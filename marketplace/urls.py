@@ -11,11 +11,3 @@ urlpatterns = [
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-    
-    from django.urls import path
-from . import views
-
-urlpatterns = [
-    path('', views.startups_list, name='startups_list'),
-    path('startup/<int:startup_id>/', views.startup_detail, name='startup_detail'),
-]
