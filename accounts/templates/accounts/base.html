@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Koulen&family=Circe:wght@400;700&display=swap" rel="stylesheet">
   
-  {# Подключаем глобальные стили футера #}
+  {# Подключение стилей футера #}
   <link rel="stylesheet" href="{% static 'accounts/css/footer_styles.css' %}">
   
   <style>
@@ -52,8 +52,12 @@
       width: 100%;
       height: 59px;
     }
-    .logo-img {
-      height: 35px;
+    /* Текстовый логотип в шапке */
+    .header-logo-text {
+      font-family: 'Koulen', sans-serif;
+      font-size: 24px;
+      color: var(--text-dark);
+      text-decoration: none;
     }
     .nav-menu {
       display: flex;
@@ -76,7 +80,6 @@
       background: var(--secondary-color);
       color: var(--text-light);
     }
-    /* Если у пользователя нет аватара – показываем дефолтное изображение */
     .avatar {
       width: 58px;
       height: 58px;
@@ -85,15 +88,28 @@
       border: 2px solid var(--primary-color);
       margin-left: 15px;
     }
+    @media (max-width: 768px) {
+      header.header {
+        flex-direction: column;
+        height: auto;
+        padding: 10px;
+      }
+      .nav-menu {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .header-logo-text {
+        font-size: 20px;
+      }
+    }
   </style>
   
   {% block head_extra %}{% endblock %}
 </head>
 <body>
   <header class="header">
-    <a href="{% url 'home' %}">
-      <img src="{% static 'accounts/images/logo.png' %}" alt="Great Ideas Логотип" class="logo-img">
-    </a>
+    <!-- Заменяем логотип на текст -->
+    <a href="{% url 'home' %}" class="header-logo-text">GREAT IDEAS</a>
     <nav class="nav-menu">
       <a href="{% url 'home' %}" {% if request.resolver_match.url_name == 'home' %}class="active"{% endif %}>Главная</a>
       <a href="{% url 'startups_list' %}" {% if request.resolver_match.url_name == 'startups_list' %}class="active"{% endif %}>Каталог</a>

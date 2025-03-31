@@ -34,7 +34,6 @@
 
 {% block content %}
 <div class="startups-catalog-page">
-  <!-- Верхняя секция поиска и фильтров -->
   <div class="filters-header">
     <div class="search-bar-container">
       <input type="text" placeholder="Поиск" class="search-input" name="q" value="{{ request.GET.q|default:'' }}" form="filter-form">
@@ -45,9 +44,8 @@
       </button>
     </div>
   </div>
-
+  
   <div class="main-content-area">
-    <!-- Левая колонка - Фильтры -->
     <aside class="filters-sidebar">
       <form method="get" action="{% url 'startups_list' %}" id="filter-form">
         <div class="filter-section">
@@ -96,8 +94,7 @@
         {% endif %}
       </form>
     </aside>
-
-    <!-- Правая колонка - Список стартапов -->
+    
     <main class="startup-list-container">
       <form method="get" action="{% url 'startups_list' %}" id="sort-form" class="sort-options">
         {% for key, value_list in request.GET.lists %}
@@ -116,7 +113,7 @@
           </select>
         </div>
       </form>
-
+      
       {% if page_obj %}
         <div class="startup-grid">
           {% for startup in page_obj.object_list %}

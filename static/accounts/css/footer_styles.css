@@ -2,110 +2,100 @@
 
 /* Основной контейнер футера */
 .site-footer {
-    position: relative;
-    background-color: #000000;
-    color: #ffffff;
-    padding: 40px 20px;
-    overflow: hidden;
-  }
-  
-  /* Фоновое изображение футера */
-  .footer-background {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: url("../images/layout/IMG_7681.png") no-repeat center;
-    background-size: cover;
-    z-index: -1;
-    opacity: 0.3;
-  }
-  
-  /* Содержимое футера */
-  .footer-content {
-    max-width: 1440px;
-    margin: 0 auto;
-    display: flex;
+  position: relative;
+  background-color: #000000; /* Фолбэк */
+  color: #ffffff;
+  padding: 40px 20px;
+  overflow: hidden;
+}
+
+/* Фоновое изображение футера */
+.footer-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url("../images/layout/IMG_7681.png") no-repeat center;
+  background-size: cover;
+  z-index: -1;
+  opacity: 0.3;
+}
+
+/* Содержимое футера */
+.footer-content {
+  max-width: 1440px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  box-sizing: border-box;
+}
+
+/* Верхняя часть футера */
+.footer-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* Логотип футера */
+.footer-logo {
+  font-family: 'Koulen', sans-serif;
+  font-size: 24px;
+  color: #ffffff;
+}
+
+/* Социальные иконки */
+.footer-socials {
+  display: flex;
+  gap: 10px;
+}
+
+.footer-socials a {
+  display: inline-block;
+}
+
+.footer-socials img {
+  width: 32px;
+  height: 32px;
+  object-fit: cover;
+}
+
+/* Средняя часть футера: ссылки на магазины */
+.footer-middle {
+  text-align: center;
+}
+
+.footer-middle img {
+  max-width: 200px;
+  height: auto;
+}
+
+/* Нижняя часть футера */
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  flex-wrap: wrap;
+}
+
+.footer-legal a {
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .footer-top,
+  .footer-bottom {
     flex-direction: column;
-    gap: 20px;
-    box-sizing: border-box;
-  }
-  
-  /* Верхняя часть футера */
-  .footer-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-  
-  /* Логотип футера */
-  .footer-logo {
-    font-family: 'Koulen', sans-serif;
-    font-size: 24px;
-    color: #ffffff;
-  }
-  
-  /* Социальные иконки */
-  .footer-socials {
-    display: flex;
-    gap: 10px;
-  }
-  
-  .footer-socials a {
-    display: inline-block;
-  }
-  
-  .footer-socials img {
-    width: 32px;
-    height: 32px;
-    object-fit: cover;
-  }
-  
-  /* Средняя часть футера: ссылки на магазины (Google Play / App Store) */
-  .footer-middle {
     text-align: center;
   }
-  
-  .footer-middle img {
-    max-width: 200px;
-    height: auto;
+  .footer-socials {
+    margin-top: 10px;
   }
-  
-  /* Нижняя часть футера: копирайт и ссылки */
-  .footer-bottom {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 14px;
-    flex-wrap: wrap;
-  }
-  
-  .footer-copyright {
-    margin-bottom: 10px;
-  }
-  
-  .footer-legal {
-    display: flex;
-    gap: 10px;
-  }
-  
-  .footer-legal a {
-    color: #ffffff;
-    text-decoration: none;
-    font-size: 14px;
-  }
-  
-  /* Responsive для футера */
-  @media (max-width: 768px) {
-    .footer-top,
-    .footer-bottom {
-      flex-direction: column;
-      text-align: center;
-    }
-    .footer-socials {
-      margin-top: 10px;
-    }
-  }
-  
+}
