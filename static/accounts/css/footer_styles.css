@@ -1,0 +1,60 @@
+/* static/accounts/css/footer_styles.css */
+:root { /* Повторное определение переменных на случай, если base.html не загрузится */
+    --primary-color: #7B61FF; --text-light: #FFFFFF; --text-gray: #A9A7A7;
+    --text-dark-gray: #4E4F51; --background-dark: #000000; --background-gray: #F5F4F3;
+    --footer-menu-title-color: #9E9E9E;
+}
+
+.site-footer {
+    background-color: var(--background-dark); color: var(--text-light);
+    position: relative; padding-top: 100px; /* Уменьшил отступ */ overflow: hidden;
+}
+.footer-background {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background-image: url('/static/accounts/images/layout/IMG_7681.png'); /* ПУТЬ К ФОНУ */
+    background-size: cover; background-position: center; opacity: 0.3; z-index: 1;
+}
+.footer-content {
+    position: relative; z-index: 2; max-width: 1280px; margin: 0 auto; padding: 0 32px;
+}
+.footer-top {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 50px; padding-bottom: 32px; border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.footer-logo {
+    font-family: 'Koulen', sans-serif; font-size: 60px; font-weight: 400; line-height: 0.8; letter-spacing: -0.02em; color: var(--text-light);
+}
+.footer-socials { display: flex; gap: 16px; }
+.footer-socials .social-link img { width: 32px; height: 32px; opacity: 0.7; transition: opacity 0.2s ease; }
+.footer-socials .social-link:hover img { opacity: 1; }
+.footer-columns { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; padding-bottom: 50px; }
+.footer-column h4 { font-family: 'Neue Power', 'Circe', sans-serif; font-size: 16px; line-height: 1.5; color: var(--text-gray); margin: 0 0 24px 0; max-width: 330px; }
+.footer-column h5 { font-family: 'Circe', sans-serif; font-weight: 700; font-size: 18px; line-height: 32px; letter-spacing: -0.02em; color: var(--footer-menu-title-color); margin: 0 0 24px 0; }
+.footer-column ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 18px; }
+.footer-column ul li a { font-family: 'Circe', sans-serif; font-size: 16px; line-height: 24px; color: var(--text-light); transition: color 0.2s ease; text-decoration: none;}
+.footer-column ul li a:hover { color: var(--primary-color); }
+.join-button {
+    display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px;
+    border: 1px solid var(--text-light); border-radius: 99px; font-family: 'Circe', sans-serif;
+    font-weight: 700; font-size: 18px; line-height: 1; letter-spacing: -0.02em;
+    color: var(--text-light); margin-top: 24px; transition: background-color 0.2s ease, color 0.2s ease;
+    text-decoration: none;
+}
+.join-button svg { width: 16px; height: 16px; }
+.join-button:hover { background-color: var(--text-light); color: var(--background-dark); }
+.join-button:hover svg path { stroke: var(--background-dark); }
+.footer-alien-logo { margin-top: 30px; }
+.footer-alien-logo img { width: 100px; height: auto; opacity: 0.8; }
+.footer-app-links img { max-width: 150px; height: auto; display: block; margin-top: 10px; }
+.footer-bottom {
+    background-color: var(--background-gray); padding: 16px 32px; display: flex;
+    justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
+    position: relative; z-index: 2;
+}
+.footer-copyright, .footer-legal a { font-family: 'Circe', sans-serif; font-size: 12px; line-height: 16px; color: var(--text-dark-gray); text-decoration: none; }
+.footer-legal { display: flex; gap: 30px; }
+.footer-legal a:hover { text-decoration: underline; }
+
+/* Адаптивность футера */
+@media (max-width: 1024px) { .footer-columns { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 30px; } .footer-logo { font-size: 48px; } }
+@media (max-width: 767px) { .site-footer { padding-top: 80px; } .footer-top { flex-direction: column; gap: 20px; text-align: center; margin-bottom: 30px; } .footer-columns { grid-template-columns: 1fr; gap: 40px; text-align: center; } .footer-column h4, .footer-column h5 { text-align: center; } .footer-column ul { align-items: center; } .footer-text-column { display: flex; flex-direction: column; align-items: center; } .footer-alien-logo { margin-top: 20px; } .footer-alien-logo img { width: 80px; } .footer-app-links { display: flex; justify-content: center; } .footer-bottom { flex-direction: column; gap: 15px; padding: 20px; text-align: center; } .footer-legal { justify-content: center; gap: 20px; } }
