@@ -102,7 +102,7 @@
   border: 1px solid #dee2e6;
   border-radius: 8px;
   width: 300px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -199,7 +199,7 @@
   background: #818CE5;
 }
 
-/* Responsive */
+/* Responsive стили */
 @media (max-width: 1024px) {
   .filters-sidebar {
     width: 240px;
