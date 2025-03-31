@@ -108,7 +108,7 @@
     border: 1px solid #dee2e6;
     border-radius: 8px;
     width: 300px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -210,7 +210,8 @@
   /* =============================== */
   /* Responsive Styles */
   /* =============================== */
-  /* Для устройств до 1024px */
+  
+  /* До 1024px */
   @media (max-width: 1024px) {
     .filters-sidebar {
       width: 240px;
@@ -224,7 +225,7 @@
     }
   }
   
-  /* Для устройств до 768px */
+  /* До 768px */
   @media (max-width: 768px) {
     .main-content-area {
       flex-direction: column;
@@ -244,7 +245,7 @@
     }
   }
   
-  /* Для устройств до 480px */
+  /* До 480px */
   @media (max-width: 480px) {
     .search-input {
       font-size: 14px;

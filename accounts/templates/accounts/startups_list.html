@@ -122,7 +122,11 @@
           {% for startup in page_obj.object_list %}
             <div class="startup-card">
               <div class="startup-card__image-container">
-                <img src="{{ startup.image_url|default:static('accounts/images/startups/placeholder.png') }}" alt="{{ startup.title }} preview" class="startup-card__image">
+                {% if startup.image_url %}
+                  <img src="{{ startup.image_url }}" alt="{{ startup.title }} preview" class="startup-card__image">
+                {% else %}
+                  <img src="{% static 'accounts/images/startups/placeholder.png' %}" alt="{{ startup.title }} preview" class="startup-card__image">
+                {% endif %}
               </div>
               <div class="startup-card__content">
                 <div class="startup-card__header">
