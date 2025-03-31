@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Koulen&family=Circe:wght@400;700&display=swap" rel="stylesheet">
   
-  {# Глобальные стили футера и базовые стили #}
+  {# Подключаем глобальные стили футера #}
   <link rel="stylesheet" href="{% static 'accounts/css/footer_styles.css' %}">
   
   <style>
@@ -119,32 +119,31 @@
     {% block content %}{% endblock %}
   </main>
   
-  <footer class="site-footer" style="position: relative; background: url('{% static 'accounts/images/layout/IMG_7681.png' %}') no-repeat center; background-size: cover; color: var(--text-light);">
-    <div class="footer-content" style="padding: 20px; text-align: center;">
-      <div class="footer-top" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
-        <div class="footer-logo" style="font-family: 'Koulen', sans-serif; font-size: 24px; color: var(--text-light);">
-          Great Ideas
-        </div>
-        <div class="footer-socials" style="display: flex; gap: 10px;">
+  <footer class="site-footer">
+    <div class="footer-background"></div>
+    <div class="footer-content">
+      <div class="footer-top">
+        <div class="footer-logo">Great Ideas</div>
+        <div class="footer-socials">
           <a href="#" target="_blank" rel="noopener noreferrer">
-            <img src="{% static 'accounts/images/layout/twitter.png' %}" alt="Twitter" style="width:32px; height:32px;">
+            <img src="{% static 'accounts/images/layout/twitter.png' %}" alt="Twitter">
           </a>
           <a href="#" target="_blank" rel="noopener noreferrer">
-            <img src="{% static 'accounts/images/layout/instagram.png' %}" alt="Instagram" style="width:32px; height:32px;">
+            <img src="{% static 'accounts/images/layout/instagram.png' %}" alt="Instagram">
           </a>
         </div>
       </div>
-      <div class="footer-middle" style="margin: 20px 0;">
+      <div class="footer-middle">
         <a href="#" target="_blank" rel="noopener noreferrer">
-          <img src="{% static 'accounts/images/layout/image28.png' %}" alt="Google Play и App Store" style="max-width:200px;">
+          <img src="{% static 'accounts/images/layout/image28.png' %}" alt="Google Play и App Store">
         </a>
       </div>
-      <div class="footer-bottom" style="font-size: 14px;">
-        <p>© {% now "Y" %} Great Ideas</p>
-        <p>
-          <a href="#" style="color: var(--text-light); text-decoration: none;">Политика конфиденциальности</a> |
-          <a href="#" style="color: var(--text-light); text-decoration: none;">Офферта</a>
-        </p>
+      <div class="footer-bottom">
+        <div class="footer-copyright">© {% now "Y" %} Great Ideas</div>
+        <div class="footer-legal">
+          <a href="#">Политика конфиденциальности</a>
+          <a href="#">Офферта</a>
+        </div>
       </div>
     </div>
   </footer>
