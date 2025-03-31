@@ -1,20 +1,18 @@
-/* =============================== */
-/* Base Styles для страницы каталога стартапов */
-/* =============================== */
+/* startups_list_styles.css */
+
+/* Основной контейнер страницы каталога стартапов */
 .startups-catalog-page {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px 0 0;
+  padding: 20px 0;
   width: 100%;
   max-width: 1440px;
   background: #ffffff;
   box-sizing: border-box;
 }
 
-/* =============================== */
-/* Секция фильтров */
-/* =============================== */
+/* Секция поиска */
 .filters-header {
   width: 100%;
   padding: 0 20px;
@@ -77,9 +75,7 @@
   margin-right: 8px;
 }
 
-/* =============================== */
 /* Основное содержимое */
-/* =============================== */
 .main-content-area {
   display: flex;
   width: 100%;
@@ -100,15 +96,13 @@
   justify-content: center;
 }
 
-/* =============================== */
 /* Карточка стартапа */
-/* =============================== */
 .startup-card {
   background: #ffffff;
   border: 1px solid #dee2e6;
   border-radius: 8px;
   width: 300px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -172,9 +166,7 @@
   font-size: 16px;
 }
 
-/* =============================== */
 /* Пагинация */
-/* =============================== */
 .pagination {
   margin-top: 20px;
   display: flex;
@@ -207,9 +199,7 @@
   background: #818CE5;
 }
 
-/* =============================== */
-/* Responsive Styles */
-/* =============================== */
+/* Responsive */
 @media (max-width: 1024px) {
   .filters-sidebar {
     width: 240px;

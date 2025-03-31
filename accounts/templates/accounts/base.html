@@ -6,12 +6,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}Great Ideas{% endblock %}</title>
   
-  {# Подключение шрифтов #}
+  {# Подключаем шрифты из Google Fonts #}
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Koulen&family=Circe:wght@400;700&display=swap" rel="stylesheet">
   
-  {# Подключение CSS футера #}
+  {# Подключение глобальных стилей футера #}
   <link rel="stylesheet" href="{% static 'accounts/css/footer_styles.css' %}">
   
   <style>
@@ -52,7 +52,7 @@
       width: 100%;
       height: 59px;
     }
-    /* Текстовый логотип вместо картинки */
+    /* Заменяем логотип на текст */
     .header-logo-text {
       font-family: 'Koulen', sans-serif;
       font-size: 24px;
@@ -88,6 +88,7 @@
       border: 2px solid var(--primary-color);
       margin-left: 15px;
     }
+    /* Адаптивность для маленьких экранов */
     @media (max-width: 768px) {
       header.header {
         flex-direction: column;
@@ -108,7 +109,7 @@
 </head>
 <body>
   <header class="header">
-    <!-- Вместо изображения логотипа выводим текст -->
+    <!-- Текстовый логотип вместо изображения -->
     <a href="{% url 'home' %}" class="header-logo-text">GREAT IDEAS</a>
     <nav class="nav-menu">
       <a href="{% url 'home' %}" {% if request.resolver_match.url_name == 'home' %}class="active"{% endif %}>Главная</a>
