@@ -52,7 +52,7 @@
       width: 100%;
       height: 59px;
     }
-    /* Текстовый логотип вместо изображения */
+    /* Вывод текстового логотипа вместо изображения */
     .header-logo-text {
       font-family: 'Koulen', sans-serif;
       font-size: 24px;
@@ -108,7 +108,7 @@
 </head>
 <body>
   <header class="header">
-    <!-- Текстовый логотип вместо изображения -->
+    <!-- Текстовый логотип -->
     <a href="{% url 'home' %}" class="header-logo-text">GREAT IDEAS</a>
     <nav class="nav-menu">
       <a href="{% url 'home' %}" {% if request.resolver_match.url_name == 'home' %}class="active"{% endif %}>Главная</a>
