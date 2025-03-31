@@ -3,7 +3,8 @@
 /* Основной контейнер футера */
 .site-footer {
   position: relative;
-  background-color: #000000; /* Фолбэк */
+  z-index: 0; /* Создаем новый stacking context */
+  background-color: #000000; /* Фолбэк, если изображение не загрузится */
   color: #ffffff;
   padding: 40px 20px;
   overflow: hidden;
@@ -18,8 +19,8 @@
   height: 100%;
   background: url("../images/layout/IMG_7681.png") no-repeat center;
   background-size: cover;
-  z-index: -1;
-  opacity: 0.3;
+  z-index: -1; /* Расположено за содержимым футера */
+  opacity: 0.3; /* Настройте по желанию */
 }
 
 /* Содержимое футера */
@@ -40,21 +41,15 @@
   flex-wrap: wrap;
 }
 
-/* Логотип футера */
 .footer-logo {
   font-family: 'Koulen', sans-serif;
   font-size: 24px;
   color: #ffffff;
 }
 
-/* Социальные иконки */
 .footer-socials {
   display: flex;
   gap: 10px;
-}
-
-.footer-socials a {
-  display: inline-block;
 }
 
 .footer-socials img {
@@ -63,7 +58,7 @@
   object-fit: cover;
 }
 
-/* Средняя часть футера: ссылки на магазины */
+/* Средняя часть футера */
 .footer-middle {
   text-align: center;
 }
