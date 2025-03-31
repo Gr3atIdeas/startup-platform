@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Koulen&family=Circe:wght@400;700&display=swap" rel="stylesheet">
   
-  <!-- Подключение файла стилей футера -->
+  <!-- Подключаем стили футера -->
   <link rel="stylesheet" href="{% static 'accounts/css/footer_styles.css' %}">
   
   <style>
@@ -108,7 +108,7 @@
 </head>
 <body>
   <header class="header">
-    <!-- Текстовый логотип -->
+    <!-- Текстовый логотип вместо изображения -->
     <a href="{% url 'home' %}" class="header-logo-text">GREAT IDEAS</a>
     <nav class="nav-menu">
       <a href="{% url 'home' %}" {% if request.resolver_match.url_name == 'home' %}class="active"{% endif %}>Главная</a>
@@ -135,6 +135,7 @@
     {% block content %}{% endblock %}
   </main>
   
+  <!-- Футер -->
   <footer class="site-footer">
     <div class="footer-background"></div>
     <div class="footer-content">
@@ -151,11 +152,13 @@
       </div>
       <div class="footer-middle">
         <a href="#" target="_blank" rel="noopener noreferrer">
-          <img src="{% static 'accounts/images/layout/image28.png' %}" alt="App Store и Google Play">
+          <img src="{% static 'accounts/images/layout/image28.png' %}" alt="App Store & Google Play">
         </a>
       </div>
       <div class="footer-bottom">
-        <div class="footer-copyright">© {% now "Y" %} Great Ideas</div>
+        <div class="footer-copyright">
+          © {% now "Y" %} Great Ideas
+        </div>
         <div class="footer-legal">
           <a href="#">Политика конфиденциальности</a>
           <a href="#">Офферта</a>
