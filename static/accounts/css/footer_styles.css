@@ -1,0 +1,96 @@
+/* footer_styles.css */
+
+/* Основной контейнер футера */
+.site-footer {
+  position: relative;
+  z-index: 0;
+  padding: 40px 20px;
+  background: none; /* убираем собственный фон */
+  color: #ffffff;
+  overflow: hidden;
+}
+
+/* Фоновое изображение футера */
+.footer-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* Абсолютный путь к изображению. Убедитесь, что файл IMG_7681.png имеет высокое разрешение */
+  background: url("/static/accounts/images/layout/IMG_7681.png") no-repeat center center;
+  background-size: cover;
+  z-index: -1;
+  filter: brightness(0.9) contrast(1.2); /* Немного затемняет и повышает контрастность */
+}
+
+/* Содержимое футера */
+.footer-content {
+  max-width: 1440px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  box-sizing: border-box;
+}
+
+/* Верхняя часть футера */
+.footer-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* Логотип футера */
+.footer-logo {
+  font-family: 'Koulen', sans-serif;
+  font-size: 24px;
+  color: #ffffff;
+}
+
+/* Социальные иконки */
+.footer-socials {
+  display: flex;
+  gap: 10px;
+}
+.footer-socials a img {
+  width: 32px;
+  height: 32px;
+  object-fit: cover;
+}
+
+/* Средняя часть футера */
+.footer-middle {
+  text-align: center;
+}
+.footer-middle img {
+  max-width: 200px;
+  height: auto;
+}
+
+/* Нижняя часть футера */
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  flex-wrap: wrap;
+}
+.footer-legal a {
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+/* Responsive стили */
+@media (max-width: 768px) {
+  .footer-top,
+  .footer-bottom {
+    flex-direction: column;
+    text-align: center;
+  }
+  .footer-socials {
+    margin-top: 10px;
+  }
+}
