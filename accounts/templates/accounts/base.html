@@ -5,16 +5,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}Great Ideas{% endblock %}</title>
-  
+
   <!-- Подключаем Font Awesome для иконок -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   
-  <!-- Подключаем шрифты -->
+  <!-- Подключаем Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Koulen&family=Circe:wght@400;700&display=swap" rel="stylesheet">
   
-  <!-- Подключаем файл стилей для футера -->
+  <!-- Файл стилей футера (если используется) -->
   <link rel="stylesheet" href="{% static 'accounts/css/footer_styles.css' %}">
   
   <style>
@@ -30,8 +30,9 @@
     body {
       margin: 0;
       padding: 0;
-      font-family: 'Circe', sans-serif;
-      background: var(--background-light);
+      font-family: 'Circe', Arial, sans-serif;
+      background-color: var(--background-light);
+      color: var(--text-dark);
       display: flex;
       flex-direction: column;
       min-height: 100vh;
@@ -40,8 +41,8 @@
       flex-grow: 1;
       padding: 20px;
       max-width: 1440px;
-      width: 100%;
       margin: 0 auto;
+      width: 100%;
       box-sizing: border-box;
     }
     header.header {
@@ -55,7 +56,7 @@
       width: 100%;
       height: 59px;
     }
-    /* Текстовый логотип слева */
+    /* Заголовок вместо логотипа */
     .header-logo-text {
       font-family: 'Koulen', sans-serif;
       font-size: 24px;
@@ -83,7 +84,7 @@
       background: var(--secondary-color);
       color: var(--text-light);
     }
-    /* Стили для кнопки выхода с иконкой */
+    /* Кнопка выхода с иконкой */
     .logout-btn {
       text-decoration: none;
       color: var(--text-dark);
@@ -108,6 +109,20 @@
       border: 2px solid var(--primary-color);
       margin-left: 15px;
     }
+    /* Кнопка "Создать стартап" – перенесли вправо рядом с аватаром */
+    .create-startup-btn {
+      text-decoration: none;
+      color: var(--text-light);
+      background-color: var(--primary-color);
+      padding: 8px 16px;
+      border-radius: 99px;
+      font-size: 16px;
+      transition: background-color 0.2s;
+      margin-left: 10px;
+    }
+    .create-startup-btn:hover {
+      background-color: var(--secondary-color);
+    }
     @media (max-width: 768px) {
       header.header {
         flex-direction: column;
@@ -121,14 +136,17 @@
       .header-logo-text {
         font-size: 20px;
       }
+      .create-startup-btn {
+        margin-top: 5px;
+        margin-left: 0;
+      }
     }
   </style>
-  
   {% block head_extra %}{% endblock %}
 </head>
 <body>
   <header class="header">
-    <!-- Текстовый логотип слева -->
+    <!-- Заголовок "GREAT IDEAS" вместо логотипа -->
     <a href="{% url 'home' %}" class="header-logo-text">GREAT IDEAS</a>
     <nav class="nav-menu">
       <a href="{% url 'home' %}" {% if request.resolver_match.url_name == 'home' %}class="active"{% endif %}>Главная</a>
@@ -139,24 +157,24 @@
       
       {% if user.is_authenticated %}
         {% if user.role.role_name == 'moderator' %}
+          <!-- Ссылка для модераторов переименована в "Заявки" -->
           <a href="{% url 'moderator_dashboard' %}" {% if request.resolver_match.url_name == 'moderator_dashboard' %}class="active"{% endif %}>Заявки</a>
         {% endif %}
         <a href="{% url 'profile' %}" {% if request.resolver_match.url_name == 'profile' %}class="active"{% endif %}>Профиль</a>
-        <a href="{% url 'create_startup' %}" {% if request.resolver_match.url_name == 'create_startup' %}class="active"{% endif %}>Создать стартап</a>
         <!-- Кнопка выхода с иконкой -->
         <a href="{% url 'logout' %}" class="logout-btn" aria-label="Выход"><i class="fas fa-sign-out-alt"></i></a>
         <img src="{% if user.profile_picture_url %}{{ user.profile_picture_url }}{% else %}{% static 'accounts/images/layout/image12.png' %}{% endif %}" alt="Аватар" class="avatar">
+        <!-- Кнопка "Создать стартап" для всех авторизованных -->
+        <a href="{% url 'create_startup' %}" class="create-startup-btn" {% if request.resolver_match.url_name == 'create_startup' %}class="active"{% endif %}>Создать стартап</a>
       {% else %}
         <a href="{% url 'login' %}">Вход</a>
         <a href="{% url 'register' %}">Регистрация</a>
       {% endif %}
     </nav>
   </header>
-  
   <main class="content">
     {% block content %}{% endblock %}
   </main>
-  
   <footer class="site-footer">
     <div class="footer-background"></div>
     <div class="footer-content">
