@@ -73,15 +73,15 @@
       color: var(--text-dark);
       padding: 8px 16px;
       border-radius: 99px;
-      transition: background-color 0.2s;
+      transition: background-color 0.2s, color 0.2s;
       font-size: 16px;
       white-space: nowrap;
     }
     .nav-menu a:hover {
-      background: #e9ecef;
+      background-color: #e9ecef;
     }
     .nav-menu a.active {
-      background: var(--secondary-color);
+      background-color: var(--secondary-color);
       color: var(--text-light);
     }
     /* Кнопка выхода с иконкой */
@@ -96,7 +96,7 @@
       align-items: center;
     }
     .logout-btn:hover {
-      background: #e9ecef;
+      background-color: #e9ecef;
     }
     .logout-btn i {
       font-size: 18px;
@@ -107,9 +107,9 @@
       border-radius: 50%;
       object-fit: cover;
       border: 2px solid var(--primary-color);
-      margin-left: 15px;
+      margin: 0 10px;
     }
-    /* Кнопка "Создать стартап" – перенесли вправо рядом с аватаром */
+    /* Кнопка "Создать стартап" – перенесли между ссылкой "Профиль" и аватаром */
     .create-startup-btn {
       text-decoration: none;
       color: var(--text-light);
@@ -118,7 +118,6 @@
       border-radius: 99px;
       font-size: 16px;
       transition: background-color 0.2s;
-      margin-left: 10px;
     }
     .create-startup-btn:hover {
       background-color: var(--secondary-color);
@@ -138,7 +137,10 @@
       }
       .create-startup-btn {
         margin-top: 5px;
-        margin-left: 0;
+      }
+      .avatar {
+        width: 50px;
+        height: 50px;
       }
     }
   </style>
@@ -146,7 +148,7 @@
 </head>
 <body>
   <header class="header">
-    <!-- Заголовок "GREAT IDEAS" вместо логотипа -->
+    <!-- Заголовок "GREAT IDEAS" слева -->
     <a href="{% url 'home' %}" class="header-logo-text">GREAT IDEAS</a>
     <nav class="nav-menu">
       <a href="{% url 'home' %}" {% if request.resolver_match.url_name == 'home' %}class="active"{% endif %}>Главная</a>
@@ -157,15 +159,14 @@
       
       {% if user.is_authenticated %}
         {% if user.role.role_name == 'moderator' %}
-          <!-- Ссылка для модераторов переименована в "Заявки" -->
           <a href="{% url 'moderator_dashboard' %}" {% if request.resolver_match.url_name == 'moderator_dashboard' %}class="active"{% endif %}>Заявки</a>
         {% endif %}
         <a href="{% url 'profile' %}" {% if request.resolver_match.url_name == 'profile' %}class="active"{% endif %}>Профиль</a>
-        <!-- Кнопка выхода с иконкой -->
-        <a href="{% url 'logout' %}" class="logout-btn" aria-label="Выход"><i class="fas fa-sign-out-alt"></i></a>
+        <!-- Кнопка "Создать стартап" размещается между "Профиль" и аватаром -->
+        <a href="{% url 'create_startup' %}" class="create-startup-btn {% if request.resolver_match.url_name == 'create_startup' %}active{% endif %}">Создать стартап</a>
         <img src="{% if user.profile_picture_url %}{{ user.profile_picture_url }}{% else %}{% static 'accounts/images/layout/image12.png' %}{% endif %}" alt="Аватар" class="avatar">
-        <!-- Кнопка "Создать стартап" для всех авторизованных -->
-        <a href="{% url 'create_startup' %}" class="create-startup-btn" {% if request.resolver_match.url_name == 'create_startup' %}class="active"{% endif %}>Создать стартап</a>
+        <!-- Кнопка "Выход" с иконкой размещается справа от аватара -->
+        <a href="{% url 'logout' %}" class="logout-btn" aria-label="Выход"><i class="fas fa-sign-out-alt"></i></a>
       {% else %}
         <a href="{% url 'login' %}">Вход</a>
         <a href="{% url 'register' %}">Регистрация</a>
