@@ -6,12 +6,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}Great Ideas{% endblock %}</title>
   
-  <!-- Подключение шрифтов из Google Fonts -->
+  <!-- Подключение шрифтов -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Koulen&family=Circe:wght@400;700&display=swap" rel="stylesheet">
   
-  <!-- Подключаем стили футера -->
+  <!-- Подключение CSS для футера -->
   <link rel="stylesheet" href="{% static 'accounts/css/footer_styles.css' %}">
   
   <style>
@@ -108,7 +108,7 @@
 </head>
 <body>
   <header class="header">
-    <!-- Текстовый логотип вместо изображения -->
+    <!-- Текстовый логотип -->
     <a href="{% url 'home' %}" class="header-logo-text">GREAT IDEAS</a>
     <nav class="nav-menu">
       <a href="{% url 'home' %}" {% if request.resolver_match.url_name == 'home' %}class="active"{% endif %}>Главная</a>
@@ -117,12 +117,17 @@
       <a href="{% url 'news' %}" {% if request.resolver_match.url_name == 'news' %}class="active"{% endif %}>Новости</a>
       <a href="{% url 'legal' %}" {% if request.resolver_match.url_name == 'legal' %}class="active"{% endif %}>Инфо</a>
       {% if user.is_authenticated %}
-        <a href="{% url 'profile' %}">Профиль</a>
-        <a href="{% url 'logout' %}">Выход</a>
-        {% if not user.profile_picture_url %}
-          <img src="{% static 'accounts/images/layout/image12.png' %}" alt="Аватар по умолчанию" class="avatar">
+        {% if user.role.role_name == 'moderator' %}
+          <a href="{% url 'moderator_dashboard' %}" {% if request.resolver_match.url_name == 'moderator_dashboard' %}class="active"{% endif %}>Панель модератора</a>
         {% else %}
+          <a href="{% url 'create_startup' %}" {% if request.resolver_match.url_name == 'create_startup' %}class="active"{% endif %}>Создать стартап</a>
+        {% endif %}
+        <a href="{% url 'profile' %}" {% if request.resolver_match.url_name == 'profile' %}class="active"{% endif %}>Профиль</a>
+        <a href="{% url 'logout' %}">Выход</a>
+        {% if user.profile_picture_url %}
           <img src="{{ user.profile_picture_url }}" alt="Аватар" class="avatar">
+        {% else %}
+          <img src="{% static 'accounts/images/layout/image12.png' %}" alt="Аватар по умолчанию" class="avatar">
         {% endif %}
       {% else %}
         <a href="{% url 'login' %}">Вход</a>

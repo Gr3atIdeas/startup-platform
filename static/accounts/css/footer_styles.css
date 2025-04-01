@@ -1,11 +1,11 @@
 /* footer_styles.css */
 
-/* Основной контейнер футера */
+/* Контейнер футера */
 .site-footer {
   position: relative;
   z-index: 0;
   padding: 40px 20px;
-  background: none; /* убираем собственный фон */
+  background: none; /* фон задаётся через background image */
   color: #ffffff;
   overflow: hidden;
 }
@@ -17,11 +17,10 @@
   left: 0;
   width: 100%;
   height: 100%;
-  /* Абсолютный путь к изображению. Убедитесь, что файл IMG_7681.png имеет высокое разрешение */
   background: url("/static/accounts/images/layout/IMG_7681.png") no-repeat center center;
   background-size: cover;
   z-index: -1;
-  filter: brightness(0.9) contrast(1.2); /* Немного затемняет и повышает контрастность */
+  filter: brightness(0.9) contrast(1.2);
 }
 
 /* Содержимое футера */
