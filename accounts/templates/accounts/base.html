@@ -2,174 +2,246 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}Great Ideas{% endblock %}</title>
-  
-  <!-- Подключение шрифтов -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Koulen&family=Circe:wght@400;700&display=swap" rel="stylesheet">
-  
-  <!-- Подключение CSS для футера -->
-  <link rel="stylesheet" href="{% static 'accounts/css/footer_styles.css' %}">
-  
-  <style>
-    :root {
-      --primary-color: #7B61FF;
-      --secondary-color: #818CE5;
-      --text-dark: #191919;
-      --text-light: #FFFFFF;
-      --text-gray: #A9A9A9;
-      --background-light: #FFFFFF;
-      --border-light-gray: #dee2e6;
-    }
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Circe', sans-serif;
-      background: var(--background-light);
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
-    main.content {
-      flex-grow: 1;
-      padding: 20px;
-      max-width: 1440px;
-      width: 100%;
-      margin: 0 auto;
-      box-sizing: border-box;
-    }
-    header.header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 32px;
-      border-bottom: 1px solid var(--border-light-gray);
-      max-width: 1440px;
-      margin: 0 auto;
-      width: 100%;
-      height: 59px;
-    }
-    /* Вывод текстового логотипа вместо изображения */
-    .header-logo-text {
-      font-family: 'Koulen', sans-serif;
-      font-size: 24px;
-      color: var(--text-dark);
-      text-decoration: none;
-    }
-    .nav-menu {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
-    .nav-menu a {
-      text-decoration: none;
-      color: var(--text-dark);
-      padding: 8px 16px;
-      border-radius: 99px;
-      transition: background-color 0.2s;
-      font-size: 16px;
-      white-space: nowrap;
-    }
-    .nav-menu a:hover {
-      background: #e9ecef;
-    }
-    .nav-menu a.active {
-      background: var(--secondary-color);
-      color: var(--text-light);
-    }
-    .avatar {
-      width: 58px;
-      height: 58px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid var(--primary-color);
-      margin-left: 15px;
-    }
-    @media (max-width: 768px) {
-      header.header {
-        flex-direction: column;
-        height: auto;
-        padding: 10px;
-      }
-      .nav-menu {
-        flex-wrap: wrap;
-        justify-content: center;
-      }
-      .header-logo-text {
-        font-size: 20px;
-      }
-    }
-  </style>
-  
-  {% block head_extra %}{% endblock %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Great Ideas{% endblock %}</title>
+
+    <!-- Подключаем шрифты -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Koulen&family=Circe:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- Подключаем глобальные стили футера -->
+    <link rel="stylesheet" href="{% static 'accounts/css/footer_styles.css' %}">
+
+    <style>
+        /* Базовые переменные и глобальные стили */
+        :root {
+            --primary-color: #7B61FF;
+            --secondary-color: #818CE5;
+            --text-dark: #191919;
+            --text-light: #FFFFFF;
+            --text-gray: #A9A9A9;
+            --background-light: #FFFFFF;
+            --background-dark: #000000;
+            --background-header-footer: #FFFFFF;
+            --border-light-gray: #dee2e6;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Circe', Arial, sans-serif;
+            background-color: var(--background-light);
+            color: var(--text-dark);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        main.content {
+            flex-grow: 1;
+            padding: 20px;
+            max-width: 1440px;
+            margin: 0 auto;
+            box-sizing: border-box;
+        }
+
+        /* Стили Хедера */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 32px;
+            background-color: var(--background-header-footer);
+            border-bottom: 1px solid var(--border-light-gray);
+            max-width: 1440px;
+            margin: 0 auto;
+            box-sizing: border-box;
+            width: 100%;
+            height: 59px;
+        }
+        /* Текстовый логотип */
+        .header-logo-text {
+            font-family: 'Koulen', sans-serif;
+            font-size: 24px;
+            letter-spacing: -0.02em;
+            color: var(--text-dark);
+            text-decoration: none;
+        }
+        .nav-menu {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .nav-menu a {
+            text-decoration: none;
+            color: var(--text-dark);
+            padding: 8px 16px;
+            border: 1px solid transparent;
+            border-radius: 99px;
+            transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+            font-family: 'Circe', sans-serif;
+            font-size: 16px;
+            line-height: 1.5;
+            white-space: nowrap;
+        }
+        .nav-menu a:hover {
+            background-color: #e9ecef;
+        }
+        .nav-menu a.active {
+            background-color: var(--secondary-color);
+            color: var(--text-light);
+        }
+        .avatar {
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary-color);
+            display: inline-block;
+            vertical-align: middle;
+            margin-left: 15px;
+        }
+
+        /* Адаптивность Хедера */
+        @media (max-width: 1024px) {
+            .header { padding: 10px 20px; }
+            .nav-menu a { font-size: 15px; padding: 6px 12px; }
+            .avatar { width: 50px; height: 50px; }
+            .header-logo-text { font-size: 22px; }
+        }
+        @media (max-width: 767px) {
+            .header { flex-direction: column; height: auto; padding: 10px; }
+            .header-logo-text { margin-bottom: 10px; }
+            .nav-menu { flex-wrap: wrap; justify-content: center; gap: 5px 10px; width: 100%; }
+            .nav-menu a { font-size: 14px; padding: 5px 10px; }
+            .avatar { width: 40px; height: 40px; margin-left: 5px; }
+        }
+        @media (max-width: 480px) {
+            .nav-menu a { padding: 4px 8px; font-size: 13px; }
+            .avatar { width: 35px; height: 35px; }
+        }
+
+        /* Стили Футера (примеры, можно корректировать в footer_styles.css) */
+        .site-footer {
+            position: relative;
+            background-color: var(--background-dark);
+            color: var(--text-light);
+            padding: 20px;
+            text-align: center;
+            overflow: hidden;
+        }
+        .footer-content {
+            position: relative;
+            z-index: 2;
+        }
+        .footer-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            opacity: 0.8;
+        }
+    </style>
+
+    {% block head_extra %}{% endblock %}
 </head>
 <body>
-  <header class="header">
-    <!-- Текстовый логотип -->
-    <a href="{% url 'home' %}" class="header-logo-text">GREAT IDEAS</a>
-    <nav class="nav-menu">
-      <a href="{% url 'home' %}" {% if request.resolver_match.url_name == 'home' %}class="active"{% endif %}>Главная</a>
-      <a href="{% url 'startups_list' %}" {% if request.resolver_match.url_name == 'startups_list' %}class="active"{% endif %}>Каталог</a>
-      <a href="{% url 'investments' %}" {% if request.resolver_match.url_name == 'investments' %}class="active"{% endif %}>Инвестиции</a>
-      <a href="{% url 'news' %}" {% if request.resolver_match.url_name == 'news' %}class="active"{% endif %}>Новости</a>
-      <a href="{% url 'legal' %}" {% if request.resolver_match.url_name == 'legal' %}class="active"{% endif %}>Инфо</a>
-      {% if user.is_authenticated %}
-        {% if user.role.role_name == 'moderator' %}
-          <a href="{% url 'moderator_dashboard' %}" {% if request.resolver_match.url_name == 'moderator_dashboard' %}class="active"{% endif %}>Панель модератора</a>
-        {% else %}
-          <a href="{% url 'create_startup' %}" {% if request.resolver_match.url_name == 'create_startup' %}class="active"{% endif %}>Создать стартап</a>
-        {% endif %}
-        <a href="{% url 'profile' %}" {% if request.resolver_match.url_name == 'profile' %}class="active"{% endif %}>Профиль</a>
-        <a href="{% url 'logout' %}">Выход</a>
-        {% if user.profile_picture_url %}
-          <img src="{{ user.profile_picture_url }}" alt="Аватар" class="avatar">
-        {% else %}
-          <img src="{% static 'accounts/images/layout/image12.png' %}" alt="Аватар по умолчанию" class="avatar">
-        {% endif %}
-      {% else %}
-        <a href="{% url 'login' %}">Вход</a>
-        <a href="{% url 'register' %}">Регистрация</a>
-      {% endif %}
-    </nav>
-  </header>
-  
-  <main class="content">
-    {% block content %}{% endblock %}
-  </main>
-  
-  <!-- Футер -->
-  <footer class="site-footer">
-    <div class="footer-background"></div>
-    <div class="footer-content">
-      <div class="footer-top">
-        <div class="footer-logo">Great Ideas</div>
-        <div class="footer-socials">
-          <a href="#" target="_blank" rel="noopener noreferrer">
-            <img src="{% static 'accounts/images/layout/twitter.png' %}" alt="Twitter">
-          </a>
-          <a href="#" target="_blank" rel="noopener noreferrer">
-            <img src="{% static 'accounts/images/layout/instagram.png' %}" alt="Instagram">
-          </a>
+    <header class="header">
+        <!-- Текстовый логотип вместо изображения -->
+        <a href="{% url 'home' %}" class="header-logo-text">GREAT IDEAS</a>
+        <nav class="nav-menu">
+            <a href="{% url 'home' %}" {% if request.resolver_match.url_name == 'home' %}class="active"{% endif %}>Главная</a>
+            <a href="{% url 'startups_list' %}" {% if request.resolver_match.url_name == 'startups_list' %}class="active"{% endif %}>Каталог</a>
+            <a href="{% url 'investments' %}" {% if request.resolver_match.url_name == 'investments' %}class="active"{% endif %}>Инвестиции</a>
+            <a href="{% url 'news' %}" {% if request.resolver_match.url_name == 'news' %}class="active"{% endif %}>Новости</a>
+            <a href="{% url 'legal' %}" {% if request.resolver_match.url_name == 'legal' %}class="active"{% endif %}>Инфо</a>
+            {% if user.is_authenticated %}
+                <!-- Ссылка "Создать стартап" для всех авторизованных пользователей -->
+                <a href="{% url 'create_startup' %}" {% if request.resolver_match.url_name == 'create_startup' %}class="active"{% endif %}>Создать стартап</a>
+                <!-- Ссылка "Панель модератора" только для модераторов -->
+                {% if user.role.role_name == 'moderator' %}
+                    <a href="{% url 'moderator_dashboard' %}" {% if request.resolver_match.url_name == 'moderator_dashboard' %}class="active"{% endif %}>Панель модератора</a>
+                {% endif %}
+                <a href="{% url 'profile' %}" {% if request.resolver_match.url_name == 'profile' %}class="active"{% endif %}>Профиль</a>
+                <a href="{% url 'logout' %}">Выход</a>
+                {% if user.profile_picture_url %}
+                    <img src="{{ user.profile_picture_url }}" alt="Аватар" class="avatar">
+                {% else %}
+                    <img src="{% static 'accounts/images/layout/image12.png' %}" alt="Аватар по умолчанию" class="avatar">
+                {% endif %}
+            {% else %}
+                <a href="{% url 'login' %}">Вход</a>
+                <a href="{% url 'register' %}">Регистрация</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <main class="content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-top">
+                <div class="footer-logo">Great Ideas</div>
+                <div class="footer-socials">
+                    <a href="#" target="_blank" rel="noopener noreferrer">
+                        <img src="{% static 'accounts/images/layout/twitter.png' %}" alt="Twitter">
+                    </a>
+                    <a href="#" target="_blank" rel="noopener noreferrer">
+                        <img src="{% static 'accounts/images/layout/instagram.png' %}" alt="Instagram">
+                    </a>
+                </div>
+            </div>
+            <div class="footer-columns">
+                <div class="footer-column footer-text-column">
+                    <h4>Раскройте открывающиеся возможности и будьте частью инновационной волны</h4>
+                    <a href="{% url 'register' %}" class="join-button">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M8 3.33331V12.6666" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M3.33301 8H12.6663" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Присоединиться
+                    </a>
+                    <div class="footer-alien-logo">
+                        <img src="{% static 'accounts/images/layout/image12.png' %}" alt="Логотип Футера">
+                    </div>
+                </div>
+                <div class="footer-column footer-menu-column">
+                    <h5>Меню</h5>
+                    <ul>
+                        <li><a href="{% url 'startups_list' %}">Каталог</a></li>
+                        <li><a href="#">Портфель</a></li>
+                        <li><a href="{% url 'news' %}">Новости</a></li>
+                        <li><a href="#">CosmoChat</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column footer-about-column">
+                    <h5>О нас</h5>
+                    <ul>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Поддержка</a></li>
+                        <li><a href="#">Контакты</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column footer-app-links">
+                    <a href="#" target="_blank" rel="noopener noreferrer">
+                        <img src="{% static 'accounts/images/layout/image28.png' %}" alt="App Stores">
+                    </a>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="footer-middle">
-        <a href="#" target="_blank" rel="noopener noreferrer">
-          <img src="{% static 'accounts/images/layout/image28.png' %}" alt="App Store & Google Play">
-        </a>
-      </div>
-      <div class="footer-bottom">
-        <div class="footer-copyright">
-          © {% now "Y" %} Great Ideas
+        <div class="footer-bottom">
+            <div class="footer-copyright">© {% now "Y" %} Great Ideas</div>
+            <div class="footer-legal">
+                <a href="#">Политика конфиденциальности</a>
+                <a href="#">Офферта</a>
+            </div>
         </div>
-        <div class="footer-legal">
-          <a href="#">Политика конфиденциальности</a>
-          <a href="#">Офферта</a>
-        </div>
-      </div>
-    </div>
-  </footer>
+        <!-- Фон футера с изображением -->
+        <div class="footer-background" style="background: url('{% static 'accounts/images/layout/IMG_7681.png' %}') no-repeat center center; background-size: cover;"></div>
+    </footer>
 </body>
 </html>
