@@ -68,14 +68,26 @@
                                 <!-- Контент -->
                                 <div class="startup-card__content">
 
-                                    <div class="startup-card__header">
+                                    <!-- Header -->
+                                    <div class="startup-card__top-row">
                                         <h2 class="startup-card__title">{{ startup.title|default:"Без названия" }}</h2>
-                                        <span class="startup-card__rating-value">Рейтинг {{ startup.get_average_rating|floatformat:"1" }}/5</span>
+                                        <div class="startup-card__rating">
+                                            <span>{{ startup.get_average_rating|floatformat:"1" }}/5</span>
+                                            <div class="stars">
+                                                {% for i in "12345" %}
+                                                    {% if i|add:"0"|int <= startup.get_average_rating %}
+                                                        ★
+                                                    {% else %}
+                                                        ☆
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                        </div>
                                     </div>
 
-                                    <p class="startup-card__category">Категория: <span>{{ startup.direction.direction_name|default:"Не указано" }}</span></p>
+                                    <p class="startup-card__category">Категория: <span>{{ startup.direction.direction_name|default:"-" }}</span></p>
 
-                                    <p class="startup-card__description">{{ startup.description|truncatechars:100|default:"Описание отсутствует" }}</p>
+                                    <p class="startup-card__description">{{ startup.description|truncatechars:160|default:"Нет описания" }}</p>
 
                                     <a href="{% url 'startup_detail' startup.startup_id %}" class="startup-card__button">Подробнее</a>
 
