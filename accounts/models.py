@@ -256,6 +256,7 @@ class StartupTimeline(models.Model):
     title = models.CharField(max_length=255, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     event_date = models.DateTimeField(blank=True, null=True)
+    step_number = models.IntegerField(default=1)  # Добавляем поле step_number
 
     class Meta:
         managed = False

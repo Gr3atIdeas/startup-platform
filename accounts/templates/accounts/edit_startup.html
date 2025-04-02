@@ -154,17 +154,17 @@
                 <div class="timeline-description-container {% if event.step_number == startup.step_number %}active{% endif %}" id="step-description-{{ event.step_number }}">
                     <div class="timeline-description-header">
                         <div class="timeline-description-title">{{ event.title }}</div>
-                        <button type="button" class="btn-select-current" onclick="setCurrentStep({{ event.step_number }})">Мы здесь</button>
+                        <button type="button" class="btn-select-current" onclick="setCurrentStep({{ event.step_number }})" {% if event.step_number != startup.step_number %}style="background-color: #ccc;"{% endif %}>Мы здесь</button>
                     </div>
-                    <textarea class="timeline-description-textarea" name="step_description_{{ event.step_number }}" placeholder="Добавьте описание для этого этапа..." required>{{ event.description }}</textarea>
+                    <textarea class="timeline-description-textarea" name="step_description_{{ event.step_number }}" placeholder="Добавьте описание для этого этапа..." required>{{ event.description|default:"" }}</textarea>
                 </div>
             {% empty %}
                 {% for i in "12345"|make_list %}
                     {% with step_number=forloop.counter %}
-                        <div class="timeline-description-container {% if step_number == 1 %}active{% endif %}" id="step-description-{{ step_number }}">
+                        <div class="timeline-description-container {% if step_number == startup.step_number|default:1 %}active{% endif %}" id="step-description-{{ step_number }}">
                             <div class="timeline-description-header">
                                 <div class="timeline-description-title">Этап {{ step_number }}</div>
-                                <button type="button" class="btn-select-current" onclick="setCurrentStep({{ step_number }})">Мы здесь</button>
+                                <button type="button" class="btn-select-current" onclick="setCurrentStep({{ step_number }})" {% if step_number != startup.step_number|default:1 %}style="background-color: #ccc;"{% endif %}>Мы здесь</button>
                             </div>
                             <textarea class="timeline-description-textarea" name="step_description_{{ step_number }}" placeholder="Добавьте описание для этого этапа..." required></textarea>
                         </div>
