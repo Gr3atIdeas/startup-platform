@@ -1,3 +1,4 @@
+/* ============ BASE ============ */
 .startups-catalog-page {
   display: flex;
   flex-direction: column;
@@ -16,7 +17,7 @@
   margin-top: 20px;
 }
 
-/* Sidebar */
+/* ============ Sidebar ============ */
 .filters-sidebar {
   width: 280px;
   padding: 20px;
@@ -109,11 +110,11 @@ input:checked + .slider:before { transform: translateX(18px); }
   cursor: default;
 }
 
-/* Grid */
+/* ============ Grid ============ */
 .startup-list-container { flex: 1; padding: 20px; }
 .startup-grid { display: flex; flex-wrap: wrap; gap: 24px; justify-content: center; }
 
-/* Card */
+/* ============ Card ============ */
 .startup-card {
   display: flex;
   flex-direction: column;
@@ -183,8 +184,7 @@ input:checked + .slider:before { transform: translateX(18px); }
   text-align: center;
 }
 
-/* =========== Адаптив ============ */
-
+/* ============ Responsive ============ */
 @media (max-width: 1024px) {
   .main-content-area { flex-direction: column; }
   .filters-sidebar { width: 100%; border-right: none; border-bottom: 1px solid #dee2e6; }

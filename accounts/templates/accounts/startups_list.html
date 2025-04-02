@@ -75,7 +75,7 @@
                                             <span>{{ startup.get_average_rating|floatformat:"1" }}/5</span>
                                             <div class="stars">
                                                 {% for i in "12345" %}
-                                                    {% if i|add:"0"|int <= startup.get_average_rating %}
+                                                    {% if forloop.counter <= startup.get_average_rating %}
                                                         ★
                                                     {% else %}
                                                         ☆
