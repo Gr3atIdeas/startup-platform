@@ -16,19 +16,17 @@
   margin-top: 20px;
 }
 
-/* Сайдбар */
+/* --- Sidebar --- */
 .filters-sidebar {
   width: 280px;
   padding: 20px;
   border-right: 1px solid #dee2e6;
   box-sizing: border-box;
 }
-
 .filter-section h4 {
   font-size: 18px;
   margin-bottom: 10px;
 }
-
 .category-list {
   display: flex;
   flex-direction: column;
@@ -37,22 +35,14 @@
   overflow-y: auto;
   padding-right: 5px;
 }
-
-.category-list::-webkit-scrollbar {
-  width: 4px;
-}
-.category-list::-webkit-scrollbar-thumb {
-  background: #7B61FF;
-  border-radius: 2px;
-}
-
+.category-list::-webkit-scrollbar { width: 4px; }
+.category-list::-webkit-scrollbar-thumb { background: #7B61FF; border-radius: 2px; }
 .custom-checkbox {
   display: flex;
   align-items: center;
   font-size: 14px;
   cursor: pointer;
 }
-
 .custom-checkbox input[type="checkbox"] {
   appearance: none;
   width: 14px;
@@ -60,35 +50,29 @@
   border: 1px solid #000;
   border-radius: 3px;
   margin-right: 8px;
-  position: relative;
 }
-
 .custom-checkbox input[type="checkbox"]:checked {
   background-color: #7B61FF;
   border: 1px solid #7B61FF;
 }
-
 .divider {
   margin: 15px 0;
   border: none;
   border-top: 1px solid #000;
 }
-
-/* Переключатель */
 .switch-wrapper {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin: 10px 0;
 }
-
 .switch {
   position: relative;
   display: inline-block;
   width: 38px;
   height: 20px;
 }
-.switch input {display:none;}
+.switch input { display: none; }
 .slider {
   position: absolute;
   cursor: pointer;
@@ -108,14 +92,10 @@
   border-radius: 50%;
   transition: .4s;
 }
-input:checked + .slider {
-  background-color: #7B61FF;
-}
-input:checked + .slider:before {
-  transform: translateX(18px);
-}
+input:checked + .slider { background-color: #7B61FF; }
+input:checked + .slider:before { transform: translateX(18px); }
 
-/* Рейтинг */
+/* --- Rating --- */
 .rating-range {
   margin-top: 15px;
 }
@@ -141,7 +121,7 @@ input:checked + .slider:before {
   cursor: default;
 }
 
-/* Сетка карточек */
+/* --- Cards --- */
 .startup-list-container {
   flex: 1;
   padding: 20px;
@@ -159,7 +139,7 @@ input:checked + .slider:before {
   justify-content: center;
   align-items: center;
   padding: 15px 9px;
-  gap: 19px;
+  gap: 15px;
   width: 330px;
   height: 507px;
   background: #FFFFFF;
@@ -167,8 +147,8 @@ input:checked + .slider:before {
   border-radius: 28px;
 }
 .startup-card__image-container {
-  width: 100%;
-  height: 200px;
+  width: 296px;
+  height: 146px;
   border-radius: 20px;
   overflow: hidden;
 }
@@ -180,16 +160,29 @@ input:checked + .slider:before {
 .startup-card__content {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
   text-align: center;
+}
+.startup-card__header {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
 }
 .startup-card__title {
   font-weight: 700;
-  font-size: 20px;
+  font-size: 18px;
+}
+.startup-card__rating-value {
+  font-size: 14px;
+  color: #888;
 }
 .startup-card__category {
   font-size: 14px;
   color: #FF6B6B;
+}
+.startup-card__description {
+  font-size: 14px;
+  color: #333;
 }
 .startup-card__button {
   background: #7B61FF;
