@@ -14,7 +14,7 @@
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 20px;
         }
         .text-center {
             text-align: center;
@@ -34,11 +34,11 @@
         .text-gray-600 {
             color: #4a5568;
         }
-        .text-gray-700 {
-            color: #2d3748;
-        }
-        .space-y-8 > li {
-            margin-bottom: 32px;
+        .startup-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            justify-content: flex-start;
         }
         .startup-card {
             background: linear-gradient(to right, #e6f0fa, #ebedff);
@@ -46,38 +46,34 @@
             border-radius: 12px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease;
+            width: 300px; /* Фиксированная ширина карточки */
+            flex: 0 0 auto; /* Не растягивать карточки */
         }
         .startup-card:hover {
             transform: scale(1.05);
         }
         .startup-card-content {
             display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 24px;
+            flex-direction: column;
+            gap: 16px;
         }
         .startup-logo {
-            flex-shrink: 0;
+            text-align: center;
         }
         .startup-logo img, .startup-logo-placeholder {
-            width: 200px;
-            height: 200px;
+            width: 150px;
+            height: 150px;
             object-fit: cover;
             border-radius: 12px;
         }
         .startup-logo-placeholder {
             background-color: #e2e8f0;
+            width: 150px;
+            height: 150px;
+            margin: 0 auto;
         }
         .startup-info {
-            flex: 1;
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: space-between;
-            gap: 16px;
-        }
-        .startup-details {
-            flex: 1;
+            text-align: center;
         }
         .startup-details h2 {
             font-size: 1.5rem;
@@ -91,11 +87,16 @@
         }
         .startup-meta {
             display: flex;
-            gap: 16px;
+            flex-wrap: wrap;
+            gap: 12px;
             color: #2d3748;
+            justify-content: center;
         }
         .startup-meta p {
             margin: 0;
+        }
+        .startup-button {
+            text-align: center;
         }
         .startup-button a {
             background-color: #2563eb;
@@ -104,6 +105,7 @@
             border-radius: 8px;
             text-decoration: none;
             transition: background-color 0.3s ease;
+            display: inline-block;
         }
         .startup-button a:hover {
             background-color: #1d4ed8;
@@ -113,47 +115,41 @@
     <h1 class="text-center mb-6 text-3xl font-bold text-gray-800">Список стартапов</h1>
     {% if startups %}
         <div class="container">
-            <ul class="space-y-8">
+            <div class="startup-grid">
                 {% for startup in startups %}
-                    {% if startup.startup_id %}
-                        <li class="startup-card">
-                            <div class="startup-card-content">
-                                <!-- Логотип -->
-                                <div class="startup-logo">
-                                    {% if startup.get_logo_url %}
-                                        <img src="{{ startup.get_logo_url }}" alt="{{ startup.title }} логотип">
-                                    {% else %}
-                                        <div class="startup-logo-placeholder"></div>
-                                    {% endif %}
-                                </div>
+                    <div class="startup-card">
+                        <div class="startup-card-content">
+                            <!-- Логотип -->
+                            <div class="startup-logo">
+                                {% if startup.get_logo_url %}
+                                    <img src="{{ startup.get_logo_url }}" alt="{{ startup.title }} логотип">
+                                {% else %}
+                                    <div class="startup-logo-placeholder"></div>
+                                {% endif %}
+                            </div>
 
-                                <!-- Информация о стартапе -->
-                                <div class="startup-info">
-                                    <div class="startup-details">
-                                        <h2>{{ startup.title|default:"Без названия" }}</h2>
-                                        <p>{{ startup.description|truncatechars:100|default:"Описание отсутствует" }}</p>
-                                    </div>
-                                    <div class="startup-meta">
-                                        <p><strong>Направление:</strong> {{ startup.direction.direction_name|default:"Не указано" }}</p>
-                                        <p><strong>Цена:</strong> {{ startup.funding_goal|default:"N/A" }} USD</p>
-                                        <p><strong>Стадия:</strong> {{ startup.stage.stage_name|default:"Не указано" }}</p>
-                                        <p><strong>Рейтинг:</strong> {{ startup.get_average_rating|floatformat:"1" }} / 5</p>
-                                    </div>
+                            <!-- Информация о стартапе -->
+                            <div class="startup-info">
+                                <div class="startup-details">
+                                    <h2>{{ startup.title|default:"Без названия" }}</h2>
+                                    <p>{{ startup.description|truncatechars:50|default:"Описание отсутствует" }}</p>
                                 </div>
-
-                                <!-- Кнопка -->
-                                <div class="startup-button">
-                                    <a href="{% url 'startup_detail' startup.startup_id %}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-300">Перейти к стартапу</a>
+                                <div class="startup-meta">
+                                    <p><strong>Направление:</strong> {{ startup.direction.direction_name|default:"Не указано" }}</p>
+                                    <p><strong>Цель:</strong> {{ startup.funding_goal|default:"N/A" }} USD</p>
+                                    <p><strong>Стадия:</strong> {{ startup.stage.stage_name|default:"Не указано" }}</p>
+                                    <p><strong>Рейтинг:</strong> {{ startup.get_average_rating|floatformat:"1" }} / 5</p>
                                 </div>
                             </div>
-                        </li>
-                    {% else %}
-                        <!-- Логируем проблемный стартап -->
-                        {% debug %}
-                        <p>Стартап с пустым startup_id: {{ startup.title }}</p>
-                    {% endif %}
+
+                            <!-- Кнопка "Подробнее" -->
+                            <div class="startup-button">
+                                <a href="{% url 'startup_detail' startup.startup_id %}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-300">Подробнее</a>
+                            </div>
+                        </div>
+                    </div>
                 {% endfor %}
-            </ul>
+            </div>
         </div>
     {% else %}
         <p class="text-center text-gray-600 text-lg">Нет доступных стартапов.</p>

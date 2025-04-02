@@ -65,18 +65,15 @@ def user_logout(request):
     return redirect('home')
 
 # accounts/views.py
-
-# accounts/views.py
 def startups_list(request):
     # Получаем одобренные стартапы, сортируем по дате создания (новые первыми)
-    approved_startups = Startups.objects.filter(status='approved').exclude(startup_id__isnull=True).order_by('-created_at')
+    approved_startups = Startups.objects.filter(status='approved').order_by('-created_at')
     
-    # Логируем количество найденных стартапов для отладки
+    # Логируем для отладки
     logger.info(f"Найдено одобренных стартапов: {approved_startups.count()}")
     for startup in approved_startups:
-        logger.debug(f"Стартап ID: {startup.startup_id}, Title: {startup.title}")
+        logger.debug(f"Стартап ID: {startup.startup_id}, Title: {startup.title}, Status: {startup.status}")
     
-    # Передаём объекты модели напрямую в шаблон
     return render(request, 'accounts/startups_list.html', {'startups': approved_startups})
 
 # accounts/views.py (фрагмент)
