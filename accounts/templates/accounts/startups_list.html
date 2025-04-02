@@ -1,159 +1,93 @@
 {% extends 'accounts/base.html' %}
 
+{% load static %}
+
 {% block title %}Список стартапов{% endblock %}
 
+{% block head_extra %}
+    <link rel="stylesheet" href="{% static 'accounts/css/startups_list_styles.css' %}">
+{% endblock %}
+
 {% block content %}
-    <!-- Встроенные стили -->
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        .text-center {
-            text-align: center;
-        }
-        .mb-6 {
-            margin-bottom: 24px;
-        }
-        .text-3xl {
-            font-size: 2rem;
-        }
-        .font-bold {
-            font-weight: bold;
-        }
-        .text-gray-800 {
-            color: #1a202c;
-        }
-        .text-gray-600 {
-            color: #4a5568;
-        }
-        .startup-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 24px;
-            justify-content: flex-start;
-        }
-        .startup-card {
-            background: linear-gradient(to right, #e6f0fa, #ebedff);
-            padding: 24px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
-            width: 300px;
-            flex: 0 0 auto;
-        }
-        .startup-card:hover {
-            transform: scale(1.05);
-        }
-        .startup-card-content {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-        .startup-logo {
-            text-align: center;
-        }
-        .startup-logo img, .startup-logo-placeholder {
-            width: 150px;
-            height: 150px;
-            object-fit: cover;
-            border-radius: 12px;
-        }
-        .startup-logo-placeholder {
-            background-color: #e2e8f0;
-            width: 150px;
-            height: 150px;
-            margin: 0 auto;
-        }
-        .startup-info {
-            text-align: center;
-        }
-        .startup-details h2 {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: #1a202c;
-            margin-bottom: 8px;
-        }
-        .startup-details p {
-            color: #4a5568;
-            margin-bottom: 4px;
-        }
-        .startup-meta {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            color: #2d3748;
-            justify-content: center;
-        }
-        .startup-meta p {
-            margin: 0;
-        }
-        .startup-button {
-            text-align: center;
-        }
-        .startup-button a {
-            background-color: #2563eb;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 8px;
-            text-decoration: none;
-            transition: background-color 0.3s ease;
-            display: inline-block;
-        }
-        .startup-button a:hover {
-            background-color: #1d4ed8;
-        }
-    </style>
+    <div class="startups-catalog-page">
+        <h1 class="text-center mb-6 text-3xl font-bold text-gray-800">Список стартапов</h1>
 
-    <h1 class="text-center mb-6 text-3xl font-bold text-gray-800">Список стартапов</h1>
-    {% if approved_startups %}
-        <div class="container">
-            <div class="startup-grid">
-                {% for startup in approved_startups %}
-                    <!-- Отладка -->
-                    <p>Debug: startup_id={{ startup.startup_id|default:"None" }}, title={{ startup.title|default:"No title" }}</p>
-                    <div class="startup-card">
-                        <div class="startup-card-content">
-                            <!-- Логотип -->
-                            <div class="startup-logo">
-                                {% if startup.get_logo_url %}
-                                    <img src="{{ startup.get_logo_url }}" alt="{{ startup.title }} логотип">
-                                {% else %}
-                                    <div class="startup-logo-placeholder"></div>
-                                {% endif %}
-                            </div>
+        <div class="main-content-area">
+            <aside class="filters-sidebar">
+                <div class="filter-section">
+                    <h4>Категории</h4>
+                </div>
+            </aside>
 
-                            <!-- Информация о стартапе -->
-                            <div class="startup-info">
-                                <div class="startup-details">
-                                    <h2>{{ startup.title|default:"Без названия" }}</h2>
-                                    <p>{{ startup.description|truncatechars:50|default:"Описание отсутствует" }}</p>
+            <div class="startup-list-container">
+                {% if approved_startups %}
+                    <div class="startup-grid">
+                        {% for startup in approved_startups %}
+                            <div class="startup-card" style="
+                                box-sizing: border-box;
+                                display: flex;
+                                flex-direction: column;
+                                justify-content: center;
+                                align-items: center;
+                                padding: 15px 9px;
+                                gap: 19px;
+                                width: 330px;
+                                height: 507px;
+                                background: #FFFFFF;
+                                border: 3px solid #000000;
+                                border-radius: 28px;
+                                ">
+                                
+                                <!-- Картинка -->
+                                <div class="startup-card__image-container" style="width: 100%; height: 200px; border-radius: 20px; overflow: hidden;">
+                                    {% if startup.get_logo_url %}
+                                        <img src="{{ startup.get_logo_url }}" alt="{{ startup.title }} логотип" style="width: 100%; height: 100%; object-fit: cover;">
+                                    {% else %}
+                                        <div style="width:100%; height:100%; background: #E2E8F0; border-radius: 20px;"></div>
+                                    {% endif %}
                                 </div>
-                                <div class="startup-meta">
-                                    <p><strong>Направление:</strong> {{ startup.direction.direction_name|default:"Не указано" }}</p>
-                                    <p><strong>Цель:</strong> {{ startup.funding_goal|default:"N/A" }} USD</p>
-                                    <p><strong>Стадия:</strong> {{ startup.stage.stage_name|default:"Не указано" }}</p>
-                                    <p><strong>Рейтинг:</strong> {{ startup.get_average_rating|floatformat:"1" }} / 5</p>
+
+                                <!-- Контент -->
+                                <div class="startup-card__content" style="display: flex; flex-direction: column; gap: 10px; text-align: center; padding: 0 8px;">
+                                    <h2 style="font-weight: 700; font-size: 20px; margin: 0;">{{ startup.title|default:"Без названия" }}</h2>
+
+                                    <p style="font-size: 14px; color: #FF6B6B; margin: 0;">Категория: {{ startup.direction.direction_name|default:"Не указано" }}</p>
+
+                                    <p style="font-size: 14px; margin: 0;">Цель: {{ startup.funding_goal|default:"N/A" }} USD</p>
+
+                                    <p style="font-size: 14px; margin: 0;">Стадия: {{ startup.stage.stage_name|default:"Не указано" }}</p>
+
+                                    <div class="startup-card__rating" style="display: flex; justify-content: center; align-items: center; gap: 4px;">
+                                        <span style="font-size: 14px;">Рейтинг:</span> 
+                                        <span>{{ startup.get_average_rating|floatformat:"1" }} / 5</span>
+                                    </div>
+
+                                    <p style="font-size: 13px; color: #333; line-height: 1.3;">{{ startup.description|truncatechars:100|default:"Описание отсутствует" }}</p>
+
+                                    <a href="{% url 'startup_detail' startup.startup_id %}" style="
+                                        background: #7B61FF;
+                                        color: #fff;
+                                        padding: 12px 32px;
+                                        border-radius: 24px;
+                                        text-decoration: none;
+                                        display: inline-block;
+                                        font-size: 16px;
+                                        transition: background 0.3s;
+                                    " onmouseover="this.style.background='#6a50f0'" onmouseout="this.style.background='#7B61FF'">
+                                        Подробнее
+                                    </a>
+
+                                    <p style="font-size: 12px; color: #A9A9A9; margin-top: 5px;">
+                                        Инвесторов: {{ startup.investors_count|default:"0" }}
+                                    </p>
                                 </div>
                             </div>
-
-                            <!-- Кнопка "Подробнее" -->
-                            <div class="startup-button">
-                                <a href="{% url 'startup_detail' startup.startup_id %}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-300">Подробнее</a>
-                            </div>
-                        </div>
+                        {% endfor %}
                     </div>
-                {% endfor %}
+                {% else %}
+                    <p class="text-center text-gray-600 text-lg">Нет доступных стартапов.</p>
+                {% endif %}
             </div>
         </div>
-    {% else %}
-        <p class="text-center text-gray-600 text-lg">Нет доступных стартапов.</p>
-    {% endif %}
+    </div>
 {% endblock %}
