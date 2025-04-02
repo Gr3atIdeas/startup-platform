@@ -113,12 +113,12 @@
     </style>
 
     <h1 class="text-center mb-6 text-3xl font-bold text-gray-800">Список стартапов</h1>
-    {% if startups %}
+    {% if approved_startups %}
         <div class="container">
             <div class="startup-grid">
-                {% for startup in startups %}
+                {% for startup in approved_startups %}
                     <!-- Отладка -->
-                    <p>Debug: startup_id={{ startup.startup_id }}, title={{ startup.title }}</p>
+                    <p>Debug: startup_id={{ startup.startup_id|default:"None" }}, title={{ startup.title|default:"No title" }}</p>
                     <div class="startup-card">
                         <div class="startup-card-content">
                             <!-- Логотип -->

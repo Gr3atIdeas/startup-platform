@@ -64,17 +64,20 @@ def user_logout(request):
     messages.success(request, 'Вы успешно вышли из системы.')
     return redirect('home')
 
-# accounts/views.py
 def startups_list(request):
-    # Получаем одобренные стартапы, сортируем по дате создания (новые первыми)
-    approved_startups = Startups.objects.filter(status='approved').order_by('-created_at')
+    # Получаем одобренные стартапы
+    approved_startups_list = Startups.objects.filter(status='approved').order_by('-created_at')
     
-    # Логируем для отладки
-    logger.info(f"Найдено одобренных стартапов: {approved_startups.count()}")
-    for startup in approved_startups:
-        logger.debug(f"Стартап ID: {startup.startup_id}, Title: {startup.title}, Status: {startup.status}")
+    # Логируем данные
+    logger.info(f"Найдено одобренных стартапов: {approved_startups_list.count()}")
+    for startup in approved_startups_list:
+        logger.debug(f"Стартап: ID={startup.startup_id}, Title={startup.title}, Type={type(startup.startup_id)}")
     
-    return render(request, 'accounts/startups_list.html', {'startups': approved_startups})
+    # Проверяем, что queryset не пустой
+    if not approved_startups_list.exists():
+        logger.warning("Нет стартапов со статусом 'approved'")
+    
+    return render(request, 'accounts/startups_list.html', {'approved_startups': approved_startups_list})
 
 # accounts/views.py (фрагмент)
 
@@ -622,12 +625,3 @@ def vote_startup(request, startup_id):
 
     average_rating = startup.sum_votes / startup.total_voters if startup.total_voters > 0 else 0
     return JsonResponse({'success': True, 'average_rating': average_rating})
-
-from django.shortcuts import render
-
-def startups_list(request):
-    startups = [
-        {"id": 1, "title": "Startup 1", "category": "ИИ", "description": "Описание стартапа", "rating": 4.5, "investors_count": 10, "image_url": "/static/accounts/images/startup1.jpg"},
-        # Добавьте больше стартапов
-    ]
-    return render(request, 'accounts/startups_list.html', {'startups': startups})
