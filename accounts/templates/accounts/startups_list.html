@@ -46,8 +46,8 @@
             border-radius: 12px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease;
-            width: 300px; /* Фиксированная ширина карточки */
-            flex: 0 0 auto; /* Не растягивать карточки */
+            width: 300px;
+            flex: 0 0 auto;
         }
         .startup-card:hover {
             transform: scale(1.05);
@@ -117,6 +117,8 @@
         <div class="container">
             <div class="startup-grid">
                 {% for startup in startups %}
+                    <!-- Отладка -->
+                    <p>Debug: startup_id={{ startup.startup_id }}, title={{ startup.title }}</p>
                     <div class="startup-card">
                         <div class="startup-card-content">
                             <!-- Логотип -->
