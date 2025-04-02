@@ -6,6 +6,9 @@ from django.utils import timezone
 from django.utils.text import slugify
 from django.db.models import JSONField  # Новый импорт для JSONField
 import os
+import logging
+
+logger = logging.getLogger(__name__)
 
 # Связанные модели
 class Actions(models.Model):
@@ -353,6 +356,7 @@ class ReviewStatuses(models.Model):
     def __str__(self):
         return self.status_name
 
+# accounts/models.py
 class Startups(models.Model):
     startup_id = models.AutoField(primary_key=True)
     owner = models.ForeignKey('Users', models.DO_NOTHING, blank=True, null=True, db_column='owner_id')
@@ -393,6 +397,24 @@ class Startups(models.Model):
     class Meta:
         managed = False
         db_table = 'startups'
+
+    def get_average_rating(self):
+        """Вычисляет средний рейтинг на основе sum_votes и total_voters."""
+        if self.total_voters > 0:
+            return float(self.sum_votes) / self.total_voters
+        return 0.0
+
+    def get_logo_url(self):
+        """Генерирует URL первого логотипа из logo_urls."""
+        if self.logo_urls and len(self.logo_urls) > 0:
+            try:
+                from django.core.files.storage import default_storage
+                logo_url = default_storage.url(f"startups/{self.startup_id}/logos/{self.logo_urls[0]}_")
+                logger.info(f"Сгенерирован URL для логотипа стартапа {self.startup_id}: {logo_url}")
+                return logo_url
+            except Exception as e:
+                logger.error(f"Ошибка при генерации URL для логотипа стартапа {self.startup_id}: {str(e)}")
+        return None
 
 class ModeratorReviews(models.Model):
     review_id = models.AutoField(primary_key=True)

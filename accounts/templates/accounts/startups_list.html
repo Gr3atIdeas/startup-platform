@@ -111,45 +111,45 @@
     </style>
 
     <h1 class="text-center mb-6 text-3xl font-bold text-gray-800">Список стартапов</h1>
-        {% if approved_startups %}
-            <div class="container">
-                <ul class="space-y-8">
-                    {% for startup in approved_startups %}
-                        <li class="startup-card">
-                            <div class="startup-card-content">
-                                <!-- Логотип -->
-                                <div class="startup-logo">
-                                    {% if startup.planet_logo %}
-                                        <img src="{{ startup.planet_logo.url }}" alt="{{ startup.title }} логотип">
-                                    {% else %}
-                                        <div class="startup-logo-placeholder"></div>
-                                    {% endif %}
-                                </div>
+    {% if startups %}
+        <div class="container">
+            <ul class="space-y-8">
+                {% for startup in startups %}
+                    <li class="startup-card">
+                        <div class="startup-card-content">
+                            <!-- Логотип -->
+                            <div class="startup-logo">
+                                {% if startup.get_logo_url %}
+                                    <img src="{{ startup.get_logo_url }}" alt="{{ startup.title }} логотип">
+                                {% else %}
+                                    <div class="startup-logo-placeholder"></div>
+                                {% endif %}
+                            </div>
 
-                                <!-- Информация о стартапе -->
-                                <div class="startup-info">
-                                    <div class="startup-details">
-                                        <h2>{{ startup.title }}</h2>
-                                        <p>{{ startup.description|truncatechars:100 }}</p>
-                                    </div>
-                                    <div class="startup-meta">
-                                        <p><strong>Направление:</strong> {{ startup.direction.direction_name }}</p>
-                                        <p><strong>Цена:</strong> {{ startup.funding_goal }} USD</p>
-                                        <p><strong>Стадия:</strong> {{ startup.stage.stage_name }}</p>
-                                        <p><strong>Рейтинг:</strong> {{ startup.average_rating|floatformat:"1" }} / 5</p>
-                                    </div>
+                            <!-- Информация о стартапе -->
+                            <div class="startup-info">
+                                <div class="startup-details">
+                                    <h2>{{ startup.title }}</h2>
+                                    <p>{{ startup.description|truncatechars:100 }}</p>
                                 </div>
-
-                                <!-- Кнопка -->
-                                <div class="startup-button">
-                                    <a href="{% url 'startup_detail' startup.startup_id %}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-300">Перейти к стартапу</a>
+                                <div class="startup-meta">
+                                    <p><strong>Направление:</strong> {{ startup.direction.direction_name|default:"Не указано" }}</p>
+                                    <p><strong>Цена:</strong> {{ startup.funding_goal|default:"N/A" }} USD</p>
+                                    <p><strong>Стадия:</strong> {{ startup.stage.stage_name|default:"Не указано" }}</p>
+                                    <p><strong>Рейтинг:</strong> {{ startup.get_average_rating|floatformat:"1" }} / 5</p>
                                 </div>
                             </div>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
-        {% else %}
-            <p class="text-center text-gray-600 text-lg">Нет доступных стартапов.</p>
-        {% endif %}
-    {% endblock %}
+
+                            <!-- Кнопка -->
+                            <div class="startup-button">
+                                <a href="{% url 'startup_detail' startup.startup_id %}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-300">Перейти к стартапу</a>
+                            </div>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% else %}
+        <p class="text-center text-gray-600 text-lg">Нет доступных стартапов.</p>
+    {% endif %}
+{% endblock %}
