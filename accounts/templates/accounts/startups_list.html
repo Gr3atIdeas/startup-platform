@@ -60,38 +60,38 @@
                         {% for startup in approved_startups %}
                             <div class="startup-card">
 
-                                <!-- Картинка -->
+                                <!-- Image -->
                                 <div class="startup-card__image-container">
                                     <img src="{% static 'accounts/images/startups/IMG_7665.png' %}" alt="Логотип" class="startup-card__image">
                                 </div>
 
-                                <!-- Контент -->
+                                <!-- Content -->
                                 <div class="startup-card__content">
 
-                                    <!-- Header -->
-                                    <div class="startup-card__top-row">
-                                        <h2 class="startup-card__title">{{ startup.title|default:"Без названия" }}</h2>
-                                        <div class="startup-card__rating">
-                                            <span>{{ startup.get_average_rating|floatformat:"1" }}/5</span>
-                                            <div class="stars">
-                                                {% for i in "12345" %}
-                                                    {% if forloop.counter <= startup.get_average_rating %}
-                                                        ★
-                                                    {% else %}
-                                                        ☆
-                                                    {% endif %}
-                                                {% endfor %}
-                                            </div>
+                                    <h2 class="startup-card__title">{{ startup.title|default:"Без названия" }}</h2>
+                                    <p class="startup-card__category">Категория: <span>{{ startup.direction.direction_name|default:"-" }}</span></p>
+                                    <p class="startup-card__description">{{ startup.description|truncatechars:160|default:"Нет описания" }}</p>
+                                    <p class="startup-card__goal">Цель: {{ startup.funding_goal|default:"N/A" }} USD</p>
+                                    <p class="startup-card__stage">Стадия: {{ startup.stage.stage_name|default:"Не указано" }}</p>
+
+                                    <div class="startup-card__rating-block">
+                                        <span class="rating-text">Рейтинг: {{ startup.get_average_rating|floatformat:"1" }}/5</span>
+                                        <div class="stars">
+                                            {% for i in "12345" %}
+                                                {% if forloop.counter <= startup.get_average_rating %}
+                                                    ★
+                                                {% else %}
+                                                    ☆
+                                                {% endif %}
+                                            {% endfor %}
                                         </div>
                                     </div>
 
-                                    <p class="startup-card__category">Категория: <span>{{ startup.direction.direction_name|default:"-" }}</span></p>
-
-                                    <p class="startup-card__description">{{ startup.description|truncatechars:160|default:"Нет описания" }}</p>
+                                    <div class="startup-card__spacer"></div>
 
                                     <a href="{% url 'startup_detail' startup.startup_id %}" class="startup-card__button">Подробнее</a>
-
                                     <p class="startup-card__investors">Инвестировало ({{ startup.investors_count|default:"0" }})</p>
+
                                 </div>
 
                             </div>
