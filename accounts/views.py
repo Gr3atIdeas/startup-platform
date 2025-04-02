@@ -64,42 +64,20 @@ def user_logout(request):
     messages.success(request, 'Вы успешно вышли из системы.')
     return redirect('home')
 
-# accounts/views.py
-
 def startups_list(request):
-    # Получаем одобренные стартапы, сортируем по дате создания (новые первыми)
-    approved_startups = Startups.objects.filter(status='approved').order_by('-created_at')
+    # Получаем одобренные стартапы
+    approved_startups_list = Startups.objects.filter(status='approved').order_by('-created_at')
     
-    # Создаём список словарей для передачи в шаблон
-    startups_data = []
-    for startup in approved_startups:
-        # Вычисляем средний рейтинг
-        average_rating = (float(startup.sum_votes) / startup.total_voters) if startup.total_voters > 0 else 0.0
-        
-        # Генерируем URL для логотипа, если он есть
-        logo_url = None
-        if startup.logo_urls and len(startup.logo_urls) > 0:
-            try:
-                logo_url = default_storage.url(f"startups/{startup.startup_id}/logos/{startup.logo_urls[0]}_")
-                logger.info(f"Сгенерирован URL для логотипа стартапа {startup.startup_id}: {logo_url}")
-            except Exception as e:
-                logger.error(f"Ошибка при генерации URL для логотипа стартапа {startup.startup_id}: {str(e)}")
-        
-        # Формируем словарь с данными стартапа
-        startups_data.append({
-            'startup_id': startup.startup_id,
-            'title': startup.title,
-            'description': startup.description,
-            'logo_url': logo_url,
-            'funding_goal': startup.funding_goal,
-            'amount_raised': startup.amount_raised,
-            'percent_amount': startup.percent_amount,
-            'created_at': startup.created_at,
-            'average_rating': average_rating,
-        })
+    # Логируем данные
+    logger.info(f"Найдено одобренных стартапов: {approved_startups_list.count()}")
+    for startup in approved_startups_list:
+        logger.debug(f"Стартап: ID={startup.startup_id}, Title={startup.title}, Type={type(startup.startup_id)}")
     
-    # Передаём данные в шаблон
-    return render(request, 'accounts/startups_list.html', {'startups': startups_data})
+    # Проверяем, что queryset не пустой
+    if not approved_startups_list.exists():
+        logger.warning("Нет стартапов со статусом 'approved'")
+    
+    return render(request, 'accounts/startups_list.html', {'approved_startups': approved_startups_list})
 
 # accounts/views.py (фрагмент)
 
