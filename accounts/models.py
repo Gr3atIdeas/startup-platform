@@ -406,7 +406,7 @@ class Startups(models.Model):
 
     def get_logo_url(self):
         """Генерирует URL первого логотипа из logo_urls."""
-        if self.logo_urls and len(self.logo_urls) > 0:
+        if self.logo_urls and isinstance(self.logo_urls, list) and len(self.logo_urls) > 0 and self.logo_urls[0]:
             try:
                 from django.core.files.storage import default_storage
                 logo_url = default_storage.url(f"startups/{self.startup_id}/logos/{self.logo_urls[0]}_")

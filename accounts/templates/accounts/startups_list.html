@@ -115,37 +115,43 @@
         <div class="container">
             <ul class="space-y-8">
                 {% for startup in startups %}
-                    <li class="startup-card">
-                        <div class="startup-card-content">
-                            <!-- Логотип -->
-                            <div class="startup-logo">
-                                {% if startup.get_logo_url %}
-                                    <img src="{{ startup.get_logo_url }}" alt="{{ startup.title }} логотип">
-                                {% else %}
-                                    <div class="startup-logo-placeholder"></div>
-                                {% endif %}
-                            </div>
-
-                            <!-- Информация о стартапе -->
-                            <div class="startup-info">
-                                <div class="startup-details">
-                                    <h2>{{ startup.title }}</h2>
-                                    <p>{{ startup.description|truncatechars:100 }}</p>
+                    {% if startup.startup_id %}
+                        <li class="startup-card">
+                            <div class="startup-card-content">
+                                <!-- Логотип -->
+                                <div class="startup-logo">
+                                    {% if startup.get_logo_url %}
+                                        <img src="{{ startup.get_logo_url }}" alt="{{ startup.title }} логотип">
+                                    {% else %}
+                                        <div class="startup-logo-placeholder"></div>
+                                    {% endif %}
                                 </div>
-                                <div class="startup-meta">
-                                    <p><strong>Направление:</strong> {{ startup.direction.direction_name|default:"Не указано" }}</p>
-                                    <p><strong>Цена:</strong> {{ startup.funding_goal|default:"N/A" }} USD</p>
-                                    <p><strong>Стадия:</strong> {{ startup.stage.stage_name|default:"Не указано" }}</p>
-                                    <p><strong>Рейтинг:</strong> {{ startup.get_average_rating|floatformat:"1" }} / 5</p>
+
+                                <!-- Информация о стартапе -->
+                                <div class="startup-info">
+                                    <div class="startup-details">
+                                        <h2>{{ startup.title|default:"Без названия" }}</h2>
+                                        <p>{{ startup.description|truncatechars:100|default:"Описание отсутствует" }}</p>
+                                    </div>
+                                    <div class="startup-meta">
+                                        <p><strong>Направление:</strong> {{ startup.direction.direction_name|default:"Не указано" }}</p>
+                                        <p><strong>Цена:</strong> {{ startup.funding_goal|default:"N/A" }} USD</p>
+                                        <p><strong>Стадия:</strong> {{ startup.stage.stage_name|default:"Не указано" }}</p>
+                                        <p><strong>Рейтинг:</strong> {{ startup.get_average_rating|floatformat:"1" }} / 5</p>
+                                    </div>
+                                </div>
+
+                                <!-- Кнопка -->
+                                <div class="startup-button">
+                                    <a href="{% url 'startup_detail' startup.startup_id %}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-300">Перейти к стартапу</a>
                                 </div>
                             </div>
-
-                            <!-- Кнопка -->
-                            <div class="startup-button">
-                                <a href="{% url 'startup_detail' startup.startup_id %}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-300">Перейти к стартапу</a>
-                            </div>
-                        </div>
-                    </li>
+                        </li>
+                    {% else %}
+                        <!-- Логируем проблемный стартап -->
+                        {% debug %}
+                        <p>Стартап с пустым startup_id: {{ startup.title }}</p>
+                    {% endif %}
                 {% endfor %}
             </ul>
         </div>
