@@ -37,18 +37,15 @@
                                 border: 3px solid #000000;
                                 border-radius: 28px;
                                 ">
-                                
-                                <!-- Картинка -->
+
+                                <!-- Фиксированное изображение для всех -->
                                 <div class="startup-card__image-container" style="width: 100%; height: 200px; border-radius: 20px; overflow: hidden;">
-                                    {% if startup.get_logo_url %}
-                                        <img src="{{ startup.get_logo_url }}" alt="{{ startup.title }} логотип" style="width: 100%; height: 100%; object-fit: cover;">
-                                    {% else %}
-                                        <div style="width:100%; height:100%; background: #E2E8F0; border-radius: 20px;"></div>
-                                    {% endif %}
+                                    <img src="{% static 'accounts/images/startups/IMG_7665.png' %}" alt="Логотип" style="width: 100%; height: 100%; object-fit: cover;">
                                 </div>
 
-                                <!-- Контент -->
+                                <!-- Контент карточки -->
                                 <div class="startup-card__content" style="display: flex; flex-direction: column; gap: 10px; text-align: center; padding: 0 8px;">
+
                                     <h2 style="font-weight: 700; font-size: 20px; margin: 0;">{{ startup.title|default:"Без названия" }}</h2>
 
                                     <p style="font-size: 14px; color: #FF6B6B; margin: 0;">Категория: {{ startup.direction.direction_name|default:"Не указано" }}</p>
@@ -57,10 +54,7 @@
 
                                     <p style="font-size: 14px; margin: 0;">Стадия: {{ startup.stage.stage_name|default:"Не указано" }}</p>
 
-                                    <div class="startup-card__rating" style="display: flex; justify-content: center; align-items: center; gap: 4px;">
-                                        <span style="font-size: 14px;">Рейтинг:</span> 
-                                        <span>{{ startup.get_average_rating|floatformat:"1" }} / 5</span>
-                                    </div>
+                                    <p style="font-size: 14px; margin: 0;">Рейтинг: {{ startup.get_average_rating|floatformat:"1" }} / 5</p>
 
                                     <p style="font-size: 13px; color: #333; line-height: 1.3;">{{ startup.description|truncatechars:100|default:"Описание отсутствует" }}</p>
 
