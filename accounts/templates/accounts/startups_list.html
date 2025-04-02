@@ -1,190 +1,155 @@
 {% extends 'accounts/base.html' %}
-{% load static %}
-{% load widget_tweaks %}
 
-{% block title %}Каталог стартапов{% endblock %}
-
-{% block head_extra %}
-  <link rel="stylesheet" href="{% static 'accounts/css/startups_list_styles.css' %}">
-  <link rel="stylesheet" href="{% static 'accounts/css/startup_form.css' %}">
-  <style>
-    /* Стили для звезд рейтинга */
-    .stars-outer {
-      position: relative;
-      display: inline-block;
-      font-size: 14px;
-    }
-    .stars-inner {
-      position: absolute;
-      top: 0;
-      left: 0;
-      white-space: nowrap;
-      overflow: hidden;
-      width: 0;
-      color: var(--primary-color);
-    }
-    .stars-outer::before {
-      content: "☆☆☆☆☆";
-      color: #e0e0e0;
-    }
-    .stars-inner::before {
-      content: "★★★★★";
-    }
-  </style>
-{% endblock %}
+{% block title %}Список стартапов{% endblock %}
 
 {% block content %}
-<div class="startups-catalog-page">
-  <div class="filters-header">
-    <div class="search-bar-container">
-      <input type="text" placeholder="Поиск" class="search-input" name="q" value="{{ request.GET.q|default:'' }}" form="filter-form">
-      <button type="submit" class="search-button" form="filter-form">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-          <path d="M15.5 14H14.71L14.43 13.73C15.41 12.59 16 11.11 16 9.5C16 5.91 13.09 3 9.5 3C5.91 3 3 5.91 3 9.5C3 13.09 5.91 16 9.5 16C11.11 16 12.59 15.41 13.73 14.43L14 14.71V15.5L19 20.49L20.49 19L15.5 14ZM9.5 14C7.01 14 5 11.99 5 9.5C5 7.01 7.01 5 9.5 5C11.99 5 14 7.01 14 9.5C14 11.99 11.99 14 9.5 14Z" fill="white"/>
-        </svg>
-      </button>
-    </div>
-  </div>
-  
-  <div class="main-content-area">
-    <aside class="filters-sidebar">
-      <form method="get" action="{% url 'startups_list' %}" id="filter-form">
-        <div class="filter-section">
-          <h4>Категории</h4>
-          <div class="category-filters">
-            <label class="filter-checkbox">
-              <input type="checkbox" name="category" value="med">
-              <span class="checkbox-custom"></span> Медицина
-            </label>
-            <label class="filter-checkbox">
-              <input type="checkbox" name="category" value="auto">
-              <span class="checkbox-custom"></span> Автомобили
-            </label>
-            <!-- Добавьте остальные категории -->
-          </div>
-          <hr class="filter-divider">
-        </div>
-        <div class="filter-section">
-          <div class="microinvestment-filter">
-            <span>Микроинвестиции</span>
-            <label class="switch">
-              <input type="checkbox" name="microinvestment" value="true" {% if request.GET.microinvestment == 'true' %}checked{% endif %}>
-              <span class="slider round"></span>
-            </label>
-            <span class="tooltip-icon" title="Включает стартапы, доступные для небольших инвестиций">?</span>
-          </div>
-        </div>
-        <div class="filter-section">
-          <h4>Рейтинг</h4>
-          <div class="rating-slider-placeholder">
-            <p>от {{ request.GET.min_rating|default:0 }} до {{ request.GET.max_rating|default:5 }}</p>
-            <input type="hidden" name="min_rating" value="{{ request.GET.min_rating|default:0 }}">
-            <input type="hidden" name="max_rating" value="{{ request.GET.max_rating|default:5 }}">
-          </div>
-          <div class="rating-inputs">
-            <input type="text" name="min_rating_display" id="rating-min-display" value="{{ request.GET.min_rating|default:'0' }}" class="rating-input-display">
-            <input type="text" name="max_rating_display" id="rating-max-display" value="{{ request.GET.max_rating|default:'5.0' }}" class="rating-input-display">
-          </div>
-        </div>
-        <div class="filter-section filter-buttons">
-          <button type="submit" class="filter-apply-button">Применить</button>
-          <a href="{% url 'startups_list' %}" class="filter-reset-button">Сбросить</a>
-        </div>
-        {% if request.GET.sort %}
-          <input type="hidden" name="sort" value="{{ request.GET.sort }}">
-        {% endif %}
-      </form>
-    </aside>
-    
-    <main class="startup-list-container">
-      {% if approved_startups %}
-        <div class="startup-grid">
-          {% for startup in approved_startups %}
-            <div class="startup-card">
-              <div class="form-row">
-                <!-- Логотип и планета -->
-                <div class="form-column" style="flex: 0 0 200px;">
-                  <div class="planet-container">
-                    <div class="planet">
-                      <div class="planet-segment segment-top" style="background-color: {{ startup.planet_top_color }};"></div>
-                      <div class="planet-segment segment-middle" style="background-color: {{ startup.planet_middle_color }};"></div>
-                      <div class="planet-segment segment-bottom" style="background-color: {{ startup.planet_bottom_color }};"></div>
-                    </div>
-                    <div class="logo-overlay">
-                      {% if startup.logo_url %}
-                        <img src="{{ startup.logo_url }}" alt="{{ startup.title }} логотип" class="logo-preview">
-                      {% else %}
-                        <div class="logo-preview"></div>
-                      {% endif %}
-                    </div>
-                  </div>
-                  <div class="small-text" style="text-align: center;">Планета стартапа</div>
-                </div>
+    <!-- Встроенные стили -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .text-center {
+            text-align: center;
+        }
+        .mb-6 {
+            margin-bottom: 24px;
+        }
+        .text-3xl {
+            font-size: 2rem;
+        }
+        .font-bold {
+            font-weight: bold;
+        }
+        .text-gray-800 {
+            color: #1a202c;
+        }
+        .text-gray-600 {
+            color: #4a5568;
+        }
+        .text-gray-700 {
+            color: #2d3748;
+        }
+        .space-y-8 > li {
+            margin-bottom: 32px;
+        }
+        .startup-card {
+            background: linear-gradient(to right, #e6f0fa, #ebedff);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .startup-card:hover {
+            transform: scale(1.05);
+        }
+        .startup-card-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+        }
+        .startup-logo {
+            flex-shrink: 0;
+        }
+        .startup-logo img, .startup-logo-placeholder {
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 12px;
+        }
+        .startup-logo-placeholder {
+            background-color: #e2e8f0;
+        }
+        .startup-info {
+            flex: 1;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+        .startup-details {
+            flex: 1;
+        }
+        .startup-details h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 8px;
+        }
+        .startup-details p {
+            color: #4a5568;
+            margin-bottom: 4px;
+        }
+        .startup-meta {
+            display: flex;
+            gap: 16px;
+            color: #2d3748;
+        }
+        .startup-meta p {
+            margin: 0;
+        }
+        .startup-button a {
+            background-color: #2563eb;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+        .startup-button a:hover {
+            background-color: #1d4ed8;
+        }
+    </style>
 
-                <!-- Информация о стартапе -->
-                <div class="form-column">
-                  <div class="form-group">
-                    <h3>{{ startup.title }}</h3>
-                    <p>{{ startup.description|truncatechars:100 }}</p>
-                  </div>
-                  <div class="form-group">
-                    <p><strong>Направление:</strong> {{ startup.direction_name }}</p>
-                    <p><strong>Цель финансирования:</strong> {{ startup.funding_goal }} USD</p>
-                    <p><strong>Стадия:</strong> {{ startup.stage_name }}</p>
-                    <p><strong>Рейтинг:</strong> {{ startup.average_rating|floatformat:"1" }} / 5</p>
-                  </div>
-                  <div class="action-buttons">
-                    <a href="{% url 'startup_detail' startup.startup_id %}" class="submit-button">Перейти к стартапу</a>
-                  </div>
-                </div>
-              </div>
+    <h1 class="text-center mb-6 text-3xl font-bold text-gray-800">Список стартапов</h1>
+        {% if approved_startups %}
+            <div class="container">
+                <ul class="space-y-8">
+                    {% for startup in approved_startups %}
+                        <li class="startup-card">
+                            <div class="startup-card-content">
+                                <!-- Логотип -->
+                                <div class="startup-logo">
+                                    {% if startup.planet_logo %}
+                                        <img src="{{ startup.planet_logo.url }}" alt="{{ startup.title }} логотип">
+                                    {% else %}
+                                        <div class="startup-logo-placeholder"></div>
+                                    {% endif %}
+                                </div>
+
+                                <!-- Информация о стартапе -->
+                                <div class="startup-info">
+                                    <div class="startup-details">
+                                        <h2>{{ startup.title }}</h2>
+                                        <p>{{ startup.description|truncatechars:100 }}</p>
+                                    </div>
+                                    <div class="startup-meta">
+                                        <p><strong>Направление:</strong> {{ startup.direction.direction_name }}</p>
+                                        <p><strong>Цена:</strong> {{ startup.funding_goal }} USD</p>
+                                        <p><strong>Стадия:</strong> {{ startup.stage.stage_name }}</p>
+                                        <p><strong>Рейтинг:</strong> {{ startup.average_rating|floatformat:"1" }} / 5</p>
+                                    </div>
+                                </div>
+
+                                <!-- Кнопка -->
+                                <div class="startup-button">
+                                    <a href="{% url 'startup_detail' startup.startup_id %}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-300">Перейти к стартапу</a>
+                                </div>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
             </div>
-          {% endfor %}
-        </div>
-      {% else %}
-        <p class="no-startups-message">Нет доступных стартапов, соответствующих вашим фильтрам.</p>
-      {% endif %}
-
-      {% if page_obj and page_obj.has_other_pages %}
-        <nav class="pagination" aria-label="Page navigation">
-          <ul class="pagination-list">
-            {% if page_obj.has_previous %}
-              <li class="pagination-item">
-                <a href="?page={{ page_obj.previous_page_number }}{% for key, value_list in request.GET.lists %}{% for value in value_list %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}{% endfor %}" class="pagination-link">« Пред.</a>
-              </li>
-            {% else %}
-              <li class="pagination-item disabled"><span class="pagination-link">« Пред.</span></li>
-            {% endif %}
-            {% for i in page_obj.paginator.page_range %}
-              {% if page_obj.number == i %}
-                <li class="pagination-item active"><span class="pagination-link">{{ i }}</span></li>
-              {% elif i > page_obj.number|add:'-3' and i < page_obj.number|add:'3' %}
-                <li class="pagination-item">
-                  <a href="?page={{ i }}{% for key, value_list in request.GET.lists %}{% for value in value_list %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}{% endfor %}" class="pagination-link">{{ i }}</a>
-                </li>
-              {% elif i == 1 and page_obj.number > 3 %}
-                <li class="pagination-item">
-                  <a href="?page=1{% for key, value_list in request.GET.lists %}{% for value in value_list %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}{% endfor %}" class="pagination-link">1</a>
-                </li>
-                <li class="pagination-item disabled"><span class="pagination-link">...</span></li>
-              {% elif i == page_obj.paginator.num_pages and page_obj.number < page_obj.paginator.num_pages|add:'-2' %}
-                <li class="pagination-item disabled"><span class="pagination-link">...</span></li>
-                <li class="pagination-item">
-                  <a href="?page={{ page_obj.paginator.num_pages }}{% for key, value_list in request.GET.lists %}{% for value in value_list %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}{% endfor %}" class="pagination-link">{{ page_obj.paginator.num_pages }}</a>
-                </li>
-              {% endif %}
-            {% endfor %}
-            {% if page_obj.has_next %}
-              <li class="pagination-item">
-                <a href="?page={{ page_obj.next_page_number }}{% for key, value_list in request.GET.lists %}{% for value in value_list %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}{% endfor %}" class="pagination-link">След. »</a>
-              </li>
-            {% else %}
-              <li class="pagination-item disabled"><span class="pagination-link">След. »</span></li>
-            {% endif %}
-          </ul>
-        </nav>
-      {% endif %}
-    </main>
-  </div>
-</div>
-{% endblock %}
+        {% else %}
+            <p class="text-center text-gray-600 text-lg">Нет доступных стартапов.</p>
+        {% endif %}
+    {% endblock %}
