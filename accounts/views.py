@@ -140,16 +140,20 @@ def create_startup(request):
                 startup.status_id = ReviewStatuses.objects.get(status_name='Pending')
             except ReviewStatuses.DoesNotExist:
                 raise ValueError("Статус 'Pending' не найден в базе данных.")
-            startup.step_number = 1  # Используем step_number
+            # Устанавливаем текущий шаг из формы
+            startup.step_number = int(request.POST.get('step_number', 1))
             startup.save()
 
-            # Создаём начальный таймлайн, если его нет
-            if not StartupTimeline.objects.filter(startup=startup).exists():
-                StartupTimeline.objects.create(
-                    startup=startup,
-                    title="Создание стартапа",
-                    description="Стартап создан и отправлен на модерацию."
-                )
+            # Сохранение всех 5 этапов таймлайна
+            for i in range(1, 6):
+                description = request.POST.get(f'step_description_{i}', '').strip()
+                if description:  # Сохраняем только этапы с описанием
+                    StartupTimeline.objects.create(
+                        startup=startup,
+                        step_number=i,
+                        title=f"Этап {i}",
+                        description=description
+                    )
 
             # Инициализация списков для ID файлов
             logo_ids = []
@@ -160,11 +164,8 @@ def create_startup(request):
             # Сохранение логотипа
             logo = form.cleaned_data.get('logo')
             if logo:
-                # Генерируем уникальный ID для файла
                 logo_id = str(uuid.uuid4())
-                # Формируем путь с использованием ID
                 file_path = f"startups/{startup.startup_id}/logos/{logo_id}_{logo.name}"
-                # Загружаем файл в Yandex Object Storage
                 default_storage.save(file_path, logo)
                 logo_ids.append(logo_id)
                 logger.info(f"Логотип сохранён с ID: {logo_id}")
@@ -178,19 +179,15 @@ def create_startup(request):
                     if not hasattr(creative_file, 'name'):
                         logger.warning(f"Пропущен креатив, так как это не файл: {creative_file}")
                         continue
-                    # Генерируем уникальный ID для файла
                     creative_id = str(uuid.uuid4())
-                    # Формируем путь с использованием ID
                     file_path = f"startups/{startup.startup_id}/creatives/{creative_id}_{creative_file.name}"
-                    # Загружаем файл в Yandex Object Storage
                     default_storage.save(file_path, creative_file)
                     creatives_ids.append(creative_id)
-                    # Сохранение в FileStorage
                     file_storage = FileStorage(
                         entity_type=entity_type,
                         entity_id=startup.startup_id,
                         file_type=creative_type,
-                        file_url=creative_id,  # Сохраняем только ID вместо URL
+                        file_url=creative_id,
                         uploaded_at=timezone.now(),
                         startup=startup
                     )
@@ -206,19 +203,15 @@ def create_startup(request):
                     if not hasattr(proof_file, 'name'):
                         logger.warning(f"Пропущен пруф, так как это не файл: {proof_file}")
                         continue
-                    # Генерируем уникальный ID для файла
                     proof_id = str(uuid.uuid4())
-                    # Формируем путь с использованием ID
                     file_path = f"startups/{startup.startup_id}/proofs/{proof_id}_{proof_file.name}"
-                    # Загружаем файл в Yandex Object Storage
                     default_storage.save(file_path, proof_file)
                     proofs_ids.append(proof_id)
-                    # Сохранение в FileStorage
                     file_storage = FileStorage(
                         entity_type=entity_type,
                         entity_id=startup.startup_id,
                         file_type=proof_type,
-                        file_url=proof_id,  # Сохраняем только ID вместо URL
+                        file_url=proof_id,
                         uploaded_at=timezone.now(),
                         startup=startup
                     )
@@ -228,21 +221,17 @@ def create_startup(request):
             # Сохранение видео
             video = form.cleaned_data.get('video')
             if video:
-                # Генерируем уникальный ID для файла
                 video_id = str(uuid.uuid4())
-                # Формируем путь с использованием ID
                 file_path = f"startups/{startup.startup_id}/videos/{video_id}_{video.name}"
-                # Загружаем файл в Yandex Object Storage
                 default_storage.save(file_path, video)
                 video_ids.append(video_id)
-                # Сохранение в FileStorage
                 video_type, _ = FileTypes.objects.get_or_create(type_name='video')
                 entity_type = EntityTypes.objects.get(type_name='startup')
                 file_storage = FileStorage(
                     entity_type=entity_type,
                     entity_id=startup.startup_id,
                     file_type=video_type,
-                    file_url=video_id,  # Сохраняем только ID вместо URL
+                    file_url=video_id,
                     uploaded_at=timezone.now(),
                     startup=startup
                 )
@@ -256,16 +245,14 @@ def create_startup(request):
             startup.video_urls = video_ids
             startup.save()
 
-            # Логирование информации о файлах
+            # Логирование (оставлено без изменений)
             logger.info("=== Отправка стартапа на модерацию ===")
             logger.info(f"Стартап ID: {startup.startup_id}")
-            
             if logo:
                 logger.info(f"Логотип: {logo.name}, размер: {logo.size} байт")
                 logger.info(f"ID логотипа: {logo_ids[0] if logo_ids else 'Не сохранён'}")
             else:
                 logger.info("Логотип не загружен")
-
             if creatives:
                 logger.info(f"Креативы: {len(creatives)} файлов")
                 for i, creative_file in enumerate(creatives, 1):
@@ -275,7 +262,6 @@ def create_startup(request):
                         logger.info(f"Креатив {i}: Неверный формат (не файл): {creative_file}")
             else:
                 logger.info("Креативы не загружены")
-
             if proofs:
                 logger.info(f"Пруфы: {len(proofs)} файлов")
                 for i, proof_file in enumerate(proofs, 1):
@@ -285,32 +271,23 @@ def create_startup(request):
                         logger.info(f"Пруф {i}: Неверный формат (не файл): {proof_file}")
             else:
                 logger.info("Пруфы не загружены")
-
             if video:
                 logger.info(f"Видео: {video.name}, размер: {video.size} байт")
                 logger.info(f"ID видео: {video_ids[0] if video_ids else 'Не сохранён'}")
             else:
                 logger.info("Видео не загружено")
-
-            # Логирование переменных окружения
             logger.info("=== Переменные окружения ===")
             for key, value in os.environ.items():
                 logger.info(f"{key}: {value}")
-
-            # Логирование настроек Yandex Object Storage
             logger.info("=== Настройки Yandex Object Storage ===")
             logger.info(f"AWS_ACCESS_KEY_ID: {getattr(settings, 'AWS_ACCESS_KEY_ID', 'Не задано')}")
             logger.info(f"AWS_SECRET_ACCESS_KEY: {getattr(settings, 'AWS_SECRET_ACCESS_KEY', 'Не задано')}")
             logger.info(f"AWS_STORAGE_BUCKET_NAME: {getattr(settings, 'AWS_STORAGE_BUCKET_NAME', 'Не задано')}")
             logger.info(f"AWS_S3_ENDPOINT_URL: {getattr(settings, 'AWS_S3_ENDPOINT_URL', 'Не задано')}")
             logger.info(f"AWS_DEFAULT_ACL: {getattr(settings, 'AWS_DEFAULT_ACL', 'Не задано')}")
-
-            # Проверка STORAGES
             logger.info("=== Проверка STORAGES ===")
             logger.info(f"STORAGES['default']['BACKEND']: {settings.STORAGES['default']['BACKEND']}")
             logger.info(f"default_storage: {default_storage.__class__.__name__}")
-
-            # Проверка подключения к Yandex Object Storage
             logger.info("=== Проверка подключения к Yandex Object Storage ===")
             try:
                 from storages.backends.s3boto3 import S3Boto3Storage
@@ -337,8 +314,6 @@ def create_startup(request):
         form = StartupForm()
     return render(request, 'accounts/create_startup.html', {'form': form})
 
-# accounts/views.py (полная функция edit_startup)
-
 @login_required
 def edit_startup(request, startup_id):
     logger.debug(f"Request method: {request.method}")
@@ -357,23 +332,26 @@ def edit_startup(request, startup_id):
             startup.status = 'pending'
             startup.is_edited = True
             startup.updated_at = timezone.now()
-            if 'step_number' in request.POST:  # Заменили current_step на step_number
+            if 'step_number' in request.POST:
                 new_step = int(request.POST.get('step_number'))
-                startup.step_number = new_step  # Заменили current_step на step_number
-
-                # Добавляем новый этап в таймлайн, если его нет
-                # Проверяем по startup.step_number, так как в StartupTimeline нет step_number
-                if not StartupTimeline.objects.filter(startup=startup, title=f"Этап {new_step}").exists():
-                    StartupTimeline.objects.create(
-                        startup=startup,
-                        step_number=new_step,  # Добавили step_number
-                        title=f"Этап {new_step}",
-                        description=f"Стартап перешёл на этап {new_step}."
-                    )
+                startup.step_number = new_step
 
             startup.save()
 
-            # Инициализация списков для ID (сохраняем существующие, если не загружаются новые)
+            # Обновление или создание этапов таймлайна
+            for i in range(1, 6):
+                description = request.POST.get(f'step_description_{i}', '').strip()
+                if description:
+                    timeline, created = StartupTimeline.objects.get_or_create(
+                        startup=startup,
+                        step_number=i,
+                        defaults={'title': f"Этап {i}", 'description': description}
+                    )
+                    if not created and timeline.description != description:
+                        timeline.description = description
+                        timeline.save()
+
+            # Инициализация списков для ID
             logo_ids = startup.logo_urls or []
             creatives_ids = startup.creatives_urls or []
             proofs_ids = startup.proofs_urls or []
@@ -382,13 +360,10 @@ def edit_startup(request, startup_id):
             # Сохранение логотипа
             logo = form.cleaned_data.get('logo')
             if logo:
-                # Генерируем уникальный ID для файла
                 logo_id = str(uuid.uuid4())
-                # Формируем путь с использованием ID
                 file_path = f"startups/{startup.startup_id}/logos/{logo_id}_{logo.name}"
-                # Загружаем файл в Yandex Object Storage
                 default_storage.save(file_path, logo)
-                logo_ids = [logo_id]  # Заменяем старый логотип
+                logo_ids = [logo_id]
                 logger.info(f"Логотип сохранён с ID: {logo_id}")
 
             # Сохранение креативов
@@ -396,24 +371,20 @@ def edit_startup(request, startup_id):
             if creatives:
                 creative_type = FileTypes.objects.get(type_name='creative')
                 entity_type = EntityTypes.objects.get(type_name='startup')
-                creatives_ids = []  # Очищаем старые креативы
+                creatives_ids = []
                 for creative_file in creatives:
                     if not hasattr(creative_file, 'name'):
                         logger.warning(f"Пропущен креатив, так как это не файл: {creative_file}")
                         continue
-                    # Генерируем уникальный ID для файла
                     creative_id = str(uuid.uuid4())
-                    # Формируем путь с использованием ID
                     file_path = f"startups/{startup.startup_id}/creatives/{creative_id}_{creative_file.name}"
-                    # Загружаем файл в Yandex Object Storage
                     default_storage.save(file_path, creative_file)
                     creatives_ids.append(creative_id)
-                    # Сохранение в FileStorage
                     file_storage = FileStorage(
                         entity_type=entity_type,
                         entity_id=startup.startup_id,
                         file_type=creative_type,
-                        file_url=creative_id,  # Сохраняем только ID вместо URL
+                        file_url=creative_id,
                         uploaded_at=timezone.now(),
                         startup=startup
                     )
@@ -425,24 +396,20 @@ def edit_startup(request, startup_id):
             if proofs:
                 proof_type = FileTypes.objects.get(type_name='proof')
                 entity_type = EntityTypes.objects.get(type_name='startup')
-                proofs_ids = []  # Очищаем старые пруфы
+                proofs_ids = []
                 for proof_file in proofs:
                     if not hasattr(proof_file, 'name'):
                         logger.warning(f"Пропущен пруф, так как это не файл: {proof_file}")
                         continue
-                    # Генерируем уникальный ID для файла
                     proof_id = str(uuid.uuid4())
-                    # Формируем путь с использованием ID
                     file_path = f"startups/{startup.startup_id}/proofs/{proof_id}_{proof_file.name}"
-                    # Загружаем файл в Yandex Object Storage
                     default_storage.save(file_path, proof_file)
                     proofs_ids.append(proof_id)
-                    # Сохранение в FileStorage
                     file_storage = FileStorage(
                         entity_type=entity_type,
                         entity_id=startup.startup_id,
                         file_type=proof_type,
-                        file_url=proof_id,  # Сохраняем только ID вместо URL
+                        file_url=proof_id,
                         uploaded_at=timezone.now(),
                         startup=startup
                     )
@@ -452,21 +419,17 @@ def edit_startup(request, startup_id):
             # Сохранение видео
             video = form.cleaned_data.get('video')
             if video:
-                # Генерируем уникальный ID для файла
                 video_id = str(uuid.uuid4())
-                # Формируем путь с использованием ID
                 file_path = f"startups/{startup.startup_id}/videos/{video_id}_{video.name}"
-                # Загружаем файл в Yandex Object Storage
                 default_storage.save(file_path, video)
-                video_ids = [video_id]  # Заменяем старое видео
-                # Сохранение в FileStorage
+                video_ids = [video_id]
                 video_type, _ = FileTypes.objects.get_or_create(type_name='video')
                 entity_type = EntityTypes.objects.get(type_name='startup')
                 file_storage = FileStorage(
                     entity_type=entity_type,
                     entity_id=startup.startup_id,
                     file_type=video_type,
-                    file_url=video_id,  # Сохраняем только ID вместо URL
+                    file_url=video_id,
                     uploaded_at=timezone.now(),
                     startup=startup
                 )
@@ -480,16 +443,14 @@ def edit_startup(request, startup_id):
             startup.video_urls = video_ids
             startup.save()
 
-            # Логирование информации о файлах
+            # Логирование (оставлено без изменений)
             logger.info("=== Обновление стартапа ===")
             logger.info(f"Стартап ID: {startup.startup_id}")
-            
             if logo:
                 logger.info(f"Логотип: {logo.name}, размер: {logo.size} байт")
                 logger.info(f"ID логотипа: {logo_ids[0] if logo_ids else 'Не сохранён'}")
             else:
                 logger.info("Логотип не загружен")
-
             if creatives:
                 logger.info(f"Креативы: {len(creatives)} файлов")
                 for i, creative_file in enumerate(creatives, 1):
@@ -499,7 +460,6 @@ def edit_startup(request, startup_id):
                         logger.info(f"Креатив {i}: Неверный формат (не файл): {creative_file}")
             else:
                 logger.info("Креативы не загружены")
-
             if proofs:
                 logger.info(f"Пруфы: {len(proofs)} файлов")
                 for i, proof_file in enumerate(proofs, 1):
@@ -509,32 +469,23 @@ def edit_startup(request, startup_id):
                         logger.info(f"Пруф {i}: Неверный формат (не файл): {proof_file}")
             else:
                 logger.info("Пруфы не загружены")
-
             if video:
                 logger.info(f"Видео: {video.name}, размер: {video.size} байт")
                 logger.info(f"ID видео: {video_ids[0] if video_ids else 'Не сохранён'}")
             else:
                 logger.info("Видео не загружено")
-
-            # Логирование переменных окружения
             logger.info("=== Переменные окружения ===")
             for key, value in os.environ.items():
                 logger.info(f"{key}: {value}")
-
-            # Логирование настроек Yandex Object Storage
             logger.info("=== Настройки Yandex Object Storage ===")
             logger.info(f"AWS_ACCESS_KEY_ID: {getattr(settings, 'AWS_ACCESS_KEY_ID', 'Не задано')}")
             logger.info(f"AWS_SECRET_ACCESS_KEY: {getattr(settings, 'AWS_SECRET_ACCESS_KEY', 'Не задано')}")
             logger.info(f"AWS_STORAGE_BUCKET_NAME: {getattr(settings, 'AWS_STORAGE_BUCKET_NAME', 'Не задано')}")
             logger.info(f"AWS_S3_ENDPOINT_URL: {getattr(settings, 'AWS_S3_ENDPOINT_URL', 'Не задано')}")
             logger.info(f"AWS_DEFAULT_ACL: {getattr(settings, 'AWS_DEFAULT_ACL', 'Не задано')}")
-
-            # Проверка STORAGES
             logger.info("=== Проверка STORAGES ===")
             logger.info(f"STORAGES['default']['BACKEND']: {settings.STORAGES['default']['BACKEND']}")
             logger.info(f"default_storage: {default_storage.__class__.__name__}")
-
-            # Проверка подключения к Yandex Object Storage
             logger.info("=== Проверка подключения к Yandex Object Storage ===")
             try:
                 from storages.backends.s3boto3 import S3Boto3Storage

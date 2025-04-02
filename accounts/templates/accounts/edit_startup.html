@@ -34,8 +34,8 @@
                         <div class="planet-segment segment-bottom" id="segment-bottom" style="background-color: {{ startup.planet_bottom_color }};"></div>
                     </div>
                     <div class="logo-overlay">
-                        {% if startup.planet_logo %}
-                            <img src="{{ startup.planet_logo.url }}" alt="Логотип" class="logo-preview" id="logoPreview">
+                        {% if startup.logo_urls %}
+                            <img src="{% get_file_url_tag startup.logo_urls.0 startup.startup_id 'logo' %}" alt="Логотип" class="logo-preview" id="logoPreview">
                         {% else %}
                             <div class="logo-preview" id="logoPreview"></div>
                         {% endif %}
@@ -137,30 +137,38 @@
         
         <!-- Блок таймлайна -->
         <div class="timeline" id="timeline">
-            {% for event in startup.timeline.all %}
-                <div class="timeline-step" onclick="selectStep({{ forloop.counter }})">
-                    <div class="step-number {% if forloop.counter <= startup.step_number %}active{% endif %}" id="step{{ forloop.counter }}">{{ forloop.counter }}</div>
-                    <div class="step-text">{{ event.title }}</div>
-                </div>
-            {% empty %}
-                <p>Таймлайн отсутствует.</p>
+            {% for i in "12345"|make_list %}
+                {% with step_number=forloop.counter %}
+                    <div class="timeline-step" onclick="selectStep({{ step_number }})">
+                        <div class="step-number {% if step_number <= startup.step_number %}active{% endif %}" id="step{{ step_number }}">{{ step_number }}</div>
+                        <div class="step-text">Этап {{ step_number }}</div>
+                    </div>
+                {% endwith %}
             {% endfor %}
         </div>
         
         <!-- Блоки описания этапов -->
         <div id="step-descriptions">
-            {% for event in startup.timeline.all %}
-                <div class="timeline-description-container" id="step-description-{{ forloop.counter }}">
+            {% for event in startup.startuptimeline_set.all %}
+                <div class="timeline-description-container {% if event.step_number == startup.step_number %}active{% endif %}" id="step-description-{{ event.step_number }}">
                     <div class="timeline-description-header">
                         <div class="timeline-description-title">{{ event.title }}</div>
-                        {% if forloop.counter == startup.step_number %}
-                            <button type="button" class="btn-select-current" onclick="setCurrentStep({{ forloop.counter }})">Мы здесь</button>
-                        {% endif %}
+                        <button type="button" class="btn-select-current" onclick="setCurrentStep({{ event.step_number }})">Мы здесь</button>
                     </div>
-                    <textarea class="timeline-description-textarea" name="step_description_{{ forloop.counter }}" placeholder="Добавьте описание для этого этапа..." required>{{ event.description }}</textarea>
+                    <textarea class="timeline-description-textarea" name="step_description_{{ event.step_number }}" placeholder="Добавьте описание для этого этапа..." required>{{ event.description }}</textarea>
                 </div>
             {% empty %}
-                <p>Описания этапов отсутствуют.</p>
+                {% for i in "12345"|make_list %}
+                    {% with step_number=forloop.counter %}
+                        <div class="timeline-description-container {% if step_number == 1 %}active{% endif %}" id="step-description-{{ step_number }}">
+                            <div class="timeline-description-header">
+                                <div class="timeline-description-title">Этап {{ step_number }}</div>
+                                <button type="button" class="btn-select-current" onclick="setCurrentStep({{ step_number }})">Мы здесь</button>
+                            </div>
+                            <textarea class="timeline-description-textarea" name="step_description_{{ step_number }}" placeholder="Добавьте описание для этого этапа..." required></textarea>
+                        </div>
+                    {% endwith %}
+                {% endfor %}
             {% endfor %}
         </div>
         
@@ -175,7 +183,7 @@
                 <div class="small-text">Допустимые форматы: PDF, DOC, DOCX, XLS, XLSX, TXT</div>
                 {% if form.proofs.errors %}
                     <span class="error-message">{{ form.proofs.errors|first }}</span>
-                {% endif %}
+                    {% endif %}
             </div>
             
             <div class="checkbox-option">
@@ -302,8 +310,7 @@
     
     function setCurrentStep(stepNumber) {
         document.getElementById('step_number').value = stepNumber;
-        const timelineLength = {{ startup.timeline.all|length|default:0 }};
-        for (let i = 1; i <= timelineLength; i++) {
+        for (let i = 1; i <= 5; i++) {
             const stepElement = document.getElementById(`step${i}`);
             if (stepElement) {
                 if (i <= stepNumber) {
@@ -332,15 +339,12 @@
                 });
                 myForm.addEventListener('submit', (e) => {
                     e.preventDefault();
-                    // Проверяем, есть ли файлы в любом из Dropzone
                     const queuedCreatives = this.getQueuedFiles();
                     const queuedProofs = proofsDropzone.getQueuedFiles();
                     if (queuedCreatives.length > 0 || queuedProofs.length > 0) {
-                        // Если есть файлы в creativesDropzone, отправляем их
                         if (queuedCreatives.length > 0) {
                             this.processQueue();
                         } else {
-                            // Если файлов в creativesDropzone нет, но есть в proofsDropzone, отправляем пруфы
                             proofsDropzone.processQueue();
                         }
                     } else {
@@ -357,7 +361,6 @@
                     formData.append("csrfmiddlewaretoken", "{{ csrf_token }}");
                 });
                 this.on("successmultiple", function(files, response) {
-                    // Если есть файлы в proofsDropzone, отправляем их
                     const queuedProofs = proofsDropzone.getQueuedFiles();
                     if (queuedProofs.length > 0) {
                         proofsDropzone.processQueue();
@@ -370,7 +373,7 @@
                 });
             }
         });
-        window.creativesDropzone = creativesDropzone; // Сохраняем в глобальной области видимости
+        window.creativesDropzone = creativesDropzone;
     }
 
     // Инициализация Dropzone для пруфов с проверкой
@@ -398,7 +401,6 @@
                     formData.append("csrfmiddlewaretoken", "{{ csrf_token }}");
                 });
                 this.on("successmultiple", function(files, response) {
-                    // После успешной загрузки пруфов перенаправляем
                     window.location.href = "{% url 'startup_detail' startup.startup_id %}";
                 });
                 this.on("errormultiple", function(files, response) {
@@ -406,16 +408,12 @@
                 });
             }
         });
-        window.proofsDropzone = proofsDropzone; // Сохраняем в глобальной области видимости
+        window.proofsDropzone = proofsDropzone;
     }
 
     window.addEventListener('DOMContentLoaded', function() {
-        // Проверяем, есть ли этапы, чтобы избежать ошибок
-        const timelineLength = {{ startup.timeline.all|length|default:0 }};
-        if (timelineLength > 0) {
-            selectStep(1);
-            setCurrentStep({{ startup.step_number|default:'1' }});
-        }
+        selectStep({{ startup.step_number|default:'1' }});
+        setCurrentStep({{ startup.step_number|default:'1' }});
     });
 </script>
 {% endblock %}

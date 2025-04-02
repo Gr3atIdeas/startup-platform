@@ -170,14 +170,31 @@
     <!-- Таймлайн -->
     <div class="timeline" id="timeline">
         {% for event in timeline %}
-            <div class="timeline-step" onclick="selectStep({{ event.title|extract_step_number }})">
-                <div class="step-number {% if event.title|extract_step_number <= startup.step_number %}active{% endif %}" id="step{{ event.title|extract_step_number }}">{{ event.title|extract_step_number }}</div>
+            <div class="timeline-step" onclick="selectStep({{ event.step_number }})">
+                <div class="step-number {% if event.step_number <= startup.step_number %}active{% endif %}" id="step{{ event.step_number }}">{{ event.step_number }}</div>
                 <div class="step-text">{{ event.title }}</div>
             </div>
         {% empty %}
+            <!-- Если таймлайн пуст, выводим шаги по умолчанию -->
             <div class="timeline-step" onclick="selectStep(1)">
-                <div class="step-number active" id="step1">1</div>
-                <div class="step-text">Создание стартапа</div>
+                <div class="step-number {% if 1 <= startup.step_number|default:1 %}active{% endif %}" id="step1">1</div>
+                <div class="step-text">Этап 1</div>
+            </div>
+            <div class="timeline-step" onclick="selectStep(2)">
+                <div class="step-number {% if 2 <= startup.step_number|default:1 %}active{% endif %}" id="step2">2</div>
+                <div class="step-text">Этап 2</div>
+            </div>
+            <div class="timeline-step" onclick="selectStep(3)">
+                <div class="step-number {% if 3 <= startup.step_number|default:1 %}active{% endif %}" id="step3">3</div>
+                <div class="step-text">Этап 3</div>
+            </div>
+            <div class="timeline-step" onclick="selectStep(4)">
+                <div class="step-number {% if 4 <= startup.step_number|default:1 %}active{% endif %}" id="step4">4</div>
+                <div class="step-text">Этап 4</div>
+            </div>
+            <div class="timeline-step" onclick="selectStep(5)">
+                <div class="step-number {% if 5 <= startup.step_number|default:1 %}active{% endif %}" id="step5">5</div>
+                <div class="step-text">Этап 5</div>
             </div>
         {% endfor %}
     </div>
@@ -185,20 +202,59 @@
     <!-- Описание этапов -->
     <div id="step-descriptions">
         {% for event in timeline %}
-            <div class="timeline-description-container {% if event.title|extract_step_number == startup.step_number %}active{% endif %}" id="step-description-{{ event.title|extract_step_number }}">
+            <div class="timeline-description-container {% if event.step_number == startup.step_number %}active{% endif %}" id="step-description-{{ event.step_number }}">
                 <div class="timeline-description-header">
                     <div class="timeline-description-title">{{ event.title }}</div>
-                    {% if event.title|extract_step_number == startup.step_number %}
+                    {% if event.step_number == startup.step_number %}
                         <button type="button" class="btn-select-current">Мы здесь</button>
                     {% endif %}
                 </div>
-                <p>{{ event.description }}</p>
+                <p>{{ event.description|default:"Описание этапа отсутствует." }}</p>
             </div>
         {% empty %}
-            <div class="timeline-description-container active" id="step-description-1">
+            <!-- Если таймлайн пуст, выводим шаги по умолчанию с пустыми описаниями -->
+            <div class="timeline-description-container {% if 1 == startup.step_number|default:1 %}active{% endif %}" id="step-description-1">
                 <div class="timeline-description-header">
-                    <div class="timeline-description-title">Этап 1: Создание стартапа</div>
-                    <button type="button" class="btn-select-current">Мы здесь</button>
+                    <div class="timeline-description-title">Этап 1</div>
+                    {% if 1 == startup.step_number|default:1 %}
+                        <button type="button" class="btn-select-current">Мы здесь</button>
+                    {% endif %}
+                </div>
+                <p>Описание этапа отсутствует.</p>
+            </div>
+            <div class="timeline-description-container {% if 2 == startup.step_number|default:1 %}active{% endif %}" id="step-description-2">
+                <div class="timeline-description-header">
+                    <div class="timeline-description-title">Этап 2</div>
+                    {% if 2 == startup.step_number|default:1 %}
+                        <button type="button" class="btn-select-current">Мы здесь</button>
+                    {% endif %}
+                </div>
+                <p>Описание этапа отсутствует.</p>
+            </div>
+            <div class="timeline-description-container {% if 3 == startup.step_number|default:1 %}active{% endif %}" id="step-description-3">
+                <div class="timeline-description-header">
+                    <div class="timeline-description-title">Этап 3</div>
+                    {% if 3 == startup.step_number|default:1 %}
+                        <button type="button" class="btn-select-current">Мы здесь</button>
+                    {% endif %}
+                </div>
+                <p>Описание этапа отсутствует.</p>
+            </div>
+            <div class="timeline-description-container {% if 4 == startup.step_number|default:1 %}active{% endif %}" id="step-description-4">
+                <div class="timeline-description-header">
+                    <div class="timeline-description-title">Этап 4</div>
+                    {% if 4 == startup.step_number|default:1 %}
+                        <button type="button" class="btn-select-current">Мы здесь</button>
+                    {% endif %}
+                </div>
+                <p>Описание этапа отсутствует.</p>
+            </div>
+            <div class="timeline-description-container {% if 5 == startup.step_number|default:1 %}active{% endif %}" id="step-description-5">
+                <div class="timeline-description-header">
+                    <div class="timeline-description-title">Этап 5</div>
+                    {% if 5 == startup.step_number|default:1 %}
+                        <button type="button" class="btn-select-current">Мы здесь</button>
+                    {% endif %}
                 </div>
                 <p>Описание этапа отсутствует.</p>
             </div>
@@ -320,7 +376,10 @@
         document.querySelectorAll('.timeline-description-container').forEach(container => {
             container.classList.remove('active');
         });
-        document.getElementById(`step-description-${stepNumber}`).classList.add('active');
+        const descriptionContainer = document.getElementById(`step-description-${stepNumber}`);
+        if (descriptionContainer) {
+            descriptionContainer.classList.add('active');
+        }
     }
 
     window.addEventListener('DOMContentLoaded', function() {
