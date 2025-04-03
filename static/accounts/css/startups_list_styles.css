@@ -1,29 +1,253 @@
-/* Блок категорий */
-.categories-block {
+/* Общий контейнер */
+.startups-catalog-page {
+    position: relative;
+    width: 1440px;
+    margin: 0 auto;
+    background: #FFFFFF;
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 80px;
+    height: 59px;
+    width: 1280px;
+    margin: 0 auto;
+    background: #FFFFFF;
+}
+
+.logo {
+    font-family: 'Koulen', sans-serif;
+    font-size: 24px;
+    color: #191919;
+    padding: 8px 32px;
+}
+
+.search-bar {
+    display: none; /* Скрыт по макету */
+}
+
+.navigation ul {
+    display: flex;
+    gap: 24px;
+}
+
+.navigation a {
+    font-family: 'Circe', sans-serif;
+    font-size: 16px;
+    color: #000000;
+    padding: 8px 16px;
+    text-decoration: none;
+}
+
+.navigation a.active {
+    background: #818CE5;
+    color: #FFFFFF;
+    border-radius: 99px;
+    padding: 16px 35px;
+}
+
+.user-profile img {
+    width: 58px;
+    height: 58px;
+    border: 2px solid #7B61FF;
+    border-radius: 29px;
+}
+
+/* Search Bar Below Header */
+.search-bar-below {
+    position: absolute;
+    top: 53px;
+    left: 300px;
+    width: 839px;
+    height: 80px;
+    background: #818CE5;
+    border-radius: 32px;
+    display: flex;
+    align-items: center;
+    padding: 5px;
+}
+
+.search-bar-below input {
+    width: 736px;
+    height: 70px;
+    background: #FFFFFF;
+    border: none;
+    border-radius: 32px;
+    padding-left: 32px;
+    font-family: 'Circe', sans-serif;
+    font-size: 16px;
+    color: #CBCBCB;
+}
+
+.search-bar-below .search-icon {
+    width: 38px;
+    height: 38px;
+    background: url('../images/search-icon.png') no-repeat center; /* Замените на ваш путь к иконке */
+    margin-left: 10px;
+    opacity: 0.6;
+}
+
+/* Sidebar */
+.filters-sidebar {
     position: absolute;
     top: 190px;
     left: 80px;
     width: 150px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
 }
 
-.categories-block h3 {
+.filters-sidebar h4 {
     font-family: 'Circe', sans-serif;
     font-weight: 700;
     font-size: 20px;
-    line-height: 18px;
+    color: #000000;
+    margin-bottom: 15px;
+}
+
+.category-list label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Circe', sans-serif;
+    font-size: 14px;
+    color: #000000;
+    margin-bottom: 5px;
+}
+
+.custom-checkbox input[type="checkbox"] {
+    width: 11px;
+    height: 11px;
+    border: 1px solid #000000;
+    border-radius: 2px;
+    appearance: none;
+}
+
+.custom-checkbox input[type="checkbox"]:checked {
+    background: #7B61FF;
+}
+
+.divider {
+    border: none;
+    height: 1px;
+    background: #989898;
+    margin: 20px 0;
+}
+
+.switch-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.switch-wrapper span {
+    font-family: 'Circe', sans-serif;
+    font-size: 14px;
+    color: #000000;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 48px;
+    height: 30px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #EBEDFF;
+    border-radius: 20px;
+    transition: 0.4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 25px;
+    width: 25px;
+    left: 3px;
+    bottom: 2.5px;
+    background: #FFFFFF;
+    border-radius: 50%;
+    transition: 0.4s;
+}
+
+.switch input:checked + .slider {
+    background: #818CE5;
+}
+
+.switch input:checked + .slider:before {
+    transform: translateX(18px);
+}
+
+.rating-range p {
+    font-family: 'Circe', sans-serif;
+    font-size: 14px;
+    color: #000000;
     margin-bottom: 10px;
 }
 
-/* Карточка стартапа */
-.card {
+.range-slider {
+    width: 100%;
+    height: 2px;
+    background: #989898;
+    -webkit-appearance: none;
+}
+
+.range-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 15px;
+    height: 15px;
+    background: #818CE5;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.rating-values {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+}
+
+.rating-values button {
+    width: 86px;
+    height: 46px;
+    border: 1px solid #000000;
+    border-radius: 5px;
+    background: #FFFFFF;
+    font-family: 'Circe', sans-serif;
+    font-size: 14px;
+    color: #000000;
+}
+
+/* Grid */
+.startup-list-container {
+    margin-left: 300px;
+    margin-top: 256px;
+}
+
+.startup-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 330px);
+    gap: 35px;
+}
+
+.startup-card {
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
     padding: 15px 9px;
     gap: 19px;
     width: 330px;
@@ -33,15 +257,16 @@
     border-radius: 28px;
 }
 
-.card-header {
+.startup-card__image-container {
     width: 312px;
     height: 140px;
     position: relative;
     border-radius: 20px;
     overflow: hidden;
+    background: #D9D9D9;
 }
 
-.card-header img {
+.startup-card__image {
     position: absolute;
     width: 325px;
     height: 325px;
@@ -51,69 +276,86 @@
     border-radius: 22px;
 }
 
-/* Контент карточки */
-.card-content {
+.startup-card__content {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    gap: 15px;
-    width: 100%;
+    gap: 25px;
+    width: 279px;
 }
 
-/* Название и рейтинг */
-.card-top {
+.startup-card__top {
     display: flex;
     justify-content: space-between;
     width: 100%;
 }
 
-.card-title {
+.startup-card__info {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.startup-card__title {
     font-family: 'Circe', sans-serif;
     font-weight: 700;
     font-size: 20px;
-    line-height: 18px;
-    letter-spacing: -0.02em;
     color: #000000;
 }
 
-.card-rating {
+.startup-card__category {
+    font-family: 'Circe', sans-serif;
+    font-size: 14px;
+    color: #A9A9A9;
+}
+
+.startup-card__rating {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    font-family: 'Circe', sans-serif;
-    font-weight: 400;
-    font-size: 14px;
-    color: #A9A9A9;
-    gap: 3px;
+    gap: 5px;
 }
 
-/* Звезды */
-.card-rating .stars {
+.rating-text {
+    font-family: 'Circe', sans-serif;
+    font-size: 14px;
+    color: #A9A9A9;
+}
+
+.stars {
     display: flex;
-    gap: 3px;
+    gap: 5px;
+    color: #7B61FF;
 }
 
-/* Категория */
-.card-category {
-    font-family: 'Circe', sans-serif;
-    font-weight: 400;
-    font-size: 14px;
-    color: #A9A9A9;
+.startup-card__desc-block {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
 }
 
-/* Описание */
-.card-description {
+.startup-card__description {
     font-family: 'Helvetica Neue', sans-serif;
-    font-size: 13px;
-    line-height: 16px;
+    font-size: 12px;
+    line-height: 14px;
     color: #000000;
-    margin-top: 5px;
 }
 
-/* Кнопка */
-.card-button {
+.read-more {
+    font-family: 'Helvetica Neue', sans-serif;
+    font-size: 8px;
+    color: rgba(49, 49, 49, 0.55);
+}
+
+.startup-card__fixed-bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.startup-card__button {
     width: 218px;
-    height: 50px;
+    height: 55px;
     background: #7B61FF;
     border-radius: 99px;
     display: flex;
@@ -121,18 +363,141 @@
     align-items: center;
     font-family: 'Circe', sans-serif;
     font-weight: 700;
-    font-size: 16px;
+    font-size: 18px;
     color: #FFFFFF;
-    margin-top: auto;
+    text-decoration: none;
 }
 
-/* Инвестировало */
-.card-invest {
+.startup-card__investors-block {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.startup-card__investors-icon {
+    width: 16px;
+    height: 16px;
+    background: #4E4F51; /* Замените на иконку */
+}
+
+.startup-card__investors-text {
     font-family: 'Circe', sans-serif;
     font-weight: 700;
-    font-size: 13px;
+    font-size: 14px;
     color: #4E4F51;
-    text-align: center;
-    width: 100%;
-    margin-top: 8px;
+}
+
+/* Footer */
+.footer {
+    width: 1440px;
+    background: #000000;
+    color: #FFFFFF;
+    padding: 32px 80px;
+    margin-top: 50px;
+}
+
+.footer-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 32px;
+}
+
+.footer-top h2 {
+    font-family: 'Koulen', sans-serif;
+    font-size: 60px;
+    color: #FFFFFF;
+}
+
+.social-icons {
+    display: flex;
+    gap: 16px;
+}
+
+.social-icons img {
+    width: 32px;
+    height: 32px;
+    background: #9E9E9E;
+    border-radius: 50%;
+}
+
+.join-button {
+    width: 195px;
+    height: 48px;
+    border: 1px solid #FFFFFF;
+    border-radius: 99px;
+    background: none;
+    color: #FFFFFF;
+    font-family: 'Circe', sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.footer-middle {
+    display: flex;
+    justify-content: space-between;
+    padding: 24px 0;
+}
+
+.menu-column, .about-column, .text-column {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.menu-column h3, .about-column h3 {
+    font-family: 'Circe', sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    color: #9E9E9E;
+}
+
+.menu-column ul, .about-column ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.menu-column a, .about-column a {
+    font-family: 'Circe', sans-serif;
+    font-size: 16px;
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
+.text-column p {
+    font-family: 'Neue Power', sans-serif;
+    font-size: 16px;
+    line-height: 24px;
+    color: #A7A7A7;
+    width: 330px;
+}
+
+.footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #F5F4F3;
+    padding: 16px 32px;
+    color: #4E4F51;
+}
+
+.footer-bottom p {
+    font-family: 'Circe', sans-serif;
+    font-size: 12px;
+}
+
+.footer-links {
+    display: flex;
+    gap: 40px;
+}
+
+.footer-links a {
+    font-family: 'Circe', sans-serif;
+    font-size: 12px;
+    color: #4E4F51;
+    text-decoration: none;
 }
