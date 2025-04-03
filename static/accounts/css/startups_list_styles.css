@@ -1,140 +1,181 @@
-/* ---------- ОСНОВНОЕ ---------- */
-.startups-catalog-page {
+/* === CARD FRAME (Frame 467) === */
+.startup-card {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
-  padding: 20px 0;
-  width: 100%;
-  max-width: 1440px;
-  background: #ffffff;
+  padding: 15px 9px;
+  gap: 19px;
+  width: 330px;
+  height: 507px;
+  background: #FFFFFF;
+  border: 3px solid #000000;
+  border-radius: 28px;
   box-sizing: border-box;
-}
-
-.main-content-area {
-  display: flex;
-  width: 100%;
-  box-sizing: border-box;
-  margin-top: 20px;
-}
-
-/* ---------- SIDEBAR ---------- */
-.filters-sidebar {
-  width: 280px;
-  padding: 20px;
-  border-right: 1px solid #dee2e6;
-  box-sizing: border-box;
-}
-.filter-section h4 {
-  font-size: 18px;
-  margin-bottom: 10px;
-  font-weight: 600;
-}
-.category-list {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  max-height: 200px;
-  overflow-y: auto;
-}
-.category-list::-webkit-scrollbar {
-  width: 4px;
-}
-.category-list::-webkit-scrollbar-thumb {
-  background: #7B61FF;
-  border-radius: 2px;
-}
-.custom-checkbox {
-  display: flex;
-  align-items: center;
-  font-size: 14px;
-  cursor: pointer;
-}
-.custom-checkbox input[type="checkbox"] {
-  appearance: none;
-  width: 14px;
-  height: 14px;
-  border: 1px solid #000;
-  border-radius: 3px;
-  margin-right: 8px;
-}
-.custom-checkbox input[type="checkbox"]:checked {
-  background-color: #7B61FF;
-  border: 1px solid #7B61FF;
-}
-.divider {
-  margin: 15px 0;
-  border: none;
-  border-top: 1px solid #000;
-}
-.switch-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin: 10px 0;
-}
-.switch {
   position: relative;
-  display: inline-block;
-  width: 38px;
-  height: 20px;
-}
-.switch input { display: none; }
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background-color: #ccc;
-  border-radius: 34px;
-  transition: .4s;
-}
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 16px;
-  width: 16px;
-  left: 2px;
-  bottom: 2px;
-  background-color: white;
-  border-radius: 50%;
-  transition: .4s;
-}
-input:checked + .slider {
-  background-color: #7B61FF;
-}
-input:checked + .slider:before {
-  transform: translateX(18px);
+  overflow: hidden;
 }
 
-.rating-range {
-  margin-top: 15px;
+/* === IMAGE (Frame 459 + Rectangle 75 + IMG_7665) === */
+.startup-card__image-container {
+  position: relative;
+  width: 312px;
+  height: 140px;
+  border-radius: 20px;
+  background: #D9D9D9;
+  overflow: hidden;
 }
-.rating-range p {
-  margin: 0 0 5px 0;
-  font-size: 14px;
+.startup-card__image {
+  position: absolute;
+  width: 325px;
+  height: 325px;
+  left: calc(50% - 325px/2 + 0.5px);
+  top: calc(50% - 325px/2 + 13.5px);
+  object-fit: cover;
+  border-radius: 22px;
 }
-.range-slider {
-  width: 100%;
-  accent-color: #7B61FF;
-}
-.rating-values {
+
+/* === CONTENT FRAME (Frame 464) === */
+.startup-card__content {
   display: flex;
-  justify-content: space-between;
-  margin-top: 8px;
-}
-.rating-values button {
-  border: 1px solid #000;
-  border-radius: 6px;
-  padding: 4px 12px;
-  background: #fff;
-  font-size: 14px;
-  cursor: default;
+  flex-direction: column;
+  align-items: center;
+  padding: 0px;
+  gap: 25px;
+  width: 279px;
+  height: 308px;
 }
 
-/* ---------- GRID ---------- */
-.startup-list-container {
-  flex: 1;
-  padding: 20px;
+/* === TOP INFO (Frame 461) === */
+.startup-card__top {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 5px;
+  width: 279px;
+  height: 43px;
 }
+
+/* === TITLE & CATEGORY (Frame 460) === */
+.startup-card__info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 7px;
+  width: 184px;
+  height: 43px;
+}
+.startup-card__title {
+  font-family: 'Circe', sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 18px;
+  letter-spacing: -0.02em;
+  color: #000000;
+  margin: 0;
+}
+.startup-card__category {
+  font-family: 'Circe', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
+  letter-spacing: -0.02em;
+  color: #A9A9A9;
+  margin: 0;
+}
+
+/* === RATING (Frame 462) === */
+.startup-card__rating {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
+  width: 90px;
+  height: 35px;
+}
+.rating-text {
+  font-family: 'Circe', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
+  letter-spacing: -0.02em;
+  color: #A9A9A9;
+}
+.stars {
+  display: flex;
+  gap: 5px;
+  font-size: 14px;
+  color: #7B61FF;
+}
+
+/* === DESCRIPTION (Frame 463) === */
+.startup-card__desc-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  width: 279px;
+  height: 95px;
+}
+.startup-card__description {
+  font-family: 'Helvetica Neue', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 14px;
+  letter-spacing: 0.01em;
+  color: #000000;
+}
+
+/* === BUTTON (menu) === */
+.startup-card__button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px 64px;
+  gap: 8px;
+  width: 218px;
+  height: 55px;
+  background: #7B61FF;
+  border-radius: 99px;
+  font-family: 'Circe', sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 32px;
+  letter-spacing: -0.02em;
+  color: #FFFFFF;
+  text-decoration: none;
+  transition: background 0.3s ease;
+}
+
+.startup-card__button:hover {
+  background: #6a50f0;
+}
+
+/* === INVESTORS === */
+.startup-card__investors-block {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 8px 24px 8px 0px;
+  gap: 8px;
+  width: 184px;
+  height: 40px;
+}
+.startup-card__investors-icon {
+  width: 16px;
+  height: 16px;
+  background: #4E4F51;
+  border-radius: 50%;
+}
+.startup-card__investors-text {
+  font-family: 'Circe', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 24px;
+  color: #4E4F51;
+}
+
+/* === GRID === */
 .startup-grid {
   display: flex;
   flex-wrap: wrap;
@@ -142,105 +183,10 @@ input:checked + .slider:before {
   justify-content: center;
 }
 
-/* ---------- CARD ---------- */
-.startup-card {
-  display: flex;
-  flex-direction: column;
-  width: 330px;
-  height: 507px;
-  padding: 15px 9px;
-  background: #FFFFFF;
-  border: 3px solid #000000;
-  border-radius: 28px;
-  box-sizing: border-box;
-  overflow: hidden;
-}
-
-.startup-card__image-container {
-  width: 100%;
-  height: 146px;
-  border-radius: 20px;
-  overflow: hidden;
-}
-.startup-card__image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.startup-card__content {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  padding-top: 8px;
-}
-.startup-card__title {
-  font-size: 18px;
-  font-weight: 700;
-  margin: 0 0 4px 0;
-}
-.startup-card__category {
-  font-size: 14px;
-  color: #FF6B6B;
-  margin: 0 0 4px 0;
-}
-.startup-card__description {
-  font-size: 14px;
-  color: #000;
-  line-height: 1.3;
-  margin-bottom: 4px;
-}
-.startup-card__goal, .startup-card__stage {
-  font-size: 14px;
-  color: #000;
-  margin: 2px 0;
-}
-.startup-card__rating-block {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  margin-top: 6px;
-}
-.rating-text {
-  font-size: 13px;
-  color: #444;
-  margin-bottom: 2px;
-}
-.stars {
-  font-size: 16px;
-  color: #7B61FF;
-}
-
-.startup-card__spacer {
-  flex-grow: 1;
-}
-
-.startup-card__button {
-  display: block;
-  width: 100%;
-  padding: 12px;
-  background: #7B61FF;
-  border-radius: 24px;
-  text-align: center;
-  color: #fff;
-  text-decoration: none;
-  font-size: 16px;
-  margin-top: 8px;
-  margin-bottom: 4px;
-  transition: background 0.3s;
-}
-.startup-card__button:hover {
-  background: #6a50f0;
-}
-
-.startup-card__investors {
-  font-size: 12px;
-  color: #A9A9A9;
-  text-align: center;
-}
-
+/* === ADAPTIVE === */
 @media (max-width: 600px) {
   .startup-card {
       width: 100%;
-      max-width: 350px;
+      max-width: 360px;
   }
 }
