@@ -1,222 +1,138 @@
-/* ===== Страница ===== */
-.startups-catalog-page {
+/* Блок категорий */
+.categories-block {
+  position: absolute;
+  top: 190px;
+  left: 80px;
+  width: 150px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: 20px 0;
-  width: 100%;
-  max-width: 1440px;
+  gap: 10px;
+}
+
+.categories-block h3 {
+  font-family: 'Circe', sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 18px;
+  margin-bottom: 10px;
+}
+
+/* Карточка стартапа */
+.card {
   box-sizing: border-box;
-}
-
-/* ===== Сетка ===== */
-.main-content-area {
-  display: flex;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-/* ===== Sidebar ===== */
-.filters-sidebar {
-  width: 260px;
-  padding: 20px;
-  border-right: 1px solid #dee2e6;
-  box-sizing: border-box;
-}
-
-.category-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.category-list label {
-  display: flex;
-  align-items: center;
-  font-size: 14px;
-}
-
-.divider {
-  margin: 15px 0;
-  border: none;
-  border-top: 1px solid #dee2e6;
-}
-
-/* ===== Карточки ===== */
-.startup-list-container {
-  flex: 1;
-  padding: 20px 30px;
-}
-
-.startup-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 24px;
-  justify-content: flex-start;
-}
-
-/* ===== Карточка ===== */
-.startup-card {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
   padding: 15px 9px;
+  gap: 19px;
   width: 330px;
   height: 507px;
   background: #FFFFFF;
   border: 3px solid #000000;
   border-radius: 28px;
-  box-sizing: border-box;
-  position: relative;
 }
 
-/* ===== Картинка ===== */
-.startup-card__image-container {
+.card-header {
   width: 312px;
   height: 140px;
+  position: relative;
   border-radius: 20px;
   overflow: hidden;
 }
 
-.startup-card__image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 20px;
+.card-header img {
+  position: absolute;
+  width: 325px;
+  height: 325px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 22px;
 }
 
-/* ===== Контент ===== */
-.startup-card__content {
+/* Контент карточки */
+.card-content {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-}
-
-/* ===== Верх карточки ===== */
-.startup-card__top {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
   align-items: flex-start;
+  gap: 15px;
   width: 100%;
-  padding: 0 5px;
 }
 
-/* ===== Название и Категория ===== */
-.startup-card__info {
+/* Название и рейтинг */
+.card-top {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
 }
 
-.startup-card__title {
+.card-title {
   font-family: 'Circe', sans-serif;
   font-weight: 700;
-  font-size: 18px;
-  margin: 0;
-}
-
-.startup-card__category {
-  font-family: 'Circe', sans-serif;
-  font-size: 13px;
-  color: #A9A9A9;
-  margin: 2px 0 5px 0;
-}
-
-/* ===== Рейтинг ===== */
-.startup-card__rating {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 5px;
-}
-
-.rating-text {
-  font-size: 13px;
-  color: #A9A9A9;
-}
-
-.stars {
-  display: flex;
-  gap: 3px;
-  font-size: 13px;
-  color: #7B61FF;
-}
-
-/* ===== Описание (увеличено) ===== */
-.startup-card__desc-block {
-  width: 100%;
-  padding: 0 5px;
-}
-
-.startup-card__description {
-  font-family: 'Helvetica Neue', sans-serif;
-  font-size: 14px;
+  font-size: 20px;
   line-height: 18px;
+  letter-spacing: -0.02em;
   color: #000000;
 }
 
-/* ===== Кнопка и Investors ===== */
-.startup-card__fixed-bottom {
-  margin-top: auto;
+.card-rating {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 6px;
+  align-items: flex-end;
+  font-family: 'Circe', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  color: #A9A9A9;
+  gap: 3px;
 }
 
-/* ===== Кнопка ===== */
-.startup-card__button {
-  padding: 10px 30px;
+/* Звезды */
+.card-rating .stars {
+  display: flex;
+  gap: 3px;
+}
+
+/* Категория */
+.card-category {
+  font-family: 'Circe', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  color: #A9A9A9;
+}
+
+/* Описание */
+.card-description {
+  font-family: 'Helvetica Neue', sans-serif;
+  font-size: 13px;
+  line-height: 16px;
+  color: #000000;
+  margin-top: 5px;
+}
+
+/* Кнопка */
+.card-button {
+  width: 218px;
+  height: 50px;
   background: #7B61FF;
   border-radius: 99px;
-  font-family: 'Circe', sans-serif;
-  font-weight: 700;
-  font-size: 15px;
-  color: #FFFFFF;
-  text-decoration: none;
-  transition: background 0.3s ease;
-}
-
-.startup-card__button:hover {
-  background: #6a50f0;
-}
-
-/* ===== Investors ===== */
-.startup-card__investors-block {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 6px;
-  margin-top: 2px;
-}
-
-.startup-card__investors-icon {
-  width: 14px;
-  height: 14px;
-  background: #4E4F51;
-  border-radius: 50%;
-}
-
-.startup-card__investors-text {
   font-family: 'Circe', sans-serif;
-  font-size: 11px;
-  color: #4E4F51;
+  font-weight: 700;
+  font-size: 16px;
+  color: #FFFFFF;
+  margin-top: auto;
 }
 
-/* ===== Adaptive ===== */
-@media (max-width: 768px) {
-  .main-content-area {
-      flex-direction: column;
-  }
-  .filters-sidebar {
-      width: 100%;
-      border-right: none;
-      border-bottom: 1px solid #dee2e6;
-  }
-  .startup-grid {
-      justify-content: center;
-  }
+/* Инвестировало */
+.card-invest {
+  font-family: 'Circe', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  color: #4E4F51;
+  text-align: center;
+  width: 100%;
+  margin-top: 8px;
 }
