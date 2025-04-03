@@ -1,23 +1,58 @@
 /* Общий контейнер */
 .startups-catalog-page {
-    position: relative;
     width: 1440px;
     margin: 0 auto;
     background: #FFFFFF;
 }
 
-/* Search Bar Below Header */
+/* Header */
+.site-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 80px;
+}
+
+.header-title {
+    font-family: 'Circe', sans-serif;
+    font-weight: 700;
+    font-size: 24px;
+    color: #000;
+    text-transform: uppercase;
+}
+
+.header-icons {
+    display: flex;
+    gap: 20px;
+}
+
+.header-icon {
+    font-size: 20px;
+    color: #000;
+}
+
+/* Search Bar */
 .search-bar-below {
-    position: absolute;
-    top: 53px;
-    left: 300px;
+    position: relative;
+    top: 20px;
+    left: 80px;
     width: 839px;
     height: 80px;
-    background: var(--secondary-color);
+    background: #EBEDFF;
     border-radius: 32px;
     display: flex;
     align-items: center;
     padding: 5px;
+}
+
+.search-dropdown {
+    height: 70px;
+    border: none;
+    background: #FFF;
+    border-radius: 32px 0 0 32px;
+    padding: 0 15px;
+    font-family: 'Circe', sans-serif;
+    font-size: 16px;
 }
 
 .search-bar-below input {
@@ -25,18 +60,16 @@
     height: 70px;
     background: #FFFFFF;
     border: none;
-    border-radius: 32px;
     padding-left: 32px;
     font-family: 'Circe', sans-serif;
     font-size: 16px;
-    color: var(--text-gray);
+    color: #989898;
 }
 
 .search-bar-below .search-icon {
     width: 38px;
     height: 38px;
     margin-left: 10px;
-    opacity: 0.6;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -44,27 +77,26 @@
 
 .search-icon i {
     font-size: 24px;
-    color: #000; /* Цвет можно настроить по вашему желанию */
+    color: #000;
 }
 
-/* Заголовок */
-.catalog-title {
-    display: none; /* Скрыт, так как в макете Figma его нет */
+/* Main Content */
+.main-content-area {
+    display: flex;
+    margin-top: 60px;
 }
 
 /* Sidebar */
 .filters-sidebar {
-    position: absolute;
-    top: 190px;
-    left: 80px;
-    width: 150px;
+    width: 200px;
+    margin-left: 80px;
 }
 
 .filters-sidebar h4 {
     font-family: 'Circe', sans-serif;
     font-weight: 700;
     font-size: 20px;
-    color: var(--text-dark);
+    color: #000;
     margin-bottom: 15px;
 }
 
@@ -74,91 +106,27 @@
     gap: 10px;
     font-family: 'Circe', sans-serif;
     font-size: 14px;
-    color: var(--text-dark);
-    margin-bottom: 5px;
+    color: #000;
+    margin-bottom: 10px;
 }
 
 .custom-checkbox input[type="checkbox"] {
     width: 11px;
     height: 11px;
-    border: 1px solid var(--text-dark);
+    border: 1px solid #000;
     border-radius: 2px;
     appearance: none;
 }
 
 .custom-checkbox input[type="checkbox"]:checked {
-    background: var(--primary-color);
-}
-
-.divider {
-    border: none;
-    height: 1px;
-    background: #989898;
-    margin: 20px 0;
-}
-
-.switch-wrapper {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.switch-wrapper span {
-    font-family: 'Circe', sans-serif;
-    font-size: 14px;
-    color: var(--text-dark);
-}
-
-.switch {
-    position: relative;
-    display: inline-block;
-    width: 48px;
-    height: 30px;
-}
-
-.switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-
-.slider {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: #EBEDFF;
-    border-radius: 20px;
-   _transition: 0.4s;
-}
-
-.slider:before {
-    position: absolute;
-    content: "";
-    height: 25px;
-    width: 25px;
-    left: 3px;
-    bottom: 2.5px;
-    background: #FFFFFF;
-    border-radius: 50%;
-    transition: 0.4s;
-}
-
-.switch input:checked + .slider {
-    background: var(--secondary-color);
-}
-
-.switch input:checked + .slider:before {
-    transform: translateX(18px);
+    background: #6A5BFF;
 }
 
 .rating-range p {
     font-family: 'Circe', sans-serif;
     font-size: 14px;
-    color: var(--text-dark);
-    margin-bottom: 10px;
+    color: #000;
+    margin: 20px 0 10px;
 }
 
 .range-slider {
@@ -172,32 +140,24 @@
     -webkit-appearance: none;
     width: 15px;
     height: 15px;
-    background: var(--secondary-color);
+    background: #6A5BFF;
     border-radius: 50%;
     cursor: pointer;
 }
 
 .rating-values {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 15px;
+    margin-top: 10px;
 }
 
-.rating-values button {
-    width: 86px;
-    height: 46px;
-    border: 1px solid var(--text-dark);
-    border-radius: 5px;
-    background: #FFFFFF;
+.rating-values span {
     font-family: 'Circe', sans-serif;
     font-size: 14px;
-    color: var(--text-dark);
+    color: #000;
 }
 
 /* Grid */
 .startup-list-container {
-    margin-left: 300px;
-    margin-top: 256px;
+    margin-left: 50px;
 }
 
 .startup-grid {
@@ -207,119 +167,58 @@
 }
 
 .startup-card {
-    box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    padding: 15px 9px;
-    gap: 19px;
+    padding: 15px;
     width: 330px;
-    height: 507px;
+    height: 400px;
     background: #FFFFFF;
-    border: 3px solid var(--text-dark);
+    border: 1px solid #000;
     border-radius: 28px;
 }
 
 .startup-card__image-container {
-    width: 312px;
-    height: 140px;
-    position: relative;
-    border-radius: 20px;
+    width: 300px;
+    height: 150px;
+    border-radius: 50%;
     overflow: hidden;
     background: #D9D9D9;
+    margin-bottom: 15px;
 }
 
 .startup-card__image {
-    position: absolute;
-    width: 325px;
-    height: 325px;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    border-radius: 22px;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
 }
 
 .startup-card__content {
     display: flex;
     flex-direction: column;
-    gap: 25px;
-    width: 279px;
-}
-
-.startup-card__top {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-}
-
-.startup-card__info {
-    display: flex;
-    flex-direction: column;
-    gap: 7px;
+    gap: 15px;
 }
 
 .startup-card__title {
     font-family: 'Circe', sans-serif;
     font-weight: 700;
     font-size: 20px;
-    color: var(--text-dark);
-}
-
-.startup-card__category {
-    font-family: 'Circe', sans-serif;
-    font-size: 14px;
-    color: var(--text-gray);
-}
-
-.startup-card__rating {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 5px;
-}
-
-.rating-text {
-    font-family: 'Circe', sans-serif;
-    font-size: 14px;
-    color: var(--text-gray);
-}
-
-.stars {
-    display: flex;
-    gap: 5px;
-    color: var(--primary-color);
-}
-
-.startup-card__desc-block {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+    color: #000;
 }
 
 .startup-card__description {
-    font-family: 'Helvetica Neue', sans-serif;
-    font-size: 12px;
-    line-height: 14px;
-    color: var(--text-dark);
+    font-family: 'Circe', sans-serif;
+    font-size: 14px;
+    color: #000;
 }
 
-.read-more {
-    font-family: 'Helvetica Neue', sans-serif;
-    font-size: 8px;
-    color: rgba(49, 49, 49, 0.55);
-}
-
-.startup-card__fixed-bottom {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
+.startup-card__rating .stars {
+    color: #6A5BFF;
 }
 
 .startup-card__button {
     width: 218px;
     height: 55px;
-    background: var(--primary-color);
+    background: #6A5BFF;
     border-radius: 99px;
     display: flex;
     justify-content: center;
@@ -327,42 +226,65 @@
     font-family: 'Circe', sans-serif;
     font-weight: 700;
     font-size: 18px;
-    color: var(--text-light);
+    color: #FFF;
+    text-decoration: none;
+    margin-top: auto;
+}
+
+/* Promotional Area */
+.promotional-area {
+    background: #1A1A1A url('https://images.unsplash.com/photo-1519681393784-d12026793375?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80') no-repeat center;
+    color: #FFF;
+    padding: 50px 80px;
+    text-align: center;
+    margin-top: 50px;
+}
+
+.promotional-area h2 {
+    font-family: 'Circe', sans-serif;
+    font-weight: 700;
+    font-size: 32px;
+    text-transform: uppercase;
+}
+
+.promotional-area p {
+    font-family: 'Circe', sans-serif;
+    font-size: 16px;
+    margin: 20px 0;
+}
+
+.app-logos {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.app-logos img {
+    height: 40px;
+}
+
+.footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.footer-links a {
+    font-family: 'Circe', sans-serif;
+    font-size: 14px;
+    color: #FFF;
     text-decoration: none;
 }
 
-.startup-card__button:hover {
-    background: var(--secondary-color);
-}
-
-.startup-card__investors-block {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.startup-card__investors-icon {
-    width: 16px;
-    height: 16px;
-    background: #4E4F51; /* Замените на иконку, если нужно */
-}
-
-.startup-card__investors-text {
+.promotional-area button {
+    background: #6A5BFF;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 99px;
     font-family: 'Circe', sans-serif;
     font-weight: 700;
-    font-size: 14px;
-    color: #4E4F51;
-}
-
-/* Стили для текста "Нет доступных стартапов" */
-.text-center {
-    text-align: center;
-}
-
-.text-gray-600 {
-    color: #4B5563;
-}
-
-.text-lg {
     font-size: 18px;
+    color: #FFF;
 }
