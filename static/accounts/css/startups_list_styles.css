@@ -6,56 +6,6 @@
     background: #FFFFFF;
 }
 
-/* Header */
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 80px;
-    height: 59px;
-    width: 1280px;
-    margin: 0 auto;
-    background: #FFFFFF;
-}
-
-.logo {
-    font-family: 'Koulen', sans-serif;
-    font-size: 24px;
-    color: #191919;
-    padding: 8px 32px;
-}
-
-.search-bar {
-    display: none; /* Скрыт по макету */
-}
-
-.navigation ul {
-    display: flex;
-    gap: 24px;
-}
-
-.navigation a {
-    font-family: 'Circe', sans-serif;
-    font-size: 16px;
-    color: #000000;
-    padding: 8px 16px;
-    text-decoration: none;
-}
-
-.navigation a.active {
-    background: #818CE5;
-    color: #FFFFFF;
-    border-radius: 99px;
-    padding: 16px 35px;
-}
-
-.user-profile img {
-    width: 58px;
-    height: 58px;
-    border: 2px solid #7B61FF;
-    border-radius: 29px;
-}
-
 /* Search Bar Below Header */
 .search-bar-below {
     position: absolute;
@@ -63,7 +13,7 @@
     left: 300px;
     width: 839px;
     height: 80px;
-    background: #818CE5;
+    background: var(--secondary-color);
     border-radius: 32px;
     display: flex;
     align-items: center;
@@ -79,15 +29,20 @@
     padding-left: 32px;
     font-family: 'Circe', sans-serif;
     font-size: 16px;
-    color: #CBCBCB;
+    color: var(--text-gray);
 }
 
 .search-bar-below .search-icon {
     width: 38px;
     height: 38px;
-    background: url('../images/search-icon.png') no-repeat center; /* Замените на ваш путь к иконке */
+    background: url('../images/search-icon.png') no-repeat center; /* Укажите путь к иконке */
     margin-left: 10px;
     opacity: 0.6;
+}
+
+/* Заголовок */
+.catalog-title {
+    display: none; /* Скрыт, так как в макете Figma его нет */
 }
 
 /* Sidebar */
@@ -102,7 +57,7 @@
     font-family: 'Circe', sans-serif;
     font-weight: 700;
     font-size: 20px;
-    color: #000000;
+    color: var(--text-dark);
     margin-bottom: 15px;
 }
 
@@ -112,20 +67,20 @@
     gap: 10px;
     font-family: 'Circe', sans-serif;
     font-size: 14px;
-    color: #000000;
+    color: var(--text-dark);
     margin-bottom: 5px;
 }
 
 .custom-checkbox input[type="checkbox"] {
     width: 11px;
     height: 11px;
-    border: 1px solid #000000;
+    border: 1px solid var(--text-dark);
     border-radius: 2px;
     appearance: none;
 }
 
 .custom-checkbox input[type="checkbox"]:checked {
-    background: #7B61FF;
+    background: var(--primary-color);
 }
 
 .divider {
@@ -145,7 +100,7 @@
 .switch-wrapper span {
     font-family: 'Circe', sans-serif;
     font-size: 14px;
-    color: #000000;
+    color: var(--text-dark);
 }
 
 .switch {
@@ -185,7 +140,7 @@
 }
 
 .switch input:checked + .slider {
-    background: #818CE5;
+    background: var(--secondary-color);
 }
 
 .switch input:checked + .slider:before {
@@ -195,7 +150,7 @@
 .rating-range p {
     font-family: 'Circe', sans-serif;
     font-size: 14px;
-    color: #000000;
+    color: var(--text-dark);
     margin-bottom: 10px;
 }
 
@@ -210,7 +165,7 @@
     -webkit-appearance: none;
     width: 15px;
     height: 15px;
-    background: #818CE5;
+    background: var(--secondary-color);
     border-radius: 50%;
     cursor: pointer;
 }
@@ -224,12 +179,12 @@
 .rating-values button {
     width: 86px;
     height: 46px;
-    border: 1px solid #000000;
+    border: 1px solid var(--text-dark);
     border-radius: 5px;
     background: #FFFFFF;
     font-family: 'Circe', sans-serif;
     font-size: 14px;
-    color: #000000;
+    color: var(--text-dark);
 }
 
 /* Grid */
@@ -253,7 +208,7 @@
     width: 330px;
     height: 507px;
     background: #FFFFFF;
-    border: 3px solid #000000;
+    border: 3px solid var(--text-dark);
     border-radius: 28px;
 }
 
@@ -274,6 +229,7 @@
     top: 50%;
     transform: translate(-50%, -50%);
     border-radius: 22px;
+    object-fit: cover;
 }
 
 .startup-card__content {
@@ -299,13 +255,13 @@
     font-family: 'Circe', sans-serif;
     font-weight: 700;
     font-size: 20px;
-    color: #000000;
+    color: var(--text-dark);
 }
 
 .startup-card__category {
     font-family: 'Circe', sans-serif;
     font-size: 14px;
-    color: #A9A9A9;
+    color: var(--text-gray);
 }
 
 .startup-card__rating {
@@ -318,13 +274,13 @@
 .rating-text {
     font-family: 'Circe', sans-serif;
     font-size: 14px;
-    color: #A9A9A9;
+    color: var(--text-gray);
 }
 
 .stars {
     display: flex;
     gap: 5px;
-    color: #7B61FF;
+    color: var(--primary-color);
 }
 
 .startup-card__desc-block {
@@ -337,7 +293,7 @@
     font-family: 'Helvetica Neue', sans-serif;
     font-size: 12px;
     line-height: 14px;
-    color: #000000;
+    color: var(--text-dark);
 }
 
 .read-more {
@@ -356,7 +312,7 @@
 .startup-card__button {
     width: 218px;
     height: 55px;
-    background: #7B61FF;
+    background: var(--primary-color);
     border-radius: 99px;
     display: flex;
     justify-content: center;
@@ -364,8 +320,12 @@
     font-family: 'Circe', sans-serif;
     font-weight: 700;
     font-size: 18px;
-    color: #FFFFFF;
+    color: var(--text-light);
     text-decoration: none;
+}
+
+.startup-card__button:hover {
+    background: var(--secondary-color);
 }
 
 .startup-card__investors-block {
@@ -387,117 +347,15 @@
     color: #4E4F51;
 }
 
-/* Footer */
-.footer {
-    width: 1440px;
-    background: #000000;
-    color: #FFFFFF;
-    padding: 32px 80px;
-    margin-top: 50px;
+/* Стили для текста "Нет доступных стартапов" */
+.text-center {
+    text-align: center;
 }
 
-.footer-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-bottom: 32px;
+.text-gray-600 {
+    color: #4B5563;
 }
 
-.footer-top h2 {
-    font-family: 'Koulen', sans-serif;
-    font-size: 60px;
-    color: #FFFFFF;
-}
-
-.social-icons {
-    display: flex;
-    gap: 16px;
-}
-
-.social-icons img {
-    width: 32px;
-    height: 32px;
-    background: #9E9E9E;
-    border-radius: 50%;
-}
-
-.join-button {
-    width: 195px;
-    height: 48px;
-    border: 1px solid #FFFFFF;
-    border-radius: 99px;
-    background: none;
-    color: #FFFFFF;
-    font-family: 'Circe', sans-serif;
-    font-weight: 700;
+.text-lg {
     font-size: 18px;
-    cursor: pointer;
-}
-
-.footer-middle {
-    display: flex;
-    justify-content: space-between;
-    padding: 24px 0;
-}
-
-.menu-column, .about-column, .text-column {
-    display: flex;
-    flex-direction: column;
-    gap: 32px;
-}
-
-.menu-column h3, .about-column h3 {
-    font-family: 'Circe', sans-serif;
-    font-weight: 700;
-    font-size: 18px;
-    color: #9E9E9E;
-}
-
-.menu-column ul, .about-column ul {
-    list-style: none;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-}
-
-.menu-column a, .about-column a {
-    font-family: 'Circe', sans-serif;
-    font-size: 16px;
-    color: #FFFFFF;
-    text-decoration: none;
-}
-
-.text-column p {
-    font-family: 'Neue Power', sans-serif;
-    font-size: 16px;
-    line-height: 24px;
-    color: #A7A7A7;
-    width: 330px;
-}
-
-.footer-bottom {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #F5F4F3;
-    padding: 16px 32px;
-    color: #4E4F51;
-}
-
-.footer-bottom p {
-    font-family: 'Circe', sans-serif;
-    font-size: 12px;
-}
-
-.footer-links {
-    display: flex;
-    gap: 40px;
-}
-
-.footer-links a {
-    font-family: 'Circe', sans-serif;
-    font-size: 12px;
-    color: #4E4F51;
-    text-decoration: none;
 }

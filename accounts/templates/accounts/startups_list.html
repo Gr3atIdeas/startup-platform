@@ -9,26 +9,6 @@
 
 {% block content %}
 <div class="startups-catalog-page">
-    <!-- Header -->
-    <header class="header">
-        <div class="logo">Great Ideas</div>
-        <div class="search-bar">
-            <input type="text" placeholder="Поиск">
-            <button>Search</button>
-        </div>
-        <nav class="navigation">
-            <ul>
-                <li><a href="#" class="active">Каталог</a></li>
-                <li><a href="#">Портфель</a></li>
-                <li><a href="#">Новости</a></li>
-                <li><a href="#">CosmoChat</a></li>
-            </ul>
-        </nav>
-        <div class="user-profile">
-            <img src="{% static 'accounts/images/profile-icon.png' %}" alt="Profile">
-        </div>
-    </header>
-
     <!-- Search Bar Below Header -->
     <div class="search-bar-below">
         <input type="text" placeholder="Поиск">
@@ -85,7 +65,11 @@
                         <div class="startup-card">
                             <!-- Картинка -->
                             <div class="startup-card__image-container">
-                                <img src="{% static 'accounts/images/startups/IMG_7665.png' %}" alt="Логотип" class="startup-card__image">
+                                {% if startup.logo_urls and startup.logo_urls|length > 0 %}
+                                    <img src="{{ startup.get_logo_url }}" alt="Логотип {{ startup.title }}" class="startup-card__image">
+                                {% else %}
+                                    <img src="{% static 'accounts/images/startups/IMG_7665.png' %}" alt="Логотип по умолчанию" class="startup-card__image">
+                                {% endif %}
                             </div>
 
                             <!-- Content -->
@@ -133,47 +117,5 @@
             {% endif %}
         </div>
     </div>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-top">
-            <h2>GREAT IDEAS</h2>
-            <div class="social-icons">
-                <a href="#"><img src="{% static 'accounts/images/twitter.png' %}" alt="Twitter"></a>
-                <a href="#"><img src="{% static 'accounts/images/instagram.png' %}" alt="Instagram"></a>
-            </div>
-            <button class="join-button">Присоединиться</button>
-        </div>
-        <div class="footer-middle">
-            <div class="menu-column">
-                <h3>Меню</h3>
-                <ul>
-                    <li><a href="#">Каталог</a></li>
-                    <li><a href="#">Портфель</a></li>
-                    <li><a href="#">Стартапы</a></li>
-                    <li><a href="#">Новости</a></li>
-                    <li><a href="#">CosmoChat</a></li>
-                </ul>
-            </div>
-            <div class="about-column">
-                <h3>О нас</h3>
-                <ul>
-                    <li><a href="#">FAQ</a></li>
-                    <li><a href="#">Поддержка</a></li>
-                    <li><a href="#">Контакты</a></li>
-                </ul>
-            </div>
-            <div class="text-column">
-                <p>Раскройте открывающиеся возможности и будьте частью инновационной волны</p>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>© 2022 Great Ideas</p>
-            <div class="footer-links">
-                <a href="#">Политика конфиденциальности</a>
-                <a href="#">Офферта</a>
-            </div>
-        </div>
-    </footer>
 </div>
 {% endblock %}
