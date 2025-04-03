@@ -9,6 +9,7 @@
 
 {% block content %}
 <div class="startups-catalog-page">
+
     <h1 class="catalog-title">Список стартапов</h1>
 
     <div class="main-content-area">
@@ -98,10 +99,10 @@
                                 <!-- Investors -->
                                 <div class="startup-card__investors-block">
                                     <span class="startup-card__investors-icon"></span>
-                                    <span class="startup-card__investors-text">Инвестировало ({{ startup.investors_count|default:"0" }})</span>
+                                    <span class="startup-card__investors-text">Инвестировали ({{ startup.investors_count|default:"0" }})</span>
                                 </div>
-                            </div>
 
+                            </div>
                         </div>
                     {% endfor %}
                 </div>

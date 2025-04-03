@@ -1,4 +1,27 @@
-/* === CARD FRAME (Frame 467) === */
+/* ====== Grid ====== */
+.startup-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  justify-content: flex-start;
+}
+
+/* ====== Sidebar (категории вернулись влево) ====== */
+.main-content-area {
+  display: flex;
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 20px;
+}
+
+.filters-sidebar {
+  width: 280px;
+  padding: 20px;
+  border-right: 1px solid #dee2e6;
+  box-sizing: border-box;
+}
+
+/* ====== CARD ====== */
 .startup-card {
   display: flex;
   flex-direction: column;
@@ -16,54 +39,47 @@
   overflow: hidden;
 }
 
-/* === IMAGE (Frame 459 + Rectangle 75 + IMG_7665) === */
+/* ====== Image (уменьшено как просил) ====== */
 .startup-card__image-container {
   position: relative;
-  width: 312px;
-  height: 140px;
+  width: 280px;
+  height: 120px;
   border-radius: 20px;
   background: #D9D9D9;
   overflow: hidden;
 }
 .startup-card__image {
-  position: absolute;
-  width: 325px;
-  height: 325px;
-  left: calc(50% - 325px/2 + 0.5px);
-  top: calc(50% - 325px/2 + 13.5px);
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  border-radius: 22px;
+  border-radius: 20px;
 }
 
-/* === CONTENT FRAME (Frame 464) === */
+/* ====== Content ====== */
 .startup-card__content {
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 0px;
-  gap: 25px;
+  gap: 16px;
   width: 279px;
   height: 308px;
 }
 
-/* === TOP INFO (Frame 461) === */
+/* ====== Title + Category ====== */
 .startup-card__top {
   display: flex;
   flex-direction: row;
   align-items: flex-start;
   gap: 5px;
-  width: 279px;
-  height: 43px;
+  width: 100%;
 }
-
-/* === TITLE & CATEGORY (Frame 460) === */
 .startup-card__info {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 7px;
+  gap: 5px;
   width: 184px;
-  height: 43px;
 }
 .startup-card__title {
   font-family: 'Circe', sans-serif;
@@ -84,21 +100,31 @@
   margin: 0;
 }
 
-/* === RATING (Frame 462) === */
+/* ====== Description (увеличен шрифт + отступ) ====== */
+.startup-card__desc-block {
+  margin-top: 4px;
+  width: 100%;
+}
+.startup-card__description {
+  font-family: 'Helvetica Neue', sans-serif;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 16px;
+  letter-spacing: 0.01em;
+  color: #000000;
+  margin-top: 6px;
+}
+
+/* ====== Rating ====== */
 .startup-card__rating {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   gap: 5px;
   width: 90px;
-  height: 35px;
 }
 .rating-text {
-  font-family: 'Circe', sans-serif;
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 18px;
-  letter-spacing: -0.02em;
+  font-size: 13px;
   color: #A9A9A9;
 }
 .stars {
@@ -108,82 +134,54 @@
   color: #7B61FF;
 }
 
-/* === DESCRIPTION (Frame 463) === */
-.startup-card__desc-block {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 16px;
-  width: 279px;
-  height: 95px;
-}
-.startup-card__description {
-  font-family: 'Helvetica Neue', sans-serif;
-  font-weight: 400;
-  font-size: 12px;
-  line-height: 14px;
-  letter-spacing: 0.01em;
-  color: #000000;
-}
-
-/* === BUTTON (menu) === */
+/* ====== Button (уменьшена) ====== */
 .startup-card__button {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 16px 64px;
+  padding: 12px 36px;
   gap: 8px;
-  width: 218px;
-  height: 55px;
+  width: 180px;
+  height: 45px;
   background: #7B61FF;
   border-radius: 99px;
   font-family: 'Circe', sans-serif;
   font-weight: 700;
-  font-size: 18px;
-  line-height: 32px;
+  font-size: 16px;
+  line-height: 26px;
   letter-spacing: -0.02em;
   color: #FFFFFF;
   text-decoration: none;
   transition: background 0.3s ease;
 }
-
 .startup-card__button:hover {
   background: #6a50f0;
 }
 
-/* === INVESTORS === */
+/* ====== Investors (сместил ниже и правее + уменьшил) ====== */
 .startup-card__investors-block {
   display: flex;
-  flex-direction: row;
   align-items: center;
-  padding: 8px 24px 8px 0px;
-  gap: 8px;
-  width: 184px;
-  height: 40px;
+  margin-top: 4px;
+  margin-left: auto;
+  margin-right: 8px;
 }
 .startup-card__investors-icon {
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
   background: #4E4F51;
   border-radius: 50%;
 }
 .startup-card__investors-text {
   font-family: 'Circe', sans-serif;
-  font-weight: 700;
-  font-size: 14px;
-  line-height: 24px;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 20px;
   color: #4E4F51;
+  margin-left: 6px;
 }
 
-/* === GRID === */
-.startup-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 24px;
-  justify-content: center;
-}
-
-/* === ADAPTIVE === */
+/* ====== Adaptive ====== */
 @media (max-width: 600px) {
   .startup-card {
       width: 100%;
