@@ -1,138 +1,173 @@
-/* Блок категорий */
-.categories-block {
-    position: absolute;
-    top: 190px;
-    left: 80px;
-    width: 150px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+/* Общий контейнер */
+.startups-catalog-page {
+    width: 1440px;
+    margin: 0 auto;
+    background: #FFFFFF;
 }
 
-.categories-block h3 {
+/* Main Content */
+.main-content-area {
+    display: flex;
+    margin-top: 60px;
+}
+
+/* Sidebar */
+.filters-sidebar {
+    width: 200px;
+    margin-left: 80px;
+}
+
+.filters-sidebar h4 {
     font-family: 'Circe', sans-serif;
     font-weight: 700;
     font-size: 20px;
-    line-height: 18px;
+    color: #000;
+    margin-bottom: 15px;
+}
+
+.category-list label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Circe', sans-serif;
+    font-size: 14px;
+    color: #000;
     margin-bottom: 10px;
 }
 
-/* Карточка стартапа */
-.card {
-    box-sizing: border-box;
+.custom-checkbox input[type="checkbox"] {
+    width: 11px;
+    height: 11px;
+    border: 1px solid #000;
+    border-radius: 2px;
+    appearance: none;
+}
+
+.custom-checkbox input[type="checkbox"]:checked {
+    background: #6A5BFF;
+}
+
+.rating-range p {
+    font-family: 'Circe', sans-serif;
+    font-size: 14px;
+    color: #000;
+    margin: 20px 0 10px;
+}
+
+.range-slider {
+    width: 100%;
+    height: 2px;
+    background: #989898;
+    -webkit-appearance: none;
+}
+
+.range-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 15px;
+    height: 15px;
+    background: #6A5BFF;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.rating-values {
+    margin-top: 10px;
+}
+
+.rating-values span {
+    font-family: 'Circe', sans-serif;
+    font-size: 14px;
+    color: #000;
+}
+
+/* Grid */
+.startup-list-container {
+    margin-left: 50px;
+}
+
+.startup-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 330px);
+    gap: 35px;
+}
+
+.startup-card {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 9px;
-    gap: 19px;
+    padding: 15px;
     width: 330px;
-    height: 507px;
+    height: 400px;
     background: #FFFFFF;
-    border: 3px solid #000000;
+    border: 1px solid #000;
     border-radius: 28px;
 }
 
-.card-header {
-    width: 312px;
-    height: 140px;
-    position: relative;
-    border-radius: 20px;
+.startup-card__image-container {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
     overflow: hidden;
+    background: #D9D9D9;
+    margin: 0 auto 15px;
 }
 
-.card-header img {
-    position: absolute;
-    width: 325px;
-    height: 325px;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    border-radius: 22px;
+.startup-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
-/* Контент карточки */
-.card-content {
+.startup-card__content {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
     gap: 15px;
-    width: 100%;
+    text-align: center;
 }
 
-/* Название и рейтинг */
-.card-top {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-}
-
-.card-title {
+.startup-card__title {
     font-family: 'Circe', sans-serif;
     font-weight: 700;
     font-size: 20px;
-    line-height: 18px;
-    letter-spacing: -0.02em;
-    color: #000000;
+    color: #000;
 }
 
-.card-rating {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
+.startup-card__description {
     font-family: 'Circe', sans-serif;
-    font-weight: 400;
     font-size: 14px;
-    color: #A9A9A9;
-    gap: 3px;
+    color: #000;
 }
 
-/* Звезды */
-.card-rating .stars {
-    display: flex;
-    gap: 3px;
+.startup-card__rating .stars {
+    color: #FFD700; /* Золотистый цвет для звезд */
+    font-size: 16px;
 }
 
-/* Категория */
-.card-category {
-    font-family: 'Circe', sans-serif;
-    font-weight: 400;
-    font-size: 14px;
-    color: #A9A9A9;
-}
-
-/* Описание */
-.card-description {
-    font-family: 'Helvetica Neue', sans-serif;
-    font-size: 13px;
-    line-height: 16px;
-    color: #000000;
-    margin-top: 5px;
-}
-
-/* Кнопка */
-.card-button {
+.startup-card__button {
     width: 218px;
-    height: 50px;
-    background: #7B61FF;
+    height: 55px;
+    background: #6A5BFF;
     border-radius: 99px;
     display: flex;
     justify-content: center;
     align-items: center;
     font-family: 'Circe', sans-serif;
     font-weight: 700;
-    font-size: 16px;
-    color: #FFFFFF;
+    font-size: 18px;
+    color: #FFF;
+    text-decoration: none;
+    margin: 0 auto;
     margin-top: auto;
 }
 
-/* Инвестировало */
-.card-invest {
-    font-family: 'Circe', sans-serif;
-    font-weight: 700;
-    font-size: 13px;
-    color: #4E4F51;
+/* Стили для текста "Нет доступных стартапов" */
+.text-center {
     text-align: center;
-    width: 100%;
-    margin-top: 8px;
+}
+
+.text-gray-600 {
+    color: #4B5563;
+}
+
+.text-lg {
+    font-size: 18px;
 }
