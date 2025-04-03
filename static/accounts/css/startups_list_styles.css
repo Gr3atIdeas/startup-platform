@@ -1,138 +1,138 @@
 /* Блок категорий */
 .categories-block {
-  position: absolute;
-  top: 190px;
-  left: 80px;
-  width: 150px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+    position: absolute;
+    top: 190px;
+    left: 80px;
+    width: 150px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .categories-block h3 {
-  font-family: 'Circe', sans-serif;
-  font-weight: 700;
-  font-size: 20px;
-  line-height: 18px;
-  margin-bottom: 10px;
+    font-family: 'Circe', sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 18px;
+    margin-bottom: 10px;
 }
 
 /* Карточка стартапа */
 .card {
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 9px;
-  gap: 19px;
-  width: 330px;
-  height: 507px;
-  background: #FFFFFF;
-  border: 3px solid #000000;
-  border-radius: 28px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 9px;
+    gap: 19px;
+    width: 330px;
+    height: 507px;
+    background: #FFFFFF;
+    border: 3px solid #000000;
+    border-radius: 28px;
 }
 
 .card-header {
-  width: 312px;
-  height: 140px;
-  position: relative;
-  border-radius: 20px;
-  overflow: hidden;
+    width: 312px;
+    height: 140px;
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
 }
 
 .card-header img {
-  position: absolute;
-  width: 325px;
-  height: 325px;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  border-radius: 22px;
+    position: absolute;
+    width: 325px;
+    height: 325px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 22px;
 }
 
 /* Контент карточки */
 .card-content {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 15px;
-  width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+    width: 100%;
 }
 
 /* Название и рейтинг */
 .card-top {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
 }
 
 .card-title {
-  font-family: 'Circe', sans-serif;
-  font-weight: 700;
-  font-size: 20px;
-  line-height: 18px;
-  letter-spacing: -0.02em;
-  color: #000000;
+    font-family: 'Circe', sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 18px;
+    letter-spacing: -0.02em;
+    color: #000000;
 }
 
 .card-rating {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  font-family: 'Circe', sans-serif;
-  font-weight: 400;
-  font-size: 14px;
-  color: #A9A9A9;
-  gap: 3px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    font-family: 'Circe', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    color: #A9A9A9;
+    gap: 3px;
 }
 
 /* Звезды */
 .card-rating .stars {
-  display: flex;
-  gap: 3px;
+    display: flex;
+    gap: 3px;
 }
 
 /* Категория */
 .card-category {
-  font-family: 'Circe', sans-serif;
-  font-weight: 400;
-  font-size: 14px;
-  color: #A9A9A9;
+    font-family: 'Circe', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    color: #A9A9A9;
 }
 
 /* Описание */
 .card-description {
-  font-family: 'Helvetica Neue', sans-serif;
-  font-size: 13px;
-  line-height: 16px;
-  color: #000000;
-  margin-top: 5px;
+    font-family: 'Helvetica Neue', sans-serif;
+    font-size: 13px;
+    line-height: 16px;
+    color: #000000;
+    margin-top: 5px;
 }
 
 /* Кнопка */
 .card-button {
-  width: 218px;
-  height: 50px;
-  background: #7B61FF;
-  border-radius: 99px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-family: 'Circe', sans-serif;
-  font-weight: 700;
-  font-size: 16px;
-  color: #FFFFFF;
-  margin-top: auto;
+    width: 218px;
+    height: 50px;
+    background: #7B61FF;
+    border-radius: 99px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Circe', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: #FFFFFF;
+    margin-top: auto;
 }
 
 /* Инвестировало */
 .card-invest {
-  font-family: 'Circe', sans-serif;
-  font-weight: 700;
-  font-size: 13px;
-  color: #4E4F51;
-  text-align: center;
-  width: 100%;
-  margin-top: 8px;
+    font-family: 'Circe', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    color: #4E4F51;
+    text-align: center;
+    width: 100%;
+    margin-top: 8px;
 }
