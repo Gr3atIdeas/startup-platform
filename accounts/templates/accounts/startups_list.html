@@ -4,6 +4,8 @@
 {% block title %}Каталог стартапов{% endblock %}
 
 {% block head_extra %}
+  <!-- Подключаем Font Awesome для иконок -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link rel="stylesheet" href="{% static 'accounts/css/startups_list_styles.css' %}">
 {% endblock %}
 
@@ -134,7 +136,8 @@
               <div class="startup-card__fixed-bottom">
                 <a href="{% url 'startup_detail' startup.id %}" class="startup-card__button">Подробнее</a>
                 <div class="startup-card__investors-block">
-                  <span class="startup-card__investors-icon"></span>
+                  <!-- Вместо фонового изображения используем иконку Font Awesome -->
+                  <i class="fas fa-hand-holding-usd startup-card__investors-icon"></i>
                   <span class="startup-card__investors-text">Инвестировало ({{ startup.investors_count }})</span>
                 </div>
               </div>

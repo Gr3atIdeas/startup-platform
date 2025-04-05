@@ -1,11 +1,11 @@
-/* Общая раскладка контейнера каталога */
+/* Общая раскладка каталога */
 .catalog-container {
     display: flex;
     gap: 20px;
     padding: 20px;
   }
   
-  /* Стили боковой панели с фильтрами */
+  /* !-- Боковая панель фильтров -- */
   .filters-sidebar {
     width: 250px;
     background: #f8f9fa;
@@ -39,7 +39,7 @@
     border-top: 1px solid #ddd;
   }
   
-  /* Стили переключателя для микроинвестиций */
+  /* Переключатель для микроинвестиций */
   .switch {
     position: relative;
     display: inline-block;
@@ -81,7 +81,7 @@
     transform: translateX(20px);
   }
   
-  /* Стили фильтра по рейтингу */
+  /* Фильтр по рейтингу */
   .rating-filter {
     margin-top: 20px;
   }
@@ -159,7 +159,7 @@
     margin: 0;
   }
   
-  /* Стили блока рейтинга */
+  /* Рейтинг */
   .startup-card__rating {
     display: flex;
     flex-direction: column;
@@ -222,16 +222,17 @@
   .startup-card__button:hover {
     background: #5D50E3;
   }
+  
+  /* Блок инвесторов */
   .startup-card__investors-block {
     display: flex;
     align-items: center;
     gap: 8px;
   }
+  /* Теперь иконка задаётся через Font Awesome, поэтому подключаем дополнительные параметры оформления */
   .startup-card__investors-icon {
-    width: 16px;
-    height: 16px;
-    background: url("{% static 'accounts/images/invest-icon.png' %}") no-repeat center center;
-    background-size: contain;
+    font-size: 16px;
+    color: #4E4F51;
   }
   .startup-card__investors-text {
     font-family: 'Circe', sans-serif;
