@@ -1,110 +1,150 @@
-{% extends 'accounts/base.html' %}
+{% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Список стартапов{% endblock %}
+{% block title %}Каталог стартапов{% endblock %}
 
 {% block head_extra %}
-    <link rel="stylesheet" href="{% static 'accounts/css/startups_list_styles.css' %}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="stylesheet" href="{% static 'accounts/css/startups_list_styles.css' %}">
 {% endblock %}
 
 {% block content %}
 <div class="startups-catalog-page">
+  <div class="catalog-container">
+    <!-- Боковая панель с фильтрами -->
+    <aside class="filters-sidebar">
+      <h4>Категории</h4>
+      <ul class="category-list">
+        <li>
+          <label>
+            <input type="checkbox" name="category" value="medicine">
+            Медицина
+          </label>
+        </li>
+        <li>
+          <label>
+            <input type="checkbox" name="category" value="automobiles">
+            Автомобили
+          </label>
+        </li>
+        <li>
+          <label>
+            <input type="checkbox" name="category" value="delivery">
+            Доставка
+          </label>
+        </li>
+        <li>
+          <label>
+            <input type="checkbox" name="category" value="cafe">
+            Кафе/рестораны
+          </label>
+        </li>
+        <li>
+          <label>
+            <input type="checkbox" name="category" value="fastfood">
+            Фастфуд
+          </label>
+        </li>
+        <li>
+          <label>
+            <input type="checkbox" name="category" value="health">
+            Здоровье
+          </label>
+        </li>
+        <li>
+          <label>
+            <input type="checkbox" name="category" value="beauty">
+            Красота
+          </label>
+        </li>
+        <li>
+          <label>
+            <input type="checkbox" name="category" value="transport">
+            Транспорт
+          </label>
+        </li>
+        <li>
+          <label>
+            <input type="checkbox" name="category" value="sport">
+            Спорт
+          </label>
+        </li>
+        <li>
+          <label>
+            <input type="checkbox" name="category" value="psychology">
+            Психология
+          </label>
+        </li>
+        <li>
+          <label>
+            <input type="checkbox" name="category" value="ai">
+            ИИ
+          </label>
+        </li>
+      </ul>
 
-    <!-- Search -->
-    <div class="search-bar-below">
-        <input type="text" placeholder="Поиск">
-        <span class="search-icon"><i class="fas fa-search"></i></span>
-    </div>
+      <hr class="divider">
 
-    <h1 class="catalog-title">Список стартапов</h1>
+      <div class="micro-investment-filter">
+        <p>Микроинвестиции</p>
+        <label class="switch">
+          <input type="checkbox" name="micro_investments">
+          <span class="slider round"></span>
+        </label>
+      </div>
 
-    <div class="main-content-area">
-
-        <!-- Sidebar -->
-        <aside class="filters-sidebar">
-            <h4>Категории</h4>
-            <div class="category-list">
-                {% for cat in categories %}
-                    <label class="custom-checkbox"><input type="checkbox" name="category"> {{ cat }}</label>
-                {% endfor %}
-            </div>
-
-            <hr class="divider">
-
-            <div class="switch-wrapper">
-                <span>Микроинвестиции</span>
-                <label class="switch">
-                    <input type="checkbox">
-                    <span class="slider round"></span>
-                </label>
-            </div>
-
-            <div class="rating-range">
-                <p>Рейтинг</p>
-                <input type="range" min="0" max="5" step="0.1" value="0" class="range-slider">
-                <div class="rating-values">
-                    <button>0</button>
-                    <button>4,6</button>
-                </div>
-            </div>
-        </aside>
-
-        <!-- Cards -->
-        <div class="startup-list-container">
-            {% if approved_startups %}
-                <div class="startup-grid">
-                    {% for startup in approved_startups %}
-                        <div class="startup-card">
-                            <div class="startup-card__image-container">
-                                {% if startup.logo_urls and startup.logo_urls|length > 0 %}
-                                    <img src="{{ startup.get_logo_url }}" alt="Логотип {{ startup.title }}" class="startup-card__image">
-                                {% else %}
-                                    <img src="{% static 'accounts/images/startups/IMG_7665.png' %}" alt="Логотип" class="startup-card__image">
-                                {% endif %}
-                            </div>
-
-                            <div class="startup-card__content">
-
-                                <div class="startup-card__top">
-                                    <div class="startup-card__info">
-                                        <h2 class="startup-card__title">{{ startup.title|default:"Без названия" }}</h2>
-                                        <p class="startup-card__category">Категория: {{ startup.direction.direction_name|default:"-" }}</p>
-                                    </div>
-                                    <div class="startup-card__rating">
-                                        <div class="rating-text">{{ startup.get_average_rating|floatformat:"1" }}/5</div>
-                                        <div class="stars">
-                                            {% for i in "12345" %}
-                                                {% if forloop.counter <= startup.get_average_rating %}
-                                                    ★
-                                                {% else %}
-                                                    ☆
-                                                {% endif %}
-                                            {% endfor %}
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="startup-card__desc-block">
-                                    <p class="startup-card__description">{{ startup.description|truncatechars:160|default:"Нет описания" }}</p>
-                                    <span class="read-more">Читать дальше</span>
-                                </div>
-
-                                <div class="startup-card__fixed-bottom">
-                                    <a href="{% url 'startup_detail' startup.startup_id %}" class="startup-card__button">Подробнее</a>
-                                    <div class="startup-card__investors-block">
-                                        <span class="startup-card__investors-icon"></span>
-                                        <span class="startup-card__investors-text">Инвестировало ({{ startup.investors_count|default:"0" }})</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
-            {% else %}
-                <p class="text-center text-gray-600 text-lg">Нет доступных стартапов.</p>
-            {% endif %}
+      <div class="rating-filter">
+        <p>Рейтинг</p>
+        <input type="range" min="0" max="4.6" step="0.1" value="0" class="rating-slider">
+        <div class="rating-values">
+          <span>0</span>
+          <span>4.6</span>
         </div>
+      </div>
+    </aside>
+
+    <!-- Секция с карточками стартапов -->
+    <div class="startup-grid">
+      {% if startups %}
+        {% for startup in startups %}
+          <div class="startup-card">
+            <div class="startup-card__image-container">
+              <img src="{{ startup.logo_url }}" alt="Логотип {{ startup.name }}" class="startup-card__image">
+            </div>
+            <div class="startup-card__content">
+              <h2 class="startup-card__title">{{ startup.name }}</h2>
+              <p class="startup-card__category">Категория: {{ startup.category.name }}</p>
+              <div class="startup-card__rating">
+                <span class="rating-text">{{ startup.rating }}/5</span>
+                <div class="stars">
+                  {% for i in "12345" %}
+                    {% if forloop.counter <= startup.rating|floatformat:"0" %}
+                      <span class="filled-star">★</span>
+                    {% else %}
+                      <span class="empty-star">★</span>
+                    {% endif %}
+                  {% endfor %}
+                </div>
+              </div>
+              <div class="startup-card__desc-block">
+                <p class="startup-card__description">
+                  {{ startup.description|truncatechars:100 }}
+                </p>
+                <span class="read-more">Читать дальше</span>
+              </div>
+              <div class="startup-card__fixed-bottom">
+                <a href="{% url 'startup_detail' startup.id %}" class="startup-card__button">Подробнее</a>
+                <div class="startup-card__investors-block">
+                  <span class="startup-card__investors-icon"></span>
+                  <span class="startup-card__investors-text">Инвестировало ({{ startup.investors_count }})</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <p>Нет доступных стартапов.</p>
+      {% endif %}
     </div>
+  </div>
 </div>
 {% endblock %}

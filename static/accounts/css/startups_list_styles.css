@@ -1,126 +1,214 @@
-.startup-grid {
+/* Общая раскладка контейнера каталога */
+.catalog-container {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+  }
+  
+  /* Стили боковой панели с фильтрами */
+  .filters-sidebar {
+    width: 250px;
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  .filters-sidebar h4 {
+    font-size: 18px;
+    margin-bottom: 15px;
+  }
+  
+  /* Стили списка категорий */
+  .category-list {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+  }
+  .category-list li {
+    margin-bottom: 10px;
+  }
+  .category-list label {
+    font-size: 14px;
+    cursor: pointer;
+  }
+  
+  /* Разделитель */
+  .divider {
+    margin: 20px 0;
+    border: none;
+    border-top: 1px solid #ddd;
+  }
+  
+  /* Стили переключателя для микроинвестиций */
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 20px;
+    margin-left: 10px;
+  }
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 20px;
+  }
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+  }
+  input:checked + .slider {
+    background-color: #7b61ff;
+  }
+  input:checked + .slider:before {
+    transform: translateX(20px);
+  }
+  
+  /* Стили фильтра по рейтингу */
+  .rating-filter {
+    margin-top: 20px;
+  }
+  .rating-filter p {
+    font-size: 14px;
+    margin-bottom: 5px;
+  }
+  .rating-slider {
+    width: 100%;
+  }
+  .rating-values {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #666;
+  }
+  
+  /* Сетка карточек стартапов */
+  .startup-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
-    gap: 35px;
-}
-
-/* --- CARD --- */
-.startup-card {
+    gap: 20px;
+    flex: 1;
+  }
+  
+  /* Стили карточки стартапа */
+  .startup-card {
+    background: #ffffff;
+    border: 3px solid #000;
+    border-radius: 28px;
+    padding: 15px 10px;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    padding: 15px 9px;
-    gap: 19px;
-    width: 330px;
-    height: 507px;
-    background: #FFFFFF;
-    border: 3px solid #000000;
-    border-radius: 28px;
+    gap: 15px;
     transition: transform 0.3s, box-shadow 0.3s;
-}
-
-.startup-card:hover {
+  }
+  .startup-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-
-/* Image */
-.startup-card__image-container {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Изображение карточки */
+  .startup-card__image-container {
     width: 312px;
     height: 140px;
-    background: #D9D9D9;
+    background: #d9d9d9;
     border-radius: 20px;
     overflow: hidden;
-}
-
-.startup-card__image {
+  }
+  .startup-card__image {
     width: 100%;
     height: 100%;
     object-fit: cover;
     border-radius: 20px;
-}
-
-/* Content */
-.startup-card__content {
+  }
+  
+  /* Контейнер контента карточки */
+  .startup-card__content {
     display: flex;
     flex-direction: column;
-    gap: 25px;
-    width: 100%;
-}
-
-/* Header */
-.startup-card__top {
-    display: flex;
-    justify-content: space-between;
-}
-
-.startup-card__info {
-    display: flex;
-    flex-direction: column;
-    gap: 7px;
-}
-
-.startup-card__title {
+    gap: 10px;
+  }
+  .startup-card__title {
     font-family: 'Circe', sans-serif;
     font-weight: 700;
     font-size: 20px;
     line-height: 18px;
     color: #000;
-}
-
-.startup-card__category {
+    margin: 0;
+  }
+  .startup-card__category {
     font-family: 'Circe', sans-serif;
     font-size: 14px;
     color: #A9A9A9;
-}
-
-/* Rating */
-.startup-card__rating {
+    margin: 0;
+  }
+  
+  /* Стили блока рейтинга */
+  .startup-card__rating {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
     gap: 5px;
-}
-
-.rating-text {
+  }
+  .rating-text {
     font-size: 14px;
     color: #A9A9A9;
-}
-
-.stars {
+  }
+  .stars {
     color: #7B61FF;
     font-size: 16px;
     display: flex;
-}
-
-/* Description */
-.startup-card__desc-block {
+  }
+  .filled-star {
+    color: #7B61FF;
+  }
+  .empty-star {
+    color: #ccc;
+  }
+  
+  /* Описание и кнопка "Читать дальше" */
+  .startup-card__desc-block {
     display: flex;
     flex-direction: column;
     gap: 5px;
-}
-
-.startup-card__description {
+  }
+  .startup-card__description {
     font-family: 'Helvetica Neue', sans-serif;
     font-size: 12px;
     line-height: 14px;
     color: #000;
-}
-
-.read-more {
+    margin: 0;
+  }
+  .read-more {
     font-size: 8px;
     color: rgba(49, 49, 49, 0.55);
-}
-
-/* Bottom */
-.startup-card__fixed-bottom {
+    cursor: pointer;
+  }
+  
+  /* Фиксированный нижний блок карточки */
+  .startup-card__fixed-bottom {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
-}
-
-.startup-card__button {
+    margin-top: auto;
+  }
+  .startup-card__button {
     padding: 16px 64px;
     background: #7B61FF;
     border-radius: 99px;
@@ -130,41 +218,39 @@
     color: #fff;
     text-decoration: none;
     transition: background 0.3s;
-}
-
-.startup-card__button:hover {
+  }
+  .startup-card__button:hover {
     background: #5D50E3;
-}
-
-.startup-card__investors-block {
+  }
+  .startup-card__investors-block {
     display: flex;
     align-items: center;
     gap: 8px;
-}
-
-.startup-card__investors-icon {
+  }
+  .startup-card__investors-icon {
     width: 16px;
     height: 16px;
-    background: url("https://cdn-icons-png.flaticon.com/512/847/847969.png") no-repeat center / contain;
-}
-
-.startup-card__investors-text {
+    background: url("{% static 'accounts/images/invest-icon.png' %}") no-repeat center center;
+    background-size: contain;
+  }
+  .startup-card__investors-text {
     font-family: 'Circe', sans-serif;
     font-weight: 700;
     font-size: 14px;
     color: #4E4F51;
-}
-
-/* Адаптив */
-@media (max-width: 1024px) {
-    .startup-grid {
-        grid-template-columns: repeat(2, 1fr);
+  }
+  
+  /* Адаптив */
+  @media (max-width: 1024px) {
+    .catalog-container {
+      flex-direction: column;
+      align-items: center;
     }
-}
-
-@media (max-width: 768px) {
-    .startup-grid {
-        grid-template-columns: 1fr;
-        justify-items: center;
+    .filters-sidebar {
+      width: 100%;
+      margin-bottom: 20px;
     }
-}
+    .startup-grid {
+      grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+    }
+  }
