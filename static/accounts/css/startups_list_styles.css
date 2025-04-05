@@ -5,7 +5,7 @@
     padding: 20px;
   }
   
-  /* !-- Боковая панель фильтров -- */
+  /* Стили боковой панели фильтров */
   .filters-sidebar {
     width: 250px;
     background: #f8f9fa;
@@ -21,8 +21,8 @@
   /* Стили списка категорий */
   .category-list {
     list-style: none;
-    padding-left: 0;
     margin: 0;
+    padding-left: 0;
   }
   .category-list li {
     margin-bottom: 10px;
@@ -159,7 +159,7 @@
     margin: 0;
   }
   
-  /* Рейтинг */
+  /* Стили блока рейтинга */
   .startup-card__rating {
     display: flex;
     flex-direction: column;
@@ -171,9 +171,8 @@
     color: #A9A9A9;
   }
   .stars {
-    color: #7B61FF;
-    font-size: 16px;
     display: flex;
+    font-size: 16px;
   }
   .filled-star {
     color: #7B61FF;
@@ -229,7 +228,6 @@
     align-items: center;
     gap: 8px;
   }
-  /* Теперь иконка задаётся через Font Awesome, поэтому подключаем дополнительные параметры оформления */
   .startup-card__investors-icon {
     font-size: 16px;
     color: #4E4F51;
