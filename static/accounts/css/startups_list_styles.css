@@ -163,6 +163,11 @@
   position: relative;
   cursor: pointer;
   margin-left: auto;
+  transition: background-color 0.3s;
+}
+
+.toggle-switch.active {
+  background: #7B61FF;
 }
 
 .toggle-handle {
@@ -173,6 +178,7 @@
   top: 3px;
   background: #FFFFFF;
   border-radius: 50%;
+  transition: left 0.3s;
 }
 
 /* Сетка карточек стартапов */
@@ -253,7 +259,6 @@
 .startup-description {
   display: flex;
   flex-direction: column;
-  gap: 12px;
   flex-grow: 1;
 }
 
@@ -270,11 +275,20 @@
   -webkit-box-orient: vertical;
 }
 
+/* Футер карточки */
+.card-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 15px;
+}
+
 .read-more {
   font-family: 'Helvetica Neue', sans-serif;
   font-weight: 400;
-  font-size: 13px;
-  color: #7B61FF;
+  font-size: 11px;
+  color: #9CA3AF;
   text-decoration: none;
   align-self: flex-start;
 }
@@ -288,8 +302,6 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-top: auto;
-  padding-top: 15px;
 }
 
 .like-button {
@@ -305,11 +317,11 @@
 }
 
 .like-button:hover i {
-  color: #ff6b6b;
+  color: #7B61FF;
 }
 
 .like-button.active i {
-  color: #ff6b6b;
+  color: #7B61FF;
 }
 
 .like-count {
