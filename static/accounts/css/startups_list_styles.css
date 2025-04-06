@@ -59,17 +59,18 @@
 .filter-heading {
   font-family: 'Circe', sans-serif;
   font-weight: 700;
-  font-size: 16px;
-  line-height: 18px;
+  font-size: 24px;
+  line-height: 28px;
+  letter-spacing: -0.01em;
   color: #000000;
-  margin: 0;
+  margin: 0 0 15px 0;
 }
 
 /* Стили списка категорий */
 .category-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
   width: 100%;
   list-style: none;
   margin: 0;
@@ -90,8 +91,8 @@
 }
 
 .category-checkbox {
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
   border: 1px solid #000000;
   border-radius: 2px;
   appearance: none;
@@ -106,16 +107,9 @@
   border-color: #7B61FF;
 }
 
+/* Убираем галочку при выборе */
 .category-checkbox:checked::after {
-  content: '';
-  position: absolute;
-  width: 4px;
-  height: 8px;
-  border: solid white;
-  border-width: 0 2px 2px 0;
-  top: 1px;
-  left: 4px;
-  transform: rotate(45deg);
+  content: none;
 }
 
 .category-name {
@@ -126,12 +120,21 @@
   color: #000000;
 }
 
+/* Разделитель после категорий */
+.category-divider {
+  width: 100%;
+  height: 1px;
+  background-color: #E2E8F0;
+  border: none;
+  margin: 5px 0;
+}
+
 /* Секция администрации */
 .admin-section {
   display: flex;
   align-items: center;
   width: 100%;
-  margin-top: 15px;
+  margin-top: 10px;
 }
 
 .admin-label {
@@ -250,6 +253,7 @@
   font-family: 'Circe', sans-serif;
   font-weight: 700;
   font-size: 20px;
+  line-height: 24px;
   margin: 0 0 4px 0;
   color: #000000;
 }
@@ -258,6 +262,7 @@
   font-family: 'Circe', sans-serif;
   font-weight: 400;
   font-size: 12px;
+  line-height: 14px;
   color: #9CA3AF;
   margin: 0 0 12px 0;
 }
@@ -295,6 +300,7 @@
   font-family: 'Helvetica Neue', sans-serif;
   font-weight: 400;
   font-size: 11px;
+  line-height: 13px;
   color: #9CA3AF;
   text-decoration: none;
   align-self: flex-start;
