@@ -103,9 +103,10 @@
               <img src="{% static 'accounts/images/startups/IMG_7665.png' %}" alt="Изображение стартапа {{ startup.title }}">
             </div>
             <div class="startup-info">
-              <h3 class="startup-name">{{ startup.title|default:"Ромашка" }}</h3>
+              <h3 class="startup-name">{{ startup.title }}</h3>
+              <div class="startup-date">{{ startup.created_at|timesince }} назад</div>
               <div class="startup-description">
-                <p>{{ startup.description|default:"Наш сервис предоставляет инновационные платформы для путешествий, которые соответствуют экологическим стандартам. Каждый путешественник может выбрать удобный и недорогой способ передвижения в любых частях планеты." }}</p>
+                <p>{{ startup.description }}</p>
               </div>
               <div class="card-footer">
                 <a href="{% url 'startup_detail' startup.startup_id %}" class="read-more">Читать дальше</a>
@@ -120,28 +121,9 @@
           </div>
         {% endfor %}
       {% else %}
-        {% for i in "123456" %}
-          <div class="startup-card">
-            <div class="startup-image">
-              <img src="{% static 'accounts/images/startups/IMG_7665.png' %}" alt="Изображение стартапа">
-            </div>
-            <div class="startup-info">
-              <h3 class="startup-name">Ромашка</h3>
-              <div class="startup-description">
-                <p>Наш сервис предоставляет инновационные платформы для путешествий, которые соответствуют экологическим стандартам. Каждый путешественник может выбрать удобный и недорогой способ передвижения в любых частях планеты.</p>
-              </div>
-              <div class="card-footer">
-                <a href="/startups/{{ forloop.counter }}/" class="read-more">Читать дальше</a>
-                <div class="startup-likes">
-                  <button class="like-button">
-                    <i class="far fa-comment"></i>
-                  </button>
-                  <span class="like-count">0</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        {% endfor %}
+        <div class="no-startups">
+          <p>В настоящее время нет доступных стартапов. Загляните позже!</p>
+        </div>
       {% endif %}
     </div>
   </div>
