@@ -2,6 +2,7 @@
 .startups-catalog-page {
   width: 100%;
   background: #FFFFFF;
+  font-family: 'Circe', 'Helvetica Neue', Arial, sans-serif;
 }
 
 .catalog-container {
@@ -13,7 +14,7 @@
   gap: 40px;
   width: 1284px;
   margin: 0 auto;
-  padding-top: 112px;
+  padding-top: 40px;
   position: relative;
 }
 
@@ -23,7 +24,7 @@
   flex-direction: column;
   align-items: flex-start;
   padding: 0;
-  gap: 36px;
+  gap: 30px;
   width: 181px;
 }
 
@@ -36,22 +37,20 @@
   box-sizing: border-box;
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   padding: 8px 24px 8px 16px;
   gap: 8px;
-  width: 181px;
+  width: 100%;
   height: 40px;
   border: 1px solid #000000;
   border-radius: 99px;
   background: transparent;
   font-family: 'Circe', sans-serif;
   font-style: normal;
-  font-weight: 700;
+  font-weight: 400;
   font-size: 14px;
   line-height: 24px;
-  display: flex;
-  align-items: center;
   color: #000000;
   cursor: pointer;
 }
@@ -70,7 +69,7 @@
   font-family: 'Circe', sans-serif;
   font-style: normal;
   font-weight: 700;
-  font-size: 20px;
+  font-size: 16px;
   line-height: 18px;
   display: flex;
   align-items: center;
@@ -85,7 +84,7 @@
   flex-direction: column;
   align-items: flex-start;
   padding: 0;
-  gap: 5px;
+  gap: 10px;
   width: 100%;
   list-style: none;
   margin: 0;
@@ -98,7 +97,6 @@
   padding: 0;
   gap: 10px;
   width: 100%;
-  height: 18px;
 }
 
 .category-label {
@@ -111,8 +109,8 @@
 
 .category-checkbox {
   box-sizing: border-box;
-  width: 11px;
-  height: 11px;
+  width: 12px;
+  height: 12px;
   border: 1px solid #000000;
   border-radius: 2px;
   appearance: none;
@@ -125,6 +123,19 @@
 
 .category-checkbox:checked {
   background: #7B61FF;
+  border-color: #7B61FF;
+}
+
+.category-checkbox:checked::after {
+  content: '';
+  position: absolute;
+  width: 4px;
+  height: 8px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  top: 0px;
+  left: 4px;
+  transform: rotate(45deg);
 }
 
 .category-name {
@@ -141,17 +152,14 @@
 
 /* Секция администрации */
 .admin-section {
-  position: relative;
-  width: 179px;
-  height: 30px;
-  margin-top: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-top: 10px;
 }
 
 .admin-label {
-  position: absolute;
-  width: 97px;
-  height: 18px;
-  left: 0;
   font-family: 'Circe', sans-serif;
   font-style: normal;
   font-weight: 400;
@@ -164,13 +172,10 @@
 }
 
 .help-icon {
-  position: absolute;
-  width: 8px;
-  height: 8px;
-  left: 97px;
-  top: 5px;
+  width: 12px;
+  height: 12px;
   background: #D9D9D9;
-  border-radius: 4px;
+  border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -178,27 +183,30 @@
   font-style: normal;
   font-weight: 400;
   font-size: 8px;
-  line-height: 18px;
+  line-height: 12px;
   color: #FFFFFF;
+  margin-left: 5px;
+  margin-right: auto;
 }
 
 .toggle-switch {
-  position: absolute;
   width: 48px;
-  height: 30px;
-  right: 0;
+  height: 24px;
   background: #EBEDFF;
-  border-radius: 20px;
+  border-radius: 12px;
+  position: relative;
+  cursor: pointer;
 }
 
 .toggle-handle {
   position: absolute;
-  width: 25px;
-  height: 25px;
+  width: 18px;
+  height: 18px;
   left: 3px;
-  top: 2px;
+  top: 3px;
   background: #FFFFFF;
   border-radius: 50%;
+  transition: left 0.2s;
 }
 
 /* Сетка карточек стартапов */
@@ -206,11 +214,10 @@
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  align-items: center;
-  align-content: flex-start;
-  padding: 0;
-  gap: 35px;
-  width: 1060px;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 25px;
+  width: calc(100% - 220px);
 }
 
 /* Сообщение о пустом списке стартапов */
@@ -232,137 +239,83 @@
   width: 330px;
   height: 420px;
   background: #FFFFFF;
-  border: 3px solid #000000;
-  border-radius: 28px;
-  position: relative;
+  border: 2px solid #000000;
+  border-radius: 24px;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Изображение стартапа */
 .startup-image {
-  position: absolute;
-  width: 330px;
-  height: 173px;
-  left: 0;
-  top: 0;
-  border-radius: 20px;
+  width: 100%;
+  height: 160px;
   overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #000819;
 }
 
 .startup-image img {
-  width: 312px;
-  height: 140px;
-  object-fit: cover;
-  border-radius: 20px;
-  margin: 0 auto;
-  display: block;
-  margin-top: 16px;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
 }
 
 /* Информация о стартапе */
 .startup-info {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  padding: 0;
-  gap: 20px;
-  position: absolute;
-  width: 279px;
-  left: 25.5px;
-  top: 192px;
+  padding: 20px;
+  gap: 15px;
+  height: calc(100% - 160px);
 }
 
-/* Хедер стартапа */
-.startup-header {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  padding: 0;
-  gap: 11px;
-  width: 126px;
-  height: 39px;
-}
-
-.startup-avatar {
-  width: 39px;
-  height: 39px;
-  background: #D9D9D9;
-  border-radius: 50%;
-}
-
-.startup-meta {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 0;
-  gap: 3px;
-  width: auto;
-}
-
+/* Название стартапа */
 .startup-name {
   font-family: 'Circe', sans-serif;
   font-style: normal;
   font-weight: 700;
   font-size: 20px;
-  line-height: 18px;
-  display: flex;
-  align-items: center;
-  letter-spacing: -0.02em;
+  line-height: 24px;
   color: #000000;
   margin: 0;
-}
-
-.startup-date {
-  font-family: 'Circe', sans-serif;
-  font-style: normal;
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 18px;
-  display: flex;
-  align-items: center;
-  letter-spacing: -0.02em;
-  color: #A9A9A9;
+  padding: 0;
 }
 
 /* Описание стартапа */
 .startup-description {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  padding: 0;
-  gap: 8px;
-  width: 279px;
+  gap: 10px;
+  flex-grow: 1;
 }
 
 .startup-description p {
-  width: 279px;
+  font-family: 'Helvetica Neue', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
+  color: #000000;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 7;
+  -webkit-box-orient: vertical;
+}
+
+.read-more {
   font-family: 'Helvetica Neue', sans-serif;
   font-style: normal;
   font-weight: 400;
   font-size: 12px;
   line-height: 14px;
-  letter-spacing: 0.01em;
-  color: #000000;
-  margin: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 6;
-  -webkit-box-orient: vertical;
-  max-height: 84px;
-}
-
-.read-more {
-  width: 100%;
-  font-family: 'Helvetica Neue', sans-serif;
-  font-style: normal;
-  font-weight: 400;
-  font-size: 8px;
-  line-height: 10px;
-  letter-spacing: 0.01em;
   color: rgba(49, 49, 49, 0.55);
-  cursor: pointer;
-  text-align: left;
+  text-decoration: none;
+  align-self: flex-start;
 }
 
 /* Лайки */
@@ -370,9 +323,8 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 0;
   gap: 8px;
-  margin-top: 5px;
+  margin-top: auto;
 }
 
 .like-button {
@@ -385,23 +337,17 @@
   justify-content: center;
 }
 
-.like-icon {
-  display: block;
-  width: 19px;
-  height: 18px;
-  border: 2px solid #D9D9D9;
-  box-sizing: border-box;
-  border-radius: 50%;
-  transition: border-color 0.2s ease;
+.like-button i {
+  font-size: 20px;
+  color: #D9D9D9;
 }
 
-.like-button:hover .like-icon {
-  border-color: #ff6b6b;
+.like-button:hover i {
+  color: #ff6b6b;
 }
 
-.like-button.active .like-icon {
-  border-color: #ff6b6b;
-  background-color: #ff6b6b;
+.like-button.active i {
+  color: #ff6b6b;
 }
 
 .like-count {
@@ -410,9 +356,6 @@
   font-weight: 400;
   font-size: 14px;
   line-height: 18px;
-  display: flex;
-  align-items: center;
-  letter-spacing: -0.02em;
   color: #A9A9A9;
 }
 
@@ -420,6 +363,11 @@
 @media (max-width: 1300px) {
   .catalog-container {
     width: 100%;
+    justify-content: center;
+    padding: 40px 20px;
+  }
+  
+  .startup-grid {
     justify-content: center;
   }
 }
@@ -432,12 +380,12 @@
   }
   
   .filters-sidebar {
-    width: 90%;
+    width: 100%;
+    max-width: 400px;
     margin-bottom: 20px;
   }
   
   .startup-grid {
     width: 100%;
-    justify-content: center;
   }
 }
