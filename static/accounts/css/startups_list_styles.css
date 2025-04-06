@@ -1,255 +1,443 @@
 /* Общая раскладка каталога */
+.startups-catalog-page {
+  width: 100%;
+  background: #FFFFFF;
+}
+
 .catalog-container {
-    display: flex;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  padding: 0;
+  gap: 40px;
+  width: 1284px;
+  margin: 0 auto;
+  padding-top: 112px;
+  position: relative;
+}
+
+/* Стили боковой панели фильтров */
+.filters-sidebar {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0;
+  gap: 36px;
+  width: 181px;
+}
+
+/* Меню фильтров */
+.filters-menu {
+  width: 100%;
+}
+
+.menu-button {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 24px 8px 16px;
+  gap: 8px;
+  width: 181px;
+  height: 40px;
+  border: 1px solid #000000;
+  border-radius: 99px;
+  background: transparent;
+  font-family: 'Circe', sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 24px;
+  display: flex;
+  align-items: center;
+  color: #000000;
+  cursor: pointer;
+}
+
+.menu-arrow {
+  width: 7.45px;
+  height: 4.39px;
+  background: #000000;
+  clip-path: polygon(50% 100%, 0 0, 100% 0);
+}
+
+/* Заголовок категорий */
+.filter-heading {
+  width: 91px;
+  height: 18px;
+  font-family: 'Circe', sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 18px;
+  display: flex;
+  align-items: center;
+  letter-spacing: -0.02em;
+  color: #000000;
+  margin: 0;
+}
+
+/* Стили списка категорий */
+.category-list {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0;
+  gap: 5px;
+  width: 100%;
+  list-style: none;
+  margin: 0;
+}
+
+.category-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0;
+  gap: 10px;
+  width: 100%;
+  height: 18px;
+}
+
+.category-label {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.category-checkbox {
+  box-sizing: border-box;
+  width: 11px;
+  height: 11px;
+  border: 1px solid #000000;
+  border-radius: 2px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: transparent;
+  position: relative;
+  cursor: pointer;
+}
+
+.category-checkbox:checked {
+  background: #7B61FF;
+}
+
+.category-name {
+  font-family: 'Circe', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
+  display: flex;
+  align-items: center;
+  letter-spacing: -0.02em;
+  color: #000000;
+}
+
+/* Секция администрации */
+.admin-section {
+  position: relative;
+  width: 179px;
+  height: 30px;
+  margin-top: 30px;
+}
+
+.admin-label {
+  position: absolute;
+  width: 97px;
+  height: 18px;
+  left: 0;
+  font-family: 'Circe', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
+  display: flex;
+  align-items: center;
+  letter-spacing: -0.02em;
+  color: #000000;
+}
+
+.help-icon {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  left: 97px;
+  top: 5px;
+  background: #D9D9D9;
+  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Circe', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 8px;
+  line-height: 18px;
+  color: #FFFFFF;
+}
+
+.toggle-switch {
+  position: absolute;
+  width: 48px;
+  height: 30px;
+  right: 0;
+  background: #EBEDFF;
+  border-radius: 20px;
+}
+
+.toggle-handle {
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  left: 3px;
+  top: 2px;
+  background: #FFFFFF;
+  border-radius: 50%;
+}
+
+/* Сетка карточек стартапов */
+.startup-grid {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  align-content: flex-start;
+  padding: 0;
+  gap: 35px;
+  width: 1060px;
+}
+
+/* Сообщение о пустом списке стартапов */
+.no-startups {
+  width: 100%;
+  text-align: center;
+  padding: 50px 0;
+}
+
+.no-startups p {
+  font-family: 'Circe', sans-serif;
+  font-size: 18px;
+  color: #A9A9A9;
+}
+
+/* Стили карточки стартапа */
+.startup-card {
+  box-sizing: border-box;
+  width: 330px;
+  height: 420px;
+  background: #FFFFFF;
+  border: 3px solid #000000;
+  border-radius: 28px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Изображение стартапа */
+.startup-image {
+  position: absolute;
+  width: 330px;
+  height: 173px;
+  left: 0;
+  top: 0;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.startup-image img {
+  width: 312px;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 20px;
+  margin: 0 auto;
+  display: block;
+  margin-top: 16px;
+}
+
+/* Информация о стартапе */
+.startup-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0;
+  gap: 20px;
+  position: absolute;
+  width: 279px;
+  left: 25.5px;
+  top: 192px;
+}
+
+/* Хедер стартапа */
+.startup-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0;
+  gap: 11px;
+  width: 126px;
+  height: 39px;
+}
+
+.startup-avatar {
+  width: 39px;
+  height: 39px;
+  background: #D9D9D9;
+  border-radius: 50%;
+}
+
+.startup-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0;
+  gap: 3px;
+  width: auto;
+}
+
+.startup-name {
+  font-family: 'Circe', sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 18px;
+  display: flex;
+  align-items: center;
+  letter-spacing: -0.02em;
+  color: #000000;
+  margin: 0;
+}
+
+.startup-date {
+  font-family: 'Circe', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
+  display: flex;
+  align-items: center;
+  letter-spacing: -0.02em;
+  color: #A9A9A9;
+}
+
+/* Описание стартапа */
+.startup-description {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0;
+  gap: 8px;
+  width: 279px;
+}
+
+.startup-description p {
+  width: 279px;
+  font-family: 'Helvetica Neue', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 14px;
+  letter-spacing: 0.01em;
+  color: #000000;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 6;
+  -webkit-box-orient: vertical;
+  max-height: 84px;
+}
+
+.read-more {
+  width: 100%;
+  font-family: 'Helvetica Neue', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 8px;
+  line-height: 10px;
+  letter-spacing: 0.01em;
+  color: rgba(49, 49, 49, 0.55);
+  cursor: pointer;
+  text-align: left;
+}
+
+/* Лайки */
+.startup-likes {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0;
+  gap: 8px;
+  margin-top: 5px;
+}
+
+.like-button {
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.like-icon {
+  display: block;
+  width: 19px;
+  height: 18px;
+  border: 2px solid #D9D9D9;
+  box-sizing: border-box;
+  border-radius: 50%;
+  transition: border-color 0.2s ease;
+}
+
+.like-button:hover .like-icon {
+  border-color: #ff6b6b;
+}
+
+.like-button.active .like-icon {
+  border-color: #ff6b6b;
+  background-color: #ff6b6b;
+}
+
+.like-count {
+  font-family: 'Circe', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
+  display: flex;
+  align-items: center;
+  letter-spacing: -0.02em;
+  color: #A9A9A9;
+}
+
+/* Адаптив */
+@media (max-width: 1300px) {
+  .catalog-container {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .catalog-container {
+    flex-direction: column;
+    align-items: center;
     gap: 20px;
-    padding: 20px;
   }
   
-  /* Стили боковой панели фильтров */
   .filters-sidebar {
-    width: 250px;
-    background: #f8f9fa;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  }
-  .filters-sidebar h4 {
-    font-size: 18px;
-    margin-bottom: 15px;
+    width: 90%;
+    margin-bottom: 20px;
   }
   
-  /* Стили списка категорий */
-  .category-list {
-    list-style: none;
-    margin: 0;
-    padding-left: 0;
-  }
-  .category-list li {
-    margin-bottom: 10px;
-  }
-  .category-list label {
-    font-size: 14px;
-    cursor: pointer;
-  }
-  
-  /* Разделитель */
-  .divider {
-    margin: 20px 0;
-    border: none;
-    border-top: 1px solid #ddd;
-  }
-  
-  /* Переключатель для микроинвестиций */
-  .switch {
-    position: relative;
-    display: inline-block;
-    width: 40px;
-    height: 20px;
-    margin-left: 10px;
-  }
-  .switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-  }
-  .slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    transition: .4s;
-    border-radius: 20px;
-  }
-  .slider:before {
-    position: absolute;
-    content: "";
-    height: 16px;
-    width: 16px;
-    left: 2px;
-    bottom: 2px;
-    background-color: white;
-    transition: .4s;
-    border-radius: 50%;
-  }
-  input:checked + .slider {
-    background-color: #7b61ff;
-  }
-  input:checked + .slider:before {
-    transform: translateX(20px);
-  }
-  
-  /* Фильтр по рейтингу */
-  .rating-filter {
-    margin-top: 20px;
-  }
-  .rating-filter p {
-    font-size: 14px;
-    margin-bottom: 5px;
-  }
-  .rating-slider {
-    width: 100%;
-  }
-  .rating-values {
-    display: flex;
-    justify-content: space-between;
-    font-size: 12px;
-    color: #666;
-  }
-  
-  /* Сетка карточек стартапов */
   .startup-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
-    gap: 20px;
-    flex: 1;
-  }
-  
-  /* Стили карточки стартапа */
-  .startup-card {
-    background: #ffffff;
-    border: 3px solid #000;
-    border-radius: 28px;
-    padding: 15px 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    transition: transform 0.3s, box-shadow 0.3s;
-  }
-  .startup-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Изображение карточки */
-  .startup-card__image-container {
-    width: 312px;
-    height: 140px;
-    background: #d9d9d9;
-    border-radius: 20px;
-    overflow: hidden;
-  }
-  .startup-card__image {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 20px;
+    justify-content: center;
   }
-  
-  /* Контейнер контента карточки */
-  .startup-card__content {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  .startup-card__title {
-    font-family: 'Circe', sans-serif;
-    font-weight: 700;
-    font-size: 20px;
-    line-height: 18px;
-    color: #000;
-    margin: 0;
-  }
-  .startup-card__category {
-    font-family: 'Circe', sans-serif;
-    font-size: 14px;
-    color: #A9A9A9;
-    margin: 0;
-  }
-  
-  /* Стили блока рейтинга */
-  .startup-card__rating {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 5px;
-  }
-  .rating-text {
-    font-size: 14px;
-    color: #A9A9A9;
-  }
-  .stars {
-    display: flex;
-    font-size: 16px;
-  }
-  .filled-star {
-    color: #7B61FF;
-  }
-  .empty-star {
-    color: #ccc;
-  }
-  
-  /* Описание и кнопка "Читать дальше" */
-  .startup-card__desc-block {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-  }
-  .startup-card__description {
-    font-family: 'Helvetica Neue', sans-serif;
-    font-size: 12px;
-    line-height: 14px;
-    color: #000;
-    margin: 0;
-  }
-  .read-more {
-    font-size: 8px;
-    color: rgba(49, 49, 49, 0.55);
-    cursor: pointer;
-  }
-  
-  /* Фиксированный нижний блок карточки */
-  .startup-card__fixed-bottom {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: auto;
-  }
-  .startup-card__button {
-    padding: 16px 64px;
-    background: #7B61FF;
-    border-radius: 99px;
-    font-family: 'Circe', sans-serif;
-    font-weight: 700;
-    font-size: 18px;
-    color: #fff;
-    text-decoration: none;
-    transition: background 0.3s;
-  }
-  .startup-card__button:hover {
-    background: #5D50E3;
-  }
-  
-  /* Блок инвесторов */
-  .startup-card__investors-block {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .startup-card__investors-icon {
-    font-size: 16px;
-    color: #4E4F51;
-  }
-  .startup-card__investors-text {
-    font-family: 'Circe', sans-serif;
-    font-weight: 700;
-    font-size: 14px;
-    color: #4E4F51;
-  }
-  
-  /* Адаптив */
-  @media (max-width: 1024px) {
-    .catalog-container {
-      flex-direction: column;
-      align-items: center;
-    }
-    .filters-sidebar {
-      width: 100%;
-      margin-bottom: 20px;
-    }
-    .startup-grid {
-      grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
-    }
-  }
+}

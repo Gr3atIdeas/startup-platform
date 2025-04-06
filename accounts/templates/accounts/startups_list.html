@@ -5,6 +5,7 @@
 
 {% block head_extra %}
   <link rel="stylesheet" href="{% static 'accounts/css/startups_list_styles.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 {% endblock %}
 
 {% block content %}
@@ -12,83 +13,72 @@
   <div class="catalog-container">
     <!-- Боковая панель с фильтрами -->
     <aside class="filters-sidebar">
-      <h4>Категории</h4>
+      <div class="filters-menu">
+        <button class="menu-button">
+          Новые
+          <span class="menu-arrow"></span>
+        </button>
+      </div>
+      
+      <h2 class="filter-heading">Категории</h2>
+      
       <ul class="category-list">
         {% for category in categories %}
-          <li>
-            <label>
-              <input type="checkbox" name="category" value="{{ category.id }}">
-              {{ category.name }}
+          <li class="category-item">
+            <label class="category-label">
+              <input type="checkbox" name="category" value="{{ category.id }}" class="category-checkbox" {% if forloop.first %}checked{% endif %}>
+              <span class="category-name">{{ category.name }}</span>
             </label>
           </li>
         {% empty %}
-          <li>Нет категорий</li>
+          <li class="category-item">Нет категорий</li>
         {% endfor %}
       </ul>
-      <hr class="divider">
-
-      <div class="micro-investment-filter">
-        <p>Микроинвестиции</p>
-        <label class="switch">
-          <input type="checkbox" name="micro_investments">
-          <span class="slider round"></span>
-        </label>
-      </div>
-
-      <div class="rating-filter">
-        <p>Рейтинг</p>
-        <input type="range" min="0" max="4.6" step="0.1" value="0" class="rating-slider">
-        <div class="rating-values">
-          <span>0</span>
-          <span>4.6</span>
+      
+      <div class="admin-section">
+        <span class="admin-label">Администрация</span>
+        <div class="help-icon">?</div>
+        <div class="toggle-switch">
+          <div class="toggle-handle"></div>
         </div>
       </div>
     </aside>
 
     <!-- Сетка карточек стартапов -->
     <div class="startup-grid">
-      {% if startups %}
-        {% for startup in startups %}
+      {% if approved_startups %}
+        {% for startup in approved_startups %}
           <div class="startup-card">
-            <div class="startup-card__image-container">
-              <img src="{{ startup.logo_url }}" alt="Логотип {{ startup.name }}" class="startup-card__image">
+            <div class="startup-image">
+              <img src="{% static 'accounts/images/startups/IMG_7665.png' %}" alt="Изображение стартапа {{ startup.title }}">
             </div>
-            <div class="startup-card__content">
-              <h2 class="startup-card__title">{{ startup.name }}</h2>
-              <p class="startup-card__category">Категория: {{ startup.category.name }}</p>
-              <div class="startup-card__rating">
-                <span class="rating-text">{{ startup.rating }}/5</span>
-                <div class="stars">
-                  {% for i in "12345" %}
-                    {% if forloop.counter <= startup.rating|floatformat:"0" %}
-                      <span class="filled-star">★</span>
-                    {% else %}
-                      <span class="empty-star">★</span>
-                    {% endif %}
-                  {% endfor %}
+            <div class="startup-info">
+              <div class="startup-header">
+                <div class="startup-avatar"></div>
+                <div class="startup-meta">
+                  <h3 class="startup-name">{{ startup.title }}</h3>
+                  <span class="startup-date">{{ startup.created_at|timesince }} назад</span>
                 </div>
               </div>
-              <div class="startup-card__desc-block">
-                <p class="startup-card__description">
-                  {{ startup.description|truncatechars:100 }}
-                </p>
+              <div class="startup-description">
+                <p>{{ startup.description|truncatechars:200 }}</p>
                 <span class="read-more">Читать дальше</span>
               </div>
-              <div class="startup-card__fixed-bottom">
-                <a href="{% url 'startup_detail' startup.id %}" class="startup-card__button">Подробнее</a>
-                <div class="startup-card__investors-block">
-                  <!-- Используем Font Awesome для иконки -->
-                  <i class="fas fa-hand-holding-usd startup-card__investors-icon"></i>
-                  <span class="startup-card__investors-text">Инвестировано ({{ startup.investors_count }})</span>
-                </div>
+              <div class="startup-likes">
+                <button class="like-button">
+                  <span class="like-icon"></span>
+                </button>
+                <span class="like-count">{{ startup.total_voters|default:"0" }}</span>
               </div>
             </div>
           </div>
         {% endfor %}
       {% else %}
-        <p>Нет доступных стартапов.</p>
+        <div class="no-startups">
+          <p>Нет доступных стартапов</p>
+        </div>
       {% endif %}
     </div>
   </div>
 </div>
-{% endblock %}
+{% endblock %}  
