@@ -103,22 +103,22 @@
               <img src="{% static 'accounts/images/startups/IMG_7665.png' %}" alt="Изображение стартапа {{ startup.title }}">
             </div>
             <div class="startup-info">
-              <h3 class="startup-name">Ромашка</h3>
+              <h3 class="startup-name">{{ startup.title|default:"Ромашка" }}</h3>
               <div class="startup-description">
-                <p>Наш сервис предоставляет инновационные платформы для путешествий, которые соответствуют экологическим стандартам. Каждый путешественник может выбрать удобный и недорогой способ передвижения в любых частях планеты.</p>
-                <a href="#" class="read-more">Читать дальше</a>
+                <p>{{ startup.description|default:"Наш сервис предоставляет инновационные платформы для путешествий, которые соответствуют экологическим стандартам. Каждый путешественник может выбрать удобный и недорогой способ передвижения в любых частях планеты." }}</p>
+                <a href="{% url 'startup_detail' startup.id %}" class="read-more">Читать дальше</a>
               </div>
               <div class="startup-likes">
                 <button class="like-button">
                   <i class="far fa-heart"></i>
                 </button>
-                <span class="like-count">0</span>
+                <span class="like-count">{{ startup.total_voters|default:"0" }}</span>
               </div>
             </div>
           </div>
         {% endfor %}
       {% else %}
-        {% for i in "1234567" %}
+        {% for i in "123456" %}
           <div class="startup-card">
             <div class="startup-image">
               <img src="{% static 'accounts/images/startups/IMG_7665.png' %}" alt="Изображение стартапа">

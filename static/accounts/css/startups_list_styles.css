@@ -8,14 +8,11 @@
 .catalog-container {
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
   align-items: flex-start;
-  padding: 0;
   gap: 40px;
-  width: 1284px;
+  max-width: 1280px;
   margin: 0 auto;
-  padding-top: 40px;
-  position: relative;
+  padding: 40px 20px;
 }
 
 /* Стили боковой панели фильтров */
@@ -23,9 +20,9 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 0;
-  gap: 30px;
-  width: 181px;
+  gap: 25px;
+  width: 180px;
+  flex-shrink: 0;
 }
 
 /* Меню фильтров */
@@ -34,46 +31,36 @@
 }
 
 .menu-button {
-  box-sizing: border-box;
   display: flex;
-  flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 24px 8px 16px;
-  gap: 8px;
+  padding: 8px 16px;
   width: 100%;
   height: 40px;
   border: 1px solid #000000;
   border-radius: 99px;
   background: transparent;
   font-family: 'Circe', sans-serif;
-  font-style: normal;
   font-weight: 400;
   font-size: 14px;
-  line-height: 24px;
   color: #000000;
   cursor: pointer;
 }
 
 .menu-arrow {
-  width: 7.45px;
-  height: 4.39px;
+  width: 8px;
+  height: 5px;
   background: #000000;
   clip-path: polygon(50% 100%, 0 0, 100% 0);
+  margin-left: 8px;
 }
 
 /* Заголовок категорий */
 .filter-heading {
-  width: 91px;
-  height: 18px;
   font-family: 'Circe', sans-serif;
-  font-style: normal;
   font-weight: 700;
   font-size: 16px;
   line-height: 18px;
-  display: flex;
-  align-items: center;
-  letter-spacing: -0.02em;
   color: #000000;
   margin: 0;
 }
@@ -82,43 +69,36 @@
 .category-list {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  padding: 0;
-  gap: 10px;
+  gap: 12px;
   width: 100%;
   list-style: none;
   margin: 0;
+  padding: 0;
 }
 
 .category-item {
   display: flex;
-  flex-direction: row;
   align-items: center;
-  padding: 0;
-  gap: 10px;
   width: 100%;
 }
 
 .category-label {
   display: flex;
-  flex-direction: row;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   cursor: pointer;
 }
 
 .category-checkbox {
-  box-sizing: border-box;
-  width: 12px;
-  height: 12px;
+  width: 14px;
+  height: 14px;
   border: 1px solid #000000;
   border-radius: 2px;
   appearance: none;
   -webkit-appearance: none;
-  -moz-appearance: none;
   background-color: transparent;
-  position: relative;
   cursor: pointer;
+  position: relative;
 }
 
 .category-checkbox:checked {
@@ -133,60 +113,46 @@
   height: 8px;
   border: solid white;
   border-width: 0 2px 2px 0;
-  top: 0px;
+  top: 1px;
   left: 4px;
   transform: rotate(45deg);
 }
 
 .category-name {
   font-family: 'Circe', sans-serif;
-  font-style: normal;
   font-weight: 400;
   font-size: 14px;
   line-height: 18px;
-  display: flex;
-  align-items: center;
-  letter-spacing: -0.02em;
   color: #000000;
 }
 
 /* Секция администрации */
 .admin-section {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   width: 100%;
-  margin-top: 10px;
+  margin-top: 15px;
 }
 
 .admin-label {
   font-family: 'Circe', sans-serif;
-  font-style: normal;
   font-weight: 400;
   font-size: 14px;
   line-height: 18px;
-  display: flex;
-  align-items: center;
-  letter-spacing: -0.02em;
   color: #000000;
 }
 
 .help-icon {
-  width: 12px;
-  height: 12px;
+  width: 14px;
+  height: 14px;
   background: #D9D9D9;
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-family: 'Circe', sans-serif;
-  font-style: normal;
-  font-weight: 400;
-  font-size: 8px;
-  line-height: 12px;
+  font-size: 10px;
   color: #FFFFFF;
-  margin-left: 5px;
-  margin-right: auto;
+  margin: 0 8px;
 }
 
 .toggle-switch {
@@ -196,6 +162,7 @@
   border-radius: 12px;
   position: relative;
   cursor: pointer;
+  margin-left: auto;
 }
 
 .toggle-handle {
@@ -206,18 +173,14 @@
   top: 3px;
   background: #FFFFFF;
   border-radius: 50%;
-  transition: left 0.2s;
 }
 
 /* Сетка карточек стартапов */
 .startup-grid {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  align-items: flex-start;
-  gap: 25px;
-  width: calc(100% - 220px);
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 30px;
+  width: 100%;
 }
 
 /* Сообщение о пустом списке стартапов */
@@ -235,30 +198,36 @@
 
 /* Стили карточки стартапа */
 .startup-card {
-  box-sizing: border-box;
-  width: 330px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 330px;
   height: 420px;
   background: #FFFFFF;
   border: 2px solid #000000;
   border-radius: 24px;
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
+  transition: transform 0.2s;
+}
+
+.startup-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
 }
 
 /* Изображение стартапа */
 .startup-image {
   width: 100%;
-  height: 160px;
-  overflow: hidden;
+  height: 180px;
+  background: #000819;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #000819;
+  overflow: hidden;
 }
 
 .startup-image img {
-  width: 100%;
+  width: 90%;
   height: auto;
   object-fit: contain;
 }
@@ -268,63 +237,59 @@
   display: flex;
   flex-direction: column;
   padding: 20px;
-  gap: 15px;
-  height: calc(100% - 160px);
+  height: calc(100% - 180px);
 }
 
 /* Название стартапа */
 .startup-name {
   font-family: 'Circe', sans-serif;
-  font-style: normal;
   font-weight: 700;
-  font-size: 20px;
-  line-height: 24px;
+  font-size: 22px;
+  margin: 0 0 15px 0;
   color: #000000;
-  margin: 0;
-  padding: 0;
 }
 
 /* Описание стартапа */
 .startup-description {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
   flex-grow: 1;
 }
 
 .startup-description p {
   font-family: 'Helvetica Neue', sans-serif;
-  font-style: normal;
   font-weight: 400;
   font-size: 14px;
   line-height: 18px;
   color: #000000;
   margin: 0;
-  padding: 0;
   overflow: hidden;
   display: -webkit-box;
-  -webkit-line-clamp: 7;
+  -webkit-line-clamp: 6;
   -webkit-box-orient: vertical;
 }
 
 .read-more {
   font-family: 'Helvetica Neue', sans-serif;
-  font-style: normal;
   font-weight: 400;
-  font-size: 12px;
-  line-height: 14px;
-  color: rgba(49, 49, 49, 0.55);
+  font-size: 13px;
+  color: #7B61FF;
   text-decoration: none;
   align-self: flex-start;
+}
+
+.read-more:hover {
+  text-decoration: underline;
 }
 
 /* Лайки */
 .startup-likes {
   display: flex;
-  flex-direction: row;
   align-items: center;
   gap: 8px;
   margin-top: auto;
+  padding-top: 15px;
 }
 
 .like-button {
@@ -332,9 +297,6 @@
   border: none;
   padding: 0;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .like-button i {
@@ -352,40 +314,33 @@
 
 .like-count {
   font-family: 'Circe', sans-serif;
-  font-style: normal;
   font-weight: 400;
   font-size: 14px;
-  line-height: 18px;
   color: #A9A9A9;
 }
 
 /* Адаптив */
-@media (max-width: 1300px) {
+@media (max-width: 1024px) {
   .catalog-container {
-    width: 100%;
-    justify-content: center;
-    padding: 40px 20px;
+    gap: 20px;
   }
   
   .startup-grid {
-    justify-content: center;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   }
 }
 
 @media (max-width: 768px) {
   .catalog-container {
     flex-direction: column;
-    align-items: center;
-    gap: 20px;
   }
   
   .filters-sidebar {
     width: 100%;
-    max-width: 400px;
-    margin-bottom: 20px;
+    max-width: 100%;
   }
   
-  .startup-grid {
-    width: 100%;
+  .startup-card {
+    max-width: 100%;
   }
 }
