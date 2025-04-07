@@ -224,46 +224,36 @@
 
 <div class="similar-startups-section">
   <div class="similar-startups-container">
-    <div class="similar-startups-header">
-      <h2 class="similar-title">
-        <span class="similar-text">похожие</span>
-        <span class="startups-text">СТАРТАПЫ</span>
-      </h2>
-    </div>
+    <h2 class="similar-title">
+      <span class="similar-text">похожие</span>
+      <span class="startups-text">СТАРТАПЫ</span>
+    </h2>
     
-    <div class="similar-startups-content">
-      <div class="similar-startups-grid">
-        {% for i in "12345" %}
-        <a href="{% if similar_startups %}{% url 'startup_detail' similar_startups.0.startup_id %}{% else %}#{% endif %}" class="similar-card">
-          <div class="similar-card-content">
-            <div class="similar-card-image">
-              <div class="planet">
-                <div class="planet-segment segment-top"></div>
-                <div class="planet-segment segment-middle"></div>
-                <div class="planet-segment segment-bottom"></div>
-              </div>
-            </div>
-            <div class="similar-card-name">Ромашка</div>
-            <div class="similar-card-rating">
-              <i class="fas fa-star active"></i>
-              <i class="fas fa-star active"></i>
-              <i class="fas fa-star active"></i>
-              <i class="fas fa-star active"></i>
-              <i class="fas fa-star active"></i>
-            </div>
-          </div>
-          <div class="similar-card-category">
-            <div class="category-title">Категория</div>
-            <div class="category-badge">Досуг</div>
-          </div>
-        </a>
-        {% endfor %}
-      </div>
-      
-      <button class="show-all-button">
-        <i class="fas fa-eye"></i>
-        <span>Показать все</span>
-      </button>
+    <button class="show-all-button">
+      <i class="fas fa-eye"></i>
+      <span>Показать все</span>
+    </button>
+    
+    <div class="similar-startups-grid">
+      {% for i in "12345" %}
+      <a href="{% if similar_startups %}{% url 'startup_detail' similar_startups.0.startup_id %}{% else %}#{% endif %}" class="similar-card">
+        <div class="similar-card-image">
+          <img src="{% static 'accounts/images/layout/earth.png' %}" alt="Планета">
+        </div>
+        <div class="similar-card-name">Ромашка</div>
+        <div class="similar-card-rating">
+          <i class="fas fa-star active"></i>
+          <i class="fas fa-star active"></i>
+          <i class="fas fa-star active"></i>
+          <i class="fas fa-star active"></i>
+          <i class="fas fa-star active"></i>
+        </div>
+        <div class="similar-card-category">
+          <div class="category-title">Категория</div>
+          <div class="category-badge">Досуг</div>
+        </div>
+      </a>
+      {% endfor %}
     </div>
   </div>
 </div>
