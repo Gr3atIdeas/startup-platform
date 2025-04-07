@@ -649,8 +649,9 @@
   margin-left: -50vw;
   margin-right: -50vw;
   background: #818CE5;
-  padding: 70px 0;
-  margin-top: 50px;
+  padding: 70px 0 0;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .similar-startups-header {
@@ -708,6 +709,8 @@
   background: #FFFFFF;
   border: 1px solid #000000;
   border-radius: 20px;
+  text-decoration: none;
+  color: inherit;
 }
 
 .similar-card-content {
@@ -853,4 +856,11 @@
   .similar-card {
     width: 100%;
   }
+}
+
+.similar-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 100px;
 } 
