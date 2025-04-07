@@ -642,16 +642,11 @@
 
 /* Блок с похожими стартапами */
 .similar-startups-section {
-  width: 100vw;
-  position: relative;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
+  width: 100%;
   background: #818CE5;
-  padding: 70px 0 0;
+  padding: 70px 0;
   margin: 0;
-  border-bottom: 0;
+  box-sizing: border-box;
 }
 
 .similar-startups-container {
@@ -671,7 +666,7 @@
   display: flex;
   justify-content: center;
   gap: 20px;
-  margin-bottom: 70px;
+  margin-bottom: 0;
 }
 
 .similar-card {
@@ -870,7 +865,7 @@ footer {
 }
 
 .site-footer {
-  margin-top: -1px;
+  margin-top: 0;
   padding-top: 0;
   border-top: 0;
 }
