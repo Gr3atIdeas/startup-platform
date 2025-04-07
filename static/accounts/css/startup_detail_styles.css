@@ -642,11 +642,16 @@
 
 /* Блок с похожими стартапами */
 .similar-startups-section {
-  width: 100%;
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
   background: #818CE5;
   padding: 70px 0;
-  margin: 0;
-  box-sizing: border-box;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .similar-startups-container {
@@ -656,10 +661,21 @@
 }
 
 .similar-startups-header {
+  margin-bottom: 50px;
+}
+
+.similar-title {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-width: 500px;
+}
+
+.similar-startups-content {
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
-  margin-bottom: 50px;
+  align-items: center;
+  gap: 20px;
 }
 
 .similar-startups-grid {
@@ -667,21 +683,7 @@
   justify-content: center;
   gap: 20px;
   margin-bottom: 0;
-}
-
-.similar-card {
-  width: 167px;
-  flex-shrink: 0;
-  background: #FFFFFF;
-  border: 1px solid #000000;
-  border-radius: 20px;
-  padding: 30px 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-  text-decoration: none;
-  color: inherit;
+  width: calc(100% - 120px);
 }
 
 .show-all-button {
@@ -697,33 +699,22 @@
   cursor: pointer;
   margin: 0;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
-.similar-title {
+.similar-card {
+  width: 167px;
+  flex-shrink: 0;
+  background: #FFFFFF;
+  border: 1px solid #000000;
+  border-radius: 20px;
+  padding: 30px 20px;
   display: flex;
   flex-direction: column;
-  gap: 15px;
-  max-width: 500px;
-}
-
-.similar-text {
-  font-family: 'Helvetica Neue', Arial, sans-serif;
-  font-weight: 400;
-  font-size: 70px;
-  line-height: 90%;
-  letter-spacing: -0.02em;
-  color: #08E5CF;
-  text-transform: lowercase;
-}
-
-.startups-text {
-  font-family: 'Helvetica Neue', Arial, sans-serif;
-  font-weight: 800;
-  font-size: 70px;
-  line-height: 90%;
-  letter-spacing: -0.02em;
-  text-transform: uppercase;
-  color: #FFFFFF;
+  align-items: center;
+  gap: 20px;
+  text-decoration: none;
+  color: inherit;
 }
 
 .similar-card-content {
