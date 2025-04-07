@@ -642,12 +642,15 @@
 
 /* Блок с похожими стартапами */
 .similar-startups-section {
-  width: 100%;
+  width: 100vw;
   position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
   background: #818CE5;
-  padding: 70px 0;
-  margin: 0;
-  overflow-x: hidden;
+  padding: 70px 0 0;
+  margin-bottom: 0;
 }
 
 .similar-startups-header {
@@ -799,7 +802,7 @@
   border-radius: 99px;
   background: transparent;
   cursor: pointer;
-  margin: 40px auto 0;
+  margin: 40px auto;
 }
 
 .show-all-button i {
@@ -859,4 +862,12 @@
   height: 100%;
   object-fit: cover;
   border-radius: 100px;
+}
+
+/* Общие стили для html и body */
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+  margin: 0;
+  padding: 0;
 } 
