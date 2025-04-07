@@ -1,5 +1,6 @@
 {% extends 'accounts/base.html' %}
 {% load static %}
+{% load file_tags %}
 
 {% block title %}Каталог стартапов{% endblock %}
 
@@ -94,7 +95,7 @@
       <hr class="category-divider">
       
       <div class="admin-section">
-        <span class="admin-label">Администрация</span>
+        <span class="admin-label">Микроинвестиции</span>
         <div class="help-icon">?</div>
         <div class="toggle-switch" id="adminToggle" onclick="toggleAdmin()">
           <div class="toggle-handle"></div>
@@ -108,7 +109,17 @@
         {% for startup in approved_startups %}
           <div class="startup-card">
             <div class="startup-image">
-              <img src="{% static 'accounts/images/startups/IMG_7665.png' %}" alt="Изображение стартапа {{ startup.title }}">
+              {% if startup.logo_urls %}
+                <img src="{% get_file_url_tag startup.logo_urls.0 startup.startup_id 'logo' %}" alt="Изображение стартапа {{ startup.title }}">
+              {% else %}
+                <div class="planet-container">
+                  <div class="planet">
+                    <div class="planet-segment segment-top" style="background-color: {{ startup.planet_top_color }};"></div>
+                    <div class="planet-segment segment-middle" style="background-color: {{ startup.planet_middle_color }};"></div>
+                    <div class="planet-segment segment-bottom" style="background-color: {{ startup.planet_bottom_color }};"></div>
+                  </div>
+                </div>
+              {% endif %}
             </div>
             <div class="startup-info">
               <h3 class="startup-name">{{ startup.title }}</h3>
