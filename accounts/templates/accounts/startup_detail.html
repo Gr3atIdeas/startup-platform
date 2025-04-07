@@ -235,24 +235,54 @@
     </button>
     
     <div class="similar-startups-grid">
-      {% for i in "12345" %}
-      <a href="{% if similar_startups %}{% url 'startup_detail' similar_startups.0.startup_id %}{% else %}#{% endif %}" class="similar-card">
+      {% for startup in similar_startups|default:'' %}
+      <a href="{% url 'startup_detail' startup.startup_id %}" class="similar-card">
         <div class="similar-card-image">
-          <img src="{% static 'accounts/images/layout/earth.png' %}" alt="Планета">
+          {% if startup.logo_urls %}
+            <img src="{% get_file_url_tag startup.logo_urls.0 startup.startup_id 'logo' %}" alt="Логотип">
+          {% else %}
+            <div class="planet">
+              <div class="planet-segment segment-top" style="background-color: {{ startup.planet_top_color|default:'#7B61FF' }};"></div>
+              <div class="planet-segment segment-middle" style="background-color: {{ startup.planet_middle_color|default:'#6B51DF' }};"></div>
+              <div class="planet-segment segment-bottom" style="background-color: {{ startup.planet_bottom_color|default:'#5B41BF' }};"></div>
+            </div>
+          {% endif %}
         </div>
-        <div class="similar-card-name">Ромашка</div>
+        <div class="similar-card-name">{{ startup.title|default:"Ромашка" }}</div>
         <div class="similar-card-rating">
-          <i class="fas fa-star active"></i>
-          <i class="fas fa-star active"></i>
-          <i class="fas fa-star active"></i>
-          <i class="fas fa-star active"></i>
-          <i class="fas fa-star active"></i>
+          {% for i in "12345" %}
+            <i class="fas fa-star {% if forloop.counter <= startup.average_rating|default:5 %}active{% endif %}"></i>
+          {% endfor %}
         </div>
         <div class="similar-card-category">
           <div class="category-title">Категория</div>
-          <div class="category-badge">Досуг</div>
+          <div class="category-badge">{{ startup.direction.direction_name|default:"Досуг" }}</div>
         </div>
       </a>
+      {% empty %}
+        {% for i in "12345" %}
+        <a href="#" class="similar-card">
+          <div class="similar-card-image">
+            <div class="planet">
+              <div class="planet-segment segment-top"></div>
+              <div class="planet-segment segment-middle"></div>
+              <div class="planet-segment segment-bottom"></div>
+            </div>
+          </div>
+          <div class="similar-card-name">Ромашка</div>
+          <div class="similar-card-rating">
+            <i class="fas fa-star active"></i>
+            <i class="fas fa-star active"></i>
+            <i class="fas fa-star active"></i>
+            <i class="fas fa-star active"></i>
+            <i class="fas fa-star active"></i>
+          </div>
+          <div class="similar-card-category">
+            <div class="category-title">Категория</div>
+            <div class="category-badge">Досуг</div>
+          </div>
+        </a>
+        {% endfor %}
       {% endfor %}
     </div>
   </div>
