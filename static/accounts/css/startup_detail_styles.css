@@ -649,7 +649,7 @@
   margin-left: -50vw;
   margin-right: -50vw;
   background: #818CE5;
-  padding: 70px 0 0;
+  padding: 70px 0 70px;
   margin-bottom: 0;
 }
 
@@ -802,7 +802,7 @@
   border-radius: 99px;
   background: transparent;
   cursor: pointer;
-  margin: 40px auto;
+  margin: 40px auto 0;
 }
 
 .show-all-button i {

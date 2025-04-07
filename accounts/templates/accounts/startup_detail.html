@@ -2,7 +2,7 @@
 {% load static %}
 {% load widget_tweaks %}
 {% load file_tags %}
-{% load timeline_filters %}  <!-- Загружаем кастомный фильтр -->
+{% load timeline_filters %}
 
 {% block title %}{{ startup.title }} - Подробности{% endblock %}
 
@@ -13,15 +13,12 @@
 
 {% block content %}
 <div class="startup-detail-page">
-  <!-- Кнопка назад -->
   <a href="{% url 'startups_list' %}" class="back-button">
     <i class="fas fa-arrow-left"></i>
   </a>
 
   <div class="detail-content">
-    <!-- Верхняя информация -->
     <div class="top-section">
-      <!-- Изображение слева -->
       <div class="left-column">
         <div class="planet-container">
           {% if startup.status == 'approved' %}
@@ -46,7 +43,6 @@
         <div class="micro-badge">Доступен для микроинвестиций</div>
       </div>
       
-      <!-- Информация в центре -->
       <div class="center-column">
         <div class="startup-header">
           <div class="startup-date">{{ startup.created_at|date:"d.m.Y" }}</div>
@@ -75,7 +71,6 @@
         </div>
       </div>
       
-      <!-- Инвестиции справа -->
       <div class="right-column">
         <div class="investment-box">
           <div class="investment-badge">
@@ -95,14 +90,12 @@
       </div>
     </div>
 
-    <!-- О проекте -->
     <div class="about-section">
       <h2 class="section-title">О проекте</h2>
       <p class="section-content">{{ startup.description }}</p>
       <a href="#" class="read-more">Читать дальше</a>
     </div>
 
-    <!-- Галерея -->
     <div class="gallery-grid">
       {% for url in creatives_urls|slice:":4" %}
         <div class="gallery-item">
@@ -121,7 +114,6 @@
       {% endif %}
     </div>
 
-    <!-- Условия для инвестора -->
     <div class="investor-conditions">
       <h2 class="section-title">Условия для инвестора</h2>
       <p class="section-content">Договоры займа сроком на 12 месяцев, выплаты — ежемесячно. 
@@ -130,7 +122,6 @@
       <a href="#" class="read-more">Читать дальше</a>
     </div>
 
-    <!-- Документы -->
     <div class="documents-section">
       <h2 class="section-title">Документы</h2>
       <div class="documents-grid">
@@ -152,7 +143,6 @@
       </div>
     </div>
 
-    <!-- Информация об авторе -->
     <div class="author-card">
       <div class="author-avatar"></div>
       <div class="author-info">
@@ -167,7 +157,6 @@
       <button class="report-button">Пожаловаться на стартап</button>
     </div>
     
-    <!-- Комментарии -->
     <div class="comments-section">
       <h2 class="section-title">Комментарии</h2>
       <button class="action-button comment-button">
@@ -233,10 +222,6 @@
   </div>
 </div>
 
-<!-- Блок похожих стартапов должен идти вплотную к футеру -->
-</div>
-
-<!-- Используем отдельный div с полной шириной -->
 <div class="similar-startups-section">
   <div class="similar-startups-header">
     <h2 class="similar-title">
@@ -309,7 +294,6 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    // Здесь можно добавить дополнительный JavaScript функционал
   });
 </script>
 {% endblock %}
