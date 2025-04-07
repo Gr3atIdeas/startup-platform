@@ -99,10 +99,32 @@
 
 .footer-copyright-bar {
   background-color: #FFFFFF;
-  padding: 10px 0;
-  text-align: center;
+  padding: 15px 0;
   color: #000000;
   margin-top: 20px;
+}
+
+.footer-copyright-bar-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.footer-copyright-bar-links {
+  display: flex;
+  gap: 20px;
+}
+
+.footer-copyright-bar-links a {
+  color: #000000;
+  text-decoration: none;
+}
+
+.footer-copyright-bar-links a:hover {
+  text-decoration: underline;
 }
 
 /* Responsive стили */
@@ -118,6 +140,16 @@
   }
   
   .footer-legal {
+    justify-content: center;
+  }
+  
+  .footer-copyright-bar-content {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+  
+  .footer-copyright-bar-links {
     justify-content: center;
   }
 }
