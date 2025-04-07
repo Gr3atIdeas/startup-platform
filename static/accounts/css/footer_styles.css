@@ -101,7 +101,8 @@
   background-color: #FFFFFF;
   padding: 15px 0;
   color: #000000;
-  margin-top: 20px;
+  margin-top: 0;
+  border-top: 1px solid #EEEEEE;
 }
 
 .footer-copyright-bar-content {
@@ -111,6 +112,11 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
+  font-size: 14px;
+}
+
+.footer-copyright-bar-copyright {
+  font-weight: 500;
 }
 
 .footer-copyright-bar-links {
