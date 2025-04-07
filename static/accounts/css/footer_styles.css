@@ -7,6 +7,8 @@
   color: #FFFFFF;
   margin: 0;
   padding: 0;
+  background: #000000;
+  overflow: hidden;
 }
 
 /* Фоновое изображение футера */
@@ -18,16 +20,16 @@
   height: 100%;
   background: url('../images/layout/IMG_7681.webp') no-repeat center center;
   background-size: cover;
-  z-index: -1;
+  z-index: 0;
 }
 
 /* Содержимое футера */
-.footer-content {
-  max-width: 1200px;
+.footer-wrapper {
+  position: relative;
+  max-width: 1280px;
   margin: 0 auto;
-  padding: 60px 20px 20px;
-  display: flex;
-  flex-direction: column;
+  padding: 40px 80px;
+  z-index: 1;
 }
 
 /* Верхняя часть футера */
@@ -35,20 +37,30 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 30px;
+  padding: 32px 0;
 }
 
 /* Логотип футера */
 .footer-logo {
   font-family: 'Koulen', sans-serif;
-  font-size: 24px;
+  font-size: 60px;
+  line-height: 80%;
+  letter-spacing: -0.02em;
   color: #FFFFFF;
 }
 
 /* Социальные иконки */
 .footer-socials {
   display: flex;
-  gap: 20px;
+  gap: 16px;
+}
+
+.footer-socials a {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .footer-socials img {
@@ -57,72 +69,130 @@
 }
 
 /* Средняя часть футера */
-.footer-middle {
+.footer-columns {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 30px;
+  margin-top: 40px;
 }
 
-.footer-middle p {
-  text-align: center;
-  max-width: 500px;
+.footer-text {
+  width: 330px;
+  padding: 24px 32px;
+}
+
+.footer-text p {
+  font-size: 16px;
+  line-height: 24px;
+  color: #A7A7A7;
   margin-bottom: 20px;
-  font-size: 18px;
 }
 
-.footer-middle img {
+.footer-text .store-links {
+  margin-top: 40px;
+}
+
+.footer-text .store-links img {
   height: 40px;
 }
 
-/* Нижняя часть футера */
-.footer-bottom {
-  display: none;
+.footer-join {
+  margin-top: 40px;
+  padding: 24px 32px;
 }
 
-.footer-legal {
+.join-button {
   display: flex;
-  gap: 20px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 195px;
+  height: 48px;
+  border: 1px solid #FFFFFF;
+  border-radius: 99px;
+  background: transparent;
+  color: #FFFFFF;
+  font-family: 'Circe', sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 32px;
+  cursor: pointer;
 }
 
-.footer-legal a {
+.join-button i {
+  font-size: 16px;
+}
+
+.footer-menu {
+  width: 290px;
+  padding: 24px 32px;
+}
+
+.footer-menu h3 {
+  font-family: 'Circe', sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 32px;
+  letter-spacing: -0.02em;
+  color: #9E9E9E;
+  margin-bottom: 32px;
+}
+
+.footer-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.footer-menu a {
+  font-family: 'Circe', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
   color: #FFFFFF;
   text-decoration: none;
 }
 
-.footer-legal a:hover {
+.footer-menu a:hover {
   text-decoration: underline;
 }
 
+/* Нижняя часть футера */
 .footer-copyright-bar {
-  background-color: #FFFFFF;
-  padding: 15px 0;
-  color: #000000;
+  background-color: #F5F4F3;
+  padding: 8px 0;
   margin-top: 0;
-  border-top: 1px solid #EEEEEE;
 }
 
 .footer-copyright-bar-content {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: 1200px;
+  max-width: 1280px;
   margin: 0 auto;
-  padding: 0 20px;
-  font-size: 14px;
+  padding: 8px 80px;
 }
 
 .footer-copyright-bar-copyright {
-  font-weight: 500;
+  font-family: 'Circe', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  color: #4E4F51;
 }
 
 .footer-copyright-bar-links {
   display: flex;
-  gap: 20px;
+  gap: 40px;
 }
 
 .footer-copyright-bar-links a {
-  color: #000000;
+  font-family: 'Circe', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  color: #4E4F51;
   text-decoration: none;
 }
 
@@ -131,21 +201,40 @@
 }
 
 /* Responsive стили */
+@media (max-width: 1200px) {
+  .footer-wrapper {
+    padding: 40px 20px;
+  }
+  
+  .footer-columns {
+    flex-wrap: wrap;
+  }
+  
+  .footer-menu {
+    width: 50%;
+    margin-top: 20px;
+  }
+}
+
 @media (max-width: 768px) {
   .footer-top {
     flex-direction: column;
-    gap: 15px;
-    text-align: center;
+    gap: 20px;
   }
   
-  .footer-socials {
-    justify-content: center;
+  .footer-columns {
+    flex-direction: column;
+  }
+  
+  .footer-text, .footer-menu {
+    width: 100%;
+    padding: 20px 0;
   }
   
   .footer-copyright-bar-content {
     flex-direction: column;
     gap: 10px;
-    text-align: center;
+    padding: 8px 20px;
   }
   
   .footer-copyright-bar-links {
