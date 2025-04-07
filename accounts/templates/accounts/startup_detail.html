@@ -6,6 +6,10 @@
 
 {% block title %}{{ startup.title }} - Подробности{% endblock %}
 
+{% block head_extra %}
+  <link rel="stylesheet" href="{% static 'accounts/css/startup_detail_styles.css' %}">
+{% endblock %}
+
 {% block content %}
 <link rel="stylesheet" href="{% static 'accounts/css/startup_form.css' %}">
 

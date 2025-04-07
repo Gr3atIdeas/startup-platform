@@ -1,0 +1,263 @@
+/* Общий контейнер */
+.startup-detail-page {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  background: #FFFFFF;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* Верхняя навигация */
+.back-button {
+  width: 25px;
+  height: 37px;
+  border: 2px solid #000000;
+  cursor: pointer;
+  margin-bottom: 40px;
+}
+
+/* Основной контент */
+.detail-content {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  max-width: 1283px;
+  margin: 0 auto;
+}
+
+/* Микроинвестиции бейдж */
+.micro-investment-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 9px 30px;
+  gap: 10px;
+  width: fit-content;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid #000000;
+  border-radius: 10px;
+}
+
+.micro-investment-badge span {
+  font-family: 'Helvetica Neue';
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 18px;
+  color: #000000;
+}
+
+.help-icon {
+  width: 14px;
+  height: 14px;
+  background: #D9D9D9;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Circe';
+  font-size: 8px;
+  color: #FFFFFF;
+}
+
+/* Секция "О проекте" */
+.about-section {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.section-title {
+  font-family: 'Helvetica Neue';
+  font-weight: 400;
+  font-size: 25px;
+  line-height: 30px;
+  color: #000000;
+}
+
+.about-content {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.about-text {
+  font-size: 20px;
+  line-height: 24px;
+  letter-spacing: 0.01em;
+  color: #000000;
+}
+
+.read-more {
+  font-size: 20px;
+  line-height: 24px;
+  color: #909090;
+  cursor: pointer;
+}
+
+/* Галерея изображений */
+.images-gallery {
+  display: flex;
+  gap: 15px;
+  width: 100%;
+}
+
+.gallery-item {
+  flex: 1;
+  height: 270px;
+  background: #D9D9D9;
+  border-radius: 10px;
+}
+
+.gallery-main {
+  width: 100%;
+  height: 598px;
+  background: #D9D9D9;
+  border-radius: 10px;
+  margin-top: 15px;
+}
+
+/* Условия для инвестора */
+.investor-conditions {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Документы */
+.documents-section {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.documents-grid {
+  display: flex;
+  gap: 15px;
+}
+
+.document-item {
+  width: 133px;
+  height: 133px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  font-family: 'Circe';
+  font-weight: 700;
+  font-size: 30px;
+  color: #FFFFFF;
+}
+
+.document-pdf {
+  background: #7B61FF;
+}
+
+.document-excel {
+  background: #36D302;
+}
+
+.document-doc {
+  background: #345DFF;
+}
+
+/* Профиль автора */
+.author-profile {
+  display: flex;
+  align-items: center;
+  gap: 58px;
+  margin-top: 30px;
+}
+
+.author-info {
+  display: flex;
+  gap: 11px;
+  align-items: flex-start;
+}
+
+.author-avatar {
+  width: 39px;
+  height: 39px;
+  background: #D9D9D9;
+  border-radius: 50%;
+}
+
+.author-details {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.author-name {
+  font-family: 'Circe';
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 18px;
+  color: #000000;
+}
+
+.author-rating {
+  font-family: 'Circe';
+  font-size: 14px;
+  line-height: 18px;
+  color: #A9A9A9;
+}
+
+.author-reviews {
+  font-family: 'Circe';
+  font-size: 14px;
+  line-height: 18px;
+  color: #7B61FF;
+  cursor: pointer;
+}
+
+/* Кнопки действий */
+.action-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px 64px;
+  gap: 8px;
+  height: 55px;
+  background: #7B61FF;
+  border-radius: 99px;
+  border: none;
+  cursor: pointer;
+}
+
+.action-button span {
+  font-family: 'Circe';
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 32px;
+  color: #FFFFFF;
+}
+
+/* Дополнительная информация */
+.additional-info {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.creation-date {
+  font-family: 'Circe';
+  font-size: 14px;
+  line-height: 18px;
+  color: #A9A9A9;
+}
+
+.report-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 9px 30px;
+  width: 247px;
+  height: 36px;
+  border: 1px solid #7B7B7B;
+  border-radius: 10px;
+  font-size: 15px;
+  color: #7B7B7B;
+  cursor: pointer;
+} 
