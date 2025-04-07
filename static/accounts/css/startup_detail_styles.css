@@ -648,9 +648,11 @@
   right: 50%;
   margin-left: -50vw;
   margin-right: -50vw;
+  margin-bottom: 0;
+  margin-top: 0;
+  padding-top: 70px;
+  padding-bottom: 0;
   background: #818CE5;
-  padding: 70px 0 0;
-  margin-bottom: -6px;
 }
 
 .similar-startups-header {
@@ -802,7 +804,8 @@
   border-radius: 99px;
   background: transparent;
   cursor: pointer;
-  margin: 40px auto 70px;
+  margin: 40px auto 0;
+  margin-bottom: 0;
 }
 
 .show-all-button i {
@@ -870,4 +873,9 @@ html, body {
   width: 100%;
   margin: 0;
   padding: 0;
+}
+
+footer {
+  margin-top: 0;
+  padding-top: 0;
 } 
