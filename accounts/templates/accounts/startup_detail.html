@@ -20,10 +20,14 @@
 
   <div class="detail-content">
     <!-- Верхняя информация -->
-    <div class="form-row">
-      <div class="form-column">
-        <!-- Планета/Логотип -->
+    <div class="top-section">
+      <!-- Изображение слева -->
+      <div class="left-column">
         <div class="planet-container">
+          {% if startup.status == 'approved' %}
+            <div class="status-badge">Активен</div>
+          {% endif %}
+          
           {% if startup.logo_urls %}
             <img src="{% get_file_url_tag logo_urls.0 startup.startup_id 'logo' %}" alt="Логотип" class="logo-preview">
           {% else %}
@@ -33,24 +37,19 @@
               <div class="planet-segment segment-bottom" style="background-color: {{ startup.planet_bottom_color|default:'#5B41BF' }};"></div>
             </div>
           {% endif %}
-          
-          {% if startup.status == 'approved' %}
-          <div class="status-badge">Активен</div>
-          {% endif %}
         </div>
         
         <button class="action-button write-button">
           <span>Написать</span>
         </button>
-      </div>
-
-      <div class="form-column startup-info-column">
-        <!-- Название и рейтинг -->
-        <h1 class="startup-name">{{ startup.title }}</h1>
-        <div class="category-label">Категория: {{ startup.direction.direction_name|default:"Досуг" }}</div>
         
-        <div class="rating-section">
-          <span class="rating-text">Рейтинг {{ average_rating|floatformat:"1" }}/5</span>
+        <div class="micro-badge">Доступен для микроинвестиций</div>
+      </div>
+      
+      <!-- Информация в центре -->
+      <div class="center-column">
+        <div class="startup-header">
+          <div class="startup-date">{{ startup.created_at|date:"d.m.Y" }}</div>
           <div class="rating-stars">
             {% for i in "12345" %}
               <i class="fas fa-star {% if forloop.counter <= average_rating %}active{% endif %}"></i>
@@ -58,35 +57,27 @@
           </div>
         </div>
         
-        <div class="funding-info">
-          <h3 class="funding-label">Цель/стоимость выкупа</h3>
-          <div class="funding-amount">{{ startup.funding_goal|default:"41 689" }} ₽</div>
-        </div>
+        <h1 class="startup-name">{{ startup.title }}</h1>
+        <div class="category-label">Категория: {{ startup.direction.direction_name|default:"Досуг" }}</div>
         
-        <div class="statistics">
-          <div class="stats-item">
-            <i class="far fa-comment"></i>
-            <span>{{ startup.total_voters|default:"213" }}</span>
-          </div>
-          <div class="stats-item">
-            <i class="far fa-heart"></i>
-            <span>{{ startup.likes_count|default:"17" }}</span>
-          </div>
+        <div class="investment-info">
+          <h3 class="price-label">Цель/стоимость выкупа</h3>
+          <div class="price-value">{{ startup.funding_goal|default:"41 689" }} ₽</div>
         </div>
         
         <div class="author-info">
           <div class="author-avatar"></div>
           <div class="author-details">
-            <span class="author-name">{{ startup.owner.first_name|default:"Виктор" }}</span>
-            <span class="author-rating">Рейтинг {{ average_rating|floatformat:"1" }}/5</span>
-            <span class="author-reviews">Отзывы</span>
+            <div class="author-name">{{ startup.owner.first_name|default:"Виктор" }}</div>
+            <div class="author-rating">Рейтинг {{ average_rating|floatformat:"1" }}/5</div>
+            <div class="author-reviews">Отзывы</div>
           </div>
         </div>
       </div>
       
-      <div class="form-column investment-column">
-        <div class="investment-container">
-          <!-- Инвестиции -->
+      <!-- Инвестиции справа -->
+      <div class="right-column">
+        <div class="investment-box">
           <div class="investment-badge">
             <span>Инвестиции</span>
             <i class="fas fa-chevron-down"></i>
@@ -107,14 +98,12 @@
     <!-- О проекте -->
     <div class="about-section">
       <h2 class="section-title">О проекте</h2>
-      <div class="about-content">
-        <p class="about-text">{{ startup.description }}</p>
-        <span class="read-more">Читать дальше</span>
-      </div>
+      <p class="section-content">{{ startup.description }}</p>
+      <a href="#" class="read-more">Читать дальше</a>
     </div>
 
     <!-- Галерея -->
-    <div class="images-gallery">
+    <div class="gallery-grid">
       {% for url in creatives_urls|slice:":4" %}
         <div class="gallery-item">
           <img src="{% get_file_url_tag url startup.startup_id 'creative' %}" alt="Креатив">
@@ -125,7 +114,8 @@
         {% endfor %}
       {% endfor %}
     </div>
-    <div class="gallery-main">
+    
+    <div class="gallery-large">
       {% if creatives_urls %}
         <img src="{% get_file_url_tag creatives_urls.0 startup.startup_id 'creative' %}" alt="Главное изображение">
       {% endif %}
@@ -134,12 +124,10 @@
     <!-- Условия для инвестора -->
     <div class="investor-conditions">
       <h2 class="section-title">Условия для инвестора</h2>
-      <div class="about-content">
-        <p class="about-text">Договоры займа сроком на 12 месяцев, выплаты — ежемесячно. 
-        Минимальный порог — {{ startup.min_investment|default:"500 000" }} ₽;
-        - от {{ startup.min_investment|default:"500 000" }} ₽ — {{ startup.interest_rate|default:"50" }}% годовых.</p>
-        <span class="read-more">Читать дальше</span>
-      </div>
+      <p class="section-content">Договоры займа сроком на 12 месяцев, выплаты — ежемесячно. 
+      Минимальный порог — {{ startup.min_investment|default:"500 000" }} ₽;
+      - от {{ startup.min_investment|default:"500 000" }} ₽ — {{ startup.interest_rate|default:"50" }}% годовых.</p>
+      <a href="#" class="read-more">Читать дальше</a>
     </div>
 
     <!-- Документы -->
@@ -164,85 +152,68 @@
       </div>
     </div>
 
-    <!-- Профиль автора -->
-    <div class="author-profile">
-      <div class="author-info-large">
-        <div class="author-avatar"></div>
-        <div class="author-details">
-          <span class="author-name">{{ startup.owner.first_name|default:"Виктор" }}</span>
-          <span class="author-rating">Рейтинг {{ average_rating|floatformat:"1" }}/5</span>
-          <span class="author-reviews">Отзывы</span>
-        </div>
+    <!-- Информация об авторе -->
+    <div class="author-card">
+      <div class="author-avatar"></div>
+      <div class="author-info">
+        <div class="author-name">{{ startup.owner.first_name|default:"Виктор" }}</div>
+        <div class="author-status">Онлайн</div>
       </div>
-      <button class="action-button">
-        <span>Написать автору</span>
-      </button>
+      <button class="action-button message-button">Написать автору</button>
     </div>
-
-    <!-- Дополнительная информация -->
-    <div class="additional-info">
-      <span class="creation-date">Создан {{ startup.created_at|date:"d/m/Y" }}</span>
+    
+    <div class="startup-meta">
+      <div class="creation-date">Создан {{ startup.created_at|date:"d/m/Y" }}</div>
       <button class="report-button">Пожаловаться на стартап</button>
     </div>
     
     <!-- Комментарии -->
     <div class="comments-section">
-      <h2 class="comments-title">Комментарии</h2>
-      <div class="comments-stats">
-        <div class="stats-item">
-          <i class="far fa-comment"></i>
-          <span>{{ comments_count|default:"213" }}</span>
-        </div>
-        <div class="stats-item">
-          <i class="far fa-heart"></i>
-          <span>{{ likes_count|default:"17" }}</span>
-        </div>
-      </div>
-      
+      <h2 class="section-title">Комментарии</h2>
       <button class="action-button comment-button">
         <span>Оставить комментарий</span>
       </button>
       
       <div class="comments-list">
         <div class="comment-card">
-          <div class="comment-row">
-            <div class="comment-user">
+          <div class="comment-header">
+            <div class="comment-author-info">
               <div class="author-avatar"></div>
-              <div class="comment-info">
-                <div class="comment-author">Виктор</div>
-                <div class="comment-text">Само направление сейчас актуально и я уже инвестировала в похожий стартап. Советую!</div>
-              </div>
+              <div class="comment-author-name">Виктор</div>
             </div>
-            <div class="comment-meta">
-              <div class="comment-date">25/07/2024</div>
-              <div class="rating-stars small">
-                {% for i in "12345" %}
-                  <i class="fas fa-star active"></i>
-                {% endfor %}
-              </div>
-              <div class="badge-invested">Инвестировал</div>
+            <div class="comment-date">25/07/2024</div>
+          </div>
+          <div class="comment-body">
+            <p>Само направление сейчас актуально и я уже инвестировала в похожий стартап. Советую!</p>
+          </div>
+          <div class="comment-footer">
+            <div class="rating-stars small">
+              {% for i in "12345" %}
+                <i class="fas fa-star active"></i>
+              {% endfor %}
             </div>
+            <div class="badge-invested">Инвестировал</div>
           </div>
         </div>
         
         <div class="comment-card">
-          <div class="comment-row">
-            <div class="comment-user">
+          <div class="comment-header">
+            <div class="comment-author-info">
               <div class="author-avatar"></div>
-              <div class="comment-info">
-                <div class="comment-author">Сергей</div>
-                <div class="comment-text">Само направление сейчас актуально и я уже инвестировала в похожий стартап. Советую!</div>
-              </div>
+              <div class="comment-author-name">Сергей</div>
             </div>
-            <div class="comment-meta">
-              <div class="comment-date">25/07/2024</div>
-              <div class="rating-stars small">
-                {% for i in "12345" %}
-                  <i class="fas fa-star active"></i>
-                {% endfor %}
-              </div>
-              <div class="badge-invested small">Выкуп</div>
+            <div class="comment-date">25/07/2024</div>
+          </div>
+          <div class="comment-body">
+            <p>Само направление сейчас актуально и я уже инвестировала в похожий стартап. Советую!</p>
+          </div>
+          <div class="comment-footer">
+            <div class="rating-stars small">
+              {% for i in "12345" %}
+                <i class="fas fa-star active"></i>
+              {% endfor %}
             </div>
+            <div class="badge-invested small">Выкуп</div>
           </div>
         </div>
       </div>
@@ -255,7 +226,7 @@
       <div class="comment-form">
         <textarea placeholder="Написать комментарий"></textarea>
         <button class="action-button comment-submit">
-          <span>Оставить комментарий</span>
+          Оставить комментарий
         </button>
       </div>
     </div>
