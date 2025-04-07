@@ -23,82 +23,86 @@
       
       <h2 class="filter-heading">Категории</h2>
       
-      <ul class="category-list">
-        <li class="category-item">
-          <label class="category-label">
-            <input type="checkbox" name="category" value="medicine" class="category-checkbox" checked>
-            <span class="category-name">Медицина</span>
-          </label>
-        </li>
-        <li class="category-item">
-          <label class="category-label">
-            <input type="checkbox" name="category" value="auto" class="category-checkbox">
-            <span class="category-name">Автомобили</span>
-          </label>
-        </li>
-        <li class="category-item">
-          <label class="category-label">
-            <input type="checkbox" name="category" value="delivery" class="category-checkbox">
-            <span class="category-name">Доставка</span>
-          </label>
-        </li>
-        <li class="category-item">
-          <label class="category-label">
-            <input type="checkbox" name="category" value="cafe" class="category-checkbox">
-            <span class="category-name">Кафе/рестораны</span>
-          </label>
-        </li>
-        <li class="category-item">
-          <label class="category-label">
-            <input type="checkbox" name="category" value="fastfood" class="category-checkbox">
-            <span class="category-name">Фастфуд</span>
-          </label>
-        </li>
-        <li class="category-item">
-          <label class="category-label">
-            <input type="checkbox" name="category" value="health" class="category-checkbox">
-            <span class="category-name">Здоровье</span>
-          </label>
-        </li>
-        <li class="category-item">
-          <label class="category-label">
-            <input type="checkbox" name="category" value="beauty" class="category-checkbox">
-            <span class="category-name">Красота</span>
-          </label>
-        </li>
-        <li class="category-item">
-          <label class="category-label">
-            <input type="checkbox" name="category" value="transport" class="category-checkbox">
-            <span class="category-name">Транспорт</span>
-          </label>
-        </li>
-        <li class="category-item">
-          <label class="category-label">
-            <input type="checkbox" name="category" value="sport" class="category-checkbox">
-            <span class="category-name">Спорт</span>
-          </label>
-        </li>
-        <li class="category-item">
-          <label class="category-label">
-            <input type="checkbox" name="category" value="psychology" class="category-checkbox">
-            <span class="category-name">Психология</span>
-          </label>
-        </li>
-        <li class="category-item">
-          <label class="category-label">
-            <input type="checkbox" name="category" value="ai" class="category-checkbox">
-            <span class="category-name">ИИ</span>
-          </label>
-        </li>
-      </ul>
+      <form method="get" id="filterForm">
+        <ul class="category-list">
+          <li class="category-item">
+            <label class="category-label">
+              <input type="checkbox" name="category" value="medicine" class="category-checkbox" {% if 'medicine' in selected_categories %}checked{% endif %}>
+              <span class="category-name">Медицина</span>
+            </label>
+          </li>
+          <li class="category-item">
+            <label class="category-label">
+              <input type="checkbox" name="category" value="auto" class="category-checkbox" {% if 'auto' in selected_categories %}checked{% endif %}>
+              <span class="category-name">Автомобили</span>
+            </label>
+          </li>
+          <li class="category-item">
+            <label class="category-label">
+              <input type="checkbox" name="category" value="delivery" class="category-checkbox" {% if 'delivery' in selected_categories %}checked{% endif %}>
+              <span class="category-name">Доставка</span>
+            </label>
+          </li>
+          <li class="category-item">
+            <label class="category-label">
+              <input type="checkbox" name="category" value="cafe" class="category-checkbox" {% if 'cafe' in selected_categories %}checked{% endif %}>
+              <span class="category-name">Кафе/рестораны</span>
+            </label>
+          </li>
+          <li class="category-item">
+            <label class="category-label">
+              <input type="checkbox" name="category" value="fastfood" class="category-checkbox" {% if 'fastfood' in selected_categories %}checked{% endif %}>
+              <span class="category-name">Фастфуд</span>
+            </label>
+          </li>
+          <li class="category-item">
+            <label class="category-label">
+              <input type="checkbox" name="category" value="health" class="category-checkbox" {% if 'health' in selected_categories %}checked{% endif %}>
+              <span class="category-name">Здоровье</span>
+            </label>
+          </li>
+          <li class="category-item">
+            <label class="category-label">
+              <input type="checkbox" name="category" value="beauty" class="category-checkbox" {% if 'beauty' in selected_categories %}checked{% endif %}>
+              <span class="category-name">Красота</span>
+            </label>
+          </li>
+          <li class="category-item">
+            <label class="category-label">
+              <input type="checkbox" name="category" value="transport" class="category-checkbox" {% if 'transport' in selected_categories %}checked{% endif %}>
+              <span class="category-name">Транспорт</span>
+            </label>
+          </li>
+          <li class="category-item">
+            <label class="category-label">
+              <input type="checkbox" name="category" value="sport" class="category-checkbox" {% if 'sport' in selected_categories %}checked{% endif %}>
+              <span class="category-name">Спорт</span>
+            </label>
+          </li>
+          <li class="category-item">
+            <label class="category-label">
+              <input type="checkbox" name="category" value="psychology" class="category-checkbox" {% if 'psychology' in selected_categories %}checked{% endif %}>
+              <span class="category-name">Психология</span>
+            </label>
+          </li>
+          <li class="category-item">
+            <label class="category-label">
+              <input type="checkbox" name="category" value="ai" class="category-checkbox" {% if 'ai' in selected_categories %}checked{% endif %}>
+              <span class="category-name">ИИ</span>
+            </label>
+          </li>
+        </ul>
+        
+        <input type="hidden" name="micro_investment" id="microInvestmentInput" value="{% if micro_investment %}1{% else %}0{% endif %}">
+      </form>
 
       <hr class="category-divider">
       
       <div class="admin-section">
         <span class="admin-label">Микроинвестиции</span>
         <div class="help-icon">?</div>
-        <div class="toggle-switch" id="adminToggle" onclick="toggleAdmin()">
-          <div class="toggle-handle"></div>
+        <div class="toggle-switch" id="adminToggle" onclick="toggleMicroInvestment()" {% if micro_investment %}class="active"{% endif %}>
+          <div class="toggle-handle" style="left: {% if micro_investment %}27px{% else %}3px{% endif %};"></div>
         </div>
       </div>
     </aside>
@@ -114,9 +118,9 @@
               {% else %}
                 <div class="planet-container">
                   <div class="planet">
-                    <div class="planet-segment segment-top" style="background-color: {{ startup.planet_top_color }};"></div>
-                    <div class="planet-segment segment-middle" style="background-color: {{ startup.planet_middle_color }};"></div>
-                    <div class="planet-segment segment-bottom" style="background-color: {{ startup.planet_bottom_color }};"></div>
+                    <div class="planet-segment segment-top" style="background-color: {{ startup.planet_top_color|default:'#7B61FF' }};"></div>
+                    <div class="planet-segment segment-middle" style="background-color: {{ startup.planet_middle_color|default:'#6B51DF' }};"></div>
+                    <div class="planet-segment segment-bottom" style="background-color: {{ startup.planet_bottom_color|default:'#5B41BF' }};"></div>
                   </div>
                 </div>
               {% endif %}
@@ -149,16 +153,29 @@
 </div>
 
 <script>
-  function toggleAdmin() {
+  // Отправка формы при изменении чекбоксов
+  document.querySelectorAll('.category-checkbox').forEach(checkbox => {
+    checkbox.addEventListener('change', function() {
+      document.getElementById('filterForm').submit();
+    });
+  });
+
+  function toggleMicroInvestment() {
     const toggleSwitch = document.getElementById('adminToggle');
     toggleSwitch.classList.toggle('active');
     
     const handle = toggleSwitch.querySelector('.toggle-handle');
+    const microInvestmentInput = document.getElementById('microInvestmentInput');
+    
     if (toggleSwitch.classList.contains('active')) {
       handle.style.left = '27px';
+      microInvestmentInput.value = '1';
     } else {
       handle.style.left = '3px';
+      microInvestmentInput.value = '0';
     }
+    
+    document.getElementById('filterForm').submit();
   }
 </script>
 {% endblock %}  

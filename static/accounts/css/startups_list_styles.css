@@ -135,6 +135,7 @@
   align-items: center;
   width: 100%;
   margin-top: 10px;
+  position: relative;
 }
 
 .admin-label {
@@ -177,7 +178,6 @@
   position: absolute;
   width: 18px;
   height: 18px;
-  left: 3px;
   top: 3px;
   background: #FFFFFF;
   border-radius: 50%;
