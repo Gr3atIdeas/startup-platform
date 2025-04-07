@@ -133,9 +133,11 @@
 .admin-section {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   width: 100%;
   margin-top: 10px;
   position: relative;
+  padding: 5px 0;
 }
 
 .admin-label {
@@ -144,6 +146,7 @@
   font-size: 14px;
   line-height: 18px;
   color: #000000;
+  flex-grow: 1;
 }
 
 .help-icon {
@@ -156,7 +159,8 @@
   align-items: center;
   font-size: 10px;
   color: #FFFFFF;
-  margin: 0 8px;
+  margin-right: 8px;
+  flex-shrink: 0;
 }
 
 .toggle-switch {
@@ -166,7 +170,7 @@
   border-radius: 12px;
   position: relative;
   cursor: pointer;
-  margin-left: auto;
+  flex-shrink: 0;
   transition: background-color 0.3s;
 }
 
@@ -179,9 +183,14 @@
   width: 18px;
   height: 18px;
   top: 3px;
+  left: 3px;
   background: #FFFFFF;
   border-radius: 50%;
   transition: left 0.3s;
+}
+
+.toggle-switch.active .toggle-handle {
+  left: 27px;
 }
 
 /* Сетка карточек стартапов */

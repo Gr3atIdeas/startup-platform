@@ -65,20 +65,8 @@ def user_logout(request):
     return redirect('home')
 
 def startups_list(request):
-    # Получаем выбранные категории из параметров запроса
-    selected_categories = request.GET.getlist('category')
-    micro_investment = request.GET.get('micro_investment') == '1'
-    
-    # Получаем все одобренные стартапы
+    # Получаем одобренные стартапы
     approved_startups_list = Startups.objects.filter(status='approved').order_by('-created_at')
-    
-    # Применяем фильтр по категориям, если они выбраны
-    if selected_categories:
-        approved_startups_list = approved_startups_list.filter(direction__in=selected_categories)
-    
-    # Применяем фильтр по микроинвестициям, если активен
-    if micro_investment:
-        approved_startups_list = approved_startups_list.filter(micro_investment_available=True)
     
     # Логируем данные
     logger.info(f"Найдено одобренных стартапов: {approved_startups_list.count()}")
@@ -89,11 +77,7 @@ def startups_list(request):
     if not approved_startups_list.exists():
         logger.warning("Нет стартапов со статусом 'approved'")
     
-    return render(request, 'accounts/startups_list.html', {
-        'approved_startups': approved_startups_list,
-        'selected_categories': selected_categories,
-        'micro_investment': micro_investment,
-    })
+    return render(request, 'accounts/startups_list.html', {'approved_startups': approved_startups_list})
 
 # accounts/views.py (фрагмент)
 
