@@ -10,11 +10,18 @@
 
 /* Верхняя навигация */
 .back-button {
-  width: 25px;
-  height: 37px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
   border: 2px solid #000000;
+  border-radius: 50%;
   cursor: pointer;
   margin-bottom: 40px;
+  text-decoration: none;
+  color: #000000;
+  font-size: 18px;
 }
 
 /* Основной контент */
@@ -26,42 +33,263 @@
   margin: 0 auto;
 }
 
-/* Микроинвестиции бейдж */
-.micro-investment-badge {
+/* Основная сетка */
+.form-row {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-bottom: 40px;
+}
+
+.form-column {
+  flex: 0 1 auto;
+}
+
+.startup-info-column {
+  width: 185px;
+}
+
+.investment-column {
+  width: 394px;
+}
+
+/* Планета и логотип */
+.planet-container {
+  width: 383px;
+  height: 305px;
+  position: relative;
+  margin-bottom: 16px;
+  background: #D9D9D9;
+  border-radius: 22px;
+  overflow: hidden;
+}
+
+.status-badge {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #000000;
+  color: #FFFFFF;
+  width: 101px;
+  height: 27px;
+  border-radius: 0 0 10px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+}
+
+.planet {
+  width: 120px;
+  height: 120px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.planet-segment {
+  position: absolute;
+  width: 100%;
+  height: 33.33%;
+}
+
+.segment-top {
+  top: 0;
+}
+
+.segment-middle {
+  top: 33.33%;
+}
+
+.segment-bottom {
+  top: 66.66%;
+}
+
+.logo-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Инвестиционный блок */
+.investment-container {
+  padding: 69px 73px;
+  width: 394px;
+  height: 315px;
+  background: #F2F4FF;
+  border-radius: 26px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.investment-badge {
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 9px 30px;
   gap: 10px;
-  width: fit-content;
+  width: 162px;
   height: 36px;
   background: rgba(255, 255, 255, 0.12);
   border: 1px solid #000000;
   border-radius: 10px;
+  font-size: 15px;
 }
 
-.micro-investment-badge span {
-  font-family: 'Helvetica Neue';
-  font-weight: 400;
+.invest-button {
+  width: 100%;
+}
+
+.investors-count {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 15px;
+  color: #4E4F51;
+  font-family: 'Circe';
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.investors-count i {
+  font-size: 16px;
+}
+
+/* Стили для информации о стартапе */
+.startup-name {
+  font-family: 'Circe';
+  font-weight: 700;
+  font-size: 30px;
+  line-height: 18px;
+  margin: 0 0 7px 0;
+  color: #000000;
+}
+
+.category-label {
+  font-family: 'Circe';
+  font-size: 14px;
+  line-height: 18px;
+  color: #A9A9A9;
+  margin-bottom: 15px;
+}
+
+.rating-section {
+  margin-bottom: 15px;
+}
+
+.rating-text {
+  font-family: 'Circe';
+  font-size: 14px;
+  line-height: 18px;
+  color: #A9A9A9;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.rating-stars {
+  display: flex;
+  gap: 5px;
+}
+
+.rating-stars i {
+  color: #D9D9D9;
+  font-size: 14px;
+}
+
+.rating-stars i.active {
+  color: #7B61FF;
+}
+
+.rating-stars.small i {
+  font-size: 12px;
+}
+
+.funding-info {
+  margin: 15px 0;
+}
+
+.funding-label {
   font-size: 15px;
+  font-weight: 400;
+  margin-bottom: 10px;
+}
+
+.funding-amount {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 9px 30px;
+  width: 120px;
+  height: 36px;
+  border: 1px dashed #000000;
+  border-radius: 10px;
+  font-size: 15px;
+}
+
+.statistics {
+  display: flex;
+  gap: 22px;
+  margin: 15px 0;
+}
+
+.stats-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #A9A9A9;
+  font-size: 14px;
+}
+
+.author-info {
+  display: flex;
+  gap: 11px;
+  margin-top: 15px;
+}
+
+.author-avatar {
+  width: 39px;
+  height: 39px;
+  background: #D9D9D9;
+  border-radius: 50%;
+}
+
+.author-details {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.author-name {
+  font-family: 'Circe';
+  font-weight: 700;
+  font-size: 20px;
   line-height: 18px;
   color: #000000;
 }
 
-.help-icon {
-  width: 14px;
-  height: 14px;
-  background: #D9D9D9;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.author-rating {
   font-family: 'Circe';
-  font-size: 8px;
-  color: #FFFFFF;
+  font-size: 14px;
+  line-height: 18px;
+  color: #A9A9A9;
 }
 
-/* Секция "О проекте" */
+.author-reviews {
+  font-family: 'Circe';
+  font-size: 14px;
+  line-height: 18px;
+  color: #7B61FF;
+  cursor: pointer;
+}
+
+/* О проекте */
 .about-section {
   display: flex;
   flex-direction: column;
@@ -108,6 +336,13 @@
   height: 270px;
   background: #D9D9D9;
   border-radius: 10px;
+  overflow: hidden;
+}
+
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .gallery-main {
@@ -116,6 +351,13 @@
   background: #D9D9D9;
   border-radius: 10px;
   margin-top: 15px;
+  overflow: hidden;
+}
+
+.gallery-main img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 /* Условия для инвестора */
@@ -148,6 +390,7 @@
   font-weight: 700;
   font-size: 30px;
   color: #FFFFFF;
+  text-decoration: none;
 }
 
 .document-pdf {
@@ -170,46 +413,10 @@
   margin-top: 30px;
 }
 
-.author-info {
+.author-info-large {
   display: flex;
   gap: 11px;
   align-items: flex-start;
-}
-
-.author-avatar {
-  width: 39px;
-  height: 39px;
-  background: #D9D9D9;
-  border-radius: 50%;
-}
-
-.author-details {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.author-name {
-  font-family: 'Circe';
-  font-weight: 700;
-  font-size: 20px;
-  line-height: 18px;
-  color: #000000;
-}
-
-.author-rating {
-  font-family: 'Circe';
-  font-size: 14px;
-  line-height: 18px;
-  color: #A9A9A9;
-}
-
-.author-reviews {
-  font-family: 'Circe';
-  font-size: 14px;
-  line-height: 18px;
-  color: #7B61FF;
-  cursor: pointer;
 }
 
 /* Кнопки действий */
@@ -218,20 +425,26 @@
   justify-content: center;
   align-items: center;
   padding: 16px 64px;
-  gap: 8px;
-  height: 55px;
   background: #7B61FF;
   border-radius: 99px;
   border: none;
   cursor: pointer;
-}
-
-.action-button span {
+  color: #FFFFFF;
   font-family: 'Circe';
   font-weight: 700;
   font-size: 18px;
   line-height: 32px;
-  color: #FFFFFF;
+  width: fit-content;
+}
+
+.write-button {
+  width: 341px;
+  padding: 16px 0;
+  margin-top: 10px;
+}
+
+.comment-button {
+  margin: 20px 0;
 }
 
 /* Дополнительная информация */
@@ -260,178 +473,15 @@
   font-size: 15px;
   color: #7B7B7B;
   cursor: pointer;
-}
-
-/* Общий контейнер */
-.startup-form-container {
-  width: 100%;
-  max-width: 1440px;
-  margin: 0 auto;
-  padding: 40px 80px;
-  background: #FFFFFF;
-  font-family: 'Helvetica Neue', Arial, sans-serif;
-}
-
-/* Заголовок */
-.form-header {
-  margin-bottom: 40px;
-}
-
-.form-header h2 {
-  font-family: 'Circe', sans-serif;
-  font-weight: 700;
-  font-size: 30px;
-  line-height: 35px;
-  color: #000000;
-}
-
-/* Основная сетка */
-.form-row {
-  display: flex;
-  gap: 95px;
-  margin-bottom: 40px;
-}
-
-.form-column {
-  flex: 1;
-}
-
-/* Группы полей */
-.form-group {
-  margin-bottom: 20px;
-}
-
-.form-group label {
-  display: block;
-  font-weight: 400;
-  font-size: 15px;
-  line-height: 18px;
-  margin-bottom: 8px;
-  color: #000000;
-}
-
-.form-group p {
-  font-size: 20px;
-  line-height: 24px;
-  color: #000000;
-}
-
-/* Планета и логотип */
-.planet-container {
-  width: 383px;
-  height: 305px;
-  position: relative;
-  margin-bottom: 16px;
-  background: #000819;
-  border-radius: 22px;
-  overflow: hidden;
-}
-
-.planet {
-  width: 120px;
-  height: 120px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  border-radius: 50%;
-  overflow: hidden;
-}
-
-.planet-segment {
-  position: absolute;
-  width: 100%;
-  height: 33.33%;
-}
-
-.segment-top {
-  top: 0;
-}
-
-.segment-middle {
-  top: 33.33%;
-}
-
-.segment-bottom {
-  top: 66.66%;
-}
-
-.logo-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.logo-preview {
-  max-width: 80%;
-  max-height: 80%;
-  object-fit: contain;
-}
-
-/* Цветовая палитра */
-.color-picker-container {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-bottom: 15px;
-}
-
-/* Режим */
-.mode-buttons {
-  margin-bottom: 20px;
-}
-
-/* Документы */
-.upload-section {
-  margin-top: 30px;
-}
-
-.upload-title {
-  font-size: 25px;
-  line-height: 30px;
-  margin-bottom: 15px;
-  color: #000000;
-}
-
-.documents-grid {
-  display: flex;
-  gap: 15px;
-  margin-top: 15px;
-}
-
-.document-item {
-  width: 133px;
-  height: 133px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 10px;
-  font-family: 'Circe';
-  font-weight: 700;
-  font-size: 30px;
-  color: #FFFFFF;
-}
-
-.document-pdf {
-  background: #7B61FF;
-}
-
-.document-excel {
-  background: #36D302;
-}
-
-.document-doc {
-  background: #345DFF;
+  background: transparent;
 }
 
 /* Комментарии */
 .comments-section {
   margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  width: 1005px;
 }
 
 .comments-title {
@@ -440,7 +490,13 @@
   font-size: 30px;
   line-height: 18px;
   color: #000000;
-  margin-bottom: 30px;
+  margin-bottom: 15px;
+}
+
+.comments-stats {
+  display: flex;
+  gap: 22px;
+  margin-bottom: 15px;
 }
 
 .comment-card {
@@ -449,20 +505,26 @@
   border-radius: 20px;
   padding: 21px 35px;
   margin-bottom: 20px;
+  width: 100%;
 }
 
-.comment-header {
+.comment-row {
   display: flex;
-  align-items: flex-start;
-  gap: 17px;
-  margin-bottom: 21px;
+  justify-content: space-between;
+  gap: 85px;
 }
 
-.comment-avatar {
-  width: 39px;
-  height: 39px;
-  background: #D9D9D9;
-  border-radius: 50%;
+.comment-user {
+  display: flex;
+  gap: 17px;
+  width: 685px;
+}
+
+.comment-info {
+  display: flex;
+  flex-direction: column;
+  gap: 21px;
+  width: 100%;
 }
 
 .comment-author {
@@ -481,9 +543,10 @@
 
 .comment-meta {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 15px;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 11px;
+  width: 163px;
 }
 
 .comment-date {
@@ -491,134 +554,134 @@
   font-size: 14px;
   line-height: 18px;
   color: #A9A9A9;
+  text-align: right;
+  width: 100%;
 }
 
-/* Кнопки */
-.action-button {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 16px 64px;
-  background: #7B61FF;
-  border-radius: 99px;
-  border: none;
-  cursor: pointer;
-  color: #FFFFFF;
-  font-family: 'Circe';
-  font-weight: 700;
-  font-size: 18px;
-  line-height: 32px;
-  margin: 20px 0;
-}
-
-.report-button {
+.badge-invested {
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 9px 30px;
+  height: 36px;
   border: 1px solid #7B7B7B;
   border-radius: 10px;
   color: #7B7B7B;
   font-size: 15px;
-  cursor: pointer;
-  width: fit-content;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-/* Модератор */
-.moderator-comment {
-  background-color: #fefcbf;
-  padding: 16px;
-  border-radius: 8px;
-  margin-top: 20px;
-  border-left: 4px solid #d97706;
+.badge-invested.small {
+  width: 106px;
 }
 
-.moderator-comment h3 {
-  margin-top: 0;
-  color: #2d3748;
-}
-
-.moderator-comment p {
-  margin: 0;
-  color: #4a5568;
-}
-
-/* Таймлайн */
-.timeline {
-  display: flex;
-  justify-content: space-between;
-  margin: 40px 0;
-}
-
-.timeline-step {
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-}
-
-.step-number {
-  width: 30px;
-  height: 30px;
-  background-color: #ccc;
-  border-radius: 50%;
+.show-more-button {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
-  font-weight: bold;
+  gap: 8px;
+  padding: 8px 24px 8px 16px;
+  height: 40px;
+  border: 2px solid #000000;
+  border-radius: 99px;
+  background: transparent;
+  cursor: pointer;
+  font-family: 'Circe';
+  font-size: 16px;
+  align-self: flex-start;
+  margin: 20px 0;
 }
 
-.step-number.active {
-  background-color: #16a34a;
+.comment-form {
+  width: 100%;
+  margin-top: 30px;
 }
 
-.timeline-description-container {
-  display: none;
-  margin-top: 10px;
-  padding: 20px;
-  background-color: #f9f9f9;
-  border-radius: 5px;
+.comment-form textarea {
+  width: 100%;
+  height: 104px;
+  border: 1px solid #000000;
+  border-radius: 20px;
+  padding: 24px 33px;
+  font-size: 14px;
+  margin-bottom: 15px;
+  resize: none;
 }
 
-.timeline-description-container.active {
-  display: block;
+.comment-form textarea::placeholder {
+  color: #DEDEDE;
 }
 
-.btn-select-current {
-  background-color: #16a34a;
-  color: white;
-  padding: 5px 10px;
-  border: none;
-  border-radius: 5px;
-  cursor: default;
+.comment-submit {
+  width: 332px;
 }
 
 /* Адаптивность */
 @media (max-width: 1200px) {
-  .startup-form-container {
-    padding: 20px;
-  }
-  
   .form-row {
     flex-direction: column;
-    gap: 40px;
+    align-items: center;
+    gap: 30px;
   }
   
-  .planet-container {
+  .startup-info-column,
+  .investment-column {
     width: 100%;
-    max-width: 383px;
-    margin: 0 auto;
+    max-width: 400px;
+    text-align: center;
+  }
+  
+  .author-info,
+  .funding-amount {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .investment-container {
+    width: 100%;
+    max-width: 394px;
+    padding: 40px 20px;
+  }
+  
+  .comments-section {
+    width: 100%;
   }
 }
 
 @media (max-width: 768px) {
-  .documents-grid {
-    flex-wrap: wrap;
+  .planet-container {
+    width: 100%;
+    max-width: 383px;
   }
   
-  .document-item {
-    width: calc(50% - 8px);
+  .write-button {
+    width: 100%;
+    max-width: 341px;
+  }
+  
+  .documents-grid {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .comment-row {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .comment-user,
+  .comment-meta {
+    width: 100%;
+  }
+  
+  .comment-meta {
+    align-items: flex-start;
+  }
+  
+  .comment-date,
+  .badge-invested {
+    text-align: left;
+    width: auto;
   }
 } 
