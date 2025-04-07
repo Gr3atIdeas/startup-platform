@@ -5,10 +5,8 @@
   width: 100%;
   position: relative;
   color: #FFFFFF;
-  margin-top: 0;
-  padding-top: 40px;
-  padding-bottom: 20px;
-  background-color: #1F1F23;
+  margin: 0;
+  padding: 0;
 }
 
 /* Фоновое изображение футера */
@@ -18,17 +16,16 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(rgba(31, 31, 35, 0.7), rgba(31, 31, 35, 0.7)), url('/static/accounts/images/layout/IMG_7681.png') no-repeat center center;
+  background: url('{% static "accounts/images/layout/IMG_7681.png" %}') no-repeat center center;
   background-size: cover;
   z-index: -1;
-  filter: contrast(1.1);
 }
 
 /* Содержимое футера */
 .footer-content {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 60px 20px 20px;
   display: flex;
   flex-direction: column;
 }
@@ -38,7 +35,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 40px;
+  margin-bottom: 30px;
 }
 
 /* Логотип футера */
@@ -62,8 +59,16 @@
 /* Средняя часть футера */
 .footer-middle {
   display: flex;
-  justify-content: center;
-  margin-bottom: 40px;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.footer-middle p {
+  text-align: center;
+  max-width: 500px;
+  margin-bottom: 20px;
+  font-size: 18px;
 }
 
 .footer-middle img {
@@ -90,6 +95,14 @@
 
 .footer-legal a:hover {
   text-decoration: underline;
+}
+
+.footer-copyright-bar {
+  background-color: #FFFFFF;
+  padding: 10px 0;
+  text-align: center;
+  color: #000000;
+  margin-top: 20px;
 }
 
 /* Responsive стили */

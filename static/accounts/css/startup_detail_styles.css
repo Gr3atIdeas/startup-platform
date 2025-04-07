@@ -649,7 +649,7 @@
   margin-left: -50vw;
   margin-right: -50vw;
   background: #818CE5;
-  padding: 70px 0 0 0;
+  padding: 70px 0 70px;
   margin-top: 0;
   margin-bottom: 0;
 }
@@ -867,4 +867,8 @@ html, body {
 footer {
   margin-top: 0;
   padding-top: 60px;
+}
+
+.site-footer {
+  margin-top: 0;
 } 
