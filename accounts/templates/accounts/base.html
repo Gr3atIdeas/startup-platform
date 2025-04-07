@@ -178,61 +178,57 @@
   </main>
   <footer class="site-footer">
     <div class="footer-background"></div>
-    <div class="footer-wrapper">
-      <div class="footer-top">
-        <div class="footer-logo">GREAT IDEAS</div>
-        <div class="footer-socials">
-          <a href="#" target="_blank" rel="noopener noreferrer">
-            <img src="{% static 'accounts/images/layout/twitter.png' %}" alt="Twitter">
-          </a>
-          <a href="#" target="_blank" rel="noopener noreferrer">
-            <img src="{% static 'accounts/images/layout/instagram.png' %}" alt="Instagram">
-          </a>
-        </div>
+    
+    <div class="footer-logo">GREAT IDEAS</div>
+    
+    <div class="footer-socials">
+      <a href="#" target="_blank" rel="noopener noreferrer">
+        <img src="{% static 'accounts/images/layout/twitter.png' %}" alt="Twitter">
+      </a>
+      <a href="#" target="_blank" rel="noopener noreferrer">
+        <img src="{% static 'accounts/images/layout/instagram.png' %}" alt="Instagram">
+      </a>
+    </div>
+    
+    <div class="footer-text">
+      <p>Раскройте открывающиеся возможности и будьте частью инновационной волны!</p>
+      <div class="store-links">
+        <a href="#" target="_blank" rel="noopener noreferrer">
+          <img src="{% static 'accounts/images/layout/image28.png' %}" alt="App Store & Google Play">
+        </a>
       </div>
-      
-      <div class="footer-columns">
-        <div class="footer-text">
-          <p>Раскройте открывающиеся возможности и будьте частью инновационной волны!</p>
-          <div class="store-links">
-            <a href="#" target="_blank" rel="noopener noreferrer">
-              <img src="{% static 'accounts/images/layout/image28.png' %}" alt="App Store & Google Play">
-            </a>
-          </div>
-        </div>
-        
-        <div class="footer-join">
-          <button class="join-button">
-            <i class="fas fa-plus"></i>
-            <span>Присоединиться</span>
-          </button>
-        </div>
-        
-        <div class="footer-menu">
-          <h3>Меню</h3>
-          <ul>
-            <li><a href="{% url 'startups_list' %}">Каталог</a></li>
-            <li><a href="{% url 'investments' %}">Портфель</a></li>
-            <li><a href="{% url 'startups_list' %}">Стартапы</a></li>
-            <li><a href="{% url 'news' %}">Новости</a></li>
-            <li><a href="#">CosmoChat</a></li>
-          </ul>
-        </div>
-        
-        <div class="footer-menu">
-          <h3>О нас</h3>
-          <ul>
-            <li><a href="#">FAQ</a></li>
-            <li><a href="#">Поддержка</a></li>
-            <li><a href="#">Контакты</a></li>
-          </ul>
-        </div>
-      </div>
+    </div>
+    
+    <div class="footer-join">
+      <button class="join-button">
+        <i class="fas fa-plus"></i>
+        <span>Присоединиться</span>
+      </button>
+    </div>
+    
+    <div class="footer-menu footer-menu-section footer-menu-main">
+      <h3>Меню</h3>
+      <ul>
+        <li><a href="{% url 'startups_list' %}">Каталог</a></li>
+        <li><a href="{% url 'investments' %}">Портфель</a></li>
+        <li><a href="{% url 'startups_list' %}">Стартапы</a></li>
+        <li><a href="{% url 'news' %}">Новости</a></li>
+        <li><a href="#">CosmoChat</a></li>
+      </ul>
+    </div>
+    
+    <div class="footer-menu footer-menu-section footer-menu-about">
+      <h3>О нас</h3>
+      <ul>
+        <li><a href="#">FAQ</a></li>
+        <li><a href="#">Поддержка</a></li>
+        <li><a href="#">Контакты</a></li>
+      </ul>
     </div>
     
     <div class="footer-copyright-bar">
       <div class="footer-copyright-bar-content">
-        <div class="footer-copyright-bar-copyright">© 2025 Great Ideas</div>
+        <div class="footer-copyright-bar-copyright">© 2022 Great Ideas</div>
         <div class="footer-copyright-bar-links">
           <a href="#">Политика конфиденциальности</a>
           <a href="#">Оферта</a>
