@@ -132,7 +132,7 @@
 
 .footer-menu-section {
   position: absolute;
-  top: 230px;
+  top: 180px;
 }
 
 .footer-menu-main {
@@ -146,11 +146,11 @@
 .footer-menu h3 {
   font-family: 'Circe', sans-serif;
   font-weight: 700;
-  font-size: 18px;
-  line-height: 32px;
+  font-size: 16px;
+  line-height: 28px;
   letter-spacing: -0.02em;
   color: #9E9E9E;
-  margin-bottom: 32px;
+  margin-bottom: 24px;
 }
 
 .footer-menu ul {
@@ -165,8 +165,8 @@
 .footer-menu a {
   font-family: 'Circe', sans-serif;
   font-weight: 400;
-  font-size: 16px;
-  line-height: 24px;
+  font-size: 14px;
+  line-height: 22px;
   color: #FFFFFF;
   text-decoration: none;
 }
@@ -180,7 +180,7 @@
   position: absolute;
   bottom: 0;
   width: 100%;
-  height: 64px;
+  height: 32px;
   background-color: #F5F4F3;
   display: flex;
   align-items: center;
