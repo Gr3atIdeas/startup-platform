@@ -260,4 +260,365 @@
   font-size: 15px;
   color: #7B7B7B;
   cursor: pointer;
+}
+
+/* Общий контейнер */
+.startup-form-container {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 40px 80px;
+  background: #FFFFFF;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* Заголовок */
+.form-header {
+  margin-bottom: 40px;
+}
+
+.form-header h2 {
+  font-family: 'Circe', sans-serif;
+  font-weight: 700;
+  font-size: 30px;
+  line-height: 35px;
+  color: #000000;
+}
+
+/* Основная сетка */
+.form-row {
+  display: flex;
+  gap: 95px;
+  margin-bottom: 40px;
+}
+
+.form-column {
+  flex: 1;
+}
+
+/* Группы полей */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 18px;
+  margin-bottom: 8px;
+  color: #000000;
+}
+
+.form-group p {
+  font-size: 20px;
+  line-height: 24px;
+  color: #000000;
+}
+
+/* Планета и логотип */
+.planet-container {
+  width: 383px;
+  height: 305px;
+  position: relative;
+  margin-bottom: 16px;
+  background: #000819;
+  border-radius: 22px;
+  overflow: hidden;
+}
+
+.planet {
+  width: 120px;
+  height: 120px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.planet-segment {
+  position: absolute;
+  width: 100%;
+  height: 33.33%;
+}
+
+.segment-top {
+  top: 0;
+}
+
+.segment-middle {
+  top: 33.33%;
+}
+
+.segment-bottom {
+  top: 66.66%;
+}
+
+.logo-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo-preview {
+  max-width: 80%;
+  max-height: 80%;
+  object-fit: contain;
+}
+
+/* Цветовая палитра */
+.color-picker-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+/* Режим */
+.mode-buttons {
+  margin-bottom: 20px;
+}
+
+/* Документы */
+.upload-section {
+  margin-top: 30px;
+}
+
+.upload-title {
+  font-size: 25px;
+  line-height: 30px;
+  margin-bottom: 15px;
+  color: #000000;
+}
+
+.documents-grid {
+  display: flex;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.document-item {
+  width: 133px;
+  height: 133px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  font-family: 'Circe';
+  font-weight: 700;
+  font-size: 30px;
+  color: #FFFFFF;
+}
+
+.document-pdf {
+  background: #7B61FF;
+}
+
+.document-excel {
+  background: #36D302;
+}
+
+.document-doc {
+  background: #345DFF;
+}
+
+/* Комментарии */
+.comments-section {
+  margin-top: 40px;
+}
+
+.comments-title {
+  font-family: 'Circe';
+  font-weight: 700;
+  font-size: 30px;
+  line-height: 18px;
+  color: #000000;
+  margin-bottom: 30px;
+}
+
+.comment-card {
+  box-sizing: border-box;
+  border: 2px solid #000000;
+  border-radius: 20px;
+  padding: 21px 35px;
+  margin-bottom: 20px;
+}
+
+.comment-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 17px;
+  margin-bottom: 21px;
+}
+
+.comment-avatar {
+  width: 39px;
+  height: 39px;
+  background: #D9D9D9;
+  border-radius: 50%;
+}
+
+.comment-author {
+  font-family: 'Circe';
+  font-weight: 700;
+  font-size: 25px;
+  line-height: 18px;
+  color: #000000;
+}
+
+.comment-text {
+  font-size: 20px;
+  line-height: 24px;
+  color: #000000;
+}
+
+.comment-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 15px;
+}
+
+.comment-date {
+  font-family: 'Circe';
+  font-size: 14px;
+  line-height: 18px;
+  color: #A9A9A9;
+}
+
+/* Кнопки */
+.action-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px 64px;
+  background: #7B61FF;
+  border-radius: 99px;
+  border: none;
+  cursor: pointer;
+  color: #FFFFFF;
+  font-family: 'Circe';
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 32px;
+  margin: 20px 0;
+}
+
+.report-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 9px 30px;
+  border: 1px solid #7B7B7B;
+  border-radius: 10px;
+  color: #7B7B7B;
+  font-size: 15px;
+  cursor: pointer;
+  width: fit-content;
+}
+
+/* Модератор */
+.moderator-comment {
+  background-color: #fefcbf;
+  padding: 16px;
+  border-radius: 8px;
+  margin-top: 20px;
+  border-left: 4px solid #d97706;
+}
+
+.moderator-comment h3 {
+  margin-top: 0;
+  color: #2d3748;
+}
+
+.moderator-comment p {
+  margin: 0;
+  color: #4a5568;
+}
+
+/* Таймлайн */
+.timeline {
+  display: flex;
+  justify-content: space-between;
+  margin: 40px 0;
+}
+
+.timeline-step {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.step-number {
+  width: 30px;
+  height: 30px;
+  background-color: #ccc;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+}
+
+.step-number.active {
+  background-color: #16a34a;
+}
+
+.timeline-description-container {
+  display: none;
+  margin-top: 10px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+}
+
+.timeline-description-container.active {
+  display: block;
+}
+
+.btn-select-current {
+  background-color: #16a34a;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: default;
+}
+
+/* Адаптивность */
+@media (max-width: 1200px) {
+  .startup-form-container {
+    padding: 20px;
+  }
+  
+  .form-row {
+    flex-direction: column;
+    gap: 40px;
+  }
+  
+  .planet-container {
+    width: 100%;
+    max-width: 383px;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .documents-grid {
+    flex-wrap: wrap;
+  }
+  
+  .document-item {
+    width: calc(50% - 8px);
+  }
 } 
