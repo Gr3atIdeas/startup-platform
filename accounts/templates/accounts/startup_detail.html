@@ -233,6 +233,49 @@
   </div>
 </div>
 
+<!-- После блока комментариев добавьте следующий код -->
+<div class="similar-startups-section">
+  <div class="similar-startups-header">
+    <h2 class="similar-title">
+      <span class="similar-text">похожие</span>
+      <span class="startups-text">СТАРТАПЫ</span>
+    </h2>
+  </div>
+  
+  <div class="similar-startups-grid">
+    {% for i in "12345" %}
+    <div class="similar-card">
+      <div class="similar-card-content">
+        <div class="similar-card-image">
+          <div class="planet">
+            <div class="planet-segment segment-top"></div>
+            <div class="planet-segment segment-middle"></div>
+            <div class="planet-segment segment-bottom"></div>
+          </div>
+        </div>
+        <div class="similar-card-name">Ромашка</div>
+        <div class="similar-card-rating">
+          <i class="fas fa-star active"></i>
+          <i class="fas fa-star active"></i>
+          <i class="fas fa-star active"></i>
+          <i class="fas fa-star active"></i>
+          <i class="fas fa-star active"></i>
+        </div>
+      </div>
+      <div class="similar-card-category">
+        <div class="category-title">Категория</div>
+        <div class="category-badge">Досуг</div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  
+  <button class="show-all-button">
+    <i class="fas fa-eye"></i>
+    <span>Показать все</span>
+  </button>
+</div>
+
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     // Здесь можно добавить дополнительный JavaScript функционал
