@@ -150,13 +150,23 @@
     <script>
       document.addEventListener('DOMContentLoaded', function() {
         // Эффект шапки при скролле
+        const header = document.querySelector('.header');
+        let lastScrollTop = 0;
+        
         window.addEventListener('scroll', function() {
-          const header = document.querySelector('.header');
-          if (window.scrollY > 50) {
-            header.classList.add('header-scrolled');
+          const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+          
+          if (scrollTop > 50) {
+            if (!header.classList.contains('header-scrolled')) {
+              header.classList.add('header-scrolled');
+            }
           } else {
-            header.classList.remove('header-scrolled');
+            if (header.classList.contains('header-scrolled')) {
+              header.classList.remove('header-scrolled');
+            }
           }
+          
+          lastScrollTop = scrollTop;
         });
       });
     </script>
