@@ -13,11 +13,9 @@
 
 {% block content %}
 <div class="startup-detail-page">
-  <div class="back-link">
-    <a href="{% url 'startups_list' %}" class="back-button">
-      <i class="fas fa-arrow-left"></i>
-    </a>
-  </div>
+  <a href="{% url 'startups_list' %}" class="back-button">
+    <i class="fas fa-arrow-left"></i>
+  </a>
 
   <div class="detail-content">
     <div class="top-section">
@@ -38,34 +36,28 @@
           {% endif %}
         </div>
         
-        <div class="progress-container">
-          <div class="progress-label">{{ startup.percent_amount|default:"58" }}%</div>
-        </div>
-        
         <button class="action-button write-button">
-          <span>Написать</span>
+          Написать
         </button>
         
         <div class="micro-badge">
-          <span class="badge-icon">℗</span>
-          <span>Доступен для микроинвестиций</span>
+          Доступен для микроинвестиций
         </div>
       </div>
       
       <div class="center-column">
-        <div class="startup-date">{{ startup.created_at|date:"d.m.Y" }}</div>
+        <div class="created-date">{{ startup.created_at|date:"d.m.Y" }}</div>
         
         <h1 class="startup-name">{{ startup.title }}</h1>
+        <div class="category-label">Категория: <span class="category-value">{{ startup.direction.direction_name|default:"Досуг" }}</span></div>
         
-        <div class="category-row">
-          <span class="category-label">Категория: <span class="category-value">{{ startup.direction.direction_name|default:"Досуг" }}</span></span>
-        </div>
-        
-        <div class="rating-stars">
-          {% for i in "12345" %}
-            <i class="fas fa-star {% if forloop.counter <= average_rating %}active{% endif %}"></i>
-          {% endfor %}
-          <span class="comments-link">Комментарии</span>
+        <div class="rating-container">
+          <div class="rating-stars">
+            {% for i in "12345" %}
+              <i class="fas fa-star {% if forloop.counter <= average_rating %}active{% endif %}"></i>
+            {% endfor %}
+          </div>
+          <div class="comments-link">Комментарии</div>
         </div>
         
         <div class="price-section">
@@ -74,11 +66,11 @@
         </div>
         
         <div class="stats-row">
-          <div class="stat-item">
+          <div class="stat-item like">
             <i class="fas fa-thumbs-up"></i>
             <span>213</span>
           </div>
-          <div class="stat-item">
+          <div class="stat-item dislike">
             <i class="fas fa-thumbs-down"></i>
             <span>17</span>
           </div>
@@ -94,12 +86,14 @@
         </div>
       </div>
       
+      <div class="progress-indicator">
+        <div class="progress-text">{{ startup.percent_amount|default:"58" }}%</div>
+      </div>
+      
       <div class="right-column">
-        <div class="dropdown-container">
-          <button class="investment-dropdown">
-            <span>Инвестиции</span>
-            <i class="fas fa-chevron-down"></i>
-          </button>
+        <div class="investment-dropdown">
+          <span>Инвестиции</span>
+          <i class="fas fa-chevron-down"></i>
         </div>
         
         <button class="invest-button">
