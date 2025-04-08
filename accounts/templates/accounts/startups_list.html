@@ -129,11 +129,9 @@
               <div class="startup-header">
                 <h3 class="startup-name">{{ startup.title }}</h3>
                 <div class="rating-stars">
-                  {% with rating=startup.sum_votes|div:startup.total_voters|default:0 %}
-                    {% for i in "12345" %}
-                      <i class="fas fa-star {% if forloop.counter <= rating %}active{% endif %}"></i>
-                    {% endfor %}
-                  {% endwith %}
+                  {% for i in "12345" %}
+                    <i class="fas fa-star {% if forloop.counter <= startup.average_rating|floatformat:0 %}active{% endif %}"></i>
+                  {% endfor %}
                 </div>
               </div>
               <div class="startup-date">{{ startup.created_at|timesince }} назад</div>

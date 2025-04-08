@@ -67,8 +67,6 @@ def user_logout(request):
     messages.success(request, 'Вы успешно вышли из системы.')
     return redirect('home')
 
-from django.db.models import Count
-
 def startups_list(request):
     startups = Startups.objects.filter(status='approved')
     selected_categories = request.GET.getlist('category')
@@ -82,6 +80,10 @@ def startups_list(request):
 
     # Аннотируем количество комментариев и сортируем по убыванию created_at
     startups = startups.annotate(comment_count=Count('comments')).order_by('-created_at')
+
+    # Добавляем средний рейтинг для каждого стартапа
+    for startup in startups:
+        startup.average_rating = startup.sum_votes / startup.total_voters if startup.total_voters > 0 else 0
 
     return render(request, 'accounts/startups_list.html', {
         'approved_startups': startups,
