@@ -34,6 +34,10 @@
               <div class="planet-segment segment-bottom" style="background-color: {{ startup.planet_bottom_color|default:'#5B41BF' }};"></div>
             </div>
           {% endif %}
+          
+          <div class="progress-bar">
+            <div class="progress-indicator" style="width: {{ startup.percent_amount|default:'58' }}%"></div>
+          </div>
         </div>
         
         <button class="action-button write-button">
