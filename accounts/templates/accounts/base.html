@@ -149,15 +149,26 @@
     {{ block.super }}
     <script>
       document.addEventListener('DOMContentLoaded', function() {
-        // Эффект при скролле
+        const header = document.querySelector('.header');
+        const content = document.querySelector('main.content');
+        
+        // Принудительно задаем отступ для контента
+        const headerHeight = header.offsetHeight;
+        document.body.style.paddingTop = headerHeight + 'px';
+        
+        // Анимация при скролле
         window.addEventListener('scroll', function() {
-          const header = document.querySelector('.header');
           if (window.scrollY > 20) {
             header.classList.add('header-scrolled');
           } else {
             header.classList.remove('header-scrolled');
           }
         });
+        
+        // Проверяем сразу при загрузке
+        if (window.scrollY > 20) {
+          header.classList.add('header-scrolled');
+        }
       });
     </script>
   {% endblock %}
