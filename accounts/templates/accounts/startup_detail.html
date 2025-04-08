@@ -182,14 +182,12 @@
       <div class="author-avatar"></div>
       <div class="author-info">
         <div class="author-name">{{ startup.owner.first_name|default:"Виктор" }}</div>
-        <div class="author-status">Онлайн</div>
+        <div class="author-rating">Рейтинг {{ average_rating|floatformat:"1" }}/5</div>
+        <div class="author-reviews">Отзывы</div>
       </div>
-      <button class="action-button message-button">Написать автору</button>
-    </div>
-    
-    <div class="startup-meta">
       <div class="creation-date">Создан {{ startup.created_at|date:"d/m/Y" }}</div>
       <button class="report-button">Пожаловаться на стартап</button>
+      <button class="action-button message-button">Написать автору</button>
     </div>
     
     <div class="comments-section">
