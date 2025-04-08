@@ -159,16 +159,16 @@
   margin: 0 20px;
   position: relative;
   width: 40px;
-  height: 305px;
 }
 
 .progress-bar {
   width: 40px;
-  height: 100%;
+  height: 305px;
   background-color: #E9E9E9;
   border-radius: 10px;
   position: relative;
   overflow: hidden;
+  margin-bottom: 10px;
 }
 
 .progress-fill {
@@ -179,6 +179,7 @@
   border-radius: 10px;
   position: relative;
   overflow: hidden;
+  transform-origin: bottom center;
 }
 
 .progress-fill:before {
@@ -217,6 +218,15 @@
   background-size: 200% 200%;
 }
 
+.progress-text {
+  font-size: 15px;
+  font-weight: 400;
+  color: #000000;
+  text-align: center;
+  width: 100%;
+  display: block;
+}
+
 @keyframes waterEffect {
   0% { background-position: 0 0; }
   50% { background-position: 0 100%; }
@@ -226,17 +236,6 @@
 @keyframes sparkleEffect {
   0% { background-position: 0% 0%; }
   100% { background-position: 200% 200%; }
-}
-
-.progress-text {
-  position: absolute;
-  top: 10px;
-  font-size: 15px;
-  font-weight: 400;
-  color: #000000;
-  text-align: center;
-  width: 100%;
-  z-index: 2;
 }
 
 /* Кнопка написать */
