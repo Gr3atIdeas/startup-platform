@@ -1,4 +1,4 @@
-/* Полностью обновленные стили хедера */
+/* Обновленные стили хедера */
 .header {
   display: flex;
   align-items: center;
@@ -7,11 +7,18 @@
   background-color: #FFFFFF;
   width: 100%;
   border-bottom: 1px solid #E5E7EB;
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 100;
   box-sizing: border-box;
   transition: all 0.3s ease;
+  animation: headerSlideDown 0.5s ease;
+}
+
+main.content {
+  margin-top: 68px; /* Отступ равен высоте хедера */
 }
 
 body {
@@ -36,27 +43,34 @@ body {
   margin-right: 32px;
 }
 
-/* Упрощаем поле поиска */
+/* Строка поиска как на скриншоте */
 .search-container {
   position: relative;
   margin-right: 32px;
+  width: 512px;
 }
 
 .search-icon {
   position: absolute;
-  left: 10px;
+  left: 16px;
   top: 50%;
   transform: translateY(-50%);
   color: #A1A0A0;
 }
 
 .search-input {
-  border: 1px solid #ccc;
-  height: 36px;
-  padding: 0 10px 0 35px;
-  border-radius: 4px;
+  border: 1px solid #7B61FF;
+  height: 40px;
+  width: 100%;
+  padding: 0 16px 0 40px;
+  border-radius: 99px;
   font-size: 14px;
-  width: 200px;
+  outline: none;
+  transition: box-shadow 0.3s ease;
+}
+
+.search-input:focus {
+  box-shadow: 0 0 0 3px rgba(123, 97, 255, 0.2);
 }
 
 /* Навигационное меню */
@@ -73,6 +87,11 @@ body {
   border-radius: 99px;
   font-size: 16px;
   margin-right: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.nav-menu a:hover {
+  background-color: #F2F4FF;
 }
 
 .nav-menu a.active {
@@ -92,6 +111,8 @@ body {
 
 .create-startup-btn:hover {
   background-color: #6B53E8;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(123, 97, 255, 0.3);
 }
 
 /* Аватар */
@@ -102,6 +123,11 @@ body {
   object-fit: cover;
   border: 2px solid #7B61FF;
   margin: 0 10px;
+  transition: transform 0.3s ease;
+}
+
+.avatar:hover {
+  transform: scale(1.05);
 }
 
 /* Кнопка выхода */
@@ -111,27 +137,33 @@ body {
   font-size: 18px;
 }
 
-/* Анимация при скролле */
-.header-scrolled {
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  animation: slideDown 0.3s forwards;
-}
-
-@keyframes slideDown {
+/* Анимация появления хедера */
+@keyframes headerSlideDown {
   from {
-    transform: translateY(-10px);
-    opacity: 0.8;
+    transform: translateY(-100%);
   }
   to {
     transform: translateY(0);
-    opacity: 1;
   }
 }
 
+/* При скролле страницы */
+.header-scrolled {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(5px);
+}
+
 /* Адаптивность */
+@media (max-width: 1200px) {
+  .search-container {
+    width: 300px;
+  }
+}
+
 @media (max-width: 992px) {
-  .search-input {
-    width: 150px;
+  .search-container {
+    width: 250px;
   }
   
   .nav-menu a {
@@ -152,19 +184,15 @@ body {
     align-items: center;
   }
   
-  .nav-menu {
-    flex-wrap: wrap;
-    justify-content: center;
-    margin-top: 10px;
-    margin-left: 0;
-  }
-  
   .search-container {
     margin: 10px 0;
     width: 100%;
   }
   
-  .search-input {
-    width: 100%;
+  .nav-menu {
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 10px;
+    margin-left: 0;
   }
 } 
