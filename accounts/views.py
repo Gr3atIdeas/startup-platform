@@ -14,6 +14,8 @@ from .forms import RegisterForm, LoginForm, StartupForm
 from .models import Users, Startups, ReviewStatuses, UserVotes, StartupTimeline, FileStorage, EntityTypes, FileTypes
 from .models import creative_upload_path, proof_upload_path, video_upload_path
 import uuid  # Добавляем импорт uuid
+from .models import Comments
+from .forms import CommentForm
 
 logger = logging.getLogger(__name__)
 
@@ -85,6 +87,19 @@ def startup_detail(request, startup_id):
     startup = get_object_or_404(Startups, startup_id=startup_id)
     timeline = StartupTimeline.objects.filter(startup=startup)
     average_rating = startup.sum_votes / startup.total_voters if startup.total_voters > 0 else 0
+    comments = Comments.objects.filter(startup_id=startup).order_by('-created_at')
+
+    if request.method == 'POST' and request.user.is_authenticated:
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.startup_id = startup
+            comment.user_id = request.user
+            comment.save()
+            return redirect('startup_detail', startup_id=startup_id)
+    else:
+        form = CommentForm()
+
     return render(request, 'accounts/startup_detail.html', {
         'startup': startup,
         'logo_urls': startup.logo_urls or [],
@@ -96,6 +111,8 @@ def startup_detail(request, startup_id):
         'direction_name': startup.direction.direction_name if startup.direction else 'Не указано',
         'stage_name': startup.stage.stage_name if startup.stage else 'Не указано',
         'owner_email': startup.owner.email if startup.owner else 'Не указано',
+        'comments': comments,
+        'form': form,
     })
 
 # Страница инвестиций

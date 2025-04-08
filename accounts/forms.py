@@ -1,5 +1,5 @@
 from django import forms
-from .models import Users, Startups, Directions, StartupStages, ReviewStatuses
+from .models import Users, Startups, Directions, StartupStages, ReviewStatuses, Comments
 
 # Кастомный виджет для загрузки нескольких файлов
 class MultipleFileInput(forms.ClearableFileInput):
@@ -47,6 +47,7 @@ class RegisterForm(forms.ModelForm):
 class LoginForm(forms.Form):
     email = forms.EmailField(label="Email")
     password = forms.CharField(widget=forms.PasswordInput, label="Пароль")
+
 
 # Форма создания стартапа
 class StartupForm(forms.ModelForm):
@@ -136,3 +137,11 @@ class StartupForm(forms.ModelForm):
                 cleaned_data['proofs'] = proofs if proofs else []
 
         return cleaned_data
+    
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comments
+        fields = ['content']
+        widgets = {
+            'content': forms.Textarea(attrs={'rows': 4, 'placeholder': 'Напишите ваш комментарий...', 'class': 'form-control'}),
+        }

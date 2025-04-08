@@ -159,65 +159,40 @@
     
     <div class="comments-section">
       <h2 class="section-title">Комментарии</h2>
-      <button class="action-button comment-button">
-        <span>Оставить комментарий</span>
-      </button>
-      
-      <div class="comments-list">
-        <div class="comment-card">
-          <div class="comment-header">
-            <div class="comment-author-info">
-              <div class="author-avatar"></div>
-              <div class="comment-author-name">Виктор</div>
+      {% if comments %}
+        <div class="comments-list">
+          {% for comment in comments %}
+            <div class="comment-card">
+              <div class="comment-header">
+                <div class="comment-author-info">
+                  <div class="author-avatar"></div>
+                  <div class="comment-author-name">{{ comment.user_id.first_name|default:comment.user_id.email }}</div>
+                </div>
+                <div class="comment-date">{{ comment.created_at|date:"d/m/Y" }}</div>
+              </div>
+              <div class="comment-body">
+                <p>{{ comment.content }}</p>
+              </div>
             </div>
-            <div class="comment-date">25/07/2024</div>
-          </div>
-          <div class="comment-body">
-            <p>Само направление сейчас актуально и я уже инвестировала в похожий стартап. Советую!</p>
-          </div>
-          <div class="comment-footer">
-            <div class="rating-stars small">
-              {% for i in "12345" %}
-                <i class="fas fa-star active"></i>
-              {% endfor %}
-            </div>
-            <div class="badge-invested">Инвестировал</div>
-          </div>
+          {% endfor %}
         </div>
-        
-        <div class="comment-card">
-          <div class="comment-header">
-            <div class="comment-author-info">
-              <div class="author-avatar"></div>
-              <div class="comment-author-name">Сергей</div>
-            </div>
-            <div class="comment-date">25/07/2024</div>
-          </div>
-          <div class="comment-body">
-            <p>Само направление сейчас актуально и я уже инвестировала в похожий стартап. Советую!</p>
-          </div>
-          <div class="comment-footer">
-            <div class="rating-stars small">
-              {% for i in "12345" %}
-                <i class="fas fa-star active"></i>
-              {% endfor %}
-            </div>
-            <div class="badge-invested small">Выкуп</div>
-          </div>
+      {% else %}
+        <div class="comments-list">
+          <p>Пока нет комментариев. Будьте первым!</p>
         </div>
-      </div>
+      {% endif %}
       
-      <button class="show-more-button">
-        <i class="fas fa-eye"></i>
-        <span>Показать еще</span>
-      </button>
-      
-      <div class="comment-form">
-        <textarea placeholder="Написать комментарий"></textarea>
-        <button class="action-button comment-submit">
-          Оставить комментарий
-        </button>
-      </div>
+      {% if user.is_authenticated %}
+        <form method="post" class="comment-form">
+          {% csrf_token %}
+          {{ form.content|add_class:"comment-textarea" }}
+          <button type="submit" class="action-button comment-submit">Оставить комментарий</button>
+        </form>
+      {% else %}
+        <div class="comment-form">
+          <p>Пожалуйста, <a href="{% url 'login' %}">войдите</a>, чтобы оставить комментарий.</p>
+        </div>
+      {% endif %}
     </div>
   </div>
 </div>

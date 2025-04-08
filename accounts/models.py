@@ -69,16 +69,19 @@ class ChatParticipants(models.Model):
 
 class Comments(models.Model):
     comment_id = models.AutoField(primary_key=True)
-    startup = models.ForeignKey('Startups', models.DO_NOTHING, blank=True, null=True)
-    user = models.ForeignKey('Users', models.DO_NOTHING, blank=True, null=True)
+    startup_id = models.ForeignKey('Startups', on_delete=models.CASCADE, db_column='startup_id')
+    user_id = models.ForeignKey('Users', on_delete=models.CASCADE, db_column='user_id')
     content = models.TextField()
-    created_at = models.DateTimeField(blank=True, null=True)
-    updated_at = models.DateTimeField(blank=True, null=True)
-    parent_comment = models.ForeignKey('self', models.DO_NOTHING, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    parent_comment_id = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, db_column='parent_comment_id')
 
     class Meta:
         managed = False
         db_table = 'comments'
+
+    def __str__(self):
+        return f"Comment {self.comment_id} by {self.user_id}"
 
 class Directions(models.Model):
     direction_id = models.AutoField(primary_key=True)
