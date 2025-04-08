@@ -35,7 +35,7 @@
 .top-section {
   display: flex;
   position: relative;
-  gap: 0;
+  gap: 20px;
   margin-bottom: 50px;
 }
 
@@ -56,9 +56,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 15px;
   background: #F2F4FF;
   border-radius: 26px;
+  text-align: center;
 }
 
 /* Остальные секции - увеличиваем ширину */
@@ -156,12 +158,12 @@
   justify-content: flex-start;
   margin: 0 20px;
   position: relative;
-  width: 20px;
+  width: 40px;
   height: 305px;
 }
 
 .progress-bar {
-  width: 20px;
+  width: 40px;
   height: 100%;
   background-color: #E9E9E9;
   border-radius: 10px;
@@ -179,12 +181,13 @@
 
 .progress-text {
   position: absolute;
-  top: 0;
+  top: 10px;
   font-size: 15px;
   font-weight: 400;
   color: #000000;
-  white-space: nowrap;
-  right: -25px;
+  text-align: center;
+  width: 100%;
+  z-index: 2;
 }
 
 /* Кнопка написать */
@@ -359,7 +362,7 @@
 .investment-dropdown {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   width: 162px;
   height: 36px;
   padding: 0 10px;
@@ -368,38 +371,19 @@
   border-radius: 10px;
   font-size: 15px;
   cursor: pointer;
-}
-
-.investment-dropdown i {
-  font-size: 12px;
-}
-
-.invest-button {
-  width: 100%;
-  height: 55px;
-  background-color: #7B61FF;
-  color: white;
-  border: none;
-  border-radius: 99px;
-  font-weight: 700;
-  font-size: 18px;
-  font-family: 'Circe', sans-serif;
-  cursor: pointer;
-  margin-top: 15px;
+  margin: 0 auto;
 }
 
 .investors-count {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   color: #4E4F51;
   font-family: 'Circe', sans-serif;
   font-weight: 700;
   font-size: 14px;
-}
-
-.investors-count i {
-  font-size: 16px;
+  width: 100%;
 }
 
 /* О проекте */
