@@ -13,9 +13,11 @@
 
 {% block content %}
 <div class="startup-detail-page">
-  <a href="{% url 'startups_list' %}" class="back-button">
-    <i class="fas fa-arrow-left"></i>
-  </a>
+  <div class="back-link">
+    <a href="{% url 'startups_list' %}" class="back-button">
+      <i class="fas fa-arrow-left"></i>
+    </a>
+  </div>
 
   <div class="detail-content">
     <div class="top-section">
@@ -34,35 +36,52 @@
               <div class="planet-segment segment-bottom" style="background-color: {{ startup.planet_bottom_color|default:'#5B41BF' }};"></div>
             </div>
           {% endif %}
-          
-          <div class="progress-bar">
-            <div class="progress-indicator" style="width: {{ startup.percent_amount|default:'58' }}%"></div>
-          </div>
+        </div>
+        
+        <div class="progress-container">
+          <div class="progress-label">{{ startup.percent_amount|default:"58" }}%</div>
         </div>
         
         <button class="action-button write-button">
           <span>Написать</span>
         </button>
         
-        <div class="micro-badge">Доступен для микроинвестиций</div>
+        <div class="micro-badge">
+          <span class="badge-icon">℗</span>
+          <span>Доступен для микроинвестиций</span>
+        </div>
       </div>
       
       <div class="center-column">
-        <div class="startup-header">
-          <div class="startup-date">{{ startup.created_at|date:"d.m.Y" }}</div>
-          <div class="rating-stars">
-            {% for i in "12345" %}
-              <i class="fas fa-star {% if forloop.counter <= average_rating %}active{% endif %}"></i>
-            {% endfor %}
-          </div>
-        </div>
+        <div class="startup-date">{{ startup.created_at|date:"d.m.Y" }}</div>
         
         <h1 class="startup-name">{{ startup.title }}</h1>
-        <div class="category-label">Категория: {{ startup.direction.direction_name|default:"Досуг" }}</div>
         
-        <div class="investment-info">
-          <h3 class="price-label">Цель/стоимость выкупа</h3>
+        <div class="category-row">
+          <span class="category-label">Категория: <span class="category-value">{{ startup.direction.direction_name|default:"Досуг" }}</span></span>
+        </div>
+        
+        <div class="rating-stars">
+          {% for i in "12345" %}
+            <i class="fas fa-star {% if forloop.counter <= average_rating %}active{% endif %}"></i>
+          {% endfor %}
+          <span class="comments-link">Комментарии</span>
+        </div>
+        
+        <div class="price-section">
+          <div class="price-label">Цель/стоимость выкупа</div>
           <div class="price-value">{{ startup.funding_goal|default:"41 689" }} ₽</div>
+        </div>
+        
+        <div class="stats-row">
+          <div class="stat-item">
+            <i class="fas fa-thumbs-up"></i>
+            <span>213</span>
+          </div>
+          <div class="stat-item">
+            <i class="fas fa-thumbs-down"></i>
+            <span>17</span>
+          </div>
         </div>
         
         <div class="author-info">
@@ -76,20 +95,20 @@
       </div>
       
       <div class="right-column">
-        <div class="investment-box">
-          <div class="investment-badge">
+        <div class="dropdown-container">
+          <button class="investment-dropdown">
             <span>Инвестиции</span>
             <i class="fas fa-chevron-down"></i>
-          </div>
-          
-          <button class="action-button invest-button">
-            <span>Инвестировать</span>
           </button>
-          
-          <div class="investors-count">
-            <i class="fas fa-users"></i>
-            <span>Инвестировало (648)</span>
-          </div>
+        </div>
+        
+        <button class="invest-button">
+          Инвестировать
+        </button>
+        
+        <div class="investors-count">
+          <i class="fas fa-users"></i>
+          <span>Инвестировало (648)</span>
         </div>
       </div>
     </div>
