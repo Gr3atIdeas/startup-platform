@@ -194,7 +194,7 @@
       <h2 class="section-title">Комментарии</h2>
       {% if comments %}
         <div class="comments-list">
-          {% for comment in comments %}
+          {% for comment in comments|slice:":2" %}
             <div class="comment-card">
               <div class="comment-header">
                 <div class="comment-author-info">
@@ -208,6 +208,13 @@
               </div>
             </div>
           {% endfor %}
+          
+          {% if comments|length > 2 %}
+            <button class="show-more-comments">
+              <i class="fas fa-chevron-down"></i>
+              Показать еще
+            </button>
+          {% endif %}
         </div>
       {% else %}
         <div class="comments-list">
