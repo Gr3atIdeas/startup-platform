@@ -80,8 +80,8 @@ def startups_list(request):
     if micro_investment:
         startups = startups.filter(micro_investment_available=True)
 
-    # Аннотируем количество комментариев
-    startups = startups.annotate(comment_count=Count('comments'))
+    # Аннотируем количество комментариев и сортируем по убыванию created_at
+    startups = startups.annotate(comment_count=Count('comments')).order_by('-created_at')
 
     return render(request, 'accounts/startups_list.html', {
         'approved_startups': startups,

@@ -126,7 +126,16 @@
               {% endif %}
             </div>
             <div class="startup-info">
-              <h3 class="startup-name">{{ startup.title }}</h3>
+              <div class="startup-header">
+                <h3 class="startup-name">{{ startup.title }}</h3>
+                <div class="rating-stars">
+                  {% with rating=startup.sum_votes|div:startup.total_voters|default:0 %}
+                    {% for i in "12345" %}
+                      <i class="fas fa-star {% if forloop.counter <= rating %}active{% endif %}"></i>
+                    {% endfor %}
+                  {% endwith %}
+                </div>
+              </div>
               <div class="startup-date">{{ startup.created_at|timesince }} назад</div>
               <div class="startup-description">
                 <p>{{ startup.description }}</p>
@@ -134,7 +143,6 @@
               <div class="card-footer">
                 <a href="{% url 'startup_detail' startup.startup_id %}" class="read-more">Читать дальше</a>
                 <div class="startup-likes">
-                  <span class="like-count">{{ startup.total_voters|default:"0" }}</span>
                   <button class="like-button">
                     <i class="far fa-comment"></i>
                   </button>
