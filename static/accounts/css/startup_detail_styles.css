@@ -1113,4 +1113,209 @@ main.content {
     flex: 0 0 100%;
     height: 200px;
   }
+}
+
+/* Добавляем общие стили для интерактивных элементов */
+.back-button, 
+.action-button, 
+.micro-badge, 
+.comments-link, 
+.author-reviews, 
+.read-more, 
+.document-item, 
+.investment-dropdown,
+.similar-card,
+.lightbox-trigger,
+.lightbox-trigger-video,
+.gallery-item,
+.report-button,
+.show-all-button {
+  transition: all 0.3s ease;
+}
+
+/* Кнопка назад - эффект ховера */
+.back-button:hover {
+  background-color: #f9fafb;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.back-button:active {
+  transform: translateY(0);
+}
+
+/* Кнопки действий - эффект ховера */
+.action-button:hover {
+  background-color: #4F46E5;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.action-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Бейдж микроинвестиций - эффект ховера */
+.micro-badge:hover {
+  background: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Рейтинг и звезды - эффект ховера */
+.rating-stars i {
+  transition: all 0.2s ease;
+}
+
+.rating-stars i:hover {
+  transform: scale(1.2);
+  color: #7B61FF;
+}
+
+/* Комментарии и отзывы - эффект ховера */
+.comments-link:hover, .author-reviews:hover {
+  color: #4F46E5;
+  text-decoration: underline;
+}
+
+/* Статистика - эффект ховера */
+.stat-item:hover {
+  color: #7B61FF;
+}
+
+.stat-item:hover i {
+  color: #7B61FF;
+  transform: scale(1.1);
+}
+
+/* Инвестиционный дропдаун - эффект ховера */
+.investment-dropdown:hover {
+  background: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Инвест-кнопка - эффект ховера */
+.invest-button:hover {
+  background-color: #6a50e0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.invest-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Ссылка "читать дальше" - эффект ховера */
+.read-more:hover {
+  color: #4F46E5;
+}
+
+/* Галерея - эффект ховера */
+.gallery-item:hover, .gallery-large:hover {
+  opacity: 0.95;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  transform: translateY(-3px);
+}
+
+/* Видео плеер - эффект ховера */
+.video-item:hover {
+  opacity: 0.95;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  transform: translateY(-3px);
+}
+
+.video-play-icon {
+  transition: all 0.3s ease;
+}
+
+.video-item:hover .video-play-icon {
+  background: rgba(0, 0, 0, 0.7);
+  transform: translate(-50%, -50%) scale(1.1);
+}
+
+/* Документы - эффект ховера */
+.document-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.document-pdf:hover {
+  background: #6a50e0;
+}
+
+.document-excel:hover {
+  background: #2eba02;
+}
+
+.document-doc:hover {
+  background: #2848df;
+}
+
+/* Кнопка "Пожаловаться" - эффект ховера */
+.report-button:hover {
+  color: #4F46E5;
+  border-color: #4F46E5;
+}
+
+/* Форма комментариев - эффект фокуса */
+.comment-textarea:focus {
+  border-color: #7B61FF;
+  box-shadow: 0 0 0 2px rgba(123, 97, 255, 0.2);
+  outline: none;
+}
+
+/* Анимация лайтбокса */
+.lightbox {
+  transition: background-color 0.3s ease;
+}
+
+.close-lightbox {
+  transition: all 0.2s ease;
+}
+
+.close-lightbox:hover {
+  color: #f0f0f0;
+  transform: scale(1.1);
+}
+
+/* Анимация для похожих стартапов */
+.similar-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.show-all-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+.show-all-button:active {
+  transform: translateY(0);
+}
+
+/* Анимация прогресс-бара */
+.progress-fill {
+  transition: height 1s ease-out;
+}
+
+/* Анимация для статус-бейджа */
+.status-badge {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Тонкая анимация пульсации для call-to-action элементов */
+.invest-button {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(123, 97, 255, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(123, 97, 255, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(123, 97, 255, 0); }
 } 
