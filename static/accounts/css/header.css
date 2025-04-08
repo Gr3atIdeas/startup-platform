@@ -23,7 +23,7 @@ body {
   align-items: center;
   padding: 0 20px;
   box-sizing: border-box;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   animation: fadeInHeader 0.5s ease;
 }
 
@@ -34,6 +34,13 @@ body {
   color: #191919;
   text-decoration: none;
   margin-right: 32px;
+  white-space: nowrap; /* Предотвращает перенос текста */
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.header-logo-text:hover {
+  color: #7B61FF;
+  transform: scale(1.05);
 }
 
 /* Поле поиска */
@@ -42,6 +49,12 @@ body {
   width: 512px;
   height: 40px;
   margin-right: 32px;
+  transition: all 0.3s ease;
+}
+
+.search-container:focus-within {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(123, 97, 255, 0.15);
 }
 
 .search-icon {
@@ -51,6 +64,11 @@ body {
   transform: translateY(-50%);
   color: #A1A0A0;
   z-index: 2;
+  transition: color 0.3s ease;
+}
+
+.search-container:focus-within .search-icon {
+  color: #7B61FF;
 }
 
 .search-input {
@@ -62,6 +80,13 @@ body {
   font-size: 14px;
   outline: none;
   box-sizing: border-box;
+  background-color: #FFFFFF; /* Белый фон внутри поля */
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.search-input:focus {
+  border-color: #7B61FF;
+  box-shadow: 0 0 0 3px rgba(123, 97, 255, 0.2);
 }
 
 /* Навигационное меню */
@@ -80,10 +105,13 @@ body {
   font-size: 16px;
   transition: all 0.3s ease;
   white-space: nowrap;
+  position: relative;
+  overflow: hidden;
 }
 
 .nav-menu a:hover {
   background-color: #F2F4FF;
+  transform: translateY(-2px);
 }
 
 .nav-menu a.active {
@@ -91,21 +119,59 @@ body {
   color: #FFFFFF;
 }
 
-/* Кнопка "Создать стартап" */
+.nav-menu a:not(.create-startup-btn):after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #7B61FF;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s ease;
+}
+
+.nav-menu a:not(.create-startup-btn):hover:after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* Кнопка "Создать стартап" - только рамка без заливки */
 .create-startup-btn {
   text-decoration: none;
-  color: #FFFFFF;
-  background-color: #7B61FF;
+  color: #7B61FF; /* Меняем цвет текста на цвет рамки */
+  background-color: transparent; /* Убираем фон */
+  border: 2px solid #7B61FF; /* Добавляем рамку */
   padding: 8px 16px;
   border-radius: 99px;
   font-size: 16px;
   transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
 }
 
 .create-startup-btn:hover {
-  background-color: #6B53E8;
+  background-color: rgba(123, 97, 255, 0.1);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(123, 97, 255, 0.3);
+  box-shadow: 0 4px 12px rgba(123, 97, 255, 0.2);
+}
+
+.create-startup-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(123, 97, 255, 0.2), transparent);
+  transition: 0.5s;
+  z-index: -1;
+}
+
+.create-startup-btn:hover::before {
+  left: 100%;
+  animation: shine 1.5s infinite;
 }
 
 /* Аватар пользователя */
@@ -116,6 +182,14 @@ body {
   object-fit: cover;
   border: 2px solid #7B61FF;
   margin: 0 10px;
+  transition: all 0.3s ease;
+  animation: pulse 2s infinite;
+}
+
+.avatar:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 15px rgba(123, 97, 255, 0.5);
+  animation: none;
 }
 
 /* Кнопка выхода */
@@ -132,16 +206,40 @@ body {
 
 .logout-btn:hover {
   background-color: #F2F4FF;
+  transform: translateY(-2px);
 }
 
 .logout-btn i {
   font-size: 18px;
+  transition: transform 0.3s ease;
 }
 
-/* Анимации для хедера */
+.logout-btn:hover i {
+  transform: rotate(90deg);
+}
+
+/* Дополнительные анимации для хедера */
 @keyframes fadeInHeader {
   from { opacity: 0; transform: translateY(-20px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shine {
+  0% { left: -100%; }
+  20% { left: 100%; }
+  100% { left: 100%; }
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(123, 97, 255, 0.4); }
+  70% { box-shadow: 0 0 0 5px rgba(123, 97, 255, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(123, 97, 255, 0); }
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-5px); }
+  100% { transform: translateY(0px); }
 }
 
 /* Стили для хедера при скролле */
@@ -149,6 +247,21 @@ body {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   background-color: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(5px);
+  height: 60px; /* Уменьшаем высоту при скролле */
+  animation: shrinkHeader 0.3s forwards;
+}
+
+@keyframes shrinkHeader {
+  from { height: 68px; }
+  to { height: 60px; }
+}
+
+.header-scrolled .header-logo-text {
+  font-size: 22px; /* Уменьшаем размер логотипа при скролле */
+}
+
+.header-scrolled .search-container {
+  transform: scale(0.95);
 }
 
 /* Адаптивность */
