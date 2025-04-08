@@ -194,8 +194,8 @@
       <h2 class="section-title">Комментарии</h2>
       {% if comments %}
         <div class="comments-list">
-          {% for comment in comments|slice:":2" %}
-            <div class="comment-card">
+          {% for comment in comments %}
+            <div class="comment-card {% if forloop.counter > 2 %}hidden{% endif %}">
               <div class="comment-header">
                 <div class="comment-author-info">
                   <div class="author-avatar"></div>
@@ -355,6 +355,17 @@
         lightboxVideo.pause();
       }
     });
+    
+    // Кнопка "Показать еще" для комментариев
+    const showMoreCommentsBtn = document.querySelector('.show-more-comments');
+    if (showMoreCommentsBtn) {
+      showMoreCommentsBtn.addEventListener('click', function() {
+        document.querySelectorAll('.comment-card.hidden').forEach(comment => {
+          comment.classList.remove('hidden');
+        });
+        this.style.display = 'none';
+      });
+    }
   });
 </script>
 {% endblock %}

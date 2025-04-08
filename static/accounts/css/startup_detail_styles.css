@@ -697,10 +697,17 @@
 }
 
 .comment-submit {
-  padding: 10px 20px;
-  width: calc(50% / 3);
+  padding: 8px 20px;
+  height: 40px;
+  width: auto;
   margin-left: 0;
-  display: block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 99px;
+  font-family: 'Circe', sans-serif;
+  font-size: 14px;
+  background: #7B61FF;
 }
 
 /* Кнопка "Показать еще" */
@@ -723,14 +730,8 @@
   transition: all 0.3s ease;
 }
 
-.show-more-comments:hover {
-  background-color: #7B61FF;
-  color: white;
-  transform: translateY(-2px);
-}
-
-.show-more-comments i {
-  font-size: 12px;
+.comment-card.hidden {
+  display: none;
 }
 
 /* Кнопки действий */
