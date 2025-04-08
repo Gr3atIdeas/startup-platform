@@ -30,6 +30,7 @@
     body {
       margin: 0;
       padding: 0;
+      padding-top: 68px; /* Отступ для фиксированного хедера */
       font-family: 'Circe', Arial, sans-serif;
       background-color: var(--background-light);
       color: var(--text-dark);
@@ -45,71 +46,93 @@
       width: 100%;
       box-sizing: border-box;
     }
+    
+    /* Стили хедера */
     header.header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 10px 32px;
-      border-bottom: 1px solid var(--border-light-gray);
-      max-width: 1440px;
-      margin: 0 auto;
+      padding: 0 20px;
+      height: 68px;
+      background-color: #FFFFFF;
+      max-width: 100%;
       width: 100%;
-      height: 59px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      border-bottom: 1px solid #E5E7EB;
+      box-sizing: border-box;
+      transition: all 0.3s ease;
+      animation: fadeInHeader 0.5s ease;
     }
-    /* Заголовок вместо логотипа */
+    
+    /* Логотип */
     .header-logo-text {
       font-family: 'Koulen', sans-serif;
       font-size: 24px;
       color: var(--text-dark);
       text-decoration: none;
+      margin-right: 32px;
     }
+    
+    /* Поле поиска как на скриншоте */
+    .search-container {
+      position: relative;
+      width: 512px;
+      height: 40px;
+      margin-right: 32px;
+    }
+    
+    .search-icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #A1A0A0;
+      z-index: 2;
+    }
+    
+    .search-input {
+      width: 100%;
+      height: 40px;
+      border: 1px solid var(--primary-color);
+      border-radius: 99px;
+      padding: 0 16px 0 40px;
+      font-size: 14px;
+      outline: none;
+      box-sizing: border-box;
+    }
+    
+    /* Навигационное меню */
     .nav-menu {
       display: flex;
       gap: 10px;
       align-items: center;
+      margin-left: auto;
     }
+    
     .nav-menu a {
       text-decoration: none;
       color: var(--text-dark);
       padding: 8px 16px;
       border-radius: 99px;
-      transition: background-color 0.2s, color 0.2s;
+      transition: background-color 0.3s, color 0.3s;
       font-size: 16px;
       white-space: nowrap;
     }
+    
     .nav-menu a:hover {
-      background-color: #e9ecef;
+      background-color: #F2F4FF;
     }
+    
     .nav-menu a.active {
       background-color: var(--secondary-color);
       color: var(--text-light);
     }
-    /* Кнопка выхода с иконкой */
-    .logout-btn {
-      text-decoration: none;
-      color: var(--text-dark);
-      padding: 8px 16px;
-      border-radius: 99px;
-      transition: background-color 0.2s;
-      font-size: 16px;
-      display: inline-flex;
-      align-items: center;
-    }
-    .logout-btn:hover {
-      background-color: #e9ecef;
-    }
-    .logout-btn i {
-      font-size: 18px;
-    }
-    .avatar {
-      width: 58px;
-      height: 58px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid var(--primary-color);
-      margin: 0 10px;
-    }
-    /* Кнопка "Создать стартап" – перенесли между ссылкой "Профиль" и аватаром */
+    
+    /* Кнопка "Создать стартап" */
     .create-startup-btn {
       text-decoration: none;
       color: var(--text-light);
@@ -117,46 +140,70 @@
       padding: 8px 16px;
       border-radius: 99px;
       font-size: 16px;
-      transition: background-color 0.2s;
+      transition: all 0.3s;
     }
+    
     .create-startup-btn:hover {
       background-color: var(--secondary-color);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(123, 97, 255, 0.3);
     }
+    
+    /* Анимации для хедера */
+    @keyframes fadeInHeader {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .header-scrolled {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      background-color: rgba(255, 255, 255, 0.98);
+    }
+    
+    /* Адаптивность */
+    @media (max-width: 1200px) {
+      .search-container {
+        width: 350px;
+      }
+    }
+    
+    @media (max-width: 992px) {
+      .search-container {
+        width: 250px;
+      }
+    }
+    
     @media (max-width: 768px) {
       header.header {
         flex-direction: column;
         height: auto;
         padding: 10px;
       }
+      
+      .search-container {
+        width: 100%;
+        margin: 10px 0;
+      }
+      
       .nav-menu {
         flex-wrap: wrap;
         justify-content: center;
+        margin-top: 10px;
       }
-      .header-logo-text {
-        font-size: 20px;
-      }
-      .create-startup-btn {
-        margin-top: 5px;
-      }
-      .avatar {
-        width: 50px;
-        height: 50px;
+      
+      body {
+        padding-top: 130px;
       }
     }
   </style>
+
   {% block head_extra %}
-    <link rel="stylesheet" href="{% static 'accounts/css/header.css' %}">
     {{ block.super }}
     <script>
       document.addEventListener('DOMContentLoaded', function() {
         const header = document.querySelector('.header');
-        const content = document.querySelector('main.content');
         
-        // Принудительно задаем отступ для контента
-        const headerHeight = header.offsetHeight;
-        document.body.style.paddingTop = headerHeight + 'px';
-        
-        // Анимация при скролле
+        // Эффект при скролле
         window.addEventListener('scroll', function() {
           if (window.scrollY > 20) {
             header.classList.add('header-scrolled');
@@ -174,7 +221,7 @@
   {% endblock %}
 </head>
 <body>
-  <header class="header">
+  <header class="header" id="main-header">
     <a href="{% url 'home' %}" class="header-logo-text">GREAT IDEAS</a>
     
     <div class="search-container">
@@ -268,5 +315,32 @@
       </div>
     </div>
   </footer>
+  <script>
+    // Немедленно выполняемая функция для управления фиксированным хедером
+    (function() {
+      // Установка отступа для <body>
+      document.body.style.paddingTop = '68px';
+      
+      // Получаем ссылку на хедер
+      const header = document.getElementById('main-header');
+      
+      // Функция для обработки скролла
+      function handleScroll() {
+        if (window.pageYOffset > 20) {
+          header.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.1)';
+          header.style.backgroundColor = 'rgba(255, 255, 255, 0.98)';
+        } else {
+          header.style.boxShadow = 'none';
+          header.style.backgroundColor = '#FFFFFF';
+        }
+      }
+      
+      // Добавляем слушатель события
+      window.addEventListener('scroll', handleScroll);
+      
+      // Проверяем скролл сразу при загрузке
+      handleScroll();
+    })();
+  </script>
 </body>
 </html>
