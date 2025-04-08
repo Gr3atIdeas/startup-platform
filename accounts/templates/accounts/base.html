@@ -144,34 +144,57 @@
       }
     }
   </style>
-  {% block head_extra %}{% endblock %}
+  {% block head_extra %}
+    <link rel="stylesheet" href="{% static 'accounts/css/header.css' %}">
+    {{ block.super }}
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Эффект шапки при скролле
+        window.addEventListener('scroll', function() {
+          const header = document.querySelector('.header');
+          if (window.scrollY > 50) {
+            header.classList.add('header-scrolled');
+          } else {
+            header.classList.remove('header-scrolled');
+          }
+        });
+      });
+    </script>
+  {% endblock %}
 </head>
 <body>
   <header class="header">
-    <!-- Заголовок "GREAT IDEAS" слева -->
-    <a href="{% url 'home' %}" class="header-logo-text">GREAT IDEAS</a>
-    <nav class="nav-menu">
-      <a href="{% url 'home' %}" {% if request.resolver_match.url_name == 'home' %}class="active"{% endif %}>Главная</a>
-      <a href="{% url 'startups_list' %}" {% if request.resolver_match.url_name == 'startups_list' %}class="active"{% endif %}>Каталог</a>
-      <a href="{% url 'investments' %}" {% if request.resolver_match.url_name == 'investments' %}class="active"{% endif %}>Инвестиции</a>
-      <a href="{% url 'news' %}" {% if request.resolver_match.url_name == 'news' %}class="active"{% endif %}>Новости</a>
-      <a href="{% url 'legal' %}" {% if request.resolver_match.url_name == 'legal' %}class="active"{% endif %}>Инфо</a>
+    <div class="header-container">
+      <a href="{% url 'home' %}" class="header-logo-text">GREAT IDEAS</a>
       
-      {% if user.is_authenticated %}
-        {% if user.role.role_name == 'moderator' %}
-          <a href="{% url 'moderator_dashboard' %}" {% if request.resolver_match.url_name == 'moderator_dashboard' %}class="active"{% endif %}>Заявки</a>
+      <div class="search-container">
+        <div class="search-icon">
+          <i class="fas fa-search"></i>
+        </div>
+        <input type="text" class="search-input" placeholder="Поиск">
+      </div>
+      
+      <nav class="nav-menu">
+        <a href="{% url 'home' %}" {% if request.resolver_match.url_name == 'home' %}class="active"{% endif %}>Главная</a>
+        <a href="{% url 'startups_list' %}" {% if request.resolver_match.url_name == 'startups_list' %}class="active"{% endif %}>Каталог</a>
+        <a href="{% url 'investments' %}" {% if request.resolver_match.url_name == 'investments' %}class="active"{% endif %}>Инвестиции</a>
+        <a href="{% url 'news' %}" {% if request.resolver_match.url_name == 'news' %}class="active"{% endif %}>Новости</a>
+        <a href="{% url 'legal' %}" {% if request.resolver_match.url_name == 'legal' %}class="active"{% endif %}>Инфо</a>
+        
+        {% if user.is_authenticated %}
+          {% if user.role.role_name == 'moderator' %}
+            <a href="{% url 'moderator_dashboard' %}" {% if request.resolver_match.url_name == 'moderator_dashboard' %}class="active"{% endif %}>Заявки</a>
+          {% endif %}
+          <a href="{% url 'profile' %}" {% if request.resolver_match.url_name == 'profile' %}class="active"{% endif %}>Профиль</a>
+          <a href="{% url 'create_startup' %}" class="create-startup-btn {% if request.resolver_match.url_name == 'create_startup' %}active{% endif %}">Создать стартап</a>
+          <img src="{% if user.profile_picture_url %}{{ user.profile_picture_url }}{% else %}{% static 'accounts/images/layout/image12.png' %}{% endif %}" alt="Аватар" class="avatar">
+          <a href="{% url 'logout' %}" class="logout-btn" aria-label="Выход"><i class="fas fa-sign-out-alt"></i></a>
+        {% else %}
+          <a href="{% url 'login' %}">Вход</a>
+          <a href="{% url 'register' %}">Регистрация</a>
         {% endif %}
-        <a href="{% url 'profile' %}" {% if request.resolver_match.url_name == 'profile' %}class="active"{% endif %}>Профиль</a>
-        <!-- Кнопка "Создать стартап" размещается между "Профиль" и аватаром -->
-        <a href="{% url 'create_startup' %}" class="create-startup-btn {% if request.resolver_match.url_name == 'create_startup' %}active{% endif %}">Создать стартап</a>
-        <img src="{% if user.profile_picture_url %}{{ user.profile_picture_url }}{% else %}{% static 'accounts/images/layout/image12.png' %}{% endif %}" alt="Аватар" class="avatar">
-        <!-- Кнопка "Выход" с иконкой размещается справа от аватара -->
-        <a href="{% url 'logout' %}" class="logout-btn" aria-label="Выход"><i class="fas fa-sign-out-alt"></i></a>
-      {% else %}
-        <a href="{% url 'login' %}">Вход</a>
-        <a href="{% url 'register' %}">Регистрация</a>
-      {% endif %}
-    </nav>
+      </nav>
+    </div>
   </header>
   <main class="content">
     {% block content %}{% endblock %}
