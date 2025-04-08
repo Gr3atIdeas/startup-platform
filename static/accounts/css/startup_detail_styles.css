@@ -35,8 +35,7 @@
 .top-section {
   display: flex;
   position: relative;
-  justify-content: space-between;
-  gap: 30px;
+  gap: 0;
   margin-bottom: 50px;
 }
 
@@ -151,16 +150,41 @@
 
 /* Индикатор прогресса */
 .progress-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  margin: 0 20px;
+  position: relative;
+  width: 20px;
+  height: 305px;
+}
+
+.progress-bar {
+  width: 20px;
+  height: 100%;
+  background-color: #E9E9E9;
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-fill {
   position: absolute;
-  right: 494px;
-  top: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: #7B61FF;
+  border-radius: 10px;
 }
 
 .progress-text {
+  position: absolute;
+  top: 0;
   font-size: 15px;
   font-weight: 400;
   color: #000000;
-  text-align: center;
+  white-space: nowrap;
+  right: -25px;
 }
 
 /* Кнопка написать */
