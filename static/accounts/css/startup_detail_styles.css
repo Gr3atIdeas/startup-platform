@@ -176,66 +176,59 @@
   bottom: 0;
   width: 100%;
   background-color: #7B61FF;
-  border-radius: 10px;
-  position: relative;
+  border-radius: 0 0 10px 10px;
   overflow: hidden;
-  transform-origin: bottom center;
+  animation: fillRise 1.5s ease-out forwards;
 }
 
-.progress-fill:before {
-  content: "";
+.progress-fill::before {
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(
-    to bottom,
-    rgba(255, 255, 255, 0.3) 0%,
-    rgba(255, 255, 255, 0.1) 50%,
-    rgba(255, 255, 255, 0.3) 100%
-  );
-  animation: waterEffect 3s infinite linear;
+  background: linear-gradient(to top, 
+    rgba(255, 255, 255, 0.2) 0%,
+    rgba(255, 255, 255, 0.4) 20%, 
+    rgba(255, 255, 255, 0.2) 40%,
+    rgba(255, 255, 255, 0.1) 60%,
+    rgba(255, 255, 255, 0.2) 80%,
+    rgba(255, 255, 255, 0.3) 100%);
+  animation: shineWave 3s infinite linear;
   background-size: 100% 200%;
 }
 
-.progress-fill:after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(
-    45deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.2) 25%,
-    transparent 50%,
-    rgba(255, 255, 255, 0.2) 75%,
-    transparent 100%
-  );
-  animation: sparkleEffect 2s infinite linear;
-  background-size: 200% 200%;
-}
-
 .progress-text {
-  font-size: 15px;
-  font-weight: 400;
-  color: #000000;
-  text-align: center;
-  width: 100%;
-  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 14px;
+  font-weight: 700;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 10px rgba(123, 97, 255, 0.5);
+  z-index: 5;
 }
 
-@keyframes waterEffect {
+@keyframes fillRise {
+  0% { height: 0; }
+  60% { height: calc(var(--height-value) * 1.1); }
+  80% { height: calc(var(--height-value) * 0.97); }
+  100% { height: var(--height-value); }
+}
+
+@keyframes shineWave {
   0% { background-position: 0 0; }
-  50% { background-position: 0 100%; }
-  100% { background-position: 0 0; }
-}
-
-@keyframes sparkleEffect {
-  0% { background-position: 0% 0%; }
-  100% { background-position: 200% 200%; }
+  100% { background-position: 0 -200%; }
 }
 
 /* Кнопка написать */
