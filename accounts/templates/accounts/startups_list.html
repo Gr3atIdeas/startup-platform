@@ -134,6 +134,7 @@
               <div class="card-footer">
                 <a href="{% url 'startup_detail' startup.startup_id %}" class="read-more">Читать дальше</a>
                 <div class="startup-likes">
+                  <span class="like-count">{{ startup.total_voters|default:"0" }}</span>
                   <button class="like-button">
                     <i class="far fa-comment"></i>
                   </button>

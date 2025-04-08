@@ -69,7 +69,7 @@ class ChatParticipants(models.Model):
 
 class Comments(models.Model):
     comment_id = models.AutoField(primary_key=True)
-    startup_id = models.ForeignKey('Startups', on_delete=models.CASCADE, db_column='startup_id')
+    startup_id = models.ForeignKey('Startups', on_delete=models.CASCADE, db_column='startup_id', related_name='comments')
     user_id = models.ForeignKey('Users', on_delete=models.CASCADE, db_column='user_id')
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)

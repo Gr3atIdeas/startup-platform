@@ -16,6 +16,7 @@ from .models import creative_upload_path, proof_upload_path, video_upload_path
 import uuid  # Добавляем импорт uuid
 from .models import Comments
 from .forms import CommentForm
+from django.db.models import Count
 
 logger = logging.getLogger(__name__)
 
@@ -66,21 +67,27 @@ def user_logout(request):
     messages.success(request, 'Вы успешно вышли из системы.')
     return redirect('home')
 
-def startups_list(request):
-    # Получаем одобренные стартапы
-    approved_startups_list = Startups.objects.filter(status='approved').order_by('-created_at')
-    
-    # Логируем данные
-    logger.info(f"Найдено одобренных стартапов: {approved_startups_list.count()}")
-    for startup in approved_startups_list:
-        logger.debug(f"Стартап: ID={startup.startup_id}, Title={startup.title}, Type={type(startup.startup_id)}")
-    
-    # Проверяем, что queryset не пустой
-    if not approved_startups_list.exists():
-        logger.warning("Нет стартапов со статусом 'approved'")
-    
-    return render(request, 'accounts/startups_list.html', {'approved_startups': approved_startups_list})
+from django.db.models import Count
 
+def startups_list(request):
+    startups = Startups.objects.filter(status='approved')
+    selected_categories = request.GET.getlist('category')
+    micro_investment = request.GET.get('micro_investment') == '1'
+
+    if selected_categories:
+        startups = startups.filter(direction__direction_name__in=[cat.capitalize() for cat in selected_categories])
+    
+    if micro_investment:
+        startups = startups.filter(micro_investment_available=True)
+
+    # Аннотируем количество комментариев
+    startups = startups.annotate(comment_count=Count('comments'))
+
+    return render(request, 'accounts/startups_list.html', {
+        'approved_startups': startups,
+        'selected_categories': selected_categories,
+        'micro_investment': micro_investment,
+    })
 # accounts/views.py (фрагмент)
 
 def startup_detail(request, startup_id):
