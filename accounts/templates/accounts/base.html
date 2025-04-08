@@ -17,6 +17,9 @@
   <!-- Файл стилей футера (если используется) -->
   <link rel="stylesheet" href="{% static 'accounts/css/footer_styles.css' %}">
   
+  <!-- Замените строку подключения CSS -->
+  <link rel="stylesheet" href="{% static 'accounts/css/header.css' %}?v={% now 'U' %}">
+  
   <style>
     :root {
       --primary-color: #7B61FF;
@@ -75,6 +78,7 @@
       color: var(--text-dark);
       text-decoration: none;
       margin-right: 32px;
+      white-space: nowrap !important;
     }
     
     /* Поле поиска как на скриншоте */
@@ -103,6 +107,7 @@
       font-size: 14px;
       outline: none;
       box-sizing: border-box;
+      background-color: #FFFFFF !important;
     }
     
     /* Навигационное меню */
@@ -135,12 +140,13 @@
     /* Кнопка "Создать стартап" */
     .create-startup-btn {
       text-decoration: none;
-      color: var(--text-light);
-      background-color: var(--primary-color);
+      color: #7B61FF !important;
+      background-color: transparent !important;
       padding: 8px 16px;
       border-radius: 99px;
       font-size: 16px;
       transition: all 0.3s;
+      border: 2px solid #7B61FF !important;
     }
     
     .create-startup-btn:hover {

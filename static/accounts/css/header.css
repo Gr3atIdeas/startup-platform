@@ -27,14 +27,16 @@ body {
   animation: fadeInHeader 0.5s ease;
 }
 
-/* Логотип */
+/* Логотип - жестко предотвращаем перенос слов */
 .header-logo-text {
   font-family: 'Koulen', sans-serif;
   font-size: 24px;
   color: #191919;
   text-decoration: none;
   margin-right: 32px;
-  white-space: nowrap; /* Предотвращает перенос текста */
+  white-space: nowrap !important;
+  flex-shrink: 0 !important; /* Предотвращает сжатие логотипа */
+  display: inline-block !important; /* Обеспечивает корректное отображение */
   transition: transform 0.3s ease, color 0.3s ease;
 }
 
@@ -43,7 +45,7 @@ body {
   transform: scale(1.05);
 }
 
-/* Поле поиска */
+/* Поле поиска с белым фоном */
 .search-container {
   position: relative;
   width: 512px;
@@ -80,7 +82,7 @@ body {
   font-size: 14px;
   outline: none;
   box-sizing: border-box;
-  background-color: #FFFFFF; /* Белый фон внутри поля */
+  background-color: #FFFFFF;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -139,12 +141,12 @@ body {
 
 /* Кнопка "Создать стартап" - только рамка без заливки */
 .create-startup-btn {
-  text-decoration: none;
-  color: #7B61FF; /* Меняем цвет текста на цвет рамки */
-  background-color: transparent; /* Убираем фон */
-  border: 2px solid #7B61FF; /* Добавляем рамку */
-  padding: 8px 16px;
-  border-radius: 99px;
+  text-decoration: none !important;
+  color: #7B61FF !important;
+  background-color: transparent !important;
+  border: 2px solid #7B61FF !important;
+  padding: 6px 14px !important;
+  border-radius: 99px !important;
   font-size: 16px;
   transition: all 0.3s ease;
   position: relative;
@@ -152,7 +154,7 @@ body {
 }
 
 .create-startup-btn:hover {
-  background-color: rgba(123, 97, 255, 0.1);
+  background-color: rgba(123, 97, 255, 0.05) !important;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(123, 97, 255, 0.2);
 }
@@ -174,7 +176,7 @@ body {
   animation: shine 1.5s infinite;
 }
 
-/* Аватар пользователя */
+/* Аватар пользователя с анимацией */
 .avatar {
   width: 42px;
   height: 42px;
@@ -192,7 +194,7 @@ body {
   animation: none;
 }
 
-/* Кнопка выхода */
+/* Кнопка выхода с анимацией */
 .logout-btn {
   text-decoration: none;
   color: #191919;
@@ -218,7 +220,7 @@ body {
   transform: rotate(90deg);
 }
 
-/* Дополнительные анимации для хедера */
+/* Анимации для хедера и элементов */
 @keyframes fadeInHeader {
   from { opacity: 0; transform: translateY(-20px); }
   to { opacity: 1; transform: translateY(0); }
@@ -247,7 +249,7 @@ body {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   background-color: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(5px);
-  height: 60px; /* Уменьшаем высоту при скролле */
+  height: 60px;
   animation: shrinkHeader 0.3s forwards;
 }
 
@@ -257,7 +259,7 @@ body {
 }
 
 .header-scrolled .header-logo-text {
-  font-size: 22px; /* Уменьшаем размер логотипа при скролле */
+  font-size: 22px;
 }
 
 .header-scrolled .search-container {
