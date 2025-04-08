@@ -137,7 +137,7 @@
                   <button class="like-button">
                     <i class="far fa-comment"></i>
                   </button>
-                  <span class="like-count">{{ startup.total_voters|default:"0" }}</span>
+                  <span class="like-count">{{ startup.comment_count|default:"0" }}</span>
                 </div>
               </div>
             </div>
@@ -178,4 +178,4 @@
     document.getElementById('filterForm').submit();
   }
 </script>
-{% endblock %}  
+{% endblock %}
