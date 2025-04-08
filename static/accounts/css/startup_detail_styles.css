@@ -708,10 +708,11 @@
   font-family: 'Circe', sans-serif;
   font-size: 14px;
   background: #7B61FF;
+  margin-right: auto;
 }
 
 /* Кнопка "Показать еще" */
-.show-more-comments {
+.show-more-comments, .hide-comments-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -728,6 +729,20 @@
   margin-top: 10px;
   margin-bottom: 20px;
   transition: all 0.3s ease;
+}
+
+.show-more-comments:hover, .hide-comments-button:hover {
+  background-color: #7B61FF;
+  color: white;
+  transform: translateY(-2px);
+}
+
+.show-more-comments i, .hide-comments-button i {
+  font-size: 12px;
+}
+
+.hide-comments-button {
+  display: none;
 }
 
 .comment-card.hidden {

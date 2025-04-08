@@ -214,6 +214,10 @@
               <i class="fas fa-chevron-down"></i>
               Показать еще
             </button>
+            <button class="hide-comments-button">
+              <i class="fas fa-chevron-up"></i>
+              Скрыть
+            </button>
           {% endif %}
         </div>
       {% else %}
@@ -356,14 +360,30 @@
       }
     });
     
-    // Кнопка "Показать еще" для комментариев
+    // Кнопки управления комментариями
     const showMoreCommentsBtn = document.querySelector('.show-more-comments');
+    const hideCommentsBtn = document.querySelector('.hide-comments-button');
+    
     if (showMoreCommentsBtn) {
       showMoreCommentsBtn.addEventListener('click', function() {
         document.querySelectorAll('.comment-card.hidden').forEach(comment => {
           comment.classList.remove('hidden');
         });
         this.style.display = 'none';
+        hideCommentsBtn.style.display = 'inline-flex';
+      });
+    }
+    
+    if (hideCommentsBtn) {
+      hideCommentsBtn.addEventListener('click', function() {
+        const comments = document.querySelectorAll('.comment-card');
+        comments.forEach((comment, index) => {
+          if (index >= 2) {
+            comment.classList.add('hidden');
+          }
+        });
+        this.style.display = 'none';
+        showMoreCommentsBtn.style.display = 'inline-flex';
       });
     }
   });
