@@ -1,22 +1,27 @@
-/* Стили для шапки сайта */
+/* Обновленные стили для шапки */
 .header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 32px;
-  height: 59px;
-  background-color: #FFFFFF;
-  width: 100%;
-  max-width: 1440px;
-  margin: 0 auto;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 100;
-  border-bottom: 1px solid #E5E7EB;
-  transition: all 0.4s ease;
-  animation: headerAppear 0.5s forwards;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  padding: 0 32px !important;
+  height: 59px !important;
+  background-color: #FFFFFF !important;
+  width: 100% !important;
+  max-width: 1440px !important;
+  margin: 0 auto !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 1000 !important;
+  border-bottom: 1px solid #E5E7EB !important;
+  box-sizing: border-box !important;
+  transition: all 0.3s ease !important;
+  animation: headerAppear 0.5s forwards !important;
+}
+
+body {
+  padding-top: 59px !important; /* Добавляем отступ для контента под фиксированным хедером */
 }
 
 main.content {
@@ -35,12 +40,12 @@ main.content {
 }
 
 .header-container {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  gap: 32px;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  width: 100% !important;
+  gap: 20px !important;
 }
 
 /* Логотип */
@@ -61,16 +66,16 @@ main.content {
 
 /* Поле поиска */
 .search-container {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  padding: 8px 16px;
-  gap: 8px;
-  width: 512px;
-  height: 40px;
-  background: rgba(255, 255, 255, 0.19);
-  border: 1px solid #7B61FF;
-  border-radius: 99px;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  padding: 8px 16px !important;
+  gap: 8px !important;
+  width: 300px !important;
+  height: 40px !important;
+  background: #FFFFFF !important;
+  border: 1px solid #7B61FF !important;
+  border-radius: 99px !important;
   transition: all 0.3s ease;
 }
 
@@ -88,14 +93,14 @@ main.content {
 }
 
 .search-input {
-  border: none;
-  background: transparent;
-  width: 100%;
+  border: none !important;
+  background: transparent !important;
+  width: 100% !important;
   font-family: 'Circe', sans-serif;
   font-size: 14px;
   line-height: 24px;
   color: #A1A0A0;
-  outline: none;
+  outline: none !important;
 }
 
 .search-input::placeholder {
@@ -104,9 +109,11 @@ main.content {
 
 /* Навигационное меню */
 .nav-menu {
-  display: flex;
-  gap: 24px;
-  align-items: center;
+  display: flex !important;
+  gap: 10px !important;
+  align-items: center !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
 .nav-menu a {
@@ -223,16 +230,15 @@ main.content {
 
 /* При скролле страницы */
 .header-scrolled {
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
-  background-color: rgba(255, 255, 255, 0.98);
-  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1) !important;
+  background-color: rgba(255, 255, 255, 0.95) !important;
   transform: translateY(0);
   animation: headerScrolled 0.3s forwards;
 }
 
 @keyframes headerScrolled {
   0% {
-    transform: translateY(-10px);
+    transform: translateY(-5px);
   }
   100% {
     transform: translateY(0);

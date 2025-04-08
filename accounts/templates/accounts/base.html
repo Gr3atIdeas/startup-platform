@@ -149,24 +149,19 @@
     {{ block.super }}
     <script>
       document.addEventListener('DOMContentLoaded', function() {
-        // Эффект шапки при скролле
+        // Фиксируем отступ контента под хедером
         const header = document.querySelector('.header');
-        let lastScrollTop = 0;
+        const content = document.querySelector('main.content');
+        const headerHeight = header.offsetHeight;
+        content.style.marginTop = headerHeight + 'px';
         
+        // Эффект шапки при скролле
         window.addEventListener('scroll', function() {
-          const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-          
-          if (scrollTop > 50) {
-            if (!header.classList.contains('header-scrolled')) {
-              header.classList.add('header-scrolled');
-            }
+          if (window.scrollY > 10) {
+            header.classList.add('header-scrolled');
           } else {
-            if (header.classList.contains('header-scrolled')) {
-              header.classList.remove('header-scrolled');
-            }
+            header.classList.remove('header-scrolled');
           }
-          
-          lastScrollTop = scrollTop;
         });
       });
     </script>
