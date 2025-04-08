@@ -177,6 +177,20 @@
   width: 100%;
   background-color: #7B61FF;
   border-radius: 10px;
+  animation: wave 2s infinite ease-in-out;
+  background-image: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.2) 0%, 
+    rgba(255, 255, 255, 0.5) 50%, 
+    rgba(255, 255, 255, 0.2) 100%
+  );
+  background-size: 100% 30px;
+  background-repeat: repeat-y;
+}
+
+@keyframes wave {
+  0%, 100% { background-position: 0 0; }
+  50% { background-position: 0 15px; }
 }
 
 .progress-text {
@@ -463,15 +477,15 @@
 }
 
 .document-item {
-  width: 60px;
-  height: 60px;
+  width: 120px;
+  height: 120px;
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 10px;
+  border-radius: 20px;
   font-family: 'Circe', sans-serif;
   font-weight: 700;
-  font-size: 16px;
+  font-size: 24px;
   color: #FFFFFF;
   text-decoration: none;
 }
@@ -1347,4 +1361,21 @@ main.content {
   0% { box-shadow: 0 0 0 0 rgba(123, 97, 255, 0.4); }
   70% { box-shadow: 0 0 0 10px rgba(123, 97, 255, 0); }
   100% { box-shadow: 0 0 0 0 rgba(123, 97, 255, 0); }
+}
+
+/* Кнопка "Оставить комментарий" */
+.action-button.comment-submit {
+  padding: 8px 20px;
+  height: 40px;
+  width: auto;
+  max-width: 250px;
+  margin-left: 0;
+  margin-right: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 99px;
+  font-family: 'Circe', sans-serif;
+  font-size: 14px;
+  background: #7B61FF;
 } 
