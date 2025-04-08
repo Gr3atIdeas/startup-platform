@@ -98,9 +98,9 @@
 
     <div class="gallery-grid">
       {% for url in creatives_urls|slice:":4" %}
-        <div class="gallery-item">
+        <a href="{% get_file_url_tag url startup.startup_id 'creative' %}" class="gallery-item lightbox-trigger">
           <img src="{% get_file_url_tag url startup.startup_id 'creative' %}" alt="Креатив">
-        </div>
+        </a>
       {% empty %}
         {% for i in "1234" %}
           <div class="gallery-item"></div>
@@ -110,8 +110,21 @@
     
     <div class="gallery-large">
       {% if creatives_urls %}
-        <img src="{% get_file_url_tag creatives_urls.0 startup.startup_id 'creative' %}" alt="Главное изображение">
+        <a href="{% get_file_url_tag creatives_urls.0 startup.startup_id 'creative' %}" class="lightbox-trigger">
+          <img src="{% get_file_url_tag creatives_urls.0 startup.startup_id 'creative' %}" alt="Главное изображение">
+        </a>
       {% endif %}
+    </div>
+
+    <div class="video-grid">
+      {% for url in video_urls %}
+        <a href="{% get_file_url_tag url startup.startup_id 'video' %}" class="video-item lightbox-trigger-video">
+          <video>
+            <source src="{% get_file_url_tag url startup.startup_id 'video' %}" type="video/mp4">
+          </video>
+          <div class="video-play-icon"><i class="fas fa-play"></i></div>
+        </a>
+      {% endfor %}
     </div>
 
     <div class="investor-conditions">
@@ -135,6 +148,8 @@
               <a href="{% get_file_url_tag url startup.startup_id 'proof' %}" target="_blank" class="document-item document-doc">DOC</a>
             {% endif %}
           {% endfor %}
+        {% elif startup.pitch_deck_url %}
+          <a href="{{ startup.pitch_deck_url }}" target="_blank" class="document-item document-pdf">PDF</a>
         {% else %}
           <div class="document-item document-pdf">PDF</div>
           <div class="document-item document-excel">EXCEL</div>
@@ -288,8 +303,58 @@
   {% endif %}
 </div>
 
+<div id="lightbox" class="lightbox">
+  <span class="close-lightbox">&times;</span>
+  <div class="lightbox-content">
+    <img id="lightbox-img" />
+    <video id="lightbox-video" controls></video>
+  </div>
+</div>
+
 <script>
   document.addEventListener('DOMContentLoaded', function() {
+    // Лайтбокс для изображений
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const lightboxVideo = document.getElementById('lightbox-video');
+    const closeLightbox = document.querySelector('.close-lightbox');
+    
+    // Обработчик для изображений
+    document.querySelectorAll('.lightbox-trigger').forEach(item => {
+      item.addEventListener('click', function(e) {
+        e.preventDefault();
+        lightboxImg.src = this.href;
+        lightboxImg.style.display = 'block';
+        lightboxVideo.style.display = 'none';
+        lightbox.style.display = 'flex';
+      });
+    });
+    
+    // Обработчик для видео
+    document.querySelectorAll('.lightbox-trigger-video').forEach(item => {
+      item.addEventListener('click', function(e) {
+        e.preventDefault();
+        lightboxVideo.innerHTML = `<source src="${this.href}" type="video/mp4">`;
+        lightboxVideo.load();
+        lightboxImg.style.display = 'none';
+        lightboxVideo.style.display = 'block';
+        lightbox.style.display = 'flex';
+      });
+    });
+    
+    // Закрыть лайтбокс
+    closeLightbox.addEventListener('click', function() {
+      lightbox.style.display = 'none';
+      lightboxVideo.pause();
+    });
+    
+    // Закрыть по клику вне контента
+    lightbox.addEventListener('click', function(e) {
+      if (e.target === lightbox) {
+        lightbox.style.display = 'none';
+        lightboxVideo.pause();
+      }
+    });
   });
 </script>
 {% endblock %}
