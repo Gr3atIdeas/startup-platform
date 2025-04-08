@@ -149,15 +149,10 @@
     {{ block.super }}
     <script>
       document.addEventListener('DOMContentLoaded', function() {
-        // Фиксируем отступ контента под хедером
-        const header = document.querySelector('.header');
-        const content = document.querySelector('main.content');
-        const headerHeight = header.offsetHeight;
-        content.style.marginTop = headerHeight + 'px';
-        
-        // Эффект шапки при скролле
+        // Эффект при скролле
         window.addEventListener('scroll', function() {
-          if (window.scrollY > 10) {
+          const header = document.querySelector('.header');
+          if (window.scrollY > 20) {
             header.classList.add('header-scrolled');
           } else {
             header.classList.remove('header-scrolled');
