@@ -263,6 +263,31 @@
   </div>
 </div>
 
+<div class="video-section">
+  <h2 class="section-title">Видео</h2>
+  <div class="video-grid">
+    {% for url in video_urls %}
+      <div class="video-item">
+        <video controls>
+          <source src="{% get_file_url_tag url startup.startup_id 'video' %}" type="video/mp4">
+          Ваш браузер не поддерживает видео.
+        </video>
+      </div>
+    {% empty %}
+      <p class="section-content">Видео отсутствуют</p>
+    {% endfor %}
+  </div>
+</div>
+
+<div class="pitch-deck-section">
+  <h2 class="section-title">Питч-дек</h2>
+  {% if startup.pitch_deck_url %}
+    <a href="{{ startup.pitch_deck_url }}" target="_blank" class="pitch-deck-link">Скачать питч-дек</a>
+  {% else %}
+    <p class="section-content">Питч-дек отсутствует</p>
+  {% endif %}
+</div>
+
 <script>
   document.addEventListener('DOMContentLoaded', function() {
   });
