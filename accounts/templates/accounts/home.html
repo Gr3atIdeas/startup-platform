@@ -260,6 +260,8 @@
     <script>
         // Определение устройства
         const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        const isAndroid = /Android/i.test(navigator.userAgent);
+        const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
 
         // Ссылки на видео
         const desktopVideo = "https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/%D0%97%D0%B0%D0%B3%D0%BB%D1%83%D1%88%D0%BA%D0%B0.mp4";
@@ -269,11 +271,24 @@
         const video = document.getElementById("background-video");
         video.src = isMobile ? mobileVideo : desktopVideo;
 
+        // Условно убираем playsinline для Android, если это вызывает проблему
+        if (isAndroid) {
+            video.removeAttribute('playsinline');
+        }
+
         // Обработка загрузки и воспроизведения видео
         video.addEventListener('loadeddata', () => {
             console.log("Видео загружено, начинаем воспроизведение...");
             video.play().catch(error => {
                 console.error("Ошибка автопроигрывания:", error);
+                // Попробуем запустить воспроизведение через небольшой таймаут для Android
+                if (isAndroid) {
+                    setTimeout(() => {
+                        video.play().catch(err => {
+                            console.error("Повторная ошибка автопроигрывания на Android:", err);
+                        });
+                    }, 1000);
+                }
             });
         });
 
@@ -293,6 +308,10 @@
         video.addEventListener('ended', () => {
             console.log("Видео закончилось, должно зациклиться...");
         });
+
+        // Проверка поддержки MP4
+        const canPlayMp4 = video.canPlayType('video/mp4');
+        console.log("Поддержка MP4:", canPlayMp4);
 
         // Таймер
         const countDownDate = new Date("July 1, 2025 00:00:00").getTime();
