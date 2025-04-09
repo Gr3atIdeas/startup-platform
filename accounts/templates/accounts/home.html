@@ -33,6 +33,11 @@
             opacity: 0.8;
         }
 
+        /* Запасной фон на случай, если видео не загрузится */
+        body.video-failed {
+            background: #000 url('https://via.placeholder.com/1920x1080?text=Video+Failed') no-repeat center center/cover;
+        }
+
         /* Создаем эффект звезд */
         .stars {
             position: fixed;
@@ -207,7 +212,7 @@
     <div class="orbit orbit-1"></div>
     <div class="orbit orbit-2"></div>
 
-    <video id="background-video" autoplay muted loop>
+    <video id="background-video" autoplay muted loop playsinline>
         Ваш браузер не поддерживает видео.
     </video>
 
@@ -258,7 +263,7 @@
 
         // Ссылки на видео
         const desktopVideo = "https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/%D0%97%D0%B0%D0%B3%D0%BB%D1%83%D1%88%D0%BA%D0%B0.mp4";
-        const mobileVideo = "https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/%D0%9A%D0%BE%D0%BC%D0%BF%D0%BE%D0%B7%D0%B8%D1%86%D0%B8%D1%8F%201_2.mp4";
+        const mobileVideo = "https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/%D0%9A%D0%BE%D0%BC%D0%BF%D0%BE%D0%B7%D0%B8%D1%86%D0%B8%D1%8F%201_3.mp4";
 
         // Установка нужного видео
         const video = document.getElementById("background-video");
@@ -266,6 +271,7 @@
 
         // Обработка загрузки и воспроизведения видео
         video.addEventListener('loadeddata', () => {
+            console.log("Видео загружено, начинаем воспроизведение...");
             video.play().catch(error => {
                 console.error("Ошибка автопроигрывания:", error);
             });
@@ -274,6 +280,18 @@
         // Обработка ошибок загрузки видео
         video.addEventListener('error', (e) => {
             console.error("Ошибка загрузки видео:", e);
+            // Показываем запасной фон, если видео не загрузилось
+            document.body.classList.add('video-failed');
+        });
+
+        // Добавляем событие для проверки воспроизведения
+        video.addEventListener('play', () => {
+            console.log("Видео начало воспроизведение");
+        });
+
+        // Добавляем событие для проверки зацикливания
+        video.addEventListener('ended', () => {
+            console.log("Видео закончилось, должно зациклиться...");
         });
 
         // Таймер
