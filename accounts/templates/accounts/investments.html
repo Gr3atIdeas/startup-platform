@@ -10,6 +10,8 @@
     /* Переопределение стилей для black-theme */
     body {
       background-color: #000000;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
     
     header.header {
@@ -61,8 +63,11 @@
       color: #08E5CF !important;
     }
     
-    /* Скрываем глобальное поле поиска в хедере на странице Портфель */
-    .black-theme header .search-container {
+    /* ФИКС: Принудительное скрытие всех глобальных полей поиска */
+    header .search-container, 
+    .header .search-container,
+    .header-search,
+    .search-form:not(.startups-search) {
       display: none !important;
     }
   </style>
@@ -163,9 +168,10 @@
         </div>
         
         <div class="search-filters">
-          <div class="search-input startups-search">
+          <!-- ФИКС: Переработано поле поиска -->
+          <div class="search-input startups-search" style="background-color: #FFFFFF;">
             <i class="fas fa-search search-icon"></i>
-            <input type="text" placeholder="Поиск" id="startup-search">
+            <input type="text" placeholder="Поиск" id="startup-search" style="background-color: #FFFFFF;">
           </div>
           
           <div class="filter-buttons">

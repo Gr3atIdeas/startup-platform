@@ -1,3 +1,13 @@
+/* Плавная прокрутка и гладкие шрифты */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 /* Обновления для черной темы */
 .black-theme {
   background-color: #000000;
@@ -35,23 +45,37 @@
   display: none !important;
 }
 
-/* Стили поля поиска в разделе Мои стартапы */
-.startups-search {
+/* ФИКС: Полностью переписываем стили для поля поиска в разделе стартапов */
+.my-startups-section .search-input,
+.search-input.startups-search {
   position: relative;
   width: 352px;
   z-index: 10;
+  margin-bottom: 0;
 }
 
-.startups-search input {
+.my-startups-section .search-input input,
+.search-input.startups-search input {
   width: 100%;
   padding: 8px 30px 8px 40px;
   border: 1px solid #000000;
   border-radius: 99px;
   font-size: 14px;
   background-color: #FFFFFF !important;
+  color: #000000 !important;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
 }
 
-.startups-search .search-icon {
+.my-startups-section .search-input input:focus,
+.search-input.startups-search input:focus {
+  border-color: #08E5CF;
+  box-shadow: 0 0 8px rgba(8, 229, 207, 0.5);
+  outline: none;
+}
+
+.my-startups-section .search-icon,
+.search-input.startups-search .search-icon {
   position: absolute;
   left: 15px;
   top: 50%;
@@ -67,6 +91,7 @@
   margin: 0 auto;
   color: #FFFFFF;
   font-family: 'Circe', Arial, sans-serif;
+  animation: fadeIn 0.8s ease;
 }
 
 /* Секция аналитики (верхняя часть) */
@@ -91,6 +116,13 @@
   height: 596px;
   background-color: #FFFFFF;
   border-radius: 28px;
+  animation: slideInLeft 1s ease 0.3s both;
+  transition: transform 0.5s ease, box-shadow 0.5s ease;
+}
+
+.portfolio-image:hover {
+  transform: scale(1.02);
+  box-shadow: 0 10px 25px rgba(255, 255, 255, 0.1);
 }
 
 .analytics-content {
@@ -108,6 +140,7 @@
   letter-spacing: -0.02em;
   color: #08E5CF;
   margin-bottom: 30px;
+  animation: slideInRight 0.8s ease 0.4s both;
 }
 
 .stats-container {
@@ -121,7 +154,14 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  animation: slideInRight 0.8s ease;
+  animation-fill-mode: both;
 }
+
+.stat-item:nth-child(1) { animation-delay: 0.5s; }
+.stat-item:nth-child(2) { animation-delay: 0.6s; }
+.stat-item:nth-child(3) { animation-delay: 0.7s; }
+.stat-item:nth-child(4) { animation-delay: 0.8s; }
 
 .stat-label {
   font-family: 'Koulen', sans-serif;
@@ -138,6 +178,12 @@
   font-size: 15px;
   min-width: 70px;
   text-align: center;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.stat-value:hover {
+  transform: translateY(-3px);
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .stat-value-simple {
@@ -147,6 +193,7 @@
 
 .categories-section {
   margin-top: 30px;
+  animation: slideInRight 0.8s ease 0.9s both;
 }
 
 .categories-title {
@@ -174,26 +221,32 @@
   height: 33px;
   border-radius: 10px;
   box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.25), inset 4px 4px 4px rgba(255, 255, 255, 0.25);
+  animation: chartGrow 1.2s ease-out;
+  animation-fill-mode: both;
 }
 
 .bar-1 {
   width: 347px;
   background-color: #333234;
+  animation-delay: 1.0s;
 }
 
 .bar-2 {
   width: 120px;
   background-color: #656060;
+  animation-delay: 1.2s;
 }
 
 .bar-3 {
   width: 169px;
   background-color: #B1B1B1;
+  animation-delay: 1.4s;
 }
 
 .bar-4 {
   width: 120px;
   background-color: #707070;
+  animation-delay: 1.6s;
 }
 
 .chart-legend {
@@ -236,11 +289,13 @@
   cursor: pointer;
   margin-top: 30px;
   align-self: flex-start;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+  animation: fadeIn 0.8s ease 1.8s both;
 }
 
 .download-report:hover {
-  background-color: #707070;
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
 /* Секция Мои стартапы */
@@ -260,25 +315,21 @@
 .startups-titles {
   display: flex;
   flex-direction: column;
+  animation: slideInLeft 0.8s ease 0.5s both;
 }
 
-.startups-title-main {
-  font-family: 'Neue Power', 'Koulen', sans-serif;
-  font-size: 96px;
-  line-height: 90%;
-  letter-spacing: -0.02em;
-  color: #08E5CF;
-  margin: 0;
-}
-
+.startups-title-main,
 .startups-title-sub {
-  font-family: 'Neue Power', 'Koulen', sans-serif;
-  font-size: 96px;
-  line-height: 90%;
-  letter-spacing: -0.02em;
-  font-weight: 800;
-  color: #000000;
-  margin: 0;
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.startups-titles:hover .startups-title-main {
+  transform: translateX(-5px);
+}
+
+.startups-titles:hover .startups-title-sub {
+  transform: translateX(5px);
 }
 
 .total-investment {
@@ -286,6 +337,7 @@
   flex-direction: column;
   align-items: center;
   gap: 15px;
+  animation: slideInRight 0.8s ease 0.7s both;
 }
 
 .investment-label {
@@ -299,6 +351,12 @@
   padding: 20px 55px;
   font-weight: 700;
   font-size: 35px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.investment-amount:hover {
+  transform: scale(1.05);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
 .search-filters {
@@ -306,27 +364,7 @@
   align-items: center;
   gap: 30px;
   margin-bottom: 40px;
-}
-
-.search-input {
-  position: relative;
-  width: 352px;
-}
-
-.search-input input {
-  width: 100%;
-  padding: 8px 30px 8px 40px;
-  border: 1px solid #000000;
-  border-radius: 99px;
-  font-size: 14px;
-}
-
-.search-icon {
-  position: absolute;
-  left: 15px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #A1A0A0;
+  animation: slideInUp 0.8s ease 0.9s both;
 }
 
 .filter-buttons {
@@ -342,16 +380,17 @@
   font-weight: 700;
   font-size: 14px;
   cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
 }
 
 .filter-btn.active {
   background-color: #000000;
   color: #FFFFFF;
+  animation: pulse 2s infinite ease-in-out;
 }
 
 .filter-btn:hover:not(.active) {
-  background-color: #f0f0f0;
+  transform: translateY(-2px);
 }
 
 .startups-grid {
@@ -367,6 +406,9 @@
   border: 1px solid #000000;
   border-radius: 20px;
   gap: 75px;
+  animation: fadeIn 0.6s ease;
+  animation-fill-mode: both;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .startup-info {
@@ -382,6 +424,11 @@
   height: 90px;
   background-color: #eee;
   border-radius: 100px;
+  transition: transform 0.3s ease;
+}
+
+.startup-card:hover .startup-avatar {
+  transform: scale(1.1);
 }
 
 .startup-name {
@@ -397,12 +444,24 @@
 
 .startup-rating i {
   color: #000000;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.startup-card:hover .startup-rating i {
+  color: #FFD700;
+  transform: scale(1.2);
 }
 
 .comment-icon {
   margin-top: 10px;
   font-size: 24px;
   color: #000000;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.startup-card:hover .comment-icon {
+  transform: scale(1.2) rotate(15deg);
+  color: #08E5CF;
 }
 
 .startup-details {
@@ -467,11 +526,21 @@
   font-size: 16px;
   cursor: pointer;
   margin-top: 20px;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
+  animation: fadeIn 0.8s ease 2.3s both;
 }
 
 .show-more-btn:hover {
-  background-color: #f0f0f0;
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.show-more-btn i {
+  transition: transform 0.3s ease;
+}
+
+.show-more-btn:hover i {
+  transform: scale(1.2);
 }
 
 /* Отображение сообщения для неавторизованных пользователей */
@@ -516,6 +585,50 @@
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
+}
+
+@keyframes slideInUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+@keyframes chartGrow {
+  from { width: 0; }
+  to { width: 100%; }
 }
 
 /* Адаптивность */
