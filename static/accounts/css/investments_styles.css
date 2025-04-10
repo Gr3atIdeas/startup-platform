@@ -1,3 +1,8 @@
+/* Обновления для черной темы */
+.black-theme {
+  background-color: #000000;
+}
+
 /* Общие стили для страницы инвестиций */
 .portfolio-container {
   width: 100%;
@@ -191,7 +196,13 @@
 .startups-header {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   margin-bottom: 50px;
+}
+
+.startups-titles {
+  display: flex;
+  flex-direction: column;
 }
 
 .startups-title-main {
