@@ -53,10 +53,9 @@ body {
 /* Секция аналитики (верхняя часть) */
 .analytics-section {
   background-color: #000000;
-  padding: 40px 0;
+  padding: 20px 0;
   display: flex;
   position: relative;
-  min-height: 600px;
 }
 
 .analytics-left {
@@ -69,13 +68,13 @@ body {
 }
 
 .portfolio-image {
-  width: 520px;
-  height: 520px;
+  width: 100%;
+  max-width: 550px;
+  height: 550px;
   background-color: #CCCCCC;
   border-radius: 28px;
   animation: slideInLeft 1s ease 0.3s both;
   transition: transform 0.5s ease, box-shadow 0.5s ease;
-  margin-bottom: 30px;
   position: relative;
 }
 
@@ -83,10 +82,9 @@ body {
   width: 100%;
   display: flex;
   justify-content: center;
-  margin-top: 0;
-  margin-bottom: 15px;
   position: absolute;
   bottom: -25px;
+  left: 0;
 }
 
 .analytics-search {
@@ -127,20 +125,20 @@ body {
 
 .analytics-content {
   width: 50%;
-  padding: 20px 30px;
+  padding: 35px 30px;
   display: flex;
   flex-direction: column;
-  gap: 25px;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 .analytics-title {
   font-family: 'Neue Power', 'Koulen', sans-serif;
   font-size: 72px;
-  line-height: 90%;
+  line-height: 100%;
   letter-spacing: -0.02em;
   color: #08E5CF;
   margin-bottom: 35px;
+  margin-top: 0;
   animation: slideInRight 0.8s ease 0.4s both;
 }
 
@@ -179,7 +177,6 @@ body {
   font-size: 15px;
   min-width: 70px;
   text-align: center;
-  transition: transform 0.3s ease, background-color 0.3s ease;
 }
 
 .stat-value:hover {
@@ -194,7 +191,6 @@ body {
 
 .categories-section {
   margin-top: 30px;
-  animation: slideInRight 0.8s ease 0.9s both;
 }
 
 .categories-title {
@@ -207,7 +203,7 @@ body {
 .categories-chart {
   background-color: #FFFFFF;
   border-radius: 15px;
-  padding: 40px;
+  padding: 35px;
   color: #000000;
 }
 
@@ -290,13 +286,6 @@ body {
   cursor: pointer;
   margin-top: 30px;
   align-self: flex-start;
-  transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-  animation: fadeIn 0.8s ease 1.8s both;
-}
-
-.download-report:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
 /* Секция Мои стартапы */
