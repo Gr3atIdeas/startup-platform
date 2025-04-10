@@ -79,6 +79,12 @@
       <div class="analytics-section">
         <div class="image-container">
           <div class="portfolio-image"></div>
+          <div class="analytics-search-container">
+            <div class="analytics-search">
+              <i class="fas fa-search search-icon"></i>
+              <input type="text" placeholder="Поиск" id="analytics-search-input">
+            </div>
+          </div>
         </div>
         <div class="analytics-content">
           <h1 class="analytics-title">Аналитика</h1>
@@ -165,6 +171,11 @@
         </div>
         
         <div class="search-filters">
+          <div class="search-input">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" placeholder="Поиск" id="startup-search">
+          </div>
+          
           <div class="filter-buttons">
             <button class="filter-btn active" data-filter="all">Все</button>
             <button class="filter-btn" data-filter="category">Категория</button>
@@ -273,6 +284,21 @@
     
     <script>
       document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('startup-search');
+        if (searchInput) {
+          searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            document.querySelectorAll('.startup-card').forEach(card => {
+              const name = card.getAttribute('data-name').toLowerCase();
+              if (name.includes(searchTerm)) {
+                card.style.display = 'flex';
+              } else {
+                card.style.display = 'none';
+              }
+            });
+          });
+        }
+        
         const filterButtons = document.querySelectorAll('.filter-btn');
         filterButtons.forEach(button => {
           button.addEventListener('click', function() {
