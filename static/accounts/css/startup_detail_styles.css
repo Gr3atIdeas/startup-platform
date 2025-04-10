@@ -1572,3 +1572,75 @@ main.content {
 .gallery-item:hover img, .gallery-large:hover img {
   transform: scale(1.05);
 } 
+
+/* Секция модерации */
+.moderator-section {
+  margin-bottom: 40px;
+  width: 100%;
+}
+
+.moderator-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.moderator-textarea {
+  width: 50%;
+  height: 100px;
+  border: 1px solid #000000;
+  border-radius: 20px;
+  padding: 15px 20px;
+  font-size: 14px;
+  resize: vertical;
+  font-family: 'Circe', sans-serif;
+}
+
+.moderator-textarea:focus {
+  border-color: #7B61FF;
+  box-shadow: 0 0 0 2px rgba(123, 97, 255, 0.2);
+  outline: none;
+}
+
+.moderator-actions {
+  display: flex;
+  gap: 15px;
+}
+
+.action-button.approve-button {
+  background: #36D302;
+  width: 150px;
+  padding: 10px 20px;
+  height: 44px;
+}
+
+.action-button.approve-button:hover {
+  background: #2eba02;
+}
+
+.action-button.reject-button {
+  background: #F05252;
+  width: 150px;
+  padding: 10px 20px;
+  height: 44px;
+}
+
+.action-button.reject-button:hover {
+  background: #d94444;
+}
+
+/* Комментарий модератора */
+.moderator-comment-section {
+  margin-bottom: 40px;
+  width: 100%;
+}
+
+.moderator-comment {
+  font-size: 16px;
+  line-height: 1.4;
+  color: #000000;
+  background: #F2F4FF;
+  padding: 15px;
+  border-radius: 15px;
+  border: 1px solid #E5E7EB;
+}
