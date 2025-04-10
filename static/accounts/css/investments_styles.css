@@ -3,6 +3,22 @@
   background-color: #000000;
 }
 
+/* Стили для футера на странице с черной темой */
+.black-theme footer.site-footer {
+  background-image: none !important; 
+  background-color: #000000 !important;
+  border-top: 1px solid #333333 !important;
+}
+
+.black-theme footer.site-footer * {
+  color: #FFFFFF !important;
+}
+
+.black-theme footer.site-footer a:hover {
+  color: #08E5CF !important;
+  text-decoration: none;
+}
+
 /* Общие стили для страницы инвестиций */
 .portfolio-container {
   width: 100%;

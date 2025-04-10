@@ -12,13 +12,13 @@
       background-color: #000000;
     }
     
-    header.header, footer.site-footer {
+    header.header {
       background-color: #000000 !important;
       border-color: #333333 !important;
     }
     
-    header.header a, footer.site-footer a, 
-    header.header .header-logo-text, footer.site-footer .footer-logo {
+    header.header a, 
+    header.header .header-logo-text {
       color: #FFFFFF !important;
     }
     
@@ -33,6 +33,21 @@
     
     .nav-menu a.active {
       background-color: #C1C1C1 !important;
+    }
+    
+    /* Стили для футера - черный фон без изображения */
+    footer.site-footer {
+      background-image: none !important;
+      background-color: #000000 !important;
+      border-top: 1px solid #333333 !important;
+    }
+    
+    footer.site-footer * {
+      color: #FFFFFF !important;
+    }
+    
+    footer.site-footer a:hover {
+      color: #08E5CF !important;
     }
   </style>
 {% endblock %}
@@ -146,7 +161,7 @@
         
         <div class="startups-grid">
           <!-- Карточки стартапов - только стартапы конкретного инвестора -->
-          {% for startup in owner_startups %}
+          {% for startup in investor_startups %}
           <div class="startup-card" data-category="{{ startup.category|default:'Все' }}" data-name="{{ startup.name|default:'Unnamed' }}">
             <div class="startup-info">
               <div class="startup-avatar" {% if startup.image_url %}style="background-image: url('{{ startup.image_url }}'); background-size: cover;"{% endif %}></div>
@@ -185,42 +200,15 @@
             </div>
           </div>
           {% empty %}
-          <!-- Если нет стартапов, показываем примеры -->
-          {% for i in '123'|make_list %}
-          <div class="startup-card">
-            <div class="startup-info">
-              <div class="startup-avatar"></div>
-              <div class="startup-name">Ромашка</div>
-              <div class="startup-rating">
-                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-              </div>
-              <i class="fas fa-comment-dots comment-icon"></i>
-            </div>
-            
-            <div class="startup-details">
-              <div class="startup-status">
-                <span class="status-label">Статус</span>
-                <div class="status-badge">Активен</div>
-              </div>
-              
-              <div class="startup-funding">
-                <span class="funding-label">Цель финансирования</span>
-                <div class="funding-amount">3 675 998 ₽</div>
-              </div>
-              
-              <div class="startup-invested">
-                <span class="invested-label">Сумма инвестированная</span>
-                <div class="invested-amount">25 600 ₽</div>
-              </div>
-              
-              <div class="startup-category">Категория: Досуг</div>
-            </div>
+          <div class="no-startups-message" style="grid-column: 1 / -1; text-align: center; padding: 50px;">
+            <h3>У вас пока нет стартапов</h3>
+            <p>Здесь будут отображаться стартапы, которые вы создали.</p>
+            <a href="{% url 'create_startup' %}" class="btn btn-primary" style="display: inline-block; margin-top: 20px; background-color: #000; color: #fff; padding: 10px 20px; border-radius: 99px; text-decoration: none;">Создать стартап</a>
           </div>
-          {% endfor %}
           {% endfor %}
         </div>
         
-        {% if owner_startups|length > 6 %}
+        {% if investor_startups|length > 6 %}
         <button class="show-more-btn" id="load-more">
           <i class="fas fa-eye"></i>
           Показать еще
