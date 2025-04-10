@@ -10,6 +10,10 @@
   border-top: 1px solid #333333 !important;
 }
 
+.black-theme footer.site-footer .wave-container {
+  display: none !important;
+}
+
 .black-theme footer.site-footer * {
   color: #FFFFFF !important;
 }
