@@ -7,7 +7,6 @@
   {{ block.super }}
   <link rel="stylesheet" href="{% static 'accounts/css/investments_styles.css' %}">
   <style>
-    /* Переопределение стилей для black-theme */
     body {
       background-color: #000000;
       -webkit-font-smoothing: antialiased;
@@ -16,7 +15,7 @@
     
     header.header {
       background-color: #000000 !important;
-      border-color: #333333 !important;
+      border: none !important;
     }
     
     header.header a, 
@@ -27,6 +26,7 @@
     header.header .search-input {
       background-color: rgba(255, 255, 255, 0.19) !important;
       border-color: #B0B0B0 !important;
+      display: block !important;
     }
     
     .nav-menu a:hover {
@@ -37,7 +37,6 @@
       background-color: #C1C1C1 !important;
     }
     
-    /* Полностью убираем изображение и фон футера - более агрессивный подход */
     footer.site-footer {
       background-image: none !important;
       background-color: #000000 !important;
@@ -63,12 +62,10 @@
       color: #08E5CF !important;
     }
     
-    /* ФИКС: Принудительное скрытие всех глобальных полей поиска */
     header .search-container, 
     .header .search-container,
-    .header-search,
-    .search-form:not(.startups-search) {
-      display: none !important;
+    .header-search {
+      display: block !important;
     }
   </style>
 {% endblock %}
@@ -168,11 +165,6 @@
         </div>
         
         <div class="search-filters">
-          <div class="search-input">
-            <i class="fas fa-search search-icon"></i>
-            <input type="text" placeholder="Поиск" id="startup-search">
-          </div>
-          
           <div class="filter-buttons">
             <button class="filter-btn active" data-filter="all">Все</button>
             <button class="filter-btn" data-filter="category">Категория</button>
@@ -281,21 +273,6 @@
     
     <script>
       document.addEventListener('DOMContentLoaded', function() {
-        const searchInput = document.getElementById('startup-search');
-        if (searchInput) {
-          searchInput.addEventListener('input', function() {
-            const searchTerm = this.value.toLowerCase();
-            document.querySelectorAll('.startup-card').forEach(card => {
-              const name = card.getAttribute('data-name').toLowerCase();
-              if (name.includes(searchTerm)) {
-                card.style.display = 'flex';
-              } else {
-                card.style.display = 'none';
-              }
-            });
-          });
-        }
-        
         const filterButtons = document.querySelectorAll('.filter-btn');
         filterButtons.forEach(button => {
           button.addEventListener('click', function() {
