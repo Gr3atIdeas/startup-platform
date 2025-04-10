@@ -278,12 +278,16 @@ class StartupVotes(models.Model):
         unique_together = (('user', 'startup'),)
 
 class UserVotes(models.Model):
-    user = models.ForeignKey('Users', on_delete=models.CASCADE)
-    startup = models.ForeignKey('Startups', on_delete=models.CASCADE)
-    rating = models.IntegerField()
+    vote_id = models.AutoField(primary_key=True)
+    user = models.ForeignKey('Users', on_delete=models.CASCADE, db_column='user_id')
+    startup = models.ForeignKey('Startups', on_delete=models.CASCADE, db_column='startup_id')
+    rating = models.IntegerField(db_column='vote_value')
+    created_at = models.DateTimeField(blank=True, null=True)
 
     class Meta:
+        db_table = 'startup_votes'
         unique_together = ('user', 'startup')
+        managed = False
 
     def __str__(self):
         return f"{self.user.email} - {self.startup.title}: {self.rating}"

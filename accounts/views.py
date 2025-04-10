@@ -629,7 +629,12 @@ def vote_startup(request, startup_id):
     if UserVotes.objects.filter(user=request.user, startup=startup).exists():
         return JsonResponse({'success': False, 'error': 'Вы уже голосовали за этот стартап'})
 
-    UserVotes.objects.create(user=request.user, startup=startup, rating=rating)
+    UserVotes.objects.create(
+        user=request.user,
+        startup=startup,
+        rating=rating,
+        created_at=timezone.now()
+    )
     startup.total_voters += 1
     startup.sum_votes += rating
     startup.save()
