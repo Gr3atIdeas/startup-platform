@@ -1644,3 +1644,18 @@ main.content {
   border-radius: 15px;
   border: 1px solid #E5E7EB;
 }
+
+/* Интерактивные звезды для голосования */
+.rating-stars.interactive i {
+  cursor: pointer;
+}
+
+.rating-stars.interactive i:hover,
+.rating-stars.interactive i:hover ~ i {
+  color: #D9D9D9 !important; /* Серый при наведении на последующие звезды */
+}
+
+.rating-stars.interactive i:hover,
+.rating-stars.interactive i.active {
+  color: #7B61FF !important; /* Фиолетовый для выбранных звезд */
+}

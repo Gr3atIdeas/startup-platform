@@ -98,6 +98,11 @@ def startup_detail(request, startup_id):
     average_rating = startup.sum_votes / startup.total_voters if startup.total_voters > 0 else 0
     comments = Comments.objects.filter(startup_id=startup).order_by('-created_at')
 
+    # Проверяем, голосовал ли текущий пользователь
+    user_has_voted = False
+    if request.user.is_authenticated:
+        user_has_voted = UserVotes.objects.filter(user=request.user, startup=startup).exists()
+
     # Добавляем проверку для модератора
     moderator_comment_form = None
     if request.user.is_authenticated and hasattr(request.user, 'role') and request.user.role.role_name == 'moderator':
@@ -149,7 +154,8 @@ def startup_detail(request, startup_id):
         'owner_email': startup.owner.email if startup.owner else 'Не указано',
         'comments': comments,
         'form': form,
-        'show_moderator_comment': show_moderator_comment,  # Добавляем флаг для отображения комментария
+        'show_moderator_comment': show_moderator_comment,
+        'user_has_voted': user_has_voted,  # Добавляем флаг, голосовал ли пользователь
     })
 
 # Страница инвестиций

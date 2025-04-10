@@ -60,11 +60,19 @@
         <div class="category-label">Категория: <span class="category-value">{{ startup.direction.direction_name|default:"Досуг" }}</span></div>
         
         <div class="rating-container">
-          <div class="rating-stars">
-            {% for i in "12345" %}
-              <i class="fas fa-star {% if forloop.counter <= average_rating %}active{% endif %}"></i>
-            {% endfor %}
-          </div>
+          {% if user.is_authenticated and not user_has_voted %}
+            <div class="rating-stars interactive" data-startup-id="{{ startup.startup_id }}">
+              {% for i in "12345" %}
+                <i class="fas fa-star" data-rating="{{ forloop.counter }}"></i>
+              {% endfor %}
+            </div>
+          {% else %}
+            <div class="rating-stars">
+              {% for i in "12345" %}
+                <i class="fas fa-star {% if forloop.counter <= average_rating|floatformat:0 %}active{% endif %}"></i>
+              {% endfor %}
+            </div>
+          {% endif %}
           <div class="comments-link">Комментарии</div>
         </div>
         
@@ -408,6 +416,44 @@
         showMoreCommentsBtn.style.display = 'inline-flex';
       });
     }
+
+    // Обработчик кликов по звездочкам для голосования
+    document.querySelectorAll('.rating-stars.interactive i').forEach(star => {
+      star.addEventListener('click', function() {
+        const rating = this.getAttribute('data-rating');
+        const startupId = this.parentElement.getAttribute('data-startup-id');
+        
+        fetch(`/vote/${startupId}/`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': document.querySelector('input[name="csrfmiddlewaretoken"]').value
+          },
+          body: `rating=${rating}`
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            const starsContainer = document.querySelector('.rating-stars.interactive');
+            starsContainer.classList.remove('interactive');
+            const stars = starsContainer.querySelectorAll('i');
+            stars.forEach((s, index) => {
+              if (index < Math.round(data.average_rating)) {
+                s.classList.add('active');
+              } else {
+                s.classList.remove('active');
+              }
+            });
+          } else {
+            alert(data.error || 'Ошибка при голосовании');
+          }
+        })
+        .catch(error => {
+          console.error('Ошибка:', error);
+          alert('Произошла ошибка при голосовании');
+        });
+      });
+    });
   });
 </script>
 {% endblock %}
