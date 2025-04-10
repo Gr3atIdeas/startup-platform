@@ -13,7 +13,7 @@ body {
   background-color: #000000;
 }
 
-/* Стили для футера на странице с черной темой - более агрессивный подход */
+/* Стили для футера на странице с черной темой */
 .black-theme footer.site-footer {
   background-image: none !important; 
   background-color: #000000 !important;
@@ -40,43 +40,6 @@ body {
   text-decoration: none;
 }
 
-/* Скрываем глобальное поле поиска в хедере на странице Портфель */
-.black-theme header .search-container {
-  display: none !important;
-}
-
-/* ФИКС: Полностью переписываем стили для поля поиска в разделе стартапов */
-.my-startups-section .search-filters {
-  position: relative;
-}
-
-.my-startups-section .search-input {
-  position: relative;
-  width: 352px;
-  margin-bottom: 0;
-  background-color: transparent !important;
-}
-
-.my-startups-section .search-input input {
-  width: 100%;
-  height: 36px;
-  padding: 8px 30px 8px 40px;
-  background-color: #FFFFFF !important;
-  border: 1px solid #000000;
-  border-radius: 99px;
-  font-size: 14px;
-  color: #000000;
-}
-
-.my-startups-section .search-icon {
-  position: absolute;
-  left: 15px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #A1A0A0;
-  z-index: 11;
-}
-
 /* Общие стили для страницы инвестиций */
 .portfolio-container {
   width: 100%;
@@ -96,27 +59,64 @@ body {
   min-height: 600px;
 }
 
-.image-container {
+.analytics-left {
   width: 50%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   padding: 20px;
 }
 
 .portfolio-image {
-  width: 587px;
-  height: 596px;
-  background-color: #FFFFFF;
+  width: 450px;
+  height: 450px;
+  background-color: #CCCCCC;
   border-radius: 28px;
   animation: slideInLeft 1s ease 0.3s both;
   transition: transform 0.5s ease, box-shadow 0.5s ease;
+  margin-bottom: 20px;
 }
 
-.portfolio-image:hover {
-  transform: scale(1.02);
-  box-shadow: 0 10px 25px rgba(255, 255, 255, 0.1);
+.analytics-search-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.analytics-search {
+  position: relative;
+  width: 352px;
+  background-color: #2E2E2E;
+  border-radius: 99px;
+  display: flex;
+  align-items: center;
+  padding: 8px 15px;
+}
+
+.analytics-search input {
+  width: 100%;
+  height: 30px;
+  background-color: transparent !important;
+  border: none;
+  color: #FFFFFF;
+  padding-left: 30px;
+  font-size: 14px;
+}
+
+.analytics-search input::placeholder {
+  color: #AAAAAA;
+}
+
+.analytics-search input:focus {
+  outline: none;
+}
+
+.analytics-search .search-icon {
+  position: absolute;
+  left: 15px;
+  color: #AAAAAA;
 }
 
 .analytics-content {
@@ -358,7 +358,8 @@ body {
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
-.search-filters {
+/* Исправления для секции поиска в разделе "Мои стартапы" */
+.startups-filters {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -367,14 +368,13 @@ body {
   animation: slideInUp 0.8s ease 0.9s both;
 }
 
-.search-input {
+.startups-search {
   position: relative;
   width: 352px;
   margin-bottom: 0;
-  background-color: transparent !important;
 }
 
-.search-input input {
+.startups-search input {
   width: 100%;
   height: 36px;
   padding: 8px 30px 8px 40px;
@@ -385,7 +385,7 @@ body {
   color: #000000;
 }
 
-.search-input .search-icon {
+.startups-search .search-icon {
   position: absolute;
   left: 15px;
   top: 50%;
@@ -664,7 +664,7 @@ body {
     flex-direction: column;
   }
   
-  .image-container,
+  .analytics-left,
   .analytics-content {
     width: 100%;
   }
@@ -684,12 +684,12 @@ body {
     font-size: 60px;
   }
   
-  .search-filters {
+  .startups-filters {
     flex-direction: column;
     align-items: flex-start;
   }
   
-  .search-input {
+  .startups-search {
     width: 100%;
   }
   
@@ -702,45 +702,4 @@ body {
   .startup-details {
     width: 100%;
   }
-}
-
-.analytics-search-container {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-}
-
-.analytics-search {
-  position: relative;
-  width: 352px;
-  background-color: #2E2E2E;
-  border-radius: 99px;
-  display: flex;
-  align-items: center;
-  padding: 8px 15px;
-}
-
-.analytics-search input {
-  width: 100%;
-  height: 30px;
-  background-color: transparent !important;
-  border: none;
-  color: #FFFFFF;
-  padding-left: 30px;
-  font-size: 14px;
-}
-
-.analytics-search input::placeholder {
-  color: #AAAAAA;
-}
-
-.analytics-search input:focus {
-  outline: none;
-}
-
-.analytics-search .search-icon {
-  position: absolute;
-  left: 15px;
-  color: #AAAAAA;
 } 
