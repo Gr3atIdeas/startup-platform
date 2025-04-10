@@ -1,8 +1,277 @@
 {% extends 'accounts/base.html' %}
+{% load static %}
 
-{% block title %}Инвестиции{% endblock %}
+{% block title %}Портфель{% endblock %}
+
+{% block head_extra %}
+  {{ block.super }}
+  <link rel="stylesheet" href="{% static 'accounts/css/investments_styles.css' %}">
+{% endblock %}
 
 {% block content %}
-    <h1>Инвестиции</h1>
-    <!-- Здесь будет информация об инвестициях -->
+  {% if user.is_authenticated and user.role.role_name == 'investor' %}
+    <div class="portfolio-container">
+      <!-- Верхняя секция с аналитикой -->
+      <div class="analytics-section">
+        <div class="image-container">
+          <div class="portfolio-image"></div>
+        </div>
+        <div class="analytics-content">
+          <h1 class="analytics-title">Аналитика</h1>
+          
+          <div class="stats-container">
+            <div class="stat-item">
+              <span class="stat-label">Кол-во стартапов</span>
+              <div class="stat-value">{{ startups_count|default:"12" }}</div>
+            </div>
+            
+            <div class="stat-item">
+              <span class="stat-label">Общая сумма инвестирования</span>
+              <div class="stat-value">{{ total_investment|default:"3 675 998" }}</div>
+            </div>
+            
+            <div class="stat-item">
+              <span class="stat-label">Макс. сумма инвестирования</span>
+              <span class="stat-value-simple">{{ max_investment|default:"254 678 987" }} ₽</span>
+            </div>
+            
+            <div class="stat-item">
+              <span class="stat-label">Мин. сумма инвестирования</span>
+              <span class="stat-value-simple">{{ min_investment|default:"25 600" }} ₽</span>
+            </div>
+          </div>
+          
+          <div class="categories-section">
+            <h3 class="categories-title">Категории</h3>
+            <div class="categories-chart">
+              <div class="chart-bars">
+                {% for category in investment_categories|slice:":4" %}
+                <div class="chart-bar bar-{{ forloop.counter }}" {% if category.percentage %}style="width: {{ category.percentage }}%;"{% endif %}></div>
+                {% empty %}
+                <div class="chart-bar bar-1"></div>
+                <div class="chart-bar bar-2"></div>
+                <div class="chart-bar bar-3"></div>
+                <div class="chart-bar bar-4"></div>
+                {% endfor %}
+              </div>
+              <div class="chart-legend">
+                {% for category in investment_categories|slice:":4" %}
+                <div class="legend-item">
+                  <div class="legend-color color-{{ forloop.counter }}"></div>
+                  <span class="legend-text">{{ category.name }}</span>
+                </div>
+                {% empty %}
+                <div class="legend-item">
+                  <div class="legend-color color-1"></div>
+                  <span class="legend-text">Медицина</span>
+                </div>
+                <div class="legend-item">
+                  <div class="legend-color color-2"></div>
+                  <span class="legend-text">ИИ</span>
+                </div>
+                <div class="legend-item">
+                  <div class="legend-color color-3"></div>
+                  <span class="legend-text">Игры</span>
+                </div>
+                <div class="legend-item">
+                  <div class="legend-color color-4"></div>
+                  <span class="legend-text">Картинг</span>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+          
+          <button class="download-report">Скачать отчет</button>
+        </div>
+      </div>
+      
+      <!-- Раздел Мои стартапы -->
+      <div class="my-startups-section">
+        <div class="startups-header">
+          <div class="startups-titles">
+            <h2 class="startups-title-main">МОИ</h2>
+            <h2 class="startups-title-sub">СТАРТАПЫ</h2>
+          </div>
+          
+          <div class="total-investment">
+            <span class="investment-label">инвестировано</span>
+            <div class="investment-amount">{{ total_investment|default:"3 675 998" }}</div>
+          </div>
+        </div>
+        
+        <div class="search-filters">
+          <div class="search-input">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" placeholder="Поиск" id="startup-search">
+          </div>
+          
+          <div class="filter-buttons">
+            <button class="filter-btn active" data-filter="all">Все</button>
+            <button class="filter-btn" data-filter="category">Категория</button>
+            <button class="filter-btn" data-filter="new">Новые</button>
+          </div>
+        </div>
+        
+        <div class="startups-grid">
+          <!-- Карточки стартапов -->
+          {% for startup in investor_startups %}
+          <div class="startup-card" data-category="{{ startup.category|default:'Все' }}" data-name="{{ startup.name|default:'Unnamed' }}">
+            <div class="startup-info">
+              <div class="startup-avatar" {% if startup.image_url %}style="background-image: url('{{ startup.image_url }}'); background-size: cover;"{% endif %}></div>
+              <div class="startup-name">{{ startup.name|default:"Стартап" }}</div>
+              <div class="startup-rating">
+                {% with rating=startup.rating|default:5 %}
+                  {% for i in "12345"|make_list %}
+                    {% if forloop.counter <= rating %}
+                    <i class="fas fa-star"></i>
+                    {% else %}
+                    <i class="far fa-star"></i>
+                    {% endif %}
+                  {% endfor %}
+                {% endwith %}
+              </div>
+              <i class="fas fa-comment-dots comment-icon"></i>
+            </div>
+            
+            <div class="startup-details">
+              <div class="startup-status">
+                <span class="status-label">Статус</span>
+                <div class="status-badge">{{ startup.status|default:"Активен" }}</div>
+              </div>
+              
+              <div class="startup-funding">
+                <span class="funding-label">Цель финансирования</span>
+                <div class="funding-amount">{{ startup.funding_goal|default:"3 675 998" }} ₽</div>
+              </div>
+              
+              <div class="startup-invested">
+                <span class="invested-label">Сумма инвестированная</span>
+                <div class="invested-amount">{{ startup.invested_amount|default:"25 600" }} ₽</div>
+              </div>
+              
+              <div class="startup-category">Категория: {{ startup.category|default:"Досуг" }}</div>
+            </div>
+          </div>
+          {% empty %}
+          <!-- Если нет стартапов, показываем примеры -->
+          {% for i in '123'|make_list %}
+          <div class="startup-card">
+            <div class="startup-info">
+              <div class="startup-avatar"></div>
+              <div class="startup-name">Ромашка</div>
+              <div class="startup-rating">
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+              </div>
+              <i class="fas fa-comment-dots comment-icon"></i>
+            </div>
+            
+            <div class="startup-details">
+              <div class="startup-status">
+                <span class="status-label">Статус</span>
+                <div class="status-badge">Активен</div>
+              </div>
+              
+              <div class="startup-funding">
+                <span class="funding-label">Цель финансирования</span>
+                <div class="funding-amount">3 675 998 ₽</div>
+              </div>
+              
+              <div class="startup-invested">
+                <span class="invested-label">Сумма инвестированная</span>
+                <div class="invested-amount">25 600 ₽</div>
+              </div>
+              
+              <div class="startup-category">Категория: Досуг</div>
+            </div>
+          </div>
+          {% endfor %}
+          {% endfor %}
+        </div>
+        
+        {% if investor_startups|length > 6 %}
+        <button class="show-more-btn" id="load-more">
+          <i class="fas fa-eye"></i>
+          Показать еще
+        </button>
+        {% endif %}
+      </div>
+    </div>
+    
+    <!-- Добавляем JavaScript для фильтрации и поиска -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Поиск по стартапам
+        const searchInput = document.getElementById('startup-search');
+        if (searchInput) {
+          searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            document.querySelectorAll('.startup-card').forEach(card => {
+              const name = card.getAttribute('data-name').toLowerCase();
+              if (name.includes(searchTerm)) {
+                card.style.display = 'flex';
+              } else {
+                card.style.display = 'none';
+              }
+            });
+          });
+        }
+        
+        // Фильтрация по кнопкам
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        filterButtons.forEach(button => {
+          button.addEventListener('click', function() {
+            // Убираем активный класс со всех кнопок
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            // Добавляем активный класс к нажатой кнопке
+            this.classList.add('active');
+            
+            const filter = this.getAttribute('data-filter');
+            const cards = document.querySelectorAll('.startup-card');
+            
+            if (filter === 'all') {
+              cards.forEach(card => card.style.display = 'flex');
+            } else if (filter === 'category') {
+              // Показать диалог выбора категории или другую логику
+              alert('Выберите категорию для фильтрации');
+            } else if (filter === 'new') {
+              // Фильтрация для новых стартапов
+              // Реализация зависит от бизнес-логики
+            }
+          });
+        });
+        
+        // Кнопка "Показать еще"
+        const loadMoreBtn = document.getElementById('load-more');
+        const startupCards = document.querySelectorAll('.startup-card');
+        
+        if (loadMoreBtn && startupCards.length > 6) {
+          // Изначально показываем только первые 6 карточек
+          for (let i = 6; i < startupCards.length; i++) {
+            startupCards[i].style.display = 'none';
+          }
+          
+          loadMoreBtn.addEventListener('click', function() {
+            // Показываем все карточки
+            startupCards.forEach(card => card.style.display = 'flex');
+            // Скрываем кнопку
+            this.style.display = 'none';
+          });
+        }
+      });
+    </script>
+  {% else %}
+    <div class="access-restricted">
+      <h2>Доступ ограничен</h2>
+      <p>Эта страница доступна только для пользователей со статусом "Инвестор". Пожалуйста, войдите в аккаунт или зарегистрируйтесь как инвестор.</p>
+      {% if user.is_authenticated %}
+        <p>Ваша текущая роль: {{ user.role.role_name|default:"не указана" }}</p>
+        <p>Чтобы изменить роль, перейдите в настройки профиля.</p>
+        <a href="{% url 'profile' %}" class="access-button">Перейти в профиль</a>
+      {% else %}
+        <a href="{% url 'login' %}" class="access-button">Войти</a>
+        <a href="{% url 'register' %}" class="access-button" style="margin-left: 10px;">Зарегистрироваться</a>
+      {% endif %}
+    </div>
+  {% endif %}
 {% endblock %}
