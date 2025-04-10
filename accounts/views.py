@@ -98,7 +98,28 @@ def startup_detail(request, startup_id):
     average_rating = startup.sum_votes / startup.total_voters if startup.total_voters > 0 else 0
     comments = Comments.objects.filter(startup_id=startup).order_by('-created_at')
 
-    if request.method == 'POST' and request.user.is_authenticated:
+    # Добавляем проверку для модератора
+    moderator_comment_form = None
+    if request.user.is_authenticated and hasattr(request.user, 'role') and request.user.role.role_name == 'moderator':
+        if request.method == 'POST' and 'moderator_comment' in request.POST:
+            comment = request.POST.get('moderator_comment', '')
+            action = request.POST.get('action', '')
+            if action == 'approve':
+                startup.moderator_comment = comment
+                startup.status = 'approved'
+                startup.status_id = ReviewStatuses.objects.get(status_name='Approved')
+                startup.save()
+                messages.success(request, 'Стартап одобрен.')
+                return redirect('startup_detail', startup_id=startup_id)
+            elif action == 'reject':
+                startup.moderator_comment = comment
+                startup.status = 'rejected'
+                startup.status_id = ReviewStatuses.objects.get(status_name='Rejected')
+                startup.save()
+                messages.success(request, 'Стартап отклонен.')
+                return redirect('startup_detail', startup_id=startup_id)
+
+    if request.method == 'POST' and request.user.is_authenticated and 'content' in request.POST:
         form = CommentForm(request.POST)
         if form.is_valid():
             comment = form.save(commit=False)
@@ -108,6 +129,12 @@ def startup_detail(request, startup_id):
             return redirect('startup_detail', startup_id=startup_id)
     else:
         form = CommentForm()
+
+    # Проверяем, является ли текущий пользователь модератором или владельцем, чтобы показать комментарий
+    show_moderator_comment = False
+    if request.user.is_authenticated:
+        if (hasattr(request.user, 'role') and request.user.role.role_name == 'moderator') or request.user == startup.owner:
+            show_moderator_comment = True
 
     return render(request, 'accounts/startup_detail.html', {
         'startup': startup,
@@ -122,6 +149,7 @@ def startup_detail(request, startup_id):
         'owner_email': startup.owner.email if startup.owner else 'Не указано',
         'comments': comments,
         'form': form,
+        'show_moderator_comment': show_moderator_comment,  # Добавляем флаг для отображения комментария
     })
 
 # Страница инвестиций

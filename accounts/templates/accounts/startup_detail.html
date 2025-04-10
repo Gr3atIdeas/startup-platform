@@ -47,7 +47,7 @@
       
       <div class="progress-indicator">
         <div class="progress-bar">
-          <div class="progress-fill" style="--height-value: {{ startup.percent_amount|default:"58" }}%;">
+          <div class="progress-fill" style="--height-value: {{ startup.percent_amount|default:'58' }}%;">
             <div class="progress-text">{{ startup.percent_amount|default:"58" }}%</div>
           </div>
         </div>
@@ -190,7 +190,28 @@
       <button class="report-button">Пожаловаться на стартап</button>
       <button class="action-button message-button">Написать автору</button>
     </div>
-    
+
+    {% if user.is_authenticated and user.role.role_name == 'moderator' and startup.status == 'pending' %}
+      <div class="moderator-section">
+        <h2 class="section-title">Модерация</h2>
+        <form method="post" class="moderator-form">
+          {% csrf_token %}
+          <textarea name="moderator_comment" class="moderator-textarea" placeholder="Оставьте комментарий для владельца стартапа...">{{ startup.moderator_comment }}</textarea>
+          <div class="moderator-actions">
+            <button type="submit" name="action" value="approve" class="action-button approve-button">Одобрить</button>
+            <button type="submit" name="action" value="reject" class="action-button reject-button">Отклонить</button>
+          </div>
+        </form>
+      </div>
+    {% endif %}
+
+    {% if show_moderator_comment and startup.moderator_comment %}
+      <div class="moderator-comment-section">
+        <h2 class="section-title">Комментарий модератора</h2>
+        <p class="moderator-comment">{{ startup.moderator_comment }}</p>
+      </div>
+    {% endif %}
+
     <div class="comments-section">
       <h2 class="section-title">Комментарии</h2>
       {% if comments %}
@@ -199,7 +220,7 @@
             <div class="comment-card {% if forloop.counter > 2 %}hidden{% endif %}">
               <div class="comment-header">
                 <div class="comment-author-info">
-                  <div class="author-avatar"></div>
+                  <div class="comment-author-avatar"></div>
                   <div class="comment-author-name">{{ comment.user_id.first_name|default:comment.user_id.email }}</div>
                 </div>
                 <div class="comment-date">{{ comment.created_at|date:"d/m/Y" }}</div>
@@ -309,7 +330,7 @@
 </div>
 
 <div id="lightbox" class="lightbox">
-  <span class="close-lightbox">&times;</span>
+  <span class="close-lightbox">×</span>
   <div class="lightbox-content">
     <img id="lightbox-img" />
     <video id="lightbox-video" controls></video>
