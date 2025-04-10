@@ -3,24 +3,61 @@
   background-color: #000000;
 }
 
-/* Стили для футера на странице с черной темой */
+/* Стили для футера на странице с черной темой - более агрессивный подход */
 .black-theme footer.site-footer {
   background-image: none !important; 
   background-color: #000000 !important;
   border-top: 1px solid #333333 !important;
 }
 
-.black-theme footer.site-footer .wave-container {
+.black-theme footer.site-footer .wave-container,
+.black-theme footer.site-footer img,
+.black-theme footer.site-footer svg,
+.black-theme footer.site-footer [class*="wave"],
+.black-theme footer.site-footer [class*="background"] {
   display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
 }
 
 .black-theme footer.site-footer * {
   color: #FFFFFF !important;
+  background-image: none !important;
 }
 
 .black-theme footer.site-footer a:hover {
   color: #08E5CF !important;
   text-decoration: none;
+}
+
+/* Скрываем глобальное поле поиска в хедере на странице Портфель */
+.black-theme header .search-container {
+  display: none !important;
+}
+
+/* Стили поля поиска в разделе Мои стартапы */
+.startups-search {
+  position: relative;
+  width: 352px;
+  z-index: 10;
+}
+
+.startups-search input {
+  width: 100%;
+  padding: 8px 30px 8px 40px;
+  border: 1px solid #000000;
+  border-radius: 99px;
+  font-size: 14px;
+  background-color: #FFFFFF !important;
+}
+
+.startups-search .search-icon {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #A1A0A0;
+  z-index: 11;
 }
 
 /* Общие стили для страницы инвестиций */

@@ -35,23 +35,35 @@
       background-color: #C1C1C1 !important;
     }
     
-    /* Полностью убираем изображение и фон футера */
+    /* Полностью убираем изображение и фон футера - более агрессивный подход */
     footer.site-footer {
       background-image: none !important;
       background-color: #000000 !important;
       border-top: 1px solid #333333 !important;
     }
     
-    footer.site-footer .wave-container {
+    footer.site-footer .wave-container,
+    footer.site-footer img,
+    footer.site-footer svg,
+    footer.site-footer [class*="wave"],
+    footer.site-footer [class*="background"] {
       display: none !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
     }
     
     footer.site-footer * {
       color: #FFFFFF !important;
+      background-image: none !important;
     }
     
     footer.site-footer a:hover {
       color: #08E5CF !important;
+    }
+    
+    /* Скрываем глобальное поле поиска в хедере на странице Портфель */
+    .black-theme header .search-container {
+      display: none !important;
     }
   </style>
 {% endblock %}
@@ -151,7 +163,7 @@
         </div>
         
         <div class="search-filters">
-          <div class="search-input">
+          <div class="search-input startups-search">
             <i class="fas fa-search search-icon"></i>
             <input type="text" placeholder="Поиск" id="startup-search">
           </div>
