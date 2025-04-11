@@ -116,6 +116,7 @@
         <div class="investors-count">
           <i class="fas fa-users"></i>
           <span>Инвестировало ({{ investors_count }})</span>
+          <div class="total-invested">{{ startup.total_invested|default:0|floatformat:2 }} ₽</div>
         </div>
       </div>
     </div>
@@ -338,6 +339,18 @@
   </div>
 </div>
 
+<!-- Модальное окно -->
+<div id="investModal" class="modal">
+  <div class="modal-content">
+    <h2>Подтверждение инвестиции</h2>
+    <p id="modalText"></p>
+    <div class="modal-buttons">
+      <button class="confirm-btn" id="confirmInvest">Подтвердить</button>
+      <button class="cancel-btn" id="cancelInvest">Отменить</button>
+    </div>
+  </div>
+</div>
+
 <div id="lightbox" class="lightbox">
   <span class="close-lightbox">×</span>
   <div class="lightbox-content">
@@ -458,57 +471,87 @@
 
     // Обработчик клика по кнопке "Инвестировать"
     const investButton = document.querySelector('.invest-button');
+    const modal = document.getElementById('investModal');
+    const modalText = document.getElementById('modalText');
+    const confirmInvest = document.getElementById('confirmInvest');
+    const cancelInvest = document.getElementById('cancelInvest');
+    let investAmount = 0;
+    let investStartupId = 0;
+
     if (investButton) {
       console.log('Кнопка "Инвестировать" найдена');
       investButton.addEventListener('click', function() {
         const amountInput = document.querySelector('.investment-amount');
-        const amount = amountInput.value;
-        const startupId = document.querySelector('.rating-stars').getAttribute('data-startup-id') || {{ startup.startup_id }};
+        investAmount = amountInput.value;
+        investStartupId = document.querySelector('.rating-stars').getAttribute('data-startup-id') || {{ startup.startup_id }};
 
-        console.log('Сумма:', amount, 'Startup ID:', startupId);
+        console.log('Сумма:', investAmount, 'Startup ID:', investStartupId);
 
-        if (!amount || amount <= 0) {
+        if (!investAmount || investAmount <= 0) {
           alert('Пожалуйста, введите сумму инвестиций больше 0');
           console.log('Сумма некорректна');
           return;
         }
 
-        fetch(`/invest/${startupId}/`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'X-CSRFToken': document.querySelector('input[name="csrfmiddlewaretoken"]').value
-          },
-          body: `amount=${amount}`
-        })
-        .then(response => {
-          console.log('Ответ сервера:', response);
-          return response.json();
-        })
-        .then(data => {
-          console.log('Данные от сервера:', data);
-          if (data.success) {
-            const progressFill = document.querySelector('.progress-fill');
-            const progressText = document.querySelector('.progress-text');
-            const investorsCount = document.querySelector('.investors-count span');
-            
-            progressFill.style.setProperty('--height-value', `${data.progress_percentage}%`);
-            progressText.textContent = `${Math.round(data.progress_percentage)}%`;
-            investorsCount.textContent = `Инвестировало (${data.investors_count})`;
-            amountInput.value = ''; // Очистка поля после инвестиции
-            alert('Инвестиция успешно совершена!');
-          } else {
-            alert(data.error || 'Ошибка при инвестировании');
-          }
-        })
-        .catch(error => {
-          console.error('Ошибка:', error);
-          alert('Произошла ошибка при инвестировании');
-        });
+        // Показать модальное окно
+        modalText.innerHTML = `Вы собираетесь инвестировать ${investAmount} ₽ в стартап "{{ startup.title }}". Подтвердите действие.`;
+        modal.style.display = 'flex';
       });
     } else {
       console.log('Кнопка "Инвестировать" не найдена');
     }
+
+    // Подтверждение инвестиции
+    confirmInvest.addEventListener('click', function() {
+      fetch(`/invest/${investStartupId}/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'X-CSRFToken': document.querySelector('input[name="csrfmiddlewaretoken"]').value
+        },
+        body: `amount=${investAmount}`
+      })
+      .then(response => {
+        console.log('Ответ сервера:', response);
+        return response.json();
+      })
+      .then(data => {
+        console.log('Данные от сервера:', data);
+        if (data.success) {
+          const progressFill = document.querySelector('.progress-fill');
+          const progressText = document.querySelector('.progress-text');
+          const investorsCount = document.querySelector('.investors-count span');
+          const totalInvested = document.querySelector('.total-invested');
+          
+          progressFill.style.setProperty('--height-value', `${data.progress_percentage}%`);
+          progressText.textContent = `${Math.round(data.progress_percentage)}%`;
+          investorsCount.textContent = `Инвестировало (${data.investors_count})`;
+          totalInvested.textContent = `${data.amount_raised.toFixed(2)} ₽`;
+          document.querySelector('.investment-amount').value = ''; // Очистка поля
+          alert('Инвестиция успешно совершена!');
+        } else {
+          alert(data.error || 'Ошибка при инвестировании');
+        }
+        modal.style.display = 'none';
+      })
+      .catch(error => {
+        console.error('Ошибка:', error);
+        alert('Произошла ошибка при инвестировании');
+        modal.style.display = 'none';
+      });
+    });
+
+    // Отмена инвестиции
+    cancelInvest.addEventListener('click', function() {
+      modal.style.display = 'none';
+    });
+
+    // Закрытие модального окна по клику вне области
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) {
+        modal.style.display = 'none';
+      }
+    });
   });
 </script>
 {% endblock %}
