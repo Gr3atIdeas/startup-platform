@@ -47,7 +47,7 @@
       
       <div class="progress-indicator">
         <div class="progress-bar">
-          <div class="progress-fill" style="--height-value: {{ progress_percentage|default:0 }}%;">
+          <div class="progress-fill" data-progress="{{ progress_percentage|default:0 }}">
             <div class="progress-text">{{ progress_percentage|default:0|floatformat:0 }}%</div>
           </div>
         </div>
@@ -361,6 +361,13 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
+    // Синхронизация прогресс-бара при загрузке страницы
+    const progressFill = document.querySelector('.progress-fill');
+    const progressText = document.querySelector('.progress-text');
+    const initialProgress = parseFloat(progressFill.getAttribute('data-progress')) || 0;
+    progressFill.style.setProperty('--height-value', `${initialProgress}%`);
+    progressText.textContent = `${Math.round(initialProgress)}%`;
+
     // Лайтбокс для изображений
     const lightbox = document.getElementById('lightbox');
     const lightboxImg = document.getElementById('lightbox-img');
