@@ -11,9 +11,9 @@ import logging
 import os
 from django.conf import settings
 from .forms import RegisterForm, LoginForm, StartupForm
-from .models import Users, Startups, ReviewStatuses, UserVotes, StartupTimeline, FileStorage, EntityTypes, FileTypes
+from .models import Users, Startups, ReviewStatuses, UserVotes, StartupTimeline, FileStorage, EntityTypes, FileTypes, InvestmentTransactions, TransactionTypes, PaymentMethods
 from .models import creative_upload_path, proof_upload_path, video_upload_path
-import uuid  # Добавляем импорт uuid
+import uuid
 from .models import Comments
 from .forms import CommentForm
 from django.db.models import Count
@@ -98,7 +98,7 @@ def startup_detail(request, startup_id):
     average_rating = startup.sum_votes / startup.total_voters if startup.total_voters > 0 else 0
     comments = Comments.objects.filter(startup_id=startup).order_by('-created_at')
     investors_count = startup.get_investors_count()
-    progress_percentage = startup.get_progress_percentage()
+    progress_percentage = startup.get_progress_percentage()  # Используем метод модели
 
     user_has_voted = False
     can_invest = False
@@ -667,9 +667,9 @@ def invest(request, startup_id):
             investor=request.user,
             amount=amount,
             is_micro=startup.micro_investment_available,
-            transaction_type_id=TransactionTypes.objects.get(type_name='investment'),
+            transaction_type=TransactionTypes.objects.get(type_name='investment'),  # Предполагаем, что такая запись есть
             transaction_status='completed',
-            payment_method_id=PaymentMethods.objects.get(method_name='default'),  # Предполагаем, что есть метод по умолчанию
+            payment_method=PaymentMethods.objects.get(method_name='default'),  # Предполагаем, что такая запись есть
             created_at=timezone.now(),
             updated_at=timezone.now()
         )

@@ -47,8 +47,8 @@
       
       <div class="progress-indicator">
         <div class="progress-bar">
-          <div class="progress-fill" style="--height-value: {{ progress_percentage|default:'58' }}%;">
-            <div class="progress-text">{{ progress_percentage|default:"58"|floatformat:0 }}%</div>
+          <div class="progress-fill" style="--height-value: {{ progress_percentage|default:0 }}%;">
+            <div class="progress-text">{{ progress_percentage|default:0|floatformat:0 }}%</div>
           </div>
         </div>
       </div>
