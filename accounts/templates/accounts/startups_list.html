@@ -128,7 +128,7 @@
             <div class="startup-info">
               <div class="startup-header">
                 <h3 class="startup-name">{{ startup.title }}</h3>
-                <div class="rating-stars">
+                <div class="rating-stars" data-rating="{{ startup.average_rating|default:0 }}">
                   {% for i in "12345" %}
                     <i class="fas fa-star {% if forloop.counter <= startup.average_rating|floatformat:0 %}active{% endif %}"></i>
                   {% endfor %}
@@ -184,5 +184,20 @@
     
     document.getElementById('filterForm').submit();
   }
+
+  // Синхронизация рейтинга при загрузке страницы
+  document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.rating-stars').forEach(stars => {
+      const rating = parseFloat(stars.getAttribute('data-rating')) || 0;
+      const starElements = stars.querySelectorAll('i');
+      starElements.forEach((star, index) => {
+        if (index < Math.round(rating)) {
+          star.classList.add('active');
+        } else {
+          star.classList.remove('active');
+        }
+      });
+    });
+  });
 </script>
 {% endblock %}
