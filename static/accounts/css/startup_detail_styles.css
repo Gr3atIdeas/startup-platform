@@ -1659,3 +1659,31 @@ main.content {
 .rating-stars.interactive i.active {
   color: #7B61FF !important; /* Фиолетовый для выбранных звезд */
 }
+/* Поле ввода суммы инвестиций */
+.investment-amount {
+  width: 247px;
+  height: 44px;
+  padding: 10px 20px;
+  border: 1px solid #000000;
+  border-radius: 10px;
+  font-family: 'Circe', sans-serif;
+  font-size: 15px;
+  color: #000000;
+  background: #FFFFFF;
+  text-align: center;
+  appearance: none; /* Стандартное свойство вместо -moz-appearance */
+}
+
+.investment-amount:focus {
+  border-color: #7B61FF;
+  box-shadow: 0 0 0 2px rgba(123, 97, 255, 0.2);
+  outline: none;
+}
+
+.investment-amount::-webkit-inner-spin-button,
+.investment-amount::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Убрано -moz-appearance: textfield; */
