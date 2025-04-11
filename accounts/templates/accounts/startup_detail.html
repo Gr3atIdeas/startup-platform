@@ -21,8 +21,23 @@
     <div class="top-section">
       <div class="left-column">
         <div class="planet-container">
-          {% if startup.status == 'approved' %}
-            <div class="status-badge">Активен</div>
+          {% if user.is_authenticated and user.role.role_name == 'moderator' %}
+            <form method="post" class="status-form">
+              {% csrf_token %}
+              <select name="status" class="status-select" onchange="this.form.submit()">
+                <option value="approved" {% if startup.status == 'approved' %}selected{% endif %}>Активен</option>
+                <option value="blocked" {% if startup.status == 'blocked' %}selected{% endif %}>Blocked</option>
+                <option value="closed" {% if startup.status == 'closed' %}selected{% endif %}>Closed</option>
+              </select>
+            </form>
+          {% else %}
+            {% if startup.status == 'approved' %}
+              <div class="status-badge">Активен</div>
+            {% elif startup.status == 'blocked' %}
+              <div class="status-badge">Blocked</div>
+            {% elif startup.status == 'closed' %}
+              <div class="status-badge">Closed</div>
+            {% endif %}
           {% endif %}
           
           {% if startup.logo_urls %}
@@ -67,7 +82,7 @@
               {% endfor %}
             </div>
           {% else %}
-            <div class="rating-stars">
+            <div class="rating-stars" data-rating="{{ average_rating|default:0 }}">
               {% for i in "12345" %}
                 <i class="fas fa-star {% if forloop.counter <= average_rating|floatformat:0 %}active{% endif %}"></i>
               {% endfor %}
@@ -367,6 +382,20 @@
     const initialProgress = parseFloat(progressFill.getAttribute('data-progress')) || 0;
     progressFill.style.setProperty('--height-value', `${initialProgress}%`);
     progressText.textContent = `${Math.round(initialProgress)}%`;
+
+    // Синхронизация рейтинга при загрузке страницы
+    const ratingStars = document.querySelector('.rating-stars:not(.interactive)');
+    if (ratingStars) {
+      const rating = parseFloat(ratingStars.getAttribute('data-rating')) || 0;
+      const stars = ratingStars.querySelectorAll('i');
+      stars.forEach((star, index) => {
+        if (index < Math.round(rating)) {
+          star.classList.add('active');
+        } else {
+          star.classList.remove('active');
+        }
+      });
+    }
 
     // Лайтбокс для изображений
     const lightbox = document.getElementById('lightbox');

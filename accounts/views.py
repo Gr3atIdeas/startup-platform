@@ -105,7 +105,7 @@ def startup_detail(request, startup_id):
     average_rating = startup.sum_votes / startup.total_voters if startup.total_voters > 0 else 0
     comments = Comments.objects.filter(startup_id=startup).order_by('-created_at')
     investors_count = startup.get_investors_count()
-    progress_percentage = startup.get_progress_percentage()  # Используем метод модели
+    progress_percentage = startup.get_progress_percentage()
 
     user_has_voted = False
     can_invest = False
@@ -114,6 +114,17 @@ def startup_detail(request, startup_id):
         can_invest = request.user.role.role_name == 'investor'
 
     if request.user.is_authenticated and hasattr(request.user, 'role') and request.user.role.role_name == 'moderator':
+        # Обработка изменения статуса
+        if request.method == 'POST' and 'status' in request.POST:
+            new_status = request.POST.get('status')
+            if new_status in ['approved', 'blocked', 'closed']:
+                startup.status = new_status
+                startup.status_id = ReviewStatuses.objects.get(status_name=new_status.capitalize())
+                startup.save()
+                messages.success(request, f'Статус стартапа изменён на "{new_status.capitalize()}".')
+                return redirect('startup_detail', startup_id=startup_id)
+
+        # Обработка одобрения/отклонения для статуса pending
         if request.method == 'POST' and 'moderator_comment' in request.POST:
             comment = request.POST.get('moderator_comment', '')
             action = request.POST.get('action', '')

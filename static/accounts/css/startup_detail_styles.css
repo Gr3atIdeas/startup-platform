@@ -1726,3 +1726,33 @@ main.content {
   background-color: #F05252;
   color: #fff;
 }
+
+/* Стили для формы изменения статуса */
+.status-form {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 1;
+}
+
+.status-select {
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(5px);
+  color: #FFFFFF;
+  padding: 5px 15px;
+  border: none;
+  border-radius: 20px;
+  font-size: 15px;
+  font-family: 'Circe', sans-serif;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.status-select:hover {
+  background: rgba(0, 0, 0, 0.9);
+}
+
+.status-select option {
+  background: #333;
+  color: #FFFFFF;
+}
