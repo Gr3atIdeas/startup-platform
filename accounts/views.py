@@ -17,6 +17,7 @@ import uuid
 from .models import Comments
 from .forms import CommentForm
 from django.db.models import Count
+from decimal import Decimal
 
 logger = logging.getLogger(__name__)
 
@@ -66,6 +67,12 @@ def user_logout(request):
     logout(request)
     messages.success(request, 'Вы успешно вышли из системы.')
     return redirect('home')
+
+def get_progress_percentage(self):
+    """Вычисляет процент выполнения цели финансирования."""
+    if self.funding_goal and self.amount_raised is not None:
+        return min((self.amount_raised / self.funding_goal) * 100, 100)
+    return 0
 
 def startups_list(request):
     startups = Startups.objects.filter(status='approved')
@@ -657,7 +664,7 @@ def invest(request, startup_id):
         return JsonResponse({'success': False, 'error': 'Только инвесторы могут инвестировать'})
 
     try:
-        amount = float(request.POST.get('amount', 0))
+        amount = Decimal(request.POST.get('amount', '0'))  # Преобразуем в Decimal
         if amount <= 0:
             return JsonResponse({'success': False, 'error': 'Сумма должна быть больше 0'})
         
@@ -667,17 +674,17 @@ def invest(request, startup_id):
             investor=request.user,
             amount=amount,
             is_micro=startup.micro_investment_available,
-            transaction_type=TransactionTypes.objects.get(type_name='investment'),  # Предполагаем, что такая запись есть
+            transaction_type=TransactionTypes.objects.get(type_name='investment'),
             transaction_status='completed',
-            payment_method=PaymentMethods.objects.get(method_name='default'),  # Предполагаем, что такая запись есть
+            payment_method=PaymentMethods.objects.get(method_name='default'),
             created_at=timezone.now(),
             updated_at=timezone.now()
         )
         transaction.save()
 
         # Обновление суммы собранных средств
-        startup.amount_raised = (startup.amount_raised or 0) + amount
-        startup.total_invested = (startup.total_invested or 0) + amount
+        startup.amount_raised = (startup.amount_raised or Decimal('0')) + amount  # Используем Decimal
+        startup.total_invested = (startup.total_invested or Decimal('0')) + amount  # Используем Decimal
         startup.save()
 
         # Подсчёт уникальных инвесторов и процента прогресса
@@ -686,9 +693,9 @@ def invest(request, startup_id):
 
         return JsonResponse({
             'success': True,
-            'amount_raised': float(startup.amount_raised),
+            'amount_raised': float(startup.amount_raised),  # Преобразуем обратно в float для JSON
             'investors_count': investors_count,
-            'progress_percentage': float(progress_percentage)
+            'progress_percentage': float(progress_percentage)  # Преобразуем в float для JSON
         })
     except Exception as e:
         logger.error(f"Ошибка при инвестировании: {str(e)}")

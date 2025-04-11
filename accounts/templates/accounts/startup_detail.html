@@ -108,11 +108,10 @@
           <i class="fas fa-chevron-down"></i>
         </div>
         
-        <button class="invest-button" {% if not can_invest %}disabled{% endif %}>
-          Инвестировать
-        </button>
-        
-        <input type="number" class="investment-amount" placeholder="Сумма инвестиций, ₽" min="0" step="1000">
+        {% if user.is_authenticated and user.role.role_name == 'investor' %}
+          <button class="invest-button">Инвестировать</button>
+          <input type="number" class="investment-amount" placeholder="Сумма инвестиций, ₽" min="0" step="1000">
+        {% endif %}
         
         <div class="investors-count">
           <i class="fas fa-users"></i>
@@ -460,13 +459,17 @@
     // Обработчик клика по кнопке "Инвестировать"
     const investButton = document.querySelector('.invest-button');
     if (investButton) {
+      console.log('Кнопка "Инвестировать" найдена');
       investButton.addEventListener('click', function() {
         const amountInput = document.querySelector('.investment-amount');
         const amount = amountInput.value;
         const startupId = document.querySelector('.rating-stars').getAttribute('data-startup-id') || {{ startup.startup_id }};
 
+        console.log('Сумма:', amount, 'Startup ID:', startupId);
+
         if (!amount || amount <= 0) {
           alert('Пожалуйста, введите сумму инвестиций больше 0');
+          console.log('Сумма некорректна');
           return;
         }
 
@@ -478,8 +481,12 @@
           },
           body: `amount=${amount}`
         })
-        .then(response => response.json())
+        .then(response => {
+          console.log('Ответ сервера:', response);
+          return response.json();
+        })
         .then(data => {
+          console.log('Данные от сервера:', data);
           if (data.success) {
             const progressFill = document.querySelector('.progress-fill');
             const progressText = document.querySelector('.progress-text');
@@ -499,6 +506,8 @@
           alert('Произошла ошибка при инвестировании');
         });
       });
+    } else {
+      console.log('Кнопка "Инвестировать" не найдена');
     }
   });
 </script>
