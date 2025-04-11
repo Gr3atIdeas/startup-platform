@@ -18,4 +18,5 @@ urlpatterns = [
     path('moderator/reject/<int:startup_id>/', views.reject_startup, name='reject_startup'),
     path('vote/<int:startup_id>/', views.vote_startup, name='vote_startup'),
     path('startup/<int:startup_id>/edit/', views.edit_startup, name='edit_startup'),
+    path('invest/<int:startup_id>/', views.invest, name='invest'),  # Добавлен маршрут для инвестиций
 ]

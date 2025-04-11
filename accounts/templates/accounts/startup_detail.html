@@ -47,8 +47,8 @@
       
       <div class="progress-indicator">
         <div class="progress-bar">
-          <div class="progress-fill" style="--height-value: {{ startup.percent_amount|default:'58' }}%;">
-            <div class="progress-text">{{ startup.percent_amount|default:"58" }}%</div>
+          <div class="progress-fill" style="--height-value: {{ progress_percentage|default:'58' }}%;">
+            <div class="progress-text">{{ progress_percentage|default:"58"|floatformat:0 }}%</div>
           </div>
         </div>
       </div>
@@ -108,7 +108,7 @@
           <i class="fas fa-chevron-down"></i>
         </div>
         
-        <button class="invest-button">
+        <button class="invest-button" {% if not can_invest %}disabled{% endif %}>
           Инвестировать
         </button>
         
@@ -116,7 +116,7 @@
         
         <div class="investors-count">
           <i class="fas fa-users"></i>
-          <span>Инвестировало (648)</span>
+          <span>Инвестировало ({{ investors_count }})</span>
         </div>
       </div>
     </div>
@@ -456,6 +456,50 @@
         });
       });
     });
+
+    // Обработчик клика по кнопке "Инвестировать"
+    const investButton = document.querySelector('.invest-button');
+    if (investButton) {
+      investButton.addEventListener('click', function() {
+        const amountInput = document.querySelector('.investment-amount');
+        const amount = amountInput.value;
+        const startupId = document.querySelector('.rating-stars').getAttribute('data-startup-id') || {{ startup.startup_id }};
+
+        if (!amount || amount <= 0) {
+          alert('Пожалуйста, введите сумму инвестиций больше 0');
+          return;
+        }
+
+        fetch(`/invest/${startupId}/`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': document.querySelector('input[name="csrfmiddlewaretoken"]').value
+          },
+          body: `amount=${amount}`
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            const progressFill = document.querySelector('.progress-fill');
+            const progressText = document.querySelector('.progress-text');
+            const investorsCount = document.querySelector('.investors-count span');
+            
+            progressFill.style.setProperty('--height-value', `${data.progress_percentage}%`);
+            progressText.textContent = `${Math.round(data.progress_percentage)}%`;
+            investorsCount.textContent = `Инвестировало (${data.investors_count})`;
+            amountInput.value = ''; // Очистка поля после инвестиции
+            alert('Инвестиция успешно совершена!');
+          } else {
+            alert(data.error || 'Ошибка при инвестировании');
+          }
+        })
+        .catch(error => {
+          console.error('Ошибка:', error);
+          alert('Произошла ошибка при инвестировании');
+        });
+      });
+    }
   });
 </script>
 {% endblock %}

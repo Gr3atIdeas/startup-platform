@@ -97,14 +97,15 @@ def startup_detail(request, startup_id):
     timeline = StartupTimeline.objects.filter(startup=startup)
     average_rating = startup.sum_votes / startup.total_voters if startup.total_voters > 0 else 0
     comments = Comments.objects.filter(startup_id=startup).order_by('-created_at')
+    investors_count = startup.get_investors_count()
+    progress_percentage = startup.get_progress_percentage()
 
-    # Проверяем, голосовал ли текущий пользователь
     user_has_voted = False
+    can_invest = False
     if request.user.is_authenticated:
         user_has_voted = UserVotes.objects.filter(user=request.user, startup=startup).exists()
+        can_invest = request.user.role.role_name == 'investor'
 
-    # Добавляем проверку для модератора
-    moderator_comment_form = None
     if request.user.is_authenticated and hasattr(request.user, 'role') and request.user.role.role_name == 'moderator':
         if request.method == 'POST' and 'moderator_comment' in request.POST:
             comment = request.POST.get('moderator_comment', '')
@@ -135,7 +136,6 @@ def startup_detail(request, startup_id):
     else:
         form = CommentForm()
 
-    # Проверяем, является ли текущий пользователь модератором или владельцем, чтобы показать комментарий
     show_moderator_comment = False
     if request.user.is_authenticated:
         if (hasattr(request.user, 'role') and request.user.role.role_name == 'moderator') or request.user == startup.owner:
@@ -155,7 +155,10 @@ def startup_detail(request, startup_id):
         'comments': comments,
         'form': form,
         'show_moderator_comment': show_moderator_comment,
-        'user_has_voted': user_has_voted,  # Добавляем флаг, голосовал ли пользователь
+        'user_has_voted': user_has_voted,
+        'can_invest': can_invest,
+        'investors_count': investors_count,
+        'progress_percentage': progress_percentage,
     })
 
 # Страница инвестиций
@@ -641,3 +644,52 @@ def vote_startup(request, startup_id):
 
     average_rating = startup.sum_votes / startup.total_voters if startup.total_voters > 0 else 0
     return JsonResponse({'success': True, 'average_rating': average_rating})
+
+@login_required
+def invest(request, startup_id):
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Неверный метод запроса'})
+
+    startup = get_object_or_404(Startups, startup_id=startup_id)
+    
+    # Проверка роли пользователя
+    if not request.user.is_authenticated or request.user.role.role_name != 'investor':
+        return JsonResponse({'success': False, 'error': 'Только инвесторы могут инвестировать'})
+
+    try:
+        amount = float(request.POST.get('amount', 0))
+        if amount <= 0:
+            return JsonResponse({'success': False, 'error': 'Сумма должна быть больше 0'})
+        
+        # Создание записи об инвестиции
+        transaction = InvestmentTransactions(
+            startup=startup,
+            investor=request.user,
+            amount=amount,
+            is_micro=startup.micro_investment_available,
+            transaction_type_id=TransactionTypes.objects.get(type_name='investment'),
+            transaction_status='completed',
+            payment_method_id=PaymentMethods.objects.get(method_name='default'),  # Предполагаем, что есть метод по умолчанию
+            created_at=timezone.now(),
+            updated_at=timezone.now()
+        )
+        transaction.save()
+
+        # Обновление суммы собранных средств
+        startup.amount_raised = (startup.amount_raised or 0) + amount
+        startup.total_invested = (startup.total_invested or 0) + amount
+        startup.save()
+
+        # Подсчёт уникальных инвесторов и процента прогресса
+        investors_count = startup.get_investors_count()
+        progress_percentage = startup.get_progress_percentage()
+
+        return JsonResponse({
+            'success': True,
+            'amount_raised': float(startup.amount_raised),
+            'investors_count': investors_count,
+            'progress_percentage': float(progress_percentage)
+        })
+    except Exception as e:
+        logger.error(f"Ошибка при инвестировании: {str(e)}")
+        return JsonResponse({'success': False, 'error': 'Произошла ошибка при инвестировании'})

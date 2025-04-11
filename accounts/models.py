@@ -423,6 +423,19 @@ class Startups(models.Model):
             except Exception as e:
                 logger.error(f"Ошибка при генерации URL для логотипа стартапа {self.startup_id}: {str(e)}")
         return None
+    
+    def get_investors_count(self):
+        """Подсчитывает количество уникальных инвесторов для стартапа."""
+        return InvestmentTransactions.objects.filter(
+            startup=self,
+            transaction_status='completed'
+        ).values('investor_id').distinct().count()
+
+    def get_progress_percentage(self):
+        """Вычисляет процент выполнения цели финансирования."""
+        if self.funding_goal and self.amount_raised:
+            return min((self.amount_raised / self.funding_goal) * 100, 100)
+        return 0
 
 class ModeratorReviews(models.Model):
     review_id = models.AutoField(primary_key=True)
