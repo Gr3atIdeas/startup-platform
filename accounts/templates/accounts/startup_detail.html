@@ -124,7 +124,13 @@
         </div>
         
         {% if user.is_authenticated and user.role.role_name == 'investor' %}
-          <button class="invest-button">Инвестировать</button>
+          <button class="invest-button" 
+                  {% if startup.status == 'blocked' or startup.status == 'closed' %}
+                    disabled 
+                    title="{% if startup.status == 'blocked' %}Инвестирование запрещено: стартап заблокирован{% else %}Инвестирование запрещено: стартап закрыт{% endif %}"
+                  {% endif %}>
+            Инвестировать
+          </button>
           <input type="number" class="investment-amount" placeholder="Сумма инвестиций, ₽" min="0" step="1000">
         {% endif %}
         
@@ -514,8 +520,8 @@
     let investAmount = 0;
     let investStartupId = 0;
 
-    if (investButton) {
-      console.log('Кнопка "Инвестировать" найдена');
+    if (investButton && !investButton.disabled) {
+      console.log('Кнопка "Инвестировать" найдена и активна');
       investButton.addEventListener('click', function() {
         const amountInput = document.querySelector('.investment-amount');
         investAmount = amountInput.value;
@@ -534,7 +540,7 @@
         modal.style.display = 'flex';
       });
     } else {
-      console.log('Кнопка "Инвестировать" не найдена');
+      console.log('Кнопка "Инвестировать" либо не найдена, либо неактивна');
     }
 
     // Подтверждение инвестиции

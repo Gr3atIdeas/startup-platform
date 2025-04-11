@@ -670,12 +670,14 @@ def invest(request, startup_id):
 
     startup = get_object_or_404(Startups, startup_id=startup_id)
     
-    # Проверка роли пользователя
+    # Проверка роли пользователя и статуса стартапа
     if not request.user.is_authenticated or request.user.role.role_name != 'investor':
         return JsonResponse({'success': False, 'error': 'Только инвесторы могут инвестировать'})
+    if startup.status in ['blocked', 'closed']:
+        return JsonResponse({'success': False, 'error': f'Инвестирование запрещено: стартап {startup.status}'})
 
     try:
-        amount = Decimal(request.POST.get('amount', '0'))  # Преобразуем в Decimal
+        amount = Decimal(request.POST.get('amount', '0'))
         if amount <= 0:
             return JsonResponse({'success': False, 'error': 'Сумма должна быть больше 0'})
         
@@ -694,8 +696,8 @@ def invest(request, startup_id):
         transaction.save()
 
         # Обновление суммы собранных средств
-        startup.amount_raised = (startup.amount_raised or Decimal('0')) + amount  # Используем Decimal
-        startup.total_invested = (startup.total_invested or Decimal('0')) + amount  # Используем Decimal
+        startup.amount_raised = (startup.amount_raised or Decimal('0')) + amount
+        startup.total_invested = (startup.total_invested or Decimal('0')) + amount
         startup.save()
 
         # Подсчёт уникальных инвесторов и процента прогресса
@@ -704,9 +706,9 @@ def invest(request, startup_id):
 
         return JsonResponse({
             'success': True,
-            'amount_raised': float(startup.amount_raised),  # Преобразуем обратно в float для JSON
+            'amount_raised': float(startup.amount_raised),
             'investors_count': investors_count,
-            'progress_percentage': float(progress_percentage)  # Преобразуем в float для JSON
+            'progress_percentage': float(progress_percentage)
         })
     except Exception as e:
         logger.error(f"Ошибка при инвестировании: {str(e)}")
