@@ -479,3 +479,52 @@
   top: 66.66%;
   background-color: #5B41BF;
 }
+
+/* Стили для секции поиска */
+.search-section {
+  margin-bottom: 20px;
+  padding: 0 10px;
+}
+
+.search-section form {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: 'Circe', sans-serif;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.search-input:focus {
+  border-color: #7B61FF;
+  box-shadow: 0 0 0 2px rgba(123, 97, 255, 0.2);
+}
+
+.search-button {
+  background: #7B61FF;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+}
+
+.search-button i {
+  color: #FFFFFF;
+  font-size: 16px;
+}
+
+.search-button:hover {
+  background: #6a50e0;
+}

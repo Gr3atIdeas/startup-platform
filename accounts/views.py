@@ -75,15 +75,28 @@ def get_progress_percentage(self):
     return 0
 
 def startups_list(request):
+    # Получаем все направления из базы данных
+    directions = Directions.objects.all()
+    
+    # Базовый запрос: только одобренные стартапы
     startups = Startups.objects.filter(status='approved')
+    
+    # Получаем параметры фильтрации
     selected_categories = request.GET.getlist('category')
     micro_investment = request.GET.get('micro_investment') == '1'
+    search_query = request.GET.get('search', '').strip()
 
+    # Фильтрация по категориям (направлениям)
     if selected_categories:
-        startups = startups.filter(direction__direction_name__in=[cat.capitalize() for cat in selected_categories])
-    
+        startups = startups.filter(direction__direction_name__in=selected_categories)
+
+    # Фильтрация по микроинвестициям
     if micro_investment:
         startups = startups.filter(micro_investment_available=True)
+
+    # Фильтрация по поисковому запросу
+    if search_query:
+        startups = startups.filter(title__icontains=search_query)
 
     # Аннотируем количество комментариев и сортируем по убыванию created_at
     startups = startups.annotate(comment_count=Count('comments')).order_by('-created_at')
@@ -96,8 +109,9 @@ def startups_list(request):
         'approved_startups': startups,
         'selected_categories': selected_categories,
         'micro_investment': micro_investment,
+        'search_query': search_query,
+        'directions': directions,
     })
-# accounts/views.py (фрагмент)
 
 def startup_detail(request, startup_id):
     startup = get_object_or_404(Startups, startup_id=startup_id)

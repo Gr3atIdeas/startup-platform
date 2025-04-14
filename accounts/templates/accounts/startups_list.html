@@ -21,79 +21,40 @@
         </button>
       </div>
       
+      <!-- Поле для поиска -->
+      <div class="search-section">
+        <form method="get" id="searchForm">
+          <input type="text" name="search" id="searchInput" placeholder="Поиск по названию..." value="{{ search_query|default_if_none:'' }}" class="search-input">
+          <button type="submit" class="search-button">
+            <i class="fas fa-search"></i>
+          </button>
+        </form>
+      </div>
+
       <h2 class="filter-heading">Категории</h2>
       
       <form method="get" id="filterForm">
-        <ul class="category-list">
-          <li class="category-item">
-            <label class="category-label">
-              <input type="checkbox" name="category" value="medicine" class="category-checkbox" {% if 'medicine' in selected_categories %}checked{% endif %}>
-              <span class="category-name">Медицина</span>
-            </label>
-          </li>
-          <li class="category-item">
-            <label class="category-label">
-              <input type="checkbox" name="category" value="auto" class="category-checkbox" {% if 'auto' in selected_categories %}checked{% endif %}>
-              <span class="category-name">Автомобили</span>
-            </label>
-          </li>
-          <li class="category-item">
-            <label class="category-label">
-              <input type="checkbox" name="category" value="delivery" class="category-checkbox" {% if 'delivery' in selected_categories %}checked{% endif %}>
-              <span class="category-name">Доставка</span>
-            </label>
-          </li>
-          <li class="category-item">
-            <label class="category-label">
-              <input type="checkbox" name="category" value="cafe" class="category-checkbox" {% if 'cafe' in selected_categories %}checked{% endif %}>
-              <span class="category-name">Кафе/рестораны</span>
-            </label>
-          </li>
-          <li class="category-item">
-            <label class="category-label">
-              <input type="checkbox" name="category" value="fastfood" class="category-checkbox" {% if 'fastfood' in selected_categories %}checked{% endif %}>
-              <span class="category-name">Фастфуд</span>
-            </label>
-          </li>
-          <li class="category-item">
-            <label class="category-label">
-              <input type="checkbox" name="category" value="health" class="category-checkbox" {% if 'health' in selected_categories %}checked{% endif %}>
-              <span class="category-name">Здоровье</span>
-            </label>
-          </li>
-          <li class="category-item">
-            <label class="category-label">
-              <input type="checkbox" name="category" value="beauty" class="category-checkbox" {% if 'beauty' in selected_categories %}checked{% endif %}>
-              <span class="category-name">Красота</span>
-            </label>
-          </li>
-          <li class="category-item">
-            <label class="category-label">
-              <input type="checkbox" name="category" value="transport" class="category-checkbox" {% if 'transport' in selected_categories %}checked{% endif %}>
-              <span class="category-name">Транспорт</span>
-            </label>
-          </li>
-          <li class="category-item">
-            <label class="category-label">
-              <input type="checkbox" name="category" value="sport" class="category-checkbox" {% if 'sport' in selected_categories %}checked{% endif %}>
-              <span class="category-name">Спорт</span>
-            </label>
-          </li>
-          <li class="category-item">
-            <label class="category-label">
-              <input type="checkbox" name="category" value="psychology" class="category-checkbox" {% if 'psychology' in selected_categories %}checked{% endif %}>
-              <span class="category-name">Психология</span>
-            </label>
-          </li>
-          <li class="category-item">
-            <label class="category-label">
-              <input type="checkbox" name="category" value="ai" class="category-checkbox" {% if 'ai' in selected_categories %}checked{% endif %}>
-              <span class="category-name">ИИ</span>
-            </label>
-          </li>
-        </ul>
+        {% with direction_translations='Medicine:Медицина,Auto:Автомобили,Delivery:Доставка,Cafe:Кафе/рестораны,Fastfood:Фастфуд,Health:Здоровье,Beauty:Красота,Transport:Транспорт,Sport:Спорт,Psychology:Психология,AI:ИИ,Finance:Финансы,Healthcare:Здравоохранение,Technology:Технологии' %}
+          <ul class="category-list">
+            {% for direction in directions %}
+              {% for pair in direction_translations.split ',' %}
+                {% if pair.split ':'|first == direction.direction_name %}
+                  {% with russian_name=pair.split ':'|last %}
+                    <li class="category-item">
+                      <label class="category-label">
+                        <input type="checkbox" name="category" value="{{ direction.direction_name|lower }}" class="category-checkbox" {% if direction.direction_name|lower in selected_categories %}checked{% endif %}>
+                        <span class="category-name">{{ russian_name }}</span>
+                      </label>
+                    </li>
+                  {% endwith %}
+                {% endif %}
+              {% endfor %}
+            {% endfor %}
+          </ul>
+        {% endwith %}
         
         <input type="hidden" name="micro_investment" id="microInvestmentInput" value="{% if micro_investment %}1{% else %}0{% endif %}">
+        <input type="hidden" name="search" value="{{ search_query|default_if_none:'' }}">
       </form>
 
       <hr class="category-divider">
