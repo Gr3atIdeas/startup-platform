@@ -75,7 +75,6 @@ def get_progress_percentage(self):
     return 0
 
 def startups_list(request):
-    from .models import Directions
     # Получаем все направления из базы данных
     directions = Directions.objects.all()
     
@@ -106,12 +105,17 @@ def startups_list(request):
     for startup in startups:
         startup.average_rating = startup.sum_votes / startup.total_voters if startup.total_voters > 0 else 0
 
+    # Разделяем direction_translations на список пар
+    direction_translations_str = 'Medicine:Медицина,Auto:Автомобили,Delivery:Доставка,Cafe:Кафе/рестораны,Fastfood:Фастфуд,Health:Здоровье,Beauty:Красота,Transport:Транспорт,Sport:Спорт,Psychology:Психология,AI:ИИ,Finance:Финансы,Healthcare:Здравоохранение,Technology:Технологии'
+    direction_translations = [pair.split(':') for pair in direction_translations_str.split(',')]
+
     return render(request, 'accounts/startups_list.html', {
         'approved_startups': startups,
         'selected_categories': selected_categories,
         'micro_investment': micro_investment,
         'search_query': search_query,
         'directions': directions,
+        'direction_translations': direction_translations,  # Передаём список пар
     })
 
 def startup_detail(request, startup_id):

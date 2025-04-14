@@ -34,24 +34,20 @@
       <h2 class="filter-heading">Категории</h2>
       
       <form method="get" id="filterForm">
-        {% with direction_translations='Medicine:Медицина,Auto:Автомобили,Delivery:Доставка,Cafe:Кафе/рестораны,Fastfood:Фастфуд,Health:Здоровье,Beauty:Красота,Transport:Транспорт,Sport:Спорт,Psychology:Психология,AI:ИИ,Finance:Финансы,Healthcare:Здравоохранение,Technology:Технологии' %}
-          <ul class="category-list">
-            {% for direction in directions %}
-              {% for pair in direction_translations.split ',' %}
-                {% if pair.split ':'|first == direction.direction_name %}
-                  {% with russian_name=pair.split ':'|last %}
-                    <li class="category-item">
-                      <label class="category-label">
-                        <input type="checkbox" name="category" value="{{ direction.direction_name|lower }}" class="category-checkbox" {% if direction.direction_name|lower in selected_categories %}checked{% endif %}>
-                        <span class="category-name">{{ russian_name }}</span>
-                      </label>
-                    </li>
-                  {% endwith %}
-                {% endif %}
-              {% endfor %}
+        <ul class="category-list">
+          {% for direction in directions %}
+            {% for pair in direction_translations %}
+              {% if pair.0 == direction.direction_name %}
+                <li class="category-item">
+                  <label class="category-label">
+                    <input type="checkbox" name="category" value="{{ direction.direction_name|lower }}" class="category-checkbox" {% if direction.direction_name|lower in selected_categories %}checked{% endif %}>
+                    <span class="category-name">{{ pair.1 }}</span>
+                  </label>
+                </li>
+              {% endif %}
             {% endfor %}
-          </ul>
-        {% endwith %}
+          {% endfor %}
+        </ul>
         
         <input type="hidden" name="micro_investment" id="microInvestmentInput" value="{% if micro_investment %}1{% else %}0{% endif %}">
         <input type="hidden" name="search" value="{{ search_query|default_if_none:'' }}">
@@ -113,7 +109,7 @@
         {% endfor %}
       {% else %}
         <div class="no-startups">
-          <p>В настоящее время нет доступных стартапов... Загляните позже!</p>
+          <p>В настоящее время нет доступных стартапов. Загляните позже!</p>
         </div>
       {% endif %}
     </div>
