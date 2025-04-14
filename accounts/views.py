@@ -75,6 +75,7 @@ def get_progress_percentage(self):
     return 0
 
 def startups_list(request):
+    from .models import Directions
     # Получаем все направления из базы данных
     directions = Directions.objects.all()
     
