@@ -85,6 +85,7 @@ def startups_list(request):
     selected_categories = request.GET.getlist('category')
     micro_investment = request.GET.get('micro_investment') == '1'
     search_query = request.GET.get('search', '').strip()
+    min_rating = request.GET.get('min_rating', '0')  # По умолчанию минимальный рейтинг 0
 
     # Фильтрация по категориям (направлениям)
     if selected_categories:
@@ -105,6 +106,13 @@ def startups_list(request):
     for startup in startups:
         startup.average_rating = startup.sum_votes / startup.total_voters if startup.total_voters > 0 else 0
 
+    # Фильтрация по рейтингу
+    try:
+        min_rating = float(min_rating)
+        startups = [startup for startup in startups if startup.average_rating >= min_rating]
+    except ValueError:
+        min_rating = 0  # Если min_rating некорректный, сбрасываем на 0
+
     # Разделяем direction_translations на список пар
     direction_translations_str = 'Medicine:Медицина,Auto:Автомобили,Delivery:Доставка,Cafe:Кафе/рестораны,Fastfood:Фастфуд,Health:Здоровье,Beauty:Красота,Transport:Транспорт,Sport:Спорт,Psychology:Психология,AI:ИИ,Finance:Финансы,Healthcare:Здравоохранение,Technology:Технологии'
     direction_translations = [pair.split(':') for pair in direction_translations_str.split(',')]
@@ -114,8 +122,9 @@ def startups_list(request):
         'selected_categories': selected_categories,
         'micro_investment': micro_investment,
         'search_query': search_query,
+        'min_rating': min_rating,
         'directions': directions,
-        'direction_translations': direction_translations,  # Передаём список пар
+        'direction_translations': direction_translations,
     })
 
 def startup_detail(request, startup_id):

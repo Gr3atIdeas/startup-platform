@@ -528,3 +528,129 @@
 .search-button:hover {
   background: #6a50e0;
 }
+
+/* Стили для кликабельной карточки */
+.startup-card-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Стили для направления стартапа */
+.startup-direction {
+  font-family: 'Circe', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 14px;
+  color: #000000;
+  margin: 0 0 12px 0;
+}
+
+/* Стили для режима стартапа */
+.startup-mode {
+  font-family: 'Circe', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 14px;
+  color: #000000;
+  background: #000000;
+  color: #FFFFFF;
+  padding: 4px 8px;
+  border-radius: 12px;
+  align-self: flex-start;
+  margin-bottom: 8px;
+}
+
+/* Стили для слайдера рейтинга */
+.rating-filter {
+  margin-top: 15px;
+  width: 100%;
+}
+
+.rating-label {
+  font-family: 'Circe', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
+  color: #000000;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.rating-slider {
+  width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 5px;
+  background: #E2E8F0;
+  outline: none;
+  border-radius: 5px;
+}
+
+.rating-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 15px;
+  height: 15px;
+  background: #7B61FF;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.rating-slider::-moz-range-thumb {
+  width: 15px;
+  height: 15px;
+  background: #7B61FF;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* Стили для кнопки "Показать" */
+.show-button {
+  width: 100%;
+  padding: 10px;
+  background: #7B61FF;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 12px;
+  font-family: 'Circe', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
+  cursor: pointer;
+  margin-top: 15px;
+  transition: background-color 0.3s ease;
+}
+
+.show-button:hover {
+  background: #6a50e0;
+}
+
+/* Стили для кнопки "Подробнее" */
+.details-button {
+  padding: 8px 16px;
+  background: #7B61FF;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 12px;
+  font-family: 'Circe', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.details-button:hover {
+  background: #6a50e0;
+}
+
+/* Обновление стилей футера карточки */
+.card-footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 15px;
+}
