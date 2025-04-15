@@ -654,3 +654,115 @@
   margin-top: auto;
   padding-top: 15px;
 }
+
+/* Стили для автодополнения поиска */
+.search-container {
+  position: relative;
+  width: 100%;
+}
+
+.suggestions-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  z-index: 1000;
+  display: none;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.suggestion-item {
+  padding: 8px 12px;
+  font-family: 'Circe', sans-serif;
+  font-size: 14px;
+  color: #000000;
+  cursor: pointer;
+}
+
+.suggestion-item:hover {
+  background: #F5F5F5;
+}
+
+/* Обновление стилей для слайдеров рейтинга */
+.rating-filter {
+  margin-top: 15px;
+  width: 100%;
+}
+
+.rating-label {
+  font-family: 'Circe', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
+  color: #000000;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.rating-slider {
+  width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 5px;
+  background: #E2E8F0;
+  outline: none;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.rating-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 15px;
+  height: 15px;
+  background: #7B61FF;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.rating-slider::-moz-range-thumb {
+  width: 15px;
+  height: 15px;
+  background: #7B61FF;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* Стили для селектора сортировки */
+.filters-menu select {
+  width: 100%;
+  padding: 8px 16px;
+  height: 40px;
+  border: 1px solid #000000;
+  border-radius: 99px;
+  background: transparent;
+  font-family: 'Circe', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  color: #000000;
+  cursor: pointer;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.filters-menu {
+  position: relative;
+}
+
+.filters-menu::after {
+  content: '';
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 5px;
+  background: #000000;
+  clip-path: polygon(50% 100%, 0 0, 100% 0);
+}

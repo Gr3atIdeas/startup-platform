@@ -15,19 +15,22 @@
     <!-- Боковая панель с фильтрами -->
     <aside class="filters-sidebar">
       <div class="filters-menu">
-        <button class="menu-button">
-          Новые
-          <span class="menu-arrow"></span>
-        </button>
+        <select name="sort_order" id="sortOrder" form="filterForm">
+          <option value="newest" {% if sort_order == 'newest' %}selected{% endif %}>Сначала новые</option>
+          <option value="oldest" {% if sort_order == 'oldest' %}selected{% endif %}>Сначала старые</option>
+        </select>
       </div>
       
-      <!-- Поле для поиска -->
+      <!-- Поле для поиска с автодополнением -->
       <div class="search-section">
         <form method="get" id="searchForm">
-          <input type="text" name="search" id="searchInput" placeholder="Поиск по названию..." value="{{ search_query|default_if_none:'' }}" class="search-input">
-          <button type="submit" class="search-button">
-            <i class="fas fa-search"></i>
-          </button>
+          <div class="search-container">
+            <input type="text" name="search" id="searchInput" placeholder="Поиск по названию..." value="{{ search_query|default_if_none:'' }}" class="search-input" autocomplete="off">
+            <div id="searchSuggestions" class="suggestions-list"></div>
+            <button type="submit" class="search-button">
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
         </form>
       </div>
 
@@ -49,14 +52,16 @@
           {% endfor %}
         </ul>
 
-        <!-- Слайдер рейтинга -->
+        <!-- Слайдеры для диапазона рейтинга -->
         <div class="rating-filter">
-          <label for="ratingRange" class="rating-label">Рейтинг: <span id="ratingValue">{{ min_rating|floatformat:1 }}</span></label>
-          <input type="range" id="ratingRange" name="min_rating" min="0" max="5" step="0.1" value="{{ min_rating|floatformat:1 }}" class="rating-slider">
+          <label for="minRatingRange" class="rating-label">Рейтинг: <span id="minRatingValue">{{ min_rating|floatformat:1 }}</span> - <span id="maxRatingValue">{{ max_rating|floatformat:1 }}</span></label>
+          <input type="range" id="minRatingRange" name="min_rating" min="0" max="5" step="0.1" value="{{ min_rating|floatformat:1 }}" class="rating-slider">
+          <input type="range" id="maxRatingRange" name="max_rating" min="0" max="5" step="0.1" value="{{ max_rating|floatformat:1 }}" class="rating-slider">
         </div>
         
         <input type="hidden" name="micro_investment" id="microInvestmentInput" value="{% if micro_investment %}1{% else %}0{% endif %}">
         <input type="hidden" name="search" value="{{ search_query|default_if_none:'' }}">
+        <input type="hidden" name="sort_order" value="{{ sort_order }}">
 
         <!-- Кнопка "Показать" -->
         <button type="submit" class="show-button">Показать</button>
@@ -146,13 +151,27 @@
 </div>
 
 <script>
-  // Обновление значения слайдера рейтинга
   document.addEventListener('DOMContentLoaded', function() {
-    const ratingRange = document.getElementById('ratingRange');
-    const ratingValue = document.getElementById('ratingValue');
+    // Обновление значений слайдеров рейтинга
+    const minRatingRange = document.getElementById('minRatingRange');
+    const maxRatingRange = document.getElementById('maxRatingRange');
+    const minRatingValue = document.getElementById('minRatingValue');
+    const maxRatingValue = document.getElementById('maxRatingValue');
     
-    ratingRange.addEventListener('input', function() {
-      ratingValue.textContent = ratingRange.value;
+    minRatingRange.addEventListener('input', function() {
+      minRatingValue.textContent = minRatingRange.value;
+      if (parseFloat(minRatingRange.value) > parseFloat(maxRatingRange.value)) {
+        maxRatingRange.value = minRatingRange.value;
+        maxRatingValue.textContent = minRatingRange.value;
+      }
+    });
+
+    maxRatingRange.addEventListener('input', function() {
+      maxRatingValue.textContent = maxRatingRange.value;
+      if (parseFloat(maxRatingRange.value) < parseFloat(minRatingRange.value)) {
+        minRatingRange.value = maxRatingRange.value;
+        minRatingValue.textContent = maxRatingRange.value;
+      }
     });
 
     // Синхронизация рейтинга при загрузке страницы
@@ -166,6 +185,53 @@
           star.classList.remove('active');
         }
       });
+    });
+
+    // Автодополнение для поиска
+    const searchInput = document.getElementById('searchInput');
+    const suggestionsList = document.getElementById('searchSuggestions');
+
+    searchInput.addEventListener('input', function() {
+      const query = searchInput.value;
+      if (query.length < 2) {
+        suggestionsList.innerHTML = '';
+        suggestionsList.style.display = 'none';
+        return;
+      }
+
+      fetch(`/search-suggestions/?q=${encodeURIComponent(query)}`)
+        .then(response => response.json())
+        .then(data => {
+          suggestionsList.innerHTML = '';
+          if (data.suggestions.length > 0) {
+            suggestionsList.style.display = 'block';
+            data.suggestions.forEach(suggestion => {
+              const div = document.createElement('div');
+              div.className = 'suggestion-item';
+              div.textContent = suggestion;
+              div.addEventListener('click', function() {
+                searchInput.value = suggestion;
+                suggestionsList.innerHTML = '';
+                suggestionsList.style.display = 'none';
+              });
+              suggestionsList.appendChild(div);
+            });
+          } else {
+            suggestionsList.style.display = 'none';
+          }
+        })
+        .catch(error => {
+          console.error('Ошибка при получении предложений:', error);
+          suggestionsList.style.display = 'none';
+        });
+    });
+
+    // Скрываем список предложений при клике вне поля ввода
+    document.addEventListener('click', function(event) {
+      if (!searchInput.contains(event.target) && !suggestionsList.contains(event.target)) {
+        suggestionsList.innerHTML = '';
+        suggestionsList.style.display = 'none';
+      }
     });
   });
 
