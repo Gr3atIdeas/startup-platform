@@ -517,3 +517,38 @@ class Users(AbstractBaseUser):
 
     def has_module_perms(self, app_label):
         return self.is_staff
+    
+class NewsArticles(models.Model):
+    article_id = models.AutoField(primary_key=True)
+    title = models.CharField(max_length=255)
+    content = models.TextField()
+    author = models.ForeignKey('Users', models.DO_NOTHING, blank=True, null=True)
+    published_at = models.DateTimeField(blank=True, null=True)
+    updated_at = models.DateTimeField(blank=True, null=True)
+    image_url = models.CharField(max_length=1000, blank=True, null=True)  # Поле для URL картинки
+    tags = models.CharField(max_length=255, blank=True, null=True)  # Поле для тегов (например, "Администрация")
+
+    class Meta:
+        managed = False
+        db_table = 'news_articles'
+
+class NewsLikes(models.Model):
+    like_id = models.AutoField(primary_key=True)
+    article = models.ForeignKey('NewsArticles', models.CASCADE, db_column='article_id')
+    user = models.ForeignKey('Users', models.CASCADE, db_column='user_id')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        managed = False
+        db_table = 'news_likes'
+        unique_together = (('article', 'user'),)
+
+class NewsViews(models.Model):
+    view_id = models.AutoField(primary_key=True)
+    article = models.ForeignKey('NewsArticles', models.CASCADE, db_column='article_id')
+    user = models.ForeignKey('Users', models.CASCADE, db_column='user_id', null=True, blank=True)
+    viewed_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        managed = False
+        db_table = 'news_views'
