@@ -162,6 +162,14 @@
     const maxRatingInput = document.getElementById('maxRatingInput');
     const ratingRangeValues = document.getElementById('ratingRangeValues');
 
+    // Предотвращаем повторную инициализацию
+    if (ratingRange.noUiSlider) {
+      ratingRange.noUiSlider.destroy();
+      console.log('Слайдер уничтожен перед повторной инициализацией');
+    }
+
+    console.log('Инициализация noUiSlider');
+
     noUiSlider.create(ratingRange, {
       start: [{{ min_rating|floatformat:1 }}, {{ max_rating|floatformat:1 }}], // Начальные значения из GET
       connect: true,
@@ -170,6 +178,7 @@
         'max': 5
       },
       step: 0.1,
+      behaviour: 'drag', // Позволяет перетаскивать весь диапазон
       format: {
         to: function(value) {
           return parseFloat(value).toFixed(1);
@@ -177,6 +186,12 @@
         from: function(value) {
           return parseFloat(value);
         }
+      },
+      tooltips: [true, true], // Показываем всплывающие подсказки над бегунками
+      pips: { // Добавляем метки на шкале
+        mode: 'steps',
+        stepped: true,
+        density: 5
       }
     });
 
