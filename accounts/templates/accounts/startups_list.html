@@ -10,6 +10,8 @@
   <!-- Подключаем noUiSlider -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js"></script>
+  <!-- Подключаем wNumb для форматирования -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/wnumb/1.2.0/wNumb.min.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -162,6 +164,12 @@
       return;
     }
 
+    // Проверка доступности wNumb
+    if (typeof wNumb === 'undefined') {
+      console.error('wNumb не загружен. Проверьте подключение библиотеки.');
+      return;
+    }
+
     // Инициализация noUiSlider для диапазона рейтинга
     const ratingRange = document.getElementById('ratingRange');
     const minRatingInput = document.getElementById('minRatingInput');
@@ -186,14 +194,11 @@
         },
         step: 0.1,
         behaviour: 'drag', // Позволяет перетаскивать весь диапазон
-        format: {
-          to: function(value) {
-            return parseFloat(value).toFixed(1);
-          },
-          from: function(value) {
-            return parseFloat(value);
-          }
-        },
+        // Используем wNumb для форматирования
+        format: wNumb({
+          decimals: 1,
+          thousand: '',
+        }),
         tooltips: [true, true], // Показываем всплывающие подсказки над бегунками
         pips: { // Добавляем метки на шкале
           mode: 'steps',
