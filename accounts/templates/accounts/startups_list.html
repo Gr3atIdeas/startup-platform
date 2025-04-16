@@ -156,6 +156,12 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
+    // Проверка доступности noUiSlider
+    if (typeof noUiSlider === 'undefined') {
+      console.error('noUiSlider не загружен. Проверьте подключение библиотеки.');
+      return;
+    }
+
     // Инициализация noUiSlider для диапазона рейтинга
     const ratingRange = document.getElementById('ratingRange');
     const minRatingInput = document.getElementById('minRatingInput');
@@ -170,37 +176,41 @@
 
     console.log('Инициализация noUiSlider');
 
-    noUiSlider.create(ratingRange, {
-      start: [{{ min_rating|floatformat:1 }}, {{ max_rating|floatformat:1 }}], // Начальные значения из GET
-      connect: true,
-      range: {
-        'min': 0,
-        'max': 5
-      },
-      step: 0.1,
-      behaviour: 'drag', // Позволяет перетаскивать весь диапазон
-      format: {
-        to: function(value) {
-          return parseFloat(value).toFixed(1);
+    try {
+      noUiSlider.create(ratingRange, {
+        start: [{{ min_rating|floatformat:1 }}, {{ max_rating|floatformat:1 }}], // Начальные значения из GET
+        connect: true,
+        range: {
+          'min': 0,
+          'max': 5
         },
-        from: function(value) {
-          return parseFloat(value);
+        step: 0.1,
+        behaviour: 'drag', // Позволяет перетаскивать весь диапазон
+        format: {
+          to: function(value) {
+            return parseFloat(value).toFixed(1);
+          },
+          from: function(value) {
+            return parseFloat(value);
+          }
+        },
+        tooltips: [true, true], // Показываем всплывающие подсказки над бегунками
+        pips: { // Добавляем метки на шкале
+          mode: 'steps',
+          stepped: true,
+          density: 5
         }
-      },
-      tooltips: [true, true], // Показываем всплывающие подсказки над бегунками
-      pips: { // Добавляем метки на шкале
-        mode: 'steps',
-        stepped: true,
-        density: 5
-      }
-    });
+      });
 
-    // Обновление значений при изменении слайдера
-    ratingRange.noUiSlider.on('update', function(values, handle) {
-      minRatingInput.value = values[0];
-      maxRatingInput.value = values[1];
-      ratingRangeValues.textContent = `${values[0]} - ${values[1]}`;
-    });
+      // Обновление значений при изменении слайдера
+      ratingRange.noUiSlider.on('update', function(values, handle) {
+        minRatingInput.value = values[0];
+        maxRatingInput.value = values[1];
+        ratingRangeValues.textContent = `${values[0]} - ${values[1]}`;
+      });
+    } catch (error) {
+      console.error('Ошибка при инициализации noUiSlider:', error);
+    }
 
     // Синхронизация рейтинга при загрузке страницы
     document.querySelectorAll('.rating-stars').forEach(stars => {
