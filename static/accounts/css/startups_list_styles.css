@@ -766,3 +766,36 @@
   background: #000000;
   clip-path: polygon(50% 100%, 0 0, 100% 0);
 }
+
+/* Стили для noUiSlider */
+.rating-slider {
+  width: 100%;
+  margin: 10px 0;
+}
+
+.noUi-target {
+  background: #E2E8F0;
+  border: none;
+  box-shadow: none;
+  border-radius: 5px;
+}
+
+.noUi-connect {
+  background: #7B61FF;
+}
+
+.noUi-handle {
+  width: 15px !important;
+  height: 15px !important;
+  background: #7B61FF;
+  border-radius: 50%;
+  box-shadow: none;
+  border: none;
+  top: -5px !important;
+  right: -7px !important;
+}
+
+.noUi-handle:before,
+.noUi-handle:after {
+  display: none;
+}

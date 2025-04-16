@@ -7,6 +7,9 @@
 {% block head_extra %}
   <link rel="stylesheet" href="{% static 'accounts/css/startups_list_styles.css' %}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Подключаем noUiSlider -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -43,7 +46,7 @@
               {% if pair.0 == direction.direction_name %}
                 <li class="category-item">
                   <label class="category-label">
-                    <input type="checkbox" name="category" value="{{ direction.direction_name|lower }}" class="category-checkbox" {% if direction.direction_name|lower in selected_categories %}checked{% endif %}>
+                    <input type="checkbox" name="category" value="{{ direction.direction_name }}" class="category-checkbox" {% if direction.direction_name in selected_categories %}checked{% endif %}>
                     <span class="category-name">{{ pair.1 }}</span>
                   </label>
                 </li>
@@ -52,11 +55,12 @@
           {% endfor %}
         </ul>
 
-        <!-- Слайдеры для диапазона рейтинга -->
+        <!-- Слайдер для диапазона рейтинга (noUiSlider) -->
         <div class="rating-filter">
-          <label for="minRatingRange" class="rating-label">Рейтинг: <span id="minRatingValue">{{ min_rating|floatformat:1 }}</span> - <span id="maxRatingValue">{{ max_rating|floatformat:1 }}</span></label>
-          <input type="range" id="minRatingRange" name="min_rating" min="0" max="5" step="0.1" value="{{ min_rating|floatformat:1 }}" class="rating-slider">
-          <input type="range" id="maxRatingRange" name="max_rating" min="0" max="5" step="0.1" value="{{ max_rating|floatformat:1 }}" class="rating-slider">
+          <label class="rating-label">Рейтинг: <span id="ratingRangeValues">{{ min_rating|floatformat:1 }} - {{ max_rating|floatformat:1 }}</span></label>
+          <div id="ratingRange" class="rating-slider"></div>
+          <input type="hidden" name="min_rating" id="minRatingInput" value="{{ min_rating|floatformat:1 }}">
+          <input type="hidden" name="max_rating" id="maxRatingInput" value="{{ max_rating|floatformat:1 }}">
         </div>
         
         <input type="hidden" name="micro_investment" id="microInvestmentInput" value="{% if micro_investment %}1{% else %}0{% endif %}">
@@ -152,26 +156,35 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    // Обновление значений слайдеров рейтинга
-    const minRatingRange = document.getElementById('minRatingRange');
-    const maxRatingRange = document.getElementById('maxRatingRange');
-    const minRatingValue = document.getElementById('minRatingValue');
-    const maxRatingValue = document.getElementById('maxRatingValue');
-    
-    minRatingRange.addEventListener('input', function() {
-      minRatingValue.textContent = minRatingRange.value;
-      if (parseFloat(minRatingRange.value) > parseFloat(maxRatingRange.value)) {
-        maxRatingRange.value = minRatingRange.value;
-        maxRatingValue.textContent = minRatingRange.value;
+    // Инициализация noUiSlider для диапазона рейтинга
+    const ratingRange = document.getElementById('ratingRange');
+    const minRatingInput = document.getElementById('minRatingInput');
+    const maxRatingInput = document.getElementById('maxRatingInput');
+    const ratingRangeValues = document.getElementById('ratingRangeValues');
+
+    noUiSlider.create(ratingRange, {
+      start: [{{ min_rating|floatformat:1 }}, {{ max_rating|floatformat:1 }}], // Начальные значения из GET
+      connect: true,
+      range: {
+        'min': 0,
+        'max': 5
+      },
+      step: 0.1,
+      format: {
+        to: function(value) {
+          return parseFloat(value).toFixed(1);
+        },
+        from: function(value) {
+          return parseFloat(value);
+        }
       }
     });
 
-    maxRatingRange.addEventListener('input', function() {
-      maxRatingValue.textContent = maxRatingRange.value;
-      if (parseFloat(maxRatingRange.value) < parseFloat(minRatingRange.value)) {
-        minRatingRange.value = maxRatingRange.value;
-        minRatingValue.textContent = maxRatingRange.value;
-      }
+    // Обновление значений при изменении слайдера
+    ratingRange.noUiSlider.on('update', function(values, handle) {
+      minRatingInput.value = values[0];
+      maxRatingInput.value = values[1];
+      ratingRangeValues.textContent = `${values[0]} - ${values[1]}`;
     });
 
     // Синхронизация рейтинга при загрузке страницы

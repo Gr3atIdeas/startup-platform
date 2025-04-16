@@ -89,7 +89,10 @@ def startups_list(request):
     max_rating = request.GET.get('max_rating', '5')  # Максимальный рейтинг
     sort_order = request.GET.get('sort_order', 'newest')  # Порядок сортировки: 'newest' или 'oldest'
 
-    # Фильтрация по категориям (направлениям)
+    # Логирование для отладки
+    logger.debug(f"Selected categories: {selected_categories}")
+
+    # Фильтрация по категориям (направлениям), нечувствительная к регистру
     if selected_categories:
         startups = startups.filter(direction__direction_name__in=selected_categories)
 
