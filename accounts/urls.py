@@ -11,6 +11,7 @@ urlpatterns = [
     path('startups/<int:startup_id>/', views.startup_detail, name='startup_detail'),
     path('investments/', views.investments, name='investments'),
     path('news/', views.news, name='news'),
+    path('news/<int:article_id>/', views.news_detail, name='news_detail'),
     path('legal/', views.legal, name='legal'),
     path('profile/', views.profile, name='profile'),
     path('create-startup/', views.create_startup, name='create_startup'),
@@ -20,5 +21,5 @@ urlpatterns = [
     path('reject-startup/<int:startup_id>/', views.reject_startup, name='reject_startup'),
     path('vote-startup/<int:startup_id>/', views.vote_startup, name='vote_startup'),
     path('invest/<int:startup_id>/', views.invest, name='invest'),
-    path('search-suggestions/', views.search_suggestions, name='search_suggestions'),  # Новый маршрут
+    path('search-suggestions/', views.search_suggestions, name='search_suggestions'),
 ]

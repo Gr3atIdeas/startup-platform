@@ -11,13 +11,17 @@ import logging
 import os
 from django.conf import settings
 from .forms import RegisterForm, LoginForm, StartupForm
-from .models import Users, Directions, Startups, ReviewStatuses, UserVotes, StartupTimeline, FileStorage, EntityTypes, FileTypes, InvestmentTransactions, TransactionTypes, PaymentMethods
+from .models import Users, Directions, Startups, ReviewStatuses, UserVotes, StartupTimeline, FileStorage, EntityTypes, FileTypes, InvestmentTransactions, TransactionTypes, PaymentMethods,
 from .models import creative_upload_path, proof_upload_path, video_upload_path
 import uuid
 from .models import Comments
 from .forms import CommentForm
 from django.db.models import Count
 from decimal import Decimal
+from .models import NewsArticles, NewsLikes, NewsViews  # Добавляем новые модели
+from django.core.files.storage import default_storage  # Для работы с файлами
+from django import forms  # Добавляем импорт
+
 
 logger = logging.getLogger(__name__)
 
@@ -764,3 +768,114 @@ def invest(request, startup_id):
     except Exception as e:
         logger.error(f"Ошибка при инвестировании: {str(e)}")
         return JsonResponse({'success': False, 'error': 'Произошла ошибка при инвестировании'})
+    
+
+# Форма для создания новости
+class NewsForm(forms.Form):
+    title = forms.CharField(max_length=255, label="Заголовок")
+    content = forms.CharField(widget=forms.Textarea, label="Текст новости")
+    image = forms.ImageField(label="Картинка", required=False)
+
+# Страница новостей (лента) с обработкой создания новости
+def news(request):
+    if request.method == 'POST':
+        if not request.user.is_authenticated or request.user.role.role_name != 'moderator':
+            return JsonResponse({'success': False, 'error': 'У вас нет прав для этого действия.'})
+
+        form = NewsForm(request.POST, request.FILES)
+        if form.is_valid():
+            article = NewsArticles(
+                title=form.cleaned_data['title'],
+                content=form.cleaned_data['content'],
+                author=request.user,
+                published_at=timezone.now(),
+                updated_at=timezone.now(),
+                tags='Администрация'  # Автоматический тег
+            )
+
+            # Сохранение картинки
+            image = form.cleaned_data.get('image')
+            if image:
+                image_id = str(uuid.uuid4())
+                file_path = f"news/{image_id}_{image.name}"
+                default_storage.save(file_path, image)
+                article.image_url = file_path
+
+            article.save()
+            return JsonResponse({'success': True})
+        else:
+            return JsonResponse({'success': False, 'error': 'Форма содержит ошибки.'})
+
+    articles = NewsArticles.objects.all().order_by('-published_at')
+    return render(request, 'accounts/news.html', {'articles': articles})
+
+# Детальная страница новости
+def news_detail(request, article_id):
+    article = get_object_or_404(NewsArticles, article_id=article_id)
+
+    # Увеличиваем счётчик просмотров
+    user = request.user if request.user.is_authenticated else None
+    if not NewsViews.objects.filter(article=article, user=user).exists():
+        NewsViews.objects.create(
+            article=article,
+            user=user,
+            viewed_at=timezone.now()
+        )
+
+    # Подсчёт просмотров и лайков
+    views_count = NewsViews.objects.filter(article=article).count()
+    likes_count = NewsLikes.objects.filter(article=article).count()
+    user_liked = NewsLikes.objects.filter(article=article, user=user).exists() if user else False
+
+    # Обработка лайка
+    if request.method == 'POST' and request.user.is_authenticated and 'like' in request.POST:
+        if not user_liked:
+            NewsLikes.objects.create(
+                article=article,
+                user=request.user,
+                created_at=timezone.now()
+            )
+            likes_count += 1
+            user_liked = True
+
+    return render(request, 'accounts/news_detail.html', {
+        'article': article,
+        'views_count': views_count,
+        'likes_count': likes_count,
+        'user_liked': user_liked,
+    })
+
+# Создание новости
+@login_required
+def create_news(request):
+    if not request.user.is_authenticated or request.user.role.role_name != 'moderator':
+        messages.error(request, 'У вас нет прав для этого действия.')
+        return redirect('news')
+
+    if request.method == 'POST':
+        form = NewsForm(request.POST, request.FILES)
+        if form.is_valid():
+            article = NewsArticles(
+                title=form.cleaned_data['title'],
+                content=form.cleaned_data['content'],
+                author=request.user,
+                published_at=timezone.now(),
+                updated_at=timezone.now(),
+                tags='Администрация'  # Автоматический тег
+            )
+
+            # Сохранение картинки
+            image = form.cleaned_data.get('image')
+            if image:
+                image_id = str(uuid.uuid4())
+                file_path = f"news/{image_id}_{image.name}"
+                default_storage.save(file_path, image)
+                article.image_url = file_path
+
+            article.save()
+            messages.success(request, 'Новость успешно создана!')
+            return redirect('news')
+    else:
+        form = NewsForm()
+
+    return render(request, 'accounts/create_news.html', {'form': form})
