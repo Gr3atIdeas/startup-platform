@@ -11,7 +11,7 @@ import logging
 import os
 from django.conf import settings
 from .forms import RegisterForm, LoginForm, StartupForm
-from .models import Users, Directions, Startups, ReviewStatuses, UserVotes, StartupTimeline, FileStorage, EntityTypes, FileTypes, InvestmentTransactions, TransactionTypes, PaymentMethods,
+from .models import Users, Directions, Startups, ReviewStatuses, UserVotes, StartupTimeline, FileStorage, EntityTypes, FileTypes, InvestmentTransactions, TransactionTypes, PaymentMethods
 from .models import creative_upload_path, proof_upload_path, video_upload_path
 import uuid
 from .models import Comments
