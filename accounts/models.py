@@ -532,6 +532,14 @@ class NewsArticles(models.Model):
         managed = False
         db_table = 'news_articles'
 
+    def get_image_url(self):
+        """Генерирует полный URL для картинки новости."""
+        if self.image_url:
+            # Базовый URL Yandex Object Storage
+            base_url = "https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/"
+            return f"{base_url}{self.image_url}"
+        return None
+
 class NewsLikes(models.Model):
     like_id = models.AutoField(primary_key=True)
     article = models.ForeignKey('NewsArticles', models.CASCADE, db_column='article_id')

@@ -15,6 +15,7 @@
       border-radius: 12px;
       overflow: hidden;
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      position: relative;
     }
     .news-image {
       width: 100%;
@@ -59,6 +60,19 @@
       border-radius: 99px;
       margin-bottom: 20px;
       cursor: pointer;
+    }
+    .delete-news-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #FF6161;
+      color: #FFFFFF;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-family: 'Circe', sans-serif;
+      font-size: 14px;
     }
     /* Стили для popup */
     .popup-overlay {
@@ -132,7 +146,7 @@
   <!-- Popup для создания новости -->
   <div class="popup-overlay" id="newsPopup">
     <div class="popup">
-      <button class="popup-close" onclick="closePopup()">&times;</button>
+      <button class="popup-close" onclick="closePopup()">×</button>
       <h2>Создать новость</h2>
       <form id="newsForm" enctype="multipart/form-data">
         {% csrf_token %}
@@ -155,9 +169,12 @@
 
   {% for article in articles %}
     <div class="news-card">
-      {% if article.image_url %}
+      {% if user.is_authenticated and user.role.role_name == 'moderator' %}
+        <button class="delete-news-btn" onclick="deleteNews({{ article.article_id }})">Удалить</button>
+      {% endif %}
+      {% if article.get_image_url %}
         <a href="{% url 'news_detail' article.article_id %}">
-          <img src="{{ article.image_url }}" alt="{{ article.title }}" class="news-image">
+          <img src="{{ article.get_image_url }}" alt="{{ article.title }}" class="news-image">
         </a>
       {% endif %}
       <div class="news-content">
@@ -204,7 +221,7 @@
     .then(data => {
       if (data.success) {
         closePopup();
-        location.reload(); // Перезагружаем страницу
+        location.reload();
       } else {
         alert(data.error || 'Ошибка при создании новости');
       }
@@ -214,5 +231,30 @@
       alert('Произошла ошибка при отправке формы');
     });
   });
+
+  function deleteNews(articleId) {
+    if (!confirm('Вы уверены, что хотите удалить эту новость?')) {
+      return;
+    }
+
+    fetch(`/news/${articleId}/delete/`, {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': '{{ csrf_token }}'
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        location.reload();
+      } else {
+        alert(data.error || 'Ошибка при удалении новости');
+      }
+    })
+    .catch(error => {
+      console.error('Ошибка:', error);
+      alert('Произошла ошибка при удалении новости');
+    });
+  }
 </script>
 {% endblock %}

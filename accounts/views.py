@@ -238,10 +238,6 @@ def startup_detail(request, startup_id):
 def investments(request):
     return render(request, 'accounts/investments.html')
 
-# Страница новостей
-def news(request):
-    return render(request, 'accounts/news.html')
-
 # Страница юридической информации
 def legal(request):
     return render(request, 'accounts/legal.html')
@@ -776,7 +772,6 @@ class NewsForm(forms.Form):
     content = forms.CharField(widget=forms.Textarea, label="Текст новости")
     image = forms.ImageField(label="Картинка", required=False)
 
-# Страница новостей (лента) с обработкой создания новости
 def news(request):
     if request.method == 'POST':
         if not request.user.is_authenticated or request.user.role.role_name != 'moderator':
@@ -792,16 +787,17 @@ def news(request):
                 updated_at=timezone.now(),
                 tags='Администрация'  # Автоматический тег
             )
+            article.save()  # Сохраняем, чтобы получить article_id
 
-            # Сохранение картинки
+            # Сохранение картинки в папке news/<article_id>/
             image = form.cleaned_data.get('image')
             if image:
                 image_id = str(uuid.uuid4())
-                file_path = f"news/{image_id}_{image.name}"
+                file_path = f"news/{article.article_id}/{image_id}_{image.name}"
                 default_storage.save(file_path, image)
                 article.image_url = file_path
+                article.save()
 
-            article.save()
             return JsonResponse({'success': True})
         else:
             return JsonResponse({'success': False, 'error': 'Форма содержит ошибки.'})
@@ -809,7 +805,6 @@ def news(request):
     articles = NewsArticles.objects.all().order_by('-published_at')
     return render(request, 'accounts/news.html', {'articles': articles})
 
-# Детальная страница новости
 def news_detail(request, article_id):
     article = get_object_or_404(NewsArticles, article_id=article_id)
 
@@ -879,3 +874,23 @@ def create_news(request):
         form = NewsForm()
 
     return render(request, 'accounts/create_news.html', {'form': form})
+
+
+def delete_news(request, article_id):
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Неверный метод запроса'})
+
+    if not request.user.is_authenticated or request.user.role.role_name != 'moderator':
+        return JsonResponse({'success': False, 'error': 'У вас нет прав для этого действия.'})
+
+    article = get_object_or_404(NewsArticles, article_id=article_id)
+    
+    # Удаляем картинку из хранилища, если она есть
+    if article.image_url:
+        try:
+            default_storage.delete(article.image_url)
+        except Exception as e:
+            logger.error(f"Ошибка при удалении картинки новости {article_id}: {str(e)}")
+
+    article.delete()
+    return JsonResponse({'success': True})

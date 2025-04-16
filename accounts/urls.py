@@ -12,6 +12,7 @@ urlpatterns = [
     path('investments/', views.investments, name='investments'),
     path('news/', views.news, name='news'),
     path('news/<int:article_id>/', views.news_detail, name='news_detail'),
+    path('news/<int:article_id>/delete/', views.delete_news, name='delete_news'),  # Новый маршрут
     path('legal/', views.legal, name='legal'),
     path('profile/', views.profile, name='profile'),
     path('create-startup/', views.create_startup, name='create_startup'),

@@ -55,15 +55,31 @@
     .like-button.liked {
       color: #FF6161;
     }
+    .delete-news-btn {
+      background: #FF6161;
+      color: #FFFFFF;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-family: 'Circe', sans-serif;
+      font-size: 14px;
+      margin-left: 20px;
+    }
   </style>
 {% endblock %}
 
 {% block content %}
 <div class="news-detail">
-  {% if article.image_url %}
-    <img src="{{ article.image_url }}" alt="{{ article.title }}" class="news-detail-image">
+  {% if article.get_image_url %}
+    <img src="{{ article.get_image_url }}" alt="{{ article.title }}" class="news-detail-image">
   {% endif %}
-  <h1 class="news-detail-title">{{ article.title }}</h1>
+  <div style="display: flex; align-items: center;">
+    <h1 class="news-detail-title">{{ article.title }}</h1>
+    {% if user.is_authenticated and user.role.role_name == 'moderator' %}
+      <button class="delete-news-btn" onclick="deleteNews({{ article.article_id }})">Удалить</button>
+    {% endif %}
+  </div>
   <div class="news-detail-meta">
     {{ article.published_at|date:"d.m.Y H:i" }} | Автор: {{ article.author.email|default:"Неизвестно" }}
   </div>
@@ -83,4 +99,31 @@
     {{ article.content|linebreaks }}
   </div>
 </div>
+
+<script>
+  function deleteNews(articleId) {
+    if (!confirm('Вы уверены, что хотите удалить эту новость?')) {
+      return;
+    }
+
+    fetch(`/news/${articleId}/delete/`, {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': '{{ csrf_token }}'
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        window.location.href = "{% url 'news' %}"; // Перенаправляем на ленту новостей
+      } else {
+        alert(data.error || 'Ошибка при удалении новости');
+      }
+    })
+    .catch(error => {
+      console.error('Ошибка:', error);
+      alert('Произошла ошибка при удалении новости');
+    });
+  }
+</script>
 {% endblock %}
