@@ -53,7 +53,7 @@ body {
 /* Поле поиска как в макете */
 .search-container {
   position: relative;
-  width: 320px;
+  width: 240px;
   height: 32px;
   background: #FFFFFF;
   border: 1px solid #E5E7EB;
@@ -132,19 +132,20 @@ body {
   object-fit: cover;
 }
 
-/* Кнопка входа точно как на скриншоте - шеврон */
+/* Кнопка входа точно как на скриншоте - шеврон с плюсом в круге */
 .login-btn {
   position: relative;
   min-width: 132px;
   height: 32px;
   display: flex;
   align-items: center;
+  justify-content: center;
   background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
   box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.25);
-  border-radius: 0;
+  border-radius: 4px;
   text-decoration: none;
-  padding: 0 40px 0 20px;
-  clip-path: polygon(0 0, 90% 0, 100% 50%, 90% 100%, 0 100%, 10% 50%);
+  padding: 0 36px 0 16px;
+  clip-path: polygon(0 0, 85% 0, 100% 50%, 85% 100%, 0 100%, 5% 50%);
 }
 
 .login-btn span {
@@ -152,18 +153,27 @@ body {
   font-weight: 400;
   font-size: 14px;
   color: #000000;
-  position: relative;
-  z-index: 2;
+  margin-right: 5px;
 }
 
-.login-btn .login-icon {
+/* Круг с плюсом */
+.login-btn::after {
+  content: "+";
   position: absolute;
-  right: 25px;
+  right: 16px;
   top: 50%;
   transform: translateY(-50%);
-  width: 14px;
-  height: 14px;
-  z-index: 2;
+  width: 18px;
+  height: 18px;
+  background: #000000;
+  color: #FFEF2B;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 1;
 }
 
 /* Фиксируем стили для всех страниц */
