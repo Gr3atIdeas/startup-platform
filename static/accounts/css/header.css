@@ -5,7 +5,7 @@ html, body {
 }
 
 body {
-  padding-top: 68px; /* Отступ для фиксированного хедера */
+  padding-top: 59px; /* Высота хедера */
 }
 
 /* Фиксированный хедер */
@@ -51,23 +51,21 @@ body {
 /* Поле поиска */
 .search-container {
   position: relative;
-  width: 352px;
+  width: 500px; /* Длинная строка поиска */
   height: 38px;
-  display: flex;
-  align-items: center;
+  margin: 0 auto;
   background: rgba(255, 255, 255, 0.19);
   border: 1px solid #004E9F;
   border-radius: 99px;
-  padding: 8px 30px;
 }
 
 .search-icon {
-  width: 22px;
-  height: 22px;
-  color: #A1A0A0;
-  opacity: 0.6;
   position: absolute;
   left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #A1A0A0;
+  opacity: 0.6;
 }
 
 .search-input {
@@ -82,33 +80,30 @@ body {
   line-height: 15px;
   color: #A1A0A0;
   outline: none;
-  padding: 0 16px 0 30px;
+  padding: 0 16px 0 40px;
+  border-radius: 99px;
 }
 
 /* Навигационное меню */
 .nav-menu {
   display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
   align-items: center;
-  gap: 24px;
+  gap: 48px;
 }
 
 .nav-menu a {
   display: flex;
-  flex-direction: row;
   justify-content: center;
   align-items: center;
-  padding: 8px 16px;
-  gap: 2px;
   text-decoration: none;
-  border-radius: 5px;
   font-family: 'Unbounded', sans-serif;
   font-style: normal;
   font-weight: 300;
   font-size: 14px;
   line-height: 18px;
   color: #000000;
+  padding: 8px 16px;
+  border-radius: 5px;
 }
 
 .nav-menu a.active {
@@ -116,12 +111,8 @@ body {
   color: #FFFFFF;
 }
 
-/* Кнопка создать стартап */
+/* Кнопка создания стартапа */
 .create-startup-btn {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  padding: 8px 30px;
   border: 1px solid #7B61FF !important;
   border-radius: 99px;
   color: #7B61FF !important;
@@ -138,14 +129,11 @@ body {
 
 /* Кнопка входа */
 .login-btn {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 10px;
+  position: relative;
   background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
   box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 4px;
-  padding: 8px 12px;
+  padding: 8px 30px 8px 16px;
 }
 
 .login-btn span {
@@ -158,6 +146,8 @@ body {
 }
 
 .login-btn i {
+  position: absolute;
+  right: 10px;
   font-size: 16px;
   color: #000000;
 }
@@ -166,6 +156,14 @@ body {
 @media (max-width: 1200px) {
   .header {
     padding: 0 20px;
+  }
+  
+  .search-container {
+    width: 400px;
+  }
+  
+  .nav-menu {
+    gap: 20px;
   }
 }
 
