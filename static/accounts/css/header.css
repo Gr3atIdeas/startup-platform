@@ -2,10 +2,11 @@
 html, body {
   margin: 0;
   padding: 0;
+  font-family: 'Unbounded', sans-serif;
 }
 
 body {
-  padding-top: 59px; /* Высота хедера */
+  padding-top: 60px; /* Высота хедера */
 }
 
 /* Фиксированный хедер */
@@ -15,7 +16,7 @@ body {
   left: 0;
   right: 0;
   width: 100%;
-  height: 59px;
+  height: 60px;
   z-index: 9999;
   background-color: #FFFFFF;
   display: flex;
@@ -58,7 +59,6 @@ body {
   border: 1px solid #E5E7EB;
   border-radius: 99px;
   overflow: hidden;
-  margin: 0 20px;
 }
 
 .search-icon {
@@ -88,7 +88,8 @@ body {
 .nav-menu {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 10px;
+  font-family: 'Unbounded', sans-serif;
 }
 
 .nav-link {
@@ -100,8 +101,8 @@ body {
   font-weight: 300;
   font-size: 14px;
   color: #000000;
-  padding: 6px 16px;
-  border-radius: 6px;
+  padding: 6px 10px;
+  border-radius: 4px; /* Легкое скругление углов */
   white-space: nowrap;
 }
 
@@ -112,6 +113,7 @@ body {
 
 /* Кнопка создания стартапа */
 .create-startup-btn {
+  font-family: 'Unbounded', sans-serif;
   border: 1px solid #7B61FF !important;
   border-radius: 99px;
   color: #7B61FF !important;
@@ -132,9 +134,10 @@ body {
   display: flex;
   align-items: center;
   background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
-  border-radius: 24px;
-  padding: 6px 30px 6px 16px;
+  border-radius: 30px;
+  padding: 8px 30px 8px 16px;
   text-decoration: none;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 .login-btn span {
@@ -147,8 +150,10 @@ body {
 .login-btn .login-icon {
   position: absolute;
   right: 10px;
-  font-size: 8px;
-  color: #000000;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
 }
 
 /* Адаптивность */
