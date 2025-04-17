@@ -134,56 +134,27 @@ body {
   object-fit: cover;
 }
 
-/* Кнопка входа как в макете */
-.login-btn, .cta {
-  display: flex;
-  align-items: center;
-  padding: 8px 24px;
-  text-decoration: none;
-  font-family: 'Unbounded', sans-serif;
-  font-size: 14px;
-  font-weight: 500;
-  color: black;
-  background: #FFEF2B;
-  transition: 0.3s;
-  box-shadow: 4px 4px 0 black;
-  transform: skewX(-15deg);
-  border-radius: 0;
-}
-
-.login-btn:focus, .cta:focus {
-  outline: none; 
-}
-
-.login-btn:hover, .cta:hover {
-  transition: 0.3s;
-  box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.3);
-}
-
-.login-btn span, .cta span {
-  transform: skewX(15deg);
-}
-
-.login-btn span:nth-child(2), .cta span:nth-child(2) {
-  width: 20px;
-  height: 20px;
-  margin-left: 12px;
-  background: #000;
-  border-radius: 50%;
+/* Кнопка входа точно как в макете */
+.login-btn {
+  position: relative;
+  width: 142px;
+  height: 42px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #FFEF2B;
-  font-size: 16px;
-  font-weight: bold;
-  transition: 0.3s;
+  text-decoration: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg width='142' height='42' viewBox='0 0 142 42' fill='none' xmlns='http://www.w3.org/2000/svg'%3e%3cg filter='url(%23filter0_d_4645_41521)'%3e%3cpath d='M4.35776 18.9565L19.1861 32.0031C19.9163 32.6456 20.8557 33 21.8283 33H131C133.209 33 135 31.2091 135 29V19.3584C135 18.3334 134.607 17.3475 133.901 16.6042L120.268 2.24581C119.513 1.4504 118.464 1 117.367 1H7C4.79086 1 3 2.79086 3 5V15.9534C3 17.1031 3.49465 18.1971 4.35776 18.9565Z' fill='url(%23paint0_linear_4645_41521)'/%3e%3cpath d='M4.35776 18.9565L19.1861 32.0031C19.9163 32.6456 20.8557 33 21.8283 33H131C133.209 33 135 31.2091 135 29V19.3584C135 18.3334 134.607 17.3475 133.901 16.6042L120.268 2.24581C119.513 1.4504 118.464 1 117.367 1H7C4.79086 1 3 2.79086 3 5V15.9534C3 17.1031 3.49465 18.1971 4.35776 18.9565Z' stroke='url(%23paint1_linear_4645_41521)'/%3e%3c/g%3e%3crect x='30.5' y='5.5' width='84' height='23' stroke='url(%23paint2_linear_4645_41521)'/%3e%3cpath d='M37.28 17.25L37.434 16.914C38.2833 16.9233 38.9693 17.054 39.492 17.306C40.0147 17.5487 40.3973 17.88 40.64 18.3C40.8827 18.7107 41.004 19.168 41.004 19.672C41.004 20.2227 40.8687 20.7127 40.598 21.142C40.3367 21.562 39.9493 21.8933 39.436 22.136C38.9227 22.3787 38.288 22.5 37.532 22.5H30.91L31.736 17.11L30.91 12H37.294C38.2647 12 39.0067 12.2287 39.52 12.686C40.0427 13.134 40.304 13.75 40.304 14.534C40.304 14.9447 40.2013 15.3507 39.996 15.752C39.8 16.144 39.4827 16.48 39.044 16.76C38.6053 17.0307 38.0173 17.194 37.28 17.25ZM32.254 22.066L31.75 21.408H37.462C38.1527 21.408 38.6893 21.254 39.072 20.946C39.464 20.6287 39.66 20.176 39.66 19.588C39.66 18.9627 39.4313 18.482 38.974 18.146C38.5167 17.81 37.84 17.642 36.944 17.642H32.408V16.578H36.874C37.4713 16.578 37.966 16.4147 38.358 16.088C38.7593 15.7613 38.96 15.2853 38.96 14.66C38.96 14.2027 38.7967 13.8293 38.47 13.54C38.1527 13.2413 37.6813 13.092 37.056 13.092H31.75L32.254 12.434L33.01 17.11L32.254 22.066ZM46.5911 22.682C45.6671 22.682 44.8504 22.5093 44.1411 22.164C43.4411 21.8187 42.8951 21.3333 42.5031 20.708C42.1111 20.0827 41.9151 19.364 41.9151 18.552C41.9151 17.7307 42.1111 17.012 42.5031 16.396C42.8951 15.78 43.4411 15.2993 44.1411 14.954C44.8504 14.6087 45.6671 14.436 46.5911 14.436C47.5244 14.436 48.3411 14.6087 49.0411 14.954C49.7411 15.2993 50.2871 15.78 50.6791 16.396C51.0804 17.012 51.2811 17.7307 51.2811 18.552C51.2811 19.364 51.0804 20.0827 50.6791 20.708C50.2871 21.3333 49.7411 21.8187 49.0411 22.164C48.3411 22.5093 47.5244 22.682 46.5911 22.682ZM46.5911 21.604C47.2818 21.604 47.8791 21.4827 48.3831 21.24C48.8871 20.988 49.2744 20.6333 49.5451 20.176C49.8251 19.7187 49.9651 19.1773 49.9651 18.552C49.9651 17.936 49.8251 17.3993 49.5451 16.942C49.2744 16.4847 48.8871 16.13 48.3831 15.878C47.8791 15.626 47.2818 15.5 46.5911 15.5C45.9098 15.5 45.3124 15.626 44.7991 15.878C44.2951 16.13 43.9078 16.4847 43.6371 16.942C43.3664 17.3993 43.2311 17.936 43.2311 18.552C43.2311 19.1773 43.3664 19.7187 43.6371 20.176C43.9078 20.6333 44.2951 20.988 44.7991 21.24C45.3124 21.4827 45.9098 21.604 46.5911 21.604ZM52.6111 22.5V14.618H53.8851V21.912L53.3951 21.842L59.4291 14.618H61.0951V22.5H59.8211V15.136L60.3251 15.22L54.2491 22.5H52.6111ZM56.7691 13.75C56.0038 13.75 55.3831 13.554 54.9071 13.162C54.4404 12.7607 54.1558 12.1913 54.0531 11.454H55.1451C55.2291 11.9113 55.4111 12.266 55.6911 12.518C55.9804 12.7607 56.3398 12.882 56.7691 12.882C57.2078 12.882 57.5671 12.7607 57.8471 12.518C58.1271 12.266 58.3091 11.9113 58.3931 11.454H59.4851C59.3918 12.1913 59.1071 12.7607 58.6311 13.162C58.1551 13.554 57.5344 13.75 56.7691 13.75ZM65.4611 15.052H66.7491V22.5H65.4611V15.052ZM62.0451 14.618H70.1651V15.668H62.0451V14.618ZM71.1097 22.5V14.618H72.3837V21.912L71.8937 21.842L77.9277 14.618H79.5937V22.5H78.3197V15.136L78.8237 15.22L72.7477 22.5H71.1097Z' fill='black'/%3e%3cpath fill-rule='evenodd' clip-rule='evenodd' d='M93.25 17C93.25 11.617 97.617 7.25 103 7.25C108.383 7.25 112.75 11.617 112.75 17C112.75 22.383 108.383 26.75 103 26.75C97.617 26.75 93.25 22.383 93.25 17ZM103 8.75C98.4455 8.75 94.75 12.4455 94.75 17C94.75 21.5545 98.4455 25.25 103 25.25C107.555 25.25 111.25 21.5545 111.25 17C111.25 12.4455 107.555 8.75 103 8.75Z' fill='black'/%3e%3cpath fill-rule='evenodd' clip-rule='evenodd' d='M103 12.5C103.414 12.5 103.75 12.8358 103.75 13.25V16.25H106.75C107.164 16.25 107.5 16.5858 107.5 17C107.5 17.4142 107.164 17.75 106.75 17.75H103.75V20.75C103.75 21.1642 103.414 21.5 103 21.5C102.586 21.5 102.25 21.1642 102.25 20.75V17.75H99.25C98.8358 17.75 98.5 17.4142 98.5 17C98.5 16.5858 98.8358 16.25 99.25 16.25H102.25V13.25C102.25 12.8358 102.586 12.5 103 12.5Z' fill='black'/%3e%3cdefs%3e%3cfilter id='filter0_d_4645_41521' x='0.5' y='0.5' width='141' height='41' filterUnits='userSpaceOnUse' color-interpolation-filters='sRGB'%3e%3cfeFlood flood-opacity='0' result='BackgroundImageFix'/%3e%3cfeColorMatrix in='SourceAlpha' type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0' result='hardAlpha'/%3e%3cfeOffset dx='2' dy='4'/%3e%3cfeGaussianBlur stdDeviation='2'/%3e%3cfeComposite in2='hardAlpha' operator='out'/%3e%3cfeColorMatrix type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0'/%3e%3cfeBlend mode='normal' in2='BackgroundImageFix' result='effect1_dropShadow_4645_41521'/%3e%3cfeBlend mode='normal' in='SourceGraphic' in2='effect1_dropShadow_4645_41521' result='shape'/%3e%3c/filter%3e%3clinearGradient id='paint0_linear_4645_41521' x1='69' y1='1' x2='69' y2='33' gradientUnits='userSpaceOnUse'%3e%3cstop stop-color='%23FFEF2B'/%3e%3cstop offset='1' stop-color='%23F9F7D6'/%3e%3c/linearGradient%3e%3clinearGradient id='paint1_linear_4645_41521' x1='69' y1='33' x2='69' y2='1' gradientUnits='userSpaceOnUse'%3e%3cstop stop-color='%23FFEF2B'/%3e%3cstop offset='1' stop-color='%23F9F7D6'/%3e%3c/linearGradient%3e%3clinearGradient id='paint2_linear_4645_41521' x1='72.5' y1='5' x2='72.5' y2='29' gradientUnits='userSpaceOnUse'%3e%3cstop stop-color='%23FFEF2B'/%3e%3cstop offset='1' stop-color='%23F9F7D6'/%3e%3c/linearGradient%3e%3c/defs%3e%3c/svg%3e ");
+  background-repeat: no-repeat;
+  background-size: contain;
+  border: none;
+  box-shadow: none;
+  transform: none;
+  padding: 0;
+  font-family: 'Unbounded', sans-serif;
 }
 
-.login-btn:hover span:nth-child(2), .cta:hover span:nth-child(2) {
-  transform: skewX(15deg) translateX(5px);
-}
-
-/* Удаляем предыдущие стили кнопки */
+/* Удаляем все старые стили */
+.login-btn span,
 .login-btn::after {
   display: none;
 }
