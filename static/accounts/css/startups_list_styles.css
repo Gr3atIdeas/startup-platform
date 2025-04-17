@@ -182,7 +182,7 @@ body {
   border: none;
   border-radius: 5px;
   background-color: #E5E7EB;
-  height: 5px;
+  height: 3px;
   box-shadow: none;
   margin-bottom: 8px;
 }
@@ -192,14 +192,15 @@ body {
 }
 
 .noUi-handle {
-  width: 18px !important;
-  height: 18px !important;
+  width: 20px !important;
+  height: 20px !important;
   border-radius: 50%;
   background: #0057B7;
   border: 2px solid white;
-  box-shadow: none;
-  right: -9px !important;
-  top: -7px !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+  right: -10px !important;
+  top: -9px !important;
+  cursor: pointer;
 }
 
 .noUi-handle:before,

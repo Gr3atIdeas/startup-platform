@@ -161,12 +161,17 @@
   font-size: 16px;
   text-align: center;
   padding-left: 15px;
-  padding-bottom: 4px;
+  padding-bottom: 5px;
 }
 
 .join-plus-icon {
   font-size: 18px;
   margin-right: 8px;
+  font-family: 'Unbounded', sans-serif;
+}
+
+.join-text {
+  font-family: 'Unbounded', sans-serif;
 }
 
 .join-button:hover {
