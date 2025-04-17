@@ -168,9 +168,11 @@ body {
 }
 
 .rating-label {
-  display: block;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   font-weight: 500;
-  margin-bottom: 10px;
+  margin-bottom: 16px;
   font-size: 14px;
   font-family: 'Unbounded', sans-serif;
 }
@@ -182,26 +184,36 @@ body {
   background-color: #E5E7EB;
   height: 5px;
   box-shadow: none;
+  margin-bottom: 8px;
 }
 
 .noUi-connect {
-  background-color: #7B61FF;
+  background-color: #0057B7;
 }
 
 .noUi-handle {
-  width: 16px !important;
-  height: 16px !important;
+  width: 18px !important;
+  height: 18px !important;
   border-radius: 50%;
-  background: #7B61FF;
+  background: #0057B7;
   border: 2px solid white;
   box-shadow: none;
-  right: -8px !important;
+  right: -9px !important;
   top: -7px !important;
 }
 
 .noUi-handle:before,
 .noUi-handle:after {
   display: none;
+}
+
+.rating-filter:after {
+  content: "Диапазон";
+  font-size: 12px;
+  color: #9CA3AF;
+  display: block;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 300;
 }
 
 /* Секция микроинвестиций */
@@ -233,32 +245,33 @@ body {
 
 /* Переключатель */
 .toggle-switch {
-  width: 40px;
-  height: 20px;
+  width: 48px;
+  height: 24px;
   background: #E5E7EB;
-  border-radius: 20px;
+  border-radius: 12px;
   position: relative;
   cursor: pointer;
   transition: background-color 0.3s;
 }
 
 .toggle-switch.active {
-  background: #7B61FF;
+  background: #0057B7;
 }
 
 .toggle-handle {
   position: absolute;
-  width: 16px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
   top: 2px;
   left: 2px;
   background: white;
   border-radius: 50%;
   transition: left 0.3s;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .toggle-switch.active .toggle-handle {
-  left: 22px;
+  left: 26px;
 }
 
 /* Кнопка Показать */
