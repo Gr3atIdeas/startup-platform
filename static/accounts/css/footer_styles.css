@@ -130,33 +130,44 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  background: transparent;
+  border: none;
+  padding: 0;
+  outline: none;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.join-button svg {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 240px;
   height: 48px;
+  z-index: 0;
+}
+
+.join-button-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 240px;
+  height: 48px;
+  color: #000000;
   font-family: 'Unbounded', sans-serif;
   font-weight: 500;
   font-size: 16px;
-  line-height: 24px;
-  cursor: pointer;
-  color: #000000;
-  background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
-  border: 1px solid rgba(255, 239, 43, 0.5);
-  border-radius: 5px;
-  padding: 0 20px;
-  transition: transform 0.3s ease;
-  box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.25);
-  overflow: hidden;
-  transform: perspective(10px) rotateX(0.5deg);
-  clip-path: polygon(0% 30%, 5% 0%, 95% 0%, 100% 25%, 100% 100%, 0% 100%);
+}
+
+.join-plus-icon {
+  font-size: 18px;
+  margin-right: 8px;
 }
 
 .join-button:hover {
-  transform: translateY(-3px) perspective(10px) rotateX(0.5deg);
-}
-
-.join-button i {
-  font-size: 16px;
-  margin-right: 5px;
+  transform: translateY(-3px);
 }
 
 /* Менюшки в футере */
@@ -215,7 +226,7 @@
   left: 0;
   width: 100%;
   height: 40px;
-  background-color: rgba(245, 244, 243, 0.1);
+  background-color: rgba(245, 244, 243, 0.05);
   display: flex;
   align-items: center;
   z-index: 1;
@@ -233,7 +244,7 @@
   font-weight: 300;
   font-size: 12px;
   line-height: 16px;
-  color: #9E9E9E;
+  color: #FFFFFF;
 }
 
 .footer-copyright-bar-links {
@@ -246,13 +257,9 @@
   font-weight: 300;
   font-size: 12px;
   line-height: 16px;
-  color: #9E9E9E;
+  color: #FFFFFF;
   text-decoration: none;
   transition: color 0.2s ease;
-}
-
-.footer-copyright-bar-links a:hover {
-  color: #FFFFFF;
 }
 
 /* Responsive стили */
