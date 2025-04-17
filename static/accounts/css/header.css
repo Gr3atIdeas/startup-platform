@@ -43,6 +43,7 @@ body {
   display: flex;
   align-items: center;
   text-decoration: none;
+  margin-right: 30px;
 }
 
 .header-logo-img {
@@ -59,8 +60,8 @@ body {
   border: 1px solid #E5E7EB;
   border-radius: 20px;
   overflow: hidden;
-  margin: 0 auto;
-  flex: 0 0 auto;
+  margin-right: auto;
+  flex: 0 0 160px;
 }
 
 .search-icon {
@@ -92,7 +93,7 @@ body {
   display: flex;
   align-items: center;
   gap: 12px;
-  position: relative;
+  margin-left: 20px;
 }
 
 .nav-menu a {
@@ -133,20 +134,17 @@ body {
   object-fit: cover;
 }
 
-/* Кнопка входа точно как на скриншоте - шеврон с плюсом в круге */
+/* Кнопка входа точно как на скриншоте */
 .login-btn {
   position: relative;
-  min-width: 132px;
+  width: 132px;
   height: 32px;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
   background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
   box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.25);
-  border-radius: 0;
   text-decoration: none;
-  padding: 0;
-  clip-path: polygon(0 0, 88% 0, 100% 50%, 88% 100%, 0 100%, 10% 50%);
+  clip-path: polygon(0 0, 88% 0, 100% 50%, 88% 100%, 0 100%, 5% 50%);
 }
 
 .login-btn span {
@@ -161,7 +159,7 @@ body {
 .login-btn::after {
   content: "+";
   position: absolute;
-  right: 12px;
+  right: 18px;
   top: 50%;
   transform: translateY(-50%);
   width: 16px;
@@ -217,17 +215,9 @@ body {
   .header {
     padding: 0 20px;
   }
-  
-  .search-container {
-    width: 160px;
-  }
 }
 
 @media (max-width: 992px) {
-  .search-container {
-    width: 140px;
-  }
-  
   .nav-menu {
     gap: 5px;
   }
@@ -243,12 +233,14 @@ body {
   .search-container {
     width: 100%;
     margin: 10px 0;
+    flex: none;
   }
   
   .nav-menu {
     flex-wrap: wrap;
     justify-content: center;
     width: 100%;
+    margin: 10px 0 0 0;
   }
   
   body {
