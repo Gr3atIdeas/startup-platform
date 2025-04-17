@@ -22,13 +22,6 @@
     <p class="catalog-subtitle">Ваш шанс найти самые следующие и успешные стартапы</p>
   </div>
 
-  <div class="search-wrapper">
-    <div class="catalog-search">
-      <input type="text" class="catalog-search-input" placeholder="Поиск по каталогу" value="{{ search_query|default_if_none:'' }}">
-      <button class="catalog-search-btn"><i class="fas fa-search"></i></button>
-    </div>
-  </div>
-
   <div class="catalog-container">
     <!-- Боковая панель с фильтрами -->
     <div class="sidebar">
@@ -133,69 +126,78 @@
       </form>
     </div>
     
-    <!-- Сетка стартапов -->
-    <div class="startups-grid">
-      {% if approved_startups %}
-        {% for startup in approved_startups %}
-          <a href="{% url 'startup_detail' startup.startup_id %}" class="startup-card-link">
-            <div class="startup-card">
-              <div class="startup-card-header">
-                <div class="startup-type">
-                  {% if startup.both_mode %}
-                    Выкуп+инвестирование
-                  {% elif startup.only_invest %}
-                    Только инвестиции
-                  {% elif startup.only_buy %}
-                    Только выкуп
-                  {% endif %}
-                </div>
-                <div class="startup-avatar">
-                  {% if startup.logo_urls %}
-                    <img src="{% get_file_url_tag startup.logo_urls.0 startup.startup_id 'logo' %}" alt="{{ startup.title }}">
-                  {% else %}
-                    {{ startup.title|make_list|first|upper }}
-                  {% endif %}
-                </div>
-                <h3 class="startup-name">{{ startup.title }}</h3>
-                <div class="startup-rating">
-                  <div class="rating-stars" data-rating="{{ startup.average_rating|default:0 }}">
-                    {% for i in "12345" %}
-                      <i class="fas fa-star {% if forloop.counter <= startup.average_rating|floatformat:0 %}active{% endif %}"></i>
-                    {% endfor %}
+    <!-- Область с карточками стартапов и поиском -->
+    <div class="startups-content">
+      <!-- Поисковая строка -->
+      <div class="catalog-search">
+        <input type="text" class="catalog-search-input" placeholder="Поиск по каталогу" value="{{ search_query|default_if_none:'' }}">
+        <button class="catalog-search-btn"><i class="fas fa-search"></i></button>
+      </div>
+      
+      <!-- Сетка стартапов -->
+      <div class="startups-grid">
+        {% if approved_startups %}
+          {% for startup in approved_startups %}
+            <a href="{% url 'startup_detail' startup.startup_id %}" class="startup-card-link">
+              <div class="startup-card">
+                <div class="startup-card-header">
+                  <div class="startup-type">
+                    {% if startup.both_mode %}
+                      Выкуп+инвестирование
+                    {% elif startup.only_invest %}
+                      Только инвестиции
+                    {% elif startup.only_buy %}
+                      Только выкуп
+                    {% endif %}
                   </div>
-                  <span>{{ startup.average_rating|default:0|floatformat:1 }}</span>
+                  <div class="startup-avatar">
+                    {% if startup.logo_urls %}
+                      <img src="{% get_file_url_tag startup.logo_urls.0 startup.startup_id 'logo' %}" alt="{{ startup.title }}">
+                    {% else %}
+                      {{ startup.title|make_list|first|upper }}
+                    {% endif %}
+                  </div>
+                  <h3 class="startup-name">{{ startup.title }}</h3>
+                  <div class="startup-rating">
+                    <div class="rating-stars" data-rating="{{ startup.average_rating|default:0 }}">
+                      {% for i in "12345" %}
+                        <i class="fas fa-star {% if forloop.counter <= startup.average_rating|floatformat:0 %}active{% endif %}"></i>
+                      {% endfor %}
+                    </div>
+                    <span>{{ startup.average_rating|default:0|floatformat:1 }}</span>
+                  </div>
+                </div>
+                <div class="startup-card-body">
+                  <div class="startup-description">
+                    {{ startup.description }}
+                  </div>
+                  <div class="startup-info">
+                    <span class="startup-direction">
+                      {% for pair in direction_translations %}
+                        {% if pair.0 == startup.direction.direction_name %}
+                          {{ pair.1 }}
+                        {% endif %}
+                      {% endfor %}
+                    </span>
+                    <span class="startup-date">{{ startup.created_at|timesince }} назад</span>
+                  </div>
+                </div>
+                <div class="startup-card-footer">
+                  <button class="detail-button">Подробнее</button>
+                  <div class="comment-counter">
+                    <i class="far fa-comment comment-icon"></i>
+                    <span>{{ startup.comment_count|default:"0" }}</span>
+                  </div>
                 </div>
               </div>
-              <div class="startup-card-body">
-                <div class="startup-description">
-                  {{ startup.description }}
-                </div>
-                <div class="startup-info">
-                  <span class="startup-direction">
-                    {% for pair in direction_translations %}
-                      {% if pair.0 == startup.direction.direction_name %}
-                        {{ pair.1 }}
-                      {% endif %}
-                    {% endfor %}
-                  </span>
-                  <span class="startup-date">{{ startup.created_at|timesince }} назад</span>
-                </div>
-              </div>
-              <div class="startup-card-footer">
-                <button class="detail-button">Подробнее</button>
-                <div class="comment-counter">
-                  <i class="far fa-comment comment-icon"></i>
-                  <span>{{ startup.comment_count|default:"0" }}</span>
-                </div>
-              </div>
-            </div>
-          </a>
-        {% endfor %}
-      {% else %}
-        <div class="no-startups">
-          <p>В настоящее время нет доступных стартапов. Загляните позже!</p>
-        </div>
-      {% endif %}
+            </a>
+          {% endfor %}
+        {% else %}
+          <div class="no-startups">
+            <p>В настоящее время нет доступных стартапов. Загляните позже!</p>
+          </div>
+        {% endif %}
+      </div>
     </div>
   </div>
 </div>

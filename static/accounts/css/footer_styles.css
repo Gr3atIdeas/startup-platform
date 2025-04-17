@@ -109,6 +109,7 @@
   left: 80px;
 }
 
+/* Кнопка присоединиться */
 .join-button {
   display: flex;
   align-items: center;
@@ -116,15 +117,24 @@
   gap: 8px;
   width: 195px;
   height: 48px;
-  border: 1px solid #FFFFFF;
-  border-radius: 99px;
-  background: transparent;
-  color: #FFFFFF;
-  font-family: 'Circe', sans-serif;
-  font-weight: 700;
-  font-size: 18px;
-  line-height: 32px;
+  position: relative;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
   cursor: pointer;
+  color: #000000;
+  background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
+  border: 1px solid #F9F7D6;
+  border-radius: 8px;
+  box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.join-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 2px 6px 8px rgba(0, 0, 0, 0.3);
 }
 
 .join-button i {

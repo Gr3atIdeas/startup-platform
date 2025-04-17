@@ -44,12 +44,11 @@ body {
   margin: 0;
 }
 
-/* Обертка для поисковой строки */
-.search-wrapper {
-  width: 100%;
-  padding: 0 40px;
-  margin-bottom: 30px;
-  box-sizing: border-box;
+/* Обертка для области карточек и поиска */
+.startups-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Поиск по каталогу */
@@ -57,6 +56,7 @@ body {
   position: relative;
   width: 100%;
   max-width: 100%;
+  margin-bottom: 20px;
   border-radius: 99px;
   overflow: hidden;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
@@ -281,7 +281,6 @@ body {
 
 /* Область с карточками стартапов */
 .startups-grid {
-  flex-grow: 1;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 20px;
@@ -483,7 +482,7 @@ body {
     padding: 0 20px;
   }
   
-  .catalog-header, .search-wrapper {
+  .catalog-header {
     padding: 0 20px;
   }
   
