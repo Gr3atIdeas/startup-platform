@@ -255,8 +255,9 @@
         <img src="{% static 'accounts/images/layout/image12.png' %}" alt="Аватар" class="avatar">
         <a href="{% url 'logout' %}" class="logout-btn" aria-label="Выход"><i class="fas fa-sign-out-alt"></i></a>
       {% else %}
-        <a href="{% url 'login' %}" class="login-btn">
+        <a href="{% url 'login' %}" class="cta login-btn">
           <span>Войти</span>
+          <span class="icon">+</span>
         </a>
       {% endif %}
     </nav>

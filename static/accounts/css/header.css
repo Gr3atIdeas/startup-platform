@@ -134,45 +134,58 @@ body {
   object-fit: cover;
 }
 
-/* Кнопка входа точно как в макете */
-.login-btn {
-  position: relative;
-  width: 110px;
-  height: 40px;
+/* Кнопка входа как в макете */
+.login-btn, .cta {
   display: flex;
   align-items: center;
-  background: #FFEF2B;
+  padding: 8px 24px;
   text-decoration: none;
-  padding: 0;
-  border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.login-btn span {
   font-family: 'Unbounded', sans-serif;
-  font-weight: 500;
   font-size: 14px;
-  color: #000000;
-  margin-left: 18px;
+  font-weight: 500;
+  color: black;
+  background: #FFEF2B;
+  transition: 0.3s;
+  box-shadow: 4px 4px 0 black;
+  transform: skewX(-15deg);
+  border-radius: 0;
 }
 
-.login-btn::after {
-  content: "+";
-  position: absolute;
-  right: 18px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 18px;
-  height: 18px;
-  background: #000000;
-  color: #FFEF2B;
+.login-btn:focus, .cta:focus {
+  outline: none; 
+}
+
+.login-btn:hover, .cta:hover {
+  transition: 0.3s;
+  box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.3);
+}
+
+.login-btn span, .cta span {
+  transform: skewX(15deg);
+}
+
+.login-btn span:nth-child(2), .cta span:nth-child(2) {
+  width: 20px;
+  height: 20px;
+  margin-left: 12px;
+  background: #000;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
+  color: #FFEF2B;
+  font-size: 16px;
   font-weight: bold;
-  line-height: 1;
+  transition: 0.3s;
+}
+
+.login-btn:hover span:nth-child(2), .cta:hover span:nth-child(2) {
+  transform: skewX(15deg) translateX(5px);
+}
+
+/* Удаляем предыдущие стили кнопки */
+.login-btn::after {
+  display: none;
 }
 
 /* Удаляем дублирующие стили глобального поиска */
