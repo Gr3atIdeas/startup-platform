@@ -180,6 +180,12 @@
     .message-meta .status {
       margin-left: 5px;
     }
+    .message.system .message-content {
+      background-color: #E5E7EB;
+      color: #666;
+      text-align: center;
+      font-style: italic;
+    }
     .chat-input {
       padding: 15px;
       border-top: 1px solid #E5E7EB;
@@ -194,6 +200,10 @@
       border: 1px solid #E5E7EB;
       border-radius: 8px;
       resize: none;
+      min-height: 40px;
+      font-family: 'Circe', sans-serif;
+      font-size: 14px;
+      display: block;
     }
     .chat-input button {
       padding: 8px 16px;
@@ -260,6 +270,30 @@
       cursor: pointer;
       margin-top: 15px;
     }
+
+    .add-participant-btn {
+      padding: 5px 10px;
+      background: #7B61FF;
+      color: #FFFFFF;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: 'Circe', sans-serif;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+    .leave-chat-btn {
+      padding: 5px 10px;
+      background: #FF6161;
+      color: #FFFFFF;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: 'Circe', sans-serif;
+      font-size: 14px;
+      margin-bottom: 10px;
+      margin-left: 10px;
+    }
   </style>
 {% endblock %}
 
@@ -318,6 +352,8 @@
     <div class="chat-interface">
       <div class="chat-header">
         <h3>Выберите чат</h3>
+        <button onclick="addParticipant()" class="add-participant-btn">Добавить участника</button>
+        <button onclick="leaveChat()" class="leave-chat-btn">Удалить чат</button>
         <div class="chat-participants"></div>
       </div>
       <div class="chat-messages"></div>
@@ -444,12 +480,12 @@
   function appendMessage(msg) {
     const messagesDiv = document.querySelector('.chat-messages');
     const messageDiv = document.createElement('div');
-    messageDiv.className = `message ${msg.is_own ? 'own' : ''}`;
+    messageDiv.className = `message ${msg.is_own ? 'own' : ''} ${msg.sender_id ? '' : 'system'}`;
     messageDiv.innerHTML = `
       <div class="message-content">${msg.message_text}</div>
       <div class="message-meta">
-        ${msg.sender_name} | ${msg.created_at}
-        <span class="status">${msg.is_read ? '✓✓' : '✓'}</span>
+        ${msg.sender_name || 'Система'} | ${msg.created_at}
+        ${msg.sender_id ? `<span class="status">${msg.is_read ? '✓✓' : '✓'}</span>` : ''}
       </div>
     `;
     messagesDiv.appendChild(messageDiv);
@@ -506,7 +542,7 @@
     .then(response => response.json())
     .then(data => {
       if (data.success) {
-        location.reload(); // Перезагружаем страницу, чтобы обновить список чатов
+        location.reload();
       } else {
         alert(data.error || 'Ошибка при создании чата');
       }
@@ -514,6 +550,69 @@
     .catch(error => {
       console.error('Ошибка:', error);
       alert('Произошла ошибка при создании чата');
+    });
+  }
+
+  function addParticipant() {
+    if (!currentChatId) {
+      alert('Выберите чат для добавления участника');
+      return;
+    }
+
+    fetch(`/cosmochat/add-participant/${currentChatId}/`, {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': '{{ csrf_token }}'
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        const participantsDiv = document.querySelector('.chat-participants');
+        const currentParticipants = participantsDiv.innerHTML ? participantsDiv.innerHTML + ', ' : '';
+        participantsDiv.innerHTML = currentParticipants + `<span>${data.new_participant.name} (${data.new_participant.role})</span>`;
+      } else {
+        alert(data.error || 'Ошибка при добавлении участника');
+      }
+    })
+    .catch(error => {
+      console.error('Ошибка:', error);
+      alert('Произошла ошибка при добавлении участника');
+    });
+  }
+
+  function leaveChat() {
+    if (!currentChatId) {
+      alert('Выберите чат для удаления');
+      return;
+    }
+
+    if (!confirm('Вы уверены, что хотите покинуть этот чат?')) {
+      return;
+    }
+
+    fetch(`/cosmochat/leave-chat/${currentChatId}/`, {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': '{{ csrf_token }}'
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        if (data.deleted) {
+          alert('Чат удалён, так как все участники покинули его');
+        } else {
+          alert('Вы покинули чат. Он всё ещё доступен другим участникам');
+        }
+        location.reload();
+      } else {
+        alert(data.error || 'Ошибка при покидании чата');
+      }
+    })
+    .catch(error => {
+      console.error('Ошибка:', error);
+      alert('Произошла ошибка при покидании чата');
     });
   }
 </script>
