@@ -152,7 +152,7 @@ class MessageForm(forms.Form):
 class UserSearchForm(forms.Form):
     query = forms.CharField(required=False, label="Поиск", widget=forms.TextInput(attrs={'placeholder': 'Поиск по имени или email...'}))
     roles = forms.MultipleChoiceField(
-        choices=[('startup', 'Стартапер'), ('investor', 'Инвестор'), ('moderator', 'Модератор')],
+        choices=[('startuper', 'Стартапер'), ('investor', 'Инвестор'), ('moderator', 'Модератор')],
         required=False,
         widget=forms.CheckboxSelectMultiple,
         label="Роли"

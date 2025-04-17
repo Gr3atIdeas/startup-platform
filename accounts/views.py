@@ -1046,21 +1046,31 @@ def start_chat(request, user_id):
         chat = existing_chats.first()
         return JsonResponse({'success': True, 'chat_id': chat.conversation_id})
 
-    # Определяем роли
-    user_role = request.user.role.role_name if request.user.role else None
-    target_role = target_user.role.role_name if target_user.role else None
+    # Определяем роли (приводим к нижнему регистру для единообразия)
+    user_role = request.user.role.role_name.lower() if request.user.role else None
+    target_role = target_user.role.role_name.lower() if target_user.role else None
     if not user_role or not target_role:
         return JsonResponse({'success': False, 'error': 'Роли пользователей не определены'})
 
     # Проверяем, какие роли уже есть
     roles = {user_role, target_role}
-    required_roles = {'startup', 'investor', 'moderator'}
-    missing_role = (required_roles - roles).pop() if len(roles) == 2 else None
+    required_roles = {'startuper', 'investor', 'moderator'}
+    if len(roles) != 2:  # Если роли совпадают
+        return JsonResponse({'success': False, 'error': 'Оба пользователя имеют одинаковую роль'})
+
+    missing_role = required_roles - roles
     if not missing_role:
         return JsonResponse({'success': False, 'error': 'Неверное сочетание ролей'})
+    missing_role = missing_role.pop()
 
-    # Находим пользователя с недостающей ролью (первого доступного)
-    third_user = Users.objects.filter(role__role_name=missing_role).first()
+    # Находим пользователя с недостающей ролью (сортируем по количеству чатов, чтобы выбрать наименее занятого)
+    third_user = Users.objects.filter(
+        role__role_name__iexact=missing_role
+    ).exclude(
+        user_id__in=[request.user.user_id, target_user.user_id]
+    ).annotate(
+        chat_count=Count('chatparticipants')
+    ).order_by('chat_count').first()
     if not third_user:
         return JsonResponse({'success': False, 'error': f'Не найден пользователь с ролью {missing_role}'})
 
