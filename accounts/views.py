@@ -10,8 +10,9 @@ import json
 import logging
 import os
 from django.conf import settings
-from .forms import RegisterForm, LoginForm, StartupForm
-from .models import Users, Directions, Startups, ReviewStatuses, UserVotes, StartupTimeline, FileStorage, EntityTypes, FileTypes, InvestmentTransactions, TransactionTypes, PaymentMethods
+from django.db import models  # Добавляем для models.Q
+from .forms import RegisterForm, LoginForm, StartupForm, CommentForm, MessageForm, UserSearchForm  # Добавляем MessageForm и UserSearchForm
+from .models import Users, Directions, Startups, ReviewStatuses, UserVotes, StartupTimeline, FileStorage, EntityTypes, FileTypes, InvestmentTransactions, TransactionTypes, PaymentMethods, Comments, NewsArticles, NewsLikes, NewsViews, ChatConversations, ChatParticipants, Messages, MessageStatuses
 from .models import creative_upload_path, proof_upload_path, video_upload_path
 import uuid
 from .models import Comments
@@ -242,11 +243,22 @@ def investments(request):
 def legal(request):
     return render(request, 'accounts/legal.html')
 
-# Профиль пользователя
 def profile(request):
     if not request.user.is_authenticated:
         messages.error(request, 'Пожалуйста, войдите в систему, чтобы просмотреть профиль.')
         return redirect('login')
+
+    # Если запрос через AJAX для профиля
+    if request.GET.get('user_id'):
+        user = get_object_or_404(Users, user_id=request.GET.get('user_id'))
+        return JsonResponse({
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'role': user.role.role_name if user.role else 'Неизвестно',
+            'rating': float(user.rating) if user.rating else None,
+            'bio': user.bio,
+            'profile_picture_url': user.profile_picture_url
+        })
 
     if request.method == 'POST' and 'avatar' in request.FILES:
         avatar = request.FILES['avatar']
@@ -894,3 +906,175 @@ def delete_news(request, article_id):
 
     article.delete()
     return JsonResponse({'success': True})
+
+def cosmochat(request):
+    # Получаем чаты пользователя
+    chats = []
+    if request.user.is_authenticated:
+        chats = ChatConversations.objects.filter(
+            chatparticipants__user=request.user
+        ).order_by('-updated_at')
+
+    # Форма для поиска пользователей
+    search_form = UserSearchForm(request.GET)
+    users = Users.objects.all()
+    if search_form.is_valid():
+        query = search_form.cleaned_data.get('query', '')
+        roles = search_form.cleaned_data.get('roles', [])
+        if query:
+            users = users.filter(
+                models.Q(email__icontains=query) | 
+                models.Q(first_name__icontains=query) |
+                models.Q(last_name__icontains=query)
+            )
+        if roles:
+            users = users.filter(role__role_name__in=roles)
+
+    # Исключаем текущего пользователя из списка
+    if request.user.is_authenticated:
+        users = users.exclude(user_id=request.user.user_id)
+
+    return render(request, 'accounts/cosmochat.html', {
+        'search_form': search_form,
+        'users': users,
+        'chats': chats,
+    })
+
+def get_chat_messages(request, chat_id):
+    if not request.user.is_authenticated:
+        return JsonResponse({'success': False, 'error': 'Требуется авторизация'})
+
+    chat = get_object_or_404(ChatConversations, conversation_id=chat_id)
+    # Проверяем, что пользователь участвует в чате
+    if not chat.chatparticipants_set.filter(user=request.user).exists():
+        return JsonResponse({'success': False, 'error': 'У вас нет доступа к этому чату'})
+
+    messages = chat.messages_set.all().order_by('created_at')
+    messages_data = [{
+        'sender_id': msg.sender.user_id if msg.sender else None,
+        'sender_name': f"{msg.sender.first_name} {msg.sender.last_name}" if msg.sender else "Неизвестно",
+        'message_text': msg.message_text,
+        'created_at': msg.created_at.strftime('%d.%m.%Y %H:%M') if msg.created_at else '',
+        'is_read': msg.is_read(),
+        'is_own': msg.sender == request.user if msg.sender else False
+    } for msg in messages]
+
+    participants = chat.get_participants()
+    participants_data = [{
+        'user_id': p.user.user_id,
+        'name': f"{p.user.first_name} {p.user.last_name}",
+        'role': p.user.role.role_name if p.user.role else 'Неизвестно'
+    } for p in participants]
+
+    return JsonResponse({
+        'success': True,
+        'messages': messages_data,
+        'participants': participants_data
+    })
+
+@login_required
+def send_message(request):
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Неверный метод запроса'})
+
+    form = MessageForm(request.POST)
+    if not form.is_valid():
+        return JsonResponse({'success': False, 'error': 'Неверные данные формы'})
+
+    chat_id = request.POST.get('chat_id')
+    chat = get_object_or_404(ChatConversations, conversation_id=chat_id)
+    if not chat.chatparticipants_set.filter(user=request.user).exists():
+        return JsonResponse({'success': False, 'error': 'У вас нет доступа к этому чату'})
+
+    message = Messages(
+        conversation=chat,
+        sender=request.user,
+        message_text=form.cleaned_data['message_text'],
+        status=MessageStatuses.objects.get(status_name='sent'),
+        created_at=timezone.now(),
+        updated_at=timezone.now()
+    )
+    message.save()
+
+    chat.updated_at = timezone.now()
+    chat.save()
+
+    return JsonResponse({
+        'success': True,
+        'message': {
+            'sender_id': request.user.user_id,
+            'sender_name': f"{request.user.first_name} {request.user.last_name}",
+            'message_text': message.message_text,
+            'created_at': message.created_at.strftime('%d.%m.%Y %H:%M'),
+            'is_read': message.is_read(),
+            'is_own': True
+        }
+    })
+
+@login_required
+def mark_messages_read(request, chat_id):
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Неверный метод запроса'})
+
+    chat = get_object_or_404(ChatConversations, conversation_id=chat_id)
+    if not chat.chatparticipants_set.filter(user=request.user).exists():
+        return JsonResponse({'success': False, 'error': 'У вас нет доступа к этому чату'})
+
+    # Обновляем статус непрочитанных сообщений (кроме своих)
+    read_status = MessageStatuses.objects.get(status_name='read')
+    messages = chat.messages_set.filter(
+        status__status_name='sent'
+    ).exclude(sender=request.user)
+    messages.update(status=read_status, updated_at=timezone.now())
+
+    return JsonResponse({'success': True})
+
+@login_required
+def start_chat(request, user_id):
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Неверный метод запроса'})
+
+    target_user = get_object_or_404(Users, user_id=user_id)
+    if target_user == request.user:
+        return JsonResponse({'success': False, 'error': 'Нельзя создать чат с самим собой'})
+
+    # Проверяем, существует ли чат между пользователями
+    existing_chats = ChatConversations.objects.filter(
+        chatparticipants__user=request.user
+    ).filter(chatparticipants__user=target_user)
+    if existing_chats.exists():
+        chat = existing_chats.first()
+        return JsonResponse({'success': True, 'chat_id': chat.conversation_id})
+
+    # Определяем роли
+    user_role = request.user.role.role_name if request.user.role else None
+    target_role = target_user.role.role_name if target_user.role else None
+    if not user_role or not target_role:
+        return JsonResponse({'success': False, 'error': 'Роли пользователей не определены'})
+
+    # Проверяем, какие роли уже есть
+    roles = {user_role, target_role}
+    required_roles = {'startup', 'investor', 'moderator'}
+    missing_role = (required_roles - roles).pop() if len(roles) == 2 else None
+    if not missing_role:
+        return JsonResponse({'success': False, 'error': 'Неверное сочетание ролей'})
+
+    # Находим пользователя с недостающей ролью (первого доступного)
+    third_user = Users.objects.filter(role__role_name=missing_role).first()
+    if not third_user:
+        return JsonResponse({'success': False, 'error': f'Не найден пользователь с ролью {missing_role}'})
+
+    # Создаём чат
+    chat = ChatConversations(
+        name=f"Чат {request.user.first_name} + {target_user.first_name} + {third_user.first_name}",
+        created_at=timezone.now(),
+        updated_at=timezone.now()
+    )
+    chat.save()
+
+    # Добавляем участников
+    ChatParticipants.objects.create(conversation=chat, user=request.user)
+    ChatParticipants.objects.create(conversation=chat, user=target_user)
+    ChatParticipants.objects.create(conversation=chat, user=third_user)
+
+    return JsonResponse({'success': True, 'chat_id': chat.conversation_id})

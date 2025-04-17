@@ -145,3 +145,15 @@ class CommentForm(forms.ModelForm):
         widgets = {
             'content': forms.Textarea(attrs={'rows': 4, 'placeholder': 'Напишите ваш комментарий...', 'class': 'form-control'}),
         }
+
+class MessageForm(forms.Form):
+    message_text = forms.CharField(widget=forms.Textarea(attrs={'rows': 2, 'placeholder': 'Введите сообщение...'}), label="Сообщение")
+
+class UserSearchForm(forms.Form):
+    query = forms.CharField(required=False, label="Поиск", widget=forms.TextInput(attrs={'placeholder': 'Поиск по имени или email...'}))
+    roles = forms.MultipleChoiceField(
+        choices=[('startup', 'Стартапер'), ('investor', 'Инвестор'), ('moderator', 'Модератор')],
+        required=False,
+        widget=forms.CheckboxSelectMultiple,
+        label="Роли"
+    )

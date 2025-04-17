@@ -560,3 +560,47 @@ class NewsViews(models.Model):
     class Meta:
         managed = False
         db_table = 'news_views'
+
+class ChatConversations(models.Model):
+    conversation_id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=255, blank=True, null=True)
+    created_at = models.DateTimeField(blank=True, null=True)
+    updated_at = models.DateTimeField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'chat_conversations'
+
+    def get_participants(self):
+        """Возвращает список участников чата."""
+        return self.chatparticipants_set.all()
+
+    def get_last_message(self):
+        """Возвращает последнее сообщение в чате."""
+        return self.messages_set.order_by('-created_at').first()
+
+class ChatParticipants(models.Model):
+    participant_id = models.AutoField(primary_key=True)
+    conversation = models.ForeignKey(ChatConversations, models.DO_NOTHING, blank=True, null=True)
+    user = models.ForeignKey('Users', models.DO_NOTHING, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'chat_participants'
+
+class Messages(models.Model):
+    message_id = models.AutoField(primary_key=True)
+    conversation = models.ForeignKey(ChatConversations, models.DO_NOTHING, blank=True, null=True)
+    sender = models.ForeignKey('Users', models.DO_NOTHING, blank=True, null=True)
+    message_text = models.TextField()
+    status = models.ForeignKey(MessageStatuses, models.DO_NOTHING, blank=True, null=True)
+    created_at = models.DateTimeField(blank=True, null=True)
+    updated_at = models.DateTimeField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'messages'
+
+    def is_read(self):
+        """Проверяет, прочитано ли сообщение."""
+        return self.status.status_name == 'read'
