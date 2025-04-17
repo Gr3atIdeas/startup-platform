@@ -51,12 +51,13 @@ body {
 /* Поле поиска */
 .search-container {
   position: relative;
-  width: 500px; /* Длинная строка поиска */
+  width: 700px; /* Более длинная строка поиска, как на макете */
   height: 38px;
-  margin: 0 auto;
-  background: rgba(255, 255, 255, 0.19);
+  margin: 0 20px;
+  background: #FFFFFF;
   border: 1px solid #004E9F;
   border-radius: 99px;
+  overflow: hidden;
 }
 
 .search-icon {
@@ -66,6 +67,8 @@ body {
   transform: translateY(-50%);
   color: #A1A0A0;
   opacity: 0.6;
+  font-size: 16px;
+  z-index: 1;
 }
 
 .search-input {
@@ -88,7 +91,7 @@ body {
 .nav-menu {
   display: flex;
   align-items: center;
-  gap: 48px;
+  gap: 24px;
 }
 
 .nav-menu a {
@@ -130,10 +133,13 @@ body {
 /* Кнопка входа */
 .login-btn {
   position: relative;
+  display: flex;
+  align-items: center;
   background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
   box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 4px;
-  padding: 8px 30px 8px 16px;
+  padding: 8px 40px 8px 16px;
+  border: 1px solid #000000;
 }
 
 .login-btn span {
@@ -145,11 +151,11 @@ body {
   color: #000000;
 }
 
-.login-btn i {
+.login-btn .login-icon {
   position: absolute;
   right: 10px;
-  font-size: 16px;
-  color: #000000;
+  width: 24px;
+  height: 24px;
 }
 
 /* Адаптивность */
