@@ -7,9 +7,10 @@
   color: #FFFFFF;
   margin: 0;
   padding: 0;
-  background: #000000;
+  background: #000819;
   overflow: hidden;
   min-height: 580px;
+  font-family: 'Unbounded', sans-serif;
 }
 
 /* Фоновое изображение футера */
@@ -23,6 +24,7 @@
   background-position: center;
   background-repeat: no-repeat;
   z-index: 0;
+  opacity: 0.4;
 }
 
 /* Содержимое футера */
@@ -45,21 +47,24 @@
 /* Логотип футера */
 .footer-logo {
   position: relative;
-  font-family: 'Koulen', sans-serif;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 700;
   font-size: 60px;
   line-height: 80%;
   letter-spacing: -0.02em;
   color: #FFFFFF;
   margin: 80px 0 0 80px;
+  z-index: 1;
 }
 
 /* Социальные иконки */
 .footer-socials {
   position: absolute;
-  top: 150px;
+  top: 80px;
   right: 80px;
   display: flex;
   gap: 16px;
+  z-index: 1;
 }
 
 .footer-socials a {
@@ -68,6 +73,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: transform 0.3s ease;
+}
+
+.footer-socials a:hover {
+  transform: translateY(-3px);
 }
 
 .footer-socials img {
@@ -81,14 +91,18 @@
   margin-top: 40px;
 }
 
+/* Текстовый блок */
 .footer-text {
   position: absolute;
-  top: 250px;
+  top: 220px;
   left: 80px;
   width: 330px;
+  z-index: 1;
 }
 
 .footer-text p {
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 300;
   font-size: 16px;
   line-height: 24px;
   color: #A7A7A7;
@@ -103,21 +117,22 @@
   height: 40px;
 }
 
+/* Кнопка присоединиться */
 .footer-join {
   position: absolute;
-  top: 430px;
+  top: 390px;
   left: 80px;
+  z-index: 1;
 }
 
-/* Кнопка присоединиться */
 .join-button {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  width: 195px;
+  gap: 10px;
+  width: 240px;
   height: 48px;
-  position: relative;
   font-family: 'Unbounded', sans-serif;
   font-weight: 500;
   font-size: 16px;
@@ -125,25 +140,30 @@
   cursor: pointer;
   color: #000000;
   background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
-  border: 1px solid #F9F7D6;
-  border-radius: 8px;
+  border: 1px solid rgba(255, 239, 43, 0.5);
+  border-radius: 5px;
+  padding: 0 20px;
+  transition: transform 0.3s ease;
   box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.25);
   overflow: hidden;
-  transition: all 0.3s ease;
+  transform: perspective(10px) rotateX(0.5deg);
+  clip-path: polygon(0% 30%, 5% 0%, 95% 0%, 100% 25%, 100% 100%, 0% 100%);
 }
 
 .join-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 2px 6px 8px rgba(0, 0, 0, 0.3);
+  transform: translateY(-3px) perspective(10px) rotateX(0.5deg);
 }
 
 .join-button i {
   font-size: 16px;
+  margin-right: 5px;
 }
 
+/* Менюшки в футере */
 .footer-menu-section {
   position: absolute;
-  top: 180px;
+  top: 160px;
+  z-index: 1;
 }
 
 .footer-menu-main {
@@ -155,13 +175,14 @@
 }
 
 .footer-menu h3 {
-  font-family: 'Circe', sans-serif;
-  font-weight: 700;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 500;
   font-size: 16px;
   line-height: 28px;
   letter-spacing: -0.02em;
   color: #9E9E9E;
   margin-bottom: 24px;
+  text-transform: uppercase;
 }
 
 .footer-menu ul {
@@ -174,27 +195,30 @@
 }
 
 .footer-menu a {
-  font-family: 'Circe', sans-serif;
-  font-weight: 400;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 300;
   font-size: 14px;
   line-height: 22px;
   color: #FFFFFF;
   text-decoration: none;
+  transition: color 0.2s ease;
 }
 
 .footer-menu a:hover {
-  text-decoration: underline;
+  color: #FFEF2B;
 }
 
 /* Нижняя часть футера */
 .footer-copyright-bar {
   position: absolute;
   bottom: 0;
+  left: 0;
   width: 100%;
-  height: 32px;
-  background-color: #F5F4F3;
+  height: 40px;
+  background-color: rgba(245, 244, 243, 0.1);
   display: flex;
   align-items: center;
+  z-index: 1;
 }
 
 .footer-copyright-bar-content {
@@ -205,11 +229,11 @@
 }
 
 .footer-copyright-bar-copyright {
-  font-family: 'Circe', sans-serif;
-  font-weight: 400;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 300;
   font-size: 12px;
   line-height: 16px;
-  color: #4E4F51;
+  color: #9E9E9E;
 }
 
 .footer-copyright-bar-links {
@@ -218,16 +242,17 @@
 }
 
 .footer-copyright-bar-links a {
-  font-family: 'Circe', sans-serif;
-  font-weight: 400;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 300;
   font-size: 12px;
   line-height: 16px;
-  color: #4E4F51;
+  color: #9E9E9E;
   text-decoration: none;
+  transition: color 0.2s ease;
 }
 
 .footer-copyright-bar-links a:hover {
-  text-decoration: underline;
+  color: #FFFFFF;
 }
 
 /* Responsive стили */
@@ -245,11 +270,11 @@
   }
   
   .footer-menu-main {
-    left: 400px;
+    left: 450px;
   }
   
   .footer-menu-about {
-    left: 650px;
+    left: 700px;
   }
   
   .footer-copyright-bar-content {
@@ -268,7 +293,7 @@
   }
   
   .footer-socials {
-    top: 100px;
+    top: 20px;
     right: 20px;
   }
   
