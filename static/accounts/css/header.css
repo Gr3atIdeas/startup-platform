@@ -8,268 +8,142 @@ body {
   padding-top: 68px; /* Отступ для фиксированного хедера */
 }
 
-/* Фиксированный хедер - основные стили */
+/* Фиксированный хедер */
 .header {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   width: 100%;
-  height: 68px;
+  height: 59px;
   z-index: 9999;
   background-color: #FFFFFF;
-  border-bottom: 1px solid #E5E7EB;
   display: flex;
   align-items: center;
-  padding: 0 20px;
+  justify-content: center;
   box-sizing: border-box;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  animation: fadeInHeader 0.5s ease;
 }
 
-/* Логотип - жестко предотвращаем перенос слов */
-.header-logo-text {
-  font-family: 'Koulen', sans-serif;
-  font-size: 24px;
-  color: #191919;
+.header-container {
+  width: 1336px;
+  height: 53px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0;
+  gap: 30px;
+}
+
+/* Логотип */
+.header-logo {
+  display: flex;
+  align-items: center;
   text-decoration: none;
-  margin-right: 32px;
-  white-space: nowrap !important;
-  flex-shrink: 0 !important; /* Предотвращает сжатие логотипа */
-  display: inline-block !important; /* Обеспечивает корректное отображение */
-  transition: transform 0.3s ease, color 0.3s ease;
 }
 
-.header-logo-text:hover {
-  color: #7B61FF;
-  transform: scale(1.05);
+.header-logo-img {
+  width: 53px;
+  height: 53px;
 }
 
-/* Поле поиска с белым фоном */
+/* Поле поиска */
 .search-container {
   position: relative;
-  width: 512px;
-  height: 40px;
-  margin-right: 32px;
-  transition: all 0.3s ease;
-}
-
-.search-container:focus-within {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(123, 97, 255, 0.15);
+  width: 352px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  padding: 8px 30px;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.19);
+  border: 1px solid #004E9F;
+  border-radius: 99px;
 }
 
 .search-icon {
-  position: absolute;
-  left: 16px;
-  top: 50%;
-  transform: translateY(-50%);
+  width: 22px;
+  height: 22px;
   color: #A1A0A0;
-  z-index: 2;
-  transition: color 0.3s ease;
-}
-
-.search-container:focus-within .search-icon {
-  color: #7B61FF;
+  opacity: 0.6;
 }
 
 .search-input {
   width: 100%;
-  height: 40px;
-  border: 1px solid #7B61FF;
-  border-radius: 99px;
-  padding: 0 16px 0 40px;
-  font-size: 14px;
+  height: 100%;
+  border: none;
+  background: transparent;
+  font-family: 'Unbounded', sans-serif;
+  font-style: normal;
+  font-weight: 300;
+  font-size: 12px;
+  line-height: 15px;
+  color: #A1A0A0;
   outline: none;
-  box-sizing: border-box;
-  background-color: #FFFFFF;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.search-input:focus {
-  border-color: #7B61FF;
-  box-shadow: 0 0 0 3px rgba(123, 97, 255, 0.2);
 }
 
 /* Навигационное меню */
 .nav-menu {
   display: flex;
-  gap: 10px;
+  flex-direction: row;
+  justify-content: flex-end;
   align-items: center;
-  margin-left: auto;
+  gap: 24px;
+  width: 561px;
 }
 
 .nav-menu a {
-  text-decoration: none;
-  color: #191919;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
   padding: 8px 16px;
-  border-radius: 99px;
-  font-size: 16px;
-  transition: all 0.3s ease;
-  white-space: nowrap;
-  position: relative;
-  overflow: hidden;
-}
-
-.nav-menu a:hover {
-  background-color: #F2F4FF;
-  transform: translateY(-2px);
+  gap: 2px;
+  text-decoration: none;
+  border-radius: 5px;
+  font-family: 'Unbounded', sans-serif;
+  font-style: normal;
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 18px;
+  color: #000000;
 }
 
 .nav-menu a.active {
-  background-color: #818CE5;
+  background: #004E9F;
   color: #FFFFFF;
 }
 
-.nav-menu a:not(.create-startup-btn):after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background-color: #7B61FF;
-  transform: scaleX(0);
-  transform-origin: right;
-  transition: transform 0.3s ease;
-}
-
-.nav-menu a:not(.create-startup-btn):hover:after {
-  transform: scaleX(1);
-  transform-origin: left;
-}
-
-/* Кнопка "Создать стартап" - только рамка без заливки */
-.create-startup-btn {
-  text-decoration: none !important;
-  color: #7B61FF !important;
-  background-color: transparent !important;
-  border: 2px solid #7B61FF !important;
-  padding: 6px 14px !important;
-  border-radius: 99px !important;
-  font-size: 16px;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.create-startup-btn:hover {
-  background-color: rgba(123, 97, 255, 0.05) !important;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(123, 97, 255, 0.2);
-}
-
-.create-startup-btn::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(123, 97, 255, 0.2), transparent);
-  transition: 0.5s;
-  z-index: -1;
-}
-
-.create-startup-btn:hover::before {
-  left: 100%;
-  animation: shine 1.5s infinite;
-}
-
-/* Аватар пользователя с анимацией */
-.avatar {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid #7B61FF;
-  margin: 0 10px;
-  transition: all 0.3s ease;
-  animation: pulse 2s infinite;
-}
-
-.avatar:hover {
-  transform: scale(1.1);
-  box-shadow: 0 0 15px rgba(123, 97, 255, 0.5);
-  animation: none;
-}
-
-/* Кнопка выхода с анимацией */
-.logout-btn {
-  text-decoration: none;
-  color: #191919;
-  padding: 8px 16px;
-  border-radius: 99px;
-  font-size: 16px;
-  display: inline-flex;
+/* Кнопка входа */
+.login-btn {
+  display: flex;
+  flex-direction: row;
   align-items: center;
-  transition: all 0.3s ease;
+  gap: 10px;
+  background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
+  box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 4px;
+  padding: 8px 12px;
 }
 
-.logout-btn:hover {
-  background-color: #F2F4FF;
-  transform: translateY(-2px);
+.login-btn span {
+  font-family: 'Unbounded', sans-serif;
+  font-style: normal;
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 18px;
+  color: #000000;
 }
 
-.logout-btn i {
-  font-size: 18px;
-  transition: transform 0.3s ease;
-}
-
-.logout-btn:hover i {
-  transform: rotate(90deg);
-}
-
-/* Анимации для хедера и элементов */
-@keyframes fadeInHeader {
-  from { opacity: 0; transform: translateY(-20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes shine {
-  0% { left: -100%; }
-  20% { left: 100%; }
-  100% { left: 100%; }
-}
-
-@keyframes pulse {
-  0% { box-shadow: 0 0 0 0 rgba(123, 97, 255, 0.4); }
-  70% { box-shadow: 0 0 0 5px rgba(123, 97, 255, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(123, 97, 255, 0); }
-}
-
-@keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-5px); }
-  100% { transform: translateY(0px); }
-}
-
-/* Стили для хедера при скролле */
-.header-scrolled {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  background-color: rgba(255, 255, 255, 0.98);
-  backdrop-filter: blur(5px);
-  height: 60px;
-  animation: shrinkHeader 0.3s forwards;
-}
-
-@keyframes shrinkHeader {
-  from { height: 68px; }
-  to { height: 60px; }
-}
-
-.header-scrolled .header-logo-text {
-  font-size: 22px;
-}
-
-.header-scrolled .search-container {
-  transform: scale(0.95);
+.login-btn i {
+  font-size: 16px;
+  color: #000000;
 }
 
 /* Адаптивность */
-@media (max-width: 1200px) {
-  .search-container {
-    width: 350px;
+@media (max-width: 1440px) {
+  .header-container {
+    width: 95%;
   }
 }
 
@@ -278,17 +152,21 @@ body {
     width: 250px;
   }
   
-  .nav-menu a {
-    padding: 6px 12px;
-    font-size: 14px;
+  .nav-menu {
+    width: auto;
+    gap: 10px;
   }
 }
 
 @media (max-width: 768px) {
   .header {
     height: auto;
-    padding: 10px;
+  }
+  
+  .header-container {
     flex-direction: column;
+    padding: 10px;
+    height: auto;
   }
   
   .search-container {
@@ -299,10 +177,10 @@ body {
   .nav-menu {
     flex-wrap: wrap;
     justify-content: center;
-    margin-top: 10px;
+    width: 100%;
   }
   
   body {
-    padding-top: 130px;
+    padding-top: 120px;
   }
 } 
