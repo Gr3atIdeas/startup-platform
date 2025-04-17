@@ -15,142 +15,137 @@
 {% endblock %}
 
 {% block content %}
-<div id="page-container" class="page-container">
-  <div class="startups-catalog-page">
-    <div class="catalog-container">
-      <!-- Боковая панель с фильтрами -->
-      <aside class="filters-sidebar">
-        <div class="filters-menu">
-          <select name="sort_order" id="sortOrder" form="filterForm">
-            <option value="newest" {% if sort_order == 'newest' %}selected{% endif %}>Сначала новые</option>
-            <option value="oldest" {% if sort_order == 'oldest' %}selected{% endif %}>Сначала старые</option>
-          </select>
-        </div>
-        
-        <h2 class="filter-heading">Категории</h2>
-        
-        <form method="get" id="filterForm">
-          <ul class="category-list">
-            {% for direction in directions %}
-              {% for pair in direction_translations %}
-                {% if pair.0 == direction.direction_name %}
-                  <li class="category-item">
-                    <label class="category-label">
-                      <input type="checkbox" name="category" value="{{ direction.direction_name }}" class="category-checkbox" {% if direction.direction_name in selected_categories %}checked{% endif %}>
-                      <span class="category-name">{{ pair.1 }}</span>
-                    </label>
-                  </li>
-                {% endif %}
-              {% endfor %}
+<div id="sidebar">
+  <div id="outline">
+    <!-- Боковая панель с фильтрами -->
+    <div class="filters-sidebar">
+      <div class="filters-menu">
+        <select name="sort_order" id="sortOrder" form="filterForm">
+          <option value="newest" {% if sort_order == 'newest' %}selected{% endif %}>Сначала новые</option>
+          <option value="oldest" {% if sort_order == 'oldest' %}selected{% endif %}>Сначала старые</option>
+        </select>
+      </div>
+      
+      <h2 class="filter-heading">Категории</h2>
+      
+      <form method="get" id="filterForm">
+        <ul class="category-list">
+          {% for direction in directions %}
+            {% for pair in direction_translations %}
+              {% if pair.0 == direction.direction_name %}
+                <li class="category-item">
+                  <label class="category-label">
+                    <input type="checkbox" name="category" value="{{ direction.direction_name }}" class="category-checkbox" {% if direction.direction_name in selected_categories %}checked{% endif %}>
+                    <span class="category-name">{{ pair.1 }}</span>
+                  </label>
+                </li>
+              {% endif %}
             {% endfor %}
-          </ul>
+          {% endfor %}
+        </ul>
 
-          <!-- Слайдер для диапазона рейтинга (noUiSlider) -->
-          <div class="rating-filter">
-            <label class="rating-label">Рейтинг: <span id="ratingRangeValues">{{ min_rating|floatformat:1 }} - {{ max_rating|floatformat:1 }}</span></label>
-            <div id="ratingRange" class="rating-slider"></div>
-            <input type="hidden" name="min_rating" id="minRatingInput" value="{{ min_rating|floatformat:1 }}">
-            <input type="hidden" name="max_rating" id="maxRatingInput" value="{{ max_rating|floatformat:1 }}">
-          </div>
-          
-          <input type="hidden" name="micro_investment" id="microInvestmentInput" value="{% if micro_investment %}1{% else %}0{% endif %}">
-          <input type="hidden" name="search" value="{{ search_query|default_if_none:'' }}">
-          <input type="hidden" name="sort_order" value="{{ sort_order }}">
-
-          <!-- Кнопка "Показать" -->
-          <button type="submit" class="show-button">Показать</button>
-        </form>
-
-        <hr class="category-divider">
-        
-        <div class="admin-section">
-          <span class="admin-label">Микроинвестиции</span>
-          <div class="help-icon">?</div>
-          <div class="toggle-switch" id="adminToggle" onclick="toggleMicroInvestment()" {% if micro_investment %}class="active"{% endif %}>
-            <div class="toggle-handle {% if micro_investment %}toggle-handle-right{% else %}toggle-handle-left{% endif %}"></div>
-          </div>
+        <!-- Слайдер для диапазона рейтинга (noUiSlider) -->
+        <div class="rating-filter">
+          <label class="rating-label">Рейтинг: <span id="ratingRangeValues">{{ min_rating|floatformat:1 }} - {{ max_rating|floatformat:1 }}</span></label>
+          <div id="ratingRange" class="rating-slider"></div>
+          <input type="hidden" name="min_rating" id="minRatingInput" value="{{ min_rating|floatformat:1 }}">
+          <input type="hidden" name="max_rating" id="maxRatingInput" value="{{ max_rating|floatformat:1 }}">
         </div>
-      </aside>
+        
+        <input type="hidden" name="micro_investment" id="microInvestmentInput" value="{% if micro_investment %}1{% else %}0{% endif %}">
+        <input type="hidden" name="search" value="{{ search_query|default_if_none:'' }}">
+        <input type="hidden" name="sort_order" value="{{ sort_order }}">
 
-      <!-- Основной контент -->
-      <div class="main-content">
-        <div class="document-viewer">
-          {% if approved_startups %}
-            <div class="pf" id="pf1" data-page-no="1">
-              <div class="pc" id="pc1">
-                <div class="startup-grid">
-                  {% for startup in approved_startups %}
-                    <a href="{% url 'startup_detail' startup.startup_id %}" class="startup-card-link">
-                      <div class="startup-card">
-                        <div class="startup-image">
-                          {% if startup.logo_urls %}
-                            <img src="{% get_file_url_tag startup.logo_urls.0 startup.startup_id 'logo' %}" alt="Изображение стартапа {{ startup.title }}" class="bi">
-                          {% else %}
-                            <div class="planet-container">
-                              <div class="planet">
-                                <div class="planet-segment segment-top color-default"></div>
-                                <div class="planet-segment segment-middle color-default"></div>
-                                <div class="planet-segment segment-bottom color-default"></div>
-                              </div>
-                            </div>
-                          {% endif %}
-                        </div>
-                        <div class="startup-info">
-                          <div class="startup-header">
-                            <h3 class="startup-name bf">{{ startup.title }}</h3>
-                            <div class="rating-stars" data-rating="{{ startup.average_rating|default:0 }}">
-                              {% for i in "12345" %}
-                                <i class="fas fa-star {% if forloop.counter <= startup.average_rating|floatformat:0 %}active{% endif %}"></i>
-                              {% endfor %}
-                            </div>
-                          </div>
-                          <!-- Режим стартапа -->
-                          <div class="startup-mode">
-                            {% if startup.both_mode %}
-                              Выкуп+инвестирование
-                            {% elif startup.only_invest %}
-                              Только инвестиции
-                            {% elif startup.only_buy %}
-                              Только выкуп
-                            {% endif %}
-                          </div>
-                          <div class="startup-date">{{ startup.created_at|timesince }} назад</div>
-                          <!-- Направление стартапа -->
-                          <div class="startup-direction">
-                            {% for pair in direction_translations %}
-                              {% if pair.0 == startup.direction.direction_name %}
-                                {{ pair.1 }}
-                              {% endif %}
-                            {% endfor %}
-                          </div>
-                          <div class="startup-description">
-                            <p>{{ startup.description }}</p>
-                          </div>
-                          <div class="card-footer">
-                            <button class="details-button">Подробнее</button>
-                            <div class="startup-likes">
-                              <button class="like-button">
-                                <i class="far fa-comment"></i>
-                              </button>
-                              <span class="like-count">{{ startup.comment_count|default:"0" }}</span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </a>
-                  {% endfor %}
-                </div>
-              </div>
-            </div>
-          {% else %}
-            <div class="no-startups">
-              <p>В настоящее время нет доступных стартапов. Загляните позже!</p>
-            </div>
-          {% endif %}
+        <!-- Кнопка "Показать" -->
+        <button type="submit" class="show-button">Показать</button>
+      </form>
+
+      <hr class="category-divider">
+      
+      <div class="admin-section">
+        <span class="admin-label">Микроинвестиции</span>
+        <div class="help-icon">?</div>
+        <div class="toggle-switch" id="adminToggle" onclick="toggleMicroInvestment()" {% if micro_investment %}class="active"{% endif %}>
+          <div class="toggle-handle {% if micro_investment %}toggle-handle-right{% else %}toggle-handle-left{% endif %}"></div>
         </div>
       </div>
     </div>
   </div>
+</div>
+
+<div id="page-container">
+  {% if approved_startups %}
+    <div class="pf" id="pf1" data-page-no="1">
+      <div class="pc opened" id="pc1">
+        <div class="startup-grid">
+          {% for startup in approved_startups %}
+            <a href="{% url 'startup_detail' startup.startup_id %}" class="startup-card-link">
+              <div class="startup-card">
+                <div class="startup-image">
+                  {% if startup.logo_urls %}
+                    <img src="{% get_file_url_tag startup.logo_urls.0 startup.startup_id 'logo' %}" alt="Изображение стартапа {{ startup.title }}" class="bi">
+                  {% else %}
+                    <div class="planet-container">
+                      <div class="planet">
+                        <div class="planet-segment segment-top color-default"></div>
+                        <div class="planet-segment segment-middle color-default"></div>
+                        <div class="planet-segment segment-bottom color-default"></div>
+                      </div>
+                    </div>
+                  {% endif %}
+                </div>
+                <div class="startup-info">
+                  <div class="startup-header">
+                    <h3 class="startup-name t">{{ startup.title }}</h3>
+                    <div class="rating-stars" data-rating="{{ startup.average_rating|default:0 }}">
+                      {% for i in "12345" %}
+                        <i class="fas fa-star {% if forloop.counter <= startup.average_rating|floatformat:0 %}active{% endif %}"></i>
+                      {% endfor %}
+                    </div>
+                  </div>
+                  <!-- Режим стартапа -->
+                  <div class="startup-mode">
+                    {% if startup.both_mode %}
+                      Выкуп+инвестирование
+                    {% elif startup.only_invest %}
+                      Только инвестиции
+                    {% elif startup.only_buy %}
+                      Только выкуп
+                    {% endif %}
+                  </div>
+                  <div class="startup-date">{{ startup.created_at|timesince }} назад</div>
+                  <!-- Направление стартапа -->
+                  <div class="startup-direction">
+                    {% for pair in direction_translations %}
+                      {% if pair.0 == startup.direction.direction_name %}
+                        {{ pair.1 }}
+                      {% endif %}
+                    {% endfor %}
+                  </div>
+                  <div class="startup-description">
+                    <p class="t">{{ startup.description }}</p>
+                  </div>
+                  <div class="card-footer">
+                    <button class="details-button">Подробнее</button>
+                    <div class="startup-likes">
+                      <button class="like-button">
+                        <i class="far fa-comment"></i>
+                      </button>
+                      <span class="like-count">{{ startup.comment_count|default:"0" }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </a>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  {% else %}
+    <div class="no-startups">
+      <p>В настоящее время нет доступных стартапов. Загляните позже!</p>
+    </div>
+  {% endif %}
 </div>
 
 <script>
@@ -168,10 +163,10 @@
     }
 
     // Инициализация noUiSlider для диапазона рейтинга
-    const ratingRange = document.getElementById('ratingRange');
-    const minRatingInput = document.getElementById('minRatingInput');
-    const maxRatingInput = document.getElementById('maxRatingInput');
-    const ratingRangeValues = document.getElementById('ratingRangeValues');
+    var ratingRange = document.getElementById('ratingRange');
+    var minRatingInput = document.getElementById('minRatingInput');
+    var maxRatingInput = document.getElementById('maxRatingInput');
+    var ratingRangeValues = document.getElementById('ratingRangeValues');
 
     // Предотвращаем повторную инициализацию
     if (ratingRange.noUiSlider) {
@@ -215,8 +210,8 @@
 
     // Синхронизация рейтинга при загрузке страницы
     document.querySelectorAll('.rating-stars').forEach(function(stars) {
-      const rating = parseFloat(stars.getAttribute('data-rating')) || 0;
-      const starElements = stars.querySelectorAll('i');
+      var rating = parseFloat(stars.getAttribute('data-rating')) || 0;
+      var starElements = stars.querySelectorAll('i');
       starElements.forEach(function(star, index) {
         if (index < Math.round(rating)) {
           star.classList.add('active');
@@ -227,12 +222,12 @@
     });
 
     // Автодополнение для поиска
-    const searchInput = document.getElementById('searchInput');
-    const suggestionsList = document.getElementById('searchSuggestions');
+    var searchInput = document.getElementById('searchInput');
+    var suggestionsList = document.getElementById('searchSuggestions');
 
     if (searchInput && suggestionsList) {
       searchInput.addEventListener('input', function() {
-        const query = searchInput.value;
+        var query = searchInput.value;
         if (query.length < 2) {
           suggestionsList.innerHTML = '';
           suggestionsList.style.display = 'none';
@@ -246,7 +241,7 @@
             if (data.suggestions.length > 0) {
               suggestionsList.style.display = 'block';
               data.suggestions.forEach(function(suggestion) {
-                const div = document.createElement('div');
+                var div = document.createElement('div');
                 div.className = 'suggestion-item';
                 div.textContent = suggestion;
                 div.addEventListener('click', function() {
@@ -278,11 +273,11 @@
 
   // Обновление значения микроинвестиций без отправки формы
   function toggleMicroInvestment() {
-    const toggleSwitch = document.getElementById('adminToggle');
+    var toggleSwitch = document.getElementById('adminToggle');
     toggleSwitch.classList.toggle('active');
     
-    const handle = toggleSwitch.querySelector('.toggle-handle');
-    const microInvestmentInput = document.getElementById('microInvestmentInput');
+    var handle = toggleSwitch.querySelector('.toggle-handle');
+    var microInvestmentInput = document.getElementById('microInvestmentInput');
     
     if (toggleSwitch.classList.contains('active')) {
       handle.classList.remove('toggle-handle-left');
