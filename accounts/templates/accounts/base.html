@@ -228,41 +228,39 @@
 </head>
 <body>
   <header class="header" id="main-header">
-    <div class="header-container">
-      <a href="{% url 'home' %}" class="header-logo">
-        <img src="{% static 'accounts/images/black_logo_header.svg' %}" alt="GREAT IDEAS" class="header-logo-img">
-      </a>
-      
-      <div class="search-container">
-        <i class="fas fa-search search-icon"></i>
-        <input type="text" class="search-input" placeholder="Поиск">
-      </div>
-      
-      <nav class="nav-menu">
-        <a href="{% url 'startups_list' %}" {% if request.resolver_match.url_name == 'startups_list' %}class="active"{% endif %}>Каталог</a>
-        <a href="{% url 'news' %}" {% if request.resolver_match.url_name == 'news' %}class="active"{% endif %}>Новости</a>
-        <a href="{% url 'legal' %}" {% if request.resolver_match.url_name == 'legal' %}class="active"{% endif %}>CosmoChat</a>
-        
-        {% if user.is_authenticated and user.role.role_name == 'investor' %}
-          <a href="{% url 'investments' %}" {% if request.resolver_match.url_name == 'investments' %}class="active"{% endif %}>Портфель</a>
-        {% endif %}
-        
-        {% if user.is_authenticated %}
-          {% if user.role.role_name == 'moderator' %}
-            <a href="{% url 'moderator_dashboard' %}" {% if request.resolver_match.url_name == 'moderator_dashboard' %}class="active"{% endif %}>Заявки</a>
-          {% endif %}
-          <a href="{% url 'profile' %}" {% if request.resolver_match.url_name == 'profile' %}class="active"{% endif %}>Профиль</a>
-          <a href="{% url 'create_startup' %}" class="create-startup-btn {% if request.resolver_match.url_name == 'create_startup' %}active{% endif %}">Создать стартап</a>
-          <img src="{% if user.profile_picture_url %}{{ user.profile_picture_url }}{% else %}{% static 'accounts/images/layout/image12.png' %}{% endif %}" alt="Аватар" class="avatar">
-          <a href="{% url 'logout' %}" class="logout-btn" aria-label="Выход"><i class="fas fa-sign-out-alt"></i></a>
-        {% else %}
-          <a href="{% url 'login' %}" class="login-btn">
-            <span>Войти</span>
-            <i class="fas fa-plus"></i>
-          </a>
-        {% endif %}
-      </nav>
+    <a href="{% url 'home' %}" class="header-logo">
+      <img src="{% static 'accounts/images/black_logo_header.svg' %}" alt="GREAT IDEAS" class="header-logo-img">
+    </a>
+    
+    <div class="search-container">
+      <i class="fas fa-search search-icon"></i>
+      <input type="text" class="search-input" placeholder="Поиск">
     </div>
+    
+    <nav class="nav-menu">
+      <a href="{% url 'startups_list' %}" {% if request.resolver_match.url_name == 'startups_list' %}class="active"{% endif %}>Каталог</a>
+      <a href="{% url 'news' %}" {% if request.resolver_match.url_name == 'news' %}class="active"{% endif %}>Новости</a>
+      <a href="{% url 'legal' %}" {% if request.resolver_match.url_name == 'legal' %}class="active"{% endif %}>CosmoChat</a>
+      
+      {% if user.is_authenticated and user.role.role_name == 'investor' %}
+        <a href="{% url 'investments' %}" {% if request.resolver_match.url_name == 'investments' %}class="active"{% endif %}>Портфель</a>
+      {% endif %}
+      
+      {% if user.is_authenticated %}
+        {% if user.role.role_name == 'moderator' %}
+          <a href="{% url 'moderator_dashboard' %}" {% if request.resolver_match.url_name == 'moderator_dashboard' %}class="active"{% endif %}>Заявки</a>
+        {% endif %}
+        <a href="{% url 'profile' %}" {% if request.resolver_match.url_name == 'profile' %}class="active"{% endif %}>Профиль</a>
+        <a href="{% url 'create_startup' %}" class="create-startup-btn {% if request.resolver_match.url_name == 'create_startup' %}active{% endif %}">Создать стартап</a>
+        <img src="{% static 'accounts/images/layout/image12.png' %}" alt="Аватар" class="avatar">
+        <a href="{% url 'logout' %}" class="logout-btn" aria-label="Выход"><i class="fas fa-sign-out-alt"></i></a>
+      {% else %}
+        <a href="{% url 'login' %}" class="login-btn">
+          <span>Войти</span>
+          <i class="fas fa-plus"></i>
+        </a>
+      {% endif %}
+    </nav>
   </header>
   
   <main class="content">
@@ -270,7 +268,7 @@
   </main>
   
   <footer class="site-footer">
-    <div class="footer-background" style="background-image: url('{% static 'accounts/images/layout/footer_main_img.webp' %}');"></div>
+    <div class="footer-background" style="background-image: url('{% static 'accounts/images/layout/footer_main_img.webp' %}')"></div>
     
     <div class="footer-logo">GREAT IDEAS</div>
     

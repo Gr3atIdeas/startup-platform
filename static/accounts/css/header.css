@@ -15,13 +15,15 @@ body {
   left: 0;
   right: 0;
   width: 100%;
-  height: 59px;
+  height: 68px;
   z-index: 9999;
   background-color: #FFFFFF;
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
+  padding: 0 20px;
   box-sizing: border-box;
+  border-bottom: 1px solid #E5E7EB;
 }
 
 .header-container {
@@ -40,6 +42,7 @@ body {
   display: flex;
   align-items: center;
   text-decoration: none;
+  margin-right: 32px;
 }
 
 .header-logo-img {
@@ -54,16 +57,16 @@ body {
   height: 38px;
   display: flex;
   align-items: center;
-  padding: 8px 30px;
-  gap: 8px;
-  background: rgba(255, 255, 255, 0.19);
   border: 1px solid #004E9F;
   border-radius: 99px;
+  margin-right: 32px;
 }
 
 .search-icon {
-  width: 22px;
-  height: 22px;
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
   color: #A1A0A0;
   opacity: 0.6;
 }
@@ -80,38 +83,34 @@ body {
   line-height: 15px;
   color: #A1A0A0;
   outline: none;
+  padding: 0 16px 0 40px;
 }
 
 /* Навигационное меню */
 .nav-menu {
   display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
+  gap: 10px;
   align-items: center;
-  gap: 24px;
-  width: 561px;
 }
 
-.nav-menu a {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  padding: 8px 16px;
-  gap: 2px;
+.avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #7B61FF;
+  margin: 0 10px;
+}
+
+.create-startup-btn {
   text-decoration: none;
-  border-radius: 5px;
-  font-family: 'Unbounded', sans-serif;
-  font-style: normal;
-  font-weight: 300;
-  font-size: 14px;
-  line-height: 18px;
-  color: #000000;
-}
-
-.nav-menu a.active {
-  background: #004E9F;
-  color: #FFFFFF;
+  color: #7B61FF !important;
+  background-color: transparent !important;
+  padding: 8px 16px;
+  border-radius: 99px;
+  font-size: 16px;
+  transition: all 0.3s;
+  border: 2px solid #7B61FF !important;
 }
 
 /* Кнопка входа */
