@@ -26,19 +26,6 @@
         </select>
       </div>
       
-      <!-- Поле для поиска с автодополнением -->
-      <div class="search-section">
-        <form method="get" id="searchForm">
-          <div class="search-container">
-            <input type="text" name="search" id="searchInput" placeholder="Поиск по названию..." value="{{ search_query|default_if_none:'' }}" class="search-input" autocomplete="off">
-            <div id="searchSuggestions" class="suggestions-list"></div>
-            <button type="submit" class="search-button">
-              <i class="fas fa-search"></i>
-            </button>
-          </div>
-        </form>
-      </div>
-
       <h2 class="filter-heading">Категории</h2>
       
       <form method="get" id="filterForm">
