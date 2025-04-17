@@ -22,7 +22,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 69px;
+  padding: 0 60px;
   box-sizing: border-box;
   border-bottom: 1px solid #E5E7EB;
 }
@@ -46,19 +46,20 @@ body {
 }
 
 .header-logo-img {
-  width: 40px;
-  height: 40px;
+  width: 38px;
+  height: 38px;
 }
 
-/* Поле поиска */
+/* Поле поиска как в макете */
 .search-container {
   position: relative;
   width: 320px;
   height: 32px;
   background: #FFFFFF;
   border: 1px solid #E5E7EB;
-  border-radius: 99px;
+  border-radius: 20px;
   overflow: hidden;
+  margin: 0 15px;
 }
 
 .search-icon {
@@ -81,41 +82,42 @@ body {
   color: #A1A0A0;
   outline: none;
   padding: 0 40px 0 16px;
-  border-radius: 99px;
+  border-radius: 20px;
 }
 
 /* Навигационное меню */
 .nav-menu {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-family: 'Unbounded', sans-serif;
+  gap: 12px;
 }
 
-.nav-link {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.nav-menu a {
   text-decoration: none;
   font-family: 'Unbounded', sans-serif;
   font-weight: 300;
   font-size: 14px;
   color: #000000;
-  padding: 6px 10px;
-  border-radius: 4px; /* Легкое скругление углов */
+  padding: 6px 14px;
+  border-radius: 6px !important;
   white-space: nowrap;
+  transition: background-color 0.3s;
 }
 
-.nav-link.active {
-  background: #004E9F;
+.nav-menu a:hover {
+  background-color: #F2F4FF;
+}
+
+.nav-menu a.active {
+  background-color: #004E9F;
   color: #FFFFFF;
+  border-radius: 6px !important;
 }
 
 /* Кнопка создания стартапа */
 .create-startup-btn {
-  font-family: 'Unbounded', sans-serif;
   border: 1px solid #7B61FF !important;
-  border-radius: 99px;
+  border-radius: 99px !important;
   color: #7B61FF !important;
   background-color: transparent !important;
 }
@@ -128,21 +130,21 @@ body {
   object-fit: cover;
 }
 
-/* Кнопка входа */
+/* Кнопка входа точно как в макете */
 .login-btn {
   position: relative;
   display: flex;
   align-items: center;
   background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
-  border-radius: 30px;
-  padding: 8px 30px 8px 16px;
+  border-radius: 30px !important;
+  padding: 6px 34px 6px 16px !important;
   text-decoration: none;
-  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .login-btn span {
   font-family: 'Unbounded', sans-serif;
-  font-weight: 300;
+  font-weight: 400;
   font-size: 14px;
   color: #000000;
 }
@@ -152,8 +154,8 @@ body {
   right: 10px;
   top: 50%;
   transform: translateY(-50%);
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
 }
 
 /* Адаптивность */
@@ -165,10 +167,6 @@ body {
   .search-container {
     width: 250px;
   }
-  
-  .nav-menu {
-    gap: 10px;
-  }
 }
 
 @media (max-width: 992px) {
@@ -178,10 +176,6 @@ body {
   
   .nav-menu {
     gap: 5px;
-  }
-  
-  .nav-link {
-    padding: 4px 8px;
   }
 }
 
@@ -201,7 +195,6 @@ body {
     flex-wrap: wrap;
     justify-content: center;
     width: 100%;
-    margin-top: 10px;
   }
   
   body {
