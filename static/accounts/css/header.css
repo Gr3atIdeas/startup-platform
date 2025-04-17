@@ -43,7 +43,7 @@ body {
   display: flex;
   align-items: center;
   text-decoration: none;
-  margin-right: 30px;
+  margin-right: 60px;
 }
 
 .header-logo-img {
@@ -54,14 +54,14 @@ body {
 /* Поле поиска как в макете */
 .search-container {
   position: relative;
-  width: 160px;
+  width: 320px;
   height: 32px;
   background: #FFFFFF;
   border: 1px solid #E5E7EB;
   border-radius: 20px;
   overflow: hidden;
   margin-right: auto;
-  flex: 0 0 160px;
+  flex: 0 0 320px;
 }
 
 .search-icon {
@@ -134,17 +134,19 @@ body {
   object-fit: cover;
 }
 
-/* Кнопка входа точно как на скриншоте */
+/* Кнопка входа */
 .login-btn {
   position: relative;
   width: 132px;
   height: 32px;
   display: flex;
   align-items: center;
+  justify-content: flex-start;
   background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
   box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.25);
   text-decoration: none;
-  clip-path: polygon(0 0, 88% 0, 100% 50%, 88% 100%, 0 100%, 5% 50%);
+  padding: 0;
+  clip-path: polygon(0 0, 85% 0, 100% 50%, 85% 100%, 0 100%);
 }
 
 .login-btn span {
@@ -152,14 +154,13 @@ body {
   font-weight: 400;
   font-size: 14px;
   color: #000000;
-  margin-left: 18px;
+  margin-left: 24px;
 }
 
-/* Круг с плюсом */
 .login-btn::after {
   content: "+";
   position: absolute;
-  right: 18px;
+  right: 24px;
   top: 50%;
   transform: translateY(-50%);
   width: 16px;
