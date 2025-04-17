@@ -1046,37 +1046,15 @@ def start_chat(request, user_id):
         chat = existing_chats.first()
         return JsonResponse({'success': True, 'chat_id': chat.conversation_id})
 
-    # Определяем роли (приводим к нижнему регистру для единообразия)
+    # Определяем роли
     user_role = request.user.role.role_name.lower() if request.user.role else None
     target_role = target_user.role.role_name.lower() if target_user.role else None
     if not user_role or not target_role:
         return JsonResponse({'success': False, 'error': 'Роли пользователей не определены'})
 
-    # Проверяем, какие роли уже есть
-    roles = {user_role, target_role}
-    required_roles = {'startuper', 'investor', 'moderator'}
-    if len(roles) != 2:  # Если роли совпадают
-        return JsonResponse({'success': False, 'error': 'Оба пользователя имеют одинаковую роль'})
-
-    missing_role = required_roles - roles
-    if not missing_role:
-        return JsonResponse({'success': False, 'error': 'Неверное сочетание ролей'})
-    missing_role = missing_role.pop()
-
-    # Находим пользователя с недостающей ролью (сортируем по количеству чатов, чтобы выбрать наименее занятого)
-    third_user = Users.objects.filter(
-        role__role_name__iexact=missing_role
-    ).exclude(
-        user_id__in=[request.user.user_id, target_user.user_id]
-    ).annotate(
-        chat_count=Count('chatparticipants')
-    ).order_by('chat_count').first()
-    if not third_user:
-        return JsonResponse({'success': False, 'error': f'Не найден пользователь с ролью {missing_role}'})
-
-    # Создаём чат
+    # Создаём чат только с двумя участниками
     chat = ChatConversations(
-        name=f"Чат {request.user.first_name} + {target_user.first_name} + {third_user.first_name}",
+        name=f"Чат {request.user.first_name} + {target_user.first_name}",
         created_at=timezone.now(),
         updated_at=timezone.now()
     )
@@ -1085,6 +1063,56 @@ def start_chat(request, user_id):
     # Добавляем участников
     ChatParticipants.objects.create(conversation=chat, user=request.user)
     ChatParticipants.objects.create(conversation=chat, user=target_user)
-    ChatParticipants.objects.create(conversation=chat, user=third_user)
 
     return JsonResponse({'success': True, 'chat_id': chat.conversation_id})
+
+
+
+
+
+@login_required
+def add_participant(request, chat_id):
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Неверный метод запроса'})
+
+    chat = get_object_or_404(ChatConversations, conversation_id=chat_id)
+    if not chat.chatparticipants_set.filter(user=request.user).exists():
+        return JsonResponse({'success': False, 'error': 'У вас нет доступа к этому чату'})
+
+    # Проверяем, сколько участников уже в чате
+    participants = chat.get_participants()
+    if participants.count() >= 3:
+        return JsonResponse({'success': False, 'error': 'В чате уже максимальное количество участников (3)'})
+
+    # Определяем текущие роли в чате
+    current_roles = {p.user.role.role_name.lower() for p in participants if p.user and p.user.role}
+    required_roles = {'startuper', 'investor', 'moderator'}
+    missing_role = (required_roles - current_roles).pop() if (required_roles - current_roles) else None
+    if not missing_role:
+        return JsonResponse({'success': False, 'error': 'Все роли уже заняты'})
+
+    # Находим пользователя с недостающей ролью (сортируем по количеству чатов)
+    new_user = Users.objects.filter(
+        role__role_name__iexact=missing_role
+    ).exclude(
+        user_id__in=[p.user.user_id for p in participants]
+    ).annotate(
+        chat_count=Count('chatparticipants')
+    ).order_by('chat_count').first()
+    if not new_user:
+        return JsonResponse({'success': False, 'error': f'Не найден пользователь с ролью {missing_role}'})
+
+    # Добавляем нового участника
+    ChatParticipants.objects.create(conversation=chat, user=new_user)
+    chat.name = f"{chat.name} + {new_user.first_name}"
+    chat.updated_at = timezone.now()
+    chat.save()
+
+    return JsonResponse({
+        'success': True,
+        'new_participant': {
+            'user_id': new_user.user_id,
+            'name': f"{new_user.first_name} {new_user.last_name}",
+            'role': new_user.role.role_name if new_user.role else 'Неизвестно'
+        }
+    })

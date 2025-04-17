@@ -189,12 +189,16 @@
       gap: 10px;
     }
     .chat-input textarea {
-      flex: 1;
-      padding: 8px;
-      border: 1px solid #E5E7EB;
-      border-radius: 8px;
-      resize: none;
-    }
+        flex: 1;
+        padding: 8px;
+        border: 1px solid #E5E7EB;
+        border-radius: 8px;
+        resize: none;
+        min-height: 40px; /* Устанавливаем минимальную высоту */
+        font-family: 'Circe', sans-serif;
+        font-size: 14px;
+        display: block; /* Убедимся, что поле отображается */
+        }
     .chat-input button {
       padding: 8px 16px;
       background: #7B61FF;
@@ -260,6 +264,18 @@
       cursor: pointer;
       margin-top: 15px;
     }
+
+    .add-participant-btn {
+        padding: 5px 10px;
+        background: #7B61FF;
+        color: #FFFFFF;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-family: 'Circe', sans-serif;
+        font-size: 14px;
+        margin-bottom: 10px;
+        }
   </style>
 {% endblock %}
 
@@ -316,20 +332,21 @@
       {% endfor %}
     </div>
     <div class="chat-interface">
-      <div class="chat-header">
-        <h3>Выберите чат</h3>
-        <div class="chat-participants"></div>
+        <div class="chat-header">
+          <h3>Выберите чат</h3>
+          <button onclick="addParticipant()" class="add-participant-btn">Добавить участника</button>
+          <div class="chat-participants"></div>
+        </div>
+        <div class="chat-messages"></div>
+        <div class="chat-input">
+          <form id="messageForm">
+            {% csrf_token %}
+            <input type="hidden" id="chatId" name="chat_id" value="">
+            {{ message_form.message_text }}
+            <button type="submit">Отправить</button>
+          </form>
+        </div>
       </div>
-      <div class="chat-messages"></div>
-      <div class="chat-input">
-        <form id="messageForm">
-          {% csrf_token %}
-          <input type="hidden" id="chatId" name="chat_id" value="">
-          {{ message_form.message_text }}
-          <button type="submit">Отправить</button>
-        </form>
-      </div>
-    </div>
   </div>
 
   <!-- Модальное окно профиля -->
@@ -516,5 +533,33 @@
       alert('Произошла ошибка при создании чата');
     });
   }
+
+  function addParticipant() {
+    if (!currentChatId) {
+        alert('Выберите чат для добавления участника');
+        return;
+    }
+
+    fetch(`/cosmochat/add-participant/${currentChatId}/`, {
+        method: 'POST',
+        headers: {
+        'X-CSRFToken': '{{ csrf_token }}'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+        const participantsDiv = document.querySelector('.chat-participants');
+        const currentParticipants = participantsDiv.innerHTML ? participantsDiv.innerHTML + ', ' : '';
+        participantsDiv.innerHTML = currentParticipants + `<span>${data.new_participant.name} (${data.new_participant.role})</span>`;
+        } else {
+        alert(data.error || 'Ошибка при добавлении участника');
+        }
+    })
+    .catch(error => {
+        console.error('Ошибка:', error);
+        alert('Произошла ошибка при добавлении участника');
+    });
+    }
 </script>
 {% endblock %}
