@@ -43,7 +43,7 @@ body {
   display: flex;
   align-items: center;
   text-decoration: none;
-  margin-right: 60px;
+  margin-right: 180px; /* Увеличили отступ в 3 раза */
 }
 
 .header-logo-img {
@@ -51,7 +51,7 @@ body {
   height: 38px;
 }
 
-/* Поле поиска как в макете */
+/* Поле поиска */
 .search-container {
   position: relative;
   width: 320px;
@@ -84,7 +84,7 @@ body {
   font-size: 12px;
   color: #A1A0A0;
   outline: none;
-  padding: 0 16px 0 36px;
+  padding: 0 16px 0 42px; /* Увеличили отступ слева для текста */
   border-radius: 20px;
 }
 
@@ -134,7 +134,7 @@ body {
   object-fit: cover;
 }
 
-/* Кнопка входа */
+/* Кнопка входа как в макете */
 .login-btn {
   position: relative;
   width: 132px;
@@ -142,11 +142,15 @@ body {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
-  box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.25);
+  background: #FFEF2B;
   text-decoration: none;
   padding: 0;
   clip-path: polygon(0 0, 85% 0, 100% 50%, 85% 100%, 0 100%);
+  transition: background 0.3s ease;
+}
+
+.login-btn:hover {
+  background: linear-gradient(180deg, #FFEF2B 50%, #F9F7D6 100%);
 }
 
 .login-btn span {
