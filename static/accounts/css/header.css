@@ -23,6 +23,7 @@ body {
   align-items: center;
   padding: 0 69px;
   box-sizing: border-box;
+  border-bottom: 1px solid #E5E7EB;
 }
 
 .header-container {
@@ -44,31 +45,29 @@ body {
 }
 
 .header-logo-img {
-  width: 53px;
-  height: 53px;
+  width: 40px;
+  height: 40px;
 }
 
 /* Поле поиска */
 .search-container {
   position: relative;
-  width: 700px; /* Более длинная строка поиска, как на макете */
-  height: 38px;
-  margin: 0 20px;
+  width: 320px;
+  height: 32px;
   background: #FFFFFF;
-  border: 1px solid #004E9F;
+  border: 1px solid #E5E7EB;
   border-radius: 99px;
   overflow: hidden;
+  margin: 0 20px;
 }
 
 .search-icon {
   position: absolute;
-  left: 16px;
+  right: 12px;
   top: 50%;
   transform: translateY(-50%);
   color: #A1A0A0;
-  opacity: 0.6;
-  font-size: 16px;
-  z-index: 1;
+  font-size: 14px;
 }
 
 .search-input {
@@ -77,13 +76,11 @@ body {
   border: none;
   background: transparent;
   font-family: 'Unbounded', sans-serif;
-  font-style: normal;
   font-weight: 300;
   font-size: 12px;
-  line-height: 15px;
   color: #A1A0A0;
   outline: none;
-  padding: 0 16px 0 40px;
+  padding: 0 40px 0 16px;
   border-radius: 99px;
 }
 
@@ -91,25 +88,24 @@ body {
 .nav-menu {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 20px;
 }
 
-.nav-menu a {
+.nav-link {
   display: flex;
   justify-content: center;
   align-items: center;
   text-decoration: none;
   font-family: 'Unbounded', sans-serif;
-  font-style: normal;
   font-weight: 300;
   font-size: 14px;
-  line-height: 18px;
   color: #000000;
-  padding: 8px 16px;
-  border-radius: 5px;
+  padding: 6px 16px;
+  border-radius: 6px;
+  white-space: nowrap;
 }
 
-.nav-menu a.active {
+.nav-link.active {
   background: #004E9F;
   color: #FFFFFF;
 }
@@ -136,26 +132,23 @@ body {
   display: flex;
   align-items: center;
   background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
-  box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.25);
-  border-radius: 4px;
-  padding: 8px 40px 8px 16px;
-  border: 1px solid #000000;
+  border-radius: 24px;
+  padding: 6px 30px 6px 16px;
+  text-decoration: none;
 }
 
 .login-btn span {
   font-family: 'Unbounded', sans-serif;
-  font-style: normal;
   font-weight: 300;
   font-size: 14px;
-  line-height: 18px;
   color: #000000;
 }
 
 .login-btn .login-icon {
   position: absolute;
   right: 10px;
-  width: 24px;
-  height: 24px;
+  font-size: 8px;
+  color: #000000;
 }
 
 /* Адаптивность */
@@ -165,21 +158,25 @@ body {
   }
   
   .search-container {
-    width: 400px;
-  }
-  
-  .nav-menu {
-    gap: 20px;
-  }
-}
-
-@media (max-width: 992px) {
-  .search-container {
     width: 250px;
   }
   
   .nav-menu {
     gap: 10px;
+  }
+}
+
+@media (max-width: 992px) {
+  .search-container {
+    width: 200px;
+  }
+  
+  .nav-menu {
+    gap: 5px;
+  }
+  
+  .nav-link {
+    padding: 4px 8px;
   }
 }
 
@@ -199,6 +196,7 @@ body {
     flex-wrap: wrap;
     justify-content: center;
     width: 100%;
+    margin-top: 10px;
   }
   
   body {
