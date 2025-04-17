@@ -15,7 +15,7 @@
 {% endblock %}
 
 {% block content %}
-<div id="sidebar">
+<div id="sidebar" class="menu-sidebar opened">
   <div id="outline">
     <!-- Боковая панель с фильтрами -->
     <div class="filters-sidebar">
@@ -269,6 +269,44 @@
         }
       });
     }
+
+    // Добавляем переключение меню для мобильных устройств
+    var sidebar = document.getElementById('sidebar');
+    var pageContainer = document.getElementById('page-container');
+    
+    function toggleMenu() {
+      sidebar.classList.toggle('opened');
+      if (sidebar.classList.contains('opened')) {
+        pageContainer.style.left = '250px';
+      } else {
+        pageContainer.style.left = '0';
+      }
+    }
+    
+    // Добавляем кнопку для переключения меню на мобильных устройствах
+    var menuToggle = document.createElement('button');
+    menuToggle.className = 'menu-toggle';
+    menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+    menuToggle.addEventListener('click', toggleMenu);
+    
+    // Добавляем кнопку только на мобильных устройствах
+    if (window.innerWidth <= 720) {
+      document.body.appendChild(menuToggle);
+    }
+    
+    window.addEventListener('resize', function() {
+      if (window.innerWidth <= 720) {
+        if (!document.querySelector('.menu-toggle')) {
+          document.body.appendChild(menuToggle);
+        }
+        pageContainer.style.left = '0';
+      } else {
+        if (document.querySelector('.menu-toggle')) {
+          document.querySelector('.menu-toggle').remove();
+        }
+        pageContainer.style.left = '250px';
+      }
+    });
   });
 
   // Обновление значения микроинвестиций без отправки формы

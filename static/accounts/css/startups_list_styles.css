@@ -59,7 +59,7 @@
 #page-container {
   position: absolute;
   top: 0;
-  left: 0;
+  left: 250px;
   margin: 0;
   padding: 0;
   border: 0;
@@ -735,12 +735,14 @@
     width: 100%;
     height: auto;
     bottom: auto;
+    z-index: 10;
   }
   
   #page-container {
     position: relative;
     left: 0;
     top: 0;
+    width: 100%;
   }
   
   .catalog-container {
@@ -1096,4 +1098,71 @@
 
 .noUi-marker {
   background: #444;
+}
+
+/* Кнопка переключения меню для мобильных устройств */
+.menu-toggle {
+  display: none;
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #7B61FF;
+  color: white;
+  border: none;
+  z-index: 1000;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+@media (max-width: 720px) {
+  .menu-toggle {
+    display: block;
+  }
+  
+  #sidebar {
+    position: fixed;
+    width: 250px;
+    height: 100%;
+    left: -250px; /* Скрываем меню за экраном */
+    transition: left 0.3s ease;
+    z-index: 100;
+  }
+  
+  #sidebar.opened {
+    left: 0; /* Показываем меню */
+  }
+  
+  #page-container {
+    position: relative;
+    left: 0 !important;
+    top: 0;
+    width: 100%;
+    transition: margin-left 0.3s ease;
+  }
+  
+  #sidebar.opened + #page-container {
+    left: 0 !important;
+  }
+  
+  .catalog-container {
+    flex-direction: column;
+    padding: 15px;
+  }
+  
+  .filters-sidebar {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  
+  .startup-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .startup-card {
+    height: auto;
+    min-height: 380px;
+  }
 }
