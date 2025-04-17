@@ -1116,3 +1116,36 @@ def add_participant(request, chat_id):
             'role': new_user.role.role_name if new_user.role else 'Неизвестно'
         }
     })
+
+@login_required
+def leave_chat(request, chat_id):
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Неверный метод запроса'})
+
+    chat = get_object_or_404(ChatConversations, conversation_id=chat_id)
+    if not chat.chatparticipants_set.filter(user=request.user).exists():
+        return JsonResponse({'success': False, 'error': 'У вас нет доступа к этому чату'})
+
+    # Удаляем текущего пользователя из участников
+    ChatParticipants.objects.filter(conversation=chat, user=request.user).delete()
+
+    # Отправляем уведомление оставшимся участникам
+    remaining_participants = chat.chatparticipants_set.all()
+    if remaining_participants.exists():
+        message = Messages(
+            conversation=chat,
+            sender=None,  # Системное сообщение
+            message_text=f"{request.user.first_name} {request.user.last_name} покинул чат",
+            status=MessageStatuses.objects.get(status_name='sent'),
+            created_at=timezone.now(),
+            updated_at=timezone.now()
+        )
+        message.save()
+        chat.updated_at = timezone.now()
+        chat.save()
+    else:
+        # Если участников не осталось, удаляем чат полностью
+        chat.delete()
+        return JsonResponse({'success': True, 'deleted': True})
+
+    return JsonResponse({'success': True, 'deleted': False})
