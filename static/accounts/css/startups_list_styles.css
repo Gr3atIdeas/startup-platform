@@ -67,24 +67,30 @@ body {
   position: relative;
   width: 100%;
   max-width: 975.8px;
-  height: 36px;
+  height: 60px;
   margin-bottom: 20px;
   border-radius: 32px;
   overflow: hidden;
   background: #FFF;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  border: 1px solid #0057B7;
 }
 
 .catalog-search-input {
   width: 100%;
-  height: 36px;
-  border: 1px solid #0057B7;
+  height: 60px;
+  border: none;
   border-radius: 32px;
-  padding: 0 50px 0 20px;
-  font-size: 14px;
+  padding: 0 70px 0 30px;
+  font-size: 16px;
   box-sizing: border-box;
   font-family: 'Unbounded', sans-serif;
   font-weight: 300;
+  color: #000;
+}
+
+.catalog-search-input::placeholder {
+  color: #BBBBBB;
+  font-size: 16px;
 }
 
 .catalog-search-btn {
@@ -94,15 +100,14 @@ body {
   background: #0057B7;
   color: white;
   border: none;
-  width: 50px;
-  height: 36px;
+  width: 60px;
+  height: 60px;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  font-size: 16px;
-  border-top-right-radius: 32px;
-  border-bottom-right-radius: 32px;
+  font-size: 20px;
+  border-radius: 0;
 }
 
 .catalog-search-btn:hover {
