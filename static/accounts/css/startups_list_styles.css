@@ -49,13 +49,19 @@ body {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
+  padding: 0 10px;
+}
+
+.catalog-search-wrapper {
+  width: 100%;
+  max-width: calc(100% - 20px);
+  margin: 0 auto;
 }
 
 /* Поиск по каталогу */
 .catalog-search {
   position: relative;
   width: 100%;
-  max-width: 100%;
   margin-bottom: 20px;
   border-radius: 8px;
   overflow: hidden;
@@ -294,8 +300,9 @@ body {
 .startups-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(337px, 1fr));
-  gap: 30px;
+  gap: 20px;
   margin-top: 20px;
+  justify-items: center;
 }
 
 /* Карточка стартапа */
@@ -335,11 +342,22 @@ body {
 
 .startup-card-header {
   position: relative;
-  background-size: cover;
-  background-position: center;
-  background-image: url('../images/startup-bg.jpg');
+  background-color: #f5f5f5;
   height: 220px;
   overflow: hidden;
+}
+
+.startup-image {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.startup-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
 }
 
 .startup-type {
@@ -347,7 +365,7 @@ body {
   top: 0;
   left: 0;
   right: 0;
-  padding: 10px 20px;
+  padding: 10px 0;
   background: #000000;
   font-size: 16px;
   font-family: 'Unbounded', sans-serif;
@@ -364,10 +382,11 @@ body {
   left: 0;
   width: 100%;
   background: rgba(0, 78, 159, 0.85);
-  padding: 20px;
+  padding: 15px 0;
   z-index: 1;
   transform: translateY(100%);
   transition: transform 0.3s ease;
+  text-align: center;
 }
 
 .startup-card:hover .startup-card-overlay {
@@ -376,15 +395,17 @@ body {
 
 .startup-name {
   font-weight: 400;
-  font-size: 32px;
+  font-size: 28px;
   margin: 0 0 5px 0;
   font-family: 'Unbounded', sans-serif;
   color: #ffffff;
+  padding: 0 10px;
 }
 
 .startup-rating {
   display: flex;
   align-items: center;
+  justify-content: center;
   font-size: 16px;
   color: #ffffff;
 }
@@ -428,8 +449,8 @@ body {
 
 .startup-info {
   display: flex;
-  justify-content: space-between;
-  margin: 0 20px 20px;
+  justify-content: space-evenly;
+  margin: 0 20px 15px;
 }
 
 .comment-counter, .like-counter {
@@ -451,7 +472,7 @@ body {
   font-family: 'Unbounded', sans-serif;
   font-weight: 400;
   font-size: 16px;
-  padding: 10px 20px;
+  padding: 10px 0;
   background: #000000;
   color: #ffffff;
   text-align: center;
@@ -475,8 +496,8 @@ body {
   color: #ffffff;
   font-family: 'Unbounded', sans-serif;
   font-weight: 400;
-  font-size: 20px;
-  padding: 15px 30px;
+  font-size: 18px;
+  padding: 12px 0;
   cursor: pointer;
   width: 100%;
   text-align: center;
@@ -550,4 +571,17 @@ body {
   .startup-card {
     max-width: 100%;
   }
+}
+
+.startup-image-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f5f5f5;
+  color: #000000;
+  font-size: 48px;
+  font-weight: bold;
+  font-family: 'Unbounded', sans-serif;
 }

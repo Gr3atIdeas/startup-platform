@@ -129,9 +129,11 @@
     <!-- Область с карточками стартапов и поиском -->
     <div class="startups-content">
       <!-- Поисковая строка -->
-      <div class="catalog-search">
-        <input type="text" class="catalog-search-input" placeholder="Поиск по каталогу" value="{{ search_query|default_if_none:'' }}">
-        <button class="catalog-search-btn"><i class="fas fa-search"></i></button>
+      <div class="catalog-search-wrapper">
+        <div class="catalog-search">
+          <input type="text" class="catalog-search-input" placeholder="Поиск по каталогу" value="{{ search_query|default_if_none:'' }}">
+          <button class="catalog-search-btn"><i class="fas fa-search"></i></button>
+        </div>
       </div>
       
       <!-- Сетка стартапов -->
@@ -148,6 +150,15 @@
                       Только инвестиции
                     {% elif startup.only_buy %}
                       Только выкуп
+                    {% endif %}
+                  </div>
+                  <div class="startup-image">
+                    {% if startup.logo_urls %}
+                      <img src="{% get_file_url_tag startup.logo_urls.0 startup.startup_id 'logo' %}" alt="{{ startup.title }}">
+                    {% else %}
+                      <div class="startup-image-placeholder">
+                        {{ startup.title|make_list|first|upper }}
+                      </div>
                     {% endif %}
                   </div>
                   <div class="startup-card-overlay">
