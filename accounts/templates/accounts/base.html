@@ -19,6 +19,7 @@
   
   <!-- Подключение CSS -->
   <link rel="stylesheet" href="{% static 'accounts/css/header.css' %}?v={% now 'U' %}">
+  <link rel="stylesheet" href="{% static 'accounts/css/buttons.css' %}?v={% now 'U' %}">
   
   <style>
     :root {
@@ -415,5 +416,6 @@
       handleScroll();
     })();
   </script>
+  <script src="{% static 'accounts/js/button_effects.js' %}"></script>
 </body>
 </html>
