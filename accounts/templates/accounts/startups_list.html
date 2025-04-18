@@ -169,25 +169,27 @@
                   </div>
                 </div>
                 <div class="startup-card-body">
-                  <div class="startup-direction">
-                    {% for pair in direction_translations %}
-                      {% if pair.0 == startup.direction.direction_name %}
-                        {{ pair.1 }}
-                      {% endif %}
-                    {% endfor %}
+                  <div class="startup-info-wrapper">
+                    <div class="startup-direction">
+                      {% for pair in direction_translations %}
+                        {% if pair.0 == startup.direction.direction_name %}
+                          {{ pair.1 }}
+                        {% endif %}
+                      {% endfor %}
+                    </div>
+                    <div class="counter-group">
+                      <div class="like-counter">
+                        <i class="far fa-thumbs-up like-icon"></i>
+                        <span>213</span>
+                      </div>
+                      <div class="comment-counter">
+                        <i class="far fa-comment comment-icon"></i>
+                        <span>{{ startup.comment_count|default:"17" }}</span>
+                      </div>
+                    </div>
                   </div>
                   <div class="startup-description">
                     {{ startup.description }}
-                  </div>
-                  <div class="startup-info">
-                    <div class="like-counter">
-                      <i class="far fa-thumbs-up like-icon"></i>
-                      <span>213</span>
-                    </div>
-                    <div class="comment-counter">
-                      <i class="far fa-comment comment-icon"></i>
-                      <span>{{ startup.comment_count|default:"17" }}</span>
-                    </div>
                   </div>
                   <div class="startup-card-footer">
                     <button class="detail-button">Подробнее</button>
