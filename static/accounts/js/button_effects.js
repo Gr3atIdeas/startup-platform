@@ -4,120 +4,71 @@
  */
 
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Initializing Position Aware effect');
+    console.log('Initializing Position Aware effect on DOMContentLoaded');
     
-    // Сначала удаляем конфликтующие стили
-    removeConflictingStyles();
+    // Initialize immediately and set up observers/listeners
+    initPositionAware();
     
-    // Затем инициализируем эффект
-    setTimeout(function() {
-        initPositionAware();
-        
-        // Наблюдатель за изменениями DOM для динамически добавленных элементов
-        const observer = new MutationObserver((mutations) => {
-            mutations.forEach((mutation) => {
-                if (mutation.addedNodes.length) {
-                    initPositionAware();
-                }
-            });
+    // Наблюдатель за изменениями DOM для динамически добавленных элементов
+    const observer = new MutationObserver((mutations) => {
+        let needsReInit = false;
+        mutations.forEach((mutation) => {
+            if (mutation.addedNodes.length) {
+                mutation.addedNodes.forEach(node => {
+                    // Check if the added node is a button or contains buttons
+                    if (node.nodeType === 1 && (node.matches('button, .btn, input[type="submit"], input[type="button"], .catalog-search-btn, .show-button, .detail-button, .join-button, .login-btn, .create-startup-btn, .logout-btn, .nav-menu a') || node.querySelector('button, .btn, input[type="submit"], input[type="button"], .catalog-search-btn, .show-button, .detail-button, .join-button, .login-btn, .create-startup-btn, .logout-btn, .nav-menu a'))) {
+                        needsReInit = true;
+                    }
+                });
+            }
         });
+        if (needsReInit) {
+            console.log('DOM changed, re-initializing Position Aware');
+            initPositionAware();
+        }
+    });
 
-        observer.observe(document.body, { childList: true, subtree: true });
-    }, 100);
+    observer.observe(document.body, { childList: true, subtree: true });
     
-    // Обработка AJAX запросов
+    // Обработка AJAX запросов (simple example, might need adjustment based on actual AJAX implementation)
+    // Consider using a more robust way to detect AJAX completion if available (e.g., custom events)
     const originalXHR = window.XMLHttpRequest;
     window.XMLHttpRequest = function() {
         const xhr = new originalXHR();
-        const originalOnLoad = xhr.onload;
-        
-        xhr.onload = function() {
-            if (originalOnLoad) {
-                originalOnLoad.apply(this, arguments);
-            }
-            removeConflictingStyles();
-            setTimeout(initPositionAware, 100);
-        };
-        
+        xhr.addEventListener('load', function() {
+            // Re-initialize after AJAX load, give some time for DOM updates
+            console.log('AJAX load detected, re-initializing Position Aware');
+            setTimeout(initPositionAware, 150);
+        });
         return xhr;
     };
 });
 
-// Функция удаления конфликтующих стилей
-function removeConflictingStyles() {
-    console.log('Removing conflicting styles');
-    
-    // Удаляем все трансформации и переходы, которые могут конфликтовать с эффектом
-    const buttons = document.querySelectorAll('button, .btn, input[type="submit"], input[type="button"], .catalog-search-btn, .show-button, .detail-button, .join-button, .login-btn, .create-startup-btn, .logout-btn, .nav-menu a');
-    
-    buttons.forEach(button => {
-        // Сбрасываем стили, которые могут мешать эффекту
-        button.style.removeProperty('transition');
-        button.style.removeProperty('transform');
-        
-        // Проверяем наличие span и создаем его, если нужно
-        let waveSpan = button.querySelector('span');
-        if (!waveSpan) {
-            waveSpan = document.createElement('span');
-            // Ensure the button is relative for absolute positioning of span
-            if (window.getComputedStyle(button).position === 'static') {
-                 button.style.position = 'relative';
-            }
-            button.appendChild(waveSpan);
-        }
-        
-        // Устанавливаем базовые стили для span (делается и в initPositionAware, но может быть нужно здесь для первого раза)
-        waveSpan.style.position = 'absolute';
-        waveSpan.style.display = 'block';
-        waveSpan.style.width = '0';
-        waveSpan.style.height = '0';
-        waveSpan.style.borderRadius = '50%';
-        waveSpan.style.transform = 'translate(-50%, -50%) scale(0)';
-        waveSpan.style.opacity = '0';
-        waveSpan.style.pointerEvents = 'none';
-        waveSpan.style.zIndex = '-1'; // Ensure it's behind content
-        waveSpan.style.transition = 'width 0.5s ease-out, height 0.5s ease-out, opacity 0.5s ease-out, transform 0.5s ease-out'; // Add transition here too? Maybe safer in init
-    });
-}
-
-// Оптимизация прокрутки
-let scrollTimeout;
-window.addEventListener('scroll', function() {
-    clearTimeout(scrollTimeout);
-    scrollTimeout = setTimeout(function() {
-        initPositionAware();
-    }, 200);
-}, { passive: true });
-
 function initPositionAware() {
-    console.log('Initializing Position Aware buttons');
+    console.log('Running initPositionAware');
     
     const buttons = document.querySelectorAll('button, .btn, input[type="submit"], input[type="button"], .catalog-search-btn, .show-button, .detail-button, .join-button, .login-btn, .create-startup-btn, .logout-btn, .nav-menu a');
     
     buttons.forEach(button => {
         // Пропускаем уже обработанные кнопки
         if (button.hasAttribute('data-position-aware-initialized')) return;
-        
-        // Ensure the button is relative for absolute positioning of span
-        if (window.getComputedStyle(button).position === 'static') {
-             button.style.position = 'relative';
-        }
-        // Ensure overflow is hidden on the button itself to contain the span
-        button.style.overflow = 'hidden';
 
-        // Удаление предыдущих обработчиков событий для избежания дублирования
+        // REMOVE existing spans to avoid conflicts
+        const existingSpan = button.querySelector('span');
+        if (existingSpan) {
+            console.log('Removing existing span from:', button);
+            existingSpan.remove();
+        }
+
+        // Удаление предыдущих обработчиков событий на всякий случай
         button.removeEventListener('mouseenter', handleMouseEnter);
         button.removeEventListener('mouseleave', handleMouseLeave);
         button.removeEventListener('touchstart', handleTouchStart);
         
-        // Проверяем существование элемента span для волнового эффекта
-        let waveSpan = button.querySelector('span');
-        if (!waveSpan) {
-            waveSpan = document.createElement('span');
-            button.appendChild(waveSpan);
-        }
+        // Создаем НОВЫЙ span для эффекта
+        const waveSpan = document.createElement('span');
         
-        // Установка базовых стилей для span элемента
+        // Установка базовых стилей для нового span элемента
         waveSpan.style.position = 'absolute';
         waveSpan.style.display = 'block';
         waveSpan.style.width = '0';
@@ -127,7 +78,10 @@ function initPositionAware() {
         waveSpan.style.opacity = '0';
         waveSpan.style.pointerEvents = 'none';
         waveSpan.style.zIndex = '-1'; // Ensure it's behind content
-        waveSpan.style.transition = 'width 0.5s ease-out, height 0.5s ease-out, opacity 0.5s ease-out, transform 0.5s ease-out'; // Added transform transition
+        waveSpan.style.transition = 'width 0.5s ease-out, height 0.5s ease-out, opacity 0.5s ease-out, transform 0.5s ease-out';
+
+        // Добавляем новый span в кнопку
+        button.appendChild(waveSpan);
 
         // Добавляем обработчики событий
         button.addEventListener('mouseenter', handleMouseEnter);
@@ -136,6 +90,7 @@ function initPositionAware() {
         
         // Помечаем кнопку как обработанную
         button.setAttribute('data-position-aware-initialized', 'true');
+        console.log('Initialized button:', button);
     });
 }
 
@@ -195,7 +150,8 @@ function handleMouseLeave(e) {
 }
 
 function handleTouchStart(e) {
-    e.preventDefault();
+    // Basic touch handling - can be improved
+    e.preventDefault(); 
     const touch = e.touches[0];
     const button = e.currentTarget;
     const rect = button.getBoundingClientRect();
@@ -206,8 +162,23 @@ function handleTouchStart(e) {
     const buttonHeight = button.offsetHeight;
     const diameter = Math.max(buttonWidth * 3, buttonHeight * 3);
     
-    const waveSpan = button.querySelector('span');
-    if (!waveSpan) return;
+    // Ensure span exists (should always exist after init, but check anyway)
+    let waveSpan = button.querySelector('span');
+    if (!waveSpan) {
+        waveSpan = document.createElement('span');
+        // Apply styles if somehow missing
+        waveSpan.style.position = 'absolute';
+        waveSpan.style.display = 'block';
+        waveSpan.style.width = '0';
+        waveSpan.style.height = '0';
+        waveSpan.style.borderRadius = '50%';
+        waveSpan.style.transform = 'translate(-50%, -50%) scale(0)';
+        waveSpan.style.opacity = '0';
+        waveSpan.style.pointerEvents = 'none';
+        waveSpan.style.zIndex = '-1';
+        waveSpan.style.transition = 'width 0.6s ease-out, height 0.6s ease-out, opacity 0.6s ease-out, transform 0.6s ease-out';
+        button.appendChild(waveSpan);
+    }
     
     waveSpan.style.width = `${diameter}px`;
     waveSpan.style.height = `${diameter}px`;
@@ -218,11 +189,21 @@ function handleTouchStart(e) {
     waveSpan.style.backgroundColor = waveColor;
     
     waveSpan.style.transform = 'translate(-50%, -50%) scale(1)';
+    // Ensure transition is set (might not be if init didn't run?)
     waveSpan.style.transition = 'width 0.6s ease-out, height 0.6s ease-out, opacity 0.6s ease-out, transform 0.6s ease-out';
     waveSpan.style.opacity = '1';
     
+    // Скрытие волны через 800мс
     setTimeout(() => {
         waveSpan.style.opacity = '0';
+        // Optional reset
+        setTimeout(() => {
+            if (waveSpan.style.opacity === '0') {
+                waveSpan.style.transform = 'translate(-50%, -50%) scale(0)';
+                waveSpan.style.width = '0';
+                waveSpan.style.height = '0';
+            }
+        }, 600); // Match touch transition duration
     }, 800);
 }
 
