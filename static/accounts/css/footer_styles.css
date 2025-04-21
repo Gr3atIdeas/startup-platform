@@ -143,19 +143,6 @@
   justify-content: center;
 }
 
-/* Стиль для эффекта Position Aware */
-.join-button span {
-  position: absolute;
-  display: block;
-  width: 0;
-  height: 0;
-  border-radius: 50%;
-  background-color: #FFEF2B;
-  transform: translate(-50%, -50%);
-  transition: width 0.4s ease-in-out, height 0.4s ease-in-out;
-  z-index: -1;
-}
-
 .join-button i {
   margin-right: 8px;
   position: relative;

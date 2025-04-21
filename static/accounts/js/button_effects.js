@@ -53,19 +53,20 @@ function initPositionAware() {
         // Пропускаем уже обработанные кнопки
         if (button.hasAttribute('data-position-aware-initialized')) return;
 
-        // REMOVE existing spans to avoid conflicts
+        // --- ВОЗВРАЩАЕМ ЛОГИКУ: Удаляем существующий span --- 
         const existingSpan = button.querySelector('span');
         if (existingSpan) {
             console.log('Removing existing span from:', button);
             existingSpan.remove();
         }
+        // --- КОНЕЦ ВОЗВРАТА ---
 
-        // Удаление предыдущих обработчиков событий на всякий случай
+        // Удаление старых обработчиков событий
         button.removeEventListener('mouseenter', handleMouseEnter);
         button.removeEventListener('mouseleave', handleMouseLeave);
         button.removeEventListener('touchstart', handleTouchStart);
         
-        // Создаем НОВЫЙ span для эффекта
+        // --- ВСЕГДА СОЗДАЕМ НОВЫЙ span --- 
         const waveSpan = document.createElement('span');
         
         // Установка базовых стилей для нового span элемента
@@ -79,6 +80,7 @@ function initPositionAware() {
         waveSpan.style.pointerEvents = 'none';
         waveSpan.style.zIndex = '-1'; // Ensure it's behind content
         waveSpan.style.transition = 'width 0.5s ease-out, height 0.5s ease-out, opacity 0.5s ease-out, transform 0.5s ease-out';
+        // --- КОНЕЦ СОЗДАНИЯ И СТИЛИЗАЦИИ ---
 
         // Добавляем новый span в кнопку
         button.appendChild(waveSpan);
@@ -90,7 +92,7 @@ function initPositionAware() {
         
         // Помечаем кнопку как обработанную
         button.setAttribute('data-position-aware-initialized', 'true');
-        console.log('Initialized button:', button);
+        console.log('Initialized button:', button, 'with new span');
     });
 }
 

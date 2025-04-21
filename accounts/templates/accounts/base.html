@@ -270,18 +270,18 @@
           <a href="{% url 'moderator_dashboard' %}" {% if request.resolver_match.url_name == 'moderator_dashboard' %}class="active"{% endif %}>Заявки</a>
         {% endif %}
         <a href="{% url 'profile' %}" class="login-btn">
-          <span></span>Профиль
+          Профиль
         </a>
         <a href="{% url 'logout' %}" class="login-btn">
-          <span></span>Выйти
+          Выйти
         </a>
         <a href="{% url 'create_startup' %}" class="create-startup-btn">
-          <span></span>Создать стартап
+          Создать стартап
         </a>
         <img src="{% static 'accounts/images/layout/image12.png' %}" alt="Аватар" class="avatar">
       {% else %}
         <a href="{% url 'login' %}" class="login-btn">
-          <span></span>Войти
+          Войти
         </a>
       {% endif %}
     </nav>
@@ -316,7 +316,6 @@
     
     <div class="footer-join">
       <button class="join-button">
-        <span></span>
         <i class="fas fa-plus-circle"></i>
         Присоединиться
       </button>
