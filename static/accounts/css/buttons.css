@@ -23,31 +23,40 @@
   --footer-btn-radius: 4px;
   --logo-size: 32px;
   --yellow-color: #FFEF2B;
+  --accent-color-main: #7B61FF;
+  --accent-color-secondary: #ffef2b;
+  --button-padding: 0.5em 1.5em;
+  --button-font-size: 16px;
+  --button-border-radius: 8px;
 }
 
-/* Общие стили для всех кнопок - базовые */
-button, .btn, input[type="submit"], input[type="button"], 
-.catalog-search-btn, .show-button, .detail-button, 
-.join-button, .login-btn, .create-startup-btn, .logout-btn, .nav-menu a {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--btn-padding, 0.5em 1.5em); 
-  border-radius: var(--btn-border-radius, 8px); 
-  font-family: 'Unbounded', sans-serif;
-  font-size: 16px;
-  font-weight: 500;
-  text-align: center;
-  text-decoration: none;
-  cursor: pointer;
-  overflow: hidden; 
-  border: 1px solid #004e9f; /* Default blue border */
-  outline: none;
-  background-color: #ffffff; /* Default white background */
-  color: #000000; /* Default black text */
-  z-index: 1; 
-  transition: color 0.2s ease-in-out; /* Add transition for text color */
+/* Общие стили для всех кнопок */
+.button {
+    position: relative;
+    display: inline-block;
+    padding: var(--button-padding);
+    background-color: white;
+    color: black;
+    border: 1px solid var(--accent-color-main);
+    border-radius: var(--button-border-radius);
+    font-size: var(--button-font-size);
+    text-decoration: none;
+    overflow: hidden;
+    cursor: pointer;
+    z-index: 1;
+    transition: color 0.4s ease-in-out;
+}
+
+/* Волна эффекта при наведении */
+.button span {
+    position: absolute;
+    background-color: #004e9f; /* Начальный цвет волны синий */
+    border-radius: 50%;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: width 0.7s, height 0.7s, opacity 0.7s;
+    z-index: -1;
 }
 
 /* Стили для кнопок меню навигации */
@@ -84,16 +93,16 @@ footer a.btn {
 
 /* Стили для кнопки присоединения */
 .join-button {
-  /* background-color: var(--accent-color); */ 
-  color: #000000; 
-  border-color: #ffef2b; /* Exception: Yellow border */
+  border-color: var(--accent-color-secondary);
+  background-color: white;
+  color: black;
 }
 
 /* Стили для кнопки входа */
 .login-btn {
-  /* background-color: var(--yellow-color); */ 
-  color: #000000; 
-  border-color: #ffef2b; /* Exception: Yellow border */
+  border-color: var(--accent-color-secondary);
+  background-color: white;
+  color: black;
 }
 
 /* Стили для кнопки создания стартапа */
@@ -151,4 +160,36 @@ button::before, button::after,
     position: relative; /* Needed for z-index */
     z-index: 1; 
     /* mix-blend-mode: normal; */ /* Reset blend mode if they exist and shouldn't blend */
+}
+
+/* Отключаем встроенное поведение при наведении, так как мы контролируем это через JS */
+.button:hover {
+    color: white; /* При наведении текст становится белым (кроме login-btn и join-button) */
+}
+
+/* Состояние при фокусе */
+.button:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 78, 159, 0.3); /* Синий ободок при фокусе */
+}
+
+/* Состояние при фокусе для специальных кнопок */
+.login-btn:focus, .join-button:focus {
+    box-shadow: 0 0 0 3px rgba(255, 239, 43, 0.3); /* Желтый ободок при фокусе */
+}
+
+.login-btn:hover, .join-button:hover {
+    color: black; /* Текст остается черным при наведении */
+}
+
+/* Стиль для волновой анимации, которая создается в JS */
+.wave {
+    position: absolute;
+    border-radius: 50%;
+    background-color: #004e9f; /* По умолчанию синий цвет */
+    transform: translate(-50%, -50%) scale(0);
+    pointer-events: none;
+    opacity: 0;
+    transition: transform 0.5s ease-out, opacity 0.5s ease-out;
+    z-index: 0;
 } 

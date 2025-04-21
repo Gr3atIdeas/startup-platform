@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function() {
 function initPositionAware() {
     console.log('Running initPositionAware');
     
-    const buttons = document.querySelectorAll('button, .btn, input[type="submit"], input[type="button"], .catalog-search-btn, .show-button, .detail-button, .join-button, .login-btn, .create-startup-btn, .logout-btn, .nav-menu a');
+    const buttons = document.querySelectorAll('button, .btn, .button, input[type="submit"], input[type="button"], .catalog-search-btn, .show-button, .detail-button, .join-button, .login-btn, .create-startup-btn, .logout-btn, .nav-menu a');
     
     buttons.forEach(button => {
         // Пропускаем уже обработанные кнопки
@@ -97,55 +97,59 @@ function initPositionAware() {
     });
 }
 
-function handleMouseEnter(e) {
-    console.log('Mouse Enter', e.currentTarget);
-    const button = e.currentTarget;
-    const waveSpan = button.querySelector('span');
-    if (!waveSpan || window.getComputedStyle(button).display === 'none') return;
-    
+function handleMouseEnter(event) {
+    const button = event.currentTarget;
     const rect = button.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
     
-    const buttonWidth = button.offsetWidth;
-    const buttonHeight = button.offsetHeight;
-    const diameter = Math.max(buttonWidth * 3, buttonHeight * 3); 
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
     
-    // Apply wave styles
-    const waveColor = getWaveColor(button);
-    waveSpan.style.backgroundColor = waveColor;
-    waveSpan.style.left = `${x}px`;
-    waveSpan.style.top = `${y}px`;
-    waveSpan.style.width = `${diameter}px`;
-    waveSpan.style.height = `${diameter}px`;
-    waveSpan.style.opacity = '1'; 
-
-    // --- УПРАВЛЕНИЕ ЦВЕТОМ ТЕКСТА --- 
+    const size = Math.max(rect.width, rect.height) * 2;
+    
+    // Создаем волну
+    const wave = document.createElement('span');
+    wave.className = 'wave';
+    wave.style.left = `${x}px`;
+    wave.style.top = `${y}px`;
+    wave.style.width = `${size}px`;
+    wave.style.height = `${size}px`;
+    wave.style.backgroundColor = getWaveColor(button);
+    
+    // Удаляем существующие волны
+    const existingWaves = button.querySelectorAll('.wave');
+    existingWaves.forEach(wave => wave.remove());
+    
+    // Добавляем новую волну
+    button.appendChild(wave);
+    
+    // Изменяем цвет текста при наведении
     if (button.classList.contains('login-btn') || button.classList.contains('join-button')) {
-        // Исключения: оставляем черный текст
-        button.style.color = '#000000';
+        button.style.color = '#000000'; // Черный для кнопок login-btn и join-button
     } else {
-        // Стандартный случай: делаем текст белым
-        button.style.color = '#ffffff';
+        button.style.color = '#ffffff'; // Белый для всех остальных кнопок
     }
-    console.log('Styles applied, text color set');
+    
+    // Активируем анимацию
+    setTimeout(() => {
+        wave.style.transform = 'translate(-50%, -50%) scale(1)';
+        wave.style.opacity = '1';
+    }, 10);
 }
 
-function handleMouseLeave(e) {
-    console.log('Mouse Leave', e.currentTarget);
-    const button = e.currentTarget;
-    const waveSpan = button.querySelector('span');
-    if (waveSpan) {
-        // Hide wave
-        waveSpan.style.opacity = '0'; 
-        waveSpan.style.width = '0'; 
-        waveSpan.style.height = '0';
-        
-        // --- СБРОС ЦВЕТА ТЕКСТА --- 
-        button.style.color = '#000000'; // Reset text color to default black
-        
-        console.log('Wave hidden, text color reset');
-    }
+function handleMouseLeave(event) {
+    const button = event.currentTarget;
+    const waves = button.querySelectorAll('.wave');
+    
+    // Анимируем скрытие волн
+    waves.forEach(wave => {
+        wave.style.opacity = '0';
+        setTimeout(() => {
+            wave.remove();
+        }, 500); // Время, соответствующее transition в CSS
+    });
+    
+    // Возвращаем исходный цвет текста
+    button.style.color = '';
 }
 
 function handleTouchStart(e) {
@@ -209,10 +213,8 @@ function handleTouchStart(e) {
 // Helper function for wave color
 function getWaveColor(button) {
     if (button.classList.contains('login-btn') || button.classList.contains('join-button')) {
-        // Исключения: желтый цвет
-        return '#ffef2b'; 
+        return '#ffef2b'; // Желтый цвет для кнопок login-btn и join-button
     } else {
-        // Стандартный случай: синий цвет
-        return '#004e9f'; 
+        return '#004e9f'; // Синий цвет для всех остальных кнопок
     }
 } 
