@@ -1,10 +1,10 @@
 @import url(https://fonts.googleapis.com/css?family=Open+Sans:400|Raleway:300);
 
 :root {
-  --btn-width: 250px;
-  --btn-height: 40px;
+  --btn-width: auto;
+  --btn-height: auto;
   --btn-padding: 0.5em 1.5em;
-  --btn-border-radius: 4px;
+  --btn-border-radius: 8px;
   --accent-color: #7B61FF;
   --accent-hover: #6551D9;
   --accent-active: #5441B3;
@@ -25,7 +25,7 @@
   --yellow-color: #FFEF2B;
 }
 
-/* Общие стили для всех кнопок */
+/* Общие стили для всех кнопок - базовые без эффектов */
 button, .btn, input[type="submit"], input[type="button"], 
 .catalog-search-btn, .show-button, .detail-button {
   position: relative;
@@ -41,61 +41,11 @@ button, .btn, input[type="submit"], input[type="button"],
   text-decoration: none;
   cursor: pointer;
   overflow: hidden;
-  transition: var(--btn-transition);
-  box-shadow: var(--btn-shadow);
   border: none;
   outline: none;
   background-color: var(--accent-color);
   color: var(--light-color);
   z-index: 1;
-}
-
-/* Эффект Position Aware */
-button span, 
-.btn span, 
-input[type="submit"] span, 
-input[type="button"] span,
-.catalog-search-btn span,
-.show-button span,
-.detail-button span,
-.join-button span,
-.login-btn span,
-.create-startup-btn span,
-.logout-btn span,
-.nav-menu a span {
-  position: absolute;
-  display: block;
-  width: 0;
-  height: 0;
-  border-radius: 50%;
-  background-color: var(--accent-hover);
-  transform: translate(-50%, -50%);
-  transition: width 0.4s ease-in-out, height 0.4s ease-in-out;
-  z-index: -1;
-}
-
-/* Стили для кнопок при наведении */
-button:hover, 
-.btn:hover, 
-input[type="submit"]:hover, 
-input[type="button"]:hover,
-.catalog-search-btn:hover,
-.show-button:hover,
-.detail-button:hover {
-  box-shadow: var(--btn-hover-shadow);
-  transform: translateY(-2px);
-}
-
-/* Стили для кнопок при активации */
-button:active, 
-.btn:active, 
-input[type="submit"]:active, 
-input[type="button"]:active,
-.catalog-search-btn:active,
-.show-button:active,
-.detail-button:active {
-  transform: translateY(1px);
-  box-shadow: var(--btn-shadow);
 }
 
 /* Стили для кнопок меню навигации */
@@ -107,13 +57,8 @@ input[type="button"]:active,
   text-decoration: none;
   color: var(--light-color);
   font-weight: 500;
-  transition: var(--btn-transition);
   overflow: hidden;
   z-index: 1;
-}
-
-.nav-menu a:hover {
-  background-color: #333;
 }
 
 .nav-menu a.active {
@@ -128,88 +73,27 @@ footer a.btn {
   border: 1px solid var(--light-color);
   color: var(--light-color);
   padding: 8px 16px;
-  border-radius: var(--footer-btn-radius);
-  font-size: 14px;
-  transition: var(--btn-transition);
-  box-shadow: none;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
   width: auto;
   min-width: 100px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   height: auto;
-}
-
-footer button:hover,
-footer .btn:hover,
-footer a.btn:hover {
-  background-color: var(--light-color);
-  color: var(--dark-color);
-  box-shadow: var(--btn-shadow);
-}
-
-footer button:active,
-footer .btn:active,
-footer a.btn:active {
-  transform: translateY(1px);
-  box-shadow: none;
 }
 
 /* Стили для кнопки присоединения */
 .join-button {
   background-color: var(--accent-color);
   color: white;
-  width: var(--btn-width);
-  height: var(--btn-height);
-  border-radius: var(--btn-border-radius);
-  text-align: center;
-  line-height: var(--btn-height);
-  font-weight: 500;
   position: relative;
   overflow: hidden;
   z-index: 1;
-  box-shadow: var(--btn-shadow);
-  transition: var(--btn-transition);
-}
-
-.join-button:hover {
-  background-color: var(--accent-hover);
-  box-shadow: var(--btn-hover-shadow);
-  transform: translateY(-2px);
-}
-
-.join-button:active {
-  background-color: var(--accent-active);
-  transform: translateY(1px);
-  box-shadow: var(--btn-shadow);
 }
 
 /* Стили для кнопки входа */
 .login-btn {
   background-color: var(--yellow-color);
   color: var(--dark-color);
-  width: var(--btn-width);
-  height: var(--btn-height);
-  border-radius: var(--btn-border-radius);
-  text-align: center;
-  line-height: var(--btn-height);
-  font-weight: 500;
   position: relative;
   overflow: hidden;
   z-index: 1;
-  transition: var(--btn-transition);
-}
-
-.login-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--btn-hover-shadow);
-}
-
-.login-btn:active {
-  transform: translateY(1px);
-  box-shadow: var(--btn-shadow);
 }
 
 /* Стили для кнопки создания стартапа */
@@ -217,25 +101,9 @@ footer a.btn:active {
   background-color: transparent;
   color: var(--accent-color);
   border: 2px solid var(--accent-color);
-  width: var(--btn-width);
-  height: var(--btn-height);
-  border-radius: var(--btn-border-radius);
-  text-align: center;
-  line-height: calc(var(--btn-height) - 4px);
-  font-weight: 500;
   position: relative;
   overflow: hidden;
   z-index: 1;
-  transition: var(--btn-transition);
-}
-
-.create-startup-btn:hover {
-  color: var(--light-color);
-}
-
-.create-startup-btn:active {
-  transform: translateY(1px);
-  box-shadow: none;
 }
 
 /* Стили для кнопки выхода */
@@ -243,41 +111,19 @@ footer a.btn:active {
   background-color: transparent;
   color: var(--light-color);
   border: 1px solid var(--light-color);
-  width: var(--btn-width);
-  height: var(--btn-height);
-  border-radius: var(--btn-border-radius);
-  text-align: center;
-  line-height: calc(var(--btn-height) - 2px);
-  font-weight: 500;
   position: relative;
   overflow: hidden;
   z-index: 1;
-  transition: var(--btn-transition);
-}
-
-.logout-btn:hover {
-  background-color: var(--light-color);
-  color: var(--dark-color);
-}
-
-.logout-btn:active {
-  transform: translateY(1px);
-  box-shadow: none;
 }
 
 @media (max-width: 768px) {
   :root {
-    --btn-width: 100%;
-    --btn-height: 36px;
     --btn-padding: 0.4em 1.2em;
-    --btn-border-radius: 4px;
   }
 }
 
 @media (max-width: 480px) {
   :root {
-    --btn-height: 32px;
     --btn-padding: 0.3em 1em;
-    --btn-border-radius: 4px;
   }
 } 

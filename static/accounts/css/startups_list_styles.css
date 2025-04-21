@@ -92,6 +92,7 @@ body {
   font-size: 16px;
 }
 
+/* Кнопка поиска в каталоге */
 .catalog-search-btn {
   position: absolute;
   right: 0;
@@ -111,25 +112,27 @@ body {
   overflow: hidden;
 }
 
-.catalog-search-btn span {
+/* Стили для кнопки показать и подробнее */
+.show-button, 
+.detail-button {
+  width: 100%;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+/* Все span элементы для Position Aware эффекта */
+.catalog-search-btn span,
+.show-button span,
+.detail-button span {
   position: absolute;
   display: block;
-  width: 0;
-  height: 0;
   border-radius: 50%;
-  background-color: #7B61FF;
-  transform: translate(-50%, -50%);
-  transition: width 0.4s ease-in-out, height 0.4s ease-in-out;
+  pointer-events: none;
   z-index: -1;
-}
-
-.catalog-search-btn:hover {
-  color: #FFFFFF;
-}
-
-.catalog-search-btn:active {
-  transform: none;
-  box-shadow: none;
 }
 
 /* Боковая панель с фильтрами */
@@ -314,49 +317,6 @@ body {
 
 .toggle-switch.active .toggle-handle {
   transform: translateX(18px);
-}
-
-/* Кнопка показать */
-.show-button, 
-.catalog-search-btn, 
-.detail-button {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 8px;
-  font-weight: 500;
-  overflow: hidden;
-  z-index: 1;
-  padding: 8px 16px;
-  cursor: pointer;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-  background-color: var(--accent-color, #7B61FF);
-  color: white;
-  border: none;
-  outline: none;
-}
-
-.catalog-search-btn {
-  height: 100%;
-  padding: 0 15px;
-  border-radius: 0 8px 8px 0;
-  border-left: none;
-}
-
-.show-button:hover, 
-.catalog-search-btn:hover, 
-.detail-button:hover {
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-  transform: translateY(-2px);
-}
-
-.show-button:active, 
-.catalog-search-btn:active, 
-.detail-button:active {
-  transform: translateY(1px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* Сетка стартапов */
@@ -548,18 +508,6 @@ body {
   margin-top: auto;
   border-top: 1px solid #E5E7EB;
   padding-top: 15px;
-}
-
-.detail-button span {
-  position: absolute;
-  display: block;
-  width: 0;
-  height: 0;
-  border-radius: 50%;
-  background-color: #7B61FF;
-  transform: translate(-50%, -50%);
-  transition: width 0.4s ease-in-out, height 0.4s ease-in-out;
-  z-index: -1;
 }
 
 .investor-info {

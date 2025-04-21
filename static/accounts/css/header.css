@@ -61,13 +61,8 @@ header {
   font-size: 16px;
   padding: 8px 16px;
   border-radius: 8px;
-  transition: background-color 0.3s, color 0.3s;
   position: relative;
   overflow: hidden;
-}
-
-.nav-menu a:hover {
-  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .nav-menu a.active {

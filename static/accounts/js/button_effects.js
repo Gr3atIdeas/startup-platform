@@ -4,19 +4,27 @@
  */
 
 document.addEventListener('DOMContentLoaded', function() {
-    initPositionAware();
-
-    // Наблюдатель за изменениями DOM для динамически добавленных элементов
-    const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-            if (mutation.addedNodes.length) {
-                initPositionAware();
-            }
+    console.log('Initializing Position Aware effect');
+    
+    // Сначала удаляем конфликтующие стили
+    removeConflictingStyles();
+    
+    // Затем инициализируем эффект
+    setTimeout(function() {
+        initPositionAware();
+        
+        // Наблюдатель за изменениями DOM для динамически добавленных элементов
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.addedNodes.length) {
+                    initPositionAware();
+                }
+            });
         });
-    });
 
-    observer.observe(document.body, { childList: true, subtree: true });
-
+        observer.observe(document.body, { childList: true, subtree: true });
+    }, 100);
+    
     // Обработка AJAX запросов
     const originalXHR = window.XMLHttpRequest;
     window.XMLHttpRequest = function() {
@@ -27,35 +35,67 @@ document.addEventListener('DOMContentLoaded', function() {
             if (originalOnLoad) {
                 originalOnLoad.apply(this, arguments);
             }
+            removeConflictingStyles();
             setTimeout(initPositionAware, 100);
         };
         
         return xhr;
     };
-
-    // Удаление нежелательных стилей и эффектов, конфликтующих с Position Aware
-    removeConflictingStyles();
 });
 
 // Функция удаления конфликтующих стилей
 function removeConflictingStyles() {
-    // Удаляем все трансформации и переходы, которые могут конфликтовать с эффектом
-    const buttons = document.querySelectorAll('.login-btn, .create-startup-btn, .logout-btn, .nav-menu a, button, .btn, .show-button, .detail-button, .join-button');
-    buttons.forEach(button => {
-        if (button.classList.contains('position-aware-initialized')) return;
-        
-        // Удаляем все обработчики событий перед добавлением новых
-        const clone = button.cloneNode(true);
-        button.parentNode.replaceChild(clone, button);
-        
-        // Проверяем наличие span и пересоздаем его, если нужно
-        let waveSpan = clone.querySelector('span');
-        if (!waveSpan) {
-            waveSpan = document.createElement('span');
-            clone.appendChild(waveSpan);
+    console.log('Removing conflicting styles');
+    
+    // CSS для очистки и перезаписи стилей кнопок
+    const styleElement = document.createElement('style');
+    styleElement.textContent = `
+        button, .btn, input[type="submit"], input[type="button"],
+        .catalog-search-btn, .show-button, .detail-button,
+        .join-button, .login-btn, .create-startup-btn, .logout-btn, .nav-menu a {
+            transition: none !important;
+            transform: none !important;
         }
         
-        clone.classList.add('position-aware-initialized');
+        button span, .btn span, input[type="submit"] span, input[type="button"] span,
+        .catalog-search-btn span, .show-button span, .detail-button span,
+        .join-button span, .login-btn span, .create-startup-btn span, 
+        .logout-btn span, .nav-menu a span {
+            position: absolute !important;
+            display: block !important;
+            border-radius: 50% !important;
+            pointer-events: none !important;
+            z-index: -1 !important;
+            transition: none !important;
+        }
+    `;
+    document.head.appendChild(styleElement);
+    
+    // Удаляем все трансформации и переходы, которые могут конфликтовать с эффектом
+    const buttons = document.querySelectorAll('button, .btn, input[type="submit"], input[type="button"], .catalog-search-btn, .show-button, .detail-button, .join-button, .login-btn, .create-startup-btn, .logout-btn, .nav-menu a');
+    
+    buttons.forEach(button => {
+        // Сбрасываем все стили, которые могут мешать эффекту
+        button.style.removeProperty('transition');
+        button.style.removeProperty('transform');
+        
+        // Проверяем наличие span и создаем его, если нужно
+        let waveSpan = button.querySelector('span');
+        if (!waveSpan) {
+            waveSpan = document.createElement('span');
+            button.appendChild(waveSpan);
+        }
+        
+        // Устанавливаем базовые стили для span
+        waveSpan.style.position = 'absolute';
+        waveSpan.style.display = 'block';
+        waveSpan.style.width = '0';
+        waveSpan.style.height = '0';
+        waveSpan.style.borderRadius = '50%';
+        waveSpan.style.transform = 'translate(-50%, -50%) scale(0)';
+        waveSpan.style.opacity = '0';
+        waveSpan.style.pointerEvents = 'none';
+        waveSpan.style.zIndex = '-1';
     });
 
     // Повторная инициализация после очистки
@@ -72,7 +112,9 @@ window.addEventListener('scroll', function() {
 }, { passive: true });
 
 function initPositionAware() {
-    const buttons = document.querySelectorAll('.login-btn, .create-startup-btn, .logout-btn, .nav-menu a, button, .btn, .show-button, .detail-button, .join-button');
+    console.log('Initializing Position Aware buttons');
+    
+    const buttons = document.querySelectorAll('button, .btn, input[type="submit"], input[type="button"], .catalog-search-btn, .show-button, .detail-button, .join-button, .login-btn, .create-startup-btn, .logout-btn, .nav-menu a');
     
     buttons.forEach(button => {
         // Пропускаем уже обработанные кнопки
@@ -93,6 +135,8 @@ function initPositionAware() {
         // Установка базовых стилей для span элемента
         waveSpan.style.position = 'absolute';
         waveSpan.style.display = 'block';
+        waveSpan.style.width = '0';
+        waveSpan.style.height = '0';
         waveSpan.style.borderRadius = '50%';
         waveSpan.style.transform = 'translate(-50%, -50%) scale(0)';
         waveSpan.style.opacity = '0';
@@ -112,6 +156,7 @@ function initPositionAware() {
 function handleMouseEnter(e) {
     const button = e.currentTarget;
     const waveSpan = button.querySelector('span');
+    if (!waveSpan) return;
     
     // Получение координат курсора относительно кнопки
     const rect = button.getBoundingClientRect();
