@@ -20,6 +20,11 @@ function applyPositionAwareEffect() {
       button.appendChild(span);
     }
     
+    // Определяем, должна ли кнопка менять цвет текста при наведении
+    const shouldChangeTextColor = !button.classList.contains('login-btn') && 
+                                 !button.classList.contains('join-button') && 
+                                 !button.classList.contains('btn-secondary');
+    
     // Обработчик при наведении мыши
     button.addEventListener('mouseenter', function(e) {
       const span = this.querySelector('span');
@@ -36,12 +41,8 @@ function applyPositionAwareEffect() {
         span.style.width = maxWidth + 'px';
         span.style.height = maxWidth + 'px';
         
-        // Устанавливаем правильный цвет текста при наведении
-        if (this.classList.contains('btn-primary') || 
-            this.classList.contains('create-startup-btn') || 
-            this.classList.contains('catalog-search-btn') || 
-            this.classList.contains('detail-button') ||
-            this.classList.contains('show-button')) {
+        // Меняем цвет текста на белый только для синих кнопок
+        if (shouldChangeTextColor) {
           this.style.color = '#FFFFFF';
         }
       }
@@ -65,7 +66,9 @@ function applyPositionAwareEffect() {
         span.style.height = '0';
         
         // Возвращаем оригинальный цвет текста
-        this.style.color = '';
+        if (shouldChangeTextColor) {
+          this.style.color = '#000000';
+        }
       }
     });
     

@@ -484,218 +484,79 @@ input[type="button"]:hover:before,
   transform: translateY(50%);
 }
 
-/* Основные стили для кнопок */
-button, .btn, input[type="submit"], input[type="button"], .catalog-search-btn, .footer-join-btn, .header-btn {
+/* Базовые стили для всех кнопок */
+button, .btn, input[type="submit"], input[type="button"], 
+.catalog-search-btn, .join-button, .login-btn, .create-startup-btn, 
+.logout-btn, .detail-button, .show-button, .nav-menu a {
   position: relative;
-  overflow: hidden;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--button-bg);
-  color: var(--button-color);
-  border: none;
-  border-radius: var(--button-radius);
-  padding: var(--button-padding);
-  font-family: var(--button-font);
+  padding: var(--button-padding-y) var(--button-padding-x);
   font-size: var(--button-font-size);
-  font-weight: var(--button-font-weight);
-  letter-spacing: var(--button-letter-spacing);
-  cursor: pointer;
+  line-height: var(--button-line-height);
+  text-align: center;
   text-decoration: none;
-  transition: var(--button-transition);
-  z-index: 1;
-}
-
-/* Стили при наведении */
-button:hover, .btn:hover, input[type="submit"]:hover, input[type="button"]:hover,
-.catalog-search-btn:hover, .footer-join-btn:hover, .header-btn:hover {
-  background-color: var(--button-hover-bg);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 87, 183, 0.2);
-}
-
-/* Стили при активном состоянии */
-button:active, .btn:active, input[type="submit"]:active, input[type="button"]:active,
-.catalog-search-btn:active, .footer-join-btn:active, .header-btn:active {
-  transform: translateY(0);
-  box-shadow: 0 2px 4px rgba(0, 87, 183, 0.1);
-}
-
-/* Стили для фокуса */
-button:focus, .btn:focus, input[type="submit"]:focus, input[type="button"]:focus,
-.catalog-search-btn:focus, .footer-join-btn:focus, .header-btn:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px var(--button-outline-color);
-}
-
-/* Стили для эффекта Position Aware */
-button span, .btn span, input[type="submit"] span, input[type="button"] span,
-.catalog-search-btn span, .footer-join-btn span, .header-btn span {
-  position: absolute;
-  display: block;
-  width: 0;
-  height: 0;
-  border-radius: 50%;
-  background-color: var(--button-effect-color);
-  transform: translate(-50%, -50%);
-  transition: width 0.5s ease, height 0.5s ease;
-  z-index: -1;
-}
-
-/* Специфические стили для разных типов кнопок */
-
-/* Кнопка поиска в каталоге */
-.catalog-search-btn {
-  border-radius: 0 var(--button-radius) var(--button-radius) 0;
-  padding: 0;
-  width: 36px;
-  height: 36px;
-}
-
-/* Кнопка Join в футере */
-.footer-join-btn {
-  border-radius: var(--button-radius);
-  padding: 10px 20px;
-  text-transform: uppercase;
-  font-size: 14px;
-}
-
-/* Кнопки в хедере */
-.header-btn {
-  border-radius: var(--button-radius);
-  padding: 8px 16px;
-  font-size: 14px;
-  background-color: transparent;
-  color: var(--button-bg);
-  border: 1px solid var(--button-bg);
-}
-
-.header-btn:hover {
-  background-color: var(--button-bg);
-  color: var(--button-color);
-}
-
-/* Другие типы кнопок */
-.btn-primary {
-  background-color: var(--button-primary);
-  color: var(--button-text);
-  border: none;
-}
-
-.btn-primary span {
-  background: var(--button-primary-hover);
-}
-
-.btn-secondary {
-  background-color: var(--button-secondary);
-  color: var(--button-text-dark);
-  border: none;
-}
-
-.btn-secondary span {
-  background: var(--button-secondary-hover);
-}
-
-.btn-success {
-  background-color: #28a745;
-}
-
-.btn-small {
-  padding: 6px 12px;
-  font-size: 14px;
-}
-
-.btn-large {
-  padding: 16px 32px;
-  font-size: 18px;
-}
-
-/* Стили для кнопок с эффектом Position Aware */
-button, 
-.btn, 
-input[type="submit"], 
-input[type="button"],
-.catalog-search-btn,
-.join-button,
-.login-btn,
-.create-startup-btn,
-.logout-btn,
-.detail-button,
-.show-button,
-.nav-menu a {
-  position: relative;
-  overflow: hidden;
   border-radius: var(--button-border-radius);
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 400;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s ease;
-  z-index: 1;
+  transition: var(--button-transition);
+  background-color: #FFFFFF;
+  color: #000000;
+  border: 1px solid var(--button-primary-color);
+  outline: none;
+  overflow: hidden;
 }
 
-/* Стиль для эффекта Position Aware */
-button span, 
-.btn span, 
-input[type="submit"] span, 
-input[type="button"] span,
-.catalog-search-btn span,
-.join-button span,
-.login-btn span,
-.create-startup-btn span,
-.logout-btn span,
-.detail-button span,
-.show-button span,
-.nav-menu a span {
+/* Основные стили для эффекта Position Aware */
+button span, .btn span, input[type="submit"] span, input[type="button"] span,
+.catalog-search-btn span, .join-button span, .login-btn span, .create-startup-btn span,
+.logout-btn span, .detail-button span, .show-button span, .nav-menu a span {
   position: absolute;
   display: block;
   width: 0;
   height: 0;
   border-radius: 50%;
-  transition: width 0.3s ease-in-out, height 0.3s ease-in-out;
+  background-color: var(--button-primary-color);
   transform: translate(-50%, -50%);
+  transition: width 0.6s ease, height 0.6s ease;
   z-index: -1;
+  pointer-events: none;
 }
 
-/* Первичная кнопка (синяя) */
-.btn-primary,
-.detail-button,
-.catalog-search-btn,
-.create-startup-btn {
-  background-color: var(--button-primary);
-  color: var(--button-text);
-  border: none;
+/* Стили для текста в кнопках (чтобы был поверх эффекта) */
+button *, .btn *, input[type="submit"] *, input[type="button"] *,
+.catalog-search-btn *, .join-button *, .login-btn *, .create-startup-btn *,
+.logout-btn *, .detail-button *, .show-button *, .nav-menu a * {
+  position: relative;
+  z-index: 2;
 }
 
-.btn-primary span,
-.detail-button span,
-.catalog-search-btn span,
-.create-startup-btn span {
-  background: var(--button-primary-hover);
+/* Первичные кнопки (синие) */
+.btn-primary, .create-startup-btn, .catalog-search-btn, .detail-button, .show-button {
+  background-color: #FFFFFF;
+  color: #000000;
+  border: 1px solid var(--button-primary-color);
 }
 
-/* Вторичная кнопка (желтая) */
-.btn-secondary,
-.join-button {
-  background-color: var(--button-secondary);
-  color: var(--button-text-dark);
-  border: none;
+.btn-primary:hover, .create-startup-btn:hover, .catalog-search-btn:hover, .detail-button:hover, .show-button:hover {
+  color: #FFFFFF;
 }
 
-.btn-secondary span,
-.join-button span {
-  background: var(--button-secondary-hover);
+/* Вторичные кнопки (желтые) */
+.btn-secondary, .login-btn, .join-button {
+  background-color: #FFFFFF;
+  color: #000000;
+  border: 1px solid var(--button-accent-color);
 }
 
-/* Ссылки в навигации */
-.nav-menu a {
-  display: inline-block;
-  padding: var(--button-padding);
-  text-decoration: none;
-  color: var(--button-text-dark);
+/* Стиль для эффекта Position Aware желтых кнопок */
+.btn-secondary span, .login-btn span, .join-button span {
+  background-color: var(--button-accent-color);
 }
 
-.nav-menu a span {
-  background: rgba(0, 87, 183, 0.1);
+.btn-secondary:hover, .login-btn:hover, .join-button:hover {
+  color: #000000;
 }
 
 /* Кнопка логина */
@@ -766,178 +627,6 @@ input[type="button"] span,
   .btn-primary,
   .btn-secondary,
   .join-button {
-    width: 100%;
-    margin-bottom: 10px;
-  }
-}
-
-/* Базовые стили для всех кнопок */
-button, .btn, input[type="submit"], input[type="button"], 
-.catalog-search-btn, .join-button, .login-btn, .create-startup-btn, 
-.logout-btn, .detail-button, .show-button, .nav-menu a {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--button-padding-y) var(--button-padding-x);
-  font-size: var(--button-font-size);
-  line-height: var(--button-line-height);
-  text-align: center;
-  text-decoration: none;
-  border-radius: var(--button-border-radius);
-  font-weight: 500;
-  cursor: pointer;
-  transition: var(--button-transition);
-  background-color: #FFFFFF;
-  color: var(--button-primary-color);
-  border: 1px solid var(--button-primary-color);
-  outline: none;
-  overflow: hidden;
-}
-
-/* Основные стили для эффекта Position Aware */
-button span, .btn span, input[type="submit"] span, input[type="button"] span,
-.catalog-search-btn span, .join-button span, .login-btn span, .create-startup-btn span,
-.logout-btn span, .detail-button span, .show-button span, .nav-menu a span {
-  position: absolute;
-  display: block;
-  width: 0;
-  height: 0;
-  border-radius: 50%;
-  background-color: var(--button-primary-color);
-  transform: translate(-50%, -50%);
-  transition: width 0.6s ease, height 0.6s ease;
-  z-index: -1;
-  pointer-events: none;
-}
-
-/* Стили для текста в кнопках (чтобы был поверх эффекта) */
-button *, .btn *, input[type="submit"] *, input[type="button"] *,
-.catalog-search-btn *, .join-button *, .login-btn *, .create-startup-btn *,
-.logout-btn *, .detail-button *, .show-button *, .nav-menu a * {
-  position: relative;
-  z-index: 2;
-}
-
-/* Первичные кнопки (синие) */
-.btn-primary, .create-startup-btn, .catalog-search-btn, .detail-button {
-  background-color: #FFFFFF;
-  color: var(--button-primary-color);
-  border: 1px solid var(--button-primary-color);
-}
-
-.btn-primary:hover, .create-startup-btn:hover, .catalog-search-btn:hover, .detail-button:hover {
-  color: #FFFFFF;
-}
-
-.btn-primary:active, .create-startup-btn:active, .catalog-search-btn:active, .detail-button:active {
-  transform: translateY(1px);
-}
-
-/* Вторичные кнопки (желтые) */
-.btn-secondary, .login-btn, .join-button {
-  background-color: #FFFFFF;
-  color: #000000;
-  border: 1px solid var(--button-accent-color);
-}
-
-/* Стиль для эффекта Position Aware желтых кнопок */
-.btn-secondary span, .login-btn span, .join-button span {
-  background-color: var(--button-accent-color);
-}
-
-.btn-secondary:hover, .login-btn:hover, .join-button:hover {
-  color: #000000;
-}
-
-/* Кнопка логина */
-.login-btn {
-  text-decoration: none;
-  background-color: #FFFFFF;
-  color: #000000;
-  border: 1px solid #FFEF2B;
-}
-
-.login-btn span {
-  background-color: #FFEF2B;
-}
-
-/* Кнопка join в футере */
-.join-button {
-  background-color: #FFFFFF;
-  color: #000000;
-  border: 1px solid #FFEF2B;
-  transition: all 0.3s ease;
-}
-
-.join-button span {
-  background-color: #FFEF2B;
-}
-
-.join-button:hover {
-  color: #000000;
-}
-
-/* Кнопка показать больше */
-.show-button {
-  background-color: #FFFFFF;
-  color: var(--button-primary-color);
-  border: 1px solid var(--button-primary-color);
-}
-
-.show-button span {
-  background-color: var(--button-primary-color);
-}
-
-.show-button:hover {
-  color: #FFFFFF;
-}
-
-/* Общие модификаторы для кнопок */
-.btn-sm {
-  padding: 5px 15px;
-  font-size: 12px;
-}
-
-.btn-lg {
-  padding: 12px 30px;
-  font-size: 16px;
-}
-
-/* Анимации для кнопок */
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-.btn-pulse {
-  animation: pulse 2s infinite;
-}
-
-/* Адаптивные стили для мобильных устройств */
-@media (max-width: 768px) {
-  :root {
-    --button-padding-y: 8px;
-    --button-padding-x: 16px;
-    --button-font-size: 14px;
-  }
-}
-
-@media (max-width: 480px) {
-  :root {
-    --button-padding-y: 6px;
-    --button-padding-x: 12px;
-    --button-font-size: 13px;
-  }
-  
-  button, .btn, input[type="submit"], input[type="button"] {
     width: 100%;
     margin-bottom: 10px;
   }
