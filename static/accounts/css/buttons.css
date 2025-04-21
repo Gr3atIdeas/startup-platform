@@ -123,7 +123,7 @@ footer a.btn {
   }
 }
 
-/* Button content: position, z-index, inherit color, transition */
+/* Button content: position, z-index, transition */
 button > *,
 .btn > *,
 input[type="submit"] > *,
@@ -138,8 +138,8 @@ input[type="button"] > *,
 .nav-menu a > * {
   position: relative;
   z-index: 1;
-  color: inherit; /* Inherit base button text color */
-  transition: color 0.2s ease-in-out; /* Transition for text color */
+  /* color: inherit; */ /* REMOVED */
+  transition: color 0.2s ease-in-out; 
 }
 
 /* Ensure pseudo-elements are also above the wave but DON'T blend */
@@ -168,22 +168,24 @@ button.wave-active,
 }
 */
 
-/* --- НОВЫЕ ПРАВИЛА ДЛЯ ЦВЕТА ДОЧЕРНИХ ЭЛЕМЕНТОВ --- */
-button.wave-active > *,
-.btn.wave-active > *,
-input[type="submit"].wave-active > *,
-input[type="button"].wave-active > *,
-.catalog-search-btn.wave-active > *,
-.show-button.wave-active > *,
-.detail-button.wave-active > *,
-.create-startup-btn.wave-active > *,
-.logout-btn.wave-active > *,
-.nav-menu a.wave-active > * {
-  color: #ffffff; /* Стандартно - белый текст */
+/* --- ПРАВИЛА ДЛЯ ЦВЕТА ПОТОМКОВ --- */
+
+/* Используем descendant selector (*) и !important */
+button.wave-active *,
+.btn.wave-active *,
+input[type="submit"].wave-active *,
+input[type="button"].wave-active *,
+.catalog-search-btn.wave-active *,
+.show-button.wave-active *,
+.detail-button.wave-active *,
+.create-startup-btn.wave-active *,
+.logout-btn.wave-active *,
+.nav-menu a.wave-active * {
+  color: #ffffff !important; /* Стандартно - белый текст */
 }
 
-/* Исключения для текста дочерних элементов */
-.login-btn.wave-active > *,
-.join-button.wave-active > * {
-  color: #000000; /* Исключения - черный текст */
+/* Исключения для текста потомков */
+.login-btn.wave-active *,
+.join-button.wave-active * {
+  color: #000000 !important; /* Исключения - черный текст */
 } 
