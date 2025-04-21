@@ -247,29 +247,4 @@ function handleTouchStart(e) {
     setTimeout(() => {
         waveSpan.style.opacity = '0';
     }, 800);
-}
-
-// Position Aware Button Effect
-$(function() {
-  $('.btn-position-aware')
-    .on('mouseenter', function(e) {
-      var parentOffset = $(this).offset(),
-          relX = e.pageX - parentOffset.left,
-          relY = e.pageY - parentOffset.top;
-      // Убедимся, что span существует, прежде чем менять его стили
-      var span = $(this).find('span');
-      if (span.length) {
-        span.css({top: relY, left: relX});
-      }
-    })
-    .on('mouseout', function(e) {
-      var parentOffset = $(this).offset(),
-          relX = e.pageX - parentOffset.left,
-          relY = e.pageY - parentOffset.top;
-      // Убедимся, что span существует
-      var span = $(this).find('span');
-      if (span.length) {
-          span.css({top: relY, left: relX});
-      }
-    });
-}); 
+} 

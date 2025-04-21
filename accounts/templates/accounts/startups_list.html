@@ -122,7 +122,7 @@
         <input type="hidden" name="sort_order" value="{{ sort_order }}">
         
         <!-- Кнопка показать -->
-        <button type="submit" class="show-button btn-position-aware"><span></span>Показать</button>
+        <button type="submit" class="show-button"><span></span>Показать</button>
       </form>
     </div>
     
@@ -132,7 +132,7 @@
       <div class="catalog-search-wrapper">
         <div class="catalog-search">
           <input type="text" class="catalog-search-input" placeholder="Поиск по каталогу" value="{{ search_query|default_if_none:'' }}">
-          <button class="catalog-search-btn btn-position-aware"><span></span><i class="fas fa-search"></i></button>
+          <button class="catalog-search-btn"><span></span><i class="fas fa-search"></i></button>
         </div>
       </div>
       
@@ -192,7 +192,7 @@
                     {{ startup.description }}
                   </div>
                   <div class="startup-card-footer">
-                    <button class="detail-button btn-position-aware"><span></span>Подробнее</button>
+                    <button class="detail-button"><span></span>Подробнее</button>
                     <div class="investor-info">
                       <i class="fas fa-users investor-icon"></i>
                       <span>Инвестировало (648)</span>

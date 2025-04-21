@@ -51,7 +51,7 @@
           {% endif %}
         </div>
         
-        <button class="action-button write-button btn-position-aware"><span></span>
+        <button class="action-button write-button">
           Написать
         </button>
         
@@ -124,7 +124,7 @@
         </div>
         
         {% if user.is_authenticated and user.role.role_name == 'investor' %}
-          <button class="invest-button btn-position-aware" 
+          <button class="invest-button" 
                   {% if startup.status == 'blocked' or startup.status == 'closed' %}
                     disabled 
                     title="{% if startup.status == 'blocked' %}Инвестирование запрещено: стартап заблокирован{% else %}Инвестирование запрещено: стартап закрыт{% endif %}"
@@ -218,8 +218,8 @@
         <div class="author-reviews">Отзывы</div>
       </div>
       <div class="creation-date">Создан {{ startup.created_at|date:"d/m/Y" }}</div>
-      <button class="report-button btn-position-aware"><span></span>Пожаловаться на стартап</button>
-      <button class="action-button message-button btn-position-aware"><span></span>Написать автору</button>
+      <button class="report-button">Пожаловаться на стартап</button>
+      <button class="action-button message-button">Написать автору</button>
     </div>
 
     {% if user.is_authenticated and user.role.role_name == 'moderator' and startup.status == 'pending' %}
@@ -229,8 +229,8 @@
           {% csrf_token %}
           <textarea name="moderator_comment" class="moderator-textarea" placeholder="Оставьте комментарий для владельца стартапа...">{{ startup.moderator_comment }}</textarea>
           <div class="moderator-actions">
-            <button type="submit" name="action" value="approve" class="action-button approve-button btn-position-aware"><span></span>Одобрить</button>
-            <button type="submit" name="action" value="reject" class="action-button reject-button btn-position-aware"><span></span>Отклонить</button>
+            <button type="submit" name="action" value="approve" class="action-button approve-button">Одобрить</button>
+            <button type="submit" name="action" value="reject" class="action-button reject-button">Отклонить</button>
           </div>
         </form>
       </div>
@@ -263,11 +263,11 @@
           {% endfor %}
           
           {% if comments|length > 2 %}
-            <button class="show-more-comments btn-position-aware">
+            <button class="show-more-comments">
               <i class="fas fa-chevron-down"></i>
               Показать еще
             </button>
-            <button class="hide-comments-button btn-position-aware">
+            <button class="hide-comments-button">
               <i class="fas fa-chevron-up"></i>
               Скрыть
             </button>
@@ -283,7 +283,7 @@
         <form method="post" class="comment-form">
           {% csrf_token %}
           {{ form.content|add_class:"comment-textarea" }}
-          <button type="submit" class="action-button comment-submit btn-position-aware"><span></span>Оставить комментарий</button>
+          <button type="submit" class="action-button comment-submit">Оставить комментарий</button>
         </form>
       {% else %}
         <div class="comment-form">
@@ -301,7 +301,7 @@
       <span class="startups-text">СТАРТАПЫ</span>
     </h2>
     
-    <button class="show-all-button btn-position-aware">
+    <button class="show-all-button">
       <i class="fas fa-eye"></i>
       <span>Показать все</span>
     </button>
@@ -366,8 +366,8 @@
     <h2>Подтверждение инвестиции</h2>
     <p id="modalText"></p>
     <div class="modal-buttons">
-      <button class="confirm-btn btn-position-aware" id="confirmInvest"><span></span>Подтвердить</button>
-      <button class="cancel-btn btn-position-aware" id="cancelInvest"><span></span>Отменить</button>
+      <button class="confirm-btn" id="confirmInvest">Подтвердить</button>
+      <button class="cancel-btn" id="cancelInvest">Отменить</button>
     </div>
   </div>
 </div>
