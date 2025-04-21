@@ -42,12 +42,12 @@ button, .btn, input[type="submit"], input[type="button"],
   text-decoration: none;
   cursor: pointer;
   overflow: hidden; 
-  border: 1px solid #004e9f !important; /* Default blue border - ADD !important */
+  border: 1px solid #004e9f !important; /* Keep !important */
   outline: none;
-  background-color: #ffffff !important; /* Default white background - ADD !important */
-  color: #000000 !important; /* Default black text - ADD !important */
+  background-color: #ffffff !important; /* Keep !important */
+  color: #000000; /* REMOVE !important from base text color */
   z-index: 1; 
-  /* transition: color 0.2s ease-in-out; */ /* REMOVE text color transition */
+  /* transition: color 0.2s ease-in-out; */ /* Keep removed */
 }
 
 /* Стили для кнопок меню навигации */
