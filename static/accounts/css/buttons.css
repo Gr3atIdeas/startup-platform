@@ -168,40 +168,40 @@ button.wave-active,
 }
 */
 
-/* --- ПРАВИЛА ДЛЯ ЦВЕТА САМОЙ КНОПКИ И ПОТОМКОВ --- */
+/* --- ПРАВИЛА ДЛЯ ЦВЕТА САМОЙ КНОПКИ И ПОТОМКОВ (С ПОВЫШЕННОЙ СПЕЦИФИЧНОСТЬЮ) --- */
 
 /* Цвет САМОЙ кнопки (для прямого текста) */
-button.wave-active,
-.btn.wave-active,
-input[type="submit"].wave-active,
-input[type="button"].wave-active,
-.catalog-search-btn.wave-active,
-.show-button.wave-active,
-.detail-button.wave-active,
-.create-startup-btn.wave-active,
-.logout-btn.wave-active,
-.nav-menu a.wave-active {
+body button.wave-active,
+body .btn.wave-active,
+body input[type="submit"].wave-active,
+body input[type="button"].wave-active,
+body .catalog-search-btn.wave-active,
+body .show-button.wave-active,
+body .detail-button.wave-active,
+body .create-startup-btn.wave-active,
+body .logout-btn.wave-active,
+body .nav-menu a.wave-active {
   color: #ffffff !important; /* Стандартно - белый текст */
 }
-.login-btn.wave-active,
-.join-button.wave-active {
+body .login-btn.wave-active,
+body .join-button.wave-active {
   color: #000000 !important; /* Исключения - черный текст */
 }
 
-/* Цвет ПОТОМКОВ (для иконок, вложенных span и т.д.) - как fallback */
-button.wave-active *,
-.btn.wave-active *,
-input[type="submit"].wave-active *,
-input[type="button"].wave-active *,
-.catalog-search-btn.wave-active *,
-.show-button.wave-active *,
-.detail-button.wave-active *,
-.create-startup-btn.wave-active *,
-.logout-btn.wave-active *,
-.nav-menu a.wave-active * {
+/* Цвет ПОТОМКОВ (для иконок, вложенных span и т.д.) */
+body button.wave-active *,
+body .btn.wave-active *,
+body input[type="submit"].wave-active *,
+body input[type="button"].wave-active *,
+body .catalog-search-btn.wave-active *,
+body .show-button.wave-active *,
+body .detail-button.wave-active *,
+body .create-startup-btn.wave-active *,
+body .logout-btn.wave-active *,
+body .nav-menu a.wave-active * {
   color: #ffffff !important; /* Стандартно - белый текст */
 }
-.login-btn.wave-active *,
-.join-button.wave-active * {
+body .login-btn.wave-active *,
+body .join-button.wave-active * {
   color: #000000 !important; /* Исключения - черный текст */
 } 
