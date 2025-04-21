@@ -317,40 +317,46 @@ body {
 }
 
 /* Кнопка показать */
-.show-button {
-  width: 100%;
-  height: 40px;
-  background-color: #7B61FF;
+.show-button, 
+.catalog-search-btn, 
+.detail-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  font-weight: 500;
+  overflow: hidden;
+  z-index: 1;
+  padding: 8px 16px;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  background-color: var(--accent-color, #7B61FF);
   color: white;
   border: none;
-  border-radius: 99px;
-  font-size: 16px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s;
-  position: relative;
-  overflow: hidden;
-  font-family: 'Unbounded', sans-serif;
+  outline: none;
 }
 
-.show-button span {
-  position: absolute;
-  display: block;
-  width: 0;
-  height: 0;
-  border-radius: 50%;
-  background-color: #6551D9;
-  transform: translate(-50%, -50%);
-  transition: width 0.4s ease-in-out, height 0.4s ease-in-out;
-  z-index: -1;
+.catalog-search-btn {
+  height: 100%;
+  padding: 0 15px;
+  border-radius: 0 8px 8px 0;
+  border-left: none;
 }
 
-.show-button:hover {
-  box-shadow: 0 4px 12px rgba(123, 97, 255, 0.3);
+.show-button:hover, 
+.catalog-search-btn:hover, 
+.detail-button:hover {
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
 }
 
-.show-button:active {
-  background-color: #6551D9;
+.show-button:active, 
+.catalog-search-btn:active, 
+.detail-button:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* Сетка стартапов */
@@ -544,21 +550,6 @@ body {
   padding-top: 15px;
 }
 
-.detail-button {
-  background-color: transparent;
-  border: 1px solid #7B61FF;
-  color: #7B61FF;
-  padding: 6px 15px;
-  border-radius: 99px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s;
-  position: relative;
-  overflow: hidden;
-  font-family: 'Unbounded', sans-serif;
-}
-
 .detail-button span {
   position: absolute;
   display: block;
@@ -569,14 +560,6 @@ body {
   transform: translate(-50%, -50%);
   transition: width 0.4s ease-in-out, height 0.4s ease-in-out;
   z-index: -1;
-}
-
-.detail-button:hover {
-  color: white;
-}
-
-.detail-button:active {
-  transform: translateY(1px);
 }
 
 .investor-info {

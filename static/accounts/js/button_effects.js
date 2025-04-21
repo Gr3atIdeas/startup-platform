@@ -32,7 +32,35 @@ document.addEventListener('DOMContentLoaded', function() {
         
         return xhr;
     };
+
+    // Удаление нежелательных стилей и эффектов, конфликтующих с Position Aware
+    removeConflictingStyles();
 });
+
+// Функция удаления конфликтующих стилей
+function removeConflictingStyles() {
+    // Удаляем все трансформации и переходы, которые могут конфликтовать с эффектом
+    const buttons = document.querySelectorAll('.login-btn, .create-startup-btn, .logout-btn, .nav-menu a, button, .btn, .show-button, .detail-button, .join-button');
+    buttons.forEach(button => {
+        if (button.classList.contains('position-aware-initialized')) return;
+        
+        // Удаляем все обработчики событий перед добавлением новых
+        const clone = button.cloneNode(true);
+        button.parentNode.replaceChild(clone, button);
+        
+        // Проверяем наличие span и пересоздаем его, если нужно
+        let waveSpan = clone.querySelector('span');
+        if (!waveSpan) {
+            waveSpan = document.createElement('span');
+            clone.appendChild(waveSpan);
+        }
+        
+        clone.classList.add('position-aware-initialized');
+    });
+
+    // Повторная инициализация после очистки
+    setTimeout(initPositionAware, 10);
+}
 
 // Оптимизация прокрутки
 let scrollTimeout;
@@ -44,9 +72,12 @@ window.addEventListener('scroll', function() {
 }, { passive: true });
 
 function initPositionAware() {
-    const buttons = document.querySelectorAll('.login-btn, .create-startup-btn, .logout-btn, .nav-menu a');
+    const buttons = document.querySelectorAll('.login-btn, .create-startup-btn, .logout-btn, .nav-menu a, button, .btn, .show-button, .detail-button, .join-button');
     
     buttons.forEach(button => {
+        // Пропускаем уже обработанные кнопки
+        if (button.hasAttribute('data-position-aware-initialized')) return;
+        
         // Удаление предыдущих обработчиков событий для избежания дублирования
         button.removeEventListener('mouseenter', handleMouseEnter);
         button.removeEventListener('mouseleave', handleMouseLeave);
@@ -59,10 +90,22 @@ function initPositionAware() {
             button.appendChild(waveSpan);
         }
         
+        // Установка базовых стилей для span элемента
+        waveSpan.style.position = 'absolute';
+        waveSpan.style.display = 'block';
+        waveSpan.style.borderRadius = '50%';
+        waveSpan.style.transform = 'translate(-50%, -50%) scale(0)';
+        waveSpan.style.opacity = '0';
+        waveSpan.style.pointerEvents = 'none';
+        waveSpan.style.zIndex = '-1';
+        
         // Добавляем обработчики событий
         button.addEventListener('mouseenter', handleMouseEnter);
         button.addEventListener('mouseleave', handleMouseLeave);
         button.addEventListener('touchstart', handleTouchStart);
+        
+        // Помечаем кнопку как обработанную
+        button.setAttribute('data-position-aware-initialized', 'true');
     });
 }
 
@@ -96,6 +139,10 @@ function handleMouseEnter(e) {
         waveSpan.style.backgroundColor = 'rgba(255, 107, 107, 0.8)';
     } else if (button.classList.contains('active')) {
         waveSpan.style.backgroundColor = 'rgba(123, 97, 255, 0.2)';
+    } else if (button.classList.contains('show-button') || 
+               button.classList.contains('detail-button') ||
+               button.classList.contains('catalog-search-btn')) {
+        waveSpan.style.backgroundColor = 'rgba(123, 97, 255, 0.4)';
     } else {
         waveSpan.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
     }
@@ -106,8 +153,10 @@ function handleMouseEnter(e) {
 
 function handleMouseLeave(e) {
     const waveSpan = e.currentTarget.querySelector('span');
-    waveSpan.style.transition = 'all 0.5s ease-out';
-    waveSpan.style.opacity = '0';
+    if (waveSpan) {
+        waveSpan.style.transition = 'all 0.5s ease-out';
+        waveSpan.style.opacity = '0';
+    }
 }
 
 function handleTouchStart(e) {
@@ -123,6 +172,8 @@ function handleTouchStart(e) {
     const diameter = Math.max(buttonWidth * 3, buttonHeight * 3);
     
     const waveSpan = button.querySelector('span');
+    if (!waveSpan) return;
+    
     waveSpan.style.width = `${diameter}px`;
     waveSpan.style.height = `${diameter}px`;
     waveSpan.style.left = `${x}px`;
@@ -135,6 +186,10 @@ function handleTouchStart(e) {
         waveSpan.style.backgroundColor = 'rgba(123, 97, 255, 0.8)';
     } else if (button.classList.contains('logout-btn')) {
         waveSpan.style.backgroundColor = 'rgba(255, 107, 107, 0.8)';
+    } else if (button.classList.contains('show-button') || 
+               button.classList.contains('detail-button') ||
+               button.classList.contains('catalog-search-btn')) {
+        waveSpan.style.backgroundColor = 'rgba(123, 97, 255, 0.4)';
     } else {
         waveSpan.style.backgroundColor = 'rgba(255, 255, 255, 0.3)';
     }
