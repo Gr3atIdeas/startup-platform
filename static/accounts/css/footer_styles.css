@@ -136,7 +136,6 @@
   font-weight: 500;
   font-size: 14px;
   cursor: pointer;
-  transition: color 0.3s ease;
   position: relative;
   overflow: hidden;
   display: inline-flex;
@@ -153,19 +152,8 @@
   border-radius: 50%;
   background-color: #FFEF2B;
   transform: translate(-50%, -50%);
-  transition: width 0.3s, height 0.3s;
+  transition: width 0.4s ease-in-out, height 0.4s ease-in-out;
   z-index: -1;
-}
-
-.join-button:hover {
-  color: #000000;
-  transform: none;
-  box-shadow: none;
-}
-
-.join-button:active {
-  transform: none;
-  box-shadow: none;
 }
 
 .join-button i {

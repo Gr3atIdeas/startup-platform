@@ -122,10 +122,26 @@ body {
   font-weight: 500;
   font-size: 14px;
   cursor: pointer;
-  transition: color 0.3s ease;
   text-decoration: none;
   position: relative;
   overflow: hidden;
+}
+
+/* Стиль для эффекта Position Aware */
+.create-startup-btn span {
+  position: absolute;
+  display: block;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background-color: #0057B7;
+  transform: translate(-50%, -50%);
+  transition: width 0.4s ease-in-out, height 0.4s ease-in-out;
+  z-index: -1;
+}
+
+.create-startup-btn:hover {
+  color: #FFFFFF;
 }
 
 /* Кнопка входа */
@@ -143,7 +159,6 @@ body {
   font-weight: 500;
   font-size: 14px;
   cursor: pointer;
-  transition: color 0.3s ease;
   text-decoration: none;
   position: relative;
   overflow: hidden;
@@ -160,7 +175,7 @@ body {
   border-radius: 50%;
   background-color: #FFEF2B;
   transform: translate(-50%, -50%);
-  transition: width 0.3s, height 0.3s;
+  transition: width 0.4s ease-in-out, height 0.4s ease-in-out;
   z-index: -1;
 }
 

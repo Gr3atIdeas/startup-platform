@@ -257,7 +257,9 @@
         <a href="{% url 'logout' %}" class="login-btn">
           <span></span>Выйти
         </a>
-        <a href="{% url 'create_startup' %}" class="create-startup-btn">Создать стартап</a>
+        <a href="{% url 'create_startup' %}" class="create-startup-btn">
+          <span></span>Создать стартап
+        </a>
         <img src="{% static 'accounts/images/layout/image12.png' %}" alt="Аватар" class="avatar">
       {% else %}
         <a href="{% url 'login' %}" class="login-btn">

@@ -9,48 +9,13 @@ $(function() {
       var parentOffset = $(this).offset(),
           relX = e.pageX - parentOffset.left,
           relY = e.pageY - parentOffset.top;
-      
-      // Добавляем span, если его нет
-      if ($(this).find('span').length === 0) {
-        $(this).append('<span></span>');
-      }
-      
-      // Определяем, нужно ли менять цвет текста
-      var shouldChangeTextColor = !$(this).hasClass('login-btn') && 
-                                !$(this).hasClass('join-button') && 
-                                !$(this).hasClass('btn-secondary');
-      
-      // Устанавливаем позицию для span
-      $(this).find('span').css({top:relY, left:relX});
-      
-      // Рассчитываем размер эффекта, чтобы покрыть всю кнопку
-      var maxWidth = Math.max($(this).width(), $(this).height()) * 2.5;
-      $(this).find('span').width(maxWidth).height(maxWidth);
-      
-      // Меняем цвет текста на белый для синих кнопок
-      if (shouldChangeTextColor) {
-        $(this).css('color', '#FFFFFF');
-      }
+      $(this).find('span').css({top:relY, left:relX})
     })
-    .on('mousemove', function(e) {
+    .on('mouseout', function(e) {
       var parentOffset = $(this).offset(),
           relX = e.pageX - parentOffset.left,
           relY = e.pageY - parentOffset.top;
-      $(this).find('span').css({top:relY, left:relX});
-    })
-    .on('mouseleave', function(e) {
-      // Определяем, нужно ли менять цвет текста
-      var shouldChangeTextColor = !$(this).hasClass('login-btn') && 
-                                !$(this).hasClass('join-button') && 
-                                !$(this).hasClass('btn-secondary');
-      
-      // Сбрасываем размер span
-      $(this).find('span').width(0).height(0);
-      
-      // Возвращаем оригинальный цвет текста
-      if (shouldChangeTextColor) {
-        $(this).css('color', '#000000');
-      }
+      $(this).find('span').css({top:relY, left:relX})
     });
 });
 

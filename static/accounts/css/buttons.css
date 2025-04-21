@@ -5,7 +5,7 @@
   --btn-height: 60px;
   --accent-color: #0057B7;
   --accent-color-dark: #004494;
-  --accent-color-light: #e6f0ff;
+  --accent-color-light: #FFFFFF;
   --bg-color: #ffffff;
   --button-radius: 6px;
   --button-font: 'Unbounded', Arial, sans-serif;
@@ -64,11 +64,18 @@ button span, .btn span, input[type="submit"] span, input[type="button"] span,
   width: 0;
   height: 0;
   border-radius: 50%;
-  background-color: var(--button-primary-color);
+  background-color: var(--accent-color-dark);
   transform: translate(-50%, -50%);
-  transition: width 0.6s ease, height 0.6s ease;
+  transition: width 0.4s ease-in-out, height 0.4s ease-in-out;
   z-index: -1;
-  pointer-events: none;
+}
+
+/* При наведении увеличиваем размер span */
+button:hover span, .btn:hover span, input[type="submit"]:hover span, input[type="button"]:hover span,
+.catalog-search-btn:hover span, .join-button:hover span, .login-btn:hover span, .create-startup-btn:hover span,
+.logout-btn:hover span, .detail-button:hover span, .show-button:hover span, .nav-menu a:hover span {
+  width: 225%;
+  height: calc(var(--btn-width) * 2.25);
 }
 
 /* Стили для текста в кнопках (чтобы был поверх эффекта) */
@@ -81,14 +88,20 @@ button *, .btn *, input[type="submit"] *, input[type="button"] *,
 
 /* Первичные кнопки (синие) */
 .btn-primary, .create-startup-btn, .catalog-search-btn, .detail-button, .show-button {
-  background-color: #FFFFFF;
   color: #000000;
   border: 1px solid var(--button-primary);
 }
 
+.btn-primary:hover, .create-startup-btn:hover, .catalog-search-btn:hover, .detail-button:hover, .show-button:hover {
+  color: var(--accent-color-light);
+}
+
+.btn-primary span, .create-startup-btn span, .catalog-search-btn span, .detail-button span, .show-button span {
+  background-color: var(--accent-color);
+}
+
 /* Вторичные кнопки (желтые) */
 .btn-secondary, .login-btn, .join-button {
-  background-color: #FFFFFF;
   color: #000000;
   border: 1px solid #FFEF2B;
 }

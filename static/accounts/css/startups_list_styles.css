@@ -110,7 +110,6 @@ body {
   border-top-right-radius: 32px;
   border-bottom-right-radius: 32px;
   overflow: hidden;
-  transition: color 0.3s ease;
 }
 
 .catalog-search-btn span {
@@ -121,14 +120,12 @@ body {
   border-radius: 50%;
   background-color: #0057B7;
   transform: translate(-50%, -50%);
-  transition: width 0.3s, height 0.3s;
-  z-index: 0;
+  transition: width 0.4s ease-in-out, height 0.4s ease-in-out;
+  z-index: -1;
 }
 
 .catalog-search-btn:hover {
   color: #FFFFFF;
-  transform: none;
-  box-shadow: none;
 }
 
 .catalog-search-btn:active {
@@ -328,7 +325,6 @@ body {
   font-weight: 500;
   font-size: 14px;
   cursor: pointer;
-  transition: color 0.3s ease;
   position: relative;
   overflow: hidden;
 }
@@ -341,14 +337,12 @@ body {
   border-radius: 50%;
   background-color: #0057B7;
   transform: translate(-50%, -50%);
-  transition: width 0.3s, height 0.3s;
+  transition: width 0.4s ease-in-out, height 0.4s ease-in-out;
   z-index: -1;
 }
 
 .show-button:hover {
   color: #FFFFFF;
-  transform: none;
-  box-shadow: none;
 }
 
 .show-button:active {
@@ -563,7 +557,6 @@ body {
   font-weight: 500;
   font-size: 14px;
   cursor: pointer;
-  transition: color 0.3s ease;
   position: relative;
   overflow: hidden;
   width: 100%;
@@ -577,14 +570,12 @@ body {
   border-radius: 50%;
   background-color: #0057B7;
   transform: translate(-50%, -50%);
-  transition: width 0.3s, height 0.3s;
+  transition: width 0.4s ease-in-out, height 0.4s ease-in-out;
   z-index: -1;
 }
 
 .detail-button:hover {
   color: #FFFFFF;
-  transform: none;
-  box-shadow: none;
 }
 
 .detail-button:active {
