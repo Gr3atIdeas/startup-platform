@@ -1,35 +1,59 @@
-// JavaScript для эффектов кнопок
-document.addEventListener('DOMContentLoaded', function() {
-  // Эффект для кнопки Position Aware (btn-6)
-  const positionAwareButtons = document.querySelectorAll('.btn-6');
+// Эффект Position Aware для всех кнопок
+document.addEventListener("DOMContentLoaded", function() {
+  // Находим все кнопки на странице
+  const buttons = document.querySelectorAll('button, .btn, input[type="submit"], input[type="button"], .catalog-search-btn, .footer-join-btn, .header-btn');
   
-  positionAwareButtons.forEach(function(button) {
-    // Добавляем span для эффекта, если его еще нет
+  // Для каждой кнопки добавляем обработчики событий
+  buttons.forEach(function(button) {
+    // Создаем span элемент для эффекта, если его еще нет
     if (!button.querySelector('span')) {
       const span = document.createElement('span');
       button.appendChild(span);
     }
     
-    // Обработчик события при наведении мыши
+    // Получаем span элемент
+    const span = button.querySelector('span');
+    
+    // Обработчик наведения мыши
     button.addEventListener('mouseenter', function(e) {
-      const parentOffset = button.getBoundingClientRect();
-      const relX = e.pageX - parentOffset.left - window.scrollX;
-      const relY = e.pageY - parentOffset.top - window.scrollY;
-      const span = this.querySelector('span');
+      // Получаем размеры кнопки для расчета максимального размера круга
+      const buttonRect = button.getBoundingClientRect();
+      const buttonWidth = buttonRect.width;
+      const buttonHeight = buttonRect.height;
       
-      span.style.top = relY + 'px';
-      span.style.left = relX + 'px';
+      // Вычисляем максимальный размер (диагональ прямоугольника)
+      const maxSize = Math.sqrt(Math.pow(buttonWidth, 2) + Math.pow(buttonHeight, 2)) * 2;
+      
+      // Устанавливаем позицию курсора относительно кнопки
+      const x = e.clientX - buttonRect.left;
+      const y = e.clientY - buttonRect.top;
+      
+      // Применяем стили к span
+      span.style.left = x + 'px';
+      span.style.top = y + 'px';
+      span.style.width = maxSize + 'px';
+      span.style.height = maxSize + 'px';
     });
     
-    // Обработчик события при перемещении мыши
+    // Обработчик движения мыши
     button.addEventListener('mousemove', function(e) {
-      const parentOffset = button.getBoundingClientRect();
-      const relX = e.pageX - parentOffset.left - window.scrollX;
-      const relY = e.pageY - parentOffset.top - window.scrollY;
-      const span = this.querySelector('span');
+      // Получаем размеры кнопки
+      const buttonRect = button.getBoundingClientRect();
       
-      span.style.top = relY + 'px';
-      span.style.left = relX + 'px';
+      // Устанавливаем позицию курсора относительно кнопки
+      const x = e.clientX - buttonRect.left;
+      const y = e.clientY - buttonRect.top;
+      
+      // Применяем стили к span
+      span.style.left = x + 'px';
+      span.style.top = y + 'px';
+    });
+    
+    // Обработчик ухода мыши
+    button.addEventListener('mouseleave', function() {
+      // Сбрасываем размер span при уходе мыши
+      span.style.width = '0';
+      span.style.height = '0';
     });
   });
 }); 

@@ -7,6 +7,19 @@
   --accent-color-dark: #004494;
   --accent-color-light: #e6f0ff;
   --bg-color: #ffffff;
+  --button-radius: 6px;
+  --button-transition: all 0.3s ease;
+  --button-font: 'Montserrat', Arial, sans-serif;
+  --button-bg: #0057B7;
+  --button-color: #ffffff;
+  --button-hover-bg: #003c7e;
+  --button-text: #ffffff;
+  --button-padding: 12px 24px;
+  --button-font-size: 16px;
+  --button-font-weight: 600;
+  --button-letter-spacing: 0.5px;
+  --button-effect-color: rgba(255, 255, 255, 0.3);
+  --button-outline-color: rgba(0, 87, 183, 0.5);
 }
 
 .button-container {
@@ -25,23 +38,98 @@
   margin-bottom: 20px;
 }
 
-[class^="btn-"] {
+/* Общий стиль для всех кнопок проекта с эффектом Position Aware */
+.button, 
+button,
+input[type="submit"],
+input[type="button"],
+.join-button-content,
+.search-btn,
+.catalog-search-btn {
   position: relative;
   display: inline-block;
   overflow: hidden;
-  width: 100%;
-  max-width: var(--btn-width);
-  height: var(--btn-height);
-  margin: 0.5rem;
-  text-transform: uppercase;
-  border: 1px solid currentColor;
-  border-radius: 8px;
-  line-height: var(--btn-height);
+  background-color: var(--accent-color);
+  color: white;
   text-decoration: none;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
   font-family: 'Unbounded', sans-serif;
   font-weight: 400;
-  color: var(--accent-color);
-  transition: 0.5s ease-in-out;
+  transition: color 0.3s ease;
+  z-index: 1;
+}
+
+/* Эффект Position Aware для всех кнопок */
+.button:before, 
+button:before,
+input[type="submit"]:before,
+input[type="button"]:before,
+.join-button-content:before,
+.search-btn:before,
+.catalog-search-btn:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--accent-color-dark);
+  transform: translateX(-101%);
+  transition: all 0.3s ease;
+  z-index: -1;
+}
+
+.button:hover:before, 
+button:hover:before,
+input[type="submit"]:hover:before,
+input[type="button"]:hover:before,
+.join-button-content:hover:before,
+.search-btn:hover:before,
+.catalog-search-btn:hover:before {
+  transform: translateX(0);
+}
+
+/* Специфический стиль для кнопки в футере */
+.join-button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  position: relative;
+  top: 15px;
+}
+
+.join-button-content {
+  background: none;
+  color: #000000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.join-button-content:before {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.join-plus-icon {
+  margin-right: 5px;
+}
+
+.footer-copyright-bar {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.footer-copyright-bar-content {
+  background-color: #ffffff;
 }
 
 /* Кнопка с простым свайпом */
@@ -342,4 +430,118 @@
 
 .btn-8:hover:after {
   transform: translateY(50%);
+}
+
+/* Основные стили для кнопок */
+button, .btn, input[type="submit"], input[type="button"], .catalog-search-btn, .footer-join-btn, .header-btn {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--button-bg);
+  color: var(--button-color);
+  border: none;
+  border-radius: var(--button-radius);
+  padding: var(--button-padding);
+  font-family: var(--button-font);
+  font-size: var(--button-font-size);
+  font-weight: var(--button-font-weight);
+  letter-spacing: var(--button-letter-spacing);
+  cursor: pointer;
+  text-decoration: none;
+  transition: var(--button-transition);
+  z-index: 1;
+}
+
+/* Стили при наведении */
+button:hover, .btn:hover, input[type="submit"]:hover, input[type="button"]:hover,
+.catalog-search-btn:hover, .footer-join-btn:hover, .header-btn:hover {
+  background-color: var(--button-hover-bg);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 87, 183, 0.2);
+}
+
+/* Стили при активном состоянии */
+button:active, .btn:active, input[type="submit"]:active, input[type="button"]:active,
+.catalog-search-btn:active, .footer-join-btn:active, .header-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 87, 183, 0.1);
+}
+
+/* Стили для фокуса */
+button:focus, .btn:focus, input[type="submit"]:focus, input[type="button"]:focus,
+.catalog-search-btn:focus, .footer-join-btn:focus, .header-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--button-outline-color);
+}
+
+/* Стили для эффекта Position Aware */
+button span, .btn span, input[type="submit"] span, input[type="button"] span,
+.catalog-search-btn span, .footer-join-btn span, .header-btn span {
+  position: absolute;
+  display: block;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background-color: var(--button-effect-color);
+  transform: translate(-50%, -50%);
+  transition: width 0.5s ease, height 0.5s ease;
+  z-index: -1;
+}
+
+/* Специфические стили для разных типов кнопок */
+
+/* Кнопка поиска в каталоге */
+.catalog-search-btn {
+  border-radius: 0 var(--button-radius) var(--button-radius) 0;
+  padding: 0;
+  width: 36px;
+  height: 36px;
+}
+
+/* Кнопка Join в футере */
+.footer-join-btn {
+  border-radius: var(--button-radius);
+  padding: 10px 20px;
+  text-transform: uppercase;
+  font-size: 14px;
+}
+
+/* Кнопки в хедере */
+.header-btn {
+  border-radius: var(--button-radius);
+  padding: 8px 16px;
+  font-size: 14px;
+  background-color: transparent;
+  color: var(--button-bg);
+  border: 1px solid var(--button-bg);
+}
+
+.header-btn:hover {
+  background-color: var(--button-bg);
+  color: var(--button-color);
+}
+
+/* Другие типы кнопок */
+.btn-primary {
+  background-color: var(--button-bg);
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+}
+
+.btn-success {
+  background-color: #28a745;
+}
+
+.btn-small {
+  padding: 6px 12px;
+  font-size: 14px;
+}
+
+.btn-large {
+  padding: 16px 32px;
+  font-size: 18px;
 } 
