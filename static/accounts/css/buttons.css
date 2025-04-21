@@ -126,4 +126,31 @@ footer a.btn {
   :root {
     --btn-padding: 0.3em 1em;
   }
+}
+
+/* Position Aware Hover Effect */
+.btn-position-aware {
+  position: relative; /* Необходимо для абсолютного позиционирования span */
+  overflow: hidden;   /* Скрывает span, выходящий за пределы кнопки */
+  cursor: pointer;    /* Указывает, что это интерактивный элемент */
+}
+
+.btn-position-aware span {
+  position: absolute;
+  display: block;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.3); /* Полупрозрачный белый круг, можно настроить */
+  transition: width 0.4s ease-in-out, height 0.4s ease-in-out;
+  transform: translate(-50%, -50%); /* Центрирует круг относительно точки курсора */
+  z-index: 0; /* Помещает под текстом кнопки, если текст имеет z-index > 0 */
+  pointer-events: none; /* Позволяет событиям проходить сквозь span к кнопке */
+}
+
+.btn-position-aware:hover span {
+  /* Размер круга при наведении, можно настроить */
+  /* Должен быть достаточно большим, чтобы покрыть кнопку */
+  width: 400px;
+  height: 400px;
 } 
