@@ -27,25 +27,27 @@
 
 /* Общие стили для всех кнопок - базовые без эффектов */
 button, .btn, input[type="submit"], input[type="button"], 
-.catalog-search-btn, .show-button, .detail-button {
+.catalog-search-btn, .show-button, .detail-button, 
+.join-button, .login-btn, .create-startup-btn, .logout-btn, .nav-menu a {
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: var(--btn-padding);
-  border-radius: var(--btn-border-radius);
+  padding: var(--btn-padding, 0.5em 1.5em); /* Default padding */
+  border-radius: var(--btn-border-radius, 8px); /* Default radius */
   font-family: 'Unbounded', sans-serif;
   font-size: 16px;
   font-weight: 500;
   text-align: center;
   text-decoration: none;
   cursor: pointer;
-  overflow: hidden;
-  border: none;
+  overflow: hidden; /* Important for effect */
+  border: 1px solid #004e9f; /* Default blue border */
   outline: none;
-  background-color: var(--accent-color);
-  color: var(--light-color);
-  z-index: 1;
+  background-color: #ffffff; /* Default white background */
+  color: #000000; /* Default black text */
+  z-index: 1; /* Ensure button is above default background */
+  /* transition: var(--btn-transition, all 0.3s ease); Removed to prevent conflicts */
 }
 
 /* Стили для кнопок меню навигации */
@@ -62,58 +64,51 @@ button, .btn, input[type="submit"], input[type="button"],
 }
 
 .nav-menu a.active {
-  background-color: var(--accent-color);
+  /* background-color: var(--accent-color); */ /* Remove background override */
+  /* Keep specific styles if needed, e.g., different text color */
+  /* color: var(--light-color); */
 }
 
 /* Стили для кнопок в футере */
 footer button,
 footer .btn,
 footer a.btn {
-  background-color: transparent;
-  border: 1px solid var(--light-color);
-  color: var(--light-color);
-  padding: 8px 16px;
-  width: auto;
-  min-width: 100px;
-  height: auto;
+  /* background-color: transparent; */ /* Use default white */
+  border-color: #004e9f; /* Default blue border, maybe override if needed */
+  color: #000000; /* Default black text */
+  /* padding: 8px 16px; */ /* Use default padding */
+  /* width: auto; */
+  /* min-width: 100px; */
+  /* height: auto; */
 }
 
 /* Стили для кнопки присоединения */
 .join-button {
-  background-color: var(--accent-color);
-  color: white;
-  position: relative;
-  overflow: hidden;
-  z-index: 1;
+  /* background-color: var(--accent-color); */ /* Use default white */
+  color: #000000; /* Ensure black text */
+  border-color: #004e9f; /* Default blue border */
 }
 
 /* Стили для кнопки входа */
 .login-btn {
-  background-color: var(--yellow-color);
-  color: var(--dark-color);
-  position: relative;
-  overflow: hidden;
-  z-index: 1;
+  /* background-color: var(--yellow-color); */ /* Use default white */
+  color: #000000; /* Ensure black text */
+  border-color: #FFEF2B; /* Exception: Yellow border */
 }
 
 /* Стили для кнопки создания стартапа */
 .create-startup-btn {
-  background-color: transparent;
-  color: var(--accent-color);
-  border: 2px solid var(--accent-color);
-  position: relative;
-  overflow: hidden;
-  z-index: 1;
+  /* background-color: transparent; */ /* Use default white */
+  color: #000000; /* Default black text */
+  border-color: #004e9f; /* Default blue border */
+  /* border-width: 2px; */ /* Keep 1px consistent or adjust */
 }
 
 /* Стили для кнопки выхода */
 .logout-btn {
-  background-color: transparent;
-  color: var(--light-color);
-  border: 1px solid var(--light-color);
-  position: relative;
-  overflow: hidden;
-  z-index: 1;
+  /* background-color: transparent; */ /* Use default white */
+  color: #000000; /* Default black text */
+  border-color: #004e9f; /* Default blue border */
 }
 
 @media (max-width: 768px) {
@@ -128,31 +123,34 @@ footer a.btn {
   }
 }
 
-/* Ensure button content is above the position-aware effect */
-button > *, 
-.btn > *, 
-input[type="submit"] > *, 
-input[type="button"] > *, 
-.catalog-search-btn > *, 
-.show-button > *, 
-.detail-button > *, 
-.join-button > *, 
-.login-btn > *, 
-.create-startup-btn > *, 
-.logout-btn > *, 
+/* Ensure button content is above the position-aware effect AND blends */
+button > *,
+.btn > *,
+input[type="submit"] > *,
+input[type="button"] > *,
+.catalog-search-btn > *,
+.show-button > *,
+.detail-button > *,
+.join-button > *,
+.login-btn > *,
+.create-startup-btn > *,
+.logout-btn > *,
 .nav-menu a > * {
   position: relative;
   z-index: 1;
+  mix-blend-mode: difference; /* Key for automatic color inversion */
+  /* Ensure content that should not blend (like maybe specific icons?) 
+     is wrapped or styled separately without blend mode if needed */
 }
 
-/* Specific rule for direct text nodes or simple content is harder, 
-   but the above should cover common cases like icons <i> or nested <span> */
-/* Ensure the ::before/::after pseudo-elements don't interfere either */
+/* Ensure pseudo-elements are also above the wave but DON'T blend */
 button::before, button::after,
 .btn::before, .btn::after,
 .join-button::before, .join-button::after,
 .login-btn::before, .login-btn::after,
 .create-startup-btn::before, .create-startup-btn::after,
 .logout-btn::before, .logout-btn::after {
-    z-index: 1; /* Ensure pseudo-elements are also above the wave */
+    position: relative; /* Needed for z-index */
+    z-index: 1; 
+    /* mix-blend-mode: normal; */ /* Reset blend mode if they exist and shouldn't blend */
 } 

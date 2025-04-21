@@ -213,6 +213,14 @@ function handleTouchStart(e) {
 // Helper function for wave color
 function getWaveColor(button) {
     if (button.classList.contains('login-btn')) {
+        // Exception: Yellow for login button
+        return '#FFEF2B'; 
+    } else {
+        // Default: Blue for all other buttons
+        return '#004e9f'; 
+    }
+    /* Remove old logic
+    if (button.classList.contains('login-btn')) {
         return 'rgba(255, 239, 43, 0.6)'; // Adjusted alpha
     } else if (button.classList.contains('create-startup-btn')) {
         return 'rgba(123, 97, 255, 0.6)'; // Adjusted alpha
@@ -234,4 +242,5 @@ function getWaveColor(button) {
         // Default wave color (e.g., for simple buttons or links)
         return 'rgba(255, 255, 255, 0.2)'; // White wave
     }
+    */
 } 
