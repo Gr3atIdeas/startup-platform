@@ -124,6 +124,26 @@ function handleMouseEnter(e) {
     // --- УПРАВЛЕНИЕ CSS КЛАССОМ ДЛЯ ЦВЕТА ТЕКСТА --- 
     button.classList.add('wave-active');
     console.log('Wave styles applied, wave-active class added');
+
+    // --- ОТЛАДКА ЦВЕТА --- 
+    setTimeout(() => { // Даем браузеру время применить CSS
+        try {
+            const computedStyle = window.getComputedStyle(button);
+            console.log('[DEBUG] Button computed color after class add:', computedStyle.color);
+            const firstChild = button.querySelector('*'); 
+            if (firstChild) {
+                 const childStyle = window.getComputedStyle(firstChild);
+                 console.log('[DEBUG] First child computed color:', childStyle.color);
+            }
+            const textNodes = Array.from(button.childNodes).filter(node => node.nodeType === Node.TEXT_NODE && node.textContent.trim() !== '');
+            if (textNodes.length > 0) {
+                console.log('[DEBUG] Button contains direct text node(s).');
+            }
+        } catch (error) {
+            console.error('[DEBUG] Error getting computed style:', error);
+        }
+    }, 0);
+    // --- КОНЕЦ ОТЛАДКИ ЦВЕТА ---
 }
 
 function handleMouseLeave(e) {

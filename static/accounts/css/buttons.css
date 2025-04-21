@@ -168,9 +168,27 @@ button.wave-active,
 }
 */
 
-/* --- ПРАВИЛА ДЛЯ ЦВЕТА ПОТОМКОВ --- */
+/* --- ПРАВИЛА ДЛЯ ЦВЕТА САМОЙ КНОПКИ И ПОТОМКОВ --- */
 
-/* Используем descendant selector (*) и !important */
+/* Цвет САМОЙ кнопки (для прямого текста) */
+button.wave-active,
+.btn.wave-active,
+input[type="submit"].wave-active,
+input[type="button"].wave-active,
+.catalog-search-btn.wave-active,
+.show-button.wave-active,
+.detail-button.wave-active,
+.create-startup-btn.wave-active,
+.logout-btn.wave-active,
+.nav-menu a.wave-active {
+  color: #ffffff !important; /* Стандартно - белый текст */
+}
+.login-btn.wave-active,
+.join-button.wave-active {
+  color: #000000 !important; /* Исключения - черный текст */
+}
+
+/* Цвет ПОТОМКОВ (для иконок, вложенных span и т.д.) - как fallback */
 button.wave-active *,
 .btn.wave-active *,
 input[type="submit"].wave-active *,
@@ -183,8 +201,6 @@ input[type="button"].wave-active *,
 .nav-menu a.wave-active * {
   color: #ffffff !important; /* Стандартно - белый текст */
 }
-
-/* Исключения для текста потомков */
 .login-btn.wave-active *,
 .join-button.wave-active * {
   color: #000000 !important; /* Исключения - черный текст */
