@@ -1,7 +1,6 @@
 /* Основные стили страницы каталога */
 body {
   font-family: 'Unbounded', 'Helvetica Neue', Arial, sans-serif;
-  background-color: #F5F7FA;
   margin: 0;
   padding: 0;
 }
@@ -33,14 +32,14 @@ body {
   font-weight: 700;
   font-size: 32px;
   margin: 0 0 10px 0;
-  color: #000000;
+  color: #FFFFFF;
 }
 
 .catalog-subtitle {
   font-family: 'Unbounded', sans-serif;
   font-weight: 300;
   font-size: 14px;
-  color: #6B7280;
+  color: #FFFFFF;
   margin: 0;
 }
 
@@ -69,7 +68,7 @@ body {
   max-width: 975.8px;
   height: 36px;
   margin-bottom: 20px;
-  border-radius: 32px;
+  border-radius: 99px;
   overflow: hidden;
   background: #FFF;
 }
@@ -78,7 +77,7 @@ body {
   width: 100%;
   height: 36px;
   border: none;
-  border-radius: 32px;
+  border-radius: 99px;
   padding: 0 50px 0 20px;
   font-size: 16px;
   box-sizing: border-box;
@@ -99,7 +98,7 @@ body {
   top: 0;
   background: #FFFFFF;
   color: #000000;
-  border: 1px solid #0057B7;
+  border: 1px solid #7B61FF;
   width: 36px;
   height: 36px;
   display: flex;
@@ -107,8 +106,8 @@ body {
   align-items: center;
   cursor: pointer;
   font-size: 16px;
-  border-top-right-radius: 32px;
-  border-bottom-right-radius: 32px;
+  border-top-right-radius: 99px;
+  border-bottom-right-radius: 99px;
   overflow: hidden;
 }
 
@@ -118,7 +117,7 @@ body {
   width: 0;
   height: 0;
   border-radius: 50%;
-  background-color: #0057B7;
+  background-color: #7B61FF;
   transform: translate(-50%, -50%);
   transition: width 0.4s ease-in-out, height 0.4s ease-in-out;
   z-index: -1;
@@ -139,6 +138,9 @@ body {
   margin-right: 30px;
   flex-shrink: 0;
   padding-top: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 16px;
+  padding: 20px;
 }
 
 /* Дропдаун сортировки */
@@ -225,14 +227,14 @@ body {
 }
 
 .noUi-connect {
-  background-color: #0057B7;
+  background-color: #7B61FF;
 }
 
 .noUi-handle {
   width: 20px !important;
   height: 20px !important;
   border-radius: 50%;
-  background: #0057B7;
+  background: #7B61FF;
   border: 2px solid white;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
   right: -10px !important;
@@ -248,85 +250,87 @@ body {
 .rating-filter:after {
   content: "Диапазон";
   font-size: 12px;
-  color: #9CA3AF;
+  text-align: center;
   display: block;
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 300;
+  color: #6B7280;
+  margin-top: 8px;
 }
 
-/* Секция микроинвестиций */
+/* Микроинвестиции */
 .micro-investment {
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
   margin-bottom: 25px;
 }
 
 .micro-label {
   font-size: 14px;
   font-weight: 500;
+  margin-right: 10px;
   font-family: 'Unbounded', sans-serif;
 }
 
 .help-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  display: inline-block;
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: #E5E7EB;
-  font-size: 12px;
+  background-color: #E5E7EB;
   color: #6B7280;
+  font-size: 10px;
+  line-height: 16px;
+  text-align: center;
   margin-left: 5px;
+  cursor: help;
 }
 
 /* Переключатель */
 .toggle-switch {
-  width: 48px;
-  height: 24px;
-  background: #E5E7EB;
-  border-radius: 12px;
+  width: 38px;
+  height: 20px;
+  border-radius: 10px;
+  background-color: #E5E7EB;
   position: relative;
   cursor: pointer;
   transition: background-color 0.3s;
 }
 
 .toggle-switch.active {
-  background: #0057B7;
+  background-color: #7B61FF;
 }
 
 .toggle-handle {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: white;
   position: absolute;
-  width: 20px;
-  height: 20px;
   top: 2px;
   left: 2px;
-  background: white;
-  border-radius: 50%;
-  transition: left 0.3s;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
 }
 
 .toggle-switch.active .toggle-handle {
-  left: 26px;
+  transform: translateX(18px);
 }
 
-/* Кнопка Показать */
+/* Кнопка показать */
 .show-button {
   width: 100%;
-  padding: 10px;
-  margin-top: 10px;
-  background-color: #FFFFFF;
-  color: #000000;
-  border: 1px solid #0057B7;
-  border-radius: 6px;
-  font-family: 'Unbounded', sans-serif;
+  height: 40px;
+  background-color: #7B61FF;
+  color: white;
+  border: none;
+  border-radius: 99px;
+  font-size: 16px;
   font-weight: 500;
-  font-size: 14px;
   cursor: pointer;
+  transition: all 0.3s;
   position: relative;
   overflow: hidden;
+  font-family: 'Unbounded', sans-serif;
 }
 
 .show-button span {
@@ -335,174 +339,165 @@ body {
   width: 0;
   height: 0;
   border-radius: 50%;
-  background-color: #0057B7;
+  background-color: #6551D9;
   transform: translate(-50%, -50%);
   transition: width 0.4s ease-in-out, height 0.4s ease-in-out;
   z-index: -1;
 }
 
 .show-button:hover {
-  color: #FFFFFF;
+  box-shadow: 0 4px 12px rgba(123, 97, 255, 0.3);
 }
 
 .show-button:active {
-  transform: none;
-  box-shadow: none;
+  background-color: #6551D9;
 }
 
-/* Область с карточками стартапов */
+/* Сетка стартапов */
 .startups-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  margin-top: 20px;
-  justify-items: center;
+  gap: 20px;
+  width: 100%;
+  margin: 0 auto;
 }
 
 /* Карточка стартапа */
 .startup-card {
-  position: relative;
+  background-color: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  height: 100%;
+  transition: transform 0.3s, box-shadow 0.3s;
   display: flex;
   flex-direction: column;
-  width: 337px;
-  height: 521px;
-  padding: 0;
-  border-radius: 10px;
-  border: 1px solid #C6BBFE;
-  background: #FFF;
-  box-shadow: 4px 4px 6px 0px rgba(123, 97, 255, 0.25);
-  overflow: hidden;
-  transition: transform 0.3s, box-shadow 0.3s;
 }
 
 .startup-card:hover {
   transform: translateY(-5px);
-  box-shadow: 6px 6px 8px 0px rgba(123, 97, 255, 0.35);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
 }
 
 .startup-card-header {
   position: relative;
-  background-color: #f5f5f5;
-  height: 220px;
-  overflow: hidden;
-  margin: 10px 10px 0;
-  border-radius: 8px;
+  background-color: #7B61FF;
+  color: white;
 }
 
 .startup-image {
   width: 100%;
-  height: 100%;
-  overflow: hidden;
-  border-radius: 8px;
+  height: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .startup-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center;
 }
 
 .startup-type {
   position: absolute;
   top: 10px;
   left: 10px;
-  padding: 8px 16px;
-  background: #000000;
-  font-size: 14px;
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 400;
-  color: #ffffff;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 99px;
+  font-size: 10px;
+  font-weight: 500;
   z-index: 2;
-  text-align: center;
-  border-radius: 6px;
-  display: inline-block;
-  width: auto;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-family: 'Unbounded', sans-serif;
 }
 
 .startup-card-overlay {
   position: absolute;
   bottom: 0;
   left: 0;
-  width: 100%;
-  background: rgba(0, 78, 159, 0.85);
-  padding: 15px 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+  padding: 20px 15px 15px;
+  transition: opacity 0.3s;
   z-index: 1;
-  transform: translateY(100%);
-  transition: transform 0.3s ease;
-  text-align: center;
 }
 
 .startup-card:hover .startup-card-overlay {
-  transform: translateY(0);
+  opacity: 1;
 }
 
 .startup-name {
-  font-weight: 400;
-  font-size: 24px;
+  font-size: 18px;
+  font-weight: 500;
   margin: 0 0 5px 0;
+  color: white;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   font-family: 'Unbounded', sans-serif;
-  color: #ffffff;
-  padding: 0 10px;
 }
 
 .startup-rating {
   display: flex;
   align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  color: #ffffff;
+  font-size: 12px;
+  color: white;
+  margin-top: 5px;
 }
 
 .rating-stars {
   display: flex;
-  gap: 2px;
-  margin-right: 5px;
+  margin-left: 5px;
 }
 
 .rating-stars i {
-  color: #ffc107;
-  font-size: 12px;
+  color: #D1D5DB;
+  margin-right: 2px;
 }
 
 .rating-stars i.active {
-  color: #ffc107;
+  color: #FFEF2B;
 }
 
-/* Тело карточки */
 .startup-card-body {
-  padding: 15px 10px 0;
-  flex-grow: 1;
+  padding: 15px;
   display: flex;
   flex-direction: column;
+  flex-grow: 1;
 }
 
 .startup-description {
-  font-size: 16px;
-  line-height: 1.4;
-  color: #000000;
-  margin: 0 10px 15px;
-  display: -webkit-box;
-  -webkit-line-clamp: 6;
-  -webkit-box-orient: vertical;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #4B5563;
   overflow: hidden;
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 400;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  margin-bottom: 15px;
   flex-grow: 1;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 300;
 }
 
 .startup-info {
   display: flex;
   align-items: center;
-  margin: 15px 10px;
+  margin-bottom: 10px;
 }
 
 .startup-info-wrapper {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
 }
 
 .counter-group {
@@ -513,53 +508,55 @@ body {
 .comment-counter, .like-counter {
   display: flex;
   align-items: center;
-  gap: 5px;
-  color: #000000;
-  font-size: 16px;
-  font-family: 'Unbounded', sans-serif;
+  font-size: 14px;
+  color: #6B7280;
+  transition: color 0.3s;
+  cursor: pointer;
 }
 
 .comment-icon, .like-icon {
-  color: #000000;
-  font-size: 18px;
+  margin-right: 5px;
 }
 
 .startup-direction {
-  display: inline-block;
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 400;
-  font-size: 14px;
-  padding: 8px 16px;
-  background: #000000;
-  color: #ffffff;
-  text-align: center;
-  border-radius: 6px;
-  width: auto;
-  margin-right: 10px;
-}
-
-/* Футер карточки */
-.startup-card-footer {
-  padding: 0 10px 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-/* Кнопка подробнее, стилизованная как кнопка "Войти" */
-.detail-button {
-  background-color: #FFFFFF;
-  color: #000000;
-  border: 1px solid #0057B7;
-  border-radius: 6px;
-  padding: 8px 16px;
-  font-family: 'Unbounded', sans-serif;
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 12px;
+  background-color: #F3F4F6;
+  border-radius: 99px;
+  font-size: 12px;
+  color: #111827;
   font-weight: 500;
+  margin-right: 10px;
+  margin-bottom: 5px;
+  white-space: nowrap;
+  background-color: rgba(123, 97, 255, 0.1);
+  color: #7B61FF;
+  font-family: 'Unbounded', sans-serif;
+}
+
+.startup-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  border-top: 1px solid #E5E7EB;
+  padding-top: 15px;
+}
+
+.detail-button {
+  background-color: transparent;
+  border: 1px solid #7B61FF;
+  color: #7B61FF;
+  padding: 6px 15px;
+  border-radius: 99px;
   font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
+  transition: all 0.3s;
   position: relative;
   overflow: hidden;
-  width: 100%;
+  font-family: 'Unbounded', sans-serif;
 }
 
 .detail-button span {
@@ -568,52 +565,58 @@ body {
   width: 0;
   height: 0;
   border-radius: 50%;
-  background-color: #0057B7;
+  background-color: #7B61FF;
   transform: translate(-50%, -50%);
   transition: width 0.4s ease-in-out, height 0.4s ease-in-out;
   z-index: -1;
 }
 
 .detail-button:hover {
-  color: #FFFFFF;
+  color: white;
 }
 
 .detail-button:active {
-  transform: none;
-  box-shadow: none;
+  transform: translateY(1px);
 }
 
 .investor-info {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 10px;
-  color: #777777;
-  font-size: 14px;
+  font-size: 12px;
+  color: #6B7280;
+  background-color: #F9FAFB;
+  padding: 5px 10px;
+  border-radius: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 50%;
   font-family: 'Unbounded', sans-serif;
-  margin-top: 15px;
-  text-align: center;
-  width: 100%;
+  font-weight: 300;
 }
 
 .investor-icon {
-  font-size: 16px;
+  margin-right: 5px;
+  color: #7B61FF;
 }
 
-/* Пустой список стартапов */
 .no-startups {
-  background: white;
-  border-radius: 12px;
+  background-color: white;
+  border-radius: 8px;
   padding: 40px;
   text-align: center;
-  color: #6B7280;
-  width: 100%;
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 300;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  grid-column: 1 / -1;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
-/* Медиа запросы для адаптивного отображения */
+.no-startups p {
+  color: #6B7280;
+  font-size: 16px;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 300;
+}
+
+/* Медиа запросы для адаптивности */
 @media (max-width: 960px) {
   .catalog-container {
     flex-direction: column;
@@ -627,11 +630,11 @@ body {
   .sidebar {
     width: 100%;
     margin-right: 0;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
   }
   
   .startups-grid {
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
@@ -651,26 +654,27 @@ body {
 
 @media (max-width: 1200px) {
   .startups-grid {
-    grid-template-columns: repeat(auto-fill, minmax(337px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
 .startup-image-placeholder {
   width: 100%;
   height: 100%;
+  background-color: #7B61FF;
   display: flex;
-  align-items: center;
   justify-content: center;
-  background-color: #f5f5f5;
-  color: #000000;
-  font-size: 48px;
-  font-weight: bold;
+  align-items: center;
+  font-size: 60px;
+  font-weight: 700;
+  color: white;
+  text-transform: uppercase;
   font-family: 'Unbounded', sans-serif;
 }
 
 .startup-card-link {
   text-decoration: none;
   color: inherit;
-  height: 100%;
   display: block;
+  height: 100%;
 }

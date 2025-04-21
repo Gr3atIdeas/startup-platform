@@ -7,6 +7,10 @@ html, body {
 
 body {
   padding-top: 60px; /* Высота хедера */
+  background-image: url('/static/accounts/images/background.webp');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
 }
 
 /* Хедер сайта */
@@ -15,9 +19,14 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 20px 60px;
-  background-color: #FFFFFF;
-  border-bottom: 1px solid #F3F4F6;
-  height: 80px;
+  background-color: #000000;
+  border-bottom: 1px solid #333;
+  height: 68px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
 }
 
 /* Логотип */
@@ -45,7 +54,7 @@ body {
   font-family: 'Unbounded', sans-serif;
   font-weight: 500;
   font-size: 16px;
-  color: #000000;
+  color: #FFFFFF;
 }
 
 /* Уменьшаем размер логотипа в хедере */
@@ -76,32 +85,24 @@ body {
   font-family: 'Unbounded', sans-serif;
   font-weight: 400;
   font-size: 16px;
-  color: #000000;
+  color: #FFFFFF;
   text-decoration: none;
   transition: color 0.3s;
   padding: 6px 10px;
   position: relative;
   overflow: hidden;
+  border-radius: 99px;
 }
 
 .nav-menu a:hover {
-  color: #0057B7;
+  color: #FFFFFF;
+  background-color: #333333;
 }
 
 .nav-menu a.active {
-  color: #0057B7;
+  color: #FFFFFF;
   font-weight: 500;
-}
-
-.nav-menu a.active::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 10px;
-  right: 10px;
-  height: 3px;
-  background-color: #0057B7;
-  border-radius: 1.5px;
+  background-color: #7B61FF;
 }
 
 /* Правая часть хедера */
@@ -118,10 +119,10 @@ body {
   justify-content: center;
   padding: 0 16px;
   height: 36px;
-  background-color: #FFFFFF;
-  color: #0057B7;
-  border: 1px solid #0057B7;
-  border-radius: 6px;
+  background-color: transparent;
+  color: #7B61FF;
+  border: 2px solid #7B61FF;
+  border-radius: 99px;
   font-family: 'Unbounded', sans-serif;
   font-weight: 500;
   font-size: 14px;
@@ -138,7 +139,7 @@ body {
   width: 0;
   height: 0;
   border-radius: 50%;
-  background-color: #0057B7;
+  background-color: #7B61FF;
   transform: translate(-50%, -50%);
   transition: width 0.4s ease-in-out, height 0.4s ease-in-out;
   z-index: -1;
@@ -155,10 +156,10 @@ body {
   justify-content: center;
   min-width: 100px;
   height: 36px;
-  background-color: #FFFFFF;
+  background-color: #FFEF2B;
   color: #000000;
-  border: 1px solid #FFEF2B;
-  border-radius: 6px;
+  border: none;
+  border-radius: 99px;
   font-family: 'Unbounded', sans-serif;
   font-weight: 500;
   font-size: 14px;
@@ -185,6 +186,33 @@ body {
 
 .login-btn:hover {
   color: #000000;
+}
+
+/* Стиль для поискового поля в хедере */
+.search-container {
+  position: relative;
+  width: 512px;
+}
+
+.search-input {
+  width: 100%;
+  height: 40px;
+  border: 1px solid var(--primary-color);
+  border-radius: 99px;
+  padding: 0 16px 0 40px;
+  font-size: 14px;
+  outline: none;
+  box-sizing: border-box;
+  background-color: #FFFFFF;
+}
+
+.search-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #A1A0A0;
+  z-index: 2;
 }
 
 /* Мобильное меню */
