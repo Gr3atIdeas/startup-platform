@@ -29,20 +29,20 @@ body {
 }
 
 .logo-img {
-  width: 32px; /* Уменьшен размер с 40px */
-  height: 32px; /* Уменьшен размер с 40px */
+  width: 28px; /* Уменьшен размер с 32px */
+  height: 28px; /* Уменьшен размер с 32px */
 }
 
 .logo-text {
   font-family: 'Unbounded', sans-serif;
   font-weight: 500;
-  font-size: 20px; /* Уменьшен размер с 24px */
+  font-size: 18px; /* Уменьшен размер с 20px */
   color: #000000;
 }
 
 /* Уменьшаем размер логотипа в хедере */
 .header-logo-img {
-  max-width: 100px; /* Уменьшенный размер логотипа */
+  max-width: 80px; /* Уменьшенный размер логотипа */
   height: auto;
 }
 
@@ -119,16 +119,20 @@ body {
   overflow: hidden;
 }
 
-.create-startup-btn:hover {
+.create-startup-btn span {
+  position: absolute;
+  display: block;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
   background-color: #0057B7;
-  color: #FFFFFF;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 87, 183, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.3s, height 0.3s;
+  z-index: -1;
 }
 
-.create-startup-btn:active {
-  transform: translateY(0);
-  box-shadow: 0 2px 4px rgba(0, 87, 183, 0.2);
+.create-startup-btn:hover {
+  color: #FFFFFF;
 }
 
 /* Кнопка входа */
@@ -138,7 +142,7 @@ body {
   justify-content: center;
   min-width: 100px;
   height: 36px;
-  background-color: #FFEF2B;
+  background-color: #FFFFFF;
   color: #000000;
   border: 1px solid #FFEF2B;
   border-radius: 6px;

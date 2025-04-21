@@ -125,29 +125,23 @@
   z-index: 1;
 }
 
+/* Стиль для кнопки "Присоединиться" */
 .join-button {
+  background-color: #FFFFFF;
+  color: #000000;
+  border: 1px solid #FFEF2B;
+  border-radius: 6px;
+  padding: 10px 20px;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 12px 24px;
-  background-color: #FFEF2B;
-  color: #000000;
-  border: none;
-  border-radius: 6px;
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 500;
-  font-size: 16px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-decoration: none;
-  position: relative;
-  overflow: hidden;
-  text-align: center;
-}
-
-.join-button i {
-  margin-right: 8px;
-  font-size: 18px;
 }
 
 /* Стиль для эффекта Position Aware */
@@ -157,21 +151,18 @@
   width: 0;
   height: 0;
   border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: #FFEF2B;
   transform: translate(-50%, -50%);
   transition: width 0.3s, height 0.3s;
   z-index: -1;
 }
 
 .join-button:hover {
-  background-color: #FFE800;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(255, 239, 43, 0.3);
+  color: #000000;
 }
 
-.join-button:active {
-  transform: translateY(0);
-  box-shadow: 0 2px 4px rgba(255, 239, 43, 0.2);
+.join-button i {
+  margin-right: 8px;
 }
 
 /* Менюшки в футере */

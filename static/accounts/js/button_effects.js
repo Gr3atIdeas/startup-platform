@@ -35,6 +35,15 @@ function applyPositionAwareEffect() {
         const maxWidth = Math.max(buttonRect.width, buttonRect.height) * 2.5;
         span.style.width = maxWidth + 'px';
         span.style.height = maxWidth + 'px';
+        
+        // Устанавливаем правильный цвет текста при наведении
+        if (this.classList.contains('btn-primary') || 
+            this.classList.contains('create-startup-btn') || 
+            this.classList.contains('catalog-search-btn') || 
+            this.classList.contains('detail-button') ||
+            this.classList.contains('show-button')) {
+          this.style.color = '#FFFFFF';
+        }
       }
     });
     
@@ -54,6 +63,9 @@ function applyPositionAwareEffect() {
       if (span) {
         span.style.width = '0';
         span.style.height = '0';
+        
+        // Возвращаем оригинальный цвет текста
+        this.style.color = '';
       }
     });
     
