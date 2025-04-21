@@ -9,206 +9,205 @@ body {
   padding-top: 60px; /* Высота хедера */
 }
 
-/* Фиксированный хедер */
+/* Хедер сайта */
 .header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  width: 100%;
-  height: 60px;
-  z-index: 9999;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 60px;
   background-color: #FFFFFF;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 60px;
-  box-sizing: border-box;
-  border-bottom: 1px solid #E5E7EB;
-}
-
-.header-container {
-  width: 1336px;
-  height: 53px;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0;
-  gap: 30px;
+  border-bottom: 1px solid #F3F4F6;
+  height: 80px;
 }
 
 /* Логотип */
-.header-logo {
+.logo {
   display: flex;
   align-items: center;
+  gap: 10px;
   text-decoration: none;
-  margin-right: 180px; /* Увеличили отступ в 3 раза */
 }
 
-.header-logo-img {
-  width: 38px;
-  height: 38px;
+.logo-img {
+  width: 40px;
+  height: 40px;
 }
 
-/* Поле поиска как в макете */
-.search-container {
-  position: relative;
-  width: 320px;
-  height: 32px;
-  background: #FFFFFF;
-  border: 1px solid #E5E7EB;
-  border-radius: 20px;
-  overflow: hidden;
-  margin-right: auto;
-  flex: 0 0 320px;
-}
-
-.search-icon {
-  position: absolute;
-  left: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #A1A0A0;
-  font-size: 14px;
-  pointer-events: none;
-}
-
-.search-input {
-  width: 100%;
-  height: 100%;
-  border: none;
-  background: transparent;
+.logo-text {
   font-family: 'Unbounded', sans-serif;
-  font-weight: 300;
-  font-size: 12px;
-  color: #A1A0A0;
-  outline: none;
-  padding: 0 16px 0 52px;
-  border-radius: 20px;
+  font-weight: 500;
+  font-size: 24px;
+  color: #000000;
 }
 
 /* Навигационное меню */
 .nav-menu {
   display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-left: 20px;
+  gap: 40px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nav-menu li {
+  position: relative;
 }
 
 .nav-menu a {
-  text-decoration: none;
   font-family: 'Unbounded', sans-serif;
-  font-weight: 300;
-  font-size: 14px;
+  font-weight: 400;
+  font-size: 16px;
   color: #000000;
-  padding: 6px 14px;
-  border-radius: 6px;
-  white-space: nowrap;
-  transition: background-color 0.3s;
+  text-decoration: none;
+  transition: color 0.3s;
+  padding: 6px 10px;
+  position: relative;
+  overflow: hidden;
 }
 
 .nav-menu a:hover {
-  background-color: #F2F4FF;
+  color: #0057B7;
 }
 
 .nav-menu a.active {
-  background-color: #004E9F;
-  color: #FFFFFF;
-  border-radius: 6px;
+  color: #0057B7;
+  font-weight: 500;
+}
+
+.nav-menu a.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 10px;
+  right: 10px;
+  height: 3px;
+  background-color: #0057B7;
+  border-radius: 1.5px;
+}
+
+/* Правая часть хедера */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
 }
 
 /* Кнопка создания стартапа */
 .create-startup-btn {
-  border: 1px solid #7B61FF !important;
-  border-radius: 99px !important;
-  color: #7B61FF !important;
-  background-color: transparent !important;
-}
-
-/* Аватар */
-.avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-/* Кнопка входа точно как в макете */
-.login-btn {
-  position: relative;
-  display: inline-block;
-  width: 142px;
-  height: 42px;
-  text-decoration: none;
-}
-
-.login-btn svg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 142px;
-  height: 42px;
-}
-
-.login-btn .login-text {
-  position: absolute;
-  top: 50%;
-  left: 55px;
-  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 16px;
+  height: 36px;
+  background-color: #0057B7;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 6px;
   font-family: 'Unbounded', sans-serif;
   font-weight: 500;
   font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.create-startup-btn:hover {
+  background-color: #0046A1;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 87, 183, 0.3);
+}
+
+.create-startup-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 87, 183, 0.2);
+}
+
+/* Кнопка входа */
+.login-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100px;
+  height: 36px;
+  background-color: #FFEF2B;
   color: #000000;
+  border: none;
+  border-radius: 6px;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
 }
 
-/* Удаляем все старые стили */
-.login-btn span,
-.login-btn::after {
-  display: none;
+/* Стиль для эффекта Position Aware */
+.login-btn span {
+  position: absolute;
+  display: block;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.5);
+  transform: translate(-50%, -50%);
+  transition: width 0.3s, height 0.3s;
+  z-index: 1;
 }
 
-/* Удаляем дублирующие стили глобального поиска */
-.global-search-container,
-.global-search-icon,
-.global-search-input {
+.login-btn:hover {
+  background-color: #F9F7D6;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 239, 43, 0.3);
+}
+
+.login-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(255, 239, 43, 0.2);
+}
+
+/* Мобильное меню */
+.mobile-menu-btn {
   display: none;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.mobile-menu-icon {
+  width: 24px;
+  height: 24px;
 }
 
 /* Адаптивность */
-@media (max-width: 1200px) {
+@media (max-width: 1024px) {
   .header {
-    padding: 0 20px;
+    padding: 20px 40px;
   }
-}
-
-@media (max-width: 992px) {
   .nav-menu {
-    gap: 5px;
+    gap: 20px;
   }
 }
 
 @media (max-width: 768px) {
   .header {
-    flex-direction: column;
-    height: auto;
-    padding: 10px 20px;
+    padding: 15px 20px;
+    height: 70px;
   }
-  
-  .search-container {
-    width: 100%;
-    margin: 10px 0;
-    flex: none;
+  .logo-text {
+    font-size: 20px;
   }
-  
   .nav-menu {
-    flex-wrap: wrap;
-    justify-content: center;
-    width: 100%;
-    margin: 10px 0 0 0;
+    display: none;
   }
-  
-  body {
-    padding-top: 120px;
+  .mobile-menu-btn {
+    display: block;
+  }
+  .header-right {
+    gap: 15px;
   }
 } 

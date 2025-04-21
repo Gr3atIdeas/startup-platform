@@ -20,6 +20,43 @@
   --button-letter-spacing: 0.5px;
   --button-effect-color: rgba(255, 255, 255, 0.3);
   --button-outline-color: rgba(0, 87, 183, 0.5);
+  --button-primary: #0057B7;
+  --button-primary-hover: #003c80;
+  --button-secondary: #FFFFFF;
+  --button-secondary-hover: #f0f0f0;
+  --button-text-dark: #000000;
+  --button-border-radius: 4px;
+  --button-padding: 10px 20px;
+  --button-font-size: 16px;
+  --button-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  --btn-primary: #0057B7;
+  --btn-primary-hover: #0046a3;
+  --btn-secondary: #FFFFFF;
+  --btn-secondary-hover: #f5f5f5;
+  --btn-accent: #FFEF2B;
+  --btn-accent-hover: #f8e800;
+  --btn-border-radius: 4px;
+  --btn-padding-desktop: 10px 20px;
+  --btn-padding-mobile: 12px 16px;
+  --btn-font-size-desktop: 16px;
+  --btn-font-size-mobile: 14px;
+  --btn-transition: all 0.3s ease;
+  --btn-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --button-primary-color: #0057B7;
+  --button-primary-text: #FFFFFF;
+  --button-primary-hover: #0045A0;
+  --button-primary-active: #003D8E;
+  --button-secondary-color: #F5F5F5;
+  --button-secondary-text: #333333;
+  --button-secondary-hover: #E0E0E0;
+  --button-secondary-active: #CCCCCC;
+  --button-accent-color: #FFEF2B;
+  --button-accent-text: #000000;
+  --button-accent-hover: #FFE800;
+  --button-accent-active: #FFCC00;
+  --button-padding-y: 10px;
+  --button-padding-x: 20px;
+  --button-line-height: 1.5;
 }
 
 .button-container {
@@ -525,11 +562,23 @@ button span, .btn span, input[type="submit"] span, input[type="button"] span,
 
 /* Другие типы кнопок */
 .btn-primary {
-  background-color: var(--button-bg);
+  background-color: var(--button-primary);
+  color: var(--button-text);
+  border: none;
+}
+
+.btn-primary span {
+  background: var(--button-primary-hover);
 }
 
 .btn-secondary {
-  background-color: #6c757d;
+  background-color: var(--button-secondary);
+  color: var(--button-text-dark);
+  border: none;
+}
+
+.btn-secondary span {
+  background: var(--button-secondary-hover);
 }
 
 .btn-success {
@@ -544,4 +593,323 @@ button span, .btn span, input[type="submit"] span, input[type="button"] span,
 .btn-large {
   padding: 16px 32px;
   font-size: 18px;
+}
+
+/* Стили для кнопок с эффектом Position Aware */
+button, 
+.btn, 
+input[type="submit"], 
+input[type="button"],
+.catalog-search-btn,
+.join-button,
+.login-btn,
+.create-startup-btn,
+.logout-btn,
+.detail-button,
+.show-button,
+.nav-menu a {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--button-border-radius);
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 1;
+}
+
+/* Стиль для эффекта Position Aware */
+button span, 
+.btn span, 
+input[type="submit"] span, 
+input[type="button"] span,
+.catalog-search-btn span,
+.join-button span,
+.login-btn span,
+.create-startup-btn span,
+.logout-btn span,
+.detail-button span,
+.show-button span,
+.nav-menu a span {
+  position: absolute;
+  display: block;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  transition: width 0.3s ease-in-out, height 0.3s ease-in-out;
+  transform: translate(-50%, -50%);
+  z-index: -1;
+}
+
+/* Первичная кнопка (синяя) */
+.btn-primary,
+.detail-button,
+.catalog-search-btn,
+.create-startup-btn {
+  background-color: var(--button-primary);
+  color: var(--button-text);
+  border: none;
+}
+
+.btn-primary span,
+.detail-button span,
+.catalog-search-btn span,
+.create-startup-btn span {
+  background: var(--button-primary-hover);
+}
+
+/* Вторичная кнопка (желтая) */
+.btn-secondary,
+.join-button {
+  background-color: var(--button-secondary);
+  color: var(--button-text-dark);
+  border: none;
+}
+
+.btn-secondary span,
+.join-button span {
+  background: var(--button-secondary-hover);
+}
+
+/* Ссылки в навигации */
+.nav-menu a {
+  display: inline-block;
+  padding: var(--button-padding);
+  text-decoration: none;
+  color: var(--button-text-dark);
+}
+
+.nav-menu a span {
+  background: rgba(0, 87, 183, 0.1);
+}
+
+/* Кнопка логина */
+.login-btn {
+  text-decoration: none;
+}
+
+.login-btn span {
+  background: rgba(255, 239, 43, 0.2);
+}
+
+/* Кнопка показать больше */
+.show-button {
+  background-color: transparent;
+  border: 1px solid var(--button-primary);
+  color: var(--button-primary);
+}
+
+.show-button span {
+  background: rgba(0, 87, 183, 0.1);
+}
+
+/* Кнопка выхода */
+.logout-btn {
+  background-color: transparent;
+  color: #FF5252;
+}
+
+.logout-btn span {
+  background: rgba(255, 82, 82, 0.1);
+}
+
+/* Общие модификаторы для кнопок */
+.btn-sm {
+  padding: 5px 15px;
+  font-size: 12px;
+}
+
+.btn-lg {
+  padding: 12px 30px;
+  font-size: 16px;
+}
+
+/* Анимации для кнопок */
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(0, 87, 183, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(0, 87, 183, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(0, 87, 183, 0);
+  }
+}
+
+.btn-pulse:hover {
+  animation: pulse 1.5s infinite;
+}
+
+/* Адаптивные стили для мобильных устройств */
+@media (max-width: 768px) {
+  :root {
+    --button-padding: 8px 15px;
+    --button-font-size: 14px;
+  }
+  
+  .btn-primary,
+  .btn-secondary,
+  .join-button {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+}
+
+/* Базовые стили для всех кнопок */
+button, .btn, input[type="submit"], input[type="button"], 
+.catalog-search-btn, .join-button, .login-btn, .create-startup-btn, 
+.logout-btn, .detail-button, .show-button, .nav-menu a {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--button-padding-y) var(--button-padding-x);
+  font-size: var(--button-font-size);
+  line-height: var(--button-line-height);
+  text-align: center;
+  text-decoration: none;
+  border-radius: var(--button-border-radius);
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--button-transition);
+  border: none;
+  outline: none;
+}
+
+/* Основные стили для эффекта Position Aware */
+button span, .btn span, input[type="submit"] span, input[type="button"] span,
+.catalog-search-btn span, .join-button span, .login-btn span, .create-startup-btn span,
+.logout-btn span, .detail-button span, .show-button span, .nav-menu a span {
+  position: absolute;
+  display: block;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s ease, height 0.6s ease;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Стили для текста в кнопках (чтобы был поверх эффекта) */
+button *, .btn *, input[type="submit"] *, input[type="button"] *,
+.catalog-search-btn *, .join-button *, .login-btn *, .create-startup-btn *,
+.logout-btn *, .detail-button *, .show-button *, .nav-menu a * {
+  position: relative;
+  z-index: 2;
+}
+
+/* Первичные кнопки */
+.btn-primary, .create-startup-btn, .login-btn, .catalog-search-btn, .detail-button {
+  background-color: var(--button-primary-color);
+  color: var(--button-primary-text);
+  box-shadow: var(--button-shadow);
+}
+
+.btn-primary:hover, .create-startup-btn:hover, .login-btn:hover, .catalog-search-btn:hover, .detail-button:hover {
+  background-color: var(--button-primary-hover);
+}
+
+.btn-primary:active, .create-startup-btn:active, .login-btn:active, .catalog-search-btn:active, .detail-button:active {
+  background-color: var(--button-primary-active);
+  transform: translateY(1px);
+}
+
+/* Вторичные кнопки */
+.btn-secondary, .logout-btn, .show-button {
+  background-color: var(--button-secondary-color);
+  color: var(--button-secondary-text);
+  border: 1px solid var(--button-secondary-hover);
+}
+
+.btn-secondary:hover, .logout-btn:hover, .show-button:hover {
+  background-color: var(--button-secondary-hover);
+}
+
+.btn-secondary:active, .logout-btn:active, .show-button:active {
+  background-color: var(--button-secondary-active);
+  transform: translateY(1px);
+}
+
+/* Акцентные кнопки */
+.btn-accent, .join-button {
+  background-color: var(--button-accent-color);
+  color: var(--button-accent-text);
+  box-shadow: var(--button-shadow);
+}
+
+.btn-accent:hover, .join-button:hover {
+  background-color: var(--button-accent-hover);
+}
+
+.btn-accent:active, .join-button:active {
+  background-color: var(--button-accent-active);
+  transform: translateY(1px);
+}
+
+/* Отзывчивые стили для различных размеров экрана */
+@media (max-width: 768px) {
+  :root {
+    --button-padding-y: 8px;
+    --button-padding-x: 16px;
+    --button-font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --button-padding-y: 6px;
+    --button-padding-x: 12px;
+    --button-font-size: 13px;
+  }
+  
+  button, .btn, input[type="submit"], input[type="button"] {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+}
+
+/* Специфичные стили для кнопок навигации */
+.nav-menu a {
+  padding: 8px 15px;
+  margin: 0 5px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.nav-menu a:hover {
+  background-color: rgba(0, 87, 183, 0.1);
+}
+
+/* Анимация при фокусе для доступности */
+button:focus-visible, .btn:focus-visible, 
+input[type="submit"]:focus-visible, input[type="button"]:focus-visible {
+  outline: 2px solid var(--button-primary-color);
+  outline-offset: 2px;
+}
+
+/* Отключенные кнопки */
+button:disabled, .btn:disabled, 
+input[type="submit"]:disabled, input[type="button"]:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Пульсирующая анимация для привлечения внимания */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.btn-pulse {
+  animation: pulse 2s infinite;
 } 
