@@ -30,6 +30,8 @@
       --text-gray: #A9A9A9;
       --background-light: #FFFFFF;
       --border-light-gray: #dee2e6;
+      --search-bg: #444444;
+      --search-text: #a1a0a0;
     }
     body {
       margin: 0;
@@ -86,6 +88,10 @@
       white-space: nowrap !important;
     }
     
+    .header-logo {
+      margin-right: 50px;
+    }
+    
     /* Поле поиска как на скриншоте */
     .search-container {
       position: relative;
@@ -99,7 +105,7 @@
       left: 16px;
       top: 50%;
       transform: translateY(-50%);
-      color: #A1A0A0;
+      color: var(--search-text);
       z-index: 2;
     }
     
@@ -107,12 +113,17 @@
       width: 100%;
       height: 40px;
       border: 1px solid var(--primary-color);
-      border-radius: 99px;
+      border-radius: 8px;
       padding: 0 16px 0 40px;
       font-size: 14px;
       outline: none;
       box-sizing: border-box;
-      background-color: rgba(255, 255, 255, 0.9) !important;
+      background-color: var(--search-bg) !important;
+      color: var(--search-text) !important;
+    }
+    
+    .search-input::placeholder {
+      color: var(--search-text);
     }
     
     /* Навигационное меню */
@@ -127,7 +138,7 @@
       text-decoration: none;
       color: var(--text-light);
       padding: 8px 16px;
-      border-radius: 99px;
+      border-radius: 8px;
       transition: background-color 0.3s, color 0.3s;
       font-size: 16px;
       white-space: nowrap;
@@ -148,7 +159,7 @@
       color: #7B61FF !important;
       background-color: transparent !important;
       padding: 8px 16px;
-      border-radius: 99px;
+      border-radius: 8px;
       font-size: 16px;
       transition: all 0.3s;
       border: 2px solid #7B61FF !important;
@@ -160,6 +171,7 @@
     .login-btn {
       overflow: hidden;
       position: relative;
+      border-radius: 8px;
     }
     
     /* Анимации для хедера */

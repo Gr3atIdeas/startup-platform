@@ -4,7 +4,7 @@
   --btn-width: 250px;
   --btn-height: 40px;
   --btn-padding: 0.5em 1.5em;
-  --btn-border-radius: 99px;
+  --btn-border-radius: 4px;
   --accent-color: #7B61FF;
   --accent-hover: #6551D9;
   --accent-active: #5441B3;
@@ -20,7 +20,7 @@
   --blue-gradient: linear-gradient(135deg, #0074cc 0%, #4a94e6 100%);
   --box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
   --transition-time: 0.3s;
-  --footer-btn-radius: 6px;
+  --footer-btn-radius: 4px;
   --logo-size: 32px;
   --yellow-color: #FFEF2B;
 }
@@ -270,7 +270,7 @@ footer a.btn:active {
     --btn-width: 100%;
     --btn-height: 36px;
     --btn-padding: 0.4em 1.2em;
-    --btn-border-radius: 8px;
+    --btn-border-radius: 4px;
   }
 }
 
@@ -278,6 +278,6 @@ footer a.btn:active {
   :root {
     --btn-height: 32px;
     --btn-padding: 0.3em 1em;
-    --btn-border-radius: 6px;
+    --btn-border-radius: 4px;
   }
 } 
