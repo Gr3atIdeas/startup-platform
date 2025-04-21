@@ -44,7 +44,8 @@ body {
     transition: transform 0.3s ease;
 }
 .startup-card:hover {
-    transform: scale(1.05);
+    /* transform: translateY(-10px); */ /* COMMENTED OUT */
+    /* box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15); */
 }
 .startup-card-content {
     display: flex;
@@ -102,5 +103,6 @@ body {
     transition: background-color 0.3s ease;
 }
 .startup-button a:hover {
-    background-color: #1d4ed8;
+    /* background-color: #6a5acd; */ /* COMMENTED OUT */
+    /* transform: scale(1.05); */ /* COMMENTED OUT */
 }

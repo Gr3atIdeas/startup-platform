@@ -786,9 +786,7 @@
 }
 
 .show-more-comments:hover, .hide-comments-button:hover {
-  background-color: #7B61FF;
-  color: white;
-  transform: translateY(-2px);
+  /* background-color: #e9ecef; */ /* COMMENTED OUT */
 }
 
 .show-more-comments i, .hide-comments-button i {
@@ -1140,7 +1138,7 @@ main.content {
 }
 
 .pitch-deck-link:hover {
-  background: #6a50e0;
+  /* background-color: var(--secondary-color); */ /* COMMENTED OUT */
 }
 
 /* Дополнить стили лайтбокса и видео */
@@ -1266,9 +1264,8 @@ main.content {
 
 /* Кнопка назад - эффект ховера */
 .back-button:hover {
-  background-color: #f9fafb;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transform: translateY(-2px);
+  /* background-color: rgba(255, 255, 255, 0.1); */ /* COMMENTED OUT */
+  /* transform: translateX(-3px); */ /* COMMENTED OUT */
 }
 
 .back-button:active {
@@ -1277,9 +1274,8 @@ main.content {
 
 /* Кнопки действий - эффект ховера */
 .action-button:hover {
-  background-color: #4F46E5;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transform: translateY(-2px);
+  /* background-color: var(--accent-hover); */ /* COMMENTED OUT */
+  /* box-shadow: 0 2px 8px rgba(0,0,0,0.2); */ /* Keep shadow? */
 }
 
 .action-button:active {
@@ -1289,8 +1285,7 @@ main.content {
 
 /* Бейдж микроинвестиций - эффект ховера */
 .micro-badge:hover {
-  background: rgba(255, 255, 255, 0.25);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  /* background-color: rgba(123, 97, 255, 0.2); */ /* COMMENTED OUT */
 }
 
 /* Рейтинг и звезды - эффект ховера */
@@ -1305,31 +1300,26 @@ main.content {
 
 /* Комментарии и отзывы - эффект ховера */
 .comments-link:hover, .author-reviews:hover {
-  color: #4F46E5;
   text-decoration: underline;
 }
 
 /* Статистика - эффект ховера */
 .stat-item:hover {
-  color: #7B61FF;
+  /* background-color: rgba(255, 255, 255, 0.05); */ /* COMMENTED OUT */
 }
 
 .stat-item:hover i {
-  color: #7B61FF;
-  transform: scale(1.1);
+  /* color: var(--accent-color); */ /* COMMENTED OUT */
 }
 
 /* Инвестиционный дропдаун - эффект ховера */
 .investment-dropdown:hover {
-  background: rgba(255, 255, 255, 0.25);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  /* background-color: rgba(255, 255, 255, 0.1); */ /* COMMENTED OUT */
 }
 
 /* Инвест-кнопка - эффект ховера */
 .invest-button:hover {
-  background-color: #6a50e0;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transform: translateY(-2px);
+  /* background-color: #6551D9; */ /* COMMENTED OUT */
 }
 
 .invest-button:active {
@@ -1339,21 +1329,21 @@ main.content {
 
 /* Ссылка "читать дальше" - эффект ховера */
 .read-more:hover {
-  color: #4F46E5;
+  color: var(--accent-hover);
 }
 
 /* Галерея - эффект ховера */
 .gallery-item:hover, .gallery-large:hover {
-  opacity: 0.95;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-  transform: translateY(-3px);
+  /* transform: scale(1.03); */ /* COMMENTED OUT */
 }
 
 /* Видео плеер - эффект ховера */
 .video-item:hover {
-  opacity: 0.95;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-  transform: translateY(-3px);
+  /* box-shadow: 0 4px 15px rgba(0,0,0,0.2); */
+}
+
+.video-item:hover .video-play-icon {
+  /* opacity: 1; */ /* COMMENTED OUT */
 }
 
 .video-play-icon {
@@ -1367,26 +1357,25 @@ main.content {
 
 /* Документы - эффект ховера */
 .document-item:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  /* transform: translateY(-2px); */ 
+  /* box-shadow: 0 4px 10px rgba(0,0,0,0.15); */
 }
 
 .document-pdf:hover {
-  background: #6a50e0;
+  /* background-color: #e63946; */ /* COMMENTED OUT */
 }
 
 .document-excel:hover {
-  background: #2eba02;
+  /* background-color: #2a9d8f; */ /* COMMENTED OUT */
 }
 
 .document-doc:hover {
-  background: #2848df;
+  /* background-color: #264653; */ /* COMMENTED OUT */
 }
 
 /* Кнопка "Пожаловаться" - эффект ховера */
 .report-button:hover {
-  color: #4F46E5;
-  border-color: #4F46E5;
+  /* background-color: #dc3545; */ /* COMMENTED OUT */
 }
 
 /* Форма комментариев - эффект фокуса */
@@ -1406,19 +1395,17 @@ main.content {
 }
 
 .close-lightbox:hover {
-  color: #f0f0f0;
-  transform: scale(1.1);
+  /* color: #fff; */ /* COMMENTED OUT */
 }
 
 /* Анимация для похожих стартапов */
 .similar-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  /* transform: translateY(-5px); */ /* COMMENTED OUT */
+  /* box-shadow: 0 8px 20px rgba(0,0,0,0.1); */
 }
 
 .show-all-button:hover {
-  background: rgba(255, 255, 255, 0.1);
-  transform: translateY(-2px);
+  /* background-color: rgba(255, 255, 255, 0.1); */ /* COMMENTED OUT */
 }
 
 .show-all-button:active {
@@ -1540,7 +1527,7 @@ main.content {
 }
 
 .back-button:hover .fa-arrow-left {
-  animation: leftRight 1s infinite;
+  /* transform: translateX(-3px); */ /* COMMENTED OUT */
 }
 
 @keyframes leftRight {
@@ -1615,7 +1602,7 @@ main.content {
 }
 
 .action-button.approve-button:hover {
-  background: #2eba02;
+  /* background-color: #218838; */ /* COMMENTED OUT */
 }
 
 .action-button.reject-button {
@@ -1626,7 +1613,7 @@ main.content {
 }
 
 .action-button.reject-button:hover {
-  background: #d94444;
+  /* background-color: #c82333; */ /* COMMENTED OUT */
 }
 
 /* Комментарий модератора */
@@ -1749,7 +1736,7 @@ main.content {
 }
 
 .status-select:hover {
-  background: rgba(0, 0, 0, 0.9);
+  border-color: var(--accent-hover);
 }
 
 .status-select option {
@@ -1765,9 +1752,8 @@ main.content {
 }
 
 .invest-button:disabled:hover {
-  transform: none; /* Отключаем эффект поднятия */
-  box-shadow: none; /* Отключаем тень */
-  animation: none; /* Отключаем анимацию */
+  /* background-color: #ccc !important; */ /* COMMENTED OUT */
+  /* cursor: not-allowed; */
 }
 
 /* Подсказка при наведении */

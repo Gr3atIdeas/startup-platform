@@ -75,11 +75,12 @@ function initPositionAware() {
         waveSpan.style.width = '0';
         waveSpan.style.height = '0';
         waveSpan.style.borderRadius = '50%';
-        waveSpan.style.transform = 'translate(-50%, -50%) scale(0)';
-        waveSpan.style.opacity = '0';
+        waveSpan.style.transform = 'translate(-50%, -50%)'; // NO scale(0) here initially
+        waveSpan.style.opacity = '0'; // Initially hidden
         waveSpan.style.pointerEvents = 'none';
-        waveSpan.style.zIndex = '0';
-        waveSpan.style.transition = 'width 0.5s ease-out, height 0.5s ease-out, opacity 0.5s ease-out, transform 0.5s ease-out';
+        waveSpan.style.zIndex = '0'; 
+        // --- ИЗМЕНЕНИЕ TRANSITION: Только width и height --- 
+        waveSpan.style.transition = 'width 0.4s ease-in-out, height 0.4s ease-in-out'; // Match example
         // --- КОНЕЦ СОЗДАНИЯ И СТИЛИЗАЦИИ ---
 
         // Добавляем новый span в кнопку
@@ -102,24 +103,24 @@ function handleMouseEnter(e) {
     const waveSpan = button.querySelector('span');
     if (!waveSpan || window.getComputedStyle(button).display === 'none') return;
     
-    // Получение координат курсора относительно кнопки
     const rect = button.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
     
-    // Расчет диаметра волны
     const buttonWidth = button.offsetWidth;
     const buttonHeight = button.offsetHeight;
-    const diameter = Math.max(buttonWidth * 3, buttonHeight * 3);
-    
-    // Анимация волны
+    // Use a large fixed size or calculation like original example? Let's try large fixed size first for simplicity.
+    // const diameter = Math.max(buttonWidth * 3, buttonHeight * 3); 
+    const diameter = Math.max(buttonWidth, buttonHeight) * 2.5; // Ensure it covers the button
+
     console.log(`Applying styles: top: ${y}, left: ${x}, width: ${diameter}, height: ${diameter}`);
-    waveSpan.style.width = `${diameter}px`;
-    waveSpan.style.height = `${diameter}px`;
+    // --- ИЗМЕНЕНИЕ: Устанавливаем только top/left/width/height + opacity --- 
     waveSpan.style.left = `${x}px`;
     waveSpan.style.top = `${y}px`;
-    waveSpan.style.transform = 'translate(-50%, -50%) scale(1)'; // Explicitly set scale to 1
-    waveSpan.style.opacity = '1'; // Explicitly set opacity to 1
+    waveSpan.style.width = `${diameter}px`;
+    waveSpan.style.height = `${diameter}px`;
+    waveSpan.style.opacity = '1'; // Make visible instantly
+    // НЕ УСТАНАВЛИВАЕМ transform: scale(1)
     
     const waveColor = getWaveColor(button);
     waveSpan.style.backgroundColor = waveColor;
@@ -131,23 +132,23 @@ function handleMouseLeave(e) {
     const button = e.currentTarget;
     const waveSpan = button.querySelector('span');
     if (waveSpan) {
-        waveSpan.style.opacity = '0'; // Fade out
-        console.log('Opacity set to 0');
+        // --- ИЗМЕНЕНИЕ: Устанавливаем opacity 0, width/height вернутся через CSS transition --- 
+        waveSpan.style.opacity = '0'; // Hide instantly
+        waveSpan.style.width = '0'; // Trigger transition back to 0
+        waveSpan.style.height = '0';// Trigger transition back to 0
+        console.log('Opacity, Width, Height set to 0');
+
+        // --- УДАЛЯЕМ setTimeout --- 
+        // clearTimeout / setTimeout logic removed
         
-        // Reset transform and size after transition ends
-        // Use a timer that matches the transition duration (0.5s = 500ms)
-        setTimeout(() => {
-            // Check if the mouse is still outside the button before resetting
-            // This prevents resetting if the mouse quickly re-enters
-            if (!button.matches(':hover')) {
-                console.log('Resetting span transform and size');
-                waveSpan.style.transform = 'translate(-50%, -50%) scale(0)';
-                waveSpan.style.width = '0';
-                waveSpan.style.height = '0';
-            } else {
-                 console.log('Mouse re-entered, skipping reset');
-            }
-        }, 500); // Corresponds to 0.5s transition
+        // --- ДОБАВЛЯЕМ УСТАНОВКУ top/left как в оригинале --- 
+        const rect = button.getBoundingClientRect();
+        // Need pageX/pageY from event, but mouseleave doesn't guarantee useful coords always?
+        // Let's try setting based on last known position or center? Or skip this for now.
+        // Original code might have had issues if mouse moved fast.
+        // Let's just focus on hiding for now.
+         console.log('Span hidden, width/height transitioning to 0 via CSS');
+
     }
 }
 

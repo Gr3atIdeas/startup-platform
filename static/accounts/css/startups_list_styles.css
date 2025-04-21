@@ -341,8 +341,8 @@ body {
 }
 
 .startup-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+  /* transform: translateY(-5px); */
+  /* box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08); */
 }
 
 .startup-card-header {
@@ -395,7 +395,7 @@ body {
 }
 
 .startup-card:hover .startup-card-overlay {
-  opacity: 1;
+  /* opacity: 1; */
 }
 
 .startup-name {

@@ -36,8 +36,7 @@ body {
 }
 
 .black-theme footer.site-footer a:hover {
-  color: #08E5CF !important;
-  text-decoration: none;
+  color: #fff;
 }
 
 /* Общие стили для страницы инвестиций */
@@ -180,8 +179,7 @@ body {
 }
 
 .stat-value:hover {
-  transform: translateY(-3px);
-  background-color: rgba(255, 255, 255, 0.1);
+  text-decoration: underline;
 }
 
 .stat-value-simple {
@@ -350,8 +348,7 @@ body {
 }
 
 .investment-amount:hover {
-  transform: scale(1.05);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  border-color: #7B61FF;
 }
 
 /* Исправления для секции поиска в разделе "Мои стартапы" */
@@ -413,7 +410,7 @@ body {
 }
 
 .filter-btn:hover:not(.active) {
-  transform: translateY(-2px);
+  /* background-color: #e9ecef; */
 }
 
 .startups-grid {
@@ -451,7 +448,7 @@ body {
 }
 
 .startup-card:hover .startup-avatar {
-  transform: scale(1.1);
+  /* transform: scale(1.05); */
 }
 
 .startup-name {
@@ -471,8 +468,7 @@ body {
 }
 
 .startup-card:hover .startup-rating i {
-  color: #FFD700;
-  transform: scale(1.2);
+  /* color: #fbbc05; */
 }
 
 .comment-icon {
@@ -483,8 +479,7 @@ body {
 }
 
 .startup-card:hover .comment-icon {
-  transform: scale(1.2) rotate(15deg);
-  color: #08E5CF;
+  /* color: #7B61FF; */
 }
 
 .startup-details {
@@ -554,8 +549,7 @@ body {
 }
 
 .show-more-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  /* background-color: var(--accent-hover); */
 }
 
 .show-more-btn i {
@@ -563,7 +557,7 @@ body {
 }
 
 .show-more-btn:hover i {
-  transform: scale(1.2);
+  /* transform: translateY(2px); */
 }
 
 /* Отображение сообщения для неавторизованных пользователей */
@@ -601,7 +595,7 @@ body {
 }
 
 .access-button:hover {
-  background-color: #6550D8;
+  /* background-color: #6551D9; */
 }
 
 /* Анимации */
