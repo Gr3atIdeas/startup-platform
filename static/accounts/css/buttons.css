@@ -126,4 +126,33 @@ footer a.btn {
   :root {
     --btn-padding: 0.3em 1em;
   }
+}
+
+/* Ensure button content is above the position-aware effect */
+button > *, 
+.btn > *, 
+input[type="submit"] > *, 
+input[type="button"] > *, 
+.catalog-search-btn > *, 
+.show-button > *, 
+.detail-button > *, 
+.join-button > *, 
+.login-btn > *, 
+.create-startup-btn > *, 
+.logout-btn > *, 
+.nav-menu a > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Specific rule for direct text nodes or simple content is harder, 
+   but the above should cover common cases like icons <i> or nested <span> */
+/* Ensure the ::before/::after pseudo-elements don't interfere either */
+button::before, button::after,
+.btn::before, .btn::after,
+.join-button::before, .join-button::after,
+.login-btn::before, .login-btn::after,
+.create-startup-btn::before, .create-startup-btn::after,
+.logout-btn::before, .logout-btn::after {
+    z-index: 1; /* Ensure pseudo-elements are also above the wave */
 } 

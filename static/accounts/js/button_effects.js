@@ -78,7 +78,7 @@ function initPositionAware() {
         waveSpan.style.transform = 'translate(-50%, -50%) scale(0)';
         waveSpan.style.opacity = '0';
         waveSpan.style.pointerEvents = 'none';
-        waveSpan.style.zIndex = '-1'; // Ensure it's behind content
+        waveSpan.style.zIndex = '0';
         waveSpan.style.transition = 'width 0.5s ease-out, height 0.5s ease-out, opacity 0.5s ease-out, transform 0.5s ease-out';
         // --- КОНЕЦ СОЗДАНИЯ И СТИЛИЗАЦИИ ---
 
@@ -110,7 +110,7 @@ function handleMouseEnter(e) {
     // Расчет диаметра волны
     const buttonWidth = button.offsetWidth;
     const buttonHeight = button.offsetHeight;
-    const diameter = Math.max(buttonWidth * 2.5, buttonHeight * 2.5);
+    const diameter = Math.max(buttonWidth * 3, buttonHeight * 3);
     
     // Анимация волны
     console.log(`Applying styles: top: ${y}, left: ${x}, width: ${diameter}, height: ${diameter}`);
