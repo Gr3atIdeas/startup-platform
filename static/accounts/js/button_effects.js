@@ -71,7 +71,4 @@ $(function() {
       }, 100);
     }
   });
-});
-
-// Экспортируем функцию для возможности вызова из других скриптов
-window.applyPositionAwareEffect = applyPositionAwareEffect; 
+}); 

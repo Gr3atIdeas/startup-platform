@@ -9,7 +9,7 @@ body {
   padding-top: 60px; /* Высота хедера */
   background-image: url('/static/accounts/images/background.webp');
   background-size: cover;
-  background-position: center;
+  background-position: top center;
   background-attachment: fixed;
 }
 
@@ -19,8 +19,8 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 20px 60px;
-  background-color: #000000;
-  border-bottom: 1px solid #333;
+  background-color: transparent;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   height: 68px;
   position: fixed;
   top: 0;
@@ -96,7 +96,7 @@ body {
 
 .nav-menu a:hover {
   color: #FFFFFF;
-  background-color: #333333;
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .nav-menu a.active {
@@ -203,7 +203,7 @@ body {
   font-size: 14px;
   outline: none;
   box-sizing: border-box;
-  background-color: #FFFFFF;
+  background-color: rgba(255, 255, 255, 0.9);
 }
 
 .search-icon {

@@ -39,7 +39,7 @@
       background-color: var(--background-light);
       background-image: url('{% static "accounts/images/background.webp" %}');
       background-size: cover;
-      background-position: center;
+      background-position: top center;
       background-attachment: fixed;
       color: var(--text-dark);
       display: flex;
@@ -62,7 +62,7 @@
       align-items: center;
       padding: 0 20px;
       height: 68px;
-      background-color: #000000;
+      background-color: transparent;
       max-width: 100%;
       width: 100%;
       position: fixed;
@@ -70,7 +70,7 @@
       left: 0;
       right: 0;
       z-index: 1000;
-      border-bottom: 1px solid #333;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       box-sizing: border-box;
       transition: all 0.3s ease;
       animation: fadeInHeader 0.5s ease;
@@ -112,7 +112,7 @@
       font-size: 14px;
       outline: none;
       box-sizing: border-box;
-      background-color: #FFFFFF !important;
+      background-color: rgba(255, 255, 255, 0.9) !important;
     }
     
     /* Навигационное меню */
@@ -134,7 +134,7 @@
     }
     
     .nav-menu a:hover {
-      background-color: #333333;
+      background-color: rgba(255, 255, 255, 0.1);
     }
     
     .nav-menu a.active {
@@ -170,7 +170,7 @@
     
     .header-scrolled {
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      background-color: rgba(0, 0, 0, 0.95);
+      background-color: rgba(0, 0, 0, 0.8);
     }
     
     /* Адаптивность */
@@ -236,7 +236,7 @@
 <body>
   <header class="header" id="main-header">
     <a href="{% url 'home' %}" class="header-logo">
-      <img src="{% static 'accounts/images/black_logo_header.svg' %}" alt="GREAT IDEAS" class="header-logo-img">
+      <img src="{% static 'accounts/images/white_logo_header.svg' %}" alt="GREAT IDEAS" class="header-logo-img">
     </a>
     
     <div class="search-container">
@@ -280,7 +280,7 @@
   </main>
   
   <footer class="site-footer">
-    <div class="footer-background" style="background-image: url('{% static "accounts/images/layout/footer_main_img.webp" %}');"></div>
+    <div class="footer-background" style="background-image: url('{% static "accounts/images/layout/footer_main_img.webp" %}')"></div>
     
     <div class="footer-logo">GREAT IDEAS</div>
     
@@ -353,10 +353,10 @@
       function handleScroll() {
         if (window.pageYOffset > 20) {
           header.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.1)';
-          header.style.backgroundColor = 'rgba(0, 0, 0, 0.95)';
+          header.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
         } else {
           header.style.boxShadow = 'none';
-          header.style.backgroundColor = '#000000';
+          header.style.backgroundColor = 'transparent';
         }
       }
       
