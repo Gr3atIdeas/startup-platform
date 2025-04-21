@@ -29,15 +29,21 @@ body {
 }
 
 .logo-img {
-  width: 40px;
-  height: 40px;
+  width: 32px; /* Уменьшен размер с 40px */
+  height: 32px; /* Уменьшен размер с 40px */
 }
 
 .logo-text {
   font-family: 'Unbounded', sans-serif;
   font-weight: 500;
-  font-size: 24px;
+  font-size: 20px; /* Уменьшен размер с 24px */
   color: #000000;
+}
+
+/* Уменьшаем размер логотипа в хедере */
+.header-logo-img {
+  max-width: 100px; /* Уменьшенный размер логотипа */
+  height: auto;
 }
 
 /* Навигационное меню */
@@ -99,9 +105,9 @@ body {
   justify-content: center;
   padding: 0 16px;
   height: 36px;
-  background-color: #0057B7;
-  color: #FFFFFF;
-  border: none;
+  background-color: #FFFFFF;
+  color: #0057B7;
+  border: 1px solid #0057B7;
   border-radius: 6px;
   font-family: 'Unbounded', sans-serif;
   font-weight: 500;
@@ -114,7 +120,8 @@ body {
 }
 
 .create-startup-btn:hover {
-  background-color: #0046A1;
+  background-color: #0057B7;
+  color: #FFFFFF;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 87, 183, 0.3);
 }
@@ -133,7 +140,7 @@ body {
   height: 36px;
   background-color: #FFEF2B;
   color: #000000;
-  border: none;
+  border: 1px solid #FFEF2B;
   border-radius: 6px;
   font-family: 'Unbounded', sans-serif;
   font-weight: 500;
@@ -154,16 +161,14 @@ body {
   width: 0;
   height: 0;
   border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: #FFEF2B;
   transform: translate(-50%, -50%);
   transition: width 0.3s, height 0.3s;
   z-index: -1;
 }
 
 .login-btn:hover {
-  background-color: #FFE800;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(255, 239, 43, 0.3);
+  color: #000000;
 }
 
 .login-btn:active {
@@ -201,7 +206,10 @@ body {
     height: 70px;
   }
   .logo-text {
-    font-size: 20px;
+    font-size: 18px;
+  }
+  .header-logo-img {
+    max-width: 100px;
   }
   .nav-menu {
     display: none;

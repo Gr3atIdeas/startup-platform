@@ -57,6 +57,21 @@
   --button-padding-y: 10px;
   --button-padding-x: 20px;
   --button-line-height: 1.5;
+  --primary-btn-bg: #FFFFFF;
+  --primary-btn-color: #0057B7;
+  --primary-btn-border: #0057B7;
+  --primary-btn-hover-bg: #0057B7;
+  --primary-btn-hover-color: #FFFFFF;
+  --secondary-btn-bg: #FFFFFF;
+  --secondary-btn-color: #000000;
+  --secondary-btn-border: #FFEF2B;
+  --secondary-btn-hover-bg: #FFEF2B;
+  --secondary-btn-hover-color: #000000;
+  --danger-btn-bg: #FFFFFF;
+  --danger-btn-color: #DC2626;
+  --danger-btn-border: #DC2626;
+  --danger-btn-hover-bg: #DC2626;
+  --danger-btn-hover-color: #FFFFFF;
 }
 
 .button-container {
@@ -912,4 +927,110 @@ input[type="submit"]:disabled, input[type="button"]:disabled {
 
 .btn-pulse {
   animation: pulse 2s infinite;
+}
+
+/* Базовый стиль для всех кнопок */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 20px;
+  min-width: 100px;
+  height: 40px;
+  background-color: var(--primary-btn-bg);
+  color: var(--primary-btn-color);
+  border: 1px solid var(--primary-btn-border);
+  border-radius: 6px;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Эффект Position Aware для всех кнопок */
+.btn span {
+  position: absolute;
+  display: block;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background-color: var(--primary-btn-hover-bg);
+  transform: translate(-50%, -50%);
+  transition: width 0.3s, height 0.3s;
+  z-index: -1;
+}
+
+.btn:hover {
+  color: var(--primary-btn-hover-color);
+}
+
+/* Основная синяя кнопка */
+.btn-primary {
+  background-color: var(--primary-btn-bg);
+  color: var(--primary-btn-color);
+  border: 1px solid var(--primary-btn-border);
+}
+
+.btn-primary span {
+  background-color: var(--primary-btn-hover-bg);
+}
+
+.btn-primary:hover {
+  color: var(--primary-btn-hover-color);
+}
+
+/* Вторичная желтая кнопка */
+.btn-secondary {
+  background-color: var(--secondary-btn-bg);
+  color: var(--secondary-btn-color);
+  border: 1px solid var(--secondary-btn-border);
+}
+
+.btn-secondary span {
+  background-color: var(--secondary-btn-hover-bg);
+}
+
+.btn-secondary:hover {
+  color: var(--secondary-btn-hover-color);
+}
+
+/* Красная опасная кнопка */
+.btn-danger {
+  background-color: var(--danger-btn-bg);
+  color: var(--danger-btn-color);
+  border: 1px solid var(--danger-btn-border);
+}
+
+.btn-danger span {
+  background-color: var(--danger-btn-hover-bg);
+}
+
+.btn-danger:hover {
+  color: var(--danger-btn-hover-color);
+}
+
+/* Маленькая кнопка */
+.btn-sm {
+  height: 32px;
+  padding: 6px 16px;
+  min-width: 80px;
+  font-size: 12px;
+}
+
+/* Большая кнопка */
+.btn-lg {
+  height: 48px;
+  padding: 12px 24px;
+  min-width: 120px;
+  font-size: 16px;
+}
+
+/* Кнопка на всю ширину контейнера */
+.btn-block {
+  display: flex;
+  width: 100%;
 } 
