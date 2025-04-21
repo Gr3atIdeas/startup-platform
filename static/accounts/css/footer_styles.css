@@ -136,7 +136,7 @@
   font-weight: 500;
   font-size: 14px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: color 0.3s ease;
   position: relative;
   overflow: hidden;
   display: inline-flex;
@@ -159,10 +159,19 @@
 
 .join-button:hover {
   color: #000000;
+  transform: none;
+  box-shadow: none;
+}
+
+.join-button:active {
+  transform: none;
+  box-shadow: none;
 }
 
 .join-button i {
   margin-right: 8px;
+  position: relative;
+  z-index: 2;
 }
 
 /* Менюшки в футере */

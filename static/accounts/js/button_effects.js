@@ -45,6 +45,10 @@ function applyPositionAwareEffect() {
         if (shouldChangeTextColor) {
           this.style.color = '#FFFFFF';
         }
+        
+        // Убираем трансформации и тени, если они заданы
+        this.style.transform = 'none';
+        this.style.boxShadow = 'none';
       }
     });
     
@@ -69,6 +73,10 @@ function applyPositionAwareEffect() {
         if (shouldChangeTextColor) {
           this.style.color = '#000000';
         }
+        
+        // Убираем трансформации и тени
+        this.style.transform = 'none';
+        this.style.boxShadow = 'none';
       }
     });
     

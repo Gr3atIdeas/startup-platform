@@ -110,6 +110,7 @@ body {
   border-top-right-radius: 32px;
   border-bottom-right-radius: 32px;
   overflow: hidden;
+  transition: color 0.3s ease;
 }
 
 .catalog-search-btn span {
@@ -126,6 +127,13 @@ body {
 
 .catalog-search-btn:hover {
   color: #FFFFFF;
+  transform: none;
+  box-shadow: none;
+}
+
+.catalog-search-btn:active {
+  transform: none;
+  box-shadow: none;
 }
 
 /* Боковая панель с фильтрами */
@@ -320,7 +328,7 @@ body {
   font-weight: 500;
   font-size: 14px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: color 0.3s ease;
   position: relative;
   overflow: hidden;
 }
@@ -339,6 +347,13 @@ body {
 
 .show-button:hover {
   color: #FFFFFF;
+  transform: none;
+  box-shadow: none;
+}
+
+.show-button:active {
+  transform: none;
+  box-shadow: none;
 }
 
 /* Область с карточками стартапов */
@@ -548,9 +563,10 @@ body {
   font-weight: 500;
   font-size: 14px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: color 0.3s ease;
   position: relative;
   overflow: hidden;
+  width: 100%;
 }
 
 .detail-button span {
@@ -567,6 +583,13 @@ body {
 
 .detail-button:hover {
   color: #FFFFFF;
+  transform: none;
+  box-shadow: none;
+}
+
+.detail-button:active {
+  transform: none;
+  box-shadow: none;
 }
 
 .investor-info {

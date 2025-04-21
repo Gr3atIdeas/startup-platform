@@ -26,24 +26,33 @@ body {
   align-items: center;
   gap: 10px;
   text-decoration: none;
+  padding: 5px 0;
+}
+
+.header-logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  padding: 5px 0;
 }
 
 .logo-img {
-  width: 28px; /* Уменьшен размер с 32px */
-  height: 28px; /* Уменьшен размер с 32px */
+  width: 28px;
+  height: 28px;
 }
 
 .logo-text {
   font-family: 'Unbounded', sans-serif;
   font-weight: 500;
-  font-size: 18px; /* Уменьшен размер с 20px */
+  font-size: 18px;
   color: #000000;
 }
 
 /* Уменьшаем размер логотипа в хедере */
 .header-logo-img {
-  max-width: 80px; /* Уменьшенный размер логотипа */
+  max-width: 80px;
   height: auto;
+  margin: 5px 0;
 }
 
 /* Навигационное меню */
@@ -133,6 +142,13 @@ body {
 
 .create-startup-btn:hover {
   color: #FFFFFF;
+  transform: none;
+  box-shadow: none;
+}
+
+.create-startup-btn:active {
+  transform: none;
+  box-shadow: none;
 }
 
 /* Кнопка входа */
@@ -173,11 +189,13 @@ body {
 
 .login-btn:hover {
   color: #000000;
+  transform: none;
+  box-shadow: none;
 }
 
 .login-btn:active {
-  transform: translateY(0);
-  box-shadow: 0 2px 4px rgba(255, 239, 43, 0.2);
+  transform: none;
+  box-shadow: none;
 }
 
 /* Мобильное меню */

@@ -497,15 +497,16 @@ button, .btn, input[type="submit"], input[type="button"],
   line-height: var(--button-line-height);
   text-align: center;
   text-decoration: none;
-  border-radius: var(--button-border-radius);
+  border-radius: 6px;
   font-weight: 500;
   cursor: pointer;
-  transition: var(--button-transition);
+  transition: color 0.3s ease;
   background-color: #FFFFFF;
   color: #000000;
   border: 1px solid var(--button-primary-color);
   outline: none;
   overflow: hidden;
+  font-family: 'Unbounded', sans-serif;
 }
 
 /* Основные стили для эффекта Position Aware */
@@ -541,6 +542,13 @@ button *, .btn *, input[type="submit"] *, input[type="button"] *,
 
 .btn-primary:hover, .create-startup-btn:hover, .catalog-search-btn:hover, .detail-button:hover, .show-button:hover {
   color: #FFFFFF;
+  transform: none;
+  box-shadow: none;
+}
+
+.btn-primary:active, .create-startup-btn:active, .catalog-search-btn:active, .detail-button:active, .show-button:active {
+  transform: none;
+  box-shadow: none;
 }
 
 /* Вторичные кнопки (желтые) */
@@ -557,15 +565,25 @@ button *, .btn *, input[type="submit"] *, input[type="button"] *,
 
 .btn-secondary:hover, .login-btn:hover, .join-button:hover {
   color: #000000;
+  transform: none;
+  box-shadow: none;
+}
+
+.btn-secondary:active, .login-btn:active, .join-button:active {
+  transform: none;
+  box-shadow: none;
 }
 
 /* Кнопка логина */
 .login-btn {
   text-decoration: none;
+  background-color: #FFFFFF;
+  color: #000000;
+  border: 1px solid #FFEF2B;
 }
 
 .login-btn span {
-  background: rgba(255, 239, 43, 0.2);
+  background-color: #FFEF2B;
 }
 
 /* Кнопка показать больше */
