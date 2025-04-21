@@ -140,38 +140,57 @@ function initPositionAware() {
 }
 
 function handleMouseEnter(e) {
+    console.log('Mouse Enter', e.currentTarget);
     const button = e.currentTarget;
     const waveSpan = button.querySelector('span');
-    if (!waveSpan) return;
+    if (!waveSpan || window.getComputedStyle(button).display === 'none') return;
     
     // Получение координат курсора относительно кнопки
     const rect = button.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
     
-    // Расчет диаметра волны, чтобы покрыть всю кнопку
+    // Расчет диаметра волны
     const buttonWidth = button.offsetWidth;
     const buttonHeight = button.offsetHeight;
-    const diameter = Math.max(buttonWidth * 2.5, buttonHeight * 2.5); // Increased multiplier slightly
+    const diameter = Math.max(buttonWidth * 2.5, buttonHeight * 2.5);
     
     // Анимация волны
+    console.log(`Applying styles: top: ${y}, left: ${x}, width: ${diameter}, height: ${diameter}`);
     waveSpan.style.width = `${diameter}px`;
     waveSpan.style.height = `${diameter}px`;
     waveSpan.style.left = `${x}px`;
     waveSpan.style.top = `${y}px`;
-    waveSpan.style.transform = 'translate(-50%, -50%) scale(1)'; // Scale up
+    waveSpan.style.transform = 'translate(-50%, -50%) scale(1)'; // Explicitly set scale to 1
+    waveSpan.style.opacity = '1'; // Explicitly set opacity to 1
     
-    // Настройка цвета и анимации в зависимости от типа кнопки
     const waveColor = getWaveColor(button);
     waveSpan.style.backgroundColor = waveColor;
-    
-    waveSpan.style.opacity = '1'; // Make visible
+    console.log('Styles applied');
 }
 
 function handleMouseLeave(e) {
-    const waveSpan = e.currentTarget.querySelector('span');
+    console.log('Mouse Leave', e.currentTarget);
+    const button = e.currentTarget;
+    const waveSpan = button.querySelector('span');
     if (waveSpan) {
         waveSpan.style.opacity = '0'; // Fade out
+        console.log('Opacity set to 0');
+        
+        // Reset transform and size after transition ends
+        // Use a timer that matches the transition duration (0.5s = 500ms)
+        setTimeout(() => {
+            // Check if the mouse is still outside the button before resetting
+            // This prevents resetting if the mouse quickly re-enters
+            if (!button.matches(':hover')) {
+                console.log('Resetting span transform and size');
+                waveSpan.style.transform = 'translate(-50%, -50%) scale(0)';
+                waveSpan.style.width = '0';
+                waveSpan.style.height = '0';
+            } else {
+                 console.log('Mouse re-entered, skipping reset');
+            }
+        }, 500); // Corresponds to 0.5s transition
     }
 }
 
