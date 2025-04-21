@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function() {
 function initPositionAware() {
     console.log('Running initPositionAware');
     
-    const buttons = document.querySelectorAll('button, .btn, .button, input[type="submit"], input[type="button"], .catalog-search-btn, .show-button, .detail-button, .join-button, .login-btn, .create-startup-btn, .logout-btn, .nav-menu a');
+    const buttons = document.querySelectorAll('button, .btn, input[type="submit"], input[type="button"], .catalog-search-btn, .show-button, .detail-button, .join-button, .login-btn, .create-startup-btn, .logout-btn, .nav-menu a');
     
     buttons.forEach(button => {
         // Пропускаем уже обработанные кнопки
@@ -75,12 +75,12 @@ function initPositionAware() {
         waveSpan.style.width = '0';
         waveSpan.style.height = '0';
         waveSpan.style.borderRadius = '50%';
-        waveSpan.style.transform = 'translate(-50%, -50%)'; // NO scale(0) here initially
-        waveSpan.style.opacity = '0'; // Initially hidden
+        waveSpan.style.transform = 'translate(-50%, -50%) scale(0)'; // Restore scale(0)
+        waveSpan.style.opacity = '0'; // Start hidden
         waveSpan.style.pointerEvents = 'none';
         waveSpan.style.zIndex = '0'; 
-        // --- ИЗМЕНЕНИЕ TRANSITION: Только width и height --- 
-        waveSpan.style.transition = 'width 0.4s ease-in-out, height 0.4s ease-in-out'; // Match example
+        // --- ВОССТАНАВЛИВАЕМ ПОЛНЫЙ TRANSITION --- 
+        waveSpan.style.transition = 'width 0.4s ease-in-out, height 0.4s ease-in-out, opacity 0.4s ease-in-out, transform 0.4s ease-in-out'; // Restore full transition
         // --- КОНЕЦ СОЗДАНИЯ И СТИЛИЗАЦИИ ---
 
         // Добавляем новый span в кнопку
@@ -97,63 +97,56 @@ function initPositionAware() {
     });
 }
 
-function handleMouseEnter(event) {
-    const button = event.currentTarget;
+function handleMouseEnter(e) {
+    console.log('Mouse Enter', e.currentTarget);
+    const button = e.currentTarget;
+    const waveSpan = button.querySelector('span');
+    if (!waveSpan || window.getComputedStyle(button).display === 'none') return;
+    
     const rect = button.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
     
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
+    const buttonWidth = button.offsetWidth;
+    const buttonHeight = button.offsetHeight;
+    const diameter = Math.max(buttonWidth * 3, buttonHeight * 3); 
     
-    const size = Math.max(rect.width, rect.height) * 2;
-    
-    // Создаем волну
-    const wave = document.createElement('span');
-    wave.className = 'wave';
-    wave.style.left = `${x}px`;
-    wave.style.top = `${y}px`;
-    wave.style.width = `${size}px`;
-    wave.style.height = `${size}px`;
-    wave.style.backgroundColor = getWaveColor(button);
-    
-    // Удаляем существующие волны
-    const existingWaves = button.querySelectorAll('.wave');
-    existingWaves.forEach(wave => wave.remove());
-    
-    // Добавляем новую волну
-    button.appendChild(wave);
-    
-    // Изменяем цвет текста при наведении
-    if (button.classList.contains('login-btn') || button.classList.contains('join-button')) {
-        button.style.color = '#000000'; // Черный для кнопок login-btn и join-button
-    } else {
-        button.style.color = '#ffffff'; // Белый для всех остальных кнопок
-    }
-    
-    // Активируем анимацию
-    setTimeout(() => {
-        wave.style.transform = 'translate(-50%, -50%) scale(1)';
-        wave.style.opacity = '1';
-    }, 10);
+    // Apply wave styles
+    const waveColor = getWaveColor(button);
+    waveSpan.style.backgroundColor = waveColor;
+    waveSpan.style.left = `${x}px`;
+    waveSpan.style.top = `${y}px`;
+    waveSpan.style.width = `${diameter}px`;
+    waveSpan.style.height = `${diameter}px`;
+    waveSpan.style.transform = 'translate(-50%, -50%) scale(1)'; // Restore scale(1)
+    waveSpan.style.opacity = '1'; 
+
+    // --- УПРАВЛЕНИЕ CSS КЛАССОМ ДЛЯ ЦВЕТА ТЕКСТА --- 
+    button.classList.add('wave-active');
+    console.log('Wave styles applied, wave-active class added');
 }
 
-function handleMouseLeave(event) {
-    const button = event.currentTarget;
-    const waves = button.querySelectorAll('.wave');
-    
-    // Анимируем скрытие волн
-    waves.forEach(wave => {
-        wave.style.opacity = '0';
-        setTimeout(() => {
-            wave.remove();
-        }, 500); // Время, соответствующее transition в CSS
-    });
-    
-    // Возвращаем исходный цвет текста
-    button.style.color = '';
+function handleMouseLeave(e) {
+    console.log('Mouse Leave', e.currentTarget);
+    const button = e.currentTarget;
+    const waveSpan = button.querySelector('span');
+    if (waveSpan) {
+        // Hide wave via transition
+        waveSpan.style.opacity = '0'; 
+        waveSpan.style.transform = 'translate(-50%, -50%) scale(0)'; // Restore scale(0)
+        // Width/Height will reset after opacity/transform transition?
+        // Maybe reset width/height after a delay similar to original idea?
+        // Let's try resetting them immediately too.
+        waveSpan.style.width = '0'; 
+        waveSpan.style.height = '0';
+
+        // --- УПРАВЛЕНИЕ CSS КЛАССОМ ДЛЯ ЦВЕТА ТЕКСТА --- 
+        button.classList.remove('wave-active');
+        console.log('Wave hidden, wave-active class removed');
+    }
 }
 
 function handleTouchStart(e) {
-    // Basic touch handling - can be improved
     e.preventDefault(); 
     const touch = e.touches[0];
     const button = e.currentTarget;
@@ -196,25 +189,31 @@ function handleTouchStart(e) {
     waveSpan.style.transition = 'width 0.6s ease-out, height 0.6s ease-out, opacity 0.6s ease-out, transform 0.6s ease-out';
     waveSpan.style.opacity = '1';
     
-    // Скрытие волны через 800мс
+    // --- ДОБАВИТЬ УПРАВЛЕНИЕ КЛАССОМ --- 
+    button.classList.add('wave-active');
+
+    // Hide wave after delay
     setTimeout(() => {
-        waveSpan.style.opacity = '0';
-        // Optional reset
-        setTimeout(() => {
-            if (waveSpan.style.opacity === '0') {
-                waveSpan.style.transform = 'translate(-50%, -50%) scale(0)';
-                waveSpan.style.width = '0';
-                waveSpan.style.height = '0';
-            }
-        }, 600); // Match touch transition duration
-    }, 800);
+        if (waveSpan) {
+            waveSpan.style.opacity = '0';
+            waveSpan.style.transform = 'translate(-50%, -50%) scale(0)';
+            waveSpan.style.width = '0';
+            waveSpan.style.height = '0';
+            // --- УБРАТЬ КЛАСС ПОСЛЕ АНИМАЦИИ --- 
+            setTimeout(() => {
+                button.classList.remove('wave-active');
+            }, 400); 
+        }
+    }, 600); // Start hiding slightly earlier than original 800?
 }
 
 // Helper function for wave color
 function getWaveColor(button) {
     if (button.classList.contains('login-btn') || button.classList.contains('join-button')) {
-        return '#ffef2b'; // Желтый цвет для кнопок login-btn и join-button
+        // Исключения: желтый цвет
+        return '#ffef2b'; 
     } else {
-        return '#004e9f'; // Синий цвет для всех остальных кнопок
+        // Стандартный случай: синий цвет
+        return '#004e9f'; 
     }
 } 
