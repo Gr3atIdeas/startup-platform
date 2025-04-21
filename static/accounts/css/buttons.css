@@ -25,7 +25,7 @@
   --yellow-color: #FFEF2B;
 }
 
-/* Общие стили для всех кнопок - базовые без эффектов */
+/* Общие стили для всех кнопок - базовые */
 button, .btn, input[type="submit"], input[type="button"], 
 .catalog-search-btn, .show-button, .detail-button, 
 .join-button, .login-btn, .create-startup-btn, .logout-btn, .nav-menu a {
@@ -33,21 +33,21 @@ button, .btn, input[type="submit"], input[type="button"],
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: var(--btn-padding, 0.5em 1.5em); /* Default padding */
-  border-radius: var(--btn-border-radius, 8px); /* Default radius */
+  padding: var(--btn-padding, 0.5em 1.5em); 
+  border-radius: var(--btn-border-radius, 8px); 
   font-family: 'Unbounded', sans-serif;
   font-size: 16px;
   font-weight: 500;
   text-align: center;
   text-decoration: none;
   cursor: pointer;
-  overflow: hidden; /* Important for effect */
+  overflow: hidden; 
   border: 1px solid #004e9f; /* Default blue border */
   outline: none;
   background-color: #ffffff; /* Default white background */
   color: #000000; /* Default black text */
-  z-index: 1; /* Ensure button is above default background */
-  /* transition: var(--btn-transition, all 0.3s ease); Removed to prevent conflicts */
+  z-index: 1; 
+  transition: color 0.2s ease-in-out; /* Add transition for text color */
 }
 
 /* Стили для кнопок меню навигации */
@@ -84,16 +84,16 @@ footer a.btn {
 
 /* Стили для кнопки присоединения */
 .join-button {
-  /* background-color: var(--accent-color); */ /* Use default white */
-  color: #000000; /* Ensure black text */
-  border-color: #004e9f; /* Default blue border */
+  /* background-color: var(--accent-color); */ 
+  color: #000000; 
+  border-color: #ffef2b; /* Exception: Yellow border */
 }
 
 /* Стили для кнопки входа */
 .login-btn {
-  /* background-color: var(--yellow-color); */ /* Use default white */
-  color: #000000; /* Ensure black text */
-  border-color: #FFEF2B; /* Exception: Yellow border */
+  /* background-color: var(--yellow-color); */ 
+  color: #000000; 
+  border-color: #ffef2b; /* Exception: Yellow border */
 }
 
 /* Стили для кнопки создания стартапа */
@@ -123,7 +123,7 @@ footer a.btn {
   }
 }
 
-/* Ensure button content is above the position-aware effect AND blends */
+/* Button content: remove mix-blend-mode */
 button > *,
 .btn > *,
 input[type="submit"] > *,
@@ -138,9 +138,7 @@ input[type="button"] > *,
 .nav-menu a > * {
   position: relative;
   z-index: 1;
-  mix-blend-mode: difference; /* Key for automatic color inversion */
-  /* Ensure content that should not blend (like maybe specific icons?) 
-     is wrapped or styled separately without blend mode if needed */
+  /* mix-blend-mode: difference; */ /* REMOVED */
 }
 
 /* Ensure pseudo-elements are also above the wave but DON'T blend */

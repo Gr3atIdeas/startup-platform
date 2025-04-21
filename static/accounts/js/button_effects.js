@@ -109,22 +109,26 @@ function handleMouseEnter(e) {
     
     const buttonWidth = button.offsetWidth;
     const buttonHeight = button.offsetHeight;
-    // Use a large fixed size or calculation like original example? Let's try large fixed size first for simplicity.
-    // const diameter = Math.max(buttonWidth * 3, buttonHeight * 3); 
-    const diameter = Math.max(buttonWidth, buttonHeight) * 2.5; // Ensure it covers the button
-
-    console.log(`Applying styles: top: ${y}, left: ${x}, width: ${diameter}, height: ${diameter}`);
-    // --- ИЗМЕНЕНИЕ: Устанавливаем только top/left/width/height + opacity --- 
+    const diameter = Math.max(buttonWidth * 3, buttonHeight * 3); 
+    
+    // Apply wave styles
+    const waveColor = getWaveColor(button);
+    waveSpan.style.backgroundColor = waveColor;
     waveSpan.style.left = `${x}px`;
     waveSpan.style.top = `${y}px`;
     waveSpan.style.width = `${diameter}px`;
     waveSpan.style.height = `${diameter}px`;
-    waveSpan.style.opacity = '1'; // Make visible instantly
-    // НЕ УСТАНАВЛИВАЕМ transform: scale(1)
-    
-    const waveColor = getWaveColor(button);
-    waveSpan.style.backgroundColor = waveColor;
-    console.log('Styles applied');
+    waveSpan.style.opacity = '1'; 
+
+    // --- УПРАВЛЕНИЕ ЦВЕТОМ ТЕКСТА --- 
+    if (button.classList.contains('login-btn') || button.classList.contains('join-button')) {
+        // Исключения: оставляем черный текст
+        button.style.color = '#000000';
+    } else {
+        // Стандартный случай: делаем текст белым
+        button.style.color = '#ffffff';
+    }
+    console.log('Styles applied, text color set');
 }
 
 function handleMouseLeave(e) {
@@ -132,23 +136,15 @@ function handleMouseLeave(e) {
     const button = e.currentTarget;
     const waveSpan = button.querySelector('span');
     if (waveSpan) {
-        // --- ИЗМЕНЕНИЕ: Устанавливаем opacity 0, width/height вернутся через CSS transition --- 
-        waveSpan.style.opacity = '0'; // Hide instantly
-        waveSpan.style.width = '0'; // Trigger transition back to 0
-        waveSpan.style.height = '0';// Trigger transition back to 0
-        console.log('Opacity, Width, Height set to 0');
-
-        // --- УДАЛЯЕМ setTimeout --- 
-        // clearTimeout / setTimeout logic removed
+        // Hide wave
+        waveSpan.style.opacity = '0'; 
+        waveSpan.style.width = '0'; 
+        waveSpan.style.height = '0';
         
-        // --- ДОБАВЛЯЕМ УСТАНОВКУ top/left как в оригинале --- 
-        const rect = button.getBoundingClientRect();
-        // Need pageX/pageY from event, but mouseleave doesn't guarantee useful coords always?
-        // Let's try setting based on last known position or center? Or skip this for now.
-        // Original code might have had issues if mouse moved fast.
-        // Let's just focus on hiding for now.
-         console.log('Span hidden, width/height transitioning to 0 via CSS');
-
+        // --- СБРОС ЦВЕТА ТЕКСТА --- 
+        button.style.color = '#000000'; // Reset text color to default black
+        
+        console.log('Wave hidden, text color reset');
     }
 }
 
@@ -212,35 +208,11 @@ function handleTouchStart(e) {
 
 // Helper function for wave color
 function getWaveColor(button) {
-    if (button.classList.contains('login-btn')) {
-        // Exception: Yellow for login button
-        return '#FFEF2B'; 
+    if (button.classList.contains('login-btn') || button.classList.contains('join-button')) {
+        // Исключения: желтый цвет
+        return '#ffef2b'; 
     } else {
-        // Default: Blue for all other buttons
+        // Стандартный случай: синий цвет
         return '#004e9f'; 
     }
-    /* Remove old logic
-    if (button.classList.contains('login-btn')) {
-        return 'rgba(255, 239, 43, 0.6)'; // Adjusted alpha
-    } else if (button.classList.contains('create-startup-btn')) {
-        return 'rgba(123, 97, 255, 0.6)'; // Adjusted alpha
-    } else if (button.classList.contains('logout-btn')) {
-        return 'rgba(255, 107, 107, 0.6)'; // Adjusted alpha
-    } else if (button.classList.contains('active') || button.closest('.nav-menu a.active')) { // Check parent for nav menu
-        return 'rgba(123, 97, 255, 0.2)';
-    } else if (button.classList.contains('show-button') || 
-               button.classList.contains('detail-button') ||
-               button.classList.contains('catalog-search-btn') ||
-               button.classList.contains('join-button') || // Added join button
-               button.classList.contains('action-button') || // Added action buttons
-               button.classList.contains('invest-button') || // Added invest button
-               button.classList.contains('confirm-btn') || // Added confirm button
-               button.classList.contains('submit-btn') || // Added submit button
-               button.type === 'submit') { // Added generic submit buttons
-        return 'rgba(123, 97, 255, 0.4)'; // Accent color wave
-    } else {
-        // Default wave color (e.g., for simple buttons or links)
-        return 'rgba(255, 255, 255, 0.2)'; // White wave
-    }
-    */
 } 
