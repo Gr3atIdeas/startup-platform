@@ -251,7 +251,7 @@
         {% if user.role.role_name == 'moderator' %}
           <a href="{% url 'moderator_dashboard' %}" {% if request.resolver_match.url_name == 'moderator_dashboard' %}class="active"{% endif %}>Заявки</a>
         {% endif %}
-        <a href="{% url 'edit_profile' %}" class="login-btn">
+        <a href="{% url 'profile' %}" class="login-btn">
           <span></span>Профиль
         </a>
         <a href="{% url 'logout' %}" class="login-btn">
