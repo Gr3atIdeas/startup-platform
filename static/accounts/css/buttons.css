@@ -123,7 +123,7 @@ footer a.btn {
   }
 }
 
-/* Button content: remove mix-blend-mode */
+/* Button content: position, z-index, inherit color, transition */
 button > *,
 .btn > *,
 input[type="submit"] > *,
@@ -138,7 +138,8 @@ input[type="button"] > *,
 .nav-menu a > * {
   position: relative;
   z-index: 1;
-  /* mix-blend-mode: difference; */ /* REMOVED */
+  color: inherit; /* Inherit base button text color */
+  transition: color 0.2s ease-in-out; /* Transition for text color */
 }
 
 /* Ensure pseudo-elements are also above the wave but DON'T blend */
@@ -153,22 +154,36 @@ button::before, button::after,
     /* mix-blend-mode: normal; */ /* Reset blend mode if they exist and shouldn't blend */
 }
 
-/* --- НОВЫЕ ПРАВИЛА ДЛЯ ЦВЕТА ТЕКСТА ПРИ АНИМАЦИИ --- */
+/* --- УБИРАЕМ СТАРЫЕ ПРАВИЛА ДЛЯ ЦВЕТА КНОПКИ --- */
+/*
 button.wave-active,
 .btn.wave-active,
-input[type="submit"].wave-active,
-input[type="button"].wave-active,
-.catalog-search-btn.wave-active,
-.show-button.wave-active,
-.detail-button.wave-active,
-.create-startup-btn.wave-active,
-.logout-btn.wave-active,
+...
 .nav-menu a.wave-active {
-  color: #ffffff !important; /* Стандартно - белый текст */
+  color: #ffffff !important; 
 }
-
-/* Исключения для текста */
 .login-btn.wave-active,
 .join-button.wave-active {
-  color: #000000 !important; /* Исключения - черный текст */
+  color: #000000 !important; 
+}
+*/
+
+/* --- НОВЫЕ ПРАВИЛА ДЛЯ ЦВЕТА ДОЧЕРНИХ ЭЛЕМЕНТОВ --- */
+button.wave-active > *,
+.btn.wave-active > *,
+input[type="submit"].wave-active > *,
+input[type="button"].wave-active > *,
+.catalog-search-btn.wave-active > *,
+.show-button.wave-active > *,
+.detail-button.wave-active > *,
+.create-startup-btn.wave-active > *,
+.logout-btn.wave-active > *,
+.nav-menu a.wave-active > * {
+  color: #ffffff; /* Стандартно - белый текст */
+}
+
+/* Исключения для текста дочерних элементов */
+.login-btn.wave-active > *,
+.join-button.wave-active > * {
+  color: #000000; /* Исключения - черный текст */
 } 
