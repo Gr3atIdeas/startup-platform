@@ -64,7 +64,7 @@ header {
   position: relative;
   overflow: hidden;
   background-color: transparent;
-  transition: background-color 0.3s, color 0.3s;
+  transition: background-color 0.3s, color 0.3s, border 0.3s;
 }
 
 .nav-menu a:hover {
@@ -111,49 +111,58 @@ header {
 
 /* Стили для кнопок в хедере */
 .login-btn {
-  background-color: #FFEF2B !important;
-  color: #000 !important;
-  border-radius: 8px;
-  padding: 8px 16px;
-  text-decoration: none;
-  font-weight: 500;
-  position: relative;
-  overflow: hidden;
-  border: none !important;
-}
-
-.login-btn:hover {
-  background-color: #FFE500 !important;
-}
-
-.create-startup-btn {
   background-color: transparent !important;
   color: #FFFFFF !important;
-  border: 2px solid transparent !important;
-  border-radius: 8px;
-  padding: 8px 16px;
+  border: none !important;
   text-decoration: none;
   font-weight: 500;
   position: relative;
   overflow: hidden;
   transition: all 0.3s;
+  border-radius: 8px;
+  padding: 8px 16px;
+}
+
+.login-btn:hover {
+  background-color: #FFEF2B !important;
+  color: #000 !important;
+}
+
+.create-startup-btn {
+  background-color: transparent !important;
+  color: #FFFFFF !important;
+  border: none !important;
+  text-decoration: none;
+  font-weight: 500;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s;
+  border-radius: 8px;
+  padding: 8px 16px;
 }
 
 .create-startup-btn:hover {
   border: 2px solid #7B61FF !important;
   color: #7B61FF !important;
+  padding: 6px 14px; /* Компенсация толщины границы */
 }
 
 .logout-btn {
-  background-color: #FFEF2B !important;
-  color: #000 !important;
-  border-radius: 8px;
-  padding: 8px 16px;
+  background-color: transparent !important;
+  color: #FFFFFF !important;
+  border: none !important;
   text-decoration: none;
   font-weight: 500;
   position: relative;
   overflow: hidden;
-  border: none !important;
+  transition: all 0.3s;
+  border-radius: 8px;
+  padding: 8px 16px;
+}
+
+.logout-btn:hover {
+  background-color: #FFEF2B !important;
+  color: #000 !important;
 }
 
 /* Мобильное меню */
@@ -210,6 +219,14 @@ header {
     padding: 6px 12px;
     font-size: 14px;
   }
+  
+  .login-btn:hover, .logout-btn:hover {
+    padding: 6px 12px;
+  }
+  
+  .create-startup-btn:hover {
+    padding: 4px 10px;
+  }
 }
 
 @media (max-width: 576px) {
@@ -225,5 +242,13 @@ header {
   .login-btn, .create-startup-btn, .logout-btn {
     padding: 5px 10px;
     font-size: 13px;
+  }
+  
+  .login-btn:hover, .logout-btn:hover {
+    padding: 5px 10px;
+  }
+  
+  .create-startup-btn:hover {
+    padding: 3px 8px;
   }
 } 
