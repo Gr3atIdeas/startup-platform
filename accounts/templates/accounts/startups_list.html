@@ -25,17 +25,17 @@
   <div class="catalog-container">
     <!-- Боковая панель с фильтрами -->
     <div class="sidebar">
-      <div class="sort-dropdown">
-        <h2 class="categories-title">Показать сначала</h2>
-        <select name="sort_order" id="sortOrder" form="filterForm">
-          <option value="newest" {% if sort_order == 'newest' %}selected{% endif %}>Новые</option>
-          <option value="oldest" {% if sort_order == 'oldest' %}selected{% endif %}>Старые</option>
-        </select>
-      </div>
-      
-      <h2 class="categories-title">Категории</h2>
-      
       <form method="get" id="filterForm">
+        <div class="sort-dropdown">
+          <h2 class="categories-title">Показать сначала</h2>
+          <select name="sort_order" id="sortOrder">
+            <option value="newest" {% if sort_order == 'newest' %}selected{% endif %}>Новые</option>
+            <option value="oldest" {% if sort_order == 'oldest' %}selected{% endif %}>Старые</option>
+          </select>
+        </div>
+        
+        <h2 class="categories-title">Категории</h2>
+        
         <ul class="categories-list">
           <li class="category-item">
             <label class="category-label">
@@ -126,7 +126,6 @@
         </div>
         
         <input type="hidden" name="search" value="{{ search_query|default_if_none:'' }}">
-        <input type="hidden" name="sort_order" value="{{ sort_order }}">
         
         <!-- Кнопка показать -->
         <button type="submit" class="show-button">Показать</button>
