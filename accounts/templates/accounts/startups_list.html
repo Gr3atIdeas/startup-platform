@@ -1,6 +1,7 @@
 {% extends 'accounts/base.html' %}
 {% load static %}
 {% load file_tags %}
+{% load humanize %}
 
 {% block title %}Каталог стартапов{% endblock %}
 
@@ -37,72 +38,16 @@
         <h2 class="categories-title">Категории</h2>
         
         <ul class="categories-list">
-          <li class="category-item">
-            <label class="category-label">
-              <input type="checkbox" name="category" value="Медицина" class="category-checkbox" {% if 'Медицина' in selected_categories %}checked{% endif %}>
-              <span class="category-name">Медицина</span>
-            </label>
-          </li>
-          <li class="category-item">
-            <label class="category-label">
-              <input type="checkbox" name="category" value="Автомобили" class="category-checkbox" {% if 'Автомобили' in selected_categories %}checked{% endif %}>
-              <span class="category-name">Автомобили</span>
-            </label>
-          </li>
-          <li class="category-item">
-            <label class="category-label">
-              <input type="checkbox" name="category" value="Доставка" class="category-checkbox" {% if 'Доставка' in selected_categories %}checked{% endif %}>
-              <span class="category-name">Доставка</span>
-            </label>
-          </li>
-          <li class="category-item">
-            <label class="category-label">
-              <input type="checkbox" name="category" value="Кафе/рестораны" class="category-checkbox" {% if 'Кафе/рестораны' in selected_categories %}checked{% endif %}>
-              <span class="category-name">Кафе/рестораны</span>
-            </label>
-          </li>
-          <li class="category-item">
-            <label class="category-label">
-              <input type="checkbox" name="category" value="Фастфуд" class="category-checkbox" {% if 'Фастфуд' in selected_categories %}checked{% endif %}>
-              <span class="category-name">Фастфуд</span>
-            </label>
-          </li>
-          <li class="category-item">
-            <label class="category-label">
-              <input type="checkbox" name="category" value="Здоровье" class="category-checkbox" {% if 'Здоровье' in selected_categories %}checked{% endif %}>
-              <span class="category-name">Здоровье</span>
-            </label>
-          </li>
-          <li class="category-item">
-            <label class="category-label">
-              <input type="checkbox" name="category" value="Красота" class="category-checkbox" {% if 'Красота' in selected_categories %}checked{% endif %}>
-              <span class="category-name">Красота</span>
-            </label>
-          </li>
-          <li class="category-item">
-            <label class="category-label">
-              <input type="checkbox" name="category" value="Транспорт" class="category-checkbox" {% if 'Транспорт' in selected_categories %}checked{% endif %}>
-              <span class="category-name">Транспорт</span>
-            </label>
-          </li>
-          <li class="category-item">
-            <label class="category-label">
-              <input type="checkbox" name="category" value="Спорт" class="category-checkbox" {% if 'Спорт' in selected_categories %}checked{% endif %}>
-              <span class="category-name">Спорт</span>
-            </label>
-          </li>
-          <li class="category-item">
-            <label class="category-label">
-              <input type="checkbox" name="category" value="Психология" class="category-checkbox" {% if 'Психология' in selected_categories %}checked{% endif %}>
-              <span class="category-name">Психология</span>
-            </label>
-          </li>
-          <li class="category-item">
-            <label class="category-label">
-              <input type="checkbox" name="category" value="ИИ" class="category-checkbox" {% if 'ИИ' in selected_categories %}checked{% endif %}>
-              <span class="category-name">ИИ</span>
-            </label>
-          </li>
+          {% for dir in directions %}
+            <li class="category-item">
+              <label class="category-label">
+                <input type="checkbox" name="category" value="{{ dir.direction_name }}" class="category-checkbox" {% if dir.direction_name in selected_categories %}checked{% endif %}>
+                <span class="category-name">{{ dir.direction_name }}</span>
+              </label>
+            </li>
+          {% empty %}
+            <li>Категории не найдены.</li>
+          {% endfor %}
         </ul>
         
         <!-- Фильтр рейтинга -->
@@ -146,64 +91,64 @@
       <div class="startups-grid">
         {% if approved_startups %}
           {% for startup in approved_startups %}
-            <a href="{% url 'startup_detail' startup.startup_id %}" class="startup-card-link">
-              <div class="startup-card">
-                <!-- Заголовок с фото и названием -->
-                <div class="startup-header">
-                  <div class="startup-image">
-                    {% if startup.logo_urls %}
-                      <img src="{% get_file_url_tag startup.logo_urls.0 startup.startup_id 'logo' %}" alt="{{ startup.title }}">
-                    {% else %}
-                      <div class="startup-image-placeholder">
-                        {{ startup.title|make_list|first|upper }}
-                      </div>
-                    {% endif %}
-                  </div>
-                  
-                  <h3 class="startup-name">{{ startup.title }}</h3>
-                  
-                  <div class="startup-rating">
-                    <div class="startup-rating-text">Рейтинг 4,2/5 (534)</div>
-                    <div class="comment-counter">
-                      <i class="far fa-comment"></i>
-                      <span>17</span>
+            <div class="startup-card">
+              <div class="startup-card-inner">
+                <div class="startup-image">
+                  {% if startup.logo_urls %}
+                    <img src="{% get_file_url_tag startup.logo_urls.0 startup.startup_id 'logo' %}" alt="{{ startup.title }}">
+                  {% else %}
+                    <div class="startup-image-placeholder">
+                      {{ startup.title|make_list|first|upper }}
                     </div>
+                  {% endif %}
+                </div>
+                
+                <h3 class="startup-name">{{ startup.title }}</h3>
+                
+                <div class="startup-rating-comments">
+                  <span class="rating-text">Рейтинг {{ startup.average_rating|floatformat:1 }}/5 ({{ startup.total_voters }})</span>
+                  <span class="comments-count">
+                    <i class="far fa-comment"></i>
+                    {# Пока нет данных для количества комментариев #}
+                    {# {{ comment_count }} #} 
+                    -- 
+                  </span>
+                </div>
+                
+                <div class="category-progress">
+                  <div class="category-tag">{{ startup.direction.direction_name|default:"Не указано" }}</div>
+                  {% with progress=startup.get_progress_percentage|default:0 %}
+                  <div class="progress-bar-container">
+                    <div class="progress-bar-bg">
+                      <div class="progress-bar-fill" style="width: {{ progress }}%;"></div>
+                    </div>
+                    <span class="progress-percentage">{{ progress|floatformat:0 }}%</span>
                   </div>
+                  {% endwith %}
                 </div>
                 
-                <!-- Тип стартапа/категория -->
-                <div class="startup-type">Медицина</div>
-                
-                <!-- Прогресс-бар -->
-                <div class="progress-container">
-                  <div class="progress-bg">
-                    <div class="progress-fill"></div>
-                    <div class="progress-text">65%</div>
-                  </div>
+                <div class="investment-type">
+                  {% if startup.both_mode %}Инвестирование+Выкуп{% elif startup.only_invest %}Только инвестирование{% elif startup.only_buy %}Только выкуп{% else %}Тип не указан{% endif %}
                 </div>
                 
-                <!-- Цель финансирования -->
-                <div class="funding-goal">
-                  Цель финансирования: 345 678 ₽
+                <div class="funding-goal-info">
+                  Цель финансирования: {{ startup.funding_goal|floatformat:"0"|intcomma }} ₽
                 </div>
                 
-                <!-- Информация об инвесторах -->
-                <div class="investor-info">
-                  <i class="fas fa-users investor-icon"></i>
-                  <span>Инвестировало (648)</span>
+                <div class="investor-count">
+                  <i class="fas fa-users"></i>
+                  <span>Инвестировало ({{ startup.get_investors_count }})</span>
                 </div>
                 
-                <!-- Описание стартапа -->
                 <div class="startup-description">
-                  Наш стартап разрабатывает инновационную платформу для телемедицины...
+                  {{ startup.description|truncatewords:15 }}
                 </div>
                 
-                <!-- Ссылка "Подробнее" -->
                 <a href="{% url 'startup_detail' startup.startup_id %}" class="detail-link">
                   Подробнее <i class="fas fa-arrow-right"></i>
                 </a>
               </div>
-            </a>
+            </div>
           {% endfor %}
         {% else %}
           <div class="no-startups">
@@ -224,28 +169,35 @@
       var maxRatingInput = document.getElementById('maxRatingInput');
       var ratingRangeValues = document.getElementById('ratingRangeValues');
       
-      if (ratingRange.noUiSlider) {
+      // Уничтожаем существующий слайдер, если он есть
+      if (ratingRange && ratingRange.noUiSlider) {
         ratingRange.noUiSlider.destroy();
       }
       
-      noUiSlider.create(ratingRange, {
-        start: [parseFloat("{{ min_rating|floatformat:1 }}"), parseFloat("{{ max_rating|floatformat:1 }}")],
-        connect: true,
-        range: {
-          'min': 0,
-          'max': 5
-        },
-        step: 0.1,
-        format: wNumb({
-          decimals: 1
-        })
-      });
-      
-      ratingRange.noUiSlider.on('update', function(values, handle) {
-        minRatingInput.value = values[0];
-        maxRatingInput.value = values[1];
-        ratingRangeValues.textContent = values[0] + " - " + values[1];
-      });
+      if (ratingRange) { // Проверяем, что элемент существует
+          noUiSlider.create(ratingRange, {
+            start: [parseFloat(minRatingInput.value || 0), parseFloat(maxRatingInput.value || 5)],
+            connect: true,
+            range: {
+              'min': 0,
+              'max': 5
+            },
+            step: 0.1,
+            format: wNumb({
+              decimals: 1
+            })
+          });
+
+          ratingRange.noUiSlider.on('update', function(values, handle) {
+            minRatingInput.value = values[0];
+            maxRatingInput.value = values[1];
+            ratingRangeValues.textContent = values[0] + " - " + values[1];
+          });
+      } else {
+        console.error('Элемент #ratingRange не найден');
+      }
+    } else {
+         console.error('Библиотека noUiSlider не загружена');
     }
     
     // Функция для работы с поиском
