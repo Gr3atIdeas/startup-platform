@@ -54,7 +54,8 @@ body {
   flex-grow: 1; /* Занимает оставшееся пространство */
   display: flex;
   flex-direction: column;
-  /* max-width: 975.8px; УДАЛЯЕМ это ограничение */
+  width: calc(100% - 254px - 21px); /* Ширина = 100% контейнера - ширина сайдбара - отступ */
+  /* max-width НЕ НУЖЕН */
 }
 
 .catalog-search-wrapper {
@@ -637,8 +638,10 @@ body {
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
-  flex-grow: 1; /* Занимает оставшееся место по высоте */
+  /* flex-grow: 1; Убираем, чтобы кнопка не выталкивалась */
   min-height: 55px; /* Примерная минимальная высота для 3 строк */
+  /* Можно добавить max-height, если нужно строго ограничить */
+  /* max-height: 55px; */
 }
 
 /* Ссылка "Подробнее" - стилизуем как кнопку */
