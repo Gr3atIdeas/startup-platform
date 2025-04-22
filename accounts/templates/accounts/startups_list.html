@@ -19,7 +19,7 @@
 <div class="catalog-wrapper">
   <div class="catalog-header">
     <h1 class="catalog-title">Каталог</h1>
-    <p class="catalog-subtitle">Ваш шанс найти самые следующие и успешные стартапы</p>
+    <p class="catalog-subtitle">Ваш шанс найти самые перспективные и успешные стартапы</p>
   </div>
 
   <div class="catalog-container">
@@ -56,14 +56,14 @@
           </li>
           <li class="category-item">
             <label class="category-label">
-              <input type="checkbox" name="category" value="Программирование" class="category-checkbox" {% if 'Программирование' in selected_categories %}checked{% endif %}>
-              <span class="category-name">Программирование</span>
+              <input type="checkbox" name="category" value="Кофеферестораны" class="category-checkbox" {% if 'Кофеферестораны' in selected_categories %}checked{% endif %}>
+              <span class="category-name">Кофеферестораны</span>
             </label>
           </li>
           <li class="category-item">
             <label class="category-label">
-              <input type="checkbox" name="category" value="Интернет" class="category-checkbox" {% if 'Интернет' in selected_categories %}checked{% endif %}>
-              <span class="category-name">Интернет</span>
+              <input type="checkbox" name="category" value="Фастфуд" class="category-checkbox" {% if 'Фастфуд' in selected_categories %}checked{% endif %}>
+              <span class="category-name">Фастфуд</span>
             </label>
           </li>
           <li class="category-item">
@@ -74,8 +74,14 @@
           </li>
           <li class="category-item">
             <label class="category-label">
-              <input type="checkbox" name="category" value="Финансы" class="category-checkbox" {% if 'Финансы' in selected_categories %}checked{% endif %}>
-              <span class="category-name">Финансы</span>
+              <input type="checkbox" name="category" value="Красота" class="category-checkbox" {% if 'Красота' in selected_categories %}checked{% endif %}>
+              <span class="category-name">Красота</span>
+            </label>
+          </li>
+          <li class="category-item">
+            <label class="category-label">
+              <input type="checkbox" name="category" value="Транспорт" class="category-checkbox" {% if 'Транспорт' in selected_categories %}checked{% endif %}>
+              <span class="category-name">Транспорт</span>
             </label>
           </li>
           <li class="category-item">
@@ -86,8 +92,8 @@
           </li>
           <li class="category-item">
             <label class="category-label">
-              <input type="checkbox" name="category" value="Технологии" class="category-checkbox" {% if 'Технологии' in selected_categories %}checked{% endif %}>
-              <span class="category-name">Технологии</span>
+              <input type="checkbox" name="category" value="Психология" class="category-checkbox" {% if 'Психология' in selected_categories %}checked{% endif %}>
+              <span class="category-name">Психология</span>
             </label>
           </li>
           <li class="category-item">
@@ -144,13 +150,7 @@
               <div class="startup-card">
                 <div class="startup-card-header">
                   <div class="startup-type">
-                    {% if startup.both_mode %}
-                      Выкуп+инвестирование
-                    {% elif startup.only_invest %}
-                      Только инвестиции
-                    {% elif startup.only_buy %}
-                      Только выкуп
-                    {% endif %}
+                    Медицина
                   </div>
                   <div class="startup-image">
                     {% if startup.logo_urls %}
@@ -171,20 +171,16 @@
                 <div class="startup-card-body">
                   <div class="startup-info-wrapper">
                     <div class="startup-direction">
-                      {% for pair in direction_translations %}
-                        {% if pair.0 == startup.direction.direction_name %}
-                          {{ pair.1 }}
-                        {% endif %}
-                      {% endfor %}
+                      Медицина
                     </div>
                     <div class="counter-group">
                       <div class="like-counter">
                         <i class="far fa-thumbs-up like-icon"></i>
-                        <span>213</span>
+                        <span>17</span>
                       </div>
                       <div class="comment-counter">
                         <i class="far fa-comment comment-icon"></i>
-                        <span>{{ startup.comment_count|default:"17" }}</span>
+                        <span>17</span>
                       </div>
                     </div>
                   </div>
@@ -249,28 +245,56 @@
     var searchInput = document.querySelector('.catalog-search-input');
     var searchBtn = document.querySelector('.catalog-search-btn');
     
-    if (searchBtn && searchInput) {
-      searchBtn.addEventListener('click', function() {
-        document.querySelector('input[name="search"]').value = searchInput.value;
-        document.getElementById('filterForm').submit();
+    searchBtn.addEventListener('click', function() {
+      var form = document.getElementById('filterForm');
+      var searchInputHidden = document.querySelector('input[name="search"]');
+      searchInputHidden.value = searchInput.value;
+      form.submit();
+    });
+    
+    searchInput.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        var form = document.getElementById('filterForm');
+        var searchInputHidden = document.querySelector('input[name="search"]');
+        searchInputHidden.value = searchInput.value;
+        form.submit();
+      }
+    });
+    
+    // Эффект Position Aware для кнопок
+    var buttons = document.querySelectorAll('.show-button, .detail-button, .catalog-search-btn');
+    
+    buttons.forEach(function(button) {
+      button.addEventListener('mouseenter', function(e) {
+        var parentOffset = this.getBoundingClientRect(),
+            relX = e.clientX - parentOffset.left,
+            relY = e.clientY - parentOffset.top;
+        
+        var span = document.createElement('span');
+        span.style.top = relY + 'px';
+        span.style.left = relX + 'px';
+        
+        this.appendChild(span);
+        
+        setTimeout(function() {
+          span.remove();
+        }, 500);
       });
-      
-      searchInput.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-          document.querySelector('input[name="search"]').value = searchInput.value;
-          document.getElementById('filterForm').submit();
-        }
-      });
-    }
+    });
   });
   
   // Функция для переключения микроинвестиций
   function toggleMicroInvestment() {
     var toggle = document.getElementById('microToggle');
-    toggle.classList.toggle('active');
+    var input = document.getElementById('microInvestmentInput');
     
-    var microInvestmentInput = document.getElementById('microInvestmentInput');
-    microInvestmentInput.value = toggle.classList.contains('active') ? '1' : '0';
+    if (toggle.classList.contains('active')) {
+      toggle.classList.remove('active');
+      input.value = '0';
+    } else {
+      toggle.classList.add('active');
+      input.value = '1';
+    }
   }
 </script>
 {% endblock %}
