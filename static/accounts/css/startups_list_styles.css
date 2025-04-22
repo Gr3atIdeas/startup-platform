@@ -348,19 +348,18 @@ body {
 .startups-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 30px;
+  gap: 20px;
   margin-top: 20px;
-  justify-content: center;
-  max-width: 1200px;
+  justify-content: flex-start;
+  max-width: 100%;
 }
 
 /* Карточка стартапа */
 .startup-card-link {
   text-decoration: none;
   color: inherit;
-  width: calc(33.333% - 20px);
-  min-width: 300px;
-  margin-bottom: 10px;
+  width: calc(33.333% - 14px);
+  margin-bottom: 20px;
 }
 
 .startup-card {
@@ -371,7 +370,6 @@ body {
   width: 100%;
   color: #000;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  height: 100%;
 }
 
 .startup-card:hover {
@@ -411,7 +409,7 @@ body {
 .startup-name {
   font-family: 'Unbounded', sans-serif;
   font-weight: 700;
-  font-size: 28px;
+  font-size: 22px;
   margin: 0 0 10px 0;
   color: #000;
   text-align: center;
@@ -459,7 +457,7 @@ body {
 .startup-type {
   background-color: #000;
   color: #fff;
-  width: 150px;
+  width: 120px;
   font-size: 14px;
   font-weight: 500;
   font-family: 'Unbounded', sans-serif;
@@ -499,7 +497,7 @@ body {
 .investment-type {
   border: 1px solid #000;
   border-radius: 5px;
-  padding: 10px 0;
+  padding: 8px 0;
   text-align: center;
   font-family: 'Unbounded', sans-serif;
   font-size: 14px;
@@ -510,7 +508,7 @@ body {
 /* Цель финансирования */
 .funding-goal {
   background-color: #F1F1F1;
-  padding: 10px 0;
+  padding: 8px 0;
   text-align: center;
   font-family: 'Unbounded', sans-serif;
   font-size: 14px;
@@ -555,7 +553,7 @@ body {
 /* Ссылка "Подробнее" */
 .detail-link-wrapper {
   text-align: center;
-  padding: 0 0 20px;
+  padding: 0 0 15px;
 }
 
 .detail-link {
@@ -620,54 +618,5 @@ body {
   #filterForm {
     max-width: 450px;
     margin: 0 auto;
-  }
-}
-
-@media (min-width: 1101px) {
-  .startup-card-link {
-    width: calc(33.333% - 20px);
-  }
-}
-
-@media (max-width: 1100px) and (min-width: 741px) {
-  .startup-card-link {
-    width: calc(50% - 15px);
-  }
-  
-  .startups-grid {
-    justify-content: center;
-  }
-}
-
-@media (max-width: 740px) {
-  .startup-card-link {
-    width: 100%;
-    max-width: 350px;
-  }
-  
-  .startups-grid {
-    justify-content: center;
-  }
-  
-  .startup-name {
-    font-size: 24px;
-  }
-  
-  .startup-rating-text, 
-  .comment-counter, 
-  .startup-type, 
-  .progress-value, 
-  .investment-type, 
-  .funding-goal, 
-  .investor-info, 
-  .startup-description, 
-  .detail-link {
-    font-size: 13px;
-  }
-  
-  .startup-image img,
-  .startup-image-placeholder {
-    width: 90px;
-    height: 90px;
   }
 }
