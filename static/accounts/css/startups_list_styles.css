@@ -17,7 +17,7 @@ body {
   display: flex;
   align-items: flex-start; /* Выравниваем сайдбар и контент по верху */
   width: 100%;
-  max-width: 1303px; /* Ограничиваем максимальную ширину согласно Figma */
+  max-width: 1350px; /* Увеличиваем максимальную ширину */
   margin: 0 auto; /* Центрируем контейнер */
   padding: 0 40px;
   gap: 21px; /* Отступ между сайдбаром и контентом */
@@ -27,7 +27,7 @@ body {
 /* Стили для заголовка */
 .catalog-header {
   width: 100%;
-  max-width: 1303px; /* Ограничиваем максимальную ширину */
+  max-width: 1350px; /* Увеличиваем максимальную ширину */
   margin: 0 auto 20px auto; /* Центрируем и добавляем отступ снизу */
   padding: 0 40px;
   box-sizing: border-box;
@@ -316,6 +316,13 @@ body {
   margin-bottom: 20px;
 }
 
+/* Обертка для текста и иконки */
+.micro-investment-label-wrapper {
+    display: inline-flex; /* Чтобы не разрывать строку */
+    align-items: baseline; /* Выравнивание по базовой линии текста */
+    white-space: nowrap; /* Запрещаем перенос строки */
+}
+
 .micro-label {
   font-size: 14px;
   font-weight: 400; /* Уменьшаем жирность */
@@ -382,6 +389,7 @@ body {
 /* Карточка стартапа */
 .startup-card {
   width: 330px; /* Ширина согласно Figma */
+  height: 448px; /* Возвращаем фиксированную высоту */
   background-color: white;
   border-radius: 16px;
   box-shadow: 4px 4px 6px 0px rgba(0, 0, 0, 0.25); /* Тень согласно Figma */
