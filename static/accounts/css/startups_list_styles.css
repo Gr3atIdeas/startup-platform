@@ -156,9 +156,17 @@ body {
   width: 254px;
   margin-right: 30px;
   flex-shrink: 0;
-  padding: 53px 28px;
-  background-color: rgb(255, 255, 255);
+  background-color: transparent;
+  border-radius: 0;
+}
+
+/* Форма фильтрации */
+#filterForm {
+  display: block;
+  width: 100%;
+  background-color: #FFFFFF;
   border-radius: 10px;
+  padding: 53px 28px;
 }
 
 /* Дропдаун сортировки */
@@ -178,6 +186,7 @@ body {
   background: #FFFFFF;
   font-family: 'Unbounded', sans-serif;
   font-weight: 400;
+  color: #000000;
 }
 
 /* Заголовок категорий */
@@ -187,6 +196,11 @@ body {
   font-size: 20px;
   margin: 0 0 10px 0;
   color: #000000;
+}
+
+/* Заголовок для "Показать сначала" */
+.sort-dropdown .categories-title {
+  font-size: 18px;
 }
 
 /* Список категорий */
@@ -584,10 +598,4 @@ body {
     width: 100%;
     max-width: 330px;
   }
-}
-
-/* Форма фильтрации */
-#filterForm {
-  display: block;
-  width: 100%;
 }
