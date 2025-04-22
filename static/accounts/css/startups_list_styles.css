@@ -178,17 +178,6 @@ body {
   background: #FFFFFF;
   font-family: 'Unbounded', sans-serif;
   font-weight: 400;
-  padding-right: 40px; /* Место для иконки */
-}
-
-.sort-icon {
-  position: absolute;
-  right: 16px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #0047FF;
-  pointer-events: none;
-  font-size: 14px;
 }
 
 /* Заголовок категорий */
@@ -213,98 +202,28 @@ body {
   margin-bottom: 8px;
 }
 
-/* Кастомные чекбоксы */
-.category-checkbox {
-  position: absolute;
-  opacity: 0;
-  cursor: pointer;
-  height: 0;
-  width: 0;
-}
-
 .category-label {
   display: flex;
   align-items: center;
   cursor: pointer;
-  position: relative;
-  padding-left: 30px;
-  margin-bottom: 10px;
 }
 
-.category-label:before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 18px;
-  height: 18px;
-  border: 2px solid #E5E7EB;
-  border-radius: 4px;
-  background-color: #FFFFFF;
-}
-
-.category-checkbox:checked + .category-name:before {
-  content: '\f00c';
-  font-family: 'Font Awesome 6 Free';
-  font-weight: 900;
-  color: #FFFFFF;
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 18px;
-  height: 18px;
-  border-radius: 4px;
-  background-color: #0047FF;
-  border: 2px solid #0047FF;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 11px;
+.category-checkbox {
+  width: 16px;
+  height: 16px;
+  margin-right: 10px;
+  accent-color: #0047FF;
 }
 
 .category-name {
-  position: relative;
   font-size: 15px;
   font-family: 'Unbounded', sans-serif;
   font-weight: 400;
 }
 
-.category-icon {
-  color: #0047FF;
-  margin-right: 5px;
-  font-size: 14px;
-  width: 16px;
-  text-align: center;
-  transition: transform 0.2s ease;
-}
-
-.category-checkbox:checked + .category-name .category-icon {
-  transform: scale(1.2);
-}
-
-/* Стилизация полосы прокрутки */
-.categories-list::-webkit-scrollbar {
-  width: 5px;
-}
-
-.categories-list::-webkit-scrollbar-track {
-  background: #F1F1F1;
-  border-radius: 10px;
-}
-
-.categories-list::-webkit-scrollbar-thumb {
-  background: #0047FF;
-  border-radius: 10px;
-}
-
-.categories-list::-webkit-scrollbar-thumb:hover {
-  background: #003CD9;
-}
-
 /* Фильтр по рейтингу */
 .rating-filter {
   margin-bottom: 30px;
-  position: relative;
 }
 
 .rating-label {
@@ -317,60 +236,35 @@ body {
   font-family: 'Unbounded', sans-serif;
 }
 
-#ratingRangeValues {
-  background-color: #F1F1F1;
-  padding: 3px 8px;
-  border-radius: 5px;
-  font-size: 14px;
-  color: #333;
-}
-
 /* Стили для слайдера noUiSlider */
 .noUi-target {
   border: none;
   border-radius: 5px;
-  background-color: rgba(229, 231, 235, 0.5);
+  background-color: #E5E7EB;
   height: 5px;
   box-shadow: none;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 
 .noUi-connect {
   background-color: #0047FF;
-  box-shadow: 0 0 5px rgba(0, 71, 255, 0.3);
 }
 
 .noUi-handle {
   width: 18px !important;
   height: 18px !important;
   border-radius: 50%;
-  background: #FFFFFF;
-  border: 2px solid #0047FF;
-  box-shadow: 0 0 5px rgba(0, 71, 255, 0.3);
+  background: #0047FF;
+  border: 2px solid white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
   right: -9px !important;
   top: -7px !important;
   cursor: pointer;
-  transition: transform 0.2s ease;
-}
-
-.noUi-handle:hover {
-  transform: scale(1.1);
 }
 
 .noUi-handle:before,
 .noUi-handle:after {
   display: none;
-}
-
-.rating-filter:after {
-  content: "Диапазон";
-  font-size: 11px;
-  text-align: center;
-  display: block;
-  color: #6B7280;
-  margin-top: 8px;
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 300;
 }
 
 /* Микроинвестиции */
@@ -379,7 +273,6 @@ body {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 30px;
-  position: relative;
 }
 
 .micro-label {
@@ -394,38 +287,12 @@ body {
   justify-content: center;
   width: 18px;
   height: 18px;
-  background-color: #F1F1F1;
-  color: #0047FF;
+  background-color: #E5E7EB;
+  color: #000;
   border-radius: 50%;
-  font-size: 12px;
+  font-size: 11px;
   margin-left: 6px;
   cursor: help;
-  transition: background-color 0.2s ease;
-  position: relative;
-}
-
-.help-icon:hover {
-  background-color: #E5E7EB;
-}
-
-.help-icon:hover:after {
-  content: 'Возможность инвестировать небольшие суммы';
-  position: absolute;
-  bottom: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #333;
-  color: #FFF;
-  padding: 5px 10px;
-  border-radius: 5px;
-  font-size: 12px;
-  width: 200px;
-  text-align: center;
-  margin-bottom: 8px;
-  pointer-events: none;
-  z-index: 10;
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 300;
 }
 
 /* Переключатель для микроинвестиций */
@@ -437,12 +304,10 @@ body {
   border-radius: 22px;
   cursor: pointer;
   transition: background-color 0.3s;
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .toggle-switch.active {
   background-color: #0047FF;
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 5px rgba(0, 71, 255, 0.3);
 }
 
 .toggle-handle {
@@ -453,8 +318,8 @@ body {
   height: 18px;
   background-color: white;
   border-radius: 50%;
-  transition: transform 0.3s ease;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .toggle-switch.active .toggle-handle {
@@ -719,24 +584,4 @@ body {
     width: 100%;
     max-width: 330px;
   }
-}
-
-/* Звезды рейтинга в фильтре */
-.rating-stars-display {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 10px;
-}
-
-.rating-stars-display i {
-  color: #E5E7EB;
-  margin: 0 2px;
-  font-size: 14px;
-  text-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
-  transition: color 0.3s ease, transform 0.2s ease;
-}
-
-.rating-stars-display i.active {
-  color: #FFD700;
-  transform: scale(1.1);
 }
