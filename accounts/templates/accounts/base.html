@@ -34,6 +34,7 @@
       --search-bg: #444444;
       --search-text: #a1a0a0;
     }
+    
     body {
       margin: 0;
       padding: 0;
@@ -49,6 +50,7 @@
       flex-direction: column;
       min-height: 100vh;
     }
+    
     main.content {
       flex-grow: 1;
       padding: 20px 0;
@@ -93,7 +95,7 @@
       margin-right: 50px;
     }
     
-    /* Поле поиска как на скриншоте */
+    /* Поле поиска */
     .search-container {
       position: relative;
       width: 512px;
@@ -150,29 +152,18 @@
     }
     
     .nav-menu a.active {
-      background-color: var(--primary-color);
+      background-color: rgba(255, 255, 255, 0.1);
       color: var(--text-light);
     }
     
     /* Кнопка "Создать стартап" */
     .create-startup-btn {
       text-decoration: none;
-      color: #7B61FF !important;
-      background-color: transparent !important;
-      padding: 8px 16px;
-      border-radius: 8px;
-      font-size: 16px;
-      transition: all 0.3s;
-      border: 2px solid #7B61FF !important;
-      overflow: hidden;
-      position: relative;
     }
     
-    /* Кнопка входа - специальные стили */
+    /* Кнопка входа и выхода */
     .login-btn {
-      overflow: hidden;
       position: relative;
-      border-radius: 8px;
     }
     
     /* Анимации для хедера */

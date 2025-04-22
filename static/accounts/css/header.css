@@ -63,10 +63,16 @@ header {
   border-radius: 8px;
   position: relative;
   overflow: hidden;
+  background-color: transparent;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.nav-menu a:hover {
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .nav-menu a.active {
-  background-color: #7B61FF;
+  background-color: rgba(255, 255, 255, 0.1);
   color: #FFFFFF;
 }
 
@@ -105,38 +111,49 @@ header {
 
 /* Стили для кнопок в хедере */
 .login-btn {
-  background-color: #FFEF2B;
-  color: #333;
+  background-color: #FFEF2B !important;
+  color: #000 !important;
   border-radius: 8px;
   padding: 8px 16px;
   text-decoration: none;
   font-weight: 500;
   position: relative;
   overflow: hidden;
+  border: none !important;
+}
+
+.login-btn:hover {
+  background-color: #FFE500 !important;
 }
 
 .create-startup-btn {
-  background-color: transparent;
-  color: #7B61FF;
-  border: 2px solid #7B61FF;
+  background-color: transparent !important;
+  color: #FFFFFF !important;
+  border: 2px solid transparent !important;
   border-radius: 8px;
   padding: 8px 16px;
   text-decoration: none;
   font-weight: 500;
   position: relative;
   overflow: hidden;
+  transition: all 0.3s;
+}
+
+.create-startup-btn:hover {
+  border: 2px solid #7B61FF !important;
+  color: #7B61FF !important;
 }
 
 .logout-btn {
-  background-color: transparent;
-  color: #FFFFFF;
-  border: 1px solid #FFFFFF;
+  background-color: #FFEF2B !important;
+  color: #000 !important;
   border-radius: 8px;
   padding: 8px 16px;
   text-decoration: none;
   font-weight: 500;
   position: relative;
   overflow: hidden;
+  border: none !important;
 }
 
 /* Мобильное меню */
