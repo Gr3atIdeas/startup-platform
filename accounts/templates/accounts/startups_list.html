@@ -26,10 +26,12 @@
     <!-- Боковая панель с фильтрами -->
     <div class="sidebar">
       <div class="sort-dropdown">
+        <h2 class="categories-title">Показать сначала</h2>
         <select name="sort_order" id="sortOrder" form="filterForm">
           <option value="newest" {% if sort_order == 'newest' %}selected{% endif %}>Новые</option>
           <option value="oldest" {% if sort_order == 'oldest' %}selected{% endif %}>Старые</option>
         </select>
+        <i class="fas fa-sort sort-icon"></i>
       </div>
       
       <h2 class="categories-title">Категории</h2>
@@ -39,67 +41,67 @@
           <li class="category-item">
             <label class="category-label">
               <input type="checkbox" name="category" value="Медицина" class="category-checkbox" {% if 'Медицина' in selected_categories %}checked{% endif %}>
-              <span class="category-name">Медицина</span>
+              <span class="category-name"><i class="fas fa-heartbeat category-icon"></i> Медицина</span>
             </label>
           </li>
           <li class="category-item">
             <label class="category-label">
               <input type="checkbox" name="category" value="Автомобили" class="category-checkbox" {% if 'Автомобили' in selected_categories %}checked{% endif %}>
-              <span class="category-name">Автомобили</span>
+              <span class="category-name"><i class="fas fa-car category-icon"></i> Автомобили</span>
             </label>
           </li>
           <li class="category-item">
             <label class="category-label">
-              <input type="checkbox" name="category" value="Недвижимость" class="category-checkbox" {% if 'Недвижимость' in selected_categories %}checked{% endif %}>
-              <span class="category-name">Недвижимость</span>
+              <input type="checkbox" name="category" value="Доставка" class="category-checkbox" {% if 'Доставка' in selected_categories %}checked{% endif %}>
+              <span class="category-name"><i class="fas fa-truck category-icon"></i> Доставка</span>
             </label>
           </li>
           <li class="category-item">
             <label class="category-label">
-              <input type="checkbox" name="category" value="Кофеферестораны" class="category-checkbox" {% if 'Кофеферестораны' in selected_categories %}checked{% endif %}>
-              <span class="category-name">Кофеферестораны</span>
+              <input type="checkbox" name="category" value="Кафе/рестораны" class="category-checkbox" {% if 'Кафе/рестораны' in selected_categories %}checked{% endif %}>
+              <span class="category-name"><i class="fas fa-utensils category-icon"></i> Кафе/рестораны</span>
             </label>
           </li>
           <li class="category-item">
             <label class="category-label">
               <input type="checkbox" name="category" value="Фастфуд" class="category-checkbox" {% if 'Фастфуд' in selected_categories %}checked{% endif %}>
-              <span class="category-name">Фастфуд</span>
+              <span class="category-name"><i class="fas fa-hamburger category-icon"></i> Фастфуд</span>
             </label>
           </li>
           <li class="category-item">
             <label class="category-label">
               <input type="checkbox" name="category" value="Здоровье" class="category-checkbox" {% if 'Здоровье' in selected_categories %}checked{% endif %}>
-              <span class="category-name">Здоровье</span>
+              <span class="category-name"><i class="fas fa-medkit category-icon"></i> Здоровье</span>
             </label>
           </li>
           <li class="category-item">
             <label class="category-label">
               <input type="checkbox" name="category" value="Красота" class="category-checkbox" {% if 'Красота' in selected_categories %}checked{% endif %}>
-              <span class="category-name">Красота</span>
+              <span class="category-name"><i class="fas fa-spa category-icon"></i> Красота</span>
             </label>
           </li>
           <li class="category-item">
             <label class="category-label">
               <input type="checkbox" name="category" value="Транспорт" class="category-checkbox" {% if 'Транспорт' in selected_categories %}checked{% endif %}>
-              <span class="category-name">Транспорт</span>
+              <span class="category-name"><i class="fas fa-bus category-icon"></i> Транспорт</span>
             </label>
           </li>
           <li class="category-item">
             <label class="category-label">
               <input type="checkbox" name="category" value="Спорт" class="category-checkbox" {% if 'Спорт' in selected_categories %}checked{% endif %}>
-              <span class="category-name">Спорт</span>
+              <span class="category-name"><i class="fas fa-running category-icon"></i> Спорт</span>
             </label>
           </li>
           <li class="category-item">
             <label class="category-label">
               <input type="checkbox" name="category" value="Психология" class="category-checkbox" {% if 'Психология' in selected_categories %}checked{% endif %}>
-              <span class="category-name">Психология</span>
+              <span class="category-name"><i class="fas fa-brain category-icon"></i> Психология</span>
             </label>
           </li>
           <li class="category-item">
             <label class="category-label">
               <input type="checkbox" name="category" value="ИИ" class="category-checkbox" {% if 'ИИ' in selected_categories %}checked{% endif %}>
-              <span class="category-name">ИИ</span>
+              <span class="category-name"><i class="fas fa-robot category-icon"></i> ИИ</span>
             </label>
           </li>
         </ul>
@@ -107,6 +109,13 @@
         <!-- Фильтр рейтинга -->
         <div class="rating-filter">
           <label class="rating-label">Рейтинг: <span id="ratingRangeValues">{{ min_rating|floatformat:1 }} - {{ max_rating|floatformat:1 }}</span></label>
+          <div class="rating-stars-display">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+          </div>
           <div id="ratingRange" class="rating-slider"></div>
           <input type="hidden" name="min_rating" id="minRatingInput" value="{{ min_rating|floatformat:1 }}">
           <input type="hidden" name="max_rating" id="maxRatingInput" value="{{ max_rating|floatformat:1 }}">
@@ -128,7 +137,9 @@
         <input type="hidden" name="sort_order" value="{{ sort_order }}">
         
         <!-- Кнопка показать -->
-        <button type="submit" class="show-button">Показать</button>
+        <button type="submit" class="show-button">
+          <i class="fas fa-filter"></i> Показать
+        </button>
       </form>
     </div>
     
@@ -223,6 +234,7 @@
       var minRatingInput = document.getElementById('minRatingInput');
       var maxRatingInput = document.getElementById('maxRatingInput');
       var ratingRangeValues = document.getElementById('ratingRangeValues');
+      var ratingStars = document.querySelectorAll('.rating-stars-display i');
       
       if (ratingRange.noUiSlider) {
         ratingRange.noUiSlider.destroy();
@@ -241,10 +253,29 @@
         })
       });
       
+      // Функция для обновления звезд рейтинга
+      function updateRatingStars(maxRating) {
+        ratingStars.forEach(function(star, index) {
+          if (index < Math.floor(maxRating)) {
+            star.classList.add('active');
+          } else {
+            star.classList.remove('active');
+          }
+        });
+      }
+      
+      // Инициализация звезд
+      updateRatingStars(parseFloat("{{ max_rating|floatformat:1 }}"));
+      
       ratingRange.noUiSlider.on('update', function(values, handle) {
         minRatingInput.value = values[0];
         maxRatingInput.value = values[1];
         ratingRangeValues.textContent = values[0] + " - " + values[1];
+        
+        // Обновляем звезды при изменении слайдера
+        if (handle === 1) { // Обновляем только при изменении максимального значения
+          updateRatingStars(parseFloat(values[1]));
+        }
       });
     }
     
