@@ -346,32 +346,34 @@ body {
   flex-wrap: wrap;
   gap: 20px;
   margin-top: 20px;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 /* Карточка стартапа */
 .startup-card {
   background-color: white;
-  border-radius: 16px;
+  border-radius: 20px;
   overflow: hidden;
-  box-shadow: 4px 4px 6px 0px rgba(0, 0, 0, 0.25);
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   width: 330px;
   height: auto;
+  padding: 30px;
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.startup-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.15);
 }
 
 .startup-card-link {
   text-decoration: none;
   color: inherit;
-}
-
-/* Заголовок карточки с названием и логотипом */
-.startup-header {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
+  display: block;
+  margin-bottom: 20px;
 }
 
 /* Логотип стартапа */
@@ -381,14 +383,14 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 15px;
+  margin: 0 auto 15px;
 }
 
 .startup-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 50%;
+  border-radius: 0;
 }
 
 .startup-image-placeholder {
@@ -397,22 +399,22 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #004e9f;
+  background: linear-gradient(135deg, #0088cc, #003366);
   color: white;
   font-size: 32px;
   font-weight: 500;
-  border-radius: 50%;
+  border-radius: 0;
   font-family: 'Unbounded', sans-serif;
 }
 
 /* Название стартапа */
 .startup-name {
   font-family: 'Unbounded', sans-serif;
-  font-weight: 600;
-  font-size: 40px;
-  margin: 0;
+  font-weight: 700;
+  font-size: 38px;
+  margin: 0 0 15px 0;
   color: #000;
-  text-align: center;
+  text-align: left;
   line-height: 1.2;
 }
 
@@ -420,81 +422,112 @@ body {
 .startup-rating {
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 15px;
-  margin: 15px 0;
+  margin-bottom: 15px;
 }
 
 .startup-rating-text {
   font-family: 'Unbounded', sans-serif;
   font-weight: 400;
-  font-size: 20px;
-  color: #004e9f;
+  font-size: 16px;
+  color: #0047FF;
 }
 
 .comment-counter {
   display: flex;
   align-items: center;
   gap: 5px;
-  color: #000;
+  color: #0047FF;
   font-family: 'Unbounded', sans-serif;
-  font-size: 20px;
+  font-size: 16px;
+}
+
+.comment-counter i {
+  color: #0047FF;
+}
+
+/* Секция с типом стартапа и прогресс-баром */
+.progress-section {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-bottom: 15px;
 }
 
 /* Тип стартапа (категория) */
 .startup-type {
-  width: 100%;
+  width: 152px;
   background-color: #000;
   color: white;
   padding: 8px 0;
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 500;
   font-family: 'Unbounded', sans-serif;
   text-align: center;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
 }
 
 /* Прогресс-бар */
 .progress-container {
   width: 100%;
   position: relative;
-  height: 40px;
+  height: 32px;
 }
 
 .progress-bg {
-  height: 40px;
-  background: #000;
+  height: 32px;
+  background: #F5F5F5;
   position: relative;
+  border-top-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  overflow: hidden;
 }
 
 .progress-fill {
   position: absolute;
   top: 0;
   left: 0;
-  height: 40px;
-  background-color: #8666ff;
+  height: 32px;
+  background-color: #FFEF2B;
   width: 65%;
 }
 
 .progress-text {
   position: absolute;
   top: 50%;
-  right: 20px;
+  right: 15px;
   transform: translateY(-50%);
-  color: white;
-  font-size: 20px;
+  color: #000;
+  font-size: 16px;
   font-weight: 500;
   font-family: 'Unbounded', sans-serif;
   z-index: 1;
 }
 
-/* Цель финансирования */
-.funding-goal {
-  background-color: #f1f1f1;
-  padding: 15px;
+/* Тип инвестирования */
+.investment-type {
+  border: 1px solid #000;
+  border-radius: 5px;
+  padding: 10px 0;
   text-align: center;
   font-family: 'Unbounded', sans-serif;
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 500;
+  margin-bottom: 15px;
+}
+
+/* Цель финансирования */
+.funding-goal {
+  background-color: #F1F1F1;
+  padding: 10px;
+  text-align: center;
+  font-family: 'Unbounded', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 15px;
+  border-radius: 5px;
 }
 
 /* Информация о количестве инвесторов */
@@ -503,45 +536,63 @@ body {
   align-items: center;
   justify-content: center;
   gap: 10px;
-  padding: 15px;
+  padding: 10px 0;
   font-family: 'Unbounded', sans-serif;
-  font-size: 20px;
-  color: #000;
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 15px;
 }
 
 .investor-icon {
-  color: #000;
+  color: #555;
 }
 
 /* Описание стартапа */
 .startup-description {
   font-family: 'Unbounded', sans-serif;
   font-weight: 300;
-  font-size: 18px;
+  font-size: 16px;
   line-height: 1.3;
   color: #000;
-  padding: 0 15px 15px;
+  padding: 0;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  text-align: center;
+  text-align: left;
+  margin-bottom: 15px;
+  min-height: 50px;
+}
+
+/* Обертка для ссылки "Подробнее" */
+.detail-link-wrapper {
+  margin-top: auto;
 }
 
 /* Ссылка "Подробнее" */
 .detail-link {
   font-family: 'Unbounded', sans-serif;
-  font-size: 20px;
-  color: #004e9f;
+  font-size: 16px;
+  color: #0047FF;
   text-decoration: none;
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 15px;
+  gap: 5px;
+  transition: color 0.3s ease;
+}
+
+.detail-link:hover {
+  color: #003CD9;
 }
 
 .detail-link i {
   margin-left: 5px;
+  font-size: 14px;
+  transition: transform 0.3s ease;
+}
+
+.detail-link:hover i {
+  transform: translateX(3px);
 }
 
 /* Состояние, когда нет доступных стартапов */
@@ -565,6 +616,7 @@ body {
 @media (max-width: 1100px) {
   .startups-grid {
     justify-content: center;
+    gap: 20px;
   }
 }
 
@@ -583,6 +635,16 @@ body {
     margin-right: 0;
     margin-bottom: 20px;
   }
+  
+  #filterForm {
+    max-width: 450px;
+    margin: 0 auto;
+  }
+  
+  .startup-card {
+    width: 100%;
+    max-width: 330px;
+  }
 }
 
 @media (max-width: 740px) {
@@ -597,5 +659,27 @@ body {
   .startup-card {
     width: 100%;
     max-width: 330px;
+    padding: 20px;
+  }
+  
+  .startup-name {
+    font-size: 30px;
+  }
+  
+  .startup-rating-text, 
+  .comment-counter, 
+  .startup-type, 
+  .progress-text, 
+  .investment-type, 
+  .funding-goal, 
+  .investor-info, 
+  .startup-description, 
+  .detail-link {
+    font-size: 14px;
+  }
+  
+  .startup-image {
+    width: 100px;
+    height: 100px;
   }
 }
