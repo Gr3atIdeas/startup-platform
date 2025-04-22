@@ -54,7 +54,7 @@ body {
   flex-grow: 1; /* Занимает оставшееся пространство */
   display: flex;
   flex-direction: column;
-  /* Удаляем max-width и margin: 0 auto, так как они теперь у .catalog-container */
+  /* max-width: 975.8px; УДАЛЯЕМ это ограничение */
 }
 
 .catalog-search-wrapper {
@@ -148,6 +148,41 @@ body {
 .show-button span,
 .detail-link span { ... } */
 
+/* Эффекты - стили для Position Aware эффекта */
+.show-button, .detail-button, .catalog-search-btn {
+    position: relative; /* Необходимо для позиционирования span */
+    overflow: hidden;   /* Необходимо для удержания эффекта внутри кнопки */
+}
+
+.position-aware-effect {
+    content: '';
+    position: absolute;
+    display: block;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3); /* Полупрозрачный белый */
+    transform: translate(-50%, -50%);
+    transition: width 0.6s ease-out, height 0.6s ease-out;
+    z-index: 1; /* Поверх текста кнопки */
+    opacity: 1;
+    /* Анимация роста круга */
+    animation: ripple 0.6s linear forwards;
+}
+
+@keyframes ripple {
+  from {
+    width: 0;
+    height: 0;
+    opacity: 0.5;
+  }
+  to {
+    width: 200%; /* Больше размера кнопки */
+    height: 200%;
+    opacity: 0;
+  }
+}
 
 /* Боковая панель с фильтрами */
 .sidebar {
@@ -606,30 +641,43 @@ body {
   min-height: 55px; /* Примерная минимальная высота для 3 строк */
 }
 
-/* Ссылка "Подробнее" */
-.detail-link {
+/* Ссылка "Подробнее" - стилизуем как кнопку */
+.detail-link.detail-button { /* Комбинированный селектор */
+  display: inline-flex; /* Меняем на inline-flex для центрирования */
+  align-items: center;
+  justify-content: center; /* Центрируем текст */
+  padding: 8px 15px; /* Паддинги кнопки */
+  margin-top: auto; /* Прижимаем к низу карточки */
+  border: 1px solid #004e9f; /* Синяя рамка */
+  border-radius: 6px; /* Скругление углов */
+  background-color: #fff; /* Белый фон */
   font-family: 'Unbounded', sans-serif;
   font-size: 13px;
-  font-weight: 400;
-  color: #004e9f; /* Синий цвет */
+  font-weight: 500; /* Средняя жирность */
+  color: #004e9f; /* Синий цвет текста */
   text-decoration: none;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start; /* Выравнивание по левому краю */
-  margin-top: auto; /* Прижимаем к низу карточки */
-  transition: color 0.2s ease;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.1s ease;
+  cursor: pointer;
+  width: auto; /* Ширина по контенту */
+  align-self: center; /* Центрируем кнопку по горизонтали внизу карточки */
 }
 
-.detail-link:hover {
-  color: #003CD9; /* Затемняем при наведении */
+.detail-link.detail-button:hover {
+  background-color: #004e9f; /* Синий фон при наведении */
+  color: #fff; /* Белый текст при наведении */
+  border-color: #004e9f;
 }
 
-.detail-link i {
+.detail-link.detail-button:active {
+    transform: scale(0.98); /* Легкое нажатие */
+}
+
+.detail-link.detail-button i {
   margin-left: 5px;
   transition: transform 0.2s ease;
 }
 
-.detail-link:hover i {
+.detail-link.detail-button:hover i {
    transform: translateX(3px); /* Сдвигаем стрелку при наведении */
 }
 

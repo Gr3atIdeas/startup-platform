@@ -115,7 +115,26 @@
                 </div>
                 
                 <div class="category-progress">
-                  <div class="category-tag">{{ startup.direction.direction_name|default:"Не указано" }}</div>
+                  <div class="category-tag">
+                    {% with original_name=startup.direction.direction_name|default:"" %}
+                        {% if original_name == "Medicine" %}Медицина
+                        {% elif original_name == "Auto" %}Автомобили
+                        {% elif original_name == "Delivery" %}Доставка
+                        {% elif original_name == "Cafe" %}Кафе/рестораны
+                        {% elif original_name == "Fastfood" %}Фастфуд
+                        {% elif original_name == "Health" %}Здоровье
+                        {% elif original_name == "Beauty" %}Красота
+                        {% elif original_name == "Transport" %}Транспорт
+                        {% elif original_name == "Sport" %}Спорт
+                        {% elif original_name == "Psychology" %}Психология
+                        {% elif original_name == "AI" %}ИИ
+                        {% elif original_name == "Finance" %}Финансы
+                        {% elif original_name == "Healthcare" %}Здравоохранение
+                        {% elif original_name == "Technology" %}Технологии
+                        {% else %}{{ original_name|default:"Не указано" }}{# Возвращаем оригинал или "Не указано" #}
+                        {% endif %}
+                    {% endwith %}
+                  </div>
                   {% with progress=startup.get_progress_percentage|default:0 %}
                   <div class="progress-bar-container">
                     <div class="progress-bar-bg">
@@ -143,7 +162,7 @@
                   {{ startup.description|truncatewords:15 }}
                 </div>
                 
-                <a href="{% url 'startup_detail' startup.startup_id %}" class="detail-link">
+                <a href="{% url 'startup_detail' startup.startup_id %}" class="detail-link detail-button">
                   Подробнее <i class="fas fa-arrow-right"></i>
                 </a>
               </div>
@@ -231,12 +250,15 @@
         var span = document.createElement('span');
         span.style.top = relY + 'px';
         span.style.left = relX + 'px';
+        span.classList.add('position-aware-effect');
         
         this.appendChild(span);
         
         setTimeout(function() {
-          span.remove();
-        }, 500);
+          if (span.parentNode === button) {
+            button.removeChild(span);
+          }
+        }, 600);
       });
     });
   });
