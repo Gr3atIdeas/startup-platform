@@ -23,12 +23,20 @@
   --footer-btn-radius: 4px;
   --logo-size: 32px;
   --yellow-color: #FFEF2B;
+  --standard-button-border: #004e9f;
+  --exception-button-border: #ffef2b;
 }
 
-/* Общие стили для всех кнопок - базовые */
-button, .btn, input[type="submit"], input[type="button"], 
-.catalog-search-btn, .show-button, .detail-button, 
-.join-button, .login-btn, .create-startup-btn, .logout-btn, .nav-menu a {
+button:not(.login-btn):not(.join-button), 
+.btn:not(.login-btn):not(.join-button), 
+input[type="submit"]:not(.login-btn):not(.join-button), 
+input[type="button"]:not(.login-btn):not(.join-button), 
+.catalog-search-btn:not(.login-btn):not(.join-button), 
+.show-button:not(.login-btn):not(.join-button), 
+.detail-button:not(.login-btn):not(.join-button), 
+.create-startup-btn:not(.login-btn):not(.join-button), 
+.logout-btn:not(.login-btn):not(.join-button), 
+.nav-menu a:not(.login-btn):not(.join-button) {
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -42,14 +50,34 @@ button, .btn, input[type="submit"], input[type="button"],
   text-decoration: none;
   cursor: pointer;
   overflow: hidden; 
-  border: 1px solid #004e9f !important; /* Синий ободок для стандартных кнопок */
+  border: 1px solid var(--standard-button-border) !important;
   outline: none;
-  background-color: #ffffff !important; /* Белый фон */
-  color: #000000; /* Черный текст */
+  background-color: #ffffff !important;
+  color: #000000 !important;
   z-index: 1; 
 }
 
-/* Стили для кнопок меню навигации */
+.login-btn, .join-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--btn-padding, 0.5em 1.5em); 
+  border-radius: var(--btn-border-radius, 8px); 
+  font-family: 'Unbounded', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  overflow: hidden; 
+  border: 1px solid var(--exception-button-border) !important;
+  outline: none;
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  z-index: 1; 
+}
+
 .nav-menu a {
   position: relative;
   display: inline-block;
@@ -60,54 +88,6 @@ button, .btn, input[type="submit"], input[type="button"],
   font-weight: 500;
   overflow: hidden;
   z-index: 1;
-}
-
-.nav-menu a.active {
-  /* background-color: var(--accent-color); */ /* Remove background override */
-  /* Keep specific styles if needed, e.g., different text color */
-  /* color: var(--light-color); */
-}
-
-/* Стили для кнопок в футере */
-footer button,
-footer .btn,
-footer a.btn {
-  /* background-color: transparent; */ /* Use default white */
-  border-color: #004e9f; /* Default blue border, maybe override if needed */
-  color: #000000; /* Default black text */
-  /* padding: 8px 16px; */ /* Use default padding */
-  /* width: auto; */
-  /* min-width: 100px; */
-  /* height: auto; */
-}
-
-/* Стили для кнопки присоединения - исключение */
-.join-button {
-  color: #000000 !important; 
-  border-color: #ffef2b !important; /* Желтый ободок */
-  background-color: #ffffff !important; /* Белый фон */
-}
-
-/* Стили для кнопки входа - исключение */
-.login-btn {
-  color: #000000 !important; 
-  border-color: #ffef2b !important; /* Желтый ободок */
-  background-color: #ffffff !important; /* Белый фон */
-}
-
-/* Стили для кнопки создания стартапа */
-.create-startup-btn {
-  /* background-color: transparent; */ /* Use default white */
-  color: #000000 !important; 
-  border-color: #004e9f !important; 
-  /* border-width: 2px; */ /* Keep 1px consistent or adjust */
-}
-
-/* Стили для кнопки выхода */
-.logout-btn {
-  /* background-color: transparent; */ /* Use default white */
-  color: #000000 !important; 
-  border-color: #004e9f !important; 
 }
 
 @media (max-width: 768px) {
@@ -122,7 +102,6 @@ footer a.btn {
   }
 }
 
-/* Button content: position, z-index, transition */
 button > *,
 .btn > *,
 input[type="submit"] > *,
@@ -140,7 +119,6 @@ input[type="button"] > *,
   transition: color 0.2s ease-in-out; 
 }
 
-/* Ensure pseudo-elements are also above the wave but DON'T blend */
 button::before, button::after,
 .btn::before, .btn::after,
 .join-button::before, .join-button::after,
@@ -151,37 +129,41 @@ button::before, button::after,
     z-index: 1; 
 }
 
-/* Цвет САМОЙ кнопки (для прямого текста) при наведении */
-body button.wave-active,
-body .btn.wave-active,
-body input[type="submit"].wave-active,
-body input[type="button"].wave-active,
-body .catalog-search-btn.wave-active,
-body .show-button.wave-active,
-body .detail-button.wave-active,
-body .create-startup-btn.wave-active,
-body .logout-btn.wave-active,
-body .nav-menu a.wave-active {
+/* Состояние при наведении для СТАНДАРТНЫХ кнопок */
+body button:not(.login-btn):not(.join-button).wave-active,
+body .btn:not(.login-btn):not(.join-button).wave-active,
+body input[type="submit"]:not(.login-btn):not(.join-button).wave-active,
+body input[type="button"]:not(.login-btn):not(.join-button).wave-active,
+body .catalog-search-btn:not(.login-btn):not(.join-button).wave-active,
+body .show-button:not(.login-btn):not(.join-button).wave-active,
+body .detail-button:not(.login-btn):not(.join-button).wave-active,
+body .create-startup-btn:not(.login-btn):not(.join-button).wave-active,
+body .logout-btn:not(.login-btn):not(.join-button).wave-active,
+body .nav-menu a:not(.login-btn):not(.join-button).wave-active {
   color: #ffffff !important; /* Белый текст при наведении для стандартных кнопок */
 }
+
+/* Состояние при наведении для кнопок-ИСКЛЮЧЕНИЙ */
 body .login-btn.wave-active,
 body .join-button.wave-active {
   color: #000000 !important; /* Черный текст при наведении для исключений */
 }
 
-/* Цвет ПОТОМКОВ (для иконок, вложенных span и т.д.) при наведении */
-body button.wave-active *,
-body .btn.wave-active *,
-body input[type="submit"].wave-active *,
-body input[type="button"].wave-active *,
-body .catalog-search-btn.wave-active *,
-body .show-button.wave-active *,
-body .detail-button.wave-active *,
-body .create-startup-btn.wave-active *,
-body .logout-btn.wave-active *,
-body .nav-menu a.wave-active * {
+/* Состояние при наведении для ДОЧЕРНИХ элементов СТАНДАРТНЫХ кнопок */
+body button:not(.login-btn):not(.join-button).wave-active *,
+body .btn:not(.login-btn):not(.join-button).wave-active *,
+body input[type="submit"]:not(.login-btn):not(.join-button).wave-active *,
+body input[type="button"]:not(.login-btn):not(.join-button).wave-active *,
+body .catalog-search-btn:not(.login-btn):not(.join-button).wave-active *,
+body .show-button:not(.login-btn):not(.join-button).wave-active *,
+body .detail-button:not(.login-btn):not(.join-button).wave-active *,
+body .create-startup-btn:not(.login-btn):not(.join-button).wave-active *,
+body .logout-btn:not(.login-btn):not(.join-button).wave-active *,
+body .nav-menu a:not(.login-btn):not(.join-button).wave-active * {
   color: #ffffff !important; /* Белый текст при наведении для стандартных кнопок */
 }
+
+/* Состояние при наведении для ДОЧЕРНИХ элементов кнопок-ИСКЛЮЧЕНИЙ */
 body .login-btn.wave-active *,
 body .join-button.wave-active * {
   color: #000000 !important; /* Черный текст при наведении для исключений */

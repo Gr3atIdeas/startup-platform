@@ -127,9 +127,9 @@
 
 /* Стиль для кнопки "Присоединиться" */
 .join-button {
-  background-color: #FFFFFF;
-  color: #000000;
-  border: 1px solid #FFEF2B;
+  background-color: #FFFFFF !important;
+  color: #000000 !important;
+  border: 1px solid #FFEF2B !important;
   border-radius: 6px;
   padding: 10px 20px;
   font-family: 'Unbounded', sans-serif;
@@ -141,6 +141,10 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+}
+
+.join-button.wave-active {
+  color: #000000 !important;
 }
 
 .join-button i {
