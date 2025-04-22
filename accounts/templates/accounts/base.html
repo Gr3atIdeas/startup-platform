@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Koulen&family=Circe:wght@400;700&family=Unbounded:wght@300;400;500&display=swap" rel="stylesheet">
   
-  <!-- Файл стилей футера -->
+  <!-- Глобальные стили -->
   <link rel="stylesheet" href="{% static 'accounts/css/footer_styles.css' %}">
   
   <!-- Подключение CSS -->
@@ -22,6 +22,7 @@
   <link rel="stylesheet" href="{% static 'accounts/css/buttons.css' %}?v={% now 'U' %}">
   
   <style>
+    html { scroll-behavior: smooth; }
     :root {
       --primary-color: #7B61FF;
       --secondary-color: #818CE5;
@@ -380,5 +381,6 @@
   </script>
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <script src="{% static 'accounts/js/button_effects.js' %}"></script>
+  <script src="{% static 'accounts/js/global_styles.js' %}"></script>
 </body>
 </html>
