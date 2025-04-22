@@ -148,40 +148,39 @@
           {% for startup in approved_startups %}
             <a href="{% url 'startup_detail' startup.startup_id %}" class="startup-card-link">
               <div class="startup-card">
-                <!-- Логотип стартапа -->
-                <div class="startup-image">
-                  {% if startup.logo_urls %}
-                    <img src="{% get_file_url_tag startup.logo_urls.0 startup.startup_id 'logo' %}" alt="{{ startup.title }}">
-                  {% else %}
-                    <div class="startup-image-placeholder">
-                      {{ startup.title|make_list|first|upper }}
+                <!-- Заголовок с фото и названием -->
+                <div class="startup-header">
+                  <div class="startup-image">
+                    {% if startup.logo_urls %}
+                      <img src="{% get_file_url_tag startup.logo_urls.0 startup.startup_id 'logo' %}" alt="{{ startup.title }}">
+                    {% else %}
+                      <div class="startup-image-placeholder">
+                        {{ startup.title|make_list|first|upper }}
+                      </div>
+                    {% endif %}
+                  </div>
+                  
+                  <h3 class="startup-name">{{ startup.title }}</h3>
+                  
+                  <div class="startup-rating">
+                    <div class="startup-rating-text">Рейтинг 4,2/5 (534)</div>
+                    <div class="comment-counter">
+                      <i class="far fa-comment"></i>
+                      <span>17</span>
                     </div>
-                  {% endif %}
-                </div>
-                
-                <!-- Название стартапа -->
-                <h3 class="startup-name">{{ startup.title }}</h3>
-                
-                <!-- Рейтинг и комментарии -->
-                <div class="startup-rating">
-                  <div class="startup-rating-text">Рейтинг 4,2/5 (534)</div>
-                  <div class="comment-counter">
-                    <i class="far fa-comment"></i>
-                    <span>17</span>
                   </div>
                 </div>
                 
-                <!-- Тип стартапа (категория) и прогресс-бар -->
-                <div class="progress-section">
-                  <div class="startup-type">Медицина</div>
-                  <div class="progress-bar">
-                    <div class="progress-fill" style="width:65%"></div>
-                    <div class="progress-value">65%</div>
+                <!-- Тип стартапа/категория -->
+                <div class="startup-type">Медицина</div>
+                
+                <!-- Прогресс-бар -->
+                <div class="progress-container">
+                  <div class="progress-bg">
+                    <div class="progress-fill"></div>
+                    <div class="progress-text">65%</div>
                   </div>
                 </div>
-                
-                <!-- Кнопка "Инвестирование+Выкуп" -->
-                <div class="investment-type">Инвестирование+Выкуп</div>
                 
                 <!-- Цель финансирования -->
                 <div class="funding-goal">
@@ -200,11 +199,9 @@
                 </div>
                 
                 <!-- Ссылка "Подробнее" -->
-                <div class="detail-link-wrapper">
-                  <a href="{% url 'startup_detail' startup.startup_id %}" class="detail-link">
-                    Подробнее <i class="fas fa-arrow-right"></i>
-                  </a>
-                </div>
+                <a href="{% url 'startup_detail' startup.startup_id %}" class="detail-link">
+                  Подробнее <i class="fas fa-arrow-right"></i>
+                </a>
               </div>
             </a>
           {% endfor %}
