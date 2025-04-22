@@ -230,10 +230,10 @@ function handleTouchStart(e) {
 // Helper function for wave color
 function getWaveColor(button) {
     if (button.classList.contains('login-btn') || button.classList.contains('join-button')) {
-        // Исключения: желтый цвет
+        // Исключения: желтый цвет #ffef2b
         return '#ffef2b'; 
     } else {
-        // Стандартный случай: синий цвет
+        // Стандартный случай: синий цвет #004e9f
         return '#004e9f'; 
     }
 } 

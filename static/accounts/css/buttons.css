@@ -42,12 +42,11 @@ button, .btn, input[type="submit"], input[type="button"],
   text-decoration: none;
   cursor: pointer;
   overflow: hidden; 
-  border: 1px solid #004e9f !important; /* Keep !important */
+  border: 1px solid #004e9f !important; /* Синий ободок для стандартных кнопок */
   outline: none;
-  background-color: #ffffff !important; /* Keep !important */
-  color: #000000; /* REMOVE !important from base text color */
+  background-color: #ffffff !important; /* Белый фон */
+  color: #000000; /* Черный текст */
   z-index: 1; 
-  /* transition: color 0.2s ease-in-out; */ /* Keep removed */
 }
 
 /* Стили для кнопок меню навигации */
@@ -82,18 +81,18 @@ footer a.btn {
   /* height: auto; */
 }
 
-/* Стили для кнопки присоединения */
+/* Стили для кнопки присоединения - исключение */
 .join-button {
-  /* background-color: var(--accent-color); */ 
   color: #000000 !important; 
-  border-color: #ffef2b !important; /* Exception: Yellow border - ADD !important */
+  border-color: #ffef2b !important; /* Желтый ободок */
+  background-color: #ffffff !important; /* Белый фон */
 }
 
-/* Стили для кнопки входа */
+/* Стили для кнопки входа - исключение */
 .login-btn {
-  /* background-color: var(--yellow-color); */ 
   color: #000000 !important; 
-  border-color: #ffef2b !important; /* Exception: Yellow border - ADD !important */
+  border-color: #ffef2b !important; /* Желтый ободок */
+  background-color: #ffffff !important; /* Белый фон */
 }
 
 /* Стили для кнопки создания стартапа */
@@ -138,7 +137,6 @@ input[type="button"] > *,
 .nav-menu a > * {
   position: relative;
   z-index: 1;
-  /* color: inherit; */ /* REMOVED */
   transition: color 0.2s ease-in-out; 
 }
 
@@ -151,26 +149,9 @@ button::before, button::after,
 .logout-btn::before, .logout-btn::after {
     position: relative; /* Needed for z-index */
     z-index: 1; 
-    /* mix-blend-mode: normal; */ /* Reset blend mode if they exist and shouldn't blend */
 }
 
-/* --- УБИРАЕМ СТАРЫЕ ПРАВИЛА ДЛЯ ЦВЕТА КНОПКИ --- */
-/*
-button.wave-active,
-.btn.wave-active,
-...
-.nav-menu a.wave-active {
-  color: #ffffff !important; 
-}
-.login-btn.wave-active,
-.join-button.wave-active {
-  color: #000000 !important; 
-}
-*/
-
-/* --- ПРАВИЛА ДЛЯ ЦВЕТА САМОЙ КНОПКИ И ПОТОМКОВ (С ПОВЫШЕННОЙ СПЕЦИФИЧНОСТЬЮ) --- */
-
-/* Цвет САМОЙ кнопки (для прямого текста) */
+/* Цвет САМОЙ кнопки (для прямого текста) при наведении */
 body button.wave-active,
 body .btn.wave-active,
 body input[type="submit"].wave-active,
@@ -181,14 +162,14 @@ body .detail-button.wave-active,
 body .create-startup-btn.wave-active,
 body .logout-btn.wave-active,
 body .nav-menu a.wave-active {
-  color: #ffffff !important; /* Стандартно - белый текст */
+  color: #ffffff !important; /* Белый текст при наведении для стандартных кнопок */
 }
 body .login-btn.wave-active,
 body .join-button.wave-active {
-  color: #000000 !important; /* Исключения - черный текст */
+  color: #000000 !important; /* Черный текст при наведении для исключений */
 }
 
-/* Цвет ПОТОМКОВ (для иконок, вложенных span и т.д.) */
+/* Цвет ПОТОМКОВ (для иконок, вложенных span и т.д.) при наведении */
 body button.wave-active *,
 body .btn.wave-active *,
 body input[type="submit"].wave-active *,
@@ -199,9 +180,9 @@ body .detail-button.wave-active *,
 body .create-startup-btn.wave-active *,
 body .logout-btn.wave-active *,
 body .nav-menu a.wave-active * {
-  color: #ffffff !important; /* Стандартно - белый текст */
+  color: #ffffff !important; /* Белый текст при наведении для стандартных кнопок */
 }
 body .login-btn.wave-active *,
 body .join-button.wave-active * {
-  color: #000000 !important; /* Исключения - черный текст */
+  color: #000000 !important; /* Черный текст при наведении для исключений */
 } 
