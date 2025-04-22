@@ -5,6 +5,7 @@
 
 document.addEventListener('DOMContentLoaded', function() {
     initPositionAware();
+    initNavButtons();
     
     const observer = new MutationObserver((mutations) => {
         let needsReInit = false;
@@ -19,6 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         if (needsReInit) {
             initPositionAware();
+            initNavButtons();
         }
     });
 
@@ -28,11 +30,43 @@ document.addEventListener('DOMContentLoaded', function() {
     window.XMLHttpRequest = function() {
         const xhr = new originalXHR();
         xhr.addEventListener('load', function() {
-            setTimeout(initPositionAware, 150);
+            setTimeout(() => {
+                initPositionAware();
+                initNavButtons();
+            }, 150);
         });
         return xhr;
     };
 });
+
+// Инициализация специальной обработки кнопок навигации
+function initNavButtons() {
+    const navButtons = document.querySelectorAll('.nav-menu a:not(.login-btn)');
+    
+    navButtons.forEach(button => {
+        // Удаляем существующие обработчики, чтобы не было дублирования
+        button.removeEventListener('mouseenter', handleNavButtonEnter);
+        button.removeEventListener('mouseleave', handleNavButtonLeave);
+        
+        // Добавляем новые обработчики для навигационных кнопок
+        button.addEventListener('mouseenter', handleNavButtonEnter);
+        button.addEventListener('mouseleave', handleNavButtonLeave);
+    });
+}
+
+// Обработчик наведения на кнопку навигации
+function handleNavButtonEnter(e) {
+    const button = e.currentTarget;
+    // Добавляем границу при наведении
+    button.style.border = '1px solid var(--standard-button-border)';
+}
+
+// Обработчик ухода курсора с кнопки навигации
+function handleNavButtonLeave(e) {
+    const button = e.currentTarget;
+    // Удаляем границу при уходе курсора
+    button.style.border = 'none';
+}
 
 function initPositionAware() {
     const buttons = document.querySelectorAll('button, .btn, input[type="submit"], input[type="button"], .catalog-search-btn, .show-button, .detail-button, .join-button, .login-btn, .create-startup-btn, .logout-btn, .nav-menu a');

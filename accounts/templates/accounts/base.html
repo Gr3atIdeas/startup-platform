@@ -38,7 +38,6 @@
     body {
       margin: 0;
       padding: 0;
-      padding-top: 68px; /* Отступ для фиксированного хедера */
       font-family: 'Unbounded', Arial, sans-serif;
       background-color: var(--background-light);
       background-image: url('{% static "accounts/images/background.webp" %}');
@@ -70,14 +69,9 @@
       background-color: transparent;
       max-width: 100%;
       width: 100%;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 1000;
+      position: relative;
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       box-sizing: border-box;
-      transition: all 0.3s ease;
       animation: fadeInHeader 0.5s ease;
     }
     
@@ -145,6 +139,7 @@
       transition: background-color 0.3s, color 0.3s;
       font-size: 16px;
       white-space: nowrap;
+      border: none !important;
     }
     
     .nav-menu a:hover {
@@ -164,17 +159,15 @@
     /* Кнопка входа и выхода */
     .login-btn {
       position: relative;
+      background-color: #FFEF2B !important;
+      color: #000000 !important;
+      border: 1px solid #FFEF2B !important;
     }
     
     /* Анимации для хедера */
     @keyframes fadeInHeader {
       from { opacity: 0; transform: translateY(-20px); }
       to { opacity: 1; transform: translateY(0); }
-    }
-    
-    .header-scrolled {
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      background-color: rgba(0, 0, 0, 0.8);
     }
     
     /* Адаптивность */
@@ -207,34 +200,11 @@
         justify-content: center;
         margin-top: 10px;
       }
-      
-      body {
-        padding-top: 130px;
-      }
     }
   </style>
 
   {% block head_extra %}
     {{ block.super }}
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const header = document.querySelector('.header');
-        
-        // Эффект при скролле
-        window.addEventListener('scroll', function() {
-          if (window.scrollY > 20) {
-            header.classList.add('header-scrolled');
-          } else {
-            header.classList.remove('header-scrolled');
-          }
-        });
-        
-        // Проверяем сразу при загрузке
-        if (window.scrollY > 20) {
-          header.classList.add('header-scrolled');
-        }
-      });
-    </script>
   {% endblock %}
 </head>
 <body>
@@ -343,33 +313,6 @@
       </div>
     </div>
   </footer>
-  <script>
-    // Немедленно выполняемая функция для управления фиксированным хедером
-    (function() {
-      // Установка отступа для <body>
-      document.body.style.paddingTop = '68px';
-      
-      // Получаем ссылку на хедер
-      const header = document.getElementById('main-header');
-      
-      // Функция для обработки скролла
-      function handleScroll() {
-        if (window.pageYOffset > 20) {
-          header.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.1)';
-          header.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
-        } else {
-          header.style.boxShadow = 'none';
-          header.style.backgroundColor = 'transparent';
-        }
-      }
-      
-      // Добавляем слушатель события
-      window.addEventListener('scroll', handleScroll);
-      
-      // Проверяем скролл сразу при загрузке
-      handleScroll();
-    })();
-  </script>
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <script src="{% static 'accounts/js/button_effects.js' %}"></script>
   <script src="{% static 'accounts/js/global_styles.js' %}"></script>

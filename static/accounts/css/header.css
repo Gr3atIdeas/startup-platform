@@ -16,7 +16,7 @@ body {
 /* Хедер сайта */
 header {
   background-color: transparent;
-  position: relative; /* Изменяем с fixed на relative */
+  position: relative; /* Меняем с fixed на relative */
   width: 100%;
   padding: 10px 20px;
   display: flex;
@@ -24,6 +24,7 @@ header {
   align-items: center;
   box-sizing: border-box;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 1000;
 }
 
 /* Логотип */
@@ -61,7 +62,8 @@ header {
   position: relative;
   overflow: hidden;
   background-color: transparent;
-  transition: background-color 0.3s, color 0.3s, border 0.3s;
+  transition: background-color 0.3s, color 0.3s;
+  border: none !important; /* Убираем рамки у всех кнопок навигации */
 }
 
 .nav-menu a:hover {
@@ -107,7 +109,23 @@ header {
 }
 
 /* Стили для кнопок в хедере */
-.login-btn, .create-startup-btn, .logout-btn {
+.login-btn, .logout-btn {
+  background-color: #FFEF2B !important;
+  color: #000000 !important;
+  border: 1px solid #FFEF2B !important;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 16px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s;
+  position: relative;
+  margin-left: auto;
+}
+
+.create-startup-btn {
   background-color: transparent !important;
   color: #FFFFFF !important;
   border: none !important;

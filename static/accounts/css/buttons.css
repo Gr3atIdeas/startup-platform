@@ -35,8 +35,7 @@ input[type="button"]:not(.login-btn):not(.join-button),
 .show-button:not(.login-btn):not(.join-button), 
 .detail-button:not(.login-btn):not(.join-button), 
 .create-startup-btn:not(.login-btn):not(.join-button), 
-.logout-btn:not(.login-btn):not(.join-button), 
-.nav-menu a:not(.login-btn):not(.join-button) {
+.logout-btn:not(.login-btn):not(.join-button) {
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -57,6 +56,27 @@ input[type="button"]:not(.login-btn):not(.join-button),
   z-index: 1; 
 }
 
+.nav-menu a:not(.login-btn) {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--btn-padding, 0.5em 1.5em); 
+  border-radius: var(--btn-border-radius, 8px); 
+  font-family: 'Unbounded', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  overflow: hidden; 
+  border: none !important;
+  outline: none;
+  background-color: transparent !important;
+  color: #FFFFFF !important;
+  z-index: 1; 
+}
+
 .login-btn, .join-button {
   position: relative;
   display: inline-flex;
@@ -73,7 +93,7 @@ input[type="button"]:not(.login-btn):not(.join-button),
   overflow: hidden; 
   border: 1px solid var(--exception-button-border) !important;
   outline: none;
-  background-color: #ffffff !important;
+  background-color: #FFEF2B !important;
   color: #000000 !important;
   z-index: 1; 
 }
@@ -131,8 +151,7 @@ body .catalog-search-btn:not(.login-btn):not(.join-button).wave-active,
 body .show-button:not(.login-btn):not(.join-button).wave-active,
 body .detail-button:not(.login-btn):not(.join-button).wave-active,
 body .create-startup-btn:not(.login-btn):not(.join-button).wave-active,
-body .logout-btn:not(.login-btn):not(.join-button).wave-active,
-body .nav-menu a:not(.login-btn):not(.join-button).wave-active {
+body .logout-btn:not(.login-btn):not(.join-button).wave-active {
   color: #ffffff !important;
 }
 
