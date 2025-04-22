@@ -6,7 +6,7 @@ html, body {
 }
 
 body {
-  padding-top: 60px; /* Высота хедера */
+  padding-top: 0; /* Убираем отступ, так как хедер больше не фиксированный */
   background-image: url('/static/accounts/images/background.webp');
   background-size: cover;
   background-position: top center;
@@ -16,10 +16,7 @@ body {
 /* Хедер сайта */
 header {
   background-color: transparent;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 1000;
+  position: relative; /* Изменяем с fixed на relative */
   width: 100%;
   padding: 10px 20px;
   display: flex;
@@ -110,59 +107,29 @@ header {
 }
 
 /* Стили для кнопок в хедере */
-.login-btn {
+.login-btn, .create-startup-btn, .logout-btn {
   background-color: transparent !important;
   color: #FFFFFF !important;
   border: none !important;
   text-decoration: none;
   font-weight: 500;
+  font-size: 16px;
+  padding: 8px 16px;
+  border-radius: 8px;
   position: relative;
   overflow: hidden;
   transition: all 0.3s;
-  border-radius: 8px;
-  padding: 8px 16px;
 }
 
-.login-btn:hover {
+.login-btn:hover, .logout-btn:hover {
   background-color: #FFEF2B !important;
   color: #000 !important;
-}
-
-.create-startup-btn {
-  background-color: transparent !important;
-  color: #FFFFFF !important;
-  border: none !important;
-  text-decoration: none;
-  font-weight: 500;
-  position: relative;
-  overflow: hidden;
-  transition: all 0.3s;
-  border-radius: 8px;
-  padding: 8px 16px;
 }
 
 .create-startup-btn:hover {
   border: 2px solid #7B61FF !important;
   color: #7B61FF !important;
   padding: 6px 14px; /* Компенсация толщины границы */
-}
-
-.logout-btn {
-  background-color: transparent !important;
-  color: #FFFFFF !important;
-  border: none !important;
-  text-decoration: none;
-  font-weight: 500;
-  position: relative;
-  overflow: hidden;
-  transition: all 0.3s;
-  border-radius: 8px;
-  padding: 8px 16px;
-}
-
-.logout-btn:hover {
-  background-color: #FFEF2B !important;
-  color: #000 !important;
 }
 
 /* Мобильное меню */
