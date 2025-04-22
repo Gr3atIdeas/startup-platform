@@ -334,10 +334,11 @@ body {
 
 /* Сетка стартапов */
 .startups-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
   margin-top: 20px;
+  justify-content: center;
 }
 
 /* Карточка стартапа */
@@ -345,211 +346,193 @@ body {
   background-color: white;
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 4px 4px 6px 0px rgba(0, 0, 0, 0.25);
   transition: all 0.3s ease;
   display: flex;
   flex-direction: column;
-  height: 100%;
+  width: 330px;
+  height: 480px;
+  flex-shrink: 0;
 }
 
 .startup-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3);
 }
 
-.startup-card-header {
-  position: relative;
-  height: 150px;
-  overflow: hidden;
-}
-
+/* Контейнер для изображения стартапа */
 .startup-image {
   width: 100%;
-  height: 100%;
+  height: 200px;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #004e9f;
+  margin-bottom: 10px;
 }
 
 .startup-image img {
-  width: 100%;
-  height: 100%;
+  width: 120px;
+  height: 120px;
   object-fit: cover;
+  border-radius: 50%;
 }
 
-.startup-type {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  background-color: rgba(0, 0, 0, 0.6);
-  color: white;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 12px;
-  font-weight: 300;
-  z-index: 2;
-  font-family: 'Unbounded', sans-serif;
+/* Контейнер для всего содержимого */
+.startup-card-header {
+  position: relative;
+  margin-top: 20px;
+  text-align: center;
 }
 
-.startup-card-overlay {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 15px;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
-  color: white;
-  opacity: 1;
-  transition: opacity 0.3s ease;
-}
-
-.startup-card:hover .startup-card-overlay {
-  opacity: 1;
-}
-
+/* Название стартапа и рейтинг */
 .startup-name {
   font-family: 'Unbounded', sans-serif;
   font-weight: 500;
-  font-size: 16px;
-  margin: 0 0 5px 0;
-  color: white;
-  line-height: 1.3;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  font-size: 40px;
+  margin: 0 0 10px 0;
+  color: #000;
+  text-align: center;
 }
 
 .startup-rating {
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 300;
-  font-size: 12px;
-  color: white;
   display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.startup-rating-text {
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 400;
+  font-size: 20px;
+  color: #004e9f;
+}
+
+.comment-counter {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #000;
+  font-family: 'Unbounded', sans-serif;
+  font-size: 20px;
+}
+
+/* Стиль для типа стартапа */
+.startup-category {
+  display: flex;
+  justify-content: center;
   align-items: center;
 }
 
-.rating-stars {
-  display: inline-flex;
-  margin-left: 5px;
+.startup-type {
+  background-color: #000;
+  color: white;
+  padding: 8px 20px;
+  border-radius: 0;
+  font-size: 20px;
+  font-weight: 500;
+  font-family: 'Unbounded', sans-serif;
+  display: inline-block;
+  text-align: center;
 }
 
-.rating-stars i {
-  font-size: 12px;
-  color: #E5E7EB;
-  margin-right: 2px;
+/* Контейнер для прогресс-бара */
+.progress-container {
+  margin: 0;
+  position: relative;
+  height: 40px;
 }
 
-.rating-stars i.active {
-  color: #FFD700;
+.progress-bg {
+  height: 40px;
+  background: #000;
+  position: relative;
 }
 
-.startup-card-body {
+.progress-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 40px;
+  background-color: #ffef2b;
+  width: 65%;
+}
+
+.progress-text {
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
+  color: white;
+  font-size: 20px;
+  font-weight: 500;
+  font-family: 'Unbounded', sans-serif;
+  z-index: 1;
+}
+
+/* Блок с целью финансирования */
+.funding-goal {
+  background-color: #f1f1f1;
   padding: 15px;
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
+  text-align: center;
+  font-family: 'Unbounded', sans-serif;
+  font-size: 20px;
+  font-weight: 500;
 }
 
+/* Блок информации об инвесторах */
+.investor-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 15px;
+  font-family: 'Unbounded', sans-serif;
+  font-size: 20px;
+  color: #000;
+}
+
+.investor-icon {
+  color: #000;
+}
+
+/* Описание стартапа */
 .startup-description {
   font-family: 'Unbounded', sans-serif;
   font-weight: 300;
-  font-size: 13px;
-  color: #333;
-  margin: 10px 0 15px;
-  line-height: 1.5;
-  flex-grow: 1;
+  font-size: 18px;
+  line-height: 1.4;
+  color: #000;
+  padding: 0 15px;
+  margin-bottom: 30px;
+  margin-top: 10px;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
-.startup-info {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.startup-info-wrapper {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.counter-group {
-  display: flex;
-  gap: 10px;
-}
-
-.comment-counter, .like-counter {
-  display: flex;
-  align-items: center;
-  font-size: 12px;
-  color: #666;
+/* Ссылка "Подробнее" */
+.detail-link {
   font-family: 'Unbounded', sans-serif;
-  font-weight: 300;
-}
-
-.comment-icon, .like-icon {
-  margin-right: 4px;
-}
-
-.startup-direction {
-  display: inline-block;
-  background-color: #f3f4f6;
-  color: #1f2937;
-  padding: 4px 10px;
-  border-radius: 4px;
-  font-size: 12px;
-  font-weight: 500;
-  font-family: 'Unbounded', sans-serif;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 120px;
-}
-
-.startup-card-footer {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: auto;
-}
-
-.detail-button {
-  background-color: #ffef2b;
-  color: #000;
-  border: none;
-  border-radius: 4px;
-  padding: 8px 15px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-}
-
-.investor-info {
+  font-size: 20px;
+  color: #004e9f;
+  text-decoration: none;
   display: flex;
   align-items: center;
-  font-size: 12px;
-  color: #666;
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 300;
-  text-align: center;
   justify-content: center;
+  margin-top: auto;
+  padding: 15px;
 }
 
-.investor-icon {
-  margin-right: 5px;
-  color: #7B61FF;
+.detail-link i {
+  margin-left: 5px;
 }
 
 /* Состояние, когда нет доступных стартапов */
 .no-startups {
-  grid-column: 1 / -1;
+  width: 100%;
   text-align: center;
   padding: 50px 0;
   background-color: rgba(255, 255, 255, 0.8);
@@ -565,6 +548,12 @@ body {
 }
 
 /* Адаптивность */
+@media (max-width: 1120px) {
+  .startups-grid {
+    justify-content: center;
+  }
+}
+
 @media (max-width: 960px) {
   .catalog-container {
     flex-direction: column;
@@ -580,15 +569,11 @@ body {
     margin-right: 0;
     margin-bottom: 20px;
   }
-  
-  .startups-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 740px) {
   .startups-grid {
-    grid-template-columns: 1fr;
+    justify-content: center;
   }
   
   .catalog-title {
@@ -596,13 +581,8 @@ body {
   }
   
   .startup-card {
-    max-width: 100%;
-  }
-}
-
-@media (max-width: 1200px) {
-  .startups-grid {
-    grid-template-columns: repeat(2, 1fr);
+    width: 100%;
+    max-width: 330px;
   }
 }
 
@@ -623,7 +603,6 @@ body {
   text-decoration: none;
   color: inherit;
   display: block;
-  height: 100%;
 }
 
 /* Прогресс-бар для заполненности */

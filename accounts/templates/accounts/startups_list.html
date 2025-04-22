@@ -148,52 +148,61 @@
           {% for startup in approved_startups %}
             <a href="{% url 'startup_detail' startup.startup_id %}" class="startup-card-link">
               <div class="startup-card">
-                <div class="startup-card-header">
-                  <div class="startup-type">
-                    Медицина
-                  </div>
-                  <div class="startup-image">
-                    {% if startup.logo_urls %}
-                      <img src="{% get_file_url_tag startup.logo_urls.0 startup.startup_id 'logo' %}" alt="{{ startup.title }}">
-                    {% else %}
-                      <div class="startup-image-placeholder">
-                        {{ startup.title|make_list|first|upper }}
-                      </div>
-                    {% endif %}
-                  </div>
-                  <div class="startup-card-overlay">
-                    <h3 class="startup-name">{{ startup.title }}</h3>
-                    <div class="startup-rating">
-                      Рейтинг {{ startup.average_rating|default:0|floatformat:1 }}/5
+                <!-- Изображение стартапа -->
+                <div class="startup-image">
+                  {% if startup.logo_urls %}
+                    <img src="{% get_file_url_tag startup.logo_urls.0 startup.startup_id 'logo' %}" alt="{{ startup.title }}">
+                  {% else %}
+                    <div class="startup-image-placeholder">
+                      {{ startup.title|make_list|first|upper }}
                     </div>
-                  </div>
+                  {% endif %}
                 </div>
-                <div class="startup-card-body">
-                  <div class="startup-info-wrapper">
-                    <div class="startup-direction">
-                      Медицина
-                    </div>
-                    <div class="counter-group">
-                      <div class="like-counter">
-                        <i class="far fa-thumbs-up like-icon"></i>
-                        <span>17</span>
-                      </div>
-                      <div class="comment-counter">
-                        <i class="far fa-comment comment-icon"></i>
-                        <span>17</span>
-                      </div>
+                
+                <!-- Информация о стартапе -->
+                <div class="startup-card-header">
+                  <h3 class="startup-name">{{ startup.title }}</h3>
+                  
+                  <div class="startup-rating">
+                    <div class="startup-rating-text">Рейтинг 4,2/5 (534)</div>
+                    <div class="comment-counter">
+                      <i class="far fa-comment"></i>
+                      <span>17</span>
                     </div>
                   </div>
+                  
+                  <div class="startup-category">
+                    <div class="startup-type">Медицина</div>
+                  </div>
+                  
+                  <!-- Прогресс-бар -->
+                  <div class="progress-container">
+                    <div class="progress-bg">
+                      <div class="progress-fill"></div>
+                      <div class="progress-text">65%</div>
+                    </div>
+                  </div>
+                  
+                  <!-- Цель финансирования -->
+                  <div class="funding-goal">
+                    Цель финансирования: 345 678 ₽
+                  </div>
+                  
+                  <!-- Информация об инвесторах -->
+                  <div class="investor-info">
+                    <i class="fas fa-users investor-icon"></i>
+                    <span>Инвестировало (648)</span>
+                  </div>
+                  
+                  <!-- Описание стартапа -->
                   <div class="startup-description">
-                    {{ startup.description }}
+                    Наш стартап разрабатывает инновационную платформу для телемедицины...
                   </div>
-                  <div class="startup-card-footer">
-                    <button class="detail-button">Подробнее</button>
-                    <div class="investor-info">
-                      <i class="fas fa-users investor-icon"></i>
-                      <span>Инвестировало (648)</span>
-                    </div>
-                  </div>
+                  
+                  <!-- Ссылка "Подробнее" -->
+                  <a href="{% url 'startup_detail' startup.startup_id %}" class="detail-link">
+                    Подробнее <i class="fas fa-arrow-right"></i>
+                  </a>
                 </div>
               </div>
             </a>
