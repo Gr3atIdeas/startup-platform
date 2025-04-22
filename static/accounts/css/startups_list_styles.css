@@ -646,19 +646,19 @@ body {
 /* Ссылка "Подробнее" - возвращаем стили простой ссылки */
 .detail-link { /* Убираем .detail-button */
   /* Убираем стили кнопки (display, padding, border, background, align-self) */
-  display: flex; /* Оставляем flex для выравнивания иконки */
+  display: inline-flex; /* Меняем на inline-flex для выравнивания иконки */
   align-items: center;
-  justify-content: flex-start; /* Выравнивание по левому краю */
-  margin-top: auto; /* Прижимаем к низу карточки */
+  /* justify-content: flex-start; Убираем, позиция будет абсолютной */
+  /* margin-top: auto; Убираем, используем absolute positioning */
+  position: absolute; /* Позиционируем относительно .startup-card */
+  left: 20px; /* Отступ слева, равный паддингу .startup-card-inner */
+  bottom: 20px; /* Отступ снизу, равный паддингу .startup-card-inner */
   font-family: 'Unbounded', sans-serif;
   font-size: 13px;
   font-weight: 400; /* Возвращаем стандартный вес */
   color: #004e9f; /* Синий цвет */
   text-decoration: none;
   transition: color 0.2s ease;
-  /* Убираем лишнее */
-  /* width: auto; */
-  /* cursor: pointer; */
 }
 
 .detail-link:hover {
