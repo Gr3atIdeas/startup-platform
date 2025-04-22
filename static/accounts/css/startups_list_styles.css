@@ -17,7 +17,7 @@ body {
   display: flex;
   align-items: flex-start; /* Выравниваем сайдбар и контент по верху */
   width: 100%;
-  max-width: 1350px; /* Увеличиваем максимальную ширину */
+  max-width: 1390px; /* Увеличиваем еще немного */
   margin: 0 auto; /* Центрируем контейнер */
   padding: 0 40px;
   gap: 21px; /* Отступ между сайдбаром и контентом */
@@ -27,7 +27,7 @@ body {
 /* Стили для заголовка */
 .catalog-header {
   width: 100%;
-  max-width: 1350px; /* Увеличиваем максимальную ширину */
+  max-width: 1390px; /* Увеличиваем еще немного */
   margin: 0 auto 20px auto; /* Центрируем и добавляем отступ снизу */
   padding: 0 40px;
   box-sizing: border-box;
@@ -51,11 +51,10 @@ body {
 
 /* Обертка для области карточек и поиска */
 .startups-content {
-  flex-grow: 1; /* Занимает оставшееся пространство */
+  flex-grow: 1; /* Возвращаем flex-grow, убираем calc() */
   display: flex;
   flex-direction: column;
-  width: calc(100% - 254px - 21px); /* Ширина = 100% контейнера - ширина сайдбара - отступ */
-  /* max-width НЕ НУЖЕН */
+  /* width: calc(100% - 254px - 21px); Убираем calc */
 }
 
 .catalog-search-wrapper {
@@ -150,7 +149,7 @@ body {
 .detail-link span { ... } */
 
 /* Эффекты - стили для Position Aware эффекта */
-.show-button, .detail-button, .catalog-search-btn {
+.show-button, .catalog-search-btn {
     position: relative; /* Необходимо для позиционирования span */
     overflow: hidden;   /* Необходимо для удержания эффекта внутри кнопки */
 }
@@ -644,43 +643,40 @@ body {
   /* max-height: 55px; */
 }
 
-/* Ссылка "Подробнее" - стилизуем как кнопку */
-.detail-link.detail-button { /* Комбинированный селектор */
-  display: inline-flex; /* Меняем на inline-flex для центрирования */
+/* Ссылка "Подробнее" - возвращаем стили простой ссылки */
+.detail-link { /* Убираем .detail-button */
+  /* Убираем стили кнопки (display, padding, border, background, align-self) */
+  display: flex; /* Оставляем flex для выравнивания иконки */
   align-items: center;
-  justify-content: center; /* Центрируем текст */
-  padding: 8px 15px; /* Паддинги кнопки */
+  justify-content: flex-start; /* Выравнивание по левому краю */
   margin-top: auto; /* Прижимаем к низу карточки */
-  border: 1px solid #004e9f; /* Синяя рамка */
-  border-radius: 6px; /* Скругление углов */
-  background-color: #fff; /* Белый фон */
   font-family: 'Unbounded', sans-serif;
   font-size: 13px;
-  font-weight: 500; /* Средняя жирность */
-  color: #004e9f; /* Синий цвет текста */
+  font-weight: 400; /* Возвращаем стандартный вес */
+  color: #004e9f; /* Синий цвет */
   text-decoration: none;
-  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.1s ease;
-  cursor: pointer;
-  width: auto; /* Ширина по контенту */
-  align-self: center; /* Центрируем кнопку по горизонтали внизу карточки */
+  transition: color 0.2s ease;
+  /* Убираем лишнее */
+  /* width: auto; */
+  /* cursor: pointer; */
 }
 
-.detail-link.detail-button:hover {
-  background-color: #004e9f; /* Синий фон при наведении */
-  color: #fff; /* Белый текст при наведении */
-  border-color: #004e9f;
+.detail-link:hover {
+  color: #003CD9; /* Затемняем при наведении */
+  /* Убираем стили hover для кнопки */
+  /* background-color: #004e9f; */
+  /* border-color: #004e9f; */
 }
 
-.detail-link.detail-button:active {
-    transform: scale(0.98); /* Легкое нажатие */
-}
+/* Убираем :active стили кнопки */
+/* .detail-link.detail-button:active { ... } */
 
-.detail-link.detail-button i {
+.detail-link i {
   margin-left: 5px;
   transition: transform 0.2s ease;
 }
 
-.detail-link.detail-button:hover i {
+.detail-link:hover i {
    transform: translateX(3px); /* Сдвигаем стрелку при наведении */
 }
 

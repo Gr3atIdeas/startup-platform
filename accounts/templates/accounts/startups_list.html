@@ -181,7 +181,7 @@
                   {{ startup.description|truncatewords:15 }}
                 </div>
                 
-                <a href="{% url 'startup_detail' startup.startup_id %}" class="detail-link detail-button">
+                <a href="{% url 'startup_detail' startup.startup_id %}" class="detail-link">
                   Подробнее <i class="fas fa-arrow-right"></i>
                 </a>
               </div>
@@ -258,7 +258,7 @@
     });
     
     // Эффект Position Aware для кнопок
-    var buttons = document.querySelectorAll('.show-button, .detail-button, .catalog-search-btn');
+    var buttons = document.querySelectorAll('.show-button, .catalog-search-btn');
     
     buttons.forEach(function(button) {
       button.addEventListener('mouseenter', function(e) {
