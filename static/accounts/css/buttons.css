@@ -90,32 +90,26 @@ input[type="button"]:not(.login-btn):not(.join-button),
   z-index: 1;
 }
 
-@media (max-width: 768px) {
-  :root {
-    --btn-padding: 0.4em 1.2em;
-  }
+span.wave-effect {
+  position: absolute !important;
+  z-index: -1 !important;
+  pointer-events: none !important;
 }
 
-@media (max-width: 480px) {
-  :root {
-    --btn-padding: 0.3em 1em;
-  }
-}
-
-button > *,
-.btn > *,
-input[type="submit"] > *,
-input[type="button"] > *,
-.catalog-search-btn > *,
-.show-button > *,
-.detail-button > *,
-.join-button > *,
-.login-btn > *,
-.create-startup-btn > *,
-.logout-btn > *,
-.nav-menu a > * {
+button > *:not(.wave-effect),
+.btn > *:not(.wave-effect),
+input[type="submit"] > *:not(.wave-effect),
+input[type="button"] > *:not(.wave-effect),
+.catalog-search-btn > *:not(.wave-effect),
+.show-button > *:not(.wave-effect),
+.detail-button > *:not(.wave-effect),
+.join-button > *:not(.wave-effect),
+.login-btn > *:not(.wave-effect),
+.create-startup-btn > *:not(.wave-effect),
+.logout-btn > *:not(.wave-effect),
+.nav-menu a > *:not(.wave-effect) {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   transition: color 0.2s ease-in-out; 
 }
 
@@ -125,11 +119,10 @@ button::before, button::after,
 .login-btn::before, .login-btn::after,
 .create-startup-btn::before, .create-startup-btn::after,
 .logout-btn::before, .logout-btn::after {
-    position: relative; /* Needed for z-index */
+    position: relative;
     z-index: 1; 
 }
 
-/* Состояние при наведении для СТАНДАРТНЫХ кнопок */
 body button:not(.login-btn):not(.join-button).wave-active,
 body .btn:not(.login-btn):not(.join-button).wave-active,
 body input[type="submit"]:not(.login-btn):not(.join-button).wave-active,
@@ -140,31 +133,44 @@ body .detail-button:not(.login-btn):not(.join-button).wave-active,
 body .create-startup-btn:not(.login-btn):not(.join-button).wave-active,
 body .logout-btn:not(.login-btn):not(.join-button).wave-active,
 body .nav-menu a:not(.login-btn):not(.join-button).wave-active {
-  color: #ffffff !important; /* Белый текст при наведении для стандартных кнопок */
+  color: #ffffff !important;
 }
 
-/* Состояние при наведении для кнопок-ИСКЛЮЧЕНИЙ */
 body .login-btn.wave-active,
 body .join-button.wave-active {
-  color: #000000 !important; /* Черный текст при наведении для исключений */
+  color: #000000 !important;
 }
 
-/* Состояние при наведении для ДОЧЕРНИХ элементов СТАНДАРТНЫХ кнопок */
-body button:not(.login-btn):not(.join-button).wave-active *,
-body .btn:not(.login-btn):not(.join-button).wave-active *,
-body input[type="submit"]:not(.login-btn):not(.join-button).wave-active *,
-body input[type="button"]:not(.login-btn):not(.join-button).wave-active *,
-body .catalog-search-btn:not(.login-btn):not(.join-button).wave-active *,
-body .show-button:not(.login-btn):not(.join-button).wave-active *,
-body .detail-button:not(.login-btn):not(.join-button).wave-active *,
-body .create-startup-btn:not(.login-btn):not(.join-button).wave-active *,
-body .logout-btn:not(.login-btn):not(.join-button).wave-active *,
-body .nav-menu a:not(.login-btn):not(.join-button).wave-active * {
-  color: #ffffff !important; /* Белый текст при наведении для стандартных кнопок */
+body button:not(.login-btn):not(.join-button).wave-active *:not(.wave-effect),
+body .btn:not(.login-btn):not(.join-button).wave-active *:not(.wave-effect),
+body input[type="submit"]:not(.login-btn):not(.join-button).wave-active *:not(.wave-effect),
+body input[type="button"]:not(.login-btn):not(.join-button).wave-active *:not(.wave-effect),
+body .catalog-search-btn:not(.login-btn):not(.join-button).wave-active *:not(.wave-effect),
+body .show-button:not(.login-btn):not(.join-button).wave-active *:not(.wave-effect),
+body .detail-button:not(.login-btn):not(.join-button).wave-active *:not(.wave-effect),
+body .create-startup-btn:not(.login-btn):not(.join-button).wave-active *:not(.wave-effect),
+body .logout-btn:not(.login-btn):not(.join-button).wave-active *:not(.wave-effect),
+body .nav-menu a:not(.login-btn):not(.join-button).wave-active *:not(.wave-effect) {
+  color: #ffffff !important;
+  position: relative;
+  z-index: 2;
 }
 
-/* Состояние при наведении для ДОЧЕРНИХ элементов кнопок-ИСКЛЮЧЕНИЙ */
-body .login-btn.wave-active *,
-body .join-button.wave-active * {
-  color: #000000 !important; /* Черный текст при наведении для исключений */
+body .login-btn.wave-active *:not(.wave-effect),
+body .join-button.wave-active *:not(.wave-effect) {
+  color: #000000 !important;
+  position: relative;
+  z-index: 2;
+}
+
+@media (max-width: 768px) {
+  :root {
+    --btn-padding: 0.4em 1.2em;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --btn-padding: 0.3em 1em;
+  }
 } 

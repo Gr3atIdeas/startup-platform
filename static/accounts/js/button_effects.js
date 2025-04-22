@@ -40,7 +40,7 @@ function initPositionAware() {
     buttons.forEach(button => {
         if (button.hasAttribute('data-position-aware-initialized')) return;
 
-        const existingSpan = button.querySelector('span');
+        const existingSpan = button.querySelector('span.wave-effect');
         if (existingSpan) {
             existingSpan.remove();
         }
@@ -50,6 +50,7 @@ function initPositionAware() {
         button.removeEventListener('touchstart', handleTouchStart);
         
         const waveSpan = document.createElement('span');
+        waveSpan.className = 'wave-effect';
         
         waveSpan.style.position = 'absolute';
         waveSpan.style.display = 'block';
@@ -57,10 +58,30 @@ function initPositionAware() {
         waveSpan.style.height = '0';
         waveSpan.style.borderRadius = '50%';
         waveSpan.style.transform = 'translate(-50%, -50%) scale(0)';
-        waveSpan.style.opacity = '0';
+        waveSpan.style.opacity = '1';
         waveSpan.style.pointerEvents = 'none';
-        waveSpan.style.zIndex = '0'; 
+        waveSpan.style.zIndex = '-1';
         waveSpan.style.transition = 'width 0.4s ease-in-out, height 0.4s ease-in-out, opacity 0.4s ease-in-out, transform 0.4s ease-in-out';
+
+        Array.from(button.childNodes).forEach(node => {
+            if (node.nodeType === Node.ELEMENT_NODE && node !== waveSpan) {
+                const currentZIndex = window.getComputedStyle(node).zIndex;
+                if (currentZIndex === 'auto' || parseInt(currentZIndex) < 1) {
+                    node.style.position = 'relative';
+                    node.style.zIndex = '2';
+                }
+            }
+        });
+
+        Array.from(button.childNodes).forEach(node => {
+            if (node.nodeType === Node.TEXT_NODE && node.textContent.trim() !== '') {
+                const wrapper = document.createElement('span');
+                wrapper.textContent = node.textContent;
+                wrapper.style.position = 'relative';
+                wrapper.style.zIndex = '2';
+                node.parentNode.replaceChild(wrapper, node);
+            }
+        });
 
         button.appendChild(waveSpan);
 
@@ -74,7 +95,7 @@ function initPositionAware() {
 
 function handleMouseEnter(e) {
     const button = e.currentTarget;
-    const waveSpan = button.querySelector('span');
+    const waveSpan = button.querySelector('span.wave-effect');
     if (!waveSpan || window.getComputedStyle(button).display === 'none') return;
     
     const rect = button.getBoundingClientRect();
@@ -101,8 +122,10 @@ function handleMouseEnter(e) {
         
         const children = button.querySelectorAll('*');
         children.forEach(child => {
-            if (child !== waveSpan) {
+            if (!child.classList.contains('wave-effect')) {
                 child.style.setProperty('color', '#000000', 'important');
+                child.style.setProperty('position', 'relative', 'important');
+                child.style.setProperty('z-index', '2', 'important');
             }
         });
     } else {
@@ -110,8 +133,10 @@ function handleMouseEnter(e) {
         
         const children = button.querySelectorAll('*');
         children.forEach(child => {
-            if (child !== waveSpan) {
+            if (!child.classList.contains('wave-effect')) {
                 child.style.setProperty('color', '#ffffff', 'important');
+                child.style.setProperty('position', 'relative', 'important');
+                child.style.setProperty('z-index', '2', 'important');
             }
         });
     }
@@ -119,7 +144,7 @@ function handleMouseEnter(e) {
 
 function handleMouseLeave(e) {
     const button = e.currentTarget;
-    const waveSpan = button.querySelector('span');
+    const waveSpan = button.querySelector('span.wave-effect');
     if (waveSpan) {
         waveSpan.style.opacity = '0'; 
         waveSpan.style.transform = 'translate(-50%, -50%) scale(0)';
@@ -132,7 +157,7 @@ function handleMouseLeave(e) {
         
         const children = button.querySelectorAll('*');
         children.forEach(child => {
-            if (child !== waveSpan) {
+            if (!child.classList.contains('wave-effect')) {
                 child.style.removeProperty('color');
             }
         });
@@ -151,9 +176,10 @@ function handleTouchStart(e) {
     const buttonHeight = button.offsetHeight;
     const diameter = Math.max(buttonWidth * 3, buttonHeight * 3);
     
-    let waveSpan = button.querySelector('span');
+    let waveSpan = button.querySelector('span.wave-effect');
     if (!waveSpan) {
         waveSpan = document.createElement('span');
+        waveSpan.className = 'wave-effect';
         waveSpan.style.position = 'absolute';
         waveSpan.style.display = 'block';
         waveSpan.style.width = '0';
@@ -186,8 +212,10 @@ function handleTouchStart(e) {
         
         const children = button.querySelectorAll('*');
         children.forEach(child => {
-            if (child !== waveSpan) {
+            if (!child.classList.contains('wave-effect')) {
                 child.style.setProperty('color', '#000000', 'important');
+                child.style.setProperty('position', 'relative', 'important');
+                child.style.setProperty('z-index', '2', 'important');
             }
         });
     } else {
@@ -195,8 +223,10 @@ function handleTouchStart(e) {
         
         const children = button.querySelectorAll('*');
         children.forEach(child => {
-            if (child !== waveSpan) {
+            if (!child.classList.contains('wave-effect')) {
                 child.style.setProperty('color', '#ffffff', 'important');
+                child.style.setProperty('position', 'relative', 'important');
+                child.style.setProperty('z-index', '2', 'important');
             }
         });
     }
@@ -213,7 +243,7 @@ function handleTouchStart(e) {
             
             const children = button.querySelectorAll('*');
             children.forEach(child => {
-                if (child !== waveSpan) {
+                if (!child.classList.contains('wave-effect')) {
                     child.style.removeProperty('color');
                 }
             });
