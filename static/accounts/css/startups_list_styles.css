@@ -375,7 +375,6 @@ body {
   display: flex; /* Используем Flexbox для сетки */
   flex-wrap: wrap;
   gap: 21px; /* Отступ между карточками согласно Figma */
-  /* margin-top: 20px; Убираем, отступ теперь от wrapper'а поиска */
   justify-content: flex-start; /* Выравнивание по левому краю */
   align-items: flex-start; /* Выравниваем по верху */
 }
@@ -383,7 +382,6 @@ body {
 /* Карточка стартапа */
 .startup-card {
   width: 330px; /* Ширина согласно Figma */
-  height: 448px; /* Высота согласно Figma */
   background-color: white;
   border-radius: 16px;
   box-shadow: 4px 4px 6px 0px rgba(0, 0, 0, 0.25); /* Тень согласно Figma */
@@ -406,18 +404,18 @@ body {
   padding: 20px; /* Внутренние отступы для всего контента карточки */
   display: flex;
   flex-direction: column;
-  height: 100%; /* Занимаем всю высоту родителя .startup-card */
+  flex-grow: 1; /* Чтобы занимал всю высоту auto-карточки */
   box-sizing: border-box;
 }
 
 
 /* Логотип стартапа */
 .startup-image {
-  width: 80px; /* Уменьшаем размер лого */
+  width: 80px; /* Размер лого */
   height: 80px;
   border-radius: 50%;
   overflow: hidden;
-  margin: 0 auto 10px auto; /* Центрируем и добавляем отступ снизу */
+  margin: 0 auto 15px auto; /* Центрируем и увеличиваем отступ снизу */
   flex-shrink: 0; /* Предотвращаем сжатие */
 }
 
@@ -444,29 +442,29 @@ body {
 /* Название стартапа */
 .startup-name {
   font-family: 'Unbounded', sans-serif;
-  font-weight: 500; /* Немного тоньше */
-  font-size: 18px; /* Уменьшаем шрифт */
-  margin: 0 0 8px 0; /* Отступы */
+  font-weight: 700; /* Делаем жирнее */
+  font-size: 24px; /* Увеличиваем шрифт */
+  margin: 0 0 10px 0; /* Отступы */
   color: #000;
   text-align: center;
-  line-height: 1.3;
+  line-height: 1.2;
 }
 
 /* Рейтинг и комментарии */
 .startup-rating-comments {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 15px; /* Отступ между рейтингом и комментариями */
-  margin-bottom: 12px; /* Отступ снизу */
+  justify-content: space-between; /* Разносим по краям */
+  gap: 10px; /* Небольшой отступ, если сожмутся */
+  margin-bottom: 15px; /* Увеличиваем отступ снизу */
   font-family: 'Unbounded', sans-serif;
-  font-weight: 300; /* Тоньше шрифт */
-  font-size: 12px; /* Уменьшаем шрифт */
-  color: #004e9f; /* Синий цвет текста */
+  font-weight: 400; /* Стандартная жирность */
+  font-size: 13px; /* Немного увеличиваем шрифт */
 }
 
 .rating-text {
-  /* Стили уже в .startup-rating-comments */
+   color: #004e9f; /* Синий цвет текста рейтинга */
+   text-align: left;
 }
 
 .comments-count {
@@ -474,6 +472,7 @@ body {
   align-items: center;
   gap: 5px; /* Отступ между иконкой и числом */
   color: #6B7280; /* Серый цвет для комментариев */
+  text-align: right;
 }
 
 .comments-count i {
@@ -485,36 +484,39 @@ body {
 .category-progress {
   display: flex;
   align-items: center;
-  justify-content: space-between; /* Разносим по краям */
   gap: 10px; /* Отступ между тегом и прогрессом */
-  margin-bottom: 10px;
+  margin-bottom: 15px; /* Увеличиваем отступ */
+  height: 28px; /* Фиксируем высоту блока */
 }
 
 .category-tag {
   background-color: #000;
   color: #fff;
   font-family: 'Unbounded', sans-serif;
-  font-weight: 400;
-  font-size: 11px; /* Мельче шрифт */
-  padding: 4px 8px;
-  border-radius: 4px;
+  font-weight: 500; /* Делаем жирнее */
+  font-size: 12px; /* Увеличиваем шрифт */
+  padding: 6px 12px; /* Увеличиваем паддинги */
+  border-radius: 6px; /* Скругляем углы */
   white-space: nowrap; /* Предотвращаем перенос */
+  text-align: center;
+  line-height: 1; /* Для лучшего центрирования */
 }
 
 .progress-bar-container {
   flex-grow: 1; /* Занимает доступное пространство */
-  display: flex;
-  align-items: center;
-  gap: 5px; /* Отступ между полосой и текстом */
+  position: relative; /* Для позиционирования текста */
+  height: 100%; /* На всю высоту родителя */
 }
 
 .progress-bar-bg {
-  flex-grow: 1;
-  height: 6px; /* Высота полосы прогресса */
+  width: 100%;
+  height: 100%; /* Высота полосы прогресса = высота родителя */
   background-color: #000; /* Фон полосы */
-  border-radius: 3px;
+  border-radius: 6px; /* Скругляем углы */
   overflow: hidden;
-  position: relative;
+  position: absolute; /* Абсолютное позиционирование внутри container */
+  top: 0;
+  left: 0;
 }
 
 .progress-bar-fill {
@@ -522,63 +524,58 @@ body {
   top: 0;
   left: 0;
   height: 100%;
-  background-color: #FDE047; /* Желтый цвет прогресса */
-  border-radius: 3px;
+  background-color: #8666FF; /* Фиолетовый цвет прогресса */
+  border-radius: 6px; /* Скругляем углы */
   transition: width 0.5s ease;
 }
 
 .progress-percentage {
+  position: absolute; /* Позиционируем над полосой */
+  right: 12px; /* Отступ справа */
+  top: 50%; /* Вертикальное центрирование */
+  transform: translateY(-50%);
   font-family: 'Unbounded', sans-serif;
-  font-weight: 500;
-  font-size: 11px; /* Мельче шрифт */
-  color: #000;
+  font-weight: 700; /* Жирный */
+  font-size: 13px; /* Увеличиваем шрифт */
+  color: #fff; /* Белый цвет текста */
   white-space: nowrap;
+  z-index: 1; /* Над progress-bar-fill */
 }
 
 
-/* Тип инвестирования */
-.investment-type {
-  border: 1px solid #000;
-  border-radius: 6px;
-  padding: 5px 10px;
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 400;
-  font-size: 12px; /* Мельче шрифт */
-  color: #000;
-  text-align: center;
-  margin-bottom: 10px;
-  background-color: #fff; /* Фон */
-}
+/* Тип инвестирования - скрыт или удален */
+/* .investment-type { ... } */
 
 /* Цель финансирования */
 .funding-goal-info {
   background-color: #f1f1f1; /* Светло-серый фон */
   border-radius: 6px;
-  padding: 8px 12px;
+  padding: 10px 12px; /* Увеличиваем паддинги */
   text-align: center;
   font-family: 'Unbounded', sans-serif;
-  font-size: 12px; /* Мельче шрифт */
-  font-weight: 400;
+  font-size: 13px; /* Увеличиваем шрифт */
+  font-weight: 500; /* Делаем жирнее */
   color: #000;
-  margin-bottom: 10px;
+  margin-bottom: 15px; /* Увеличиваем отступ */
+  line-height: 1.3;
 }
 
 /* Количество инвесторов */
 .investor-count {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start; /* Выравнивание по левому краю */
   gap: 6px; /* Отступ между иконкой и текстом */
   padding: 5px 0; /* Небольшой вертикальный отступ */
   font-family: 'Unbounded', sans-serif;
-  font-size: 12px; /* Мельче шрифт */
-  font-weight: 300; /* Тонкий шрифт */
+  font-size: 13px; /* Увеличиваем шрифт */
+  font-weight: 400; /* Стандартный вес */
   color: #6B7280; /* Серый цвет */
-  margin-bottom: 10px;
+  margin-bottom: 15px; /* Увеличиваем отступ */
 }
 
 .investor-count i {
-  font-size: 14px; /* Размер иконки */
+  font-size: 16px; /* Увеличиваем иконку */
   color: #6B7280; /* Серый цвет иконки */
 }
 
@@ -586,10 +583,10 @@ body {
 .startup-description {
   font-family: 'Unbounded', sans-serif;
   font-weight: 300;
-  font-size: 13px; /* Мельче шрифт */
-  line-height: 1.4; /* Межстрочный интервал */
+  font-size: 13px;
+  line-height: 1.4;
   color: #000;
-  margin-bottom: 15px; /* Отступ до кнопки "Подробнее" */
+  margin-bottom: 15px;
   text-align: left; /* Выравнивание по левому краю */
   /* Ограничение по количеству строк */
   display: -webkit-box;
@@ -598,20 +595,19 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
   flex-grow: 1; /* Занимает оставшееся место по высоте */
-  min-height: 55px; /* Минимальная высота, чтобы избежать скачков */
+  min-height: 55px; /* Примерная минимальная высота для 3 строк */
 }
 
 /* Ссылка "Подробнее" */
 .detail-link {
   font-family: 'Unbounded', sans-serif;
-  font-size: 13px; /* Мельче шрифт */
+  font-size: 13px;
   font-weight: 400;
   color: #004e9f; /* Синий цвет */
   text-decoration: none;
   display: flex;
   align-items: center;
   justify-content: flex-start; /* Выравнивание по левому краю */
-  /* padding: 15px; Убираем, отступы контролируются родительским .startup-card-inner */
   margin-top: auto; /* Прижимаем к низу карточки */
   transition: color 0.2s ease;
 }
@@ -687,7 +683,6 @@ body {
   .startup-card {
     width: 100%; /* Карточка занимает почти всю ширину */
     max-width: 350px; /* Но не больше этого значения */
-    height: auto; /* Высота авто */
   }
 
   .catalog-title {
