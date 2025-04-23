@@ -816,7 +816,8 @@ body {
     font-weight: 500;
     cursor: pointer;
     transition: color 0.2s ease; /* Оставляем переход для цвета */
-    /* position: relative; и overflow: hidden; уже добавлены выше */
+    position: relative; /* Добавляем для position aware эффекта */
+    overflow: hidden;   /* Добавляем для position aware эффекта */
 }
 
 .show-more-btn i {
