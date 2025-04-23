@@ -192,18 +192,50 @@
         {% endif %}
       </div>
 
-      {# Кнопка Показать еще #}
-      {% if approved_startups|length > 6 %}
-      <div class="show-more-container">
-          <button class="show-more-btn">
-              Показать еще <i class="fas fa-eye"></i>
-          </button>
-      </div>
-      {% endif %}
+      {# Контейнер для пагинации и кнопки "Показать еще" #}
+      <div class="pagination-controls">
+        {# Пагинация #}
+        {# !!! Важно: Убедитесь, что view передает page_obj в контекст !!! #}
+        {% if page_obj.has_other_pages %}
+          <div class="pagination">
+            {% if page_obj.has_previous %}
+              <a href="?page={{ page_obj.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="page-link page-arrow">&laquo;</a>
+            {% else %}
+              <span class="page-link page-arrow disabled">&laquo;</span>
+            {% endif %}
 
-    </div>
-  </div>
-</div>
+            {% for i in page_obj.paginator.page_range %}
+              {% if page_obj.number == i %}
+                <span class="page-link current-page">{{ i }}</span>
+              {% elif i > page_obj.number|add:'-3' and i < page_obj.number|add:'3' %}
+                <a href="?page={{ i }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="page-link">{{ i }}</a>
+              {% elif i == page_obj.number|add:'-3' or i == page_obj.number|add:'3' %}
+                <span class="page-link">...</span> {# Многоточие для пропуска страниц #}
+              {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+              <a href="?page={{ page_obj.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="page-link page-arrow">&raquo;</a>
+            {% else %}
+              <span class="page-link page-arrow disabled">&raquo;</span>
+            {% endif %}
+          </div>
+        {% endif %}
+
+        {# Кнопка Показать еще - оставляем пока, можно будет убрать/изменить логику #}
+        {# Условие {% if approved_startups|length > 6 %} может быть неактуально с пагинацией #}
+        {% if approved_startups|length > 6 %} {# <<< Возможно, изменить на page_obj.has_next или убрать #}
+        <div class="show-more-container">
+            <button class="show-more-btn">
+                Показать еще <i class="fas fa-eye"></i>
+            </button>
+        </div>
+        {% endif %}
+      </div> {# Конец .pagination-controls #}
+
+    </div> {# Конец .startups-content #}
+  </div> {# Конец .catalog-container #}
+</div> {# Конец .catalog-wrapper #}
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {

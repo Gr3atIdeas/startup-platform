@@ -17,8 +17,8 @@ body {
   display: flex;
   align-items: flex-start; /* Выравниваем сайдбар и контент по верху */
   width: 100%;
-  /* max-width: 1390px; Убираем максимальную ширину */
-  /* margin: 0 auto; Убираем центрирование */
+  max-width: 1303px; /* Возвращаем максимальную ширину */
+  margin: 0 auto; /* Возвращаем центрирование */
   padding: 0 20px; /* Оставляем отступ 20px */
   gap: 21px; /* Отступ между сайдбаром и контентом */
   box-sizing: border-box;
@@ -59,8 +59,8 @@ body {
 
 .catalog-search-wrapper {
   width: 100%;
-  /* max-width: 975.8px; Удаляем, ширина будет 100% от .startups-content */
-  margin: 0 0 20px 0; /* Убираем центрирование, добавляем отступ снизу */
+  max-width: 1032px; /* << Устанавливаем макс. ширину как у 3х карточек */
+  margin: 0 auto 20px auto; /* << Центрируем и добавляем отступ снизу */
   display: flex;
   justify-content: center;
 }
@@ -798,8 +798,8 @@ body {
 /* Кнопка Показать еще */
 .show-more-container {
     width: 100%;
-    text-align: left; /* Выравниваем по левому краю */
-    margin-top: 20px; /* Отступ от сетки */
+    /* text-align: left; Убираем, центрирование через родителя .pagination-controls */
+    margin-top: 15px; /* Уменьшаем отступ, т.к. есть пагинация */
     /* Добавляем небольшой отступ слева, если нужно, чтобы кнопка не прилипала к краю */
     /* padding-left: 5px; */
 }
@@ -833,3 +833,56 @@ body {
     /* border-color: #FFF; Убираем */
     /* color: #BBB; */ /* Убираем изменение цвета текста при наведении */
 }
+
+/* === Стили пагинации === */
+.pagination-controls {
+  text-align: center; /* Центрируем содержимое (пагинацию и кнопку) */
+  margin-top: 30px; /* Отступ сверху */
+}
+
+.pagination {
+  display: inline-flex; /* Используем inline-flex для центрирования как блока */
+  justify-content: center;
+  align-items: center;
+  gap: 5px; /* Отступ между элементами */
+  margin-bottom: 15px; /* Отступ снизу до кнопки Показать еще */
+}
+
+.page-link {
+  display: inline-block;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  color: #FFF; /* Белый цвет для цифр */
+  text-decoration: none;
+  font-family: 'Unbounded', sans-serif;
+  font-size: 14px;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.page-link:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: #bbb;
+}
+
+.current-page {
+  background-color: #0047FF; /* Синий фон для текущей страницы */
+  border-color: #0047FF;
+  color: #FFF;
+  font-weight: bold;
+}
+
+.page-arrow {
+  font-weight: bold;
+}
+
+.page-link.disabled {
+  color: #6c757d;
+  pointer-events: none;
+  border-color: #444; /* Более темная граница для неактивных стрелок */
+}
+
+.page-link.disabled:hover {
+  background-color: transparent;
+}
+/* === Конец стилей пагинации === */
