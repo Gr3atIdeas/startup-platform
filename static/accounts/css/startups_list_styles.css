@@ -114,7 +114,7 @@ body {
   border-radius: 50%; /* Делаем кнопку круглой */
   /* Убираем border-top-right-radius, border-bottom-right-radius */
   overflow: hidden;
-  transform: translateX(0); /* Сбрасываем возможное смещение */
+  transform: translateX(0) translateZ(0); /* Сбрасываем возможное смещение и добавляем translateZ */
 }
 
 /* Стили для кнопки показать и подробнее */
@@ -137,6 +137,7 @@ body {
   padding: 10px 12px; /* Увеличиваем padding */
   margin-top: 20px; /* Увеличиваем отступ */
   transition: background-color 0.3s;
+  transform: translateZ(0); /* Добавляем для стабилизации рендеринга */
 }
 
 .show-button:hover {
@@ -169,6 +170,7 @@ body {
     opacity: 1;
     /* Анимация роста круга */
     animation: ripple 0.6s linear forwards;
+    will-change: transform, opacity; /* Добавляем для оптимизации анимации */
 }
 
 @keyframes ripple {
@@ -818,6 +820,7 @@ body {
     transition: color 0.2s ease; /* Оставляем переход для цвета */
     position: relative; /* Добавляем для position aware эффекта */
     overflow: hidden;   /* Добавляем для position aware эффекта */
+    transform: translateZ(0); /* Добавляем для стабилизации рендеринга */
 }
 
 .show-more-btn i {
