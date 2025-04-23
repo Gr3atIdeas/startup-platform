@@ -419,6 +419,7 @@ body {
   gap: 21px; /* Отступ между карточками согласно Figma */
   justify-content: flex-start; /* Выравнивание по левому краю */
   align-items: flex-start; /* Выравниваем по верху */
+  margin-top: 20px; /* Добавляем отступ сверху от поиска/контейнера */
 }
 
 /* Карточка стартапа */
@@ -795,33 +796,36 @@ body {
 /* Кнопка Показать еще */
 .show-more-container {
     width: 100%;
-    text-align: center; /* Центрируем кнопку */
+    text-align: left; /* Выравниваем по левому краю */
     margin-top: 20px; /* Отступ от сетки */
+    /* Добавляем небольшой отступ слева, если нужно, чтобы кнопка не прилипала к краю */
+    /* padding-left: 5px; */
 }
 
 .show-more-btn {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-    padding: 10px 25px; /* Паддинги кнопки */
+    justify-content: center; /* Оставляем для внутреннего выравнивания текста и иконки */
+    padding: 0; /* Убираем паддинги */
     background-color: transparent; /* Прозрачный фон */
-    border: 1px solid #000; /* Черная рамка */
-    border-radius: 8px; /* Скругление */
-    color: #FFF; /* Белый текст (возможно, лучше #000 для контраста?) */
+    border: none; /* Убираем рамку */
+    /* border-radius: 8px; Не нужно */
+    color: #FFF; /* Белый текст */
     font-family: 'Unbounded', sans-serif;
     font-size: 14px;
     font-weight: 500;
     cursor: pointer;
-    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    transition: color 0.2s ease; /* Оставляем переход для цвета */
     /* position: relative; и overflow: hidden; уже добавлены выше */
 }
 
 .show-more-btn i {
-    margin-right: 8px; /* Отступ иконки от текста */
+    /* margin-right: 8px; Убираем */
+    margin-left: 8px; /* Добавляем отступ слева от иконки */
 }
 
 .show-more-btn:hover {
-    background-color: rgba(255, 255, 255, 0.1); /* Легкий белый фон при наведении */
-    border-color: #FFF; /* Белая рамка при наведении */
-    color: #FFF;
+    /* background-color: rgba(255, 255, 255, 0.1); Убираем */
+    /* border-color: #FFF; Убираем */
+    color: #BBB; /* Можно немного затемнить текст при наведении */
 }
