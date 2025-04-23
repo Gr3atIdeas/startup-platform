@@ -59,7 +59,7 @@ body {
 
 .catalog-search-wrapper {
   width: 100%;
-  max-width: 1032px; /* << Устанавливаем макс. ширину как у 3х карточек */
+  max-width: 987px; /* << Корректируем макс. ширину под 3х315px карточки */
   margin: 0 auto 20px auto; /* << Центрируем и добавляем отступ снизу */
   display: flex;
   justify-content: center;
@@ -426,7 +426,7 @@ body {
 
 /* Карточка стартапа */
 .startup-card {
-  width: 330px; /* Ширина согласно Figma */
+  width: 315px; /* << Уменьшаем ширину для размещения 3х в ряд */
   height: 448px; /* Возвращаем фиксированную высоту */
   background-color: white;
   border-radius: 16px;

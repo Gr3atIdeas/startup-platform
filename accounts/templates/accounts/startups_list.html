@@ -196,31 +196,39 @@
       <div class="pagination-controls">
         {# Пагинация #}
         {# !!! Важно: Убедитесь, что view передает page_obj в контекст !!! #}
-        {% if page_obj.has_other_pages %}
+        {# {% if page_obj.has_other_pages %} <-- Временно убираем условие для проверки верстки #}
           <div class="pagination">
-            {% if page_obj.has_previous %}
-              <a href="?page={{ page_obj.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="page-link page-arrow">&laquo;</a>
-            {% else %}
-              <span class="page-link page-arrow disabled">&laquo;</span>
-            {% endif %}
-
-            {% for i in page_obj.paginator.page_range %}
-              {% if page_obj.number == i %}
-                <span class="page-link current-page">{{ i }}</span>
-              {% elif i > page_obj.number|add:'-3' and i < page_obj.number|add:'3' %}
-                <a href="?page={{ i }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="page-link">{{ i }}</a>
-              {% elif i == page_obj.number|add:'-3' or i == page_obj.number|add:'3' %}
-                <span class="page-link">...</span> {# Многоточие для пропуска страниц #}
+            {# Проверка наличия page_obj нужна внутри, иначе будут ошибки если его нет #}
+            {% if page_obj %}
+              {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="page-link page-arrow">&laquo;</a>
+              {% else %}
+                <span class="page-link page-arrow disabled">&laquo;</span>
               {% endif %}
-            {% endfor %}
 
-            {% if page_obj.has_next %}
-              <a href="?page={{ page_obj.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="page-link page-arrow">&raquo;</a>
+              {% for i in page_obj.paginator.page_range %}
+                {% if page_obj.number == i %}
+                  <span class="page-link current-page">{{ i }}</span>
+                {% elif i > page_obj.number|add:'-3' and i < page_obj.number|add:'3' %}
+                  <a href="?page={{ i }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="page-link">{{ i }}</a>
+                {% elif i == page_obj.number|add:'-3' or i == page_obj.number|add:'3' %}
+                  <span class="page-link">...</span> {# Многоточие для пропуска страниц #}
+                {% endif %}
+              {% endfor %}
+
+              {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="page-link page-arrow">&raquo;</a>
+              {% else %}
+                <span class="page-link page-arrow disabled">&raquo;</span>
+              {% endif %}
             {% else %}
+              {# Можно вывести заглушку, если page_obj не передан #}
+              <span class="page-link current-page">1</span> 
+              <span class="page-link">...</span>
               <span class="page-link page-arrow disabled">&raquo;</span>
             {% endif %}
           </div>
-        {% endif %}
+        {# {% endif %} <-- Конец временного удаления условия #}
 
         {# Кнопка Показать еще - оставляем пока, можно будет убрать/изменить логику #}
         {# Условие {% if approved_startups|length > 6 %} может быть неактуально с пагинацией #}
