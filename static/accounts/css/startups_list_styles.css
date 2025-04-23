@@ -427,15 +427,17 @@ body {
   height: 448px; /* Возвращаем фиксированную высоту */
   background-color: white;
   border-radius: 16px;
-  box-shadow: 4px 4px 6px 0px rgba(0, 0, 0, 0.25); /* Тень согласно Figma */
-  overflow: hidden; /* Обрезаем все, что выходит за рамки */
+  box-shadow: 4px 4px 6px 0px rgba(0, 0, 0, 0.25);
+  /* overflow: hidden; Убираем, чтобы аватар мог выходить */
+  overflow: visible; /* Явно разрешаем выход контента */
   display: flex; /* Используем flex для внутреннего контента */
   flex-direction: column;
-  text-decoration: none; /* Убираем подчеркивание у ссылок, если startup-card будет ссылкой */
-  color: inherit; /* Наследуем цвет текста */
+  text-decoration: none;
+  color: inherit;
   box-sizing: border-box;
-  position: relative; /* Для позиционирования внутренних элементов, если нужно */
+  position: relative; /* Необходимо для позиционирования аватара и ссылки */
   transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  margin-bottom: 40px; /* Добавляем отступ снизу, чтобы аватары не налезали */
 }
 
 .startup-card:hover {
@@ -444,11 +446,13 @@ body {
 }
 
 .startup-card-inner {
-  padding: 20px; /* Внутренние отступы для всего контента карточки */
+  padding: 60px 20px 20px 20px; /* Увеличиваем верхний паддинг для компенсации аватара */
   display: flex;
   flex-direction: column;
   flex-grow: 1; /* Чтобы занимал всю высоту auto-карточки */
   box-sizing: border-box;
+  position: relative; /* Добавляем для возможного z-index */
+  z-index: 1; /* Чтобы контент был над возможными артефактами */
 }
 
 
@@ -458,14 +462,23 @@ body {
   height: 80px;
   border-radius: 50%;
   overflow: hidden;
-  margin: 0 auto 15px auto; /* Центрируем и увеличиваем отступ снизу */
+  /* margin: 0 auto 15px auto; Убираем старый margin */
+  position: absolute; /* Позиционируем абсолютно */
+  top: -40px; /* Поднимаем на половину высоты */
+  left: 50%; /* Центрируем по горизонтали */
+  transform: translateX(-50%); /* Точное центрирование */
   flex-shrink: 0; /* Предотвращаем сжатие */
+  border: 3px solid white; /* Белая обводка для отделения */
+  background-color: #eee; /* Фон на случай отсутствия картинки */
+  z-index: 2; /* Чтобы был поверх .startup-card-inner */
 }
 
-.startup-image img {
+.startup-image img,
+.startup-image-placeholder {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: 50%; /* Для placeholder тоже */
 }
 
 .startup-image-placeholder {
@@ -777,4 +790,38 @@ body {
      .catalog-header, .catalog-container {
       padding: 0 10px; /* Минимальные паддинги */
   }
+}
+
+/* Кнопка Показать еще */
+.show-more-container {
+    width: 100%;
+    text-align: center; /* Центрируем кнопку */
+    margin-top: 20px; /* Отступ от сетки */
+}
+
+.show-more-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 25px; /* Паддинги кнопки */
+    background-color: transparent; /* Прозрачный фон */
+    border: 1px solid #000; /* Черная рамка */
+    border-radius: 8px; /* Скругление */
+    color: #FFF; /* Белый текст (возможно, лучше #000 для контраста?) */
+    font-family: 'Unbounded', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    /* position: relative; и overflow: hidden; уже добавлены выше */
+}
+
+.show-more-btn i {
+    margin-right: 8px; /* Отступ иконки от текста */
+}
+
+.show-more-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1); /* Легкий белый фон при наведении */
+    border-color: #FFF; /* Белая рамка при наведении */
+    color: #FFF;
 }
