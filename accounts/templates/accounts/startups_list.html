@@ -302,7 +302,7 @@
       showMoreBtn.addEventListener('click', function() {
         const nextPage = this.dataset.nextPage;
         // !!! Замените '/load-more-startups/' на ваш реальный URL эндпоинта !!!
-        // Можно использовать Django тег url: const url = `{% url 'load_more_startups' %}?page=${nextPage}`;
+        // Можно использовать Django тег url: {# const url = `{% url 'load_more_startups' %}?page=${nextPage}`; #}
         // Но так как это внутри <script>, тег {% url %} может потребовать 
         // передачи URL в data-атрибут или в глобальную JS переменную.
         // Используем пока что статический URL для примера.
