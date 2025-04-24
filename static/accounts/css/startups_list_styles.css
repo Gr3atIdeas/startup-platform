@@ -17,7 +17,7 @@ body {
   display: flex;
   align-items: flex-start; /* Выравниваем сайдбар и контент по верху */
   width: 100%;
-  max-width: 1303px; /* Возвращаем максимальную ширину */
+  max-width: 1310px; /* Увеличиваем, чтобы вместить 3 карточки (1030px) + сайдбар (254px) + gap (21px) */
   margin: 0 auto; /* Возвращаем центрирование */
   padding: 0 20px; /* Оставляем отступ 20px */
   gap: 21px; /* Отступ между сайдбаром и контентом */
@@ -70,7 +70,7 @@ body {
 .catalog-search {
   position: relative;
   width: 100%;
-  /* max-width: 975.8px; */
+  max-width: 1030px; /* Макс. ширина = 3 * 330px + 2 * 20px */
   height: 36px;
   /* margin-bottom: 20px; Перенесено в wrapper */
   border-radius: 99px;
