@@ -92,9 +92,17 @@
     /* Поле поиска */
     .search-container {
       position: relative;
-      width: 512px;
       height: 40px;
-      margin-right: 32px;
+      display: flex;
+      width: 352px;
+      padding: 8px 30px;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+      border-radius: 99px;
+      border: 1px solid #004E9F;
+      background: rgba(255, 255, 255, 0.19);
+      box-sizing: border-box;
     }
     
     .search-icon {
@@ -108,9 +116,9 @@
     
     .search-input {
       width: 100%;
-      height: 40px;
-      border: 1px solid var(--primary-color);
-      border-radius: 8px;
+      height: auto;
+      border: none;
+      flex-grow: 1;
       padding: 0 16px 0 40px;
       font-size: 14px;
       outline: none;
