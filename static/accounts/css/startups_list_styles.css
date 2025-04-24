@@ -70,7 +70,7 @@ body {
 .catalog-search {
   position: relative;
   width: 100%;
-  max-width: 1050px; /* Синхронизируем с новой шириной контента */
+  max-width: 1010px; /* Ширина = 1325(container) - 254(sidebar) - 21(gap) - 40(padding) */
   height: 36px;
   /* margin-bottom: 20px; Перенесено в wrapper */
   border-radius: 99px;
@@ -872,7 +872,7 @@ body {
   top: 15px; /* Отступ сверху */
   left: 20px; /* Отступ слева */
   font-family: Unbounded, sans-serif;
-  font-size: 11px; /* Уменьшаем шрифт */
+  font-size: 10px; /* Уменьшаем шрифт еще */
   font-weight: 300;
   color: #cccccc; /* Светло-серый, полупрозрачный */
   background-color: transparent;
