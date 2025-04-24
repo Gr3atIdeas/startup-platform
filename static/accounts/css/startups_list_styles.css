@@ -250,6 +250,10 @@ body {
   list-style: none;
   padding: 0;
   margin: 0 0 20px 0;
+  max-height: 150px; /* Уменьшаем высоту и добавляем скролл */
+  overflow-y: auto;
+  /* Стилизация скроллбара (опционально) */
+  scrollbar-width: thin;
   /* Конфликтует с определением выше? */
 }
 
@@ -277,6 +281,10 @@ body {
   display: flex;
   align-items: center;
   cursor: pointer;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 400;
+  font-size: 13px; /* Уменьшаем шрифт */
+  color: #000;
   /* Конфликтует с определением выше? */
 }
 
@@ -336,6 +344,9 @@ body {
 
 /* Микроинвестиции */
 .micro-investment {
+  display: flex; /* Делаем flex-контейнером */
+  justify-content: space-between; /* Разносим элементы по краям */
+  align-items: center; /* Выравниваем по центру по вертикали */
   margin-bottom: 20px;
   /* Конфликтует с определением выше? */
 }
@@ -349,7 +360,10 @@ body {
 }
 
 .micro-label {
-  margin-right: 5px;
+  font-size: 13px; /* Уменьшаем шрифт */
+  font-weight: 400; /* Уменьшаем жирность */
+  font-family: 'Unbounded', sans-serif;
+  margin-right: 5px; /* Добавляем отступ */
   /* Конфликтует с определением выше? */
 }
 
@@ -416,8 +430,9 @@ body {
   position: relative; /* Для позиционирования аватара */
   padding-top: 40px; /* Добавляем место сверху под выступающий аватар */
   margin-top: 40px; /* Компенсируем вынос аватара, чтобы карточки не слипались */
-  width: auto !important; /* Убираем фикс. ширину, чтобы работала сетка */
-  height: auto !important; /* Убираем фикс. высоту */
+  width: 330px !important; /* Задаем ширину явно, убираем auto */
+  min-height: 413px; /* Устанавливаем минимальную высоту */
+  height: auto; /* Позволяем расти при необходимости */
   margin-bottom: 0 !important; /* Убираем конфликт с margin-bottom */
 }
 
