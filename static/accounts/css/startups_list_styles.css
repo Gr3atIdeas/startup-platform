@@ -425,7 +425,7 @@ body {
   background-color: white;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  overflow: visible; /* Разрешаем аватару выходить за пределы */
+  overflow: visible !important; /* Явно разрешаем выход контента, !important для гарантии */
   transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
   display: flex;
   flex-direction: column;
@@ -470,6 +470,7 @@ body {
   border: 3px solid white; /* Белая рамка */
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15); /* Тень */
   background-color: #e9ecef; /* Фон для плейсхолдера */
+  z-index: 2; /* Над тегом "Франшиза" */
   /* Конфликтует с определением выше? */
 }
 
@@ -599,14 +600,27 @@ body {
   color: #000; /* Black text */
   white-space: nowrap;
   z-index: 1; /* Above fill */
+  text-shadow: 0 0 2px #FFF, 0 0 3px #FFF; /* White shadow for contrast */
   /* Конфликтует с определением выше? - Resolved */
 }
 
 /* Тип инвестирования - скрыт или удален */
-/* .investment-type { ... } */
+.investment-type {
+  /* Убираем общие стили фона, центрирования */
+  background-color: transparent;
+  text-align: left;
+  font-weight: 400; /* Обычный вес */
+  border: 1px solid #ccc; /* Серая рамка */
+  /* padding: 8px 12px; Оставляем отступы */
+  /* color: #000; Черный текст */
+  /* margin-bottom: 10px; Оставляем отступ */
+  /* border-radius: 6px; Оставляем скругление */
+}
 
 /* Цель финансирования */
 .funding-goal-info {
+  background-color: #f1f1f1; /* Light gray background */
+  line-height: 1.3;
   font-family: Unbounded, sans-serif; /* Set font */
   font-size: 13px; /* Keep size */
   font-weight: 500; /* Medium weight */
@@ -845,3 +859,17 @@ body {
 }
 
 /* === Конец стилей пагинации === */
+
+/* Тег "Франшиза" */
+.startup-franchise-tag {
+  position: absolute;
+  top: 15px; /* Отступ сверху */
+  left: 20px; /* Отступ слева */
+  font-family: Unbounded, sans-serif;
+  font-size: 12px;
+  font-weight: 300;
+  color: #cccccc; /* Светло-серый, полупрозрачный */
+  background-color: transparent;
+  padding: 0;
+  z-index: 1; /* Под аватаром */
+}
