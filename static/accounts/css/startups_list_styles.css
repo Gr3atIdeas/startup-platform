@@ -824,13 +824,13 @@ body {
   /* Стили скопированы из buttons.css и адаптированы */
   position: relative;
   display: inline-flex;
-  align-items: center;
-  justify-content: center;
+    align-items: center;
+    justify-content: center;
   padding: 10px 20px;
   border-radius: 8px;
   font-size: 16px;
-  font-weight: 500;
-  cursor: pointer;
+    font-weight: 500;
+    cursor: pointer;
   overflow: hidden; /* Для эффекта */
   transition: background-color 0.3s, color 0.3s, border-color 0.3s;
   border: 1px solid var(--primary-color, #007bff); /* Пример */
@@ -840,7 +840,7 @@ body {
 }
 
 .show-more-btn i {
-  margin-left: 8px;
+    margin-left: 8px; 
   /* Конфликтует с определением выше? */
 }
 
