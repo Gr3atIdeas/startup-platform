@@ -60,7 +60,7 @@ body {
 
 .catalog-search-wrapper {
   width: 100%;
-  max-width: 987px; /* << Корректируем макс. ширину под 3х315px карточки */
+  max-width: 1010px; /* Устанавливаем макс. ширину здесь */
   margin: 0 auto 20px auto; /* << Центрируем и добавляем отступ снизу */
   display: flex;
   justify-content: center;
@@ -70,7 +70,7 @@ body {
 .catalog-search {
   position: relative;
   width: 100%;
-  max-width: 1010px; /* Ширина = 1325(container) - 254(sidebar) - 21(gap) - 40(padding) */
+  /* max-width: 1010px; Убираем max-width отсюда */
   height: 36px;
   /* margin-bottom: 20px; Перенесено в wrapper */
   border-radius: 99px;
@@ -430,8 +430,8 @@ body {
   display: flex;
   flex-direction: column;
   position: relative; /* Для позиционирования аватара */
-  padding-top: 55.5px; /* Компенсация для 111px аватара */
-  margin-top: 55.5px; /* Компенсация для 111px аватара */
+  padding-top: 27.75px; /* Компенсация для 25% выноса аватара */
+  margin-top: 27.75px; /* Компенсация для 25% выноса аватара */
   width: 100%; /* Карточка занимает всю ширину колонки */
   box-sizing: border-box; /* Учитываем padding/border в ширине */
   min-height: 413px; /* Устанавливаем минимальную высоту */
@@ -446,7 +446,7 @@ body {
 }
 
 .startup-card-inner {
-  padding: 70px 20px 20px 20px; /* Увеличиваем верхний паддинг, боковые/нижний оставляем по 20px */
+  padding: 103px 20px 20px 20px; /* Отступ сверху = 83.25px (видимая часть аватара) + 20px */
   display: flex;
   flex-direction: column;
   flex-grow: 1; /* Позволяет внутреннему блоку расти */
@@ -464,7 +464,7 @@ body {
   overflow: hidden; /* Обрезаем изображение, если оно больше */
   /* Позиционирование аватара */
   position: absolute;
-  top: -55.5px; /* Выносим наполовину вверх (111px / 2) */
+  top: -27.75px; /* Выносим на 25% высоты (111px * 0.25) */
   left: 50%;
   transform: translateX(-50%);
   border-radius: 50%; /* Делаем овальным/круглым */
@@ -640,15 +640,20 @@ body {
 
 /* Количество инвесторов */
 .investor-count {
+  justify-content: center; /* Центрируем содержимое */
   padding: 5px 0; /* Reset padding */
   border-radius: 0; /* Reset radius */
-  text-align: left; /* Reset align */
+  text-align: center; /* Центрируем текст на всякий случай */
   background-color: transparent; /* Reset background */
   /* Keep specific styles */
   display: flex;
   align-items: center;
   gap: 6px;
-  font-weight: 400; /* Regular weight */
+  font-family: Unbounded, sans-serif; /* Задаем шрифт */
+  font-weight: 300; /* Новый вес */
+  font-size: 12px; /* Новый размер */
+  line-height: 1; /* Новая высота строки */
+  letter-spacing: 0.01em; /* Новый интервал */
   color: #6B7280; /* Gray color */
   margin-bottom: 15px; /* Increase margin */
   /* Конфликтует с определением выше? - Resolved */
