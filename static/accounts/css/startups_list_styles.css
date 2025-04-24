@@ -190,14 +190,15 @@ body {
 
 /* Боковая панель с фильтрами */
 .sidebar {
-  width: 254px; /* Фиксированная ширина сайдбара */
-  /* margin-right: 30px; Заменено на gap в .catalog-container */
-  flex-shrink: 0;
-  background-color: #FFFFFF; /* Задаем белый фон для сайдбара */
-  border-radius: 10px; /* Скругляем углы сайдбара */
-  padding: 25px 20px; /* Внутренние отступы сайдбара */
-  box-sizing: border-box; /* Учитываем padding в ширине */
-  height: fit-content; /* Высота по содержимому */
+  width: 254px !important; /* Фиксированная ширина сайдбара */
+  flex-shrink: 0 !important;
+  background: #FFF !important; /* Фон */
+  height: 718px !important; /* Фиксированная высота */
+  padding: 53px 28px !important; /* Отступы */
+  border-radius: 10px !important; /* Скругление углов */
+  box-shadow: none !important; /* Убираем тень */
+  box-sizing: border-box !important; /* Учитываем паддинг в размерах */
+  margin-right: 0 !important; /* Убираем margin-right */
 }
 
 /* Форма фильтрации */
@@ -231,11 +232,10 @@ body {
 
 /* Заголовок категорий и других секций фильтра */
 .categories-title {
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 500;
-  font-size: 16px; /* Уменьшаем шрифт заголовков */
-  margin: 0 0 10px 0;
-  color: #000000;
+  font-size: 18px;
+  margin-bottom: 15px;
+  color: #333;
+  /* Конфликтует с определением выше? */
 }
 
 /* Заголовок для "Показать сначала" */
@@ -249,12 +249,8 @@ body {
 .categories-list {
   list-style: none;
   padding: 0;
-  margin: 0 0 20px 0; /* Увеличиваем отступ */
-  max-height: 200px; /* Уменьшаем высоту */
-  overflow-y: auto;
-  /* Стилизация скроллбара (опционально) */
-  scrollbar-width: thin;
-  scrollbar-color: #ccc #f1f1f1;
+  margin: 0 0 20px 0;
+  /* Конфликтует с определением выше? */
 }
 
 .categories-list::-webkit-scrollbar {
@@ -272,27 +268,21 @@ body {
   background: #aaa;
 }
 
-
 .category-item {
-  margin-bottom: 8px; /* Увеличиваем отступ */
+  margin-bottom: 10px;
+  /* Конфликтует с определением выше? */
 }
 
 .category-label {
   display: flex;
   align-items: center;
   cursor: pointer;
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 400;
-  font-size: 14px; /* Уменьшаем шрифт */
-  color: #000;
+  /* Конфликтует с определением выше? */
 }
 
 .category-checkbox {
-  width: 16px; /* Увеличиваем размер чекбокса */
-  height: 16px;
-  margin-right: 10px; /* Увеличиваем отступ */
-  accent-color: #0047FF;
-  cursor: pointer;
+  margin-right: 8px;
+  /* Конфликтует с определением выше? */
 }
 
 .category-name {
@@ -304,16 +294,13 @@ body {
 /* Фильтр по рейтингу */
 .rating-filter {
   margin-bottom: 20px;
+  /* Конфликтует с определением выше? */
 }
 
 .rating-label {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-weight: 400; /* Уменьшаем жирность */
+  display: block;
   margin-bottom: 10px;
-  font-size: 14px;
-  font-family: 'Unbounded', sans-serif;
+  /* Конфликтует с определением выше? */
 }
 
 /* Стили для слайдера noUiSlider */
@@ -349,290 +336,252 @@ body {
 
 /* Микроинвестиции */
 .micro-investment {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   margin-bottom: 20px;
+  /* Конфликтует с определением выше? */
 }
 
 /* Обертка для текста и иконки */
 .micro-investment-label-wrapper {
-    display: inline-flex; /* Чтобы не разрывать строку */
-    align-items: baseline; /* Выравнивание по базовой линии текста */
-    white-space: nowrap; /* Запрещаем перенос строки */
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    /* Конфликтует с определением выше? */
 }
 
 .micro-label {
-  font-size: 14px;
-  font-weight: 400; /* Уменьшаем жирность */
-  font-family: 'Unbounded', sans-serif;
-  margin-right: 5px; /* Добавляем отступ */
+  margin-right: 5px;
+  /* Конфликтует с определением выше? */
 }
 
 .help-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 14px;
-  height: 14px;
-  background-color: #E5E7EB;
-  color: #000;
-  border-radius: 50%;
-  font-size: 10px;
-  font-weight: bold; /* Делаем ? жирнее */
-  cursor: help;
+  cursor: pointer;
+  /* Стили для иконки помощи */
+  /* Конфликтует с определением выше? */
 }
 
 /* Переключатель для микроинвестиций */
 .toggle-switch {
+  width: 50px;
+  height: 25px;
+  background-color: #ccc;
+  border-radius: 15px;
   position: relative;
-  width: 40px; /* Увеличиваем ширину */
-  height: 20px; /* Увеличиваем высоту */
-  background-color: #E5E7EB;
-  border-radius: 10px; /* Корректируем радиус */
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s;
+  /* Конфликтует с определением выше? */
 }
 
 .toggle-switch.active {
-  background-color: #0047FF;
+  background-color: var(--primary-color, #7B61FF);
+  /* Конфликтует с определением выше? */
 }
 
 .toggle-handle {
+  width: 21px;
+  height: 21px;
+  background-color: white;
+  border-radius: 50%;
   position: absolute;
   top: 2px;
   left: 2px;
-  width: 16px; /* Увеличиваем размер */
-  height: 16px;
-  background-color: white;
-  border-radius: 50%;
-  transition: transform 0.3s ease;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s;
+  /* Конфликтует с определением выше? */
 }
 
 .toggle-switch.active .toggle-handle {
-  transform: translateX(20px); /* Корректируем смещение */
+  transform: translateX(25px);
+  /* Конфликтует с определением выше? */
 }
-
 
 /* === Сетка и Карточки стартапов === */
 
 .startups-grid {
-  display: flex; /* Используем Flexbox для сетки */
-  flex-wrap: wrap;
-  gap: 21px; /* Отступ между карточками согласно Figma */
-  justify-content: flex-start; /* Выравнивание по левому краю */
-  align-items: flex-start; /* Выравниваем по верху */
-  margin-top: 40px; /* Увеличиваем отступ сверху от поиска/контейнера */
+  display: grid !important; /* Используем grid */
+  /* Адаптивная сетка */
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)) !important;
+  gap: 20px !important;
+  margin-bottom: 30px !important; /* Отступ под сеткой */
+  margin-top: 0 !important; /* Убираем конфликт с margin-top */
 }
 
 /* Карточка стартапа */
 .startup-card {
-  width: 330px; /* << Уменьшаем ширину для размещения 3х в ряд */
-  height: 408px; /* Возвращаем фиксированную высоту */
   background-color: white;
-  border-radius: 16px;
-  box-shadow: 4px 4px 6px 0px rgba(0, 0, 0, 0.25);
-  /* overflow: hidden; Убираем, чтобы аватар мог выходить */
-  overflow: visible; /* Явно разрешаем выход контента */
-  display: flex; /* Используем flex для внутреннего контента */
-  flex-direction: column;
-  text-decoration: none;
-  color: inherit;
-  box-sizing: border-box;
-  position: relative; /* Необходимо для позиционирования аватара и ссылки */
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  overflow: visible; /* Разрешаем аватару выходить за пределы */
   transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-  margin-bottom: 40px; /* Добавляем отступ снизу, чтобы аватары не налезали */
+  display: flex;
+  flex-direction: column;
+  position: relative; /* Для позиционирования аватара */
+  padding-top: 40px; /* Добавляем место сверху под выступающий аватар */
+  margin-top: 40px; /* Компенсируем вынос аватара, чтобы карточки не слипались */
+  width: auto !important; /* Убираем фикс. ширину, чтобы работала сетка */
+  height: auto !important; /* Убираем фикс. высоту */
+  margin-bottom: 0 !important; /* Убираем конфликт с margin-bottom */
 }
 
 .startup-card:hover {
-  transform: translateY(-5px); /* Небольшой подъем при наведении */
-  box-shadow: 6px 8px 12px 0px rgba(0, 0, 0, 0.3); /* Увеличиваем тень */
+  transform: translateY(-5px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  /* Конфликтует с определением выше? */
 }
 
 .startup-card-inner {
-  padding: 60px 20px 20px 20px; /* Увеличиваем верхний паддинг для компенсации аватара */
+  padding: 15px; /* Сохраняем боковые/нижние отступы */
+  padding-top: 50px; /* Увеличиваем верхний отступ, чтобы текст был ниже аватара */
   display: flex;
   flex-direction: column;
-  flex-grow: 1; /* Чтобы занимал всю высоту auto-карточки */
-  box-sizing: border-box;
-  position: relative; /* Добавляем для возможного z-index */
-  z-index: 1; /* Чтобы контент был над возможными артефактами */
+  flex-grow: 1; /* Позволяет внутреннему блоку расти */
+  /* Конфликтует с определением выше? */
 }
-
 
 /* Логотип стартапа */
 .startup-image {
-  width: 80px; /* Размер лого */
+  width: 80px; /* Фиксированный размер аватара */
   height: 80px;
-  border-radius: 50%;
-  overflow: hidden;
-  /* margin: 0 auto 15px auto; Убираем старый margin */
-  position: absolute; /* Позиционируем абсолютно */
-  top: -40px; /* Поднимаем на половину высоты */
-  left: 50%; /* Центрируем по горизонтали */
-  transform: translateX(-50%); /* Точное центрирование */
-  flex-shrink: 0; /* Предотвращаем сжатие */
-  border: 3px solid white; /* Белая обводка для отделения */
-  background-color: #eee; /* Фон на случай отсутствия картинки */
-  z-index: 2; /* Чтобы был поверх .startup-card-inner */
-}
-
-.startup-image img,
-.startup-image-placeholder {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 50%; /* Для placeholder тоже */
-}
-
-.startup-image-placeholder {
-  width: 100%;
-  height: 100%;
   display: flex;
-  justify-content: center;
   align-items: center;
-  background-color: #004e9f; /* Цвет фона плейсхолдера */
-  color: white;
-  font-size: 24px; /* Размер буквы в плейсхолдере */
-  font-weight: 500;
-  border-radius: 50%;
-  font-family: 'Unbounded', sans-serif;
+  justify-content: center;
+  overflow: hidden; /* Обрезаем изображение, если оно больше */
+  /* Позиционирование аватара */
+  position: absolute;
+  top: -40px; /* Выносим наполовину вверх */
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 50%; /* Делаем круглым */
+  border: 3px solid white; /* Белая рамка */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15); /* Тень */
+  background-color: #e9ecef; /* Фон для плейсхолдера */
+  /* Конфликтует с определением выше? */
+}
+
+.startup-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Масштабируем изображение с сохранением пропорций */
+  border-radius: 50%; /* Убедимся, что изображение тоже круглое */
+  /* Конфликтует с определением выше? */
+}
+
+.startup-image-placeholder {
+  width: 100%;
+  height: 100%;
+  /* background-color: #e9ecef; <-- перенесли в .startup-image */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px; /* Уменьшим букву для меньшего аватара */
+  color: #adb5bd;
+  font-weight: bold;
+  border-radius: 50%; /* Убедимся, что плейсхолдер круглый */
+  /* Конфликтует с определением выше? */
 }
 
 /* Название стартапа */
 .startup-name {
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 700; /* Делаем жирнее */
-  font-size: 24px; /* Увеличиваем шрифт */
-  margin: 0 0 10px 0; /* Отступы */
-  color: #000;
-  text-align: center;
-  line-height: 1.2;
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 10px 0;
+  color: #333;
+  /* Конфликтует с определением выше? */
 }
 
 /* Рейтинг и комментарии */
 .startup-rating-comments {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: space-between; /* Разносим по краям */
-  gap: 10px; /* Небольшой отступ, если сожмутся */
-  margin-bottom: 15px; /* Увеличиваем отступ снизу */
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 400; /* Стандартная жирность */
-  font-size: 13px; /* Немного увеличиваем шрифт */
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 10px;
+  /* Конфликтует с определением выше? */
 }
 
 .rating-text {
-   color: #004e9f; /* Синий цвет текста рейтинга */
-   text-align: left;
+  /* Стили для текста рейтинга */
+  /* Конфликтует с определением выше? */
 }
 
 .comments-count {
   display: flex;
   align-items: center;
-  gap: 5px; /* Отступ между иконкой и числом */
-  color: #6B7280; /* Серый цвет для комментариев */
-  text-align: right;
+  gap: 5px;
+  /* Конфликтует с определением выше? */
 }
 
 .comments-count i {
   font-size: 14px; /* Размер иконки комментариев */
 }
 
-
 /* Блок Категория + Прогресс */
 .category-progress {
   display: flex;
   align-items: center;
-  gap: 10px; /* Отступ между тегом и прогрессом */
-  margin-bottom: 15px; /* Увеличиваем отступ */
-  height: 28px; /* Фиксируем высоту блока */
+  gap: 10px;
+  margin-bottom: 10px;
+  /* Конфликтует с определением выше? */
 }
 
 .category-tag {
-  background-color: #000;
-  color: #fff;
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 500; /* Делаем жирнее */
-  font-size: 12px; /* Увеличиваем шрифт */
-  padding: 6px 12px; /* Увеличиваем паддинги */
-  border-radius: 6px; /* Скругляем углы */
-  white-space: nowrap; /* Предотвращаем перенос */
-  text-align: center;
-  line-height: 1; /* Для лучшего центрирования */
+  background-color: #f0f0f0;
+  color: #555;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  /* Конфликтует с определением выше? */
 }
 
 .progress-bar-container {
-  flex-grow: 1; /* Занимает доступное пространство */
-  position: relative; /* Для позиционирования текста */
-  height: 100%; /* На всю высоту родителя */
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  /* Конфликтует с определением выше? */
 }
 
 .progress-bar-bg {
-  width: 100%;
-  height: 100%; /* Высота полосы прогресса = высота родителя */
-  background-color: #000; /* Фон полосы */
-  border-radius: 6px; /* Скругляем углы */
+  flex-grow: 1;
+  height: 8px;
+  background-color: #e9ecef;
+  border-radius: 4px;
   overflow: hidden;
-  position: absolute; /* Абсолютное позиционирование внутри container */
-  top: 0;
-  left: 0;
+  /* Конфликтует с определением выше? */
 }
 
 .progress-bar-fill {
-  position: absolute;
-  top: 0;
-  left: 0;
   height: 100%;
-  background-color: #8666FF; /* Фиолетовый цвет прогресса */
-  border-radius: 6px; /* Скругляем углы */
+  background-color: var(--primary-color, #007bff);
+  border-radius: 4px;
   transition: width 0.5s ease;
+  /* Конфликтует с определением выше? */
 }
 
 .progress-percentage {
-  position: absolute; /* Позиционируем над полосой */
-  right: 12px; /* Отступ справа */
-  top: 50%; /* Вертикальное центрирование */
-  transform: translateY(-50%);
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 700; /* Жирный */
-  font-size: 13px; /* Увеличиваем шрифт */
-  color: #fff; /* Белый цвет текста */
+  font-size: 12px;
+  color: #555;
   white-space: nowrap;
-  z-index: 1; /* Над progress-bar-fill */
+  /* Конфликтует с определением выше? */
 }
-
 
 /* Тип инвестирования - скрыт или удален */
 /* .investment-type { ... } */
 
 /* Цель финансирования */
 .funding-goal-info {
-  background-color: #f1f1f1; /* Светло-серый фон */
-  border-radius: 6px;
-  padding: 10px 12px; /* Увеличиваем паддинги */
-  text-align: center;
-  font-family: 'Unbounded', sans-serif;
-  font-size: 13px; /* Увеличиваем шрифт */
-  font-weight: 500; /* Делаем жирнее */
-  color: #000;
-  margin-bottom: 15px; /* Увеличиваем отступ */
-  line-height: 1.3;
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 8px;
+  /* .funding-goal-info и .investor-count конфликтуют с определением выше? */
 }
 
 /* Количество инвесторов */
 .investor-count {
   display: flex;
   align-items: center;
-  justify-content: flex-start; /* Выравнивание по левому краю */
-  gap: 6px; /* Отступ между иконкой и текстом */
-  padding: 5px 0; /* Небольшой вертикальный отступ */
-  font-family: 'Unbounded', sans-serif;
-  font-size: 13px; /* Увеличиваем шрифт */
-  font-weight: 400; /* Стандартный вес */
-  color: #6B7280; /* Серый цвет */
-  margin-bottom: 15px; /* Увеличиваем отступ */
+  gap: 5px;
+  /* Конфликтует с определением выше? */
 }
 
 .investor-count i {
@@ -642,71 +591,46 @@ body {
 
 /* Описание стартапа */
 .startup-description {
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 300;
-  font-size: 13px;
-  line-height: 1.4;
-  color: #000;
+  font-size: 14px;
+  color: #444;
+  line-height: 1.5;
   margin-bottom: 15px;
-  text-align: left; /* Выравнивание по левому краю */
-  /* Ограничение по количеству строк */
-  display: -webkit-box;
-  -webkit-line-clamp: 3; /* Ограничиваем тремя строками */
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  /* flex-grow: 1; Убираем, чтобы кнопка не выталкивалась */
-  min-height: 55px; /* Примерная минимальная высота для 3 строк */
-  /* Можно добавить max-height, если нужно строго ограничить */
-  /* max-height: 55px; */
+  flex-grow: 1; /* Занимает доступное место */
+  /* Конфликтует с определением выше? */
 }
 
 /* Ссылка "Подробнее" - возвращаем стили простой ссылки */
-.detail-link { /* Убираем .detail-button */
-  /* Убираем стили кнопки (display, padding, border, background, align-self) */
-  display: inline-flex; /* Меняем на inline-flex для выравнивания иконки */
-  align-items: center;
-  /* justify-content: flex-start; Убираем, позиция будет абсолютной */
-  /* margin-top: auto; Убираем, используем absolute positioning */
-  position: absolute; /* Позиционируем относительно .startup-card */
-  left: 20px; /* Отступ слева, равный паддингу .startup-card-inner */
-  bottom: 20px; /* Отступ снизу, равный паддингу .startup-card-inner */
-  font-family: 'Unbounded', sans-serif;
-  font-size: 13px;
-  font-weight: 400; /* Возвращаем стандартный вес */
-  color: #004e9f; /* Синий цвет */
+.detail-link {
+  display: inline-flex; /* Используем inline-flex для выравнивания иконки */
+  align-items: center; /* Выравниваем иконку по центру */
+  gap: 5px; /* Отступ между текстом и иконкой */
+  color: var(--primary-color, #007bff);
   text-decoration: none;
-  transition: color 0.2s ease;
+  font-weight: 500;
+  font-size: 14px;
+  align-self: flex-start; /* Кнопка прижимается к началу */
+  margin-top: auto; /* Прижимает кнопку вниз, если описание короткое */
+  position: static !important; /* Убираем absolute позиционирование */
+  /* Конфликтует с определением выше? */
 }
-
-.detail-link:hover {
-  color: #003CD9; /* Затемняем при наведении */
-  /* Убираем стили hover для кнопки */
-  /* background-color: #004e9f; */
-  /* border-color: #004e9f; */
-}
-
-/* Убираем :active стили кнопки */
-/* .detail-link.detail-button:active { ... } */
 
 .detail-link i {
-  margin-left: 5px;
   transition: transform 0.2s ease;
+  /* Конфликтует с определением выше? */
 }
 
 .detail-link:hover i {
-   transform: translateX(3px); /* Сдвигаем стрелку при наведении */
+  transform: translateX(3px);
+  /* Конфликтует с определением выше? */
 }
 
 /* Состояние, когда нет доступных стартапов */
 .no-startups {
-  width: 100%;
   text-align: center;
-  padding: 50px 20px;
-  background-color: rgba(255, 255, 255, 0.8);
-  border-radius: 16px;
-  color: #333;
-  font-family: 'Unbounded', sans-serif;
+  padding: 40px;
+  color: #777;
+  grid-column: 1 / -1; /* Занимает всю ширину грида */
+  /* Конфликтует с определением выше? */
 }
 
 .no-startups p {
@@ -714,7 +638,6 @@ body {
   font-size: 16px;
   margin: 0;
 }
-
 
 /* === Адаптивность === */
 
@@ -799,110 +722,66 @@ body {
 
 /* === Стили пагинации === */
 .pagination-controls {
-  text-align: center; /* Центрируем содержимое (пагинацию и кнопку) */
-  margin-top: 30px; /* Отступ сверху */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  /* Конфликтует с определением выше? */
 }
 
 /* Стили кнопки "Показать еще" (новая версия) */
 .show-more-container {
-  margin-bottom: 20px; /* Отступ снизу до пагинации */
-  /* Убираем width: 100% и margin-top */
+  /* Контейнер для кнопки */
+  /* Конфликтует с определением выше? */
 }
 
 .show-more-btn {
-    display: inline-flex; /* Чтобы кнопка была по размеру контента */
-    align-items: center;
-    justify-content: center;
-    padding: 12px 24px; /* Паддинги */
-    background-color: #003366; /* Темно-синий фон (примерно) */
-    border: 1px solid #FFF; /* Белая рамка */
-    border-radius: 8px; /* Скругление углов */
-    color: #FFF; /* Белый текст */
-    font-family: 'Unbounded', sans-serif;
-    font-size: 16px; /* Увеличиваем шрифт */
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.2s ease; /* Плавный переход */
-    position: relative;
-    overflow: hidden;
-    transform: translateZ(0);
-    z-index: 0; /* Добавляем z-index */
-}
-
-.show-more-btn:hover {
-    background-color: #004488; /* Чуть светлее при наведении */
-}
-
-.show-more-btn:disabled {
-    background-color: #555;
-    border-color: #888;
-    color: #aaa;
-    cursor: not-allowed;
+  /* Стили скопированы из buttons.css и адаптированы */
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  overflow: hidden; /* Для эффекта */
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+  border: 1px solid var(--primary-color, #007bff); /* Пример */
+  background-color: var(--primary-color, #007bff);
+  color: white;
+  /* Конфликтует с определением выше? */
 }
 
 .show-more-btn i {
-    margin-left: 8px; 
-    color: #FFF; /* Убедимся, что иконка белая */
+  margin-left: 8px;
+  /* Конфликтует с определением выше? */
 }
 
-/* Старые стили .show-more-btn удалены/заменены выше */
-
-.pagination {
-  display: inline-flex; /* Используем inline-flex для центрирования как блока */
-  justify-content: center;
-  align-items: center;
-  gap: 10px; /* Увеличиваем отступ между элементами */
-  /* margin-bottom: 15px; Убираем, т.к. кнопка теперь сверху */
+.show-more-btn:hover {
+  background-color: darken(var(--primary-color, #007bff), 10%);
+  border-color: darken(var(--primary-color, #007bff), 10%);
+  /* Конфликтует с определением выше? */
 }
 
-.page-link {
-  display: inline-block;
-  padding: 8px 12px;
-  /* border: 1px solid #ddd; Убираем рамку */
-  border: none;
-  border-radius: 6px; /* Скругление для current-page */
-  color: #FFF; /* Белый цвет для цифр */
-  background-color: transparent; /* Прозрачный фон по умолчанию */
-  text-decoration: none;
-  font-family: 'Unbounded', sans-serif;
-  font-size: 16px; /* Увеличиваем шрифт */
-  transition: background-color 0.2s, color 0.2s;
-  min-width: 40px; /* Минимальная ширина для одинакового размера */
-  text-align: center;
+/* Эффект Position Aware для кнопки "Показать еще" (если используется JS) */
+.show-more-btn .position-aware-effect {
+  position: absolute;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.3);
+  transform: scale(0);
+  animation: ripple 0.6s linear;
+  pointer-events: none;
+  /* Конфликтует с определением выше? */
 }
 
-.page-link:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  /* border-color: #bbb; */
-}
-
-.current-page {
-  /* background-color: #0047FF; */
-  background-color: #FFF; /* Белый фон для текущей страницы */
-  /* border-color: #0047FF; */
-  color: #003366; /* Темно-синий цвет текста (как у кнопки) */
-  font-weight: bold;
-}
-
-.page-arrow {
-  /* Стили для стрелок удалены */
-}
-
-.page-link.disabled {
-  /* Стили для неактивных стрелок больше не нужны */
-}
-
-.page-ellipsis {
-  /* Стили для многоточия */
-  color: #FFF;
-  padding: 8px 0; /* Убираем боковые паддинги */
-  background-color: transparent;
-  border: none;
-  min-width: auto; /* Убираем мин. ширину */
-}
-
-.page-ellipsis:hover {
-    background-color: transparent; /* Убираем ховер эффект */
+@keyframes ripple {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+  /* Конфликтует с определением выше? */
 }
 
 /* === Конец стилей пагинации === */
