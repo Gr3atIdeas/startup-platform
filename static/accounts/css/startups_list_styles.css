@@ -17,7 +17,7 @@ body {
   display: flex;
   align-items: flex-start; /* Выравниваем сайдбар и контент по верху */
   width: 100%;
-  max-width: 1310px; /* Увеличиваем, чтобы вместить 3 карточки (1030px) + сайдбар (254px) + gap (21px) */
+  max-width: 1315px; /* Еще немного увеличиваем для запаса */
   margin: 0 auto; /* Возвращаем центрирование */
   padding: 0 20px; /* Оставляем отступ 20px */
   gap: 21px; /* Отступ между сайдбаром и контентом */
@@ -416,6 +416,7 @@ body {
   display: grid !important;
   /* Адаптивная сетка */
   grid-template-columns: repeat(auto-fill, 330px); /* Колонки по ширине карточек */
+  justify-content: start; /* Выравниваем сетку по началу */
   gap: 20px; /* Отступ между карточками */
   margin-bottom: 30px; /* Отступ под сеткой */
   margin-top: 0; /* Убираем !important */
