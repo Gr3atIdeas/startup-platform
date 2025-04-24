@@ -413,12 +413,12 @@ body {
 /* === Сетка и Карточки стартапов === */
 
 .startups-grid {
-  display: grid !important; /* Используем grid */
+  display: grid !important;
   /* Адаптивная сетка */
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)) !important;
+  grid-template-columns: repeat(auto-fill, 330px); /* Колонки по ширине карточек */
   gap: 20px; /* Отступ между карточками */
   margin-bottom: 30px; /* Отступ под сеткой */
-  margin-top: 0 !important; /* Убираем конфликт с margin-top */
+  margin-top: 0; /* Убираем !important */
   /* overflow: visible; Убираем отсюда, т.к. не помогло */
 }
 
@@ -451,7 +451,7 @@ body {
   display: flex;
   flex-direction: column;
   flex-grow: 1; /* Позволяет внутреннему блоку расти */
-  position: relative; /* Для позиционирования detail-link */
+  /* position: relative; Убираем, т.к. detail-link позиционируется от .startup-card */
   /* Конфликтует с определением выше? */
 }
 
@@ -868,7 +868,7 @@ body {
   top: 15px; /* Отступ сверху */
   left: 20px; /* Отступ слева */
   font-family: Unbounded, sans-serif;
-  font-size: 12px;
+  font-size: 11px; /* Уменьшаем шрифт */
   font-weight: 300;
   color: #cccccc; /* Светло-серый, полупрозрачный */
   background-color: transparent;
