@@ -413,10 +413,10 @@ body {
 /* === Сетка и Карточки стартапов === */
 
 .startups-grid {
-  display: grid !important;
+  display: flex; /* Меняем на flex */
+  flex-wrap: wrap; /* Разрешаем перенос */
   /* Адаптивная сетка */
-  grid-template-columns: repeat(auto-fill, 330px); /* Колонки по ширине карточек */
-  justify-content: start; /* Выравниваем сетку по началу */
+  justify-content: flex-start; /* Выравниваем по началу */
   gap: 20px; /* Отступ между карточками */
   margin-bottom: 30px; /* Отступ под сеткой */
   margin-top: 0; /* Убираем !important */
@@ -611,13 +611,18 @@ body {
 .investment-type {
   /* Убираем общие стили фона, центрирования */
   background-color: transparent;
-  text-align: left;
+  text-align: center; /* Центрируем текст внутри */
   font-weight: 400; /* Обычный вес */
-  border: 1px solid #ccc; /* Серая рамка */
+  border: 1px solid #E5E7EB; /* Светло-серая рамка */
+  padding: 8px 12px; /* Добавляем паддинги */
+  color: #000; /* Черный текст */
+  margin-bottom: 10px; /* Отступ снизу */
+  border-radius: 6px; /* Скругление */
+  font-family: Unbounded, sans-serif; /* Задаем шрифт */
+  font-size: 13px; /* Задаем размер */
   /* padding: 8px 12px; Оставляем отступы */
   /* color: #000; Черный текст */
   /* margin-bottom: 10px; Оставляем отступ */
-  /* border-radius: 6px; Оставляем скругление */
 }
 
 /* Цель финансирования */
