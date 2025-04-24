@@ -190,15 +190,15 @@ body {
 
 /* Боковая панель с фильтрами */
 .sidebar {
-  width: 254px !important; /* Фиксированная ширина сайдбара */
-  flex-shrink: 0 !important;
-  background: #FFF !important; /* Фон */
-  height: 718px !important; /* Фиксированная высота */
-  padding: 53px 28px !important; /* Отступы */
-  border-radius: 10px !important; /* Скругление углов */
-  box-shadow: none !important; /* Убираем тень */
-  box-sizing: border-box !important; /* Учитываем паддинг в размерах */
-  margin-right: 0 !important; /* Убираем margin-right */
+  width: 254px; /* Фиксированная ширина сайдбара */
+  flex-shrink: 0;
+  background: #FFF; /* Фон */
+  height: auto; /* Автоматическая высота по контенту */
+  padding: 53px 28px; /* Отступы */
+  border-radius: 10px; /* Скругление углов */
+  box-shadow: none; /* Убираем тень */
+  box-sizing: border-box; /* Учитываем паддинг в размерах */
+  margin-right: 0; /* Убираем margin-right */
 }
 
 /* Форма фильтрации */
@@ -232,10 +232,14 @@ body {
 
 /* Заголовок категорий и других секций фильтра */
 .categories-title {
-  font-size: 18px;
-  margin-bottom: 15px;
-  color: #333;
-  /* Конфликтует с определением выше? */
+  font-family: Unbounded, sans-serif; /* Добавляем запасной шрифт */
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 1.2; /* Вместо 18px */
+  letter-spacing: -0.02em; /* -2% */
+  margin: 0 0 10px 0; /* Возвращаем отступ из оригинального стиля */
+  color: #000000; /* Возвращаем цвет из оригинального стиля */
+  /* Конфликтует с определением выше? - Конфликт разрешен в пользу этого */
 }
 
 /* Заголовок для "Показать сначала" */
@@ -250,31 +254,20 @@ body {
   list-style: none;
   padding: 0;
   margin: 0 0 20px 0;
-  max-height: 150px; /* Уменьшаем высоту и добавляем скролл */
-  overflow-y: auto;
-  /* Стилизация скроллбара (опционально) */
-  scrollbar-width: thin;
+  /* Убираем max-height и overflow-y, чтобы показать все категории */
   /* Конфликтует с определением выше? */
-}
-
-.categories-list::-webkit-scrollbar {
-  width: 6px;
-}
-.categories-list::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 3px;
-}
-.categories-list::-webkit-scrollbar-thumb {
-  background: #ccc;
-  border-radius: 3px;
-}
-.categories-list::-webkit-scrollbar-thumb:hover {
-  background: #aaa;
 }
 
 .category-item {
   margin-bottom: 10px;
-  /* Конфликтует с определением выше? */
+  cursor: pointer;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  font-size: 12px;
+  line-height: 1; /* 100% */
+  letter-spacing: 0.01em; /* 1% */
+  color: #000;
+  /* Конфликтует с определением выше? - Конфликт разрешен в пользу этого */
 }
 
 .category-label {
@@ -306,9 +299,16 @@ body {
 }
 
 .rating-label {
-  display: block;
-  margin-bottom: 10px;
-  /* Конфликтует с определением выше? */
+  display: flex; /* Возвращаем flex из оригинального стиля */
+  justify-content: space-between;
+  align-items: center;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  font-size: 12px;
+  line-height: 1; /* 100% */
+  letter-spacing: 0.01em; /* 1% */
+  margin-bottom: 10px; /* Отступ из HTML стиля */
+  /* Конфликтует с определением выше? - Конфликт разрешен в пользу этого */
 }
 
 /* Стили для слайдера noUiSlider */
@@ -360,11 +360,13 @@ body {
 }
 
 .micro-label {
-  font-size: 13px; /* Уменьшаем шрифт */
-  font-weight: 400; /* Уменьшаем жирность */
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  font-size: 12px;
+  line-height: 1; /* 100% */
+  letter-spacing: 0.01em; /* 1% */
   margin-right: 5px; /* Добавляем отступ */
-  /* Конфликтует с определением выше? */
+  /* Конфликтует с определением выше? - Конфликт разрешен в пользу этого */
 }
 
 .help-icon {
@@ -428,12 +430,12 @@ body {
   display: flex;
   flex-direction: column;
   position: relative; /* Для позиционирования аватара */
-  padding-top: 40px; /* Добавляем место сверху под выступающий аватар */
-  margin-top: 40px; /* Компенсируем вынос аватара, чтобы карточки не слипались */
-  width: 330px !important; /* Задаем ширину явно, убираем auto */
+  padding-top: 55.5px; /* Компенсация для 111px аватара */
+  margin-top: 55.5px; /* Компенсация для 111px аватара */
+  width: 330px; /* Задаем ширину */
   min-height: 413px; /* Устанавливаем минимальную высоту */
   height: auto; /* Позволяем расти при необходимости */
-  margin-bottom: 0 !important; /* Убираем конфликт с margin-bottom */
+  margin-bottom: 0; /* Убираем !important */
 }
 
 .startup-card:hover {
@@ -443,28 +445,28 @@ body {
 }
 
 .startup-card-inner {
-  padding: 15px; /* Сохраняем боковые/нижние отступы */
-  padding-top: 50px; /* Увеличиваем верхний отступ, чтобы текст был ниже аватара */
+  padding: 70px 20px 20px 20px; /* Увеличиваем верхний паддинг, боковые/нижний оставляем по 20px */
   display: flex;
   flex-direction: column;
   flex-grow: 1; /* Позволяет внутреннему блоку расти */
+  position: relative; /* Для позиционирования detail-link */
   /* Конфликтует с определением выше? */
 }
 
 /* Логотип стартапа */
 .startup-image {
-  width: 80px; /* Фиксированный размер аватара */
-  height: 80px;
+  width: 123px; /* Новый размер */
+  height: 111px;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden; /* Обрезаем изображение, если оно больше */
   /* Позиционирование аватара */
   position: absolute;
-  top: -40px; /* Выносим наполовину вверх */
+  top: -55.5px; /* Выносим наполовину вверх (111px / 2) */
   left: 50%;
   transform: translateX(-50%);
-  border-radius: 50%; /* Делаем круглым */
+  border-radius: 50%; /* Делаем овальным/круглым */
   border: 3px solid white; /* Белая рамка */
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15); /* Тень */
   background-color: #e9ecef; /* Фон для плейсхолдера */
@@ -495,11 +497,14 @@ body {
 
 /* Название стартапа */
 .startup-name {
-  font-size: 18px;
-  font-weight: 600;
+  font-family: Unbounded, sans-serif;
+  font-weight: 700; /* Bold */
+  font-size: 24px; /* Larger font */
   margin: 0 0 10px 0;
-  color: #333;
-  /* Конфликтует с определением выше? */
+  color: #000; /* Black */
+  text-align: center; /* Center align */
+  line-height: 1.2;
+  /* Конфликтует с определением выше? - Resolved */
 }
 
 /* Рейтинг и комментарии */
@@ -507,22 +512,24 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 13px;
-  color: #666;
-  margin-bottom: 10px;
-  /* Конфликтует с определением выше? */
+  font-size: 13px; /* Keep size */
+  margin-bottom: 15px; /* Increase margin */
+  font-family: Unbounded, sans-serif;
+  font-weight: 400;
+  /* Конфликтует с определением выше? - Resolved */
 }
 
 .rating-text {
-  /* Стили для текста рейтинга */
-  /* Конфликтует с определением выше? */
+  color: #004e9f; /* Blue color */
+  /* Конфликтует с определением выше? - Resolved */
 }
 
 .comments-count {
   display: flex;
   align-items: center;
   gap: 5px;
-  /* Конфликтует с определением выше? */
+  color: #6B7280; /* Gray color */
+  /* Конфликтует с определением выше? - Resolved */
 }
 
 .comments-count i {
@@ -534,50 +541,65 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 10px;
-  /* Конфликтует с определением выше? */
+  margin-bottom: 15px; /* Increase margin */
+  height: 28px; /* Set height like image */
+  /* Конфликтует с определением выше? - Resolved */
 }
 
 .category-tag {
-  background-color: #f0f0f0;
-  color: #555;
-  padding: 3px 8px;
-  border-radius: 4px;
-  font-size: 12px;
+  background-color: #000; /* Black background */
+  color: #fff; /* White text */
+  font-family: Unbounded, sans-serif;
+  font-weight: 500;
+  font-size: 12px; /* Keep size */
+  padding: 6px 12px; /* Increase padding */
+  border-radius: 6px; /* Rounded corners */
   white-space: nowrap;
-  /* Конфликтует с определением выше? */
+  line-height: 1;
+  /* Конфликтует с определением выше? - Resolved */
 }
 
 .progress-bar-container {
   flex-grow: 1;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  /* Конфликтует с определением выше? */
+  position: relative; /* For percentage positioning */
+  height: 100%; /* Match parent height */
+  /* Конфликтует с определением выше? - Resolved */
 }
 
 .progress-bar-bg {
-  flex-grow: 1;
-  height: 8px;
-  background-color: #e9ecef;
-  border-radius: 4px;
+  width: 100%;
+  height: 100%;
+  background-color: #000; /* Black background */
+  border-radius: 6px; /* Match tag radius */
   overflow: hidden;
-  /* Конфликтует с определением выше? */
+  position: absolute;
+  top: 0;
+  left: 0;
+  /* Конфликтует с определением выше? - Resolved */
 }
 
 .progress-bar-fill {
   height: 100%;
-  background-color: var(--primary-color, #007bff);
-  border-radius: 4px;
+  background-color: #FFDD00; /* Yellow fill */
+  border-radius: 6px; /* Match tag radius */
   transition: width 0.5s ease;
-  /* Конфликтует с определением выше? */
+  position: absolute; /* Add position */
+  top: 0;
+  left: 0;
+  /* Конфликтует с определением выше? - Resolved */
 }
 
 .progress-percentage {
-  font-size: 12px;
-  color: #555;
+  position: absolute; /* Position inside */
+  right: 10px; /* Align right */
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 13px; /* Slightly larger */
+  font-weight: 700; /* Bold */
+  color: #000; /* Black text */
   white-space: nowrap;
-  /* Конфликтует с определением выше? */
+  z-index: 1; /* Above fill */
+  /* Конфликтует с определением выше? - Resolved */
 }
 
 /* Тип инвестирования - скрыт или удален */
@@ -585,58 +607,81 @@ body {
 
 /* Цель финансирования */
 .funding-goal-info {
-  font-size: 13px;
-  color: #666;
-  margin-bottom: 8px;
+  font-family: Unbounded, sans-serif; /* Set font */
+  font-size: 13px; /* Keep size */
+  font-weight: 500; /* Medium weight */
+  color: #000; /* Black text */
+  margin-bottom: 10px; /* Adjust margin */
+  padding: 8px 12px; /* Add padding */
+  border-radius: 6px; /* Rounded corners */
+  text-align: center; /* Center text */
   /* .funding-goal-info и .investor-count конфликтуют с определением выше? */
 }
 
 /* Количество инвесторов */
 .investor-count {
+  padding: 5px 0; /* Reset padding */
+  border-radius: 0; /* Reset radius */
+  text-align: left; /* Reset align */
+  background-color: transparent; /* Reset background */
+  /* Keep specific styles */
   display: flex;
   align-items: center;
-  gap: 5px;
-  /* Конфликтует с определением выше? */
+  gap: 6px;
+  font-weight: 400; /* Regular weight */
+  color: #6B7280; /* Gray color */
+  margin-bottom: 15px; /* Increase margin */
+  /* Конфликтует с определением выше? - Resolved */
 }
 
 .investor-count i {
-  font-size: 16px; /* Увеличиваем иконку */
-  color: #6B7280; /* Серый цвет иконки */
+  font-size: 16px;
+  color: #6B7280;
 }
 
 /* Описание стартапа */
 .startup-description {
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
   font-size: 14px;
-  color: #444;
-  line-height: 1.5;
+  color: #000; /* Black text */
+  line-height: 1.4;
   margin-bottom: 15px;
-  flex-grow: 1; /* Занимает доступное место */
-  /* Конфликтует с определением выше? */
+  text-align: left;
+  /* Truncate text */
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* Limit to 3 lines */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-height: calc(1.4em * 3); /* Approx height for 3 lines */
+  /* Конфликтует с определением выше? - Resolved */
 }
 
 /* Ссылка "Подробнее" - возвращаем стили простой ссылки */
 .detail-link {
-  display: inline-flex; /* Используем inline-flex для выравнивания иконки */
-  align-items: center; /* Выравниваем иконку по центру */
-  gap: 5px; /* Отступ между текстом и иконкой */
-  color: var(--primary-color, #007bff);
+  position: absolute; /* Position bottom left */
+  bottom: 20px;
+  left: 20px;
+  font-family: Unbounded, sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  color: #004e9f; /* Blue color */
   text-decoration: none;
-  font-weight: 500;
-  font-size: 14px;
-  align-self: flex-start; /* Кнопка прижимается к началу */
-  margin-top: auto; /* Прижимает кнопку вниз, если описание короткое */
-  position: static !important; /* Убираем absolute позиционирование */
-  /* Конфликтует с определением выше? */
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: color 0.2s ease;
+  /* Конфликтует с определением выше? - Resolved */
 }
 
 .detail-link i {
   transition: transform 0.2s ease;
-  /* Конфликтует с определением выше? */
+  /* Конфликтует с определением выше? - Resolved */
 }
 
-.detail-link:hover i {
-  transform: translateX(3px);
-  /* Конфликтует с определением выше? */
+.detail-link:hover {
+  color: #003CD9; /* Darker blue on hover */
 }
 
 /* Состояние, когда нет доступных стартапов */
