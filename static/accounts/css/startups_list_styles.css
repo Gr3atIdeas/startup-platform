@@ -54,6 +54,7 @@ body {
   flex-grow: 1; /* Возвращаем flex-grow, убираем calc() */
   display: flex;
   flex-direction: column;
+  overflow: visible; /* Позволяем дочерним элементам (включая выступающие аватары) выходить за пределы */
   /* width: calc(100% - 254px - 21px); Убираем calc */
 }
 
@@ -415,10 +416,10 @@ body {
   display: grid !important; /* Используем grid */
   /* Адаптивная сетка */
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)) !important;
-  gap: 20px !important;
-  margin-bottom: 30px !important; /* Отступ под сеткой */
+  gap: 20px; /* Отступ между карточками */
+  margin-bottom: 30px; /* Отступ под сеткой */
   margin-top: 0 !important; /* Убираем конфликт с margin-top */
-  overflow: visible; /* Позволяем дочерним элементам выходить за пределы */
+  /* overflow: visible; Убираем отсюда, т.к. не помогло */
 }
 
 /* Карточка стартапа */
