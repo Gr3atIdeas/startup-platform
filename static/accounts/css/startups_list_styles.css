@@ -678,8 +678,6 @@ body {
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
-  min-height: calc(1.4em * 3); /* Approx height for 3 lines */
-  /* Конфликтует с определением выше? - Resolved */
 }
 
 /* Ссылка "Подробнее" - возвращаем стили простой ссылки */
