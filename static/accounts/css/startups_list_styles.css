@@ -316,26 +316,26 @@ body {
 /* Стили для слайдера noUiSlider */
 .noUi-target {
   border: none;
-  border-radius: 4px;
-  background-color: #E5E7EB;
-  height: 4px;
+  border-radius: 4px; /* Оставляем скругление для самого бара */
+  background-color: #EBEBEB; /* Цвет неактивной части */
+  height: 4px; /* Тонкий бар */
   box-shadow: none;
-  margin-bottom: 8px; /* Добавляем отступ */
+  margin-bottom: 8px;
 }
 
 .noUi-connect {
-  background-color: #0047FF;
+  background-color: #004E9F; /* Цвет активной части */
 }
 
 .noUi-handle {
-  width: 16px !important; /* Увеличиваем размер */
+  width: 16px !important;
   height: 16px !important;
-  border-radius: 50%;
-  background: #0047FF;
-  border: 3px solid white; /* Увеличиваем обводку */
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
-  right: -8px !important; /* Корректируем позицию */
-  top: -7px !important;  /* Корректируем позицию */
+  border-radius: 50%; /* Круглые ползунки */
+  background: #004E9F; /* Цвет ползунков */
+  border: none; /* Убираем обводку */
+  box-shadow: none; /* Убираем тень */
+  right: -8px !important; /* Центрируем на баре */
+  top: -6px !important; /* Центрируем на баре (высота бара 4px + ползунок 16px) / 2 - высота ползунка / 2 = (4 + 16)/2 - 16/2 = 10 - 8 = 2;  нужно - (16-4)/2 = -6 */
   cursor: pointer;
 }
 
