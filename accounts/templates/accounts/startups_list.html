@@ -129,7 +129,7 @@
                       <i class="far fa-comment"></i>
                       {# Пока нет данных для количества комментариев #}
                       {# {{ comment_count }} #} 
-                      -- 
+                      {{ startup.comments_count|default:0 }}
                     </span>
                   </div>
                   
