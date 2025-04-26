@@ -133,7 +133,9 @@
 .footer-socials {
   display: flex;
   gap: 20px; /* Пространство между иконками */
-  align-self: flex-end; /* Прижимаем к правому краю */
+  position: absolute;
+  top: 50px;
+  right: 50px;
 }
 
 .footer-socials img {
@@ -149,7 +151,7 @@
 /* Нижняя полоса с копирайтом */
 .footer-copyright-bar {
   border-top: 1px solid rgba(0, 0, 0, 0.1); /* Сделаем разделитель темнее для белого фона */
-  padding: 15px 0; /* Уменьшаем вертикальные отступы */
+  padding: 8px 0; /* Уменьшаем вертикальные отступы */
   margin-top: 40px;
   background-color: #FFFFFF; /* Белый фон */
   color: #191919; /* Темный текст */
@@ -244,11 +246,12 @@
   }
 
   .footer-socials {
-    align-self: center; /* Центрируем соцсети */
+    position: static;
+    align-self: center;
     margin-top: 20px;
-    justify-content: center; /* Центрируем иконки */
-    width: 100%; /* Занимаем всю ширину */
-    order: 3; /* Перемещаем соц сети вниз в правой колонке */
+    justify-content: center;
+    width: 100%;
+    order: 3;
   }
 
   .footer-copyright-bar-content {
