@@ -294,8 +294,13 @@
         params.set('page', nextPage);
         const fetchUrl = `${currentUrl.pathname}?${params.toString()}`;
 
-        button.textContent = 'Загрузка...';
+        // --- Отображаем состояние загрузки --- 
+        const textSpanLoading = button.querySelector('.btn-text');
+        const iconLoading = button.querySelector('i');
+        if (textSpanLoading) textSpanLoading.textContent = 'Загрузка...'; 
+        if (iconLoading) iconLoading.style.display = 'none'; // Скрываем иконку
         button.disabled = true;
+        // --- Конец состояния загрузки ---
 
         fetch(fetchUrl, {
             method: 'GET',
@@ -336,17 +341,12 @@
 
             if (data.has_next) {
                 button.dataset.nextPage = parseInt(nextPage) + 1;
-                 // Восстанавливаем кнопку, изменяя только текст в span
+                 // Восстанавливаем кнопку, изменяя только текст в span и показывая иконку
                  button.disabled = false;
                  const textSpan = button.querySelector('.btn-text');
                  if (textSpan) textSpan.textContent = 'Показать еще ';
-                 // Убедимся, что иконка есть
-                 let icon = button.querySelector('i.fas.fa-eye');
-                 if (!icon) {
-                     icon = document.createElement('i');
-                     icon.className = 'fas fa-eye';
-                     button.appendChild(icon);
-                 }
+                 const icon = button.querySelector('i'); // Иконка должна быть
+                 if (icon) icon.style.display = ''; // Показываем иконку
             } else {
                 button.style.display = 'none';
                  if (paginationInfo && data.count !== undefined) {
@@ -358,17 +358,12 @@
         })
         .catch(error => {
             console.error('Ошибка при загрузке стартапов:', error);
-             // Восстанавливаем кнопку, изменяя только текст в span
+             // Восстанавливаем кнопку, изменяя только текст в span и показывая иконку
              button.disabled = false;
              const textSpan = button.querySelector('.btn-text');
              if (textSpan) textSpan.textContent = 'Показать еще ';
-             // Убедимся, что иконка есть
-             let icon = button.querySelector('i.fas.fa-eye');
-             if (!icon) {
-                 icon = document.createElement('i');
-                 icon.className = 'fas fa-eye';
-                 button.appendChild(icon);
-             }
+             const icon = button.querySelector('i'); // Иконка должна быть
+             if (icon) icon.style.display = ''; // Показываем иконку
              if (paginationInfo) {
                  // ... (обработка ошибки без изменений) ...
                  let errorP = paginationInfo.querySelector('.error-message');
@@ -405,25 +400,18 @@
             showMoreBtn.style.display = 'inline-flex';
             showMoreBtn.dataset.nextPage = '2';
             showMoreBtn.disabled = false;
-            // Восстанавливаем, изменяя только текст в span
+            // Восстанавливаем, изменяя только текст в span и показывая иконку
             const textSpan = showMoreBtn.querySelector('.btn-text');
             if (textSpan) textSpan.textContent = 'Показать еще ';
-            // Убедимся, что иконка есть
-            let icon = showMoreBtn.querySelector('i.fas.fa-eye');
-            if (!icon) {
-                icon = document.createElement('i');
-                icon.className = 'fas fa-eye';
-                showMoreBtn.appendChild(icon);
-            }
+            const icon = showMoreBtn.querySelector('i'); // Иконка должна быть
+            if (icon) icon.style.display = ''; // Показываем иконку
 
             // Восстанавливаем исходный текст пагинации
             if (paginationInfo && initialPaginationText) {
                 paginationInfo.innerHTML = initialPaginationText;
-                 // Убираем сообщение об ошибке, если оно было
                  const errorP = paginationInfo.querySelector('.error-message');
                  if (errorP) errorP.remove();
             } else if (paginationInfo) {
-                 // Если initialPaginationText пуст, просто очищаем инфо
                  paginationInfo.innerHTML = '';
             }
         });
