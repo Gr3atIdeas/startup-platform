@@ -398,19 +398,19 @@ body {
   background-color: white;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  overflow: visible; /* <<< RETURNED to visible to show image */
-  transition: transform 0.2s linear, box-shadow 0.2s linear;
+  overflow: visible; 
+  /* Added background-color and border-color to transition */
+  transition: transform 0.2s linear, box-shadow 0.2s linear, background-color 0.2s linear, border-color 0.2s linear;
   display: flex;
   flex-direction: column;
-  position: relative; /* Важно для позиционирования ссылки и логотипа */
-  /* padding-top убран, логотип позиционируется абсолютно */
+  position: relative; 
   width: 100%; 
   box-sizing: border-box;
   min-width: 0; 
-  height: 413px; /* Фиксированная высота */
+  height: 413px; 
   margin-bottom: 0; 
   cursor: pointer; 
-  /* Default text colors moved to specific elements */
+  border: 1px solid transparent; /* Add transparent border for smooth transition */
 }
 
 /* Новый контейнер для контента и обрезки волны */
@@ -476,7 +476,13 @@ body {
   transition: color 0.2s linear; /* Faster transition */
 }
 
-/* Text colors on HOVER */
+/* Text and Background colors on HOVER */
+.startup-card:hover {
+  background-color: rgba(255, 255, 255, 0.1); /* Restore hover background */
+  border-color: rgba(255, 255, 255, 0.2); /* Restore hover border */
+  /* Text color changes moved below */
+}
+
 .startup-card:hover .startup-name,
 .startup-card:hover .rating-text,
 .startup-card:hover .comments-count,
