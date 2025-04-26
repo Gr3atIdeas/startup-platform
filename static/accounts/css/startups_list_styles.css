@@ -680,32 +680,6 @@ body {
   text-overflow: ellipsis;
 }
 
-/* Ссылка "Подробнее" - возвращаем стили простой ссылки */
-.detail-link {
-  position: absolute; /* Position bottom left */
-  bottom: 20px;
-  left: 20px;
-  font-family: Unbounded, sans-serif;
-  font-size: 13px;
-  font-weight: 400;
-  color: #004e9f; /* Blue color */
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  transition: color 0.2s ease;
-  /* Конфликтует с определением выше? - Resolved */
-}
-
-.detail-link i {
-  transition: transform 0.2s ease;
-  /* Конфликтует с определением выше? - Resolved */
-}
-
-.detail-link:hover {
-  color: #003CD9; /* Darker blue on hover */
-}
-
 /* Состояние, когда нет доступных стартапов */
 .no-startups {
   text-align: center;
@@ -787,7 +761,6 @@ body {
    .funding-goal-info { font-size: 11px; }
    .investor-count { font-size: 11px; }
    .startup-description { font-size: 12px; -webkit-line-clamp: 2; min-height: 34px; }
-   .detail-link { font-size: 12px; }
 }
 
 @media (max-width: 400px) {
@@ -881,3 +854,19 @@ body {
   padding: 0;
   z-index: 1; /* Под аватаром */
 }
+
+/* <<< Добавлено: Стили для обертки карточки-ссылки >>> */
+.startup-card-link {
+  display: block; /* Чтобы занимала место как блочный элемент */
+  color: inherit; /* Наследовать цвет текста от родителя */
+  text-decoration: none; /* Убрать подчеркивание */
+}
+
+.startup-card-link:hover {
+  color: inherit; /* Убрать изменение цвета при наведении */
+}
+
+/* Ссылка "Подробнее" - <<< Удаляем стили >>> */
+/* .detail-link { ... } */
+/* .detail-link i { ... } */
+/* .detail-link:hover { ... } */
