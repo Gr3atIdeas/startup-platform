@@ -914,3 +914,10 @@ input[type=range]#ratingSlider::-moz-range-thumb {
   border: none;
   background: transparent;
 }
+
+.startup-avatar {
+  /* ... другие стили ... */
+  background-size: cover; 
+  background-position: center; 
+  /* background-image: url(...); ЗАКОММЕНТИРОВАНО: Изображение должно устанавливаться через inline-style в HTML с {% static %} */
+}

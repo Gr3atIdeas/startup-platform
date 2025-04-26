@@ -9,19 +9,23 @@ body {
 }
 
 /* Обновления для черной темы */
-.black-theme {
+/* .black-theme {
   background-color: #000000;
-}
+} */
 
 /* Общие стили для страницы инвестиций */
 .portfolio-container {
   width: 100%;
   max-width: 1440px;
   margin: 0 auto;
-  color: #FFFFFF;
+  color: #FFFFFF; /* Возвращаем цвет по умолчанию, если нужно */
   font-family: 'Circe', Arial, sans-serif;
-  animation: fadeIn 0.8s ease;
+  animation: fadeIn 0.8s ease; /* Возвращаем анимацию */
 }
+
+/* 
+ВОССТАНАВЛИВАЕМ СТИЛИ 
+*/
 
 /* Секция аналитики (верхняя часть) */
 .analytics-section {
@@ -423,7 +427,9 @@ body {
   background-color: #E2E8F0; /* Цвет фона аватара */
   border-radius: 50%;
   transition: none;
-  /* Можно добавить картинку: background-image: url(...); background-size: cover; */
+  background-size: cover; /* Добавлено для корректного отображения фона */
+  background-position: center; /* Добавлено для корректного отображения фона */
+  /* background-image: url(...); ЗАКОММЕНТИРОВАНО: Изображение должно устанавливаться через inline-style в HTML с {% static %} */
 }
 
 .startup-card:hover .startup-avatar {
@@ -591,6 +597,7 @@ body {
   /* Убираем hover эффект */
 }
 
+/* Оставляем только стили для access-restricted на всякий случай */
 /* Отображение сообщения для неавторизованных пользователей */
 .access-restricted {
   text-align: center;
@@ -635,6 +642,9 @@ body {
   to { opacity: 1; }
 }
 
+/* 
+ВОССТАНАВЛИВАЕМ АНИМАЦИИ
+*/
 @keyframes slideInUp {
   from {
     transform: translateY(30px);
@@ -675,6 +685,7 @@ body {
 }
 
 /* Адаптивность */
+/* ВОССТАНАВЛИВАЕМ АДАПТИВНОСТЬ */
 @media (max-width: 1200px) {
   .analytics-section {
     flex-direction: column;
@@ -718,9 +729,10 @@ body {
   .startup-details {
     width: 100%;
   }
-}
+} 
 
 /* Стили для блока аналитики по месяцам */
+/* ВОССТАНАВЛИВАЕМ СТИЛИ */
 .monthly-analytics {
   margin-top: 30px;
   margin-bottom: 30px;
