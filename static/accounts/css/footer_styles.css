@@ -149,6 +149,27 @@
   opacity: 0.8;
 }
 
+/* <<< Добавлено: Стили для фона иконки >>> */
+.social-icon-bg {
+  display: inline-flex; /* Используем flex для центрирования */
+  justify-content: center;
+  align-items: center;
+  width: 30px;  /* Немного больше иконки (24px) */
+  height: 30px; /* Немного больше иконки (24px) */
+  background-color: white; /* Белый фон */
+  border-radius: 50%;    /* Круглый фон */
+  padding: 3px; /* Небольшой внутренний отступ */
+  box-sizing: border-box;
+}
+
+.social-icon-bg img {
+  display: block; /* Убираем лишнее пространство под картинкой */
+  width: 100%; /* Картинка заполняет контейнер (с учетом padding) */
+  height: auto;
+  max-width: 20px; /* Ограничим размер самой иконки, чтобы не прилипала к краям */
+  max-height: 20px;
+}
+
 /* Нижняя полоса с копирайтом */
 .footer-copyright-bar {
   border-top: 1px solid rgba(0, 0, 0, 0.1); /* Сделаем разделитель темнее для белого фона */
