@@ -747,71 +747,93 @@ body {
   }
 }
 
-/* === Стили пагинации === */
+/* === Стили пагинации и "Показать еще" === */
 .pagination-controls {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 20px;
-  /* Конфликтует с определением выше? */
+  flex-direction: column; /* Располагаем инфо над кнопкой */
+  align-items: center; /* Центрируем по горизонтали */
+  margin-top: 30px; /* Отступ сверху */
+  margin-bottom: 20px; /* Отступ снизу */
+  width: 100%;
+  gap: 15px; /* Расстояние между инфо и кнопкой */
 }
 
-/* Стили кнопки "Показать еще" (новая версия) */
+/* Стили для информации о пагинации */
+.pagination-info {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 14px;
+  color: #FFFFFF; /* Белый текст для видимости на фоне */
+  text-align: center;
+}
+
+.pagination-info p {
+    margin: 0;
+}
+
+/* Стили контейнера кнопки "Показать еще" */
 .show-more-container {
-  /* Контейнер для кнопки */
-  /* Конфликтует с определением выше? */
+  /* Можно оставить пустым или использовать для дополнительного позиционирования */
+  text-align: center; /* Центрирует кнопку, если она inline-block/inline-flex */
 }
 
+/* Стили кнопки "Показать еще" (адаптировано) */
 .show-more-btn {
-  /* Стили скопированы из buttons.css и адаптированы */
   position: relative;
-  display: inline-flex;
-    align-items: center;
-    justify-content: center;
-  padding: 10px 20px;
+  display: inline-flex; /* Используем inline-flex для центрирования иконки */
+  align-items: center;
+  justify-content: center;
+  padding: 12px 25px; /* Немного увеличим паддинги */
   border-radius: 8px;
   font-size: 16px;
-    font-weight: 500;
-    cursor: pointer;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 500;
+  cursor: pointer;
   overflow: hidden; /* Для эффекта */
-  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
-  border: 1px solid var(--primary-color, #007bff); /* Пример */
-  background-color: var(--primary-color, #007bff);
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s, opacity 0.3s;
+  border: none; /* Убираем границу */
+  background-color: #0047FF; /* Синий фон */
   color: white;
-  /* Конфликтует с определением выше? */
+  transform: translateZ(0); /* Для рендеринга и эффекта */
+  z-index: 0;
 }
 
 .show-more-btn i {
-    margin-left: 8px; 
-  /* Конфликтует с определением выше? */
+  margin-left: 8px;
+  font-size: 14px; /* Сделаем иконку чуть меньше */
 }
 
 .show-more-btn:hover {
-  background-color: darken(var(--primary-color, #007bff), 10%);
-  border-color: darken(var(--primary-color, #007bff), 10%);
-  /* Конфликтует с определением выше? */
+  /* background-color: #003CD9; */ /* Оставляем эффект пульсации */
 }
 
-/* Эффект Position Aware для кнопки "Показать еще" (если используется JS) */
+.show-more-btn:disabled {
+    background-color: #cccccc; /* Серый фон для неактивной кнопки */
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/* Эффект Position Aware для кнопки "Показать еще" (стили уже были, проверим) */
 .show-more-btn .position-aware-effect {
-  position: absolute;
-  border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.3);
-  transform: scale(0);
-  animation: ripple 0.6s linear;
-  pointer-events: none;
-  /* Конфликтует с определением выше? */
+    content: '';
+    position: absolute;
+    display: block;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3); /* Полупрозрачный белый */
+    transform: translate(-50%, -50%);
+    transition: width 0.6s ease-out, height 0.6s ease-out;
+    z-index: 2; /* Увеличиваем z-index */
+    opacity: 1;
+    animation: ripple 0.6s linear forwards;
+    will-change: transform, opacity;
 }
 
-@keyframes ripple {
-  to {
-    transform: scale(4);
-    opacity: 0;
-  }
-  /* Конфликтует с определением выше? */
-}
+/* @keyframes ripple уже определен выше, можно не дублировать */
+/* @keyframes ripple { ... } */
 
-/* === Конец стилей пагинации === */
+/* === Конец стилей пагинации и "Показать еще" === */
 
 /* Тег "Франшиза" */
 .startup-franchise-tag {

@@ -106,94 +106,10 @@
       </div>
       
       <!-- Сетка стартапов -->
-      <div class="startups-grid">
-        {# Возвращаем approved_startups #}
-        {% if approved_startups %}
-          {% for startup in approved_startups %}
-            {# Возвращаем условие if forloop.counter <= 6 #}
-            {% if forloop.counter <= 6 %}
-              {# <<< Изменено: Убираем обертку <a> >>> #}
-              {# <a href="{% url 'startup_detail' startup.startup_id %}" class="startup-card-link"> #}
-                <div class="startup-card">
-                  <span class="startup-franchise-tag">Франшиза</span>
-                  <div class="startup-card-inner">
-                    <div class="startup-image">
-                      {% if startup.logo_urls %}
-                        <img src="{% get_file_url_tag startup.logo_urls.0 startup.startup_id 'logo' %}" alt="{{ startup.title }}">
-                      {% else %}
-                        <div class="startup-image-placeholder">
-                          {{ startup.title|make_list|first|upper }}
-                        </div>
-                      {% endif %}
-                    </div>
-                    
-                    <h3 class="startup-name">{{ startup.title }}</h3>
-                    
-                    <div class="startup-rating-comments">
-                      <span class="rating-text">Рейтинг {{ startup.average_rating|floatformat:1 }}/5 ({{ startup.total_voters }})</span>
-                      <span class="comments-count">
-                        <i class="far fa-comment"></i>
-                        {{ startup.comments.count|default:0 }}
-                      </span>
-                    </div>
-                    
-                    <div class="category-progress">
-                      <div class="category-tag">
-                        {% with original_name=startup.direction.direction_name|default:"" %}
-                            {% if original_name == "Medicine" %}Медицина
-                            {% elif original_name == "Auto" %}Автомобили
-                            {% elif original_name == "Delivery" %}Доставка
-                            {% elif original_name == "Cafe" %}Кафе/рестораны
-                            {% elif original_name == "Fastfood" %}Фастфуд
-                            {% elif original_name == "Health" %}Здоровье
-                            {% elif original_name == "Beauty" %}Красота
-                            {% elif original_name == "Transport" %}Транспорт
-                            {% elif original_name == "Sport" %}Спорт
-                            {% elif original_name == "Psychology" %}Психология
-                            {% elif original_name == "AI" %}ИИ
-                            {% elif original_name == "Finance" %}Финансы
-                            {% elif original_name == "Healthcare" %}Здравоохранение
-                            {% elif original_name == "Technology" %}Технологии
-                            {% else %}{{ original_name|default:"Не указано" }}{# Возвращаем оригинал или "Не указано" #}
-                            {% endif %}
-                        {% endwith %}
-                      </div>
-                      {% with progress=startup.get_progress_percentage|default:0 %}
-                      <div class="progress-bar-container">
-                        <div class="progress-bar-bg">
-                          <div class="progress-bar-fill" style="width: {{ progress }}%;"></div>
-                        </div>
-                        <span class="progress-percentage">{{ progress|floatformat:0 }}%</span>
-                      </div>
-                      {% endwith %}
-                    </div>
-                    
-                    <div class="investment-type">
-                      {% if startup.both_mode %}Инвестирование+Выкуп{% elif startup.only_invest %}Только инвестирование{% elif startup.only_buy %}Только выкуп{% else %}Тип не указан{% endif %}
-                    </div>
-                    
-                    <div class="funding-goal-info">
-                      Цель финансирования: {{ startup.funding_goal|floatformat:"0" }} ₽
-                    </div>
-                    
-                    <div class="investor-count">
-                      <i class="fas fa-users"></i>
-                      <span>Инвестировало ({{ startup.get_investors_count }})</span>
-                    </div>
-                    
-                    <div class="startup-description">
-                      {{ startup.description|truncatewords:15 }}
-                    </div>
-                    
-                    {# <<< Возвращено: Ссылка "Подробнее", но она будет растянута через CSS >>> #}
-                    <a href="{% url 'startup_detail' startup.startup_id %}" class="detail-link">
-                      {# Текст не нужен, т.к. ссылка будет невидимой #}
-                    </a>
-                  </div>
-                </div>
-              {# </a> #}
-            {% endif %}
-          {% endfor %}
+      <div class="startups-grid" id="startupsGrid">
+        {% if page_obj %} {# Проверяем page_obj вместо approved_startups #}
+          {# <<< Включаем частичный шаблон для отрисовки карточек >>> #}
+          {% include 'accounts/partials/_startup_cards.html' with page_obj=page_obj %}
         {% else %}
           <div class="no-startups">
             <p>В настоящее время нет доступных стартапов. Загляните позже!</p>
@@ -201,20 +117,30 @@
         {% endif %}
       </div>
 
-      {# Возвращаем старую структуру кнопки "Показать еще" #}
-      {# {% if initial_has_next %} <-- Убираем это условие #}
-        {% if approved_startups|length > 6 %} {# <-- Возвращаем старое условие #}
-          <div class="pagination-controls">
-            <div class="show-more-container">
-                {# Убираем id и data-атрибут #}
-                <button class="show-more-btn">
-                    Показать еще <i class="fas fa-eye"></i>
-                </button>
-            </div>
-            {# Блок пагинации .pagination удален #}
-          </div> {# Конец .pagination-controls #}
-        {% endif %}
-      {# {% endif %} #}
+      {# <<< Начало: Контейнер для пагинации и кнопки "Показать еще" >>> #}
+      <div class="pagination-controls">
+          {# Информационный блок пагинации (будет обновляться JS) #}
+          <div class="pagination-info" id="paginationInfo">
+              {% if page_obj and paginator.num_pages > 1 %}
+                  {# Начальное состояние, если передано из view #}
+                  <p>Страница {{ page_obj.number }} из {{ paginator.num_pages }}. Показано {{ page_obj.object_list|length }} из {{ paginator.count }} стартапов.</p>
+              {% elif page_obj %}
+                   <p>Показано {{ paginator.count }} стартапов.</p> {# Если только одна страница #}
+              {% endif %}
+          </div>
+
+          {# Кнопка "Показать еще" #}
+          {# Отображается, если initial_has_next=True передано из view #}
+          {% if initial_has_next %}
+          <div class="show-more-container">
+              {# Добавляем id и data-атрибут для JS #}
+              <button class="show-more-btn" id="showMoreBtn" data-next-page="2">
+                  Показать еще <i class="fas fa-eye"></i>
+              </button>
+          </div>
+          {% endif %}
+      </div>
+      {# <<< Конец: Контейнер для пагинации и кнопки "Показать еще" >>> #}
 
     </div> {# Конец .startups-content #}
   </div> {# Конец .catalog-container #}
@@ -276,28 +202,36 @@
     // Функция для работы с поиском
     var searchInput = document.querySelector('.catalog-search-input');
     var searchBtn = document.querySelector('.catalog-search-btn');
-    
-    searchBtn.addEventListener('click', function() {
-      var form = document.getElementById('filterForm');
-      var searchInputHidden = document.querySelector('input[name="search"]');
-      searchInputHidden.value = searchInput.value;
-      form.submit();
-    });
-    
-    searchInput.addEventListener('keypress', function(e) {
-      if (e.key === 'Enter') {
-        var form = document.getElementById('filterForm');
-        var searchInputHidden = document.querySelector('input[name="search"]');
-        searchInputHidden.value = searchInput.value;
-        form.submit();
-      }
-    });
-    
+    var filterForm = document.getElementById('filterForm'); // Получаем форму
+
+    if (searchBtn && searchInput && filterForm) { // Проверяем наличие формы
+        searchBtn.addEventListener('click', function() {
+          var searchInputHidden = filterForm.querySelector('input[name="search"]'); // Ищем поле внутри формы
+          if (searchInputHidden) {
+              searchInputHidden.value = searchInput.value;
+          }
+          filterForm.submit();
+        });
+
+        searchInput.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') {
+            var searchInputHidden = filterForm.querySelector('input[name="search"]'); // Ищем поле внутри формы
+             if (searchInputHidden) {
+                searchInputHidden.value = searchInput.value;
+             }
+            filterForm.submit();
+          }
+        });
+    }
+
     // Эффект Position Aware для кнопок
     var buttons = document.querySelectorAll('.show-button, .catalog-search-btn, .show-more-btn');
     
     buttons.forEach(function(button) {
       button.addEventListener('mouseenter', function(e) {
+        // Проверяем, не отключена ли кнопка
+        if (this.disabled) return;
+
         var parentOffset = this.getBoundingClientRect(),
             relX = e.clientX - parentOffset.left,
             relY = e.clientY - parentOffset.top;
@@ -307,16 +241,135 @@
         span.style.left = relX + 'px';
         span.classList.add('position-aware-effect');
         
+        // Удаляем старые эффекты перед добавлением нового
+        var existingEffect = this.querySelector('.position-aware-effect');
+        if (existingEffect) {
+            existingEffect.remove();
+        }
+
         this.appendChild(span);
         
-        setTimeout(function() {
-          if (span.parentNode === button) {
-            button.removeChild(span);
-          }
-        }, 600);
+        // Удаляем эффект после завершения анимации
+        span.addEventListener('animationend', function() {
+            if (span.parentNode === button) {
+                button.removeChild(span);
+            }
+        });
       });
     });
     
+    // <<< Начало: Логика "Показать еще" >>>
+    const showMoreBtn = document.getElementById('showMoreBtn');
+    const startupsGrid = document.getElementById('startupsGrid');
+    const paginationInfo = document.getElementById('paginationInfo'); // Элемент для обновления информации
+
+    if (showMoreBtn && startupsGrid) {
+      showMoreBtn.addEventListener('click', function() {
+        const button = this; // Сохраняем контекст кнопки
+        const nextPage = button.dataset.nextPage;
+        if (!nextPage) return; // Нет следующей страницы
+
+        // Собираем текущие параметры фильтрации из URL (это проще и надежнее)
+        const currentUrl = new URL(window.location.href);
+        const params = new URLSearchParams(currentUrl.search);
+
+        // Устанавливаем номер запрашиваемой страницы
+        params.set('page', nextPage);
+        // Не добавляем 'ajax=true', будем использовать HTTP заголовок 'X-Requested-With'
+
+        // Формируем URL для запроса
+        const fetchUrl = `${currentUrl.pathname}?${params.toString()}`;
+
+        // Показываем индикатор загрузки
+        button.textContent = 'Загрузка...';
+        button.disabled = true;
+
+        fetch(fetchUrl, {
+            method: 'GET',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest' // Стандартный заголовок для AJAX в Django
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                 // Попытаемся прочитать тело ответа как текст, если это ошибка сервера
+                 return response.text().then(text => {
+                    throw new Error(`HTTP error ${response.status}: ${text || 'Server error'}`);
+                 });
+            }
+            // Проверяем Content-Type перед парсингом JSON
+            const contentType = response.headers.get("content-type");
+            if (contentType && contentType.indexOf("application/json") !== -1) {
+                return response.json(); // Ожидаем JSON { html: '...', has_next: true/false, page_number: N, num_pages: M, count: T }
+            } else {
+                // Если не JSON, возможно HTML или текст ошибки
+                return response.text().then(text => {
+                    throw new Error(`Unexpected response type: ${contentType}. Content: ${text}`);
+                });
+            }
+        })
+        .then(data => {
+            if (data.html) {
+                // Вставляем новые карточки
+                startupsGrid.insertAdjacentHTML('beforeend', data.html);
+                 // Может потребоваться повторно инициализировать JS для новых карточек, если нужно
+            }
+
+            // Обновляем информацию о пагинации (если элемент есть)
+            if (paginationInfo && data.count !== undefined && data.page_number !== undefined && data.num_pages !== undefined) {
+                 const currentVisibleCount = startupsGrid.querySelectorAll('.startup-card').length;
+                 if (data.num_pages > 1) {
+                    paginationInfo.innerHTML = `<p>Страница ${data.page_number} из ${data.num_pages}. Показано ${currentVisibleCount} из ${data.count} стартапов.</p>`;
+                 } else {
+                     paginationInfo.innerHTML = `<p>Показано ${currentVisibleCount} из ${data.count} стартапов.</p>`;
+                 }
+            }
+
+
+            if (data.has_next) {
+                // Есть еще страницы, обновляем кнопку
+                button.dataset.nextPage = parseInt(nextPage) + 1;
+                button.textContent = 'Показать еще '; // Возвращаем текст
+                const icon = document.createElement('i');
+                icon.className = 'fas fa-eye';
+                button.appendChild(icon); // Возвращаем иконку
+                button.disabled = false;
+            } else {
+                // Это была последняя страница, скрываем кнопку
+                button.style.display = 'none';
+                 // Можно также обновить пагинацию, чтобы показать, что все загружено
+                 if (paginationInfo && data.count !== undefined) {
+                     const currentVisibleCount = startupsGrid.querySelectorAll('.startup-card').length;
+                     paginationInfo.innerHTML = `<p>Показаны все ${currentVisibleCount} из ${data.count} стартапов.</p>`;
+                 }
+            }
+        })
+        .catch(error => {
+            console.error('Ошибка при загрузке стартапов:', error);
+            // Возвращаем кнопку в исходное состояние в случае ошибки
+             button.textContent = 'Показать еще ';
+             const icon = document.createElement('i');
+             icon.className = 'fas fa-eye';
+             button.appendChild(icon);
+             button.disabled = false;
+             // Показываем сообщение об ошибке пользователю
+             if (paginationInfo) {
+                 // Добавляем сообщение к существующему тексту, чтобы не стирать его
+                 let errorP = paginationInfo.querySelector('.error-message');
+                 if (!errorP) {
+                     errorP = document.createElement('p');
+                     errorP.style.color = 'red';
+                     errorP.className = 'error-message';
+                     paginationInfo.appendChild(errorP);
+                 }
+                 errorP.textContent = `Не удалось загрузить больше стартапов (${error.message}). Попробуйте еще раз.`;
+
+             }
+        });
+      });
+    }
+    // <<< Конец логики "Показать еще" >>>
+
   });
   
   // Функция для переключения микроинвестиций
@@ -331,6 +384,9 @@
       toggle.classList.add('active');
       input.value = '1';
     }
+    // Опционально: если изменение этого поля должно влиять на фильтр,
+    // можно автоматически отправить форму: document.getElementById('filterForm').submit();
+    // Но обычно пользователь ожидает нажатия кнопки "Показать"
   }
 </script>
 {% endblock %}

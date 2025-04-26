@@ -17,11 +17,13 @@ from .models import creative_upload_path, proof_upload_path, video_upload_path
 import uuid
 from .models import Comments
 from .forms import CommentForm
-from django.db.models import Count
+from django.db.models import Count, Sum, Avg, F, FloatField
 from decimal import Decimal
 from .models import NewsArticles, NewsLikes, NewsViews  # Добавляем новые модели
 from django.core.files.storage import default_storage  # Для работы с файлами
 from django import forms  # Добавляем импорт
+from django.core.paginator import Paginator
+from django.template.loader import render_to_string
 
 
 logger = logging.getLogger(__name__)
@@ -73,79 +75,102 @@ def user_logout(request):
     messages.success(request, 'Вы успешно вышли из системы.')
     return redirect('home')
 
-def get_progress_percentage(self):
-    """Вычисляет процент выполнения цели финансирования."""
-    if self.funding_goal and self.amount_raised is not None:
-        return min((self.amount_raised / self.funding_goal) * 100, 100)
-    return 0
-
 def startups_list(request):
     # Получаем все направления из базы данных
     directions = Directions.objects.all()
-    
+
     # Базовый запрос: только одобренные стартапы
-    startups = Startups.objects.filter(status='approved')
-    
+    startups_qs = Startups.objects.filter(status='approved')
+
     # Получаем параметры фильтрации
     selected_categories = request.GET.getlist('category')
     micro_investment = request.GET.get('micro_investment') == '1'
     search_query = request.GET.get('search', '').strip()
-    min_rating = request.GET.get('min_rating', '0')  # Минимальный рейтинг
-    max_rating = request.GET.get('max_rating', '5')  # Максимальный рейтинг
-    sort_order = request.GET.get('sort_order', 'newest')  # Порядок сортировки: 'newest' или 'oldest'
+    min_rating_str = request.GET.get('min_rating', '0')
+    max_rating_str = request.GET.get('max_rating', '5')
+    sort_order = request.GET.get('sort_order', 'newest')
+    page_number = request.GET.get('page', 1)
 
-    # Логирование для отладки
-    logger.debug(f"Selected categories: {selected_categories}")
+    # Аннотируем базовые поля + средний рейтинг сразу
+    startups_qs = startups_qs.annotate(
+        comment_count=Count('comments'),
+        average_rating=Avg(
+            models.ExpressionWrapper(
+                models.F('sum_votes') * 1.0 / models.F('total_voters'),
+                output_field=FloatField()
+            ),
+            filter=models.Q(total_voters__gt=0)
+        )
+    ).annotate(
+         average_rating=models.functions.Coalesce('average_rating', 0.0)
+    )
 
-    # Фильтрация по категориям (направлениям), нечувствительная к регистру
+    # Фильтрация по категориям
     if selected_categories:
-        startups = startups.filter(direction__direction_name__in=selected_categories)
+        startups_qs = startups_qs.filter(direction__direction_name__in=selected_categories)
 
     # Фильтрация по микроинвестициям
     if micro_investment:
-        startups = startups.filter(micro_investment_available=True)
+        startups_qs = startups_qs.filter(micro_investment_available=True)
 
     # Фильтрация по поисковому запросу
     if search_query:
-        startups = startups.filter(title__icontains=search_query)
+        startups_qs = startups_qs.filter(title__icontains=search_query)
 
-    # Аннотируем количество комментариев
-    startups = startups.annotate(comment_count=Count('comments'))
-
-    # Сортировка
-    if sort_order == 'newest':
-        startups = startups.order_by('-created_at')
-    elif sort_order == 'oldest':
-        startups = startups.order_by('created_at')
-
-    # Добавляем средний рейтинг для каждого стартапа
-    for startup in startups:
-        startup.average_rating = startup.sum_votes / startup.total_voters if startup.total_voters > 0 else 0
-
-    # Фильтрация по диапазону рейтинга
+    # Фильтрация по диапазону рейтинга (применяем к аннотированному полю)
     try:
-        min_rating = float(min_rating)
-        max_rating = float(max_rating)
-        startups = [startup for startup in startups if min_rating <= startup.average_rating <= max_rating]
+        min_rating = float(min_rating_str)
+        max_rating = float(max_rating_str)
+        if min_rating > 0:
+            startups_qs = startups_qs.filter(average_rating__gte=min_rating)
+        if max_rating < 5:
+            startups_qs = startups_qs.filter(average_rating__lte=max_rating)
     except ValueError:
         min_rating = 0
         max_rating = 5
 
-    # Разделяем direction_translations на список пар
-    direction_translations_str = 'Medicine:Медицина,Auto:Автомобили,Delivery:Доставка,Cafe:Кафе/рестораны,Fastfood:Фастфуд,Health:Здоровье,Beauty:Красота,Transport:Транспорт,Sport:Спорт,Psychology:Психология,AI:ИИ,Finance:Финансы,Healthcare:Здравоохранение,Technology:Технологии'
-    direction_translations = [pair.split(':') for pair in direction_translations_str.split(',')]
+    # Сортировка
+    if sort_order == 'newest':
+        startups_qs = startups_qs.order_by('-created_at')
+    elif sort_order == 'oldest':
+        startups_qs = startups_qs.order_by('created_at')
 
-    return render(request, 'accounts/startups_list.html', {
-        'approved_startups': startups,
-        'selected_categories': selected_categories,
-        'micro_investment': micro_investment,
-        'search_query': search_query,
-        'min_rating': min_rating,
-        'max_rating': max_rating,
-        'sort_order': sort_order,
-        'directions': directions,
-        'direction_translations': direction_translations,
-    })
+    # Создаем пагинатор ПОСЛЕ всех фильтраций и сортировок
+    paginator = Paginator(startups_qs, 6)
+    page_obj = paginator.get_page(page_number)
+
+    # Проверяем, AJAX ли это запрос
+    is_ajax = request.headers.get('x-requested-with') == 'XMLHttpRequest'
+
+    if is_ajax:
+        # Рендерим только карточки стартапов
+        html = render_to_string(
+            'accounts/partials/_startup_cards.html',
+            {'page_obj': page_obj}
+        )
+        # Возвращаем JSON
+        return JsonResponse({
+            'html': html,
+            'has_next': page_obj.has_next(),
+            'page_number': page_obj.number,
+            'num_pages': paginator.num_pages,
+            'count': paginator.count
+        })
+    else:
+        # Обычный запрос, рендерим всю страницу
+        context = {
+            'page_obj': page_obj,
+            'paginator': paginator,
+            'initial_has_next': page_obj.has_next(),
+            'selected_categories': selected_categories,
+            'micro_investment': micro_investment,
+            'search_query': search_query,
+            'min_rating': min_rating,
+            'max_rating': max_rating,
+            'sort_order': sort_order,
+            'directions': directions,
+        }
+        return render(request, 'accounts/startups_list.html', context)
 
 def search_suggestions(request):
     query = request.GET.get('q', '').strip()
