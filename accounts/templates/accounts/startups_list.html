@@ -139,9 +139,9 @@
               {# Кнопка "Показать еще" #}
               {# Отображается, если initial_has_next=True передано из view #}
               {% if initial_has_next %}
-                  {# Добавляем общий класс pagination-btn #}
+                  {# Добавляем общий класс pagination-btn и вложенный span для текста #}
                   <button class="pagination-btn show-more-btn" id="showMoreBtn" data-next-page="2" data-initial-count="{{ page_obj.object_list|length|default:6 }}">
-                      Показать еще <i class="fas fa-eye"></i>
+                      <span class="btn-text">Показать еще </span><i class="fas fa-eye"></i>
                   </button>
               {% endif %}
           </div>
@@ -336,12 +336,17 @@
 
             if (data.has_next) {
                 button.dataset.nextPage = parseInt(nextPage) + 1;
-                 // Восстанавливаем кнопку через textContent + appendChild
+                 // Восстанавливаем кнопку, изменяя только текст в span
                  button.disabled = false;
-                 button.textContent = 'Показать еще '; // Текст с пробелом
-                 const icon = document.createElement('i');
-                 icon.className = 'fas fa-eye';
-                 button.appendChild(icon); // Добавляем иконку
+                 const textSpan = button.querySelector('.btn-text');
+                 if (textSpan) textSpan.textContent = 'Показать еще ';
+                 // Убедимся, что иконка есть
+                 let icon = button.querySelector('i.fas.fa-eye');
+                 if (!icon) {
+                     icon = document.createElement('i');
+                     icon.className = 'fas fa-eye';
+                     button.appendChild(icon);
+                 }
             } else {
                 button.style.display = 'none';
                  if (paginationInfo && data.count !== undefined) {
@@ -353,12 +358,17 @@
         })
         .catch(error => {
             console.error('Ошибка при загрузке стартапов:', error);
-             // Восстанавливаем кнопку через textContent + appendChild
+             // Восстанавливаем кнопку, изменяя только текст в span
              button.disabled = false;
-             button.textContent = 'Показать еще '; // Текст с пробелом
-             const icon = document.createElement('i');
-             icon.className = 'fas fa-eye';
-             button.appendChild(icon); // Добавляем иконку
+             const textSpan = button.querySelector('.btn-text');
+             if (textSpan) textSpan.textContent = 'Показать еще ';
+             // Убедимся, что иконка есть
+             let icon = button.querySelector('i.fas.fa-eye');
+             if (!icon) {
+                 icon = document.createElement('i');
+                 icon.className = 'fas fa-eye';
+                 button.appendChild(icon);
+             }
              if (paginationInfo) {
                  // ... (обработка ошибки без изменений) ...
                  let errorP = paginationInfo.querySelector('.error-message');
@@ -395,11 +405,16 @@
             showMoreBtn.style.display = 'inline-flex';
             showMoreBtn.dataset.nextPage = '2';
             showMoreBtn.disabled = false;
-            // Восстанавливаем через textContent + appendChild
-            showMoreBtn.textContent = 'Показать еще '; // Текст с пробелом
-            const icon = document.createElement('i');
-            icon.className = 'fas fa-eye';
-            showMoreBtn.appendChild(icon); // Добавляем иконку
+            // Восстанавливаем, изменяя только текст в span
+            const textSpan = showMoreBtn.querySelector('.btn-text');
+            if (textSpan) textSpan.textContent = 'Показать еще ';
+            // Убедимся, что иконка есть
+            let icon = showMoreBtn.querySelector('i.fas.fa-eye');
+            if (!icon) {
+                icon = document.createElement('i');
+                icon.className = 'fas fa-eye';
+                showMoreBtn.appendChild(icon);
+            }
 
             // Восстанавливаем исходный текст пагинации
             if (paginationInfo && initialPaginationText) {
