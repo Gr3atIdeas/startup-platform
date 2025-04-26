@@ -113,51 +113,73 @@
   </main>
   
   <footer class="site-footer">
-    <div class="footer-logo">GREAT IDEAS</div>
-    
-    <div class="footer-socials">
-      <a href="#" target="_blank" rel="noopener noreferrer">
-        <img src="{% static 'accounts/images/layout/twitter.png' %}" alt="Twitter">
-      </a>
-      <a href="#" target="_blank" rel="noopener noreferrer">
-        <img src="{% static 'accounts/images/layout/instagram.png' %}" alt="Instagram">
-      </a>
-    </div>
-    
-    <div class="footer-text">
-      <p>Раскройте открывающиеся возможности и будьте частью инновационной волны!</p>
-      <div class="store-links">
-        <a href="#" target="_blank" rel="noopener noreferrer">
-          <img src="{% static 'accounts/images/layout/image28.png' %}" alt="App Store & Google Play">
-        </a>
+    <div class="footer-main-content">
+      <div class="footer-left-column">
+        <div class="footer-logo">GREAT IDEAS</div>
+        <div class="footer-text">
+          <p>Раскройте открывающиеся возможности и будьте частью инновационной волны!</p>
+        </div>
+        <div class="store-links">
+          <a href="#" target="_blank" rel="noopener noreferrer">
+            {# Замените на реальный путь к изображению App Store #}
+            <img src="{% static 'accounts/images/layout/image28.png' %}" alt="App Store">
+          </a>
+          <a href="#" target="_blank" rel="noopener noreferrer">
+            {# Замените на реальный путь к изображению Google Play #}
+            <img src="{% static 'accounts/images/layout/google_play_badge.png' %}" alt="Google Play">
+          </a>
+        </div>
+        <button class="suggest-news-button">
+          <i class="fas fa-plus-circle"></i>
+          Предложить новость
+        </button>
       </div>
-    </div>
-    
-    <div class="footer-join">
-      <button class="join-button">
-        <i class="fas fa-plus-circle"></i>
-        Присоединиться
-      </button>
-    </div>
-    
-    <div class="footer-menu footer-menu-section footer-menu-main">
-      <h3>Меню</h3>
-      <ul>
-        <li><a href="{% url 'startups_list' %}">Каталог</a></li>
-        <li><a href="{% url 'investments' %}">Портфель</a></li>
-        <li><a href="{% url 'startups_list' %}">Стартапы</a></li>
-        <li><a href="{% url 'news' %}">Новости</a></li>
-        <li><a href="{% url 'cosmochat' %}">CosmoChat</a></li>
-      </ul>
-    </div>
-    
-    <div class="footer-menu footer-menu-section footer-menu-about">
-      <h3>О нас</h3>
-      <ul>
-        <li><a href="#">FAQ</a></li>
-        <li><a href="#">Поддержка</a></li>
-        <li><a href="#">Контакты</a></li>
-      </ul>
+      
+      <div class="footer-right-column">
+        <div class="footer-menus">
+          <div class="footer-menu footer-menu-main">
+            <h3>Меню</h3>
+            <ul>
+              <li><a href="{% url 'startups_list' %}">Каталог</a></li>
+              {% if user.is_authenticated and user.role.role_name == 'investor' %}
+              <li><a href="{% url 'investments' %}">Портфель</a></li>
+              {% endif %}
+              {# <li><a href="{% url 'startups_list' %}">Стартапы</a></li> #} {# Возможно, дубликат Каталога? #}
+              <li><a href="#">Франшизы</a></li> {# TODO: Добавить URL для франшиз #}
+              <li><a href="{% url 'news' %}">Новости</a></li>
+              <li><a href="{% url 'cosmochat' %}">CosmoChat</a></li>
+            </ul>
+          </div>
+          
+          <div class="footer-menu footer-menu-about">
+            <h3>О нас</h3>
+            <ul>
+              <li><a href="#">FAQ</a></li>
+              <li><a href="#">Поддержка</a></li>
+              <li><a href="#">Контакты</a></li>
+            </ul>
+          </div>
+        </div>
+        
+        <div class="footer-socials">
+          <a href="#" target="_blank" rel="noopener noreferrer">
+             {# Замените на иконку VK #}
+             <img src="{% static 'accounts/images/layout/vk_footer.png' %}" alt="VK">
+          </a>
+          <a href="#" target="_blank" rel="noopener noreferrer">
+             {# Замените на иконку LinkedIn #}
+             <img src="{% static 'accounts/images/layout/linkedin_footer.png' %}" alt="LinkedIn">
+          </a>
+           <a href="#" target="_blank" rel="noopener noreferrer">
+            {# Замените на иконку Instagram #}
+             <img src="{% static 'accounts/images/layout/instagram.png' %}" alt="Instagram">
+          </a>
+          {# Убираем старые иконки если они были другие #}
+          {# <a href="#" target="_blank" rel="noopener noreferrer">
+            <img src="{% static 'accounts/images/layout/twitter.png' %}" alt="Twitter">
+          </a> #}
+        </div>
+      </div>
     </div>
     
     <div class="footer-copyright-bar">

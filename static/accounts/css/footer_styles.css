@@ -10,20 +10,12 @@
   border-top: 1px solid rgba(255, 255, 255, 0.1); /* Тонкая линия сверху */
   /* Обновляем фон: градиент поверх изображения */
   background-image:
-    linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.7) 50%, rgba(0,0,0,1) 100%),
+    linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,1) 100%), /* Обновленный градиент */
     url('../images/layout/footer_main_img.webp');
   background-size: cover, cover; /* Размер для каждого фона */
   background-position: center top, bottom center; /* Позиция для градиента и изображения */
   background-repeat: no-repeat, no-repeat; /* Повторение для каждого фона */
   background-attachment: scroll; /* Чтобы фон прокручивался с футером */
-}
-
-.footer-content-wrapper {
-  display: flex;
-  justify-content: space-between;
-  gap: 40px; /* Пространство между левой и правой частями */
-  max-width: 1320px;
-  margin: 0 auto; /* Центрирование контента */
 }
 
 /* Левая часть футера */
@@ -32,18 +24,25 @@
 }
 
 .footer-logo {
-  font-family: 'Koulen', sans-serif;
-  font-size: 36px; /* Размер шрифта логотипа */
-  font-weight: normal;
+  font-family: 'Koulen', sans-serif; /* Используем Koulen как замену Blippo */
+  font-weight: 400; /* Как указано */
+  font-size: 78px; /* Как указано */
+  line-height: 1; /* Скорректируем для такого большого шрифта */
+  letter-spacing: -0.02em; /* -2% */
+  text-transform: uppercase; /* Как указано */
   margin-bottom: 20px;
   color: #FFFFFF;
 }
 
 .footer-text {
-  font-size: 14px;
-  line-height: 1.6;
+  font-family: 'Unbounded', sans-serif; /* Как указано */
+  font-weight: 300; /* Как указано */
+  font-size: 12px; /* Как указано */
+  line-height: 100%; /* Как указано */
+  letter-spacing: 0.01em; /* 1% */
   color: rgba(255, 255, 255, 0.8); /* Полупрозрачный белый */
   margin-bottom: 25px;
+  max-width: 300px; /* Ограничим ширину текста */
 }
 
 .store-links {
@@ -62,6 +61,7 @@
   opacity: 0.8;
 }
 
+/* Кнопка "Предложить новость" (добавим стили) */
 .suggest-news-button {
   background-color: #FFEF2B; /* Желтый фон кнопки */
   color: #000000; /* Черный текст */
@@ -69,12 +69,14 @@
   border-radius: 25px; /* Скругленные углы */
   padding: 12px 25px;
   font-size: 14px;
+  font-family: 'Unbounded', sans-serif;
   font-weight: 500;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   gap: 8px;
   transition: background-color 0.3s ease;
+  margin-top: 10px; /* Добавим отступ сверху */
 }
 
 .suggest-news-button:hover {
@@ -181,19 +183,51 @@
   color: #FFFFFF;
 }
 
+/* Новая структура с Flexbox для расположения как на скриншоте */
+.footer-main-content {
+  display: flex;
+  justify-content: space-between;
+  gap: 40px; /* Пространство между блоками */
+  max-width: 1320px;
+  margin: 0 auto 40px auto; /* Центрирование и отступ снизу */
+  align-items: flex-start; /* Выравнивание по верху */
+}
+
+.footer-left-column {
+  flex-basis: 45%; /* Ширина левой колонки */
+}
+
+.footer-right-column {
+  flex-basis: 50%; /* Ширина правой колонки */
+  display: flex;
+  justify-content: space-between; /* Раздвигаем меню и соц сети */
+  gap: 40px; /* Отступ между меню */
+  padding-top: 10px; /* Небольшой отступ сверху для выравнивания */
+}
+
 /* Адаптивность */
 @media (max-width: 992px) {
-  .footer-content-wrapper {
+  .footer-main-content {
     flex-direction: column;
     gap: 30px;
+    align-items: center; /* Центрируем контент */
+    text-align: center;
   }
 
-  .footer-left, .footer-right {
+  .footer-left-column, .footer-right-column {
     flex-basis: auto; /* Убираем фиксированную ширину */
+    width: 100%;
+    align-items: center; /* Центрируем элементы внутри колонок */
   }
 
-  .footer-right {
-    align-items: center; /* Центрируем правую часть */
+  .footer-right-column {
+      flex-direction: column;
+      gap: 30px;
+  }
+
+  .footer-text {
+      margin-left: auto;
+      margin-right: auto;
   }
 
   .footer-menus {
@@ -201,11 +235,15 @@
     gap: 40px;
     width: 100%;
     text-align: center;
+    flex-direction: row; /* Возвращаем меню в строку на средних экранах */
   }
 
   .footer-socials {
     align-self: center; /* Центрируем соцсети */
     margin-top: 20px;
+    justify-content: center; /* Центрируем иконки */
+    width: 100%; /* Занимаем всю ширину */
+    order: 3; /* Перемещаем соц сети вниз в правой колонке */
   }
 
   .footer-copyright-bar-content {
@@ -231,8 +269,6 @@
     width: 100%;
   }
 
-  .suggest-news-button {
-    width: 100%;
-    justify-content: center;
-  }
+  /* Убираем старую кнопку */
+  /* .suggest-news-button { ... } */
 }
