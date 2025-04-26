@@ -792,13 +792,14 @@ body {
   font-weight: 500;
   cursor: pointer;
   overflow: hidden;
-  transition: background-color 0.3s, color 0.3s, opacity 0.3s; /* Убираем border-color */
+  transition: background-color 0.3s, color 0.3s, opacity 0.3s;
   border: none;
   color: white;
   transform: translateZ(0);
   z-index: 0;
-  min-width: 150px; /* Минимальная ширина для единообразия */
+  min-width: 150px;
   text-align: center;
+  white-space: nowrap;
 }
 
 .pagination-btn i {
@@ -822,7 +823,12 @@ body {
 .hide-btn {
   background-color: #6c757d; /* Серый фон для "Скрыть" */
   /* Наследование общих стилей .pagination-btn */
-  display: none; /* Изначально скрыта */
+  /* display: none;  <-- Закомментируем старое правило */
+}
+
+/* Используем ID для большей специфичности, чтобы точно скрыть кнопку */
+#hideBtn {
+    display: none;
 }
 
 /* Убираем hover-эффект изменения фона, т.к. есть position aware */
