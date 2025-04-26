@@ -49,12 +49,12 @@ body {
 
 /* Обертка для области карточек и поиска */
 .startups-content {
-  flex-grow: 1; /* Оставляем, чтобы занимал оставшееся место */
+  /* flex-grow: 1; <<< Удалено: Используем явную ширину */
   display: flex;
   flex-direction: column;
   overflow: visible; /* Позволяем дочерним элементам (включая выступающие аватары) выходить за пределы */
-  /* width: 75%; <<< Удалено: Полагаемся на flex-grow */
-  box-sizing: border-box; /* Добавим на всякий случай */
+  width: calc(75% - 20px); /* <<< Изменено: Явно указываем ширину, вычитая ширину сайдбара и gap */
+  box-sizing: border-box;
 }
 
 .catalog-search-wrapper {
