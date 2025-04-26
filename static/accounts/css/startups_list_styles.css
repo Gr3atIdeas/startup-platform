@@ -313,37 +313,6 @@ body {
   /* Конфликтует с определением выше? - Конфликт разрешен в пользу этого */
 }
 
-/* Стили для слайдера noUiSlider */
-.noUi-target {
-  border: none;
-  border-radius: 4px; /* Оставляем скругление для самого бара */
-  background-color: #EBEBEB; /* Цвет неактивной части */
-  height: 2px; /* Уменьшаем высоту бара */
-  box-shadow: none;
-  margin-bottom: 8px;
-}
-
-.noUi-connect {
-  background-color: #004E9F; /* Цвет активной части */
-}
-
-.noUi-handle {
-  width: 18px !important; /* Увеличиваем размер ползунка */
-  height: 18px !important; /* Увеличиваем размер ползунка */
-  border-radius: 50%; /* Круглые ползунки */
-  background: #004E9F; /* Цвет ползунков */
-  border: none; /* Убираем обводку */
-  box-shadow: none; /* Убираем тень */
-  right: -9px !important; /* Корректируем позицию под новый размер */
-  top: -8px !important; /* Корректируем позицию под новый размер и высоту бара */
-  cursor: pointer;
-}
-
-.noUi-handle:before,
-.noUi-handle:after {
-  display: none;
-}
-
 /* Микроинвестиции */
 .micro-investment {
   display: flex; /* Делаем flex-контейнером */
@@ -882,3 +851,63 @@ body {
 
 /* .detail-link i { ... } */
 /* .detail-link:hover { ... } */
+
+/* Стили для rangeslider.js */
+.rating-filter .rangeslider {
+  background: #EBEBEB; /* Цвет неактивной части */
+  height: 2px;
+  margin-top: 10px; /* Добавим отступ сверху */
+  margin-bottom: 15px; /* И снизу */
+  box-shadow: none;
+  border-radius: 2px;
+}
+
+.rating-filter .rangeslider__fill {
+  background: #004E9F; /* Цвет активной части */
+  box-shadow: none;
+  border-radius: 2px;
+}
+
+.rating-filter .rangeslider__handle {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #004E9F; /* Цвет ползунка */
+  border: none;
+  box-shadow: none;
+  /* Убираем псевдоэлементы, если они есть по умолчанию */
+  &:after {
+    display: none;
+  }
+  /* Позиционирование ручки по центру бара */
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Убираем стандартные стили браузера для input[type=range], если rangeslider их не перекрыл */
+input[type=range]#ratingSlider {
+  -webkit-appearance: none; /* Override default look */
+  appearance: none;
+  width: 100%; /* Full-width */
+  height: 2px; /* Specified height */
+  background: transparent; /* Transparent track */
+  cursor: pointer;
+}
+
+/* Стили для ползунка (thumb) WebKit */
+input[type=range]#ratingSlider::-webkit-slider-thumb {
+  -webkit-appearance: none; 
+  appearance: none;
+  /* Стили будут применены через .rangeslider__handle */
+  width: 0; 
+  height: 0;
+}
+
+/* Стили для ползунка (thumb) Mozilla */
+input[type=range]#ratingSlider::-moz-range-thumb {
+ /* Стили будут применены через .rangeslider__handle */
+  width: 0;
+  height: 0;
+  border: none;
+  background: transparent;
+}
