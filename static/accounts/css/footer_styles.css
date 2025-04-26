@@ -1,327 +1,234 @@
 /* footer_styles.css */
 
-/* Контейнер футера */
+/* Общие стили для футера */
 .site-footer {
-  width: 100%;
+  background-color: #000000; /* Черный фон */
+  color: #FFFFFF; /* Белый текст */
+  padding: 60px 50px 0; /* Отступы: сверху, по бокам, снизу 0 */
   position: relative;
-  color: #FFFFFF;
-  margin: 0;
-  padding: 0;
-  background: #000819;
-  overflow: hidden;
-  min-height: 580px;
-  font-family: 'Unbounded', sans-serif;
-}
-
-/* Фоновое изображение футера */
-.footer-background {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  font-family: 'Unbounded', Arial, sans-serif;
+  border-top: 1px solid rgba(255, 255, 255, 0.1); /* Тонкая линия сверху */
+  background-image: url('../images/background.webp'); /* Фоновое изображение со звездами */
   background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  z-index: 0;
-  opacity: 0.4;
+  background-position: bottom center;
+  background-attachment: scroll; /* Чтобы фон прокручивался с футером */
 }
 
-/* Содержимое футера */
-.footer-wrapper {
-  position: relative;
-  margin: 0 auto;
-  padding: 40px 50px;
-  z-index: 1;
-}
-
-/* Верхняя часть футера */
-.footer-top {
+.footer-content-wrapper {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 32px 0;
+  gap: 40px; /* Пространство между левой и правой частями */
+  max-width: 1320px;
+  margin: 0 auto; /* Центрирование контента */
 }
 
-/* Логотип футера */
+/* Левая часть футера */
+.footer-left {
+  flex-basis: 40%; /* Занимает примерно 40% ширины */
+}
+
 .footer-logo {
-  position: relative;
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 700;
-  font-size: 60px;
-  line-height: 80%;
-  letter-spacing: -0.02em;
-  color: #FFFFFF;
-  margin: 80px 0 0 50px;
-  z-index: 1;
-}
-
-/* Социальные иконки */
-.footer-socials {
-  position: absolute;
-  top: 80px;
-  right: 50px;
-  display: flex;
-  gap: 16px;
-  z-index: 1;
-}
-
-.footer-socials a {
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.3s ease;
-}
-
-.footer-socials a:hover {
-  transform: translateY(-3px);
-}
-
-.footer-socials img {
-  width: 24px;
-  height: 24px;
-}
-
-/* Средняя часть футера */
-.footer-columns {
-  display: flex;
-  margin-top: 40px;
-}
-
-/* Текстовый блок */
-.footer-text {
-  position: absolute;
-  top: 220px;
-  left: 50px;
-  width: 330px;
-  z-index: 1;
-}
-
-.footer-text p {
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 300;
-  font-size: 16px;
-  line-height: 24px;
-  color: #A7A7A7;
+  font-family: 'Koulen', sans-serif;
+  font-size: 36px; /* Размер шрифта логотипа */
+  font-weight: normal;
   margin-bottom: 20px;
+  color: #FFFFFF;
+}
+
+.footer-text {
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.8); /* Полупрозрачный белый */
+  margin-bottom: 25px;
 }
 
 .store-links {
-  margin-top: 40px;
+  display: flex;
+  gap: 15px; /* Пространство между кнопками магазинов */
+  margin-bottom: 30px;
 }
 
 .store-links img {
-  height: 40px;
+  height: 40px; /* Высота иконок магазинов */
+  width: auto;
+  transition: opacity 0.3s ease;
 }
 
-/* Кнопка присоединиться */
-.footer-join {
-  position: absolute;
-  top: 410px;
-  left: 50px;
-  z-index: 1;
+.store-links a:hover img {
+  opacity: 0.8;
 }
 
-/* Стиль для кнопки "Присоединиться" */
-.join-button {
-  background-color: #FFFFFF !important;
-  color: #000000 !important;
-  border: 1px solid #FFEF2B !important;
-  border-radius: 6px;
-  padding: 10px 20px;
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 500;
+.suggest-news-button {
+  background-color: #FFEF2B; /* Желтый фон кнопки */
+  color: #000000; /* Черный текст */
+  border: none;
+  border-radius: 25px; /* Скругленные углы */
+  padding: 12px 25px;
   font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
-  position: relative;
-  overflow: hidden;
   display: inline-flex;
   align-items: center;
-  justify-content: center;
+  gap: 8px;
+  transition: background-color 0.3s ease;
 }
 
-.join-button.wave-active {
-  color: #000000 !important;
+.suggest-news-button:hover {
+  background-color: #fff8a0; /* Более светлый желтый при наведении */
 }
 
-.join-button i {
-  margin-right: 8px;
-  position: relative;
-  z-index: 2;
+.suggest-news-button i {
+  font-size: 16px;
 }
 
-/* Менюшки в футере */
-.footer-menu-section {
-  position: absolute;
-  top: 160px;
-  z-index: 1;
+/* Правая часть футера */
+.footer-right {
+  flex-basis: 55%; /* Занимает примерно 55% ширины */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Распределяет меню и соцсети */
 }
 
-.footer-menu-main {
-  left: calc(50% - 120px);
-}
-
-.footer-menu-about {
-  right: 50px;
+.footer-menus {
+  display: flex;
+  gap: 80px; /* Пространство между блоками меню */
+  margin-bottom: 30px;
 }
 
 .footer-menu h3 {
-  font-family: 'Unbounded', sans-serif;
+  font-size: 18px;
   font-weight: 500;
-  font-size: 16px;
-  line-height: 28px;
-  letter-spacing: -0.02em;
-  color: #9E9E9E;
-  margin-bottom: 24px;
-  text-transform: uppercase;
+  margin-bottom: 15px;
+  color: #FFFFFF;
 }
 
 .footer-menu ul {
   list-style: none;
   padding: 0;
   margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
+}
+
+.footer-menu li {
+  margin-bottom: 10px;
 }
 
 .footer-menu a {
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 300;
-  font-size: 14px;
-  line-height: 22px;
-  color: #FFFFFF;
   text-decoration: none;
-  transition: color 0.2s ease;
+  color: rgba(255, 255, 255, 0.8); /* Полупрозрачный белый */
+  font-size: 14px;
+  transition: color 0.3s ease;
 }
 
 .footer-menu a:hover {
-  color: #FFEF2B;
+  color: #FFFFFF; /* Белый при наведении */
 }
 
-/* Нижняя часть футера */
-.footer-copyright-bar {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 40px;
-  background-color: #FFFFFF;
+/* Социальные иконки */
+.footer-socials {
   display: flex;
-  align-items: center;
-  z-index: 1;
-  opacity: 1;
+  gap: 20px; /* Пространство между иконками */
+  align-self: flex-end; /* Прижимаем к правому краю */
+}
+
+.footer-socials img {
+  height: 24px; /* Размер иконок */
+  width: auto;
+  transition: opacity 0.3s ease;
+}
+
+.footer-socials a:hover img {
+  opacity: 0.8;
+}
+
+/* Нижняя полоса с копирайтом */
+.footer-copyright-bar {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 20px 0;
+  margin-top: 40px;
 }
 
 .footer-copyright-bar-content {
-  width: 100%;
   display: flex;
   justify-content: space-between;
-  padding: 0 50px;
-  background-color: #FFFFFF;
-  opacity: 1;
+  align-items: center;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0 50px; /* Синхронизируем отступы с основным padding футера */
 }
 
 .footer-copyright-bar-copyright {
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 300;
   font-size: 12px;
-  line-height: 16px;
-  color: #000000;
-  opacity: 1;
+  color: rgba(255, 255, 255, 0.6);
 }
 
 .footer-copyright-bar-links {
   display: flex;
-  gap: 40px;
-  opacity: 1;
+  gap: 30px;
 }
 
 .footer-copyright-bar-links a {
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 300;
-  font-size: 12px;
-  line-height: 16px;
-  color: #000000;
   text-decoration: none;
-  transition: color 0.2s ease;
-  opacity: 1;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+  transition: color 0.3s ease;
 }
 
-/* Responsive стили */
-@media (max-width: 1200px) {
-  .footer-logo {
-    margin: 40px 0 0 40px;
-  }
-  
-  .footer-socials {
-    right: 40px;
-  }
-  
-  .footer-text, .footer-join {
-    left: 40px;
-  }
-  
-  .footer-menu-main {
-    left: calc(50% - 100px);
-  }
-  
-  .footer-menu-about {
-    right: 40px;
-    left: auto;
-  }
-  
-  .footer-copyright-bar-content {
-    padding: 0 50px;
-  }
+.footer-copyright-bar-links a:hover {
+  color: #FFFFFF;
 }
 
-@media (max-width: 768px) {
-  .site-footer {
-    min-height: 700px;
+/* Адаптивность */
+@media (max-width: 992px) {
+  .footer-content-wrapper {
+    flex-direction: column;
+    gap: 30px;
   }
-  
-  .footer-logo {
-    font-size: 40px;
-    margin: 20px 0 0 20px;
+
+  .footer-left, .footer-right {
+    flex-basis: auto; /* Убираем фиксированную ширину */
   }
-  
+
+  .footer-right {
+    align-items: center; /* Центрируем правую часть */
+  }
+
+  .footer-menus {
+    justify-content: center; /* Центрируем меню */
+    gap: 40px;
+    width: 100%;
+    text-align: center;
+  }
+
   .footer-socials {
-    top: 20px;
-    right: 20px;
+    align-self: center; /* Центрируем соцсети */
+    margin-top: 20px;
   }
-  
-  .footer-text {
-    top: 150px;
-    left: 20px;
-    width: calc(100% - 40px);
-  }
-  
-  .footer-join {
-    top: 300px;
-    left: 20px;
-  }
-  
-  .footer-menu-section {
-    position: static;
-    margin: 20px;
-  }
-  
-  .footer-menu-main {
-    top: 400px;
-    left: 20px;
-  }
-  
-  .footer-menu-about {
-    top: 600px;
-    left: 20px;
-  }
-  
+
   .footer-copyright-bar-content {
     flex-direction: column;
-    padding: 10px 20px;
     gap: 10px;
+    text-align: center;
+    padding: 0 20px;
+  }
+}
+
+@media (max-width: 576px) {
+  .site-footer {
+    padding: 40px 20px 0;
+  }
+
+  .footer-menus {
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+  }
+
+  .footer-menu {
+    width: 100%;
+  }
+
+  .suggest-news-button {
+    width: 100%;
+    justify-content: center;
   }
 }
