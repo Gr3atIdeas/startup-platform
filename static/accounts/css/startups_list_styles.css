@@ -469,9 +469,9 @@ body {
 .startup-card .investment-type,
 .startup-card .funding-goal-info {
     color: #333; /* Ensure dark initial color */
-    background-color: #f8f9fa; 
-    /* Remove color from transition, keep background */
-    transition: background-color 0.2s linear; 
+    background-color: #f8f9fa; /* Keep light background */
+    /* Remove transition as neither color nor background changes */
+    transition: none;
 }
 
 .startup-card .startup-description {
