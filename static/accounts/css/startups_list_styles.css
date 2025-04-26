@@ -18,7 +18,7 @@ body {
   align-items: flex-start; /* Выравниваем сайдбар и контент по верху */
   width: 100%;
   margin: 0 auto; /* <<< Оставлено: Центрирование */
-  padding: 0 20px; /* <<< Изменено: Устанавливаем горизонтальные отступы как у хедера */
+  padding: 0; /* <<< Изменено: Убираем горизонтальные отступы, т.к. они заданы в main.content */
   gap: 20px; /* <<< Оставлено: Отступ между сайдбаром и контентом */
   box-sizing: border-box;
 }
@@ -724,7 +724,7 @@ body {
 @media (max-width: 1320px) { /* Чуть больше чем 1303 + паддинги */
   .catalog-container, .catalog-header {
       max-width: 100%; /* Убираем max-width */
-      padding: 0 20px; /* << Оставляем 20px */
+      padding: 0; /* <<< Изменено: Убираем горизонтальные отступы */
   }
 }
 
@@ -769,7 +769,7 @@ body {
   }
 
   .catalog-header, .catalog-container {
-      padding: 0 10px; /* << Уменьшаем до 10px */
+      padding: 0; /* <<< Изменено: Убираем горизонтальные отступы */
   }
 
    .startup-card-inner {
@@ -796,7 +796,7 @@ body {
         max-width: 100%; /* Одна карточка на строку */
     }
      .catalog-header, .catalog-container {
-      padding: 0 10px; /* << Оставляем 10px */
+      padding: 0; /* <<< Изменено: Убираем горизонтальные отступы */
   }
 }
 

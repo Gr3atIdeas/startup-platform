@@ -32,7 +32,7 @@
   position: relative;
   max-width: 1280px;
   margin: 0 auto;
-  padding: 40px 80px;
+  padding: 40px 50px;
   z-index: 1;
 }
 
@@ -220,7 +220,7 @@
   width: 100%;
   display: flex;
   justify-content: space-between;
-  padding: 0 80px;
+  padding: 0 50px;
   background-color: #FFFFFF;
   opacity: 1;
 }
@@ -274,7 +274,7 @@
   }
   
   .footer-copyright-bar-content {
-    padding: 0 40px;
+    padding: 0 50px;
   }
 }
 
