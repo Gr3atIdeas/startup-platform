@@ -459,10 +459,11 @@ body {
 }
 
 .startup-card .progress-percentage {
-  color: #191919;
+  color: #191919; /* Ensure initial color is black */
   text-shadow: 0 0 2px #FFF, 0 0 3px #FFF;
-  transition: color 0.2s linear, text-shadow 0.2s linear; /* Faster transition */
-  z-index: 1; /* Ensure it's above progress bar fill */
+  /* Remove color from transition */
+  transition: text-shadow 0.2s linear; 
+  z-index: 1; 
 }
 
 .startup-card .investment-type,
@@ -489,7 +490,7 @@ body {
 .startup-card:hover .rating-text,
 .startup-card:hover .comments-count,
 .startup-card:hover .investor-count,
-.startup-card:hover .progress-percentage,
+/* .startup-card:hover .progress-percentage, */ /* REMOVED */
 .startup-card:hover .investment-type,
 .startup-card:hover .funding-goal-info,
 .startup-card:hover .startup-description,
@@ -503,27 +504,17 @@ body {
   color: #FFFFFF;
 }
 
-.startup-card:hover .progress-percentage {
-  text-shadow: none; 
-}
-
-.startup-card:hover .investment-type,
-.startup-card:hover .funding-goal-info {
-    color: #FFFFFF;
-    background-color: transparent; /* Make background transparent on hover */
-}
-
 /* Text colors during wave animation (backup/reinforce hover) */
 .startup-card.wave-active .startup-name,
 .startup-card.wave-active .rating-text,
 .startup-card.wave-active .comments-count,
 .startup-card.wave-active .investor-count,
-.startup-card.wave-active .progress-percentage,
+/* .startup-card.wave-active .progress-percentage, */ /* REMOVED */
 .startup-card.wave-active .investment-type,
 .startup-card.wave-active .funding-goal-info,
 .startup-card.wave-active .startup-description {
   color: #FFFFFF; 
-  text-shadow: none; 
+  /* REMOVED text-shadow: none; from here, should stay on base element */
 }
 
 .startup-card.wave-active .category-tag {
@@ -1375,12 +1366,12 @@ input[type=range]#ratingSlider::-moz-range-thumb {
 .startup-card.wave-active .rating-text,
 .startup-card.wave-active .comments-count,
 .startup-card.wave-active .investor-count,
-.startup-card.wave-active .progress-percentage,
+/* .startup-card.wave-active .progress-percentage, */ /* REMOVED */
 .startup-card.wave-active .investment-type,
 .startup-card.wave-active .funding-goal-info,
 .startup-card.wave-active .startup-description {
   color: #FFFFFF !important; /* Force white during animation */
-  text-shadow: none; /* Remove text shadow for percentage */
+  /* REMOVED text-shadow: none; from here, should stay on base element */
 }
 
 .startup-card.wave-active .category-tag {
