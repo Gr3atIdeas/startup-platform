@@ -174,16 +174,20 @@ header {
 
 /* Ссылка-аватар */
 .avatar-link {
-  display: inline-flex; /* Чтобы ссылка не занимала всю ширину */
+  display: inline-block; /* Изменено на inline-block */
   vertical-align: middle; /* Выравнивание по вертикали */
   line-height: 0; /* Убрать лишнее пространство под картинкой */
+  border-radius: 50%; /* Делаем контейнер круглым */
+  width: 32px; /* Устанавливаем ширину по размеру изображения */
+  height: 32px; /* Устанавливаем высоту по размеру изображения */
+  margin-left: 10px; /* Добавляем отступ слева */
 }
 
 /* Иконка выхода */
 .logout-icon-link {
   color: var(--text-light);
   font-size: 20px; /* Размер иконки */
-  margin-left: 15px; /* Отступ слева */
+  margin-left: 15px; /* Отступ слева от аватара */
   text-decoration: none;
   display: inline-flex;
   align-items: center;

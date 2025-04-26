@@ -93,11 +93,15 @@
         <a href="{% url 'create_startup' %}" class="create-startup-btn">
           Создать стартап
         </a>
-        <a href="{% url 'logout' %}" class="logout-icon-link" title="Выйти">
-            <i class="fas fa-sign-out-alt"></i>
-        </a>
+        
+        {# Делаем аватар ссылкой на профиль #}
         <a href="{% url 'profile' %}" class="avatar-link">
             <img src="{% static 'accounts/images/layout/image12.png' %}" alt="Аватар" class="avatar">
+        </a>
+
+        {# Добавляем иконку выхода - Перемещено после аватара #}
+        <a href="{% url 'logout' %}" class="logout-icon-link" title="Выйти">
+            <i class="fas fa-sign-out-alt"></i>
         </a>
       {% else %}
         <a href="{% url 'login' %}" class="login-btn">
