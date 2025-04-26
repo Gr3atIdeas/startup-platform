@@ -403,7 +403,8 @@ body {
   position: relative; /* Важно для позиционирования ссылки */
   padding-top: 27.75px; 
   width: 100%; 
-  box-sizing: border-box; 
+  box-sizing: border-box; /* Убедимся, что есть */
+  min-width: 0; /* Добавляем для предотвращения проблем с шириной в гриде */
   height: 413px; /* Фиксированная высота */
   margin-bottom: 0; 
   cursor: pointer; /* Указываем, что элемент кликабельный */
@@ -854,6 +855,7 @@ body {
 
 /* Стили для rangeslider.js */
 .rating-filter .rangeslider {
+  display: block; /* Гарантируем блочное отображение */
   background: #EBEBEB; /* Цвет неактивной части */
   height: 2px;
   margin-top: 10px; /* Добавим отступ сверху */
@@ -862,13 +864,14 @@ body {
   border-radius: 2px;
 }
 
-.rating-filter .rangeslider__fill {
+.rating-filter .rangeslider .rangeslider__fill {
   background: #004E9F; /* Цвет активной части */
   box-shadow: none;
   border-radius: 2px;
+  display: block; /* На всякий случай */
 }
 
-.rating-filter .rangeslider__handle {
+.rating-filter .rangeslider .rangeslider__handle {
   width: 18px;
   height: 18px;
   border-radius: 50%;
