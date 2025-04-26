@@ -468,10 +468,10 @@ body {
 
 .startup-card .investment-type,
 .startup-card .funding-goal-info {
-    color: #333; /* Ensure dark initial color */
-    background-color: #f8f9fa; /* Keep light background */
-    /* Remove transition as neither color nor background changes */
-    transition: none;
+    color: #333; 
+    background-color: #f8f9fa; 
+    /* Removed transition: none; */
+    transition: background-color 0.2s linear; /* Keep background transition just in case */
 }
 
 .startup-card .startup-description {
@@ -504,10 +504,11 @@ body {
   color: #FFFFFF;
 }
 
-/* Keep background transparent on hover for these elements */
+/* Force black text and light background on hover */
 .startup-card:hover .investment-type,
 .startup-card:hover .funding-goal-info {
-    background-color: transparent; 
+    color: #333 !important; 
+    background-color: #f8f9fa !important; 
 }
 
 /* Text colors during wave animation (backup/reinforce hover) */
@@ -528,10 +529,11 @@ body {
   color: #FFFFFF; 
 }
 
-/* Keep background transparent during wave for these elements */
+/* Force black text and light background during wave */
 .startup-card.wave-active .investment-type,
 .startup-card.wave-active .funding-goal-info {
-  background-color: transparent; 
+  color: #333 !important; 
+  background-color: #f8f9fa !important; 
 }
 
 .startup-card.wave-active .comments-count i,
