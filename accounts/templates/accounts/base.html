@@ -90,16 +90,15 @@
         {% if user.role.role_name == 'moderator' %}
           <a href="{% url 'moderator_dashboard' %}" {% if request.resolver_match.url_name == 'moderator_dashboard' %}class="active"{% endif %}>Заявки</a>
         {% endif %}
-        <a href="{% url 'profile' %}" class="login-btn">
-          Профиль
-        </a>
-        <a href="{% url 'logout' %}" class="login-btn">
-          Выйти
-        </a>
         <a href="{% url 'create_startup' %}" class="create-startup-btn">
           Создать стартап
         </a>
-        <img src="{% static 'accounts/images/layout/image12.png' %}" alt="Аватар" class="avatar">
+        <a href="{% url 'logout' %}" class="logout-icon-link" title="Выйти">
+            <i class="fas fa-sign-out-alt"></i>
+        </a>
+        <a href="{% url 'profile' %}" class="avatar-link">
+            <img src="{% static 'accounts/images/layout/image12.png' %}" alt="Аватар" class="avatar">
+        </a>
       {% else %}
         <a href="{% url 'login' %}" class="login-btn">
           Войти

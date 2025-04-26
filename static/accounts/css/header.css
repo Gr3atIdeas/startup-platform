@@ -169,6 +169,30 @@ header {
   height: 32px;
   border-radius: 50%;
   margin-left: 10px;
+  vertical-align: middle; /* Выравнивание по вертикали */
+}
+
+/* Ссылка-аватар */
+.avatar-link {
+  display: inline-flex; /* Чтобы ссылка не занимала всю ширину */
+  vertical-align: middle; /* Выравнивание по вертикали */
+  line-height: 0; /* Убрать лишнее пространство под картинкой */
+}
+
+/* Иконка выхода */
+.logout-icon-link {
+  color: var(--text-light);
+  font-size: 20px; /* Размер иконки */
+  margin-left: 15px; /* Отступ слева */
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.logout-icon-link:hover {
+  color: #FFEF2B; /* Цвет при наведении */
+  transform: translateX(3px); /* Анимация сдвига вправо */
 }
 
 /* Адаптивность */
