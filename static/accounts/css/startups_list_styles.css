@@ -8,11 +8,10 @@ body {
 }
 
 .catalog-wrapper {
-  padding: 0 50px; /* Добавляем боковые отступы */
   box-sizing: border-box; /* Учитываем padding в общей ширине */
   width: 100%; /* Занимаем всю ширину */
   margin: 0;
-  padding: 20px 0; /* Добавляем вертикальный отступ */
+  padding: 20px 50px; /* <<< Изменено: Добавляем вертикальный 20px и горизонтальный 50px отступы */
 }
 
 .catalog-container {
