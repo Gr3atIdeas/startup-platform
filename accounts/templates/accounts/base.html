@@ -113,62 +113,58 @@
   </main>
   
   <footer class="site-footer">
-    <div class="footer-content-wrapper">
-      <div class="footer-left">
-        <div class="footer-logo">GREAT IDEAS</div>
-        <p class="footer-text">Раскройте открывающиеся возможности и будьте частью инновационной волны!</p>
-        <div class="store-links">
-          <a href="#" target="_blank" rel="noopener noreferrer">
-            <img src="{% static 'accounts/images/layout/app_store.png' %}" alt="App Store">
-          </a>
-          <a href="#" target="_blank" rel="noopener noreferrer">
-            <img src="{% static 'accounts/images/layout/google_play.png' %}" alt="Google Play">
-          </a>
-        </div>
-        <button class="suggest-news-button">
-          Предложить новость <i class="fas fa-plus-circle"></i>
-        </button>
-      </div>
-
-      <div class="footer-right">
-        <div class="footer-menus">
-          <div class="footer-menu footer-menu-main">
-            <h3>Меню</h3>
-            <ul>
-              <li><a href="{% url 'startups_list' %}">Каталог</a></li>
-              <li><a href="{% url 'investments' %}">Портфель</a></li>
-              <li><a href="{% url 'startups_list' %}">Стартапы</a></li>
-              <li><a href="#">Франшизы</a></li>  {# Добавить URL, если есть #}
-              <li><a href="{% url 'news' %}">Новости</a></li>
-              <li><a href="{% url 'cosmochat' %}">CosmoChat</a></li>
-            </ul>
-          </div>
-          <div class="footer-menu footer-menu-about">
-            <h3>О нас</h3>
-            <ul>
-              <li><a href="#">FAQ</a></li>
-              <li><a href="#">Поддержка</a></li>
-              <li><a href="#">Контакты</a></li>
-            </ul>
-          </div>
-        </div>
-        <div class="footer-socials">
-          <a href="#" target="_blank" rel="noopener noreferrer">
-            <img src="{% static 'accounts/images/layout/vk_icon.svg' %}" alt="VK">
-          </a>
-          <a href="#" target="_blank" rel="noopener noreferrer">
-            <img src="{% static 'accounts/images/layout/linkedin_icon.svg' %}" alt="LinkedIn">
-          </a>
-          <a href="#" target="_blank" rel="noopener noreferrer">
-            <img src="{% static 'accounts/images/layout/instagram_icon.svg' %}" alt="Instagram">
-          </a>
-        </div>
+    <div class="footer-background" style="background-image: url('{% static "accounts/images/layout/footer_main_img.webp" %}')"></div>
+    
+    <div class="footer-logo">GREAT IDEAS</div>
+    
+    <div class="footer-socials">
+      <a href="#" target="_blank" rel="noopener noreferrer">
+        <img src="{% static 'accounts/images/layout/twitter.png' %}" alt="Twitter">
+      </a>
+      <a href="#" target="_blank" rel="noopener noreferrer">
+        <img src="{% static 'accounts/images/layout/instagram.png' %}" alt="Instagram">
+      </a>
+    </div>
+    
+    <div class="footer-text">
+      <p>Раскройте открывающиеся возможности и будьте частью инновационной волны!</p>
+      <div class="store-links">
+        <a href="#" target="_blank" rel="noopener noreferrer">
+          <img src="{% static 'accounts/images/layout/image28.png' %}" alt="App Store & Google Play">
+        </a>
       </div>
     </div>
-
+    
+    <div class="footer-join">
+      <button class="join-button">
+        <i class="fas fa-plus-circle"></i>
+        Присоединиться
+      </button>
+    </div>
+    
+    <div class="footer-menu footer-menu-section footer-menu-main">
+      <h3>Меню</h3>
+      <ul>
+        <li><a href="{% url 'startups_list' %}">Каталог</a></li>
+        <li><a href="{% url 'investments' %}">Портфель</a></li>
+        <li><a href="{% url 'startups_list' %}">Стартапы</a></li>
+        <li><a href="{% url 'news' %}">Новости</a></li>
+        <li><a href="{% url 'cosmochat' %}">CosmoChat</a></li>
+      </ul>
+    </div>
+    
+    <div class="footer-menu footer-menu-section footer-menu-about">
+      <h3>О нас</h3>
+      <ul>
+        <li><a href="#">FAQ</a></li>
+        <li><a href="#">Поддержка</a></li>
+        <li><a href="#">Контакты</a></li>
+      </ul>
+    </div>
+    
     <div class="footer-copyright-bar">
       <div class="footer-copyright-bar-content">
-        <div class="footer-copyright-bar-copyright">© {% now "Y" %} Great Ideas</div> {# Обновляем год динамически #}
+        <div class="footer-copyright-bar-copyright">© 2025 Great Ideas</div>
         <div class="footer-copyright-bar-links">
           <a href="#">Политика конфиденциальности</a>
           <a href="#">Оферта</a>
@@ -179,7 +175,8 @@
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <script src="{% static 'accounts/js/button_effects.js' %}"></script>
   <script src="{% static 'accounts/js/global_styles.js' %}"></script>
-  
-  {% block scripts %}{% endblock %}
+  {% block body_scripts %}
+    {# Дочерние шаблоны могут добавлять скрипты сюда #}
+  {% endblock %}
 </body>
 </html>

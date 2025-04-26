@@ -226,7 +226,7 @@
   </div> {# Конец .catalog-container #}
 </div> {# Конец .catalog-wrapper #}
 
-{# Убираем подключение скрипта отсюда #}
+{# Убираем скрипт отсюда #}
 {# <script src="https://cdnjs.cloudflare.com/ajax/libs/rangeslider.js/2.3.0/rangeslider.min.js"></script> #}
 
 <script>
@@ -319,8 +319,8 @@
 </script>
 {% endblock %}
 
-{# Перемещаем скрипт rangeslider.js в блок scripts #}
-{% block scripts %}
-{{ block.super }} {# На случай, если в base.html уже есть скрипты в этом блоке #}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/rangeslider.js/2.3.0/rangeslider.min.js"></script>
+{% block body_scripts %}
+  {{ block.super }} {# На случай, если в base.html уже есть скрипты в этом блоке #}
+  {# Подключаем JS rangeslider.js здесь, после загрузки jQuery из base.html #}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/rangeslider.js/2.3.0/rangeslider.min.js"></script>
 {% endblock %}
