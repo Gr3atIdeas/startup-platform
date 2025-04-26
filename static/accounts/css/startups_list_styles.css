@@ -224,7 +224,6 @@ body {
   border-radius: 8px;
   font-size: 14px;
   appearance: none;
-  background: #FFFFFF url('/static/accounts/images/icons/arrow-down.svg') no-repeat right 12px center; /* Используем абсолютный путь SVG */
   background-size: 12px;
   font-family: 'Unbounded', sans-serif;
   font-weight: 400;
