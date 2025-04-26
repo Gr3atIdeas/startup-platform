@@ -9,16 +9,13 @@
   {# <link rel="stylesheet" href="{% static 'accounts/css/startups_list_styles.css' %}"> <-- Закомментируем или удалим, если файла нет #}
   <link rel="stylesheet" href="{% static 'accounts/css/startups_list_styles.css' %}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- Удаляем noUiSlider -->
-  {# <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.css"> #}
+  {# <<< Восстанавливаем noUiSlider CSS >>> #}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.css">
+  {# <<< Комментируем rangeslider.js CSS >>> #}
+  {# <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rangeslider.js/2.3.0/rangeslider.min.css"> #}
+  {# JS пока не подключаем здесь #}
   {# <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js"></script> #}
-  <!-- Удаляем wNumb -->
   {# <script src="https://cdnjs.cloudflare.com/ajax/libs/wnumb/1.2.0/wNumb.min.js"></script> #}
-  
-  <!-- Подключаем CSS rangeslider.js -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rangeslider.js/2.3.0/rangeslider.min.css">
-  {# Убираем JS отсюда #}
-  {# <script src="https://cdnjs.cloudflare.com/ajax/libs/rangeslider.js/2.3.0/rangeslider.min.js"></script> #}
 {% endblock %}
 
 {% block content %}
@@ -71,15 +68,12 @@
         
         <!-- Фильтр рейтинга -->
         <div class="rating-filter">
-          {# Убираем старый span для значений и div для слайдера #}
-          {# <label class="rating-label">Рейтинг: <span id="ratingRangeValues">{{ min_rating|floatformat:1 }} - {{ max_rating|floatformat:1 }}</span></label> #}
-          {# Вместо этого добавляем простой label и input type="range" #}
-          <label for="ratingSlider" class="rating-label">Рейтинг до: <span id="ratingValueDisplay">{{ max_rating|default:5|floatformat:1 }}</span></label>
-          <input type="range" id="ratingSlider" name="max_rating" 
-                 min="0" max="5" step="0.1" value="{{ max_rating|default:5|floatformat:1 }}">
-          {# Убираем скрытые поля min/max #}
-          {# <input type="hidden" name="min_rating" id="minRatingInput" value="{{ min_rating|floatformat:1 }}"> #}
-          {# <input type="hidden" name="max_rating" id="maxRatingInput" value="{{ max_rating|floatformat:1 }}"> #}
+          {# <<< Восстанавливаем разметку для noUiSlider >>> #}
+          <label class="rating-label">Рейтинг: <span id="ratingRangeValues">{{ min_rating|default:0|floatformat:1 }} - {{ max_rating|default:5|floatformat:1 }}</span></label>
+          <div id="ratingSlider"></div> {# <<< Контейнер для noUiSlider >>> #}
+          {# <<< Восстанавливаем скрытые поля >>> #}
+          <input type="hidden" name="min_rating" id="minRatingInput" value="{{ min_rating|default:0|floatformat:1 }}">
+          <input type="hidden" name="max_rating" id="maxRatingInput" value="{{ max_rating|default:5|floatformat:1 }}">
         </div>
         
         <!-- Микроинвестиции -->
@@ -226,37 +220,59 @@
   </div> {# Конец .catalog-container #}
 </div> {# Конец .catalog-wrapper #}
 
-{# Убираем скрипт отсюда #}
+{# Удаляем старый скрипт rangeslider #}
 {# <script src="https://cdnjs.cloudflare.com/ajax/libs/rangeslider.js/2.3.0/rangeslider.min.js"></script> #}
 
 <script>
-  // Оставляем инициализацию здесь, она выполнится после загрузки библиотеки
   document.addEventListener('DOMContentLoaded', function() {
-    // Инициализация rangeslider.js
-    var $ratingSlider = $('#ratingSlider');
-    var ratingValueDisplay = document.getElementById('ratingValueDisplay');
+    // <<< Начинаем инициализацию noUiSlider >>>
+    var ratingSlider = document.getElementById('ratingSlider');
+    var ratingRangeValues = document.getElementById('ratingRangeValues');
+    var minRatingInput = document.getElementById('minRatingInput');
+    var maxRatingInput = document.getElementById('maxRatingInput');
 
-    if ($ratingSlider.length) {
-      $ratingSlider.rangeslider({
-        polyfill: false, // Не использовать полифил, если браузер поддерживает <input type="range">
-        onInit: function() {
-          // Начальное значение можно установить здесь, если нужно
-          // ratingValueDisplay.textContent = this.value;
-        },
-        onSlide: function(position, value) {
-          // Обновляем текст при движении ползунка
-          ratingValueDisplay.textContent = value;
-        },
-        onSlideEnd: function(position, value) {
-          // Можно добавить логику при завершении движения, например, авто-отправку формы
-          // console.log('Final value: ' + value);
-          // document.getElementById('filterForm').submit(); 
-        }
-      });
+    // Проверяем, что все элементы существуют и библиотеки подключены
+    if (ratingSlider && ratingRangeValues && minRatingInput && maxRatingInput && typeof noUiSlider !== 'undefined' && typeof wNumb !== 'undefined') {
+        // Получаем начальные значения из скрытых полей
+        var initialMin = parseFloat(minRatingInput.value) || 0;
+        var initialMax = parseFloat(maxRatingInput.value) || 5;
+
+        noUiSlider.create(ratingSlider, {
+            start: [initialMin, initialMax], // Начальные значения
+            connect: true,                 // Соединять ползунки
+            range: {
+                'min': 0,
+                'max': 5
+            },
+            step: 0.1,                     // Шаг
+            format: wNumb({                // Форматирование для отображения
+                decimals: 1
+            }),
+            tooltips: false                 // Отключаем встроенные тултипы
+        });
+
+        // Обновляем span и скрытые поля при изменении слайдера
+        ratingSlider.noUiSlider.on('update', function (values, handle) {
+            // values[0] - значение левого ползунка, values[1] - правого
+            var minValue = values[0];
+            var maxValue = values[1];
+
+            ratingRangeValues.textContent = minValue + ' - ' + maxValue;
+            minRatingInput.value = minValue;
+            maxRatingInput.value = maxValue;
+        });
     } else {
-      console.error('Элемент #ratingSlider не найден');
+        console.error('Не удалось инициализировать noUiSlider. Элементы не найдены или библиотеки не подключены.');
+        // Выводим, чего не хватает
+        if (!ratingSlider) console.error('Элемент #ratingSlider не найден');
+        if (!ratingRangeValues) console.error('Элемент #ratingRangeValues не найден');
+        if (!minRatingInput) console.error('Элемент #minRatingInput не найден');
+        if (!maxRatingInput) console.error('Элемент #maxRatingInput не найден');
+        if (typeof noUiSlider === 'undefined') console.error('Библиотека noUiSlider не подключена');
+        if (typeof wNumb === 'undefined') console.error('Библиотека wNumb не подключена');
     }
-    
+    // <<< Конец инициализации noUiSlider >>>
+
     // Функция для работы с поиском
     var searchInput = document.querySelector('.catalog-search-input');
     var searchBtn = document.querySelector('.catalog-search-btn');
@@ -321,6 +337,7 @@
 
 {% block body_scripts %}
   {{ block.super }} {# На случай, если в base.html уже есть скрипты в этом блоке #}
-  {# Подключаем JS rangeslider.js здесь, после загрузки jQuery из base.html #}
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/rangeslider.js/2.3.0/rangeslider.min.js"></script>
+  {# <<< Подключаем JS noUiSlider и wNumb здесь >>> #}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/wnumb/1.2.0/wNumb.min.js"></script>
 {% endblock %}

@@ -854,64 +854,102 @@ body {
 /* .detail-link i { ... } */
 /* .detail-link:hover { ... } */
 
-/* Стили для rangeslider.js */
-.rating-filter .rangeslider {
-  display: block; /* Гарантируем блочное отображение */
+/* === Стили для noUiSlider (имитация rangeslider.js) === */
+.rating-filter .noUi-target {
   background: #EBEBEB; /* Цвет неактивной части */
   height: 2px;
-  margin-top: 10px; /* Добавим отступ сверху */
+  margin-top: 10px; /* Отступ сверху */
   margin-bottom: 15px; /* И снизу */
   box-shadow: none;
+  border: none;
   border-radius: 2px;
 }
 
-.rating-filter .rangeslider .rangeslider__fill {
+.rating-filter .noUi-connect {
   background: #004E9F; /* Цвет активной части */
   box-shadow: none;
   border-radius: 2px;
-  display: block; /* На всякий случай */
 }
 
-.rating-filter .rangeslider .rangeslider__handle {
+.rating-filter .noUi-handle {
   width: 18px;
   height: 18px;
   border-radius: 50%;
   background: #004E9F; /* Цвет ползунка */
   border: none;
   box-shadow: none;
-  /* Убираем псевдоэлементы, если они есть по умолчанию */
+  cursor: pointer;
+  /* Позиционирование: сдвигаем вверх и влево, чтобы центр был на линии */
+  top: -8px; /* -(18px/2) + (2px/2) */
+  right: -9px; /* -(18px/2) */
+}
+
+/* Убираем стандартные ::before и ::after у ползунков */
+.rating-filter .noUi-handle::before,
+.rating-filter .noUi-handle::after {
+  display: none;
+}
+
+/* === Комментируем или удаляем старые стили rangeslider.js === */
+/*
+.rating-filter .rangeslider {
+  display: block; 
+  background: #EBEBEB; 
+  height: 2px;
+  margin-top: 10px; 
+  margin-bottom: 15px; 
+  box-shadow: none;
+  border-radius: 2px;
+}
+
+.rating-filter .rangeslider .rangeslider__fill {
+  background: #004E9F; 
+  box-shadow: none;
+  border-radius: 2px;
+  display: block; 
+}
+
+.rating-filter .rangeslider .rangeslider__handle {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #004E9F; 
+  border: none;
+  box-shadow: none;
+  
   &:after {
     display: none;
   }
-  /* Позиционирование ручки по центру бара */
+  
   top: 50%;
   transform: translateY(-50%);
 }
 
-/* Убираем стандартные стили браузера для input[type=range], если rangeslider их не перекрыл */
+
 input[type=range]#ratingSlider {
-  -webkit-appearance: none; /* Override default look */
+  -webkit-appearance: none; 
   appearance: none;
-  width: 100%; /* Full-width */
-  height: 2px; /* Specified height */
-  background: transparent; /* Transparent track */
+  width: 100%; 
+  height: 2px; 
+  background: transparent; 
   cursor: pointer;
 }
 
-/* Стили для ползунка (thumb) WebKit */
+
 input[type=range]#ratingSlider::-webkit-slider-thumb {
   -webkit-appearance: none; 
   appearance: none;
-  /* Стили будут применены через .rangeslider__handle */
+  
   width: 0; 
   height: 0;
 }
 
-/* Стили для ползунка (thumb) Mozilla */
+
 input[type=range]#ratingSlider::-moz-range-thumb {
- /* Стили будут применены через .rangeslider__handle */
+ 
   width: 0;
   height: 0;
   border: none;
   background: transparent;
 }
+*/
