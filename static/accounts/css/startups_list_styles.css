@@ -318,7 +318,7 @@ body {
   border: none;
   border-radius: 4px; /* Оставляем скругление для самого бара */
   background-color: #EBEBEB; /* Цвет неактивной части */
-  height: 4px; /* Тонкий бар */
+  height: 2px; /* Уменьшаем высоту бара */
   box-shadow: none;
   margin-bottom: 8px;
 }
@@ -328,14 +328,14 @@ body {
 }
 
 .noUi-handle {
-  width: 16px !important;
-  height: 16px !important;
+  width: 18px !important; /* Увеличиваем размер ползунка */
+  height: 18px !important; /* Увеличиваем размер ползунка */
   border-radius: 50%; /* Круглые ползунки */
   background: #004E9F; /* Цвет ползунков */
   border: none; /* Убираем обводку */
   box-shadow: none; /* Убираем тень */
-  right: -8px !important; /* Центрируем на баре */
-  top: -6px !important; /* Центрируем на баре (высота бара 4px + ползунок 16px) / 2 - высота ползунка / 2 = (4 + 16)/2 - 16/2 = 10 - 8 = 2;  нужно - (16-4)/2 = -6 */
+  right: -9px !important; /* Корректируем позицию под новый размер */
+  top: -8px !important; /* Корректируем позицию под новый размер и высоту бара */
   cursor: pointer;
 }
 
