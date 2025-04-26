@@ -462,13 +462,15 @@ body {
   color: #191919;
   text-shadow: 0 0 2px #FFF, 0 0 3px #FFF;
   transition: color 0.2s linear, text-shadow 0.2s linear; /* Faster transition */
+  z-index: 1; /* Ensure it's above progress bar fill */
 }
 
 .startup-card .investment-type,
 .startup-card .funding-goal-info {
     color: #333;
     background-color: #f8f9fa; 
-    transition: color 0.2s linear; /* Faster transition */
+    /* Add background-color to transition */
+    transition: color 0.2s linear, background-color 0.2s linear; 
 }
 
 .startup-card .startup-description {
@@ -505,6 +507,12 @@ body {
   text-shadow: none; 
 }
 
+.startup-card:hover .investment-type,
+.startup-card:hover .funding-goal-info {
+    color: #FFFFFF;
+    background-color: transparent; /* Make background transparent on hover */
+}
+
 /* Text colors during wave animation (backup/reinforce hover) */
 .startup-card.wave-active .startup-name,
 .startup-card.wave-active .rating-text,
@@ -526,6 +534,12 @@ body {
 .startup-card.wave-active .comments-count i,
 .startup-card.wave-active .investor-count i {
     color: #FFFFFF;
+}
+
+.startup-card.wave-active .investment-type,
+.startup-card.wave-active .funding-goal-info {
+  color: #FFFFFF; 
+  background-color: transparent; /* Also make background transparent during wave */
 }
 
 /* Логотип стартапа */
