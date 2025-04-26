@@ -770,50 +770,69 @@ body {
     margin: 0;
 }
 
-/* Стили контейнера кнопки "Показать еще" */
-.show-more-container {
-  /* Можно оставить пустым или использовать для дополнительного позиционирования */
-  text-align: center; /* Центрирует кнопку, если она inline-block/inline-flex */
+/* Стили контейнера кнопок */
+.show-more-container { /* Переименуем или используем общий контейнер */
+  display: flex;
+  flex-direction: column; /* Кнопки одна под другой */
+  align-items: center;
+  gap: 10px; /* Отступ между кнопками */
+  width: 100%; /* Занимаем ширину для центрирования */
 }
 
-/* Стили кнопки "Показать еще" (адаптировано) */
-.show-more-btn {
+/* Общие стили для кнопок пагинации */
+.pagination-btn {
   position: relative;
-  display: inline-flex; /* Используем inline-flex для центрирования иконки */
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 12px 25px; /* Немного увеличим паддинги */
+  padding: 12px 25px;
   border-radius: 8px;
   font-size: 16px;
   font-family: 'Unbounded', sans-serif;
   font-weight: 500;
   cursor: pointer;
-  overflow: hidden; /* Для эффекта */
-  transition: background-color 0.3s, color 0.3s, border-color 0.3s, opacity 0.3s;
-  border: none; /* Убираем границу */
-  background-color: #0047FF; /* Синий фон */
+  overflow: hidden;
+  transition: background-color 0.3s, color 0.3s, opacity 0.3s; /* Убираем border-color */
+  border: none;
   color: white;
-  transform: translateZ(0); /* Для рендеринга и эффекта */
+  transform: translateZ(0);
   z-index: 0;
+  min-width: 150px; /* Минимальная ширина для единообразия */
+  text-align: center;
 }
 
-.show-more-btn i {
+.pagination-btn i {
   margin-left: 8px;
-  font-size: 14px; /* Сделаем иконку чуть меньше */
+  font-size: 14px;
 }
 
-.show-more-btn:hover {
-  /* background-color: #003CD9; */ /* Оставляем эффект пульсации */
+/* Стили кнопки "Показать еще" */
+.show-more-btn {
+  background-color: #0047FF; /* Синий фон */
+  /* Наследование общих стилей .pagination-btn */
 }
 
 .show-more-btn:disabled {
-    background-color: #cccccc; /* Серый фон для неактивной кнопки */
+    background-color: #cccccc;
     cursor: not-allowed;
     opacity: 0.7;
 }
 
-/* Эффект Position Aware для кнопки "Показать еще" (стили уже были, проверим) */
-.show-more-btn .position-aware-effect {
+/* Стили кнопки "Скрыть" */
+.hide-btn {
+  background-color: #6c757d; /* Серый фон для "Скрыть" */
+  /* Наследование общих стилей .pagination-btn */
+  display: none; /* Изначально скрыта */
+}
+
+/* Убираем hover-эффект изменения фона, т.к. есть position aware */
+.pagination-btn:not(:disabled):hover {
+  /* background-color: затемненный; */ /* Не нужно */
+}
+
+/* Эффект Position Aware (стили уже есть, проверяем селектор) */
+/* Убедимся, что эффект применяется ко всем кнопкам с классом .pagination-btn */
+.pagination-btn .position-aware-effect {
     content: '';
     position: absolute;
     display: block;
@@ -821,19 +840,14 @@ body {
     height: 0;
     pointer-events: none;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.3); /* Полупрозрачный белый */
+    background: rgba(255, 255, 255, 0.3);
     transform: translate(-50%, -50%);
     transition: width 0.6s ease-out, height 0.6s ease-out;
-    z-index: 2; /* Увеличиваем z-index */
+    z-index: 2;
     opacity: 1;
     animation: ripple 0.6s linear forwards;
     will-change: transform, opacity;
 }
-
-/* @keyframes ripple уже определен выше, можно не дублировать */
-/* @keyframes ripple { ... } */
-
-/* === Конец стилей пагинации и "Показать еще" === */
 
 /* Тег "Франшиза" */
 .startup-franchise-tag {

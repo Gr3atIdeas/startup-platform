@@ -129,16 +129,23 @@
               {% endif %}
           </div>
 
-          {# Кнопка "Показать еще" #}
-          {# Отображается, если initial_has_next=True передано из view #}
-          {% if initial_has_next %}
+          {# <<< Начало: Контейнер для кнопок Показать/Скрыть >>> #}
           <div class="show-more-container">
-              {# Добавляем id и data-атрибут для JS #}
-              <button class="show-more-btn" id="showMoreBtn" data-next-page="2">
-                  Показать еще <i class="fas fa-eye"></i>
+              {# Кнопка "Скрыть" (изначально скрыта) #}
+              <button class="pagination-btn hide-btn" id="hideBtn">
+                  Скрыть <i class="fas fa-eye-slash"></i>
               </button>
+
+              {# Кнопка "Показать еще" #}
+              {# Отображается, если initial_has_next=True передано из view #}
+              {% if initial_has_next %}
+                  {# Добавляем общий класс pagination-btn #}
+                  <button class="pagination-btn show-more-btn" id="showMoreBtn" data-next-page="2" data-initial-count="{{ page_obj.object_list|length|default:6 }}">
+                      Показать еще <i class="fas fa-eye"></i>
+                  </button>
+              {% endif %}
           </div>
-          {% endif %}
+          {# <<< Конец: Контейнер для кнопок Показать/Скрыть >>> #}
       </div>
       {# <<< Конец: Контейнер для пагинации и кнопки "Показать еще" >>> #}
 
@@ -224,32 +231,29 @@
         });
     }
 
-    // Эффект Position Aware для кнопок
-    var buttons = document.querySelectorAll('.show-button, .catalog-search-btn, .show-more-btn');
-    
-    buttons.forEach(function(button) {
+    // Эффект Position Aware для кнопок пагинации
+    var paginationButtons = document.querySelectorAll('.pagination-btn'); // Выбираем обе кнопки
+
+    paginationButtons.forEach(function(button) {
       button.addEventListener('mouseenter', function(e) {
-        // Проверяем, не отключена ли кнопка
         if (this.disabled) return;
 
         var parentOffset = this.getBoundingClientRect(),
             relX = e.clientX - parentOffset.left,
             relY = e.clientY - parentOffset.top;
-        
+
         var span = document.createElement('span');
         span.style.top = relY + 'px';
         span.style.left = relX + 'px';
         span.classList.add('position-aware-effect');
-        
-        // Удаляем старые эффекты перед добавлением нового
+
         var existingEffect = this.querySelector('.position-aware-effect');
         if (existingEffect) {
             existingEffect.remove();
         }
 
         this.appendChild(span);
-        
-        // Удаляем эффект после завершения анимации
+
         span.addEventListener('animationend', function() {
             if (span.parentNode === button) {
                 button.removeChild(span);
@@ -257,67 +261,57 @@
         });
       });
     });
-    
-    // <<< Начало: Логика "Показать еще" >>>
+
+    // <<< Начало: Логика "Показать еще" и "Скрыть" >>>
     const showMoreBtn = document.getElementById('showMoreBtn');
+    const hideBtn = document.getElementById('hideBtn');
     const startupsGrid = document.getElementById('startupsGrid');
-    const paginationInfo = document.getElementById('paginationInfo'); // Элемент для обновления информации
+    const paginationInfo = document.getElementById('paginationInfo');
+    const initialVisibleCount = parseInt(showMoreBtn?.dataset.initialCount || '6'); // Количество видимых изначально
+    let initialPaginationText = paginationInfo?.innerHTML || ''; // Сохраняем исходный текст пагинации
 
+    // --- Обработчик кнопки "Показать еще" --- (модифицированный)
     if (showMoreBtn && startupsGrid) {
+      if (!initialPaginationText && paginationInfo) { // Если текст не был загружен сразу
+          initialPaginationText = paginationInfo.innerHTML;
+      }
       showMoreBtn.addEventListener('click', function() {
-        const button = this; // Сохраняем контекст кнопки
+        const button = this;
         const nextPage = button.dataset.nextPage;
-        if (!nextPage) return; // Нет следующей страницы
+        if (!nextPage) return;
 
-        // Собираем текущие параметры фильтрации из URL (это проще и надежнее)
         const currentUrl = new URL(window.location.href);
         const params = new URLSearchParams(currentUrl.search);
-
-        // Устанавливаем номер запрашиваемой страницы
         params.set('page', nextPage);
-        // Не добавляем 'ajax=true', будем использовать HTTP заголовок 'X-Requested-With'
-
-        // Формируем URL для запроса
         const fetchUrl = `${currentUrl.pathname}?${params.toString()}`;
 
-        // Показываем индикатор загрузки
         button.textContent = 'Загрузка...';
         button.disabled = true;
 
         fetch(fetchUrl, {
             method: 'GET',
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest' // Стандартный заголовок для AJAX в Django
-            }
+            headers: {'X-Requested-With': 'XMLHttpRequest'}
         })
         .then(response => {
             if (!response.ok) {
-                 // Попытаемся прочитать тело ответа как текст, если это ошибка сервера
-                 return response.text().then(text => {
-                    throw new Error(`HTTP error ${response.status}: ${text || 'Server error'}`);
-                 });
+                 return response.text().then(text => {throw new Error(`HTTP error ${response.status}: ${text || 'Server error'}`);});
             }
-            // Проверяем Content-Type перед парсингом JSON
             const contentType = response.headers.get("content-type");
             if (contentType && contentType.indexOf("application/json") !== -1) {
-                return response.json(); // Ожидаем JSON { html: '...', has_next: true/false, page_number: N, num_pages: M, count: T }
+                return response.json();
             } else {
-                // Если не JSON, возможно HTML или текст ошибки
-                return response.text().then(text => {
-                    throw new Error(`Unexpected response type: ${contentType}. Content: ${text}`);
-                });
+                return response.text().then(text => {throw new Error(`Unexpected response type: ${contentType}. Content: ${text}`);});
             }
         })
         .then(data => {
             if (data.html) {
-                // Вставляем новые карточки
                 startupsGrid.insertAdjacentHTML('beforeend', data.html);
-                 // Может потребоваться повторно инициализировать JS для новых карточек, если нужно
             }
 
-            // Обновляем информацию о пагинации (если элемент есть)
+            const currentVisibleCount = startupsGrid.querySelectorAll('.startup-card').length;
+
+            // Обновляем пагинацию
             if (paginationInfo && data.count !== undefined && data.page_number !== undefined && data.num_pages !== undefined) {
-                 const currentVisibleCount = startupsGrid.querySelectorAll('.startup-card').length;
                  if (data.num_pages > 1) {
                     paginationInfo.innerHTML = `<p>Страница ${data.page_number} из ${data.num_pages}. Показано ${currentVisibleCount} из ${data.count} стартапов.</p>`;
                  } else {
@@ -325,36 +319,33 @@
                  }
             }
 
+            // Показываем кнопку "Скрыть"
+            if (hideBtn) {
+                hideBtn.style.display = 'inline-flex';
+            }
 
             if (data.has_next) {
-                // Есть еще страницы, обновляем кнопку
                 button.dataset.nextPage = parseInt(nextPage) + 1;
-                button.textContent = 'Показать еще '; // Возвращаем текст
+                button.textContent = 'Показать еще ';
                 const icon = document.createElement('i');
                 icon.className = 'fas fa-eye';
-                button.appendChild(icon); // Возвращаем иконку
+                button.appendChild(icon);
                 button.disabled = false;
             } else {
-                // Это была последняя страница, скрываем кнопку
                 button.style.display = 'none';
-                 // Можно также обновить пагинацию, чтобы показать, что все загружено
                  if (paginationInfo && data.count !== undefined) {
-                     const currentVisibleCount = startupsGrid.querySelectorAll('.startup-card').length;
                      paginationInfo.innerHTML = `<p>Показаны все ${currentVisibleCount} из ${data.count} стартапов.</p>`;
                  }
             }
         })
         .catch(error => {
             console.error('Ошибка при загрузке стартапов:', error);
-            // Возвращаем кнопку в исходное состояние в случае ошибки
              button.textContent = 'Показать еще ';
              const icon = document.createElement('i');
              icon.className = 'fas fa-eye';
              button.appendChild(icon);
              button.disabled = false;
-             // Показываем сообщение об ошибке пользователю
              if (paginationInfo) {
-                 // Добавляем сообщение к существующему тексту, чтобы не стирать его
                  let errorP = paginationInfo.querySelector('.error-message');
                  if (!errorP) {
                      errorP = document.createElement('p');
@@ -363,12 +354,49 @@
                      paginationInfo.appendChild(errorP);
                  }
                  errorP.textContent = `Не удалось загрузить больше стартапов (${error.message}). Попробуйте еще раз.`;
-
              }
         });
       });
     }
-    // <<< Конец логики "Показать еще" >>>
+
+    // --- Обработчик кнопки "Скрыть" --- (новый)
+    if (hideBtn && startupsGrid && showMoreBtn) {
+        hideBtn.addEventListener('click', function() {
+            const allCards = startupsGrid.querySelectorAll('.startup-card');
+
+            // Скрываем все карточки, кроме первых initialVisibleCount
+            allCards.forEach((card, index) => {
+                if (index >= initialVisibleCount) {
+                    card.style.display = 'none'; // Просто скрываем, не удаляя
+                } else {
+                    card.style.display = ''; // Убедимся, что первые видны
+                }
+            });
+
+            // Скрываем кнопку "Скрыть"
+            this.style.display = 'none';
+
+            // Показываем кнопку "Показать еще" и сбрасываем страницу
+            showMoreBtn.style.display = 'inline-flex';
+            showMoreBtn.dataset.nextPage = '2'; // Сбрасываем на следующую после первой
+            // Убедимся, что текст и состояние кнопки "Показать еще" сброшены
+            showMoreBtn.disabled = false;
+            showMoreBtn.textContent = 'Показать еще ';
+            const icon = document.createElement('i');
+            icon.className = 'fas fa-eye';
+            showMoreBtn.appendChild(icon);
+
+
+            // Восстанавливаем исходный текст пагинации
+            if (paginationInfo) {
+                paginationInfo.innerHTML = initialPaginationText;
+                // Убираем сообщение об ошибке, если оно было
+                const errorP = paginationInfo.querySelector('.error-message');
+                if (errorP) errorP.remove();
+            }
+        });
+    }
+    // <<< Конец логики "Показать еще" и "Скрыть" >>>
 
   });
   
