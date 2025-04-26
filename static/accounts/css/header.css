@@ -37,7 +37,7 @@ header {
 .header-logo-img {
   height: 32px; /* Уменьшаем размер логотипа согласно макету */
   width: auto;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.3s linear;
 }
 
 .header-logo:hover .header-logo-img {
@@ -58,7 +58,7 @@ header {
   padding: 8px 15px;
   margin: 0 5px;
   border-radius: 5px;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.3s linear, color 0.3s linear;
   white-space: nowrap;
   font-family: 'Unbounded', sans-serif;
   font-weight: 300;
@@ -122,7 +122,7 @@ header {
   border-radius: 8px;
   position: relative;
   overflow: hidden;
-  transition: all 0.3s;
+  transition: all 0.3s linear;
   position: relative;
   margin-left: auto;
 }
@@ -138,7 +138,7 @@ header {
   border-radius: 8px;
   position: relative;
   overflow: hidden;
-  transition: all 0.3s;
+  transition: all 0.3s linear;
 }
 
 .login-btn:hover, .logout-btn:hover {
@@ -161,6 +161,7 @@ header {
   cursor: pointer;
   color: #FFFFFF;
   padding: 5px;
+  transition: all 0.3s linear;
 }
 
 /* Аватар пользователя */
@@ -183,7 +184,7 @@ header {
   margin-left: 15px; /* Немного увеличим отступ слева */
   vertical-align: middle;
   overflow: hidden; /* Скроем все, что выходит за круглые рамки */
-  transition: box-shadow 0.2s ease; /* Добавим тень при наведении для визуализации */
+  transition: box-shadow 0.2s linear;
 }
 
 .avatar-link:hover {
@@ -198,7 +199,7 @@ header {
   text-decoration: none;
   display: inline-flex;
   align-items: center;
-  transition: transform 0.3s ease, color 0.3s ease;
+  transition: transform 0.3s linear, color 0.3s linear;
 }
 
 .logout-icon-link:hover {
@@ -273,4 +274,26 @@ header {
   .create-startup-btn:hover {
     padding: 3px 8px;
   }
+}
+
+.dropdown-menu {
+  transition: opacity 0.3s linear;
+}
+
+.main-nav ul li a:hover,
+.main-nav ul li a.active {
+  transition: background-color 0.3s linear, color 0.3s linear;
+}
+
+.user-menu ul li a {
+  transition: all 0.3s linear;
+}
+
+.user-avatar:hover {
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.5);
+  transition: box-shadow 0.2s linear;
+}
+
+.dropdown-toggle i {
+  transition: transform 0.3s linear, color 0.3s linear;
 } 

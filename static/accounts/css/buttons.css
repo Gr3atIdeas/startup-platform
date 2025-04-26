@@ -10,7 +10,7 @@
   --accent-active: #5441B3;
   --light-color: #FFFFFF;
   --dark-color: #333333;
-  --btn-transition: all 0.3s ease;
+  --btn-transition: all 0.3s linear;
   --btn-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   --btn-hover-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
   --gray-bg: #f8f9fa;
@@ -130,7 +130,7 @@ input[type="button"] > *:not(.wave-effect),
 .nav-menu a > *:not(.wave-effect) {
   position: relative;
   z-index: 2;
-  transition: color 0.2s ease-in-out; 
+  transition: color 0.2s linear; 
 }
 
 button::before, button::after,
@@ -192,4 +192,9 @@ body .join-button.wave-active *:not(.wave-effect) {
   :root {
     --btn-padding: 0.3em 1em;
   }
+}
+
+.button-secondary:hover {
+  color: #000;
+  transition: color 0.2s linear;
 } 

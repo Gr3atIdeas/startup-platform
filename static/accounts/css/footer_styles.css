@@ -54,7 +54,7 @@
 .store-links img {
   height: 40px; /* Высота иконок магазинов */
   width: auto;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.3s linear;
 }
 
 .store-links a:hover img {
@@ -75,7 +75,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s linear;
   margin-top: 10px; /* Добавим отступ сверху */
 }
 
@@ -122,7 +122,7 @@
   text-decoration: none;
   color: rgba(255, 255, 255, 0.8); /* Полупрозрачный белый */
   font-size: 14px;
-  transition: color 0.3s ease;
+  transition: color 0.3s linear;
 }
 
 .footer-menu a:hover {
@@ -142,7 +142,7 @@
 .footer-socials img {
   height: 24px; /* Размер иконок */
   width: auto;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.3s linear;
 }
 
 .footer-socials a:hover img {
@@ -202,7 +202,7 @@
   text-decoration: none;
   font-size: 12px;
   color: #495057; /* Темно-серый для ссылок */
-  transition: color 0.3s ease;
+  transition: color 0.3s linear;
 }
 
 .footer-copyright-bar-links a:hover {
