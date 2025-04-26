@@ -15,9 +15,10 @@
   <!-- Удаляем wNumb -->
   {# <script src="https://cdnjs.cloudflare.com/ajax/libs/wnumb/1.2.0/wNumb.min.js"></script> #}
   
-  <!-- Подключаем rangeslider.js -->
+  <!-- Подключаем CSS rangeslider.js -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rangeslider.js/2.3.0/rangeslider.min.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/rangeslider.js/2.3.0/rangeslider.min.js"></script>
+  {# Убираем JS отсюда #}
+  {# <script src="https://cdnjs.cloudflare.com/ajax/libs/rangeslider.js/2.3.0/rangeslider.min.js"></script> #}
 {% endblock %}
 
 {% block content %}
@@ -224,6 +225,10 @@
     </div> {# Конец .startups-content #}
   </div> {# Конец .catalog-container #}
 </div> {# Конец .catalog-wrapper #}
+
+{# Подключаем JS rangeslider.js здесь, после загрузки jQuery из base.html #}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/rangeslider.js/2.3.0/rangeslider.min.js"></script>
+
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     // Инициализация rangeslider.js
