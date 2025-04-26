@@ -165,22 +165,29 @@ header {
 
 /* Аватар пользователя */
 .avatar {
-  width: 32px;
-  height: 32px;
+  width: 36px; /* Увеличено */
+  height: 36px; /* Увеличено */
   border-radius: 50%;
-  margin-left: 10px;
-  vertical-align: middle; /* Выравнивание по вертикали */
+  /* margin-left удален, так как будет на контейнере */
+  display: block; /* Убедимся, что изображение блочное внутри ссылки */
 }
 
 /* Ссылка-аватар */
 .avatar-link {
-  display: inline-block; /* Изменено на inline-block */
-  vertical-align: middle; /* Выравнивание по вертикали */
-  line-height: 0; /* Убрать лишнее пространство под картинкой */
+  display: inline-flex; /* Используем flex для центрирования */
+  align-items: center; /* Вертикальное центрирование */
+  justify-content: center; /* Горизонтальное центрирование */
   border-radius: 50%; /* Делаем контейнер круглым */
-  width: 32px; /* Устанавливаем ширину по размеру изображения */
-  height: 32px; /* Устанавливаем высоту по размеру изображения */
-  margin-left: 10px; /* Добавляем отступ слева */
+  width: 36px; /* Размер контейнера = размеру аватара */
+  height: 36px; /* Размер контейнера = размеру аватара */
+  margin-left: 15px; /* Немного увеличим отступ слева */
+  vertical-align: middle;
+  overflow: hidden; /* Скроем все, что выходит за круглые рамки */
+  transition: box-shadow 0.2s ease; /* Добавим тень при наведении для визуализации */
+}
+
+.avatar-link:hover {
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.5); /* Легкая тень при наведении */
 }
 
 /* Иконка выхода */
