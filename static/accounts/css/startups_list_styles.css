@@ -427,16 +427,17 @@ body {
   background-color: white;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  overflow: visible; /* Разрешаем выход контента */
+  overflow: hidden; /* <<< Изменено: Скрываем все, что выходит за пределы */
   transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
   display: flex;
   flex-direction: column;
-  position: relative; /* Для позиционирования аватара */
-  padding-top: 27.75px; /* Компенсация для 25% выноса аватара */
-  width: 100%; /* <<< Изменено: Фиксированная ширина заменена на 100% */
-  box-sizing: border-box; /* Учитываем padding/border в ширине */
-  height: 413px; /* <<< Добавлено: Возвращаем фиксированную высоту */
-  margin-bottom: 0; /* Убираем !important */
+  position: relative; /* <<< Важно для позиционирования ссылки */
+  padding-top: 27.75px; 
+  width: 100%; 
+  box-sizing: border-box; 
+  height: 413px; /* Фиксированная высота */
+  margin-bottom: 0; 
+  cursor: pointer; /* <<< Добавлено: Указываем, что элемент кликабельный */
 }
 
 .startup-card:hover {
@@ -855,18 +856,29 @@ body {
   z-index: 1; /* Под аватаром */
 }
 
-/* <<< Добавлено: Стили для обертки карточки-ссылки >>> */
-.startup-card-link {
-  display: block; /* Чтобы занимала место как блочный элемент */
-  color: inherit; /* Наследовать цвет текста от родителя */
-  text-decoration: none; /* Убрать подчеркивание */
+/* Ссылка "Подробнее" - <<< Изменяем стили, чтобы растянуть на всю карточку >>> */
+.detail-link {
+  position: absolute; /* Позиционируем абсолютно относительно .startup-card */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* Делаем невидимой, но кликабельной */
+  font-size: 0; /* Скрыть текст */
+  color: transparent;
+  background-color: transparent;
+  border: none;
+  z-index: 3; /* Поверх всего остального контента карточки */
+  /* Убираем старые стили позиционирования и оформления */
+  /* bottom: 20px; */
+  /* font-family: Unbounded, sans-serif; */
+  /* font-weight: 400; */
+  /* text-decoration: none; */
+  /* display: inline-flex; */
+  /* align-items: center; */
+  /* gap: 5px; */
+  /* transition: color 0.2s ease; */
 }
 
-.startup-card-link:hover {
-  color: inherit; /* Убрать изменение цвета при наведении */
-}
-
-/* Ссылка "Подробнее" - <<< Удаляем стили >>> */
-/* .detail-link { ... } */
 /* .detail-link i { ... } */
 /* .detail-link:hover { ... } */

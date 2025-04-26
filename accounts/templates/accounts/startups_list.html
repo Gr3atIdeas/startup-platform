@@ -108,8 +108,8 @@
           {% for startup in approved_startups %}
             {# Возвращаем условие if forloop.counter <= 6 #}
             {% if forloop.counter <= 6 %}
-              {# <<< Изменено: Обертка <a> вокруг всей карточки >>> #}
-              <a href="{% url 'startup_detail' startup.startup_id %}" class="startup-card-link">
+              {# <<< Изменено: Убираем обертку <a> >>> #}
+              {# <a href="{% url 'startup_detail' startup.startup_id %}" class="startup-card-link"> #}
                 <div class="startup-card">
                   <span class="startup-franchise-tag">Франшиза</span>
                   <div class="startup-card-inner">
@@ -129,9 +129,7 @@
                       <span class="rating-text">Рейтинг {{ startup.average_rating|floatformat:1 }}/5 ({{ startup.total_voters }})</span>
                       <span class="comments-count">
                         <i class="far fa-comment"></i>
-                        {# Пока нет данных для количества комментариев #}
-                        {# {{ comment_count }} #} 
-                        {{ startup.comments.count|default:0 }} {# <<< Изменено: Используем related manager .count() #}
+                        {{ startup.comments.count|default:0 }}
                       </span>
                     </div>
                     
@@ -183,13 +181,13 @@
                       {{ startup.description|truncatewords:15 }}
                     </div>
                     
-                    {# <<< Удалено: Ссылка "Подробнее" >>> #}
-                    {# <a href="{% url 'startup_detail' startup.startup_id %}" class="detail-link">
-                      Подробнее <i class="fas fa-arrow-right"></i>
-                    </a> #}
+                    {# <<< Возвращено: Ссылка "Подробнее", но она будет растянута через CSS >>> #}
+                    <a href="{% url 'startup_detail' startup.startup_id %}" class="detail-link">
+                      {# Текст не нужен, т.к. ссылка будет невидимой #}
+                    </a>
                   </div>
                 </div>
-              </a> {# <<< Изменено: Закрываем обертку <a> #}
+              {# </a> #}
             {% endif %}
           {% endfor %}
         {% else %}
