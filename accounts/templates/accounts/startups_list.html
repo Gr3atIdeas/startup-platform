@@ -232,13 +232,28 @@
     }
 
     // Эффект Position Aware для кнопок пагинации и карточек стартапов
-    var interactiveElements = document.querySelectorAll('.pagination-btn, .show-button, .catalog-search-btn, .startup-card'); // Добавляем .startup-card
+    var interactiveElements = document.querySelectorAll('.pagination-btn, .show-button, .catalog-search-btn, .startup-card'); // Selector remains the same
 
     interactiveElements.forEach(function(element) {
       element.addEventListener('mouseenter', function(e) {
         if (this.disabled) return;
 
-        var parentOffset = this.getBoundingClientRect(),
+        // Determine the target for the ripple effect
+        let rippleTarget = this; // Default to the element itself (for buttons)
+        if (this.classList.contains('startup-card')) {
+            // For cards, find the inner wrapper
+            const wrapper = this.querySelector('.startup-card-content-wrapper');
+            if (wrapper) {
+                rippleTarget = wrapper; // Target the wrapper for ripple append
+            } else {
+                console.warn('Could not find .startup-card-content-wrapper inside .startup-card');
+                // Optionally fall back to the card itself, or do nothing
+                 // rippleTarget = this; // Fallback to card if needed
+                 return; // Or prevent ripple if structure is wrong
+            }
+        }
+
+        var parentOffset = rippleTarget.getBoundingClientRect(), // Get offset of the ripple target
             relX = e.clientX - parentOffset.left,
             relY = e.clientY - parentOffset.top;
 
@@ -247,31 +262,38 @@
         span.style.left = relX + 'px';
         span.classList.add('position-aware-effect');
 
-        // Добавляем класс wave-active к элементу (карточке или кнопке)
+        // Add wave-active to the MAIN element (card or button) to trigger CSS
         this.classList.add('wave-active');
 
-        var existingEffect = this.querySelector('.position-aware-effect');
+        var existingEffect = rippleTarget.querySelector('.position-aware-effect');
         if (existingEffect) {
             existingEffect.remove();
         }
 
-        this.appendChild(span);
+        rippleTarget.appendChild(span); // Append ripple to the correct target
 
         span.addEventListener('animationend', function() {
-            if (span.parentNode === element) {
-                element.removeChild(span);
-                // Удаляем класс wave-active после завершения анимации
-                element.classList.remove('wave-active'); 
+            if (span.parentNode === rippleTarget) {
+                rippleTarget.removeChild(span);
             }
+            // Remove wave-active from the MAIN element after animation
+            element.classList.remove('wave-active');
         });
       });
-       // Дополнительно удаляем класс, если мышь ушла до завершения анимации
+
+       // Remove wave-active on mouseleave from the MAIN element
         element.addEventListener('mouseleave', function(e) {
-            const ripple = this.querySelector('.position-aware-effect');
+            // Find the correct target to remove the ripple from
+            let rippleTarget = this;
+             if (this.classList.contains('startup-card')) {
+                 const wrapper = this.querySelector('.startup-card-content-wrapper');
+                 if (wrapper) rippleTarget = wrapper;
+            }
+            const ripple = rippleTarget.querySelector('.position-aware-effect');
             if (ripple) {
                 ripple.remove();
             }
-            this.classList.remove('wave-active');
+            this.classList.remove('wave-active'); // Remove from main element
         });
     });
 

@@ -398,34 +398,128 @@ body {
   background-color: white;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  overflow: hidden; /* <<< Changed from visible to hidden */
+  overflow: visible; /* <<< RETURNED to visible to show image */
   transition: transform 0.2s linear, box-shadow 0.2s linear;
   display: flex;
   flex-direction: column;
-  position: relative; /* Важно для позиционирования ссылки */
-  padding-top: 27.75px; 
+  position: relative; /* Важно для позиционирования ссылки и логотипа */
+  /* padding-top убран, логотип позиционируется абсолютно */
   width: 100%; 
-  box-sizing: border-box; /* Убедимся, что есть */
-  min-width: 0; /* Добавляем для предотвращения проблем с шириной в гриде */
+  box-sizing: border-box;
+  min-width: 0; 
   height: 413px; /* Фиксированная высота */
   margin-bottom: 0; 
-  cursor: pointer; /* Указываем, что элемент кликабельный */
-  /* Default text colors */
-  color: #191919; /* Default dark color for text */
+  cursor: pointer; 
+  /* Default text colors moved to specific elements */
 }
 
-.startup-card:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.2);
+/* Новый контейнер для контента и обрезки волны */
+.startup-card-content-wrapper {
+    position: relative; /* Для позиционирования волны */
+    overflow: hidden; /* Обрезаем волну здесь */
+    height: 100%; /* Занимает всю высоту карточки */
+    border-radius: 12px; /* Скругляем углы здесь, чтобы обрезать волну */
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
 }
 
 .startup-card-inner {
-  padding: 103px 20px 20px 20px; /* Отступ сверху = 83.25px (видимая часть аватара) + 20px */
+  /* padding убран, теперь он в content-wrapper, но отступ для лого нужен */
+  padding: 103px 20px 20px 20px; /* Отступ сверху для лого + боковые/нижние */
   display: flex;
   flex-direction: column;
-  flex-grow: 1; /* Позволяет внутреннему блоку расти */
-  /* position: relative; Убираем, т.к. detail-link позиционируется от .startup-card */
-  /* Конфликтует с определением выше? */
+  flex-grow: 1; 
+  /* Initial text colors */
+  color: #191919; /* Default text color */
+}
+
+.startup-card .startup-name {
+  color: #191919;
+  transition: color 0.2s linear; /* Faster transition */
+}
+
+.startup-card .rating-text {
+  color: #004e9f; /* Keep blue */
+  transition: color 0.2s linear; /* Faster transition */
+}
+
+.startup-card .comments-count,
+.startup-card .investor-count,
+.startup-card .comments-count i,
+.startup-card .investor-count i {
+  color: #6B7280; /* Gray */
+  transition: color 0.2s linear; /* Faster transition */
+}
+
+.startup-card .category-tag {
+  background-color: #f0f0f0; /* Light gray */
+  color: #333; /* Dark text */
+  transition: color 0.2s linear, background-color 0.2s linear; /* Faster transition */
+}
+
+.startup-card .progress-percentage {
+  color: #191919;
+  text-shadow: 0 0 2px #FFF, 0 0 3px #FFF;
+  transition: color 0.2s linear, text-shadow 0.2s linear; /* Faster transition */
+}
+
+.startup-card .investment-type,
+.startup-card .funding-goal-info {
+    color: #333;
+    background-color: #f8f9fa; 
+    transition: color 0.2s linear; /* Faster transition */
+}
+
+.startup-card .startup-description {
+  color: #4a5568; 
+  transition: color 0.2s linear; /* Faster transition */
+}
+
+/* Text colors on HOVER */
+.startup-card:hover .startup-name,
+.startup-card:hover .rating-text,
+.startup-card:hover .comments-count,
+.startup-card:hover .investor-count,
+.startup-card:hover .progress-percentage,
+.startup-card:hover .investment-type,
+.startup-card:hover .funding-goal-info,
+.startup-card:hover .startup-description,
+.startup-card:hover .comments-count i,
+.startup-card:hover .investor-count i {
+  color: #FFFFFF;
+}
+
+.startup-card:hover .category-tag {
+  background-color: rgba(0, 0, 0, 0.3);
+  color: #FFFFFF;
+}
+
+.startup-card:hover .progress-percentage {
+  text-shadow: none; 
+}
+
+/* Text colors during wave animation (backup/reinforce hover) */
+.startup-card.wave-active .startup-name,
+.startup-card.wave-active .rating-text,
+.startup-card.wave-active .comments-count,
+.startup-card.wave-active .investor-count,
+.startup-card.wave-active .progress-percentage,
+.startup-card.wave-active .investment-type,
+.startup-card.wave-active .funding-goal-info,
+.startup-card.wave-active .startup-description {
+  color: #FFFFFF; 
+  text-shadow: none; 
+}
+
+.startup-card.wave-active .category-tag {
+  background-color: rgba(0, 0, 0, 0.3); 
+  color: #FFFFFF; 
+}
+
+.startup-card.wave-active .comments-count i,
+.startup-card.wave-active .investor-count i {
+    color: #FFFFFF;
 }
 
 /* Логотип стартапа */
@@ -1292,6 +1386,24 @@ input[type=range]#ratingSlider::-moz-range-thumb {
     transform: translate(-50%, -50%);
     transition: width 0.6s linear, height 0.6s linear; 
     z-index: 4; /* Above detail link (z-index 3) */
+    opacity: 1;
+    animation: ripple 0.6s linear forwards;
+    will-change: transform, opacity;
+}
+
+/* Position Aware Effect inside the content wrapper */
+.startup-card-content-wrapper .position-aware-effect {
+    content: '';
+    position: absolute;
+    display: block;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.1); /* Darker ripple for light cards */
+    transform: translate(-50%, -50%);
+    transition: width 0.6s linear, height 0.6s linear; 
+    z-index: 1; /* Should be above content but clipped by wrapper */
     opacity: 1;
     animation: ripple 0.6s linear forwards;
     will-change: transform, opacity;
