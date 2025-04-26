@@ -41,9 +41,11 @@ body {
 
 /* Общие стили для страницы инвестиций */
 .portfolio-container {
-  width: 100%;
-  max-width: 1440px;
-  margin: 0 auto;
+  width: 100%; /* Занимает всю ширину */
+  /* max-width: 1440px; /* Убираем ограничение ширины */
+  /* margin: 0 auto; /* Убираем центрирование */
+  padding: 0 50px; /* Добавляем боковые отступы */
+  box-sizing: border-box; /* Учитываем padding в общей ширине */
   color: #FFFFFF;
   font-family: 'Circe', Arial, sans-serif;
   animation: fadeIn 0.8s ease;
