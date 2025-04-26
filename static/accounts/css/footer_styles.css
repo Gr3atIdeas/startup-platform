@@ -149,7 +149,7 @@
 /* Нижняя полоса с копирайтом */
 .footer-copyright-bar {
   border-top: 1px solid rgba(0, 0, 0, 0.1); /* Сделаем разделитель темнее для белого фона */
-  padding: 20px 0;
+  padding: 15px 0; /* Уменьшаем вертикальные отступы */
   margin-top: 40px;
   background-color: #FFFFFF; /* Белый фон */
   color: #191919; /* Темный текст */
@@ -159,10 +159,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: 1320px; /* Максимальная ширина как у хедера */
-  margin: 0 auto; /* Центрирование */
   padding: 0 50px; /* Боковые отступы */
   box-sizing: border-box; /* Учитываем padding в ширине */
+  width: 100%; /* Явно указываем занять всю ширину родителя */
 }
 
 .footer-copyright-bar-copyright {
@@ -191,11 +190,11 @@
   display: flex;
   justify-content: space-between;
   gap: 40px; /* Пространство между блоками */
-  max-width: 1320px; /* Максимальная ширина как у хедера */
-  margin: 0 auto 40px auto; /* Центрирование и отступ снизу */
+  margin-bottom: 40px; /* Оставляем только нижний отступ */
   padding: 0 50px; /* Боковые отступы */
   box-sizing: border-box; /* Учитываем padding в ширине */
   align-items: flex-start; /* Выравнивание по верху */
+  width: 100%; /* Явно указываем занять всю ширину родителя */
 }
 
 .footer-left-column {
