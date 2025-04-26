@@ -231,11 +231,11 @@
         });
     }
 
-    // Эффект Position Aware для кнопок пагинации
-    var paginationButtons = document.querySelectorAll('.pagination-btn'); // Выбираем обе кнопки
+    // Эффект Position Aware для кнопок пагинации и карточек стартапов
+    var interactiveElements = document.querySelectorAll('.pagination-btn, .show-button, .catalog-search-btn, .startup-card'); // Добавляем .startup-card
 
-    paginationButtons.forEach(function(button) {
-      button.addEventListener('mouseenter', function(e) {
+    interactiveElements.forEach(function(element) {
+      element.addEventListener('mouseenter', function(e) {
         if (this.disabled) return;
 
         var parentOffset = this.getBoundingClientRect(),
@@ -247,6 +247,9 @@
         span.style.left = relX + 'px';
         span.classList.add('position-aware-effect');
 
+        // Добавляем класс wave-active к элементу (карточке или кнопке)
+        this.classList.add('wave-active');
+
         var existingEffect = this.querySelector('.position-aware-effect');
         if (existingEffect) {
             existingEffect.remove();
@@ -255,11 +258,21 @@
         this.appendChild(span);
 
         span.addEventListener('animationend', function() {
-            if (span.parentNode === button) {
-                button.removeChild(span);
+            if (span.parentNode === element) {
+                element.removeChild(span);
+                // Удаляем класс wave-active после завершения анимации
+                element.classList.remove('wave-active'); 
             }
         });
       });
+       // Дополнительно удаляем класс, если мышь ушла до завершения анимации
+        element.addEventListener('mouseleave', function(e) {
+            const ripple = this.querySelector('.position-aware-effect');
+            if (ripple) {
+                ripple.remove();
+            }
+            this.classList.remove('wave-active');
+        });
     });
 
     // <<< Начало: Логика "Показать еще" и "Скрыть" >>>
