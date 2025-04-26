@@ -427,17 +427,17 @@ body {
   background-color: white;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  overflow: hidden; /* <<< Изменено: Скрываем все, что выходит за пределы */
+  overflow: visible; /* <<< Возвращено: Разрешаем выход контента */
   transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
   display: flex;
   flex-direction: column;
-  position: relative; /* <<< Важно для позиционирования ссылки */
+  position: relative; /* Важно для позиционирования ссылки */
   padding-top: 27.75px; 
   width: 100%; 
   box-sizing: border-box; 
   height: 413px; /* Фиксированная высота */
   margin-bottom: 0; 
-  cursor: pointer; /* <<< Добавлено: Указываем, что элемент кликабельный */
+  cursor: pointer; /* Указываем, что элемент кликабельный */
 }
 
 .startup-card:hover {
