@@ -468,10 +468,10 @@ body {
 
 .startup-card .investment-type,
 .startup-card .funding-goal-info {
-    color: #333;
+    color: #333; /* Ensure dark initial color */
     background-color: #f8f9fa; 
-    /* Add background-color to transition */
-    transition: color 0.2s linear, background-color 0.2s linear; 
+    /* Remove color from transition, keep background */
+    transition: background-color 0.2s linear; 
 }
 
 .startup-card .startup-description {
@@ -490,9 +490,9 @@ body {
 .startup-card:hover .rating-text,
 .startup-card:hover .comments-count,
 .startup-card:hover .investor-count,
-/* .startup-card:hover .progress-percentage, */ /* REMOVED */
-.startup-card:hover .investment-type,
-.startup-card:hover .funding-goal-info,
+/* .startup-card:hover .progress-percentage, */
+/* .startup-card:hover .investment-type, */ /* REMOVED */
+/* .startup-card:hover .funding-goal-info, */ /* REMOVED */
 .startup-card:hover .startup-description,
 .startup-card:hover .comments-count i,
 .startup-card:hover .investor-count i {
@@ -504,14 +504,20 @@ body {
   color: #FFFFFF;
 }
 
+/* Keep background transparent on hover for these elements */
+.startup-card:hover .investment-type,
+.startup-card:hover .funding-goal-info {
+    background-color: transparent; 
+}
+
 /* Text colors during wave animation (backup/reinforce hover) */
 .startup-card.wave-active .startup-name,
 .startup-card.wave-active .rating-text,
 .startup-card.wave-active .comments-count,
 .startup-card.wave-active .investor-count,
-/* .startup-card.wave-active .progress-percentage, */ /* REMOVED */
-.startup-card.wave-active .investment-type,
-.startup-card.wave-active .funding-goal-info,
+/* .startup-card.wave-active .progress-percentage, */
+/* .startup-card.wave-active .investment-type, */ /* REMOVED */
+/* .startup-card.wave-active .funding-goal-info, */ /* REMOVED */
 .startup-card.wave-active .startup-description {
   color: #FFFFFF; 
   /* REMOVED text-shadow: none; from here, should stay on base element */
@@ -522,15 +528,15 @@ body {
   color: #FFFFFF; 
 }
 
+/* Keep background transparent during wave for these elements */
+.startup-card.wave-active .investment-type,
+.startup-card.wave-active .funding-goal-info {
+  background-color: transparent; 
+}
+
 .startup-card.wave-active .comments-count i,
 .startup-card.wave-active .investor-count i {
     color: #FFFFFF;
-}
-
-.startup-card.wave-active .investment-type,
-.startup-card.wave-active .funding-goal-info {
-  color: #FFFFFF; 
-  background-color: transparent; /* Also make background transparent during wave */
 }
 
 /* Логотип стартапа */
