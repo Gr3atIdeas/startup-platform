@@ -13,32 +13,6 @@ body {
   background-color: #000000;
 }
 
-/* Стили для футера на странице с черной темой */
-.black-theme footer.site-footer {
-  background-image: none !important; 
-  background-color: #000000 !important;
-  border-top: 1px solid #333333 !important;
-}
-
-.black-theme footer.site-footer .wave-container,
-.black-theme footer.site-footer img,
-.black-theme footer.site-footer svg,
-.black-theme footer.site-footer [class*="wave"],
-.black-theme footer.site-footer [class*="background"] {
-  display: none !important;
-  opacity: 0 !important;
-  visibility: hidden !important;
-}
-
-.black-theme footer.site-footer * {
-  color: #FFFFFF !important;
-  background-image: none !important;
-}
-
-.black-theme footer.site-footer a:hover {
-  color: #fff;
-}
-
 /* Общие стили для страницы инвестиций */
 .portfolio-container {
   width: 100%;
@@ -51,10 +25,14 @@ body {
 
 /* Секция аналитики (верхняя часть) */
 .analytics-section {
-  background-color: #000000;
-  padding: 20px 0;
+  background-color: #F3F4F6; /* Светло-серый фон как в макете */
+  padding: 40px 50px; /* Отступы как в макете */
   display: flex;
+  gap: 30px; /* Пространство между блоками */
   position: relative;
+  border-radius: 24px; /* Скругленные углы для всей секции */
+  margin-bottom: 40px; /* Отступ снизу */
+  color: #111827; /* Темный текст по умолчанию */
 }
 
 .analytics-left {
@@ -63,219 +41,197 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 20px;
+  padding: 0; /* Убрали лишний padding */
 }
 
 .portfolio-image {
   width: 100%;
-  max-width: 550px;
-  height: 550px;
-  background-color: #CCCCCC;
-  border-radius: 28px;
-  animation: slideInLeft 1s ease 0.3s both;
-  transition: transform 0.5s ease, box-shadow 0.5s ease;
+  max-width: none; /* Убираем ограничение */
+  height: auto; /* Автоматическая высота */
+  background-color: transparent; /* Убираем серый фон */
+  border-radius: 16px; /* Скругление для картинки */
+  animation: none; /* Убираем анимацию */
+  transition: none; /* Убираем transition */
   position: relative;
+  overflow: hidden; /* Скрываем выходящие части img */
 }
 
-.analytics-search-container {
+.portfolio-image img {
+  display: block;
   width: 100%;
-  display: flex;
-  justify-content: center;
-  position: absolute;
-  bottom: -25px;
-  left: 0;
-}
-
-.analytics-search {
-  position: relative;
-  width: 420px;
-  background-color: #2E2E2E;
-  border-radius: 99px;
-  display: flex;
-  align-items: center;
-  padding: 10px 20px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-}
-
-.analytics-search input {
-  width: 100%;
-  height: 36px;
-  background-color: transparent !important;
-  border: none;
-  color: #FFFFFF;
-  padding-left: 30px;
-  font-size: 16px;
-}
-
-.analytics-search input::placeholder {
-  color: #AAAAAA;
-}
-
-.analytics-search input:focus {
-  outline: none;
-}
-
-.analytics-search .search-icon {
-  position: absolute;
-  left: 20px;
-  color: #AAAAAA;
-  font-size: 18px;
+  height: auto;
+  object-fit: cover;
+  border-radius: 16px;
 }
 
 .analytics-content {
   width: 50%;
-  padding: 35px 30px;
+  padding: 0; /* Убираем лишний padding */
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  color: #111827; /* Устанавливаем цвет текста */
 }
 
 .analytics-title {
-  font-family: 'Neue Power', 'Koulen', sans-serif;
-  font-size: 72px;
-  line-height: 100%;
-  letter-spacing: -0.02em;
-  color: #08E5CF;
-  margin-bottom: 35px;
+  font-family: 'Unbounded', sans-serif; /* Шрифт как в макете */
+  font-size: 32px; /* Размер шрифта */
+  font-weight: 500;
+  line-height: 1.2;
+  color: #111827; /* Цвет текста */
+  margin-bottom: 20px;
   margin-top: 0;
-  animation: slideInRight 0.8s ease 0.4s both;
+  animation: none; /* Убираем анимацию */
 }
 
 .stats-container {
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  margin-bottom: 30px;
+  gap: 15px; /* Пространство между строками статистики */
+  margin-bottom: 25px;
+}
+
+.stats-row {
+  display: flex;
+  gap: 15px; /* Пространство между элементами в строке */
+  animation: none; /* Убираем анимации для stat-item */
 }
 
 .stat-item {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  animation: slideInRight 0.8s ease;
-  animation-fill-mode: both;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  background-color: #FFFFFF; /* Белый фон для блоков */
+  border-radius: 12px;
+  padding: 15px;
+  flex-grow: 1;
 }
 
-.stat-item:nth-child(1) { animation-delay: 0.5s; }
-.stat-item:nth-child(2) { animation-delay: 0.6s; }
-.stat-item:nth-child(3) { animation-delay: 0.7s; }
-.stat-item:nth-child(4) { animation-delay: 0.8s; }
+.stat-item.large {
+  padding: 20px; /* Большие отступы */
+}
 
 .stat-label {
-  font-family: 'Koulen', sans-serif;
-  font-size: 20px;
-  color: #A9A9A9;
+  font-family: 'Circe', sans-serif; /* Шрифт */
+  font-size: 14px; /* Размер */
+  color: #6B7280; /* Серый цвет */
+  margin-bottom: 8px;
 }
 
-.stat-value {
-  background-color: transparent;
-  border: 1px solid #FFFFFF;
-  padding: 5px 15px;
-  border-radius: 99px;
-  font-weight: 700;
-  font-size: 15px;
-  min-width: 70px;
-  text-align: center;
+/* Стили для больших значений */
+.stat-value.large-value {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 24px;
+  font-weight: 500;
+  color: #111827;
+  background-color: transparent; /* Убираем фон по умолчанию */
+  border: none; /* Убираем рамку по умолчанию */
+  padding: 0;
+  border-radius: 0;
+  min-width: auto;
+  text-align: left;
 }
 
-.stat-value:hover {
-  text-decoration: underline;
+.stat-value.large-value.blue-bg {
+  background-color: #3B82F6; /* Синий фон как в макете */
+  color: #FFFFFF; /* Белый текст */
+  padding: 10px 20px;
+  border-radius: 8px;
+  display: inline-block; /* Чтобы padding работал */
+}
+
+/* Строка с мелкими значениями */
+.stats-row.small-stats {
+  gap: 30px; /* Больший отступ между мелкими элементами */
+}
+
+.stat-item.small {
+  background-color: transparent; /* Прозрачный фон */
+  padding: 0;
+  border-radius: 0;
+  flex-direction: row; /* В строку */
+  align-items: center; /* Выравнивание по центру */
+  justify-content: space-between; /* Разносим элементы */
+}
+
+.stat-item.small .stat-label {
+  margin-bottom: 0; /* Убираем отступ снизу */
+  font-size: 16px; /* Чуть больше */
+  color: #374151;
 }
 
 .stat-value-simple {
-  color: #A9A9A9;
-  font-size: 20px;
+  font-family: 'Circe', sans-serif;
+  color: #374151; /* Цвет текста */
+  font-size: 16px;
+  font-weight: 700; /* Жирнее */
+  background-color: #F3F4F6; /* Светло-серый фон */
+  padding: 5px 15px;
+  border-radius: 6px;
 }
 
 .categories-section {
   margin-top: 30px;
+  background-color: #FFFFFF; /* Белый фон для секции */
+  border-radius: 12px;
+  padding: 20px;
 }
 
-.categories-title {
-  font-family: 'Koulen', sans-serif;
-  font-size: 20px;
-  color: #A9A9A9;
-  margin-bottom: 20px;
+/* Новые стили для сетки категорий */
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 колонки */
+  gap: 20px;
 }
 
-.categories-chart {
-  background-color: #FFFFFF;
-  border-radius: 15px;
-  padding: 35px;
-  color: #000000;
-}
-
-.chart-bars {
+.category-item {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin-bottom: 20px;
+  align-items: center;
+  text-align: center;
 }
 
-.chart-bar {
-  height: 33px;
-  border-radius: 10px;
-  box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.25), inset 4px 4px 4px rgba(255, 255, 255, 0.25);
-  animation: chartGrow 1.2s ease-out;
-  animation-fill-mode: both;
-}
-
-.bar-1 {
-  width: 347px;
-  background-color: #333234;
-  animation-delay: 1.0s;
-}
-
-.bar-2 {
-  width: 120px;
-  background-color: #656060;
-  animation-delay: 1.2s;
-}
-
-.bar-3 {
-  width: 169px;
-  background-color: #B1B1B1;
-  animation-delay: 1.4s;
-}
-
-.bar-4 {
-  width: 120px;
-  background-color: #707070;
-  animation-delay: 1.6s;
-}
-
-.chart-legend {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.legend-item {
+.category-chart-circle {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: #E5E7EB; /* Фоновый цвет круга */
   display: flex;
   align-items: center;
-  gap: 6px;
-  margin-right: 15px;
+  justify-content: center;
+  margin-bottom: 10px;
+  position: relative;
+  /* Стили для отображения прогресса (можно использовать conic-gradient или JS) */
+  /* Пример с conic-gradient (нужно будет настроить цвета и угол) */
+  /* background-image: conic-gradient(#4F46E5 var(--percentage), #E5E7EB 0); */ 
 }
 
-.legend-color {
-  width: 11px;
-  height: 11px;
-  border-radius: 2px;
+.category-chart-circle .percentage-text {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1F2937;
 }
 
-.color-1 { background-color: #858585; }
-.color-2 { background-color: #656060; }
-.color-3 { background-color: #B1B1B1; }
-.color-4 { background-color: #707070; }
+.category-name {
+  font-size: 14px;
+  color: #4B5563;
+}
 
-.legend-text {
-  font-size: 12px;
-  color: #000000;
+/* Стиль для "Все" */
+.category-item.all-categories .category-chart-circle {
+  border: 2px dashed #9CA3AF;
+  background-color: transparent;
+}
+
+.category-item.all-categories .category-chart-circle i {
+  font-size: 24px;
+  color: #6B7280;
 }
 
 .download-report {
-  background-color: #858585;
-  color: #FFFFFF;
+  background-color: #FFEF2B; /* Желтый фон */
+  color: #1F2937; /* Темный текст */
   border: none;
   border-radius: 99px;
   padding: 16px 64px;
@@ -288,9 +244,13 @@ body {
 
 /* Секция Мои стартапы */
 .my-startups-section {
-  background-color: #FFFFFF;
-  color: #000000;
-  padding: 40px 80px;
+  background-color: #000819; /* Темно-синий фон как в макете */
+  color: #FFFFFF; /* Белый текст по умолчанию */
+  padding: 60px 50px; /* Отступы */
+  border-radius: 24px; /* Скругление */
+  margin-top: -20px; /* Немного наезжает на верхний блок */
+  position: relative; /* Для z-index */
+  z-index: 5; /* Чтобы был над футером, если нужно */
 }
 
 .startups-header {
@@ -307,21 +267,22 @@ body {
 }
 
 .startups-title-main {
-  font-family: 'Neue Power', 'Koulen', sans-serif;
-  font-size: 96px;
-  line-height: 90%;
-  letter-spacing: -0.02em;
-  color: #08E5CF;
+  font-family: 'Unbounded', sans-serif; /* Шрифт */
+  font-size: 48px; /* Размер */
+  line-height: 1;
+  letter-spacing: 0.05em; /* Разрядка */
+  color: #FFEF2B; /* Желтый цвет */
   margin: 0;
+  font-weight: 700;
 }
 
 .startups-title-sub {
-  font-family: 'Neue Power', 'Koulen', sans-serif;
-  font-size: 96px;
-  line-height: 90%;
-  letter-spacing: -0.02em;
-  font-weight: 800;
-  color: #000000;
+  font-family: 'Unbounded', sans-serif; /* Шрифт */
+  font-size: 48px; /* Размер */
+  line-height: 1;
+  letter-spacing: 0.05em; /* Разрядка */
+  font-weight: 700;
+  color: #FFFFFF; /* Белый цвет */
   margin: 0;
 }
 
@@ -334,48 +295,55 @@ body {
 }
 
 .investment-label {
-  font-size: 20px;
+  font-size: 14px; /* Меньше размер */
+  color: #A0AEC0; /* Сероватый цвет */
+  text-transform: uppercase; /* Заглавные */
 }
 
 .investment-amount {
-  background-color: #000000;
-  color: #FFFFFF;
-  border-radius: 99px;
-  padding: 20px 55px;
+  background-color: #08E5CF; /* Бирюзовый фон */
+  color: #000000; /* Черный текст */
+  border-radius: 8px; /* Скругление */
+  padding: 10px 25px; /* Отступы */
   font-weight: 700;
-  font-size: 35px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  font-size: 20px; /* Размер */
+  transition: none; /* Убираем transition */
+  border: none; /* Убираем рамку */
 }
 
 .investment-amount:hover {
-  border-color: #7B61FF;
+  /* Убираем hover эффект */
 }
 
 /* Исправления для секции поиска в разделе "Мои стартапы" */
 .startups-filters {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 30px;
+  justify-content: flex-start; /* Выравнивание по левому краю */
+  gap: 20px; /* Меньше отступ */
   margin-bottom: 40px;
-  animation: slideInUp 0.8s ease 0.9s both;
+  animation: none; /* Убираем анимацию */
 }
 
 .startups-search {
   position: relative;
-  width: 352px;
+  width: 300px; /* Ширина поиска */
   margin-bottom: 0;
 }
 
 .startups-search input {
   width: 100%;
-  height: 36px;
-  padding: 8px 30px 8px 40px;
-  background-color: #FFFFFF !important;
-  border: 1px solid #000000;
-  border-radius: 99px;
+  height: 40px; /* Высота */
+  padding: 8px 15px 8px 40px; /* Отступы */
+  background-color: #FFFFFF !important; /* Белый фон */
+  border: 1px solid #E2E8F0; /* Светлая рамка */
+  border-radius: 8px; /* Скругление */
   font-size: 14px;
-  color: #000000;
+  color: #1A202C; /* Темный текст */
+}
+
+.startups-search input::placeholder {
+  color: #A0AEC0; /* Цвет placeholder */
 }
 
 .startups-search .search-icon {
@@ -383,181 +351,244 @@ body {
   left: 15px;
   top: 50%;
   transform: translateY(-50%);
-  color: #A1A0A0;
-  z-index: 11;
+  color: #A0AEC0; /* Цвет иконки */
+  z-index: 1;
 }
 
 .filter-buttons {
   display: flex;
-  gap: 15px;
+  gap: 10px; /* Отступ между кнопками */
 }
 
 .filter-btn {
-  padding: 8px 30px;
-  border: 1px solid #000000;
-  border-radius: 99px;
-  background-color: transparent;
-  font-weight: 700;
+  padding: 8px 20px; /* Отступы */
+  border: 1px solid #4A5568; /* Темно-серая рамка */
+  border-radius: 8px; /* Скругление */
+  background-color: transparent; /* Прозрачный фон */
+  color: #FFFFFF; /* Белый текст */
+  font-weight: 500; /* Средняя жирность */
   font-size: 14px;
   cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .filter-btn.active {
-  background-color: #000000;
-  color: #FFFFFF;
-  animation: pulse 2s infinite ease-in-out;
+  background-color: #FFFFFF; /* Белый фон для активной */
+  color: #1A202C; /* Темный текст для активной */
+  border-color: #FFFFFF; /* Белая рамка для активной */
+  animation: none; /* Убираем пульсацию */
 }
 
 .filter-btn:hover:not(.active) {
-  /* background-color: #e9ecef; */
+  background-color: rgba(255, 255, 255, 0.1); /* Легкий белый фон при наведении */
 }
 
 .startups-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 64px;
+  gap: 30px; /* Отступ между карточками */
   margin-bottom: 40px;
 }
 
 .startup-card {
   display: flex;
-  padding: 30px 20px;
-  border: 1px solid #000000;
-  border-radius: 20px;
-  gap: 75px;
-  animation: fadeIn 0.6s ease;
-  animation-fill-mode: both;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  padding: 25px; /* Отступы внутри карточки */
+  border: none; /* Убираем рамку */
+  border-radius: 16px; /* Скругление */
+  gap: 25px; /* Отступ между левой и правой частью */
+  animation: none; /* Убираем анимацию */
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background-color: #FFFFFF; /* Белый фон */
+  color: #1A202C; /* Темный текст */
+  align-items: flex-start; /* Выравнивание по верху */
+}
+
+.startup-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
 .startup-info {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
-  width: 123px;
+  gap: 12px; /* Отступы внутри левой части */
+  width: 100px; /* Фиксированная ширина левой части */
+  flex-shrink: 0; /* Не сжимать */
 }
 
 .startup-avatar {
-  width: 90px;
-  height: 90px;
-  background-color: #eee;
-  border-radius: 100px;
-  transition: transform 0.3s ease;
+  width: 80px; /* Размер аватара */
+  height: 80px;
+  background-color: #E2E8F0; /* Цвет фона аватара */
+  border-radius: 50%;
+  transition: none;
+  /* Можно добавить картинку: background-image: url(...); background-size: cover; */
 }
 
 .startup-card:hover .startup-avatar {
-  /* transform: scale(1.05); */
+  /* Убираем hover эффект */
 }
 
 .startup-name {
-  font-family: 'Koulen', sans-serif;
-  font-size: 20px;
+  font-family: 'Unbounded', sans-serif; /* Шрифт */
+  font-size: 16px; /* Размер */
+  font-weight: 500;
   text-align: center;
+  color: #1A202C;
 }
 
 .startup-rating {
   display: flex;
-  gap: 5px;
+  gap: 4px;
 }
 
 .startup-rating i {
-  color: #000000;
-  transition: transform 0.3s ease, color 0.3s ease;
+  color: #CBD5E0; /* Цвет неактивных звезд */
+  font-size: 14px; /* Размер звезд */
+  transition: none;
+}
+
+.startup-rating i.yellow {
+  color: #FFEF2B; /* Цвет активных звезд */
 }
 
 .startup-card:hover .startup-rating i {
-  /* color: #fbbc05; */
+  /* Убираем hover эффект */
 }
 
 .comment-icon {
-  margin-top: 10px;
-  font-size: 24px;
-  color: #000000;
-  transition: transform 0.3s ease, color 0.3s ease;
+  margin-top: 8px;
+  font-size: 20px;
+  color: #A0AEC0; /* Цвет иконки комментариев */
+  transition: color 0.2s ease;
 }
 
 .startup-card:hover .comment-icon {
-  /* color: #7B61FF; */
+  color: #6366F1; /* Цвет при наведении */
 }
 
 .startup-details {
   display: flex;
   flex-direction: column;
-  gap: 26px;
-  width: 379px;
+  gap: 15px; /* Отступы между элементами справа */
+  width: auto; /* Автоматическая ширина */
+  flex-grow: 1; /* Занимать оставшееся место */
 }
 
-.startup-status,
-.startup-funding,
-.startup-invested {
+.startup-status {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 10px;
 }
 
-.status-label,
-.funding-label,
-.invested-label {
-  font-family: 'Koulen', sans-serif;
-  font-size: 20px;
-  color: #000000;
+.status-label {
+  font-family: 'Circe', sans-serif;
+  font-size: 14px;
+  color: #6B7280;
 }
 
 .status-badge {
-  background-color: #000000;
-  color: #FFFFFF;
-  padding: 5px 15px;
+  background-color: #E5E7EB; /* Фон по умолчанию */
+  color: #374151; /* Текст по умолчанию */
+  padding: 4px 12px;
   border-radius: 99px;
-  font-weight: 700;
-  font-size: 15px;
-  min-width: 70px;
+  font-weight: 500;
+  font-size: 12px;
   text-align: center;
 }
 
-.funding-amount,
-.invested-amount {
-  border: 1px solid #000000;
-  padding: 5px 15px;
-  border-radius: 99px;
-  font-weight: 700;
-  font-size: 15px;
-  min-width: 70px;
-  text-align: center;
+.status-badge.active-status {
+  background-color: #34D399; /* Зеленый фон для активного */
+  color: #065F46; /* Темно-зеленый текст */
 }
 
-.startup-category {
-  font-family: 'Koulen', sans-serif;
-  font-size: 20px;
-  color: #A9A9A9;
+/* Удаляем старые стили для .startup-funding, .startup-invested, .funding-amount, .invested-amount */
+
+/* Новые стили для объединенного блока финансирования */
+.startup-funding-combined {
+  background-color: #F3F4F6; /* Светло-серый фон */
+  border-radius: 8px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
+
+.funding-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.funding-label {
+  font-family: 'Circe', sans-serif;
+  font-size: 14px;
+  color: #4B5563;
+}
+
+.funding-value {
+  font-family: 'Circe', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #1F2937;
+}
+
+/* Новые стили для тега категории */
+.startup-category-tag {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 5px;
+}
+
+.category-tag-label {
+  font-family: 'Circe', sans-serif;
+  font-size: 14px;
+  color: #6B7280;
+}
+
+.category-tag-value {
+  background-color: #1A202C; /* Темный фон */
+  color: #FFFFFF; /* Белый текст */
+  padding: 4px 12px;
+  border-radius: 99px;
+  font-weight: 500;
+  font-size: 12px;
+}
+
+/* Удаляем старый стиль .startup-category */
 
 .show-more-btn {
   display: flex;
   align-items: center;
+  justify-content: center; /* Центрируем контент */
   gap: 8px;
-  padding: 8px 24px 8px 16px;
-  border: 2px solid #000000;
-  border-radius: 99px;
+  padding: 10px 24px; /* Отступы */
+  border: 1px solid #4A5568; /* Рамка */
+  border-radius: 8px; /* Скругление */
   background-color: transparent;
-  font-size: 16px;
+  color: #FFFFFF; /* Белый текст */
+  font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
-  margin-top: 20px;
-  transition: all 0.3s ease;
-  animation: fadeIn 0.8s ease 2.3s both;
+  margin: 20px auto 0 auto; /* Центрируем кнопку */
+  transition: all 0.2s ease;
+  animation: none; /* Убираем анимацию */
 }
 
 .show-more-btn:hover {
-  /* background-color: var(--accent-hover); */
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: #FFFFFF;
 }
 
 .show-more-btn i {
-  transition: transform 0.3s ease;
+  transition: none;
+  font-size: 16px; /* Размер иконки */
 }
 
 .show-more-btn:hover i {
-  /* transform: translateY(2px); */
+  /* Убираем hover эффект */
 }
 
 /* Отображение сообщения для неавторизованных пользователей */
@@ -643,11 +674,6 @@ body {
   100% { transform: scale(1); }
 }
 
-@keyframes chartGrow {
-  from { width: 0; }
-  to { width: 100%; }
-}
-
 /* Адаптивность */
 @media (max-width: 1200px) {
   .analytics-section {
@@ -692,4 +718,47 @@ body {
   .startup-details {
     width: 100%;
   }
+}
+
+/* Стили для блока аналитики по месяцам */
+.monthly-analytics {
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+.monthly-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.month-select {
+  padding: 8px 12px;
+  border: 1px solid #D1D5DB;
+  border-radius: 6px;
+  background-color: #FFFFFF;
+  font-family: 'Circe', sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.monthly-title {
+  font-size: 14px;
+  color: #6B7280;
+}
+
+.monthly-chart-container {
+  background-color: #FFFFFF;
+  border-radius: 12px;
+  padding: 20px;
+  height: 200px; /* Примерная высота, под график */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.monthly-chart-container canvas {
+  max-width: 100%;
+  max-height: 100%;
 } 

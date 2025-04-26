@@ -70,7 +70,7 @@
   </style>
 {% endblock %}
 
-{% block extra_body_class %}black-theme{% endblock %}
+{% block extra_body_class %}{% endblock %}
 
 {% block content %}
   {% if user.is_authenticated and user.role.role_name == 'investor' %}
@@ -79,76 +79,72 @@
       <div class="analytics-section">
         <div class="analytics-left">
           <div class="portfolio-image">
-            <div class="analytics-search-container">
-              <div class="analytics-search">
-                <i class="fas fa-search search-icon"></i>
-                <input type="text" placeholder="Поиск" id="analytics-search-input">
-              </div>
-            </div>
+            <img src="{% static 'accounts/images/portfolio_planets.webp' %}" alt="Portfolio Image">
           </div>
         </div>
         <div class="analytics-content">
           <h1 class="analytics-title">Аналитика</h1>
           
           <div class="stats-container">
-            <div class="stat-item">
-              <span class="stat-label">Кол-во стартапов</span>
-              <div class="stat-value">{{ startups_count|default:"12" }}</div>
+            <div class="stats-row">
+              <div class="stat-item large">
+                <span class="stat-label">Кол-во стартапов</span>
+                <div class="stat-value large-value">{{ startups_count }}</div>
+              </div>
+              <div class="stat-item large">
+                <span class="stat-label">Общая сумма инвестирования</span>
+                <div class="stat-value large-value blue-bg">{{ total_investment }} ₽</div>
+              </div>
             </div>
-            
-            <div class="stat-item">
-              <span class="stat-label">Общая сумма инвестирования</span>
-              <div class="stat-value">{{ total_investment|default:"3 675 998" }}</div>
-            </div>
-            
-            <div class="stat-item">
-              <span class="stat-label">Макс. сумма инвестирования</span>
-              <span class="stat-value-simple">{{ max_investment|default:"254 678 987" }} ₽</span>
-            </div>
-            
-            <div class="stat-item">
-              <span class="stat-label">Мин. сумма инвестирования</span>
-              <span class="stat-value-simple">{{ min_investment|default:"25 600" }} ₽</span>
+            <div class="stats-row small-stats">
+              <div class="stat-item small">
+                <span class="stat-label">Макс. сумма инвестирования</span>
+                <span class="stat-value-simple">{{ max_investment }} ₽</span>
+              </div>
+              <div class="stat-item small">
+                <span class="stat-label">Мин. сумма инвестирования</span>
+                <span class="stat-value-simple">{{ min_investment }} ₽</span>
+              </div>
             </div>
           </div>
           
+          <!-- Новый блок: Аналитика по месяцам -->
+          <div class="monthly-analytics">
+            <div class="monthly-header">
+              <select class="month-select" id="month-selector">
+                <option value="3">Март</option>
+                <option value="4">Апрель</option>
+                <option value="5">Май</option>
+                <!-- Добавить остальные месяцы -->
+              </select>
+              <span class="monthly-title">Аналитика этого месяца</span>
+            </div>
+            <div class="monthly-chart-container">
+              <!-- Сюда будет добавлен график (например, с помощью Chart.js или SVG) -->
+              <canvas id="monthlyChart" height="150"></canvas> 
+            </div>
+          </div>
+          <!-- Конец нового блока -->
+
           <div class="categories-section">
-            <h3 class="categories-title">Категории</h3>
-            <div class="categories-chart">
-              <div class="chart-bars">
-                {% for category in investment_categories|slice:":4" %}
-                <div class="chart-bar bar-{{ forloop.counter }}" {% if category.percentage %}style="width: {{ category.percentage }}%;"{% endif %}></div>
-                {% empty %}
-                <div class="chart-bar bar-1"></div>
-                <div class="chart-bar bar-2"></div>
-                <div class="chart-bar bar-3"></div>
-                <div class="chart-bar bar-4"></div>
-                {% endfor %}
-              </div>
-              <div class="chart-legend">
-                {% for category in investment_categories|slice:":4" %}
-                <div class="legend-item">
-                  <div class="legend-color color-{{ forloop.counter }}"></div>
-                  <span class="legend-text">{{ category.name }}</span>
+            <div class="categories-grid">
+              {% for category in investment_categories %}
+                <div class="category-item">
+                  <div class="category-chart-circle" data-percentage="{{ category.percentage|default:0 }}"> 
+                    <span class="percentage-text">{{ category.percentage|default:0 }}%</span>
+                  </div>
+                  <span class="category-name">{{ category.name }}</span>
                 </div>
-                {% empty %}
-                <div class="legend-item">
-                  <div class="legend-color color-1"></div>
-                  <span class="legend-text">Медицина</span>
+              {% empty %}
+                <p>Нет данных по категориям.</p>
+              {% endfor %}
+
+              <!-- Категория "Все" -->
+              <div class="category-item all-categories">
+                <div class="category-chart-circle all-placeholder">
+                   <i class="fas fa-globe"></i>
                 </div>
-                <div class="legend-item">
-                  <div class="legend-color color-2"></div>
-                  <span class="legend-text">ИИ</span>
-                </div>
-                <div class="legend-item">
-                  <div class="legend-color color-3"></div>
-                  <span class="legend-text">Игры</span>
-                </div>
-                <div class="legend-item">
-                  <div class="legend-color color-4"></div>
-                  <span class="legend-text">Картинг</span>
-                </div>
-                {% endfor %}
+                <span class="category-name">Все</span>
               </div>
             </div>
           </div>
@@ -167,7 +163,7 @@
           
           <div class="total-investment">
             <span class="investment-label">инвестировано</span>
-            <div class="investment-amount">{{ total_investment|default:"3 675 998" }}</div>
+            <div class="investment-amount">{{ user_total_investment }} ₽</div>
           </div>
         </div>
         
@@ -185,95 +181,53 @@
         </div>
         
         <div class="startups-grid">
-          <div class="startup-card" data-category="Досуг" data-name="Ромашка">
-            <div class="startup-info">
-              <div class="startup-avatar"></div>
-              <div class="startup-name">Ромашка</div>
-              <div class="startup-rating">
-                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+          {% for startup_investment in user_invested_startups %}
+            {% with startup=startup_investment.startup %}
+              <div class="startup-card" data-category="{{ startup.category.name|default:'' }}" data-name="{{ startup.name }}">
+                <div class="startup-info">
+                  <div class="startup-avatar" {% if startup.logo %}style="background-image: url({{ startup.logo.url }})"{% endif %}></div>
+                  <div class="startup-name">{{ startup.name }}</div>
+                  <div class="startup-rating">
+                    {# Логика отображения звезд рейтинга (нужно реализовать) #}
+                    {% for i in "12345" %}
+                      <i class="fas fa-star {% if forloop.counter <= startup.rating|default:0 %}yellow{% endif %}"></i>
+                    {% endfor %}
+                  </div>
+                  <i class="fas fa-comment-dots comment-icon"></i> {# Ссылка на чат? #}
+                </div>
+                
+                <div class="startup-details">
+                  <div class="startup-status">
+                    <span class="status-label">Статус</span>
+                    {# Логика определения класса статуса (active-status, etc.) #}
+                    <div class="status-badge {% if startup.status == 'active' %}active-status{% endif %}">{{ startup.get_status_display|default:startup.status }}</div>
+                  </div>
+                  
+                  <div class="startup-funding-combined">
+                    <div class="funding-item">
+                      <span class="funding-label">Собранная сумма:</span>
+                      <span class="funding-value">{{ startup.current_investment }} ₽</span>
+                    </div>
+                    <div class="funding-item">
+                      <span class="funding-label">Цель финансирования:</span>
+                      <span class="funding-value">{{ startup.investment_goal }} ₽</span>
+                    </div>
+                     <div class="funding-item">
+                      <span class="funding-label">Ваши инвестиции:</span>
+                      <span class="funding-value">{{ startup_investment.amount }} ₽</span>
+                    </div>
+                  </div>
+                                
+                  <div class="startup-category-tag">
+                    <span class="category-tag-label">Категория</span>
+                    <span class="category-tag-value">{{ startup.category.name|default:'Без категории' }}</span>
+                  </div>
+                </div>
               </div>
-              <i class="fas fa-comment-dots comment-icon"></i>
-            </div>
-            
-            <div class="startup-details">
-              <div class="startup-status">
-                <span class="status-label">Статус</span>
-                <div class="status-badge">Активен</div>
-              </div>
-              
-              <div class="startup-funding">
-                <span class="funding-label">Цель финансирования</span>
-                <div class="funding-amount">3 675 998 ₽</div>
-              </div>
-              
-              <div class="startup-invested">
-                <span class="invested-label">Сумма инвестированная</span>
-                <div class="invested-amount">25 600 ₽</div>
-              </div>
-              
-              <div class="startup-category">Категория: Досуг</div>
-            </div>
-          </div>
-
-          <div class="startup-card" data-category="Медицина" data-name="Аптека+">
-            <div class="startup-info">
-              <div class="startup-avatar"></div>
-              <div class="startup-name">Аптека+</div>
-              <div class="startup-rating">
-                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
-              </div>
-              <i class="fas fa-comment-dots comment-icon"></i>
-            </div>
-            
-            <div class="startup-details">
-              <div class="startup-status">
-                <span class="status-label">Статус</span>
-                <div class="status-badge">Активен</div>
-              </div>
-              
-              <div class="startup-funding">
-                <span class="funding-label">Цель финансирования</span>
-                <div class="funding-amount">5 220 000 ₽</div>
-              </div>
-              
-              <div class="startup-invested">
-                <span class="invested-label">Сумма инвестированная</span>
-                <div class="invested-amount">1 125 000 ₽</div>
-              </div>
-              
-              <div class="startup-category">Категория: Медицина</div>
-            </div>
-          </div>
-
-          <div class="startup-card" data-category="ИИ" data-name="НейроСеть">
-            <div class="startup-info">
-              <div class="startup-avatar"></div>
-              <div class="startup-name">НейроСеть</div>
-              <div class="startup-rating">
-                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-              </div>
-              <i class="fas fa-comment-dots comment-icon"></i>
-            </div>
-            
-            <div class="startup-details">
-              <div class="startup-status">
-                <span class="status-label">Статус</span>
-                <div class="status-badge">Активен</div>
-              </div>
-              
-              <div class="startup-funding">
-                <span class="funding-label">Цель финансирования</span>
-                <div class="funding-amount">12 500 000 ₽</div>
-              </div>
-              
-              <div class="startup-invested">
-                <span class="invested-label">Сумма инвестированная</span>
-                <div class="invested-amount">8 900 000 ₽</div>
-              </div>
-              
-              <div class="startup-category">Категория: ИИ</div>
-            </div>
-          </div>
+            {% endwith %}
+          {% empty %}
+             <p>Вы еще не инвестировали ни в один стартап.</p>
+          {% endfor %}
         </div>
         
         <button class="show-more-btn" id="load-more">
@@ -347,4 +301,197 @@
       {% endif %}
     </div>
   {% endif %}
+{% endblock %}
+
+{% block scripts %}
+  {{ block.super }}
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // 1. Круговые диаграммы категорий (conic-gradient)
+      const categoryCircles = document.querySelectorAll('.category-chart-circle[data-percentage]');
+      categoryCircles.forEach(circle => {
+        const percentage = parseInt(circle.getAttribute('data-percentage')) || 0;
+        // Устанавливаем градиент. Цвета можно настроить.
+        // Например, синий для заполненной части, серый для фона
+        circle.style.backgroundImage = `conic-gradient(#4F46E5 ${percentage}%, #E5E7EB ${percentage}%)`; 
+      });
+
+      // 2. Месячный график (Chart.js) - Демонстрационные данные
+      const monthlyChartCtx = document.getElementById('monthlyChart')?.getContext('2d');
+      if (monthlyChartCtx) {
+        const monthlyChart = new Chart(monthlyChartCtx, {
+          type: 'bar',
+          data: {
+            labels: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'], // Месяцы
+            datasets: [{
+              label: 'Инвестиции', // Метка набора данных
+              data: [500, 800, 1200, 2100, 1500, 1000, 1300, 900, 1400, 2200, 1800, 1600], // Пример данных
+              backgroundColor: [
+                'rgba(59, 130, 246, 0.6)', // Синий
+                'rgba(245, 158, 11, 0.6)', // Оранжевый
+                'rgba(16, 185, 129, 0.6)', // Зеленый
+                 // ... и т.д. для всех 12, можно использовать один цвет или массив
+              ],
+              borderColor: [
+                 'rgba(59, 130, 246, 1)',
+                 'rgba(245, 158, 11, 1)',
+                 'rgba(16, 185, 129, 1)',
+              ],
+              borderWidth: 1,
+              borderRadius: 5, // Скругление столбиков
+              barThickness: 20 // Ширина столбиков
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false }, // Скрыть легенду
+              tooltip: { enabled: true } // Включить подсказки при наведении
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                grid: { display: false }, // Скрыть сетку Y
+                ticks: { padding: 10 }
+              },
+              x: {
+                grid: { display: false }, // Скрыть сетку X
+                ticks: { padding: 10 }
+              }
+            }
+          }
+        });
+
+        // Обработчик смены месяца (если понадобится в будущем для AJAX)
+        const monthSelector = document.getElementById('month-selector');
+        if(monthSelector) {
+          monthSelector.addEventListener('change', function() {
+            const selectedMonth = this.value;
+            console.log('Выбран месяц:', selectedMonth);
+            // Здесь можно будет добавить логику для обновления данных графика
+            // Например, сделать AJAX запрос и вызвать monthlyChart.update()
+          });
+        }
+      }
+
+      // 3. Интерактивность (Поиск, Фильтры, Показать еще)
+      const searchInput = document.getElementById('startup-search');
+      const filterButtons = document.querySelectorAll('.filter-btn');
+      const startupCards = document.querySelectorAll('.startup-card');
+      const loadMoreBtn = document.getElementById('load-more');
+      const itemsToShowInitially = 6; // Сколько карточек показывать сначала
+
+      // --- Поиск --- 
+      if (searchInput) {
+        searchInput.addEventListener('input', function() {
+          const searchTerm = this.value.toLowerCase().trim();
+          startupCards.forEach(card => {
+            const name = card.getAttribute('data-name').toLowerCase();
+            const category = card.getAttribute('data-category').toLowerCase();
+            const isVisible = name.includes(searchTerm) || category.includes(searchTerm);
+            // Управляем видимостью с учетом текущего фильтра и пагинации
+            const currentFilter = document.querySelector('.filter-btn.active')?.getAttribute('data-filter') || 'all';
+            const passesFilter = checkFilter(card, currentFilter);
+            const isHiddenByPagination = card.classList.contains('hidden-by-pagination');
+            
+            card.style.display = (isVisible && passesFilter && !isHiddenByPagination) ? 'flex' : 'none';
+          });
+        });
+      }
+
+      // --- Фильтры --- 
+      filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          filterButtons.forEach(btn => btn.classList.remove('active'));
+          this.classList.add('active');
+          const filter = this.getAttribute('data-filter');
+          applyFilters();
+        });
+      });
+
+      function checkFilter(card, filter) {
+        if (filter === 'all') {
+          return true;
+        } else if (filter === 'category') {
+           // TODO: Нужна логика выбора категории. Пока оставляем alert.
+           // const selectedCategory = ...; 
+           // return card.getAttribute('data-category').toLowerCase() === selectedCategory;
+           return true; // Временно показываем все, пока нет выбора
+        } else if (filter === 'new') {
+           // TODO: Нужна логика определения "нового" стартапа.
+           // return card.getAttribute('data-is-new') === 'true'; 
+           return true; // Временно показываем все
+        }
+        return true;
+      }
+      
+      function applyFilters() {
+          const currentFilter = document.querySelector('.filter-btn.active')?.getAttribute('data-filter') || 'all';
+          const searchTerm = searchInput ? searchInput.value.toLowerCase().trim() : '';
+          
+           if (currentFilter === 'category') {
+             alert('Логика фильтрации по категориям еще не реализована.');
+           }
+            if (currentFilter === 'new') {
+             alert('Логика фильтрации по новым стартапам еще не реализована.');
+           }
+           
+          startupCards.forEach(card => {
+            const name = card.getAttribute('data-name').toLowerCase();
+            const category = card.getAttribute('data-category').toLowerCase();
+            const passesFilter = checkFilter(card, currentFilter);
+            const matchesSearch = name.includes(searchTerm) || category.includes(searchTerm);
+            const isHiddenByPagination = card.classList.contains('hidden-by-pagination');
+
+            card.style.display = (passesFilter && matchesSearch && !isHiddenByPagination) ? 'flex' : 'none';
+          });
+      }
+
+      // --- Показать еще --- 
+      function setupPagination() {
+          if (startupCards.length <= itemsToShowInitially) {
+              if(loadMoreBtn) loadMoreBtn.style.display = 'none';
+              return;
+          }
+
+          startupCards.forEach((card, index) => {
+              if (index >= itemsToShowInitially) {
+                  card.style.display = 'none';
+                  card.classList.add('hidden-by-pagination');
+              } else {
+                  card.style.display = 'flex'; 
+                  card.classList.remove('hidden-by-pagination');
+              }
+          });
+          if(loadMoreBtn) loadMoreBtn.style.display = 'flex';
+      }
+
+      if (loadMoreBtn) {
+          loadMoreBtn.addEventListener('click', function() {
+              startupCards.forEach(card => {
+                  card.classList.remove('hidden-by-pagination');
+                   // Показываем только если проходит текущий фильтр и поиск
+                  const currentFilter = document.querySelector('.filter-btn.active')?.getAttribute('data-filter') || 'all';
+                  const searchTerm = searchInput ? searchInput.value.toLowerCase().trim() : '';
+                  const name = card.getAttribute('data-name').toLowerCase();
+                  const category = card.getAttribute('data-category').toLowerCase();
+                   const passesFilter = checkFilter(card, currentFilter);
+                   const matchesSearch = name.includes(searchTerm) || category.includes(searchTerm);
+                   
+                   if(passesFilter && matchesSearch) {
+                     card.style.display = 'flex';
+                   }
+              });
+              this.style.display = 'none'; // Скрываем кнопку
+          });
+      }
+      
+      // Инициализация фильтров и пагинации при загрузке
+      setupPagination();
+      applyFilters(); // Применяем фильтр "Все" по умолчанию
+
+    });
+  </script>
 {% endblock %}
