@@ -285,7 +285,7 @@ def investments(request):
     # Данные по категориям (пример, можно доработать логику процентовки)
     # Группируем по категориям и считаем сумму и кол-во
     category_data_raw = user_investments_qs.values(
-        'startup__category__name' # Используем category вместо direction
+        'startup__direction__direction_name' # Исправляем category на direction
     ).annotate(
         category_total=Sum('amount'),
         category_count=Count('startup_id', distinct=True)
@@ -299,7 +299,7 @@ def investments(request):
         if cat_data['category_total']:
              percentage = round((cat_data['category_total'] / total_for_percentage) * 100)
         investment_categories.append({
-            'name': cat_data['startup__category__name'] or 'Без категории',
+            'name': cat_data['startup__direction__direction_name'] or 'Без категории', # Исправляем category на direction
             'percentage': percentage,
         })
 
