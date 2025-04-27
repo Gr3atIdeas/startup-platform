@@ -152,9 +152,13 @@ body {
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
   border-radius: 50%;
-  /* Убираем базовый градиент, он будет задаваться через data-percentage */
-  mask: radial-gradient(transparent 60%, black 61%); /* Создаем кольцо */
-  transform: rotate(-90deg); /* Начинаем с 12 часов */
+  /* Устанавливаем градиент с использованием переменных */
+  background: conic-gradient(
+    var(--progress-color, #007bff) calc(var(--percentage, 0) * 1%), 
+    transparent calc(var(--percentage, 0) * 1%)
+  );
+  mask: radial-gradient(transparent 60%, black 61%);
+  transform: rotate(-90deg);
 }
 
 .radial-chart-text {
@@ -164,18 +168,6 @@ body {
   transform: translate(-50%, -50%);
   font-size: 14px;
   font-weight: 700;
-  color: #191919; /* Темный текст */
-}
-
-/* Стилизация прогресса в зависимости от процента - берем цвета из макета */
-.radial-chart[data-percentage="70"] .radial-chart-progress { --percentage: 70; background: conic-gradient(#007BFF calc(var(--percentage) * 1%), #E9ECEF calc(var(--percentage) * 1%)); }
-.radial-chart[data-percentage="90"] .radial-chart-progress { --percentage: 90; background: conic-gradient(#28A745 calc(var(--percentage) * 1%), #E9ECEF calc(var(--percentage) * 1%)); }
-.radial-chart[data-percentage="60"] .radial-chart-progress { --percentage: 60; background: conic-gradient(#FFC107 calc(var(--percentage) * 1%), #E9ECEF calc(var(--percentage) * 1%)); }
-.radial-chart[data-percentage="40"] .radial-chart-progress { --percentage: 40; background: conic-gradient(#DC3545 calc(var(--percentage) * 1%), #E9ECEF calc(var(--percentage) * 1%)); }
-/* Добавить больше стилей если нужно */
-
-.category-radial-name {
-  font-size: 12px;
   color: #191919; /* Темный текст */
 }
 
@@ -990,16 +982,18 @@ body {
   display: block;
   font-size: 18px;
   font-weight: 700;
-  color: #007bff; /* Синий цвет для процентов */
+  /* Убираем фиксированный синий цвет, будет задаваться JS */
+  /* color: #007bff; */ 
 }
 
 .modal-category-item .invested-indicator {
-  display: inline-block; /* Или block, если нужно на новой строке */
+  display: inline-block; 
   width: 8px;
   height: 8px;
-  background-color: #28a745; /* Зеленый индикатор */
+  /* Убираем фиксированный зеленый цвет */
+  /* background-color: #28a745; */ 
   border-radius: 50%;
-  margin-left: 5px; /* Отступ от процента */
+  margin-left: 5px; 
   vertical-align: middle;
 }
 

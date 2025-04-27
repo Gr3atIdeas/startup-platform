@@ -509,6 +509,44 @@
         })();
         // ==== Конец логики модального окна ==== 
       });
+
+      // Функция для определения цвета по проценту
+      function getColorForPercentage(percentage) {
+        if (percentage >= 75) {
+          return '#28a745'; // Зеленый
+        } else if (percentage >= 50) {
+          return '#007bff'; // Синий
+        } else if (percentage >= 25) {
+          return '#ffc107'; // Желтый
+        } else if (percentage > 0) {
+          return '#dc3545'; // Красный
+        } else {
+          return '#6c757d'; // Серый для 0%
+        }
+      }
+
+      // Функция для обновления цветов радиальных диаграмм
+      function updateRadialChartColors() {
+        document.querySelectorAll('.radial-chart').forEach(chart => {
+          const percentage = parseInt(chart.dataset.percentage || 0, 10);
+          const color = getColorForPercentage(percentage);
+          const progressElement = chart.querySelector('.radial-chart-progress');
+          if (progressElement) {
+              // Устанавливаем CSS переменные для градиента
+              progressElement.style.setProperty('--percentage', percentage);
+              progressElement.style.setProperty('--progress-color', color);
+          }
+          // Опционально: изменить цвет текста в зависимости от фона?
+          // const textElement = chart.querySelector('.radial-chart-text');
+          // if (textElement) { textElement.style.color = ...; }
+        });
+      }
+
+      // Вызываем обновление цветов при загрузке DOM
+      document.addEventListener('DOMContentLoaded', updateRadialChartColors);
+
+      // Добавляем обработчик для кнопки открытия модального окна
+      document.getElementById('addCategoryBtn').addEventListener('click', openModal);
     </script>
   {% else %}
     <div class="access-restricted">
