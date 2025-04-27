@@ -130,6 +130,8 @@ LANGUAGE_CODE = 'ru-RU'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
+USE_L10N = True  # Добавляем для включения локализации форматов
+USE_THOUSAND_SEPARATOR = True # Добавляем для включения разделителя тысяч
 
 # Кодировка по умолчанию
 DEFAULT_CHARSET = 'utf-8'
