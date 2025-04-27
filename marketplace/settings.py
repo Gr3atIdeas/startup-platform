@@ -67,6 +67,7 @@ INSTALLED_APPS = [
     'accounts',
     'storages',  # Убедись, что 'storages' добавлен
     'widget_tweaks',  # Добавляем widget_tweaks
+    'django.contrib.humanize',  # Добавляем humanize
 ]
 
 MIDDLEWARE = [
