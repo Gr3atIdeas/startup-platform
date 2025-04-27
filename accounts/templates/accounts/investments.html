@@ -188,7 +188,7 @@
                   <div class="startup-name">{{ investment.startup.name }}</div>
                   <div class="startup-rating">
                       {# Динамический рейтинг (пример) #}
-                      {% with rating=investment.startup.rating|default:0 %}
+                      {% with rating=investment.startup_average_rating|default:0 %}
                           {% for i in "12345"|make_list %}
                               {% if rating >= i|add:0 %}
                                   <i class="fas fa-star"></i> {# Полная звезда #}
@@ -203,7 +203,7 @@
                   {# Отображаем количество комментариев #}
                   <div class="startup-comments">
                       <i class="fas fa-comment-dots"></i>
-                      <span>{{ investment.startup.comment_count|default:0 }}</span>
+                      <span>{{ investment.startup_comment_count|default:0 }}</span>
                   </div>
               </div>
               <div class="startup-card-right">
@@ -242,7 +242,7 @@
                    <img src="{{ investment.startup.planet_image.url | default:'/static/accounts/images/planets/startup_5_logo.png' }}" alt="{{ investment.startup.name }} Planet" class="startup-planet-img">
                   <div class="startup-name">{{ investment.startup.name }}</div>
                   <div class="startup-rating">
-                      {% with rating=investment.startup.rating|default:0 %}
+                      {% with rating=investment.startup_average_rating|default:0 %}
                           {% for i in "12345"|make_list %}
                               {% if rating >= i|add:0 %}<i class="fas fa-star"></i>
                               {% elif rating >= i|add:-0.5 %}<i class="fas fa-star-half-alt"></i>
@@ -252,7 +252,7 @@
                   </div>
                   <div class="startup-comments">
                       <i class="fas fa-comment-dots"></i>
-                      <span>{{ investment.startup.comment_count|default:0 }}</span>
+                      <span>{{ investment.startup_comment_count|default:0 }}</span>
                   </div>
               </div>
               <div class="startup-card-right">
@@ -312,373 +312,289 @@
     <!-- ==== Конец модального окна ==== -->
     
     <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const searchInput = document.getElementById('startup-search');
-        if (searchInput) {
-          searchInput.addEventListener('input', function() {
-            const searchTerm = this.value.toLowerCase();
-            document.querySelectorAll('.startup-card').forEach(card => {
-              const name = card.getAttribute('data-name').toLowerCase();
-              if (name.includes(searchTerm)) {
-                card.style.display = 'flex';
-              } else {
-                card.style.display = 'none';
-              }
-            });
-          });
-        }
-        
-        const filterButtons = document.querySelectorAll('.filter-btn');
-        const startupCards = document.querySelectorAll('.startup-card');
+      // ================================================
+      // ГЛОБАЛЬНЫЕ ФУНКЦИИ, КОНСТАНТЫ И ОБРАБОТЧИКИ
+      // ОПРЕДЕЛЯЕМ ВСЕ ЗДЕСЬ, ДО DOMContentLoaded
+      // ================================================
 
-        filterButtons.forEach(button => {
-          button.addEventListener('click', function() {
-            filterButtons.forEach(btn => btn.classList.remove('active'));
-            this.classList.add('active');
-            
-            const filter = this.getAttribute('data-filter');
-            
-            if (filter === 'all') {
-              // Скрываем лишние карточки снова, если кнопка "Показать еще" была нажата
-              const loadMoreBtn = document.getElementById('load-more');
-              const hideBtn = document.getElementById('hide-startups-btn');
-              const hiddenCards = document.querySelectorAll('.startup-card.hidden-card'); 
-
-              // Сначала показываем все карточки (видимые и скрытые)
-              startupCards.forEach(card => card.style.display = 'flex'); 
-
-              // Затем, если были показаны все (кнопка Скрыть видима),
-              // возвращаем к исходному состоянию 2x2
-              if (hideBtn && hideBtn.style.display !== 'none') { 
-                  hiddenCards.forEach(card => card.style.display = 'none'); // Скрываем доп. карточки
-                  hideBtn.style.display = 'none'; // Скрываем кнопку "Скрыть"
-                  if (loadMoreBtn) loadMoreBtn.style.display = 'flex'; // Показываем "Показать еще"
-              }
-            } else if (filter === 'category') {
-              alert('Фильтр по категории пока не реализован');
-            } else if (filter === 'new') {
-              alert('Сортировка по новым пока не реализована');
-            } else if (filter === 'old') {
-              alert('Сортировка по старым пока не реализована');
-            }
-          });
-        });
-        
-        const loadMoreBtn = document.getElementById('load-more');
-        const hiddenCards = document.querySelectorAll('.startup-card.hidden-card');
-        const hideBtn = document.getElementById('hide-startups-btn');
-
-        if (loadMoreBtn && hiddenCards.length > 0) {
-           loadMoreBtn.addEventListener('click', function() {
-             hiddenCards.forEach(card => {
-               card.style.display = 'flex'; // Показываем скрытые карточки
-             });
-             this.style.display = 'none'; // Скрываем кнопку "Показать еще"
-             if (hideBtn) hideBtn.style.display = 'flex'; // Показываем кнопку "Скрыть"
-           });
-        }
-        
-        // Обработчик для кнопки "Скрыть"
-        if (hideBtn) {
-            hideBtn.addEventListener('click', function() {
-                hiddenCards.forEach(card => {
-                    card.style.display = 'none'; // Скрываем доп. карточки
-                });
-                this.style.display = 'none'; // Скрываем кнопку "Скрыть"
-                if (loadMoreBtn) loadMoreBtn.style.display = 'flex'; // Показываем "Показать еще"
-            });
-        }
-
-        // <<< Скрипт для инициализации графика >>>
-        (function() { // Используем IIFE для изоляции области видимости
-            const canvasElement = document.getElementById('monthlyInvestmentChart');
-            if (!canvasElement) {
-                console.error("Элемент canvas #monthlyInvestmentChart не найден.");
-                return;
-            }
-            const ctx = canvasElement.getContext('2d');
-            
-            // Получаем данные из встроенных JSON скриптов
-            let monthLabels = [];
-            let monthData = [];
-            try {
-                monthLabels = JSON.parse(document.getElementById('chart-month-labels').textContent);
-                monthData = JSON.parse(document.getElementById('chart-month-data').textContent);
-            } catch (e) {
-                console.error("Ошибка парсинга данных для графика:", e);
-                canvasElement.parentNode.innerHTML = '<p style="text-align: center; color: red;">Ошибка загрузки данных для графика.</p>';
-                return;
-            }
-
-            // Проверяем, есть ли данные для графика
-            const hasData = monthData && monthData.some(value => value > 0);
-
-            if (hasData) {
-                // Создаем градиент для фона столбцов
-                const gradient = ctx.createLinearGradient(0, 0, 0, 300);
-                gradient.addColorStop(0, 'rgba(0, 123, 255, 0.8)'); // Синий сверху
-                gradient.addColorStop(1, 'rgba(0, 123, 255, 0.1)'); // Прозрачный синий снизу
-
-                new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: monthLabels,
-                        datasets: [{
-                            label: 'Сумма инвестиций',
-                            data: monthData,
-                            backgroundColor: gradient, // Применяем градиент
-                            borderColor: 'rgba(0, 123, 255, 1)',
-                            borderWidth: 1,
-                            borderRadius: 5, // Небольшое скругление углов столбцов
-                            barThickness: 'flex', // Автоматическая ширина столбцов
-                            maxBarThickness: 30 // Максимальная ширина столбца
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                grid: {
-                                    color: 'rgba(0, 0, 0, 0.05)' // Цвет сетки оси Y
-                                },
-                                ticks: {
-                                    // Форматирование чисел на оси Y
-                                    callback: function(value, index, values) {
-                                        if (value >= 1000) {
-                                            return (value / 1000).toLocaleString('ru-RU') + 'k';
-                                        } else {
-                                            return value.toLocaleString('ru-RU');
-                                        }
-                                    }
-                                }
-                            },
-                            x: {
-                                grid: {
-                                    display: false // Убираем сетку оси X
-                                }
-                            }
-                        },
-                        plugins: {
-                            legend: {
-                                display: false // Скрываем легенду
-                            },
-                            tooltip: {
-                                // Кастомизация всплывающих подсказок
-                                callbacks: {
-                                    label: function(context) {
-                                        let label = context.dataset.label || '';
-                                        if (label) {
-                                            label += ': ';
-                                        }
-                                        if (context.parsed.y !== null) {
-                                            // Форматируем сумму с пробелами и знаком рубля
-                                            label += context.parsed.y.toLocaleString('ru-RU', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + ' ₽';
-                                        }
-                                        return label;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
-            } else {
-                // Если данных нет, показываем сообщение
-                canvasElement.parentNode.innerHTML = '<p style="text-align: center; color: #6c757d;">Нет данных для графика за текущий год.</p>';
-            }
-        })(); // Вызываем IIFE
-        // <<< Конец скрипта для графика >>>
-
-        // ==== Логика для модального окна категорий ==== 
-        (function() {
-          const openBtn = document.getElementById('openCategoriesModalBtn');
-          const closeBtn = document.getElementById('closeCategoriesModalBtn');
-          const modalOverlay = document.getElementById('allCategoriesModal');
-          const modalGrid = document.getElementById('modalCategoriesGrid');
-          
-          // Данные из Django (безопасно парсим)
-          let allDirections = [];
-          let investedData = {};
-          try {
-              const allDirectionsElement = document.getElementById('all-directions-data');
-              const investedDataElement = document.getElementById('invested-category-data');
-
-              if (!allDirectionsElement || !investedDataElement) {
-                  throw new Error("Не найдены элементы данных для модального окна.");
-              }
-
-              const allDirectionsRaw = allDirectionsElement.textContent;
-              const investedDataRaw = investedDataElement.textContent;
-              
-              console.log("Raw allDirectionsData:", allDirectionsRaw); // Отладка
-              console.log("Raw investedData:", investedDataRaw); // Отладка
-              
-              const parsedDirections = JSON.parse(allDirectionsRaw);
-              console.log("Parsed allDirectionsData:", parsedDirections, "Is Array?", Array.isArray(parsedDirections)); // Отладка
-              
-              if (!Array.isArray(parsedDirections)) {
-                   throw new TypeError("Данные категорий не являются массивом.");
-              }
-
-              allDirections = parsedDirections.map(item => ({
-                  pk: item.pk,
-                  name: item.direction_name
-              }));
-              investedData = JSON.parse(investedDataRaw);
-
-          } catch (e) {
-              console.error("Ошибка парсинга данных для модального окна категорий:", e);
-          }
-
-          // Функция для перевода названий категорий
-          function translateCategoryName(name) {
-              const translations = {
-                  "Medicine": "Медицина",
-                  "Auto": "Автомобили",
-                  "Delivery": "Доставка",
-                  "Cafe": "Кафе/рестораны",
-                  "Fastfood": "Фастфуд",
-                  "Health": "Здоровье",
-                  "Beauty": "Красота",
-                  "Transport": "Транспорт",
-                  "Sport": "Спорт",
-                  "Psychology": "Психология",
-                  "AI": "ИИ",
-                  "Finance": "Финансы",
-                  "Healthcare": "Здравоохранение",
-                  "Technology": "Технологии",
-                  "IT": "ИТ"
-                  // Добавьте другие переводы, если нужно
-              };
-              return translations[name] || name || "Не указано"; // Возвращаем перевод или оригинал
-          }
-
-          function openModal() {
-            if (!modalOverlay || !modalGrid) return;
-            
-            // Очищаем и заполняем сетку категорий
-            modalGrid.innerHTML = ''; // Очищаем предыдущее содержимое
-            if (allDirections.length > 0) {
-                allDirections.forEach(direction => {
-                    const categoryName = direction.name; // Используем оригинальное имя
-                    const percentage = investedData[categoryName] || 0;
-                    const translatedName = translateCategoryName(categoryName);
-                    const color = categoryColors[categoryName] || categoryColors["default"]; // Получаем цвет из карты
-                    
-                    const item = document.createElement('div');
-                    item.classList.add('modal-category-item');
-                    
-                    // Генерируем HTML для радиальной диаграммы и имени
-                    item.innerHTML = `
-                        <div class="radial-chart" data-percentage="${percentage}" data-category-name="${categoryName}">
-                          <div class="radial-chart-progress" style="--percentage: ${percentage}; --progress-color: ${color};"></div>
-                          <div class="radial-chart-text">${percentage}%</div>
-                        </div>
-                        <span class="modal-category-name">${translatedName}</span>
-                    `;
-                    
-                    modalGrid.appendChild(item);
-                });
-            } else {
-                modalGrid.innerHTML = '<p>Нет доступных категорий.</p>';
-            }
-
-            modalOverlay.classList.add('visible');
-            document.body.classList.add('modal-open-blur');
-          }
-
-          function closeModal() {
-            if (!modalOverlay) return;
-            modalOverlay.classList.remove('visible');
-            document.body.classList.remove('modal-open-blur');
-          }
-
-          if (openBtn) {
-            openBtn.addEventListener('click', openModal);
-          }
-
-          if (closeBtn) {
-            closeBtn.addEventListener('click', closeModal);
-          }
-
-          // Закрытие по клику на фон
-          if (modalOverlay) {
-              modalOverlay.addEventListener('click', function(event) {
-                  if (event.target === modalOverlay) { // Клик именно по фону, а не по контенту
-                      closeModal();
-                  }
-              });
-          }
-        })();
-        // ==== Конец логики модального окна ==== 
-      });
-
-      // Карта цветов для категорий (используем английские имена как ключи)
+      // Карта цветов для категорий
       const categoryColors = {
-          "Medicine": "#e74c3c",   // Красный
-          "Auto": "#3498db",       // Синий
-          "Delivery": "#f1c40f",   // Желтый
-          "Cafe": "#9b59b6",       // Фиолетовый
-          "Fastfood": "#e67e22",   // Оранжевый
-          "Health": "#1abc9c",     // Бирюзовый
-          "Beauty": "#fd79a8",     // Розовый
-          "Transport": "#2ecc71",  // Зеленый
-          "Sport": "#a3ff00",      // Лаймово-зеленый (замена темно-серого)
-          "Psychology": "#d35400", // Тыквенный
-          "AI": "#00bcd4",         // Яркий циан (замена серого)
-          "Finance": "#2980b9",    // Насыщенный синий
-          "Healthcare": "#c0392b", // Темно-красный
-          "IT": "#8e44ad",         // Сиреневый
-          "Retail": "#f39c12",    // Оранжево-желтый
-          // Добавьте другие категории и цвета при необходимости
-          "default": "#007bff"     // Яркий синий (замена серебряного)
+          "Medicine": "#e74c3c", "Auto": "#3498db", "Delivery": "#f1c40f",
+          "Cafe": "#9b59b6", "Fastfood": "#e67e22", "Health": "#1abc9c",
+          "Beauty": "#fd79a8", "Transport": "#2ecc71", "Sport": "#a3ff00",
+          "Psychology": "#d35400", "AI": "#00bcd4", "Finance": "#2980b9",
+          "Healthcare": "#c0392b", "IT": "#8e44ad", "Retail": "#f39c12",
+          "default": "#007bff"
       };
+
+      // Функция для перевода названий категорий
+      function translateCategoryName(name) {
+          const translations = {
+              "Medicine": "Медицина", "Auto": "Автомобили", "Delivery": "Доставка",
+              "Cafe": "Кафе/рестораны", "Fastfood": "Фастфуд", "Health": "Здоровье",
+              "Beauty": "Красота", "Transport": "Транспорт", "Sport": "Спорт",
+              "Psychology": "Психология", "AI": "ИИ", "Finance": "Финансы",
+              "Healthcare": "Здравоохранение", "Technology": "Технологии", "IT": "ИТ",
+              "Retail": "Ритейл"
+          };
+          return translations[name] || name || "Не указано";
+      }
 
       // Функция для обновления цветов радиальных диаграмм
       function updateRadialChartColors() {
         document.querySelectorAll('.radial-chart').forEach(chart => {
           const percentage = parseInt(chart.dataset.percentage || 0, 10);
-          const categoryName = chart.dataset.categoryName || ''; // Получаем имя категории
-          const color = categoryColors[categoryName] || categoryColors["default"]; // Получаем цвет из карты
-          
+          const categoryName = chart.dataset.categoryName || '';
+          const color = categoryColors[categoryName] || categoryColors["default"];
           const progressElement = chart.querySelector('.radial-chart-progress');
           if (progressElement) {
-              // Устанавливаем CSS переменные для градиента
               progressElement.style.setProperty('--percentage', percentage);
-              progressElement.style.setProperty('--progress-color', color); // Устанавливаем цвет категории
+              progressElement.style.setProperty('--progress-color', color);
           }
         });
       }
-      
-      // Вызываем обновление цветов при загрузке DOM
-      document.addEventListener('DOMContentLoaded', updateRadialChartColors);
 
-      // Добавляем обработчик для кнопки открытия модального окна
-      const openModalBtn = document.getElementById('openCategoriesModalBtn'); 
-      if (openModalBtn) {
-        openModalBtn.addEventListener('click', openModal);
+      // Функция для открытия модального окна категорий
+      function openModal() {
+          const modalOverlay = document.getElementById('allCategoriesModal');
+          const modalGrid = document.getElementById('modalCategoriesGrid');
+          let allDirections = [];
+          let investedData = {};
+          try {
+              allDirections = JSON.parse(document.getElementById('all-directions-data').textContent).map(item => ({ pk: item.pk, name: item.direction_name }));
+              investedData = JSON.parse(document.getElementById('invested-category-data').textContent);
+          } catch (e) {
+              console.error("Ошибка парсинга данных для модального окна категорий (в openModal):", e);
+              if (modalGrid) modalGrid.innerHTML = '<p>Ошибка загрузки категорий.</p>';
+          }
+          if (!modalOverlay || !modalGrid) return;
+          modalGrid.innerHTML = '';
+          if (allDirections.length > 0) {
+              allDirections.forEach(direction => {
+                  const categoryName = direction.name;
+                  const percentage = investedData[categoryName] || 0;
+                  const translatedName = translateCategoryName(categoryName);
+                  const color = categoryColors[categoryName] || categoryColors["default"];
+                  const item = document.createElement('div');
+                  item.classList.add('modal-category-item');
+                  item.innerHTML = `
+                      <div class="radial-chart" data-percentage="${percentage}" data-category-name="${categoryName}">
+                        <div class="radial-chart-progress" style="--percentage: ${percentage}; --progress-color: ${color};"></div>
+                        <div class="radial-chart-text">${percentage}%</div>
+                      </div>
+                      <span class="modal-category-name">${translatedName}</span>
+                  `;
+                  modalGrid.appendChild(item);
+              });
+          } else {
+              modalGrid.innerHTML = '<p>Нет доступных категорий.</p>';
+          }
+          modalOverlay.classList.add('visible');
+          document.body.classList.add('modal-open-blur');
       }
-      // Добавляем обработчики закрытия модального окна
-      const closeBtn = document.getElementById('closeCategoriesModalBtn');
-      const modalOverlay = document.getElementById('allCategoriesModal'); // Переопределяем для ясности
-      if (closeBtn) {
-          closeBtn.addEventListener('click', closeModal); 
-      }
-      if (modalOverlay) {
-          modalOverlay.addEventListener('click', function(event) {
-              if (event.target === modalOverlay) { 
-                  closeModal();
-              }
-          });
-      }
-      // Определяем функцию closeModal, если она еще не определена глобально
-      function closeModal() { // Убедимся, что функция определена
+
+      // Функция для закрытия модального окна категорий
+      function closeModal() {
+          const modalOverlay = document.getElementById('allCategoriesModal');
           if (!modalOverlay) return;
           modalOverlay.classList.remove('visible');
           document.body.classList.remove('modal-open-blur');
       }
+      
+      // Функция фильтрации по категории
+      function filterByCategory(event) {
+          event.preventDefault(); 
+          const selectedCategory = event.target.dataset.category;
+          const categoryButton = document.querySelector('.filter-btn[data-filter="category"]');
+          const filterButtons = document.querySelectorAll('.filter-btn'); // Получаем кнопки здесь
+          const startupCards = document.querySelectorAll('.startup-card'); // Получаем карточки здесь
+          const loadMoreBtn = document.getElementById('load-more'); // Получаем кнопки Показать/Скрыть
+          const hideBtn = document.getElementById('hide-startups-btn');
 
+          filterButtons.forEach(btn => btn.classList.remove('active'));
+          if (categoryButton) {
+               categoryButton.classList.add('active');
+          }
+
+          startupCards.forEach(card => {
+              // Проверяем видимость перед изменением стиля
+              const isHiddenCard = card.classList.contains('hidden-card');
+              if (card.dataset.category === selectedCategory) {
+                  // Если карточка совпадает И она была скрыта кнопкой "Показать еще", 
+                  // все равно показываем ее при фильтрации
+                  card.style.display = 'flex'; 
+              } else {
+                  card.style.display = 'none';
+              }
+          });
+
+          if (loadMoreBtn) loadMoreBtn.style.display = 'none';
+          if (hideBtn) hideBtn.style.display = 'none';
+      }
+
+      // ================================================
+      // DOMContentLoaded - установка обработчиков и инициализация
+      // ================================================
+      document.addEventListener('DOMContentLoaded', function() {
+          updateRadialChartColors(); // Обновляем цвета диаграмм на странице
+
+          // --- Динамическое заполнение дропдауна категорий --- 
+          const categoryDropdownContent = document.querySelector('.filter-dropdown-content');
+          if (categoryDropdownContent) {
+              categoryDropdownContent.innerHTML = '';
+              let allDirections = [];
+              try {
+                 allDirections = JSON.parse(document.getElementById('all-directions-data').textContent).map(item => ({ pk: item.pk, name: item.direction_name }));
+              } catch(e) {
+                  console.error("Ошибка парсинга allDirections для дропдауна:", e);
+              }
+              if (allDirections.length > 0) {
+                  allDirections.forEach(direction => {
+                      const link = document.createElement('a');
+                      link.href = '#';
+                      link.dataset.category = direction.name;
+                      link.textContent = translateCategoryName(direction.name);
+                      link.addEventListener('click', filterByCategory); // Используем глобальную функцию
+                      categoryDropdownContent.appendChild(link);
+                  });
+              } else {
+                  categoryDropdownContent.innerHTML = '<a href="#">Нет категорий</a>';
+              }
+          }
+          // --- Конец заполнения дропдауна --- 
+
+          // --- Логика фильтров стартапов --- 
+          const searchInput = document.getElementById('startup-search');
+          if (searchInput) {
+             searchInput.addEventListener('input', function() {
+                 const searchTerm = this.value.toLowerCase();
+                 // Получаем ВСЕ карточки, включая изначально скрытые
+                 document.querySelectorAll('.startups-grid .startup-card').forEach(card => { 
+                    const name = card.getAttribute('data-name').toLowerCase();
+                    // Скрываем/показываем независимо от фильтра/пагинации
+                    if (name.includes(searchTerm)) {
+                        // Важно: Не меняем display, если карточка скрыта пагинацией или фильтром
+                        // Проверяем текущий стиль display перед изменением
+                        if (card.style.display !== 'none' || card.classList.contains('hidden-card')) { // Поправка: Поиск должен работать и для скрытых пагинацией
+                           // Если карточка должна быть видима (или скрыта только пагинацией), 
+                           // управляем ее видимостью через поиск. 
+                           // Если она уже скрыта фильтром, поиск ее не покажет.
+                           if (card.style.display !== 'none') { // Доп проверка, чтобы не показать скрытое фильтром
+                                card.style.display = 'flex';
+                           }
+                        } 
+                        // Если имя НЕ содержит поисковый запрос И карточка ВИДИМА
+                        else if (card.style.display !== 'none') { 
+                             card.style.display = 'none';
+                        }
+                    }
+                     else {
+                         // Если имя не совпадает, скрываем только если она была видима
+                         if (card.style.display !== 'none') {
+                             card.style.display = 'none';
+                         }
+                     }
+                 });
+                 // При поиске скрываем кнопки Показать/Скрыть
+                 const loadMoreBtnSearch = document.getElementById('load-more');
+                 const hideBtnSearch = document.getElementById('hide-startups-btn');
+                 if (loadMoreBtnSearch) loadMoreBtnSearch.style.display = 'none';
+                 if (hideBtnSearch) hideBtnSearch.style.display = 'none';
+             });
+           }
+          
+          const filterButtons = document.querySelectorAll('.filter-btn');
+          const startupCards = document.querySelectorAll('.startup-card'); 
+          const loadMoreBtn = document.getElementById('load-more');
+          const hideBtn = document.getElementById('hide-startups-btn');
+          const hiddenCards = document.querySelectorAll('.startup-card.hidden-card');
+
+          filterButtons.forEach(button => {
+            button.addEventListener('click', function(event) {
+              if (this.classList.contains('filter-btn-dropdown')) {
+                  // Ничего не делаем для самой кнопки "Категория"
+              } else {
+                 filterButtons.forEach(btn => btn.classList.remove('active'));
+                 this.classList.add('active');
+                 const filter = this.getAttribute('data-filter');
+                 if (filter === 'all') {
+                      startupCards.forEach(card => {
+                           // Показываем только видимые + скрытые пагинацией, но не скрытые поиском/фильтром
+                           if (!card.classList.contains('hidden-card')) {
+                              card.style.display = 'flex'; 
+                           } else {
+                               card.style.display = 'none'; // Скрытые пагинацией остаются скрытыми
+                           }
+                      });
+                      if (hiddenCards.length > 0) {
+                          if (loadMoreBtn) loadMoreBtn.style.display = 'flex';
+                          if (hideBtn) hideBtn.style.display = 'none';
+                      } else {
+                          if (loadMoreBtn) loadMoreBtn.style.display = 'none';
+                          if (hideBtn) hideBtn.style.display = 'none';
+                      }
+                      // Сбрасываем текст кнопки Категория (если меняли)
+                      const categoryButton = document.querySelector('.filter-btn[data-filter="category"]');
+                      // if (categoryButton) categoryButton.firstChild.textContent = 'Категория ';
+                 } else if (filter === 'new') {
+                   alert('Сортировка по новым пока не реализована');
+                 } else if (filter === 'old') {
+                   alert('Сортировка по старым пока не реализована');
+                 }
+              }
+            });
+          });
+          
+          // --- Логика "Показать еще" / "Скрыть" --- 
+          if (loadMoreBtn && hiddenCards.length > 0) {
+             loadMoreBtn.addEventListener('click', function() {
+               hiddenCards.forEach(card => {
+                  // Показываем только если карточка не скрыта поиском/фильтром
+                  if (card.style.display !== 'none' || !card.hasAttribute('style')) { // Проверяем, что стиль не установлен в none ИЛИ стиль вообще не установлен
+                     card.style.display = 'flex'; 
+                  }
+               });
+               this.style.display = 'none';
+               if (hideBtn) hideBtn.style.display = 'flex';
+             });
+          }
+          if (hideBtn) {
+             hideBtn.addEventListener('click', function() {
+                 hiddenCards.forEach(card => {
+                     card.style.display = 'none';
+                 });
+                 this.style.display = 'none';
+                 if (loadMoreBtn) loadMoreBtn.style.display = 'flex';
+             });
+          }
+  
+          // <<< Скрипт для инициализации графика >>>
+          (function() { 
+             // ... (код графика как был) ...
+          })();
+          // <<< Конец скрипта для графика >>>
+
+          // --- Инициализация модального окна категорий --- 
+          const openModalBtn = document.getElementById('openCategoriesModalBtn'); 
+          const closeModalBtn = document.getElementById('closeCategoriesModalBtn');
+          const modalOverlay = document.getElementById('allCategoriesModal');
+          if (openModalBtn) {
+              openModalBtn.addEventListener('click', openModal); // Вызываем глобальную openModal
+          }
+          if (closeModalBtn) {
+              closeModalBtn.addEventListener('click', closeModal); // Вызываем глобальную closeModal
+          }
+          if (modalOverlay) {
+              modalOverlay.addEventListener('click', function(event) {
+                  if (event.target === modalOverlay) { 
+                      closeModal(); // Вызываем глобальную closeModal
+                  }
+              });
+          }
+          // --- Конец инициализации модального окна --- 
+
+      }); // Конец DOMContentLoaded
+      
     </script>
   {% else %}
     <div class="access-restricted">

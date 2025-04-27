@@ -268,13 +268,29 @@ def investments(request):
     # Дополнительная проверка на роль инвестора
     if not hasattr(request.user, 'role') or request.user.role.role_name != 'investor':
         messages.error(request, 'Доступ к этой странице разрешен только инвесторам.')
-        return redirect('home') # Или на страницу профиля: redirect('profile')
+        return redirect('home')
 
     # Получаем все транзакции инвестиций текущего пользователя
     user_investments_qs = InvestmentTransactions.objects.filter(
         investor=request.user,
-        transaction_type__type_name='investment' # Убедимся, что это именно инвестиции
-    ).select_related('startup', 'startup__direction', 'startup__owner') # Исправляем category на direction
+        transaction_type__type_name='investment'
+    ).select_related(
+        'startup', 
+        'startup__direction', 
+        'startup__owner'
+    ).annotate(
+        # Аннотируем рейтинг (предполагая поля sum_votes и total_voters в модели Startups)
+        startup_average_rating=Avg(
+            models.ExpressionWrapper(
+                models.F('startup__sum_votes') * 1.0 / models.F('startup__total_voters'),
+                output_field=FloatField()
+            ),
+            filter=models.Q(startup__total_voters__gt=0),
+            default=0.0 # Значение по умолчанию, если нет голосов
+        ),
+        # Аннотируем количество комментариев (предполагая связь 'comments' в модели Startups)
+        startup_comment_count=Count('startup__comments', distinct=True)
+    ).order_by('-created_at') # Добавляем сортировку для порядка
 
     # Агрегированные данные для аналитики
     analytics_data = user_investments_qs.aggregate(

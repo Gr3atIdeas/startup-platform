@@ -663,8 +663,8 @@ body {
   flex-direction: column;
   gap: 15px;
   flex-grow: 1;
-  width: auto; /* Убираем фиксированную ширину */
-  text-align: left; /* Выравнивание по левому краю */
+  width: auto;
+  text-align: left;
 }
 
 .startup-status-row,
@@ -672,6 +672,11 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+/* Скрываем текстовый лейбл "Категория" */
+.startup-category-row .detail-label {
+    display: none;
 }
 
 .startup-financials {
