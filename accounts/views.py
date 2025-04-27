@@ -300,36 +300,42 @@ def investments(request):
         startups_count=Count('startup', distinct=True)
     )
 
-    # Данные по категориям (пример, можно доработать логику процентовки)
-    # Группируем по категориям и считаем сумму и кол-во
-    category_data_raw = user_investments_qs.values(
-        'startup__direction__direction_name' # Исправляем category на direction
-    ).annotate(
-        category_total=Sum('amount'),
-        category_count=Count('startup_id', distinct=True)
-    ).order_by('-category_total') # Сортируем по сумме
+    # Получаем общую сумму инвестиций отдельно
+    total_investment_decimal = analytics_data.get('total_investment') or Decimal('0')
 
-    # Формируем данные для радиальных диаграмм
+    # Данные по категориям: получаем суммы по категориям
+    category_data_raw = user_investments_qs.values(
+        'startup__direction__direction_name'
+    ).annotate(
+        category_total=Sum('amount')
+    ).order_by('-category_total')
+
+    # Формируем данные для радиальных диаграмм, РАССЧИТЫВАЯ ПРОЦЕНТЫ
     investment_categories = []
-    total_for_percentage = analytics_data.get('total_investment') or Decimal('0.01') # Используем Decimal и малое значение, если total = 0
+    invested_category_data_dict = {} # Для модального окна
+    
+    # Используем total_investment_decimal для расчета процентов
+    total_for_percentage = total_investment_decimal if total_investment_decimal > 0 else Decimal('1') # Избегаем деления на ноль
 
     for cat_data in category_data_raw:
         percentage = 0
-        category_sum = cat_data.get('category_total') # Используем .get()
-        # Проверяем, что есть сумма и на что делить
-        if category_sum and total_for_percentage > 0: 
-             try:
-                 # Явно приводим к Decimal перед делением
-                 percentage = round((Decimal(category_sum) / Decimal(total_for_percentage)) * 100)
-                 percentage = min(percentage, 100) # Ограничиваем сверху 100%
-             except Exception as e:
-                 logger.error(f"Ошибка расчета процента для категории: {cat_data}. Ошибка: {e}")
-                 percentage = 0 # В случае ошибки ставим 0
+        category_sum = cat_data.get('category_total')
+        category_name = cat_data.get('startup__direction__direction_name') or 'Без категории'
+        
+        if category_sum and total_for_percentage > 0:
+            try:
+                # Расчет процента
+                percentage = round((Decimal(category_sum) / total_for_percentage) * 100)
+                percentage = min(percentage, 100) # Ограничиваем сверху 100%
+            except Exception as e:
+                logger.error(f"Ошибка расчета процента для категории '{category_name}': {e}")
+                percentage = 0
         
         investment_categories.append({
-            'name': cat_data.get('startup__direction__direction_name') or 'Без категории', # Используем .get()
+            'name': category_name,
             'percentage': percentage,
         })
+        invested_category_data_dict[category_name] = percentage # Сохраняем для модалки
 
     # --- Данные для графика по месяцам (текущий год) ---
     current_year = timezone.now().year
@@ -357,20 +363,18 @@ def investments(request):
     # Преобразуем QuerySet в список словарей для JSON
     all_directions_list = list(all_directions_qs.values('pk', 'direction_name'))
     # all_directions_json_string = json.dumps(all_directions_list) # Убираем ручную сериализацию
-    invested_category_data = {cat['name']: cat['percentage'] for cat in investment_categories}
-    # --- Конец данных для модального окна ---
 
     context = {
         'user_investments': user_investments_qs,
         'startups_count': analytics_data.get('startups_count', 0),
-        'total_investment': analytics_data.get('total_investment', 0),
+        'total_investment': total_investment_decimal, # Передаем Decimal
         'max_investment': analytics_data.get('max_investment', 0),
         'min_investment': analytics_data.get('min_investment', 0),
         'investment_categories': investment_categories[:7], # Оставляем топ-7 для радиальных диаграмм
         'month_labels': month_labels,
         'month_data': monthly_totals,
-        'all_directions': all_directions_list, # Передаем список словарей
-        'invested_category_data': invested_category_data,
+        'all_directions': all_directions_list,
+        'invested_category_data': invested_category_data_dict, # Передаем обновленный словарь
     }
     return render(request, 'accounts/investments.html', context)
 

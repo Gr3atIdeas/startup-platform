@@ -610,10 +610,91 @@
              });
           }
   
-          // <<< Скрипт для инициализации графика >>>
+          // <<< Скрипт для инициализации графика (ПЕРЕМЕЩЕН ВНУТРЬ DOMContentLoaded) >>>
           (function() { 
-             // ... (код графика как был) ...
-          })();
+              const canvasElement = document.getElementById('monthlyInvestmentChart');
+              if (!canvasElement) {
+                  console.error("Элемент canvas #monthlyInvestmentChart не найден.");
+                  return;
+              }
+              const ctx = canvasElement.getContext('2d');
+              
+              // Получаем данные из встроенных JSON скриптов
+              let monthLabels = [];
+              let monthData = [];
+              try {
+                  // Убедимся, что используем правильные ID скриптов
+                  monthLabels = JSON.parse(document.getElementById('chart-month-labels').textContent);
+                  monthData = JSON.parse(document.getElementById('chart-month-data').textContent);
+              } catch (e) {
+                  console.error("Ошибка парсинга данных для графика:", e);
+                  if (canvasElement.parentNode) {
+                    canvasElement.parentNode.innerHTML = '<p style="text-align: center; color: red;">Ошибка загрузки данных для графика.</p>';
+                  }
+                  return;
+              }
+
+              const hasData = monthData && monthData.some(value => value > 0);
+
+              if (hasData) {
+                  const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+                  gradient.addColorStop(0, 'rgba(0, 123, 255, 0.8)');
+                  gradient.addColorStop(1, 'rgba(0, 123, 255, 0.1)');
+
+                  new Chart(ctx, {
+                      type: 'bar',
+                      data: {
+                          labels: monthLabels,
+                          datasets: [{
+                              label: 'Сумма инвестиций',
+                              data: monthData,
+                              backgroundColor: gradient,
+                              borderColor: 'rgba(0, 123, 255, 1)',
+                              borderWidth: 1,
+                              borderRadius: 5,
+                              barThickness: 'flex',
+                              maxBarThickness: 30
+                          }]
+                      },
+                      options: { // ... опции графика как были ... 
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: { color: 'rgba(0, 0, 0, 0.05)' },
+                                ticks: {
+                                    callback: function(value) {
+                                        if (value >= 1000) { return (value / 1000).toLocaleString('ru-RU') + 'k'; }
+                                        else { return value.toLocaleString('ru-RU'); }
+                                    }
+                                }
+                            },
+                            x: { grid: { display: false } }
+                        },
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) { label += ': '; }
+                                        if (context.parsed.y !== null) {
+                                            label += context.parsed.y.toLocaleString('ru-RU', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + ' ₽';
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        }
+                      }
+                  });
+              } else {
+                 if (canvasElement.parentNode) {
+                    canvasElement.parentNode.innerHTML = '<p style="text-align: center; color: #6c757d;">Нет данных для графика за текущий год.</p>';
+                 }
+              }
+          })(); 
           // <<< Конец скрипта для графика >>>
 
           // --- Инициализация модального окна категорий --- 
