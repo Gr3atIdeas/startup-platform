@@ -51,6 +51,12 @@ body {
   animation: fadeIn 0.8s linear;
   /* Устанавливаем темный фон по умолчанию для этой страницы */
   background-color: #0B0D17; /* Темно-синий фон, как в макете */
+  position: relative;
+  overflow: hidden;
+  border-radius: 15px;
+  background-color: #1a1d2e; /* Placeholder фон для изображения */
+  background-size: cover;
+  background-position: center;
 }
 
 /* Секция аналитики (верхняя часть) */
@@ -80,8 +86,6 @@ body {
   overflow: hidden;
   border-radius: 15px;
   background-color: #1a1d2e; /* Placeholder фон для изображения */
-  /* Добавьте URL изображения из макета, если он есть */
-  /* background-image: url('path/to/your/planet-image.png'); */
   background-size: cover;
   background-position: center;
 }
