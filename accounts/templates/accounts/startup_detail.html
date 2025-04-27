@@ -94,7 +94,7 @@
         
         <div class="price-section">
           <div class="price-label">Цель/стоимость выкупа</div>
-          <div class="price-value">{{ startup.funding_goal|default:"0"|intcomma }} ₽</div>
+          <div class="price-value">{{ startup.funding_goal|default:"0"|floatformat:0|intcomma }} ₽</div>
         </div>
         
         <div class="stats-row">
@@ -138,7 +138,7 @@
         <div class="investors-count">
           <i class="fas fa-users"></i>
           <span>Инвестировало ({{ investors_count }})</span>
-          <div class="total-invested">{{ startup.total_invested|default:0|intcomma }} ₽</div>
+          <div class="total-invested">{{ startup.total_invested|default:0|floatformat:0|intcomma }} ₽</div>
         </div>
       </div>
     </div>
@@ -183,8 +183,8 @@
     <div class="investor-conditions">
       <h2 class="section-title">Условия для инвестора</h2>
       <p class="section-content">Договоры займа сроком на 12 месяцев, выплаты — ежемесячно. 
-      Минимальный порог — {{ startup.min_investment|default:"0"|intcomma }} ₽;
-      - от {{ startup.min_investment|default:"0"|intcomma }} ₽ — {{ startup.interest_rate|default:"0" }}% годовых.</p>
+      Минимальный порог — {{ startup.min_investment|default:"0"|floatformat:0|intcomma }} ₽;
+      - от {{ startup.min_investment|default:"0"|floatformat:0|intcomma }} ₽ — {{ startup.interest_rate|default:"0" }}% годовых.</p>
       <a href="#" class="read-more">Читать дальше</a>
     </div>
 
