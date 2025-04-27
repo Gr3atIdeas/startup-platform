@@ -563,7 +563,7 @@ body {
   display: none; /* !!! Восстанавливаем скрытие по умолчанию !!! */
   position: absolute;
   top: 100%;
-  right: 0; /* Выравниваем по правому краю кнопки */
+  left: 0; /* !!! Выравниваем по левому краю кнопки !!! */
   background-color: #FFFFFF; /* Белый фон */
   border: 1px solid #DEE2E6; /* Граница */
   border-radius: 5px;
@@ -692,9 +692,10 @@ body {
     align-items: center;
 }
 
-/* Скрываем текстовый лейбл "Категория" */
+/* УБЕДИМСЯ, ЧТО ЛЕЙБЛ КАТЕГОРИИ ВИДЕН */
 .startup-category-row .detail-label {
-    display: none;
+    /* НЕ СКРЫВАЕМ: display: none; */
+    /* Просто оставляем стили по умолчанию */
 }
 
 .startup-financials {
@@ -744,8 +745,12 @@ body {
 }
 
 .status-active {
-  color: #FFFFFF;
-  background-color: #007BFF; /* Синий */
+  color: #FFFFFF; /* Белый текст */
+  background-color: #004E9F !important; /* Новый темно-синий + !important для надежности */
+  padding: 3px 10px; /* Убедимся, что паддинг есть */
+  border-radius: 12px; /* Скругление */
+  font-size: 12px; /* Размер шрифта */
+  font-weight: 500; /* Вес */
 }
 .status-funded {
   color: #FFFFFF;

@@ -311,14 +311,23 @@ def investments(request):
 
     # Формируем данные для радиальных диаграмм
     investment_categories = []
-    total_for_percentage = analytics_data.get('total_investment') or Decimal(1) # Избегаем деления на ноль
+    total_for_percentage = analytics_data.get('total_investment') or Decimal('0.01') # Используем Decimal и малое значение, если total = 0
+
     for cat_data in category_data_raw:
         percentage = 0
-        if cat_data['category_total']:
-             percentage = round((Decimal(cat_data['category_total']) / total_for_percentage) * 100)
-             percentage = min(percentage, 100) # Ограничиваем сверху 100%
+        category_sum = cat_data.get('category_total') # Используем .get()
+        # Проверяем, что есть сумма и на что делить
+        if category_sum and total_for_percentage > 0: 
+             try:
+                 # Явно приводим к Decimal перед делением
+                 percentage = round((Decimal(category_sum) / Decimal(total_for_percentage)) * 100)
+                 percentage = min(percentage, 100) # Ограничиваем сверху 100%
+             except Exception as e:
+                 logger.error(f"Ошибка расчета процента для категории: {cat_data}. Ошибка: {e}")
+                 percentage = 0 # В случае ошибки ставим 0
+        
         investment_categories.append({
-            'name': cat_data['startup__direction__direction_name'] or 'Без категории', # Исправляем category на direction
+            'name': cat_data.get('startup__direction__direction_name') or 'Без категории', # Используем .get()
             'percentage': percentage,
         })
 

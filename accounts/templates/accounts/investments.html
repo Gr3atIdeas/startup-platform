@@ -227,7 +227,28 @@
                   </div>
                   <div class="startup-category-row"> {# Отдельная строка для категории #}
                     <span class="detail-label">Категория</span>
-                    <span class="startup-category-tag">{{ investment.startup.direction.direction_name|default:'Категория' }}</span>
+                    <span class="startup-category-tag">
+                        {% with original_name=investment.startup.direction.direction_name|default:"" %}
+                            {% if original_name == "Medicine" %}Медицина
+                            {% elif original_name == "Auto" %}Автомобили
+                            {% elif original_name == "Delivery" %}Доставка
+                            {% elif original_name == "Cafe" %}Кафе/рестораны
+                            {% elif original_name == "Fastfood" %}Фастфуд
+                            {% elif original_name == "Health" %}Здоровье
+                            {% elif original_name == "Beauty" %}Красота
+                            {% elif original_name == "Transport" %}Транспорт
+                            {% elif original_name == "Sport" %}Спорт
+                            {% elif original_name == "Psychology" %}Психология
+                            {% elif original_name == "AI" %}ИИ
+                            {% elif original_name == "Finance" %}Финансы
+                            {% elif original_name == "Healthcare" %}Здравоохранение
+                            {% elif original_name == "Technology" %}Технологии
+                            {% elif original_name == "IT" %}ИТ
+                            {% elif original_name == "Retail" %}Ритейл
+                            {% else %}{{ original_name|default:"Категория" }}
+                            {% endif %}
+                        {% endwith %}
+                    </span>
                   </div>
               </div>
             </div>
@@ -276,7 +297,28 @@
                   </div>
                   <div class="startup-category-row">
                     <span class="detail-label">Категория</span>
-                    <span class="startup-category-tag">{{ investment.startup.direction.direction_name|default:'Категория' }}</span>
+                     <span class="startup-category-tag">
+                        {% with original_name=investment.startup.direction.direction_name|default:"" %}
+                            {% if original_name == "Medicine" %}Медицина
+                            {% elif original_name == "Auto" %}Автомобили
+                            {% elif original_name == "Delivery" %}Доставка
+                            {% elif original_name == "Cafe" %}Кафе/рестораны
+                            {% elif original_name == "Fastfood" %}Фастфуд
+                            {% elif original_name == "Health" %}Здоровье
+                            {% elif original_name == "Beauty" %}Красота
+                            {% elif original_name == "Transport" %}Транспорт
+                            {% elif original_name == "Sport" %}Спорт
+                            {% elif original_name == "Psychology" %}Психология
+                            {% elif original_name == "AI" %}ИИ
+                            {% elif original_name == "Finance" %}Финансы
+                            {% elif original_name == "Healthcare" %}Здравоохранение
+                            {% elif original_name == "Technology" %}Технологии
+                            {% elif original_name == "IT" %}ИТ
+                            {% elif original_name == "Retail" %}Ритейл
+                            {% else %}{{ original_name|default:"Категория" }}
+                            {% endif %}
+                        {% endwith %}
+                    </span>
                   </div>
               </div>
              {# ...до сюда #}
