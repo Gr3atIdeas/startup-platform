@@ -62,21 +62,21 @@ body {
 
 /* Секция аналитики (верхняя часть) */
 .analytics-section {
-  background-color: #ffffff;
-  padding: 40px 0; /* Возвращаем вертикальный отступ 40px */
+  /* background-color: #ffffff; */ /* Убираем фон */
+  /* padding: 40px 0; */ /* Убираем паддинг */
   display: flex;
-  gap: 50px;
-  border-radius: 20px;
+  gap: 10px; /* Устанавливаем отступ 10px между левой и правой колонками */
+  /* border-radius: 20px; */ /* Убираем радиус */
   margin-bottom: 40px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-  color: #191919;
+  /* box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); */ /* Убираем тень */
+  /* color: #191919; */ /* Убираем цвет, он будет у дочерних */
 }
 
 .analytics-left {
-  width: 45%;
+  width: 45%; /* Ширина левой колонки */
   display: flex;
   flex-direction: column;
-  gap: 50px; /* Увеличиваем отступ между изображением и категориями */
+  gap: 10px; /* Отступ 10px между блоком изображения и блоком категорий */
 }
 
 /* Контейнер изображения портфолио */
@@ -85,10 +85,13 @@ body {
   aspect-ratio: 1 / 1; /* Делаем контейнер квадратным */
   position: relative;
   overflow: hidden;
-  border-radius: 15px;
-  background-color: #1a1d2e; /* Placeholder фон для изображения */
+  border-radius: 15px; /* Закругление углов */
+  /* background-color: #1a1d2e; */ /* Убираем старый фон */
+  background-color: #FFFFFF; /* Белый фон как у других блоков */
   background-size: cover;
   background-position: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); /* Добавляем тень */
+  /* padding: 20px; */ /* Паддинг не нужен, если есть фоновое изображение */
 }
 
 .portfolio-image {
@@ -122,12 +125,13 @@ body {
 
 /* Секция категорий с радиальными диаграммами */
 .categories-radial-section {
-  background-color: #F8F9FA; /* Светло-серый фон */
+  /* background-color: #F8F9FA; */ /* Убираем старый фон */
+  background-color: #FFFFFF; /* Белый фон */
   padding: 25px;
-  border-radius: 15px;
-  background-color: #FFFFFF; /* Сделаем фон белым как в макете */
-  color: #191919; /* Текст темный */
+  border-radius: 15px; /* Закругление углов */
+  color: #191919; /* Темный текст */
   overflow: auto; /* Добавляем прокрутку на всякий случай */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); /* Добавляем тень */
 }
 
 .categories-radial-title {
@@ -170,7 +174,8 @@ body {
     transparent calc(var(--percentage, 0) * 1%)
   );
   mask: radial-gradient(transparent 60%, black 61%);
-  transform: rotate(-90deg);
+  /* transform: rotate(-90deg); */ /* Убираем старый поворот (старт сверху) */
+  transform: rotate(180deg); /* Новый поворот (старт слева) */
 }
 
 .radial-chart-text {
@@ -205,10 +210,15 @@ body {
 
 /* Правая часть аналитики */
 .analytics-content {
-  width: 55%;
-  padding: 0; /* Убираем паддинг, т.к. внутренние элементы его имеют */
+  width: 55%; /* Ширина правой колонки */
+  /* padding: 0; */ /* Убираем старый паддинг */
+  padding: 30px 40px; /* Добавляем внутренние отступы */
   display: flex;
   flex-direction: column;
+  background-color: #FFFFFF; /* Белый фон */
+  border-radius: 20px; /* Закругление углов */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); /* Добавляем тень */
+  color: #191919; /* Темный текст */
 }
 
 /* Заголовок и контролы */
@@ -1003,46 +1013,48 @@ body {
 
 .modal-categories-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 20px;
+  /* grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); */ /* Убираем старое */
+  grid-template-columns: repeat(7, 1fr); /* 7 колонок */
+  gap: 15px; /* Уменьшаем отступ между элементами */
 }
 
 .modal-category-item {
   background-color: #f8f9fa;
-  padding: 15px;
-  border-radius: 8px;
+  padding: 10px; /* Уменьшаем паддинг */
+  border-radius: 6px; /* Уменьшаем скругление */
   text-align: center;
   border: 1px solid #e9ecef;
   display: flex; /* Используем flex для позиционирования */
   flex-direction: column; /* Располагаем элементы вертикально */
   align-items: center; /* Центрируем по горизонтали */
-  gap: 10px; /* Отступ между диаграммой и текстом */
+  gap: 5px; /* Уменьшаем отступ между диаграммой и текстом */
 }
 
 .modal-category-name {
   display: block;
-  margin-bottom: 0; /* Убираем отступ, т.к. есть gap */
-  font-family: 'Unbounded', sans-serif; /* Новый шрифт */
-  font-weight: 400; /* Новый вес */
-  font-size: 20px; /* Новый размер */
-  line-height: 18px; /* Новая высота строки (может вызвать наложение) */
-  letter-spacing: -0.02em; /* Новый интервал */
-  text-align: center; /* Центрирование текста */
+  margin-bottom: 0;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 400;
+  /* font-size: 20px; */ /* Убираем старый размер */
+  font-size: 12px; /* Уменьшаем размер шрифта имени категории */
+  /* line-height: 18px; */ /* Убираем старую высоту строки */
+  line-height: 1.2; /* Корректируем высоту строки */
+  letter-spacing: -0.02em;
+  text-align: center;
 }
-
-/* Удаляем отдельные стили для процентов, т.к. они будут в радиальной диаграмме */
-/* .modal-category-percentage { ... } */
-/* .modal-category-item .invested-indicator { ... } */
 
 /* Стили для радиальной диаграммы ВНУТРИ модального окна */
 .modal-category-item .radial-chart {
-    width: 80px; /* Можно сделать чуть больше */
-    height: 80px;
-    margin-bottom: 5px; /* Небольшой отступ снизу */
+    /* width: 80px; */ /* Убираем старый размер */
+    /* height: 80px; */
+    width: 50px; /* Уменьшаем размер диаграммы */
+    height: 50px;
+    margin-bottom: 0; /* Убираем отступ, т.к. есть gap */
 }
 
 .modal-category-item .radial-chart-text {
-    font-size: 16px; /* Размер текста процента внутри диаграммы */
+    /* font-size: 16px; */ /* Убираем старый размер */
+    font-size: 12px; /* Уменьшаем размер текста процента */
     font-weight: 700;
 }
 

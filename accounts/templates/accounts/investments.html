@@ -26,31 +26,30 @@
             <h3 class="categories-radial-title">Категории</h3>
             <div class="categories-radial-grid">
               {% for category in investment_categories %}
+              {% with original_name=category.name|default:"" %}
               <div class="category-radial-item">
-                <div class="radial-chart" data-percentage="{{ category.percentage }}">
+                <div class="radial-chart" data-percentage="{{ category.percentage }}" data-category-name="{{ original_name }}">
                   <div class="radial-chart-progress"></div>
                   <div class="radial-chart-text">{{ category.percentage }}%</div>
                 </div>
                 <span class="category-radial-name">
-                    {% with original_name=category.name|default:"" %}
-                        {% if original_name == "Medicine" %}Медицина
-                        {% elif original_name == "Auto" %}Автомобили
-                        {% elif original_name == "Delivery" %}Доставка
-                        {% elif original_name == "Cafe" %}Кафе/рестораны
-                        {% elif original_name == "Fastfood" %}Фастфуд
-                        {% elif original_name == "Health" %}Здоровье
-                        {% elif original_name == "Beauty" %}Красота
-                        {% elif original_name == "Transport" %}Транспорт
-                        {% elif original_name == "Sport" %}Спорт
-                        {% elif original_name == "Psychology" %}Психология
-                        {% elif original_name == "AI" %}ИИ
-                        {% elif original_name == "Finance" %}Финансы
-                        {% elif original_name == "Healthcare" %}Здравоохранение
-                        {% elif original_name == "Technology" %}Технологии
-                        {% elif original_name == "IT" %}ИТ {# Добавляем перевод для IT #}
-                        {% else %}{{ original_name|default:"Не указано" }}
-                        {% endif %}
-                    {% endwith %}
+                    {% if original_name == "Medicine" %}Медицина
+                    {% elif original_name == "Auto" %}Автомобили
+                    {% elif original_name == "Delivery" %}Доставка
+                    {% elif original_name == "Cafe" %}Кафе/рестораны
+                    {% elif original_name == "Fastfood" %}Фастфуд
+                    {% elif original_name == "Health" %}Здоровье
+                    {% elif original_name == "Beauty" %}Красота
+                    {% elif original_name == "Transport" %}Транспорт
+                    {% elif original_name == "Sport" %}Спорт
+                    {% elif original_name == "Psychology" %}Психология
+                    {% elif original_name == "AI" %}ИИ
+                    {% elif original_name == "Finance" %}Финансы
+                    {% elif original_name == "Healthcare" %}Здравоохранение
+                    {% elif original_name == "Technology" %}Технологии
+                    {% elif original_name == "IT" %}ИТ {# Добавляем перевод для IT #}
+                    {% else %}{{ original_name|default:"Не указано" }}
+                    {% endif %}
                 </span>
               </div>
               {% empty %}
@@ -83,7 +82,7 @@
                     <span class="category-radial-name">Ритейл</span>
                  </div>
                  <p>Нет данных по категориям.</p>
-              {% endfor %}
+              {% endwith %}
               <!-- Категория "Все" -->
               <div class="category-radial-item category-all" id="openCategoriesModalBtn">
                 <div class="radial-chart-all">
@@ -465,16 +464,17 @@
             modalGrid.innerHTML = ''; // Очищаем предыдущее содержимое
             if (allDirections.length > 0) {
                 allDirections.forEach(direction => {
-                    const percentage = investedData[direction.name] || 0;
-                    const translatedName = translateCategoryName(direction.name); // Используем перевод
-                    const color = getColorForPercentage(percentage); // Получаем цвет
+                    const categoryName = direction.name; // Используем оригинальное имя
+                    const percentage = investedData[categoryName] || 0;
+                    const translatedName = translateCategoryName(categoryName);
+                    const color = categoryColors[categoryName] || categoryColors["default"]; // Получаем цвет из карты
                     
                     const item = document.createElement('div');
                     item.classList.add('modal-category-item');
                     
                     // Генерируем HTML для радиальной диаграммы и имени
                     item.innerHTML = `
-                        <div class="radial-chart" data-percentage="${percentage}">
+                        <div class="radial-chart" data-percentage="${percentage}" data-category-name="${categoryName}">
                           <div class="radial-chart-progress" style="--percentage: ${percentage}; --progress-color: ${color};"></div>
                           <div class="radial-chart-text">${percentage}%</div>
                         </div>
@@ -517,43 +517,71 @@
         // ==== Конец логики модального окна ==== 
       });
 
-      // Функция для определения цвета по проценту
-      function getColorForPercentage(percentage) {
-        if (percentage >= 75) {
-          return '#28a745'; // Зеленый
-        } else if (percentage >= 50) {
-          return '#007bff'; // Синий
-        } else if (percentage >= 25) {
-          return '#ffc107'; // Желтый
-        } else if (percentage > 0) {
-          return '#dc3545'; // Красный
-        } else {
-          return '#6c757d'; // Серый для 0%
-        }
-      }
+      // Карта цветов для категорий (используем английские имена как ключи)
+      const categoryColors = {
+          "Medicine": "#e74c3c",   // Красный
+          "Auto": "#3498db",       // Синий
+          "Delivery": "#f1c40f",   // Желтый
+          "Cafe": "#9b59b6",       // Фиолетовый
+          "Fastfood": "#e67e22",   // Оранжевый
+          "Health": "#1abc9c",     // Бирюзовый
+          "Beauty": "#fd79a8",     // Розовый
+          "Transport": "#2ecc71",  // Зеленый
+          "Sport": "#34495e",      // Темно-синий/серый
+          "Psychology": "#d35400", // Тыквенный
+          "AI": "#7f8c8d",         // Серый
+          "Finance": "#2980b9",    // Насыщенный синий
+          "Healthcare": "#c0392b", // Темно-красный
+          "IT": "#8e44ad",         // Сиреневый
+          "Retail": "#f39c12",    // Оранжево-желтый (добавлен из примера)
+          // Добавьте другие категории и цвета при необходимости
+          "default": "#bdc3c7"     // Серебряный (для категорий без заданного цвета)
+      };
 
       // Функция для обновления цветов радиальных диаграмм
       function updateRadialChartColors() {
         document.querySelectorAll('.radial-chart').forEach(chart => {
           const percentage = parseInt(chart.dataset.percentage || 0, 10);
-          const color = getColorForPercentage(percentage);
+          const categoryName = chart.dataset.categoryName || ''; // Получаем имя категории
+          const color = categoryColors[categoryName] || categoryColors["default"]; // Получаем цвет из карты
+          
           const progressElement = chart.querySelector('.radial-chart-progress');
           if (progressElement) {
               // Устанавливаем CSS переменные для градиента
               progressElement.style.setProperty('--percentage', percentage);
-              progressElement.style.setProperty('--progress-color', color);
+              progressElement.style.setProperty('--progress-color', color); // Устанавливаем цвет категории
           }
-          // Опционально: изменить цвет текста в зависимости от фона?
-          // const textElement = chart.querySelector('.radial-chart-text');
-          // if (textElement) { textElement.style.color = ...; }
         });
       }
-
+      
       // Вызываем обновление цветов при загрузке DOM
       document.addEventListener('DOMContentLoaded', updateRadialChartColors);
 
       // Добавляем обработчик для кнопки открытия модального окна
-      document.getElementById('addCategoryBtn').addEventListener('click', openModal);
+      const openModalBtn = document.getElementById('openCategoriesModalBtn'); 
+      if (openModalBtn) {
+        openModalBtn.addEventListener('click', openModal);
+      }
+      // Добавляем обработчики закрытия модального окна
+      const closeBtn = document.getElementById('closeCategoriesModalBtn');
+      const modalOverlay = document.getElementById('allCategoriesModal'); // Переопределяем для ясности
+      if (closeBtn) {
+          closeBtn.addEventListener('click', closeModal); 
+      }
+      if (modalOverlay) {
+          modalOverlay.addEventListener('click', function(event) {
+              if (event.target === modalOverlay) { 
+                  closeModal();
+              }
+          });
+      }
+      // Определяем функцию closeModal, если она еще не определена глобально
+      function closeModal() { // Убедимся, что функция определена
+          if (!modalOverlay) return;
+          modalOverlay.classList.remove('visible');
+          document.body.classList.remove('modal-open-blur');
+      }
+
     </script>
   {% else %}
     <div class="access-restricted">
