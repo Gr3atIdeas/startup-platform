@@ -44,10 +44,20 @@ body {
   width: 100%;
   padding: 0 50px; /* Возвращаем боковые отступы 50px */
   box-sizing: border-box;
+  /* Применяем базовый шрифт Unbounded */
+  font-family: 'Unbounded', sans-serif; 
+  font-weight: 300; /* Базовый вес 300 */
+  font-size: 14px; /* Базовый размер 14px */
+  line-height: 18px; /* Базовая высота строки */
+  letter-spacing: -0.02em; /* Базовый межбуквенный интервал */
   color: #FFFFFF;
-  font-family: 'Circe', Arial, sans-serif;
   animation: fadeIn 0.8s linear;
   background-color: #0B0D17;
+}
+
+/* Применяем стили к конкретным текстовым элементам, где vertical-align имеет смысл */
+.stat-label, .detail-label, .investment-label, .filter-btn, .modal-category-name {
+    vertical-align: middle; /* Применяем vertical-align там, где это может быть уместно */
 }
 
 /* Секция аналитики (верхняя часть) */
@@ -208,9 +218,12 @@ body {
 }
 
 .analytics-title {
-  font-family: 'Unbounded', sans-serif; /* Используем Unbounded для заголовка */
-  font-size: 56px; /* Размер как в макете */
-  font-weight: 500;
+  /* font-family: 'Unbounded', sans-serif; */ /* Заменяем шрифт */
+  font-family: 'Blippo-Black CY [Rus by me]', sans-serif; /* Новый шрифт */
+  font-weight: 400; /* Новый вес */
+  font-size: 55px; /* Новый размер */
+  line-height: 18px; /* Новая высота строки (может вызвать наложение) */
+  letter-spacing: -0.02em; /* Новый интервал */
   color: #191919;
   margin: 0;
 }
@@ -270,9 +283,12 @@ body {
 }
 
 .stat-label {
-  font-size: 14px;
+  font-size: 14px; /* Используем базовый размер 14px */
   color: #868E96; /* Более светлый серый */
   margin-bottom: 8px; /* Отступ снизу для overview */
+  font-weight: 300; /* Базовый вес */
+  line-height: 18px; /* Базовая высота строки */
+  letter-spacing: -0.02em; /* Базовый интервал */
 }
 
 .stat-item.detail-item .stat-label {
@@ -303,9 +319,11 @@ body {
 }
 
 .stat-value-simple {
-  font-size: 16px;
-  font-weight: 500;
+  font-size: 14px; /* Используем базовый размер 14px */
+  font-weight: 300; /* Базовый вес */
   color: #191919; /* Темный текст */
+  line-height: 18px; /* Базовая высота строки */
+  letter-spacing: -0.02em; /* Базовый интервал */
 }
 
 /* Контейнер графика */
@@ -389,20 +407,24 @@ body {
 
 .startups-title-main,
 .startups-title-sub {
-  font-family: 'Koulen', sans-serif; /* Используем Koulen */
-  font-size: 80px; /* Немного уменьшим */
-  font-weight: normal;
-  letter-spacing: -0.02em;
+  /* font-family: 'Koulen', sans-serif; */ /* Заменяем шрифт */
+  font-family: 'Blippo-Black CY [Rus by me]', sans-serif; /* Новый шрифт */
+  font-weight: 400; /* Новый вес */
+  font-size: 55px; /* Новый размер */
+  line-height: 18px; /* Новая высота строки (может вызвать наложение) */
+  letter-spacing: -0.02em; /* Новый интервал */
   margin: 0;
   text-transform: uppercase;
 }
 
 .startups-title-main {
-  color: #FFEF2B; /* Желтый цвет для "МОИ" */
+  /* color: #FFEF2B; */ /* Убираем желтый цвет */
+  color: #FFFFFF; /* Делаем белым */
 }
 
 .startups-title-sub {
-  color: #FFFFFF; /* Белый цвет для "СТАРТАПЫ" */
+  /* color: #FFFFFF; */ /* Убираем белый цвет */
+  color: #FFEF2B; /* Делаем желтым */
 }
 
 .total-investment {
@@ -410,10 +432,13 @@ body {
 }
 
 .investment-label {
-  font-size: 14px;
+  font-size: 14px; /* Используем базовый размер 14px */
   color: rgba(255, 255, 255, 0.7);
   display: block;
   margin-bottom: 5px;
+  font-weight: 300; /* Базовый вес */
+  line-height: 18px; /* Базовая высота строки */
+  letter-spacing: -0.02em; /* Базовый интервал */
 }
 
 .investment-amount {
@@ -421,8 +446,10 @@ body {
   color: #FFFFFF;
   border-radius: 8px; /* Чуть меньше скругление */
   padding: 15px 30px;
-  font-weight: 500; /* Средний */
-  font-size: 20px; /* Чуть меньше */
+  font-weight: 300; /* Базовый вес */
+  font-size: 14px; /* Базовый размер */
+  line-height: 18px; /* Базовая высота строки */
+  letter-spacing: -0.02em; /* Базовый интервал */
   display: inline-block; /* Чтобы padding работал */
   min-width: 200px; /* Минимальная ширина */
   text-align: center;
@@ -485,7 +512,11 @@ body {
   border-radius: 8px; /* Меньше скругление */
   background-color: rgba(255, 255, 255, 0.1);
   color: #FFFFFF;
-  font-weight: 500;
+  font-family: 'Unbounded', sans-serif; /* Явно указываем шрифт */
+  font-weight: 300; /* Базовый вес */
+  font-size: 14px; /* Базовый размер */
+  line-height: 18px; /* Базовая высота строки */
+  letter-spacing: -0.02em; /* Базовый интервал */
   cursor: pointer;
   transition: background-color 0.3s linear, border-color 0.3s linear;
   display: inline-flex; /* Для иконок */
@@ -608,11 +639,13 @@ body {
 
 .startup-name {
   font-family: 'Unbounded', sans-serif;
-  font-size: 15px;
-  font-weight: 500;
+  font-size: 14px; /* Базовый размер */
+  font-weight: 300; /* Базовый вес */
   color: #191919; /* Темный текст */
   text-align: center;
   margin-top: 8px; /* Небольшой отступ сверху */
+  line-height: 18px; /* Базовая высота строки */
+  letter-spacing: -0.02em; /* Базовый интервал */
 }
 
 .startup-rating {
@@ -673,11 +706,18 @@ body {
 
 .detail-label {
   color: #868E96; /* Светло-серый */
+  font-weight: 300; /* Базовый вес */
+  font-size: 14px; /* Базовый размер */
+  line-height: 18px; /* Базовая высота строки */
+  letter-spacing: -0.02em; /* Базовый интервал */
 }
 
 .detail-value {
   color: #191919; /* Темный */
-  font-weight: 500;
+  font-weight: 300; /* Базовый вес */
+  font-size: 14px; /* Базовый размер */
+  line-height: 18px; /* Базовая высота строки */
+  letter-spacing: -0.02em; /* Базовый интервал */
 }
 
 .status-active {
@@ -949,9 +989,11 @@ body {
 }
 
 .modal-title {
-  font-family: 'Unbounded', sans-serif;
-  font-size: 24px;
-  font-weight: 500;
+  font-family: 'Blippo-Black CY [Rus by me]', sans-serif; /* Новый шрифт */
+  font-weight: 400; /* Новый вес */
+  font-size: 55px; /* Новый размер */
+  line-height: 18px; /* Новая высота строки (может вызвать наложение) */
+  letter-spacing: -0.02em; /* Новый интервал */
   margin-top: 0;
   margin-bottom: 25px;
   text-align: center;
@@ -969,32 +1011,37 @@ body {
   border-radius: 8px;
   text-align: center;
   border: 1px solid #e9ecef;
+  display: flex; /* Используем flex для позиционирования */
+  flex-direction: column; /* Располагаем элементы вертикально */
+  align-items: center; /* Центрируем по горизонтали */
+  gap: 10px; /* Отступ между диаграммой и текстом */
 }
 
 .modal-category-name {
   display: block;
-  font-weight: 500;
-  margin-bottom: 8px;
-  font-size: 14px;
+  margin-bottom: 0; /* Убираем отступ, т.к. есть gap */
+  font-family: 'Unbounded', sans-serif; /* Новый шрифт */
+  font-weight: 400; /* Новый вес */
+  font-size: 20px; /* Новый размер */
+  line-height: 18px; /* Новая высота строки (может вызвать наложение) */
+  letter-spacing: -0.02em; /* Новый интервал */
+  text-align: center; /* Центрирование текста */
 }
 
-.modal-category-percentage {
-  display: block;
-  font-size: 18px;
-  font-weight: 700;
-  /* Убираем фиксированный синий цвет, будет задаваться JS */
-  /* color: #007bff; */ 
+/* Удаляем отдельные стили для процентов, т.к. они будут в радиальной диаграмме */
+/* .modal-category-percentage { ... } */
+/* .modal-category-item .invested-indicator { ... } */
+
+/* Стили для радиальной диаграммы ВНУТРИ модального окна */
+.modal-category-item .radial-chart {
+    width: 80px; /* Можно сделать чуть больше */
+    height: 80px;
+    margin-bottom: 5px; /* Небольшой отступ снизу */
 }
 
-.modal-category-item .invested-indicator {
-  display: inline-block; 
-  width: 8px;
-  height: 8px;
-  /* Убираем фиксированный зеленый цвет */
-  /* background-color: #28a745; */ 
-  border-radius: 50%;
-  margin-left: 5px; 
-  vertical-align: middle;
+.modal-category-item .radial-chart-text {
+    font-size: 16px; /* Размер текста процента внутри диаграммы */
+    font-weight: 700;
 }
 
 /* Эффект блюра для фона */

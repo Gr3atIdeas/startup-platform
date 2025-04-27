@@ -467,13 +467,20 @@
                 allDirections.forEach(direction => {
                     const percentage = investedData[direction.name] || 0;
                     const translatedName = translateCategoryName(direction.name); // Используем перевод
+                    const color = getColorForPercentage(percentage); // Получаем цвет
+                    
                     const item = document.createElement('div');
                     item.classList.add('modal-category-item');
+                    
+                    // Генерируем HTML для радиальной диаграммы и имени
                     item.innerHTML = `
-                        <span class="modal-category-name">${translatedName}</span> {# Выводим переведенное имя #}
-                        <span class="modal-category-percentage">${percentage}%</span>
-                        ${percentage > 0 ? '<span class="invested-indicator"></span>' : ''}
+                        <div class="radial-chart" data-percentage="${percentage}">
+                          <div class="radial-chart-progress" style="--percentage: ${percentage}; --progress-color: ${color};"></div>
+                          <div class="radial-chart-text">${percentage}%</div>
+                        </div>
+                        <span class="modal-category-name">${translatedName}</span>
                     `;
+                    
                     modalGrid.appendChild(item);
                 });
             } else {
