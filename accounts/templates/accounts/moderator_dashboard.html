@@ -1,4 +1,6 @@
 {% extends 'accounts/base.html' %}
+{% load static %}
+{% load humanize %}
 
 {% block title %}Панель модератора{% endblock %}
 
@@ -209,7 +211,7 @@
                                 </div>
                                 <div class="startup-meta">
                                     <p><strong>Направление:</strong> {{ startup.direction.direction_name }}</p>
-                                    <p><strong>Цель:</strong> {{ startup.funding_goal }} USD</p>
+                                    <p><strong>Цель:</strong> {{ startup.funding_goal|default:"0"|intcomma }} USD</p>
                                 </div>
                             </div>
 

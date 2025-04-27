@@ -3,6 +3,7 @@
 {% load widget_tweaks %}
 {% load file_tags %}
 {% load timeline_filters %}
+{% load humanize %}
 
 {% block title %}{{ startup.title }} - Подробности{% endblock %}
 
@@ -93,7 +94,7 @@
         
         <div class="price-section">
           <div class="price-label">Цель/стоимость выкупа</div>
-          <div class="price-value">{{ startup.funding_goal|default:"41 689" }} ₽</div>
+          <div class="price-value">{{ startup.funding_goal|default:"0"|intcomma }} ₽</div>
         </div>
         
         <div class="stats-row">
@@ -137,7 +138,7 @@
         <div class="investors-count">
           <i class="fas fa-users"></i>
           <span>Инвестировало ({{ investors_count }})</span>
-          <div class="total-invested">{{ startup.total_invested|default:0|floatformat:2 }} ₽</div>
+          <div class="total-invested">{{ startup.total_invested|default:0|intcomma }} ₽</div>
         </div>
       </div>
     </div>
@@ -182,8 +183,8 @@
     <div class="investor-conditions">
       <h2 class="section-title">Условия для инвестора</h2>
       <p class="section-content">Договоры займа сроком на 12 месяцев, выплаты — ежемесячно. 
-      Минимальный порог — {{ startup.min_investment|default:"500 000" }} ₽;
-      - от {{ startup.min_investment|default:"500 000" }} ₽ — {{ startup.interest_rate|default:"50" }}% годовых.</p>
+      Минимальный порог — {{ startup.min_investment|default:"0"|intcomma }} ₽;
+      - от {{ startup.min_investment|default:"0"|intcomma }} ₽ — {{ startup.interest_rate|default:"0" }}% годовых.</p>
       <a href="#" class="read-more">Читать дальше</a>
     </div>
 
@@ -536,50 +537,62 @@
         }
 
         // Показать модальное окно
-        modalText.innerHTML = `Вы собираетесь инвестировать ${investAmount} ₽ в стартап "{{ startup.title }}". Подтвердите действие.`;
+        const formattedAmount = parseFloat(investAmount).toLocaleString('ru-RU');
+        modalText.innerHTML = `Вы собираетесь инвестировать ${formattedAmount} ₽ в стартап "{{ startup.title }}". Подтвердите действие.`;
         modal.style.display = 'flex';
       });
     } else {
       console.log('Кнопка "Инвестировать" либо не найдена, либо неактивна');
     }
 
-    // Подтверждение инвестиции
+    // Обработка клика на кнопку подтверждения в модальном окне
     confirmInvest.addEventListener('click', function() {
+      modal.style.display = 'none';
+      // Отправка AJAX запроса на инвестирование
       fetch(`/invest/${investStartupId}/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
-          'X-CSRFToken': document.querySelector('input[name="csrfmiddlewaretoken"]').value
+          'X-CSRFToken': getCookie('csrftoken')
         },
         body: `amount=${investAmount}`
       })
-      .then(response => {
-        console.log('Ответ сервера:', response);
-        return response.json();
-      })
+      .then(response => response.json())
       .then(data => {
-        console.log('Данные от сервера:', data);
         if (data.success) {
-          const progressFill = document.querySelector('.progress-fill');
+          // Обновление данных на странице
+          const progressBarFill = document.querySelector('.progress-bar-fill');
           const progressText = document.querySelector('.progress-text');
-          const investorsCount = document.querySelector('.investors-count span');
-          const totalInvested = document.querySelector('.total-invested');
-          
-          progressFill.style.setProperty('--height-value', `${data.progress_percentage}%`);
-          progressText.textContent = `${Math.round(data.progress_percentage)}%`;
-          investorsCount.textContent = `Инвестировало (${data.investors_count})`;
-          totalInvested.textContent = `${data.amount_raised.toFixed(2)} ₽`;
-          document.querySelector('.investment-amount').value = ''; // Очистка поля
+          const investorsCountElement = document.querySelector('.investors-count span');
+          const totalInvestedElement = document.querySelector('.total-invested');
+
+          if (progressBarFill) {
+              progressBarFill.style.width = `${Math.round(data.progress_percentage)}%`;
+          }
+          if (progressText) {
+              progressText.textContent = `${Math.round(data.progress_percentage)}%`;
+          }
+
+          if (investorsCountElement) {
+              investorsCountElement.textContent = `(${data.investors_count})`;
+          }
+
+          if (totalInvestedElement) {
+            const formattedRaised = parseFloat(data.amount_raised).toLocaleString('ru-RU');
+            totalInvestedElement.textContent = `${formattedRaised} ₽`;
+          }
+
+          const amountInput = document.querySelector('.investment-amount');
+          if (amountInput) amountInput.value = '';
+
           alert('Инвестиция успешно совершена!');
         } else {
-          alert(data.error || 'Ошибка при инвестировании');
+          alert('Ошибка инвестирования: ' + data.error);
         }
-        modal.style.display = 'none';
       })
       .catch(error => {
         console.error('Ошибка:', error);
-        alert('Произошла ошибка при инвестировании');
-        modal.style.display = 'none';
+        alert('Произошла ошибка сети.');
       });
     });
 

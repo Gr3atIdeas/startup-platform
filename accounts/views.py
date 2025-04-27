@@ -17,7 +17,7 @@ from .models import creative_upload_path, proof_upload_path, video_upload_path
 import uuid
 from .models import Comments
 from .forms import CommentForm
-from django.db.models import Count, Sum, Avg, F, FloatField
+from django.db.models import Count, Sum, Avg, F, FloatField, Max, Min
 from decimal import Decimal
 from .models import NewsArticles, NewsLikes, NewsViews  # Добавляем новые модели
 from django.core.files.storage import default_storage  # Для работы с файлами
@@ -261,8 +261,57 @@ def startup_detail(request, startup_id):
     })
 
 # Страница инвестиций
+@login_required
 def investments(request):
-    return render(request, 'accounts/investments.html')
+    # Дополнительная проверка на роль инвестора
+    if not hasattr(request.user, 'role') or request.user.role.role_name != 'investor':
+        messages.error(request, 'Доступ к этой странице разрешен только инвесторам.')
+        return redirect('home') # Или на страницу профиля: redirect('profile')
+
+    # Получаем все транзакции инвестиций текущего пользователя
+    user_investments_qs = InvestmentTransactions.objects.filter(
+        investor=request.user,
+        transaction_type__type_name='investment' # Убедимся, что это именно инвестиции
+    ).select_related('startup', 'startup__category', 'startup__owner') # Оптимизация запроса
+
+    # Агрегированные данные для аналитики
+    analytics_data = user_investments_qs.aggregate(
+        total_investment=Sum('amount'),
+        max_investment=Max('amount'),
+        min_investment=Min('amount'),
+        startups_count=Count('startup', distinct=True)
+    )
+
+    # Данные по категориям (пример, можно доработать логику процентовки)
+    # Группируем по категориям и считаем сумму и кол-во
+    category_data_raw = user_investments_qs.values(
+        'startup__category__name' # Используем category вместо direction
+    ).annotate(
+        category_total=Sum('amount'),
+        category_count=Count('startup_id', distinct=True)
+    ).order_by('-category_total') # Сортируем по сумме
+
+    # Формируем данные для радиальных диаграмм
+    investment_categories = []
+    total_for_percentage = analytics_data.get('total_investment') or Decimal(1) # Избегаем деления на ноль
+    for cat_data in category_data_raw:
+        percentage = 0
+        if cat_data['category_total']:
+             percentage = round((cat_data['category_total'] / total_for_percentage) * 100)
+        investment_categories.append({
+            'name': cat_data['startup__category__name'] or 'Без категории',
+            'percentage': percentage,
+        })
+
+    context = {
+        'user_investments': user_investments_qs, # Передаем queryset инвестиций
+        'startups_count': analytics_data.get('startups_count', 0),
+        'total_investment': analytics_data.get('total_investment', 0),
+        'max_investment': analytics_data.get('max_investment', 0),
+        'min_investment': analytics_data.get('min_investment', 0),
+        'investment_categories': investment_categories[:7], # Ограничиваем для отображения в сетке (7 + "Все")
+    }
+    return render(request, 'accounts/investments.html', context)
 
 # Страница юридической информации
 def legal(request):

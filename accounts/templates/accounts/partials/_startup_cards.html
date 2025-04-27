@@ -1,4 +1,6 @@
 {% load file_tags %}
+{% load static %}
+{% load humanize %}
 
 {% for startup in page_obj %}
   <div class="startup-card">
@@ -60,7 +62,7 @@
       </div>
 
       <div class="funding-goal-info">
-        Цель финансирования: {{ startup.funding_goal|floatformat:"0" }} ₽
+        Цель финансирования: {{ startup.funding_goal|default:"0"|intcomma }} ₽
       </div>
 
       <div class="investor-count">

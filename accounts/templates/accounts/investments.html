@@ -1,5 +1,6 @@
 {% extends 'accounts/base.html' %}
 {% load static %}
+{% load humanize %}
 
 {% block title %}Портфель{% endblock %}
 
@@ -95,18 +96,18 @@
             </div>
             <div class="stat-item">
               <span class="stat-label">Общая сумма инвестирования</span>
-              <div class="stat-value-box blue-box">{{ total_investment|default:"3 654 765" }} ₽</div>
+              <div class="stat-value-box blue-box">{{ total_investment|default:"0"|intcomma }} ₽</div>
             </div>
           </div>
 
           <div class="stats-details">
              <div class="stat-item detail-item">
               <span class="stat-label">Макс. сумма инвестирования</span>
-              <span class="stat-value-simple">{{ max_investment|default:"3 654 765" }} ₽</span>
+              <span class="stat-value-simple">{{ max_investment|default:"0"|intcomma }} ₽</span>
             </div>
             <div class="stat-item detail-item">
               <span class="stat-label">Мин. сумма инвестирования</span>
-              <span class="stat-value-simple">{{ min_investment|default:"3 654 765" }} ₽</span>
+              <span class="stat-value-simple">{{ min_investment|default:"0"|intcomma }} ₽</span>
             </div>
           </div>
 
@@ -131,7 +132,7 @@
           </div>
           <div class="total-investment">
             <span class="investment-label">инвестировано</span>
-            <div class="investment-amount">{{ total_investment|default:"3 675 998" }}</div> {# Отображаем реальную сумму #}
+            <div class="investment-amount">{{ total_investment|default:"0"|intcomma }}</div>
           </div>
         </div>
 
@@ -178,11 +179,15 @@
                   </div>
                   <div class="startup-detail-row">
                       <span class="detail-label">Собранная сумма:</span>
-                      <span class="detail-value">{{ investment.startup.current_investment|default:'0' }} ₽</span>
+                      <span class="detail-value">{{ investment.startup.current_investment|default:'0'|intcomma }} ₽</span>
+                  </div>
+                  <div class="startup-detail-row">
+                      <span class="detail-label">Ваши инвестиции:</span>
+                      <span class="detail-value">{{ investment.amount|floatformat:0|intcomma }} ₽</span>
                   </div>
                   <div class="startup-detail-row">
                       <span class="detail-label">Цель финансирования:</span>
-                      <span class="detail-value">{{ investment.startup.goal|default:'0' }} ₽</span>
+                      <span class="detail-value">{{ investment.startup.goal|default:'0'|intcomma }} ₽</span>
                   </div>
                    <div class="startup-category-tag">{{ investment.startup.category.name|default:'Категория' }}</div>
               </div>
