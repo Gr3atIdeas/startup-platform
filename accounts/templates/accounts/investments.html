@@ -227,7 +227,7 @@
                   </div>
                   <div class="startup-category-row"> {# Отдельная строка для категории #}
                     <span class="detail-label">Категория</span>
-                    <span class="startup-category-tag">{{ investment.startup.category.name|default:'Категория' }}</span>
+                    <span class="startup-category-tag">{{ investment.startup.direction.direction_name|default:'Категория' }}</span>
                   </div>
               </div>
             </div>
@@ -276,7 +276,7 @@
                   </div>
                   <div class="startup-category-row">
                     <span class="detail-label">Категория</span>
-                    <span class="startup-category-tag">{{ investment.startup.category.name|default:'Категория' }}</span>
+                    <span class="startup-category-tag">{{ investment.startup.direction.direction_name|default:'Категория' }}</span>
                   </div>
               </div>
              {# ...до сюда #}

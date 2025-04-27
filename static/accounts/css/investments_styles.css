@@ -560,13 +560,31 @@ body {
 
 /* Выпадающий список */
 .filter-dropdown-content {
+  display: none; /* !!! Восстанавливаем скрытие по умолчанию !!! */
+  position: absolute;
+  top: 100%;
+  right: 0; /* Выравниваем по правому краю кнопки */
   background-color: #FFFFFF; /* Белый фон */
   border: 1px solid #DEE2E6; /* Граница */
+  border-radius: 5px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Тень */
+  padding: 10px 0;
+  min-width: 150px;
+  z-index: 10;
+  margin-top: 5px;
+}
+
+.filter-dropdown-wrapper:hover .filter-dropdown-content {
+  display: block; /* !!! Восстанавливаем показ при наведении !!! */
 }
 
 .filter-dropdown-content a {
+  display: block; /* Ссылки одна под другой */
+  padding: 8px 15px;
   color: #495057; /* Темно-серый текст */
+  text-decoration: none;
+  font-size: 14px;
+  /* white-space: nowrap; */ /* Убираем запрет переноса */
 }
 
 .filter-dropdown-content a:hover {

@@ -315,7 +315,8 @@ def investments(request):
     for cat_data in category_data_raw:
         percentage = 0
         if cat_data['category_total']:
-             percentage = round((cat_data['category_total'] / total_for_percentage) * 100)
+             percentage = round((Decimal(cat_data['category_total']) / total_for_percentage) * 100)
+             percentage = min(percentage, 100) # Ограничиваем сверху 100%
         investment_categories.append({
             'name': cat_data['startup__direction__direction_name'] or 'Без категории', # Исправляем category на direction
             'percentage': percentage,
