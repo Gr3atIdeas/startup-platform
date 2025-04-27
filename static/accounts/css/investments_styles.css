@@ -76,7 +76,7 @@ body {
   width: 45%;
   display: flex;
   flex-direction: column;
-  gap: 30px; /* Отступ между изображением и категориями */
+  gap: 50px; /* Увеличиваем отступ между изображением и категориями */
 }
 
 /* Контейнер изображения портфолио */
@@ -127,6 +127,7 @@ body {
   border-radius: 15px;
   background-color: #FFFFFF; /* Сделаем фон белым как в макете */
   color: #191919; /* Текст темный */
+  overflow: auto; /* Добавляем прокрутку на всякий случай */
 }
 
 .categories-radial-title {
@@ -140,6 +141,7 @@ body {
   display: grid;
   grid-template-columns: repeat(4, 1fr); /* 4 колонки */
   gap: 20px;
+  align-content: start; /* Выравнивание по верху при переносе строк */
 }
 
 .category-radial-item {
@@ -411,7 +413,7 @@ body {
   font-family: 'Blippo-Black CY [Rus by me]', sans-serif; /* Новый шрифт */
   font-weight: 400; /* Новый вес */
   font-size: 55px; /* Новый размер */
-  line-height: 18px; /* Новая высота строки (может вызвать наложение) */
+  line-height: 1.0; /* Устанавливаем нормальную высоту строки (100% от размера шрифта) */
   letter-spacing: -0.02em; /* Новый интервал */
   margin: 0;
   text-transform: uppercase;
