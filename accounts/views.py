@@ -270,30 +270,14 @@ def investments(request):
         messages.error(request, 'Доступ к этой странице разрешен только инвесторам.')
         return redirect('home')
 
-    # Получаем все транзакции инвестиций текущего пользователя
-    user_investments_qs = InvestmentTransactions.objects.filter(
+    # Базовый запрос без аннотаций рейтинга/комментов, которые могут дублировать строки
+    base_investments_qs = InvestmentTransactions.objects.filter(
         investor=request.user,
         transaction_type__type_name='investment'
-    ).select_related(
-        'startup', 
-        'startup__direction', 
-        'startup__owner'
-    ).annotate(
-        # Аннотируем рейтинг (предполагая поля sum_votes и total_voters в модели Startups)
-        startup_average_rating=Avg(
-            models.ExpressionWrapper(
-                models.F('startup__sum_votes') * 1.0 / models.F('startup__total_voters'),
-                output_field=FloatField()
-            ),
-            filter=models.Q(startup__total_voters__gt=0),
-            default=0.0 # Значение по умолчанию, если нет голосов
-        ),
-        # Аннотируем количество комментариев (предполагая связь 'comments' в модели Startups)
-        startup_comment_count=Count('startup__comments', distinct=True)
-    ).order_by('-created_at') # Добавляем сортировку для порядка
+    ).select_related('startup', 'startup__direction', 'startup__owner')
 
-    # Агрегированные данные для аналитики
-    analytics_data = user_investments_qs.aggregate(
+    # Агрегированные данные для аналитики (применяем distinct() ПЕРЕД агрегацией)
+    analytics_data = base_investments_qs.distinct().aggregate(
         total_investment=Sum('amount'),
         max_investment=Max('amount'),
         min_investment=Min('amount'),
@@ -302,9 +286,11 @@ def investments(request):
 
     # Получаем общую сумму инвестиций отдельно
     total_investment_decimal = analytics_data.get('total_investment') or Decimal('0')
+    # >>> ЛОГГИРОВАНИЕ ОБЩЕЙ СУММЫ
+    logger.info(f"[investments view] User: {request.user.email}, Total Investment Calculated (after distinct): {total_investment_decimal}")
 
-    # Данные по категориям: получаем суммы по категориям
-    category_data_raw = user_investments_qs.values(
+    # Данные по категориям (применяем distinct() ПЕРЕД values/annotate)
+    category_data_raw = base_investments_qs.distinct().values(
         'startup__direction__direction_name'
     ).annotate(
         category_total=Sum('amount')
@@ -322,6 +308,10 @@ def investments(request):
         category_sum = cat_data.get('category_total')
         category_name = cat_data.get('startup__direction__direction_name') or 'Без категории'
         
+        # >>> ЛОГГИРОВАНИЕ СУММ ПО КАТЕГОРИЯМ (примерно)
+        if investment_categories == []: # Логгируем только первый раз
+             logger.info(f"[investments view] Raw category data example (after distinct): {list(category_data_raw[:2])}") # Логгируем список
+
         if category_sum and total_for_percentage > 0:
             try:
                 # Расчет процента
@@ -337,26 +327,47 @@ def investments(request):
         })
         invested_category_data_dict[category_name] = percentage # Сохраняем для модалки
 
-    # --- Данные для графика по месяцам (текущий год) ---
+    # --- Данные для графика по месяцам (НОВЫЙ НЕЗАВИСИМЫЙ ЗАПРОС + distinct) ---
     current_year = timezone.now().year
-    monthly_data_raw = user_investments_qs.filter(
+    monthly_data_direct = InvestmentTransactions.objects.filter(
+        investor=request.user,
+        transaction_type__type_name='investment',
         created_at__year=current_year
-    ).annotate(
-        month=TruncMonth('created_at') # Группируем по месяцу
+    ).distinct().annotate(
+        month=TruncMonth('created_at')
     ).values('month').annotate(
         monthly_total=Sum('amount')
     ).order_by('month')
+    # >>> ЛОГГИРОВАНИЕ МЕСЯЧНЫХ ДАННЫХ
+    logger.info(f"[investments view] Monthly data calculated (after distinct): {list(monthly_data_direct)}")
 
     # Подготовка данных для Chart.js
     month_labels = ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"]
-    # Инициализируем нулями
     monthly_totals = [0] * 12
-    for data in monthly_data_raw:
+    for data in monthly_data_direct: # Используем новый queryset
         month_index = data['month'].month - 1 # Месяцы 1-12 -> индексы 0-11
         if 0 <= month_index < 12:
-             # Преобразуем Decimal в float для JSON-сериализации
-            monthly_totals[month_index] = float(data['monthly_total'] or 0)
+            monthly_totals[month_index] = float(data.get('monthly_total', 0) or 0) # Добавил .get()
+    # >>> ЛОГГИРОВАНИЕ ИТОГОВЫХ ДАННЫХ ДЛЯ ГРАФИКА
+    logger.info(f"[investments view] Final monthly totals for chart (after distinct): {monthly_totals}")
     # --- Конец данных для графика ---
+
+    # --- Получаем QuerySet со всеми данными для передачи в шаблон ---
+    # Теперь добавляем аннотации рейтинга/комментов к базовому QS
+    user_investments_qs_final = base_investments_qs.annotate(
+         startup_average_rating=Avg(
+            models.ExpressionWrapper(
+                models.F('startup__sum_votes') * 1.0 / models.F('startup__total_voters'),
+                output_field=FloatField()
+            ),
+            filter=models.Q(startup__total_voters__gt=0),
+            default=0.0 # Значение по умолчанию, если нет голосов
+        ),
+        # Аннотируем количество комментариев (предполагая связь 'comments' в модели Startups)
+        startup_comment_count=Count('startup__comments', distinct=True)
+    ).annotate(
+         average_rating=models.functions.Coalesce('startup_average_rating', 0.0)
+    )
 
     # --- Данные для модального окна категорий ---
     all_directions_qs = Directions.objects.all().order_by('direction_name')
@@ -364,8 +375,18 @@ def investments(request):
     all_directions_list = list(all_directions_qs.values('pk', 'direction_name'))
     # all_directions_json_string = json.dumps(all_directions_list) # Убираем ручную сериализацию
 
+    # >>> ЛОГГИРОВАНИЕ ДАННЫХ СТАРТАПОВ ПЕРЕД КОНТЕКСТОМ
+    try:
+        logger.info(f"[investments view] Checking startup data for user {request.user.email}:")
+        for inv in user_investments_qs_final[:3]: # Проверяем первые 3 инвестиции
+            startup_info = "Startup object exists" if inv.startup else "!!! Startup object IS MISSING !!!"
+            startup_name = f"Name: '{inv.startup.name}'" if inv.startup and hasattr(inv.startup, 'name') else "Name: attribute missing or startup is None"
+            logger.info(f"  Investment ID: {inv.transaction_id}, {startup_info}, {startup_name}")
+    except Exception as e:
+        logger.error(f"[investments view] Error logging startup data: {e}")
+
     context = {
-        'user_investments': user_investments_qs,
+        'user_investments': user_investments_qs_final, # <<< Передаем QS с аннотациями
         'startups_count': analytics_data.get('startups_count', 0),
         'total_investment': total_investment_decimal, # Передаем Decimal
         'max_investment': analytics_data.get('max_investment', 0),
@@ -376,6 +397,11 @@ def investments(request):
         'all_directions': all_directions_list,
         'invested_category_data': invested_category_data_dict, # Передаем обновленный словарь
     }
+    context['month_labels'] = json.dumps(month_labels)
+    context['month_data'] = json.dumps(monthly_totals)
+    context['all_directions'] = json.dumps(all_directions_list)
+    context['invested_category_data'] = json.dumps(invested_category_data_dict)
+
     return render(request, 'accounts/investments.html', context)
 
 # Страница юридической информации

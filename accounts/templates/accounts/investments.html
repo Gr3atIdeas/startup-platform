@@ -182,10 +182,20 @@
         <div class="startups-grid">
           {# Отображаем только первые 4 (индекс 0, 1, 2, 3) #}
           {% for investment in user_investments|slice:":4" %}
-            <div class="startup-card" data-category="{{ investment.startup.category.name }}" data-name="{{ investment.startup.name }}">
+            <div class="startup-card" data-category="{{ investment.startup.direction.direction_name|default:'' }}" data-name="{{ investment.startup.name|default:'' }}">
               <div class="startup-card-left">
-                   <img src="{{ investment.startup.planet_image.url | default:'/static/accounts/images/planets/startup_5_logo.png' }}" alt="{{ investment.startup.name }} Planet" class="startup-planet-img">
-                  <div class="startup-name">{{ investment.startup.name }}</div>
+                   <img src="{{ investment.startup.planet_image.url | default:'/static/accounts/images/planets/startup_5_logo.png' }}" alt="{{ investment.startup.name|default:'No Name' }} Planet" class="startup-planet-img">
+                  <div class="startup-name">
+                      {% if investment.startup %}
+                          {% if investment.startup.name %}
+                              {{ investment.startup.name }}
+                          {% else %}
+                              <span style="color: red; font-size: 10px;">(Имя не задано!)</span>
+                          {% endif %}
+                      {% else %}
+                          <span style="color: red; font-size: 10px;">(Стартап не найден!)</span>
+                      {% endif %}
+                  </div>
                   <div class="startup-rating">
                       {# Динамический рейтинг (пример) #}
                       {% with rating=investment.startup_average_rating|default:0 %}
@@ -257,11 +267,21 @@
           {% endfor %}
           {# Скрытые карточки для "Показать еще" #}
            {% for investment in user_investments|slice:"4:" %}
-            <div class="startup-card hidden-card" data-category="{{ investment.startup.category.name }}" data-name="{{ investment.startup.name }}" style="display: none;">
+            <div class="startup-card hidden-card" data-category="{{ investment.startup.direction.direction_name|default:'' }}" data-name="{{ investment.startup.name|default:'' }}" style="display: none;">
              {# Копируем структуру карточки отсюда... #}
               <div class="startup-card-left">
-                   <img src="{{ investment.startup.planet_image.url | default:'/static/accounts/images/planets/startup_5_logo.png' }}" alt="{{ investment.startup.name }} Planet" class="startup-planet-img">
-                  <div class="startup-name">{{ investment.startup.name }}</div>
+                   <img src="{{ investment.startup.planet_image.url | default:'/static/accounts/images/planets/startup_5_logo.png' }}" alt="{{ investment.startup.name|default:'No Name' }} Planet" class="startup-planet-img">
+                  <div class="startup-name">
+                      {% if investment.startup %}
+                          {% if investment.startup.name %}
+                              {{ investment.startup.name }}
+                          {% else %}
+                              <span style="color: red; font-size: 10px;">(Имя не задано!)</span>
+                          {% endif %}
+                      {% else %}
+                          <span style="color: red; font-size: 10px;">(Стартап не найден!)</span>
+                      {% endif %}
+                  </div>
                   <div class="startup-rating">
                       {% with rating=investment.startup_average_rating|default:0 %}
                           {% for i in "12345"|make_list %}
