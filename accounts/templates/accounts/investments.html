@@ -7,6 +7,7 @@
 {% block head_extra %}
   {{ block.super }}
   <link rel="stylesheet" href="{% static 'accounts/css/investments_styles.css' %}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -113,8 +114,7 @@
 
           <!-- График -->
           <div class="analytics-chart-container">
-            <div class="chart-placeholder">
-              </div>
+            <canvas id="monthlyInvestmentChart"></canvas>
             <span class="chart-title-overlay">Аналитика этого месяца</span>
 
           </div>
@@ -260,6 +260,108 @@
         } else if (loadMoreBtn) {
             loadMoreBtn.style.display = 'none';
         }
+
+        // <<< Скрипт для инициализации графика >>>
+        (function() { // Используем IIFE для изоляции области видимости
+            const canvasElement = document.getElementById('monthlyInvestmentChart');
+            if (!canvasElement) {
+                console.error("Элемент canvas #monthlyInvestmentChart не найден.");
+                return;
+            }
+            const ctx = canvasElement.getContext('2d');
+            
+            // Получаем данные из контекста Django (безопасное встраивание JSON)
+            let monthLabels = [];
+            let monthData = [];
+            try {
+                monthLabels = JSON.parse('{{ month_labels|escapejs }}');
+                monthData = JSON.parse('{{ month_data|escapejs }}');
+            } catch (e) {
+                console.error("Ошибка парсинга данных для графика:", e);
+                // Можно показать сообщение об ошибке на месте графика
+                canvasElement.parentNode.innerHTML = '<p style="text-align: center; color: red;">Ошибка загрузки данных для графика.</p>';
+                return;
+            }
+
+            // Проверяем, есть ли данные для графика
+            const hasData = monthData && monthData.some(value => value > 0);
+
+            if (hasData) {
+                // Создаем градиент для фона столбцов
+                const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+                gradient.addColorStop(0, 'rgba(0, 123, 255, 0.8)'); // Синий сверху
+                gradient.addColorStop(1, 'rgba(0, 123, 255, 0.1)'); // Прозрачный синий снизу
+
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: monthLabels,
+                        datasets: [{
+                            label: 'Сумма инвестиций',
+                            data: monthData,
+                            backgroundColor: gradient, // Применяем градиент
+                            borderColor: 'rgba(0, 123, 255, 1)',
+                            borderWidth: 1,
+                            borderRadius: 5, // Небольшое скругление углов столбцов
+                            barThickness: 'flex', // Автоматическая ширина столбцов
+                            maxBarThickness: 30 // Максимальная ширина столбца
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: 'rgba(0, 0, 0, 0.05)' // Цвет сетки оси Y
+                                },
+                                ticks: {
+                                    // Форматирование чисел на оси Y
+                                    callback: function(value, index, values) {
+                                        if (value >= 1000) {
+                                            return (value / 1000).toLocaleString('ru-RU') + 'k';
+                                        } else {
+                                            return value.toLocaleString('ru-RU');
+                                        }
+                                    }
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    display: false // Убираем сетку оси X
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false // Скрываем легенду
+                            },
+                            tooltip: {
+                                // Кастомизация всплывающих подсказок
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed.y !== null) {
+                                            // Форматируем сумму с пробелами и знаком рубля
+                                            label += context.parsed.y.toLocaleString('ru-RU', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + ' ₽';
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            } else {
+                // Если данных нет, показываем сообщение
+                canvasElement.parentNode.innerHTML = '<p style="text-align: center; color: #6c757d;">Нет данных для графика за текущий год.</p>';
+            }
+        })(); // Вызываем IIFE
+        // <<< Конец скрипта для графика >>>
       });
     </script>
   {% else %}

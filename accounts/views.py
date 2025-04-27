@@ -24,6 +24,8 @@ from django.core.files.storage import default_storage  # Для работы с 
 from django import forms  # Добавляем импорт
 from django.core.paginator import Paginator
 from django.template.loader import render_to_string
+from django.db.models.functions import TruncMonth # Добавляем для группировки по месяцам
+import datetime # Добавляем для работы с датами
 
 
 logger = logging.getLogger(__name__)
@@ -303,13 +305,36 @@ def investments(request):
             'percentage': percentage,
         })
 
+    # --- Данные для графика по месяцам (текущий год) ---
+    current_year = timezone.now().year
+    monthly_data_raw = user_investments_qs.filter(
+        created_at__year=current_year
+    ).annotate(
+        month=TruncMonth('created_at') # Группируем по месяцу
+    ).values('month').annotate(
+        monthly_total=Sum('amount')
+    ).order_by('month')
+
+    # Подготовка данных для Chart.js
+    month_labels = ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"]
+    # Инициализируем нулями
+    monthly_totals = [0] * 12
+    for data in monthly_data_raw:
+        month_index = data['month'].month - 1 # Месяцы 1-12 -> индексы 0-11
+        if 0 <= month_index < 12:
+             # Преобразуем Decimal в float для JSON-сериализации
+            monthly_totals[month_index] = float(data['monthly_total'] or 0)
+    # --- Конец данных для графика ---
+
     context = {
-        'user_investments': user_investments_qs, # Передаем queryset инвестиций
+        'user_investments': user_investments_qs,
         'startups_count': analytics_data.get('startups_count', 0),
         'total_investment': analytics_data.get('total_investment', 0),
         'max_investment': analytics_data.get('max_investment', 0),
         'min_investment': analytics_data.get('min_investment', 0),
-        'investment_categories': investment_categories[:7], # Ограничиваем для отображения в сетке (7 + "Все")
+        'investment_categories': investment_categories[:7],
+        'month_labels': month_labels, # Добавляем метки месяцев
+        'month_data': monthly_totals, # Добавляем данные по месяцам
     }
     return render(request, 'accounts/investments.html', context)
 

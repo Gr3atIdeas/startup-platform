@@ -41,34 +41,27 @@ body {
 
 /* Общие стили для страницы инвестиций */
 .portfolio-container {
-  width: 100%; /* Занимает всю ширину */
-  /* max-width: 1440px; /* Убираем ограничение ширины */
-  /* margin: 0 auto; /* Убираем центрирование */
-  padding: 0 50px; /* Добавляем боковые отступы */
-  box-sizing: border-box; /* Учитываем padding в общей ширине */
+  width: 100%;
+  padding: 0 71px; /* Отступы слева/справа */
+  box-sizing: border-box;
   color: #FFFFFF;
   font-family: 'Circe', Arial, sans-serif;
   animation: fadeIn 0.8s linear;
-  /* Устанавливаем темный фон по умолчанию для этой страницы */
-  background-color: #0B0D17; /* Темно-синий фон, как в макете */
-  position: relative;
-  overflow: hidden;
-  border-radius: 15px;
-  background-color: #1a1d2e; /* Placeholder фон для изображения */
-  background-size: cover;
-  background-position: center;
+  background-color: #0B0D17;
+  max-width: 1445px;
+  margin: 0 auto;
 }
 
 /* Секция аналитики (верхняя часть) */
 .analytics-section {
-  background-color: #ffffff; /* Белый фон для этой секции */
-  padding: 40px 0; /* Убираем боковые отступы, оставляем верхний/нижний */
+  background-color: #ffffff;
+  padding: 45px 0; /* Верхний/нижний отступ */
   display: flex;
-  gap: 50px; /* Пространство между левой и правой частями */
-  border-radius: 20px; /* Скругление углов */
-  margin-bottom: 40px; /* Отступ снизу */
+  gap: 50px;
+  border-radius: 20px;
+  margin-bottom: 40px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-  color: #191919; /* Темный текст по умолчанию */
+  color: #191919;
 }
 
 .analytics-left {
@@ -385,9 +378,8 @@ body {
 
 /* Секция Мои стартапы */
 .my-startups-section {
-  /* Используем основной фон страницы (из body) */
   color: #FFFFFF;
-  padding: 60px 0; /* Убираем боковые отступы, оставляем верхний/нижний */
+  padding: 45px 0; /* Верхний/нижний отступ */
 }
 
 .startups-header {
