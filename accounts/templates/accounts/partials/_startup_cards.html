@@ -62,6 +62,7 @@
       </div>
 
       <div class="funding-goal-info">
+        {# Убедимся, что intcomma применяется без лишних фильтров, если это целое число #}
         Цель финансирования: {{ startup.funding_goal|default:"0"|intcomma }} ₽
       </div>
 
