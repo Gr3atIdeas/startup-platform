@@ -42,20 +42,18 @@ body {
 /* Общие стили для страницы инвестиций */
 .portfolio-container {
   width: 100%;
-  padding: 0 71px; /* Отступы слева/справа */
+  padding: 0 50px; /* Возвращаем боковые отступы 50px */
   box-sizing: border-box;
   color: #FFFFFF;
   font-family: 'Circe', Arial, sans-serif;
   animation: fadeIn 0.8s linear;
   background-color: #0B0D17;
-  max-width: 1445px;
-  margin: 0 auto;
 }
 
 /* Секция аналитики (верхняя часть) */
 .analytics-section {
   background-color: #ffffff;
-  padding: 45px 0; /* Верхний/нижний отступ */
+  padding: 40px 0; /* Возвращаем вертикальный отступ 40px */
   display: flex;
   gap: 50px;
   border-radius: 20px;
@@ -379,7 +377,7 @@ body {
 /* Секция Мои стартапы */
 .my-startups-section {
   color: #FFFFFF;
-  padding: 45px 0; /* Верхний/нижний отступ */
+  padding: 60px 0; /* Возвращаем вертикальный отступ 60px */
 }
 
 .startups-header {

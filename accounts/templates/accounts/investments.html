@@ -270,15 +270,14 @@
             }
             const ctx = canvasElement.getContext('2d');
             
-            // Получаем данные из контекста Django (безопасное встраивание JSON)
+            // Получаем данные из встроенных JSON скриптов
             let monthLabels = [];
             let monthData = [];
             try {
-                monthLabels = JSON.parse('{{ month_labels|escapejs }}');
-                monthData = JSON.parse('{{ month_data|escapejs }}');
+                monthLabels = JSON.parse(document.getElementById('chart-month-labels').textContent);
+                monthData = JSON.parse(document.getElementById('chart-month-data').textContent);
             } catch (e) {
                 console.error("Ошибка парсинга данных для графика:", e);
-                // Можно показать сообщение об ошибке на месте графика
                 canvasElement.parentNode.innerHTML = '<p style="text-align: center; color: red;">Ошибка загрузки данных для графика.</p>';
                 return;
             }
@@ -379,3 +378,7 @@
     </div>
   {% endif %}
 {% endblock %}
+
+{# Безопасно встраиваем данные для графика с помощью json_script #}
+{{ month_labels|json_script:"chart-month-labels" }}
+{{ month_data|json_script:"chart-month-data" }}
