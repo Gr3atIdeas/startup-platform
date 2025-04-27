@@ -65,7 +65,7 @@
                  <p>Нет данных по категориям.</p>
               {% endfor %}
               <!-- Категория "Все" -->
-              <div class="category-radial-item category-all">
+              <div class="category-radial-item category-all" id="openCategoriesModalBtn">
                 <div class="radial-chart-all">
                    <i class="fas fa-ellipsis-h"></i>
                 </div>
@@ -202,6 +202,18 @@
         </button>
       </div>
     </div>
+    
+    <!-- ==== Модальное окно для всех категорий (HTML остается, но JS будет заполнять grid) ==== -->
+    <div id="allCategoriesModal" class="modal-overlay">
+        <div class="modal-content category-modal-content">
+            <button class="modal-close-btn" id="closeCategoriesModalBtn">&times;</button>
+            <h2 class="modal-title">Все категории инвестиций</h2>
+            <div class="modal-categories-grid" id="modalCategoriesGrid"> {# Добавляем ID для JS #}
+                {# Содержимое будет генерироваться JS #}
+            </div>
+        </div>
+    </div>
+    <!-- ==== Конец модального окна ==== -->
     
     <script>
       document.addEventListener('DOMContentLoaded', function() {
@@ -361,6 +373,80 @@
             }
         })(); // Вызываем IIFE
         // <<< Конец скрипта для графика >>>
+
+        // ==== Логика для модального окна категорий ==== 
+        (function() {
+          const openBtn = document.getElementById('openCategoriesModalBtn');
+          const closeBtn = document.getElementById('closeCategoriesModalBtn');
+          const modalOverlay = document.getElementById('allCategoriesModal');
+          const modalGrid = document.getElementById('modalCategoriesGrid');
+          
+          // Данные из Django (безопасно парсим)
+          let allDirections = [];
+          let investedData = {};
+          try {
+              const allDirectionsRaw = JSON.parse(document.getElementById('all-directions-data').textContent);
+              // Преобразуем QuerySet-подобную структуру в массив объектов
+              allDirections = allDirectionsRaw.map(item => ({ 
+                  pk: item.pk, 
+                  name: item.fields.direction_name 
+                  // Добавьте другие поля Directions, если нужно
+              }));
+              investedData = JSON.parse(document.getElementById('invested-category-data').textContent);
+          } catch (e) {
+              console.error("Ошибка парсинга данных для модального окна категорий:", e);
+              // Можно добавить сообщение об ошибке в модальное окно или просто не открывать его
+          }
+
+          function openModal() {
+            if (!modalOverlay || !modalGrid) return;
+            
+            // Очищаем и заполняем сетку категорий
+            modalGrid.innerHTML = ''; // Очищаем предыдущее содержимое
+            if (allDirections.length > 0) {
+                allDirections.forEach(direction => {
+                    const percentage = investedData[direction.name] || 0;
+                    const item = document.createElement('div');
+                    item.classList.add('modal-category-item');
+                    item.innerHTML = `
+                        <span class="modal-category-name">${direction.name}</span>
+                        <span class="modal-category-percentage">${percentage}%</span>
+                        ${percentage > 0 ? '<span class="invested-indicator"></span>' : ''}
+                    `;
+                    modalGrid.appendChild(item);
+                });
+            } else {
+                modalGrid.innerHTML = '<p>Нет доступных категорий.</p>';
+            }
+
+            modalOverlay.classList.add('visible');
+            document.body.classList.add('modal-open-blur');
+          }
+
+          function closeModal() {
+            if (!modalOverlay) return;
+            modalOverlay.classList.remove('visible');
+            document.body.classList.remove('modal-open-blur');
+          }
+
+          if (openBtn) {
+            openBtn.addEventListener('click', openModal);
+          }
+
+          if (closeBtn) {
+            closeBtn.addEventListener('click', closeModal);
+          }
+
+          // Закрытие по клику на фон
+          if (modalOverlay) {
+              modalOverlay.addEventListener('click', function(event) {
+                  if (event.target === modalOverlay) { // Клик именно по фону, а не по контенту
+                      closeModal();
+                  }
+              });
+          }
+        })();
+        // ==== Конец логики модального окна ==== 
       });
     </script>
   {% else %}
@@ -381,13 +467,12 @@
   {# <<< Переносим json_script сюда, внутрь блока content >>> #}
   {{ month_labels|json_script:"chart-month-labels" }}
   {{ month_data|json_script:"chart-month-data" }}
+  {# Добавляем JSON для модального окна категорий #}
+  {{ all_directions|safe|json_script:"all-directions-data" }} {# Нужно сериализовать QuerySet во view #}
+  {{ invested_category_data|json_script:"invested-category-data" }}
 
 {% endblock %}
 
-{# Удаляем json_script отсюда #}
-{# {{ month_labels|json_script:"chart-month-labels" }} #}
-{# {{ month_data|json_script:"chart-month-data" }} #}
-
 <script>
-// ... existing code ...
+// ... JS из блока content переехал сюда ...
 </script>

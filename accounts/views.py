@@ -26,6 +26,7 @@ from django.core.paginator import Paginator
 from django.template.loader import render_to_string
 from django.db.models.functions import TruncMonth # Добавляем для группировки по месяцам
 import datetime # Добавляем для работы с датами
+from django.core.serializers import serialize # Добавляем для сериализации
 
 
 logger = logging.getLogger(__name__)
@@ -326,15 +327,24 @@ def investments(request):
             monthly_totals[month_index] = float(data['monthly_total'] or 0)
     # --- Конец данных для графика ---
 
+    # --- Данные для модального окна категорий ---
+    all_directions_qs = Directions.objects.all().order_by('direction_name')
+    # Сериализуем QuerySet в JSON строку, выбирая нужные поля
+    all_directions_json = serialize('json', all_directions_qs, fields=('direction_name',))
+    invested_category_data = {cat['name']: cat['percentage'] for cat in investment_categories}
+    # --- Конец данных для модального окна ---
+
     context = {
         'user_investments': user_investments_qs,
         'startups_count': analytics_data.get('startups_count', 0),
         'total_investment': analytics_data.get('total_investment', 0),
         'max_investment': analytics_data.get('max_investment', 0),
         'min_investment': analytics_data.get('min_investment', 0),
-        'investment_categories': investment_categories[:7],
-        'month_labels': month_labels, # Добавляем метки месяцев
-        'month_data': monthly_totals, # Добавляем данные по месяцам
+        'investment_categories': investment_categories[:7], # Оставляем топ-7 для радиальных диаграмм
+        'month_labels': month_labels,
+        'month_data': monthly_totals,
+        'all_directions': all_directions_json, # Передаем JSON строку
+        'invested_category_data': invested_category_data,
     }
     return render(request, 'accounts/investments.html', context)
 
