@@ -369,6 +369,14 @@ def investments(request):
          average_rating=models.functions.Coalesce('startup_average_rating', 0.0)
     )
 
+    # <<< ДОБАВЛЯЕМ СОРТИРОВКУ >>>
+    sort_param = request.GET.get('sort', 'newest') # По умолчанию - новые
+    if sort_param == 'oldest':
+        user_investments_qs_final = user_investments_qs_final.order_by('created_at')
+    else: # newest или любой другой параметр
+        user_investments_qs_final = user_investments_qs_final.order_by('-created_at')
+    # <<< КОНЕЦ СОРТИРОВКИ >>>
+
     # --- Данные для модального окна категорий ---
     all_directions_qs = Directions.objects.all().order_by('direction_name')
     # Преобразуем QuerySet в список словарей для JSON
@@ -396,6 +404,7 @@ def investments(request):
         'month_data': monthly_totals,
         'all_directions': all_directions_list,
         'invested_category_data': invested_category_data_dict, # Передаем обновленный словарь
+        'current_sort': sort_param, # Передаем текущую сортировку для выделения активной кнопки
     }
     context['month_labels'] = json.dumps(month_labels)
     context['month_data'] = json.dumps(monthly_totals)

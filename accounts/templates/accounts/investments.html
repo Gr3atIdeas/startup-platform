@@ -466,6 +466,7 @@
       function filterByCategory(event) {
           event.preventDefault(); 
           const selectedCategory = event.target.dataset.category;
+          console.log("[filterByCategory] Clicked category:", selectedCategory);
           const categoryButton = document.querySelector('.filter-btn[data-filter="category"]');
           const filterButtons = document.querySelectorAll('.filter-btn'); // Получаем кнопки здесь
           const startupCards = document.querySelectorAll('.startup-card'); // Получаем карточки здесь
@@ -579,6 +580,8 @@
            }
           
           const filterButtons = document.querySelectorAll('.filter-btn');
+          // Заменяем кнопки сортировки на ссылки
+          const sortLinks = document.querySelectorAll('a.filter-link-sort'); // Новый селектор
           const startupCards = document.querySelectorAll('.startup-card'); 
           const loadMoreBtn = document.getElementById('load-more');
           const hideBtn = document.getElementById('hide-startups-btn');
@@ -678,9 +681,13 @@
               let monthLabels = [];
               let monthData = [];
               try {
-                  // Убедимся, что используем правильные ID скриптов
-                  monthLabels = JSON.parse(document.getElementById('chart-month-labels').textContent);
-                  monthData = JSON.parse(document.getElementById('chart-month-data').textContent);
+                  const labelsEl = document.getElementById('chart-month-labels');
+                  const dataEl = document.getElementById('chart-month-data');
+                  if (!labelsEl || !dataEl) throw new Error("Элементы данных графика не найдены");
+                  monthLabels = JSON.parse(labelsEl.textContent);
+                  monthData = JSON.parse(dataEl.textContent);
+                  console.log("[Chart Init] Labels:", monthLabels);
+                  console.log("[Chart Init] Data:", monthData);
               } catch (e) {
                   console.error("Ошибка парсинга данных для графика:", e);
                   if (canvasElement.parentNode) {
