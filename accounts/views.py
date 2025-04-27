@@ -272,7 +272,7 @@ def investments(request):
     user_investments_qs = InvestmentTransactions.objects.filter(
         investor=request.user,
         transaction_type__type_name='investment' # Убедимся, что это именно инвестиции
-    ).select_related('startup', 'startup__category', 'startup__owner') # Оптимизация запроса
+    ).select_related('startup', 'startup__direction', 'startup__owner') # Исправляем category на direction
 
     # Агрегированные данные для аналитики
     analytics_data = user_investments_qs.aggregate(
