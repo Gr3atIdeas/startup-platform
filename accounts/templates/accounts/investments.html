@@ -385,11 +385,12 @@
           let allDirections = [];
           let investedData = {};
           try {
-              const allDirectionsRaw = JSON.parse(document.getElementById('all-directions-data').textContent);
-              // Правильно парсим структуру Django serialize
-              allDirections = allDirectionsRaw.map(item => ({
+              // Теперь allDirectionsData будет массивом объектов типа {pk: ..., direction_name: ...}
+              const allDirectionsData = JSON.parse(document.getElementById('all-directions-data').textContent);
+              // Используем данные напрямую
+              allDirections = allDirectionsData.map(item => ({
                   pk: item.pk,
-                  name: item.fields.direction_name
+                  name: item.direction_name // Используем напрямую direction_name
               }));
               investedData = JSON.parse(document.getElementById('invested-category-data').textContent);
           } catch (e) {
