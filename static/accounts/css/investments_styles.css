@@ -399,7 +399,7 @@ body {
 /* Секция Мои стартапы */
 .my-startups-section {
   color: #FFFFFF;
-  padding: 60px 0; /* Возвращаем вертикальный отступ 60px */
+  padding: 60px 0;
 }
 
 .startups-header {
@@ -485,23 +485,24 @@ body {
 .startups-search-input {
   width: 100%;
   height: 40px;
-  padding: 0 15px 0 40px; /* Отступ для иконки */
-  background-color: rgba(35, 38, 53, 0.8); /* Темный фон как в макете */
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 8px; /* Меньше скругление */
+  padding: 0 15px 0 40px;
+  background-color: #FFFFFF; /* Белый фон */
+  border: 1px solid #DEE2E6; /* Светло-серая граница */
+  border-radius: 20px; /* Сильное скругление */
   font-size: 14px;
-  color: #FFFFFF;
+  color: #495057; /* Темно-серый текст */
   outline: none;
-  transition: border-color 0.3s ease, background-color 0.3s ease;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .startups-search-input:focus {
   border-color: #007BFF;
-  background-color: rgba(35, 38, 53, 1);
+  background-color: #FFFFFF;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
 }
 
 .startups-search-input::placeholder {
-  color: rgba(255, 255, 255, 0.5);
+  color: #ADB5BD; /* Светло-серый плейсхолдер */
 }
 
 .startups-search-wrapper .search-icon {
@@ -509,7 +510,7 @@ body {
   left: 15px;
   top: 50%;
   transform: translateY(-50%);
-  color: rgba(255, 255, 255, 0.5);
+  color: #ADB5BD; /* Светло-серая иконка */
   font-size: 16px;
 }
 
@@ -520,86 +521,63 @@ body {
 
 .filter-btn {
   padding: 8px 20px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 8px; /* Меньше скругление */
-  background-color: rgba(255, 255, 255, 0.1);
-  color: #FFFFFF;
-  font-family: 'Unbounded', sans-serif; /* Явно указываем шрифт */
-  font-weight: 300; /* Базовый вес */
-  font-size: 14px; /* Базовый размер */
-  line-height: 18px; /* Базовая высота строки */
-  letter-spacing: -0.02em; /* Базовый интервал */
+  border: 1px solid #DEE2E6; /* Светло-серая граница */
+  border-radius: 16px; /* Скругление */
+  background-color: #FFFFFF; /* Белый фон */
+  color: #495057; /* Темно-серый текст */
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 500; /* Средний вес */
+  font-size: 14px;
+  line-height: 18px;
+  letter-spacing: -0.02em;
   cursor: pointer;
-  transition: background-color 0.3s linear, border-color 0.3s linear;
-  display: inline-flex; /* Для иконок */
+  transition: background-color 0.3s linear, border-color 0.3s linear, color 0.3s linear, box-shadow 0.3s ease;
+  display: inline-flex;
   align-items: center;
   gap: 6px;
 }
 
 .filter-btn:hover {
-  background-color: rgba(255, 255, 255, 0.2);
-  border-color: rgba(255, 255, 255, 0.5);
+  background-color: #f8f9fa; /* Очень светлый серый фон */
+  border-color: #ced4da;
+  color: #212529; /* Черный текст */
 }
 
 .filter-btn.active {
-  background-color: #FFFFFF;
-  color: #000000;
-  border-color: #FFFFFF;
+  background-color: #007BFF; /* Синий фон */
+  color: #FFFFFF; /* Белый текст */
+  border-color: #007BFF;
+}
+
+.filter-btn.active:hover {
+    background-color: #0056b3; /* Темно-синий при наведении */
+    border-color: #0056b3;
 }
 
 .filter-btn i {
-  font-size: 12px; /* Размер иконок в кнопках */
+  font-size: 12px;
 }
 
-/* Выпадающий список для категорий */
-.filter-dropdown-wrapper {
-  position: relative;
-}
-
-.filter-btn-dropdown i {
-  margin-left: 5px;
-  transition: transform 0.3s linear;
-}
-
-.filter-dropdown-wrapper:hover .filter-btn-dropdown i {
-  transform: rotate(180deg);
-}
-
+/* Выпадающий список */
 .filter-dropdown-content {
-  display: none;
-  position: absolute;
-  top: 100%;
-  right: 0; /* Выравниваем по правому краю кнопки */
-  background-color: #333; /* Темный фон для списка */
-  border-radius: 5px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  padding: 10px 0;
-  min-width: 150px;
-  z-index: 10;
-  margin-top: 5px;
-}
-
-.filter-dropdown-wrapper:hover .filter-dropdown-content {
-  display: block;
+  background-color: #FFFFFF; /* Белый фон */
+  border: 1px solid #DEE2E6; /* Граница */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Тень */
 }
 
 .filter-dropdown-content a {
-  display: block;
-  padding: 8px 15px;
-  color: #FFFFFF;
-  text-decoration: none;
-  font-size: 14px;
-  white-space: nowrap;
+  color: #495057; /* Темно-серый текст */
 }
 
 .filter-dropdown-content a:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: #f8f9fa; /* Светлый фон при наведении */
+  color: #212529;
 }
 
 /* Сетка стартапов */
 .startups-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* Строго 2 колонки */
+  grid-template-columns: repeat(2, 1fr);
   gap: 30px;
   margin-bottom: 40px;
 }
@@ -607,22 +585,19 @@ body {
 /* Карточка стартапа */
 .startup-card {
   display: flex;
-  background-color: #FFFFFF; /* Белый фон карточки */
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: #FFFFFF;
+  border: 1px solid #E9ECEF;
   border-radius: 12px;
-  padding: 25px;
-  gap: 25px;
+  padding: 20px; /* Уменьшаем паддинг */
+  gap: 20px; /* Уменьшаем отступ */
   transition: background-color 0.3s linear, border-color 0.3s linear, box-shadow 0.3s ease;
   overflow: hidden;
-  animation: fadeIn 0.8s linear;
-  color: #191919; /* Темный текст внутри карточки */
-  border-color: #E9ECEF; /* Светло-серая граница */
+  color: #191919;
 }
 
 .startup-card:hover {
-  background-color: #f8f9fa; /* Легкий фон при наведении */
   border-color: #dee2e6;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); /* Увеличиваем тень при наведении */
 }
 
 /* Левая часть карточки */
@@ -630,132 +605,144 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
-  width: 100px; /* Фиксированная ширина для левой части */
+  gap: 10px; /* Уменьшаем отступ */
+  width: 100px;
   flex-shrink: 0;
-  align-items: center; /* Центрируем контент */
   text-align: center;
 }
 
 .startup-planet-img {
-  width: 80px;
-  height: 80px;
-  object-fit: contain; /* Чтобы планета не искажалась */
+  width: 70px; /* Уменьшаем планету */
+  height: 70px;
+  object-fit: contain;
+  border-radius: 50%;
+  background-color: #e9ecef;
+  display: block;
   margin-bottom: 5px;
-  border-radius: 50%; /* Круглое изображение */
-  background-color: #e9ecef; /* Placeholder фон, если изображение не загрузится */
-  display: block; /* Убираем лишние отступы */
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .startup-name {
   font-family: 'Unbounded', sans-serif;
-  font-size: 14px; /* Базовый размер */
-  font-weight: 300; /* Базовый вес */
-  color: #191919; /* Темный текст */
+  font-size: 16px; /* Немного увеличиваем */
+  font-weight: 500; /* Средний вес */
+  color: #191919;
   text-align: center;
-  margin-top: 8px; /* Небольшой отступ сверху */
-  line-height: 18px; /* Базовая высота строки */
-  letter-spacing: -0.02em; /* Базовый интервал */
+  margin-top: 0; /* Убираем отступ */
+  line-height: 1.3;
+  letter-spacing: initial; /* Сбрасываем до дефолта */
 }
 
 .startup-rating {
   display: flex;
-  gap: 4px;
-  color: #FFEF2B; /* Желтые звезды */
+  gap: 3px; /* Уменьшаем отступ */
+  color: #ffcd3c; /* Более желтый цвет звезд */
   font-size: 14px;
 }
 
-.startup-rating .fa-star-half-alt {
-    /* Стили для половинчатой звезды, если нужно */
-}
-
 .startup-rating .far.fa-star {
-    color: rgba(255, 255, 255, 0.3); /* Цвет пустой звезды */
+    color: #e9ecef; /* Светло-серые пустые звезды */
 }
 
-.startup-chat-btn {
-  background: none;
-  border: none;
-  color: #adb5bd; /* Светло-серый */
-  font-size: 20px;
-  cursor: pointer;
-  padding: 5px;
-  margin-top: 5px;
-  transition: color 0.3s linear;
+.startup-comments {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 13px;
+    color: #868E96; /* Серый цвет */
+    margin-top: 5px;
 }
 
-.startup-chat-btn:hover {
-  color: #007BFF; /* Синий при наведении */
+.startup-comments i {
+    font-size: 16px;
+    color: #adb5bd; /* Светло-серый для иконки */
 }
 
 /* Правая часть карточки */
 .startup-card-right {
   display: flex;
   flex-direction: column;
-  gap: 15px; /* Отступ между строками деталей */
+  gap: 15px;
   flex-grow: 1;
-  position: relative; /* Для позиционирования тега категории */
-  width: 100%;
-  text-align: center; /* Центрируем текст справа */
+  width: auto; /* Убираем фиксированную ширину */
+  text-align: left; /* Выравнивание по левому краю */
+}
+
+.startup-status-row,
+.startup-category-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.startup-financials {
+    background-color: #F8F9FA; /* Светло-серый фон для блока с суммами */
+    border-radius: 8px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Отступ между строками внутри блока */
 }
 
 .startup-detail-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: transparent; /* Убираем фон строк */
-  padding: 8px 12px;
-  border-radius: 0; /* Убираем скругление строк */
+  background-color: transparent;
+  padding: 0; /* Убираем паддинг строки */
+  border-radius: 0;
   font-size: 13px;
-  border-bottom: 1px solid #f1f3f5; /* Разделитель между строками */
-}
-
-.startup-detail-row:last-child {
-  border-bottom: none; /* Убираем разделитель у последней строки */
+  border-bottom: none; /* Убираем разделитель */
 }
 
 .detail-label {
-  color: #868E96; /* Светло-серый */
-  font-weight: 300; /* Базовый вес */
-  font-size: 14px; /* Базовый размер */
-  line-height: 18px; /* Базовая высота строки */
-  letter-spacing: -0.02em; /* Базовый интервал */
+  color: #868E96;
+  font-weight: 400; /* Нормальный вес */
+  font-size: 13px;
+  line-height: 1.4;
+  letter-spacing: initial;
 }
 
 .detail-value {
-  color: #191919; /* Темный */
-  font-weight: 300; /* Базовый вес */
-  font-size: 14px; /* Базовый размер */
-  line-height: 18px; /* Базовая высота строки */
-  letter-spacing: -0.02em; /* Базовый интервал */
+  color: #191919;
+  font-weight: 500; /* Средний вес */
+  font-size: 13px;
+  line-height: 1.4;
+  letter-spacing: initial;
+}
+
+.status-active,
+.status-funded,
+.status-pending { /* Общие стили для статусов */
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: 12px; /* Скругление для пилюли */
+  font-size: 12px;
+  text-transform: capitalize; /* Первую букву заглавной */
 }
 
 .status-active {
-  color: #28A745; /* Зеленый для активного статуса */
-  font-weight: 700;
-  background-color: rgba(40, 167, 69, 0.15); /* Чуть ярче фон */
-  padding: 3px 8px;
-  border-radius: 5px;
+  color: #FFFFFF;
+  background-color: #007BFF; /* Синий */
 }
-/* Добавить стили для других статусов */
-.status-funded { /* Пример для статуса "Сбор средств завершен" */
-  color: #007BFF;
-  background-color: rgba(0, 123, 255, 0.1);
-  /* ... другие стили ... */
+.status-funded {
+  color: #FFFFFF;
+  background-color: #28a745; /* Зеленый */
 }
-.status-pending { /* Пример для статуса "Ожидает" */
-  color: #FFC107;
-  background-color: rgba(255, 193, 7, 0.1);
-  /* ... другие стили ... */
+.status-pending {
+  color: #191919;
+  background-color: #ffc107; /* Желтый */
 }
+/* Добавьте другие статусы по аналогии */
 
 .startup-category-tag {
-  position: static; /* Убираем абсолютное позиционирование */
-  margin-top: 15px;
-  display: inline-block; /* Чтобы margin работал */
-  background-color: #6c757d; /* Серый фон тега */
+  position: static;
+  display: inline-block;
+  background-color: #191919; /* Черный фон */
+  color: #FFFFFF; /* Белый текст */
+  border-radius: 6px; /* Скругление */
+  padding: 4px 8px; /* Отступы */
+  font-size: 12px;
+  font-weight: 500;
 }
 
 /* Кнопка "Показать еще" */
@@ -764,21 +751,21 @@ body {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 10px 25px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 8px 20px; /* Уменьшаем паддинг */
+  border: 1px solid #000000; /* Черная граница */
   border-radius: 20px;
   background-color: transparent;
-  color: #FFFFFF;
+  color: #000000; /* Черный текст */
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
-  margin: 0 auto; /* Центрируем кнопку */
+  margin: 0 auto;
   transition: all 0.3s linear;
 }
 
 .show-more-btn:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(0, 0, 0, 0.05); /* Легкий фон при наведении */
+  border-color: #000000;
 }
 
 .show-more-btn i {
@@ -789,43 +776,158 @@ body {
   transform: translateX(4px);
 }
 
-/* Отображение сообщения для неавторизованных пользователей */
-.access-restricted {
-  text-align: center;
-  padding: 50px 20px;
-  background-color: #f8f9fa;
-  border-radius: 12px;
-  margin: 30px auto;
-  max-width: 800px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-  animation: fadeIn 0.5s ease;
+/* Адаптивность */
+@media (max-width: 768px) {
+  .startup-card {
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+  }
+
+  .startup-card-left {
+    width: auto;
+  }
+
+  .startup-card-right {
+    width: 100%;
+    text-align: center;
+    align-items: center; /* Центрируем контент правой части */
+  }
+
+  .startup-status-row,
+  .startup-category-row,
+  .startup-financials .startup-detail-row {
+      width: 100%; /* Растягиваем строки на всю ширину */
+      justify-content: space-between; /* Возвращаем выравнивание */
+  }
+  .startup-financials {
+      width: 90%; /* Немного сужаем блок финансов */
+  }
+
 }
 
-.access-restricted h2 {
-  color: #7B61FF;
-  margin-bottom: 15px;
+/* ==== Стили для модального окна категорий ==== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6); /* Полупрозрачный фон */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s ease, visibility 0s linear 0.4s;
 }
 
-.access-restricted p {
-  color: #666;
-  margin-bottom: 20px;
-  line-height: 1.5;
+.modal-overlay.visible {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.4s ease, visibility 0s linear 0s;
 }
 
-.access-button {
-  display: inline-block;
-  background-color: #7B61FF;
-  color: white;
-  text-decoration: none;
-  padding: 10px 20px;
-  border-radius: 6px;
+.modal-content {
+  background-color: #ffffff;
+  padding: 30px 40px;
+  border-radius: 15px;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+  position: relative;
+  max-width: 800px; /* Макс ширина окна */
+  width: 90%;
+  max-height: 80vh; /* Макс высота */
+  overflow-y: auto;
+  color: #191919; /* Темный текст внутри окна */
+  transform: scale(0.9);
+  transition: transform 0.4s ease;
+}
+
+.modal-overlay.visible .modal-content {
+  transform: scale(1);
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 15px;
+  left: auto;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 28px;
   font-weight: bold;
-  transition: background-color 0.3s linear;
+  color: #adb5bd;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  transition: color 0.3s ease;
 }
 
-.access-button:hover {
-  /* background-color: #6551D9; */
+.modal-close-btn:hover {
+  color: #343a40;
 }
+
+.modal-title {
+  font-family: 'Blippo-Black CY [Rus by me]', sans-serif;
+  font-weight: 400;
+  font-size: 28px;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  margin-top: 0;
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+.modal-categories-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 15px;
+}
+
+.modal-category-item {
+  padding: 5px 0;
+  border-radius: 6px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.modal-category-name {
+  display: block;
+  margin-bottom: 0;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  text-align: center;
+}
+
+/* Стили для радиальной диаграммы ВНУТРИ модального окна */
+.modal-category-item .radial-chart {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 0;
+}
+
+.modal-category-item .radial-chart-text {
+    font-size: 12px;
+    font-weight: 700;
+}
+
+/* Эффект блюра для фона */
+/* Применяем блюр к основным блокам страницы, исключая модальные окна */
+body.modal-open-blur .site-header, /* Замените .site-header на ваш реальный селектор хедера */
+body.modal-open-blur .main-content, /* Замените .main-content на ваш основной контейнер */
+body.modal-open-blur .site-footer, /* Замените .site-footer на ваш реальный селектор футера */
+body.modal-open-blur .portfolio-container > *:not(.modal-overlay) { /* Дополнительно для содержимого контейнера портфеля */
+  filter: blur(5px);
+  transition: filter 0.4s ease;
+}
+/* ==== Конец стилей для модального окна ==== */
 
 /* Анимации */
 @keyframes fadeIn {
