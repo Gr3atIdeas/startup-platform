@@ -182,13 +182,13 @@
         <div class="startups-grid">
           {# Отображаем только первые 4 (индекс 0, 1, 2, 3) #}
           {% for investment in user_investments|slice:":4" %}
-            <div class="startup-card" data-category="{{ investment.startup.direction.direction_name|default:'' }}" data-name="{{ investment.startup.name|default:'' }}">
+            <div class="startup-card" data-category="{{ investment.startup.direction.direction_name|default:'' }}" data-name="{{ investment.startup.title|default:'' }}">
               <div class="startup-card-left">
-                   <img src="{{ investment.startup.planet_image.url | default:'/static/accounts/images/planets/startup_5_logo.png' }}" alt="{{ investment.startup.name|default:'No Name' }} Planet" class="startup-planet-img">
+                   <img src="{{ investment.startup.planet_image.url | default:'/static/accounts/images/planets/startup_5_logo.png' }}" alt="{{ investment.startup.title|default:'No Name' }} Planet" class="startup-planet-img">
                   <div class="startup-name">
                       {% if investment.startup %}
-                          {% if investment.startup.name %}
-                              {{ investment.startup.name }}
+                          {% if investment.startup.title %}
+                              {{ investment.startup.title }}
                           {% else %}
                               <span style="color: red; font-size: 10px;">(Имя не задано!)</span>
                           {% endif %}
@@ -267,14 +267,14 @@
           {% endfor %}
           {# Скрытые карточки для "Показать еще" #}
            {% for investment in user_investments|slice:"4:" %}
-            <div class="startup-card hidden-card" data-category="{{ investment.startup.direction.direction_name|default:'' }}" data-name="{{ investment.startup.name|default:'' }}" style="display: none;">
+            <div class="startup-card hidden-card" data-category="{{ investment.startup.direction.direction_name|default:'' }}" data-name="{{ investment.startup.title|default:'' }}" style="display: none;">
              {# Копируем структуру карточки отсюда... #}
               <div class="startup-card-left">
-                   <img src="{{ investment.startup.planet_image.url | default:'/static/accounts/images/planets/startup_5_logo.png' }}" alt="{{ investment.startup.name|default:'No Name' }} Planet" class="startup-planet-img">
+                   <img src="{{ investment.startup.planet_image.url | default:'/static/accounts/images/planets/startup_5_logo.png' }}" alt="{{ investment.startup.title|default:'No Name' }} Planet" class="startup-planet-img">
                   <div class="startup-name">
                       {% if investment.startup %}
-                          {% if investment.startup.name %}
-                              {{ investment.startup.name }}
+                          {% if investment.startup.title %}
+                              {{ investment.startup.title }}
                           {% else %}
                               <span style="color: red; font-size: 10px;">(Имя не задано!)</span>
                           {% endif %}
@@ -372,14 +372,19 @@
         </div>
     </div>
     <!-- ==== Конец модального окна ==== -->
-    
+
+    {# <<< ПЕРЕМЕЩАЕМ JSON SCRIPTS СЮДА (ПЕРЕД ОСНОВНЫМ СКРИПТОМ) >>> #}
+    {{ month_labels|json_script:"chart-month-labels" }}
+    {{ month_data|json_script:"chart-month-data" }}
+    {{ all_directions|json_script:"all-directions-data" }}
+    {{ invested_category_data|json_script:"invested-category-data" }}
+
     <script>
       // ================================================
-      // ГЛОБАЛЬНЫЕ ФУНКЦИИ, КОНСТАНТЫ И ОБРАБОТЧИКИ
-      // ОПРЕДЕЛЯЕМ ВСЕ ЗДЕСЬ, ДО DOMContentLoaded
+      // ГЛОБАЛЬНЫЕ ФУНКЦИИ, КОНСТАНТЫ
       // ================================================
 
-      // Карта цветов для категорий
+      // Карта цветов категорий 
       const categoryColors = {
           "Medicine": "#e74c3c", "Auto": "#3498db", "Delivery": "#f1c40f",
           "Cafe": "#9b59b6", "Fastfood": "#e67e22", "Health": "#1abc9c",
@@ -389,7 +394,7 @@
           "default": "#007bff"
       };
 
-      // Функция для перевода названий категорий
+      // Функция перевода категорий
       function translateCategoryName(name) {
           const translations = {
               "Medicine": "Медицина", "Auto": "Автомобили", "Delivery": "Доставка",
@@ -402,7 +407,7 @@
           return translations[name] || name || "Не указано";
       }
 
-      // Функция для обновления цветов радиальных диаграмм
+      // Функция обновления цветов радиальных диаграмм
       function updateRadialChartColors() {
         document.querySelectorAll('.radial-chart').forEach(chart => {
           const percentage = parseInt(chart.dataset.percentage || 0, 10);
@@ -416,25 +421,18 @@
         });
       }
 
-      // Функция для открытия модального окна категорий
-      function openModal() {
+      // Функция открытия модального окна (принимает данные как аргументы)
+      function openModal(directionsData, investedDataDict) {
           const modalOverlay = document.getElementById('allCategoriesModal');
           const modalGrid = document.getElementById('modalCategoriesGrid');
-          let allDirections = [];
-          let investedData = {};
-          try {
-              allDirections = JSON.parse(document.getElementById('all-directions-data').textContent).map(item => ({ pk: item.pk, name: item.direction_name }));
-              investedData = JSON.parse(document.getElementById('invested-category-data').textContent);
-          } catch (e) {
-              console.error("Ошибка парсинга данных для модального окна категорий (в openModal):", e);
-              if (modalGrid) modalGrid.innerHTML = '<p>Ошибка загрузки категорий.</p>';
-          }
+          
           if (!modalOverlay || !modalGrid) return;
-          modalGrid.innerHTML = '';
-          if (allDirections.length > 0) {
-              allDirections.forEach(direction => {
-                  const categoryName = direction.name;
-                  const percentage = investedData[categoryName] || 0;
+
+          modalGrid.innerHTML = ''; // Очищаем
+          if (directionsData && directionsData.length > 0) {
+              directionsData.forEach(direction => {
+                  const categoryName = direction.name; // Используем имя из переданных данных
+                  const percentage = investedDataDict[categoryName] || 0;
                   const translatedName = translateCategoryName(categoryName);
                   const color = categoryColors[categoryName] || categoryColors["default"];
                   const item = document.createElement('div');
@@ -451,11 +449,12 @@
           } else {
               modalGrid.innerHTML = '<p>Нет доступных категорий.</p>';
           }
+
           modalOverlay.classList.add('visible');
           document.body.classList.add('modal-open-blur');
       }
 
-      // Функция для закрытия модального окна категорий
+      // Функция закрытия модального окна
       function closeModal() {
           const modalOverlay = document.getElementById('allCategoriesModal');
           if (!modalOverlay) return;
@@ -498,25 +497,39 @@
       // DOMContentLoaded - установка обработчиков и инициализация
       // ================================================
       document.addEventListener('DOMContentLoaded', function() {
+          
+          // --- Парсинг данных для модального окна ОДИН РАЗ --- 
+          let parsedDirections = [];
+          let parsedInvestedData = {};
+          try {
+              const directionsElement = document.getElementById('all-directions-data');
+              const investedElement = document.getElementById('invested-category-data');
+              if (directionsElement) {
+                  parsedDirections = JSON.parse(directionsElement.textContent).map(item => ({ pk: item.pk, name: item.direction_name }));
+              }
+              if (investedElement) {
+                  parsedInvestedData = JSON.parse(investedElement.textContent);
+              }
+          } catch (e) {
+              console.error("Ошибка парсинга данных для модального окна при загрузке DOM:", e);
+          }
+          // --- Конец парсинга данных для модального окна --- 
+
           updateRadialChartColors(); // Обновляем цвета диаграмм на странице
 
           // --- Динамическое заполнение дропдауна категорий --- 
           const categoryDropdownContent = document.querySelector('.filter-dropdown-content');
           if (categoryDropdownContent) {
-              categoryDropdownContent.innerHTML = '';
-              let allDirections = [];
-              try {
-                 allDirections = JSON.parse(document.getElementById('all-directions-data').textContent).map(item => ({ pk: item.pk, name: item.direction_name }));
-              } catch(e) {
-                  console.error("Ошибка парсинга allDirections для дропдауна:", e);
-              }
-              if (allDirections.length > 0) {
-                  allDirections.forEach(direction => {
+              // Используем parsedDirections, если они есть
+              const directionsForDropdown = parsedDirections || []; 
+              categoryDropdownContent.innerHTML = ''; 
+              if (directionsForDropdown.length > 0) {
+                  directionsForDropdown.forEach(direction => {
                       const link = document.createElement('a');
                       link.href = '#';
                       link.dataset.category = direction.name;
                       link.textContent = translateCategoryName(direction.name);
-                      link.addEventListener('click', filterByCategory); // Используем глобальную функцию
+                      link.addEventListener('click', filterByCategory);
                       categoryDropdownContent.appendChild(link);
                   });
               } else {
@@ -630,7 +643,29 @@
              });
           }
   
-          // <<< Скрипт для инициализации графика (ПЕРЕМЕЩЕН ВНУТРЬ DOMContentLoaded) >>>
+          // --- Инициализация модального окна категорий --- 
+          const openModalBtn = document.getElementById('openCategoriesModalBtn'); 
+          const closeModalBtn = document.getElementById('closeCategoriesModalBtn');
+          const modalOverlay = document.getElementById('allCategoriesModal');
+          if (openModalBtn) {
+              // Передаем загруженные данные в openModal при клике
+              openModalBtn.addEventListener('click', function() { 
+                  openModal(parsedDirections, parsedInvestedData);
+              }); 
+          }
+          if (closeModalBtn) {
+              closeModalBtn.addEventListener('click', closeModal); 
+          }
+          if (modalOverlay) {
+              modalOverlay.addEventListener('click', function(event) {
+                  if (event.target === modalOverlay) { 
+                      closeModal(); 
+                  }
+              });
+          }
+          // --- Конец инициализации модального окна --- 
+
+          // <<< Скрипт для инициализации графика >>>
           (function() { 
               const canvasElement = document.getElementById('monthlyInvestmentChart');
               if (!canvasElement) {
@@ -717,25 +752,6 @@
           })(); 
           // <<< Конец скрипта для графика >>>
 
-          // --- Инициализация модального окна категорий --- 
-          const openModalBtn = document.getElementById('openCategoriesModalBtn'); 
-          const closeModalBtn = document.getElementById('closeCategoriesModalBtn');
-          const modalOverlay = document.getElementById('allCategoriesModal');
-          if (openModalBtn) {
-              openModalBtn.addEventListener('click', openModal); // Вызываем глобальную openModal
-          }
-          if (closeModalBtn) {
-              closeModalBtn.addEventListener('click', closeModal); // Вызываем глобальную closeModal
-          }
-          if (modalOverlay) {
-              modalOverlay.addEventListener('click', function(event) {
-                  if (event.target === modalOverlay) { 
-                      closeModal(); // Вызываем глобальную closeModal
-                  }
-              });
-          }
-          // --- Конец инициализации модального окна --- 
-
       }); // Конец DOMContentLoaded
       
     </script>
@@ -754,15 +770,8 @@
     </div>
   {% endif %}
 
-  {# <<< Переносим json_script сюда, внутрь блока content >>> #}
-  {{ month_labels|json_script:"chart-month-labels" }}
-  {{ month_data|json_script:"chart-month-data" }}
-  {# Восстанавливаем json_script для all_directions #}
-  {{ all_directions|json_script:"all-directions-data" }}
-  {{ invested_category_data|json_script:"invested-category-data" }}
-
 {% endblock %}
 
 <script>
-// ... JS из блока content переехал сюда ...
+// УДАЛЯЕМ ВЕСЬ СКРИПТ ВНЕ БЛОКА CONTENT
 </script>
