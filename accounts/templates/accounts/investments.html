@@ -52,6 +52,7 @@
                     {% endif %}
                 </span>
               </div>
+              {% endwith %}
               {% empty %}
                 <div class="category-radial-item">
                     <div class="radial-chart" data-percentage="70">
@@ -82,7 +83,7 @@
                     <span class="category-radial-name">Ритейл</span>
                  </div>
                  <p>Нет данных по категориям.</p>
-              {% endwith %}
+              {% endfor %}
               <!-- Категория "Все" -->
               <div class="category-radial-item category-all" id="openCategoriesModalBtn">
                 <div class="radial-chart-all">
