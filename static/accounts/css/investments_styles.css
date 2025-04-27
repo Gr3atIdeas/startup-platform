@@ -984,6 +984,7 @@ body {
 .modal-close-btn {
   position: absolute;
   top: 15px;
+  left: auto;
   right: 20px;
   background: none;
   border: none;
@@ -1001,11 +1002,11 @@ body {
 }
 
 .modal-title {
-  font-family: 'Blippo-Black CY [Rus by me]', sans-serif; /* Новый шрифт */
-  font-weight: 400; /* Новый вес */
-  font-size: 55px; /* Новый размер */
-  line-height: 18px; /* Новая высота строки (может вызвать наложение) */
-  letter-spacing: -0.02em; /* Новый интервал */
+  font-family: 'Blippo-Black CY [Rus by me]', sans-serif;
+  font-weight: 400;
+  font-size: 28px;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
   margin-top: 0;
   margin-bottom: 25px;
   text-align: center;
@@ -1013,21 +1014,18 @@ body {
 
 .modal-categories-grid {
   display: grid;
-  /* grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); */ /* Убираем старое */
-  grid-template-columns: repeat(7, 1fr); /* 7 колонок */
-  gap: 15px; /* Уменьшаем отступ между элементами */
+  grid-template-columns: repeat(7, 1fr);
+  gap: 15px;
 }
 
 .modal-category-item {
-  background-color: #f8f9fa;
-  padding: 10px; /* Уменьшаем паддинг */
-  border-radius: 6px; /* Уменьшаем скругление */
+  padding: 5px 0;
+  border-radius: 6px;
   text-align: center;
-  border: 1px solid #e9ecef;
-  display: flex; /* Используем flex для позиционирования */
-  flex-direction: column; /* Располагаем элементы вертикально */
-  align-items: center; /* Центрируем по горизонтали */
-  gap: 5px; /* Уменьшаем отступ между диаграммой и текстом */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
 }
 
 .modal-category-name {
@@ -1035,26 +1033,21 @@ body {
   margin-bottom: 0;
   font-family: 'Unbounded', sans-serif;
   font-weight: 400;
-  /* font-size: 20px; */ /* Убираем старый размер */
-  font-size: 12px; /* Уменьшаем размер шрифта имени категории */
-  /* line-height: 18px; */ /* Убираем старую высоту строки */
-  line-height: 1.2; /* Корректируем высоту строки */
+  font-size: 12px;
+  line-height: 1.2;
   letter-spacing: -0.02em;
   text-align: center;
 }
 
 /* Стили для радиальной диаграммы ВНУТРИ модального окна */
 .modal-category-item .radial-chart {
-    /* width: 80px; */ /* Убираем старый размер */
-    /* height: 80px; */
-    width: 50px; /* Уменьшаем размер диаграммы */
+    width: 50px;
     height: 50px;
-    margin-bottom: 0; /* Убираем отступ, т.к. есть gap */
+    margin-bottom: 0;
 }
 
 .modal-category-item .radial-chart-text {
-    /* font-size: 16px; */ /* Убираем старый размер */
-    font-size: 12px; /* Уменьшаем размер текста процента */
+    font-size: 12px;
     font-weight: 700;
 }
 
