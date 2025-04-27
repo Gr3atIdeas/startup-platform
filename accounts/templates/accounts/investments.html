@@ -377,8 +377,17 @@
       {% endif %}
     </div>
   {% endif %}
+
+  {# <<< Переносим json_script сюда, внутрь блока content >>> #}
+  {{ month_labels|json_script:"chart-month-labels" }}
+  {{ month_data|json_script:"chart-month-data" }}
+
 {% endblock %}
 
-{# Безопасно встраиваем данные для графика с помощью json_script #}
-{{ month_labels|json_script:"chart-month-labels" }}
-{{ month_data|json_script:"chart-month-data" }}
+{# Удаляем json_script отсюда #}
+{# {{ month_labels|json_script:"chart-month-labels" }} #}
+{# {{ month_data|json_script:"chart-month-data" }} #}
+
+<script>
+// ... existing code ...
+</script>
