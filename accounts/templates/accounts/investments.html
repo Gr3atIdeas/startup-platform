@@ -66,7 +66,7 @@
                         <div class="radial-chart-progress"></div>
                         <div class="radial-chart-text">90%</div>
                     </div>
-                    <span class="category-radial-name">IT</span>
+                    <span class="category-radial-name">ИТ</span>
                 </div>
                 <div class="category-radial-item">
                     <div class="radial-chart" data-percentage="60">
@@ -405,14 +405,32 @@
           let allDirections = [];
           let investedData = {};
           try {
-              // Парсим JSON строку, переданную из view
-              const allDirectionsData = JSON.parse('{{ all_directions_json|escapejs }}');
-              // Используем данные напрямую
-              allDirections = allDirectionsData.map(item => ({
+              const allDirectionsElement = document.getElementById('all-directions-data');
+              const investedDataElement = document.getElementById('invested-category-data');
+
+              if (!allDirectionsElement || !investedDataElement) {
+                  throw new Error("Не найдены элементы данных для модального окна.");
+              }
+
+              const allDirectionsRaw = allDirectionsElement.textContent;
+              const investedDataRaw = investedDataElement.textContent;
+              
+              console.log("Raw allDirectionsData:", allDirectionsRaw); // Отладка
+              console.log("Raw investedData:", investedDataRaw); // Отладка
+              
+              const parsedDirections = JSON.parse(allDirectionsRaw);
+              console.log("Parsed allDirectionsData:", parsedDirections, "Is Array?", Array.isArray(parsedDirections)); // Отладка
+              
+              if (!Array.isArray(parsedDirections)) {
+                   throw new TypeError("Данные категорий не являются массивом.");
+              }
+
+              allDirections = parsedDirections.map(item => ({
                   pk: item.pk,
                   name: item.direction_name
               }));
-              investedData = JSON.parse(document.getElementById('invested-category-data').textContent);
+              investedData = JSON.parse(investedDataRaw);
+
           } catch (e) {
               console.error("Ошибка парсинга данных для модального окна категорий:", e);
           }
@@ -510,8 +528,8 @@
   {# <<< Переносим json_script сюда, внутрь блока content >>> #}
   {{ month_labels|json_script:"chart-month-labels" }}
   {{ month_data|json_script:"chart-month-data" }}
-  {# Убираем json_script для all_directions, так как передаем строку #}
-  {# {{ all_directions|json_script:"all-directions-data" }} #}
+  {# Восстанавливаем json_script для all_directions #}
+  {{ all_directions|json_script:"all-directions-data" }}
   {{ invested_category_data|json_script:"invested-category-data" }}
 
 {% endblock %}

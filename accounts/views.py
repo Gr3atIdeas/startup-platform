@@ -330,7 +330,7 @@ def investments(request):
     all_directions_qs = Directions.objects.all().order_by('direction_name')
     # Преобразуем QuerySet в список словарей для JSON
     all_directions_list = list(all_directions_qs.values('pk', 'direction_name'))
-    all_directions_json_string = json.dumps(all_directions_list) # Вручную создаем JSON строку
+    # all_directions_json_string = json.dumps(all_directions_list) # Убираем ручную сериализацию
     invested_category_data = {cat['name']: cat['percentage'] for cat in investment_categories}
     # --- Конец данных для модального окна ---
 
@@ -343,7 +343,7 @@ def investments(request):
         'investment_categories': investment_categories[:7], # Оставляем топ-7 для радиальных диаграмм
         'month_labels': month_labels,
         'month_data': monthly_totals,
-        'all_directions_json': all_directions_json_string, # Передаем JSON строку
+        'all_directions': all_directions_list, # Передаем список словарей
         'invested_category_data': invested_category_data,
     }
     return render(request, 'accounts/investments.html', context)
