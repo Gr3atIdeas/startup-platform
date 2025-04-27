@@ -1004,7 +1004,11 @@ body {
 }
 
 /* Эффект блюра для фона */
-body.modal-open-blur > *:not(.modal-overlay) {
+/* Применяем блюр к основным блокам страницы, исключая модальные окна */
+body.modal-open-blur .site-header, /* Замените .site-header на ваш реальный селектор хедера */
+body.modal-open-blur .main-content, /* Замените .main-content на ваш основной контейнер */
+body.modal-open-blur .site-footer, /* Замените .site-footer на ваш реальный селектор футера */
+body.modal-open-blur .portfolio-container > *:not(.modal-overlay) { /* Дополнительно для содержимого контейнера портфеля */
   filter: blur(5px);
   transition: filter 0.4s ease;
 }

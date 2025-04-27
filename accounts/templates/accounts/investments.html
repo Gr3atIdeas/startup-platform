@@ -386,11 +386,10 @@
           let investedData = {};
           try {
               const allDirectionsRaw = JSON.parse(document.getElementById('all-directions-data').textContent);
-              // Преобразуем QuerySet-подобную структуру в массив объектов
-              allDirections = allDirectionsRaw.map(item => ({ 
-                  pk: item.pk, 
-                  name: item.fields.direction_name 
-                  // Добавьте другие поля Directions, если нужно
+              // Правильно парсим структуру Django serialize
+              allDirections = allDirectionsRaw.map(item => ({
+                  pk: item.pk,
+                  name: item.fields.direction_name
               }));
               investedData = JSON.parse(document.getElementById('invested-category-data').textContent);
           } catch (e) {
