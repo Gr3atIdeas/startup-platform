@@ -294,6 +294,27 @@
       margin-bottom: 10px;
       margin-left: 10px;
     }
+
+    /* Стили для модального окна выбора участников */
+    .participants-list {
+      max-height: 300px;
+      overflow-y: auto;
+      margin-top: 10px;
+    }
+    .participant-item {
+      padding: 10px;
+      border-bottom: 1px solid #E5E7EB;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    .participant-item:hover {
+      background-color: #F2F4FF;
+    }
+    .participant-item.disabled {
+      background-color: #E5E7EB;
+      cursor: not-allowed;
+      color: #A9A9A9;
+    }
   </style>
 {% endblock %}
 
@@ -352,7 +373,7 @@
     <div class="chat-interface">
       <div class="chat-header">
         <h3>Выберите чат</h3>
-        <button onclick="addParticipant()" class="add-participant-btn">Добавить участника</button>
+        <button onclick="openAddParticipantModal()" class="add-participant-btn">Добавить участника</button>
         <button onclick="leaveChat()" class="leave-chat-btn">Удалить чат</button>
         <div class="chat-participants"></div>
       </div>
@@ -380,6 +401,15 @@
       <button onclick="startChat()">Начать чат</button>
     </div>
   </div>
+
+  <!-- Модальное окно выбора участников -->
+  <div class="modal-overlay" id="addParticipantModal">
+    <div class="modal">
+      <button class="modal-close" onclick="closeAddParticipantModal()">×</button>
+      <h3>Добавить участника</h3>
+      <div class="participants-list" id="participantsList"></div>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -387,6 +417,7 @@
   let currentProfileUserId = null;
   let lastMessageTimestamp = null; // Для отслеживания времени последнего сообщения
   let pollingInterval = null; // Для хранения интервала опроса
+  let currentParticipants = []; // Для хранения текущих участников чата
 
   document.addEventListener('DOMContentLoaded', function() {
     // Загружаем первый чат при загрузке страницы
@@ -419,7 +450,7 @@
         if (data.success) {
           appendMessage(data.message);
           updateChatList(data.message);
-          lastMessageTimestamp = data.message.created_at; // Обновляем время последнего сообщения
+          lastMessageTimestamp = data.message.created_at_iso;
           this.reset();
         } else {
           alert(data.error || 'Ошибка при отправке сообщения');
@@ -464,10 +495,13 @@
 
         const participantsDiv = document.querySelector('.chat-participants');
         participantsDiv.innerHTML = data.participants.map(p => `<span>${p.name} (${p.role})</span>`).join(', ');
+        
+        // Сохраняем текущих участников для проверки ролей
+        currentParticipants = data.participants;
 
         // Устанавливаем время последнего сообщения
         if (data.messages.length > 0) {
-          lastMessageTimestamp = data.messages[data.messages.length - 1].created_at;
+          lastMessageTimestamp = data.messages[data.messages.length - 1].created_at_iso;
         } else {
           lastMessageTimestamp = null;
         }
@@ -499,6 +533,8 @@
     pollingInterval = setInterval(() => {
       if (!currentChatId) return;
 
+      console.log(`[${new Date().toISOString()}] Опрос новых сообщений для чата ${currentChatId}`);
+
       fetch(`/cosmochat/${currentChatId}/`, {
         headers: {
           'X-CSRFToken': '{{ csrf_token }}'
@@ -509,13 +545,15 @@
         if (data.success) {
           const messagesDiv = document.querySelector('.chat-messages');
           const newMessages = lastMessageTimestamp
-            ? data.messages.filter(msg => msg.created_at > lastMessageTimestamp)
+            ? data.messages.filter(msg => new Date(msg.created_at_iso) > new Date(lastMessageTimestamp))
             : data.messages;
+
+          console.log(`[${new Date().toISOString()}] Найдено новых сообщений: ${newMessages.length}`);
 
           newMessages.forEach(msg => appendMessage(msg));
 
           if (newMessages.length > 0) {
-            lastMessageTimestamp = newMessages[newMessages.length - 1].created_at;
+            lastMessageTimestamp = newMessages[newMessages.length - 1].created_at_iso;
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
 
             // Обновляем статус в списке чатов
@@ -627,13 +665,64 @@
     });
   }
 
-  function addParticipant() {
+  function openAddParticipantModal() {
     if (!currentChatId) {
       alert('Выберите чат для добавления участника');
       return;
     }
 
-    fetch(`/cosmochat/add-participant/${currentChatId}/`, {
+    // Проверяем количество участников
+    if (currentParticipants.length >= 3) {
+      alert('В чате уже максимальное количество участников (3)');
+      return;
+    }
+
+    // Получаем список доступных пользователей
+    fetch(`/cosmochat/?chat_id=${currentChatId}`, {
+      headers: {
+        'X-CSRFToken': '{{ csrf_token }}'
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      const participantsList = document.getElementById('participantsList');
+      participantsList.innerHTML = '';
+
+      // Получаем роли текущих участников
+      const currentRoles = currentParticipants.map(p => p.role.toLowerCase());
+      const allRoles = ['startuper', 'investor', 'moderator'];
+      const availableRoles = allRoles.filter(role => !currentRoles.includes(role));
+
+      data.users.forEach(user => {
+        const isDisabled = !availableRoles.includes(user.role.toLowerCase());
+        const item = document.createElement('div');
+        item.className = `participant-item ${isDisabled ? 'disabled' : ''}`;
+        item.innerHTML = `${user.name} (${user.role})`;
+        if (!isDisabled) {
+          item.onclick = () => addParticipant(user.user_id);
+        }
+        participantsList.appendChild(item);
+      });
+
+      document.getElementById('addParticipantModal').style.display = 'flex';
+    })
+    .catch(error => {
+      console.error('Ошибка:', error);
+      alert('Произошла ошибка при загрузке списка пользователей');
+    });
+  }
+
+  function closeAddParticipantModal() {
+    document.getElementById('addParticipantModal').style.display = 'none';
+  }
+
+  function addParticipant(userId) {
+    if (!currentChatId) {
+      alert('Выберите чат для добавления участника');
+      return;
+    }
+
+    fetch(`/cosmochat/add-participant/${currentChatId}/?user_id=${userId}`, {
       method: 'POST',
       headers: {
         'X-CSRFToken': '{{ csrf_token }}'
@@ -643,8 +732,10 @@
     .then(data => {
       if (data.success) {
         const participantsDiv = document.querySelector('.chat-participants');
-        const currentParticipants = participantsDiv.innerHTML ? participantsDiv.innerHTML + ', ' : '';
-        participantsDiv.innerHTML = currentParticipants + `<span>${data.new_participant.name} (${data.new_participant.role})</span>`;
+        const currentParticipantsHtml = participantsDiv.innerHTML ? participantsDiv.innerHTML + ', ' : '';
+        participantsDiv.innerHTML = currentParticipantsHtml + `<span>${data.new_participant.name} (${data.new_participant.role})</span>`;
+        currentParticipants.push(data.new_participant);
+        closeAddParticipantModal();
       } else {
         alert(data.error || 'Ошибка при добавлении участника');
       }

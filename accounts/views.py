@@ -1109,22 +1109,39 @@ def cosmochat(request):
     if request.user.is_authenticated:
         users = users.exclude(user_id=request.user.user_id)
 
+    # Если есть параметр chat_id, исключаем текущих участников чата
+    chat_id = request.GET.get('chat_id')
+    if chat_id:
+        chat = ChatConversations.objects.filter(conversation_id=chat_id).first()
+        if chat:
+            participant_ids = chat.chatparticipants_set.values_list('user_id', flat=True)
+            users = users.exclude(user_id__in=participant_ids)
+
     # Создаём форму для отправки сообщений
     message_form = MessageForm()
+
+    # Если это AJAX-запрос, возвращаем JSON
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        users_data = [{
+            'user_id': user.user_id,
+            'name': f"{user.first_name} {user.last_name}",
+            'role': user.role.role_name if user.role else 'Неизвестно'
+        } for user in users]
+        return JsonResponse({'users': users_data})
 
     return render(request, 'accounts/cosmochat.html', {
         'search_form': search_form,
         'users': users,
         'chats': chats,
-        'message_form': message_form,  # Добавляем message_form в контекст
+        'message_form': message_form,
     })
 
+# accounts/views.py
 def get_chat_messages(request, chat_id):
     if not request.user.is_authenticated:
         return JsonResponse({'success': False, 'error': 'Требуется авторизация'})
 
     chat = get_object_or_404(ChatConversations, conversation_id=chat_id)
-    # Проверяем, что пользователь участвует в чате
     if not chat.chatparticipants_set.filter(user=request.user).exists():
         return JsonResponse({'success': False, 'error': 'У вас нет доступа к этому чату'})
 
@@ -1134,6 +1151,7 @@ def get_chat_messages(request, chat_id):
         'sender_name': f"{msg.sender.first_name} {msg.sender.last_name}" if msg.sender else "Неизвестно",
         'message_text': msg.message_text,
         'created_at': msg.created_at.strftime('%d.%m.%Y %H:%M') if msg.created_at else '',
+        'created_at_iso': msg.created_at.isoformat() if msg.created_at else '',  # Добавляем ISO формат
         'is_read': msg.is_read(),
         'is_own': msg.sender == request.user if msg.sender else False
     } for msg in messages]
@@ -1151,6 +1169,7 @@ def get_chat_messages(request, chat_id):
         'participants': participants_data
     })
 
+# accounts/views.py
 @login_required
 def send_message(request):
     if request.method != 'POST':
@@ -1185,6 +1204,7 @@ def send_message(request):
             'sender_name': f"{request.user.first_name} {request.user.last_name}",
             'message_text': message.message_text,
             'created_at': message.created_at.strftime('%d.%m.%Y %H:%M'),
+            'created_at_iso': message.created_at.isoformat(),  # Добавляем ISO формат
             'is_read': message.is_read(),
             'is_own': True
         }
@@ -1245,10 +1265,7 @@ def start_chat(request, user_id):
 
     return JsonResponse({'success': True, 'chat_id': chat.conversation_id})
 
-
-
-
-
+# accounts/views.py
 @login_required
 def add_participant(request, chat_id):
     if request.method != 'POST':
@@ -1258,28 +1275,26 @@ def add_participant(request, chat_id):
     if not chat.chatparticipants_set.filter(user=request.user).exists():
         return JsonResponse({'success': False, 'error': 'У вас нет доступа к этому чату'})
 
-    # Проверяем, сколько участников уже в чате
+    # Проверяем количество участников
     participants = chat.get_participants()
     if participants.count() >= 3:
         return JsonResponse({'success': False, 'error': 'В чате уже максимальное количество участников (3)'})
 
-    # Определяем текущие роли в чате
-    current_roles = {p.user.role.role_name.lower() for p in participants if p.user and p.user.role}
-    required_roles = {'startuper', 'investor', 'moderator'}
-    missing_role = (required_roles - current_roles).pop() if (required_roles - current_roles) else None
-    if not missing_role:
-        return JsonResponse({'success': False, 'error': 'Все роли уже заняты'})
+    # Получаем user_id из параметров запроса
+    user_id = request.GET.get('user_id')
+    if not user_id:
+        return JsonResponse({'success': False, 'error': 'Не указан пользователь для добавления'})
 
-    # Находим пользователя с недостающей ролью (сортируем по количеству чатов)
-    new_user = Users.objects.filter(
-        role__role_name__iexact=missing_role
-    ).exclude(
-        user_id__in=[p.user.user_id for p in participants]
-    ).annotate(
-        chat_count=Count('chatparticipants')
-    ).order_by('chat_count').first()
-    if not new_user:
-        return JsonResponse({'success': False, 'error': f'Не найден пользователь с ролью {missing_role}'})
+    new_user = get_object_or_404(Users, user_id=user_id)
+
+    # Проверяем роли
+    current_roles = {p.user.role.role_name.lower() for p in participants if p.user and p.user.role}
+    new_user_role = new_user.role.role_name.lower() if new_user.role else None
+    if not new_user_role:
+        return JsonResponse({'success': False, 'error': 'Роль нового пользователя не определена'})
+
+    if new_user_role in current_roles:
+        return JsonResponse({'success': False, 'error': f'В чате уже есть пользователь с ролью {new_user_role}'})
 
     # Добавляем нового участника
     ChatParticipants.objects.create(conversation=chat, user=new_user)
