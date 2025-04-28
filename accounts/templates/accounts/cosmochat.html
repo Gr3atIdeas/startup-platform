@@ -666,51 +666,57 @@
   }
 
   function openAddParticipantModal() {
-    if (!currentChatId) {
-      alert('Выберите чат для добавления участника');
-      return;
-    }
-
-    // Проверяем количество участников
-    if (currentParticipants.length >= 3) {
-      alert('В чате уже максимальное количество участников (3)');
-      return;
-    }
-
-    // Получаем список доступных пользователей
-    fetch(`/cosmochat/?chat_id=${currentChatId}`, {
-      headers: {
-        'X-CSRFToken': '{{ csrf_token }}'
-      }
-    })
-    .then(response => response.json())
-    .then(data => {
-      const participantsList = document.getElementById('participantsList');
-      participantsList.innerHTML = '';
-
-      // Получаем роли текущих участников
-      const currentRoles = currentParticipants.map(p => p.role.toLowerCase());
-      const allRoles = ['startuper', 'investor', 'moderator'];
-      const availableRoles = allRoles.filter(role => !currentRoles.includes(role));
-
-      data.users.forEach(user => {
-        const isDisabled = !availableRoles.includes(user.role.toLowerCase());
-        const item = document.createElement('div');
-        item.className = `participant-item ${isDisabled ? 'disabled' : ''}`;
-        item.innerHTML = `${user.name} (${user.role})`;
-        if (!isDisabled) {
-          item.onclick = () => addParticipant(user.user_id);
-        }
-        participantsList.appendChild(item);
-      });
-
-      document.getElementById('addParticipantModal').style.display = 'flex';
-    })
-    .catch(error => {
-      console.error('Ошибка:', error);
-      alert('Произошла ошибка при загрузке списка пользователей');
-    });
+  if (!currentChatId) {
+    alert('Выберите чат для добавления участника');
+    return;
   }
+
+  // Проверяем количество участников
+  if (currentParticipants.length >= 3) {
+    alert('В чате уже максимальное количество участников (3)');
+    return;
+  }
+
+  // Получаем список доступных пользователей
+  fetch(`/cosmochat/?chat_id=${currentChatId}`, {
+    headers: {
+      'X-CSRFToken': '{{ csrf_token }}',
+      'x-requested-with': 'XMLHttpRequest' // Добавляем заголовок AJAX
+    }
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return response.json();
+  })
+  .then(data => {
+    const participantsList = document.getElementById('participantsList');
+    participantsList.innerHTML = '';
+
+    // Получаем роли текущих участников
+    const currentRoles = currentParticipants.map(p => p.role.toLowerCase());
+    const allRoles = ['startuper', 'investor', 'moderator'];
+    const availableRoles = allRoles.filter(role => !currentRoles.includes(role));
+
+    data.users.forEach(user => {
+      const isDisabled = !availableRoles.includes(user.role.toLowerCase());
+      const item = document.createElement('div');
+      item.className = `participant-item ${isDisabled ? 'disabled' : ''}`;
+      item.innerHTML = `${user.name} (${user.role})`;
+      if (!isDisabled) {
+        item.onclick = () => addParticipant(user.user_id);
+      }
+      participantsList.appendChild(item);
+    });
+
+    document.getElementById('addParticipantModal').style.display = 'flex';
+  })
+  .catch(error => {
+    console.error('Ошибка:', error);
+    alert('Произошла ошибка при загрузке списка пользователей');
+  });
+}
 
   function closeAddParticipantModal() {
     document.getElementById('addParticipantModal').style.display = 'none';
