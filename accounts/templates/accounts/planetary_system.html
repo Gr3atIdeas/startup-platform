@@ -1,0 +1,822 @@
+{% extends 'accounts/base.html' %}
+{% load static %}
+
+{% block title %}Планетарная система стартапов{% endblock %}
+
+{% block head_extra %}
+  <style>
+    /* Стили для планетарной системы */
+    .planetary-system-container {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      margin: 0 auto;
+      padding: 20px 0;
+      box-sizing: border-box;
+    }
+
+    .space-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('https://images.unsplash.com/photo-1447433819943-74a20987a81b') no-repeat center center;
+      background-size: cover;
+      z-index: -1;
+    }
+
+    .stars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('https://www.transparenttextures.com/patterns/stardust.png') repeat;
+      opacity: 0.5;
+      animation: parallax 100s linear infinite;
+      z-index: -1;
+    }
+
+    @keyframes parallax {
+      from { background-position: 0 0; }
+      to { background-position: 1000px 1000px; }
+    }
+
+    #solar-system {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      perspective: 1000px;
+      cursor: grab;
+    }
+
+    #solar-system.dragging {
+      cursor: grabbing;
+    }
+
+    #scene {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) translate(0px, 0px) scale(1);
+      transform-style: preserve-3d;
+    }
+
+    #galaxy {
+      position: absolute;
+      top: 0;
+      left: 0;
+      transform: rotateX(45deg);
+      transform-style: preserve-3d;
+    }
+
+    #logo {
+      width: 100px;
+      height: 100px;
+      background-size: cover;
+      border-radius: 50%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotateX(-45deg);
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: bold;
+      color: #333;
+      text-align: center;
+      line-height: 1.2;
+    }
+
+    .orbit {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: var(--orbit-size);
+      height: var(--orbit-size);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      margin-left: calc(-0.5 * var(--orbit-size));
+      margin-top: calc(-0.5 * var(--orbit-size));
+      transform-style: preserve-3d;
+      z-index: 1;
+      transition: all 0.5s ease;
+    }
+
+    .planet-orientation {
+      position: absolute;
+      transform-style: preserve-3d;
+    }
+
+    .planet {
+      position: absolute;
+      width: var(--planet-size);
+      height: var(--planet-size);
+      margin-left: calc(-0.5 * var(--planet-size));
+      margin-top: calc(-0.5 * var(--planet-size));
+      border-radius: 50%;
+      background-size: cover;
+      cursor: pointer;
+      transform-style: preserve-3d;
+      z-index: 5;
+      transition: all 0.3s ease;
+    }
+
+    .planet:hover {
+      transform: scale(1.1);
+    }
+
+    .planet.active {
+      transform: scale(1.2);
+    }
+
+    #info-card {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(255, 255, 255, 0.95);
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+      max-width: 350px;
+      width: 90%;
+      color: #333;
+      z-index: 20;
+      display: none;
+      text-align: center;
+    }
+
+    #info-card .planet-image {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      margin: 0 auto 10px;
+      background-size: cover;
+    }
+
+    #info-card h2 {
+      margin: 0 0 5px;
+      font-size: 24px;
+      color: #000;
+    }
+
+    #info-card .rating {
+      font-size: 16px;
+      color: #555;
+      margin-bottom: 10px;
+    }
+
+    #info-card .progress-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 10px 0;
+    }
+
+    #info-card .progress-bar button {
+      padding: 5px 10px;
+      border: none;
+      background: #000;
+      color: white;
+      font-size: 14px;
+      border-radius: 5px 0 0 5px;
+    }
+
+    #info-card .progress-bar .progress {
+      background: #ffd700;
+      padding: 5px;
+      font-size: 14px;
+      font-weight: bold;
+      border-radius: 0 5px 5px 0;
+    }
+
+    #info-card .funding {
+      font-size: 14px;
+      color: #555;
+      margin: 10px 0;
+    }
+
+    #info-card .investors {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 15px;
+    }
+
+    #info-card .description {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 15px;
+    }
+
+    #info-card .more-details {
+      padding: 10px 20px;
+      background: none;
+      border: none;
+      color: #007bff;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    #close-card {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #ffd700;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: #000;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #crosshair {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      width: 20px;
+      height: 20px;
+      transform: translate(-50%, -50%);
+      z-index: 100;
+    }
+
+    #crosshair::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: rgba(255, 255, 255, 0.7);
+      transform: translateY(-50%);
+    }
+
+    #crosshair::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 2px;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.7);
+      transform: translateX(-50%);
+    }
+
+    #crosshair-coords {
+      position: fixed;
+      top: 50%;
+      left: calc(50% + 20px);
+      transform: translateY(-50%);
+      color: white;
+      font-size: 12px;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 5px;
+      border-radius: 5px;
+      z-index: 100;
+    }
+
+    #mouse-coords {
+      position: fixed;
+      color: white;
+      font-size: 12px;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 5px;
+      border-radius: 5px;
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    #axes {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      width: 60px;
+      height: 60px;
+      transform-style: preserve-3d;
+      z-index: 100;
+    }
+
+    .axis {
+      position: absolute;
+      width: 2px;
+      height: 30px;
+      transform-origin: bottom center;
+    }
+
+    #axis-x {
+      background: red;
+      transform: rotateY(90deg) translateZ(15px);
+    }
+
+    #axis-y {
+      background: green;
+      transform: translateZ(15px);
+    }
+
+    #axis-z {
+      background: blue;
+      transform: rotateX(90deg) translateZ(15px);
+    }
+
+    .axis-label {
+      position: absolute;
+      color: white;
+      font-size: 10px;
+      transform: translateZ(20px);
+    }
+
+    #label-x {
+      left: 35px;
+      top: 15px;
+      color: red;
+    }
+
+    #label-y {
+      left: 15px;
+      top: -5px;
+      color: green;
+    }
+
+    #label-z {
+      left: 15px;
+      top: 35px;
+      color: blue;
+    }
+
+    #fps {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      background: rgba(0, 0, 0, 0.5);
+      color: white;
+      padding: 5px;
+      border-radius: 3px;
+      font-size: 12px;
+      z-index: 100;
+    }
+
+    #galaxy-selector {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 400px;
+      height: 60px;
+      overflow-x: auto;
+      white-space: nowrap;
+      z-index: 100;
+      scrollbar-width: none;
+    }
+
+    #galaxy-selector::-webkit-scrollbar {
+      display: none;
+    }
+
+    #galaxy-list {
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 0 20px;
+      height: 100%;
+    }
+
+    .galaxy-item {
+      flex: 0 0 auto;
+      margin: 0 10px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      padding: 10px 20px;
+      color: white;
+      font-size: 16px;
+      text-align: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .galaxy-item:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .galaxy-item.selected {
+      background: rgba(255, 255, 255, 0.5);
+      transform: scale(1.2);
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <div class="planetary-system-container">
+    <div class="space-background"></div>
+    <div class="stars"></div>
+    <div id="solar-system">
+      <div id="scene">
+        <div id="galaxy">
+          <div id="logo" style="background-image: url('{{ logo_data.image }}');"></div>
+          {% for planet in planets_data %}
+            <div class="orbit" style="--orbit-size: {{ 200|add:forloop.counter0|multiply:100 }}px; --orbit-time: {{ 80|add:forloop.counter0|multiply:20 }}s;">
+              <div class="planet-orientation">
+                <div class="planet" style="--planet-size: {{ planet.id|multiply:2|add:50 }}px; background-image: url('{{ planet.image }}');" data-id="{{ planet.id }}"></div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    <div id="info-card">
+      <button id="close-card">×</button>
+      <div class="planet-image" id="planet-image"></div>
+      <h2 id="startup-name"></h2>
+      <div class="rating" id="startup-rating"></div>
+      <div class="progress-bar">
+        <button>Выкуп+инвестирование</button>
+        <div class="progress" id="startup-progress"></div>
+      </div>
+      <div class="funding" id="startup-funding"></div>
+      <div class="investors" id="startup-investors"></div>
+      <div class="description" id="startup-description"></div>
+      <button class="more-details" id="more-details">Подробнее</button>
+    </div>
+    <div id="crosshair"></div>
+    <div id="crosshair-coords"></div>
+    <div id="mouse-coords"></div>
+    <div id="axes">
+      <div class="axis" id="axis-x"></div>
+      <div class="axis" id="axis-y"></div>
+      <div class="axis" id="axis-z"></div>
+      <div class="axis-label" id="label-x">X</div>
+      <div class="axis-label" id="label-y">Y</div>
+      <div class="axis-label" id="label-z">Z</div>
+    </div>
+    <div id="fps">0 FPS</div>
+    <div id="galaxy-selector">
+      <div id="galaxy-list">
+        {% for direction in directions %}
+          <div class="galaxy-item {% if direction.direction_name == selected_galaxy %}selected{% endif %}" data-name="{{ direction.direction_name }}">{{ direction.direction_name }}</div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block body_scripts %}
+  <script>
+    const startups = {
+      {% for planet in planets_data %}
+        '{{ planet.id }}': {
+          name: '{{ planet.name }}',
+          description: '{{ planet.description }}',
+          rating: '{{ planet.rating }}',
+          progress: '{{ planet.progress }}',
+          funding: '{{ planet.funding }}',
+          investors: '{{ planet.investors }}',
+          image: '{{ planet.image }}'
+        }{% if not forloop.last %},{% endif %}
+      {% endfor %}
+    };
+
+    const planets = document.querySelectorAll('.planet');
+    const infoCard = document.getElementById('info-card');
+    const planetImage = document.getElementById('planet-image');
+    const startupName = document.getElementById('startup-name');
+    const startupRating = document.getElementById('startup-rating');
+    const startupProgress = document.getElementById('startup-progress');
+    const startupFunding = document.getElementById('startup-funding');
+    const startupInvestors = document.getElementById('startup-investors');
+    const startupDescription = document.getElementById('startup-description');
+    const closeCard = document.getElementById('close-card');
+    const moreDetails = document.getElementById('more-details');
+    const solarSystem = document.getElementById('solar-system');
+    const scene = document.getElementById('scene');
+    const galaxy = document.getElementById('galaxy');
+    const crosshairCoords = document.getElementById('crosshair-coords');
+    const mouseCoords = document.getElementById('mouse-coords');
+    const fpsElement = document.getElementById('fps');
+    const galaxySelector = document.getElementById('galaxy-selector');
+    const galaxyList = document.getElementById('galaxy-list');
+
+    // Начальный угол наклона галактики
+    const galaxyTiltAngle = 45;
+
+    // Для расчета FPS
+    let lastTime = 0;
+    let frameCount = 0;
+    let fps = 0;
+
+    // Переменные для управления паузой
+    let isPaused = false;
+    let pausedTime = 0;
+
+    // Переменные для возвращения к центру
+    let lastInteractionTime = Date.now();
+    const inactivityTimeout = 10000;
+    let isReturningToCenter = false;
+
+    // Переменные для перемещения и масштабирования
+    let isDragging = false;
+    let startX, startY;
+    let offsetX = 0;
+    let offsetY = 0;
+    let scale = 1;
+
+    planets.forEach(planet => {
+      const randomAngle = Math.random() * 360;
+      planet.parentElement.parentElement.style.setProperty('--random-angle', `${randomAngle}deg`);
+
+      const randomSpeedFactor = 0.8 + Math.random() * 0.4;
+      planet.parentElement.parentElement.style.setProperty('--random-speed-factor', randomSpeedFactor);
+
+      const id = planet.getAttribute('data-id');
+      planet.style.backgroundImage = `url('${startups[id].image}')`;
+      planet.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const startup = startups[id];
+
+        planetImage.style.backgroundImage = `url('${startup.image}')`;
+        startupName.textContent = startup.name;
+        startupRating.textContent = `Рейтинг ${startup.rating}`;
+        startupProgress.textContent = startup.progress;
+        startupFunding.textContent = `Цель финансирования: ${startup.funding}`;
+        startupInvestors.textContent = startup.investors;
+        startupDescription.textContent = startup.description;
+
+        planets.forEach(p => p.classList.remove('active'));
+        planet.classList.add('active');
+        infoCard.style.display = 'block';
+
+        // Приостановить вращение планет
+        isPaused = true;
+        pausedTime = Date.now();
+
+        // Обновляем время последнего взаимодействия
+        lastInteractionTime = Date.now();
+      });
+    });
+
+    closeCard.addEventListener('click', () => {
+      infoCard.style.display = 'none';
+      planets.forEach(p => p.classList.remove('active'));
+
+      // Возобновить вращение планет с того же места
+      if (isPaused) {
+        const pauseDuration = Date.now() - pausedTime;
+        planetObjects.forEach(planetObj => {
+          planetObj.startTime += pauseDuration;
+        });
+        isPaused = false;
+      }
+
+      // Обновляем время последнего взаимодействия
+      lastInteractionTime = Date.now();
+    });
+
+    moreDetails.addEventListener('click', () => {
+      infoCard.style.display = 'none';
+      planets.forEach(p => p.classList.remove('active'));
+
+      // Возобновить вращение планет с того же места
+      if (isPaused) {
+        const pauseDuration = Date.now() - pausedTime;
+        planetObjects.forEach(planetObj => {
+          planetObj.startTime += pauseDuration;
+        });
+        isPaused = false;
+      }
+
+      // Обновляем время последнего взаимодействия
+      lastInteractionTime = Date.now();
+    });
+
+    solarSystem.addEventListener('mousedown', (e) => {
+      e.preventDefault();
+      isDragging = true;
+      startX = e.clientX;
+      startY = e.clientY;
+      solarSystem.classList.add('dragging');
+
+      // Обновляем время последнего взаимодействия
+      lastInteractionTime = Date.now();
+      isReturningToCenter = false;
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+
+      const deltaX = e.clientX - startX;
+      const deltaY = e.clientY - startY;
+
+      offsetX += deltaX;
+      offsetY += deltaY;
+
+      offsetX = Math.max(-window.innerWidth / 2, Math.min(window.innerWidth / 2, offsetX));
+      offsetY = Math.max(-window.innerHeight / 2, Math.min(window.innerHeight / 2, offsetY));
+
+      scene.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+      startX = e.clientX;
+      startY = e.clientY;
+
+      crosshairCoords.textContent = `Center: (${Math.round(offsetX)}, ${Math.round(offsetY)}, 0)`;
+
+      mouseCoords.style.left = `${e.clientX + 15}px`;
+      mouseCoords.style.top = `${e.clientY + 15}px`;
+      mouseCoords.textContent = `Mouse: (${e.clientX}, ${e.clientY})`;
+
+      // Обновляем время последнего взаимодействия
+      lastInteractionTime = Date.now();
+    });
+
+    document.addEventListener('mouseup', () => {
+      isDragging = false;
+      solarSystem.classList.remove('dragging');
+
+      // Обновляем время последнего взаимодействия
+      lastInteractionTime = Date.now();
+    });
+
+    solarSystem.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      const delta = e.deltaY > 0 ? -0.1 : 0.1;
+      scale = Math.max(0.5, Math.min(3, scale + delta));
+      scene.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+
+      crosshairCoords.textContent = `Center: (${Math.round(offsetX)}, ${Math.round(offsetY)}, 0)`;
+
+      mouseCoords.style.left = `${e.clientX + 15}px`;
+      mouseCoords.style.top = `${e.clientY + 15}px`;
+      mouseCoords.textContent = `Mouse: (${e.clientX}, ${e.clientY})`;
+
+      // Обновляем время последнего взаимодействия
+      lastInteractionTime = Date.now();
+      isReturningToCenter = false;
+    });
+
+    infoCard.addEventListener('mousedown', (e) => {
+      e.stopPropagation();
+
+      // Обновляем время последнего взаимодействия
+      lastInteractionTime = Date.now();
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      mouseCoords.style.left = `${e.clientX + 15}px`;
+      mouseCoords.style.top = `${e.clientY + 15}px`;
+      mouseCoords.textContent = `Mouse: (${e.clientX}, ${e.clientY})`;
+    });
+
+    function checkInactivity() {
+      const now = Date.now();
+      if (now - lastInteractionTime >= inactivityTimeout && !isReturningToCenter && !isPaused) {
+        isReturningToCenter = true;
+        const startX = offsetX;
+        const startY = offsetY;
+        const duration = 1000;
+        let startTime = null;
+
+        function animateReturn(timestamp) {
+          if (!startTime) startTime = timestamp;
+          const elapsed = timestamp - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+
+          offsetX = startX + (0 - startX) * progress;
+          offsetY = startY + (0 - startY) * progress;
+
+          scene.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+          crosshairCoords.textContent = `Center: (${Math.round(offsetX)}, ${Math.round(offsetY)}, 0)`;
+
+          if (progress < 1) {
+            requestAnimationFrame(animateReturn);
+          } else {
+            isReturningToCenter = false;
+          }
+        }
+
+        requestAnimationFrame(animateReturn);
+      }
+    }
+
+    setInterval(checkInactivity, 1000);
+
+    function updatePlanets() {
+      const now = Date.now();
+      
+      frameCount++;
+      if (now - lastTime >= 1000) {
+        fps = frameCount;
+        frameCount = 0;
+        lastTime = now;
+        fpsElement.textContent = `${fps} FPS`;
+      }
+
+      if (isPaused) {
+        requestAnimationFrame(updatePlanets);
+        return;
+      }
+
+      planetObjects.forEach(planetObj => {
+        const elapsedSeconds = (now - planetObj.startTime) / 1000;
+        const orbitTimeSeconds = planetObj.orbitTime * planetObj.speedFactor;
+        const progress = (elapsedSeconds % orbitTimeSeconds) / orbitTimeSeconds;
+        const angle = planetObj.angle + progress * 360;
+        const angleRad = angle * Math.PI / 180;
+        
+        const radius = planetObj.orbitSize / 2;
+        const x = Math.cos(angleRad) * radius;
+        const y = Math.sin(angleRad) * radius;
+        
+        planetObj.orientation.style.left = `${50 + 50 * (x / radius)}%`;
+        planetObj.orientation.style.top = `${50 + 50 * (y / radius)}%`;
+
+        const tiltCompensation = -galaxyTiltAngle;
+        planetObj.element.style.transform = `rotateX(${tiltCompensation}deg)`;
+      });
+      
+      requestAnimationFrame(updatePlanets);
+    }
+
+    const planetObjects = [];
+    planets.forEach((planet, index) => {
+      const orbit = planet.closest('.orbit');
+      const planetOrientation = planet.closest('.planet-orientation');
+      
+      const orbitSize = parseFloat(getComputedStyle(orbit).getPropertyValue('--orbit-size'));
+      const orbitTime = parseFloat(getComputedStyle(orbit).getPropertyValue('--orbit-time'));
+      
+      const initialAngle = Math.random() * 360;
+      const speedFactor = 0.8 + Math.random() * 0.4;
+      
+      planetObjects.push({
+        element: planet,
+        orientation: planetOrientation,
+        orbit: orbit,
+        size: parseFloat(getComputedStyle(planet).getPropertyValue('--planet-size')),
+        orbitSize: orbitSize,
+        orbitTime: orbitTime,
+        angle: initialAngle,
+        speedFactor: speedFactor,
+        startTime: Date.now() - Math.random() * orbitTime * 1000
+      });
+    });
+
+    let scrollVelocity = 0;
+    let lastScrollTime = 0;
+
+    galaxySelector.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      const delta = e.deltaY * 10;
+      scrollVelocity += delta;
+      lastScrollTime = Date.now();
+
+      lastInteractionTime = Date.now();
+    });
+
+    function smoothScroll() {
+      const now = Date.now();
+      const timeSinceLastScroll = now - lastScrollTime;
+
+      if (timeSinceLastScroll < 100) {
+        galaxySelector.scrollLeft += scrollVelocity;
+        scrollVelocity *= 0.95;
+      } else {
+        scrollVelocity = 0;
+      }
+
+      const containerRect = galaxySelector.getBoundingClientRect();
+      const containerCenter = containerRect.left + containerRect.width / 2;
+      const items = document.querySelectorAll('.galaxy-item');
+
+      items.forEach(item => {
+        const itemRect = item.getBoundingClientRect();
+        const itemCenter = itemRect.left + itemRect.width / 2;
+        const distanceFromCenter = Math.abs(containerCenter - itemCenter);
+        const maxDistance = containerRect.width / 2;
+
+        const scale = Math.max(0.5, 1 - (distanceFromCenter / maxDistance));
+        const fontSize = 16 * scale;
+        item.style.transform = `scale(${scale})`;
+        item.style.fontSize = `${fontSize}px`;
+      });
+
+      requestAnimationFrame(smoothScroll);
+    }
+
+    requestAnimationFrame(smoothScroll);
+
+    document.querySelectorAll('.galaxy-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const galaxyName = item.getAttribute('data-name');
+        window.location.href = `{% url 'planetary_system' %}?galaxy=${encodeURIComponent(galaxyName)}`;
+      });
+    });
+
+    requestAnimationFrame(updatePlanets);
+
+    crosshairCoords.textContent = `Center: (${Math.round(offsetX)}, ${Math.round(offsetY)}, 0)`;
+  </script>
+{% endblock %}

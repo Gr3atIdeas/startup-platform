@@ -1323,3 +1323,55 @@ def leave_chat(request, chat_id):
         return JsonResponse({'success': True, 'deleted': True})
 
     return JsonResponse({'success': True, 'deleted': False})
+
+
+
+
+# accounts/views.py
+def planetary_system(request):
+    # Получаем все направления из базы данных
+    directions = Directions.objects.all()
+
+    # Получаем текущую категорию (галактику) из GET-параметра или берём случайную
+    selected_galaxy = request.GET.get('galaxy', '')
+    if selected_galaxy:
+        current_direction = Directions.objects.filter(direction_name=selected_galaxy).first()
+    else:
+        current_direction = Directions.objects.order_by('?').first()  # Случайная категория, если не выбрана
+    selected_galaxy = current_direction.direction_name if current_direction else 'Технологии'
+
+    # Получаем 8 случайных стартапов для текущей категории
+    planetary_startups = Startups.objects.filter(
+        status='approved',
+        direction=current_direction
+    ).order_by('?')[:8]
+
+    # Формируем данные для планет
+    planets_data = []
+    for idx, startup in enumerate(planetary_startups, 1):
+        # Получаем URL логотипа
+        logo_url = startup.get_logo_url() or 'https://via.placeholder.com/150'  # Запасной URL, если логотипа нет
+        planet_data = {
+            'id': idx,
+            'name': startup.title,
+            'description': startup.description,
+            'rating': f"{startup.get_average_rating():.1f}/5 ({startup.total_voters})",
+            'progress': f"{startup.get_progress_percentage():.0f}%",
+            'funding': f"{startup.amount_raised or 0} ₽",
+            'investors': f"Инвесторов: {startup.get_investors_count()}",
+            'image': logo_url,
+        }
+        planets_data.append(planet_data)
+
+    # Данные для логотипа планетарной системы
+    logo_data = {
+        'image': 'https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/planets/Group%20645.png'
+    }
+
+    context = {
+        'planets_data': planets_data,
+        'directions': directions,
+        'selected_galaxy': selected_galaxy,
+        'logo_data': logo_data,
+    }
+    return render(request, 'accounts/planetary_system.html', context)

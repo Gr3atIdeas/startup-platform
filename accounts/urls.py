@@ -19,7 +19,7 @@ urlpatterns = [
     path('cosmochat/mark-read/<int:chat_id>/', views.mark_messages_read, name='mark_messages_read'),
     path('cosmochat/start-chat/<int:user_id>/', views.start_chat, name='start_chat'),
     path('cosmochat/add-participant/<int:chat_id>/', views.add_participant, name='add_participant'),
-    path('cosmochat/leave-chat/<int:chat_id>/', views.leave_chat, name='leave_chat'),  # Новый маршрут
+    path('cosmochat/leave-chat/<int:chat_id>/', views.leave_chat, name='leave_chat'),
     path('profile/', views.profile, name='profile'),
     path('create-startup/', views.create_startup, name='create_startup'),
     path('edit-startup/<int:startup_id>/', views.edit_startup, name='edit_startup'),
@@ -29,4 +29,5 @@ urlpatterns = [
     path('vote-startup/<int:startup_id>/', views.vote_startup, name='vote_startup'),
     path('invest/<int:startup_id>/', views.invest, name='invest'),
     path('search-suggestions/', views.search_suggestions, name='search_suggestions'),
+    path('planetary-system/', views.planetary_system, name='planetary_system'),  # Новый маршрут
 ]
