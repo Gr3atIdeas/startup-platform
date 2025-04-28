@@ -385,6 +385,8 @@
 <script>
   let currentChatId = null;
   let currentProfileUserId = null;
+  let lastMessageTimestamp = null; // Для отслеживания времени последнего сообщения
+  let pollingInterval = null; // Для хранения интервала опроса
 
   document.addEventListener('DOMContentLoaded', function() {
     // Загружаем первый чат при загрузке страницы
@@ -417,6 +419,7 @@
         if (data.success) {
           appendMessage(data.message);
           updateChatList(data.message);
+          lastMessageTimestamp = data.message.created_at; // Обновляем время последнего сообщения
           this.reset();
         } else {
           alert(data.error || 'Ошибка при отправке сообщения');
@@ -432,6 +435,11 @@
   function loadChat(chatId) {
     currentChatId = chatId;
     document.getElementById('chatId').value = chatId;
+
+    // Останавливаем предыдущий опрос, если он был
+    if (pollingInterval) {
+      clearInterval(pollingInterval);
+    }
 
     // Обновляем активный чат в списке
     document.querySelectorAll('.chat-item').forEach(item => {
@@ -457,6 +465,13 @@
         const participantsDiv = document.querySelector('.chat-participants');
         participantsDiv.innerHTML = data.participants.map(p => `<span>${p.name} (${p.role})</span>`).join(', ');
 
+        // Устанавливаем время последнего сообщения
+        if (data.messages.length > 0) {
+          lastMessageTimestamp = data.messages[data.messages.length - 1].created_at;
+        } else {
+          lastMessageTimestamp = null;
+        }
+
         // Прокручиваем вниз
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
 
@@ -467,6 +482,9 @@
             'X-CSRFToken': '{{ csrf_token }}'
           }
         });
+
+        // Запускаем опрос новых сообщений
+        startPolling();
       } else {
         alert(data.error || 'Ошибка при загрузке чата');
       }
@@ -475,6 +493,48 @@
       console.error('Ошибка:', error);
       alert('Произошла ошибка при загрузке чата');
     });
+  }
+
+  function startPolling() {
+    pollingInterval = setInterval(() => {
+      if (!currentChatId) return;
+
+      fetch(`/cosmochat/${currentChatId}/`, {
+        headers: {
+          'X-CSRFToken': '{{ csrf_token }}'
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          const messagesDiv = document.querySelector('.chat-messages');
+          const newMessages = lastMessageTimestamp
+            ? data.messages.filter(msg => msg.created_at > lastMessageTimestamp)
+            : data.messages;
+
+          newMessages.forEach(msg => appendMessage(msg));
+
+          if (newMessages.length > 0) {
+            lastMessageTimestamp = newMessages[newMessages.length - 1].created_at;
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+            // Обновляем статус в списке чатов
+            updateChatList(newMessages[newMessages.length - 1]);
+
+            // Отмечаем новые сообщения как прочитанные
+            fetch(`/cosmochat/mark-read/${currentChatId}/`, {
+              method: 'POST',
+              headers: {
+                'X-CSRFToken': '{{ csrf_token }}'
+              }
+            });
+          }
+        }
+      })
+      .catch(error => {
+        console.error('Ошибка при опросе новых сообщений:', error);
+      });
+    }, 5000); // Опрашиваем каждые 5 секунд
   }
 
   function appendMessage(msg) {
@@ -495,8 +555,22 @@
   function updateChatList(lastMessage) {
     const chatItem = document.querySelector(`.chat-item[data-chat-id="${currentChatId}"]`);
     if (chatItem) {
-      chatItem.querySelector('p:nth-child(2)').textContent = lastMessage.message_text.substring(0, 50);
-      chatItem.querySelector('p:nth-child(3)').innerHTML = `${lastMessage.created_at} <span class="status">${lastMessage.is_read ? '(Прочитано)' : '(Не прочитано)'}</span>`;
+      let messageTextP = chatItem.querySelector('p:nth-child(2)');
+      let metaP = chatItem.querySelector('p:nth-child(3)');
+
+      // Если элементов <p> нет (например, было "Сообщений пока нет"), заменяем или добавляем их
+      if (!messageTextP) {
+        messageTextP = document.createElement('p');
+        chatItem.appendChild(messageTextP);
+      }
+      if (!metaP) {
+        metaP = document.createElement('p');
+        chatItem.appendChild(metaP);
+      }
+
+      // Обновляем содержимое
+      messageTextP.textContent = lastMessage.message_text.substring(0, 50);
+      metaP.innerHTML = `${lastMessage.created_at} <span class="status">${lastMessage.is_read ? '(Прочитано)' : '(Не прочитано)'}</span>`;
     }
   }
 
