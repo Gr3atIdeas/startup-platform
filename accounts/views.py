@@ -1356,18 +1356,11 @@ def planetary_system(request):
     # Формируем данные для планет
     planets_data = []
     for idx, startup in enumerate(planetary_startups, 1):
-        # Проверяем наличие logo_urls
-        if not startup.logo_urls or not isinstance(startup.logo_urls, list) or len(startup.logo_urls) == 0:
-            logger.warning(f"Стартап {startup.startup_id} ({startup.title}) не имеет логотипа в logo_urls")
+        # Используем метод get_logo_url из модели Startups для генерации URL
+        logo_url = startup.get_logo_url()
+        if not logo_url:
+            logger.warning(f"Не удалось сгенерировать URL для логотипа стартапа {startup.startup_id}")
             logo_url = 'https://via.placeholder.com/150'
-        else:
-            # Генерируем URL логотипа
-            try:
-                logo_url = default_storage.url(f"startups/{startup.startup_id}/logos/{startup.logo_urls[0]}_")
-                logger.info(f"Сгенерирован URL для логотипа стартапа {startup.startup_id}: {logo_url}")
-            except Exception as e:
-                logger.error(f"Ошибка при генерации URL для логотипа стартапа {startup.startup_id}: {str(e)}")
-                logo_url = 'https://via.placeholder.com/150'
 
         # Вычисляем размеры орбит и планет
         orbit_size = 200 + (idx - 1) * 100
