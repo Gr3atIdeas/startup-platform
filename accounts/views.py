@@ -1081,6 +1081,7 @@ def delete_news(request, article_id):
     article.delete()
     return JsonResponse({'success': True})
 
+# accounts/views.py
 def cosmochat(request):
     # Получаем чаты пользователя
     chats = []
@@ -1108,10 +1109,14 @@ def cosmochat(request):
     if request.user.is_authenticated:
         users = users.exclude(user_id=request.user.user_id)
 
+    # Создаём форму для отправки сообщений
+    message_form = MessageForm()
+
     return render(request, 'accounts/cosmochat.html', {
         'search_form': search_form,
         'users': users,
         'chats': chats,
+        'message_form': message_form,  # Добавляем message_form в контекст
     })
 
 def get_chat_messages(request, chat_id):
