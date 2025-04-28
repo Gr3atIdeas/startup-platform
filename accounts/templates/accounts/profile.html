@@ -1,13 +1,10 @@
 {% extends 'accounts/base.html' %}
 {% load static %}
-{# Удаляем тестовый логотип и аватар #}
-{# <img src="{% static 'accounts/images/logo.png' %}" alt="Logo"> #}
-{# <img src="{% static 'accounts/images/avatars/user_3_avatar.png' %}" alt="Avatar"> #}
 
 {% block title %}Профиль пользователя{% endblock %}
 
 {% block content %}
-    <h1>Профиль пользователя</h1>
+    <h1>Профиль пользователя {{ user.first_name }} {{ user.last_name }}</h1>
     {% if messages %}
         <ul>
             {% for message in messages %}
@@ -16,28 +13,27 @@
         </ul>
     {% endif %}
     {% if user.is_authenticated %}
-        <h2>Загрузка аватарки</h2>
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            <input type="file" name="avatar" accept="image/*" required>
-            <button type="submit">Загрузить аватарку</button>
-        </form>
+        {% if is_own_profile %}
+            <h2>Загрузка аватарки</h2>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="file" name="avatar" accept="image/*" required>
+                <button type="submit">Загрузить аватарку</button>
+            </form>
+        {% endif %}
         {% if user.profile_picture_url %}
             <h3>Текущая аватарка:</h3>
-            {# Возвращаем использование static тега для URL из модели #}
-            <img src="{% static user.profile_picture_url %}" alt="Аватарка" style="max-width: 200px;">
+            <img src="{{ user.profile_picture_url }}" alt="Аватарка" style="max-width: 200px;">
         {% endif %}
         <h2>Информация о пользователе</h2>
         <table border="1">
             <tr><th>Поле</th><th>Значение</th></tr>
             <tr><td>ID пользователя</td><td>{{ user.user_id }}</td></tr>
             <tr><td>Email</td><td>{{ user.email }}</td></tr>
-            <tr><td>Хеш пароля</td><td>{{ user.password_hash }}</td></tr>
             <tr><td>Имя</td><td>{{ user.first_name }}</td></tr>
             <tr><td>Фамилия</td><td>{{ user.last_name }}</td></tr>
             <tr><td>Телефон</td><td>{{ user.phone|default:"Не указан" }}</td></tr>
             <tr><td>Роль</td><td>{{ user.role.role_name|default:"Не указана" }}</td></tr>
-            <tr><td>URL фото профиля</td><td>{{ user.profile_picture_url|default:"Не указан" }}</td></tr>
             <tr><td>Биография</td><td>{{ user.bio|default:"Не указана" }}</td></tr>
             <tr><td>Рейтинг</td><td>{{ user.rating|default:"Не указан" }}</td></tr>
             <tr><td>Статус</td><td>{{ user.status.status_name|default:"Не указан" }}</td></tr>
@@ -48,9 +44,10 @@
             <tr><td>Сотрудник</td><td>{{ user.is_staff|yesno:"Да,Нет" }}</td></tr>
         </table>
 
-        <h2>Создать стартап</h2>
-        <a href="{% url 'create_startup' %}" class="startup-button">Создать стартап</a>
-        
+        {% if is_own_profile %}
+            <h2>Создать стартап</h2>
+            <a href="{% url 'create_startup' %}" class="startup-button">Создать стартап</a>
+        {% endif %}
     {% else %}
         <p>Вы не авторизованы.</p>
     {% endif %}
