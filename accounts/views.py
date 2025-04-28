@@ -417,10 +417,17 @@ def investments(request):
 def legal(request):
     return render(request, 'accounts/legal.html')
 
-def profile(request):
+# accounts/views.py
+def profile(request, user_id=None):
     if not request.user.is_authenticated:
         messages.error(request, 'Пожалуйста, войдите в систему, чтобы просмотреть профиль.')
         return redirect('login')
+
+    # Если передан user_id, показываем профиль этого пользователя
+    if user_id:
+        profile_user = get_object_or_404(Users, user_id=user_id)
+    else:
+        profile_user = request.user
 
     # Если запрос через AJAX для профиля
     if request.GET.get('user_id'):
@@ -434,7 +441,8 @@ def profile(request):
             'profile_picture_url': user.profile_picture_url
         })
 
-    if request.method == 'POST' and 'avatar' in request.FILES:
+    # Обработка загрузки аватара (доступно только для своего профиля)
+    if request.method == 'POST' and 'avatar' in request.FILES and profile_user == request.user:
         avatar = request.FILES['avatar']
         filename = f'avatars/user_{request.user.user_id}_avatar{os.path.splitext(avatar.name)[1]}'
         file_path = default_storage.save(filename, avatar)
@@ -442,7 +450,7 @@ def profile(request):
         request.user.save()
         messages.success(request, 'Аватарка успешно загружена!')
 
-    return render(request, 'accounts/profile.html', {'user': request.user})
+    return render(request, 'accounts/profile.html', {'user': profile_user, 'is_own_profile': profile_user == request.user})
 
 @login_required
 def create_startup(request):
