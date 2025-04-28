@@ -6,13 +6,20 @@
 {% block head_extra %}
   <style>
     /* Стили для планетарной системы */
+    .planetary-system-wrapper {
+      padding: 20px; /* Отступы со всех сторон */
+      height: calc(100vh - 40px); /* Учитываем отступы */
+      box-sizing: border-box;
+    }
+
     .planetary-system-container {
       position: relative;
       width: 100%;
-      height: 100vh;
+      height: 100%;
       margin: 0 auto;
-      padding: 20px 0;
       box-sizing: border-box;
+      border: 2px solid rgba(255, 255, 255, 0.3); /* Рамка */
+      border-radius: 10px; /* Скругленные углы */
     }
 
     .space-background {
@@ -413,54 +420,56 @@
 {% endblock %}
 
 {% block content %}
-  <div class="planetary-system-container">
-    <div class="space-background"></div>
-    <div class="stars"></div>
-    <div id="solar-system">
-      <div id="scene">
-        <div id="galaxy">
-          <div id="logo" style="background-image: url('{{ logo_data.image }}');"></div>
-          {% for planet in planets_data %}
-            <div class="orbit" style="--orbit-size: {{ planet.orbit_size }}px; --orbit-time: {{ planet.orbit_time }}s;">
-              <div class="planet-orientation">
-                <div class="planet" style="--planet-size: {{ planet.planet_size }}px; background-image: url('{{ planet.image }}');" data-id="{{ planet.id }}"></div>
+  <div class="planetary-system-wrapper">
+    <div class="planetary-system-container">
+      <div class="space-background"></div>
+      <div class="stars"></div>
+      <div id="solar-system">
+        <div id="scene">
+          <div id="galaxy">
+            <div id="logo" style="background-image: url('{{ logo_data.image }}');"></div>
+            {% for planet in planets_data %}
+              <div class="orbit" style="--orbit-size: {{ planet.orbit_size }}px; --orbit-time: {{ planet.orbit_time }}s;">
+                <div class="planet-orientation">
+                  <div class="planet" style="--planet-size: {{ planet.planet_size }}px; background-image: url('{{ planet.image }}');" data-id="{{ planet.id }}"></div>
+                </div>
               </div>
-            </div>
-          {% endfor %}
+            {% endfor %}
+          </div>
         </div>
       </div>
-    </div>
-    <div id="info-card">
-      <button id="close-card">×</button>
-      <div class="planet-image" id="planet-image"></div>
-      <h2 id="startup-name"></h2>
-      <div class="rating" id="startup-rating"></div>
-      <div class="progress-bar">
-        <button>Выкуп+инвестирование</button>
-        <div class="progress" id="startup-progress"></div>
+      <div id="info-card">
+        <button id="close-card">×</button>
+        <div class="planet-image" id="planet-image"></div>
+        <h2 id="startup-name"></h2>
+        <div class="rating" id="startup-rating"></div>
+        <div class="progress-bar">
+          <button>Выкуп+инвестирование</button>
+          <div class="progress" id="startup-progress"></div>
+        </div>
+        <div class="funding" id="startup-funding"></div>
+        <div class="investors" id="startup-investors"></div>
+        <div class="description" id="startup-description"></div>
+        <button class="more-details" id="more-details">Подробнее</button>
       </div>
-      <div class="funding" id="startup-funding"></div>
-      <div class="investors" id="startup-investors"></div>
-      <div class="description" id="startup-description"></div>
-      <button class="more-details" id="more-details">Подробнее</button>
-    </div>
-    <div id="crosshair"></div>
-    <div id="crosshair-coords"></div>
-    <div id="mouse-coords"></div>
-    <div id="axes">
-      <div class="axis" id="axis-x"></div>
-      <div class="axis" id="axis-y"></div>
-      <div class="axis" id="axis-z"></div>
-      <div class="axis-label" id="label-x">X</div>
-      <div class="axis-label" id="label-y">Y</div>
-      <div class="axis-label" id="label-z">Z</div>
-    </div>
-    <div id="fps">0 FPS</div>
-    <div id="galaxy-selector">
-      <div id="galaxy-list">
-        {% for direction in directions %}
-          <div class="galaxy-item {% if direction.direction_name == selected_galaxy %}selected{% endif %}" data-name="{{ direction.direction_name }}">{{ direction.direction_name }}</div>
-        {% endfor %}
+      <div id="crosshair"></div>
+      <div id="crosshair-coords"></div>
+      <div id="mouse-coords"></div>
+      <div id="axes">
+        <div class="axis" id="axis-x"></div>
+        <div class="axis" id="axis-y"></div>
+        <div class="axis" id="axis-z"></div>
+        <div class="axis-label" id="label-x">X</div>
+        <div class="axis-label" id="label-y">Y</div>
+        <div class="axis-label" id="label-z">Z</div>
+      </div>
+      <div id="fps">0 FPS</div>
+      <div id="galaxy-selector">
+        <div id="galaxy-list">
+          {% for direction in directions %}
+            <div class="galaxy-item {% if direction.direction_name == selected_galaxy %}selected{% endif %}" data-name="{{ direction.direction_name }}">{{ direction.direction_name }}</div>
+          {% endfor %}
+        </div>
       </div>
     </div>
   </div>
@@ -477,7 +486,8 @@
           progress: '{{ planet.progress }}',
           funding: '{{ planet.funding }}',
           investors: '{{ planet.investors }}',
-          image: '{{ planet.image }}'
+          image: '{{ planet.image }}',
+          startup_id: '{{ planet.startup_id }}'  // Добавляем startup_id
         }{% if not forloop.last %},{% endif %}
       {% endfor %}
     };
@@ -501,6 +511,9 @@
     const fpsElement = document.getElementById('fps');
     const galaxySelector = document.getElementById('galaxy-selector');
     const galaxyList = document.getElementById('galaxy-list');
+
+    // Переменная для хранения текущего выбранного стартапа
+    let currentStartupId = null;
 
     // Начальный угол наклона галактики
     const galaxyTiltAngle = 45;
@@ -547,6 +560,9 @@
         startupInvestors.textContent = startup.investors;
         startupDescription.textContent = startup.description;
 
+        // Сохраняем startup_id текущего стартапа
+        currentStartupId = startup.startup_id;
+
         planets.forEach(p => p.classList.remove('active'));
         planet.classList.add('active');
         infoCard.style.display = 'block';
@@ -578,6 +594,15 @@
     });
 
     moreDetails.addEventListener('click', () => {
+      // Проверяем, есть ли текущий startup_id
+      if (currentStartupId) {
+        // Перенаправляем пользователя на страницу стартапа
+        window.location.href = `/startups/${currentStartupId}/`;
+      } else {
+        console.error('Startup ID не найден для перехода на страницу стартапа');
+      }
+
+      // Скрываем карточку
       infoCard.style.display = 'none';
       planets.forEach(p => p.classList.remove('active'));
 

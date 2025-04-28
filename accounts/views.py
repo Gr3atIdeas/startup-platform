@@ -1325,6 +1325,7 @@ def leave_chat(request, chat_id):
     return JsonResponse({'success': True, 'deleted': False})
 
 
+# accounts/views.py
 import boto3
 
 def planetary_system(request):
@@ -1383,15 +1384,8 @@ def planetary_system(request):
                 if 'Contents' in response and len(response['Contents']) > 0:
                     # Берём первый (и единственный) файл
                     file_key = response['Contents'][0]['Key']
-                    # Генерируем подписанный URL для файла
-                    logo_url = s3_client.generate_presigned_url(
-                        'get_object',
-                        Params={
-                            'Bucket': settings.AWS_STORAGE_BUCKET_NAME,
-                            'Key': file_key
-                        },
-                        ExpiresIn=3600  # URL действителен 1 час
-                    )
+                    # Генерируем URL без подписи, так как файл публичный
+                    logo_url = f"https://storage.yandexcloud.net/{settings.AWS_STORAGE_BUCKET_NAME}/{file_key}"
                     logger.info(f"Сгенерирован URL для логотипа стартапа {startup.startup_id}: {logo_url}")
                 else:
                     logger.warning(f"Файл для логотипа стартапа {startup.startup_id} не найден в бакете по префиксу {prefix}")
@@ -1407,6 +1401,7 @@ def planetary_system(request):
 
         planet_data = {
             'id': idx,
+            'startup_id': startup.startup_id,  # Добавляем startup_id
             'name': startup.title,
             'description': startup.description,
             'rating': f"{startup.get_average_rating():.1f}/5 ({startup.total_voters})",
