@@ -406,10 +406,10 @@ def investments(request):
         'invested_category_data': invested_category_data_dict, # Передаем обновленный словарь
         'current_sort': sort_param, # Передаем текущую сортировку для выделения активной кнопки
     }
-    context['month_labels'] = json.dumps(month_labels)
-    context['month_data'] = json.dumps(monthly_totals)
-    context['all_directions'] = json.dumps(all_directions_list)
-    context['invested_category_data'] = json.dumps(invested_category_data_dict)
+    # context['month_labels'] = json.dumps(month_labels) # УДАЛЯЕМ - json_script сделает это сам
+    # context['month_data'] = json.dumps(monthly_totals) # УДАЛЯЕМ - json_script сделает это сам
+    # context['all_directions'] = json.dumps(all_directions_list) # УДАЛЯЕМ - json_script сделает это сам
+    # context['invested_category_data'] = json.dumps(invested_category_data_dict) # УДАЛЯЕМ - json_script сделает это сам
 
     return render(request, 'accounts/investments.html', context)
 
