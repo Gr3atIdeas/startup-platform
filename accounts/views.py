@@ -1325,9 +1325,8 @@ def leave_chat(request, chat_id):
     return JsonResponse({'success': True, 'deleted': False})
 
 
+import boto3
 
-
-# accounts/views.py
 def planetary_system(request):
     # Получаем все направления из базы данных
     directions = Directions.objects.all()
@@ -1353,14 +1352,53 @@ def planetary_system(request):
     planetary_startups = planetary_startups[:8]
     logger.info(f"Выбрано стартапов для отображения: {len(planetary_startups)}")
 
+    # Инициализируем S3-клиент для доступа к Yandex Object Storage
+    s3_client = boto3.client(
+        's3',
+        aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+        aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+        endpoint_url=settings.AWS_S3_ENDPOINT_URL,
+        region_name=settings.AWS_S3_REGION_NAME
+    )
+
     # Формируем данные для планет
     planets_data = []
     for idx, startup in enumerate(planetary_startups, 1):
-        # Используем метод get_logo_url из модели Startups для генерации URL
-        logo_url = startup.get_logo_url()
-        if not logo_url:
-            logger.warning(f"Не удалось сгенерировать URL для логотипа стартапа {startup.startup_id}")
+        # Проверяем наличие logo_urls
+        if not startup.logo_urls or not isinstance(startup.logo_urls, list) or len(startup.logo_urls) == 0:
+            logger.warning(f"Стартап {startup.startup_id} ({startup.title}) не имеет логотипа в logo_urls")
             logo_url = 'https://via.placeholder.com/150'
+        else:
+            try:
+                # Формируем префикс для поиска файла в папке startups/{startup_id}/logos/
+                prefix = f"startups/{startup.startup_id}/logos/"
+
+                # Ищем файлы в этой папке
+                response = s3_client.list_objects_v2(
+                    Bucket=settings.AWS_STORAGE_BUCKET_NAME,
+                    Prefix=prefix
+                )
+
+                # Проверяем, есть ли файлы в папке
+                if 'Contents' in response and len(response['Contents']) > 0:
+                    # Берём первый (и единственный) файл
+                    file_key = response['Contents'][0]['Key']
+                    # Генерируем подписанный URL для файла
+                    logo_url = s3_client.generate_presigned_url(
+                        'get_object',
+                        Params={
+                            'Bucket': settings.AWS_STORAGE_BUCKET_NAME,
+                            'Key': file_key
+                        },
+                        ExpiresIn=3600  # URL действителен 1 час
+                    )
+                    logger.info(f"Сгенерирован URL для логотипа стартапа {startup.startup_id}: {logo_url}")
+                else:
+                    logger.warning(f"Файл для логотипа стартапа {startup.startup_id} не найден в бакете по префиксу {prefix}")
+                    logo_url = 'https://via.placeholder.com/150'
+            except Exception as e:
+                logger.error(f"Ошибка при генерации URL для логотипа стартапа {startup.startup_id}: {str(e)}")
+                logo_url = 'https://via.placeholder.com/150'
 
         # Вычисляем размеры орбит и планет
         orbit_size = 200 + (idx - 1) * 100
