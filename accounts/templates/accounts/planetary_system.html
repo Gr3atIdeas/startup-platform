@@ -421,9 +421,9 @@
         <div id="galaxy">
           <div id="logo" style="background-image: url('{{ logo_data.image }}');"></div>
           {% for planet in planets_data %}
-            <div class="orbit" style="--orbit-size: {{ 200|add:forloop.counter0|multiply:100 }}px; --orbit-time: {{ 80|add:forloop.counter0|multiply:20 }}s;">
+            <div class="orbit" style="--orbit-size: {{ planet.orbit_size }}px; --orbit-time: {{ planet.orbit_time }}s;">
               <div class="planet-orientation">
-                <div class="planet" style="--planet-size: {{ planet.id|multiply:2|add:50 }}px; background-image: url('{{ planet.image }}');" data-id="{{ planet.id }}"></div>
+                <div class="planet" style="--planet-size: {{ planet.planet_size }}px; background-image: url('{{ planet.image }}');" data-id="{{ planet.id }}"></div>
               </div>
             </div>
           {% endfor %}

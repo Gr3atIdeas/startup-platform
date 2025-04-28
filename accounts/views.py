@@ -1351,6 +1351,10 @@ def planetary_system(request):
     for idx, startup in enumerate(planetary_startups, 1):
         # Получаем URL логотипа
         logo_url = startup.get_logo_url() or 'https://via.placeholder.com/150'  # Запасной URL, если логотипа нет
+        # Вычисляем размеры орбит и планет
+        orbit_size = 200 + (idx - 1) * 100  # Аналогично {{ 200|add:forloop.counter0|multiply:100 }}
+        orbit_time = 80 + (idx - 1) * 20    # Аналогично {{ 80|add:forloop.counter0|multiply:20 }}
+        planet_size = idx * 2 + 50          # Аналогично {{ planet.id|multiply:2|add:50 }}
         planet_data = {
             'id': idx,
             'name': startup.title,
@@ -1360,6 +1364,9 @@ def planetary_system(request):
             'funding': f"{startup.amount_raised or 0} ₽",
             'investors': f"Инвесторов: {startup.get_investors_count()}",
             'image': logo_url,
+            'orbit_size': orbit_size,
+            'orbit_time': orbit_time,
+            'planet_size': planet_size,
         }
         planets_data.append(planet_data)
 
