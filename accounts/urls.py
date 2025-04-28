@@ -30,5 +30,5 @@ urlpatterns = [
     path('invest/<int:startup_id>/', views.invest, name='invest'),
     path('search-suggestions/', views.search_suggestions, name='search_suggestions'),
     path('planetary-system/', views.planetary_system, name='planetary_system'),  # Новый маршрут
-    path('my-startups/', views.my_startups, name='my_startups'),  # Новый маршрут
+    path('my_startups/', views.my_startups, name='my_startups'),  # Изменяем my-startups на my_startups
 ]

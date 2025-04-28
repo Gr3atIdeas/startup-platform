@@ -1429,11 +1429,12 @@ def planetary_system(request):
     return render(request, 'accounts/planetary_system.html', context)
 
 
+# accounts/views.py
 @login_required
 def my_startups(request):
     # Временная заглушка, чтобы страница отображалась
     # Позже здесь будет логика для стартаперов
-    return render(request, 'accounts/my-startups.html', {
+    return render(request, 'accounts/my_startups.html', {  # Изменяем my-startups.html на my_startups.html
         'startups_count': 0,
         'total_investment': 0,
         'max_investment': 0,
