@@ -1427,3 +1427,21 @@ def planetary_system(request):
         'logo_data': logo_data,
     }
     return render(request, 'accounts/planetary_system.html', context)
+
+
+@login_required
+def my_startups(request):
+    # Временная заглушка, чтобы страница отображалась
+    # Позже здесь будет логика для стартаперов
+    return render(request, 'accounts/my-startups.html', {
+        'startups_count': 0,
+        'total_investment': 0,
+        'max_investment': 0,
+        'min_investment': 0,
+        'investment_categories': [],
+        'month_labels': [],
+        'month_data': [],
+        'all_directions': [],
+        'invested_category_data': {},
+        'user_investments': [],
+    })
