@@ -1340,21 +1340,40 @@ def planetary_system(request):
         current_direction = Directions.objects.order_by('?').first()  # Случайная категория, если не выбрана
     selected_galaxy = current_direction.direction_name if current_direction else 'Технологии'
 
-    # Получаем 8 случайных стартапов для текущей категории
+    # Получаем стартапы для текущей категории
     planetary_startups = Startups.objects.filter(
         status='approved',
         direction=current_direction
-    ).order_by('?')[:8]
+    ).order_by('?')
+
+    # Логируем общее количество стартапов в категории
+    logger.info(f"Найдено стартапов в категории '{selected_galaxy}': {planetary_startups.count()}")
+
+    # Ограничиваем до 8 стартапов (или берём столько, сколько есть, если меньше)
+    planetary_startups = planetary_startups[:8]
+    logger.info(f"Выбрано стартапов для отображения: {len(planetary_startups)}")
 
     # Формируем данные для планет
     planets_data = []
     for idx, startup in enumerate(planetary_startups, 1):
-        # Получаем URL логотипа
-        logo_url = startup.get_logo_url() or 'https://via.placeholder.com/150'  # Запасной URL, если логотипа нет
+        # Проверяем наличие logo_urls
+        if not startup.logo_urls or not isinstance(startup.logo_urls, list) or len(startup.logo_urls) == 0:
+            logger.warning(f"Стартап {startup.startup_id} ({startup.title}) не имеет логотипа в logo_urls")
+            logo_url = 'https://via.placeholder.com/150'
+        else:
+            # Генерируем URL логотипа
+            try:
+                logo_url = default_storage.url(f"startups/{startup.startup_id}/logos/{startup.logo_urls[0]}_")
+                logger.info(f"Сгенерирован URL для логотипа стартапа {startup.startup_id}: {logo_url}")
+            except Exception as e:
+                logger.error(f"Ошибка при генерации URL для логотипа стартапа {startup.startup_id}: {str(e)}")
+                logo_url = 'https://via.placeholder.com/150'
+
         # Вычисляем размеры орбит и планет
-        orbit_size = 200 + (idx - 1) * 100  # Аналогично {{ 200|add:forloop.counter0|multiply:100 }}
-        orbit_time = 80 + (idx - 1) * 20    # Аналогично {{ 80|add:forloop.counter0|multiply:20 }}
-        planet_size = idx * 2 + 50          # Аналогично {{ planet.id|multiply:2|add:50 }}
+        orbit_size = 200 + (idx - 1) * 100
+        orbit_time = 80 + (idx - 1) * 20
+        planet_size = idx * 2 + 50
+
         planet_data = {
             'id': idx,
             'name': startup.title,
