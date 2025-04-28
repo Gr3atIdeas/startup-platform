@@ -1125,7 +1125,7 @@ def cosmochat(request):
         users_data = [{
             'user_id': user.user_id,
             'name': f"{user.first_name} {user.last_name}",
-            'role': user.role.role_name if user.role else 'Неизвестно'
+            'role': user.role.role_name if user.role else 'Система'
         } for user in users]
         return JsonResponse({'users': users_data})
 

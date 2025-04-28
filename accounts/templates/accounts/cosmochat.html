@@ -399,6 +399,7 @@
       <p id="profileRating"></p>
       <p id="profileBio"></p>
       <button onclick="startChat()">Начать чат</button>
+      <a id="profileLink" href="#"><button>К профилю</button></a> <!-- Новая кнопка -->
     </div>
   </div>
 
@@ -626,6 +627,7 @@
       document.getElementById('profileRole').textContent = `Роль: ${data.role}`;
       document.getElementById('profileRating').textContent = `Рейтинг: ${data.rating || 'Нет рейтинга'}`;
       document.getElementById('profileBio').textContent = `О себе: ${data.bio || 'Нет информации'}`;
+      document.getElementById('profileLink').href = `/profile/${userId}/`; // Устанавливаем ссылку
       document.getElementById('profileModal').style.display = 'flex';
     })
     .catch(error => {
