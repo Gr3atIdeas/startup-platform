@@ -17,7 +17,7 @@ from .models import creative_upload_path, proof_upload_path, video_upload_path
 import uuid
 from .models import Comments
 from .forms import CommentForm
-from django.db.models import Count, Sum, Avg, F, FloatField, Max, Min
+from django.db.models import Count, Sum, Avg, F, FloatField, Max, Min, Q # Добавляем Q
 from decimal import Decimal
 from .models import NewsArticles, NewsLikes, NewsViews  # Добавляем новые модели
 from django.core.files.storage import default_storage  # Для работы с файлами
