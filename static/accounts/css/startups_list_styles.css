@@ -11,7 +11,7 @@ body {
   box-sizing: border-box; /* Учитываем padding в общей ширине */
   width: 100%; /* Занимаем всю ширину */
   margin: 0;
-  padding: 20px 50px; /* <<< Изменено: Добавляем вертикальный 20px и горизонтальный 50px отступы */
+  padding: 20px 70px; /* <<< Изменено: Добавляем вертикальный 20px и горизонтальный 70px отступы */
 }
 
 .catalog-container {
@@ -86,7 +86,7 @@ body {
   height: 36px;
   border: none;
   border-radius: 99px;
-  padding: 0 50px 0 20px;
+  padding: 0 70px 0 20px;
   font-size: 16px;
   box-sizing: border-box;
   font-family: 'Unbounded', sans-serif;

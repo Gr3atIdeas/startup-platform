@@ -42,7 +42,8 @@ body {
 /* Общие стили для страницы инвестиций */
 .portfolio-container {
   width: 100%;
-  padding: 0 50px; /* Возвращаем боковые отступы 50px */
+  margin: 0 auto; /* Центрируем контейнер */
+  padding: 0 70px; /* Возвращаем боковые отступы 70px */
   box-sizing: border-box;
   /* Применяем базовый шрифт Unbounded */
   font-family: 'Unbounded', sans-serif; 
