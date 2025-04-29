@@ -1542,7 +1542,8 @@ def my_startups(request):
     # --- Все направления для модального окна ---
     all_directions_qs = Directions.objects.all().order_by('direction_name')
     # Преобразуем в список словарей для JSON, передавая оригинальное имя для JS
-    all_directions_list = list(all_directions_qs.values('pk', direction_name='direction_name'))
+    # Исправляем использование .values() - передаем имена полей как строки
+    all_directions_list = list(all_directions_qs.values('pk', 'direction_name'))
 
 
     context = {
