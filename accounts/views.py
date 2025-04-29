@@ -1094,12 +1094,17 @@ def delete_news(request, article_id):
 
 # accounts/views.py
 def cosmochat(request):
+    # Проверяем авторизацию
+    if not request.user.is_authenticated:
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return JsonResponse({'success': False, 'error': 'Требуется авторизация'}, status=401)
+        messages.error(request, 'Пожалуйста, войдите в систему, чтобы получить доступ к чату.')
+        return redirect('login')
+
     # Получаем чаты пользователя
-    chats = []
-    if request.user.is_authenticated:
-        chats = ChatConversations.objects.filter(
-            chatparticipants__user=request.user
-        ).order_by('-updated_at')
+    chats = ChatConversations.objects.filter(
+        chatparticipants__user=request.user
+    ).order_by('-updated_at')
 
     # Форма для поиска пользователей
     search_form = UserSearchForm(request.GET)
@@ -1117,17 +1122,36 @@ def cosmochat(request):
             users = users.filter(role__role_name__in=roles)
 
     # Исключаем текущего пользователя из списка
-    if request.user.is_authenticated:
-        users = users.exclude(user_id=request.user.user_id)
+    users = users.exclude(user_id=request.user.user_id)
+
+    # Если есть параметр chat_id, исключаем текущих участников чата
+    chat_id = request.GET.get('chat_id')
+    if chat_id:
+        chat = ChatConversations.objects.filter(conversation_id=chat_id).first()
+        if chat:
+            participant_ids = chat.chatparticipants_set.values_list('user_id', flat=True)
+            users = users.exclude(user_id__in=participant_ids)
+        else:
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'success': False, 'error': 'Чат не найден'}, status=404)
 
     # Создаём форму для отправки сообщений
     message_form = MessageForm()
+
+    # Если это AJAX-запрос, возвращаем JSON
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        users_data = [{
+            'user_id': user.user_id,
+            'name': f"{user.first_name} {user.last_name}",
+            'role': user.role.role_name if user.role else 'Система'
+        } for user in users]
+        return JsonResponse({'users': users_data})
 
     return render(request, 'accounts/cosmochat.html', {
         'search_form': search_form,
         'users': users,
         'chats': chats,
-        'message_form': message_form,  # Добавляем message_form в контекст
+        'message_form': message_form,
     })
 
 # accounts/views.py
