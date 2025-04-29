@@ -10,11 +10,11 @@
   {# Добавляем стили для раздела заявок #}
   <style>
     /* Добавляем стиль для фона портфолио */
-    .startuper-portfolio-bg {
+    /* .startuper-portfolio-bg {
         background-image: url('{% static "accounts/images/startuper_portfolio_bg.jpg" %}');
         background-size: cover;
         background-position: center;
-    }
+    } */ /* Убираем стиль, так как файла нет */
 
     .applications-section {
       color: #FFFFFF;
@@ -115,7 +115,7 @@
       <!-- Верхняя секция с аналитикой -->
       <div class="analytics-section">
         <div class="analytics-left">
-          <div class="portfolio-image-container startuper-portfolio-bg"> {# Используем CSS класс вместо инлайн-стиля #}
+          <div class="portfolio-image-container"> {# Убрали класс startuper-portfolio-bg #}
             <button class="portfolio-image-fullscreen-btn">
               <i class="fas fa-expand"></i>
             </button>
