@@ -26,6 +26,7 @@ from django.core.paginator import Paginator
 from django.template.loader import render_to_string
 from django.db.models.functions import TruncMonth # Добавляем для группировки по месяцам
 import datetime # Добавляем для работы с датами
+from django.db.models.functions import Coalesce # Добавляем Coalesce
 
 
 logger = logging.getLogger(__name__)
@@ -1442,67 +1443,73 @@ def my_startups(request):
         messages.error(request, 'Доступ к этой странице разрешен только стартаперам.')
         return redirect('profile') # Или на другую страницу, например, home
 
-    # Получаем все стартапы пользователя
+    # Получаем ВСЕ стартапы пользователя (не только одобренные)
     user_startups_qs = Startups.objects.filter(owner=request.user).select_related(
         'direction', 'stage', 'status_id'
     ).prefetch_related('comments') # Предзагружаем комментарии
 
-    # Фильтруем одобренные стартапы для основной секции и аналитики
+    # --- Расчет общего количества стартапов пользователя ---
+    total_user_startups_count = user_startups_qs.count()
+
+    # Фильтруем одобренные стартапы для основной секции и финансовой аналитики
     approved_startups_qs = user_startups_qs.filter(status='approved')
 
-    # --- Расчет аналитики по одобренным стартапам ---
-    analytics_data = approved_startups_qs.aggregate(
+    # --- Расчет ФИНАНСОВОЙ аналитики по ОДОБРЕННЫМ стартапам ---
+    financial_analytics_data = approved_startups_qs.aggregate(
         total_raised=Sum('amount_raised'),
         max_raised=Max('amount_raised'),
         min_raised=Min('amount_raised'),
-        startups_count=Count('startup_id') # Считаем по ID
+        approved_startups_count=Count('startup_id') # Считаем только одобренные для этой статистики
     )
 
-    startups_count = analytics_data.get('startups_count', 0)
-    total_amount_raised = analytics_data.get('total_raised') or Decimal('0')
-    max_raised = analytics_data.get('max_raised') or Decimal('0')
-    min_raised = analytics_data.get('min_raised') or Decimal('0')
+    approved_startups_count = financial_analytics_data.get('approved_startups_count', 0) # Количество одобренных
+    total_amount_raised = financial_analytics_data.get('total_raised') or Decimal('0')
+    max_raised = financial_analytics_data.get('max_raised') or Decimal('0')
+    min_raised = financial_analytics_data.get('min_raised') or Decimal('0')
 
-    # --- Данные по категориям (аналогично investments, но по amount_raised) ---
-    category_data_raw = approved_startups_qs.values(
+    # --- Данные по категориям для радиальных диаграмм (на основе КОЛИЧЕСТВА ВСЕХ стартапов) ---
+    category_data_raw = user_startups_qs.values( # Используем ВСЕ стартапы пользователя
         'direction__direction_name'
     ).annotate(
-        category_total=Sum('amount_raised')
-    ).order_by('-category_total')
+        category_count=Count('startup_id') # Считаем КОЛИЧЕСТВО стартапов
+    ).order_by('-category_count')
 
     investment_categories = []
-    invested_category_data_dict = {}
-    total_for_percentage = total_amount_raised if total_amount_raised > 0 else Decimal('1')
+    invested_category_data_dict = {} # Используем старое имя для совместимости с JS
+    # Используем общее количество стартапов пользователя для расчета процентов
+    total_for_category_percentage = total_user_startups_count if total_user_startups_count > 0 else 1
 
     for cat_data in category_data_raw:
         percentage = 0
-        category_sum = cat_data.get('category_total')
+        category_count = cat_data.get('category_count') # Получаем количество
         category_name = cat_data.get('direction__direction_name') or 'Без категории'
 
-        if category_sum and total_for_percentage > 0:
+        if category_count and total_for_category_percentage > 0:
             try:
-                percentage = round((Decimal(category_sum) / total_for_percentage) * 100)
+                # Расчет процента от ОБЩЕГО количества стартапов
+                percentage = round((int(category_count) / total_for_category_percentage) * 100)
                 percentage = min(percentage, 100)
             except Exception as e:
-                logger.error(f"Ошибка расчета процента для категории '{category_name}': {e}")
+                logger.error(f"Ошибка расчета процента (по количеству) для категории '{category_name}': {e}")
                 percentage = 0
 
         investment_categories.append({
-            'name': category_name,
+            'name': category_name, # Исходное имя для JS
             'percentage': percentage,
         })
         invested_category_data_dict[category_name] = percentage
 
-    # --- Данные для графика по месяцам (по amount_raised) ---
+    # --- Данные для графика по месяцам (по сумме amount_raised ОДОБРЕННЫХ стартапов) ---
+    # Оставляем логику без изменений, так как она показывает финансовый прогресс
     current_year = timezone.now().year
-    # Используем дату обновления, как прокси для даты сбора средств
     monthly_data_direct = approved_startups_qs.filter(
         updated_at__year=current_year,
-        amount_raised__gt=0 # Учитываем только стартапы с собранными средствами
+        amount_raised__gt=0
     ).annotate(
         month=TruncMonth('updated_at')
     ).values('month').annotate(
-        monthly_total=Sum('amount_raised')
+        # Используем Coalesce для замены NULL на 0 перед суммированием
+        monthly_total=Sum(Coalesce('amount_raised', Decimal(0)))
     ).order_by('month')
 
     month_labels = ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"]
@@ -1510,24 +1517,23 @@ def my_startups(request):
     for data in monthly_data_direct:
         month_index = data['month'].month - 1
         if 0 <= month_index < 12:
-            # Преобразуем Decimal в float для JSON
-            monthly_totals[month_index] = float(data.get('monthly_total', 0) or 0)
+            monthly_total_decimal = data.get('monthly_total', Decimal(0)) or Decimal(0)
+            monthly_totals[month_index] = float(monthly_total_decimal)
 
 
     # --- Получаем одобренные стартапы с аннотациями для основной сетки ---
-    # (Добавляем рейтинг и комменты к одобренным)
     approved_startups_annotated = approved_startups_qs.annotate(
          average_rating=Avg(
             models.ExpressionWrapper(
-                models.F('sum_votes') * 1.0 / models.F('total_voters'),
+                Coalesce(models.F('sum_votes'), 0) * 1.0 / Coalesce(models.F('total_voters'), 1), # Используем Coalesce для избежания деления на ноль
                 output_field=FloatField()
             ),
-            filter=models.Q(total_voters__gt=0),
-            default=0.0
+            filter=models.Q(total_voters__gt=0), # Фильтр все еще полезен для определения, были ли голоса
+            default=0.0 # Значение по умолчанию
         ),
         comment_count=Count('comments') # Используем prefetch_related
     ).annotate(
-         average_rating=models.functions.Coalesce('average_rating', 0.0)
+         average_rating=Coalesce('average_rating', 0.0) # Дополнительный Coalesce на всякий случай
     ).order_by('-created_at') # Сортировка по умолчанию - новые
 
     # --- Получаем все стартапы пользователя для секции "Заявки" ---
@@ -1535,18 +1541,20 @@ def my_startups(request):
 
     # --- Все направления для модального окна ---
     all_directions_qs = Directions.objects.all().order_by('direction_name')
-    all_directions_list = list(all_directions_qs.values('pk', 'direction_name'))
+    # Преобразуем в список словарей для JSON, передавая оригинальное имя для JS
+    all_directions_list = list(all_directions_qs.values('pk', direction_name='direction_name'))
+
 
     context = {
-        'startups_count': startups_count,
-        'total_investment': total_amount_raised, # Используем это имя для совместимости с CSS/JS, но это 'total_raised'
-        'max_investment': max_raised, # Используем это имя для совместимости
-        'min_investment': min_raised, # Используем это имя для совместимости
-        'investment_categories': investment_categories[:7], # Топ-7 для радиальных
-        'month_labels': month_labels,
-        'month_data': monthly_totals,
-        'all_directions': all_directions_list,
-        'invested_category_data': invested_category_data_dict,
+        'startups_count': approved_startups_count, # Количество одобренных стартапов
+        'total_investment': total_amount_raised, # Сумма собранная одобренными
+        'max_investment': max_raised, # Макс. сумма одного одобренного
+        'min_investment': min_raised, # Мин. сумма одного одобренного
+        'investment_categories': investment_categories[:7], # Категории по КОЛИЧЕСТВУ (топ-7)
+        'month_labels': month_labels, # Метки месяцев
+        'month_data': monthly_totals, # Суммы собранных средств по месяцам (одобренные)
+        'all_directions': all_directions_list, # Все категории для модального окна (ориг. имена)
+        'invested_category_data': invested_category_data_dict, # % по КОЛИЧЕСТВУ для модального окна
         'user_startups': approved_startups_annotated, # Одобренные для основной сетки
         'startup_applications': all_user_applications, # Все для секции заявок
         'current_sort': 'newest', # Начальная сортировка (пока не реализована полностью)
