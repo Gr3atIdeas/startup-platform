@@ -1547,20 +1547,73 @@ def my_startups(request):
     # Исправляем использование .values() - передаем имена полей как строки
     all_directions_list = list(all_directions_qs.values('pk', 'direction_name'))
 
+    # --- Данные для СТЕКОВОГО графика по категориям --- 
+    current_year = timezone.now().year
+    logger.info(f"[my_startups] Preparing chart data for user {request.user.email}, year: {current_year}") # Лог: начало подготовки данных
+    month_labels = ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"]
+    
+    # Получаем данные: месяц обновления, категория, сумма сборов за этот месяц и категорию
+    monthly_category_data_raw = approved_startups_qs.filter(
+        updated_at__year=current_year,
+        amount_raised__gt=0,
+        direction__isnull=False # Исключаем стартапы без категории
+    ).annotate(
+        month=TruncMonth('updated_at')
+    ).values(
+        'month', 'direction__direction_name' # Группируем по месяцу и названию категории
+    ).annotate(
+        monthly_category_total=Sum(Coalesce('amount_raised', Decimal(0)))
+    ).order_by('month', 'direction__direction_name')
+
+    # Лог: результат сырого запроса к БД
+    logger.info(f"[my_startups] Raw monthly category data from DB: {list(monthly_category_data_raw)}")
+
+    # Структурируем данные для Chart.js (месяц -> категория -> сумма)
+    structured_monthly_data = collections.defaultdict(lambda: collections.defaultdict(float))
+    unique_categories = set()
+
+    for data in monthly_category_data_raw:
+        month_dt = data['month']
+        category_name = data['direction__direction_name']
+        amount = float(data.get('monthly_category_total', 0) or 0)
+        month_key = month_dt.strftime('%Y-%m-01') 
+        structured_monthly_data[month_key][category_name] += amount
+        unique_categories.add(category_name)
+        
+    sorted_categories = sorted(list(unique_categories))
+    # Лог: найденные категории
+    logger.info(f"[my_startups] Unique categories found for chart: {sorted_categories}")
+
+    # Подготавливаем данные для передачи в JSON
+    chart_data_list = []
+    start_date = datetime.date(current_year, 1, 1)
+    # Импортируем relativedelta, если еще не импортирован
+    from dateutil.relativedelta import relativedelta 
+    for i in range(12):
+        current_month_key = (start_date + relativedelta(months=i)).strftime('%Y-%m-01')
+        month_data = {
+            'month_key': current_month_key,
+            'category_data': dict(structured_monthly_data[current_month_key])
+        }
+        chart_data_list.append(month_data)
+        
+    # Лог: финальные данные для графика
+    logger.info(f"[my_startups] Final structured chart data list: {chart_data_list}")
 
     context = {
         'startups_count': approved_startups_count, # Количество одобренных стартапов
         'total_investment': total_amount_raised, # Сумма собранная одобренными
         'max_investment': max_raised, # Макс. сумма одного одобренного
         'min_investment': min_raised, # Мин. сумма одного одобренного
-        'investment_categories': investment_categories[:7], # Категории по КОЛИЧЕСТВУ (топ-7)
-        'month_labels': month_labels, # Метки месяцев
-        'month_data': monthly_totals, # Суммы собранных средств по месяцам (одобренные)
-        'all_directions': all_directions_list, # Все категории для модального окна (ориг. имена)
-        'invested_category_data': invested_category_data_dict, # % по КОЛИЧЕСТВУ для модального окна
-        'user_startups': approved_startups_annotated, # Одобренные для основной сетки
-        'startup_applications': all_user_applications, # Все для секции заявок
-        'current_sort': 'newest', # Начальная сортировка (пока не реализована полностью)
+        'investment_categories': investment_categories[:7], 
+        'month_labels': month_labels, 
+        'chart_monthly_category_data': chart_data_list, # Новые структурированные данные
+        'chart_categories': sorted_categories, # Список категорий для графика
+        'all_directions': all_directions_list, 
+        'invested_category_data': invested_category_data_dict, 
+        'user_startups': approved_startups_annotated, 
+        'startup_applications': all_user_applications, 
+        'current_sort': 'newest', 
     }
 
     return render(request, 'accounts/my_startups.html', context)
