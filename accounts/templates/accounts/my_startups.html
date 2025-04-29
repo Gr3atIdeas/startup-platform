@@ -9,6 +9,13 @@
   <link rel="stylesheet" href="{% static 'accounts/css/investments_styles.css' %}">
   {# Добавляем стили для раздела заявок #}
   <style>
+    /* Добавляем стиль для фона портфолио */
+    .startuper-portfolio-bg {
+        background-image: url('{% static "accounts/images/startuper_portfolio_bg.jpg" %}');
+        background-size: cover;
+        background-position: center;
+    }
+
     .applications-section {
       color: #FFFFFF;
       padding: 40px 0;
@@ -108,7 +115,7 @@
       <!-- Верхняя секция с аналитикой -->
       <div class="analytics-section">
         <div class="analytics-left">
-          <div class="portfolio-image-container" style="background-image: url('{% static 'accounts/images/startuper_portfolio_bg.jpg' %}');"> {# Пример фонового изображения #}
+          <div class="portfolio-image-container startuper-portfolio-bg"> {# Используем CSS класс вместо инлайн-стиля #}
             <button class="portfolio-image-fullscreen-btn">
               <i class="fas fa-expand"></i>
             </button>
@@ -227,8 +234,9 @@
           {% for startup in user_startups|slice:":6" %} {# Меняем user_investments на user_startups #}
             <div class="startup-card" data-category="{{ startup.direction.direction_name|default:'' }}" data-name="{{ startup.title|default:'' }}">
               <div class="startup-card-left">
-                   {# Используем get_logo_url - предполагается наличие такого метода или адаптировать логику из planetary_system #}
-                   <img src="{{ startup.get_logo_url | default:'/static/accounts/images/placeholder_logo.png' }}" alt="{{ startup.title|default:'Лого' }} " class="startup-planet-img">
+                   {# Временно убираем изображение стартапа #}
+                   <!-- <img src="{{ startup.get_logo_url | default:'/static/accounts/images/placeholder_logo.png' }}" alt="{{ startup.title|default:'Лого' }} " class="startup-planet-img"> -->
+                   <div class="startup-planet-placeholder" style="width: 70px; height: 70px; background-color: #e9ecef; border-radius: 50%; margin-bottom: 5px;"></div> {# Плейсхолдер #}
                    <div class="startup-name">
                        {% if startup.title %}
                           {# Добавляем ссылку на детальную страницу стартапа #}
@@ -293,7 +301,9 @@
            {% for startup in user_startups|slice:"6:" %}
             <div class="startup-card hidden-card" data-category="{{ startup.direction.direction_name|default:'' }}" data-name="{{ startup.title|default:'' }}" style="display: none;">
               <div class="startup-card-left">
-                   <img src="{{ startup.get_logo_url | default:'/static/accounts/images/placeholder_logo.png' }}" alt="{{ startup.title|default:'Лого' }}" class="startup-planet-img">
+                   {# Временно убираем изображение стартапа #}
+                   <!-- <img src="{{ startup.get_logo_url | default:'/static/accounts/images/placeholder_logo.png' }}" alt="{{ startup.title|default:'Лого' }}" class="startup-planet-img"> -->
+                   <div class="startup-planet-placeholder" style="width: 70px; height: 70px; background-color: #e9ecef; border-radius: 50%; margin-bottom: 5px;"></div> {# Плейсхолдер #}
                    <div class="startup-name">
                        {% if startup.title %}
                           <a href="{% url 'startup_detail' startup_id=startup.startup_id %}" style="color: inherit; text-decoration: none;">{{ startup.title }}</a>

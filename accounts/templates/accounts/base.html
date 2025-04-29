@@ -83,6 +83,11 @@
       <a href="{% url 'cosmochat' %}" {% if request.resolver_match.url_name == 'cosmochat' %}class="active"{% endif %}>CosmoChat</a>
       
       {% if user.is_authenticated %}
+        {# Ссылка для стартапера #}
+        {% if user.role.role_name == 'startuper' %}
+          <a href="{% url 'my_startups' %}" {% if request.resolver_match.url_name == 'my_startups' %}class="active"{% endif %}>Мои стартапы</a>
+        {% endif %}
+
         {% if user.role.role_name == 'investor' %}
           <a href="{% url 'investments' %}" {% if request.resolver_match.url_name == 'investments' %}class="active"{% endif %}>Портфель</a>
         {% endif %}
