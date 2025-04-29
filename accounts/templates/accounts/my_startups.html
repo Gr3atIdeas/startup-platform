@@ -158,28 +158,29 @@
               </div>
           </div>
 
+          {# Применяем структуру и классы из investments.html #}
           <div class="stats-overview">
             <div class="stat-item">
               <span class="stat-label">Одобренные стартапы</span>
-              {# Отображаем количество одобренных стартапов, применяем intcomma #}
+              {# Используем dark-box для количества #}
               <div class="stat-value-box dark-box">{{ startups_count|default:"0"|intcomma }}</div>
             </div>
             <div class="stat-item">
-              <span class="stat-label">Всего собрано (одобренными)</span> {# Уточняем лейбл #}
-              {# Используем total_investment как total_raised, применяем intcomma #}
+              <span class="stat-label">Всего собрано (одобренными)</span>
+              {# Используем blue-box для суммы #}
               <div class="stat-value-box blue-box">{{ total_investment|default:"0"|intcomma }} ₽</div>
             </div>
           </div>
 
           <div class="stats-details">
              <div class="stat-item detail-item">
-              <span class="stat-label">Макс. собрано (одобренным)</span> {# Уточняем лейбл #}
-              {# Используем max_investment как max_raised, применяем intcomma #}
+              <span class="stat-label">Макс. собрано (одобренным)</span>
+              {# Используем stat-value-simple #}
               <span class="stat-value-simple">{{ max_investment|default:"0"|intcomma }} ₽</span>
             </div>
             <div class="stat-item detail-item">
-              <span class="stat-label">Мин. собрано (одобренным)</span> {# Уточняем лейбл #}
-              {# Используем min_investment как min_raised, применяем intcomma #}
+              <span class="stat-label">Мин. собрано (одобренным)</span>
+              {# Используем stat-value-simple #}
               <span class="stat-value-simple">{{ min_investment|default:"0"|intcomma }} ₽</span>
             </div>
           </div>
@@ -429,8 +430,8 @@
 
     {# Перемещаем JSON SCRIPTS сюда #}
     {{ month_labels|json_script:"chart-month-labels" }}
-    {{ month_data|json_script:"chart-month-data" }} {# Сумма сборов #}
-    {{ month_counts|json_script:"chart-month-counts" }} {# Количество созданных #}
+    {{ chart_monthly_category_data|json_script:"chart-monthly-category-data" }} {# Новые данные: месяц -> категория -> сумма #}
+    {{ chart_categories|json_script:"chart-categories" }} {# Список категорий для графика #}
     {{ all_directions|json_script:"all-directions-data" }}
     {{ invested_category_data|json_script:"invested-category-data" }}
 
@@ -822,7 +823,7 @@
               });
           }
 
-          // График - Обновляем для двух наборов данных
+          // График - Переделываем в Stacked Bar Chart по категориям
           (function() {
               const canvasElement = document.getElementById('monthlyInvestmentChart');
               if (!canvasElement) {
@@ -832,19 +833,23 @@
               const ctx = canvasElement.getContext('2d');
 
               let monthLabels = [];
-              let monthDataRaised = []; // Переименовано для ясности
-              let monthDataCounts = []; // Новый массив для количества
+              let monthlyCategoryData = []; // Данные: [{month_key: '...', category_data: {cat: amount, ...}}, ...]
+              let categoriesForChart = []; // Список категорий для датасетов
+
               try {
                   const labelsEl = document.getElementById('chart-month-labels');
-                  const dataRaisedEl = document.getElementById('chart-month-data');
-                  const dataCountsEl = document.getElementById('chart-month-counts'); // Получаем новый элемент
-                  if (!labelsEl || !dataRaisedEl || !dataCountsEl) throw new Error("Элементы данных графика не найдены");
+                  const monthlyDataEl = document.getElementById('chart-monthly-category-data');
+                  const categoriesEl = document.getElementById('chart-categories');
+
+                  if (!labelsEl || !monthlyDataEl || !categoriesEl) throw new Error("Элементы данных графика не найдены");
+                  
                   monthLabels = JSON.parse(labelsEl.textContent);
-                  monthDataRaised = JSON.parse(dataRaisedEl.textContent);
-                  monthDataCounts = JSON.parse(dataCountsEl.textContent); // Парсим данные о количестве
+                  monthlyCategoryData = JSON.parse(monthlyDataEl.textContent);
+                  categoriesForChart = JSON.parse(categoriesEl.textContent);
+
                   console.log("Chart Labels:", monthLabels);
-                  console.log("Chart Data (Raised):", monthDataRaised);
-                  console.log("Chart Data (Counts):", monthDataCounts);
+                  console.log("Chart Categories:", categoriesForChart);
+                  console.log("Chart Monthly Category Data:", monthlyCategoryData);
               } catch (e) {
                   console.error("Ошибка парсинга данных для графика:", e);
                   if (canvasElement.parentNode) {
@@ -853,70 +858,57 @@
                   return;
               }
 
-              // Проверяем, есть ли данные хотя бы в одном из массивов
-              const hasRaisedData = monthDataRaised && monthDataRaised.some(value => value > 0);
-              const hasCountsData = monthDataCounts && monthDataCounts.some(value => value > 0);
-              console.log("Chart has raised data:", hasRaisedData);
-              console.log("Chart has counts data:", hasCountsData);
+              // Проверяем, есть ли хоть какие-то данные по категориям
+              const hasData = monthlyCategoryData && monthlyCategoryData.some(month => Object.keys(month.category_data).length > 0);
+              console.log("Chart has category data:", hasData);
 
-              if (hasRaisedData || hasCountsData) { // Рисуем график, если есть хоть какие-то данные
-                  const gradient = ctx.createLinearGradient(0, 0, 0, 300);
-                  gradient.addColorStop(0, 'rgba(0, 123, 255, 0.8)');
-                  gradient.addColorStop(1, 'rgba(0, 123, 255, 0.1)');
+              if (hasData && categoriesForChart.length > 0) {
 
-                  // Цвет для линии количества
-                  const countColor = 'rgba(255, 188, 83, 1)'; // Оранжевый цвет (пример)
+                  // Создаем датасеты для каждой категории
+                  const datasets = categoriesForChart.map(categoryName => {
+                      const color = categoryColors[categoryName] || categoryColors["default"]; // Берем цвет из константы
+                      // Собираем данные для этой категории по всем месяцам
+                      const data = monthLabels.map((label, index) => {
+                          // Ищем данные для текущего месяца (индекс совпадает с monthLabels)
+                          const monthData = monthlyCategoryData[index];
+                          // Возвращаем сумму для этой категории в этом месяце или 0
+                          return monthData.category_data[categoryName] || 0;
+                      });
+
+                      return {
+                          label: translateCategoryName(categoryName), // Используем русский лейбл
+                          data: data,
+                          backgroundColor: color, // Цвет для стека
+                          // borderColor: color, // Можно добавить границу, если нужно
+                          // borderWidth: 1
+                      };
+                  });
+
+                  console.log("Generated Chart Datasets:", datasets);
 
                   new Chart(ctx, {
-                      type: 'bar', // Основной тип - столбцы для сумм
+                      type: 'bar',
                       data: {
                           labels: monthLabels,
-                          datasets: [
-                          {
-                              label: 'Сумма собрана (₽)', // Обновляем лейбл
-                              data: monthDataRaised,
-                              backgroundColor: gradient,
-                              borderColor: 'rgba(0, 123, 255, 1)',
-                              borderWidth: 1,
-                              borderRadius: 5,
-                              barThickness: 'flex',
-                              maxBarThickness: 30,
-                              order: 2, // Столбцы рисуются позади линии
-                              yAxisID: 'yAmount' // Привязываем к оси сумм
-                          },
-                          {
-                              label: 'Создано стартапов (шт)', // Новый лейбл
-                              data: monthDataCounts,
-                              type: 'line', // Тип линии для количества
-                              borderColor: countColor,
-                              backgroundColor: countColor, // Для точки
-                              tension: 0.3,
-                              borderWidth: 2,
-                              pointRadius: 3,
-                              pointHoverRadius: 5,
-                              order: 1, // Линия рисуется поверх столбцов
-                              yAxisID: 'yCount' // Привязываем к оси количества
-                          }
-                          ]
+                          datasets: datasets // Передаем созданные датасеты
                       },
                       options: {
                         responsive: true,
                         maintainAspectRatio: false,
-                        interaction: { // Для корректной работы подсказок с разными типами графиков
+                        interaction: { // Для корректной работы подсказок со стеками
                             mode: 'index',
                             intersect: false,
                         },
                         scales: {
-                            // Ось Y для сумм (слева)
-                            yAmount: {
-                                type: 'linear',
-                                position: 'left',
+                            // Ось Y (сумма)
+                            y: { 
+                                stacked: true, // Включаем стекирование по оси Y
                                 beginAtZero: true,
                                 grid: { color: 'rgba(255, 255, 255, 0.05)' },
                                 ticks: {
                                      color: 'rgba(255, 255, 255, 0.7)',
                                     callback: function(value) {
-                                        // Оставляем форматирование сумм
+                                        // Форматирование сумм
                                         if (value >= 1000000) { return (value / 1000000).toLocaleString('ru-RU', { maximumFractionDigits: 1 }) + 'M'; }
                                         if (value >= 1000) { return (value / 1000).toLocaleString('ru-RU', { maximumFractionDigits: 0 }) + 'k'; }
                                         else { return value.toLocaleString('ru-RU'); }
@@ -924,52 +916,39 @@
                                 },
                                 title: {
                                     display: true,
-                                    text: 'Сумма, ₽',
+                                    text: 'Сумма сборов, ₽',
                                     color: 'rgba(255, 255, 255, 0.7)'
                                 }
                             },
-                            // Ось Y для количества (справа)
-                            yCount: {
-                                type: 'linear',
-                                position: 'right',
-                                beginAtZero: true,
-                                // Настраиваем сетку и тики для второй оси
-                                grid: { drawOnChartArea: false }, // Не рисуем сетку поверх графика
-                                ticks: {
-                                     color: countColor, // Цвет тиков совпадает с цветом линии
-                                     stepSize: 1 // Шаг в 1 для количества стартапов
-                                },
-                                title: {
-                                    display: true,
-                                    text: 'Кол-во, шт',
-                                    color: countColor
-                                }
-                            },
+                            // Ось X (месяцы)
                             x: {
+                                stacked: true, // Включаем стекирование по оси X
                                 grid: { display: false },
                                 ticks: { color: 'rgba(255, 255, 255, 0.7)' }
                             }
                         },
                         plugins: {
                             legend: {
-                                display: true, // Показываем легенду для двух наборов данных
-                                position: 'top', // Позиция легенды
+                                display: true, // Показываем легенду категорий
+                                position: 'top', 
                                 labels: {
-                                    color: 'rgba(255, 255, 255, 0.7)' // Цвет текста легенды
+                                    color: 'rgba(255, 255, 255, 0.7)',
+                                    boxWidth: 12, // Уменьшим ширину цветного бокса
+                                    padding: 15 // Отступ между элементами легенды
                                 }
                              },
                             tooltip: {
                                 callbacks: {
+                                    // Настраиваем подсказку для стеков
+                                    title: function(tooltipItems) {
+                                        // Заголовок - месяц
+                                        return tooltipItems[0].label;
+                                    },
                                     label: function(context) {
                                         let label = context.dataset.label || '';
                                         if (label) { label += ': '; }
                                         if (context.parsed.y !== null) {
-                                            // Форматируем в зависимости от набора данных
-                                            if (context.dataset.yAxisID === 'yAmount') {
-                                                label += context.parsed.y.toLocaleString('ru-RU', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + ' ₽';
-                                            } else if (context.dataset.yAxisID === 'yCount') {
-                                                label += context.parsed.y;
-                                            }
+                                            label += context.parsed.y.toLocaleString('ru-RU', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + ' ₽';
                                         }
                                         return label;
                                     }
@@ -979,9 +958,9 @@
                       }
                   });
               } else {
-                 console.log("No data found for chart, rendering placeholder.");
+                 console.log("No category data found for chart, rendering placeholder.");
                  if (canvasElement.parentNode) {
-                    canvasElement.parentNode.innerHTML = '<p style="text-align: center; color: #adb5bd;">Нет данных по сборам средств или созданию стартапов за текущий год.</p>';
+                    canvasElement.parentNode.innerHTML = '<p style="text-align: center; color: #adb5bd;">Нет данных по сборам средств за текущий год для отображения по категориям.</p>';
                  }
               }
           })();

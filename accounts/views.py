@@ -27,6 +27,8 @@ from django.template.loader import render_to_string
 from django.db.models.functions import TruncMonth # Добавляем для группировки по месяцам
 import datetime # Добавляем для работы с датами
 from django.db.models.functions import Coalesce # Добавляем Coalesce
+import collections # Добавляем для defaultdict
+from dateutil.relativedelta import relativedelta
 
 
 logger = logging.getLogger(__name__)
