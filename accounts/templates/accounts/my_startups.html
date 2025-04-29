@@ -7,7 +7,99 @@
 {% block head_extra %}
   {{ block.super }}
   <link rel="stylesheet" href="{% static 'accounts/css/investments_styles.css' %}">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  {# Добавляем стили для раздела заявок #}
+  <style>
+    .applications-section {
+      color: #FFFFFF;
+      padding: 40px 0;
+      margin-top: 40px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .applications-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end; /* Выравниваем по нижнему краю */
+      margin-bottom: 30px;
+    }
+    .applications-titles {
+       display: flex;
+       flex-direction: column;
+       line-height: 0.8; /* Сближаем строки */
+    }
+    .applications-title-main,
+    .applications-title-sub {
+      font-family: 'Blippo-Black CY [Rus by me]', sans-serif; /* Новый шрифт */
+      font-weight: 400; /* Новый вес */
+      font-size: 45px; /* Чуть меньше */
+      line-height: 1.0;
+      letter-spacing: -0.02em;
+      margin: 0;
+      text-transform: uppercase;
+    }
+    .applications-title-main { color: #FFFFFF; }
+    .applications-title-sub { color: #FFEF2B; }
+
+    .applications-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    .application-card {
+      background-color: #1A1D2E; /* Темный фон для карточки заявки */
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: background-color 0.3s linear, border-color 0.3s linear;
+    }
+    .application-card:hover {
+      background-color: #212538;
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+    .application-title {
+      font-size: 16px;
+      font-weight: 500;
+      color: #FFFFFF;
+      margin-bottom: 5px;
+    }
+    .application-status {
+      font-size: 14px;
+      font-weight: 500;
+      padding: 4px 10px;
+      border-radius: 12px;
+      display: inline-block; /* Чтобы padding работал */
+      margin-bottom: 10px;
+      text-align: center;
+      min-width: 100px; /* Минимальная ширина для выравнивания */
+    }
+    /* Стили для статусов заявок */
+    .status-approved { background-color: #28a745; color: #fff; }
+    .status-pending { background-color: #ffc107; color: #191919; }
+    .status-rejected { background-color: #dc3545; color: #fff; }
+    .status-blocked { background-color: #6c757d; color: #fff; } /* Добавим стиль для blocked */
+    .status-closed { background-color: #343a40; color: #fff; } /* Добавим стиль для closed */
+
+    .application-comment {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.7);
+      font-style: italic;
+      margin-top: auto; /* Прижимаем комментарий к низу */
+      padding-top: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .application-card a {
+        color: #FFEF2B;
+        text-decoration: none;
+        font-weight: 500;
+        margin-top: 10px;
+        display: inline-block;
+    }
+    .application-card a:hover {
+        text-decoration: underline;
+    }
+  </style>
 {% endblock %}
 
 {% block content %}
@@ -16,14 +108,14 @@
       <!-- Верхняя секция с аналитикой -->
       <div class="analytics-section">
         <div class="analytics-left">
-          <div class="portfolio-image-container">
+          <div class="portfolio-image-container" style="background-image: url('{% static 'accounts/images/startuper_portfolio_bg.jpg' %}');"> {# Пример фонового изображения #}
             <button class="portfolio-image-fullscreen-btn">
               <i class="fas fa-expand"></i>
             </button>
           </div>
           <!-- Категории с радиальными диаграммами -->
           <div class="categories-radial-section">
-            <h3 class="categories-radial-title">Категории</h3>
+            <h3 class="categories-radial-title">Категории Ваших Стартапов</h3>
             <div class="categories-radial-grid">
               {% for category in investment_categories %}
               {% with original_name=category.name|default:"" %}
@@ -33,56 +125,13 @@
                   <div class="radial-chart-text">{{ category.percentage }}%</div>
                 </div>
                 <span class="category-radial-name">
-                    {% if original_name == "Medicine" %}Медицина
-                    {% elif original_name == "Auto" %}Автомобили
-                    {% elif original_name == "Delivery" %}Доставка
-                    {% elif original_name == "Cafe" %}Кафе/рестораны
-                    {% elif original_name == "Fastfood" %}Фастфуд
-                    {% elif original_name == "Health" %}Здоровье
-                    {% elif original_name == "Beauty" %}Красота
-                    {% elif original_name == "Transport" %}Транспорт
-                    {% elif original_name == "Sport" %}Спорт
-                    {% elif original_name == "Psychology" %}Психология
-                    {% elif original_name == "AI" %}ИИ
-                    {% elif original_name == "Finance" %}Финансы
-                    {% elif original_name == "Healthcare" %}Здравоохранение
-                    {% elif original_name == "Technology" %}Технологии
-                    {% elif original_name == "IT" %}ИТ
-                    {% else %}{{ original_name|default:"Не указано" }}
-                    {% endif %}
+                    {# Используем функцию перевода в JS, здесь можно оставить как есть или дублировать логику #}
+                    {{ original_name|default:"Без категории" }}
                 </span>
               </div>
               {% endwith %}
               {% empty %}
-                <div class="category-radial-item">
-                    <div class="radial-chart" data-percentage="70">
-                        <div class="radial-chart-progress"></div>
-                        <div class="radial-chart-text">70%</div>
-                    </div>
-                    <span class="category-radial-name">Медицина</span>
-                </div>
-                <div class="category-radial-item">
-                    <div class="radial-chart" data-percentage="90">
-                        <div class="radial-chart-progress"></div>
-                        <div class="radial-chart-text">90%</div>
-                    </div>
-                    <span class="category-radial-name">ИТ</span>
-                </div>
-                <div class="category-radial-item">
-                    <div class="radial-chart" data-percentage="60">
-                        <div class="radial-chart-progress"></div>
-                        <div class="radial-chart-text">60%</div>
-                    </div>
-                    <span class="category-radial-name">Финансы</span>
-                </div>
-                 <div class="category-radial-item">
-                    <div class="radial-chart" data-percentage="40">
-                        <div class="radial-chart-progress"></div>
-                        <div class="radial-chart-text">40%</div>
-                    </div>
-                    <span class="category-radial-name">Ритейл</span>
-                 </div>
-                 <p>Нет данных по категориям.</p>
+                 <p>Нет данных по категориям одобренных стартапов.</p>
               {% endfor %}
               <!-- Категория "Все" -->
               <div class="category-radial-item category-all" id="openCategoriesModalBtn">
@@ -98,11 +147,9 @@
           <div class="analytics-header">
               <h1 class="analytics-title">Аналитика</h1>
               <div class="analytics-controls">
+                  {# Выбор месяца пока оставим, но он может быть нерелевантен #}
                   <select class="month-select">
-                      <option value="март">Март</option>
-                      <option value="апрель">Апрель</option>
-                      <option value="май">Май</option>
-                      {# Другие месяцы #}
+                      <option value="весь год">Весь год</option>
                   </select>
                   <button class="analytics-options-btn">
                       <i class="fas fa-ellipsis-v"></i>
@@ -112,36 +159,36 @@
 
           <div class="stats-overview">
             <div class="stat-item">
-              <span class="stat-label">Кол-во стартапов</span>
-              <div class="stat-value-box dark-box">{{ startups_count|default:"12" }}</div>
+              <span class="stat-label">Одобренные стартапы</span>
+              <div class="stat-value-box dark-box">{{ startups_count|default:"0" }}</div>
             </div>
             <div class="stat-item">
-              <span class="stat-label">Общая сумма собранных средств</span>
-              <div class="stat-value-box blue-box">{{ total_investment|default:"0"|intcomma }} ₽</div>
+              <span class="stat-label">Всего собрано</span>
+              <div class="stat-value-box blue-box">{{ total_investment|default:"0"|intcomma }} ₽</div> {# Используем total_investment как total_raised #}
             </div>
           </div>
 
           <div class="stats-details">
              <div class="stat-item detail-item">
-              <span class="stat-label">Макс. сумма собранных средств</span>
-              <span class="stat-value-simple">{{ max_investment|default:"0"|intcomma }} ₽</span>
+              <span class="stat-label">Макс. собрано стартапом</span>
+              <span class="stat-value-simple">{{ max_investment|default:"0"|intcomma }} ₽</span> {# Используем max_investment как max_raised #}
             </div>
             <div class="stat-item detail-item">
-              <span class="stat-label">Мин. сумма собранных средств</span>
-              <span class="stat-value-simple">{{ min_investment|default:"0"|intcomma }} ₽</span>
+              <span class="stat-label">Мин. собрано стартапом</span>
+              <span class="stat-value-simple">{{ min_investment|default:"0"|intcomma }} ₽</span> {# Используем min_investment как min_raised #}
             </div>
           </div>
 
           <!-- График -->
           <div class="analytics-chart-container">
-            <canvas id="monthlyInvestmentChart"></canvas>
-            <span class="chart-title-overlay">Аналитика этого месяца</span>
+            <canvas id="monthlyInvestmentChart"></canvas> {# Оставляем ID для JS #}
+            <span class="chart-title-overlay">Собрано за год</span> {# Меняем подпись #}
           </div>
 
           <button class="download-report-btn">Скачать отчет</button>
         </div>
       </div>
-      
+
       <!-- Раздел Мои стартапы -->
       <div class="my-startups-section">
         <div class="startups-header">
@@ -150,214 +197,214 @@
             <h2 class="startups-title-sub">СТАРТАПЫ</h2>
           </div>
           <div class="total-investment">
-            <span class="investment-label">собрано</span>
-            <div class="investment-amount">{{ total_investment|default:"0"|intcomma }}</div>
+            <span class="investment-label">собрано всего</span>
+            <div class="investment-amount">{{ total_investment|default:"0"|intcomma }}</div> {# Используем total_investment как total_raised #}
           </div>
         </div>
 
         <div class="startups-filters">
           <div class="startups-search-wrapper">
             <i class="fas fa-search search-icon"></i>
-            <input type="text" placeholder="Поиск" id="startup-search" class="startups-search-input">
+            <input type="text" placeholder="Поиск по названию..." id="startup-search" class="startups-search-input">
           </div>
           <div class="filter-buttons">
             <button class="filter-btn active" data-filter="all">Все</button>
             <div class="filter-dropdown-wrapper">
               <button class="filter-btn filter-btn-dropdown" data-filter="category">Категория <i class="fas fa-chevron-down"></i></button>
-              {# Здесь может быть выпадающий список категорий #}
               <div class="filter-dropdown-content">
-                <a href="#" data-category="medicine">Медицина</a>
-                <a href="#" data-category="it">IT</a>
-                <a href="#" data-category="finance">Финансы</a>
-                {# Другие категории #}
+                {# Динамически заполняется из JS #}
+                <a href="#">Загрузка...</a>
               </div>
             </div>
-            <button class="filter-btn" data-filter="new"><i class="fas fa-sort-amount-up"></i> Новые</button>
-            {# Добавляем кнопку "Старые" #}
-            <button class="filter-btn" data-filter="old"><i class="fas fa-sort-amount-down"></i> Старые</button>
+            {# Кнопки сортировки пока уберем, нужна логика в view #}
+            {# <button class="filter-btn" data-filter="new"><i class="fas fa-sort-amount-up"></i> Новые</button> #}
+            {# <button class="filter-btn" data-filter="old"><i class="fas fa-sort-amount-down"></i> Старые</button> #}
           </div>
         </div>
 
         <div class="startups-grid">
-          {# Отображаем только первые 4 (индекс 0, 1, 2, 3) #}
-          {% for investment in user_investments|slice:":4" %}
-            <div class="startup-card" data-category="{{ investment.startup.direction.direction_name|default:'' }}" data-name="{{ investment.startup.title|default:'' }}">
+          {# Отображаем первые 6 одобренных стартапов #}
+          {% for startup in user_startups|slice:":6" %} {# Меняем user_investments на user_startups #}
+            <div class="startup-card" data-category="{{ startup.direction.direction_name|default:'' }}" data-name="{{ startup.title|default:'' }}">
               <div class="startup-card-left">
-                   <img src="{{ investment.startup.planet_image.url | default:'/static/accounts/images/planets/startup_5_logo.png' }}" alt="{{ investment.startup.title|default:'No Name' }} Planet" class="startup-planet-img">
-                  <div class="startup-name">
-                      {% if investment.startup %}
-                          {% if investment.startup.title %}
-                              {{ investment.startup.title }}
-                          {% else %}
-                              <span style="color: red; font-size: 10px;">(Имя не задано!)</span>
-                          {% endif %}
-                      {% else %}
-                          <span style="color: red; font-size: 10px;">(Стартап не найден!)</span>
-                      {% endif %}
-                  </div>
-                  <div class="startup-rating">
-                      {# Динамический рейтинг (пример) #}
-                      {% with rating=investment.startup_average_rating|default:0 %}
-                          {% for i in "12345"|make_list %}
-                              {% if rating >= i|add:0 %}
-                                  <i class="fas fa-star"></i> {# Полная звезда #}
-                              {% elif rating >= i|add:-0.5 %}
-                                  <i class="fas fa-star-half-alt"></i> {# Половина звезды #}
-                              {% else %}
-                                  <i class="far fa-star"></i> {# Пустая звезда #}
-                              {% endif %}
-                          {% endfor %}
-                      {% endwith %}
-                  </div>
-                  {# Отображаем количество комментариев #}
-                  <div class="startup-comments">
-                      <i class="fas fa-comment-dots"></i>
-                      <span>{{ investment.startup_comment_count|default:0 }}</span>
-                  </div>
-              </div>
-              <div class="startup-card-right">
-                  <div class="startup-status-row"> {# Отдельная строка для статуса #}
-                    <span class="detail-label">Статус</span>
-                    <span class="detail-value status-{{ investment.startup.get_status_display|lower|default:'активен' }}">{{ investment.startup.get_status_display|default:'Активен' }}</span>
-                  </div>
-                  <div class="startup-financials"> {# Блок для сумм #}
-                      <div class="startup-detail-row">
-                          <span class="detail-label">Собранная сумма:</span>
-                          <span class="detail-value">{{ investment.startup.current_investment|default:'0'|intcomma }} ₽</span>
-                      </div>
-                      <div class="startup-detail-row">
-                          <span class="detail-label">Инвесторы:</span>
-                          <span class="detail-value">{{ investment.startup.get_investors_count|default:0 }}</span>
-                      </div>
-                      <div class="startup-detail-row">
-                          <span class="detail-label">Цель финансирования:</span>
-                          <span class="detail-value">{{ investment.startup.goal|default:'0'|intcomma }} ₽</span>
-                      </div>
-                  </div>
-                  <div class="startup-category-row"> {# Отдельная строка для категории #}
-                    <span class="detail-label">Категория</span>
-                    <span class="startup-category-tag">
-                        {% with original_name=investment.startup.direction.direction_name|default:"" %}
-                            {% if original_name == "Medicine" %}Медицина
-                            {% elif original_name == "Auto" %}Автомобили
-                            {% elif original_name == "Delivery" %}Доставка
-                            {% elif original_name == "Cafe" %}Кафе/рестораны
-                            {% elif original_name == "Fastfood" %}Фастфуд
-                            {% elif original_name == "Health" %}Здоровье
-                            {% elif original_name == "Beauty" %}Красота
-                            {% elif original_name == "Transport" %}Транспорт
-                            {% elif original_name == "Sport" %}Спорт
-                            {% elif original_name == "Psychology" %}Психология
-                            {% elif original_name == "AI" %}ИИ
-                            {% elif original_name == "Finance" %}Финансы
-                            {% elif original_name == "Healthcare" %}Здравоохранение
-                            {% elif original_name == "Technology" %}Технологии
-                            {% elif original_name == "IT" %}ИТ
-                            {% elif original_name == "Retail" %}Ритейл
-                            {% else %}{{ original_name|default:"Категория" }}
-                            {% endif %}
-                        {% endwith %}
-                    </span>
-                  </div>
-              </div>
-            </div>
-          {% empty %}
-             <p>У вас пока нет стартапов.</p>
-          {% endfor %}
-          {# Скрытые карточки для "Показать еще" #}
-           {% for investment in user_investments|slice:"4:" %}
-            <div class="startup-card hidden-card" data-category="{{ investment.startup.direction.direction_name|default:'' }}" data-name="{{ investment.startup.title|default:'' }}" style="display: none;">
-              <div class="startup-card-left">
-                   <img src="{{ investment.startup.planet_image.url | default:'/static/accounts/images/planets/startup_5_logo.png' }}" alt="{{ investment.startup.title|default:'No Name' }} Planet" class="startup-planet-img">
-                  <div class="startup-name">
-                      {% if investment.startup %}
-                          {% if investment.startup.title %}
-                              {{ investment.startup.title }}
-                          {% else %}
-                              <span style="color: red; font-size: 10px;">(Имя не задано!)</span>
-                          {% endif %}
-                      {% else %}
-                          <span style="color: red; font-size: 10px;">(Стартап не найден!)</span>
-                      {% endif %}
-                  </div>
-                  <div class="startup-rating">
-                      {% with rating=investment.startup_average_rating|default:0 %}
-                          {% for i in "12345"|make_list %}
-                              {% if rating >= i|add:0 %}<i class="fas fa-star"></i>
-                              {% elif rating >= i|add:-0.5 %}<i class="fas fa-star-half-alt"></i>
-                              {% else %}<i class="far fa-star"></i>{% endif %}
-                          {% endfor %}
-                      {% endwith %}
-                  </div>
-                  <div class="startup-comments">
-                      <i class="fas fa-comment-dots"></i>
-                      <span>{{ investment.startup_comment_count|default:0 }}</span>
-                  </div>
+                   {# Используем get_logo_url - предполагается наличие такого метода или адаптировать логику из planetary_system #}
+                   <img src="{{ startup.get_logo_url | default:'/static/accounts/images/placeholder_logo.png' }}" alt="{{ startup.title|default:'Лого' }} " class="startup-planet-img">
+                   <div class="startup-name">
+                       {% if startup.title %}
+                          {# Добавляем ссылку на детальную страницу стартапа #}
+                          <a href="{% url 'startup_detail' startup_id=startup.startup_id %}" style="color: inherit; text-decoration: none;">{{ startup.title }}</a>
+                       {% else %}
+                           <span style="color: red; font-size: 10px;">(Имя не задано!)</span>
+                       {% endif %}
+                   </div>
+                   <div class="startup-rating">
+                       {% with rating=startup.average_rating|default:0 %} {# Используем аннотированное поле #}
+                           {% for i in "12345"|make_list %}
+                               {% if rating >= i|add:0 %}<i class="fas fa-star"></i>
+                               {% elif rating >= i|add:-0.5 %}<i class="fas fa-star-half-alt"></i>
+                               {% else %}<i class="far fa-star"></i>{% endif %}
+                           {% endfor %}
+                           <span style="font-size: 12px; color: #868E96; margin-left: 5px;">({{ startup.total_voters|default:0 }})</span>
+                       {% endwith %}
+                   </div>
+                   <div class="startup-comments">
+                       <i class="fas fa-comment-dots"></i>
+                       <span>{{ startup.comment_count|default:0 }}</span> {# Используем аннотированное поле #}
+                   </div>
               </div>
               <div class="startup-card-right">
                   <div class="startup-status-row">
                     <span class="detail-label">Статус</span>
-                    <span class="detail-value status-{{ investment.startup.get_status_display|lower|default:'активен' }}">{{ investment.startup.get_status_display|default:'Активен' }}</span>
+                    {# Используем статус из модели напрямую #}
+                    <span class="detail-value status-{{ startup.status|lower|default:'pending' }}">{{ startup.get_status_display|default:'Неизвестен' }}</span>
                   </div>
-                   <div class="startup-financials">
-                       <div class="startup-detail-row">
-                          <span class="detail-label">Собранная сумма:</span>
-                          <span class="detail-value">{{ investment.startup.current_investment|default:'0'|intcomma }} ₽</span>
+                  <div class="startup-financials">
+                      <div class="startup-detail-row">
+                          <span class="detail-label">Собрано:</span>
+                          <span class="detail-value">{{ startup.amount_raised|default:'0'|intcomma }} ₽</span>
                       </div>
                       <div class="startup-detail-row">
-                          <span class="detail-label">Инвесторы:</span>
-                          <span class="detail-value">{{ investment.startup.get_investors_count|default:0 }}</span>
+                          <span class="detail-label">Инвесторов:</span>
+                          <span class="detail-value">{{ startup.get_investors_count|default:0 }}</span>
                       </div>
                       <div class="startup-detail-row">
-                          <span class="detail-label">Цель финансирования:</span>
-                          <span class="detail-value">{{ investment.startup.goal|default:'0'|intcomma }} ₽</span>
+                          <span class="detail-label">Цель:</span>
+                          <span class="detail-value">{{ startup.goal|default:'0'|intcomma }} ₽</span>
                       </div>
                   </div>
                   <div class="startup-category-row">
                     <span class="detail-label">Категория</span>
-                     <span class="startup-category-tag">
-                        {% with original_name=investment.startup.direction.direction_name|default:"" %}
-                            {% if original_name == "Medicine" %}Медицина
-                            {% elif original_name == "Auto" %}Автомобили
-                            {% elif original_name == "Delivery" %}Доставка
-                            {% elif original_name == "Cafe" %}Кафе/рестораны
-                            {% elif original_name == "Fastfood" %}Фастфуд
-                            {% elif original_name == "Health" %}Здоровье
-                            {% elif original_name == "Beauty" %}Красота
-                            {% elif original_name == "Transport" %}Транспорт
-                            {% elif original_name == "Sport" %}Спорт
-                            {% elif original_name == "Psychology" %}Психология
-                            {% elif original_name == "AI" %}ИИ
-                            {% elif original_name == "Finance" %}Финансы
-                            {% elif original_name == "Healthcare" %}Здравоохранение
-                            {% elif original_name == "Technology" %}Технологии
-                            {% elif original_name == "IT" %}ИТ
-                            {% elif original_name == "Retail" %}Ритейл
-                            {% else %}{{ original_name|default:"Категория" }}
-                            {% endif %}
-                        {% endwith %}
+                    <span class="startup-category-tag">
+                         {% with original_name=startup.direction.direction_name|default:"" %}
+                           {# Оставляем как есть, перевод будет в JS или можно дублировать #}
+                           {{ original_name|default:"Без категории" }}
+                         {% endwith %}
                     </span>
                   </div>
+                  {# Добавляем кнопку Редактировать #}
+                   <a href="{% url 'edit_startup' startup_id=startup.startup_id %}" class="edit-startup-btn" style="align-self: flex-end; margin-top: 10px; color: #007bff; text-decoration: none; font-size: 13px;">Редактировать</a>
+              </div>
+            </div>
+          {% empty %}
+             <p style="grid-column: 1 / -1; text-align: center;">У вас пока нет одобренных стартапов.</p> {# Объединяем колонки #}
+          {% endfor %}
+
+          {# Скрытые карточки #}
+           {% for startup in user_startups|slice:"6:" %}
+            <div class="startup-card hidden-card" data-category="{{ startup.direction.direction_name|default:'' }}" data-name="{{ startup.title|default:'' }}" style="display: none;">
+              <div class="startup-card-left">
+                   <img src="{{ startup.get_logo_url | default:'/static/accounts/images/placeholder_logo.png' }}" alt="{{ startup.title|default:'Лого' }}" class="startup-planet-img">
+                   <div class="startup-name">
+                       {% if startup.title %}
+                          <a href="{% url 'startup_detail' startup_id=startup.startup_id %}" style="color: inherit; text-decoration: none;">{{ startup.title }}</a>
+                       {% else %}
+                           <span style="color: red; font-size: 10px;">(Имя не задано!)</span>
+                       {% endif %}
+                   </div>
+                   <div class="startup-rating">
+                       {% with rating=startup.average_rating|default:0 %}
+                           {% for i in "12345"|make_list %}
+                               {% if rating >= i|add:0 %}<i class="fas fa-star"></i>
+                               {% elif rating >= i|add:-0.5 %}<i class="fas fa-star-half-alt"></i>
+                               {% else %}<i class="far fa-star"></i>{% endif %}
+                           {% endfor %}
+                            <span style="font-size: 12px; color: #868E96; margin-left: 5px;">({{ startup.total_voters|default:0 }})</span>
+                       {% endwith %}
+                   </div>
+                   <div class="startup-comments">
+                       <i class="fas fa-comment-dots"></i>
+                       <span>{{ startup.comment_count|default:0 }}</span>
+                   </div>
+              </div>
+              <div class="startup-card-right">
+                  <div class="startup-status-row">
+                    <span class="detail-label">Статус</span>
+                    <span class="detail-value status-{{ startup.status|lower|default:'pending' }}">{{ startup.get_status_display|default:'Неизвестен' }}</span>
+                  </div>
+                  <div class="startup-financials">
+                       <div class="startup-detail-row">
+                          <span class="detail-label">Собрано:</span>
+                          <span class="detail-value">{{ startup.amount_raised|default:'0'|intcomma }} ₽</span>
+                      </div>
+                      <div class="startup-detail-row">
+                          <span class="detail-label">Инвесторов:</span>
+                          <span class="detail-value">{{ startup.get_investors_count|default:0 }}</span>
+                      </div>
+                      <div class="startup-detail-row">
+                          <span class="detail-label">Цель:</span>
+                          <span class="detail-value">{{ startup.goal|default:'0'|intcomma }} ₽</span>
+                      </div>
+                  </div>
+                  <div class="startup-category-row">
+                    <span class="detail-label">Категория</span>
+                    <span class="startup-category-tag">
+                         {% with original_name=startup.direction.direction_name|default:"" %}
+                            {{ original_name|default:"Без категории" }}
+                         {% endwith %}
+                    </span>
+                  </div>
+                  <a href="{% url 'edit_startup' startup_id=startup.startup_id %}" class="edit-startup-btn" style="align-self: flex-end; margin-top: 10px; color: #007bff; text-decoration: none; font-size: 13px;">Редактировать</a>
               </div>
             </div>
           {% endfor %}
         </div>
 
-        {# Кнопка Показать еще будет видна только если есть скрытые карточки #}
-        {% if user_investments|length > 4 %}
-        <div class="startup-buttons-container">
+        {# Кнопка Показать еще #}
+        {% if user_startups|length > 6 %} {# Проверяем длину user_startups (одобренных) #}
+        <div class="startup-buttons-container" style="text-align: center; margin-top: 20px;"> {# Центрируем кнопки #}
             <button class="show-more-btn" id="load-more">
               Показать еще <i class="fas fa-arrow-right"></i>
             </button>
-            {# Новая кнопка Скрыть, изначально скрыта #}
             <button class="show-more-btn hide-btn" id="hide-startups-btn" style="display: none;">
               Скрыть <i class="fas fa-arrow-up"></i>
             </button>
         </div>
         {% endif %}
       </div>
-    </div>
-    
+
+      <!-- НОВЫЙ РАЗДЕЛ: Заявки на стартапы -->
+      <div class="applications-section">
+        <div class="applications-header">
+          <div class="applications-titles">
+            <h2 class="applications-title-main">Заявки</h2>
+            <h2 class="applications-title-sub">на стартапы</h2>
+          </div>
+          {# Можно добавить сюда кнопку "Создать новый стартап", если нужно #}
+           <a href="{% url 'create_startup' %}" class="download-report-btn" style="align-self: center;">Создать стартап</a>
+        </div>
+
+        <div class="applications-list">
+          {% for app in startup_applications %} {# Используем startup_applications из контекста #}
+            <div class="application-card">
+              <div class="application-title">{{ app.title|default:"Без названия" }}</div>
+              <div class="application-status status-{{ app.status|lower|default:'pending' }}">
+                  {{ app.get_status_display|default:"Неизвестен" }}
+              </div>
+              {# Отображаем комментарий модератора, если стартап отклонен или заблокирован #}
+              {% if app.status == 'rejected' or app.status == 'blocked' %}
+                {% if app.moderator_comment %}
+                  <div class="application-comment">
+                    <strong>Комментарий модератора:</strong> {{ app.moderator_comment }}
+                  </div>
+                {% endif %}
+              {% endif %}
+              {# Ссылка на просмотр/редактирование #}
+              {% if app.status == 'pending' or app.status == 'rejected' %}
+                 <a href="{% url 'edit_startup' startup_id=app.startup_id %}">Редактировать заявку</a>
+              {% elif app.status == 'approved' %}
+                 <a href="{% url 'startup_detail' startup_id=app.startup_id %}">Перейти к стартапу</a>
+              {% endif %}
+               <span style="font-size: 12px; color: rgba(255, 255, 255, 0.5); margin-top: 5px;">Обновлено: {{ app.updated_at|date:"d.m.Y H:i" }}</span>
+            </div>
+          {% empty %}
+            <p style="grid-column: 1 / -1; text-align: center;">У вас пока нет отправленных заявок.</p>
+          {% endfor %}
+        </div>
+      </div>
+      <!-- Конец раздела Заявки на стартапы -->
+
+    </div> {# Конец portfolio-container #}
+
     <!-- Модальное окно для всех категорий -->
     <div id="allCategoriesModal" class="modal-overlay">
         <div class="modal-content category-modal-content">
@@ -369,14 +416,14 @@
         </div>
     </div>
 
-    {# Перемещаем JSON SCRIPTS сюда (перед основным скриптом) #}
+    {# Перемещаем JSON SCRIPTS сюда #}
     {{ month_labels|json_script:"chart-month-labels" }}
     {{ month_data|json_script:"chart-month-data" }}
     {{ all_directions|json_script:"all-directions-data" }}
     {{ invested_category_data|json_script:"invested-category-data" }}
 
     <script>
-      // ГЛОБАЛЬНЫЕ ФУНКЦИИ, КОНСТАНТЫ
+      // ГЛОБАЛЬНЫЕ ФУНКЦИИ, КОНСТАНТЫ (оставляем как есть)
       const categoryColors = {
           "Medicine": "#e74c3c", "Auto": "#3498db", "Delivery": "#f1c40f",
           "Cafe": "#9b59b6", "Fastfood": "#e67e22", "Health": "#1abc9c",
@@ -395,7 +442,7 @@
               "Healthcare": "Здравоохранение", "Technology": "Технологии", "IT": "ИТ",
               "Retail": "Ритейл"
           };
-          return translations[name] || name || "Не указано";
+          return translations[name] || name || "Без категории";
       }
 
       function updateRadialChartColors() {
@@ -404,23 +451,42 @@
           const categoryName = chart.dataset.categoryName || '';
           const color = categoryColors[categoryName] || categoryColors["default"];
           const progressElement = chart.querySelector('.radial-chart-progress');
+          const textElement = chart.querySelector('.radial-chart-text'); // Находим текстовый элемент
           if (progressElement) {
               progressElement.style.setProperty('--percentage', percentage);
               progressElement.style.setProperty('--progress-color', color);
           }
+          // Обновляем текст, если категория не "Все"
+          if (!chart.closest('.category-all') && textElement) {
+                textElement.textContent = `${percentage}%`;
+          }
         });
+        // Обновляем имена категорий под диаграммами
+         document.querySelectorAll('.category-radial-name').forEach(span => {
+            const item = span.closest('.category-radial-item');
+            if (item && !item.classList.contains('category-all')) {
+                const chart = item.querySelector('.radial-chart');
+                if (chart) {
+                    const originalName = chart.dataset.categoryName;
+                    span.textContent = translateCategoryName(originalName);
+                }
+            }
+         });
       }
 
       function openModal(directionsData, investedDataDict) {
           const modalOverlay = document.getElementById('allCategoriesModal');
           const modalGrid = document.getElementById('modalCategoriesGrid');
-          
+
           if (!modalOverlay || !modalGrid) return;
 
           modalGrid.innerHTML = '';
           if (directionsData && directionsData.length > 0) {
+              // Сортируем категории по убыванию процента
+              directionsData.sort((a, b) => (investedDataDict[b.name] || 0) - (investedDataDict[a.name] || 0));
+
               directionsData.forEach(direction => {
-                  const categoryName = direction.name;
+                  const categoryName = direction.name; // Используем 'name' как ключ
                   const percentage = investedDataDict[categoryName] || 0;
                   const translatedName = translateCategoryName(categoryName);
                   const color = categoryColors[categoryName] || categoryColors["default"];
@@ -449,59 +515,110 @@
           modalOverlay.classList.remove('visible');
           document.body.classList.remove('modal-open-blur');
       }
-      
+
       function filterByCategory(event) {
           event.preventDefault();
           const selectedCategory = event.target.dataset.category;
-          console.log("[filterByCategory] Clicked category:", selectedCategory);
           const categoryButton = document.querySelector('.filter-btn[data-filter="category"]');
           const filterButtons = document.querySelectorAll('.filter-btn');
-          const startupCards = document.querySelectorAll('.startup-card');
+          const startupCards = document.querySelectorAll('.startups-grid .startup-card'); // Ищем только в основной сетке
           const loadMoreBtn = document.getElementById('load-more');
           const hideBtn = document.getElementById('hide-startups-btn');
+          const startupGrid = document.querySelector('.startups-grid');
 
           filterButtons.forEach(btn => btn.classList.remove('active'));
           if (categoryButton) {
                categoryButton.classList.add('active');
+               // Обновляем текст кнопки "Категория"
+               const chevron = categoryButton.querySelector('i');
+               categoryButton.textContent = translateCategoryName(selectedCategory) + ' ';
+               if (chevron) categoryButton.appendChild(chevron);
           }
 
+          let visibleCount = 0;
           startupCards.forEach(card => {
               const isHiddenCard = card.classList.contains('hidden-card');
+              // Фильтруем только видимые или скрытые карточки, которые должны быть показаны
               if (card.dataset.category === selectedCategory) {
-                  card.style.display = 'flex';
+                  // Показываем только первые 6, остальные скрываем (даже если они были показаны кнопкой "Показать еще")
+                  if (visibleCount < 6) {
+                       card.style.display = 'flex';
+                       visibleCount++;
+                  } else {
+                      card.style.display = 'none';
+                      card.classList.add('hidden-card'); // Убедимся, что карточка помечена как скрытая
+                  }
               } else {
                   card.style.display = 'none';
               }
           });
 
+          // Скрываем кнопки "Показать еще" / "Скрыть" при фильтрации по категории
           if (loadMoreBtn) loadMoreBtn.style.display = 'none';
           if (hideBtn) hideBtn.style.display = 'none';
+
+          // Добавляем сообщение, если нет стартапов в категории
+          const noResultsMsg = startupGrid.querySelector('.no-results-message');
+          if (visibleCount === 0) {
+              if (!noResultsMsg) {
+                  const p = document.createElement('p');
+                  p.textContent = `Нет стартапов в категории "${translateCategoryName(selectedCategory)}".`;
+                  p.style.gridColumn = '1 / -1';
+                  p.style.textAlign = 'center';
+                  p.classList.add('no-results-message');
+                  startupGrid.appendChild(p);
+              }
+          } else {
+              if (noResultsMsg) {
+                  noResultsMsg.remove();
+              }
+          }
       }
 
       document.addEventListener('DOMContentLoaded', function() {
-          
+
           let parsedDirections = [];
           let parsedInvestedData = {};
           try {
               const directionsElement = document.getElementById('all-directions-data');
               const investedElement = document.getElementById('invested-category-data');
               if (directionsElement) {
-                  parsedDirections = JSON.parse(directionsElement.textContent).map(item => ({ pk: item.pk, name: item.direction_name }));
+                  // Теперь данные приходят как {pk: ..., direction_name: ...}
+                   parsedDirections = JSON.parse(directionsElement.textContent).map(item => ({ pk: item.pk, name: item.direction_name }));
               }
               if (investedElement) {
                   parsedInvestedData = JSON.parse(investedElement.textContent);
               }
           } catch (e) {
-              console.error("Ошибка парсинга данных для модального окна при загрузке DOM:", e);
+              console.error("Ошибка парсинга данных для модального окна:", e);
           }
 
-          updateRadialChartColors();
+          updateRadialChartColors(); // Вызываем сразу для начальной отрисовки
 
+          // Заполняем выпадающий список категорий
           const categoryDropdownContent = document.querySelector('.filter-dropdown-content');
           if (categoryDropdownContent) {
               const directionsForDropdown = parsedDirections || [];
-              categoryDropdownContent.innerHTML = '';
+              categoryDropdownContent.innerHTML = ''; // Очищаем перед заполнением
               if (directionsForDropdown.length > 0) {
+                   // Добавляем пункт "Все категории"
+                   const allLink = document.createElement('a');
+                   allLink.href = '#';
+                   allLink.dataset.filter = 'all'; // Используем тот же фильтр, что и у кнопки "Все"
+                   allLink.textContent = 'Все категории';
+                   allLink.addEventListener('click', (e) => {
+                       e.preventDefault();
+                       document.querySelector('.filter-btn[data-filter="all"]').click(); // Имитируем клик по кнопке "Все"
+                       // Сбрасываем текст кнопки "Категория"
+                       const categoryButton = document.querySelector('.filter-btn[data-filter="category"]');
+                       const chevron = categoryButton.querySelector('i');
+                       categoryButton.textContent = 'Категория ';
+                       if (chevron) categoryButton.appendChild(chevron);
+
+                   });
+                   categoryDropdownContent.appendChild(allLink);
+
+                   // Добавляем остальные категории
                   directionsForDropdown.forEach(direction => {
                       const link = document.createElement('a');
                       link.href = '#';
@@ -515,93 +632,175 @@
               }
           }
 
+          // Поиск
           const searchInput = document.getElementById('startup-search');
-          if (searchInput) {
+           const startupGrid = document.querySelector('.startups-grid'); // Получаем контейнер сетки
+          if (searchInput && startupGrid) {
              searchInput.addEventListener('input', function() {
-                 const searchTerm = this.value.toLowerCase();
-                 document.querySelectorAll('.startups-grid .startup-card').forEach(card => {
-                    const name = card.getAttribute('data-name').toLowerCase();
-                    if (name.includes(searchTerm)) {
-                        if (card.style.display !== 'none' || card.classList.contains('hidden-card')) {
-                           if (card.style.display !== 'none') {
-                                card.style.display = 'flex';
-                           }
-                        }
-                    } else {
-                        if (card.style.display !== 'none') {
-                            card.style.display = 'none';
-                        }
-                    }
-                 });
+                 const searchTerm = this.value.toLowerCase().trim();
+                 const startupCards = startupGrid.querySelectorAll('.startup-card');
                  const loadMoreBtnSearch = document.getElementById('load-more');
                  const hideBtnSearch = document.getElementById('hide-startups-btn');
+                 let visibleCount = 0;
+
+                 startupCards.forEach(card => {
+                    const name = card.getAttribute('data-name').toLowerCase();
+                    const category = card.getAttribute('data-category');
+                    const isActiveCategoryFilter = document.querySelector('.filter-btn[data-filter="category"].active');
+                    const selectedCategory = isActiveCategoryFilter ? categoryButton.textContent.trim().split(' ')[0] : null; // Получаем активную категорию
+
+                    // Проверяем совпадение по имени И активному фильтру категории (если он есть)
+                    const matchesCategory = !isActiveCategoryFilter || (category === selectedCategory); // Либо нет фильтра, либо категория совпадает
+                    const matchesSearch = name.includes(searchTerm);
+
+                    if (matchesSearch && matchesCategory) {
+                         // Показываем только первые 6 найденных, остальные скрываем
+                         if (visibleCount < 6) {
+                              card.style.display = 'flex';
+                              visibleCount++;
+                         } else {
+                             card.style.display = 'none';
+                             card.classList.add('hidden-card'); // Помечаем как скрытую для кнопки "Показать еще"
+                         }
+                    } else {
+                        card.style.display = 'none';
+                    }
+                 });
+
+                 // Скрываем кнопки "Показать/Скрыть" при поиске
                  if (loadMoreBtnSearch) loadMoreBtnSearch.style.display = 'none';
                  if (hideBtnSearch) hideBtnSearch.style.display = 'none';
+
+                  // Добавляем/удаляем сообщение "Ничего не найдено"
+                  const noResultsMsg = startupGrid.querySelector('.no-results-message');
+                  if (visibleCount === 0 && searchTerm !== '') {
+                       if (!noResultsMsg) {
+                           const p = document.createElement('p');
+                           p.textContent = 'По вашему запросу ничего не найдено.';
+                           p.style.gridColumn = '1 / -1';
+                           p.style.textAlign = 'center';
+                           p.classList.add('no-results-message');
+                           startupGrid.appendChild(p);
+                       }
+                   } else {
+                       if (noResultsMsg) {
+                           noResultsMsg.remove();
+                       }
+                   }
+
              });
            }
-          
+
+          // Обработка кнопок фильтрации ("Все", "Категория" и т.д.)
           const filterButtons = document.querySelectorAll('.filter-btn');
-          const sortLinks = document.querySelectorAll('a.filter-link-sort');
-          const startupCards = document.querySelectorAll('.startup-card');
+          const startupCards = startupGrid.querySelectorAll('.startup-card'); // Обновляем выборку
           const loadMoreBtn = document.getElementById('load-more');
           const hideBtn = document.getElementById('hide-startups-btn');
-          const hiddenCards = document.querySelectorAll('.startup-card.hidden-card');
+          const hiddenCards = startupGrid.querySelectorAll('.startup-card.hidden-card'); // Обновляем выборку
 
-          filterButtons.forEach(button => {
-            button.addEventListener('click', function(event) {
-              if (this.classList.contains('filter-btn-dropdown')) {
-                  // Ничего не делаем для самой кнопки "Категория"
-              } else {
-                 filterButtons.forEach(btn => btn.classList.remove('active'));
-                 this.classList.add('active');
-                 const filter = this.getAttribute('data-filter');
-                 if (filter === 'all') {
-                      startupCards.forEach(card => {
-                           if (!card.classList.contains('hidden-card')) {
-                              card.style.display = 'flex';
+           filterButtons.forEach(button => {
+               button.addEventListener('click', function(event) {
+                    // Игнорируем клики по самой кнопке с выпадающим списком
+                    if (this.classList.contains('filter-btn-dropdown')) {
+                       return;
+                    }
+                    // Игнорируем клики по ссылкам внутри выпадающего списка (обрабатываются в filterByCategory)
+                    if (event.target.tagName === 'A' && event.target.closest('.filter-dropdown-content')) {
+                        return;
+                    }
+
+                   filterButtons.forEach(btn => btn.classList.remove('active'));
+                   this.classList.add('active');
+                   const filter = this.getAttribute('data-filter');
+
+                   // Удаляем сообщение "нет результатов", если оно было
+                   const noResultsMsg = startupGrid.querySelector('.no-results-message');
+                   if (noResultsMsg) noResultsMsg.remove();
+
+                   if (filter === 'all') {
+                       let visibleCount = 0;
+                        startupCards.forEach(card => {
+                           // Показываем только первые 6, остальные помечаем как скрытые
+                           if (visibleCount < 6) {
+                               card.style.display = 'flex';
+                               card.classList.remove('hidden-card'); // Убираем класс hidden, если он был
+                               visibleCount++;
                            } else {
                                card.style.display = 'none';
+                               card.classList.add('hidden-card');
                            }
-                      });
-                      if (hiddenCards.length > 0) {
-                          if (loadMoreBtn) loadMoreBtn.style.display = 'flex';
-                          if (hideBtn) hideBtn.style.display = 'none';
-                      } else {
-                          if (loadMoreBtn) loadMoreBtn.style.display = 'none';
-                          if (hideBtn) hideBtn.style.display = 'none';
-                      }
-                      const categoryButton = document.querySelector('.filter-btn[data-filter="category"]');
-                      // if (categoryButton) categoryButton.firstChild.textContent = 'Категория ';
-                 } else if (filter === 'new') {
-                   alert('Сортировка по новым пока не реализована');
-                 } else if (filter === 'old') {
-                   alert('Сортировка по старым пока не реализована');
-                 }
-              }
-            });
-          });
-          
-          if (loadMoreBtn && hiddenCards.length > 0) {
+                        });
+                        // Показываем/скрываем кнопку "Показать еще"
+                       if (hiddenCards.length > 0) {
+                           if (loadMoreBtn) loadMoreBtn.style.display = 'flex';
+                           if (hideBtn) hideBtn.style.display = 'none';
+                       } else {
+                           if (loadMoreBtn) loadMoreBtn.style.display = 'none';
+                           if (hideBtn) hideBtn.style.display = 'none';
+                       }
+                       // Сбрасываем текст кнопки "Категория"
+                       const categoryButton = document.querySelector('.filter-btn[data-filter="category"]');
+                       if (categoryButton) {
+                            const chevron = categoryButton.querySelector('i');
+                            categoryButton.textContent = 'Категория ';
+                            if (chevron) categoryButton.appendChild(chevron);
+                       }
+                       // Сбрасываем поиск
+                       if(searchInput) searchInput.value = '';
+
+                  } else if (filter === 'new') {
+                    // Логика для "Новые" (требует сортировки на бэкенде или сложной логики на фронте)
+                    alert('Сортировка по новым пока не реализована.');
+                    if (loadMoreBtn) loadMoreBtn.style.display = 'none';
+                    if (hideBtn) hideBtn.style.display = 'none';
+                  } else if (filter === 'old') {
+                     // Логика для "Старые"
+                    alert('Сортировка по старым пока не реализована.');
+                    if (loadMoreBtn) loadMoreBtn.style.display = 'none';
+                    if (hideBtn) hideBtn.style.display = 'none';
+                  }
+                  // Фильтр по категории обрабатывается отдельно в filterByCategory
+               });
+           });
+
+          // Кнопка "Показать еще"
+          if (loadMoreBtn) {
              loadMoreBtn.addEventListener('click', function() {
-               hiddenCards.forEach(card => {
-                  if (card.style.display !== 'none' || !card.hasAttribute('style')) {
+               const currentlyHiddenCards = startupGrid.querySelectorAll('.startup-card.hidden-card'); // Находим актуальные скрытые
+               currentlyHiddenCards.forEach(card => {
+                   // Показываем только те, что скрыты, но соответствуют текущему фильтру/поиску
+                  if (card.style.display === 'none') {
                      card.style.display = 'flex';
+                     card.classList.remove('hidden-card'); // Убираем класс, чтобы они не скрылись снова
                   }
                });
-               this.style.display = 'none';
-               if (hideBtn) hideBtn.style.display = 'flex';
+               this.style.display = 'none'; // Скрываем кнопку "Показать еще"
+               if (hideBtn) hideBtn.style.display = 'flex'; // Показываем кнопку "Скрыть"
              });
           }
+
+          // Кнопка "Скрыть"
           if (hideBtn) {
              hideBtn.addEventListener('click', function() {
-                 hiddenCards.forEach(card => {
-                     card.style.display = 'none';
-                 });
-                 this.style.display = 'none';
-                 if (loadMoreBtn) loadMoreBtn.style.display = 'flex';
+                  let visibleCount = 0;
+                  // Проходим по всем карточкам в сетке
+                  startupGrid.querySelectorAll('.startup-card').forEach(card => {
+                       if (card.style.display === 'flex') { // Считаем только видимые
+                           if (visibleCount >= 6) {
+                               card.style.display = 'none'; // Скрываем лишние
+                               card.classList.add('hidden-card'); // Помечаем как скрытые
+                           }
+                           visibleCount++;
+                       }
+                  });
+                 this.style.display = 'none'; // Скрываем кнопку "Скрыть"
+                 if (loadMoreBtn && startupGrid.querySelectorAll('.startup-card.hidden-card').length > 0) {
+                      loadMoreBtn.style.display = 'flex'; // Показываем "Показать еще", если есть что показывать
+                 }
              });
           }
-  
+
+          // Модальное окно (оставляем без изменений)
           const openModalBtn = document.getElementById('openCategoriesModalBtn');
           const closeModalBtn = document.getElementById('closeCategoriesModalBtn');
           const modalOverlay = document.getElementById('allCategoriesModal');
@@ -621,14 +820,15 @@
               });
           }
 
+          // График (адаптируем под новые данные)
           (function() {
-              const canvasElement = document.getElementById('monthlyInvestmentChart');
+              const canvasElement = document.getElementById('monthlyInvestmentChart'); // ID остается тот же
               if (!canvasElement) {
-                  console.error("Элемент canvas #monthlyInvestmentChart не найден.");
+                  console.warn("Элемент canvas #monthlyInvestmentChart не найден."); // Используем warn
                   return;
               }
               const ctx = canvasElement.getContext('2d');
-              
+
               let monthLabels = [];
               let monthData = [];
               try {
@@ -636,9 +836,8 @@
                   const dataEl = document.getElementById('chart-month-data');
                   if (!labelsEl || !dataEl) throw new Error("Элементы данных графика не найдены");
                   monthLabels = JSON.parse(labelsEl.textContent);
+                  // monthData теперь содержит float, JSON.parse справится
                   monthData = JSON.parse(dataEl.textContent);
-                  console.log("[Chart Init] Labels:", monthLabels);
-                  console.log("[Chart Init] Data:", monthData);
               } catch (e) {
                   console.error("Ошибка парсинга данных для графика:", e);
                   if (canvasElement.parentNode) {
@@ -650,6 +849,7 @@
               const hasData = monthData && monthData.some(value => value > 0);
 
               if (hasData) {
+                   // Градиент и настройки графика оставляем как есть
                   const gradient = ctx.createLinearGradient(0, 0, 0, 300);
                   gradient.addColorStop(0, 'rgba(0, 123, 255, 0.8)');
                   gradient.addColorStop(1, 'rgba(0, 123, 255, 0.1)');
@@ -659,7 +859,7 @@
                       data: {
                           labels: monthLabels,
                           datasets: [{
-                              label: 'Сумма собранных средств',
+                              label: 'Сумма собранных средств', // Лейбл остается релевантным
                               data: monthData,
                               backgroundColor: gradient,
                               borderColor: 'rgba(0, 123, 255, 1)',
@@ -669,21 +869,26 @@
                               maxBarThickness: 30
                           }]
                       },
-                      options: {
+                      options: { // Опции оставляем без изменений
                         responsive: true,
                         maintainAspectRatio: false,
                         scales: {
                             y: {
                                 beginAtZero: true,
-                                grid: { color: 'rgba(0, 0, 0, 0.05)' },
+                                grid: { color: 'rgba(255, 255, 255, 0.05)' }, // Светлая сетка для темного фона
                                 ticks: {
+                                     color: 'rgba(255, 255, 255, 0.7)', // Светлые тики
                                     callback: function(value) {
-                                        if (value >= 1000) { return (value / 1000).toLocaleString('ru-RU') + 'k'; }
+                                        if (value >= 1000000) { return (value / 1000000).toLocaleString('ru-RU', { maximumFractionDigits: 1 }) + 'M'; }
+                                        if (value >= 1000) { return (value / 1000).toLocaleString('ru-RU', { maximumFractionDigits: 0 }) + 'k'; }
                                         else { return value.toLocaleString('ru-RU'); }
                                     }
                                 }
                             },
-                            x: { grid: { display: false } }
+                            x: {
+                                grid: { display: false },
+                                ticks: { color: 'rgba(255, 255, 255, 0.7)' } // Светлые тики
+                            }
                         },
                         plugins: {
                             legend: { display: false },
@@ -703,13 +908,17 @@
                       }
                   });
               } else {
+                 // Сообщение, если нет данных
                  if (canvasElement.parentNode) {
-                    canvasElement.parentNode.innerHTML = '<p style="text-align: center; color: #6c757d;">Нет данных для графика за текущий год.</p>';
+                    canvasElement.parentNode.innerHTML = '<p style="text-align: center; color: #adb5bd;">Нет данных по сборам средств за текущий год.</p>';
                  }
               }
-          })();
+          })(); // Конец IIFE для графика
+      }); // Конец DOMContentLoaded
     </script>
+
   {% else %}
+    {# Блок с сообщением об ограничении доступа остается без изменений #}
     <div class="access-restricted">
       <h2>Доступ ограничен</h2>
       <p>Эта страница доступна только для пользователей со статусом "Стартапер". Пожалуйста, войдите в аккаунт или зарегистрируйтесь как стартапер.</p>

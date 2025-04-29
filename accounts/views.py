@@ -417,17 +417,10 @@ def investments(request):
 def legal(request):
     return render(request, 'accounts/legal.html')
 
-# accounts/views.py
-def profile(request, user_id=None):
+def profile(request):
     if not request.user.is_authenticated:
         messages.error(request, 'Пожалуйста, войдите в систему, чтобы просмотреть профиль.')
         return redirect('login')
-
-    # Если передан user_id, показываем профиль этого пользователя
-    if user_id:
-        profile_user = get_object_or_404(Users, user_id=user_id)
-    else:
-        profile_user = request.user
 
     # Если запрос через AJAX для профиля
     if request.GET.get('user_id'):
@@ -441,8 +434,7 @@ def profile(request, user_id=None):
             'profile_picture_url': user.profile_picture_url
         })
 
-    # Обработка загрузки аватара (доступно только для своего профиля)
-    if request.method == 'POST' and 'avatar' in request.FILES and profile_user == request.user:
+    if request.method == 'POST' and 'avatar' in request.FILES:
         avatar = request.FILES['avatar']
         filename = f'avatars/user_{request.user.user_id}_avatar{os.path.splitext(avatar.name)[1]}'
         file_path = default_storage.save(filename, avatar)
@@ -450,7 +442,7 @@ def profile(request, user_id=None):
         request.user.save()
         messages.success(request, 'Аватарка успешно загружена!')
 
-    return render(request, 'accounts/profile.html', {'user': profile_user, 'is_own_profile': profile_user == request.user})
+    return render(request, 'accounts/profile.html', {'user': request.user})
 
 @login_required
 def create_startup(request):
@@ -1117,39 +1109,22 @@ def cosmochat(request):
     if request.user.is_authenticated:
         users = users.exclude(user_id=request.user.user_id)
 
-    # Если есть параметр chat_id, исключаем текущих участников чата
-    chat_id = request.GET.get('chat_id')
-    if chat_id:
-        chat = ChatConversations.objects.filter(conversation_id=chat_id).first()
-        if chat:
-            participant_ids = chat.chatparticipants_set.values_list('user_id', flat=True)
-            users = users.exclude(user_id__in=participant_ids)
-
     # Создаём форму для отправки сообщений
     message_form = MessageForm()
-
-    # Если это AJAX-запрос, возвращаем JSON
-    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        users_data = [{
-            'user_id': user.user_id,
-            'name': f"{user.first_name} {user.last_name}",
-            'role': user.role.role_name if user.role else 'Система'
-        } for user in users]
-        return JsonResponse({'users': users_data})
 
     return render(request, 'accounts/cosmochat.html', {
         'search_form': search_form,
         'users': users,
         'chats': chats,
-        'message_form': message_form,
+        'message_form': message_form,  # Добавляем message_form в контекст
     })
 
-# accounts/views.py
 def get_chat_messages(request, chat_id):
     if not request.user.is_authenticated:
         return JsonResponse({'success': False, 'error': 'Требуется авторизация'})
 
     chat = get_object_or_404(ChatConversations, conversation_id=chat_id)
+    # Проверяем, что пользователь участвует в чате
     if not chat.chatparticipants_set.filter(user=request.user).exists():
         return JsonResponse({'success': False, 'error': 'У вас нет доступа к этому чату'})
 
@@ -1159,7 +1134,6 @@ def get_chat_messages(request, chat_id):
         'sender_name': f"{msg.sender.first_name} {msg.sender.last_name}" if msg.sender else "Неизвестно",
         'message_text': msg.message_text,
         'created_at': msg.created_at.strftime('%d.%m.%Y %H:%M') if msg.created_at else '',
-        'created_at_iso': msg.created_at.isoformat() if msg.created_at else '',  # Добавляем ISO формат
         'is_read': msg.is_read(),
         'is_own': msg.sender == request.user if msg.sender else False
     } for msg in messages]
@@ -1177,7 +1151,6 @@ def get_chat_messages(request, chat_id):
         'participants': participants_data
     })
 
-# accounts/views.py
 @login_required
 def send_message(request):
     if request.method != 'POST':
@@ -1212,7 +1185,6 @@ def send_message(request):
             'sender_name': f"{request.user.first_name} {request.user.last_name}",
             'message_text': message.message_text,
             'created_at': message.created_at.strftime('%d.%m.%Y %H:%M'),
-            'created_at_iso': message.created_at.isoformat(),  # Добавляем ISO формат
             'is_read': message.is_read(),
             'is_own': True
         }
@@ -1273,7 +1245,10 @@ def start_chat(request, user_id):
 
     return JsonResponse({'success': True, 'chat_id': chat.conversation_id})
 
-# accounts/views.py
+
+
+
+
 @login_required
 def add_participant(request, chat_id):
     if request.method != 'POST':
@@ -1283,26 +1258,28 @@ def add_participant(request, chat_id):
     if not chat.chatparticipants_set.filter(user=request.user).exists():
         return JsonResponse({'success': False, 'error': 'У вас нет доступа к этому чату'})
 
-    # Проверяем количество участников
+    # Проверяем, сколько участников уже в чате
     participants = chat.get_participants()
     if participants.count() >= 3:
         return JsonResponse({'success': False, 'error': 'В чате уже максимальное количество участников (3)'})
 
-    # Получаем user_id из параметров запроса
-    user_id = request.GET.get('user_id')
-    if not user_id:
-        return JsonResponse({'success': False, 'error': 'Не указан пользователь для добавления'})
-
-    new_user = get_object_or_404(Users, user_id=user_id)
-
-    # Проверяем роли
+    # Определяем текущие роли в чате
     current_roles = {p.user.role.role_name.lower() for p in participants if p.user and p.user.role}
-    new_user_role = new_user.role.role_name.lower() if new_user.role else None
-    if not new_user_role:
-        return JsonResponse({'success': False, 'error': 'Роль нового пользователя не определена'})
+    required_roles = {'startuper', 'investor', 'moderator'}
+    missing_role = (required_roles - current_roles).pop() if (required_roles - current_roles) else None
+    if not missing_role:
+        return JsonResponse({'success': False, 'error': 'Все роли уже заняты'})
 
-    if new_user_role in current_roles:
-        return JsonResponse({'success': False, 'error': f'В чате уже есть пользователь с ролью {new_user_role}'})
+    # Находим пользователя с недостающей ролью (сортируем по количеству чатов)
+    new_user = Users.objects.filter(
+        role__role_name__iexact=missing_role
+    ).exclude(
+        user_id__in=[p.user.user_id for p in participants]
+    ).annotate(
+        chat_count=Count('chatparticipants')
+    ).order_by('chat_count').first()
+    if not new_user:
+        return JsonResponse({'success': False, 'error': f'Не найден пользователь с ролью {missing_role}'})
 
     # Добавляем нового участника
     ChatParticipants.objects.create(conversation=chat, user=new_user)
@@ -1460,17 +1437,119 @@ def planetary_system(request):
 # accounts/views.py
 @login_required
 def my_startups(request):
-    # Временная заглушка, чтобы страница отображалась
-    # Позже здесь будет логика для стартаперов
-    return render(request, 'accounts/my_startups.html', {  # Изменяем my-startups.html на my_startups.html
-        'startups_count': 0,
-        'total_investment': 0,
-        'max_investment': 0,
-        'min_investment': 0,
-        'investment_categories': [],
-        'month_labels': [],
-        'month_data': [],
-        'all_directions': [],
-        'invested_category_data': {},
-        'user_investments': [],
-    })
+    # Проверяем роль пользователя
+    if not hasattr(request.user, 'role') or request.user.role.role_name != 'startuper':
+        messages.error(request, 'Доступ к этой странице разрешен только стартаперам.')
+        return redirect('profile') # Или на другую страницу, например, home
+
+    # Получаем все стартапы пользователя
+    user_startups_qs = Startups.objects.filter(owner=request.user).select_related(
+        'direction', 'stage', 'status_id'
+    ).prefetch_related('comments') # Предзагружаем комментарии
+
+    # Фильтруем одобренные стартапы для основной секции и аналитики
+    approved_startups_qs = user_startups_qs.filter(status='approved')
+
+    # --- Расчет аналитики по одобренным стартапам ---
+    analytics_data = approved_startups_qs.aggregate(
+        total_raised=Sum('amount_raised'),
+        max_raised=Max('amount_raised'),
+        min_raised=Min('amount_raised'),
+        startups_count=Count('startup_id') # Считаем по ID
+    )
+
+    startups_count = analytics_data.get('startups_count', 0)
+    total_amount_raised = analytics_data.get('total_raised') or Decimal('0')
+    max_raised = analytics_data.get('max_raised') or Decimal('0')
+    min_raised = analytics_data.get('min_raised') or Decimal('0')
+
+    # --- Данные по категориям (аналогично investments, но по amount_raised) ---
+    category_data_raw = approved_startups_qs.values(
+        'direction__direction_name'
+    ).annotate(
+        category_total=Sum('amount_raised')
+    ).order_by('-category_total')
+
+    investment_categories = []
+    invested_category_data_dict = {}
+    total_for_percentage = total_amount_raised if total_amount_raised > 0 else Decimal('1')
+
+    for cat_data in category_data_raw:
+        percentage = 0
+        category_sum = cat_data.get('category_total')
+        category_name = cat_data.get('direction__direction_name') or 'Без категории'
+
+        if category_sum and total_for_percentage > 0:
+            try:
+                percentage = round((Decimal(category_sum) / total_for_percentage) * 100)
+                percentage = min(percentage, 100)
+            except Exception as e:
+                logger.error(f"Ошибка расчета процента для категории '{category_name}': {e}")
+                percentage = 0
+
+        investment_categories.append({
+            'name': category_name,
+            'percentage': percentage,
+        })
+        invested_category_data_dict[category_name] = percentage
+
+    # --- Данные для графика по месяцам (по amount_raised) ---
+    current_year = timezone.now().year
+    # Используем дату обновления, как прокси для даты сбора средств
+    monthly_data_direct = approved_startups_qs.filter(
+        updated_at__year=current_year,
+        amount_raised__gt=0 # Учитываем только стартапы с собранными средствами
+    ).annotate(
+        month=TruncMonth('updated_at')
+    ).values('month').annotate(
+        monthly_total=Sum('amount_raised')
+    ).order_by('month')
+
+    month_labels = ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"]
+    monthly_totals = [0] * 12
+    for data in monthly_data_direct:
+        month_index = data['month'].month - 1
+        if 0 <= month_index < 12:
+            # Преобразуем Decimal в float для JSON
+            monthly_totals[month_index] = float(data.get('monthly_total', 0) or 0)
+
+
+    # --- Получаем одобренные стартапы с аннотациями для основной сетки ---
+    # (Добавляем рейтинг и комменты к одобренным)
+    approved_startups_annotated = approved_startups_qs.annotate(
+         average_rating=Avg(
+            models.ExpressionWrapper(
+                models.F('sum_votes') * 1.0 / models.F('total_voters'),
+                output_field=FloatField()
+            ),
+            filter=models.Q(total_voters__gt=0),
+            default=0.0
+        ),
+        comment_count=Count('comments') # Используем prefetch_related
+    ).annotate(
+         average_rating=models.functions.Coalesce('average_rating', 0.0)
+    ).order_by('-created_at') # Сортировка по умолчанию - новые
+
+    # --- Получаем все стартапы пользователя для секции "Заявки" ---
+    all_user_applications = user_startups_qs.order_by('-updated_at') # Сортируем по дате обновления
+
+    # --- Все направления для модального окна ---
+    all_directions_qs = Directions.objects.all().order_by('direction_name')
+    all_directions_list = list(all_directions_qs.values('pk', 'direction_name'))
+
+    context = {
+        'startups_count': startups_count,
+        'total_investment': total_amount_raised, # Используем это имя для совместимости с CSS/JS, но это 'total_raised'
+        'max_investment': max_raised, # Используем это имя для совместимости
+        'min_investment': min_raised, # Используем это имя для совместимости
+        'investment_categories': investment_categories[:7], # Топ-7 для радиальных
+        'month_labels': month_labels,
+        'month_data': monthly_totals,
+        'all_directions': all_directions_list,
+        'invested_category_data': invested_category_data_dict,
+        'user_startups': approved_startups_annotated, # Одобренные для основной сетки
+        'startup_applications': all_user_applications, # Все для секции заявок
+        'current_sort': 'newest', # Начальная сортировка (пока не реализована полностью)
+    }
+
+    return render(request, 'accounts/my_startups.html', context)
