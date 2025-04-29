@@ -1130,21 +1130,34 @@ def cosmochat(request):
         'message_form': message_form,  # Добавляем message_form в контекст
     })
 
+# accounts/views.py
 def get_chat_messages(request, chat_id):
     if not request.user.is_authenticated:
         return JsonResponse({'success': False, 'error': 'Требуется авторизация'})
 
     chat = get_object_or_404(ChatConversations, conversation_id=chat_id)
-    # Проверяем, что пользователь участвует в чате
     if not chat.chatparticipants_set.filter(user=request.user).exists():
         return JsonResponse({'success': False, 'error': 'У вас нет доступа к этому чату'})
 
-    messages = chat.messages_set.all().order_by('created_at')
+    # Получаем параметр since из запроса
+    since = request.GET.get('since')
+    messages = chat.messages_set.all()
+    if since:
+        try:
+            from datetime import datetime
+            since_dt = datetime.fromisoformat(since.replace('Z', '+00:00'))
+            messages = messages.filter(created_at__gt=since_dt)
+        except ValueError:
+            return JsonResponse({'success': False, 'error': 'Неверный формат параметра since'})
+
+    messages = messages.order_by('created_at')
     messages_data = [{
+        'message_id': msg.message_id,
         'sender_id': msg.sender.user_id if msg.sender else None,
         'sender_name': f"{msg.sender.first_name} {msg.sender.last_name}" if msg.sender else "Неизвестно",
         'message_text': msg.message_text,
         'created_at': msg.created_at.strftime('%d.%m.%Y %H:%M') if msg.created_at else '',
+        'created_at_iso': msg.created_at.isoformat() if msg.created_at else '',
         'is_read': msg.is_read(),
         'is_own': msg.sender == request.user if msg.sender else False
     } for msg in messages]
@@ -1162,6 +1175,7 @@ def get_chat_messages(request, chat_id):
         'participants': participants_data
     })
 
+# accounts/views.py
 @login_required
 def send_message(request):
     if request.method != 'POST':
@@ -1192,10 +1206,12 @@ def send_message(request):
     return JsonResponse({
         'success': True,
         'message': {
+            'message_id': message.message_id,  # Добавляем message_id
             'sender_id': request.user.user_id,
             'sender_name': f"{request.user.first_name} {request.user.last_name}",
             'message_text': message.message_text,
             'created_at': message.created_at.strftime('%d.%m.%Y %H:%M'),
+            'created_at_iso': message.created_at.isoformat(),
             'is_read': message.is_read(),
             'is_own': True
         }

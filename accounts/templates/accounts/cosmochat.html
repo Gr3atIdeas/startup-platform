@@ -419,6 +419,7 @@
   let lastMessageTimestamp = null; // Для отслеживания времени последнего сообщения
   let pollingInterval = null; // Для хранения интервала опроса
   let currentParticipants = []; // Для хранения текущих участников чата
+  let displayedMessageIds = new Set(); // Храним ID отображённых сообщений
 
   document.addEventListener('DOMContentLoaded', function() {
     // Загружаем первый чат при загрузке страницы
@@ -473,6 +474,9 @@
       clearInterval(pollingInterval);
     }
 
+    // Очищаем список отображённых сообщений
+    displayedMessageIds.clear();
+
     // Обновляем активный чат в списке
     document.querySelectorAll('.chat-item').forEach(item => {
       item.classList.remove('active');
@@ -481,7 +485,7 @@
       }
     });
 
-    // Загружаем сообщения
+    // Загружаем все сообщения (без параметра since)
     fetch(`/cosmochat/${chatId}/`, {
       headers: {
         'X-CSRFToken': '{{ csrf_token }}'
@@ -491,12 +495,12 @@
     .then(data => {
       if (data.success) {
         const messagesDiv = document.querySelector('.chat-messages');
-        messagesDiv.innerHTML = '';
+        messagesDiv.innerHTML = ''; // Очищаем область сообщений
         data.messages.forEach(msg => appendMessage(msg));
 
         const participantsDiv = document.querySelector('.chat-participants');
         participantsDiv.innerHTML = data.participants.map(p => `<span>${p.name} (${p.role})</span>`).join(', ');
-        
+
         // Сохраняем текущих участников для проверки ролей
         currentParticipants = data.participants;
 
@@ -536,7 +540,12 @@
 
       console.log(`[${new Date().toISOString()}] Опрос новых сообщений для чата ${currentChatId}`);
 
-      fetch(`/cosmochat/${currentChatId}/`, {
+      // Добавляем параметр since, если есть lastMessageTimestamp
+      const url = lastMessageTimestamp 
+        ? `/cosmochat/${currentChatId}/?since=${encodeURIComponent(lastMessageTimestamp)}`
+        : `/cosmochat/${currentChatId}/`;
+
+      fetch(url, {
         headers: {
           'X-CSRFToken': '{{ csrf_token }}'
         }
@@ -545,9 +554,7 @@
       .then(data => {
         if (data.success) {
           const messagesDiv = document.querySelector('.chat-messages');
-          const newMessages = lastMessageTimestamp
-            ? data.messages.filter(msg => new Date(msg.created_at_iso) > new Date(lastMessageTimestamp))
-            : data.messages;
+          const newMessages = data.messages; // Сервер уже отфильтровал сообщения
 
           console.log(`[${new Date().toISOString()}] Найдено новых сообщений: ${newMessages.length}`);
 
@@ -568,6 +575,8 @@
               }
             });
           }
+        } else {
+          console.error('Ошибка от сервера:', data.error);
         }
       })
       .catch(error => {
@@ -577,9 +586,15 @@
   }
 
   function appendMessage(msg) {
+    // Проверяем, не было ли сообщение уже отображено
+    if (displayedMessageIds.has(msg.message_id)) {
+      return; // Пропускаем, если сообщение уже отображено
+    }
+
     const messagesDiv = document.querySelector('.chat-messages');
     const messageDiv = document.createElement('div');
     messageDiv.className = `message ${msg.is_own ? 'own' : ''} ${msg.sender_id ? '' : 'system'}`;
+    messageDiv.dataset.messageId = msg.message_id; // Сохраняем message_id в элементе
     messageDiv.innerHTML = `
       <div class="message-content">${msg.message_text}</div>
       <div class="message-meta">
@@ -589,6 +604,9 @@
     `;
     messagesDiv.appendChild(messageDiv);
     messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+    // Добавляем message_id в список отображённых
+    displayedMessageIds.add(msg.message_id);
   }
 
   function updateChatList(lastMessage) {
@@ -622,12 +640,17 @@
     })
     .then(response => response.json())
     .then(data => {
-      document.getElementById('profileAvatar').src = data.profile_picture_url || '/static/accounts/images/layout/image12.png';
+      // Добавляем '/' в начало пути, если его нет
+      const profilePictureUrl = data.profile_picture_url ? 
+        (data.profile_picture_url.startsWith('/') ? data.profile_picture_url : `/${data.profile_picture_url}`) : 
+        '/static/accounts/images/layout/image12.png';
+      
+      document.getElementById('profileAvatar').src = profilePictureUrl;
       document.getElementById('profileName').textContent = `${data.first_name} ${data.last_name}`;
       document.getElementById('profileRole').textContent = `Роль: ${data.role}`;
       document.getElementById('profileRating').textContent = `Рейтинг: ${data.rating || 'Нет рейтинга'}`;
       document.getElementById('profileBio').textContent = `О себе: ${data.bio || 'Нет информации'}`;
-      document.getElementById('profileLink').href = `/profile/${userId}/`; // Устанавливаем ссылку
+      document.getElementById('profileLink').href = `/profile/${userId}/`;
       document.getElementById('profileModal').style.display = 'flex';
     })
     .catch(error => {
@@ -668,57 +691,57 @@
   }
 
   function openAddParticipantModal() {
-  if (!currentChatId) {
-    alert('Выберите чат для добавления участника');
-    return;
-  }
-
-  // Проверяем количество участников
-  if (currentParticipants.length >= 3) {
-    alert('В чате уже максимальное количество участников (3)');
-    return;
-  }
-
-  // Получаем список доступных пользователей
-  fetch(`/cosmochat/?chat_id=${currentChatId}`, {
-    headers: {
-      'X-CSRFToken': '{{ csrf_token }}',
-      'x-requested-with': 'XMLHttpRequest' // Добавляем заголовок AJAX
+    if (!currentChatId) {
+      alert('Выберите чат для добавления участника');
+      return;
     }
-  })
-  .then(response => {
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+
+    // Проверяем количество участников
+    if (currentParticipants.length >= 3) {
+      alert('В чате уже максимальное количество участников (3)');
+      return;
     }
-    return response.json();
-  })
-  .then(data => {
-    const participantsList = document.getElementById('participantsList');
-    participantsList.innerHTML = '';
 
-    // Получаем роли текущих участников
-    const currentRoles = currentParticipants.map(p => p.role.toLowerCase());
-    const allRoles = ['startuper', 'investor', 'moderator'];
-    const availableRoles = allRoles.filter(role => !currentRoles.includes(role));
-
-    data.users.forEach(user => {
-      const isDisabled = !availableRoles.includes(user.role.toLowerCase());
-      const item = document.createElement('div');
-      item.className = `participant-item ${isDisabled ? 'disabled' : ''}`;
-      item.innerHTML = `${user.name} (${user.role})`;
-      if (!isDisabled) {
-        item.onclick = () => addParticipant(user.user_id);
+    // Получаем список доступных пользователей
+    fetch(`/cosmochat/?chat_id=${currentChatId}`, {
+      headers: {
+        'X-CSRFToken': '{{ csrf_token }}',
+        'x-requested-with': 'XMLHttpRequest' // Добавляем заголовок AJAX
       }
-      participantsList.appendChild(item);
-    });
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(data => {
+      const participantsList = document.getElementById('participantsList');
+      participantsList.innerHTML = '';
 
-    document.getElementById('addParticipantModal').style.display = 'flex';
-  })
-  .catch(error => {
-    console.error('Ошибка:', error);
-    alert('Произошла ошибка при загрузке списка пользователей');
-  });
-}
+      // Получаем роли текущих участников
+      const currentRoles = currentParticipants.map(p => p.role.toLowerCase());
+      const allRoles = ['startuper', 'investor', 'moderator'];
+      const availableRoles = allRoles.filter(role => !currentRoles.includes(role));
+
+      data.users.forEach(user => {
+        const isDisabled = !availableRoles.includes(user.role.toLowerCase());
+        const item = document.createElement('div');
+        item.className = `participant-item ${isDisabled ? 'disabled' : ''}`;
+        item.innerHTML = `${user.name} (${user.role})`;
+        if (!isDisabled) {
+          item.onclick = () => addParticipant(user.user_id);
+        }
+        participantsList.appendChild(item);
+      });
+
+      document.getElementById('addParticipantModal').style.display = 'flex';
+    })
+    .catch(error => {
+      console.error('Ошибка:', error);
+      alert('Произошла ошибка при загрузке списка пользователей');
+    });
+  }
 
   function closeAddParticipantModal() {
     document.getElementById('addParticipantModal').style.display = 'none';
