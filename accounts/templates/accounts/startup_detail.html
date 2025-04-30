@@ -334,7 +334,7 @@
   </div>
 </div>
 
-<div id="investModal" class="modal">
+<div id="investModal" class="modal" style="display: none !important;">
   <div class="modal-content">
     <h2>Подтверждение инвестиции</h2>
     <p id="modalText"></p>
@@ -612,8 +612,7 @@
                 selector: 'a',
                 licenseKey: 'YOUR_LICENSE_KEY', // TODO: Добавьте ваш ключ, если есть
                 speed: 500,
-                download: false,
-                preload: 1 // Предзагрузка 1 следующего/предыдущего слайда
+                download: false
                 // Другие опции: https://www.lightgalleryjs.com/docs/settings/
             });
             console.log('Image gallery initialized'); // Debug log
@@ -628,8 +627,7 @@
                 plugins: [lgVideo],
                 selector: 'a', // Видео-ссылки
                 licenseKey: 'YOUR_LICENSE_KEY', // TODO: Добавьте ваш ключ, если есть
-                download: false,
-                preload: 1 // Предзагрузка?
+                download: false
                 // Видео опции: https://www.lightgalleryjs.com/docs/video-gallery/
             });
             console.log('Video gallery initialized'); // Debug log
