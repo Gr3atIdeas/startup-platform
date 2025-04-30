@@ -137,6 +137,16 @@
      .messages li.error { background-color: rgba(220, 53, 69, 0.7); }
      .messages li.warning { background-color: rgba(255, 193, 7, 0.7); }
      .messages li.info { background-color: rgba(23, 162, 184, 0.7); }
+
+    /* Скрытие основной части футера на странице входа */
+    .site-footer .footer-main-content {
+        display: none;
+    }
+    /* Можно добавить стили для copyright bar, если нужно */
+    .footer-copyright-bar {
+         background-color: rgba(0, 0, 0, 0.8); /* Сделаем фон чуть прозрачнее */
+         border-top: 1px solid rgba(255, 255, 255, 0.1); /* Тонкая линия сверху */
+    }
 </style>
 {% endblock %}
 
