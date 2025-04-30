@@ -63,7 +63,7 @@
             </div>
             <div class="progress-info">
               <span class="progress-percentage">{{ progress_percentage|default:0|floatformat:0 }}%</span>
-              <span class="progress-backers">(648)</span>
+              <span class="progress-backers">({{ investors_count }})</span>
             </div>
           </div>
           
@@ -134,20 +134,10 @@
                 <button class="action-button view-button" disabled>Смотреть</button>
               {% endif %}
             </div>
-            <div class="info-block rating-block">
-              <i class="fas fa-balance-scale icon"></i>
-              <span class="info-block-title">Оценка</span>
-              <span class="info-block-value">{{ startup.valuation|default:"?" }} ₽</span>
-            </div>
             <div class="info-block collected-sum-block">
               <i class="fas fa-coins icon"></i>
               <span class="info-block-title">Собранная сумма</span>
               <span class="info-block-value">{{ startup.total_invested|default:0|floatformat:0|intcomma }} ₽</span>
-            </div>
-            <div class="info-block stage-block">
-              <i class="fas fa-tasks icon"></i>
-              <span class="info-block-title">Стадия</span>
-              <span class="info-block-value">{{ startup.stage|default:"Разработка продукта" }}</span>
             </div>
           </div>
 
@@ -172,7 +162,7 @@
         <div class="comments-header">
           <h2 class="section-title">Комментарии <span class="comments-count">({{ comments|length }})</span></h2>
           <div class="comments-rating-summary">
-            <span class="average-rating-value">{{ comments_average_rating|default:average_rating|floatformat:"1" }}</span>
+            <span class="average-rating-value">{{ average_rating|default:0|floatformat:"1" }}</span>
             <div class="rating-distribution">
               {% for i in "54321" %}
               <div class="rating-bar-container">
@@ -210,8 +200,8 @@
                   </div>
                   <div class="comment-rating">
                     {% with comment_rating=comment.rating|default:0 %}
-                    {% for i in "12345" %}
-                      <i class="fas fa-star {% if forloop.counter <= comment_rating %}active{% endif %}"></i>
+                    {% for star_i in "12345" %}
+                      <i class="fas fa-star {% if star_i|add:"0" <= comment_rating %}active{% endif %}"></i>
                     {% endfor %}
                     {% endwith %}
                   </div>

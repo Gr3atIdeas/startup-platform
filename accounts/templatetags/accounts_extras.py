@@ -72,4 +72,8 @@ def is_buyout_investor(user, startup):
 @register.filter(name='get_item')
 def get_item(dictionary, key):
     """Позволяет получить значение из словаря по ключу в шаблоне Django."""
-    return dictionary.get(key) 
+    # Проверяем, что dictionary действительно словарь
+    if isinstance(dictionary, dict):
+        return dictionary.get(key)
+    # Возвращаем None или 0, если это не словарь, чтобы избежать ошибки
+    return 0 
