@@ -599,31 +599,50 @@
       }
     });
 
-    // Инициализация LightGallery
-    const galleryImages = document.getElementById('lightgallery-images');
-    if (galleryImages) {
-        lightGallery(galleryImages, {
-            plugins: [lgThumbnail],
-            thumbnail: true,
-            selector: 'a',
-            licenseKey: 'YOUR_LICENSE_KEY', // TODO: Добавьте ваш ключ, если есть
-            speed: 500,
-            download: false
-            // Другие опции: https://www.lightgalleryjs.com/docs/settings/
-        });
-    }
+    // --- LightGallery Initialization --- 
+    try {
+        console.log('Initializing LightGallery...'); // Debug log
 
-    const galleryVideo = document.getElementById('lightgallery-video');
-    if (galleryVideo) {
-        lightGallery(galleryVideo, {
-            plugins: [lgVideo],
-            selector: 'a', // Видео-ссылки
-            licenseKey: 'YOUR_LICENSE_KEY', // TODO: Добавьте ваш ключ, если есть
-            download: false
-            // Видео опции: https://www.lightgalleryjs.com/docs/video-gallery/
-        });
+        const galleryImages = document.getElementById('lightgallery-images');
+        if (galleryImages) {
+            console.log('Found image gallery container'); // Debug log
+            lightGallery(galleryImages, {
+                plugins: [lgThumbnail],
+                thumbnail: true,
+                selector: 'a',
+                licenseKey: 'YOUR_LICENSE_KEY', // TODO: Добавьте ваш ключ, если есть
+                speed: 500,
+                download: false,
+                preload: 1 // Предзагрузка 1 следующего/предыдущего слайда
+                // Другие опции: https://www.lightgalleryjs.com/docs/settings/
+            });
+            console.log('Image gallery initialized'); // Debug log
+        } else {
+            console.log('Image gallery container (#lightgallery-images) not found'); // Debug log
+        }
+
+        const galleryVideo = document.getElementById('lightgallery-video');
+        if (galleryVideo) {
+            console.log('Found video gallery container'); // Debug log
+            lightGallery(galleryVideo, {
+                plugins: [lgVideo],
+                selector: 'a', // Видео-ссылки
+                licenseKey: 'YOUR_LICENSE_KEY', // TODO: Добавьте ваш ключ, если есть
+                download: false,
+                preload: 1 // Предзагрузка?
+                // Видео опции: https://www.lightgalleryjs.com/docs/video-gallery/
+            });
+            console.log('Video gallery initialized'); // Debug log
+        } else {
+            console.log('Video gallery container (#lightgallery-video) not found'); // Debug log
+        }
+
+    } catch (error) {
+        console.error('Error initializing LightGallery:', error); // Log any errors during init
     }
-  });
+    // --- End LightGallery Initialization ---
+
+  }); // Конец DOMContentLoaded
 </script>
 {# LightGallery JS #}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.7.1/lightgallery.min.js" integrity="sha512-dSI4QnNeaXiNEjX2N8bkb16B7aMu/8SI5/rE6NIa3Hr/HnWUO+EazpSG5eaeOrqrLzPGXLAcHJcXjaBQC4fhPg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
