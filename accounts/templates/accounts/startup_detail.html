@@ -345,301 +345,273 @@
   </div>
 </div>
 
-<div id="lightbox" class="lightbox">
-  <span class="close-lightbox">×</span>
-  <div class="lightbox-content">
-    <img id="lightbox-img" />
-    <video id="lightbox-video" controls></video>
-  </div>
-</div>
-
+{# --- РАСКОММЕНТИРОВАНО --- #}
+{# Убираем комментирование всего скрипта #}
 <script>
+  // Добавляем стандартную функцию getCookie для CSRF
+  function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+          const cookies = document.cookie.split(';');
+          for (let i = 0; i < cookies.length; i++) {
+              const cookie = cookies[i].trim();
+              // Does this cookie string begin with the name we want?
+              if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                  cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                  break;
+              }
+          }
+      }
+      return cookieValue;
+  }
+
   document.addEventListener('DOMContentLoaded', function() {
-    const progressFill = document.querySelector('.progress-fill');
-    const progressPercentageSpan = document.querySelector('.progress-percentage');
-    if (progressFill && progressPercentageSpan) {
-      const initialProgress = parseFloat(progressFill.getAttribute('data-progress')) || 0;
-      progressFill.style.width = `${initialProgress}%`;
-      progressPercentageSpan.textContent = `${Math.round(initialProgress)}%`;
-    }
+      // Синхронизация прогресс-бара (селекторы могли измениться)
+      const progressFill = document.querySelector('.progress-fill');
+      const progressPercentageSpan = document.querySelector('.progress-percentage');
+      if (progressFill && progressPercentageSpan) {
+        const initialProgress = parseFloat(progressFill.getAttribute('data-progress')) || 0;
+        progressFill.style.width = `${initialProgress}%`;
+        progressPercentageSpan.textContent = `${Math.round(initialProgress)}%`;
+      }
 
-    const ratingStarsDisplay = document.querySelector('.rating-stars[data-rating]');
-    if (ratingStarsDisplay) {
-      const rating = parseFloat(ratingStarsDisplay.getAttribute('data-rating')) || 0;
-      const stars = ratingStarsDisplay.querySelectorAll('i');
-      stars.forEach((star, index) => {
-        star.classList.toggle('active', index < Math.round(rating));
-      });
-    }
+      const ratingStarsDisplay = document.querySelector('.rating-stars[data-rating]');
+      if (ratingStarsDisplay) {
+        const rating = parseFloat(ratingStarsDisplay.getAttribute('data-rating')) || 0;
+        const stars = ratingStarsDisplay.querySelectorAll('i');
+        stars.forEach((star, index) => {
+          star.classList.toggle('active', index < Math.round(rating));
+        });
+      }
 
-    const lightbox = document.getElementById('lightbox');
-    const lightboxImg = document.getElementById('lightbox-img');
-    const lightboxVideo = document.getElementById('lightbox-video');
-    const closeLightbox = document.querySelector('.close-lightbox');
-    
-    document.querySelectorAll('.lightbox-trigger').forEach(item => {
-      item.addEventListener('click', function(e) {
-        e.preventDefault();
-        lightboxImg.src = this.href;
-        lightboxImg.style.display = 'block';
-        lightboxVideo.style.display = 'none';
-        lightboxVideo.pause(); 
-        lightbox.style.display = 'flex';
-      });
-    });
-    
-    document.querySelectorAll('.lightbox-trigger-video').forEach(item => {
-      item.addEventListener('click', function(e) {
-        e.preventDefault();
-        const videoSource = this.querySelector('video source');
-        if(videoSource) {
-            lightboxVideo.src = videoSource.src;
-            lightboxVideo.load();
-            lightboxVideo.style.display = 'block';
-            lightboxImg.style.display = 'none';
-            lightbox.style.display = 'flex';
-        }
-      });
-    });
-    
-    if (closeLightbox) {
-        closeLightbox.addEventListener('click', function() {
-        lightbox.style.display = 'none';
-        lightboxVideo.pause();
+      const showMoreCommentsBtn = document.querySelector('.show-more-comments');
+      const hideCommentsBtn = document.querySelector('.hide-comments-button');
+      const commentCards = document.querySelectorAll('.comment-card');
+      const commentsToShow = 3;
+      
+      if (showMoreCommentsBtn && hideCommentsBtn && commentCards.length > commentsToShow) {
+        showMoreCommentsBtn.addEventListener('click', function() {
+          commentCards.forEach((comment, index) => {
+            if (index >= commentsToShow) {
+               comment.classList.remove('hidden');
+            }
+          });
+          this.style.display = 'none';
+          hideCommentsBtn.style.display = 'inline-flex';
         });
-    }
-    
-    if (lightbox) {
-        lightbox.addEventListener('click', function(e) {
-        if (e.target === lightbox) {
-            lightbox.style.display = 'none';
-            lightboxVideo.pause();
-        }
+      
+        hideCommentsBtn.addEventListener('click', function() {
+          commentCards.forEach((comment, index) => {
+            if (index >= commentsToShow) {
+              comment.classList.add('hidden');
+            }
+          });
+          this.style.display = 'none';
+          showMoreCommentsBtn.style.display = 'inline-flex';
         });
-    }
-    
-    const showMoreCommentsBtn = document.querySelector('.show-more-comments');
-    const hideCommentsBtn = document.querySelector('.hide-comments-button');
-    const commentCards = document.querySelectorAll('.comment-card');
-    const commentsToShow = 3;
-    
-    if (showMoreCommentsBtn && hideCommentsBtn && commentCards.length > commentsToShow) {
-      showMoreCommentsBtn.addEventListener('click', function() {
-        commentCards.forEach((comment, index) => {
-          if (index >= commentsToShow) {
-             comment.classList.remove('hidden');
+      } else if (showMoreCommentsBtn) {
+          showMoreCommentsBtn.style.display = 'none'; 
+      }
+
+      document.querySelectorAll('.rating-stars[data-startup-id] i[data-rating]').forEach(star => {
+        star.addEventListener('click', function() {
+          const rating = this.getAttribute('data-rating');
+          const startupId = this.closest('.rating-stars').getAttribute('data-startup-id');
+          const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+          
+          if (!startupId || !csrfToken) {
+              console.error("Не найден startupId или CSRF токен для голосования.");
+              return;
           }
-        });
-        this.style.display = 'none';
-        hideCommentsBtn.style.display = 'inline-flex';
-      });
-    
-      hideCommentsBtn.addEventListener('click', function() {
-        commentCards.forEach((comment, index) => {
-          if (index >= commentsToShow) {
-            comment.classList.add('hidden');
-          }
-        });
-        this.style.display = 'none';
-        showMoreCommentsBtn.style.display = 'inline-flex';
-      });
-    } else if (showMoreCommentsBtn) {
-        showMoreCommentsBtn.style.display = 'none'; 
-    }
 
-    document.querySelectorAll('.rating-stars[data-startup-id] i[data-rating]').forEach(star => {
-      star.addEventListener('click', function() {
-        const rating = this.getAttribute('data-rating');
-        const startupId = this.closest('.rating-stars').getAttribute('data-startup-id');
-        const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
-        
-        if (!startupId || !csrfToken) {
-            console.error("Не найден startupId или CSRF токен для голосования.");
+          fetch(`/vote/${startupId}/`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+              'X-CSRFToken': csrfToken
+            },
+            body: `rating=${rating}`
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+               const starsContainer = this.closest('.rating-stars');
+               if (starsContainer) {
+                   starsContainer.removeAttribute('data-startup-id');
+                   const stars = starsContainer.querySelectorAll('i');
+                   stars.forEach((s, index) => {
+                       s.classList.toggle('active', index < Math.round(data.average_rating));
+                       s.removeAttribute('data-rating');
+                   });
+                   const ratingValueElement = document.querySelector('.rating-label');
+                   if (ratingValueElement) {
+                       ratingValueElement.textContent = `Рейтинг: ${data.average_rating.toFixed(1)}/5`;
+                   }
+                   const commentAvgRating = document.querySelector('.comments-rating-summary .average-rating-value');
+                   if (commentAvgRating) {
+                      commentAvgRating.textContent = data.average_rating.toFixed(1);
+                   }
+               }
+            } else {
+              alert(data.error || 'Ошибка при голосовании');
+            }
+          })
+          .catch(error => {
+            console.error('Ошибка:', error);
+            alert('Произошла ошибка при голосовании');
+          });
+        });
+      });
+
+      // Обработчик клика по кнопке "Инвестировать"
+      const investButton = document.querySelector('.invest-button');
+      const modal = document.getElementById('investModal');
+      const modalText = document.getElementById('modalText');
+      const confirmInvest = document.getElementById('confirmInvest');
+      const cancelInvest = document.getElementById('cancelInvest');
+      let investAmount = 0;
+      let investStartupId = 0;
+
+      if (investButton && !investButton.disabled) {
+        console.log('Кнопка "Инвестировать" найдена и активна');
+        investButton.addEventListener('click', function() {
+          const amountInput = document.querySelector('.investment-amount');
+          investAmount = amountInput.value;
+          const ratingStarsElement = document.querySelector('.rating-stars');
+          const startupElementForId = document.querySelector('[data-startup-id]');
+          if (startupElementForId) {
+              investStartupId = startupElementForId.getAttribute('data-startup-id');
+          } else {
+              investStartupId = '{{ startup.startup_id|default:0 }}';
+              console.warn("Не удалось найти data-startup-id на странице, используется ID из Django.");
+          }
+          console.log('Сумма:', investAmount, 'Startup ID:', investStartupId);
+
+          if (!investAmount || investAmount <= 0) {
+            alert('Пожалуйста, введите сумму инвестиций больше 0');
+            console.log('Сумма некорректна');
             return;
-        }
+          }
 
-        fetch(`/vote/${startupId}/`, {
+          // Показать модальное окно
+          const formattedAmount = parseFloat(investAmount).toLocaleString('ru-RU');
+          modalText.innerHTML = `Вы собираетесь инвестировать ${formattedAmount} ₽ в стартап \"{{ startup.title|escapejs }}\". Подтвердите действие.`;
+          modal.style.display = 'flex';
+        });
+      }
+
+      // Обработка клика на кнопку подтверждения в модальном окне
+      confirmInvest.addEventListener('click', function() {
+        modal.style.display = 'none';
+        // Отправка AJAX запроса на инвестирование
+        fetch(`/invest/${investStartupId}/`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
-            'X-CSRFToken': csrfToken
+            'X-CSRFToken': getCookie('csrftoken')
           },
-          body: `rating=${rating}`
+          body: `amount=${investAmount}`
         })
         .then(response => response.json())
         .then(data => {
           if (data.success) {
-             const starsContainer = this.closest('.rating-stars');
-             if (starsContainer) {
-                 starsContainer.removeAttribute('data-startup-id');
-                 const stars = starsContainer.querySelectorAll('i');
-                 stars.forEach((s, index) => {
-                     s.classList.toggle('active', index < Math.round(data.average_rating));
-                     s.removeAttribute('data-rating');
-                 });
-                 const ratingValueElement = document.querySelector('.rating-label');
-                 if (ratingValueElement) {
-                     ratingValueElement.textContent = `Рейтинг: ${data.average_rating.toFixed(1)}/5`;
-                 }
-                 const commentAvgRating = document.querySelector('.comments-rating-summary .average-rating-value');
-                 if (commentAvgRating) {
-                    commentAvgRating.textContent = data.average_rating.toFixed(1);
-                 }
-             }
+            // Обновление данных на странице
+            const progressBarFill = document.querySelector('.progress-bar-fill');
+            const progressText = document.querySelector('.progress-text');
+            const investorsCountElement = document.querySelector('.investors-count span');
+            const totalInvestedElement = document.querySelector('.total-invested');
+
+            if (progressBarFill) {
+                progressBarFill.style.width = `${Math.round(data.progress_percentage)}%`;
+            }
+            if (progressText) {
+                progressText.textContent = `${Math.round(data.progress_percentage)}%`;
+            }
+
+            if (investorsCountElement) {
+                investorsCountElement.textContent = `(${data.investors_count})`;
+            }
+
+            if (totalInvestedElement) {
+              const formattedRaised = parseFloat(data.amount_raised).toLocaleString('ru-RU');
+              totalInvestedElement.textContent = `${formattedRaised} ₽`;
+            }
+
+            const amountInput = document.querySelector('.investment-amount');
+            if (amountInput) amountInput.value = '';
+
+            alert('Инвестиция успешно совершена!');
           } else {
-            alert(data.error || 'Ошибка при голосовании');
+            alert('Ошибка инвестирования: ' + data.error);
           }
         })
         .catch(error => {
           console.error('Ошибка:', error);
-          alert('Произошла ошибка при голосовании');
+          alert('Произошла ошибка сети.');
         });
       });
-    });
 
-    // Обработчик клика по кнопке "Инвестировать"
-    const investButton = document.querySelector('.invest-button');
-    const modal = document.getElementById('investModal');
-    const modalText = document.getElementById('modalText');
-    const confirmInvest = document.getElementById('confirmInvest');
-    const cancelInvest = document.getElementById('cancelInvest');
-    let investAmount = 0;
-    let investStartupId = 0;
-
-    if (investButton && !investButton.disabled) {
-      console.log('Кнопка "Инвестировать" найдена и активна');
-      investButton.addEventListener('click', function() {
-        const amountInput = document.querySelector('.investment-amount');
-        investAmount = amountInput.value;
-        const ratingStarsElement = document.querySelector('.rating-stars');
-        const startupElementForId = document.querySelector('[data-startup-id]');
-        if (startupElementForId) {
-            investStartupId = startupElementForId.getAttribute('data-startup-id');
-        } else {
-            investStartupId = '{{ startup.startup_id|default:0 }}';
-            console.warn("Не удалось найти data-startup-id на странице, используется ID из Django.");
-        }
-        console.log('Сумма:', investAmount, 'Startup ID:', investStartupId);
-
-        if (!investAmount || investAmount <= 0) {
-          alert('Пожалуйста, введите сумму инвестиций больше 0');
-          console.log('Сумма некорректна');
-          return;
-        }
-
-        // Показать модальное окно
-        const formattedAmount = parseFloat(investAmount).toLocaleString('ru-RU');
-        modalText.innerHTML = `Вы собираетесь инвестировать ${formattedAmount} ₽ в стартап \"{{ startup.title|escapejs }}\". Подтвердите действие.`;
-        modal.style.display = 'flex';
-      });
-    }
-
-    // Обработка клика на кнопку подтверждения в модальном окне
-    confirmInvest.addEventListener('click', function() {
-      modal.style.display = 'none';
-      // Отправка AJAX запроса на инвестирование
-      fetch(`/invest/${investStartupId}/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'X-CSRFToken': getCookie('csrftoken')
-        },
-        body: `amount=${investAmount}`
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          // Обновление данных на странице
-          const progressBarFill = document.querySelector('.progress-bar-fill');
-          const progressText = document.querySelector('.progress-text');
-          const investorsCountElement = document.querySelector('.investors-count span');
-          const totalInvestedElement = document.querySelector('.total-invested');
-
-          if (progressBarFill) {
-              progressBarFill.style.width = `${Math.round(data.progress_percentage)}%`;
-          }
-          if (progressText) {
-              progressText.textContent = `${Math.round(data.progress_percentage)}%`;
-          }
-
-          if (investorsCountElement) {
-              investorsCountElement.textContent = `(${data.investors_count})`;
-          }
-
-          if (totalInvestedElement) {
-            const formattedRaised = parseFloat(data.amount_raised).toLocaleString('ru-RU');
-            totalInvestedElement.textContent = `${formattedRaised} ₽`;
-          }
-
-          const amountInput = document.querySelector('.investment-amount');
-          if (amountInput) amountInput.value = '';
-
-          alert('Инвестиция успешно совершена!');
-        } else {
-          alert('Ошибка инвестирования: ' + data.error);
-        }
-      })
-      .catch(error => {
-        console.error('Ошибка:', error);
-        alert('Произошла ошибка сети.');
-      });
-    });
-
-    // Отмена инвестиции
-    cancelInvest.addEventListener('click', function() {
-      modal.style.display = 'none';
-    });
-
-    // Закрытие модального окна по клику вне области
-    modal.addEventListener('click', function(e) {
-      if (e.target === modal) {
+      // Отмена инвестиции
+      cancelInvest.addEventListener('click', function() {
         modal.style.display = 'none';
+      });
+
+      // Закрытие модального окна по клику вне области
+      modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+          modal.style.display = 'none';
+        }
+      });
+
+      // --- LightGallery Initialization --- #}
+      {# Раскомментируем блок инициализации LightGallery #}
+      // ---- НАЧАЛО БЛОКА LG ----
+      try {
+          console.log('Initializing LightGallery...'); // Debug log
+
+          const galleryImages = document.getElementById('lightgallery-images');
+          if (galleryImages) {
+              console.log('Found image gallery container'); // Debug log
+              lightGallery(galleryImages, {
+                  plugins: [lgThumbnail],
+                  thumbnail: true,
+                  selector: 'a',
+                  licenseKey: 'YOUR_LICENSE_KEY', // TODO: Добавьте ваш ключ, если есть
+                  speed: 500,
+                  download: false
+                  // Другие опции: https://www.lightgalleryjs.com/docs/settings/
+              });
+              console.log('Image gallery initialized'); // Debug log
+          } else {
+              console.log('Image gallery container (#lightgallery-images) not found'); // Debug log
+          }
+
+          const galleryVideo = document.getElementById('lightgallery-video');
+          if (galleryVideo) {
+              console.log('Found video gallery container'); // Debug log
+              lightGallery(galleryVideo, {
+                  plugins: [lgVideo],
+                  selector: 'a', // Видео-ссылки
+                  licenseKey: 'YOUR_LICENSE_KEY', // TODO: Добавьте ваш ключ, если есть
+                  download: false
+                  // Видео опции: https://www.lightgalleryjs.com/docs/video-gallery/
+              });
+              console.log('Video gallery initialized'); // Debug log
+          } else {
+              console.log('Video gallery container (#lightgallery-video) not found'); // Debug log
+          }
+
+      } catch (error) {
+          console.error('Error initializing LightGallery:', error); // Log any errors during init
       }
-    });
+      // ---- КОНЕЦ БЛОКА LG ----
+      {# --- Конец LightGallery Initialization --- #}
 
-    // --- LightGallery Initialization --- 
-    try {
-        console.log('Initializing LightGallery...'); // Debug log
+     }); // Конец DOMContentLoaded
+  </script>
+{# Убираем закрывающий комментарий #}
+{# #}
 
-        const galleryImages = document.getElementById('lightgallery-images');
-        if (galleryImages) {
-            console.log('Found image gallery container'); // Debug log
-            lightGallery(galleryImages, {
-                plugins: [lgThumbnail],
-                thumbnail: true,
-                selector: 'a',
-                licenseKey: 'YOUR_LICENSE_KEY', // TODO: Добавьте ваш ключ, если есть
-                speed: 500,
-                download: false
-                // Другие опции: https://www.lightgalleryjs.com/docs/settings/
-            });
-            console.log('Image gallery initialized'); // Debug log
-        } else {
-            console.log('Image gallery container (#lightgallery-images) not found'); // Debug log
-        }
-
-        const galleryVideo = document.getElementById('lightgallery-video');
-        if (galleryVideo) {
-            console.log('Found video gallery container'); // Debug log
-            lightGallery(galleryVideo, {
-                plugins: [lgVideo],
-                selector: 'a', // Видео-ссылки
-                licenseKey: 'YOUR_LICENSE_KEY', // TODO: Добавьте ваш ключ, если есть
-                download: false
-                // Видео опции: https://www.lightgalleryjs.com/docs/video-gallery/
-            });
-            console.log('Video gallery initialized'); // Debug log
-        } else {
-            console.log('Video gallery container (#lightgallery-video) not found'); // Debug log
-        }
-
-    } catch (error) {
-        console.error('Error initializing LightGallery:', error); // Log any errors during init
-    }
-    // --- End LightGallery Initialization ---
-
-  }); // Конец DOMContentLoaded
-</script>
 {# LightGallery JS #}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.7.1/lightgallery.min.js" integrity="sha512-dSI4QnNeaXiNEjX2N8bkb16B7aMu/8SI5/rE6NIa3Hr/HnWUO+EAZpizN2JQJrXuvU7z0HTgpBVk/sfGd0oW+w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.7.1/plugins/thumbnail/lg-thumbnail.min.js" integrity="sha512-Jx+orEb1KJtJ6Ajfshhr7is0zqgUC7H9ylk76KMtB9Ea2WAf/Muyzpe9zvBAYQQQKdAbj+rNYEorsRQLsmRafA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>

@@ -2,38 +2,38 @@
 /*          ОБЩИЕ СТИЛИ СТРАНИЦЫ          */
 /* ======================================== */
 :root {
-  /* Цвета из макета (примерные) */
+  /* Цвета из макета (первый скриншот) */
   --primary-dark-blue: #000819; /* Основной фон */
-  --secondary-blue: #04112D; /* Чуть светлее фона */
-  --accent-purple: #7B61FF; /* Фиолетовый акцент */
-  --accent-yellow: #FFD700; /* Желтый для звезд (пример) */
-  --accent-green: #08E5CF; /* Бирюзовый для текста "похожие" */
-  --light-blue-bg: #F2F4FF; /* Фон для правых блоков (из старого css) -> заменим на темный */
+  --secondary-blue: #04112D; /* Фон для комментариев и др. блоков */
+  --accent-purple: #7B61FF; /* Фиолетовый акцент (прогресс, ссылки) */
+  --accent-yellow: #FFC85E; /* Желтый для звезд (как на макете) */
+  --accent-green: #08E5CF; /* Бирюзовый для "похожие" */
+  --button-blue: #345DFF; /* Синий для кнопок (Редактировать, Инвестировать) */
+  --button-yellow: #F7BF4F; /* Желтый для кнопки (Продать активы) */
+  --button-grey: #3d4b70; /* Серый для кнопки (Смотреть) */
   --dark-card-bg: #0B1A3F; /* Фон для карточек/блоков на темном фоне */
   --text-primary: #FFFFFF; /* Основной текст */
-  --text-secondary: #A9B8D4; /* Вторичный текст (серый/голубоватый) */
-  --text-grey: #909090; /* Серый текст (старый) -> адаптируем */
-  --border-color: #1D3059; /* Цвет границ на темном фоне */
-  --danger-red: #F05252; /* Красный (для категорий?) */
-  --success-green: #36D302; /* Зеленый (старый) */
-  --info-blue: #345DFF; /* Синий (старый) */
+  --text-secondary: #A9B8D4; /* Вторичный текст */
+  --text-placeholder: #6c7a9a; /* Цвет плейсхолдера/серых надписей */
+  --border-color: #1D3059; /* Цвет границ */
+  --danger-red: #F05252; /* Красный */
+  --success-green: #36D302; /* Зеленый (для галочки микроинвестиций) */
 }
 
 body {
   background-color: var(--primary-dark-blue);
   color: var(--text-primary);
-  font-family: 'Gilroy', sans-serif; /* Устанавливаем Gilroy как основной шрифт */
+  /* Используем шрифты из base.html: Circe и Unbounded */
+  font-family: 'Circe', sans-serif; /* Основной шрифт */
   margin: 0;
   padding: 0;
   overflow-x: hidden;
 }
 
-/* Подключение шрифта Gilroy (если еще не подключен глобально) */
-/* @font-face { ... } */
-
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Gilroy', sans-serif; /* Убедимся, что заголовки используют Gilroy */
+  font-family: 'Circe', sans-serif; /* Заголовки */
   color: var(--text-primary);
+  font-weight: 700; /* Bold по умолчанию для заголовков */
 }
 
 a {
@@ -48,7 +48,7 @@ a:hover {
 
 /* Основной контейнер с отступами */
 .main-content-grid {
-  /* max-width: 1300px; */ /* Убираем max-width, полагаемся на родительский main.content */
+  max-width: 1440px; /* Общая ширина контейнера */
   width: 100%;
   margin: 0 auto; /* Центрирование */
   padding: 40px 70px; /* Отступы сверху/снизу и по 70px по бокам */
@@ -66,74 +66,96 @@ a:hover {
   gap: 8px;
   color: var(--text-secondary);
   font-size: 16px;
-  font-weight: 500; /* Medium */
+  font-weight: 400; /* Regular */
 }
 
-.back-button i {
-  font-size: 14px;
-}
-
-.back-button:hover {
-  color: var(--text-primary);
-}
-
-/* Общие стили кнопок (согласно макету) */
+/* Общие стили кнопок - СДЕЛАТЬ БОЛЕЕ КОНКРЕТНЫМИ */
 .action-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 12px 24px; /* Примерные паддинги */
-  border-radius: 12px; /* Скругленные углы */
+  padding: 12px 24px;
+  border-radius: 10px; /* Менее скругленные */
   border: none;
-  font-family: 'Gilroy', sans-serif;
+  font-family: 'Circe', sans-serif;
   font-size: 16px;
-  font-weight: 600; /* Semibold */
+  font-weight: 700; /* Bold */
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: background-color 0.3s ease;
   text-align: center;
   white-space: nowrap;
+  line-height: 1.2;
 }
 
-/* Основная кнопка (синяя/фиолетовая) */
-.action-button.primary {
-  background-color: var(--accent-purple);
-  color: var(--text-primary);
+/* Конкретные стили кнопок по макету */
+.action-button.chat-button {
+    background-color: transparent;
+    color: var(--text-primary);
+    border: 1px solid var(--text-primary);
+    margin-top: 15px; /* Отступ от планеты */
+    width: 100%; /* На всю ширину колонки */
+    font-weight: 400; /* Regular */
+}
+.action-button.chat-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
-.action-button.primary:hover {
-  background-color: #6551D9; /* Чуть темнее */
+.action-button.write-author-button {
+    background-color: var(--text-primary);
+    color: var(--primary-dark-blue);
+    font-weight: 700;
+    padding: 10px 20px; /* чуть меньше */
+}
+.action-button.write-author-button:hover {
+    background-color: #e0e0e0;
 }
 
-/* Вторичная кнопка (светлая/прозрачная) */
-.action-button.secondary {
-  background-color: transparent;
-  color: var(--text-primary);
-  border: 1px solid var(--border-color);
+.action-button.edit-button,
+.action-button.invest-button {
+    background-color: var(--button-blue);
+    color: var(--text-primary);
+}
+.action-button.edit-button:hover,
+.action-button.invest-button:hover {
+    background-color: #2a4ecc;
 }
 
-.action-button.secondary:hover {
-  background-color: var(--dark-card-bg);
-  border-color: var(--accent-purple);
+.action-button.sell-button {
+    background-color: var(--button-yellow);
+    color: var(--primary-dark-blue);
+}
+.action-button.sell-button:hover {
+    background-color: #e0ae44;
 }
 
-/* Кнопка просмотра (желтая?) */
 .action-button.view-button {
-  background-color: #3d4b70; /* Темно-серо-синий фон для кнопок Смотреть/Оценка */
-  color: var(--text-primary);
-  padding: 8px 16px;
-  font-size: 14px;
-  border-radius: 8px;
+    background-color: var(--button-grey);
+    color: var(--text-primary);
+    padding: 10px 20px;
+    font-size: 14px;
+    border-radius: 8px;
+    width: 100%; /* Кнопка на всю ширину блока */
+    margin-top: auto; /* Прижимаем к низу блока */
 }
 .action-button.view-button:hover {
-  background-color: #50618a;
+    background-color: #50618a;
 }
 .action-button.view-button:disabled {
-  background-color: #2a3550;
-  color: var(--text-secondary);
-  cursor: not-allowed;
-  opacity: 0.7;
+    background-color: #2a3550;
+    color: var(--text-placeholder);
+    cursor: not-allowed;
+    opacity: 0.7;
 }
 
+.action-button.comment-submit {
+    background-color: var(--button-blue);
+    color: var(--text-primary);
+    width: auto; /* Не на всю ширину */
+    padding: 10px 30px;
+}
+.action-button.comment-submit:hover {
+    background-color: #2a4ecc;
+}
 
 /* ======================================== */
 /*             ВЕРХНЯЯ СЕКЦИЯ             */
@@ -141,31 +163,46 @@ a:hover {
 
 .top-section {
   display: flex;
-  gap: 40px; /* Отступ между колонками */
-  margin-bottom: 60px;
+  gap: 30px; /* Отступ между колонками как на макете */
+  margin-bottom: 40px;
 }
 
 /* ------------------ */
 /*    ЛЕВАЯ КОЛОНКА   */
 /* ------------------ */
 .left-column {
-  width: 300px; /* Ширина левой колонки */
+  width: 300px; /* Фикс ширина */
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  gap: 25px; /* Отступы между элементами в колонке */
+  gap: 20px; /* Отступы между элементами */
 }
 
 .planet-container {
   width: 100%;
-  height: 240px; /* Высота контейнера планеты */
+  height: 240px;
   position: relative;
-  border-radius: 20px; /* Скругление */
+  border-radius: 15px; /* Скругление */
   overflow: hidden;
-  background-color: var(--dark-card-bg); /* Фон, если нет картинки */
-  display: flex; /* Центрируем планету, если она меньше */
+  background-color: var(--dark-card-bg);
+  display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* Статус стартапа (если не модератор) */
+.status-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: rgba(0, 8, 25, 0.7);
+  backdrop-filter: blur(5px);
+  color: var(--text-primary);
+  padding: 5px 15px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 400;
+  z-index: 1;
 }
 
 .planet {
@@ -192,24 +229,6 @@ a:hover {
   object-fit: cover; /* Масштабирование лого */
 }
 
-/* Кнопка Чат */
-.action-button.chat-button {
-  position: absolute;
-  bottom: 15px; /* Отступ снизу */
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: rgba(0, 0, 0, 0.6); /* Полупрозрачный фон */
-  backdrop-filter: blur(5px);
-  color: var(--text-primary);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 8px 20px;
-  font-size: 14px;
-  border-radius: 20px; /* Сильно скругленная */
-}
-.action-button.chat-button:hover {
-  background-color: rgba(0, 0, 0, 0.8);
-}
-
 /* Прогресс бар */
 .progress-container {
   width: 100%;
@@ -217,30 +236,31 @@ a:hover {
 
 .progress-bar {
   width: 100%;
-  height: 8px; /* Тонкий бар */
+  height: 6px;
   background-color: var(--dark-card-bg);
-  border-radius: 4px;
+  border-radius: 3px;
   overflow: hidden;
-  margin-bottom: 8px;
+  margin-bottom: 5px; /* Меньше отступ */
 }
 
 .progress-fill {
   height: 100%;
   background-color: var(--accent-purple);
-  border-radius: 4px;
+  border-radius: 3px;
   transition: width 1s ease-out;
 }
 
 .progress-info {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end; /* Текст справа */
   align-items: center;
-  font-size: 14px;
-  color: var(--text-secondary);
+  font-size: 13px;
+  color: var(--text-placeholder);
+  gap: 5px; /* Отступ между % и числом */
 }
 
 .progress-percentage {
-  font-weight: 600;
+  font-weight: 700;
   color: var(--text-primary);
 }
 
@@ -251,29 +271,27 @@ a:hover {
   padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 12px; /* Меньше отступ */
 }
 
 .author-header {
   font-size: 14px;
-  color: var(--text-secondary);
-  font-weight: 500;
+  color: var(--text-placeholder);
+  font-weight: 400;
 }
 
 .author-details {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 12px;
 }
 
 .author-avatar {
-  width: 40px;
-  height: 40px;
+  width: 44px; /* Чуть больше */
+  height: 44px;
   border-radius: 50%;
-  background-color: var(--secondary-blue); /* Заглушка */
+  background-color: var(--secondary-blue);
   flex-shrink: 0;
-   /* Стили для img внутри */
-   /* img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; } */
 }
 
 .author-meta {
@@ -282,45 +300,35 @@ a:hover {
 
 .author-name {
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--text-primary);
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 }
 
 .author-rating {
   font-size: 13px;
-  color: var(--text-secondary);
-}
-
-.action-button.write-author-button {
-  padding: 8px 16px;
-  font-size: 14px;
-  background-color: var(--secondary-blue); /* Кнопка "Написать" */
-  color: var(--text-primary);
-  flex-shrink: 0;
-}
-.action-button.write-author-button:hover {
-  background-color: #1d3059;
+  color: var(--text-placeholder);
 }
 
 .creation-date {
   font-size: 13px;
-  color: var(--text-secondary);
-  text-align: center; /* По центру под блоком */
+  color: var(--text-placeholder);
+  /* text-align: center; */ /* Убираем центрирование */
 }
 
 .report-button {
   background: transparent;
   border: none;
-  color: var(--text-secondary);
+  color: var(--text-placeholder);
   font-size: 13px;
-  text-align: center;
+  text-align: left; /* Слева */
   cursor: pointer;
-  padding: 5px; /* Небольшой паддинг для кликабельности */
-  width: 100%;
+  padding: 5px 0; /* Убираем боковой паддинг */
+  width: auto; /* Не на всю ширину */
+  align-self: flex-start; /* Прижимаем влево */
 }
 .report-button:hover {
-  color: var(--danger-red);
+  color: var(--text-secondary);
   text-decoration: underline;
 }
 
@@ -332,49 +340,48 @@ a:hover {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-  gap: 30px; /* Отступ между блоками в правой колонке */
-  min-width: 0; /* Предотвращает переполнение */
+  gap: 25px; /* Уменьшим отступ */
+  min-width: 0;
 }
 
 /* Шапка стартапа */
 .startup-header {
   display: flex;
   flex-direction: column;
-  gap: 15px; /* Немного увеличим отступ */
+  gap: 10px;
 }
 
 .startup-name {
-  font-size: 42px; /* Еще крупнее заголовок */
-  font-weight: 700; /* Bold */
+  font-size: 36px; /* Вернем размер */
+  font-weight: 700;
   line-height: 1.2;
   margin: 0;
-  color: var(--text-primary); /* Убедимся, что белый */
+  color: var(--text-primary);
 }
 
 .header-meta {
   display: flex;
   align-items: center;
-  gap: 25px; /* Увеличим отступ */
-  font-size: 15px; /* Чуть крупнее */
-  color: var(--text-secondary);
+  gap: 15px; /* Уменьшим отступ */
+  font-size: 14px;
+  color: var(--text-placeholder);
 }
 
 .category-label .category-value {
-  color: var(--text-primary); /* Белый цвет для категории */
-  font-weight: 500;
-  margin-left: 5px;
+  color: var(--text-primary);
+  font-weight: 400;
 }
 
 .investment-type {
   display: flex;
   align-items: center;
   gap: 6px;
-  color: var(--text-primary); /* Белый цвет для типа */
-  font-weight: 500;
+  color: var(--text-primary);
+  font-weight: 400;
 }
 
 .investment-type i {
-  color: var(--success-green); /* Зеленая иконка */
+  color: var(--success-green);
   font-size: 16px;
 }
 
@@ -382,150 +389,107 @@ a:hover {
 .rating-comments-container {
   display: flex;
   align-items: center;
-  gap: 25px;
-  margin-top: 5px; /* Небольшой отступ сверху */
+  gap: 15px; /* Уменьшим отступ */
+  margin-top: 5px;
 }
 
 .rating-container {
   display: flex;
   align-items: center;
-  gap: 12px; /* Увеличим отступ */
+  gap: 8px;
 }
 
 .rating-label {
-  font-size: 15px; /* Крупнее */
-  color: var(--text-secondary);
-}
-
-.rating-stars {
-  display: flex;
-  gap: 4px;
+  font-size: 14px;
+  color: var(--text-placeholder);
 }
 
 .rating-stars i {
-  font-size: 20px; /* Крупнее звезды */
-  color: #3a4a6f; /* Более темный неактивный цвет */
+  font-size: 18px; /* Уменьшим звезды */
+  color: #2c3a5f;
 }
-
 .rating-stars i.active {
-  color: var(--accent-yellow); /* Активный цвет звезды */
-}
-/* Интерактивные звезды */
-.rating-stars[data-startup-id] i {
-  cursor: pointer;
-  transition: color 0.2s ease, transform 0.2s ease;
-}
-.rating-stars[data-startup-id] i:hover {
-  transform: scale(1.15);
   color: var(--accent-yellow);
 }
 
 .comments-link {
-  font-size: 15px; /* Крупнее */
+  font-size: 14px;
   color: var(--accent-purple);
-  font-weight: 500;
-}
-.comments-link:hover {
-  text-decoration: underline;
-  color: var(--text-primary);
+  font-weight: 400;
 }
 
 /* Действия справа вверху */
 .actions-top-right {
   display: flex;
   align-items: center;
-  gap: 15px;
-  padding: 0; /* Убираем внутренние отступы */
-  flex-wrap: wrap; /* Добавляем перенос */
+  gap: 10px; /* Меньше отступ */
+  padding: 0;
+  flex-wrap: wrap;
 }
 
 .investment-info-badge {
-  background-color: var(--dark-card-bg); /* Темный фон для бейджа */
-  color: var(--text-secondary);
-  padding: 6px 12px; /* Меньше паддинг */
+  background-color: var(--dark-card-bg);
+  color: var(--text-placeholder); /* Темнее текст бейджа */
+  padding: 6px 12px;
   border-radius: 8px;
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 13px; /* Мельче */
+  font-weight: 400;
   border: 1px solid var(--border-color);
+  margin-right: auto; /* Отодвигаем влево */
 }
 
-/* Специфичные кнопки действий */
-.action-button.edit-button,
-.action-button.sell-button {
-   /* Используют .primary или .secondary */
+.actions-top-right .action-button {
+    padding: 10px 20px;
+    font-size: 15px;
 }
-.action-button.invest-button {
-   /* Использует .primary */
-}
-.investment-amount { /* Поле ввода суммы */
-  background-color: var(--secondary-blue);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  padding: 10px 15px;
-  color: var(--text-primary);
-  font-family: 'Gilroy', sans-serif;
-  font-size: 14px;
-  height: 44px; /* Высота как у кнопок */
-  flex-basis: 150px; /* Фикс ширина или можно % */
-  flex-grow: 0;
-  text-align: right;
-  margin-left: 5px;
-}
-.investment-amount::placeholder {
-  color: var(--text-secondary);
-}
-.investment-amount:focus {
-  outline: none;
-  border-color: var(--accent-purple);
-  box-shadow: 0 0 0 2px rgba(123, 97, 255, 0.3);
-}
-/* Убираем стрелки у number input */
-.investment-amount::-webkit-inner-spin-button,
-.investment-amount::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
+
 .investment-amount {
-  -moz-appearance: textfield; /* Firefox */
+    height: 40px; /* Высота как у кнопок */
+    padding: 8px 12px;
+    flex-basis: 130px;
+    flex-grow: 0;
+    font-size: 14px;
 }
-
 
 /* Информационные блоки */
 .info-blocks {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* Всегда 4 колонки? */
-  gap: 20px; /* Увеличим отступ */
+  grid-template-columns: repeat(4, 1fr); /* Всегда 4 колонки */
+  gap: 15px; /* Меньше отступ */
 }
 
 .info-block {
   background-color: var(--dark-card-bg);
-  border-radius: 15px;
-  padding: 20px;
+  border-radius: 12px; /* Меньше радиус */
+  padding: 15px;
   display: flex;
   flex-direction: column;
-  align-items: center; /* Центрируем контент */
+  align-items: center;
   text-align: center;
-  gap: 10px; /* Увеличим отступ */
-  border: 1px solid var(--border-color); /* Добавим границу */
+  gap: 8px;
+  border: 1px solid var(--border-color);
+  min-height: 140px; /* Фикс высота? */
+  box-sizing: border-box;
 }
 
 .info-block .icon {
-  font-size: 24px; /* Крупнее иконка */
-  color: var(--text-secondary); /* Серая иконка */
-  margin-bottom: 8px;
+  font-size: 20px;
+  color: var(--text-placeholder);
+  margin-bottom: 5px;
+  margin-top: 5px; /* Отступ сверху */
 }
 
 .info-block-title {
-  font-size: 14px;
-  color: var(--text-secondary);
-  order: 2; /* Название под значением */
+  font-size: 13px; /* Мельче */
+  color: var(--text-placeholder);
+  order: 2;
 }
 
 .info-block-value {
-  font-size: 20px; /* Крупнее значение */
-  font-weight: 600;
+  font-size: 18px;
+  font-weight: 700; /* Bold */
   color: var(--text-primary);
-  order: 1; /* Значение над названием */
+  order: 1;
 }
 
 /* Специальные стили для блоков */
@@ -539,178 +503,93 @@ a:hover {
 
 /* Блок "О проекте" */
 .about-section {
-  background-color: transparent; /* Убираем фон */
+  background-color: transparent;
   border-radius: 0;
-  padding: 0; /* Убираем внутренние отступы */
-  margin-top: 10px; /* Небольшой отступ */
+  padding: 0;
+  margin-top: 15px;
 }
 
 .about-section .section-title {
-  font-size: 22px; /* Крупнее заголовок секции */
-  font-weight: 600;
-  margin-bottom: 20px;
-  position: relative;
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--border-color); /* Линия под заголовком */
-}
-.about-section .section-title::after {
-    display: none; /* Убираем фиолетовую линию */
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 15px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .about-section .section-content {
-  font-size: 16px; /* Крупнее текст */
-  line-height: 1.7;
+  font-size: 15px;
+  line-height: 1.6;
   color: var(--text-secondary);
 }
-.about-section .section-content strong {
-    color: var(--text-primary);
-    font-weight: 600;
-}
-.about-section .full-description p {
-    margin-bottom: 1em; /* Отступ между параграфами */
-}
 .about-section .short-description {
-    font-style: italic; /* Выделяем вводную */
-    color: var(--text-primary);
-    margin-bottom: 1em;
-}
-
-/* Убираем старые секции */
-.gallery-grid, .gallery-large, .video-grid, .investor-conditions, .documents-section, .author-card, .moderator-section, .moderator-comment-section {
-  display: none; /* Скрываем старые секции, которые не используются в новом макете */
+    /* Убираем курсив */
+    color: var(--text-secondary);
+    margin-bottom: 1.5em;
 }
 
 /* ======================================== */
 /*         СЕКЦИЯ ГАЛЕРЕИ И ВИДЕО         */
 /* ======================================== */
 .media-section {
-    margin-top: 30px;
-}
-
-.video-gallery, .image-gallery {
-    display: grid;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-/* Сетка для видео */
-.video-gallery {
-   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-}
-
-/* Сетка для изображений */
-.image-gallery {
-   grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-}
-
-.gallery-thumbnail, .video-thumbnail {
-    display: block;
-    position: relative;
-    border-radius: 10px;
-    overflow: hidden;
-    cursor: pointer;
-    aspect-ratio: 16 / 9; /* Соотношение сторон для превью */
+    margin-top: 25px;
     background-color: var(--dark-card-bg);
-}
-
-.thumbnail-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.3s ease;
-}
-
-.gallery-thumbnail:hover .thumbnail-img,
-.video-thumbnail:hover .thumbnail-img {
-    transform: scale(1.05);
-}
-
-.video-thumbnail .play-icon {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 40px;
-    height: 40px;
-    background-color: rgba(0, 8, 25, 0.7);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 18px;
-    transition: background-color 0.3s ease;
-    pointer-events: none; /* Чтобы иконка не мешала клику */
-}
-
-.video-thumbnail:hover .play-icon {
-    background-color: rgba(123, 97, 255, 0.8); /* Фиолетовый при наведении */
-}
-
-/* Стили для LightGallery (можно переопределить стандартные) */
-.lg-backdrop {
-    background-color: rgba(0, 8, 25, 0.95); /* Более плотный фон */
-}
-.lg-toolbar {
-    background-color: rgba(4, 17, 45, 0.8); /* Фон тулбара */
-}
-.lg-sub-html {
-    background-color: rgba(4, 17, 45, 0.8);
-    color: var(--text-secondary);
-}
-.lg-sub-html h4 {
-    color: var(--text-primary);
-    font-size: 16px;
-    margin-bottom: 5px;
+    border-radius: 15px;
+    padding: 20px;
+    border: 1px solid var(--border-color);
 }
 
 /* ======================================== */
 /*           СЕКЦИЯ КОММЕНТАРИЕВ          */
 /* ======================================== */
 .comments-section {
-  background-color: var(--secondary-blue); /* Фон секции комментариев */
-  border-radius: 20px;
-  padding: 30px;
-  margin-top: 40px; /* Отступ сверху */
+  background-color: var(--text-primary); /* БЕЛЫЙ ФОН */
+  color: var(--primary-dark-blue); /* Темный текст */
+  border-radius: 15px;
+  padding: 25px 30px;
+  margin-top: 30px;
 }
 
 .comments-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start; /* Выравнивание по верху */
-  margin-bottom: 30px;
+  align-items: flex-start;
+  margin-bottom: 25px;
   gap: 30px;
-  flex-wrap: wrap; /* Перенос на маленьких экранах */
+  flex-wrap: wrap;
+  border-bottom: 1px solid #e0e0e0; /* Серая линия */
+  padding-bottom: 20px;
 }
 
 .comments-header .section-title {
-  font-size: 24px;
-  font-weight: 600;
+  font-size: 22px;
+  font-weight: 700;
   margin: 0;
+  color: var(--primary-dark-blue);
 }
 .comments-count {
-  color: var(--text-secondary);
+  color: var(--text-placeholder);
   font-weight: 400;
 }
 
 .comments-rating-summary {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 15px;
 }
 
 .average-rating-value {
-  font-size: 36px; /* Крупный рейтинг */
+  font-size: 32px;
   font-weight: 700;
-  color: var(--text-primary);
+  color: var(--primary-dark-blue);
   line-height: 1;
 }
 
 .rating-distribution {
   display: flex;
   flex-direction: column;
-  gap: 5px;
-  min-width: 200px; /* Минимальная ширина для графика */
+  gap: 4px;
+  min-width: 180px;
 }
 
 .rating-bar-container {
@@ -718,11 +597,11 @@ a:hover {
   align-items: center;
   gap: 8px;
   font-size: 13px;
-  color: var(--text-secondary);
+  color: var(--text-placeholder);
 }
 
 .star-label {
-  width: 30px; /* Ширина для цифры и звезды */
+  width: 30px;
   text-align: right;
   flex-shrink: 0;
 }
@@ -735,7 +614,7 @@ a:hover {
 .rating-bar {
   flex-grow: 1;
   height: 6px;
-  background-color: var(--dark-card-bg);
+  background-color: #e9ecef; /* Светло-серый фон полоски */
   border-radius: 3px;
   overflow: hidden;
 }
@@ -748,59 +627,57 @@ a:hover {
 }
 
 .rating-count {
-  min-width: 20px; /* Минимальная ширина для числа голосов */
+  min-width: 25px; /* Шире место под число */
   text-align: right;
-  font-weight: 500;
+  font-weight: 400;
+  color: var(--primary-dark-blue);
 }
 
 /* Форма добавления комментария */
 .comment-form {
-  margin-bottom: 30px;
+  margin-bottom: 25px;
 }
 
 .comment-textarea {
   display: block;
   width: 100%;
   min-height: 80px;
-  background-color: var(--primary-dark-blue); /* Фон поля ввода */
-  border: 1px solid var(--border-color);
+  background-color: #f8f9fa; /* Очень светлый фон поля */
+  border: 1px solid #dee2e6; /* Серая граница */
   border-radius: 10px;
-  padding: 15px;
-  font-family: 'Gilroy', sans-serif;
+  padding: 12px 15px;
+  font-family: 'Circe', sans-serif;
   font-size: 15px;
-  color: var(--text-primary);
+  color: var(--primary-dark-blue);
   resize: vertical;
   margin-bottom: 15px;
   box-sizing: border-box;
 }
 .comment-textarea::placeholder {
-  color: var(--text-secondary);
+  color: #adb5bd; /* Серый плейсхолдер */
 }
 .comment-textarea:focus {
   outline: none;
-  border-color: var(--accent-purple);
-  box-shadow: 0 0 0 2px rgba(123, 97, 255, 0.3);
-}
-
-.action-button.comment-submit {
-  /* Использует .primary */
+  border-color: var(--button-blue); /* Синяя рамка при фокусе */
+  box-shadow: 0 0 0 2px rgba(52, 93, 255, 0.2);
 }
 
 /* Список комментариев */
 .comments-list {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 15px;
 }
 
 .comment-card {
-  background-color: var(--dark-card-bg);
-  border-radius: 15px;
-  padding: 20px;
-  border: 1px solid var(--border-color);
+  background-color: transparent; /* Прозрачный фон карточки */
+  border-radius: 0;
+  padding: 15px 0;
+  border: none;
+  border-bottom: 1px solid #e0e0e0; /* Разделитель */
 }
-.comment-card.hidden {
-    display: none;
+.comment-card:last-child {
+    border-bottom: none;
 }
 
 .comment-header {
@@ -828,8 +705,8 @@ a:hover {
 
 .comment-author-name {
   font-size: 16px;
-  font-weight: 600;
-  color: var(--text-primary);
+  font-weight: 700;
+  color: var(--primary-dark-blue);
 }
 
 /* Рейтинг в комментарии */
@@ -840,82 +717,54 @@ a:hover {
   padding-left: 15px; /* Отступ от имени */
 }
 .comment-rating i {
-  font-size: 14px; /* Звезды в комментах */
-  color: #4a5a7f; /* Неактивный */
+    color: #d8dcdf; /* Светло-серые неактивные звезды */
 }
 .comment-rating i.active {
-  color: var(--accent-yellow); /* Активный */
+    color: var(--accent-yellow);
 }
-
 .comment-date {
   font-size: 13px;
-  color: var(--text-secondary);
-  flex-shrink: 0;
+  color: var(--text-placeholder);
 }
 
 .comment-body {
   font-size: 15px;
   line-height: 1.6;
-  color: var(--text-secondary);
-  margin-bottom: 15px;
-}
-.comment-body p {
-    margin: 0;
-}
-
-.comment-footer {
-  display: flex;
-  gap: 10px;
+  color: #495057; /* Темно-серый текст комментария */
+  margin-bottom: 10px;
 }
 
 /* Бейджи в комментариях */
 .badge {
-  display: inline-block;
-  padding: 4px 10px;
-  font-size: 12px;
-  font-weight: 500;
+  padding: 3px 8px;
+  font-size: 11px;
+  font-weight: 700;
   border-radius: 6px;
-  line-height: 1.2;
 }
 .badge-invested {
-  background-color: rgba(123, 97, 255, 0.2); /* Фиолетовый полупрозрачный */
+  background-color: rgba(123, 97, 255, 0.1);
   color: var(--accent-purple);
-  border: 1px solid var(--accent-purple);
+  border: 1px solid rgba(123, 97, 255, 0.3);
 }
 .badge-buyout {
-  background-color: rgba(255, 215, 0, 0.1); /* Желтый полупрозрачный */
-  color: var(--accent-yellow);
-  border: 1px solid var(--accent-yellow);
+  background-color: rgba(247, 191, 79, 0.1);
+  color: #dda01e; /* Темнее желтый */
+  border: 1px solid rgba(247, 191, 79, 0.3);
 }
 
 /* Кнопки Показать/Скрыть комментарии */
 .show-more-comments, .hide-comments-button {
-  align-self: center; /* Центрируем кнопку */
-  margin-top: 10px;
-  background-color: transparent;
-  border: 1px solid var(--border-color);
-  color: var(--text-secondary);
-  padding: 8px 20px;
-  border-radius: 20px; /* Сильно скругленная */
-  font-size: 14px;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  transition: all 0.3s ease;
+  /* ... */
+  border: 1px solid #dee2e6;
+  color: #6c757d;
+  padding: 6px 15px;
+  font-size: 13px;
 }
 .show-more-comments:hover, .hide-comments-button:hover {
-  color: var(--text-primary);
-  border-color: var(--accent-purple);
-  background-color: var(--dark-card-bg);
+  color: var(--primary-dark-blue);
+  border-color: var(--button-blue);
+  background-color: rgba(52, 93, 255, 0.05);
 }
-.show-more-comments i, .hide-comments-button i {
-  font-size: 12px;
-}
-.hide-comments-button {
-  display: none; /* Скрыта по умолчанию */
-}
-
 
 /* ======================================== */
 /*         СЕКЦИЯ ПОХОЖИХ СТАРТАПОВ       */
@@ -1015,7 +864,7 @@ a:hover {
   gap: 10px;
   text-decoration: none;
   color: var(--primary-dark-blue); /* Темный текст на белом фоне */
-  border: 1px solid #e0e0e0; /* Светлая граница */
+  border: 1px solid #dee2e6; /* Граница светлее */
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 .similar-card:hover {
@@ -1066,10 +915,10 @@ a:hover {
 }
 .similar-card-rating i {
   font-size: 14px;
-  color: #e0e0e0; /* Неактивный серый */
+  color: #e9ecef; /* Светлее неактивные */
 }
 .similar-card-rating i.active {
-  color: var(--accent-purple); /* Фиолетовый для звезд в карточках */
+  color: var(--accent-yellow); /* Желтые звезды */
 }
 
 .similar-card-category {
@@ -1078,11 +927,11 @@ a:hover {
 .category-badge { /* Бейдж категории */
   display: inline-block;
   padding: 4px 10px;
-  background-color: #f0f0f0; /* Светло-серый фон */
-  color: var(--primary-dark-blue);
+  background-color: #e9ecef; /* Светлее фон */
+  color: #495057; /* Темнее текст */
   border-radius: 6px;
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 400;
 }
 
 
