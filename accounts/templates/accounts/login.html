@@ -1,60 +1,128 @@
 {% extends 'accounts/base.html' %}
+{% load static %}
 
 {% block title %}Вход{% endblock %}
 
+{% block head_extra %}
+{{ block.super }}
+<style>
+    /* Стили для контейнера анимации, чтобы он занимал весь фон */
+    #liquid-background-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: -1; /* Помещаем под остальной контент */
+        overflow: hidden; /* Предотвращаем появление полос прокрутки */
+    }
+    #liquid-background-svg {
+        width: 100%;
+        height: 100%;
+    }
+    /* Переопределяем фон body, чтобы он не перекрывал анимацию */
+    body {
+        background: none !important; /* Убираем исходный фон */
+    }
+    /* Стили для основного контента, чтобы он был поверх фона */
+    .auth-container {
+        position: relative; /* Или absolute, в зависимости от контекста */
+        z-index: 1; /* Убеждаемся, что контент над фоном */
+         background: rgba(255, 255, 255, 0.1); /* Легкий фон для читаемости, если нужно */
+        backdrop-filter: blur(5px); /* Эффект размытия под контейнером */
+        padding: 20px;
+        border-radius: 10px;
+        height: auto; /* Убираем фиксированную высоту */
+        margin-top: 15vh; /* Отступ сверху */
+        max-width: 450px; /* Немного увеличим ширину */
+    }
+    .auth-box {
+         background: transparent; /* Делаем внутренний бокс прозрачным */
+         box-shadow: none; /* Убираем тень */
+         padding: 0; /* Убираем внутренние отступы */
+    }
+
+    /* Дополнительные стили для формы, чтобы она выглядела хорошо на размытом фоне */
+     .auth-box h1 {
+        color: #fff; /* Белый текст для заголовка */
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.5); /* Тень для читаемости */
+     }
+     .auth-box form label {
+        color: #eee; /* Светлый цвет для меток */
+        font-weight: bold;
+     }
+     .auth-box input {
+         background-color: rgba(255, 255, 255, 0.8); /* Полупрозрачный фон для полей */
+         border: 1px solid rgba(255, 255, 255, 0.5);
+     }
+      .auth-box button {
+         background-color: rgba(175, 0, 239, 0.8); /* Полупрозрачная кнопка */
+         border: 1px solid rgba(255, 255, 255, 0.3);
+         transition: background-color 0.3s;
+      }
+      .auth-box button:hover {
+         background-color: rgba(255, 239, 43, 0.9); /* Яркий желтый при наведении */
+         color: #333;
+      }
+     .auth-box p, .auth-box p a {
+         color: #eee; /* Светлый текст для ссылки регистрации */
+         text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
+     }
+     .auth-box p a:hover {
+         color: #fff;
+         text-decoration: underline;
+     }
+     /* Стили для сообщений */
+     .messages li {
+         color: #fff;
+         background-color: rgba(0,0,0,0.5);
+         padding: 10px;
+         border-radius: 5px;
+         margin-bottom: 10px;
+         list-style: none;
+     }
+     .messages li.success { background-color: rgba(40, 167, 69, 0.7); }
+     .messages li.error { background-color: rgba(220, 53, 69, 0.7); }
+     .messages li.warning { background-color: rgba(255, 193, 7, 0.7); }
+     .messages li.info { background-color: rgba(23, 162, 184, 0.7); }
+</style>
+{% endblock %}
+
+
 {% block content %}
-    <style>
-        .auth-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 80vh;
-            text-align: center;
-        }
-        .auth-box {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            max-width: 400px;
-            width: 100%;
-        }
-        .auth-box h1 {
-            margin-bottom: 20px;
-        }
-        .auth-box form {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .auth-box input {
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        .auth-box button {
-            background-color: rgb(175, 0, 239);
-            color: white;
-            font-weight: bold;
-            padding: 10px;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-        .auth-box button:hover {
-            background-color: yellow;
-        }
-        .auth-box p {
-            margin-top: 10px;
-        }
-    </style>
+    {# <style> ... existing styles ... </style> #} {# Старые стили можно удалить или закомментировать, если они больше не нужны #}
+
+    {# Добавляем контейнер для SVG фона #}
+    <div id="liquid-background-container">
+        <svg id="liquid-background-svg" class="btn0009_liquid" xmlns="http://www.w3.org/2000/svg"
+             data-tension="0.1"
+             data-width="1920" {# Используем ширину всего экрана #}
+             data-height="1080" {# Используем высоту всего экрана #}
+             data-margin="0" {# Убираем отступы #}
+             data-hover-factor="-0.05"
+             data-gap="8"
+             data-force-factor="0.15"
+             data-color1="#360061" {# Темно-фиолетовый #}
+             data-color2="#6a0dad" {# Пурпурный #}
+             data-color3="#a020f0" {# Ярко-фиолетовый #}
+             data-text="" {# Текст не нужен для фона #}
+             data-mouse-force="50"
+             data-layer-1-viscosity="0.4"
+             data-layer-2-viscosity="0.6"
+             data-layer-1-mouse-force="60"
+             data-layer-2-mouse-force="80"
+             data-layer-1-force-limit="1.5"
+             data-layer-2-force-limit="2.5"
+             data-noise="5" {# Добавляем немного шума для динамики #}
+             >
+        </svg>
+    </div>
 
     <div class="auth-container">
         <div class="auth-box">
             <h1>Вход</h1>
             {% if messages %}
-                <ul>
+                <ul class="messages"> {# Добавляем класс для стилизации сообщений #}
                     {% for message in messages %}
                         <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
                     {% endfor %}
@@ -62,10 +130,442 @@
             {% endif %}
             <form method="post">
                 {% csrf_token %}
-                {{ form.as_p }}
+                {# Заменяем form.as_p на явный рендеринг полей #}
+                <div class="form-group">
+                    <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+                    {{ form.email }}
+                    {% if form.email.errors %}
+                        <div class="errors">{{ form.email.errors }}</div>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.password.id_for_label }}">{{ form.password.label }}</label>
+                    {{ form.password }}
+                    {% if form.password.errors %}
+                        <div class="errors">{{ form.password.errors }}</div>
+                    {% endif %}
+                </div>
                 <button type="submit">Войти</button>
             </form>
             <p>Нет аккаунта? <a href="{% url 'register' %}">Зарегистрироваться</a></p>
         </div>
     </div>
+
+<script>
+    // Оборачиваем весь скрипт в DOMContentLoaded, чтобы гарантировать, что SVG уже есть на странице
+    document.addEventListener('DOMContentLoaded', () => {
+
+        const LiquidButton = class LiquidButton {
+
+            constructor(svg) {
+                const options = svg.dataset;
+                this.id = svg.id || `liquid-button-${Math.random().toString(36).substr(2, 9)}`;
+
+                this.tension = options.tension * 1 || 0.4;
+                this.width   = options.width   * 1 || 218;
+                this.height  = options.height  * 1 || 56;
+                this.margin  = options.margin  * 1 || 50; // Увеличил стандартный margin
+                this.hoverFactor = options.hoverFactor * 1 || -0.1;
+                this.gap     = options.gap     * 1 ||   5;
+                this.forceFactor = options.forceFactor * 1 || 0.2;
+                this.color1 = options.color1 || '#360061'; // Изменил цвет по умолчанию
+                this.color2 = options.color2 || '#6a0dad'; // Изменил цвет по умолчанию
+                this.color3 = options.color3 || '#a020f0'; // Изменил цвет по умолчанию
+                this.textColor = options.textColor || '#FFFFFF';
+                this.text = options.text    || ''; // Текст по умолчанию пустой
+                this.svg = svg;
+                this.layers = [];
+                 this.noise = options.noise * 1 || 0;
+
+                // Исправлено: Убрано некорректное присваивание внутри цикла
+                const defaultLayerOptions = [
+                    { viscosity: 0.5, mouseForce: 100, forceLimit: 2 },
+                    { viscosity: 0.8, mouseForce: 150, forceLimit: 3 },
+                ];
+
+                 for (let i = 0; i < 2; i++) { // Создаем 2 слоя как в оригинале
+                     const layer = { points: [] };
+                     const layerNum = i + 1;
+                     layer.viscosity = options[`layer${layerNum}Viscosity`] * 1 || defaultLayerOptions[i].viscosity;
+                     layer.mouseForce = options[`layer${layerNum}MouseForce`] * 1 || defaultLayerOptions[i].mouseForce;
+                     layer.forceLimit = options[`layer${layerNum}ForceLimit`] * 1 || defaultLayerOptions[i].forceLimit;
+                     layer.path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                     this.svg.appendChild(layer.path);
+                     this.layers.push(layer);
+                 }
+
+
+                this.xmlns = 'http://www.w3.org/2000/svg';
+                this.debug = options.debug === 'true' || false; // Приводим к boolean
+
+                 // Убран код добавления SVG в body, так как SVG уже в HTML
+                // this.wrapperElement = options.wrapperElement ? document.querySelector(options.wrapperElement) : document.body;
+                // if (!this.svg.parentElement) {
+                //     this.wrapperElement.append(this.svg);
+                // }
+
+                 // Убран код для создания текста, так как текст для фона не нужен
+                // this.svgText = document.createElementNS(this.xmlns, 'text');
+                // ... атрибуты и стили для текста ...
+                // this.svg.appendChild(this.svgText);
+
+                this.svgDefs = document.createElementNS(this.xmlns, 'defs');
+                this.svg.appendChild(this.svgDefs);
+
+                this.touches = [];
+
+                 // Используем document вместо body для слушателей, чтобы ловить события на всем документе
+                document.addEventListener('touchstart', this.touchHandler.bind(this), { passive: false }); // Добавил bind и passive: false
+                document.addEventListener('touchmove', this.touchHandler.bind(this), { passive: false }); // Добавил bind и passive: false
+                document.addEventListener('touchend', this.clearHandler.bind(this)); // Добавил bind
+                document.addEventListener('touchcancel', this.clearHandler.bind(this)); // Добавил bind
+                this.svg.addEventListener('mousemove', this.mouseHandler.bind(this)); // Добавил bind
+                this.svg.addEventListener('mouseout', this.clearHandler.bind(this)); // Добавил bind
+
+
+                this.initOrigins();
+                this.animate();
+            }
+
+            // mouseHandler и touchHandler обернуты в get для ленивой инициализации,
+            // но это может вызвать проблемы с `this` внутри обработчиков.
+            // Переделываем в обычные методы и используем .bind(this) при добавлении слушателей.
+
+             mouseHandler(e) {
+                const rect = this.svg.getBoundingClientRect();
+                 this.touches = [{
+                    // Используем clientX/clientY и getBoundingClientRect для корректных координат SVG
+                    x: e.clientX - rect.left,
+                    y: e.clientY - rect.top,
+                    force: 1,
+                 }];
+             }
+
+             touchHandler(e) {
+                 this.touches = [];
+                 const rect = this.svg.getBoundingClientRect();
+                 for (let touchIndex = 0; touchIndex < e.changedTouches.length; touchIndex++) {
+                     const touch = e.changedTouches[touchIndex];
+                     const x = touch.clientX - rect.left; // Используем clientX/clientY
+                     const y = touch.clientY - rect.top; // Используем clientY/clientY
+                     // Проверяем, находится ли касание внутри SVG
+                     if (x > 0 && y > 0 && x < this.svgWidth && y < this.svgHeight) {
+                          this.touches.push({ x, y, force: touch.force || 1 });
+                     }
+                 }
+                 // Предотвращаем стандартное поведение только если были касания внутри SVG
+                 if (this.touches.length > 0) {
+                    e.preventDefault();
+                 }
+             }
+
+             clearHandler(e) {
+                 // Проверяем, что мышь действительно покинула SVG, а не перешла на дочерний элемент
+                 if (e.type === 'mouseout' && this.svg.contains(e.relatedTarget)) {
+                     return;
+                 }
+                 this.touches = [];
+             }
+
+
+             get raf() {
+                  // Упрощенный вариант, использующий стандартный requestAnimationFrame
+                 return this.__raf || (this.__raf = window.requestAnimationFrame.bind(window));
+             }
+
+            distance(p1, p2) {
+                // Проверяем, что p1 и p2 существуют
+                if (!p1 || !p2) return 0;
+                return Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2));
+            }
+
+            update() {
+                 for (let layerIndex = 0; layerIndex < this.layers.length; layerIndex++) {
+                     const layer = this.layers[layerIndex];
+                     const points = layer.points;
+                     if (!points) continue; // Пропуск, если точки еще не инициализированы
+
+                     for (let pointIndex = 0; pointIndex < points.length; pointIndex++) {
+                         const point = points[pointIndex];
+                         if (!point) continue; // Добавлена проверка
+
+                         // Шум (noise)
+                         const dx = point.ox - point.x + (Math.random() - 0.5) * this.noise;
+                         const dy = point.oy - point.y + (Math.random() - 0.5) * this.noise;
+                         const d = Math.sqrt(dx * dx + dy * dy);
+                         const f = d * this.forceFactor;
+
+                         // Возврат к исходной точке (origin)
+                         point.vx += f * (dx / (d || 1)); // Предотвращение деления на ноль
+                         point.vy += f * (dy / (d || 1)); // Предотвращение деления на ноль
+
+
+                        // Взаимодействие с мышью/касаниями
+                         for (let touchIndex = 0; touchIndex < this.touches.length; touchIndex++) {
+                             const touch = this.touches[touchIndex];
+                             let mouseForce = layer.mouseForce;
+
+                             // Проверка на hover внутри "кнопки" (здесь это вся область SVG)
+                             // Убрал проверку на hoverFactor, так как это фон
+                            // if (touch.x > this.margin && touch.x < this.margin + this.width &&
+                            //     touch.y > this.margin && touch.y < this.margin + this.height) {
+                            //     mouseForce *= -this.hoverFactor;
+                            // }
+
+                            const mx = point.x - touch.x;
+                            const my = point.y - touch.y;
+                            const md = Math.sqrt(mx * mx + my * my);
+
+                             if (md > 0) { // Проверка деления на ноль
+                                const mf = Math.max(-layer.forceLimit, Math.min(layer.forceLimit, (mouseForce * touch.force) / md));
+                                point.vx += mf * (mx / md);
+                                point.vy += mf * (my / md);
+                             }
+                         }
+
+                         // Вязкость (viscosity)
+                         point.vx *= layer.viscosity;
+                         point.vy *= layer.viscosity;
+
+                         // Обновление позиции
+                         point.x += point.vx;
+                         point.y += point.vy;
+                     }
+
+                     // Расчет контрольных точек для кривых Безье
+                    for (let pointIndex = 0; pointIndex < points.length; pointIndex++) {
+                        const point = points[pointIndex];
+                        if (!point) continue; // Добавлена проверка
+
+                        const prev = points[(pointIndex + points.length - 1) % points.length];
+                        const next = points[(pointIndex + points.length + 1) % points.length];
+
+                        // Проверяем prev и next
+                        if (!prev || !next) continue;
+
+                        const dPrev = this.distance(point, prev);
+                        const dNext = this.distance(point, next);
+
+                        const line = {
+                            x: next.x - prev.x,
+                            y: next.y - prev.y,
+                        };
+                        const dLine = Math.sqrt(line.x * line.x + line.y * line.y);
+
+                         if (dLine > 0) { // Проверка деления на ноль
+                            const tensionFactorPrev = dPrev * this.tension;
+                            const tensionFactorNext = dNext * this.tension;
+
+                            point.cPrev = {
+                                x: point.x - (line.x / dLine) * tensionFactorPrev,
+                                y: point.y - (line.y / dLine) * tensionFactorPrev,
+                            };
+                            point.cNext = {
+                                x: point.x + (line.x / dLine) * tensionFactorNext,
+                                y: point.y + (line.y / dLine) * tensionFactorNext,
+                            };
+                         } else {
+                             // Если dLine = 0, точки совпадают, устанавливаем контрольные точки в саму точку
+                             point.cPrev = { x: point.x, y: point.y };
+                             point.cNext = { x: point.x, y: point.y };
+                         }
+                    }
+                }
+            }
+
+
+            animate() {
+                this.raf(() => {
+                    this.update();
+                    this.draw();
+                    this.animate();
+                });
+            }
+
+             // svgWidth и svgHeight теперь должны учитывать margin = 0
+             get svgWidth() {
+                // return this.width + this.margin * 2;
+                return this.width; // Margin теперь 0
+             }
+
+             get svgHeight() {
+                // return this.height + this.margin * 2;
+                 return this.height; // Margin теперь 0
+             }
+
+            draw() {
+                for (let layerIndex = 0; layerIndex < this.layers.length; layerIndex++) {
+                    const layer = this.layers[layerIndex];
+                    const points = layer.points;
+                    if (!points || points.length === 0 || !layer.path) continue; // Пропуск, если нет точек или path
+
+                    // Управление цветом и градиентами
+                    if (layerIndex === 1) { // Второй слой (верхний)
+                        if (this.touches.length > 0 && this.svgWidth > 0 && this.svgHeight > 0) { // Добавил проверку размеров SVG
+                            while (this.svgDefs.firstChild) {
+                                this.svgDefs.removeChild(this.svgDefs.firstChild);
+                            }
+                            for (let touchIndex = 0; touchIndex < this.touches.length; touchIndex++) {
+                                const touch = this.touches[touchIndex];
+                                const gradient = document.createElementNS(this.xmlns, 'radialGradient');
+                                gradient.id = `${this.id}-gradient-${touchIndex}`; // Используем уникальный id
+
+                                const stop1 = document.createElementNS(this.xmlns, 'stop');
+                                stop1.setAttribute('stop-color', this.color3);
+                                stop1.setAttribute('offset', '0%');
+
+                                const stop2 = document.createElementNS(this.xmlns, 'stop');
+                                stop2.setAttribute('stop-color', this.color2);
+                                stop2.setAttribute('offset', '100%');
+
+                                gradient.appendChild(stop1);
+                                gradient.appendChild(stop2);
+                                this.svgDefs.appendChild(gradient);
+
+                                // Убедимся, что svgWidth и svgHeight не нулевые
+                                const gradCX = this.svgWidth ? touch.x / this.svgWidth : 0.5;
+                                const gradCY = this.svgHeight ? touch.y / this.svgHeight : 0.5;
+                                const gradR = Math.max(0.1, Math.min(1, touch.force || 0.5)); // Ограничиваем радиус
+
+                                gradient.setAttribute('cx', gradCX);
+                                gradient.setAttribute('cy', gradCY);
+                                gradient.setAttribute('r', gradR); // Радиус градиента зависит от силы касания
+
+                                layer.path.style.fill = `url(#${gradient.id})`;
+                            }
+                        } else {
+                            layer.path.style.fill = this.color2; // Стандартный цвет, если нет касаний
+                        }
+                    } else { // Первый слой (нижний)
+                        layer.path.style.fill = this.color1;
+                    }
+
+                    // Построение path d-атрибута
+                    const commands = [];
+                    if (points[0] && points[0].cNext) { // Проверка наличия первой точки и её контрольной точки
+                       commands.push('M', points[0].x, points[0].y);
+
+                        for (let pointIndex = 0; pointIndex < points.length; pointIndex++) {
+                           const currentPoint = points[pointIndex];
+                           const nextPoint = points[(pointIndex + 1) % points.length];
+
+                            // Проверяем наличие точек и контрольных точек
+                            if (currentPoint && nextPoint && currentPoint.cNext && nextPoint.cPrev) {
+                                commands.push('C',
+                                    currentPoint.cNext.x, currentPoint.cNext.y,
+                                    nextPoint.cPrev.x, nextPoint.cPrev.y,
+                                    nextPoint.x, nextPoint.y
+                                );
+                            } else {
+                                // Если данных не хватает, рисуем прямую линию (L) или пропускаем
+                                if(nextPoint) {
+                                    commands.push('L', nextPoint.x, nextPoint.y);
+                                }
+                                // Можно добавить логирование ошибки, если это неожиданно
+                                // console.warn("Missing point data for curve generation", pointIndex, currentPoint, nextPoint);
+                            }
+                        }
+                       commands.push('Z');
+                       layer.path.setAttribute('d', commands.join(' '));
+                    } else {
+                       // console.warn("Initial point data missing for path drawing.");
+                       layer.path.setAttribute('d', ''); // Очищаем путь, если нет данных
+                    }
+                }
+                // Убран код отрисовки текста
+                // if (this.svgText) {
+                //     this.svgText.textContent = this.text;
+                //     this.svgText.style.fill = this.textColor;
+                // }
+            }
+
+
+            createPoint(x, y) {
+                return { x, y, ox: x, oy: y, vx: 0, vy: 0 };
+            }
+
+            initOrigins() {
+                // Устанавливаем реальные размеры SVG в соответствии с контейнером
+                const container = document.getElementById('liquid-background-container');
+                if (container) {
+                   this.width = container.offsetWidth;
+                   this.height = container.offsetHeight;
+                } else {
+                    // Фоллбэк на viewport, если контейнер не найден
+                    this.width = window.innerWidth;
+                    this.height = window.innerHeight;
+                }
+
+                 this.svg.setAttribute('viewBox', `0 0 ${this.width} ${this.height}`);
+                 // Убираем width и height атрибуты, чтобы SVG масштабировался через viewBox
+                 this.svg.removeAttribute('width');
+                 this.svg.removeAttribute('height');
+
+                 // Используем реальные this.width и this.height вместо data-атрибутов
+                // const dataWidth = this.svg.dataset.width * 1 || this.width;
+                // const dataHeight = this.svg.dataset.height * 1 || this.height;
+
+                for (let layerIndex = 0; layerIndex < this.layers.length; layerIndex++) {
+                    const layer = this.layers[layerIndex];
+                    const points = [];
+                    const vertexCount = 20; // Количество вершин по горизонтали/вертикали (пример)
+                    const horizontalGap = this.width / vertexCount;
+                    const verticalGap = this.height / vertexCount;
+
+                    // Верхняя граница (слева направо)
+                    for (let i = 0; i <= vertexCount; i++) {
+                        points.push(this.createPoint(i * horizontalGap, 0));
+                    }
+                    // Правая граница (сверху вниз)
+                    for (let i = 1; i <= vertexCount; i++) {
+                        points.push(this.createPoint(this.width, i * verticalGap));
+                    }
+                    // Нижняя граница (справа налево)
+                    for (let i = vertexCount - 1; i >= 0; i--) {
+                        points.push(this.createPoint(i * horizontalGap, this.height));
+                    }
+                    // Левая граница (снизу вверх)
+                    for (let i = vertexCount - 1; i >= 1; i--) { // До i = 1, чтобы не дублировать начальную точку
+                        points.push(this.createPoint(0, i * verticalGap));
+                    }
+
+                    layer.points = points;
+                }
+            }
+        }
+
+        // --- Инициализация ---
+        const svgElement = document.getElementById('liquid-background-svg');
+        if (svgElement) {
+            const liquidBackground = new LiquidButton(svgElement);
+
+             // Добавляем обработчик изменения размера окна для переинициализации
+             let resizeTimeout;
+             window.addEventListener('resize', () => {
+                 clearTimeout(resizeTimeout);
+                 resizeTimeout = setTimeout(() => {
+                     liquidBackground.initOrigins(); // Пересчитываем размеры и точки
+                 }, 250); // Задержка для предотвращения частых пересчетов
+             });
+        } else {
+            console.error("SVG element for liquid background not found.");
+        }
+
+        // Убран старый код инициализации для кнопок
+        // const redraw = () => {
+        //     // Эта функция больше не нужна в таком виде
+        // };
+        // const buttons = document.getElementsByClassName('btn0009_liquid');
+        // for (let buttonIndex = 0; buttonIndex < buttons.length; buttonIndex++) {
+        //     const button = buttons[buttonIndex];
+        //     // Проверяем, что это не наш фоновый SVG
+        //     if (button.id !== 'liquid-background-svg') {
+        //        button.liquidButton = new LiquidButton(button);
+        //     }
+        // }
+
+    });
+    // Конец DOMContentLoaded
+</script>
+
 {% endblock %}
