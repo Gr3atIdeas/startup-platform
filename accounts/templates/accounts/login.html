@@ -24,17 +24,30 @@
     body {
         background: none !important; /* Убираем исходный фон */
     }
+
+    /* Центрируем main.content для страницы входа */
+    main.content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-grow: 1; /* Убедимся, что он растягивается */
+        padding: 20px; /* Добавим немного отступов */
+    }
+
     /* Стили для основного контента, чтобы он был поверх фона */
     .auth-container {
         position: relative; /* Или absolute, в зависимости от контекста */
         z-index: 1; /* Убеждаемся, что контент над фоном */
          background: rgba(255, 255, 255, 0.1); /* Легкий фон для читаемости, если нужно */
         backdrop-filter: blur(5px); /* Эффект размытия под контейнером */
-        padding: 20px;
+        padding: 30px; /* Увеличим внутренние отступы */
         border-radius: 10px;
-        height: auto; /* Убираем фиксированную высоту */
-        margin-top: 15vh; /* Отступ сверху */
-        max-width: 450px; /* Немного увеличим ширину */
+        /* height: auto; <<< Убрали */
+        /* margin-top: 15vh; <<< Убираем отступ сверху, так как центрируем через flex */
+        max-width: 450px;
+        width: 100%; /* Чтобы не растягивался бесконечно на больших экранах */
+        box-sizing: border-box; /* Учитываем padding в ширине */
+        margin: 0; /* Убираем внешние отступы */
     }
     .auth-box {
          background: transparent; /* Делаем внутренний бокс прозрачным */
