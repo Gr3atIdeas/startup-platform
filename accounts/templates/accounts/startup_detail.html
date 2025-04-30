@@ -171,7 +171,6 @@
                    data-lg-size="1280-720" {# Пример размера, можно убрать или настроить #}
                    data-video='{"source": [{"src":"{% get_file_url_tag url startup.startup_id 'video' %}", "type":"video/mp4"}], "attributes": {"preload": false, "playsinline": true, "controls": true}}' 
                    class="video-thumbnail">
-                    <img src="{% static 'accounts/images/video_placeholder.png' %}" alt="Видео {{ forloop.counter }}" class="thumbnail-img"/> {# Заглушка-превью #}
                     <div class="play-icon"><i class="fas fa-play"></i></div>
                 </a>
                 {% endfor %}
