@@ -281,7 +281,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const b = q[h]; // b = текущая звезда
             const currentX = b.x / b.a; // Экранная X = Мировая X / Глубина
             const currentY = b.y / b.a; // Экранная Y = Мировая Y / Глубина
-            const z = 1 / b.a * 5 + 1; // Размер звезды (зависит от глубины)
+            // Уменьшаем базовый размер звезд
+            const baseSize = 1 / b.a * 2 + 0.5;
+            // Добавляем фактор мерцания
+            const twinkleFactor = 0.7 + Math.random() * 0.6; // Случайный множитель от 0.7 до 1.3
+            const z = baseSize * twinkleFactor; // Итоговый размер с мерцанием
 
             // Рисуем хвост звезды (если есть предыдущая позиция) - ВОССТАНОВЛЕНО
             if(b.b !== 0) { // b.b - предыдущая X, b.c - предыдущая Y
@@ -297,7 +301,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Рисуем белую круглую "голову" звезды
             k.fillStyle = '#fff'; // Устанавливаем белый цвет
             k.beginPath();
-            // Рисуем круг: arc(x, y, radius, startAngle, endAngle) - ИСПОЛЬЗУЕМ ПЛАВНОЕ СМЕЩЕНИЕ
+            // Рисуем круг: arc(x, y, radius, startAngle, endAngle) - ИСПОЛЬЗУЕМ ПЛАВНОЕ СМЕЩЕНИЕ и размер z
             k.arc(currentX + currentOffsetX, currentY + currentOffsetY, z / 2, 0, Math.PI * 2); // Делим z на 2 для радиуса
             k.fill();
 
