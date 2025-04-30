@@ -340,21 +340,22 @@ a:hover {
 .startup-header {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 15px; /* Немного увеличим отступ */
 }
 
 .startup-name {
-  font-size: 36px; /* Крупный заголовок */
+  font-size: 42px; /* Еще крупнее заголовок */
   font-weight: 700; /* Bold */
   line-height: 1.2;
   margin: 0;
+  color: var(--text-primary); /* Убедимся, что белый */
 }
 
 .header-meta {
   display: flex;
   align-items: center;
-  gap: 20px;
-  font-size: 14px;
+  gap: 25px; /* Увеличим отступ */
+  font-size: 15px; /* Чуть крупнее */
   color: var(--text-secondary);
 }
 
@@ -382,16 +383,17 @@ a:hover {
   display: flex;
   align-items: center;
   gap: 25px;
+  margin-top: 5px; /* Небольшой отступ сверху */
 }
 
 .rating-container {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px; /* Увеличим отступ */
 }
 
 .rating-label {
-  font-size: 14px;
+  font-size: 15px; /* Крупнее */
   color: var(--text-secondary);
 }
 
@@ -401,8 +403,8 @@ a:hover {
 }
 
 .rating-stars i {
-  font-size: 18px; /* Размер звезд */
-  color: #4a5a7f; /* Неактивный цвет звезды */
+  font-size: 20px; /* Крупнее звезды */
+  color: #3a4a6f; /* Более темный неактивный цвет */
 }
 
 .rating-stars i.active {
@@ -419,7 +421,7 @@ a:hover {
 }
 
 .comments-link {
-  font-size: 14px;
+  font-size: 15px; /* Крупнее */
   color: var(--accent-purple);
   font-weight: 500;
 }
@@ -433,19 +435,18 @@ a:hover {
   display: flex;
   align-items: center;
   gap: 15px;
-  background-color: var(--dark-card-bg); /* Фон для этой группы */
-  padding: 15px 20px;
-  border-radius: 15px;
+  padding: 0; /* Убираем внутренние отступы */
+  flex-wrap: wrap; /* Добавляем перенос */
 }
 
 .investment-info-badge {
-  background-color: var(--secondary-blue);
-  color: var(--text-primary);
-  padding: 8px 15px;
+  background-color: var(--dark-card-bg); /* Темный фон для бейджа */
+  color: var(--text-secondary);
+  padding: 6px 12px; /* Меньше паддинг */
   border-radius: 8px;
   font-size: 14px;
   font-weight: 500;
-  margin-right: auto; /* Отодвигает бейдж влево */
+  border: 1px solid var(--border-color);
 }
 
 /* Специфичные кнопки действий */
@@ -464,7 +465,9 @@ a:hover {
   color: var(--text-primary);
   font-family: 'Gilroy', sans-serif;
   font-size: 14px;
-  width: 120px; /* Ширина поля */
+  height: 44px; /* Высота как у кнопок */
+  flex-basis: 150px; /* Фикс ширина или можно % */
+  flex-grow: 0;
   text-align: right;
   margin-left: 5px;
 }
@@ -490,8 +493,8 @@ a:hover {
 /* Информационные блоки */
 .info-blocks {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Адаптивная сетка */
-  gap: 15px;
+  grid-template-columns: repeat(4, 1fr); /* Всегда 4 колонки? */
+  gap: 20px; /* Увеличим отступ */
 }
 
 .info-block {
@@ -500,54 +503,63 @@ a:hover {
   padding: 20px;
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* Выравнивание по левому краю */
-  gap: 8px;
+  align-items: center; /* Центрируем контент */
+  text-align: center;
+  gap: 10px; /* Увеличим отступ */
+  border: 1px solid var(--border-color); /* Добавим границу */
 }
 
 .info-block .icon {
-  font-size: 20px;
-  color: var(--accent-purple); /* Цвет иконки */
-  margin-bottom: 5px;
+  font-size: 24px; /* Крупнее иконка */
+  color: var(--text-secondary); /* Серая иконка */
+  margin-bottom: 8px;
 }
 
 .info-block-title {
   font-size: 14px;
   color: var(--text-secondary);
+  order: 2; /* Название под значением */
 }
 
 .info-block-value {
-  font-size: 18px;
+  font-size: 20px; /* Крупнее значение */
   font-weight: 600;
   color: var(--text-primary);
+  order: 1; /* Значение над названием */
+}
+
+/* Специальные стили для блоков */
+.info-block.presentation-block .action-button.view-button {
+    margin-top: 10px; /* Отступ для кнопки */
+    order: 3;
+}
+.info-block.collected-sum-block .info-block-value {
+    color: var(--accent-purple); /* Выделяем сумму */
 }
 
 /* Блок "О проекте" */
 .about-section {
-  background-color: var(--dark-card-bg);
-  border-radius: 15px;
-  padding: 25px;
+  background-color: transparent; /* Убираем фон */
+  border-radius: 0;
+  padding: 0; /* Убираем внутренние отступы */
+  margin-top: 10px; /* Небольшой отступ */
 }
 
 .about-section .section-title {
-  font-size: 20px;
+  font-size: 22px; /* Крупнее заголовок секции */
   font-weight: 600;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
   position: relative;
   padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-color); /* Линия под заголовком */
 }
-.about-section .section-title::after { /* Линия под заголовком */
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 40px;
-    height: 2px;
-    background-color: var(--accent-purple);
+.about-section .section-title::after {
+    display: none; /* Убираем фиолетовую линию */
 }
 
 .about-section .section-content {
-  font-size: 15px;
-  line-height: 1.6;
+  font-size: 16px; /* Крупнее текст */
+  line-height: 1.7;
   color: var(--text-secondary);
 }
 .about-section .section-content strong {
@@ -557,10 +569,99 @@ a:hover {
 .about-section .full-description p {
     margin-bottom: 1em; /* Отступ между параграфами */
 }
+.about-section .short-description {
+    font-style: italic; /* Выделяем вводную */
+    color: var(--text-primary);
+    margin-bottom: 1em;
+}
 
 /* Убираем старые секции */
 .gallery-grid, .gallery-large, .video-grid, .investor-conditions, .documents-section, .author-card, .moderator-section, .moderator-comment-section {
   display: none; /* Скрываем старые секции, которые не используются в новом макете */
+}
+
+/* ======================================== */
+/*         СЕКЦИЯ ГАЛЕРЕИ И ВИДЕО         */
+/* ======================================== */
+.media-section {
+    margin-top: 30px;
+}
+
+.video-gallery, .image-gallery {
+    display: grid;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+/* Сетка для видео */
+.video-gallery {
+   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+}
+
+/* Сетка для изображений */
+.image-gallery {
+   grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+}
+
+.gallery-thumbnail, .video-thumbnail {
+    display: block;
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    aspect-ratio: 16 / 9; /* Соотношение сторон для превью */
+    background-color: var(--dark-card-bg);
+}
+
+.thumbnail-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.gallery-thumbnail:hover .thumbnail-img,
+.video-thumbnail:hover .thumbnail-img {
+    transform: scale(1.05);
+}
+
+.video-thumbnail .play-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background-color: rgba(0, 8, 25, 0.7);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 18px;
+    transition: background-color 0.3s ease;
+    pointer-events: none; /* Чтобы иконка не мешала клику */
+}
+
+.video-thumbnail:hover .play-icon {
+    background-color: rgba(123, 97, 255, 0.8); /* Фиолетовый при наведении */
+}
+
+/* Стили для LightGallery (можно переопределить стандартные) */
+.lg-backdrop {
+    background-color: rgba(0, 8, 25, 0.95); /* Более плотный фон */
+}
+.lg-toolbar {
+    background-color: rgba(4, 17, 45, 0.8); /* Фон тулбара */
+}
+.lg-sub-html {
+    background-color: rgba(4, 17, 45, 0.8);
+    color: var(--text-secondary);
+}
+.lg-sub-html h4 {
+    color: var(--text-primary);
+    font-size: 16px;
+    margin-bottom: 5px;
 }
 
 /* ======================================== */
@@ -1206,6 +1307,12 @@ a:hover {
    .similar-startups-grid {
       grid-template-columns: 1fr; /* По одной карточке в ряд */
   }
+  .video-gallery {
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+  .image-gallery {
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  }
 }
 
 @media (max-width: 480px) {
@@ -1259,6 +1366,15 @@ a:hover {
     .action-button.edit-button,
     .action-button.sell-button {
         flex-basis: 100%; /* Кнопки владельца по одной в ряд */
+    }
+    .video-gallery {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    }
+    .image-gallery {
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    }
+    .actions-top-right {
+        gap: 10px; /* Уменьшаем отступ между кнопками */
     }
 }
 
