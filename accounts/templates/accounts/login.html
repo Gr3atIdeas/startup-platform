@@ -287,26 +287,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const currentY = b.y / b.a; // Экранная Y = Мировая Y / Глубина
             const z = 1 / b.a * 5 + 1; // Размер звезды (зависит от глубины)
 
-            // Расчет цвета звезды (пульсирующий)
-            const A=n(Q*h+r)*64+W;
-            const B=n(Q*h+2+r)*64+W;
-            const C=n(Q*h+4+r)*64+W;
-            const starColor = "rgb("+o(A)+","+o(B)+","+o(C)+")";
+            // Рисуем белую круглую звезду
+            k.fillStyle = '#fff'; // Устанавливаем белый цвет
+            k.beginPath();
+            // Рисуем круг: arc(x, y, radius, startAngle, endAngle)
+            k.arc(currentX + offsetX, currentY + offsetY, z / 2, 0, Math.PI * 2); // Делим z на 2 для радиуса
+            k.fill();
 
-            // Рисуем хвост звезды (если есть предыдущая позиция)
-            if(b.b !== 0) { // b.b - предыдущая X, b.c - предыдущая Y
-                k.strokeStyle = starColor;
-                k.lineWidth = z; // Ширина хвоста = размеру звезды
-                k.beginPath();
-                // Смещаем координаты относительно центра (позиции мыши)
-                k.moveTo(currentX + offsetX, currentY + offsetY);
-                k.lineTo(b.b + offsetX, b.c + offsetY);
-                k.stroke();
-            }
-
-            // Сохраняем текущую позицию для следующего кадра
-            b.b = currentX;
-            b.c = currentY;
             // Приближаем звезду (уменьшаем глубину)
             b.a -= s;
 
@@ -314,11 +301,11 @@ document.addEventListener('DOMContentLoaded', () => {
             // Проверяем экранные координаты со смещением
             const screenX = currentX + offsetX;
             const screenY = currentY + offsetY;
-            if(b.a < 0.01 || screenX < 0 || screenX > d || screenY < 0 || screenY > e) {
+            if(b.a < 0.01 || screenX < -z || screenX > d + z || screenY < -z || screenY > e + z) { // Добавляем радиус к проверке границ
                  u(b); // Сбросить звезду в центр "туннеля"
-                 // Сбрасываем предыдущие координаты, чтобы не рисовался хвост из центра
-                 b.b = 0;
-                 b.c = 0;
+                 // Сбрасываем предыдущие координаты, чтобы не рисовался хвост из центра - БОЛЬШЕ НЕ НУЖНО
+                 // b.b = 0;
+                 // b.c = 0;
             }
         }
         r += 0.015; // Увеличиваем фазу для пульсации цвета (замедляем немного)
