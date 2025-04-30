@@ -231,7 +231,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const p=10; // Начальный множитель для координат (z-координата?)
     const q=[]; // Массив звезд
     let r=0; // Переменная для синуса (цвет)
-    let s=0.2; // Скорость приближения звезд - ЗАФИКСИРОВАНА НИЖЕ СРЕДНЕЙ
+    let s=0.1; // Скорость приближения звезд - ЗАФИКСИРОВАНА НИЗКО
     const V=500; // Количество звезд
     const W=190; // Базовое значение для цвета
     const Q=0.3; // Множитель для синуса (разнообразие цветов)
@@ -273,7 +273,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // const offsetY = j;
 
         // Плавно интерполируем текущее смещение к целевому
-        const interpolationFactor = 0.05; // Меньше значение = более плавное/медленное движение
+        const interpolationFactor = 0.03; // Меньше значение = ЕЩЕ более плавное/медленное движение
         currentOffsetX += (targetOffsetX - currentOffsetX) * interpolationFactor;
         currentOffsetY += (targetOffsetY - currentOffsetY) * interpolationFactor;
 
