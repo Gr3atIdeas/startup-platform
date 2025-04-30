@@ -217,6 +217,11 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error("Could not get 2D context for starfield canvas!");
         return;
     }
+    // Добавляем переменные для плавного смещения
+    let targetOffsetX = d / 2;
+    let targetOffsetY = e / 2;
+    let currentOffsetX = d / 2;
+    let currentOffsetY = e / 2;
 
     k.globalAlpha=0.1; // Прозрачность ОЧЕНЬ НИЗКАЯ для еле заметных шлейфов
     const l=Math;
@@ -226,7 +231,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const p=10; // Начальный множитель для координат (z-координата?)
     const q=[]; // Массив звезд
     let r=0; // Переменная для синуса (цвет)
-    let s=0.3; // Скорость приближения звезд - УСТАНОВЛЕНА СРЕДНЯЯ СКОРОСТЬ
+    let s=0.2; // Скорость приближения звезд - ЗАФИКСИРОВАНА НИЖЕ СРЕДНЕЙ
     const V=500; // Количество звезд
     const W=190; // Базовое значение для цвета
     const Q=0.3; // Множитель для синуса (разнообразие цветов)
@@ -236,25 +241,11 @@ document.addEventListener('DOMContentLoaded', () => {
         c.addEventListener(eventName, handler, false);
     }
 
-    // Обработчик движения мыши
+    // Обработчик движения мыши - Обновляем целевое смещение
     E("mousemove", function(a){
-        i=a.clientX;
-        j=a.clientY;
+        targetOffsetX=a.clientX;
+        targetOffsetY=a.clientY;
     });
-
-    // Обработчик колеса мыши для скорости
-    function t(a) { // a = event
-        let f=0; // f = delta
-        if(a.detail) f=-a.detail/3; // Firefox
-        else f=a.wheelDelta/120; // Other browsers
-        // Ограничиваем скорость
-        const newSpeed = s + f / 25;
-        if(newSpeed >= 0.01 && newSpeed <= 1) { // Минимальная скорость > 0
-           s=newSpeed;
-        }
-    }
-    E("DOMMouseScroll",t); // Firefox
-    E("mousewheel",t); // Other
 
     // Инициализация/Сброс звезды
     function u(a) { // a = star object
@@ -277,9 +268,14 @@ document.addEventListener('DOMContentLoaded', () => {
         k.fillStyle="#000"; // Черный фон на каждом кадре
         k.fillRect(0,0,d,e);
 
-        // Центр смещения (зависит от положения мыши)
-        const offsetX = i; // Используем напрямую позицию мыши
-        const offsetY = j;
+        // Центр смещения (зависит от положения мыши) - ЗАМЕНЕНО НА ПЛАВНОЕ СМЕЩЕНИЕ
+        // const offsetX = i; // Используем напрямую позицию мыши
+        // const offsetY = j;
+
+        // Плавно интерполируем текущее смещение к целевому
+        const interpolationFactor = 0.05; // Меньше значение = более плавное/медленное движение
+        currentOffsetX += (targetOffsetX - currentOffsetX) * interpolationFactor;
+        currentOffsetY += (targetOffsetY - currentOffsetY) * interpolationFactor;
 
         for(let h=0; h<V; h++) {
             const b = q[h]; // b = текущая звезда
@@ -292,17 +288,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 k.strokeStyle = '#fff'; // Белый шлейф
                 k.lineWidth = z; // Ширина хвоста = размеру звезды
                 k.beginPath();
-                // Смещаем координаты относительно центра (позиции мыши)
-                k.moveTo(currentX + offsetX, currentY + offsetY);
-                k.lineTo(b.b + offsetX, b.c + offsetY);
+                // Смещаем координаты относительно центра (позиции мыши) - ИСПОЛЬЗУЕМ ПЛАВНОЕ СМЕЩЕНИЕ
+                k.moveTo(currentX + currentOffsetX, currentY + currentOffsetY);
+                k.lineTo(b.b + currentOffsetX, b.c + currentOffsetY);
                 k.stroke();
             }
 
             // Рисуем белую круглую "голову" звезды
             k.fillStyle = '#fff'; // Устанавливаем белый цвет
             k.beginPath();
-            // Рисуем круг: arc(x, y, radius, startAngle, endAngle)
-            k.arc(currentX + offsetX, currentY + offsetY, z / 2, 0, Math.PI * 2); // Делим z на 2 для радиуса
+            // Рисуем круг: arc(x, y, radius, startAngle, endAngle) - ИСПОЛЬЗУЕМ ПЛАВНОЕ СМЕЩЕНИЕ
+            k.arc(currentX + currentOffsetX, currentY + currentOffsetY, z / 2, 0, Math.PI * 2); // Делим z на 2 для радиуса
             k.fill();
 
             // Сохраняем текущую позицию для следующего кадра - ВОССТАНОВЛЕНО
@@ -313,9 +309,9 @@ document.addEventListener('DOMContentLoaded', () => {
             b.a -= s;
 
             // Если звезда вышла за пределы глубины или экрана, сбрасываем её
-            // Проверяем экранные координаты со смещением
-            const screenX = currentX + offsetX;
-            const screenY = currentY + offsetY;
+            // Проверяем экранные координаты со смещением - ИСПОЛЬЗУЕМ ПЛАВНОЕ СМЕЩЕНИЕ
+            const screenX = currentX + currentOffsetX;
+            const screenY = currentY + currentOffsetY;
             if(b.a < 0.01 || screenX < -z || screenX > d + z || screenY < -z || screenY > e + z) { // Добавляем радиус к проверке границ
                  u(b); // Сбросить звезду в центр "туннеля"
                  // Сбрасываем предыдущие координаты, чтобы не рисовался хвост из центра - ВОССТАНОВЛЕНО
