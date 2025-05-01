@@ -254,10 +254,13 @@ document.addEventListener('DOMContentLoaded', function() {
          if (!modal) console.log('Модальное окно инвестиций не найдено');
     }
 
-    // 6. Инициализация Fancybox
+    // 6. Инициализация Fancybox (Упрощенная)
     try {
         if (typeof Fancybox !== 'undefined') {
-             console.log('Initializing Fancybox...');
+             console.log('Initializing Fancybox (Simplified)...');
+             // Используем самую базовую инициализацию
+             Fancybox.bind('[data-fancybox="gallery"]'); 
+             /* Убираем кастомные опции:
              Fancybox.bind('[data-fancybox="gallery"]', {
                  Thumbs: { showOnStart: false },
                  Images: { zoom: false },
@@ -273,7 +276,8 @@ document.addEventListener('DOMContentLoaded', function() {
                      return slide.caption || "";
                  }
              });
-             console.log('Fancybox initialized');
+             */
+             console.log('Fancybox initialized (Simplified)');
         } else {
             console.error('Fancybox is not defined. Check if the library is loaded correctly.');
         }
