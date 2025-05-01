@@ -177,8 +177,10 @@
                 {# Выводим сначала видео, если есть #}
                 {% for url in video_urls %}
                   <a data-fancybox="gallery"
-                     data-src="{% get_file_url_tag url startup.startup_id 'video' %}"
-                     href="javascript:;"
+                     {# Используем href для источника видео #}
+                     href="{% get_file_url_tag url startup.startup_id 'video' %}"
+                     {# data-src="{% get_file_url_tag url startup.startup_id 'video' %}" #}
+                     {# href="javascript:;" #}
                      class="gallery-item video-item">
                      <div class="play-icon-overlay"><i class="fas fa-play"></i></div>
                      {# Можно добавить превью для видео, если есть #}
