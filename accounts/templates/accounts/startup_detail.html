@@ -128,194 +128,197 @@
         {% endif %}
       </div>
 
-      {# --- ТАБЫ НАВИГАЦИИ --- #}
-      <div class="tab-navigation">
-        <button class="tab-button active" data-target="info-section">Информация</button>
-        <button class="tab-button" data-target="gallery-section">Галерея</button>
-        <button class="tab-button" data-target="stages-section">Этапы</button>
-        <button class="tab-button" data-target="documents-section">Документы</button>
-        <button class="tab-button" data-target="conditions-section">Условия</button>
-        <button class="tab-button" data-target="comments-section">Комментарии</button>
-      </div>
-
-      {# --- Контейнер для секций, управляемых табами --- #}
-      <div class="tab-content-container">
-        {# Секция ИНФОРМАЦИЯ (по умолчанию активна) #}
-        <div id="info-section" class="content-section active">
-          <div class="info-blocks">
-            <div class="info-block presentation-block">
-              <i class="fas fa-file-alt icon"></i>
-              <span class="info-block-title">Презентация</span>
-              {% if startup.pitch_deck_url %}
-                <a href="{{ startup.pitch_deck_url }}" target="_blank" class="action-button view-button">Смотреть</a>
-              {% else %}
-                <button class="action-button view-button" disabled>Смотреть</button>
-              {% endif %}
-            </div>
-            <div class="info-block collected-sum-block">
-              <i class="fas fa-coins icon"></i>
-              <span class="info-block-title">Собранная сумма</span>
-              <span class="info-block-value">{{ startup.total_invested|default:0|floatformat:0|intcomma }} ₽</span>
-            </div>
-            {# --- Новый блок: Стадия --- #}
-            <div class="info-block stage-block">
-              <i class="fas fa-tasks icon"></i> {# Иконка для стадии, можно изменить #}
-              <span class="info-block-title">Стадия</span>
-              <span class="info-block-value">{{ startup.stage.stage_name|default:"Не указана" }}</span>
-            </div>
-          </div>
-
-          <div class="about-section">
-            {# --- Изменения в секции "О проекте" --- #}
-            <h2 class="section-title">О проекте</h2>
-            <div class="section-content">
-              {# Показываем "Вводную" как первую часть описания #}
-              <p><strong>Вводная:</strong> {{ startup.description|truncatewords:30 }}</p>
-              <p><strong>Подробное описание:</strong></p>
-              {{ startup.description|linebreaksbr }}
-              {% if startup.additional_info %}
-                <p><strong>Основные функции:</strong></p>
-                {{ startup.additional_info|linebreaksbr }}
-              {% endif %}
-            </div>
-          </div>
+      {# --- ОБЕРТКА ДЛЯ ТАБОВ И КОНТЕНТА --- #}
+      <div class="tabbed-content-wrapper">
+        {# --- ТАБЫ НАВИГАЦИИ --- #}
+        <div class="tab-navigation">
+          <button class="tab-button active" data-target="info-section">Информация</button>
+          <button class="tab-button" data-target="gallery-section">Галерея</button>
+          <button class="tab-button" data-target="stages-section">Этапы</button>
+          <button class="tab-button" data-target="documents-section">Документы</button>
+          <button class="tab-button" data-target="conditions-section">Условия</button>
+          <button class="tab-button" data-target="comments-section">Комментарии</button>
         </div>
 
-        {# Секция ГАЛЕРЕЯ #}
-        <div id="gallery-section" class="content-section media-section">
-          <h2 class="section-title">Галерея</h2>
-          {% if video_urls or creatives_urls %}
-            <div class="gallery-grid">
-              {# Выводим сначала видео, если есть #}
-              {% for url in video_urls %}
-                <a data-fancybox="gallery"
-                   {# Используем href для источника видео #}
-                   href="{% get_file_url_tag url startup.startup_id 'video' %}"
-                   {# data-src="{% get_file_url_tag url startup.startup_id 'video' %}" #}
-                   {# href="javascript:;" #}
-                   class="gallery-item video-item">
-                   <div class="play-icon-overlay"><i class="fas fa-play"></i></div>
-                   {# Можно добавить превью для видео, если есть #}
-                   <div class="video-placeholder">Видео</div>
-                </a>
-              {% endfor %}
-
-              {# Выводим креативы (изображения) #}
-              {% for url in creatives_urls %}
-                <a data-fancybox="gallery"
-                   href="{% get_file_url_tag url startup.startup_id 'creative' %}"
-                   data-caption="Креатив {{ forloop.counter }}"
-                   class="gallery-item image-item">
-                  <img src="{% get_file_url_tag url startup.startup_id 'creative' %}" alt="Креатив {{ forloop.counter }}" />
-                </a>
-              {% endfor %}
+        {# --- Контейнер для секций, управляемых табами --- #}
+        <div class="tab-content-container">
+          {# Секция ИНФОРМАЦИЯ (по умолчанию активна) #}
+          <div id="info-section" class="content-section active">
+            <div class="info-blocks">
+              <div class="info-block presentation-block">
+                <i class="fas fa-file-alt icon"></i>
+                <span class="info-block-title">Презентация</span>
+                {% if startup.pitch_deck_url %}
+                  <a href="{{ startup.pitch_deck_url }}" target="_blank" class="action-button view-button">Смотреть</a>
+                {% else %}
+                  <button class="action-button view-button" disabled>Смотреть</button>
+                {% endif %}
+              </div>
+              <div class="info-block collected-sum-block">
+                <i class="fas fa-coins icon"></i>
+                <span class="info-block-title">Собранная сумма</span>
+                <span class="info-block-value">{{ startup.total_invested|default:0|floatformat:0|intcomma }} ₽</span>
+              </div>
+              {# --- Новый блок: Стадия --- #}
+              <div class="info-block stage-block">
+                <i class="fas fa-tasks icon"></i> {# Иконка для стадии, можно изменить #}
+                <span class="info-block-title">Стадия</span>
+                <span class="info-block-value">{{ startup.stage.stage_name|default:"Не указана" }}</span>
+              </div>
             </div>
-          {% else %}
-            <p>Дополнительные медиа-материалы отсутствуют.</p>
-          {% endif %}
-        </div>
 
-        {# Секция ЭТАПЫ (пустая) #}
-        <div id="stages-section" class="content-section">
-          <h2 class="section-title">Этапы</h2>
-          <p>Информация об этапах проекта пока не добавлена.</p>
-          {# Сюда можно будет добавить таймлайн или список этапов #}
-        </div>
-
-        {# Секция ДОКУМЕНТЫ (пустая) #}
-        <div id="documents-section" class="content-section">
-          <h2 class="section-title">Документы</h2>
-          <p>Документы по проекту пока не загружены.</p>
-          {# Сюда можно будет добавить список ссылок на документы #}
-        </div>
-
-        {# Секция УСЛОВИЯ (пустая) #}
-        <div id="conditions-section" class="content-section">
-          <h2 class="section-title">Условия</h2>
-          <p>Информация об условиях инвестирования пока не добавлена.</p>
-          {# Сюда можно будет добавить текст условий #}
-        </div>
-
-        {# Секция КОММЕНТАРИИ (перемещена сюда) #}
-        <div id="comments-section" class="content-section comments-section">
-          <div class="comments-header">
-            <h2 class="section-title">Комментарии <span class="comments-count">({{ comments|length }})</span></h2>
-            <div class="comments-rating-summary">
-              <span class="average-rating-value">{{ average_rating|default:0|floatformat:"1" }}</span>
-              <div class="rating-distribution">
-                {% for i in "54321" %}
-                <div class="rating-bar-container">
-                  <span class="star-label">{{ i }} <i class="fas fa-star"></i></span>
-                  <div class="rating-bar">
-                    <div class="rating-bar-fill" style="width: {{ rating_distribution|get_item:i|default:0 }}%;"></div>
-                  </div>
-                  <span class="rating-count">{{ rating_counts|get_item:i|default:0 }}</span>
-                </div>
-                {% endfor %}
+            <div class="about-section">
+              {# --- Изменения в секции "О проекте" --- #}
+              <h2 class="section-title">О проекте</h2>
+              <div class="section-content">
+                {# Показываем "Вводную" как первую часть описания #}
+                <p><strong>Вводная:</strong> {{ startup.description|truncatewords:30 }}</p>
+                <p><strong>Подробное описание:</strong></p>
+                {{ startup.description|linebreaksbr }}
+                {% if startup.additional_info %}
+                  <p><strong>Основные функции:</strong></p>
+                  {{ startup.additional_info|linebreaksbr }}
+                {% endif %}
               </div>
             </div>
           </div>
 
-          {% if user.is_authenticated %}
-            <form method="post" class="comment-form">
-              {% csrf_token %}
-              {{ form.content|add_class:"comment-textarea"|attr:"placeholder:Полность комментария..." }}
-              <button type="submit" class="action-button comment-submit primary">Оставить комментарий</button>
-            </form>
-          {% else %}
-            <div class="comment-form">
-              <p>Пожалуйста, <a href="{% url 'login' %}">войдите</a>, чтобы оставить комментарий.</p>
-            </div>
-          {% endif %}
+          {# Секция ГАЛЕРЕЯ #}
+          <div id="gallery-section" class="content-section media-section">
+            <h2 class="section-title">Галерея</h2>
+            {% if video_urls or creatives_urls %}
+              <div class="gallery-grid">
+                {# Выводим сначала видео, если есть #}
+                {% for url in video_urls %}
+                  <a data-fancybox="gallery"
+                     {# Используем href для источника видео #}
+                     href="{% get_file_url_tag url startup.startup_id 'video' %}"
+                     {# data-src="{% get_file_url_tag url startup.startup_id 'video' %}" #}
+                     {# href="javascript:;" #}
+                     class="gallery-item video-item">
+                     <div class="play-icon-overlay"><i class="fas fa-play"></i></div>
+                     {# Можно добавить превью для видео, если есть #}
+                     <div class="video-placeholder">Видео</div>
+                  </a>
+                {% endfor %}
 
-          {% if comments %}
-            <div class="comments-list">
-              {% for comment in comments %}
-                <div class="comment-card {% if forloop.counter > 3 %}hidden{% endif %}">
-                  <div class="comment-header">
-                    <div class="comment-author-info">
-                      <div class="comment-author-avatar"></div>
-                      <div class="comment-author-name">{{ comment.user_id.first_name|default:comment.user_id.email }}</div>
+                {# Выводим креативы (изображения) #}
+                {% for url in creatives_urls %}
+                  <a data-fancybox="gallery"
+                     href="{% get_file_url_tag url startup.startup_id 'creative' %}"
+                     data-caption="Креатив {{ forloop.counter }}"
+                     class="gallery-item image-item">
+                    <img src="{% get_file_url_tag url startup.startup_id 'creative' %}" alt="Креатив {{ forloop.counter }}" />
+                  </a>
+                {% endfor %}
+              </div>
+            {% else %}
+              <p>Дополнительные медиа-материалы отсутствуют.</p>
+            {% endif %}
+          </div>
+
+          {# Секция ЭТАПЫ (пустая) #}
+          <div id="stages-section" class="content-section">
+            <h2 class="section-title">Этапы</h2>
+            <p>Информация об этапах проекта пока не добавлена.</p>
+            {# Сюда можно будет добавить таймлайн или список этапов #}
+          </div>
+
+          {# Секция ДОКУМЕНТЫ (пустая) #}
+          <div id="documents-section" class="content-section">
+            <h2 class="section-title">Документы</h2>
+            <p>Документы по проекту пока не загружены.</p>
+            {# Сюда можно будет добавить список ссылок на документы #}
+          </div>
+
+          {# Секция УСЛОВИЯ (пустая) #}
+          <div id="conditions-section" class="content-section">
+            <h2 class="section-title">Условия</h2>
+            <p>Информация об условиях инвестирования пока не добавлена.</p>
+            {# Сюда можно будет добавить текст условий #}
+          </div>
+
+          {# Секция КОММЕНТАРИИ (перемещена сюда) #}
+          <div id="comments-section" class="content-section comments-section">
+            <div class="comments-header">
+              <h2 class="section-title">Комментарии <span class="comments-count">({{ comments|length }})</span></h2>
+              <div class="comments-rating-summary">
+                <span class="average-rating-value">{{ average_rating|default:0|floatformat:"1" }}</span>
+                <div class="rating-distribution">
+                  {% for i in "54321" %}
+                  <div class="rating-bar-container">
+                    <span class="star-label">{{ i }} <i class="fas fa-star"></i></span>
+                    <div class="rating-bar">
+                      <div class="rating-bar-fill" style="width: {{ rating_distribution|get_item:i|default:0 }}%;"></div>
                     </div>
-                    <div class="comment-rating">
-                      {% with comment_rating=comment.rating|default:0 %}
-                      {% for star_i in "12345" %}
-                        <i class="fas fa-star {% if star_i|add:"0" <= comment_rating %}active{% endif %}"></i>
-                      {% endfor %}
-                      {% endwith %}
-                    </div>
-                    <div class="comment-date">{{ comment.created_at|date:"d/m/Y" }}</div>
+                    <span class="rating-count">{{ rating_counts|get_item:i|default:0 }}</span>
                   </div>
-                  <div class="comment-body">
-                    <p>{{ comment.content }}</p>
-                  </div>
-                  <div class="comment-footer">
-                    {% if comment.user_id|has_invested:startup %}
-                      <span class="badge badge-invested">Инвестировал</span>
-                    {% endif %}
-                    {% if comment.user_id|is_buyout_investor:startup %}
-                      <span class="badge badge-buyout">Выкуп</span>
-                    {% endif %}
-                  </div>
+                  {% endfor %}
                 </div>
-              {% endfor %}
-              
-              {% if comments|length > 3 %}
-                <button class="show-more-comments">
-                  Показать еще <i class="fas fa-chevron-down"></i>
-                </button>
-                <button class="hide-comments-button" style="display: none;">
-                  Скрыть <i class="fas fa-chevron-up"></i>
-                </button>
-              {% endif %}
+              </div>
             </div>
-          {% else %}
-            <div class="comments-list">
-              <p>Пока нет комментариев. Будьте первым!</p>
-            </div>
-          {% endif %}
-        </div>
-      </div> {# Конец tab-content-container #}
+
+            {% if user.is_authenticated %}
+              <form method="post" class="comment-form">
+                {% csrf_token %}
+                {{ form.content|add_class:"comment-textarea"|attr:"placeholder:Полность комментария..." }}
+                <button type="submit" class="action-button comment-submit primary">Оставить комментарий</button>
+              </form>
+            {% else %}
+              <div class="comment-form">
+                <p>Пожалуйста, <a href="{% url 'login' %}">войдите</a>, чтобы оставить комментарий.</p>
+              </div>
+            {% endif %}
+
+            {% if comments %}
+              <div class="comments-list">
+                {% for comment in comments %}
+                  <div class="comment-card {% if forloop.counter > 3 %}hidden{% endif %}">
+                    <div class="comment-header">
+                      <div class="comment-author-info">
+                        <div class="comment-author-avatar"></div>
+                        <div class="comment-author-name">{{ comment.user_id.first_name|default:comment.user_id.email }}</div>
+                      </div>
+                      <div class="comment-rating">
+                        {% with comment_rating=comment.rating|default:0 %}
+                        {% for star_i in "12345" %}
+                          <i class="fas fa-star {% if star_i|add:"0" <= comment_rating %}active{% endif %}"></i>
+                        {% endfor %}
+                        {% endwith %}
+                      </div>
+                      <div class="comment-date">{{ comment.created_at|date:"d/m/Y" }}</div>
+                    </div>
+                    <div class="comment-body">
+                      <p>{{ comment.content }}</p>
+                    </div>
+                    <div class="comment-footer">
+                      {% if comment.user_id|has_invested:startup %}
+                        <span class="badge badge-invested">Инвестировал</span>
+                      {% endif %}
+                      {% if comment.user_id|is_buyout_investor:startup %}
+                        <span class="badge badge-buyout">Выкуп</span>
+                      {% endif %}
+                    </div>
+                  </div>
+                {% endfor %}
+                
+                {% if comments|length > 3 %}
+                  <button class="show-more-comments">
+                    Показать еще <i class="fas fa-chevron-down"></i>
+                  </button>
+                  <button class="hide-comments-button" style="display: none;">
+                    Скрыть <i class="fas fa-chevron-up"></i>
+                  </button>
+                {% endif %}
+              </div>
+            {% else %}
+              <div class="comments-list">
+                <p>Пока нет комментариев. Будьте первым!</p>
+              </div>
+            {% endif %}
+          </div>
+        </div> {# Конец tab-content-container #}
+      </div> {# Конец tabbed-content-wrapper #}
     </div> {# Конец right-column #}
   </div> {# Конец top-section #}
 

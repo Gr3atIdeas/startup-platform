@@ -316,11 +316,116 @@ a:hover {
 /* Правая колонка */
 .right-column {
     display: flex;
-    /* width: 799px; Убираем фикс. ширину, пусть растягивается */
-    flex-grow: 1; /* Позволяем правой колонке занять оставшееся место */
+    width: 799px; /* Задаем фиксированную ширину */
+    /* flex-grow: 1; */ /* Убираем растягивание */
     flex-direction: column;
     align-items: flex-start;
     gap: 35px; /* Промежуток между блоками в правой колонке */
+}
+
+/* --- Контейнер для табов и контента --- */
+.tabbed-content-wrapper {
+    background-color: var(--secondary-blue, #04112D); /* Темно-синий фон */
+    padding: 25px 30px; /* Внутренние отступы */
+    border-radius: 15px; /* Скругление углов */
+    border: 1px solid var(--border-color, #1D3059); /* Тонкая рамка */
+    width: 100%; /* На всю ширину родителя (.right-column) */
+    box-sizing: border-box;
+}
+
+/* --- ТАБЫ НАВИГАЦИИ (обновленные стили) --- */
+.tab-navigation {
+  display: flex;
+  gap: 25px; /* Промежуток между кнопками-ссылками */
+  /* Убираем старые стили бара */
+  /* align-self: stretch; */
+  /* border-radius: 10px; */
+  /* border: 2px solid rgba(255, 255, 255, 0.50); */
+  margin-bottom: 25px; /* Отступ под табами до контента */
+  /* overflow: hidden; */
+  padding-bottom: 15px; /* Отступ снизу до разделителя */
+  border-bottom: 1px solid var(--border-color, #1D3059); /* Разделитель под табами */
+}
+
+.tab-button {
+  /* flex-grow: 1; */ /* Убираем равное растягивание */
+  padding: 6px 12px; /* Уменьшаем паддинги */
+  background-color: transparent;
+  border: none;
+  color: var(--text-secondary, #A9B8D4); /* По умолчанию серый текст */
+  font-family: 'Circe', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease, border-radius 0.3s ease;
+  white-space: nowrap;
+  border-radius: 8px; /* Небольшое скругление для hover/active */
+}
+
+.tab-button:hover {
+  background-color: rgba(255, 255, 255, 0.05); /* Легкий фон при наведении */
+  color: var(--text-primary, #FFFFFF);
+}
+
+.tab-button.active {
+  background-color: #e9ecef; /* Светло-серый фон активной кнопки */
+  color: var(--primary-dark-blue, #000819); /* Темный текст активной кнопки */
+  font-weight: 700;
+}
+
+/* --- КОНТЕНТ ТАБОВ --- */
+.content-section {
+  display: none;
+}
+
+/* Убираем лишний фон и паддинги у дочерних секций, т.к. есть обертка */
+.content-section.media-section,
+.content-section.about-section,
+.content-section.comments-section {
+    background-color: transparent;
+    padding: 0;
+    margin-top: 0;
+    border-radius: 0;
+    border: none;
+}
+
+/* Стили заголовков внутри секций контента */
+.content-section .section-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--accent-yellow, #FFC85E); /* Желтый цвет заголовков */
+    margin-bottom: 20px;
+    padding-bottom: 0;
+    border-bottom: none; /* Убираем линию под заголовками секций */
+}
+
+/* Доп. стили для секции О проекте, если нужно */
+.content-section#info-section .about-section {
+    margin-top: 30px; /* Отступ между info-blocks и текстом О проекте */
+}
+
+/* Доп. стили для секции комментариев */
+.content-section#comments-section {
+   background-color: var(--background-light, #FFFFFF); /* Белый фон для комментариев */
+   color: var(--primary-dark-blue);
+   border-radius: 15px; /* Возвращаем скругление для блока комм. */
+   padding: 25px 30px; /* Возвращаем паддинги для блока комм. */
+   margin-top: 20px; /* Отступ сверху для блока комм. */
+}
+/* Корректируем цвет заголовка комментариев */
+.content-section#comments-section .section-title {
+    color: var(--primary-dark-blue);
+}
+
+.content-section.active {
+  display: block;
+  animation: fadeInContent 0.5s ease-in-out; /* Плавное появление */
+}
+
+@keyframes fadeInContent {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* Шапка стартапа */
@@ -483,37 +588,6 @@ a:hover {
     font-size: 20px; /* Крупнее */
     font-weight: 700; /* Жирнее */
     color: var(--text-primary);
-}
-
-/* Блок "О проекте" */
-.about-section {
-  margin-top: 40px; /* Отступ сверху */
-  background-color: var(--secondary-blue); /* Фон как у секции комментариев */
-  padding: 30px;
-  border-radius: 15px;
-}
-
-.about-section .section-title {
-  font-size: 24px; /* Крупнее заголовок */
-  font-weight: 700;
-  margin-bottom: 20px; /* Отступ снизу */
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--border-color); /* Линия под заголовком */
-}
-
-.about-section .section-content {
-  color: var(--text-secondary);
-  font-size: 16px;
-  line-height: 1.6;
-}
-
-.about-section .section-content p {
-  margin-bottom: 15px;
-}
-
-.about-section .section-content strong {
-  color: var(--text-primary);
-  font-weight: 600;
 }
 
 /* ======================================== */
