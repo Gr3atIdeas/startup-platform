@@ -18,6 +18,7 @@
   --border-color: #1D3059; /* Цвет границ */
   --danger-red: #F05252; /* Красный */
   --success-green: #36D302; /* Зеленый (для галочки микроинвестиций) */
+  --grey-light: #f8f9fa; /* Светло-серый для фона плейсхолдеров */
 }
 
 body {
@@ -266,9 +267,9 @@ a:hover {
 
 /* Блок автора слева */
 .author-info-left {
-  background-color: var(--dark-card-bg);
-  border-radius: 15px;
+  background-color: var(--secondary-blue);
   padding: 20px;
+  border-radius: 15px;
   display: flex;
   flex-direction: column;
   gap: 12px; /* Меньше отступ */
@@ -276,22 +277,18 @@ a:hover {
 
 .author-header {
   font-size: 14px;
-  color: var(--text-placeholder);
-  font-weight: 400;
+  color: var(--text-secondary);
+  margin-bottom: 15px;
 }
 
 .author-details {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+  gap: 15px;
 }
 
 .author-avatar {
-  width: 44px; /* Чуть больше */
-  height: 44px;
-  border-radius: 50%;
-  background-color: var(--secondary-blue);
-  flex-shrink: 0;
+  width: 50px;
+  height: 50px;
+  background-color: var(--dark-card-bg); /* Плейсхолдер для аватара */
 }
 
 .author-meta {
@@ -300,36 +297,31 @@ a:hover {
 
 .author-name {
   font-size: 16px;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 2px;
+  font-weight: 600;
 }
 
 .author-rating {
   font-size: 13px;
-  color: var(--text-placeholder);
+  color: var(--text-secondary);
 }
 
 .creation-date {
   font-size: 13px;
-  color: var(--text-placeholder);
-  /* text-align: center; */ /* Убираем центрирование */
+  color: var(--text-secondary);
+  margin-top: 10px;
 }
 
 .report-button {
-  background: transparent;
-  border: none;
-  color: var(--text-placeholder);
-  font-size: 13px;
-  text-align: left; /* Слева */
-  cursor: pointer;
-  padding: 5px 0; /* Убираем боковой паддинг */
-  width: auto; /* Не на всю ширину */
-  align-self: flex-start; /* Прижимаем влево */
+  margin-top: 15px;
+  background: none;
+  border: 1px solid var(--danger-red);
+  color: var(--danger-red);
+  width: 100%;
+  font-weight: 400;
 }
 .report-button:hover {
-  color: var(--text-secondary);
-  text-decoration: underline;
+  background-color: rgba(240, 82, 82, 0.1);
+  color: #ff6b6b;
 }
 
 
@@ -389,7 +381,7 @@ a:hover {
 .rating-comments-container {
   display: flex;
   align-items: center;
-  gap: 15px; /* Уменьшим отступ */
+  gap: 20px; /* Увеличить отступ */
   margin-top: 5px;
 }
 
@@ -401,21 +393,23 @@ a:hover {
 
 .rating-label {
   font-size: 14px;
-  color: var(--text-placeholder);
+  color: var(--text-secondary);
 }
 
 .rating-stars i {
-  font-size: 18px; /* Уменьшим звезды */
-  color: #2c3a5f;
+  font-size: 18px; /* Чуть больше звезды */
+  color: var(--text-placeholder); /* Неактивные звезды */
 }
 .rating-stars i.active {
-  color: var(--accent-yellow);
+  color: var(--accent-yellow); /* Активные звезды желтые */
 }
 
 .comments-link {
   font-size: 14px;
-  color: var(--accent-purple);
-  font-weight: 400;
+  color: var(--text-secondary);
+}
+.comments-link:hover {
+  color: var(--text-primary);
 }
 
 /* Действия справа вверху */
@@ -498,45 +492,109 @@ a:hover {
     order: 3;
 }
 .info-block.collected-sum-block .info-block-value {
-    color: var(--accent-purple); /* Выделяем сумму */
+    font-size: 20px; /* Крупнее */
+    font-weight: 700; /* Жирнее */
+    color: var(--text-primary);
 }
 
 /* Блок "О проекте" */
 .about-section {
-  background-color: transparent;
-  border-radius: 0;
-  padding: 0;
-  margin-top: 15px;
+  margin-top: 40px; /* Отступ сверху */
+  background-color: var(--secondary-blue); /* Фон как у секции комментариев */
+  padding: 30px;
+  border-radius: 15px;
 }
 
 .about-section .section-title {
-  font-size: 20px;
+  font-size: 24px; /* Крупнее заголовок */
   font-weight: 700;
-  margin-bottom: 15px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 20px; /* Отступ снизу */
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-color); /* Линия под заголовком */
 }
 
 .about-section .section-content {
-  font-size: 15px;
-  line-height: 1.6;
   color: var(--text-secondary);
+  font-size: 16px;
+  line-height: 1.6;
 }
-.about-section .short-description {
-    /* Убираем курсив */
-    color: var(--text-secondary);
-    margin-bottom: 1.5em;
+
+.about-section .section-content p {
+  margin-bottom: 15px;
+}
+
+.about-section .section-content strong {
+  color: var(--text-primary);
+  font-weight: 600;
 }
 
 /* ======================================== */
 /*         СЕКЦИЯ ГАЛЕРЕИ И ВИДЕО         */
 /* ======================================== */
 .media-section {
-    margin-top: 25px;
-    background-color: var(--dark-card-bg);
-    border-radius: 15px;
-    padding: 20px;
-    border: 1px solid var(--border-color);
+  margin-top: 40px;
+  background-color: var(--secondary-blue); /* Тот же фон */
+  padding: 30px;
+  border-radius: 15px;
+}
+
+.media-section .section-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); /* Адаптивная сетка */
+  gap: 15px;
+}
+
+.gallery-item {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  aspect-ratio: 1 / 1; /* Квадратные превью */
+  background-color: var(--dark-card-bg); /* Фон для плейсхолдеров */
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.gallery-item:hover img {
+  transform: scale(1.05);
+}
+
+.gallery-item.video-item .play-icon-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 8, 25, 0.5);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.gallery-item.video-item:hover .play-icon-overlay {
+  opacity: 1;
+}
+
+.gallery-item .video-placeholder {
+  color: var(--text-secondary);
+  font-size: 14px;
 }
 
 /* ======================================== */
@@ -1266,27 +1324,35 @@ a:hover {
 /* Позиционирование формы статуса (если модератор) */
 .status-form {
     position: absolute;
-    top: 15px;
-    left: 15px;
+    top: 10px;
+    left: 10px;
     z-index: 2;
 }
 .status-select {
     background: rgba(0, 8, 25, 0.7);
-    backdrop-filter: blur(4px);
+    backdrop-filter: blur(5px);
     color: var(--text-primary);
-    padding: 6px 12px;
-    border: 1px solid var(--border-color);
+    padding: 5px 15px;
     border-radius: 20px;
-    font-size: 13px;
-    font-family: 'Gilroy', sans-serif;
+    border: 1px solid var(--border-color);
+    font-size: 14px;
+    font-weight: 400;
     cursor: pointer;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    padding-right: 30px; /* Место для стрелки */
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%23A9B8D4" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 18px;
 }
 .status-select:focus {
     outline: none;
     border-color: var(--accent-purple);
 }
 .status-select option {
-    background: var(--secondary-blue);
+    background-color: var(--secondary-blue);
     color: var(--text-primary);
 }
 
@@ -1325,4 +1391,133 @@ a:hover {
   z-index: 10;
   opacity: 1;
   transition: opacity 0.2s;
+}
+
+/* --- Новый стиль: Блок Стадии --- */
+.info-block.stage-block .info-block-value {
+  /* Стиль значения для стадии, если нужно */
+  font-weight: 600; /* Немного жирнее */
+}
+
+/* --- Обновленные стили: О проекте --- */
+.about-section {
+  margin-top: 40px; /* Отступ сверху */
+  background-color: var(--secondary-blue); /* Фон как у секции комментариев */
+  padding: 30px;
+  border-radius: 15px;
+}
+
+.about-section .section-title {
+  font-size: 24px; /* Крупнее заголовок */
+  font-weight: 700;
+  margin-bottom: 20px; /* Отступ снизу */
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-color); /* Линия под заголовком */
+}
+
+.about-section .section-content {
+  color: var(--text-secondary);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.about-section .section-content p {
+  margin-bottom: 15px;
+}
+
+.about-section .section-content strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* --- Обновленные стили: Медиа секция (Галерея) --- */
+.media-section {
+  margin-top: 40px;
+  background-color: var(--secondary-blue); /* Тот же фон */
+  padding: 30px;
+  border-radius: 15px;
+}
+
+.media-section .section-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); /* Адаптивная сетка */
+  gap: 15px;
+}
+
+.gallery-item {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  aspect-ratio: 1 / 1; /* Квадратные превью */
+  background-color: var(--dark-card-bg); /* Фон для плейсхолдеров */
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.gallery-item:hover img {
+  transform: scale(1.05);
+}
+
+.gallery-item.video-item .play-icon-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 8, 25, 0.5);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.gallery-item.video-item:hover .play-icon-overlay {
+  opacity: 1;
+}
+
+.gallery-item .video-placeholder {
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+/* --- Стили для Fancybox (опционально, для подгонки) --- */
+.fancybox__container {
+  --fancybox-bg: rgba(11, 26, 63, 0.9); /* Полупрозрачный фон */
+  --fancybox-color: var(--text-primary);
+}
+
+.fancybox__toolbar {
+  background: none;
+}
+
+.fancybox__button {
+  color: var(--text-secondary);
+}
+
+.fancybox__button:hover {
+  color: var(--text-primary);
+}
+
+.fancybox__caption {
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 100%);
+  padding: 20px 10px 10px 10px;
+  color: var(--text-primary);
+  font-size: 14px;
 }

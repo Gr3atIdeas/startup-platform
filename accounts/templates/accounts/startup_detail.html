@@ -11,14 +11,17 @@
 {% block head_extra %}
   <link rel="stylesheet" href="{% static 'accounts/css/startup_detail_styles.css' %}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  {# LightGallery CSS #}
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.7.1/css/lightgallery.min.css" integrity="sha512-F2E+YYE1gkt0T5TVajAslgDfTEUQKtlu4ralVq78ViNxhKXQLrgQLLie8u1tVdG2vWnB3ute4hcdbiBtvJQh0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.7.1/css/lg-thumbnail.min.css" integrity="sha512-GRxDpj/bx6/I4y6h2LE5rbGaqRcbTu4dYhaTewlS8Nh9hm/akYprvOTZD7GR+FRCALiKfe8u1gjvWEEGEtoR6g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.7.1/css/lg-video.min.css" integrity="sha512-89gDQOHnYjji90NPJ7+M5tgA/0E+fjL4KuSFhi6tjH6sZ54yUEogPMmOAgbI599fW1CtCyrsJbch8k/QzuoXzw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  {# Fancybox CSS - заменяем LightGallery #}
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css" />
 {% endblock %}
 
 {% block content %}
-<div class="startup-detail-page">
+{# Добавляем data-атрибуты для передачи данных в JS #}
+<div class="startup-detail-page" 
+     data-startup-id="{{ startup.startup_id }}" 
+     data-startup-title="{{ startup.title|escapejs }}"
+     data-user-authenticated="{{ user.is_authenticated|yesno:'true,false' }}"
+     data-user-has-voted="{{ user_has_voted|yesno:'true,false' }}">
   <div class="main-content-grid">
     <div class="back-link-container">
       <a href="{% url 'startups_list' %}" class="back-button">
@@ -101,9 +104,9 @@
             <div class="rating-comments-container">
               <div class="rating-container">
                 <span class="rating-label">Рейтинг: {{ average_rating|floatformat:"1" }}/5</span>
-                <div class="rating-stars" data-rating="{{ average_rating|default:0 }}" {% if user.is_authenticated and not user_has_voted %}data-startup-id="{{ startup.startup_id }}"{% endif %}>
+                <div class="rating-stars" data-rating="{{ average_rating|default:0 }}" {% if user.is_authenticated and not user_has_voted %}data-interactive="true"{% endif %}>
                   {% for i in "12345" %}
-                    <i class="fas fa-star {% if forloop.counter <= average_rating|floatformat:0 %}active{% endif %}" {% if user.is_authenticated and not user_has_voted %}data-rating="{{ forloop.counter }}"{% endif %}></i>
+                    <i class="fas fa-star {% if forloop.counter <= average_rating|floatformat:0 %}active{% endif %}" {% if user.is_authenticated and not user_has_voted %}data-value="{{ forloop.counter }}"{% endif %}></i>
                   {% endfor %}
                 </div>
               </div>
@@ -143,15 +146,21 @@
               <span class="info-block-title">Собранная сумма</span>
               <span class="info-block-value">{{ startup.total_invested|default:0|floatformat:0|intcomma }} ₽</span>
             </div>
+            {# --- Новый блок: Стадия --- #}
+            <div class="info-block stage-block">
+              <i class="fas fa-tasks icon"></i> {# Иконка для стадии, можно изменить #}
+              <span class="info-block-title">Стадия</span>
+              <span class="info-block-value">{{ startup.stage.stage_name|default:"Не указана" }}</span>
+            </div>
           </div>
 
           <div class="about-section">
-            <h2 class="section-title">Вводная</h2>
-            <p class="section-content short-description">
-              {{ startup.description|truncatewords:30 }}
-            </p>
+            {# --- Изменения в секции "О проекте" --- #}
             <h2 class="section-title">О проекте</h2>
-            <div class="section-content full-description">
+            <div class="section-content">
+              {# Показываем "Вводную" как первую часть описания #}
+              <p><strong>Вводная:</strong> {{ startup.description|truncatewords:30 }}</p>
+              <p><strong>Подробное описание:</strong></p>
               {{ startup.description|linebreaksbr }}
               {% if startup.additional_info %}
                 <p><strong>Основные функции:</strong></p>
@@ -160,40 +169,35 @@
             </div>
           </div>
 
-          {# Секция Креативов и Видео #}
+          {# Секция Креативов и Видео - Обновлено для Fancybox #}
           <div class="media-section">
-            {# Выводим сначала видео, если есть #}
-            {% if video_urls %}
-            <div class="video-gallery" id="lightgallery-video"> 
+            <h2 class="section-title">Галерея</h2>
+            {% if video_urls or creatives_urls %}
+              <div class="gallery-grid">
+                {# Выводим сначала видео, если есть #}
                 {% for url in video_urls %}
-                {# LightGallery требует ссылку <a> с data-src для видео #}
-                <a href="{% get_file_url_tag url startup.startup_id 'video' %}" 
-                   data-lg-size="1280-720" {# Пример размера, можно убрать или настроить #}
-                   data-video='{"source": [{"src":"{% get_file_url_tag url startup.startup_id 'video' %}", "type":"video/mp4"}], "attributes": {"preload": false, "playsinline": true, "controls": true}}' 
-                   class="video-thumbnail">
-                    <div class="play-icon"><i class="fas fa-play"></i></div>
-                </a>
+                  <a data-fancybox="gallery"
+                     data-src="{% get_file_url_tag url startup.startup_id 'video' %}"
+                     href="javascript:;"
+                     class="gallery-item video-item">
+                     <div class="play-icon-overlay"><i class="fas fa-play"></i></div>
+                     {# Можно добавить превью для видео, если есть #}
+                     <div class="video-placeholder">Видео</div>
+                  </a>
                 {% endfor %}
-            </div>
-            {% endif %}
 
-            {# Выводим креативы (изображения) #}
-            {% if creatives_urls %}
-            <div class="image-gallery" id="lightgallery-images">
+                {# Выводим креативы (изображения) #}
                 {% for url in creatives_urls %}
-                <a href="{% get_file_url_tag url startup.startup_id 'creative' %}" 
-                   data-lg-size="1600-1200" {# Пример размера #}
-                   class="gallery-thumbnail" 
-                   data-sub-html="<h4>Креатив {{ forloop.counter }}</h4>">
-                    <img src="{% get_file_url_tag url startup.startup_id 'creative' %}" alt="Креатив {{ forloop.counter }}" class="thumbnail-img"/>
-                </a>
+                  <a data-fancybox="gallery"
+                     href="{% get_file_url_tag url startup.startup_id 'creative' %}"
+                     data-caption="Креатив {{ forloop.counter }}"
+                     class="gallery-item image-item">
+                    <img src="{% get_file_url_tag url startup.startup_id 'creative' %}" alt="Креатив {{ forloop.counter }}" />
+                  </a>
                 {% endfor %}
-            </div>
-            {% endif %}
-
-            {# Если нет ни видео, ни креативов #}
-            {% if not video_urls and not creatives_urls %}
-                <p>Дополнительные медиа-материалы отсутствуют.</p>
+              </div>
+            {% else %}
+              <p>Дополнительные медиа-материалы отсутствуют.</p>
             {% endif %}
           </div>
         </div>
@@ -345,275 +349,11 @@
   </div>
 </div>
 
-{# --- РАСКОММЕНТИРОВАНО --- #}
-{# Убираем комментирование всего скрипта #}
-<script>
-  // Добавляем стандартную функцию getCookie для CSRF
-  function getCookie(name) {
-      let cookieValue = null;
-      if (document.cookie && document.cookie !== '') {
-          const cookies = document.cookie.split(';');
-          for (let i = 0; i < cookies.length; i++) {
-              const cookie = cookies[i].trim();
-              // Does this cookie string begin with the name we want?
-              if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                  cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                  break;
-              }
-          }
-      }
-      return cookieValue;
-  }
+{# --- Удаляем весь инлайн скрипт --- #}
+{# Оставляем только ссылки на библиотеки #}
 
-  document.addEventListener('DOMContentLoaded', function() {
-      // Синхронизация прогресс-бара (селекторы могли измениться)
-      const progressFill = document.querySelector('.progress-fill');
-      const progressPercentageSpan = document.querySelector('.progress-percentage');
-      if (progressFill && progressPercentageSpan) {
-        const initialProgress = parseFloat(progressFill.getAttribute('data-progress')) || 0;
-        progressFill.style.width = `${initialProgress}%`;
-        progressPercentageSpan.textContent = `${Math.round(initialProgress)}%`;
-      }
-
-      const ratingStarsDisplay = document.querySelector('.rating-stars[data-rating]');
-      if (ratingStarsDisplay) {
-        const rating = parseFloat(ratingStarsDisplay.getAttribute('data-rating')) || 0;
-        const stars = ratingStarsDisplay.querySelectorAll('i');
-        stars.forEach((star, index) => {
-          star.classList.toggle('active', index < Math.round(rating));
-        });
-      }
-
-      const showMoreCommentsBtn = document.querySelector('.show-more-comments');
-      const hideCommentsBtn = document.querySelector('.hide-comments-button');
-      const commentCards = document.querySelectorAll('.comment-card');
-      const commentsToShow = 3;
-      
-      if (showMoreCommentsBtn && hideCommentsBtn && commentCards.length > commentsToShow) {
-        showMoreCommentsBtn.addEventListener('click', function() {
-          commentCards.forEach((comment, index) => {
-            if (index >= commentsToShow) {
-               comment.classList.remove('hidden');
-            }
-          });
-          this.style.display = 'none';
-          hideCommentsBtn.style.display = 'inline-flex';
-        });
-      
-        hideCommentsBtn.addEventListener('click', function() {
-          commentCards.forEach((comment, index) => {
-            if (index >= commentsToShow) {
-              comment.classList.add('hidden');
-            }
-          });
-          this.style.display = 'none';
-          showMoreCommentsBtn.style.display = 'inline-flex';
-        });
-      } else if (showMoreCommentsBtn) {
-          showMoreCommentsBtn.style.display = 'none'; 
-      }
-
-      document.querySelectorAll('.rating-stars[data-startup-id] i[data-rating]').forEach(star => {
-        star.addEventListener('click', function() {
-          const rating = this.getAttribute('data-rating');
-          const startupId = this.closest('.rating-stars').getAttribute('data-startup-id');
-          const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
-          
-          if (!startupId || !csrfToken) {
-              console.error("Не найден startupId или CSRF токен для голосования.");
-              return;
-          }
-
-          fetch(`/vote/${startupId}/`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-              'X-CSRFToken': csrfToken
-            },
-            body: `rating=${rating}`
-          })
-          .then(response => response.json())
-          .then(data => {
-            if (data.success) {
-               const starsContainer = this.closest('.rating-stars');
-               if (starsContainer) {
-                   starsContainer.removeAttribute('data-startup-id');
-                   const stars = starsContainer.querySelectorAll('i');
-                   stars.forEach((s, index) => {
-                       s.classList.toggle('active', index < Math.round(data.average_rating));
-                       s.removeAttribute('data-rating');
-                   });
-                   const ratingValueElement = document.querySelector('.rating-label');
-                   if (ratingValueElement) {
-                       ratingValueElement.textContent = `Рейтинг: ${data.average_rating.toFixed(1)}/5`;
-                   }
-                   const commentAvgRating = document.querySelector('.comments-rating-summary .average-rating-value');
-                   if (commentAvgRating) {
-                      commentAvgRating.textContent = data.average_rating.toFixed(1);
-                   }
-               }
-            } else {
-              alert(data.error || 'Ошибка при голосовании');
-            }
-          })
-          .catch(error => {
-            console.error('Ошибка:', error);
-            alert('Произошла ошибка при голосовании');
-          });
-        });
-      });
-
-      // Обработчик клика по кнопке "Инвестировать"
-      const investButton = document.querySelector('.invest-button');
-      const modal = document.getElementById('investModal');
-      const modalText = document.getElementById('modalText');
-      const confirmInvest = document.getElementById('confirmInvest');
-      const cancelInvest = document.getElementById('cancelInvest');
-      let investAmount = 0;
-      let investStartupId = 0;
-
-      if (investButton && !investButton.disabled) {
-        console.log('Кнопка "Инвестировать" найдена и активна');
-        investButton.addEventListener('click', function() {
-          const amountInput = document.querySelector('.investment-amount');
-          investAmount = amountInput.value;
-          const ratingStarsElement = document.querySelector('.rating-stars');
-          const startupElementForId = document.querySelector('[data-startup-id]');
-          if (startupElementForId) {
-              investStartupId = startupElementForId.getAttribute('data-startup-id');
-          } else {
-              investStartupId = '{{ startup.startup_id|default:0 }}';
-              console.warn("Не удалось найти data-startup-id на странице, используется ID из Django.");
-          }
-          console.log('Сумма:', investAmount, 'Startup ID:', investStartupId);
-
-          if (!investAmount || investAmount <= 0) {
-            alert('Пожалуйста, введите сумму инвестиций больше 0');
-            console.log('Сумма некорректна');
-            return;
-          }
-
-          // Показать модальное окно
-          const formattedAmount = parseFloat(investAmount).toLocaleString('ru-RU');
-          modalText.innerHTML = `Вы собираетесь инвестировать ${formattedAmount} ₽ в стартап \"{{ startup.title|escapejs }}\". Подтвердите действие.`;
-          modal.style.display = 'flex';
-        });
-      }
-
-      // Обработка клика на кнопку подтверждения в модальном окне
-      confirmInvest.addEventListener('click', function() {
-        modal.style.display = 'none';
-        // Отправка AJAX запроса на инвестирование
-        fetch(`/invest/${investStartupId}/`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'X-CSRFToken': getCookie('csrftoken')
-          },
-          body: `amount=${investAmount}`
-        })
-        .then(response => response.json())
-        .then(data => {
-          if (data.success) {
-            // Обновление данных на странице
-            const progressBarFill = document.querySelector('.progress-bar-fill');
-            const progressText = document.querySelector('.progress-text');
-            const investorsCountElement = document.querySelector('.investors-count span');
-            const totalInvestedElement = document.querySelector('.total-invested');
-
-            if (progressBarFill) {
-                progressBarFill.style.width = `${Math.round(data.progress_percentage)}%`;
-            }
-            if (progressText) {
-                progressText.textContent = `${Math.round(data.progress_percentage)}%`;
-            }
-
-            if (investorsCountElement) {
-                investorsCountElement.textContent = `(${data.investors_count})`;
-            }
-
-            if (totalInvestedElement) {
-              const formattedRaised = parseFloat(data.amount_raised).toLocaleString('ru-RU');
-              totalInvestedElement.textContent = `${formattedRaised} ₽`;
-            }
-
-            const amountInput = document.querySelector('.investment-amount');
-            if (amountInput) amountInput.value = '';
-
-            alert('Инвестиция успешно совершена!');
-          } else {
-            alert('Ошибка инвестирования: ' + data.error);
-          }
-        })
-        .catch(error => {
-          console.error('Ошибка:', error);
-          alert('Произошла ошибка сети.');
-        });
-      });
-
-      // Отмена инвестиции
-      cancelInvest.addEventListener('click', function() {
-        modal.style.display = 'none';
-      });
-
-      // Закрытие модального окна по клику вне области
-      modal.addEventListener('click', function(e) {
-        if (e.target === modal) {
-          modal.style.display = 'none';
-        }
-      });
-
-      // --- LightGallery Initialization --- #}
-      {# Раскомментируем блок инициализации LightGallery #}
-      // ---- НАЧАЛО БЛОКА LG ----
-      try {
-          console.log('Initializing LightGallery...'); // Debug log
-
-          const galleryImages = document.getElementById('lightgallery-images');
-          if (galleryImages) {
-              console.log('Found image gallery container'); // Debug log
-              lightGallery(galleryImages, {
-                  plugins: [lgThumbnail],
-                  thumbnail: true,
-                  selector: 'a',
-                  licenseKey: 'YOUR_LICENSE_KEY', // TODO: Добавьте ваш ключ, если есть
-                  speed: 500,
-                  download: false
-                  // Другие опции: https://www.lightgalleryjs.com/docs/settings/
-              });
-              console.log('Image gallery initialized'); // Debug log
-          } else {
-              console.log('Image gallery container (#lightgallery-images) not found'); // Debug log
-          }
-
-          const galleryVideo = document.getElementById('lightgallery-video');
-          if (galleryVideo) {
-              console.log('Found video gallery container'); // Debug log
-              lightGallery(galleryVideo, {
-                  plugins: [lgVideo],
-                  selector: 'a', // Видео-ссылки
-                  licenseKey: 'YOUR_LICENSE_KEY', // TODO: Добавьте ваш ключ, если есть
-                  download: false
-                  // Видео опции: https://www.lightgalleryjs.com/docs/video-gallery/
-              });
-              console.log('Video gallery initialized'); // Debug log
-          } else {
-              console.log('Video gallery container (#lightgallery-video) not found'); // Debug log
-          }
-
-      } catch (error) {
-          console.error('Error initializing LightGallery:', error); // Log any errors during init
-      }
-      // ---- КОНЕЦ БЛОКА LG ----
-      {# --- Конец LightGallery Initialization --- #}
-
-     }); // Конец DOMContentLoaded
-  </script>
-{# Убираем закрывающий комментарий #}
-{# #}
-
-{# LightGallery JS #}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.7.1/lightgallery.min.js" integrity="sha512-dSI4QnNeaXiNEjX2N8bkb16B7aMu/8SI5/rE6NIa3Hr/HnWUO+EAZpizN2JQJrXuvU7z0HTgpBVk/sfGd0oW+w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.7.1/plugins/thumbnail/lg-thumbnail.min.js" integrity="sha512-Jx+orEb1KJtJ6Ajfshhr7is0zqgUC7H9ylk76KMtB9Ea2WAf/Muyzpe9zvBAYQQQKdAbj+rNYEorsRQLsmRafA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/2.7.1/plugins/video/lg-video.min.js" integrity="sha512-mjdf6tU1Mksu9Hq2YXfbxdzzYHU7SJYmAsMnrhBf80SkHFvk6eHa2d79JM0q5w5ft5nQyBQ0EMB+XTmnvhcFgA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+{# --- Fancybox JS - заменяем LightGallery --- #}
+<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+{# --- Наш основной скрипт --- #}
+<script src="{% static 'accounts/js/startup_detail.js' %}" defer></script>
 {% endblock %}
