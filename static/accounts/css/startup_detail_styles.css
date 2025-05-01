@@ -52,7 +52,7 @@ a:hover {
   max-width: 1440px; /* Общая ширина контейнера */
   width: 100%;
   margin: 0 auto; /* Центрирование */
-  padding: 40px 70px; /* Отступы сверху/снизу и по 70px по бокам */
+  padding: 40px 70px; /* Отступы сверху/снизу 40px, по бокам 70px - УЖЕ УСТАНОВЛЕНО */
   box-sizing: border-box;
 }
 
@@ -164,7 +164,7 @@ a:hover {
 
 .top-section {
   display: flex;
-  gap: 30px; /* Отступ между колонками как на макете */
+  gap: 40px; /* Отступ между колонками как на макете */
   margin-bottom: 40px;
 }
 
@@ -176,7 +176,7 @@ a:hover {
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  gap: 20px; /* Отступы между элементами */
+  gap: 25px; /* Отступы между элементами */
 }
 
 .planet-container {
@@ -273,6 +273,7 @@ a:hover {
   display: flex;
   flex-direction: column;
   gap: 12px; /* Меньше отступ */
+  margin-bottom: 10px; /* Добавим немного воздуха снизу */
 }
 
 .author-header {
@@ -312,7 +313,7 @@ a:hover {
 }
 
 .report-button {
-  margin-top: 15px;
+  margin-top: 20px;
   background: none;
   border: 1px solid var(--danger-red);
   color: var(--danger-red);
@@ -341,6 +342,7 @@ a:hover {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  margin-bottom: 20px;
 }
 
 .startup-name {
@@ -449,7 +451,7 @@ a:hover {
 .info-blocks {
   display: grid;
   grid-template-columns: repeat(4, 1fr); /* Всегда 4 колонки */
-  gap: 15px; /* Меньше отступ */
+  gap: 20px; /* Меньше отступ */
 }
 
 .info-block {
@@ -1497,22 +1499,74 @@ a:hover {
   font-size: 14px;
 }
 
-/* --- Стили для Fancybox (опционально, для подгонки) --- */
+/* --- Стили для Fancybox (Улучшенные кнопки) --- */
 .fancybox__container {
   --fancybox-bg: rgba(11, 26, 63, 0.9); /* Полупрозрачный фон */
   --fancybox-color: var(--text-primary);
+  /* Переменные для кнопок */
+  --fancybox-button-bg: transparent;
+  --fancybox-button-hover-bg: rgba(255, 255, 255, 0.1);
+  --fancybox-button-color: var(--text-secondary);
+  --fancybox-button-hover-color: var(--text-primary);
+  --fancybox-button-active-bg: rgba(255, 255, 255, 0.15);
 }
 
 .fancybox__toolbar {
   background: none;
 }
 
+/* Общие стили для кнопок */
 .fancybox__button {
-  color: var(--text-secondary);
+  /* Убираем стандартный SVG фон */
+  background: var(--fancybox-button-bg);
+  color: var(--fancybox-button-color);
+  border-radius: 50%;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  padding: 0;
+  width: 44px; /* Размер кнопки */
+  height: 44px;
+  display: inline-flex; /* Центрируем иконку */
+  align-items: center;
+  justify-content: center;
 }
 
 .fancybox__button:hover {
-  color: var(--text-primary);
+  background: var(--fancybox-button-hover-bg);
+  color: var(--fancybox-button-hover-color);
+}
+
+.fancybox__button:active {
+  background: var(--fancybox-button-active-bg);
+}
+
+/* Убираем стандартные SVG иконки */
+.fancybox__button svg {
+  display: none;
+}
+
+/* Добавляем Font Awesome иконки */
+.fancybox__button::before {
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  font-size: 18px; /* Размер иконки */
+  line-height: 1;
+}
+
+.fancybox__button--close::before {
+  content: "\f00d"; /* fa-times */
+}
+
+.fancybox__button--prev::before {
+  content: "\f053"; /* fa-chevron-left */
+}
+
+.fancybox__button--next::before {
+  content: "\f054"; /* fa-chevron-right */
+}
+
+/* Счетчик слайдов */
+.fancybox__counter {
+    color: var(--text-secondary);
 }
 
 .fancybox__caption {
