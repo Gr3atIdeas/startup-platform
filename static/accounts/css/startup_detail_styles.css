@@ -987,7 +987,8 @@ a:hover {
 
 /* Модальное окно инвестиций (немного адаптируем под темную тему) */
 .modal {
-  /* display: none; */ /* Управляется JS */
+  /* display: none; */ /* Управляется JS - ВОЗВРАЩАЕМ ЭТО! */
+  display: none;
   /* ... остальное без изменений ... */
   background-color: rgba(0, 8, 25, 0.7); /* Затемненный фон */
   position: fixed;
@@ -1281,10 +1282,10 @@ a:hover {
     padding: 0;
     background: none;
 }
-.detail-content { /* Убираем старые стили */
-    max-width: calc(100% - 140px); /* Учитываем отступы по 70px */
-    margin: 0 auto; /* Центрирование */
-    padding: 0 70px; /* Добавляем отступы */
+.detail-content { /* Убираем старые стили И max-width/margin */
+    /* max-width: calc(100% - 140px); */ /* Убираем ограничение ширины */
+    /* margin: 0 auto; */ /* Убираем центрирование */
+    padding: 0 70px; /* Оставляем только боковые отступы */
     box-sizing: border-box; /* Чтобы padding не увеличивал ширину */
 }
 
