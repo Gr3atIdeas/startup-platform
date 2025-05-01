@@ -22,267 +22,265 @@
      data-startup-title="{{ startup.title|escapejs }}"
      data-user-authenticated="{{ user.is_authenticated|yesno:'true,false' }}"
      data-user-has-voted="{{ user_has_voted|yesno:'true,false' }}">
-  <div class="main-content-grid">
-    <div class="back-link-container">
-      <a href="{% url 'startups_list' %}" class="back-button">
-        <i class="fas fa-arrow-left"></i> Назад
-      </a>
-    </div>
+  <div class="back-link-container">
+    <a href="{% url 'startups_list' %}" class="back-button">
+      <i class="fas fa-arrow-left"></i> Назад
+    </a>
+  </div>
 
-    <div class="detail-content">
-      <div class="top-section">
-        <div class="left-column">
-          <div class="planet-container">
-            {% if user.is_authenticated and user.role.role_name == 'moderator' %}
-              <form method="post" class="status-form">
-                {% csrf_token %}
-                <select name="status" class="status-select" onchange="this.form.submit()">
-                  <option value="approved" {% if startup.status == 'approved' %}selected{% endif %}>Активен</option>
-                  <option value="blocked" {% if startup.status == 'blocked' %}selected{% endif %}>Blocked</option>
-                  <option value="closed" {% if startup.status == 'closed' %}selected{% endif %}>Closed</option>
-                </select>
-              </form>
-            {% else %}
-              {% if startup.status == 'approved' %}
-                <div class="status-badge">Активен</div>
-              {% elif startup.status == 'blocked' %}
-                <div class="status-badge">Blocked</div>
-              {% elif startup.status == 'closed' %}
-                <div class="status-badge">Closed</div>
-              {% endif %}
+  <div class="detail-content">
+    <div class="top-section">
+      <div class="left-column">
+        <div class="planet-container">
+          {% if user.is_authenticated and user.role.role_name == 'moderator' %}
+            <form method="post" class="status-form">
+              {% csrf_token %}
+              <select name="status" class="status-select" onchange="this.form.submit()">
+                <option value="approved" {% if startup.status == 'approved' %}selected{% endif %}>Активен</option>
+                <option value="blocked" {% if startup.status == 'blocked' %}selected{% endif %}>Blocked</option>
+                <option value="closed" {% if startup.status == 'closed' %}selected{% endif %}>Closed</option>
+              </select>
+            </form>
+          {% else %}
+            {% if startup.status == 'approved' %}
+              <div class="status-badge">Активен</div>
+            {% elif startup.status == 'blocked' %}
+              <div class="status-badge">Blocked</div>
+            {% elif startup.status == 'closed' %}
+              <div class="status-badge">Closed</div>
             {% endif %}
-            
-            {% if startup.logo_urls %}
-              <img src="{% get_file_url_tag logo_urls.0 startup.startup_id 'logo' %}" alt="Логотип" class="logo-preview">
-            {% else %}
-              <div class="planet">
-                <div class="planet-segment segment-top" style="background-color: {{ startup.planet_top_color|default:'#7B61FF' }};"></div>
-                <div class="planet-segment segment-middle" style="background-color: {{ startup.planet_middle_color|default:'#6B51DF' }};"></div>
-                <div class="planet-segment segment-bottom" style="background-color: {{ startup.planet_bottom_color|default:'#5B41BF' }};"></div>
-              </div>
-            {% endif %}
-            <button class="action-button chat-button">Чат</button>
-          </div>
+          {% endif %}
           
-          <div class="progress-container">
-            <div class="progress-bar">
-              <div class="progress-fill" data-progress="{{ progress_percentage|default:0 }}" style="width: {{ progress_percentage|default:0 }}%;"></div>
+          {% if startup.logo_urls %}
+            <img src="{% get_file_url_tag logo_urls.0 startup.startup_id 'logo' %}" alt="Логотип" class="logo-preview">
+          {% else %}
+            <div class="planet">
+              <div class="planet-segment segment-top" style="background-color: {{ startup.planet_top_color|default:'#7B61FF' }};"></div>
+              <div class="planet-segment segment-middle" style="background-color: {{ startup.planet_middle_color|default:'#6B51DF' }};"></div>
+              <div class="planet-segment segment-bottom" style="background-color: {{ startup.planet_bottom_color|default:'#5B41BF' }};"></div>
             </div>
-            <div class="progress-info">
-              <span class="progress-percentage">{{ progress_percentage|default:0|floatformat:0 }}%</span>
-              <span class="progress-backers">({{ investors_count }})</span>
-            </div>
+          {% endif %}
+          <button class="action-button chat-button">Чат</button>
+        </div>
+        
+        <div class="progress-container">
+          <div class="progress-bar">
+            <div class="progress-fill" data-progress="{{ progress_percentage|default:0 }}" style="width: {{ progress_percentage|default:0 }}%;"></div>
           </div>
-          
-          <div class="author-info-left">
-            <div class="author-header">Автор</div>
-            <div class="author-details">
-              <div class="author-avatar">
-                {# <img src="{{ startup.owner.avatar_url }}" alt="{{ startup.owner.first_name }}"> #}
-              </div>
-              <div class="author-meta">
-                <div class="author-name">{{ startup.owner.first_name|default:"Виктор" }}</div>
-                <div class="author-rating">Рейтинг {{ average_rating|floatformat:"1" }}/5</div>
-                {# <div class="author-reviews">Отзывы</div> #}
-              </div>
-              <button class="action-button write-author-button">Написать</button>
-            </div>
-            <div class="creation-date">Создан {{ startup.created_at|date:"d/m/Y" }}</div>
-            <button class="report-button">Пожаловаться</button>
+          <div class="progress-info">
+            <span class="progress-percentage">{{ progress_percentage|default:0|floatformat:0 }}%</span>
+            <span class="progress-backers">({{ investors_count }})</span>
           </div>
         </div>
         
-        <div class="right-column">
-          <div class="startup-header">
-            <h1 class="startup-name">{{ startup.title }}</h1>
-            <div class="header-meta">
-              <span class="category-label">Категория: <span class="category-value">{{ startup.direction.direction_name|default:"Медицина" }}</span></span>
-              <span class="investment-type">
-                <i class="fas fa-check-circle"></i> Микроинвестиции
-              </span>
+        <div class="author-info-left">
+          <div class="author-header">Автор</div>
+          <div class="author-details">
+            <div class="author-avatar">
+              {# <img src="{{ startup.owner.avatar_url }}" alt="{{ startup.owner.first_name }}"> #}
             </div>
-            <div class="rating-comments-container">
-              <div class="rating-container">
-                <span class="rating-label">Рейтинг: {{ average_rating|floatformat:"1" }}/5</span>
-                <div class="rating-stars" data-rating="{{ average_rating|default:0 }}" {% if user.is_authenticated and not user_has_voted %}data-interactive="true"{% endif %}>
-                  {% for i in "12345" %}
-                    <i class="fas fa-star {% if forloop.counter <= average_rating|floatformat:0 %}active{% endif %}" {% if user.is_authenticated and not user_has_voted %}data-value="{{ forloop.counter }}"{% endif %}></i>
-                  {% endfor %}
-                </div>
-              </div>
-              <a href="#comments-section" class="comments-link">Комментарии</a>
+            <div class="author-meta">
+              <div class="author-name">{{ startup.owner.first_name|default:"Виктор" }}</div>
+              <div class="author-rating">Рейтинг {{ average_rating|floatformat:"1" }}/5</div>
+              {# <div class="author-reviews">Отзывы</div> #}
             </div>
+            <button class="action-button write-author-button">Написать</button>
           </div>
+          <div class="creation-date">Создан {{ startup.created_at|date:"d/m/Y" }}</div>
+          <button class="report-button">Пожаловаться</button>
+        </div>
+      </div>
+      
+      <div class="right-column">
+        <div class="startup-header">
+          <h1 class="startup-name">{{ startup.title }}</h1>
+          <div class="header-meta">
+            <span class="category-label">Категория: <span class="category-value">{{ startup.direction.direction_name|default:"Медицина" }}</span></span>
+            <span class="investment-type">
+              <i class="fas fa-check-circle"></i> Микроинвестиции
+            </span>
+          </div>
+          <div class="rating-comments-container">
+            <div class="rating-container">
+              <span class="rating-label">Рейтинг: {{ average_rating|floatformat:"1" }}/5</span>
+              <div class="rating-stars" data-rating="{{ average_rating|default:0 }}" {% if user.is_authenticated and not user_has_voted %}data-interactive="true"{% endif %}>
+                {% for i in "12345" %}
+                  <i class="fas fa-star {% if forloop.counter <= average_rating|floatformat:0 %}active{% endif %}" {% if user.is_authenticated and not user_has_voted %}data-value="{{ forloop.counter }}"{% endif %}></i>
+                {% endfor %}
+              </div>
+            </div>
+            <a href="#comments-section" class="comments-link">Комментарии</a>
+          </div>
+        </div>
 
-          <div class="actions-top-right">
-            <div class="investment-info-badge">Инвестирование: Выкуп</div>
-            {% if user.is_authenticated and startup.owner == user %}
-              <button class="action-button edit-button">Редактировать</button>
-              <button class="action-button sell-button primary">Продать активы</button>
-            {% elif user.is_authenticated and user.role.role_name == 'investor' %}
-              <button class="action-button invest-button primary" 
-                      {% if startup.status == 'blocked' or startup.status == 'closed' %}
-                        disabled 
-                        title="{% if startup.status == 'blocked' %}Инвестирование запрещено: стартап заблокирован{% else %}Инвестирование запрещено: стартап закрыт{% endif %}"
-                      {% endif %}>
-                Инвестировать
-              </button>
-              <input type="number" class="investment-amount" placeholder="Сумма, ₽" min="0" step="1000">
+        <div class="actions-top-right">
+          <div class="investment-info-badge">Инвестирование: Выкуп</div>
+          {% if user.is_authenticated and startup.owner == user %}
+            <button class="action-button edit-button">Редактировать</button>
+            <button class="action-button sell-button primary">Продать активы</button>
+          {% elif user.is_authenticated and user.role.role_name == 'investor' %}
+            <button class="action-button invest-button primary" 
+                    {% if startup.status == 'blocked' or startup.status == 'closed' %}
+                      disabled 
+                      title="{% if startup.status == 'blocked' %}Инвестирование запрещено: стартап заблокирован{% else %}Инвестирование запрещено: стартап закрыт{% endif %}"
+                    {% endif %}>
+              Инвестировать
+            </button>
+            <input type="number" class="investment-amount" placeholder="Сумма, ₽" min="0" step="1000">
+          {% endif %}
+        </div>
+
+        <div class="info-blocks">
+          <div class="info-block presentation-block">
+            <i class="fas fa-file-alt icon"></i>
+            <span class="info-block-title">Презентация</span>
+            {% if startup.pitch_deck_url %}
+              <a href="{{ startup.pitch_deck_url }}" target="_blank" class="action-button view-button">Смотреть</a>
+            {% else %}
+              <button class="action-button view-button" disabled>Смотреть</button>
             {% endif %}
           </div>
-
-          <div class="info-blocks">
-            <div class="info-block presentation-block">
-              <i class="fas fa-file-alt icon"></i>
-              <span class="info-block-title">Презентация</span>
-              {% if startup.pitch_deck_url %}
-                <a href="{{ startup.pitch_deck_url }}" target="_blank" class="action-button view-button">Смотреть</a>
-              {% else %}
-                <button class="action-button view-button" disabled>Смотреть</button>
-              {% endif %}
-            </div>
-            <div class="info-block collected-sum-block">
-              <i class="fas fa-coins icon"></i>
-              <span class="info-block-title">Собранная сумма</span>
-              <span class="info-block-value">{{ startup.total_invested|default:0|floatformat:0|intcomma }} ₽</span>
-            </div>
-            {# --- Новый блок: Стадия --- #}
-            <div class="info-block stage-block">
-              <i class="fas fa-tasks icon"></i> {# Иконка для стадии, можно изменить #}
-              <span class="info-block-title">Стадия</span>
-              <span class="info-block-value">{{ startup.stage.stage_name|default:"Не указана" }}</span>
-            </div>
+          <div class="info-block collected-sum-block">
+            <i class="fas fa-coins icon"></i>
+            <span class="info-block-title">Собранная сумма</span>
+            <span class="info-block-value">{{ startup.total_invested|default:0|floatformat:0|intcomma }} ₽</span>
           </div>
-
-          <div class="about-section">
-            {# --- Изменения в секции "О проекте" --- #}
-            <h2 class="section-title">О проекте</h2>
-            <div class="section-content">
-              {# Показываем "Вводную" как первую часть описания #}
-              <p><strong>Вводная:</strong> {{ startup.description|truncatewords:30 }}</p>
-              <p><strong>Подробное описание:</strong></p>
-              {{ startup.description|linebreaksbr }}
-              {% if startup.additional_info %}
-                <p><strong>Основные функции:</strong></p>
-                {{ startup.additional_info|linebreaksbr }}
-              {% endif %}
-            </div>
+          {# --- Новый блок: Стадия --- #}
+          <div class="info-block stage-block">
+            <i class="fas fa-tasks icon"></i> {# Иконка для стадии, можно изменить #}
+            <span class="info-block-title">Стадия</span>
+            <span class="info-block-value">{{ startup.stage.stage_name|default:"Не указана" }}</span>
           </div>
+        </div>
 
-          {# Секция Креативов и Видео - Обновлено для Fancybox #}
-          <div class="media-section">
-            <h2 class="section-title">Галерея</h2>
-            {% if video_urls or creatives_urls %}
-              <div class="gallery-grid">
-                {# Выводим сначала видео, если есть #}
-                {% for url in video_urls %}
-                  <a data-fancybox="gallery"
-                     {# Используем href для источника видео #}
-                     href="{% get_file_url_tag url startup.startup_id 'video' %}"
-                     {# data-src="{% get_file_url_tag url startup.startup_id 'video' %}" #}
-                     {# href="javascript:;" #}
-                     class="gallery-item video-item">
-                     <div class="play-icon-overlay"><i class="fas fa-play"></i></div>
-                     {# Можно добавить превью для видео, если есть #}
-                     <div class="video-placeholder">Видео</div>
-                  </a>
-                {% endfor %}
-
-                {# Выводим креативы (изображения) #}
-                {% for url in creatives_urls %}
-                  <a data-fancybox="gallery"
-                     href="{% get_file_url_tag url startup.startup_id 'creative' %}"
-                     data-caption="Креатив {{ forloop.counter }}"
-                     class="gallery-item image-item">
-                    <img src="{% get_file_url_tag url startup.startup_id 'creative' %}" alt="Креатив {{ forloop.counter }}" />
-                  </a>
-                {% endfor %}
-              </div>
-            {% else %}
-              <p>Дополнительные медиа-материалы отсутствуют.</p>
+        <div class="about-section">
+          {# --- Изменения в секции "О проекте" --- #}
+          <h2 class="section-title">О проекте</h2>
+          <div class="section-content">
+            {# Показываем "Вводную" как первую часть описания #}
+            <p><strong>Вводная:</strong> {{ startup.description|truncatewords:30 }}</p>
+            <p><strong>Подробное описание:</strong></p>
+            {{ startup.description|linebreaksbr }}
+            {% if startup.additional_info %}
+              <p><strong>Основные функции:</strong></p>
+              {{ startup.additional_info|linebreaksbr }}
             {% endif %}
           </div>
         </div>
-      </div>
 
-      <div id="comments-section" class="comments-section">
-        <div class="comments-header">
-          <h2 class="section-title">Комментарии <span class="comments-count">({{ comments|length }})</span></h2>
-          <div class="comments-rating-summary">
-            <span class="average-rating-value">{{ average_rating|default:0|floatformat:"1" }}</span>
-            <div class="rating-distribution">
-              {% for i in "54321" %}
-              <div class="rating-bar-container">
-                <span class="star-label">{{ i }} <i class="fas fa-star"></i></span>
-                <div class="rating-bar">
-                  <div class="rating-bar-fill" style="width: {{ rating_distribution|get_item:i|default:0 }}%;"></div>
-                </div>
-                <span class="rating-count">{{ rating_counts|get_item:i|default:0 }}</span>
-              </div>
+        {# Секция Креативов и Видео - Обновлено для Fancybox #}
+        <div class="media-section">
+          <h2 class="section-title">Галерея</h2>
+          {% if video_urls or creatives_urls %}
+            <div class="gallery-grid">
+              {# Выводим сначала видео, если есть #}
+              {% for url in video_urls %}
+                <a data-fancybox="gallery"
+                   {# Используем href для источника видео #}
+                   href="{% get_file_url_tag url startup.startup_id 'video' %}"
+                   {# data-src="{% get_file_url_tag url startup.startup_id 'video' %}" #}
+                   {# href="javascript:;" #}
+                   class="gallery-item video-item">
+                   <div class="play-icon-overlay"><i class="fas fa-play"></i></div>
+                   {# Можно добавить превью для видео, если есть #}
+                   <div class="video-placeholder">Видео</div>
+                </a>
+              {% endfor %}
+
+              {# Выводим креативы (изображения) #}
+              {% for url in creatives_urls %}
+                <a data-fancybox="gallery"
+                   href="{% get_file_url_tag url startup.startup_id 'creative' %}"
+                   data-caption="Креатив {{ forloop.counter }}"
+                   class="gallery-item image-item">
+                  <img src="{% get_file_url_tag url startup.startup_id 'creative' %}" alt="Креатив {{ forloop.counter }}" />
+                </a>
               {% endfor %}
             </div>
+          {% else %}
+            <p>Дополнительные медиа-материалы отсутствуют.</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div id="comments-section" class="comments-section">
+      <div class="comments-header">
+        <h2 class="section-title">Комментарии <span class="comments-count">({{ comments|length }})</span></h2>
+        <div class="comments-rating-summary">
+          <span class="average-rating-value">{{ average_rating|default:0|floatformat:"1" }}</span>
+          <div class="rating-distribution">
+            {% for i in "54321" %}
+            <div class="rating-bar-container">
+              <span class="star-label">{{ i }} <i class="fas fa-star"></i></span>
+              <div class="rating-bar">
+                <div class="rating-bar-fill" style="width: {{ rating_distribution|get_item:i|default:0 }}%;"></div>
+              </div>
+              <span class="rating-count">{{ rating_counts|get_item:i|default:0 }}</span>
+            </div>
+            {% endfor %}
           </div>
         </div>
-
-        {% if user.is_authenticated %}
-          <form method="post" class="comment-form">
-            {% csrf_token %}
-            {{ form.content|add_class:"comment-textarea"|attr:"placeholder:Полность комментария..." }}
-            <button type="submit" class="action-button comment-submit primary">Оставить комментарий</button>
-          </form>
-        {% else %}
-          <div class="comment-form">
-            <p>Пожалуйста, <a href="{% url 'login' %}">войдите</a>, чтобы оставить комментарий.</p>
-          </div>
-        {% endif %}
-
-        {% if comments %}
-          <div class="comments-list">
-            {% for comment in comments %}
-              <div class="comment-card {% if forloop.counter > 3 %}hidden{% endif %}">
-                <div class="comment-header">
-                  <div class="comment-author-info">
-                    <div class="comment-author-avatar"></div>
-                    <div class="comment-author-name">{{ comment.user_id.first_name|default:comment.user_id.email }}</div>
-                  </div>
-                  <div class="comment-rating">
-                    {% with comment_rating=comment.rating|default:0 %}
-                    {% for star_i in "12345" %}
-                      <i class="fas fa-star {% if star_i|add:"0" <= comment_rating %}active{% endif %}"></i>
-                    {% endfor %}
-                    {% endwith %}
-                  </div>
-                  <div class="comment-date">{{ comment.created_at|date:"d/m/Y" }}</div>
-                </div>
-                <div class="comment-body">
-                  <p>{{ comment.content }}</p>
-                </div>
-                <div class="comment-footer">
-                  {% if comment.user_id|has_invested:startup %}
-                    <span class="badge badge-invested">Инвестировал</span>
-                  {% endif %}
-                  {% if comment.user_id|is_buyout_investor:startup %}
-                    <span class="badge badge-buyout">Выкуп</span>
-                  {% endif %}
-                </div>
-              </div>
-            {% endfor %}
-            
-            {% if comments|length > 3 %}
-              <button class="show-more-comments">
-                Показать еще <i class="fas fa-chevron-down"></i>
-              </button>
-              <button class="hide-comments-button" style="display: none;">
-                Скрыть <i class="fas fa-chevron-up"></i>
-              </button>
-            {% endif %}
-          </div>
-        {% else %}
-          <div class="comments-list">
-            <p>Пока нет комментариев. Будьте первым!</p>
-          </div>
-        {% endif %}
       </div>
+
+      {% if user.is_authenticated %}
+        <form method="post" class="comment-form">
+          {% csrf_token %}
+          {{ form.content|add_class:"comment-textarea"|attr:"placeholder:Полность комментария..." }}
+          <button type="submit" class="action-button comment-submit primary">Оставить комментарий</button>
+        </form>
+      {% else %}
+        <div class="comment-form">
+          <p>Пожалуйста, <a href="{% url 'login' %}">войдите</a>, чтобы оставить комментарий.</p>
+        </div>
+      {% endif %}
+
+      {% if comments %}
+        <div class="comments-list">
+          {% for comment in comments %}
+            <div class="comment-card {% if forloop.counter > 3 %}hidden{% endif %}">
+              <div class="comment-header">
+                <div class="comment-author-info">
+                  <div class="comment-author-avatar"></div>
+                  <div class="comment-author-name">{{ comment.user_id.first_name|default:comment.user_id.email }}</div>
+                </div>
+                <div class="comment-rating">
+                  {% with comment_rating=comment.rating|default:0 %}
+                  {% for star_i in "12345" %}
+                    <i class="fas fa-star {% if star_i|add:"0" <= comment_rating %}active{% endif %}"></i>
+                  {% endfor %}
+                  {% endwith %}
+                </div>
+                <div class="comment-date">{{ comment.created_at|date:"d/m/Y" }}</div>
+              </div>
+              <div class="comment-body">
+                <p>{{ comment.content }}</p>
+              </div>
+              <div class="comment-footer">
+                {% if comment.user_id|has_invested:startup %}
+                  <span class="badge badge-invested">Инвестировал</span>
+                {% endif %}
+                {% if comment.user_id|is_buyout_investor:startup %}
+                  <span class="badge badge-buyout">Выкуп</span>
+                {% endif %}
+              </div>
+            </div>
+          {% endfor %}
+          
+          {% if comments|length > 3 %}
+            <button class="show-more-comments">
+              Показать еще <i class="fas fa-chevron-down"></i>
+            </button>
+            <button class="hide-comments-button" style="display: none;">
+              Скрыть <i class="fas fa-chevron-up"></i>
+            </button>
+          {% endif %}
+        </div>
+      {% else %}
+        <div class="comments-list">
+          <p>Пока нет комментариев. Будьте первым!</p>
+        </div>
+      {% endif %}
     </div>
   </div>
 </div>
