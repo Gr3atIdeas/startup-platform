@@ -164,31 +164,54 @@ a:hover {
 
 .top-section {
   display: flex;
-  gap: 40px; /* Отступ между колонками как на макете */
-  margin-bottom: 40px;
+  gap: 30px; /* Промежуток между колонками */
+  margin-bottom: 40px; /* Отступ снизу */
 }
 
 /* ------------------ */
 /*    ЛЕВАЯ КОЛОНКА   */
 /* ------------------ */
 .left-column {
-  width: 300px; /* Фикс ширина */
-  flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  gap: 25px; /* Отступы между элементами */
+  gap: 20px; /* Промежутки между блоками в левой колонке */
+  width: 451px; /* Фиксированная ширина левой колонки */
+  flex-shrink: 0;
 }
 
 .planet-container {
-  width: 100%;
-  height: 240px;
-  position: relative;
-  border-radius: 15px; /* Скругление */
-  overflow: hidden;
-  background-color: var(--dark-card-bg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    width: 451px;
+    height: auto; /* Авто-высота, чтобы вместить контент */
+    min-height: 400px; /* Минимальная высота, чтобы выглядело как на макете */
+    flex-shrink: 0;
+    border-radius: 10px;
+    border: 2px solid #353945;
+    background-color: #0e1014; /* Фоновый цвет для контейнера */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around; /* Распределение контента */
+    padding: 20px;
+    box-sizing: border-box;
+    position: relative; /* Для позиционирования статусных значков */
+}
+
+.planet-container .logo-preview {
+    max-width: 100%;
+    max-height: 350px; /* Ограничение высоты лого */
+    object-fit: contain;
+    margin-bottom: 15px;
+}
+
+.planet-container .planet {
+    width: 80%; /* Размер планеты */
+    padding-bottom: 80%; /* Сохранение пропорций */
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.planet-container .chat-button {
+   margin-top: auto; /* Прижать кнопку чата вниз */
 }
 
 /* Статус стартапа (если не модератор) */
@@ -232,109 +255,72 @@ a:hover {
 
 /* Прогресс бар */
 .progress-container {
-  width: 100%;
+    width: 353px; /* Ширина как в ТЗ */
+    height: 50px; /* Высота как в ТЗ */
+    flex-shrink: 0;
+    border-radius: 10px;
+    border: 1px solid var(--G4, #2BEDFF);
+    background: linear-gradient(180deg, #FFF -0.64%, #2BEDFF 7.87%, rgba(0, 78, 159, 0.00) 55.18%, #2BEDFF 125%);
+    display: flex; /* Используем flex для внутреннего выравнивания */
+    align-items: center;
+    padding: 5px 15px; /* Внутренние отступы */
+    box-sizing: border-box;
+    margin: 0 auto; /* Центрируем блок по горизонтали внутри левой колонки */
 }
 
 .progress-bar {
-  width: 100%;
-  height: 6px;
-  background-color: var(--dark-card-bg);
-  border-radius: 3px;
-  overflow: hidden;
-  margin-bottom: 5px; /* Меньше отступ */
+    flex-grow: 1; /* Занимает доступное пространство */
+    height: 10px; /* Высота самой полосы прогресса */
+    background-color: rgba(255, 255, 255, 0.2); /* Фон полосы */
+    border-radius: 5px;
+    overflow: hidden; /* Скрыть выходящую часть заливки */
+    margin-right: 10px; /* Отступ от текста */
 }
 
 .progress-fill {
-  height: 100%;
-  background-color: var(--accent-purple);
-  border-radius: 3px;
-  transition: width 1s ease-out;
+    height: 100%;
+    background-color: #ffffff; /* Цвет заливки прогресса */
+    border-radius: 5px;
+    transition: width 0.3s ease-in-out;
 }
 
 .progress-info {
-  display: flex;
-  justify-content: flex-end; /* Текст справа */
-  align-items: center;
-  font-size: 13px;
-  color: var(--text-placeholder);
-  gap: 5px; /* Отступ между % и числом */
+    display: flex;
+    align-items: baseline; /* Выравнивание текста по базовой линии */
+    color: #fff; /* Цвет текста */
+    font-size: 14px;
 }
 
 .progress-percentage {
-  font-weight: 700;
-  color: var(--text-primary);
+    font-weight: bold;
+    margin-right: 5px;
 }
 
 /* Блок автора слева */
 .author-info-left {
-  background-color: var(--secondary-blue);
-  padding: 20px;
-  border-radius: 15px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px; /* Меньше отступ */
-  margin-bottom: 10px; /* Добавим немного воздуха снизу */
+    display: flex;
+    width: 451px;
+    /* height: 257px; Убираем фикс. высоту, пусть подстраивается */
+    padding: 30px 50px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px; /* Уменьшил gap для лучшего вида */
+    flex-shrink: 0;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.27);
+    box-shadow: 6px 6px 10px 0px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(10px);
+    box-sizing: border-box;
 }
 
-.author-header {
-  font-size: 14px;
-  color: var(--text-secondary);
-  margin-bottom: 15px;
-}
-
-.author-details {
-  gap: 15px;
-}
-
-.author-avatar {
-  width: 50px;
-  height: 50px;
-  background-color: var(--dark-card-bg); /* Плейсхолдер для аватара */
-}
-
-.author-meta {
-  flex-grow: 1;
-}
-
-.author-name {
-  font-size: 16px;
-  font-weight: 600;
-}
-
-.author-rating {
-  font-size: 13px;
-  color: var(--text-secondary);
-}
-
-.creation-date {
-  font-size: 13px;
-  color: var(--text-secondary);
-  margin-top: 10px;
-}
-
-.report-button {
-  margin-top: 20px;
-  background: none;
-  border: 1px solid var(--danger-red);
-  color: var(--danger-red);
-  width: 100%;
-  font-weight: 400;
-}
-.report-button:hover {
-  background-color: rgba(240, 82, 82, 0.1);
-  color: #ff6b6b;
-}
-
-
-/* ------------------ */
-/*    ПРАВАЯ КОЛОНКА   */
-/* ------------------ */
+/* Правая колонка */
 .right-column {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 25px; /* Уменьшим отступ */
-  min-width: 0;
+    display: flex;
+    /* width: 799px; Убираем фикс. ширину, пусть растягивается */
+    flex-grow: 1; /* Позволяем правой колонке занять оставшееся место */
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 35px; /* Промежуток между блоками в правой колонке */
 }
 
 /* Шапка стартапа */
@@ -1296,9 +1282,10 @@ a:hover {
     background: none;
 }
 .detail-content { /* Убираем старые стили */
-    max-width: none;
-    width: auto;
-    margin: 0;
+    max-width: calc(100% - 140px); /* Учитываем отступы по 70px */
+    margin: 0 auto; /* Центрирование */
+    padding: 0 70px; /* Добавляем отступы */
+    box-sizing: border-box; /* Чтобы padding не увеличивал ширину */
 }
 
 /* Селекторы, которые больше не нужны или переопределены */

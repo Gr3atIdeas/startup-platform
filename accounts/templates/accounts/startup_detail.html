@@ -114,7 +114,6 @@
         </div>
 
         <div class="actions-top-right">
-          <div class="investment-info-badge">Инвестирование: Выкуп</div>
           {% if user.is_authenticated and startup.owner == user %}
             <button class="action-button edit-button">Редактировать</button>
             <button class="action-button sell-button primary">Продать активы</button>
@@ -338,7 +337,7 @@
   </div>
 </div>
 
-<div id="investModal" class="modal" style="display: none !important;">
+<div id="investModal" class="modal">
   <div class="modal-content">
     <h2>Подтверждение инвестиции</h2>
     <p id="modalText"></p>
