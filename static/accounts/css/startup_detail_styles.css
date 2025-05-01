@@ -1282,12 +1282,13 @@ a:hover {
     padding: 0;
     background: none;
 }
-.detail-content { /* Убираем старые стили И max-width/margin */
-    /* max-width: calc(100% - 140px); */ /* Убираем ограничение ширины */
-    /* margin: 0 auto; */ /* Убираем центрирование */
-    padding: 0 70px; /* Оставляем только боковые отступы */
-    box-sizing: border-box; /* Чтобы padding не увеличивал ширину */
+/* УДАЛЯЕМ СТИЛИ ДЛЯ .detail-content */
+/*
+.detail-content { 
+    padding: 0 70px; 
+    box-sizing: border-box; 
 }
+*/
 
 /* Селекторы, которые больше не нужны или переопределены */
 .progress-indicator,
