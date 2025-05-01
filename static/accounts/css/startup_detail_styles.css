@@ -166,6 +166,10 @@ a:hover {
   display: flex;
   gap: 30px; /* Промежуток между колонками */
   margin-bottom: 40px; /* Отступ снизу */
+  /* Центрирование блока на широких экранах */
+  max-width: 1280px; /* 451px (left) + 799px (right) + 30px (gap) */
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* ------------------ */
@@ -331,40 +335,44 @@ a:hover {
     border: 1px solid #353945; /* Обновляем цвет рамки на более заметный как в макете */
     width: 100%;
     box-sizing: border-box;
+    margin-bottom: 30px; /* Добавляем отступ под этим блоком */
 }
 
-/* --- ТАБЫ НАВИГАЦИИ (обновленные стили) --- */
+/* --- ТАБЫ НАВИГАЦИИ (попытка 2 - стиль как рамка с текстом) --- */
 .tab-navigation {
   display: flex;
-  gap: 25px; /* Промежуток между кнопками-ссылками */
-  margin-bottom: 25px; /* Отступ под табами до контента */
-  padding-bottom: 15px; /* Отступ снизу до разделителя */
-  border-bottom: 1px solid #353945; /* Обновляем цвет разделителя */
+  /* Убираем стили обертки, если они были */
+  /* border-radius: 10px; */
+  /* border: 2px solid rgba(255, 255, 255, 0.50); */
+  /* overflow: hidden; */
+  gap: 25px; /* Промежуток между кнопками */
+  align-self: stretch;
+  margin-bottom: 25px; /* Отступ под табами */
+  padding-bottom: 15px; /* Отступ до разделителя */
+  border-bottom: 1px solid #353945; /* Разделитель */
 }
 
 .tab-button {
-  padding: 6px 12px;
-  background-color: transparent;
-  border: none;
-  color: var(--text-secondary, #A9B8D4); /* Цвет неактивной кнопки */
+  padding: 8px 15px; /* Внутренние отступы */
+  background-color: transparent; /* Нет фона по умолчанию */
+  border: none; /* Нет рамки по умолчанию */
+  color: var(--text-secondary, #A9B8D4); /* Цвет текста по умолчанию */
   font-family: 'Circe', sans-serif;
   font-size: 16px;
   font-weight: 400;
   text-align: center;
   cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.2s ease, color 0.2s ease, border-radius 0.2s ease;
   white-space: nowrap;
+  border-radius: 8px; /* Скругление для hover/active */
 }
 
-.tab-button:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
-}
-
+/* Стиль при наведении и для активной кнопки */
+.tab-button:hover,
 .tab-button.active {
-  background-color: #e9ecef; /* Светло-серый фон активной кнопки */
-  color: var(--primary-dark-blue, #000819); /* Темный текст активной кнопки */
-  font-weight: 700;
+  background-color: #e9ecef; /* Светло-серый фон */
+  color: var(--primary-dark-blue, #000819); /* Темный текст */
+  font-weight: 700; /* Bold */
 }
 
 /* --- КОНТЕНТ ТАБОВ --- */
@@ -1746,48 +1754,26 @@ a:hover {
 /* --- ТАБЫ НАВИГАЦИИ --- */
 .tab-navigation {
   display: flex;
-  /* height: 35px;  Высота будет определяться паддингами кнопок */
-  /* padding: 6px; Убираем паддинг контейнера */
-  /* flex-direction: column; Убираем, кнопки должны быть в ряд */
-  /* align-items: flex-start; Убираем */
-  gap: 0px; /* Убираем промежуток, кнопки будут прилегать */
+  gap: 25px; /* Промежуток между кнопками */
   align-self: stretch;
-  border-radius: 10px;
-  border: 2px solid rgba(255, 255, 255, 0.50);
-  margin-bottom: 30px; /* Отступ под табами */
-  overflow: hidden; /* Чтобы скругление работало с кнопками */
+  margin-bottom: 25px; /* Отступ под табами */
+  padding-bottom: 15px; /* Отступ до разделителя */
+  border-bottom: 1px solid #353945; /* Разделитель */
 }
 
 .tab-button {
-  flex-grow: 1; /* Кнопки занимают равное пространство */
-  padding: 10px 15px; /* Внутренние отступы кнопок */
-  background-color: transparent; /* Прозрачный фон по умолчанию */
-  border: none;
-  /* border-right: 1px solid rgba(255, 255, 255, 0.30); Разделитель */
-  color: rgba(255, 255, 255, 0.7); /* Полупрозрачный белый текст */
+  padding: 8px 15px; /* Внутренние отступы */
+  background-color: transparent; /* Нет фона по умолчанию */
+  border: none; /* Нет рамки по умолчанию */
+  color: var(--text-secondary, #A9B8D4); /* Цвет текста по умолчанию */
   font-family: 'Circe', sans-serif;
   font-size: 16px;
-  font-weight: 400; /* Regular */
+  font-weight: 400;
   text-align: center;
   cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.2s ease, color 0.2s ease, border-radius 0.2s ease;
   white-space: nowrap;
-}
-
-/* Убираем бордер у последней кнопки */
-/* .tab-button:last-child {
-  border-right: none;
-} */
-
-.tab-button:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
-}
-
-.tab-button.active {
-  background-color: #f0f0f0; /* Светло-серый фон активной кнопки */
-  color: #333; /* Темный текст активной кнопки */
-  font-weight: 700; /* Bold */
+  border-radius: 8px; /* Скругление для hover/active */
 }
 
 /* --- КОНТЕНТ ТАБОВ --- */
