@@ -328,8 +328,8 @@ a:hover {
     background-color: var(--secondary-blue, #04112D); /* Темно-синий фон */
     padding: 25px 30px; /* Внутренние отступы */
     border-radius: 15px; /* Скругление углов */
-    border: 1px solid var(--border-color, #1D3059); /* Тонкая рамка */
-    width: 100%; /* На всю ширину родителя (.right-column) */
+    border: 1px solid #353945; /* Обновляем цвет рамки на более заметный как в макете */
+    width: 100%;
     box-sizing: border-box;
 }
 
@@ -337,35 +337,28 @@ a:hover {
 .tab-navigation {
   display: flex;
   gap: 25px; /* Промежуток между кнопками-ссылками */
-  /* Убираем старые стили бара */
-  /* align-self: stretch; */
-  /* border-radius: 10px; */
-  /* border: 2px solid rgba(255, 255, 255, 0.50); */
   margin-bottom: 25px; /* Отступ под табами до контента */
-  /* overflow: hidden; */
   padding-bottom: 15px; /* Отступ снизу до разделителя */
-  border-bottom: 1px solid var(--border-color, #1D3059); /* Разделитель под табами */
+  border-bottom: 1px solid #353945; /* Обновляем цвет разделителя */
 }
 
 .tab-button {
-  /* flex-grow: 1; */ /* Убираем равное растягивание */
-  padding: 6px 12px; /* Уменьшаем паддинги */
+  padding: 6px 12px;
   background-color: transparent;
   border: none;
-  color: var(--text-secondary, #A9B8D4); /* По умолчанию серый текст */
+  color: var(--text-secondary, #A9B8D4); /* Цвет неактивной кнопки */
   font-family: 'Circe', sans-serif;
   font-size: 16px;
   font-weight: 400;
   text-align: center;
   cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease, border-radius 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease;
   white-space: nowrap;
-  border-radius: 8px; /* Небольшое скругление для hover/active */
 }
 
 .tab-button:hover {
-  background-color: rgba(255, 255, 255, 0.05); /* Легкий фон при наведении */
-  color: var(--text-primary, #FFFFFF);
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
 }
 
 .tab-button.active {
@@ -381,7 +374,7 @@ a:hover {
 
 /* Убираем лишний фон и паддинги у дочерних секций, т.к. есть обертка */
 .content-section.media-section,
-.content-section.about-section,
+/* .content-section.about-section, Убираем это, about-section не имеет своего фона */
 .content-section.comments-section {
     background-color: transparent;
     padding: 0;
@@ -394,15 +387,116 @@ a:hover {
 .content-section .section-title {
     font-size: 24px;
     font-weight: 700;
-    color: var(--accent-yellow, #FFC85E); /* Желтый цвет заголовков */
+    color: var(--accent-yellow, #F7BF4F); /* Ярко-Желтый цвет заголовков как в макете */
     margin-bottom: 20px;
     padding-bottom: 0;
     border-bottom: none; /* Убираем линию под заголовками секций */
 }
 
-/* Доп. стили для секции О проекте, если нужно */
+/* Возвращаем стили для info-blocks, так как они теперь внутри темного контейнера */
+.content-section#info-section .info-blocks {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.content-section#info-section .info-block {
+  background-color: var(--dark-card-bg, #0B1A3F); /* Темный фон для блоков */
+  border-radius: 12px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+  border: 1px solid var(--border-color, #1D3059); /* Рамка для блоков */
+  min-height: 140px;
+  box-sizing: border-box;
+}
+
+/* Стили иконок/текста внутри info-block (возможно, уже есть выше, но проверим) */
+.content-section#info-section .info-block .icon {
+    font-size: 20px;
+    color: var(--text-placeholder);
+    margin-bottom: 5px;
+    margin-top: 5px;
+}
+.content-section#info-section .info-block-title {
+    font-size: 13px;
+    color: var(--text-placeholder);
+    order: 2;
+}
+.content-section#info-section .info-block-value {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
+    order: 1;
+}
+/* Кнопка Смотреть */
+.content-section#info-section .info-block.presentation-block .action-button.view-button {
+    margin-top: 10px;
+    order: 3;
+    background-color: var(--button-yellow, #F7BF4F); /* Желтая кнопка */
+    color: var(--primary-dark-blue);
+    /* Убедимся что стили из :root применяются */
+    padding: 10px 20px;
+    font-size: 14px;
+    border-radius: 8px;
+    width: 100%;
+    margin-top: auto;
+}
+.content-section#info-section .info-block.presentation-block .action-button.view-button:hover {
+     background-color: #e0ae44;
+}
+/* Оценка */
+.content-section#info-section .info-block.rate-block .info-block-value {
+    background-color: var(--button-yellow, #F7BF4F); /* Желтый фон для цифры */
+    color: var(--primary-dark-blue);
+    padding: 5px 15px;
+    border-radius: 8px;
+    display: inline-block; /* Чтобы фон был только под цифрой */
+}
+/* Собранная сумма */
+.content-section#info-section .info-block.collected-sum-block .info-block-value {
+    background-color: var(--button-blue, #345DFF); /* Синий фон для цифры */
+    color: var(--text-primary);
+    padding: 5px 15px;
+    border-radius: 8px;
+    display: inline-block;
+    width: 80%; /* Примерно по ширине */
+}
+/* Стадия */
+.content-section#info-section .info-block.stage-block .info-block-value {
+    background-color: #e9ecef; /* Светлый фон */
+    color: var(--primary-dark-blue);
+    padding: 5px 15px;
+    border-radius: 8px;
+    display: inline-block;
+    width: 80%;
+}
+
+
+/* Доп. стили для секции О проекте */
 .content-section#info-section .about-section {
     margin-top: 30px; /* Отступ между info-blocks и текстом О проекте */
+    background-color: transparent; /* Убираем повторный фон */
+    padding: 0; /* Убираем лишние паддинги */
+    border: none;
+}
+
+.content-section#info-section .about-section .section-content {
+    color: var(--text-secondary);
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.content-section#info-section .about-section .section-content p {
+    margin-bottom: 15px;
+}
+
+.content-section#info-section .about-section .section-content strong {
+    color: var(--text-primary);
+    font-weight: 600;
 }
 
 /* Доп. стили для секции комментариев */
