@@ -354,25 +354,25 @@ a:hover {
 
 .tab-button {
   padding: 8px 15px; /* Внутренние отступы */
-  background-color: transparent; /* Нет фона по умолчанию */
-  border: 1px solid var(--text-secondary, #A9B8D4); /* !!! ДОБАВЛЯЕМ РАМКУ ПО УМОЛЧАНИЮ !!! */
-  color: var(--text-secondary, #A9B8D4); /* Цвет текста по умолчанию */
+  background-color: transparent; /* Фон ПРОЗРАЧНЫЙ по умолчанию */
+  border: 1px solid var(--text-secondary, #A9B8D4); /* Видимая РАМКА светло-серая */
+  color: var(--text-secondary, #A9B8D4); /* Цвет ТЕКСТА светло-серый */
   font-family: 'Circe', sans-serif;
   font-size: 16px;
   font-weight: 400;
   text-align: center;
   cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease, border-radius 0.2s ease;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease; /* Обновляем transition */
   white-space: nowrap;
-  border-radius: 8px; /* Скругление для hover/active */
+  border-radius: 8px; /* Скругление углов */
 }
 
 /* Стиль при наведении и для активной кнопки */
 .tab-button:hover,
 .tab-button.active {
-  background-color: #e9ecef; /* Светло-серый фон */
-  border-color: #e9ecef; /* !!! Делаем рамку цвета фона !!! */
-  color: var(--primary-dark-blue, #000819); /* Темный текст */
+  background-color: #e9ecef; /* Светло-серый ФОН */
+  border-color: #e9ecef;    /* Цвет РАМКИ совпадает с фоном (становится невидимой) */
+  color: var(--primary-dark-blue, #000819); /* Темный цвет ТЕКСТА */
   font-weight: 700; /* Bold */
 }
 
@@ -1764,26 +1764,26 @@ a:hover {
 
 .tab-button {
   padding: 8px 15px; /* Внутренние отступы */
-  background-color: transparent; /* Нет фона по умолчанию */
-  border: 1px solid var(--text-secondary, #A9B8D4); /* !!! ДОБАВЛЯЕМ РАМКУ ПО УМОЛЧАНИЮ !!! */
-  color: var(--text-secondary, #A9B8D4); /* Цвет текста по умолчанию */
+  background-color: transparent; /* Фон ПРОЗРАЧНЫЙ по умолчанию */
+  border: 1px solid var(--text-secondary, #A9B8D4); /* Видимая РАМКА светло-серая */
+  color: var(--text-secondary, #A9B8D4); /* Цвет ТЕКСТА светло-серый */
   font-family: 'Circe', sans-serif;
   font-size: 16px;
   font-weight: 400;
   text-align: center;
   cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease, border-radius 0.2s ease;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease; /* Обновляем transition */
   white-space: nowrap;
-  border-radius: 8px; /* Скругление для hover/active */
+  border-radius: 8px; /* Скругление углов */
 }
 
 /* --- КОНТЕНТ ТАБОВ --- */
 .content-section {
-  display: none; /* Скрываем все секции по умолчанию */
+  display: none;
 }
 
 .content-section.active {
-  display: block; /* Показываем активную секцию */
+  display: block;
   animation: fadeInContent 0.5s ease-in-out; /* Плавное появление */
 }
 
