@@ -436,7 +436,7 @@ a:hover {
 /* Информационные блоки */
 .info-blocks {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* Всегда 4 колонки */
+  grid-template-columns: repeat(3, 1fr); /* Стало 3 колонки по макету */
   gap: 20px; /* Меньше отступ */
 }
 
@@ -816,36 +816,29 @@ a:hover {
 /*         СЕКЦИЯ ПОХОЖИХ СТАРТАПОВ       */
 /* ======================================== */
 .similar-startups-section {
-  /* Расширяем на всю ширину */
-  width: 100vw;
-  position: relative;
-  left: 50%;
-  transform: translateX(-50%);
-  margin-top: 60px; /* Отступ от комментариев */
-  padding: 70px 0;
-  background-image: url('../images/startups/inside_cards_background.webp'); /* Фон */
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  margin-top: 30px; /* Отступ от комментариев, уменьшил */
+  padding: 30px; /* Внутренние отступы секции */
+  background-color: var(--background-light); /* Белый фон */
+  border-radius: 15px; /* Скругленные углы */
   box-sizing: border-box;
 }
 
 .similar-startups-container {
-  max-width: 1440px;
   width: 100%;
   margin: 0 auto;
-  padding: 0 70px; /* Отступы как у основного контента */
+  padding: 0; /* Убираем внутренние отступы контейнера */
   position: relative;
   box-sizing: border-box;
 }
 
 .similar-title {
-  margin-bottom: 40px;
-  padding: 0; /* Убираем лишний паддинг */
+  margin-bottom: 30px; /* Уменьшил отступ */
+  padding: 0;
+  color: var(--primary-dark-blue); /* Текст заголовка темный на белом фоне */
 }
 
 .similar-text, .startups-text {
-  font-size: clamp(40px, 6vw, 70px); /* Адаптивный размер шрифта */
+  font-size: clamp(32px, 5vw, 48px); /* Уменьшаем размер заголовка */
   line-height: 1.1;
   letter-spacing: -0.02em;
   display: block;
@@ -853,30 +846,30 @@ a:hover {
 }
 
 .similar-text {
-  color: var(--accent-green); /* Бирюзовый */
-  font-weight: 600; /* Чуть менее жирный? */
+  color: var(--accent-purple); /* Акцентный цвет для первого слова */
+  font-weight: 600;
   text-transform: lowercase;
 }
 
 .startups-text {
-  color: var(--text-primary); /* Белый */
+  color: var(--primary-dark-blue); /* Темный цвет для второго слова */
   text-transform: uppercase;
 }
 
 /* Кнопка Показать все */
 .show-all-button {
   position: absolute;
-  top: 0; /* Позиционируем относительно контейнера */
-  right: 70px; /* Отступ справа */
+  top: 0; /* Оставляем сверху */
+  right: 0; /* Прижимаем к правому краю контейнера (у которого теперь нет паддингов) */
   display: inline-flex;
   align-items: center;
   gap: 8px;
   padding: 10px 20px;
-  height: auto; /* Убираем фикс высоту */
-  border: 1px solid var(--text-primary); /* Белая рамка */
-  border-radius: 25px; /* Сильно скругленная */
+  height: auto;
+  border: 1px solid var(--primary-dark-blue); /* Темная рамка */
+  border-radius: 25px;
   background: transparent;
-  color: var(--text-primary);
+  color: var(--primary-dark-blue); /* Темный текст */
   cursor: pointer;
   font-size: 14px;
   font-weight: 500;
@@ -886,9 +879,9 @@ a:hover {
     font-size: 12px;
 }
 .show-all-button:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  border-color: var(--accent-green);
-  color: var(--accent-green);
+  background-color: rgba(0, 8, 25, 0.05); /* Легкий темный фон при наведении */
+  border-color: var(--accent-purple);
+  color: var(--accent-purple);
 }
 
 /* Сетка похожих стартапов */
