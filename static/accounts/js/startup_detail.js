@@ -285,4 +285,33 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error('Error initializing Fancybox:', error);
     }
 
+    // 7. Логика переключения табов
+    const tabContainer = document.querySelector('.tab-navigation');
+    const contentSections = document.querySelectorAll('.content-section');
+    const tabButtons = document.querySelectorAll('.tab-button');
+
+    if (tabContainer && contentSections.length > 0 && tabButtons.length > 0) {
+        tabContainer.addEventListener('click', function(event) {
+            if (event.target.classList.contains('tab-button')) {
+                const targetId = event.target.dataset.target;
+                if (!targetId) return;
+
+                // Обновляем кнопки
+                tabButtons.forEach(button => {
+                    button.classList.remove('active');
+                });
+                event.target.classList.add('active');
+
+                // Обновляем секции контента
+                contentSections.forEach(section => {
+                    if (section.id === targetId) {
+                        section.classList.add('active');
+                    } else {
+                        section.classList.remove('active');
+                    }
+                });
+            }
+        });
+    }
+
 });

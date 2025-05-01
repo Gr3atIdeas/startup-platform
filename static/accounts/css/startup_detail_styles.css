@@ -816,9 +816,13 @@ a:hover {
 /*         СЕКЦИЯ ПОХОЖИХ СТАРТАПОВ       */
 /* ======================================== */
 .similar-startups-section {
-  margin-top: 30px; /* Отступ от комментариев, уменьшил */
-  padding: 30px; /* Внутренние отступы секции */
-  background-color: var(--background-light); /* Белый фон */
+  margin-top: 60px; /* Возвращаем больший отступ сверху */
+  padding: 70px 30px; /* Увеличиваем вертикальные отступы, оставляем боковые 30px */
+  background-color: var(--background-light); /* Оставляем белый фон НА СЛУЧАЙ если картинка не загрузится */
+  background-image: url('../images/startups/inside_cards_background.webp'); /* Возвращаем фон */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   border-radius: 15px; /* Скругленные углы */
   box-sizing: border-box;
 }
@@ -832,13 +836,15 @@ a:hover {
 }
 
 .similar-title {
-  margin-bottom: 30px; /* Уменьшил отступ */
+  margin-bottom: 40px; /* Возвращаем больший отступ */
   padding: 0;
-  color: var(--primary-dark-blue); /* Текст заголовка темный на белом фоне */
+  color: var(--primary-dark-blue);
+  /* Цвет текста заголовка теперь нужно вернуть на светлый, т.к. фон темный */
+  color: var(--text-primary);
 }
 
 .similar-text, .startups-text {
-  font-size: clamp(32px, 5vw, 48px); /* Уменьшаем размер заголовка */
+  font-size: clamp(40px, 6vw, 70px); /* Возвращаем больший размер */
   line-height: 1.1;
   letter-spacing: -0.02em;
   display: block;
@@ -846,30 +852,37 @@ a:hover {
 }
 
 .similar-text {
-  color: var(--accent-purple); /* Акцентный цвет для первого слова */
+  /* Цвет первого слова теперь должен быть светлее на темном фоне */
+  /* color: var(--accent-purple); */
+  color: var(--accent-green); /* Бирюзовый как был изначально */
   font-weight: 600;
   text-transform: lowercase;
 }
 
 .startups-text {
-  color: var(--primary-dark-blue); /* Темный цвет для второго слова */
+  /* Цвет второго слова тоже светлый */
+  /* color: var(--primary-dark-blue); */
+  color: var(--text-primary);
   text-transform: uppercase;
 }
 
 /* Кнопка Показать все */
 .show-all-button {
   position: absolute;
-  top: 0; /* Оставляем сверху */
-  right: 0; /* Прижимаем к правому краю контейнера (у которого теперь нет паддингов) */
+  top: 0;
+  right: 0;
   display: inline-flex;
   align-items: center;
   gap: 8px;
   padding: 10px 20px;
   height: auto;
-  border: 1px solid var(--primary-dark-blue); /* Темная рамка */
+  /* Стили кнопки тоже нужно вернуть для темного фона */
+  /* border: 1px solid var(--primary-dark-blue); */
+  border: 1px solid var(--text-primary); /* Белая рамка */
   border-radius: 25px;
   background: transparent;
-  color: var(--primary-dark-blue); /* Темный текст */
+  /* color: var(--primary-dark-blue); */
+  color: var(--text-primary); /* Белый текст */
   cursor: pointer;
   font-size: 14px;
   font-weight: 500;
@@ -879,9 +892,13 @@ a:hover {
     font-size: 12px;
 }
 .show-all-button:hover {
-  background-color: rgba(0, 8, 25, 0.05); /* Легкий темный фон при наведении */
-  border-color: var(--accent-purple);
-  color: var(--accent-purple);
+  /* Эффект наведения для темного фона */
+  /* background-color: rgba(0, 8, 25, 0.05); */
+  background-color: rgba(255, 255, 255, 0.1);
+  /* border-color: var(--accent-purple); */
+  border-color: var(--accent-green); /* Бирюзовый при наведении */
+  /* color: var(--accent-purple); */
+  color: var(--accent-green);
 }
 
 /* Сетка похожих стартапов */
@@ -1556,4 +1573,66 @@ a:hover {
   padding: 20px 10px 10px 10px;
   color: var(--text-primary);
   font-size: 14px;
+}
+
+/* --- ТАБЫ НАВИГАЦИИ --- */
+.tab-navigation {
+  display: flex;
+  /* height: 35px;  Высота будет определяться паддингами кнопок */
+  /* padding: 6px; Убираем паддинг контейнера */
+  /* flex-direction: column; Убираем, кнопки должны быть в ряд */
+  /* align-items: flex-start; Убираем */
+  gap: 0px; /* Убираем промежуток, кнопки будут прилегать */
+  align-self: stretch;
+  border-radius: 10px;
+  border: 2px solid rgba(255, 255, 255, 0.50);
+  margin-bottom: 30px; /* Отступ под табами */
+  overflow: hidden; /* Чтобы скругление работало с кнопками */
+}
+
+.tab-button {
+  flex-grow: 1; /* Кнопки занимают равное пространство */
+  padding: 10px 15px; /* Внутренние отступы кнопок */
+  background-color: transparent; /* Прозрачный фон по умолчанию */
+  border: none;
+  /* border-right: 1px solid rgba(255, 255, 255, 0.30); Разделитель */
+  color: rgba(255, 255, 255, 0.7); /* Полупрозрачный белый текст */
+  font-family: 'Circe', sans-serif;
+  font-size: 16px;
+  font-weight: 400; /* Regular */
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  white-space: nowrap;
+}
+
+/* Убираем бордер у последней кнопки */
+/* .tab-button:last-child {
+  border-right: none;
+} */
+
+.tab-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+.tab-button.active {
+  background-color: #f0f0f0; /* Светло-серый фон активной кнопки */
+  color: #333; /* Темный текст активной кнопки */
+  font-weight: 700; /* Bold */
+}
+
+/* --- КОНТЕНТ ТАБОВ --- */
+.content-section {
+  display: none; /* Скрываем все секции по умолчанию */
+}
+
+.content-section.active {
+  display: block; /* Показываем активную секцию */
+  animation: fadeInContent 0.5s ease-in-out; /* Плавное появление */
+}
+
+@keyframes fadeInContent {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
