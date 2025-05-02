@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', function() {
                  finalState = 'empty (forced)';
             }
             // Выводим финальное состояние для каждой планеты
-            console.log(`Planet ${index}: Final state = ${finalState}, Classes = ${planet.className}, Fill = ${planet.style.getPropertyValue('--fill-percentage')}`); 
+            // console.log(`Planet ${index}: Final state = ${finalState}, Classes = ${planet.className}, Fill = ${planet.style.getPropertyValue('--fill-percentage')}`); 
         });
     }
 

@@ -351,9 +351,9 @@ a:hover {
 /* Увеличиваем специфичность */
 .tabbed-content-wrapper .tab-navigation .tab-button {
   padding: 8px 15px; /* Внутренние отступы */
-  background-color: transparent; /* ПРОЗРАЧНЫЙ фон по умолчанию */
+  background-color: transparent !important; /* Возвращаем !important */
   border: none; /* Рамки нет */
-  color: var(--text-secondary, #A9B8D4); /* Светло-серый ТЕКСТ по умолчанию */
+  color: var(--text-secondary, #A9B8D4) !important; /* Возвращаем !important */
   font-family: 'Circe', sans-serif;
   font-size: 16px;
   font-weight: 400;
@@ -367,8 +367,8 @@ a:hover {
 /* Увеличиваем специфичность */
 .tabbed-content-wrapper .tab-navigation .tab-button:hover,
 .tabbed-content-wrapper .tab-navigation .tab-button.active {
-  background-color: rgba(255, 255, 255, 0.08); /* Легкий белый фон при наведении/активации */
-  color: var(--text-primary, #FFFFFF); /* Белый цвет ТЕКСТА */
+  background-color: rgba(255, 255, 255, 0.08) !important; /* Возвращаем !important */
+  color: var(--text-primary, #FFFFFF) !important; /* Возвращаем !important */
   font-weight: 600; /* Можно сделать чуть жирнее (SemiBold) */
 }
 
@@ -590,13 +590,55 @@ a:hover {
 
 .rating-planet {
   display: inline-block;
-  font-size: 22px; /* Подберите нужный размер */
-  vertical-align: middle; /* Выравнивание по центру строки */
+  position: relative; /* Нужно для позиционирования ::before */
+  font-size: 22px; 
+  vertical-align: middle; 
   cursor: default;
-  color: var(--text-secondary, #A9B8D4); /* Цвет НЕЗАПОЛНЕННОЙ планеты (серый) - базовый */
-  line-height: 1; /* Чтобы избежать лишних отступов */
-  transition: color 0.2s ease; /* Плавность для ховера (убираем background) */
-  margin-right: -4px; /* Увеличиваем отрицательный отступ */
+  color: var(--text-secondary, #A9B8D4); /* Базовый серый цвет */
+  line-height: 1; 
+  transition: color 0.2s ease;
+  margin-right: -4px; /* Оставляем сближение */
+}
+
+.rating-planet:last-child {
+    margin-right: 0;
+}
+
+/* Стиль для ЧАСТИЧНО заполненной планеты (используем псевдоэлемент) */
+.rating-planet.partial::before {
+  content: '🪐'; /* Тот же символ */
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: var(--fill-percentage, 0%); /* Ширина зависит от переменной */
+  color: #FFB700; /* Цвет заполненной части */
+  overflow: hidden; /* Обрезаем символ по ширине */
+  z-index: 1; /* Накладываем поверх основного символа */
+  line-height: 1; /* Важно для выравнивания */
+  /* Убираем свойства background-clip */
+  /* background: linear-gradient(to right, #FFB700 var(--fill-percentage, 0%), var(--text-secondary, #A9B8D4) var(--fill-percentage, 0%)); */
+  /* -webkit-background-clip: text; */
+  /* background-clip: text; */
+  /* -webkit-text-fill-color: transparent; */
+}
+
+/* Стиль для ЗАПОЛНЕННОЙ планеты (просто меняем цвет текста) */
+.rating-planet.filled {
+   color: #FFB700; /* Просто устанавливаем нужный цвет текста */
+}
+
+/* Для интерактивных планет (возможность голосования) */
+.rating-stars[data-interactive="true"] .rating-planet {
+  cursor: pointer;
+}
+/* Эффект при наведении на интерактивные планеты */
+.rating-stars[data-interactive="true"] .rating-planet:hover {
+  /* Можно временно закрасить желтым при наведении */
+   background: #FFB700; 
+   -webkit-background-clip: text;
+   background-clip: text;
+   -webkit-text-fill-color: transparent; 
 }
 
 .comments-link {
@@ -1570,18 +1612,28 @@ a:hover {
   transition: opacity 0.2s;
 }
 
-/* --- Новые стили для Unicode Планет Рейтинга --- */
+/* --- Новые стили для Unicode Планет Рейтинга (с псевдоэлементом) --- */
 .rating-planet:last-child {
     margin-right: 0;
 }
 
-/* Стиль для ЧАСТИЧНО заполненной планеты (применяем градиент только здесь) */
-.rating-planet.partial {
-  color: transparent; /* Скрываем исходный символ */
-  background: linear-gradient(to right, #FFB700 var(--fill-percentage, 0%), var(--text-secondary, #A9B8D4) var(--fill-percentage, 0%));
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+/* Стиль для ЧАСТИЧНО заполненной планеты (используем псевдоэлемент) */
+.rating-planet.partial::before {
+  content: '🪐'; /* Тот же символ */
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: var(--fill-percentage, 0%); /* Ширина зависит от переменной */
+  color: #FFB700; /* Цвет заполненной части */
+  overflow: hidden; /* Обрезаем символ по ширине */
+  z-index: 1; /* Накладываем поверх основного символа */
+  line-height: 1; /* Важно для выравнивания */
+  /* Убираем свойства background-clip */
+  /* background: linear-gradient(to right, #FFB700 var(--fill-percentage, 0%), var(--text-secondary, #A9B8D4) var(--fill-percentage, 0%)); */
+  /* -webkit-background-clip: text; */
+  /* background-clip: text; */
+  /* -webkit-text-fill-color: transparent; */
 }
 
 /* Стиль для ЗАПОЛНЕННОЙ планеты (просто меняем цвет текста) */
