@@ -341,7 +341,6 @@ a:hover {
 /* --- ТАБЫ НАВИГАЦИИ --- */
 .tab-navigation {
   display: flex;
-  /* gap: 25px; */ /* Уменьшаем отступ */
   gap: 15px;
   align-self: stretch;
   margin-bottom: 25px; 
@@ -349,13 +348,13 @@ a:hover {
   border-bottom: 1px solid #353945; 
 }
 
-.tab-button {
-  /* Добавляем display и выравнивание */
+/* Увеличиваем специфичность, добавляя родительский класс */
+.tab-navigation .tab-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   padding: 6px 12px;
-  background-color: transparent; /* Явно указываем прозрачность */
+  background-color: transparent; 
   border: none; 
   color: var(--text-secondary, #A9B8D4); 
   font-family: 'Circe', sans-serif;
@@ -365,16 +364,16 @@ a:hover {
   cursor: pointer;
   transition: background-color 0.2s ease, color 0.2s ease, border-radius 0.2s ease;
   white-space: nowrap;
-  border-radius: 100px; /* Пилюля по умолчанию */
+  border-radius: 100px; 
 }
 
-/* Стили hover/active точно по макету */
-.tab-button:hover,
-.tab-button.active {
-  background-color: #E6E8EC; /* Светло-серый фон */
-  color: var(--primary-dark-blue); /* Темный текст */
-  font-weight: 600; /* Жирнее */
-  border-radius: 5px; /* Слегка скругленные углы */
+/* Увеличиваем специфичность и для hover/active */
+.tab-navigation .tab-button:hover,
+.tab-navigation .tab-button.active {
+  background-color: #E6E8EC; 
+  color: var(--primary-dark-blue); 
+  font-weight: 600; 
+  border-radius: 5px; 
 }
 
 /* --- КОНТЕНТ ТАБОВ --- */
