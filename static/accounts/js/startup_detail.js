@@ -78,7 +78,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Отображаем основной рейтинг
     const mainRatingElement = document.querySelector(ratingDisplayContainer);
     if (mainRatingElement) {
-        const initialRating = mainRatingElement.getAttribute('data-rating');
+        const initialRatingRaw = mainRatingElement.getAttribute('data-rating'); // Получаем как строку
+        console.log(`Raw data-rating attribute: "${initialRatingRaw}"`); // <<< Отладка: выводим сырую строку
+        const initialRating = initialRatingRaw; // Передаем строку в функцию
         updateRatingDisplay(ratingDisplayContainer, initialRating);
     }
     

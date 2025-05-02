@@ -341,10 +341,6 @@ a:hover {
 /* --- ТАБЫ НАВИГАЦИИ (попытка 2 - стиль как рамка с текстом) --- */
 .tab-navigation {
   display: flex;
-  /* Убираем стили обертки, если они были */
-  /* border-radius: 10px; */
-  /* border: 2px solid rgba(255, 255, 255, 0.50); */
-  /* overflow: hidden; */
   gap: 25px; /* Промежуток между кнопками */
   align-self: stretch;
   margin-bottom: 25px; /* Отступ под табами */
@@ -354,27 +350,25 @@ a:hover {
 
 .tab-button {
   padding: 8px 15px; /* Внутренние отступы */
-  background-color: transparent; /* Фон ПРОЗРАЧНЫЙ по умолчанию */
-  /* border: 1px solid var(--text-secondary, #A9B8D4); */ /* УБИРАЕМ РАМКУ ПО УМОЛЧАНИЮ */
+  background-color: transparent; /* ПРОЗРАЧНЫЙ фон по умолчанию */
   border: none; /* Убедимся что рамки нет */
-  color: var(--text-secondary, #A9B8D4); /* Цвет ТЕКСТА светло-серый */
+  color: var(--text-secondary, #A9B8D4); /* Светло-серый ТЕКСТ по умолчанию */
   font-family: 'Circe', sans-serif;
   font-size: 16px;
   font-weight: 400;
   text-align: center;
   cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease; /* Обновляем transition */
+  transition: background-color 0.2s ease, color 0.2s ease; /* Обновляем transition */
   white-space: nowrap;
-  border-radius: 8px; /* Скругление углов */
+  border-radius: 8px; /* Оставляем скругление для hover/active */
 }
 
-/* Стиль при наведении и для активной кнопки */
+/* Стиль при наведении и для активной кнопки (как в хедере) */
 .tab-button:hover,
 .tab-button.active {
-  background-color: #e9ecef; /* Светло-серый ФОН */
-  /* border-color: #e9ecef; */    /* Рамка больше не нужна */
-  color: var(--primary-dark-blue, #000819); /* Темный цвет ТЕКСТА */
-  font-weight: 700; /* Bold */
+  background-color: rgba(255, 255, 255, 0.08); /* Легкий белый фон при наведении/активации */
+  color: var(--text-primary, #FFFFFF); /* Белый цвет ТЕКСТА */
+  font-weight: 600; /* Можно сделать чуть жирнее (SemiBold) */
 }
 
 /* --- КОНТЕНТ ТАБОВ --- */
