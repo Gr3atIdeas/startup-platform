@@ -41,30 +41,30 @@ document.addEventListener('DOMContentLoaded', function() {
         const planets = starsContainer.querySelectorAll('.rating-planet');
         const ratingValue = parseFloat(rating) || 0;
         const fullPlanets = Math.floor(ratingValue);
-        const partialPlanetPercentage = (ratingValue - fullPlanets) * 100;
+        // const partialPlanetPercentage = (ratingValue - fullPlanets) * 100; // Пока не используем
 
         planets.forEach((planet, index) => {
-            let finalState = 'empty'; // Отслеживаем финальное состояние
             planet.classList.remove('filled', 'partial'); // Сбрасываем классы
             planet.style.removeProperty('--fill-percentage'); // Убираем переменную
 
             if (index < fullPlanets) {
                 // Полностью заполненные - класс filled
                 planet.classList.add('filled');
-                finalState = 'filled';
+            } else {
+                 // Пустые планеты
+                 planet.classList.remove('filled', 'partial'); 
+                 planet.style.removeProperty('--fill-percentage');
+            }
+            /* Старая логика с partial
             } else if (index === fullPlanets && partialPlanetPercentage > 0) {
                 // Частично заполненная - класс partial и переменная
                 planet.classList.add('partial');
                 planet.style.setProperty('--fill-percentage', `${partialPlanetPercentage}%`);
-                finalState = `partial (${partialPlanetPercentage}%)`;
             } else {
-                 // Пустые планеты
+                 // Пустые планеты 
                  planet.classList.remove('filled', 'partial');
                  planet.style.removeProperty('--fill-percentage');
-                 finalState = 'empty (forced)';
-            }
-            // Выводим финальное состояние для каждой планеты
-            // console.log(`Planet ${index}: Final state = ${finalState}, Classes = ${planet.className}, Fill = ${planet.style.getPropertyValue('--fill-percentage')}`); 
+            }*/
         });
     }
 
