@@ -102,10 +102,13 @@
         <div class="rating-comments-container">
           <div class="rating-container">
             <span class="rating-label">Рейтинг: {{ average_rating|floatformat:"1" }}/5</span>
+            {# Используем контейнеры с двумя иконками #}
             <div class="rating-stars" data-rating="{{ average_rating|floatformat:"-2"|default:0 }}" {% if user.is_authenticated and not user_has_voted %}data-interactive="true"{% endif %}>
               {% for i in "12345" %}
-                <span class="rating-planet" 
-                      {% if user.is_authenticated and not user_has_voted %}data-value="{{ forloop.counter }}"{% endif %}>🪐</span>
+                <span class="rating-icon-container" {% if user.is_authenticated and not user_has_voted %}data-value="{{ forloop.counter }}"{% endif %}>
+                  <i class="fas fa-star icon-empty"></i> {# Серая иконка фона #}
+                  <i class="fas fa-star icon-filled"></i> {# Желтая иконка заполнения #}
+                </span>
               {% endfor %}
             </div>
           </div>
@@ -283,7 +286,11 @@
                       <div class="comment-rating" data-rating="{{ comment.user_rating|default:0 }}">
                         {% with comment_rating=comment.user_rating|default:0 %}
                           {% for star_i in "12345" %}
-                            <span class="rating-planet comment-planet">🪐</span>
+                            {# Используем контейнеры с двумя иконками #}
+                            <span class="rating-icon-container comment-icon-container">
+                              <i class="fas fa-star icon-empty"></i>
+                              <i class="fas fa-star icon-filled"></i>
+                            </span>
                           {% endfor %}
                         {% endwith %}
                       </div>

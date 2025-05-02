@@ -33,40 +33,33 @@ document.addEventListener('DOMContentLoaded', function() {
         // Можно остановить выполнение дальнейших скриптов, зависящих от ID
     }
 
-    // Функция для обновления отображения рейтинга планетами
+    // Функция для обновления отображения рейтинга (метод наложения)
     function updateRatingDisplay(containerSelector, rating) {
         const starsContainer = document.querySelector(containerSelector);
         if (!starsContainer) return;
 
-        const planets = starsContainer.querySelectorAll('.rating-planet');
+        const iconContainers = starsContainer.querySelectorAll('.rating-icon-container'); // Ищем контейнеры
         const ratingValue = parseFloat(rating) || 0;
-        const fullPlanets = Math.floor(ratingValue);
-        // const partialPlanetPercentage = (ratingValue - fullPlanets) * 100; // Пока не используем
-        console.log(`BEFORE LOOP - Rating: ${ratingValue}, Full: ${fullPlanets}, Planets found: ${planets.length}, Selector: ${containerSelector}`); // <<< Отладка перед циклом
+        const fullStars = Math.floor(ratingValue);
+        const partialPercentage = (ratingValue - fullStars) * 100;
+        // console.log(`BEFORE LOOP - Rating: ${ratingValue}, Full: ${fullStars}, Partial%: ${partialPercentage}, Containers found: ${iconContainers.length}, Selector: ${containerSelector}`);
 
-        planets.forEach((planet, index) => {
-            planet.classList.remove('filled', 'partial'); // Сбрасываем классы
-            planet.style.removeProperty('--fill-percentage'); // Убираем переменную
-            console.log(`Inside loop - Planet ${index}:`, planet); // <<< Отладка элемента
+        iconContainers.forEach((container, index) => {
+            const filledIcon = container.querySelector('.icon-filled');
+            if (!filledIcon) return; // Пропускаем, если нет иконки
+            // console.log(`Inside loop - Container ${index}:`, container);
 
-            if (index < fullPlanets) {
-                // Полностью заполненные - класс filled
-                planet.classList.add('filled');
-            } else {
-                 // Пустые планеты
-                 planet.classList.remove('filled', 'partial'); 
-                 planet.style.removeProperty('--fill-percentage');
+            let fillWidth = '0%'; // Ширина по умолчанию
+            if (index < fullStars) {
+                // Полностью заполненные
+                fillWidth = '100%';
+            } else if (index === fullStars && partialPercentage > 0) {
+                // Частично заполненная
+                fillWidth = `${partialPercentage}%`;
             }
-            /* Старая логика с partial
-            } else if (index === fullPlanets && partialPlanetPercentage > 0) {
-                // Частично заполненная - класс partial и переменная
-                planet.classList.add('partial');
-                planet.style.setProperty('--fill-percentage', `${partialPlanetPercentage}%`);
-            } else {
-                 // Пустые планеты 
-                 planet.classList.remove('filled', 'partial');
-                 planet.style.removeProperty('--fill-percentage');
-            }*/
+            // Применяем ширину к желтой иконке
+            filledIcon.style.width = fillWidth;
+            // console.log(`Container ${index}: Set width to ${fillWidth}`);
         });
     }
 

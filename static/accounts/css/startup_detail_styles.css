@@ -338,42 +338,38 @@ a:hover {
     margin-bottom: 30px; /* Добавляем отступ под этим блоком */
 }
 
-/* --- ТАБЫ НАВИГАЦИИ (попытка 2 - стиль как рамка с текстом) --- */
-.tabbed-content-wrapper .tab-navigation {
+/* --- ТАБЫ НАВИГАЦИИ --- */
+.tab-navigation {
   display: flex;
-  gap: 25px; /* Промежуток между кнопками */
+  gap: 25px; 
   align-self: stretch;
-  margin-bottom: 25px; /* Отступ под табами */
-  padding-bottom: 15px; /* Отступ до разделителя */
-  border-bottom: 1px solid #353945; /* Разделитель */
+  margin-bottom: 25px; 
+  padding-bottom: 15px; 
+  border-bottom: 1px solid #353945; 
 }
 
-/* Увеличиваем специфичность */
-.tabbed-content-wrapper .tab-navigation .tab-button {
-  padding: 0; /* Убираем padding с кнопки */
-  background-color: transparent !important; 
+/* Возвращаем стили, которые работали изначально для клика */
+.tab-button {
+  padding: 8px 15px; 
+  background-color: transparent; 
   border: none; 
-  color: var(--text-secondary, #A9B8D4) !important; 
+  color: var(--text-secondary, #A9B8D4); 
   font-family: 'Circe', sans-serif;
   font-size: 16px;
   font-weight: 400;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
   white-space: nowrap;
   border-radius: 8px; 
-  display: inline-block; /* Меняем на inline-block */
 }
 
-/* Добавляем стили для внутреннего span */
-.tabbed-content-wrapper .tab-navigation .tab-button span {
-    display: block; /* Чтобы padding работал */
-    padding: 8px 15px; /* Применяем padding сюда */
-}
-
-/* Увеличиваем специфичность */
-.tabbed-content-wrapper .tab-navigation .tab-button:hover,
-.tabbed-content-wrapper .tab-navigation .tab-button.active {
-  background-color: rgba(255, 255, 255, 0.08) !important; /* Возвращаем !important */
-  color: var(--text-primary, #FFFFFF) !important; /* Возвращаем !important */
-  font-weight: 600; /* Можно сделать чуть жирнее (SemiBold) */
+/* Возвращаем стили hover/active */
+.tab-button:hover,
+.tab-button.active {
+  background-color: rgba(255, 255, 255, 0.08); 
+  color: var(--text-primary, #FFFFFF); 
+  font-weight: 600; 
 }
 
 /* --- КОНТЕНТ ТАБОВ --- */
@@ -1596,48 +1592,87 @@ a:hover {
   transition: opacity 0.2s;
 }
 
-/* --- Новые стили для Unicode Планет Рейтинга (Упрощенные) --- */
-.rating-planet {
+/* --- Новые стили для иконок рейтинга (метод наложения) --- */
+.rating-icon-container {
   display: inline-block;
-  font-size: 22px; 
-  vertical-align: middle; 
+  position: relative;
+  font-size: 20px; /* Базовый размер для контейнера */
+  vertical-align: middle;
+  margin-right: 2px; /* Отступ между контейнерами */
   cursor: default;
-  color: var(--text-secondary, #A9B8D4); /* Базовый серый цвет */
-  line-height: 1; 
-  transition: color 0.2s ease;
-  margin-right: -4px; /* Оставляем сближение */
+  line-height: 1; /* Предотвращение лишних отступов */
+}
+.rating-icon-container:last-child {
+  margin-right: 0;
 }
 
-.rating-planet:last-child {
-    margin-right: 0;
+/* Общие стили для обеих иконок внутри контейнера */
+.rating-icon-container .fas.fa-star {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transition: width 0.1s ease-out; /* Плавность для изменения ширины */
+  line-height: inherit; /* Наследуем line-height */
 }
 
-/* Стиль для ЗАПОЛНЕННОЙ планеты (просто меняем цвет текста) */
-.rating-planet.filled {
-   color: #FFB700 !important; /* Добавляем !important для отладки */
+/* Стиль для фоновой (серой) иконки */
+.rating-icon-container .icon-empty {
+  color: var(--text-secondary, #A9B8D4);
+  z-index: 1; /* Под заполненной иконкой */
+  /* Ширина 100% не нужна, т.к. она под ней */
 }
 
-/* Для интерактивных планет (возможность голосования) */
-.rating-stars[data-interactive="true"] .rating-planet {
+/* Стиль для заполняющей (желтой) иконки */
+.rating-icon-container .icon-filled {
+  color: #FFB700;
+  width: 0%; /* Изначально невидима */
+  overflow: hidden; /* Обрезаем по ширине */
+  z-index: 2; /* Поверх серой иконки */
+  white-space: nowrap; /* Предотвращение переноса, если вдруг иконка не поместится */
+}
+
+/* Для интерактивных контейнеров */
+.rating-stars[data-interactive="true"] .rating-icon-container {
   cursor: pointer;
 }
-/* Эффект при наведении на интерактивные планеты */
-.rating-stars[data-interactive="true"] .rating-planet:hover {
-  /* Можно временно закрасить желтым при наведении */
-   background: #FFB700; 
-   -webkit-background-clip: text;
-   background-clip: text;
-   -webkit-text-fill-color: transparent; 
+
+/* Эффект при наведении на интерактивные (опционально - можно подсветить фон) */
+/* .rating-stars[data-interactive="true"] .rating-icon-container:hover { ... } */
+
+/* Контейнеры в комментариях */
+.comment-icon-container {
+    font-size: 16px; /* Чуть меньше */
 }
 
-/* --- КОНЕЦ Новых стилей для Unicode Планет Рейтинга --- */
+/* --- КОНЕЦ стилей для иконок рейтинга --- */
 
-.comment-planet {
-  /* Если нужны особые стили для планет в комментариях - добавляем сюда */
-  /* width: 16px; */
-  /* height: 16px; */
-  font-size: 18px; /* Например, чуть меньше */
+/* Удаляем старые стили .rating-icon */
+/*
+.rating-icon {
+  display: inline-block;
+  font-size: 20px; 
+  vertical-align: middle; 
+  color: var(--text-secondary, #A9B8D4); 
+  margin-right: 2px; 
+  transition: color 0.2s ease;
+  cursor: default;
 }
+.rating-icon:last-child {
+    margin-right: 0;
+}
+.rating-icon.active {
+  color: #FFB700 !important; 
+}
+.rating-stars[data-interactive="true"] .rating-icon {
+  cursor: pointer;
+}
+.rating-stars[data-interactive="true"] .rating-icon:hover {
+  color: #FFDA63; 
+}
+.comment-icon {
+    font-size: 16px; 
+}
+*/
 
 .comment-date {
   font-size: 13px;
