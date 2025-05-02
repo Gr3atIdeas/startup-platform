@@ -106,8 +106,8 @@
             <div class="rating-stars" data-rating="{{ average_rating|floatformat:"-2"|default:0 }}" {% if user.is_authenticated and not user_has_voted %}data-interactive="true"{% endif %}>
               {% for i in "12345" %}
                 <span class="rating-icon-container" {% if user.is_authenticated and not user_has_voted %}data-value="{{ forloop.counter }}"{% endif %}>
-                  <i class="fas fa-star icon-empty"></i> {# Серая иконка фона #}
-                  <i class="fas fa-star icon-filled"></i> {# Желтая иконка заполнения #}
+                  <i class="fas fa-ring icon-empty"></i> {# Серая иконка фона #}
+                  <i class="fas fa-ring icon-filled"></i> {# Желтая иконка заполнения #}
                 </span>
               {% endfor %}
             </div>
@@ -288,8 +288,8 @@
                           {% for star_i in "12345" %}
                             {# Используем контейнеры с двумя иконками #}
                             <span class="rating-icon-container comment-icon-container">
-                              <i class="fas fa-star icon-empty"></i>
-                              <i class="fas fa-star icon-filled"></i>
+                              <i class="fas fa-ring icon-empty"></i>
+                              <i class="fas fa-ring icon-filled"></i>
                             </span>
                           {% endfor %}
                         {% endwith %}

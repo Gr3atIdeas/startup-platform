@@ -150,12 +150,13 @@ document.addEventListener('DOMContentLoaded', function() {
         showMoreCommentsBtn.style.display = 'none';
     }
 
-    // 4. Логика голосования звездами (только если пользователь аутентифицирован и не голосовал)
+    // 4. Логика голосования (теперь для иконок-контейнеров)
     const interactiveStarsContainer = document.querySelector('.rating-stars[data-interactive="true"]');
     if (isUserAuthenticated && !hasUserVoted && interactiveStarsContainer) {
-        interactiveStarsContainer.querySelectorAll('i.fa-star[data-value]').forEach(star => {
-            star.style.cursor = 'pointer'; // Добавляем указатель
-            star.addEventListener('click', function() {
+        // Ищем контейнеры с data-value, а не сами иконки
+        interactiveStarsContainer.querySelectorAll('.rating-icon-container[data-value]').forEach(iconContainer => {
+            iconContainer.style.cursor = 'pointer'; // Добавляем указатель
+            iconContainer.addEventListener('click', function() {
                 const rating = this.getAttribute('data-value');
 
                 if (!csrfToken) {
@@ -186,10 +187,10 @@ document.addEventListener('DOMContentLoaded', function() {
                             // Обновляем отображение планет после голосования
                             updateRatingDisplay('.rating-stars[data-rating]', data.average_rating);
                             
-                            // Убираем data-value и стиль курсора у планет
-                            starsContainerElement.querySelectorAll('.rating-planet').forEach(p => {
-                                p.removeAttribute('data-value');
-                                p.style.cursor = 'default';
+                            // Убираем data-value и стиль курсора у КОНТЕЙНЕРОВ
+                            starsContainerElement.querySelectorAll('.rating-icon-container').forEach(container => {
+                                container.removeAttribute('data-value');
+                                container.style.cursor = 'default';
                             });
 
                             const ratingValueElement = document.querySelector('.rating-label');
