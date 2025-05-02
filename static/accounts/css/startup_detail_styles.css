@@ -593,12 +593,13 @@ a:hover {
   color: var(--text-secondary);
 }
 
-.rating-stars i {
-  font-size: 18px; /* Чуть больше звезды */
-  color: var(--text-placeholder); /* Неактивные звезды */
-}
-.rating-stars i.active {
-  color: var(--accent-yellow); /* Активные звезды желтые */
+.rating-planet {
+  font-size: 24px;
+  color: var(--text-placeholder);
+  background: linear-gradient(to right, #FFB700 0%, #FFB700 var(--fill-percentage), #000819 var(--fill-percentage), #000819 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .comments-link {
@@ -1596,15 +1597,7 @@ a:hover {
   transition: color 0.2s ease, background 0.2s ease; /* Плавность для ховера */
 }
 
-/* Полностью удаляем этот комментарий */
-/*
-.rating-planet.filled {
-  background-image: url('../images/startups/planet_rating_filled.svg');
-}
-.rating-planet.partial::before {
-  ...
-}
-*/
+/* Полностью удаляем этот закомментированный блок */
 
 /* Стиль для ЗАПОЛНЕННОЙ планеты (просто меняем цвет) */
 .rating-planet.filled {
