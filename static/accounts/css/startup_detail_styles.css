@@ -367,7 +367,7 @@ a:hover {
 /* Возвращаем стили hover/active */
 .tab-button:hover,
 .tab-button.active {
-  background-color: var(--dark-card-bg); /* Используем фон карточек */
+  /* background-color: var(--dark-card-bg); */ /* Убираем фон */
   color: var(--text-primary, #FFFFFF); 
   font-weight: 600; 
 }
@@ -1592,43 +1592,44 @@ a:hover {
   transition: opacity 0.2s;
 }
 
-/* --- Новые стили для иконок рейтинга (метод наложения) --- */
+/* --- Новые стили для иконок рейтинга (метод наложения SVG) --- */
 .rating-icon-container {
   display: inline-block;
   position: relative;
-  font-size: 20px; /* Базовый размер для контейнера */
+  width: 22px; /* Ширина иконки */
+  height: 22px; /* Высота иконки */
   vertical-align: middle;
-  margin-right: 2px; /* Отступ между контейнерами */
+  margin-right: 3px; /* Отступ между контейнерами */
   cursor: default;
-  line-height: 1; /* Предотвращение лишних отступов */
+  line-height: 1;
 }
 .rating-icon-container:last-child {
   margin-right: 0;
 }
 
-/* Общие стили для обеих иконок внутри контейнера */
-.rating-icon-container .fas.fa-star {
+/* Общие стили для обеих SVG иконок внутри контейнера */
+.rating-icon-container img {
   position: absolute;
   top: 0;
   left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* Сохраняем пропорции SVG */
   transition: width 0.1s ease-out; /* Плавность для изменения ширины */
-  line-height: inherit; /* Наследуем line-height */
 }
 
 /* Стиль для фоновой (серой) иконки */
 .rating-icon-container .icon-empty {
-  color: var(--text-secondary, #A9B8D4);
+  filter: grayscale(100%) brightness(1.2); /* Делаем SVG серым и чуть светлее */
   z-index: 1; /* Под заполненной иконкой */
-  /* Ширина 100% не нужна, т.к. она под ней */
 }
 
-/* Стиль для заполняющей (желтой) иконки */
+/* Стиль для заполняющей (цветной) иконки */
 .rating-icon-container .icon-filled {
-  color: #FFB700;
+  /* Цвет берется из SVG */
   width: 0%; /* Изначально невидима */
   overflow: hidden; /* Обрезаем по ширине */
   z-index: 2; /* Поверх серой иконки */
-  white-space: nowrap; /* Предотвращение переноса, если вдруг иконка не поместится */
 }
 
 /* Для интерактивных контейнеров */
@@ -1636,43 +1637,39 @@ a:hover {
   cursor: pointer;
 }
 
-/* Эффект при наведении на интерактивные (опционально - можно подсветить фон) */
-/* .rating-stars[data-interactive="true"] .rating-icon-container:hover { ... } */
-
 /* Контейнеры в комментариях */
 .comment-icon-container {
-    font-size: 16px; /* Чуть меньше */
+    width: 18px; /* Чуть меньше */
+    height: 18px;
 }
 
-/* --- КОНЕЦ стилей для иконок рейтинга --- */
+/* --- КОНЕЦ стилей для иконок рейтинга SVG --- */
 
-/* Удаляем старые стили .rating-icon */
+/* --- УДАЛЯЕМ СТАРЫЕ СТИЛИ FA --- */
 /*
-.rating-icon {
-  display: inline-block;
-  font-size: 20px; 
-  vertical-align: middle; 
-  color: var(--text-secondary, #A9B8D4); 
-  margin-right: 2px; 
-  transition: color 0.2s ease;
-  cursor: default;
+.rating-icon-container .fas.fa-star {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transition: width 0.1s ease-out; 
+  line-height: inherit; 
 }
-.rating-icon:last-child {
-    margin-right: 0;
+.rating-icon-container .icon-empty {
+  color: var(--text-secondary, #A9B8D4);
+  z-index: 1; 
 }
-.rating-icon.active {
-  color: #FFB700 !important; 
+.rating-icon-container .icon-filled {
+  color: #FFB700;
+  width: 0%; 
+  overflow: hidden; 
+  z-index: 2; 
+  white-space: nowrap; 
 }
-.rating-stars[data-interactive="true"] .rating-icon {
-  cursor: pointer;
-}
-.rating-stars[data-interactive="true"] .rating-icon:hover {
-  color: #FFDA63; 
-}
-.comment-icon {
+.comment-icon-container {
     font-size: 16px; 
 }
 */
+/* --- КОНЕЦ УДАЛЕНИЯ СТАРЫХ СТИЛЕЙ --- */
 
 .comment-date {
   font-size: 13px;

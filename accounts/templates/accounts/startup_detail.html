@@ -102,12 +102,14 @@
         <div class="rating-comments-container">
           <div class="rating-container">
             <span class="rating-label">Рейтинг: {{ average_rating|floatformat:"1" }}/5</span>
-            {# Используем контейнеры с двумя иконками #}
+            {# Используем контейнеры с двумя иконками SVG #}
             <div class="rating-stars" data-rating="{{ average_rating|floatformat:"-2"|default:0 }}" {% if user.is_authenticated and not user_has_voted %}data-interactive="true"{% endif %}>
               {% for i in "12345" %}
                 <span class="rating-icon-container" {% if user.is_authenticated and not user_has_voted %}data-value="{{ forloop.counter }}"{% endif %}>
-                  <i class="fas fa-ring icon-empty"></i> {# Серая иконка фона #}
-                  <i class="fas fa-ring icon-filled"></i> {# Желтая иконка заполнения #}
+                  {# Серая иконка фона SVG #}
+                  <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-empty">
+                  {# Желтая иконка заполнения SVG #}
+                  <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-filled">
                 </span>
               {% endfor %}
             </div>
@@ -286,10 +288,12 @@
                       <div class="comment-rating" data-rating="{{ comment.user_rating|default:0 }}">
                         {% with comment_rating=comment.user_rating|default:0 %}
                           {% for star_i in "12345" %}
-                            {# Используем контейнеры с двумя иконками #}
+                            {# Используем контейнеры с двумя иконками SVG #}
                             <span class="rating-icon-container comment-icon-container">
-                              <i class="fas fa-ring icon-empty"></i>
-                              <i class="fas fa-ring icon-filled"></i>
+                              {# Серая иконка фона SVG #}
+                              <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-empty">
+                              {# Желтая иконка заполнения SVG #}
+                              <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-filled">
                             </span>
                           {% endfor %}
                         {% endwith %}
