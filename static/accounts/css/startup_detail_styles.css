@@ -594,12 +594,14 @@ a:hover {
 }
 
 .rating-planet {
-  font-size: 24px;
-  color: var(--text-placeholder);
-  background: linear-gradient(to right, #FFB700 0%, #FFB700 var(--fill-percentage), #000819 var(--fill-percentage), #000819 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  display: inline-block;
+  font-size: 22px; /* Подберите нужный размер */
+  vertical-align: middle; /* Выравнивание по центру строки */
+  cursor: default;
+  color: var(--text-secondary, #A9B8D4); /* Цвет НЕЗАПОЛНЕННОЙ планеты (серый) - базовый */
+  line-height: 1; /* Чтобы избежать лишних отступов */
+  transition: color 0.2s ease; /* Плавность для ховера (убираем background) */
+  margin-right: 2px; /* Добавляем небольшой отступ справа */
 }
 
 .comments-link {
@@ -1574,39 +1576,22 @@ a:hover {
 }
 
 /* --- Новые стили для Unicode Планет Рейтинга --- */
-.rating-planet {
-  display: inline-block;
-  /* width: 20px; */  /* Размеры теперь управляются font-size */
-  /* height: 20px; */
-  font-size: 22px; /* Подберите нужный размер */
-  /* Удаляем все упоминания SVG */
-  /* background-size: contain; */
-  /* background-repeat: no-repeat; */
-  /* background-position: center; */
-  vertical-align: middle; /* Выравнивание по центру строки */
-  position: relative; /* Для псевдоэлемента не нужно, используем градиент */
-  cursor: default;
-  color: var(--text-secondary, #A9B8D4); /* Цвет НЕЗАПОЛНЕННОЙ планеты (серый) */
-  line-height: 1; /* Чтобы избежать лишних отступов */
-  
-  /* Свойства для частичного заполнения градиентом */
+.rating-planet:last-child {
+    margin-right: 0;
+}
+
+/* Стиль для ЧАСТИЧНО заполненной планеты (применяем градиент только здесь) */
+.rating-planet.partial {
+  color: transparent; /* Скрываем исходный символ */
   background: linear-gradient(to right, #FFB700 var(--fill-percentage, 0%), var(--text-secondary, #A9B8D4) var(--fill-percentage, 0%));
   -webkit-background-clip: text;
   background-clip: text;
-  -webkit-text-fill-color: transparent; /* Делаем оригинальный цвет текста прозрачным */
-  transition: color 0.2s ease, background 0.2s ease; /* Плавность для ховера */
+  -webkit-text-fill-color: transparent;
 }
 
-/* Полностью удаляем этот закомментированный блок */
-
-/* Стиль для ЗАПОЛНЕННОЙ планеты (просто меняем цвет) */
+/* Стиль для ЗАПОЛНЕННОЙ планеты (просто меняем цвет текста) */
 .rating-planet.filled {
-   background: #FFB700; /* Сплошной цвет фона (но обрежется текстом) */
-   -webkit-background-clip: text;
-   background-clip: text;
-   -webkit-text-fill-color: transparent;
-   /* Можно и просто color: #FFB700; если не нужна поддержка частичного заполнения при наведении */
-   /* color: #FFB700; */ 
+   color: #FFB700; /* Просто устанавливаем нужный цвет текста */
 }
 
 /* Для интерактивных планет (возможность голосования) */
