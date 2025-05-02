@@ -44,16 +44,19 @@ document.addEventListener('DOMContentLoaded', function() {
         const partialPlanetPercentage = (ratingValue - fullPlanets) * 100;
 
         planets.forEach((planet, index) => {
-            planet.style.removeProperty('--fill-percentage');
+            planet.classList.remove('filled'); // Убираем класс .filled для всех по умолчанию
+            planet.style.removeProperty('--fill-percentage'); // Убираем переменную на всякий случай
 
             if (index < fullPlanets) {
+                // Полностью заполненные
                 planet.classList.add('filled');
             } else if (index === fullPlanets && partialPlanetPercentage > 0) {
+                // Частично заполненная - используем ТОЛЬКО переменную
                 planet.style.setProperty('--fill-percentage', `${partialPlanetPercentage}%`);
             } else {
-                // Для пустых планет убираем класс filled и переменную (уже сделано в начале)
+                // Пустые - устанавливаем переменную в 0%, класс filled уже убран
+                planet.style.setProperty('--fill-percentage', '0%');
             }
-            // Убрали логику с .partial, так как базовый стиль уже содержит градиент
         });
     }
 
