@@ -44,21 +44,27 @@ document.addEventListener('DOMContentLoaded', function() {
         const partialPlanetPercentage = (ratingValue - fullPlanets) * 100;
 
         planets.forEach((planet, index) => {
+            let finalState = 'empty'; // Отслеживаем финальное состояние
             planet.classList.remove('filled', 'partial'); // Сбрасываем классы
             planet.style.removeProperty('--fill-percentage'); // Убираем переменную
 
             if (index < fullPlanets) {
                 // Полностью заполненные - класс filled
                 planet.classList.add('filled');
+                finalState = 'filled';
             } else if (index === fullPlanets && partialPlanetPercentage > 0) {
                 // Частично заполненная - класс partial и переменная
                 planet.classList.add('partial');
                 planet.style.setProperty('--fill-percentage', `${partialPlanetPercentage}%`);
+                finalState = `partial (${partialPlanetPercentage}%)`;
             } else {
-                 // Пустые планеты - убеждаемся, что оба класса удалены и переменная сброшена
+                 // Пустые планеты
                  planet.classList.remove('filled', 'partial');
                  planet.style.removeProperty('--fill-percentage');
+                 finalState = 'empty (forced)';
             }
+            // Выводим финальное состояние для каждой планеты
+            console.log(`Planet ${index}: Final state = ${finalState}, Classes = ${planet.className}, Fill = ${planet.style.getPropertyValue('--fill-percentage')}`); 
         });
     }
 

@@ -339,7 +339,7 @@ a:hover {
 }
 
 /* --- ТАБЫ НАВИГАЦИИ (попытка 2 - стиль как рамка с текстом) --- */
-.tab-navigation {
+.tabbed-content-wrapper .tab-navigation {
   display: flex;
   gap: 25px; /* Промежуток между кнопками */
   align-self: stretch;
@@ -348,9 +348,10 @@ a:hover {
   border-bottom: 1px solid #353945; /* Разделитель */
 }
 
-.tab-button {
+/* Увеличиваем специфичность */
+.tabbed-content-wrapper .tab-navigation .tab-button {
   padding: 8px 15px; /* Внутренние отступы */
-  background-color: transparent !important; /* !important для гарантии прозрачности по умолчанию */
+  background-color: transparent; /* ПРОЗРАЧНЫЙ фон по умолчанию */
   border: none; /* Рамки нет */
   color: var(--text-secondary, #A9B8D4); /* Светло-серый ТЕКСТ по умолчанию */
   font-family: 'Circe', sans-serif;
@@ -363,10 +364,10 @@ a:hover {
   border-radius: 8px; /* Оставляем скругление для hover/active */
 }
 
-/* Стиль при наведении и для активной кнопки (как в хедере) */
-.tab-button:hover,
-.tab-button.active {
-  background-color: rgba(255, 255, 255, 0.08) !important; /* Легкий белый фон при наведении/активации, !important для переопределения */
+/* Увеличиваем специфичность */
+.tabbed-content-wrapper .tab-navigation .tab-button:hover,
+.tabbed-content-wrapper .tab-navigation .tab-button.active {
+  background-color: rgba(255, 255, 255, 0.08); /* Легкий белый фон при наведении/активации */
   color: var(--text-primary, #FFFFFF); /* Белый цвет ТЕКСТА */
   font-weight: 600; /* Можно сделать чуть жирнее (SemiBold) */
 }
