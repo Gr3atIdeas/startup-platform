@@ -1572,267 +1572,73 @@ a:hover {
   transition: opacity 0.2s;
 }
 
-/* --- Новый стиль: Блок Стадии --- */
-.info-block.stage-block .info-block-value {
-  /* Стиль значения для стадии, если нужно */
-  font-weight: 600; /* Немного жирнее */
-}
-
-/* --- Обновленные стили: О проекте --- */
-.about-section {
-  margin-top: 40px; /* Отступ сверху */
-  background-color: var(--secondary-blue); /* Фон как у секции комментариев */
-  padding: 30px;
-  border-radius: 15px;
-}
-
-.about-section .section-title {
-  font-size: 24px; /* Крупнее заголовок */
-  font-weight: 700;
-  margin-bottom: 20px; /* Отступ снизу */
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--border-color); /* Линия под заголовком */
-}
-
-.about-section .section-content {
-  color: var(--text-secondary);
-  font-size: 16px;
-  line-height: 1.6;
-}
-
-.about-section .section-content p {
-  margin-bottom: 15px;
-}
-
-.about-section .section-content strong {
-  color: var(--text-primary);
-  font-weight: 600;
-}
-
-/* --- Обновленные стили: Медиа секция (Галерея) --- */
-.media-section {
-  margin-top: 40px;
-  background-color: var(--secondary-blue); /* Тот же фон */
-  padding: 30px;
-  border-radius: 15px;
-}
-
-.media-section .section-title {
-  font-size: 24px;
-  font-weight: 700;
-  margin-bottom: 20px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--border-color);
-}
-
-.gallery-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); /* Адаптивная сетка */
-  gap: 15px;
-}
-
-.gallery-item {
-  position: relative;
-  border-radius: 8px;
-  overflow: hidden;
-  aspect-ratio: 1 / 1; /* Квадратные превью */
-  background-color: var(--dark-card-bg); /* Фон для плейсхолдеров */
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.gallery-item img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.3s ease;
-}
-
-.gallery-item:hover img {
-  transform: scale(1.05);
-}
-
-.gallery-item.video-item .play-icon-overlay {
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0, 8, 25, 0.5);
-  color: var(--text-primary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 30px;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.gallery-item.video-item:hover .play-icon-overlay {
-  opacity: 1;
-}
-
-.gallery-item .video-placeholder {
-  color: var(--text-secondary);
-  font-size: 14px;
-}
-
-/* --- Стили для Fancybox (Улучшенные кнопки) --- */
-.fancybox__container {
-  --fancybox-bg: rgba(11, 26, 63, 0.9); /* Полупрозрачный фон */
-  --fancybox-color: var(--text-primary);
-  /* Переменные для кнопок */
-  --fancybox-button-bg: transparent;
-  --fancybox-button-hover-bg: rgba(255, 255, 255, 0.1);
-  --fancybox-button-color: var(--text-secondary);
-  --fancybox-button-hover-color: var(--text-primary);
-  --fancybox-button-active-bg: rgba(255, 255, 255, 0.15);
-}
-
-.fancybox__toolbar {
-  background: none;
-}
-
-/* Общие стили для кнопок */
-.fancybox__button {
-  /* Убираем стандартный SVG фон */
-  background: var(--fancybox-button-bg);
-  color: var(--fancybox-button-color);
-  border-radius: 50%;
-  transition: background-color 0.2s ease, color 0.2s ease;
-  padding: 0;
-  width: 44px; /* Размер кнопки */
-  height: 44px;
-  display: inline-flex; /* Центрируем иконку */
-  align-items: center;
-  justify-content: center;
-}
-
-.fancybox__button:hover {
-  background: var(--fancybox-button-hover-bg);
-  color: var(--fancybox-button-hover-color);
-}
-
-.fancybox__button:active {
-  background: var(--fancybox-button-active-bg);
-}
-
-/* Убираем стандартные SVG иконки */
-.fancybox__button svg {
-  display: none;
-}
-
-/* Добавляем Font Awesome иконки */
-.fancybox__button::before {
-  font-family: "Font Awesome 6 Free";
-  font-weight: 900;
-  font-size: 18px; /* Размер иконки */
-  line-height: 1;
-}
-
-.fancybox__button--close::before {
-  content: "\f00d"; /* fa-times */
-}
-
-.fancybox__button--prev::before {
-  content: "\f053"; /* fa-chevron-left */
-}
-
-.fancybox__button--next::before {
-  content: "\f054"; /* fa-chevron-right */
-}
-
-/* Счетчик слайдов */
-.fancybox__counter {
-    color: var(--text-secondary);
-}
-
-.fancybox__caption {
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 100%);
-  padding: 20px 10px 10px 10px;
-  color: var(--text-primary);
-  font-size: 14px;
-}
-
-/* --- ТАБЫ НАВИГАЦИИ --- */
-.tab-navigation {
-  display: flex;
-  gap: 25px; /* Промежуток между кнопками */
-  align-self: stretch;
-  margin-bottom: 25px; /* Отступ под табами */
-  padding-bottom: 15px; /* Отступ до разделителя */
-  border-bottom: 1px solid #353945; /* Разделитель */
-}
-
-.tab-button {
-  padding: 8px 15px; /* Внутренние отступы */
-  background-color: transparent; /* Фон ПРОЗРАЧНЫЙ по умолчанию */
-  /* border: 1px solid var(--text-secondary, #A9B8D4); */ /* УБИРАЕМ РАМКУ ПО УМОЛЧАНИЮ */
-  border: none; /* Убедимся что рамки нет */
-  color: var(--text-secondary, #A9B8D4); /* Цвет ТЕКСТА светло-серый */
-  font-family: 'Circe', sans-serif;
-  font-size: 16px;
-  font-weight: 400;
-  text-align: center;
-  cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease; /* Обновляем transition */
-  white-space: nowrap;
-  border-radius: 8px; /* Скругление углов */
-}
-
-/* --- КОНТЕНТ ТАБОВ --- */
-.content-section {
-  display: none;
-}
-
-.content-section.active {
-  display: block;
-  animation: fadeInContent 0.5s ease-in-out; /* Плавное появление */
-}
-
-@keyframes fadeInContent {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* --- Новые стили для SVG Планет Рейтинга --- */
+/* --- Новые стили для Unicode Планет Рейтинга --- */
 .rating-planet {
   display: inline-block;
-  width: 20px;  /* Задайте желаемую ширину планеты */
-  height: 20px; /* Задайте желаемую высоту планеты */
-  background-image: url('../images/startups/planet_rating_empty.svg'); /* Путь к НЕЗАПОЛНЕННОЙ планете */
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
+  /* width: 20px; */  /* Размеры теперь управляются font-size */
+  /* height: 20px; */
+  font-size: 22px; /* Подберите нужный размер */
+  /* background-image: url('../images/startups/planet_rating_empty.svg'); */ /* Больше не используем SVG */
+  /* background-size: contain; */
+  /* background-repeat: no-repeat; */
+  /* background-position: center; */
   vertical-align: middle; /* Выравнивание по центру строки */
-  position: relative; /* Для позиционирования псевдоэлемента */
-  /* Убираем стандартный вид курсора для интерактивных */
+  position: relative; /* Для псевдоэлемента не нужно, используем градиент */
   cursor: default;
+  color: var(--text-secondary, #A9B8D4); /* Цвет НЕЗАПОЛНЕННОЙ планеты (серый) */
+  line-height: 1; /* Чтобы избежать лишних отступов */
+  
+  /* Свойства для частичного заполнения градиентом */
+  background: linear-gradient(to right, #FFB700 var(--fill-percentage, 0%), var(--text-secondary, #A9B8D4) var(--fill-percentage, 0%));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent; /* Делаем оригинальный цвет текста прозрачным */
+  transition: color 0.2s ease, background 0.2s ease; /* Плавность для ховера */
 }
 
-/* Стиль для полностью ЗАПОЛНЕННОЙ планеты */
+/* Убираем стили для .filled и .partial, т.к. управляем градиентом */
+/*
 .rating-planet.filled {
-  background-image: url('../images/startups/planet_rating_filled.svg'); /* Путь к ЗАПОЛНЕННОЙ планете */
+  background-image: url('../images/startups/planet_rating_filled.svg');
 }
-
-/* Стиль для ЧАСТИЧНО ЗАПОЛНЕННОЙ планеты (используем псевдоэлемент) */
 .rating-planet.partial::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: var(--fill-percentage, 0%); /* Ширина зависит от переменной */
-  background-image: url('../images/startups/planet_rating_filled.svg'); /* ЗАПОЛНЕННАЯ планета для заливки */
-  background-size: contain; /* Используем contain, чтобы соответствовать родительскому */
-  background-repeat: no-repeat;
-  background-position: left center; /* Позиционируем слева */
-  overflow: hidden; /* Обрезаем лишнее */
-  z-index: 1;
+  ...
+}
+*/
+
+/* Стиль для ЗАПОЛНЕННОЙ планеты (просто меняем цвет) */
+.rating-planet.filled {
+   background: #FFB700; /* Сплошной цвет фона (но обрежется текстом) */
+   -webkit-background-clip: text;
+   background-clip: text;
+   -webkit-text-fill-color: transparent;
+   /* Можно и просто color: #FFB700; если не нужна поддержка частичного заполнения при наведении */
+   /* color: #FFB700; */ 
 }
 
 /* Для интерактивных планет (возможность голосования) */
 .rating-stars[data-interactive="true"] .rating-planet {
   cursor: pointer;
 }
+/* Эффект при наведении на интерактивные планеты */
+.rating-stars[data-interactive="true"] .rating-planet:hover {
+  /* Можно временно закрасить желтым при наведении */
+   background: #FFB700; 
+   -webkit-background-clip: text;
+   background-clip: text;
+   -webkit-text-fill-color: transparent; 
+}
 
-/* --- КОНЕЦ Новых стилей для SVG Планет Рейтинга --- */
+/* --- КОНЕЦ Новых стилей для Unicode Планет Рейтинга --- */
+
+.comment-planet {
+  /* Если нужны особые стили для планет в комментариях - добавляем сюда */
+  /* width: 16px; */
+  /* height: 16px; */
+  font-size: 18px; /* Например, чуть меньше */
+}
+
+.comment-date {
+  font-size: 13px;
+  color: var(--text-placeholder);
+}

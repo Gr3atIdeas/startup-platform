@@ -105,8 +105,7 @@
             <div class="rating-stars" data-rating="{{ average_rating|default:0 }}" {% if user.is_authenticated and not user_has_voted %}data-interactive="true"{% endif %}>
               {% for i in "12345" %}
                 <span class="rating-planet" 
-                      {% if user.is_authenticated and not user_has_voted %}data-value="{{ forloop.counter }}"{% endif %}>
-                </span>
+                      {% if user.is_authenticated and not user_has_voted %}data-value="{{ forloop.counter }}"{% endif %}>🪐</span>
               {% endfor %}
             </div>
           </div>
@@ -281,11 +280,11 @@
                         <div class="comment-author-avatar"></div>
                         <div class="comment-author-name">{{ comment.user_id.first_name|default:comment.user_id.email }}</div>
                       </div>
-                      <div class="comment-rating">
-                        {% with comment_rating=comment.rating|default:0 %}
-                        {% for star_i in "12345" %}
-                          <span class="rating-planet comment-planet"></span>
-                        {% endfor %}
+                      <div class="comment-rating" data-rating="{{ comment.user_rating|default:0 }}">
+                        {% with comment_rating=comment.user_rating|default:0 %}
+                          {% for star_i in "12345" %}
+                            <span class="rating-planet comment-planet">🪐</span>
+                          {% endfor %}
                         {% endwith %}
                       </div>
                       <div class="comment-date">{{ comment.created_at|date:"d/m/Y" }}</div>

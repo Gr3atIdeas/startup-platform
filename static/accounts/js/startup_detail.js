@@ -44,16 +44,16 @@ document.addEventListener('DOMContentLoaded', function() {
         const partialPlanetPercentage = (ratingValue - fullPlanets) * 100;
 
         planets.forEach((planet, index) => {
-            planet.classList.remove('filled', 'partial');
             planet.style.removeProperty('--fill-percentage');
 
             if (index < fullPlanets) {
                 planet.classList.add('filled');
             } else if (index === fullPlanets && partialPlanetPercentage > 0) {
-                planet.classList.add('partial');
                 planet.style.setProperty('--fill-percentage', `${partialPlanetPercentage}%`);
-            } 
-            // Остальные остаются пустыми (без доп. классов)
+            } else {
+                // Для пустых планет убираем класс filled и переменную (уже сделано в начале)
+            }
+            // Убрали логику с .partial, так как базовый стиль уже содержит градиент
         });
     }
 
@@ -91,10 +91,16 @@ document.addEventListener('DOMContentLoaded', function() {
             // или нужно будет добавить data-rating="{{ comment.rating }}" в HTML.
             // --- ЗАГЛУШКА: ищем предка comment-card и пытаемся найти данные там, если есть --- 
             let commentRatingValue = 0; // Значение по умолчанию
+            // Читаем data-rating из контейнера commentRatingContainer
+            if (commentRatingContainer && commentRatingContainer.dataset.rating) {
+                 commentRatingValue = parseFloat(commentRatingContainer.dataset.rating);
+            }
+            /* Старый код заглушки:
             const commentRatingAttr = card.dataset.commentRating; // Пример, если бы добавили data-comment-rating
             if (commentRatingAttr) {
                 commentRatingValue = parseFloat(commentRatingAttr);
             }
+            */
             // Генерируем уникальный селектор для контейнера звезд этого комментария
             const uniqueCommentSelector = `.comment-card:nth-child(${cardIndex + 1}) ${ratingCommentsSelector}`;
             updateRatingDisplay(uniqueCommentSelector, commentRatingValue);

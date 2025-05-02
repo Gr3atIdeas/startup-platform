@@ -189,7 +189,15 @@ def startup_detail(request, startup_id):
     startup = get_object_or_404(Startups, startup_id=startup_id)
     timeline = StartupTimeline.objects.filter(startup=startup)
     average_rating = startup.sum_votes / startup.total_voters if startup.total_voters > 0 else 0
-    comments = Comments.objects.filter(startup_id=startup).order_by('-created_at')
+    # Аннотируем рейтинг пользователя к каждому комментарию
+    comments = Comments.objects.filter(startup_id=startup).annotate(
+        user_rating=models.Subquery(
+            UserVotes.objects.filter(
+                startup=models.OuterRef('startup_id'), 
+                user=models.OuterRef('user_id')
+            ).values('rating')[:1]
+        )
+    ).order_by('-created_at')
     investors_count = startup.get_investors_count()
     progress_percentage = startup.get_progress_percentage()
 
