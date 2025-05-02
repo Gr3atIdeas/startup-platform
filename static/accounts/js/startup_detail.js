@@ -42,24 +42,28 @@ document.addEventListener('DOMContentLoaded', function() {
         const ratingValue = parseFloat(rating) || 0;
         const fullPlanets = Math.floor(ratingValue);
         const partialPlanetPercentage = (ratingValue - fullPlanets) * 100;
+        console.log(`Rating: ${ratingValue}, Full: ${fullPlanets}, Partial%: ${partialPlanetPercentage}, Selector: ${containerSelector}`); // Отладка: входные данные
 
         planets.forEach((planet, index) => {
             planet.classList.remove('filled', 'partial'); // Сбрасываем классы
             planet.style.removeProperty('--fill-percentage'); // Убираем переменную
+            console.log(`Planet ${index}: Reset`); // Отладка: сброс
 
             if (index < fullPlanets) {
                 // Полностью заполненные - класс filled
                 planet.classList.add('filled');
+                 console.log(`Planet ${index}: Applied .filled`); // Отладка: полное заполнение
             } else if (index === fullPlanets && partialPlanetPercentage > 0) {
                 // Частично заполненная - класс partial и переменная
                 planet.classList.add('partial');
                 planet.style.setProperty('--fill-percentage', `${partialPlanetPercentage}%`);
+                 console.log(`Planet ${index}: Applied .partial with ${partialPlanetPercentage}%`); // Отладка: частичное
             } else {
                  // Пустые планеты - убеждаемся, что оба класса удалены и переменная сброшена
                  planet.classList.remove('filled', 'partial');
                  planet.style.removeProperty('--fill-percentage');
+                 console.log(`Planet ${index}: Kept empty (styles removed)`); // Отладка: пустая
             }
-            // Для пустых планет ничего не делаем (классы уже сброшены)
         });
     }
 
