@@ -33,6 +33,30 @@ document.addEventListener('DOMContentLoaded', function() {
         // Можно остановить выполнение дальнейших скриптов, зависящих от ID
     }
 
+    // Функция для обновления отображения рейтинга планетами
+    function updateRatingDisplay(containerSelector, rating) {
+        const starsContainer = document.querySelector(containerSelector);
+        if (!starsContainer) return;
+
+        const planets = starsContainer.querySelectorAll('.rating-planet');
+        const ratingValue = parseFloat(rating) || 0;
+        const fullPlanets = Math.floor(ratingValue);
+        const partialPlanetPercentage = (ratingValue - fullPlanets) * 100;
+
+        planets.forEach((planet, index) => {
+            planet.classList.remove('filled', 'partial');
+            planet.style.removeProperty('--fill-percentage');
+
+            if (index < fullPlanets) {
+                planet.classList.add('filled');
+            } else if (index === fullPlanets && partialPlanetPercentage > 0) {
+                planet.classList.add('partial');
+                planet.style.setProperty('--fill-percentage', `${partialPlanetPercentage}%`);
+            } 
+            // Остальные остаются пустыми (без доп. классов)
+        });
+    }
+
     // 1. Синхронизация прогресс-бара
     const progressFill = document.querySelector('.progress-fill');
     const progressPercentageSpan = document.querySelector('.progress-percentage');
@@ -42,20 +66,48 @@ document.addEventListener('DOMContentLoaded', function() {
         progressPercentageSpan.textContent = `${Math.round(initialProgress)}%`;
     }
 
-    // 2. Отображение начального рейтинга звезд
-    const ratingStarsDisplay = document.querySelector('.rating-stars[data-rating]');
-    if (ratingStarsDisplay) {
-        const rating = parseFloat(ratingStarsDisplay.getAttribute('data-rating')) || 0;
-        const stars = ratingStarsDisplay.querySelectorAll('i.fa-star'); // Уточнили селектор
-        stars.forEach((star, index) => {
-            star.classList.toggle('active', index < Math.round(rating));
-        });
+    // 2. Отображение начального рейтинга (теперь планетами)
+    const ratingDisplayContainer = '.rating-stars[data-rating]'; // Селектор для основного блока
+    const ratingCommentsSelector = '.comment-rating'; // Селектор для рейтинга в комментах
+    
+    // Отображаем основной рейтинг
+    const mainRatingElement = document.querySelector(ratingDisplayContainer);
+    if (mainRatingElement) {
+        const initialRating = mainRatingElement.getAttribute('data-rating');
+        updateRatingDisplay(ratingDisplayContainer, initialRating);
     }
+    
+    // Отображаем рейтинг в каждом комментарии
+    const commentCards = document.querySelectorAll('.comment-card');
+    commentCards.forEach((card, cardIndex) => {
+        const commentRatingContainer = card.querySelector(ratingCommentsSelector);
+        const commentPlanets = commentRatingContainer ? commentRatingContainer.querySelectorAll('.rating-planet') : null;
+        if (commentPlanets && commentPlanets.length > 0) {
+            // Пытаемся получить рейтинг из данных (если был бы добавлен)
+            // В текущей структуре HTML рейтинга в комменте нет data-атрибута.
+            // Мы можем извлечь его из количества активных звезд, если бы они были, 
+            // или (что более правильно) его нужно передавать из шаблона.
+            // Пока что предполагаем, что рейтинг комментария хранится где-то еще
+            // или нужно будет добавить data-rating="{{ comment.rating }}" в HTML.
+            // --- ЗАГЛУШКА: ищем предка comment-card и пытаемся найти данные там, если есть --- 
+            let commentRatingValue = 0; // Значение по умолчанию
+            const commentRatingAttr = card.dataset.commentRating; // Пример, если бы добавили data-comment-rating
+            if (commentRatingAttr) {
+                commentRatingValue = parseFloat(commentRatingAttr);
+            }
+            // Генерируем уникальный селектор для контейнера звезд этого комментария
+            const uniqueCommentSelector = `.comment-card:nth-child(${cardIndex + 1}) ${ratingCommentsSelector}`;
+            updateRatingDisplay(uniqueCommentSelector, commentRatingValue);
+            // ПРИМЕЧАНИЕ: Для корректной работы рейтинга в комментариях, 
+            // необходимо передать значение рейтинга каждого комментария из шаблона,
+            // например, добавив data-rating="{{ comment.rating|default:0 }}" 
+            // к элементу `.comment-rating` или `.comment-card` в HTML.
+        }
+    });
 
     // 3. Логика "Показать еще" / "Скрыть" для комментариев
     const showMoreCommentsBtn = document.querySelector('.show-more-comments');
     const hideCommentsBtn = document.querySelector('.hide-comments-button');
-    const commentCards = document.querySelectorAll('.comment-card');
     const commentsToShow = 3;
 
     if (showMoreCommentsBtn && hideCommentsBtn && commentCards.length > commentsToShow) {
@@ -112,15 +164,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        const starsContainer = this.closest('.rating-stars');
-                        if (starsContainer) {
-                            starsContainer.removeAttribute('data-interactive'); // Убираем интерактивность
-                            const currentStars = starsContainer.querySelectorAll('i.fa-star');
-                            currentStars.forEach((s, index) => {
-                                s.classList.toggle('active', index < Math.round(data.average_rating));
-                                s.removeAttribute('data-value');
-                                s.style.cursor = 'default';
+                        const starsContainerElement = this.closest('.rating-stars');
+                        if (starsContainerElement) {
+                            starsContainerElement.removeAttribute('data-interactive'); // Убираем интерактивность
+                            // Обновляем отображение планет после голосования
+                            updateRatingDisplay('.rating-stars[data-rating]', data.average_rating);
+                            
+                            // Убираем data-value и стиль курсора у планет
+                            starsContainerElement.querySelectorAll('.rating-planet').forEach(p => {
+                                p.removeAttribute('data-value');
+                                p.style.cursor = 'default';
                             });
+
                             const ratingValueElement = document.querySelector('.rating-label');
                             if (ratingValueElement) {
                                 ratingValueElement.textContent = `Рейтинг: ${data.average_rating.toFixed(1)}/5`;

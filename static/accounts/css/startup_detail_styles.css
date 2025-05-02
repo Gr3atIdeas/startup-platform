@@ -355,7 +355,8 @@ a:hover {
 .tab-button {
   padding: 8px 15px; /* Внутренние отступы */
   background-color: transparent; /* Фон ПРОЗРАЧНЫЙ по умолчанию */
-  border: 1px solid var(--text-secondary, #A9B8D4); /* Видимая РАМКА светло-серая */
+  /* border: 1px solid var(--text-secondary, #A9B8D4); */ /* УБИРАЕМ РАМКУ ПО УМОЛЧАНИЮ */
+  border: none; /* Убедимся что рамки нет */
   color: var(--text-secondary, #A9B8D4); /* Цвет ТЕКСТА светло-серый */
   font-family: 'Circe', sans-serif;
   font-size: 16px;
@@ -371,7 +372,7 @@ a:hover {
 .tab-button:hover,
 .tab-button.active {
   background-color: #e9ecef; /* Светло-серый ФОН */
-  border-color: #e9ecef;    /* Цвет РАМКИ совпадает с фоном (становится невидимой) */
+  /* border-color: #e9ecef; */    /* Рамка больше не нужна */
   color: var(--primary-dark-blue, #000819); /* Темный цвет ТЕКСТА */
   font-weight: 700; /* Bold */
 }
@@ -1765,7 +1766,8 @@ a:hover {
 .tab-button {
   padding: 8px 15px; /* Внутренние отступы */
   background-color: transparent; /* Фон ПРОЗРАЧНЫЙ по умолчанию */
-  border: 1px solid var(--text-secondary, #A9B8D4); /* Видимая РАМКА светло-серая */
+  /* border: 1px solid var(--text-secondary, #A9B8D4); */ /* УБИРАЕМ РАМКУ ПО УМОЛЧАНИЮ */
+  border: none; /* Убедимся что рамки нет */
   color: var(--text-secondary, #A9B8D4); /* Цвет ТЕКСТА светло-серый */
   font-family: 'Circe', sans-serif;
   font-size: 16px;
@@ -1791,3 +1793,46 @@ a:hover {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* --- Новые стили для SVG Планет Рейтинга --- */
+.rating-planet {
+  display: inline-block;
+  width: 20px;  /* Задайте желаемую ширину планеты */
+  height: 20px; /* Задайте желаемую высоту планеты */
+  background-image: url('../images/startups/planet_rating_empty.svg'); /* Путь к НЕЗАПОЛНЕННОЙ планете */
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  vertical-align: middle; /* Выравнивание по центру строки */
+  position: relative; /* Для позиционирования псевдоэлемента */
+  /* Убираем стандартный вид курсора для интерактивных */
+  cursor: default;
+}
+
+/* Стиль для полностью ЗАПОЛНЕННОЙ планеты */
+.rating-planet.filled {
+  background-image: url('../images/startups/planet_rating_filled.svg'); /* Путь к ЗАПОЛНЕННОЙ планете */
+}
+
+/* Стиль для ЧАСТИЧНО ЗАПОЛНЕННОЙ планеты (используем псевдоэлемент) */
+.rating-planet.partial::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: var(--fill-percentage, 0%); /* Ширина зависит от переменной */
+  background-image: url('../images/startups/planet_rating_filled.svg'); /* ЗАПОЛНЕННАЯ планета для заливки */
+  background-size: contain; /* Используем contain, чтобы соответствовать родительскому */
+  background-repeat: no-repeat;
+  background-position: left center; /* Позиционируем слева */
+  overflow: hidden; /* Обрезаем лишнее */
+  z-index: 1;
+}
+
+/* Для интерактивных планет (возможность голосования) */
+.rating-stars[data-interactive="true"] .rating-planet {
+  cursor: pointer;
+}
+
+/* --- КОНЕЦ Новых стилей для SVG Планет Рейтинга --- */

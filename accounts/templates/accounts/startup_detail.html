@@ -104,7 +104,9 @@
             <span class="rating-label">Рейтинг: {{ average_rating|floatformat:"1" }}/5</span>
             <div class="rating-stars" data-rating="{{ average_rating|default:0 }}" {% if user.is_authenticated and not user_has_voted %}data-interactive="true"{% endif %}>
               {% for i in "12345" %}
-                <i class="fas fa-star {% if forloop.counter <= average_rating|floatformat:0 %}active{% endif %}" {% if user.is_authenticated and not user_has_voted %}data-value="{{ forloop.counter }}"{% endif %}></i>
+                <span class="rating-planet" 
+                      {% if user.is_authenticated and not user_has_voted %}data-value="{{ forloop.counter }}"{% endif %}>
+                </span>
               {% endfor %}
             </div>
           </div>
@@ -282,7 +284,7 @@
                       <div class="comment-rating">
                         {% with comment_rating=comment.rating|default:0 %}
                         {% for star_i in "12345" %}
-                          <i class="fas fa-star {% if star_i|add:"0" <= comment_rating %}active{% endif %}"></i>
+                          <span class="rating-planet comment-planet"></span>
                         {% endfor %}
                         {% endwith %}
                       </div>
