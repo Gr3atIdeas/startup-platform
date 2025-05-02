@@ -79,8 +79,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const mainRatingElement = document.querySelector(ratingDisplayContainer);
     if (mainRatingElement) {
         const initialRatingRaw = mainRatingElement.getAttribute('data-rating'); // Получаем как строку
-        console.log(`Raw data-rating attribute: "${initialRatingRaw}"`); // <<< Отладка: выводим сырую строку
-        const initialRating = initialRatingRaw; // Передаем строку в функцию
+        // console.log(`Raw data-rating attribute: "${initialRatingRaw}"`); // Убираем отладку
+        // Заменяем запятую на точку перед parseFloat
+        const ratingStringForJs = initialRatingRaw ? initialRatingRaw.replace(',', '.') : '0'; 
+        const initialRating = parseFloat(ratingStringForJs); // Парсим строку с точкой
         updateRatingDisplay(ratingDisplayContainer, initialRating);
     }
     
