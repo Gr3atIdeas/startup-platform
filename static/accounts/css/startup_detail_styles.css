@@ -350,9 +350,12 @@ a:hover {
 }
 
 .tab-button {
-  /* padding: 8px 15px; */ /* Меняем паддинги по макету */
+  /* Добавляем display и выравнивание */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: 6px 12px;
-  background-color: transparent; 
+  background-color: transparent; /* Явно указываем прозрачность */
   border: none; 
   color: var(--text-secondary, #A9B8D4); 
   font-family: 'Circe', sans-serif;
@@ -360,21 +363,18 @@ a:hover {
   font-weight: 400;
   text-align: center;
   cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease, border-radius 0.2s ease; /* Добавляем transition для border-radius */
+  transition: background-color 0.2s ease, color 0.2s ease, border-radius 0.2s ease;
   white-space: nowrap;
-  /* border-radius: 8px; */ /* Делаем пилюлей по умолчанию */
-  border-radius: 100px;
+  border-radius: 100px; /* Пилюля по умолчанию */
 }
 
-/* Стили hover/active по макету */
+/* Стили hover/active точно по макету */
 .tab-button:hover,
 .tab-button.active {
-  /* background-color: rgba(255, 255, 255, 0.08); */ /* Убираем старый фон */
-  background-color: #E6E8EC; /* Новый фон из макета */
-  /* color: var(--text-primary, #FFFFFF); */ /* Меняем цвет текста на темный */
-  color: var(--primary-dark-blue);
-  font-weight: 600; 
-  border-radius: 5px; /* Меняем радиус при наведении/активности */
+  background-color: #E6E8EC; /* Светло-серый фон */
+  color: var(--primary-dark-blue); /* Темный текст */
+  font-weight: 600; /* Жирнее */
+  border-radius: 5px; /* Слегка скругленные углы */
 }
 
 /* --- КОНТЕНТ ТАБОВ --- */
