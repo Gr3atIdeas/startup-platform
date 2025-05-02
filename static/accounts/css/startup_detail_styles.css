@@ -601,7 +601,7 @@ a:hover {
   color: var(--text-secondary, #A9B8D4); /* Цвет НЕЗАПОЛНЕННОЙ планеты (серый) - базовый */
   line-height: 1; /* Чтобы избежать лишних отступов */
   transition: color 0.2s ease; /* Плавность для ховера (убираем background) */
-  margin-right: 2px; /* Добавляем небольшой отступ справа */
+  margin-right: -2px; /* Делаем отрицательным для сближения */
 }
 
 .comments-link {

@@ -54,7 +54,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Частично заполненная - класс partial и переменная
                 planet.classList.add('partial');
                 planet.style.setProperty('--fill-percentage', `${partialPlanetPercentage}%`);
-            } 
+            } else {
+                 // Пустые планеты - убеждаемся, что оба класса удалены и переменная сброшена
+                 planet.classList.remove('filled', 'partial');
+                 planet.style.removeProperty('--fill-percentage');
+            }
             // Для пустых планет ничего не делаем (классы уже сброшены)
         });
     }
