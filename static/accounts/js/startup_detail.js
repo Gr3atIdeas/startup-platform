@@ -42,10 +42,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const ratingValue = parseFloat(rating) || 0;
         const fullPlanets = Math.floor(ratingValue);
         // const partialPlanetPercentage = (ratingValue - fullPlanets) * 100; // Пока не используем
+        console.log(`BEFORE LOOP - Rating: ${ratingValue}, Full: ${fullPlanets}, Planets found: ${planets.length}, Selector: ${containerSelector}`); // <<< Отладка перед циклом
 
         planets.forEach((planet, index) => {
             planet.classList.remove('filled', 'partial'); // Сбрасываем классы
             planet.style.removeProperty('--fill-percentage'); // Убираем переменную
+            console.log(`Inside loop - Planet ${index}:`, planet); // <<< Отладка элемента
 
             if (index < fullPlanets) {
                 // Полностью заполненные - класс filled

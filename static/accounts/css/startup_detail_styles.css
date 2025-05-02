@@ -350,21 +350,22 @@ a:hover {
 
 /* Увеличиваем специфичность */
 .tabbed-content-wrapper .tab-navigation .tab-button {
-  padding: 8px 15px; /* Внутренние отступы */
-  background-color: transparent !important; /* Возвращаем !important */
-  border: none; /* Рамки нет */
-  color: var(--text-secondary, #A9B8D4) !important; /* Возвращаем !important */
+  padding: 0; /* Убираем padding с кнопки */
+  background-color: transparent !important; 
+  border: none; 
+  color: var(--text-secondary, #A9B8D4) !important; 
   font-family: 'Circe', sans-serif;
   font-size: 16px;
   font-weight: 400;
-  /* text-align: center; */ /* Убираем, т.к. используем flex */
-  cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease; /* Обновляем transition */
   white-space: nowrap;
-  border-radius: 8px; /* Оставляем скругление для hover/active */
-  display: inline-flex; /* Делаем flex-контейнером */
-  align-items: center; /* Выравниваем текст по центру */
-  justify-content: center; /* Выравниваем текст по центру */
+  border-radius: 8px; 
+  display: inline-block; /* Меняем на inline-block */
+}
+
+/* Добавляем стили для внутреннего span */
+.tabbed-content-wrapper .tab-navigation .tab-button span {
+    display: block; /* Чтобы padding работал */
+    padding: 8px 15px; /* Применяем padding сюда */
 }
 
 /* Увеличиваем специфичность */
@@ -608,7 +609,7 @@ a:hover {
 
 /* Стиль для ЗАПОЛНЕННОЙ планеты (просто меняем цвет текста) */
 .rating-planet.filled {
-   color: #FFB700; /* Просто устанавливаем нужный цвет текста */
+   color: #FFB700 !important; /* Добавляем !important для отладки */
 }
 
 /* Для интерактивных планет (возможность голосования) */
@@ -1613,7 +1614,7 @@ a:hover {
 
 /* Стиль для ЗАПОЛНЕННОЙ планеты (просто меняем цвет текста) */
 .rating-planet.filled {
-   color: #FFB700; /* Просто устанавливаем нужный цвет текста */
+   color: #FFB700 !important; /* Добавляем !important для отладки */
 }
 
 /* Для интерактивных планет (возможность голосования) */
