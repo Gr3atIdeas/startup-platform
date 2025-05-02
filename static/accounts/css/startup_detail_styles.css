@@ -1578,7 +1578,7 @@ a:hover {
   /* width: 20px; */  /* Размеры теперь управляются font-size */
   /* height: 20px; */
   font-size: 22px; /* Подберите нужный размер */
-  /* background-image: url('../images/startups/planet_rating_empty.svg'); */ /* Больше не используем SVG */
+  /* Удаляем все упоминания SVG */
   /* background-size: contain; */
   /* background-repeat: no-repeat; */
   /* background-position: center; */
@@ -1596,7 +1596,7 @@ a:hover {
   transition: color 0.2s ease, background 0.2s ease; /* Плавность для ховера */
 }
 
-/* Убираем стили для .filled и .partial, т.к. управляем градиентом */
+/* Полностью удаляем этот комментарий */
 /*
 .rating-planet.filled {
   background-image: url('../images/startups/planet_rating_filled.svg');
