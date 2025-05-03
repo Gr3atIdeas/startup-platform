@@ -558,7 +558,8 @@ a:hover {
 }
 
 .startup-info-badge {
-  background-color: var(--primary-dark-blue);
+  background-color: rgba(0, 8, 25, 0.6); /* Делаем фон полупрозрачным */
+  backdrop-filter: blur(5px); /* Добавляем размытие */
   color: var(--text-primary);
   padding: 8px 16px;
   border-radius: 10px;
@@ -617,13 +618,14 @@ a:hover {
   white-space: nowrap;
   border-radius: 8px;
   background-color: transparent; /* По умолчанию прозрачный фон */
-  color: #353945 !important; /* Цвет текста неактивной кнопки (как у рамки) + !important */
+  color: var(--text-secondary) !important; /* <<< Меняем цвет на светло-серый */
+  border: none !important; /* <<< Убираем любую обводку */
 }
 
-/* Неактивная кнопка таба - явно задаем прозрачный фон */
+/* Неактивная кнопка таба - стили уже заданы выше, но можно продублировать цвет */
 .tabbed-content-wrapper .tab-navigation .tab-button:not(.active) {
     background-color: transparent !important; 
-    /* color: #353945 !important; уже в базовом стиле */
+    color: var(--text-secondary) !important; /* <<< Убедимся, что цвет здесь */
 }
 
 /* Активная кнопка таба */
@@ -1246,7 +1248,7 @@ a:hover {
 /* Кнопка "Показать еще" - применяем стили как у "Показать все" */
 .similar-startups-grid .similar-card.show-more-placeholder .action-button.show-more-similar {
     /* Стили из .show-all-button */
-    display: inline-flex !important; /* !important на всякий случай */
+    display: inline-flex !important; 
     align-items: center;
     gap: 8px;
     padding: 10px 20px;
@@ -1260,15 +1262,21 @@ a:hover {
     font-weight: 500;
     transition: all 0.3s ease;
     /* Убираем возможные конфликты */
-    position: static; /* Убираем relative, если он мешает */
-    overflow: visible; /* Убираем hidden, если он мешает */
     width: auto;
+    text-decoration: none; /* Убираем подчеркивание, если есть */
 }
-/* Увеличиваем специфичность для hover + стили из .show-all-button:hover */
+/* Убираем эффект волны (предположение) */
+.similar-startups-grid .similar-card.show-more-placeholder .action-button.show-more-similar::before,
+.similar-startups-grid .similar-card.show-more-placeholder .action-button.show-more-similar::after {
+    content: none !important;
+    display: none !important;
+}
+/* Hover - добавляем glow */
 .similar-startups-grid .similar-card.show-more-placeholder .action-button.show-more-similar:hover {
      background-color: rgba(255, 255, 255, 0.1);
      border-color: var(--accent-green);
      color: var(--accent-green);
+     box-shadow: 0 0 15px rgba(8, 229, 207, 0.5); /* Свечение как у accent-green */
 }
 
 /* ======================================== */
@@ -1490,7 +1498,7 @@ a:hover {
 /* Увеличиваем специфичность ЕЩЕ БОЛЬШЕ */
 body #fancybox-toolbar .fancybox__button.f-button {
     color: #ffffff !important; /* Белый цвет */
-    background: transparent !important; /* Прозрачный фон */
+    background: red !important; /* <<< ВРЕМЕННО КРАСНЫЙ ФОН ДЛЯ ТЕСТА */
     border-radius: 50%;
     width: 40px;
     height: 40px;
@@ -1535,3 +1543,10 @@ body .fancybox__toolbar .fancybox__button i {
     content: none !important; 
 }
 */
+
+/* Убираем любой контент, который может создавать квадрат */
+body #fancybox-toolbar .fancybox__button.f-button::before,
+body #fancybox-toolbar .fancybox__button.f-button::after {
+    content: none !important;
+    display: none !important;
+}
