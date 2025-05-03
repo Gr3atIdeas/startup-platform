@@ -218,12 +218,21 @@ document.addEventListener('DOMContentLoaded', function() {
     // 6. Инициализация PhotoSwipe
     if (typeof PhotoSwipeLightbox !== 'undefined') {
         const lightbox = new PhotoSwipeLightbox({
-            gallery: '#pswp-gallery', // Селектор контейнера галереи
-            children: 'a',        // Селектор дочерних элементов (ссылок)
-            pswpModule: PhotoSwipe   // Передаем сам модуль PhotoSwipe
+            gallery: '#pswp-gallery', 
+            children: 'a',
+            pswpModule: PhotoSwipe,
+
+            // Настройки для скрытия стандартного UI
+            arrowPrev: false,
+            arrowNext: false,
+            closeButton: false, // Используйте closeButton для v5
+            counter: false,
+            zoom: false, // Отключаем кнопку зума, но оставляем pinch-to-zoom
+            // Оставляем стандартное поведение закрытия по клику/свайпу
+            // clickToCloseNonZoomable: true, (это по умолчанию)
         });
         lightbox.init();
-        console.log('PhotoSwipe initialized for #pswp-gallery');
+        console.log('PhotoSwipe initialized for #pswp-gallery with minimal UI');
     } else {
         console.error('PhotoSwipeLightbox is not defined. Check if the library is loaded correctly.');
     }

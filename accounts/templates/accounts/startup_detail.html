@@ -64,17 +64,20 @@
       </div>
       
       <div class="progress-container">
-        <div class="progress-bar">
-          {# Удаляем старый .progress-fill и добавляем новый контейнер для анимации #}
+        {# Контейнер для самого бара (визуальной части) #}
+        <div class="progress-bar-visual">
           <div class="progress-animation-container" style="width: {{ progress_percentage|default:0 }}%;">
             <div class="progress-planets">
               {# Планеты будут добавлены через CSS #}
             </div>
           </div>
-        </div>
-        <div class="progress-info">
+          {# Текст процента поверх бара #}
           <span class="progress-percentage">{{ progress_percentage|default:0|floatformat:0 }}%</span>
-          <span class="progress-backers"><i class="fas fa-users"></i> ({{ investors_count }})</span>
+        </div>
+        {# Информация об инвесторах рядом с баром #}
+        <div class="progress-backers-info">
+          <i class="fas fa-users"></i>
+          <span>({{ investors_count }})</span>
         </div>
       </div>
       

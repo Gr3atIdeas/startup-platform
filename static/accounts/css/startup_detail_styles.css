@@ -93,34 +93,28 @@ a:hover {
 
 /* Конкретные стили кнопок по макету */
 .action-button.chat-button {
-    background-color: transparent !important; /* Прозрачный фон всегда */
+    background: transparent !important; /* Используем background вместо background-color для надежности */
     color: var(--text-primary);
-    border: 1px solid var(--text-primary); /* Тонкая белая рамка */
-    /* margin-top: 15px; */ /* Убрано, т.к. контейнер .planet-container теперь управляет расположением */
-    width: auto; /* Авто-ширина по контенту и padding */
-    font-weight: 400; /* Regular */
-    padding: 8px 16px; /* Уменьшенные отступы */
+    border: 1px solid var(--text-primary);
+    width: auto;
+    font-weight: 400;
+    padding: 8px 16px;
     font-size: 14px;
-    line-height: 1; /* Компактная высота */
+    line-height: 1;
     border-radius: 8px;
-    position: relative; /* Оставляем для возможных будущих эффектов */
-    overflow: hidden; /* Оставляем для возможных будущих эффектов */
-    align-self: center; /* Центрируем кнопку по горизонтали */
-    margin-top: auto; /* Прижимаем к низу контейнера */
-    max-width: 200px; /* Ограничим максимальную ширину на всякий случай */
-    box-shadow: none !important; /* Убираем тени */
-    /* display: inline-flex; уже есть от .action-button */
-    /* justify-content: center; уже есть от .action-button */
-    /* text-align: center; уже есть от .action-button */
-    /* white-space: nowrap; уже есть от .action-button */
-    /* cursor: pointer; уже есть от .action-button */
-    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease; /* Добавляем обратно */
+    position: relative;
+    overflow: hidden;
+    align-self: center;
+    margin-top: auto;
+    max-width: 200px;
+    box-shadow: none !important;
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }
 .action-button.chat-button .wave-effect {
-    display: none !important; /* Прячем эффект волны, если он еще есть */
+    display: none !important;
 }
 .action-button.chat-button:hover {
-    background-color: rgba(255, 255, 255, 0.1) !important; /* Легкий фон при наведении */
+    background-color: rgba(255, 255, 255, 0.1) !important;
     border-color: var(--text-primary);
     color: var(--text-primary);
 }
@@ -318,40 +312,44 @@ a:hover {
 
 /* Прогресс бар */
 .progress-container {
-    width: 100%; /* Сделаем на всю ширину левой колонки */
+    width: 100%;
     height: 50px;
     flex-shrink: 0;
-    border-radius: 10px;
-    background-color: rgba(11, 26, 63, 0.8); /* Полупрозрачный темно-синий фон */
-    border: 1px solid rgba(43, 237, 255, 0.5); /* Полупрозрачная бирюзовая рамка */
+    border-radius: 25px; /* Делаем края полностью круглыми */
+    background-color: rgba(11, 26, 63, 0.8);
+    border: 1px solid rgba(43, 237, 255, 0.5);
     display: flex;
     align-items: center;
-    padding: 5px;
+    padding: 5px 15px; /* Увеличим отступ справа для иконки */
     box-sizing: border-box;
-    position: relative; /* Для позиционирования текста */
-    overflow: hidden; /* Скрываем все, что выходит за пределы */
+    position: relative;
+    overflow: hidden;
 }
 
-.progress-bar {
-    flex-grow: 1;
-    height: 100%; /* На всю высоту контейнера */
+/* Убираем старый .progress-bar */
+/* .progress-bar { ... } */
+
+/* Новый контейнер для визуальной части бара */
+.progress-bar-visual {
+    flex-grow: 1; /* Занимает доступное место */
+    height: 100%;
     background-color: transparent;
-    border-radius: 0;
-    margin-right: 0; /* Убираем отступ */
-    position: relative; /* Для позиционирования контейнера анимации */
+    border-radius: 20px; /* Скругление для внутреннего бара */
+    margin-right: 15px; /* Отступ справа от инфо инвесторов */
+    position: relative;
+    overflow: hidden; /* Скрываем анимацию по краям */
 }
 
-/* Новый контейнер для анимированного заполнения */
 .progress-animation-container {
     position: absolute;
     top: 0;
     left: 0;
     height: 100%;
-    border-radius: 6px; /* Скругляем внутренний контейнер */
-    overflow: hidden; /* Важно, чтобы скрыть анимацию за пределами ширины */
+    border-radius: 20px; /* Полностью круглые края */
+    overflow: hidden;
     background: linear-gradient(90deg, #a6f8ff 0%, #47d1ff 50%, #e0ff9c 100%);
     box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.5), 0 0 10px rgba(71, 209, 255, 0.7);
-    transition: width 0.5s ease-in-out; /* Плавное изменение ширины */
+    transition: width 0.5s ease-in-out;
 }
 
 .progress-planets {
@@ -366,7 +364,7 @@ a:hover {
     position: absolute;
     top: 50%;
     border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.7); /* Белые полупрозрачные круги */
+    background-color: rgba(255, 255, 255, 0.7);
     box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
     animation: movePlanets 8s linear infinite;
 }
@@ -374,21 +372,19 @@ a:hover {
 .progress-planets::before {
     width: 12px;
     height: 12px;
-    margin-top: -6px; /* Центрирование */
-    left: 10%; /* Начальная позиция */
+    margin-top: -6px;
+    left: 10%;
     animation-delay: 0s;
 }
 
 .progress-planets::after {
     width: 8px;
     height: 8px;
-    margin-top: -4px; /* Центрирование */
-    left: 60%; /* Начальная позиция */
-    animation-delay: -4s; /* Сдвиг анимации */
+    margin-top: -4px;
+    left: 60%;
+    animation-delay: -4s;
 }
 
-/* Добавляем больше планет через дополнительные псевдоэлементы или спаны, если нужно */
-/* Пример с еще одним псевдо на самом .progress-animation-container */
 .progress-animation-container::before {
     content: '';
     position: absolute;
@@ -405,52 +401,41 @@ a:hover {
 }
 
 @keyframes movePlanets {
-    0% {
-        transform: translateX(0) translateY(-1px) scale(1);
-        opacity: 0.7;
-    }
-    25% {
-         transform: translateX(20px) translateY(1px) scale(1.1);
-         opacity: 0.9;
-    }
-    50% {
-        transform: translateX(-10px) translateY(0) scale(1);
-        opacity: 0.8;
-    }
-    75% {
-         transform: translateX(15px) translateY(-2px) scale(0.9);
-         opacity: 1;
-    }
-    100% {
-        transform: translateX(0) translateY(-1px) scale(1);
-        opacity: 0.7;
-    }
+    0% { transform: translateX(0) translateY(-1px) scale(1); opacity: 0.7; }
+    25% { transform: translateX(20px) translateY(1px) scale(1.1); opacity: 0.9; }
+    50% { transform: translateX(-10px) translateY(0) scale(1); opacity: 0.8; }
+    75% { transform: translateX(15px) translateY(-2px) scale(0.9); opacity: 1; }
+    100% { transform: translateX(0) translateY(-1px) scale(1); opacity: 0.7; }
 }
 
-/* Информационный текст поверх прогресс-бара */
-.progress-info {
-    position: absolute; /* Позиционируем поверх */
-    right: 15px; /* Отступ справа */
+/* Убираем старый .progress-info */
+/* .progress-info { ... } */
+
+/* Текст процента поверх бара */
+.progress-percentage {
+    position: absolute;
+    left: 15px; /* Отступ слева внутри бара */
     top: 50%;
     transform: translateY(-50%);
-    display: flex;
-    align-items: baseline;
-    color: #fff;
-    font-size: 14px;
-    z-index: 2; /* Выше анимации */
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5); /* Тень для читаемости */
-}
-
-.progress-percentage {
     font-weight: bold;
-    margin-right: 10px;
+    color: #002b4d; /* Темно-синий для контраста */
+    font-size: 14px;
+    z-index: 2;
+    text-shadow: 0 0 3px rgba(255, 255, 255, 0.5); /* Легкое свечение для читаемости */
 }
 
-.progress-backers {
-    display: inline-flex;
+/* Блок с инфо об инвесторах */
+.progress-backers-info {
+    display: flex;
     align-items: center;
     gap: 5px;
-    color: #d0eaff; /* Слегка светлее для контраста */
+    color: #d0eaff;
+    font-size: 14px;
+    flex-shrink: 0; /* Не сжимать */
+    z-index: 2;
+}
+.progress-backers-info i {
+    font-size: 16px;
 }
 
 /* Блок автора слева */
