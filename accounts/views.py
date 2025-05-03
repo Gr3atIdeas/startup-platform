@@ -202,6 +202,18 @@ def startup_detail(request, startup_id):
     investors_count = startup.get_investors_count()
     progress_percentage = startup.get_progress_percentage()
 
+    # --- Расчет распределения голосов --- 
+    rating_distribution = UserVotes.objects.filter(startup=startup)\
+                                         .values('rating')\
+                                         .annotate(count=Count('rating'))\
+                                         .order_by('-rating')
+    # Преобразуем в удобный словарь {5: count5, 4: count4, ...}
+    rating_distribution_dict = {item['rating']: item['count'] for item in rating_distribution}
+    # Дополняем нулями для тех оценок, которых нет
+    for i in range(1, 6):
+        rating_distribution_dict.setdefault(i, 0)
+    # --- Конец расчета --- 
+
     # --- Получаем похожие стартапы --- 
     similar_startups = Startups.objects.filter(
         status='approved' # Только одобренные
@@ -282,6 +294,7 @@ def startup_detail(request, startup_id):
         'investors_count': investors_count,
         'progress_percentage': progress_percentage,
         'similar_startups': similar_startups, # <-- Добавляем похожие стартапы в контекст
+        'rating_distribution': rating_distribution_dict, # <-- Добавляем распределение рейтинга
     })
 
 # Новая view-функция для AJAX-запроса похожих стартапов

@@ -290,8 +290,8 @@
           {# Секция УСЛОВИЯ (пустая) #}
           <div id="conditions-section" class="content-section">
             <h2 class="section-title">Условия</h2>
-            <p>Информация об условиях инвестирования пока не добавлена.</p>
-            {# Сюда можно будет добавить текст условий #}
+            {# Добавьте сюда контент для условий #}
+            <p>Информация об условиях инвестирования или выкупа...</p>
           </div>
 
           {# Секция КОММЕНТАРИИ (перемещена сюда) #}
@@ -300,23 +300,26 @@
               <h2 class="section-title">Комментарии <span class="comments-count">({{ comments|length }})</span></h2>
               <div class="comments-rating-summary">
                 <span class="average-rating-value">{{ average_rating|default:0|floatformat:"1" }}</span>
-                <div class="rating-distribution">
+                {# Передаем данные о распределении в data-атрибуты #}
+                {# Используем тег to_json для безопасной передачи словаря #}
+                <div class="rating-distribution" data-ratings='{{ rating_distribution|to_json }}'>
+                  {# Шаблон для отрисовки баров (5 звезд) #}
                   {% for i in "54321" %}
-                  <div class="rating-bar-container">
-                    {# Заменяем звезду на контейнер с планетой #}
-                    <span class="star-label">{{ i }}
+                    <div class="rating-bar-container">
+                      {# Заменяем звезду на контейнер с планетой #}
+                      <span class="star-label">{{ i }}
 
-                      <span class="rating-icon-container comment-icon-container">
-                        <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-empty">
-                        <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-filled" style="width: 100%;">
+                        <span class="rating-icon-container comment-icon-container">
+                          <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-empty">
+                          <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-filled" style="width: 100%;">
+                        </span>
                       </span>
-                    </span>
-                    <div class="rating-bar">
-                      {# Этот стиль применяется динамически. Ошибка линтера ожидаема и ее можно игнорировать. #}
-                      <div class="rating-bar-fill" style="width: {{ rating_distribution|get_item:i|default:0 }}%;"></div>
+                      <div class="rating-bar">
+                        {# Этот стиль применяется динамически. Ошибка линтера ожидаема и ее можно игнорировать. #}
+                        <div class="rating-bar-fill" style="width: {{ rating_distribution|get_item:i|default:0 }}%;"></div>
+                      </div>
+                      <span class="rating-count">{{ rating_counts|get_item:i|default:0 }}</span>
                     </div>
-                    <span class="rating-count">{{ rating_counts|get_item:i|default:0 }}</span>
-                  </div>
                   {% endfor %}
                 </div>
               </div>

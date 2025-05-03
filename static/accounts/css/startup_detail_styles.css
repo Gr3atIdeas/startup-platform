@@ -433,15 +433,16 @@ a:hover {
 .progress-backers-info {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 5px;
     color: #d0eaff;
     font-size: 14px;
-    flex-shrink: 0; /* Не сжимать */
+    flex-shrink: 0;
     z-index: 2;
-    line-height: 1.1;
-    letter-spacing: -0.02em;
-    display: block;
-    font-weight: 800;
+    margin-left: 15px;
+    flex-grow: 1;
+    text-align: right;
+    min-width: 80px;
 }
 .progress-backers-info i {
     font-size: 16px;
@@ -1702,4 +1703,76 @@ a:hover {
 .pswp__preloader .pswp__preloader__icn {
   /* Можно изменить стили спиннера, если нужно */
   /* background: none; */ 
+}
+
+/* Верхняя панель (счетчик, кнопки) */
+.pswp__top-bar {
+  background-color: rgba(0, 8, 25, 0.7) !important; /* Полупрозрачный фон */
+  backdrop-filter: blur(5px);
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+/* Счетчик */
+.pswp__counter {
+  font-size: 16px;
+  color: var(--text-secondary);
+  text-shadow: none;
+  /* Позиционирование по центру */
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 14px; /* Отступ сверху */
+  height: auto;
+  line-height: normal;
+}
+
+/* Кнопка закрытия ('x') */
+.pswp__button--close {
+  /* background: var(--danger-red) !important; */ /* Можно сделать красной */
+  /* background: rgba(240, 82, 82, 0.8) !important; */
+  /* Оставим стандартный стиль, но можно кастомизировать */
+  opacity: 0.8;
+  transition: opacity 0.3s ease, transform 0.2s ease;
+}
+.pswp__button--close:hover {
+   opacity: 1;
+   transform: scale(1.1) rotate(90deg); /* Эффект при наведении */
+}
+
+/* Кнопка зума */
+.pswp__button--zoom {
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+.pswp__button--zoom:hover {
+  opacity: 1;
+}
+
+/* Остальные кнопки (можно добавить стили для --fs, --share и т.д., если используются) */
+.pswp__button--fs, /* Fullscreen */
+.pswp__button--share {
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+.pswp__button--fs:hover,
+.pswp__button--share:hover {
+  opacity: 1;
+}
+
+/* Можно изменить расположение кнопок, например, собрать их вместе */
+/*
+.pswp__button--zoom {
+    right: 60px; // Сдвигаем левее
+}
+.pswp__button--fs {
+    right: 110px; // Еще левее
+}
+*/
+
+/* Убираем фон загрузчика, если он мешает */
+.pswp__preloader .pswp__preloader__icn {
+  /* background: none; */
+  /* Используем стандартный SVG-спиннер, но можно заменить */
+  opacity: 0.8;
 }
