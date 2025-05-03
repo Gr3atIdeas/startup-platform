@@ -435,7 +435,8 @@ a:hover {
 
 /* --- Контейнер для табов и контента --- */
 .tabbed-content-wrapper {
-    background-color: var(--secondary-blue, #04112D); /* Темно-синий фон */
+    /* background-color: var(--secondary-blue, #04112D); */ /* Убираем фон */
+    background-color: transparent; /* Делаем фон прозрачным */
     padding: 25px 30px; /* Внутренние отступы */
     border-radius: 15px; /* Скругление углов */
     border: 1px solid #353945; /* Обновляем цвет рамки на более заметный как в макете */
@@ -452,6 +453,7 @@ a:hover {
   margin-bottom: 25px;
   padding-bottom: 15px;
   border-bottom: 1px solid #353945; /* Нижняя граница под табами */
+  /* background-color: transparent; */ /* Убедимся, что фон прозрачный */
 }
 
 .tabbed-content-wrapper .tab-navigation .tab-button {
@@ -966,9 +968,10 @@ a:hover {
   flex-shrink: 0;
 }
 .star-label i {
-  color: var(--accent-yellow);
-  font-size: 12px;
-  margin-left: 2px;
+  /* color: var(--accent-yellow); */ /* Убираем стили для звезд */
+  /* font-size: 12px; */
+  /* margin-left: 2px; */
+  display: none; /* Скрываем старую звезду */
 }
 
 .rating-bar {
@@ -1277,31 +1280,72 @@ a:hover {
   font-size: 16px;
   font-weight: 600; /* Semibold */
   color: var(--primary-dark-blue);
+  /* Убираем вложенность - стили будут ниже */
 }
 
 .similar-card-rating {
   display: flex;
   gap: 3px;
+  /* Убираем вложенность - стили будут ниже */
 }
 .similar-card-rating i {
-  font-size: 14px;
-  color: #e9ecef; /* Светлее неактивные */
-}
-.similar-card-rating i.active {
-  color: var(--accent-yellow); /* Желтые звезды */
-}
-
+/* ... existing code ... */
 .similar-card-category {
   margin-top: 5px;
+  /* Убираем вложенность - стили будут ниже */
 }
 .category-badge { /* Бейдж категории */
-  display: inline-block;
-  padding: 4px 10px;
-  background-color: #e9ecef; /* Светлее фон */
-  color: #495057; /* Темнее текст */
-  border-radius: 6px;
-  font-size: 12px;
-  font-weight: 400;
+/* ... existing code ... */
+
+/* Новые правила для скрытия элементов внутри плейсхолдера */
+.similar-card.show-more-placeholder .similar-card-name,
+.similar-card.show-more-placeholder .similar-card-rating,
+.similar-card.show-more-placeholder .similar-card-category {
+    display: none;
+}
+
+.action-button.show-more-similar {
+    /* background: transparent; */ /* Убираем, наследуется от .action-button */
+    border: 1px solid var(--text-primary); /* Белая рамка как у Показать все */
+    color: var(--text-primary); /* Белый текст */
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 500; /* Как у Показать все */
+    gap: 8px;
+    border-radius: 25px; /* Форма пилюли */
+    width: auto; /* Ширина по контенту */
+    transition: all 0.3s ease;
+    /* Убираем иконку по умолчанию, если она не нужна */
+    /* i { display: none; } */
+}
+.action-button.show-more-similar:hover {
+     background-color: rgba(255, 255, 255, 0.1);
+     border-color: var(--accent-green);
+     color: var(--accent-green);
+}
+
+/* Стили для плейсхолдера кнопки "Показать еще" */
+.similar-card.show-more-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* border: 1px solid var(--text-primary); */ /* Убираем рамку карточки */
+    border: none; /* Убираем рамку карточки */
+    background-color: transparent; /* Прозрачный фон */
+    /* border-radius: 25px; */ /* Убираем скругление карточки */
+    border-radius: 0;
+    padding: 0; /* Убираем паддинг карточки */
+    /* Убираем стили при наведении для плейсхолдера */
+    transform: none;
+    box-shadow: none;
+}
+.similar-card.show-more-placeholder:hover {
+    transform: none;
+    box-shadow: none;
+}
+/* Стили для самой кнопки внутри плейсхолдера */
+.similar-card.show-more-placeholder .action-button.show-more-similar {
+    /* Стили кнопки уже заданы выше */
 }
 
 
@@ -1789,9 +1833,9 @@ a:hover {
 
 /* Стили для обертки шапки и кнопок */
 .startup-header-actions-wrapper {
-  display: flex; 
-  justify-content: space-between; 
-  align-items: flex-start; 
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
   gap: 30px;
   margin-bottom: 20px; /* Добавим отступ снизу */
 }
@@ -1804,16 +1848,18 @@ a:hover {
 }
 
 .action-button.show-more-similar {
-    background: transparent; /* Прозрачный фон */
-    border: none; /* Без своей рамки */
+    /* background: transparent; */ /* Убираем, наследуется от .action-button */
+    border: 1px solid var(--text-primary); /* Белая рамка как у Показать все */
     color: var(--text-primary); /* Белый текст */
     padding: 10px 20px;
     font-size: 14px;
     font-weight: 500; /* Как у Показать все */
-    gap: 8px; 
+    gap: 8px;
     border-radius: 25px; /* Форма пилюли */
-    width: auto;
+    width: auto; /* Ширина по контенту */
     transition: all 0.3s ease;
+    /* Убираем иконку по умолчанию, если она не нужна */
+    /* i { display: none; } */
 }
 .action-button.show-more-similar:hover {
      background-color: rgba(255, 255, 255, 0.1);
@@ -1826,8 +1872,34 @@ a:hover {
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid var(--text-primary); /* Белая рамка как у Показать все */
+    /* border: 1px solid var(--text-primary); */ /* Убираем рамку карточки */
+    border: none; /* Убираем рамку карточки */
     background-color: transparent; /* Прозрачный фон */
-    border-radius: 25px; /* Форма пилюли как у Показать все */
-    padding: 10px; /* Уменьшим паддинг для карточки */
+    /* border-radius: 25px; */ /* Убираем скругление карточки */
+    border-radius: 0;
+    padding: 0; /* Убираем паддинг карточки */
+    /* Убираем стили при наведении для плейсхолдера */
+    transform: none;
+    box-shadow: none;
+}
+.similar-card.show-more-placeholder:hover {
+    transform: none;
+    box-shadow: none;
+}
+/* Стили для самой кнопки внутри плейсхолдера */
+.similar-card.show-more-placeholder .action-button.show-more-similar {
+    /* Стили кнопки уже заданы выше */
+}
+
+.similar-card-rating i.active {
+  color: var(--accent-yellow); /* Желтые звезды */
+}
+
+.similar-card-category {
+  margin-top: 5px;
+  /* Убираем вложенность - стили будут ниже */
+}
+
+.category-badge { /* Бейдж категории */
+  display: inline-block;
 }

@@ -320,14 +320,16 @@ document.addEventListener('DOMContentLoaded', function() {
                      items: {
                          // Добавляем свои кнопки с иконками Font Awesome
                          prev: {
-                             tpl: '<button class="f-button" title="Previous"><i class="fas fa-chevron-left"></i></button>',
+                             /* tpl: '<button class="f-button" title="Previous"><i class="fas fa-chevron-left"></i></button>', */
+                             html: '<button class="f-button" title="Previous"><i class="fas fa-chevron-left"></i></button>',
                          },
                          next: {
-                             tpl: '<button class="f-button" title="Next"><i class="fas fa-chevron-right"></i></button>',
+                             /* tpl: '<button class="f-button" title="Next"><i class="fas fa-chevron-right"></i></button>', */
+                             html: '<button class="f-button" title="Next"><i class="fas fa-chevron-right"></i></button>',
                          },
                          // Можно переопределить и кнопку закрытия, если стандартная не работает
                          // close: {
-                         //     tpl: '<button class="f-button" title="Close"><i class="fas fa-times"></i></button>',
+                         //     html: '<button class="f-button" title="Close"><i class="fas fa-times"></i></button>',
                          // }
                      }
                  },

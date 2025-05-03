@@ -284,7 +284,14 @@
                 <div class="rating-distribution">
                   {% for i in "54321" %}
                   <div class="rating-bar-container">
-                    <span class="star-label">{{ i }} <i class="fas fa-star"></i></span>
+                    {# Заменяем звезду на контейнер с планетой #}
+                    <span class="star-label">{{ i }}
+                      {# <i class="fas fa-star"></i> #}
+                      <span class="rating-icon-container comment-icon-container">
+                        <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-empty">
+                        <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-filled" style="width: 100%;"> {# Заполнен на 100% для метки #}
+                      </span>
+                    </span>
                     <div class="rating-bar">
                       <div class="rating-bar-fill" style="width: {{ rating_distribution|get_item:i|default:0 }}%;"></div>
                     </div>
