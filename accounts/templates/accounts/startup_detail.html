@@ -395,7 +395,7 @@
             {% endif %}
           </div>
           <div class="similar-card-name">{{ similar.title|default:"Ромашка" }}</div>
-          <div class="similar-card-rating" data-rating="{{ similar.average_rating|default:0|floatformat:'-2'|unlocalize }}">
+          <div class="similar-card-rating" data-rating="{{ similar.average_rating|default:0|floatformat:'-2' }}">
             {# Используем цикл и контейнеры для планет #}
             {% for star_i in "12345" %}
               <span class="rating-icon-container comment-icon-container"> {# Меньший размер иконок #}
