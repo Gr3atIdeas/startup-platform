@@ -412,16 +412,16 @@
           </a>
           {% endfor %}
         {% endfor %}
+      </div> {# Конец similar-startups-grid #}
 
-        {# Добавляем кнопку "Показать еще" как пятый элемент сетки, если есть стартапы #}
-        {% if similar_startups %}
-          <div class="similar-card show-more-placeholder">
-             <button class="action-button show-more-similar">
-               <i class="fas fa-redo"></i> Показать еще
-             </button>
-          </div>
-        {% endif %}
-      </div>
+      {# Переносим кнопку "Показать еще" ПОСЛЕ сетки #}
+      {% if similar_startups|length > 4 %} {# Показываем кнопку, только если стартапов БОЛЬШЕ 4 #}
+        <div class="show-more-similar-container">
+          <button class="action-button show-more-similar">
+            <i class="fas fa-redo"></i> Показать еще
+          </button>
+        </div>
+      {% endif %}
     </div>
   </div>
 

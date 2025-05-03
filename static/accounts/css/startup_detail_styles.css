@@ -274,17 +274,17 @@ a:hover {
 
 /* Прогресс бар */
 .progress-container {
-    width: 451px; /* Подгоняем ширину под контейнер выше */
-    height: 50px; /* Высота из Figma */
+    width: 451px; /* Ширина для выравнивания с контейнером изображения */
+    height: 50px; 
     flex-shrink: 0;
-    border-radius: 10px; /* Радиус из Figma */
-    border: 1px solid #2BEDFF; /* Цвет границы из Figma (var(--G4 ?) */
-    background: linear-gradient(180deg, #FFF -0.64%, #2BEDFF 7.87%, rgba(0, 78, 159, 0.00) 55.18%, #2BEDFF 125%); /* Градиент из Figma */
-    display: flex; /* Используем flex для внутреннего выравнивания */
+    border-radius: 10px; 
+    border: 1px solid #2BEDFF; 
+    background: linear-gradient(180deg, #FFF -0.64%, #2BEDFF 7.87%, rgba(0, 78, 159, 0.00) 55.18%, #2BEDFF 125%); 
+    display: flex; 
     align-items: center;
-    padding: 5px 15px; /* Внутренние отступы (можно настроить) */
+    padding: 5px 15px; 
     box-sizing: border-box;
-    /* margin: 0 auto; */ /* Убираем центрирование, чтобы выровнять по левому краю */
+    /* Убираем margin: 0 auto; для выравнивания по левому краю */
 }
 
 .progress-bar {
@@ -515,7 +515,7 @@ a:hover {
 }
 
 .content-section#info-section .info-block {
-  background-color: var(--dark-card-bg, #0B1A3F); /* Темный фон для блоков */
+  /* background-color: var(--dark-card-bg, #0B1A3F); */ /* Убираем фон */
   border-radius: 12px;
   padding: 15px;
   display: flex;
@@ -523,9 +523,13 @@ a:hover {
   align-items: center;
   text-align: center;
   gap: 8px;
-  border: 1px solid var(--border-color, #1D3059); /* Рамка для блоков */
+  border: 1px solid var(--border-color);
   min-height: 140px;
   box-sizing: border-box;
+  /* color: var(--primary-dark-blue); */ /* Убираем цвет, т.к. фон прозрачный */
+  border-radius: 15px; 
+  padding: 25px 30px; 
+  /* Убираем overflow-x: auto и связанные стили */
 }
 
 /* Стили иконок/текста внутри info-block (возможно, уже есть выше, но проверим) */
@@ -1787,13 +1791,11 @@ a:hover {
   margin-bottom: 20px; /* Добавим отступ снизу */
 }
 
-/* Стили для плейсхолдера кнопки "Показать еще" */
-.similar-card.show-more-placeholder {
+/* Стили для контейнера кнопки "Показать еще" */
+.show-more-similar-container {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px dashed var(--border-color); /* Пунктирная граница */
-    background-color: var(--dark-card-bg); /* Темный фон */
+    justify-content: center; /* Центрируем кнопку */
+    margin-top: 20px; /* Отступ сверху */
 }
 
 .action-button.show-more-similar {
