@@ -110,8 +110,8 @@
 
           <div class="rating-comments-container"> {# Переносим рейтинг/комментарии сюда #}
             <div class="rating-container">
-              {# Убираем текст "Рейтинг:" #}
-              <span class="rating-label">{{ average_rating|floatformat:"1" }}/5</span>
+              {# Возвращаем текст "Рейтинг:" #}
+              <span class="rating-label">Рейтинг {{ average_rating|floatformat:"1" }}/5</span>
               <div class="rating-stars" data-rating="{{ average_rating|floatformat:"-2"|default:0 }}" {% if user.is_authenticated and not user_has_voted %}data-interactive="true"{% endif %}>
                   {% for i in "12345" %}
                     <span class="rating-icon-container" {% if user.is_authenticated and not user_has_voted %}data-value="{{ forloop.counter }}"{% endif %}>

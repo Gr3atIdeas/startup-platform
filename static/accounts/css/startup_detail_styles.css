@@ -530,8 +530,14 @@ a:hover {
 }
 
 .rating-label {
-  font-size: 14px;
-  color: var(--text-secondary);
+  /* Типографика из запроса */
+  color: #FFF;
+  font-family: Unbounded, sans-serif; /* Добавляем запасной шрифт */
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 300;
+  line-height: normal;
+  letter-spacing: 0.12px;
 }
 
 /* Основной рейтинг (планеты) */
@@ -1521,28 +1527,41 @@ body #fancybox-toolbar .fancybox__button.f-button i.fas {
 }
 */
 
-/* Применяем стили к кнопке (менее агрессивно) */
+/* Применяем стили к кнопке (максимально сбрасываем + !important) */
 body .fancybox__toolbar .fancybox__button {
-    background: transparent; /* Прозрачный фон */
-    border: none;
-    color: #ccc; /* Светло-серый цвет иконки по умолчанию */
-    box-shadow: none; 
-    width: 44px; /* Стандартный размер */
-    height: 44px;
-    padding: 0;
-    display: inline-flex; 
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: color 0.2s, background-color 0.2s;
+    all: initial !important; /* <<< ПЫТАЕМСЯ СБРОСИТЬ ВСЕ СТИЛИ */
+    /* Возвращаем необходимое */
+    display: inline-flex !important; 
+    align-items: center !important;
+    justify-content: center !important;
+    width: 44px !important;
+    height: 44px !important;
+    padding: 0 !important;
+    margin: 0 2px !important; /* Небольшой отступ между кнопками */
+    cursor: pointer !important;
+    border: none !important;
+    border-radius: 50% !important; /* Скругляем */
+    background: transparent !important; /* Прозрачный фон */
+    color: #ccc !important; /* Светло-серый цвет иконки */
+    transition: color 0.2s, background-color 0.2s !important;
+    position: relative !important; /* Для z-index */
+    overflow: hidden !important; /* Часто нужно для таких кнопок */
+    z-index: 1 !important;
 }
 /* Стилизуем сам SVG */
 body .fancybox__toolbar .fancybox__button svg {
-    width: 24px; /* Размер SVG иконки */
-    height: 24px;
-    fill: currentColor; /* Наследуем цвет от кнопки */
-    stroke: none; 
-    display: block; /* Убедимся, что SVG отображается */
+    display: block !important; 
+    width: 24px !important;
+    height: 24px !important;
+    fill: currentColor !important; 
+    stroke: none !important; 
+    margin: auto !important; /* Центрируем SVG */
+    position: relative !important; /* Чтобы было поверх волны */
+    z-index: 2 !important;
+}
+/* Скрываем эффект волны внутри кнопки */
+body .fancybox__toolbar .fancybox__button .wave-effect {
+    display: none !important;
 }
 
 /* Hover для кнопки */
