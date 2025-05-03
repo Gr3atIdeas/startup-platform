@@ -211,40 +211,17 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // 6. Инициализация Fancybox (Используем стандартные SVG)
-    try {
-        if (typeof Fancybox !== 'undefined') {
-             console.log('Initializing Fancybox with default buttons...');
-             Fancybox.bind('[data-fancybox="gallery"]', {
-                 Toolbar: {
-                     display: {
-                         left: ["infobar"], // Возвращаем инфобар
-                         middle: [], 
-                         // Позволяем Fancybox использовать стандартные кнопки
-                         right: ["prev", "next", "close"], 
-                     },
-                     // УБИРАЕМ items, чтобы использовать стандартные иконки
-                     /*
-                     items: {
-                         prev: {
-                             html: '<button data-fancybox-prev class="f-button" title="Previous"><i class="fas fa-chevron-left"></i></button>',
-                         },
-                         next: {
-                             html: '<button data-fancybox-next class="f-button" title="Next"><i class="fas fa-chevron-right"></i></button>',
-                         },
-                     }
-                     */
-                 },
-                 Thumbs: {
-                     showOnStart: false 
-                 }
-             });
-             console.log('Fancybox initialized with default buttons');
-        } else {
-            console.error('Fancybox is not defined. Check if the library is loaded correctly.');
-        }
-    } catch (error) {
-        console.error('Error initializing Fancybox:', error);
+    // 6. Инициализация PhotoSwipe
+    if (typeof PhotoSwipeLightbox !== 'undefined') {
+        const lightbox = new PhotoSwipeLightbox({
+            gallery: '#pswp-gallery', // Селектор контейнера галереи
+            children: 'a',        // Селектор дочерних элементов (ссылок)
+            pswpModule: PhotoSwipe   // Передаем сам модуль PhotoSwipe
+        });
+        lightbox.init();
+        console.log('PhotoSwipe initialized for #pswp-gallery');
+    } else {
+        console.error('PhotoSwipeLightbox is not defined. Check if the library is loaded correctly.');
     }
 
     // 7. Логика переключения табов

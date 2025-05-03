@@ -11,8 +11,8 @@
 {% block head_extra %}
   <link rel="stylesheet" href="{% static 'accounts/css/startup_detail_styles.css' %}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  {# Fancybox CSS - заменяем LightGallery #}
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css" />
+  {# Добавляем CSS PhotoSwipe #}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/5.4.3/photoswipe.min.css" integrity="sha512-L1eozaVoRAKYzRPCWHacJ97/9caP/kQKH98o/L3Geq2T27cU60f/t27f09XF9U64sWJ6B5S7P/U3t9+7+7z/A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 {% endblock %}
 
 {% block content %}
@@ -224,34 +224,36 @@
           {# Секция ГАЛЕРЕЯ #}
           <div id="gallery-section" class="content-section media-section">
             <h2 class="section-title">Галерея</h2>
-            {% if video_urls or creatives_urls %}
-              <div class="gallery-grid">
-                {# Выводим сначала видео, если есть #}
-                {% for url in video_urls %}
-                  <a data-fancybox="gallery"
-                     {# Используем href для источника видео #}
-                     href="{% get_file_url_tag url startup.startup_id 'video' %}"
-                     {# data-src="{% get_file_url_tag url startup.startup_id 'video' %}" #}
-                     {# href="javascript:;" #}
-                     class="gallery-item video-item">
-                     <div class="play-icon-overlay"><i class="fas fa-play"></i></div>
-                     {# Можно добавить превью для видео, если есть #}
-                     <div class="video-placeholder">Видео</div>
-                  </a>
-                {% endfor %}
-
-                {# Выводим креативы (изображения) #}
+            {# Проверяем ТОЛЬКО наличие creatives_urls для PhotoSwipe #}
+            {% if creatives_urls %}
+              {# Добавляем id="pswp-gallery" #}
+              <div class="gallery-grid" id="pswp-gallery">
+                {# Выводим ТОЛЬКО креативы (изображения) #}
                 {% for url in creatives_urls %}
-                  <a data-fancybox="gallery"
+                  <a 
                      href="{% get_file_url_tag url startup.startup_id 'creative' %}"
-                     data-caption="Креатив {{ forloop.counter }}"
+                     data-pswp-width="1200" {# Добавляем ширину #}
+                     data-pswp-height="800" {# Добавляем высоту #}
+                     target="_blank" {# Добавим target для открытия в новой вкладке, если JS не сработает #}
+                     {# data-caption="Креатив {{ forloop.counter }}" - PhotoSwipe сам может генерировать caption #}
                      class="gallery-item image-item">
                     <img src="{% get_file_url_tag url startup.startup_id 'creative' %}" alt="Креатив {{ forloop.counter }}" />
                   </a>
                 {% endfor %}
               </div>
             {% else %}
-              <p>Дополнительные медиа-материалы отсутствуют.</p>
+              <p>Изображения для галереи отсутствуют.</p>
+            {% endif %}
+            {# Выводим видео отдельно, если нужно, вне сетки PhotoSwipe #}
+            {% if video_urls %}
+              <h3 class="section-subtitle" style="margin-top: 25px; font-size: 18px; color: var(--accent-yellow);">Видео</h3>
+              <div class="video-list" style="display: flex; flex-direction: column; gap: 10px;">
+                  {% for url in video_urls %}
+                      <a href="{% get_file_url_tag url startup.startup_id 'video' %}" target="_blank" class="video-link" style="color: var(--accent-purple); text-decoration: underline;">
+                          Смотреть видео {{ forloop.counter }}
+                      </a>
+                  {% endfor %}
+              </div>
             {% endif %}
           </div>
 
@@ -436,14 +438,25 @@
     </div>
   </div>
 
-  {# --- Удаляем весь инлайн скрипт --- #}
-  {# Оставляем только ссылки на библиотеки #}
-
-  {# --- Fancybox JS - заменяем LightGallery --- #}
-  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
   {# --- Наш основной скрипт --- #}
   <script src="{% static 'accounts/js/startup_detail.js' %}" defer></script>
 </div> {# Конец startup-detail-page #}
 
 {# СЕКЦИЯ ПОХОЖИХ СТАРТАПОВ (остается снаружи) #}
+{# Добавляем JS PhotoSwipe ПЕРЕД блоком body_scripts #}
+<script type="module">
+    // Небольшой скрипт для импорта PhotoSwipe как ES-модуля
+    // (Так рекомендует документация PhotoSwipe v5)
+    // Он сделает PhotoSwipe доступным глобально или для startup_detail.js
+    import PhotoSwipeLightbox from 'https://cdnjs.cloudflare.com/ajax/libs/photoswipe/5.4.3/photoswipe-lightbox.esm.min.js';
+    import PhotoSwipe from 'https://cdnjs.cloudflare.com/ajax/libs/photoswipe/5.4.3/photoswipe.esm.min.js';
+    window.PhotoSwipeLightbox = PhotoSwipeLightbox;
+    window.PhotoSwipe = PhotoSwipe;
+</script>
 {% endblock %}
+
+{% block body_scripts %}
+{# Дочерние шаблоны могут добавлять скрипты сюда #}
+{% endblock %}
+</body>
+</html>
