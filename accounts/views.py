@@ -285,7 +285,7 @@ def startup_detail(request, startup_id):
     })
 
 # Новая view-функция для AJAX-запроса похожих стартапов
-def load_similar_startups(request, startup_id):
+def load_similar_startups(request, startup_id: int): # <-- Явно указываем тип int
     # Получаем ID текущего стартапа, чтобы исключить его
     current_startup_id = startup_id
 

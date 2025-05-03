@@ -32,6 +32,6 @@ urlpatterns = [
     path('search-suggestions/', views.search_suggestions, name='search_suggestions'),
     path('planetary-system/', views.planetary_system, name='planetary_system'),  # Новый маршрут
     path('my_startups/', views.my_startups, name='my_startups'),  # Изменяем my-startups на my_startups
-    # URL для подгрузки похожих стартапов
-    path('load_similar_startups/<uuid:startup_id>/', views.load_similar_startups, name='load_similar_startups'),
+    # URL для подгрузки похожих стартапов - ИСПРАВЛЯЕМ ТИП ID НА INT
+    path('load_similar_startups/<int:startup_id>/', views.load_similar_startups, name='load_similar_startups'),
 ]
