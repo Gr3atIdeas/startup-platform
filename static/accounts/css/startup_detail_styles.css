@@ -596,27 +596,34 @@ a:hover {
   border-bottom: 1px solid #353945;
 }
 
+/* Общие стили для кнопок табов + Типографика */
 .tabbed-content-wrapper .tab-navigation .tab-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   padding: 6px 12px;
-  background-color: transparent;
   border: none;
-  color: #353945;
-  font-family: 'Unbounded', sans-serif;
+  /* Типографика из запроса */
+  font-family: 'Unbounded', sans-serif; /* Уже было */
   font-size: 14px;
   font-style: normal;
   font-weight: 300;
-  line-height: 18px;
+  line-height: 18px; /* 128.571% */
   letter-spacing: -0.28px;
+  /* ---- */
   text-align: center;
   cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease; /* Анимация */
   white-space: nowrap;
   border-radius: 8px;
-  leading-trim: both;
-  text-edge: cap;
+  background-color: transparent; /* По умолчанию прозрачный фон */
+}
+
+/* Неактивная кнопка таба */
+/* Увеличиваем специфичность для неактивных кнопок табов - УБИРАЕМ .startup-detail-page */
+.tabbed-content-wrapper .tab-navigation .tab-button:not(.active) {
+  /* background-color: transparent; УЖЕ ЗАДАНО ВЫШЕ */
+  color: #353945; /* Цвет как у рамки (#353945) */
 }
 
 /* Активная кнопка таба */
@@ -1230,8 +1237,7 @@ a:hover {
     padding: 0;
     box-shadow: none;
     transform: none;
-    /* Убедимся, что занимает место */
-    min-height: 200px; /* Примерная высота, подберите по карточкам */
+    min-height: 200px; /* Примерная высота */
 }
 .similar-card.show-more-placeholder:hover {
     transform: none;
@@ -1247,10 +1253,10 @@ a:hover {
 }
 
 /* Кнопка "Показать еще" - стили как у "Показать все" */
-.action-button.show-more-similar {
+.similar-startups-grid .similar-card.show-more-placeholder .action-button.show-more-similar {
     border: 1px solid var(--text-primary);
     color: var(--text-primary);
-    background: transparent;
+    background: transparent; /* Явно прозрачный фон */
     padding: 10px 20px;
     font-size: 14px;
     font-weight: 500;
@@ -1261,15 +1267,11 @@ a:hover {
     display: inline-flex;
     align-items: center;
 }
-.action-button.show-more-similar:hover {
+/* Увеличиваем специфичность для hover */
+.similar-startups-grid .similar-card.show-more-placeholder .action-button.show-more-similar:hover {
      background-color: rgba(255, 255, 255, 0.1);
      border-color: var(--accent-green);
      color: var(--accent-green);
-}
-
-/* Кнопка внутри плейсхолдера */
-.similar-card.show-more-placeholder .action-button.show-more-similar {
-    /* Наследуем стили выше */
 }
 
 /* ======================================== */
@@ -1462,9 +1464,12 @@ a:hover {
 }
 
 .rating-icon-container .icon-filled {
+  position: absolute; /* Добавим на всякий случай */
+  top: 0; left: 0; /* Добавим на всякий случай */
+  height: 100%; /* Добавим на всякий случай */
   width: 0%; /* Управляется JS */
   overflow: hidden;
-  z-index: 2;
+  z-index: 2; /* Должна быть поверх .icon-empty */
 }
 
 /* Интерактивные звезды/планеты */
@@ -1496,4 +1501,28 @@ a:hover {
 /* Если используем FontAwesome */
 .fancybox__button i {
     font-size: 18px; /* Размер иконки */
+}
+
+/* Увеличиваем специфичность */
+body .fancybox__toolbar .fancybox__button {
+    color: #ffffff; /* Белый цвет иконки */
+    background: transparent; /* Убираем фон */
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+body .fancybox__toolbar .fancybox__button:hover {
+    color: var(--accent-purple); /* Цвет при наведении */
+    background: rgba(0, 0, 0, 0.2); /* Легкий фон при наведении */
+}
+
+/* Если используем FontAwesome */
+body .fancybox__toolbar .fancybox__button i {
+    font-size: 18px;
+    line-height: 1;
+    vertical-align: middle;
 }

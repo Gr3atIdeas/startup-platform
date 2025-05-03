@@ -21,7 +21,8 @@
      data-startup-id="{{ startup.startup_id }}" 
      data-startup-title="{{ startup.title|escapejs }}"
      data-user-authenticated="{{ user.is_authenticated|yesno:'true,false' }}"
-     data-user-has-voted="{{ user_has_voted|yesno:'true,false' }}">
+     data-user-has-voted="{{ user_has_voted|yesno:'true,false' }}"
+     data-load-similar-url="{% url 'load_similar_startups' startup_id=startup.startup_id %}">
   <div class="back-link-container">
     <a href="{% url 'startups_list' %}" class="back-button">
       <i class="fas fa-arrow-left"></i> Назад

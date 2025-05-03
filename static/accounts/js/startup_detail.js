@@ -281,22 +281,75 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Добавляем обработчик для ссылки "Комментарии" под основным рейтингом
-    const commentsLink = document.querySelector('.comments-link[href="#comments-section"]');
-    const commentsTabButton = document.querySelector('.tab-button[data-target="comments-section"]');
-    const commentsSection = document.getElementById('comments-section');
+    // 8. Обработчик для "Показать еще" похожие стартапы
+    const showMoreSimilarBtn = document.querySelector('.action-button.show-more-similar');
+    const similarGrid = document.querySelector('.similar-startups-grid');
 
-    if (commentsLink && commentsTabButton && commentsSection) {
-        commentsLink.addEventListener('click', function(event) {
-            event.preventDefault(); // Предотвращаем стандартный переход по якорю
-            
-            // Имитируем клик по табу комментариев, если он еще не активен
-            if (!commentsTabButton.classList.contains('active')) {
-                commentsTabButton.click(); // Вызываем событие click на табе
+    if (showMoreSimilarBtn && similarGrid) {
+        showMoreSimilarBtn.addEventListener('click', function() {
+            // Показываем индикатор загрузки (опционально)
+            this.textContent = 'Загрузка...';
+            this.disabled = true;
+
+            // Определяем URL для AJAX запроса из data-атрибута
+            const loadSimilarUrl = pageDataElement.dataset.loadSimilarUrl;
+            if (!loadSimilarUrl) {
+                console.error('URL для загрузки похожих стартапов не найден в data-атрибуте!');
+                this.innerHTML = '<i class="fas fa-redo"></i> Показать еще';
+                this.disabled = false;
+                alert('Произошла ошибка конфигурации.');
+                return; // Прерываем выполнение
             }
             
-            // Плавная прокрутка к секции комментариев
-            commentsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            fetch(loadSimilarUrl) 
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.text(); // Ожидаем HTML
+                })
+                .then(html => {
+                    // Находим все текущие карточки, КРОМЕ плейсхолдера с кнопкой
+                    const currentCards = similarGrid.querySelectorAll('.similar-card:not(.show-more-placeholder)');
+                    // Удаляем текущие карточки
+                    currentCards.forEach(card => card.remove());
+                    
+                    // Вставляем новый HTML ПЕРЕД кнопкой "Показать еще"
+                    const placeholder = similarGrid.querySelector('.show-more-placeholder');
+                    if (placeholder) {
+                        placeholder.insertAdjacentHTML('beforebegin', html);
+                    } else {
+                        // Если вдруг кнопки нет, просто добавляем в конец
+                        similarGrid.innerHTML += html;
+                    }
+
+                    // Обновляем отображение рейтинга для НОВЫХ карточек
+                    const newCards = similarGrid.querySelectorAll('.similar-card:not(.show-more-placeholder)'); // Ищем снова
+                    newCards.forEach((card, cardIndex) => {
+                        const similarRatingContainer = card.querySelector('.similar-card-rating');
+                        if (similarRatingContainer && similarRatingContainer.dataset.rating !== undefined) {
+                            const ratingStringRaw = similarRatingContainer.dataset.rating;
+                            const ratingStringForJs = ratingStringRaw ? ratingStringRaw.replace(',', '.') : '0';
+                            const similarRatingValue = parseFloat(ratingStringForJs) || 0;
+                            // Селектор нужно обновить, чтобы он был уникальным в контексте нового набора
+                            // Простой способ - использовать уникальный ID или data-атрибут, если он есть
+                            // Или пересчитать уникальный селектор на основе нового порядка
+                            // Пока используем простой поиск внутри card
+                            updateRatingDisplay(`.similar-card[href="${card.getAttribute('href')}"] .similar-card-rating`, similarRatingValue);
+                        }
+                    });
+
+                    // Возвращаем кнопку в исходное состояние
+                    this.innerHTML = '<i class="fas fa-redo"></i> Показать еще';
+                    this.disabled = false;
+                })
+                .catch(error => {
+                    console.error('Ошибка при загрузке похожих стартапов:', error);
+                    // Возвращаем кнопку в исходное состояние
+                    this.innerHTML = '<i class="fas fa-redo"></i> Показать еще'; 
+                    this.disabled = false;
+                    alert('Не удалось загрузить похожие стартапы.');
+                });
         });
     }
 

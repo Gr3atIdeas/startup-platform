@@ -2,6 +2,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
+from django.http import HttpResponse 
 from django.core.files.storage import default_storage
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
@@ -282,6 +283,41 @@ def startup_detail(request, startup_id):
         'progress_percentage': progress_percentage,
         'similar_startups': similar_startups, # <-- Добавляем похожие стартапы в контекст
     })
+
+# Новая view-функция для AJAX-запроса похожих стартапов
+def load_similar_startups(request, startup_id):
+    # Получаем ID текущего стартапа, чтобы исключить его
+    current_startup_id = startup_id
+
+    # Запрашиваем 4 случайных одобренных стартапа, исключая текущий
+    similar_startups = Startups.objects.filter(
+        status='approved'
+    ).exclude(
+        startup_id=current_startup_id
+    ).order_by('?')[:4] # Берем 4 случайных
+
+    # Аннотируем средний рейтинг для похожих стартапов
+    # Убедимся, что используем правильные импорты и аннотации
+    similar_startups = similar_startups.annotate(
+        average_rating_calc=Avg(
+            models.ExpressionWrapper(
+                models.F('sum_votes') * 1.0 / models.F('total_voters'),
+                output_field=FloatField()
+            ),
+            filter=models.Q(total_voters__gt=0)
+        )
+    ).annotate(
+         average_rating=Coalesce('average_rating_calc', 0.0)
+    )
+
+    # Рендерим HTML для карточек
+    # Используем правильный путь к шаблону
+    html = render_to_string(
+        'accounts/_similar_startup_cards.html',
+        {'similar_startups': similar_startups, 'request': request} 
+    )
+
+    return HttpResponse(html)
 
 # Страница инвестиций
 @login_required
