@@ -214,33 +214,32 @@ document.addEventListener('DOMContentLoaded', function() {
     // 6. Инициализация Fancybox (Упрощенная)
     try {
         if (typeof Fancybox !== 'undefined') {
-             console.log('Initializing Fancybox with custom HTML buttons...');
+             console.log('Initializing Fancybox...'); // Убираем упоминание кастомных кнопок
              Fancybox.bind('[data-fancybox="gallery"]', {
                  Toolbar: {
                      display: {
-                         left: [], // Убираем стандартные кнопки слева
-                         middle: [], // Убираем стандартные кнопки посередине
-                         right: ["close"], // Оставляем стандартную кнопку закрытия
+                         left: ["infobar"], // Возвращаем инфобар
+                         middle: [], 
+                         // Позволяем Fancybox использовать стандартные кнопки
+                         right: ["prev", "next", "close"], 
                      },
+                     // УБИРАЕМ items, чтобы использовать стандартные иконки
+                     /*
                      items: {
-                         // Перепроверяем кнопки
                          prev: {
                              html: '<button data-fancybox-prev class="f-button" title="Previous"><i class="fas fa-chevron-left"></i></button>',
                          },
                          next: {
                              html: '<button data-fancybox-next class="f-button" title="Next"><i class="fas fa-chevron-right"></i></button>',
                          },
-                         // Кнопка закрытия - используем стандартную, она должна работать
-                         // close: {
-                         //     html: '<button data-fancybox-close class="f-button" title="Close"><i class="fas fa-times"></i></button>',
-                         // }
                      }
+                     */
                  },
                  Thumbs: {
-                     showOnStart: false // Не показывать миниатюры при старте
+                     showOnStart: false 
                  }
              });
-             console.log('Fancybox initialized with custom HTML buttons');
+             console.log('Fancybox initialized with default buttons');
         } else {
             console.error('Fancybox is not defined. Check if the library is loaded correctly.');
         }
@@ -350,6 +349,40 @@ document.addEventListener('DOMContentLoaded', function() {
                     this.disabled = false;
                     alert('Не удалось загрузить похожие стартапы.');
                 });
+        });
+    }
+
+    // Обработчик для ссылки "Комментарии"
+    const commentsLink = document.querySelector('.comments-link[href="#comments-section"]');
+    const commentsTabButton = document.querySelector('.tab-button[data-target="comments-section"]');
+    const commentsSection = document.getElementById('comments-section');
+
+    if (commentsLink && commentsTabButton && commentsSection) {
+        commentsLink.addEventListener('click', function(event) {
+            event.preventDefault(); // Предотвращаем стандартный переход по якорю
+            
+            // Имитируем клик по табу комментариев, если он еще не активен
+            if (!commentsTabButton.classList.contains('active')) {
+                commentsTabButton.click(); // Вызываем событие click на табе
+            }
+            
+            // Плавная прокрутка к секции комментариев
+            // Убедимся, что секция видима перед прокруткой (на случай, если она скрыта другим JS)
+            if (window.getComputedStyle(commentsSection).display !== 'none') {
+                 commentsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } else {
+                // Если секция скрыта, сначала делаем ее активной (если таб-логика не справляется)
+                 const tabContentContainer = document.querySelector('.tab-content-container');
+                 if (tabContentContainer) {
+                     const activeSection = tabContentContainer.querySelector('.content-section.active');
+                     if (activeSection) activeSection.classList.remove('active');
+                 }
+                commentsSection.classList.add('active');
+                 // Даем браузеру время на отображение перед прокруткой
+                 setTimeout(() => {
+                     commentsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                 }, 100); 
+            }
         });
     }
 
