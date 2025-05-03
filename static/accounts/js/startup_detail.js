@@ -364,15 +364,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (tabContainer && contentSections.length > 0 && tabButtons.length > 0) {
         tabContainer.addEventListener('click', function(event) {
-            if (event.target.classList.contains('tab-button')) {
-                const targetId = event.target.dataset.target;
+            // Ищем ближайший родительский элемент (или сам элемент) с классом 'tab-button'
+            const clickedButton = event.target.closest('.tab-button');
+
+            // Если кнопка найдена (клик был по кнопке или ее дочернему элементу)
+            if (clickedButton) {
+                const targetId = clickedButton.dataset.target; // Берем data-target с найденной кнопки
                 if (!targetId) return;
 
                 // Обновляем кнопки
                 tabButtons.forEach(button => {
                     button.classList.remove('active');
                 });
-                event.target.classList.add('active');
+                clickedButton.classList.add('active');
 
                 // Обновляем секции контента
                 contentSections.forEach(section => {

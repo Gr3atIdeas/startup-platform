@@ -365,10 +365,10 @@ a:hover {
   cursor: pointer;
   transition: background-color 0.2s ease, color 0.2s ease;
   white-space: nowrap;
-  border-radius: 100px; /* Форма пилюли */
+  border-radius: 8px; /* Прямоугольная форма с небольшим скруглением */
 }
 
-.tabbed-content-wrapper .tab-navigation .tab-button:hover,
+/* Стиль ТОЛЬКО для АКТИВНОЙ кнопки */
 .tabbed-content-wrapper .tab-navigation .tab-button.active {
   background-color: #E6E8EC; /* Светло-серый фон */
   color: #23262F; /* Темный текст */
