@@ -215,47 +215,24 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // 6. Инициализация PhotoSwipe с опциями
-    if (typeof PhotoSwipeLightbox !== 'undefined') {
-        const lightbox = new PhotoSwipeLightbox({
-            gallery: '#pswp-gallery', 
-            children: 'a',
-            pswpModule: PhotoSwipe,
-
-            // --- Добавляем опции для UI и анимации --- 
-            // Явно включаем кнопки (хотя они должны быть по умолчанию)
-            arrowPrev: true,
-            arrowNext: true,
-            close: true,
-            zoom: true,
-            // fullscreen: true, // Можно включить, если нужна кнопка полного экрана
-            // share: false, // Отключаем кнопку "поделиться", если не нужна
-
-            // Настройка длительности анимации (может помочь с артефактами)
-            // showAnimationDuration: 300, // мс, немного медленнее стандарта (333)
-            // hideAnimationDuration: 300, // мс, немного медленнее стандарта (333)
-            // ОТКЛЮЧАЕМ АНИМАЦИЮ ПОЛНОСТЬЮ для борьбы с артефактами
-            showHideAnimationType: 'none', 
-            zoomAnimationDuration: false, // Отключаем анимацию зума при открытии/закрытии
-
-            // Опционально: можно задать SVG для иконок, если CSS не справляется
-            // arrowPrevSVG: '<svg ...>', 
-            // arrowNextSVG: '<svg ...>',
-            // closeSVG: '<svg ...>',
-            // zoomSVG: '<svg ...>',
-
-            // Доп. опции для возможной отладки
-            // preloaderDelay: 500, // Задержка перед показом прелоадера
-            // errorMsg: 'Не удалось загрузить изображение', 
-            // indexIndicatorSep: ' / ', 
+    // 6. Инициализация GLightbox (новая нумерация)
+    if (typeof GLightbox !== 'undefined') {
+        const lightbox = GLightbox({
+            selector: '.glightbox', // Используем класс, добавленный к ссылкам
+            loop: true,          // Включаем зацикливание галереи
+            touchNavigation: true,
+            keyboardNavigation: true,
+            // Дополнительные опции можно добавить здесь
+            // skin: 'clean', // Пример скина
+            // openEffect: 'zoom', 
+            // closeEffect: 'fade',
         });
-        lightbox.init();
-        console.log('PhotoSwipe initialized for #pswp-gallery with custom options');
+        console.log('GLightbox initialized for .glightbox elements');
     } else {
-        console.error('PhotoSwipeLightbox is not defined. Check if the library is loaded correctly.');
+        console.error('GLightbox is not defined. Check if the library is loaded correctly.');
     }
 
-    // 7. Логика отрисовки распределения рейтинга в комментариях
+    // 7. Логика отрисовки распределения рейтинга в комментариях (новая нумерация)
     const ratingDistributionContainer = document.querySelector('.rating-distribution');
     if (ratingDistributionContainer) {
         // Предполагаем, что данные хранятся в data-атрибутах на родительском контейнере

@@ -132,13 +132,26 @@ body .action-button.chat-button::after {
     display: none !important;
     content: '' !important;
     background: none !important;
-    background-color: transparent !important;
+    background-color: transparent !important; 
     border: none !important;
+    width: 0 !important; /* Добавляем width 0 */
+    height: 0 !important; /* Добавляем height 0 */
+    opacity: 0 !important; /* Добавляем opacity 0 */
+    visibility: hidden !important; /* Добавляем visibility hidden */
+    position: absolute !important;
+    z-index: -1 !important; /* Прячем под кнопку */
+    /* Убираем анимацию, если она задана здесь */
+    transition: none !important;
+    animation: none !important;
+}
+/* Отдельно для .wave-effect для большей уверенности */
+body .action-button.chat-button .wave-effect {
+    display: none !important;
     width: 0 !important;
     height: 0 !important;
     opacity: 0 !important;
-    position: absolute !important; /* Добавляем для z-index */
-    z-index: -1 !important; /* Прячем под кнопку */
+    visibility: hidden !important;
+    background: none !important;
 }
 
 body .action-button.chat-button:hover {
@@ -1657,223 +1670,86 @@ body .action-button.chat-button:hover {
     display: none !important; /* Для скрытия комментариев */
 }
 
-/* ======================================== */
-/*        КАСТОМНЫЕ СТИЛИ PHOTOSWIPE         */
-/* ======================================== */
+/* --- БАЗОВЫЕ СТИЛИ ДЛЯ GLIGHTBOX (ТЕМНАЯ ТЕМА) --- */
 
-/* Фон */
-.pswp {
-  --pswp-bg: rgba(0, 8, 25, 0.9);
-}
-
-/* Верхняя панель (счетчик, кнопки) */
-.pswp .pswp__top-bar {
-  background-color: rgba(0, 8, 25, 0.7) !important; /* Полупрозрачный фон */
+/* Фон оверлея */
+.goverlay {
+  background: rgba(0, 8, 25, 0.9) !important; /* Темно-синий полупрозрачный */
   backdrop-filter: blur(5px);
-  padding-top: 10px;
-  padding-bottom: 10px;
 }
 
-/* Счетчик */
-.pswp .pswp__counter {
-  font-size: 16px;
-  color: var(--text-secondary);
-  text-shadow: none;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  top: 14px;
-  height: auto;
-  line-height: normal;
-}
-
-/* Кнопки (стрелки, закрыть, зум) - Основной стиль */
-body .pswp .pswp__button {
-  background: rgba(30, 40, 65, 0.8) !important;
+/* Кнопки навигации (стрелки) */
+.gnavigation .gnext, 
+.gnavigation .gprev {
+  background-color: rgba(30, 40, 65, 0.8) !important; /* Фон как у кнопок PhotoSwipe */
   border-radius: 50% !important;
   width: 44px !important;
   height: 44px !important;
-  backdrop-filter: blur(8px) !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
   transition: background-color 0.3s ease, transform 0.2s ease !important;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3) !important;
-  border: none !important;
-  padding: 0 !important;
-  line-height: 44px !important;
-  text-align: center !important;
-  cursor: pointer !important;
-  color: transparent !important; 
-  font-size: 0 !important;
-  animation: none !important;
-  position: relative !important;
-  overflow: hidden;
 }
 
-body .pswp .pswp__button:hover {
-  background: rgba(50, 65, 95, 0.95) !important;
-  transform: scale(1.05) !important;
+.gnavigation .gnext:hover, 
+.gnavigation .gprev:hover {
+  background-color: rgba(50, 65, 95, 0.95) !important;
+  transform: scale(1.05);
 }
 
-/* Иконки внутри кнопок */
-body .pswp .pswp__button svg {
-  fill: var(--text-primary) !important;
-  transition: transform 0.2s ease !important;
-  display: inline-block !important;
-  vertical-align: middle !important;
-  width: 50% !important;
-  height: 50% !important;
-  position: absolute !important;
-  left: 50% !important;
-  top: 50% !important;
-  transform: translate(-50%, -50%) !important;
+/* Иконки стрелок (настраиваем цвет через fill) */
+.gnavigation .gnext svg,
+.gnavigation .gprev svg {
+  fill: var(--text-primary) !important; /* Белые иконки */
+  width: 25px !important;
+  height: 25px !important;
 }
 
-body .pswp .pswp__button:hover svg {
-  transform: scale(1.15) !important;
-}
-
-/* Стилизация стрелок */
-body .pswp .pswp__button--arrow--prev,
-body .pswp .pswp__button--arrow--next {
-  /* Видимость и размеры */
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  opacity: 0.8 !important; /* Сделаем чуть прозрачными по умолчанию */
-  visibility: visible !important;
-  width: 50px !important; /* Уменьшим обратно до 50px */
-  height: 50px !important;
-  /* Фон и граница - как у остальных кнопок */
-  background: rgba(30, 40, 65, 0.8) !important;
-  border: none !important;
+/* Кнопка закрытия */
+.gclose {
+  background-color: rgba(30, 40, 65, 0.8) !important;
   border-radius: 50% !important;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3) !important;
-  backdrop-filter: blur(8px) !important;
-  /* Позиционирование */
-  position: absolute !important;
-  top: auto !important;
-  bottom: 25px !important; /* Чуть выше поднимем */
-  z-index: 1050 !important; /* Стандартный z-index для UI PhotoSwipe */
-  transform: translateY(0) !important;
-  left: auto !important;
-  right: auto !important;
-  cursor: pointer !important;
-  transition: opacity 0.3s ease, transform 0.2s ease !important; /* Добавим transition для opacity */
+  width: 40px !important;
+  height: 40px !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  transition: background-color 0.3s ease, transform 0.2s ease !important;
+  top: 20px !important;
+  right: 20px !important;
 }
 
-body .pswp .pswp__button--arrow--prev {
-    left: 50% !important;
-    /* Сдвигаем левее на половину ширины + отступ */
-    transform: translateX(calc(-50% - 10px)) !important; 
+.gclose:hover {
+  background-color: rgba(50, 65, 95, 0.95) !important;
+  transform: scale(1.1) rotate(90deg);
 }
 
-body .pswp .pswp__button--arrow--next {
-    /* right: 50% !important; */ /* Используем left для обеих */
-    left: 50% !important;
-    /* Сдвигаем правее на половину ширины + отступ */
-    transform: translateX(calc(50% + 10px)) !important; 
-}
-
-body .pswp .pswp__button--arrow--prev:hover,
-body .pswp .pswp__button--arrow--next:hover {
-  background: rgba(50, 65, 95, 0.95) !important;
-  opacity: 1 !important; /* Делаем непрозрачными при наведении */
-  /* Увеличение при наведении */
-  transform: scale(1.05) !important; 
-}
-/* Корректируем transform при наведении */
-body .pswp .pswp__button--arrow--prev:hover {
-     transform: translateX(calc(-50% - 10px)) scale(1.05) !important; 
-}
-body .pswp .pswp__button--arrow--next:hover {
-     transform: translateX(calc(50% + 10px)) scale(1.05) !important;
-}
-
-body .pswp .pswp__button--arrow--prev svg,
-body .pswp .pswp__button--arrow--next svg,
-body .pswp .pswp__button--close svg,
-body .pswp .pswp__button--zoom svg,
-body .pswp .pswp__button--fs svg,
-body .pswp .pswp__button--share svg {
-  filter: drop-shadow(0 1px 3px rgba(0,0,0,0.4));
-  width: 50% !important; /* Возвращаем 50% */
-  height: 50% !important;
-  display: block !important;
+/* Иконка закрытия */
+.gclose svg {
   fill: var(--text-primary) !important;
-  /* Центрирование через absolute + transform */
-  position: absolute !important; 
-  left: 50% !important;
-  top: 50% !important;
-  transform: translate(-50%, -50%) !important; 
-  transition: opacity 0.3s ease !important; /* Убираем transform из transition */
-  opacity: 1 !important; /* Убираем прозрачность по умолчанию */
+  width: 20px !important;
+  height: 20px !important;
 }
 
-/* Анимация иконки при наведении на кнопку - убираем */
-body .pswp .pswp__button--arrow--prev:hover svg,
-body .pswp .pswp__button--arrow--next:hover svg,
-body .pswp .pswp__button--close:hover svg,
-body .pswp .pswp__button--zoom:hover svg,
-body .pswp .pswp__button--fs:hover svg,
-body .pswp .pswp__button--share:hover svg {
-    /* transform: scale(1.15) !important; */ /* Убираем масштабирование */
-    opacity: 1 !important; /* Оставляем полную непрозрачность */
+/* Загрузчик */
+.gspinner {
+  border-left-color: var(--accent-purple) !important; /* Фиолетовый цвет загрузчика */
+  width: 40px !important;
+  height: 40px !important;
 }
 
-/* Убираем стандартный фон у стрелок (на всякий случай) */
-body .pswp .pswp__button--arrow--prev::before,
-body .pswp .pswp__button--arrow--next::before {
-  background: none !important;
-  display: none !important;
+/* Описание/подпись к слайду (если используется) */
+.gslide-description {
+  background: rgba(0, 8, 25, 0.7) !important;
 }
 
-/* Кнопка закрытия ('x') */
-body .pswp .pswp__button--close {
-  opacity: 0.8 !important;
-  transition: opacity 0.3s ease, transform 0.2s ease !important;
+.gslide-title,
+.gslide-desc {
+  color: var(--text-primary) !important;
 }
 
-body .pswp .pswp__button--close:hover {
-  opacity: 1 !important;
-  transform: scale(1.1) rotate(90deg) !important;
-}
 
-/* Кнопка зума */
-body .pswp .pswp__button--zoom {
-  opacity: 0.8 !important;
-  transition: opacity 0.3s ease !important;
-}
-
-body .pswp .pswp__button--zoom:hover {
-  opacity: 1 !important;
-}
-
-/* Остальные кнопки */
-body .pswp .pswp__button--fs,
-body .pswp .pswp__button--share {
-  opacity: 0.8 !important;
-  transition: opacity 0.3s ease !important;
-}
-
-body .pswp .pswp__button--fs:hover,
-body .pswp .pswp__button--share:hover {
-  opacity: 1 !important;
-}
-
-/* Убираем фон загрузчика */
-body .pswp .pswp__preloader .pswp__preloader__icn {
-  opacity: 0.8 !important;
-}
-
-/* Скрытие возможного span от волнового эффекта */
-body .pswp .pswp__button span {
-    display: none !important;
-}
-
-/* --- Попытка убрать артефакты --- */
+/* --- Попытка убрать артефакты (оставляем, может помочь GLightbox) --- */
 /* Отключаем transition и animation для контейнеров PhotoSwipe */
-.pswp__container,
-.pswp__item,
-.pswp__img {
+.glightbox-container .gslide, /* Селекторы для GLightbox */
+.glightbox-container .gslide-inner-content,
+.glightbox-container .gslide-media {
     transition: none !important;
     animation: none !important;
     /* Возвращаем backface-visibility */

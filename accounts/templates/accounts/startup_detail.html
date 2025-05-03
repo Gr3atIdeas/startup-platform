@@ -11,8 +11,7 @@
 {% block head_extra %}
   <link rel="stylesheet" href="{% static 'accounts/css/startup_detail_styles.css' %}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  {# Добавляем CSS PhotoSwipe - УДАЛЯЕМ integrity #}
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/5.4.4/photoswipe.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
 {% endblock %}
 
 {% block content %}
@@ -247,22 +246,19 @@
             {% endif %}
             {# --- КОНЕЦ БЛОКА ВИДЕО --- #}
             
-            {# --- БЛОК ИЗОБРАЖЕНИЙ (PhotoSwipe) --- #}
+            {# --- БЛОК ИЗОБРАЖЕНИЙ (GLightbox) --- #}
             {% if creatives_urls %}
               {# Добавляем заголовок для изображений, если есть и видео, и изображения #}
               {% if video_urls %}
               <h3 class="section-subtitle" style="margin-top: 30px; margin-bottom: 15px; font-size: 18px; color: var(--accent-yellow);">Изображения</h3>
               {% endif %}
-              <div class="gallery-grid" id="pswp-gallery">
+              <div class="gallery-grid">
                 {# Выводим ТОЛЬКО креативы (изображения) #}
                 {% for url in creatives_urls %}
                   <a 
                      href="{% get_file_url_tag url startup.startup_id 'creative' %}"
-                     data-pswp-width="1200" {# Добавляем ширину #}
-                     data-pswp-height="800" {# Добавляем высоту #}
-
-
-                     class="gallery-item image-item">
+                     class="gallery-item image-item glightbox" 
+                     data-gallery="startup-gallery"> {# Добавляем data-gallery для группировки #}
                     <img src="{% get_file_url_tag url startup.startup_id 'creative' %}" alt="Креатив {{ forloop.counter }}" />
                   </a>
                 {% endfor %}
@@ -467,17 +463,8 @@
 {% endblock %}
 
 {% block body_scripts %}
-{# Добавляем JS PhotoSwipe внутрь этого блока #}
-<script type="module">
-    // Небольшой скрипт для импорта PhotoSwipe как ES-модуля
-    // (Так рекомендует документация PhotoSwipe v5)
-    // Он сделает PhotoSwipe доступным глобально или для startup_detail.js
-    // ОБНОВЛЕНО до v5.4.4
-    import PhotoSwipeLightbox from 'https://cdnjs.cloudflare.com/ajax/libs/photoswipe/5.4.4/photoswipe-lightbox.esm.min.js';
-    import PhotoSwipe from 'https://cdnjs.cloudflare.com/ajax/libs/photoswipe/5.4.4/photoswipe.esm.min.js';
-    window.PhotoSwipeLightbox = PhotoSwipeLightbox;
-    window.PhotoSwipe = PhotoSwipe;
-</script>
+{# Добавляем JS GLightbox #}
+<script src="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/js/glightbox.min.js"></script>
 {# Дочерние шаблоны могут добавлять скрипты сюда #}
 {% endblock %}
 </body>
