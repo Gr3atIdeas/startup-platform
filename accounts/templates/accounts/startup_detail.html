@@ -312,6 +312,7 @@
                       </span>
                     </span>
                     <div class="rating-bar">
+                      {# Этот стиль применяется динамически. Ошибка линтера ожидаема и ее можно игнорировать. #}
                       <div class="rating-bar-fill" style="width: {{ rating_distribution|get_item:i|default:0 }}%;"></div>
                     </div>
                     <span class="rating-count">{{ rating_counts|get_item:i|default:0 }}</span>

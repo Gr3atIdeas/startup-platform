@@ -93,7 +93,7 @@ a:hover {
 
 /* Конкретные стили кнопок по макету */
 .action-button.chat-button {
-    background: transparent !important; /* Используем background вместо background-color для надежности */
+    background: none !important; /* Убираем фон максимально строго */
     color: var(--text-primary);
     border: 1px solid var(--text-primary);
     width: auto;
@@ -117,6 +117,7 @@ a:hover {
     background-color: rgba(255, 255, 255, 0.1) !important;
     border-color: var(--text-primary);
     color: var(--text-primary);
+    box-shadow: none !important;
 }
 
 .action-button.write-author-button {
@@ -333,11 +334,11 @@ a:hover {
 .progress-bar-visual {
     flex-grow: 1; /* Занимает доступное место */
     height: 100%;
-    background-color: transparent;
-    border-radius: 20px; /* Скругление для внутреннего бара */
-    margin-right: 15px; /* Отступ справа от инфо инвесторов */
+    background-color: rgba(11, 26, 63, 0.6); /* Добавим легкий фон для самого бара */
+    border-radius: 20px; /* Скругление */
+    max-width: calc(100% - 100px); /* Пример: оставляем 100px для иконки и текста справа */
     position: relative;
-    overflow: hidden; /* Скрываем анимацию по краям */
+    overflow: hidden;
 }
 
 .progress-animation-container {
@@ -408,20 +409,24 @@ a:hover {
     100% { transform: translateX(0) translateY(-1px) scale(1); opacity: 0.7; }
 }
 
-/* Убираем старый .progress-info */
-/* .progress-info { ... } */
-
 /* Текст процента поверх бара */
 .progress-percentage {
     position: absolute;
-    left: 15px; /* Отступ слева внутри бара */
+    /* Центрируем текст внутри .progress-animation-container */
+    left: 50%;
     top: 50%;
-    transform: translateY(-50%);
+    transform: translate(-50%, -50%); /* Точное центрирование */
     font-weight: bold;
-    color: #002b4d; /* Темно-синий для контраста */
+    color: #ffffff; /* Сделаем белым для лучшей читаемости на градиенте */
     font-size: 14px;
-    z-index: 2;
-    text-shadow: 0 0 3px rgba(255, 255, 255, 0.5); /* Легкое свечение для читаемости */
+    z-index: 3; /* Над анимацией и планетами */
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6); /* Усилим тень */
+    white-space: nowrap; /* Предотвратим перенос текста */
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0 5px; /* Небольшие отступы по бокам внутри */
+    box-sizing: border-box;
 }
 
 /* Блок с инфо об инвесторах */
@@ -433,6 +438,10 @@ a:hover {
     font-size: 14px;
     flex-shrink: 0; /* Не сжимать */
     z-index: 2;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    display: block;
+    font-weight: 800;
 }
 .progress-backers-info i {
     font-size: 16px;
@@ -1119,7 +1128,7 @@ a:hover {
 
 .comment-date {
   font-size: 13px;
-  color: var(--text-placeholder);
+  color: var(--accent-yellow);
 }
 
 .comment-body {
@@ -1566,7 +1575,7 @@ a:hover {
   width: 22px; /* Ширина иконки */
   height: 22px; /* Высота иконки */
   vertical-align: middle;
-  margin-right: 3px;
+  margin-right: 0;
   cursor: default;
   line-height: 1;
 }
@@ -1589,13 +1598,16 @@ a:hover {
   z-index: 1;
 }
 
-.rating-icon-container .icon-filled {
-  position: absolute; /* Добавим на всякий случай */
-  top: 0; left: 0; /* Добавим на всякий случай */
-  height: 100%; /* Добавим на всякий случай */
+.rating-icon-container .icon-filled,
+.similar-card-rating .rating-icon-container .icon-filled,
+.comment-rating .rating-icon-container .icon-filled,
+.star-label .rating-icon-container .icon-filled {
+  position: absolute;
+  top: 0; left: 0;
+  height: 100%;
   width: 0%; /* Управляется JS */
   overflow: hidden;
-  z-index: 2; /* Должна быть поверх .icon-empty */
+  z-index: 2;
 }
 
 /* Интерактивные звезды/планеты */
@@ -1613,4 +1625,81 @@ a:hover {
 /* --- Утилиты --- */
 .hidden {
     display: none !important; /* Для скрытия комментариев */
+}
+
+/* ======================================== */
+/*        КАСТОМНЫЕ СТИЛИ PHOTOSWIPE         */
+/* ======================================== */
+
+/* Фон */
+.pswp {
+  --pswp-bg: rgba(0, 8, 25, 0.9); /* Полупрозрачный темно-синий фон */
+}
+
+/* Кнопки (стрелки, закрыть, зум) */
+.pswp__button {
+  background: rgba(30, 40, 65, 0.8) !important; /* Темный фон с прозрачностью */
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  backdrop-filter: blur(8px); /* Усилим блюр */
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); /* Добавим тень */
+}
+
+.pswp__button:hover {
+  background: rgba(50, 65, 95, 0.95) !important; /* Чуть светлее при наведении */
+  transform: scale(1.05); /* Небольшое увеличение */
+}
+
+/* Иконки внутри кнопок (белые) */
+.pswp__button svg {
+  fill: var(--text-primary) !important;
+  transition: transform 0.2s ease;
+}
+.pswp__button:hover svg {
+    transform: scale(1.1); /* Увеличиваем иконку при наведении */
+}
+
+/* Стилизация стрелок */
+.pswp__button--arrow--prev,
+.pswp__button--arrow--next {
+  width: 50px; /* Чуть шире */
+  background: none !important; /* Убираем фон для стрелок, оставляем только иконку */
+  box-shadow: none; /* Убираем тень у стрелок */
+  backdrop-filter: none; /* Убираем блюр у стрелок */
+}
+.pswp__button--arrow--prev:hover,
+.pswp__button--arrow--next:hover {
+  background: rgba(255, 255, 255, 0.1) !important; /* Легкий фон при наведении на стрелки */
+  transform: none; /* Убираем scale для стрелок */
+}
+.pswp__button--arrow--prev svg,
+.pswp__button--arrow--next svg {
+   /* Можно добавить тень для самих иконок стрелок */
+   filter: drop-shadow(0 1px 3px rgba(0,0,0,0.4));
+}
+
+/* Убираем стандартный фон у стрелок (на всякий случай) */
+.pswp__button--arrow--prev::before,
+.pswp__button--arrow--next::before {
+  background: none !important;
+}
+
+/* Расположение кнопки закрытия (можно настроить) */
+.pswp__button--close {
+  /* По умолчанию справа вверху */
+}
+
+/* Счетчик слайдов */
+.pswp__counter {
+  color: var(--text-secondary);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  font-size: 14px;
+}
+
+/* Убираем фон загрузчика, если он мешает */
+.pswp__preloader .pswp__preloader__icn {
+  /* Можно изменить стили спиннера, если нужно */
+  /* background: none; */ 
 }

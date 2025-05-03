@@ -218,26 +218,86 @@ document.addEventListener('DOMContentLoaded', function() {
     // 6. Инициализация PhotoSwipe
     if (typeof PhotoSwipeLightbox !== 'undefined') {
         const lightbox = new PhotoSwipeLightbox({
-            gallery: '#pswp-gallery', 
+            gallery: '#pswp-gallery',
             children: 'a',
             pswpModule: PhotoSwipe,
-
-            // Настройки для скрытия стандартного UI
-            arrowPrev: false,
-            arrowNext: false,
-            closeButton: false, // Используйте closeButton для v5
-            counter: false,
-            zoom: false, // Отключаем кнопку зума, но оставляем pinch-to-zoom
-            // Оставляем стандартное поведение закрытия по клику/свайпу
-            // clickToCloseNonZoomable: true, (это по умолчанию)
+            // UI должен быть включен по умолчанию, убираем явное указание
+            // ui: PhotoSwipeUI_Default
         });
         lightbox.init();
-        console.log('PhotoSwipe initialized for #pswp-gallery with minimal UI');
+        console.log('PhotoSwipe initialized for #pswp-gallery with default UI');
     } else {
         console.error('PhotoSwipeLightbox is not defined. Check if the library is loaded correctly.');
     }
 
-    // 7. Логика переключения табов
+    // 7. Логика отрисовки распределения рейтинга в комментариях
+    const ratingDistributionContainer = document.querySelector('.rating-distribution');
+    if (ratingDistributionContainer) {
+        // Предполагаем, что данные хранятся в data-атрибутах на родительском контейнере
+        // Например: data-ratings='{"5": 10, "4": 5, "3": 2, "2": 0, "1": 1}'
+        // Или data-total-votes="18" и data-rating-5="10", data-rating-4="5" и т.д.
+
+        const ratingBars = ratingDistributionContainer.querySelectorAll('.rating-bar-container');
+        let totalVotes = 0;
+        const votesPerLevel = {};
+
+        // Способ 1: Чтение из одного JSON-атрибута (предпочтительнее)
+        if (ratingDistributionContainer.dataset.ratings) {
+            try {
+                const ratingsData = JSON.parse(ratingDistributionContainer.dataset.ratings);
+                 // Суммируем общее количество голосов
+                Object.values(ratingsData).forEach(count => totalVotes += parseInt(count) || 0);
+                // Сохраняем голоса по уровням
+                for (const level in ratingsData) {
+                    votesPerLevel[level] = parseInt(ratingsData[level]) || 0;
+                }
+            } catch (e) {
+                console.error('Ошибка парсинга JSON из data-ratings:', e);
+            }
+        } else {
+            // Способ 2: Чтение из отдельных атрибутов data-rating-X и data-total-votes
+             totalVotes = parseInt(ratingDistributionContainer.dataset.totalVotes) || 0;
+             for (let i = 5; i >= 1; i--) {
+                 votesPerLevel[i] = parseInt(ratingDistributionContainer.dataset[`rating${i}`]) || 0;
+             }
+             // Перепроверка, если totalVotes не был предоставлен
+             if (totalVotes === 0) {
+                 Object.values(votesPerLevel).forEach(count => totalVotes += count);
+             }
+        }
+
+
+        if (totalVotes > 0) {
+            ratingBars.forEach(barContainer => {
+                const starLabel = barContainer.querySelector('.star-label');
+                const ratingLevel = starLabel ? parseInt(starLabel.textContent || starLabel.innerText) : null; // Получаем уровень (5, 4, ...)
+                const ratingBarFill = barContainer.querySelector('.rating-bar-fill');
+                const ratingCountSpan = barContainer.querySelector('.rating-count');
+
+                if (ratingLevel !== null && ratingBarFill && ratingCountSpan) {
+                     const countForLevel = votesPerLevel[ratingLevel] || 0;
+                     const percentage = (countForLevel / totalVotes) * 100;
+                     ratingBarFill.style.width = `${percentage}%`;
+                     ratingCountSpan.textContent = countForLevel; // Обновляем текст с количеством
+                } else {
+                     if (!ratingLevel) console.warn("Не удалось определить уровень рейтинга для бара:", barContainer);
+                     if (!ratingBarFill) console.warn("Не найден .rating-bar-fill для бара:", barContainer);
+                     if (!ratingCountSpan) console.warn("Не найден .rating-count для бара:", barContainer);
+                }
+            });
+        } else {
+            // Если голосов нет, обнуляем все полоски и счетчики
+            ratingBars.forEach(barContainer => {
+                 const ratingBarFill = barContainer.querySelector('.rating-bar-fill');
+                 const ratingCountSpan = barContainer.querySelector('.rating-count');
+                 if (ratingBarFill) ratingBarFill.style.width = '0%';
+                 if (ratingCountSpan) ratingCountSpan.textContent = '0';
+            });
+            console.log("Нет данных о голосах для распределения рейтинга.");
+        }
+    }
+
+    // 8. Логика переключения табов (сдвигаем нумерацию)
     const tabContainer = document.querySelector('.tab-navigation');
     const contentSections = document.querySelectorAll('.content-section');
     const tabButtons = document.querySelectorAll('.tab-button');
@@ -270,7 +330,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // 8. Обработчик для "Показать еще" похожие стартапы
+    // 9. Обработчик для "Показать еще" похожие стартапы
     const showMoreSimilarBtn = document.querySelector('.action-button.show-more-similar');
     const similarGrid = document.querySelector('.similar-startups-grid');
 
