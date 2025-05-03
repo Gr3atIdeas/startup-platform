@@ -42,12 +42,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const ratingValue = parseFloat(rating) || 0;
         const fullStars = Math.floor(ratingValue);
         const partialPercentage = (ratingValue - fullStars) * 100;
-        // console.log(`BEFORE LOOP - Rating: ${ratingValue}, Full: ${fullStars}, Partial%: ${partialPercentage}, Containers found: ${iconContainers.length}, Selector: ${containerSelector}`);
+        
 
         iconContainers.forEach((container, index) => {
             const filledIcon = container.querySelector('.icon-filled');
             if (!filledIcon) return; // Пропускаем, если нет иконки
-            // console.log(`Inside loop - Container ${index}:`, container);
 
             let fillWidth = '0%'; // Ширина по умолчанию
             if (index < fullStars) {
@@ -59,7 +58,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             // Применяем ширину к желтой иконке
             filledIcon.style.width = fillWidth;
-            // console.log(`Container ${index}: Set width to ${fillWidth}`);
+            
         });
     }
 
@@ -80,7 +79,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const mainRatingElement = document.querySelector(ratingDisplayContainer);
     if (mainRatingElement) {
         const initialRatingRaw = mainRatingElement.getAttribute('data-rating'); // Получаем как строку
-        // console.log(`Raw data-rating attribute: "${initialRatingRaw}"`); // Убираем отладку
+        
         // Заменяем запятую на точку перед parseFloat
         const ratingStringForJs = initialRatingRaw ? initialRatingRaw.replace(',', '.') : '0'; 
         const initialRating = parseFloat(ratingStringForJs); // Парсим строку с точкой
@@ -197,7 +196,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 commentAvgRating.textContent = data.average_rating.toFixed(1);
                             }
                             // Можно добавить сообщение об успехе
-                            // alert('Ваш голос учтен!');
+                            
                         }
                     } else {
                         alert(data.error || 'Ошибка при голосовании');

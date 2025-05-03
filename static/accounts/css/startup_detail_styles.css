@@ -648,11 +648,6 @@ a:hover {
 .content-section {
   display: none; /* По умолчанию скрыты */
   /* Убираем общие стили рамки и отступов отсюда */
-  /* background: transparent; */
-  /* border: 1px solid rgba(255, 255, 255, 0.50); */
-  /* border-radius: 10px; */
-  /* padding: 20px; */
-  /* margin-top: -1px; */
 }
 
 .content-section.active {
@@ -775,9 +770,9 @@ a:hover {
 .gallery-grid,
 .video-grid { /* Добавляем новый класс */
   display: grid;
-  /* Увеличиваем минимальный размер превью */
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); /* Было minmax(120px, 1fr) */
-  gap: 20px; /* Немного увеличим отступ */
+  /* Уменьшаем минимальный размер превью на 20% */
+  grid-template-columns: repeat(auto-fill, minmax(192px, 1fr));
+  gap: 15px;
   margin-bottom: 30px; /* Добавим отступ под сеткой */
 }
 

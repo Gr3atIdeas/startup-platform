@@ -11,8 +11,8 @@
 {% block head_extra %}
   <link rel="stylesheet" href="{% static 'accounts/css/startup_detail_styles.css' %}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  {# Добавляем CSS PhotoSwipe #}
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/5.4.3/photoswipe.min.css" integrity="sha512-L1eozaVoRAKYzRPCWHacJ97/9caP/kQKH98o/L3Geq2T27cU60f/t27f09XF9U64sWJ6B5S7P/U3t9+7+7z/A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  {# Добавляем CSS PhotoSwipe - ОБНОВЛЕНО до v5.4.4 #}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/5.4.4/photoswipe.min.css" integrity="sha512-BE09VQdGmA8+3PDi7F9SR/S5kWw75Lhv04YOpH4T/3z8fDo9P+t0SgKj+XqA0PVs/FmJ52Q8UjB1iHnFhUyHyg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 {% endblock %}
 
 {% block content %}
@@ -76,13 +76,10 @@
       <div class="author-info-left">
         <div class="author-header">Автор</div>
         <div class="author-details">
-          <div class="author-avatar">
-            {# <img src="{{ startup.owner.avatar_url }}" alt="{{ startup.owner.first_name }}"> #}
           </div>
           <div class="author-meta">
             <div class="author-name">{{ startup.owner.first_name|default:"Виктор" }}</div>
-            <div class="author-rating">Рейтинг {{ average_rating|floatformat:"1" }}/5</div>
-            {# <div class="author-reviews">Отзывы</div> #}
+
           </div>
           <button class="action-button write-author-button">Написать</button>
         </div>
@@ -135,10 +132,8 @@
               Инвестирование
             {% elif startup.only_buy %}
               Выкуп
-            {% else %}
-              {# Статус по умолчанию, если ничего не выбрано? #}
             {% endif %}
-            {# Инвестирование+Выкуп Временный текст #}
+
           </div>
 
           {# Кнопка Редактировать #}
@@ -147,22 +142,20 @@
               {% if startup.owner == user or user.role.role_name == 'moderator' %}
                 {# Пользователь авторизован И (он владелец ИЛИ модератор) -> кнопка активна #}
               {% else %}
-                disabled {# Пользователь авторизован, но не владелец и не модератор #}
+                disabled
               {% endif %}
             {% else %}
-              disabled {# Пользователь не авторизован #}
+              disabled
             {% endif %}>
             Редактировать
           </button>
 
           {# Кнопка Продать активы #}
           {% if user.is_authenticated and startup.owner == user %}
-            <button class="action-button sell-button">Продать активы</button>
-          {% endif %}
 
           {# Кнопка Инвестировать и поле суммы - ОСТАВЛЯЕМ для инвесторов, но ВНЕ ЭТОГО БЛОКА? #}
           {# Нужно решить, где будет кнопка Инвестировать согласно новому дизайну #}
-          {# {% if user.is_authenticated and user.role.role_name == 'investor' %} ... {% endif %} #}
+
         </div>
       </div> {# Конец startup-header-actions-wrapper #}
 
@@ -256,14 +249,14 @@
                      href="{% get_file_url_tag url startup.startup_id 'creative' %}"
                      data-pswp-width="1200" {# Добавляем ширину #}
                      data-pswp-height="800" {# Добавляем высоту #}
-                     {# target="_blank" Убираем этот атрибут #}
-                     {# data-caption="Креатив {{ forloop.counter }}" - PhotoSwipe сам может генерировать caption #}
+
+
                      class="gallery-item image-item">
                     <img src="{% get_file_url_tag url startup.startup_id 'creative' %}" alt="Креатив {{ forloop.counter }}" />
                   </a>
                 {% endfor %}
               </div>
-            {% elif not video_urls %} {# Если нет ни видео, ни изображений #}
+            {% elif not video_urls %}
               <p>Медиа-материалы отсутствуют.</p>
             {% endif %}
             {# --- КОНЕЦ БЛОКА ИЗОБРАЖЕНИЙ --- #}
@@ -301,10 +294,10 @@
                   <div class="rating-bar-container">
                     {# Заменяем звезду на контейнер с планетой #}
                     <span class="star-label">{{ i }}
-                      {# <i class="fas fa-star"></i> #}
+
                       <span class="rating-icon-container comment-icon-container">
                         <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-empty">
-                        <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-filled" style="width: 100%;"> {# Заполнен на 100% для метки #}
+                        <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-filled" style="width: 100%;">
                       </span>
                     </span>
                     <div class="rating-bar">
@@ -413,7 +406,7 @@
           <div class="similar-card-rating" data-rating="{{ similar.average_rating|default:0|floatformat:'-2' }}">
             {# Используем цикл и контейнеры для планет #}
             {% for star_i in "12345" %}
-              <span class="rating-icon-container comment-icon-container"> {# Меньший размер иконок #}
+              <span class="rating-icon-container comment-icon-container">
                 <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-empty">
                 <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-filled">
               </span>
@@ -460,8 +453,9 @@
     // Небольшой скрипт для импорта PhotoSwipe как ES-модуля
     // (Так рекомендует документация PhotoSwipe v5)
     // Он сделает PhotoSwipe доступным глобально или для startup_detail.js
-    import PhotoSwipeLightbox from 'https://cdnjs.cloudflare.com/ajax/libs/photoswipe/5.4.3/photoswipe-lightbox.esm.min.js';
-    import PhotoSwipe from 'https://cdnjs.cloudflare.com/ajax/libs/photoswipe/5.4.3/photoswipe.esm.min.js';
+    // ОБНОВЛЕНО до v5.4.4
+    import PhotoSwipeLightbox from 'https://cdnjs.cloudflare.com/ajax/libs/photoswipe/5.4.4/photoswipe-lightbox.esm.min.js';
+    import PhotoSwipe from 'https://cdnjs.cloudflare.com/ajax/libs/photoswipe/5.4.4/photoswipe.esm.min.js';
     window.PhotoSwipeLightbox = PhotoSwipeLightbox;
     window.PhotoSwipe = PhotoSwipe;
 </script>

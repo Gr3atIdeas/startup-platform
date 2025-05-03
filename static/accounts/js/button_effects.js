@@ -72,6 +72,18 @@ function initPositionAware() {
     const buttons = document.querySelectorAll('button, .btn, input[type="submit"], input[type="button"], .catalog-search-btn, .show-button, .detail-button, .join-button, .login-btn, .create-startup-btn, .logout-btn, .nav-menu a');
     
     buttons.forEach(button => {
+        if (button.closest('.tabbed-content-wrapper')) {
+            button.removeAttribute('data-position-aware-initialized');
+            const existingSpan = button.querySelector('span.wave-effect');
+            if (existingSpan) {
+                existingSpan.remove();
+            }
+            button.removeEventListener('mouseenter', handleMouseEnter);
+            button.removeEventListener('mouseleave', handleMouseLeave);
+            button.removeEventListener('touchstart', handleTouchStart);
+            return;
+        }
+
         if (button.hasAttribute('data-position-aware-initialized')) return;
 
         const existingSpan = button.querySelector('span.wave-effect');
