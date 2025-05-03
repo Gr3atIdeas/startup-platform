@@ -94,9 +94,10 @@ document.addEventListener('DOMContentLoaded', function() {
         // Используем commentRatingContainer для поиска и проверки data-rating
         if (commentRatingContainer && commentRatingContainer.dataset.rating !== undefined) {
             const commentRatingValue = parseFloat(commentRatingContainer.dataset.rating.replace(',', '.')) || 0;
-            // Генерируем уникальный селектор для контейнера звезд этого комментария
-            // Упрощаем селектор, так как работаем с конкретным commentRatingContainer
-            updateRatingDisplay(commentRatingContainer, commentRatingValue); 
+            // Генерируем УНИКАЛЬНЫЙ селектор для контейнера звезд этого комментария
+            // Используем cardIndex + 1, так как nth-child 1-индексированный
+            const uniqueCommentSelector = `.comment-card:nth-child(${cardIndex + 1}) ${ratingCommentsSelector}`;
+            updateRatingDisplay(uniqueCommentSelector, commentRatingValue);
         }
     });
 

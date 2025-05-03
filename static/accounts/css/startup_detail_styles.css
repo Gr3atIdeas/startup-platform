@@ -334,9 +334,9 @@ a:hover {
     gap: 23px; /* Из Figma */
     flex-shrink: 0; /* Из Figma */
     border-radius: 10px; /* Из Figma */
-    background: rgba(0, 0, 0, 0.27); /* Из Figma */
+    background: rgba(0, 0, 0, 0.27); /* Из Figma - полупрозрачный фон */
     box-shadow: 6px 6px 10px 0px rgba(0, 0, 0, 0.25); /* Из Figma */
-    backdrop-filter: blur(10px); /* Из Figma */
+    backdrop-filter: blur(10px); /* Из Figma - применяем блюр */
     box-sizing: border-box;
 }
 
@@ -484,6 +484,11 @@ a:hover {
 /* --- КОНТЕНТ ТАБОВ --- */
 .content-section {
   display: none;
+  background: transparent; /* Прозрачный фон для секции */
+  border: 1px solid rgba(255, 255, 255, 0.50); /* Белая полупрозрачная рамка */
+  border-radius: 10px; /* Небольшое скругление */
+  padding: 20px; /* Добавим отступ внутри рамки */
+  margin-top: -1px; /* Компенсируем двойную рамку с табами */
 }
 
 /* Убираем лишний фон и паддинги у дочерних секций, т.к. есть обертка */
@@ -515,7 +520,7 @@ a:hover {
 }
 
 .content-section#info-section .info-block {
-  /* background-color: var(--dark-card-bg, #0B1A3F); */ /* Убираем фон */
+  background-color: var(--dark-card-bg, #0B1A3F); 
   border-radius: 12px;
   padding: 15px;
   display: flex;
@@ -619,10 +624,10 @@ a:hover {
 
 /* Доп. стили для секции комментариев */
 .content-section#comments-section {
-   background-color: var(--background-light, #FFFFFF); /* Белый фон для комментариев */
-   color: var(--primary-dark-blue);
-   border-radius: 15px; /* Возвращаем скругление для блока комм. */
-   padding: 25px 30px; /* Возвращаем паддинги для блока комм. */
+   background-color: var(--background-light, #FFFFFF); 
+   color: var(--primary-dark-blue); 
+   border-radius: 10px; /* Синхронизируем радиус */
+   padding: 25px 30px; 
    margin-top: 20px; /* Отступ сверху для блока комм. */
 }
 /* Корректируем цвет заголовка комментариев */
@@ -1799,13 +1804,30 @@ a:hover {
 }
 
 .action-button.show-more-similar {
-    background-color: var(--button-grey);
-    color: var(--text-primary);
-    width: auto;
+    background: transparent; /* Прозрачный фон */
+    border: none; /* Без своей рамки */
+    color: var(--text-primary); /* Белый текст */
     padding: 10px 20px;
     font-size: 14px;
-    gap: 8px; /* Отступ для иконки */
+    font-weight: 500; /* Как у Показать все */
+    gap: 8px; 
+    border-radius: 25px; /* Форма пилюли */
+    width: auto;
+    transition: all 0.3s ease;
 }
 .action-button.show-more-similar:hover {
-     background-color: #50618a;
+     background-color: rgba(255, 255, 255, 0.1);
+     border-color: var(--accent-green);
+     color: var(--accent-green);
+}
+
+/* Стили для плейсхолдера кнопки "Показать еще" */
+.similar-card.show-more-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--text-primary); /* Белая рамка как у Показать все */
+    background-color: transparent; /* Прозрачный фон */
+    border-radius: 25px; /* Форма пилюли как у Показать все */
+    padding: 10px; /* Уменьшим паддинг для карточки */
 }
