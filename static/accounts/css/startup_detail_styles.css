@@ -1681,26 +1681,36 @@ body .action-button.chat-button:hover {
 /* Кнопки навигации (стрелки) */
 .gnavigation .gnext, 
 .gnavigation .gprev {
-  background-color: rgba(30, 40, 65, 0.8) !important; /* Фон как у кнопок PhotoSwipe */
-  border-radius: 50% !important;
-  width: 44px !important;
-  height: 44px !important;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-  transition: background-color 0.3s ease, transform 0.2s ease !important;
+  background-color: rgba(30, 40, 65, 0.8) !important; /* Фон */
+  border-radius: 50% !important; /* Круглые */
+  width: 48px !important; /* Размер */
+  height: 48px !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3) !important;
+  transition: background-color 0.3s ease !important; /* Убираем transform из transition */
+  opacity: 0.8 !important; /* Полупрозрачные по умолчанию */
+  display: flex !important; /* Для центрирования SVG */
+  align-items: center !important;
+  justify-content: center !important;
+  border: none !important; /* Убираем границу */
 }
 
 .gnavigation .gnext:hover, 
 .gnavigation .gprev:hover {
   background-color: rgba(50, 65, 95, 0.95) !important;
-  transform: scale(1.05);
+  transform: none !important; /* Убираем scale */
+  opacity: 1 !important; /* Полная видимость при наведении */
 }
 
 /* Иконки стрелок (настраиваем цвет через fill) */
 .gnavigation .gnext svg,
 .gnavigation .gprev svg {
   fill: var(--text-primary) !important; /* Белые иконки */
-  width: 25px !important;
-  height: 25px !important;
+  width: 22px !important; /* Размер иконки */
+  height: 22px !important;
+  display: block !important; /* Убедимся, что видимы */
+  transition: none !important; /* Убираем transition с иконки */
+  transform: none !important; /* Убираем transform */
+  opacity: 1 !important; /* Иконка всегда непрозрачна */
 }
 
 /* Кнопка закрытия */
@@ -1746,8 +1756,8 @@ body .action-button.chat-button:hover {
 
 
 /* --- Попытка убрать артефакты (оставляем, может помочь GLightbox) --- */
-/* Отключаем transition и animation для контейнеров PhotoSwipe */
-.glightbox-container .gslide, /* Селекторы для GLightbox */
+/* Отключаем transition и animation для контейнеров GLightbox */
+.glightbox-container .gslide, 
 .glightbox-container .gslide-inner-content,
 .glightbox-container .gslide-media {
     transition: none !important;
