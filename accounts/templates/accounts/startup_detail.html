@@ -448,7 +448,10 @@
 </div> {# Конец startup-detail-page #}
 
 {# СЕКЦИЯ ПОХОЖИХ СТАРТАПОВ (остается снаружи) #}
-{# Добавляем JS PhotoSwipe ПЕРЕД блоком body_scripts #}
+{% endblock %}
+
+{% block body_scripts %}
+{# Добавляем JS PhotoSwipe внутрь этого блока #}
 <script type="module">
     // Небольшой скрипт для импорта PhotoSwipe как ES-модуля
     // (Так рекомендует документация PhotoSwipe v5)
@@ -459,9 +462,6 @@
     window.PhotoSwipeLightbox = PhotoSwipeLightbox;
     window.PhotoSwipe = PhotoSwipe;
 </script>
-{% endblock %}
-
-{% block body_scripts %}
 {# Дочерние шаблоны могут добавлять скрипты сюда #}
 {% endblock %}
 </body>
