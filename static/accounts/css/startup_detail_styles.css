@@ -1501,60 +1501,61 @@ a:hover {
     display: none !important; /* Для скрытия комментариев */
 }
 
-/* --- Стили для кнопок Fancybox (FontAwesome) --- */
-/* Убираем стили для SVG */
+/* --- Стили для кнопок Fancybox (стандартные SVG) --- */
+/* Убираем стили для FontAwesome */
 /*
-body #fancybox-toolbar .fancybox__button.f-button svg {
-    width: 50%; 
-    height: 50%;
-    fill: currentColor !important; 
-    stroke: none !important; 
-}
-body #fancybox-toolbar .fancybox__button.f-button svg path {
-    fill: currentColor !important; 
-    stroke: none !important; 
-}
-*/
-
-/* Применяем стили к кнопке */
-body #fancybox-toolbar .fancybox__button.f-button {
-    background: transparent !important; 
-    border: none !important;
-    color: #ffffff !important; /* Белый цвет для иконки */
-    box-shadow: none !important; 
-    width: 40px !important; /* Фиксируем размер */
-    height: 40px !important;
-    padding: 0 !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-}
-/* Применяем стили напрямую к тегу <i> */
 body #fancybox-toolbar .fancybox__button.f-button i.fas {
     font-family: "Font Awesome 6 Free" !important; 
-    font-weight: 900 !important; /* Solid */
+    font-weight: 900 !important; 
     font-style: normal !important;
     font-variant: normal !important;
     text-rendering: auto !important;
     -webkit-font-smoothing: antialiased !important;
-    font-size: 18px !important; /* Фиксируем размер иконки */
+    font-size: 18px !important; 
     line-height: 1 !important;
-    color: inherit !important; /* Наследуем цвет от кнопки */
-    background: transparent !important; /* Убираем фон, если есть */
-    margin: 0 !important; /* Убираем отступы */
+    color: inherit !important; 
+    background: transparent !important; 
+    margin: 0 !important; 
     padding: 0 !important;
-    display: inline-block !important; /* Важно для отображения */
+    display: inline-block !important; 
+}
+*/
+
+/* Применяем стили к кнопке (менее агрессивно) */
+body .fancybox__toolbar .fancybox__button {
+    background: transparent; /* Прозрачный фон */
+    border: none;
+    color: #ccc; /* Светло-серый цвет иконки по умолчанию */
+    box-shadow: none; 
+    width: 44px; /* Стандартный размер */
+    height: 44px;
+    padding: 0;
+    display: inline-flex; 
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: color 0.2s, background-color 0.2s;
+}
+/* Стилизуем сам SVG */
+body .fancybox__toolbar .fancybox__button svg {
+    width: 24px; /* Размер SVG иконки */
+    height: 24px;
+    fill: currentColor; /* Наследуем цвет от кнопки */
+    stroke: none; 
+    display: block; /* Убедимся, что SVG отображается */
 }
 
 /* Hover для кнопки */
-body #fancybox-toolbar .fancybox__button.f-button:hover {
-    background: rgba(0, 0, 0, 0.2) !important;
-    color: var(--accent-purple) !important; /* Меняем цвет иконки при наведении */
+body .fancybox__toolbar .fancybox__button:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff; /* Белый цвет при наведении */
 }
 
-/* Убираем правила для псевдоэлементов кнопки, если они мешают */
+/* Убираем правила для псевдоэлементов, если они мешают */
+/*
 body #fancybox-toolbar .fancybox__button.f-button::before,
 body #fancybox-toolbar .fancybox__button.f-button::after {
     content: none !important;
     display: none !important;
 }
+*/

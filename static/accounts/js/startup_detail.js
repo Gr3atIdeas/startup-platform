@@ -211,19 +211,20 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // 6. Инициализация Fancybox (Возвращаем FontAwesome)
+    // 6. Инициализация Fancybox (Используем стандартные SVG)
     try {
         if (typeof Fancybox !== 'undefined') {
-             console.log('Initializing Fancybox with custom HTML buttons (again)...');
+             console.log('Initializing Fancybox with default buttons...');
              Fancybox.bind('[data-fancybox="gallery"]', {
                  Toolbar: {
                      display: {
-                         left: [], // Убираем инфобар и стандартные слева
+                         left: ["infobar"], // Возвращаем инфобар
                          middle: [], 
-                         // Используем кастомные кнопки + стандартное закрытие
+                         // Позволяем Fancybox использовать стандартные кнопки
                          right: ["prev", "next", "close"], 
                      },
-                     // ВОЗВРАЩАЕМ кастомный HTML
+                     // УБИРАЕМ items, чтобы использовать стандартные иконки
+                     /*
                      items: {
                          prev: {
                              html: '<button data-fancybox-prev class="f-button" title="Previous"><i class="fas fa-chevron-left"></i></button>',
@@ -232,12 +233,13 @@ document.addEventListener('DOMContentLoaded', function() {
                              html: '<button data-fancybox-next class="f-button" title="Next"><i class="fas fa-chevron-right"></i></button>',
                          },
                      }
+                     */
                  },
                  Thumbs: {
                      showOnStart: false 
                  }
              });
-             console.log('Fancybox initialized with custom HTML buttons');
+             console.log('Fancybox initialized with default buttons');
         } else {
             console.error('Fancybox is not defined. Check if the library is loaded correctly.');
         }
