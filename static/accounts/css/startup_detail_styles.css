@@ -336,7 +336,7 @@ a:hover {
     height: 100%;
     background-color: rgba(11, 26, 63, 0.6); /* Добавим легкий фон для самого бара */
     border-radius: 20px; /* Скругление */
-    max-width: calc(100% - 100px); /* Пример: оставляем 100px для иконки и текста справа */
+    margin-right: 10px; /* Добавим небольшой отступ справа от бара */
     position: relative;
     overflow: hidden;
 }
@@ -1634,79 +1634,11 @@ a:hover {
 
 /* Фон */
 .pswp {
-  --pswp-bg: rgba(0, 8, 25, 0.9); /* Полупрозрачный темно-синий фон */
-}
-
-/* Кнопки (стрелки, закрыть, зум) */
-.pswp__button {
-  background: rgba(30, 40, 65, 0.8) !important; /* Темный фон с прозрачностью */
-  border-radius: 50%;
-  width: 44px;
-  height: 44px;
-  backdrop-filter: blur(8px); /* Усилим блюр */
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); /* Добавим тень */
-}
-
-.pswp__button:hover {
-  background: rgba(50, 65, 95, 0.95) !important; /* Чуть светлее при наведении */
-  transform: scale(1.05); /* Небольшое увеличение */
-}
-
-/* Иконки внутри кнопок (белые) */
-.pswp__button svg {
-  fill: var(--text-primary) !important;
-  transition: transform 0.2s ease;
-}
-.pswp__button:hover svg {
-    transform: scale(1.1); /* Увеличиваем иконку при наведении */
-}
-
-/* Стилизация стрелок */
-.pswp__button--arrow--prev,
-.pswp__button--arrow--next {
-  width: 50px; /* Чуть шире */
-  background: none !important; /* Убираем фон для стрелок, оставляем только иконку */
-  box-shadow: none; /* Убираем тень у стрелок */
-  backdrop-filter: none; /* Убираем блюр у стрелок */
-}
-.pswp__button--arrow--prev:hover,
-.pswp__button--arrow--next:hover {
-  background: rgba(255, 255, 255, 0.1) !important; /* Легкий фон при наведении на стрелки */
-  transform: none; /* Убираем scale для стрелок */
-}
-.pswp__button--arrow--prev svg,
-.pswp__button--arrow--next svg {
-   /* Можно добавить тень для самих иконок стрелок */
-   filter: drop-shadow(0 1px 3px rgba(0,0,0,0.4));
-}
-
-/* Убираем стандартный фон у стрелок (на всякий случай) */
-.pswp__button--arrow--prev::before,
-.pswp__button--arrow--next::before {
-  background: none !important;
-}
-
-/* Расположение кнопки закрытия (можно настроить) */
-.pswp__button--close {
-  /* По умолчанию справа вверху */
-}
-
-/* Счетчик слайдов */
-.pswp__counter {
-  color: var(--text-secondary);
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-  font-size: 14px;
-}
-
-/* Убираем фон загрузчика, если он мешает */
-.pswp__preloader .pswp__preloader__icn {
-  /* Можно изменить стили спиннера, если нужно */
-  /* background: none; */ 
+  --pswp-bg: rgba(0, 8, 25, 0.9);
 }
 
 /* Верхняя панель (счетчик, кнопки) */
-.pswp__top-bar {
+.pswp .pswp__top-bar {
   background-color: rgba(0, 8, 25, 0.7) !important; /* Полупрозрачный фон */
   backdrop-filter: blur(5px);
   padding-top: 10px;
@@ -1714,65 +1646,117 @@ a:hover {
 }
 
 /* Счетчик */
-.pswp__counter {
+.pswp .pswp__counter {
   font-size: 16px;
   color: var(--text-secondary);
   text-shadow: none;
-  /* Позиционирование по центру */
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  top: 14px; /* Отступ сверху */
+  top: 14px;
   height: auto;
   line-height: normal;
 }
 
+/* Кнопки (стрелки, закрыть, зум) - Основной стиль */
+.pswp .pswp__button {
+  background: rgba(30, 40, 65, 0.8) !important; /* Темный фон с прозрачностью */
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  backdrop-filter: blur(8px);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  /* Сброс возможных унаследованных стилей */
+  border: none;
+  padding: 0;
+  line-height: 44px; /* Центрируем иконку вертикально */
+  text-align: center;
+}
+
+.pswp .pswp__button:hover {
+  background: rgba(50, 65, 95, 0.95) !important;
+  transform: scale(1.05);
+}
+
+/* Иконки внутри кнопок */
+.pswp .pswp__button svg {
+  fill: var(--text-primary) !important;
+  transition: transform 0.2s ease;
+  /* Убедимся, что иконки отображаются */
+  display: inline-block !important;
+  vertical-align: middle;
+  width: 50%; /* Размер иконки */
+  height: 50%;
+}
+
+.pswp .pswp__button:hover svg {
+  transform: scale(1.1);
+}
+
+/* Стилизация стрелок */
+.pswp .pswp__button--arrow--prev,
+.pswp .pswp__button--arrow--next {
+  width: 50px;
+  background: none !important; /* Убираем фон для стрелок */
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+.pswp .pswp__button--arrow--prev:hover,
+.pswp .pswp__button--arrow--next:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  transform: none;
+}
+
+.pswp .pswp__button--arrow--prev svg,
+.pswp .pswp__button--arrow--next svg {
+  filter: drop-shadow(0 1px 3px rgba(0,0,0,0.4));
+  width: 60%; /* Стрелки могут быть чуть больше */
+  height: 60%;
+}
+
+/* Убираем стандартный фон у стрелок (на всякий случай) */
+.pswp .pswp__button--arrow--prev::before,
+.pswp .pswp__button--arrow--next::before {
+  background: none !important;
+}
+
 /* Кнопка закрытия ('x') */
-.pswp__button--close {
-  /* background: var(--danger-red) !important; */ /* Можно сделать красной */
-  /* background: rgba(240, 82, 82, 0.8) !important; */
-  /* Оставим стандартный стиль, но можно кастомизировать */
+.pswp .pswp__button--close {
   opacity: 0.8;
   transition: opacity 0.3s ease, transform 0.2s ease;
 }
-.pswp__button--close:hover {
-   opacity: 1;
-   transform: scale(1.1) rotate(90deg); /* Эффект при наведении */
+
+.pswp .pswp__button--close:hover {
+  opacity: 1;
+  transform: scale(1.1) rotate(90deg);
 }
 
 /* Кнопка зума */
-.pswp__button--zoom {
+.pswp .pswp__button--zoom {
   opacity: 0.8;
   transition: opacity 0.3s ease;
 }
-.pswp__button--zoom:hover {
+
+.pswp .pswp__button--zoom:hover {
   opacity: 1;
 }
 
-/* Остальные кнопки (можно добавить стили для --fs, --share и т.д., если используются) */
-.pswp__button--fs, /* Fullscreen */
-.pswp__button--share {
+/* Остальные кнопки */
+.pswp .pswp__button--fs,
+.pswp .pswp__button--share {
   opacity: 0.8;
   transition: opacity 0.3s ease;
 }
-.pswp__button--fs:hover,
-.pswp__button--share:hover {
+
+.pswp .pswp__button--fs:hover,
+.pswp .pswp__button--share:hover {
   opacity: 1;
 }
 
-/* Можно изменить расположение кнопок, например, собрать их вместе */
-/*
-.pswp__button--zoom {
-    right: 60px; // Сдвигаем левее
-}
-.pswp__button--fs {
-    right: 110px; // Еще левее
-}
-*/
-
-/* Убираем фон загрузчика, если он мешает */
-.pswp__preloader .pswp__preloader__icn {
-  /* background: none; */
-  /* Используем стандартный SVG-спиннер, но можно заменить */
+/* Убираем фон загрузчика */
+.pswp .pswp__preloader .pswp__preloader__icn {
   opacity: 0.8;
 }
+
