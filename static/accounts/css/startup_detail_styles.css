@@ -178,9 +178,7 @@ a:hover {
   display: flex;
   gap: 30px; /* Промежуток между колонками */
   margin-bottom: 40px; /* Отступ снизу */
-  max-width: 1280px;
-  margin-left: auto;
-  margin-right: auto;
+  width: 100%; /* Занимаем всю доступную ширину */
 }
 
 /* ------------------ */
@@ -1508,69 +1506,63 @@ a:hover {
 }
 
 /* --- Стили для кнопок Fancybox (стандартные SVG) --- */
-/* Убираем стили для FontAwesome */
+/* Убираем тестовый фон */
 /*
-body #fancybox-toolbar .fancybox__button.f-button i.fas {
-    font-family: "Font Awesome 6 Free" !important; 
-    font-weight: 900 !important; 
-    font-style: normal !important;
-    font-variant: normal !important;
-    text-rendering: auto !important;
-    -webkit-font-smoothing: antialiased !important;
-    font-size: 18px !important; 
-    line-height: 1 !important;
-    color: inherit !important; 
-    background: transparent !important; 
-    margin: 0 !important; 
-    padding: 0 !important;
-    display: inline-block !important; 
+body .fancybox__toolbar .fancybox__button {
+    background-color: green !important;
+    border: 2px solid yellow !important; 
+    color: white !important; 
 }
 */
 
-/* Применяем стили к кнопке (максимально сбрасываем + !important) */
-body .fancybox__toolbar .fancybox__button {
-    all: initial !important; /* <<< ПЫТАЕМСЯ СБРОСИТЬ ВСЕ СТИЛИ */
+/* 1. Стилизуем кнопку Fancybox, сбрасывая лишнее */
+body .fancybox__toolbar button.fancybox__button {
+    all: initial !important; /* Сбрасываем ВСЕ */
     /* Возвращаем необходимое */
-    display: inline-flex !important; 
+    display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
     width: 44px !important;
     height: 44px !important;
     padding: 0 !important;
-    margin: 0 2px !important; /* Небольшой отступ между кнопками */
+    margin: 0 2px !important;
     cursor: pointer !important;
     border: none !important;
-    border-radius: 50% !important; /* Скругляем */
-    background: transparent !important; /* Прозрачный фон */
-    color: #ccc !important; /* Светло-серый цвет иконки */
+    border-radius: 50% !important;
+    background: transparent !important;
+    color: #cccccc !important; /* Светло-серый для SVG по умолчанию */
     transition: color 0.2s, background-color 0.2s !important;
-    position: relative !important; /* Для z-index */
-    overflow: hidden !important; /* Часто нужно для таких кнопок */
-    z-index: 1 !important;
+    position: relative !important; /* Для z-index и позиционирования спана */
+    overflow: hidden !important; /* Обрезаем спан, если он вылезает */
+    z-index: 1 !important; /* Базовый z-index */
 }
-/* Стилизуем сам SVG */
-body .fancybox__toolbar .fancybox__button svg {
-    display: block !important; 
+
+/* 2. Скрываем span с эффектом волны ВНУТРИ кнопки */
+body .fancybox__toolbar button.fancybox__button span.wave-effect {
+    display: none !important;
+    visibility: hidden !important; /* Дополнительно скрываем */
+    background: none !important; /* Убираем фон на всякий случай */
+}
+
+/* 3. Стилизуем сам SVG */
+body .fancybox__toolbar button.fancybox__button svg {
+    display: block !important;
     width: 24px !important;
     height: 24px !important;
-    fill: currentColor !important; 
-    stroke: none !important; 
-    margin: auto !important; /* Центрируем SVG */
-    position: relative !important; /* Чтобы было поверх волны */
-    z-index: 2 !important;
-}
-/* Скрываем эффект волны внутри кнопки */
-body .fancybox__toolbar .fancybox__button .wave-effect {
-    display: none !important;
+    fill: currentColor !important; /* Наследуем цвет от кнопки */
+    stroke: none !important;
+    margin: auto !important;
+    position: relative !important; /* Чтобы был поверх всего */
+    z-index: 2 !important; /* Выше кнопки */
 }
 
-/* Hover для кнопки */
-body .fancybox__toolbar .fancybox__button:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: #ffffff; /* Белый цвет при наведении */
+/* 4. Hover для кнопки */
+body .fancybox__toolbar button.fancybox__button:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: #ffffff !important; /* Белый цвет для SVG при наведении */
 }
 
-/* Убираем правила для псевдоэлементов, если они мешают */
+/* Убираем правила для псевдоэлементов кнопки */
 /*
 body #fancybox-toolbar .fancybox__button.f-button::before,
 body #fancybox-toolbar .fancybox__button.f-button::after {

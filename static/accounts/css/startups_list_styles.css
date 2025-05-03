@@ -10,8 +10,8 @@ body {
 .catalog-wrapper {
   box-sizing: border-box; /* Учитываем padding в общей ширине */
   width: 100%; /* Занимаем всю ширину */
-  margin: 0;
-  padding: 20px 70px; /* <<< Изменено: Добавляем вертикальный 20px и горизонтальный 70px отступы */
+  margin: 0; /* Убираем внешний margin */
+  padding: 0; /* <<< Убираем padding, будем полагаться на main.content */
 }
 
 .catalog-container {
