@@ -93,12 +93,21 @@ a:hover {
 
 /* Конкретные стили кнопок по макету */
 .action-button.chat-button {
-    background-color: transparent;
+    background-color: transparent !important;
     color: var(--text-primary);
     border: 1px solid var(--text-primary);
     margin-top: 15px;
     width: 100%;
     font-weight: 400; /* Regular */
+    padding: 8px 16px;
+    font-size: 14px;
+    line-height: 1;
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+}
+.action-button.chat-button .wave-effect {
+    display: none !important;
 }
 .action-button.chat-button:hover {
     background-color: rgba(255, 255, 255, 0.1);
