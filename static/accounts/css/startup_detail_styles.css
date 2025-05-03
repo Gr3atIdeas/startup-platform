@@ -652,8 +652,8 @@ a:hover {
 
 /* Новый инфо-бейдж */
 .startup-info-badge {
-  background-color: #FFFFFF;
-  color: var(--primary-dark-blue);
+  background-color: var(--primary-dark-blue); /* Черный фон */
+  color: var(--text-primary); /* Белый текст */
   padding: 8px 16px;
   border-radius: 10px;
   font-size: 14px;

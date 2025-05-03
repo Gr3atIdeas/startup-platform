@@ -98,12 +98,6 @@
             {# Просто выводим значение категории #}
             <span class="category-value">{{ startup.direction.direction_name|default:"Медицина" }}</span>
 
-            {# Закомментированный старый блок Микроинвестиции
-            <span class="investment-type">
-              <i class="fas fa-check-circle"></i> Микроинвестиции
-            </span>
-            #}
-
             {# Новый блок для Микроинвестиций #}
             {% if startup.only_invest or startup.both_mode %}
             <div class="microinvestment-badge">
