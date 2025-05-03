@@ -232,8 +232,11 @@ document.addEventListener('DOMContentLoaded', function() {
             // share: false, // Отключаем кнопку "поделиться", если не нужна
 
             // Настройка длительности анимации (может помочь с артефактами)
-            showAnimationDuration: 300, // мс, немного медленнее стандарта (333)
-            hideAnimationDuration: 300, // мс, немного медленнее стандарта (333)
+            // showAnimationDuration: 300, // мс, немного медленнее стандарта (333)
+            // hideAnimationDuration: 300, // мс, немного медленнее стандарта (333)
+            // ОТКЛЮЧАЕМ АНИМАЦИЮ ПОЛНОСТЬЮ для борьбы с артефактами
+            showHideAnimationType: 'none', 
+            zoomAnimationDuration: false, // Отключаем анимацию зума при открытии/закрытии
 
             // Опционально: можно задать SVG для иконок, если CSS не справляется
             // arrowPrevSVG: '<svg ...>', 

@@ -92,7 +92,7 @@ a:hover {
 }
 
 /* Конкретные стили кнопок по макету */
-.action-button.chat-button {
+body .action-button.chat-button { /* Повышаем специфичность добавлением body */
     display: flex !important;
     width: 142px !important;
     height: 40px !important;
@@ -103,6 +103,7 @@ a:hover {
     flex-shrink: 0 !important;
     /* Основные визуальные стили */
     background: none !important;
+    background-color: transparent !important; /* Явно указываем прозрачный фон */
     background-image: none !important;
     color: var(--text-primary) !important;
     border: 1px solid var(--text-primary) !important;
@@ -120,18 +121,26 @@ a:hover {
     text-decoration: none !important;
     appearance: none !important;
     cursor: pointer !important;
+    z-index: 1; /* На случай перекрытия псевдоэлементами */
 }
 
 /* Скрытие возможного span и псевдоэлементов от волнового эффекта */
-.action-button.chat-button span,
-.action-button.chat-button .wave-effect,
-.action-button.chat-button::before,
-.action-button.chat-button::after {
+body .action-button.chat-button span,
+body .action-button.chat-button .wave-effect,
+body .action-button.chat-button::before,
+body .action-button.chat-button::after {
     display: none !important;
+    content: '' !important; /* Убираем контент псевдоэлементов */
     background: none !important;
+    background-color: transparent !important; 
+    border: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    opacity: 0 !important;
+    z-index: -1 !important; /* Прячем под кнопку */
 }
 
-.action-button.chat-button:hover {
+body .action-button.chat-button:hover {
     background-color: rgba(255, 255, 255, 0.1) !important;
     border-color: var(--text-primary) !important;
     color: var(--text-primary) !important;
@@ -1718,7 +1727,7 @@ body .pswp .pswp__button svg {
 }
 
 body .pswp .pswp__button:hover svg {
-  transform: translate(-50%, -50%) scale(1.1) !important;
+  transform: scale(1.15) !important;
 }
 
 /* Стилизация стрелок */
@@ -1785,15 +1794,36 @@ body .pswp .pswp__button--arrow--next svg {
   height: 45% !important;
   display: block !important;
   fill: var(--text-primary) !important;
-  position: relative !important; 
-  transform: none !important; 
-  transition: transform 0.2s ease !important;
+  position: relative !important; /* Относительное позиционирование для центровки */
+  transform: none !important;
+  transition: transform 0.2s ease, opacity 0.3s ease !important; /* Добавляем opacity */
+  opacity: 0.7 !important; /* Делаем иконку полупрозрачной */
 }
 
 /* Анимация иконки при наведении на кнопку */
 body .pswp .pswp__button--arrow--prev:hover svg,
-body .pswp .pswp__button--arrow--next:hover svg {
+body .pswp .pswp__button--arrow--next:hover svg,
+body .pswp .pswp__button--close:hover svg, /* Добавляем другие кнопки */
+body .pswp .pswp__button--zoom:hover svg,
+body .pswp .pswp__button--fs:hover svg,
+body .pswp .pswp__button--share:hover svg {
     transform: scale(1.15) !important;
+    opacity: 1 !important; /* Полная непрозрачность при наведении */
+}
+
+/* Общие стили для иконок в других кнопках */
+body .pswp .pswp__button--close svg,
+body .pswp .pswp__button--zoom svg,
+body .pswp .pswp__button--fs svg,
+body .pswp .pswp__button--share svg {
+    width: 50% !important; 
+    height: 50% !important;
+    display: block !important;
+    fill: var(--text-primary) !important;
+    position: relative !important;
+    transform: none !important;
+    transition: transform 0.2s ease, opacity 0.3s ease !important; /* Добавляем opacity */
+    opacity: 0.7 !important; /* Делаем иконку полупрозрачной */
 }
 
 /* Убираем стандартный фон у стрелок (на всякий случай) */
@@ -1853,7 +1883,8 @@ body .pswp .pswp__button span {
 .pswp__img {
     transition: none !important;
     animation: none !important;
-    backface-visibility: hidden !important;
-    -webkit-backface-visibility: hidden !important;
+    /* Убираем backface-visibility, т.к. нет анимации */
+    /* backface-visibility: hidden !important; */
+    /* -webkit-backface-visibility: hidden !important; */ 
 }
 
