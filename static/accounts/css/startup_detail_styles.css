@@ -613,10 +613,11 @@ a:hover {
   /* ---- */
   text-align: center;
   cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease; /* Анимация */
+  transition: background-color 0.3s ease, color 0.3s ease; /* Анимация перехода */
   white-space: nowrap;
   border-radius: 8px;
   background-color: transparent; /* По умолчанию прозрачный фон */
+  color: #353945; /* Цвет текста неактивной кнопки (как у рамки) */
 }
 
 /* Неактивная кнопка таба */
@@ -1254,9 +1255,9 @@ a:hover {
 
 /* Кнопка "Показать еще" - стили как у "Показать все" */
 .similar-startups-grid .similar-card.show-more-placeholder .action-button.show-more-similar {
-    border: 1px solid var(--text-primary);
+    border: none !important; /* Убираем рамку */
     color: var(--text-primary);
-    background: transparent; /* Явно прозрачный фон */
+    background: transparent !important; /* Явно прозрачный фон */
     padding: 10px 20px;
     font-size: 14px;
     font-weight: 500;
@@ -1266,6 +1267,7 @@ a:hover {
     transition: all 0.3s ease;
     display: inline-flex;
     align-items: center;
+    cursor: pointer; /* Добавляем курсор */
 }
 /* Увеличиваем специфичность для hover */
 .similar-startups-grid .similar-card.show-more-placeholder .action-button.show-more-similar:hover {
@@ -1522,7 +1524,17 @@ body .fancybox__toolbar .fancybox__button:hover {
 
 /* Если используем FontAwesome */
 body .fancybox__toolbar .fancybox__button i {
+    /* Применяем шрифт FontAwesome */
+    font-family: "Font Awesome 6 Free"; 
+    font-weight: 900; /* Для solid иконок */
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    /* --- */
     font-size: 18px;
     line-height: 1;
     vertical-align: middle;
+    /* Убираем возможное переопределение content */
+    content: none !important; 
 }
