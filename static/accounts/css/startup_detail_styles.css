@@ -620,11 +620,10 @@ a:hover {
   color: #353945 !important; /* Цвет текста неактивной кнопки (как у рамки) + !important */
 }
 
-/* Неактивная кнопка таба */
-/* Увеличиваем специфичность для неактивных кнопок табов - УБИРАЕМ .startup-detail-page */
+/* Неактивная кнопка таба - явно задаем прозрачный фон */
 .tabbed-content-wrapper .tab-navigation .tab-button:not(.active) {
-  /* background-color: transparent; УЖЕ ЗАДАНО ВЫШЕ */
-  color: #353945; /* Цвет как у рамки (#353945) */
+    background-color: transparent !important; 
+    /* color: #353945 !important; уже в базовом стиле */
 }
 
 /* Активная кнопка таба */
@@ -1239,19 +1238,9 @@ a:hover {
     box-shadow: none;
     transform: none;
     min-height: 200px; /* Примерная высота */
-    display: none;
 }
 .similar-card.show-more-placeholder:hover {
     transform: none;
-    box-shadow: none;
-}
-
-/* Скрываем элементы обычной карточки внутри плейсхолдера */
-.similar-card.show-more-placeholder .similar-card-image,
-.similar-card.show-more-placeholder .similar-card-name,
-.similar-card.show-more-placeholder .similar-card-rating,
-.similar-card.show-more-placeholder .similar-card-category {
-    display: none;
 }
 
 /* Кнопка "Показать еще" - применяем стили как у "Показать все" */
@@ -1498,29 +1487,37 @@ a:hover {
 }
 
 /* --- Стили для кнопок Fancybox (стандартные SVG) --- */
-/* Увеличиваем специфичность */
-body .fancybox__toolbar .fancybox__button {
-    color: #ffffff; /* Белый цвет иконки */
-    background: transparent; /* Убираем фон */
+/* Увеличиваем специфичность ЕЩЕ БОЛЬШЕ */
+body #fancybox-toolbar .fancybox__button.f-button {
+    color: #ffffff !important; /* Белый цвет */
+    background: transparent !important; /* Прозрачный фон */
     border-radius: 50%;
     width: 40px;
     height: 40px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 0; /* Убираем внутренний отступ, если мешает SVG */
-    border: none; /* Убираем рамку кнопки */
+    padding: 0;
+    border: none;
+    box-shadow: none !important; /* Убираем тени */
 }
 
-body .fancybox__toolbar .fancybox__button svg {
-    width: 60%; /* Подбираем размер SVG */
-    height: 60%;
-    fill: currentColor; /* SVG наследует цвет кнопки */
+/* Стилизуем сам SVG и его path */
+body #fancybox-toolbar .fancybox__button.f-button svg {
+    width: 50%; /* Уменьшим немного */
+    height: 50%;
+    fill: currentColor !important; /* Наследуем цвет и !important */
+    stroke: none !important; /* Убираем обводку */
+}
+body #fancybox-toolbar .fancybox__button.f-button svg path {
+    fill: currentColor !important; /* Заливка для path */
+    stroke: none !important; /* Обводка для path */
 }
 
-body .fancybox__toolbar .fancybox__button:hover {
-    color: var(--accent-purple); /* Цвет при наведении */
-    background: rgba(0, 0, 0, 0.2); /* Легкий фон при наведении */
+/* Hover */
+body #fancybox-toolbar .fancybox__button.f-button:hover {
+    color: var(--accent-purple) !important; /* Цвет при наведении */
+    background: rgba(0, 0, 0, 0.2) !important; /* Легкий фон при наведении */
 }
 
 /* Убираем старые стили для <i>, если они остались */
