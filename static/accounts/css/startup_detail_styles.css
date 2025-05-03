@@ -190,7 +190,7 @@ a:hover {
     flex-shrink: 0;
     border-radius: 10px;
     border: 2px solid #353945;
-    background-color: #0e1014; /* Фоновый цвет для контейнера */
+    background-color: #0e1014; /* Фон для контейнера */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -341,39 +341,38 @@ a:hover {
 /* --- ТАБЫ НАВИГАЦИИ --- */
 .tab-navigation {
   display: flex;
-  gap: 15px;
+  gap: 15px; /* Отступ между кнопками */
   align-self: stretch;
-  margin-bottom: 25px; 
-  padding-bottom: 15px; 
-  border-bottom: 1px solid #353945; 
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #353945; /* Нижняя граница под табами */
 }
 
-/* Увеличиваем специфичность еще больше */
 .tabbed-content-wrapper .tab-navigation .tab-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 6px 12px;
-  background-color: transparent; /* Всегда прозрачный по умолчанию */
-  border: none; 
-  color: var(--text-secondary, #A9B8D4); 
-  font-family: 'Circe', sans-serif;
-  font-size: 16px;
-  font-weight: 400;
+  padding: 6px 12px; /* Из макета */
+  background-color: transparent; /* Прозрачный фон */
+  border: none; /* Убираем границу */
+  color: rgba(255, 255, 255, 0.50); /* Цвет текста неактивного таба */
+  font-family: 'Unbounded', sans-serif; /* Шрифт */
+  font-size: 14px; /* Размер шрифта */
+  font-weight: 300; /* Вес шрифта */
+  line-height: 18px; /* Межстрочный интервал */
+  letter-spacing: -0.28px; /* Межбуквенный интервал */
   text-align: center;
   cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease; /* Убираем transition для border-radius */
+  transition: background-color 0.2s ease, color 0.2s ease;
   white-space: nowrap;
-  border-radius: 100px; /* Всегда пилюля */
+  border-radius: 100px; /* Форма пилюли */
 }
 
-/* Увеличиваем специфичность и для hover/active */
 .tabbed-content-wrapper .tab-navigation .tab-button:hover,
 .tabbed-content-wrapper .tab-navigation .tab-button.active {
   background-color: #E6E8EC; /* Светло-серый фон */
-  color: var(--primary-dark-blue); /* Темный текст */
-  font-weight: 600; 
-  /* border-radius: 5px; */ /* Убираем изменение радиуса */
+  color: #23262F; /* Темный текст */
+  font-weight: 300; /* Оставляем тот же вес */
 }
 
 /* --- КОНТЕНТ ТАБОВ --- */
@@ -1674,8 +1673,3 @@ a:hover {
 }
 */
 /* --- КОНЕЦ УДАЛЕНИЯ СТАРЫХ СТИЛЕЙ --- */
-
-.comment-date {
-  font-size: 13px;
-  color: var(--text-placeholder);
-}
