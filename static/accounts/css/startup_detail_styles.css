@@ -94,29 +94,35 @@ a:hover {
 /* Конкретные стили кнопок по макету */
 .action-button.chat-button {
     background: none !important; /* Убираем фон максимально строго */
-    color: var(--text-primary);
-    border: 1px solid var(--text-primary);
-    width: auto;
-    font-weight: 400;
-    padding: 8px 16px;
-    font-size: 14px;
-    line-height: 1;
-    border-radius: 8px;
-    position: relative;
-    overflow: hidden;
-    align-self: center;
-    margin-top: auto;
-    max-width: 200px;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--text-primary) !important;
+    width: auto !important; /* Сбросим ширину на авто */
+    max-width: 200px !important; /* Ограничим макс ширину */
+    font-weight: 400 !important;
+    padding: 8px 16px !important;
+    font-size: 14px !important;
+    line-height: 1 !important;
+    border-radius: 8px !important;
+    position: relative !important;
+    overflow: hidden !important; /* Скроем дочерние элементы анимации */
+    align-self: center !important;
+    margin-top: auto !important;
     box-shadow: none !important;
-    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease !important;
+    /* Дополнительные сбросы на всякий случай */
+    text-decoration: none !important;
+    appearance: none !important;
 }
+/* Скрытие возможного span от волнового эффекта */
+.action-button.chat-button span,
 .action-button.chat-button .wave-effect {
     display: none !important;
 }
+
 .action-button.chat-button:hover {
     background-color: rgba(255, 255, 255, 0.1) !important;
-    border-color: var(--text-primary);
-    color: var(--text-primary);
+    border-color: var(--text-primary) !important;
+    color: var(--text-primary) !important;
     box-shadow: none !important;
 }
 
@@ -887,19 +893,23 @@ a:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  /* Добавляем transition для плавного изменения размера */
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  /* Убираем transition, чтобы избежать конфликтов с PhotoSwipe */
+  /* transition: transform 0.3s ease, box-shadow 0.3s ease; */
 }
+/* Убираем hover-эффект масштабирования */
+/*
 .gallery-item:hover {
-    transform: scale(1.03); /* Немного увеличиваем при наведении */
+    transform: scale(1.03);
     box-shadow: 0 5px 15px rgba(0, 8, 25, 0.3);
 }
+*/
 
 .gallery-item img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.3s ease;
+  /* Убираем transition с изображения */
+  /* transition: transform 0.3s ease; */
 }
 
 /* Убираем hover-эффект увеличения картинки, т.к. увеличиваем весь блок */
@@ -1385,7 +1395,7 @@ a:hover {
     transition: all 0.3s ease;
     /* Убираем возможные конфликты */
     width: auto;
-    text-decoration: none; /* Убираем подчеркивание, если есть */
+    text-decoration: none !important; /* Убираем подчеркивание, если есть */
 }
 /* Пытаемся скрыть элемент с эффектом волны ВНУТРИ кнопки */
 .similar-startups-grid .similar-card.show-more-placeholder .action-button.show-more-similar .wave-effect {
@@ -1705,20 +1715,44 @@ body .pswp .pswp__button--arrow--next {
   background: none !important;
   box-shadow: none !important;
   backdrop-filter: none !important;
-  width: 50px !important;
+  width: 60px !important; /* Немного увеличим ширину */
+  height: 60px !important; /* И высоту */
+  /* Позиционирование */
+  position: absolute !important;
+  top: auto !important; /* Убираем top */
+  bottom: 20px !important; /* Отступ снизу */
+  transform: translateY(0) !important; /* Сбрасываем возможный вертикальный сдвиг */
+  display: block !important; /* Убедимся, что отображаются */
+}
+
+body .pswp .pswp__button--arrow--prev {
+    left: 50% !important;
+    transform: translateX(-120%) !important; /* Сдвигаем левую стрелку влево от центра */
+}
+
+body .pswp .pswp__button--arrow--next {
+    right: 50% !important;
+    transform: translateX(120%) !important; /* Сдвигаем правую стрелку вправо от центра */
 }
 
 body .pswp .pswp__button--arrow--prev:hover,
 body .pswp .pswp__button--arrow--next:hover {
   background: rgba(255, 255, 255, 0.1) !important;
-  transform: none !important;
+  transform: none !important; /* Отключаем увеличение при наведении для стрелок */
+}
+/* Корректировка сдвига стрелок при наведении, если он был */
+body .pswp .pswp__button--arrow--prev:hover {
+     transform: translateX(-120%) !important; 
+}
+body .pswp .pswp__button--arrow--next:hover {
+     transform: translateX(120%) !important;
 }
 
 body .pswp .pswp__button--arrow--prev svg,
 body .pswp .pswp__button--arrow--next svg {
   filter: drop-shadow(0 1px 3px rgba(0,0,0,0.4));
-  width: 60% !important;
-  height: 60% !important;
+  width: 50% !important; /* Уменьшим иконку относительно кнопки */
+  height: 50% !important;
 }
 
 /* Убираем стандартный фон у стрелок (на всякий случай) */
