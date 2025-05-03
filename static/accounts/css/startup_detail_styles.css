@@ -273,17 +273,17 @@ a:hover {
 
 /* Прогресс бар */
 .progress-container {
-    width: 353px; /* Ширина как в ТЗ */
-    height: 50px; /* Высота как в ТЗ */
+    width: 353px; /* Ширина из Figma */
+    height: 50px; /* Высота из Figma */
     flex-shrink: 0;
-    border-radius: 10px;
-    border: 1px solid var(--G4, #2BEDFF);
-    background: linear-gradient(180deg, #FFF -0.64%, #2BEDFF 7.87%, rgba(0, 78, 159, 0.00) 55.18%, #2BEDFF 125%);
+    border-radius: 10px; /* Радиус из Figma */
+    border: 1px solid #2BEDFF; /* Цвет границы из Figma (var(--G4 ?) */
+    background: linear-gradient(180deg, #FFF -0.64%, #2BEDFF 7.87%, rgba(0, 78, 159, 0.00) 55.18%, #2BEDFF 125%); /* Градиент из Figma */
     display: flex; /* Используем flex для внутреннего выравнивания */
     align-items: center;
-    padding: 5px 15px; /* Внутренние отступы */
+    padding: 5px 15px; /* Внутренние отступы (можно настроить) */
     box-sizing: border-box;
-    margin: 0 auto; /* Центрируем блок по горизонтали внутри левой колонки */
+    margin: 0 auto; /* Центрируем блок для выравнивания под планетой */
 }
 
 .progress-bar {
@@ -311,7 +311,15 @@ a:hover {
 
 .progress-percentage {
     font-weight: bold;
-    margin-right: 5px;
+    margin-right: 10px; /* Добавим отступ справа от процентов */
+}
+
+/* Стиль для иконки и текста инвесторов */
+.progress-backers {
+    display: inline-flex; /* Чтобы иконка и текст были в строку */
+    align-items: center;
+    gap: 5px; /* Отступ между иконкой и текстом */
+    color: var(--text-secondary); /* Или другой цвет, если нужно */
 }
 
 /* Блок автора слева */
@@ -1685,3 +1693,12 @@ a:hover {
 }
 */
 /* --- КОНЕЦ УДАЛЕНИЯ СТАРЫХ СТИЛЕЙ --- */
+
+/* Стили для обертки шапки и кнопок */
+.startup-header-actions-wrapper {
+  display: flex; 
+  justify-content: space-between; 
+  align-items: flex-start; 
+  gap: 30px;
+  margin-bottom: 20px; /* Добавим отступ снизу */
+}

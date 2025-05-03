@@ -329,27 +329,33 @@ document.addEventListener('DOMContentLoaded', function() {
     // 6. Инициализация Fancybox (Упрощенная)
     try {
         if (typeof Fancybox !== 'undefined') {
-             console.log('Initializing Fancybox (Simplified)...');
-             // Используем самую базовую инициализацию
-             Fancybox.bind('[data-fancybox="gallery"]'); 
-             /* Убираем кастомные опции:
+             console.log('Initializing Fancybox with FontAwesome icons...');
              Fancybox.bind('[data-fancybox="gallery"]', {
-                 Thumbs: { showOnStart: false },
-                 Images: { zoom: false },
                  Toolbar: {
-                     display: [
-                         { id: "prev", position: "center" },
-                         { id: "counter", position: "center" },
-                         { id: "next", position: "center" },
-                         "close",
-                     ],
+                     display: {
+                         left: [], // Убираем стандартные кнопки слева
+                         middle: [], // Убираем стандартные кнопки посередине
+                         right: ["close"], // Оставляем стандартную кнопку закрытия (она обычно работает)
+                     },
+                     items: {
+                         // Добавляем свои кнопки с иконками Font Awesome
+                         prev: {
+                             tpl: '<button class="f-button" title="Previous"><i class="fas fa-chevron-left"></i></button>',
+                         },
+                         next: {
+                             tpl: '<button class="f-button" title="Next"><i class="fas fa-chevron-right"></i></button>',
+                         },
+                         // Можно переопределить и кнопку закрытия, если стандартная не работает
+                         // close: {
+                         //     tpl: '<button class="f-button" title="Close"><i class="fas fa-times"></i></button>',
+                         // }
+                     }
                  },
-                 caption: function (fancybox, carousel, slide) {
-                     return slide.caption || "";
+                 Thumbs: { 
+                     showOnStart: false // Не показывать миниатюры при старте
                  }
-             });
-             */
-             console.log('Fancybox initialized (Simplified)');
+             }); 
+             console.log('Fancybox initialized with FontAwesome icons');
         } else {
             console.error('Fancybox is not defined. Check if the library is loaded correctly.');
         }

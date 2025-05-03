@@ -68,7 +68,7 @@
         </div>
         <div class="progress-info">
           <span class="progress-percentage">{{ progress_percentage|default:0|floatformat:0 }}%</span>
-          <span class="progress-backers">({{ investors_count }})</span>
+          <span class="progress-backers"><i class="fas fa-users"></i> ({{ investors_count }})</span>
         </div>
       </div>
       
@@ -91,7 +91,8 @@
     </div>
     
     <div class="right-column">
-      <div class="startup-header-actions-wrapper"> {# Новый контейнер для шапки и кнопок справа #}
+      {# Этот контейнер теперь будет стилизоваться через CSS #}
+      <div class="startup-header-actions-wrapper"> 
         <div class="startup-header">
           <h1 class="startup-name" title="{{ startup.title }}">{{ startup.title }}</h1> {# Добавляем title для полного названия #}
           <div class="header-meta">

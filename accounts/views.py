@@ -201,6 +201,15 @@ def startup_detail(request, startup_id):
     investors_count = startup.get_investors_count()
     progress_percentage = startup.get_progress_percentage()
 
+    # --- Получаем похожие стартапы --- 
+    similar_startups = Startups.objects.filter(
+        status='approved' # Только одобренные
+    ).exclude(
+        startup_id=startup_id # Исключаем текущий
+    ).order_by('?')[:5] # Берем 5 случайных
+    # Примечание: .order_by('?') может быть медленным на больших таблицах
+    # Возможно, в будущем понадобится более сложная логика (по категории, тегам и т.д.)
+
     user_has_voted = False
     can_invest = False
     if request.user.is_authenticated:
@@ -271,6 +280,7 @@ def startup_detail(request, startup_id):
         'can_invest': can_invest,
         'investors_count': investors_count,
         'progress_percentage': progress_percentage,
+        'similar_startups': similar_startups, # <-- Добавляем похожие стартапы в контекст
     })
 
 # Страница инвестиций
