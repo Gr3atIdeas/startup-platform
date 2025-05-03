@@ -63,12 +63,17 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // 1. Синхронизация прогресс-бара
-    const progressFill = document.querySelector('.progress-fill');
+    // Находим новый контейнер анимации и текстовый элемент
+    const progressAnimationContainer = document.querySelector('.progress-animation-container'); 
     const progressPercentageSpan = document.querySelector('.progress-percentage');
-    if (progressFill && progressPercentageSpan) {
-        const initialProgress = parseFloat(progressFill.getAttribute('data-progress')) || 0;
-        progressFill.style.width = `${initialProgress}%`;
-        progressPercentageSpan.textContent = `${Math.round(initialProgress)}%`;
+    if (progressAnimationContainer && progressPercentageSpan) {
+        // Получаем ширину из инлайн-стиля (уже содержит проценты)
+        const initialProgressWidth = progressAnimationContainer.style.width || '0%';
+        // Устанавливаем ширину (на всякий случай, хотя она уже задана в HTML)
+        progressAnimationContainer.style.width = initialProgressWidth;
+        // Извлекаем числовое значение процента для текста
+        const initialProgressValue = parseFloat(initialProgressWidth) || 0;
+        progressPercentageSpan.textContent = `${Math.round(initialProgressValue)}%`;
     }
 
     // 2. Отображение начального рейтинга (теперь планетами)

@@ -11,8 +11,8 @@
 {% block head_extra %}
   <link rel="stylesheet" href="{% static 'accounts/css/startup_detail_styles.css' %}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  {# Добавляем CSS PhotoSwipe - ОБНОВЛЕНО до v5.4.4 #}
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/5.4.4/photoswipe.min.css" integrity="sha512-BE09VQdGmA8+3PDi7F9SR/S5kWw75Lhv04YOpH4T/3z8fDo9P+t0SgKj+XqA0PVs/FmJ52Q8UjB1iHnFhUyHyg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  {# Добавляем CSS PhotoSwipe - УДАЛЯЕМ integrity #}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/5.4.4/photoswipe.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 {% endblock %}
 
 {% block content %}
@@ -65,7 +65,12 @@
       
       <div class="progress-container">
         <div class="progress-bar">
-          <div class="progress-fill" data-progress="{{ progress_percentage|default:0 }}" style="width: {{ progress_percentage|default:0 }}%;"></div>
+          {# Удаляем старый .progress-fill и добавляем новый контейнер для анимации #}
+          <div class="progress-animation-container" style="width: {{ progress_percentage|default:0 }}%;">
+            <div class="progress-planets">
+              {# Планеты будут добавлены через CSS #}
+            </div>
+          </div>
         </div>
         <div class="progress-info">
           <span class="progress-percentage">{{ progress_percentage|default:0|floatformat:0 }}%</span>
