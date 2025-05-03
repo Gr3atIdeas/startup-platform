@@ -101,6 +101,21 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // Отображаем рейтинг в карточках похожих стартапов
+    const similarCards = document.querySelectorAll('.similar-card');
+    similarCards.forEach((card, cardIndex) => {
+        const similarRatingContainer = card.querySelector('.similar-card-rating');
+        if (similarRatingContainer && similarRatingContainer.dataset.rating !== undefined) {
+            const ratingStringRaw = similarRatingContainer.dataset.rating;
+            // Заменяем запятую на точку, если есть
+            const ratingStringForJs = ratingStringRaw ? ratingStringRaw.replace(',', '.') : '0';
+            const similarRatingValue = parseFloat(ratingStringForJs) || 0;
+            // Генерируем уникальный селектор для этого контейнера звезд
+            const uniqueSimilarSelector = `.similar-card:nth-child(${cardIndex + 1}) .similar-card-rating`;
+            updateRatingDisplay(uniqueSimilarSelector, similarRatingValue);
+        }
+    });
+
     // 3. Логика "Показать еще" / "Скрыть" для комментариев
     const showMoreCommentsBtn = document.querySelector('.show-more-comments');
     const hideCommentsBtn = document.querySelector('.hide-comments-button');
@@ -199,35 +214,33 @@ document.addEventListener('DOMContentLoaded', function() {
     // 6. Инициализация Fancybox (Упрощенная)
     try {
         if (typeof Fancybox !== 'undefined') {
-             console.log('Initializing Fancybox with FontAwesome icons...');
+             console.log('Initializing Fancybox with custom HTML buttons...');
              Fancybox.bind('[data-fancybox="gallery"]', {
                  Toolbar: {
                      display: {
                          left: [], // Убираем стандартные кнопки слева
                          middle: [], // Убираем стандартные кнопки посередине
-                         right: ["close"], // Оставляем стандартную кнопку закрытия (она обычно работает)
+                         right: ["close"], // Оставляем стандартную кнопку закрытия
                      },
                      items: {
-                         // Добавляем свои кнопки с иконками Font Awesome
+                         // Перепроверяем кнопки
                          prev: {
-                             /* tpl: '<button class="f-button" title="Previous"><i class="fas fa-chevron-left"></i></button>', */
-                             html: '<button class="f-button" title="Previous"><i class="fas fa-chevron-left"></i></button>',
+                             html: '<button data-fancybox-prev class="f-button" title="Previous"><i class="fas fa-chevron-left"></i></button>',
                          },
                          next: {
-                             /* tpl: '<button class="f-button" title="Next"><i class="fas fa-chevron-right"></i></button>', */
-                             html: '<button class="f-button" title="Next"><i class="fas fa-chevron-right"></i></button>',
+                             html: '<button data-fancybox-next class="f-button" title="Next"><i class="fas fa-chevron-right"></i></button>',
                          },
-                         // Можно переопределить и кнопку закрытия, если стандартная не работает
+                         // Кнопка закрытия - используем стандартную, она должна работать
                          // close: {
-                         //     html: '<button class="f-button" title="Close"><i class="fas fa-times"></i></button>',
+                         //     html: '<button data-fancybox-close class="f-button" title="Close"><i class="fas fa-times"></i></button>',
                          // }
                      }
                  },
-                 Thumbs: { 
+                 Thumbs: {
                      showOnStart: false // Не показывать миниатюры при старте
                  }
-             }); 
-             console.log('Fancybox initialized with FontAwesome icons');
+             });
+             console.log('Fancybox initialized with custom HTML buttons');
         } else {
             console.error('Fancybox is not defined. Check if the library is loaded correctly.');
         }

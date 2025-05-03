@@ -603,17 +603,20 @@ a:hover {
   padding: 6px 12px;
   background-color: transparent;
   border: none;
-  color: rgba(255, 255, 255, 0.50);
+  color: #353945;
   font-family: 'Unbounded', sans-serif;
   font-size: 14px;
+  font-style: normal;
   font-weight: 300;
   line-height: 18px;
   letter-spacing: -0.28px;
   text-align: center;
   cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.3s ease, color 0.3s ease;
   white-space: nowrap;
   border-radius: 8px;
+  leading-trim: both;
+  text-edge: cap;
 }
 
 /* Активная кнопка таба */
@@ -1479,4 +1482,18 @@ a:hover {
 /* --- Утилиты --- */
 .hidden {
     display: none !important; /* Для скрытия комментариев */
+}
+
+/* --- Стили для кнопок Fancybox --- */
+.fancybox__button {
+    color: #ffffff; /* Цвет иконки по умолчанию */
+}
+
+.fancybox__button:hover {
+    color: var(--accent-purple); /* Цвет при наведении */
+}
+
+/* Если используем FontAwesome */
+.fancybox__button i {
+    font-size: 18px; /* Размер иконки */
 }

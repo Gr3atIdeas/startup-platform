@@ -395,15 +395,18 @@
             {% endif %}
           </div>
           <div class="similar-card-name">{{ similar.title|default:"Ромашка" }}</div>
-          <div class="similar-card-rating">
-            {% with sim_rating=similar.average_rating|default:0 %}
-            {% for i in "12345" %}
-              <i class="fas fa-star {% if forloop.counter <= sim_rating|floatformat:0 %}active{% endif %}"></i>
+          <div class="similar-card-rating" data-rating="{{ similar.average_rating|default:0|floatformat:'-2'|unlocalize }}">
+            {# Используем цикл и контейнеры для планет #}
+            {% for star_i in "12345" %}
+              <span class="rating-icon-container comment-icon-container"> {# Меньший размер иконок #}
+                <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-empty">
+                <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-filled">
+              </span>
             {% endfor %}
-            {% endwith %}
           </div>
           <div class="similar-card-category">
-            <div class="category-badge">{{ similar.direction.direction_name|default:"Медицина" }}</div>
+            {# Применяем фильтр перевода #}
+            <div class="category-badge">{{ similar.direction.direction_name|translate_category|default:"Категория" }}</div>
           </div>
         </a>
         {% empty %}
