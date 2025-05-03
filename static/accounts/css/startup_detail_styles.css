@@ -768,13 +768,17 @@ a:hover {
 
 /* Секция ГАЛЕРЕЯ */
 .content-section#gallery-section {
-  /* Стилизация не нужна, т.к. у .gallery-grid свои стили */
+  /* Стилизация не нужна, т.к. у сеток свои стили */
 }
 
-.gallery-grid {
+/* Общий стиль для сеток галереи (видео и изображения) */
+.gallery-grid,
+.video-grid { /* Добавляем новый класс */
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: 15px;
+  /* Увеличиваем минимальный размер превью */
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); /* Было minmax(120px, 1fr) */
+  gap: 20px; /* Немного увеличим отступ */
+  margin-bottom: 30px; /* Добавим отступ под сеткой */
 }
 
 .gallery-item {
@@ -787,6 +791,12 @@ a:hover {
   display: flex;
   align-items: center;
   justify-content: center;
+  /* Добавляем transition для плавного изменения размера */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.gallery-item:hover {
+    transform: scale(1.03); /* Немного увеличиваем при наведении */
+    box-shadow: 0 5px 15px rgba(0, 8, 25, 0.3);
 }
 
 .gallery-item img {
@@ -796,8 +806,17 @@ a:hover {
   transition: transform 0.3s ease;
 }
 
+/* Убираем hover-эффект увеличения картинки, т.к. увеличиваем весь блок */
+/*
 .gallery-item:hover img {
   transform: scale(1.05);
+}
+*/
+
+/* Стили для видео-элемента (похоже на image-item) */
+.gallery-item.video-item {
+    text-decoration: none; /* Убираем подчеркивание ссылки */
+    color: var(--text-secondary);
 }
 
 .gallery-item.video-item .play-icon-overlay {
@@ -808,18 +827,20 @@ a:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 30px;
-  opacity: 0;
-  transition: opacity 0.3s ease;
+  font-size: 40px; /* Увеличиваем иконку Play */
+  opacity: 0.7; /* Делаем иконку видимой всегда */
+  transition: opacity 0.3s ease, background-color 0.3s ease;
 }
 
 .gallery-item.video-item:hover .play-icon-overlay {
   opacity: 1;
+  background: rgba(0, 8, 25, 0.7); /* Затемняем при наведении */
 }
 
 .gallery-item .video-placeholder {
   color: var(--text-secondary);
-  font-size: 14px;
+  font-size: 16px; /* Увеличим шрифт */
+  text-align: center;
 }
 
 /* Секции Этапы, Документы, Условия (пока пустые) */

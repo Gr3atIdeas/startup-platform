@@ -224,9 +224,31 @@
           {# Секция ГАЛЕРЕЯ #}
           <div id="gallery-section" class="content-section media-section">
             <h2 class="section-title">Галерея</h2>
-            {# Проверяем ТОЛЬКО наличие creatives_urls для PhotoSwipe #}
+
+            {# --- БЛОК ВИДЕО (ПЕРЕМЕЩЕН ВВЕРХ) --- #}
+            {% if video_urls %}
+              <h3 class="section-subtitle" style="margin-bottom: 15px; font-size: 18px; color: var(--accent-yellow);">Видео</h3>
+              <div class="video-grid"> {# Используем новый класс сетки #}
+                  {% for url in video_urls %}
+                      {# Оборачиваем видео в .gallery-item для единообразия сетки #}
+                      <a href="{% get_file_url_tag url startup.startup_id 'video' %}" 
+                         target="_blank" {# Видео открываем в новой вкладке #}
+                         class="gallery-item video-item">
+                         <div class="play-icon-overlay"><i class="fas fa-play"></i></div>
+                         {# Плейсхолдер текста. Реальные превью требуют бэкенда #}
+                         <div class="video-placeholder">Смотреть видео {{ forloop.counter }}</div> 
+                      </a>
+                  {% endfor %}
+              </div>
+            {% endif %}
+            {# --- КОНЕЦ БЛОКА ВИДЕО --- #}
+            
+            {# --- БЛОК ИЗОБРАЖЕНИЙ (PhotoSwipe) --- #}
             {% if creatives_urls %}
-              {# Добавляем id="pswp-gallery" #}
+              {# Добавляем заголовок для изображений, если есть и видео, и изображения #}
+              {% if video_urls %}
+              <h3 class="section-subtitle" style="margin-top: 30px; margin-bottom: 15px; font-size: 18px; color: var(--accent-yellow);">Изображения</h3>
+              {% endif %}
               <div class="gallery-grid" id="pswp-gallery">
                 {# Выводим ТОЛЬКО креативы (изображения) #}
                 {% for url in creatives_urls %}
@@ -234,27 +256,17 @@
                      href="{% get_file_url_tag url startup.startup_id 'creative' %}"
                      data-pswp-width="1200" {# Добавляем ширину #}
                      data-pswp-height="800" {# Добавляем высоту #}
-                     target="_blank" {# Добавим target для открытия в новой вкладке, если JS не сработает #}
+                     {# target="_blank" Убираем этот атрибут #}
                      {# data-caption="Креатив {{ forloop.counter }}" - PhotoSwipe сам может генерировать caption #}
                      class="gallery-item image-item">
                     <img src="{% get_file_url_tag url startup.startup_id 'creative' %}" alt="Креатив {{ forloop.counter }}" />
                   </a>
                 {% endfor %}
               </div>
-            {% else %}
-              <p>Изображения для галереи отсутствуют.</p>
+            {% elif not video_urls %} {# Если нет ни видео, ни изображений #}
+              <p>Медиа-материалы отсутствуют.</p>
             {% endif %}
-            {# Выводим видео отдельно, если нужно, вне сетки PhotoSwipe #}
-            {% if video_urls %}
-              <h3 class="section-subtitle" style="margin-top: 25px; font-size: 18px; color: var(--accent-yellow);">Видео</h3>
-              <div class="video-list" style="display: flex; flex-direction: column; gap: 10px;">
-                  {% for url in video_urls %}
-                      <a href="{% get_file_url_tag url startup.startup_id 'video' %}" target="_blank" class="video-link" style="color: var(--accent-purple); text-decoration: underline;">
-                          Смотреть видео {{ forloop.counter }}
-                      </a>
-                  {% endfor %}
-              </div>
-            {% endif %}
+            {# --- КОНЕЦ БЛОКА ИЗОБРАЖЕНИЙ --- #}
           </div>
 
           {# Секция ЭТАПЫ (пустая) #}
