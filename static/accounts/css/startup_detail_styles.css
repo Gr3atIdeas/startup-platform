@@ -96,23 +96,24 @@ a:hover {
     display: flex !important;
     width: 142px !important;
     height: 40px !important;
-    padding: 12px 25px !important; /* Используем паддинг из макета */
+    padding: 12px 25px !important;
     justify-content: center !important;
-    align-items: center !important; /* Центрируем текст вертикально */
+    align-items: center !important;
     gap: 9px !important;
     flex-shrink: 0 !important;
     /* Основные визуальные стили */
     background: none !important;
+    background-image: none !important;
     color: var(--text-primary) !important;
     border: 1px solid var(--text-primary) !important;
-    border-radius: 8px !important; /* Оставляем скругление */
+    border-radius: 8px !important;
     /* Сбросы и переопределения */
-    font-weight: 400 !important; /* Оставляем шрифт */
+    font-weight: 400 !important;
     font-size: 14px !important;
-    line-height: normal !important; /* Автоматическая высота строки для flex */
+    line-height: normal !important;
     position: relative !important;
     overflow: hidden !important;
-    align-self: center !important; /* Оставляем выравнивание */
+    align-self: center !important;
     margin-top: auto !important;
     box-shadow: none !important;
     transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease !important;
@@ -121,10 +122,13 @@ a:hover {
     cursor: pointer !important;
 }
 
-/* Скрытие возможного span от волнового эффекта */
+/* Скрытие возможного span и псевдоэлементов от волнового эффекта */
 .action-button.chat-button span,
-.action-button.chat-button .wave-effect {
+.action-button.chat-button .wave-effect,
+.action-button.chat-button::before,
+.action-button.chat-button::after {
     display: none !important;
+    background: none !important;
 }
 
 .action-button.chat-button:hover {
@@ -1777,12 +1781,19 @@ body .pswp .pswp__button--arrow--next:hover {
 body .pswp .pswp__button--arrow--prev svg,
 body .pswp .pswp__button--arrow--next svg {
   filter: drop-shadow(0 1px 3px rgba(0,0,0,0.4));
-  width: 45% !important; /* Еще чуть уменьшим иконку */
+  width: 45% !important;
   height: 45% !important;
   display: block !important;
   fill: var(--text-primary) !important;
-  position: static !important;
-  transform: none !important;
+  position: relative !important; 
+  transform: none !important; 
+  transition: transform 0.2s ease !important;
+}
+
+/* Анимация иконки при наведении на кнопку */
+body .pswp .pswp__button--arrow--prev:hover svg,
+body .pswp .pswp__button--arrow--next:hover svg {
+    transform: scale(1.15) !important;
 }
 
 /* Убираем стандартный фон у стрелок (на всякий случай) */
@@ -1842,5 +1853,7 @@ body .pswp .pswp__button span {
 .pswp__img {
     transition: none !important;
     animation: none !important;
+    backface-visibility: hidden !important;
+    -webkit-backface-visibility: hidden !important;
 }
 
