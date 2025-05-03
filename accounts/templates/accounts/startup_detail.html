@@ -91,48 +91,76 @@
     </div>
     
     <div class="right-column">
-      <div class="startup-header">
-        <h1 class="startup-name">{{ startup.title }}</h1>
-        <div class="header-meta">
-          <span class="category-label">Категория: <span class="category-value">{{ startup.direction.direction_name|default:"Медицина" }}</span></span>
-          <span class="investment-type">
-            <i class="fas fa-check-circle"></i> Микроинвестиции
-          </span>
-        </div>
-        <div class="rating-comments-container">
-          <div class="rating-container">
-            <span class="rating-label">Рейтинг: {{ average_rating|floatformat:"1" }}/5</span>
-            {# Используем контейнеры с двумя иконками SVG #}
-            <div class="rating-stars" data-rating="{{ average_rating|floatformat:"-2"|default:0 }}" {% if user.is_authenticated and not user_has_voted %}data-interactive="true"{% endif %}>
-              {% for i in "12345" %}
-                <span class="rating-icon-container" {% if user.is_authenticated and not user_has_voted %}data-value="{{ forloop.counter }}"{% endif %}>
-                  {# Серая иконка фона SVG #}
-                  <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-empty">
-                  {# Желтая иконка заполнения SVG #}
-                  <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-filled">
-                </span>
-              {% endfor %}
-            </div>
-          </div>
-          <a href="#comments-section" class="comments-link">Комментарии</a>
-        </div>
-      </div>
+      <div class="startup-header-actions-wrapper"> {# Новый контейнер для шапки и кнопок справа #}
+        <div class="startup-header">
+          <h1 class="startup-name" title="{{ startup.title }}">{{ startup.title }}</h1> {# Добавляем title для полного названия #}
+          <div class="header-meta">
+            {# Просто выводим значение категории #}
+            <span class="category-value">{{ startup.direction.direction_name|default:"Медицина" }}</span>
 
-      <div class="actions-top-right">
-        {% if user.is_authenticated and startup.owner == user %}
-          <button class="action-button edit-button">Редактировать</button>
-          <button class="action-button sell-button primary">Продать активы</button>
-        {% elif user.is_authenticated and user.role.role_name == 'investor' %}
-          <button class="action-button invest-button primary" 
-                  {% if startup.status == 'blocked' or startup.status == 'closed' %}
-                    disabled 
-                    title="{% if startup.status == 'blocked' %}Инвестирование запрещено: стартап заблокирован{% else %}Инвестирование запрещено: стартап закрыт{% endif %}"
-                  {% endif %}>
-            Инвестировать
+            {# Закомментированный старый блок Микроинвестиции
+            <span class="investment-type">
+              <i class="fas fa-check-circle"></i> Микроинвестиции
+            </span>
+            #}
+
+            {# Новый блок для Микроинвестиций #}
+            {% if startup.only_invest or startup.both_mode %}
+            <div class="microinvestment-badge">
+              <i class="fas fa-check-circle"></i> Микроинвестиции
+            </div>
+            {% endif %}
+          </div>
+
+          <div class="rating-comments-container"> {# Переносим рейтинг/комментарии сюда #}
+            <div class="rating-container">
+              {# Убираем текст "Рейтинг:" #}
+              <span class="rating-label">{{ average_rating|floatformat:"1" }}/5</span>
+              <div class="rating-stars" data-rating="{{ average_rating|floatformat:"-2"|default:0 }}" {% if user.is_authenticated and not user_has_voted %}data-interactive="true"{% endif %}>
+                  {% for i in "12345" %}
+                    <span class="rating-icon-container" {% if user.is_authenticated and not user_has_voted %}data-value="{{ forloop.counter }}"{% endif %}>
+                      <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-empty">
+                      <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-filled">
+                    </span>
+                  {% endfor %}
+              </div>
+            </div>
+            <a href="#comments-section" class="comments-link">Комментарии</a>
+          </div>
+        </div>
+
+        <div class="actions-top-right">
+          {# Новый инфо-бейдж #}
+          <div class="startup-info-badge">
+            {# Логика вывода текста на основе полей модели #}
+            {% if startup.both_mode %}
+              Инвестирование+Выкуп
+            {% elif startup.only_invest %}
+              Инвестирование
+            {% elif startup.only_buy %}
+              Выкуп
+            {% else %}
+              {# Статус по умолчанию, если ничего не выбрано? #}
+            {% endif %}
+            {# Инвестирование+Выкуп Временный текст #}
+          </div>
+
+          {# Кнопка Редактировать #}
+          <button class="action-button edit-button"
+            {% if not (user.is_authenticated and (startup.owner == user or user.role.role_name == 'moderator')) %}disabled{% endif %}>
+            Редактировать
           </button>
-          <input type="number" class="investment-amount" placeholder="Сумма, ₽" min="0" step="1000">
-        {% endif %}
-      </div>
+
+          {# Кнопка Продать активы #}
+          {% if user.is_authenticated and startup.owner == user %}
+            <button class="action-button sell-button">Продать активы</button>
+          {% endif %}
+
+          {# Кнопка Инвестировать и поле суммы - ОСТАВЛЯЕМ для инвесторов, но ВНЕ ЭТОГО БЛОКА? #}
+          {# Нужно решить, где будет кнопка Инвестировать согласно новому дизайну #}
+          {# {% if user.is_authenticated and user.role.role_name == 'investor' %} ... {% endif %} #}
+        </div>
+      </div> {# Конец startup-header-actions-wrapper #}
 
       {# --- ОБЕРТКА ДЛЯ ТАБОВ И КОНТЕНТА --- #}
       <div class="tabbed-content-wrapper">

@@ -9,7 +9,7 @@
   --accent-yellow: #FFC85E; /* Желтый для звезд (как на макете) */
   --accent-green: #08E5CF; /* Бирюзовый для "похожие" */
   --button-blue: #345DFF; /* Синий для кнопок (Редактировать, Инвестировать) */
-  --button-yellow: #F7BF4F; /* Желтый для кнопки (Продать активы) */
+  --button-yellow: #FFEF2B; /* Желтый для кнопки (Продать активы) - ИЗМЕНЕН */
   --button-grey: #3d4b70; /* Серый для кнопки (Смотреть) */
   --dark-card-bg: #0B1A3F; /* Фон для карточек/блоков на темном фоне */
   --text-primary: #FFFFFF; /* Основной текст */
@@ -21,18 +21,23 @@
   --grey-light: #f8f9fa; /* Светло-серый для фона плейсхолдеров */
 }
 
+/* Применяем шрифт Unbounded глобально или к конкретному блоку */
+.startup-detail-page, body /* Применим к body для большей уверенности */ {
+  font-family: 'Unbounded', sans-serif; /* Основной шрифт страницы */
+}
+
 body {
   background-color: var(--primary-dark-blue);
   color: var(--text-primary);
   /* Используем шрифты из base.html: Circe и Unbounded */
-  font-family: 'Circe', sans-serif; /* Основной шрифт */
+  /* font-family: 'Circe', sans-serif; */ /* Убираем Circe как основной */
   margin: 0;
   padding: 0;
   overflow-x: hidden;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Circe', sans-serif; /* Заголовки */
+  font-family: 'Unbounded', sans-serif; /* Заголовки - уже Unbounded */
   color: var(--text-primary);
   font-weight: 700; /* Bold по умолчанию для заголовков */
 }
@@ -76,9 +81,9 @@ a:hover {
   align-items: center;
   justify-content: center;
   padding: 12px 24px;
-  border-radius: 10px; /* Менее скругленные */
+  border-radius: 10px; /* Базовый радиус, может быть переопределен */
   border: none;
-  font-family: 'Circe', sans-serif;
+  font-family: 'Unbounded', sans-serif; /* Используем Unbounded для кнопок */
   font-size: 16px;
   font-weight: 700; /* Bold */
   cursor: pointer;
@@ -115,18 +120,27 @@ a:hover {
 .action-button.invest-button {
     background-color: var(--button-blue);
     color: var(--text-primary);
+    border-radius: 10px; /* Добавляем радиус сюда тоже */
 }
 .action-button.edit-button:hover,
 .action-button.invest-button:hover {
     background-color: #2a4ecc;
 }
 
+/* Стиль для неактивной кнопки Редактировать */
+.action-button.edit-button:disabled {
+    background-color: var(--button-grey);
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
 .action-button.sell-button {
-    background-color: var(--button-yellow);
+    background-color: var(--button-yellow); /* Новый желтый */
     color: var(--primary-dark-blue);
+    border-radius: 10px; /* Скругленные углы */
 }
 .action-button.sell-button:hover {
-    background-color: #e0ae44;
+    background-color: #eedf29; /* Чуть темнее желтый при наведении */
 }
 
 .action-button.view-button {
@@ -534,8 +548,9 @@ a:hover {
 .startup-header {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 5px; /* Уменьшаем gap */
   margin-bottom: 20px;
+  flex-grow: 1; /* Занимает доступное место слева */
 }
 
 .startup-name {
@@ -544,30 +559,44 @@ a:hover {
   line-height: 1.2;
   margin: 0;
   color: var(--text-primary);
+  /* Обрезка текста */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block; /* или inline-block */
+  max-width: 100%; /* Ограничиваем ширину */
 }
 
 .header-meta {
   display: flex;
-  align-items: center;
-  gap: 15px; /* Уменьшим отступ */
+  flex-direction: column; /* Элементы друг под другом */
+  align-items: flex-start; /* Выравнивание по левому краю */
+  gap: 5px; /* Отступ между категорией и микроинвестициями */
   font-size: 14px;
   color: var(--text-placeholder);
 }
 
-.category-label .category-value {
-  color: var(--text-primary);
-  font-weight: 400;
+/* Стиль для значения категории (если нужно выделить) */
+.category-value {
+  color: var(--accent-yellow); /* Используем желтый акцент */
+  font-weight: 500;
 }
 
-.investment-type {
-  display: flex;
+/* Убираем иконку и текст "Категория:" */
+.category-label {
+ display: none; /* Скрываем старый span */
+}
+
+/* Бейдж Микроинвестиции */
+.microinvestment-badge {
+  display: inline-flex;
   align-items: center;
   gap: 6px;
+  font-size: 14px;
   color: var(--text-primary);
-  font-weight: 400;
 }
 
-.investment-type i {
+.microinvestment-badge i {
   color: var(--success-green);
   font-size: 16px;
 }
@@ -575,58 +604,32 @@ a:hover {
 /* Рейтинг и комментарии */
 .rating-comments-container {
   display: flex;
-  align-items: center;
-  gap: 20px; /* Увеличить отступ */
-  margin-top: 5px;
+  flex-direction: column; /* Элементы друг под другом */
+  align-items: flex-start;
+  gap: 5px; /* Уменьшаем отступ */
+  margin-top: 10px; /* Отступ сверху */
 }
 
 .rating-container {
   display: flex;
-  align-items: center;
-  gap: 8px;
+  flex-direction: column; /* Число и планеты друг под другом */
+  align-items: flex-start;
+  gap: 5px;
 }
 
 .rating-label {
   font-size: 14px;
   color: var(--text-secondary);
+  /* Убираем текст "Рейтинг:" из HTML, здесь только стили */
 }
 
-.rating-planet {
-  display: inline-block;
-  font-size: 22px; 
-  vertical-align: middle; 
-  cursor: default;
-  color: var(--text-secondary, #A9B8D4); /* Базовый серый цвет */
-  line-height: 1; 
-  transition: color 0.2s ease;
-  margin-right: -4px; /* Оставляем сближение */
-}
-
-.rating-planet:last-child {
-    margin-right: 0;
-}
-
-/* Стиль для ЗАПОЛНЕННОЙ планеты (просто меняем цвет текста) */
-.rating-planet.filled {
-   color: #FFB700 !important; /* Добавляем !important для отладки */
-}
-
-/* Для интерактивных планет (возможность голосования) */
-.rating-stars[data-interactive="true"] .rating-planet {
-  cursor: pointer;
-}
-/* Эффект при наведении на интерактивные планеты */
-.rating-stars[data-interactive="true"] .rating-planet:hover {
-  /* Можно временно закрасить желтым при наведении */
-   background: #FFB700; 
-   -webkit-background-clip: text;
-   background-clip: text;
-   -webkit-text-fill-color: transparent; 
+.rating-stars {
+  /* Стили для планет остаются */
 }
 
 .comments-link {
   font-size: 14px;
-  color: var(--text-secondary);
+  color: var(--accent-purple); /* Фиолетовый для ссылки */
 }
 .comments-link:hover {
   color: var(--text-primary);
@@ -635,26 +638,35 @@ a:hover {
 /* Действия справа вверху */
 .actions-top-right {
   display: flex;
-  align-items: center;
-  gap: 10px; /* Меньше отступ */
+  flex-direction: column; /* Элементы друг под другом */
+  align-items: flex-end; /* Выравнивание по правому краю */
+  gap: 15px; /* Отступ между инфо-бейджем и кнопками */
   padding: 0;
-  flex-wrap: wrap;
+  flex-shrink: 0; /* Не сжимается */
 }
 
+/* Убираем старый бейдж */
 .investment-info-badge {
-  background-color: var(--dark-card-bg);
-  color: var(--text-placeholder); /* Темнее текст бейджа */
-  padding: 6px 12px;
-  border-radius: 8px;
-  font-size: 13px; /* Мельче */
-  font-weight: 400;
-  border: 1px solid var(--border-color);
-  margin-right: auto; /* Отодвигаем влево */
+ display: none;
+}
+
+/* Новый инфо-бейдж */
+.startup-info-badge {
+  background-color: #FFFFFF;
+  color: var(--primary-dark-blue);
+  padding: 8px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+  min-width: 180px; /* Примерная минимальная ширина */
 }
 
 .actions-top-right .action-button {
     padding: 10px 20px;
     font-size: 15px;
+    width: 100%; /* Кнопки на всю ширину правой колонки */
+    box-sizing: border-box;
 }
 
 .investment-amount {
