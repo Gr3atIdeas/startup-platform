@@ -77,3 +77,16 @@ def get_item(dictionary, key):
         return dictionary.get(key)
     # Возвращаем None или 0, если это не словарь, чтобы избежать ошибки
     return 0 
+
+# --- Добавляем фильтр to_json --- 
+@register.filter(is_safe=True, name='to_json')
+def to_json(value):
+    try:
+        # Преобразуем Python-объект (например, словарь) в JSON-строку
+        json_string = json.dumps(value)
+        # Отмечаем строку как безопасную, чтобы Django не экранировал кавычки
+        return mark_safe(json_string)
+    except TypeError:
+        # В случае ошибки возвращаем пустой JSON-объект или null
+        return mark_safe('null')
+# --- Конец фильтра to_json --- 
