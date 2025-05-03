@@ -6,7 +6,7 @@
   --primary-dark-blue: #000819; /* Основной фон */
   --secondary-blue: #04112D; /* Фон для комментариев и др. блоков */
   --accent-purple: #7B61FF; /* Фиолетовый акцент (прогресс, ссылки) */
-  --accent-yellow: #FFC85E; /* Желтый для звезд (как на макете) */
+  --accent-yellow: #FFC85E; /* Желтый для звезд/планет (как на макете) */
   --accent-green: #08E5CF; /* Бирюзовый для "похожие" */
   --button-blue: #345DFF; /* Синий для кнопок (Редактировать, Инвестировать) */
   --button-yellow: #FFEF2B; /* Желтый для кнопки (Продать активы) - ИЗМЕНЕН */
@@ -29,8 +29,6 @@
 body {
   background-color: var(--primary-dark-blue);
   color: var(--text-primary);
-  /* Используем шрифты из base.html: Circe и Unbounded */
-  /* font-family: 'Circe', sans-serif; */ /* Убираем Circe как основной */
   margin: 0;
   padding: 0;
   overflow-x: hidden;
@@ -57,7 +55,7 @@ a:hover {
   max-width: 1440px; /* Общая ширина контейнера */
   width: 100%;
   margin: 0 auto; /* Центрирование */
-  padding: 40px 70px; /* Отступы сверху/снизу 40px, по бокам 70px - УЖЕ УСТАНОВЛЕНО */
+  padding: 40px 70px; /* Отступы сверху/снизу 40px, по бокам 70px */
   box-sizing: border-box;
 }
 
@@ -75,19 +73,19 @@ a:hover {
   font-weight: 400; /* Regular */
 }
 
-/* Общие стили кнопок - СДЕЛАТЬ БОЛЕЕ КОНКРЕТНЫМИ */
+/* Общие стили кнопок */
 .action-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   padding: 12px 24px;
-  border-radius: 10px; /* Базовый радиус, может быть переопределен */
+  border-radius: 10px; /* Базовый радиус */
   border: none;
-  font-family: 'Unbounded', sans-serif; /* Используем Unbounded для кнопок */
+  font-family: 'Unbounded', sans-serif; /* Шрифт для кнопок */
   font-size: 16px;
   font-weight: 700; /* Bold */
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
   text-align: center;
   white-space: nowrap;
   line-height: 1.2;
@@ -98,8 +96,8 @@ a:hover {
     background-color: transparent;
     color: var(--text-primary);
     border: 1px solid var(--text-primary);
-    margin-top: 15px; /* Отступ от планеты */
-    width: 100%; /* На всю ширину колонки */
+    margin-top: 15px;
+    width: 100%;
     font-weight: 400; /* Regular */
 }
 .action-button.chat-button:hover {
@@ -107,25 +105,23 @@ a:hover {
 }
 
 .action-button.write-author-button {
-    background-color: var(--button-blue); /* Синий фон */
-    color: var(--text-primary);
-    font-weight: 700;
-    padding: 10px 20px; 
-    border-radius: 10px; /* Скругление */
-    flex-shrink: 0; /* Не сжимается */
-}
-.action-button.write-author-button:hover {
-    background-color: #2a4ecc; /* Темнее синий */
-}
-
-.action-button.edit-button,
-.action-button.invest-button {
     background-color: var(--button-blue);
     color: var(--text-primary);
-    border-radius: 10px; /* Добавляем радиус сюда тоже */
+    font-weight: 700;
+    padding: 10px 20px;
+    border-radius: 10px;
+    flex-shrink: 0;
 }
-.action-button.edit-button:hover,
-.action-button.invest-button:hover {
+.action-button.write-author-button:hover {
+    background-color: #2a4ecc;
+}
+
+.action-button.edit-button {
+    background-color: var(--button-blue);
+    color: var(--text-primary);
+    border-radius: 10px;
+}
+.action-button.edit-button:hover {
     background-color: #2a4ecc;
 }
 
@@ -137,12 +133,12 @@ a:hover {
 }
 
 .action-button.sell-button {
-    background-color: var(--button-yellow); /* Новый желтый */
+    background-color: var(--button-yellow);
     color: var(--primary-dark-blue);
-    border-radius: 10px; /* Скругленные углы */
+    border-radius: 10px;
 }
 .action-button.sell-button:hover {
-    background-color: #eedf29; /* Чуть темнее желтый при наведении */
+    background-color: #eedf29;
 }
 
 .action-button.view-button {
@@ -151,8 +147,8 @@ a:hover {
     padding: 10px 20px;
     font-size: 14px;
     border-radius: 8px;
-    width: 100%; /* Кнопка на всю ширину блока */
-    margin-top: auto; /* Прижимаем к низу блока */
+    width: 100%;
+    margin-top: auto;
 }
 .action-button.view-button:hover {
     background-color: #50618a;
@@ -167,7 +163,7 @@ a:hover {
 .action-button.comment-submit {
     background-color: var(--button-blue);
     color: var(--text-primary);
-    width: auto; /* Не на всю ширину */
+    width: auto;
     padding: 10px 30px;
 }
 .action-button.comment-submit:hover {
@@ -182,8 +178,7 @@ a:hover {
   display: flex;
   gap: 30px; /* Промежуток между колонками */
   margin-bottom: 40px; /* Отступ снизу */
-  /* Центрирование блока на широких экранах */
-  max-width: 1280px; /* 451px (left) + 799px (right) + 30px (gap) */
+  max-width: 1280px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -194,46 +189,46 @@ a:hover {
 .left-column {
   display: flex;
   flex-direction: column;
-  gap: 20px; /* Промежутки между блоками в левой колонке */
-  width: 451px; /* Фиксированная ширина левой колонки */
+  gap: 20px;
+  width: 451px;
   flex-shrink: 0;
 }
 
 .planet-container {
-    width: 451px; /* Ширина из Figma */
-    height: 491px; /* Высота из Figma */
+    width: 451px;
+    height: 491px;
     flex-shrink: 0;
-    border-radius: 10px; /* Радиус из Figma */
-    border: 2px solid #353945; /* Рамка из Figma */
-    background-color: #0e1014; /* Оставляем темный фон */
+    border-radius: 10px;
+    border: 2px solid #353945;
+    background-color: #0e1014;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-around; /* Распределение контента */
+    justify-content: space-around;
     padding: 20px;
     box-sizing: border-box;
-    position: relative; /* Для позиционирования статусных значков */
+    position: relative;
 }
 
 .planet-container .logo-preview {
     max-width: 100%;
-    max-height: 350px; /* Ограничение высоты лого */
+    max-height: 350px;
     object-fit: contain;
     margin-bottom: 15px;
 }
 
 .planet-container .planet {
-    width: 80%; /* Размер планеты */
-    padding-bottom: 80%; /* Сохранение пропорций */
+    width: 80%;
+    padding-bottom: 80%;
     position: relative;
     margin-bottom: 15px;
 }
 
 .planet-container .chat-button {
-   margin-top: auto; /* Прижать кнопку чата вниз */
+   margin-top: auto;
 }
 
-/* Статус стартапа (если не модератор) */
+/* Статус стартапа */
 .status-badge {
   position: absolute;
   top: 10px;
@@ -248,12 +243,48 @@ a:hover {
   z-index: 1;
 }
 
+/* Форма статуса (модератор) */
+.status-form {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 2;
+}
+.status-select {
+    background: rgba(0, 8, 25, 0.7);
+    backdrop-filter: blur(5px);
+    color: var(--text-primary);
+    padding: 5px 15px;
+    border-radius: 20px;
+    border: 1px solid var(--border-color);
+    font-size: 14px;
+    font-weight: 400;
+    cursor: pointer;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    padding-right: 30px; /* Место для стрелки */
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%23A9B8D4" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 18px;
+}
+.status-select:focus {
+    outline: none;
+    border-color: var(--accent-purple);
+}
+.status-select option {
+    background-color: var(--secondary-blue);
+    color: var(--text-primary);
+}
+
+/* Планета (если нет лого) */
 .planet {
-  width: 150px; /* Размер планеты */
+  width: 150px;
   height: 150px;
   border-radius: 50%;
   overflow: hidden;
-  position: relative; /* Для позиционирования сегментов */
+  position: relative;
 }
 
 .planet-segment {
@@ -266,108 +297,98 @@ a:hover {
 .segment-middle { top: 33.33%; }
 .segment-bottom { top: 66.66%; }
 
-.logo-preview {
-  width: 100%;
-  height: 100%;
-  object-fit: cover; /* Масштабирование лого */
-}
-
 /* Прогресс бар */
 .progress-container {
-    width: 451px; /* Ширина для выравнивания с контейнером изображения */
-    height: 50px; 
+    width: 451px;
+    height: 50px;
     flex-shrink: 0;
-    border-radius: 10px; 
-    border: 1px solid #2BEDFF; 
-    background: linear-gradient(180deg, #FFF -0.64%, #2BEDFF 7.87%, rgba(0, 78, 159, 0.00) 55.18%, #2BEDFF 125%); 
-    display: flex; 
+    border-radius: 10px;
+    border: 1px solid #2BEDFF;
+    background: linear-gradient(180deg, #FFF -0.64%, #2BEDFF 7.87%, rgba(0, 78, 159, 0.00) 55.18%, #2BEDFF 125%);
+    display: flex;
     align-items: center;
-    padding: 5px 15px; 
+    padding: 5px 15px;
     box-sizing: border-box;
-    /* Убираем margin: 0 auto; для выравнивания по левому краю */
 }
 
 .progress-bar {
-    flex-grow: 1; /* Занимает доступное пространство */
-    height: 10px; /* Высота самой полосы прогресса */
-    background-color: rgba(255, 255, 255, 0.2); /* Фон полосы */
+    flex-grow: 1;
+    height: 10px;
+    background-color: rgba(255, 255, 255, 0.2);
     border-radius: 5px;
-    overflow: hidden; /* Скрыть выходящую часть заливки */
-    margin-right: 10px; /* Отступ от текста */
+    overflow: hidden;
+    margin-right: 10px;
 }
 
 .progress-fill {
     height: 100%;
-    background-color: #ffffff; /* Цвет заливки прогресса */
+    background-color: #ffffff;
     border-radius: 5px;
     transition: width 0.3s ease-in-out;
 }
 
 .progress-info {
     display: flex;
-    align-items: baseline; /* Выравнивание текста по базовой линии */
-    color: #fff; /* Цвет текста */
+    align-items: baseline;
+    color: #fff;
     font-size: 14px;
 }
 
 .progress-percentage {
     font-weight: bold;
-    margin-right: 10px; /* Добавим отступ справа от процентов */
+    margin-right: 10px;
 }
 
-/* Стиль для иконки и текста инвесторов */
 .progress-backers {
-    display: inline-flex; /* Чтобы иконка и текст были в строку */
+    display: inline-flex;
     align-items: center;
-    gap: 5px; /* Отступ между иконкой и текстом */
-    color: var(--text-secondary); /* Или другой цвет, если нужно */
+    gap: 5px;
+    color: var(--text-secondary);
 }
 
 /* Блок автора слева */
 .author-info-left {
     display: flex;
-    width: 451px; /* Из Figma */
-    height: 257px; /* Из Figma - может потребоваться убрать, если контент динамический */
-    padding: 30px 50px; /* Из Figma */
-    flex-direction: column; /* Из Figma */
-    align-items: flex-start; /* Из Figma */
-    gap: 23px; /* Из Figma */
-    flex-shrink: 0; /* Из Figma */
-    border-radius: 10px; /* Из Figma */
-    background: rgba(0, 0, 0, 0.27); /* Из Figma - полупрозрачный фон */
-    box-shadow: 6px 6px 10px 0px rgba(0, 0, 0, 0.25); /* Из Figma */
-    backdrop-filter: blur(10px); /* Из Figma - применяем блюр */
+    width: 451px;
+    height: 257px;
+    padding: 30px 50px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 23px;
+    flex-shrink: 0;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.27);
+    box-shadow: 6px 6px 10px 0px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(10px);
     box-sizing: border-box;
 }
 
 .author-header {
-  font-size: 18px; /* Примерный размер */
+  font-size: 18px;
   font-weight: 600;
-  color: var(--accent-yellow); /* Желтый цвет заголовка */
-  margin-bottom: 5px; /* Небольшой отступ снизу */
+  color: var(--accent-yellow);
+  margin-bottom: 5px;
 }
 
 .author-details {
-  display: flex; 
+  display: flex;
   align-items: center;
-  justify-content: space-between; /* Распределяем элементы по краям */
-  width: 100%; /* Занимает всю ширину */
-  gap: 15px; /* Отступ между элементами */
+  justify-content: space-between;
+  width: 100%;
+  gap: 15px;
 }
 
 .author-avatar {
-  width: 50px; /* Размер аватара */
+  width: 50px;
   height: 50px;
   border-radius: 50%;
-  background-color: #e0e0e0; /* Светло-серый фон для плейсхолдера */
+  background-color: #e0e0e0;
   flex-shrink: 0;
-  /* Можно добавить иконку пользователя */
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--text-placeholder);
 }
-/* Если будет img внутри */
 .author-avatar img {
     width: 100%;
     height: 100%;
@@ -378,8 +399,8 @@ a:hover {
 .author-meta {
   display: flex;
   flex-direction: column;
-  gap: 3px; /* Небольшой отступ между именем и рейтингом */
-  flex-grow: 1; /* Занимает доступное пространство */
+  gap: 3px;
+  flex-grow: 1;
 }
 
 .author-name {
@@ -413,8 +434,8 @@ a:hover {
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
-  align-self: flex-start; /* Выравнивание по левому краю */
-  margin-top: auto; /* Прижимаем к низу, если высота фиксирована */
+  align-self: flex-start;
+  margin-top: auto;
 }
 
 .report-button:hover {
@@ -423,98 +444,221 @@ a:hover {
   color: var(--text-primary);
 }
 
-/* Правая колонка */
+/* ------------------ */
+/*   ПРАВАЯ КОЛОНКА   */
+/* ------------------ */
 .right-column {
     display: flex;
-    width: 799px; /* Задаем фиксированную ширину */
-    /* flex-grow: 1; */ /* Убираем растягивание */
+    width: 799px;
     flex-direction: column;
     align-items: flex-start;
-    gap: 35px; /* Промежуток между блоками в правой колонке */
+    gap: 35px;
+}
+
+/* Обертка шапки и действий */
+.startup-header-actions-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 30px;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+/* Шапка стартапа */
+.startup-header {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  flex-grow: 1;
+}
+
+.startup-name {
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  max-width: 100%;
+}
+
+.header-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  font-size: 14px;
+  color: var(--text-placeholder);
+}
+
+.category-value {
+  color: var(--accent-yellow);
+  font-weight: 500;
+}
+
+.microinvestment-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+.microinvestment-badge i {
+  color: var(--success-green);
+  font-size: 16px;
+}
+
+/* Рейтинг и комментарии под шапкой */
+.rating-comments-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  margin-top: 10px;
+}
+
+.rating-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+}
+
+.rating-label {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+/* Основной рейтинг (планеты) */
+.rating-stars {
+  display: flex;
+}
+
+.comments-link {
+  font-size: 14px;
+  color: var(--accent-purple);
+}
+.comments-link:hover {
+  color: var(--text-primary);
+}
+
+/* Действия справа вверху */
+.actions-top-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 15px;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.startup-info-badge {
+  background-color: var(--primary-dark-blue);
+  color: var(--text-primary);
+  padding: 8px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+  min-width: 180px;
+}
+
+.actions-top-right .action-button {
+    padding: 10px 20px;
+    font-size: 15px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 /* --- Контейнер для табов и контента --- */
 .tabbed-content-wrapper {
-    /* background-color: var(--secondary-blue, #04112D); */ /* Убираем фон */
-    background-color: transparent; /* Делаем фон прозрачным */
-    padding: 25px 30px; /* Внутренние отступы */
-    border-radius: 15px; /* Скругление углов */
-    border: 1px solid #353945; /* Обновляем цвет рамки на более заметный как в макете */
+    background-color: transparent; /* Прозрачный фон */
+    padding: 25px 30px;
+    border-radius: 15px;
+    border: 1px solid #353945; /* Рамка обертки */
     width: 100%;
     box-sizing: border-box;
-    margin-bottom: 30px; /* Добавляем отступ под этим блоком */
+    margin-bottom: 30px;
 }
 
 /* --- ТАБЫ НАВИГАЦИИ --- */
 .tab-navigation {
   display: flex;
-  gap: 15px; /* Отступ между кнопками */
+  gap: 15px;
   align-self: stretch;
   margin-bottom: 25px;
   padding-bottom: 15px;
-  border-bottom: 1px solid #353945; /* Нижняя граница под табами */
-  /* background-color: transparent; */ /* Убедимся, что фон прозрачный */
+  border-bottom: 1px solid #353945;
 }
 
 .tabbed-content-wrapper .tab-navigation .tab-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 6px 12px; /* Из макета */
-  background-color: transparent; /* Прозрачный фон */
-  border: none; /* Убираем границу */
-  color: rgba(255, 255, 255, 0.50); /* Цвет текста неактивного таба */
-  font-family: 'Unbounded', sans-serif; /* Шрифт */
-  font-size: 14px; /* Размер шрифта */
-  font-weight: 300; /* Вес шрифта */
-  line-height: 18px; /* Межстрочный интервал */
-  letter-spacing: -0.28px; /* Межбуквенный интервал */
+  padding: 6px 12px;
+  background-color: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.50);
+  font-family: 'Unbounded', sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 18px;
+  letter-spacing: -0.28px;
   text-align: center;
   cursor: pointer;
   transition: background-color 0.2s ease, color 0.2s ease;
   white-space: nowrap;
-  border-radius: 8px; /* Прямоугольная форма с небольшим скруглением */
+  border-radius: 8px;
 }
 
-/* Стиль ТОЛЬКО для АКТИВНОЙ кнопки */
+/* Активная кнопка таба */
 .tabbed-content-wrapper .tab-navigation .tab-button.active {
-  background-color: #E6E8EC; /* Светло-серый фон */
-  color: #23262F; /* Темный текст */
-  font-weight: 300; /* Оставляем тот же вес */
+  background-color: #E6E8EC;
+  color: #23262F;
+  font-weight: 300;
 }
 
 /* --- КОНТЕНТ ТАБОВ --- */
-.content-section {
-  display: none;
-  background: transparent; /* Прозрачный фон для секции */
-  border: 1px solid rgba(255, 255, 255, 0.50); /* Белая полупрозрачная рамка */
-  border-radius: 10px; /* Небольшое скругление */
-  padding: 20px; /* Добавим отступ внутри рамки */
-  margin-top: -1px; /* Компенсируем двойную рамку с табами */
+.tab-content-container { /* Новый контейнер для управления видимостью */
+    /* Стилизация не требуется, управляет только видимостью */
 }
 
-/* Убираем лишний фон и паддинги у дочерних секций, т.к. есть обертка */
-.content-section.media-section,
-/* .content-section.about-section, Убираем это, about-section не имеет своего фона */
-.content-section.comments-section {
-    background-color: transparent;
-    padding: 0;
-    margin-top: 0;
-    border-radius: 0;
-    border: none;
+.content-section {
+  display: none; /* По умолчанию скрыты */
+  /* Убираем общие стили рамки и отступов отсюда */
+  /* background: transparent; */
+  /* border: 1px solid rgba(255, 255, 255, 0.50); */
+  /* border-radius: 10px; */
+  /* padding: 20px; */
+  /* margin-top: -1px; */
+}
+
+.content-section.active {
+  display: block;
+  animation: fadeInContent 0.5s ease-in-out;
+}
+
+@keyframes fadeInContent {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* Стили заголовков внутри секций контента */
 .content-section .section-title {
     font-size: 24px;
     font-weight: 700;
-    color: var(--accent-yellow, #F7BF4F); /* Ярко-Желтый цвет заголовков как в макете */
+    color: var(--accent-yellow, #F7BF4F);
     margin-bottom: 20px;
     padding-bottom: 0;
-    border-bottom: none; /* Убираем линию под заголовками секций */
+    border-bottom: none;
 }
 
-/* Возвращаем стили для info-blocks, так как они теперь внутри темного контейнера */
+/* Секция ИНФОРМАЦИЯ */
 .content-section#info-section .info-blocks {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -522,7 +666,7 @@ a:hover {
 }
 
 .content-section#info-section .info-block {
-  background-color: var(--dark-card-bg, #0B1A3F); 
+  background-color: var(--dark-card-bg, #0B1A3F);
   border-radius: 12px;
   padding: 15px;
   display: flex;
@@ -533,13 +677,8 @@ a:hover {
   border: 1px solid var(--border-color);
   min-height: 140px;
   box-sizing: border-box;
-  /* color: var(--primary-dark-blue); */ /* Убираем цвет, т.к. фон прозрачный */
-  border-radius: 15px; 
-  padding: 25px 30px; 
-  /* Убираем overflow-x: auto и связанные стили */
 }
 
-/* Стили иконок/текста внутри info-block (возможно, уже есть выше, но проверим) */
 .content-section#info-section .info-block .icon {
     font-size: 20px;
     color: var(--text-placeholder);
@@ -557,13 +696,11 @@ a:hover {
     color: var(--text-primary);
     order: 1;
 }
-/* Кнопка Смотреть */
 .content-section#info-section .info-block.presentation-block .action-button.view-button {
     margin-top: 10px;
     order: 3;
-    background-color: var(--button-yellow, #F7BF4F); /* Желтая кнопка */
+    background-color: var(--button-yellow, #F7BF4F);
     color: var(--primary-dark-blue);
-    /* Убедимся что стили из :root применяются */
     padding: 10px 20px;
     font-size: 14px;
     border-radius: 8px;
@@ -573,26 +710,16 @@ a:hover {
 .content-section#info-section .info-block.presentation-block .action-button.view-button:hover {
      background-color: #e0ae44;
 }
-/* Оценка */
-.content-section#info-section .info-block.rate-block .info-block-value {
-    background-color: var(--button-yellow, #F7BF4F); /* Желтый фон для цифры */
-    color: var(--primary-dark-blue);
-    padding: 5px 15px;
-    border-radius: 8px;
-    display: inline-block; /* Чтобы фон был только под цифрой */
-}
-/* Собранная сумма */
 .content-section#info-section .info-block.collected-sum-block .info-block-value {
-    background-color: var(--button-blue, #345DFF); /* Синий фон для цифры */
+    background-color: var(--button-blue, #345DFF);
     color: var(--text-primary);
     padding: 5px 15px;
     border-radius: 8px;
     display: inline-block;
-    width: 80%; /* Примерно по ширине */
+    width: 80%;
 }
-/* Стадия */
 .content-section#info-section .info-block.stage-block .info-block-value {
-    background-color: #e9ecef; /* Светлый фон */
+    background-color: #e9ecef;
     color: var(--primary-dark-blue);
     padding: 5px 15px;
     border-radius: 8px;
@@ -600,12 +727,10 @@ a:hover {
     width: 80%;
 }
 
-
-/* Доп. стили для секции О проекте */
 .content-section#info-section .about-section {
-    margin-top: 30px; /* Отступ между info-blocks и текстом О проекте */
-    background-color: transparent; /* Убираем повторный фон */
-    padding: 0; /* Убираем лишние паддинги */
+    margin-top: 30px;
+    background-color: transparent;
+    padding: 0;
     border: none;
 }
 
@@ -624,235 +749,14 @@ a:hover {
     font-weight: 600;
 }
 
-/* Доп. стили для секции комментариев */
-.content-section#comments-section {
-   background-color: var(--background-light, #FFFFFF); 
-   color: var(--primary-dark-blue); 
-   border-radius: 10px; /* Синхронизируем радиус */
-   padding: 25px 30px; 
-   margin-top: 20px; /* Отступ сверху для блока комм. */
-}
-/* Корректируем цвет заголовка комментариев */
-.content-section#comments-section .section-title {
-    color: var(--primary-dark-blue);
-}
-
-.content-section.active {
-  display: block;
-  animation: fadeInContent 0.5s ease-in-out; /* Плавное появление */
-}
-
-@keyframes fadeInContent {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* Шапка стартапа */
-.startup-header {
-  display: flex;
-  flex-direction: column;
-  gap: 5px; /* Уменьшаем gap */
-  margin-bottom: 20px;
-  flex-grow: 1; /* Занимает доступное место слева */
-}
-
-.startup-name {
-  font-size: 36px; /* Вернем размер */
-  font-weight: 700;
-  line-height: 1.2;
-  margin: 0;
-  color: var(--text-primary);
-  /* Обрезка текста */
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: block; /* или inline-block */
-  max-width: 100%; /* Ограничиваем ширину */
-}
-
-.header-meta {
-  display: flex;
-  flex-direction: column; /* Элементы друг под другом */
-  align-items: flex-start; /* Выравнивание по левому краю */
-  gap: 5px; /* Отступ между категорией и микроинвестициями */
-  font-size: 14px;
-  color: var(--text-placeholder);
-}
-
-/* Стиль для значения категории (если нужно выделить) */
-.category-value {
-  color: var(--accent-yellow); /* Используем желтый акцент */
-  font-weight: 500;
-}
-
-/* Убираем иконку и текст "Категория:" */
-.category-label {
- display: none; /* Скрываем старый span */
-}
-
-/* Бейдж Микроинвестиции */
-.microinvestment-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 14px;
-  color: var(--text-primary);
-}
-
-.microinvestment-badge i {
-  color: var(--success-green);
-  font-size: 16px;
-}
-
-/* Рейтинг и комментарии */
-.rating-comments-container {
-  display: flex;
-  flex-direction: column; /* Элементы друг под другом */
-  align-items: flex-start;
-  gap: 5px; /* Уменьшаем отступ */
-  margin-top: 10px; /* Отступ сверху */
-}
-
-.rating-container {
-  display: flex;
-  flex-direction: column; /* Число и планеты друг под другом */
-  align-items: flex-start;
-  gap: 5px;
-}
-
-.rating-label {
-  font-size: 14px;
-  color: var(--text-secondary);
-  /* Убираем текст "Рейтинг:" из HTML, здесь только стили */
-}
-
-.rating-stars {
-  /* Стили для планет остаются */
-}
-
-.comments-link {
-  font-size: 14px;
-  color: var(--accent-purple); /* Фиолетовый для ссылки */
-}
-.comments-link:hover {
-  color: var(--text-primary);
-}
-
-/* Действия справа вверху */
-.actions-top-right {
-  display: flex;
-  flex-direction: column; /* Элементы друг под другом */
-  align-items: flex-end; /* Выравнивание по правому краю */
-  gap: 15px; /* Отступ между инфо-бейджем и кнопками */
-  padding: 0;
-  flex-shrink: 0; /* Не сжимается */
-}
-
-/* Убираем старый бейдж */
-.investment-info-badge {
- display: none;
-}
-
-/* Новый инфо-бейдж */
-.startup-info-badge {
-  background-color: var(--primary-dark-blue); /* Черный фон */
-  color: var(--text-primary); /* Белый текст */
-  padding: 8px 16px;
-  border-radius: 10px;
-  font-size: 14px;
-  font-weight: 500;
-  text-align: center;
-  min-width: 180px; /* Примерная минимальная ширина */
-}
-
-.actions-top-right .action-button {
-    padding: 10px 20px;
-    font-size: 15px;
-    width: 100%; /* Кнопки на всю ширину правой колонки */
-    box-sizing: border-box;
-}
-
-.investment-amount {
-    height: 40px; /* Высота как у кнопок */
-    padding: 8px 12px;
-    flex-basis: 130px;
-    flex-grow: 0;
-    font-size: 14px;
-}
-
-/* Информационные блоки */
-.info-blocks {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); /* Стало 3 колонки по макету */
-  gap: 20px; /* Меньше отступ */
-}
-
-.info-block {
-  background-color: var(--dark-card-bg);
-  border-radius: 12px; /* Меньше радиус */
-  padding: 15px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: 8px;
-  border: 1px solid var(--border-color);
-  min-height: 140px; /* Фикс высота? */
-  box-sizing: border-box;
-}
-
-.info-block .icon {
-  font-size: 20px;
-  color: var(--text-placeholder);
-  margin-bottom: 5px;
-  margin-top: 5px; /* Отступ сверху */
-}
-
-.info-block-title {
-  font-size: 13px; /* Мельче */
-  color: var(--text-placeholder);
-  order: 2;
-}
-
-.info-block-value {
-  font-size: 18px;
-  font-weight: 700; /* Bold */
-  color: var(--text-primary);
-  order: 1;
-}
-
-/* Специальные стили для блоков */
-.info-block.presentation-block .action-button.view-button {
-    margin-top: 10px; /* Отступ для кнопки */
-    order: 3;
-}
-.info-block.collected-sum-block .info-block-value {
-    font-size: 20px; /* Крупнее */
-    font-weight: 700; /* Жирнее */
-    color: var(--text-primary);
-}
-
-/* ======================================== */
-/*         СЕКЦИЯ ГАЛЕРЕИ И ВИДЕО         */
-/* ======================================== */
-.media-section {
-  margin-top: 40px;
-  background-color: var(--secondary-blue); /* Тот же фон */
-  padding: 30px;
-  border-radius: 15px;
-}
-
-.media-section .section-title {
-  font-size: 24px;
-  font-weight: 700;
-  margin-bottom: 20px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--border-color);
+/* Секция ГАЛЕРЕЯ */
+.content-section#gallery-section {
+  /* Стилизация не нужна, т.к. у .gallery-grid свои стили */
 }
 
 .gallery-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); /* Адаптивная сетка */
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
   gap: 15px;
 }
 
@@ -860,8 +764,8 @@ a:hover {
   position: relative;
   border-radius: 8px;
   overflow: hidden;
-  aspect-ratio: 1 / 1; /* Квадратные превью */
-  background-color: var(--dark-card-bg); /* Фон для плейсхолдеров */
+  aspect-ratio: 1 / 1;
+  background-color: var(--dark-card-bg);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -901,15 +805,20 @@ a:hover {
   font-size: 14px;
 }
 
+/* Секции Этапы, Документы, Условия (пока пустые) */
+#stages-section, #documents-section, #conditions-section {
+    color: var(--text-secondary);
+}
+
 /* ======================================== */
 /*           СЕКЦИЯ КОММЕНТАРИЕВ          */
 /* ======================================== */
-.comments-section {
+.content-section#comments-section {
   background-color: var(--text-primary); /* БЕЛЫЙ ФОН */
   color: var(--primary-dark-blue); /* Темный текст */
   border-radius: 15px;
   padding: 25px 30px;
-  margin-top: 30px;
+  margin-top: 0; /* Убираем лишний отступ */
 }
 
 .comments-header {
@@ -919,16 +828,15 @@ a:hover {
   margin-bottom: 25px;
   gap: 30px;
   flex-wrap: wrap;
-  border-bottom: 1px solid #e0e0e0; /* Серая линия */
+  border-bottom: 1px solid #e0e0e0;
   padding-bottom: 20px;
 }
 
-.comments-header .section-title {
-  font-size: 22px;
-  font-weight: 700;
-  margin: 0;
-  color: var(--primary-dark-blue);
+/* Корректируем цвет заголовка комментариев */
+.content-section#comments-section .section-title {
+    color: var(--primary-dark-blue);
 }
+
 .comments-count {
   color: var(--text-placeholder);
   font-weight: 400;
@@ -963,34 +871,36 @@ a:hover {
 }
 
 .star-label {
-  width: 30px;
+  width: auto; /* Авто ширина */
+  min-width: 30px; /* Минимальная ширина */
   text-align: right;
   flex-shrink: 0;
+  display: inline-flex; /* Для выравнивания числа и планеты */
+  align-items: center;
+  gap: 4px; /* Отступ между числом и планетой */
 }
 .star-label i {
-  /* color: var(--accent-yellow); */ /* Убираем стили для звезд */
-  /* font-size: 12px; */
-  /* margin-left: 2px; */
-  display: none; /* Скрываем старую звезду */
+  display: none; /* Скрываем старую иконку звезды */
 }
+/* Стили для планеты внутри .star-label уже обрабатываются .rating-icon-container */
 
 .rating-bar {
   flex-grow: 1;
   height: 6px;
-  background-color: #e9ecef; /* Светло-серый фон полоски */
+  background-color: #e9ecef;
   border-radius: 3px;
   overflow: hidden;
 }
 
 .rating-bar-fill {
   height: 100%;
-  background-color: var(--accent-yellow); /* Цвет полосы рейтинга */
+  background-color: var(--accent-yellow);
   border-radius: 3px;
   transition: width 0.5s ease;
 }
 
 .rating-count {
-  min-width: 25px; /* Шире место под число */
+  min-width: 25px;
   text-align: right;
   font-weight: 400;
   color: var(--primary-dark-blue);
@@ -1005,8 +915,8 @@ a:hover {
   display: block;
   width: 100%;
   min-height: 80px;
-  background-color: #f8f9fa; /* Очень светлый фон поля */
-  border: 1px solid #dee2e6; /* Серая граница */
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
   border-radius: 10px;
   padding: 12px 15px;
   font-family: 'Circe', sans-serif;
@@ -1017,11 +927,11 @@ a:hover {
   box-sizing: border-box;
 }
 .comment-textarea::placeholder {
-  color: #adb5bd; /* Серый плейсхолдер */
+  color: #adb5bd;
 }
 .comment-textarea:focus {
   outline: none;
-  border-color: var(--button-blue); /* Синяя рамка при фокусе */
+  border-color: var(--button-blue);
   box-shadow: 0 0 0 2px rgba(52, 93, 255, 0.2);
 }
 
@@ -1033,11 +943,11 @@ a:hover {
 }
 
 .comment-card {
-  background-color: transparent; /* Прозрачный фон карточки */
+  background-color: transparent;
   border-radius: 0;
   padding: 15px 0;
   border: none;
-  border-bottom: 1px solid #e0e0e0; /* Разделитель */
+  border-bottom: 1px solid #e0e0e0;
 }
 .comment-card:last-child {
     border-bottom: none;
@@ -1062,7 +972,7 @@ a:hover {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background-color: var(--secondary-blue); /* Заглушка */
+  background-color: var(--secondary-blue);
   flex-shrink: 0;
 }
 
@@ -1076,15 +986,10 @@ a:hover {
 .comment-rating {
   display: flex;
   gap: 3px;
-  margin-left: auto; /* Отодвигает рейтинг вправо */
-  padding-left: 15px; /* Отступ от имени */
+  margin-left: auto;
+  padding-left: 15px;
 }
-.comment-rating i {
-    color: #d8dcdf; /* Светло-серые неактивные звезды */
-}
-.comment-rating i.active {
-    color: var(--accent-yellow);
-}
+
 .comment-date {
   font-size: 13px;
   color: var(--text-placeholder);
@@ -1093,8 +998,14 @@ a:hover {
 .comment-body {
   font-size: 15px;
   line-height: 1.6;
-  color: #495057; /* Темно-серый текст комментария */
+  color: #495057;
   margin-bottom: 10px;
+}
+
+.comment-footer {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
 }
 
 /* Бейджи в комментариях */
@@ -1111,17 +1022,24 @@ a:hover {
 }
 .badge-buyout {
   background-color: rgba(247, 191, 79, 0.1);
-  color: #dda01e; /* Темнее желтый */
+  color: #dda01e;
   border: 1px solid rgba(247, 191, 79, 0.3);
 }
 
 /* Кнопки Показать/Скрыть комментарии */
 .show-more-comments, .hide-comments-button {
-  /* ... */
   border: 1px solid #dee2e6;
   color: #6c757d;
   padding: 6px 15px;
   font-size: 13px;
+  display: inline-flex; /* Используем flex */
+  align-items: center;
+  gap: 5px;
+  background-color: transparent;
+  border-radius: 8px;
+  margin-top: 15px;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 .show-more-comments:hover, .hide-comments-button:hover {
   color: var(--primary-dark-blue);
@@ -1129,56 +1047,54 @@ a:hover {
   background-color: rgba(52, 93, 255, 0.05);
 }
 
+.comment-card.hidden {
+    display: none;
+}
+
 /* ======================================== */
 /*         СЕКЦИЯ ПОХОЖИХ СТАРТАПОВ       */
 /* ======================================== */
 .similar-startups-section {
-  margin-top: 60px; /* Возвращаем больший отступ сверху */
-  padding: 70px 30px; /* Увеличиваем вертикальные отступы, оставляем боковые 30px */
-  background-color: var(--background-light); /* Оставляем белый фон НА СЛУЧАЙ если картинка не загрузится */
-  background-image: url('../images/startups/inside_cards_background.webp'); /* Возвращаем фон */
+  margin-top: 60px;
+  padding: 70px 30px;
+  background-color: var(--primary-dark-blue); /* Темный фон по умолчанию */
+  background-image: url('../images/startups/inside_cards_background.webp');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  border-radius: 15px; /* Скругленные углы */
+  border-radius: 15px;
   box-sizing: border-box;
 }
 
 .similar-startups-container {
   width: 100%;
   margin: 0 auto;
-  padding: 0; /* Убираем внутренние отступы контейнера */
+  padding: 0;
   position: relative;
   box-sizing: border-box;
 }
 
 .similar-title {
-  margin-bottom: 40px; /* Возвращаем больший отступ */
+  margin-bottom: 40px;
   padding: 0;
-  color: var(--primary-dark-blue);
-  /* Цвет текста заголовка теперь нужно вернуть на светлый, т.к. фон темный */
   color: var(--text-primary);
 }
 
 .similar-text, .startups-text {
-  font-size: clamp(40px, 6vw, 70px); /* Возвращаем больший размер */
+  font-size: clamp(40px, 6vw, 70px);
   line-height: 1.1;
   letter-spacing: -0.02em;
   display: block;
-  font-weight: 800; /* Bold для обоих */
+  font-weight: 800;
 }
 
 .similar-text {
-  /* Цвет первого слова теперь должен быть светлее на темном фоне */
-  /* color: var(--accent-purple); */
-  color: var(--accent-green); /* Бирюзовый как был изначально */
+  color: var(--accent-green);
   font-weight: 600;
   text-transform: lowercase;
 }
 
 .startups-text {
-  /* Цвет второго слова тоже светлый */
-  /* color: var(--primary-dark-blue); */
   color: var(--text-primary);
   text-transform: uppercase;
 }
@@ -1193,13 +1109,10 @@ a:hover {
   gap: 8px;
   padding: 10px 20px;
   height: auto;
-  /* Стили кнопки тоже нужно вернуть для темного фона */
-  /* border: 1px solid var(--primary-dark-blue); */
-  border: 1px solid var(--text-primary); /* Белая рамка */
+  border: 1px solid var(--text-primary);
   border-radius: 25px;
   background: transparent;
-  /* color: var(--primary-dark-blue); */
-  color: var(--text-primary); /* Белый текст */
+  color: var(--text-primary);
   cursor: pointer;
   font-size: 14px;
   font-weight: 500;
@@ -1209,25 +1122,20 @@ a:hover {
     font-size: 12px;
 }
 .show-all-button:hover {
-  /* Эффект наведения для темного фона */
-  /* background-color: rgba(0, 8, 25, 0.05); */
   background-color: rgba(255, 255, 255, 0.1);
-  /* border-color: var(--accent-purple); */
-  border-color: var(--accent-green); /* Бирюзовый при наведении */
-  /* color: var(--accent-purple); */
+  border-color: var(--accent-green);
   color: var(--accent-green);
 }
 
 /* Сетка похожих стартапов */
 .similar-startups-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); /* Адаптивная сетка карточек */
-  gap: 20px; /* Отступ между карточками */
-   /* Убираем overflow-x: auto и связанные стили */
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
 }
 
 .similar-card {
-  background: #FFFFFF; /* Белый фон карточек */
+  background: #FFFFFF;
   border-radius: 15px;
   padding: 15px;
   display: flex;
@@ -1236,20 +1144,21 @@ a:hover {
   text-align: center;
   gap: 10px;
   text-decoration: none;
-  color: var(--primary-dark-blue); /* Темный текст на белом фоне */
-  border: 1px solid #dee2e6; /* Граница светлее */
+  color: var(--primary-dark-blue);
+  border: 1px solid #dee2e6;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-sizing: border-box; /* Добавим */
 }
 .similar-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 8, 25, 0.2); /* Тень при наведении */
+    box-shadow: 0 10px 20px rgba(0, 8, 25, 0.2);
 }
 
 .similar-card-image {
   width: 90px;
   height: 90px;
   border-radius: 50%;
-  background-color: var(--primary-dark-blue); /* Фон для планеты */
+  background-color: var(--primary-dark-blue);
   overflow: hidden;
   position: relative;
   display: flex;
@@ -1257,19 +1166,18 @@ a:hover {
   justify-content: center;
   margin-bottom: 5px;
 }
-.similar-card-image img { /* Логотип в карточке */
+.similar-card-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
-.similar-card-image .planet { /* Планета в карточке */
+.similar-card-image .planet {
     width: 60px;
     height: 60px;
     border-radius: 50%;
     position: relative;
     overflow: hidden;
 }
-/* Стили для сегментов планеты внутри карточки (можно скопировать из .left-column .planet) */
 .similar-card-image .planet-segment { position: absolute; width: 100%; height: 33.33%; left: 0; }
 .similar-card-image .segment-top { top: 0; }
 .similar-card-image .segment-middle { top: 33.33%; }
@@ -1278,45 +1186,77 @@ a:hover {
 
 .similar-card-name {
   font-size: 16px;
-  font-weight: 600; /* Semibold */
+  font-weight: 600;
   color: var(--primary-dark-blue);
-  /* Убираем вложенность - стили будут ниже */
 }
 
 .similar-card-rating {
   display: flex;
   gap: 3px;
-  /* Убираем вложенность - стили будут ниже */
 }
 .similar-card-rating i {
-/* ... existing code ... */
+  font-size: 14px;
+  color: #e9ecef;
+}
+.similar-card-rating i.active {
+  color: var(--accent-yellow);
+}
+
 .similar-card-category {
   margin-top: 5px;
-  /* Убираем вложенность - стили будут ниже */
 }
-.category-badge { /* Бейдж категории */
-/* ... existing code ... */
 
-/* Новые правила для скрытия элементов внутри плейсхолдера */
+.category-badge { /* Бейдж категории */
+  display: inline-block;
+  padding: 4px 10px;
+  background-color: #e9ecef;
+  color: #495057;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+/* Плейсхолдер для кнопки "Показать еще" */
+.similar-card.show-more-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background-color: transparent;
+    border-radius: 0;
+    padding: 0;
+    box-shadow: none;
+    transform: none;
+    /* Убедимся, что занимает место */
+    min-height: 200px; /* Примерная высота, подберите по карточкам */
+}
+.similar-card.show-more-placeholder:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+/* Скрываем элементы обычной карточки внутри плейсхолдера */
+.similar-card.show-more-placeholder .similar-card-image,
 .similar-card.show-more-placeholder .similar-card-name,
 .similar-card.show-more-placeholder .similar-card-rating,
 .similar-card.show-more-placeholder .similar-card-category {
     display: none;
 }
 
+/* Кнопка "Показать еще" - стили как у "Показать все" */
 .action-button.show-more-similar {
-    /* background: transparent; */ /* Убираем, наследуется от .action-button */
-    border: 1px solid var(--text-primary); /* Белая рамка как у Показать все */
-    color: var(--text-primary); /* Белый текст */
+    border: 1px solid var(--text-primary);
+    color: var(--text-primary);
+    background: transparent;
     padding: 10px 20px;
     font-size: 14px;
-    font-weight: 500; /* Как у Показать все */
+    font-weight: 500;
     gap: 8px;
-    border-radius: 25px; /* Форма пилюли */
-    width: auto; /* Ширина по контенту */
+    border-radius: 25px;
+    width: auto;
     transition: all 0.3s ease;
-    /* Убираем иконку по умолчанию, если она не нужна */
-    /* i { display: none; } */
+    display: inline-flex;
+    align-items: center;
 }
 .action-button.show-more-similar:hover {
      background-color: rgba(255, 255, 255, 0.1);
@@ -1324,149 +1264,10 @@ a:hover {
      color: var(--accent-green);
 }
 
-/* Стили для плейсхолдера кнопки "Показать еще" */
-.similar-card.show-more-placeholder {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    /* border: 1px solid var(--text-primary); */ /* Убираем рамку карточки */
-    border: none; /* Убираем рамку карточки */
-    background-color: transparent; /* Прозрачный фон */
-    /* border-radius: 25px; */ /* Убираем скругление карточки */
-    border-radius: 0;
-    padding: 0; /* Убираем паддинг карточки */
-    /* Убираем стили при наведении для плейсхолдера */
-    transform: none;
-    box-shadow: none;
-}
-.similar-card.show-more-placeholder:hover {
-    transform: none;
-    box-shadow: none;
-}
-/* Стили для самой кнопки внутри плейсхолдера */
+/* Кнопка внутри плейсхолдера */
 .similar-card.show-more-placeholder .action-button.show-more-similar {
-    /* Стили кнопки уже заданы выше */
+    /* Наследуем стили выше */
 }
-
-
-/* ======================================== */
-/*            МОДАЛЬНЫЕ ОКНА              */
-/* ======================================== */
-
-/* Модальное окно инвестиций (немного адаптируем под темную тему) */
-.modal {
-  /* display: none; */ /* Управляется JS - ВОЗВРАЩАЕМ ЭТО! */
-  display: none;
-  /* ... остальное без изменений ... */
-  background-color: rgba(0, 8, 25, 0.7); /* Затемненный фон */
-  position: fixed;
-  z-index: 1000;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  justify-content: center;
-  align-items: center;
-}
-.modal-content {
-  background-color: var(--secondary-blue); /* Фон модалки */
-  color: var(--text-primary);
-  padding: 30px;
-  border-radius: 15px;
-  width: 90%;
-  max-width: 450px; /* Макс ширина */
-  text-align: center;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-  animation: fadeIn 0.3s ease-out;
-}
-.modal-content h2 {
-    margin-top: 0;
-    margin-bottom: 15px;
-    font-size: 20px;
-}
-.modal-content p {
-    font-size: 15px;
-    color: var(--text-secondary);
-    line-height: 1.6;
-    margin-bottom: 25px;
-}
-.modal-buttons {
-  margin-top: 20px;
-  display: flex;
-  justify-content: space-around;
-  gap: 15px; /* Отступ между кнопками */
-}
-.modal-buttons button {
-  /* Используем стили .action-button */
-  flex-grow: 1; /* Растягиваем кнопки */
-  padding: 10px 20px; /* Уменьшаем паддинг */
-}
-.confirm-btn {
-  /* action-button primary */
-  background-color: var(--accent-purple);
-  color: var(--text-primary);
-}
-.confirm-btn:hover {
-    background-color: #6551D9;
-}
-.cancel-btn {
-  /* action-button secondary */
-  background-color: var(--danger-red); /* Красный для отмены */
-  border: none;
-  color: var(--text-primary);
-}
-.cancel-btn:hover {
-    background-color: #c82333;
-}
-
-
-/* Лайтбокс */
-.lightbox {
-  /* display: none; */ /* Управляется JS */
-  position: fixed;
-  z-index: 1001; /* Выше модалки */
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  justify-content: center;
-  align-items: center;
-   background-color: rgba(0, 8, 25, 0.9); /* Сильно затемненный фон */
-   animation: fadeIn 0.3s ease-out;
-}
-.lightbox-content {
-   position: relative;
-   max-width: 90%;
-   max-height: 90%;
-}
-#lightbox-img, #lightbox-video {
-  max-width: 100%;
-  max-height: 90vh;
-  display: block;
-  margin: 0 auto;
-  border-radius: 10px;
-  border: 3px solid var(--dark-card-bg); /* Рамка вокруг контента */
-}
-.close-lightbox {
-   position: absolute;
-   top: 15px;
-   right: 25px;
-   font-size: 40px;
-   font-weight: bold;
-   cursor: pointer;
-   z-index: 1002;
-   color: var(--text-secondary);
-   transition: color 0.2s ease;
-}
-.close-lightbox:hover {
-   color: var(--text-primary);
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
 
 /* ======================================== */
 /*               АДАПТИВНОСТЬ              */
@@ -1474,7 +1275,7 @@ a:hover {
 
 @media (max-width: 1200px) {
   .main-content-grid {
-    padding: 30px 40px; /* Уменьшаем отступы */
+    padding: 30px 40px;
   }
   .info-blocks {
     grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
@@ -1489,31 +1290,31 @@ a:hover {
 
 @media (max-width: 992px) {
   .top-section {
-    flex-direction: column; /* Колонки друг под другом */
+    flex-direction: column;
     gap: 30px;
   }
   .left-column, .right-column {
-    width: 100%; /* Колонки на всю ширину */
+    width: 100%;
   }
   .comments-header {
       flex-direction: column;
-      align-items: stretch; /* Растягиваем элементы */
+      align-items: stretch;
       gap: 20px;
   }
   .comments-rating-summary {
-      justify-content: space-between; /* Распределяем рейтинг и график */
+      justify-content: space-between;
       width: 100%;
   }
   .similar-startups-grid {
       grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   }
   .show-all-button {
-      position: static; /* Убираем абсолютное позиционирование */
+      position: static;
       margin-top: 20px;
-      margin-bottom: 20px; /* Добавим отступ снизу */
-      display: block; /* Делаем блочной */
+      margin-bottom: 20px;
+      display: block;
       text-align: center;
-      width: fit-content; /* Ширина по контенту */
+      width: fit-content;
       margin-left: auto;
       margin-right: auto;
   }
@@ -1524,39 +1325,34 @@ a:hover {
 
 @media (max-width: 768px) {
   .main-content-grid {
-    padding: 20px; /* Еще меньше отступы */
+    padding: 20px;
   }
   .startup-name {
     font-size: 28px;
   }
   .info-blocks {
-    grid-template-columns: 1fr 1fr; /* По 2 блока в ряд */
+    grid-template-columns: 1fr 1fr;
+  }
+  .startup-header-actions-wrapper {
+    flex-direction: column; /* Складываем шапку и действия */
+    align-items: stretch; /* Растягиваем по ширине */
   }
   .actions-top-right {
-      flex-wrap: wrap; /* Перенос кнопок */
-      padding: 15px;
-      justify-content: center; /* Центрируем элементы */
+    align-items: stretch; /* Выравниваем кнопки по ширине */
+    width: 100%;
+    flex-direction: row; /* Кнопки в ряд */
+    flex-wrap: wrap; /* Разрешаем перенос */
+    justify-content: flex-start;
   }
-  .investment-info-badge {
-      width: 100%; /* Бейдж на всю ширину */
-      margin-bottom: 10px;
-      text-align: center;
-      margin-right: 0; /* Убираем авто-отступ */
+  .actions-top-right > * {
+    flex-basis: calc(50% - 8px); /* По две кнопки/элемента */
+    max-width: calc(50% - 8px);
   }
-  .action-button.invest-button {
-     order: 1; /* Кнопка Инвестировать первой */
-     width: 100%; /* На всю ширину */
-  }
-  .investment-amount {
-      order: 2; /* Поле ввода вторым */
-      width: 100%; /* На всю ширину */
-      margin-left: 0;
-      margin-top: 10px;
-  }
-  /* Кнопки владельца */
-  .action-button.edit-button,
-  .action-button.sell-button {
-      flex-basis: calc(50% - 8px); /* По две кнопки в ряд */
+  .startup-info-badge {
+    min-width: auto; /* Убираем мин ширину */
+    flex-basis: 100%; /* Бейдж на всю строку */
+    max-width: 100%;
+    margin-bottom: 10px; /* Отступ под бейджем */
   }
 
   .comment-textarea {
@@ -1569,12 +1365,9 @@ a:hover {
      padding: 0 20px;
   }
    .similar-startups-grid {
-      grid-template-columns: 1fr; /* По одной карточке в ряд */
+      grid-template-columns: 1fr;
   }
-  .video-gallery {
-      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  }
-  .image-gallery {
+  .gallery-grid {
       grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
   }
 }
@@ -1590,17 +1383,13 @@ a:hover {
         font-size: 24px;
     }
     .header-meta {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 5px;
+        /* стили уже подходят */
     }
     .rating-comments-container {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
+        /* стили уже подходят */
     }
     .info-blocks {
-        grid-template-columns: 1fr; /* По одному блоку в ряд */
+        grid-template-columns: 1fr;
     }
     .comments-header .section-title {
         font-size: 20px;
@@ -1627,139 +1416,26 @@ a:hover {
     .similar-text, .startups-text {
         font-size: 32px;
     }
-    .action-button.edit-button,
-    .action-button.sell-button {
-        flex-basis: 100%; /* Кнопки владельца по одной в ряд */
+    .actions-top-right > * {
+        flex-basis: 100%; /* Все элементы по одному в ряд */
+        max-width: 100%;
     }
-    .video-gallery {
-        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    }
-    .image-gallery {
+    .gallery-grid {
         grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
     }
     .actions-top-right {
-        gap: 10px; /* Уменьшаем отступ между кнопками */
+        gap: 10px;
     }
 }
 
-/* Убираем стили для неиспользуемых старых элементов, чтобы избежать конфликтов */
-.startup-detail-page { /* Убираем старые стили для обертки */
-    width: auto;
-    max-width: none;
-    margin: 0;
-    padding: 0;
-    background: none;
-}
-/* УДАЛЯЕМ СТИЛИ ДЛЯ .detail-content */
-/*
-.detail-content { 
-    padding: 0 70px; 
-    box-sizing: border-box; 
-}
-*/
-
-/* Селекторы, которые больше не нужны или переопределены */
-.progress-indicator,
-.write-button,
-.micro-badge,
-.center-column,
-.price-section,
-.stats-row,
-.author-info,
-.investment-dropdown,
-.investors-count,
-.read-more,
-.document-item, .documents-grid,
-.pitch-deck-section,
-.status-select, /* Стили для select перенесены ниже */
-.author-card,
-.moderator-section,
-.moderator-comment-section
- {
-     /* Можно оставить пустым или display: none */
-     /* display: none; */
-}
-
-/* Позиционирование формы статуса (если модератор) */
-.status-form {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    z-index: 2;
-}
-.status-select {
-    background: rgba(0, 8, 25, 0.7);
-    backdrop-filter: blur(5px);
-    color: var(--text-primary);
-    padding: 5px 15px;
-    border-radius: 20px;
-    border: 1px solid var(--border-color);
-    font-size: 14px;
-    font-weight: 400;
-    cursor: pointer;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    padding-right: 30px; /* Место для стрелки */
-    background-image: url('data:image/svg+xml;utf8,<svg fill="%23A9B8D4" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
-    background-repeat: no-repeat;
-    background-position: right 8px center;
-    background-size: 18px;
-}
-.status-select:focus {
-    outline: none;
-    border-color: var(--accent-purple);
-}
-.status-select option {
-    background-color: var(--secondary-blue);
-    color: var(--text-primary);
-}
-
-/* Подсказка для неактивной кнопки */
-.action-button:disabled[title] {
-  position: relative;
-}
-.action-button:disabled[title]:hover::after {
-  content: attr(title);
-  position: absolute;
-  bottom: 110%; /* Позиция над кнопкой */
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #333; /* Темный фон подсказки */
-  color: #fff;
-  padding: 5px 10px;
-  border-radius: 5px;
-  font-size: 12px;
-  white-space: nowrap;
-  z-index: 10;
-  opacity: 1;
-  transition: opacity 0.2s;
-}
-/* Стрелочка для подсказки */
-.action-button:disabled[title]:hover::before {
-  content: '';
-  position: absolute;
-  bottom: calc(110% - 5px); /* Подсказка + стрелка */
-  left: 50%;
-  transform: translateX(-50%);
-  width: 0;
-  height: 0;
-  border-left: 5px solid transparent;
-  border-right: 5px solid transparent;
-  border-top: 5px solid #333;
-  z-index: 10;
-  opacity: 1;
-  transition: opacity 0.2s;
-}
-
-/* --- Новые стили для иконок рейтинга (метод наложения SVG) --- */
+/* --- Стили для иконок рейтинга (SVG) --- */
 .rating-icon-container {
   display: inline-block;
   position: relative;
   width: 22px; /* Ширина иконки */
   height: 22px; /* Высота иконки */
   vertical-align: middle;
-  margin-right: 3px; /* Отступ между контейнерами */
+  margin-right: 3px;
   cursor: default;
   line-height: 1;
 }
@@ -1767,139 +1443,40 @@ a:hover {
   margin-right: 0;
 }
 
-/* Общие стили для обеих SVG иконок внутри контейнера */
 .rating-icon-container img {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  object-fit: contain; /* Сохраняем пропорции SVG */
-  transition: width 0.1s ease-out; /* Плавность для изменения ширины */
+  object-fit: contain;
+  transition: width 0.1s ease-out;
 }
 
-/* Стиль для фоновой (серой) иконки */
 .rating-icon-container .icon-empty {
-  filter: grayscale(100%) brightness(1.2); /* Делаем SVG серым и чуть светлее */
-  z-index: 1; /* Под заполненной иконкой */
+  filter: grayscale(100%) brightness(1.2);
+  z-index: 1;
 }
 
-/* Стиль для заполняющей (цветной) иконки */
 .rating-icon-container .icon-filled {
-  /* Цвет берется из SVG */
-  width: 0%; /* Изначально невидима */
-  overflow: hidden; /* Обрезаем по ширине */
-  z-index: 2; /* Поверх серой иконки */
+  width: 0%; /* Управляется JS */
+  overflow: hidden;
+  z-index: 2;
 }
 
-/* Для интерактивных контейнеров */
+/* Интерактивные звезды/планеты */
 .rating-stars[data-interactive="true"] .rating-icon-container {
   cursor: pointer;
 }
 
-/* Контейнеры в комментариях */
-.comment-icon-container {
-    width: 18px; /* Чуть меньше */
+/* Планеты в комментариях (меньше) */
+.comment-icon-container,
+.star-label .rating-icon-container { /* Применяем и к планете в .star-label */
+    width: 18px;
     height: 18px;
 }
 
-/* --- КОНЕЦ стилей для иконок рейтинга SVG --- */
-
-/* --- УДАЛЯЕМ СТАРЫЕ СТИЛИ FA --- */
-/*
-.rating-icon-container .fas.fa-star {
-  position: absolute;
-  top: 0;
-  left: 0;
-  transition: width 0.1s ease-out; 
-  line-height: inherit; 
-}
-.rating-icon-container .icon-empty {
-  color: var(--text-secondary, #A9B8D4);
-  z-index: 1; 
-}
-.rating-icon-container .icon-filled {
-  color: #FFB700;
-  width: 0%; 
-  overflow: hidden; 
-  z-index: 2; 
-  white-space: nowrap; 
-}
-.comment-icon-container {
-    font-size: 16px; 
-}
-*/
-/* --- КОНЕЦ УДАЛЕНИЯ СТАРЫХ СТИЛЕЙ --- */
-
-/* Стили для обертки шапки и кнопок */
-.startup-header-actions-wrapper {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 30px;
-  margin-bottom: 20px; /* Добавим отступ снизу */
-}
-
-/* Стили для контейнера кнопки "Показать еще" */
-.show-more-similar-container {
-    display: flex;
-    justify-content: center; /* Центрируем кнопку */
-    margin-top: 20px; /* Отступ сверху */
-}
-
-.action-button.show-more-similar {
-    /* background: transparent; */ /* Убираем, наследуется от .action-button */
-    border: 1px solid var(--text-primary); /* Белая рамка как у Показать все */
-    color: var(--text-primary); /* Белый текст */
-    padding: 10px 20px;
-    font-size: 14px;
-    font-weight: 500; /* Как у Показать все */
-    gap: 8px;
-    border-radius: 25px; /* Форма пилюли */
-    width: auto; /* Ширина по контенту */
-    transition: all 0.3s ease;
-    /* Убираем иконку по умолчанию, если она не нужна */
-    /* i { display: none; } */
-}
-.action-button.show-more-similar:hover {
-     background-color: rgba(255, 255, 255, 0.1);
-     border-color: var(--accent-green);
-     color: var(--accent-green);
-}
-
-/* Стили для плейсхолдера кнопки "Показать еще" */
-.similar-card.show-more-placeholder {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    /* border: 1px solid var(--text-primary); */ /* Убираем рамку карточки */
-    border: none; /* Убираем рамку карточки */
-    background-color: transparent; /* Прозрачный фон */
-    /* border-radius: 25px; */ /* Убираем скругление карточки */
-    border-radius: 0;
-    padding: 0; /* Убираем паддинг карточки */
-    /* Убираем стили при наведении для плейсхолдера */
-    transform: none;
-    box-shadow: none;
-}
-.similar-card.show-more-placeholder:hover {
-    transform: none;
-    box-shadow: none;
-}
-/* Стили для самой кнопки внутри плейсхолдера */
-.similar-card.show-more-placeholder .action-button.show-more-similar {
-    /* Стили кнопки уже заданы выше */
-}
-
-.similar-card-rating i.active {
-  color: var(--accent-yellow); /* Желтые звезды */
-}
-
-.similar-card-category {
-  margin-top: 5px;
-  /* Убираем вложенность - стили будут ниже */
-}
-
-.category-badge { /* Бейдж категории */
-  display: inline-block;
+/* --- Утилиты --- */
+.hidden {
+    display: none !important; /* Для скрытия комментариев */
 }
