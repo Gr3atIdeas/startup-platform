@@ -147,10 +147,14 @@
 
           {# Кнопка Редактировать #}
           <button class="action-button edit-button"
-            {% if user.is_authenticated and (startup.owner == user or user.role.role_name == 'moderator') %}
-              {# Условие выполнено - кнопка активна, ничего не добавляем #}
+            {% if user.is_authenticated %}
+              {% if startup.owner == user or user.role.role_name == 'moderator' %}
+                {# Пользователь авторизован И (он владелец ИЛИ модератор) -> кнопка активна #}
+              {% else %}
+                disabled {# Пользователь авторизован, но не владелец и не модератор #}
+              {% endif %}
             {% else %}
-              disabled {# Условие НЕ выполнено - добавляем disabled #}
+              disabled {# Пользователь не авторизован #}
             {% endif %}>
             Редактировать
           </button>
