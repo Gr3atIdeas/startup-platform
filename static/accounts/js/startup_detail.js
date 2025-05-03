@@ -215,17 +215,39 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // 6. Инициализация PhotoSwipe
+    // 6. Инициализация PhotoSwipe с опциями
     if (typeof PhotoSwipeLightbox !== 'undefined') {
         const lightbox = new PhotoSwipeLightbox({
-            gallery: '#pswp-gallery',
+            gallery: '#pswp-gallery', 
             children: 'a',
             pswpModule: PhotoSwipe,
-            // UI должен быть включен по умолчанию, убираем явное указание
-            // ui: PhotoSwipeUI_Default
+
+            // --- Добавляем опции для UI и анимации --- 
+            // Явно включаем кнопки (хотя они должны быть по умолчанию)
+            arrowPrev: true,
+            arrowNext: true,
+            close: true,
+            zoom: true,
+            // fullscreen: true, // Можно включить, если нужна кнопка полного экрана
+            // share: false, // Отключаем кнопку "поделиться", если не нужна
+
+            // Настройка длительности анимации (может помочь с артефактами)
+            showAnimationDuration: 300, // мс, немного медленнее стандарта (333)
+            hideAnimationDuration: 300, // мс, немного медленнее стандарта (333)
+
+            // Опционально: можно задать SVG для иконок, если CSS не справляется
+            // arrowPrevSVG: '<svg ...>', 
+            // arrowNextSVG: '<svg ...>',
+            // closeSVG: '<svg ...>',
+            // zoomSVG: '<svg ...>',
+
+            // Доп. опции для возможной отладки
+            // preloaderDelay: 500, // Задержка перед показом прелоадера
+            // errorMsg: 'Не удалось загрузить изображение', 
+            // indexIndicatorSep: ' / ', 
         });
         lightbox.init();
-        console.log('PhotoSwipe initialized for #pswp-gallery with default UI');
+        console.log('PhotoSwipe initialized for #pswp-gallery with custom options');
     } else {
         console.error('PhotoSwipeLightbox is not defined. Check if the library is loaded correctly.');
     }
