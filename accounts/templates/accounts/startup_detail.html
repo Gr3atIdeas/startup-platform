@@ -317,17 +317,13 @@
                         <div class="comment-author-name">{{ comment.user_id.first_name|default:comment.user_id.email }}</div>
                       </div>
                       <div class="comment-rating" data-rating="{{ comment.user_rating|default:0 }}">
-                        {% with comment_rating=comment.user_rating|default:0 %}
-                          {% for star_i in "12345" %}
-                            {# Используем контейнеры с двумя иконками SVG #}
-                            <span class="rating-icon-container comment-icon-container">
-                              {# Серая иконка фона SVG #}
-                              <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-empty">
-                              {# Желтая иконка заполнения SVG #}
-                              <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-filled">
-                            </span>
-                          {% endfor %}
-                        {% endwith %}
+                        {# Добавляем структуру планет для рейтинга комментария #}
+                        {% for star_i in "12345" %}
+                          <span class="rating-icon-container comment-icon-container">
+                            <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-empty">
+                            <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-filled">
+                          </span>
+                        {% endfor %}
                       </div>
                       <div class="comment-date">{{ comment.created_at|date:"d/m/Y" }}</div>
                     </div>
@@ -377,7 +373,8 @@
       </a>
       
       <div class="similar-startups-grid">
-        {% for similar in similar_startups|slice:":5" %}
+        {# Отображаем первые 4 похожих стартапа #}
+        {% for similar in similar_startups|slice:":4" %}
         <a href="{% url 'startup_detail' similar.startup_id %}" class="similar-card">
           <div class="similar-card-image">
             {% if similar.logo_urls %}
@@ -403,7 +400,8 @@
           </div>
         </a>
         {% empty %}
-          {% for i in "12345" %}
+          {# Плейсхолдеры, если нет похожих стартапов #}
+          {% for i in "1234" %}
           <a href="#" class="similar-card placeholder">
             <div class="similar-card-image"><div class="planet"></div></div>
             <div class="similar-card-name">Название стартапа</div>
@@ -414,6 +412,15 @@
           </a>
           {% endfor %}
         {% endfor %}
+
+        {# Добавляем кнопку "Показать еще" как пятый элемент сетки, если есть стартапы #}
+        {% if similar_startups %}
+          <div class="similar-card show-more-placeholder">
+             <button class="action-button show-more-similar">
+               <i class="fas fa-redo"></i> Показать еще
+             </button>
+          </div>
+        {% endif %}
       </div>
     </div>
   </div>

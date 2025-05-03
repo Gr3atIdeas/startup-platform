@@ -107,13 +107,15 @@ a:hover {
 }
 
 .action-button.write-author-button {
-    background-color: var(--text-primary);
-    color: var(--primary-dark-blue);
+    background-color: var(--button-blue); /* Синий фон */
+    color: var(--text-primary);
     font-weight: 700;
-    padding: 10px 20px; /* чуть меньше */
+    padding: 10px 20px; 
+    border-radius: 10px; /* Скругление */
+    flex-shrink: 0; /* Не сжимается */
 }
 .action-button.write-author-button:hover {
-    background-color: #e0e0e0;
+    background-color: #2a4ecc; /* Темнее синий */
 }
 
 .action-button.edit-button,
@@ -198,13 +200,12 @@ a:hover {
 }
 
 .planet-container {
-    width: 451px;
-    height: auto; /* Авто-высота, чтобы вместить контент */
-    min-height: 400px; /* Минимальная высота, чтобы выглядело как на макете */
+    width: 451px; /* Ширина из Figma */
+    height: 491px; /* Высота из Figma */
     flex-shrink: 0;
-    border-radius: 10px;
-    border: 2px solid #353945;
-    background-color: #0e1014; /* Фон для контейнера */
+    border-radius: 10px; /* Радиус из Figma */
+    border: 2px solid #353945; /* Рамка из Figma */
+    background-color: #0e1014; /* Оставляем темный фон */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -273,7 +274,7 @@ a:hover {
 
 /* Прогресс бар */
 .progress-container {
-    width: 353px; /* Ширина из Figma */
+    width: 451px; /* Подгоняем ширину под контейнер выше */
     height: 50px; /* Высота из Figma */
     flex-shrink: 0;
     border-radius: 10px; /* Радиус из Figma */
@@ -283,7 +284,7 @@ a:hover {
     align-items: center;
     padding: 5px 15px; /* Внутренние отступы (можно настроить) */
     box-sizing: border-box;
-    margin: 0 auto; /* Центрируем блок для выравнивания под планетой */
+    /* margin: 0 auto; */ /* Убираем центрирование, чтобы выровнять по левому краю */
 }
 
 .progress-bar {
@@ -325,18 +326,101 @@ a:hover {
 /* Блок автора слева */
 .author-info-left {
     display: flex;
-    width: 451px;
-    /* height: 257px; Убираем фикс. высоту, пусть подстраивается */
-    padding: 30px 50px;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 15px; /* Уменьшил gap для лучшего вида */
-    flex-shrink: 0;
-    border-radius: 10px;
-    background: rgba(0, 0, 0, 0.27);
-    box-shadow: 6px 6px 10px 0px rgba(0, 0, 0, 0.25);
-    backdrop-filter: blur(10px);
+    width: 451px; /* Из Figma */
+    height: 257px; /* Из Figma - может потребоваться убрать, если контент динамический */
+    padding: 30px 50px; /* Из Figma */
+    flex-direction: column; /* Из Figma */
+    align-items: flex-start; /* Из Figma */
+    gap: 23px; /* Из Figma */
+    flex-shrink: 0; /* Из Figma */
+    border-radius: 10px; /* Из Figma */
+    background: rgba(0, 0, 0, 0.27); /* Из Figma */
+    box-shadow: 6px 6px 10px 0px rgba(0, 0, 0, 0.25); /* Из Figma */
+    backdrop-filter: blur(10px); /* Из Figma */
     box-sizing: border-box;
+}
+
+.author-header {
+  font-size: 18px; /* Примерный размер */
+  font-weight: 600;
+  color: var(--accent-yellow); /* Желтый цвет заголовка */
+  margin-bottom: 5px; /* Небольшой отступ снизу */
+}
+
+.author-details {
+  display: flex; 
+  align-items: center;
+  justify-content: space-between; /* Распределяем элементы по краям */
+  width: 100%; /* Занимает всю ширину */
+  gap: 15px; /* Отступ между элементами */
+}
+
+.author-avatar {
+  width: 50px; /* Размер аватара */
+  height: 50px;
+  border-radius: 50%;
+  background-color: #e0e0e0; /* Светло-серый фон для плейсхолдера */
+  flex-shrink: 0;
+  /* Можно добавить иконку пользователя */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-placeholder);
+}
+/* Если будет img внутри */
+.author-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.author-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 3px; /* Небольшой отступ между именем и рейтингом */
+  flex-grow: 1; /* Занимает доступное пространство */
+}
+
+.author-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.author-rating {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.author-rating a { /* Стиль для ссылки "Отзывы" */
+    color: var(--accent-purple);
+    margin-left: 5px;
+}
+
+.creation-date {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.report-button {
+  background-color: transparent;
+  border: 1px solid var(--text-secondary);
+  color: var(--text-secondary);
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  align-self: flex-start; /* Выравнивание по левому краю */
+  margin-top: auto; /* Прижимаем к низу, если высота фиксирована */
+}
+
+.report-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: var(--text-primary);
+  color: var(--text-primary);
 }
 
 /* Правая колонка */
@@ -1701,4 +1785,25 @@ a:hover {
   align-items: flex-start; 
   gap: 30px;
   margin-bottom: 20px; /* Добавим отступ снизу */
+}
+
+/* Стили для плейсхолдера кнопки "Показать еще" */
+.similar-card.show-more-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px dashed var(--border-color); /* Пунктирная граница */
+    background-color: var(--dark-card-bg); /* Темный фон */
+}
+
+.action-button.show-more-similar {
+    background-color: var(--button-grey);
+    color: var(--text-primary);
+    width: auto;
+    padding: 10px 20px;
+    font-size: 14px;
+    gap: 8px; /* Отступ для иконки */
+}
+.action-button.show-more-similar:hover {
+     background-color: #50618a;
 }

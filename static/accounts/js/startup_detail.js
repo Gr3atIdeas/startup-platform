@@ -91,33 +91,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const commentCards = document.querySelectorAll('.comment-card');
     commentCards.forEach((card, cardIndex) => {
         const commentRatingContainer = card.querySelector(ratingCommentsSelector);
-        const commentPlanets = commentRatingContainer ? commentRatingContainer.querySelectorAll('.rating-planet') : null;
-        if (commentPlanets && commentPlanets.length > 0) {
-            // Пытаемся получить рейтинг из данных (если был бы добавлен)
-            // В текущей структуре HTML рейтинга в комменте нет data-атрибута.
-            // Мы можем извлечь его из количества активных звезд, если бы они были, 
-            // или (что более правильно) его нужно передавать из шаблона.
-            // Пока что предполагаем, что рейтинг комментария хранится где-то еще
-            // или нужно будет добавить data-rating="{{ comment.rating }}" в HTML.
-            // --- ЗАГЛУШКА: ищем предка comment-card и пытаемся найти данные там, если есть --- 
-            let commentRatingValue = 0; // Значение по умолчанию
-            // Читаем data-rating из контейнера commentRatingContainer
-            if (commentRatingContainer && commentRatingContainer.dataset.rating) {
-                 commentRatingValue = parseFloat(commentRatingContainer.dataset.rating);
-            }
-            /* Старый код заглушки:
-            const commentRatingAttr = card.dataset.commentRating; // Пример, если бы добавили data-comment-rating
-            if (commentRatingAttr) {
-                commentRatingValue = parseFloat(commentRatingAttr);
-            }
-            */
+        // Используем commentRatingContainer для поиска и проверки data-rating
+        if (commentRatingContainer && commentRatingContainer.dataset.rating !== undefined) {
+            const commentRatingValue = parseFloat(commentRatingContainer.dataset.rating.replace(',', '.')) || 0;
             // Генерируем уникальный селектор для контейнера звезд этого комментария
-            const uniqueCommentSelector = `.comment-card:nth-child(${cardIndex + 1}) ${ratingCommentsSelector}`;
-            updateRatingDisplay(uniqueCommentSelector, commentRatingValue);
-            // ПРИМЕЧАНИЕ: Для корректной работы рейтинга в комментариях, 
-            // необходимо передать значение рейтинга каждого комментария из шаблона,
-            // например, добавив data-rating="{{ comment.rating|default:0 }}" 
-            // к элементу `.comment-rating` или `.comment-card` в HTML.
+            // Упрощаем селектор, так как работаем с конкретным commentRatingContainer
+            updateRatingDisplay(commentRatingContainer, commentRatingValue); 
         }
     });
 
@@ -393,6 +372,25 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 });
             }
+        });
+    }
+
+    // Добавляем обработчик для ссылки "Комментарии" под основным рейтингом
+    const commentsLink = document.querySelector('.comments-link[href="#comments-section"]');
+    const commentsTabButton = document.querySelector('.tab-button[data-target="comments-section"]');
+    const commentsSection = document.getElementById('comments-section');
+
+    if (commentsLink && commentsTabButton && commentsSection) {
+        commentsLink.addEventListener('click', function(event) {
+            event.preventDefault(); // Предотвращаем стандартный переход по якорю
+            
+            // Имитируем клик по табу комментариев, если он еще не активен
+            if (!commentsTabButton.classList.contains('active')) {
+                commentsTabButton.click(); // Вызываем событие click на табе
+            }
+            
+            // Плавная прокрутка к секции комментариев
+            commentsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
     }
 
