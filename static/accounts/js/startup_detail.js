@@ -211,20 +211,19 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // 6. Инициализация Fancybox (Упрощенная)
+    // 6. Инициализация Fancybox (Возвращаем FontAwesome)
     try {
         if (typeof Fancybox !== 'undefined') {
-             console.log('Initializing Fancybox...'); // Убираем упоминание кастомных кнопок
+             console.log('Initializing Fancybox with custom HTML buttons (again)...');
              Fancybox.bind('[data-fancybox="gallery"]', {
                  Toolbar: {
                      display: {
-                         left: ["infobar"], // Возвращаем инфобар
+                         left: [], // Убираем инфобар и стандартные слева
                          middle: [], 
-                         // Позволяем Fancybox использовать стандартные кнопки
+                         // Используем кастомные кнопки + стандартное закрытие
                          right: ["prev", "next", "close"], 
                      },
-                     // УБИРАЕМ items, чтобы использовать стандартные иконки
-                     /*
+                     // ВОЗВРАЩАЕМ кастомный HTML
                      items: {
                          prev: {
                              html: '<button data-fancybox-prev class="f-button" title="Previous"><i class="fas fa-chevron-left"></i></button>',
@@ -233,13 +232,12 @@ document.addEventListener('DOMContentLoaded', function() {
                              html: '<button data-fancybox-next class="f-button" title="Next"><i class="fas fa-chevron-right"></i></button>',
                          },
                      }
-                     */
                  },
                  Thumbs: {
                      showOnStart: false 
                  }
              });
-             console.log('Fancybox initialized with default buttons');
+             console.log('Fancybox initialized with custom HTML buttons');
         } else {
             console.error('Fancybox is not defined. Check if the library is loaded correctly.');
         }
