@@ -236,8 +236,9 @@
                   {% for url in video_urls %}
                       {# Оборачиваем видео в .gallery-item для единообразия сетки #}
                       <a href="{% get_file_url_tag url startup.startup_id 'video' %}" 
-                         target="_blank" {# Видео открываем в новой вкладке #}
-                         class="gallery-item video-item">
+                         {# target="_blank" <<< УДАЛЯЕМ #}
+                         class="gallery-item video-item glightbox" {# <<< ДОБАВЛЯЕМ glightbox #}
+                         data-gallery="startup-gallery">          {# <<< ДОБАВЛЯЕМ data-gallery #}
                          <div class="play-icon-overlay"><i class="fas fa-play"></i></div>
                          {# Плейсхолдер текста. Реальные превью требуют бэкенда #}
                          <div class="video-placeholder">Смотреть видео {{ forloop.counter }}</div> 
