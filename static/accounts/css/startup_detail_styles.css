@@ -1905,6 +1905,10 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover {
   color: var(--text-primary) !important;
 }
 
+/* --- Добавляем переопределение overflow для контейнера --- */
+body.glightbox-open .glightbox-container {
+    overflow: visible !important;
+}
 
 /* --- Удаляем попытку убрать артефакты --- */
 /* Отключаем transition и animation для контейнеров GLightbox */
