@@ -72,6 +72,18 @@ function initPositionAware() {
     const buttons = document.querySelectorAll('button, .btn, input[type="submit"], input[type="button"], .catalog-search-btn, .show-button, .detail-button, .join-button, .login-btn, .create-startup-btn, .logout-btn, .nav-menu a');
     
     buttons.forEach(button => {
+        if (button.closest('.goverlay') || button.closest('.tab-navigation')) {
+            button.removeAttribute('data-position-aware-initialized');
+            const existingSpan = button.querySelector('span.wave-effect');
+            if (existingSpan) {
+                existingSpan.remove();
+            }
+            button.removeEventListener('mouseenter', handleMouseEnter);
+            button.removeEventListener('mouseleave', handleMouseLeave);
+            button.removeEventListener('touchstart', handleTouchStart);
+            return;
+        }
+
         if (button.closest('.tabbed-content-wrapper')) {
             button.removeAttribute('data-position-aware-initialized');
             const existingSpan = button.querySelector('span.wave-effect');
@@ -162,30 +174,6 @@ function handleMouseEnter(e) {
     waveSpan.style.opacity = '1'; 
 
     button.classList.add('wave-active');
-    
-    if (button.classList.contains('login-btn') || button.classList.contains('join-button')) {
-        button.style.setProperty('color', '#000000', 'important');
-        
-        const children = button.querySelectorAll('*');
-        children.forEach(child => {
-            if (!child.classList.contains('wave-effect')) {
-                child.style.setProperty('color', '#000000', 'important');
-                child.style.setProperty('position', 'relative', 'important');
-                child.style.setProperty('z-index', '2', 'important');
-            }
-        });
-    } else {
-        button.style.setProperty('color', '#ffffff', 'important');
-        
-        const children = button.querySelectorAll('*');
-        children.forEach(child => {
-            if (!child.classList.contains('wave-effect')) {
-                child.style.setProperty('color', '#ffffff', 'important');
-                child.style.setProperty('position', 'relative', 'important');
-                child.style.setProperty('z-index', '2', 'important');
-            }
-        });
-    }
 }
 
 function handleMouseLeave(e) {
@@ -198,15 +186,6 @@ function handleMouseLeave(e) {
         waveSpan.style.height = '0';
 
         button.classList.remove('wave-active');
-        
-        button.style.removeProperty('color');
-        
-        const children = button.querySelectorAll('*');
-        children.forEach(child => {
-            if (!child.classList.contains('wave-effect')) {
-                child.style.removeProperty('color');
-            }
-        });
     }
 }
 
@@ -253,30 +232,6 @@ function handleTouchStart(e) {
     
     button.classList.add('wave-active');
     
-    if (button.classList.contains('login-btn') || button.classList.contains('join-button')) {
-        button.style.setProperty('color', '#000000', 'important');
-        
-        const children = button.querySelectorAll('*');
-        children.forEach(child => {
-            if (!child.classList.contains('wave-effect')) {
-                child.style.setProperty('color', '#000000', 'important');
-                child.style.setProperty('position', 'relative', 'important');
-                child.style.setProperty('z-index', '2', 'important');
-            }
-        });
-    } else {
-        button.style.setProperty('color', '#ffffff', 'important');
-        
-        const children = button.querySelectorAll('*');
-        children.forEach(child => {
-            if (!child.classList.contains('wave-effect')) {
-                child.style.setProperty('color', '#ffffff', 'important');
-                child.style.setProperty('position', 'relative', 'important');
-                child.style.setProperty('z-index', '2', 'important');
-            }
-        });
-    }
-
     setTimeout(() => {
         if (waveSpan) {
             waveSpan.style.opacity = '0';
@@ -285,14 +240,6 @@ function handleTouchStart(e) {
             waveSpan.style.height = '0';
             
             button.classList.remove('wave-active');
-            button.style.removeProperty('color');
-            
-            const children = button.querySelectorAll('*');
-            children.forEach(child => {
-                if (!child.classList.contains('wave-effect')) {
-                    child.style.removeProperty('color');
-                }
-            });
         }
     }, 600);
 }

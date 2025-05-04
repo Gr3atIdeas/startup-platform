@@ -95,45 +95,45 @@ a:hover {
 /* Увеличиваем специфичность, добавляя родительский класс */
 .planet-container .action-button.chat-button {
     /* Размеры и отступы */
-    width: 142px;
-    height: 40px;
-    padding: 0; /* Сброс padding, т.к. используем flex для центровки */
-    display: inline-flex; /* Используем inline-flex */
-    align-items: center;
-    justify-content: center;
-    gap: 9px; /* Отступ между иконкой (если будет) и текстом */
-    flex-shrink: 0;
-    align-self: center; /* Выравнивание по центру в контейнере */
-    margin-top: auto; /* Прижимаем к низу в flex-контейнере */
+    width: 142px !important; /* <<< Добавляем !important */
+    height: 40px !important; /* <<< Добавляем !important */
+    padding: 0 !important; /* <<< Добавляем !important */
+    display: inline-flex !important; /* <<< Добавляем !important */
+    align-items: center !important; /* <<< Добавляем !important */
+    justify-content: center !important; /* <<< Добавляем !important */
+    gap: 9px !important; /* <<< Добавляем !important */
+    flex-shrink: 0 !important; /* <<< Добавляем !important */
+    align-self: center !important; /* <<< Добавляем !important */
+    margin-top: auto !important; /* <<< Добавляем !important */
 
     /* Визуальное оформление */
-    background: none !important; /* <<< Явно убираем фон */
-    background-color: transparent !important; /* <<< Прозрачный фон */
-    border: 1px solid var(--text-primary) !important; /* Белая рамка */
-    border-radius: 8px; /* Скругление углов */
-    color: var(--text-primary) !important; /* Белый текст */
+    background: none !important; 
+    background-color: transparent !important; 
+    border: 1px solid var(--text-primary) !important; 
+    border-radius: 8px !important; /* <<< Добавляем !important */
+    color: var(--text-primary) !important; 
 
     /* Типографика */
-    font-family: 'Unbounded', sans-serif; /* Шрифт */
-    font-size: 14px; /* Размер шрифта */
-    font-weight: 400; /* Regular */
-    line-height: 1; /* Убираем лишнюю высоту строки */
-    text-align: center;
-    text-decoration: none; /* Убираем подчеркивание */
-    white-space: nowrap; /* Запрет переноса */
+    font-family: 'Unbounded', sans-serif !important; /* <<< Добавляем !important */
+    font-size: 14px !important; /* <<< Добавляем !important */
+    font-weight: 400 !important; /* <<< Добавляем !important */
+    line-height: 1 !important; /* <<< Добавляем !important */
+    text-align: center !important; /* <<< Добавляем !important */
+    text-decoration: none !important; /* <<< Добавляем !important */
+    white-space: nowrap !important; /* <<< Добавляем !important */
 
     /* Поведение */
-    cursor: pointer;
-    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
-    box-shadow: none; /* Убираем тени */
-    appearance: none; /* Сброс системных стилей */
+    cursor: pointer !important; /* <<< Добавляем !important */
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease !important; /* <<< Добавляем !important */
+    box-shadow: none !important; 
+    appearance: none !important; 
 }
 
 /* Увеличиваем специфичность */
 .planet-container .action-button.chat-button:hover {
-    background-color: rgba(255, 255, 255, 0.1) !important; /* <<< Добавляем !important */
-    border-color: var(--text-primary) !important; /* <<< Добавляем !important */
-    color: var(--text-primary) !important; /* <<< Добавляем !important */
+    background-color: rgba(255, 255, 255, 0.1) !important; 
+    border-color: var(--text-primary) !important; 
+    color: var(--text-primary) !important; 
 }
 
 /* Важно: Убедимся, что никакие другие общие стили не ломают кнопку */
@@ -733,9 +733,9 @@ a:hover {
   align-items: center;
   justify-content: center;
   padding: 6px 12px;
-  border: none;
+  border: none !important; /* <<< Убираем любую обводку (важно) */
   /* Типографика из запроса */
-  font-family: 'Unbounded', sans-serif; /* Уже было */
+  font-family: 'Unbounded', sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: 300;
@@ -744,18 +744,20 @@ a:hover {
   /* ---- */
   text-align: center;
   cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease; /* Анимация перехода */
+  transition: background-color 0.3s ease, color 0.3s ease;
   white-space: nowrap;
   border-radius: 8px;
-  background-color: transparent; /* По умолчанию прозрачный фон */
-  color: var(--text-secondary) !important; /* <<< Меняем цвет на светло-серый */
-  border: none !important; /* <<< Убираем любую обводку */
+  background-color: transparent !important; /* <<< Прозрачный фон (важно) */
+  color: var(--text-secondary) !important; /* <<< Светло-серый текст (важно) */
+  box-shadow: none !important; /* Убираем тени, если есть */
+  appearance: none !important; /* Сброс системных стилей */
 }
 
 /* Неактивная кнопка таба - стили уже заданы выше, но можно продублировать цвет */
 .tabbed-content-wrapper .tab-navigation .tab-button:not(.active) {
     background-color: transparent !important; 
     color: var(--text-secondary) !important; /* <<< Убедимся, что цвет здесь */
+    border: none !important; /* <<< Убедимся, что рамки нет */
 }
 
 /* Активная кнопка таба - Повышаем специфичность */
