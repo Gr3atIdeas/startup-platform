@@ -228,6 +228,9 @@ document.addEventListener('DOMContentLoaded', function() {
             // closeEffect: 'fade',
             closeOnOutsideClick: true, // Добавляем опцию закрытия по клику вне окна
             plyr: { // Добавляем настройки Plyr
+                // Явно указываем пути к CSS и JS Plyr
+                css: 'https://cdn.plyr.io/3.7.8/plyr.css',
+                js: 'https://cdn.plyr.io/3.7.8/plyr.polyfilled.js', // Используем polyfilled для лучшей совместимости
                 // Опции Plyr передаются напрямую, без вложенного config
                 speed: {
                     selected: 1, // Скорость по умолчанию
@@ -238,7 +241,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // tooltips: { controls: true, seek: true }
             }
         });
-        console.log('GLightbox initialized for .glightbox elements with corrected Plyr speed options');
+        console.log('GLightbox initialized with explicit Plyr paths and speed options');
     } else {
         console.error('GLightbox is not defined. Check if the library is loaded correctly.');
     }
