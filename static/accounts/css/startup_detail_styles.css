@@ -1815,6 +1815,13 @@ a:hover {
   border-radius: 8px;
 }
 
+/* Скрываем эффект волны на стандартных контролах */
+.gslide-media video::-webkit-media-controls-play-button .wave-effect,
+.gslide-media video::-webkit-media-controls-mute-button .wave-effect,
+.gslide-media video::-webkit-media-controls-fullscreen-button .wave-effect {
+    display: none !important;
+}
+
 .gslide-media video::-webkit-media-controls-play-button,
 .gslide-media video::-webkit-media-controls-timeline,
 .gslide-media video::-webkit-media-controls-current-time-display,
@@ -1828,26 +1835,21 @@ a:hover {
   filter: brightness(1.2); /* Немного осветлим стандартные иконки */
 }
 
-/* Удаляем специфичные стили для не-SVG кнопок навигации */
-/*
-.gnavigation .gnext,
-.gnavigation .gprev {
- //... старые стили ... 
+/* Повышаем специфичность и гарантируем видимость кнопок навигации */
+.goverlay .gnavigation button.gnext, 
+.goverlay .gnavigation button.gprev {
+    visibility: visible !important;
+    opacity: 0.8 !important; 
+    display: flex !important;
+    pointer-events: auto !important; /* <<< Разрешаем клики */
+    cursor: pointer !important;
 }
-.gnavigation .gnext svg,
-.gnavigation .gprev svg {
- //... старые стили ...
+
+/* Скрываем любые дочерние элементы кроме SVG внутри кнопок навигации */
+.goverlay .gnavigation button.gnext > *:not(svg),
+.goverlay .gnavigation button.gprev > *:not(svg) {
+    display: none !important;
 }
-*/
-
-/* Иконки стрелок (настраиваем цвет через fill) */
-/* Удаляем старые отдельные правила для SVG */
-
-/* Кнопка закрытия */
-/* Удаляем старые отдельные правила для gclose */
-
-/* Иконка закрытия */
-/* Удаляем старые отдельные правила для SVG */
 
 /* Загрузчик */
 .gspinner {

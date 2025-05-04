@@ -153,6 +153,8 @@ function initPositionAware() {
 
 function handleMouseEnter(e) {
     const button = e.currentTarget;
+    if (button.closest('.goverlay') || button.closest('.tab-navigation')) return;
+    
     const waveSpan = button.querySelector('span.wave-effect');
     if (!waveSpan || window.getComputedStyle(button).display === 'none') return;
     
@@ -178,6 +180,8 @@ function handleMouseEnter(e) {
 
 function handleMouseLeave(e) {
     const button = e.currentTarget;
+    if (button.closest('.goverlay') || button.closest('.tab-navigation')) return;
+
     const waveSpan = button.querySelector('span.wave-effect');
     if (waveSpan) {
         waveSpan.style.opacity = '0'; 
@@ -193,6 +197,8 @@ function handleTouchStart(e) {
     e.preventDefault(); 
     const touch = e.touches[0];
     const button = e.currentTarget;
+    if (button.closest('.goverlay') || button.closest('.tab-navigation')) return;
+
     const rect = button.getBoundingClientRect();
     const x = touch.clientX - rect.left;
     const y = touch.clientY - rect.top;
