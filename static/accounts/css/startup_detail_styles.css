@@ -95,45 +95,48 @@ a:hover {
 /* Увеличиваем специфичность, добавляя родительский класс */
 .planet-container .action-button.chat-button {
     /* Размеры и отступы */
-    width: 142px !important; /* <<< Добавляем !important */
-    height: 40px !important; /* <<< Добавляем !important */
-    padding: 0 !important; /* <<< Добавляем !important */
-    display: inline-flex !important; /* <<< Добавляем !important */
-    align-items: center !important; /* <<< Добавляем !important */
-    justify-content: center !important; /* <<< Добавляем !important */
-    gap: 9px !important; /* <<< Добавляем !important */
-    flex-shrink: 0 !important; /* <<< Добавляем !important */
-    align-self: center !important; /* <<< Добавляем !important */
-    margin-top: auto !important; /* <<< Добавляем !important */
+    width: 142px; 
+    height: 40px; 
+    padding: 0; /* Оставляем 0, т.к. центрируем через flex */
+    display: inline-flex; 
+    align-items: center; 
+    justify-content: center; 
+    gap: 9px; 
+    flex-shrink: 0; 
+    align-self: center; 
+    margin-top: auto; 
 
     /* Визуальное оформление */
-    background: none !important; 
-    background-color: transparent !important; 
-    border: 1px solid var(--text-primary) !important; 
-    border-radius: 8px !important; /* <<< Добавляем !important */
-    color: var(--text-primary) !important; 
+    background: none; /* Явный сброс фона */
+    background-color: transparent; /* Прозрачный фон */
+    border: 1px solid var(--text-primary); /* Возвращаем рамку */
+    border-radius: 8px; /* Возвращаем радиус */
+    color: var(--text-primary); /* Возвращаем белый текст */
 
     /* Типографика */
-    font-family: 'Unbounded', sans-serif !important; /* <<< Добавляем !important */
-    font-size: 14px !important; /* <<< Добавляем !important */
-    font-weight: 400 !important; /* <<< Добавляем !important */
-    line-height: 1 !important; /* <<< Добавляем !important */
-    text-align: center !important; /* <<< Добавляем !important */
-    text-decoration: none !important; /* <<< Добавляем !important */
-    white-space: nowrap !important; /* <<< Добавляем !important */
+    font-family: 'Unbounded', sans-serif; 
+    font-size: 14px; 
+    font-weight: 400; /* Возвращаем Normal */
+    line-height: 1; 
+    text-align: center; 
+    text-decoration: none; 
+    white-space: nowrap; 
 
     /* Поведение */
-    cursor: pointer !important; /* <<< Добавляем !important */
-    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease !important; /* <<< Добавляем !important */
-    box-shadow: none !important; 
-    appearance: none !important; 
+    cursor: pointer; 
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease; 
+    box-shadow: none; 
+    appearance: none; 
+    position: relative; /* Добавим для z-index дочерних элементов */
+    overflow: hidden; /* Снова скроем волну, выходящую за края */
+    z-index: 1; /* Базовый z-index */
 }
 
 /* Увеличиваем специфичность */
 .planet-container .action-button.chat-button:hover {
-    background-color: rgba(255, 255, 255, 0.1) !important; 
-    border-color: var(--text-primary) !important; 
-    color: var(--text-primary) !important; 
+    background-color: rgba(255, 255, 255, 0.1); 
+    border-color: var(--text-primary); 
+    color: var(--text-primary); 
 }
 
 /* Важно: Убедимся, что никакие другие общие стили не ломают кнопку */
@@ -142,15 +145,38 @@ a:hover {
 .planet-container .action-button.chat-button .wave-effect,
 .planet-container .action-button.chat-button::before,
 .planet-container .action-button.chat-button::after {
-    display: none !important; /* Скрываем потенциальные лишние элементы */
+    /* display: none !important; <<< Убираем, т.к. JS должен управлять волной */
+}
+
+/* Текст внутри кнопки чата (на всякий случай) */
+.planet-container .action-button.chat-button > span {
+    position: relative; /* Чтобы z-index сработал */
+    z-index: 2; /* Явно выше фона/волны */
+    color: var(--text-primary); /* Явно задаем цвет */
+}
+
+/* Скрываем оригинальный wave-effect, если JS его не добавил/удалил */
+.planet-container .action-button.chat-button .wave-effect {
+    position: absolute;
+    top: 0; left: 0;
+    width: 0; height: 0;
+    opacity: 0;
+    pointer-events: none;
+    z-index: -1; /* Прячем под контент */
+    background-color: rgba(255, 255, 255, 0.3); /* Цвет волны */
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    transition: none; /* Анимацией управляет JS */
 }
 
 .action-button.write-author-button {
+    /* Возвращаем стили для этой кнопки */
     background-color: var(--button-blue);
     color: var(--text-primary);
     font-weight: 700;
-    padding: 10px 20px;
-    border-radius: 10px;
+    padding: 10px 20px; /* <<< Возвращаем padding */
+    border-radius: 10px; /* <<< Возвращаем radius */
+    border: none; /* Убедимся, что нет рамки */
     flex-shrink: 0;
 }
 .action-button.write-author-button:hover {
@@ -729,43 +755,57 @@ a:hover {
 
 /* Общие стили для кнопок табов + Типографика */
 .tabbed-content-wrapper .tab-navigation .tab-button {
-  display: inline-flex;
+  display: inline-flex; 
   align-items: center;
   justify-content: center;
-  padding: 6px 12px;
-  border: none !important; /* <<< Убираем любую обводку (важно) */
+  padding: 6px 12px; /* Возвращаем padding */
+  border: none; /* <<< Убираем рамку */
   /* Типографика из запроса */
   font-family: 'Unbounded', sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: 300;
-  line-height: 18px; /* 128.571% */
+  line-height: 18px; 
   letter-spacing: -0.28px;
   /* ---- */
   text-align: center;
   cursor: pointer;
   transition: background-color 0.3s ease, color 0.3s ease;
   white-space: nowrap;
-  border-radius: 8px;
-  background-color: transparent !important; /* <<< Прозрачный фон (важно) */
-  color: var(--text-secondary) !important; /* <<< Светло-серый текст (важно) */
-  box-shadow: none !important; /* Убираем тени, если есть */
-  appearance: none !important; /* Сброс системных стилей */
+  border-radius: 8px; /* Возвращаем радиус */
+  background-color: transparent; /* <<< Прозрачный фон */
+  color: var(--text-secondary); /* <<< Светло-серый текст */
+  box-shadow: none; /* Убираем тени, если есть */
+  appearance: none; /* Сброс системных стилей */
+  position: relative; /* Для z-index */
+  overflow: hidden; /* Скрываем волну */
+  z-index: 1;
 }
 
 /* Неактивная кнопка таба - стили уже заданы выше, но можно продублировать цвет */
 .tabbed-content-wrapper .tab-navigation .tab-button:not(.active) {
-    background-color: transparent !important; 
-    color: var(--text-secondary) !important; /* <<< Убедимся, что цвет здесь */
-    border: none !important; /* <<< Убедимся, что рамки нет */
+    background-color: transparent; 
+    color: var(--text-secondary); 
+    border: none; 
 }
 
 /* Активная кнопка таба - Повышаем специфичность */
 .startup-detail-page .tabbed-content-wrapper .tab-navigation .tab-button.active {
-  background-color: #E6E8EC !important; /* Фон активной кнопки */
-  color: #23262F !important; /* Цвет текста активной кнопки (темный) + !important */
+  background-color: #E6E8EC; /* Фон активной кнопки */
+  color: #23262F; /* Цвет текста активной кнопки (темный) */
   font-weight: 300;
-  border: none !important; /* На всякий случай */
+  border: none; 
+}
+
+/* Стили для текста внутри таба (для z-index) */
+.tabbed-content-wrapper .tab-navigation .tab-button > span {
+    position: relative;
+    z-index: 2;
+}
+
+/* Стили для волны (если она добавляется JS) */
+.tabbed-content-wrapper .tab-navigation .tab-button .wave-effect {
+    display: none !important; /* Убедимся, что волна не показывается */
 }
 
 /* --- КОНТЕНТ ТАБОВ --- */
