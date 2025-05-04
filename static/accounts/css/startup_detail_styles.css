@@ -92,7 +92,8 @@ a:hover {
 }
 
 /* Новые, чистые стили для кнопки чата */
-.action-button.chat-button {
+/* Увеличиваем специфичность, добавляя родительский класс */
+.planet-container .action-button.chat-button {
     /* Размеры и отступы */
     width: 142px;
     height: 40px;
@@ -128,17 +129,19 @@ a:hover {
     appearance: none; /* Сброс системных стилей */
 }
 
-.action-button.chat-button:hover {
+/* Увеличиваем специфичность */
+.planet-container .action-button.chat-button:hover {
     background-color: rgba(255, 255, 255, 0.1) !important; /* <<< Добавляем !important */
     border-color: var(--text-primary) !important; /* <<< Добавляем !important */
     color: var(--text-primary) !important; /* <<< Добавляем !important */
 }
 
 /* Важно: Убедимся, что никакие другие общие стили не ломают кнопку */
-.action-button.chat-button span,
-.action-button.chat-button .wave-effect,
-.action-button.chat-button::before,
-.action-button.chat-button::after {
+/* Увеличиваем специфичность */
+.planet-container .action-button.chat-button span,
+.planet-container .action-button.chat-button .wave-effect,
+.planet-container .action-button.chat-button::before,
+.planet-container .action-button.chat-button::after {
     display: none !important; /* Скрываем потенциальные лишние элементы */
 }
 
@@ -1666,70 +1669,143 @@ a:hover {
 }
 
 /* Кнопки навигации (стрелки) */
-.gnavigation .gnext,
-.gnavigation .gprev {
-  background-color: rgba(30, 40, 65, 0.8) !important; /* Фон */
-  border-radius: 50% !important; /* Круглые */
-  width: 44px !important; /* Уменьшил размер */
+.goverlay .gnavigation .gnext,
+.goverlay .gnavigation .gprev {
+  /* Сбрасываем общие стили кнопок */
+  background: rgba(30, 40, 65, 0.8) !important;
+  border: none !important;
+  width: 44px !important;
   height: 44px !important;
+  padding: 0 !important;
+  border-radius: 50% !important;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3) !important;
-  transition: background-color 0.3s ease !important;
-  opacity: 0.8 !important; /* <<< Убедимся, что не 0 */
-  display: flex !important; /* Для центрирования SVG */
+  opacity: 0.8 !important;
+  display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  border: none !important; /* Убираем границу */
-  visibility: visible !important; /* <<< Добавляем явную видимость */
-  cursor: pointer !important; /* <<< Добавляем курсор */
-  z-index: 99999 !important; /* <<< Поднимаем на самый верх */
+  visibility: visible !important;
+  cursor: pointer !important;
+  z-index: 99999 !important;
+  transition: background-color 0.3s ease !important;
+  /* Убираем возможные эффекты */
+  text-decoration: none !important;
+  appearance: none !important;
+  font-size: inherit !important; /* Сброс размера шрифта */
+  font-weight: normal !important; /* Сброс жирности */
+  line-height: 1 !important; /* Сброс высоты строки */
+  color: inherit !important; /* Сброс цвета текста (иконка через fill) */
+  position: static !important; /* Сброс позиционирования, если было */
 }
 
-.gnavigation .gnext:hover,
-.gnavigation .gprev:hover {
+/* Убираем лишние элементы типа wave-effect */
+.goverlay .gnavigation .gnext *,
+.goverlay .gnavigation .gprev * {
+    display: none !important; /* Скрываем все дочерние, кроме SVG */
+}
+.goverlay .gnavigation .gnext svg,
+.goverlay .gnavigation .gprev svg {
+    display: block !important; /* Показываем только SVG */
+    fill: var(--text-primary) !important;
+    width: 20px !important;
+    height: 20px !important;
+    transition: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+    margin: 0 !important; /* Убираем отступы */
+    padding: 0 !important; /* Убираем паддинги */
+}
+
+.goverlay .gnavigation .gnext:hover,
+.goverlay .gnavigation .gprev:hover {
   background-color: rgba(50, 65, 95, 0.95) !important;
-  opacity: 1 !important;
-}
-
-/* Иконки стрелок (настраиваем цвет через fill) */
-.gnavigation .gnext svg,
-.gnavigation .gprev svg {
-  fill: var(--text-primary) !important; /* Белые иконки */
-  width: 20px !important; /* Уменьшил размер иконки */
-  height: 20px !important;
-  display: block !important; /* Убедимся, что видимы */
-  transition: none !important;
-  transform: none !important;
   opacity: 1 !important;
 }
 
 /* Кнопка закрытия */
-.gclose {
-  background-color: rgba(30, 40, 65, 0.8) !important;
-  border-radius: 50% !important;
-  width: 36px !important; /* Уменьшил размер */
+.goverlay .gclose {
+  /* Сбрасываем общие стили кнопок */
+  background: rgba(30, 40, 65, 0.8) !important;
+  border: none !important;
+  width: 36px !important;
   height: 36px !important;
+  padding: 0 !important;
+  border-radius: 50% !important;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-  transition: background-color 0.3s ease, transform 0.2s ease !important;
-  top: 15px !important; /* Ближе к краю */
-  right: 15px !important;
-  display: flex !important; /* Центрируем иконку */
+  opacity: 0.9 !important;
+  display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  border: none !important; /* Убираем границу */
-  opacity: 0.9 !important; /* Чуть виднее */
+  cursor: pointer !important;
+  z-index: 99999 !important;
+  transition: background-color 0.3s ease, transform 0.2s ease !important;
+  top: 15px !important;
+  right: 15px !important;
+  /* Сбросы */
+  appearance: none !important;
+  font-size: inherit !important;
+  font-weight: normal !important;
+  line-height: 1 !important;
+  color: inherit !important;
+  text-decoration: none !important;
+  position: fixed !important; /* Glightbox задает fixed */
+}
+/* Убираем лишние элементы типа wave-effect */
+.goverlay .gclose * {
+    display: none !important;
+}
+.goverlay .gclose svg {
+    display: block !important;
+    fill: var(--text-primary) !important;
+    width: 18px !important;
+    height: 18px !important;
+    margin: 0 !important;
+    padding: 0 !important;
 }
 
-.gclose:hover {
+.goverlay .gclose:hover {
   background-color: rgba(50, 65, 95, 0.95) !important;
-  transform: scale(1.1) rotate(90deg); /* Оставляем ховер эффект */
+  transform: scale(1.1) rotate(90deg);
 }
+
+/* Стилизация стандартных контролов HTML5 видео ВНУТРИ GLightbox */
+.gslide-media video::-webkit-media-controls-panel {
+  background-color: rgba(0, 8, 25, 0.7) !important;
+  border-radius: 8px;
+}
+
+.gslide-media video::-webkit-media-controls-play-button,
+.gslide-media video::-webkit-media-controls-timeline,
+.gslide-media video::-webkit-media-controls-current-time-display,
+.gslide-media video::-webkit-media-controls-time-remaining-display,
+.gslide-media video::-webkit-media-controls-mute-button,
+.gslide-media video::-webkit-media-controls-volume-slider,
+.gslide-media video::-webkit-media-controls-fullscreen-button {
+  /* Здесь можно задать более тонкие настройки цвета/фона, если нужно */
+  /* Например, цвет иконок */
+  color: var(--text-primary);
+  filter: brightness(1.2); /* Немного осветлим стандартные иконки */
+}
+
+/* Удаляем специфичные стили для не-SVG кнопок навигации */
+/*
+.gnavigation .gnext,
+.gnavigation .gprev {
+ //... старые стили ... 
+}
+.gnavigation .gnext svg,
+.gnavigation .gprev svg {
+ //... старые стили ...
+}
+*/
+
+/* Иконки стрелок (настраиваем цвет через fill) */
+/* Удаляем старые отдельные правила для SVG */
+
+/* Кнопка закрытия */
+/* Удаляем старые отдельные правила для gclose */
 
 /* Иконка закрытия */
-.gclose svg {
-  fill: var(--text-primary) !important;
-  width: 18px !important; /* Уменьшил иконку */
-  height: 18px !important;
-}
+/* Удаляем старые отдельные правила для SVG */
 
 /* Загрузчик */
 .gspinner {

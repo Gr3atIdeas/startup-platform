@@ -27,15 +27,15 @@
   --exception-button-border: #ffef2b;
 }
 
-button:not(.login-btn):not(.join-button), 
-.btn:not(.login-btn):not(.join-button), 
-input[type="submit"]:not(.login-btn):not(.join-button), 
-input[type="button"]:not(.login-btn):not(.join-button), 
-.catalog-search-btn:not(.login-btn):not(.join-button), 
-.show-button:not(.login-btn):not(.join-button), 
-.detail-button:not(.login-btn):not(.join-button), 
-.create-startup-btn:not(.login-btn):not(.join-button), 
-.logout-btn:not(.login-btn):not(.join-button) {
+button:not(.login-btn):not(.join-button):not(.chat-button), 
+.btn:not(.login-btn):not(.join-button):not(.chat-button), 
+input[type="submit"]:not(.login-btn):not(.join-button):not(.chat-button), 
+input[type="button"]:not(.login-btn):not(.join-button):not(.chat-button), 
+.catalog-search-btn:not(.login-btn):not(.join-button):not(.chat-button), 
+.show-button:not(.login-btn):not(.join-button):not(.chat-button), 
+.detail-button:not(.login-btn):not(.join-button):not(.chat-button), 
+.create-startup-btn:not(.login-btn):not(.join-button):not(.chat-button), 
+.logout-btn:not(.login-btn):not(.join-button):not(.chat-button) {
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -143,15 +143,15 @@ button::before, button::after,
     z-index: 1; 
 }
 
-body button:not(.login-btn):not(.join-button).wave-active,
-body .btn:not(.login-btn):not(.join-button).wave-active,
-body input[type="submit"]:not(.login-btn):not(.join-button).wave-active,
-body input[type="button"]:not(.login-btn):not(.join-button).wave-active,
-body .catalog-search-btn:not(.login-btn):not(.join-button).wave-active,
-body .show-button:not(.login-btn):not(.join-button).wave-active,
-body .detail-button:not(.login-btn):not(.join-button).wave-active,
-body .create-startup-btn:not(.login-btn):not(.join-button).wave-active,
-body .logout-btn:not(.login-btn):not(.join-button).wave-active {
+body button:not(.login-btn):not(.join-button):not(.chat-button).wave-active,
+body .btn:not(.login-btn):not(.join-button):not(.chat-button).wave-active,
+body input[type="submit"]:not(.login-btn):not(.join-button):not(.chat-button).wave-active,
+body input[type="button"]:not(.login-btn):not(.join-button):not(.chat-button).wave-active,
+body .catalog-search-btn:not(.login-btn):not(.join-button):not(.chat-button).wave-active,
+body .show-button:not(.login-btn):not(.join-button):not(.chat-button).wave-active,
+body .detail-button:not(.login-btn):not(.join-button):not(.chat-button).wave-active,
+body .create-startup-btn:not(.login-btn):not(.join-button):not(.chat-button).wave-active,
+body .logout-btn:not(.login-btn):not(.join-button):not(.chat-button).wave-active {
   color: #ffffff !important;
 }
 
@@ -160,16 +160,16 @@ body .join-button.wave-active {
   color: #000000 !important;
 }
 
-body button:not(.login-btn):not(.join-button).wave-active *:not(.wave-effect),
-body .btn:not(.login-btn):not(.join-button).wave-active *:not(.wave-effect),
-body input[type="submit"]:not(.login-btn):not(.join-button).wave-active *:not(.wave-effect),
-body input[type="button"]:not(.login-btn):not(.join-button).wave-active *:not(.wave-effect),
-body .catalog-search-btn:not(.login-btn):not(.join-button).wave-active *:not(.wave-effect),
-body .show-button:not(.login-btn):not(.join-button).wave-active *:not(.wave-effect),
-body .detail-button:not(.login-btn):not(.join-button).wave-active *:not(.wave-effect),
-body .create-startup-btn:not(.login-btn):not(.join-button).wave-active *:not(.wave-effect),
-body .logout-btn:not(.login-btn):not(.join-button).wave-active *:not(.wave-effect),
-body .nav-menu a:not(.login-btn):not(.join-button).wave-active *:not(.wave-effect) {
+body button:not(.login-btn):not(.join-button):not(.chat-button).wave-active *:not(.wave-effect),
+body .btn:not(.login-btn):not(.join-button):not(.chat-button).wave-active *:not(.wave-effect),
+body input[type="submit"]:not(.login-btn):not(.join-button):not(.chat-button).wave-active *:not(.wave-effect),
+body input[type="button"]:not(.login-btn):not(.join-button):not(.chat-button).wave-active *:not(.wave-effect),
+body .catalog-search-btn:not(.login-btn):not(.join-button):not(.chat-button).wave-active *:not(.wave-effect),
+body .show-button:not(.login-btn):not(.join-button):not(.chat-button).wave-active *:not(.wave-effect),
+body .detail-button:not(.login-btn):not(.join-button):not(.chat-button).wave-active *:not(.wave-effect),
+body .create-startup-btn:not(.login-btn):not(.join-button):not(.chat-button).wave-active *:not(.wave-effect),
+body .logout-btn:not(.login-btn):not(.join-button):not(.chat-button).wave-active *:not(.wave-effect),
+body .nav-menu a:not(.login-btn):not(.join-button):not(.chat-button).wave-active *:not(.wave-effect) {
   color: #ffffff !important;
   position: relative;
   z-index: 2;
