@@ -1427,3 +1427,74 @@ input[type=range]#ratingSlider::-moz-range-thumb {
     animation: ripple 0.6s linear forwards;
     will-change: transform, opacity;
 }
+
+/* Стили для кнопки Показать еще в каталоге */
+.pagination-controls .show-more-btn {
+    background: transparent !important;
+    color: #FFFFFF !important;
+    border: 1px solid #FFFFFF !important;
+    padding: 10px 25px;
+    border-radius: 25px;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    cursor: pointer;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pagination-controls .show-more-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    border-color: #FFFFFF !important;
+    color: #FFFFFF !important;
+}
+
+.pagination-controls .show-more-btn i {
+    margin-left: 8px;
+}
+
+/* Стили для кнопки Скрыть - можно сделать похожей, но менее акцентной */
+.pagination-controls .hide-btn {
+    background: transparent;
+    color: #a9b8d4;
+    border: 1px solid #a9b8d4;
+    padding: 10px 25px;
+    border-radius: 25px;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    cursor: pointer;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pagination-controls .hide-btn:hover {
+    background-color: rgba(169, 184, 212, 0.1);
+    border-color: #FFFFFF;
+    color: #FFFFFF;
+}
+
+.pagination-controls .hide-btn i {
+    margin-left: 8px;
+}
+
+// Функция для переключения микроинвестиций
+function toggleMicroInvestment() {
+  var toggle = document.getElementById('microToggle');
+  var input = document.getElementById('microInvestmentInput');
+
+  if (toggle.classList.contains('active')) {
+    toggle.classList.remove('active');
+    input.value = '0';
+  } else {
+    toggle.classList.add('active');
+    input.value = '1';
+  }
+  // Опционально: если изменение этого поля должно влиять на фильтр,
+  // можно автоматически отправить форму: document.getElementById('filterForm').submit();
+  // Но обычно пользователь ожидает нажатия кнопки "Показать"
+}

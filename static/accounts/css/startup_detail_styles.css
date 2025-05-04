@@ -1710,24 +1710,26 @@ a:hover {
   backdrop-filter: blur(5px);
 }
 
-/* <<< Добавляем стили для контейнера навигации >>> */
+/* <<< Удаляем стили для контейнера навигации >>> */
+/*
 .goverlay .gnavigation {
     position: absolute !important;
     top: 0 !important;
     left: 0 !important;
     width: 100% !important;
     height: 100% !important;
-    display: flex !important; /* Используем flex для базового выравнивания */
-    justify-content: space-between; /* Распределяем кнопки по краям */
-    align-items: center; /* Центрируем по вертикали */
-    pointer-events: none !important; /* Чтобы не мешал кликам по слайду */
-    z-index: 99998 !important; /* Чуть ниже кнопок */
+    display: flex !important;
+    justify-content: space-between;
+    align-items: center;
+    pointer-events: none !important;
+    z-index: 99998 !important;
 }
+*/
 
-/* Кнопки навигации (стрелки) */
+/* Кнопки навигации (стрелки) - ОСТАВЛЯЕМ ТОЛЬКО ВИЗУАЛЬНЫЕ СТИЛИ */
 .goverlay .gnavigation .gnext,
 .goverlay .gnavigation .gprev {
-  /* Сбрасываем общие стили кнопок */
+  /* Визуальные стили */
   background: rgba(30, 40, 65, 0.8) !important;
   border: none !important;
   width: 44px !important;
@@ -1736,33 +1738,28 @@ a:hover {
   border-radius: 50% !important;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3) !important;
   opacity: 0.8 !important;
-  display: flex !important; /* Оставляем flex для центровки SVG */
+  cursor: pointer !important;
+  transition: background-color 0.3s ease !important;
+
+  /* Стили для SVG внутри кнопки (оставляем) */
+  display: flex !important; /* Для центровки SVG */
   align-items: center !important;
   justify-content: center !important;
-  visibility: visible !important;
-  cursor: pointer !important;
-  z-index: 99999 !important; /* Оставляем высокий z-index */
-  transition: background-color 0.3s ease !important;
-  /* <<< Используем position: relative или static (flex сделает свое дело) >>> */
-  position: relative !important; /* Убираем absolute/fixed отсюда */
-  pointer-events: auto !important; /* Кнопки должны быть кликабельны */
-  /* Убираем transform, так как align-items сделает центровку */
-  /* transform: translateY(-50%) !important; */
-  /* Убираем top/left/right, так как justify-content/align-items родителя их расставит */
-  /* top: 50% !important; */
-  /* left: 15px !important; */
-  /* right: 15px !important; */
 
-  /* Добавляем небольшие отступы по бокам */
-  margin: 0 15px !important;
+  /* <<< УБИРАЕМ ВСЕ ЯВНЫЕ СТИЛИ ПОЗИЦИОНИРОВАНИЯ И ВИДИМОСТИ ОТСЮДА >>> */
+  /* visibility: visible !important; */ /* Пусть GLightbox сам решает */
+  /* z-index: 99999 !important; */
+  /* position: relative !important; */
+  /* pointer-events: auto !important; */
+  /* margin: 0 15px !important; */
 
-  /* Убираем возможные эффекты */
+  /* Базовые сбросы (можно оставить) */
   text-decoration: none !important;
   appearance: none !important;
-  font-size: inherit !important; /* Сброс размера шрифта */
-  font-weight: normal !important; /* Сброс жирности */
-  line-height: 1 !important; /* Сброс высоты строки */
-  color: inherit !important; /* Сброс цвета текста (иконка через fill) */
+  font-size: inherit !important;
+  font-weight: normal !important;
+  line-height: 1 !important;
+  color: inherit !important;
 }
 
 /* Убираем лишние элементы типа wave-effect */
@@ -1811,9 +1808,11 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 }
 
 /* --- Добавляем переопределение overflow для контейнера --- */
+/*
 body.glightbox-open .glightbox-container {
     overflow: visible !important;
 }
+*/
 
 /* --- Удаляем попытку убрать артефакты --- */
 /* Отключаем transition и animation для контейнеров GLightbox */
