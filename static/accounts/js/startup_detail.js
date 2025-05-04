@@ -224,11 +224,20 @@ document.addEventListener('DOMContentLoaded', function() {
             keyboardNavigation: true,
             // Дополнительные опции можно добавить здесь
             // skin: 'clean', // Пример скина
-            // openEffect: 'zoom', 
+            // openEffect: 'zoom',
             // closeEffect: 'fade',
-            closeOnOutsideClick: true // Добавляем опцию закрытия по клику вне окна
+            closeOnOutsideClick: true, // Добавляем опцию закрытия по клику вне окна
+            plyr: { // Добавляем настройки Plyr
+                config: {
+                    speed: {
+                        selected: 1, // Скорость по умолчанию
+                        options: [0.5, 1, 1.25, 1.5] // Доступные скорости
+                    }
+                    // Здесь можно добавить другие настройки Plyr, если нужно
+                }
+            }
         });
-        console.log('GLightbox initialized for .glightbox elements');
+        console.log('GLightbox initialized for .glightbox elements with Plyr speed options');
     } else {
         console.error('GLightbox is not defined. Check if the library is loaded correctly.');
     }

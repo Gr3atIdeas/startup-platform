@@ -1937,3 +1937,30 @@ body.glightbox-open .glightbox-container {
   fill: white !important; /* Цвет иконки */
 }
 
+/* GLightbox Close Button Position */
+.gclose {
+    position: absolute !important;
+    top: 15px !important; /* Отступ сверху */
+    right: 15px !important; /* Отступ справа */
+    width: 30px !important; /* Размер кнопки */
+    height: 30px !important;
+    z-index: 10000 !important; /* Выше всего остального */
+    background-color: rgba(0, 0, 0, 0.5) !important; /* Фон как у навигации */
+    border-radius: 50% !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    cursor: pointer !important;
+    border: none !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.gclose svg {
+    display: block !important;
+    width: 15px !important; /* Размер иконки крестика */
+    height: 15px !important;
+    fill: white !important;
+}
+
