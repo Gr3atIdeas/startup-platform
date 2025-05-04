@@ -227,21 +227,19 @@ document.addEventListener('DOMContentLoaded', function() {
             // openEffect: 'zoom',
             // closeEffect: 'fade',
             closeOnOutsideClick: true, // Добавляем опцию закрытия по клику вне окна
-            plyr: { // Добавляем настройки Plyr
-                // Явно указываем пути к CSS и JS Plyr
-                css: 'https://cdn.plyr.io/3.7.8/plyr.css',
-                js: 'https://cdn.plyr.io/3.7.8/plyr.polyfilled.js', // Используем polyfilled для лучшей совместимости
+            plyr: { // Добавляем настройки Plyr (версия 3.6.12)
+                // Явно указываем пути к CSS и JS Plyr (версия 3.6.12)
+                css: 'https://cdn.plyr.io/3.6.12/plyr.css',
+                js: 'https://cdn.plyr.io/3.6.12/plyr.polyfilled.js', // Используем polyfilled
                 // Опции Plyr передаются напрямую, без вложенного config
                 speed: {
                     selected: 1, // Скорость по умолчанию
                     options: [0.5, 1, 1.25, 1.5] // Доступные скорости
                 }
-                // Другие опции Plyr можно добавить здесь же, например:
-                // controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'settings', 'fullscreen'],
-                // tooltips: { controls: true, seek: true }
+                // Другие опции Plyr можно добавить здесь же
             }
         });
-        console.log('GLightbox initialized with explicit Plyr paths and speed options');
+        console.log('GLightbox initialized with Plyr v3.6.12 and speed options');
     } else {
         console.error('GLightbox is not defined. Check if the library is loaded correctly.');
     }
