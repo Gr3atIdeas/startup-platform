@@ -228,15 +228,59 @@ document.addEventListener('DOMContentLoaded', function() {
             // closeEffect: 'fade',
             closeOnOutsideClick: true, // Добавляем опцию закрытия по клику вне окна
             plyr: { // Добавляем настройки Plyr (версия 3.6.12)
-                // Явно указываем пути к CSS и JS Plyr (версия 3.6.12)
                 css: 'https://cdn.plyr.io/3.6.12/plyr.css',
                 js: 'https://cdn.plyr.io/3.6.12/plyr.polyfilled.js', // Используем polyfilled
-                // Опции Plyr передаются напрямую, без вложенного config
+                // Опции Plyr
                 speed: {
                     selected: 1, // Скорость по умолчанию
                     options: [0.5, 1, 1.25, 1.5] // Доступные скорости
+                },
+                // Добавляем объект i18n для переводов
+                i18n: {
+                    restart: 'Перезапустить',
+                    rewind: 'Перемотать {seektime}с',
+                    play: 'Воспроизвести',
+                    pause: 'Пауза',
+                    fastForward: 'Вперед {seektime}с',
+                    seek: 'Искать',
+                    seekLabel: '{currentTime} из {duration}',
+                    played: 'Воспроизведено',
+                    buffered: 'Буферизовано',
+                    currentTime: 'Текущее время',
+                    duration: 'Продолжительность',
+                    volume: 'Громкость',
+                    mute: 'Выключить звук',
+                    unmute: 'Включить звук',
+                    enableCaptions: 'Включить субтитры',
+                    disableCaptions: 'Выключить субтитры',
+                    download: 'Скачать',
+                    enterFullscreen: 'Во весь экран',
+                    exitFullscreen: 'Выйти из полноэкранного режима',
+                    frameTitle: 'Плеер для {title}',
+                    captions: 'Субтитры',
+                    settings: 'Настройки',
+                    menuBack: 'Назад',
+                    speed: 'Скорость',
+                    normal: 'Обычная', // Перевод для "Normal" скорости
+                    quality: 'Качество',
+                    loop: 'Повтор',
+                    start: 'Старт',
+                    end: 'Конец',
+                    all: 'Все',
+                    reset: 'Сброс',
+                    disabled: 'Отключено',
+                    enabled: 'Включено',
+                    advertisement: 'Реклама',
+                    qualityBadge: { // Переводы для значков качества, если понадобятся
+                        '2160': '4K',
+                        '1440': 'HD',
+                        '1080': 'HD',
+                        '720': 'HD',
+                        '576': 'SD',
+                        '480': 'SD'
+                    }
                 }
-                // Другие опции Plyr можно добавить здесь же
+                // tooltips: { controls: true, seek: true }
             }
         });
         console.log('GLightbox initialized with Plyr v3.6.12 and speed options');
