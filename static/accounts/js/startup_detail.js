@@ -439,33 +439,33 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // 11. Удаление мешающего span.wave-effect из кнопки "Чат" (новая нумерация)
-    const chatButton = document.querySelector('.action-button.chat-button');
-    if (chatButton) {
-        const observer = new MutationObserver(function(mutationsList, observer) {
-            // Перебираем все мутации
-            for(const mutation of mutationsList) {
-                if (mutation.type === 'childList') {
-                    // Перебираем добавленные узлы
-                    mutation.addedNodes.forEach(node => {
-                        // Проверяем, является ли узел элементом и имеет ли он класс wave-effect
-                        if (node.nodeType === 1 && node.classList.contains('wave-effect')) {
-                            // Немедленно удаляем этот узел
-                            chatButton.removeChild(node);
-                            console.log('Removed wave-effect span from chat button.');
-                        }
-                    });
-                }
-            }
-        });
-
-        // Начинаем наблюдение за дочерними элементами кнопки чата
-        observer.observe(chatButton, { childList: true });
-
-        // Опционально: можно остановить наблюдение через какое-то время или при определенных условиях
-        // observer.disconnect();
-    } else {
-        console.warn('Chat button not found for wave-effect removal.');
-    }
+    // 11. Удаляем мешающий span.wave-effect из кнопки "Чат" (новая нумерация)
+    // const chatButton = document.querySelector('.action-button.chat-button');
+    // if (chatButton) {
+    //     const observer = new MutationObserver(function(mutationsList, observer) {
+    //         // Перебираем все мутации
+    //         for(const mutation of mutationsList) {
+    //             if (mutation.type === 'childList') {
+    //                 // Перебираем добавленные узлы
+    //                 mutation.addedNodes.forEach(node => {
+    //                     // Проверяем, является ли узел элементом и имеет ли он класс wave-effect
+    //                     if (node.nodeType === 1 && node.classList.contains('wave-effect')) {
+    //                         // Немедленно удаляем этот узел
+    //                         chatButton.removeChild(node);
+    //                         console.log('Removed wave-effect span from chat button.');
+    //                     }
+    //                 });
+    //             }
+    //         }
+    //     });
+    //
+    //     // Начинаем наблюдение за дочерними элементами кнопки чата
+    //     observer.observe(chatButton, { childList: true });
+    //
+    //     // Опционально: можно остановить наблюдение через какое-то время или при определенных условиях
+    //     // observer.disconnect();
+    // } else {
+    //     console.warn('Chat button not found for wave-effect removal.');
+    // }
 
 });

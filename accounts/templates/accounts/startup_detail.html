@@ -11,7 +11,8 @@
 {% block head_extra %}
   <link rel="stylesheet" href="{% static 'accounts/css/startup_detail_styles.css' %}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
+  {# <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" /> #}
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox@latest/dist/css/glightbox.min.css" />
 {% endblock %}
 
 {% block content %}
@@ -464,7 +465,8 @@
 
 {% block body_scripts %}
 {# Добавляем JS GLightbox #}
-<script src="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/js/glightbox.min.js"></script>
+{# <script src="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/js/glightbox.min.js"></script> #}
+<script src="https://cdn.jsdelivr.net/npm/glightbox@latest/dist/js/glightbox.min.js"></script>
 {# Дочерние шаблоны могут добавлять скрипты сюда #}
 {% endblock %}
 </body>

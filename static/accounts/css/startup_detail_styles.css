@@ -91,74 +91,54 @@ a:hover {
   line-height: 1.2;
 }
 
-/* Конкретные стили кнопок по макету */
-body .action-button.chat-button { /* Повышаем специфичность добавлением body */
-    display: flex !important;
-    width: 142px !important;
-    height: 40px !important;
-    padding: 12px 25px !important;
-    justify-content: center !important;
-    align-items: center !important;
-    gap: 9px !important;
-    flex-shrink: 0 !important;
-    /* Основные визуальные стили */
-    background: none !important;
-    background-color: transparent !important;
-    background-image: none !important;
-    color: var(--text-primary) !important; /* Явно задаем цвет текста */
-    border: 1px solid var(--text-primary) !important;
-    border-radius: 8px !important;
-    /* Сбросы и переопределения */
-    font-weight: 400 !important;
-    font-size: 14px !important;
-    line-height: normal !important;
-    position: relative !important;
-    /* overflow: hidden !important; */ /* Убираем overflow, вдруг мешает тексту */
-    align-self: center !important;
-    margin-top: auto !important;
-    box-shadow: none !important;
-    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease !important;
-    text-decoration: none !important;
-    appearance: none !important;
-    cursor: pointer !important;
-    z-index: 2 !important; /* Поднимаем текст кнопки выше */
+/* Новые, чистые стили для кнопки чата */
+.action-button.chat-button {
+    /* Размеры и отступы */
+    width: 142px;
+    height: 40px;
+    padding: 0; /* Сброс padding, т.к. используем flex для центровки */
+    display: inline-flex; /* Используем inline-flex */
+    align-items: center;
+    justify-content: center;
+    gap: 9px; /* Отступ между иконкой (если будет) и текстом */
+    flex-shrink: 0;
+    align-self: center; /* Выравнивание по центру в контейнере */
+    margin-top: auto; /* Прижимаем к низу в flex-контейнере */
+
+    /* Визуальное оформление */
+    background-color: transparent; /* Прозрачный фон */
+    border: 1px solid var(--text-primary); /* Белая рамка */
+    border-radius: 8px; /* Скругление углов */
+    color: var(--text-primary); /* Белый текст */
+
+    /* Типографика */
+    font-family: 'Unbounded', sans-serif; /* Шрифт */
+    font-size: 14px; /* Размер шрифта */
+    font-weight: 400; /* Regular */
+    line-height: 1; /* Убираем лишнюю высоту строки */
+    text-align: center;
+    text-decoration: none; /* Убираем подчеркивание */
+    white-space: nowrap; /* Запрет переноса */
+
+    /* Поведение */
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+    box-shadow: none; /* Убираем тени */
+    appearance: none; /* Сброс системных стилей */
 }
 
-/* Скрытие возможного span и псевдоэлементов от волнового эффекта */
-body .action-button.chat-button span,
-body .action-button.chat-button .wave-effect,
-body .action-button.chat-button::before,
-body .action-button.chat-button::after {
-    display: none !important;
-    content: '' !important;
-    background: none !important;
-    background-color: transparent !important; 
-    border: none !important;
-    width: 0 !important; /* Добавляем width 0 */
-    height: 0 !important; /* Добавляем height 0 */
-    opacity: 0 !important; /* Добавляем opacity 0 */
-    visibility: hidden !important; /* Добавляем visibility hidden */
-    position: absolute !important;
-    z-index: -1 !important; /* Прячем под кнопку */
-    /* Убираем анимацию, если она задана здесь */
-    transition: none !important;
-    animation: none !important;
-}
-/* Отдельно для .wave-effect для большей уверенности */
-body .action-button.chat-button .wave-effect {
-    display: none !important;
-    width: 0 !important;
-    height: 0 !important;
-    opacity: 0 !important;
-    visibility: hidden !important;
-    background: none !important;
+.action-button.chat-button:hover {
+    background-color: rgba(255, 255, 255, 0.1); /* Легкий фон при наведении */
+    border-color: var(--text-primary); /* Рамка остается белой */
+    color: var(--text-primary); /* Текст остается белым */
 }
 
-body .action-button.chat-button:hover {
-    background-color: rgba(255, 255, 255, 0.1) !important;
-    border-color: var(--text-primary) !important;
-    color: var(--text-primary) !important;
-    box-shadow: none !important;
+/* Важно: Убедимся, что никакие другие общие стили не ломают кнопку */
+.action-button.chat-button span,
+.action-button.chat-button .wave-effect,
+.action-button.chat-button::before,
+.action-button.chat-button::after {
+    display: none !important; /* Скрываем потенциальные лишние элементы */
 }
 
 .action-button.write-author-button {
@@ -947,12 +927,18 @@ body .action-button.chat-button:hover {
   /* transition: transform 0.3s ease; */
 }
 
-/* Убираем hover-эффект увеличения картинки, т.к. увеличиваем весь блок */
-/*
-.gallery-item:hover img {
-  transform: scale(1.05);
+/* Добавляем стили, чтобы ссылка в галерее не выглядела как ссылка */
+.gallery-item:hover {
+    text-decoration: none; /* Убираем подчеркивание при наведении */
 }
-*/
+
+.gallery-item,
+.gallery-item:visited,
+.gallery-item:focus {
+    text-decoration: none; /* Убираем подчеркивание для всех состояний */
+    color: inherit; /* Наследуем цвет текста (для плейсхолдеров) */
+    outline: none; /* Убираем контур при фокусе */
+}
 
 /* Стили для видео-элемента (похоже на image-item) */
 .gallery-item.video-item {
@@ -1679,62 +1665,66 @@ body .action-button.chat-button:hover {
 }
 
 /* Кнопки навигации (стрелки) */
-.gnavigation .gnext, 
+.gnavigation .gnext,
 .gnavigation .gprev {
   background-color: rgba(30, 40, 65, 0.8) !important; /* Фон */
   border-radius: 50% !important; /* Круглые */
-  width: 48px !important; /* Размер */
-  height: 48px !important;
+  width: 44px !important; /* Уменьшил размер */
+  height: 44px !important;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3) !important;
-  transition: background-color 0.3s ease !important; /* Убираем transform из transition */
-  opacity: 0.8 !important; /* Полупрозрачные по умолчанию */
+  transition: background-color 0.3s ease !important;
+  opacity: 0.8 !important;
   display: flex !important; /* Для центрирования SVG */
   align-items: center !important;
   justify-content: center !important;
   border: none !important; /* Убираем границу */
 }
 
-.gnavigation .gnext:hover, 
+.gnavigation .gnext:hover,
 .gnavigation .gprev:hover {
   background-color: rgba(50, 65, 95, 0.95) !important;
-  transform: none !important; /* Убираем scale */
-  opacity: 1 !important; /* Полная видимость при наведении */
+  opacity: 1 !important;
 }
 
 /* Иконки стрелок (настраиваем цвет через fill) */
 .gnavigation .gnext svg,
 .gnavigation .gprev svg {
   fill: var(--text-primary) !important; /* Белые иконки */
-  width: 22px !important; /* Размер иконки */
-  height: 22px !important;
+  width: 20px !important; /* Уменьшил размер иконки */
+  height: 20px !important;
   display: block !important; /* Убедимся, что видимы */
-  transition: none !important; /* Убираем transition с иконки */
-  transform: none !important; /* Убираем transform */
-  opacity: 1 !important; /* Иконка всегда непрозрачна */
+  transition: none !important;
+  transform: none !important;
+  opacity: 1 !important;
 }
 
 /* Кнопка закрытия */
 .gclose {
   background-color: rgba(30, 40, 65, 0.8) !important;
   border-radius: 50% !important;
-  width: 40px !important;
-  height: 40px !important;
+  width: 36px !important; /* Уменьшил размер */
+  height: 36px !important;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
   transition: background-color 0.3s ease, transform 0.2s ease !important;
-  top: 20px !important;
-  right: 20px !important;
+  top: 15px !important; /* Ближе к краю */
+  right: 15px !important;
+  display: flex !important; /* Центрируем иконку */
+  align-items: center !important;
+  justify-content: center !important;
+  border: none !important; /* Убираем границу */
+  opacity: 0.9 !important; /* Чуть виднее */
 }
 
 .gclose:hover {
   background-color: rgba(50, 65, 95, 0.95) !important;
-  transform: scale(1.1) rotate(90deg);
+  transform: scale(1.1) rotate(90deg); /* Оставляем ховер эффект */
 }
 
 /* Иконка закрытия */
 .gclose svg {
   fill: var(--text-primary) !important;
-  width: 20px !important;
-  height: 20px !important;
+  width: 18px !important; /* Уменьшил иконку */
+  height: 18px !important;
 }
 
 /* Загрузчик */
@@ -1755,15 +1745,17 @@ body .action-button.chat-button:hover {
 }
 
 
-/* --- Попытка убрать артефакты (оставляем, может помочь GLightbox) --- */
+/* --- Удаляем попытку убрать артефакты --- */
 /* Отключаем transition и animation для контейнеров GLightbox */
-.glightbox-container .gslide, 
+/*
+.glightbox-container .gslide,
 .glightbox-container .gslide-inner-content,
 .glightbox-container .gslide-media {
     transition: none !important;
     animation: none !important;
     /* Возвращаем backface-visibility */
-    backface-visibility: hidden !important;
-    -webkit-backface-visibility: hidden !important; 
+/*    backface-visibility: hidden !important;
+    -webkit-backface-visibility: hidden !important;
 }
+*/
 
