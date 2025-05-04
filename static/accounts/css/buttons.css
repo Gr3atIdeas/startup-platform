@@ -46,6 +46,7 @@ input[type="button"]:not(.login-btn):not(.join-button),
   text-align: center;
   text-decoration: none;
   cursor: pointer;
+  overflow: hidden;
   border: none;
   outline: none;
   background: none;

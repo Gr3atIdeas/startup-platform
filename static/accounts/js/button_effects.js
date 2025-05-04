@@ -153,7 +153,12 @@ function initPositionAware() {
 
 function handleMouseEnter(e) {
     const button = e.currentTarget;
-    if (button.closest('.goverlay') || button.closest('.tab-navigation')) return;
+    if (button.closest('.goverlay') || button.closest('.tab-navigation')) {
+        button.classList.remove('wave-active');
+        const wave = button.querySelector('span.wave-effect');
+        if (wave) wave.style.opacity = '0';
+        return;
+    }
     
     const waveSpan = button.querySelector('span.wave-effect');
     if (!waveSpan || window.getComputedStyle(button).display === 'none') return;
@@ -194,7 +199,6 @@ function handleMouseLeave(e) {
 }
 
 function handleTouchStart(e) {
-    e.preventDefault(); 
     const touch = e.touches[0];
     const button = e.currentTarget;
     if (button.closest('.goverlay') || button.closest('.tab-navigation')) return;
