@@ -1828,3 +1828,39 @@ body.glightbox-open .glightbox-container {
 }
 */
 
+/* GLightbox Navigation Button Fixes */
+.gnext, .gprev {
+    position: absolute !important; /* Убедимся, что позиционирование абсолютное */
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    z-index: 9999 !important; /* Высокий z-index, чтобы быть поверх всего */
+    opacity: 1 !important; /* Убедимся, что кнопки не прозрачные */
+    visibility: visible !important; /* Убедимся, что кнопки видимы */
+    cursor: pointer !important;
+    width: 40px; /* Примерный размер, можно настроить */
+    height: 40px; /* Примерный размер, можно настроить */
+    background-color: rgba(0, 0, 0, 0.5) !important; /* Полупрозрачный фон для видимости */
+    border-radius: 50%; /* Сделать круглыми */
+    border: none;
+    padding: 0;
+    display: flex !important; /* Используем flex для центрирования иконки */
+    align-items: center;
+    justify-content: center;
+}
+
+.gprev {
+    left: 20px !important; /* Отступ слева */
+}
+
+.gnext {
+    right: 20px !important; /* Отступ справа */
+}
+
+/* Стили для SVG иконки внутри кнопки (если стандартные иконки не видны) */
+.gnext svg, .gprev svg {
+  display: block !important;
+  width: 20px !important; /* Размер иконки */
+  height: 20px !important; /* Размер иконки */
+  fill: white !important; /* Цвет иконки */
+}
+

@@ -1,36 +1,33 @@
-/* Основные стили страницы каталога */
 body {
   font-family: 'Unbounded', 'Helvetica Neue', Arial, sans-serif;
   margin: 0;
   padding: 0;
   background: linear-gradient(179deg, #000 0.85%, #004e9f 49.61%, #0136d0 65.79%, #202022 100%);
-  color: #000; /* Устанавливаем черный цвет текста по умолчанию для контента */
+  color: #000;
 }
 
 .catalog-wrapper {
-  box-sizing: border-box; /* Учитываем padding в общей ширине */
-  width: 100%; /* Занимаем всю ширину */
-  margin: 0; /* Убираем внешний margin */
-  padding: 0; /* <<< Убираем padding, будем полагаться на main.content */
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 .catalog-container {
-  display: grid; /* <<< Изменено: Используем Grid */
-  grid-template-columns: 280px 1fr; /* <<< Добавлено: Фикс. сайдбар, остальное - контент */
-  align-items: flex-start; /* Оставляем выравнивание по верху */
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  align-items: flex-start;
   width: 100%;
-  /* margin: 0 auto; <<< Удалено */
-  padding: 0; /* Отступы от main.content */
-  gap: 20px; /* Отступ между колонками грида */
+  padding: 0;
+  gap: 20px;
   box-sizing: border-box;
 }
 
-/* Стили для заголовка */
+
 .catalog-header {
   width: 100%;
-  /* max-width: 1390px; <<< Удалено */
-  margin: 0 auto 20px auto; /* Центрируем и добавляем отступ снизу */
-  padding: 0; /* <<< Изменено: Отступы теперь у родителя */
+  margin: 0 auto 20px auto;
+  padding: 0;
   box-sizing: border-box;
 }
 
@@ -50,32 +47,27 @@ body {
   margin: 0;
 }
 
-/* Обертка для области карточек и поиска */
+
 .startups-content {
-  /* flex-grow: 1; <<< Не нужно для Grid */
-  display: flex; /* Оставляем flex для внутреннего контента (поиск + грид) */
+  display: flex;
   flex-direction: column;
-  overflow: visible; 
-  /* width: calc(100% - 280px - 20px); <<< Удалено: Grid управляет шириной */
+  overflow: visible;
   box-sizing: border-box;
-  min-width: 0; /* <<< Добавлено: Помогает при расчетах в grid/flex */
+  min-width: 0;
 }
 
 .catalog-search-wrapper {
-  width: 100%; /* <<< Изменено */
-  /* max-width: 1010px; <<< Удалено */
-  margin: 0 0 20px 0; /* <<< Изменено: Убираем авто-отступы по бокам */
+  width: 100%;
+  margin: 0 0 20px 0;
   display: flex;
   justify-content: center;
 }
 
-/* Поиск по каталогу */
+
 .catalog-search {
   position: relative;
   width: 100%;
-  /* max-width: 1010px; Убираем max-width отсюда */
   height: 36px;
-  /* margin-bottom: 20px; Перенесено в wrapper */
   border-radius: 99px;
   overflow: hidden;
   background: #FFF;
@@ -100,13 +92,13 @@ body {
   font-size: 16px;
 }
 
-/* Кнопка поиска в каталоге */
+
 .catalog-search-btn {
   position: absolute;
   right: 0;
   top: 0;
-  background: #0047FF; /* Изменяем фон кнопки поиска */
-  color: #FFFFFF; /* Изменяем цвет иконки */
+  background: #0047FF;
+  color: #FFFFFF;
   border: none;
   width: 36px;
   height: 36px;
@@ -115,50 +107,16 @@ body {
   align-items: center;
   cursor: pointer;
   font-size: 16px;
-  border-radius: 50%; /* Делаем кнопку круглой */
-  /* Убираем border-top-right-radius, border-bottom-right-radius */
+  border-radius: 50%;
   overflow: hidden;
-  transform: translateX(0) translateZ(0); /* Сбрасываем возможное смещение и добавляем translateZ */
-  z-index: 0; /* Добавляем z-index */
+  transform: translateX(0) translateZ(0);
+  z-index: 0;
 }
 
-/* Стили для кнопки показать и подробнее */
-.show-button {
-  /* Общие стили для кнопки "Показать" */
-  width: 100%;
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  cursor: pointer;
-  background-color: #0047FF;
-  color: #FFF;
-  border: none;
-  border-radius: 8px;
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 500;
-  font-size: 14px;
-  padding: 10px 12px; /* Увеличиваем padding */
-  margin-top: 20px; /* Увеличиваем отступ */
-  transition: background-color 0.3s;
-  transform: translateZ(0); /* Добавляем для стабилизации рендеринга */
-  z-index: 0; /* Добавляем z-index */
-}
 
-.show-button:hover {
-  /* background-color: #003CD9; */ /* Убираем изменение фона при наведении */
-}
-
-/* Эффекты убраны для краткости, можно вернуть при необходимости */
-/* .catalog-search-btn span,
-.show-button span,
-.detail-link span { ... } */
-
-/* Эффекты - стили для Position Aware эффекта */
 .show-button, .catalog-search-btn {
-    position: relative; /* Необходимо для позиционирования span */
-    overflow: hidden;   /* Необходимо для удержания эффекта внутри кнопки */
+    position: relative;
+    overflow: hidden;
 }
 
 .position-aware-effect {
@@ -169,14 +127,13 @@ body {
     height: 0;
     pointer-events: none;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.3); /* Полупрозрачный белый */
+    background: rgba(255, 255, 255, 0.3);
     transform: translate(-50%, -50%);
     transition: width 0.6s linear, height 0.6s linear;
-    z-index: 2; /* Увеличиваем z-index */
+    z-index: 2;
     opacity: 1;
-    /* Анимация роста круга */
     animation: ripple 0.6s linear forwards;
-    will-change: transform, opacity; /* Добавляем для оптимизации анимации */
+    will-change: transform, opacity;
 }
 
 @keyframes ripple {
@@ -186,35 +143,32 @@ body {
     opacity: 0.5;
   }
   to {
-    width: 200%; /* Больше размера кнопки */
+    width: 200%;
     height: 200%;
     opacity: 0;
   }
 }
 
-/* Боковая панель с фильтрами */
+
 .sidebar {
-  /* width: 280px; <<< Удалено: Grid управляет шириной */
-  /* flex-shrink: 0; <<< Не нужно для Grid */
-  background: #FFF; /* Фон */
-  height: auto; /* Автоматическая высота по контенту */
-  padding: 53px 28px; /* Отступы */
-  border-radius: 10px; /* Скругление углов */
-  box-shadow: none; /* Убираем тень */
-  box-sizing: border-box; 
+  background: #FFF;
+  height: auto;
+  padding: 53px 28px;
+  border-radius: 10px;
+  box-shadow: none;
+  box-sizing: border-box;
 }
 
-/* Форма фильтрации */
+
 #filterForm {
   display: block;
   width: 100%;
-  /* Убираем background-color, border-radius, padding - они теперь у .sidebar */
 }
 
-/* Дропдаун сортировки */
+
 .sort-dropdown {
   width: 100%;
-  margin-bottom: 20px; /* Увеличиваем отступ */
+  margin-bottom: 20px;
   position: relative;
 }
 
@@ -225,7 +179,7 @@ body {
   border-radius: 8px;
   font-size: 14px;
   appearance: none;
-  background: #FFFFFF url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1.41 0.589996L6 5.17L10.59 0.589996L12 2L6 8L0 2L1.41 0.589996Z' fill='%236B7280'/%3E%3C/svg%3E") no-repeat right 12px center; /* Добавляем свою стрелку */
+  background: #FFFFFF url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1.41 0.589996L6 5.17L10.59 0.589996L12 2L6 8L0 2L1.41 0.589996Z' fill='%236B7280'/%3E%3C/svg%3E") no-repeat right 12px center;
   background-size: 12px;
   font-family: 'Unbounded', sans-serif;
   font-weight: 400;
@@ -233,32 +187,29 @@ body {
   cursor: pointer;
 }
 
-/* Заголовок категорий и других секций фильтра */
+
 .categories-title {
-  font-family: Unbounded, sans-serif; /* Добавляем запасной шрифт */
+  font-family: Unbounded, sans-serif;
   font-weight: 400;
   font-size: 20px;
-  line-height: 1.2; /* Вместо 18px */
-  letter-spacing: -0.02em; /* -2% */
-  margin: 0 0 10px 0; /* Возвращаем отступ из оригинального стиля */
-  color: #000000; /* Возвращаем цвет из оригинального стиля */
-  /* Конфликтует с определением выше? - Конфликт разрешен в пользу этого */
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  margin: 0 0 10px 0;
+  color: #000000;
 }
 
-/* Заголовок для "Показать сначала" */
+
 .sort-dropdown .categories-title {
-  font-size: 14px; /* Уменьшаем шрифт */
+  font-size: 14px;
   font-weight: 400;
   margin-bottom: 5px;
 }
 
-/* Список категорий */
+
 .categories-list {
   list-style: none;
   padding: 0;
   margin: 0 0 20px 0;
-  /* Убираем max-height и overflow-y, чтобы показать все категории */
-  /* Конфликтует с определением выше? */
 }
 
 .category-item {
@@ -267,10 +218,9 @@ body {
   font-family: Unbounded, sans-serif;
   font-weight: 300;
   font-size: 12px;
-  line-height: 1; /* 100% */
-  letter-spacing: 0.01em; /* 1% */
+  line-height: 1;
+  letter-spacing: 0.01em;
   color: #000;
-  /* Конфликтует с определением выше? - Конфликт разрешен в пользу этого */
 }
 
 .category-label {
@@ -279,75 +229,63 @@ body {
   cursor: pointer;
   font-family: 'Unbounded', sans-serif;
   font-weight: 400;
-  font-size: 13px; /* Уменьшаем шрифт */
+  font-size: 13px;
   color: #000;
-  /* Конфликтует с определением выше? */
 }
 
 .category-checkbox {
   margin-right: 8px;
-  /* Конфликтует с определением выше? */
 }
 
 .category-name {
-  /* font-size: 14px; - уже в .category-label */
-  /* font-family: 'Unbounded', sans-serif; - уже в .category-label */
-  /* font-weight: 400; - уже в .category-label */
 }
 
-/* Фильтр по рейтингу */
+
 .rating-filter {
   margin-bottom: 20px;
-  /* Конфликтует с определением выше? */
 }
 
 .rating-label {
-  display: flex; /* Возвращаем flex из оригинального стиля */
+  display: flex;
   justify-content: space-between;
   align-items: center;
   font-family: Unbounded, sans-serif;
   font-weight: 300;
   font-size: 12px;
-  line-height: 1; /* 100% */
-  letter-spacing: 0.01em; /* 1% */
-  margin-bottom: 10px; /* Отступ из HTML стиля */
-  /* Конфликтует с определением выше? - Конфликт разрешен в пользу этого */
+  line-height: 1;
+  letter-spacing: 0.01em;
+  margin-bottom: 10px;
 }
 
-/* Микроинвестиции */
+
 .micro-investment {
-  display: flex; /* Делаем flex-контейнером */
-  justify-content: space-between; /* Разносим элементы по краям */
-  align-items: center; /* Выравниваем по центру по вертикали */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 20px;
-  /* Конфликтует с определением выше? */
 }
 
-/* Обертка для текста и иконки */
+
 .micro-investment-label-wrapper {
     display: flex;
     align-items: center;
     margin-bottom: 10px;
-    /* Конфликтует с определением выше? */
 }
 
 .micro-label {
   font-family: Unbounded, sans-serif;
   font-weight: 300;
   font-size: 12px;
-  line-height: 1; /* 100% */
-  letter-spacing: 0.01em; /* 1% */
-  margin-right: 5px; /* Добавляем отступ */
-  /* Конфликтует с определением выше? - Конфликт разрешен в пользу этого */
+  line-height: 1;
+  letter-spacing: 0.01em;
+  margin-right: 5px;
 }
 
 .help-icon {
   cursor: pointer;
-  /* Стили для иконки помощи */
-  /* Конфликтует с определением выше? */
 }
 
-/* Переключатель для микроинвестиций */
+
 .toggle-switch {
   width: 50px;
   height: 25px;
@@ -357,12 +295,10 @@ body {
   cursor: pointer;
   transition: background-color 0.3s linear;
   transition: background-color 0.3s;
-  /* Конфликтует с определением выше? */
 }
 
 .toggle-switch.active {
   background-color: var(--primary-color, #7B61FF);
-  /* Конфликтует с определением выше? */
 }
 
 .toggle-handle {
@@ -373,126 +309,117 @@ body {
   position: absolute;
   top: 2px;
   left: 2px;
-  transition: transform 0.3s linear; /* Added linear */
-  /* Конфликтует с определением выше? */
+  transition: transform 0.3s linear;
 }
 
 .toggle-switch.active .toggle-handle {
   transform: translateX(25px);
-  /* Конфликтует с определением выше? */
 }
 
-/* === Сетка и Карточки стартапов === */
+
 
 .startups-grid {
-  display: grid; /* Возвращаем grid */
-  grid-template-columns: repeat(3, 1fr); /* Создаем ровно 3 колонки равной ширины */
-  gap: 50px 20px; /* <<< Изменено: row-gap 50px, column-gap 20px */
-  margin-bottom: 30px; /* Отступ под сеткой */
-  margin-top: 50px; /* <<< Добавлено: Отступ сверху */
-  width: 100%; 
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 50px 20px;
+  margin-bottom: 30px;
+  margin-top: 50px;
+  width: 100%;
 }
 
-/* Карточка стартапа */
+
 .startup-card {
   background-color: white;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  overflow: visible; 
-  /* Added background-color and border-color to transition */
+  overflow: visible;
   transition: transform 0.2s linear, box-shadow 0.2s linear, background-color 0.2s linear, border-color 0.2s linear;
   display: flex;
   flex-direction: column;
-  position: relative; 
-  width: 100%; 
+  position: relative;
+  width: 100%;
   box-sizing: border-box;
-  min-width: 0; 
-  height: 413px; 
-  margin-bottom: 0; 
-  cursor: pointer; 
-  border: 1px solid transparent; /* Add transparent border for smooth transition */
+  min-width: 0;
+  height: 413px;
+  margin-bottom: 0;
+  cursor: pointer;
+  border: 1px solid transparent;
 }
 
-/* Новый контейнер для контента и обрезки волны */
+
 .startup-card-content-wrapper {
-    position: relative; /* Для позиционирования волны */
-    overflow: hidden; /* Обрезаем волну здесь */
-    height: 100%; /* Занимает всю высоту карточки */
-    border-radius: 12px; /* Скругляем углы здесь, чтобы обрезать волну */
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+    border-radius: 12px;
     display: flex;
     flex-direction: column;
     flex-grow: 1;
 }
 
 .startup-card-inner {
-  /* padding убран, теперь он в content-wrapper, но отступ для лого нужен */
-  padding: 103px 20px 20px 20px; /* Отступ сверху для лого + боковые/нижние */
+  padding: 103px 20px 20px 20px;
   display: flex;
   flex-direction: column;
-  flex-grow: 1; 
-  /* Initial text colors */
-  color: #191919; /* Default text color */
+  flex-grow: 1;
+  color: #191919;
 }
 
 .startup-card .startup-name {
   color: #191919;
-  transition: color 0.2s linear; /* Faster transition */
+  transition: color 0.2s linear;
 }
 
 .startup-card .rating-text {
-  color: #004e9f; /* Keep blue */
-  transition: color 0.2s linear; /* Faster transition */
+  color: #004e9f;
+  transition: color 0.2s linear;
 }
 
 .startup-card .comments-count,
 .startup-card .investor-count,
 .startup-card .comments-count i,
 .startup-card .investor-count i {
-  color: #6B7280; /* Gray */
-  transition: color 0.2s linear; /* Faster transition */
+  color: #6B7280;
+  transition: color 0.2s linear;
 }
 
 .startup-card .category-tag {
-  background-color: #f0f0f0; /* Light gray */
-  color: #333; /* Dark text */
-  transition: color 0.2s linear, background-color 0.2s linear; /* Faster transition */
+  background-color: #f0f0f0;
+  color: #333;
+  transition: color 0.2s linear, background-color 0.2s linear;
 }
 
 .startup-card .progress-percentage {
-  color: #191919; /* Ensure initial color is black */
+  color: #191919;
   text-shadow: 0 0 2px #FFF, 0 0 3px #FFF;
-  /* Remove color from transition */
-  transition: text-shadow 0.2s linear; 
-  z-index: 1; 
+  transition: text-shadow 0.2s linear;
+  z-index: 1;
 }
 
 .startup-card .investment-type,
 .startup-card .funding-goal-info {
-    color: #333; 
-    background-color: #f8f9fa; 
-    /* Removed transition: none; */
-    transition: background-color 0.2s linear; /* Keep background transition just in case */
+    color: #333;
+    background-color: #f8f9fa;
+    transition: background-color 0.2s linear;
 }
 
 .startup-card .startup-description {
-  color: #4a5568; 
-  transition: color 0.2s linear; /* Faster transition */
+  color: #4a5568;
+  transition: color 0.2s linear;
 }
 
-/* Text and Background colors on HOVER */
+
 .startup-card:hover {
-  background-color: rgba(255, 255, 255, 0.1); /* Restore hover background */
-  border-color: rgba(255, 255, 255, 0.2); /* Restore hover border */
-  /* Text color changes moved below */
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 .startup-card:hover .startup-name,
 .startup-card:hover .rating-text,
 .startup-card:hover .comments-count,
 .startup-card:hover .investor-count,
-/* .startup-card:hover .progress-percentage, */
-/* .startup-card:hover .investment-type, */ /* REMOVED */
-/* .startup-card:hover .funding-goal-info, */ /* REMOVED */
+
+
 .startup-card:hover .startup-description,
 .startup-card:hover .comments-count i,
 .startup-card:hover .investor-count i {
@@ -504,36 +431,34 @@ body {
   color: #FFFFFF;
 }
 
-/* Force black text and light background on hover */
+
 .startup-card:hover .investment-type,
 .startup-card:hover .funding-goal-info {
-    color: #333 !important; 
-    background-color: #f8f9fa !important; 
+    color: #333 !important;
+    background-color: #f8f9fa !important;
 }
 
-/* Text colors during wave animation (backup/reinforce hover) */
+
 .startup-card.wave-active .startup-name,
 .startup-card.wave-active .rating-text,
 .startup-card.wave-active .comments-count,
 .startup-card.wave-active .investor-count,
-/* .startup-card.wave-active .progress-percentage, */
-/* .startup-card.wave-active .investment-type, */ /* REMOVED */
-/* .startup-card.wave-active .funding-goal-info, */ /* REMOVED */
+
+
 .startup-card.wave-active .startup-description {
-  color: #FFFFFF; 
-  /* REMOVED text-shadow: none; from here, should stay on base element */
+  color: #FFFFFF;
 }
 
 .startup-card.wave-active .category-tag {
-  background-color: rgba(0, 0, 0, 0.3); 
-  color: #FFFFFF; 
+  background-color: rgba(0, 0, 0, 0.3);
+  color: #FFFFFF;
 }
 
-/* Force black text and light background during wave */
+
 .startup-card.wave-active .investment-type,
 .startup-card.wave-active .funding-goal-info {
-  color: #333 !important; 
-  background-color: #f8f9fa !important; 
+  color: #333 !important;
+  background-color: #f8f9fa !important;
 }
 
 .startup-card.wave-active .comments-count i,
@@ -541,30 +466,30 @@ body {
     color: #FFFFFF;
 }
 
-/* Логотип стартапа */
+
 .startup-image {
-  width: 120px; /* <<< Изменено: Делаем квадратным */
-  height: 120px; /* <<< Изменено: Делаем квадратным */
+  width: 120px;
+  height: 120px;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden; 
+  overflow: hidden;
   position: absolute;
-  top: -30px; /* <<< Изменено: Выносим на 25% новой высоты (120px * 0.25) */
+  top: -30px;
   left: 50%;
   transform: translateX(-50%);
-  border-radius: 50%; /* Убедимся, что круглое */
-  border: 3px solid white; 
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15); 
-  background-color: #e9ecef; 
-  z-index: 2; 
+  border-radius: 50%;
+  border: 3px solid white;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  background-color: #e9ecef;
+  z-index: 2;
 }
 
 .startup-image img {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Масштабируем изображение с сохранением пропорций */
-  border-radius: 50%; /* <<< Убедимся, что изображение тоже круглое */
+  object-fit: cover;
+  border-radius: 50%;
 }
 
 .startup-image-placeholder {
@@ -573,176 +498,163 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 36px; /* <<< Возвращено */
+  font-size: 36px;
   color: #adb5bd;
   font-weight: bold;
-  border-radius: 50%; 
+  border-radius: 50%;
 }
 
-/* Название стартапа */
+
 .startup-name {
   font-family: Unbounded, sans-serif;
-  font-weight: 400; /* <<< Изменено */
-  font-size: 20px; /* <<< Изменено */
-  line-height: 18px; /* <<< Изменено */
-  letter-spacing: -0.02em; /* <<< Добавлено */
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 18px;
+  letter-spacing: -0.02em;
   margin: 0 0 10px 0;
-  color: #191919; 
-  text-align: left; 
-  /* Стили для обрезки текста */
+  color: #191919;
+  text-align: left;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  vertical-align: middle; /* <<< Добавлено (эффект может быть ограничен) */
+  vertical-align: middle;
 }
 
-/* Рейтинг и комментарии */
+
 .startup-rating-comments {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 13px; /* Keep size */
-  margin-bottom: 15px; /* Increase margin */
+  font-size: 13px;
+  margin-bottom: 15px;
   font-family: Unbounded, sans-serif;
   font-weight: 400;
-  /* Конфликтует с определением выше? - Resolved */
 }
 
 .rating-text {
-  color: #004e9f; /* Blue color */
-  /* Конфликтует с определением выше? - Resolved */
+  color: #004e9f;
 }
 
 .comments-count {
   display: flex;
   align-items: center;
   gap: 5px;
-  color: #6B7280; /* Gray color */
-  /* Конфликтует с определением выше? - Resolved */
+  color: #6B7280;
 }
 
 .comments-count i {
-  font-size: 14px; /* Размер иконки комментариев */
+  font-size: 14px;
 }
 
-/* Блок Категория + Прогресс */
+
 .category-progress {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 15px; /* Increase margin */
-  height: 28px; /* Set height like image */
-  /* Конфликтует с определением выше? - Resolved */
+  margin-bottom: 15px;
+  height: 28px;
 }
 
 .category-tag {
-  background-color: #f0f0f0; /* Light gray background */
-  color: #333; /* Dark text */
+  background-color: #f0f0f0;
+  color: #333;
   font-family: Unbounded, sans-serif;
   font-weight: 500;
-  font-size: 12px; /* Keep size */
-  padding: 6px 12px; /* Increase padding */
-  border-radius: 6px; /* Rounded corners */
+  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: 6px;
   white-space: nowrap;
   line-height: 1;
-  /* Конфликтует с определением выше? - Resolved */
 }
 
 .progress-bar-container {
   flex-grow: 1;
-  position: relative; /* For percentage positioning */
-  height: 100%; /* Match parent height */
-  /* Конфликтует с определением выше? - Resolved */
+  position: relative;
+  height: 100%;
 }
 
 .progress-bar-bg {
   width: 100%;
   height: 100%;
-  background-color: #FFF; /* White background */
-  border-radius: 6px; /* Match tag radius */
+  background-color: #FFF;
+  border-radius: 6px;
   overflow: hidden;
   position: absolute;
   top: 0;
   left: 0;
-  /* Конфликтует с определением выше? - Resolved */
 }
 
 .progress-bar-fill {
   height: 100%;
-  background-color: #FFDD00; /* Yellow fill */
-  border-radius: 6px; /* Match tag radius */
-  transition: width 0.5s linear; /* Changed ease to linear */
-  position: absolute; /* Add position */
+  background-color: #FFDD00;
+  border-radius: 6px;
+  transition: width 0.5s linear;
+  position: absolute;
   top: 0;
   left: 0;
-  /* Конфликтует с определением выше? - Resolved */
 }
 
 .progress-percentage {
-  position: absolute; /* Position inside */
-  left: 50%; /* Center horizontally */
+  position: absolute;
+  left: 50%;
   top: 50%;
-  transform: translate(-50%, -50%); /* Center perfectly */
-  font-size: 13px; /* Slightly larger */
-  font-weight: 400; /* Normal weight */
-  color: #191919; /* Black text */
+  transform: translate(-50%, -50%);
+  font-size: 13px;
+  font-weight: 400;
+  color: #191919;
   white-space: nowrap;
-  z-index: 1; /* Above fill */
-  /* text-shadow: 0 0 2px #FFF, 0 0 3px #FFF; Remove shadow */
-  /* Конфликтует с определением выше? - Resolved */
+  z-index: 1;
 }
 
-/* Тип инвестирования - скрыт или удален */
+
 .investment-type {
   background-color: transparent;
-  text-align: center; 
-  font-weight: 400; 
-  border: 1px solid #E5E7EB; 
-  padding: 8px 12px; 
-  color: #333; 
-  margin-bottom: 10px; 
-  border-radius: 6px; 
-  font-family: Unbounded, sans-serif; 
-  font-size: 13px; 
-  width: 100%; /* <<< Добавлено */
-  box-sizing: border-box; /* <<< Добавлено */
+  text-align: center;
+  font-weight: 400;
+  border: 1px solid #E5E7EB;
+  padding: 8px 12px;
+  color: #333;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  font-family: Unbounded, sans-serif;
+  font-size: 13px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-/* Цель финансирования */
+
 .funding-goal-info {
-  background-color: #f8f9fa; 
+  background-color: #f8f9fa;
   line-height: 1.3;
-  font-family: Unbounded, sans-serif; 
-  font-size: 13px; 
-  font-weight: 500; 
-  color: #333; 
-  margin-bottom: 10px; 
-  padding: 8px 12px; 
-  border-radius: 6px; 
-  text-align: center; 
-  width: 100%; /* <<< Добавлено */
-  box-sizing: border-box; /* <<< Добавлено */
+  font-family: Unbounded, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 10px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  text-align: center;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-/* Количество инвесторов */
+
 .investor-count {
-  justify-content: center; /* Центрируем содержимое */
-  padding: 5px 0; /* Reset padding */
-  border-radius: 0; /* Reset radius */
-  text-align: center; /* Центрируем текст на всякий случай */
-  background-color: transparent; /* Reset background */
-  /* Keep specific styles */
+  justify-content: center;
+  padding: 5px 0;
+  border-radius: 0;
+  text-align: center;
+  background-color: transparent;
   display: flex;
   align-items: center;
   gap: 6px;
-  font-family: Unbounded, sans-serif; /* Задаем шрифт */
-  font-weight: 300; /* Новый вес */
-  font-size: 12px; /* Новый размер */
-  line-height: 1; /* Новая высота строки */
-  letter-spacing: 0.01em; /* Новый интервал */
-  color: #6B7280; /* Gray color */
-  margin-bottom: 15px; /* Increase margin */
-  /* Конфликтует с определением выше? - Resolved */
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  font-size: 12px;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  color: #6B7280;
+  margin-bottom: 15px;
 }
 
 .investor-count i {
@@ -750,30 +662,28 @@ body {
   color: #6B7280;
 }
 
-/* Описание стартапа */
+
 .startup-description {
   font-family: Unbounded, sans-serif;
   font-weight: 300;
   font-size: 14px;
-  color: #4a5568; /* Slightly lighter dark */
+  color: #4a5568;
   line-height: 1.4;
   margin-bottom: 15px;
   text-align: left;
-  /* Truncate text */
   display: -webkit-box;
-  -webkit-line-clamp: 3; /* <<< Возвращено: Limit to 3 lines */
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-/* Состояние, когда нет доступных стартапов */
+
 .no-startups {
   text-align: center;
   padding: 40px;
   color: #777;
-  grid-column: 1 / -1; /* Занимает всю ширину грида */
-  /* Конфликтует с определением выше? */
+  grid-column: 1 / -1;
 }
 
 .no-startups p {
@@ -782,46 +692,46 @@ body {
   margin: 0;
 }
 
-/* === Адаптивность === */
 
-@media (max-width: 1320px) { /* Чуть больше чем 1303 + паддинги */
+
+@media (max-width: 1320px) {
   .catalog-container, .catalog-header {
-      max-width: 100%; /* Убираем max-width */
-      padding: 0; /* <<< Изменено: Убираем горизонтальные отступы */
+      max-width: 100%;
+      padding: 0;
   }
 }
 
 @media (max-width: 960px) {
   .catalog-container {
-    flex-direction: column; /* Фильтры сверху */
-    gap: 20px; /* Отступ между фильтрами и контентом */
+    flex-direction: column;
+    gap: 20px;
   }
 
   .sidebar {
-    width: 100%; /* Сайдбар на всю ширину */
+    width: 100%;
     margin-right: 0;
-    margin-bottom: 20px; /* Отступ снизу сайдбара */
+    margin-bottom: 20px;
     padding: 20px;
   }
 
   .startups-content {
-    width: 100%; /* Контент на всю ширину */
+    width: 100%;
   }
 
   .startups-grid {
-    justify-content: center; /* Центрируем карточки */
+    justify-content: center;
   }
 }
 
 @media (max-width: 740px) {
   .startups-grid {
-    justify-content: center; /* Все еще центрируем */
-    gap: 15px; /* Уменьшаем отступ */
+    justify-content: center;
+    gap: 15px;
   }
 
   .startup-card {
-    width: 100%; /* Карточка занимает почти всю ширину */
-    max-width: 350px; /* Но не больше этого значения */
+    width: 100%;
+    max-width: 350px;
   }
 
   .catalog-title {
@@ -832,14 +742,13 @@ body {
   }
 
   .catalog-header, .catalog-container {
-      padding: 0; /* <<< Изменено: Убираем горизонтальные отступы */
+      padding: 0;
   }
 
    .startup-card-inner {
-     padding: 15px; /* Уменьшаем внутренние отступы карточки */
+     padding: 15px;
    }
 
-   /* Корректируем размеры шрифтов для мобильных */
    .startup-name { font-size: 16px; }
    .startup-rating-comments { font-size: 11px; }
    .category-tag { font-size: 10px; }
@@ -852,32 +761,32 @@ body {
 
 @media (max-width: 400px) {
     .startups-grid {
-        gap: 10px; /* Минимальный отступ */
+        gap: 10px;
     }
     .startup-card {
-        max-width: 100%; /* Одна карточка на строку */
+        max-width: 100%;
     }
      .catalog-header, .catalog-container {
-      padding: 0; /* <<< Изменено: Убираем горизонтальные отступы */
+      padding: 0;
   }
 }
 
-/* === Стили пагинации и "Показать еще" === */
+
 .pagination-controls {
   display: flex;
-  flex-direction: column; /* Располагаем инфо над кнопкой */
-  align-items: center; /* Центрируем по горизонтали */
-  margin-top: 30px; /* Отступ сверху */
-  margin-bottom: 20px; /* Отступ снизу */
+  flex-direction: column;
+  align-items: center;
+  margin-top: 30px;
+  margin-bottom: 20px;
   width: 100%;
-  gap: 15px; /* Расстояние между инфо и кнопкой */
+  gap: 15px;
 }
 
-/* Стили для информации о пагинации */
+
 .pagination-info {
   font-family: 'Unbounded', sans-serif;
   font-size: 14px;
-  color: #FFFFFF; /* Белый текст для видимости на фоне */
+  color: #FFFFFF;
   text-align: center;
 }
 
@@ -885,16 +794,16 @@ body {
     margin: 0;
 }
 
-/* Стили контейнера кнопок */
-.show-more-container { /* Переименуем или используем общий контейнер */
+
+.show-more-container {
   display: flex;
-  flex-direction: column; /* Кнопки одна под другой */
+  flex-direction: column;
   align-items: center;
-  gap: 10px; /* Отступ между кнопками */
-  width: 100%; /* Занимаем ширину для центрирования */
+  gap: 10px;
+  width: 100%;
 }
 
-/* Общие стили для кнопок пагинации */
+
 .pagination-btn {
   position: relative;
   display: inline-flex;
@@ -922,37 +831,53 @@ body {
   font-size: 14px;
 }
 
-/* Стили кнопки "Показать еще" */
-.show-more-btn {
-  background-color: #0047FF; /* Синий фон */
-  /* Наследование общих стилей .pagination-btn */
+
+.pagination-controls .show-more-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  padding: 10px 25px !important;
+  border: 1px solid var(--text-primary) !important;
+  border-radius: 99px !important;
+  background: none !important;
+  background-color: transparent !important;
+  color: var(--text-primary) !important;
+  font-family: 'Unbounded', sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease !important;
+  text-decoration: none !important;
+  margin: 20px auto 0 auto !important;
+  width: auto !important;
+  box-shadow: none !important;
+  text-transform: none !important;
 }
 
-.show-more-btn:disabled {
-    background-color: #cccccc;
-    cursor: not-allowed;
-    opacity: 0.7;
+.pagination-controls .show-more-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  border-color: var(--text-primary) !important;
+  color: var(--text-primary) !important;
 }
 
-/* Стили кнопки "Скрыть" */
+
 .hide-btn {
-  background-color: #6c757d; /* Серый фон для "Скрыть" */
-  /* Наследование общих стилей .pagination-btn */
-  /* display: none;  <-- Закомментируем старое правило */
+  background-color: #6c757d;
 }
 
-/* Используем ID для большей специфичности, чтобы точно скрыть кнопку */
+
 #hideBtn {
     display: none;
 }
 
-/* Убираем hover-эффект изменения фона, т.к. есть position aware */
-.pagination-btn:not(:disabled):hover {
-  /* background-color: затемненный; */ /* Не нужно */
+
+.pagination-controls .show-more-btn i {
+    color: var(--text-primary) !important;
 }
 
-/* Эффект Position Aware (стили уже есть, проверяем селектор) */
-/* Убедимся, что эффект применяется ко всем кнопкам с классом .pagination-btn */
+
+
 .pagination-btn .position-aware-effect {
     content: '';
     position: absolute;
@@ -961,169 +886,95 @@ body {
     height: 0;
     pointer-events: none;
     border-radius: 50%;
-    background: rgba(0, 0, 0, 0.1); /* Темный эффект для светлых кнопок */
+    background: rgba(0, 0, 0, 0.1);
     transform: translate(-50%, -50%);
-    transition: width 0.6s linear, height 0.6s linear; /* Changed ease-out to linear */
+    transition: width 0.6s linear, height 0.6s linear;
     z-index: 2;
     opacity: 1;
     animation: ripple 0.6s linear forwards;
     will-change: transform, opacity;
 }
 
-/* Тег "Франшиза" */
+
 .startup-franchise-tag {
   position: absolute;
-  top: 15px; /* Отступ сверху */
-  left: 20px; /* Отступ слева */
+  top: 15px;
+  left: 20px;
   font-family: Unbounded, sans-serif;
-  font-size: 10px; /* Уменьшаем шрифт еще */
+  font-size: 10px;
   font-weight: 300;
-  color: #cccccc; /* Светло-серый, полупрозрачный */
+  color: #cccccc;
   background-color: transparent;
   padding: 0;
-  z-index: 1; /* Под аватаром */
+  z-index: 1;
 }
 
-/* Ссылка "Подробнее" - <<< Изменяем стили, чтобы растянуть на всю карточку >>> */
+
 .detail-link {
-  position: absolute; /* Позиционируем абсолютно относительно .startup-card */
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  /* Делаем невидимой, но кликабельной */
-  font-size: 0; /* Скрыть текст */
+  font-size: 0;
   color: transparent;
   background-color: transparent;
   border: none;
-  z-index: 3; /* Поверх всего остального контента карточки */
-  /* Убираем старые стили позиционирования и оформления */
-  /* bottom: 20px; */
-  /* font-family: Unbounded, sans-serif; */
-  /* font-weight: 400; */
-  /* text-decoration: none; */
-  /* display: inline-flex; */
-  /* align-items: center; */
-  /* gap: 5px; */
-  /* transition: color 0.2s ease; */
+  z-index: 3;
 }
 
-/* .detail-link i { ... } */
-/* .detail-link:hover { ... } */
 
-/* === Стили для noUiSlider (имитация rangeslider.js) === */
+
+
 .rating-filter .noUi-target {
-  background: #EBEBEB; /* Цвет неактивной части */
+  background: #EBEBEB;
   height: 2px;
-  margin-top: 10px; /* Отступ сверху */
-  margin-bottom: 15px; /* И снизу */
+  margin-top: 10px;
+  margin-bottom: 15px;
   box-shadow: none;
   border: none;
   border-radius: 2px;
 }
 
 .rating-filter .noUi-connect {
-  background: #004E9F; /* Цвет активной части */
+  background: #004E9F;
   box-shadow: none;
   border-radius: 2px;
 }
 
 .rating-filter .noUi-handle {
-  width: 9px;  /* Размер 9px */
-  height: 9px; /* Размер 9px */
-  border-radius: 50%; /* Круглые */
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
   background: #004E9F;
   border: none;
   box-shadow: none;
   cursor: pointer;
-  /* Центрирование по вертикали: сдвиг на половину высоты ползунка вверх + половину высоты линии вниз */
-  top: -4px; /* -(9px/2) + (2px/2) округлено */
-  right: auto; /* Горизонтальное положение управляется noUiSlider */
+  top: -4px;
+  right: auto;
 }
 
-/* Убираем стандартные ::before и ::after у ползунков */
+
 .rating-filter .noUi-handle::before,
 .rating-filter .noUi-handle::after {
   display: none;
 }
 
-/* === Комментируем или удаляем старые стили rangeslider.js === */
-/*
-.rating-filter .rangeslider {
-  display: block; 
-  background: #EBEBEB; 
-  height: 2px;
-  margin-top: 10px; 
-  margin-bottom: 15px; 
-  box-shadow: none;
-  border-radius: 2px;
-}
 
-.rating-filter .rangeslider .rangeslider__fill {
-  background: #004E9F; 
-  box-shadow: none;
-  border-radius: 2px;
-  display: block; 
-}
-
-.rating-filter .rangeslider .rangeslider__handle {
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: #004E9F; 
-  border: none;
-  box-shadow: none;
-  
-  &:after {
-    display: none;
-  }
-  
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-
-input[type=range]#ratingSlider {
-  -webkit-appearance: none; 
-  appearance: none;
-  width: 100%; 
-  height: 2px; 
-  background: transparent; 
-  cursor: pointer;
-}
-
-
-input[type=range]#ratingSlider::-webkit-slider-thumb {
-  -webkit-appearance: none; 
-  appearance: none;
-  
-  width: 0; 
-  height: 0;
-}
-
-
-input[type=range]#ratingSlider::-moz-range-thumb {
- 
-  width: 0;
-  height: 0;
-  border: none;
-  background: transparent;
-}
-*/
 
 .startup-card-link {
   text-decoration: none;
   color: inherit;
-  display: block; /* Чтобы ссылка занимала всю карточку */
+  display: block;
 }
 
 .startup-card-banner {
     width: 100%;
-    height: 120px; /* Fixed height for banner */
-    background-color: #222; /* Placeholder color */
+    height: 120px;
+    background-color: #222;
     background-size: cover;
     background-position: center;
-    border-radius: 15px 15px 0 0; /* Top corners rounded */
+    border-radius: 15px 15px 0 0;
     margin-bottom: 15px;
     position: relative;
     overflow: hidden;
@@ -1136,7 +987,7 @@ input[type=range]#ratingSlider::-moz-range-thumb {
     background: linear-gradient(to top, rgba(0,0,0,0.5), transparent);
 }
 
-/* Ripple effect for the card image */
+
 .ripple-effect {
     position: absolute;
     border-radius: 50%;
@@ -1154,7 +1005,7 @@ input[type=range]#ratingSlider::-moz-range-thumb {
 }
 
 .startup-card-content {
-    padding: 0 20px 20px; /* Padding only for content */
+    padding: 0 20px 20px;
 }
 
 .startup-name {
@@ -1171,7 +1022,7 @@ input[type=range]#ratingSlider::-moz-range-thumb {
     color: rgba(255, 255, 255, 0.7);
     line-height: 1.5;
     margin-bottom: 15px;
-    height: 4.5em; /* Limit to 3 lines */
+    height: 4.5em;
     overflow: hidden;
     text-overflow: ellipsis;
 }
@@ -1196,12 +1047,12 @@ input[type=range]#ratingSlider::-moz-range-thumb {
     display: flex;
     align-items: center;
     gap: 5px;
-    color: #FFD700; /* Gold color for stars */
+    color: #FFD700;
     font-size: 14px;
 }
 
 .startup-rating .far.fa-star {
-    color: rgba(255, 255, 255, 0.3); /* Dimmed empty stars */
+    color: rgba(255, 255, 255, 0.3);
 }
 
 .startup-funding {
@@ -1218,9 +1069,9 @@ input[type=range]#ratingSlider::-moz-range-thumb {
 
 .funding-progress-bar {
     height: 100%;
-    background-color: #08E5CF; /* Accent color for progress */
+    background-color: #08E5CF;
     border-radius: 4px;
-    transition: width 0.6s linear; /* Changed ease-out to linear */
+    transition: width 0.6s linear;
 }
 
 .funding-details {
@@ -1238,7 +1089,6 @@ input[type=range]#ratingSlider::-moz-range-thumb {
 }
 
 .funding-goal {
-    /* Style for goal */
 }
 
 .funding-percentage {
@@ -1263,7 +1113,7 @@ input[type=range]#ratingSlider::-moz-range-thumb {
     font-weight: 700;
     font-size: 14px;
     cursor: pointer;
-    transition: background-color 0.3s linear; /* Added linear */
+    transition: background-color 0.3s linear;
     white-space: nowrap;
 }
 
@@ -1285,7 +1135,7 @@ input[type=range]#ratingSlider::-moz-range-thumb {
 }
 
 .stat-item i {
-    transition: transform 0.3s linear; /* Added linear */
+    transition: transform 0.3s linear;
 }
 
 .stat-item:hover i {
@@ -1293,37 +1143,6 @@ input[type=range]#ratingSlider::-moz-range-thumb {
 }
 
 
-
-/* Кнопка "Показать еще" */
-.show-more-btn {
-    display: block;
-    width: fit-content;
-    margin: 40px auto;
-    padding: 12px 30px;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 25px;
-    background-color: transparent;
-    color: #FFFFFF;
-    font-weight: 500;
-    font-size: 15px;
-    cursor: pointer;
-    transition: transform 0.2s linear, box-shadow 0.2s linear; /* Changed ease-in-out to linear */
-}
-
-.show-more-btn:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.5);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-.show-more-btn:active {
-    transform: translateY(0);
-    box-shadow: none;
-}
-
-
-/* Стили для динамически добавляемых карточек */
 .startup-card.new-item {
     opacity: 0;
     transform: translateY(20px);
@@ -1337,7 +1156,7 @@ input[type=range]#ratingSlider::-moz-range-thumb {
     }
 }
 
-/* Улучшенные стили для фильтров */
+
 .filter-buttons {
     display: flex;
     gap: 10px;
@@ -1353,38 +1172,35 @@ input[type=range]#ratingSlider::-moz-range-thumb {
     font-weight: 500;
     font-size: 14px;
     cursor: pointer;
-    transition: width 0.5s linear; /* Changed ease to linear */
+    transition: width 0.5s linear;
     display: flex;
     align-items: center;
     gap: 6px;
 }
 
 .cta-button {
-    /* ... other styles ... */
-    transition: background-color 0.3s linear, color 0.3s linear, opacity 0.3s linear; /* Added linear */
+    transition: background-color 0.3s linear, color 0.3s linear, opacity 0.3s linear;
 }
 
 .progress-bar {
-    /* ... other styles ... */
-    transition: width 0.6s linear, height 0.6s linear; /* Changed ease-out to linear */
+    transition: width 0.6s linear, height 0.6s linear;
 }
 
-/* Text colors on hover/wave active */
+
 .startup-card.wave-active .startup-name,
 .startup-card.wave-active .rating-text,
 .startup-card.wave-active .comments-count,
 .startup-card.wave-active .investor-count,
-/* .startup-card.wave-active .progress-percentage, */ /* REMOVED */
+
 .startup-card.wave-active .investment-type,
 .startup-card.wave-active .funding-goal-info,
 .startup-card.wave-active .startup-description {
-  color: #FFFFFF !important; /* Force white during animation */
-  /* REMOVED text-shadow: none; from here, should stay on base element */
+  color: #FFFFFF !important;
 }
 
 .startup-card.wave-active .category-tag {
-  background-color: rgba(0, 0, 0, 0.3); /* Darker tag background */
-  color: #FFFFFF !important; /* White text on tag */
+  background-color: rgba(0, 0, 0, 0.3);
+  color: #FFFFFF !important;
 }
 
 .startup-card.wave-active .comments-count i,
@@ -1392,7 +1208,7 @@ input[type=range]#ratingSlider::-moz-range-thumb {
     color: #FFFFFF !important;
 }
 
-/* Position Aware Effect for Startup Cards */
+
 .startup-card .position-aware-effect {
     content: '';
     position: absolute;
@@ -1401,16 +1217,16 @@ input[type=range]#ratingSlider::-moz-range-thumb {
     height: 0;
     pointer-events: none;
     border-radius: 50%;
-    background: rgba(0, 0, 0, 0.1); /* Darker ripple for light cards */
+    background: rgba(0, 0, 0, 0.1);
     transform: translate(-50%, -50%);
-    transition: width 0.6s linear, height 0.6s linear; 
-    z-index: 4; /* Above detail link (z-index 3) */
+    transition: width 0.6s linear, height 0.6s linear;
+    z-index: 4;
     opacity: 1;
     animation: ripple 0.6s linear forwards;
     will-change: transform, opacity;
 }
 
-/* Position Aware Effect inside the content wrapper */
+
 .startup-card-content-wrapper .position-aware-effect {
     content: '';
     position: absolute;
@@ -1419,16 +1235,16 @@ input[type=range]#ratingSlider::-moz-range-thumb {
     height: 0;
     pointer-events: none;
     border-radius: 50%;
-    background: rgba(0, 0, 0, 0.1); /* Darker ripple for light cards */
+    background: rgba(0, 0, 0, 0.1);
     transform: translate(-50%, -50%);
-    transition: width 0.6s linear, height 0.6s linear; 
-    z-index: 1; /* Should be above content but clipped by wrapper */
+    transition: width 0.6s linear, height 0.6s linear;
+    z-index: 1;
     opacity: 1;
     animation: ripple 0.6s linear forwards;
     will-change: transform, opacity;
 }
 
-/* Стили для кнопки Показать еще в каталоге */
+
 .pagination-controls .show-more-btn {
     background: transparent !important;
     color: #FFFFFF !important;
@@ -1455,7 +1271,7 @@ input[type=range]#ratingSlider::-moz-range-thumb {
     margin-left: 8px;
 }
 
-/* Стили для кнопки Скрыть - можно сделать похожей, но менее акцентной */
+
 .pagination-controls .hide-btn {
     background: transparent;
     color: #a9b8d4;
@@ -1480,21 +1296,4 @@ input[type=range]#ratingSlider::-moz-range-thumb {
 
 .pagination-controls .hide-btn i {
     margin-left: 8px;
-}
-
-// Функция для переключения микроинвестиций
-function toggleMicroInvestment() {
-  var toggle = document.getElementById('microToggle');
-  var input = document.getElementById('microInvestmentInput');
-
-  if (toggle.classList.contains('active')) {
-    toggle.classList.remove('active');
-    input.value = '0';
-  } else {
-    toggle.classList.add('active');
-    input.value = '1';
-  }
-  // Опционально: если изменение этого поля должно влиять на фильтр,
-  // можно автоматически отправить форму: document.getElementById('filterForm').submit();
-  // Но обычно пользователь ожидает нажатия кнопки "Показать"
 }
