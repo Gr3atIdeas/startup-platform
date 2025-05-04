@@ -228,13 +228,14 @@ document.addEventListener('DOMContentLoaded', function() {
             // closeEffect: 'fade',
             closeOnOutsideClick: true, // Добавляем опцию закрытия по клику вне окна
             plyr: { // Добавляем настройки Plyr
-                config: {
-                    speed: {
-                        selected: 1, // Скорость по умолчанию
-                        options: [0.5, 1, 1.25, 1.5] // Доступные скорости
-                    }
-                    // Здесь можно добавить другие настройки Plyr, если нужно
+                // НЕ заворачиваем в config, опции Plyr передаются напрямую
+                speed: {
+                    selected: 1, // Скорость по умолчанию
+                    options: [0.5, 1, 1.25, 1.5] // Доступные скорости
                 }
+                // Другие опции Plyr можно добавить здесь же, например:
+                // controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'settings', 'fullscreen'],
+                // tooltips: { controls: true, seek: true }
             }
         });
         console.log('GLightbox initialized for .glightbox elements with Plyr speed options');
