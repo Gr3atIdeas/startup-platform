@@ -1739,7 +1739,6 @@ a:hover {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3) !important;
   opacity: 0.8 !important;
   cursor: pointer !important;
-  transition: background-color 0.3s ease !important;
 
   /* Стили для SVG внутри кнопки (оставляем) */
   display: flex !important; /* Для центровки SVG */
@@ -1858,6 +1857,80 @@ body.glightbox-open .glightbox-container {
 
 /* Стили для SVG иконки внутри кнопки (если стандартные иконки не видны) */
 .gnext svg, .gprev svg {
+  display: block !important;
+  width: 20px !important; /* Размер иконки */
+  height: 20px !important; /* Размер иконки */
+  fill: white !important; /* Цвет иконки */
+}
+
+/* GLightbox Container Fixes */
+.glightbox-container { /* Самый внешний контейнер */
+    position: fixed !important; /* Фиксированное позиционирование относительно окна */
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    overflow: hidden !important; /* Предотвращаем выход за пределы экрана */
+    z-index: 9990 !important; /* Чуть ниже оверлея и кнопок, но выше остального */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px; /* Небольшой отступ от краев экрана */
+    box-sizing: border-box;
+}
+
+.gcontainer { /* Контейнер для слайдера и кнопок */
+    position: relative !important; /* Относительное позиционирование для дочерних абсолютных */
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 95vw !important; /* Ограничиваем макс. ширину */
+    max-height: 95vh !important; /* Ограничиваем макс. высоту */
+    display: flex !important; /* Используем flex для выравнивания слайдера */
+    align-items: center !important;
+    justify-content: center !important;
+    margin: auto !important; /* Дополнительное центрирование */
+    z-index: 9995 !important;
+}
+
+.gslider { /* Сам слайдер */
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 100%; /* Занимает всю ширину .gcontainer */
+    max-height: 100%; /* Занимает всю высоту .gcontainer */
+}
+
+/* Перепроверим стили кнопок, чтобы они точно были внутри .gcontainer */
+.gcontainer .gnext,
+.gcontainer .gprev {
+    position: absolute !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    z-index: 9999 !important;
+    width: 40px !important; /* Убедимся, что !important есть */
+    height: 40px !important;
+    background-color: rgba(0, 0, 0, 0.5) !important; /* Полупрозрачный фон для видимости */
+    border-radius: 50% !important; /* Сделать круглыми */
+    border: none !important;
+    padding: 0 !important;
+    display: flex !important; /* Используем flex для центрирования иконки */
+    align-items: center !important;
+    justify-content: center !important;
+    opacity: 1 !important; /* Убедимся, что кнопки не прозрачные */
+    visibility: visible !important; /* Убедимся, что кнопки видимы */
+    cursor: pointer !important;
+}
+
+.gcontainer .gprev {
+    left: 15px !important; /* Небольшой отступ от края .gcontainer */
+}
+
+.gcontainer .gnext {
+    right: 15px !important; /* Небольшой отступ от края .gcontainer */
+}
+
+/* Стили для SVG иконки внутри кнопки (если стандартные иконки не видны) */
+.gcontainer .gnext svg,
+.gcontainer .gprev svg {
   display: block !important;
   width: 20px !important; /* Размер иконки */
   height: 20px !important; /* Размер иконки */
