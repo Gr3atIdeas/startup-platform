@@ -184,19 +184,31 @@
 /* Нижняя полоса с копирайтом */
 .footer-copyright-bar {
   border-top: 1px solid rgba(0, 0, 0, 0.1); /* Сделаем разделитель темнее для белого фона */
-  padding: 8px 0; /* Уменьшаем вертикальные отступы */
+  padding: 8px 0; /* Оставляем только вертикальные отступы */
   margin-top: 40px;
   background-color: #FFFFFF; /* Белый фон */
   color: #191919; /* Темный текст */
 }
 
-.footer-copyright-bar-content {
+/* Новый контейнер для copyright */
+.copyright-inner-container {
+  max-width: 1303px;
+  margin: 0 auto;
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 175px; /* Боковые отступы */
-  box-sizing: border-box; /* Учитываем padding в ширине */
-  width: 100%; /* Явно указываем занять всю ширину родителя */
+}
+
+.footer-copyright-bar-content {
+  padding: 0; /* Убираем все отступы отсюда */
+  box-sizing: border-box;
+  width: 100%;
+  /* Внутренние элементы теперь управляются .copyright-inner-container */
+  /* Сохраняем flex для правильного отображения дочерних .copyright и .links */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .footer-copyright-bar-copyright {
@@ -234,16 +246,29 @@
   color: #191919; /* Черный при наведении */
 }
 
-/* Новая структура с Flexbox для расположения как на скриншоте */
-.footer-main-content {
+/* Новый контейнер для основного контента футера */
+.footer-inner-container {
+  max-width: 1303px;
+  margin: 0 auto;
+  width: 100%;
   display: flex;
   justify-content: space-between;
-  gap: 40px; /* Пространство между блоками */
-  margin-bottom: 40px; /* Оставляем только нижний отступ */
-  padding: 0 175px; /* Боковые отступы */
-  box-sizing: border-box; /* Учитываем padding в ширине */
-  align-items: flex-start; /* Выравнивание по верху */
-  width: 100%; /* Явно указываем занять всю ширину родителя */
+  gap: 40px;
+  align-items: flex-start;
+  /* Добавляем нижний отступ, который был на footer-main-content */
+  margin-bottom: 40px;
+}
+
+/* Основной контейнер (внутри inner) */
+.footer-main-content {
+  padding: 0; /* Убираем отступы отсюда */
+  box-sizing: border-box;
+  width: 100%;
+  /* Сохраняем flex для правильного расположения колонок */
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+  align-items: flex-start;
 }
 
 .footer-left-column {
@@ -259,13 +284,39 @@
 }
 
 /* Адаптивность */
+@media (max-width: 1350px) { /* Добавляем точку для 1303px + немного */
+  .footer-inner-container, .copyright-inner-container {
+      max-width: 100%;
+      padding-left: 20px; /* Небольшие отступы для экранов < 1303px */
+      padding-right: 20px;
+  }
+}
+
 @media (max-width: 992px) {
-  .footer-main-content {
+  /* Переносим адаптивные отступы на inner контейнеры */
+  .footer-inner-container {
+    padding-left: 30px;
+    padding-right: 30px;
     flex-direction: column;
     gap: 30px;
     align-items: center; /* Центрируем контент */
     text-align: center;
-    padding: 0 30px; /* Уменьшаем отступы на планшетах */
+    margin-bottom: 30px; /* Уменьшаем нижний отступ */
+  }
+  .copyright-inner-container {
+    padding-left: 30px;
+    padding-right: 30px;
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+
+  .footer-main-content {
+    /* Убираем flex-direction для этого уровня, так как колонки теперь одна под другой */
+    /* flex-direction: column; */
+    gap: 30px;
+    align-items: center; /* Центрируем контент */
+    text-align: center;
   }
 
   .footer-left-column, .footer-right-column {
@@ -277,6 +328,7 @@
   .footer-right-column {
       flex-direction: column;
       gap: 30px;
+      padding-top: 0; /* Убираем отступ */
   }
 
   .footer-text {
@@ -301,17 +353,16 @@
     order: 3;
   }
 
-  .footer-copyright-bar-content {
-    flex-direction: column;
-    gap: 10px;
-    text-align: center;
-    padding: 0 30px; /* Уменьшаем отступы на планшетах */
-  }
+  /* .footer-copyright-bar-content уже обрабатывается .copyright-inner-container */
 }
 
 @media (max-width: 576px) {
   .site-footer {
-    padding: 40px 20px 0;
+    padding: 40px 0 0; /* Убираем боковые, оставляем верхний */
+  }
+  .footer-inner-container, .copyright-inner-container {
+      padding-left: 20px;
+      padding-right: 20px;
   }
 
   .footer-menus {
@@ -328,20 +379,4 @@
   /* .suggest-news-button { ... } */
 }
 
-.footer-container {
-    max-width: 100%;
-    margin: 0 auto;
-    padding: 0 175px; /* Боковые отступы */
-    display: flex;
-    justify-content: space-between; /* Распределение элементов */
-}
-
-.footer-bottom {
-    display: flex;
-    justify-content: space-between; /* Элементы по краям */
-    align-items: center;
-    margin-top: 20px; /* Отступ сверху */
-    padding: 0 175px; /* Боковые отступы */
-    border-top: 1px solid #444; /* Верхняя граница */
-    padding-top: 20px; /* Отступ сверху от границы */
-}
+/* Удаляем старые .footer-container и .footer-bottom */
