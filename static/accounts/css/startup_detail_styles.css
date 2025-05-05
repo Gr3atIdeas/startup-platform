@@ -1118,32 +1118,42 @@ a:hover {
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  align-items: stretch; 
+  align-items: flex-start; /* Выравниваем контент по левому краю */
   gap: 16px;
   /* Убираем отступ сверху, если он не нужен по макету */
   /* margin-top: ??? */ 
 }
 
-/* --- Стили правой колонки (Общий рейтинг) --- */
-.comments-rating-summary { /* Контейнер для звезд и цифры */
-  display: flex;
-  flex-direction: column; 
-  align-items: flex-start; 
-  gap: 8px; 
-  /* Добавляем разделитель снизу */
-  padding-bottom: 16px;
-  margin-bottom: 16px; /* Отступ под разделителем */
-  border-bottom: 1px solid #E6E8EC; /* Цвет разделителя */
+/* Убираем старый .comments-rating-summary, т.к. структура изменилась */
+/* .comments-rating-summary { ... } */
+
+/* Обертка для всего контента рейтинга (линия + распределение) */
+.rating-summary-content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px; /* Отступ между линией рейтинга и распределением */
+}
+
+/* Линия: Большие планеты + цифра */
+.overall-rating-line {
+    display: flex;
+    align-items: center; /* Выравнивание по вертикали */
+    gap: 12px; /* Отступ между планетами и цифрой */
+    width: 100%;
+    padding-bottom: 16px; /* Отступ под линией */
+    border-bottom: 1px solid #E6E8EC; /* Разделитель */
+    margin-bottom: 0; /* Убираем нижний маргин, т.к. gap у родителя */
 }
 
 .overall-rating-stars {
     display: flex;
-    gap: 6px; /* Отступ между звездами */
-    margin-bottom: 8px; 
+    gap: 6px; 
+    /* margin-bottom убран, т.к. все в одну линию */
 }
 
 .overall-rating-icon-container {
-    width: 40px; /* Увеличиваем размер */
+    width: 40px; 
     height: 40px;
 }
 
@@ -1152,37 +1162,40 @@ a:hover {
   font-size: 48px;
   font-style: normal;
   font-weight: 500;
-  line-height: 1; /* Уменьшаем высоту строки */
+  line-height: 1;
   color: #23262F;
 }
 
+/* Распределение рейтинга */
 .rating-distribution {
   display: flex;
   flex-direction: column;
-  gap: 8px; /* Отступ между строками */
-  width: 100%; /* На всю ширину правой колонки */
+  gap: 10px; /* Увеличим немного gap */
+  width: 100%; 
 }
 
 .rating-bar-container {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px; /* Увеличим gap */
 }
 
+/* Контейнер для N маленьких планет */
 .star-label {
-  width: 16px;
-  height: 16px;
   flex-shrink: 0;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: center; /* Выравнивание планеток */
+  justify-content: flex-start; /* Начинаем слева */
+  gap: 3px; /* Отступ между маленькими планетами */
+  min-width: 95px; /* Приблизительная ширина для 5 планет + отступы */ 
+  /* width: auto; */ /* Ширина по содержимому */
 }
 
+/* Маленькая иконка планеты в распределении */
 .rating-dist-icon {
-  width: 100%;
-  height: 100%;
+  width: 16px; /* Фикс размер */
+  height: 16px;
   object-fit: contain;
-  /* Предполагаем, что SVG желтый (#FFC85E) */
 }
 
 .rating-bar {

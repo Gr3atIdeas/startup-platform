@@ -120,10 +120,20 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // >>> ДОБАВЛЯЕМ ОТОБРАЖЕНИЕ ДЛЯ ОБЩЕГО РЕЙТИНГА В БЛОКЕ КОММЕНТАРИЕВ <<<
+    const overallRatingStarsElement = document.querySelector('.overall-rating-stars');
+    if (overallRatingStarsElement) {
+        const overallRatingRaw = overallRatingStarsElement.getAttribute('data-rating');
+        const overallRatingStringForJs = overallRatingRaw ? overallRatingRaw.replace(',', '.') : '0';
+        const overallRating = parseFloat(overallRatingStringForJs);
+        updateRatingDisplay('.overall-rating-stars', overallRating);
+    }
+    // >>> КОНЕЦ ДОБАВЛЕННОГО КОДА <<<
+
     // 3. Логика "Показать еще" / "Скрыть" для комментариев
     const showMoreCommentsBtn = document.querySelector('.show-more-comments');
     const hideCommentsBtn = document.querySelector('.hide-comments-button');
-    const commentsToShow = 3;
+    const commentsToShow = 5; // Показываем 5 по умолчанию
 
     if (showMoreCommentsBtn && hideCommentsBtn && commentCards.length > commentsToShow) {
         showMoreCommentsBtn.addEventListener('click', function() {

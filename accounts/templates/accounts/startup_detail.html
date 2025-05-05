@@ -392,31 +392,41 @@
 
       {# 2.2 Правая колонка: Общий рейтинг #}
       <div class="comments-rating-summary-wrapper">
-        <div class="comments-rating-summary">
-          {# Добавляем блок для планет перед цифрой #}
-          <div class="overall-rating-stars" data-rating="{{ average_rating|floatformat:'-2'|default:0 }}">
-              {% for i in "12345" %}
-                <span class="rating-icon-container overall-rating-icon-container">
-                  <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-empty">
-                  <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-filled">
-                </span>
-              {% endfor %}
-          </div>
-          <span class="average-rating-value">{{ average_rating|default:0|floatformat:"1" }}</span>
+        {# Обертка для верхней линии (планеты + цифра) и распределения #}
+        <div class="rating-summary-content">
+          {# Верхняя линия: Планеты + Цифра #}
+          <div class="overall-rating-line">
+            <div class="overall-rating-stars" data-rating="{{ average_rating|floatformat:'-2'|default:0 }}">
+                {% for i in "12345" %}
+                  <span class="rating-icon-container overall-rating-icon-container">
+                    <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-empty">
+                    <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-filled">
+                  </span>
+                {% endfor %}
+            </div>
+            <span class="average-rating-value">{{ average_rating|default:0|floatformat:"1" }}</span>
+          </div> {# Конец overall-rating-line #}
+
+          {# Распределение рейтинга #}
           <div class="rating-distribution" data-ratings='{{ rating_distribution|to_json }}'>
-            {% for i in "54321" %}
+            {% for i_str in "54321" %}
+              {% with i=i_str|add:"0" %} {# Преобразуем строку в число #}
               <div class="rating-bar-container">
+                {# Генерируем i маленьких планеток #}
                 <span class="star-label">
-                  <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="rating-dist-icon">
+                  {% for _ in ""|rjust:i %}
+                    <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="rating-dist-icon">
+                  {% endfor %}
                 </span>
                 <div class="rating-bar">
-                  <div class="rating-bar-fill" style="width: {{ rating_distribution|get_item:i|default:0 }}%;"></div>
+                  <div class="rating-bar-fill" style="width: {{ rating_distribution|get_item:i_str|default:0 }}%;"></div> {# Используем i_str (строку) для ключа словаря #}
                 </div>
-                <span class="rating-count">{{ rating_counts|get_item:i|default:0 }}</span>
+                <span class="rating-count">{{ rating_counts|get_item:i_str|default:0 }}</span> {# Используем i_str (строку) для ключа словаря #}
               </div>
+              {% endwith %}
             {% endfor %}
-          </div>
-        </div>
+          </div> {# Конец rating-distribution #}
+        </div> {# Конец rating-summary-content #}
       </div> {# Конец comments-rating-summary-wrapper #}
 
     </div> {# Конец comments-main-content #}
