@@ -1045,20 +1045,18 @@ a:hover {
 /* ======================================== */
 #comments-section {
   display: flex;
-  width: 1303px; /* Фиксированная ширина, можно сделать адаптивнее */
-  max-width: 90%; /* Ограничим максимальную ширину для больших экранов */
+  /* width: 1303px; */ /* Убираем фикс ширину, пусть будет по контейнеру */
+  max-width: 100%; /* Используем всю ширину контейнера */
   margin-left: auto;
   margin-right: auto;
-  padding: 40px 50px; /* Скорректируем паддинги */
+  padding: 40px; /* Уменьшим паддинги */
   flex-direction: column;
-  align-items: stretch; /* Растягиваем дочерние по ширине */
-  gap: 25px; /* Увеличим основной gap */
+  align-items: stretch;
+  gap: 30px; /* Отступ между header, form, list */
   flex-shrink: 0;
   border-radius: 20px;
-  background: var(--text-primary); /* Явно белый фон */
-  box-shadow: 6px 6px 10px 0px rgba(0, 0, 0, 0.25);
-  /* Убираем backdrop-filter, на белом фоне он не нужен */
-  /* backdrop-filter: blur(10px); */
+  background: var(--text-primary);
+  box-shadow: 0px 8px 16px -8px rgba(15, 15, 15, 0.10); /* Тень как в макете */
   margin-top: 50px;
   margin-bottom: 50px;
   box-sizing: border-box;
@@ -1067,45 +1065,44 @@ a:hover {
 .comments-header {
   display: flex;
   justify-content: space-between;
-  align-items: center; /* Выравниваем по центру вертикально */
-  margin-bottom: 15px; /* Уменьшим отступ снизу */
+  align-items: center;
+  margin-bottom: 0; /* Убираем нижний отступ */
   gap: 30px;
   flex-wrap: wrap;
-  border-bottom: 1px solid #E0E0E0; /* Цвет разделителя */
-  padding-bottom: 25px; /* Отступ под разделителем */
+  border-bottom: none; /* Убираем разделитель */
+  padding-bottom: 0; /* Убираем паддинг под разделителем */
 }
 
-/* Заголовок "Комментарии (N)" */
 #comments-section .section-title {
-  color: #141416; /* Цвет как на макете */
+  color: #141416; /* Темный */
   font-family: 'Unbounded', sans-serif;
   font-size: 24px;
   font-style: normal;
   font-weight: 500; /* Medium */
-  line-height: normal;
-  margin: 0; /* Убираем отступы по умолчанию */
+  line-height: 1.3; /* Чуть больше */
+  margin: 0;
 }
 
 .comments-count {
-  color: #777E90; /* Цвет счетчика как на макете */
+  color: #777E90; /* Серый */
   font-family: 'Unbounded', sans-serif;
   font-size: 24px;
   font-style: normal;
   font-weight: 500;
-  line-height: normal;
-  margin-left: 5px; /* Небольшой отступ */
+  line-height: 1.3;
+  margin-left: 8px;
 }
 
 .comments-rating-summary {
   display: flex;
   align-items: center;
-  gap: 20px; /* Увеличим отступ */
+  gap: 16px; /* Отступ между 4,7 и барами */
 }
 
 .average-rating-value {
-  font-size: 48px; /* Крупный размер рейтинга */
+  font-size: 48px;
   font-weight: 500; /* Medium */
-  color: #23262F; /* Цвет рейтинга */
+  color: #23262F; /* Темно-серый */
   line-height: 1;
   font-family: 'Unbounded', sans-serif;
 }
@@ -1113,132 +1110,142 @@ a:hover {
 .rating-distribution {
   display: flex;
   flex-direction: column;
-  gap: 8px; /* Отступ между строками */
-  min-width: 200px; /* Минимальная ширина */
+  gap: 6px; /* Уменьшим gap между барами */
+  min-width: 180px; /* Ширина блока баров */
 }
 
 .rating-bar-container {
   display: flex;
   align-items: center;
-  gap: 10px; /* Отступ между элементами */
-  font-size: 12px; /* Размер шрифта счетчика справа */
-  color: #777E91; /* Цвет счетчика справа */
-  font-family: 'Poppins', sans-serif; /* Шрифт как на макете (предположительно) */
+  gap: 8px;
 }
 
+/* Контейнер для статичной иконки планеты */
 .star-label {
-  width: 20px; /* Фиксированная ширина для иконки */
-  height: 20px; /* Фиксированная высота для иконки */
+  width: 16px; /* Размер иконки */
+  height: 16px;
   flex-shrink: 0;
-  display: flex; /* Используем flex для центрирования иконки */
+  display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* Убедимся, что размер иконки внутри .star-label правильный */
-.star-label .rating-icon-container {
+/* Сама иконка планеты в распределении */
+.rating-dist-icon {
     width: 100%;
     height: 100%;
+    object-fit: contain;
+    filter: none; /* Убираем фильтры */
+    opacity: 1; /* Полностью видима */
+    /* Цвет должен быть желтым #FFC85E, если SVG позволяет */
+    /* Если SVG монохромный, можно попробовать filter для окраски, */
+    /* но лучше использовать цветной SVG или background-image */
+    /* Для примера, предполагаем, что SVG сам желтый */
 }
 
 .rating-bar {
   flex-grow: 1;
-  height: 8px; /* Толщина полоски */
-  background-color: #E6E8EC; /* Фон полоски */
+  height: 8px;
+  background-color: #F4F5F6; /* Цвет фона бара */
   border-radius: 4px;
   overflow: hidden;
 }
 
 .rating-bar-fill {
   height: 100%;
-  background-color: #FFC85E; /* Цвет заполнения (желтый) */
+  background-color: #FFC85E; /* Цвет заполнения */
   border-radius: 4px;
   transition: width 0.5s ease;
 }
 
 .rating-count {
-  min-width: 20px; /* Ширина для чисел */
+  min-width: 15px;
   text-align: right;
-  font-weight: 600; /* SemiBold */
-  color: #777E91;
-  font-family: 'Poppins', sans-serif; /* Шрифт */
+  font-family: 'Poppins', sans-serif;
   font-size: 12px;
+  font-style: normal;
+  font-weight: 600; /* SemiBold */
+  line-height: 1.3; 
+  color: #777E91; /* Цвет счетчика */
 }
 
 /* Форма добавления комментария */
 .comment-form {
-  margin-bottom: 30px;
-  padding-bottom: 30px;
-  border-bottom: 1px solid #E0E0E0; /* Разделитель под формой */
+  margin-top: 20px; /* Добавим отступ сверху */
+  margin-bottom: 0; /* Убираем отступ снизу */
+  padding-bottom: 0; /* Убираем паддинг снизу */
+  border-bottom: none; /* Убираем разделитель */
 }
 
 .comment-textarea {
   display: block;
   width: 100%;
-  min-height: 100px; /* Высота поля */
-  background-color: #F4F5F6; /* Фон поля */
-  border: 1px solid #F4F5F6; /* Убираем видимую рамку */
-  border-radius: 12px; /* Скругление */
-  padding: 16px; /* Внутренние отступы */
-  font-family: 'Poppins', sans-serif; /* Шрифт */
+  min-height: 90px;
+  background-color: #F4F5F6;
+  border: 2px solid #F4F5F6; /* Граница того же цвета, что и фон */
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-family: 'Poppins', sans-serif;
   font-size: 14px;
-  color: #23262F; /* Цвет текста */
+  color: #23262F;
   resize: vertical;
-  margin-bottom: 20px; /* Отступ до кнопки */
+  margin-bottom: 16px;
   box-sizing: border-box;
   line-height: 1.5;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
 }
 .comment-textarea::placeholder {
-  color: #B1B5C3; /* Цвет плейсхолдера */
+  color: #B1B5C3;
 }
 .comment-textarea:focus {
   outline: none;
-  border-color: var(--button-blue); /* Рамка при фокусе */
+  border-color: #E6E8EC; /* Серая граница при фокусе */
   background-color: #fff;
   box-shadow: none;
 }
 
 /* Кнопка отправки комментария */
 #comments-section .action-button.comment-submit {
-  background-color: #345DFF; /* Цвет кнопки */
-  color: #FCFCFD; /* Цвет текста */
+  background-color: #3772FF; /* Синий цвет кнопки */
+  color: #FCFCFD;
   font-family: 'Poppins', sans-serif;
   font-size: 16px;
-  font-weight: 700; /* Bold */
-  padding: 16px 24px; /* Размеры кнопки */
-  border-radius: 90px; /* Сильное скругление */
+  font-weight: 700;
+  padding: 14px 24px; /* Паддинги кнопки */
+  border-radius: 90px;
   border: none;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 #comments-section .action-button.comment-submit:hover {
-  background-color: #2a4ecc;
+  background-color: #2a5cdc; /* Чуть темнее при ховере */
 }
 
 /* Список комментариев */
 .comments-list {
   display: flex;
   flex-direction: column;
-  gap: 20px; /* Отступ между комментариями */
+  gap: 0; /* Убираем gap, т.к. есть паддинги у карточек */
+  margin-top: 30px; /* Отступ от формы */
 }
 
 .comment-card {
   background-color: transparent;
   border-radius: 0;
-  padding: 20px 0; /* Вертикальные отступы */
+  padding: 24px 0; /* Вертикальные отступы */
   border: none;
-  border-bottom: 1px solid #E0E0E0; /* Разделитель */
+  border-bottom: 1px solid #E6E8EC; /* Цвет разделителя */
 }
 .comment-card:last-child {
-  border-bottom: none; /* Убираем у последнего */
+  border-bottom: none;
   padding-bottom: 0;
 }
 
 .comment-header {
   display: flex;
   align-items: center;
-  justify-content: flex-start; /* Выравнивание по началу */
-  margin-bottom: 12px;
+  justify-content: flex-start;
+  margin-bottom: 8px; /* Уменьшим отступ под хедером */
   gap: 12px;
   flex-wrap: wrap;
 }
@@ -1250,105 +1257,120 @@ a:hover {
 }
 
 .comment-author-avatar {
-  width: 40px; /* Размер аватара */
-  height: 40px;
+  width: 32px; /* Уменьшим аватар */
+  height: 32px;
   border-radius: 50%;
-  background-color: #353945; /* Темный фон аватара */
+  background-color: #E6E8EC; /* Светло-серый фон */
   flex-shrink: 0;
 }
 
 .comment-author-name {
-  font-size: 16px;
-  font-weight: 500; /* Medium */
-  color: #23262F;
   font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500; /* Medium */
+  line-height: 1.4; 
+  color: #23262F; /* Темный цвет имени */
 }
 
 /* Рейтинг в комментарии */
 .comment-rating {
   display: flex;
   gap: 4px;
-  margin-left: 10px; /* Небольшой отступ от имени */
+  margin-left: 10px;
 }
 
-/* Размер планет в комментарии */
+/* Базовые стили для планет рейтинга в комментах */
 .comment-rating .rating-icon-container {
     width: 16px;
     height: 16px;
 }
+/* Пустая планета */
+.comment-rating .rating-icon-container .icon-empty {
+    filter: grayscale(100%) opacity(0.3); /* Серая и полупрозрачная */
+}
+/* Заполненная часть */
+.comment-rating .rating-icon-container .icon-filled {
+    filter: none; /* Без фильтров */
+    /* width: 0%; управляется JS */
+}
 
 .comment-date {
-  font-size: 14px;
-  color: #777E91; /* Цвет даты */
-  margin-left: auto; /* Дата справа */
-  padding-left: 15px;
   font-family: 'Poppins', sans-serif;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400; /* Regular */
+  line-height: 1.3;
+  color: #FFA114; /* Оранжевый цвет даты */
+  margin-left: auto;
+  padding-left: 15px;
 }
 
 .comment-body {
-  font-size: 14px;
-  line-height: 1.6;
-  color: #777E91; /* Цвет текста комментария */
-  margin-bottom: 15px; /* Отступ до футера */
   font-family: 'Poppins', sans-serif;
-  padding-left: 52px; /* Отступ слева, под аватаром */
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400; /* Regular */
+  line-height: 1.6;
+  color: #777E91; /* Серый цвет текста */
+  margin-bottom: 12px; /* Уменьшим отступ до футера */
+  padding-left: 44px; /* Отступ слева = ширина аватара + gap */
 }
-
 .comment-body p {
-    margin: 0; /* Убираем отступы у параграфа */
+    margin: 0;
 }
 
 .comment-footer {
   display: flex;
-  gap: 10px;
-  margin-top: 10px;
-  padding-left: 52px; /* Отступ слева, под аватаром */
+  gap: 8px;
+  margin-top: 0;
+  padding-left: 44px; /* Отступ слева = ширина аватара + gap */
 }
 
 /* Бейджи в комментариях */
 .badge {
-  padding: 6px 12px; /* Размеры бейджа */
-  font-size: 12px; /* Шрифт */
-  font-weight: 700; /* Bold */
-  border-radius: 8px;
+  padding: 4px 8px; /* Уменьшим паддинги */
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 6px; /* Уменьшим радиус */
   font-family: 'Poppins', sans-serif;
   line-height: 1;
 }
 .badge-invested {
-  background-color: #F4F5F6;
-  color: #345DFF;
+  background-color: #F4F5F6; /* Серый фон */
+  color: #3772FF; /* Синий текст */
   border: none;
 }
 .badge-buyout {
-  background-color: #FFF6E4; /* Цвет фона бейджа */
-  color: #FFA114; /* Цвет текста */
+  background-color: #FFF6E4; /* Желтый фон */
+  color: #FFA114; /* Оранжевый текст */
   border: none;
 }
 
-/* Кнопки Показать/Скрыть комментарии */
+/* Кнопка Показать/Скрыть комментарии */
 .show-more-comments, .hide-comments-button {
-  border: 2px solid #E6E8EC; /* Рамка кнопки */
-  color: #23262F; /* Цвет текста */
+  border: 2px solid #E6E8EC; /* Серая рамка */
+  color: #23262F; /* Темный текст */
   padding: 12px 20px;
   font-size: 14px;
-  font-weight: 700; /* Bold */
+  font-weight: 700;
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px; /* Отступ для иконки */
   background-color: transparent;
-  border-radius: 90px; /* Сильное скругление */
-  margin-top: 20px;
+  border-radius: 90px;
+  margin-top: 24px; /* Отступ сверху */
   cursor: pointer;
   transition: all 0.2s ease;
   font-family: 'Poppins', sans-serif;
 }
 .show-more-comments:hover, .hide-comments-button:hover {
-  color: #23262F;
-  border-color: #777E91;
-  background-color: #f0f0f0;
+  border-color: #B1B5C3; /* Темнее рамка при ховере */
+  background-color: #F4F5F6; /* Легкий фон при ховере */
 }
 .show-more-comments i, .hide-comments-button i {
     font-size: 12px;
+    color: #777E90; /* Серая иконка */
 }
 
 /* ======================================== */

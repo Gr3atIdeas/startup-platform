@@ -306,16 +306,12 @@
         {# Передаем данные о распределении в data-атрибуты #}
         {# Используем тег to_json для безопасной передачи словаря #}
         <div class="rating-distribution" data-ratings='{{ rating_distribution|to_json }}'>
-          {# Шаблон для отрисовки баров (5 звезд) #}
+          {# Шаблон для отрисовки баров (5 звезд -> 5 планет) #}
           {% for i in "54321" %}
             <div class="rating-bar-container">
-              {# Заменяем цифру на контейнер с планетой #}
+              {# Просто статичная желтая иконка планеты #}
               <span class="star-label">
-                {# {{ i }} <<< УДАЛЯЕМ ЦИФРУ #}
-                <span class="rating-icon-container comment-icon-container"> {# Используем тот же контейнер, что и в комментариях #}
-                  <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-empty">
-                  <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-filled" style="width: 100%;"> {# Закрашенная планета для 5 звезд #}
-                </span>
+                <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="rating-dist-icon"> {# Новый класс для стилизации #}
               </span>
               <div class="rating-bar">
                 {# Этот стиль применяется динамически. Ошибка линтера ожидаема и ее можно игнорировать. #}
