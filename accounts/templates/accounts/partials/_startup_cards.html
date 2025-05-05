@@ -31,10 +31,10 @@
         <div class="progress-bar-visual" data-progress="{{ progress|floatformat:0 }}">
           {% if progress > 0 %}
             <div class="progress-animation-container">
-              <div class="progress-planets">
-              </div>
+            <div class="progress-planets">
             </div>
-            <span class="progress-percentage">{{ progress|floatformat:0 }}%</span>
+          </div>
+          <span class="progress-percentage">{{ progress|floatformat:0 }}%</span>
           {% else %}
              <span class="progress-percentage">0%</span>
           {% endif %}
@@ -45,33 +45,6 @@
         </div>
       </div>
       {% endwith %}
-
-      {# <<< Начало: Блок категории >>> #}
-      {% if startup.direction %}
-          <div class="startup-category-display">
-              {% with original_name=startup.direction.direction_name|default:"" %}
-                  {% if original_name == "Medicine" %}Медицина
-                  {% elif original_name == "Auto" %}Автомобили
-                  {% elif original_name == "Delivery" %}Доставка
-                  {% elif original_name == "Cafe" %}Кафе/рестораны
-                  {% elif original_name == "Fastfood" %}Фастфуд
-                  {% elif original_name == "Health" %}Здоровье
-                  {% elif original_name == "Beauty" %}Красота
-                  {% elif original_name == "Transport" %}Транспорт
-                  {% elif original_name == "Sport" %}Спорт
-                  {% elif original_name == "Psychology" %}Психология
-                  {% elif original_name == "AI" %}ИИ
-                  {% elif original_name == "Finance" %}Финансы
-                  {% elif original_name == "Healthcare" %}Здравоохранение
-                  {% elif original_name == "Technology" %}Технологии
-                  {% else %}{{ original_name|default:"Категория не указана" }}{# Возвращаем оригинал или "Не указано" #}
-                  {% endif %}
-              {% endwith %}
-          </div>
-      {% else %}
-          <div class="startup-category-display">Категория не указана</div>
-      {% endif %}
-      {# <<< Конец: Блок категории >>> #}
 
       <div class="investment-type">
         {% if startup.both_mode %}Инвестирование+Выкуп{% elif startup.only_invest %}Только инвестирование{% elif startup.only_buy %}Только выкуп{% else %}Тип не указан{% endif %}

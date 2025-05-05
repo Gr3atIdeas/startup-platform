@@ -62,7 +62,7 @@ body {
 
 .catalog-search-wrapper {
   width: 100%;
-  margin: 0 0 50px 0;
+  margin: 0 0 30px 0;
   display: flex;
   justify-content: center;
 }
@@ -411,25 +411,25 @@ body {
 
 .startup-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
 .startup-image {
-  width: 120px; 
-  height: 120px; 
+  width: 120px;
+  height: 120px;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  position: absolute; 
+  position: absolute;
   top: -30px; /* Выступ на 25% от высоты (120px * 0.25 = 30px) */
   left: 50%;
-  transform: translateX(-50%); 
-  border-radius: 50%; 
+  transform: translateX(-50%);
+  border-radius: 50%;
   border: 4px solid white; 
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); 
-  background-color: #e9ecef; 
-  z-index: 2; 
+  background-color: #e9ecef;
+  z-index: 2;
 }
 
 .startup-image img {
@@ -458,7 +458,7 @@ body {
   font-size: 20px;
   line-height: 18px;
   letter-spacing: -0.02em;
-  margin: 0 0 15px 0;
+  margin: 0 0 10px 0;
   color: #191919;
   text-align: left;
   white-space: nowrap;
@@ -577,19 +577,17 @@ body {
 .investor-count {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 4px;
+  gap: 5px;
   color: #6c757d;
-  font-size: 11px;
+  font-size: 12px;
   flex-shrink: 0;
-  z-index: 2;
   padding: 0 8px;
   margin-top: 0;
   margin-bottom: 0;
 }
 
 .investor-count i {
-  font-size: 13px;
+  font-size: 14px;
   color: #ffc107;
 }
 
@@ -1251,19 +1249,18 @@ body {
 .progress-container {
     display: flex;
     align-items: center;
-    gap: 10px; 
+    gap: 10px; /* Уменьшим немного отступ для карточки */
     width: 100%;
-    margin-top: 10px; 
-    margin-bottom: 10px; 
-    box-sizing: border-box; 
-    position: relative;
-    overflow: hidden; 
+    margin-top: 10px; /* Уменьшим отступ сверху */
+    margin-bottom: 10px; /* Уменьшим отступ снизу */
+    padding: 0 15px; /* Добавим внутренние отступы слева/справа */
+    box-sizing: border-box; /* Учитываем padding */
 }
 
 .progress-bar-visual {
     flex-grow: 1;
-    height: 18px; 
-    background-color: #e9ecef; 
+    height: 18px; /* Уменьшим высоту для карточки */
+    background-color: rgba(11, 26, 63, 0.6); /* <<< Возвращаем цвет из деталей */
     border-radius: 9px;
     position: relative;
     overflow: hidden;
@@ -1276,7 +1273,7 @@ body {
     top: 0;
     left: 0;
     height: 100%;
-    border-radius: 9px;
+    border-radius: 12px;
     overflow: hidden;
     background: linear-gradient(90deg, #a6f8ff 0%, #47d1ff 50%, #e0ff9c 100%);
     transition: width 0.5s ease-in-out;
@@ -1296,28 +1293,139 @@ body {
     top: 50%;
     border-radius: 50%;
     background-color: rgba(255, 255, 255, 0.6);
-    box-shadow: 0 0 4px rgba(255, 255, 255, 0.6);
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
     animation: movePlanets 8s linear infinite;
-    width: 6px; 
-    height: 6px;
-    margin-top: -3px; 
 }
 
 .progress-planets::before {
+    width: 10px;
+    height: 10px;
+    margin-top: -5px;
     left: 15%;
     animation-delay: 0s;
 }
 
 .progress-planets::after {
-    width: 4px; 
-    height: 4px;
-    margin-top: -2px;
+    width: 7px;
+    height: 7px;
+    margin-top: -3.5px;
     left: 65%;
     animation-delay: -4s;
 }
 
 @keyframes movePlanets {
     0% { transform: translateX(0px) translateY(0px) scale(1); opacity: 0.6; }
+    25% { transform: translateX(8px) translateY(1px) scale(1.05); opacity: 0.8; }
+    50% { transform: translateX(-4px) translateY(0px) scale(0.95); opacity: 0.7; }
+    75% { transform: translateX(5px) translateY(-1px) scale(1); opacity: 0.9; }
+    100% { transform: translateX(0px) translateY(0px) scale(1); opacity: 0.6; }
+}
+
+.progress-percentage {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 1;
+    z-index: 3;
+    pointer-events: none;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
+    white-space: nowrap;
+}
+
+/* Заменяем стили на точные из startup_detail_styles.css */
+.progress-container {
+    width: 100%;
+    height: 30px;
+    flex-shrink: 0;
+    border-radius: 15px;
+    background-color: rgba(11, 26, 63, 0.8); /* <<< Возвращаем цвет из деталей */
+    border: 1px solid rgba(43, 237, 255, 0.5); /* <<< Возвращаем цвет рамки из деталей */
+    display: flex;
+    align-items: center;
+    padding: 3px;
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+    margin: 10px 0;
+}
+
+.progress-bar-visual {
+    flex-grow: 1;
+    flex-shrink: 1;
+    height: 100%;
+    background-color: rgba(11, 26, 63, 0.6); /* <<< Возвращаем цвет из деталей */
+    border-radius: 12px; /* Адаптирован радиус */
+    margin-right: 5px;
+    position: relative;
+    overflow: hidden;
+    min-width: 50px;
+}
+
+.progress-animation-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+    background: linear-gradient(90deg, #a6f8ff 0%, #47d1ff 50%, #e0ff9c 100%);
+    transition: width 0.5s ease-in-out;
+}
+
+.progress-planets {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.progress-planets::before,
+.progress-planets::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.6);
+    box-shadow: 0 0 4px rgba(255, 255, 255, 0.6);
+    animation: movePlanets 8s linear infinite;
+}
+
+.progress-planets::before {
+    width: 8px;
+    height: 8px;
+    margin-top: -4px;
+    left: 15%;
+    animation-delay: 0s;
+}
+
+.progress-planets::after {
+    width: 5px;
+    height: 5px;
+    margin-top: -2.5px;
+    left: 65%;
+    animation-delay: -4s;
+}
+
+.progress-animation-container::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 35%;
+    width: 6px;
+    height: 6px;
+    margin-top: -3px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 0 3px rgba(255, 255, 255, 0.6);
+    animation: movePlanets 10s linear infinite alternate;
+    animation-delay: -2s;
+}
+
+@keyframes movePlanets {
+    0% { transform: translateX(0) translateY(0px) scale(1); opacity: 0.6; }
     25% { transform: translateX(8px) translateY(1px) scale(1.05); opacity: 0.8; }
     50% { transform: translateX(-4px) translateY(0px) scale(0.95); opacity: 0.7; }
     75% { transform: translateX(5px) translateY(-1px) scale(1); opacity: 0.9; }
@@ -1342,31 +1450,14 @@ body {
     box-sizing: border-box;
 }
 
-/* Новый стиль для блока категории */
-.startup-category-display {
-  background-color: #f8f9fa; /* Светлый фон, как у других инфо-блоков */
-  line-height: 1.3;
-  font-family: Unbounded, sans-serif;
-  font-size: 13px;
-  font-weight: 400; /* Обычный вес */
-  color: #333;
-  margin-top: 10px; /* Отступ сверху */
-  margin-bottom: 10px;
-  padding: 8px 12px;
-  border-radius: 6px;
-  text-align: center;
-  width: 100%;
-  box-sizing: border-box;
-}
-
 /* Используем .investor-count для информации об инвесторах, стилизуем как .progress-backers-info */
 .investor-count {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 4px;
-    color: #6c757d;
-    font-size: 11px;
+    color: #d0eaff; /* <<< Возвращаем цвет из деталей */
+    font-size: 11px; /* Уменьшен шрифт */
     flex-shrink: 0;
     z-index: 2;
     padding: 0 8px;
@@ -1375,7 +1466,7 @@ body {
 }
 .investor-count i {
     font-size: 13px;
-    color: #ffc107;
+    color: inherit; /* <<< Возвращаем наследование цвета из деталей */
 }
 
 /* Конец блока стилей прогресс-бара */
