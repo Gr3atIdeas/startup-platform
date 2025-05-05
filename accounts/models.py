@@ -433,15 +433,14 @@ class Startups(models.Model):
 
     def get_progress_percentage(self):
         if self.funding_goal and self.funding_goal > 0:
-            # Обеспечиваем, что amount_raised не None, иначе возвращаем 0
             amount_raised = self.amount_raised or 0
             try:
-                # Выполняем вычисление в блоке try на случай ошибок деления
                 percentage = (amount_raised / self.funding_goal) * 100
-                # Ограничиваем от 0 до 100 и ПРЕОБРАЗУЕМ В INT
-                return int(min(max(percentage, 0), 100))
-            except (TypeError, ZeroDivisionError):
-                # В случае ошибки типов или деления на ноль (хотя проверка goal > 0 есть)
+                # Ограничиваем от 0 до 100 и ОКРУГЛЯЕМ до ближайшего целого
+                capped_percentage = min(max(percentage, 0), 100)
+                return round(capped_percentage)
+            except (TypeError, ZeroDivisionError, ValueError):
+                # Добавил ValueError на случай проблем с Decimal->float в round, хотя не должно
                 return 0 
         return 0
 

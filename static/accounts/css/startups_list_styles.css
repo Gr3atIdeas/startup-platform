@@ -62,7 +62,7 @@ body {
 
 .catalog-search-wrapper {
   width: 100%;
-  margin: 0 0 20px 0;
+  margin: 0 0 30px 0;
   display: flex;
   justify-content: center;
 }
@@ -325,7 +325,7 @@ body {
 .startups-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, 330px);
-  gap: 30px 6px;
+  gap: 40px 6px;
   justify-content: center;
   width: 100%;
   padding: 0;
@@ -364,8 +364,7 @@ body {
 }
 
 .startup-card-inner {
-  /* Увеличиваем верхний отступ еще, чтобы аватар точно не перекрывал имя */
-  padding: 90px 20px 20px 20px; 
+  padding: 100px 20px 20px 20px; 
   display: flex;
   flex-direction: column;
   flex-grow: 1;
