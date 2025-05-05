@@ -115,9 +115,10 @@
           </div>
 
           <div class="rating-comments-container"> {# Переносим рейтинг/комментарии сюда #}
-            <div class="rating-container">
+            <div class="rating-container"> {# Переносим рейтинг/комментарии сюда #}
               {# Возвращаем текст "Рейтинг:" #}
               <span class="rating-label">Рейтинг {{ average_rating|floatformat:"1" }}/5</span>
+              {# ---> Возвращаем |default:0 для data-rating <--- #}
               <div class="rating-stars" data-rating="{{ average_rating|floatformat:"-2"|default:0 }}" {% if user.is_authenticated and not user_has_voted %}data-interactive="true"{% endif %}>
                   {% for i in "12345" %}
                     <span class="rating-icon-container" {% if user.is_authenticated and not user_has_voted %}data-value="{{ forloop.counter }}"{% endif %}>
@@ -422,9 +423,9 @@
                 </span>
                 <div class="rating-bar">
                   {# Ширина = (кол-во голосов / макс кол-во) * 100, но не больше 100% #}
-                  {% with max_count=max_rating_count %}
-                    {% if max_count > 0 %}
-                      {% widthratio current_count max_count 100 as bar_width %}
+                  {% with total_votes=total_votes_count %}
+                    {% if total_votes > 0 %}
+                      {% widthratio current_count total_votes 100 as bar_width %}
                       <div class="rating-bar-fill" style="width: {{ bar_width }}%;"></div>
                     {% else %}
                       {# define 0 as bar_width #} {# Удаляем define #}

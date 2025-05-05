@@ -106,17 +106,30 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Отображаем рейтинг в карточках похожих стартапов
-    const similarCards = document.querySelectorAll('.similar-card');
-    similarCards.forEach((card, cardIndex) => {
-        const similarRatingContainer = card.querySelector('.similar-card-rating');
-        if (similarRatingContainer && similarRatingContainer.dataset.rating !== undefined) {
-            const ratingStringRaw = similarRatingContainer.dataset.rating;
-            // Заменяем запятую на точку, если есть
-            const ratingStringForJs = ratingStringRaw ? ratingStringRaw.replace(',', '.') : '0';
-            const similarRatingValue = parseFloat(ratingStringForJs) || 0;
-            // Генерируем уникальный селектор для этого контейнера звезд
-            const uniqueSimilarSelector = `.similar-card:nth-child(${cardIndex + 1}) .similar-card-rating`;
-            updateRatingDisplay(uniqueSimilarSelector, similarRatingValue);
+    // ---> Рефакторинг: Ищем все контейнеры рейтинга внутри .similar-card <--- 
+    const similarRatingContainers = document.querySelectorAll('.similar-card .similar-card-rating[data-rating]');
+    console.log(`Found ${similarRatingContainers.length} similar startup rating containers.`); // Логгирование
+    similarRatingContainers.forEach((container) => {
+        const ratingStringRaw = container.dataset.rating;
+        const ratingStringForJs = ratingStringRaw ? ratingStringRaw.replace(',', '.') : '0';
+        const similarRatingValue = parseFloat(ratingStringForJs) || 0;
+        console.log(`Processing similar startup card. Rating value: ${similarRatingValue}`); // Логгирование
+        
+        // Генерируем УНИКАЛЬНЫЙ селектор для этого контейнера
+        // Можно использовать href родительской ссылки .similar-card
+        const parentLink = container.closest('.similar-card');
+        let uniqueSimilarSelector = null;
+        if (parentLink && parentLink.getAttribute('href')) {
+            uniqueSimilarSelector = `.similar-card[href="${parentLink.getAttribute('href')}"] .similar-card-rating`;
+        } else {
+            // Фоллбэк, если нет href (менее надежно)
+            console.warn('Could not find unique href for similar card, using less specific selector');
+            // Пытаемся использовать data-rating как часть селектора (но он может быть не уникальным)
+            uniqueSimilarSelector = `.similar-card-rating[data-rating="${ratingStringRaw}"]`; 
+        }
+        console.log(`Using selector: ${uniqueSimilarSelector}`); // Логгирование
+        if (uniqueSimilarSelector) {
+             updateRatingDisplay(uniqueSimilarSelector, similarRatingValue);
         }
     });
 
