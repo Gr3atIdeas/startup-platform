@@ -1045,73 +1045,104 @@ a:hover {
 /* ======================================== */
 #comments-section {
   display: flex;
-  /* width: 1303px; */ /* Убираем фикс ширину, пусть будет по контейнеру */
-  max-width: 100%; /* Используем всю ширину контейнера */
-  margin-left: auto;
-  margin-right: auto;
-  padding: 40px; /* Уменьшим паддинги */
+  width: 1303px; /* Заданная ширина */
+  max-width: 95%; /* Ограничиваем на всякий случай */
+  margin: 50px auto; /* Центрирование и вертикальные отступы */
+  padding: 50px 40px; /* Внутренние отступы */
   flex-direction: column;
-  align-items: stretch;
-  gap: 30px; /* Отступ между header, form, list */
+  align-items: stretch; /* Растягиваем потомков */
+  gap: 18px; /* Отступ между хедером и контентом */
   flex-shrink: 0;
   border-radius: 20px;
-  background: var(--text-primary);
-  box-shadow: 0px 8px 16px -8px rgba(15, 15, 15, 0.10); /* Тень как в макете */
-  margin-top: 50px;
-  margin-bottom: 50px;
+  background: #FFF; /* Белый фон */
+  box-shadow: 6px 6px 10px 0px rgba(0, 0, 0, 0.25); /* Тень */
+  backdrop-filter: blur(10px); /* Блюр */
   box-sizing: border-box;
 }
 
+/* Заголовок "Комментарии" + иконка + счетчик */
 .comments-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start; /* Выравниваем по левому краю */
   align-items: center;
-  margin-bottom: 0; /* Убираем нижний отступ */
-  gap: 30px;
-  flex-wrap: wrap;
-  border-bottom: none; /* Убираем разделитель */
-  padding-bottom: 0; /* Убираем паддинг под разделителем */
+  gap: 15px; /* Отступ между элементами */
+  border-bottom: none; /* Убираем старый разделитель */
+  padding-bottom: 0;
+  margin-bottom: 12px; /* Отступ под заголовком */
 }
 
 #comments-section .section-title {
-  color: #141416; /* Темный */
+  display: flex; /* Чтобы иконка и счетчик были в строку */
+  align-items: center;
+  gap: 10px; /* Отступ между словом, иконкой и числом */
+  color: #141416; /* Темный цвет */
   font-family: 'Unbounded', sans-serif;
   font-size: 24px;
-  font-style: normal;
-  font-weight: 500; /* Medium */
-  line-height: 1.3; /* Чуть больше */
+  font-weight: 500;
+  line-height: normal;
   margin: 0;
 }
 
-.comments-count {
-  color: #777E90; /* Серый */
-  font-family: 'Unbounded', sans-serif;
-  font-size: 24px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 1.3;
-  margin-left: 8px;
+.comment-title-icon {
+  font-size: 20px; /* Размер иконки */
+  color: #777E90; /* Цвет иконки */
 }
 
+.comments-count {
+  color: #777E90; /* Цвет счетчика */
+  font-family: 'Unbounded', sans-serif;
+  font-size: 24px;
+  font-weight: 500;
+}
+
+/* Основной контейнер: левая (комменты) + правая (рейтинг) колонки */
+.comments-main-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 57px; /* Отступ между колонками */
+  width: 100%; /* Занимает всю ширину #comments-section */
+}
+
+/* Левая колонка (основная) */
+.comments-list-wrapper {
+  flex-grow: 1; /* Занимает доступное пространство */
+  display: flex;
+  flex-direction: column;
+  min-width: 0; /* Для корректного сжатия */
+}
+
+/* Правая колонка (рейтинг) */
+.comments-rating-summary-wrapper {
+  width: 349px; /* Фиксированная ширина */
+  flex-shrink: 0; /* Не сжимается */
+  display: flex;
+  flex-direction: column;
+  align-items: stretch; /* Растягиваем элементы внутри */
+  gap: 16px;
+}
+
+/* --- Стили правой колонки (Общий рейтинг) --- */
 .comments-rating-summary {
   display: flex;
-  align-items: center;
-  gap: 16px; /* Отступ между 4,7 и барами */
+  flex-direction: column; /* Рейтинг над распределением */
+  align-items: flex-start; /* Выравнивание по левому краю */
+  gap: 16px;
 }
 
 .average-rating-value {
-  font-size: 48px;
-  font-weight: 500; /* Medium */
-  color: #23262F; /* Темно-серый */
-  line-height: 1;
   font-family: 'Unbounded', sans-serif;
+  font-size: 48px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1; /* Уменьшаем высоту строки */
+  color: #23262F;
 }
 
 .rating-distribution {
   display: flex;
   flex-direction: column;
-  gap: 6px; /* Уменьшим gap между барами */
-  min-width: 180px; /* Ширина блока баров */
+  gap: 8px; /* Отступ между строками */
+  width: 100%; /* На всю ширину правой колонки */
 }
 
 .rating-bar-container {
@@ -1120,9 +1151,8 @@ a:hover {
   gap: 8px;
 }
 
-/* Контейнер для статичной иконки планеты */
 .star-label {
-  width: 16px; /* Размер иконки */
+  width: 16px;
   height: 16px;
   flex-shrink: 0;
   display: flex;
@@ -1130,30 +1160,24 @@ a:hover {
   justify-content: center;
 }
 
-/* Сама иконка планеты в распределении */
 .rating-dist-icon {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    filter: none; /* Убираем фильтры */
-    opacity: 1; /* Полностью видима */
-    /* Цвет должен быть желтым #FFC85E, если SVG позволяет */
-    /* Если SVG монохромный, можно попробовать filter для окраски, */
-    /* но лучше использовать цветной SVG или background-image */
-    /* Для примера, предполагаем, что SVG сам желтый */
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  /* Предполагаем, что SVG желтый (#FFC85E) */
 }
 
 .rating-bar {
   flex-grow: 1;
   height: 8px;
-  background-color: #F4F5F6; /* Цвет фона бара */
+  background-color: #F4F5F6; /* Светло-серый фон */
   border-radius: 4px;
   overflow: hidden;
 }
 
 .rating-bar-fill {
   height: 100%;
-  background-color: #FFC85E; /* Цвет заполнения */
+  background-color: #3772FF; /* Синий цвет заполнения */
   border-radius: 4px;
   transition: width 0.5s ease;
 }
@@ -1163,26 +1187,186 @@ a:hover {
   text-align: right;
   font-family: 'Poppins', sans-serif;
   font-size: 12px;
-  font-style: normal;
-  font-weight: 600; /* SemiBold */
-  line-height: 1.3; 
-  color: #777E91; /* Цвет счетчика */
+  font-weight: 600;
+  line-height: 1.3;
+  color: #777E91;
 }
 
-/* Форма добавления комментария */
+/* --- Стили левой колонки --- */
+
+/* Список комментариев */
+.comments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: 100%;
+}
+.comments-list.empty p {
+    color: #777E91;
+    font-family: 'Poppins', sans-serif;
+    padding: 20px 0;
+}
+
+.comment-card {
+  display: flex; /* Горизонтальное расположение left и right */
+  justify-content: space-between; /* Разносим left и right */
+  align-items: flex-start; /* Выравнивание по верху */
+  padding: 24px 0;
+  border-bottom: 1px solid #E6E8EC;
+}
+.comment-card:last-of-type { /* У последнего убираем границу */
+    border-bottom: none;
+}
+
+/* Левая часть комментария */
+.comment-left {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    flex-grow: 1; /* Занимает доступное место */
+    margin-right: 20px; /* Отступ от правой части */
+}
+
+.comment-author-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #E6E8EC;
+  flex-shrink: 0;
+}
+
+.comment-content-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 4px; /* Отступ между именем и текстом */
+}
+
+.comment-author-name {
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: #23262F;
+}
+
+.comment-body {
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: #777E91;
+  padding-left: 0; /* Убираем старый отступ */
+  margin-bottom: 0;
+}
+.comment-body p {
+    margin: 0;
+}
+
+/* Правая часть комментария */
+.comment-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end; /* Выравнивание по правому краю */
+    gap: 8px;
+    flex-shrink: 0; /* Не сжимается */
+    text-align: right;
+}
+
+.comment-date {
+  font-family: 'Poppins', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.3;
+  color: #B1B5C3; /* Серый цвет даты */
+  margin-left: 0; /* Убираем старый отступ */
+  padding-left: 0;
+}
+
+.comment-rating {
+  display: flex;
+  justify-content: flex-end; /* Планеты справа */
+  gap: 4px;
+}
+
+.comment-rating .rating-icon-container {
+    width: 16px;
+    height: 16px;
+}
+.comment-rating .rating-icon-container .icon-empty {
+    filter: grayscale(100%) opacity(0.3);
+}
+.comment-rating .rating-icon-container .icon-filled {
+    filter: none;
+}
+
+.comment-footer {
+  display: flex;
+  justify-content: flex-end; /* Бейджи справа */
+  gap: 8px;
+  margin-top: 0;
+  padding-left: 0; /* Убираем старый отступ */
+}
+
+/* Бейджи */
+.badge {
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 6px;
+  font-family: 'Poppins', sans-serif;
+  line-height: 1;
+}
+.badge-invested {
+  background-color: #F4F5F6;
+  color: #3772FF;
+  border: none;
+}
+.badge-buyout {
+  background-color: #FFF6E4;
+  color: #FFA114;
+  border: none;
+}
+
+/* Кнопка "Показать еще" */
+.show-more-comments, .hide-comments-button {
+  border: 2px solid #E6E8EC;
+  color: #23262F;
+  padding: 12px 20px;
+  font-size: 14px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center; /* Центрируем текст/иконку */
+  gap: 12px;
+  background-color: transparent;
+  border-radius: 90px;
+  margin-top: 24px; /* Отступ от последнего видимого коммента */
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: 'Poppins', sans-serif;
+  align-self: flex-start; /* Кнопка слева */
+}
+.show-more-comments:hover, .hide-comments-button:hover {
+  border-color: #B1B5C3;
+  background-color: #F4F5F6;
+}
+.show-more-comments i, .hide-comments-button i {
+    font-size: 12px;
+    color: #777E90;
+}
+
+/* Форма добавления комментария (позиционирование) */
 .comment-form {
-  margin-top: 20px; /* Добавим отступ сверху */
-  margin-bottom: 0; /* Убираем отступ снизу */
-  padding-bottom: 0; /* Убираем паддинг снизу */
-  border-bottom: none; /* Убираем разделитель */
+  margin-top: 30px; /* Отступ от комментариев или кнопки "Показать еще" */
+  width: 100%; /* На всю ширину левой колонки */
 }
 
 .comment-textarea {
-  display: block;
+  /* width: 1005px; */ /* Убираем фикс ширину, т.к. форма 100% */
   width: 100%;
-  min-height: 90px;
-  background-color: #F4F5F6;
-  border: 2px solid #F4F5F6; /* Граница того же цвета, что и фон */
+  height: 104px; /* Заданная высота */
+  background-color: #FFF; /* Белый фон */
+  border: 1px solid #E6E8EC; /* Серая рамка */
   border-radius: 12px;
   padding: 12px 16px;
   font-family: 'Poppins', sans-serif;
@@ -1199,178 +1383,34 @@ a:hover {
 }
 .comment-textarea:focus {
   outline: none;
-  border-color: #E6E8EC; /* Серая граница при фокусе */
+  border-color: #777E91; /* Темнее рамка при фокусе */
   background-color: #fff;
   box-shadow: none;
 }
 
-/* Кнопка отправки комментария */
+/* Кнопка "Оставить комментарий" */
 #comments-section .action-button.comment-submit {
-  background-color: #3772FF; /* Синий цвет кнопки */
-  color: #FCFCFD;
+  display: flex; /* Используем flex из описания */
+  height: 40px;
+  padding: 0 35px; /* Убираем вертикальный паддинг, т.к. есть height */
+  justify-content: center;
+  align-items: center;
+  gap: 8px; /* Примерный gap */
+  border-radius: 10px;
+  background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%); /* Градиент */
+  box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.25); /* Тень */
+  color: #FFF; /* Белый текст */
   font-family: 'Poppins', sans-serif;
-  font-size: 16px;
-  font-weight: 700;
-  padding: 14px 24px; /* Паддинги кнопки */
-  border-radius: 90px;
+  font-size: 14px; /* Уменьшим шрифт */
+  font-weight: 600; /* SemiBold */
   border: none;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+  align-self: flex-start; /* Кнопка слева */
 }
 #comments-section .action-button.comment-submit:hover {
-  background-color: #2a5cdc; /* Чуть темнее при ховере */
-}
-
-/* Список комментариев */
-.comments-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0; /* Убираем gap, т.к. есть паддинги у карточек */
-  margin-top: 30px; /* Отступ от формы */
-}
-
-.comment-card {
-  background-color: transparent;
-  border-radius: 0;
-  padding: 24px 0; /* Вертикальные отступы */
-  border: none;
-  border-bottom: 1px solid #E6E8EC; /* Цвет разделителя */
-}
-.comment-card:last-child {
-  border-bottom: none;
-  padding-bottom: 0;
-}
-
-.comment-header {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  margin-bottom: 8px; /* Уменьшим отступ под хедером */
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.comment-author-info {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.comment-author-avatar {
-  width: 32px; /* Уменьшим аватар */
-  height: 32px;
-  border-radius: 50%;
-  background-color: #E6E8EC; /* Светло-серый фон */
-  flex-shrink: 0;
-}
-
-.comment-author-name {
-  font-family: 'Poppins', sans-serif;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 500; /* Medium */
-  line-height: 1.4; 
-  color: #23262F; /* Темный цвет имени */
-}
-
-/* Рейтинг в комментарии */
-.comment-rating {
-  display: flex;
-  gap: 4px;
-  margin-left: 10px;
-}
-
-/* Базовые стили для планет рейтинга в комментах */
-.comment-rating .rating-icon-container {
-    width: 16px;
-    height: 16px;
-}
-/* Пустая планета */
-.comment-rating .rating-icon-container .icon-empty {
-    filter: grayscale(100%) opacity(0.3); /* Серая и полупрозрачная */
-}
-/* Заполненная часть */
-.comment-rating .rating-icon-container .icon-filled {
-    filter: none; /* Без фильтров */
-    /* width: 0%; управляется JS */
-}
-
-.comment-date {
-  font-family: 'Poppins', sans-serif;
-  font-size: 12px;
-  font-style: normal;
-  font-weight: 400; /* Regular */
-  line-height: 1.3;
-  color: #FFA114; /* Оранжевый цвет даты */
-  margin-left: auto;
-  padding-left: 15px;
-}
-
-.comment-body {
-  font-family: 'Poppins', sans-serif;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 400; /* Regular */
-  line-height: 1.6;
-  color: #777E91; /* Серый цвет текста */
-  margin-bottom: 12px; /* Уменьшим отступ до футера */
-  padding-left: 44px; /* Отступ слева = ширина аватара + gap */
-}
-.comment-body p {
-    margin: 0;
-}
-
-.comment-footer {
-  display: flex;
-  gap: 8px;
-  margin-top: 0;
-  padding-left: 44px; /* Отступ слева = ширина аватара + gap */
-}
-
-/* Бейджи в комментариях */
-.badge {
-  padding: 4px 8px; /* Уменьшим паддинги */
-  font-size: 12px;
-  font-weight: 700;
-  border-radius: 6px; /* Уменьшим радиус */
-  font-family: 'Poppins', sans-serif;
-  line-height: 1;
-}
-.badge-invested {
-  background-color: #F4F5F6; /* Серый фон */
-  color: #3772FF; /* Синий текст */
-  border: none;
-}
-.badge-buyout {
-  background-color: #FFF6E4; /* Желтый фон */
-  color: #FFA114; /* Оранжевый текст */
-  border: none;
-}
-
-/* Кнопка Показать/Скрыть комментарии */
-.show-more-comments, .hide-comments-button {
-  border: 2px solid #E6E8EC; /* Серая рамка */
-  color: #23262F; /* Темный текст */
-  padding: 12px 20px;
-  font-size: 14px;
-  font-weight: 700;
-  display: inline-flex;
-  align-items: center;
-  gap: 12px; /* Отступ для иконки */
-  background-color: transparent;
-  border-radius: 90px;
-  margin-top: 24px; /* Отступ сверху */
-  cursor: pointer;
-  transition: all 0.2s ease;
-  font-family: 'Poppins', sans-serif;
-}
-.show-more-comments:hover, .hide-comments-button:hover {
-  border-color: #B1B5C3; /* Темнее рамка при ховере */
-  background-color: #F4F5F6; /* Легкий фон при ховере */
-}
-.show-more-comments i, .hide-comments-button i {
-    font-size: 12px;
-    color: #777E90; /* Серая иконка */
+  background: linear-gradient(0deg, #003a7a 0%, #0055b3 100%); /* Затемненный градиент */
+  box-shadow: 1px 1px 3px 0px rgba(0, 0, 0, 0.2); 
 }
 
 /* ======================================== */

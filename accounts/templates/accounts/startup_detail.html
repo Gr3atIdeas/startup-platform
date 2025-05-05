@@ -297,80 +297,67 @@
     </div> {# Конец right-column #}
   </div> {# Конец top-section #}
 
-  {# --- ВСТАВЛЯЕМ СЕКЦИЮ КОММЕНТАРИЕВ ПЕРЕД ПОХОЖИМИ СТАРТАПАМИ --- #}
   <div id="comments-section">
+    {# 1. Заголовок с иконкой #}
     <div class="comments-header">
-      <h2 class="section-title">Комментарии <span class="comments-count">({{ comments|length }})</span></h2>
-      <div class="comments-rating-summary">
-        <span class="average-rating-value">{{ average_rating|default:0|floatformat:"1" }}</span>
-        {# Передаем данные о распределении в data-атрибуты #}
-        {# Используем тег to_json для безопасной передачи словаря #}
-        <div class="rating-distribution" data-ratings='{{ rating_distribution|to_json }}'>
-          {# Шаблон для отрисовки баров (5 звезд -> 5 планет) #}
-          {% for i in "54321" %}
-            <div class="rating-bar-container">
-              {# Просто статичная желтая иконка планеты #}
-              <span class="star-label">
-                <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="rating-dist-icon"> {# Новый класс для стилизации #}
-              </span>
-              <div class="rating-bar">
-                {# Этот стиль применяется динамически. Ошибка линтера ожидаема и ее можно игнорировать. #}
-                <div class="rating-bar-fill" style="width: {{ rating_distribution|get_item:i|default:0 }}%;"></div>
-              </div>
-              <span class="rating-count">{{ rating_counts|get_item:i|default:0 }}</span>
-            </div>
-          {% endfor %}
-        </div>
-      </div>
+      <h2 class="section-title">
+        Комментарии 
+        <i class="fas fa-comment-dots comment-title-icon"></i> {# Добавляем иконку #}
+        <span class="comments-count">({{ comments|length }})</span>
+      </h2>
+      {# Правую часть хедера (рейтинг) переносим в правую колонку ниже #}
     </div>
 
-    {% if user.is_authenticated %}
-      <form method="post" class="comment-form">
-        {% csrf_token %}
-        {{ form.content|add_class:"comment-textarea"|attr:"placeholder:Полность комментария..." }}
-        <button type="submit" class="action-button comment-submit primary">Оставить комментарий</button>
-      </form>
-    {% else %}
-      <div class="comment-form">
-        <p>Пожалуйста, <a href="{% url 'login' %}">войдите</a>, чтобы оставить комментарий.</p>
-      </div>
-    {% endif %}
-
-    {% if comments %}
-      <div class="comments-list">
-        {% for comment in comments %}
-          <div class="comment-card {% if forloop.counter > 3 %}hidden{% endif %}">
-            <div class="comment-header">
-              <div class="comment-author-info">
-                <div class="comment-author-avatar"></div>
-                <div class="comment-author-name">{{ comment.user_id.first_name|default:comment.user_id.email }}</div>
-              </div>
-              <div class="comment-rating" data-rating="{{ comment.user_rating|default:0 }}">
-                {# Добавляем структуру планет для рейтинга комментария #}
-                {% for star_i in "12345" %}
-                  <span class="rating-icon-container comment-icon-container">
-                    <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-empty">
-                    <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-filled">
-                  </span>
-                {% endfor %}
-              </div>
-              <div class="comment-date">{{ comment.created_at|date:"d/m/Y" }}</div>
-            </div>
-            <div class="comment-body">
-              <p>{{ comment.content }}</p>
-            </div>
-            <div class="comment-footer">
-              {% if comment.user_id|has_invested:startup %}
-                <span class="badge badge-invested">Инвестировал</span>
-              {% endif %}
-              {% if comment.user_id|is_buyout_investor:startup %}
-                <span class="badge badge-buyout">Выкуп</span>
-              {% endif %}
-            </div>
-          </div>
-        {% endfor %}
+    {# 2. Основной контент (две колонки) #}
+    <div class="comments-main-content">
+      
+      {# 2.1 Левая колонка: Комментарии и форма #}
+      <div class="comments-list-wrapper">
         
-        {% if comments|length > 3 %}
+        {# Список комментариев #}
+        {% if comments %}
+          <div class="comments-list">
+            {% for comment in comments %}
+              <div class="comment-card {% if forloop.counter > 5 %}hidden{% endif %}"> {# Скрываем после 5 #}
+                <div class="comment-left">
+                  <div class="comment-author-avatar"></div>
+                  <div class="comment-content-wrapper">
+                    <div class="comment-author-name">{{ comment.user_id.first_name|default:comment.user_id.email }}</div>
+                    <div class="comment-body">
+                      <p>{{ comment.content }}</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="comment-right">
+                  <div class="comment-date">{{ comment.created_at|date:"d/m/Y" }}</div>
+                  <div class="comment-rating" data-rating="{{ comment.user_rating|default:0 }}">
+                    {% for star_i in "12345" %}
+                      <span class="rating-icon-container comment-icon-container">
+                        <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-empty">
+                        <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-filled">
+                      </span>
+                    {% endfor %}
+                  </div>
+                  <div class="comment-footer">
+                    {% if comment.user_id|has_invested:startup %}
+                      <span class="badge badge-invested">Инвестировал</span>
+                    {% endif %}
+                    {% if comment.user_id|is_buyout_investor:startup %}
+                      <span class="badge badge-buyout">Выкуп</span>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div> {# Конец comments-list #}
+        {% else %}
+          <div class="comments-list empty">
+            <p>Пока нет комментариев. Будьте первым!</p>
+          </div>
+        {% endif %}
+
+        {# Кнопка Показать еще (если > 5) #}
+        {% if comments|length > 5 %}
           <button class="show-more-comments">
             Показать еще <i class="fas fa-chevron-down"></i>
           </button>
@@ -378,13 +365,45 @@
             Скрыть <i class="fas fa-chevron-up"></i>
           </button>
         {% endif %}
-      </div>
-    {% else %}
-      <div class="comments-list">
-        <p>Пока нет комментариев. Будьте первым!</p>
-      </div>
-    {% endif %}
-  </div>
+
+        {# Форма добавления комментария #}
+        {% if user.is_authenticated %}
+          <form method="post" class="comment-form">
+            {% csrf_token %}
+            {# Устанавливаем плейсхолдер #}
+            {{ form.content|add_class:"comment-textarea"|attr:"placeholder:Написать комментарий" }}
+            <button type="submit" class="action-button comment-submit">Оставить комментарий</button>
+          </form>
+        {% else %}
+          <div class="comment-form disabled-form">
+            <p>Пожалуйста, <a href="{% url 'login' %}">войдите</a>, чтобы оставить комментарий.</p>
+          </div>
+        {% endif %}
+
+      </div> {# Конец comments-list-wrapper #}
+
+      {# 2.2 Правая колонка: Общий рейтинг #}
+      <div class="comments-rating-summary-wrapper">
+        <div class="comments-rating-summary">
+          <span class="average-rating-value">{{ average_rating|default:0|floatformat:"1" }}</span>
+          <div class="rating-distribution" data-ratings='{{ rating_distribution|to_json }}'>
+            {% for i in "54321" %}
+              <div class="rating-bar-container">
+                <span class="star-label">
+                  <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="rating-dist-icon">
+                </span>
+                <div class="rating-bar">
+                  <div class="rating-bar-fill" style="width: {{ rating_distribution|get_item:i|default:0 }}%;"></div>
+                </div>
+                <span class="rating-count">{{ rating_counts|get_item:i|default:0 }}</span>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div> {# Конец comments-rating-summary-wrapper #}
+
+    </div> {# Конец comments-main-content #}
+  </div> {# Конец comments-section #}
 
   <div class="similar-startups-section">
     <div class="similar-startups-container">
