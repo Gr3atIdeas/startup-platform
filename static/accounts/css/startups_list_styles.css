@@ -1314,3 +1314,100 @@ body {
     /* height: 100%; */
     flex-grow: 1; /* Занимает все доступное пространство */
 }
+
+/* ======================================== */
+/*      СТИЛИ ДЛЯ ПРОГРЕСС-БАРА В КАРТОЧКЕ      */
+/* ======================================== */
+
+.startup-card .card-progress-container { /* Используем доп. класс */
+    width: 100%; /* На всю ширину карточки */
+    height: 30px; /* Уменьшаем высоту */
+    flex-shrink: 0;
+    border-radius: 15px; /* Уменьшаем радиус */
+    background-color: rgba(11, 26, 63, 0.8);
+    border: 1px solid rgba(43, 237, 255, 0.3); /* Уменьшаем прозрачность рамки */
+    display: flex;
+    align-items: center;
+    padding: 4px; /* Уменьшаем внутренний отступ */
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+    margin-top: 10px; /* Добавляем отступ сверху */
+    margin-bottom: 10px; /* Добавляем отступ снизу */
+}
+
+.startup-card .progress-bar-visual {
+    flex-grow: 1;
+    height: 100%;
+    background-color: rgba(11, 26, 63, 0.6);
+    border-radius: 11px; /* Уменьшаем радиус */
+    margin-right: 8px; /* Уменьшаем отступ справа */
+    position: relative;
+    overflow: hidden;
+    min-width: 50px; /* Уменьшаем мин. ширину */
+}
+
+.startup-card .progress-animation-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    border-radius: 11px; /* Уменьшаем радиус */
+    overflow: hidden;
+    background: linear-gradient(90deg, #a6f8ff 0%, #47d1ff 50%, #e0ff9c 100%);
+    box-shadow: inset 0 0 3px rgba(255, 255, 255, 0.4), 0 0 6px rgba(71, 209, 255, 0.5);
+    transition: width 0.5s ease-in-out;
+    /* Убираем сложную анимацию планет для карточек */
+}
+
+/* Убираем анимацию планет для карточек */
+.startup-card .progress-planets,
+.startup-card .progress-planets::before,
+.startup-card .progress-planets::after,
+.startup-card .progress-animation-container::before {
+    display: none;
+}
+
+/* Анимация (оставляем, вдруг понадобится) */
+@keyframes movePlanets {
+    0% { transform: translateX(0) translateY(-1px) scale(1); opacity: 0.7; }
+    25% { transform: translateX(10px) translateY(1px) scale(1.1); opacity: 0.9; } /* Уменьшаем смещение */
+    50% { transform: translateX(-5px) translateY(0) scale(1); opacity: 0.8; } /* Уменьшаем смещение */
+    75% { transform: translateX(8px) translateY(-2px) scale(0.9); opacity: 1; } /* Уменьшаем смещение */
+    100% { transform: translateX(0) translateY(-1px) scale(1); opacity: 0.7; }
+}
+
+.startup-card .progress-percentage {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: bold;
+    color: #ffffff;
+    font-size: 10px; /* Уменьшаем шрифт */
+    z-index: 3;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.6);
+    white-space: nowrap;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0 3px;
+    box-sizing: border-box;
+}
+
+.startup-card .progress-backers-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px; /* Уменьшаем отступ */
+    color: #d0eaff;
+    font-size: 10px; /* Уменьшаем шрифт */
+    flex-shrink: 0;
+    z-index: 2;
+    margin-left: auto;
+    padding: 0 8px; /* Уменьшаем отступ */
+}
+
+.startup-card .progress-backers-info i {
+    font-size: 12px; /* Уменьшаем иконку */
+}

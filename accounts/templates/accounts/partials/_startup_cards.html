@@ -47,14 +47,21 @@
               {% endif %}
           {% endwith %}
         </div>
-        {% with progress=startup.get_progress_percentage|default:0 %}
-        <div class="progress-bar-container">
-          <div class="progress-bar-bg">
-            <div class="progress-bar-fill" style="width: {{ progress }}%;"></div>
+      </div>
+
+      <div class="progress-container card-progress-container">
+        <div class="progress-bar-visual">
+          <div class="progress-animation-container" style="width: {{ startup.progress_percentage|default:0 }}%;">
+            <div class="progress-planets">
+              {# Планеты будут добавлены через CSS #}
+            </div>
           </div>
-          <span class="progress-percentage">{{ progress|floatformat:0 }}%</span>
+          <span class="progress-percentage">{{ startup.progress_percentage|default:0|floatformat:0 }}%</span>
         </div>
-        {% endwith %}
+        <div class="progress-backers-info">
+          <i class="fas fa-users"></i>
+          <span>({{ startup.investors_count|default:0 }})</span>
+        </div>
       </div>
 
       <div class="investment-type">
