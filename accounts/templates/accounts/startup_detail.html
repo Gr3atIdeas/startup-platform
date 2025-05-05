@@ -419,7 +419,15 @@
                   {% endfor %}
                 </span>
                 <div class="rating-bar">
-                  <div class="rating-bar-fill" style="width: {{ rating_distribution|get_item:i_str|default:0 }}%;"></div> {# Ширина полоски берется по строковому ключу i_str #}
+                  {# Ширина = (кол-во голосов / макс кол-во) * 100, но не больше 100% #}
+                  {% with count=(rating_distribution|get_item:i|default:0) max_count=(max_rating_count|default:1) %}
+                    {% if max_count > 0 %}
+                      {% widthratio count max_count 100 as bar_width %}
+                    {% else %}
+                      {% define 0 as bar_width %}
+                    {% endif %}
+                    <div class="rating-bar-fill" style="width: {{ bar_width }}%;"></div>
+                  {% endwith %}
                 </div>
                 {# Количество берем из rating_distribution по числовому ключу i #}
                 <span class="rating-count">{{ rating_distribution|get_item:i|default:0 }}</span> 

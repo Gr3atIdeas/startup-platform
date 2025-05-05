@@ -214,6 +214,12 @@ def startup_detail(request, startup_id):
         rating_distribution_dict.setdefault(i, 0)
     # --- Конец расчета --- 
 
+    # ---> Добавляем расчет максимального количества голосов <--- 
+    max_rating_count = 0
+    if rating_distribution_dict: # Проверяем, что словарь не пустой
+        max_rating_count = max(rating_distribution_dict.values()) if rating_distribution_dict else 0
+    # ---> Конец добавления <--- 
+
     # --- Получаем похожие стартапы --- 
     similar_startups = Startups.objects.filter(
         status='approved' # Только одобренные
@@ -222,6 +228,20 @@ def startup_detail(request, startup_id):
     ).order_by('?')[:5] # Берем 5 случайных
     # Примечание: .order_by('?') может быть медленным на больших таблицах
     # Возможно, в будущем понадобится более сложная логика (по категории, тегам и т.д.)
+
+    # ---> Добавляем аннотацию рейтинга для похожих стартапов <--- 
+    similar_startups = similar_startups.annotate(
+        average_rating_calc=Avg(
+            models.ExpressionWrapper(
+                models.F('sum_votes') * 1.0 / models.F('total_voters'),
+                output_field=FloatField()
+            ),
+            filter=models.Q(total_voters__gt=0)
+        )
+    ).annotate(
+         average_rating=Coalesce('average_rating_calc', 0.0)
+    )
+    # ---> Конец добавления <--- 
 
     user_has_voted = False
     can_invest = False
@@ -295,6 +315,7 @@ def startup_detail(request, startup_id):
         'progress_percentage': progress_percentage,
         'similar_startups': similar_startups, # <-- Добавляем похожие стартапы в контекст
         'rating_distribution': rating_distribution_dict, # <-- Добавляем распределение рейтинга
+        'max_rating_count': max_rating_count # <-- Передаем максимальное количество
     })
 
 # Новая view-функция для AJAX-запроса похожих стартапов

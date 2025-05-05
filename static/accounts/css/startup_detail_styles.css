@@ -1285,8 +1285,8 @@ a:hover {
 
 .comment-body {
   /* Применяем Текст2/GI/14, но с серым цветом */
-  /* color: #000; */ /* Заменяем на серый */
-  color: #777E91;
+  /* color: #777E91; */ /* Делаем черным по запросу */
+  color: #000;
   font-family: 'Unbounded', sans-serif;
   font-size: 14px;
   font-style: normal;
@@ -1599,6 +1599,12 @@ a:hover {
   font-size: 16px;
   font-weight: 600;
   color: var(--primary-dark-blue);
+  /* Добавляем стили для однострочного отображения */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%; /* Убедимся, что имя занимает всю доступную ширину */
+  max-width: 100%;
 }
 
 .similar-card-rating {
