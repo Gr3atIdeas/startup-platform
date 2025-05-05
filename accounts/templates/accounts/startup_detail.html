@@ -309,12 +309,12 @@
           {# Шаблон для отрисовки баров (5 звезд) #}
           {% for i in "54321" %}
             <div class="rating-bar-container">
-              {# Заменяем звезду на контейнер с планетой #}
-              <span class="star-label">{{ i }}
-
-                <span class="rating-icon-container comment-icon-container">
+              {# Заменяем цифру на контейнер с планетой #}
+              <span class="star-label">
+                {# {{ i }} <<< УДАЛЯЕМ ЦИФРУ #}
+                <span class="rating-icon-container comment-icon-container"> {# Используем тот же контейнер, что и в комментариях #}
                   <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-empty">
-                  <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-filled" style="width: 100%;">
+                  <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-filled" style="width: 100%;"> {# Закрашенная планета для 5 звезд #}
                 </span>
               </span>
               <div class="rating-bar">
