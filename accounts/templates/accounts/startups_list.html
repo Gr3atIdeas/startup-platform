@@ -243,14 +243,11 @@
         let rippleTarget = this; // Default to the element itself (for buttons)
         if (this.classList.contains('startup-card')) {
             // For cards, find the inner wrapper
-            const wrapper = this.querySelector('.startup-card-content-wrapper');
+            const wrapper = this.querySelector('.startup-card-inner');
             if (wrapper) {
                 rippleTarget = wrapper; // Target the wrapper for ripple append
             } else {
-                console.warn('Could not find .startup-card-content-wrapper inside .startup-card');
-                // Optionally fall back to the card itself, or do nothing
-                 // rippleTarget = this; // Fallback to card if needed
-                 return; // Or prevent ripple if structure is wrong
+                console.warn('Could not find .startup-card-inner inside .startup-card');
             }
         }
 
@@ -287,7 +284,7 @@
             // Find the correct target to remove the ripple from
             let rippleTarget = this;
              if (this.classList.contains('startup-card')) {
-                 const wrapper = this.querySelector('.startup-card-content-wrapper');
+                 const wrapper = this.querySelector('.startup-card-inner');
                  if (wrapper) rippleTarget = wrapper;
             }
             const ripple = rippleTarget.querySelector('.position-aware-effect');

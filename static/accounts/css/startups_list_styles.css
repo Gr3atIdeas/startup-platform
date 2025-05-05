@@ -324,32 +324,27 @@ body {
 
 .startups-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
-  gap: 50px 20px;
-  margin-bottom: 30px;
-  margin-top: 50px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
   width: 100%;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 
 .startup-card {
-  background-color: #FFF;
-  border-radius: 15px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  position: relative;
-  overflow: visible;
+  background: #FFFFFF;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: column;
-  height: 411px;
+  position: relative;
   text-decoration: none;
   color: inherit;
+  max-width: 100%;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  will-change: transform, box-shadow;
-  cursor: pointer;
-  border: 1px solid transparent;
   box-sizing: border-box;
-  width: 100%;
-  margin: 0 auto;
 }
 
 
