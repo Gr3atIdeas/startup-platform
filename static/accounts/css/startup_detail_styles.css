@@ -599,7 +599,9 @@ a:hover {
 /* ------------------ */
 .right-column {
     display: flex;
-    width: 799px;
+    /* width: 799px; */ /* Убираем фиксированную ширину */
+    flex-grow: 1; /* Позволяем колонке растягиваться */
+    min-width: 0; /* Предотвращаем проблемы с переполнением */
     flex-direction: column;
     align-items: flex-start;
     gap: 35px;
