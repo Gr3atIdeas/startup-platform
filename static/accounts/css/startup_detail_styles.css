@@ -1280,6 +1280,7 @@ a:hover {
   font-style: normal;
   font-weight: 400; 
   line-height: 1; 
+  margin-bottom: 6px; /* Добавляем отступ снизу */
 }
 
 .comment-body {

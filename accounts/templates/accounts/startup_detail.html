@@ -419,9 +419,10 @@
                   {% endfor %}
                 </span>
                 <div class="rating-bar">
-                  <div class="rating-bar-fill" style="width: {{ rating_distribution|get_item:i_str|default:0 }}%;"></div> {# Используем i_str (строку) для ключа словаря #}
+                  <div class="rating-bar-fill" style="width: {{ rating_distribution|get_item:i_str|default:0 }}%;"></div> {# Ширина полоски берется по строковому ключу i_str #}
                 </div>
-                <span class="rating-count">{{ rating_counts|get_item:i_str|default:0 }}</span> {# Используем i_str (строку) для ключа словаря #}
+                {# Количество берем из rating_distribution по числовому ключу i #}
+                <span class="rating-count">{{ rating_distribution|get_item:i|default:0 }}</span> 
               </div>
               {% endwith %}
             {% endfor %}
