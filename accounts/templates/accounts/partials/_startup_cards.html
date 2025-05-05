@@ -28,17 +28,14 @@
 
       {% with progress=startup.get_progress_percentage|default:0 %}
       <div class="progress-container">
-        <div class="progress-bar-visual">
-          {# Отображаем анимированный контейнер только если прогресс > 0 #}
+        <div class="progress-bar-visual" data-progress="{{ progress|floatformat:0 }}">
           {% if progress > 0 %}
-            <div class="progress-animation-container" style="width: {{ progress }}%;">
+            <div class="progress-animation-container">
               <div class="progress-planets">
-                {# Планеты будут добавлены через CSS #}
               </div>
             </div>
             <span class="progress-percentage">{{ progress|floatformat:0 }}%</span>
           {% else %}
-            {# Если прогресс 0, показываем 0% без анимированного фона #}
              <span class="progress-percentage">0%</span>
           {% endif %}
         </div>

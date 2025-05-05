@@ -324,10 +324,9 @@ body {
 
 .startups-grid {
   display: grid;
-  /* Пытаемся уместить карточки по 330px, центрируем если не влезает 3 */
   grid-template-columns: repeat(auto-fit, 330px);
-  gap: 6px; /* Уменьшаем gap, чтобы 3 карточки влезли */
-  justify-content: center; /* Центрируем ряд, если карточек меньше 3 */
+  gap: 30px 6px;
+  justify-content: center;
   width: 100%;
   padding: 0;
   box-sizing: border-box;
@@ -365,13 +364,12 @@ body {
 }
 
 .startup-card-inner {
-  /* Отступ сверху должен быть достаточным для выступающего аватара + немного пространства */
-  padding: 70px 20px 20px 20px; /* 30px (выступ) + 40px (отступ) = 70px */
+  /* Увеличиваем верхний отступ еще, чтобы аватар точно не перекрывал имя */
+  padding: 90px 20px 20px 20px; 
   display: flex;
   flex-direction: column;
   flex-grow: 1;
   color: #191919;
-  /* Добавляем overflow: hidden сюда, если нужно обрезать внутренний контент */
   overflow: hidden; 
 }
 

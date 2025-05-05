@@ -303,6 +303,43 @@
     const initialVisibleCount = parseInt(showMoreBtn?.dataset.initialCount || '6'); // Количество видимых изначально
     let initialPaginationText = paginationInfo?.innerHTML || ''; // Сохраняем исходный текст пагинации
 
+    // Функция обновления прогресс-баров
+    function updateProgressBars(containerElement) {
+      if (!containerElement) return;
+      const progressVisuals = containerElement.querySelectorAll('.progress-bar-visual');
+      progressVisuals.forEach(visual => {
+        const progressPercent = parseInt(visual.dataset.progress || '0', 10);
+        const animationContainer = visual.querySelector('.progress-animation-container');
+        const percentageText = visual.querySelector('.progress-percentage');
+
+        if (progressPercent > 0) {
+          if (animationContainer) {
+            animationContainer.style.width = progressPercent + '%';
+          }
+          if (percentageText) {
+            percentageText.textContent = progressPercent + '%';
+          }
+           // Убедимся, что контейнер анимации видим, если он был скрыт
+           if(animationContainer && animationContainer.style.display === 'none') {
+              animationContainer.style.display = '';
+           }
+        } else {
+          // Скрываем или обнуляем контейнер анимации при 0%
+          if (animationContainer) {
+            animationContainer.style.width = '0%';
+             // animationContainer.style.display = 'none'; // Можно и скрыть, если нужно
+          }
+          if (percentageText) {
+            percentageText.textContent = '0%';
+          }
+        }
+      });
+    }
+
+    // Инициализируем прогресс-бары при загрузке
+    const initialGrid = document.getElementById('startupsGrid');
+    updateProgressBars(initialGrid);
+
     // --- Обработчик кнопки "Показать еще" --- (без изменений в fetch, но сохраняем текст пагинации при первой загрузке)
     if (showMoreBtn && startupsGrid) {
       if (!initialPaginationText && paginationInfo) { // Если текст не был загружен сразу (на случай, если initial_has_next=False)
@@ -352,7 +389,13 @@
         })
         .then(data => {
             if (data.html) {
-                startupsGrid.insertAdjacentHTML('beforeend', data.html);
+                // Создаем временный контейнер, чтобы обновить прогресс-бары ДО вставки
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = data.html;
+                updateProgressBars(tempDiv); // Обновляем бары во временном контейнере
+                
+                // Вставляем уже обновленный HTML
+                startupsGrid.insertAdjacentHTML('beforeend', tempDiv.innerHTML);
             }
 
             // Считаем ТОЛЬКО видимые карточки (на всякий случай, хотя теперь скрытых быть не должно)
