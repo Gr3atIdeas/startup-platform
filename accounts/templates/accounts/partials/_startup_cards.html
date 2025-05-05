@@ -26,42 +26,22 @@
         </span>
       </div>
 
-      <div class="category-progress">
-        <div class="category-tag">
-          {% with original_name=startup.direction.direction_name|default:"" %}
-              {% if original_name == "Medicine" %}Медицина
-              {% elif original_name == "Auto" %}Автомобили
-              {% elif original_name == "Delivery" %}Доставка
-              {% elif original_name == "Cafe" %}Кафе/рестораны
-              {% elif original_name == "Fastfood" %}Фастфуд
-              {% elif original_name == "Health" %}Здоровье
-              {% elif original_name == "Beauty" %}Красота
-              {% elif original_name == "Transport" %}Транспорт
-              {% elif original_name == "Sport" %}Спорт
-              {% elif original_name == "Psychology" %}Психология
-              {% elif original_name == "AI" %}ИИ
-              {% elif original_name == "Finance" %}Финансы
-              {% elif original_name == "Healthcare" %}Здравоохранение
-              {% elif original_name == "Technology" %}Технологии
-              {% else %}{{ original_name|default:"Не указано" }}
-              {% endif %}
-          {% endwith %}
-        </div>
-      </div>
-
-      <div class="progress-container card-progress-container">
+      {% with progress=startup.get_progress_percentage|default:0 %}
+      <div class="progress-container">
         <div class="progress-bar-visual">
-          <div class="progress-animation-container" style="width: {{ startup.progress_percentage|default:0 }}%;">
+          <div class="progress-animation-container" style="width: {{ progress }}%;">
             <div class="progress-planets">
               {# Планеты будут добавлены через CSS #}
             </div>
           </div>
-          <span class="progress-percentage">{{ startup.progress_percentage|default:0|floatformat:0 }}%</span>
+          <span class="progress-percentage">{{ progress|floatformat:0 }}%</span>
         </div>
-        <div class="progress-backers-info">
-          <i class="fas fa-users"></i>
-          <span>({{ startup.investors_count|default:0 }})</span>
-        </div>
+      </div>
+      {% endwith %}
+
+      <div class="investor-count">
+        <i class="fas fa-users"></i>
+        <span>({{ startup.get_investors_count }})</span>
       </div>
 
       <div class="investment-type">
@@ -69,20 +49,13 @@
       </div>
 
       <div class="funding-goal-info">
-        {# Убираем десятичные знаки перед добавлением разделителей #}
-        Цель финансирования: {# Добавляем span для суммы #}<span class="funding-amount">{{ startup.funding_goal|default:"0"|floatformat:0|intcomma }} ₽</span>
-      </div>
-
-      <div class="investor-count">
-        <i class="fas fa-users"></i>
-        <span>Инвестировало ({{ startup.get_investors_count }})</span>
+        Цель: {{ startup.funding_goal|default:"0"|floatformat:0|intcomma }} ₽
       </div>
 
       <div class="startup-description">
         {{ startup.description|truncatewords:15 }}
       </div>
 
-      {# Ссылка "Подробнее" растянута через CSS #}
       <a href="{% url 'startup_detail' startup.startup_id %}" class="detail-link">
         {# Текст не нужен #}
       </a>

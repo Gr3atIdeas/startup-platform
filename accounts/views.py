@@ -19,7 +19,6 @@ import uuid
 from .models import Comments
 from .forms import CommentForm
 from django.db.models import Count, Sum, Avg, F, FloatField, Max, Min, Q # Добавляем Q
-from django.db.models import Case, When, Value # Добавляем для условных выражений
 from decimal import Decimal
 from .models import NewsArticles, NewsLikes, NewsViews  # Добавляем новые модели
 from django.core.files.storage import default_storage  # Для работы с файлами
@@ -31,7 +30,6 @@ import datetime # Добавляем для работы с датами
 from django.db.models.functions import Coalesce # Добавляем Coalesce
 import collections # Добавляем для defaultdict
 from dateutil.relativedelta import relativedelta
-from django.db.models.functions import Least # Добавляем для нахождения наименьшего значения
 
 
 logger = logging.getLogger(__name__)
@@ -112,28 +110,6 @@ def startups_list(request):
     ).annotate(
          average_rating=models.functions.Coalesce('average_rating', 0.0)
     )
-
-    # ---> Добавляем аннотации для прогресса и инвесторов <--- 
-    # Количество инвесторов (уникальных пользователей в транзакциях)
-    startups_qs = startups_qs.annotate(
-        investors_count_calc=Count('investmenttransactions__investor', distinct=True)
-    )
-    # Процент прогресса (amount_raised / funding_goal * 100)
-    startups_qs = startups_qs.annotate(
-        progress_percentage_calc=Case(
-            When(funding_goal__isnull=True, then=Value(0.0)), # Если цель не задана
-            When(funding_goal=0, then=Value(0.0)), # Если цель = 0
-            default=( F('amount_raised') * 100.0 / F('funding_goal') ), # Расчет
-            output_field=FloatField()
-        )
-    ).annotate( # Заменяем NULL на 0 и ограничиваем 100%
-        progress_percentage=Least( # Используем Least (или Min в SQL) для ограничения 100%
-            Coalesce('progress_percentage_calc', 0.0), # Заменяем NULL (хотя не должно быть) на 0
-            Value(100.0) # Максимальное значение 100
-        ),
-        investors_count=Coalesce('investors_count_calc', 0) # Заменяем NULL на 0
-    )
-    # ---> Конец аннотаций <--- 
 
     # Фильтрация по категориям
     if selected_categories:
