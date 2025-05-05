@@ -411,6 +411,8 @@
           <div class="rating-distribution" data-ratings='{{ rating_distribution|to_json }}'>
             {% for i_str in "54321" %}
               {% with i=i_str|add:"0" %} {# Преобразуем строку в число #}
+              {# ---> Вычисляем количество голосов отдельно <--- #}
+              {% with current_count=(rating_distribution|get_item:i|default:0) %}
               <div class="rating-bar-container">
                 {# Генерируем i маленьких планеток #}
                 <span class="star-label">
@@ -420,19 +422,23 @@
                 </span>
                 <div class="rating-bar">
                   {# Ширина = (кол-во голосов / макс кол-во) * 100, но не больше 100% #}
-                  {% with count=(rating_distribution|get_item:i|default:0) max_count=(max_rating_count|default:1) %}
+                  {# ---> Используем current_count и убираем define <--- #}
+                  {% with max_count=(max_rating_count|default:1) %}
                     {% if max_count > 0 %}
-                      {% widthratio count max_count 100 as bar_width %}
+                      {% widthratio current_count max_count 100 as bar_width %}
+                      <div class="rating-bar-fill" style="width: {{ bar_width }}%;"></div>
                     {% else %}
-                      {% define 0 as bar_width %}
+                      {# define 0 as bar_width #} {# Удаляем define #}
+                      <div class="rating-bar-fill" style="width: 0%;"></div> {# Устанавливаем 0% напрямую #}
                     {% endif %}
-                    <div class="rating-bar-fill" style="width: {{ bar_width }}%;"></div>
                   {% endwith %}
                 </div>
                 {# Количество берем из rating_distribution по числовому ключу i #}
-                <span class="rating-count">{{ rating_distribution|get_item:i|default:0 }}</span> 
+                {# ---> Используем current_count <--- #}
+                <span class="rating-count">{{ current_count }}</span> 
               </div>
-              {% endwith %}
+              {% endwith %} {# Конец with current_count #}
+              {% endwith %} {# Конец with i #}
             {% endfor %}
           </div> {# Конец rating-distribution #}
         </div> {# Конец rating-summary-content #}
