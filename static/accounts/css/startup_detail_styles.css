@@ -1043,12 +1043,25 @@ a:hover {
 /* ======================================== */
 /*           СЕКЦИЯ КОММЕНТАРИЕВ          */
 /* ======================================== */
-.content-section#comments-section {
-  background-color: var(--text-primary); /* БЕЛЫЙ ФОН */
-  color: var(--primary-dark-blue); /* Темный текст */
-  border-radius: 15px;
-  padding: 25px 30px;
-  margin-top: 0; /* Убираем лишний отступ */
+#comments-section {
+  display: flex;
+  width: 1303px; /* Фиксированная ширина, может потребоваться адаптация */
+  max-width: 100%; /* Предотвращает выход за пределы контейнера */
+  /* Добавляем автоматические отступы для центрирования */
+  margin-left: auto;
+  margin-right: auto;
+  padding: 50px 40px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 18px;
+  flex-shrink: 0;
+  border-radius: 20px;
+  background: linear-gradient(180deg, #FFF 0%, #FFF 100%);
+  box-shadow: 6px 6px 10px 0px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(10px);
+  margin-top: 50px;
+  margin-bottom: 50px;
+  box-sizing: border-box;
 }
 
 .comments-header {
@@ -1063,7 +1076,7 @@ a:hover {
 }
 
 /* Корректируем цвет заголовка комментариев */
-.content-section#comments-section .section-title {
+#comments-section .section-title {
     color: var(--primary-dark-blue);
 }
 
