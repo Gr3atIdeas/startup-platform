@@ -324,8 +324,10 @@ body {
 
 .startups-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  /* Пытаемся уместить карточки по 330px, центрируем если не влезает 3 */
+  grid-template-columns: repeat(auto-fit, 330px);
+  gap: 6px; /* Уменьшаем gap, чтобы 3 карточки влезли */
+  justify-content: center; /* Центрируем ряд, если карточек меньше 3 */
   width: 100%;
   padding: 0;
   box-sizing: border-box;
@@ -335,13 +337,17 @@ body {
 .startup-card {
   background: #FFFFFF;
   border-radius: 12px;
-  overflow: hidden;
+  /* Убираем overflow: hidden отсюда, чтобы аватар мог выступать */
+  /* overflow: hidden; */ 
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: column;
   position: relative;
   text-decoration: none;
   color: inherit;
+  /* Возвращаем фиксированные размеры */
+  width: 330px; 
+  height: 413px;
   max-width: 100%;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   box-sizing: border-box;
@@ -359,11 +365,14 @@ body {
 }
 
 .startup-card-inner {
-  padding: 70px 20px 20px 20px;
+  /* Отступ сверху должен быть достаточным для выступающего аватара + немного пространства */
+  padding: 70px 20px 20px 20px; /* 30px (выступ) + 40px (отступ) = 70px */
   display: flex;
   flex-direction: column;
   flex-grow: 1;
   color: #191919;
+  /* Добавляем overflow: hidden сюда, если нужно обрезать внутренний контент */
+  overflow: hidden; 
 }
 
 .startup-card .startup-name {
@@ -409,21 +418,21 @@ body {
 }
 
 .startup-image {
-  width: 120px;
-  height: 120px;
+  width: 120px; 
+  height: 120px; 
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  position: absolute;
-  top: -60px;
+  position: absolute; 
+  top: -30px; /* Выступ на 25% от высоты (120px * 0.25 = 30px) */
   left: 50%;
-  transform: translateX(-50%);
-  border-radius: 50%;
-  border: 4px solid white;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  background-color: #e9ecef;
-  z-index: 2;
+  transform: translateX(-50%); 
+  border-radius: 50%; 
+  border: 4px solid white; 
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); 
+  background-color: #e9ecef; 
+  z-index: 2; 
 }
 
 .startup-image img {
@@ -1113,27 +1122,33 @@ body {
 }
 
 
+/* Комментируем изменения цвета текста для .wave-active */
+/*
 .startup-card.wave-active .startup-name,
 .startup-card.wave-active .rating-text,
 .startup-card.wave-active .comments-count,
 .startup-card.wave-active .investor-count,
-
-.startup-card.wave-active .investment-type,
-.startup-card.wave-active .funding-goal-info,
 .startup-card.wave-active .startup-description {
-  color: #FFFFFF !important;
+  color: #FFFFFF;
 }
 
 .startup-card.wave-active .category-tag {
   background-color: rgba(0, 0, 0, 0.3);
-  color: #FFFFFF !important;
+  color: #FFFFFF;
+}
+
+
+.startup-card.wave-active .investment-type,
+.startup-card.wave-active .funding-goal-info {
+  color: #333 !important;
+  background-color: #f8f9fa !important;
 }
 
 .startup-card.wave-active .comments-count i,
 .startup-card.wave-active .investor-count i {
-    color: #FFFFFF !important;
+    color: #FFFFFF;
 }
-
+*/
 
 .startup-card .position-aware-effect {
     content: '';
