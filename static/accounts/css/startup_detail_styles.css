@@ -1865,7 +1865,7 @@ a:hover {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  transition: width 0.1s ease-out;
+  /* transition: width 0.1s ease-out; */ /* <<< УДАЛЯЕМ */
 }
 /* Пустая планета (общий стиль) */
 .rating-icon-container .icon-empty {
@@ -1877,7 +1877,7 @@ a:hover {
   position: absolute;
   top: 0; left: 0;
   height: 100%;
-  width: 0%; /* Управляется JS */
+  /* width: 0%; */ /* <<< УДАЛЯЕМ */
   overflow: hidden;
   z-index: 2;
   filter: none; /* Убираем фильтры для заполненной */
