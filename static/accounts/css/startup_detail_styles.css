@@ -55,7 +55,7 @@ a:hover {
   max-width: 1440px; /* Общая ширина контейнера */
   width: 100%;
   margin: 0 auto; /* Центрирование */
-  padding: 40px 150px; /* Отступы сверху/снизу 40px, по бокам 150px */
+  padding: 40px 175px; /* Отступы сверху/снизу 40px, по бокам 175px */
   box-sizing: border-box;
 }
 

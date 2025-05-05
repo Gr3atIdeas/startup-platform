@@ -183,7 +183,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 150px; /* Боковые отступы */
+  padding: 0 175px; /* Боковые отступы */
   box-sizing: border-box; /* Учитываем padding в ширине */
   width: 100%; /* Явно указываем занять всю ширину родителя */
 }
@@ -215,7 +215,7 @@
   justify-content: space-between;
   gap: 40px; /* Пространство между блоками */
   margin-bottom: 40px; /* Оставляем только нижний отступ */
-  padding: 0 150px; /* Боковые отступы */
+  padding: 0 175px; /* Боковые отступы */
   box-sizing: border-box; /* Учитываем padding в ширине */
   align-items: flex-start; /* Выравнивание по верху */
   width: 100%; /* Явно указываем занять всю ширину родителя */
@@ -306,7 +306,7 @@
 .footer-container {
     max-width: 100%;
     margin: 0 auto;
-    padding: 0 150px; /* Боковые отступы */
+    padding: 0 175px; /* Боковые отступы */
     display: flex;
     justify-content: space-between; /* Распределение элементов */
 }
@@ -316,7 +316,7 @@
     justify-content: space-between; /* Элементы по краям */
     align-items: center;
     margin-top: 20px; /* Отступ сверху */
-    padding: 0 150px; /* Боковые отступы */
+    padding: 0 175px; /* Боковые отступы */
     border-top: 1px solid #444; /* Верхняя граница */
     padding-top: 20px; /* Отступ сверху от границы */
 }

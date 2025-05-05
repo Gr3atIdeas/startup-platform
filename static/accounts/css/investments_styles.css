@@ -43,7 +43,7 @@ body {
 .investments-container {
   max-width: 100%; /* Контейнер на всю ширину */
   margin: 0 auto; /* Центрируем контейнер */
-  padding: 0 150px; /* Возвращаем боковые отступы 70px */
+  padding: 0 175px; /* Возвращаем боковые отступы 175px */
   box-sizing: border-box; /* Учитываем padding в общей ширине */
   /* Применяем базовый шрифт Unbounded */
   font-family: 'Unbounded', sans-serif; 
