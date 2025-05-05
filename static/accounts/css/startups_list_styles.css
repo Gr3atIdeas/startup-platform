@@ -340,7 +340,7 @@ body {
   overflow: visible;
   display: flex;
   flex-direction: column;
-  height: 430px;
+  height: 411px;
   text-decoration: none;
   color: inherit;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -631,9 +631,9 @@ body {
   color: #6c757d;
   font-size: 12px;
   flex-shrink: 0;
-  padding: 0 15px;
-  margin-top: 5px;
-  margin-bottom: 10px;
+  padding: 0 8px;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .investor-count i {
@@ -1507,7 +1507,6 @@ body {
     font-size: 11px; /* Уменьшен шрифт */
     flex-shrink: 0;
     z-index: 2;
-    margin-left: auto;
     padding: 0 8px;
     margin-top: 0;
     margin-bottom: 0;

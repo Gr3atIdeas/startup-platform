@@ -36,13 +36,12 @@
           </div>
           <span class="progress-percentage">{{ progress|floatformat:0 }}%</span>
         </div>
+        <div class="investor-count">
+          <i class="fas fa-users"></i>
+          <span>({{ startup.get_investors_count }})</span>
+        </div>
       </div>
       {% endwith %}
-
-      <div class="investor-count">
-        <i class="fas fa-users"></i>
-        <span>({{ startup.get_investors_count }})</span>
-      </div>
 
       <div class="investment-type">
         {% if startup.both_mode %}Инвестирование+Выкуп{% elif startup.only_invest %}Только инвестирование{% elif startup.only_buy %}Только выкуп{% else %}Тип не указан{% endif %}
