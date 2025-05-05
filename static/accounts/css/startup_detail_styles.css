@@ -1858,6 +1858,18 @@ a:hover {
   cursor: default;
   line-height: 1;
 }
+/* ---> Задаем размер для иконок основного рейтинга <--- */
+.rating-stars .rating-icon-container {
+    width: 20px;
+    height: 20px;
+    margin: 0 1px; /* Небольшой отступ между иконками */
+}
+/* ---> Задаем размер для иконок рейтинга похожих стартапов <--- */
+.similar-card-rating .rating-icon-container {
+    width: 14px;
+    height: 14px;
+}
+
 .rating-icon-container img {
   position: absolute;
   top: 0;
