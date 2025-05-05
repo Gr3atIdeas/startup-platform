@@ -18,7 +18,7 @@ header {
   background-color: transparent;
   position: relative; /* Меняем с fixed на relative */
   width: 100%;
-  padding: 10px 100px; /* <<< Увеличиваем боковые отступы до 100px */
+  padding: 10px 150px; /* <<< Увеличиваем боковые отступы до 150px */
   display: flex;
   justify-content: space-between;
   align-items: center;
