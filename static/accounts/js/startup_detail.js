@@ -35,10 +35,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Функция для обновления отображения рейтинга (метод наложения)
     function updateRatingDisplay(containerSelector, rating) {
+        console.log(`[updateRatingDisplay] Called for selector: "${containerSelector}", rating: ${rating}`); // <<< Лог 1: Вызов функции
         const starsContainer = document.querySelector(containerSelector);
-        if (!starsContainer) return;
+        if (!starsContainer) {
+            console.error(`[updateRatingDisplay] Container not found for selector: "${containerSelector}"`); // <<< Лог 2: Контейнер не найден
+            return;
+        }
 
         const iconContainers = starsContainer.querySelectorAll('.rating-icon-container'); // Ищем контейнеры
+        console.log(`[updateRatingDisplay] Found ${iconContainers.length} icon containers within "${containerSelector}"`); // <<< Лог 3: Сколько контейнеров иконок найдено
         const ratingValue = parseFloat(rating) || 0;
         const fullStars = Math.floor(ratingValue);
         const partialPercentage = (ratingValue - fullStars) * 100;
@@ -46,7 +51,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
         iconContainers.forEach((container, index) => {
             const filledIcon = container.querySelector('.icon-filled');
-            if (!filledIcon) return; // Пропускаем, если нет иконки
+            if (!filledIcon) {
+                console.warn(`[updateRatingDisplay] Filled icon not found in container ${index + 1} for selector "${containerSelector}"`); // <<< Лог 4: Заполненная иконка не найдена
+                return; // Пропускаем, если нет иконки
+            }
 
             let fillWidth = '0%'; // Ширина по умолчанию
             if (index < fullStars) {
@@ -57,6 +65,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 fillWidth = `${partialPercentage}%`;
             }
             // Применяем ширину к желтой иконке
+            console.log(`[updateRatingDisplay] Setting width ${fillWidth} for icon ${index + 1} in "${containerSelector}"`); // <<< Лог 5: Применение ширины
             filledIcon.style.width = fillWidth;
             
         });
@@ -84,11 +93,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const mainRatingElement = document.querySelector(ratingDisplayContainer);
     if (mainRatingElement) {
         const initialRatingRaw = mainRatingElement.getAttribute('data-rating'); // Получаем как строку
+        console.log(`[Main Rating] Raw data-rating: "${initialRatingRaw}"`); // <<< Лог 6: Сырое значение data-rating
         
         // Заменяем запятую на точку перед parseFloat
-        const ratingStringForJs = initialRatingRaw ? initialRatingRaw.replace(',', '.') : '0'; 
+        const ratingStringForJs = initialRatingRaw ? initialRatingRaw.replace(',', '.') : '0';
         const initialRating = parseFloat(ratingStringForJs); // Парсим строку с точкой
+        console.log(`[Main Rating] Parsed rating value: ${initialRating}`); // <<< Лог 7: Распарсенное значение
         updateRatingDisplay(ratingDisplayContainer, initialRating);
+    } else {
+        console.error('[Main Rating] Rating container not found with selector:', ratingDisplayContainer); // <<< Лог 8: Основной контейнер не найден
     }
     
     // Отображаем рейтинг в каждом комментарии
@@ -111,9 +124,11 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log(`Found ${similarRatingContainers.length} similar startup rating containers.`); // Логгирование
     similarRatingContainers.forEach((container) => {
         const ratingStringRaw = container.dataset.rating;
+        // ---> Добавляем лог сырых данных для похожих <--- 
+        console.log(`[Similar Rating] Raw data-rating: "${ratingStringRaw}" for container:`, container); // <<< Лог 9: Сырые данные для похожих
         const ratingStringForJs = ratingStringRaw ? ratingStringRaw.replace(',', '.') : '0';
         const similarRatingValue = parseFloat(ratingStringForJs) || 0;
-        console.log(`Processing similar startup card. Rating value: ${similarRatingValue}`); // Логгирование
+        console.log(`[Similar Rating] Processing similar startup card. Parsed rating: ${similarRatingValue}`); // Логгирование (обновлено)
         
         // Генерируем УНИКАЛЬНЫЙ селектор для этого контейнера
         // Можно использовать href родительской ссылки .similar-card
