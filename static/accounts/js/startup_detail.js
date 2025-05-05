@@ -346,7 +346,7 @@ document.addEventListener('DOMContentLoaded', function() {
                      const countForLevel = votesPerLevel[ratingLevel] || 0;
                      const percentage = (countForLevel / totalVotes) * 100;
                      ratingBarFill.style.width = `${percentage}%`;
-                     ratingCountSpan.textContent = countForLevel; // Обновляем текст с количеством
+                     // ratingCountSpan.textContent = countForLevel; // <<< КОММЕНТИРУЕМ ЭТУ СТРОКУ, т.к. значение уже есть из шаблона
                 } else {
                      if (!ratingLevel) console.warn("Не удалось определить уровень рейтинга для бара:", barContainer);
                      if (!ratingBarFill) console.warn("Не найден .rating-bar-fill для бара:", barContainer);

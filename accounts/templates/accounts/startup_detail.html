@@ -303,7 +303,7 @@
       <h2 class="section-title">
         Комментарии 
         <i class="fas fa-comment-dots comment-title-icon"></i> {# Добавляем иконку #}
-        <span class="comments-count">({{ comments|length }})</span>
+        <span class="comments-count">{{ comments|length }}</span> {# Убираем скобки #}
       </h2>
       {# Правую часть хедера (рейтинг) переносим в правую колонку ниже #}
     </div>
