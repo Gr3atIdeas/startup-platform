@@ -1309,21 +1309,22 @@ body {
     flex-grow: 1; /* Занимает все доступное пространство */
 }
 
+/* Добавляем стили прогресс-бара со страницы деталей */
 .progress-container {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 10px; /* Уменьшим немного отступ для карточки */
     width: 100%;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    padding: 0 15px;
-    box-sizing: border-box;
+    margin-top: 10px; /* Уменьшим отступ сверху */
+    margin-bottom: 10px; /* Уменьшим отступ снизу */
+    padding: 0 15px; /* Добавим внутренние отступы слева/справа */
+    box-sizing: border-box; /* Учитываем padding */
 }
 
 .progress-bar-visual {
     flex-grow: 1;
-    height: 18px;
-    background-color: #e9ecef;
+    height: 18px; /* Уменьшим высоту для карточки */
+    background-color: #e9ecef; /* Светлый фон для светлой карточки */
     border-radius: 9px;
     position: relative;
     overflow: hidden;
@@ -1333,7 +1334,9 @@ body {
 
 .progress-animation-container {
     height: 100%;
-    background: linear-gradient(90deg, var(--accent-purple) 0%, #A950FF 100%);
+    /* Используем более подходящие цвета для светлой темы? */
+    /* background: linear-gradient(90deg, #6f42c1 0%, #a97bff 100%); */
+    background: linear-gradient(90deg, var(--accent-purple) 0%, #A950FF 100%); /* Оставим пока оригинал */
     border-radius: 9px;
     position: relative;
     overflow: hidden;
@@ -1357,12 +1360,14 @@ body {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    width: 12px;
+    width: 12px; /* Уменьшим планеты */
     height: 12px;
-    background-image: url("../images/planets/filled_planet_progress.svg");
+    /* Нужен светлый вариант иконки для темного градиента */
+    /* background-image: url("../images/planets/filled_planet_progress_light.svg"); */
+    background-image: url("../images/planets/filled_planet_progress.svg"); /* <<< ПРАВИЛЬНЫЙ ПУТЬ */
     background-size: contain;
     background-repeat: no-repeat;
-    filter: brightness(1.5);
+    filter: brightness(1.5); /* Сделаем иконку чуть ярче */
     animation: movePlanets 4s linear infinite;
 }
 
@@ -1377,7 +1382,7 @@ body {
 
 @keyframes movePlanets {
     0% { transform: translate(0, -50%); }
-    50% { transform: translate(5px, -50%); }
+    50% { transform: translate(5px, -50%); } /* Уменьшим сдвиг */
     100% { transform: translate(0, -50%); }
 }
 
@@ -1386,8 +1391,8 @@ body {
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    color: #ffffff;
-    font-size: 10px;
+    color: #ffffff; /* Белый текст на градиенте */
+    font-size: 10px; /* Уменьшим шрифт */
     font-weight: 700;
     line-height: 1;
     z-index: 2;
