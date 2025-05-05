@@ -422,7 +422,7 @@
                 </span>
                 <div class="rating-bar">
                   {# Ширина = (кол-во голосов / макс кол-во) * 100, но не больше 100% #}
-                  {% with max_count=(max_rating_count|default:1) %}
+                  {% with max_count=max_rating_count %}
                     {% if max_count > 0 %}
                       {% widthratio current_count max_count 100 as bar_width %}
                       <div class="rating-bar-fill" style="width: {{ bar_width }}%;"></div>
