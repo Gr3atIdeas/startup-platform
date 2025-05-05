@@ -1045,13 +1045,14 @@ a:hover {
 /* ======================================== */
 #comments-section {
   display: flex;
-  width: 1303px; /* Заданная ширина */
-  max-width: 95%; /* Ограничиваем на всякий случай */
-  margin: 50px auto; /* Центрирование и вертикальные отступы */
-  padding: 50px 40px; /* Внутренние отступы */
+  width: 1303px;
+  /* max-width: 95%; */ 
+  margin: 50px auto;
+  /* padding: 50px 40px; */ /* Убираем горизонтальные паддинги */
+  padding: 50px 0; 
   flex-direction: column;
-  align-items: stretch; /* Растягиваем потомков */
-  gap: 18px; /* Отступ между хедером и контентом */
+  align-items: stretch; 
+  gap: 18px; 
   flex-shrink: 0;
   border-radius: 20px;
   background: #FFF; /* Белый фон */
@@ -1124,10 +1125,24 @@ a:hover {
 /* --- Стили правой колонки (Общий рейтинг) --- */
 .comments-rating-summary {
   display: flex;
-  flex-direction: column; /* Рейтинг над распределением */
-  align-items: flex-start; /* Выравнивание по левому краю */
-  gap: 16px;
+  flex-direction: column; 
+  align-items: flex-start; 
+  gap: 8px; /* Уменьшим отступ между звездами/цифрой и распределением */
 }
+
+/* Контейнер для звезд над цифрой */
+.overall-rating-stars {
+    display: flex;
+    gap: 5px; /* Отступ между звездами */
+    margin-bottom: 8px; /* Отступ под звездами */
+}
+
+.overall-rating-icon-container {
+    width: 24px; /* Размер больших звезд */
+    height: 24px;
+}
+/* Стили для .icon-empty и .icon-filled внутри overall-rating-icon-container */
+/* будут как у других планет, но JS будет управлять заполнением */
 
 .average-rating-value {
   font-family: 'Unbounded', sans-serif;
@@ -1242,20 +1257,22 @@ a:hover {
 }
 
 .comment-author-name {
-  font-family: 'Poppins', sans-serif;
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 1.4;
-  color: #23262F;
+  font-family: 'Unbounded', sans-serif;
+  font-size: 16px; /* var(--sds-typography-body-size-medium) -> 16px */
+  font-style: normal;
+  font-weight: 400; /* var(--sds-typography-body-font-weight-regular) -> 400 */
+  line-height: 1; /* 100% */
+  color: #000;
 }
 
 .comment-body {
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Unbounded', sans-serif;
   font-size: 14px;
-  font-weight: 400;
-  line-height: 1.6;
-  color: #777E91;
-  padding-left: 0; /* Убираем старый отступ */
+  font-style: normal;
+  font-weight: 300;
+  line-height: 18px; /* 128.571% */
+  letter-spacing: -0.28px;
+  padding-left: 0; 
   margin-bottom: 0;
 }
 .comment-body p {
@@ -1310,20 +1327,25 @@ a:hover {
 /* Бейджи */
 .badge {
   padding: 4px 8px;
-  font-size: 12px;
-  font-weight: 700;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 300;
+  line-height: 18px; /* 128.571% */
+  letter-spacing: -0.28px;
+  /* Подбираем фон и цвет текста для читаемости */
+  background-color: #f0f0f0; /* Светлый фон */
+  border: 1px solid #e0e0e0; /* Тонкая рамка */
   border-radius: 6px;
-  font-family: 'Poppins', sans-serif;
-  line-height: 1;
+  color: #000;
 }
 .badge-invested {
-  background-color: #F4F5F6;
-  color: #3772FF;
+  background-color: #e7f1ff;
+  color: #0056b3; /* Синий для инвестора */
   border: none;
 }
 .badge-buyout {
-  background-color: #FFF6E4;
-  color: #FFA114;
+  background-color: #fff6e4;
+  color: #b37400; /* Оранжевый для выкупа */
   border: none;
 }
 
@@ -1798,17 +1820,11 @@ a:hover {
 .rating-icon-container {
   display: inline-block;
   position: relative;
-  width: 22px; /* Ширина иконки */
-  height: 22px; /* Высота иконки */
+  /* width/height задаются отдельно для overall и comment */
   vertical-align: middle;
-  margin-right: 0;
   cursor: default;
   line-height: 1;
 }
-.rating-icon-container:last-child {
-  margin-right: 0;
-}
-
 .rating-icon-container img {
   position: absolute;
   top: 0;
@@ -1818,34 +1834,42 @@ a:hover {
   object-fit: contain;
   transition: width 0.1s ease-out;
 }
-
+/* Пустая планета (общий стиль) */
 .rating-icon-container .icon-empty {
-  filter: grayscale(100%) brightness(1.2);
+  filter: grayscale(100%) opacity(0.3);
   z-index: 1;
 }
-
-.rating-icon-container .icon-filled,
-.similar-card-rating .rating-icon-container .icon-filled,
-.comment-rating .rating-icon-container .icon-filled,
-.star-label .rating-icon-container .icon-filled {
+/* Заполненная планета (общий стиль) */
+.rating-icon-container .icon-filled {
   position: absolute;
   top: 0; left: 0;
   height: 100%;
   width: 0%; /* Управляется JS */
   overflow: hidden;
   z-index: 2;
+  filter: none; /* Убираем фильтры для заполненной */
 }
 
-/* Интерактивные звезды/планеты */
-.rating-stars[data-interactive="true"] .rating-icon-container {
-  cursor: pointer;
+/* Стили для АВАТАРОК */
+.comment-author-avatar {
+  width: 32px; 
+  height: 32px;
+  border-radius: 50%;
+  background-color: #E6E8EC;
+  flex-shrink: 0;
+  display: flex; /* Для центрирования иконки/картинки */
+  align-items: center;
+  justify-content: center;
+  overflow: hidden; /* Скрываем выходящее за круг */
 }
-
-/* Планеты в комментариях (меньше) */
-.comment-icon-container,
-.star-label .rating-icon-container { /* Применяем и к планете в .star-label */
-    width: 18px;
-    height: 18px;
+.comment-author-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Масштабируем картинку */
+}
+.comment-author-avatar i.fa-user { /* Стиль для иконки-плейсхолдера */
+    color: #B1B5C3;
+    font-size: 18px;
 }
 
 /* --- Утилиты --- */

@@ -320,7 +320,15 @@
             {% for comment in comments %}
               <div class="comment-card {% if forloop.counter > 5 %}hidden{% endif %}"> {# Скрываем после 5 #}
                 <div class="comment-left">
-                  <div class="comment-author-avatar"></div>
+                  <div class="comment-author-avatar">
+                    {# Вставляем аватарку #}
+                    {% if comment.user_id.profile_picture_url %}
+                      <img src="{{ comment.user_id.profile_picture_url }}" alt="Аватар {{ comment.user_id.first_name }}">
+                    {% else %}
+                      {# Можно добавить плейсхолдер, если аватарки нет #}
+                      <i class="fas fa-user"></i>
+                    {% endif %}
+                  </div>
                   <div class="comment-content-wrapper">
                     <div class="comment-author-name">{{ comment.user_id.first_name|default:comment.user_id.email }}</div>
                     <div class="comment-body">
@@ -385,6 +393,15 @@
       {# 2.2 Правая колонка: Общий рейтинг #}
       <div class="comments-rating-summary-wrapper">
         <div class="comments-rating-summary">
+          {# Добавляем блок для планет перед цифрой #}
+          <div class="overall-rating-stars" data-rating="{{ average_rating|floatformat:'-2'|default:0 }}">
+              {% for i in "12345" %}
+                <span class="rating-icon-container overall-rating-icon-container">
+                  <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-empty">
+                  <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-filled">
+                </span>
+              {% endfor %}
+          </div>
           <span class="average-rating-value">{{ average_rating|default:0|floatformat:"1" }}</span>
           <div class="rating-distribution" data-ratings='{{ rating_distribution|to_json }}'>
             {% for i in "54321" %}
