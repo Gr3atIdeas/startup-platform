@@ -329,6 +329,12 @@ body {
   margin-bottom: 30px;
   margin-top: 50px;
   width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
+  height: 450px;
+  margin-bottom: 0;
+  cursor: pointer;
+  border: 1px solid transparent;
 }
 
 
@@ -637,9 +643,14 @@ body {
   margin-bottom: 10px;
   padding: 8px 12px;
   border-radius: 6px;
-  text-align: center;
   width: 100%;
   box-sizing: border-box;
+}
+
+.funding-goal-info .funding-amount {
+    display: block;
+    text-align: center;
+    margin-top: 4px;
 }
 
 
@@ -1332,7 +1343,7 @@ body {
     box-sizing: border-box;
     position: relative;
     overflow: hidden;
-    margin-top: 10px; /* Добавляем отступ сверху */
+    margin-top: 5px; /* <<< Уменьшаем отступ сверху */
     margin-bottom: 10px; /* Добавляем отступ снизу */
 }
 
@@ -1371,9 +1382,9 @@ body {
 /* Анимация (оставляем, вдруг понадобится) */
 @keyframes movePlanets {
     0% { transform: translateX(0) translateY(-1px) scale(1); opacity: 0.7; }
-    25% { transform: translateX(10px) translateY(1px) scale(1.1); opacity: 0.9; } /* Уменьшаем смещение */
-    50% { transform: translateX(-5px) translateY(0) scale(1); opacity: 0.8; } /* Уменьшаем смещение */
-    75% { transform: translateX(8px) translateY(-2px) scale(0.9); opacity: 1; } /* Уменьшаем смещение */
+    25% { transform: translateX(8px) translateY(1px) scale(1.1); opacity: 0.9; } /* Уменьшаем смещение */
+    50% { transform: translateX(-4px) translateY(0) scale(1); opacity: 0.8; } /* Уменьшаем смещение */
+    75% { transform: translateX(6px) translateY(-1px) scale(0.9); opacity: 1; } /* Уменьшаем смещение */
     100% { transform: translateX(0) translateY(-1px) scale(1); opacity: 0.7; }
 }
 
@@ -1410,4 +1421,64 @@ body {
 
 .startup-card .progress-backers-info i {
     font-size: 12px; /* Уменьшаем иконку */
+}
+
+/* ---> Возвращаем планеты в прогресс-бар карточки <--- */
+.startup-card .progress-planets {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.startup-card .progress-planets::before,
+.startup-card .progress-planets::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.6); /* Чуть менее яркие */
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.6);
+    animation: movePlanets 6s linear infinite; /* <<< Анимация */
+}
+
+.startup-card .progress-planets::before {
+    width: 8px; /* Уменьшаем планеты */
+    height: 8px;
+    margin-top: -4px;
+    left: 15%;
+    animation-delay: -1s;
+}
+
+.startup-card .progress-planets::after {
+    width: 6px; /* Уменьшаем планеты */
+    height: 6px;
+    margin-top: -3px;
+    left: 70%;
+    animation-delay: -4s;
+}
+/* Маленькая третья планета (опционально) */
+.startup-card .progress-animation-container::before {
+    /* display: none; */ /* ПОКАЗЫВАЕМ */
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 40%;
+    width: 7px;
+    height: 7px;
+    margin-top: -3.5px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 0 4px rgba(255, 255, 255, 0.5);
+    animation: movePlanets 8s linear infinite alternate; /* <<< Анимация */
+    animation-delay: -3s;
+}
+
+/* Анимация (оставляем, вдруг понадобится) */
+@keyframes movePlanets {
+    0% { transform: translateX(0) translateY(-1px) scale(1); opacity: 0.6; }
+    25% { transform: translateX(8px) translateY(1px) scale(1.1); opacity: 0.8; } /* Уменьшаем смещение */
+    50% { transform: translateX(-4px) translateY(0) scale(1); opacity: 0.7; } /* Уменьшаем смещение */
+    75% { transform: translateX(6px) translateY(-1px) scale(0.9); opacity: 0.9; } /* Уменьшаем смещение */
+    100% { transform: translateX(0) translateY(-1px) scale(1); opacity: 0.6; }
 }

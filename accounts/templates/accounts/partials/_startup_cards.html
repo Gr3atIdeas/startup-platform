@@ -70,7 +70,7 @@
 
       <div class="funding-goal-info">
         {# Убираем десятичные знаки перед добавлением разделителей #}
-        Цель финансирования: {{ startup.funding_goal|default:"0"|floatformat:0|intcomma }} ₽
+        Цель финансирования: {# Добавляем span для суммы #}<span class="funding-amount">{{ startup.funding_goal|default:"0"|floatformat:0|intcomma }} ₽</span>
       </div>
 
       <div class="investor-count">
