@@ -1048,8 +1048,8 @@ a:hover {
   width: 1303px;
   /* max-width: 95%; */ 
   margin: 50px auto;
-  /* padding: 50px 40px; */ /* Убираем горизонтальные паддинги */
-  padding: 50px 0; 
+  /* padding: 50px 0; */ /* Возвращаем горизонтальные паддинги */
+  padding: 50px 30px; 
   flex-direction: column;
   align-items: stretch; 
   gap: 18px; 
@@ -1114,35 +1114,38 @@ a:hover {
 
 /* Правая колонка (рейтинг) */
 .comments-rating-summary-wrapper {
-  width: 349px; /* Фиксированная ширина */
-  flex-shrink: 0; /* Не сжимается */
+  width: 349px;
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  align-items: stretch; /* Растягиваем элементы внутри */
+  align-items: stretch; 
   gap: 16px;
+  /* Убираем отступ сверху, если он не нужен по макету */
+  /* margin-top: ??? */ 
 }
 
 /* --- Стили правой колонки (Общий рейтинг) --- */
-.comments-rating-summary {
+.comments-rating-summary { /* Контейнер для звезд и цифры */
   display: flex;
   flex-direction: column; 
   align-items: flex-start; 
-  gap: 8px; /* Уменьшим отступ между звездами/цифрой и распределением */
+  gap: 8px; 
+  /* Добавляем разделитель снизу */
+  padding-bottom: 16px;
+  margin-bottom: 16px; /* Отступ под разделителем */
+  border-bottom: 1px solid #E6E8EC; /* Цвет разделителя */
 }
 
-/* Контейнер для звезд над цифрой */
 .overall-rating-stars {
     display: flex;
-    gap: 5px; /* Отступ между звездами */
-    margin-bottom: 8px; /* Отступ под звездами */
+    gap: 6px; /* Отступ между звездами */
+    margin-bottom: 8px; 
 }
 
 .overall-rating-icon-container {
-    width: 24px; /* Размер больших звезд */
-    height: 24px;
+    width: 40px; /* Увеличиваем размер */
+    height: 40px;
 }
-/* Стили для .icon-empty и .icon-filled внутри overall-rating-icon-container */
-/* будут как у других планет, но JS будет управлять заполнением */
 
 .average-rating-value {
   font-family: 'Unbounded', sans-serif;
@@ -1257,20 +1260,24 @@ a:hover {
 }
 
 .comment-author-name {
-  font-family: 'Unbounded', sans-serif;
-  font-size: 16px; /* var(--sds-typography-body-size-medium) -> 16px */
-  font-style: normal;
-  font-weight: 400; /* var(--sds-typography-body-font-weight-regular) -> 400 */
-  line-height: 1; /* 100% */
+  /* Применяем Текст1/GI/16 */
   color: #000;
+  font-family: 'Unbounded', sans-serif;
+  font-size: 16px; 
+  font-style: normal;
+  font-weight: 400; 
+  line-height: 1; 
 }
 
 .comment-body {
+  /* Применяем Текст2/GI/14, но с серым цветом */
+  /* color: #000; */ /* Заменяем на серый */
+  color: #777E91;
   font-family: 'Unbounded', sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: 300;
-  line-height: 18px; /* 128.571% */
+  line-height: 18px; 
   letter-spacing: -0.28px;
   padding-left: 0; 
   margin-bottom: 0;
@@ -1326,27 +1333,33 @@ a:hover {
 
 /* Бейджи */
 .badge {
-  padding: 4px 8px;
+  /* Применяем Текст2/GI/14 */
+  color: #000;
+  font-family: 'Unbounded', sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: 300;
-  line-height: 18px; /* 128.571% */
+  line-height: 18px; 
   letter-spacing: -0.28px;
-  /* Подбираем фон и цвет текста для читаемости */
-  background-color: #f0f0f0; /* Светлый фон */
-  border: 1px solid #e0e0e0; /* Тонкая рамка */
+  /* Стили как у кнопки с рамкой */
+  background-color: transparent;
+  border: 1px solid #000;
   border-radius: 6px;
-  color: #000;
+  padding: 4px 10px; /* Немного увеличим паддинг */
+  text-align: center;
+  display: inline-block;
 }
 .badge-invested {
-  background-color: #e7f1ff;
-  color: #0056b3; /* Синий для инвестора */
-  border: none;
+  /* Убираем специфичные стили, используем общие */
+  border-color: #000;
+  color: #000;
+  background-color: transparent;
 }
 .badge-buyout {
-  background-color: #fff6e4;
-  color: #b37400; /* Оранжевый для выкупа */
-  border: none;
+  /* Убираем специфичные стили, используем общие */
+  border-color: #000;
+  color: #000;
+  background-color: transparent;
 }
 
 /* Кнопка "Показать еще" */
