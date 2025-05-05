@@ -411,8 +411,8 @@
           <div class="rating-distribution" data-ratings='{{ rating_distribution|to_json }}'>
             {% for i_str in "54321" %}
               {% with i=i_str|add:"0" %} {# Преобразуем строку в число #}
-              {# ---> Вычисляем количество голосов отдельно <--- #}
-              {% with current_count=(rating_distribution|get_item:i|default:0) %}
+              {# ---> Вычисляем количество голосов СНАРУЖИ div <--- #}
+              {% with current_count=rating_distribution|get_item:i %}
               <div class="rating-bar-container">
                 {# Генерируем i маленьких планеток #}
                 <span class="star-label">
@@ -422,7 +422,6 @@
                 </span>
                 <div class="rating-bar">
                   {# Ширина = (кол-во голосов / макс кол-во) * 100, но не больше 100% #}
-                  {# ---> Используем current_count и убираем define <--- #}
                   {% with max_count=(max_rating_count|default:1) %}
                     {% if max_count > 0 %}
                       {% widthratio current_count max_count 100 as bar_width %}
@@ -434,7 +433,6 @@
                   {% endwith %}
                 </div>
                 {# Количество берем из rating_distribution по числовому ключу i #}
-                {# ---> Используем current_count <--- #}
                 <span class="rating-count">{{ current_count }}</span> 
               </div>
               {% endwith %} {# Конец with current_count #}
