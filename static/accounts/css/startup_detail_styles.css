@@ -300,12 +300,16 @@ a:hover {
   left: 10px;
   background: rgba(0, 8, 25, 0.7);
   backdrop-filter: blur(5px);
-  color: var(--text-primary);
+  color: #FFF;
   padding: 5px 15px;
   border-radius: 20px;
-  font-size: 14px;
-  font-weight: 400;
   z-index: 1;
+  font-family: 'Unbounded', sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 300;
+  line-height: 18px;
+  letter-spacing: -0.28px;
 }
 
 /* Форма статуса (модератор) */
@@ -318,12 +322,10 @@ a:hover {
 .status-select {
     background: rgba(0, 8, 25, 0.7);
     backdrop-filter: blur(5px);
-    color: var(--text-primary);
+    color: #FFF;
     padding: 5px 15px;
     border-radius: 20px;
     border: 1px solid var(--border-color);
-    font-size: 14px;
-    font-weight: 400;
     cursor: pointer;
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -333,6 +335,11 @@ a:hover {
     background-repeat: no-repeat;
     background-position: right 8px center;
     background-size: 18px;
+    font-family: 'Unbounded', sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 18px;
 }
 .status-select:focus {
     outline: none;
@@ -656,8 +663,13 @@ a:hover {
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  color: #FFF;
+  font-family: 'Unbounded', sans-serif;
   font-size: 14px;
-  color: var(--text-primary);
+  font-style: normal;
+  font-weight: 300;
+  line-height: 18px;
+  letter-spacing: -0.28px;
 }
 
 .microinvestment-badge i {

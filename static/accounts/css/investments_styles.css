@@ -47,10 +47,10 @@ body {
   box-sizing: border-box; /* Учитываем padding в общей ширине */
   /* Применяем базовый шрифт Unbounded */
   font-family: 'Unbounded', sans-serif; 
-  font-weight: 300; /* Базовый вес 300 */
-  font-size: 14px; /* Базовый размер 14px */
+  font-weight: 300; /* Базовый вес */
+  font-size: 14px; /* Базовый размер */
   line-height: 18px; /* Базовая высота строки */
-  letter-spacing: -0.02em; /* Базовый межбуквенный интервал */
+  letter-spacing: -0.28px;
   color: #FFFFFF;
   animation: fadeIn 0.8s linear;
   background-color: #0B0D17;
@@ -462,7 +462,7 @@ body {
   font-weight: 300; /* Базовый вес */
   font-size: 14px; /* Базовый размер */
   line-height: 18px; /* Базовая высота строки */
-  letter-spacing: -0.02em; /* Базовый интервал */
+  letter-spacing: -0.28px;
   display: inline-block; /* Чтобы padding работал */
   min-width: 200px; /* Минимальная ширина */
   text-align: center;

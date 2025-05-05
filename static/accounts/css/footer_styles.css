@@ -24,23 +24,24 @@
 }
 
 .footer-logo {
-  font-family: 'Koulen', sans-serif; /* Используем Koulen как замену Blippo */
-  font-weight: 400; /* Как указано */
-  font-size: 78px; /* Как указано */
-  line-height: 1; /* Скорректируем для такого большого шрифта */
-  letter-spacing: -0.02em; /* -2% */
-  text-transform: uppercase; /* Как указано */
+  /* font-family: 'Koulen', sans-serif; */ /* Заменяем на Blippo */
+  font-family: "Blippo-Black CY [Rus by me]", sans-serif; /* Убедитесь, что шрифт подключен */
+  font-weight: 400;
+  font-size: 100px;
+  line-height: 1; /* line-height: 18px (18%) выглядит как ошибка для 100px шрифта */
+  letter-spacing: -2px;
+  text-transform: uppercase;
   margin-bottom: 20px;
   color: #FFFFFF;
 }
 
 .footer-text {
-  font-family: 'Unbounded', sans-serif; /* Как указано */
-  font-weight: 300; /* Как указано */
-  font-size: 12px; /* Как указано */
-  line-height: 100%; /* Как указано */
-  letter-spacing: 0.01em; /* 1% */
-  color: rgba(255, 255, 255, 0.8); /* Полупрозрачный белый */
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 300;
+  font-size: 12px;
+  line-height: normal;
+  letter-spacing: 0.12px;
+  color: #FFF;
   margin-bottom: 25px;
   max-width: 300px; /* Ограничим ширину текста */
 }
@@ -102,10 +103,15 @@
 }
 
 .footer-menu h3 {
-  font-size: 18px;
-  font-weight: 500;
+  /* font-size: 18px; */
+  /* font-weight: 500; */
   margin-bottom: 15px;
-  color: #FFFFFF;
+  color: #FFEF2B; /* Желтый */
+  font-family: 'Unbounded', sans-serif; /* var(--1, Unbounded) */
+  font-size: 16px; /* var(--sds-typography-body-size-medium) -> 16px */
+  font-style: normal;
+  font-weight: 400; /* var(--sds-typography-body-font-weight-regular) -> 400 */
+  line-height: 100%; /* 16px */
 }
 
 .footer-menu ul {
@@ -120,9 +126,14 @@
 
 .footer-menu a {
   text-decoration: none;
-  color: rgba(255, 255, 255, 0.8); /* Полупрозрачный белый */
-  font-size: 14px;
+  color: #FFF;
   transition: color 0.3s linear;
+  font-family: 'Unbounded', sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 300;
+  line-height: 18px; /* 128.571% */
+  letter-spacing: -0.28px;
 }
 
 .footer-menu a:hover {
@@ -189,8 +200,15 @@
 }
 
 .footer-copyright-bar-copyright {
+  /* font-size: 12px; */
+  /* color: #6c757d; */ /* Серый текст для копирайта -> #4E4F51 */
+  color: #4E4F51;
+  font-family: 'Unbounded', sans-serif;
   font-size: 12px;
-  color: #6c757d; /* Серый текст для копирайта */
+  font-style: normal;
+  font-weight: 300;
+  line-height: normal;
+  letter-spacing: 0.12px;
 }
 
 .footer-copyright-bar-links {
@@ -200,9 +218,16 @@
 
 .footer-copyright-bar-links a {
   text-decoration: none;
-  font-size: 12px;
-  color: #495057; /* Темно-серый для ссылок */
+  /* font-size: 12px; */
+  /* color: #495057; */ /* Темно-серый для ссылок -> #4E4F51 */
+  color: #4E4F51;
   transition: color 0.3s linear;
+  font-family: 'Unbounded', sans-serif;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 300;
+  line-height: normal;
+  letter-spacing: 0.12px;
 }
 
 .footer-copyright-bar-links a:hover {
