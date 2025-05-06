@@ -1454,13 +1454,15 @@ body {
 
 /* Новый стиль для фрейма категории в карточке */
 .startup-category-frame {
-    font-size: 0.8rem; /* 12-13px */
-    color: #333; /* Темно-серый текст */
-    background-color: #f0f0f0; /* Светло-серый фон */
-    padding: 4px 8px;
-    border-radius: 4px;
+    font-size: 13px; /* Как у соседних блоков */
+    font-weight: 400; /* Как у investment-type */
+    color: #333; /* Как у соседних блоков */
+    background-color: #f8f9fa; /* Светлый фон как у funding-goal-info */
+    padding: 8px 12px; /* Как у соседних блоков */
+    border-radius: 6px; /* Как у соседних блоков */
     margin-top: 10px; /* Отступ сверху от прогресс-бара */
     margin-bottom: 10px; /* Отступ снизу до блока типа инвестиций */
-    display: inline-block; /* Чтобы занимал ширину по контенту */
-    text-align: left; /* Выравнивание текста по левому краю, если нужно */
+    width: 100%; /* Растягиваем на всю ширину */
+    box-sizing: border-box; /* Чтобы padding не увеличивал ширину */
+    text-align: center; /* Центрируем текст */
 }
