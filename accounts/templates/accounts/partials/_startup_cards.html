@@ -46,12 +46,27 @@
       </div>
       {% endwith %}
 
-      {# Новый блок для категории стартапа #}
-      {% if startup.direction %} {# Предполагаем, что поле категории называется 'direction' #}
+      {# Блок для категории стартапа с переводом #}
+      {% if startup.direction and startup.direction.direction_name %}
         <div class="startup-category-frame">
-            {# Используем get_..._display для отображения значения ChoiceField на русском #}
-            {# Если поле называется иначе, например 'category', то будет {{ startup.get_category_display }} #}
-            {{ startup.get_direction_display }}
+            {% with original_name=startup.direction.direction_name|default:"" %}
+                {% if original_name == "Medicine" %}Медицина
+                {% elif original_name == "Auto" %}Автомобили
+                {% elif original_name == "Delivery" %}Доставка
+                {% elif original_name == "Cafe" %}Кафе/рестораны
+                {% elif original_name == "Fastfood" %}Фастфуд
+                {% elif original_name == "Health" %}Здоровье
+                {% elif original_name == "Beauty" %}Красота
+                {% elif original_name == "Transport" %}Транспорт
+                {% elif original_name == "Sport" %}Спорт
+                {% elif original_name == "Psychology" %}Психология
+                {% elif original_name == "AI" %}ИИ
+                {% elif original_name == "Finance" %}Финансы
+                {% elif original_name == "Healthcare" %}Здравоохранение
+                {% elif original_name == "Technology" %}Технологии
+                {% else %}{{ original_name|default:"Не указано" }}
+                {% endif %}
+            {% endwith %}
         </div>
       {% endif %}
 
