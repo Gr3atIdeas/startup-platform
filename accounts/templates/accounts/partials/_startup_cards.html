@@ -82,10 +82,13 @@
         {# Текст не нужен #}
       </a>
       
-      {# Новый блок для всплывающего описания #}
+      {# Обновленный блок для всплывающего описания #}
       {% if startup.description %}
       <div class="description-popup">
-          {{ startup.description }} {# Полное описание #}
+          <h4 class="description-popup-title">Описание</h4>
+          <div class="description-popup-content">
+              {{ startup.description }}
+          </div>
       </div>
       {% endif %}
     </div>
