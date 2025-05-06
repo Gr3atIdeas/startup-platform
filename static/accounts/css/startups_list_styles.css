@@ -1486,7 +1486,7 @@ body {
     transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out; 
     font-size: 13px;
     line-height: 1.45;
-    overflow-y: auto;  
+    overflow-y: hidden;  /* Изменено: Скрываем вертикальный скролл и обрезаем текст */
     pointer-events: none; 
     box-shadow: 0 2px 8px rgba(0,0,0,0.4); /* Обычная тень, т.к. не прижат к краю */
 }
