@@ -5,17 +5,17 @@
 {% for startup in page_obj %}
   <div class="startup-card">
     <span class="startup-franchise-tag">Франшиза</span>
-    <div class="startup-card-inner">
-      <div class="startup-image">
-        {% if startup.logo_urls %}
-          <img src="{% get_file_url_tag startup.logo_urls.0 startup.startup_id 'logo' %}" alt="{{ startup.title }}">
-        {% else %}
-          <div class="startup-image-placeholder">
-            {{ startup.title|make_list|first|upper }}
-          </div>
-        {% endif %}
-      </div>
+    <div class="startup-image">
+      {% if startup.logo_urls %}
+        <img src="{% get_file_url_tag startup.logo_urls.0 startup.startup_id 'logo' %}" alt="{{ startup.title }}">
+      {% else %}
+        <div class="startup-image-placeholder">
+          {{ startup.title|make_list|first|upper }}
+        </div>
+      {% endif %}
+    </div>
 
+    <div class="startup-card-inner">
       <h3 class="startup-name">{{ startup.title }}</h3>
 
       <div class="startup-rating-comments">

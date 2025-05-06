@@ -336,15 +336,12 @@ body {
 .startup-card {
   background: #FFFFFF;
   border-radius: 12px;
-  /* Убираем overflow: hidden отсюда, чтобы аватар мог выступать */
-  /* overflow: hidden; */ 
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: column;
   position: relative;
   text-decoration: none;
   color: inherit;
-  /* Возвращаем фиксированные размеры */
   width: 330px; 
   height: 413px;
   max-width: 100%;
@@ -364,13 +361,14 @@ body {
 }
 
 .startup-card-inner {
-  padding: 100px 20px 20px 20px; 
+  padding: 90px 20px 20px 20px;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
   color: #191919;
-  overflow: hidden; /* Важно для анимации выезжающего попапа */
-  position: relative; /* Важно для абсолютного позиционирования попапа внутри */
+  overflow: hidden;
+  position: relative;
+  border-radius: 12px;
 }
 
 .startup-card .startup-name {
@@ -423,7 +421,7 @@ body {
   justify-content: center;
   overflow: hidden;
   position: absolute;
-  top: -30px; /* Выступ на 25% от высоты (120px * 0.25 = 30px) */
+  top: -30px;
   left: 50%;
   transform: translateX(-50%);
   border-radius: 50%;
@@ -1472,37 +1470,29 @@ body {
 /* Обновленные стили для всплывающего описания стартапа */
 .description-popup {
     position: absolute;
-    top: 0; /* Занимает всю высоту родителя (.startup-card-inner) */
+    top: 0; 
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #FFFFFF; /* Сплошной белый фон */
-    color: #191919; /* Темный текст */
-    /* padding: 15px; Убрали общий padding, будет у дочерних элементов */
-    /* border-radius: 8px; Убираем общий, будет у верхних углов */
-    z-index: 4; /* Выше чем detail-link (у которого z-index: 3) */
-    visibility: hidden; /* Скрыто по умолчанию, но для transform opacity 0 лучше */
-    opacity: 0; /* Начальная прозрачность для плавного появления */
-    transform: translateY(100%); /* Изначально полностью сдвинут вниз */
-    transition: transform 0.35s ease-out, opacity 0.3s ease-out; 
-    display: flex; /* Для управления заголовком и контентом */
+    background-color: #FFFFFF; 
+    color: #191919; 
+    z-index: 4; 
+    opacity: 0;
+    transform: translateY(100%); 
+    transition: transform 0.35s ease-out, opacity 0.35s ease-out; 
+    display: flex; 
     flex-direction: column;
-    box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.15); /* Тень сверху */
-    /* Скругление только верхних углов. Предполагаем, что основной радиус карточки 12px */
+    box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.15); 
     border-top-left-radius: 12px;
     border-top-right-radius: 12px;
     box-sizing: border-box; 
+    pointer-events: none;
 }
 
 .startup-card:hover .description-popup {
-    visibility: visible;
     opacity: 1;
-    /* Сдвигаем вверх так, чтобы его верхняя грань была на уровне ~220px от верха .startup-card-inner */
-    /* Высота .startup-card-inner ~413px. 413 - X = 220. X = 193. Это высота видимой части. */
-    /* Значит, translateY должен быть равен (высота_контентной_части_inner - высота_видимой_части_попапа) */
-    /* Или проще: сдвигаем так, чтобы его верхняя часть была на ~220px от верха родителя */
-    transform: translateY(215px); /* Это значение возможно потребует подстройки */
-                                 /* Оно означает, что верхняя часть попапа будет на 215px ниже верха .startup-card-inner */
+    transform: translateY(215px); 
+    pointer-events: auto;
 }
 
 .description-popup-title {
