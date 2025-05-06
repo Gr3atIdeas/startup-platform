@@ -78,13 +78,16 @@
         Цель: {{ startup.funding_goal|default:"0"|floatformat:0|intcomma }} ₽
       </div>
 
-      <div class="startup-description">
-        {{ startup.description|truncatewords:15 }}
-      </div>
-
       <a href="{% url 'startup_detail' startup.startup_id %}" class="detail-link">
         {# Текст не нужен #}
       </a>
+      
+      {# Новый блок для всплывающего описания #}
+      {% if startup.description %}
+      <div class="description-popup">
+          {{ startup.description }} {# Полное описание #}
+      </div>
+      {% endif %}
     </div>
   </div>
 {% endfor %} 

@@ -1467,3 +1467,32 @@ body {
     box-sizing: border-box;             /* Как у .investment-type */
     text-align: center;                 /* Как у .investment-type */
 }
+
+/* Стили для всплывающего описания стартапа */
+.description-popup {
+    position: absolute;
+    bottom: 8px; /* Небольшой отступ от нижнего края карточки */
+    left: 8px;   /* Отступы по бокам */
+    right: 8px;
+    background-color: rgba(32, 32, 34, 0.92); /* Темный полупрозрачный фон (из body gradient #202022) */
+    color: #f0f0f0; /* Светлый цвет текста */
+    font-family: 'Unbounded', 'Helvetica Neue', Arial, sans-serif; /* Шрифт Unbounded */
+    padding: 12px;
+    border-radius: 6px;
+    z-index: 100; /* Высокий z-index, чтобы быть поверх других элементов карточки */
+    visibility: hidden; /* Скрыто по умолчанию */
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out; /* Плавное появление */
+    font-size: 13px;
+    line-height: 1.45;
+    max-height: 100px; /* Ограничение высоты, чтобы не занимало всю карточку */
+    overflow-y: auto;  /* Добавляем скролл, если описание длинное */
+    pointer-events: none; /* Не перехватывать события мыши, когда скрыто */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4); /* Тень для выделения */
+}
+
+.startup-card:hover .description-popup {
+    visibility: visible; /* Показываем при наведении на .startup-card */
+    opacity: 1;
+    pointer-events: auto; /* Разрешаем события мыши (для скролла) когда видимо */
+}
