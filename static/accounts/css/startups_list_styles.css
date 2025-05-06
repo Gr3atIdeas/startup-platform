@@ -1454,15 +1454,17 @@ body {
 
 /* Новый стиль для фрейма категории в карточке */
 .startup-category-frame {
-    font-size: 13px; /* Как у соседних блоков */
-    font-weight: 400; /* Как у investment-type */
-    color: #333; /* Как у соседних блоков */
-    background-color: #f8f9fa; /* Светлый фон как у funding-goal-info */
-    padding: 8px 12px; /* Как у соседних блоков */
-    border-radius: 6px; /* Как у соседних блоков */
-    margin-top: 10px; /* Отступ сверху от прогресс-бара */
-    margin-bottom: 10px; /* Отступ снизу до блока типа инвестиций */
-    width: 100%; /* Растягиваем на всю ширину */
-    box-sizing: border-box; /* Чтобы padding не увеличивал ширину */
-    text-align: center; /* Центрируем текст */
+    font-family: Unbounded, sans-serif; /* Как у .investment-type */
+    font-size: 13px;                    /* Как у .investment-type */
+    font-weight: 400;                   /* Как у .investment-type */
+    color: #333;                        /* Как у .investment-type */
+    background-color: transparent;      /* Как у .investment-type */
+    border: 1px solid #E5E7EB;          /* Как у .investment-type */
+    padding: 8px 12px;                  /* Как у .investment-type */
+    border-radius: 6px;                 /* Как у .investment-type */
+    margin-top: 10px;                   /* Отступ сверху, чтобы был ниже прогресс-бара */
+    margin-bottom: 10px;                /* Отступ снизу, как у .investment-type */
+    width: 100%;                        /* Как у .investment-type */
+    box-sizing: border-box;             /* Как у .investment-type */
+    text-align: center;                 /* Как у .investment-type */
 }
