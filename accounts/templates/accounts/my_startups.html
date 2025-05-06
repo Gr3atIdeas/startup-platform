@@ -55,6 +55,7 @@
       flex-direction: column;
       gap: 10px;
       transition: background-color 0.3s linear, border-color 0.3s linear;
+      position: relative; /* Для позиционирования кнопки удаления */
     }
     .application-card:hover {
       background-color: #212538;
@@ -100,6 +101,25 @@
     }
     .application-card a:hover {
         text-decoration: underline;
+    }
+
+    /* Стили для кнопки удаления заявки */
+    .delete-application-btn-icon {
+      position: absolute;
+      top: 15px; /* Немного отступ сверху */
+      right: 15px; /* Немного отступ справа */
+      background: none;
+      border: none;
+      color: #dc3545; /* Красный цвет */
+      font-size: 1.6em; /* Размер иконки, можно использовать &times; или иконку из FontAwesome */
+      cursor: pointer;
+      padding: 0;
+      line-height: 1;
+      z-index: 10; /* Чтобы кнопка была поверх других элементов */
+    }
+
+    .delete-application-btn-icon:hover {
+      color: #a71d2a; /* Более темный красный при наведении */
     }
   </style>
 {% endblock %}
@@ -392,28 +412,50 @@
         <div class="applications-list">
           {# Используем startup_applications (все заявки пользователя) #}
           {% for app in startup_applications %}
-            <div class="application-card">
-              <div class="application-title">{{ app.title|default:"Без названия" }}</div>
-              {# Отображаем статус с помощью get_status_display #}
-              <div class="application-status status-{{ app.status|lower|default:'pending' }}">
-                  {{ app.get_status_display|default:"Неизвестен" }}
-              </div>
-              {# Отображаем комментарий модератора, если стартап отклонен или заблокирован #}
-              {% if app.status == 'rejected' or app.status == 'blocked' %}
-                {% if app.moderator_comment %}
-                  <div class="application-comment">
-                    <strong>Комментарий модератора:</strong> {{ app.moderator_comment }}
-                  </div>
+            {# Кнопка удаления (красный крестик) для отклоненных заявок #}
+            {% if app.status == 'rejected' %}
+              <form method="POST" action="{% url 'delete_rejected_startup' startup_id=app.startup_id %}" style="position: absolute; top: 15px; right: 15px; z-index: 10;">
+                  {% csrf_token %}
+                  <button type="submit" class="delete-application-btn-icon"
+                          onclick="return confirm('Вы уверены, что хотите удалить эту заявку? Это действие необратимо.');"
+                          title="Удалить заявку">
+                      &times; {# HTML-символ крестика #}
+                  </button>
+              </form>
+            {% endif %}
+
+            <div class="application-title">{{ app.title|default:"Без названия" }}</div>
+            {# Отображаем статус с явным текстом для Одобрен/Отклонен #}
+            <div class="application-status status-{{ app.status|lower|default:'pending' }}">
+                {% if app.status == 'approved' %}
+                    Одобрен
+                {% elif app.status == 'rejected' %}
+                    Отклонен
+                {% else %}
+                    {{ app.get_status_display|default:"Неизвестен" }}
                 {% endif %}
-              {% endif %}
-              {# Ссылка на просмотр/редактирование #}
-              {% if app.status == 'pending' or app.status == 'rejected' %}
-                 <a href="{% url 'edit_startup' startup_id=app.startup_id %}">Редактировать заявку</a>
-              {% elif app.status == 'approved' %}
-                 <a href="{% url 'startup_detail' startup_id=app.startup_id %}">Перейти к стартапу</a>
-              {% endif %}
-               <span style="font-size: 12px; color: rgba(255, 255, 255, 0.5); margin-top: 5px;">Обновлено: {{ app.updated_at|date:"d.m.Y H:i" }}</span>
             </div>
+
+            {# Отображаем комментарий модератора и кнопку "Удалить" #}
+            <div class="application-actions" style="margin-top: 10px; margin-bottom:10px; display: flex; flex-direction: column; gap: 8px;">
+              {% if app.moderator_comment %}
+                 <div class="application-comment" style="font-size: 0.9em; color: #ccc;">
+                     <strong>Комментарий модератора:</strong> {{ app.moderator_comment }}
+                 </div>
+              {% endif %}
+
+              {# Ссылки и кнопка "Удалить" - старая кнопка УДАЛЕНА #}
+              <div class="action-links" style="display: flex; gap: 10px; align-items: center;">
+                  {% if app.status == 'pending' or app.status == 'rejected' %}
+                     <a href="{% url 'edit_startup' startup_id=app.startup_id %}" class="edit-link">Редактировать заявку</a>
+                     {# Старая кнопка "Удалить" была здесь, теперь она в виде крестика сверху #}
+                  {% elif app.status == 'approved' %}
+                     <a href="{% url 'startup_detail' startup_id=app.startup_id %}" class="view-link">Перейти к стартапу</a>
+                  {% endif %}
+              </div>
+            </div>
+
+             <span style="font-size: 12px; color: rgba(255, 255, 255, 0.5); margin-top: auto; padding-top:10px; border-top: 1px solid rgba(255,255,255,0.1);">Обновлено: {{ app.updated_at|date:"d.m.Y H:i" }}</span>
           {% empty %}
             <p style="grid-column: 1 / -1; text-align: center;">У вас пока нет отправленных заявок.</p>
           {% endfor %}

@@ -30,6 +30,7 @@ import datetime # Добавляем для работы с датами
 from django.db.models.functions import Coalesce # Добавляем Coalesce
 import collections # Добавляем для defaultdict
 from dateutil.relativedelta import relativedelta
+from django.views.decorators.http import require_POST
 
 
 logger = logging.getLogger(__name__)
@@ -1758,3 +1759,27 @@ def my_startups(request):
     }
 
     return render(request, 'accounts/my_startups.html', context)
+
+@login_required
+@require_POST # Эта view должна принимать только POST запросы
+def delete_rejected_startup(request, startup_id):
+    startup = get_object_or_404(Startups, pk=startup_id)
+
+    # Проверка, что пользователь является владельцем стартапа
+    if startup.owner != request.user:
+        messages.error(request, "У вас нет прав для удаления этого стартапа.")
+        return redirect('my_startups') # Или на другую страницу, например, home
+
+    # Проверка, что стартап действительно имеет статус 'rejected'
+    if startup.status != 'rejected':
+        messages.error(request, "Удалить можно только отклоненные заявки.")
+        return redirect('my_startups')
+
+    try:
+        startup_title = startup.title # Сохраняем название для сообщения
+        startup.delete()
+        messages.success(request, f'Заявка на стартап "{startup_title}" была успешно удалена.')
+    except Exception as e:
+        messages.error(request, f'Произошла ошибка при удалении заявки: {e}')
+    
+    return redirect('my_startups')

@@ -34,4 +34,12 @@ urlpatterns = [
     path('my_startups/', views.my_startups, name='my_startups'),  # Изменяем my-startups на my_startups
     # URL для подгрузки похожих стартапов - ИСПРАВЛЯЕМ ТИП ID НА INT
     path('load_similar_startups/<int:startup_id>/', views.load_similar_startups, name='load_similar_startups'),
+    path('startup/<int:startup_id>/vote/<str:vote_type>/', views.submit_vote, name='submit_vote'),
+    path('startup/<int:startup_id>/add_comment/', views.add_comment, name='add_comment'),
+    path('startup/<int:startup_id>/delete_comment/<int:comment_id>/', views.delete_comment, name='delete_comment'),
+    path('upload_file/', views.upload_file, name='upload_file'),
+    path('delete_file/', views.delete_file, name='delete_file'),
+    path('get_file_url/<str:entity_type>/<int:entity_id>/<str:file_name>/', views.get_file_url_view, name='get_file_url_view'),
+    path('profile/my_investments/', views.my_investments, name='my_investments'),
+    path('profile/delete_rejected_startup/<int:startup_id>/', views.delete_rejected_startup, name='delete_rejected_startup'),
 ]
