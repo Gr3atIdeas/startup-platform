@@ -46,6 +46,15 @@
       </div>
       {% endwith %}
 
+      {# Новый блок для категории стартапа #}
+      {% if startup.direction %} {# Предполагаем, что поле категории называется 'direction' #}
+        <div class="startup-category-frame">
+            {# Используем get_..._display для отображения значения ChoiceField на русском #}
+            {# Если поле называется иначе, например 'category', то будет {{ startup.get_category_display }} #}
+            {{ startup.get_direction_display }}
+        </div>
+      {% endif %}
+
       <div class="investment-type">
         {% if startup.both_mode %}Инвестирование+Выкуп{% elif startup.only_invest %}Только инвестирование{% elif startup.only_buy %}Только выкуп{% else %}Тип не указан{% endif %}
       </div>
