@@ -1471,24 +1471,26 @@ body {
 /* Стили для всплывающего описания стартапа */
 .description-popup {
     position: absolute;
-    bottom: 8px; /* Небольшой отступ от нижнего края карточки */
-    left: 8px;   /* Отступы по бокам */
-    right: 8px;
-    background-color: rgba(32, 32, 34, 0.92); /* Темный полупрозрачный фон (из body gradient #202022) */
-    color: #f0f0f0; /* Светлый цвет текста */
-    font-family: 'Unbounded', 'Helvetica Neue', Arial, sans-serif; /* Шрифт Unbounded */
-    padding: 12px;
-    border-radius: 6px;
-    z-index: 100; /* Высокий z-index, чтобы быть поверх других элементов карточки */
-    visibility: hidden; /* Скрыто по умолчанию */
+    top: 50%; /* Начинаем от середины карточки по высоте */
+    bottom: 0; /* До нижнего края .startup-card-inner (или карточки, если нет отступов) */
+    left: 0;   /* От левого до правого края .startup-card-inner */
+    right: 0;
+    background-color: rgba(32, 32, 34, 0.95); /* Немного увеличим непрозрачность фона */
+    color: #f0f0f0; 
+    font-family: 'Unbounded', 'Helvetica Neue', Arial, sans-serif; 
+    padding: 15px; /* Увеличим внутренние отступы для лучшей читаемости */
+    border-radius: 0 0 12px 12px; /* Скругляем только нижние углы, если карточка имеет border-radius 12px */
+                                  /* Если .startup-card-inner имеет свои отступы/скругления, нужно будет это учесть */
+    z-index: 100; 
+    visibility: hidden; 
     opacity: 0;
-    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out; /* Плавное появление */
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out; 
     font-size: 13px;
     line-height: 1.45;
-    max-height: 100px; /* Ограничение высоты, чтобы не занимало всю карточку */
-    overflow-y: auto;  /* Добавляем скролл, если описание длинное */
-    pointer-events: none; /* Не перехватывать события мыши, когда скрыто */
-    box-shadow: 0 4px 12px rgba(0,0,0,0.4); /* Тень для выделения */
+    /* max-height: 100px; Убираем, высота теперь определяется top/bottom */
+    overflow-y: auto;  
+    pointer-events: none; 
+    box-shadow: 0 -4px 12px rgba(0,0,0,0.3); /* Тень сверху, так как блок прижат к низу */
 }
 
 .startup-card:hover .description-popup {
