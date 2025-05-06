@@ -361,7 +361,7 @@ body {
 }
 
 .startup-card-inner {
-  padding: 90px 20px 20px 20px;
+  padding: 105px 20px 20px 20px;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
@@ -1491,7 +1491,7 @@ body {
 
 .startup-card:hover .description-popup {
     opacity: 1;
-    transform: translateY(215px); 
+    transform: translateY(104px);
     pointer-events: auto;
 }
 
