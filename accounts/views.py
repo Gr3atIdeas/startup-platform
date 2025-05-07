@@ -562,25 +562,9 @@ def create_startup(request):
                 startup.status_id = ReviewStatuses.objects.get(status_name='Pending')
             except ReviewStatuses.DoesNotExist:
                 raise ValueError("Статус 'Pending' не найден в базе данных.")
-            
-            # Обработка типа инвестирования
-            investment_type = form.cleaned_data.get('investment_type')
-            if investment_type == 'invest':
-                startup.only_invest = True
-                startup.only_buy = False
-                startup.both_mode = False
-            elif investment_type == 'buy':
-                startup.only_invest = False
-                startup.only_buy = True
-                startup.both_mode = False
-            elif investment_type == 'both':
-                startup.only_invest = False # или True, в зависимости от вашей логики, если 'both' подразумевает и то, и другое
-                startup.only_buy = False    # или True
-                startup.both_mode = True
-
             # Устанавливаем текущий шаг из формы
             startup.step_number = int(request.POST.get('step_number', 1))
-            startup.save() # Сохраняем основные данные стартапа, включая short_description и terms
+            startup.save()
 
             # Сохранение всех 5 этапов таймлайна
             for i in range(1, 6):
@@ -766,28 +750,13 @@ def edit_startup(request, startup_id):
     if request.method == 'POST':
         form = StartupForm(request.POST, request.FILES, instance=startup)
         if form.is_valid():
-            startup = form.save(commit=False) # short_description и terms обновятся здесь
+            startup = form.save(commit=False)
             startup.status = 'pending'
             startup.is_edited = True
             startup.updated_at = timezone.now()
             if 'step_number' in request.POST:
                 new_step = int(request.POST.get('step_number'))
                 startup.step_number = new_step
-
-            # Обработка типа инвестирования
-            investment_type = form.cleaned_data.get('investment_type')
-            if investment_type == 'invest':
-                startup.only_invest = True
-                startup.only_buy = False
-                startup.both_mode = False
-            elif investment_type == 'buy':
-                startup.only_invest = False
-                startup.only_buy = True
-                startup.both_mode = False
-            elif investment_type == 'both':
-                startup.only_invest = False # или True, как решено для create_startup
-                startup.only_buy = False    # или True
-                startup.both_mode = True
 
             startup.save()
 
