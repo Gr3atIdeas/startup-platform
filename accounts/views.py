@@ -766,7 +766,10 @@ def edit_startup(request, startup_id):
     logger.debug(f"Request FILES: {dict(request.FILES)}")
     
     startup = get_object_or_404(Startups, startup_id=startup_id)
-    if request.user != startup.owner:
+    if not (request.user == startup.owner or \
+            (hasattr(request.user, 'role') and \
+             request.user.role and \
+             request.user.role.role_name == 'moderator')):
         messages.error(request, 'У вас нет прав для редактирования этого стартапа.')
         return redirect('startup_detail', startup_id=startup_id)
 
