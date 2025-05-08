@@ -517,13 +517,25 @@ h3.section-title {
     margin-bottom: 20px;
 }
 
+.timeline {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0; /* Убираем лишние отступы */
+    position: relative; /* Делаем родительский блок относительным для позиционирования линии */
+    margin-top: 0; /* Убираем отрицательный отступ, линия теперь сама позиционируется */
+    z-index: 3;
+}
+
 .timeline-progress-container {
-    position: relative;
+    position: absolute; /* Позиционируем абсолютно внутри .timeline */
     width: calc(100% - 122px); /* Ширина линии = 100% минус ширина одного круга (по бокам половинки) */
-    margin: 0 auto; /* Центрируем линию */
+    left: 61px; /* Отступ слева равен половине ширины круга */
+    right: 61px; /* Отступ справа равен половине ширины круга */
+    top: 59px; /* (Высота круга 122px - Высота линии 4px) / 2 */
     height: 4px; /* Делаем линию тоньше */
-    margin-bottom: 20px; /* Отступ ДО следующего элемента (.timeline) */
-    top: 40px; /* СКОРРЕКТИРОВАНО: Поднимаем линию выше */
+    margin: 0; /* Убираем авто-отступы */
+    z-index: 1; /* Убедимся, что линия под кругами */
 }
 
 .timeline-progress-line {
@@ -533,7 +545,7 @@ h3.section-title {
     width: 100%;
     height: 100%;
     background: black; /* ИЗМЕНЕНО: Фон трека */
-    z-index: 1;
+    z-index: 1; /* Этот z-index теперь внутри timeline-progress-container */
 }
 
 .timeline-progress-filled {
@@ -543,18 +555,8 @@ h3.section-title {
     width: 0%; /* Изначально 0, будет обновляться JS */
     height: 100%;
     background: linear-gradient(90deg, #1967B8 2%, #6348EB 26%, #1967B8 50%, #6749E7 78%, #F26162 100%); /* ИЗМЕНЕНО: Фон заполненной части */
-    z-index: 2;
+    z-index: 2; /* Этот z-index теперь внутри timeline-progress-container */
     transition: width 0.3s ease-in-out;
-}
-
-.timeline {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0; /* Убираем лишние отступы */
-    position: relative; /* Чтобы круги были над линией */
-    margin-top: 0; /* Убираем отрицательный отступ, линия теперь сама позиционируется */
-    z-index: 3;
 }
 
 .timeline-step {
