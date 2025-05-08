@@ -1789,17 +1789,10 @@ def my_startups(request):
     # --- Данные для планетарной системы ---
     planetary_startups = []
     for idx, startup in enumerate(approved_startups_annotated, start=1):
-        # Получаем URL логотипа через метод get_logo_url()
         logo_url = startup.get_logo_url() or 'https://via.placeholder.com/150'
-
-        # Вычисляем значения для orbit-size, orbit-time и planet-size
         orbit_size = (idx * 100) + 100
         orbit_time = (idx * 20) + 60
         planet_size = (idx * 2) + 50
-
-        # Проверяем наличие direction и получаем название категории
-        category_name = startup.direction.direction_name if startup.direction else 'Без категории'
-
         planet_data = {
             'id': str(idx),
             'startup_id': startup.startup_id,
@@ -1813,7 +1806,6 @@ def my_startups(request):
             'orbit_size': orbit_size,
             'orbit_time': orbit_time,
             'planet_size': planet_size,
-            'category': category_name,
         }
         planetary_startups.append(planet_data)
 
