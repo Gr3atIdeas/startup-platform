@@ -9,22 +9,11 @@
       {% if startup.logo_urls %}
         <img src="{% get_file_url_tag startup.logo_urls.0 startup.startup_id 'logo' %}" alt="{{ startup.title }}">
       {% else %}
-        <div class="startup-image-placeholder">
-          {{ startup.title|make_list|first|upper }}
-        </div>
+        <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Placeholder logo" class="startup-logo-placeholder-main">
       {% endif %}
     </div>
 
     <div class="startup-card-inner">
-      <div class="startup-logo-container">
-        {% if startup.logo_urls %}
-          {% with logo_file_id=startup.logo_urls.0 %}
-            <img src="{% get_file_url_tag logo_file_id startup.startup_id 'logo' %}" alt="{{ startup.title }} logo" class="startup-logo">
-          {% endwith %}
-        {% else %}
-          <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Placeholder logo" class="startup-logo placeholder-logo">
-        {% endif %}
-      </div>
       <h3 class="startup-title">{{ startup.title }}</h3>
       <p class="startup-short-description">{{ startup.short_description|truncatewords:15|default:"Нет краткого описания." }}</p>
       
@@ -34,8 +23,7 @@
       </div>
 
       <div class="funding-info">
-        <span class="funding-goal">Цель: {{ startup.funding_goal|default:"N/A" }}</span>
-        <!-- Можно добавить прогресс бар или сумму собранных средств, если есть -->
+        <span class="funding-goal">Цель: {{ startup.funding_goal|intcomma|default:"N/A" }}</span>
       </div>
       
       <div class="startup-actions">
@@ -50,7 +38,6 @@
     <div class="info-popup-content">
       <span class="close-popup-button" data-popup-target="#popup-{{ startup.startup_id }}">&times;</span>
       <h4>{{ startup.title }}</h4>
-      <!-- Здесь теперь полное описание -->
       <p>{{ startup.description|linebreaksbr|default:"Нет подробного описания." }}</p>
       <p><strong>Условия:</strong> {{ startup.terms|linebreaksbr|default:"Условия не указаны." }}</p>
     </div>
