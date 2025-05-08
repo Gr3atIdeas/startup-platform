@@ -77,11 +77,64 @@ textarea.form-control {
     min-height: 100px;
 }
 
+/* Styles for error messages */
 .error-message {
-    color: #FF6B6B; /* Ярко-красный для ошибок */
-    font-size: 0.85em;
+    color: #D8000C; /* Red color for errors */
+    background-color: #FFD2D2; /* Light red background */
+    border: 1px solid #D8000C;
+    padding: 10px;
+    margin-top: 5px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    display: block; /* Make it a block to take full width */
+}
+
+/* Style for input fields with errors */
+.form-control.input-error,
+.form-control-file.input-error,
+.timeline-description-textarea.input-error,
+.file-upload-area.input-error {
+    border-color: #D8000C !important; /* Important to override other border styles */
+    box-shadow: 0 0 0 0.2rem rgba(216, 0, 12, 0.25) !important; /* Red glow */
+}
+
+.checkbox-group.input-error label {
+    color: #D8000C !important;
+}
+
+/* General message styling (if used by Django messages framework on this page) */
+ul.messages {
+    list-style-type: none;
+    padding: 0;
+    margin: 0 0 20px 0;
+}
+ul.messages li {
+    padding: 10px 15px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    font-size: 1em;
+}
+ul.messages li.error {
+    color: #D8000C;
+    background-color: #FFD2D2;
+    border: 1px solid #D8000C;
+}
+ul.messages li.success {
+    color: #270;
+    background-color: #DFF2BF;
+    border: 1px solid #4F8A10;
+}
+.custom-validation-error {
+    /* Используем те же стили, что и .error-message */
+    color: #D8000C;
+    background-color: #FFD2D2;
+    border: 1px solid #D8000C;
+    padding: 10px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    border-radius: 4px;
+    font-size: 0.9em;
     display: block;
-    margin-top: 3px;
 }
 
 .small-text {

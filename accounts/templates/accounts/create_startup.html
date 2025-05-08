@@ -275,19 +275,139 @@ document.addEventListener('DOMContentLoaded', function() {
         setCurrentStep(1); // Устанавливаем и показываем первый этап
     }
 
+    // --- НОВЫЙ КОД: Прокрутка к первой ошибке Django при загрузке страницы ---
+    const firstServerSideError = document.querySelector('.error-message:not(.custom-validation-error)');
+    if (firstServerSideError) {
+        const errorParentGroup = firstServerSideError.closest('.form-group, .upload-box, .agreement-section');
+        if (errorParentGroup) {
+            errorParentGroup.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            const inputField = errorParentGroup.querySelector('.form-control, .form-control-file, input[type="checkbox"]');
+            if (inputField && inputField.type !== 'checkbox') {
+                inputField.classList.add('input-error');
+            } else if (inputField && inputField.type === 'checkbox' && errorParentGroup.classList.contains('checkbox-group')) {
+                 errorParentGroup.classList.add('input-error'); // Подсвечиваем группу чекбокса
+            }
+        } else {
+            firstServerSideError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }
+    // --- КОНЕЦ: Прокрутка к первой ошибке Django ---
 
-    // --- Обработка отправки формы ---
+    // --- ОБНОВЛЕННАЯ Обработка отправки формы --- 
     const startupForm = document.getElementById('startupForm');
     if (startupForm) {
         startupForm.addEventListener('submit', function(e) {
-        const submitButton = this.querySelector('button[type="submit"]');
-        if (submitButton.disabled) {
-            e.preventDefault();
-            return;
-        }
-        submitButton.disabled = true;
-        submitButton.textContent = 'Отправка...';
-    });
+            let firstInvalidElement = null;
+            let validationPassed = true;
+
+            // Очистка предыдущих кастомных ошибок валидации
+            document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+            document.querySelectorAll('.custom-validation-error').forEach(el => el.remove());
+            document.querySelectorAll('.file-upload-area').forEach(el => el.style.borderColor = '');
+            document.querySelectorAll('.checkbox-group').forEach(el => el.classList.remove('input-error'));
+
+
+            // 1. Валидация описаний этапов таймлайна
+            const timelineTextareas = startupForm.querySelectorAll('textarea.timeline-description-textarea');
+            let timelineErrorDisplayed = false;
+            for (let i = 0; i < timelineTextareas.length; i++) {
+                const textarea = timelineTextareas[i];
+                if (textarea.hasAttribute('required') && !textarea.value.trim()) {
+                    validationPassed = false;
+                    textarea.classList.add('input-error');
+                    if (!firstInvalidElement) firstInvalidElement = textarea;
+                    if (!timelineErrorDisplayed) {
+                        const timelineSection = document.getElementById('timeline');
+                        if (timelineSection) {
+                            const errorMsg = document.createElement('p');
+                            errorMsg.className = 'error-message custom-validation-error';
+                            errorMsg.textContent = 'Пожалуйста, заполните описания для всех пяти этапов таймлайна.';
+                            // Вставляем после родителя timeline, т.е. после div class="timeline"
+                            timelineSection.parentElement.insertBefore(errorMsg, timelineSection.nextElementSibling);
+                            timelineErrorDisplayed = true;
+                        }
+                    }
+                }
+            }
+
+            // 2. Валидация поля "Пруфы" (проверка наличия файлов на клиенте)
+            const proofsInput = document.getElementById('{{ form.proofs.id_for_label }}');
+            const proofsLabel = document.querySelector('label[for="{{ form.proofs.id_for_label }}"]');
+            const proofsDropArea = document.getElementById('proofsDropArea');
+            if (proofsInput && proofsLabel && proofsLabel.textContent.includes('*')) { 
+                if (proofsInput.files.length === 0) {
+                    validationPassed = false;
+                    if(proofsDropArea) proofsDropArea.classList.add('input-error');
+                    else proofsInput.classList.add('input-error');
+                    
+                    if (!firstInvalidElement) firstInvalidElement = proofsDropArea || proofsInput;
+                    if (proofsDropArea && !proofsDropArea.parentElement.querySelector('.custom-validation-error.proofs-error')) {
+                        const errorMsg = document.createElement('p');
+                        errorMsg.className = 'error-message custom-validation-error proofs-error';
+                        errorMsg.textContent = 'Пожалуйста, загрузите подтверждающие документы (Пруфы).';
+                        proofsDropArea.parentElement.insertBefore(errorMsg, proofsDropArea.nextSibling);
+                    }
+                }
+            }
+            
+            // 3. Валидация чекбокса "Согласие с правилами"
+            const agreeRulesCheckbox = document.getElementById('{{ form.agree_rules.id_for_label }}');
+            if (agreeRulesCheckbox && !agreeRulesCheckbox.checked) {
+                validationPassed = false;
+                const parentDiv = agreeRulesCheckbox.closest('.checkbox-group');
+                if(parentDiv) parentDiv.classList.add('input-error');
+                else agreeRulesCheckbox.classList.add('input-error');
+
+                if (!firstInvalidElement) firstInvalidElement = parentDiv || agreeRulesCheckbox;
+                if (parentDiv && !parentDiv.querySelector('.custom-validation-error.agree-rules-error')) {
+                    const errorMsg = document.createElement('p');
+                    errorMsg.className = 'error-message custom-validation-error agree-rules-error';
+                    errorMsg.textContent = 'Необходимо подтвердить согласие с правилами.';
+                    parentDiv.appendChild(errorMsg);
+                }
+            }
+
+            // 4. Валидация чекбокса "Согласие на обработку данных"
+            const agreeDataProcessingCheckbox = document.getElementById('{{ form.agree_data_processing.id_for_label }}');
+            if (agreeDataProcessingCheckbox && !agreeDataProcessingCheckbox.checked) {
+                validationPassed = false;
+                const parentDiv = agreeDataProcessingCheckbox.closest('.checkbox-group');
+                if(parentDiv) parentDiv.classList.add('input-error');
+                else agreeDataProcessingCheckbox.classList.add('input-error');
+                
+                if (!firstInvalidElement) firstInvalidElement = parentDiv || agreeDataProcessingCheckbox;
+                if (parentDiv && !parentDiv.querySelector('.custom-validation-error.agree-data-error')) {
+                    const errorMsg = document.createElement('p');
+                    errorMsg.className = 'error-message custom-validation-error agree-data-error';
+                    errorMsg.textContent = 'Необходимо подтвердить согласие на обработку персональных данных.';
+                    parentDiv.appendChild(errorMsg);
+                }
+            }
+
+            const submitButton = this.querySelector('button[type="submit"]');
+            if (!validationPassed) {
+                e.preventDefault(); // Отменяем стандартную отправку формы
+                if (submitButton) {
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Отправить на модерацию';
+                }
+                if (firstInvalidElement) {
+                    firstInvalidElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+                return false;
+            } else {
+                // Если все клиентские проверки прошли, деактивируем кнопку
+                if (submitButton) {
+                    if (submitButton.disabled) { // Если уже отключена (например, двойной клик)
+                         e.preventDefault();
+                         return;
+                    }
+                    submitButton.disabled = true;
+                    submitButton.textContent = 'Отправка...';
+                }
+                // Позволяем форме отправиться
+            }
+        });
     }
 
     // --- Drag & Drop для файлов ---
