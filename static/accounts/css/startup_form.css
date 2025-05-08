@@ -387,6 +387,11 @@ ul.messages li.success {
 .timeline-step.active-step-display .step-text {
     color: #FFC107;
 }
+.step-number.error-step {
+    border-color: #D8000C !important; /* Red border for error indication */
+    color: #D8000C !important; /* Optional: change text color too */
+    box-shadow: 0 0 0 0.2rem rgba(216, 0, 12, 0.25);
+}
 
 #step-descriptions {
     margin-bottom: 20px;

@@ -13,7 +13,7 @@
         <h2 class="form-main-title">Создание стартапа</h2>
     </div>
 
-    <form method="post" enctype="multipart/form-data" id="startupForm">
+    <form method="post" enctype="multipart/form-data" id="startupForm" novalidate>
         {% csrf_token %}
 
         <div class="form-grid">
@@ -250,7 +250,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 stepCircle.classList.toggle('active', stepNum <= stepNumber);
             }
         });
-        // Также выделяем выбранный шаг в таймлайне и показываем его описание
         selectStep(stepNumber);
     }
 
@@ -258,8 +257,6 @@ document.addEventListener('DOMContentLoaded', function() {
         step.addEventListener('click', function() {
             const stepNum = this.dataset.step;
             selectStep(stepNum);
-            // Не меняем currentStepInput при простом клике на этап для просмотра,
-            // только кнопкой "Мы здесь"
         });
     });
 
@@ -270,12 +267,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Инициализация: показать первый этап и отметить его как текущий
     if (timelineSteps.length > 0) {
-        setCurrentStep(1); // Устанавливаем и показываем первый этап
+        setCurrentStep(1);
     }
 
-    // --- НОВЫЙ КОД: Прокрутка к первой ошибке Django при загрузке страницы ---
+    // --- Прокрутка к первой ошибке Django при загрузке страницы ---
     const firstServerSideError = document.querySelector('.error-message:not(.custom-validation-error)');
     if (firstServerSideError) {
         const errorParentGroup = firstServerSideError.closest('.form-group, .upload-box, .agreement-section');
@@ -285,7 +281,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (inputField && inputField.type !== 'checkbox') {
                 inputField.classList.add('input-error');
             } else if (inputField && inputField.type === 'checkbox' && errorParentGroup.classList.contains('checkbox-group')) {
-                 errorParentGroup.classList.add('input-error'); // Подсвечиваем группу чекбокса
+                 errorParentGroup.classList.add('input-error');
             }
         } else {
             firstServerSideError.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -300,37 +296,51 @@ document.addEventListener('DOMContentLoaded', function() {
             let firstInvalidElement = null;
             let validationPassed = true;
 
-            // Очистка предыдущих кастомных ошибок валидации
             document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
             document.querySelectorAll('.custom-validation-error').forEach(el => el.remove());
-            document.querySelectorAll('.file-upload-area').forEach(el => el.style.borderColor = '');
+            document.querySelectorAll('.file-upload-area').forEach(el => el.classList.remove('input-error'));
             document.querySelectorAll('.checkbox-group').forEach(el => el.classList.remove('input-error'));
-
+            document.querySelectorAll('.timeline-step .step-number').forEach(el => el.classList.remove('error-step'));
 
             // 1. Валидация описаний этапов таймлайна
             const timelineTextareas = startupForm.querySelectorAll('textarea.timeline-description-textarea');
             let timelineErrorDisplayed = false;
+            let firstTimelineErrorTextarea = null;
+
             for (let i = 0; i < timelineTextareas.length; i++) {
                 const textarea = timelineTextareas[i];
+                const stepNumber = textarea.name.split('_').pop();
+                const correspondingStepVisual = document.querySelector(`.timeline-step[data-step="${stepNumber}"] .step-number`);
+
                 if (textarea.hasAttribute('required') && !textarea.value.trim()) {
                     validationPassed = false;
                     textarea.classList.add('input-error');
-                    if (!firstInvalidElement) firstInvalidElement = textarea;
+                    if (correspondingStepVisual) {
+                        correspondingStepVisual.classList.add('error-step');
+                    }
+                    if (!firstTimelineErrorTextarea) firstTimelineErrorTextarea = textarea;
+                    
                     if (!timelineErrorDisplayed) {
                         const timelineSection = document.getElementById('timeline');
-                        if (timelineSection) {
+                        if (timelineSection && !timelineSection.parentElement.querySelector('.custom-validation-error.timeline-general-error')) {
                             const errorMsg = document.createElement('p');
-                            errorMsg.className = 'error-message custom-validation-error';
+                            errorMsg.className = 'error-message custom-validation-error timeline-general-error';
                             errorMsg.textContent = 'Пожалуйста, заполните описания для всех пяти этапов таймлайна.';
-                            // Вставляем после родителя timeline, т.е. после div class="timeline"
                             timelineSection.parentElement.insertBefore(errorMsg, timelineSection.nextElementSibling);
                             timelineErrorDisplayed = true;
+                            if (!firstInvalidElement) firstInvalidElement = timelineSection;
                         }
                     }
                 }
             }
+            
+            if (firstTimelineErrorTextarea) {
+                const stepNumberToShow = firstTimelineErrorTextarea.name.split('_').pop();
+                selectStep(stepNumberToShow);
+                if (!firstInvalidElement) firstInvalidElement = firstTimelineErrorTextarea;
+            }
 
-            // 2. Валидация поля "Пруфы" (проверка наличия файлов на клиенте)
+            // 2. Валидация поля "Пруфы"
             const proofsInput = document.getElementById('{{ form.proofs.id_for_label }}');
             const proofsLabel = document.querySelector('label[for="{{ form.proofs.id_for_label }}"]');
             const proofsDropArea = document.getElementById('proofsDropArea');
@@ -386,26 +396,33 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const submitButton = this.querySelector('button[type="submit"]');
             if (!validationPassed) {
-                e.preventDefault(); // Отменяем стандартную отправку формы
+                e.preventDefault(); 
                 if (submitButton) {
                     submitButton.disabled = false;
                     submitButton.textContent = 'Отправить на модерацию';
                 }
                 if (firstInvalidElement) {
-                    firstInvalidElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    if (firstInvalidElement.classList && firstInvalidElement.classList.contains('timeline-description-textarea')){
+                        const container = firstInvalidElement.closest('.timeline-description-container');
+                        if (container && container.classList.contains('active')){
+                             firstInvalidElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        } else if (document.getElementById('timeline')) {
+                            document.getElementById('timeline').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                    } else {
+                        firstInvalidElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
                 }
                 return false;
             } else {
-                // Если все клиентские проверки прошли, деактивируем кнопку
                 if (submitButton) {
-                    if (submitButton.disabled) { // Если уже отключена (например, двойной клик)
+                    if (submitButton.disabled) { 
                          e.preventDefault();
                          return;
                     }
                     submitButton.disabled = true;
                     submitButton.textContent = 'Отправка...';
                 }
-                // Позволяем форме отправиться
             }
         });
     }
@@ -523,6 +540,6 @@ document.addEventListener('DOMContentLoaded', function() {
     setupDragAndDrop('{{ form.video.id_for_label }}', 'videoDropArea', 'videoPreview', 1, ['video/mp4', 'video/quicktime', 'video/x-msvideo']); // 'video/quicktime' for .mov
     setupDragAndDrop('{{ form.proofs.id_for_label }}', 'proofsDropArea', 'proofsPreview', 3, ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']);
 
-    });
+});
 </script>
 {% endblock %}

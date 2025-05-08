@@ -611,8 +611,10 @@ def create_startup(request):
             # Сохранение креативов
             creatives = form.cleaned_data.get('creatives', [])
             if creatives:
-                creative_type = FileTypes.objects.get(type_name='creative')
-                entity_type = EntityTypes.objects.get(type_name='startup')
+                # OLD: creative_type = FileTypes.objects.get(type_name='creative')
+                # OLD: entity_type = EntityTypes.objects.get(type_name='startup')
+                creative_type, _ = FileTypes.objects.get_or_create(type_name='creative')
+                entity_type, _ = EntityTypes.objects.get_or_create(type_name='startup')
                 for creative_file in creatives:
                     if not hasattr(creative_file, 'name'):
                         logger.warning(f"Пропущен креатив, так как это не файл: {creative_file}")
@@ -635,8 +637,10 @@ def create_startup(request):
             # Сохранение пруфов
             proofs = form.cleaned_data.get('proofs', [])
             if proofs:
-                proof_type = FileTypes.objects.get(type_name='proof')
-                entity_type = EntityTypes.objects.get(type_name='startup')
+                # OLD: proof_type = FileTypes.objects.get(type_name='proof')
+                # OLD: entity_type = EntityTypes.objects.get(type_name='startup') # entity_type уже получен выше, можно переиспользовать или получить снова с get_or_create
+                proof_type, _ = FileTypes.objects.get_or_create(type_name='proof')
+                entity_type, _ = EntityTypes.objects.get_or_create(type_name='startup') # Повторный вызов для безопасности, если он не был получен ранее
                 for proof_file in proofs:
                     if not hasattr(proof_file, 'name'):
                         logger.warning(f"Пропущен пруф, так как это не файл: {proof_file}")
@@ -664,7 +668,8 @@ def create_startup(request):
                 default_storage.save(file_path, video)
                 video_ids.append(video_id)
                 video_type, _ = FileTypes.objects.get_or_create(type_name='video')
-                entity_type = EntityTypes.objects.get(type_name='startup')
+                # OLD: entity_type = EntityTypes.objects.get(type_name='startup')
+                entity_type, _ = EntityTypes.objects.get_or_create(type_name='startup') # Убедимся, что он есть
                 file_storage = FileStorage(
                     entity_type=entity_type,
                     entity_id=startup.startup_id,

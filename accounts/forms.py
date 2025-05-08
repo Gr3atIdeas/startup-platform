@@ -117,6 +117,16 @@ class StartupForm(forms.ModelForm):
             'agree_data_processing': 'Согласен с обработкой данных *',
         }
 
+    def clean_title(self):
+        title = self.cleaned_data.get('title')
+        if not self.instance or not self.instance.pk: 
+            if Startups.objects.filter(title__iexact=title).exists():
+                raise forms.ValidationError("Стартап с таким названием уже существует. Пожалуйста, выберите другое название.")
+        else:
+            if Startups.objects.filter(title__iexact=title).exclude(pk=self.instance.pk).exists():
+                raise forms.ValidationError("Другой стартап с таким названием уже существует. Пожалуйста, выберите другое название.")
+        return title
+
     def clean(self):
         cleaned_data = super().clean()
         # Валидация для investment_type, если потребуется, может быть добавлена здесь.

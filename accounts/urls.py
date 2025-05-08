@@ -23,6 +23,7 @@ urlpatterns = [
     path('profile/', views.profile, name='profile'),
     path('profile/<int:user_id>/', views.profile, name='user_profile'),  # Новый маршрут
     path('create-startup/', views.create_startup, name='create_startup'),
+    path('create-startup/success/', views.startup_creation_success, name='startup_creation_success'),
     path('edit-startup/<int:startup_id>/', views.edit_startup, name='edit_startup'),
     path('moderator-dashboard/', views.moderator_dashboard, name='moderator_dashboard'),
     path('approve-startup/<int:startup_id>/', views.approve_startup, name='approve_startup'),
