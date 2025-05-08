@@ -77,44 +77,11 @@ textarea.form-control {
     min-height: 100px;
 }
 
-/* Стили для индивидуальных сообщений об ошибках полей */
 .error-message {
-    display: block; /* Чтобы ошибка была на новой строке */
-    color: #dc3545; /* Яркий красный цвет для ошибок */
-    font-size: 0.875em; /* Немного меньше основного текста */
-    margin-top: 5px; /* Отступ сверху от поля */
-    padding: 8px 12px; /* Внутренние отступы */
-    background-color: #f8d7da; /* Светло-красный фон */
-    border: 1px solid #f5c6cb; /* Красная рамка */
-    border-radius: 4px; /* Скругленные углы */
-}
-
-/* Стили для общего блока ошибок вверху формы */
-.form-summary-errors {
-    padding: 15px;
-    margin-bottom: 20px;
-    border: 1px solid transparent;
-    border-radius: 4px;
-    color: #721c24; /* Темно-красный текст */
-    background-color: #f8d7da; /* Светло-красный фон */
-    border-color: #f5c6cb; /* Красная рамка */
-    font-family: 'Inter', sans-serif;
-}
-
-.form-summary-errors h4 {
-    margin-top: 0;
-    color: inherit; /* Наследовать цвет от родителя */
-    font-weight: 600;
-    margin-bottom: 10px;
-}
-
-.form-summary-errors ul {
-    margin-bottom: 0;
-    padding-left: 20px; /* Отступ для списка */
-}
-
-.form-summary-errors li {
-    margin-bottom: 5px;
+    color: #FF6B6B; /* Ярко-красный для ошибок */
+    font-size: 0.85em;
+    display: block;
+    margin-top: 3px;
 }
 
 .small-text {
