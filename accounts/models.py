@@ -402,7 +402,7 @@ class Startups(models.Model):
     video_urls = JSONField(blank=True, null=True, default=list)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'startups'
 
     def get_average_rating(self):
