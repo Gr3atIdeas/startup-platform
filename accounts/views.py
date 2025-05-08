@@ -1812,4 +1812,4 @@ def my_startups(request):
     # Логирование для отладки
     logger.info("Planetary Startups Data:")
     for planet in planetary_startups:
-        logger.info(f"Startup ID: {planet['startup_id']}, Title: {planet['name']}, Category: {planet['category']}")
+        logger.info(f"Startup ID: {planet['startup_id']}, Title: {planet['name']}")
