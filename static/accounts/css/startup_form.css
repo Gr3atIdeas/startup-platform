@@ -1,580 +1,1085 @@
 /* General Styles */
 body {
-    font-family: 'Arial', sans-serif; /* Замените на ваш шрифт из Figma, если он другой */
-    background-color: #0D1B2A; /* Темно-синий фон как на макете */
-    color: #E0E1DD; /* Светлый текст */
+    font-family: 'Unbounded', sans-serif; /* Шрифт по умолчанию */
+    background-color: #1E1E1E; /* Темный фон как в Figma */
+    color: #FFFFFF; /* Белый текст по умолчанию */
     margin: 0;
     padding: 20px;
 }
 
 .startup-form-container {
-    max-width: 1200px;
+    max-width: 1440px; /* Или ширина вашего основного контейнера по макету */
     margin: 0 auto;
-    background-color: #1B263B; /* Чуть светлее фона для основной формы */
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    padding: 20px; /* Общий паддинг для контейнера */
 }
 
 .form-navigation-header {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    margin-bottom: 30px;
-    border-bottom: 1px solid #415A77;
-    padding-bottom: 20px;
+    margin-bottom: 40px; /* Отступ снизу */
+    padding: 0 50px; /* Паддинги по бокам как в макете (может потребоваться настройка) */
 }
 
 .back-button {
-    color: #E0E1DD;
+    color: #FFFFFF;
     text-decoration: none;
-    font-size: 1.2em;
-    margin-right: 20px;
-    display: flex;
-    align-items: center;
-}
-
-.back-button:hover {
-    color: #778DA9;
+    font-size: 16px; /* Размер шрифта кнопки "Назад" */
 }
 
 .form-main-title {
-    font-size: 2em;
+    font-size: 24px; /* Размер основного заголовка */
+    font-weight: 500; /* Или другое значение по макету */
     color: #FFFFFF;
-    margin: 0;
 }
 
-label {
+/* Стили для секций формы */
+.form-section {
+    background: rgba(255, 255, 255, 0.07);
+    box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.25);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.36);
+    backdrop-filter: blur(10px);
+    padding: 40px 50px; /* Внутренние отступы для секций */
+    margin-bottom: 30px; /* Отступ между секциями */
+}
+
+.form-section-top {
+    background: none; /* У верхнего блока нет такого фона */
+    box-shadow: none;
+    border: none;
+    backdrop-filter: none;
+    padding: 0; /* Убираем лишние паддинги, если они не нужны */
+    margin-bottom: 50px; /* Отступ от верхнего блока до следующего */
+}
+
+.form-top-grid {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 35px; /* Отступ между левой и правой колонкой верхнего блока */
+}
+
+.form-top-left {
+    display: flex;
+    align-items: flex-start;
+    gap: 35px; /* Отступ между лого и полями слева */
+    flex-grow: 1; /* Позволяет занимать доступное пространство */
+}
+
+.logo-upload-group .logo-upload-label {
     display: block;
-    margin-bottom: 8px;
-    font-weight: bold;
-    color: #A9B4C2; /* Светло-серый для лейблов */
-    font-size: 0.9em;
-}
-
-.form-control,
-.form-control-file,
-select.form-control {
-    width: 100%;
-    padding: 12px 15px;
-    margin-bottom: 5px;
-    border: 1px solid #415A77; /* Граница в цвет фона */
+    width: 288px;
+    height: 288px;
     border-radius: 5px;
-    background-color: #0D1B2A; /* Темный фон для полей */
-    color: #E0E1DD; /* Светлый текст в полях */
-    box-sizing: border-box;
-    font-size: 1em;
-}
-
-.form-control:focus,
-select.form-control:focus {
-    outline: none;
-    border-color: #778DA9; /* Светлее при фокусе */
-    box-shadow: 0 0 5px rgba(119, 141, 169, 0.5);
-}
-
-textarea.form-control {
-    resize: vertical;
-    min-height: 100px;
-}
-
-/* Styles for error messages */
-.error-message {
-    color: #D8000C; /* Red color for errors */
-    background-color: #FFD2D2; /* Light red background */
-    border: 1px solid #D8000C;
-    padding: 10px;
-    margin-top: 5px;
-    border-radius: 4px;
-    font-size: 0.9em;
-    display: block; /* Make it a block to take full width */
-}
-
-/* Style for input fields with errors */
-.form-control.input-error,
-.form-control-file.input-error,
-.timeline-description-textarea.input-error,
-.file-upload-area.input-error {
-    border-color: #D8000C !important; /* Important to override other border styles */
-    box-shadow: 0 0 0 0.2rem rgba(216, 0, 12, 0.25) !important; /* Red glow */
-}
-
-.checkbox-group.input-error label {
-    color: #D8000C !important;
-}
-
-/* General message styling (if used by Django messages framework on this page) */
-ul.messages {
-    list-style-type: none;
-    padding: 0;
-    margin: 0 0 20px 0;
-}
-ul.messages li {
-    padding: 10px 15px;
-    border-radius: 4px;
-    margin-bottom: 10px;
-    font-size: 1em;
-}
-ul.messages li.error {
-    color: #D8000C;
-    background-color: #FFD2D2;
-    border: 1px solid #D8000C;
-}
-ul.messages li.success {
-    color: #270;
-    background-color: #DFF2BF;
-    border: 1px solid #4F8A10;
-}
-.custom-validation-error {
-    /* Используем те же стили, что и .error-message */
-    color: #D8000C;
-    background-color: #FFD2D2;
-    border: 1px solid #D8000C;
-    padding: 10px;
-    margin-top: 8px;
-    margin-bottom: 8px;
-    border-radius: 4px;
-    font-size: 0.9em;
-    display: block;
-}
-
-.small-text {
-    font-size: 0.8em;
-    color: #778DA9; /* Приглушенный цвет для подсказок */
-    margin-top: 5px;
-}
-
-.section-title {
-    font-size: 1.5em;
-    color: #FFFFFF;
-    margin-top: 30px;
-    margin-bottom: 15px;
-    border-bottom: 1px solid #415A77;
-    padding-bottom: 10px;
-}
-
-/* Grid Layout */
-.form-grid {
-    display: grid;
-    grid-template-columns: 1fr 2fr; /* Левая колонка меньше правой */
-    gap: 30px;
-    margin-bottom: 30px;
-}
-
-.form-column-left,
-.form-column-right {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.full-width {
-    grid-column: 1 / -1; /* Для элементов, занимающих всю ширину */
-}
-
-/* Logo Upload */
-.logo-upload-group {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.logo-upload-label {
+    background-color: #333; /* Примерный цвет фона, если изображение не загружено */
     cursor: pointer;
-    display: block; /* чтобы margin auto работал */
-    margin-bottom: 10px;
+    position: relative;
+    overflow: hidden; /* Чтобы img не вылезал за рамки */
 }
 
-.logo-placeholder {
-    width: 200px; /* Размер как на макете */
-    height: 200px;
-    border: 2px dashed #415A77;
-    border-radius: 8px;
+.logo-upload-group .logo-placeholder {
     display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
-    background-color: #0D1B2A;
-    color: #778DA9;
-    transition: background-color 0.3s;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    color: #a9a9a9;
 }
-.logo-placeholder:hover {
-    background-color: #112337;
-}
-.logo-placeholder img {
-    width: 50px; /* Размер иконки */
-    height: 50px;
+
+.logo-upload-group .logo-placeholder img {
+    width: 60px; /* Размер иконки плейсхолдера */
+    height: 60px;
     margin-bottom: 10px;
-    opacity: 0.7;
-}
-.logo-placeholder span {
-    font-size: 0.9em;
 }
 
-.logo-preview {
-    max-width: 200px;
-    max-height: 200px;
-    border-radius: 8px;
-    object-fit: cover;
-    border: 1px solid #415A77;
+.logo-upload-group .logo-preview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Масштабирование превью */
+    border-radius: 5px;
 }
 
-/* Investment Type Section */
-.investment-type-section {
+.form-fields-left {
     display: flex;
-    flex-direction: column; /* Элементы друг под другом */
-    gap: 20px;
-    padding: 20px;
-    background-color: #0D1B2A; /* Фон для этого блока */
-    border-radius: 8px;
-    border: 1px solid #415A77;
+    flex-direction: column;
+    gap: 30px; /* Отступ между полями в левой колонке */
+    width: 301px; /* Ширина колонки с полями */
 }
 
-.checkbox-group {
+.form-top-right {
+    width: 531px; /* Ширина правой колонки */
+}
+
+.investment-type-card {
+    border-radius: 10px;
+    border: 2px solid #353945;
+    background-image: url('../images/creat_startup/Frame 992.svg'); /* Пример, если фон изображение */
+    background-size: cover;
+    background-position: center;
+    padding: 25px 21px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Центрирование контента по макету */
+    gap: 20px; /* Отступ между элементами в карточке */
+    height: 288px; /* Высота как у лого */
+    box-sizing: border-box;
+}
+
+.micro-investment-group {
     display: flex;
     align-items: center;
-}
-.checkbox-group input[type="checkbox"] {
-    width: auto;
-    margin-right: 10px;
-    accent-color: #FFC107; /* Цвет чекбокса как на макете (желтоватый) */
-}
-.checkbox-group label {
-    margin-bottom: 0;
-    font-weight: normal;
-    color: #E0E1DD;
-}
-
-/* Upload Section Grid */
-.upload-section-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-    margin-bottom: 20px;
-}
-.upload-box {
-    /* Стили для каждого блока загрузки, если нужны общие */
-}
-.form-group.upload-box.full-width {
-    grid-column: 1 / -1;
-}
-
-
-.file-upload-area {
-    border: 2px dashed #415A77;
-    border-radius: 8px;
-    padding: 20px;
-    text-align: center;
-    background-color: #0D1B2A;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-.file-upload-area:hover {
-    background-color: #112337;
-}
-.file-upload-area input[type="file"] {
-    display: none; /* Скрываем стандартный инпут */
-}
-.file-upload-area p {
-    margin: 10px 0 5px 0;
-    color: #E0E1DD;
-}
-
-.file-preview-area {
-    margin-top: 15px;
-    display: flex;
-    flex-wrap: wrap;
     gap: 10px;
 }
-.file-preview-item {
-    position: relative;
+
+.micro-investment-group .form-check-label {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 5px;
-    padding: 10px;
-    background-color: #0D1B2A;
-    border: 1px solid #415A77;
-    border-radius: 5px;
-    width: calc(33.333% - 7px); /* Примерно 3 в ряд с учетом gap */
-    box-sizing: border-box;
-}
-.file-preview-item img,
-.file-preview-item video {
-    max-width: 100px;
-    max-height: 100px;
-    object-fit: cover;
-    border-radius: 4px;
-}
-.file-preview-item .file-icon { /* Для иконок не-изображений */
-    width: 50px;
-    height: 50px;
-}
-.file-preview-item p {
-    font-size: 0.8em;
-    color: #A9B4C2;
-    word-break: break-all;
-    text-align: center;
-    margin: 0;
-}
-.remove-file-btn {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    background: rgba(0,0,0,0.5);
+    gap: 10px;
+    font-size: 12px;
+    font-family: Unbounded;
+    font-weight: 300;
+    letter-spacing: 0.12px;
     color: white;
-    border: none;
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    font-size: 14px;
-    line-height: 18px;
-    text-align: center;
-    cursor: pointer;
+}
+.micro-investment-group .micro-investment-icon {
+    width: 24px;
+    height: 24px;
 }
 
-/* Valuation and Amount Raised Row */
-.form-row-valuation-raised {
+.investment-type-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Текст и селект по центру */
+    gap: 15px;
+}
+
+.investment-type-label {
+    font-size: 12px;
+    font-family: Unbounded;
+    font-weight: 300;
+    letter-spacing: 0.12px;
+    color: #A9A9A9; /* Цвет как в Figma */
+}
+
+/* Общие стили для form-group, label, input-wrapper, form-control */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Отступ между label и input/select */
+    margin-bottom: 0; /* Убираем стандартный margin-bottom, если он есть */
+}
+
+.form-group label {
+    font-size: 12px;
+    font-family: Unbounded;
+    font-weight: 300;
+    letter-spacing: 0.12px;
+    color: white;
+    text-align: left; /* Явное выравнивание для лейблов */
+}
+
+.input-wrapper {
+    position: relative; /* Для позиционирования стрелки в select */
+    display: flex; /* Чтобы инпут занимал всю ширину */
+}
+
+.form-control {
+    height: 40px;
+    padding: 12px 16px;
+    background: white;
+    border-radius: 5px;
+    border: 1px solid #D9D9D9;
+    color: #1E1E1E;
+    font-size: 14px;
+    font-family: Unbounded;
+    font-weight: 300;
+    line-height: 18px; /* Соответствует 14px font-size + padding */
+    width: 100%; /* Растягиваем инпут на всю ширину wrapper */
+    box-sizing: border-box;
+}
+
+.form-control::placeholder {
+    color: #C7C7C7; /* Цвет плейсхолдера */
+    font-size: 14px;
+    font-family: Unbounded;
+    font-weight: 300;
+}
+
+/* Стили для селектов */
+.select-wrapper select.form-control {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding-right: 35px; /* Место для стрелки */
+}
+
+.select-arrow {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    pointer-events: none; /* Чтобы не мешала клику по селекту */
+}
+
+
+/* --- Стили для полей под колонками (Вводная, Описание и т.д.) --- */
+.form-group.full-width {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Отступ между label, notice, input, small-text */
+}
+
+.form-group.full-width label {
+    font-size: 20px;
+    font-family: Unbounded;
+    font-weight: 400;
+    line-height: 18px;
+    color: white;
+}
+
+.required-field-notice {
+    color: #FF0000;
+    font-size: 12px;
+    font-family: Unbounded;
+    font-weight: 300;
+    letter-spacing: 0.12px;
+}
+
+.form-group.full-width .form-control {
+    min-height: 117px;
+    background: white; /* Белый фон для текстовых полей */
+    padding: 29px 15px; /* Паддинги как в Figma */
+    color: black; /* Черный текст */
+    font-size: 14px;
+    font-family: Unbounded;
+    font-weight: 300;
+    line-height: 18px;
+    border-radius: 5px;
+    border: 1px solid #D9D9D9; /* Убедимся, что граница есть */
+}
+
+/* Пример для поля с ошибкой (красный фон) */
+.form-group.full-width .form-control.input-error {
+    background: #FEEAEA; /* Красный фон как в Figma для ошибки */
+    border-color: #FF0000 !important; /* Красная граница */
+}
+
+.form-group .small-text {
+    font-size: 12px;
+    color: #C9C8C8; /* Приглушенный цвет для подсказок */
+    margin-top: -10px; /* Подвинуть ближе к инпуту, если нужно */
+}
+
+
+/* --- Upload Section Grid --- */
+.media-and-finance-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
+    grid-template-columns: repeat(3, 1fr); /* Три колонки как в Figma */
+    gap: 45px; /* Отступ между колонками */
+    align-items: flex-start;
+}
+
+.upload-box,
+.presentation-finance-group {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Внутренний отступ между элементами в колонке */
+}
+
+.presentation-finance-group {
+    gap: 45px; /* Увеличенный отступ для этой группы */
+}
+
+.upload-box > label,
+.presentation-finance-group .form-group > label {
+    font-size: 20px;
+    font-family: Unbounded;
+    font-weight: 400;
+    line-height: 18px;
+    color: white;
+}
+
+.custom-file-upload-button {
+    display: inline-flex; /* Чтобы была как кнопка */
+    padding: 12px; 
+    background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    color: black;
+    font-size: 16px;
+    font-family: Unbounded;
+    font-weight: 400;
+    line-height: 16px;
+    word-wrap: break-word;
+    cursor: pointer;
+    width: 231px; /* Ширина как в Figma */
+    height: 40px; /* Высота как в Figma */
+    box-sizing: border-box;
+    margin-bottom: 18px; /* Отступ до текста с форматами */
+}
+
+.upload-box .small-text { /* Для текста "Допустимый формат..." */
+    font-size: 12px;
+    font-family: Unbounded;
+    font-weight: 300;
+    letter-spacing: 0.12px;
+    color: white;
+    text-align: left; /* Выравнивание по левому краю */
+    margin-top: -10px; /* Ближе к кнопке */
+}
+
+/* Стили для file-upload-area, если он остается как drop-зона */
+.file-upload-area {
+    border: 2px dashed #757575;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    background-color: rgba(255, 255, 255, 0.05);
+    display: flex;
+    flex-direction: column; /* Чтобы кнопка и текст были друг под другом */
+    align-items: flex-start; /* Выравнивание кнопки и текста по левому краю */
+    gap: 0; /* Убираем лишний внутренний отступ, если custom-button управляет им */
+}
+/* Если input[type=file] внутри .file-upload-area и должен быть скрыт, а .custom-file-upload-button используется */
+.file-upload-area input[type="file"][style*="display:none"] + .custom-file-upload-button {
+    /* Стили для кнопки, если она идет сразу после скрытого инпута */
+}
+.file-upload-area > p { /* Если текст "Перетащите файлы..." остается */
+    display: none; /* Скрываем, так как есть кастомная кнопка */
+}
+
+
+.file-preview-area {
+    display: flex;
+    flex-direction: column;
+    gap: 14px; /* Отступ между файлами в превью */
+    margin-top: 10px; /* Отступ от кнопки/текста до превью */
+}
+
+.file-preview-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.file-preview-item .drag-handle-mock {
+    /* Заглушка для точек drag, можно использовать SVG или псевдоэлементы */
+    width: 9px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px; /* Отступ между точками */
+    align-content: flex-start;
+}
+.file-preview-item .drag-handle-mock span {
+    width: 3px;
+    height: 3px;
+    background: #D9D9D9;
+    border-radius: 50%;
+}
+
+.file-preview-item img.preview-image, /* для картинок и видео превью */
+.file-preview-item img.file-icon     /* для иконок документов */
+{
+    width: 72px;
+    height: 72px;
+    border-radius: 5px;
+    object-fit: cover;
+}
+
+.file-preview-item p.file-name {
+    flex-grow: 1;
+    color: white;
+    font-size: 12px;
+    font-family: Unbounded;
+    font-weight: 300;
+    letter-spacing: 0.12px;
+    word-wrap: break-word;
+    margin: 0;
+}
+
+.file-preview-item .file-actions {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.file-preview-item .file-actions button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+.file-preview-item .file-actions img {
+    width: 15px;
+    height: 15px;
+}
+
+/* Поле для URL презентации */
+.presentation-finance-group .input-wrapper .form-control[placeholder="URL"] {
+    width: 100%; /* Растягиваем на всю ширину колонки */
+    max-width: 361px; /* Максимальная ширина как в Figma */
+    height: 40px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    padding-left: 16px;
+    padding-right: 12px;
+    background-color: white;
+    border: 1px solid #D9D9D9;
+    border-radius: 5px;
+    color: #1E1E1E; /* Цвет введенного текста */
+}
+.presentation-finance-group .input-wrapper .form-control[placeholder="URL"]::placeholder {
+    color: #C7C7C7; /* Цвет плейсхолдера */
+}
+
+/* Поля Оценка и Собранная сумма в presentation-finance-group */
+.presentation-finance-group .form-group .input-wrapper .form-control {
+    width: 100%;
+    max-width: 361px; /* Для "Собранная сумма" */
+    height: 40px;
+    background-color: white;
+    border: 1px solid #D9D9D9;
+    border-radius: 5px;
+    color: #1E1E1E;
+    padding: 12px 16px;
+}
+
+.presentation-finance-group .form-group .input-wrapper.valuation-input .form-control {
+    max-width: 117px; /* Для "Оценка" */
+    padding-right: 30px; /* Место для стрелок */
+}
+
+.presentation-finance-group .form-group .input-wrapper .form-control::placeholder {
+    color: #C7C7C7;
+}
+
+.valuation-input {
+    position: relative;
+}
+
+.valuation-spin-buttons {
+    position: absolute;
+    right: 8px; /* Отступ справа для стрелок */
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 4px; /* Отступ между стрелками */
+}
+
+.valuation-spin-buttons img {
+    width: 10px; /* Размер SVG стрелки */
+    height: 5px;
+    cursor: pointer;
+    filter: brightness(0); /* Делаем SVG черным */
+}
+
+/* --- Timeline Section --- */
+.timeline-section-wrapper.content-section {
+    /* Общие стили для секции таймлайна */
+}
+
+h3.section-title {
+    /* Стили для заголовка секции (например, *Этапы) */
+    font-size: 20px;
+    font-family: Unbounded;
+    font-weight: 400;
+    line-height: 18px;
+    color: white;
     margin-bottom: 20px;
 }
 
-/* Timeline */
+.timeline-progress-container {
+    position: relative;
+    width: 100%;
+    height: 11px; /* Высота линии */
+    margin-bottom: 20px; /* Отступ от линии до кругов */
+}
+
+.timeline-progress-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, #1967B8 2%, #6348EB 26%, #1967B8 50%, #6749E7 78%, #F26162 100%);
+    z-index: 1;
+}
+
+.timeline-progress-filled {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0%; /* Изначально 0, будет обновляться JS */
+    height: 100%;
+    background: black; /* Цвет заполненной части по Figma */
+    z-index: 2;
+    transition: width 0.3s ease-in-out;
+}
+
 .timeline {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 20px;
-    padding: 10px 0;
-    border-top: 1px solid #415A77;
-    border-bottom: 1px solid #415A77;
+    align-items: flex-start;
+    padding: 0 10px; /* Небольшие отступы по краям */
+    position: relative; /* Чтобы круги были над линией */
+    margin-top: -66px; /* Поднять круги, чтобы центр был на линии (122/2 + 5 отступа) */
+    z-index: 3;
 }
+
 .timeline-step {
     display: flex;
     flex-direction: column;
     align-items: center;
+    text-align: center;
+    gap: 10px;
+    width: 122px; /* Ширина блока этапа */
     cursor: pointer;
-    padding: 10px;
-    border-radius: 5px;
-    transition: background-color 0.3s;
 }
-.timeline-step:hover, .timeline-step.active-step-display {
-    background-color: #112337; /* Подсветка активного/ховер этапа */
-}
-.step-number {
-    width: 40px;
-    height: 40px;
-    border: 2px solid #415A77;
+
+.timeline-step .step-number-wrapper {
+    width: 122px;
+    height: 122px;
     border-radius: 50%;
     display: flex;
-    align-items: center;
     justify-content: center;
-    font-weight: bold;
-    margin-bottom: 5px;
-    background-color: #0D1B2A;
-    color: #E0E1DD;
-    transition: background-color 0.3s, border-color 0.3s;
+    align-items: center;
+    position: relative;
+    background-size: cover; /* Для градиентов */
+    background-position: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-.step-number.active {
-    background-color: #FFC107; /* Яркий цвет для активного номера этапа (желтый) */
-    border-color: #FFC107;
-    color: #0D1B2A; /* Темный текст на активном */
+
+/* Градиенты и иконки для каждого этапа */
+.timeline-step[data-step="1"] .step-number-wrapper { background: linear-gradient(307deg, #4392E3 0%, #004E9F 100%); }
+.timeline-step[data-step="2"] .step-number-wrapper { background: linear-gradient(307deg, #7B61FF 0%, #3B1ECA 100%); }
+.timeline-step[data-step="3"] .step-number-wrapper { background: linear-gradient(217deg, #4392E3 0%, #004E9F 100%); }
+.timeline-step[data-step="4"] .step-number-wrapper { background: black; }
+.timeline-step[data-step="5"] .step-number-wrapper { background: black; }
+
+.timeline-step .step-icon {
+    width: 60px; /* Размер иконки внутри круга */
+    height: 60px;
+    object-fit: contain;
 }
-.step-text {
-    font-size: 0.9em;
-    color: #A9B4C2;
+
+.timeline-step .step-text {
+    font-size: 12px;
+    font-family: Unbounded;
+    font-weight: 300;
+    letter-spacing: 0.12px;
+    color: white;
 }
-.timeline-step.active-step-display .step-text {
-    color: #FFC107;
+
+/* Активный этап для отображения описания */
+.timeline-step.active-step-display .step-number-wrapper {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(255, 239, 43, 0.7); /* Желтое свечение */
 }
-.step-number.error-step {
-    border-color: #D8000C !important; /* Red border for error indication */
-    color: #D8000C !important; /* Optional: change text color too */
-    box-shadow: 0 0 0 0.2rem rgba(216, 0, 12, 0.25);
+
+/* Пройденные/текущий этап (стилизация через JS - класс active на step-number-wrapper) */
+.timeline-step .step-number-wrapper.active {
+    /* Здесь можно добавить галочку или другой индикатор поверх круга, если нужно */
+}
+.timeline-step .step-number-wrapper.error-step {
+    border: 3px solid #FF0000 !important;
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.7) !important;
 }
 
 #step-descriptions {
-    margin-bottom: 20px;
+    margin-top: 30px; /* Отступ от таймлайна до описания */
 }
+
 .timeline-description-container {
-    display: none; /* Скрываем по умолчанию */
-    padding: 20px;
-    background-color: #0D1B2A;
-    border: 1px solid #415A77;
-    border-radius: 8px;
-    margin-top: 10px; /* Небольшой отступ сверху */
+    display: none; /* Скрыт по умолчанию */
+    padding: 45px 22px 25px 22px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.36);
+    background-color: rgba(40, 40, 40, 0.3); /* Слегка затемненный фон для контейнера */
+    backdrop-filter: blur(5px);
+    flex-direction: column;
+    gap: 30px;
 }
+
 .timeline-description-container.active {
-    display: block; /* Показываем активный */
+    display: flex; /* Показать активный */
 }
+
 .timeline-description-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
+    align-items: flex-start;
+    width: 100%;
 }
+
+.timeline-description-title-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
 .timeline-description-title {
-    font-size: 1.2em;
-    font-weight: bold;
-    color: #FFFFFF;
+    font-size: 20px;
+    font-family: Unbounded;
+    font-weight: 400;
+    line-height: 18px;
+    color: white;
+    text-align: left;
 }
+
 .btn-select-current {
-    padding: 8px 15px;
-    background-color: #FFC107; /* Желтая кнопка */
-    color: #0D1B2A; /* Темный текст */
+    padding: 12px 0;
+    background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    color: black;
+    font-size: 16px;
+    font-family: Unbounded;
+    font-weight: 400;
+    line-height: 16px;
     border: none;
-    border-radius: 5px;
     cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.3s;
+    width: 165px;
+    height: 40px;
+    text-align: center;
 }
-.btn-select-current:hover {
-    background-color: #e6ac00;
-}
+
 .timeline-description-textarea {
     width: 100%;
-    min-height: 120px;
-    padding: 10px;
-    border: 1px solid #415A77;
-    border-radius: 5px;
-    background-color: #0D1B2A; /* Темный фон */
-    color: #E0E1DD; /* Светлый текст */
-    box-sizing: border-box;
-    resize: vertical;
-}
-.timeline-description-textarea:focus {
-    outline: none;
-    border-color: #778DA9;
+    height: 188px;
+    background: white;
+    border-radius: 10px;
+    padding: 15px;
+    color: black;
+    font-family: Unbounded;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 18px;
+    border: 1px solid #D9D9D9;
+    resize: vertical; /* Разрешить изменение размера по вертикали */
 }
 
+.timeline-description-textarea::placeholder {
+    color: #C9C8C8;
+    font-size: 12px;
+    font-family: Unbounded;
+    font-weight: 300;
+    letter-spacing: 0.12px;
+}
 
-/* Agreement Section */
+.timeline-description-textarea.input-error {
+     border-color: #FF0000 !important;
+     background-color: #FEEAEA; /* Красный фон при ошибке */
+}
+
+/* --- Agreement Section Wrapper --- */
+.agreement-section-wrapper.content-section {
+    gap: 25px; /* Отступ до блока согласия */
+}
+
 .agreement-section {
-    margin-top: 30px;
-    padding-top: 20px;
-    border-top: 1px solid #415A77;
-}
-.agreement-section .checkbox-group {
-    margin-bottom: 15px;
-}
-
-/* Submit Button */
-.submit-button-container {
     display: flex;
-    justify-content: flex-end; /* Кнопка справа */
-    margin-top: 30px;
+    flex-direction: column;
+    gap: 15px; /* Отступ между заголовком и чекбоксами */
 }
-.submit-button {
-    padding: 12px 30px;
-    background-color: #FFC107; /* Желтая кнопка */
-    color: #0D1B2A;
-    border: none;
-    border-radius: 5px;
-    font-size: 1.1em;
-    font-weight: bold;
+
+.agreement-section .section-title {
+    font-size: 20px;
+    font-family: Unbounded;
+    font-weight: 400;
+    line-height: 18px;
+    color: white;
+    margin-bottom: 0; /* Управляется gap родителя */
+    text-align: left; /* Заголовок слева */
+}
+
+.agreement-section .checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    margin-bottom: 0; /* Управляется gap родителя */
+}
+
+.agreement-section .checkbox-group .form-check-input {
+    /* Скрываем стандартный чекбокс, чтобы использовать кастомный SVG */
+    display: none;
+}
+
+.agreement-section .checkbox-group .custom-checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 11px;
     cursor: pointer;
-    transition: background-color 0.3s;
-}
-.submit-button:hover {
-    background-color: #e6ac00;
-}
-.submit-button:disabled {
-    background-color: #778DA9;
-    cursor: not-allowed;
 }
 
+.agreement-section .checkbox-group .custom-checkbox-label img.checkbox-icon {
+    width: 24px;
+    height: 24px;
+}
 
-/* Responsive adjustments if needed */
-@media (max-width: 992px) {
-    .form-grid {
-        grid-template-columns: 1fr; /* Одна колонка на средних экранах */
+.agreement-section .checkbox-group .custom-checkbox-label span.checkbox-text {
+    color: white;
+    font-size: 16px;
+    font-family: Unbounded;
+    font-weight: 400;
+    line-height: 16px;
+}
+
+.agreement-section .checkbox-group .tooltip-icon-wrapper {
+    display: flex; /* Для выравнивания с текстом */
+    align-items: center;
+    margin-left: 0; /* Убираем авто-отступ, если он есть */
+}
+
+.tooltip-icon {
+    width: 12px;
+    height: 12px;
+    background: #D9D9D9;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 8px;
+    font-family: 'Circe', sans-serif;
+    font-weight: 400;
+    cursor: pointer;
+    line-height: 12px; /* Для центрирования вопросика */
+}
+
+/* Стили для кнопки отправки уже есть (.submit-button, .submit-button-container) */
+
+/* Адаптивность - базовые примеры */
+@media (max-width: 1200px) {
+    .form-top-grid {
+        flex-direction: column;
+        align-items: center; /* Центрировать лого и блок инвестиций на малых экранах */
     }
-    .form-column-left, .form-column-right {
-        gap: 20px; /* Уменьшаем отступ если нужно */
+    .form-top-left {
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+    .form-fields-left {
+        width: 100%;
+        max-width: 400px; /* Ограничить ширину полей */
+    }
+    .form-top-right {
+        width: 100%;
+        max-width: 531px; /* Ограничить ширину блока инвестиций */
     }
     .upload-section-grid {
-        grid-template-columns: 1fr; /* Одна колонка для загрузок */
+        grid-template-columns: 1fr; /* Один столбец на малых экранах */
     }
-    .file-preview-item {
-        width: calc(50% - 5px); /* Два в ряд на мобильных */
+    .form-row-valuation-raised {
+        grid-template-columns: 1fr;
+    }
+    .timeline {
+        flex-wrap: wrap; /* Позволить этапам переноситься */
+        justify-content: center;
+    }
+    .timeline-step {
+        margin-bottom: 20px;
     }
 }
 
 @media (max-width: 768px) {
     .form-navigation-header {
         flex-direction: column;
-        align-items: flex-start;
+        gap: 15px;
+        padding: 0 20px;
     }
-    .back-button {
-        margin-bottom: 15px;
+    .form-section {
+        padding: 20px;
     }
-    .form-main-title {
-        font-size: 1.8em;
+    .logo-upload-group .logo-upload-label {
+        width: 200px;
+        height: 200px;
     }
-    .timeline {
-        flex-direction: column; /* Этапы друг под другом */
-        gap: 10px;
+    .timeline::before, .timeline::after {
+        display: none; /* Скрыть линию на очень маленьких экранах */
     }
-    .timeline-step {
+    .btn-select-current, .custom-file-upload-button, .submit-button {
         width: 100%;
-        flex-direction: row; /* Номер и текст в строку */
-        justify-content: flex-start;
-        gap: 10px;
+        padding-left: 15px;
+        padding-right: 15px;
+        box-sizing: border-box;
     }
-    .step-number {
-        margin-bottom: 0;
+}
+
+/* Адаптивность для этого блока */
+@media (max-width: 1024px) { /* Например, для планшетов */
+    .media-and-finance-grid {
+        grid-template-columns: repeat(2, 1fr); /* Две колонки */
     }
-     .file-preview-item {
-        width: 100%; /* Один в ряд на маленьких экранах */
+    .presentation-finance-group {
+        grid-column: 1 / -1; /* Третья колонка (финансы) занимает всю ширину */
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
     }
-    .form-row-valuation-raised {
+}
+
+@media (max-width: 768px) { /* Для мобильных */
+    .media-and-finance-grid {
+        grid-template-columns: 1fr; /* Одна колонка */
+    }
+    .presentation-finance-group {
         grid-template-columns: 1fr;
     }
-    .submit-button-container {
-        justify-content: center;
-    }
-    .submit-button {
-        width: 100%;
+    .presentation-finance-group .form-group .input-wrapper .form-control,
+    .presentation-finance-group .form-group .input-wrapper.valuation-input .form-control {
+        max-width: 100%; /* На всю ширину */
     }
 }
 
-/* Specific styles from previous version if needed, for example, for error messages */
-.form-group .error-message {
-    font-size: 0.85em;
-    color: #e74c3c; /* Bootstrap-like error color */
-    display: block; /* Ensure it takes its own line */
-    margin-top: .25rem;
+/* --- Секция Документы (Пруфы) --- */
+.form-section .form-group.upload-box.full-width {
+    /* Стили для контейнера загрузки документов */
 }
 
-/* Стили для полей с множественным выбором, если они не стилизованы через widget_tweaks */
-.form-group select[multiple] {
-    min-height: 100px; /* Дать больше места для множественного выбора */
+.form-group.upload-box.full-width > label {
+    /* Стили для заголовка "*Документы" */
+    font-size: 20px;
+    font-family: Unbounded;
+    font-weight: 400;
+    line-height: 18px;
+    color: white;
 }
 
-/* Дополнительные стили для виджетов, если `add_class` не покрывает все */
-input[type="color"].color-picker { /* Если вдруг понадобится */
-    height: 40px;
-    padding: 5px;
+.form-group.upload-box.full-width .custom-file-upload-button {
+    /* Стили кнопки "Выбрать файл" уже должны быть */
 }
 
-/* Общие стили для всех инпутов и текстовых полей */
-input.form-control,
-textarea.form-control,
-select.form-control {
-    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+.form-group.upload-box.full-width .small-text {
+    /* Стили подсказки о формате */
+    font-size: 12px;
+    font-family: Unbounded;
+    font-weight: 300;
+    letter-spacing: 0.12px;
+    color: white;
+    text-align: left;
 }
 
-/* Стили для кастомных чекбоксов и радио, если Django рендерит их без BS классов */
-.form-check-input {
-    /* Можно добавить стили, если стандартные не подходят */
-}
-.form-check-label {
-    /* Можно добавить стили, если стандартные не подходят */
+.form-group.upload-box.full-width .file-preview-area {
+    /* Стили для области превью */
 }
 
-/* Убираем outline у кнопок при фокусе, если это соответствует дизайну */
-button:focus,
-.btn:focus {
-    outline: none;
-    box-shadow: none; /* Если используется Bootstrap или аналогичный фреймворк */
+.file-preview-item {
+    /* Стили для одного элемента превью, включая drag handle, картинку/иконку, имя, кнопки */
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 10px; /* Отступ между превьюшками */
+}
+
+.file-preview-item .drag-handle-mock {
+    width: 9px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px;
+    align-content: flex-start;
+    cursor: grab;
+}
+.file-preview-item .drag-handle-mock span {
+    width: 3px;
+    height: 3px;
+    background: #D9D9D9;
+    border-radius: 50%;
+}
+
+.file-preview-item img.preview-image,
+.file-preview-item img.file-icon {
+    width: 72px;
+    height: 72px;
+    border-radius: 5px;
+    object-fit: cover;
+}
+
+.file-preview-item p.file-name {
+    flex-grow: 1;
+    color: white;
+    font-size: 12px;
+    font-family: Unbounded;
+    font-weight: 300;
+    letter-spacing: 0.12px;
+    word-wrap: break-word;
+    margin: 0;
+}
+
+.file-preview-item .file-actions {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.file-preview-item .file-actions button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex; /* Чтобы иконки были нормально видны */
+    align-items: center;
+    justify-content: center;
+}
+.file-preview-item .file-actions img {
+    width: 15px;
+    height: 15px;
+    /* Можно добавить filter для смены цвета иконок */
+    filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(180deg) brightness(100%) contrast(100%);
+}
+
+
+/* --- Секция Согласия --- */
+.agreement-section-wrapper.content-section {
+    gap: 25px;
+}
+
+.agreement-section {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.agreement-section .section-title {
+    font-size: 20px;
+    font-family: Unbounded;
+    font-weight: 400;
+    line-height: 18px;
+    color: white;
+    margin-bottom: 0;
+    text-align: left;
+}
+
+.agreement-section .checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    margin-bottom: 0;
+}
+
+/* Скрываем стандартный чекбокс */
+.agreement-section .checkbox-group .form-check-input {
+    display: none;
+}
+
+.custom-checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    cursor: pointer;
+}
+
+.custom-checkbox-label .checkbox-icon {
+    width: 24px;
+    height: 24px;
+}
+
+/* Показываем нужную иконку в зависимости от состояния */
+.custom-checkbox-label .checked-icon {
+    display: none; /* Скрыта по умолчанию */
+}
+:checked + .custom-checkbox-label .default-icon {
+    display: none;
+}
+:checked + .custom-checkbox-label .checked-icon {
+    display: inline-block;
+    /* Синий цвет иконки и белая галочка (как в Figma) могут требовать отдельного SVG */
+    /* Или сложного CSS filter. Пример для синего фона: */
+    /* filter: invert(20%) sepia(90%) saturate(5000%) hue-rotate(190deg) brightness(90%) contrast(101%); */
+    /* Пока оставляем как есть, используя ту же иконку */
+}
+
+.custom-checkbox-label .checkbox-text {
+    color: white;
+    font-size: 16px;
+    font-family: Unbounded;
+    font-weight: 400;
+    line-height: 16px;
+}
+
+.tooltip-icon-wrapper {
+    display: flex;
+    align-items: center;
+    margin-left: 0;
+    position: relative; /* Для позиционирования тултипа */
+}
+
+.tooltip-icon {
+    width: 12px;
+    height: 12px;
+    background: #D9D9D9;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #1E1E1E; /* Цвет знака вопроса */
+    font-size: 8px;
+    font-family: 'Circe', sans-serif; /* Убедитесь, что шрифт Circe подключен */
+    font-weight: 700; /* Жирный знак вопроса */
+    cursor: pointer;
+    line-height: 12px;
+}
+
+/* Пример стилей для тултипа (появляется при наведении на ?) */
+.tooltip-content {
+    display: none;
+    position: absolute;
+    bottom: 100%; /* Позиционировать над иконкой */
+    left: 50%;
+    transform: translateX(-50%) translateY(-5px); /* Центрировать и небольшой отступ */
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 10;
+}
+.tooltip-icon-wrapper:hover .tooltip-content {
+    display: block;
+}
+
+
+/* --- Кнопка отправки --- */
+.submit-button-container {
+    text-align: center;
+    margin-top: 40px;
+    padding-bottom: 40px; /* Добавим отступ снизу */
+}
+
+.submit-button {
+    padding: 15px 40px;
+    background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    color: black;
+    font-size: 18px;
+    font-family: Unbounded;
+    font-weight: 500;
+    line-height: 20px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.1s ease;
+}
+.submit-button:disabled {
+    background: #777;
+    color: #bbb;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+.submit-button:hover:not(:disabled) {
+    background: linear-gradient(180deg, #f5e629 0%, #f0eec9 100%); /* Чуть темнее при наведении */
+}
+.submit-button:active:not(:disabled) {
+    transform: scale(0.98); /* Небольшое нажатие */
 }
