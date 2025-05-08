@@ -36,19 +36,17 @@
           <form method="post" class="status-form">
             {% csrf_token %}
             <select name="status" class="status-select" onchange="this.form.submit()">
-              <option value="approved" {% if startup.status == 'approved' %}selected{% endif %}>Активен</option>
+              <option value="approved" {% if startup.status == 'approved' %}selected{% endif %}>Approved</option>
               <option value="blocked" {% if startup.status == 'blocked' %}selected{% endif %}>Blocked</option>
               <option value="closed" {% if startup.status == 'closed' %}selected{% endif %}>Closed</option>
+              <option value="pending" {% if startup.status == 'pending' %}selected{% endif %}>Pending</option>
+              <option value="rejected" {% if startup.status == 'rejected' %}selected{% endif %}>Rejected</option>
             </select>
           </form>
         {% else %}
-          {% if startup.status == 'approved' %}
-            <div class="status-badge">Активен</div>
-          {% elif startup.status == 'blocked' %}
-            <div class="status-badge">Blocked</div>
-          {% elif startup.status == 'closed' %}
-            <div class="status-badge">Closed</div>
-          {% endif %}
+          <div class="status-badge status-{{ startup.status|default:'unknown' }}">
+             {{ startup.get_status_display|default:startup.status|capfirst }}
+          </div>
         {% endif %}
         
         <div class="startup-logo-container">
@@ -298,6 +296,38 @@
       </div> {# Конец tabbed-content-wrapper #}
     </div> {# Конец right-column #}
   </div> {# Конец top-section #}
+
+  {# --- КОНТЕЙНЕР ДЛЯ БЛОКА МОДЕРАТОРА --- #}
+  <div class="moderator-section-container my-4"> {# Добавлен общий контейнер и отступ #}
+      {% if user.is_authenticated and user.role.role_name == 'moderator' and startup.status == 'pending' %}
+        <div class="moderator-review-section card"> {# Убран my-4, так как он на контейнере #}
+          <div class="card-header">
+            <h4>Модерация стартапа</h4>
+          </div>
+          <div class="card-body">
+            <form method="post">
+              {% csrf_token %}
+              <div class="mb-3">
+                <label for="moderator_comment_area" class="form-label">Комментарий модератора:</label>
+                <textarea class="form-control" id="moderator_comment_area" name="moderator_comment" rows="3">{{ startup.moderator_comment|default:'' }}</textarea>
+              </div>
+              <button type="submit" name="action" value="approve" class="btn btn-success me-2">Одобрить</button>
+              <button type="submit" name="action" value="reject" class="btn btn-danger">Отклонить</button>
+            </form>
+          </div>
+        </div>
+      {% elif show_moderator_comment and startup.moderator_comment %} 
+        <div class="moderator-comment-display card bg-light"> {# Убран my-4 #}
+           <div class="card-header">
+             <h5>Комментарий модератора:</h5>
+           </div>
+           <div class="card-body">
+             <p class="card-text">{{ startup.moderator_comment }}</p>
+           </div>
+        </div>
+      {% endif %}
+  </div>
+  {# --- КОНЕЦ КОНТЕЙНЕРА ДЛЯ БЛОКА МОДЕРАТОРА --- #}
 
   <div id="comments-section">
     {# 1. Заголовок с иконкой #}
