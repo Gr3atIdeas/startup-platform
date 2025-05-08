@@ -297,13 +297,15 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     }
 
-    // --- Логика таймлайна ---
+    // --- Логика таймлайна (Обновлено) ---
     const timelineSteps = document.querySelectorAll('.timeline-step');
     const descriptionContainers = document.querySelectorAll('.timeline-description-container');
     const currentStepInput = document.getElementById('step_number');
     const setCurrentButtons = document.querySelectorAll('.btn-select-current');
+    const timelineProgressFilled = document.getElementById('timelineProgressFilled'); // Полоса прогресса
+    const totalSteps = 5; // Общее количество шагов
 
-    function selectStep(stepNumber) {
+    function selectStepDescription(stepNumber) {
         descriptionContainers.forEach(container => {
             container.classList.toggle('active', container.dataset.stepContent == stepNumber);
         });
@@ -313,31 +315,53 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function setCurrentStep(stepNumber) {
-        currentStepInput.value = stepNumber;
+        const currentStep = parseInt(stepNumber);
+        currentStepInput.value = currentStep;
+
+        // Обновление стилей кругов и иконок
         timelineSteps.forEach(step => {
             const stepNum = parseInt(step.dataset.step);
-            const stepCircle = step.querySelector('.step-number');
-            if (stepCircle) {
-                stepCircle.classList.toggle('active', stepNum <= stepNumber);
+            const stepWrapper = step.querySelector('.step-number-wrapper');
+            step.classList.remove('future-step', 'active-step-display'); // Сбрасываем классы
+            stepWrapper.classList.remove('active'); // Убираем активный фон
+
+            if (stepNum < currentStep) {
+                stepWrapper.classList.add('active'); // Пройденные этапы
+            } else if (stepNum === currentStep) {
+                stepWrapper.classList.add('active'); // Текущий этап
+                selectStepDescription(currentStep); // Показываем описание текущего этапа
+            } else {
+                step.classList.add('future-step'); // Будущие этапы
             }
         });
-        selectStep(stepNumber);
+
+        // Обновление полосы прогресса
+        let progressPercentage = 0;
+        if (currentStep > 1) {
+            // Прогресс рассчитывается как (текущий_шаг - 1) / (всего_шагов - 1)
+            // Чтобы на 1 шаге было 0%, на последнем 100%
+            progressPercentage = ((currentStep - 1) / (totalSteps - 1)) * 100;
+        }
+        if(timelineProgressFilled) {
+             timelineProgressFilled.style.width = `${progressPercentage}%`;
+        }
     }
 
     timelineSteps.forEach(step => {
         step.addEventListener('click', function() {
             const stepNum = this.dataset.step;
-            selectStep(stepNum);
+            selectStepDescription(stepNum); // Только показываем описание при клике на круг
         });
     });
 
     setCurrentButtons.forEach(button => {
         button.addEventListener('click', function() {
             const stepNum = this.dataset.stepTarget;
-            setCurrentStep(stepNum);
+            setCurrentStep(stepNum); // Устанавливаем как текущий этап
         });
     });
     
+    // Инициализация таймлайна при загрузке (устанавливаем шаг 1)
     if (timelineSteps.length > 0) {
         setCurrentStep(1);
     }
@@ -348,17 +372,16 @@ document.addEventListener('DOMContentLoaded', function() {
         const errorParentGroup = firstServerSideError.closest('.form-group, .upload-box, .agreement-section');
         if (errorParentGroup) {
             errorParentGroup.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            const inputField = errorParentGroup.querySelector('.form-control, .form-control-file, input[type="checkbox"]');
+            const inputField = errorParentGroup.querySelector('.form-control, .form-control-file, input[type="checkbox"], .custom-checkbox-label');
             if (inputField && inputField.type !== 'checkbox') {
                 inputField.classList.add('input-error');
-            } else if (inputField && inputField.type === 'checkbox' && errorParentGroup.classList.contains('checkbox-group')) {
-                 errorParentGroup.classList.add('input-error');
+            } else if (inputField && (inputField.type === 'checkbox' || inputField.classList.contains('custom-checkbox-label')) && errorParentGroup.classList.contains('checkbox-group')) {
+                 errorParentGroup.classList.add('input-error'); // Подсветка группы кастомного чекбокса
             }
         } else {
             firstServerSideError.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
     }
-    // --- КОНЕЦ: Прокрутка к первой ошибке Django ---
 
     // --- ОБНОВЛЕННАЯ Обработка отправки формы --- 
     const startupForm = document.getElementById('startupForm');
@@ -367,11 +390,13 @@ document.addEventListener('DOMContentLoaded', function() {
             let firstInvalidElement = null;
             let validationPassed = true;
 
+            // Сброс предыдущих ошибок
             document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
             document.querySelectorAll('.custom-validation-error').forEach(el => el.remove());
             document.querySelectorAll('.file-upload-area').forEach(el => el.classList.remove('input-error'));
+            document.querySelectorAll('.upload-box .custom-file-upload-button').forEach(el => el.classList.remove('input-error'));
             document.querySelectorAll('.checkbox-group').forEach(el => el.classList.remove('input-error'));
-            document.querySelectorAll('.timeline-step .step-number').forEach(el => el.classList.remove('error-step'));
+            document.querySelectorAll('.timeline-step .step-number-wrapper').forEach(el => el.classList.remove('error-step'));
 
             // 1. Валидация описаний этапов таймлайна
             const timelineTextareas = startupForm.querySelectorAll('textarea.timeline-description-textarea');
@@ -381,7 +406,7 @@ document.addEventListener('DOMContentLoaded', function() {
             for (let i = 0; i < timelineTextareas.length; i++) {
                 const textarea = timelineTextareas[i];
                 const stepNumber = textarea.name.split('_').pop();
-                const correspondingStepVisual = document.querySelector(`.timeline-step[data-step="${stepNumber}"] .step-number`);
+                const correspondingStepVisual = document.querySelector(`.timeline-step[data-step="${stepNumber}"] .step-number-wrapper`);
 
                 if (textarea.hasAttribute('required') && !textarea.value.trim()) {
                     validationPassed = false;
@@ -393,68 +418,81 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     if (!timelineErrorDisplayed) {
                         const timelineSection = document.getElementById('timeline');
-                        if (timelineSection && !timelineSection.parentElement.querySelector('.custom-validation-error.timeline-general-error')) {
+                        const timelineWrapper = timelineSection?.closest('.timeline-section-wrapper'); // Ищем обертку
+                        if (timelineWrapper && !timelineWrapper.querySelector('.custom-validation-error.timeline-general-error')) {
                             const errorMsg = document.createElement('p');
                             errorMsg.className = 'error-message custom-validation-error timeline-general-error';
                             errorMsg.textContent = 'Пожалуйста, заполните описания для всех пяти этапов таймлайна.';
-                            timelineSection.parentElement.insertBefore(errorMsg, timelineSection.nextElementSibling);
+                             // Вставляем после h3
+                             const titleElement = timelineWrapper.querySelector('h3.section-title');
+                             if (titleElement) {
+                                 titleElement.parentNode.insertBefore(errorMsg, titleElement.nextSibling);
+                             } else {
+                                 timelineWrapper.insertBefore(errorMsg, timelineWrapper.firstChild);
+                             }
                             timelineErrorDisplayed = true;
-                            if (!firstInvalidElement) firstInvalidElement = timelineSection;
+                            if (!firstInvalidElement) firstInvalidElement = timelineWrapper; // Скролл к обертке
                         }
                     }
                 }
             }
             
             if (firstTimelineErrorTextarea) {
-                const stepNumberToShow = firstTimelineErrorTextarea.name.split('_').pop();
-                selectStep(stepNumberToShow);
+                const stepNumberToShow = firstTimelineErrorTextarea.closest('.timeline-description-container').dataset.stepContent;
+                selectStepDescription(stepNumberToShow);
                 if (!firstInvalidElement) firstInvalidElement = firstTimelineErrorTextarea;
             }
 
             // 2. Валидация поля "Пруфы"
-            const proofsInput = document.getElementById('{{ form.proofs.id_for_label }}');
-            const proofsLabel = document.querySelector('label[for="{{ form.proofs.id_for_label }}"]');
-            const proofsDropArea = document.getElementById('proofsDropArea');
+            const proofsInput = document.getElementById('id_proofs_input');
+            const proofsLabel = document.querySelector('label[for="id_proofs_input"]');
+            const proofsUploadButton = proofsInput?.closest('.upload-box')?.querySelector('.custom-file-upload-button');
             if (proofsInput && proofsLabel && proofsLabel.textContent.includes('*')) { 
                 if (proofsInput.files.length === 0) {
                     validationPassed = false;
-                    if(proofsDropArea) proofsDropArea.classList.add('input-error');
+                    if(proofsUploadButton) proofsUploadButton.classList.add('input-error');
                     else proofsInput.classList.add('input-error');
                     
-                    if (!firstInvalidElement) firstInvalidElement = proofsDropArea || proofsInput;
-                    if (proofsDropArea && !proofsDropArea.parentElement.querySelector('.custom-validation-error.proofs-error')) {
+                    if (!firstInvalidElement) firstInvalidElement = proofsUploadButton || proofsInput;
+                    
+                    const proofsBox = proofsInput.closest('.upload-box');
+                    if (proofsBox && !proofsBox.querySelector('.custom-validation-error.proofs-error')) {
                         const errorMsg = document.createElement('p');
                         errorMsg.className = 'error-message custom-validation-error proofs-error';
                         errorMsg.textContent = 'Пожалуйста, загрузите подтверждающие документы (Пруфы).';
-                        proofsDropArea.parentElement.insertBefore(errorMsg, proofsDropArea.nextSibling);
+                        // Вставляем после small-text
+                        const smallText = proofsBox.querySelector('.small-text');
+                        if (smallText) {
+                             smallText.parentNode.insertBefore(errorMsg, smallText.nextSibling);
+                        } else {
+                            proofsBox.appendChild(errorMsg);
+                        }
                     }
                 }
             }
             
             // 3. Валидация чекбокса "Согласие с правилами"
-            const agreeRulesCheckbox = document.getElementById('{{ form.agree_rules.id_for_label }}');
+            const agreeRulesCheckbox = document.getElementById('id_agree_rules');
             if (agreeRulesCheckbox && !agreeRulesCheckbox.checked) {
                 validationPassed = false;
                 const parentDiv = agreeRulesCheckbox.closest('.checkbox-group');
                 if(parentDiv) parentDiv.classList.add('input-error');
-                else agreeRulesCheckbox.classList.add('input-error');
 
                 if (!firstInvalidElement) firstInvalidElement = parentDiv || agreeRulesCheckbox;
                 if (parentDiv && !parentDiv.querySelector('.custom-validation-error.agree-rules-error')) {
                     const errorMsg = document.createElement('p');
                     errorMsg.className = 'error-message custom-validation-error agree-rules-error';
                     errorMsg.textContent = 'Необходимо подтвердить согласие с правилами.';
-                    parentDiv.appendChild(errorMsg);
+                    parentDiv.appendChild(errorMsg); 
                 }
             }
 
             // 4. Валидация чекбокса "Согласие на обработку данных"
-            const agreeDataProcessingCheckbox = document.getElementById('{{ form.agree_data_processing.id_for_label }}');
+            const agreeDataProcessingCheckbox = document.getElementById('id_agree_data_processing');
             if (agreeDataProcessingCheckbox && !agreeDataProcessingCheckbox.checked) {
                 validationPassed = false;
                 const parentDiv = agreeDataProcessingCheckbox.closest('.checkbox-group');
                 if(parentDiv) parentDiv.classList.add('input-error');
-                else agreeDataProcessingCheckbox.classList.add('input-error');
                 
                 if (!firstInvalidElement) firstInvalidElement = parentDiv || agreeDataProcessingCheckbox;
                 if (parentDiv && !parentDiv.querySelector('.custom-validation-error.agree-data-error')) {
@@ -465,6 +503,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
 
+            // Логика предотвращения отправки и скролла
             const submitButton = this.querySelector('button[type="submit"]');
             if (!validationPassed) {
                 e.preventDefault(); 
@@ -473,19 +512,27 @@ document.addEventListener('DOMContentLoaded', function() {
                     submitButton.textContent = 'Отправить на модерацию';
                 }
                 if (firstInvalidElement) {
+                    // Проверяем, является ли первый невалидный элемент текстовым полем таймлайна
                     if (firstInvalidElement.classList && firstInvalidElement.classList.contains('timeline-description-textarea')){
                         const container = firstInvalidElement.closest('.timeline-description-container');
+                        // Если контейнер активен (виден), скроллим к полю
                         if (container && container.classList.contains('active')){
                              firstInvalidElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        } else if (document.getElementById('timeline')) {
-                            document.getElementById('timeline').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        } else { // Иначе скроллим к началу секции таймлайна
+                           const timelineWrapper = document.querySelector('.timeline-section-wrapper');
+                           if (timelineWrapper) {
+                               timelineWrapper.scrollIntoView({ behavior: 'smooth', block: 'start' }); // Скролл к началу секции
+                           }
                         }
-                    } else {
+                    } else if (firstInvalidElement.closest('.timeline-section-wrapper')) { // Если ошибка в заголовке таймлайна
+                         firstInvalidElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    } else { // Для всех остальных ошибок
                         firstInvalidElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     }
                 }
                 return false;
             } else {
+                // Блокировка кнопки при успешной валидации
                 if (submitButton) {
                     if (submitButton.disabled) { 
                          e.preventDefault();
@@ -498,100 +545,203 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // --- Drag & Drop для файлов ---
+    // --- Drag & Drop для файлов (Обновлено для документов) ---
     function setupDragAndDrop(inputId, dropAreaId, previewAreaId, maxFiles = 1, allowedTypes = ['image/jpeg', 'image/png', 'image/gif']) {
         const fileInput = document.getElementById(inputId);
-        const dropArea = document.getElementById(dropAreaId);
+        // const dropArea = document.getElementById(dropAreaId); // Drop area больше не используется напрямую
         const previewArea = document.getElementById(previewAreaId);
+        // Кнопка "Выбрать файл" теперь основной триггер
+        const uploadButton = document.querySelector(`.custom-file-upload-button[onclick*="${inputId}"]`);
 
-        if (!fileInput || !dropArea || !previewArea) return;
+        if (!fileInput || !previewArea || !uploadButton) {
+             console.warn(`Drag and drop setup failed for input: ${inputId}`);
+             return;
+         }
 
-        // Клик по области для выбора файлов
-        dropArea.addEventListener('click', () => fileInput.click());
+        // Клик по кастомной кнопке для выбора файлов
+        // uploadButton.addEventListener('click', () => fileInput.click()); // Это уже встроено в onclick
 
-        dropArea.addEventListener('dragover', (event) => {
-            event.preventDefault();
-            dropArea.classList.add('dragover');
-        });
-
-        dropArea.addEventListener('dragleave', () => {
-            dropArea.classList.remove('dragover');
-        });
-
-        dropArea.addEventListener('drop', (event) => {
-            event.preventDefault();
-            dropArea.classList.remove('dragover');
-            const files = event.dataTransfer.files;
-            handleFiles(files, fileInput, previewArea, maxFiles, allowedTypes);
-        });
-
+        // Обработчик изменения в инпуте
         fileInput.addEventListener('change', (event) => {
             const files = event.target.files;
-            handleFiles(files, fileInput, previewArea, maxFiles, allowedTypes);
+            handleFiles(files, fileInput, previewArea, maxFiles, allowedTypes, inputId);
         });
+
+        // Опционально: оставить Drag & Drop на весь upload-box
+        const uploadBox = fileInput.closest('.upload-box');
+        if (uploadBox) {
+            uploadBox.addEventListener('dragover', (event) => {
+                event.preventDefault();
+                uploadBox.classList.add('dragover'); // Стиль для подсветки
+            });
+            uploadBox.addEventListener('dragleave', () => {
+                uploadBox.classList.remove('dragover');
+            });
+            uploadBox.addEventListener('drop', (event) => {
+                event.preventDefault();
+                uploadBox.classList.remove('dragover');
+                const files = event.dataTransfer.files;
+                handleFiles(files, fileInput, previewArea, maxFiles, allowedTypes, inputId);
+            });
+        }
     }
 
-    function handleFiles(files, fileInput, previewArea, maxFiles, allowedTypes) {
-        // Для инпутов, которые не поддерживают multiple, очищаем старые файлы,
-        // если новый файл выбран (HTML5 file input делает это сам для single file input)
+    function handleFiles(files, fileInput, previewArea, maxFiles, allowedTypes, inputId) {
         if (!fileInput.multiple) {
-             previewArea.innerHTML = ''; // Очищаем превью для single file
+             previewArea.innerHTML = ''; 
         }
         
         let currentFiles = Array.from(fileInput.files);
         let newFilesList = new DataTransfer();
 
-        // Добавляем существующие файлы, если input multiple
         if (fileInput.multiple) {
             currentFiles.forEach(f => newFilesList.items.add(f));
         }
 
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
+            
+            // Проверка количества файлов для multiple
             if (fileInput.multiple && newFilesList.items.length >= maxFiles) {
                 alert(`Можно загрузить не более ${maxFiles} файлов.`);
                 break;
             }
-            if (!allowedTypes.includes(file.type) && allowedTypes.length > 0 && !(allowedTypes.includes('application/pdf') && file.name.endsWith('.pdf')) && !(allowedTypes.includes('application/msword') && file.name.endsWith('.doc')) && !(allowedTypes.includes('application/vnd.openxmlformats-officedocument.wordprocessingml.document') && file.name.endsWith('.docx')) && !(allowedTypes.includes('application/vnd.ms-excel') && file.name.endsWith('.xls')) && !(allowedTypes.includes('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') && file.name.endsWith('.xlsx'))) {
-                 alert(`Файл ${file.name} имеет неподдерживаемый тип. Разрешены: ${allowedTypes.join(', ')}`);
+
+            // Проверка типа файла
+            const fileExtension = file.name.split('.').pop().toLowerCase();
+            const fileType = file.type;
+            let isAllowed = false;
+            if (allowedTypes.includes(fileType) && fileType !== '') {
+                isAllowed = true;
+            } else {
+                // Дополнительная проверка по расширению для офисных форматов
+                const officeTypes = {
+                    'pdf': ['application/pdf'],
+                    'doc': ['application/msword'],
+                    'docx': ['application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
+                    'xls': ['application/vnd.ms-excel'],
+                    'xlsx': ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']
+                };
+                 for (const ext in officeTypes) {
+                     if (fileExtension === ext && allowedTypes.some(allowed => officeTypes[ext].includes(allowed))) {
+                         isAllowed = true;
+                         break;
+                     }
+                 }
+            }
+
+            if (!isAllowed) {
+                 alert(`Файл ${file.name} имеет неподдерживаемый тип.`);
+                 console.warn(`Skipped file ${file.name} with type ${file.type} and extension ${fileExtension}. Allowed: ${allowedTypes.join(', ')}`);
                  continue;
             }
 
-            if (!fileInput.multiple) { // Для single file input, заменяем файл
-                newFilesList = new DataTransfer(); // Очищаем, чтобы добавить только один
+            if (!fileInput.multiple) {
+                newFilesList = new DataTransfer();
                 previewArea.innerHTML = ''; 
             }
+
+            // Проверка на дубликаты перед добавлением
+             let isDuplicate = false;
+             for (let j = 0; j < newFilesList.items.length; j++) {
+                 if (newFilesList.items[j].getAsFile().name === file.name) {
+                     isDuplicate = true;
+                     break;
+                 }
+             }
+             if (isDuplicate) continue;
+
             newFilesList.items.add(file);
             
+            // Генерация превью
             const reader = new FileReader();
             reader.onload = (e) => {
-                let previewItem;
+                let previewItemHTML = '';
+                // Обновленная структура превью с drag handle и кнопками
+                const dragHandleHTML = `<div class="drag-handle-mock"><span></span><span></span><span></span><span></span><span></span><span></span></div>`;
+                const actionsHTML = `
+                    <div class="file-actions">
+                         <button type="button" class="edit-file-btn" data-filename="${file.name}" title="Редактировать (пока не реализовано)" style="display:none;"><img src="{% static 'accounts/images/icons/edit_icon.svg' %}" alt="Edit"></button>
+                         <button type="button" class="remove-file-btn" data-filename="${file.name}" title="Удалить"><img src="{% static 'accounts/images/icons/delete_icon.svg' %}" alt="Delete"></button>
+                     </div>`;
+
                 if (file.type.startsWith('image/')) {
-                    previewItem = `<div class="file-preview-item"><img src="${e.target.result}" alt="${file.name}"><p>${file.name}</p><button type="button" class="remove-file-btn" data-filename="${file.name}">&times;</button></div>`;
+                    previewItemHTML = `
+                        <div class="file-preview-item" data-filename="${file.name}">
+                            ${dragHandleHTML}
+                            <img src="${e.target.result}" alt="${file.name}" class="preview-image">
+                            <p class="file-name">${file.name}</p>
+                            ${actionsHTML}
+                        </div>`;
                 } else if (file.type.startsWith('video/')) {
-                     previewItem = `<div class="file-preview-item"><video controls src="${e.target.result}"></video><p>${file.name}</p><button type="button" class="remove-file-btn" data-filename="${file.name}">&times;</button></div>`;
+                     previewItemHTML = `
+                         <div class="file-preview-item" data-filename="${file.name}">
+                             ${dragHandleHTML}
+                             <video controls src="${e.target.result}" class="preview-image"></video>
+                             <p class="file-name">${file.name}</p>
+                             ${actionsHTML}
+                         </div>`;
                 } else { // Для других типов файлов (PDF, DOC и т.д.)
-                    previewItem = `<div class="file-preview-item"><img src="{% static 'accounts/images/icons/file_icon.svg' %}" alt="file icon" class="file-icon"><p>${file.name}</p><button type="button" class="remove-file-btn" data-filename="${file.name}">&times;</button></div>`;
+                    previewItemHTML = `
+                        <div class="file-preview-item" data-filename="${file.name}">
+                            ${dragHandleHTML}
+                            <img src="{% static 'accounts/images/icons/file_icon.svg' %}" alt="file icon" class="file-icon preview-image">
+                            <p class="file-name">${file.name}</p>
+                            ${actionsHTML}
+                        </div>`;
                 }
+                
                 if (!fileInput.multiple) {
-                    previewArea.innerHTML = previewItem; // Заменяем превью для single file
+                    previewArea.innerHTML = previewItemHTML; 
                 } else {
-                    previewArea.insertAdjacentHTML('beforeend', previewItem);
+                    // Проверяем, нет ли уже такого файла в превью
+                    if (!previewArea.querySelector(`.file-preview-item[data-filename="${file.name}"]`)) {
+                         previewArea.insertAdjacentHTML('beforeend', previewItemHTML);
+                    }
                 }
             };
-            reader.readAsDataURL(file);
+             if (file.type.startsWith('image/') || file.type.startsWith('video/')) {
+                 reader.readAsDataURL(file); // Для картинок/видео читаем Data URL
+             } else {
+                  // Для документов и других файлов Data URL не нужен, просто показываем иконку
+                   let previewItemHTML = '';
+                    const dragHandleHTML = `<div class="drag-handle-mock"><span></span><span></span><span></span><span></span><span></span><span></span></div>`;
+                    const actionsHTML = `
+                        <div class="file-actions">
+                             <button type="button" class="edit-file-btn" data-filename="${file.name}" title="Редактировать (пока не реализовано)" style="display:none;"><img src="{% static 'accounts/images/icons/edit_icon.svg' %}" alt="Edit"></button>
+                             <button type="button" class="remove-file-btn" data-filename="${file.name}" title="Удалить"><img src="{% static 'accounts/images/icons/delete_icon.svg' %}" alt="Delete"></button>
+                         </div>`;
+                    previewItemHTML = `
+                        <div class="file-preview-item" data-filename="${file.name}">
+                            ${dragHandleHTML}
+                            <img src="{% static 'accounts/images/icons/file_icon.svg' %}" alt="file icon" class="file-icon preview-image">
+                            <p class="file-name">${file.name}</p>
+                            ${actionsHTML}
+                        </div>`;
+
+                    if (!fileInput.multiple) {
+                        previewArea.innerHTML = previewItemHTML;
+                    } else {
+                         if (!previewArea.querySelector(`.file-preview-item[data-filename="${file.name}"]`)) {
+                            previewArea.insertAdjacentHTML('beforeend', previewItemHTML);
+                         }
+                    }
+             }
         }
-        fileInput.files = newFilesList.files; // Обновляем файлы в инпуте
+        fileInput.files = newFilesList.files;
     }
     
-    // Удаление файла из превью и из fileInput.files
+    // Удаление файла из превью и из fileInput.files (Обновлено)
     document.addEventListener('click', function(event) {
-        if (event.target.classList.contains('remove-file-btn')) {
-            const fileNameToRemove = event.target.dataset.filename;
-            const previewItem = event.target.closest('.file-preview-item');
+        const removeButton = event.target.closest('.remove-file-btn');
+        if (removeButton) {
+            const fileNameToRemove = removeButton.dataset.filename;
+            const previewItem = removeButton.closest('.file-preview-item');
             const previewArea = previewItem.parentElement;
-            const fileInputId = previewArea.id.replace('Preview', ''); // e.g. 'creatives' from 'creativesPreview'
-            const fileInput = document.querySelector(`input[name="${fileInputId}"]`);
+            // Определяем связанный input по ID previewArea (id="creativesPreview" -> name="creatives")
+            const inputName = previewArea.id.replace('Preview', ''); 
+            // Находим input по ID, которое должно быть равно form.<name>.id_for_label, но тут проще по name
+             const fileInput = document.querySelector(`input[type="file"][name="${inputName}"]`);
 
             if (fileInput) {
                 const dt = new DataTransfer();
@@ -607,11 +757,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    setupDragAndDrop('{{ form.creatives.id_for_label }}', 'creativesDropArea', 'creativesPreview', 3, ['image/jpeg', 'image/png', 'image/gif']);
-    setupDragAndDrop('{{ form.video.id_for_label }}', 'videoDropArea', 'videoPreview', 1, ['video/mp4', 'video/quicktime', 'video/x-msvideo']); // 'video/quicktime' for .mov
-    setupDragAndDrop('{{ form.proofs.id_for_label }}', 'proofsDropArea', 'proofsPreview', 3, ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']);
+    // Настройка Drag & Drop для всех полей
+    setupDragAndDrop('{{ form.creatives.id_for_label }}'.replace('id_',''), 'creativesDropArea', 'creativesPreview', 3, ['image/jpeg', 'image/png', 'image/gif']);
+    setupDragAndDrop('{{ form.video.id_for_label }}'.replace('id_',''), 'videoDropArea', 'videoPreview', 1, ['video/mp4', 'video/quicktime', 'video/x-msvideo', 'video/x-matroska']); // Добавлены типы
+    setupDragAndDrop('{{ form.proofs.id_for_label }}'.replace('id_',''), 'proofsDropArea', 'proofsPreview', 3, ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']);
 
-    // --- Logic for custom checkboxes ---
+
+    // --- Logic for custom checkboxes (Обновлено) ---
     function setupCustomCheckboxes() {
         document.querySelectorAll('.custom-checkbox-label').forEach(label => {
             const inputId = label.getAttribute('for');
@@ -622,17 +774,14 @@ document.addEventListener('DOMContentLoaded', function() {
             if (input && defaultIcon && checkedIcon) {
                 const updateIcons = () => {
                     if (input.checked) {
-                        // В Figma обе иконки одинаковые, но одна синяя с белой галочкой.
-                        // Пока используем одну и ту же SVG и меняем цвет через CSS или filter.
-                        // Или можно загрузить вторую SVG, если она есть.
                         defaultIcon.style.display = 'none';
                         checkedIcon.style.display = 'inline-block';
-                        // Пример смены цвета через filter (нужно будет настроить):
-                         checkedIcon.style.filter = 'invert(30%) sepia(80%) saturate(2500%) hue-rotate(190deg) brightness(90%) contrast(100%)';
+                        // Применяем синий цвет через filter (подберите значения точнее при необходимости)
+                         checkedIcon.style.filter = 'invert(30%) sepia(80%) saturate(2500%) hue-rotate(190deg) brightness(90%) contrast(100%)'; 
                     } else {
                         defaultIcon.style.display = 'inline-block';
                         checkedIcon.style.display = 'none';
-                        checkedIcon.style.filter = 'none'; // Сбросить фильтр
+                        checkedIcon.style.filter = 'none'; // Сбрасываем фильтр
                     }
                 };
 
@@ -641,18 +790,25 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 // Update on change
                 input.addEventListener('change', updateIcons);
-
-                 // Update when label is clicked (which toggles the input)
-                label.addEventListener('click', () => {
-                    // Timeout to allow the input state to update before reading it
-                    setTimeout(updateIcons, 0);
-                });
+                 // Update when label is clicked (which toggles the input) - убрано, т.к. for работает
             }
         });
     }
-
-    // Call the setup function after DOM content is loaded
     setupCustomCheckboxes();
+
+    // --- Spin buttons for Valuation --- (Добавлено)
+    const valuationInput = document.querySelector('.valuation-input input[type="number"]');
+    const spinUp = document.querySelector('.valuation-spin-buttons .spin-up');
+    const spinDown = document.querySelector('.valuation-spin-buttons .spin-down');
+
+    if (valuationInput && spinUp && spinDown) {
+        spinUp.addEventListener('click', () => {
+            valuationInput.stepUp();
+        });
+        spinDown.addEventListener('click', () => {
+            valuationInput.stepDown();
+        });
+    }
 
 });
 </script>

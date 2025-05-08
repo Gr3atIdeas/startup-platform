@@ -51,7 +51,7 @@ body {
     border: none;
     backdrop-filter: none;
     padding: 0;
-    margin-bottom: 50px; /* Отступ от верхнего блока до нового контейнера */
+    margin-bottom: 30px; /* Уменьшим отступ, если основной контент близко */
 }
 
 .form-top-grid {
@@ -115,17 +115,18 @@ body {
 
 .investment-type-card {
     border-radius: 10px;
-    border: 2px solid #353945;
-    background-image: url('../images/creat_startup/Frame 992.svg'); /* Пример, если фон изображение */
-    background-size: cover;
-    background-position: center;
+    border: 1px solid rgba(255, 255, 255, 0.36); /* Как у основного контейнера */
+    /* background-image: url('../images/creat_startup/Frame 992.svg'); */ /* Убираем SVG фон */
+    background-color: rgba(255, 255, 255, 0.07); /* Фон как у основного контейнера */
+    backdrop-filter: blur(10px); /* Размытие как у основного контейнера */
     padding: 25px 21px;
     display: flex;
     flex-direction: column;
-    align-items: center; /* Центрирование контента по макету */
-    gap: 20px; /* Отступ между элементами в карточке */
-    height: 288px; /* Высота как у лого */
+    align-items: center;
+    gap: 20px;
+    height: 288px;
     box-sizing: border-box;
+    box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.25); /* Тень как у основного контейнера */
 }
 
 .micro-investment-group {
@@ -501,9 +502,11 @@ h3.section-title {
 
 .timeline-progress-container {
     position: relative;
-    width: 100%;
-    height: 11px; /* Высота линии */
-    margin-bottom: 20px; /* Отступ от линии до кругов */
+    width: calc(100% - 122px); /* Ширина линии = 100% минус ширина одного круга (по бокам половинки) */
+    margin: 0 auto; /* Центрируем линию */
+    height: 4px; /* Делаем линию тоньше */
+    margin-bottom: 20px;
+    top: 59px; /* Позиционируем вертикально по центру кругов (122px / 2 - height/2) */
 }
 
 .timeline-progress-line {
@@ -530,10 +533,10 @@ h3.section-title {
 .timeline {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
-    padding: 0 10px; /* Небольшие отступы по краям */
+    align-items: center;
+    padding: 0; /* Убираем лишние отступы */
     position: relative; /* Чтобы круги были над линией */
-    margin-top: -66px; /* Поднять круги, чтобы центр был на линии (122/2 + 5 отступа) */
+    margin-top: 0; /* Убираем отрицательный отступ, линия теперь сама позиционируется */
     z-index: 3;
 }
 
@@ -557,7 +560,7 @@ h3.section-title {
     position: relative;
     background-size: cover; /* Для градиентов */
     background-position: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease; /* Добавляем transition для фона */
 }
 
 /* Градиенты и иконки для каждого этапа */
@@ -594,6 +597,15 @@ h3.section-title {
 .timeline-step .step-number-wrapper.error-step {
     border: 3px solid #FF0000 !important;
     box-shadow: 0 0 10px rgba(255, 0, 0, 0.7) !important;
+}
+
+/* Стили для неактивных/будущих этапов */
+.timeline-step.future-step .step-number-wrapper {
+    background: black; /* Черный фон */
+}
+
+.timeline-step.future-step .step-icon {
+    filter: grayscale(100%); /* Обесцвечиваем иконку */
 }
 
 #step-descriptions {
@@ -691,6 +703,7 @@ h3.section-title {
     display: flex;
     flex-direction: column;
     gap: 15px; /* Отступ между заголовком и чекбоксами */
+    align-items: flex-start; /* Выравниваем все чекбоксы по левому краю */
 }
 
 .agreement-section .section-title {
@@ -708,6 +721,7 @@ h3.section-title {
     align-items: center;
     gap: 11px;
     margin-bottom: 0; /* Управляется gap родителя */
+    width: fit-content; /* Чтобы группа не растягивалась */
 }
 
 .agreement-section .checkbox-group .form-check-input {
@@ -755,280 +769,6 @@ h3.section-title {
     font-weight: 400;
     cursor: pointer;
     line-height: 12px; /* Для центрирования вопросика */
-}
-
-/* Стили для кнопки отправки уже есть (.submit-button, .submit-button-container) */
-
-/* Адаптивность - базовые примеры */
-@media (max-width: 1200px) {
-    .form-top-grid {
-        flex-direction: column;
-        align-items: center; /* Центрировать лого и блок инвестиций на малых экранах */
-    }
-    .form-top-left {
-        flex-direction: column;
-        align-items: center;
-        width: 100%;
-    }
-    .form-fields-left {
-        width: 100%;
-        max-width: 400px; /* Ограничить ширину полей */
-    }
-    .form-top-right {
-        width: 100%;
-        max-width: 531px; /* Ограничить ширину блока инвестиций */
-    }
-    .upload-section-grid {
-        grid-template-columns: 1fr; /* Один столбец на малых экранах */
-    }
-    .form-row-valuation-raised {
-        grid-template-columns: 1fr;
-    }
-    .timeline {
-        flex-wrap: wrap; /* Позволить этапам переноситься */
-        justify-content: center;
-    }
-    .timeline-step {
-        margin-bottom: 20px;
-    }
-}
-
-@media (max-width: 768px) {
-    .form-navigation-header {
-        flex-direction: column;
-        gap: 15px;
-        padding: 0 20px;
-    }
-    .form-section {
-        padding: 20px;
-    }
-    .logo-upload-group .logo-upload-label {
-        width: 200px;
-        height: 200px;
-    }
-    .timeline::before, .timeline::after {
-        display: none; /* Скрыть линию на очень маленьких экранах */
-    }
-    .btn-select-current, .custom-file-upload-button, .submit-button {
-        width: 100%;
-        padding-left: 15px;
-        padding-right: 15px;
-        box-sizing: border-box;
-    }
-}
-
-/* Адаптивность для этого блока */
-@media (max-width: 1024px) { /* Например, для планшетов */
-    .media-and-finance-grid {
-        grid-template-columns: repeat(2, 1fr); /* Две колонки */
-    }
-    .presentation-finance-group {
-        grid-column: 1 / -1; /* Третья колонка (финансы) занимает всю ширину */
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 20px;
-    }
-}
-
-@media (max-width: 768px) { /* Для мобильных */
-    .media-and-finance-grid {
-        grid-template-columns: 1fr; /* Одна колонка */
-    }
-    .presentation-finance-group {
-        grid-template-columns: 1fr;
-    }
-    .presentation-finance-group .form-group .input-wrapper .form-control,
-    .presentation-finance-group .form-group .input-wrapper.valuation-input .form-control {
-        max-width: 100%; /* На всю ширину */
-    }
-}
-
-/* --- Секция Документы (Пруфы) --- */
-.form-section .form-group.upload-box.full-width {
-    /* Стили для контейнера загрузки документов */
-}
-
-.form-group.upload-box.full-width > label {
-    /* Стили для заголовка "*Документы" */
-    font-size: 20px;
-    font-family: Unbounded;
-    font-weight: 400;
-    line-height: 18px;
-    color: white;
-}
-
-.form-group.upload-box.full-width .custom-file-upload-button {
-    /* Стили кнопки "Выбрать файл" уже должны быть */
-}
-
-.form-group.upload-box.full-width .small-text {
-    /* Стили подсказки о формате */
-    font-size: 12px;
-    font-family: Unbounded;
-    font-weight: 300;
-    letter-spacing: 0.12px;
-    color: white;
-    text-align: left;
-}
-
-.form-group.upload-box.full-width .file-preview-area {
-    /* Стили для области превью */
-}
-
-.file-preview-item {
-    /* Стили для одного элемента превью, включая drag handle, картинку/иконку, имя, кнопки */
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin-bottom: 10px; /* Отступ между превьюшками */
-}
-
-.file-preview-item .drag-handle-mock {
-    width: 9px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 3px;
-    align-content: flex-start;
-    cursor: grab;
-}
-.file-preview-item .drag-handle-mock span {
-    width: 3px;
-    height: 3px;
-    background: #D9D9D9;
-    border-radius: 50%;
-}
-
-.file-preview-item img.preview-image,
-.file-preview-item img.file-icon {
-    width: 72px;
-    height: 72px;
-    border-radius: 5px;
-    object-fit: cover;
-}
-
-.file-preview-item p.file-name {
-    flex-grow: 1;
-    color: white;
-    font-size: 12px;
-    font-family: Unbounded;
-    font-weight: 300;
-    letter-spacing: 0.12px;
-    word-wrap: break-word;
-    margin: 0;
-}
-
-.file-preview-item .file-actions {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-}
-
-.file-preview-item .file-actions button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    display: flex; /* Чтобы иконки были нормально видны */
-    align-items: center;
-    justify-content: center;
-}
-.file-preview-item .file-actions img {
-    width: 15px;
-    height: 15px;
-    /* Можно добавить filter для смены цвета иконок */
-    filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(180deg) brightness(100%) contrast(100%);
-}
-
-
-/* --- Секция Согласия --- */
-.agreement-section-wrapper.content-section {
-    gap: 25px;
-}
-
-.agreement-section {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.agreement-section .section-title {
-    font-size: 20px;
-    font-family: Unbounded;
-    font-weight: 400;
-    line-height: 18px;
-    color: white;
-    margin-bottom: 0;
-    text-align: left;
-}
-
-.agreement-section .checkbox-group {
-    display: flex;
-    align-items: center;
-    gap: 11px;
-    margin-bottom: 0;
-}
-
-/* Скрываем стандартный чекбокс */
-.agreement-section .checkbox-group .form-check-input {
-    display: none;
-}
-
-.custom-checkbox-label {
-    display: flex;
-    align-items: center;
-    gap: 11px;
-    cursor: pointer;
-}
-
-.custom-checkbox-label .checkbox-icon {
-    width: 24px;
-    height: 24px;
-}
-
-/* Показываем нужную иконку в зависимости от состояния */
-.custom-checkbox-label .checked-icon {
-    display: none; /* Скрыта по умолчанию */
-}
-:checked + .custom-checkbox-label .default-icon {
-    display: none;
-}
-:checked + .custom-checkbox-label .checked-icon {
-    display: inline-block;
-    /* Синий цвет иконки и белая галочка (как в Figma) могут требовать отдельного SVG */
-    /* Или сложного CSS filter. Пример для синего фона: */
-    /* filter: invert(20%) sepia(90%) saturate(5000%) hue-rotate(190deg) brightness(90%) contrast(101%); */
-    /* Пока оставляем как есть, используя ту же иконку */
-}
-
-.custom-checkbox-label .checkbox-text {
-    color: white;
-    font-size: 16px;
-    font-family: Unbounded;
-    font-weight: 400;
-    line-height: 16px;
-}
-
-.tooltip-icon-wrapper {
-    display: flex;
-    align-items: center;
-    margin-left: 0;
-    position: relative; /* Для позиционирования тултипа */
-}
-
-.tooltip-icon {
-    width: 12px;
-    height: 12px;
-    background: #D9D9D9;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #1E1E1E; /* Цвет знака вопроса */
-    font-size: 8px;
-    font-family: 'Circe', sans-serif; /* Убедитесь, что шрифт Circe подключен */
-    font-weight: 700; /* Жирный знак вопроса */
-    cursor: pointer;
-    line-height: 12px;
 }
 
 /* Пример стилей для тултипа (появляется при наведении на ?) */
