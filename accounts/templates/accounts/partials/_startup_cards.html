@@ -61,8 +61,14 @@
         {% endif %}
       </div>
 
-      <div class="funding-goal-info">
-        Цель: {{ startup.funding_goal|default:"0"|floatformat:0|intcomma }} ₽
+      <div class="card-funding-goal">
+        <span>Цель:</span>
+        <span>{{ startup.funding_goal|default:0|floatformat:0|intcomma }} ₽</span>
+      </div>
+
+      <div class="card-amount-raised">
+        <span>Собрано:</span>
+        <span>{{ startup.amount_raised|default:0|floatformat:0|intcomma }} ₽</span>
       </div>
 
       <a href="{% url 'startup_detail' startup_id=startup.startup_id %}" class="detail-link">Подробнее</a>

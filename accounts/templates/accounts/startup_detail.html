@@ -200,7 +200,7 @@
               <div class="info-block collected-sum-block">
                 <i class="fas fa-coins icon"></i>
                 <span class="info-block-title">Собранная сумма</span>
-                <span class="info-block-value">{{ startup.total_invested|default:0|floatformat:0|intcomma }} ₽</span>
+                <span class="info-block-value">{{ startup.amount_raised|default:0|floatformat:0|intcomma }} ₽</span>
               </div>
               {# --- Новый блок: Стадия --- #}
               <div class="info-block stage-block">
