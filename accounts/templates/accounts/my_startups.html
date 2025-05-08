@@ -2,6 +2,8 @@
 {% load static %}
 {% load humanize %}
 {% load accounts_extras %}
+{% load math_filters %}
+{% load startup_filters %}
 
 {% block title %}Мои стартапы{% endblock %}
 
@@ -101,6 +103,414 @@
     .application-card a:hover {
         text-decoration: underline;
     }
+
+
+
+    /* Стили для планетарной системы */
+    .planetary-system-container {
+      position: relative;
+      width: 100%;
+      height: 400px;
+      overflow: hidden;
+      background: radial-gradient(circle at center, #1a1a2e 0%, #0a0a1e 100%);
+    }
+
+    .planetary-system {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      perspective: 1000px;
+      cursor: grab;
+    }
+
+    .planetary-system.dragging {
+      cursor: grabbing;
+    }
+
+    .planetary-system .space-background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('https://images.unsplash.com/photo-1447433819943-74a20987a81b') no-repeat center center;
+      background-size: cover;
+      z-index: -1;
+    }
+
+    .planetary-system .stars {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('https://www.transparenttextures.com/patterns/stardust.png') repeat;
+      opacity: 0.5;
+      animation: parallax 100s linear infinite;
+      z-index: -1;
+    }
+
+    @keyframes parallax {
+      from { background-position: 0 0; }
+      to { background-position: 1000px 1000px; }
+    }
+
+    .planetary-system #scene {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) translate(0px, 0px) scale(1);
+      transform-style: preserve-3d;
+    }
+
+    .planetary-system #galaxy {
+      position: absolute;
+      top: 0;
+      left: 0;
+      transform: rotateX(45deg);
+      transform-style: preserve-3d;
+    }
+
+    .planetary-system #logo {
+      width: 60px;
+      height: 60px;
+      background-size: cover;
+      border-radius: 50%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotateX(-45deg);
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: bold;
+      color: #333;
+      text-align: center;
+      line-height: 1.2;
+    }
+
+    .planetary-system .orbit {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: var(--orbit-size);
+      height: var(--orbit-size);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      margin-left: calc(-0.5 * var(--orbit-size));
+      margin-top: calc(-0.5 * var(--orbit-size));
+      transform-style: preserve-3d;
+      z-index: 1;
+      transition: all 0.5s ease;
+    }
+
+    .planetary-system .planet-orientation {
+      position: absolute;
+      transform-style: preserve-3d;
+    }
+
+    .planetary-system .planet {
+      position: absolute;
+      width: var(--planet-size);
+      height: var(--planet-size);
+      margin-left: calc(-0.5 * var(--planet-size));
+      margin-top: calc(-0.5 * var(--planet-size));
+      border-radius: 50%;
+      background-size: cover;
+      cursor: pointer;
+      transform-style: preserve-3d;
+      z-index: 5;
+      transition: all 0.3s ease;
+    }
+
+    .planetary-system .planet:hover {
+      transform: scale(1.1);
+    }
+
+    .planetary-system .planet.active {
+      transform: scale(1.2);
+    }
+
+    .planetary-system #info-card {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(255, 255, 255, 0.95);
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+      max-width: 300px;
+      width: 90%;
+      color: #333;
+      z-index: 20;
+      display: none;
+      text-align: center;
+    }
+
+    .planetary-system #info-card .planet-image {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      margin: 0 auto 8px;
+      background-size: cover;
+    }
+
+    .planetary-system #info-card h2 {
+      margin: 0 0 4px;
+      font-size: 18px;
+      color: #000;
+    }
+
+    .planetary-system #info-card .rating {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 8px;
+    }
+
+    .planetary-system #info-card .progress-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 8px 0;
+    }
+
+    .planetary-system #info-card .progress-bar button {
+      padding: 4px 8px;
+      border: none;
+      background: #000;
+      color: white;
+      font-size: 12px;
+      border-radius: 4px 0 0 4px;
+    }
+
+    .planetary-system #info-card .progress-bar .progress {
+      background: #ffd700;
+      padding: 4px;
+      font-size: 12px;
+      font-weight: bold;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .planetary-system #info-card .funding {
+      font-size: 12px;
+      color: #555;
+      margin: 8px 0;
+    }
+
+    .planetary-system #info-card .investors {
+      font-size: 12px;
+      color: #555;
+      margin-bottom: 12px;
+    }
+
+    .planetary-system #info-card .description {
+      font-size: 12px;
+      color: #555;
+      margin-bottom: 12px;
+    }
+
+    .planetary-system #info-card .more-details {
+      padding: 8px 16px;
+      background: none;
+      border: none;
+      color: #007bff;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .planetary-system #close-card {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: #ffd700;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+      color: #000;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .planetary-system #crosshair {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 16px;
+      height: 16px;
+      transform: translate(-50%, -50%);
+      z-index: 100;
+    }
+
+    .planetary-system #crosshair::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.7);
+      transform: translateY(-50%);
+    }
+
+    .planetary-system #crosshair::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 1px;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.7);
+      transform: translateX(-50%);
+    }
+
+    .planetary-system #crosshair-coords {
+      position: absolute;
+      top: 50%;
+      left: calc(50% + 15px);
+      transform: translateY(-50%);
+      color: white;
+      font-size: 10px;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 4px;
+      border-radius: 4px;
+      z-index: 100;
+    }
+
+    .planetary-system #mouse-coords {
+      position: absolute;
+      color: white;
+      font-size: 10px;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 4px;
+      border-radius: 4px;
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    .planetary-system #axes {
+      position: absolute;
+      bottom: 8px;
+      right: 8px;
+      width: 40px;
+      height: 40px;
+      transform-style: preserve-3d;
+      z-index: 100;
+    }
+
+    .planetary-system .axis {
+      position: absolute;
+      width: 1px;
+      height: 20px;
+      transform-origin: bottom center;
+    }
+
+    .planetary-system #axis-x {
+      background: red;
+      transform: rotateY(90deg) translateZ(10px);
+    }
+
+    .planetary-system #axis-y {
+      background: green;
+      transform: translateZ(10px);
+    }
+
+    .planetary-system #axis-z {
+      background: blue;
+      transform: rotateX(90deg) translateZ(10px);
+    }
+
+    .planetary-system .axis-label {
+      position: absolute;
+      color: white;
+      font-size: 8px;
+      transform: translateZ(15px);
+    }
+
+    .planetary-system #label-x {
+      left: 25px;
+      top: 10px;
+      color: red;
+    }
+
+    .planetary-system #label-y {
+      left: 10px;
+      top: -5px;
+      color: green;
+    }
+
+    .planetary-system #label-z {
+      left: 10px;
+      top: 25px;
+      color: blue;
+    }
+
+    .planetary-system #fps {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      background: rgba(0, 0, 0, 0.5);
+      color: white;
+      padding: 4px;
+      border-radius: 3px;
+      font-size: 10px;
+      z-index: 100;
+    }
+
+    .planetary-system #galaxy-selector {
+      position: absolute;
+      bottom: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 300px;
+      height: 50px;
+      overflow-x: auto;
+      white-space: nowrap;
+      z-index: 100;
+      scrollbar-width: none;
+    }
+
+    .planetary-system #galaxy-selector::-webkit-scrollbar {
+      display: none;
+    }
+
+    .planetary-system #galaxy-list {
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 0 15px;
+      height: 100%;
+    }
+
+    .planetary-system .galaxy-item {
+      flex: 0 0 auto;
+      margin: 0 8px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      padding: 8px 15px;
+      color: white;
+      font-size: 14px;
+      text-align: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .planetary-system .galaxy-item:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .planetary-system .galaxy-item.selected {
+      background: rgba(255, 255, 255, 0.5);
+      transform: scale(1.2);
+    }
+
+
   </style>
 {% endblock %}
 
@@ -110,35 +520,77 @@
       <!-- Верхняя секция с аналитикой -->
       <div class="analytics-section">
         <div class="analytics-left">
-          <div class="portfolio-image-container"> {# Убрали класс startuper-portfolio-bg #}
-            <button class="portfolio-image-fullscreen-btn">
+          <div class="portfolio-image-container planetary-system-container">
+            <button class="portfolio-image-fullscreen-btn" aria-label="Развернуть на полный экран">
               <i class="fas fa-expand"></i>
             </button>
+            <div class="planetary-system" id="solar-system">
+              <div class="space-background"></div>
+              <div class="stars"></div>
+              <div id="scene">
+                <div id="galaxy">
+                  <div id="logo"></div>
+                  {% for startup in planetary_startups %}
+                    <div class="orbit" style="--orbit-size: {{ startup.orbit_size|default:200 }}px; --orbit-time: {{ startup.orbit_time|default:80 }}s;">
+                      <div class="planet-orientation">
+                        <div class="planet" style="--planet-size: {{ startup.planet_size|default:50 }}px;" data-id="{{ startup.id|default_if_none:'' }}"></div>
+                      </div>
+                    </div>
+                  {% empty %}
+                    <p style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white;">Нет стартапов для отображения</p>
+                  {% endfor %}
+                </div>
+              </div>
+              <div id="info-card">
+                <button id="close-card" aria-label="Закрыть карточку">×</button>
+                <div class="planet-image" id="planet-image"></div>
+                <h2 id="startup-name"></h2>
+                <div class="rating" id="startup-rating"></div>
+                <div class="progress-bar">
+                  <button>Выкуп+инвестирование</button>
+                  <div class="progress" id="startup-progress"></div>
+                </div>
+                <div class="funding" id="startup-funding"></div>
+                <div class="investors" id="startup-investors"></div>
+                <div class="description" id="startup-description"></div>
+                <button class="more-details" id="more-details">Подробнее</button>
+              </div>
+              <div id="crosshair"></div>
+              <div id="crosshair-coords"></div>
+              <div id="mouse-coords"></div>
+              <div id="axes">
+                <div class="axis" id="axis-x"></div>
+                <div class="axis" id="axis-y"></div>
+                <div class="axis" id="axis-z"></div>
+                <div class="axis-label" id="label-x">X</div>
+                <div class="axis-label" id="label-y">Y</div>
+                <div class="axis-label" id="label-z">Z</div>
+              </div>
+              <div id="fps">0 FPS</div>
+              <div id="galaxy-selector">
+                <div id="galaxy-list"></div>
+              </div>
+            </div>
           </div>
           <!-- Категории с радиальными диаграммами -->
           <div class="categories-radial-section">
             <h3 class="categories-radial-title">Категории Ваших Стартапов</h3>
             <div class="categories-radial-grid">
               {% for category in investment_categories %}
-              {% with original_name=category.name|default:"" %} {# Используем оригинальное имя для data-атрибута #}
-              <div class="category-radial-item">
-                <div class="radial-chart" data-percentage="{{ category.percentage }}" data-category-name="{{ original_name }}">
-                  <div class="radial-chart-progress"></div>
-                  <div class="radial-chart-text">{{ category.percentage }}%</div>
+                <div class="category-radial-item">
+                  <div class="radial-chart" data-percentage="{{ category.percentage|default:0 }}" data-category-name="{{ category.name|default:''|escape }}">
+                    <div class="radial-chart-progress"></div>
+                    <div class="radial-chart-text">{{ category.percentage|default:0 }}%</div>
+                  </div>
+                  <span class="category-radial-name">{{ category.name|default:"Без категории"|escape }}</span>
                 </div>
-                <span class="category-radial-name">
-                    {# JS переведет имя #}
-                    {{ original_name|default:"Без категории" }}
-                </span>
-              </div>
-              {% endwith %}
               {% empty %}
-                 <p>Нет данных по категориям созданных стартапов.</p> {# Обновляем текст #}
+                <p>Нет данных по категориям созданных стартапов.</p>
               {% endfor %}
               <!-- Категория "Все" -->
               <div class="category-radial-item category-all" id="openCategoriesModalBtn">
                 <div class="radial-chart-all">
-                   <i class="fas fa-ellipsis-h"></i>
+                  <i class="fas fa-ellipsis-h" aria-hidden="true"></i>
                 </div>
                 <span class="category-radial-name">Все</span>
               </div>
@@ -147,51 +599,46 @@
         </div>
         <div class="analytics-content">
           <div class="analytics-header">
-              <h1 class="analytics-title">Аналитика</h1>
-              <div class="analytics-controls">
-                  <select class="month-select">
-                      <option value="весь год">Весь год</option>
-                  </select>
-                  <button class="analytics-options-btn">
-                      <i class="fas fa-ellipsis-v"></i>
-                  </button>
-              </div>
+            <h1 class="analytics-title">Аналитика</h1>
+            <div class="analytics-controls">
+              <select class="month-select" aria-label="Выбор периода">
+                <option value="весь год">Весь год</option>
+              </select>
+              <button class="analytics-options-btn" aria-label="Дополнительные опции">
+                <i class="fas fa-ellipsis-v" aria-hidden="true"></i>
+              </button>
+            </div>
           </div>
 
-          {# Применяем структуру и классы из investments.html #}
           <div class="stats-overview">
             <div class="stat-item">
               <span class="stat-label">Одобренные стартапы</span>
-              {# Применяем floatformat:0 перед intcomma #}
-              <div class="stat-value-box dark-box">{{ startups_count|default:"0"|floatformat:0|intcomma }}</div>
+              <div class="stat-value-box dark-box">{{ startups_count|default:0|floatformat:0|intcomma }}</div>
             </div>
             <div class="stat-item">
               <span class="stat-label">Всего собрано (одобренными)</span>
-              {# Применяем floatformat:0 перед intcomma #}
-              <div class="stat-value-box blue-box">{{ total_investment|default:"0"|floatformat:0|intcomma }} ₽</div>
+              <div class="stat-value-box blue-box">{{ total_investment|default:0|floatformat:0|intcomma }} ₽</div>
             </div>
           </div>
 
           <div class="stats-details">
-             <div class="stat-item detail-item">
+            <div class="stat-item detail-item">
               <span class="stat-label">Макс. собрано (одобренным)</span>
-              {# Применяем floatformat:0 перед intcomma #}
-              <span class="stat-value-simple">{{ max_investment|default:"0"|floatformat:0|intcomma }} ₽</span>
+              <span class="stat-value-simple">{{ max_investment|default:0|floatformat:0|intcomma }} ₽</span>
             </div>
             <div class="stat-item detail-item">
               <span class="stat-label">Мин. собрано (одобренным)</span>
-              {# Применяем floatformat:0 перед intcomma #}
-              <span class="stat-value-simple">{{ min_investment|default:"0"|floatformat:0|intcomma }} ₽</span>
+              <span class="stat-value-simple">{{ min_investment|default:0|floatformat:0|intcomma }} ₽</span>
             </div>
           </div>
 
           <!-- График -->
           <div class="analytics-chart-container">
-            <canvas id="monthlyInvestmentChart"></canvas>
-            <span class="chart-title-overlay">Собрано одобренными за год</span> {# Меняем подпись для соответствия данным #}
+            <canvas id="monthlyInvestmentChart" aria-label="График сборов одобренных стартапов за год"></canvas>
+            <span class="chart-title-overlay">Собрано одобренными за год</span>
           </div>
 
-          <button class="download-report-btn">Скачать отчет</button>
+          <button class="download-report-btn" type="button">Скачать отчет</button>
         </div>
       </div>
 
@@ -203,163 +650,153 @@
             <h2 class="startups-title-sub">СТАРТАПЫ</h2>
           </div>
           <div class="total-investment">
-            <span class="investment-label">собрано всего (одобренными)</span>
-            {# Добавляем знак рубля ₽ #}
-            <div class="investment-amount">{{ total_investment|default:"0"|floatformat:0|intcomma }} ₽</div>
+            <span class="investment-label">Собрано всего (одобренными)</span>
+            <div class="investment-amount">{{ total_investment|default:0|floatformat:0|intcomma }} ₽</div>
           </div>
         </div>
 
         <div class="startups-filters">
           <div class="startups-search-wrapper">
-            <i class="fas fa-search search-icon"></i>
-            <input type="text" placeholder="Поиск по названию..." id="startup-search" class="startups-search-input">
+            <i class="fas fa-search search-icon" aria-hidden="true"></i>
+            <input type="text" placeholder="Поиск по названию..." id="startup-search" class="startups-search-input" aria-label="Поиск стартапов по названию">
           </div>
           <div class="filter-buttons">
-            <button class="filter-btn active" data-filter="all">Все</button>
+            <button class="filter-btn active" data-filter="all" type="button">Все</button>
             <div class="filter-dropdown-wrapper">
-              <button class="filter-btn filter-btn-dropdown" data-filter="category">Категория <i class="fas fa-chevron-down"></i></button>
+              <button class="filter-btn filter-btn-dropdown" data-filter="category" type="button" aria-expanded="false">
+                Категория <i class="fas fa-chevron-down" aria-hidden="true"></i>
+              </button>
               <div class="filter-dropdown-content">
-                {# Динамически заполняется из JS #}
-                <a href="#">Загрузка...</a>
+                <a href="#" aria-label="Загрузка категорий">Загрузка...</a>
               </div>
             </div>
-            {# Кнопки сортировки пока уберем, нужна логика в view #}
           </div>
         </div>
 
         <div class="startups-grid">
-          {# Отображаем первые 6 одобренных стартапов из user_startups #}
           {% for startup in user_startups|slice:":6" %}
-            {# Используем оригинальное имя для data-category #}
-            <div class="startup-card" data-category="{{ startup.direction.direction_name|default:'' }}" data-name="{{ startup.title|default:'' }}">
+            <div class="startup-card" data-category="{{ startup.direction.direction_name|default:''|escape }}" data-name="{{ startup.title|default:''|escape }}">
               <div class="startup-card-left">
-                   {# Вставляем плейсхолдер для логотипа #}
-                   <div class="startup-planet-placeholder" style="width: 70px; height: 70px; background-color: #e9ecef; border-radius: 50%; margin-bottom: 5px;"></div>
-                   <div class="startup-name">
-                       {% if startup.title %}
-                          <a href="{% url 'startup_detail' startup_id=startup.startup_id %}" style="color: inherit; text-decoration: none;">{{ startup.title }}</a>
-                       {% else %}
-                           <span style="color: red; font-size: 10px;">(Имя не задано!)</span>
-                       {% endif %}
-                   </div>
-                   <div class="startup-rating">
-                       {% with rating=startup.average_rating|default:0 %}
-                           {% for i in "12345"|make_list %}
-                               {% if rating >= i|add:0 %}<i class="fas fa-star"></i>
-                               {% elif rating >= i|add:-0.5 %}<i class="fas fa-star-half-alt"></i>
-                               {% else %}<i class="far fa-star"></i>{% endif %}
-                           {% endfor %}
-                           {# Применяем floatformat:0 перед intcomma к числу голосов #}
-                           <span style="font-size: 12px; color: #868E96; margin-left: 5px;">({{ startup.total_voters|default:0|floatformat:0|intcomma }})</span>
-                       {% endwith %}
-                   </div>
-                   <div class="startup-comments">
-                       <i class="fas fa-comment-dots"></i>
-                       {# Применяем floatformat:0 перед intcomma к числу комментариев #}
-                       <span>{{ startup.comment_count|default:0|floatformat:0|intcomma }}</span>
-                   </div>
+                <div class="startup-planet-placeholder" style="width: 70px; height: 70px; background-color: #e9ecef; border-radius: 50%; margin-bottom: 5px;"></div>
+                <div class="startup-name">
+                  {% if startup.title %}
+                    <a href="{% url 'startup_detail' startup_id=startup.startup_id|default_if_none:'' %}" style="color: inherit; text-decoration: none;">{{ startup.title|escape }}</a>
+                  {% else %}
+                    <span style="color: red; font-size: 10px;">(Имя не задано!)</span>
+                  {% endif %}
+                </div>
+                <div class="startup-rating">
+                  {% with rating=startup.average_rating|default:0 %}
+                    {% for i in "12345"|make_list %}
+                      {% if rating >= i|floatformat:0 %}
+                        <i class="fas fa-star" aria-hidden="true"></i>
+                      {% elif rating >= i|add:-0.5 %}
+                        <i class="fas fa-star-half-alt" aria-hidden="true"></i>
+                      {% else %}
+                        <i class="far fa-star" aria-hidden="true"></i>
+                      {% endif %}
+                    {% endfor %}
+                    <span style="font-size: 12px; color: #868E96; margin-left: 5px;">({{ startup.total_voters|default:0|floatformat:0|intcomma }})</span>
+                  {% endwith %}
+                </div>
+                <div class="startup-comments">
+                  <i class="fas fa-comment-dots" aria-hidden="true"></i>
+                  <span>{{ startup.comment_count|default:0|floatformat:0|intcomma }}</span>
+                </div>
               </div>
               <div class="startup-card-right">
-                  <div class="startup-status-row">
-                    <span class="detail-label">Статус</span>
-                    {# Изменяем текст для статуса 'approved' #}
-                    <span class="detail-value status-{{ startup.status|lower|default:'pending' }}">
-                      {% if startup.status == 'approved' %}Активен{% else %}{{ startup.get_status_display|default:'Неизвестен' }}{% endif %}
-                    </span>
+                <div class="startup-status-row">
+                  <span class="detail-label">Статус</span>
+                  <span class="detail-value status-{{ startup.status|lower|default:'pending' }}">
+                    {% if startup.status == 'approved' %}Активен{% else %}{{ startup.status|default:'Неизвестен'|title }}{% endif %}
+                  </span>
+                </div>
+                <div class="startup-financials">
+                  <div class="startup-detail-row">
+                    <span class="detail-label">Собрано:</span>
+                    <span class="detail-value">{{ startup.amount_raised|default:'0'|floatformat:0|intcomma }} ₽</span>
                   </div>
-                  <div class="startup-financials">
-                      <div class="startup-detail-row">
-                          <span class="detail-label">Собрано:</span>
-                          {# Применяем floatformat:0 перед intcomma #}
-                          <span class="detail-value">{{ startup.amount_raised|default:'0'|floatformat:0|intcomma }} ₽</span>
-                      </div>
-                      <div class="startup-detail-row">
-                          <span class="detail-label">Инвесторов:</span>
-                          {# Применяем floatformat:0 перед intcomma #}
-                          <span class="detail-value">{{ startup.get_investors_count|default:0|floatformat:0|intcomma }}</span>
-                      </div>
-                      <div class="startup-detail-row">
-                          <span class="detail-label">Цель:</span>
-                          {# Применяем floatformat:0 перед intcomma #}
-                          <span class="detail-value">{{ startup.goal|default:'0'|floatformat:0|intcomma }} ₽</span>
-                      </div>
+                  <div class="startup-detail-row">
+                    <span class="detail-label">Инвесторов:</span>
+                    <span class="detail-value">{{ startup.get_investors_count|default:0|floatformat:0|intcomma }}</span>
                   </div>
-                  <div class="startup-category-row">
-                    <span class="detail-label">Категория</span>
-                    <span class="startup-category-tag">
-                         {{ startup.direction.direction_name|translate_category|default:"Без категории" }}
-                    </span>
+                  <div class="startup-detail-row">
+                    <span class="detail-label">Цель:</span>
+                    <span class="detail-value">{{ startup.funding_goal|default:'0'|floatformat:0|intcomma }} ₽</span>
                   </div>
-                   <a href="{% url 'edit_startup' startup_id=startup.startup_id %}" class="edit-startup-btn" style="align-self: flex-end; margin-top: 10px; color: #007bff; text-decoration: none; font-size: 13px;">Редактировать</a>
+                </div>
+                <div class="startup-category-row">
+                  <span class="detail-label">Категория</span>
+                  <span class="startup-category-tag">
+                    {{ startup.direction.direction_name|translate_category|default:"Без категории"|escape }}
+                  </span>
+                </div>
+                <a href="{% url 'edit_startup' startup_id=startup.startup_id|default_if_none:'' %}" class="edit-startup-btn" style="align-self: flex-end; margin-top: 10px; color: #007bff; text-decoration: none; font-size: 13px;">Редактировать</a>
               </div>
             </div>
           {% empty %}
-             <p style="grid-column: 1 / -1; text-align: center;">У вас пока нет одобренных стартапов.</p>
+            <p style="grid-column: 1 / -1; text-align: center;">У вас пока нет одобренных стартапов.</p>
           {% endfor %}
 
           {# Скрытые карточки #}
-           {% for startup in user_startups|slice:"6:" %}
-             {# Используем оригинальное имя для data-category #}
-            <div class="startup-card hidden-card" data-category="{{ startup.direction.direction_name|default:'' }}" data-name="{{ startup.title|default:'' }}" style="display: none;">
+          {% for startup in user_startups|slice:"6:" %}
+            <div class="startup-card hidden-card" data-category="{{ startup.direction.direction_name|default:''|escape }}" data-name="{{ startup.title|default:''|escape }}" style="display: none;">
               <div class="startup-card-left">
-                   {# Вставляем плейсхолдер для логотипа #}
-                   <div class="startup-planet-placeholder" style="width: 70px; height: 70px; background-color: #e9ecef; border-radius: 50%; margin-bottom: 5px;"></div>
-                   <div class="startup-name">
-                       {% if startup.title %}
-                          <a href="{% url 'startup_detail' startup_id=startup.startup_id %}" style="color: inherit; text-decoration: none;">{{ startup.title }}</a>
-                       {% else %}
-                           <span style="color: red; font-size: 10px;">(Имя не задано!)</span>
-                       {% endif %}
-                   </div>
-                   <div class="startup-rating">
-                       {% with rating=startup.average_rating|default:0 %}
-                           {% for i in "12345"|make_list %}
-                               {% if rating >= i|add:0 %}<i class="fas fa-star"></i>
-                               {% elif rating >= i|add:-0.5 %}<i class="fas fa-star-half-alt"></i>
-                               {% else %}<i class="far fa-star"></i>{% endif %}
-                           {% endfor %}
-                            {# Применяем floatformat:0 перед intcomma #}
-                            <span style="font-size: 12px; color: #868E96; margin-left: 5px;">({{ startup.total_voters|default:0|floatformat:0|intcomma }})</span>
-                       {% endwith %}
-                   </div>
-                   <div class="startup-comments">
-                       <i class="fas fa-comment-dots"></i>
-                       {# Применяем floatformat:0 перед intcomma #}
-                       <span>{{ startup.comment_count|default:0|floatformat:0|intcomma }}</span>
-                   </div>
+                <div class="startup-planet-placeholder" style="width: 70px; height: 70px; background-color: #e9ecef; border-radius: 50%; margin-bottom: 5px;"></div>
+                <div class="startup-name">
+                  {% if startup.title %}
+                    <a href="{% url 'startup_detail' startup_id=startup.startup_id|default_if_none:'' %}" style="color: inherit; text-decoration: none;">{{ startup.title|escape }}</a>
+                  {% else %}
+                    <span style="color: red; font-size: 10px;">(Имя не задано!)</span>
+                  {% endif %}
+                </div>
+                <div class="startup-rating">
+                  {% with rating=startup.average_rating|default:0 %}
+                    {% for i in "12345"|make_list %}
+                      {% if rating >= i|floatformat:0 %}
+                        <i class="fas fa-star" aria-hidden="true"></i>
+                      {% elif rating >= i|add:-0.5 %}
+                        <i class="fas fa-star-half-alt" aria-hidden="true"></i>
+                      {% else %}
+                        <i class="far fa-star" aria-hidden="true"></i>
+                      {% endif %}
+                    {% endfor %}
+                    <span style="font-size: 12px; color: #868E96; margin-left: 5px;">({{ startup.total_voters|default:0|floatformat:0|intcomma }})</span>
+                  {% endwith %}
+                </div>
+                <div class="startup-comments">
+                  <i class="fas fa-comment-dots" aria-hidden="true"></i>
+                  <span>{{ startup.comment_count|default:0|floatformat:0|intcomma }}</span>
+                </div>
               </div>
               <div class="startup-card-right">
-                  <div class="startup-status-row">
-                    <span class="detail-label">Статус</span>
-                    {# Изменяем текст для статуса 'approved' #}
-                    <span class="detail-value status-{{ startup.status|lower|default:'pending' }}">
-                      {% if startup.status == 'approved' %}Активен{% else %}{{ startup.get_status_display|default:'Неизвестен' }}{% endif %}
-                    </span>
+                <div class="startup-status-row">
+                  <span class="detail-label">Статус</span>
+                  <span class="detail-value status-{{ startup.status|lower|default:'pending' }}">
+                    {% if startup.status == 'approved' %}Активен{% else %}{{ startup.status|default:'Неизвестен'|title }}{% endif %}
+                  </span>
+                </div>
+                <div class="startup-financials">
+                  <div class="startup-detail-row">
+                    <span class="detail-label">Собрано:</span>
+                    <span class="detail-value">{{ startup.amount_raised|default:'0'|floatformat:0|intcomma }} ₽</span>
                   </div>
-                  <div class="startup-financials">
-                       <div class="startup-detail-row">
-                          <span class="detail-label">Собрано:</span>
-                          {# Применяем floatformat:0 перед intcomma #}
-                          <span class="detail-value">{{ startup.amount_raised|default:'0'|floatformat:0|intcomma }} ₽</span>
-                      </div>
-                      <div class="startup-detail-row">
-                          <span class="detail-label">Инвесторов:</span>
-                          {# Применяем floatformat:0 перед intcomma #}
-                          <span class="detail-value">{{ startup.get_investors_count|default:0|floatformat:0|intcomma }}</span>
-                      </div>
-                      <div class="startup-detail-row">
-                          <span class="detail-label">Цель:</span>
-                          {# Применяем floatformat:0 перед intcomma #}
-                          <span class="detail-value">{{ startup.goal|default:'0'|floatformat:0|intcomma }} ₽</span>
-                      </div>
+                  <div class="startup-detail-row">
+                    <span class="detail-label">Инвесторов:</span>
+                    <span class="detail-value">{{ startup.get_investors_count|default:0|floatformat:0|intcomma }}</span>
                   </div>
-                  <div class="startup-category-row">
-                    <span class="detail-label">Категория</span>
-                    <span class="startup-category-tag">
-                         {{ startup.direction.direction_name|translate_category|default:"Без категории" }}
-                    </span>
+                  <div class="startup-detail-row">
+                    <span class="detail-label">Цель:</span>
+                    <span class="detail-value">{{ startup.funding_goal|default:'0'|floatformat:0|intcomma }} ₽</span>
                   </div>
-                  <a href="{% url 'edit_startup' startup_id=startup.startup_id %}" class="edit-startup-btn" style="align-self: flex-end; margin-top: 10px; color: #007bff; text-decoration: none; font-size: 13px;">Редактировать</a>
+                </div>
+                <div class="startup-category-row">
+                  <span class="detail-label">Категория</span>
+                  <span class="startup-category-tag">
+                    {{ startup.direction.direction_name|translate_category|default:"Без категории"|escape }}
+                  </span>
+                </div>
+                <a href="{% url 'edit_startup' startup_id=startup.startup_id|default_if_none:'' %}" class="edit-startup-btn" style="align-self: flex-end; margin-top: 10px; color: #007bff; text-decoration: none; font-size: 13px;">Редактировать</a>
               </div>
             </div>
           {% endfor %}
@@ -367,14 +804,14 @@
 
         {# Кнопка Показать еще #}
         {% if user_startups|length > 6 %}
-        <div class="startup-buttons-container" style="text-align: center; margin-top: 20px;">
-            <button class="show-more-btn" id="load-more">
-              Показать еще <i class="fas fa-arrow-right"></i>
+          <div class="startup-buttons-container" style="text-align: center; margin-top: 20px;">
+            <button class="show-more-btn" id="load-more" type="button">
+              Показать еще <i class="fas fa-arrow-right" aria-hidden="true"></i>
             </button>
-            <button class="show-more-btn hide-btn" id="hide-startups-btn" style="display: none;">
-              Скрыть <i class="fas fa-arrow-up"></i>
+            <button class="show-more-btn hide-btn" id="hide-startups-btn" style="display: none;" type="button">
+              Скрыть <i class="fas fa-arrow-up" aria-hidden="true"></i>
             </button>
-        </div>
+          </div>
         {% endif %}
       </div>
 
@@ -385,34 +822,30 @@
             <h2 class="applications-title-main">Заявки</h2>
             <h2 class="applications-title-sub">на стартапы</h2>
           </div>
-          {# --- УДАЛЕНА КНОПКА "Создать стартап" --- #}
-          {# <a href="{% url 'create_startup' %}" class="download-report-btn" style="align-self: center;">Создать стартап</a> #}
         </div>
 
         <div class="applications-list">
-          {# Используем startup_applications (все заявки пользователя) #}
           {% for app in startup_applications %}
             <div class="application-card">
-              <div class="application-title">{{ app.title|default:"Без названия" }}</div>
-              {# Отображаем статус с помощью get_status_display #}
+              <div class="application-title">{{ app.title|default:"Без названия"|escape }}</div>
               <div class="application-status status-{{ app.status|lower|default:'pending' }}">
-                  {{ app.get_status_display|default:"Неизвестен" }}
+                {{ app.status|default:"Неизвестен"|title }}
               </div>
-              {# Отображаем комментарий модератора, если стартап отклонен или заблокирован #}
               {% if app.status == 'rejected' or app.status == 'blocked' %}
                 {% if app.moderator_comment %}
                   <div class="application-comment">
-                    <strong>Комментарий модератора:</strong> {{ app.moderator_comment }}
+                    <strong>Комментарий модератора:</strong> {{ app.moderator_comment|escape }}
                   </div>
                 {% endif %}
               {% endif %}
-              {# Ссылка на просмотр/редактирование #}
               {% if app.status == 'pending' or app.status == 'rejected' %}
-                 <a href="{% url 'edit_startup' startup_id=app.startup_id %}">Редактировать заявку</a>
+                <a href="{% url 'edit_startup' startup_id=app.startup_id|default_if_none:'' %}">Редактировать заявку</a>
               {% elif app.status == 'approved' %}
-                 <a href="{% url 'startup_detail' startup_id=app.startup_id %}">Перейти к стартапу</a>
+                <a href="{% url 'startup_detail' startup_id=app.startup_id|default_if_none:'' %}">Перейти к стартапу</a>
               {% endif %}
-               <span style="font-size: 12px; color: rgba(255, 255, 255, 0.5); margin-top: 5px;">Обновлено: {{ app.updated_at|date:"d.m.Y H:i" }}</span>
+              <span style="font-size: 12px; color: rgba(255, 255, 255, 0.5); margin-top: 5px;">
+                Обновлено: {{ app.updated_at|date:"d.m.Y H:i"|default:"Дата неизвестна" }}
+              </span>
             </div>
           {% empty %}
             <p style="grid-column: 1 / -1; text-align: center;">У вас пока нет отправленных заявок.</p>
@@ -420,24 +853,21 @@
         </div>
       </div>
       <!-- Конец раздела Заявки на стартапы -->
-
-    </div> {# Конец portfolio-container #}
+    </div>
 
     <!-- Модальное окно для всех категорий -->
     <div id="allCategoriesModal" class="modal-overlay">
-        <div class="modal-content category-modal-content">
-            <button class="modal-close-btn" id="closeCategoriesModalBtn">×</button>
-            <h2 class="modal-title">Все категории стартапов</h2>
-            <div class="modal-categories-grid" id="modalCategoriesGrid">
-                {# Содержимое будет генерироваться JS #}
-            </div>
-        </div>
+      <div class="modal-content category-modal-content">
+        <button class="modal-close-btn" id="closeCategoriesModalBtn" aria-label="Закрыть модальное окно">×</button>
+        <h2 class="modal-title">Все категории стартапов</h2>
+        <div class="modal-categories-grid" id="modalCategoriesGrid"></div>
+      </div>
     </div>
 
     {# Перемещаем JSON SCRIPTS сюда #}
     {{ month_labels|json_script:"chart-month-labels" }}
-    {{ chart_monthly_category_data|json_script:"chart-monthly-category-data" }} {# Новые данные: месяц -> категория -> сумма #}
-    {{ chart_categories|json_script:"chart-categories" }} {# Список категорий для графика #}
+    {{ chart_monthly_category_data|json_script:"chart-monthly-category-data" }}
+    {{ chart_categories|json_script:"chart-categories" }}
     {{ all_directions|json_script:"all-directions-data" }}
     {{ invested_category_data|json_script:"invested-category-data" }}
 
@@ -451,7 +881,7 @@
           "Healthcare": "#c0392b", "IT": "#8e44ad", "Retail": "#f39c12",
           "default": "#007bff"
       };
-
+    
       function translateCategoryName(name) {
           const translations = {
               "Medicine": "Медицина", "Auto": "Автомобили", "Delivery": "Доставка",
@@ -463,7 +893,7 @@
           };
           return translations[name] || name || "Без категории";
       }
-
+    
       function updateRadialChartColors() {
         document.querySelectorAll('.radial-chart').forEach(chart => {
           const percentage = parseInt(chart.dataset.percentage || 0, 10);
@@ -490,27 +920,24 @@
             }
          });
       }
-
+    
       function openModal(directionsData, investedDataDict) {
           const modalOverlay = document.getElementById('allCategoriesModal');
           const modalGrid = document.getElementById('modalCategoriesGrid');
-
+    
           if (!modalOverlay || !modalGrid) return;
-
+    
           modalGrid.innerHTML = '';
           if (directionsData && directionsData.length > 0) {
-              // Сортируем категории по убыванию процента (из investedDataDict)
-              // Используем 'direction_name' из directionsData для ключа в investedDataDict
               directionsData.sort((a, b) => (investedDataDict[b.direction_name] || 0) - (investedDataDict[a.direction_name] || 0));
-
+    
               directionsData.forEach(direction => {
-                  const categoryName = direction.direction_name; // Используем 'direction_name' как ключ
+                  const categoryName = direction.direction_name;
                   const percentage = investedDataDict[categoryName] || 0;
                   const translatedName = translateCategoryName(categoryName);
                   const color = categoryColors[categoryName] || categoryColors["default"];
                   const item = document.createElement('div');
                   item.classList.add('modal-category-item');
-                  // Используем шаблонные литералы корректно
                   item.innerHTML = `
                       <div class="radial-chart" data-percentage="${percentage}" data-category-name="${categoryName}">
                         <div class="radial-chart-progress" style="--percentage: ${percentage}; --progress-color: ${color};"></div>
@@ -523,42 +950,39 @@
           } else {
               modalGrid.innerHTML = '<p>Нет доступных категорий.</p>';
           }
-
+    
           modalOverlay.classList.add('visible');
           document.body.classList.add('modal-open-blur');
       }
-
+    
       function closeModal() {
           const modalOverlay = document.getElementById('allCategoriesModal');
           if (!modalOverlay) return;
           modalOverlay.classList.remove('visible');
           document.body.classList.remove('modal-open-blur');
       }
-
+    
       function filterByCategory(event) {
           event.preventDefault();
-          const selectedCategory = event.target.dataset.category; // Оригинальное имя
+          const selectedCategory = event.target.dataset.category;
           const categoryButton = document.querySelector('.filter-btn[data-filter="category"]');
           const filterButtons = document.querySelectorAll('.filter-btn');
           const startupCards = document.querySelectorAll('.startups-grid .startup-card');
           const loadMoreBtn = document.getElementById('load-more');
           const hideBtn = document.getElementById('hide-startups-btn');
           const startupGrid = document.querySelector('.startups-grid');
-
+    
           filterButtons.forEach(btn => btn.classList.remove('active'));
           if (categoryButton) {
                categoryButton.classList.add('active');
                const chevron = categoryButton.querySelector('i');
-               // Используем JS перевод для кнопки
                categoryButton.textContent = translateCategoryName(selectedCategory) + ' ';
                if (chevron) categoryButton.appendChild(chevron);
           }
-
+    
           let visibleCount = 0;
           startupCards.forEach(card => {
-              // Сравниваем data-category с selectedCategory (оригинальное имя)
               if (card.dataset.category === selectedCategory) {
-                  // Показываем только первые 6, остальные скрываем
                   if (visibleCount < 6) {
                        card.style.display = 'flex';
                        visibleCount++;
@@ -570,16 +994,14 @@
                   card.style.display = 'none';
               }
           });
-
+    
           if (loadMoreBtn) loadMoreBtn.style.display = 'none';
           if (hideBtn) hideBtn.style.display = 'none';
-
+    
           const noResultsMsg = startupGrid.querySelector('.no-results-message');
           if (visibleCount === 0) {
               if (!noResultsMsg) {
                   const p = document.createElement('p');
-                  // Используем переведенное имя в сообщении
-                  // Используем шаблонные литералы корректно
                   p.textContent = `Нет стартапов в категории "${translateCategoryName(selectedCategory)}".`;
                   p.style.gridColumn = '1 / -1';
                   p.style.textAlign = 'center';
@@ -592,17 +1014,15 @@
               }
           }
       }
-
+    
       document.addEventListener('DOMContentLoaded', function() {
-
           let parsedDirections = [];
           let parsedInvestedData = {};
           try {
               const directionsElement = document.getElementById('all-directions-data');
               const investedElement = document.getElementById('invested-category-data');
               if (directionsElement) {
-                  // Данные приходят как {pk: ..., direction_name: ...}
-                   parsedDirections = JSON.parse(directionsElement.textContent); // Используем direction_name
+                  parsedDirections = JSON.parse(directionsElement.textContent);
               }
               if (investedElement) {
                   parsedInvestedData = JSON.parse(investedElement.textContent);
@@ -610,10 +1030,9 @@
           } catch (e) {
               console.error("Ошибка парсинга данных для модального окна:", e);
           }
-
+    
           updateRadialChartColors();
-
-          // Заполняем выпадающий список категорий
+    
           const categoryDropdownContent = document.querySelector('.filter-dropdown-content');
           if (categoryDropdownContent) {
               const directionsForDropdown = parsedDirections || [];
@@ -632,13 +1051,11 @@
                        if (chevron) categoryButton.appendChild(chevron);
                    });
                    categoryDropdownContent.appendChild(allLink);
-
+    
                    directionsForDropdown.forEach(direction => {
                       const link = document.createElement('a');
                       link.href = '#';
-                      // Используем direction.direction_name для data-category
                       link.dataset.category = direction.direction_name;
-                      // Используем JS перевод для текста ссылки
                       link.textContent = translateCategoryName(direction.direction_name);
                       link.addEventListener('click', filterByCategory);
                       categoryDropdownContent.appendChild(link);
@@ -647,8 +1064,7 @@
                   categoryDropdownContent.innerHTML = '<a href="#">Нет категорий</a>';
               }
           }
-
-          // Поиск
+    
           const searchInput = document.getElementById('startup-search');
           const startupGrid = document.querySelector('.startups-grid');
           if (searchInput && startupGrid) {
@@ -658,35 +1074,31 @@
                  const loadMoreBtnSearch = document.getElementById('load-more');
                  const hideBtnSearch = document.getElementById('hide-startups-btn');
                  let visibleCount = 0;
-                 // Определяем активный фильтр категории (оригинальное имя)
                  const activeCategoryButton = document.querySelector('.filter-btn[data-filter="category"].active');
                  let activeCategoryFilter = null;
                  if (activeCategoryButton) {
                      const links = categoryDropdownContent.querySelectorAll('a');
                      for(let link of links){
                          if(translateCategoryName(link.dataset.category) === activeCategoryButton.textContent.trim().split(' ')[0]){
-                             activeCategoryFilter = link.dataset.category; // Получаем оригинальное имя
+                             activeCategoryFilter = link.dataset.category;
                              break;
                          }
                      }
-                      // Если активна кнопка "Категория", но не найдена соответствующая ссылка (маловероятно, но возможно)
-                      // или если активна кнопка "Все"
                      if (!activeCategoryFilter && !document.querySelector('.filter-btn[data-filter="all"].active')) {
                          console.warn("Не удалось определить активный фильтр категории для поиска.");
-                         activeCategoryFilter = null; // Считаем, что фильтра нет
+                         activeCategoryFilter = null;
                      } else if (document.querySelector('.filter-btn[data-filter="all"].active')) {
-                          activeCategoryFilter = null; // Фильтра нет, если активна "Все"
+                          activeCategoryFilter = null;
                      }
                  }
-
+    
                  startupCards.forEach(card => {
                     const name = card.getAttribute('data-name').toLowerCase();
-                    const category = card.getAttribute('data-category'); // Оригинальное имя категории
-
-                    // Проверяем совпадение по имени И активному фильтру категории (если он есть)
+                    const category = card.getAttribute('data-category');
+    
                     const matchesCategory = !activeCategoryFilter || (category === activeCategoryFilter);
                     const matchesSearch = name.includes(searchTerm);
-
+    
                     if (matchesSearch && matchesCategory) {
                          if (visibleCount < 6) {
                               card.style.display = 'flex';
@@ -699,10 +1111,10 @@
                         card.style.display = 'none';
                     }
                  });
-
+    
                  if (loadMoreBtnSearch) loadMoreBtnSearch.style.display = 'none';
                  if (hideBtnSearch) hideBtnSearch.style.display = 'none';
-
+    
                   const noResultsMsg = startupGrid.querySelector('.no-results-message');
                   if (visibleCount === 0 && searchTerm !== '') {
                        if (!noResultsMsg) {
@@ -719,63 +1131,60 @@
                        }
                    }
              });
-           }
-
-          // Обработка кнопок фильтрации ("Все", ...)
+          }
+    
           const filterButtons = document.querySelectorAll('.filter-btn');
           const allStartupCards = startupGrid.querySelectorAll('.startup-card');
           const loadMoreBtn = document.getElementById('load-more');
           const hideBtn = document.getElementById('hide-startups-btn');
-
-           filterButtons.forEach(button => {
-               button.addEventListener('click', function(event) {
-                    if (this.classList.contains('filter-btn-dropdown')) {
-                       return;
-                    }
-                    if (event.target.tagName === 'A' && event.target.closest('.filter-dropdown-content')) {
-                        return;
-                    }
-
-                   filterButtons.forEach(btn => btn.classList.remove('active'));
-                   this.classList.add('active');
-                   const filter = this.getAttribute('data-filter');
-
-                   const noResultsMsg = startupGrid.querySelector('.no-results-message');
-                   if (noResultsMsg) noResultsMsg.remove();
-
-                   if (filter === 'all') {
-                       let visibleCount = 0;
-                        allStartupCards.forEach(card => {
-                           if (visibleCount < 6) {
-                               card.style.display = 'flex';
-                               card.classList.remove('hidden-card');
-                               visibleCount++;
-                           } else {
-                               card.style.display = 'none';
-                               card.classList.add('hidden-card');
-                           }
-                        });
-                       const hiddenCardsAfterReset = startupGrid.querySelectorAll('.startup-card.hidden-card');
-                       if (hiddenCardsAfterReset.length > 0) {
-                           if (loadMoreBtn) loadMoreBtn.style.display = 'flex';
-                           if (hideBtn) hideBtn.style.display = 'none';
-                       } else {
-                           if (loadMoreBtn) loadMoreBtn.style.display = 'none';
-                           if (hideBtn) hideBtn.style.display = 'none';
-                       }
-                       const categoryButton = document.querySelector('.filter-btn[data-filter="category"]');
-                       if (categoryButton) {
-                            const chevron = categoryButton.querySelector('i');
-                            categoryButton.textContent = 'Категория ';
-                            if (chevron) categoryButton.appendChild(chevron);
-                       }
-                       if(searchInput) searchInput.value = '';
+    
+          filterButtons.forEach(button => {
+              button.addEventListener('click', function(event) {
+                  if (this.classList.contains('filter-btn-dropdown')) {
+                     return;
                   }
-                  // Другие фильтры (new/old) пока не реализованы
-               });
-           });
-
-          // Кнопка "Показать еще"
+                  if (event.target.tagName === 'A' && event.target.closest('.filter-dropdown-content')) {
+                      return;
+                  }
+    
+                 filterButtons.forEach(btn => btn.classList.remove('active'));
+                 this.classList.add('active');
+                 const filter = this.getAttribute('data-filter');
+    
+                 const noResultsMsg = startupGrid.querySelector('.no-results-message');
+                 if (noResultsMsg) noResultsMsg.remove();
+    
+                 if (filter === 'all') {
+                     let visibleCount = 0;
+                     allStartupCards.forEach(card => {
+                        if (visibleCount < 6) {
+                            card.style.display = 'flex';
+                            card.classList.remove('hidden-card');
+                            visibleCount++;
+                        } else {
+                            card.style.display = 'none';
+                            card.classList.add('hidden-card');
+                        }
+                     });
+                    const hiddenCardsAfterReset = startupGrid.querySelectorAll('.startup-card.hidden-card');
+                    if (hiddenCardsAfterReset.length > 0) {
+                        if (loadMoreBtn) loadMoreBtn.style.display = 'flex';
+                        if (hideBtn) hideBtn.style.display = 'none';
+                    } else {
+                        if (loadMoreBtn) loadMoreBtn.style.display = 'none';
+                        if (hideBtn) hideBtn.style.display = 'none';
+                    }
+                    const categoryButton = document.querySelector('.filter-btn[data-filter="category"]');
+                    if (categoryButton) {
+                         const chevron = categoryButton.querySelector('i');
+                         categoryButton.textContent = 'Категория ';
+                         if (chevron) categoryButton.appendChild(chevron);
+                    }
+                    if(searchInput) searchInput.value = '';
+               }
+              });
+          });
+    
           if (loadMoreBtn) {
              loadMoreBtn.addEventListener('click', function() {
                const currentlyHiddenCards = startupGrid.querySelectorAll('.startup-card.hidden-card');
@@ -787,8 +1196,7 @@
                if (hideBtn) hideBtn.style.display = 'flex';
              });
           }
-
-          // Кнопка "Скрыть"
+    
           if (hideBtn) {
              hideBtn.addEventListener('click', function() {
                   let visibleCount = 0;
@@ -807,14 +1215,12 @@
                  }
              });
           }
-
-          // Модальное окно
+    
           const openModalBtn = document.getElementById('openCategoriesModalBtn');
           const closeModalBtn = document.getElementById('closeCategoriesModalBtn');
           const modalOverlay = document.getElementById('allCategoriesModal');
           if (openModalBtn) {
               openModalBtn.addEventListener('click', function() {
-                  // Передаем parsedDirections и parsedInvestedData (% по количеству)
                   openModal(parsedDirections, parsedInvestedData);
               });
           }
@@ -828,8 +1234,7 @@
                   }
               });
           }
-
-          // График - Переделываем в Stacked Bar Chart по категориям
+    
           (function() {
               const canvasElement = document.getElementById('monthlyInvestmentChart');
               if (!canvasElement) {
@@ -837,22 +1242,22 @@
                   return;
               }
               const ctx = canvasElement.getContext('2d');
-
+    
               let monthLabels = [];
-              let monthlyCategoryData = []; // Данные: [{month_key: '...', category_data: {cat: amount, ...}}, ...]
-              let categoriesForChart = []; // Список категорий для датасетов
-
+              let monthlyCategoryData = [];
+              let categoriesForChart = [];
+    
               try {
                   const labelsEl = document.getElementById('chart-month-labels');
                   const monthlyDataEl = document.getElementById('chart-monthly-category-data');
                   const categoriesEl = document.getElementById('chart-categories');
-
+    
                   if (!labelsEl || !monthlyDataEl || !categoriesEl) throw new Error("Элементы данных графика не найдены");
                   
                   monthLabels = JSON.parse(labelsEl.textContent);
                   monthlyCategoryData = JSON.parse(monthlyDataEl.textContent);
                   categoriesForChart = JSON.parse(categoriesEl.textContent);
-
+    
                   console.log("Chart Labels:", monthLabels);
                   console.log("Chart Categories:", categoriesForChart);
                   console.log("Chart Monthly Category Data:", monthlyCategoryData);
@@ -863,58 +1268,48 @@
                   }
                   return;
               }
-
-              // Проверяем, есть ли хоть какие-то данные по категориям
+    
               const hasData = monthlyCategoryData && monthlyCategoryData.some(month => Object.keys(month.category_data).length > 0);
               console.log("Chart has category data:", hasData);
-
+    
               if (hasData && categoriesForChart.length > 0) {
-
-                  // Создаем датасеты для каждой категории
                   const datasets = categoriesForChart.map(categoryName => {
-                      const color = categoryColors[categoryName] || categoryColors["default"]; // Берем цвет из константы
-                      // Собираем данные для этой категории по всем месяцам
+                      const color = categoryColors[categoryName] || categoryColors["default"];
                       const data = monthLabels.map((label, index) => {
-                          // Ищем данные для текущего месяца (индекс совпадает с monthLabels)
                           const monthData = monthlyCategoryData[index];
-                          // Возвращаем сумму для этой категории в этом месяце или 0
                           return monthData.category_data[categoryName] || 0;
                       });
-
+    
                       return {
-                          label: translateCategoryName(categoryName), // Используем русский лейбл
+                          label: translateCategoryName(categoryName),
                           data: data,
-                          backgroundColor: color, // Цвет для стека
-                          // borderColor: color, // Можно добавить границу, если нужно
-                          // borderWidth: 1
+                          backgroundColor: color,
                       };
                   });
-
+    
                   console.log("Generated Chart Datasets:", datasets);
-
+    
                   new Chart(ctx, {
                       type: 'bar',
                       data: {
                           labels: monthLabels,
-                          datasets: datasets // Передаем созданные датасеты
+                          datasets: datasets
                       },
                       options: {
                         responsive: true,
                         maintainAspectRatio: false,
-                        interaction: { // Для корректной работы подсказок со стеками
+                        interaction: {
                             mode: 'index',
                             intersect: false,
                         },
                         scales: {
-                            // Ось Y (сумма)
-                            y: { 
-                                stacked: true, // Включаем стекирование по оси Y
+                            y: {
+                                stacked: true,
                                 beginAtZero: true,
                                 grid: { color: 'rgba(255, 255, 255, 0.05)' },
                                 ticks: {
                                      color: 'rgba(255, 255, 255, 0.7)',
                                     callback: function(value) {
-                                        // Форматирование сумм
                                         if (value >= 1000000) { return (value / 1000000).toLocaleString('ru-RU', { maximumFractionDigits: 1 }) + 'M'; }
                                         if (value >= 1000) { return (value / 1000).toLocaleString('ru-RU', { maximumFractionDigits: 0 }) + 'k'; }
                                         else { return value.toLocaleString('ru-RU'); }
@@ -926,28 +1321,25 @@
                                     color: 'rgba(255, 255, 255, 0.7)'
                                 }
                             },
-                            // Ось X (месяцы)
                             x: {
-                                stacked: true, // Включаем стекирование по оси X
+                                stacked: true,
                                 grid: { display: false },
                                 ticks: { color: '#495057' }
                             }
                         },
                         plugins: {
                             legend: {
-                                display: true, // Показываем легенду категорий
-                                position: 'top', 
+                                display: true,
+                                position: 'top',
                                 labels: {
                                     color: 'rgba(255, 255, 255, 0.7)',
-                                    boxWidth: 12, // Уменьшим ширину цветного бокса
-                                    padding: 15 // Отступ между элементами легенды
+                                    boxWidth: 12,
+                                    padding: 15
                                 }
                              },
                             tooltip: {
                                 callbacks: {
-                                    // Настраиваем подсказку для стеков
                                     title: function(tooltipItems) {
-                                        // Заголовок - месяц
                                         return tooltipItems[0].label;
                                     },
                                     label: function(context) {
@@ -969,6 +1361,385 @@
                     canvasElement.parentNode.innerHTML = '<p style="text-align: center; color: #adb5bd;">Нет данных по сборам средств за текущий год для отображения по категориям.</p>';
                  }
               }
+          })();
+    
+          // Планетарная система
+          (function() {
+              const startups = {{ planetary_startups|safe }};
+    
+              const planets = document.querySelectorAll('.planetary-system .planet');
+              const planetOrientations = document.querySelectorAll('.planetary-system .planet-orientation');
+              const orbits = document.querySelectorAll('.planetary-system .orbit');
+              const infoCard = document.querySelector('.planetary-system #info-card');
+              const planetImage = document.querySelector('.planetary-system #planet-image');
+              const startupName = document.querySelector('.planetary-system #startup-name');
+              const startupRating = document.querySelector('.planetary-system #startup-rating');
+              const startupProgress = document.querySelector('.planetary-system #startup-progress');
+              const startupFunding = document.querySelector('.planetary-system #startup-funding');
+              const startupInvestors = document.querySelector('.planetary-system #startup-investors');
+              const startupDescription = document.querySelector('.planetary-system #startup-description');
+              const closeCard = document.querySelector('.planetary-system #close-card');
+              const moreDetails = document.querySelector('.planetary-system #more-details');
+              const solarSystem = document.querySelector('.planetary-system#solar-system');
+              const scene = document.querySelector('.planetary-system #scene');
+              const galaxy = document.querySelector('.planetary-system #galaxy');
+              const crosshairCoords = document.querySelector('.planetary-system #crosshair-coords');
+              const mouseCoords = document.querySelector('.planetary-system #mouse-coords');
+              const fpsElement = document.querySelector('.planetary-system #fps');
+              const galaxySelector = document.querySelector('.planetary-system #galaxy-selector');
+              const galaxyList = document.querySelector('.planetary-system #galaxy-list');
+              const logoElement = document.querySelector('.planetary-system #logo');
+    
+              logoElement.style.backgroundImage = `url('{% static "accounts/images/layout/image12.png" %}')`;
+    
+              const galaxyTiltAngle = 45;
+              const planetObjects = [];
+              let lastTime = 0;
+              let frameCount = 0;
+              let fps = 0;
+              let isPaused = false;
+              let pausedTime = 0;
+              let lastInteractionTime = Date.now();
+              const inactivityTimeout = 10000;
+              let isReturningToCenter = false;
+    
+              const galaxyNames = [
+                  'Технологии', 'Финансы', 'Здравоохранение', 'Медицина', 'Автомобили',
+                  'Доставка', 'Кафе/рестораны', 'Фастфуд', 'Здоровье', 'Красота',
+                  'Транспорт', 'Спорт', 'Психология', 'ИИ'
+              ];
+              let currentGalaxy = 'Технологии';
+    
+              galaxyNames.forEach((name, index) => {
+                  const galaxyItem = document.createElement('div');
+                  galaxyItem.className = 'galaxy-item';
+                  galaxyItem.textContent = name;
+                  if (name === currentGalaxy) {
+                      galaxyItem.classList.add('selected');
+                  }
+                  galaxyItem.addEventListener('click', () => {
+                      switchGalaxy(name);
+                      scrollToCenter(galaxyItem);
+                  });
+                  galaxyList.appendChild(galaxyItem);
+              });
+    
+              planets.forEach((planet, index) => {
+                  const orbit = planet.closest('.orbit');
+                  const planetOrientation = planet.closest('.planet-orientation');
+                  const orbitSize = parseFloat(getComputedStyle(orbit).getPropertyValue('--orbit-size'));
+                  const orbitTime = parseFloat(getComputedStyle(orbit).getPropertyValue('--orbit-time'));
+                  const initialAngle = Math.random() * 360;
+                  const speedFactor = 0.8 + Math.random() * 0.4;
+    
+                  planetObjects.push({
+                      element: planet,
+                      orientation: planetOrientation,
+                      orbit: orbit,
+                      size: parseFloat(getComputedStyle(planet).getPropertyValue('--planet-size')),
+                      orbitSize: orbitSize,
+                      orbitTime: orbitTime,
+                      angle: initialAngle,
+                      speedFactor: speedFactor,
+                      startTime: Date.now() - Math.random() * orbitTime * 1000
+                  });
+    
+                  const id = planet.getAttribute('data-id');
+                  const startup = startups.find(s => s.id == id);
+                  if (startup && startup.image) {
+                      planet.style.backgroundImage = `url('${startup.image}')`;
+                  } else {
+                      planet.style.backgroundColor = '#e9ecef';
+                  }
+    
+                  planet.addEventListener('click', (e) => {
+                      e.stopPropagation();
+                      const startupData = startups.find(s => s.id == id);
+    
+                      planetImage.style.backgroundImage = `url('${startupData.image}')`;
+                      startupName.textContent = startupData.name;
+                      startupRating.textContent = `Рейтинг ${startupData.rating}`;
+                      startupProgress.textContent = startupData.progress;
+                      startupFunding.textContent = `Цель финансирования: ${startupData.funding}`;
+                      startupInvestors.textContent = startupData.investors;
+                      startupDescription.textContent = startupData.description;
+    
+                      planets.forEach(p => p.classList.remove('active'));
+                      planet.classList.add('active');
+                      infoCard.style.display = 'block';
+    
+                      isPaused = true;
+                      pausedTime = Date.now();
+                      lastInteractionTime = Date.now();
+                  });
+              });
+    
+              closeCard.addEventListener('click', () => {
+                  infoCard.style.display = 'none';
+                  planets.forEach(p => p.classList.remove('active'));
+    
+                  if (isPaused) {
+                      const pauseDuration = Date.now() - pausedTime;
+                      planetObjects.forEach(planetObj => {
+                          planetObj.startTime += pauseDuration;
+                      });
+                      isPaused = false;
+                  }
+    
+                  lastInteractionTime = Date.now();
+              });
+    
+              moreDetails.addEventListener('click', () => {
+                  const activePlanet = document.querySelector('.planetary-system .planet.active');
+                  if (activePlanet) {
+                      const id = activePlanet.getAttribute('data-id');
+                      const startup = startups.find(s => s.id == id);
+                      if (startup && startup.startup_id) {
+                          window.location.href = `/startups/${startup.startup_id}/`;
+                      }
+                  }
+                  infoCard.style.display = 'none';
+                  planets.forEach(p => p.classList.remove('active'));
+    
+                  if (isPaused) {
+                      const pauseDuration = Date.now() - pausedTime;
+                      planetObjects.forEach(planetObj => {
+                          planetObj.startTime += pauseDuration;
+                      });
+                      isPaused = false;
+                  }
+    
+                  lastInteractionTime = Date.now();
+              });
+    
+              let isDragging = false;
+              let startX, startY;
+              let offsetX = 0;
+              let offsetY = 0;
+              let scale = 1;
+    
+              solarSystem.addEventListener('mousedown', (e) => {
+                  e.preventDefault();
+                  isDragging = true;
+                  startX = e.clientX;
+                  startY = e.clientY;
+                  solarSystem.classList.add('dragging');
+                  lastInteractionTime = Date.now();
+                  isReturningToCenter = false;
+              });
+    
+              document.addEventListener('mousemove', (e) => {
+                  if (!isDragging) return;
+    
+                  const deltaX = e.clientX - startX;
+                  const deltaY = e.clientY - startY;
+    
+                  offsetX += deltaX;
+                  offsetY += deltaY;
+    
+                  offsetX = Math.max(-solarSystem.offsetWidth / 2, Math.min(solarSystem.offsetWidth / 2, offsetX));
+                  offsetY = Math.max(-solarSystem.offsetHeight / 2, Math.min(solarSystem.offsetHeight / 2, offsetY));
+    
+                  scene.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+                  startX = e.clientX;
+                  startY = e.clientY;
+    
+                  crosshairCoords.textContent = `Center: (${Math.round(offsetX)}, ${Math.round(offsetY)}, 0)`;
+    
+                  mouseCoords.style.left = `${e.clientX + 15}px`;
+                  mouseCoords.style.top = `${e.clientY + 15}px`;
+                  mouseCoords.textContent = `Mouse: (${e.clientX}, ${e.clientY})`;
+    
+                  lastInteractionTime = Date.now();
+              });
+    
+              document.addEventListener('mouseup', () => {
+                  isDragging = false;
+                  solarSystem.classList.remove('dragging');
+                  lastInteractionTime = Date.now();
+              });
+    
+              solarSystem.addEventListener('wheel', (e) => {
+                  e.preventDefault();
+                  const delta = e.deltaY > 0 ? -0.1 : 0.1;
+                  scale = Math.max(0.5, Math.min(3, scale + delta));
+                  scene.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+    
+                  crosshairCoords.textContent = `Center: (${Math.round(offsetX)}, ${Math.round(offsetY)}, 0)`;
+    
+                  mouseCoords.style.left = `${e.clientX + 15}px`;
+                  mouseCoords.style.top = `${e.clientY + 15}px`;
+                  mouseCoords.textContent = `Mouse: (${e.clientX}, ${e.clientY})`;
+    
+                  lastInteractionTime = Date.now();
+                  isReturningToCenter = false;
+              });
+    
+              infoCard.addEventListener('mousedown', (e) => {
+                  e.stopPropagation();
+                  lastInteractionTime = Date.now();
+              });
+    
+              document.addEventListener('mousemove', (e) => {
+                  mouseCoords.style.left = `${e.clientX + 15}px`;
+                  mouseCoords.style.top = `${e.clientY + 15}px`;
+                  mouseCoords.textContent = `Mouse: (${e.clientX}, ${e.clientY})`;
+              });
+    
+              function checkInactivity() {
+                  const now = Date.now();
+                  if (now - lastInteractionTime >= inactivityTimeout && !isReturningToCenter && !isPaused) {
+                      isReturningToCenter = true;
+                      const startX = offsetX;
+                      const startY = offsetY;
+                      const duration = 1000;
+                      let startTime = null;
+    
+                      function animateReturn(timestamp) {
+                          if (!startTime) startTime = timestamp;
+                          const elapsed = timestamp - startTime;
+                          const progress = Math.min(elapsed / duration, 1);
+    
+                          offsetX = startX + (0 - startX) * progress;
+                          offsetY = startY + (0 - startY) * progress;
+    
+                          scene.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+                          crosshairCoords.textContent = `Center: (${Math.round(offsetX)}, ${Math.round(offsetY)}, 0)`;
+    
+                          if (progress < 1) {
+                              requestAnimationFrame(animateReturn);
+                          } else {
+                              isReturningToCenter = false;
+                          }
+                      }
+    
+                      requestAnimationFrame(animateReturn);
+                  }
+              }
+    
+              setInterval(checkInactivity, 1000);
+    
+              function updatePlanets() {
+                  const now = Date.now();
+                  
+                  frameCount++;
+                  if (now - lastTime >= 1000) {
+                      fps = frameCount;
+                      frameCount = 0;
+                      lastTime = now;
+                      fpsElement.textContent = `${fps} FPS`;
+                  }
+    
+                  if (isPaused) {
+                      requestAnimationFrame(updatePlanets);
+                      return;
+                  }
+    
+                  planetObjects.forEach(planetObj => {
+                      const elapsedSeconds = (now - planetObj.startTime) / 1000;
+                      const orbitTimeSeconds = planetObj.orbitTime * planetObj.speedFactor;
+                      const progress = (elapsedSeconds % orbitTimeSeconds) / orbitTimeSeconds;
+                      const angle = planetObj.angle + progress * 360;
+                      const angleRad = angle * Math.PI / 180;
+    
+                      const radius = planetObj.orbitSize / 2;
+                      const x = Math.cos(angleRad) * radius;
+                      const y = Math.sin(angleRad) * radius;
+    
+                      planetObj.orientation.style.left = `${50 + 50 * (x / radius)}%`;
+                      planetObj.orientation.style.top = `${50 + 50 * (y / radius)}%`;
+    
+                      const tiltCompensation = -galaxyTiltAngle;
+                      planetObj.element.style.transform = `rotateX(${tiltCompensation}deg)`;
+                  });
+    
+                  requestAnimationFrame(updatePlanets);
+              }
+    
+              function switchGalaxy(galaxyName) {
+                  if (currentGalaxy === galaxyName) return;
+                  currentGalaxy = galaxyName;
+    
+                  document.querySelectorAll('.planetary-system .galaxy-item').forEach(item => {
+                      item.classList.remove('selected');
+                      if (item.textContent === galaxyName) {
+                          item.classList.add('selected');
+                      }
+                  });
+    
+                  planetObjects.forEach((planetObj, index) => {
+                      const newOrbitSize = 100 + index * 100 + (Math.random() * 50 - 25);
+                      const newOrbitTime = 60 + index * 20 + (Math.random() * 10 - 5);
+                      const newAngle = Math.random() * 360;
+                      const newSpeedFactor = 0.8 + Math.random() * 0.4;
+    
+                      planetObj.orbit.style.setProperty('--orbit-size', `${newOrbitSize}px`);
+                      planetObj.orbit.style.setProperty('--orbit-time', `${newOrbitTime}s`);
+                      planetObj.orbitSize = newOrbitSize;
+                      planetObj.orbitTime = newOrbitTime;
+                      planetObj.angle = newAngle;
+                      planetObj.speedFactor = newSpeedFactor;
+                      planetObj.startTime = Date.now() - Math.random() * newOrbitTime * 1000;
+                  });
+    
+                  lastInteractionTime = Date.now();
+              }
+    
+              function scrollToCenter(element) {
+                  const container = galaxySelector;
+                  const elementRect = element.getBoundingClientRect();
+                  const containerRect = container.getBoundingClientRect();
+                  const scrollLeft = element.offsetLeft - (containerRect.width / 2) + (elementRect.width / 2);
+                  container.scrollTo({
+                      left: scrollLeft,
+                      behavior: 'smooth'
+                  });
+              }
+    
+              let scrollVelocity = 0;
+              let lastScrollTime = 0;
+    
+              galaxySelector.addEventListener('wheel', (e) => {
+                  e.preventDefault();
+                  const delta = e.deltaY * 10;
+                  scrollVelocity += delta;
+                  lastScrollTime = Date.now();
+                  lastInteractionTime = Date.now();
+              });
+    
+              function smoothScroll() {
+                  const now = Date.now();
+                  const timeSinceLastScroll = now - lastScrollTime;
+    
+                  if (timeSinceLastScroll < 100) {
+                      galaxySelector.scrollLeft += scrollVelocity;
+                      scrollVelocity *= 0.95;
+                  } else {
+                      scrollVelocity = 0;
+                  }
+    
+                  const containerRect = galaxySelector.getBoundingClientRect();
+                  const containerCenter = containerRect.left + containerRect.width / 2;
+                  const items = document.querySelectorAll('.planetary-system .galaxy-item');
+    
+                  items.forEach(item => {
+                      const itemRect = item.getBoundingClientRect();
+                      const itemCenter = itemRect.left + itemRect.width / 2;
+                      const distanceFromCenter = Math.abs(containerCenter - itemCenter);
+                      const maxDistance = containerRect.width / 2;
+    
+                      const scale = Math.max(0.5, 1 - (distanceFromCenter / maxDistance));
+                      const fontSize = 14 * scale;
+                      item.style.transform = `scale(${scale})`;
+                      item.style.fontSize = `${fontSize}px`;
+                  });
+    
+                  requestAnimationFrame(smoothScroll);
+              }
+    
+              requestAnimationFrame(smoothScroll);
+    
+              updatePlanets();
           })();
       });
     </script>

@@ -442,6 +442,16 @@ class Startups(models.Model):
                 # Добавил ValueError на случай проблем с Decimal->float в round, хотя не должно
                 return 0 
         return 0
+    
+    def get_status_display(self):
+        statuses = {
+            'pending': 'На рассмотрении',
+            'approved': 'Одобрен',
+            'rejected': 'Отклонён',
+            'blocked': 'Заблокирован',
+            'closed': 'Закрыт',
+        }
+        return statuses.get(self.status, 'Неизвестен')
 
 class ModeratorReviews(models.Model):
     review_id = models.AutoField(primary_key=True)

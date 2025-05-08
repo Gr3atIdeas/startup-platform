@@ -752,6 +752,7 @@ def create_startup(request):
         form = StartupForm()
     return render(request, 'accounts/create_startup.html', {'form': form})
 
+# accounts/views.py
 @login_required
 def edit_startup(request, startup_id):
     logger.debug(f"Request method: {request.method}")
@@ -763,10 +764,15 @@ def edit_startup(request, startup_id):
         messages.error(request, 'У вас нет прав для редактирования этого стартапа.')
         return redirect('startup_detail', startup_id=startup_id)
 
+    # Получаем таймлайн стартапа
+    timeline = StartupTimeline.objects.filter(startup=startup)
+    # Создаём словарь с описаниями этапов (step_number: description)
+    timeline_steps = {step.step_number: step.description for step in timeline}
+
     if request.method == 'POST':
         form = StartupForm(request.POST, request.FILES, instance=startup)
         if form.is_valid():
-            startup = form.save(commit=False) # short_description и terms обновятся здесь
+            startup = form.save(commit=False)
             startup.status = 'pending'
             startup.is_edited = True
             startup.updated_at = timezone.now()
@@ -785,8 +791,8 @@ def edit_startup(request, startup_id):
                 startup.only_buy = True
                 startup.both_mode = False
             elif investment_type == 'both':
-                startup.only_invest = False # или True, как решено для create_startup
-                startup.only_buy = False    # или True
+                startup.only_invest = False
+                startup.only_buy = False
                 startup.both_mode = True
 
             startup.save()
@@ -795,14 +801,14 @@ def edit_startup(request, startup_id):
             for i in range(1, 6):
                 description = request.POST.get(f'step_description_{i}', '').strip()
                 if description:
-                    timeline, created = StartupTimeline.objects.get_or_create(
+                    timeline_entry, created = StartupTimeline.objects.get_or_create(
                         startup=startup,
                         step_number=i,
                         defaults={'title': f"Этап {i}", 'description': description}
                     )
-                    if not created and timeline.description != description:
-                        timeline.description = description
-                        timeline.save()
+                    if not created and timeline_entry.description != description:
+                        timeline_entry.description = description
+                        timeline_entry.save()
 
             # Инициализация списков для ID
             logo_ids = startup.logo_urls or []
@@ -896,7 +902,7 @@ def edit_startup(request, startup_id):
             startup.video_urls = video_ids
             startup.save()
 
-            # Логирование (оставлено без изменений)
+            # Логирование
             logger.info("=== Обновление стартапа ===")
             logger.info(f"Стартап ID: {startup.startup_id}")
             if logo:
@@ -960,10 +966,10 @@ def edit_startup(request, startup_id):
             return redirect('profile')
         else:
             messages.error(request, 'Форма содержит ошибки.')
-            return render(request, 'accounts/edit_startup.html', {'form': form, 'startup': startup})
+            return render(request, 'accounts/edit_startup.html', {'form': form, 'startup': startup, 'timeline_steps': timeline_steps})
     else:
         form = StartupForm(instance=startup)
-    return render(request, 'accounts/edit_startup.html', {'form': form, 'startup': startup})
+    return render(request, 'accounts/edit_startup.html', {'form': form, 'startup': startup, 'timeline_steps': timeline_steps})
 
 # Панель модератора
 def moderator_dashboard(request):
@@ -1628,7 +1634,7 @@ def my_startups(request):
     # Фильтруем одобренные стартапы для основной секции и финансовой аналитики
     approved_startups_qs = user_startups_qs.filter(status='approved')
 
-    # --- Расчет ФИНАНСОВОЙ аналитики по ОДОБРЕННЫМ стартапам ---
+    # --- Расчет ФИНАНСОЧВОЙ аналитики по ОДОБРЕННЫМ стартапам ---
     financial_analytics_data = approved_startups_qs.aggregate(
         total_raised=Sum('amount_raised'),
         max_raised=Max('amount_raised'),
@@ -1673,7 +1679,7 @@ def my_startups(request):
         })
         invested_category_data_dict[category_name] = percentage
 
-    # --- Данные для графика по месяцам (по сумме amount_raised ОДОБРЕННЫХ стартапов) ---
+    # --- Данные для графика по месяцам (по сумме amount_raised ОДОБРЕННЫМ стартапов) ---
     # Оставляем логику без изменений, так как она показывает финансовый прогресс
     current_year = timezone.now().year
     monthly_data_direct = approved_startups_qs.filter(
@@ -1693,7 +1699,6 @@ def my_startups(request):
         if 0 <= month_index < 12:
             monthly_total_decimal = data.get('monthly_total', Decimal(0)) or Decimal(0)
             monthly_totals[month_index] = float(monthly_total_decimal)
-
 
     # --- Получаем одобренные стартапы с аннотациями для основной сетки ---
     approved_startups_annotated = approved_startups_qs.annotate(
@@ -1772,20 +1777,48 @@ def my_startups(request):
     # Лог: финальные данные для графика
     logger.info(f"[my_startups] Final structured chart data list: {chart_data_list}")
 
+    # --- Данные для планетарной системы ---
+    planetary_startups = []
+    for idx, startup in enumerate(approved_startups_annotated, start=1):
+        # Получаем URL логотипа через метод get_logo_url()
+        logo_url = startup.get_logo_url() or 'https://via.placeholder.com/150'
+
+        # Вычисляем значения для orbit-size, orbit-time и planet-size
+        orbit_size = (idx * 100) + 100  # forloop.counter|mul:100|add:100
+        orbit_time = (idx * 20) + 60    # forloop.counter|mul:20|add:60
+        planet_size = (idx * 2) + 50    # forloop.counter|mul:2|add:50
+
+        planet_data = {
+            'id': str(idx),
+            'startup_id': startup.startup_id,
+            'name': startup.title or 'Без названия',
+            'description': startup.description or 'Описание отсутствует',
+            'rating': f"{startup.get_average_rating():.1f}/5 ({startup.total_voters or 0})",
+            'progress': f"{startup.get_progress_percentage():.0f}%",
+            'funding': f"{int(startup.amount_raised or 0):,d} ₽".replace(',', ' '),
+            'investors': f"Инвесторов: {startup.get_investors_count() or 0}",
+            'image': logo_url,
+            'orbit_size': orbit_size,    # Передаём вычисленное значение
+            'orbit_time': orbit_time,    # Передаём вычисленное значение
+            'planet_size': planet_size,  # Передаём вычисленное значение
+        }
+        planetary_startups.append(planet_data)
+
     context = {
-        'startups_count': approved_startups_count, # Количество одобренных стартапов
-        'total_investment': total_amount_raised, # Сумма собранная одобренными
-        'max_investment': max_raised, # Макс. сумма одного одобренного
-        'min_investment': min_raised, # Мин. сумма одного одобренного
-        'investment_categories': investment_categories[:7], 
-        'month_labels': month_labels, 
-        'chart_monthly_category_data': chart_data_list, # Новые структурированные данные
-        'chart_categories': sorted_categories, # Список категорий для графика
-        'all_directions': all_directions_list, 
-        'invested_category_data': invested_category_data_dict, 
-        'user_startups': approved_startups_annotated, 
-        'startup_applications': all_user_applications, 
-        'current_sort': 'newest', 
+        'startups_count': approved_startups_count,
+        'total_investment': total_amount_raised,
+        'max_investment': max_raised,
+        'min_investment': min_raised,
+        'investment_categories': investment_categories[:7],
+        'month_labels': month_labels,
+        'chart_monthly_category_data': chart_data_list,
+        'chart_categories': sorted_categories,
+        'all_directions': all_directions_list,
+        'invested_category_data': invested_category_data_dict,
+        'user_startups': approved_startups_annotated,
+        'startup_applications': all_user_applications,
+        'current_sort': 'newest',
+        'planetary_startups': planetary_startups,
     }
 
     return render(request, 'accounts/my_startups.html', context)
