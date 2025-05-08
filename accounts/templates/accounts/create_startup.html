@@ -16,15 +16,16 @@
     <form method="post" enctype="multipart/form-data" id="startupForm">
         {% csrf_token %}
 
-        {# --- Общий блок для ошибок формы --- #}
         {% if form.errors %}
             <div class="form-summary-errors">
                 <h4>Пожалуйста, исправьте следующие ошибки:</h4>
                 <ul>
-                    {% for field, errors in form.errors.items %}
-                        {% for error in errors %}
+                    {% for field, errors_list in form.errors.items %}
+                        {% for error in errors_list %}
                             <li>
-                                {% if field != "__all__" %}{{ form|get_field_label:field }}: {% endif %}
+                                {% if field != "__all__" %}
+                                    {{ form.fields|get_item:field.label|default:field|capfirst }}: 
+                                {% endif %}
                                 {{ error }}
                             </li>
                         {% endfor %}
@@ -32,7 +33,6 @@
                 </ul>
             </div>
         {% endif %}
-        {# --- Конец общего блока для ошибок формы --- #}
 
         <div class="form-grid">
             <!-- Левая колонка -->
