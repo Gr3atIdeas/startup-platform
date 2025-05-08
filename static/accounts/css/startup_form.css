@@ -523,7 +523,7 @@ h3.section-title {
     margin: 0 auto; /* Центрируем линию */
     height: 4px; /* Делаем линию тоньше */
     margin-bottom: 20px; /* Отступ ДО следующего элемента (.timeline) */
-    top: 142px; /* СКОРРЕКТИРОВАНО: Позиционируем вертикально по центру кругов */
+    top: 40px; /* СКОРРЕКТИРОВАНО: Поднимаем линию выше */
 }
 
 .timeline-progress-line {
@@ -817,10 +817,10 @@ h3.section-title {
 
 .submit-button {
     padding: 15px 40px;
-    background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%); /* Желтый градиент */
+    background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%) !important; /* Желтый градиент + !important для уверенности */
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
     border-radius: 10px;
-    color: black; /* Черный текст на желтом */
+    color: black !important; /* Черный текст на желтом + !important */
     font-size: 18px;
     font-family: Unbounded;
     font-weight: 500;
