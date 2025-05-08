@@ -752,6 +752,7 @@ def create_startup(request):
         form = StartupForm()
     return render(request, 'accounts/create_startup.html', {'form': form})
 
+# accounts/views.py
 @login_required
 def edit_startup(request, startup_id):
     logger.debug(f"Request method: {request.method}")
@@ -763,10 +764,15 @@ def edit_startup(request, startup_id):
         messages.error(request, 'У вас нет прав для редактирования этого стартапа.')
         return redirect('startup_detail', startup_id=startup_id)
 
+    # Получаем таймлайн стартапа
+    timeline = StartupTimeline.objects.filter(startup=startup)
+    # Создаём словарь с описаниями этапов (step_number: description)
+    timeline_steps = {step.step_number: step.description for step in timeline}
+
     if request.method == 'POST':
         form = StartupForm(request.POST, request.FILES, instance=startup)
         if form.is_valid():
-            startup = form.save(commit=False) # short_description и terms обновятся здесь
+            startup = form.save(commit=False)
             startup.status = 'pending'
             startup.is_edited = True
             startup.updated_at = timezone.now()
@@ -785,8 +791,8 @@ def edit_startup(request, startup_id):
                 startup.only_buy = True
                 startup.both_mode = False
             elif investment_type == 'both':
-                startup.only_invest = False # или True, как решено для create_startup
-                startup.only_buy = False    # или True
+                startup.only_invest = False
+                startup.only_buy = False
                 startup.both_mode = True
 
             startup.save()
@@ -795,14 +801,14 @@ def edit_startup(request, startup_id):
             for i in range(1, 6):
                 description = request.POST.get(f'step_description_{i}', '').strip()
                 if description:
-                    timeline, created = StartupTimeline.objects.get_or_create(
+                    timeline_entry, created = StartupTimeline.objects.get_or_create(
                         startup=startup,
                         step_number=i,
                         defaults={'title': f"Этап {i}", 'description': description}
                     )
-                    if not created and timeline.description != description:
-                        timeline.description = description
-                        timeline.save()
+                    if not created and timeline_entry.description != description:
+                        timeline_entry.description = description
+                        timeline_entry.save()
 
             # Инициализация списков для ID
             logo_ids = startup.logo_urls or []
@@ -896,7 +902,7 @@ def edit_startup(request, startup_id):
             startup.video_urls = video_ids
             startup.save()
 
-            # Логирование (оставлено без изменений)
+            # Логирование
             logger.info("=== Обновление стартапа ===")
             logger.info(f"Стартап ID: {startup.startup_id}")
             if logo:
@@ -960,10 +966,10 @@ def edit_startup(request, startup_id):
             return redirect('profile')
         else:
             messages.error(request, 'Форма содержит ошибки.')
-            return render(request, 'accounts/edit_startup.html', {'form': form, 'startup': startup})
+            return render(request, 'accounts/edit_startup.html', {'form': form, 'startup': startup, 'timeline_steps': timeline_steps})
     else:
         form = StartupForm(instance=startup)
-    return render(request, 'accounts/edit_startup.html', {'form': form, 'startup': startup})
+    return render(request, 'accounts/edit_startup.html', {'form': form, 'startup': startup, 'timeline_steps': timeline_steps})
 
 # Панель модератора
 def moderator_dashboard(request):
