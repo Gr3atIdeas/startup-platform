@@ -1793,9 +1793,12 @@ def my_startups(request):
         logo_url = startup.get_logo_url() or 'https://via.placeholder.com/150'
 
         # Вычисляем значения для orbit-size, orbit-time и planet-size
-        orbit_size = (idx * 100) + 100  # forloop.counter|mul:100|add:100
-        orbit_time = (idx * 20) + 60    # forloop.counter|mul:20|add:60
-        planet_size = (idx * 2) + 50    # forloop.counter|mul:2|add:50
+        orbit_size = (idx * 100) + 100
+        orbit_time = (idx * 20) + 60
+        planet_size = (idx * 2) + 50
+
+        # Проверяем наличие direction и получаем название категории
+        category_name = startup.direction.direction_name if startup.direction else 'Без категории'
 
         planet_data = {
             'id': str(idx),
@@ -1807,27 +1810,14 @@ def my_startups(request):
             'funding': f"{int(startup.amount_raised or 0):,d} ₽".replace(',', ' '),
             'investors': f"Инвесторов: {startup.get_investors_count() or 0}",
             'image': logo_url,
-            'orbit_size': orbit_size,    # Передаём вычисленное значение
-            'orbit_time': orbit_time,    # Передаём вычисленное значение
-            'planet_size': planet_size,  # Передаём вычисленное значение
+            'orbit_size': orbit_size,
+            'orbit_time': orbit_time,
+            'planet_size': planet_size,
+            'category': category_name,
         }
         planetary_startups.append(planet_data)
 
-    context = {
-        'startups_count': approved_startups_count,
-        'total_investment': total_amount_raised,
-        'max_investment': max_raised,
-        'min_investment': min_raised,
-        'investment_categories': investment_categories[:7],
-        'month_labels': month_labels,
-        'chart_monthly_category_data': chart_data_list,
-        'chart_categories': sorted_categories,
-        'all_directions': all_directions_list,
-        'invested_category_data': invested_category_data_dict,
-        'user_startups': approved_startups_annotated,
-        'startup_applications': all_user_applications,
-        'current_sort': 'newest',
-        'planetary_startups': planetary_startups,
-    }
-
-    return render(request, 'accounts/my_startups.html', context)
+    # Логирование для отладки
+    logger.info("Planetary Startups Data:")
+    for planet in planetary_startups:
+        logger.info(f"Startup ID: {planet['startup_id']}, Title: {planet['name']}, Category: {planet['category']}")
