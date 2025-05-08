@@ -510,38 +510,6 @@
       transform: scale(1.2);
     }
 
-    /* Добавляем стили для селектора статусов */
-    .status-filter-wrapper {
-        margin-right: 20px;
-    }
-
-    #status-filter {
-        padding: 8px 12px;
-        background-color: #1A1D2E;
-        color: #FFFFFF;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 5px;
-        font-size: 14px;
-        cursor: pointer;
-        appearance: none;
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        background-image: url('data:image/svg+xml;utf8,<svg fill="white" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
-        background-repeat: no-repeat;
-        background-position: right 8px center;
-        padding-right: 30px;
-    }
-
-    #status-filter:focus {
-        outline: none;
-        border-color: #FFEF2B;
-    }
-
-    #status-filter option {
-        background-color: #1A1D2E;
-        color: #FFFFFF;
-    }
-
 
     .status-filter-buttons {
         display: flex;
@@ -905,7 +873,7 @@
 
         <div class="applications-list">
           {% for app in startup_applications %}
-            <div class="application-card">
+            <div class="application-card" data-status="{{ app.status|lower|default:'pending' }}">
               <div class="application-title">{{ app.title|default:"Без названия"|escape }}</div>
               <div class="application-status status-{{ app.status|lower|default:'pending' }}">
                 {{ app.get_status_display }}
@@ -1077,9 +1045,9 @@
           if (loadMoreBtn) loadMoreBtn.style.display = 'none';
           if (hideBtn) hideBtn.style.display = 'none';
     
-          const noResultsMsg = startupGrid.querySelector('.no-results-message');
+          let startupsNoResultsMsg = startupGrid.querySelector('.no-results-message');
           if (visibleCount === 0) {
-              if (!noResultsMsg) {
+              if (!startupsNoResultsMsg) {
                   const p = document.createElement('p');
                   p.textContent = `Нет стартапов в категории "${translateCategoryName(selectedCategory)}".`;
                   p.style.gridColumn = '1 / -1';
@@ -1088,8 +1056,8 @@
                   startupGrid.appendChild(p);
               }
           } else {
-              if (noResultsMsg) {
-                  noResultsMsg.remove();
+              if (startupsNoResultsMsg) {
+                  startupsNoResultsMsg.remove();
               }
           }
       }
@@ -1194,21 +1162,21 @@
                  if (loadMoreBtnSearch) loadMoreBtnSearch.style.display = 'none';
                  if (hideBtnSearch) hideBtnSearch.style.display = 'none';
     
-                  const noResultsMsg = startupGrid.querySelector('.no-results-message');
-                  if (visibleCount === 0 && searchTerm !== '') {
-                       if (!noResultsMsg) {
-                           const p = document.createElement('p');
-                           p.textContent = 'По вашему запросу ничего не найдено.';
-                           p.style.gridColumn = '1 / -1';
-                           p.style.textAlign = 'center';
-                           p.classList.add('no-results-message');
-                           startupGrid.appendChild(p);
-                       }
-                   } else {
-                       if (noResultsMsg) {
-                           noResultsMsg.remove();
-                       }
-                   }
+                 let startupsNoResultsMsg = startupGrid.querySelector('.no-results-message');
+                 if (visibleCount === 0 && searchTerm !== '') {
+                      if (!startupsNoResultsMsg) {
+                          const p = document.createElement('p');
+                          p.textContent = 'По вашему запросу ничего не найдено.';
+                          p.style.gridColumn = '1 / -1';
+                          p.style.textAlign = 'center';
+                          p.classList.add('no-results-message');
+                          startupGrid.appendChild(p);
+                      }
+                  } else {
+                      if (startupsNoResultsMsg) {
+                          startupsNoResultsMsg.remove();
+                      }
+                  }
              });
           }
     
@@ -1230,8 +1198,8 @@
                  this.classList.add('active');
                  const filter = this.getAttribute('data-filter');
     
-                 const noResultsMsg = startupGrid.querySelector('.no-results-message');
-                 if (noResultsMsg) noResultsMsg.remove();
+                 let startupsNoResultsMsg = startupGrid.querySelector('.no-results-message');
+                 if (startupsNoResultsMsg) startupsNoResultsMsg.remove();
     
                  if (filter === 'all') {
                      let visibleCount = 0;
@@ -1310,9 +1278,9 @@
                  if (loadMoreBtnSearch) loadMoreBtnSearch.style.display = 'none';
                  if (hideBtnSearch) hideBtnSearch.style.display = 'none';
     
-                 const noResultsMsg = startupGrid.querySelector('.no-results-message');
+                 startupsNoResultsMsg = startupGrid.querySelector('.no-results-message');
                  if (visibleCount === 0 && searchTerm !== '') {
-                     if (!noResultsMsg) {
+                     if (!startupsNoResultsMsg) {
                          const p = document.createElement('p');
                          p.textContent = 'По вашему запросу ничего не найдено.';
                          p.style.gridColumn = '1 / -1';
@@ -1321,8 +1289,8 @@
                          startupGrid.appendChild(p);
                      }
                  } else {
-                     if (noResultsMsg) {
-                         noResultsMsg.remove();
+                     if (startupsNoResultsMsg) {
+                         startupsNoResultsMsg.remove();
                      }
                  }
              });
@@ -1429,9 +1397,9 @@
                  if (loadMoreBtnSearch) loadMoreBtnSearch.style.display = 'none';
                  if (hideBtnSearch) hideBtnSearch.style.display = 'none';
     
-                 const noResultsMsg = startupGrid.querySelector('.no-results-message');
+                 let startupsNoResultsMsg = startupGrid.querySelector('.no-results-message');
                  if (visibleCount === 0 && searchTerm !== '') {
-                     if (!noResultsMsg) {
+                     if (!startupsNoResultsMsg) {
                          const p = document.createElement('p');
                          p.textContent = 'По вашему запросу ничего не найдено.';
                          p.style.gridColumn = '1 / -1';
@@ -1440,8 +1408,8 @@
                          startupGrid.appendChild(p);
                      }
                  } else {
-                     if (noResultsMsg) {
-                         noResultsMsg.remove();
+                     if (startupsNoResultsMsg) {
+                         startupsNoResultsMsg.remove();
                      }
                  }
              });
@@ -1455,7 +1423,7 @@
     
              let visibleCount = 0;
              applicationCards.forEach(card => {
-                 const status = card.querySelector('.application-status').getAttribute('class').split(' ')[1].split('-')[1];
+                 const status = card.getAttribute('data-status');
                  const matchesStatus = statusFilter === 'all' || status === statusFilter;
     
                  if (matchesStatus) {
@@ -1466,9 +1434,9 @@
                  }
              });
     
-             const noResultsMsg = document.querySelector('.applications-list .no-results-message');
+             let applicationsNoResultsMsg = document.querySelector('.applications-list .no-results-message');
              if (visibleCount === 0) {
-                 if (!noResultsMsg) {
+                 if (!applicationsNoResultsMsg) {
                      const p = document.createElement('p');
                      p.textContent = 'По вашему запросу ничего не найдено.';
                      p.style.gridColumn = '1 / -1';
@@ -1477,8 +1445,8 @@
                      document.querySelector('.applications-list').appendChild(p);
                  }
              } else {
-                 if (noResultsMsg) {
-                     noResultsMsg.remove();
+                 if (applicationsNoResultsMsg) {
+                     applicationsNoResultsMsg.remove();
                  }
              }
          }
