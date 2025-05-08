@@ -2,6 +2,7 @@
 {% load static %}
 {% load widget_tweaks %}
 {% load file_tags %}  {# Убедимся, что тег загружен #}
+{% load startup_filters %}
 
 {% block title %}Редактирование стартапа{% endblock %}
 
@@ -172,30 +173,25 @@
         <!-- Блок таймлайна -->
         <h3 class="section-title">Этапы</h3>
         <div class="timeline" id="timeline">
-            {% for i in "12345" %}
+            {% for i in "12345"|make_list %}
             <div class="timeline-step" data-step="{{ i }}">
                 {# Добавляем класс active для текущего сохраненного шага #}
                 <div class="step-number {% if forloop.counter <= startup.step_number %}active{% endif %}" id="step{{ i }}">{{ i }}</div>
                 <div class="step-text">Этап {{ i }}</div>
             </div>
             {% endfor %}
-            </div>
+        </div>
 
         <div id="step-descriptions">
-            {# Получаем существующие описания этапов, если они есть #}
-            {% with timeline_events=startup.startuptimeline_set.all %}
-                {% for i in "12345" %}
-                    {% with current_event=timeline_events|get_by_step:i %}
-                        <div class="timeline-description-container {% if forloop.counter == startup.step_number %}active{% endif %}" id="step-description-{{ i }}" data-step-content="{{ i }}">
-                            <div class="timeline-description-header">
-                                <div class="timeline-description-title">Этап {{ i }}</div>
-                                <button type="button" class="btn-select-current" data-step-target="{{ i }}">Мы здесь</button>
-                            </div>
-                            <textarea class="timeline-description-textarea" name="step_description_{{ i }}" placeholder="Добавьте описание для этого этапа..." required>{{ current_event.description|default:"" }}</textarea>
-                        </div>
-                     {% endwith %}
-                {% endfor %}
-            {% endwith %}
+            {% for i in "12345"|make_list %}
+                <div class="timeline-description-container {% if forloop.counter == startup.step_number %}active{% endif %}" id="step-description-{{ i }}" data-step-content="{{ i }}">
+                    <div class="timeline-description-header">
+                        <div class="timeline-description-title">Этап {{ i }}</div>
+                        <button type="button" class="btn-select-current" data-step-target="{{ i }}">Мы здесь</button>
+                    </div>
+                    <textarea class="timeline-description-textarea" name="step_description_{{ i }}" placeholder="Добавьте описание для этого этапа..." required>{{ timeline_steps|get_item:i|default:"" }}</textarea>
+                </div>
+            {% endfor %}
         </div>
         <!-- Скрытое поле для текущего этапа -->
         <input type="hidden" name="step_number" id="step_number" value="{{ startup.step_number|default:1 }}">
