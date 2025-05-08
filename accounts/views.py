@@ -1748,6 +1748,25 @@ def my_startups(request):
 
         logger.info(f"[my_startups] Final structured chart data list: {chart_data_list}")
 
+        # --- Получаем одобренные стартапы с аннотациями для основной сетки и планетарной системы ---
+        try:
+            approved_startups_annotated = approved_startups_qs.annotate(
+                average_rating=Avg(
+                    models.ExpressionWrapper(
+                        Coalesce(models.F('sum_votes'), 0) * 1.0 / Coalesce(models.F('total_voters'), 1),
+                        output_field=FloatField()
+                    ),
+                    filter=models.Q(total_voters__gt=0),
+                    default=0.0
+                ),
+                comment_count=Count('comments')
+            ).annotate(
+                average_rating=Coalesce('average_rating', 0.0)
+            ).order_by('-created_at')
+        except Exception as e:
+            logger.error(f"Ошибка при получении одобренных стартапов: {str(e)}")
+            approved_startups_annotated = []
+
         # --- Данные для планетарной системы ---
         planetary_startups = []
         for idx, startup in enumerate(approved_startups_annotated, start=1):
@@ -1783,25 +1802,6 @@ def my_startups(request):
         except Exception as e:
             logger.error(f"Ошибка при получении направлений: {str(e)}")
             all_directions_list = []
-
-        # --- Получаем одобренные стартапы с аннотациями для основной сетки ---
-        try:
-            approved_startups_annotated = approved_startups_qs.annotate(
-                average_rating=Avg(
-                    models.ExpressionWrapper(
-                        Coalesce(models.F('sum_votes'), 0) * 1.0 / Coalesce(models.F('total_voters'), 1),
-                        output_field=FloatField()
-                    ),
-                    filter=models.Q(total_voters__gt=0),
-                    default=0.0
-                ),
-                comment_count=Count('comments')
-            ).annotate(
-                average_rating=Coalesce('average_rating', 0.0)
-            ).order_by('-created_at')
-        except Exception as e:
-            logger.error(f"Ошибка при получении одобренных стартапов: {str(e)}")
-            approved_startups_annotated = []
 
         # --- Получаем все стартапы пользователя для секции "Заявки" ---
         try:
