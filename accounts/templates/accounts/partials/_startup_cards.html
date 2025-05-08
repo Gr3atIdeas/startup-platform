@@ -7,9 +7,11 @@
     <span class="startup-franchise-tag">Франшиза</span>
     <div class="startup-image">
       {% if startup.logo_urls %}
-        <img src="{% get_file_url_tag startup.logo_urls.0 startup.startup_id 'logo' %}" alt="{{ startup.title }}">
+        <img src="{% get_file_url_tag startup.logo_urls.0 startup.startup_id 'logo' %}" alt="{{ startup.title }}" class="startup-logo-img">
       {% else %}
-        <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Placeholder logo" class="startup-logo-placeholder-main">
+        <div class="startup-image-placeholder">
+          {{ startup.title|make_list|first|upper }}
+        </div>
       {% endif %}
     </div>
 
