@@ -133,21 +133,38 @@ body {
     display: flex;
     align-items: center;
     gap: 10px;
+    width: 100%; /* Растягиваем на всю ширину карточки */
+    justify-content: flex-start; /* Выравниваем по левому краю */
 }
 
-.micro-investment-group .form-check-label {
+.micro-investment-group .form-check-input {
+    /* Стандартный чекбокс можно скрыть, если иконка полностью его заменяет
+    или оставить видимым, если он нужен для доступности и должен быть стилизован */
+    order: 1; /* Иконка и текст будут первыми */
+    margin-right: 10px; /* Отступ от стандартного чекбокса до иконки/текста, если он видим */
+    /* Если скрываем, то display: none; */
+}
+
+.micro-investment-group .micro-investment-label-custom {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 10px; /* Отступ между иконкой и текстом */
     font-size: 12px;
     font-family: Unbounded;
     font-weight: 300;
     letter-spacing: 0.12px;
     color: white;
+    cursor: pointer;
+    order: 2; /* Порядок для label */
 }
-.micro-investment-group .micro-investment-icon {
+
+.micro-investment-group .micro-investment-label-custom .micro-investment-icon {
     width: 24px;
     height: 24px;
+    /* order: 1;  Убрано, порядок через flex-контейнер */
+}
+.micro-investment-group .micro-investment-label-custom .checkbox-text-span {
+    /* order: 2; Убрано */
 }
 
 .investment-type-group {
@@ -505,8 +522,8 @@ h3.section-title {
     width: calc(100% - 122px); /* Ширина линии = 100% минус ширина одного круга (по бокам половинки) */
     margin: 0 auto; /* Центрируем линию */
     height: 4px; /* Делаем линию тоньше */
-    margin-bottom: 20px;
-    top: 59px; /* Позиционируем вертикально по центру кругов (122px / 2 - height/2) */
+    margin-bottom: 20px; /* Отступ ДО следующего элемента (.timeline) */
+    top: 142px; /* СКОРРЕКТИРОВАНО: Позиционируем вертикально по центру кругов */
 }
 
 .timeline-progress-line {
@@ -800,10 +817,10 @@ h3.section-title {
 
 .submit-button {
     padding: 15px 40px;
-    background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
+    background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%); /* Желтый градиент */
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
     border-radius: 10px;
-    color: black;
+    color: black; /* Черный текст на желтом */
     font-size: 18px;
     font-family: Unbounded;
     font-weight: 500;
@@ -873,4 +890,9 @@ h3.section-title {
         gap: 40px; /* Уменьшаем отступы между секциями */
     }
     /* ... другие мобильные стили ... */
+}
+
+/* Скрываем стандартный чекбокс Django, если используем полностью кастомный */
+.form-check-input-hidden {
+    display: none;
 }

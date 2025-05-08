@@ -52,14 +52,14 @@ class LoginForm(forms.Form):
 # Форма создания стартапа
 class StartupForm(forms.ModelForm):
     logo = forms.ImageField(label='Логотип', required=False, help_text="Загрузите логотип стартапа (изображение)")
-    creatives = MultipleFileField(label='Креативы', required=False, help_text="Загрузите креативы (множественные файлы: изображения или видео)")
-    proofs = MultipleFileField(label='Пруфы', required=False, help_text="Загрузите пруфы (множественные файлы: PDF, DOC, TXT и т.д.)")
+    creatives = MultipleFileField(required=False, help_text="Загрузите изображения (множественные файлы: PNG, JPEG)")
+    proofs = MultipleFileField(required=False, help_text="Загрузите документы (множественные файлы: PDF, DOC, TXT и т.д.)")
     direction = forms.ModelChoiceField(queryset=Directions.objects.all(), label='Направление', required=True)
     stage = forms.ModelChoiceField(queryset=StartupStages.objects.all(), label='Стадия', required=True)
     agree_rules = forms.BooleanField(label='Согласен с правилами', required=True)
     agree_data_processing = forms.BooleanField(label='Согласен с обработкой данных', required=True)
-    micro_investment_available = forms.BooleanField(label='Включить микро-инвестиции', required=False)
-    video = forms.FileField(required=False)  # Новое поле для видео
+    micro_investment_available = forms.BooleanField(required=False)
+    video = forms.FileField(required=False, help_text="Загрузите основное видео (MP4, MOV)")
     short_description = forms.CharField(widget=forms.Textarea(attrs={'rows': 3}), label='Вводная (краткое описание)', required=False)
     terms = forms.CharField(widget=forms.Textarea(attrs={'rows': 5}), label='Условия', required=False)
 
@@ -112,7 +112,7 @@ class StartupForm(forms.ModelForm):
             'creatives': 'Изображения',
             'video': 'Видео',
             'proofs': 'Документы',
-            'micro_investment_available': 'Микроинвестиции',
+            'micro_investment_available': 'Включить микро-инвестиции',
             'agree_rules': 'Согласен с правилами *',
             'agree_data_processing': 'Согласен с обработкой данных *',
         }

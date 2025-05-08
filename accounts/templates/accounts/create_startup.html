@@ -70,9 +70,9 @@
                     <div class="investment-type-card">
                         <div class="form-group checkbox-group micro-investment-group">
                             {{ form.micro_investment_available|add_class:"form-check-input"|attr:"id:id_micro_investment_available" }}
-                            <label for="id_micro_investment_available" class="form-check-label">
+                            <label for="id_micro_investment_available" class="form-check-label micro-investment-label-custom">
                                  <img src="{% static 'accounts/images/creat_startup/add-circle-outline.svg' %}" alt="micro-investment icon" class="micro-investment-icon">
-                                {{ form.micro_investment_available.label }}
+                                <span class="checkbox-text-span">{{ form.micro_investment_available.label }}</span>
                             </label>
                             {% if form.micro_investment_available.errors %}<span class="error-message">{{ form.micro_investment_available.errors|first }}</span>{% endif %}
                         </div>
@@ -96,18 +96,12 @@
             <div class="form-content-section">
                 <div class="form-group full-width">
                     <label for="{{ form.short_description.id_for_label }}">*{{ form.short_description.label }}</label>
-                    {% if form.short_description.field.required %}
-                        <div class="required-field-notice">*Обязательное поле</div>
-                    {% endif %}
                     {{ form.short_description|add_class:"form-control"|attr:"placeholder:Наш стартап разрабатывает инновационную платформу для..." }}
                     <div class="small-text">Краткое описание вашего стартапа, основные моменты.</div>
                     {% if form.short_description.errors %}<span class="error-message">{{ form.short_description.errors|first }}</span>{% endif %}
                 </div>
                 <div class="form-group full-width">
                     <label for="{{ form.description.id_for_label }}">*{{ form.description.label }}</label>
-                     {% if form.description.field.required %}
-                        <div class="required-field-notice">*Обязательное поле</div>
-                    {% endif %}
                     {{ form.description|add_class:"form-control"|attr:"placeholder:Наш стартап разрабатывает инновационную платформу для телемедицины, которая обеспечивает пользователям доступ..." }}
                     <div class="small-text">Подробное описание вашего стартапа. Расскажите о проблеме, решении, команде и т.д.</div>
                     {% if form.description.errors %}<span class="error-message">{{ form.description.errors|first }}</span>{% endif %}
@@ -170,9 +164,6 @@
              <div class="form-content-section">
                 <div class="form-group full-width">
                     <label for="{{ form.terms.id_for_label }}">*{{ form.terms.label }}</label>
-                     {% if form.terms.field.required %}
-                        <div class="required-field-notice">*Обязательное поле</div>
-                    {% endif %}
                     {{ form.terms|add_class:"form-control"|attr:"placeholder:Договоры займа сроком на 12 месяцев..." }}
                     <div class="small-text">Условия инвестирования или выкупа, если они уже определены.</div>
                     {% if form.terms.errors %}<span class="error-message">{{ form.terms.errors|first }}</span>{% endif %}
@@ -220,9 +211,6 @@
              <div class="form-content-section">
                 <div class="form-group upload-box full-width">
                     <label for="id_proofs_input">*{{ form.proofs.label }}</label>
-                    {% if form.proofs.field.required %}
-                        <div class="required-field-notice">*Обязательное поле</div>
-                    {% endif %}
                     {{ form.proofs|attr:"style:display:none"|attr:"multiple:true"|attr:"id:id_proofs_input" }}
                     <div class="custom-file-upload-button" onclick="document.getElementById('id_proofs_input').click()">Выбрать файл</div>
                     <div class="small-text">Допустимый формат Doc, Excel, PDF (до 3 файлов)</div>
@@ -237,7 +225,7 @@
                 <div class="agreement-section">
                     <h3 class="section-title">Согласие</h3>
                     <div class="form-group checkbox-group">
-                        {{ form.agree_rules|add_class:"form-check-input"|attr:"id:id_agree_rules" }}
+                        {{ form.agree_rules|attr:"id:id_agree_rules"|add_class:"form-check-input-hidden" }}
                         <label for="id_agree_rules" class="custom-checkbox-label">
                             <img src="{% static 'accounts/images/creat_startup/checkmark-circle-outline.svg' %}" alt="checkbox icon" class="checkbox-icon default-icon">
                             <img src="{% static 'accounts/images/creat_startup/checkmark-circle-outline.svg' %}" alt="checkbox icon checked" class="checkbox-icon checked-icon">
@@ -249,7 +237,7 @@
                         {% if form.agree_rules.errors %}<span class="error-message">{{ form.agree_rules.errors|first }}</span>{% endif %}
                     </div>
                     <div class="form-group checkbox-group">
-                        {{ form.agree_data_processing|add_class:"form-check-input"|attr:"id:id_agree_data_processing" }}
+                        {{ form.agree_data_processing|attr:"id:id_agree_data_processing"|add_class:"form-check-input-hidden" }}
                         <label for="id_agree_data_processing" class="custom-checkbox-label">
                              <img src="{% static 'accounts/images/creat_startup/checkmark-circle-outline.svg' %}" alt="checkbox icon" class="checkbox-icon default-icon">
                             <img src="{% static 'accounts/images/creat_startup/checkmark-circle-outline.svg' %}" alt="checkbox icon checked" class="checkbox-icon checked-icon">
@@ -588,112 +576,108 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function handleFiles(files, fileInput, previewArea, maxFiles, allowedTypes, inputId) {
         if (!fileInput.multiple) {
-             previewArea.innerHTML = ''; 
+             previewArea.innerHTML = ''; // Очищаем превью для одиночных файлов (например, видео)
         }
         
-        let currentFiles = Array.from(fileInput.files);
-        let newFilesList = new DataTransfer();
-
+        let currentFilesDataTransfer = new DataTransfer();
+        // Сначала добавим существующие файлы из fileInput.files, если это multiple upload
         if (fileInput.multiple) {
-            currentFiles.forEach(f => newFilesList.items.add(f));
+            Array.from(fileInput.files).forEach(f => currentFilesDataTransfer.items.add(f));
         }
 
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
             
-            // Проверка количества файлов для multiple
-            if (fileInput.multiple && newFilesList.items.length >= maxFiles) {
-                alert(`Можно загрузить не более ${maxFiles} файлов.`);
-                break;
+            // 1. Проверка количества файлов
+            if (fileInput.multiple && currentFilesDataTransfer.items.length >= maxFiles) {
+                alert(`Можно загрузить не более ${maxFiles} файлов для этого поля.`);
+                break; // Прерываем добавление новых, если лимит для multiple достигнут
+            }
+            if (!fileInput.multiple && currentFilesDataTransfer.items.length > 0){
+                // Для не-multiple инпута, если уже есть файл в DataTransfer (т.е. новый выбран), очищаем перед добавлением нового
+                currentFilesDataTransfer = new DataTransfer(); 
+                previewArea.innerHTML = ''; // Очищаем и превью
             }
 
-            // Проверка типа файла
+            // 2. Проверка типа файла (MIME + расширение)
             const fileExtension = file.name.split('.').pop().toLowerCase();
             const fileType = file.type;
             let isAllowed = false;
+
             if (allowedTypes.includes(fileType) && fileType !== '') {
                 isAllowed = true;
             } else {
-                // Дополнительная проверка по расширению для офисных форматов
-                const officeTypes = {
-                    'pdf': ['application/pdf'],
-                    'doc': ['application/msword'],
-                    'docx': ['application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
-                    'xls': ['application/vnd.ms-excel'],
-                    'xlsx': ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']
+                // Расширенная проверка по расширениям
+                const typeMap = {
+                    'image/jpeg': ['jpg', 'jpeg'],
+                    'image/png': ['png'],
+                    'video/mp4': ['mp4'],
+                    'video/quicktime': ['mov'],
+                    'application/pdf': ['pdf'],
+                    'application/msword': ['doc'],
+                    'application/vnd.openxmlformats-officedocument.wordprocessingml.document': ['docx'],
+                    'application/vnd.ms-excel': ['xls'],
+                    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ['xlsx']
                 };
-                 for (const ext in officeTypes) {
-                     if (fileExtension === ext && allowedTypes.some(allowed => officeTypes[ext].includes(allowed))) {
-                         isAllowed = true;
-                         break;
-                     }
-                 }
+                for (const allowedMime of allowedTypes) {
+                    if (typeMap[allowedMime] && typeMap[allowedMime].includes(fileExtension)) {
+                        isAllowed = true;
+                        break;
+                    }
+                }
             }
 
             if (!isAllowed) {
-                 alert(`Файл ${file.name} имеет неподдерживаемый тип.`);
-                 console.warn(`Skipped file ${file.name} with type ${file.type} and extension ${fileExtension}. Allowed: ${allowedTypes.join(', ')}`);
-                 continue;
+                alert(`Файл "${file.name}" имеет неподдерживаемый тип или расширение. Пожалуйста, выберите файл одного из следующих форматов: ${allowedTypes.map(t => t.split('/')[1]).join(', ').toUpperCase()}`);
+                console.warn(`Skipped file ${file.name} (type: ${fileType}, ext: ${fileExtension}). Allowed MIME: ${allowedTypes.join(', ')}`);
+                continue; // Пропускаем этот файл
             }
 
-            if (!fileInput.multiple) {
-                newFilesList = new DataTransfer();
-                previewArea.innerHTML = ''; 
-            }
-
-            // Проверка на дубликаты перед добавлением
-             let isDuplicate = false;
-             for (let j = 0; j < newFilesList.items.length; j++) {
-                 if (newFilesList.items[j].getAsFile().name === file.name) {
-                     isDuplicate = true;
-                     break;
-                 }
-             }
-             if (isDuplicate) continue;
-
-            newFilesList.items.add(file);
-            
-            // Генерация превью
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                let previewItemHTML = '';
-                const dragHandleHTML = `<div class="drag-handle-mock"><span></span><span></span><span></span><span></span><span></span><span></span></div>`;
-                const actionsHTML = `
-                    <div class="file-actions">
-                         <button type="button" class="edit-file-btn" data-filename="${file.name}" title="Редактировать (пока не реализовано)" style="display:none;"><img src="{% static 'accounts/images/creat_startup/edit_icon.svg' %}" alt="Edit"></button>
-                         <button type="button" class="remove-file-btn" data-filename="${file.name}" title="Удалить"><img src="{% static 'accounts/images/creat_startup/delete_icon.svg' %}" alt="Delete"></button>
-                     </div>`;
-
-                // Используем docimage.png для всех превью файлов
-                previewItemHTML = `
-                    <div class="file-preview-item" data-filename="${file.name}">
-                        ${dragHandleHTML}
-                        <img src="{% static 'accounts/images/creat_startup/docimage.png' %}" alt="file preview icon" class="file-icon preview-image">
-                        <p class="file-name">${file.name}</p>
-                        ${actionsHTML}
-                    </div>`;
-                
-                if (!fileInput.multiple) {
-                    previewArea.innerHTML = previewItemHTML; 
-                } else {
-                    if (!previewArea.querySelector(`.file-preview-item[data-filename="${file.name}"]`)) {
-                         previewArea.insertAdjacentHTML('beforeend', previewItemHTML);
+            // 3. Проверка на дубликаты по имени файла (для multiple)
+            if (fileInput.multiple) {
+                let isDuplicate = false;
+                for (let j = 0; j < currentFilesDataTransfer.items.length; j++) {
+                    if (currentFilesDataTransfer.items[j].getAsFile().name === file.name) {
+                        isDuplicate = true;
+                        break;
                     }
                 }
-            };
-            // Для docimage.png нам не нужно читать файл как DataURL, если это просто статичная иконка.
-            // Но если docimage.png сама должна быть превьюшкой картинки, то reader.readAsDataURL(file) нужен для file.type.startsWith('image/')
-            // Судя по названию "docimage" это универсальная иконка.
-            // Поэтому reader.readAsDataURL(file) можно убрать, если не хотим показывать миниатюру самой картинки,
-            // а хотим всегда показывать docimage.png.
-            // Пользователь указал "иконку для добавленный файлов возьми вот эту D:\\...\\docimage.png"
-            // Это означает, что для *всех* файлов должна быть эта иконка.
+                if (isDuplicate) {
+                    alert(`Файл "${file.name}" уже добавлен.`);
+                    continue; // Пропускаем дубликат
+                }
+            }
 
-            // Вызываем onload вручную, так как нам не нужно читать содержимое файла для показа стандартной иконки
-            reader.onload(); 
+            // Добавляем валидный файл в DataTransfer
+            currentFilesDataTransfer.items.add(file);
+            
+            // 4. Генерация и добавление HTML для превью
+            const dragHandleHTML = `<div class="drag-handle-mock"><span></span><span></span><span></span><span></span><span></span><span></span></div>`;
+            const actionsHTML = `
+                <div class="file-actions">
+                     <button type="button" class="edit-file-btn" data-filename="${file.name}" title="Редактировать (пока не реализовано)" style="display:none;"><img src="{% static 'accounts/images/creat_startup/edit_icon.svg' %}" alt="Edit"></button>
+                     <button type="button" class="remove-file-btn" data-filename="${file.name}" title="Удалить"><img src="{% static 'accounts/images/creat_startup/delete_icon.svg' %}" alt="Delete"></button>
+                 </div>`;
 
+            const previewItemHTML = `
+                <div class="file-preview-item" data-filename="${file.name}">
+                    ${dragHandleHTML}
+                    <img src="{% static 'accounts/images/creat_startup/docimage.png' %}" alt="file preview icon" class="file-icon preview-image">
+                    <p class="file-name">${file.name}</p>
+                    ${actionsHTML}
+                </div>`;
+            
+            if (!fileInput.multiple) { // Для одиночного файла (видео) - заменяем превью
+                previewArea.innerHTML = previewItemHTML; 
+            } else { // Для множественных файлов - добавляем в конец
+                // Еще раз проверим на дубликат в DOM, на всякий случай
+                if (!previewArea.querySelector(`.file-preview-item[data-filename="${CSS.escape(file.name)}"]`)) {
+                     previewArea.insertAdjacentHTML('beforeend', previewItemHTML);
+                }
+            }
         }
-        fileInput.files = newFilesList.files;
+        // Обновляем fileInput.files всеми валидными и не дублирующимися файлами
+        fileInput.files = currentFilesDataTransfer.files;
     }
     
     // Удаление файла из превью и из fileInput.files (Обновлено)
