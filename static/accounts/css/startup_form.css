@@ -515,7 +515,7 @@ h3.section-title {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, #1967B8 2%, #6348EB 26%, #1967B8 50%, #6749E7 78%, #F26162 100%);
+    background: black; /* ИЗМЕНЕНО: Фон трека */
     z-index: 1;
 }
 
@@ -525,7 +525,7 @@ h3.section-title {
     left: 0;
     width: 0%; /* Изначально 0, будет обновляться JS */
     height: 100%;
-    background: black; /* Цвет заполненной части по Figma */
+    background: linear-gradient(90deg, #1967B8 2%, #6348EB 26%, #1967B8 50%, #6749E7 78%, #F26162 100%); /* ИЗМЕНЕНО: Фон заполненной части */
     z-index: 2;
     transition: width 0.3s ease-in-out;
 }

@@ -197,6 +197,7 @@
                              {% if i == "5" %}<img src="{% static 'accounts/images/creat_startup/Frame 992.svg' %}" alt="Иконка Этап 5" class="step-icon">{% endif %}
                         </div>
                         <div class="step-text">Этап {{ i }}</div>
+                        <button type="button" class="btn-select-current-step" data-step-target="{{ i }}">Мы здесь</button>
                     </div>
                     {% endfor %}
                 </div>
@@ -206,7 +207,6 @@
                         <div class="timeline-description-header">
                             <div class="timeline-description-title-wrapper">
                                 <div class="timeline-description-title">Этап {{ i }}</div>
-                                <button type="button" class="btn-select-current" data-step-target="{{ i }}">Мы здесь</button>
                             </div>
                         </div>
                         <textarea class="timeline-description-textarea" name="step_description_{{ i }}" placeholder="Описание" required></textarea>
@@ -301,7 +301,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const timelineSteps = document.querySelectorAll('.timeline-step');
     const descriptionContainers = document.querySelectorAll('.timeline-description-container');
     const currentStepInput = document.getElementById('step_number');
-    const setCurrentButtons = document.querySelectorAll('.btn-select-current');
+    const setCurrentButtons = document.querySelectorAll('.btn-select-current-step');
     const timelineProgressFilled = document.getElementById('timelineProgressFilled'); // Полоса прогресса
     const totalSteps = 5; // Общее количество шагов
 
@@ -657,7 +657,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const reader = new FileReader();
             reader.onload = (e) => {
                 let previewItemHTML = '';
-                // Обновленная структура превью с drag handle и кнопками
                 const dragHandleHTML = `<div class="drag-handle-mock"><span></span><span></span><span></span><span></span><span></span><span></span></div>`;
                 const actionsHTML = `
                     <div class="file-actions">
@@ -665,68 +664,34 @@ document.addEventListener('DOMContentLoaded', function() {
                          <button type="button" class="remove-file-btn" data-filename="${file.name}" title="Удалить"><img src="{% static 'accounts/images/creat_startup/delete_icon.svg' %}" alt="Delete"></button>
                      </div>`;
 
-                if (file.type.startsWith('image/')) {
-                    previewItemHTML = `
-                        <div class="file-preview-item" data-filename="${file.name}">
-                            ${dragHandleHTML}
-                            <img src="${e.target.result}" alt="${file.name}" class="preview-image">
-                            <p class="file-name">${file.name}</p>
-                            ${actionsHTML}
-                        </div>`;
-                } else if (file.type.startsWith('video/')) {
-                     previewItemHTML = `
-                         <div class="file-preview-item" data-filename="${file.name}">
-                             ${dragHandleHTML}
-                             <video controls src="${e.target.result}" class="preview-image"></video>
-                             <p class="file-name">${file.name}</p>
-                             ${actionsHTML}
-                         </div>`;
-                } else { // Для других типов файлов (PDF, DOC и т.д.)
-                    previewItemHTML = `
-                        <div class="file-preview-item" data-filename="${file.name}">
-                            ${dragHandleHTML}
-                            <img src="{% static 'accounts/images/icons/file_icon.svg' %}" alt="file icon" class="file-icon preview-image">
-                            <p class="file-name">${file.name}</p>
-                            ${actionsHTML}
-                        </div>`;
-                }
+                // Используем docimage.png для всех превью файлов
+                previewItemHTML = `
+                    <div class="file-preview-item" data-filename="${file.name}">
+                        ${dragHandleHTML}
+                        <img src="{% static 'accounts/images/creat_startup/docimage.png' %}" alt="file preview icon" class="file-icon preview-image">
+                        <p class="file-name">${file.name}</p>
+                        ${actionsHTML}
+                    </div>`;
                 
                 if (!fileInput.multiple) {
                     previewArea.innerHTML = previewItemHTML; 
                 } else {
-                    // Проверяем, нет ли уже такого файла в превью
                     if (!previewArea.querySelector(`.file-preview-item[data-filename="${file.name}"]`)) {
                          previewArea.insertAdjacentHTML('beforeend', previewItemHTML);
                     }
                 }
             };
-             if (file.type.startsWith('image/') || file.type.startsWith('video/')) {
-                 reader.readAsDataURL(file); // Для картинок/видео читаем Data URL
-             } else {
-                  // Для документов и других файлов Data URL не нужен, просто показываем иконку
-                   let previewItemHTML = '';
-                    const dragHandleHTML = `<div class="drag-handle-mock"><span></span><span></span><span></span><span></span><span></span><span></span></div>`;
-                    const actionsHTML = `
-                        <div class="file-actions">
-                             <button type="button" class="edit-file-btn" data-filename="${file.name}" title="Редактировать (пока не реализовано)" style="display:none;"><img src="{% static 'accounts/images/creat_startup/edit_icon.svg' %}" alt="Edit"></button>
-                             <button type="button" class="remove-file-btn" data-filename="${file.name}" title="Удалить"><img src="{% static 'accounts/images/creat_startup/delete_icon.svg' %}" alt="Delete"></button>
-                         </div>`;
-                    previewItemHTML = `
-                        <div class="file-preview-item" data-filename="${file.name}">
-                            ${dragHandleHTML}
-                            <img src="{% static 'accounts/images/icons/file_icon.svg' %}" alt="file icon" class="file-icon preview-image">
-                            <p class="file-name">${file.name}</p>
-                            ${actionsHTML}
-                        </div>`;
+            // Для docimage.png нам не нужно читать файл как DataURL, если это просто статичная иконка.
+            // Но если docimage.png сама должна быть превьюшкой картинки, то reader.readAsDataURL(file) нужен для file.type.startsWith('image/')
+            // Судя по названию "docimage" это универсальная иконка.
+            // Поэтому reader.readAsDataURL(file) можно убрать, если не хотим показывать миниатюру самой картинки,
+            // а хотим всегда показывать docimage.png.
+            // Пользователь указал "иконку для добавленный файлов возьми вот эту D:\\...\\docimage.png"
+            // Это означает, что для *всех* файлов должна быть эта иконка.
 
-                    if (!fileInput.multiple) {
-                        previewArea.innerHTML = previewItemHTML;
-                    } else {
-                         if (!previewArea.querySelector(`.file-preview-item[data-filename="${file.name}"]`)) {
-                            previewArea.insertAdjacentHTML('beforeend', previewItemHTML);
-                         }
-                    }
-             }
+            // Вызываем onload вручную, так как нам не нужно читать содержимое файла для показа стандартной иконки
+            reader.onload(); 
+
         }
         fileInput.files = newFilesList.files;
     }
