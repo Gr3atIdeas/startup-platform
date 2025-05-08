@@ -510,6 +510,37 @@
       transform: scale(1.2);
     }
 
+    /* Добавляем стили для селектора статусов */
+    .status-filter-wrapper {
+        margin-right: 20px;
+    }
+
+    #status-filter {
+        padding: 8px 12px;
+        background-color: #1A1D2E;
+        color: #FFFFFF;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 5px;
+        font-size: 14px;
+        cursor: pointer;
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background-image: url('data:image/svg+xml;utf8,<svg fill="white" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+        background-repeat: no-repeat;
+        background-position: right 8px center;
+        padding-right: 30px;
+    }
+
+    #status-filter:focus {
+        outline: none;
+        border-color: #FFEF2B;
+    }
+
+    #status-filter option {
+        background-color: #1A1D2E;
+        color: #FFFFFF;
+    }
 
   </style>
 {% endblock %}
@@ -656,6 +687,17 @@
         </div>
 
         <div class="startups-filters">
+          <!-- Новый селектор статусов -->
+          <div class="status-filter-wrapper">
+              <select id="status-filter" aria-label="Фильтр по статусу">
+                  <option value="all">Все</option>
+                  <option value="approved">Одобрены</option>
+                  <option value="rejected">Отклонены</option>
+                  <option value="blocked">Заблокированы</option>
+                  <option value="closed">Закрыты</option>
+              </select>
+          </div>
+
           <div class="startups-search-wrapper">
             <i class="fas fa-search search-icon" aria-hidden="true"></i>
             <input type="text" placeholder="Поиск по названию..." id="startup-search" class="startups-search-input" aria-label="Поиск стартапов по названию">
@@ -675,7 +717,7 @@
 
         <div class="startups-grid">
           {% for startup in user_startups|slice:":6" %}
-            <div class="startup-card" data-category="{{ startup.direction.direction_name|default:''|escape }}" data-name="{{ startup.title|default:''|escape }}">
+            <div class="startup-card" data-category="{{ startup.direction.direction_name|default:''|escape }}" data-name="{{ startup.title|default:''|escape }}" data-status="{{ startup.status|lower|default:'pending' }}">
               <div class="startup-card-left">
                 <div class="startup-planet-placeholder" style="width: 70px; height: 70px; background-color: #e9ecef; border-radius: 50%; margin-bottom: 5px;"></div>
                 <div class="startup-name">
@@ -708,8 +750,9 @@
                 <div class="startup-status-row">
                   <span class="detail-label">Статус</span>
                   <span class="detail-value status-{{ startup.status|lower|default:'pending' }}">
-                    {% if startup.status == 'approved' %}Активен{% else %}{{ startup.status|default:'Неизвестен'|title }}{% endif %}
+                    {% if startup.status == 'approved' %}Активен{% else %}{{ startup.get_status_display }}{% endif %}
                   </span>
+                  <span class="status-value" data-status="{{ startup.status|lower|default:'pending' }}" style="display: none;"></span>
                 </div>
                 <div class="startup-financials">
                   <div class="startup-detail-row">
@@ -740,7 +783,7 @@
 
           {# Скрытые карточки #}
           {% for startup in user_startups|slice:"6:" %}
-            <div class="startup-card hidden-card" data-category="{{ startup.direction.direction_name|default:''|escape }}" data-name="{{ startup.title|default:''|escape }}" style="display: none;">
+            <div class="startup-card hidden-card" data-category="{{ startup.direction.direction_name|default:''|escape }}" data-name="{{ startup.title|default:''|escape }}" data-status="{{ startup.status|lower|default:'pending' }}" style="display: none;">
               <div class="startup-card-left">
                 <div class="startup-planet-placeholder" style="width: 70px; height: 70px; background-color: #e9ecef; border-radius: 50%; margin-bottom: 5px;"></div>
                 <div class="startup-name">
@@ -773,8 +816,9 @@
                 <div class="startup-status-row">
                   <span class="detail-label">Статус</span>
                   <span class="detail-value status-{{ startup.status|lower|default:'pending' }}">
-                    {% if startup.status == 'approved' %}Активен{% else %}{{ startup.status|default:'Неизвестен'|title }}{% endif %}
+                    {% if startup.status == 'approved' %}Активен{% else %}{{ startup.get_status_display }}{% endif %}
                   </span>
+                  <span class="status-value" data-status="{{ startup.status|lower|default:'pending' }}" style="display: none;"></span>
                 </div>
                 <div class="startup-financials">
                   <div class="startup-detail-row">
@@ -829,7 +873,7 @@
             <div class="application-card">
               <div class="application-title">{{ app.title|default:"Без названия"|escape }}</div>
               <div class="application-status status-{{ app.status|lower|default:'pending' }}">
-                {{ app.status|default:"Неизвестен"|title }}
+                {{ app.get_status_display }}
               </div>
               {% if app.status == 'rejected' or app.status == 'blocked' %}
                 {% if app.moderator_comment %}
@@ -1235,6 +1279,134 @@
               });
           }
     
+          // Добавляем логику для фильтрации по статусу
+          // Функция для применения всех фильтров (статус, категория, поиск)
+          function applyFilters() {
+              const statusFilter = document.getElementById('status-filter').value;
+              const searchInput = document.getElementById('startup-search');
+              const searchTerm = searchInput ? searchInput.value.toLowerCase().trim() : '';
+              const categoryButton = document.querySelector('.filter-btn[data-filter="category"].active');
+              let activeCategoryFilter = null;
+              if (categoryButton) {
+                  const links = categoryDropdownContent.querySelectorAll('a');
+                  for (let link of links) {
+                      if (translateCategoryName(link.dataset.category) === categoryButton.textContent.trim().split(' ')[0]) {
+                          activeCategoryFilter = link.dataset.category;
+                          break;
+                      }
+                  }
+                  if (!activeCategoryFilter && !document.querySelector('.filter-btn[data-filter="all"].active')) {
+                      console.warn("Не удалось определить активный фильтр категории для фильтрации.");
+                      activeCategoryFilter = null;
+                  } else if (document.querySelector('.filter-btn[data-filter="all"].active')) {
+                      activeCategoryFilter = null;
+                  }
+              }
+
+              const startupCards = document.querySelectorAll('.startups-grid .startup-card');
+              const loadMoreBtn = document.getElementById('load-more');
+              const hideBtn = document.getElementById('hide-startups-btn');
+              const startupGrid = document.querySelector('.startups-grid');
+              let visibleCount = 0;
+
+              startupCards.forEach(card => {
+                  const status = card.querySelector('.status-value').dataset.status.toLowerCase();
+                  const name = card.getAttribute('data-name').toLowerCase();
+                  const category = card.getAttribute('data-category');
+
+                  const matchesStatus = statusFilter === 'all' || status === statusFilter;
+                  const matchesCategory = !activeCategoryFilter || (category === activeCategoryFilter);
+                  const matchesSearch = name.includes(searchTerm);
+
+                  if (matchesStatus && matchesCategory && matchesSearch) {
+                      if (visibleCount < 6) {
+                          card.style.display = 'flex';
+                          card.classList.remove('hidden-card');
+                          visibleCount++;
+                      } else {
+                          card.style.display = 'none';
+                          card.classList.add('hidden-card');
+                      }
+                  } else {
+                      card.style.display = 'none';
+                  }
+              });
+
+              // Управление кнопками "Показать ещё" и "Скрыть"
+              const hiddenCards = startupGrid.querySelectorAll('.startup-card.hidden-card');
+              if (hiddenCards.length > 0) {
+                  if (loadMoreBtn) loadMoreBtn.style.display = 'flex';
+                  if (hideBtn) hideBtn.style.display = 'none';
+              } else {
+                  if (loadMoreBtn) loadMoreBtn.style.display = 'none';
+                  if (hideBtn) hideBtn.style.display = 'none';
+              }
+
+              // Сообщение "Нет результатов"
+              const noResultsMsg = startupGrid.querySelector('.no-results-message');
+              if (visibleCount === 0) {
+                  if (!noResultsMsg) {
+                      const p = document.createElement('p');
+                      p.textContent = 'По вашему запросу ничего не найдено.';
+                      p.style.gridColumn = '1 / -1';
+                      p.style.textAlign = 'center';
+                      p.classList.add('no-results-message');
+                      startupGrid.appendChild(p);
+                  }
+              } else {
+                  if (noResultsMsg) {
+                      noResultsMsg.remove();
+                  }
+              }
+          }
+
+          // Обработчик для селектора статусов
+          const statusFilter = document.getElementById('status-filter');
+          if (statusFilter) {
+              statusFilter.addEventListener('change', applyFilters);
+          }
+
+          // Обновляем существующие обработчики, чтобы они вызывали applyFilters
+          if (searchInput && startupGrid) {
+              searchInput.addEventListener('input', applyFilters);
+          }
+
+          filterButtons.forEach(button => {
+              button.addEventListener('click', function(event) {
+                  if (this.classList.contains('filter-btn-dropdown')) {
+                      return;
+                  }
+                  if (event.target.tagName === 'A' && event.target.closest('.filter-dropdown-content')) {
+                      return;
+                  }
+
+                  filterButtons.forEach(btn => btn.classList.remove('active'));
+                  this.classList.add('active');
+                  const filter = this.getAttribute('data-filter');
+
+                  const noResultsMsg = startupGrid.querySelector('.no-results-message');
+                  if (noResultsMsg) noResultsMsg.remove();
+
+                  if (filter === 'all') {
+                      const categoryButton = document.querySelector('.filter-btn[data-filter="category"]');
+                      if (categoryButton) {
+                          const chevron = categoryButton.querySelector('i');
+                          categoryButton.textContent = 'Категория ';
+                          if (chevron) categoryButton.appendChild(chevron);
+                      }
+                      if (searchInput) searchInput.value = '';
+                  }
+                  applyFilters();
+              });
+          });
+
+          document.querySelectorAll('.filter-dropdown-content a').forEach(link => {
+              link.addEventListener('click', function(event) {
+                  filterByCategory(event);
+                  applyFilters();
+              });
+          });
+
           (function() {
               const canvasElement = document.getElementById('monthlyInvestmentChart');
               if (!canvasElement) {
