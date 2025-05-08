@@ -542,6 +542,34 @@
         color: #FFFFFF;
     }
 
+
+    .status-filter-buttons {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+    }
+
+    .status-filter-btn {
+        padding: 8px 16px;
+        background-color: #1A1D2E;
+        color: #FFFFFF;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 5px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background-color 0.3s, border-color 0.3s;
+    }
+
+    .status-filter-btn:hover {
+        background-color: #212538;
+        border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .status-filter-btn.active {
+        background-color: #FFEF2B;
+        color: #191919;
+        border-color: #FFEF2B;
+    }
   </style>
 {% endblock %}
 
@@ -866,6 +894,13 @@
             <h2 class="applications-title-main">Заявки</h2>
             <h2 class="applications-title-sub">на стартапы</h2>
           </div>
+          <div class="status-filter-buttons">
+            <button class="status-filter-btn active" data-status-filter="all">Все</button>
+            <button class="status-filter-btn" data-status-filter="approved">Одобрены</button>
+            <button class="status-filter-btn" data-status-filter="rejected">Отклонены</button>
+            <button class="status-filter-btn" data-status-filter="blocked">Заблокированы</button>
+            <button class="status-filter-btn" data-status-filter="closed">Закрыты</button>
+        </div>
         </div>
 
         <div class="applications-list">
@@ -1225,23 +1260,87 @@
                          if (chevron) categoryButton.appendChild(chevron);
                     }
                     if(searchInput) searchInput.value = '';
-               }
-              });
-          });
+                 }
     
-          if (loadMoreBtn) {
+                 // Вызываем фильтрацию для "Мои стартапы" (без статуса)
+                 const searchInput = document.getElementById('startup-search');
+                 const searchTerm = searchInput ? searchInput.value.toLowerCase().trim() : '';
+                 const startupCards = startupGrid.querySelectorAll('.startup-card');
+                 const loadMoreBtnSearch = document.getElementById('load-more');
+                 const hideBtnSearch = document.getElementById('hide-startups-btn');
+                 let visibleCount = 0;
+                 const activeCategoryButton = document.querySelector('.filter-btn[data-filter="category"].active');
+                 let activeCategoryFilter = null;
+                 if (activeCategoryButton) {
+                     const links = categoryDropdownContent.querySelectorAll('a');
+                     for(let link of links){
+                         if(translateCategoryName(link.dataset.category) === activeCategoryButton.textContent.trim().split(' ')[0]){
+                             activeCategoryFilter = link.dataset.category;
+                             break;
+                         }
+                     }
+                     if (!activeCategoryFilter && !document.querySelector('.filter-btn[data-filter="all"].active')) {
+                         console.warn("Не удалось определить активный фильтр категории для поиска.");
+                         activeCategoryFilter = null;
+                     } else if (document.querySelector('.filter-btn[data-filter="all"].active')) {
+                         activeCategoryFilter = null;
+                     }
+                 }
+    
+                 startupCards.forEach(card => {
+                     const name = card.getAttribute('data-name').toLowerCase();
+                     const category = card.getAttribute('data-category');
+    
+                     const matchesCategory = !activeCategoryFilter || (category === activeCategoryFilter);
+                     const matchesSearch = name.includes(searchTerm);
+    
+                     if (matchesSearch && matchesCategory) {
+                         if (visibleCount < 6) {
+                             card.style.display = 'flex';
+                             visibleCount++;
+                         } else {
+                             card.style.display = 'none';
+                             card.classList.add('hidden-card');
+                         }
+                     } else {
+                         card.style.display = 'none';
+                     }
+                 });
+    
+                 if (loadMoreBtnSearch) loadMoreBtnSearch.style.display = 'none';
+                 if (hideBtnSearch) hideBtnSearch.style.display = 'none';
+    
+                 const noResultsMsg = startupGrid.querySelector('.no-results-message');
+                 if (visibleCount === 0 && searchTerm !== '') {
+                     if (!noResultsMsg) {
+                         const p = document.createElement('p');
+                         p.textContent = 'По вашему запросу ничего не найдено.';
+                         p.style.gridColumn = '1 / -1';
+                         p.style.textAlign = 'center';
+                         p.classList.add('no-results-message');
+                         startupGrid.appendChild(p);
+                     }
+                 } else {
+                     if (noResultsMsg) {
+                         noResultsMsg.remove();
+                     }
+                 }
+             });
+         });
+    
+         if (loadMoreBtn) {
              loadMoreBtn.addEventListener('click', function() {
-               const currentlyHiddenCards = startupGrid.querySelectorAll('.startup-card.hidden-card');
-               currentlyHiddenCards.forEach(card => {
+                 const currentlyHiddenCards = startupGrid.querySelectorAll('.startup-card.hidden-card');
+                 currentlyHiddenCards.forEach(card => {
                      card.style.display = 'flex';
                      card.classList.remove('hidden-card');
-               });
-               this.style.display = 'none';
-               if (hideBtn) hideBtn.style.display = 'flex';
+                 });
+                 this.style.display = 'none';
+                 if (hideBtn) hideBtn.style.display = 'flex';
              });
-          }
+         }
     
-          if (hideBtn) {
+         if (hideBtn) {
              hideBtn.addEventListener('click', function() {
                   let visibleCount = 0;
                   startupGrid.querySelectorAll('.startup-card').forEach(card => {
@@ -1258,662 +1357,652 @@
                       loadMoreBtn.style.display = 'flex';
                  }
              });
-          }
+         }
     
-          const openModalBtn = document.getElementById('openCategoriesModalBtn');
-          const closeModalBtn = document.getElementById('closeCategoriesModalBtn');
-          const modalOverlay = document.getElementById('allCategoriesModal');
-          if (openModalBtn) {
-              openModalBtn.addEventListener('click', function() {
-                  openModal(parsedDirections, parsedInvestedData);
-              });
-          }
-          if (closeModalBtn) {
-              closeModalBtn.addEventListener('click', closeModal);
-          }
-          if (modalOverlay) {
-              modalOverlay.addEventListener('click', function(event) {
-                  if (event.target === modalOverlay) {
-                      closeModal();
-                  }
-              });
-          }
-    
-          // Добавляем логику для фильтрации по статусу
-          // Функция для применения всех фильтров (статус, категория, поиск)
-          function applyFilters() {
-              const statusFilter = document.getElementById('status-filter').value;
-              const searchInput = document.getElementById('startup-search');
-              const searchTerm = searchInput ? searchInput.value.toLowerCase().trim() : '';
-              const categoryButton = document.querySelector('.filter-btn[data-filter="category"].active');
-              let activeCategoryFilter = null;
-              if (categoryButton) {
-                  const links = categoryDropdownContent.querySelectorAll('a');
-                  for (let link of links) {
-                      if (translateCategoryName(link.dataset.category) === categoryButton.textContent.trim().split(' ')[0]) {
-                          activeCategoryFilter = link.dataset.category;
-                          break;
-                      }
-                  }
-                  if (!activeCategoryFilter && !document.querySelector('.filter-btn[data-filter="all"].active')) {
-                      console.warn("Не удалось определить активный фильтр категории для фильтрации.");
-                      activeCategoryFilter = null;
-                  } else if (document.querySelector('.filter-btn[data-filter="all"].active')) {
-                      activeCategoryFilter = null;
-                  }
-              }
-
-              const startupCards = document.querySelectorAll('.startups-grid .startup-card');
-              const loadMoreBtn = document.getElementById('load-more');
-              const hideBtn = document.getElementById('hide-startups-btn');
-              const startupGrid = document.querySelector('.startups-grid');
-              let visibleCount = 0;
-
-              startupCards.forEach(card => {
-                  const status = card.querySelector('.status-value').dataset.status.toLowerCase();
-                  const name = card.getAttribute('data-name').toLowerCase();
-                  const category = card.getAttribute('data-category');
-
-                  const matchesStatus = statusFilter === 'all' || status === statusFilter;
-                  const matchesCategory = !activeCategoryFilter || (category === activeCategoryFilter);
-                  const matchesSearch = name.includes(searchTerm);
-
-                  if (matchesStatus && matchesCategory && matchesSearch) {
-                      if (visibleCount < 6) {
-                          card.style.display = 'flex';
-                          card.classList.remove('hidden-card');
-                          visibleCount++;
-                      } else {
-                          card.style.display = 'none';
-                          card.classList.add('hidden-card');
-                      }
-                  } else {
-                      card.style.display = 'none';
-                  }
-              });
-
-              // Управление кнопками "Показать ещё" и "Скрыть"
-              const hiddenCards = startupGrid.querySelectorAll('.startup-card.hidden-card');
-              if (hiddenCards.length > 0) {
-                  if (loadMoreBtn) loadMoreBtn.style.display = 'flex';
-                  if (hideBtn) hideBtn.style.display = 'none';
-              } else {
-                  if (loadMoreBtn) loadMoreBtn.style.display = 'none';
-                  if (hideBtn) hideBtn.style.display = 'none';
-              }
-
-              // Сообщение "Нет результатов"
-              const noResultsMsg = startupGrid.querySelector('.no-results-message');
-              if (visibleCount === 0) {
-                  if (!noResultsMsg) {
-                      const p = document.createElement('p');
-                      p.textContent = 'По вашему запросу ничего не найдено.';
-                      p.style.gridColumn = '1 / -1';
-                      p.style.textAlign = 'center';
-                      p.classList.add('no-results-message');
-                      startupGrid.appendChild(p);
-                  }
-              } else {
-                  if (noResultsMsg) {
-                      noResultsMsg.remove();
-                  }
-              }
-          }
-
-          // Обработчик для селектора статусов
-          const statusFilter = document.getElementById('status-filter');
-          if (statusFilter) {
-              statusFilter.addEventListener('change', applyFilters);
-          }
-
-          // Обновляем существующие обработчики, чтобы они вызывали applyFilters
-          if (searchInput && startupGrid) {
-              searchInput.addEventListener('input', applyFilters);
-          }
-
-          filterButtons.forEach(button => {
-              button.addEventListener('click', function(event) {
-                  if (this.classList.contains('filter-btn-dropdown')) {
-                      return;
-                  }
-                  if (event.target.tagName === 'A' && event.target.closest('.filter-dropdown-content')) {
-                      return;
-                  }
-
-                  filterButtons.forEach(btn => btn.classList.remove('active'));
-                  this.classList.add('active');
-                  const filter = this.getAttribute('data-filter');
-
-                  const noResultsMsg = startupGrid.querySelector('.no-results-message');
-                  if (noResultsMsg) noResultsMsg.remove();
-
-                  if (filter === 'all') {
-                      const categoryButton = document.querySelector('.filter-btn[data-filter="category"]');
-                      if (categoryButton) {
-                          const chevron = categoryButton.querySelector('i');
-                          categoryButton.textContent = 'Категория ';
-                          if (chevron) categoryButton.appendChild(chevron);
-                      }
-                      if (searchInput) searchInput.value = '';
-                  }
-                  applyFilters();
-              });
-          });
-
-          document.querySelectorAll('.filter-dropdown-content a').forEach(link => {
-              link.addEventListener('click', function(event) {
-                  filterByCategory(event);
-                  applyFilters();
-              });
-          });
-
-          (function() {
-              const canvasElement = document.getElementById('monthlyInvestmentChart');
-              if (!canvasElement) {
-                  console.warn("Элемент canvas #monthlyInvestmentChart не найден.");
-                  return;
-              }
-              const ctx = canvasElement.getContext('2d');
-    
-              let monthLabels = [];
-              let monthlyCategoryData = [];
-              let categoriesForChart = [];
-    
-              try {
-                  const labelsEl = document.getElementById('chart-month-labels');
-                  const monthlyDataEl = document.getElementById('chart-monthly-category-data');
-                  const categoriesEl = document.getElementById('chart-categories');
-    
-                  if (!labelsEl || !monthlyDataEl || !categoriesEl) throw new Error("Элементы данных графика не найдены");
-                  
-                  monthLabels = JSON.parse(labelsEl.textContent);
-                  monthlyCategoryData = JSON.parse(monthlyDataEl.textContent);
-                  categoriesForChart = JSON.parse(categoriesEl.textContent);
-    
-                  console.log("Chart Labels:", monthLabels);
-                  console.log("Chart Categories:", categoriesForChart);
-                  console.log("Chart Monthly Category Data:", monthlyCategoryData);
-              } catch (e) {
-                  console.error("Ошибка парсинга данных для графика:", e);
-                  if (canvasElement.parentNode) {
-                    canvasElement.parentNode.innerHTML = '<p style="text-align: center; color: red;">Ошибка загрузки данных для графика.</p>';
-                  }
-                  return;
-              }
-    
-              const hasData = monthlyCategoryData && monthlyCategoryData.some(month => Object.keys(month.category_data).length > 0);
-              console.log("Chart has category data:", hasData);
-    
-              if (hasData && categoriesForChart.length > 0) {
-                  const datasets = categoriesForChart.map(categoryName => {
-                      const color = categoryColors[categoryName] || categoryColors["default"];
-                      const data = monthLabels.map((label, index) => {
-                          const monthData = monthlyCategoryData[index];
-                          return monthData.category_data[categoryName] || 0;
-                      });
-    
-                      return {
-                          label: translateCategoryName(categoryName),
-                          data: data,
-                          backgroundColor: color,
-                      };
-                  });
-    
-                  console.log("Generated Chart Datasets:", datasets);
-    
-                  new Chart(ctx, {
-                      type: 'bar',
-                      data: {
-                          labels: monthLabels,
-                          datasets: datasets
-                      },
-                      options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        interaction: {
-                            mode: 'index',
-                            intersect: false,
-                        },
-                        scales: {
-                            y: {
-                                stacked: true,
-                                beginAtZero: true,
-                                grid: { color: 'rgba(255, 255, 255, 0.05)' },
-                                ticks: {
-                                     color: 'rgba(255, 255, 255, 0.7)',
-                                    callback: function(value) {
-                                        if (value >= 1000000) { return (value / 1000000).toLocaleString('ru-RU', { maximumFractionDigits: 1 }) + 'M'; }
-                                        if (value >= 1000) { return (value / 1000).toLocaleString('ru-RU', { maximumFractionDigits: 0 }) + 'k'; }
-                                        else { return value.toLocaleString('ru-RU'); }
-                                    }
-                                },
-                                title: {
-                                    display: true,
-                                    text: 'Сумма сборов, ₽',
-                                    color: 'rgba(255, 255, 255, 0.7)'
-                                }
-                            },
-                            x: {
-                                stacked: true,
-                                grid: { display: false },
-                                ticks: { color: '#495057' }
-                            }
-                        },
-                        plugins: {
-                            legend: {
-                                display: true,
-                                position: 'top',
-                                labels: {
-                                    color: 'rgba(255, 255, 255, 0.7)',
-                                    boxWidth: 12,
-                                    padding: 15
-                                }
-                             },
-                            tooltip: {
-                                callbacks: {
-                                    title: function(tooltipItems) {
-                                        return tooltipItems[0].label;
-                                    },
-                                    label: function(context) {
-                                        let label = context.dataset.label || '';
-                                        if (label) { label += ': '; }
-                                        if (context.parsed.y !== null) {
-                                            label += context.parsed.y.toLocaleString('ru-RU', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + ' ₽';
-                                        }
-                                        return label;
-                                    }
-                                }
-                            }
-                        }
-                      }
-                  });
-              } else {
-                 console.log("No category data found for chart, rendering placeholder.");
-                 if (canvasElement.parentNode) {
-                    canvasElement.parentNode.innerHTML = '<p style="text-align: center; color: #adb5bd;">Нет данных по сборам средств за текущий год для отображения по категориям.</p>';
+         const openModalBtn = document.getElementById('openCategoriesModalBtn');
+         const closeModalBtn = document.getElementById('closeCategoriesModalBtn');
+         const modalOverlay = document.getElementById('allCategoriesModal');
+         if (openModalBtn) {
+             openModalBtn.addEventListener('click', function() {
+                 openModal(parsedDirections, parsedInvestedData);
+             });
+         }
+         if (closeModalBtn) {
+             closeModalBtn.addEventListener('click', closeModal);
+         }
+         if (modalOverlay) {
+             modalOverlay.addEventListener('click', function(event) {
+                 if (event.target === modalOverlay) {
+                     closeModal();
                  }
-              }
-          })();
-    
-          // Планетарная система
-          (function() {
-              const startups = {{ planetary_startups|safe }};
-    
-              const planets = document.querySelectorAll('.planetary-system .planet');
-              const planetOrientations = document.querySelectorAll('.planetary-system .planet-orientation');
-              const orbits = document.querySelectorAll('.planetary-system .orbit');
-              const infoCard = document.querySelector('.planetary-system #info-card');
-              const planetImage = document.querySelector('.planetary-system #planet-image');
-              const startupName = document.querySelector('.planetary-system #startup-name');
-              const startupRating = document.querySelector('.planetary-system #startup-rating');
-              const startupProgress = document.querySelector('.planetary-system #startup-progress');
-              const startupFunding = document.querySelector('.planetary-system #startup-funding');
-              const startupInvestors = document.querySelector('.planetary-system #startup-investors');
-              const startupDescription = document.querySelector('.planetary-system #startup-description');
-              const closeCard = document.querySelector('.planetary-system #close-card');
-              const moreDetails = document.querySelector('.planetary-system #more-details');
-              const solarSystem = document.querySelector('.planetary-system#solar-system');
-              const scene = document.querySelector('.planetary-system #scene');
-              const galaxy = document.querySelector('.planetary-system #galaxy');
-              const crosshairCoords = document.querySelector('.planetary-system #crosshair-coords');
-              const mouseCoords = document.querySelector('.planetary-system #mouse-coords');
-              const fpsElement = document.querySelector('.planetary-system #fps');
-              const galaxySelector = document.querySelector('.planetary-system #galaxy-selector');
-              const galaxyList = document.querySelector('.planetary-system #galaxy-list');
-              const logoElement = document.querySelector('.planetary-system #logo');
-    
-              logoElement.style.backgroundImage = `url('{% static "accounts/images/layout/image12.png" %}')`;
-    
-              const galaxyTiltAngle = 45;
-              const planetObjects = [];
-              let lastTime = 0;
-              let frameCount = 0;
-              let fps = 0;
-              let isPaused = false;
-              let pausedTime = 0;
-              let lastInteractionTime = Date.now();
-              const inactivityTimeout = 10000;
-              let isReturningToCenter = false;
-    
-              const galaxyNames = [
-                  'Технологии', 'Финансы', 'Здравоохранение', 'Медицина', 'Автомобили',
-                  'Доставка', 'Кафе/рестораны', 'Фастфуд', 'Здоровье', 'Красота',
-                  'Транспорт', 'Спорт', 'Психология', 'ИИ'
-              ];
-              let currentGalaxy = 'Технологии';
-    
-              galaxyNames.forEach((name, index) => {
-                  const galaxyItem = document.createElement('div');
-                  galaxyItem.className = 'galaxy-item';
-                  galaxyItem.textContent = name;
-                  if (name === currentGalaxy) {
-                      galaxyItem.classList.add('selected');
-                  }
-                  galaxyItem.addEventListener('click', () => {
-                      switchGalaxy(name);
-                      scrollToCenter(galaxyItem);
-                  });
-                  galaxyList.appendChild(galaxyItem);
-              });
-    
-              planets.forEach((planet, index) => {
-                  const orbit = planet.closest('.orbit');
-                  const planetOrientation = planet.closest('.planet-orientation');
-                  const orbitSize = parseFloat(getComputedStyle(orbit).getPropertyValue('--orbit-size'));
-                  const orbitTime = parseFloat(getComputedStyle(orbit).getPropertyValue('--orbit-time'));
-                  const initialAngle = Math.random() * 360;
-                  const speedFactor = 0.8 + Math.random() * 0.4;
-    
-                  planetObjects.push({
-                      element: planet,
-                      orientation: planetOrientation,
-                      orbit: orbit,
-                      size: parseFloat(getComputedStyle(planet).getPropertyValue('--planet-size')),
-                      orbitSize: orbitSize,
-                      orbitTime: orbitTime,
-                      angle: initialAngle,
-                      speedFactor: speedFactor,
-                      startTime: Date.now() - Math.random() * orbitTime * 1000
-                  });
-    
-                  const id = planet.getAttribute('data-id');
-                  const startup = startups.find(s => s.id == id);
-                  if (startup && startup.image) {
-                      planet.style.backgroundImage = `url('${startup.image}')`;
-                  } else {
-                      planet.style.backgroundColor = '#e9ecef';
-                  }
-    
-                  planet.addEventListener('click', (e) => {
-                      e.stopPropagation();
-                      const startupData = startups.find(s => s.id == id);
-    
-                      planetImage.style.backgroundImage = `url('${startupData.image}')`;
-                      startupName.textContent = startupData.name;
-                      startupRating.textContent = `Рейтинг ${startupData.rating}`;
-                      startupProgress.textContent = startupData.progress;
-                      startupFunding.textContent = `Цель финансирования: ${startupData.funding}`;
-                      startupInvestors.textContent = startupData.investors;
-                      startupDescription.textContent = startupData.description;
-    
-                      planets.forEach(p => p.classList.remove('active'));
-                      planet.classList.add('active');
-                      infoCard.style.display = 'block';
-    
-                      isPaused = true;
-                      pausedTime = Date.now();
-                      lastInteractionTime = Date.now();
-                  });
-              });
-    
-              closeCard.addEventListener('click', () => {
-                  infoCard.style.display = 'none';
-                  planets.forEach(p => p.classList.remove('active'));
-    
-                  if (isPaused) {
-                      const pauseDuration = Date.now() - pausedTime;
-                      planetObjects.forEach(planetObj => {
-                          planetObj.startTime += pauseDuration;
-                      });
-                      isPaused = false;
-                  }
-    
-                  lastInteractionTime = Date.now();
-              });
-    
-              moreDetails.addEventListener('click', () => {
-                  const activePlanet = document.querySelector('.planetary-system .planet.active');
-                  if (activePlanet) {
-                      const id = activePlanet.getAttribute('data-id');
-                      const startup = startups.find(s => s.id == id);
-                      if (startup && startup.startup_id) {
-                          window.location.href = `/startups/${startup.startup_id}/`;
-                      }
-                  }
-                  infoCard.style.display = 'none';
-                  planets.forEach(p => p.classList.remove('active'));
-    
-                  if (isPaused) {
-                      const pauseDuration = Date.now() - pausedTime;
-                      planetObjects.forEach(planetObj => {
-                          planetObj.startTime += pauseDuration;
-                      });
-                      isPaused = false;
-                  }
-    
-                  lastInteractionTime = Date.now();
-              });
-    
-              let isDragging = false;
-              let startX, startY;
-              let offsetX = 0;
-              let offsetY = 0;
-              let scale = 1;
-    
-              solarSystem.addEventListener('mousedown', (e) => {
-                  e.preventDefault();
-                  isDragging = true;
-                  startX = e.clientX;
-                  startY = e.clientY;
-                  solarSystem.classList.add('dragging');
-                  lastInteractionTime = Date.now();
-                  isReturningToCenter = false;
-              });
-    
-              document.addEventListener('mousemove', (e) => {
-                  if (!isDragging) return;
-    
-                  const deltaX = e.clientX - startX;
-                  const deltaY = e.clientY - startY;
-    
-                  offsetX += deltaX;
-                  offsetY += deltaY;
-    
-                  offsetX = Math.max(-solarSystem.offsetWidth / 2, Math.min(solarSystem.offsetWidth / 2, offsetX));
-                  offsetY = Math.max(-solarSystem.offsetHeight / 2, Math.min(solarSystem.offsetHeight / 2, offsetY));
-    
-                  scene.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
-                  startX = e.clientX;
-                  startY = e.clientY;
-    
-                  crosshairCoords.textContent = `Center: (${Math.round(offsetX)}, ${Math.round(offsetY)}, 0)`;
-    
-                  mouseCoords.style.left = `${e.clientX + 15}px`;
-                  mouseCoords.style.top = `${e.clientY + 15}px`;
-                  mouseCoords.textContent = `Mouse: (${e.clientX}, ${e.clientY})`;
-    
-                  lastInteractionTime = Date.now();
-              });
-    
-              document.addEventListener('mouseup', () => {
-                  isDragging = false;
-                  solarSystem.classList.remove('dragging');
-                  lastInteractionTime = Date.now();
-              });
-    
-              solarSystem.addEventListener('wheel', (e) => {
-                  e.preventDefault();
-                  const delta = e.deltaY > 0 ? -0.1 : 0.1;
-                  scale = Math.max(0.5, Math.min(3, scale + delta));
-                  scene.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
-    
-                  crosshairCoords.textContent = `Center: (${Math.round(offsetX)}, ${Math.round(offsetY)}, 0)`;
-    
-                  mouseCoords.style.left = `${e.clientX + 15}px`;
-                  mouseCoords.style.top = `${e.clientY + 15}px`;
-                  mouseCoords.textContent = `Mouse: (${e.clientX}, ${e.clientY})`;
-    
-                  lastInteractionTime = Date.now();
-                  isReturningToCenter = false;
-              });
-    
-              infoCard.addEventListener('mousedown', (e) => {
-                  e.stopPropagation();
-                  lastInteractionTime = Date.now();
-              });
-    
-              document.addEventListener('mousemove', (e) => {
-                  mouseCoords.style.left = `${e.clientX + 15}px`;
-                  mouseCoords.style.top = `${e.clientY + 15}px`;
-                  mouseCoords.textContent = `Mouse: (${e.clientX}, ${e.clientY})`;
-              });
-    
-              function checkInactivity() {
-                  const now = Date.now();
-                  if (now - lastInteractionTime >= inactivityTimeout && !isReturningToCenter && !isPaused) {
-                      isReturningToCenter = true;
-                      const startX = offsetX;
-                      const startY = offsetY;
-                      const duration = 1000;
-                      let startTime = null;
-    
-                      function animateReturn(timestamp) {
-                          if (!startTime) startTime = timestamp;
-                          const elapsed = timestamp - startTime;
-                          const progress = Math.min(elapsed / duration, 1);
-    
-                          offsetX = startX + (0 - startX) * progress;
-                          offsetY = startY + (0 - startY) * progress;
-    
-                          scene.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
-                          crosshairCoords.textContent = `Center: (${Math.round(offsetX)}, ${Math.round(offsetY)}, 0)`;
-    
-                          if (progress < 1) {
-                              requestAnimationFrame(animateReturn);
-                          } else {
-                              isReturningToCenter = false;
-                          }
-                      }
-    
-                      requestAnimationFrame(animateReturn);
-                  }
-              }
-    
-              setInterval(checkInactivity, 1000);
-    
-              function updatePlanets() {
-                  const now = Date.now();
-                  
-                  frameCount++;
-                  if (now - lastTime >= 1000) {
-                      fps = frameCount;
-                      frameCount = 0;
-                      lastTime = now;
-                      fpsElement.textContent = `${fps} FPS`;
-                  }
-    
-                  if (isPaused) {
-                      requestAnimationFrame(updatePlanets);
-                      return;
-                  }
-    
-                  planetObjects.forEach(planetObj => {
-                      const elapsedSeconds = (now - planetObj.startTime) / 1000;
-                      const orbitTimeSeconds = planetObj.orbitTime * planetObj.speedFactor;
-                      const progress = (elapsedSeconds % orbitTimeSeconds) / orbitTimeSeconds;
-                      const angle = planetObj.angle + progress * 360;
-                      const angleRad = angle * Math.PI / 180;
-    
-                      const radius = planetObj.orbitSize / 2;
-                      const x = Math.cos(angleRad) * radius;
-                      const y = Math.sin(angleRad) * radius;
-    
-                      planetObj.orientation.style.left = `${50 + 50 * (x / radius)}%`;
-                      planetObj.orientation.style.top = `${50 + 50 * (y / radius)}%`;
-    
-                      const tiltCompensation = -galaxyTiltAngle;
-                      planetObj.element.style.transform = `rotateX(${tiltCompensation}deg)`;
-                  });
-    
-                  requestAnimationFrame(updatePlanets);
-              }
-    
-              function switchGalaxy(galaxyName) {
-                  if (currentGalaxy === galaxyName) return;
-                  currentGalaxy = galaxyName;
-    
-                  document.querySelectorAll('.planetary-system .galaxy-item').forEach(item => {
-                      item.classList.remove('selected');
-                      if (item.textContent === galaxyName) {
-                          item.classList.add('selected');
-                      }
-                  });
-    
-                  planetObjects.forEach((planetObj, index) => {
-                      const newOrbitSize = 100 + index * 100 + (Math.random() * 50 - 25);
-                      const newOrbitTime = 60 + index * 20 + (Math.random() * 10 - 5);
-                      const newAngle = Math.random() * 360;
-                      const newSpeedFactor = 0.8 + Math.random() * 0.4;
-    
-                      planetObj.orbit.style.setProperty('--orbit-size', `${newOrbitSize}px`);
-                      planetObj.orbit.style.setProperty('--orbit-time', `${newOrbitTime}s`);
-                      planetObj.orbitSize = newOrbitSize;
-                      planetObj.orbitTime = newOrbitTime;
-                      planetObj.angle = newAngle;
-                      planetObj.speedFactor = newSpeedFactor;
-                      planetObj.startTime = Date.now() - Math.random() * newOrbitTime * 1000;
-                  });
-    
-                  lastInteractionTime = Date.now();
-              }
-    
-              function scrollToCenter(element) {
-                  const container = galaxySelector;
-                  const elementRect = element.getBoundingClientRect();
-                  const containerRect = container.getBoundingClientRect();
-                  const scrollLeft = element.offsetLeft - (containerRect.width / 2) + (elementRect.width / 2);
-                  container.scrollTo({
-                      left: scrollLeft,
-                      behavior: 'smooth'
-                  });
-              }
-    
-              let scrollVelocity = 0;
-              let lastScrollTime = 0;
-    
-              galaxySelector.addEventListener('wheel', (e) => {
-                  e.preventDefault();
-                  const delta = e.deltaY * 10;
-                  scrollVelocity += delta;
-                  lastScrollTime = Date.now();
-                  lastInteractionTime = Date.now();
-              });
-    
-              function smoothScroll() {
-                  const now = Date.now();
-                  const timeSinceLastScroll = now - lastScrollTime;
-    
-                  if (timeSinceLastScroll < 100) {
-                      galaxySelector.scrollLeft += scrollVelocity;
-                      scrollVelocity *= 0.95;
-                  } else {
-                      scrollVelocity = 0;
-                  }
-    
-                  const containerRect = galaxySelector.getBoundingClientRect();
-                  const containerCenter = containerRect.left + containerRect.width / 2;
-                  const items = document.querySelectorAll('.planetary-system .galaxy-item');
-    
-                  items.forEach(item => {
-                      const itemRect = item.getBoundingClientRect();
-                      const itemCenter = itemRect.left + itemRect.width / 2;
-                      const distanceFromCenter = Math.abs(containerCenter - itemCenter);
-                      const maxDistance = containerRect.width / 2;
-    
-                      const scale = Math.max(0.5, 1 - (distanceFromCenter / maxDistance));
-                      const fontSize = 14 * scale;
-                      item.style.transform = `scale(${scale})`;
-                      item.style.fontSize = `${fontSize}px`;
-                  });
-    
-                  requestAnimationFrame(smoothScroll);
-              }
-    
-              requestAnimationFrame(smoothScroll);
-    
-              updatePlanets();
-          })();
-      });
+             });
+         }
+    
+         document.querySelectorAll('.filter-dropdown-content a').forEach(link => {
+             link.addEventListener('click', function(event) {
+                 filterByCategory(event);
+                 // Вызываем фильтрацию для "Мои стартапы" (без статуса)
+                 const searchInput = document.getElementById('startup-search');
+                 const searchTerm = searchInput ? searchInput.value.toLowerCase().trim() : '';
+                 const startupCards = startupGrid.querySelectorAll('.startup-card');
+                 const loadMoreBtnSearch = document.getElementById('load-more');
+                 const hideBtnSearch = document.getElementById('hide-startups-btn');
+                 let visibleCount = 0;
+                 const activeCategoryButton = document.querySelector('.filter-btn[data-filter="category"].active');
+                 let activeCategoryFilter = null;
+                 if (activeCategoryButton) {
+                     const links = categoryDropdownContent.querySelectorAll('a');
+                     for(let link of links){
+                         if(translateCategoryName(link.dataset.category) === activeCategoryButton.textContent.trim().split(' ')[0]){
+                             activeCategoryFilter = link.dataset.category;
+                             break;
+                         }
+                     }
+                     if (!activeCategoryFilter && !document.querySelector('.filter-btn[data-filter="all"].active')) {
+                         console.warn("Не удалось определить активный фильтр категории для поиска.");
+                         activeCategoryFilter = null;
+                     } else if (document.querySelector('.filter-btn[data-filter="all"].active')) {
+                         activeCategoryFilter = null;
+                     }
+                 }
+    
+                 startupCards.forEach(card => {
+                     const name = card.getAttribute('data-name').toLowerCase();
+                     const category = card.getAttribute('data-category');
+    
+                     const matchesCategory = !activeCategoryFilter || (category === activeCategoryFilter);
+                     const matchesSearch = name.includes(searchTerm);
+    
+                     if (matchesSearch && matchesCategory) {
+                         if (visibleCount < 6) {
+                             card.style.display = 'flex';
+                             visibleCount++;
+                         } else {
+                             card.style.display = 'none';
+                             card.classList.add('hidden-card');
+                         }
+                     } else {
+                         card.style.display = 'none';
+                     }
+                 });
+    
+                 if (loadMoreBtnSearch) loadMoreBtnSearch.style.display = 'none';
+                 if (hideBtnSearch) hideBtnSearch.style.display = 'none';
+    
+                 const noResultsMsg = startupGrid.querySelector('.no-results-message');
+                 if (visibleCount === 0 && searchTerm !== '') {
+                     if (!noResultsMsg) {
+                         const p = document.createElement('p');
+                         p.textContent = 'По вашему запросу ничего не найдено.';
+                         p.style.gridColumn = '1 / -1';
+                         p.style.textAlign = 'center';
+                         p.classList.add('no-results-message');
+                         startupGrid.appendChild(p);
+                     }
+                 } else {
+                     if (noResultsMsg) {
+                         noResultsMsg.remove();
+                     }
+                 }
+             });
+         });
+    
+         // Добавляем логику для фильтрации по статусу в разделе "Заявки на стартапы"
+         function applyApplicationFilters() {
+             const activeButton = document.querySelector('.status-filter-btn.active');
+             const statusFilter = activeButton ? activeButton.getAttribute('data-status-filter') : 'all';
+             const applicationCards = document.querySelectorAll('.applications-list .application-card');
+    
+             let visibleCount = 0;
+             applicationCards.forEach(card => {
+                 const status = card.querySelector('.application-status').getAttribute('class').split(' ')[1].split('-')[1];
+                 const matchesStatus = statusFilter === 'all' || status === statusFilter;
+    
+                 if (matchesStatus) {
+                     card.style.display = 'flex';
+                     visibleCount++;
+                 } else {
+                     card.style.display = 'none';
+                 }
+             });
+    
+             const noResultsMsg = document.querySelector('.applications-list .no-results-message');
+             if (visibleCount === 0) {
+                 if (!noResultsMsg) {
+                     const p = document.createElement('p');
+                     p.textContent = 'По вашему запросу ничего не найдено.';
+                     p.style.gridColumn = '1 / -1';
+                     p.style.textAlign = 'center';
+                     p.classList.add('no-results-message');
+                     document.querySelector('.applications-list').appendChild(p);
+                 }
+             } else {
+                 if (noResultsMsg) {
+                     noResultsMsg.remove();
+                 }
+             }
+         }
+    
+         // Обработчик для кнопок фильтрации в "Заявки на стартапы"
+         const statusFilterButtons = document.querySelectorAll('.status-filter-btn');
+         statusFilterButtons.forEach(button => {
+             button.addEventListener('click', function() {
+                 statusFilterButtons.forEach(btn => btn.classList.remove('active'));
+                 this.classList.add('active');
+                 applyApplicationFilters();
+             });
+         });
+    
+         // Инициализация фильтрации при загрузке страницы
+         applyApplicationFilters();
+    
+         (function() {
+             const canvasElement = document.getElementById('monthlyInvestmentChart');
+             if (!canvasElement) {
+                 console.warn("Элемент canvas #monthlyInvestmentChart не найден.");
+                 return;
+             }
+             const ctx = canvasElement.getContext('2d');
+    
+             let monthLabels = [];
+             let monthlyCategoryData = [];
+             let categoriesForChart = [];
+    
+             try {
+                 const labelsEl = document.getElementById('chart-month-labels');
+                 const monthlyDataEl = document.getElementById('chart-monthly-category-data');
+                 const categoriesEl = document.getElementById('chart-categories');
+    
+                 if (!labelsEl || !monthlyDataEl || !categoriesEl) throw new Error("Элементы данных графика не найдены");
+    
+                 monthLabels = JSON.parse(labelsEl.textContent);
+                 monthlyCategoryData = JSON.parse(monthlyDataEl.textContent);
+                 categoriesForChart = JSON.parse(categoriesEl.textContent);
+    
+                 console.log("Chart Labels:", monthLabels);
+                 console.log("Chart Categories:", categoriesForChart);
+                 console.log("Chart Monthly Category Data:", monthlyCategoryData);
+             } catch (e) {
+                 console.error("Ошибка парсинга данных для графика:", e);
+                 if (canvasElement.parentNode) {
+                   canvasElement.parentNode.innerHTML = '<p style="text-align: center; color: red;">Ошибка загрузки данных для графика.</p>';
+                 }
+                 return;
+             }
+    
+             const hasData = monthlyCategoryData && monthlyCategoryData.some(month => Object.keys(month.category_data).length > 0);
+             console.log("Chart has category data:", hasData);
+    
+             if (hasData && categoriesForChart.length > 0) {
+                 const datasets = categoriesForChart.map(categoryName => {
+                     const color = categoryColors[categoryName] || categoryColors["default"];
+                     const data = monthLabels.map((label, index) => {
+                         const monthData = monthlyCategoryData[index];
+                         return monthData.category_data[categoryName] || 0;
+                     });
+    
+                     return {
+                         label: translateCategoryName(categoryName),
+                         data: data,
+                         backgroundColor: color,
+                     };
+                 });
+    
+                 console.log("Generated Chart Datasets:", datasets);
+    
+                 new Chart(ctx, {
+                     type: 'bar',
+                     data: {
+                         labels: monthLabels,
+                         datasets: datasets
+                     },
+                     options: {
+                       responsive: true,
+                       maintainAspectRatio: false,
+                       interaction: {
+                           mode: 'index',
+                           intersect: false,
+                       },
+                       scales: {
+                           y: {
+                               stacked: true,
+                               beginAtZero: true,
+                               grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                               ticks: {
+                                    color: 'rgba(255, 255, 255, 0.7)',
+                                   callback: function(value) {
+                                       if (value >= 1000000) { return (value / 1000000).toLocaleString('ru-RU', { maximumFractionDigits: 1 }) + 'M'; }
+                                       if (value >= 1000) { return (value / 1000).toLocaleString('ru-RU', { maximumFractionDigits: 0 }) + 'k'; }
+                                       else { return value.toLocaleString('ru-RU'); }
+                                   }
+                               },
+                               title: {
+                                   display: true,
+                                   text: 'Сумма сборов, ₽',
+                                   color: 'rgba(255, 255, 255, 0.7)'
+                               }
+                           },
+                           x: {
+                               stacked: true,
+                               grid: { display: false },
+                               ticks: { color: '#495057' }
+                           }
+                       },
+                       plugins: {
+                           legend: {
+                               display: true,
+                               position: 'top',
+                               labels: {
+                                   color: 'rgba(255, 255, 255, 0.7)',
+                                   boxWidth: 12,
+                                   padding: 15
+                               }
+                            },
+                           tooltip: {
+                               callbacks: {
+                                   title: function(tooltipItems) {
+                                       return tooltipItems[0].label;
+                                   },
+                                   label: function(context) {
+                                       let label = context.dataset.label || '';
+                                       if (label) { label += ': '; }
+                                       if (context.parsed.y !== null) {
+                                           label += context.parsed.y.toLocaleString('ru-RU', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + ' ₽';
+                                       }
+                                       return label;
+                                   }
+                               }
+                           }
+                       }
+                     }
+                 });
+             } else {
+                console.log("No category data found for chart, rendering placeholder.");
+                if (canvasElement.parentNode) {
+                   canvasElement.parentNode.innerHTML = '<p style="text-align: center; color: #adb5bd;">Нет данных по сборам средств за текущий год для отображения по категориям.</p>';
+                }
+             }
+         })();
+    
+         // Планетарная система
+         (function() {
+             const startups = {{ planetary_startups|safe }};
+    
+             const planets = document.querySelectorAll('.planetary-system .planet');
+             const planetOrientations = document.querySelectorAll('.planetary-system .planet-orientation');
+             const orbits = document.querySelectorAll('.planetary-system .orbit');
+             const infoCard = document.querySelector('.planetary-system #info-card');
+             const planetImage = document.querySelector('.planetary-system #planet-image');
+             const startupName = document.querySelector('.planetary-system #startup-name');
+             const startupRating = document.querySelector('.planetary-system #startup-rating');
+             const startupProgress = document.querySelector('.planetary-system #startup-progress');
+             const startupFunding = document.querySelector('.planetary-system #startup-funding');
+             const startupInvestors = document.querySelector('.planetary-system #startup-investors');
+             const startupDescription = document.querySelector('.planetary-system #startup-description');
+             const closeCard = document.querySelector('.planetary-system #close-card');
+             const moreDetails = document.querySelector('.planetary-system #more-details');
+             const solarSystem = document.querySelector('.planetary-system#solar-system');
+             const scene = document.querySelector('.planetary-system #scene');
+             const galaxy = document.querySelector('.planetary-system #galaxy');
+             const crosshairCoords = document.querySelector('.planetary-system #crosshair-coords');
+             const mouseCoords = document.querySelector('.planetary-system #mouse-coords');
+             const fpsElement = document.querySelector('.planetary-system #fps');
+             const galaxySelector = document.querySelector('.planetary-system #galaxy-selector');
+             const galaxyList = document.querySelector('.planetary-system #galaxy-list');
+             const logoElement = document.querySelector('.planetary-system #logo');
+    
+             logoElement.style.backgroundImage = `url('{% static "accounts/images/layout/image12.png" %}')`;
+    
+             const galaxyTiltAngle = 45;
+             const planetObjects = [];
+             let lastTime = 0;
+             let frameCount = 0;
+             let fps = 0;
+             let isPaused = false;
+             let pausedTime = 0;
+             let lastInteractionTime = Date.now();
+             const inactivityTimeout = 10000;
+             let isReturningToCenter = false;
+    
+             const galaxyNames = [
+                 'Технологии', 'Финансы', 'Здравоохранение', 'Медицина', 'Автомобили',
+                 'Доставка', 'Кафе/рестораны', 'Фастфуд', 'Здоровье', 'Красота',
+                 'Транспорт', 'Спорт', 'Психология', 'ИИ'
+             ];
+             let currentGalaxy = 'Технологии';
+    
+             galaxyNames.forEach((name, index) => {
+                 const galaxyItem = document.createElement('div');
+                 galaxyItem.className = 'galaxy-item';
+                 galaxyItem.textContent = name;
+                 if (name === currentGalaxy) {
+                     galaxyItem.classList.add('selected');
+                 }
+                 galaxyItem.addEventListener('click', () => {
+                     switchGalaxy(name);
+                     scrollToCenter(galaxyItem);
+                 });
+                 galaxyList.appendChild(galaxyItem);
+             });
+    
+             planets.forEach((planet, index) => {
+                 const orbit = planet.closest('.orbit');
+                 const planetOrientation = planet.closest('.planet-orientation');
+                 const orbitSize = parseFloat(getComputedStyle(orbit).getPropertyValue('--orbit-size'));
+                 const orbitTime = parseFloat(getComputedStyle(orbit).getPropertyValue('--orbit-time'));
+                 const initialAngle = Math.random() * 360;
+                 const speedFactor = 0.8 + Math.random() * 0.4;
+    
+                 planetObjects.push({
+                     element: planet,
+                     orientation: planetOrientation,
+                     orbit: orbit,
+                     size: parseFloat(getComputedStyle(planet).getPropertyValue('--planet-size')),
+                     orbitSize: orbitSize,
+                     orbitTime: orbitTime,
+                     angle: initialAngle,
+                     speedFactor: speedFactor,
+                     startTime: Date.now() - Math.random() * orbitTime * 1000
+                 });
+    
+                 const id = planet.getAttribute('data-id');
+                 const startup = startups.find(s => s.id == id);
+                 if (startup && startup.image) {
+                     planet.style.backgroundImage = `url('${startup.image}')`;
+                 } else {
+                     planet.style.backgroundColor = '#e9ecef';
+                 }
+    
+                 planet.addEventListener('click', (e) => {
+                     e.stopPropagation();
+                     const startupData = startups.find(s => s.id == id);
+    
+                     planetImage.style.backgroundImage = `url('${startupData.image}')`;
+                     startupName.textContent = startupData.name;
+                     startupRating.textContent = `Рейтинг ${startupData.rating}`;
+                     startupProgress.textContent = startupData.progress;
+                     startupFunding.textContent = `Цель финансирования: ${startupData.funding}`;
+                     startupInvestors.textContent = startupData.investors;
+                     startupDescription.textContent = startupData.description;
+    
+                     planets.forEach(p => p.classList.remove('active'));
+                     planet.classList.add('active');
+                     infoCard.style.display = 'block';
+    
+                     isPaused = true;
+                     pausedTime = Date.now();
+                     lastInteractionTime = Date.now();
+                 });
+             });
+    
+             closeCard.addEventListener('click', () => {
+                 infoCard.style.display = 'none';
+                 planets.forEach(p => p.classList.remove('active'));
+    
+                 if (isPaused) {
+                     const pauseDuration = Date.now() - pausedTime;
+                     planetObjects.forEach(planetObj => {
+                         planetObj.startTime += pauseDuration;
+                     });
+                     isPaused = false;
+                 }
+    
+                 lastInteractionTime = Date.now();
+             });
+    
+             moreDetails.addEventListener('click', () => {
+                 const activePlanet = document.querySelector('.planetary-system .planet.active');
+                 if (activePlanet) {
+                     const id = activePlanet.getAttribute('data-id');
+                     const startup = startups.find(s => s.id == id);
+                     if (startup && startup.startup_id) {
+                         window.location.href = `/startups/${startup.startup_id}/`;
+                     }
+                 }
+                 infoCard.style.display = 'none';
+                 planets.forEach(p => p.classList.remove('active'));
+    
+                 if (isPaused) {
+                     const pauseDuration = Date.now() - pausedTime;
+                     planetObjects.forEach(planetObj => {
+                         planetObj.startTime += pauseDuration;
+                     });
+                     isPaused = false;
+                 }
+    
+                 lastInteractionTime = Date.now();
+             });
+    
+             let isDragging = false;
+             let startX, startY;
+             let offsetX = 0;
+             let offsetY = 0;
+             let scale = 1;
+    
+             solarSystem.addEventListener('mousedown', (e) => {
+                 e.preventDefault();
+                 isDragging = true;
+                 startX = e.clientX;
+                 startY = e.clientY;
+                 solarSystem.classList.add('dragging');
+                 lastInteractionTime = Date.now();
+                 isReturningToCenter = false;
+             });
+    
+             document.addEventListener('mousemove', (e) => {
+                 if (!isDragging) return;
+    
+                 const deltaX = e.clientX - startX;
+                 const deltaY = e.clientY - startY;
+    
+                 offsetX += deltaX;
+                 offsetY += deltaY;
+    
+                 offsetX = Math.max(-solarSystem.offsetWidth / 2, Math.min(solarSystem.offsetWidth / 2, offsetX));
+                 offsetY = Math.max(-solarSystem.offsetHeight / 2, Math.min(solarSystem.offsetHeight / 2, offsetY));
+    
+                 scene.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+                 startX = e.clientX;
+                 startY = e.clientY;
+    
+                 crosshairCoords.textContent = `Center: (${Math.round(offsetX)}, ${Math.round(offsetY)}, 0)`;
+    
+                 mouseCoords.style.left = `${e.clientX + 15}px`;
+                 mouseCoords.style.top = `${e.clientY + 15}px`;
+                 mouseCoords.textContent = `Mouse: (${e.clientX}, ${e.clientY})`;
+    
+                 lastInteractionTime = Date.now();
+             });
+    
+             document.addEventListener('mouseup', () => {
+                 isDragging = false;
+                 solarSystem.classList.remove('dragging');
+                 lastInteractionTime = Date.now();
+             });
+    
+             solarSystem.addEventListener('wheel', (e) => {
+                 e.preventDefault();
+                 const delta = e.deltaY > 0 ? -0.1 : 0.1;
+                 scale = Math.max(0.5, Math.min(3, scale + delta));
+                 scene.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+    
+                 crosshairCoords.textContent = `Center: (${Math.round(offsetX)}, ${Math.round(offsetY)}, 0)`;
+    
+                 mouseCoords.style.left = `${e.clientX + 15}px`;
+                 mouseCoords.style.top = `${e.clientY + 15}px`;
+                 mouseCoords.textContent = `Mouse: (${e.clientX}, ${e.clientY})`;
+    
+                 lastInteractionTime = Date.now();
+                 isReturningToCenter = false;
+             });
+    
+             infoCard.addEventListener('mousedown', (e) => {
+                 e.stopPropagation();
+                 lastInteractionTime = Date.now();
+             });
+    
+             document.addEventListener('mousemove', (e) => {
+                 mouseCoords.style.left = `${e.clientX + 15}px`;
+                 mouseCoords.style.top = `${e.clientY + 15}px`;
+                 mouseCoords.textContent = `Mouse: (${e.clientX}, ${e.clientY})`;
+             });
+    
+             function checkInactivity() {
+                 const now = Date.now();
+                 if (now - lastInteractionTime >= inactivityTimeout && !isReturningToCenter && !isPaused) {
+                     isReturningToCenter = true;
+                     const startX = offsetX;
+                     const startY = offsetY;
+                     const duration = 1000;
+                     let startTime = null;
+    
+                     function animateReturn(timestamp) {
+                         if (!startTime) startTime = timestamp;
+                         const elapsed = timestamp - startTime;
+                         const progress = Math.min(elapsed / duration, 1);
+    
+                         offsetX = startX + (0 - startX) * progress;
+                         offsetY = startY + (0 - startY) * progress;
+    
+                         scene.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+                         crosshairCoords.textContent = `Center: (${Math.round(offsetX)}, ${Math.round(offsetY)}, 0)`;
+    
+                         if (progress < 1) {
+                             requestAnimationFrame(animateReturn);
+                         } else {
+                             isReturningToCenter = false;
+                         }
+                     }
+    
+                     requestAnimationFrame(animateReturn);
+                 }
+             }
+    
+             setInterval(checkInactivity, 1000);
+    
+             function updatePlanets() {
+                 const now = Date.now();
+    
+                 frameCount++;
+                 if (now - lastTime >= 1000) {
+                     fps = frameCount;
+                     frameCount = 0;
+                     lastTime = now;
+                     fpsElement.textContent = `${fps} FPS`;
+                 }
+    
+                 if (isPaused) {
+                     requestAnimationFrame(updatePlanets);
+                     return;
+                 }
+    
+                 planetObjects.forEach(planetObj => {
+                     const elapsedSeconds = (now - planetObj.startTime) / 1000;
+                     const orbitTimeSeconds = planetObj.orbitTime * planetObj.speedFactor;
+                     const progress = (elapsedSeconds % orbitTimeSeconds) / orbitTimeSeconds;
+                     const angle = planetObj.angle + progress * 360;
+                     const angleRad = angle * Math.PI / 180;
+    
+                     const radius = planetObj.orbitSize / 2;
+                     const x = Math.cos(angleRad) * radius;
+                     const y = Math.sin(angleRad) * radius;
+    
+                     planetObj.orientation.style.left = `${50 + 50 * (x / radius)}%`;
+                     planetObj.orientation.style.top = `${50 + 50 * (y / radius)}%`;
+    
+                     const tiltCompensation = -galaxyTiltAngle;
+                     planetObj.element.style.transform = `rotateX(${tiltCompensation}deg)`;
+                 });
+    
+                 requestAnimationFrame(updatePlanets);
+             }
+    
+             function switchGalaxy(galaxyName) {
+                 if (currentGalaxy === galaxyName) return;
+                 currentGalaxy = galaxyName;
+    
+                 document.querySelectorAll('.planetary-system .galaxy-item').forEach(item => {
+                     item.classList.remove('selected');
+                     if (item.textContent === galaxyName) {
+                         item.classList.add('selected');
+                     }
+                 });
+    
+                 planetObjects.forEach((planetObj, index) => {
+                     const newOrbitSize = 100 + index * 100 + (Math.random() * 50 - 25);
+                     const newOrbitTime = 60 + index * 20 + (Math.random() * 10 - 5);
+                     const newAngle = Math.random() * 360;
+                     const newSpeedFactor = 0.8 + Math.random() * 0.4;
+    
+                     planetObj.orbit.style.setProperty('--orbit-size', `${newOrbitSize}px`);
+                     planetObj.orbit.style.setProperty('--orbit-time', `${newOrbitTime}s`);
+                     planetObj.orbitSize = newOrbitSize;
+                     planetObj.orbitTime = newOrbitTime;
+                     planetObj.angle = newAngle;
+                     planetObj.speedFactor = newSpeedFactor;
+                     planetObj.startTime = Date.now() - Math.random() * newOrbitTime * 1000;
+                 });
+    
+                 lastInteractionTime = Date.now();
+             }
+    
+             function scrollToCenter(element) {
+                 const container = galaxySelector;
+                 const elementRect = element.getBoundingClientRect();
+                 const containerRect = container.getBoundingClientRect();
+                 const scrollLeft = element.offsetLeft - (containerRect.width / 2) + (elementRect.width / 2);
+                 container.scrollTo({
+                     left: scrollLeft,
+                     behavior: 'smooth'
+                 });
+             }
+    
+             let scrollVelocity = 0;
+             let lastScrollTime = 0;
+    
+             galaxySelector.addEventListener('wheel', (e) => {
+                 e.preventDefault();
+                 const delta = e.deltaY * 10;
+                 scrollVelocity += delta;
+                 lastScrollTime = Date.now();
+                 lastInteractionTime = Date.now();
+             });
+    
+             function smoothScroll() {
+                 const now = Date.now();
+                 const timeSinceLastScroll = now - lastScrollTime;
+    
+                 if (timeSinceLastScroll < 100) {
+                     galaxySelector.scrollLeft += scrollVelocity;
+                     scrollVelocity *= 0.95;
+                 } else {
+                     scrollVelocity = 0;
+                 }
+    
+                 const containerRect = galaxySelector.getBoundingClientRect();
+                 const containerCenter = containerRect.left + containerRect.width / 2;
+                 const items = document.querySelectorAll('.planetary-system .galaxy-item');
+    
+                 items.forEach(item => {
+                     const itemRect = item.getBoundingClientRect();
+                     const itemCenter = itemRect.left + itemRect.width / 2;
+                     const distanceFromCenter = Math.abs(containerCenter - itemCenter);
+                     const maxDistance = containerRect.width / 2;
+    
+                     const scale = Math.max(0.5, 1 - (distanceFromCenter / maxDistance));
+                     const fontSize = 14 * scale;
+                     item.style.transform = `scale(${scale})`;
+                     item.style.fontSize = `${fontSize}px`;
+                 });
+    
+                 requestAnimationFrame(smoothScroll);
+             }
+    
+             requestAnimationFrame(smoothScroll);
+    
+             updatePlanets();
+         })();
+     });
     </script>
 
   {% else %}
