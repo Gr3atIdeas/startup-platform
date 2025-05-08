@@ -1773,9 +1773,46 @@ def my_startups(request):
             approved_startups_annotated = []
 
         # --- Данные для планетарной системы ---
+        # Инициализируем S3-клиент для доступа к Yandex Object Storage
+        s3_client = boto3.client(
+            's3',
+            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+            endpoint_url=settings.AWS_S3_ENDPOINT_URL,
+            region_name=settings.AWS_S3_REGION_NAME
+        )
+
         planetary_startups = []
         for idx, startup in enumerate(approved_startups_annotated, start=1):
-            logo_url = startup.get_logo_url() or 'https://via.placeholder.com/150'
+            # Формируем URL для логотипа
+            if not startup.logo_urls or not isinstance(startup.logo_urls, list) or len(startup.logo_urls) == 0:
+                logger.warning(f"Стартап {startup.startup_id} ({startup.title}) не имеет логотипа в logo_urls")
+                logo_url = 'https://via.placeholder.com/150'
+            else:
+                try:
+                    # Формируем префикс для поиска файла в папке startups/{startup_id}/logos/
+                    prefix = f"startups/{startup.startup_id}/logos/"
+
+                    # Ищем файлы в этой папке
+                    response = s3_client.list_objects_v2(
+                        Bucket=settings.AWS_STORAGE_BUCKET_NAME,
+                        Prefix=prefix
+                    )
+
+                    # Проверяем, есть ли файлы в папке
+                    if 'Contents' in response and len(response['Contents']) > 0:
+                        # Берём первый файл
+                        file_key = response['Contents'][0]['Key']
+                        # Генерируем прямой URL без подписи
+                        logo_url = f"https://storage.yandexcloud.net/{settings.AWS_STORAGE_BUCKET_NAME}/{file_key}"
+                        logger.info(f"Сгенерирован URL для логотипа стартапа {startup.startup_id}: {logo_url}")
+                    else:
+                        logger.warning(f"Файл для логотипа стартапа {startup.startup_id} не найден в бакете по префиксу {prefix}")
+                        logo_url = 'https://via.placeholder.com/150'
+                except Exception as e:
+                    logger.error(f"Ошибка при генерации URL для логотипа стартапа {startup.startup_id}: {str(e)}")
+                    logo_url = 'https://via.placeholder.com/150'
+
             orbit_size = (idx * 100) + 100
             orbit_time = (idx * 20) + 60
             planet_size = (idx * 2) + 50
