@@ -284,19 +284,18 @@ a:hover {
 }
 
 .startup-logo-container {
-    /* Убираем фиксированные размеры, делаем гибким */
-    width: 80%; /* Занимает большую часть ширины родителя */
-    /* height: auto; */ /* Высота по содержимому */
-    /* aspect-ratio: 1 / 1; */ /* Можно задать соотношение сторон, если нужно (например, квадрат) */
-    max-height: 70%; /* Ограничиваем максимальную высоту относительно родителя */
-    margin: 15px auto; /* Отступы сверху/снизу и авто по бокам для центровки */
+    /* Занимает всю доступную ширину и высоту, оставляя место под кнопку */
+    width: 100%; 
+    flex-grow: 1; /* Позволяем растягиваться по высоте */
+    margin-bottom: 20px; /* Отступ перед кнопкой чата */
     border-radius: 10px; 
     overflow: hidden; 
     display: flex; 
     align-items: center;
     justify-content: center;
-    background-color: var(--secondary-blue); 
+    background-color: var(--secondary-blue); /* Фон на случай отсутствия лого */
     position: relative; 
+    min-height: 0; /* Для корректной работы flex-grow */
 }
 
 .startup-logo-actual {
@@ -305,8 +304,9 @@ a:hover {
     height: 100%;
     max-width: 100%;
     max-height: 100%;
-    object-fit: contain; /* Вписываем изображение */
-    border-radius: 8px;
+    /* OLD: object-fit: contain; */
+    object-fit: cover; /* <--- ИЗМЕНЕНО: Заполняем контейнер, обрезая лишнее */
+    border-radius: 0; /* Убираем радиус у самого img, т.к. контейнер с overflow:hidden */
 }
 
 .startup-logo-placeholder {
