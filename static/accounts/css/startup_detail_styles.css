@@ -265,19 +265,47 @@ a:hover {
 }
 
 .planet-container {
-    width: 451px;
-    height: 491px;
-    flex-shrink: 0;
-    border-radius: 10px;
-    border: 2px solid #353945;
-    background-color: #0e1014;
-    display: flex;
-    flex-direction: column;
+  width: 250px; /* Или другая фиксированная ширина для левой колонки */
+  height: 350px; /* Примерная высота, подберите под дизайн */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between; /* Распределяем контент внутри */
+  padding: 20px;
+  background-color: var(--dark-card-bg);
+  border-radius: 15px;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.startup-logo-container {
+    width: 200px; /* Ширина контейнера логотипа */
+    height: 200px; /* Высота контейнера логотипа */
+    margin: 0 auto 15px auto; /* Центрируем и добавляем отступ снизу */
+    border-radius: 10px; /* Скруглим углы контейнера */
+    overflow: hidden; /* Скрываем все, что выходит за рамки */
+    display: flex; /* Центрируем содержимое */
     align-items: center;
-    justify-content: space-around;
-    padding: 20px;
-    box-sizing: border-box;
-    position: relative;
+    justify-content: center;
+    background-color: var(--secondary-blue); /* Фон на случай отсутствия лого */
+    position: relative; /* Для возможного позиционирования */
+}
+
+.startup-logo-actual {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain; /* Вписываем изображение, сохраняя пропорции */
+    /* object-fit: cover; */ /* Альтернатива: заполнить контейнер, обрезая лишнее */
+    border-radius: 8px; /* Небольшое скругление углов самого изображения */
+}
+
+.startup-logo-placeholder {
+    width: 100px; /* Размер иконки плейсхолдера */
+    height: 100px;
+    opacity: 0.5;
 }
 
 .planet-container .logo-preview {
