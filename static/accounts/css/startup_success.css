@@ -1,0 +1,80 @@
+/* static/accounts/css/startup_success.css */
+
+.success-page-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 70vh; /* Высота относительно видимой части экрана, подберите по необходимости */
+    padding: 20px;
+    text-align: center;
+    color: #fff;
+    width: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    box-sizing: border-box;
+    /* background-image будет установлен в HTML-шаблоне через <style> блок */
+}
+
+.success-content-overlay {
+    /* Этот блок можно использовать для полупрозрачного оверлея,
+       если фон затрудняет чтение текста. 
+       Пример: background-color: rgba(0, 0, 0, 0.3); 
+       Сейчас он не используется, но оставлен для возможности настройки. */
+    padding: 30px;
+    border-radius: 8px;
+    max-width: 600px;
+    margin: auto;
+}
+
+.title-congrats {
+    font-size: 52px;
+    font-weight: 700;
+    color: #0AF2C2; /* Бирюзовый цвет */
+    margin-top: 0;
+    margin-bottom: 5px;
+    font-family: 'Montserrat', sans-serif; /* Пример шрифта, используйте шрифт вашего проекта */
+    line-height: 1.2;
+}
+
+.title-moderation {
+    font-size: 40px;
+    font-weight: 700;
+    color: #FFFFFF;
+    margin-top: 0;
+    margin-bottom: 50px;
+    font-family: 'Montserrat', sans-serif; /* Пример шрифта */
+    line-height: 1.2;
+}
+
+.btn-main-page {
+    display: inline-block;
+    padding: 16px 40px;
+    background-color: #F9ED3A; /* Желтый цвет */
+    color: #1E1E1E;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 30px;
+    margin-bottom: 35px;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    border: none;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif; /* Пример шрифта */
+}
+
+.btn-main-page:hover {
+    background-color: #E8DA34;
+    transform: translateY(-2px);
+}
+
+.info-text {
+    font-size: 15px;
+    color: #B0B0C0; /* Светло-серый текст */
+    line-height: 1.5;
+    max-width: 450px;
+    margin-left: auto;
+    margin-right: auto;
+    font-family: 'Inter', sans-serif; /* Пример шрифта */
+} 

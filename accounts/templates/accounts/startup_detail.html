@@ -6,17 +6,17 @@
 {% load humanize %}
 {% load accounts_extras %}
 
-{% block title %}{{ startup.title }} - Подробности{% endblock %}
+{% block title %}{{ startup.title|default:"Детали стартапа" }}{% endblock %}
 
 {% block head_extra %}
   <link rel="stylesheet" href="{% static 'accounts/css/startup_detail_styles.css' %}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   {# <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" /> #}
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox@3.2.0/dist/css/glightbox.min.css" />
+  <link rel="stylesheet" href="{% static 'accounts/css/moderation_panel.css' %}">
 {% endblock %}
 
 {% block content %}
-{# Добавляем data-атрибуты для передачи данных в JS #}
 <div class="startup-detail-page" 
      data-startup-id="{{ startup.startup_id }}" 
      data-startup-title="{{ startup.title|escapejs }}"

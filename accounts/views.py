@@ -744,13 +744,19 @@ def create_startup(request):
                 logger.error(f"Ошибка подключения к Yandex Object Storage: {str(e)}", exc_info=True)
 
             messages.success(request, f'Стартап "{startup.title}" успешно создан и отправлен на модерацию!')
-            return redirect('profile')
+            return redirect('startup_creation_success') # <--- ИЗМЕНЕНО ЗДЕСЬ
         else:
             messages.error(request, 'Форма содержит ошибки.')
-            return render(request, 'accounts/create_startup.html', {'form': form})
+            # Здесь оставляем render, чтобы показать ошибки на той же странице
+            return render(request, 'accounts/create_startup.html', {'form': form, 'timeline_steps': request.POST})
     else:
         form = StartupForm()
     return render(request, 'accounts/create_startup.html', {'form': form})
+
+# Новая view-функция для страницы успеха
+@login_required
+def startup_creation_success(request):
+    return render(request, 'accounts/templates/accounts/startup_creation_success.html')
 
 # accounts/views.py
 @login_required
