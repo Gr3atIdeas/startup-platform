@@ -35,22 +35,23 @@ body {
 
 /* Стили для секций формы */
 .form-section {
-    background: rgba(255, 255, 255, 0.07);
-    box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.25);
-    border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.36);
-    backdrop-filter: blur(10px);
-    padding: 40px 50px; /* Внутренние отступы для секций */
-    margin-bottom: 30px; /* Отступ между секциями */
+    /* Убираем стили, так как они теперь в .form-main-content-wrapper */
+    /* background: rgba(255, 255, 255, 0.07); */
+    /* box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.25); */
+    border-radius: 0; /* Сброс, если был */
+    /* border: 1px solid rgba(255, 255, 255, 0.36); */
+    /* backdrop-filter: blur(10px); */
+    padding: 0; /* Внутренние отступы теперь у .form-main-content-wrapper или .form-content-section */
+    margin-bottom: 0; /* Отступы между секциями теперь внутри .form-main-content-wrapper */
 }
 
 .form-section-top {
-    background: none; /* У верхнего блока нет такого фона */
+    background: none;
     box-shadow: none;
     border: none;
     backdrop-filter: none;
-    padding: 0; /* Убираем лишние паддинги, если они не нужны */
-    margin-bottom: 50px; /* Отступ от верхнего блока до следующего */
+    padding: 0;
+    margin-bottom: 50px; /* Отступ от верхнего блока до нового контейнера */
 }
 
 .form-top-grid {
@@ -1082,4 +1083,54 @@ h3.section-title {
 }
 .submit-button:active:not(:disabled) {
     transform: scale(0.98); /* Небольшое нажатие */
+}
+
+/* Новый контейнер для основного контента формы */
+.form-main-content-wrapper {
+    background: rgba(255, 255, 255, 0.07);
+    box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.25);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.36);
+    backdrop-filter: blur(10px);
+    padding: 50px; /* Внутренние отступы как в Figma */
+    display: flex;
+    flex-direction: column;
+    gap: 73px; /* Отступы между секциями внутри контейнера */
+    margin-bottom: 40px; /* Отступ до кнопки "Отправить" */
+}
+
+/* Внутренние секции контента */
+.form-content-section {
+    /* Этот класс используется для группировки полей внутри основного контейнера */
+    /* Возможно, не требует специфических стилей, кроме управления gap если нужно */
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Примерный отступ между элементами внутри секции */
+}
+
+.form-content-section.timeline-section-wrapper {
+     gap: 30px; /* Специфичный отступ для таймлайна */
+}
+
+.form-content-section.agreement-section-outer-wrapper {
+    gap: 25px; /* Специфичный отступ для согласий */
+}
+
+
+/* Убираем лишние стили у .content-section, если он еще где-то используется */
+.content-section {
+   /* Можно удалить или оставить только необходимые, не связанные с фоном/рамкой */
+    padding: 0; /* Убираем паддинги, если они дублируют .form-main-content-wrapper */
+    gap: 0; /* Убираем gap, если он дублирует .form-main-content-wrapper */
+    margin-bottom: 0; /* Убираем отступ */
+}
+
+
+/* Адаптивность: убедимся, что паддинги .form-main-content-wrapper уменьшаются */
+@media (max-width: 768px) {
+    .form-main-content-wrapper {
+        padding: 20px; /* Уменьшаем паддинги на мобильных */
+        gap: 40px; /* Уменьшаем отступы между секциями */
+    }
+    /* ... другие мобильные стили ... */
 }
