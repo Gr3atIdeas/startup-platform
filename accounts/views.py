@@ -761,7 +761,7 @@ def create_startup(request):
 # Новая view-функция для страницы успеха
 @login_required
 def startup_creation_success(request):
-    return render(request, 'accounts/templates/accounts/startup_creation_success.html')
+    return render(request, 'accounts/startup_creation_success.html')
 
 # accounts/views.py
 @login_required
