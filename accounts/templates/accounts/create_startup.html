@@ -8,413 +8,401 @@
 <link rel="stylesheet" href="{% static 'accounts/css/startup_form.css' %}">
 
 <div class="startup-form-container">
-    <div class="form-header">
-        <h2>Создание стартапа</h2>
+    <div class="form-navigation-header">
+        <a href="{% url 'startups_list' %}" class="back-button">&larr; Назад</a>
+        <h2 class="form-main-title">Создание стартапа</h2>
     </div>
 
     <form method="post" enctype="multipart/form-data" id="startupForm">
         {% csrf_token %}
 
-        <div class="form-row">
-            <div class="form-column">
-                <!-- Блок названия стартапа -->
-                <div class="form-group">
-                    <label for="{{ form.title.id_for_label }}">Название стартапа *</label>
-                    {{ form.title|add_class:"form-control" }}
-                    {% if form.title.errors %}
-                        <span class="error-message">{{ form.title.errors|first }}</span>
-                    {% endif %}
+        <div class="form-grid">
+            <!-- Левая колонка -->
+            <div class="form-column-left">
+                <div class="form-group logo-upload-group">
+                    <label for="{{ form.logo.id_for_label }}" class="logo-upload-label">
+                        <div class="logo-placeholder" id="logoPlaceholder">
+                            <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Upload Logo">
+                            <span>Загрузить логотип</span>
                 </div>
-
-                <!-- Блок планеты с логотипом -->
-                <div class="planet-container">
-                    <div class="planet">
-                        <div class="planet-segment segment-top" id="segment-top"></div>
-                        <div class="planet-segment segment-middle" id="segment-middle"></div>
-                        <div class="planet-segment segment-bottom" id="segment-bottom"></div>
-                    </div>
-                    <div class="logo-overlay">
-                        <img src="" alt="Логотип" class="logo-preview" id="logoPreview">
-                    </div>
-                </div>
-
-                <!-- Блок выбора цветов планеты -->
-                <div class="color-picker-container">
-                    <div class="form-group">
-                        <label for="{{ form.planet_top_color.id_for_label }}">Цвет верха планеты *</label>
-                        {{ form.planet_top_color|add_class:"color-picker"|attr:"data-segment=segment-top" }}
-                        {% if form.planet_top_color.errors %}
-                            <span class="error-message">{{ form.planet_top_color.errors|first }}</span>
-                        {% endif %}
-                    </div>
-                    <div class="form-group">
-                        <label for="{{ form.planet_middle_color.id_for_label }}">Цвет середины планеты *</label>
-                        {{ form.planet_middle_color|add_class:"color-picker"|attr:"data-segment=segment-middle" }}
-                        {% if form.planet_middle_color.errors %}
-                            <span class="error-message">{{ form.planet_middle_color.errors|first }}</span>
-                        {% endif %}
-                    </div>
-                    <div class="form-group">
-                        <label for="{{ form.planet_bottom_color.id_for_label }}">Цвет низа планеты *</label>
-                        {{ form.planet_bottom_color|add_class:"color-picker"|attr:"data-segment=segment-bottom" }}
-                        {% if form.planet_bottom_color.errors %}
-                            <span class="error-message">{{ form.planet_bottom_color.errors|first }}</span>
-                        {% endif %}
-                    </div>
-                </div>
-
-                <!-- Блок загрузки логотипа -->
-                <div class="form-group">
-                    <label for="{{ form.logo.id_for_label }}">Загрузить логотип</label>
-                    {{ form.logo|add_class:"form-control-file" }}
+                        <img src="" alt="Логотип" class="logo-preview" id="logoPreview" style="display:none;">
+                    </label>
+                    {{ form.logo|add_class:"form-control-file"|attr:"id:id_logo_input"|attr:"style:display:none;" }}
                     {% if form.logo.errors %}
                         <span class="error-message">{{ form.logo.errors|first }}</span>
                     {% endif %}
                 </div>
 
-                <div class="small-text" style="text-align: center;">Нажмите на планету</div>
-            </div>
-
-            <div class="form-column">
-                <!-- Блок выбора режима -->
-                <div class="mode-buttons">
-                    <button type="button" id="only_buy_btn" class="mode-button" onclick="selectMode('only_buy')">ВЫКУП</button>
-                    <button type="button" id="only_invest_btn" class="mode-button" onclick="selectMode('only_invest')">ИНВЕСТ</button>
-                    <button type="button" id="both_mode_btn" class="mode-button" onclick="selectMode('both_mode')">ВЫКУП + ИНВЕСТ</button>
+                <div class="form-group">
+                    <label for="{{ form.title.id_for_label }}">{{ form.title.label }}</label>
+                    {{ form.title|add_class:"form-control" }}
+                    {% if form.title.errors %}<span class="error-message">{{ form.title.errors|first }}</span>{% endif %}
                 </div>
 
-                <!-- Блок цели финансирования -->
                 <div class="form-group">
-                    <label for="{{ form.funding_goal.id_for_label }}">Цель финансирования (USD) *</label>
-                    {{ form.funding_goal|add_class:"form-control" }}
-                    {% if form.funding_goal.errors %}
-                        <span class="error-message">{{ form.funding_goal.errors|first }}</span>
-                    {% endif %}
-                </div>
-
-                <!-- Блок собранной суммы -->
-                <div class="form-group">
-                    <label for="{{ form.amount_raised.id_for_label }}">Собранная сумма (USD)</label>
-                    {{ form.amount_raised|add_class:"form-control" }}
-                    {% if form.amount_raised.errors %}
-                        <span class="error-message">{{ form.amount_raised.errors|first }}</span>
-                    {% endif %}
-                </div>
-
-                <!-- Блок оценки -->
-                <div class="form-group">
-                    <label for="{{ form.valuation.id_for_label }}">Оценка (USD)</label>
-                    {{ form.valuation|add_class:"form-control" }}
-                    {% if form.valuation.errors %}
-                        <span class="error-message">{{ form.valuation.errors|first }}</span>
-                    {% endif %}
-                </div>
-
-                <!-- Блок URL презентации -->
-                <div class="form-group">
-                    <label for="{{ form.pitch_deck_url.id_for_label }}">URL презентации</label>
-                    {{ form.pitch_deck_url|add_class:"form-control" }}
-                    {% if form.pitch_deck_url.errors %}
-                        <span class="error-message">{{ form.pitch_deck_url.errors|first }}</span>
-                    {% endif %}
-                </div>
-
-                <!-- Блок описания -->
-                <div class="form-group">
-                    <label for="{{ form.description.id_for_label }}">Описание *</label>
-                    {{ form.description|add_class:"form-control" }}
-                    {% if form.description.errors %}
-                        <span class="error-message">{{ form.description.errors|first }}</span>
-                    {% endif %}
-                </div>
-
-                <!-- Блок направления -->
-                <div class="form-group">
-                    <label for="{{ form.direction.id_for_label }}">Направление *</label>
+                    <label for="{{ form.direction.id_for_label }}">{{ form.direction.label }}</label>
                     {{ form.direction|add_class:"form-control" }}
-                    {% if form.direction.errors %}
-                        <span class="error-message">{{ form.direction.errors|first }}</span>
-                    {% endif %}
+                    {% if form.direction.errors %}<span class="error-message">{{ form.direction.errors|first }}</span>{% endif %}
                 </div>
 
-                <!-- Блок стадии -->
                 <div class="form-group">
-                    <label for="{{ form.stage.id_for_label }}">Стадия *</label>
+                    <label for="{{ form.funding_goal.id_for_label }}">{{ form.funding_goal.label }}</label>
+                    {{ form.funding_goal|add_class:"form-control"|attr:"placeholder:Введите сумму" }}
+                    {% if form.funding_goal.errors %}<span class="error-message">{{ form.funding_goal.errors|first }}</span>{% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.stage.id_for_label }}">{{ form.stage.label }}</label>
                     {{ form.stage|add_class:"form-control" }}
-                    {% if form.stage.errors %}
-                        <span class="error-message">{{ form.stage.errors|first }}</span>
-                    {% endif %}
+                    {% if form.stage.errors %}<span class="error-message">{{ form.stage.errors|first }}</span>{% endif %}
+                </div>
                 </div>
 
-                <!-- Блок загрузки креативов -->
-                <div class="upload-section">
-                    <div class="upload-title">Креативы</div>
-                    {{ form.creatives }}
-                    <div class="small-text">Допустимые форматы: JPG, PNG, GIF, MP4, MOV</div>
-                    {% if form.creatives.errors %}
-                        <span class="error-message">{{ form.creatives.errors|first }}</span>
-                    {% endif %}
-                </div>
-
-                <!-- Блок загрузки видео -->
-                <div class="upload-section">
-                    <div class="upload-title">Видео</div>
-                    {{ form.video|add_class:"form-control-file" }}
-                    <div class="small-text">Допустимые форматы: MP4, MOV</div>
-                    {% if form.video.errors %}
-                        <span class="error-message">{{ form.video.errors|first }}</span>
-                    {% endif %}
+            <!-- Правая колонка -->
+            <div class="form-column-right">
+                <div class="investment-type-section">
+                    <div class="form-group checkbox-group">
+                         {{ form.micro_investment_available|add_class:"form-check-input" }}
+                        <label for="{{ form.micro_investment_available.id_for_label }}" class="form-check-label">
+                            {{ form.micro_investment_available.label }}
+                        </label>
+                        {% if form.micro_investment_available.errors %}<span class="error-message">{{ form.micro_investment_available.errors|first }}</span>{% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.investment_type.id_for_label }}">{{ form.investment_type.label }}</label>
+                        {{ form.investment_type|add_class:"form-control" }}
+                        {% if form.investment_type.errors %}<span class="error-message">{{ form.investment_type.errors|first }}</span>{% endif %}
+                    </div>
                 </div>
             </div>
         </div>
 
+        <!-- Поля под колонками -->
+        <div class="form-group full-width">
+            <label for="{{ form.short_description.id_for_label }}">{{ form.short_description.label }}</label>
+            {{ form.short_description|add_class:"form-control" }}
+            <div class="small-text">Краткое описание вашего стартапа, основные моменты.</div>
+            {% if form.short_description.errors %}<span class="error-message">{{ form.short_description.errors|first }}</span>{% endif %}
+            </div>
+
+        <div class="form-group full-width">
+            <label for="{{ form.description.id_for_label }}">{{ form.description.label }}</label>
+            {{ form.description|add_class:"form-control" }}
+            <div class="small-text">Подробное описание вашего стартапа. Расскажите о проблеме, решении, команде и т.д.</div>
+            {% if form.description.errors %}<span class="error-message">{{ form.description.errors|first }}</span>{% endif %}
+        </div>
+
+        <div class="upload-section-grid">
+            <div class="form-group upload-box">
+                <label for="{{ form.creatives.id_for_label }}">{{ form.creatives.label }}</label>
+                <div class="file-upload-area" id="creativesDropArea">
+                    {{ form.creatives|attr:"multiple:true" }}
+                    <p>Перетащите файлы сюда или нажмите для выбора</p>
+                    <div class="small-text">Допустимые форматы: JPG, PNG, GIF (до 3 файлов)</div>
+                </div>
+                <div id="creativesPreview" class="file-preview-area"></div>
+                {% if form.creatives.errors %}<span class="error-message">{{ form.creatives.errors|first }}</span>{% endif %}
+            </div>
+
+            <div class="form-group upload-box">
+                <label for="{{ form.video.id_for_label }}">{{ form.video.label }}</label>
+                 <div class="file-upload-area" id="videoDropArea">
+                    {{ form.video }}
+                    <p>Перетащите файл сюда или нажмите для выбора</p>
+                    <div class="small-text">Допустимый формат: MP4, MOV (1 файл)</div>
+                </div>
+                <div id="videoPreview" class="file-preview-area"></div>
+                {% if form.video.errors %}<span class="error-message">{{ form.video.errors|first }}</span>{% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.pitch_deck_url.id_for_label }}">{{ form.pitch_deck_url.label }}</label>
+                {{ form.pitch_deck_url|add_class:"form-control" }}
+                {% if form.pitch_deck_url.errors %}<span class="error-message">{{ form.pitch_deck_url.errors|first }}</span>{% endif %}
+            </div>
+            </div>
+
+        <div class="form-row-valuation-raised">
+            <div class="form-group">
+                <label for="{{ form.valuation.id_for_label }}">{{ form.valuation.label }}</label>
+                {{ form.valuation|add_class:"form-control"|attr:"placeholder:Введите сумму" }}
+                {% if form.valuation.errors %}<span class="error-message">{{ form.valuation.errors|first }}</span>{% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.amount_raised.id_for_label }}">{{ form.amount_raised.label }}</label>
+                {{ form.amount_raised|add_class:"form-control"|attr:"placeholder:Введите сумму" }}
+                {% if form.amount_raised.errors %}<span class="error-message">{{ form.amount_raised.errors|first }}</span>{% endif %}
+            </div>
+        </div>
+
+        <div class="form-group full-width">
+            <label for="{{ form.terms.id_for_label }}">{{ form.terms.label }}</label>
+            {{ form.terms|add_class:"form-control" }}
+            <div class="small-text">Условия инвестирования или выкупа, если они уже определены.</div>
+            {% if form.terms.errors %}<span class="error-message">{{ form.terms.errors|first }}</span>{% endif %}
+        </div>
+        
         <!-- Блок таймлайна -->
+        <h3 class="section-title">Этапы</h3>
         <div class="timeline" id="timeline">
-            <div class="timeline-step" onclick="selectStep(1)">
-                <div class="step-number" id="step1">1</div>
-                <div class="step-text">Этап 1</div>
+            {% for i in "12345" %}
+            <div class="timeline-step" data-step="{{ i }}">
+                <div class="step-number" id="step{{ i }}">{{ i }}</div>
+                <div class="step-text">Этап {{ i }}</div>
             </div>
-            <div class="timeline-step" onclick="selectStep(2)">
-                <div class="step-number" id="step2">2</div>
-                <div class="step-text">Этап 2</div>
+            {% endfor %}
             </div>
-            <div class="timeline-step" onclick="selectStep(3)">
-                <div class="step-number" id="step3">3</div>
-                <div class="step-text">Этап 3</div>
-            </div>
-            <div class="timeline-step" onclick="selectStep(4)">
-                <div class="step-number" id="step4">4</div>
-                <div class="step-text">Этап 4</div>
-            </div>
-            <div class="timeline-step" onclick="selectStep(5)">
-                <div class="step-number" id="step5">5</div>
-                <div class="step-text">Этап 5</div>
-            </div>
-        </div>
 
-        <!-- Блоки описания этапов -->
         <div id="step-descriptions">
-            <div class="timeline-description-container active" id="step-description-1">
+            {% for i in "12345" %}
+            <div class="timeline-description-container" id="step-description-{{ i }}" data-step-content="{{ i }}">
                 <div class="timeline-description-header">
-                    <div class="timeline-description-title">Этап 1</div>
-                    <button type="button" class="btn-select-current" onclick="setCurrentStep(1)">Мы здесь</button>
+                    <div class="timeline-description-title">Этап {{ i }}</div>
+                    <button type="button" class="btn-select-current" data-step-target="{{ i }}">Мы здесь</button>
                 </div>
-                <textarea class="timeline-description-textarea" name="step_description_1" placeholder="Добавьте описание для этого этапа..." required></textarea>
+                <textarea class="timeline-description-textarea" name="step_description_{{ i }}" placeholder="Добавьте описание для этого этапа..." required></textarea>
             </div>
-
-            <div class="timeline-description-container" id="step-description-2">
-                <div class="timeline-description-header">
-                    <div class="timeline-description-title">Этап 2</div>
-                    <button type="button" class="btn-select-current" onclick="setCurrentStep(2)">Мы здесь</button>
-                </div>
-                <textarea class="timeline-description-textarea" name="step_description_2" placeholder="Добавьте описание для этого этапа..." required></textarea>
-            </div>
-
-            <div class="timeline-description-container" id="step-description-3">
-                <div class="timeline-description-header">
-                    <div class="timeline-description-title">Этап 3</div>
-                    <button type="button" class="btn-select-current" onclick="setCurrentStep(3)">Мы здесь</button>
-                </div>
-                <textarea class="timeline-description-textarea" name="step_description_3" placeholder="Добавьте описание для этого этапа..." required></textarea>
-            </div>
-
-            <div class="timeline-description-container" id="step-description-4">
-                <div class="timeline-description-header">
-                    <div class="timeline-description-title">Этап 4</div>
-                    <button type="button" class="btn-select-current" onclick="setCurrentStep(4)">Мы здесь</button>
-                </div>
-                <textarea class="timeline-description-textarea" name="step_description_4" placeholder="Добавьте описание для этого этапа..." required></textarea>
-            </div>
-
-            <div class="timeline-description-container" id="step-description-5">
-                <div class="timeline-description-header">
-                    <div class="timeline-description-title">Этап 5</div>
-                    <button type="button" class="btn-select-current" onclick="setCurrentStep(5)">Мы здесь</button>
-                </div>
-                <textarea class="timeline-description-textarea" name="step_description_5" placeholder="Добавьте описание для этого этапа..." required></textarea>
-            </div>
+            {% endfor %}
         </div>
-
-        <!-- Блок финансовых показателей -->
-        <div class="financial-section">
-            <h3>Финансовые показатели</h3>
-
-            <!-- Блок загрузки пруфов -->
-            <div class="upload-section">
-                <div class="upload-title">Пруфы</div>
-                {{ form.proofs }}
-                <div class="small-text">Допустимые форматы: PDF, DOC, DOCX, XLS, XLSX, TXT</div>
-                {% if form.proofs.errors %}
-                    <span class="error-message">{{ form.proofs.errors|first }}</span>
-                {% endif %}
-            </div>
-
-            <!-- Блок микроинвестиций -->
-            <div class="checkbox-option">
-                <label for="{{ form.micro_investment_available.id_for_label }}">
-                    {{ form.micro_investment_available }}
-                    <span style="color: #4CAF50; font-weight: bold;">Включить возможность инвестиций разных инвесторов</span>
-                </label>
-                {% if form.micro_investment_available.errors %}
-                    <span class="error-message">{{ form.micro_investment_available.errors|first }}</span>
-                {% endif %}
-            </div>
-        </div>
-
-        <!-- Скрытые поля для режима -->
-        {{ form.only_invest }}
-        {{ form.only_buy }}
-        {{ form.both_mode }}
-
         <!-- Скрытое поле для текущего этапа -->
         <input type="hidden" name="step_number" id="step_number" value="1">
 
+        <div class="form-group upload-box full-width">
+            <label for="{{ form.proofs.id_for_label }}">{{ form.proofs.label }} *</label>
+            <div class="file-upload-area" id="proofsDropArea">
+                {{ form.proofs|attr:"multiple:true" }}
+                <p>Перетащите файлы сюда или нажмите для выбора</p>
+                <div class="small-text">Допустимые форматы: PDF, DOC, Excel (до 3 файлов)</div>
+            </div>
+            <div id="proofsPreview" class="file-preview-area"></div>
+            {% if form.proofs.errors %}<span class="error-message">{{ form.proofs.errors|first }}</span>{% endif %}
+        </div>
+
         <!-- Согласия -->
         <div class="agreement-section">
-            <h3>Согласия и настройки</h3>
-            <div class="form-group">
-                <label for="{{ form.agree_rules.id_for_label }}">
+            <h3 class="section-title">Согласие</h3>
+            <div class="form-group checkbox-group">
                     {{ form.agree_rules }}
-                    Согласен с правилами *
-                </label>
-                {% if form.agree_rules.errors %}
-                    <span class="error-message">{{ form.agree_rules.errors|first }}</span>
-                {% endif %}
+                <label for="{{ form.agree_rules.id_for_label }}">{{ form.agree_rules.label }}</label>
+                {% if form.agree_rules.errors %}<span class="error-message">{{ form.agree_rules.errors|first }}</span>{% endif %}
             </div>
-            <div class="form-group">
-                <label for="{{ form.agree_data_processing.id_for_label }}">
+            <div class="form-group checkbox-group">
                     {{ form.agree_data_processing }}
-                    Согласен с обработкой данных *
-                </label>
-                {% if form.agree_data_processing.errors %}
-                    <span class="error-message">{{ form.agree_data_processing.errors|first }}</span>
-                {% endif %}
+                <label for="{{ form.agree_data_processing.id_for_label }}">{{ form.agree_data_processing.label }}</label>
+                {% if form.agree_data_processing.errors %}<span class="error-message">{{ form.agree_data_processing.errors|first }}</span>{% endif %}
             </div>
         </div>
 
         <!-- Кнопка отправки -->
+        <div class="submit-button-container">
         <button type="submit" class="submit-button">Отправить на модерацию</button>
+        </div>
     </form>
 </div>
 
-<style>
-    /* Стили для таймлайна */
-    .timeline-step {
-        cursor: pointer;
-    }
-    .step-number {
-        width: 30px;
-        height: 30px;
-        background-color: #ccc;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-weight: bold;
-    }
-    .step-number.active {
-        background-color: #16a34a;
-    }
-    .timeline-description-container {
-        display: none;
-        margin-top: 10px;
-        padding: 10px;
-        background-color: #f9f9f9;
-        border-radius: 5px;
-    }
-    .timeline-description-container.active {
-        display: block;
-    }
-    .btn-select-current {
-        background-color: #16a34a;
-        color: white;
-        padding: 5px 10px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-</style>
-
 <script>
-    // Функция выбора режима
-    function selectMode(selectedMode) {
-        document.getElementById('only_invest_btn').classList.remove('selected');
-        document.getElementById('only_buy_btn').classList.remove('selected');
-        document.getElementById('both_mode_btn').classList.remove('selected');
+document.addEventListener('DOMContentLoaded', function() {
+    // --- Логотип ---
+    const logoInput = document.getElementById('id_logo_input');
+    const logoPlaceholder = document.getElementById('logoPlaceholder');
+    const logoPreviewImg = document.getElementById('logoPreview');
 
-        document.getElementById('id_only_invest').value = 'false';
-        document.getElementById('id_only_buy').value = 'false';
-        document.getElementById('id_both_mode').value = 'false';
+    if (logoInput && logoPlaceholder && logoPreviewImg) {
+        logoPlaceholder.addEventListener('click', () => logoInput.click());
+        logoPreviewImg.addEventListener('click', () => logoInput.click());
 
-        document.getElementById(selectedMode + '_btn').classList.add('selected');
-        document.getElementById('id_' + selectedMode).value = 'true';
-    }
-
-    // Обновление цвета сегментов планеты
-    document.querySelectorAll('.color-picker').forEach(picker => {
-        picker.addEventListener('input', function() {
-            const segmentId = this.getAttribute('data-segment');
-            document.getElementById(segmentId).style.backgroundColor = this.value;
-        });
-    });
-
-    // Предпросмотр логотипа
-    document.getElementById('id_logo').addEventListener('change', function() {
+        logoInput.addEventListener('change', function() {
         const file = this.files[0];
         if (file) {
             const reader = new FileReader();
             reader.onload = function(e) {
-                document.getElementById('logoPreview').src = e.target.result;
+                    logoPreviewImg.src = e.target.result;
+                    logoPreviewImg.style.display = 'block';
+                    logoPlaceholder.style.display = 'none';
             };
             reader.readAsDataURL(file);
         }
     });
+    }
 
-    // Функция для выбора этапа и отображения описания
+    // --- Логика таймлайна ---
+    const timelineSteps = document.querySelectorAll('.timeline-step');
+    const descriptionContainers = document.querySelectorAll('.timeline-description-container');
+    const currentStepInput = document.getElementById('step_number');
+    const setCurrentButtons = document.querySelectorAll('.btn-select-current');
+
     function selectStep(stepNumber) {
-        document.querySelectorAll('.timeline-description-container').forEach(container => {
-            container.classList.remove('active');
+        descriptionContainers.forEach(container => {
+            container.classList.toggle('active', container.dataset.stepContent == stepNumber);
         });
-        document.getElementById(`step-description-${stepNumber}`).classList.add('active');
+        timelineSteps.forEach(step => {
+            step.classList.toggle('active-step-display', step.dataset.step == stepNumber);
+        });
     }
 
-    // Функция для установки текущего этапа
     function setCurrentStep(stepNumber) {
-        document.getElementById('step_number').value = stepNumber;
-        for (let i = 1; i <= 5; i++) {
-            const stepElement = document.getElementById(`step${i}`);
-            if (i <= stepNumber) {
-                stepElement.classList.add('active');
-            } else {
-                stepElement.classList.remove('active');
+        currentStepInput.value = stepNumber;
+        timelineSteps.forEach(step => {
+            const stepNum = parseInt(step.dataset.step);
+            const stepCircle = step.querySelector('.step-number');
+            if (stepCircle) {
+                stepCircle.classList.toggle('active', stepNum <= stepNumber);
             }
-        }
+        });
+        // Также выделяем выбранный шаг в таймлайне и показываем его описание
+        selectStep(stepNumber);
     }
 
-    // Обработка отправки формы
-    document.getElementById('startupForm').addEventListener('submit', function(e) {
+    timelineSteps.forEach(step => {
+        step.addEventListener('click', function() {
+            const stepNum = this.dataset.step;
+            selectStep(stepNum);
+            // Не меняем currentStepInput при простом клике на этап для просмотра,
+            // только кнопкой "Мы здесь"
+        });
+    });
+
+    setCurrentButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const stepNum = this.dataset.stepTarget;
+            setCurrentStep(stepNum);
+        });
+    });
+    
+    // Инициализация: показать первый этап и отметить его как текущий
+    if (timelineSteps.length > 0) {
+        setCurrentStep(1); // Устанавливаем и показываем первый этап
+    }
+
+
+    // --- Обработка отправки формы ---
+    const startupForm = document.getElementById('startupForm');
+    if (startupForm) {
+        startupForm.addEventListener('submit', function(e) {
         const submitButton = this.querySelector('button[type="submit"]');
         if (submitButton.disabled) {
             e.preventDefault();
             return;
         }
-
         submitButton.disabled = true;
         submitButton.textContent = 'Отправка...';
     });
+    }
 
-    // Инициализация по умолчанию
-    window.addEventListener('DOMContentLoaded', function() {
-        selectMode('only_invest');
-        selectStep(1);
-        setCurrentStep(1);
+    // --- Drag & Drop для файлов ---
+    function setupDragAndDrop(inputId, dropAreaId, previewAreaId, maxFiles = 1, allowedTypes = ['image/jpeg', 'image/png', 'image/gif']) {
+        const fileInput = document.getElementById(inputId);
+        const dropArea = document.getElementById(dropAreaId);
+        const previewArea = document.getElementById(previewAreaId);
 
-        // Инициализация цветов планеты
-        document.querySelectorAll('.color-picker').forEach(picker => {
-            const segmentId = picker.getAttribute('data-segment');
-            document.getElementById(segmentId).style.backgroundColor = picker.value;
+        if (!fileInput || !dropArea || !previewArea) return;
+
+        // Клик по области для выбора файлов
+        dropArea.addEventListener('click', () => fileInput.click());
+
+        dropArea.addEventListener('dragover', (event) => {
+            event.preventDefault();
+            dropArea.classList.add('dragover');
         });
+
+        dropArea.addEventListener('dragleave', () => {
+            dropArea.classList.remove('dragover');
+        });
+
+        dropArea.addEventListener('drop', (event) => {
+            event.preventDefault();
+            dropArea.classList.remove('dragover');
+            const files = event.dataTransfer.files;
+            handleFiles(files, fileInput, previewArea, maxFiles, allowedTypes);
+        });
+
+        fileInput.addEventListener('change', (event) => {
+            const files = event.target.files;
+            handleFiles(files, fileInput, previewArea, maxFiles, allowedTypes);
+        });
+    }
+
+    function handleFiles(files, fileInput, previewArea, maxFiles, allowedTypes) {
+        // Для инпутов, которые не поддерживают multiple, очищаем старые файлы,
+        // если новый файл выбран (HTML5 file input делает это сам для single file input)
+        if (!fileInput.multiple) {
+             previewArea.innerHTML = ''; // Очищаем превью для single file
+        }
+        
+        let currentFiles = Array.from(fileInput.files);
+        let newFilesList = new DataTransfer();
+
+        // Добавляем существующие файлы, если input multiple
+        if (fileInput.multiple) {
+            currentFiles.forEach(f => newFilesList.items.add(f));
+        }
+
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            if (fileInput.multiple && newFilesList.items.length >= maxFiles) {
+                alert(`Можно загрузить не более ${maxFiles} файлов.`);
+                break;
+            }
+            if (!allowedTypes.includes(file.type) && allowedTypes.length > 0 && !(allowedTypes.includes('application/pdf') && file.name.endsWith('.pdf')) && !(allowedTypes.includes('application/msword') && file.name.endsWith('.doc')) && !(allowedTypes.includes('application/vnd.openxmlformats-officedocument.wordprocessingml.document') && file.name.endsWith('.docx')) && !(allowedTypes.includes('application/vnd.ms-excel') && file.name.endsWith('.xls')) && !(allowedTypes.includes('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') && file.name.endsWith('.xlsx'))) {
+                 alert(`Файл ${file.name} имеет неподдерживаемый тип. Разрешены: ${allowedTypes.join(', ')}`);
+                 continue;
+            }
+
+            if (!fileInput.multiple) { // Для single file input, заменяем файл
+                newFilesList = new DataTransfer(); // Очищаем, чтобы добавить только один
+                previewArea.innerHTML = ''; 
+            }
+            newFilesList.items.add(file);
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                let previewItem;
+                if (file.type.startsWith('image/')) {
+                    previewItem = `<div class="file-preview-item"><img src="${e.target.result}" alt="${file.name}"><p>${file.name}</p><button type="button" class="remove-file-btn" data-filename="${file.name}">&times;</button></div>`;
+                } else if (file.type.startsWith('video/')) {
+                     previewItem = `<div class="file-preview-item"><video controls src="${e.target.result}"></video><p>${file.name}</p><button type="button" class="remove-file-btn" data-filename="${file.name}">&times;</button></div>`;
+                } else { // Для других типов файлов (PDF, DOC и т.д.)
+                    previewItem = `<div class="file-preview-item"><img src="{% static 'accounts/images/icons/file_icon.svg' %}" alt="file icon" class="file-icon"><p>${file.name}</p><button type="button" class="remove-file-btn" data-filename="${file.name}">&times;</button></div>`;
+                }
+                if (!fileInput.multiple) {
+                    previewArea.innerHTML = previewItem; // Заменяем превью для single file
+                } else {
+                    previewArea.insertAdjacentHTML('beforeend', previewItem);
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+        fileInput.files = newFilesList.files; // Обновляем файлы в инпуте
+    }
+    
+    // Удаление файла из превью и из fileInput.files
+    document.addEventListener('click', function(event) {
+        if (event.target.classList.contains('remove-file-btn')) {
+            const fileNameToRemove = event.target.dataset.filename;
+            const previewItem = event.target.closest('.file-preview-item');
+            const previewArea = previewItem.parentElement;
+            const fileInputId = previewArea.id.replace('Preview', ''); // e.g. 'creatives' from 'creativesPreview'
+            const fileInput = document.querySelector(`input[name="${fileInputId}"]`);
+
+            if (fileInput) {
+                const dt = new DataTransfer();
+                const files = Array.from(fileInput.files);
+                files.forEach(file => {
+                    if (file.name !== fileNameToRemove) {
+                        dt.items.add(file);
+                    }
+                });
+                fileInput.files = dt.files; // Обновляем files в input
+            }
+            previewItem.remove(); // Удаляем элемент из DOM
+        }
+    });
+
+    setupDragAndDrop('{{ form.creatives.id_for_label }}', 'creativesDropArea', 'creativesPreview', 3, ['image/jpeg', 'image/png', 'image/gif']);
+    setupDragAndDrop('{{ form.video.id_for_label }}', 'videoDropArea', 'videoPreview', 1, ['video/mp4', 'video/quicktime', 'video/x-msvideo']); // 'video/quicktime' for .mov
+    setupDragAndDrop('{{ form.proofs.id_for_label }}', 'proofsDropArea', 'proofsPreview', 3, ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']);
+
     });
 </script>
 {% endblock %}

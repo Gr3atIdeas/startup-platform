@@ -16,81 +16,43 @@
     </div>
 
     <div class="startup-card-inner">
-      <h3 class="startup-name">{{ startup.title }}</h3>
-
-      <div class="startup-rating-comments">
-        <span class="rating-text">Рейтинг {{ startup.average_rating|floatformat:1 }}/5 ({{ startup.total_voters }})</span>
-        <span class="comments-count">
-          <i class="far fa-comment"></i>
-          {{ startup.comments.count|default:0 }}
-        </span>
+      <div class="startup-logo-container">
+        {% if startup.logo_urls %}
+          {% with logo_file_id=startup.logo_urls.0 %}
+            <img src="{% get_file_url_tag logo_file_id startup.startup_id 'logo' %}" alt="{{ startup.title }} logo" class="startup-logo">
+          {% endwith %}
+        {% else %}
+          <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Placeholder logo" class="startup-logo placeholder-logo">
+        {% endif %}
       </div>
-
-      {% with progress=startup.get_progress_percentage|default:0 %}
-      <div class="progress-container">
-        <div class="progress-bar-visual" data-progress="{{ progress|floatformat:0 }}">
-          {% if progress > 0 %}
-            <div class="progress-animation-container">
-            <div class="progress-planets">
-            </div>
-          </div>
-          <span class="progress-percentage">{{ progress|floatformat:0 }}%</span>
-          {% else %}
-             <span class="progress-percentage">0%</span>
-          {% endif %}
-        </div>
-        <div class="investor-count">
-          <i class="fas fa-users"></i>
-          <span>({{ startup.get_investors_count }})</span>
-        </div>
-      </div>
-      {% endwith %}
-
-      {# Блок для категории стартапа с переводом #}
-      {% if startup.direction and startup.direction.direction_name %}
-        <div class="startup-category-frame">
-            {% with original_name=startup.direction.direction_name|default:"" %}
-                {% if original_name == "Medicine" %}Медицина
-                {% elif original_name == "Auto" %}Автомобили
-                {% elif original_name == "Delivery" %}Доставка
-                {% elif original_name == "Cafe" %}Кафе/рестораны
-                {% elif original_name == "Fastfood" %}Фастфуд
-                {% elif original_name == "Health" %}Здоровье
-                {% elif original_name == "Beauty" %}Красота
-                {% elif original_name == "Transport" %}Транспорт
-                {% elif original_name == "Sport" %}Спорт
-                {% elif original_name == "Psychology" %}Психология
-                {% elif original_name == "AI" %}ИИ
-                {% elif original_name == "Finance" %}Финансы
-                {% elif original_name == "Healthcare" %}Здравоохранение
-                {% elif original_name == "Technology" %}Технологии
-                {% else %}{{ original_name|default:"Не указано" }}
-                {% endif %}
-            {% endwith %}
-        </div>
-      {% endif %}
-
-      <div class="investment-type">
-        {% if startup.both_mode %}Инвестирование+Выкуп{% elif startup.only_invest %}Только инвестирование{% elif startup.only_buy %}Только выкуп{% else %}Тип не указан{% endif %}
-      </div>
-
-      <div class="funding-goal-info">
-        Цель: {{ startup.funding_goal|default:"0"|floatformat:0|intcomma }} ₽
-      </div>
-
-      <a href="{% url 'startup_detail' startup.startup_id %}" class="detail-link">
-        {# Текст не нужен #}
-      </a>
+      <h3 class="startup-title">{{ startup.title }}</h3>
+      <p class="startup-short-description">{{ startup.short_description|truncatewords:15|default:"Нет краткого описания." }}</p>
       
-      {# Обновленный блок для всплывающего описания #}
-      {% if startup.description %}
-      <div class="description-popup">
-          <h4 class="description-popup-title">Описание</h4>
-          <div class="description-popup-content">
-              {{ startup.description }}
-          </div>
+      <div class="startup-info">
+        <span class="startup-direction">{{ startup.direction.name|default:"Без направления" }}</span>
+        <span class="startup-stage">{{ startup.stage.name|default:"Без стадии" }}</span>
       </div>
-      {% endif %}
+
+      <div class="funding-info">
+        <span class="funding-goal">Цель: {{ startup.funding_goal|default:"N/A" }}</span>
+        <!-- Можно добавить прогресс бар или сумму собранных средств, если есть -->
+      </div>
+      
+      <div class="startup-actions">
+        <a href="{% url 'startup_detail' startup_id=startup.startup_id %}" class="detail-link">Подробнее</a>
+        <button class="info-popup-button" data-popup-target="#popup-{{ startup.startup_id }}">i</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Всплывающее окно с полным описанием -->
+  <div class="info-popup" id="popup-{{ startup.startup_id }}">
+    <div class="info-popup-content">
+      <span class="close-popup-button" data-popup-target="#popup-{{ startup.startup_id }}">&times;</span>
+      <h4>{{ startup.title }}</h4>
+      <!-- Здесь теперь полное описание -->
+      <p>{{ startup.description|linebreaksbr|default:"Нет подробного описания." }}</p>
+      <p><strong>Условия:</strong> {{ startup.terms|linebreaksbr|default:"Условия не указаны." }}</p>
     </div>
   </div>
 {% endfor %} 

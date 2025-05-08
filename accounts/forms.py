@@ -60,59 +60,68 @@ class StartupForm(forms.ModelForm):
     agree_data_processing = forms.BooleanField(label='Согласен с обработкой данных', required=True)
     micro_investment_available = forms.BooleanField(label='Включить микро-инвестиции', required=False)
     video = forms.FileField(required=False)  # Новое поле для видео
+    short_description = forms.CharField(widget=forms.Textarea(attrs={'rows': 3}), label='Вводная (краткое описание)', required=False)
+    terms = forms.CharField(widget=forms.Textarea(attrs={'rows': 5}), label='Условия', required=False)
+
+    INVESTMENT_TYPE_CHOICES = [
+        ('invest', 'Инвестирование'),
+        ('buy', 'Выкуп'),
+        ('both', 'Инвестирование + Выкуп'),
+    ]
+    investment_type = forms.ChoiceField(
+        choices=INVESTMENT_TYPE_CHOICES,
+        label='Тип инвестирования',
+        required=True,
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
 
     class Meta:
         model = Startups
         fields = [
-            'title', 'description', 'funding_goal', 'amount_raised', 'valuation', 'pitch_deck_url',
-            'planet_top_color', 'planet_middle_color', 'planet_bottom_color', 'logo',
-            'only_invest', 'only_buy', 'both_mode', 'direction', 'stage',
+            'title', 'short_description', 'description', 'terms', 'funding_goal', 'amount_raised', 'valuation', 'pitch_deck_url', 'logo',
+            'direction', 'stage', 'investment_type',
             'agree_rules', 'agree_data_processing', 'micro_investment_available',
-            'creatives', 'proofs', 'video'  # Добавляем поля, чтобы форма их обрабатывала
+            'creatives', 'proofs', 'video'
         ]
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
-            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 5}),
+            'short_description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Краткое описание стартапа (до 255 символов)'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 5, 'placeholder': 'Подробное описание стартапа'}),
+            'terms': forms.Textarea(attrs={'class': 'form-control', 'rows': 5, 'placeholder': 'Условия сотрудничества, если есть'}),
             'funding_goal': forms.NumberInput(attrs={'class': 'form-control'}),
             'amount_raised': forms.NumberInput(attrs={'class': 'form-control'}),
             'valuation': forms.NumberInput(attrs={'class': 'form-control'}),
-            'pitch_deck_url': forms.URLInput(attrs={'class': 'form-control'}),
-            'planet_top_color': forms.TextInput(attrs={'type': 'color', 'class': 'color-picker'}),
-            'planet_middle_color': forms.TextInput(attrs={'type': 'color', 'class': 'color-picker'}),
-            'planet_bottom_color': forms.TextInput(attrs={'type': 'color', 'class': 'color-picker'}),
+            'pitch_deck_url': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'https://example.com/presentation'}),
             'direction': forms.Select(attrs={'class': 'form-control'}),
             'stage': forms.Select(attrs={'class': 'form-control'}),
             'logo': forms.FileInput(attrs={'class': 'form-control-file'}),
         }
         labels = {
-            'title': 'Название стартапа',
-            'description': 'Описание',
-            'funding_goal': 'Цель финансирования',
-            'amount_raised': 'Собранная сумма',
-            'valuation': 'Оценка',
+            'title': 'Название стартапа *',
+            'short_description': 'Вводная *',
+            'description': 'Описание *',
+            'terms': 'Условия',
+            'funding_goal': 'Цель финансирования (USD) *',
+            'amount_raised': 'Собранная сумма (USD)',
+            'valuation': 'Оценка (USD)',
             'pitch_deck_url': 'URL презентации',
-            'planet_top_color': 'Цвет верха планеты',
-            'planet_middle_color': 'Цвет середины планеты',
-            'planet_bottom_color': 'Цвет низа планеты',
-            'only_invest': 'Только инвестиции',
-            'only_buy': 'Только выкуп',
-            'both_mode': 'Оба варианта',
-            'direction': 'Направление',
-            'stage': 'Стадия',
+            'investment_type': 'Тип инвестирования *',
+            'direction': 'Направление *',
+            'stage': 'Стадия *',
+            'logo': 'Логотип',
+            'creatives': 'Креативы (фото/видео)',
+            'video': 'Видео (основное)',
+            'proofs': 'Документы (пруфы)',
+            'micro_investment_available': 'Микроинвестиции',
+            'agree_rules': 'Согласен с правилами *',
+            'agree_data_processing': 'Согласен с обработкой данных *',
         }
 
     def clean(self):
         cleaned_data = super().clean()
-        only_invest = cleaned_data.get('only_invest', False)
-        only_buy = cleaned_data.get('only_buy', False)
-        both_mode = cleaned_data.get('both_mode', False)
-
-        if not (only_invest or only_buy or both_mode):
-            raise forms.ValidationError("Выберите хотя бы один режим: только инвестиции, только выкуп или оба варианта.")
-        
-        if both_mode and (only_invest or only_buy):
-            cleaned_data['only_invest'] = False
-            cleaned_data['only_buy'] = False
+        # Валидация для investment_type, если потребуется, может быть добавлена здесь.
+        # Например, убедиться, что значение выбрано.
+        # Но 'required=True' в определении поля уже это делает.
 
         # Убедимся, что creatives и proofs — это плоский список файлов
         if 'creatives' in cleaned_data:
