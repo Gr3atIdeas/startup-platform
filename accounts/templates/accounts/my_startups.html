@@ -2,6 +2,7 @@
 {% load static %}
 {% load humanize %}
 {% load accounts_extras %}
+{% load math_filters %}  <!-- Добавляем загрузку новых фильтров -->
 
 {% block title %}Мои стартапы{% endblock %}
 
@@ -525,13 +526,14 @@
             <div class="planetary-system" id="solar-system">
               <div class="space-background"></div>
               <div class="stars"></div>
+              <!-- Внутри planetary-system -->
               <div id="scene">
                 <div id="galaxy">
                   <div id="logo"></div>
                   {% for startup in planetary_startups %}
-                    <div class="orbit" style="--orbit-size: {{ forloop.counter|mul:100|add:100 }}px; --orbit-time: {{ forloop.counter|mul:20|add:60 }}s;">
+                    <div class="orbit" style="--orbit-size: {{ startup.orbit_size }}px; --orbit-time: {{ startup.orbit_time }}s;">
                       <div class="planet-orientation">
-                        <div class="planet" style="--planet-size: {{ forloop.counter|mul:2|add:50 }}px;" data-id="{{ startup.id }}"></div>
+                        <div class="planet" style="--planet-size: {{ startup.planet_size }}px;" data-id="{{ startup.id }}"></div>
                       </div>
                     </div>
                   {% empty %}

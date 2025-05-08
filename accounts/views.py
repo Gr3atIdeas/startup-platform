@@ -1777,6 +1777,11 @@ def my_startups(request):
         # Получаем URL логотипа через метод get_logo_url()
         logo_url = startup.get_logo_url() or 'https://via.placeholder.com/150'
 
+        # Вычисляем значения для orbit-size, orbit-time и planet-size
+        orbit_size = (idx * 100) + 100  # forloop.counter|mul:100|add:100
+        orbit_time = (idx * 20) + 60    # forloop.counter|mul:20|add:60
+        planet_size = (idx * 2) + 50    # forloop.counter|mul:2|add:50
+
         planet_data = {
             'id': str(idx),
             'startup_id': startup.startup_id,
@@ -1787,24 +1792,27 @@ def my_startups(request):
             'funding': f"{int(startup.amount_raised or 0):,d} ₽".replace(',', ' '),
             'investors': f"Инвесторов: {startup.get_investors_count() or 0}",
             'image': logo_url,
+            'orbit_size': orbit_size,    # Передаём вычисленное значение
+            'orbit_time': orbit_time,    # Передаём вычисленное значение
+            'planet_size': planet_size,  # Передаём вычисленное значение
         }
         planetary_startups.append(planet_data)
 
     context = {
-        'startups_count': approved_startups_count, # Количество одобренных стартапов
-        'total_investment': total_amount_raised, # Сумма собранная одобренными
-        'max_investment': max_raised, # Макс. сумма одного одобренного
-        'min_investment': min_raised, # Мин. сумма одного одобренного
-        'investment_categories': investment_categories[:7], 
-        'month_labels': month_labels, 
-        'chart_monthly_category_data': chart_data_list, # Новые структурированные данные
-        'chart_categories': sorted_categories, # Список категорий для графика
-        'all_directions': all_directions_list, 
-        'invested_category_data': invested_category_data_dict, 
-        'user_startups': approved_startups_annotated, 
-        'startup_applications': all_user_applications, 
+        'startups_count': approved_startups_count,
+        'total_investment': total_amount_raised,
+        'max_investment': max_raised,
+        'min_investment': min_raised,
+        'investment_categories': investment_categories[:7],
+        'month_labels': month_labels,
+        'chart_monthly_category_data': chart_data_list,
+        'chart_categories': sorted_categories,
+        'all_directions': all_directions_list,
+        'invested_category_data': invested_category_data_dict,
+        'user_startups': approved_startups_annotated,
+        'startup_applications': all_user_applications,
         'current_sort': 'newest',
-        'planetary_startups': planetary_startups,  # Данные для планетарной системы
+        'planetary_startups': planetary_startups,
     }
 
     return render(request, 'accounts/my_startups.html', context)
