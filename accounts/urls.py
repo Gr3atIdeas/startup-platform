@@ -1,4 +1,5 @@
 # accounts/urls.py
+from django.views.generic import RedirectView
 from django.urls import path
 from . import views
 
@@ -34,4 +35,5 @@ urlpatterns = [
     path('my_startups/', views.my_startups, name='my_startups'),  # Изменяем my-startups на my_startups
     # URL для подгрузки похожих стартапов - ИСПРАВЛЯЕМ ТИП ID НА INT
     path('load_similar_startups/<int:startup_id>/', views.load_similar_startups, name='load_similar_startups'),
+    path('favicon.ico', RedirectView.as_view(url='/static/images/favicon.png', permanent=True)),
 ]
