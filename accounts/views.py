@@ -1624,192 +1624,212 @@ def planetary_system(request):
     return render(request, 'accounts/planetary_system.html', context)
 
 
-# accounts/views.py
 @login_required
 def my_startups(request):
     # Проверяем роль пользователя
     if not hasattr(request.user, 'role') or request.user.role.role_name != 'startuper':
         messages.error(request, 'Доступ к этой странице разрешен только стартаперам.')
-        return redirect('profile') # Или на другую страницу, например, home
+        return redirect('profile')
 
-    # Получаем ВСЕ стартапы пользователя (не только одобренные)
-    user_startups_qs = Startups.objects.filter(owner=request.user).select_related(
-        'direction', 'stage', 'status_id'
-    ).prefetch_related('comments') # Предзагружаем комментарии
+    try:
+        # Получаем ВСЕ стартапы пользователя (не только одобренные)
+        user_startups_qs = Startups.objects.filter(owner=request.user).select_related(
+            'direction', 'stage', 'status_id'
+        ).prefetch_related('comments')
 
-    # --- Расчет общего количества стартапов пользователя ---
-    total_user_startups_count = user_startups_qs.count()
+        # --- Расчет общего количества стартапов пользователя ---
+        total_user_startups_count = user_startups_qs.count()
 
-    # Фильтруем одобренные стартапы для основной секции и финансовой аналитики
-    approved_startups_qs = user_startups_qs.filter(status='approved')
+        # Фильтруем одобренные стартапы для основной секции и финансовой аналитики
+        approved_startups_qs = user_startups_qs.filter(status='approved')
 
-    # --- Расчет ФИНАНСОЧВОЙ аналитики по ОДОБРЕННЫМ стартапам ---
-    financial_analytics_data = approved_startups_qs.aggregate(
-        total_raised=Sum('amount_raised'),
-        max_raised=Max('amount_raised'),
-        min_raised=Min('amount_raised'),
-        approved_startups_count=Count('startup_id') # Считаем только одобренные для этой статистики
-    )
+        # --- Расчет ФИНАНСОЧВОЙ аналитики по ОДОБРЕННЫМ стартапам ---
+        financial_analytics_data = approved_startups_qs.aggregate(
+            total_raised=Sum('amount_raised'),
+            max_raised=Max('amount_raised'),
+            min_raised=Min('amount_raised'),
+            approved_startups_count=Count('startup_id')
+        )
 
-    approved_startups_count = financial_analytics_data.get('approved_startups_count', 0) # Количество одобренных
-    total_amount_raised = financial_analytics_data.get('total_raised') or Decimal('0')
-    max_raised = financial_analytics_data.get('max_raised') or Decimal('0')
-    min_raised = financial_analytics_data.get('min_raised') or Decimal('0')
+        approved_startups_count = financial_analytics_data.get('approved_startups_count', 0)
+        total_amount_raised = financial_analytics_data.get('total_raised') or Decimal('0')
+        max_raised = financial_analytics_data.get('max_raised') or Decimal('0')
+        min_raised = financial_analytics_data.get('min_raised') or Decimal('0')
 
-    # --- Данные по категориям для радиальных диаграмм (на основе КОЛИЧЕСТВА ВСЕХ стартапов) ---
-    category_data_raw = user_startups_qs.values( # Используем ВСЕ стартапы пользователя
-        'direction__direction_name'
-    ).annotate(
-        category_count=Count('startup_id') # Считаем КОЛИЧЕСТВО стартапов
-    ).order_by('-category_count')
+        # --- Данные по категориям для радиальных диаграмм ---
+        category_data_raw = user_startups_qs.values(
+            'direction__direction_name'
+        ).annotate(
+            category_count=Count('startup_id')
+        ).order_by('-category_count')
 
-    investment_categories = []
-    invested_category_data_dict = {} # Используем старое имя для совместимости с JS
-    # Используем общее количество стартапов пользователя для расчета процентов
-    total_for_category_percentage = total_user_startups_count if total_user_startups_count > 0 else 1
+        investment_categories = []
+        invested_category_data_dict = {}
+        total_for_category_percentage = total_user_startups_count if total_user_startups_count > 0 else 1
 
-    for cat_data in category_data_raw:
-        percentage = 0
-        category_count = cat_data.get('category_count') # Получаем количество
-        category_name = cat_data.get('direction__direction_name') or 'Без категории'
+        for cat_data in category_data_raw:
+            percentage = 0
+            category_count = cat_data.get('category_count')
+            category_name = cat_data.get('direction__direction_name') or 'Без категории'
 
-        if category_count and total_for_category_percentage > 0:
-            try:
-                # Расчет процента от ОБЩЕГО количества стартапов
-                percentage = round((int(category_count) / total_for_category_percentage) * 100)
-                percentage = min(percentage, 100)
-            except Exception as e:
-                logger.error(f"Ошибка расчета процента (по количеству) для категории '{category_name}': {e}")
-                percentage = 0
+            if category_count and total_for_category_percentage > 0:
+                try:
+                    percentage = round((int(category_count) / total_for_category_percentage) * 100)
+                    percentage = min(percentage, 100)
+                except Exception as e:
+                    logger.error(f"Ошибка расчета процента (по количеству) для категории '{category_name}': {e}")
+                    percentage = 0
 
-        investment_categories.append({
-            'name': category_name, # Исходное имя для JS
-            'percentage': percentage,
-        })
-        invested_category_data_dict[category_name] = percentage
+            investment_categories.append({
+                'name': category_name,
+                'percentage': percentage,
+            })
+            invested_category_data_dict[category_name] = percentage
 
-    # --- Данные для графика по месяцам (по сумме amount_raised ОДОБРЕННЫМ стартапов) ---
-    # Оставляем логику без изменений, так как она показывает финансовый прогресс
-    current_year = timezone.now().year
-    monthly_data_direct = approved_startups_qs.filter(
-        updated_at__year=current_year,
-        amount_raised__gt=0
-    ).annotate(
-        month=TruncMonth('updated_at')
-    ).values('month').annotate(
-        # Используем Coalesce для замены NULL на 0 перед суммированием
-        monthly_total=Sum(Coalesce('amount_raised', Decimal(0)))
-    ).order_by('month')
+        # --- Данные для графика по месяцам ---
+        current_year = timezone.now().year
+        logger.info(f"[my_startups] Preparing chart data for user {request.user.email}, year: {current_year}")
+        monthly_data_direct = approved_startups_qs.filter(
+            updated_at__year=current_year,
+            amount_raised__gt=0
+        ).annotate(
+            month=TruncMonth('updated_at')
+        ).values('month').annotate(
+            monthly_total=Sum(Coalesce('amount_raised', Decimal(0)))
+        ).order_by('month')
 
-    month_labels = ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"]
-    monthly_totals = [0] * 12
-    for data in monthly_data_direct:
-        month_index = data['month'].month - 1
-        if 0 <= month_index < 12:
-            monthly_total_decimal = data.get('monthly_total', Decimal(0)) or Decimal(0)
-            monthly_totals[month_index] = float(monthly_total_decimal)
+        month_labels = ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"]
+        monthly_totals = [0] * 12
+        for data in monthly_data_direct:
+            month_index = data['month'].month - 1
+            if 0 <= month_index < 12:
+                monthly_total_decimal = data.get('monthly_total', Decimal(0)) or Decimal(0)
+                monthly_totals[month_index] = float(monthly_total_decimal)
 
-    # --- Получаем одобренные стартапы с аннотациями для основной сетки ---
-    approved_startups_annotated = approved_startups_qs.annotate(
-         average_rating=Avg(
-            models.ExpressionWrapper(
-                Coalesce(models.F('sum_votes'), 0) * 1.0 / Coalesce(models.F('total_voters'), 1), # Используем Coalesce для избежания деления на ноль
-                output_field=FloatField()
-            ),
-            filter=models.Q(total_voters__gt=0), # Фильтр все еще полезен для определения, были ли голоса
-            default=0.0 # Значение по умолчанию
-        ),
-        comment_count=Count('comments') # Используем prefetch_related
-    ).annotate(
-         average_rating=Coalesce('average_rating', 0.0) # Дополнительный Coalesce на всякий случай
-    ).order_by('-created_at') # Сортировка по умолчанию - новые
+        # --- Получаем данные для СТЕКОВОГО графика по категориям ---
+        logger.info(f"[my_startups] Preparing chart data for user {request.user.email}, year: {current_year}")
+        monthly_category_data_raw = approved_startups_qs.filter(
+            updated_at__year=current_year,
+            amount_raised__gt=0,
+            direction__isnull=False
+        ).annotate(
+            month=TruncMonth('updated_at')
+        ).values(
+            'month', 'direction__direction_name'
+        ).annotate(
+            monthly_category_total=Sum(Coalesce('amount_raised', Decimal(0)))
+        ).order_by('month', 'direction__direction_name')
 
-    # --- Получаем все стартапы пользователя для секции "Заявки" ---
-    all_user_applications = user_startups_qs.order_by('-updated_at') # Сортируем по дате обновления
+        logger.info(f"[my_startups] Raw monthly category data from DB: {list(monthly_category_data_raw)}")
 
-    # --- Все направления для модального окна ---
-    all_directions_qs = Directions.objects.all().order_by('direction_name')
-    # Преобразуем в список словарей для JSON, передавая оригинальное имя для JS
-    # Исправляем использование .values() - передаем имена полей как строки
-    all_directions_list = list(all_directions_qs.values('pk', 'direction_name'))
+        structured_monthly_data = collections.defaultdict(lambda: collections.defaultdict(float))
+        unique_categories = set()
 
-    # --- Данные для СТЕКОВОГО графика по категориям --- 
-    current_year = timezone.now().year
-    logger.info(f"[my_startups] Preparing chart data for user {request.user.email}, year: {current_year}") # Лог: начало подготовки данных
-    month_labels = ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"]
-    
-    # Получаем данные: месяц обновления, категория, сумма сборов за этот месяц и категорию
-    monthly_category_data_raw = approved_startups_qs.filter(
-        updated_at__year=current_year,
-        amount_raised__gt=0,
-        direction__isnull=False # Исключаем стартапы без категории
-    ).annotate(
-        month=TruncMonth('updated_at')
-    ).values(
-        'month', 'direction__direction_name' # Группируем по месяцу и названию категории
-    ).annotate(
-        monthly_category_total=Sum(Coalesce('amount_raised', Decimal(0)))
-    ).order_by('month', 'direction__direction_name')
+        for data in monthly_category_data_raw:
+            month_dt = data['month']
+            category_name = data['direction__direction_name']
+            amount = float(data.get('monthly_category_total', 0) or 0)
+            month_key = month_dt.strftime('%Y-%m-01')
+            structured_monthly_data[month_key][category_name] += amount
+            unique_categories.add(category_name)
 
-    # Лог: результат сырого запроса к БД
-    logger.info(f"[my_startups] Raw monthly category data from DB: {list(monthly_category_data_raw)}")
+        sorted_categories = sorted(list(unique_categories))
+        logger.info(f"[my_startups] Unique categories found for chart: {sorted_categories}")
 
-    # Структурируем данные для Chart.js (месяц -> категория -> сумма)
-    structured_monthly_data = collections.defaultdict(lambda: collections.defaultdict(float))
-    unique_categories = set()
+        chart_data_list = []
+        start_date = datetime.date(current_year, 1, 1)
+        for i in range(12):
+            current_month_key = (start_date + relativedelta(months=i)).strftime('%Y-%m-01')
+            month_data = {
+                'month_key': current_month_key,
+                'category_data': dict(structured_monthly_data[current_month_key])
+            }
+            chart_data_list.append(month_data)
 
-    for data in monthly_category_data_raw:
-        month_dt = data['month']
-        category_name = data['direction__direction_name']
-        amount = float(data.get('monthly_category_total', 0) or 0)
-        month_key = month_dt.strftime('%Y-%m-01') 
-        structured_monthly_data[month_key][category_name] += amount
-        unique_categories.add(category_name)
-        
-    sorted_categories = sorted(list(unique_categories))
-    # Лог: найденные категории
-    logger.info(f"[my_startups] Unique categories found for chart: {sorted_categories}")
+        logger.info(f"[my_startups] Final structured chart data list: {chart_data_list}")
 
-    # Подготавливаем данные для передачи в JSON
-    chart_data_list = []
-    start_date = datetime.date(current_year, 1, 1)
-    # Импортируем relativedelta, если еще не импортирован
-    from dateutil.relativedelta import relativedelta 
-    for i in range(12):
-        current_month_key = (start_date + relativedelta(months=i)).strftime('%Y-%m-01')
-        month_data = {
-            'month_key': current_month_key,
-            'category_data': dict(structured_monthly_data[current_month_key])
+        # --- Данные для планетарной системы ---
+        planetary_startups = []
+        for idx, startup in enumerate(approved_startups_annotated, start=1):
+            logo_url = startup.get_logo_url() or 'https://via.placeholder.com/150'
+            orbit_size = (idx * 100) + 100
+            orbit_time = (idx * 20) + 60
+            planet_size = (idx * 2) + 50
+            planet_data = {
+                'id': str(idx),
+                'startup_id': startup.startup_id,
+                'name': startup.title or 'Без названия',
+                'description': startup.description or 'Описание отсутствует',
+                'rating': f"{startup.get_average_rating():.1f}/5 ({startup.total_voters or 0})",
+                'progress': f"{startup.get_progress_percentage():.0f}%",
+                'funding': f"{int(startup.amount_raised or 0):,d} ₽".replace(',', ' '),
+                'investors': f"Инвесторов: {startup.get_investors_count() or 0}",
+                'image': logo_url,
+                'orbit_size': orbit_size,
+                'orbit_time': orbit_time,
+                'planet_size': planet_size,
+            }
+            planetary_startups.append(planet_data)
+
+        # Логирование для отладки
+        logger.info("Planetary Startups Data:")
+        for planet in planetary_startups:
+            logger.info(f"Startup ID: {planet['startup_id']}, Title: {planet['name']}")
+
+        # --- Все направления для модального окна ---
+        try:
+            all_directions_qs = Directions.objects.all().order_by('direction_name')
+            all_directions_list = list(all_directions_qs.values('pk', 'direction_name'))
+        except Exception as e:
+            logger.error(f"Ошибка при получении направлений: {str(e)}")
+            all_directions_list = []
+
+        # --- Получаем одобренные стартапы с аннотациями для основной сетки ---
+        try:
+            approved_startups_annotated = approved_startups_qs.annotate(
+                average_rating=Avg(
+                    models.ExpressionWrapper(
+                        Coalesce(models.F('sum_votes'), 0) * 1.0 / Coalesce(models.F('total_voters'), 1),
+                        output_field=FloatField()
+                    ),
+                    filter=models.Q(total_voters__gt=0),
+                    default=0.0
+                ),
+                comment_count=Count('comments')
+            ).annotate(
+                average_rating=Coalesce('average_rating', 0.0)
+            ).order_by('-created_at')
+        except Exception as e:
+            logger.error(f"Ошибка при получении одобренных стартапов: {str(e)}")
+            approved_startups_annotated = []
+
+        # --- Получаем все стартапы пользователя для секции "Заявки" ---
+        try:
+            all_user_applications = user_startups_qs.order_by('-updated_at')
+        except Exception as e:
+            logger.error(f"Ошибка при получении всех заявок пользователя: {str(e)}")
+            all_user_applications = []
+
+        context = {
+            'startups_count': approved_startups_count,
+            'total_investment': total_amount_raised,
+            'max_investment': max_raised,
+            'min_investment': min_raised,
+            'investment_categories': investment_categories[:7],
+            'month_labels': month_labels,
+            'chart_monthly_category_data': chart_data_list,
+            'chart_categories': sorted_categories,
+            'all_directions': all_directions_list,
+            'invested_category_data': invested_category_data_dict,
+            'user_startups': approved_startups_annotated,
+            'startup_applications': all_user_applications,
+            'current_sort': 'newest',
+            'planetary_startups': planetary_startups,
         }
-        chart_data_list.append(month_data)
-        
-    # Лог: финальные данные для графика
-    logger.info(f"[my_startups] Final structured chart data list: {chart_data_list}")
 
-    # --- Данные для планетарной системы ---
-    planetary_startups = []
-    for idx, startup in enumerate(approved_startups_annotated, start=1):
-        logo_url = startup.get_logo_url() or 'https://via.placeholder.com/150'
-        orbit_size = (idx * 100) + 100
-        orbit_time = (idx * 20) + 60
-        planet_size = (idx * 2) + 50
-        planet_data = {
-            'id': str(idx),
-            'startup_id': startup.startup_id,
-            'name': startup.title or 'Без названия',
-            'description': startup.description or 'Описание отсутствует',
-            'rating': f"{startup.get_average_rating():.1f}/5 ({startup.total_voters or 0})",
-            'progress': f"{startup.get_progress_percentage():.0f}%",
-            'funding': f"{int(startup.amount_raised or 0):,d} ₽".replace(',', ' '),
-            'investors': f"Инвесторов: {startup.get_investors_count() or 0}",
-            'image': logo_url,
-            'orbit_size': orbit_size,
-            'orbit_time': orbit_time,
-            'planet_size': planet_size,
-        }
-        planetary_startups.append(planet_data)
+        return render(request, 'accounts/my_startups.html', context)
 
-    # Логирование для отладки
-    logger.info("Planetary Startups Data:")
-    for planet in planetary_startups:
-        logger.info(f"Startup ID: {planet['startup_id']}, Title: {planet['name']}")
+    except Exception as e:
+        logger.error(f"Произошла ошибка в my_startups: {str(e)}", exc_info=True)
+        messages.error(request, 'Произошла ошибка при загрузке страницы. Пожалуйста, попробуйте снова.')
+        return redirect('profile')
