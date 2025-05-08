@@ -662,7 +662,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const actionsHTML = `
                     <div class="file-actions">
                          <button type="button" class="edit-file-btn" data-filename="${file.name}" title="Редактировать (пока не реализовано)" style="display:none;"><img src="{% static 'accounts/images/creat_startup/edit_icon.svg' %}" alt="Edit"></button>
-                         <button type="button" class="remove-file-btn" data-filename="${file.name}" title="Удалить"><img src="{% static 'accounts/images/icons/delete_icon.svg' %}" alt="Delete"></button>
+                         <button type="button" class="remove-file-btn" data-filename="${file.name}" title="Удалить"><img src="{% static 'accounts/images/creat_startup/delete_icon.svg' %}" alt="Delete"></button>
                      </div>`;
 
                 if (file.type.startsWith('image/')) {
@@ -709,7 +709,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     const actionsHTML = `
                         <div class="file-actions">
                              <button type="button" class="edit-file-btn" data-filename="${file.name}" title="Редактировать (пока не реализовано)" style="display:none;"><img src="{% static 'accounts/images/creat_startup/edit_icon.svg' %}" alt="Edit"></button>
-                             <button type="button" class="remove-file-btn" data-filename="${file.name}" title="Удалить"><img src="{% static 'accounts/images/icons/delete_icon.svg' %}" alt="Delete"></button>
+                             <button type="button" class="remove-file-btn" data-filename="${file.name}" title="Удалить"><img src="{% static 'accounts/images/creat_startup/delete_icon.svg' %}" alt="Delete"></button>
                          </div>`;
                     previewItemHTML = `
                         <div class="file-preview-item" data-filename="${file.name}">
