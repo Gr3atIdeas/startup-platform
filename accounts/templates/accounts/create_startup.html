@@ -69,11 +69,11 @@
                 <div class="form-top-right">
                     <div class="investment-type-card">
                         <div class="form-group checkbox-group micro-investment-group">
-                            {{ form.micro_investment_available|add_class:"form-check-input-hidden"|attr:"id:id_micro_investment_available" }}
-                            <label for="id_micro_investment_available" class="form-check-label micro-investment-label-custom">
-                                <span class="custom-checkbox-visual" id="microInvestmentVisual">
-                                    <span class="custom-checkbox-unchecked"></span>
-                                    <span class="custom-checkbox-checked"></span>
+                            {{ form.micro_investment_available|attr:"id:id_micro_investment_available"|add_class:"form-check-input-hidden" }}
+                            <label for="id_micro_investment_available" class="micro-investment-label-new">
+                                <span class="micro-checkbox-visual">
+                                    <span class="micro-checkbox-unchecked"></span>
+                                    <img src="{% static 'accounts/images/creat_startup/checkmark-circle-blue.svg' %}" alt="checked" class="micro-checkbox-checked" style="display:none;">
                                 </span>
                                 <span class="checkbox-text-span">Микроинвестиции доступны</span>
                             </label>
@@ -798,51 +798,43 @@ document.addEventListener('DOMContentLoaded', function() {
         updateFileActionButtonsState(previewAreaId);
 
         // Микроинвестиции
-        const microInvestmentCheckbox = document.getElementById('id_micro_investment_available');
-        if (microInvestmentCheckbox) {
-            // Ищем label, который является непосредственным родителем или связан через for
-            let label = document.querySelector(`label[for="${microInvestmentCheckbox.id}"]`);
-            if (!label) { // Если не нашли по for, возможно, input вложен в label
-                label = microInvestmentCheckbox.closest('label');
-            }
+        const microCheckboxInput = document.getElementById('id_micro_investment_available');
+        const microLabel = document.querySelector('label[for="id_micro_investment_available"].micro-investment-label-new');
 
-            if (!label) {
-                console.error('Label for micro-investment checkbox not found.');
-                // return; // Не выходим, чтобы остальная часть setupCustomCheckboxes могла выполниться
-            } else {
-                const visualSpan = label.querySelector('#microInvestmentVisual'); 
-                if (!visualSpan) {
-                    console.error('Visual span #microInvestmentVisual for micro-investment checkbox not found within its label.');
-                } else {
-                    const uncheckedVisual = visualSpan.querySelector('.custom-checkbox-unchecked');
-                    const checkedVisual = visualSpan.querySelector('.custom-checkbox-checked');
-                    
-                    if (uncheckedVisual && checkedVisual) { 
-                        const updateMicroIcons = () => {
-                            console.log('MicroInv checkbox changed, checked:', microInvestmentCheckbox.checked);
-                            if (microInvestmentCheckbox.checked) {
-                                uncheckedVisual.style.display = 'none';
-                                checkedVisual.style.display = 'block'; 
-                            } else {
-                                uncheckedVisual.style.display = 'block'; 
-                                checkedVisual.style.display = 'none';
-                            }
-                        };
-                        updateMicroIcons(); 
-                        microInvestmentCheckbox.addEventListener('change', updateMicroIcons);
-                        // Добавим обработчик на клик по самому label, чтобы он тоже переключал (если for не сработал)
-                        label.addEventListener('click', function(e) {
-                            // Предотвращаем двойное срабатывание, если клик был по самому input-у (который скрыт)
-                            if (e.target !== microInvestmentCheckbox) {
-                                // microInvestmentCheckbox.checked = !microInvestmentCheckbox.checked;
-                                // updateMicroIcons(); // Вызовется автоматически через событие change на input
-                            }
-                        });
+        if (microCheckboxInput && microLabel) {
+            const visualUnchecked = microLabel.querySelector('.micro-checkbox-unchecked');
+            const visualChecked = microLabel.querySelector('.micro-checkbox-checked');
+
+            if (visualUnchecked && visualChecked) {
+                const updateMicroCheckboxVisual = () => {
+                    if (microCheckboxInput.checked) {
+                        visualUnchecked.style.display = 'none';
+                        visualChecked.style.display = 'inline-block';
                     } else {
-                        console.error('Unchecked/Checked visual elements not found inside #microInvestmentVisual');
+                        visualUnchecked.style.display = 'inline-block';
+                        visualChecked.style.display = 'none';
                     }
-                }
+                };
+
+                // Устанавливаем начальное состояние при загрузке
+                updateMicroCheckboxVisual();
+
+                // Обработчик клика на label
+                microLabel.addEventListener('click', function(e) {
+                    // Не предотвращаем стандартное поведение, label for сам переключит input
+                    // Просто обновим визуализацию ПОСЛЕ того, как браузер изменит состояние инпута
+                    // Используем setTimeout, чтобы дать браузеру время обновить .checked состояние
+                    setTimeout(updateMicroCheckboxVisual, 0);
+                });
+
+                // Также слушаем событие change на самом инпуте (на случай, если он меняется другим способом)
+                microCheckboxInput.addEventListener('change', updateMicroCheckboxVisual);
+
+            } else {
+                console.error('Visual elements for micro-investment checkbox not found inside label.');
             }
+        } else {
+            console.error('Micro-investment checkbox input or its new label not found.');
         }
     }
     
@@ -911,51 +903,43 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         // Микроинвестиции
-        const microInvestmentCheckbox = document.getElementById('id_micro_investment_available');
-        if (microInvestmentCheckbox) {
-            // Ищем label, который является непосредственным родителем или связан через for
-            let label = document.querySelector(`label[for="${microInvestmentCheckbox.id}"]`);
-            if (!label) { // Если не нашли по for, возможно, input вложен в label
-                label = microInvestmentCheckbox.closest('label');
-            }
+        const microCheckboxInput = document.getElementById('id_micro_investment_available');
+        const microLabel = document.querySelector('label[for="id_micro_investment_available"].micro-investment-label-new');
 
-            if (!label) {
-                console.error('Label for micro-investment checkbox not found.');
-                // return; // Не выходим, чтобы остальная часть setupCustomCheckboxes могла выполниться
-            } else {
-                const visualSpan = label.querySelector('#microInvestmentVisual'); 
-                if (!visualSpan) {
-                    console.error('Visual span #microInvestmentVisual for micro-investment checkbox not found within its label.');
-                } else {
-                    const uncheckedVisual = visualSpan.querySelector('.custom-checkbox-unchecked');
-                    const checkedVisual = visualSpan.querySelector('.custom-checkbox-checked');
-                    
-                    if (uncheckedVisual && checkedVisual) { 
-                        const updateMicroIcons = () => {
-                            console.log('MicroInv checkbox changed, checked:', microInvestmentCheckbox.checked);
-                            if (microInvestmentCheckbox.checked) {
-                                uncheckedVisual.style.display = 'none';
-                                checkedVisual.style.display = 'block'; 
-                            } else {
-                                uncheckedVisual.style.display = 'block'; 
-                                checkedVisual.style.display = 'none';
-                            }
-                        };
-                        updateMicroIcons(); 
-                        microInvestmentCheckbox.addEventListener('change', updateMicroIcons);
-                        // Добавим обработчик на клик по самому label, чтобы он тоже переключал (если for не сработал)
-                        label.addEventListener('click', function(e) {
-                            // Предотвращаем двойное срабатывание, если клик был по самому input-у (который скрыт)
-                            if (e.target !== microInvestmentCheckbox) {
-                                // microInvestmentCheckbox.checked = !microInvestmentCheckbox.checked;
-                                // updateMicroIcons(); // Вызовется автоматически через событие change на input
-                            }
-                        });
+        if (microCheckboxInput && microLabel) {
+            const visualUnchecked = microLabel.querySelector('.micro-checkbox-unchecked');
+            const visualChecked = microLabel.querySelector('.micro-checkbox-checked');
+
+            if (visualUnchecked && visualChecked) {
+                const updateMicroCheckboxVisual = () => {
+                    if (microCheckboxInput.checked) {
+                        visualUnchecked.style.display = 'none';
+                        visualChecked.style.display = 'inline-block';
                     } else {
-                        console.error('Unchecked/Checked visual elements not found inside #microInvestmentVisual');
+                        visualUnchecked.style.display = 'inline-block';
+                        visualChecked.style.display = 'none';
                     }
-                }
+                };
+
+                // Устанавливаем начальное состояние при загрузке
+                updateMicroCheckboxVisual();
+
+                // Обработчик клика на label
+                microLabel.addEventListener('click', function(e) {
+                    // Не предотвращаем стандартное поведение, label for сам переключит input
+                    // Просто обновим визуализацию ПОСЛЕ того, как браузер изменит состояние инпута
+                    // Используем setTimeout, чтобы дать браузеру время обновить .checked состояние
+                    setTimeout(updateMicroCheckboxVisual, 0);
+                });
+
+                // Также слушаем событие change на самом инпуте (на случай, если он меняется другим способом)
+                microCheckboxInput.addEventListener('change', updateMicroCheckboxVisual);
+
+            } else {
+                console.error('Visual elements for micro-investment checkbox not found inside label.');
             }
+        } else {
+            console.error('Micro-investment checkbox input or its new label not found.');
         }
     }
     setupCustomCheckboxes();
