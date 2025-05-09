@@ -69,9 +69,12 @@
                 <div class="form-top-right">
                     <div class="investment-type-card">
                         <div class="form-group checkbox-group micro-investment-group">
-                            {{ form.micro_investment_available|add_class:"form-check-input"|attr:"id:id_micro_investment_available" }}
+                            {{ form.micro_investment_available|add_class:"form-check-input-hidden"|attr:"id:id_micro_investment_available" }}
                             <label for="id_micro_investment_available" class="form-check-label micro-investment-label-custom">
-                                 <img src="{% static 'accounts/images/creat_startup/add-circle-outline.svg' %}" alt="micro-investment icon" class="micro-investment-icon">
+                                <span class="custom-checkbox-visual-micro">
+                                    <img src="{% static 'accounts/images/creat_startup/add-circle-outline.svg' %}" alt="micro-investment icon" class="micro-investment-icon unchecked-icon-micro">
+                                    <img src="{% static 'accounts/images/creat_startup/checkmark-circle-blue.svg' %}" alt="micro-investment icon checked" class="micro-investment-icon checked-icon-micro" style="display:none;">
+                                </span>
                                 <span class="checkbox-text-span">{{ form.micro_investment_available.label }}</span>
                             </label>
                             {% if form.micro_investment_available.errors %}<span class="error-message">{{ form.micro_investment_available.errors|first }}</span>{% endif %}
@@ -112,8 +115,8 @@
              <div class="form-content-section">
                 <div class="upload-section-grid media-and-finance-grid">
                     <!-- Блок Изображения -->
-                    <div class="form-group upload-box">
-                        <label for="id_creatives_input">*{{ form.creatives.label }}</label>
+                    <div class="form-group upload-box" id="creativesDropArea">
+                        <label for="id_creatives_input">*Изображения</label>
                         {{ form.creatives|attr:"style:display:none"|attr:"multiple:true"|attr:"id:id_creatives_input" }}
                         <div class="custom-file-upload-button" onclick="document.getElementById('id_creatives_input').click()">Выбрать файл</div>
                         <div class="small-text">Допустимый формат PNG, JPEG (до 3 файлов)</div>
@@ -121,8 +124,8 @@
                         {% if form.creatives.errors %}<span class="error-message">{{ form.creatives.errors|first }}</span>{% endif %}
                     </div>
                     <!-- Блок Видео -->
-                    <div class="form-group upload-box">
-                        <label for="id_video_input">*{{ form.video.label }}</label>
+                    <div class="form-group upload-box" id="videoDropArea">
+                        <label for="id_video_input">*Видео</label>
                         {{ form.video|attr:"style:display:none"|attr:"id:id_video_input" }}
                         <div class="custom-file-upload-button" onclick="document.getElementById('id_video_input').click()">Выбрать файл</div>
                         <div class="small-text">Допустимый формат MOV, MP4 (1 файл)</div>
@@ -173,11 +176,11 @@
             <!-- Блок таймлайна -->
              <div class="form-content-section timeline-section-wrapper">
                  <h3 class="section-title">*Этапы</h3>
-                <div class="timeline-progress-container">
-                    <div class="timeline-progress-line"></div>
-                    <div class="timeline-progress-filled" id="timelineProgressFilled"></div>
-                </div>
                 <div class="timeline" id="timeline">
+                    <div class="timeline-progress-container">
+                        <div class="timeline-progress-line"></div>
+                        <div class="timeline-progress-filled" id="timelineProgressFilled"></div>
+                    </div>
                     {% for i in "12345" %}
                     <div class="timeline-step" data-step="{{ i }}">
                         <div class="step-number-wrapper" id="stepNumber{{ i }}">
@@ -209,8 +212,8 @@
 
             <!-- Секция Документы (Пруфы) -->
              <div class="form-content-section">
-                <div class="form-group upload-box full-width">
-                    <label for="id_proofs_input">*{{ form.proofs.label }}</label>
+                <div class="form-group upload-box full-width" id="proofsDropArea">
+                    <label for="id_proofs_input">*Документы</label>
                     {{ form.proofs|attr:"style:display:none"|attr:"multiple:true"|attr:"id:id_proofs_input" }}
                     <div class="custom-file-upload-button" onclick="document.getElementById('id_proofs_input').click()">Выбрать файл</div>
                     <div class="small-text">Допустимый формат Doc, Excel, PDF (до 3 файлов)</div>
@@ -227,8 +230,10 @@
                     <div class="form-group checkbox-group">
                         {{ form.agree_rules|attr:"id:id_agree_rules"|add_class:"form-check-input-hidden" }}
                         <label for="id_agree_rules" class="custom-checkbox-label">
-                            <img src="{% static 'accounts/images/creat_startup/checkmark-circle-outline.svg' %}" alt="checkbox icon" class="checkbox-icon default-icon">
-                            <img src="{% static 'accounts/images/creat_startup/checkmark-circle-outline.svg' %}" alt="checkbox icon checked" class="checkbox-icon checked-icon">
+                            <span class="custom-checkbox-visual">
+                                <span class="custom-checkbox-unchecked"></span>
+                                <span class="custom-checkbox-checked"></span>
+                            </span>
                             <span class="checkbox-text">{{ form.agree_rules.label }}</span>
                         </label>
                         <div class="tooltip-icon-wrapper">
@@ -239,8 +244,10 @@
                     <div class="form-group checkbox-group">
                         {{ form.agree_data_processing|attr:"id:id_agree_data_processing"|add_class:"form-check-input-hidden" }}
                         <label for="id_agree_data_processing" class="custom-checkbox-label">
-                             <img src="{% static 'accounts/images/creat_startup/checkmark-circle-outline.svg' %}" alt="checkbox icon" class="checkbox-icon default-icon">
-                            <img src="{% static 'accounts/images/creat_startup/checkmark-circle-outline.svg' %}" alt="checkbox icon checked" class="checkbox-icon checked-icon">
+                            <span class="custom-checkbox-visual">
+                                <span class="custom-checkbox-unchecked"></span>
+                                <span class="custom-checkbox-checked"></span>
+                            </span>
                             <span class="checkbox-text">{{ form.agree_data_processing.label }}</span>
                         </label>
                         <div class="tooltip-icon-wrapper">
@@ -449,7 +456,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (proofsBox && !proofsBox.querySelector('.custom-validation-error.proofs-error')) {
                         const errorMsg = document.createElement('p');
                         errorMsg.className = 'error-message custom-validation-error proofs-error';
-                        errorMsg.textContent = 'Пожалуйста, загрузите подтверждающие документы (Пруфы).';
+                        errorMsg.textContent = 'Пожалуйста, загрузите подтверждающие документы (Документы).';
                         // Вставляем после small-text
                         const smallText = proofsBox.querySelector('.small-text');
                         if (smallText) {
@@ -536,7 +543,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // --- Drag & Drop для файлов (Обновлено для документов) ---
-    function setupDragAndDrop(inputId, dropAreaId, previewAreaId, allowedTypesDetails, isMultiple = false) {
+    function setupDragAndDrop(inputId, dropAreaId, previewAreaId, allowedTypesDetails, isMultiple = false, maxFiles = 1) {
         const dropArea = document.getElementById(dropAreaId);
         const fileInput = document.getElementById(inputId);
         const previewArea = document.getElementById(previewAreaId);
@@ -557,7 +564,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         fileInput.addEventListener('change', (event) => {
-            handleFiles(event.target.files, inputId, previewAreaId, allowedTypesDetails, isMultiple);
+            handleFiles(event.target.files, inputId, previewAreaId, allowedTypesDetails, isMultiple, maxFiles);
             checkPlaceholderVisibility(dropAreaId);
         });
 
@@ -575,14 +582,11 @@ document.addEventListener('DOMContentLoaded', function() {
             dropArea.classList.remove('dragover');
             const files = event.dataTransfer.files;
             if (files.length) {
-                // Для корректной работы с формой, нужно обновить fileInput.files
-                // Прямое присвоение fileInput.files = files; не всегда работает или сбрасывается.
-                // Лучше создать новый DataTransfer и присвоить его.
                 const dataTransfer = new DataTransfer();
                 Array.from(files).forEach(file => dataTransfer.items.add(file));
                 fileInput.files = dataTransfer.files;
                 
-                handleFiles(files, inputId, previewAreaId, allowedTypesDetails, isMultiple);
+                handleFiles(files, inputId, previewAreaId, allowedTypesDetails, isMultiple, maxFiles);
             }
             checkPlaceholderVisibility(dropAreaId);
         });
@@ -591,21 +595,39 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Общая функция для обработки файлов и отображения превью
-    function handleFiles(files, inputId, previewAreaId, allowedTypesDetails, isMultiple) {
-        const fileInput = document.getElementById(inputId); // Не используется напрямую, но может быть полезно для сброса
+    function handleFiles(files, inputId, previewAreaId, allowedTypesDetails, isMultiple, maxFiles) {
+        const fileInput = document.getElementById(inputId);
         const previewArea = document.getElementById(previewAreaId);
+        const existingFileCount = previewArea.children.length;
 
         if (!isMultiple) {
             previewArea.innerHTML = ''; // Очищаем превью для одиночных файлов
         }
 
-        Array.from(files).forEach(file => {
+        let filesToProcess = Array.from(files);
+
+        if (isMultiple && (existingFileCount + filesToProcess.length > maxFiles)) {
+            alert(`Можно загрузить не более ${maxFiles} файлов.`);
+            filesToProcess = filesToProcess.slice(0, maxFiles - existingFileCount);
+        } else if (!isMultiple && filesToProcess.length > maxFiles) {
+            alert(`Можно загрузить не более ${maxFiles} файлов.`);
+            filesToProcess = filesToProcess.slice(0, maxFiles);
+        }
+        
+        // Обновляем files в fileInput, если количество файлов было изменено
+        if (filesToProcess.length < files.length) {
+            const dataTransfer = new DataTransfer();
+            filesToProcess.forEach(file => dataTransfer.items.add(file));
+            if (fileInput) fileInput.files = dataTransfer.files;
+        }
+
+
+        filesToProcess.forEach(file => {
             const fileType = file.type;
             const fileName = file.name;
             const fileExtension = fileName.split('.').pop().toLowerCase();
             let isAllowed = false;
 
-            // Проверка типа файла
             if (allowedTypesDetails.mimes.includes(fileType) && fileType !== '') {
                 isAllowed = true;
             } else if (allowedTypesDetails.extensions.includes(fileExtension)) {
@@ -639,8 +661,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="file-preview-item" draggable="true" data-filename="${CSS.escape(file.name)}">
                         ${dragHandleHTML}
                         <div class="file-info">
-                            <img src="${previewSrc}" alt="${file.name}" class="${imageClass}">
-                            <p class="file-name">${file.name}</p>
+                            <img src="${previewSrc}" alt="${isImage ? 'Предпросмотр' : 'Иконка файла'}" class="${imageClass}">
+                            <div class="file-text-details">
+                                <p class="file-name-display">${file.name}</p>
+                                <p class="file-type-display">${fileExtension.toUpperCase()}</p>
+                            </div>
                         </div>
                         ${actionsHTML}
                     </div>`;
@@ -648,7 +673,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (!isMultiple) {
                     previewArea.innerHTML = previewItemHTML;
                 } else {
-                    previewArea.insertAdjacentHTML('beforeend', previewItemHTML);
+                     if (previewArea.children.length < maxFiles) {
+                        previewArea.insertAdjacentHTML('beforeend', previewItemHTML);
+                    }
                 }
                 updateFileActionButtonsState(previewAreaId); 
             };
@@ -656,6 +683,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (file.type.startsWith('image/')) {
                 reader.readAsDataURL(file);
             } else {
+                // Для не-изображений, вызываем onload сразу, т.к. e.target.result не нужен для иконки
                 reader.onload({ target: { result: null } }); 
             }
         });
@@ -668,69 +696,92 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Удаление файла из превью и из fileInput.files (Обновлено)
     document.addEventListener('click', function(event) {
-        const removeButton = event.target.closest('.remove-file-btn');
-        if (removeButton) {
-            const fileNameToRemove = removeButton.dataset.filename;
-            const previewItem = removeButton.closest('.file-preview-item');
+        const deleteButton = event.target.closest('.delete-file-btn'); // изменено с remove-file-btn
+        if (deleteButton) {
+            const previewItem = deleteButton.closest('.file-preview-item');
+            if (!previewItem) return;
+
+            const fileNameToRemove = previewItem.dataset.filename;
             const previewArea = previewItem.parentElement;
-            // Определяем связанный input по ID previewArea (id="creativesPreview" -> name="creatives")
-            const inputName = previewArea.id.replace('Preview', ''); 
-            // Находим input по ID, которое должно быть равно form.<name>.id_for_label, но тут проще по name
-             const fileInput = document.querySelector(`input[type="file"][name="${inputName}"]`);
+            
+            // Определяем связанный input по ID previewArea
+            // Например, creativesPreview -> id_creatives_input
+            const inputId = previewArea.id.replace('Preview', '_input'); 
+            const fileInput = document.getElementById(inputId);
 
             if (fileInput) {
                 const dt = new DataTransfer();
                 const files = Array.from(fileInput.files);
                 files.forEach(file => {
-                    if (file.name !== fileNameToRemove) {
+                    if (CSS.escape(file.name) !== fileNameToRemove) { // Сравнение экранированных имен
                         dt.items.add(file);
                     }
                 });
                 fileInput.files = dt.files; // Обновляем files в input
             }
             previewItem.remove(); // Удаляем элемент из DOM
+            checkPlaceholderVisibility(previewArea.id.replace('Preview', 'DropArea')); // Обновляем видимость плейсхолдера
+            updateFileActionButtonsState(previewArea.id);
         }
     });
 
     // Настройка Drag & Drop для всех полей
-    setupDragAndDrop('{{ form.creatives.id_for_label }}'.replace('id_',''), 'creativesDropArea', 'creativesPreview', 3, 
-        { mimes: ['image/jpeg', 'image/png'], extensions: ['jpg', 'jpeg', 'png'] });
-    setupDragAndDrop('{{ form.video.id_for_label }}'.replace('id_',''), 'videoDropArea', 'videoPreview', 1, 
-        { mimes: ['video/mp4', 'video/quicktime'], extensions: ['mp4', 'mov'] });
-    setupDragAndDrop('{{ form.proofs.id_for_label }}'.replace('id_',''), 'proofsDropArea', 'proofsPreview', 3, 
-        { mimes: ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'], extensions: ['pdf', 'doc', 'docx', 'xls', 'xlsx'] });
+    setupDragAndDrop('id_creatives_input', 'creativesDropArea', 'creativesPreview', 
+        { mimes: ['image/jpeg', 'image/png'], extensions: ['jpg', 'jpeg', 'png'] }, true, 3);
+    setupDragAndDrop('id_video_input', 'videoDropArea', 'videoPreview', 
+        { mimes: ['video/mp4', 'video/quicktime'], extensions: ['mp4', 'mov'] }, false, 1);
+    setupDragAndDrop('id_proofs_input', 'proofsDropArea', 'proofsPreview', 
+        { mimes: ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'], extensions: ['pdf', 'doc', 'docx', 'xls', 'xlsx'] }, true, 3);
 
 
     // --- Logic for custom checkboxes (Обновлено) ---
     function setupCustomCheckboxes() {
-        document.querySelectorAll('.custom-checkbox-label').forEach(label => {
+        // Согласия
+        document.querySelectorAll('.agreement-section .custom-checkbox-label').forEach(label => {
             const inputId = label.getAttribute('for');
             const input = document.getElementById(inputId);
-            const defaultIcon = label.querySelector('.default-icon');
-            const checkedIcon = label.querySelector('.checked-icon');
+            const uncheckedVisual = label.querySelector('.custom-checkbox-unchecked');
+            const checkedVisual = label.querySelector('.custom-checkbox-checked');
 
-            if (input && defaultIcon && checkedIcon) {
-                const updateIcons = () => {
+            if (input && uncheckedVisual && checkedVisual) {
+                const updateAgreementIcons = () => {
                     if (input.checked) {
-                        defaultIcon.style.display = 'none';
-                        checkedIcon.style.display = 'inline-block';
-                        // Применяем синий цвет через filter (подберите значения точнее при необходимости)
-                         checkedIcon.style.filter = 'invert(30%) sepia(80%) saturate(2500%) hue-rotate(190deg) brightness(90%) contrast(100%)'; 
+                        uncheckedVisual.style.display = 'none';
+                        checkedVisual.style.display = 'block'; // или 'inline-block' / 'flex' в зависимости от CSS для галочки
                     } else {
-                        defaultIcon.style.display = 'inline-block';
-                        checkedIcon.style.display = 'none';
-                        checkedIcon.style.filter = 'none'; // Сбрасываем фильтр
+                        uncheckedVisual.style.display = 'block'; // или 'inline-block' / 'flex'
+                        checkedVisual.style.display = 'none';
                     }
                 };
-
-                // Initial state
-                updateIcons();
-
-                // Update on change
-                input.addEventListener('change', updateIcons);
-                 // Update when label is clicked (which toggles the input) - убрано, т.к. for работает
+                updateAgreementIcons();
+                input.addEventListener('change', updateAgreementIcons);
             }
         });
+
+        // Микроинвестиции
+        const microInvestmentCheckbox = document.getElementById('id_micro_investment_available');
+        if (microInvestmentCheckbox) {
+            const label = microInvestmentCheckbox.nextElementSibling; // Предполагаем, что label идет сразу за input
+            const uncheckedIconMicro = label?.querySelector('.unchecked-icon-micro');
+            const checkedIconMicro = label?.querySelector('.checked-icon-micro');
+
+            if (uncheckedIconMicro && checkedIconMicro) {
+                const updateMicroIcons = () => {
+                    if (microInvestmentCheckbox.checked) {
+                        uncheckedIconMicro.style.display = 'none';
+                        checkedIconMicro.style.display = 'inline-block';
+                        // Применяем синий цвет через filter (если иконка не синяя по умолчанию)
+                        // checkedIconMicro.style.filter = 'invert(30%) sepia(80%) saturate(2500%) hue-rotate(190deg) brightness(90%) contrast(100%)'; 
+                    } else {
+                        uncheckedIconMicro.style.display = 'inline-block';
+                        checkedIconMicro.style.display = 'none';
+                        // checkedIconMicro.style.filter = 'none'; 
+                    }
+                };
+                updateMicroIcons();
+                microInvestmentCheckbox.addEventListener('change', updateMicroIcons);
+            }
+        }
     }
     setupCustomCheckboxes();
 
@@ -761,55 +812,30 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if (editBtn) {
                 editBtn.style.display = 'none'; // Функционал редактирования пока не реализован
-                // editBtn.onclick = () => { /* Логика редактирования файла fileName */ };
             }
-            if (deleteBtn) {
-                deleteBtn.onclick = () => {
-                    item.remove();
-                    const inputId = previewAreaId.replace('-preview-area', '');
-                    const fileInput = document.getElementById(inputId);
-                    
-                    // Обновляем FileList в input
-                    if (fileInput) {
-                        const dt = new DataTransfer();
-                        const remainingItems = previewArea.querySelectorAll('.file-preview-item');
-                        remainingItems.forEach(remainingItem => {
-                            // Нам нужен оригинальный File объект. Это сложно без его хранения.
-                            // Вместо этого, мы должны найти его в fileInput.files по имени (если он там есть).
-                            // Однако, fileInput.files может быть уже неактуален, если файлы добавлялись через drag-n-drop и присваивались.
-                            // Простой вариант: если файлов не осталось, очистить input.
-                            // Более сложный: при добавлении хранить File объекты где-то.
-                        });
-                        // Для упрощения, если в превью ничего нет, очищаем инпут
-                        if (previewArea.children.length === 0) {
-                            fileInput.value = ""; 
-                            if (fileInput.dataset.hadFile) fileInput.dataset.hadFile = 'false';
-                        }
-                    }
-
-                    checkPlaceholderVisibility(previewAreaId.replace('-preview-area', '-upload-area'));
-                    updateFileActionButtonsState(previewAreaId); // Обновить состояние на случай, если удалили не все
-                };
-            }
+            // Логика для deleteBtn уже в общем обработчике кликов документа
         });
     }
     
-    // Показываем/скрываем плейсхолдер
+    // Показываем/скрываем плейсхолдер (для кнопок "Выбрать файл")
     function checkPlaceholderVisibility(dropAreaId) {
         const dropArea = document.getElementById(dropAreaId);
         if (!dropArea) return;
 
-        const previewAreaId = dropAreaId.replace('-upload-area', '-preview-area');
-        const previewArea = document.getElementById(previewAreaId);
-        const placeholder = dropArea.querySelector('.upload-placeholder');
+        // Эта функция, возможно, больше не нужна в таком виде, 
+        // так как "плейсхолдер" - это сама кнопка "Выбрать файл", которая всегда видна.
+        // Если речь шла о каком-то другом плейсхолдере, нужно уточнить.
+        // const previewAreaId = dropAreaId.replace('DropArea', 'Preview');
+        // const previewArea = document.getElementById(previewAreaId);
+        // const placeholder = dropArea.querySelector('.upload-placeholder'); // Если есть такой класс
 
-        if (placeholder && previewArea) {
-            if (previewArea.children.length > 0) {
-                placeholder.style.display = 'none';
-            } else {
-                placeholder.style.display = 'flex'; 
-            }
-        }
+        // if (placeholder && previewArea) {
+        //     if (previewArea.children.length > 0) {
+        //         placeholder.style.display = 'none';
+        //     } else {
+        //         placeholder.style.display = 'flex'; 
+        //     }
+        // }
     }
 
 });

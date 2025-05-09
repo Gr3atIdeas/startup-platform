@@ -898,3 +898,249 @@ h3.section-title {
 .form-check-input-hidden {
     display: none;
 }
+
+/* === Custom Checkbox Styles (Agreement Section) === */
+.custom-checkbox-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    position: relative; 
+}
+
+.custom-checkbox-visual {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #7A8A99; /* Default border color for unchecked state */
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+    background-color: transparent; /* Unchecked state is transparent circle */
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.custom-checkbox-visual::after {
+    content: '';
+    display: block;
+    width: 10px; 
+    height: 5px; 
+    border-left: 2px solid white; 
+    border-bottom: 2px solid white; 
+    transform: rotate(-45deg) translate(-1px, 1px); /* Adjust for better centering */
+    opacity: 0; 
+    transition: opacity 0.2s;
+}
+
+.form-check-input-hidden:checked + .custom-checkbox-label .custom-checkbox-visual {
+    background-color: #007BFF; 
+    border-color: #007BFF; 
+}
+
+.form-check-input-hidden:checked + .custom-checkbox-label .custom-checkbox-visual::after {
+    opacity: 1; 
+}
+
+/* === Micro Investment Checkbox Visuals === */
+.micro-investment-label-custom {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.custom-checkbox-visual-micro {
+    margin-right: 8px;
+    display: inline-flex; 
+    align-items: center;
+    justify-content: center;
+    width: 24px; /* Match icon size */
+    height: 24px; /* Match icon size */
+}
+
+.custom-checkbox-visual-micro .micro-investment-icon {
+    width: 100%; 
+    height: 100%; 
+}
+
+/* === File Preview Styles === */
+.file-preview-area {
+    margin-top: 10px;
+}
+
+.file-preview-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    border: 1px solid #e0e0e0; /* Lighter border */
+    border-radius: 6px; /* Slightly more rounded */
+    margin-bottom: 8px;
+    background-color: #f7f9fc; /* Light background */
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05); /* Subtle shadow */
+}
+
+.file-preview-item .file-info {
+    display: flex;
+    align-items: center;
+    gap: 12px; 
+}
+
+.file-preview-item .file-icon,
+.file-preview-item .preview-image {
+    width: 36px;   
+    height: 36px;  
+    object-fit: cover; 
+    border-radius: 4px; 
+    flex-shrink: 0; /* Prevent icon from shrinking */
+}
+
+.file-preview-item .file-text-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden; /* Prevent long names from breaking layout */
+}
+
+.file-preview-item .file-name-display {
+    font-weight: 500; /* Medium weight */
+    color: #2c3e50; /* Darker text */
+    margin: 0;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Add ellipsis for very long names */
+}
+
+.file-preview-item .file-type-display {
+    font-size: 0.75rem;
+    color: #7f8c8d; /* Softer grey */
+    margin: 0;
+    text-transform: uppercase;
+}
+
+.file-preview-item .file-actions {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0; /* Prevent action buttons from shrinking */
+}
+
+.file-preview-item .file-actions button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    margin-left: 5px; /* Space between buttons */
+}
+
+.file-preview-item .file-actions button img {
+    width: 16px; 
+    height: 16px; 
+    vertical-align: middle; /* Align icons nicely */
+}
+.file-preview-item .file-actions button:hover img {
+    opacity: 0.7;
+}
+
+
+/* === Timeline Progress Bar Styles === */
+.timeline {
+    position: relative; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: flex-start; 
+    /* Adjusted padding to visually center the line with icons */
+    /* The icons are 40px high. step-number-wrapper also 40px.
+       The line should be at the vertical center of these icons.
+       If timeline's top padding is 0, and step-number-wrapper is first,
+       icon center is 20px from top. Line top should be 20px.
+    */
+    padding-top: 0; /* Remove timeline top padding, rely on step margin/padding */
+    padding-left: 20px; /* Half width of first icon (40px / 2) */
+    padding-right: 20px; /* Half width of last icon (40px / 2) */
+    margin-bottom: 20px;
+    margin-top: 30px; /* Add margin above timeline for spacing */
+}
+
+.timeline-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    position: relative; 
+    z-index: 1; 
+    width: calc(100% / 5 - 10px); /* Adjust width for spacing if needed */
+}
+
+/* This container holds the line and its progress fill */
+.timeline .timeline-progress-container { 
+    position: absolute;
+    /* Center of 40px icons is 20px. The line has height 3px.
+       So, top should be 20px - 1.5px = 18.5px from the top of the icon itself.
+       The step-number-wrapper is 40px high.
+    */
+    top: 20px; /* This should be the Y-coordinate for the center of the icons */
+               /* relative to the .timeline div (which now has no top padding). */
+    left: 0px; /* Starts at the very beginning of the first icon's center line */
+    right: 0px; /* Ends at the very end of the last icon's center line */
+    /* The padding on .timeline (20px left/right) means this container will effectively span between icon centers. */
+    height: 3px;
+    z-index: 0; /* Behind the step icons */
+    transform: translateY(-50%); /* Vertically centers the 3px line at the top: 20px mark */
+}
+
+.timeline-progress-line,
+.timeline-progress-filled {
+    position: absolute;
+    height: 100%;
+    border-radius: 1.5px;
+}
+
+.timeline-progress-line {
+    left: 0; 
+    width: 100%; /* Full width of its container */
+    background-color: #e9ecef; /* Lighter grey for the track */
+}
+
+.timeline-progress-filled {
+    left: 0;
+    width: 0%; /* JS controlled */
+    background-color: #007bff; 
+    transition: width 0.3s ease-in-out;
+}
+
+.step-number-wrapper {
+    width: 40px; 
+    height: 40px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: #ffffff; /* Crucial: Background to hide the line passing *behind* the icon */
+    position: relative; 
+    z-index: 1; /* Above .timeline-progress-container */
+    box-shadow: 0 0 0 3px #ffffff; /* Creates a "cutout" effect for the line, if background of page is not #fff, change this */
+    margin-bottom: 8px; /* Space between icon and text "Этап X" */
+}
+.step-number-wrapper.active {
+    /* Styles for the circle when it's the current or past step */
+    /* Example: change icon color or background, handled by JS adding 'active' class */
+}
+.step-number-wrapper .step-icon {
+    width: 100%; 
+    height: 100%; 
+}
+
+/* Ensure the overall form background is considered for the timeline icon cutout */
+/* If .startup-form-container or body has a different background, 
+   .step-number-wrapper background-color and box-shadow color should match that.
+   Assuming default white for now.
+*/
+body, .startup-form-container { /* Example, adjust selector as needed */
+    /* background-color: #f8f9fa; /* If this is the page background */
+}
+/* If so, then update .step-number-wrapper:
+.step-number-wrapper {
+    background-color: #f8f9fa;
+    box-shadow: 0 0 0 3px #f8f9fa;
+}
+*/
