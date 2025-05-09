@@ -261,6 +261,8 @@
 </div>
 
 <script>
+const creatStartupStaticUrl = "{% static 'accounts/images/creat_startup/' %}";
+
 document.addEventListener('DOMContentLoaded', function() {
     // --- Логотип ---
     const logoInput = document.getElementById('id_logo_input');
@@ -534,83 +536,76 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // --- Drag & Drop для файлов (Обновлено для документов) ---
-    function setupDragAndDrop(inputId, dropAreaId, previewAreaId, maxFiles = 1, allowedTypesDetails = { mimes: [], extensions: [] }) {
+    function setupDragAndDrop(inputId, dropAreaId, previewAreaId, allowedTypesDetails, isMultiple = false) {
+        const dropArea = document.getElementById(dropAreaId);
         const fileInput = document.getElementById(inputId);
         const previewArea = document.getElementById(previewAreaId);
-        const uploadButton = document.querySelector(`.custom-file-upload-button[onclick*="${inputId}"]`);
 
-        if (!fileInput || !previewArea || !uploadButton) {
-             console.warn(`Drag and drop setup failed for input: ${inputId}`);
-             return;
-         }
-
-        fileInput.addEventListener('change', (event) => {
-            const files = event.target.files;
-            handleFiles(files, fileInput, previewArea, maxFiles, allowedTypesDetails, inputId);
-        });
-
-        const uploadBox = fileInput.closest('.upload-box');
-        if (uploadBox) {
-            uploadBox.addEventListener('dragover', (event) => {
-                event.preventDefault();
-                uploadBox.classList.add('dragover');
-            });
-            uploadBox.addEventListener('dragleave', () => {
-                uploadBox.classList.remove('dragover');
-            });
-            uploadBox.addEventListener('drop', (event) => {
-                event.preventDefault();
-                uploadBox.classList.remove('dragover');
-                const files = event.dataTransfer.files;
-                handleFiles(files, fileInput, previewArea, maxFiles, allowedTypesDetails, inputId);
-            });
-        }
-    }
-
-    function handleFiles(files, fileInput, previewArea, maxFiles, allowedTypesDetails, inputId) {
-        if (!fileInput.multiple) {
-             previewArea.innerHTML = ''; 
+        if (!dropArea || !fileInput || !previewArea) {
+            console.error('Элементы не найдены для', inputId, dropAreaId, previewAreaId);
+            return;
         }
         
-        let currentFilesDataTransfer = new DataTransfer();
-        let existingFileNames = new Set(); // Отслеживаем имена файлов, уже добавленных в DataTransfer
+        checkPlaceholderVisibility(dropAreaId); // Первоначальная проверка
 
-        if (fileInput.multiple) {
-            Array.from(fileInput.files).forEach(f => {
-                // Проверяем на дубликаты перед добавлением в начальный DataTransfer
-                if (!existingFileNames.has(f.name)) {
-                     currentFilesDataTransfer.items.add(f);
-                     existingFileNames.add(f.name);
-                } else {
-                     console.warn(`Initial duplicate file skipped: ${f.name}`);
-                }
-            });
+        dropArea.addEventListener('click', (e) => {
+            // Предотвращаем срабатывание, если клик был по кнопке удаления внутри previewArea
+            if (e.target.closest('.delete-file-btn') || e.target.closest('.edit-file-btn')) {
+                return;
+            }
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('change', (event) => {
+            handleFiles(event.target.files, inputId, previewAreaId, allowedTypesDetails, isMultiple);
+            checkPlaceholderVisibility(dropAreaId);
+        });
+
+        dropArea.addEventListener('dragover', (event) => {
+            event.preventDefault();
+            dropArea.classList.add('dragover');
+        });
+
+        dropArea.addEventListener('dragleave', () => {
+            dropArea.classList.remove('dragover');
+        });
+
+        dropArea.addEventListener('drop', (event) => {
+            event.preventDefault();
+            dropArea.classList.remove('dragover');
+            const files = event.dataTransfer.files;
+            if (files.length) {
+                // Для корректной работы с формой, нужно обновить fileInput.files
+                // Прямое присвоение fileInput.files = files; не всегда работает или сбрасывается.
+                // Лучше создать новый DataTransfer и присвоить его.
+                const dataTransfer = new DataTransfer();
+                Array.from(files).forEach(file => dataTransfer.items.add(file));
+                fileInput.files = dataTransfer.files;
+                
+                handleFiles(files, inputId, previewAreaId, allowedTypesDetails, isMultiple);
+            }
+            checkPlaceholderVisibility(dropAreaId);
+        });
+        
+        updateFileActionButtonsState(previewAreaId);
+    }
+
+    // Общая функция для обработки файлов и отображения превью
+    function handleFiles(files, inputId, previewAreaId, allowedTypesDetails, isMultiple) {
+        const fileInput = document.getElementById(inputId); // Не используется напрямую, но может быть полезно для сброса
+        const previewArea = document.getElementById(previewAreaId);
+
+        if (!isMultiple) {
+            previewArea.innerHTML = ''; // Очищаем превью для одиночных файлов
         }
 
-        for (let i = 0; i < files.length; i++) {
-            const file = files[i];
-            
-            // Проверка дубликатов перед обработкой нового файла
-            if (existingFileNames.has(file.name)) {
-                 alert(`Файл "${file.name}" уже добавлен.`);
-                 continue; 
-            }
-            
-            if (fileInput.multiple && currentFilesDataTransfer.items.length >= maxFiles) {
-                alert(`Можно загрузить не более ${maxFiles} файлов для этого поля.`);
-                break; 
-            }
-            if (!fileInput.multiple && currentFilesDataTransfer.items.length >= 1 && files.length > 0) {
-                // Для одиночного файла - очищаем перед добавлением нового
-                currentFilesDataTransfer = new DataTransfer(); 
-                previewArea.innerHTML = '';
-                existingFileNames.clear(); // Очищаем и сет имен
-            }
-
-            const fileExtension = file.name.split('.').pop().toLowerCase();
+        Array.from(files).forEach(file => {
             const fileType = file.type;
+            const fileName = file.name;
+            const fileExtension = fileName.split('.').pop().toLowerCase();
             let isAllowed = false;
 
+            // Проверка типа файла
             if (allowedTypesDetails.mimes.includes(fileType) && fileType !== '') {
                 isAllowed = true;
             } else if (allowedTypesDetails.extensions.includes(fileExtension)) {
@@ -619,45 +614,56 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if (!isAllowed) {
                 alert(`Файл "${file.name}" имеет неподдерживаемый тип или расширение. Допустимые форматы: ${allowedTypesDetails.extensions.map(ext => ext.toUpperCase()).join(', ')}`);
-                continue;
+                return; 
             }
 
-            // Добавляем валидный, не дублирующийся файл
-            currentFilesDataTransfer.items.add(file);
-            existingFileNames.add(file.name); // Добавляем имя в сет
+            const reader = new FileReader();
             
-            // --- ГЕНЕРАЦИЯ И ВСТАВКА HTML --- 
-            const dragHandleHTML = `<div class="drag-handle-mock"><span></span><span></span><span></span><span></span><span></span><span></span></div>`;
-            const actionsHTML = `
-                <div class="file-actions">
-                     <button type="button" class="edit-file-btn" data-filename="${CSS.escape(file.name)}" title="Редактировать (пока не реализовано)" style="display:none;"><img src="{% static 'accounts/images/creat_startup/edit_icon.svg' %}" alt="Edit"></button>
-                     <button type="button" class="remove-file-btn" data-filename="${CSS.escape(file.name)}" title="Удалить"><img src="{% static 'accounts/images/creat_startup/delete_icon.svg' %}" alt="Delete"></button>
-                 </div>`;
+            reader.onload = function(e) {
+                const isImage = file.type.startsWith('image/');
+                const previewSrc = isImage && e.target.result ? e.target.result : creatStartupStaticUrl + 'docimage.png';
+                const imageClass = isImage ? 'preview-image' : 'file-icon';
 
-            const previewItemHTML = `
-                <div class="file-preview-item" data-filename="${CSS.escape(file.name)}">
-                    ${dragHandleHTML}
-                    <img src="{% static 'accounts/images/creat_startup/docimage.png' %}" alt="file preview icon" class="file-icon preview-image">
-                    <p class="file-name">${file.name}</p>
-                    ${actionsHTML}
-                </div>`;
-            
-            // Вставляем HTML в DOM
-            if (!fileInput.multiple) { 
-                previewArea.innerHTML = previewItemHTML; 
-            } else { 
-                 previewArea.insertAdjacentHTML('beforeend', previewItemHTML);
+                const dragHandleHTML = `<div class="drag-handle-mock"><span></span><span></span><span></span><span></span><span></span><span></span></div>`;
+                const actionsHTML = `
+                    <div class="file-actions">
+                        <button type="button" class="edit-file-btn" aria-label="Редактировать">
+                            <img src="${creatStartupStaticUrl}edit_icon.svg" alt="Редактировать">
+                        </button>
+                        <button type="button" class="delete-file-btn" aria-label="Удалить">
+                            <img src="${creatStartupStaticUrl}delete_icon.svg" alt="Удалить">
+                        </button>
+                    </div>`;
+
+                const previewItemHTML = `
+                    <div class="file-preview-item" draggable="true" data-filename="${CSS.escape(file.name)}">
+                        ${dragHandleHTML}
+                        <div class="file-info">
+                            <img src="${previewSrc}" alt="${file.name}" class="${imageClass}">
+                            <p class="file-name">${file.name}</p>
+                        </div>
+                        ${actionsHTML}
+                    </div>`;
+
+                if (!isMultiple) {
+                    previewArea.innerHTML = previewItemHTML;
+                } else {
+                    previewArea.insertAdjacentHTML('beforeend', previewItemHTML);
+                }
+                updateFileActionButtonsState(previewAreaId); 
+            };
+
+            if (file.type.startsWith('image/')) {
+                reader.readAsDataURL(file);
+            } else {
+                reader.onload({ target: { result: null } }); 
             }
-            // --- КОНЕЦ ВСТАВКИ HTML --- 
-        }
-        // Обновляем fileInput.files ТОЛЬКО В КОНЦЕ, после всех проверок
-        fileInput.files = currentFilesDataTransfer.files;
+        });
 
-        // Сбрасываем ошибку с кнопки, если она была
-        const uploadButton = fileInput.closest('.upload-box').querySelector('.custom-file-upload-button');
-        if (uploadButton) {
-             uploadButton.classList.remove('input-error'); 
+        if (fileInput) {
+             fileInput.dataset.hadFile = previewArea.children.length > 0 ? 'true' : 'false';
         }
+        updateFileActionButtonsState(previewAreaId);
     }
     
     // Удаление файла из превью и из fileInput.files (Обновлено)
@@ -740,6 +746,70 @@ document.addEventListener('DOMContentLoaded', function() {
         spinDown.addEventListener('click', () => {
             valuationInput.stepDown();
         });
+    }
+
+    // Обновление состояния кнопок редактирования/удаления
+    function updateFileActionButtonsState(previewAreaId) {
+        const previewArea = document.getElementById(previewAreaId);
+        if (!previewArea) return;
+
+        const items = previewArea.querySelectorAll('.file-preview-item');
+        items.forEach(item => {
+            const editBtn = item.querySelector('.edit-file-btn');
+            const deleteBtn = item.querySelector('.delete-file-btn');
+            const fileName = item.dataset.filename; 
+
+            if (editBtn) {
+                editBtn.style.display = 'none'; // Функционал редактирования пока не реализован
+                // editBtn.onclick = () => { /* Логика редактирования файла fileName */ };
+            }
+            if (deleteBtn) {
+                deleteBtn.onclick = () => {
+                    item.remove();
+                    const inputId = previewAreaId.replace('-preview-area', '');
+                    const fileInput = document.getElementById(inputId);
+                    
+                    // Обновляем FileList в input
+                    if (fileInput) {
+                        const dt = new DataTransfer();
+                        const remainingItems = previewArea.querySelectorAll('.file-preview-item');
+                        remainingItems.forEach(remainingItem => {
+                            // Нам нужен оригинальный File объект. Это сложно без его хранения.
+                            // Вместо этого, мы должны найти его в fileInput.files по имени (если он там есть).
+                            // Однако, fileInput.files может быть уже неактуален, если файлы добавлялись через drag-n-drop и присваивались.
+                            // Простой вариант: если файлов не осталось, очистить input.
+                            // Более сложный: при добавлении хранить File объекты где-то.
+                        });
+                        // Для упрощения, если в превью ничего нет, очищаем инпут
+                        if (previewArea.children.length === 0) {
+                            fileInput.value = ""; 
+                            if (fileInput.dataset.hadFile) fileInput.dataset.hadFile = 'false';
+                        }
+                    }
+
+                    checkPlaceholderVisibility(previewAreaId.replace('-preview-area', '-upload-area'));
+                    updateFileActionButtonsState(previewAreaId); // Обновить состояние на случай, если удалили не все
+                };
+            }
+        });
+    }
+    
+    // Показываем/скрываем плейсхолдер
+    function checkPlaceholderVisibility(dropAreaId) {
+        const dropArea = document.getElementById(dropAreaId);
+        if (!dropArea) return;
+
+        const previewAreaId = dropAreaId.replace('-upload-area', '-preview-area');
+        const previewArea = document.getElementById(previewAreaId);
+        const placeholder = dropArea.querySelector('.upload-placeholder');
+
+        if (placeholder && previewArea) {
+            if (previewArea.children.length > 0) {
+                placeholder.style.display = 'none';
+            } else {
+                placeholder.style.display = 'flex'; 
+            }
+        }
     }
 
 });
