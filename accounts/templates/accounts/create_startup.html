@@ -380,19 +380,130 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- ОБНОВЛЕННАЯ Обработка отправки формы --- 
     const startupForm = document.getElementById('startupForm');
     if (startupForm) {
+        // Helper function to create and display error messages
+        function displayValidationMessage(element, message, fieldType = 'input') {
+            // Remove existing error for this element
+            const parentGroup = element.closest('.form-group, .upload-box, .logo-upload-group');
+            let existingErrorMsg = null;
+            if (parentGroup) {
+                existingErrorMsg = parentGroup.querySelector('.custom-validation-error.field-specific-error');
+            } else {
+                // For elements not in a group, check next sibling (less common)
+                if (element.nextElementSibling && element.nextElementSibling.classList.contains('custom-validation-error')){
+                    existingErrorMsg = element.nextElementSibling;
+                }
+            }
+            if (existingErrorMsg) {
+                existingErrorMsg.remove();
+            }
+
+            const errorMsg = document.createElement('p');
+            errorMsg.className = 'error-message custom-validation-error field-specific-error'; // Added field-specific-error
+            errorMsg.textContent = message;
+
+            if (parentGroup) {
+                parentGroup.appendChild(errorMsg); // Append error inside the group for better structure
+                if (fieldType === 'fileButton' && element.classList.contains('custom-file-upload-button')) {
+                    element.classList.add('input-error');
+                } else if (element.type !== 'checkbox') { // Don't add to checkbox input itself
+                     element.classList.add('input-error');
+                }
+                // For custom checkboxes, the error highlighting is handled by adding .input-error to parentGroup
+            } else {
+                // Fallback: insert after the element if no parentGroup found
+                element.parentNode.insertBefore(errorMsg, element.nextSibling);
+                element.classList.add('input-error');
+            }
+            return errorMsg; // Return the error message element for scrollIntoView
+        }
+
         startupForm.addEventListener('submit', function(e) {
-            let firstInvalidElement = null;
+            let firstInvalidElementOrGroup = null;
             let validationPassed = true;
 
             // Сброс предыдущих ошибок
             document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
-            document.querySelectorAll('.custom-validation-error').forEach(el => el.remove());
-            document.querySelectorAll('.file-upload-area').forEach(el => el.classList.remove('input-error'));
-            document.querySelectorAll('.upload-box .custom-file-upload-button').forEach(el => el.classList.remove('input-error'));
-            document.querySelectorAll('.checkbox-group').forEach(el => el.classList.remove('input-error'));
+            document.querySelectorAll('.custom-validation-error').forEach(el => el.remove()); 
+            // document.querySelectorAll('.file-upload-area').forEach(el => el.classList.remove('input-error')); // .file-upload-area не используется как основной класс для ошибок
+            // document.querySelectorAll('.upload-box .custom-file-upload-button').forEach(el => el.classList.remove('input-error')); // Сброс выше
+            // document.querySelectorAll('.checkbox-group').forEach(el => el.classList.remove('input-error')); // Сброс выше
             document.querySelectorAll('.timeline-step .step-number-wrapper').forEach(el => el.classList.remove('error-step'));
 
-            // 1. Валидация описаний этапов таймлайна
+            // --- Валидация всех обязательных полей --- 
+            const requiredFields = [
+                // Текстовые поля и textarea
+                { id: '{{ form.title.id_for_label }}', name: 'Название стартапа', type: 'text' },
+                { id: '{{ form.funding_goal.id_for_label }}', name: 'Цель финансирования', type: 'text' }, // или number
+                { id: '{{ form.short_description.id_for_label }}', name: 'Вводная', type: 'textarea' },
+                { id: '{{ form.description.id_for_label }}', name: 'Описание', type: 'textarea' },
+                { id: '{{ form.terms.id_for_label }}', name: 'Условия', type: 'textarea' },
+
+                // Select поля (проверка на выбранное значение)
+                { id: '{{ form.direction.id_for_label }}', name: 'Направление', type: 'select' },
+                { id: '{{ form.stage.id_for_label }}', name: 'Стадия', type: 'select' },
+
+                // Файловые поля
+                // { id: 'id_logo_input', name: 'Логотип', type: 'file', required: true }, // Если лого обязателен
+                { id: 'id_creatives_input', name: 'Изображения', type: 'file', required: true },
+                { id: 'id_video_input', name: 'Видео', type: 'file', required: true },
+                // { id: 'id_proofs_input', name: 'Документы', type: 'file', required: true }, // Уже валидируется ниже отдельно
+            ];
+
+            for (const field of requiredFields) {
+                const element = document.getElementById(field.id);
+                if (element) {
+                    let isInvalid = false;
+                    if (field.type === 'text' || field.type === 'textarea') {
+                        if (!element.value.trim()) {
+                            isInvalid = true;
+                        }
+                    } else if (field.type === 'select') {
+                        if (element.value === '' || element.value === null) { // Или специфичное значение для "не выбрано"
+                            isInvalid = true;
+                        }
+                    } else if (field.type === 'file' && field.required) {
+                        if (element.files.length === 0) {
+                            isInvalid = true;
+                        }
+                    }
+
+                    if (isInvalid) {
+                        validationPassed = false;
+                        const errorElement = displayValidationMessage(element, `Пожалуйста, заполните поле "${field.name}".`);
+                        if (!firstInvalidElementOrGroup) {
+                            firstInvalidElementOrGroup = errorElement.closest('.form-group, .upload-box, .logo-upload-group') || errorElement;
+                        }
+                        // Для файловых полей, если кнопка кастомная
+                        if (field.type === 'file') {
+                            const parentBox = element.closest('.upload-box, .logo-upload-group');
+                            const uploadButton = parentBox ? parentBox.querySelector('.custom-file-upload-button, .logo-placeholder') : null;
+                            if (uploadButton) {
+                                uploadButton.classList.add('input-error');
+                                if (!firstInvalidElementOrGroup || firstInvalidElementOrGroup === errorElement) { // Если еще не установлено или это ошибка самого поля
+                                     firstInvalidElementOrGroup = uploadButton;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Валидация Логотипа (если он обязателен - раскомментировать и настроить required в requiredFields)
+            const logoInput = document.getElementById('id_logo_input');
+            const logoLabel = document.querySelector('label[for="id_logo_input"]'); // Предполагая, что у лейбла есть for
+            // Пример: если лого обязателен, ищем звездочку в label или явно указываем
+            // if (logoInput && logoLabel && logoLabel.textContent.includes('*')) { 
+            //     if (logoInput.files.length === 0) {
+            //         validationPassed = false;
+            //         const logoPlaceholder = document.getElementById('logoPlaceholder');
+            //         const errorEl = displayValidationMessage(logoPlaceholder || logoInput, 'Пожалуйста, загрузите логотип.');
+            //         if (logoPlaceholder) logoPlaceholder.classList.add('input-error');
+            //         else logoInput.classList.add('input-error');
+            //         if (!firstInvalidElementOrGroup) firstInvalidElementOrGroup = logoPlaceholder || logoInput;
+            //     }
+            // }
+
+            // 1. Валидация описаний этапов таймлайна (оставляем существующую логику)
             const timelineTextareas = startupForm.querySelectorAll('textarea.timeline-description-textarea');
             let timelineErrorDisplayed = false;
             let firstTimelineErrorTextarea = null;
@@ -425,7 +536,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                  timelineWrapper.insertBefore(errorMsg, timelineWrapper.firstChild);
                              }
                             timelineErrorDisplayed = true;
-                            if (!firstInvalidElement) firstInvalidElement = timelineWrapper; // Скролл к обертке
+                            if (!firstInvalidElementOrGroup) firstInvalidElementOrGroup = timelineWrapper; // Скролл к обертке
                         }
                     }
                 }
@@ -434,66 +545,42 @@ document.addEventListener('DOMContentLoaded', function() {
             if (firstTimelineErrorTextarea) {
                 const stepNumberToShow = firstTimelineErrorTextarea.closest('.timeline-description-container').dataset.stepContent;
                 selectStepDescription(stepNumberToShow);
-                if (!firstInvalidElement) firstInvalidElement = firstTimelineErrorTextarea;
+                if (!firstInvalidElementOrGroup) firstInvalidElementOrGroup = firstTimelineErrorTextarea;
             }
 
-            // 2. Валидация поля "Пруфы"
+            // 2. Валидация поля "Документы" (Пруфы) (оставляем существующую)
             const proofsInput = document.getElementById('id_proofs_input');
-            const proofsLabel = document.querySelector('label[for="id_proofs_input"]');
+            const proofsLabelText = document.querySelector('label[for="id_proofs_input"]')?.textContent || '';
             const proofsUploadButton = proofsInput?.closest('.upload-box')?.querySelector('.custom-file-upload-button');
-            if (proofsInput && proofsLabel && proofsLabel.textContent.includes('*')) { 
+            if (proofsInput && proofsLabelText.includes('*')) { 
                 if (proofsInput.files.length === 0) {
                     validationPassed = false;
-                    if(proofsUploadButton) proofsUploadButton.classList.add('input-error');
-                    else proofsInput.classList.add('input-error');
-                    
-                    if (!firstInvalidElement) firstInvalidElement = proofsUploadButton || proofsInput;
-                    
-                    const proofsBox = proofsInput.closest('.upload-box');
-                    if (proofsBox && !proofsBox.querySelector('.custom-validation-error.proofs-error')) {
-                        const errorMsg = document.createElement('p');
-                        errorMsg.className = 'error-message custom-validation-error proofs-error';
-                        errorMsg.textContent = 'Пожалуйста, загрузите подтверждающие документы (Документы).';
-                        // Вставляем после small-text
-                        const smallText = proofsBox.querySelector('.small-text');
-                        if (smallText) {
-                             smallText.parentNode.insertBefore(errorMsg, smallText.nextSibling);
-                        } else {
-                            proofsBox.appendChild(errorMsg);
-                        }
-                    }
+                    const errorEl = displayValidationMessage(proofsUploadButton || proofsInput, 'Пожалуйста, загрузите Документы.', proofsUploadButton ? 'fileButton' : 'file');
+                    if (!firstInvalidElementOrGroup) firstInvalidElementOrGroup = proofsUploadButton || proofsInput;
                 }
             }
             
-            // 3. Валидация чекбокса "Согласие с правилами"
+            // 3. Валидация чекбокса "Согласие с правилами" (оставляем существующую)
             const agreeRulesCheckbox = document.getElementById('id_agree_rules');
-            if (agreeRulesCheckbox && !agreeRulesCheckbox.checked) {
-                validationPassed = false;
-                const parentDiv = agreeRulesCheckbox.closest('.checkbox-group');
-                if(parentDiv) parentDiv.classList.add('input-error');
-
-                if (!firstInvalidElement) firstInvalidElement = parentDiv || agreeRulesCheckbox;
-                if (parentDiv && !parentDiv.querySelector('.custom-validation-error.agree-rules-error')) {
-                    const errorMsg = document.createElement('p');
-                    errorMsg.className = 'error-message custom-validation-error agree-rules-error';
-                    errorMsg.textContent = 'Необходимо подтвердить согласие с правилами.';
-                    parentDiv.appendChild(errorMsg); 
+            if (agreeRulesCheckbox && (document.querySelector('label[for="id_agree_rules"] span.checkbox-text')?.textContent?.includes('*') || true)) { // Убрал includes('*') т.к. по логике они обязательны
+                if(!agreeRulesCheckbox.checked){
+                    validationPassed = false;
+                    const parentDiv = agreeRulesCheckbox.closest('.checkbox-group');
+                    const errorEl = displayValidationMessage(parentDiv || agreeRulesCheckbox, 'Необходимо подтвердить согласие с правилами.', 'checkbox');
+                    if(parentDiv) parentDiv.classList.add('input-error');
+                    if (!firstInvalidElementOrGroup) firstInvalidElementOrGroup = parentDiv || agreeRulesCheckbox;
                 }
             }
 
-            // 4. Валидация чекбокса "Согласие на обработку данных"
+            // 4. Валидация чекбокса "Согласие на обработку данных" (оставляем существующую)
             const agreeDataProcessingCheckbox = document.getElementById('id_agree_data_processing');
-            if (agreeDataProcessingCheckbox && !agreeDataProcessingCheckbox.checked) {
-                validationPassed = false;
-                const parentDiv = agreeDataProcessingCheckbox.closest('.checkbox-group');
-                if(parentDiv) parentDiv.classList.add('input-error');
-                
-                if (!firstInvalidElement) firstInvalidElement = parentDiv || agreeDataProcessingCheckbox;
-                if (parentDiv && !parentDiv.querySelector('.custom-validation-error.agree-data-error')) {
-                    const errorMsg = document.createElement('p');
-                    errorMsg.className = 'error-message custom-validation-error agree-data-error';
-                    errorMsg.textContent = 'Необходимо подтвердить согласие на обработку персональных данных.';
-                    parentDiv.appendChild(errorMsg);
+            if (agreeDataProcessingCheckbox && (document.querySelector('label[for="id_agree_data_processing"] span.checkbox-text')?.textContent?.includes('*') || true )) { // Убрал includes('*')
+                if(!agreeDataProcessingCheckbox.checked){
+                    validationPassed = false;
+                    const parentDiv = agreeDataProcessingCheckbox.closest('.checkbox-group');
+                    const errorEl = displayValidationMessage(parentDiv || agreeDataProcessingCheckbox, 'Необходимо подтвердить согласие на обработку персональных данных.', 'checkbox');
+                    if(parentDiv) parentDiv.classList.add('input-error');
+                    if (!firstInvalidElementOrGroup) firstInvalidElementOrGroup = parentDiv || agreeDataProcessingCheckbox;
                 }
             }
 
@@ -505,23 +592,23 @@ document.addEventListener('DOMContentLoaded', function() {
                     submitButton.disabled = false;
                     submitButton.textContent = 'Отправить на модерацию';
                 }
-                if (firstInvalidElement) {
+                if (firstInvalidElementOrGroup) {
                     // Проверяем, является ли первый невалидный элемент текстовым полем таймлайна
-                    if (firstInvalidElement.classList && firstInvalidElement.classList.contains('timeline-description-textarea')){
-                        const container = firstInvalidElement.closest('.timeline-description-container');
+                    if (firstInvalidElementOrGroup.classList && firstInvalidElementOrGroup.classList.contains('timeline-description-textarea')){
+                        const container = firstInvalidElementOrGroup.closest('.timeline-description-container');
                         // Если контейнер активен (виден), скроллим к полю
                         if (container && container.classList.contains('active')){
-                             firstInvalidElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                             firstInvalidElementOrGroup.scrollIntoView({ behavior: 'smooth', block: 'center' });
                         } else { // Иначе скроллим к началу секции таймлайна
                            const timelineWrapper = document.querySelector('.timeline-section-wrapper');
                            if (timelineWrapper) {
                                timelineWrapper.scrollIntoView({ behavior: 'smooth', block: 'start' }); // Скролл к началу секции
                            }
                         }
-                    } else if (firstInvalidElement.closest('.timeline-section-wrapper')) { // Если ошибка в заголовке таймлайна
-                         firstInvalidElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    } else if (firstInvalidElementOrGroup.closest('.timeline-section-wrapper')) { // Если ошибка в заголовке таймлайна
+                         firstInvalidElementOrGroup.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     } else { // Для всех остальных ошибок
-                        firstInvalidElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        firstInvalidElementOrGroup.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     }
                 }
                 return false;
