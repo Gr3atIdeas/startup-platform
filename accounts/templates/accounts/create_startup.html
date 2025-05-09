@@ -24,7 +24,7 @@
                         <label for="{{ form.logo.id_for_label }}" class="logo-upload-label">
                             <div class="logo-placeholder" id="logoPlaceholder">
                                 <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Upload Logo Icon">
-                                <span>Загрузить логотип</span>
+                                <span>*Загрузить логотип</span>
                             </div>
                             <img src="" alt="Логотип" class="logo-preview" id="logoPreview" style="display:none;">
                         </label>
@@ -443,10 +443,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 { id: '{{ form.stage.id_for_label }}', name: 'Стадия', type: 'select' },
 
                 // Файловые поля
-                // { id: 'id_logo_input', name: 'Логотип', type: 'file', required: true }, // Если лого обязателен
+                { id: 'id_logo_input', name: 'Логотип', type: 'file', required: true }, 
                 { id: 'id_creatives_input', name: 'Изображения', type: 'file', required: true },
                 { id: 'id_video_input', name: 'Видео', type: 'file', required: true },
-                // { id: 'id_proofs_input', name: 'Документы', type: 'file', required: true }, // Уже валидируется ниже отдельно
+                // { id: 'id_proofs_input', name: 'Документы', type: 'file', required: true }, // Валидируется ниже отдельно
             ];
 
             for (const field of requiredFields) {
@@ -487,21 +487,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 }
             }
-
-            // Валидация Логотипа (если он обязателен - раскомментировать и настроить required в requiredFields)
-            const logoInput = document.getElementById('id_logo_input');
-            const logoLabel = document.querySelector('label[for="id_logo_input"]'); // Предполагая, что у лейбла есть for
-            // Пример: если лого обязателен, ищем звездочку в label или явно указываем
-            // if (logoInput && logoLabel && logoLabel.textContent.includes('*')) { 
-            //     if (logoInput.files.length === 0) {
-            //         validationPassed = false;
-            //         const logoPlaceholder = document.getElementById('logoPlaceholder');
-            //         const errorEl = displayValidationMessage(logoPlaceholder || logoInput, 'Пожалуйста, загрузите логотип.');
-            //         if (logoPlaceholder) logoPlaceholder.classList.add('input-error');
-            //         else logoInput.classList.add('input-error');
-            //         if (!firstInvalidElementOrGroup) firstInvalidElementOrGroup = logoPlaceholder || logoInput;
-            //     }
-            // }
 
             // 1. Валидация описаний этапов таймлайна (оставляем существующую логику)
             const timelineTextareas = startupForm.querySelectorAll('textarea.timeline-description-textarea');
