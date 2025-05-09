@@ -663,6 +663,18 @@ document.addEventListener('DOMContentLoaded', function() {
         const previewArea = document.getElementById(previewAreaId);
         const existingFileCount = previewArea.children.length;
 
+        // Удаляем предыдущие ошибки для этого поля загрузки
+        const dropArea = fileInput.closest('.upload-box, .logo-upload-group');
+        if (dropArea) {
+            const existingError = dropArea.querySelector('.custom-validation-error.file-specific-upload-error');
+            if (existingError) {
+                existingError.remove();
+            }
+            const uploadButton = dropArea.querySelector('.custom-file-upload-button');
+            if (uploadButton) uploadButton.classList.remove('input-error');
+            else dropArea.classList.remove('input-error');
+        }
+
         console.log(`handleFiles called for inputId: ${inputId}. Received ${files.length} files. IsMultiple: ${isMultiple}, MaxFiles: ${maxFiles}, ExistingFilesInPreview: ${existingFileCount}`);
 
         if (!isMultiple) {
@@ -781,6 +793,40 @@ document.addEventListener('DOMContentLoaded', function() {
              console.log(`Finished processing for ${inputId}. Preview area has ${previewArea.children.length} items. hadFile: ${fileInput.dataset.hadFile}`);
         }
         updateFileActionButtonsState(previewAreaId);
+
+        // Микроинвестиции
+        const microInvestmentCheckbox = document.getElementById('id_micro_investment_available');
+        if (microInvestmentCheckbox) {
+            const label = microInvestmentCheckbox.closest('.micro-investment-label-custom'); // Ищем родительский label
+            if (!label) {
+                console.error('Label for micro-investment checkbox not found correctly');
+                return;
+            }
+            const visualSpan = label.querySelector('#microInvestmentVisual'); // Ищем span по ID
+            if (!visualSpan) {
+                console.error('Visual span #microInvestmentVisual for micro-investment checkbox not found');
+                return;
+            }
+            const uncheckedVisual = visualSpan.querySelector('.custom-checkbox-unchecked');
+            const checkedVisual = visualSpan.querySelector('.custom-checkbox-checked');
+            
+            if (uncheckedVisual && checkedVisual) { 
+                const updateMicroIcons = () => {
+                    console.log('MicroInv checkbox changed, checked:', microInvestmentCheckbox.checked);
+                    if (microInvestmentCheckbox.checked) {
+                        uncheckedVisual.style.display = 'none';
+                        checkedVisual.style.display = 'block'; // или inline-block
+                    } else {
+                        uncheckedVisual.style.display = 'block'; // или inline-block
+                        checkedVisual.style.display = 'none';
+                    }
+                };
+                updateMicroIcons(); // Устанавливаем начальное состояние
+                microInvestmentCheckbox.addEventListener('change', updateMicroIcons);
+            } else {
+                console.error('Unchecked/Checked visual elements not found inside #microInvestmentVisual');
+            }
+        }
     }
     
     // Удаление файла из превью и из fileInput.files (Обновлено)
@@ -850,26 +896,73 @@ document.addEventListener('DOMContentLoaded', function() {
         // Микроинвестиции
         const microInvestmentCheckbox = document.getElementById('id_micro_investment_available');
         if (microInvestmentCheckbox) {
-            const label = microInvestmentCheckbox.nextElementSibling; 
-            const uncheckedVisual = label?.querySelector('#microInvestmentVisual .custom-checkbox-unchecked');
-            const checkedVisual = label?.querySelector('#microInvestmentVisual .custom-checkbox-checked');
-
-            if (uncheckedVisual && checkedVisual) {
+            const label = microInvestmentCheckbox.closest('.micro-investment-label-custom'); // Ищем родительский label
+            if (!label) {
+                console.error('Label for micro-investment checkbox not found correctly');
+                return;
+            }
+            const visualSpan = label.querySelector('#microInvestmentVisual'); // Ищем span по ID
+            if (!visualSpan) {
+                console.error('Visual span #microInvestmentVisual for micro-investment checkbox not found');
+                return;
+            }
+            const uncheckedVisual = visualSpan.querySelector('.custom-checkbox-unchecked');
+            const checkedVisual = visualSpan.querySelector('.custom-checkbox-checked');
+            
+            if (uncheckedVisual && checkedVisual) { 
                 const updateMicroIcons = () => {
+                    console.log('MicroInv checkbox changed, checked:', microInvestmentCheckbox.checked);
                     if (microInvestmentCheckbox.checked) {
                         uncheckedVisual.style.display = 'none';
-                        checkedVisual.style.display = 'block';
+                        checkedVisual.style.display = 'block'; // или inline-block
                     } else {
-                        uncheckedVisual.style.display = 'block';
+                        uncheckedVisual.style.display = 'block'; // или inline-block
                         checkedVisual.style.display = 'none';
                     }
                 };
-                updateMicroIcons();
+                updateMicroIcons(); // Устанавливаем начальное состояние
                 microInvestmentCheckbox.addEventListener('change', updateMicroIcons);
+            } else {
+                console.error('Unchecked/Checked visual elements not found inside #microInvestmentVisual');
             }
         }
     }
     setupCustomCheckboxes();
+
+    // --- Translate Direction Options --- 
+    function translateDirectionOptions() {
+        const directionSelect = document.getElementById('{{ form.direction.id_for_label }}');
+        if (!directionSelect) {
+            console.error('Direction select field not found for translation.');
+            return;
+        }
+
+        const translations = {
+            "Medicine": "Медицина",
+            "Auto": "Автомобили",
+            "Delivery": "Доставка",
+            "Cafe": "Кафе/рестораны",
+            "Fastfood": "Фастфуд",
+            "Health": "Здоровье",
+            "Beauty": "Красота",
+            "Transport": "Транспорт",
+            "Sport": "Спорт",
+            "Psychology": "Психология",
+            "AI": "ИИ",
+            "Finance": "Финансы",
+            "Healthcare": "Здравоохранение",
+            "Technology": "Технологии"
+            // Добавьте другие переводы по аналогии, если необходимо
+        };
+
+        Array.from(directionSelect.options).forEach(option => {
+            const originalValue = option.textContent.trim(); // или option.value, если value содержит англ. название
+            if (translations[originalValue]) {
+                option.textContent = translations[originalValue];
+            }
+        });
+    }
+    translateDirectionOptions();
 
     // --- Spin buttons for Valuation --- (Добавлено)
     const valuationInput = document.querySelector('.valuation-input input[type="number"]');

@@ -239,6 +239,9 @@ body {
     -webkit-appearance: none;
     -moz-appearance: none;
     padding-right: 35px; /* Место для стрелки */
+    /* width: 24px; */
+    /* height: 24px; */
+    /* margin-right: 10px; */
 }
 
 .select-arrow {
@@ -583,7 +586,7 @@ h3.section-title {
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    background-color: #000000; /* По умолчанию черный фон для всех */
+    background-color: #333333; /* ИЗМЕНЕНО: Серый фон по умолчанию для неактивных */
     background-image: none; 
     position: relative; 
     z-index: 1; 
@@ -623,11 +626,11 @@ h3.section-title {
 }
 .timeline-step[data-step="4"] .step-number-wrapper.active {
     background-color: #000000; /* Остается черным, даже если активен, согласно макету */
-    /* background-image: none; /* Явно убираем градиент, если он мог наследоваться */
+    background-image: none; /* Явно убираем градиент */
 }
 .timeline-step[data-step="5"] .step-number-wrapper.active {
     background-color: #000000; /* Остается черным, даже если активен, согласно макету */
-    /* background-image: none; */
+    background-image: none; /* Явно убираем градиент */
 }
 
 /* Активный этап для отображения описания (добавляет свечение) */
@@ -1108,8 +1111,8 @@ h3.section-title {
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    background-color: #000000; /* По умолчанию черный фон для всех */
-    background-image: none; /* Убираем градиент по умолчанию */
+    background-color: #333333; /* ИЗМЕНЕНО: Серый фон по умолчанию для неактивных */
+    background-image: none; 
     position: relative; 
     z-index: 1; 
     margin-bottom: 8px; 
@@ -1148,11 +1151,11 @@ h3.section-title {
 }
 .timeline-step[data-step="4"] .step-number-wrapper.active {
     background-color: #000000; /* Остается черным, даже если активен, согласно макету */
-    /* background-image: none; /* Явно убираем градиент, если он мог наследоваться */
+    background-image: none; /* Явно убираем градиент */
 }
 .timeline-step[data-step="5"] .step-number-wrapper.active {
     background-color: #000000; /* Остается черным, даже если активен, согласно макету */
-    /* background-image: none; */
+    background-image: none; /* Явно убираем градиент */
 }
 
 /* Активный этап для отображения описания (добавляет свечение) */
@@ -1204,3 +1207,10 @@ body, .startup-form-container { /* Example, adjust selector as needed */
     box-shadow: 0 0 0 3px #f8f9fa;
 }
 */
+
+/* Стиль для красной надписи ошибки загрузки файла */
+.custom-validation-error.file-specific-upload-error {
+    color: #e74c3c; /* Яркий красный цвет для ошибки */
+    font-size: 0.85rem;
+    margin-top: 5px;
+}
