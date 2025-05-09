@@ -71,9 +71,9 @@
                         <div class="form-group checkbox-group micro-investment-group">
                             {{ form.micro_investment_available|add_class:"form-check-input-hidden"|attr:"id:id_micro_investment_available" }}
                             <label for="id_micro_investment_available" class="form-check-label micro-investment-label-custom">
-                                <span class="custom-checkbox-visual-micro">
-                                    <img src="{% static 'accounts/images/creat_startup/add-circle-outline.svg' %}" alt="micro-investment icon" class="micro-investment-icon unchecked-icon-micro">
-                                    <img src="{% static 'accounts/images/creat_startup/checkmark-circle-blue.svg' %}" alt="micro-investment icon checked" class="micro-investment-icon checked-icon-micro" style="display:none;">
+                                <span class="custom-checkbox-visual" id="microInvestmentVisual">
+                                    <span class="custom-checkbox-unchecked"></span>
+                                    <span class="custom-checkbox-checked"></span>
                                 </span>
                                 <span class="checkbox-text-span">Микроинвестиции доступны</span>
                             </label>
@@ -592,22 +592,41 @@ document.addEventListener('DOMContentLoaded', function() {
         const previewArea = document.getElementById(previewAreaId);
 
         if (!dropArea || !fileInput || !previewArea) {
-            console.error('Элементы не найдены для', inputId, dropAreaId, previewAreaId);
+            console.error('Элементы не найдены для Drag & Drop:', { inputId, dropAreaId, previewAreaId });
             return;
         }
         
-        checkPlaceholderVisibility(dropAreaId); // Первоначальная проверка
+        // Clear file input value before click to ensure change event fires even for the same file
+        const customButton = dropArea.querySelector('.custom-file-upload-button');
+        if (customButton) {
+            customButton.addEventListener('click', () => {
+                console.log(`Clearing fileInput.value for ${inputId} before click.`);
+                fileInput.value = null; // << СБРОС ЗНАЧЕНИЯ ПЕРЕД ОТКРЫТИЕМ ДИАЛОГА
+                // fileInput.click(); // Это уже делается в HTML через onclick
+            });
+        }
+
+        checkPlaceholderVisibility(dropAreaId); 
 
         dropArea.addEventListener('click', (e) => {
-            // Предотвращаем срабатывание, если клик был по кнопке удаления внутри previewArea
             if (e.target.closest('.delete-file-btn') || e.target.closest('.edit-file-btn')) {
                 return;
             }
-            fileInput.click();
+            // Сбрасываем значение перед программным кликом, если клик идет по dropArea, а не по кнопке
+            if (!e.target.closest('.custom-file-upload-button')) {
+                 console.log(`Clearing fileInput.value for ${inputId} via dropArea click.`);
+                 fileInput.value = null;
+                 fileInput.click();
+            }
         });
 
         fileInput.addEventListener('change', (event) => {
-            handleFiles(event.target.files, inputId, previewAreaId, allowedTypesDetails, isMultiple, maxFiles);
+            console.log(`File input ${inputId} CHANGED. Event target files:`, event.target.files);
+            if (event.target.files && event.target.files.length > 0) {
+                handleFiles(event.target.files, inputId, previewAreaId, allowedTypesDetails, isMultiple, maxFiles);
+            } else {
+                console.log(`File input ${inputId} changed, but no files selected or files array is empty.`);
+            }
             checkPlaceholderVisibility(dropAreaId);
         });
 
@@ -830,21 +849,18 @@ document.addEventListener('DOMContentLoaded', function() {
         // Микроинвестиции
         const microInvestmentCheckbox = document.getElementById('id_micro_investment_available');
         if (microInvestmentCheckbox) {
-            const label = microInvestmentCheckbox.nextElementSibling; // Предполагаем, что label идет сразу за input
-            const uncheckedIconMicro = label?.querySelector('.unchecked-icon-micro');
-            const checkedIconMicro = label?.querySelector('.checked-icon-micro');
+            const label = microInvestmentCheckbox.nextElementSibling; 
+            const uncheckedVisual = label?.querySelector('#microInvestmentVisual .custom-checkbox-unchecked');
+            const checkedVisual = label?.querySelector('#microInvestmentVisual .custom-checkbox-checked');
 
-            if (uncheckedIconMicro && checkedIconMicro) {
+            if (uncheckedVisual && checkedVisual) {
                 const updateMicroIcons = () => {
                     if (microInvestmentCheckbox.checked) {
-                        uncheckedIconMicro.style.display = 'none';
-                        checkedIconMicro.style.display = 'inline-block';
-                        // Применяем синий цвет через filter (если иконка не синяя по умолчанию)
-                        // checkedIconMicro.style.filter = 'invert(30%) sepia(80%) saturate(2500%) hue-rotate(190deg) brightness(90%) contrast(100%)'; 
+                        uncheckedVisual.style.display = 'none';
+                        checkedVisual.style.display = 'block';
                     } else {
-                        uncheckedIconMicro.style.display = 'inline-block';
-                        checkedIconMicro.style.display = 'none';
-                        // checkedIconMicro.style.filter = 'none'; 
+                        uncheckedVisual.style.display = 'block';
+                        checkedVisual.style.display = 'none';
                     }
                 };
                 updateMicroIcons();

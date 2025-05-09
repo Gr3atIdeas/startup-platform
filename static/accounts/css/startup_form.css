@@ -576,43 +576,60 @@ h3.section-title {
     width: 122px; /* Ширина шага равна ширине иконки */
 }
 
-.step-number-wrapper { /* Обертка для SVG иконки этапа */
+.step-number-wrapper {
     width: 122px; 
     height: 122px; 
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    background-color: #1E1E1E; /* Фон страницы, чтобы линия проходила "за" иконкой */
+    background-color: #000000; /* По умолчанию черный фон для всех, включая будущие */
+    background-image: none; /* Убираем градиент по умолчанию */
     position: relative; 
     z-index: 1; 
     margin-bottom: 8px; 
+    transition: background-color 0.3s ease, background-image 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.step-number-wrapper.active {
-    /* Стили для активного/пройденного этапа остаются как есть или корректируются по дизайну */
-}
 .step-number-wrapper .step-icon {
-    width: 100%; /* Иконка занимает всю обертку */
+    width: 100%; 
     height: 100%; 
-    object-fit: contain; /* Чтобы SVG не искажался */
+    object-fit: contain; 
+    filter: grayscale(100%); /* По умолчанию иконки серые для всех, кроме активных */
+    transition: filter 0.3s ease;
 }
 
-/* Градиенты для этапов (эти стили корректны и должны остаться) */
-.timeline-step[data-step="1"] .step-number-wrapper { background: linear-gradient(307deg, #4392E3 0%, #004E9F 100%); }
-.timeline-step[data-step="2"] .step-number-wrapper { background: linear-gradient(307deg, #7B61FF 0%, #3B1ECA 100%); }
-.timeline-step[data-step="3"] .step-number-wrapper { background: linear-gradient(217deg, #4392E3 0%, #004E9F 100%); }
-.timeline-step[data-step="4"] .step-number-wrapper { background: black; } /* Фон для неактивных/будущих */
-.timeline-step[data-step="5"] .step-number-wrapper { background: black; } /* Фон для неактивных/будущих */
-
-/* Tooltip icon in agreement section - Скрываем его */
-.tooltip-icon-wrapper {
-    display: none !important; /* Скрываем "лишние кружки" */
+/* Стили для активных (пройденных и текущего) этапов */
+.step-number-wrapper.active {
+    filter: none; /* Убираем grayscale для иконки активного этапа */
+}
+.step-number-wrapper.active .step-icon {
+    filter: none; /* Убираем grayscale для иконки активного этапа */
 }
 
-#step-descriptions {
-    margin-top: 30px; /* Отступ от таймлайна до описания */
+.timeline-step[data-step="1"] .step-number-wrapper.active { background-image: linear-gradient(307deg, #4392E3 0%, #004E9F 100%); }
+.timeline-step[data-step="2"] .step-number-wrapper.active { background-image: linear-gradient(307deg, #7B61FF 0%, #3B1ECA 100%); }
+.timeline-step[data-step="3"] .step-number-wrapper.active { background-image: linear-gradient(217deg, #4392E3 0%, #004E9F 100%); }
+/* Для 4 и 5 этапа, если они активны, но должны оставаться черными (как на макете), то градиент не нужен */
+/* Если они должны иметь свой цвет при активности, добавьте сюда background-image */
+.timeline-step[data-step="4"] .step-number-wrapper.active {
+    background-color: #000000; /* Черный, если активен, но дизайн требует черного */
+     /* background-image: linear-gradient(...); если нужен свой цвет для активного 4-го */
 }
+.timeline-step[data-step="5"] .step-number-wrapper.active {
+    background-color: #000000; /* Черный, если активен, но дизайн требует черного */
+    /* background-image: linear-gradient(...); если нужен свой цвет для активного 5-го */
+}
+
+/* Активный этап для отображения описания (добавляет свечение) */
+.timeline-step.active-step-display .step-number-wrapper {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(255, 239, 43, 0.7); /* Желтое свечение */
+}
+
+/* Будущие этапы (теперь управляются отсутствием .active и начальными стилями .step-number-wrapper) */
+/* .timeline-step.future-step .step-number-wrapper { ... } - больше не нужен, т.к. черный фон и серые иконки по умолчанию */
+/* .timeline-step.future-step .step-icon { ... } - больше не нужен */
 
 .timeline-description-container {
     display: none; /* Скрыт по умолчанию */
@@ -625,6 +642,7 @@ h3.section-title {
     gap: 30px;
     width: 100%; /* << УБЕДИМСЯ, ЧТО КОНТЕЙНЕР ЗАНИМАЕТ 100% */
     box-sizing: border-box; /* << УЧИТЫВАЕМ PADDING И BORDER */
+    overflow: hidden; /* << ДОБАВЛЕНО для предотвращения выпадения контента */
 }
 
 .timeline-description-container.active {
@@ -688,7 +706,9 @@ h3.section-title {
     font-size: 14px;
     line-height: 18px;
     border: 1px solid #D9D9D9;
-    resize: vertical; /* Разрешить изменение размера по вертикали */
+    resize: none; /* << ЗАПРЕТ ИЗМЕНЕНИЯ РАЗМЕРА */
+    box-sizing: border-box; /* << УЧИТЫВАЕМ PADDING И BORDER TEXTAREA */
+    /* overflow: auto; /* Добавим на случай, если текст все же выходит, но это не должно быть нужно с box-sizing */
 }
 
 .timeline-description-textarea::placeholder {
@@ -929,18 +949,18 @@ h3.section-title {
     cursor: pointer;
 }
 
-.custom-checkbox-visual-micro {
-    margin-right: 8px;
-    display: inline-flex; 
-    align-items: center;
-    justify-content: center;
-    width: 24px; /* Match icon size */
-    height: 24px; /* Match icon size */
-}
+/* Удаляем стили для .custom-checkbox-visual-micro и его содержимого, 
+   так как теперь используется общая структура .custom-checkbox-visual 
+   из секции согласий. Убедимся, что общие стили .custom-checkbox-visual 
+   подходят или при необходимости добавляем специфичные для #microInvestmentVisual. */
 
-.custom-checkbox-visual-micro .micro-investment-icon {
-    width: 100%; 
-    height: 100%; 
+/* Пример специфичного стиля для микроинвестиций, если нужно, чтобы он отличался от согласий */
+#microInvestmentVisual {
+    /* Если нужны отличия от .custom-checkbox-visual по умолчанию, добавляем их сюда */
+    /* Например, другие размеры или отступы, если стандартные 20px не подходят */
+    /* width: 24px; */
+    /* height: 24px; */
+    /* margin-right: 10px; */
 }
 
 /* === File Preview Styles === */
@@ -1084,19 +1104,77 @@ h3.section-title {
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    background-color: #1E1E1E; /* Фон страницы, чтобы линия проходила "за" иконкой */
+    background-color: #000000; /* По умолчанию черный фон для всех, включая будущие */
+    background-image: none; /* Убираем градиент по умолчанию */
     position: relative; 
     z-index: 1; 
     margin-bottom: 8px; 
+    transition: background-color 0.3s ease, background-image 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.step-number-wrapper.active {
-    /* Стили для активного/пройденного этапа остаются как есть или корректируются по дизайну */
-}
 .step-number-wrapper .step-icon {
-    width: 100%; /* Иконка занимает всю обертку */
+    width: 100%; 
     height: 100%; 
-    object-fit: contain; /* Чтобы SVG не искажался */
+    object-fit: contain; 
+    filter: grayscale(100%); /* По умолчанию иконки серые для всех, кроме активных */
+    transition: filter 0.3s ease;
+}
+
+/* Стили для активных (пройденных и текущего) этапов */
+.step-number-wrapper.active {
+    filter: none; /* Убираем grayscale для иконки активного этапа */
+}
+.step-number-wrapper.active .step-icon {
+    filter: none; /* Убираем grayscale для иконки активного этапа */
+}
+
+.timeline-step[data-step="1"] .step-number-wrapper.active { background-image: linear-gradient(307deg, #4392E3 0%, #004E9F 100%); }
+.timeline-step[data-step="2"] .step-number-wrapper.active { background-image: linear-gradient(307deg, #7B61FF 0%, #3B1ECA 100%); }
+.timeline-step[data-step="3"] .step-number-wrapper.active { background-image: linear-gradient(217deg, #4392E3 0%, #004E9F 100%); }
+/* Для 4 и 5 этапа, если они активны, но должны оставаться черными (как на макете), то градиент не нужен */
+/* Если они должны иметь свой цвет при активности, добавьте сюда background-image */
+.timeline-step[data-step="4"] .step-number-wrapper.active {
+    background-color: #000000; /* Черный, если активен, но дизайн требует черного */
+     /* background-image: linear-gradient(...); если нужен свой цвет для активного 4-го */
+}
+.timeline-step[data-step="5"] .step-number-wrapper.active {
+    background-color: #000000; /* Черный, если активен, но дизайн требует черного */
+    /* background-image: linear-gradient(...); если нужен свой цвет для активного 5-го */
+}
+
+/* Активный этап для отображения описания (добавляет свечение) */
+.timeline-step.active-step-display .step-number-wrapper {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(255, 239, 43, 0.7); /* Желтое свечение */
+}
+
+/* Будущие этапы (теперь управляются отсутствием .active и начальными стилями .step-number-wrapper) */
+/* .timeline-step.future-step .step-number-wrapper { ... } - больше не нужен, т.к. черный фон и серые иконки по умолчанию */
+/* .timeline-step.future-step .step-icon { ... } - больше не нужен */
+
+.timeline-description-textarea {
+    width: 100%;
+    height: 188px;
+    background: white;
+    border-radius: 10px;
+    padding: 15px;
+    color: black;
+    font-family: Unbounded;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 18px;
+    border: 1px solid #D9D9D9;
+    resize: none; /* << ЗАПРЕТ ИЗМЕНЕНИЯ РАЗМЕРА */
+    box-sizing: border-box; /* << УЧИТЫВАЕМ PADDING И BORDER TEXTAREA */
+    /* overflow: auto; /* Добавим на случай, если текст все же выходит, но это не должно быть нужно с box-sizing */
+}
+
+/* Если контейнер описания все еще вызывает проблемы с шириной */
+.timeline-description-container {
+    /* ... существующие стили ... */
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden; /* << ДОБАВЛЕНО для предотвращения выпадения контента */
 }
 
 /* Ensure the overall form background is considered for the timeline icon cutout */
