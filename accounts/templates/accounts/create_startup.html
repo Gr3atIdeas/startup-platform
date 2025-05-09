@@ -75,7 +75,7 @@
                                     <img src="{% static 'accounts/images/creat_startup/add-circle-outline.svg' %}" alt="micro-investment icon" class="micro-investment-icon unchecked-icon-micro">
                                     <img src="{% static 'accounts/images/creat_startup/checkmark-circle-blue.svg' %}" alt="micro-investment icon checked" class="micro-investment-icon checked-icon-micro" style="display:none;">
                                 </span>
-                                <span class="checkbox-text-span">{{ form.micro_investment_available.label }}</span>
+                                <span class="checkbox-text-span">Микроинвестиции доступны</span>
                             </label>
                             {% if form.micro_investment_available.errors %}<span class="error-message">{{ form.micro_investment_available.errors|first }}</span>{% endif %}
                         </div>
@@ -542,6 +542,49 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // --- Helper function to display file upload errors ---
+    function displayFileUploadError(dropAreaId, message) {
+        const dropArea = document.getElementById(dropAreaId);
+        if (!dropArea) {
+            console.error('Drop area not found for error display:', dropAreaId);
+            return;
+        }
+
+        // Remove existing file-specific error message for this drop area
+        const existingError = dropArea.querySelector('.custom-validation-error.file-specific-upload-error');
+        if (existingError) {
+            existingError.remove();
+        }
+
+        const errorMsgElement = document.createElement('p');
+        errorMsgElement.className = 'error-message custom-validation-error file-specific-upload-error';
+        errorMsgElement.textContent = message;
+
+        // Try to append after the 'small-text' element or the upload button
+        const smallText = dropArea.querySelector('.small-text');
+        const uploadButton = dropArea.querySelector('.custom-file-upload-button');
+
+        if (smallText && smallText.nextSibling) {
+            smallText.parentNode.insertBefore(errorMsgElement, smallText.nextSibling);
+        } else if (smallText) {
+            smallText.parentNode.appendChild(errorMsgElement);
+        } else if (uploadButton && uploadButton.nextSibling) {
+            uploadButton.parentNode.insertBefore(errorMsgElement, uploadButton.nextSibling);
+        } else if (uploadButton) {
+            uploadButton.parentNode.appendChild(errorMsgElement);
+        } else {
+            dropArea.appendChild(errorMsgElement); // Fallback
+        }
+
+        if (uploadButton) {
+            uploadButton.classList.add('input-error');
+        } else {
+            dropArea.classList.add('input-error');
+        }
+        
+        errorMsgElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
     // --- Drag & Drop для файлов (Обновлено для документов) ---
     function setupDragAndDrop(inputId, dropAreaId, previewAreaId, allowedTypesDetails, isMultiple = false, maxFiles = 1) {
         const dropArea = document.getElementById(dropAreaId);
@@ -600,42 +643,66 @@ document.addEventListener('DOMContentLoaded', function() {
         const previewArea = document.getElementById(previewAreaId);
         const existingFileCount = previewArea.children.length;
 
+        console.log(`handleFiles called for inputId: ${inputId}. Received ${files.length} files. IsMultiple: ${isMultiple}, MaxFiles: ${maxFiles}, ExistingFilesInPreview: ${existingFileCount}`);
+
         if (!isMultiple) {
             previewArea.innerHTML = ''; // Очищаем превью для одиночных файлов
+            console.log('Cleared preview area for single file input.');
         }
 
         let filesToProcess = Array.from(files);
+        console.log('Initial filesToProcess count:', filesToProcess.length);
 
         if (isMultiple && (existingFileCount + filesToProcess.length > maxFiles)) {
-            alert(`Можно загрузить не более ${maxFiles} файлов.`);
+            displayFileUploadError(dropAreaId, `Можно загрузить не более ${maxFiles} файлов для этого поля.`);
             filesToProcess = filesToProcess.slice(0, maxFiles - existingFileCount);
+            console.log(`Slicing files for multiple input. New filesToProcess count: ${filesToProcess.length}`);
         } else if (!isMultiple && filesToProcess.length > maxFiles) {
-            alert(`Можно загрузить не более ${maxFiles} файлов.`);
+            displayFileUploadError(dropAreaId, `Можно загрузить не более ${maxFiles} файла для этого поля.`);
             filesToProcess = filesToProcess.slice(0, maxFiles);
+            console.log(`Slicing files for single input (e.g. via drag-drop). New filesToProcess count: ${filesToProcess.length}`);
         }
         
-        // Обновляем files в fileInput, если количество файлов было изменено
-        if (filesToProcess.length < files.length) {
+        // Обновляем files в fileInput, если количество файлов было изменено из-за maxFiles
+        if (filesToProcess.length < Array.from(files).length) {
             const dataTransfer = new DataTransfer();
             filesToProcess.forEach(file => dataTransfer.items.add(file));
-            if (fileInput) fileInput.files = dataTransfer.files;
+            if (fileInput) {
+                fileInput.files = dataTransfer.files;
+                console.log(`Updated fileInput.files for ${inputId} due to maxFiles constraint. New count: ${fileInput.files.length}`);
+            }
         }
 
-
-        filesToProcess.forEach(file => {
+        filesToProcess.forEach((file, index) => {
+            console.log(`Processing file #${index + 1}: ${file.name}, type: ${file.type}, size: ${file.size}`);
             const fileType = file.type;
             const fileName = file.name;
             const fileExtension = fileName.split('.').pop().toLowerCase();
             let isAllowed = false;
 
-            if (allowedTypesDetails.mimes.includes(fileType) && fileType !== '') {
+            if (allowedTypesDetails.mimes.some(mime => fileType.startsWith(mime)) && fileType !== '') {
                 isAllowed = true;
             } else if (allowedTypesDetails.extensions.includes(fileExtension)) {
                 isAllowed = true;
             }
+            
+            console.log(`File ${fileName} - Allowed: ${isAllowed}. Type found: ${fileType}, Ext found: ${fileExtension}. Allowed mimes: ${allowedTypesDetails.mimes.join(',')}, Allowed exts: ${allowedTypesDetails.extensions.join(',')}`);
+
 
             if (!isAllowed) {
-                alert(`Файл "${file.name}" имеет неподдерживаемый тип или расширение. Допустимые форматы: ${allowedTypesDetails.extensions.map(ext => ext.toUpperCase()).join(', ')}`);
+                displayFileUploadError(dropAreaId, `Файл "${file.name}" имеет неподдерживаемый тип или расширение. Допустимые форматы: ${allowedTypesDetails.extensions.map(ext => ext.toUpperCase()).join(', ')}`);
+                console.warn(`File ${file.name} has unsupported type. Skipping.`);
+                // Удаляем этот файл из fileInput.files, если он там оказался (особенно актуально для drag-n-drop)
+                if (fileInput) {
+                    const dt = new DataTransfer();
+                    Array.from(fileInput.files).forEach(f => {
+                        if (f.name !== file.name || f.size !== file.size || f.lastModified !== file.lastModified) {
+                           dt.items.add(f);
+                        }
+                    });
+                    fileInput.files = dt.files;
+                     console.log(`Removed disallowed file ${file.name} from input ${inputId}. New input count: ${fileInput.files.length}`);
+                }
                 return; 
             }
 
@@ -681,15 +748,17 @@ document.addEventListener('DOMContentLoaded', function() {
             };
 
             if (file.type.startsWith('image/')) {
+                console.log(`Reading ${file.name} as Data URL (image).`);
                 reader.readAsDataURL(file);
             } else {
-                // Для не-изображений, вызываем onload сразу, т.к. e.target.result не нужен для иконки
+                console.log(`Processing ${file.name} as non-image. Triggering onload directly.`);
                 reader.onload({ target: { result: null } }); 
             }
         });
 
         if (fileInput) {
              fileInput.dataset.hadFile = previewArea.children.length > 0 ? 'true' : 'false';
+             console.log(`Finished processing for ${inputId}. Preview area has ${previewArea.children.length} items. hadFile: ${fileInput.dataset.hadFile}`);
         }
         updateFileActionButtonsState(previewAreaId);
     }
@@ -729,7 +798,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setupDragAndDrop('id_creatives_input', 'creativesDropArea', 'creativesPreview', 
         { mimes: ['image/jpeg', 'image/png'], extensions: ['jpg', 'jpeg', 'png'] }, true, 3);
     setupDragAndDrop('id_video_input', 'videoDropArea', 'videoPreview', 
-        { mimes: ['video/mp4', 'video/quicktime'], extensions: ['mp4', 'mov'] }, false, 1);
+        { mimes: ['video/mp4', 'video/quicktime', 'video/x-msvideo', 'video/x-matroska'], extensions: ['mp4', 'mov', 'avi', 'mkv'] }, false, 1);
     setupDragAndDrop('id_proofs_input', 'proofsDropArea', 'proofsPreview', 
         { mimes: ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'], extensions: ['pdf', 'doc', 'docx', 'xls', 'xlsx'] }, true, 3);
 

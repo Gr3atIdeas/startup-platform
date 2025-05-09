@@ -123,6 +123,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center; /* <<< ДОБАВЛЕНО для вертикального центрирования */
     gap: 20px;
     height: 288px;
     box-sizing: border-box;
@@ -217,6 +218,7 @@ body {
     line-height: 18px; /* Соответствует 14px font-size + padding */
     width: 100%; /* Растягиваем инпут на всю ширину wrapper */
     box-sizing: border-box;
+    resize: none; /* << ЗАПРЕТ ИЗМЕНЕНИЯ РАЗМЕРА */
 }
 
 .form-control::placeholder {
@@ -224,6 +226,11 @@ body {
     font-size: 14px;
     font-family: Unbounded;
     font-weight: 300;
+    backdrop-filter: blur(5px);
+    flex-direction: column;
+    gap: 30px;
+    width: 100%; /* << УБЕДИМСЯ, ЧТО КОНТЕЙНЕР ЗАНИМАЕТ 100% */
+    box-sizing: border-box; /* << УЧИТЫВАЕМ PADDING И BORDER */
 }
 
 /* Стили для селектов */
@@ -518,54 +525,44 @@ h3.section-title {
 }
 
 .timeline {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0; /* Убираем лишние отступы */
-    position: relative; /* Делаем родительский блок относительным для позиционирования линии */
-    margin-top: 0; /* Убираем отрицательный отступ, линия теперь сама позиционируется */
-    z-index: 3;
+    position: relative; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: flex-start; /* Выравниваем сами шаги по верху, линия будет позиционироваться относительно них */
+    padding-top: 0; 
+    padding-left: 61px; /* Половина ширины иконки (122px / 2) */
+    padding-right: 61px;/* Половина ширины иконки (122px / 2) */
+    margin-bottom: 20px;
+    margin-top: 30px; 
 }
 
-.timeline-progress-container {
+.timeline-progress-container { 
     position: absolute;
-    /* Ширина линии = 100% контейнера таймлайна минус ширина одного полного круга (по 61px с каждой стороны).
-       Круги имеют диаметр 122px, поэтому их радиус/половина ширины = 61px.
-       Линия начинается после первого полукруга и заканчивается перед последним полукругом. */
-    width: calc(100% - 122px); 
-    left: 61px; /* Отступ слева, равный половине ширины круга */
-    /*
-      Центрирование линии по вертикали относительно кругов.
-      Высота круга (.step-number-wrapper) = 122px.
-      Вертикальный центр круга находится на 122px / 2 = 61px.
-      Высота самой линии прогресса = 4px.
-      Чтобы центр линии совпадал с центром круга, верхний край линии должен быть на:
-      (Высота круга / 2) - (Высота линии / 2) = (122px / 2) - (4px / 2) = 61px - 2px = 59px.
-    */
-    top: 59px; 
-    height: 4px;
-    margin: 0; /* Убираем внешние отступы, если они были */
-    z-index: 1; /* Ниже чем круги (z-index: 2 у .step-number-wrapper) */
+    top: 64px; /* (122px / 2) + 3px = 61px + 3px = 64px. Сдвиг чуть ниже центра иконки */
+    left: 0px; /* Линия начинается от левого края padding .timeline */
+    right: 0px;/* Линия заканчивается у правого края padding .timeline */
+    height: 4px; /* Толщина линии */
+    z-index: 0; 
+    transform: translateY(-50%); 
+}
+
+.timeline-progress-line,
+.timeline-progress-filled {
+    position: absolute;
+    height: 100%;
+    border-radius: 2px; /* Половина высоты линии */
 }
 
 .timeline-progress-line {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: black; /* ИЗМЕНЕНО: Фон трека */
-    z-index: 1; /* Этот z-index теперь внутри timeline-progress-container */
+    left: 0; 
+    width: 100%; 
+    background-color: #4A4A4A; /* Цвет трека линии из Figma (пример) */
 }
 
 .timeline-progress-filled {
-    position: absolute;
-    top: 0;
     left: 0;
-    width: 0%; /* Изначально 0, будет обновляться JS */
-    height: 100%;
-    background: linear-gradient(90deg, #1967B8 2%, #6348EB 26%, #1967B8 50%, #6749E7 78%, #F26162 100%); /* ИЗМЕНЕНО: Фон заполненной части */
-    z-index: 2; /* Этот z-index теперь внутри timeline-progress-container */
+    width: 0%; 
+    background: linear-gradient(90deg, #1967B8 2%, #6348EB 26%, #1967B8 50%, #6749E7 78%, #F26162 100%);
     transition: width 0.3s ease-in-out;
 }
 
@@ -574,67 +571,43 @@ h3.section-title {
     flex-direction: column;
     align-items: center;
     text-align: center;
-    gap: 10px;
-    width: 122px; /* Ширина блока этапа */
-    cursor: pointer;
+    position: relative; 
+    z-index: 1; 
+    width: 122px; /* Ширина шага равна ширине иконки */
 }
 
-.timeline-step .step-number-wrapper {
-    width: 122px;
-    height: 122px;
-    border-radius: 50%;
+.step-number-wrapper { /* Обертка для SVG иконки этапа */
+    width: 122px; 
+    height: 122px; 
     display: flex;
-    justify-content: center;
     align-items: center;
-    position: relative;
-    background-size: cover; /* Для градиентов */
-    background-position: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease; /* Добавляем transition для фона */
+    justify-content: center;
+    border-radius: 50%;
+    background-color: #1E1E1E; /* Фон страницы, чтобы линия проходила "за" иконкой */
+    position: relative; 
+    z-index: 1; 
+    margin-bottom: 8px; 
 }
 
-/* Градиенты и иконки для каждого этапа */
+.step-number-wrapper.active {
+    /* Стили для активного/пройденного этапа остаются как есть или корректируются по дизайну */
+}
+.step-number-wrapper .step-icon {
+    width: 100%; /* Иконка занимает всю обертку */
+    height: 100%; 
+    object-fit: contain; /* Чтобы SVG не искажался */
+}
+
+/* Градиенты для этапов (эти стили корректны и должны остаться) */
 .timeline-step[data-step="1"] .step-number-wrapper { background: linear-gradient(307deg, #4392E3 0%, #004E9F 100%); }
 .timeline-step[data-step="2"] .step-number-wrapper { background: linear-gradient(307deg, #7B61FF 0%, #3B1ECA 100%); }
 .timeline-step[data-step="3"] .step-number-wrapper { background: linear-gradient(217deg, #4392E3 0%, #004E9F 100%); }
-.timeline-step[data-step="4"] .step-number-wrapper { background: black; }
-.timeline-step[data-step="5"] .step-number-wrapper { background: black; }
+.timeline-step[data-step="4"] .step-number-wrapper { background: black; } /* Фон для неактивных/будущих */
+.timeline-step[data-step="5"] .step-number-wrapper { background: black; } /* Фон для неактивных/будущих */
 
-.timeline-step .step-icon {
-    width: 60px; /* Размер иконки внутри круга */
-    height: 60px;
-    object-fit: contain;
-}
-
-.timeline-step .step-text {
-    font-size: 12px;
-    font-family: Unbounded;
-    font-weight: 300;
-    letter-spacing: 0.12px;
-    color: white;
-}
-
-/* Активный этап для отображения описания */
-.timeline-step.active-step-display .step-number-wrapper {
-    transform: scale(1.05);
-    box-shadow: 0 0 15px rgba(255, 239, 43, 0.7); /* Желтое свечение */
-}
-
-/* Пройденные/текущий этап (стилизация через JS - класс active на step-number-wrapper) */
-.timeline-step .step-number-wrapper.active {
-    /* Здесь можно добавить галочку или другой индикатор поверх круга, если нужно */
-}
-.timeline-step .step-number-wrapper.error-step {
-    border: 3px solid #FF0000 !important;
-    box-shadow: 0 0 10px rgba(255, 0, 0, 0.7) !important;
-}
-
-/* Стили для неактивных/будущих этапов */
-.timeline-step.future-step .step-number-wrapper {
-    background: black; /* Черный фон */
-}
-
-.timeline-step.future-step .step-icon {
-    filter: grayscale(100%); /* Обесцвечиваем иконку */
+/* Tooltip icon in agreement section - Скрываем его */
+.tooltip-icon-wrapper {
+    display: none !important; /* Скрываем "лишние кружки" */
 }
 
 #step-descriptions {
@@ -650,10 +623,18 @@ h3.section-title {
     backdrop-filter: blur(5px);
     flex-direction: column;
     gap: 30px;
+    width: 100%; /* << УБЕДИМСЯ, ЧТО КОНТЕЙНЕР ЗАНИМАЕТ 100% */
+    box-sizing: border-box; /* << УЧИТЫВАЕМ PADDING И BORDER */
 }
 
 .timeline-description-container.active {
     display: flex; /* Показать активный */
+    font-size: 14px;
+    line-height: 18px;
+    border: 1px solid #D9D9D9;
+    resize: none; /* << ЗАПРЕТ ИЗМЕНЕНИЯ РАЗМЕРА (было vertical) */
+    width: 100%; /* << УБЕДИМСЯ, ЧТО TEXTAREA ЗАНИМАЕТ 100% */
+    box-sizing: border-box; /* << УЧИТЫВАЕМ PADDING И BORDER TEXTAREA */
 }
 
 .timeline-description-header {
@@ -1048,17 +1029,11 @@ h3.section-title {
     display: flex; 
     justify-content: space-between; 
     align-items: flex-start; 
-    /* Adjusted padding to visually center the line with icons */
-    /* The icons are 40px high. step-number-wrapper also 40px.
-       The line should be at the vertical center of these icons.
-       If timeline's top padding is 0, and step-number-wrapper is first,
-       icon center is 20px from top. Line top should be 20px.
-    */
-    padding-top: 0; /* Remove timeline top padding, rely on step margin/padding */
-    padding-left: 20px; /* Half width of first icon (40px / 2) */
-    padding-right: 20px; /* Half width of last icon (40px / 2) */
+    padding-top: 0; 
+    padding-left: 61px; /* Половина ширины иконки (122px / 2) */
+    padding-right: 61px;/* Половина ширины иконки (122px / 2) */
     margin-bottom: 20px;
-    margin-top: 30px; /* Add margin above timeline for spacing */
+    margin-top: 30px; 
 }
 
 .timeline-step {
@@ -1068,66 +1043,60 @@ h3.section-title {
     text-align: center;
     position: relative; 
     z-index: 1; 
-    width: calc(100% / 5 - 10px); /* Adjust width for spacing if needed */
+    width: 122px; /* Ширина шага равна ширине иконки */
 }
 
 /* This container holds the line and its progress fill */
 .timeline .timeline-progress-container { 
     position: absolute;
-    /* Center of 40px icons is 20px. The line has height 3px.
-       So, top should be 20px - 1.5px = 18.5px from the top of the icon itself.
-       The step-number-wrapper is 40px high.
-    */
-    top: 20px; /* This should be the Y-coordinate for the center of the icons */
-               /* relative to the .timeline div (which now has no top padding). */
-    left: 0px; /* Starts at the very beginning of the first icon's center line */
-    right: 0px; /* Ends at the very end of the last icon's center line */
-    /* The padding on .timeline (20px left/right) means this container will effectively span between icon centers. */
-    height: 3px;
-    z-index: 0; /* Behind the step icons */
-    transform: translateY(-50%); /* Vertically centers the 3px line at the top: 20px mark */
+    top: 64px; /* (122px / 2) + 3px = 61px + 3px = 64px. Сдвиг чуть ниже центра иконки */
+    left: 0px; /* Линия начинается от левого края padding .timeline */
+    right: 0px;/* Линия заканчивается у правого края padding .timeline */
+    height: 4px; /* Толщина линии */
+    z-index: 0; 
+    transform: translateY(-50%); 
 }
 
 .timeline-progress-line,
 .timeline-progress-filled {
     position: absolute;
     height: 100%;
-    border-radius: 1.5px;
+    border-radius: 2px; /* Половина высоты линии */
 }
 
 .timeline-progress-line {
     left: 0; 
-    width: 100%; /* Full width of its container */
-    background-color: #e9ecef; /* Lighter grey for the track */
+    width: 100%; 
+    background-color: #4A4A4A; /* Цвет трека линии из Figma (пример) */
 }
 
 .timeline-progress-filled {
     left: 0;
-    width: 0%; /* JS controlled */
-    background-color: #007bff; 
+    width: 0%; 
+    background: linear-gradient(90deg, #1967B8 2%, #6348EB 26%, #1967B8 50%, #6749E7 78%, #F26162 100%);
     transition: width 0.3s ease-in-out;
 }
 
-.step-number-wrapper {
-    width: 40px; 
-    height: 40px; 
+.step-number-wrapper { /* Обертка для SVG иконки этапа */
+    width: 122px; 
+    height: 122px; 
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    background-color: #ffffff; /* Crucial: Background to hide the line passing *behind* the icon */
+    background-color: #1E1E1E; /* Фон страницы, чтобы линия проходила "за" иконкой */
     position: relative; 
-    z-index: 1; /* Above .timeline-progress-container */
-    box-shadow: 0 0 0 3px #ffffff; /* Creates a "cutout" effect for the line, if background of page is not #fff, change this */
-    margin-bottom: 8px; /* Space between icon and text "Этап X" */
+    z-index: 1; 
+    margin-bottom: 8px; 
 }
+
 .step-number-wrapper.active {
-    /* Styles for the circle when it's the current or past step */
-    /* Example: change icon color or background, handled by JS adding 'active' class */
+    /* Стили для активного/пройденного этапа остаются как есть или корректируются по дизайну */
 }
 .step-number-wrapper .step-icon {
-    width: 100%; 
+    width: 100%; /* Иконка занимает всю обертку */
     height: 100%; 
+    object-fit: contain; /* Чтобы SVG не искажался */
 }
 
 /* Ensure the overall form background is considered for the timeline icon cutout */
