@@ -586,8 +586,8 @@ h3.section-title {
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    background-color: #333333; /* ИЗМЕНЕНО: Серый фон по умолчанию для неактивных */
-    background-image: none; 
+    background-color: #000000; /* По умолчанию черный фон для всех (неактивных) */
+    background-image: none; /* Убедимся, что нет градиента по умолчанию */
     position: relative; 
     z-index: 1; 
     margin-bottom: 8px; 
@@ -598,23 +598,23 @@ h3.section-title {
     width: 100%; 
     height: 100%; 
     object-fit: contain; 
-    filter: grayscale(100%); /* По умолчанию иконки серые */
+    filter: grayscale(100%) brightness(0.7); /* По умолчанию иконки серые и чуть темнее (черно-белые) */
     transition: filter 0.3s ease;
 }
 
 /* Стили для активных (пройденных и текущего) этапов */
 .step-number-wrapper.active {
-    /* background-color: transparent; /* Убираем черный фон, если градиент должен быть чистым */
-    /* filter: none; /* Этот фильтр для wrapper не нужен, он для иконки */
-}
-.step-number-wrapper.active .step-icon {
-    filter: none; /* Иконка становится цветной */
+    /* Стили фона для активных этапов применяются ниже, специфично для каждого data-step */
 }
 
-/* Градиенты применяются ТОЛЬКО к активным кружкам */
+.step-number-wrapper.active .step-icon {
+    filter: none; /* Активная иконка становится цветной */
+}
+
+/* Градиенты и специфичные фоны применяются ТОЛЬКО к активным кружкам (.active) */
 .timeline-step[data-step="1"] .step-number-wrapper.active { 
     background-image: linear-gradient(307deg, #4392E3 0%, #004E9F 100%); 
-    background-color: transparent; /* Чтобы градиент был виден без черного фона */
+    background-color: transparent; 
 }
 .timeline-step[data-step="2"] .step-number-wrapper.active { 
     background-image: linear-gradient(307deg, #7B61FF 0%, #3B1ECA 100%); 
@@ -624,13 +624,14 @@ h3.section-title {
     background-image: linear-gradient(217deg, #4392E3 0%, #004E9F 100%); 
     background-color: transparent;
 }
+/* Этапы 4 и 5 остаются черными с цветной иконкой при активности */
 .timeline-step[data-step="4"] .step-number-wrapper.active {
-    background-color: #000000; /* Остается черным, даже если активен, согласно макету */
-    background-image: none; /* Явно убираем градиент */
+    background-color: #000000; 
+    background-image: none; 
 }
 .timeline-step[data-step="5"] .step-number-wrapper.active {
-    background-color: #000000; /* Остается черным, даже если активен, согласно макету */
-    background-image: none; /* Явно убираем градиент */
+    background-color: #000000; 
+    background-image: none; 
 }
 
 /* Активный этап для отображения описания (добавляет свечение) */
@@ -1111,8 +1112,8 @@ h3.section-title {
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    background-color: #333333; /* ИЗМЕНЕНО: Серый фон по умолчанию для неактивных */
-    background-image: none; 
+    background-color: #000000; /* По умолчанию черный фон для всех (неактивных) */
+    background-image: none; /* Убедимся, что нет градиента по умолчанию */
     position: relative; 
     z-index: 1; 
     margin-bottom: 8px; 
@@ -1123,23 +1124,23 @@ h3.section-title {
     width: 100%; 
     height: 100%; 
     object-fit: contain; 
-    filter: grayscale(100%); /* По умолчанию иконки серые */
+    filter: grayscale(100%) brightness(0.7); /* По умолчанию иконки серые и чуть темнее (черно-белые) */
     transition: filter 0.3s ease;
 }
 
 /* Стили для активных (пройденных и текущего) этапов */
 .step-number-wrapper.active {
-    /* background-color: transparent; /* Убираем черный фон, если градиент должен быть чистым */
-    /* filter: none; /* Этот фильтр для wrapper не нужен, он для иконки */
-}
-.step-number-wrapper.active .step-icon {
-    filter: none; /* Иконка становится цветной */
+    /* Стили фона для активных этапов применяются ниже, специфично для каждого data-step */
 }
 
-/* Градиенты применяются ТОЛЬКО к активным кружкам */
+.step-number-wrapper.active .step-icon {
+    filter: none; /* Активная иконка становится цветной */
+}
+
+/* Градиенты и специфичные фоны применяются ТОЛЬКО к активным кружкам (.active) */
 .timeline-step[data-step="1"] .step-number-wrapper.active { 
     background-image: linear-gradient(307deg, #4392E3 0%, #004E9F 100%); 
-    background-color: transparent; /* Чтобы градиент был виден без черного фона */
+    background-color: transparent; 
 }
 .timeline-step[data-step="2"] .step-number-wrapper.active { 
     background-image: linear-gradient(307deg, #7B61FF 0%, #3B1ECA 100%); 
@@ -1149,13 +1150,14 @@ h3.section-title {
     background-image: linear-gradient(217deg, #4392E3 0%, #004E9F 100%); 
     background-color: transparent;
 }
+/* Этапы 4 и 5 остаются черными с цветной иконкой при активности */
 .timeline-step[data-step="4"] .step-number-wrapper.active {
-    background-color: #000000; /* Остается черным, даже если активен, согласно макету */
-    background-image: none; /* Явно убираем градиент */
+    background-color: #000000; 
+    background-image: none; 
 }
 .timeline-step[data-step="5"] .step-number-wrapper.active {
-    background-color: #000000; /* Остается черным, даже если активен, согласно макету */
-    background-image: none; /* Явно убираем градиент */
+    background-color: #000000; 
+    background-image: none; 
 }
 
 /* Активный этап для отображения описания (добавляет свечение) */

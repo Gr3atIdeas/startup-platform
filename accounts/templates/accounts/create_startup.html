@@ -309,20 +309,23 @@ document.addEventListener('DOMContentLoaded', function() {
         const currentStep = parseInt(stepNumber);
         currentStepInput.value = currentStep;
 
-        // Обновление стилей кругов и иконок
         timelineSteps.forEach(step => {
             const stepNum = parseInt(step.dataset.step);
             const stepWrapper = step.querySelector('.step-number-wrapper');
-            step.classList.remove('future-step', 'active-step-display'); // Сбрасываем классы
-            stepWrapper.classList.remove('active'); // Убираем активный фон
+            
+            step.classList.remove('active-step-display'); // Сначала убираем у всех свечение
+            stepWrapper.classList.remove('active'); // Убираем активную раскраску у всех
+            // stepWrapper.classList.remove('future-step'); // future-step больше не используется для стилизации напрямую
 
-            if (stepNum < currentStep) {
-                stepWrapper.classList.add('active'); // Пройденные этапы
-            } else if (stepNum === currentStep) {
-                stepWrapper.classList.add('active'); // Текущий этап
-                selectStepDescription(currentStep); // Показываем описание текущего этапа
+            if (stepNum <= currentStep) {
+                stepWrapper.classList.add('active'); // Пройденные и текущий этап - активные (цветные)
             } else {
-                step.classList.add('future-step'); // Будущие этапы
+                // Будущие этапы - неактивные (по умолчанию будут черно-белыми по CSS)
+            }
+            
+            // Показываем описание и свечение только для выбранного текущего этапа
+            if (stepNum === currentStep) {
+                selectStepDescription(currentStep); // Показываем описание (эта функция также добавляет active-step-display)
             }
         });
 
@@ -797,34 +800,48 @@ document.addEventListener('DOMContentLoaded', function() {
         // Микроинвестиции
         const microInvestmentCheckbox = document.getElementById('id_micro_investment_available');
         if (microInvestmentCheckbox) {
-            const label = microInvestmentCheckbox.closest('.micro-investment-label-custom'); // Ищем родительский label
+            // Ищем label, который является непосредственным родителем или связан через for
+            let label = document.querySelector(`label[for="${microInvestmentCheckbox.id}"]`);
+            if (!label) { // Если не нашли по for, возможно, input вложен в label
+                label = microInvestmentCheckbox.closest('label');
+            }
+
             if (!label) {
-                console.error('Label for micro-investment checkbox not found correctly');
-                return;
-            }
-            const visualSpan = label.querySelector('#microInvestmentVisual'); // Ищем span по ID
-            if (!visualSpan) {
-                console.error('Visual span #microInvestmentVisual for micro-investment checkbox not found');
-                return;
-            }
-            const uncheckedVisual = visualSpan.querySelector('.custom-checkbox-unchecked');
-            const checkedVisual = visualSpan.querySelector('.custom-checkbox-checked');
-            
-            if (uncheckedVisual && checkedVisual) { 
-                const updateMicroIcons = () => {
-                    console.log('MicroInv checkbox changed, checked:', microInvestmentCheckbox.checked);
-                    if (microInvestmentCheckbox.checked) {
-                        uncheckedVisual.style.display = 'none';
-                        checkedVisual.style.display = 'block'; // или inline-block
-                    } else {
-                        uncheckedVisual.style.display = 'block'; // или inline-block
-                        checkedVisual.style.display = 'none';
-                    }
-                };
-                updateMicroIcons(); // Устанавливаем начальное состояние
-                microInvestmentCheckbox.addEventListener('change', updateMicroIcons);
+                console.error('Label for micro-investment checkbox not found.');
+                // return; // Не выходим, чтобы остальная часть setupCustomCheckboxes могла выполниться
             } else {
-                console.error('Unchecked/Checked visual elements not found inside #microInvestmentVisual');
+                const visualSpan = label.querySelector('#microInvestmentVisual'); 
+                if (!visualSpan) {
+                    console.error('Visual span #microInvestmentVisual for micro-investment checkbox not found within its label.');
+                } else {
+                    const uncheckedVisual = visualSpan.querySelector('.custom-checkbox-unchecked');
+                    const checkedVisual = visualSpan.querySelector('.custom-checkbox-checked');
+                    
+                    if (uncheckedVisual && checkedVisual) { 
+                        const updateMicroIcons = () => {
+                            console.log('MicroInv checkbox changed, checked:', microInvestmentCheckbox.checked);
+                            if (microInvestmentCheckbox.checked) {
+                                uncheckedVisual.style.display = 'none';
+                                checkedVisual.style.display = 'block'; 
+                            } else {
+                                uncheckedVisual.style.display = 'block'; 
+                                checkedVisual.style.display = 'none';
+                            }
+                        };
+                        updateMicroIcons(); 
+                        microInvestmentCheckbox.addEventListener('change', updateMicroIcons);
+                        // Добавим обработчик на клик по самому label, чтобы он тоже переключал (если for не сработал)
+                        label.addEventListener('click', function(e) {
+                            // Предотвращаем двойное срабатывание, если клик был по самому input-у (который скрыт)
+                            if (e.target !== microInvestmentCheckbox) {
+                                // microInvestmentCheckbox.checked = !microInvestmentCheckbox.checked;
+                                // updateMicroIcons(); // Вызовется автоматически через событие change на input
+                            }
+                        });
+                    } else {
+                        console.error('Unchecked/Checked visual elements not found inside #microInvestmentVisual');
+                    }
+                }
             }
         }
     }
@@ -896,34 +913,48 @@ document.addEventListener('DOMContentLoaded', function() {
         // Микроинвестиции
         const microInvestmentCheckbox = document.getElementById('id_micro_investment_available');
         if (microInvestmentCheckbox) {
-            const label = microInvestmentCheckbox.closest('.micro-investment-label-custom'); // Ищем родительский label
+            // Ищем label, который является непосредственным родителем или связан через for
+            let label = document.querySelector(`label[for="${microInvestmentCheckbox.id}"]`);
+            if (!label) { // Если не нашли по for, возможно, input вложен в label
+                label = microInvestmentCheckbox.closest('label');
+            }
+
             if (!label) {
-                console.error('Label for micro-investment checkbox not found correctly');
-                return;
-            }
-            const visualSpan = label.querySelector('#microInvestmentVisual'); // Ищем span по ID
-            if (!visualSpan) {
-                console.error('Visual span #microInvestmentVisual for micro-investment checkbox not found');
-                return;
-            }
-            const uncheckedVisual = visualSpan.querySelector('.custom-checkbox-unchecked');
-            const checkedVisual = visualSpan.querySelector('.custom-checkbox-checked');
-            
-            if (uncheckedVisual && checkedVisual) { 
-                const updateMicroIcons = () => {
-                    console.log('MicroInv checkbox changed, checked:', microInvestmentCheckbox.checked);
-                    if (microInvestmentCheckbox.checked) {
-                        uncheckedVisual.style.display = 'none';
-                        checkedVisual.style.display = 'block'; // или inline-block
-                    } else {
-                        uncheckedVisual.style.display = 'block'; // или inline-block
-                        checkedVisual.style.display = 'none';
-                    }
-                };
-                updateMicroIcons(); // Устанавливаем начальное состояние
-                microInvestmentCheckbox.addEventListener('change', updateMicroIcons);
+                console.error('Label for micro-investment checkbox not found.');
+                // return; // Не выходим, чтобы остальная часть setupCustomCheckboxes могла выполниться
             } else {
-                console.error('Unchecked/Checked visual elements not found inside #microInvestmentVisual');
+                const visualSpan = label.querySelector('#microInvestmentVisual'); 
+                if (!visualSpan) {
+                    console.error('Visual span #microInvestmentVisual for micro-investment checkbox not found within its label.');
+                } else {
+                    const uncheckedVisual = visualSpan.querySelector('.custom-checkbox-unchecked');
+                    const checkedVisual = visualSpan.querySelector('.custom-checkbox-checked');
+                    
+                    if (uncheckedVisual && checkedVisual) { 
+                        const updateMicroIcons = () => {
+                            console.log('MicroInv checkbox changed, checked:', microInvestmentCheckbox.checked);
+                            if (microInvestmentCheckbox.checked) {
+                                uncheckedVisual.style.display = 'none';
+                                checkedVisual.style.display = 'block'; 
+                            } else {
+                                uncheckedVisual.style.display = 'block'; 
+                                checkedVisual.style.display = 'none';
+                            }
+                        };
+                        updateMicroIcons(); 
+                        microInvestmentCheckbox.addEventListener('change', updateMicroIcons);
+                        // Добавим обработчик на клик по самому label, чтобы он тоже переключал (если for не сработал)
+                        label.addEventListener('click', function(e) {
+                            // Предотвращаем двойное срабатывание, если клик был по самому input-у (который скрыт)
+                            if (e.target !== microInvestmentCheckbox) {
+                                // microInvestmentCheckbox.checked = !microInvestmentCheckbox.checked;
+                                // updateMicroIcons(); // Вызовется автоматически через событие change на input
+                            }
+                        });
+                    } else {
+                        console.error('Unchecked/Checked visual elements not found inside #microInvestmentVisual');
+                    }
+                }
             }
         }
     }
