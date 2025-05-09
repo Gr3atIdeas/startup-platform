@@ -236,9 +236,6 @@
                             </span>
                             <span class="checkbox-text">{{ form.agree_rules.label }}</span>
                         </label>
-                        <div class="tooltip-icon-wrapper">
-                            <span class="tooltip-icon">?</span>
-                        </div>
                         {% if form.agree_rules.errors %}<span class="error-message">{{ form.agree_rules.errors|first }}</span>{% endif %}
                     </div>
                     <div class="form-group checkbox-group">
@@ -250,9 +247,6 @@
                             </span>
                             <span class="checkbox-text">{{ form.agree_data_processing.label }}</span>
                         </label>
-                        <div class="tooltip-icon-wrapper">
-                            <span class="tooltip-icon">?</span>
-                        </div>
                         {% if form.agree_data_processing.errors %}<span class="error-message">{{ form.agree_data_processing.errors|first }}</span>{% endif %}
                     </div>
                 </div>
@@ -543,10 +537,17 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // --- Helper function to display file upload errors ---
-    function displayFileUploadError(dropAreaId, message) {
-        const dropArea = document.getElementById(dropAreaId);
+    function displayFileUploadError(inputId, message) {
+        const fileInput = document.getElementById(inputId);
+        if (!fileInput) {
+            console.error('File input not found for error display:', inputId);
+            return;
+        }
+        // Находим родительский .upload-box или .logo-upload-group по fileInput
+        const dropArea = fileInput.closest('.upload-box, .logo-upload-group'); 
+
         if (!dropArea) {
-            console.error('Drop area not found for error display:', dropAreaId);
+            console.error('Drop area (parent .upload-box or .logo-upload-group) not found for input:', inputId);
             return;
         }
 
@@ -673,11 +674,11 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Initial filesToProcess count:', filesToProcess.length);
 
         if (isMultiple && (existingFileCount + filesToProcess.length > maxFiles)) {
-            displayFileUploadError(dropAreaId, `Можно загрузить не более ${maxFiles} файлов для этого поля.`);
+            displayFileUploadError(inputId, `Можно загрузить не более ${maxFiles} файлов для этого поля.`);
             filesToProcess = filesToProcess.slice(0, maxFiles - existingFileCount);
             console.log(`Slicing files for multiple input. New filesToProcess count: ${filesToProcess.length}`);
         } else if (!isMultiple && filesToProcess.length > maxFiles) {
-            displayFileUploadError(dropAreaId, `Можно загрузить не более ${maxFiles} файла для этого поля.`);
+            displayFileUploadError(inputId, `Можно загрузить не более ${maxFiles} файла для этого поля.`);
             filesToProcess = filesToProcess.slice(0, maxFiles);
             console.log(`Slicing files for single input (e.g. via drag-drop). New filesToProcess count: ${filesToProcess.length}`);
         }
@@ -709,7 +710,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
             if (!isAllowed) {
-                displayFileUploadError(dropAreaId, `Файл "${file.name}" имеет неподдерживаемый тип или расширение. Допустимые форматы: ${allowedTypesDetails.extensions.map(ext => ext.toUpperCase()).join(', ')}`);
+                displayFileUploadError(inputId, `Файл "${file.name}" имеет неподдерживаемый тип или расширение. Допустимые форматы: ${allowedTypesDetails.extensions.map(ext => ext.toUpperCase()).join(', ')}`);
                 console.warn(`File ${file.name} has unsupported type. Skipping.`);
                 // Удаляем этот файл из fileInput.files, если он там оказался (особенно актуально для drag-n-drop)
                 if (fileInput) {
