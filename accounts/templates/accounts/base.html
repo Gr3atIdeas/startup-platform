@@ -65,7 +65,7 @@
                 <div class="profile-dropdown-container">
                     <button class="profile-dropdown-button">
                         <div class="profile-avatar-wrapper">
-                            <img src="{% if user.profile_picture_url %}{{ user.profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}" alt="Аватар" class="profile-dropdown-avatar">
+                            <img src="{% static 'accounts/images/avatars/default_avatar_ufo.png' %}" alt="Аватар" class="profile-dropdown-avatar">
                         </div>
                         {# <i class="fas fa-chevron-down profile-dropdown-chevron"></i> #} {# Шеврон пока уберем, на скрине его нет #}
                     </button>

@@ -63,11 +63,11 @@ body, html {
     min-height: 395px; /* Use min-height to allow content to expand if needed, though unlikely with this design */
     height: 395px; /* Explicit height */
     align-self: stretch;
-    background-image: url("/static/accounts/images/profile/profile_spacebg.webp") !important;
-    background-color: #1a1a2e; /* Darker fallback */
-    background-position: center center !important;
-    background-size: cover !important;
-    background-repeat: no-repeat !important;
+    /* background-image: url("/static/accounts/images/profile/profile_spacebg.webp") !important; */
+    background-color: lime !important; /* Тестовый яркий фон */
+    /* background-position: center center !important; */
+    /* background-size: cover !important; */
+    /* background-repeat: no-repeat !important; */
     display: flex;
     flex-direction: column;
     justify-content: flex-start; 
