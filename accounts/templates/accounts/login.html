@@ -94,10 +94,10 @@
          margin: 0;
      }
       .auth-box button {
-         background-color: rgb(175, 0, 239); /* Фиолетовая кнопка, без прозрачности */
-         border: 1px solid rgba(255, 255, 255, 0.3);
+         background-color: blue !important; /* Тест: Ярко-синяя кнопка */
+         border: 1px solid #FFFFFF; /* Белая рамка для контраста */
          transition: background-color 0.3s, color 0.3s;
-         color: #FFFFFF; /* Белый текст */
+         color: #FFFFFF !important; /* Белый текст, принудительно */
          font-weight: bold;
          padding: 12px 20px;
          border-radius: 5px;
@@ -161,13 +161,6 @@
     <div class="auth-container">
         <div class="auth-box">
             <h1>Вход</h1>
-            {# {% if messages %}
-                <ul class="messages"> {# Добавляем класс для стилизации сообщений #}
-                    {% for message in messages %}
-                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %} #}
             <form method="post">
                 {% csrf_token %}
                 {# Явный рендеринг полей #}

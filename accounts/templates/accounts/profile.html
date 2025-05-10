@@ -3,52 +3,229 @@
 
 {% block title %}Профиль пользователя{% endblock %}
 
+<link rel="stylesheet" href="{% static 'accounts/css/profile.css' %}" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400&display=swap" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@700&display=swap" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Circe:wght@400&display=swap" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Blippo-Black+CY+[Rus+by+me]:wght@400&display=swap" />
+
 {% block content %}
-    <h1>Профиль пользователя {{ user.first_name }} {{ user.last_name }}</h1>
     {% if messages %}
-        <ul>
+        <ul class="messages" style="list-style-type: none; padding: 10px; background-color: #f8d7da; border: 1px solid #f5c6cb; border-radius: 5px; margin-bottom: 20px;">
             {% for message in messages %}
-                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                <li{% if message.tags %} class="{{ message.tags }}" style="color: #721c24;"{% endif %}>{{ message }}</li>
             {% endfor %}
         </ul>
     {% endif %}
-    {% if user.is_authenticated %}
-        {% if is_own_profile %}
-            <h2>Загрузка аватарки</h2>
-            <form method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                <input type="file" name="avatar" accept="image/*" required>
-                <button type="submit">Загрузить аватарку</button>
-            </form>
-        {% endif %}
-        {% if user.profile_picture_url %}
-            <h3>Текущая аватарка:</h3>
-            <img src="{{ user.profile_picture_url }}" alt="Аватарка" style="max-width: 200px;">
-        {% endif %}
-        <h2>Информация о пользователе</h2>
-        <table border="1">
-            <tr><th>Поле</th><th>Значение</th></tr>
-            <tr><td>ID пользователя</td><td>{{ user.user_id }}</td></tr>
-            <tr><td>Email</td><td>{{ user.email }}</td></tr>
-            <tr><td>Имя</td><td>{{ user.first_name }}</td></tr>
-            <tr><td>Фамилия</td><td>{{ user.last_name }}</td></tr>
-            <tr><td>Телефон</td><td>{{ user.phone|default:"Не указан" }}</td></tr>
-            <tr><td>Роль</td><td>{{ user.role.role_name|default:"Не указана" }}</td></tr>
-            <tr><td>Биография</td><td>{{ user.bio|default:"Не указана" }}</td></tr>
-            <tr><td>Рейтинг</td><td>{{ user.rating|default:"Не указан" }}</td></tr>
-            <tr><td>Статус</td><td>{{ user.status.status_name|default:"Не указан" }}</td></tr>
-            <tr><td>Дата создания</td><td>{{ user.created_at|date:"Y-m-d H:i:s" }}</td></tr>
-            <tr><td>Дата обновления</td><td>{{ user.updated_at|date:"Y-m-d H:i:s" }}</td></tr>
-            <tr><td>Последний вход</td><td>{{ user.last_login|date:"Y-m-d H:i:s"|default:"Ещё не входил" }}</td></tr>
-            <tr><td>Активен</td><td>{{ user.is_active|yesno:"Да,Нет" }}</td></tr>
-            <tr><td>Сотрудник</td><td>{{ user.is_staff|yesno:"Да,Нет" }}</td></tr>
-        </table>
 
-        {% if is_own_profile %}
-            <h2>Создать стартап</h2>
-            <a href="{% url 'create_startup' %}" class="startup-button">Создать стартап</a>
-        {% endif %}
-    {% else %}
-        <p>Вы не авторизованы.</p>
-    {% endif %}
+    <div class="div">
+        <div class="parent">
+            
+            
+            <div class="button">
+                
+                <div class="id-89457t94857t">Поиск</div>
+            </div>
+            <div class="menus-wrapper">
+                <div class="menus">
+                    <div class="menus1">
+                        <div class="menu">
+                            <div class="cosmochat">Каталог</div>
+                            <div class="expand-more"></div>
+                        </div>
+                        <div class="menu">
+                            <div class="cosmochat">Новости</div>
+                            <div class="expand-more"></div>
+                        </div>
+                        <div class="menu2">
+                            <div class="cosmochat">CosmoChat</div>
+                            <div class="expand-more"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="group">
+                <div class="label">Войти</div>
+                
+            </div>
+        </div>
+
+        <div class="featured">
+            <img class="image-from-rawpixel-id-597407-icon" alt="Фоновое изображение космоса" src="{% static 'accounts/images/profile/profile_spacebg.webp' %}">
+            
+            <div class="auto-layout">
+                <div class="profile">
+                    <div class="avatar01-parent">
+                        <img class="avatar01-icon" alt="Аватар пользователя" src="{% if user.profile_picture_url %}{{ user.profile_picture_url }}{% else %}{% static 'accounts/images/icons/image_placeholder.svg' %}{% endif %}">
+                        
+                        <div class="frame-parent">
+                            <div class="name-name-parent">
+                                <div class="name-name">
+                                    <div class="div5">{{ user.first_name|default:"Имя" }}</div>
+                                    <div class="div5">{{ user.last_name|default:"Фамилия" }}</div>
+                                </div>
+                                <div class="address">
+                                    <div class="cosmochat">{{ user.role.role_name|default:"Стартапер" }}</div>
+                                </div>
+                                <div class="address1">
+                                    <div class="id-89457t94857t">ID {{ user.user_id|default:"Не указан" }}</div>
+                                    <img class="copy-sharp-icon" alt="Копировать ID" src="{% static 'accounts/images/profile/copy-sharp.svg' %}">
+                                </div>
+                            </div>
+                            <div class="div8">{{ user.bio|default:"Описание отсутствует." }}</div>
+                            {% if user.website_url %} {# Предполагаем, что есть такое поле #}
+                            <div class="address2">
+                                <img class="iconsglobeline" alt="Вебсайт" src="{% static 'accounts/images/profile/Globe_Line.svg' %}">
+                                <b class="httpsui8net"><a href="{{ user.website_url }}" target="_blank" style="color: inherit; text-decoration: none;">{{ user.website_url }}</a></b>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    {% if is_own_profile %}
+                    <div style="margin-top: 10px; margin-bottom:10px; text-align: center;">
+                        <h3>Загрузка аватарки</h3>
+                        <form method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <input type="file" name="avatar" accept="image/*" required>
+                            <button type="submit" style="margin-top:5px;">Загрузить</button>
+                        </form>
+                    </div>
+                    {% endif %}
+
+                    <div class="share-icon-parent">
+                        <img class="share-icon" alt="Поделиться" src="{% static 'accounts/images/profile/share_icon.svg' %}">
+                        
+                    </div>
+                    <div class="button1">
+                        <div class="label">Моя Галактика</div>
+                    </div>
+                     {% if is_own_profile %}
+                        <a href="{% url 'create_startup' %}" class="button1" style="text-decoration: none; margin-top: 10px;">
+                            <div class="label">Создать стартап</div>
+                        </a>
+                    {% endif %}
+                    <div class="socials">
+                        
+                        
+                        <img class="mask-group-icon" alt="Соцсеть 1" src="{% static 'accounts/images/profile/Mask_group.png' %}">
+                        <img class="mask-group-icon1" alt="Соцсеть 2" src="{% static 'accounts/images/profile/Mask_group.png' %}"> {# Или другое изображение, если это разные иконки #}
+                        
+                    </div>
+                    <div class="divider"></div>
+                    <div class="div8">На площадке с {{ user.created_at|date:"d E Y"|default:"недавно" }}</div>
+                </div>
+
+                <div class="action-button-parent">
+                    {% if is_own_profile %}
+                    <div class="action-button">
+                        <div class="button3"> {# Это может быть ссылка на страницу редактирования #}
+                            <div class="label">Редактировать профиль</div> 
+                            <img class="iconsglobeline" alt="Редактировать" src="{% static 'accounts/images/profile/Edit_Line.svg' %}">
+                        </div>
+                    </div>
+                    {% endif %}
+                    <div class="following">
+                        <div class="sub-navigation">
+                            <div class="sub-nav-item">
+                                <div class="cosmochat">Стартапы</div>
+                            </div>
+                            <div class="sub-nav-item1">
+                                <div class="cosmochat">Новости</div>
+                            </div>
+                        </div>
+                        
+                        {# Пример отображения стартапов, нужно будет заменить на реальный цикл #}
+                        {% for i in "123" %} {# Замените это на реальный цикл по стартапам пользователя, если есть #}
+                        <div class="group-parent">
+                            <div class="frame-group">
+                                <div class="frame-container">
+                                    <div class="container">
+                                        <div class="div5">Ромашка {{ i }}</div> {# Название стартапа #}
+                                        <div class="frame-div">
+                                            <div class="id-89457t94857t">Рейтинг 4,2/5 (534)</div> {# Рейтинг #}
+                                            <div class="vector-parent">
+                                                
+                                                <div class="div5">17</div> {# Количество чего-то #}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="frame-wrapper">
+                                        <div class="editmenu-action-parent">
+                                            <div class="editmenu-action">
+                                                <div class="id-89457t94857t">Медицина</div> {# Категория #}
+                                            </div>
+                                            <div class="rectangle-parent">
+                                                <div class="group-child"></div>
+                                                <div class="group-item"></div>
+                                                <div class="div13">65%</div> {# Прогресс #}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="button4">
+                                        <div class="label">Подробнее</div>
+                                    </div>
+                                </div>
+                                <img class="group-inner" alt="Изображение стартапа" src="{% static 'accounts/images/profile/Rectangle_4196.png' %}"> {# Изображение стартапа #}
+                            </div>
+                            {% if not forloop.last %}<div class="divider1"></div>{% endif %}
+                        </div>
+                        {% empty %}
+                        <p style="color: #fff; padding: 20px;">У вас пока нет стартапов.</p>
+                        {% endfor %}
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="frame-parent6">
+            <div class="frame-parent7">
+                <div class="great-ideas-parent">
+                    <div class="great-ideas">Great ideas</div>
+                    <div class="div26">Раскройте открывающиеся возможности и будьте частью инновационной волны</div>
+                </div>
+                <div class="vk-black-parent">
+                    
+                </div>
+            </div>
+            <div class="menu-parent">
+                <div class="menu3">
+                    <div class="div27">Меню</div>
+                    <div class="menus2">
+                        <div class="cosmochat">Каталог</div>
+                        <div class="cosmochat">Портфель</div>
+                        <div class="cosmochat">Стартапы</div>
+                        <div class="cosmochat">Франшизы</div>
+                        <div class="cosmochat">Новости</div>
+                        <div class="cosmochat">CosmoChat</div>
+                    </div>
+                </div>
+                <div class="menu3">
+                    <div class="div27">О нас</div>
+                    <div class="menus2">
+                        <div class="cosmochat">FAQ</div>
+                        <div class="cosmochat">Поддержка</div>
+                        <div class="cosmochat">Контакты</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="appstore-parent">
+                
+            </div>
+            <div class="parent7">
+                <div class="label">Подписаться на новости</div>
+                
+            </div>
+            <div class="instance-item"></div>
+            <div class="great-ideas-group">
+                <div class="id-89457t94857t">© 2025 Great Ideas</div>
+                <div class="parent8">
+                    <div class="id-89457t94857t">Политика конфидициальности</div>
+                    <div class="id-89457t94857t">Офферта</div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
