@@ -6,18 +6,31 @@ body, html {
     /* background-color: #000; Removed to allow body gradient from global.css to show if needed */
 }
 
+#profile-content-wrapper-for-bg-test {
+    background-color: orange !important; /* Тестовый фон для новой обертки */
+    width: 100%;
+    min-height: 100vh; /* Чтобы занимала весь экран, если контента мало */
+    padding-top: 20px; /* Какой-то отступ сверху, как был у page-container */
+    border: 5px solid red !important; /* Для отладки */
+    position: relative; /* Убедимся, что z-index работает */
+    z-index: 0; /* Базовый z-index */
+}
+
 .profile-page-container {
     width: 100%;
-    min-height: 100vh; 
+    min-height: inherit; /* Наследуем высоту от обертки */
     display: flex; 
     flex-direction: column;
     align-items: center; 
-    padding-top: 0; 
     box-sizing: border-box;
-    position: relative; /* Для z-index контекста */
-    z-index: 1; /* Слой ниже, чем featured-section, если он будет абсолютным */
-    background-color: purple !important; /* Тестовый фон для родителя */
-    overflow-x: hidden; 
+    position: relative; 
+    z-index: 1;
+    /* background-color: transparent !important; */ /* Делаем этот фон прозрачным, чтобы видеть фон обертки */
+    /* overflow-x: hidden; */ /* Пока уберем, если не нужно */
+    background-color: purple !important; /* Тестовый фон */
+    min-height: 90vh; /* Занимаем почти всю высоту родителя */
+    border: 3px solid blue !important; /* Для отладки */
+    /* z-index: 1; */ /* Уже есть z-index: 1 выше */
 }
 
 .profile-header-bar {
@@ -62,19 +75,20 @@ body, html {
     width: 100%;
     height: 395px; 
     align-self: stretch;
-    background-image: url("/static/accounts/images/profile/profile_spacebg.webp") !important;
-    background-color: transparent; /* Фон должен быть от картинки */
-    background-position: center center !important;
-    background-size: cover !important;
-    background-repeat: no-repeat !important;
-    display: flex; /* Остается flex */
+    /* background-image: url("/static/accounts/images/profile/profile_spacebg.webp") !important; */
+    /* background-color: transparent !important; */ /* Фон только от картинки */
+    background-color: lime !important; /* Яркий тестовый фон */
+    /* background-position: center center !important; */
+    /* background-size: cover !important; */
+    /* background-repeat: no-repeat !important; */
+    display: flex; 
     flex-direction: column;
     justify-content: flex-start; 
     align-items: center;
     box-sizing: border-box;
-    position: relative; /* Для z-index дочерних элементов */
-    z-index: 2; /* Выше чем .profile-page-container */
-    /* overflow: visible; */ /* Уберем пока, чтобы проверить не в нем ли дело */
+    position: relative; 
+    z-index: 2; 
+    border: 3px solid yellow !important; /* Для отладки */
 }
 
 .profile-content-layout {

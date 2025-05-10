@@ -10,6 +10,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Blippo-Black+CY+[Rus+by+me]:wght@400&display=swap" />
 
 {% block content %}
+<div id="profile-content-wrapper-for-bg-test">
     {% if messages %}
         <ul class="django-messages">
             {% for message in messages %}
@@ -18,111 +19,112 @@
         </ul>
     {% endif %}
 
-<div class="profile-page-container">
-    <div class="profile-featured-section">
-        <div class="profile-content-layout">
-            <div class="profile-sidebar-column">
-                <div class="profile-avatar-section">
-                    <img src="{% if user.profile_picture_url %}{{ user.profile_picture_url }}{% else %}{% static 'accounts/images/icons/image_placeholder.svg' %}{% endif %}" alt="Аватар пользователя" />
-                </div>
-                <div class="profile-user-info">
-                    <div>
-                        <div>{{ user.first_name|default:"Имя" }}</div>
-                        <div>{{ user.last_name|default:"Фамилия" }}</div>
+    <div class="profile-page-container">
+        <div class="profile-featured-section">
+            <div class="profile-content-layout">
+                <div class="profile-sidebar-column">
+                    <div class="profile-avatar-section">
+                        <img src="{% if user.profile_picture_url %}{{ user.profile_picture_url }}{% else %}{% static 'accounts/images/icons/image_placeholder.svg' %}{% endif %}" alt="Аватар пользователя" />
                     </div>
-                    <div>{{ user.role.role_name|default:"Роль не указана" }}</div>
-                    <div>
-                        <div>ID {{ user.user_id|default:"Не указан" }}</div>
-                        <div title="Копировать ID"> {/* Copy Icon - visual representation in CSS if needed */}
-                            <div></div>
-                            <div></div>
+                    <div class="profile-user-info">
+                        <div>
+                            <div>{{ user.first_name|default:"Имя" }}</div>
+                            <div>{{ user.last_name|default:"Фамилия" }}</div>
                         </div>
-                    </div>
-                    <div>{{ user.bio|default:"Описание отсутствует."}}</div>
-                    {% if user.website_url %}
-                    <div>
-                        <div> {/* Globe Icon - visual representation in CSS if needed */}
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                        </div>
-                        <a href="{{ user.website_url }}" target="_blank">{{ user.website_url }}</a>
-                    </div>
-                    {% endif %}
-                </div>
-
-                {% if is_own_profile %}
-                <div class="profile-avatar-upload">
-                    <h4>Загрузить аватарку</h4>
-                    <form method="post" enctype="multipart/form-data" id="avatarUploadForm">
-                        {% csrf_token %}
-                        <input type="file" name="avatar" accept="image/*" required id="id_avatar_input" class="file-input-hidden">
-                        <button type="button" onclick="document.getElementById('id_avatar_input').click();" class="btn btn-secondary">Выберите файл</button> {# Added generic btn classes #}
-                        <div id="fileName">Файл не выбран</div>
-                        <button type="submit" class="btn btn-primary">Загрузить</button> {# Added generic btn classes #}
-                    </form>
-                </div>
-                {% endif %}
-
-                <div class="profile-user-actions">
-                    <a href="#" class="btn btn-primary">Моя Галактика</a>
-                    {% if is_own_profile %}
-                         <a href="{% url 'create_startup' %}" class="btn btn-secondary">Создать стартап</a>
-                    {% endif %}
-                </div>
-
-                <div class="profile-social-links">
-                    <a href="#" title="Соцсеть 1"><img src="{% static 'accounts/images/profile/Mask_group.png' %}" /></a>
-                    <a href="#" title="Соцсеть 2"><img src="{% static 'accounts/images/profile/Mask_group.png' %}" /></a>
-                </div>
-                <div class="profile-sidebar-divider"></div>
-                <div>На площадке с {{ user.created_at|date:"d M Y"|default:"Неизвестно" }}</div>
-            </div>
-
-            <div class="profile-main-column">
-                {% if is_own_profile %}
-                <div class="profile-edit-button-area">
-                    <a href="#" class="btn btn-outline-light"> {# Generic btn classes #}
-                        Редактировать профиль
-                        <div> {/* Edit Icon - visual representation in CSS if needed */}
-                           <img src="{% static 'accounts/images/profile/Edit_Line.svg' %}" alt="Редактировать">
-                        </div>
-                    </a>
-                </div>
-                {% endif %}
-                <div class="profile-startups-section">
-                    <div class="profile-startup-tabs">
-                        <div>Стартапы</div>
-                        <div>Новости</div>
-                    </div>
-                    
-                    {% for i in "123" %} 
-                    <div class="profile-startup-card-wrapper">
-                        <div class="profile-startup-card">
-                            <img src="{% static 'accounts/images/profile/Rectangle_4196.png' %}" alt="Лого стартапа {{i}}" />
-                            <div>
-                                <div>Ромашка {{i}}</div>
-                                <div>
-                                    <div>Рейтинг 4,2/5 (534)</div>
-                                    <div>17 <span>отзывов</span></div>
-                                </div>
+                        <div>{{ user.role.role_name|default:"Роль не указана" }}</div>
+                        <div>
+                            <div>ID {{ user.user_id|default:"Не указан" }}</div>
+                            <div title="Копировать ID"> {/* Copy Icon - visual representation in CSS if needed */}
+                                <div></div>
+                                <div></div>
                             </div>
-                            <div>
-                                <div>Медицина</div>
-                                <div>
-                                    <div></div>
-                                    <div>65%</div>
-                                </div>
-                            </div>
-                            <a href="#" class="btn btn-primary">Подробнее</a>
                         </div>
-                        {% if not forloop.last %}
-                        <div class="profile-startup-divider"></div>
+                        <div>{{ user.bio|default:"Описание отсутствует."}}</div>
+                        {% if user.website_url %}
+                        <div>
+                            <div> {/* Globe Icon - visual representation in CSS if needed */}
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                            </div>
+                            <a href="{{ user.website_url }}" target="_blank">{{ user.website_url }}</a>
+                        </div>
                         {% endif %}
                     </div>
-                    {% empty %}
-                         <p>У вас пока нет стартапов.</p>
-                    {% endfor %}
+
+                    {% if is_own_profile %}
+                    <div class="profile-avatar-upload">
+                        <h4>Загрузить аватарку</h4>
+                        <form method="post" enctype="multipart/form-data" id="avatarUploadForm">
+                            {% csrf_token %}
+                            <input type="file" name="avatar" accept="image/*" required id="id_avatar_input" class="file-input-hidden">
+                            <button type="button" onclick="document.getElementById('id_avatar_input').click();" class="btn btn-secondary">Выберите файл</button> {# Added generic btn classes #}
+                            <div id="fileName">Файл не выбран</div>
+                            <button type="submit" class="btn btn-primary">Загрузить</button> {# Added generic btn classes #}
+                        </form>
+                    </div>
+                    {% endif %}
+
+                    <div class="profile-user-actions">
+                        <a href="#" class="btn btn-primary">Моя Галактика</a>
+                        {% if is_own_profile %}
+                             <a href="{% url 'create_startup' %}" class="btn btn-secondary">Создать стартап</a>
+                        {% endif %}
+                    </div>
+
+                    <div class="profile-social-links">
+                        <a href="#" title="Соцсеть 1"><img src="{% static 'accounts/images/profile/Mask_group.png' %}" /></a>
+                        <a href="#" title="Соцсеть 2"><img src="{% static 'accounts/images/profile/Mask_group.png' %}" /></a>
+                    </div>
+                    <div class="profile-sidebar-divider"></div>
+                    <div>На площадке с {{ user.created_at|date:"d M Y"|default:"Неизвестно" }}</div>
+                </div>
+
+                <div class="profile-main-column">
+                    {% if is_own_profile %}
+                    <div class="profile-edit-button-area">
+                        <a href="#" class="btn btn-outline-light"> {# Generic btn classes #}
+                            Редактировать профиль
+                            <div> {/* Edit Icon - visual representation in CSS if needed */}
+                               <img src="{% static 'accounts/images/profile/Edit_Line.svg' %}" alt="Редактировать">
+                            </div>
+                        </a>
+                    </div>
+                    {% endif %}
+                    <div class="profile-startups-section">
+                        <div class="profile-startup-tabs">
+                            <div>Стартапы</div>
+                            <div>Новости</div>
+                        </div>
+                        
+                        {% for i in "123" %} 
+                        <div class="profile-startup-card-wrapper">
+                            <div class="profile-startup-card">
+                                <img src="{% static 'accounts/images/profile/Rectangle_4196.png' %}" alt="Лого стартапа {{i}}" />
+                                <div>
+                                    <div>Ромашка {{i}}</div>
+                                    <div>
+                                        <div>Рейтинг 4,2/5 (534)</div>
+                                        <div>17 <span>отзывов</span></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div>Медицина</div>
+                                    <div>
+                                        <div></div>
+                                        <div>65%</div>
+                                    </div>
+                                </div>
+                                <a href="#" class="btn btn-primary">Подробнее</a>
+                            </div>
+                            {% if not forloop.last %}
+                            <div class="profile-startup-divider"></div>
+                            {% endif %}
+                        </div>
+                        {% empty %}
+                             <p>У вас пока нет стартапов.</p>
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
         </div>
