@@ -9,53 +9,56 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-top: 20px;
-  padding-bottom: 20px;
+  padding-top: 40px;
+  padding-bottom: 0;
   box-sizing: border-box;
 }
 
 .footer-positioning-container { 
-  width: 1440px;
-  max-width: 100%;
-  height: 100%; 
+  width: 1316px;
+  max-width: 95%;
+  height: auto;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
 }
 
 .footer-top-section {
-  width: 1316px;
-  max-width: calc(100% - 40px); 
+  width: 100%;
   justify-content: space-between;
   align-items: center;
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
-  /* position: absolute; left: 50%; transform: translateX(-50%); top: 88px; */ /* Оставляем inline */
+  padding-bottom: 30px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .footer-brand-info {
-  width: 535px; 
-  max-width:100%;
+  flex-basis: 50%;
+  min-width: 300px;
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  gap: 36px;
-  display: inline-flex; 
+  gap: 20px;
+  display: flex; 
 }
 
 .footer-brand-title {
-  align-self: stretch;
   color: white;
-  font-size: 70px;
+  font-size: 60px;
   font-family: 'Blippo-Black CY [Rus by me]', 'Unbounded', sans-serif;
   font-weight: 400;
   text-transform: uppercase;
-  line-height: 1.1;
+  line-height: 1;
   word-wrap: break-word;
 }
 
 .footer-brand-tagline {
-  width: 316px;
-  max-width:100%;
+  width: auto;
+  max-width: 400px;
   color: white;
   font-size: 12px;
   font-family: 'Unbounded', sans-serif;
@@ -65,7 +68,7 @@
 }
 
 .footer-social-links {
-  justify-content: flex-start;
+  justify-content: flex-end;
   align-items: center;
   gap: 22px;
   display: flex;
@@ -80,59 +83,28 @@
   object-fit: contain;
 }
 
-.footer-menus-section {
-  /* position: absolute; top: 225px; right: 62px; */ /* Оставляем inline */
+.footer-middle-section {
+  width: 100%;
   display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
   flex-wrap: wrap;
   gap: 30px;
-  justify-content: flex-end;
-  max-width: calc(100% - 124px); 
+  padding-bottom: 30px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.footer-menu-column {
-  width: 200px;
-  padding: 24px 0px;
-  flex-direction: column;
-  gap: 20px;
-  display: inline-flex; 
-}
-
-.footer-menu-title {
-  color: #FFEF2B;
-  font-size: 16px;
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 400;
-}
-
-.footer-menu-links {
-  flex-direction: column;
-  gap: 18px;
+.footer-subscribe-and-apps {
   display: flex;
-}
-
-.footer-menu-link { 
-  color: white;
-  font-size: 14px;
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 300;
-  text-decoration: none; 
-}
-
-.footer-app-links-section {
-  /* position: absolute; top: 437px; left: 62px; */ /* Оставляем inline */
-  display: flex;
-  gap: 23px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.footer-app-link-img { 
-  height: 50px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 25px;
+  flex-basis: 40%;
+  min-width: 280px;
 }
 
 .footer-subscribe-button {
   padding: 12px 25px;
-  /* left: 62px; top: 245px; position: absolute; */ /* Оставляем inline */
   border-radius: 10px;
   border: 1px white solid;
   justify-content: flex-start;
@@ -174,26 +146,80 @@
   background: white;
 }
 
+.footer-app-links-section {
+  display: flex;
+  gap: 23px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.footer-app-link-img { 
+  height: 50px;
+}
+
+.footer-menus-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: flex-end;
+  flex-basis: 55%;
+  min-width: 300px;
+}
+
+.footer-menu-column {
+  min-width: 150px;
+  padding: 0;
+  flex-direction: column;
+  gap: 15px;
+  display: flex; 
+}
+
+.footer-menu-title {
+  color: #FFEF2B;
+  font-size: 16px;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 400;
+}
+
+.footer-menu-links {
+  flex-direction: column;
+  gap: 15px;
+  display: flex;
+}
+
+.footer-menu-link { 
+  color: white;
+  font-size: 14px;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 300;
+  text-decoration: none; 
+}
+
+.footer-bottom-section {
+  width: 100%;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
 .footer-bottom-bar {
   width: 100%;
-  height: 48px;
-  /* left: 0px; bottom: 0px; position: absolute; */ /* Оставляем inline */
-  background: white;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.2);
+  margin-bottom: 15px;
+  display: none;
 }
 
 .footer-copyright-section {
-  width: 1315px;
-  max-width: calc(100% - 40px);
+  width: 100%;
   justify-content: space-between;
   align-items: center;
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  /* left: 50%; transform: translateX(-50%); bottom: 15px; position: absolute; */ /* Оставляем inline */
+  gap: 15px;
 }
 
 .footer-copyright-text {
-  color: #4E4F51;
+  color: #A9A9A9;
   font-size: 12px;
   font-family: 'Unbounded', sans-serif;
   font-weight: 300;
@@ -203,16 +229,51 @@
 .footer-legal-links {
   justify-content: flex-start;
   align-items: center;
-  gap: 40px;
+  gap: 30px;
   display: flex;
   flex-wrap: wrap;
 }
 
 .footer-legal-link { 
-  color: #4E4F51;
+  color: #A9A9A9;
   font-size: 12px;
   font-family: 'Unbounded', sans-serif;
   font-weight: 300;
   letter-spacing: 0.12px;
   text-decoration: none;
+}
+
+@media (max-width: 768px) {
+  .footer-top-section,
+  .footer-middle-section,
+  .footer-copyright-section {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .footer-brand-info,
+  .footer-social-links,
+  .footer-subscribe-and-apps,
+  .footer-menus-section,
+  .footer-legal-links {
+    justify-content: center;
+    align-items: center;
+    flex-basis: 100%;
+  }
+  .footer-brand-title {
+    font-size: 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-brand-title {
+    font-size: 32px;
+  }
+  .site-footer {
+    padding-top: 20px;
+  }
+  .footer-menu-column {
+    align-items: center;
+  }
 }
