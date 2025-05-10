@@ -210,23 +210,26 @@
 
 /* StyledButton (My Galaxy) -> .profile-sidebar-my-galaxy-btn */
 .profile-sidebar-my-galaxy-btn {
-    height: 40px; 
-    padding-left: 35px; padding-right: 35px; padding-top: 12px; padding-bottom: 12px;
+    width: 100%; /* Changed from fixed height to full width */
+    padding: 12px 35px;
     background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
     overflow: hidden;
     border-radius: 10px;
     justify-content: center;
     align-items: center;
     gap: 8px;
-    display: inline-flex;
-    /* Text styles applied directly to the button/link */
+    display: inline-flex; 
+    text-decoration: none; 
+    box-sizing: border-box;
+}
+
+.profile-sidebar-my-galaxy-btn-text { /* New class for inner text */
     color: black;
     font-size: 16px;
     font-family: 'Unbounded', sans-serif;
     font-weight: 400;
     line-height: 16px;
-    word-wrap: break-word;
-    text-decoration: none; /* Ensure links look like buttons */
+    white-space: nowrap; /* Ensuring single line */
 }
 
 /* StyledSocials -> .profile-sidebar-social-icons-row */
@@ -321,22 +324,35 @@
 }
 /* StyledButton (Edit Profile Button itself) -> .profile-main-edit-btn */
 .profile-main-edit-btn {
+    /* height: 40px; */ /* Removed fixed height, let padding define it */
     padding: 12px 16px;
     border-radius: 10px;
-    border: 1px solid white; /* Убеждаемся, что рамка есть и она белая */
+    outline: 1px white solid;
+    outline-offset: -1px; 
     justify-content: center;
     align-items: center;
     gap: 12px;
-    display: flex; /* display:inline-flex from HTML for this specific button if it should not take full width */
-    /* Text styles applied directly */
-    color: white;
-    font-size: 16px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 400;
-    line-height: 16px;
-    word-wrap: break-word;
-    text-decoration: none; /* Ensure links look like buttons */
+    display: inline-flex;
+    text-decoration: none; 
+    background: transparent; /* Ensuring no other background is inherited */
+    color: white; /* Default text color for the link itself if any */
 }
+
+.profile-main-edit-btn-text { /* New class for inner text div */
+    text-align: right; 
+    color: white; 
+    font-size: 16px; 
+    font-family: 'Unbounded', sans-serif; 
+    font-weight: 400; 
+    line-height: 16px; 
+    word-wrap: break-word;
+}
+
+.profile-main-edit-btn-icon { /* Class for the edit icon img */
+    width: 16px;
+    height: 16px;
+}
+
 /* StyledIconsEditLine -> .profile-main-edit-btn-icon (wrapper for img) */
 .profile-main-edit-btn-icon-wrapper { /* New wrapper if needed, or styles on img */
     width: 16px;
@@ -347,10 +363,6 @@
 /* StyledShape05 and StyledShape06 for edit icon parts, but we use an SVG now */
 /* .edit-icon-inner1 { width: 12px; height: 1.33px; left: 2px; top: 14px; position: absolute; background: white; } */
 /* .edit-icon-inner2 { width: 12.11px; height: 12.11px; left: 2px; top: 0.55px; position: absolute; background: white; } */
-.profile-main-edit-btn-icon {
-    width: 16px;
-    height: 16px;
-}
 
 
 /* StyledFollowing -> .profile-main-startups-section */
