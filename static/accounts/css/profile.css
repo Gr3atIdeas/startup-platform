@@ -57,8 +57,8 @@ body, html {
 }
 
 .profile-featured-section {
-    width: 1445px;
-    max-width: 100%; /* Responsive */
+    width: 100%; /* Changed from 1445px to full width */
+    /* max-width: 100%; */ /* Removed as width: 100% covers it */
     padding-bottom: 55px;
     overflow: hidden;
     flex-direction: column;
@@ -66,12 +66,17 @@ body, html {
     align-items: center;
     display: flex;
     box-sizing: border-box;
+    position: relative; /* Added for potential absolute positioning of children if needed */
 }
 
 .profile-featured-bg-image {
-    align-self: stretch;
+    width: 100%; /* Ensure image takes full width of its container */
     height: 395px;
     object-fit: cover;
+    position: absolute; /* Position it behind the content */
+    top: 0;
+    left: 0;
+    z-index: 0; /* Behind other content in profile-featured-section */
 }
 
 .profile-content-layout {
@@ -80,9 +85,9 @@ body, html {
     justify-content: space-between;
     align-items: flex-start;
     display: flex; /* Changed from inline-flex for easier responsive handling */
-    margin-top: -140px;
+    margin-top: 50px; /* Adjusted margin, original -140px was for when bg image was static */
     position: relative;
-    z-index: 1;
+    z-index: 1; /* Ensure content is above the background image */
     gap: 20px; /* Added gap for responsiveness */
     box-sizing: border-box;
 }
@@ -159,7 +164,8 @@ body, html {
     flex-grow: 1; /* Allow to take remaining space */
     flex-direction: column;
     justify-content: flex-start;
-    align-items: flex-end; /* Original Figma alignment */
+    /* align-items: flex-end; */ /* Original Figma alignment, changed to center for better look with transparency */
+    align-items: center; /* Centering content in main column for this layout */
     gap: 20px;
     display: flex; /* Changed from inline-flex */
     box-sizing: border-box;
@@ -168,11 +174,11 @@ body, html {
 .profile-startups-section {
     align-self: stretch;
     padding: 32px;
-    background: #011B35;
-    box-shadow: 0px 40px 32px -24px rgba(0, 0, 0, 0.12);
+    background: transparent; /* Changed from #011B35 */
+    /* box-shadow: 0px 40px 32px -24px rgba(0, 0, 0, 0.12); */ /* Removed shadow */
     overflow: hidden;
     border-radius: 10px;
-    border: 1px #353945 solid;
+    /* border: 1px #353945 solid; */ /* Removed border */
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
