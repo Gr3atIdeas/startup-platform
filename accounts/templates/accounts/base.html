@@ -35,10 +35,7 @@
   <header id="main-header">
     <div class="header-content-wrapper">
         <a href="{% url 'home' %}" class="header-logo-link">
-            <div class="header-logo-icon-container">
-                <div class="header-logo-icon-element1"></div>
-                <div class="header-logo-icon-element2"></div>
-            </div>
+            <img src="{% static 'accounts/images/white_logo_header.svg' %}" alt="Great Ideas Logo" class="header-logo-icon-img" style="height: 50px; width: auto;"> 
         </a>
         <div class="header-search-bar">
             <div class="header-search-icon-container">
@@ -54,14 +51,26 @@
                 <a href="{% url 'cosmochat' %}" class="header-nav-link cosmochat-link">CosmoChat</a>
             </div>
         </nav>
-        <div class="header-auth-button-container">
+        <div class="header-auth-section">
             {% if user.is_authenticated %}
-                <a href="{% url 'profile' %}" class="header-auth-button-link">Профиль</a>
-                {# Тут можно добавить аватар пользователя, если нужно, взяв из старого хедера #}
-                {# <a href="{% url 'logout' %}" title="Выйти" style="margin-left: auto; ..."><i class="fas fa-sign-out-alt"></i></a> #}
+                <div class="profile-dropdown-container">
+                    <button class="profile-dropdown-button">
+                        <img src="{% static 'accounts/images/avatars/default_avatar_ufo.png' %}" alt="Аватар" class="profile-dropdown-avatar">
+                        <span>Профиль</span> {# Или {{ user.get_username }} #}
+                        <i class="fas fa-chevron-down profile-dropdown-chevron"></i>
+                    </button>
+                    <div class="profile-dropdown-menu">
+                        {# <a href="{% url 'profile_settings' %}" class="profile-dropdown-item">Настройки</a> #}
+                        <a href="{% url 'logout' %}" class="profile-dropdown-item">
+                            <i class="fas fa-sign-out-alt"></i> Выйти
+                        </a>
+                    </div>
+                </div>
             {% else %}
-                <a href="{% url 'login' %}" class="header-auth-button-link">Войти</a>
-                <img src="{% static 'accounts/images/add-circle-outline.svg' %}" alt="icon" class="header-auth-button-icon">
+                <a href="{% url 'login' %}" class="header-auth-button-link header-login-button">
+                    Войти
+                    <img src="{% static 'accounts/images/add-circle-outline.svg' %}" alt="icon" class="header-auth-button-icon">
+                </a>
             {% endif %}
         </div>
     </div>

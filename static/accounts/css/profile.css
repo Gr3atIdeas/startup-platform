@@ -8,7 +8,7 @@ body, html {
 
 .profile-page-container {
     width: 100%;
-    /* background: linear-gradient(153deg, black 0%, #00346B 25%, #004E9F 48%, #01366D 64%, #020202 100%); Moved inline for now */
+    background: linear-gradient(153deg, black 0%, #00346B 25%, #004E9F 48%, #01366D 64%, #020202 100%); /* Перенесенный фон */
     overflow: hidden;
     flex-direction: column;
     justify-content: flex-start;
