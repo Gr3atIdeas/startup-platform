@@ -60,11 +60,11 @@ body, html {
     width: 100%;
     height: 395px; /* As per mockup CSS */
     align-self: stretch; /* As per mockup CSS, for flex context if parent is flex */
-    background-image: url("/static/accounts/images/profile/profile_spacebg.webp"); /* Adjusted path */
+    background-image: url("/static/accounts/images/profile/profile_spacebg.webp"); /* Path to image */
     background-color: lightgray; /* Fallback color from mockup CSS */
-    background-position: center center; /* Adjusted from 2.05px -378.738px */
-    background-size: cover; /* Adjusted from 100% 275.555% for better general coverage */
-    background-repeat: no-repeat;
+    background-position: 2.05px -378.738px; /* From mockup CSS */
+    background-size: 100% 275.555%; /* From mockup CSS */
+    background-repeat: no-repeat; /* From mockup CSS */
     padding-bottom: 0; /* Removed previous padding, height is now fixed */
     overflow: hidden;
     display: flex; /* Keep as flex container for content-layout */

@@ -1,0 +1,39 @@
+html { scroll-behavior: smooth; }
+:root {
+  --primary-color: #7B61FF;
+  --secondary-color: #818CE5;
+  --text-dark: #191919;
+  --text-light: #FFFFFF;
+  --text-gray: #A9A9A9;
+  --background-light: #FFFFFF;
+  --border-light-gray: #dee2e6;
+  --search-bg: #444444;
+  --search-text: #a1a0a0;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Unbounded', Arial, sans-serif;
+  background: linear-gradient(178.72deg, #000000 0%, #00346B 25.00%, #004E9F 47.60%, #01366D 64.42%, #020202 100%);
+  color: var(--text-light); 
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+main.content {
+  flex-grow: 1;
+  padding: 20px 0; 
+  max-width: 1440px; 
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+} 

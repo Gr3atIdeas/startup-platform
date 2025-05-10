@@ -1,307 +1,154 @@
-/* Базовые стили для body */
-html, body {
-  margin: 0;
-  padding: 0;
-  font-family: 'Roboto', sans-serif;
-}
+/* All previous content will be removed */ 
 
-body {
-  padding-top: 0; /* Убираем отступ, так как хедер больше не фиксированный */
-  background-image: url('/static/accounts/images/background.webp');
-  background-size: cover;
-  background-position: top center;
-  background-attachment: fixed;
-}
-
-/* Хедер сайта */
-header {
-  background-color: transparent;
-  position: relative; /* Меняем с fixed на relative */
+#main-header {
   width: 100%;
-  padding: 10px 0; /* Оставляем только вертикальные отступы */
-  box-sizing: border-box;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  z-index: 1000;
-}
-
-/* Новый контейнер для ограничения ширины и центрирования */
-.header-inner-container {
-  max-width: 1303px;
-  margin: 0 auto; /* Центрирование */
-  width: 100%;
+  padding-top: 20px;
+  padding-bottom: 20px;
   display: flex;
+  justify-content: center;
+}
+
+.header-content-wrapper {
+  width: 1303px;
+  max-width: 95%;
   justify-content: space-between;
   align-items: center;
+  display: inline-flex; 
 }
 
-/* Логотип */
-.header-logo {
-  display: flex;
+.header-logo-link {
+  display: inline-block; 
+}
+
+.header-logo-icon-container {
+  width: 53.18px;
+  height: 53.18px;
+  position: relative;
+  overflow: hidden;
+}
+
+.header-logo-icon-element1 {
+  width: 50.34px;
+  height: 50.34px;
+  left: -2.38px;
+  top: 47.28px;
+  position: absolute;
+  transform: rotate(-81deg);
+  transform-origin: top left;
+  border: 2.83px white solid;
+}
+
+.header-logo-icon-element2 {
+  width: 30.87px;
+  height: 27.34px;
+  left: 9.53px;
+  top: 12.24px;
+  position: absolute;
+  background: white;
+}
+
+.header-search-bar {
+  width: 352px;
+  padding: 8px 30px; 
+  background: rgba(255, 255, 255, 0.19);
+  border-radius: 99px;
+  border: 1px #004E9F solid;
+  justify-content: flex-start;
   align-items: center;
-  text-decoration: none;
-}
-
-.header-logo-img {
-  height: 32px; /* Уменьшаем размер логотипа согласно макету */
-  width: auto;
-  transition: opacity 0.3s linear;
-}
-
-.header-logo:hover .header-logo-img {
-  opacity: 0.9;
-}
-
-/* Навигационное меню */
-.nav-menu {
+  gap: 8px;
   display: flex;
-  gap: 10px;
-  align-items: center;
-  margin-left: auto;
 }
 
-.nav-menu a {
-  color: #FFF;
-  text-decoration: none;
-  padding: 8px 15px;
-  margin: 0 5px;
+.header-search-icon-container {
+  width: 22px;
+  height: 22px;
+  position: relative;
+  opacity: 0.60;
+  overflow: hidden;
+}
+
+.header-search-icon-element1 {
+  width: 14.67px;
+  height: 14.67px;
+  left: 1.75px;
+  top: 2.75px;
+  position: absolute;
+  border: 1.50px #A1A0A0 solid;
+}
+
+.header-search-icon-element2 {
+  width: 3.99px;
+  height: 3.99px;
+  left: 14.26px;
+  top: 15.26px;
+  position: absolute;
+  border: 1.50px #A1A0A0 solid;
+}
+
+.header-search-input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #A1A0A0;
+  font-size: 12px;
+  font-family: 'Unbounded', sans-serif; 
+  font-weight: 300;
+  letter-spacing: 0.12px;
+  flex-grow: 1;
+}
+
+.header-nav {
+  justify-content: flex-end;
+  align-items: center;
+  gap: 48px;
+  display: flex;
+}
+
+.header-nav-links {
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+  display: flex;
+}
+
+.header-nav-link { 
+  padding: 8px 16px;
   border-radius: 5px;
-  transition: background-color 0.3s linear, color 0.3s linear;
-  white-space: nowrap;
-  font-family: 'Unbounded', sans-serif;
+  color: white;
   font-size: 14px;
-  font-style: normal;
+  font-family: 'Unbounded', sans-serif;
   font-weight: 300;
   line-height: 18px;
-  letter-spacing: -0.28px;
-  vertical-align: middle;
+  text-decoration: none; 
 }
 
-.nav-menu a:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+.header-nav-link.cosmochat-link { 
+  background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%);
 }
 
-.nav-menu a.active {
-  background-color: rgba(255, 255, 255, 0.1);
-  color: #FFFFFF;
-}
-
-/* Стиль для поискового поля в хедере */
-.search-container {
-  position: relative;
-  width: 280px;
-  margin: 0 30px;
-}
-
-.search-icon {
-  position: absolute;
-  left: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #a1a0a0;
-  z-index: 2;
-}
-
-.search-input {
-  width: 100%;
-  height: 36px;
-  border: 1px solid #7B61FF;
-  border-radius: 99px;
-  padding: 0 12px 0 35px;
-  font-size: 14px;
-  outline: none;
-  box-sizing: border-box;
-  background-color: rgba(68, 68, 68, 0.8) !important;
-  color: #a1a0a0 !important;
-}
-
-.search-input::placeholder {
-  color: #a1a0a0;
-}
-
-/* Стили для кнопок в хедере */
-.login-btn, .logout-btn {
-  background-color: #FFEF2B !important;
-  color: #000000 !important;
-  border: 1px solid #FFEF2B !important;
-  text-decoration: none;
-  font-weight: 500;
-  font-size: 16px;
-  padding: 8px 16px;
-  border-radius: 8px;
-  position: relative;
-  overflow: hidden;
-  transition: all 0.3s linear;
-  position: relative;
-  margin-left: auto;
-}
-
-.create-startup-btn {
-  background-color: transparent !important;
-  color: #FFFFFF !important;
-  border: none !important;
-  text-decoration: none;
-  font-weight: 500;
-  font-size: 16px;
-  padding: 8px 16px;
-  border-radius: 8px;
-  position: relative;
-  overflow: hidden;
-  transition: all 0.3s linear;
-}
-
-.login-btn:hover, .logout-btn:hover {
-  background-color: #FFEF2B !important;
-  color: #000 !important;
-}
-
-.create-startup-btn:hover {
-  border: 2px solid #7B61FF !important;
-  color: #7B61FF !important;
-  padding: 6px 14px; /* Компенсация толщины границы */
-}
-
-/* Мобильное меню */
-.mobile-menu-toggle {
-  display: none;
-  background: none;
-  border: none;
-  font-size: 24px;
-  cursor: pointer;
-  color: #FFFFFF;
-  padding: 5px;
-  transition: all 0.3s linear;
-}
-
-/* Аватар пользователя */
-.avatar {
-  width: 36px; /* Увеличено */
-  height: 36px; /* Увеличено */
-  border-radius: 50%;
-  /* margin-left удален, так как будет на контейнере */
-  display: block; /* Убедимся, что изображение блочное внутри ссылки */
-}
-
-/* Ссылка-аватар */
-.avatar-link {
-  display: inline-flex; /* Используем flex для центрирования */
-  align-items: center; /* Вертикальное центрирование */
-  justify-content: center; /* Горизонтальное центрирование */
-  border-radius: 50%; /* Делаем контейнер круглым */
-  width: 36px; /* Размер контейнера = размеру аватара */
-  height: 36px; /* Размер контейнера = размеру аватара */
-  margin-left: 15px; /* Немного увеличим отступ слева */
-  vertical-align: middle;
-  overflow: hidden; /* Скроем все, что выходит за круглые рамки */
-  transition: box-shadow 0.2s linear;
-}
-
-.avatar-link:hover {
-  box-shadow: 0 0 5px rgba(255, 255, 255, 0.5); /* Легкая тень при наведении */
-}
-
-/* Иконка выхода */
-.logout-icon-link {
-  color: var(--text-light);
-  font-size: 20px; /* Размер иконки */
-  margin-left: 15px; /* Отступ слева от аватара */
-  text-decoration: none;
-  display: inline-flex;
+.header-auth-button-container {
+  min-width: 142px; 
+  height: 40px;
+  padding: 12px 25px;
+  background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+  justify-content: flex-start; 
   align-items: center;
-  transition: transform 0.3s linear, color 0.3s linear;
+  gap: 9px;
+  display: flex;
 }
 
-.logout-icon-link:hover {
-  color: #FFEF2B; /* Цвет при наведении */
-  transform: translateX(3px); /* Анимация сдвига вправо */
+.header-auth-button-link {
+  color: black;
+  font-size: 16px;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 400;
+  line-height: 16px;
+  text-decoration: none;
 }
 
-/* Адаптивность */
-@media (max-width: 992px) {
-  .search-container {
-    width: 200px;
-    margin: 0 15px;
-  }
-  
-  .nav-menu a {
-    padding: 6px 12px;
-    font-size: 14px;
-  }
-}
-
-@media (max-width: 768px) {
-  header {
-    flex-direction: column;
-    height: auto;
-    padding: 10px;
-  }
-  
-  .search-container {
-    width: 100%;
-    margin: 10px 0;
-  }
-  
-  .nav-menu {
-    flex-wrap: wrap;
-    justify-content: center;
-    margin-top: 10px;
-  }
-  
-  .login-btn, .create-startup-btn, .logout-btn {
-    padding: 6px 12px;
-    font-size: 14px;
-  }
-  
-  .login-btn:hover, .logout-btn:hover {
-    padding: 6px 12px;
-  }
-  
-  .create-startup-btn:hover {
-    padding: 4px 10px;
-  }
-}
-
-@media (max-width: 576px) {
-  .search-container {
-    width: 100%;
-  }
-  
-  .nav-menu a {
-    padding: 5px 10px;
-    font-size: 13px;
-  }
-  
-  .login-btn, .create-startup-btn, .logout-btn {
-    padding: 5px 10px;
-    font-size: 13px;
-  }
-  
-  .login-btn:hover, .logout-btn:hover {
-    padding: 5px 10px;
-  }
-  
-  .create-startup-btn:hover {
-    padding: 3px 8px;
-  }
-}
-
-.dropdown-menu {
-  transition: opacity 0.3s linear;
-}
-
-.main-nav ul li a:hover,
-.main-nav ul li a.active {
-  transition: background-color 0.3s linear, color 0.3s linear;
-}
-
-.user-menu ul li a {
-  transition: all 0.3s linear;
-}
-
-.user-avatar:hover {
-  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.5);
-  transition: box-shadow 0.2s linear;
-}
-
-.dropdown-toggle i {
-  transition: transform 0.3s linear, color 0.3s linear;
+.header-auth-button-icon {
+  width: 24px;
+  height: 24px;
 } 

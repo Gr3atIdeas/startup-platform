@@ -13,111 +13,57 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Koulen&family=Circe:wght@400;700&family=Unbounded:wght@300;400;500&display=swap" rel="stylesheet">
-  
+  {# Ссылка на Blippo-Black CY, если он используется локально и не через @font-face в CSS #}
+  {# <link rel="stylesheet" href="{% static 'path/to/blippo-font.css' %}"> #}
+
   <!-- Глобальные стили -->
-  <link rel="stylesheet" href="{% static 'accounts/css/footer_styles.css' %}">
+  <link rel="stylesheet" href="{% static 'accounts/css/global.css' %}?v={% now 'U' %}">
+  <link rel="stylesheet" href="{% static 'accounts/css/footer.css' %}?v={% now 'U' %}"> 
   
   <!-- Подключение CSS -->
-  <link rel="stylesheet" href="{% static 'accounts/css/header.css' %}?v={% now 'U' %}">
+  <link rel="stylesheet" href="{% static 'accounts/css/header.css' %}?v={% now 'U' %}"> 
   <link rel="stylesheet" href="{% static 'accounts/css/buttons.css' %}?v={% now 'U' %}">
 
   <!-- Подключаем Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   
-  <style>
-    html { scroll-behavior: smooth; }
-    :root {
-      --primary-color: #7B61FF;
-      --secondary-color: #818CE5;
-      --text-dark: #191919;
-      --text-light: #FFFFFF;
-      --text-gray: #A9A9A9;
-      --background-light: #FFFFFF;
-      --border-light-gray: #dee2e6;
-      --search-bg: #444444;
-      --search-text: #a1a0a0;
-    }
-    
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Unbounded', Arial, sans-serif;
-      background-color: var(--background-light);
-      background-image: url('{% static "accounts/images/background.webp" %}');
-      background-size: cover;
-      background-position: top center;
-      background-attachment: fixed;
-      color: var(--text-dark);
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-    
-    main.content {
-      flex-grow: 1;
-      padding: 40px 0; /* Оставляем только вертикальные отступы */
-      max-width: 1303px; /* Ограничиваем ширину контента */
-      margin: 0 auto; /* Центрирование контента */
-      width: 100%;
-      box-sizing: border-box;
-    }
-  </style>
-
   {% block head_extra %}
     {{ block.super }}
   {% endblock %}
 </head>
 <body>
-  <header class="header" id="main-header">
-    <div class="header-inner-container">
-      <a href="{% url 'home' %}" class="header-logo">
-        <img src="{% static 'accounts/images/white_logo_header.svg' %}" alt="GREAT IDEAS" class="header-logo-img">
-      </a>
-      
-      <div class="search-container">
-        <i class="fas fa-search search-icon"></i>
-        <input type="text" class="search-input" placeholder="Поиск">
-      </div>
-      
-      <nav class="nav-menu">
-        <a href="{% url 'startups_list' %}" {% if request.resolver_match.url_name == 'startups_list' %}class="active"{% endif %}>Каталог</a>
-        <a href="{% url 'news' %}" {% if request.resolver_match.url_name == 'news' %}class="active"{% endif %}>Новости</a>
-        <a href="{% url 'cosmochat' %}" {% if request.resolver_match.url_name == 'cosmochat' %}class="active"{% endif %}>CosmoChat</a>
-        
-        {% if user.is_authenticated %}
-          {# Ссылка для стартапера #}
-          {% if user.role.role_name == 'startuper' %}
-            <a href="{% url 'my_startups' %}" {% if request.resolver_match.url_name == 'my_startups' %}class="active"{% endif %}>Мои стартапы</a>
-          {% endif %}
-
-          {% if user.role.role_name == 'investor' %}
-            <a href="{% url 'investments' %}" {% if request.resolver_match.url_name == 'investments' %}class="active"{% endif %}>Портфель</a>
-          {% endif %}
-          
-          {% if user.role.role_name == 'moderator' %}
-            <a href="{% url 'moderator_dashboard' %}" {% if request.resolver_match.url_name == 'moderator_dashboard' %}class="active"{% endif %}>Заявки</a>
-          {% endif %}
-          <a href="{% url 'create_startup' %}" class="create-startup-btn">
-            Создать стартап
-          </a>
-          
-          {# Делаем аватар ссылкой на профиль #}
-          <a href="{% url 'profile' %}" class="avatar-link">
-              <img src="{% static 'accounts/images/avatars/default_avatar_ufo.png' %}" alt="Аватар" class="avatar">
-          </a>
-
-          {# Добавляем иконку выхода - Перемещено после аватара #}
-          <a href="{% url 'logout' %}" class="logout-icon-link" title="Выйти">
-              <i class="fas fa-sign-out-alt"></i>
-          </a>
-        {% else %}
-          <a href="{% url 'login' %}" class="login-btn">
-            Войти
-          </a>
-        {% endif %}
-      </nav>
+  <header id="main-header">
+    <div class="header-content-wrapper">
+        <a href="{% url 'home' %}" class="header-logo-link">
+            <div class="header-logo-icon-container">
+                <div class="header-logo-icon-element1"></div>
+                <div class="header-logo-icon-element2"></div>
+            </div>
+        </a>
+        <div class="header-search-bar">
+            <div class="header-search-icon-container">
+                <div class="header-search-icon-element1"></div>
+                <div class="header-search-icon-element2"></div>
+            </div>
+            <input type="text" placeholder="Поиск" class="header-search-input">
+        </div>
+        <nav class="header-nav">
+            <div class="header-nav-links">
+                <a href="{% url 'startups_list' %}" class="header-nav-link">Каталог</a>
+                <a href="{% url 'news' %}" class="header-nav-link">Новости</a>
+                <a href="{% url 'cosmochat' %}" class="header-nav-link cosmochat-link">CosmoChat</a>
+            </div>
+        </nav>
+        <div class="header-auth-button-container">
+            {% if user.is_authenticated %}
+                <a href="{% url 'profile' %}" class="header-auth-button-link">Профиль</a>
+                {# Тут можно добавить аватар пользователя, если нужно, взяв из старого хедера #}
+                {# <a href="{% url 'logout' %}" title="Выйти" style="margin-left: auto; ..."><i class="fas fa-sign-out-alt"></i></a> #}
+            {% else %}
+                <a href="{% url 'login' %}" class="header-auth-button-link">Войти</a>
+            {% endif %}
+            <img src="{% static 'accounts/images/add-circle-outline.svg' %}" alt="icon" class="header-auth-button-icon">
+        </div>
     </div>
   </header>
   
@@ -126,81 +72,63 @@
   </main>
   
   <footer class="site-footer">
-    <div class="footer-inner-container">
-      <div class="footer-main-content">
-        <div class="footer-left-column">
-          <div class="footer-logo">GREAT IDEAS</div>
-          <div class="footer-text">
-            <p>Раскройте открывающиеся возможности и будьте частью инновационной волны!</p>
-          </div>
-          <div class="store-links">
-            <a href="#" target="_blank" rel="noopener noreferrer">
-              {# Замените на реальный путь к изображению App Store #}
-              <img src="{% static 'accounts/images/layout/appstore_footer.png' %}" alt="App Store">
-            </a>
-            <a href="#" target="_blank" rel="noopener noreferrer">
-              {# Замените на реальный путь к изображению Google Play #}
-              <img src="{% static 'accounts/images/layout/googleplay_footer.png' %}" alt="Google Play">
-            </a>
-          </div>
-          <button class="suggest-news-button">
-            <i class="fas fa-plus-circle"></i>
-            Предложить новость
-          </button>
+    <div class="footer-positioning-container">
+        <div class="footer-top-section" style="position: absolute; left: 50%; transform: translateX(-50%); top: 88px;">
+            <div class="footer-brand-info">
+                <div class="footer-brand-title">Great ideas</div>
+                <div class="footer-brand-tagline">Раскройте открывающиеся возможности и будьте частью инновационной волны</div>
+            </div>
+            <div class="footer-social-links">
+                <a href="#" title="VK"><img src="{% static 'accounts/images/layout/vk_footer.png' %}" alt="VK" class="footer-social-icon"></a>
+                <a href="#" title="LinkedIn/Telegram"><img src="{% static 'accounts/images/layout/linkedin_footer.png' %}" alt="LinkedIn" class="footer-social-icon"></a>
+            </div>
         </div>
+
+        <div class="footer-menus-section" style="position: absolute; top: 225px; right: 62px;">
+            <div class="footer-menu-column">
+                <div class="footer-menu-title">Меню</div>
+                <div class="footer-menu-links">
+                    <a href="{% url 'startups_list' %}" class="footer-menu-link">Каталог</a>
+                    {% if user.is_authenticated and user.role.role_name == 'investor' %}
+                    <a href="{% url 'investments' %}" class="footer-menu-link">Портфель</a>
+                    {% endif %}
+                    <a href="{% url 'startups_list' %}" class="footer-menu-link">Стартапы</a>
+                    <a href="#" class="footer-menu-link">Франшизы</a>
+                    <a href="{% url 'news' %}" class="footer-menu-link">Новости</a>
+                    <a href="{% url 'cosmochat' %}" class="footer-menu-link">CosmoChat</a>
+                </div>
+            </div>
+            <div class="footer-menu-column">
+                <div class="footer-menu-title">О нас</div>
+                <div class="footer-menu-links">
+                    <a href="#" class="footer-menu-link">FAQ</a>
+                    <a href="#" class="footer-menu-link">Поддержка</a>
+                    <a href="#" class="footer-menu-link">Контакты</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-app-links-section" style="position: absolute; top: 437px; left: 62px;">
+            <a href="#"><img src="{% static 'accounts/images/layout/appstore_footer.png' %}" alt="App Store" class="footer-app-link-img"></a>
+            <a href="#"><img src="{% static 'accounts/images/layout/googleplay_footer.png' %}" alt="Google Play" class="footer-app-link-img"></a>
+        </div>
+
+        <a href="#" class="footer-subscribe-button" style="left: 62px; top: 245px; position: absolute;">
+            <div class="footer-subscribe-text">Подписаться на новости</div>
+            <div class="footer-subscribe-icon-container">
+                <div class="footer-subscribe-icon-element1"></div>
+                <div class="footer-subscribe-icon-element2"></div>
+            </div>
+        </a>
         
-        <div class="footer-right-column">
-          <div class="footer-menus">
-            <div class="footer-menu footer-menu-main">
-              <h3>Меню</h3>
-              <ul>
-                <li><a href="{% url 'startups_list' %}">Каталог</a></li>
-                {% if user.is_authenticated and user.role.role_name == 'investor' %}
-                <li><a href="{% url 'investments' %}">Портфель</a></li>
-                {% endif %}
-                {# <li><a href="{% url 'startups_list' %}">Стартапы</a></li> #} {# Возможно, дубликат Каталога? #}
-                <li><a href="#">Франшизы</a></li> {# TODO: Добавить URL для франшиз #}
-                <li><a href="{% url 'news' %}">Новости</a></li>
-                <li><a href="{% url 'cosmochat' %}">CosmoChat</a></li>
-              </ul>
+        <div class="footer-bottom-bar" style="left: 0px; bottom: 0px; position: absolute;"></div>
+        <div class="footer-copyright-section" style="left: 50%; transform: translateX(-50%); bottom: 15px; position: absolute;">
+            <div class="footer-copyright-text">© 2025 Great Ideas</div>
+            <div class="footer-legal-links">
+                <a href="#" class="footer-legal-link">Политика конфиденциальности</a>
+                <a href="#" class="footer-legal-link">Оферта</a>
             </div>
-            
-            <div class="footer-menu footer-menu-about">
-              <h3>О нас</h3>
-              <ul>
-                <li><a href="#">FAQ</a></li>
-                <li><a href="#">Поддержка</a></li>
-                <li><a href="#">Контакты</a></li>
-              </ul>
-            </div>
-          </div>
-          
-          <div class="footer-socials">
-            <a href="#" target="_blank" rel="noopener noreferrer">
-               <span class="social-icon-bg">
-                 <img src="{% static 'accounts/images/layout/vk_footer.png' %}" alt="VK">
-               </span>
-            </a>
-            <a href="#" target="_blank" rel="noopener noreferrer">
-               <span class="social-icon-bg">
-                 <img src="{% static 'accounts/images/layout/linkedin_footer.png' %}" alt="LinkedIn">
-               </span>
-            </a>
-          </div>
         </div>
-      </div>
-    </div>
-    
-    <div class="footer-copyright-bar">
-      <div class="copyright-inner-container">
-        <div class="footer-copyright-bar-content">
-          <div class="footer-copyright-bar-copyright">© 2025 Great Ideas</div>
-          <div class="footer-copyright-bar-links">
-            <a href="#">Политика конфиденциальности</a>
-            <a href="#">Оферта</a>
-          </div>
-        </div>
-      </div>
     </div>
   </footer>
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
