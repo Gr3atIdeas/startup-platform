@@ -275,14 +275,14 @@
     align-items: center;
     gap: 8px;
     display: inline-flex;
-}
-.profile-sidebar-my-galaxy-btn span { /* StyledButton01span */
+    /* Text styles applied directly to the button/link */
     color: black;
     font-size: 16px;
     font-family: 'Unbounded', sans-serif;
     font-weight: 400;
     line-height: 16px;
     word-wrap: break-word;
+    text-decoration: none; /* Ensure links look like buttons */
 }
 
 /* StyledSocials -> .profile-sidebar-social-icons-row */
@@ -384,15 +384,14 @@
     align-items: center;
     gap: 12px;
     display: flex; /* display:inline-flex from HTML for this specific button if it should not take full width */
-}
-.profile-main-edit-btn span { /* StyledLabelspan for edit button text */
+    /* Text styles applied directly */
     color: white;
     font-size: 16px;
     font-family: 'Unbounded', sans-serif;
     font-weight: 400;
     line-height: 16px;
     word-wrap: break-word;
-    text-align: right; /* Added */
+    text-decoration: none; /* Ensure links look like buttons */
 }
 /* StyledIconsEditLine -> .profile-main-edit-btn-icon (wrapper for img) */
 .profile-main-edit-btn-icon-wrapper { /* New wrapper if needed, or styles on img */
@@ -558,8 +557,7 @@
     align-items: center;
     gap: 10px; /* from styled */
     display: flex; /* from styled */
-}
-.profile-main-startup-category-tag span { /* StyledLabelspan for category text */
+    /* Text styles applied directly */
     color: white;
     font-size: 12px;
     font-family: 'Unbounded', sans-serif;
@@ -602,14 +600,14 @@
     align-items: center;
     gap: 8px;
     display: flex;
-}
-.profile-main-startup-details-btn span { /* StyledButton03span */
-    color: #F5F5F5; /* var(--Text-Brand-On-Brand, #F5F5F5) */
+    /* Text styles applied directly */
+    color: var(--Text-Brand-On-Brand, #F5F5F5);
     font-size: 16px;
     font-family: 'Unbounded', sans-serif;
     font-weight: 400;
     line-height: 16px;
     word-wrap: break-word;
+    text-decoration: none; /* Ensure links look like buttons */
 }
 
 /* StyledRectangle4196 (Startup Image) -> .profile-main-startup-image */
