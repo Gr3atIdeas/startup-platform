@@ -13,7 +13,8 @@
   max-width: 95%;
   justify-content: space-between;
   align-items: center;
-  display: inline-flex; 
+  display: flex;
+  gap: 20px;
 }
 
 .header-logo-link {
@@ -129,7 +130,8 @@
 .header-auth-section {
   display: flex;
   align-items: center;
-  min-width: 142px;
+  margin-left: auto;
+  gap: 15px;
 }
 
 .header-login-button {
@@ -190,7 +192,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #cccccc;
+  background-color: #FF00FF !important;
   position: relative;
 }
 
@@ -284,4 +286,14 @@
 .header-logo-icon-element1,
 .header-logo-icon-element2 {
     display: none;
+}
+
+.header-role-button {
+    padding: 8px 12px;
+    font-size: 14px;
+}
+
+.nav-menu {
+    /* margin-right: auto; */
+    /* flex-grow: 1; */
 } 

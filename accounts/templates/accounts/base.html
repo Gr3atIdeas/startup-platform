@@ -50,6 +50,15 @@
                 <a href="{% url 'news' %}" class="header-nav-link">Новости</a>
                 <a href="{% url 'cosmochat' %}" class="header-nav-link cosmochat-link">CosmoChat</a>
             </div>
+            {# Блок для дополнительных кнопок ролей перед кнопкой Профиля/Войти #}
+            {% if user.is_authenticated %}
+                {% if user.role.role_name == 'moderator' %}
+                    <a href="{% url 'moderator_dashboard' %}" class="header-nav-link header-role-button">Заявки</a>
+                    <a href="{% url 'create_startup' %}" class="header-nav-link header-role-button">Создать стартап</a>
+                {% elif user.role.role_name == 'startuper' %}
+                    <a href="{% url 'create_startup' %}" class="header-nav-link header-role-button">Создать стартап</a>
+                {% endif %}
+            {% endif %}
         </nav>
         <div class="header-auth-section">
             {% if user.is_authenticated %}
