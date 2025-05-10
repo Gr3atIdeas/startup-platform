@@ -1,56 +1,56 @@
-/* Profile Page Specific Styles */
+/* Profile Page Specific Styles - Adapted from Styled-Components */
 
-/* Main wrapper for the entire profile page content */
+/* StyledFeatured -> .profile-page-wrapper */
 .profile-page-wrapper {
     width: 100%;
-    /* height: 100%; */ /* Height should be auto or determined by content */
     padding-bottom: 55px;
-    overflow: hidden; /* Consider if this is always needed, might hide useful overflows */
+    overflow: hidden; 
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    display: flex; /* Changed from inline-flex for a top-level block */
+    display: flex;
 }
 
-/* Main banner image at the top of the profile */
+/* StyledImagefromrawpixelid597407jpeg1 -> .profile-main-banner */
 .profile-main-banner {
     align-self: stretch;
     height: 395px;
-    object-fit: cover; /* Ensures the image covers the area well */
+    object-fit: cover;
 }
 
-/* Container for the two-column layout (sidebar and main content) */
+/* StyledAutolayout -> .profile-content-container */
 .profile-content-container {
     width: 1303px;
-    max-width: 95%; /* Responsive adjustment */
+    max-width: 95%;
     justify-content: space-between;
     align-items: flex-start;
-    display: flex; /* Changed from inline-flex */
-    margin-top: -275px; /* Negative margin to pull it up over the banner, as per Figma */
-    position: relative; /* Needed for z-index stacking if banner is also positioned */
-    z-index: 1; /* Ensures it's above the banner if banner had z-index */
-    gap: 20px; /* Gap between sidebar and main content */
+    display: flex;
+    margin-top: -275px;
+    position: relative;
+    z-index: 1;
+    gap: 20px; 
 }
 
-/* Sidebar Styles */
+/* StyledProfile -> .profile-sidebar */
 .profile-sidebar {
     width: 256px;
-    min-width: 256px; /* Prevent shrinking too much */
+    min-width: 256px;
     padding: 32px;
     background: #011B35;
     box-shadow: 0px 40px 32px -24px rgba(14.88, 14.88, 14.88, 0.12);
     overflow: hidden;
     border-radius: 10px;
-    border: 1px solid #353945; /* Changed from outline for consistency */
+    border: 1px solid #353945; 
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    gap: 24px; /* Default gap for items in sidebar, was 48px in one inner div */
-    display: flex; /* Changed from inline-flex */
+    gap: 48px; /* Original gap from StyledProfile */
+    display: flex;
     box-sizing: border-box;
 }
 
-.profile-sidebar-user-info-block {
+/* StyledFrame934 (Container for avatar and text block below it) */
+.profile-sidebar-user-info-block { /* Re-using this class for StyledFrame934 */
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -59,23 +59,26 @@
     width: 100%;
 }
 
+/* StyledAvatar01 -> .profile-sidebar-avatar-wrapper */
 .profile-sidebar-avatar-wrapper {
     width: 160px;
     height: 160px;
     position: relative;
-    /* background: #45B26B; */ /* Placeholder color, avatar img should cover */
+    background: #45B26B; /* Placeholder bg from styled component */
     overflow: hidden;
-    border-radius: 128px; /* For circular avatar */
+    border-radius: 128px;
 }
 
+/* StyledAustinwadeX6Uj51n5CE8unsplash1 -> .profile-sidebar-avatar-img */
 .profile-sidebar-avatar-img {
-    width: 100%; /* Make image fill the wrapper */
+    width: 100%; /* Adjusted to fill wrapper, original had absolute positioning */
     height: 100%;
-    object-fit: cover; /* Crop and center image */
-    /* position: absolute; left: 0; top: -43.33px; width: 160px; height: 239.97px; */ /* These were likely Figma export quirks for specific placeholder, object-fit is better */
+    object-fit: cover;
+    /* width: 160px; height: 239.97px; left: 0px; top: -43.33px; position: absolute; */ /* Original styles for placeholder */
 }
 
-.profile-sidebar-text-details {
+/* StyledFrame930 (Text details below avatar) */
+.profile-sidebar-text-details { /* Re-using this class for StyledFrame930 */
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -83,7 +86,8 @@
     display: flex;
 }
 
-.profile-sidebar-name-role {
+/* StyledFrame931 (Name, Role, ID block) */
+.profile-sidebar-name-role { /* Re-using for StyledFrame931 */
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
@@ -91,54 +95,53 @@
     display: flex;
 }
 
+/* StyledNameName -> .profile-sidebar-name */
 .profile-sidebar-name {
     justify-content: flex-start;
     align-items: flex-start;
     gap: 4px;
-    display: inline-flex; /* To keep names on one line if possible */
+    display: inline-flex;
+}
+.profile-sidebar-name span { /* Corresponds to multiple <StyledP> or <StyledSpan> in React for name parts */
     color: #FCFCFD;
     font-size: 20px;
     font-family: 'Unbounded', sans-serif;
     font-weight: 400;
     line-height: 18px;
-}
-.profile-sidebar-name span {
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    word-wrap: break-word;
 }
 
-.profile-sidebar-role {
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 8px;
-    display: inline-flex;
+/* StyledAddress (for Role) -> .profile-sidebar-role */
+.profile-sidebar-role span { /* Corresponds to <StyledP> for Role */
     color: #F5DB0C;
     font-size: 14px;
     font-family: 'Unbounded', sans-serif;
     font-weight: 300;
     line-height: 18px;
+    word-wrap: break-word;
 }
 
+/* StyledAddress01 (for ID and copy icon) -> .profile-sidebar-id */
 .profile-sidebar-id {
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 8px;
-    display: inline-flex;
-    color: rgba(251, 252, 253, 0.30);
+    gap: 8px; /* From StyledAddress01 */
+}
+.profile-sidebar-id span { /* StyledID89457t94857tspan */
+    color: rgba(251.82, 252.37, 252.88, 0.30);
     font-size: 12px;
     font-family: 'Unbounded', sans-serif;
     font-weight: 300;
     letter-spacing: 0.12px;
+    word-wrap: break-word;
 }
 
+/* StyledCopysharp -> .profile-sidebar-copy-icon */
 .profile-sidebar-copy-icon {
     width: 11px;
     height: 11px;
     position: relative;
     overflow: hidden;
-    cursor: pointer;
 }
-
+/* StyledVector -> .profile-sidebar-copy-icon-inner1 */
 .profile-sidebar-copy-icon-inner1 {
     width: 7.91px;
     height: 7.91px;
@@ -147,7 +150,7 @@
     position: absolute;
     background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%);
 }
-
+/* StyledVector01 -> .profile-sidebar-copy-icon-inner2 */
 .profile-sidebar-copy-icon-inner2 {
     width: 7.91px;
     height: 7.91px;
@@ -157,31 +160,30 @@
     background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%);
 }
 
-.profile-sidebar-bio {
-    width: 186px;
-    text-align: center;
+/* Bio text (StyledP within StyledFrame930) -> .profile-sidebar-bio */
+.profile-sidebar-bio { /* One of the <StyledP> in React */
     color: #777E90;
     font-size: 12px;
     font-family: 'Unbounded', sans-serif;
     font-weight: 300;
     letter-spacing: 0.12px;
     word-wrap: break-word;
+    width: 186px; /* from previous CSS, seems consistent */
+    text-align: center;
 }
 
+/* StyledAddress02 (for website link) -> .profile-sidebar-website */
 .profile-sidebar-website {
-    justify-content: flex-start;
-    align-items: center; /* Vertically align icon and text */
-    gap: 8px;
-    display: inline-flex;
+    gap: 8px; /* From StyledAddress02 */
 }
-
+/* StyledIconsGlobeLine -> .profile-sidebar-globe-icon */
 .profile-sidebar-globe-icon {
     width: 16px;
     height: 16px;
     position: relative;
     overflow: hidden;
 }
-
+/* StyledShape -> .profile-sidebar-globe-icon-inner1 */
 .profile-sidebar-globe-icon-inner1 {
     width: 13.33px;
     height: 13.33px;
@@ -189,27 +191,27 @@
     top: 1.33px;
     position: absolute;
     background: #777E90;
-    border-radius: 50%; /* Make it a circle */
+    border-radius: 50%;
 }
-
+/* StyledShape01 -> .profile-sidebar-globe-icon-inner2 */
 .profile-sidebar-globe-icon-inner2 {
-    width: 6.67px; /* For longitude line */
+    width: 6.67px;
     height: 13.33px;
     left: 4.67px;
     top: 1.33px;
     position: absolute;
     background: #777E90;
 }
-
+/* StyledShape02 -> .profile-sidebar-globe-icon-inner3 */
 .profile-sidebar-globe-icon-inner3 {
-    width: 13.33px; /* For latitude line */
+    width: 13.33px;
     height: 1.33px;
     left: 1.33px;
     top: 7.33px;
     position: absolute;
     background: #777E90;
 }
-
+/* StyledHttpsui8netspan or StyledHttpsui8net -> .profile-sidebar-website-link */
 .profile-sidebar-website-link {
     color: #FCFCFD;
     font-size: 14px;
@@ -217,57 +219,436 @@
     font-weight: 700;
     line-height: 16px;
     word-wrap: break-word;
-    text-decoration: none;
-}
-.profile-sidebar-website-link:hover {
-    text-decoration: underline;
 }
 
-/* Social icons (round placeholders) */
+/* StyledFrame932 (round share icons container) -> .profile-sidebar-social-icons-round */
 .profile-sidebar-social-icons-round {
+    gap: 8px; /* From StyledFrame932 */
+    display: inline-flex; /* Ensure they are in a row */
     justify-content: center;
     align-items: center;
-    gap: 8px;
-    display: inline-flex;
 }
-
+/* StyledShareicon and StyledShareicon01 -> .profile-sidebar-social-icon-round-item */
 .profile-sidebar-social-icon-round-item {
     padding: 10px;
     overflow: hidden;
-    border-radius: 40px; /* Highly rounded */
-    border: 2px solid #353945;
+    border-radius: 40px;
+    border: 2px solid #353945; /* outline from styled-component is border here */
     justify-content: flex-start;
     align-items: flex-start;
-    gap: 10px;
-    display: flex;
-    width: 40px; /* 20px icon + 2*10px padding */
+    display: flex; /* gap:10px from styled component not needed as icon is inner */
+    width: 40px; 
     height: 40px;
     box-sizing: border-box;
 }
-
+/* StyledIconsShareSquareLine / StyledIconsMoreLine -> .profile-sidebar-social-icon-placeholder1/2 */
 .profile-sidebar-social-icon-placeholder1, .profile-sidebar-social-icon-placeholder2 {
     width: 20px;
     height: 20px;
     position: relative;
     overflow: hidden;
 }
-/* Styles for placeholder icon 1 (example) */
-.icon-placeholder-inner-1-1 {
+/* StyledShape03, StyledShape04 for first icon */
+.icon-placeholder-inner-1-1 { /* Was StyledShape03 */
     width: 15px; height: 11.59px; left: 2.50px; top: 7.58px; position: absolute; background: #777E90;
 }
-.icon-placeholder-inner-1-2 {
-    width: 11.60px; height: 7.50px; left: 13.75px; top: 0.83px; position: absolute; transform: rotate(90deg); transform-origin: top left; background: #777E90;
+.icon-placeholder-inner-1-2 { /* Was StyledShape04 */
+    width: 11.60px; height: 7.50px; left: 2.50px; /* Adjusted left from 13.75 to center in 20px */ top: 0.83px; position: absolute; transform: rotate(90deg); transform-origin: top left; background: #777E90;
 }
-/* Styles for placeholder icon 2 (example) */
-.icon-placeholder-inner-2-1 {
-    width: 20px; height: 20px; left: 0px; top: 0px; position: absolute; /* This div seems to be a container */
+/* StyledMorefill1, StyledVector02, StyledVector03 for second icon */
+.icon-placeholder-inner-2-1 { /* Was StyledMorefill1->StyledVector02, seems like a container for vector03 */
+    width: 20px; height: 20px; left: 0px; top: 0px; position: absolute; /* No background, acts as container */
 }
-.icon-placeholder-inner-2-2 {
+.icon-placeholder-inner-2-2 { /* Was StyledVector03 */
     width: 15px; height: 3.33px; left: 2.50px; top: 8.33px; position: absolute; background: #777E90;
 }
 
 
-/* Avatar Upload Section */
+/* StyledButton (My Galaxy) -> .profile-sidebar-my-galaxy-btn */
+.profile-sidebar-my-galaxy-btn {
+    height: 40px; 
+    padding-left: 35px; padding-right: 35px; padding-top: 12px; padding-bottom: 12px;
+    background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
+    overflow: hidden;
+    border-radius: 10px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    display: inline-flex;
+}
+.profile-sidebar-my-galaxy-btn span { /* StyledButton01span */
+    color: black;
+    font-size: 16px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
+    line-height: 16px;
+    word-wrap: break-word;
+}
+
+/* StyledSocials -> .profile-sidebar-social-icons-row */
+.profile-sidebar-social-icons-row {
+    padding-top: 8px; padding-bottom: 8px;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 16px;
+    display: inline-flex;
+}
+/* StyledImage36 -> first img in .profile-sidebar-social-icons-row */
+.profile-sidebar-social-icons-row img:first-of-type {
+    width: 25px;
+    height: 23.47px;
+}
+/* StyledRectangle130 -> first div in .profile-sidebar-social-icons-row */
+.profile-sidebar-social-icons-row div:nth-of-type(1) {
+    width: 29.33px;
+    height: 33.30px;
+    background: #777E90;
+}
+/* StyledImage37 -> second img in .profile-sidebar-social-icons-row */
+.profile-sidebar-social-icons-row img:nth-of-type(2) {
+    width: 25px;
+    height: 25px;
+}
+/* StyledRectangle131 -> second div in .profile-sidebar-social-icons-row */
+.profile-sidebar-social-icons-row div:nth-of-type(2) {
+    width: 30.91px;
+    height: 34.04px;
+    background: #777E90;
+}
+/* StyledIconsInstagramLine -> .profile-sidebar-social-icon-row-item-complex-div */
+.profile-sidebar-social-icon-row-item-complex-div {
+    width: 30px;
+    height: 30px;
+    position: relative;
+    overflow: hidden;
+}
+.icon-complex-inner1 { /* StyledVector04 */
+    width: 25px; height: 25px; left: 2.50px; top: 2.50px; position: absolute; background: #777E90;
+}
+.icon-complex-inner2 { /* StyledVector05 */
+    width: 2.50px; height: 2.50px; left: 20px; top: 7.50px; position: absolute; background: #777E90;
+}
+.icon-complex-inner3 { /* StyledVector06 */
+    width: 12.50px; height: 12.50px; left: 8.75px; top: 8.75px; position: absolute; background: #777E90;
+}
+
+/* StyledDivider -> .profile-sidebar-divider */
+.profile-sidebar-divider {
+    width: 199px;
+    height: 1px;
+    /* position: relative; */ /* Not needed if just a bg color line */
+    background: #353945;
+}
+
+/* Styled152025span / Styled152025 -> .profile-sidebar-date-joined */
+.profile-sidebar-date-joined {
+    color: #777E90;
+    font-size: 12px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.12px;
+    word-wrap: break-word;
+    text-align: center; /* From previous CSS */
+    width: 186px; /* From previous CSS */
+}
+
+
+/* StyledFrame1018 -> .profile-main-content */
+.profile-main-content {
+    width: 976px;
+    max-width: 100%;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-end; 
+    gap: 100px; /* Original gap from StyledFrame1018 */
+    display: flex;
+}
+
+/* StyledActionbutton (Edit Profile Button container) -> .profile-main-edit-btn-container */
+.profile-main-edit-btn-container {
+    justify-content: flex-start; /* From StyledActionbutton */
+    align-items: flex-start;    /* From StyledActionbutton */
+    gap: 15px;                 /* From StyledActionbutton */
+    display: inline-flex;      /* From StyledActionbutton */
+    /* Overriding some of these with flex-end as per previous CSS */
+    width: auto; /* Let it size by content */
+    justify-content: flex-end; 
+    align-self: flex-end; /* Ensure it aligns to the right of .profile-main-content */
+}
+/* StyledButton (Edit Profile Button itself) -> .profile-main-edit-btn */
+.profile-main-edit-btn {
+    padding: 12px 16px;
+    border-radius: 10px;
+    border: 1px solid white; 
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    display: flex; /* display:inline-flex from HTML for this specific button if it should not take full width */
+}
+.profile-main-edit-btn span { /* StyledLabelspan for edit button text */
+    color: white;
+    font-size: 16px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
+    line-height: 16px;
+    word-wrap: break-word;
+    text-align: right; /* Added */
+}
+/* StyledIconsEditLine -> .profile-main-edit-btn-icon (wrapper for img) */
+.profile-main-edit-btn-icon-wrapper { /* New wrapper if needed, or styles on img */
+    width: 16px;
+    height: 16px;
+    position: relative;
+    overflow: hidden;
+}
+/* StyledShape05 and StyledShape06 for edit icon parts, but we use an SVG now */
+/* .edit-icon-inner1 { width: 12px; height: 1.33px; left: 2px; top: 14px; position: absolute; background: white; } */
+/* .edit-icon-inner2 { width: 12.11px; height: 12.11px; left: 2px; top: 0.55px; position: absolute; background: white; } */
+.profile-main-edit-btn-icon {
+    width: 16px;
+    height: 16px;
+}
+
+
+/* StyledFollowing -> .profile-main-startups-section */
+.profile-main-startups-section {
+    align-self: stretch;
+    padding: 32px 32px 45px 32px; /* Top, H, Bottom from StyledFollowing */
+    background: rgba(1, 27, 53, 0.85); /* From previous attempt, seems good */
+    box-shadow: 0px 40px 32px -24px rgba(0, 0, 0, 0.12);
+    overflow: hidden;
+    border-radius: 10px;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 48px; /* Original gap from StyledFollowing */
+    display: flex;
+}
+
+/* StyledSubNavigation -> .profile-main-tabs */
+.profile-main-tabs {
+    align-self: stretch;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 12px;
+    display: inline-flex;
+}
+/* StyledSubnavitem -> .profile-main-tab-item */
+.profile-main-tab-item {
+    padding: 6px 12px;
+    border-radius: 10px; 
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    display: flex;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    line-height: 18px;
+    font-size: 14px;
+    cursor: pointer;
+}
+.profile-main-tab-item.active-tab { /* StyledSubnavitem with StyledActivespan */
+    background: #E6E8EC;
+    color: #23262F; 
+}
+.profile-main-tab-item:not(.active-tab) { /* StyledSubnavitem01 with StyledDefaultspan */
+    color: rgba(255, 255, 255, 0.50);
+    border-radius: 100px; /* From StyledSubnavitem01 */
+}
+
+
+/* Startup Card container: StyledFrame1019, StyledFrame1020 etc. */
+/* These are wrappers for each card + image + divider. We have .profile-main-startup-card-item for the card, and then image and divider are siblings */
+.profile-main-startup-list-item-wrapper { /* New class if needed for card+img+divider block */
+    align-self: stretch;
+    justify-content: flex-start; /* default, but styled-components had it */
+    align-items: flex-start;   /* default */
+    gap: 20px;
+    display: flex; /* changed from inline-flex as it's a block */
+    flex-wrap: wrap; /* from styled-component */
+    align-content: flex-start; /* from styled-component */
+    flex-direction: column; /* To stack card, then image, then divider based on order in HTML */
+}
+
+/* StyledFrame947 -> .profile-main-startup-card-item (this is the card itself) */
+.profile-main-startup-card-item {
+    /* width: 836px; */ /* Let it be flexible by parent */
+    align-self: stretch; /* Make card take full width of its column in the flex wrap */
+    padding: 23px 32px 23px 75px; /* As per StyledFrame947 */
+    overflow: hidden;
+    border-radius: 10px;
+    justify-content: flex-start; /* Content elements start from left */
+    align-items: center;
+    gap: 35px;
+    display: flex;
+    background-color: #032347; /* from previous CSS */
+    box-sizing: border-box;
+}
+
+/* Content within the card, before image */
+/* StyledFrame1012 (Name + Rating/Reviews) -> .profile-main-startup-info */
+.profile-main-startup-info {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 13px;
+    display: inline-flex;
+}
+.profile-main-startup-name { /* Generic text, corresponds to multiple <StyledP> or <StyledSpan> */
+    color: white;
+    font-size: 20px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
+    line-height: 18px;
+    word-wrap: break-word;
+}
+/* StyledFrame952 (Rating + Review Count) -> .profile-main-startup-rating-reviews */
+.profile-main-startup-rating-reviews {
+    width: 185px; /* From StyledFrame952 */
+    justify-content: space-between;
+    align-items: center;
+    display: inline-flex;
+}
+.profile-main-startup-rating { /* Styled425534span */
+    color: white;
+    font-size: 12px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.12px;
+    word-wrap: break-word;
+}
+/* StyledFrame490 (Review icon + count) -> .profile-main-startup-reviews */
+.profile-main-startup-reviews {
+    gap: 8px; /* From StyledFrame490 */
+}
+.profile-main-startup-review-icon { /* StyledVector07, 08, 09, 10 */
+    width: 16px;
+    height: 15px;
+    border: 1px solid white; /* outline from styled-component */
+}
+.profile-main-startup-reviews span { /* Styled17span */
+    color: white;
+    font-size: 14px;
+    font-family: 'Circe', sans-serif;
+    font-weight: 400;
+    line-height: 18px;
+    word-wrap: break-word;
+}
+
+/* StyledFrame1014 (Category tag + Progress bar) -> .profile-main-startup-category-progress */
+.profile-main-startup-category-progress {
+    flex-direction: column; /* from styled */
+    justify-content: flex-start; /* from styled */
+    align-items: flex-start; /* from styled */
+    gap: 15px; /* from styled */
+    display: inline-flex; /* from styled */
+}
+/* StyledFrame945 (Tag, prog bar bg, prog bar fg, text) */
+.progress-bar-elements-container { /* New class for the row of items in StyledFrame945 */
+    justify-content: flex-start;
+    align-items: center;
+    gap: 15px;
+    display: inline-flex;
+}
+.profile-main-startup-category-tag { /* StyledEditMenuaction */
+    padding: 9px 17px;
+    background: #050505;
+    border-radius: 5px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px; /* from styled */
+    display: flex; /* from styled */
+}
+.profile-main-startup-category-tag span { /* StyledLabelspan for category text */
+    color: white;
+    font-size: 12px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.12px;
+    word-wrap: break-word;
+    text-align: center; /* from styled */
+}
+.profile-main-startup-progress-bar-bg { /* StyledRectangle4197 */
+    width: 150px;
+    height: 27px;
+    background: black;
+    border-radius: 5px;
+    overflow: hidden;
+}
+.profile-main-startup-progress-bar-fg { /* StyledRectangle4198 */
+    /* width: 101px; */ /* This will be dynamic via inline style */
+    height: 100%;
+    background: #FFEF2B;
+    border-radius: 5px;
+}
+.profile-main-startup-progress-text { /* Styled65span */
+    color: black;
+    font-size: 12px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.12px;
+    word-wrap: break-word;
+    text-align: center; /* from styled */
+}
+
+/* StyledButton02 (Details button) -> .profile-main-startup-details-btn */
+.profile-main-startup-details-btn {
+    height: 40px;
+    padding: 12px 35px;
+    background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%);
+    overflow: hidden;
+    border-radius: 10px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    display: flex;
+}
+.profile-main-startup-details-btn span { /* StyledButton03span */
+    color: #F5F5F5; /* var(--Text-Brand-On-Brand, #F5F5F5) */
+    font-size: 16px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
+    line-height: 16px;
+    word-wrap: break-word;
+}
+
+/* StyledRectangle4196 (Startup Image) -> .profile-main-startup-image */
+.profile-main-startup-image {
+    width: 134px;
+    height: 126px;
+    object-fit: cover;
+    border-radius: 8px; /* from previous css */
+}
+
+/* StyledDivider01 -> .profile-main-startup-list-divider */
+.profile-main-startup-list-divider {
+    width: 912px; /* from styled */
+    max-width: 100%; /* make it responsive */
+    height: 4px; /* from styled */
+    /* position: relative; */ /* not needed */
+    background: rgba(255, 255, 255, 0.50);
+}
+
+.profile-main-no-startups {
+    color: #777E90;
+    font-size: 16px;
+    text-align: center;
+    width: 100%;
+    padding: 20px 0;
+}
+
+/* General button styling (ensure .btn class from global/buttons.css is effective) */
+.btn {
+    text-decoration: none;
+    /* other base styles */
+}
+
+/* Font family fallbacks should be handled by global.css */
+body {
+    font-family: 'Unbounded', 'Circe', 'DM Sans', Arial, sans-serif;
+}
+
+/* Avatar Upload section (from previous manual CSS, ensure it fits) */
 .profile-avatar-upload-section {
     display: flex;
     flex-direction: column;
@@ -275,6 +656,8 @@
     gap: 10px;
     width: 100%;
     color: #FCFCFD;
+    margin-top: 20px; /* Add some spacing */
+    margin-bottom: 20px;
 }
 .profile-avatar-upload-section h4 {
     margin-bottom: 10px;
@@ -293,372 +676,11 @@
 }
 .choose-file-btn, .upload-btn {
     width: 100%;
-    max-width: 180px; /* Limit button width */
+    max-width: 180px;
 }
 .file-name-display {
     font-size: 12px;
     color: #777E90;
     margin-top: 5px;
     word-break: break-all;
-}
-
-/* My Galaxy Button */
-.profile-sidebar-my-galaxy-btn {
-    /* height: 40px; */ /* height will be determined by padding and content */
-    padding: 12px 35px;
-    background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
-    overflow: hidden;
-    border-radius: 10px;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    display: inline-flex;
-    color: black;
-    font-size: 16px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 400;
-    line-height: 16px;
-    text-decoration: none;
-    box-sizing: border-box;
-}
-
-/* Social icons (row of 5 items) */
-.profile-sidebar-social-icons-row {
-    padding-top: 8px;
-    padding-bottom: 8px;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 16px;
-    display: inline-flex;
-}
-
-.profile-sidebar-social-icon-row-item-img {
-    width: 25px;
-    height: 23.47px; /* Specific height for first placeholder */
-    object-fit: contain;
-}
-.profile-sidebar-social-icons-row img:nth-of-type(2) { /* Second image placeholder */
-    height: 25px;
-}
-
-.profile-sidebar-social-icon-row-item-div {
-    width: 29.33px;
-    height: 33.30px;
-    background: #777E90; /* Placeholder style */
-}
-.profile-sidebar-social-icons-row .profile-sidebar-social-icon-row-item-div:nth-of-type(2) { /* Second div placeholder */
-     width: 30.91px;
-     height: 34.04px;
-}
-
-.profile-sidebar-social-icon-row-item-complex-div {
-    width: 30px;
-    height: 30px;
-    position: relative;
-    overflow: hidden;
-    background: #777E90; /* Base for complex icon */
-}
-.icon-complex-inner1 {
-    width: 25px; height: 25px; left: 2.50px; top: 2.50px; position: absolute; background: #555E70; /* Darker part */
-}
-.icon-complex-inner2 {
-    width: 2.50px; height: 2.50px; left: 20px; top: 7.50px; position: absolute; background: #999EB0; /* Detail */
-}
-.icon-complex-inner3 {
-    width: 12.50px; height: 12.50px; left: 8.75px; top: 8.75px; position: absolute; background: #FCFCFD; /* Highlight */
-}
-
-.profile-sidebar-divider {
-    width: 199px;
-    max-width: 100%;
-    height: 1px;
-    background: #353945;
-}
-
-.profile-sidebar-date-joined {
-    width: 186px;
-    text-align: center;
-    color: #777E90;
-    font-size: 12px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 300;
-    letter-spacing: 0.12px;
-    word-wrap: break-word;
-}
-
-/* Main Content Styles */
-.profile-main-content {
-    width: 976px;
-    max-width: 100%; /* Allow shrinking on smaller viewports */
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-end; /* Align edit button to the right */
-    gap: 20px; /* Reduced from 100px in Figma export, original was for spacing button from startup list*/
-    display: flex;
-    box-sizing: border-box;
-}
-
-.profile-main-edit-btn-container {
-    /* justify-content: flex-start; */ /* This was in Figma, but for main-content being align-items: flex-end, this div isn't strictly needed or can be simpler */
-    /* align-items: flex-start; */
-    /* gap: 15px; */
-    /* display: inline-flex; */
-    width: 100%;
-    display: flex;
-    justify-content: flex-end; /* Aligns button to the right */
-    margin-bottom: 20px; /* Space between button and startup section, was 100px gap in parent */
-}
-
-.profile-main-edit-btn {
-    padding: 12px 16px;
-    border-radius: 10px;
-    border: 1px solid white;
-    justify-content: center;
-    align-items: center;
-    gap: 12px;
-    display: inline-flex; /* To keep icon and text together */
-    text-align: right;
-    color: white;
-    font-size: 16px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 400;
-    line-height: 16px;
-    text-decoration: none;
-}
-
-.profile-main-edit-btn-icon {
-    width: 16px;
-    height: 16px;
-    /* The Figma export used divs to draw icon, replaced by actual SVG */
-}
-
-.profile-main-startups-section {
-    align-self: stretch;
-    padding: 32px;
-    /* background: #011B35; */ /* Figma had a dark background, but screenshot shows it transparent relative to page bg, or it was removed to show banner */
-    background: rgba(1, 27, 53, 0.85); /* Slightly transparent dark blue, adjust as needed */
-    box-shadow: 0px 40px 32px -24px rgba(0, 0, 0, 0.12);
-    overflow: hidden; /* Might be an issue if cards have dropdowns or shadows */
-    border-radius: 10px;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 30px; /* Gap between tabs and first card, and between cards, adjusted from 48px */
-    display: flex;
-    box-sizing: border-box;
-}
-
-.profile-main-tabs {
-    align-self: stretch;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 12px;
-    display: inline-flex;
-}
-
-.profile-main-tab-item {
-    padding: 6px 12px;
-    border-radius: 10px; /* Was 100px for non-active in Figma */
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    display: flex;
-    color: rgba(255, 255, 255, 0.50);
-    font-size: 14px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 300;
-    line-height: 18px;
-    cursor: pointer;
-}
-
-.profile-main-tab-item.active-tab {
-    background: #E6E8EC;
-    color: #23262F;
-    border-radius: 10px;
-}
-
-/* Startup card list items */
-.profile-main-startup-card-item {
-    align-self: stretch;
-    /* padding: 23px 32px 23px 75px; */ /* Original Figma padding for the inner content div */
-    /* overflow: hidden; */ /* Moved to card content if needed */
-    border-radius: 10px;
-    justify-content: space-between; /* Image on one side, content on other */
-    align-items: center;
-    gap: 20px; /* Gap between image and content block */
-    display: flex;
-    background-color: #032347; /* Background for the card itself */
-    padding: 20px;
-    box-sizing: border-box;
-}
-
-.profile-main-startup-card-content {
-    display: flex;
-    flex-direction: row; /* inner content items in a row */
-    justify-content: flex-start;
-    align-items: center;
-    gap: 35px; /* Gap between info block, category/progress, and button */
-    flex-grow: 1;
-}
-
-.profile-main-startup-info {
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 13px;
-    display: inline-flex;
-    min-width: 200px; /* Give it some base width */
-}
-
-.profile-main-startup-name {
-    color: white;
-    font-size: 20px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 400;
-    line-height: 18px;
-}
-
-.profile-main-startup-rating-reviews {
-    width: 100%; /* Was 185px, make it more flexible */
-    justify-content: space-between;
-    align-items: center;
-    display: inline-flex;
-}
-
-.profile-main-startup-rating {
-    color: white;
-    font-size: 12px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 300;
-    letter-spacing: 0.12px;
-}
-
-.profile-main-startup-reviews {
-    justify-content: flex-start;
-    align-items: center;
-    gap: 8px;
-    display: flex;
-    color: white;
-    font-size: 14px;
-    font-family: 'Circe', sans-serif;
-    font-weight: 400;
-    line-height: 18px;
-}
-
-.profile-main-startup-review-icon {
-    width: 16px;
-    height: 15px;
-    border: 1px solid white; /* Changed from outline */
-}
-
-.profile-main-startup-category-progress {
-    flex-direction: column; /* Stack tag and progress bar */
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 15px;
-    display: inline-flex;
-    align-items: center; /* Center items like progress bar */
-    min-width: 200px; /* Give it some base width */
-}
-
-.profile-main-startup-category-tag {
-    padding: 9px 17px;
-    background: #050505;
-    border-radius: 5px;
-    text-align: center;
-    color: white;
-    font-size: 12px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 300;
-    letter-spacing: 0.12px;
-}
-
-/* Progress bar styles */
-.profile-main-startup-progress-bar-container-wrapper { /* Not in HTML yet, but good for complex progress */
-    justify-content: flex-start;
-    align-items: center;
-    gap: 15px;
-    display: inline-flex;
-}
-
-.profile-main-startup-progress-bar-bg {
-    width: 150px; /* Fixed width from figma for the bar itself */
-    height: 27px;
-    background: black;
-    border-radius: 5px;
-    overflow: hidden; /* To contain the foreground bar */
-    position: relative; /* For positioning text over it if needed */
-}
-
-.profile-main-startup-progress-bar-fg {
-    /* width: 101px; */ /* Width will be set by inline style {{ startup.progress }}% */
-    height: 100%; /* Fill height of background */
-    background: #FFEF2B;
-    border-radius: 5px; /* Match background, or slightly less if inset desired */
-}
-
-.profile-main-startup-progress-text {
-    text-align: center;
-    color: white; /* Figma had black, but on dark bg white is better */
-    font-size: 12px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 300;
-    letter-spacing: 0.12px;
-    /* Position this text if it needs to be over the bar */
-}
-
-.profile-main-startup-details-btn {
-    padding: 12px 35px;
-    background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%);
-    border-radius: 10px;
-    color: #F5F5F5;
-    font-size: 16px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 400;
-    line-height: 16px;
-    text-decoration: none;
-    white-space: nowrap;
-}
-
-.profile-main-startup-image {
-    width: 134px;
-    height: 126px;
-    object-fit: cover;
-    border-radius: 8px; /* Added for softer edges */
-}
-
-.profile-main-startup-list-divider {
-    width: 100%; /* Was 912px, make it responsive */
-    height: 1px; /* Was 4px, 1px is more common for divider */
-    background: rgba(255, 255, 255, 0.25); /* Lighter than figma for better visibility on dark card */
-}
-
-.profile-main-no-startups {
-    color: #777E90;
-    font-size: 16px;
-    text-align: center;
-    width: 100%;
-    padding: 20px 0;
-}
-
-/* Text box trim utilities - these are non-standard and might not work, depends on browser support for proposed CSS features */
-/* Use with caution or find alternative ways to achieve the effect (e.g. line-height adjustments, padding) */
-/*
-.text-box-trim-both {
-    text-box-trim: trim-both; 
-}
-.text-box-edge-cap-alphabetic {
-    text-box-edge: cap alphabetic;
-}
-*/
-
-/* Ensure button styles from buttons.css are available if needed */
-.btn {
-    /* Basic button styling from global or buttons.css is assumed */
-    text-decoration: none;
-}
-
-/* Font family fallbacks (already in global.css mostly) */
-body {
-    font-family: 'Unbounded', 'Circe', 'DM Sans', Arial, sans-serif;
 } 

@@ -69,7 +69,7 @@ function handleNavButtonLeave(e) {
 }
 
 function initPositionAware() {
-    const buttons = document.querySelectorAll('button:not(.plyr__control):not(.plyr__control--back), .btn:not(.plyr__control):not(.plyr__control--back), input[type="submit"]:not(.plyr__control):not(.plyr__control--back), input[type="button"]:not(.plyr__control):not(.plyr__control--back), .catalog-search-btn:not(.plyr__control):not(.plyr__control--back), .show-button:not(.plyr__control):not(.plyr__control--back), .detail-button:not(.plyr-control):not(.plyr-control--back), .join-button:not(.plyr__control):not(.plyr__control--back), .login-btn:not(.plyr__control):not(.plyr__control--back), .create-startup-btn:not(.plyr__control):not(.plyr__control--back), .logout-btn:not(.plyr__control):not(.plyr__control--back), .nav-menu a:not(.plyr__control):not(.plyr__control--back)');
+    const buttons = document.querySelectorAll('button:not(.plyr__control):not(.plyr__control--back):not(.no-wave-effect), .btn:not(.plyr__control):not(.plyr__control--back), input[type="submit"]:not(.plyr__control):not(.plyr__control--back), input[type="button"]:not(.plyr__control):not(.plyr__control--back), .catalog-search-btn:not(.plyr__control):not(.plyr__control--back), .show-button:not(.plyr__control):not(.plyr__control--back), .detail-button:not(.plyr-control):not(.plyr-control--back), .join-button:not(.plyr__control):not(.plyr__control--back), .login-btn:not(.plyr__control):not(.plyr__control--back), .create-startup-btn:not(.plyr__control):not(.plyr__control--back), .logout-btn:not(.plyr__control):not(.plyr__control--back), .nav-menu a:not(.plyr__control):not(.plyr__control--back)');
     
     buttons.forEach(button => {
         if (button.closest('.goverlay') || button.closest('.tab-navigation')) {
