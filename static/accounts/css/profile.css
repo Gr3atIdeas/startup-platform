@@ -357,7 +357,6 @@
 .profile-main-startups-section {
     align-self: stretch;
     padding: 32px 32px 45px 32px; 
-    /* background: rgba(1, 27, 53, 0.85); */ /* Старый фон */
     background: transparent; /* Прозрачный фон */
     box-shadow: 0px 40px 32px -24px rgba(0, 0, 0, 0.12);
     overflow: hidden;
@@ -367,7 +366,7 @@
     align-items: flex-start;
     gap: 48px; /* Original gap from StyledFollowing */
     display: flex;
-    margin-top: 175px; /* Push section below banner. (395px banner - 275px content_offset) - 100px parent_gap + some_buffer for edit_btn */
+    margin-top: 165px; /* Поднято на 10px (было 175px) */
     /* This value might need fine-tuning after checking in browser. Goal is to start below 395px banner height. */
 }
 
@@ -599,6 +598,7 @@
     object-fit: cover;
     border-radius: 12px; /* Более скругленные */
     flex-shrink: 0; /* Чтобы картинка не сжималась */
+    order: -1; /* Перемещаем изображение налево */
 }
 
 /* StyledDivider01 -> .profile-main-startup-list-divider */

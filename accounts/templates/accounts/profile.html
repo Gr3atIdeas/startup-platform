@@ -18,7 +18,7 @@
     <div class="profile-content-container">
         <div class="profile-sidebar">
             <div class="profile-sidebar-user-info-block">
-                <div class="profile-sidebar-avatar-wrapper">
+                <div class="profile-sidebar-avatar-wrapper" id="avatarClickableArea" style="cursor: pointer;" title="Изменить аватар">
                     <img class="profile-sidebar-avatar-img" src="{% if user.profile_picture_url %}{{ user.profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}" alt="Аватар пользователя" />
                 </div>
                 <div class="profile-sidebar-text-details">
@@ -28,7 +28,13 @@
                             <span>{{ user.last_name|default:"Фамилия" }}</span>
                         </div>
                         <div class="profile-sidebar-role">
-                            <span>{{ user.role.role_name|default:"Роль не указана" }}</span>
+                            <span>
+                                {% if user.role.role_name == "startuper" %}Стартапер
+                                {% elif user.role.role_name == "investor" %}Инвестор
+                                {% elif user.role.role_name == "moderator" %}Модератор
+                                {% elif user.role.role_name == "administrator" %}Администратор
+                                {% else %}{{ user.role.role_name|default:"Роль не указана" }}{% endif %}
+                            </span>
                         </div>
                         <div class="profile-sidebar-id">
                             <span>ID {{ user.user_id|default:"Не указан" }}</span>
@@ -61,7 +67,7 @@
             </div>
             
             {% if is_own_profile %}
-            <div class="profile-avatar-upload-section">
+            <div class="profile-avatar-upload-section" style="display: none;"> {# Скрываем этот блок, но оставляем форму для JS #}
                 <h4>Загрузить аватарку</h4>
                 <form method="post" enctype="multipart/form-data" id="avatarUploadForm" class="avatar-upload-form">
                     {% csrf_token %}
@@ -198,10 +204,32 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    const avatarClickableArea = document.getElementById('avatarClickableArea');
     const avatarInput = document.getElementById('id_avatar_input');
-    const fileNameDisplay = document.getElementById('fileNameDisplay');
-    if (avatarInput && fileNameDisplay) {
+    const avatarUploadForm = document.getElementById('avatarUploadForm');
+
+    if (avatarClickableArea && avatarInput && avatarUploadForm) {
+        avatarClickableArea.addEventListener('click', function() {
+            avatarInput.click(); // Вызываем клик по скрытому инпуту
+        });
+
         avatarInput.addEventListener('change', function() {
+            if (this.files && this.files.length > 0) {
+                // Файл выбран, автоматически отправляем форму
+                // Можно добавить проверку размера/типа файла здесь перед отправкой, если нужно
+                avatarUploadForm.submit();
+            } 
+            // fileNameDisplay больше не видим, так что его обновление не нужно
+        });
+    }
+
+    // Старый код для fileNameDisplay, если он был, теперь не нужен в видимой части,
+    // но оставим логику на случай, если решите вернуть отображение имени файла где-то.
+    /*
+    const originalAvatarInputForFileName = document.getElementById('id_avatar_input'); // Если id_avatar_input используется только для формы выше
+    const fileNameDisplay = document.getElementById('fileNameDisplay');
+    if (originalAvatarInputForFileName && fileNameDisplay) {
+        originalAvatarInputForFileName.addEventListener('change', function() {
             if (this.files && this.files.length > 0) {
                 fileNameDisplay.textContent = this.files[0].name;
             } else {
@@ -209,6 +237,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+    */
 });
 </script>
 {% endblock %} 
