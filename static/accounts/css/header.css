@@ -14,11 +14,12 @@
   justify-content: space-between;
   align-items: center;
   display: flex;
-  gap: 8px;
+  gap: 16px;
 }
 
 .header-logo-link {
   display: inline-block; 
+  margin-right: 8px;
 }
 
 .header-logo-icon-container {
@@ -111,6 +112,7 @@
   display: flex;
   align-items: center;
   flex-wrap: nowrap;
+  gap: 16px;
 }
 
 .header-nav-link { 
@@ -124,7 +126,7 @@
   text-decoration: none; 
 }
 
-.header-nav-link.cosmochat-link { 
+.header-nav-link.cosmochat-link:hover {
   background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%);
 }
 
@@ -187,6 +189,7 @@
 .profile-avatar-wrapper {
   width: 58px;
   height: 58px;
+  aspect-ratio: 1/1;
   flex-shrink: 0;
   border-radius: 29px;
   border: 5px solid #FFEF2B;
@@ -196,6 +199,7 @@
   align-items: center;
   background-color: transparent !important;
   position: relative;
+  box-sizing: border-box;
 }
 
 .profile-dropdown-avatar {
@@ -203,7 +207,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 0;
+  border-radius: 50%;
 }
 
 .profile-dropdown-chevron {

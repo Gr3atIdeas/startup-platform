@@ -1,153 +1,117 @@
-/* Base styles for the new profile page design */
-body, html {
-    margin: 0;
-    padding: 0;
-    font-family: 'Unbounded', sans-serif; /* Default font */
-    /* background-color: #000; Removed to allow body gradient from global.css to show if needed */
-}
+/* Profile Page Specific Styles */
 
-#profile-content-wrapper-for-bg-test {
-    background-color: orange !important; /* Тестовый фон для новой обертки */
+/* Main wrapper for the entire profile page content */
+.profile-page-wrapper {
     width: 100%;
-    min-height: 100vh; /* Чтобы занимала весь экран, если контента мало */
-    padding-top: 20px; /* Какой-то отступ сверху, как был у page-container */
-    border: 5px solid red !important; /* Для отладки */
-    position: relative; /* Убедимся, что z-index работает */
-    z-index: 0; /* Базовый z-index */
-}
-
-.profile-page-container {
-    width: 100%;
-    min-height: inherit; /* Наследуем высоту от обертки */
-    display: flex; 
-    flex-direction: column;
-    align-items: center; 
-    box-sizing: border-box;
-    position: relative; 
-    z-index: 1;
-    /* background-color: transparent !important; */ /* Делаем этот фон прозрачным, чтобы видеть фон обертки */
-    /* overflow-x: hidden; */ /* Пока уберем, если не нужно */
-    background-color: purple !important; /* Тестовый фон */
-    min-height: 90vh; /* Занимаем почти всю высоту родителя */
-    border: 3px solid blue !important; /* Для отладки */
-    /* z-index: 1; */ /* Уже есть z-index: 1 выше */
-}
-
-.profile-header-bar {
-    width: 1303px;
-    max-width: 95%; /* Responsive */
-    padding-bottom: 45px;
-    justify-content: space-between;
-    align-items: center;
-    display: flex;
-    box-sizing: border-box;
-}
-
-.profile-header-logo-area {
-    /* Styles for logo container if needed beyond inline */
-}
-
-.profile-header-search {
-    /* background: rgba(255, 255, 255, 0.19); */ /* Kept inline for now due to specificity */
-    /* border-radius: 99px; */
-    /* border: 1px #004E9F solid; */
-}
-
-.profile-header-nav a {
-    color: white;
-    font-size: 14px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 300;
-    line-height: 18px;
-    text-decoration: none;
-}
-
-.profile-header-login a {
-    color: black;
-    font-size: 16px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 400;
-    line-height: 16px;
-    text-decoration: none;
-}
-
-.profile-featured-section {
-    width: 100%;
-    height: 395px; 
-    align-self: stretch;
-    /* background-image: url("/static/accounts/images/profile/profile_spacebg.webp") !important; */
-    /* background-color: transparent !important; */ /* Фон только от картинки */
-    background-color: lime !important; /* Яркий тестовый фон */
-    /* background-position: center center !important; */
-    /* background-size: cover !important; */
-    /* background-repeat: no-repeat !important; */
-    display: flex; 
-    flex-direction: column;
-    justify-content: flex-start; 
-    align-items: center;
-    box-sizing: border-box;
-    position: relative; 
-    z-index: 2; 
-    border: 3px solid yellow !important; /* Для отладки */
-}
-
-.profile-content-layout {
-    width: 1303px;
-    max-width: 95%;
-    justify-content: space-between;
-    align-items: flex-start;
-    display: flex;
-    margin-top: -275px; 
-    position: relative; 
-    z-index: 3; /* Выше чем .profile-featured-section */
-    gap: 20px; 
-    box-sizing: border-box;
-    padding-bottom: 50px; 
-}
-
-.profile-sidebar-column {
-    width: 256px;
-    min-width: 240px; /* For smaller screens */
-    padding: 32px;
-    background: #011B35;
-    box-shadow: 0px 40px 32px -24px rgba(15, 15, 15, 0.12);
-    overflow: visible; /* Prevent clipping of its content */
-    padding-top: 0; /* Remove padding that might push content down */
-    margin-top: 0; /* Ensure no extra margin pushes it down */
-    border-radius: 10px;
-    border: 1px #353945 solid;
+    /* height: 100%; */ /* Height should be auto or determined by content */
+    padding-bottom: 55px;
+    overflow: hidden; /* Consider if this is always needed, might hide useful overflows */
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    gap: 24px;
+    display: flex; /* Changed from inline-flex for a top-level block */
+}
+
+/* Main banner image at the top of the profile */
+.profile-main-banner {
+    align-self: stretch;
+    height: 395px;
+    object-fit: cover; /* Ensures the image covers the area well */
+}
+
+/* Container for the two-column layout (sidebar and main content) */
+.profile-content-container {
+    width: 1303px;
+    max-width: 95%; /* Responsive adjustment */
+    justify-content: space-between;
+    align-items: flex-start;
+    display: flex; /* Changed from inline-flex */
+    margin-top: -275px; /* Negative margin to pull it up over the banner, as per Figma */
+    position: relative; /* Needed for z-index stacking if banner is also positioned */
+    z-index: 1; /* Ensures it's above the banner if banner had z-index */
+    gap: 20px; /* Gap between sidebar and main content */
+}
+
+/* Sidebar Styles */
+.profile-sidebar {
+    width: 256px;
+    min-width: 256px; /* Prevent shrinking too much */
+    padding: 32px;
+    background: #011B35;
+    box-shadow: 0px 40px 32px -24px rgba(14.88, 14.88, 14.88, 0.12);
+    overflow: hidden;
+    border-radius: 10px;
+    border: 1px solid #353945; /* Changed from outline for consistency */
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 24px; /* Default gap for items in sidebar, was 48px in one inner div */
     display: flex; /* Changed from inline-flex */
     box-sizing: border-box;
 }
 
-.profile-avatar-section img {
+.profile-sidebar-user-info-block {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+    display: flex;
+    width: 100%;
+}
+
+.profile-sidebar-avatar-wrapper {
     width: 160px;
     height: 160px;
-    border-radius: 128px;
-    object-fit: cover;
+    position: relative;
+    /* background: #45B26B; */ /* Placeholder color, avatar img should cover */
+    overflow: hidden;
+    border-radius: 128px; /* For circular avatar */
 }
 
-.profile-avatar-section {
-    margin-top: 20px; /* Add some space from the top of the sidebar */
+.profile-sidebar-avatar-img {
+    width: 100%; /* Make image fill the wrapper */
+    height: 100%;
+    object-fit: cover; /* Crop and center image */
+    /* position: absolute; left: 0; top: -43.33px; width: 160px; height: 239.97px; */ /* These were likely Figma export quirks for specific placeholder, object-fit is better */
 }
 
-.profile-user-info {
-    /* Styles moved from inline */
+.profile-sidebar-text-details {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    display: flex;
+}
+
+.profile-sidebar-name-role {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+    display: flex;
+}
+
+.profile-sidebar-name {
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 4px;
+    display: inline-flex; /* To keep names on one line if possible */
     color: #FCFCFD;
-}
-
-.profile-user-info .user-name {
     font-size: 20px;
     font-family: 'Unbounded', sans-serif;
     font-weight: 400;
     line-height: 18px;
 }
+.profile-sidebar-name span {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
 
-.profile-user-info .user-role {
+.profile-sidebar-role {
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 8px;
+    display: inline-flex;
     color: #F5DB0C;
     font-size: 14px;
     font-family: 'Unbounded', sans-serif;
@@ -155,15 +119,45 @@ body, html {
     line-height: 18px;
 }
 
-.profile-user-info .user-id {
-    color: rgba(252, 252, 253, 0.30);
+.profile-sidebar-id {
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 8px;
+    display: inline-flex;
+    color: rgba(251, 252, 253, 0.30);
     font-size: 12px;
     font-family: 'Unbounded', sans-serif;
     font-weight: 300;
     letter-spacing: 0.12px;
 }
 
-.profile-user-info .user-bio {
+.profile-sidebar-copy-icon {
+    width: 11px;
+    height: 11px;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.profile-sidebar-copy-icon-inner1 {
+    width: 7.91px;
+    height: 7.91px;
+    left: 2.41px;
+    top: 2.41px;
+    position: absolute;
+    background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%);
+}
+
+.profile-sidebar-copy-icon-inner2 {
+    width: 7.91px;
+    height: 7.91px;
+    left: 0.69px;
+    top: 0.69px;
+    position: absolute;
+    background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%);
+}
+
+.profile-sidebar-bio {
     width: 186px;
     text-align: center;
     color: #777E90;
@@ -174,175 +168,497 @@ body, html {
     word-wrap: break-word;
 }
 
-.profile-user-actions a {
+.profile-sidebar-website {
+    justify-content: flex-start;
+    align-items: center; /* Vertically align icon and text */
+    gap: 8px;
+    display: inline-flex;
+}
+
+.profile-sidebar-globe-icon {
+    width: 16px;
+    height: 16px;
+    position: relative;
+    overflow: hidden;
+}
+
+.profile-sidebar-globe-icon-inner1 {
+    width: 13.33px;
+    height: 13.33px;
+    left: 1.33px;
+    top: 1.33px;
+    position: absolute;
+    background: #777E90;
+    border-radius: 50%; /* Make it a circle */
+}
+
+.profile-sidebar-globe-icon-inner2 {
+    width: 6.67px; /* For longitude line */
+    height: 13.33px;
+    left: 4.67px;
+    top: 1.33px;
+    position: absolute;
+    background: #777E90;
+}
+
+.profile-sidebar-globe-icon-inner3 {
+    width: 13.33px; /* For latitude line */
+    height: 1.33px;
+    left: 1.33px;
+    top: 7.33px;
+    position: absolute;
+    background: #777E90;
+}
+
+.profile-sidebar-website-link {
+    color: #FCFCFD;
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    line-height: 16px;
+    word-wrap: break-word;
+    text-decoration: none;
+}
+.profile-sidebar-website-link:hover {
+    text-decoration: underline;
+}
+
+/* Social icons (round placeholders) */
+.profile-sidebar-social-icons-round {
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    display: inline-flex;
+}
+
+.profile-sidebar-social-icon-round-item {
+    padding: 10px;
+    overflow: hidden;
+    border-radius: 40px; /* Highly rounded */
+    border: 2px solid #353945;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 10px;
+    display: flex;
+    width: 40px; /* 20px icon + 2*10px padding */
+    height: 40px;
+    box-sizing: border-box;
+}
+
+.profile-sidebar-social-icon-placeholder1, .profile-sidebar-social-icon-placeholder2 {
+    width: 20px;
+    height: 20px;
+    position: relative;
+    overflow: hidden;
+}
+/* Styles for placeholder icon 1 (example) */
+.icon-placeholder-inner-1-1 {
+    width: 15px; height: 11.59px; left: 2.50px; top: 7.58px; position: absolute; background: #777E90;
+}
+.icon-placeholder-inner-1-2 {
+    width: 11.60px; height: 7.50px; left: 13.75px; top: 0.83px; position: absolute; transform: rotate(90deg); transform-origin: top left; background: #777E90;
+}
+/* Styles for placeholder icon 2 (example) */
+.icon-placeholder-inner-2-1 {
+    width: 20px; height: 20px; left: 0px; top: 0px; position: absolute; /* This div seems to be a container */
+}
+.icon-placeholder-inner-2-2 {
+    width: 15px; height: 3.33px; left: 2.50px; top: 8.33px; position: absolute; background: #777E90;
+}
+
+
+/* Avatar Upload Section */
+.profile-avatar-upload-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    color: #FCFCFD;
+}
+.profile-avatar-upload-section h4 {
+    margin-bottom: 10px;
+    font-size: 16px;
+    font-weight: 500;
+}
+.avatar-upload-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+.file-input-hidden {
+    display: none;
+}
+.choose-file-btn, .upload-btn {
+    width: 100%;
+    max-width: 180px; /* Limit button width */
+}
+.file-name-display {
+    font-size: 12px;
+    color: #777E90;
+    margin-top: 5px;
+    word-break: break-all;
+}
+
+/* My Galaxy Button */
+.profile-sidebar-my-galaxy-btn {
+    /* height: 40px; */ /* height will be determined by padding and content */
+    padding: 12px 35px;
+    background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
+    overflow: hidden;
+    border-radius: 10px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    display: inline-flex;
+    color: black;
+    font-size: 16px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
+    line-height: 16px;
+    text-decoration: none;
+    box-sizing: border-box;
+}
+
+/* Social icons (row of 5 items) */
+.profile-sidebar-social-icons-row {
+    padding-top: 8px;
+    padding-bottom: 8px;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 16px;
+    display: inline-flex;
+}
+
+.profile-sidebar-social-icon-row-item-img {
+    width: 25px;
+    height: 23.47px; /* Specific height for first placeholder */
+    object-fit: contain;
+}
+.profile-sidebar-social-icons-row img:nth-of-type(2) { /* Second image placeholder */
+    height: 25px;
+}
+
+.profile-sidebar-social-icon-row-item-div {
+    width: 29.33px;
+    height: 33.30px;
+    background: #777E90; /* Placeholder style */
+}
+.profile-sidebar-social-icons-row .profile-sidebar-social-icon-row-item-div:nth-of-type(2) { /* Second div placeholder */
+     width: 30.91px;
+     height: 34.04px;
+}
+
+.profile-sidebar-social-icon-row-item-complex-div {
+    width: 30px;
+    height: 30px;
+    position: relative;
+    overflow: hidden;
+    background: #777E90; /* Base for complex icon */
+}
+.icon-complex-inner1 {
+    width: 25px; height: 25px; left: 2.50px; top: 2.50px; position: absolute; background: #555E70; /* Darker part */
+}
+.icon-complex-inner2 {
+    width: 2.50px; height: 2.50px; left: 20px; top: 7.50px; position: absolute; background: #999EB0; /* Detail */
+}
+.icon-complex-inner3 {
+    width: 12.50px; height: 12.50px; left: 8.75px; top: 8.75px; position: absolute; background: #FCFCFD; /* Highlight */
+}
+
+.profile-sidebar-divider {
+    width: 199px;
+    max-width: 100%;
+    height: 1px;
+    background: #353945;
+}
+
+.profile-sidebar-date-joined {
+    width: 186px;
+    text-align: center;
+    color: #777E90;
+    font-size: 12px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.12px;
+    word-wrap: break-word;
+}
+
+/* Main Content Styles */
+.profile-main-content {
+    width: 976px;
+    max-width: 100%; /* Allow shrinking on smaller viewports */
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-end; /* Align edit button to the right */
+    gap: 20px; /* Reduced from 100px in Figma export, original was for spacing button from startup list*/
+    display: flex;
+    box-sizing: border-box;
+}
+
+.profile-main-edit-btn-container {
+    /* justify-content: flex-start; */ /* This was in Figma, but for main-content being align-items: flex-end, this div isn't strictly needed or can be simpler */
+    /* align-items: flex-start; */
+    /* gap: 15px; */
+    /* display: inline-flex; */
+    width: 100%;
+    display: flex;
+    justify-content: flex-end; /* Aligns button to the right */
+    margin-bottom: 20px; /* Space between button and startup section, was 100px gap in parent */
+}
+
+.profile-main-edit-btn {
+    padding: 12px 16px;
+    border-radius: 10px;
+    border: 1px solid white;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    display: inline-flex; /* To keep icon and text together */
+    text-align: right;
+    color: white;
+    font-size: 16px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
+    line-height: 16px;
     text-decoration: none;
 }
 
-.profile-main-column {
-    width: 976px;
-    flex-grow: 1; /* Allow to take remaining space */
-    flex-direction: column;
-    justify-content: flex-start;
-    /* align-items: flex-end; */ /* Original Figma alignment, changed to center for better look with transparency */
-    align-items: center; /* Centering content in main column for this layout */
-    gap: 20px;
-    display: flex; /* Changed from inline-flex */
-    box-sizing: border-box;
-    padding-top: 0; /* Assuming button is first, no extra top padding */
-    overflow: visible; /* Prevent clipping of its content, e.g. edit button */
+.profile-main-edit-btn-icon {
+    width: 16px;
+    height: 16px;
+    /* The Figma export used divs to draw icon, replaced by actual SVG */
 }
 
-.profile-startups-section {
+.profile-main-startups-section {
     align-self: stretch;
     padding: 32px;
-    background: transparent; /* Changed from #011B35 */
-    /* box-shadow: 0px 40px 32px -24px rgba(0, 0, 0, 0.12); */ /* Removed shadow */
-    overflow: hidden;
+    /* background: #011B35; */ /* Figma had a dark background, but screenshot shows it transparent relative to page bg, or it was removed to show banner */
+    background: rgba(1, 27, 53, 0.85); /* Slightly transparent dark blue, adjust as needed */
+    box-shadow: 0px 40px 32px -24px rgba(0, 0, 0, 0.12);
+    overflow: hidden; /* Might be an issue if cards have dropdowns or shadows */
     border-radius: 10px;
-    /* border: 1px #353945 solid; */ /* Removed border */
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
-    gap: 48px;
+    gap: 30px; /* Gap between tabs and first card, and between cards, adjusted from 48px */
     display: flex;
     box-sizing: border-box;
 }
 
-.profile-startup-card-wrapper {
+.profile-main-tabs {
     align-self: stretch;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 12px;
+    display: inline-flex;
+}
+
+.profile-main-tab-item {
+    padding: 6px 12px;
+    border-radius: 10px; /* Was 100px for non-active in Figma */
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
     display: flex;
+    color: rgba(255, 255, 255, 0.50);
+    font-size: 14px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    line-height: 18px;
+    cursor: pointer;
+}
+
+.profile-main-tab-item.active-tab {
+    background: #E6E8EC;
+    color: #23262F;
+    border-radius: 10px;
+}
+
+/* Startup card list items */
+.profile-main-startup-card-item {
+    align-self: stretch;
+    /* padding: 23px 32px 23px 75px; */ /* Original Figma padding for the inner content div */
+    /* overflow: hidden; */ /* Moved to card content if needed */
+    border-radius: 10px;
+    justify-content: space-between; /* Image on one side, content on other */
+    align-items: center;
+    gap: 20px; /* Gap between image and content block */
+    display: flex;
+    background-color: #032347; /* Background for the card itself */
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.profile-main-startup-card-content {
+    display: flex;
+    flex-direction: row; /* inner content items in a row */
+    justify-content: flex-start;
+    align-items: center;
+    gap: 35px; /* Gap between info block, category/progress, and button */
+    flex-grow: 1;
+}
+
+.profile-main-startup-info {
     flex-direction: column;
-    gap: 20px;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 13px;
+    display: inline-flex;
+    min-width: 200px; /* Give it some base width */
 }
 
-.profile-startup-card {
-    width: 100%; 
-    padding: 23px 20px; /* Adjusted padding slightly */
-    overflow: hidden; 
-    border-radius: 10px; 
-    justify-content: space-between; 
-    align-items: center; 
-    gap: 20px; 
-    display: flex; 
-    background-color: #032347;
-    box-sizing: border-box;
+.profile-main-startup-name {
+    color: white;
+    font-size: 20px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
+    line-height: 18px;
 }
 
-.profile-startup-card img {
-    width: 100px; 
-    height: 100px; 
-    object-fit: cover; 
-    border-radius: 8px;
+.profile-main-startup-rating-reviews {
+    width: 100%; /* Was 185px, make it more flexible */
+    justify-content: space-between;
+    align-items: center;
+    display: inline-flex;
 }
 
-.profile-page-footer {
-    width: 100%;
-    height: 660px; /* Or auto depending on content */
-    position: relative; 
-    /* background: linear-gradient(180deg, #011D39 0%, black 100%); */ /* Kept inline */
-    overflow: hidden; 
-    margin-top: 30px;
-    box-sizing: border-box;
+.profile-main-startup-rating {
+    color: white;
+    font-size: 12px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.12px;
 }
 
-/* Django messages styling */
-.django-messages {
-    list-style-type: none;
-    padding: 15px;
-    margin: 0 auto 20px auto; /* Centered */
-    border-radius: 5px;
-    max-width: 1303px; /* Align with content width */
-    box-sizing: border-box;
-    text-align: center;
-}
-
-.django-messages .success {
-    background-color: #d4edda;
-    border: 1px solid #c3e6cb;
-    color: #155724;
-}
-
-.django-messages .error {
-    background-color: #f8d7da;
-    border: 1px solid #f5c6cb;
-    color: #721c24;
-}
-
-.django-messages .warning {
-    background-color: #fff3cd;
-    border: 1px solid #ffeeba;
-    color: #856404;
-}
-
-.django-messages .info {
-    background-color: #d1ecf1;
-    border: 1px solid #bee5eb;
-    color: #0c5460;
-}
-
-.profile-edit-button-area {
-    width: 100%; /* Allow it to take full width of main column */
+.profile-main-startup-reviews {
+    justify-content: flex-start;
+    align-items: center;
+    gap: 8px;
     display: flex;
-    justify-content: flex-end; /* Align button to the right */
-    padding-right: 0; /* No extra padding if button itself has it */
-    margin-bottom: 20px; /* Space below button */
+    color: white;
+    font-size: 14px;
+    font-family: 'Circe', sans-serif;
+    font-weight: 400;
+    line-height: 18px;
 }
 
-.profile-edit-button-area a {
-    /* Ensure its styles don't cause clipping */
+.profile-main-startup-review-icon {
+    width: 16px;
+    height: 15px;
+    border: 1px solid white; /* Changed from outline */
 }
 
-/* Responsive adjustments example */
-@media (max-width: 1350px) {
-    .profile-header-bar,
-    .profile-content-layout,
-    .profile-main-column {
-        width: 95%;
-    }
-    .profile-startups-section {
-      padding: 20px;
-    }
-    .profile-startup-card {
-        flex-direction: column;
-        align-items: stretch; /* Make card items take full width */
-        padding: 15px;
-    }
-    .profile-startup-card img {
-        align-self: center;
-        margin-bottom: 15px;
-    }
+.profile-main-startup-category-progress {
+    flex-direction: column; /* Stack tag and progress bar */
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 15px;
+    display: inline-flex;
+    align-items: center; /* Center items like progress bar */
+    min-width: 200px; /* Give it some base width */
 }
 
-@media (max-width: 768px) {
-    .profile-header-nav {
-        display: none; /* Example: Hide nav on small screens or convert to burger */
-    }
-    .profile-content-layout {
-        flex-direction: column;
-        align-items: center;
-        margin-top: -80px; /* Adjust overlap */
-    }
-    .profile-sidebar-column {
-        width: 90%;
-        margin-bottom: 20px;
-    }
-    .profile-main-column {
-        width: 90%;
-        align-items: center;
-    }
-    .profile-startups-section {
-        padding: 15px;
-    }
-    .profile-footer-great-ideas div:first-child {
-        font-size: 50px; /* Adjust footer text size */
-    }
-    .profile-footer-menus {
-        right: 20px;
-        gap: 15px;
-    }
-    .profile-footer-app-links {
-        left: 20px;
-        flex-direction: column;
-    }
+.profile-main-startup-category-tag {
+    padding: 9px 17px;
+    background: #050505;
+    border-radius: 5px;
+    text-align: center;
+    color: white;
+    font-size: 12px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.12px;
+}
 
+/* Progress bar styles */
+.profile-main-startup-progress-bar-container-wrapper { /* Not in HTML yet, but good for complex progress */
+    justify-content: flex-start;
+    align-items: center;
+    gap: 15px;
+    display: inline-flex;
+}
+
+.profile-main-startup-progress-bar-bg {
+    width: 150px; /* Fixed width from figma for the bar itself */
+    height: 27px;
+    background: black;
+    border-radius: 5px;
+    overflow: hidden; /* To contain the foreground bar */
+    position: relative; /* For positioning text over it if needed */
+}
+
+.profile-main-startup-progress-bar-fg {
+    /* width: 101px; */ /* Width will be set by inline style {{ startup.progress }}% */
+    height: 100%; /* Fill height of background */
+    background: #FFEF2B;
+    border-radius: 5px; /* Match background, or slightly less if inset desired */
+}
+
+.profile-main-startup-progress-text {
+    text-align: center;
+    color: white; /* Figma had black, but on dark bg white is better */
+    font-size: 12px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.12px;
+    /* Position this text if it needs to be over the bar */
+}
+
+.profile-main-startup-details-btn {
+    padding: 12px 35px;
+    background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%);
+    border-radius: 10px;
+    color: #F5F5F5;
+    font-size: 16px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
+    line-height: 16px;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.profile-main-startup-image {
+    width: 134px;
+    height: 126px;
+    object-fit: cover;
+    border-radius: 8px; /* Added for softer edges */
+}
+
+.profile-main-startup-list-divider {
+    width: 100%; /* Was 912px, make it responsive */
+    height: 1px; /* Was 4px, 1px is more common for divider */
+    background: rgba(255, 255, 255, 0.25); /* Lighter than figma for better visibility on dark card */
+}
+
+.profile-main-no-startups {
+    color: #777E90;
+    font-size: 16px;
+    text-align: center;
+    width: 100%;
+    padding: 20px 0;
+}
+
+/* Text box trim utilities - these are non-standard and might not work, depends on browser support for proposed CSS features */
+/* Use with caution or find alternative ways to achieve the effect (e.g. line-height adjustments, padding) */
+/*
+.text-box-trim-both {
+    text-box-trim: trim-both; 
+}
+.text-box-edge-cap-alphabetic {
+    text-box-edge: cap alphabetic;
+}
+*/
+
+/* Ensure button styles from buttons.css are available if needed */
+.btn {
+    /* Basic button styling from global or buttons.css is assumed */
+    text-decoration: none;
+}
+
+/* Font family fallbacks (already in global.css mostly) */
+body {
+    font-family: 'Unbounded', 'Circe', 'DM Sans', Arial, sans-serif;
 } 
