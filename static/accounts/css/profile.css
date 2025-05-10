@@ -2,24 +2,21 @@
 
 /* StyledFeatured -> .profile-page-wrapper */
 .profile-page-wrapper {
-    width: 100%; /* Takes width of its container in base.html */
+    width: 100vw; /* Занимает всю ширину окна просмотра */
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
     padding-bottom: 55px;
-    /* overflow: hidden; --- REMOVED to allow full-width banner */
     display: flex;
     flex-direction: column;
-    align-items: center; /* This will center .profile-content-container */
-    position: relative; 
+    align-items: center; /* Центрирует .profile-content-container, если он уже */
 }
 
 /* StyledImagefromrawpixelid597407jpeg1 -> .profile-main-banner */
 .profile-main-banner {
     height: 395px;
     object-fit: cover;
-    width: 100vw;
-    position: relative; 
-    left: 50%;
-    transform: translateX(-50%);
-    /* max-width: none; --- Allow it to exceed parent's width constraints */
+    width: 100%; /* Будет 100% от .profile-page-wrapper (т.е. 100vw) */
 }
 
 /* StyledAutolayout -> .profile-content-container */
@@ -326,7 +323,7 @@
 .profile-main-edit-btn {
     padding: 12px 16px;
     border-radius: 10px;
-    border: 1px solid white; 
+    border: 1px solid white; /* Убеждаемся, что рамка есть и она белая */
     justify-content: center;
     align-items: center;
     gap: 12px;
@@ -359,8 +356,9 @@
 /* StyledFollowing -> .profile-main-startups-section */
 .profile-main-startups-section {
     align-self: stretch;
-    padding: 32px 32px 45px 32px; /* Top, H, Bottom from StyledFollowing */
-    background: rgba(1, 27, 53, 0.85); /* From previous attempt, seems good */
+    padding: 32px 32px 45px 32px; 
+    /* background: rgba(1, 27, 53, 0.85); */ /* Старый фон */
+    background: transparent; /* Прозрачный фон */
     box-shadow: 0px 40px 32px -24px rgba(0, 0, 0, 0.12);
     overflow: hidden;
     border-radius: 10px;
@@ -420,27 +418,34 @@
 
 /* StyledFrame947 -> .profile-main-startup-card-item (this is the card itself) */
 .profile-main-startup-card-item {
-    /* width: 836px; */ /* Let it be flexible by parent */
-    align-self: stretch; /* Make card take full width of its column in the flex wrap */
-    padding: 23px 32px 23px 75px; /* As per StyledFrame947 */
+    align-self: stretch;
+    padding: 24px; /* Уменьшены паддинги */
     overflow: hidden;
     border-radius: 10px;
-    justify-content: flex-start; /* Content elements start from left */
+    justify-content: space-between; /* Распределит card-content и image по краям */
     align-items: center;
-    gap: 35px;
     display: flex;
-    background-color: #032347; /* from previous CSS */
+    background-color: #032347; 
     box-sizing: border-box;
+    gap: 20px; /* Промежуток между контентом и картинкой */
 }
 
 /* Content within the card, before image */
+.profile-main-startup-card-content {
+    display: flex;
+    flex-grow: 1; /* Позволит этому блоку занять доступное пространство */
+    justify-content: space-between; /* Распределит info, category/progress, button */
+    align-items: center; /* Выровняет их по центру вертикально */
+    gap: 20px; /* Промежуток между info, category/progress, button */
+}
+
 /* StyledFrame1012 (Name + Rating/Reviews) -> .profile-main-startup-info */
 .profile-main-startup-info {
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: center; /* Изменено на center */
     align-items: flex-start;
     gap: 13px;
-    display: inline-flex;
+    display: inline-flex; /* Чтобы не занимал всю ширину flex-родителя */
 }
 .profile-main-startup-name { /* Generic text, corresponds to multiple <StyledP> or <StyledSpan> */
     color: white;
@@ -505,19 +510,26 @@
 
 /* StyledFrame1014 (Category tag + Progress bar) -> .profile-main-startup-category-progress */
 .profile-main-startup-category-progress {
-    flex-direction: column; /* from styled */
-    justify-content: flex-start; /* from styled */
-    align-items: flex-start; /* from styled */
-    gap: 15px; /* from styled */
-    display: inline-flex; /* from styled */
+    display: flex; /* ADDED to make tag and progress-bar-container align in a row */
+    flex-direction: row; /* ADDED to confirm row direction */
+    align-items: center; /* ADDED to vertically align items in this row */
+    gap: 15px; /* ADDED gap between tag and progress-bar-container */
 }
 /* StyledFrame945 (Tag, prog bar bg, prog bar fg, text) */
-.progress-bar-elements-container { /* New class for the row of items in StyledFrame945 */
+/* .progress-bar-elements-container { 
     justify-content: flex-start;
     align-items: center;
     gap: 15px;
     display: inline-flex;
+} */ /* This class is now replaced by .profile-main-startup-category-progress direct children */
+
+/* НОВЫЙ КЛАСС */
+.progress-bar-and-text-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
+
 .profile-main-startup-category-tag { /* StyledEditMenuaction */
     padding: 9px 17px;
     background: #050505;
@@ -536,8 +548,8 @@
     text-align: center; /* from styled */
 }
 .profile-main-startup-progress-bar-bg { /* StyledRectangle4197 */
-    width: 150px;
-    height: 27px;
+    width: 100px; /* Уменьшено для соответствия макету */
+    height: 10px; /* Уменьшено для соответствия макету */
     background: black;
     border-radius: 5px;
     overflow: hidden;
@@ -549,7 +561,7 @@
     border-radius: 5px;
 }
 .profile-main-startup-progress-text { /* Styled65span */
-    color: black;
+    color: white; /* ИЗМЕНЕНО на white */
     font-size: 12px;
     font-family: 'Unbounded', sans-serif;
     font-weight: 300;
@@ -561,7 +573,7 @@
 /* StyledButton02 (Details button) -> .profile-main-startup-details-btn */
 .profile-main-startup-details-btn {
     height: 40px;
-    padding: 12px 35px;
+    padding: 0 30px; /* Горизонтальный паддинг уменьшен */
     background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%);
     overflow: hidden;
     border-radius: 10px;
@@ -577,14 +589,16 @@
     line-height: 16px;
     word-wrap: break-word;
     text-decoration: none; /* Ensure links look like buttons */
+    flex-shrink: 0; /* Чтобы кнопка не сжималась */
 }
 
 /* StyledRectangle4196 (Startup Image) -> .profile-main-startup-image */
 .profile-main-startup-image {
-    width: 134px;
-    height: 126px;
+    width: 100px; /* Уменьшено */
+    height: 100px; /* Уменьшено */
     object-fit: cover;
-    border-radius: 8px; /* from previous css */
+    border-radius: 12px; /* Более скругленные */
+    flex-shrink: 0; /* Чтобы картинка не сжималась */
 }
 
 /* StyledDivider01 -> .profile-main-startup-list-divider */
