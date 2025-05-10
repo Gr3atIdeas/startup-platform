@@ -11,221 +11,231 @@
 
 {% block content %}
     {% if messages %}
-        <ul class="messages" style="list-style-type: none; padding: 10px; background-color: #f8d7da; border: 1px solid #f5c6cb; border-radius: 5px; margin-bottom: 20px;">
+        <ul class="django-messages" style="list-style-type: none; padding: 10px; background-color: #f8d7da; border: 1px solid #f5c6cb; border-radius: 5px; margin-bottom: 20px; color: #721c24; text-align: center;">
             {% for message in messages %}
-                <li{% if message.tags %} class="{{ message.tags }}" style="color: #721c24;"{% endif %}>{{ message }}</li>
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
             {% endfor %}
         </ul>
     {% endif %}
 
-    <div class="div">
-        <div class="parent">
-            
-            
-            <div class="button">
-                
-                <div class="id-89457t94857t">Поиск</div>
+<div class="profile-page-container" style="width: 100%; background: linear-gradient(153deg, black 0%, #00346B 25%, #004E9F 48%, #01366D 64%, #020202 100%); overflow: hidden; flex-direction: column; justify-content: flex-start; align-items: center; display: flex; padding-top: 20px;">
+    <div class="profile-header-bar" style="width: 1303px; padding-bottom: 45px; justify-content: space-between; align-items: center; display: inline-flex;">
+        <div class="profile-header-logo-area" style="width: 53.18px; height: 53.18px; position: relative; overflow: hidden;">
+            <!-- <img src="{% static 'accounts/images/profile/logo.svg' %}" alt="Logo"> -->
+             <div style="width: 50.34px; height: 50.34px; left: -2.38px; top: 47.28px; position: absolute; transform: rotate(-81deg); transform-origin: top left; border: 2.83px white solid;"></div>
+             <div style="width: 30.87px; height: 27.34px; left: 9.53px; top: 12.24px; position: absolute; background: white;"></div>
+        </div>
+        <div class="profile-header-search" style="width: 352px; padding-left: 30px; padding-right: 30px; padding-top: 8px; padding-bottom: 8px; background: rgba(255, 255, 255, 0.19); border-radius: 99px; border: 1px #004E9F solid; justify-content: flex-start; align-items: center; gap: 8px; display: flex;">
+            <div style="width: 22px; height: 22px; position: relative; opacity: 0.60; overflow: hidden;"> {/* Search Icon container */}
+                <div style="width: 14.67px; height: 14.67px; left: 1.75px; top: 2.75px; position: absolute; border: 1.50px #A1A0A0 solid;"></div>
+                <div style="width: 3.99px; height: 3.99px; left: 14.26px; top: 15.26px; position: absolute; border: 1.50px #A1A0A0 solid;"></div>
             </div>
-            <div class="menus-wrapper">
-                <div class="menus">
-                    <div class="menus1">
-                        <div class="menu">
-                            <div class="cosmochat">Каталог</div>
-                            <div class="expand-more"></div>
-                        </div>
-                        <div class="menu">
-                            <div class="cosmochat">Новости</div>
-                            <div class="expand-more"></div>
-                        </div>
-                        <div class="menu2">
-                            <div class="cosmochat">CosmoChat</div>
-                            <div class="expand-more"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="group">
-                <div class="label">Войти</div>
-                
+            <div style="color: #A1A0A0; font-size: 12px; font-family: 'Unbounded', sans-serif; font-weight: 300; letter-spacing: 0.12px; word-wrap: break-word;">Поиск</div>
+        </div>
+        <div class="profile-header-nav" style="justify-content: flex-end; align-items: center; gap: 48px; display: flex;">
+            <div style="justify-content: center; align-items: center; gap: 24px; display: flex;">
+                <div style="padding: 8px 16px; border-radius: 5px; display: flex;"><a href="#" style="color: white; font-size: 14px; font-family: 'Unbounded', sans-serif; font-weight: 300; line-height: 18px; text-decoration: none;">Каталог</a></div>
+                <div style="padding: 8px 16px; border-radius: 5px; display: flex;"><a href="#" style="color: white; font-size: 14px; font-family: 'Unbounded', sans-serif; font-weight: 300; line-height: 18px; text-decoration: none;">Новости</a></div>
+                <div style="padding: 8px 16px; background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%); border-radius: 5px; display: flex;"><a href="#" style="color: white; font-size: 14px; font-family: 'Unbounded', sans-serif; font-weight: 300; line-height: 18px; text-decoration: none;">CosmoChat</a></div>
             </div>
         </div>
+        <div class="profile-header-login" style="width: 142px; height: 40px; padding: 12px 25px; background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%); box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25); border-radius: 10px; justify-content: flex-start; align-items: center; gap: 9px; display: flex;">
+             {% if user.is_authenticated %}
+                <a href="{% url 'profile' %}" style="color: black; font-size: 16px; font-family: 'Unbounded', sans-serif; font-weight: 400; line-height: 16px; text-decoration: none;">Профиль</a>
+                {# <a href="{% url 'logout' %}" style="...">Выйти</a> #}
+            {% else %}
+                <a href="{% url 'login' %}" style="color: black; font-size: 16px; font-family: 'Unbounded', sans-serif; font-weight: 400; line-height: 16px; text-decoration: none;">Войти</a>
+            {% endif %}
+            {# Login icon placeholder div if needed from figma #}
+            <div style="width: 24px; height: 24px; position: relative; overflow: hidden;">
+                 <div style="width: 19.50px; height: 19.50px; left: 2.25px; top: 2.25px; position: absolute; background: black;"></div>
+                 <div style="width: 9px; height: 9px; left: 7.50px; top: 7.50px; position: absolute; background: black;"></div>
+            </div>
+        </div>
+    </div>
 
-        <div class="featured">
-            <img class="image-from-rawpixel-id-597407-icon" alt="Фоновое изображение космоса" src="{% static 'accounts/images/profile/profile_spacebg.webp' %}">
-            
-            <div class="auto-layout">
-                <div class="profile">
-                    <div class="avatar01-parent">
-                        <img class="avatar01-icon" alt="Аватар пользователя" src="{% if user.profile_picture_url %}{{ user.profile_picture_url }}{% else %}{% static 'accounts/images/icons/image_placeholder.svg' %}{% endif %}">
-                        
-                        <div class="frame-parent">
-                            <div class="name-name-parent">
-                                <div class="name-name">
-                                    <div class="div5">{{ user.first_name|default:"Имя" }}</div>
-                                    <div class="div5">{{ user.last_name|default:"Фамилия" }}</div>
-                                </div>
-                                <div class="address">
-                                    <div class="cosmochat">{{ user.role.role_name|default:"Стартапер" }}</div>
-                                </div>
-                                <div class="address1">
-                                    <div class="id-89457t94857t">ID {{ user.user_id|default:"Не указан" }}</div>
-                                    <img class="copy-sharp-icon" alt="Копировать ID" src="{% static 'accounts/images/profile/copy-sharp.svg' %}">
-                                </div>
+    <div class="profile-featured-section" style="width: 1445px; padding-bottom: 55px; overflow: hidden; flex-direction: column; justify-content: flex-start; align-items: center; display: flex;">
+        <img class="profile-featured-bg-image" style="align-self: stretch; height: 395px; object-fit: cover;" src="{% static 'accounts/images/profile/profile_spacebg.webp' %}" alt="Фоновое изображение профиля" />
+        <div class="profile-content-layout" style="width: 1303px; justify-content: space-between; align-items: flex-start; display: inline-flex; margin-top: -140px; position:relative; z-index:1;">
+            <div class="profile-sidebar-column" style="width: 256px; padding: 32px; background: #011B35; box-shadow: 0px 40px 32px -24px rgba(15, 15, 15, 0.12); overflow: hidden; border-radius: 10px; border: 1px #353945 solid; flex-direction: column; justify-content: flex-start; align-items: center; gap: 24px; display: inline-flex;">
+                <div class="profile-avatar-section" style="flex-direction: column; justify-content: center; align-items: center; gap: 24px; display: flex;">
+                    <img style="width: 160px; height: 160px; border-radius: 128px; object-fit: cover;" src="{% if user.profile_picture_url %}{{ user.profile_picture_url }}{% else %}{% static 'accounts/images/icons/image_placeholder.svg' %}{% endif %}" alt="Аватар пользователя" />
+                </div>
+                <div class="profile-user-info" style="flex-direction: column; justify-content: center; align-items: center; gap: 20px; display: flex;">
+                    <div style="flex-direction: column; justify-content: flex-start; align-items: center; gap: 10px; display: flex;">
+                        <div style="justify-content: flex-start; align-items: flex-start; gap: 4px; display: inline-flex;">
+                            <div style="color: #FCFCFD; font-size: 20px; font-family: 'Unbounded', sans-serif; font-weight: 400; line-height: 18px;">{{ user.first_name|default:"Имя" }}</div>
+                            <div style="color: #FCFCFD; font-size: 20px; font-family: 'Unbounded', sans-serif; font-weight: 400; line-height: 18px;">{{ user.last_name|default:"Фамилия" }}</div>
+                        </div>
+                        <div style="color: #F5DB0C; font-size: 14px; font-family: 'Unbounded', sans-serif; font-weight: 300; line-height: 18px;">{{ user.role.role_name|default:"Роль не указана" }}</div>
+                        <div style="justify-content: flex-start; align-items: center; gap: 8px; display: inline-flex;">
+                            <div style="color: rgba(252, 252, 253, 0.30); font-size: 12px; font-family: 'Unbounded', sans-serif; font-weight: 300; letter-spacing: 0.12px;">ID {{ user.user_id|default:"Не указан" }}</div>
+                            <div style="width: 11px; height: 11px; position: relative; overflow: hidden; cursor:pointer;" title="Копировать ID"> {/* Copy Icon */}
+                                <div style="width: 7.91px; height: 7.91px; left: 2.41px; top: 2.41px; position: absolute; background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%);"></div>
+                                <div style="width: 7.91px; height: 7.91px; left: 0.69px; top: 0.69px; position: absolute; background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%);"></div>
                             </div>
-                            <div class="div8">{{ user.bio|default:"Описание отсутствует." }}</div>
-                            {% if user.website_url %} {# Предполагаем, что есть такое поле #}
-                            <div class="address2">
-                                <img class="iconsglobeline" alt="Вебсайт" src="{% static 'accounts/images/profile/Globe_Line.svg' %}">
-                                <b class="httpsui8net"><a href="{{ user.website_url }}" target="_blank" style="color: inherit; text-decoration: none;">{{ user.website_url }}</a></b>
-                            </div>
-                            {% endif %}
                         </div>
                     </div>
-
-                    {% if is_own_profile %}
-                    <div style="margin-top: 10px; margin-bottom:10px; text-align: center;">
-                        <h3>Загрузка аватарки</h3>
-                        <form method="post" enctype="multipart/form-data">
-                            {% csrf_token %}
-                            <input type="file" name="avatar" accept="image/*" required>
-                            <button type="submit" style="margin-top:5px;">Загрузить</button>
-                        </form>
+                    <div style="width: 186px; text-align: center; color: #777E90; font-size: 12px; font-family: 'Unbounded', sans-serif; font-weight: 300; letter-spacing: 0.12px; word-wrap: break-word;">{{ user.bio|default:"Описание отсутствует."}}</div>
+                    {% if user.website_url %}
+                    <div style="justify-content: flex-start; align-items: center; gap: 8px; display: inline-flex;">
+                        <div style="width: 16px; height: 16px; position: relative; overflow: hidden;"> {/* Globe Icon */}
+                            <div style="width: 13.33px; height: 13.33px; left: 1.33px; top: 1.33px; position: absolute; background: #777E90;"></div>
+                            <div style="width: 6.67px; height: 13.33px; left: 4.67px; top: 1.33px; position: absolute; background: #777E90;"></div>
+                            <div style="width: 13.33px; height: 1.33px; left: 1.33px; top: 7.33px; position: absolute; background: #777E90;"></div>
+                        </div>
+                        <a href="{{ user.website_url }}" target="_blank" style="color: #FCFCFD; font-size: 14px; font-family: 'DM Sans', sans-serif; font-weight: 700; line-height: 16px; text-decoration:none;">{{ user.website_url }}</a>
                     </div>
                     {% endif %}
+                </div>
 
-                    <div class="share-icon-parent">
-                        <img class="share-icon" alt="Поделиться" src="{% static 'accounts/images/profile/share_icon.svg' %}">
-                        
-                    </div>
-                    <div class="button1">
-                        <div class="label">Моя Галактика</div>
-                    </div>
-                     {% if is_own_profile %}
-                        <a href="{% url 'create_startup' %}" class="button1" style="text-decoration: none; margin-top: 10px;">
-                            <div class="label">Создать стартап</div>
+                {% if is_own_profile %}
+                <div class="profile-avatar-upload" style="margin-top: 15px; padding:10px; border: 1px dashed #353945; border-radius:5px; width:100%; text-align:center;">
+                    <h4 style="color: #FCFCFD; font-size: 14px; font-family: 'Unbounded', sans-serif; margin-bottom:10px;">Загрузить аватарку</h4>
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="file" name="avatar" accept="image/*" required style="color: #777E90; font-size: 12px; margin-bottom:10px; max-width: 180px;">
+                        <button type="submit" style="padding: 8px 15px; background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%); color: black; border: none; border-radius: 5px; cursor: pointer; font-family: 'Unbounded', sans-serif; font-size:14px;">Загрузить</button>
+                    </form>
+                </div>
+                {% endif %}
+
+                <div class="profile-user-actions" style="display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%;">
+                    <a href="#" style="height: 40px; padding: 12px 35px; background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%); border-radius: 10px; justify-content: center; align-items: center; display: inline-flex; text-decoration:none; width: calc(100% - 70px);">
+                        <div style="color: black; font-size: 16px; font-family: 'Unbounded', sans-serif; font-weight: 400; line-height: 16px;">Моя Галактика</div>
+                    </a>
+                    {% if is_own_profile %}
+                         <a href="{% url 'create_startup' %}" style="height: 40px; padding: 12px 20px; background: #006EDF; border-radius: 10px; justify-content: center; align-items: center; display: inline-flex; text-decoration:none; width: calc(100% - 40px);">
+                            <div style="color: white; font-size: 16px; font-family: 'Unbounded', sans-serif; font-weight: 400; line-height: 16px;">Создать стартап</div>
                         </a>
                     {% endif %}
-                    <div class="socials">
-                        
-                        
-                        <img class="mask-group-icon" alt="Соцсеть 1" src="{% static 'accounts/images/profile/Mask_group.png' %}">
-                        <img class="mask-group-icon1" alt="Соцсеть 2" src="{% static 'accounts/images/profile/Mask_group.png' %}"> {# Или другое изображение, если это разные иконки #}
-                        
-                    </div>
-                    <div class="divider"></div>
-                    <div class="div8">На площадке с {{ user.created_at|date:"d E Y"|default:"недавно" }}</div>
                 </div>
 
-                <div class="action-button-parent">
-                    {% if is_own_profile %}
-                    <div class="action-button">
-                        <div class="button3"> {# Это может быть ссылка на страницу редактирования #}
-                            <div class="label">Редактировать профиль</div> 
-                            <img class="iconsglobeline" alt="Редактировать" src="{% static 'accounts/images/profile/Edit_Line.svg' %}">
+                <div class="profile-social-links" style="padding-top: 8px; padding-bottom: 8px; justify-content: center; align-items: center; gap: 16px; display: inline-flex;">
+                    <a href="#" title="Соцсеть 1"><img style="width: 25px; height: 23.47px;" src="{% static 'accounts/images/profile/Mask_group.png' %}" /></a>
+                    {# <div style="width: 29.33px; height: 33.30px; background: #777E90;"></div> #}
+                    <a href="#" title="Соцсеть 2"><img style="width: 25px; height: 25px;" src="{% static 'accounts/images/profile/Mask_group.png' %}" /></a>
+                    {# <div style="width: 30.91px; height: 34.04px; background: #777E90;"></div> #}
+                    {# Example of div-based icon from new HTML - keep if it's a specific design choice #}
+                    <!-- <div style="width: 30px; height: 30px; position: relative; overflow: hidden;">
+                        <div style="width: 25px; height: 25px; left: 2.50px; top: 2.50px; position: absolute; background: #777E90;"></div>
+                        <div style="width: 2.50px; height: 2.50px; left: 20px; top: 7.50px; position: absolute; background: #777E90;"></div>
+                        <div style="width: 12.50px; height: 12.50px; left: 8.75px; top: 8.75px; position: absolute; background: #777E90;"></div>
+                    </div> -->
+                </div>
+                <div class="profile-sidebar-divider" style="width: 199px; height: 1px; background: #353945;"></div>
+                <div style="width: 186px; text-align: center; color: #777E90; font-size: 12px; font-family: 'Unbounded', sans-serif; font-weight: 300; letter-spacing: 0.12px;">На площадке с {{ user.created_at|date:"d M Y"|default:"Неизвестно" }}</div>
+            </div>
+
+            <div class="profile-main-column" style="width: 976px; flex-direction: column; justify-content: flex-start; align-items: flex-end; gap: 20px; display: inline-flex;">
+                {% if is_own_profile %}
+                <div class="profile-edit-button-area" style="justify-content: flex-start; align-items: flex-start; display: inline-flex;">
+                    <a href="#" style="padding: 12px 16px; border-radius: 10px; border: 1px white solid; justify-content: center; align-items: center; gap: 12px; display: flex; text-decoration: none;">
+                        <div style="text-align: right; color: white; font-size: 16px; font-family: 'Unbounded', sans-serif; font-weight: 400; line-height: 16px;">Редактировать профиль</div>
+                        <div style="width: 16px; height: 16px; position: relative; overflow: hidden;"> {/* Edit Icon */}
+                           <img src="{% static 'accounts/images/profile/Edit_Line.svg' %}" alt="Редактировать" style="width:100%; height:100%;">
                         </div>
+                    </a>
+                </div>
+                {% endif %}
+                <div class="profile-startups-section" style="align-self: stretch; padding: 32px; box-shadow: 0px 40px 32px -24px rgba(0, 0, 0, 0.12); overflow: hidden; border-radius: 10px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 48px; display: flex; background: #011B35; border: 1px #353945 solid; margin-top: {% if not is_own_profile %}60px{% else %}0px{% endif %};">
+                    <div class="profile-startup-tabs" style="align-self: stretch; justify-content: flex-start; align-items: flex-start; gap: 12px; display: inline-flex;">
+                        <div style="padding: 6px 12px; background: #E6E8EC; border-radius: 10px; display: flex;"><div style="color: #23262F; font-size: 14px; font-family: 'Unbounded', sans-serif; font-weight: 300; line-height: 18px;">Стартапы</div></div>
+                        <div style="padding: 6px 12px; border-radius: 100px; display: flex;"><div style="color: rgba(255, 255, 255, 0.50); font-size: 14px; font-family: 'Unbounded', sans-serif; font-weight: 300; line-height: 18px;">Новости</div></div>
                     </div>
-                    {% endif %}
-                    <div class="following">
-                        <div class="sub-navigation">
-                            <div class="sub-nav-item">
-                                <div class="cosmochat">Стартапы</div>
-                            </div>
-                            <div class="sub-nav-item1">
-                                <div class="cosmochat">Новости</div>
-                            </div>
-                        </div>
-                        
-                        {# Пример отображения стартапов, нужно будет заменить на реальный цикл #}
-                        {% for i in "123" %} {# Замените это на реальный цикл по стартапам пользователя, если есть #}
-                        <div class="group-parent">
-                            <div class="frame-group">
-                                <div class="frame-container">
-                                    <div class="container">
-                                        <div class="div5">Ромашка {{ i }}</div> {# Название стартапа #}
-                                        <div class="frame-div">
-                                            <div class="id-89457t94857t">Рейтинг 4,2/5 (534)</div> {# Рейтинг #}
-                                            <div class="vector-parent">
-                                                
-                                                <div class="div5">17</div> {# Количество чего-то #}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="frame-wrapper">
-                                        <div class="editmenu-action-parent">
-                                            <div class="editmenu-action">
-                                                <div class="id-89457t94857t">Медицина</div> {# Категория #}
-                                            </div>
-                                            <div class="rectangle-parent">
-                                                <div class="group-child"></div>
-                                                <div class="group-item"></div>
-                                                <div class="div13">65%</div> {# Прогресс #}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="button4">
-                                        <div class="label">Подробнее</div>
+                    
+                    {# Loop for startups - replace with actual user startups #}
+                    {% for i in "123" %} {# Placeholder loop, replace with 'user.startups' or similar #}
+                    <div class="profile-startup-card-wrapper" style="align-self: stretch; display: flex; flex-direction: column; gap: 20px;">
+                        <div class="profile-startup-card" style="width: 100%; {# previous: 836px #} padding: 23px 32px 23px 20px; {# Figma had 75px left padding, seems too much #} overflow: hidden; border-radius: 10px; justify-content: space-between; align-items: center; gap: 20px; display: flex; background-color: #032347; {# Darker shade for card #}">
+                            <img style="width: 100px; height: 100px; object-fit: cover; border-radius: 8px;" src="{% static 'accounts/images/profile/Rectangle_4196.png' %}" alt="Лого стартапа {{i}}" />
+                            <div style="flex-grow:1; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 13px; display: inline-flex;">
+                                <div style="color: white; font-size: 20px; font-family: 'Unbounded', sans-serif; font-weight: 400; line-height: 18px;">Ромашка {{i}}</div>
+                                <div style="width: 100%; justify-content: space-between; align-items: center; display: inline-flex;">
+                                    <div style="color: white; font-size: 12px; font-family: 'Unbounded', sans-serif; font-weight: 300; letter-spacing: 0.12px;">Рейтинг 4,2/5 (534)</div>
+                                    <div style="justify-content: flex-start; align-items: center; gap: 8px; display: flex;">
+                                        {# Placeholder for rating icon if needed #}
+                                        <!-- <div style="width: 16px; height: 15px; border: 1px white solid;"></div> -->
+                                        <div style="color: white; font-size: 14px; font-family: 'Circe', sans-serif; font-weight: 400; line-height: 18px;">17 <span style="font-size:10px">отзывов</span></div>
                                     </div>
                                 </div>
-                                <img class="group-inner" alt="Изображение стартапа" src="{% static 'accounts/images/profile/Rectangle_4196.png' %}"> {# Изображение стартапа #}
                             </div>
-                            {% if not forloop.last %}<div class="divider1"></div>{% endif %}
+                            <div style="flex-direction: column; justify-content: center; align-items: center; gap: 10px; display: inline-flex; min-width:180px;">
+                                <div style="padding: 5px 12px; background: #050505; border-radius: 5px;"><div style="text-align: center; color: white; font-size: 12px; font-family: 'Unbounded', sans-serif; font-weight: 300; letter-spacing: 0.12px;">Медицина</div></div>
+                                <div style="width: 150px; height: 27px; background: black; border-radius: 5px; position:relative; display:flex; align-items:center; justify-content:center;">
+                                    <div style="width: 65%; height: 100%; background: #FFEF2B; border-radius: 5px; position:absolute; left:0; top:0;"></div>
+                                    <div style="position:relative; color: black; font-size: 12px; font-family: 'Unbounded', sans-serif; font-weight: 300; letter-spacing: 0.12px;">65%</div>
+                                </div>
+                            </div>
+                            <a href="#" style="height: 40px; padding: 12px 35px; background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%); border-radius: 10px; justify-content: center; align-items: center; display: inline-flex; text-decoration: none;">
+                                <div style="color: #F5F5F5; font-size: 16px; font-family: 'Unbounded', sans-serif; font-weight: 400; line-height: 16px;">Подробнее</div>
+                            </a>
                         </div>
-                        {% empty %}
-                        <p style="color: #fff; padding: 20px;">У вас пока нет стартапов.</p>
-                        {% endfor %}
-                        
+                        {% if not forloop.last %}
+                        <div class="profile-startup-divider" style="width: 100%; height: 1px; background: rgba(255, 255, 255, 0.2);"></div>
+                        {% endif %}
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="frame-parent6">
-            <div class="frame-parent7">
-                <div class="great-ideas-parent">
-                    <div class="great-ideas">Great ideas</div>
-                    <div class="div26">Раскройте открывающиеся возможности и будьте частью инновационной волны</div>
-                </div>
-                <div class="vk-black-parent">
-                    
-                </div>
-            </div>
-            <div class="menu-parent">
-                <div class="menu3">
-                    <div class="div27">Меню</div>
-                    <div class="menus2">
-                        <div class="cosmochat">Каталог</div>
-                        <div class="cosmochat">Портфель</div>
-                        <div class="cosmochat">Стартапы</div>
-                        <div class="cosmochat">Франшизы</div>
-                        <div class="cosmochat">Новости</div>
-                        <div class="cosmochat">CosmoChat</div>
-                    </div>
-                </div>
-                <div class="menu3">
-                    <div class="div27">О нас</div>
-                    <div class="menus2">
-                        <div class="cosmochat">FAQ</div>
-                        <div class="cosmochat">Поддержка</div>
-                        <div class="cosmochat">Контакты</div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="appstore-parent">
-                
-            </div>
-            <div class="parent7">
-                <div class="label">Подписаться на новости</div>
-                
-            </div>
-            <div class="instance-item"></div>
-            <div class="great-ideas-group">
-                <div class="id-89457t94857t">© 2025 Great Ideas</div>
-                <div class="parent8">
-                    <div class="id-89457t94857t">Политика конфидициальности</div>
-                    <div class="id-89457t94857t">Офферта</div>
+                    {% empty %}
+                         <p style="color: #777E90; font-size: 14px; font-family: 'Unbounded', sans-serif;">У вас пока нет стартапов.</p>
+                    {% endfor %}
                 </div>
             </div>
         </div>
     </div>
+
+    <div class="profile-page-footer" style="width: 100%; {# Figma width 1440px #} height: 660px; position: relative; background: linear-gradient(180deg, #011D39 0%, black 100%); overflow: hidden; margin-top: 30px;">
+        <div style="width: 91.3%; {# 1316px/1440px #} max-width: 1316px; left: 50%; transform: translateX(-50%); top: 88px; position: absolute; justify-content: space-between; align-items: center; display: inline-flex;">
+            <div class="profile-footer-great-ideas" style="width: 535px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 36px; display: inline-flex;">
+                <div style="align-self: stretch; color: white; font-size: 70px; {# Figma 100px is too big #} font-family: 'Blippo-Black CY [Rus by me]', sans-serif; font-weight: 400; text-transform: uppercase; line-height: 1.1;">Great ideas</div>
+                <div style="width: 316px; color: white; font-size: 12px; font-family: 'Unbounded', sans-serif; font-weight: 300; letter-spacing: 0.12px;">Раскройте открывающиеся возможности и будьте частью инновационной волны</div>
+            </div>
+            <div class="profile-footer-social" style="justify-content: flex-start; align-items: center; gap: 22px; display: flex;">
+                {# Placeholder for social icons in footer, e.g., VK, Telegram #}
+                <!-- <img src="{% static 'accounts/images/profile/vk_footer.svg' %}" style="width: 48px; height: 48px;"> -->
+                <!-- <img src="{% static 'accounts/images/profile/tg_footer.svg' %}" style="width: 48px; height: 48px;"> -->
+                <div style="width: 48px; height: 48px; background: #ccc; border-radius:50%; display:flex; align-items:center; justify-content:center;">VK</div>
+                <div style="width: 48px; height: 48px; background: #ccc; border-radius:50%; display:flex; align-items:center; justify-content:center;">TG</div>
+            </div>
+        </div>
+        <div class="profile-footer-menus" style="position: absolute; top: 225px; right: 62px; {# Figma left: 780px, making it responsive #} display: flex; flex-wrap: wrap; gap: 30px; justify-content: flex-end;">
+            <div style="width: 200px; {# Figma 290px #} padding: 24px 0px; flex-direction: column; gap: 20px; display: inline-flex;">
+                <div style="color: #FFEF2B; font-size: 16px; font-family: 'Unbounded', sans-serif; font-weight: 400;">Меню</div>
+                <div style="flex-direction: column; gap: 18px; display: flex;">
+                    <a href="#" style="color: white; font-size: 14px; font-family: 'Unbounded', sans-serif; font-weight: 300; text-decoration:none;">Каталог</a>
+                    <a href="#" style="color: white; font-size: 14px; font-family: 'Unbounded', sans-serif; font-weight: 300; text-decoration:none;">Портфель</a>
+                    <a href="#" style="color: white; font-size: 14px; font-family: 'Unbounded', sans-serif; font-weight: 300; text-decoration:none;">Стартапы</a>
+                </div>
+            </div>
+            <div style="width: 200px; padding: 24px 0px; flex-direction: column; gap: 20px; display: inline-flex;">
+                <div style="color: #FFEF2B; font-size: 16px; font-family: 'Unbounded', sans-serif; font-weight: 400;">О нас</div>
+                <div style="flex-direction: column; gap: 18px; display: flex;">
+                    <a href="#" style="color: white; font-size: 14px; font-family: 'Unbounded', sans-serif; font-weight: 300; text-decoration:none;">FAQ</a>
+                    <a href="#" style="color: white; font-size: 14px; font-family: 'Unbounded', sans-serif; font-weight: 300; text-decoration:none;">Поддержка</a>
+                    <a href="#" style="color: white; font-size: 14px; font-family: 'Unbounded', sans-serif; font-weight: 300; text-decoration:none;">Контакты</a>
+                </div>
+            </div>
+        </div>
+         <div class="profile-footer-app-links" style="position: absolute; top: 437px; left: 62px; display: flex; gap: 23px; align-items:center;">
+            {# Placeholders for AppStore/GooglePlay images #}
+            <!-- <img src="{% static 'accounts/images/profile/appstore.svg' %}" style="height: 52px;"> -->
+            <!-- <img src="{% static 'accounts/images/profile/googleplay.svg' %}" style="height: 42px;"> -->
+             <div style="width: 178px; height: 50.04px; background: #555; display:flex; align-items:center; justify-content:center; color:white; border-radius:8px;">App Store</div>
+             <div style="width: 180px; height: 52px; background: #555; display:flex; align-items:center; justify-content:center; color:white; border-radius:8px;">Google Play</div>
+        </div>
+        <a href="#" class="profile-footer-subscribe" style="height: 40px; padding: 12px 25px; left: 62px; top: 245px; position: absolute; border-radius: 10px; border: 1px white solid; justify-content: flex-start; align-items: center; gap: 9px; display: inline-flex; text-decoration:none;">
+            <div style="color: #F5F5F5; font-size: 16px; font-family: 'Unbounded', sans-serif; font-weight: 400;">Подписаться на новости</div>
+             {# Placeholder for subscribe icon #}
+            <!-- <img src="{% static 'accounts/images/profile/plus_icon_footer.svg' %}" style="width: 24px; height: 24px;"> -->
+             <div style="width: 24px; height: 24px; position: relative; overflow: hidden;"><div style="width: 19.50px; height: 19.50px; left: 2.25px; top: 2.25px; position: absolute; background: white;"></div><div style="width: 9px; height: 9px; left: 7.50px; top: 7.50px; position: absolute; background: white;"></div></div>
+        </a>
+        <div style="width: 100%; height: 48px; left: 0px; top: 612px; position: absolute; background: white;"></div>
+        <div class="profile-footer-bottom-text" style="width: 91.3%; max-width:1315px; left: 50%; transform: translateX(-50%); top: 632px; position: absolute; justify-content: space-between; align-items: center; display: inline-flex;">
+            <div style="color: #4E4F51; font-size: 12px; font-family: 'Unbounded', sans-serif; font-weight: 300; letter-spacing: 0.12px;">© 2025 Great Ideas</div>
+            <div style="justify-content: flex-start; align-items: center; gap: 40px; display: flex;">
+                <a href="#" style="color: #4E4F51; font-size: 12px; font-family: 'Unbounded', sans-serif; font-weight: 300; letter-spacing: 0.12px; text-decoration:none;">Политика конфиденциальности</a>
+                <a href="#" style="color: #4E4F51; font-size: 12px; font-family: 'Unbounded', sans-serif; font-weight: 300; letter-spacing: 0.12px; text-decoration:none;">Оферта</a>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
