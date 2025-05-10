@@ -15,7 +15,7 @@
 {% block content %}
 <div class="profile-page-wrapper">
     <img class="profile-main-banner" src="{% static 'accounts/images/profile/profile_spacebg.webp' %}" alt="Баннер профиля" />
-    <div class="profile-content-container">
+    <div class="profile-content-container" style="margin-top: 20px;">
         <div class="profile-sidebar">
             <div class="profile-sidebar-user-info-block">
                 <div class="profile-sidebar-avatar-wrapper" id="avatarClickableArea" style="cursor: pointer;" title="Изменить аватар">
@@ -79,7 +79,9 @@
             </div>
             {% endif %}
 
-            <a href="#" class="btn btn-primary profile-sidebar-my-galaxy-btn">Моя Галактика</a>
+            <a href="#" data-has-icon-end="false" data-has-icon-start="false" data-size="Medium" data-state="Default" data-variant="Primary" style="width: 100%; padding-left: 35px; padding-right: 35px; padding-top: 12px; padding-bottom: 12px; background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%); overflow: hidden; border-radius: 10px; justify-content: center; align-items: center; gap: 8px; display: inline-flex; text-decoration: none; box-sizing: border-box;">
+                <div style="color: black; font-size: 16px; font-family: Unbounded; font-weight: 400; line-height: 16px; word-wrap: break-word">Моя Галактика</div>
+            </a>
             
             <div class="profile-sidebar-social-icons-row">
                 <img class="profile-sidebar-social-icon-row-item-img" src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Соцсеть 1" />
@@ -99,9 +101,12 @@
         <div class="profile-main-content">
             {% if is_own_profile %}
             <div class="profile-main-edit-btn-container">
-                <a href="#" class="btn btn-outline-light profile-main-edit-btn">
-                    Редактировать профиль
-                    <img src="{% static 'accounts/images/profile/Edit_Line.svg' %}" alt="Редактировать" class="profile-main-edit-btn-icon"/>
+                <a href="#" data-icon="right" data-size="small" data-state="default" data-style="dark" style="width: auto; height: auto; padding-left: 16px; padding-right: 16px; padding-top: 12px; padding-bottom: 12px; border-radius: 10px; outline: 1px white solid; outline-offset: -1px; justify-content: center; align-items: center; gap: 12px; display: inline-flex; text-decoration: none;">
+                    <div style="text-align: right; color: white; font-size: 16px; font-family: Unbounded; font-weight: 400; line-height: 16px; word-wrap: break-word">Редактировать профиль</div>
+                    <div style="width: 16px; height: 16px; position: relative; overflow: hidden">
+                        <div style="width: 12px; height: 1.33px; left: 2px; top: 14px; position: absolute; background: white;"></div>
+                        <div style="width: 12.11px; height: 12.11px; left: 2px; top: 0.55px; position: absolute; background: white;"></div>
+                    </div>
                 </a>
             </div>
             {% endif %}
@@ -112,91 +117,47 @@
                     <div class="profile-main-tab-item">Новости</div>
                 </div>
                 
-                <!-- Макет стартапа 1 -->
-                <div class="profile-main-startup-card-item">
-                    <div class="profile-main-startup-card-content">
-                        <div class="profile-main-startup-info">
-                            <div class="profile-main-startup-name">Ромашка (Макет)</div>
-                            <div class="profile-main-startup-rating-reviews">
-                                <span class="profile-main-startup-rating">Рейтинг 4.2/5 (534)</span>
-                                <div class="profile-main-startup-reviews">
-                                    <img src="{% static 'accounts/images/profile/chat_icon.svg' %}" alt="Reviews" class="profile-main-startup-review-icon-img">
-                                    <span>17</span>
+                <div style="width: 100%; display: flex; flex-direction: column; gap: 0px; background-color: transparent !important;">
+                    {% for startup in user_startups %} {# Предполагаем, что user_startups передается в контекст #}
+                    <div class="startup-item-container" style="display: flex; align-items: center; gap: 20px; width: 100%; padding-top: 20px; padding-bottom: 20px; background-color: transparent !important;">
+                        <img style="width: 126px; height: 126px; border-radius: 50%; flex-shrink: 0;" src="{{ startup.image_url|default_if_none:'' }}{% if not startup.image_url %}{% static 'accounts/images/profile/Rectangle_4196.png' %}{% endif %}" alt="{{ startup.name|default:'Изображение стартапа' }}" />
+                        
+                        <div class="startup-details-flex-column" style="flex: 1; display: flex; flex-direction: column; gap: 10px; background-color: transparent !important;">
+                            <div class="startup-details-top-row" style="display: flex; justify-content: space-between; align-items: center; gap: 20px; width: 100%;">
+                                <div style="flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 10px; display: inline-flex;">
+                                    <div style="color: white; font-size: 20px; font-family: Unbounded; font-weight: 400; line-height: 1.1;">{{ startup.name|default:"Название стартапа" }}</div>
+                                    <div style="justify-content: flex-start; align-items: center; display: inline-flex; gap: 15px;">
+                                        <div style="color: white; font-size: 12px; font-family: Unbounded; font-weight: 300; letter-spacing: 0.12px;">Рейтинг {{ startup.rating|stringformat:".1f"|default:"0.0" }}/5 ({{ startup.reviews_count|default:0 }})</div>
+                                        <div style="justify-content: flex-start; align-items: center; gap: 8px; display: flex;">
+                                            <div style="width: 16px; height: 15px; border: 1px solid white;"></div> {# Иконка чата из макета #}
+                                            <div style="color: white; font-size: 14px; font-family: Circe; font-weight: 400; line-height: 18px;">{{ startup.comments_count|default:0 }}</div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="profile-main-startup-category-progress">
-                            <div class="profile-main-startup-category-tag">Медицина</div>
-                            <div class="progress-bar-and-text-container">
-                                <div class="profile-main-startup-progress-bar-bg">
-                                     <div class="profile-main-startup-progress-bar-fg" style="width: 65%;"></div>
-                                </div>
-                                <span class="profile-main-startup-progress-text">65%</span>
-                            </div>
-                        </div>
-                        <a href="#" class="btn btn-primary profile-main-startup-details-btn">Подробнее</a>
-                    </div>
-                    <img class="profile-main-startup-image" src="{% static 'accounts/images/profile/Rectangle_4196.png' %}" alt="Изображение стартапа" />
-                </div>
-                <div class="profile-main-startup-list-divider"></div>
-                <!-- /Макет стартапа 1 -->
 
-                <!-- Макет стартапа 2 -->
-                <div class="profile-main-startup-card-item">
-                    <div class="profile-main-startup-card-content">
-                        <div class="profile-main-startup-info">
-                            <div class="profile-main-startup-name">Космический Лифт (Макет)</div>
-                            <div class="profile-main-startup-rating-reviews">
-                                <span class="profile-main-startup-rating">Рейтинг 4.8/5 (1203)</span>
-                                <div class="profile-main-startup-reviews">
-                                    <img src="{% static 'accounts/images/profile/chat_icon.svg' %}" alt="Reviews" class="profile-main-startup-review-icon-img">
-                                    <span>42</span>
+                                <div style="display: flex; align-items: center; gap: 15px; flex-shrink: 0;">
+                                    <div style="padding: 9px 17px; background: rgba(5,5,5,0.7); border-radius: 5px;">
+                                        <div style="text-align: center; color: white; font-size: 12px; font-family: Unbounded; font-weight: 300; letter-spacing: 0.12px;">{{ startup.category|default:"Категория" }}</div>
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 10px;">
+                                        <div style="width: 100px; height: 10px; background: #000000; border-radius: 5px; position: relative; overflow: hidden;">
+                                            <div style="width: {{ startup.progress_percentage|default:0 }}%; height: 100%; background: #FFEF2B; border-radius: 5px;"></div>
+                                        </div>
+                                        <div style="color: white; font-size: 12px; font-family: Unbounded; font-weight: 300; width: 40px; text-align: left;">{{ startup.progress_percentage|default:0 }}%</div>
+                                    </div>
                                 </div>
+                                
+                                <a href="{{ startup.get_absolute_url|default:'#' }}" style="height: 40px; padding-left: 25px; padding-right: 25px; background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%); border-radius: 10px; text-decoration: none; color: #F5F5F5; font-size: 16px; font-family: Unbounded; font-weight: 400; display: inline-flex; justify-content: center; align-items: center; white-space: nowrap; flex-shrink: 0;">Подробнее</a>
                             </div>
                         </div>
-                        <div class="profile-main-startup-category-progress">
-                            <div class="profile-main-startup-category-tag">Технологии</div>
-                            <div class="progress-bar-and-text-container">
-                                <div class="profile-main-startup-progress-bar-bg">
-                                     <div class="profile-main-startup-progress-bar-fg" style="width: 85%;"></div>
-                                </div>
-                                <span class="profile-main-startup-progress-text">85%</span>
-                            </div>
-                        </div>
-                        <a href="#" class="btn btn-primary profile-main-startup-details-btn">Подробнее</a>
                     </div>
-                    <img class="profile-main-startup-image" src="{% static 'accounts/images/profile/Rectangle_4196.png' %}" alt="Изображение стартапа" />
+                    {% if not forloop.last %}
+                    <div style="width: 100%; height: 1px; background: rgba(255, 255, 255, 0.25); margin-top: 15px; margin-bottom: 15px;"></div>
+                    {% endif %}
+                    {% empty %}
+                    <p style="color: white; text-align: center; padding: 20px;">У пользователя пока нет стартапов.</p>
+                    {% endfor %}
                 </div>
-                <div class="profile-main-startup-list-divider"></div>
-                <!-- /Макет стартапа 2 -->
-                
-                <!-- Макет стартапа 3 -->
-                <div class="profile-main-startup-card-item">
-                    <div class="profile-main-startup-card-content">
-                        <div class="profile-main-startup-info">
-                            <div class="profile-main-startup-name">Вечная Батарейка (Макет)</div>
-                            <div class="profile-main-startup-rating-reviews">
-                                <span class="profile-main-startup-rating">Рейтинг 3.9/5 (250)</span>
-                                <div class="profile-main-startup-reviews">
-                                    <img src="{% static 'accounts/images/profile/chat_icon.svg' %}" alt="Reviews" class="profile-main-startup-review-icon-img">
-                                    <span>9</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="profile-main-startup-category-progress">
-                            <div class="profile-main-startup-category-tag">Энергетика</div>
-                            <div class="progress-bar-and-text-container">
-                                <div class="profile-main-startup-progress-bar-bg">
-                                     <div class="profile-main-startup-progress-bar-fg" style="width: 40%;"></div>
-                                </div>
-                                <span class="profile-main-startup-progress-text">40%</span>
-                            </div>
-                        </div>
-                        <a href="#" class="btn btn-primary profile-main-startup-details-btn">Подробнее</a>
-                    </div>
-                    <img class="profile-main-startup-image" src="{% static 'accounts/images/profile/Rectangle_4196.png' %}" alt="Изображение стартапа" />
-                </div>
-                <!-- /Макет стартапа 3 -->
             </div>
         </div>
     </div>
