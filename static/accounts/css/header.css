@@ -161,12 +161,23 @@
 }
 
 .profile-dropdown-button {
-  background-color: transparent;
-  border: none;
+  background-color: transparent !important;
+  border: none !important;
   padding: 0;
   cursor: pointer;
   display: flex;
   align-items: center;
+  box-shadow: none !important;
+  transform: none !important;
+  transition: none !important;
+}
+
+.profile-dropdown-button:hover,
+.profile-dropdown-button:focus,
+.profile-dropdown-button:active {
+  background-color: transparent !important;
+  box-shadow: none !important;
+  transform: none !important;
 }
 
 .profile-avatar-wrapper {
@@ -179,13 +190,16 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: lightgray;
+  background-color: #cccccc;
+  position: relative;
 }
 
 .profile-dropdown-avatar {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: 0;
 }
 
 .profile-dropdown-chevron {

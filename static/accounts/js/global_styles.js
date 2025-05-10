@@ -33,13 +33,16 @@ document.addEventListener('DOMContentLoaded', function() {
   // Add smooth scroll to anchor links if any
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
-      e.preventDefault();
       const targetId = this.getAttribute('href');
-      const targetElement = document.querySelector(targetId);
-      if (targetElement) {
-        targetElement.scrollIntoView({
-          behavior: 'smooth'
-        });
+      // Only proceed if href is more than just "#"
+      if (targetId && targetId.length > 1) { 
+        e.preventDefault();
+        const targetElement = document.querySelector(targetId);
+        if (targetElement) {
+          targetElement.scrollIntoView({
+            behavior: 'smooth'
+          });
+        }
       }
     });
   });

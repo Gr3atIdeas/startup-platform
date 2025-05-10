@@ -59,9 +59,14 @@
                 {% if is_own_profile %}
                 <div class="profile-avatar-upload" style="margin-top: 15px; padding:10px; border: 1px dashed #353945; border-radius:5px; width:100%; text-align:center;">
                     <h4 style="color: #FCFCFD; font-size: 14px; font-family: 'Unbounded', sans-serif; margin-bottom:10px;">Загрузить аватарку</h4>
-                    <form method="post" enctype="multipart/form-data">
+                    <form method="post" enctype="multipart/form-data" id="avatarUploadForm">
                         {% csrf_token %}
-                        <input type="file" name="avatar" accept="image/*" required style="color: #777E90; font-size: 12px; margin-bottom:10px; max-width: 180px;">
+                        {# <input type="file" name="avatar" accept="image/*" required style="color: #777E90; font-size: 12px; margin-bottom:10px; max-width: 180px;"> #}
+                        {# Чтобы скрыть стандартный input type="file" и использовать кастомную кнопку/логику #}
+                        <input type="file" name="avatar" accept="image/*" required id="id_avatar_input" style="display: none;">
+                        {# Можно добавить JS, чтобы по клику на кастомную кнопку/текст триггерился этот скрытый инпут #}
+                        <button type="button" onclick="document.getElementById('id_avatar_input').click();" style="padding: 8px 15px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer; font-family: 'Unbounded', sans-serif; font-size:14px; margin-bottom: 10px;">Выберите файл</button>
+                        <div id="fileName" style="color: #777E90; font-size: 12px; margin-bottom:10px;">Файл не выбран</div>
                         <button type="submit" style="padding: 8px 15px; background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%); color: black; border: none; border-radius: 5px; cursor: pointer; font-family: 'Unbounded', sans-serif; font-size:14px;">Загрузить</button>
                     </form>
                 </div>
@@ -141,4 +146,20 @@
 
     {# Footer section removed as it should be inherited from base.html #}
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const avatarInput = document.getElementById('id_avatar_input');
+    const fileNameDisplay = document.getElementById('fileName');
+    if (avatarInput && fileNameDisplay) {
+        avatarInput.addEventListener('change', function() {
+            if (this.files && this.files.length > 0) {
+                fileNameDisplay.textContent = this.files[0].name;
+            } else {
+                fileNameDisplay.textContent = 'Файл не выбран';
+            }
+        });
+    }
+});
+</script>
 {% endblock %}
