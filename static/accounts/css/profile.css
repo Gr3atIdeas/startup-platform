@@ -68,6 +68,13 @@
     background: #45B26B; /* Placeholder bg from styled component */
     overflow: hidden;
     border-radius: 128px;
+    transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out; /* Плавный переход */
+    cursor: pointer; /* Добавлено из HTML для консистентности */
+}
+
+.profile-sidebar-avatar-wrapper:hover {
+    box-shadow: 0 0 15px 5px rgba(255, 239, 43, 0.6); /* Желтоватая подсветка по кругу */
+    transform: scale(1.05); /* Слегка увеличиваем при наведении */
 }
 
 /* StyledAustinwadeX6Uj51n5CE8unsplash1 -> .profile-sidebar-avatar-img */

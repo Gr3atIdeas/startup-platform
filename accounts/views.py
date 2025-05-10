@@ -12,7 +12,7 @@ import logging
 import os
 from django.conf import settings
 from django.db import models  # Добавляем для models.Q
-from .forms import RegisterForm, LoginForm, StartupForm, CommentForm, MessageForm, UserSearchForm, CustomUserCreationForm, CustomAuthenticationForm, StartupNewsForm, InvestmentForm, StartupSearchForm, FeedbackForm  # Добавляем MessageForm и UserSearchForm
+from .forms import RegisterForm, LoginForm, StartupForm, CommentForm, MessageForm, UserSearchForm, StartupNewsForm, InvestmentForm, StartupSearchForm, FeedbackForm  # Добавляем MessageForm и UserSearchForm
 from .models import Users, Directions, Startups, ReviewStatuses, UserVotes, StartupTimeline, FileStorage, EntityTypes, FileTypes, InvestmentTransactions, TransactionTypes, PaymentMethods, Comments, NewsArticles, NewsLikes, NewsViews, ChatConversations, ChatParticipants, Messages, MessageStatuses, StartupNews, Investments, UserRoles, Feedback, StartupRating
 from .models import creative_upload_path, proof_upload_path, video_upload_path
 import uuid
