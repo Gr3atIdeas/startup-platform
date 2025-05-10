@@ -68,13 +68,6 @@
     background: #45B26B; /* Placeholder bg from styled component */
     overflow: hidden;
     border-radius: 128px;
-    transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out; /* Плавный переход */
-    cursor: pointer; /* Добавлено из HTML для консистентности */
-}
-
-.profile-sidebar-avatar-wrapper:hover {
-    box-shadow: 0 0 15px 5px rgba(255, 239, 43, 0.6); /* Желтоватая подсветка по кругу */
-    transform: scale(1.05); /* Слегка увеличиваем при наведении */
 }
 
 /* StyledAustinwadeX6Uj51n5CE8unsplash1 -> .profile-sidebar-avatar-img */
@@ -410,7 +403,6 @@
     line-height: 18px;
     font-size: 14px;
     cursor: pointer;
-    word-wrap: break-word;
 }
 .profile-main-tab-item.active-tab { /* StyledSubnavitem with StyledActivespan */
     background: #E6E8EC;
@@ -444,7 +436,7 @@
     justify-content: space-between; /* Распределит card-content и image по краям */
     align-items: center;
     display: flex;
-    background-color: transparent; /* Фон сделан прозрачным */
+    background-color: transparent; /* ИЗМЕНЕНО: Фон сделан прозрачным */
     box-sizing: border-box;
     gap: 20px; /* Промежуток между контентом и картинкой */
 }
@@ -452,20 +444,19 @@
 /* Content within the card, before image */
 .profile-main-startup-card-content {
     display: flex;
-    flex-grow: 1;
-    justify-content: flex-start; /* Изменено для контроля порядка и выравнивания */
-    align-items: center;
-    gap: 20px;
+    flex-grow: 1; /* Позволит этому блоку занять доступное пространство */
+    align-items: center; /* Выровняет их по центру вертикально */
+    gap: 20px; /* Промежуток между info, category/progress, button */
 }
 
 /* StyledFrame1012 (Name + Rating/Reviews) -> .profile-main-startup-info */
 .profile-main-startup-info {
     flex-direction: column;
-    justify-content: center;
+    justify-content: center; /* Изменено на center */
     align-items: flex-start;
     gap: 13px;
-    display: inline-flex;
-    margin-right: auto; /* Отталкивает следующие элементы (категорию/прогресс и кнопку) вправо */
+    display: inline-flex; /* Чтобы не занимал всю ширину flex-родителя */
+    margin-right: auto; /* ДОБАВЛЕНО: Занимает доступное место слева, прижимая остальные элементы вправо */
 }
 .profile-main-startup-name { /* Generic text, corresponds to multiple <StyledP> or <StyledSpan> */
     color: white;
@@ -530,11 +521,11 @@
 
 /* StyledFrame1014 (Category tag + Progress bar) -> .profile-main-startup-category-progress */
 .profile-main-startup-category-progress {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 15px;
-    margin-left: auto; /* Выравнивание по правому краю */
+    display: flex; /* ADDED to make tag and progress-bar-container align in a row */
+    flex-direction: row; /* ADDED to confirm row direction */
+    align-items: center; /* ADDED to vertically align items in this row */
+    gap: 15px; /* ADDED gap between tag and progress-bar-container */
+    justify-content: flex-end; /* ДОБАВЛЕНО: Выравнивает содержимое (тег и прогресс-бар) по правому краю этого блока */
 }
 /* StyledFrame945 (Tag, prog bar bg, prog bar fg, text) */
 /* .progress-bar-elements-container { 
@@ -570,7 +561,7 @@
 }
 .profile-main-startup-progress-bar-bg { /* StyledRectangle4197 */
     width: 100px; /* Уменьшено для соответствия макету */
-    height: 27px; /* Уменьшено для соответствия макету */
+    height: 27px; /* ИЗМЕНЕНО: Высота изменена на 27px */
     background: black;
     border-radius: 5px;
     overflow: hidden;
@@ -686,63 +677,4 @@ body {
     color: #777E90;
     margin-top: 5px;
     word-break: break-all;
-}
-
-/* News Section Styles */
-#news-content {
-    /* display: none;  Управляется JS */
-    width: 100%;
-}
-
-.profile-main-news-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Адаптивная сетка */
-    gap: 20px; /* Промежуток между карточками новостей */
-    width: 100%;
-}
-
-.profile-main-news-card-item {
-    width: 100%; /* Ширина будет управляться сеткой, но можно оставить для внутреннего контроля */
-    /* height: 251px;  Высота может быть автоматической или фиксированной */
-    position: relative;
-    background: white; /* Изменено на белый фон */
-    overflow: hidden;
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column; /* Элементы внутри карточки будут идти сверху вниз */
-    padding: 15px; /* Внутренние отступы для карточки */
-    box-sizing: border-box;
-    color: black; /* Основной цвет текста в карточке */
-}
-
-.profile-main-news-image {
-    width: 100%; /* Растягиваем изображение на всю ширину карточки */
-    height: 131px; /* Фиксированная высота из макета */
-    object-fit: cover; /* Масштабирование с сохранением пропорций и обрезкой */
-    border-radius: 7px; /* Скругление углов изображения */
-    margin-bottom: 15px; /* Отступ под изображением */
-}
-
-.profile-main-news-title {
-    /* width: 250px; /* Ширина будет 100% от padding родителя */
-    /* position: absolute; left: 17px; top: 148px; - убираем абсолютное позиционирование */
-    color: black; /* Изменен цвет текста */
-    font-size: 16px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 400;
-    line-height: 16px; /* Изменена высота строки */
-    word-wrap: break-word;
-    margin-bottom: 10px; /* Отступ под заголовком */
-}
-
-.profile-main-news-description {
-    /* width: 250px; /* Ширина будет 100% от padding родителя */
-    /* position: absolute; left: 17px; top: 193px; - убираем абсолютное позиционирование */
-    color: rgba(0, 0, 0, 0.20); /* Изменен цвет текста */
-    font-size: 12px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 300;
-    letter-spacing: 0.12px;
-    word-wrap: break-word;
-    line-height: 1.4; /* Можно оставить или изменить на фиксированное, если нужно */
 } 

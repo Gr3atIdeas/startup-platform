@@ -22,9 +22,31 @@
   margin-right: 8px;
 }
 
-.header-logo-icon-img {
-  height: 50px; 
-  width: auto;
+.header-logo-icon-container {
+  width: 53.18px;
+  height: 53.18px;
+  position: relative;
+  overflow: hidden;
+}
+
+.header-logo-icon-element1 {
+  width: 50.34px;
+  height: 50.34px;
+  left: -2.38px;
+  top: 47.28px;
+  position: absolute;
+  transform: rotate(-81deg);
+  transform-origin: top left;
+  border: 2.83px white solid;
+}
+
+.header-logo-icon-element2 {
+  width: 30.87px;
+  height: 27.34px;
+  left: 9.53px;
+  top: 12.24px;
+  position: absolute;
+  background: white;
 }
 
 .header-search-bar {
@@ -38,13 +60,33 @@
   background: rgba(255, 255, 255, 0.19);
   border-radius: 99px;
   border: 1px #004E9F solid;
-  gap: 10px;
+  gap: 8px;
 }
 
-.header-search-icon-img {
-  width: 20px;
-  height: 20px;
-  opacity: 0.7;
+.header-search-icon-container {
+  width: 22px;
+  height: 22px;
+  position: relative;
+  opacity: 0.60;
+  overflow: hidden;
+}
+
+.header-search-icon-element1 {
+  width: 14.67px;
+  height: 14.67px;
+  left: 1.75px;
+  top: 2.75px;
+  position: absolute;
+  border: 1.50px #A1A0A0 solid;
+}
+
+.header-search-icon-element2 {
+  width: 3.99px;
+  height: 3.99px;
+  left: 14.26px;
+  top: 15.26px;
+  position: absolute;
+  border: 1.50px #A1A0A0 solid;
 }
 
 .header-search-input {
@@ -246,6 +288,17 @@
   color: #000000;
 }
 
+.header-logo-icon-img {
+  height: 50px; 
+  width: auto;
+}
+
+.header-logo-icon-container,
+.header-logo-icon-element1,
+.header-logo-icon-element2 {
+    display: none;
+}
+
 .header-role-button {
     padding: 8px 12px;
     font-size: 14px;
@@ -257,4 +310,15 @@
     flex-shrink: 1;
     min-width: 0;
     gap: 16px;
+}
+
+/* Новые стили для SVG иконки поиска */
+.header-search-icon-img {
+    width: 22px; /* Соответствует старому размеру контейнера */
+    height: 22px; /* Соответствует старому размеру контейнера */
+    opacity: 0.8; /* Немного увеличим видимость, можно настроить */
+}
+
+.header-search-input {
+    flex-grow: 1;
 } 
