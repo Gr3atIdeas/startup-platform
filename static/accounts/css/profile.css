@@ -8,16 +8,16 @@ body, html {
 
 .profile-page-container {
     width: 100%;
-    /* background: linear-gradient(153deg, black 0%, #00346B 25%, #004E9F 48%, #01366D 64%, #020202 100%); */ /* Keep removed for now */
     min-height: 100vh; 
-    display: flex; /* Ensures it behaves as a flex container */
+    display: flex; 
     flex-direction: column;
-    /* justify-content: flex-start; */ /* Allow content to define its own top alignment */
-    align-items: center; /* Center direct children like profile-featured-section */
+    align-items: center; 
     padding-top: 0; 
     box-sizing: border-box;
-    position: relative; /* For z-index context if needed */
-    overflow-x: hidden; /* Prevent horizontal scroll, but allow vertical */
+    position: relative; /* Для z-index контекста */
+    z-index: 1; /* Слой ниже, чем featured-section, если он будет абсолютным */
+    background-color: purple !important; /* Тестовый фон для родителя */
+    overflow-x: hidden; 
 }
 
 .profile-header-bar {
@@ -60,25 +60,22 @@ body, html {
 
 .profile-featured-section {
     width: 100%;
-    min-height: 395px; /* Use min-height to allow content to expand if needed, though unlikely with this design */
-    height: 395px; /* Explicit height */
+    height: 395px; 
     align-self: stretch;
-    /* background-image: url("/static/accounts/images/profile/profile_spacebg.webp") !important; */
-    background-color: lime !important; /* Тестовый яркий фон */
-    /* background-position: center center !important; */
-    /* background-size: cover !important; */
-    /* background-repeat: no-repeat !important; */
-    display: flex;
+    background-image: url("/static/accounts/images/profile/profile_spacebg.webp") !important;
+    background-color: transparent; /* Фон должен быть от картинки */
+    background-position: center center !important;
+    background-size: cover !important;
+    background-repeat: no-repeat !important;
+    display: flex; /* Остается flex */
     flex-direction: column;
     justify-content: flex-start; 
     align-items: center;
     box-sizing: border-box;
-    position: relative; /* Crucial for z-indexed children like profile-content-layout */
-    z-index: 0; /* Ensure it's behind profile-content-layout */
-    overflow: visible; /* Ensure no internal content is clipped by this specific element */
+    position: relative; /* Для z-index дочерних элементов */
+    z-index: 2; /* Выше чем .profile-page-container */
+    /* overflow: visible; */ /* Уберем пока, чтобы проверить не в нем ли дело */
 }
-
-/* .profile-featured-bg-image class is no longer needed as image is a background of .profile-featured-section */
 
 .profile-content-layout {
     width: 1303px;
@@ -86,13 +83,12 @@ body, html {
     justify-content: space-between;
     align-items: flex-start;
     display: flex;
-    margin-top: -275px; /* Adjusted for more overlap based on mockup, original figma was -140px from top of featured, but featured is now taller */
-                        /* The original -140px might have been from the very top of its own container, this new value is a guess to match the visual overlap */
+    margin-top: -275px; 
     position: relative; 
-    z-index: 1; /* Must be higher than .profile-featured-section */
+    z-index: 3; /* Выше чем .profile-featured-section */
     gap: 20px; 
     box-sizing: border-box;
-    padding-bottom: 50px; /* Add some padding at the bottom of content */
+    padding-bottom: 50px; 
 }
 
 .profile-sidebar-column {
