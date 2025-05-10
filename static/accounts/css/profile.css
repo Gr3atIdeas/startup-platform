@@ -2,20 +2,24 @@
 
 /* StyledFeatured -> .profile-page-wrapper */
 .profile-page-wrapper {
-    width: 100%;
+    width: 100%; /* Takes width of its container in base.html */
     padding-bottom: 55px;
-    overflow: hidden; 
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
+    /* overflow: hidden; --- REMOVED to allow full-width banner */
     display: flex;
+    flex-direction: column;
+    align-items: center; /* This will center .profile-content-container */
+    position: relative; 
 }
 
 /* StyledImagefromrawpixelid597407jpeg1 -> .profile-main-banner */
 .profile-main-banner {
-    align-self: stretch;
     height: 395px;
     object-fit: cover;
+    width: 100vw;
+    position: relative; 
+    left: 50%;
+    transform: translateX(-50%);
+    /* max-width: none; --- Allow it to exceed parent's width constraints */
 }
 
 /* StyledAutolayout -> .profile-content-container */
@@ -23,11 +27,11 @@
     width: 1303px;
     max-width: 95%;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: flex-start; /* Sidebar and main content will be at the top of this container */
     display: flex;
-    margin-top: -275px;
+    margin-top: -275px; /* Pulls the whole content block up so sidebar/edit button overlap banner */
     position: relative;
-    z-index: 1;
+    z-index: 1; /* Ensure it's above the banner if banner had a z-index or for stacking context */
     gap: 20px; 
 }
 
@@ -123,6 +127,8 @@
 
 /* StyledAddress01 (for ID and copy icon) -> .profile-sidebar-id */
 .profile-sidebar-id {
+    display: flex; /* Added for vertical alignment of icon and text */
+    align-items: center; /* Added for vertical alignment */
     gap: 8px; /* From StyledAddress01 */
 }
 .profile-sidebar-id span { /* StyledID89457t94857tspan */
@@ -175,51 +181,11 @@
 /* StyledAddress02 (for website link) -> .profile-sidebar-website */
 .profile-sidebar-website {
     gap: 8px; /* From StyledAddress02 */
+    display: flex; /* Added for icon and link alignment */
+    align-items: center; /* Added for icon and link alignment */
 }
 /* StyledIconsGlobeLine -> .profile-sidebar-globe-icon */
-.profile-sidebar-globe-icon {
-    width: 16px;
-    height: 16px;
-    position: relative;
-    overflow: hidden;
-}
-/* StyledShape -> .profile-sidebar-globe-icon-inner1 */
-.profile-sidebar-globe-icon-inner1 {
-    width: 13.33px;
-    height: 13.33px;
-    left: 1.33px;
-    top: 1.33px;
-    position: absolute;
-    background: #777E90;
-    border-radius: 50%;
-}
-/* StyledShape01 -> .profile-sidebar-globe-icon-inner2 */
-.profile-sidebar-globe-icon-inner2 {
-    width: 6.67px;
-    height: 13.33px;
-    left: 4.67px;
-    top: 1.33px;
-    position: absolute;
-    background: #777E90;
-}
-/* StyledShape02 -> .profile-sidebar-globe-icon-inner3 */
-.profile-sidebar-globe-icon-inner3 {
-    width: 13.33px;
-    height: 1.33px;
-    left: 1.33px;
-    top: 7.33px;
-    position: absolute;
-    background: #777E90;
-}
-/* StyledHttpsui8netspan or StyledHttpsui8net -> .profile-sidebar-website-link */
-.profile-sidebar-website-link {
-    color: #FCFCFD;
-    font-size: 14px;
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 700;
-    line-height: 16px;
-    word-wrap: break-word;
-}
+/* Removed styles for .profile-sidebar-globe-icon and its -inner parts as it's replaced by img */
 
 /* StyledFrame932 (round share icons container) -> .profile-sidebar-social-icons-round */
 .profile-sidebar-social-icons-round {
@@ -234,34 +200,15 @@
     overflow: hidden;
     border-radius: 40px;
     border: 2px solid #353945; /* outline from styled-component is border here */
-    justify-content: flex-start;
-    align-items: flex-start;
+    justify-content: center; /* Center the image icon */
+    align-items: center; /* Center the image icon */
     display: flex; /* gap:10px from styled component not needed as icon is inner */
     width: 40px; 
     height: 40px;
     box-sizing: border-box;
 }
 /* StyledIconsShareSquareLine / StyledIconsMoreLine -> .profile-sidebar-social-icon-placeholder1/2 */
-.profile-sidebar-social-icon-placeholder1, .profile-sidebar-social-icon-placeholder2 {
-    width: 20px;
-    height: 20px;
-    position: relative;
-    overflow: hidden;
-}
-/* StyledShape03, StyledShape04 for first icon */
-.icon-placeholder-inner-1-1 { /* Was StyledShape03 */
-    width: 15px; height: 11.59px; left: 2.50px; top: 7.58px; position: absolute; background: #777E90;
-}
-.icon-placeholder-inner-1-2 { /* Was StyledShape04 */
-    width: 11.60px; height: 7.50px; left: 2.50px; /* Adjusted left from 13.75 to center in 20px */ top: 0.83px; position: absolute; transform: rotate(90deg); transform-origin: top left; background: #777E90;
-}
-/* StyledMorefill1, StyledVector02, StyledVector03 for second icon */
-.icon-placeholder-inner-2-1 { /* Was StyledMorefill1->StyledVector02, seems like a container for vector03 */
-    width: 20px; height: 20px; left: 0px; top: 0px; position: absolute; /* No background, acts as container */
-}
-.icon-placeholder-inner-2-2 { /* Was StyledVector03 */
-    width: 15px; height: 3.33px; left: 2.50px; top: 8.33px; position: absolute; background: #777E90;
-}
+/* Removed styles for .profile-sidebar-social-icon-placeholder1/2 and their -inner parts */
 
 
 /* StyledButton (My Galaxy) -> .profile-sidebar-my-galaxy-btn */
@@ -422,6 +369,8 @@
     align-items: flex-start;
     gap: 48px; /* Original gap from StyledFollowing */
     display: flex;
+    margin-top: 175px; /* Push section below banner. (395px banner - 275px content_offset) - 100px parent_gap + some_buffer for edit_btn */
+    /* This value might need fine-tuning after checking in browser. Goal is to start below 395px banner height. */
 }
 
 /* StyledSubNavigation -> .profile-main-tabs */
@@ -520,10 +469,10 @@
 .profile-main-startup-reviews {
     gap: 8px; /* From StyledFrame490 */
 }
-.profile-main-startup-review-icon { /* StyledVector07, 08, 09, 10 */
-    width: 16px;
-    height: 15px;
-    border: 1px solid white; /* outline from styled-component */
+.profile-main-startup-review-icon {
+    /* border: 1px solid white; /* outline from styled-component - REMOVED */
+    /* width: 16px; /* REMOVED */
+    /* height: 15px; /* REMOVED */
 }
 .profile-main-startup-reviews span { /* Styled17span */
     color: white;
@@ -532,6 +481,26 @@
     font-weight: 400;
     line-height: 18px;
     word-wrap: break-word;
+}
+
+/* Styles for new image icons */
+.profile-main-startup-review-icon-img {
+    width: 18px; 
+    height: 18px;
+    vertical-align: middle; 
+}
+
+.profile-sidebar-website-icon-img {
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+    margin-right: 8px; 
+}
+
+.profile-sidebar-social-icon-img { 
+    width: 20px;
+    height: 20px;
+    display: block; 
 }
 
 /* StyledFrame1014 (Category tag + Progress bar) -> .profile-main-startup-category-progress */

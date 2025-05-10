@@ -41,11 +41,7 @@
                     <div class="profile-sidebar-bio">{{ user.bio|default:"Описание отсутствует."}}</div>
                     {% if user.website_url %}
                     <div class="profile-sidebar-website">
-                        <div class="profile-sidebar-globe-icon">
-                            <div class="profile-sidebar-globe-icon-inner1"></div>
-                            <div class="profile-sidebar-globe-icon-inner2"></div>
-                            <div class="profile-sidebar-globe-icon-inner3"></div>
-                        </div>
+                        <img src="{% static 'accounts/images/profile/Globe_Line.svg' %}" alt="Website" class="profile-sidebar-website-icon-img">
                         <a href="{{ user.website_url }}" target="_blank" class="profile-sidebar-website-link">{{ user.website_url }}</a>
                     </div>
                     {% endif %}
@@ -53,11 +49,7 @@
             </div>
             <div class="profile-sidebar-social-icons-round">
                 <div class="profile-sidebar-social-icon-round-item">
-                    <div class="profile-sidebar-social-icon-placeholder1">
-                         {#{% static 'accounts/images/icons/social_placeholder_1.svg' %}#}
-                        <div class="icon-placeholder-inner-1-1"></div>
-                        <div class="icon-placeholder-inner-1-2"></div>
-                    </div>
+                    <img src="{% static 'accounts/images/profile/share_icon.svg' %}" alt="Share" class="profile-sidebar-social-icon-img">
                 </div>
                 <div class="profile-sidebar-social-icon-round-item">
                      <div class="profile-sidebar-social-icon-placeholder2">
@@ -114,36 +106,85 @@
                     <div class="profile-main-tab-item">Новости</div>
                 </div>
                 
-                {% for startup in user_startups %} {# Предполагается, что user_startups передается в контекст #}
+                <!-- Макет стартапа 1 -->
                 <div class="profile-main-startup-card-item">
                     <div class="profile-main-startup-card-content">
                         <div class="profile-main-startup-info">
-                            <div class="profile-main-startup-name">{{ startup.name|default:"Название стартапа" }}</div>
+                            <div class="profile-main-startup-name">Ромашка (Макет)</div>
                             <div class="profile-main-startup-rating-reviews">
-                                <span class="profile-main-startup-rating">Рейтинг {{ startup.rating|default:"0.0" }}/5 ({{ startup.reviews_count|default:0 }})</span>
+                                <span class="profile-main-startup-rating">Рейтинг 4.2/5 (534)</span>
                                 <div class="profile-main-startup-reviews">
-                                    <div class="profile-main-startup-review-icon"></div>
-                                    <span>{{ startup.reviews_count|default:0 }}</span>
+                                    <img src="{% static 'accounts/images/profile/chat_icon.svg' %}" alt="Reviews" class="profile-main-startup-review-icon-img">
+                                    <span>17</span>
                                 </div>
                             </div>
                         </div>
                         <div class="profile-main-startup-category-progress">
-                            <div class="profile-main-startup-category-tag">{{ startup.category|default:"Категория" }}</div>
+                            <div class="profile-main-startup-category-tag">Медицина</div>
                             <div class="profile-main-startup-progress-bar-bg">
-                                 <div class="profile-main-startup-progress-bar-fg" style="width: {{ startup.progress|default:0 }}%;"></div>
+                                 <div class="profile-main-startup-progress-bar-fg" style="width: 65%;"></div>
                             </div>
-                            <span class="profile-main-startup-progress-text">{{ startup.progress|default:0 }}%</span>
+                            <span class="profile-main-startup-progress-text">65%</span>
                         </div>
-                        <a href="{% url 'startup_detail' startup.id %}" class="btn btn-primary profile-main-startup-details-btn">Подробнее</a> {# Предполагается URL startup_detail #}
+                        <a href="#" class="btn btn-primary profile-main-startup-details-btn">Подробнее</a>
                     </div>
-                    <img class="profile-main-startup-image" src="{% if startup.image_url %}{{ startup.image_url }}{% else %}{% static 'accounts/images/profile/Rectangle_4196.png' %}{% endif %}" alt="Изображение стартапа" />
+                    <img class="profile-main-startup-image" src="{% static 'accounts/images/profile/Rectangle_4196.png' %}" alt="Изображение стартапа" />
                 </div>
-                {% if not forloop.last %}
                 <div class="profile-main-startup-list-divider"></div>
-                {% endif %}
-                {% empty %}
-                <p class="profile-main-no-startups">У вас пока нет стартапов.</p>
-                {% endfor %}
+                <!-- /Макет стартапа 1 -->
+
+                <!-- Макет стартапа 2 -->
+                <div class="profile-main-startup-card-item">
+                    <div class="profile-main-startup-card-content">
+                        <div class="profile-main-startup-info">
+                            <div class="profile-main-startup-name">Космический Лифт (Макет)</div>
+                            <div class="profile-main-startup-rating-reviews">
+                                <span class="profile-main-startup-rating">Рейтинг 4.8/5 (1203)</span>
+                                <div class="profile-main-startup-reviews">
+                                    <img src="{% static 'accounts/images/profile/chat_icon.svg' %}" alt="Reviews" class="profile-main-startup-review-icon-img">
+                                    <span>42</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="profile-main-startup-category-progress">
+                            <div class="profile-main-startup-category-tag">Технологии</div>
+                            <div class="profile-main-startup-progress-bar-bg">
+                                 <div class="profile-main-startup-progress-bar-fg" style="width: 85%;"></div>
+                            </div>
+                            <span class="profile-main-startup-progress-text">85%</span>
+                        </div>
+                        <a href="#" class="btn btn-primary profile-main-startup-details-btn">Подробнее</a>
+                    </div>
+                    <img class="profile-main-startup-image" src="{% static 'accounts/images/profile/Rectangle_4196.png' %}" alt="Изображение стартапа" />
+                </div>
+                <div class="profile-main-startup-list-divider"></div>
+                <!-- /Макет стартапа 2 -->
+                
+                <!-- Макет стартапа 3 -->
+                <div class="profile-main-startup-card-item">
+                    <div class="profile-main-startup-card-content">
+                        <div class="profile-main-startup-info">
+                            <div class="profile-main-startup-name">Вечная Батарейка (Макет)</div>
+                            <div class="profile-main-startup-rating-reviews">
+                                <span class="profile-main-startup-rating">Рейтинг 3.9/5 (250)</span>
+                                <div class="profile-main-startup-reviews">
+                                    <img src="{% static 'accounts/images/profile/chat_icon.svg' %}" alt="Reviews" class="profile-main-startup-review-icon-img">
+                                    <span>9</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="profile-main-startup-category-progress">
+                            <div class="profile-main-startup-category-tag">Энергетика</div>
+                            <div class="profile-main-startup-progress-bar-bg">
+                                 <div class="profile-main-startup-progress-bar-fg" style="width: 40%;"></div>
+                            </div>
+                            <span class="profile-main-startup-progress-text">40%</span>
+                        </div>
+                        <a href="#" class="btn btn-primary profile-main-startup-details-btn">Подробнее</a>
+                    </div>
+                    <img class="profile-main-startup-image" src="{% static 'accounts/images/profile/Rectangle_4196.png' %}" alt="Изображение стартапа" />
+                </div>
+                <!-- /Макет стартапа 3 -->
             </div>
         </div>
     </div>
