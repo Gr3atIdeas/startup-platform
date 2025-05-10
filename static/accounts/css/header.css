@@ -214,7 +214,7 @@
   text-decoration: none;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   font-family: 'Unbounded', sans-serif;
   font-size: 16px;
   font-style: normal;
@@ -234,6 +234,27 @@
 .profile-dropdown-item-icon {
   width: 20px;
   height: 20px;
+  filter: brightness(0) invert(1);
+}
+
+.profile-dropdown-notifications .profile-dropdown-item-icon {
+    filter: none;
+}
+
+.notification-icon-background {
+  display: flex;
+  width: 35px;
+  height: 35px;
+  padding: 5px;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  border-radius: 50px;
+  background: #004E9F;
+}
+
+.notification-icon-background img.profile-dropdown-item-icon {
+    filter: brightness(0) invert(1);
 }
 
 .profile-dropdown-logout i {

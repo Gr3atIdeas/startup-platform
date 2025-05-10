@@ -3,18 +3,19 @@ body, html {
     margin: 0;
     padding: 0;
     font-family: 'Unbounded', sans-serif; /* Default font */
-    background-color: #000; /* Or the main page background */
+    /* background-color: #000; Removed to allow body gradient from global.css to show if needed */
 }
 
 .profile-page-container {
     width: 100%;
-    background: linear-gradient(153deg, black 0%, #00346B 25%, #004E9F 48%, #01366D 64%, #020202 100%); /* Перенесенный фон */
-    overflow: hidden;
+    /* background: linear-gradient(153deg, black 0%, #00346B 25%, #004E9F 48%, #01366D 64%, #020202 100%); */ /* Temporarily removed */
+    /* overflow: hidden; */ /* Temporarily removed to see if it affects bg visibility */
+    min-height: 100vh; /* Ensure container takes at least full viewport height */
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
     display: flex;
-    padding-top: 20px;
+    padding-top: 0; /* Resetting padding, header will create its own space */
     box-sizing: border-box;
 }
 
@@ -58,19 +59,19 @@ body, html {
 
 .profile-featured-section {
     width: 100%;
-    height: 395px; /* As per mockup CSS */
-    align-self: stretch; /* As per mockup CSS, for flex context if parent is flex */
-    background-image: url("/static/accounts/images/profile/profile_spacebg.webp") !important; /* Path to image */
-    background-color: lightgray; /* Fallback color from mockup CSS */
-    background-position: 2.05px -378.738px; /* From mockup CSS */
-    background-size: 100% 275.555%; /* From mockup CSS */
-    background-repeat: no-repeat; /* From mockup CSS */
-    padding-bottom: 0; /* Removed previous padding, height is now fixed */
-    overflow: hidden;
-    display: flex; /* Keep as flex container for content-layout */
-    flex-direction: column; /* Align content layout vertically */
-    justify-content: flex-start; /* Align content to the top */
-    align-items: center; /* Center content horizontally */
+    height: 395px;
+    align-self: stretch;
+    background-image: url("/static/accounts/images/profile/profile_spacebg.webp") !important;
+    background-color: lightgray; /* Fallback */
+    background-position: center center; /* Centering position */
+    background-size: cover; /* Cover the area, might crop but ensures visibility */
+    background-repeat: no-repeat;
+    /* padding-bottom: 0; */ /* Already commented or removed */
+    /* overflow: hidden; */ /* Let's remove this temporarily too */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; 
+    align-items: center;
     box-sizing: border-box;
     position: relative; 
 }
@@ -81,11 +82,11 @@ body, html {
     width: 1303px;
     max-width: 95%;
     justify-content: space-between;
-    align-items: flex-start; /* Children (sidebar, main column) will align to their top */
+    align-items: flex-start;
     display: flex;
-    margin-top: 60px; /* Adjust this value to get the correct overlap from top */
-    position: relative; /* Keep relative for z-index stacking if needed, but z-index 1 might not be needed if parent handles bg */
-    z-index: 1; /* Ensure this content is above the parent's background */
+    margin-top: -140px; /* Restored for potential overlap like in mockup */
+    position: relative; 
+    z-index: 1; 
     gap: 20px; 
     box-sizing: border-box;
 }

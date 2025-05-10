@@ -62,11 +62,13 @@
                     </button>
                     <div class="profile-dropdown-menu">
                         <a href="#" class="profile-dropdown-item profile-dropdown-notifications"> {# URL для уведомлений? #}
-                            <img src="{% static 'accounts/images/bell.svg' %}" alt="Уведомления" class="profile-dropdown-item-icon">
+                            <span class="notification-icon-background">
+                                <img src="{% static 'accounts/images/bell.svg' %}" alt="Уведомления" class="profile-dropdown-item-icon">
+                            </span>
                             Уведомления
                             {# Здесь может быть счетчик уведомлений, если он есть в контексте #}
                         </a>
-                        <a href="{% url 'profile' %}" class="profile-dropdown-item">Личный кабинет</a>
+                        <a href="{% url 'profile' %}" class="profile-dropdown-item">Профиль</a>
                         <a href="{% url 'my_startups' %}" class="profile-dropdown-item">Стартапы</a> {# или 'startups_list' в зависимости от того, что имеется в виду #}
                         {# <a href="{% url 'profile_settings' %}" class="profile-dropdown-item">Настройки</a> #} {# Нужен URL для настроек #}
                         <a href="#" class="profile-dropdown-item">Настройки</a> {# Временный #}
