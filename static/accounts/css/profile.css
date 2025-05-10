@@ -57,38 +57,36 @@ body, html {
 }
 
 .profile-featured-section {
-    width: 100%; /* Changed from 1445px to full width */
-    /* max-width: 100%; */ /* Removed as width: 100% covers it */
-    padding-bottom: 55px;
+    width: 100%;
+    height: 395px; /* As per mockup CSS */
+    align-self: stretch; /* As per mockup CSS, for flex context if parent is flex */
+    background-image: url("/static/accounts/images/profile/profile_spacebg.webp"); /* Adjusted path */
+    background-color: lightgray; /* Fallback color from mockup CSS */
+    background-position: center center; /* Adjusted from 2.05px -378.738px */
+    background-size: cover; /* Adjusted from 100% 275.555% for better general coverage */
+    background-repeat: no-repeat;
+    padding-bottom: 0; /* Removed previous padding, height is now fixed */
     overflow: hidden;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    display: flex;
+    display: flex; /* Keep as flex container for content-layout */
+    flex-direction: column; /* Align content layout vertically */
+    justify-content: flex-start; /* Align content to the top */
+    align-items: center; /* Center content horizontally */
     box-sizing: border-box;
-    position: relative; /* Added for potential absolute positioning of children if needed */
+    position: relative; 
 }
 
-.profile-featured-bg-image {
-    width: 100%; /* Ensure image takes full width of its container */
-    height: 395px;
-    object-fit: cover;
-    position: absolute; /* Position it behind the content */
-    top: 0;
-    left: 0;
-    z-index: 0; /* Behind other content in profile-featured-section */
-}
+/* .profile-featured-bg-image class is no longer needed as image is a background of .profile-featured-section */
 
 .profile-content-layout {
     width: 1303px;
-    max-width: 95%; /* Responsive */
+    max-width: 95%;
     justify-content: space-between;
-    align-items: flex-start;
-    display: flex; /* Changed from inline-flex for easier responsive handling */
-    margin-top: 50px; /* Adjusted margin, original -140px was for when bg image was static */
-    position: relative;
-    z-index: 1; /* Ensure content is above the background image */
-    gap: 20px; /* Added gap for responsiveness */
+    align-items: flex-start; /* Children (sidebar, main column) will align to their top */
+    display: flex;
+    margin-top: 60px; /* Adjust this value to get the correct overlap from top */
+    position: relative; /* Keep relative for z-index stacking if needed, but z-index 1 might not be needed if parent handles bg */
+    z-index: 1; /* Ensure this content is above the parent's background */
+    gap: 20px; 
     box-sizing: border-box;
 }
 
