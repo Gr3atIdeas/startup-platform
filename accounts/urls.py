@@ -37,4 +37,5 @@ urlpatterns = [
     # URL для подгрузки похожих стартапов - ИСПРАВЛЯЕМ ТИП ID НА INT
     path('load_similar_startups/<int:startup_id>/', views.load_similar_startups, name='load_similar_startups'),
     path('favicon.ico', RedirectView.as_view(url='/static/images/favicon.png', permanent=True)),
+    path('profile/edit/', views.profile_edit_view, name='profile_edit'), # Новый маршрут
 ]

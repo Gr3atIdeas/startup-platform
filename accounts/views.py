@@ -12,8 +12,8 @@ import logging
 import os
 from django.conf import settings
 from django.db import models  # Добавляем для models.Q
-from .forms import RegisterForm, LoginForm, StartupForm, CommentForm, MessageForm, UserSearchForm  # Добавляем MessageForm и UserSearchForm
-from .models import Users, Directions, Startups, ReviewStatuses, UserVotes, StartupTimeline, FileStorage, EntityTypes, FileTypes, InvestmentTransactions, TransactionTypes, PaymentMethods, Comments, NewsArticles, NewsLikes, NewsViews, ChatConversations, ChatParticipants, Messages, MessageStatuses
+from .forms import RegisterForm, LoginForm, StartupForm, CommentForm, MessageForm, UserSearchForm, CustomUserCreationForm, CustomAuthenticationForm, StartupNewsForm, InvestmentForm, StartupSearchForm, FeedbackForm  # Добавляем MessageForm и UserSearchForm
+from .models import Users, Directions, Startups, ReviewStatuses, UserVotes, StartupTimeline, FileStorage, EntityTypes, FileTypes, InvestmentTransactions, TransactionTypes, PaymentMethods, Comments, NewsArticles, NewsLikes, NewsViews, ChatConversations, ChatParticipants, Messages, MessageStatuses, StartupNews, Investments, UserRoles, Feedback, StartupRating
 from .models import creative_upload_path, proof_upload_path, video_upload_path
 import uuid
 from .models import Comments
@@ -30,6 +30,8 @@ import datetime # Добавляем для работы с датами
 from django.db.models.functions import Coalesce # Добавляем Coalesce
 import collections # Добавляем для defaultdict
 from dateutil.relativedelta import relativedelta
+from django.urls import reverse
+from django.views.generic import RedirectView
 
 
 logger = logging.getLogger(__name__)
@@ -1875,3 +1877,50 @@ def my_startups(request):
         logger.error(f"Произошла ошибка в my_startups: {str(e)}", exc_info=True)
         messages.error(request, 'Произошла ошибка при загрузке страницы. Пожалуйста, попробуйте снова.')
         return redirect('profile')
+
+@login_required
+def profile_view(request):
+    user_profile = request.user
+    is_own_profile = True # По умолчанию считаем, что это собственный профиль
+
+    # Здесь можно будет добавить логику для просмотра чужих профилей, если потребуется
+    # user_id = request.GET.get('user_id')
+    # if user_id and user_id != str(request.user.user_id):
+    #     try:
+    #         user_profile = Users.objects.get(user_id=user_id)
+    #         is_own_profile = False
+    #     except Users.DoesNotExist:
+    #         # Обработка случая, когда пользователь не найден, например, редирект или ошибка 404
+    #         return redirect('home') 
+
+    # Обработка загрузки аватара (если используется POST на этой же странице)
+    if request.method == 'POST' and is_own_profile:
+        if 'avatar' in request.FILES:
+            user_profile.profile_picture = request.FILES['avatar']
+            user_profile.save()
+            return redirect('profile') # Перезагружаем страницу, чтобы увидеть изменения
+
+    context = {
+        'user': user_profile,
+        'is_own_profile': is_own_profile,
+        'current_page': 'profile'
+    }
+    return render(request, 'accounts/profile.html', context)
+
+@login_required
+def profile_edit_view(request):
+    # TODO: Добавить обработку POST-запроса для сохранения изменений формы
+    # if request.method == 'POST':
+    #     form = ProfileEditForm(request.POST, request.FILES, instance=request.user)
+    #     if form.is_valid():
+    #         form.save()
+    #         return redirect('profile')
+    # else:
+    #     form = ProfileEditForm(instance=request.user)
+    
+    context = {
+        'user': request.user, # Передаем текущего пользователя в шаблон
+        # 'form': form, # Если будем использовать Django Forms
+        'current_page': 'profile_edit'
+    }
+    return render(request, 'accounts/templates/accounts/profile_edit.html', context)
