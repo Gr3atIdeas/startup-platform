@@ -384,33 +384,32 @@
 
 /* StyledSubNavigation -> .profile-main-tabs */
 .profile-main-tabs {
-    align-self: stretch;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 12px;
-    display: inline-flex;
+    display: flex;
+    gap: 12px; /* Из Figma */
+    margin-bottom: 24px; /* Отступ снизу до контента вкладок */
+    /* padding-left: 32px; Если нужно, чтобы табы тоже имели отступ */
 }
 /* StyledSubnavitem -> .profile-main-tab-item */
 .profile-main-tab-item {
     padding: 6px 12px;
-    border-radius: 10px; 
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    display: flex;
+    border-radius: 100px; /* Скругление для неактивной вкладки */
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.50); /* Цвет текста для "Стартапы" в неактивном состоянии (из Figma для "Стартапы") */
+    font-size: 14px;
     font-family: 'Unbounded', sans-serif;
     font-weight: 300;
     line-height: 18px;
-    font-size: 14px;
-    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    /* text-box-trim: trim-both; /* Свойства text-box-* не являются стандартными CSS */
+    /* text-box-edge: cap alphabetic; */
+    display: flex; /* Для выравнивания текста, если нужно */
+    justify-content: center;
+    align-items: center;
 }
-.profile-main-tab-item.active-tab { /* StyledSubnavitem with StyledActivespan */
-    background: #E6E8EC;
-    color: #23262F; 
-}
-.profile-main-tab-item:not(.active-tab) { /* StyledSubnavitem01 with StyledDefaultspan */
-    color: rgba(255, 255, 255, 0.50);
-    border-radius: 100px; /* From StyledSubnavitem01 */
+.profile-main-tab-item.active-tab {
+    background-color: #E6E8EC; /* Фон активной вкладки "Новости" из Figma */
+    color: #23262F; /* Цвет текста активной вкладки "Новости" из Figma */
+    border-radius: 10px; /* Скругление для активной вкладки */
 }
 
 
@@ -677,4 +676,137 @@ body {
     color: #777E90;
     margin-top: 5px;
     word-break: break-all;
-} 
+}
+
+/* Общий контейнер для содержимого вкладок (стартапы и новости) */
+.profile-main-content-tab {
+    /* display: none; /* Скрыто по умолчанию, управляется JS */
+    /* flex-direction: column; /* Если контент должен быть в колонку */
+    /* gap: 20px; /* Общий отступ для элементов внутри вкладки */
+    /* padding-top: 32px; /* Внутренний отступ сверху (из Figma для обертки новостей) */
+    /* padding-bottom: 45px; /* Внутренний отступ снизу (из Figma для обертки новостей) */
+    /* padding-left и padding-right могут быть не нужны, если profile-main-content уже их имеет */
+    /* box-shadow: 0px 40px 32px -24px rgba(0, 0, 0, 0.12); /* Тень из Figma */
+    /* overflow: hidden; /* Обрезка контента из Figma */
+    /* border-radius: 10px; /* Скругление из Figma */
+}
+
+/* .profile-main-content-tab.active-content {
+    display: flex; /* Или block, в зависимости от содержимого */
+/* } */
+
+/* Стили для секции новостей */
+#newsContent {
+    /* padding-top: 32px; /* Уже может быть в .profile-main-content-tab или в общей обертке */
+    /* padding-bottom: 45px; */
+    /* box-shadow: 0px 40px 32px -24px rgba(0, 0, 0, 0.12); /* Если тень нужна именно для этого блока */
+    /* overflow: hidden; */
+    /* border-radius: 10px; */
+    display: flex; /* Это уже установлено в JS, но можно для ясности */
+    flex-direction: column;
+    /* justify-content: flex-start; /* Это уже установлено в JS */
+    /* align-items: flex-start; /* Это уже установлено в JS */
+    gap: 24px; /* Уменьшим gap с 48px до 24px, т.к. табы уже имеют отступ */
+}
+
+.profile-news-items-container {
+    align-self: stretch;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start; /* или space-between, если нужно растянуть по ширине */
+    align-items: flex-start;
+    align-content: flex-start;
+    gap: 20px; /* Отступ между карточками новостей */
+}
+
+.profile-news-card-item {
+    width: 284px; /* Ширина карточки из Figma */
+    height: 251px; /* Высота карточки из Figma */
+    background: white;
+    overflow: hidden;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05); /* Небольшая тень для карточек */
+    transition: transform 0.2s ease-in-out;
+}
+
+.profile-news-card-item:hover {
+    transform: translateY(-5px); /* Эффект при наведении */
+}
+
+.profile-news-card-item img {
+    width: 100%; /* Растягиваем изображение по ширине карточки */
+    height: 131px; /* Высота изображения из Figma */
+    object-fit: cover; /* Масштабирование с сохранением пропорций и обрезкой */
+    border-top-left-radius: 7px; /* Скругление углов изображения (соответствует Figma) */
+    border-top-right-radius: 7px;
+}
+
+.profile-news-card-title {
+    /* width: 250px; /* Ширина текста заголовка из Figma */
+    margin: 17px 17px 0 17px; /* Отступы: верх, право, низ, лево. Низ 0, так как есть description */
+    color: black;
+    font-size: 16px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
+    line-height: 1.2; /* Немного увеличим для лучшей читаемости */
+    word-wrap: break-word;
+    /* position, left, top, display:flex, flex-direction:column убраны, т.к. родитель flex */
+    height: 38px; /* Примерно 2 строки текста */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* white-space: nowrap; /* Если нужно обрезать до одной строки */
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Ограничение в 2 строки для WebKit-браузеров */
+    -webkit-box-orient: vertical;
+}
+
+.profile-news-card-description {
+    /* width: 250px; /* Ширина текста описания из Figma */
+    margin: 12px 17px 17px 17px; /* Отступы: верх, право, низ, лево */
+    color: rgba(0, 0, 0, 0.20); /* var(--Color4, ...) заменено на прямое значение */
+    font-size: 12px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.12px;
+    word-wrap: break-word;
+    line-height: 1.4; /* Немного увеличим для лучшей читаемости */
+    /* text-box-trim и text-box-edge не стандартные */
+    /* position, left, top, display:flex, flex-direction:column убраны, т.к. родитель flex */
+    flex-grow: 1; /* Чтобы описание занимало оставшееся место */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* Ограничение в 3 строки для WebKit-браузеров */
+    -webkit-box-orient: vertical;
+}
+
+/* Адаптивность для карточек новостей */
+@media (max-width: 992px) { /* Примерная точка, когда 3 карточки в ряд не помещаются */
+    .profile-news-items-container {
+        justify-content: center; /* Центрируем карточки, если их меньше чем на всю ширину */
+    }
+    .profile-news-card-item {
+        width: calc(50% - 10px); /* Две карточки в ряд с учетом gap */
+    }
+}
+
+@media (max-width: 640px) {
+    .profile-news-card-item {
+        width: 100%; /* Одна карточка в ряд на маленьких экранах */
+    }
+    .profile-main-tabs {
+        padding-left: 16px; /* Уменьшаем отступы для табов на мобильных */
+        padding-right: 16px;
+    }
+    #newsContent {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+}
+
+/* Стили для секции стартапов (если нужно что-то общее с новостями вынести или адаптировать) */
+/* .profile-main-startups-section { ... } */
+/* .profile-main-startup-card-item { ... } */
+/* ... и т.д. */ 

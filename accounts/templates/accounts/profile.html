@@ -99,95 +99,129 @@
 
             <div class="profile-main-startups-section">
                 <div class="profile-main-tabs">
-                    <div class="profile-main-tab-item active-tab">Стартапы</div>
-                    <div class="profile-main-tab-item">Новости</div>
+                    <div class="profile-main-tab-item active-tab" data-tab="startups">Стартапы</div>
+                    <div class="profile-main-tab-item" data-tab="news">Новости</div>
                 </div>
                 
-                <!-- Макет стартапа 1 -->
-                <div class="profile-main-startup-card-item">
-                    <div class="profile-main-startup-card-content">
-                        <div class="profile-main-startup-info">
-                            <div class="profile-main-startup-name">Ромашка (Макет)</div>
-                            <div class="profile-main-startup-rating-reviews">
-                                <span class="profile-main-startup-rating">Рейтинг 4.2/5 (534)</span>
-                                <div class="profile-main-startup-reviews">
-                                    <img src="{% static 'accounts/images/profile/chat_icon.svg' %}" alt="Reviews" class="profile-main-startup-review-icon-img">
-                                    <span>17</span>
+                <div class="profile-main-content-tab active-content" id="startupsContent">
+                    <!-- Макет стартапа 1 -->
+                    <div class="profile-main-startup-card-item">
+                        <div class="profile-main-startup-card-content">
+                            <div class="profile-main-startup-info">
+                                <div class="profile-main-startup-name">Ромашка (Макет)</div>
+                                <div class="profile-main-startup-rating-reviews">
+                                    <span class="profile-main-startup-rating">Рейтинг 4.2/5 (534)</span>
+                                    <div class="profile-main-startup-reviews">
+                                        <img src="{% static 'accounts/images/profile/chat_icon.svg' %}" alt="Reviews" class="profile-main-startup-review-icon-img">
+                                        <span>17</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="profile-main-startup-category-progress">
-                            <div class="profile-main-startup-category-tag">Медицина</div>
-                            <div class="progress-bar-and-text-container">
-                                <div class="profile-main-startup-progress-bar-bg">
-                                     <div class="profile-main-startup-progress-bar-fg" style="width: 65%;"></div>
+                            <div class="profile-main-startup-category-progress">
+                                <div class="profile-main-startup-category-tag">Медицина</div>
+                                <div class="progress-bar-and-text-container">
+                                    <div class="profile-main-startup-progress-bar-bg">
+                                         <div class="profile-main-startup-progress-bar-fg" style="width: 65%;"></div>
+                                    </div>
+                                    <span class="profile-main-startup-progress-text">65%</span>
                                 </div>
-                                <span class="profile-main-startup-progress-text">65%</span>
                             </div>
+                            <a href="#" class="btn btn-primary profile-main-startup-details-btn">Подробнее</a>
                         </div>
-                        <a href="#" class="btn btn-primary profile-main-startup-details-btn">Подробнее</a>
+                        <img class="profile-main-startup-image" src="{% static 'accounts/images/profile/Rectangle_4196.png' %}" alt="Изображение стартапа" />
                     </div>
-                    <img class="profile-main-startup-image" src="{% static 'accounts/images/profile/Rectangle_4196.png' %}" alt="Изображение стартапа" />
-                </div>
-                <div class="profile-main-startup-list-divider"></div>
-                <!-- /Макет стартапа 1 -->
+                    <div class="profile-main-startup-list-divider"></div>
+                    <!-- /Макет стартапа 1 -->
 
-                <!-- Макет стартапа 2 -->
-                <div class="profile-main-startup-card-item">
-                    <div class="profile-main-startup-card-content">
-                        <div class="profile-main-startup-info">
-                            <div class="profile-main-startup-name">Космический Лифт (Макет)</div>
-                            <div class="profile-main-startup-rating-reviews">
-                                <span class="profile-main-startup-rating">Рейтинг 4.8/5 (1203)</span>
-                                <div class="profile-main-startup-reviews">
-                                    <img src="{% static 'accounts/images/profile/chat_icon.svg' %}" alt="Reviews" class="profile-main-startup-review-icon-img">
-                                    <span>42</span>
+                    <!-- Макет стартапа 2 -->
+                    <div class="profile-main-startup-card-item">
+                        <div class="profile-main-startup-card-content">
+                            <div class="profile-main-startup-info">
+                                <div class="profile-main-startup-name">Космический Лифт (Макет)</div>
+                                <div class="profile-main-startup-rating-reviews">
+                                    <span class="profile-main-startup-rating">Рейтинг 4.8/5 (1203)</span>
+                                    <div class="profile-main-startup-reviews">
+                                        <img src="{% static 'accounts/images/profile/chat_icon.svg' %}" alt="Reviews" class="profile-main-startup-review-icon-img">
+                                        <span>42</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="profile-main-startup-category-progress">
-                            <div class="profile-main-startup-category-tag">Технологии</div>
-                            <div class="progress-bar-and-text-container">
-                                <div class="profile-main-startup-progress-bar-bg">
-                                     <div class="profile-main-startup-progress-bar-fg" style="width: 85%;"></div>
+                            <div class="profile-main-startup-category-progress">
+                                <div class="profile-main-startup-category-tag">Технологии</div>
+                                <div class="progress-bar-and-text-container">
+                                    <div class="profile-main-startup-progress-bar-bg">
+                                         <div class="profile-main-startup-progress-bar-fg" style="width: 85%;"></div>
+                                    </div>
+                                    <span class="profile-main-startup-progress-text">85%</span>
                                 </div>
-                                <span class="profile-main-startup-progress-text">85%</span>
                             </div>
+                            <a href="#" class="btn btn-primary profile-main-startup-details-btn">Подробнее</a>
                         </div>
-                        <a href="#" class="btn btn-primary profile-main-startup-details-btn">Подробнее</a>
+                        <img class="profile-main-startup-image" src="{% static 'accounts/images/profile/Rectangle_4196.png' %}" alt="Изображение стартапа" />
                     </div>
-                    <img class="profile-main-startup-image" src="{% static 'accounts/images/profile/Rectangle_4196.png' %}" alt="Изображение стартапа" />
-                </div>
-                <div class="profile-main-startup-list-divider"></div>
-                <!-- /Макет стартапа 2 -->
-                
-                <!-- Макет стартапа 3 -->
-                <div class="profile-main-startup-card-item">
-                    <div class="profile-main-startup-card-content">
-                        <div class="profile-main-startup-info">
-                            <div class="profile-main-startup-name">Вечная Батарейка (Макет)</div>
-                            <div class="profile-main-startup-rating-reviews">
-                                <span class="profile-main-startup-rating">Рейтинг 3.9/5 (250)</span>
-                                <div class="profile-main-startup-reviews">
-                                    <img src="{% static 'accounts/images/profile/chat_icon.svg' %}" alt="Reviews" class="profile-main-startup-review-icon-img">
-                                    <span>9</span>
+                    <div class="profile-main-startup-list-divider"></div>
+                    <!-- /Макет стартапа 2 -->
+                    
+                    <!-- Макет стартапа 3 -->
+                    <div class="profile-main-startup-card-item">
+                        <div class="profile-main-startup-card-content">
+                            <div class="profile-main-startup-info">
+                                <div class="profile-main-startup-name">Вечная Батарейка (Макет)</div>
+                                <div class="profile-main-startup-rating-reviews">
+                                    <span class="profile-main-startup-rating">Рейтинг 3.9/5 (250)</span>
+                                    <div class="profile-main-startup-reviews">
+                                        <img src="{% static 'accounts/images/profile/chat_icon.svg' %}" alt="Reviews" class="profile-main-startup-review-icon-img">
+                                        <span>9</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="profile-main-startup-category-progress">
-                            <div class="profile-main-startup-category-tag">Энергетика</div>
-                            <div class="progress-bar-and-text-container">
-                                <div class="profile-main-startup-progress-bar-bg">
-                                     <div class="profile-main-startup-progress-bar-fg" style="width: 40%;"></div>
+                            <div class="profile-main-startup-category-progress">
+                                <div class="profile-main-startup-category-tag">Энергетика</div>
+                                <div class="progress-bar-and-text-container">
+                                    <div class="profile-main-startup-progress-bar-bg">
+                                         <div class="profile-main-startup-progress-bar-fg" style="width: 40%;"></div>
+                                    </div>
+                                    <span class="profile-main-startup-progress-text">40%</span>
                                 </div>
-                                <span class="profile-main-startup-progress-text">40%</span>
                             </div>
+                            <a href="#" class="btn btn-primary profile-main-startup-details-btn">Подробнее</a>
                         </div>
-                        <a href="#" class="btn btn-primary profile-main-startup-details-btn">Подробнее</a>
+                        <img class="profile-main-startup-image" src="{% static 'accounts/images/profile/Rectangle_4196.png' %}" alt="Изображение стартапа" />
                     </div>
-                    <img class="profile-main-startup-image" src="{% static 'accounts/images/profile/Rectangle_4196.png' %}" alt="Изображение стартапа" />
+                    <!-- /Макет стартапа 3 -->
                 </div>
-                <!-- /Макет стартапа 3 -->
+
+                <div class="profile-main-content-tab" id="newsContent" style="display: none;">
+                    <div style="width: 100%; height: 100%; padding-top: 32px; padding-bottom: 45px; /* padding-left: 32px; padding-right: 32px; */ box-shadow: 0px 40px 32px -24px rgba(0, 0, 0, 0.12); overflow: hidden; border-radius: 10px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 48px; display: flex;">
+                        {# Табы внутри новостей пока убраны, так как основные табы уже есть выше #}
+                        {# <div style="align-self: stretch; justify-content: flex-start; align-items: flex-start; gap: 12px; display: inline-flex">
+                            <div style="padding-left: 12px; padding-right: 12px; padding-top: 6px; padding-bottom: 6px; border-radius: 100px; justify-content: center; align-items: center; gap: 10px; display: flex">
+                                <div style="text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: center; display: flex; flex-direction: column; color: rgba(255, 255, 255, 0.50); font-size: 14px; font-family: Unbounded; font-weight: 300; line-height: 18px; word-wrap: break-word">Стартапы</div>
+                            </div>
+                            <div style="padding-left: 12px; padding-right: 12px; padding-top: 6px; padding-bottom: 6px; background: #E6E8EC; border-radius: 10px; justify-content: center; align-items: center; gap: 10px; display: flex">
+                                <div style="text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: center; display: flex; flex-direction: column; color: #23262F; font-size: 14px; font-family: Unbounded; font-weight: 300; line-height: 18px; word-wrap: break-word">Новости</div>
+                            </div>
+                        </div> #}
+                        <div class="profile-news-items-container" style="align-self: stretch; justify-content: flex-start; align-items: flex-start; gap: 20px; display: flex; flex-wrap: wrap; align-content: flex-start;">
+                            <div class="profile-news-card-item" style="width: 284px; height: 251px; position: relative; background: white; overflow: hidden; border-radius: 10px;">
+                                <img style="width: 100%; height: 131px; object-fit: cover; border-top-left-radius: 7px; border-top-right-radius: 7px;" src="{% static 'accounts/images/startups/inside_cards_background.webp' %}" />
+                                <div class="profile-news-card-title" style="width: 250px; margin-left: 17px; margin-top: 17px; /*left: 17px; top: 148px; position: absolute;*/ justify-content: center; display: flex; flex-direction: column; color: black; font-size: 16px; font-family: 'Unbounded'; font-weight: 400; line-height: 16px; word-wrap: break-word;">Лучшие ракеты или турбо режим на лайте (Макет)</div>
+                                <div class="profile-news-card-description" style="width: 250px; margin-left: 17px; margin-top: 12px; /*left: 17px; top: 193px; position: absolute;*/ text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: center; display: flex; flex-direction: column; color: rgba(0, 0, 0, 0.20); font-size: 12px; font-family: 'Unbounded'; font-weight: 300; letter-spacing: 0.12px; word-wrap: break-word;">Наш стартап разрабатывает инновационную платформу для... (Макет)</div>
+                            </div>
+                            <div class="profile-news-card-item" style="width: 284px; height: 251px; position: relative; background: white; overflow: hidden; border-radius: 10px;">
+                                <img style="width: 100%; height: 131px; object-fit: cover; border-top-left-radius: 7px; border-top-right-radius: 7px;" src="{% static 'accounts/images/startups/inside_cards_background.webp' %}" />
+                                <div class="profile-news-card-title" style="width: 250px; margin-left: 17px; margin-top: 17px; justify-content: center; display: flex; flex-direction: column; color: black; font-size: 16px; font-family: 'Unbounded'; font-weight: 400; line-height: 16px; word-wrap: break-word;">Лучшие ракеты или турбо режим на лайте 2 (Макет)</div>
+                                <div class="profile-news-card-description" style="width: 250px; margin-left: 17px; margin-top: 12px; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: center; display: flex; flex-direction: column; color: rgba(0, 0, 0, 0.20); font-size: 12px; font-family: 'Unbounded'; font-weight: 300; letter-spacing: 0.12px; word-wrap: break-word;">Наш стартап разрабатывает инновационную платформу для... (Макет)</div>
+                            </div>
+                             <div class="profile-news-card-item" style="width: 284px; height: 251px; position: relative; background: white; overflow: hidden; border-radius: 10px;">
+                                <img style="width: 100%; height: 131px; object-fit: cover; border-top-left-radius: 7px; border-top-right-radius: 7px;" src="{% static 'accounts/images/startups/inside_cards_background.webp' %}" />
+                                <div class="profile-news-card-title" style="width: 250px; margin-left: 17px; margin-top: 17px; justify-content: center; display: flex; flex-direction: column; color: black; font-size: 16px; font-family: 'Unbounded'; font-weight: 400; line-height: 16px; word-wrap: break-word;">Лучшие ракеты или турбо режим на лайте 3 (Макет)</div>
+                                <div class="profile-news-card-description" style="width: 250px; margin-left: 17px; margin-top: 12px; text-box-trim: trim-both; text-box-edge: cap alphabetic; justify-content: center; display: flex; flex-direction: column; color: rgba(0, 0, 0, 0.20); font-size: 12px; font-family: 'Unbounded'; font-weight: 300; letter-spacing: 0.12px; word-wrap: break-word;">Наш стартап разрабатывает инновационную платформу для... (Макет)</div>
+                            </div>
+                            <!-- Добавьте больше карточек новостей здесь, если нужно -->
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -214,21 +248,53 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Старый код для fileNameDisplay, если он был, теперь не нужен в видимой части,
-    // но оставим логику на случай, если решите вернуть отображение имени файла где-то.
-    /*
-    const originalAvatarInputForFileName = document.getElementById('id_avatar_input'); // Если id_avatar_input используется только для формы выше
-    const fileNameDisplay = document.getElementById('fileNameDisplay');
-    if (originalAvatarInputForFileName && fileNameDisplay) {
-        originalAvatarInputForFileName.addEventListener('change', function() {
-            if (this.files && this.files.length > 0) {
-                fileNameDisplay.textContent = this.files[0].name;
-            } else {
-                fileNameDisplay.textContent = 'Файл не выбран';
+    // Логика переключения вкладок
+    const tabs = document.querySelectorAll('.profile-main-tab-item');
+    const tabContents = document.querySelectorAll('.profile-main-content-tab');
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            // Убираем active-tab со всех табов
+            tabs.forEach(t => t.classList.remove('active-tab'));
+            // Добавляем active-tab к нажатому табу
+            this.classList.add('active-tab');
+
+            const targetTab = this.getAttribute('data-tab');
+
+            // Скрываем все содержимое вкладок
+            tabContents.forEach(content => {
+                content.style.display = 'none';
+                content.classList.remove('active-content');
+            });
+
+            // Показываем содержимое для активной вкладки
+            const activeContent = document.getElementById(targetTab + 'Content');
+            if (activeContent) {
+                activeContent.style.display = 'flex'; // или 'block', в зависимости от того, как должен отображаться контент
+                activeContent.classList.add('active-content');
             }
         });
+    });
+
+    // Устанавливаем начальное активное состояние, если необходимо
+    // Например, чтобы первая вкладка "Стартапы" была активной при загрузке
+    const initialActiveTab = document.querySelector('.profile-main-tab-item.active-tab');
+    if (initialActiveTab) {
+        const initialTargetTab = initialActiveTab.getAttribute('data-tab');
+        const initialActiveContent = document.getElementById(initialTargetTab + 'Content');
+        if (initialActiveContent) {
+            // Убедимся, что только контент активной вкладки видим
+            tabContents.forEach(content => {
+                if (content.id === initialTargetTab + 'Content') {
+                    content.style.display = 'flex'; // или 'block'
+                    content.classList.add('active-content');
+                } else {
+                    content.style.display = 'none';
+                    content.classList.remove('active-content');
+                }
+            });
+        }
     }
-    */
 });
 </script>
 {% endblock %}
