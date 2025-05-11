@@ -2,10 +2,8 @@
 
 /* StyledFeatured -> .profile-page-wrapper */
 .profile-page-wrapper {
-    width: 100vw; /* Занимает всю ширину окна просмотра */
-    position: relative;
-    left: 50%;
-    transform: translateX(-50%);
+    width: 100%; /* Изменено с 100vw */
+    position: relative; /* Оставляем для z-index или абсолютного позиционирования дочерних */
     padding-bottom: 55px;
     display: flex;
     flex-direction: column;

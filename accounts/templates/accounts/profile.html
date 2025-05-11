@@ -277,7 +277,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const targetTabId = this.getAttribute('data-tab');
             const newActiveContent = document.getElementById(targetTabId + 'Content');
 
-            if (currentActiveTab === this || !newActiveContent || !currentActiveContent) {
+            if (currentActiveTab === this || !newActiveContent || !currentActiveContent || currentActiveContent === newActiveContent) {
                 return; 
             }
 
@@ -285,30 +285,36 @@ document.addEventListener('DOMContentLoaded', function() {
             tabs.forEach(t => t.classList.remove('active-tab'));
             this.classList.add('active-tab');
 
+            // Подготавливаем новый контент (он уже display:none по CSS)
+            newActiveContent.style.display = 'flex'; // Сразу делаем видимым для Anime.js
+            newActiveContent.classList.add('active-content');
+            newActiveContent.style.opacity = '0'; // Начальное состояние для анимации появления
+            // Можно добавить начальный transform, если он отличается от конечного
+            // newActiveContent.style.transform = 'translateY(20px)'; 
+
             // Анимация скрытия текущего контента
             anime({
                 targets: currentActiveContent,
-                opacity: [1, 0],
-                translateY: [0, -10], // Немного вверх при исчезновении
-                duration: 300,
-                easing: 'easeOutQuad',
+                opacity: 0,
+                translateY: -10, // Немного вверх при исчезновении
+                duration: 350, // Немного увеличим длительность
+                easing: 'easeInOutQuad', // Попробуем другой easing
                 complete: function() {
-                    currentActiveContent.style.display = 'none';
+                    currentActiveContent.style.display = 'none'; // Скрываем старый контент окончательно
                     currentActiveContent.classList.remove('active-content');
-                    
-                    // Показываем и анимируем новый контент
-                    newActiveContent.style.display = 'flex'; // Используем flex
-                    newActiveContent.classList.add('active-content');
-                    newActiveContent.style.opacity = '0'; // Начальное состояние для анимации появления
-                    
-                    anime({
-                        targets: newActiveContent,
-                        opacity: [0, 1],
-                        translateY: [10, 0], // Немного снизу при появлении
-                        duration: 300,
-                        easing: 'easeOutQuad'
-                    });
+                    // Сбрасываем transform, чтобы не влиял, если элемент будет снова показан
+                    currentActiveContent.style.transform = 'translateY(0px)'; 
                 }
+            });
+
+            // Анимация появления нового контента
+            anime({
+                targets: newActiveContent,
+                opacity: 1,
+                translateY: [10, 0], // Появление немного снизу
+                duration: 350, // Немного увеличим длительность
+                easing: 'easeInOutQuad', // Попробуем другой easing
+                // delay: 50 // Небольшая задержка, чтобы старый начал исчезать
             });
         });
     });
