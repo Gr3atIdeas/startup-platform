@@ -765,15 +765,15 @@ body {
     flex-direction: column; 
     gap: 20px; 
     opacity: 0;
-    transform: translateY(20px); /* Возвращаем transform для анимации "выезжания" */
-    transition: opacity 0.3s ease-out, transform 0.3s ease-out; /* Возвращаем transform в transition */
+    /* transform: translateY(20px); /* Временно убрано для диагностики */
+    transition: opacity 0.3s ease-out; /* Оставляем только opacity для теста */
     width: 100%; 
 }
 
 .profile-main-content-tab.active-content {
     display: flex; /* Показываем активный контент */
     opacity: 1;
-    transform: translateY(0); /* Возвращаем transform для анимации "выезжания" */
+    /* transform: translateY(0); /* Временно убрано для диагностики */
 }
 
 /* Стили для секции стартапов */
