@@ -250,14 +250,17 @@
 }
 
 .profile-sidebar-social-icon-row-item-img {
-    /* padding: 5px; /* Убрали padding */
-    /* background-color: #777E90; /* Убрали фон */
-    /* border-radius: 5px; /* Убрали скругление для фона */
-    /* box-sizing: content-box; /* Не нужно без padding */
-    display: block; /* Для корректного отображения SVG как блока */
+    /* img tag inside the a tag */
+    width: 35px; /* Изменено с 30px */
+    height: 35px; /* Изменено с 30px */
+    object-fit: contain;
+    /* background: none; убрал фон по последнему требованию */
+    /* border-radius: 50%; убрал по последнему требованию */
+    /* padding: 5px; убрал по последнему требованию */
 }
 
-/* Размеры для новых SVG иконок */
+/* Удаляем специфичные правила, чтобы применялись общие 35x35px */
+/* 
 .profile-sidebar-social-icons-row img.profile-sidebar-social-icon-row-item-img[alt="VK"] {
     width: 30px; 
     height: 30px;
@@ -267,16 +270,19 @@
     width: 30px; 
     height: 30px;
 }
+*/
 
 /* StyledImage36 -> first img in .profile-sidebar-social-icons-row */
 .profile-sidebar-social-icons-row img:first-of-type.profile-sidebar-social-icon-row-item-img {
-    width: 25px;
-    height: 23.47px;
+    /* Styles for the first icon if different, e.g., margin-right */
+    /* width: 35px; */ /* Эти строки теперь не нужны, т.к. размер задан выше */
+    /* height: 35px; */
 }
 /* StyledImage37 -> second img in .profile-sidebar-social-icons-row */
 .profile-sidebar-social-icons-row img:nth-of-type(2).profile-sidebar-social-icon-row-item-img {
-    width: 25px;
-    height: 25px;
+    /* Styles for the second icon if different */
+    /* width: 35px; */ /* Эти строки теперь не нужны */
+    /* height: 35px; */
 }
 /* StyledIconsInstagramLine -> .profile-sidebar-social-icon-row-item-complex-div */
 .profile-sidebar-social-icon-row-item-complex-div {
@@ -383,18 +389,11 @@
 
 /* StyledFollowing -> .profile-main-startups-section */
 .profile-main-startups-section {
-    align-self: stretch;
-    padding: 0; /* Убраны внутренние отступы, они будут в #startupsContent и #newsContent */
-    background: transparent; /* Прозрачный фон */
-    box-shadow: none; /* Тень будет на #startupsContent и #newsContent */
-    /* overflow: hidden; /* Временно убрано для отладки стартапов */
-    border-radius: 10px;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: stretch; /* Чтобы дочерние .profile-main-content-tab растягивались */
-    gap: 48px; /* Этот gap должен создать отступ в 48px между табами и контентом */
     display: flex;
-    margin-top: 165px; 
+    flex-direction: column;
+    gap: 48px; /* Расстояние между табами и контентом вкладок */
+    width: 100%; /* Занимает всю ширину .profile-main-content */
+    position: relative; /* Для корректного позиционирования абсолютных дочерних элементов */
 }
 
 /* StyledSubNavigation -> .profile-main-tabs */
@@ -746,19 +745,31 @@ body {
 
 /* Общий контейнер для содержимого вкладок (стартапы и новости) */
 .profile-main-content-tab {
-    display: none; /* Изначально скрыто */
+    /* display: none; */ /* Убрали */
     flex-direction: column; 
-    width: 100%; 
-    box-sizing: border-box;
+    gap: 20px; 
     opacity: 0;
-    transform: translateY(10px); /* Начальное смещение для анимации "всплывания" */
-    transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+    transform: translateY(20px); 
+    transition: opacity 0.3s ease-out, transform 0.3s ease-out, visibility 0s linear 0.3s; 
+    width: 100%; 
+    visibility: hidden; 
+    position: absolute; 
+    left: 0; 
+    /* top: 0; /* Пока закомментируем, если табы и контент в одном потоке, top:0 от родителя .profile-main-startups-section может быть не то, что нужно */
+    /* Нужно, чтобы блок контента был ПОД табами. Tabs имеют свою высоту. */
+    /* Возможно, top должен быть равен высоте блока табов. */
+    /* Или проще не делать position:absolute, а просто display:none/flex */
 }
 
 .profile-main-content-tab.active-content {
     display: flex; 
     opacity: 1;
     transform: translateY(0);
+    visibility: visible; 
+    transition: opacity 0.3s ease-out, transform 0.3s ease-out; 
+    position: relative; /* Возвращаем в поток и отменяем absolute */
+    /* Сбрасываем top, если он был установлен */
+    /* top: auto; */ 
 }
 
 /* Стили для секции стартапов */
@@ -804,15 +815,12 @@ body {
 
 /* Стили для секции новостей */
 #newsContent {
-    /* display: flex; /* Уже установлено через .profile-main-content-tab.active-content */
-    /* flex-direction: column; /* Уже установлено через .profile-main-content-tab */
-    gap: 32px; /* Отступ между элементами внутри #newsContent, например, если бы был заголовок */
-    padding: 32px;
-    padding-bottom: 45px; 
-    box-shadow: 0px 40px 32px -24px rgba(0, 0, 0, 0.12); 
-    border-radius: 10px; 
-    overflow: hidden; /* Если нужен */
-    background-color: transparent; /* Фон самой секции новостей - прозрачный, карточки белые */
+    /* display: none; */ /* Убрали */
+    /* Все остальные стили тут не нужны, так как они наследуются или определены в .profile-main-content-tab / .active-content */
+    /* padding: 20px; */
+    /* background-color: #f9f9f9; */
+    /* border-radius: 8px; */
+    /* box-shadow: 0 2px 4px rgba(0,0,0,0.1); */
 }
 
 .profile-news-items-container {

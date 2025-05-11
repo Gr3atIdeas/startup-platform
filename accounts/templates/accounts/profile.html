@@ -272,28 +272,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 return; 
             }
 
-            // Убираем active-tab со всех табов и добавляем к нажатому
             tabs.forEach(t => t.classList.remove('active-tab'));
             this.classList.add('active-tab');
 
-            // Скрываем текущий активный контент (если он есть)
             if (currentActiveContent) {
                 currentActiveContent.classList.remove('active-content');
-                // Даем время CSS transition отработать перед тем как скрывать через display
-                // Это важно, если display:none прерывает transition opacity/transform
-                // Однако, с display:none -> display:flex и opacity 0 -> 1, это может быть не нужно
-                // CSS сам должен справиться, когда класс active-content удаляется
             }
 
-            // Показываем новый контент
-            // Сначала убедимся, что он display:flex (если изначально был display:none)
-            // чтобы CSS transition мог сработать с opacity и transform
-            newActiveContent.style.display = 'flex'; // Устанавливаем display до добавления класса
-            // Небольшая задержка перед добавлением класса, чтобы браузер успел применить display:flex
             requestAnimationFrame(() => {
-                 requestAnimationFrame(() => { // Вложенный RAF для большей надежности
-                    newActiveContent.classList.add('active-content');
-                 });
+                newActiveContent.classList.add('active-content');
             });
         });
     });
@@ -304,19 +291,14 @@ document.addEventListener('DOMContentLoaded', function() {
         const initialTargetTabId = initialActiveTab.getAttribute('data-tab');
         const initialActiveContent = document.getElementById(initialTargetTabId + 'Content');
         if (initialActiveContent) {
-            // Скрываем все, кроме активного, без анимации
             tabContents.forEach(content => {
                 if (content !== initialActiveContent) {
                     content.classList.remove('active-content');
-                    content.style.display = 'none'; // Явно скрываем неактивные
-                    content.style.opacity = '0'; // И устанавливаем начальную прозрачность
                 }
             });
-            // Показываем активный
-            initialActiveContent.style.display = 'flex';
-            initialActiveContent.style.opacity = '1';
-            initialActiveContent.style.transform = 'translateY(0)';
-            initialActiveContent.classList.add('active-content'); 
+            if (!initialActiveContent.classList.contains('active-content')) {
+                 initialActiveContent.classList.add('active-content'); 
+            }
         }
     }
 });
