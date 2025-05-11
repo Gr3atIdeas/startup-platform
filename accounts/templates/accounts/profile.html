@@ -239,51 +239,7 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Function definitions first
-    function fadeOut(element, callback) {
-        if (!element) { 
-            if (callback) callback(); 
-            return; 
-        }
-        element.style.opacity = 1;
-        let_is_fading_out = true; // Флаг для предотвращения двойного запуска
-
-        function fade() {
-            if (!element.is_fading_out) return; // Если уже не актуально
-            let val = parseFloat(element.style.opacity);
-            if (!((val -= 0.1) < 0)) {
-                element.style.opacity = val;
-                requestAnimationFrame(fade);
-            } else {
-                element.style.opacity = 0;
-                element.style.display = 'none'; // Скрываем ПОСЛЕ анимации
-                element.is_fading_out = false;
-                if (callback) callback();
-            }
-        }
-        element.is_fading_out = true; // Устанавливаем флаг перед первым вызовом fade
-        requestAnimationFrame(fade);
-    }
-
-    function fadeIn(element) {
-        if (!element) return;
-        // Сбрасываем флаг fadeOut, если он был установлен на этом элементе
-        element.is_fading_out = false; 
-
-        element.style.opacity = 0;
-        element.style.display = 'flex'; // Или 'block'/ 'inline-flex' и т.д. как нужно
-        
-        function fade() {
-            let val = parseFloat(element.style.opacity);
-            if (!((val += 0.1) > 1)) {
-                element.style.opacity = val;
-                requestAnimationFrame(fade);
-            } else {
-                element.style.opacity = 1; // Убедимся, что в конце opacity 1
-            }
-        }
-        requestAnimationFrame(fade);
-    }
+    // Удаляем старые функции fadeIn/fadeOut, если они были здесь
 
     const avatarClickableArea = document.getElementById('avatarClickableArea');
     const avatarInput = document.getElementById('id_avatar_input');
@@ -291,7 +247,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (avatarClickableArea && avatarInput && avatarUploadForm) {
         avatarClickableArea.addEventListener('click', function() {
-            avatarInput.click(); // Вызываем клик по скрытому инпуту
+            avatarInput.click();
         });
 
         avatarInput.addEventListener('change', function() {
@@ -301,10 +257,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Логика переключения вкладок с JS анимацией
+    // Новая логика переключения вкладок с CSS-анимацией
     const tabs = document.querySelectorAll('.profile-main-tab-item');
     const tabContents = document.querySelectorAll('.profile-main-content-tab');
-    // const animationDuration = 300; // мс, requestAnimationFrame сам управляет скоростью
 
     tabs.forEach(tab => {
         tab.addEventListener('click', function() {
@@ -317,42 +272,51 @@ document.addEventListener('DOMContentLoaded', function() {
                 return; 
             }
 
+            // Убираем active-tab со всех табов и добавляем к нажатому
             tabs.forEach(t => t.classList.remove('active-tab'));
             this.classList.add('active-tab');
 
+            // Скрываем текущий активный контент (если он есть)
             if (currentActiveContent) {
-                // Перед тем как запустить fadeOut, отменяем предыдущий fadeOut, если он был
-                currentActiveContent.is_fading_out = false; 
-                fadeOut(currentActiveContent, () => {
-                    currentActiveContent.classList.remove('active-content');
-                    // display:none уже устанавливается в fadeOut
-                    
-                    newActiveContent.classList.add('active-content');
-                    fadeIn(newActiveContent);
-                });
-            } else { // Если не было активного контента (например, при первой загрузке, хотя это обрабатывается ниже)
-                newActiveContent.classList.add('active-content');
-                fadeIn(newActiveContent);
+                currentActiveContent.classList.remove('active-content');
+                // Даем время CSS transition отработать перед тем как скрывать через display
+                // Это важно, если display:none прерывает transition opacity/transform
+                // Однако, с display:none -> display:flex и opacity 0 -> 1, это может быть не нужно
+                // CSS сам должен справиться, когда класс active-content удаляется
             }
+
+            // Показываем новый контент
+            // Сначала убедимся, что он display:flex (если изначально был display:none)
+            // чтобы CSS transition мог сработать с opacity и transform
+            newActiveContent.style.display = 'flex'; // Устанавливаем display до добавления класса
+            // Небольшая задержка перед добавлением класса, чтобы браузер успел применить display:flex
+            requestAnimationFrame(() => {
+                 requestAnimationFrame(() => { // Вложенный RAF для большей надежности
+                    newActiveContent.classList.add('active-content');
+                 });
+            });
         });
     });
 
-    // Устанавливаем начальное активное состояние (без анимации)
+    // Устанавливаем начальное активное состояние
     const initialActiveTab = document.querySelector('.profile-main-tab-item.active-tab');
     if (initialActiveTab) {
         const initialTargetTabId = initialActiveTab.getAttribute('data-tab');
         const initialActiveContent = document.getElementById(initialTargetTabId + 'Content');
         if (initialActiveContent) {
+            // Скрываем все, кроме активного, без анимации
             tabContents.forEach(content => {
                 if (content !== initialActiveContent) {
-                    content.style.display = 'none';
-                    content.style.opacity = 0;
                     content.classList.remove('active-content');
+                    content.style.display = 'none'; // Явно скрываем неактивные
+                    content.style.opacity = '0'; // И устанавливаем начальную прозрачность
                 }
             });
+            // Показываем активный
             initialActiveContent.style.display = 'flex';
-            initialActiveContent.style.opacity = 1;
-            initialActiveContent.classList.add('active-content');
+            initialActiveContent.style.opacity = '1';
+            initialActiveContent.style.transform = 'translateY(0)';
+            initialActiveContent.classList.add('active-content'); 
         }
     }
 });

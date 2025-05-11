@@ -69,8 +69,13 @@
     overflow: hidden; 
     border-radius: 50%; 
     cursor: pointer; 
-    /* transition: box-shadow 0.3s ease-in-out; /* Убрали ховер-эффект */
+    /* transition: box-shadow 0.3s ease-in-out; /* Убеждаемся, что ховер-эффект свечения удален */
 }
+
+/* Убеждаемся, что ховер-эффект свечения удален */
+/* .profile-sidebar-avatar-wrapper:hover {
+    box-shadow: 0 0 15px 7px rgba(245, 219, 12, 0.6); 
+} */
 
 /* StyledAustinwadeX6Uj51n5CE8unsplash1 -> .profile-sidebar-avatar-img */
 .profile-sidebar-avatar-img {
@@ -254,13 +259,13 @@
 
 /* Размеры для новых SVG иконок */
 .profile-sidebar-social-icons-row img.profile-sidebar-social-icon-row-item-img[alt="VK"] {
-    width: 40px; 
-    height: 40px;
+    width: 30px; 
+    height: 30px;
 }
 
 .profile-sidebar-social-icons-row img.profile-sidebar-social-icon-row-item-img[alt="LinkedIn"] {
-    width: 40px; 
-    height: 40px;
+    width: 30px; 
+    height: 30px;
 }
 
 /* StyledImage36 -> first img in .profile-sidebar-social-icons-row */
@@ -741,21 +746,19 @@ body {
 
 /* Общий контейнер для содержимого вкладок (стартапы и новости) */
 .profile-main-content-tab {
-    display: none; /* Изначально скрыто, управляется JS */
+    display: none; /* Изначально скрыто */
     flex-direction: column; 
     width: 100%; 
     box-sizing: border-box;
-    /* Убираем CSS-анимацию opacity/visibility, будет управляться JS */
-    /* opacity: 0; */
-    /* visibility: hidden; */
-    /* transition: opacity 0.4s ease-in-out, visibility 0s linear 0.4s; */
+    opacity: 0;
+    transform: translateY(10px); /* Начальное смещение для анимации "всплывания" */
+    transition: opacity 0.3s ease-out, transform 0.3s ease-out;
 }
 
 .profile-main-content-tab.active-content {
     display: flex; 
-    /* opacity: 1; */ /* Управляется JS */
-    /* visibility: visible; */ /* Управляется JS */
-    /* transition-delay: 0s; */
+    opacity: 1;
+    transform: translateY(0);
 }
 
 /* Стили для секции стартапов */
