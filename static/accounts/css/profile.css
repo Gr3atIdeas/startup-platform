@@ -10,6 +10,7 @@
     display: flex;
     flex-direction: column;
     align-items: center; /* Центрирует .profile-content-container, если он уже */
+    overflow-x: hidden; /* Предотвращаем горизонтальную прокрутку на самом wrapper */
 }
 
 /* StyledImagefromrawpixelid597407jpeg1 -> .profile-main-banner */
@@ -21,8 +22,8 @@
 
 /* StyledAutolayout -> .profile-content-container */
 .profile-content-container {
-    width: 1303px;
-    max-width: 95%;
+    width: 95%; /* Изменено с фиксированного значения для адаптивности */
+    max-width: 1303px; /* Максимальная ширина сохраняется */
     justify-content: space-between;
     align-items: flex-start; /* Sidebar and main content will be at the top of this container */
     display: flex;
@@ -743,31 +744,25 @@ body {
 
 /* Общий контейнер для содержимого вкладок (стартапы и новости) */
 .profile-main-content-tab {
-    /* display: none; */ /* Убрали */
+    display: none; /* По умолчанию скрыто */
     flex-direction: column; 
     gap: 20px; 
     opacity: 0;
     transform: translateY(20px); 
-    transition: opacity 0.3s ease-out, transform 0.3s ease-out, visibility 0s linear 0.3s; 
+    transition: opacity 0.3s ease-out, transform 0.3s ease-out; /* Убрана transition для visibility и position */
     width: 100%; 
-    visibility: hidden; 
-    position: absolute; 
-    left: 0; 
-    /* top: 0; /* Пока закомментируем, если табы и контент в одном потоке, top:0 от родителя .profile-main-startups-section может быть не то, что нужно */
-    /* Нужно, чтобы блок контента был ПОД табами. Tabs имеют свою высоту. */
-    /* Возможно, top должен быть равен высоте блока табов. */
-    /* Или проще не делать position:absolute, а просто display:none/flex */
+    /* visibility: hidden; /* Больше не нужно, управляется через display */
+    /* position: absolute; /* Убрано, чтобы избежать проблем с высотой и наложением */
+    /* left: 0; /* Убрано */
 }
 
 .profile-main-content-tab.active-content {
-    display: flex; 
+    display: flex; /* Показываем активный контент */
     opacity: 1;
     transform: translateY(0);
-    visibility: visible; 
-    transition: opacity 0.3s ease-out, transform 0.3s ease-out; 
-    position: relative; /* Возвращаем в поток и отменяем absolute */
-    /* Сбрасываем top, если он был установлен */
-    /* top: auto; */ 
+    /* visibility: visible; /* Больше не нужно */
+    /* transition: opacity 0.3s ease-out, transform 0.3s ease-out; /* Переход определяется на базовом классе */
+    /* position: relative; /* Убрано, будет static по умолчанию, что нормально в потоке */
 }
 
 /* Стили для секции стартапов */

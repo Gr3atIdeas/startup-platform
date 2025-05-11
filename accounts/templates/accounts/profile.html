@@ -299,6 +299,27 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!initialActiveContent.classList.contains('active-content')) {
                  initialActiveContent.classList.add('active-content'); 
             }
+        } else {
+            // Если у активной вкладки нет контента, делаем ее неактивной
+            initialActiveTab.classList.remove('active-tab');
+            // И пытаемся активировать первую вкладку по умолчанию
+            if (tabs.length > 0) {
+                tabs[0].classList.add('active-tab');
+                const firstTabId = tabs[0].getAttribute('data-tab');
+                const firstContent = document.getElementById(firstTabId + 'Content');
+                if (firstContent) {
+                    tabContents.forEach(content => content.classList.remove('active-content')); // Сначала деактивируем все
+                    firstContent.classList.add('active-content');
+                }
+            }
+        }
+    } else if (tabs.length > 0) { // Если ни одна вкладка не активна в HTML, активируем первую
+        tabs[0].classList.add('active-tab');
+        const firstTabId = tabs[0].getAttribute('data-tab');
+        const firstContent = document.getElementById(firstTabId + 'Content');
+        if (firstContent) {
+            tabContents.forEach(content => content.classList.remove('active-content')); // Сначала деактивируем все
+            firstContent.classList.add('active-content');
         }
     }
 });
