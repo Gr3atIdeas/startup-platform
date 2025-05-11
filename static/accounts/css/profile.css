@@ -66,8 +66,14 @@
     height: 160px;
     position: relative;
     background: #45B26B; /* Placeholder bg from styled component */
-    overflow: hidden;
-    border-radius: 128px;
+    overflow: hidden; /* Может мешать внешнему box-shadow, если он будет слишком большим */
+    border-radius: 50%; /* Уже должно быть 128px, но 50% надежнее для круга */
+    cursor: pointer; /* Уже было в инлайн стиле, но лучше в CSS */
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+.profile-sidebar-avatar-wrapper:hover {
+    box-shadow: 0 0 15px 7px rgba(245, 219, 12, 0.6); /* Желтое свечение при наведении */
 }
 
 /* StyledAustinwadeX6Uj51n5CE8unsplash1 -> .profile-sidebar-avatar-img */
@@ -203,7 +209,7 @@
     width: 40px; 
     height: 40px;
     box-sizing: border-box;
-    background-color: rgba(255, 255, 255, 0.08); /* Добавлен фон для видимости иконок */
+    /* background-color: rgba(255, 255, 255, 0.08); /* ОТКАТ ИЗМЕНЕНИЯ */
 }
 /* StyledIconsShareSquareLine / StyledIconsMoreLine -> .profile-sidebar-social-icon-placeholder1/2 */
 /* Removed styles for .profile-sidebar-social-icon-placeholder1/2 and their -inner parts */
@@ -241,27 +247,25 @@
     gap: 16px;
     display: inline-flex;
 }
+
+.profile-sidebar-social-icon-row-item-img {
+    /* width: 25px; /* Размеры будут разные для VK и LinkedIn, задаются ниже */
+    /* height: 25px; */
+    padding: 5px; /* Добавляем внутренний отступ */
+    background-color: #777E90; /* Фон из Figma */
+    border-radius: 5px; /* Небольшое скругление для фона */
+    box-sizing: content-box; /* Чтобы padding не влиял на указанные width/height */
+}
+
 /* StyledImage36 -> first img in .profile-sidebar-social-icons-row */
-.profile-sidebar-social-icons-row img:first-of-type {
+.profile-sidebar-social-icons-row img:first-of-type.profile-sidebar-social-icon-row-item-img {
     width: 25px;
     height: 23.47px;
 }
-/* StyledRectangle130 -> first div in .profile-sidebar-social-icons-row */
-.profile-sidebar-social-icons-row div:nth-of-type(1) {
-    width: 29.33px;
-    height: 33.30px;
-    background: #777E90;
-}
 /* StyledImage37 -> second img in .profile-sidebar-social-icons-row */
-.profile-sidebar-social-icons-row img:nth-of-type(2) {
+.profile-sidebar-social-icons-row img:nth-of-type(2).profile-sidebar-social-icon-row-item-img {
     width: 25px;
     height: 25px;
-}
-/* StyledRectangle131 -> second div in .profile-sidebar-social-icons-row */
-.profile-sidebar-social-icons-row div:nth-of-type(2) {
-    width: 30.91px;
-    height: 34.04px;
-    background: #777E90;
 }
 /* StyledIconsInstagramLine -> .profile-sidebar-social-icon-row-item-complex-div */
 .profile-sidebar-social-icon-row-item-complex-div {
@@ -377,7 +381,7 @@
     flex-direction: column;
     justify-content: flex-start;
     align-items: stretch; /* Чтобы дочерние .profile-main-content-tab растягивались */
-    gap: 48px; /* Original gap from StyledFollowing, (между табами и контентом) */
+    gap: 48px; /* Этот gap должен создать отступ в 48px между табами и контентом */
     display: flex;
     margin-top: 165px; 
 }
@@ -386,8 +390,7 @@
 .profile-main-tabs {
     display: flex;
     gap: 12px; /* Из Figma */
-    margin-bottom: 24px; /* Отступ снизу до контента вкладок */
-    /* padding-left: 32px; Если нужно, чтобы табы тоже имели отступ */
+    /* margin-bottom: 24px; /* Убрано, чтобы gap родителя .profile-main-startups-section работал корректно */
 }
 /* StyledSubnavitem -> .profile-main-tab-item */
 .profile-main-tab-item {
@@ -690,14 +693,20 @@ body {
 
 /* Общий контейнер для содержимого вкладок (стартапы и новости) */
 .profile-main-content-tab {
-    display: none; /* Скрыто по умолчанию, управляется JS */
-    flex-direction: column; /* Общее правило для контента вкладок */
-    width: 100%; /* Растягиваем на всю ширину родителя (.profile-main-startups-section) */
+    display: none; /* Изначально скрыто, управляется JS через active-content */
+    flex-direction: column; 
+    width: 100%; 
     box-sizing: border-box;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease-in-out, visibility 0s linear 0.4s;
 }
 
 .profile-main-content-tab.active-content {
-    display: flex; /* Показываем активную вкладку */
+    display: flex; 
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0s; /* Сброс задержки для активной вкладки */
 }
 
 /* Стили для секции стартапов */
@@ -789,41 +798,34 @@ body {
 }
 
 .profile-news-card-title {
-    /* width: 250px; /* Ширина текста заголовка из Figma */
-    margin: 17px 17px 0 17px; /* Отступы: верх, право, низ, лево. Низ 0, так как есть description */
+    margin: 17px 17px 0 17px; 
     color: black;
     font-size: 16px;
     font-family: 'Unbounded', sans-serif;
     font-weight: 400;
-    line-height: 1.2; /* Немного увеличим для лучшей читаемости */
+    line-height: 1.3; /* Увеличено для лучшей читаемости и предотвращения срезания */
     word-wrap: break-word;
-    /* position, left, top, display:flex, flex-direction:column убраны, т.к. родитель flex */
-    height: 38px; /* Примерно 2 строки текста */
     overflow: hidden;
     text-overflow: ellipsis;
-    /* white-space: nowrap; /* Если нужно обрезать до одной строки */
     display: -webkit-box;
-    -webkit-line-clamp: 2; /* Ограничение в 2 строки для WebKit-браузеров */
+    -webkit-line-clamp: 2; 
     -webkit-box-orient: vertical;
 }
 
 .profile-news-card-description {
-    /* width: 250px; /* Ширина текста описания из Figma */
-    margin: 12px 17px 17px 17px; /* Отступы: верх, право, низ, лево */
-    color: rgba(0, 0, 0, 0.20); /* var(--Color4, ...) заменено на прямое значение */
+    margin: 12px 17px 17px 17px; 
+    color: rgba(0, 0, 0, 0.20); 
     font-size: 12px;
     font-family: 'Unbounded', sans-serif;
     font-weight: 300;
     letter-spacing: 0.12px;
     word-wrap: break-word;
-    line-height: 1.4; /* Немного увеличим для лучшей читаемости */
-    /* text-box-trim и text-box-edge не стандартные */
-    /* position, left, top, display:flex, flex-direction:column убраны, т.к. родитель flex */
-    flex-grow: 1; /* Чтобы описание занимало оставшееся место */
+    line-height: 1.5; /* Увеличено для лучшей читаемости */
+    flex-grow: 1; 
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
-    -webkit-line-clamp: 3; /* Ограничение в 3 строки для WebKit-браузеров */
+    -webkit-line-clamp: 4; /* Увеличено до 4 строк, если flex-grow позволяет */
     -webkit-box-orient: vertical;
 }
 
