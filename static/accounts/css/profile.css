@@ -2,19 +2,23 @@
 
 /* StyledFeatured -> .profile-page-wrapper */
 .profile-page-wrapper {
-    width: 100%; /* Изменено с 100vw */
-    position: relative; /* Оставляем для z-index или абсолютного позиционирования дочерних */
-    padding-bottom: 55px;
     display: flex;
     flex-direction: column;
-    align-items: center; /* Центрирует .profile-content-container, если он уже */
+    align-items: center; /* Centers content horizontally */
+    width: 100%; /* Takes full width available */
+    /* min-height: 100vh; */ /* Ensures it takes at least full viewport height */
+    background-color: #0B0B0F; /* Set background color */
+    padding: 0; /* Removed default padding */
+    margin: 0; /* Removed default margin */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    overflow-x: hidden; /* Предотвращаем горизонтальную прокрутку */
 }
 
 /* StyledImagefromrawpixelid597407jpeg1 -> .profile-main-banner */
 .profile-main-banner {
     height: 395px;
     object-fit: cover;
-    width: 100%; /* Будет 100% от .profile-page-wrapper (т.е. 100vw) */
+    width: 100vw; /* Баннер будет занимать всю ширину окна просмотра */
 }
 
 /* StyledAutolayout -> .profile-content-container */

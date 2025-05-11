@@ -238,86 +238,104 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const avatarClickableArea = document.getElementById('avatarClickableArea');
-    const avatarInput = document.getElementById('id_avatar_input');
-    const avatarUploadForm = document.getElementById('avatarUploadForm');
+document.addEventListener('DOMContentLoaded', function () {
+    const tabButtons = document.querySelectorAll('.profile-main-tab-item');
+    const contentPanes = document.querySelectorAll('.profile-main-content-tab');
+    const startupsContent = document.getElementById('startupsContent'); // Получаем блок стартапов
 
-    if (avatarClickableArea && avatarInput && avatarUploadForm) {
-        avatarClickableArea.addEventListener('click', function() {
-            avatarInput.click();
+    // Функция для установки активной вкладки
+    function setActiveTab(activeButton) {
+        // Деактивируем все кнопки и панели
+        tabButtons.forEach(btn => btn.classList.remove('active-tab'));
+        contentPanes.forEach(pane => {
+            pane.classList.remove('active-content');
+            pane.style.display = 'none'; // Убедимся, что все панели скрыты
         });
 
-        avatarInput.addEventListener('change', function() {
-            if (this.files && this.files.length > 0) {
-                avatarUploadForm.submit();
-            } 
-        });
-    }
+        // Активируем нажатую кнопку
+        activeButton.classList.add('active-tab');
 
-    const tabs = document.querySelectorAll('.profile-main-tab-item');
-    const tabContents = document.querySelectorAll('.profile-main-content-tab');
+        // Активируем соответствующую панель контента
+        const targetContentId = activeButton.getAttribute('data-tab');
+        const targetContentPane = document.getElementById(targetContentId);
 
-    // Инициализация: первая вкладка активна, ее контент виден
-    if (tabs.length > 0 && tabContents.length > 0) {
-        tabs[0].classList.add('active-tab');
-        tabContents[0].style.display = 'flex'; // Используем flex, как в .active-content
-        tabContents[0].classList.add('active-content'); // Добавляем класс для согласованности стилей, если они есть
-        // Остальные скрыты
-        for (let i = 1; i < tabContents.length; i++) {
-            tabContents[i].style.display = 'none';
-            tabContents[i].classList.remove('active-content');
+        if (targetContentPane) {
+            targetContentPane.classList.add('active-content');
+            targetContentPane.style.display = 'flex'; // Используем flex для отображения активной вкладки
+                                                    // или 'block', или 'grid' в зависимости от содержимого
+            // Если активная вкладка "Новости", то для ее контейнера используем grid
+            if (targetContentId === 'newsContent') {
+                const newsContainer = targetContentPane.querySelector('.profile-news-items-container');
+                if (newsContainer) {
+                    targetContentPane.style.display = 'block'; // Для #newsContent используем block, т.к. внутри grid
+                }
+            } else if (targetContentId === 'startupsContent') {
+                 targetContentPane.style.display = 'flex'; // Убедимся, что стартапы используют flex
+            }
         }
     }
 
-    tabs.forEach(tab => {
-        tab.addEventListener('click', function() {
-            const currentActiveTab = document.querySelector('.profile-main-tab-item.active-tab');
-            const currentActiveContent = document.querySelector('.profile-main-content-tab.active-content');
-            const targetTabId = this.getAttribute('data-tab');
-            const newActiveContent = document.getElementById(targetTabId + 'Content');
-
-            if (currentActiveTab === this || !newActiveContent || !currentActiveContent || currentActiveContent === newActiveContent) {
-                return; 
-            }
-
-            // Переключаем активный таб
-            tabs.forEach(t => t.classList.remove('active-tab'));
-            this.classList.add('active-tab');
-
-            // Подготавливаем новый контент (он уже display:none по CSS)
-            newActiveContent.style.display = 'flex'; // Сразу делаем видимым для Anime.js
-            newActiveContent.classList.add('active-content');
-            newActiveContent.style.opacity = '0'; // Начальное состояние для анимации появления
-            // Можно добавить начальный transform, если он отличается от конечного
-            // newActiveContent.style.transform = 'translateY(20px)'; 
-
-            // Анимация скрытия текущего контента
-            anime({
-                targets: currentActiveContent,
-                opacity: 0,
-                translateY: -10, // Немного вверх при исчезновении
-                duration: 350, // Немного увеличим длительность
-                easing: 'easeInOutQuad', // Попробуем другой easing
-                complete: function() {
-                    currentActiveContent.style.display = 'none'; // Скрываем старый контент окончательно
-                    currentActiveContent.classList.remove('active-content');
-                    // Сбрасываем transform, чтобы не влиял, если элемент будет снова показан
-                    currentActiveContent.style.transform = 'translateY(0px)'; 
-                }
-            });
-
-            // Анимация появления нового контента
-            anime({
-                targets: newActiveContent,
-                opacity: 1,
-                translateY: [10, 0], // Появление немного снизу
-                duration: 350, // Немного увеличим длительность
-                easing: 'easeInOutQuad', // Попробуем другой easing
-                // delay: 50 // Небольшая задержка, чтобы старый начал исчезать
-            });
+    // Добавляем обработчики событий на кнопки вкладок
+    tabButtons.forEach(button => {
+        button.addEventListener('click', function () {
+            setActiveTab(this);
         });
     });
+
+    // Устанавливаем вкладку "Стартапы" активной по умолчанию
+    const defaultActiveButton = document.querySelector('.profile-main-tab-item[data-tab="startupsContent"]');
+    if (defaultActiveButton) {
+        setActiveTab(defaultActiveButton);
+    } else if (tabButtons.length > 0) {
+        // Если вкладка "Стартапы" не найдена, активируем первую доступную вкладку
+        setActiveTab(tabButtons[0]);
+    }
+    
+    // Avatar upload preview
+    const avatarInput = document.getElementById('avatar');
+    const avatarPreview = document.getElementById('avatar-preview');
+    const defaultAvatar = "{% static 'accounts/images/avatars/default_avatar.png' %}"; // Путь к дефолтному аватару
+
+    if (avatarInput && avatarPreview) {
+        avatarInput.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    avatarPreview.src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            } else {
+                // Если файл не выбран (например, пользователь нажал "отмена"),
+                // проверяем, есть ли у пользователя уже аватар или используем дефолтный
+                const currentUserAvatar = "{{ user.profile.avatar.url }}";
+                if (currentUserAvatar && currentUserAvatar !== 'None') {
+                    avatarPreview.src = currentUserAvatar;
+                } else {
+                    avatarPreview.src = defaultAvatar;
+                }
+            }
+        });
+    }
+
+    // File name display for avatar upload
+    const fileInput = document.getElementById('avatar');
+    const fileNameDisplay = document.getElementById('file-name-display');
+    const chooseFileBtn = document.querySelector('.choose-file-btn');
+
+    if (chooseFileBtn && fileInput && fileNameDisplay) {
+        chooseFileBtn.addEventListener('click', function() {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('change', function() {
+            if (this.files && this.files.length > 0) {
+                fileNameDisplay.textContent = this.files[0].name;
+            } else {
+                fileNameDisplay.textContent = 'Файл не выбран';
+            }
+        });
+    }
 });
 </script>
 {% endblock %}
