@@ -26,7 +26,7 @@
     justify-content: space-between;
     align-items: flex-start; /* Sidebar and main content will be at the top of this container */
     display: flex;
-    margin-top: -275px; /* Pulls the whole content block up so sidebar/edit button overlap banner */
+    margin-top: -140px; /* Изменено с -275px. Определяет, насколько блок "заезжает" на баннер */
     position: relative;
     z-index: 1; /* Ensure it's above the banner if banner had a z-index or for stacking context */
     gap: 20px; 
