@@ -1,15 +1,28 @@
 /* Profile Page Specific Styles - Adapted from Styled-Components */
 
+/* Global box-sizing */
+* {
+    box-sizing: border-box;
+    margin: 0; /* Также сбросим margin по умолчанию, чтобы избежать неожиданных отступов */
+    padding: 0; /* И padding */
+}
+
+html, body {
+    width: 100%;
+    overflow-x: hidden; /* Предотвращаем горизонтальную прокрутку на самых верхних элементах */
+}
+
 /* StyledFeatured -> .profile-page-wrapper */
 .profile-page-wrapper {
-    width: 100vw; /* Занимает всю ширину окна просмотра */
+    width: 100%; /* Изменено с 100vw */
     position: relative;
+    /* left: 50%; /* Эти свойства больше не нужны если width: 100% и нет явного смещения */
+    /* transform: translateX(-50%); */
     padding-bottom: 55px;
     display: flex;
     flex-direction: column;
-    align-items: center; /* Центрирует .profile-content-container, если он уже */
-    overflow-x: hidden; /* Предотвращаем горизонтальную прокрутку на самом wrapper */
-    box-sizing: border-box; /* ADDED */
+    align-items: center; 
+    /* overflow-x: hidden; /* Уже установлено на html, body */
 }
 
 /* StyledImagefromrawpixelid597407jpeg1 -> .profile-main-banner */
@@ -743,22 +756,19 @@ body {
 
 /* Общий контейнер для содержимого вкладок (стартапы и новости) */
 .profile-main-content-tab {
-    display: flex; /* По умолчанию теперь flex, а не none */
+    display: none; /* По умолчанию скрыто */
     flex-direction: column; 
     gap: 20px; 
     opacity: 0;
-    transform: translateY(20px); 
-    transition: opacity 0.3s ease-out, transform 0.3s ease-out;
-    width: 100%;
+    /* transform: translateY(20px); /* Временно убрано для диагностики артефакта с затемнением */
+    transition: opacity 0.3s ease-out; /* Убрана transition для transform */
+    width: 100%; 
 }
 
 .profile-main-content-tab.active-content {
     display: flex; /* Показываем активный контент */
     opacity: 1;
-    transform: translateY(0);
-    /* visibility: visible; /* Больше не нужно */
-    /* transition: opacity 0.3s ease-out, transform 0.3s ease-out; /* Переход определяется на базовом классе */
-    /* position: relative; /* Убрано, будет static по умолчанию, что нормально в потоке */
+    /* transform: translateY(0); /* Временно убрано */
 }
 
 /* Стили для секции стартапов */
