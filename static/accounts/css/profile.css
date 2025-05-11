@@ -254,13 +254,13 @@
 
 /* Размеры для новых SVG иконок */
 .profile-sidebar-social-icons-row img.profile-sidebar-social-icon-row-item-img[alt="VK"] {
-    width: 32px; /* Примерный размер, можно будет подстроить */
-    height: 32px;
+    width: 40px; 
+    height: 40px;
 }
 
 .profile-sidebar-social-icons-row img.profile-sidebar-social-icon-row-item-img[alt="LinkedIn"] {
-    width: 32px; /* Примерный размер, можно будет подстроить */
-    height: 32px;
+    width: 40px; 
+    height: 40px;
 }
 
 /* StyledImage36 -> first img in .profile-sidebar-social-icons-row */
@@ -399,6 +399,17 @@
 }
 
 .profile-main-tab-item {
+    /* Сбрасываем только те свойства, которые могут конфликтовать */
+    border: none;
+    outline: none;
+    text-decoration: none;
+    appearance: none; /* Для сброса системных стилей кнопок */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    margin: 0; /* Сброс внешних отступов */
+
+    /* Стили из Figma для НЕАКТИВНОЙ вкладки (аналог "Стартапы" в вашем примере, если бы она была неактивна) */
+    box-sizing: border-box; 
     padding: 6px 12px;
     font-family: 'Unbounded', sans-serif;
     font-size: 14px;
@@ -406,29 +417,51 @@
     line-height: 18px;
     word-wrap: break-word;
     cursor: pointer;
-    border: none; /* Сброс границы от возможных общих стилей кнопок */
-    background: transparent; /* Явный прозрачный фон для неактивной */
-    color: rgba(255, 255, 255, 0.50); /* Цвет для неактивной вкладки (как "Стартапы" в примере Figma) */
-    border-radius: 100px; /* Скругление для неактивной вкладки (как "Стартапы" в примере Figma) */
-    display: flex; 
+    background: transparent; 
+    color: rgba(255, 255, 255, 0.50); 
+    border-radius: 100px; /* Как у неактивной "Стартапы" из Figma, если бы вторая кнопка была активна */
+    display: inline-flex; 
     justify-content: center;
     align-items: center;
-    transition: background-color 0.2s ease, color 0.2s ease; /* Плавный переход для ховера, если будет */
+    gap: 10px; 
 }
 
 .profile-main-tab-item:hover {
-    /* Можно добавить эффект ховера для неактивных, если нужно, например, чуть изменить цвет текста или фона */
-     color: rgba(255, 255, 255, 0.75);
+    color: rgba(255, 255, 255, 0.75); /* Легкое осветление при наведении на неактивную */
+    background: transparent; 
 }
 
 .profile-main-tab-item.active-tab {
-    background: #E6E8EC; /* Фон активной вкладки из Figma */
-    color: #23262F; /* Цвет текста активной вкладки из Figma */
-    border-radius: 10px; /* Скругление для активной вкладки из Figma */
+    /* Сбрасываем только те свойства, которые могут конфликтовать */
+    border: none;
+    outline: none;
+    text-decoration: none;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    margin: 0;
+
+    /* Стили из Figma для АКТИВНОЙ вкладки (как "Новости" в вашем примере) */
+    box-sizing: border-box;
+    padding: 6px 12px;
+    font-family: 'Unbounded', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 18px;
+    word-wrap: break-word;
+    cursor: default; 
+    background: #E6E8EC; 
+    color: #23262F; 
+    border-radius: 10px; 
+    display: inline-flex; 
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
 }
 
 .profile-main-tab-item.active-tab:hover {
-    color: #23262F; /* Чтобы при ховере на активную цвет не менялся на цвет неактивной */
+    color: #23262F; 
+    background: #E6E8EC; 
 }
 
 /* Startup Card container: StyledFrame1019, StyledFrame1020 etc. */

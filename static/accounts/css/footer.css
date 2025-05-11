@@ -68,19 +68,21 @@
 }
 
 .footer-social-links {
-  justify-content: flex-end;
+  display: flex;
   align-items: center;
   gap: 22px;
-  display: flex;
+  justify-content: flex-end;
 }
 
-.footer-social-icon { 
+.footer-social-icon {
   width: 30px;
   height: 30px;
-  background: white;
+  background: none;
   border-radius: 50%;
   padding: 4px;
   object-fit: contain;
+  display: block;
+  border: none;
 }
 
 .footer-middle-section {
@@ -98,7 +100,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 25px;
+  gap: 50px;
   flex-basis: 40%;
   min-width: 280px;
 }
@@ -121,29 +123,9 @@
   font-weight: 400;
 }
 
-.footer-subscribe-icon-container {
-  width: 24px;
-  height: 24px;
-  position: relative;
-  overflow: hidden;
-}
-
-.footer-subscribe-icon-element1 {
-  width: 19.50px;
-  height: 19.50px;
-  left: 2.25px;
-  top: 2.25px;
-  position: absolute;
-  background: white;
-}
-
-.footer-subscribe-icon-element2 {
-  width: 9px;
-  height: 9px;
-  left: 7.50px;
-  top: 7.50px;
-  position: absolute;
-  background: white;
+.footer-subscribe-icon-img {
+  width: 20px;
+  height: 20px;
 }
 
 .footer-app-links-section {

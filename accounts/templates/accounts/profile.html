@@ -239,6 +239,52 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Function definitions first
+    function fadeOut(element, callback) {
+        if (!element) { 
+            if (callback) callback(); 
+            return; 
+        }
+        element.style.opacity = 1;
+        let_is_fading_out = true; // Флаг для предотвращения двойного запуска
+
+        function fade() {
+            if (!element.is_fading_out) return; // Если уже не актуально
+            let val = parseFloat(element.style.opacity);
+            if (!((val -= 0.1) < 0)) {
+                element.style.opacity = val;
+                requestAnimationFrame(fade);
+            } else {
+                element.style.opacity = 0;
+                element.style.display = 'none'; // Скрываем ПОСЛЕ анимации
+                element.is_fading_out = false;
+                if (callback) callback();
+            }
+        }
+        element.is_fading_out = true; // Устанавливаем флаг перед первым вызовом fade
+        requestAnimationFrame(fade);
+    }
+
+    function fadeIn(element) {
+        if (!element) return;
+        // Сбрасываем флаг fadeOut, если он был установлен на этом элементе
+        element.is_fading_out = false; 
+
+        element.style.opacity = 0;
+        element.style.display = 'flex'; // Или 'block'/ 'inline-flex' и т.д. как нужно
+        
+        function fade() {
+            let val = parseFloat(element.style.opacity);
+            if (!((val += 0.1) > 1)) {
+                element.style.opacity = val;
+                requestAnimationFrame(fade);
+            } else {
+                element.style.opacity = 1; // Убедимся, что в конце opacity 1
+            }
+        }
+        requestAnimationFrame(fade);
+    }
+
     const avatarClickableArea = document.getElementById('avatarClickableArea');
     const avatarInput = document.getElementById('id_avatar_input');
     const avatarUploadForm = document.getElementById('avatarUploadForm');
@@ -258,7 +304,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Логика переключения вкладок с JS анимацией
     const tabs = document.querySelectorAll('.profile-main-tab-item');
     const tabContents = document.querySelectorAll('.profile-main-content-tab');
-    const animationDuration = 300; // мс, должно совпадать с CSS transition-duration если бы он был
+    // const animationDuration = 300; // мс, requestAnimationFrame сам управляет скоростью
 
     tabs.forEach(tab => {
         tab.addEventListener('click', function() {
@@ -267,51 +313,29 @@ document.addEventListener('DOMContentLoaded', function() {
             const targetTabId = this.getAttribute('data-tab');
             const newActiveContent = document.getElementById(targetTabId + 'Content');
 
-            if (currentActiveTab === this) {
-                return; // Клик по уже активной вкладке, ничего не делаем
+            if (currentActiveTab === this || !newActiveContent) {
+                return; 
             }
 
-            // Убираем active-tab со всех табов и добавляем к нажатому
             tabs.forEach(t => t.classList.remove('active-tab'));
             this.classList.add('active-tab');
 
-            functionfadeOut(currentActiveContent, () => {
-                currentActiveContent.classList.remove('active-content');
-                currentActiveContent.style.display = 'none'; // Скрываем после анимации
-                
-                fadeIn(newActiveContent);
+            if (currentActiveContent) {
+                // Перед тем как запустить fadeOut, отменяем предыдущий fadeOut, если он был
+                currentActiveContent.is_fading_out = false; 
+                fadeOut(currentActiveContent, () => {
+                    currentActiveContent.classList.remove('active-content');
+                    // display:none уже устанавливается в fadeOut
+                    
+                    newActiveContent.classList.add('active-content');
+                    fadeIn(newActiveContent);
+                });
+            } else { // Если не было активного контента (например, при первой загрузке, хотя это обрабатывается ниже)
                 newActiveContent.classList.add('active-content');
-            });
+                fadeIn(newActiveContent);
+            }
         });
     });
-
-    function fadeOut(element, callback) {
-        if (!element) { if (callback) callback(); return; }
-        element.style.opacity = 1;
-        (function fade() {
-            let val = parseFloat(element.style.opacity);
-            if (!((val -= 0.1) < 0)) {
-                element.style.opacity = val;
-                requestAnimationFrame(fade);
-            } else {
-                element.style.opacity = 0; // Убедимся, что в конце opacity 0
-                if (callback) callback();
-            }
-        })();
-    }
-
-    function fadeIn(element) {
-        if (!element) return;
-        element.style.opacity = 0;
-        element.style.display = 'flex'; // Или 'block', в зависимости от того, как должен отображаться контент
-        (function fade() {
-            let val = parseFloat(element.style.opacity);
-            if (!((val += 0.1) > 1)) {
-                element.style.opacity = val;
-                requestAnimationFrame(fade);
-            }
-        })();
-    }
 
     // Устанавливаем начальное активное состояние (без анимации)
     const initialActiveTab = document.querySelector('.profile-main-tab-item.active-tab');
@@ -320,9 +344,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const initialActiveContent = document.getElementById(initialTargetTabId + 'Content');
         if (initialActiveContent) {
             tabContents.forEach(content => {
-                content.style.display = 'none';
-                content.style.opacity = 0;
-                content.classList.remove('active-content');
+                if (content !== initialActiveContent) {
+                    content.style.display = 'none';
+                    content.style.opacity = 0;
+                    content.classList.remove('active-content');
+                }
             });
             initialActiveContent.style.display = 'flex';
             initialActiveContent.style.opacity = 1;
