@@ -768,6 +768,7 @@ body {
     /* transform: translateY(20px); /* Временно убрано для диагностики */
     transition: opacity 0.3s ease-out; /* Оставляем только opacity для теста */
     width: 100%; 
+    will-change: opacity; /* Подсказка браузеру для оптимизации анимации прозрачности */
 }
 
 .profile-main-content-tab.active-content {
@@ -840,12 +841,13 @@ body {
 .profile-news-card-item {
     width: 284px; /* Ширина карточки из Figma */
     height: 251px; /* Высота карточки из Figma */
-    background: white;
+    /* background: white; /* Временно убрано для диагностики тени */
+    background: transparent; /* Временно для диагностики тени */
     overflow: hidden;
     border-radius: 10px;
     display: flex;
     flex-direction: column;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05); /* Небольшая тень для карточек */
+    /* box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05); /* Временно убрано для диагностики тени */
     transition: transform 0.2s ease-in-out;
 }
 
