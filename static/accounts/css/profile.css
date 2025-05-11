@@ -2,23 +2,21 @@
 
 /* StyledFeatured -> .profile-page-wrapper */
 .profile-page-wrapper {
+    width: 100vw; /* Занимает всю ширину окна просмотра */
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    padding-bottom: 55px;
     display: flex;
     flex-direction: column;
-    align-items: center; /* Centers content horizontally */
-    width: 100%; /* Takes full width available */
-    /* min-height: 100vh; */ /* Ensures it takes at least full viewport height */
-    background-color: #0B0B0F; /* Set background color */
-    padding: 0; /* Removed default padding */
-    margin: 0; /* Removed default margin */
-    box-sizing: border-box; /* Include padding and border in the element's total width and height */
-    overflow-x: hidden; /* Предотвращаем горизонтальную прокрутку */
+    align-items: center; /* Центрирует .profile-content-container, если он уже */
 }
 
 /* StyledImagefromrawpixelid597407jpeg1 -> .profile-main-banner */
 .profile-main-banner {
     height: 395px;
     object-fit: cover;
-    width: 100vw; /* Баннер будет занимать всю ширину окна просмотра */
+    width: 100%; /* Будет 100% от .profile-page-wrapper (т.е. 100vw) */
 }
 
 /* StyledAutolayout -> .profile-content-container */
@@ -28,7 +26,7 @@
     justify-content: space-between;
     align-items: flex-start; /* Sidebar and main content will be at the top of this container */
     display: flex;
-    margin-top: -110px; /* Изменено с -140px. (-140 + 30 = -110) */
+    margin-top: -110px;
     position: relative;
     z-index: 1; /* Ensure it's above the banner if banner had a z-index or for stacking context */
     gap: 20px; 
@@ -68,7 +66,7 @@
     height: 160px;
     position: relative;
     background: #45B26B; /* Placeholder bg from styled component */
-    overflow: hidden; 
+    overflow: hidden;
     border-radius: 50%; 
     cursor: pointer; 
     /* transition: box-shadow 0.3s ease-in-out; /* Убеждаемся, что ховер-эффект свечения удален */
@@ -333,10 +331,6 @@
     align-items: flex-end; 
     gap: 100px; /* Original gap from StyledFrame1018 */
     display: flex;
-    background-color: #011B35; /* Фон как у сайдбара */
-    padding: 24px; /* Внутренние отступы */
-    border-radius: 10px; /* Скругление углов как у сайдбара */
-    box-sizing: border-box; /* Чтобы padding не увеличивал общий размер */
 }
 
 /* StyledActionbutton (Edit Profile Button container) -> .profile-main-edit-btn-container */
@@ -403,7 +397,7 @@
 /* StyledSubNavigation -> .profile-main-tabs */
 .profile-main-tabs {
     display: flex;
-    gap: 12px; 
+    gap: 12px;
 }
 
 .profile-main-tab-item {
@@ -431,7 +425,7 @@
     display: inline-flex; 
     justify-content: center;
     align-items: center;
-    gap: 10px; 
+    gap: 10px;
 }
 
 .profile-main-tab-item:hover {
@@ -458,7 +452,7 @@
     line-height: 18px;
     word-wrap: break-word;
     cursor: default; 
-    background: #E6E8EC; 
+    background: #E6E8EC;
     color: #23262F; 
     border-radius: 10px; 
     display: inline-flex; 
@@ -745,29 +739,45 @@ body {
     color: #777E90;
     margin-top: 5px;
     word-break: break-all;
-}
+} 
 
 /* Общий контейнер для содержимого вкладок (стартапы и новости) */
 .profile-main-content-tab {
-    display: none; /* По умолчанию скрыто */
-    width: 100%; 
+    /* display: none; */ /* Убрали */
+    flex-direction: column; 
+    gap: 20px; 
     opacity: 0;
-    /* transition: opacity 0.3s ease-in-out; */ /* Удалена анимация прозрачности */
-    /* Удаляем position, transform, visibility, так как они больше не нужны для этой анимации */
+    transform: translateY(20px); 
+    transition: opacity 0.3s ease-out, transform 0.3s ease-out, visibility 0s linear 0.3s; 
+    width: 100%; 
+    visibility: hidden; 
+    position: absolute; 
+    left: 0; 
+    /* top: 0; /* Пока закомментируем, если табы и контент в одном потоке, top:0 от родителя .profile-main-startups-section может быть не то, что нужно */
+    /* Нужно, чтобы блок контента был ПОД табами. Tabs имеют свою высоту. */
+    /* Возможно, top должен быть равен высоте блока табов. */
+    /* Или проще не делать position:absolute, а просто display:none/flex */
 }
 
 .profile-main-content-tab.active-content {
-    display: flex; /* Или block/grid в зависимости от содержимого по умолчанию */
-    flex-direction: column; 
+    display: flex; 
     opacity: 1;
-    /* Если #newsContent должен быть grid, это можно переопределить ниже */
+    transform: translateY(0);
+    visibility: visible; 
+    transition: opacity 0.3s ease-out, transform 0.3s ease-out; 
+    position: relative; /* Возвращаем в поток и отменяем absolute */
+    /* Сбрасываем top, если он был установлен */
+    /* top: auto; */ 
 }
 
 /* Стили для секции стартапов */
 #startupsContent {
-    /* display: flex; /* Управляется через .active-content */
-    /* flex-direction: column; /* Уже установлено в .active-content */
-    gap: 20px; /* Отступ между карточками стартапов */
+    padding: 32px; /* Внутренние отступы как у новостей */
+    background: transparent; /* Фон как у родителя */
+    box-shadow: 0px 40px 32px -24px rgba(0, 0, 0, 0.12); /* Тень как у новостей */
+    border-radius: 10px; /* Скругление как у новостей */
+    overflow: hidden; /* Если нужно обрезать контент */
+    gap: 0; /* Разделители .profile-main-startup-list-divider управляют вертикальными отступами */
 }
 
 .profile-main-startup-card-item {
@@ -803,21 +813,22 @@ body {
 
 /* Стили для секции новостей */
 #newsContent {
-    /* display: flex; /* Управляется через .active-content, но будет переопределено на block/grid */
-    /* flex-direction: column; /* Не нужно, если display: grid у дочернего .profile-news-items-container */
-    /* gap: 20px; /* Управляется .profile-news-items-container */
+    /* display: none; */ /* Убрали */
+    /* Все остальные стили тут не нужны, так как они наследуются или определены в .profile-main-content-tab / .active-content */
+    /* padding: 20px; */
+    /* background-color: #f9f9f9; */
+    /* border-radius: 8px; */
+    /* box-shadow: 0 2px 4px rgba(0,0,0,0.1); */
 }
 
-/* Переопределение display для #newsContent, если он активен */
-#newsContent.active-content {
-    display: block; /* Контейнер для grid должен быть block или grid сам по себе */
-}
-
-.profile-news-items-container { /* Этот класс уже существует и используется для #newsContent */
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
-    width: 100%;
+.profile-news-items-container {
+    align-self: stretch;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start; 
+    align-items: flex-start;
+    align-content: flex-start;
+    gap: 20px; /* Отступ между карточками новостей */
 }
 
 .profile-news-card-item {

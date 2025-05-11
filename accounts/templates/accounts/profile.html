@@ -6,6 +6,10 @@
 {% block head_extra %}
   {{ block.super }}
   <link rel="stylesheet" href="{% static 'accounts/css/profile.css' %}?v={% now 'U' %}" />
+  {# Дополнительные шрифты, если нужны именно для этой страницы, уже могут быть в base.html или global.css #}
+  {# <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400&display=swap" /> #}
+  {# <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@700&display=swap" /> #}
+  {# <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Circe:wght@400&display=swap" /> #}
 {% endblock %}
 
 {% block content %}
@@ -15,8 +19,7 @@
         <div class="profile-sidebar">
             <div class="profile-sidebar-user-info-block">
                 <div class="profile-sidebar-avatar-wrapper" id="avatarClickableArea" style="cursor: pointer;" title="Изменить аватар">
-                    {# Используем ID для JS предпросмотра, если будете его раскомментировать #}
-                    <img class="profile-sidebar-avatar-img" id="profileSidebarAvatarImg" src="{% if user.profile_picture_url %}{{ user.profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}" alt="Аватар пользователя" />
+                    <img class="profile-sidebar-avatar-img" src="{% if user.profile_picture_url %}{{ user.profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}" alt="Аватар пользователя" />
                 </div>
                 <div class="profile-sidebar-text-details">
                     <div class="profile-sidebar-name-role">
@@ -47,7 +50,7 @@
                         <img src="{% static 'accounts/images/profile/Globe_Line.svg' %}" alt="Website" class="profile-sidebar-website-icon-img">
                         <a href="{{ user.website_url }}" target="_blank" class="profile-sidebar-website-link">{{ user.website_url }}</a>
                     </div>
-                    {% endif %}
+    {% endif %}
                 </div>
             </div>
             <div class="profile-sidebar-social-icons-round">
@@ -58,23 +61,24 @@
                      <img src="{% static 'accounts/images/profile/dots.svg' %}" alt="More options" class="profile-sidebar-social-icon-img">
                 </div>
             </div>
-
+            
         {% if is_own_profile %}
-            {# Форма загрузки аватара. id_avatar_input используется в JS. #}
-            <div class="profile-avatar-upload-section" style="display: none;">
+            <div class="profile-avatar-upload-section" style="display: none;"> {# Скрываем этот блок, но оставляем форму для JS #}
                 <h4>Загрузить аватарку</h4>
                 <form method="post" enctype="multipart/form-data" id="avatarUploadForm" class="avatar-upload-form">
                 {% csrf_token %}
                     <input type="file" name="avatar" accept="image/*" required id="id_avatar_input" class="file-input-hidden">
-                    {# Можно удалить кнопки выбора и загрузки файла отсюда, если JS управляет только кликом по id_avatar_input #}
-                </form>
+                    <button type="button" onclick="document.getElementById('id_avatar_input').click();" class="btn btn-secondary choose-file-btn">Выберите файл</button>
+                    <div id="fileNameDisplay" class="file-name-display">Файл не выбран</div>
+                    <button type="submit" class="btn btn-primary upload-btn">Загрузить</button>
+            </form>
             </div>
         {% endif %}
 
             <a href="#" class="profile-sidebar-my-galaxy-btn">
                 <div class="profile-sidebar-my-galaxy-btn-text">Моя Галактика</div>
             </a>
-
+            
             <div class="profile-sidebar-social-icons-row">
                 <img class="profile-sidebar-social-icon-row-item-img" src="{% static 'accounts/images/profile/vk_icon_social.svg' %}" alt="VK" />
                 <img class="profile-sidebar-social-icon-row-item-img" src="{% static 'accounts/images/profile/linkedin_icon_social.svg' %}" alt="LinkedIn" />
@@ -95,10 +99,10 @@
 
             <div class="profile-main-startups-section">
                 <div class="profile-main-tabs">
-                    <div class="profile-main-tab-item active-tab" data-tab="startupsContent">Стартапы</div>
-                    <div class="profile-main-tab-item" data-tab="newsContent">Новости</div>
+                    <div class="profile-main-tab-item active-tab" data-tab="startups">Стартапы</div>
+                    <div class="profile-main-tab-item" data-tab="news">Новости</div>
                 </div>
-
+                
                 <div class="profile-main-content-tab active-content" id="startupsContent">
                     <!-- Макет стартапа 1 -->
                     <div class="profile-main-startup-card-item">
@@ -157,7 +161,7 @@
                     </div>
                     <div class="profile-main-startup-list-divider"></div>
                     <!-- /Макет стартапа 2 -->
-
+                    
                     <!-- Макет стартапа 3 -->
                     <div class="profile-main-startup-card-item">
                         <div class="profile-main-startup-card-content">
@@ -188,6 +192,7 @@
                 </div>
 
                 <div class="profile-main-content-tab" id="newsContent">
+                    {# Обертка для применения стилей отступов, тени из Figma, теперь стили в CSS через #newsContent #}
                     <div class="profile-news-items-container">
                         <div class="profile-news-card-item">
                             <img src="{% static 'accounts/images/startups/inside_cards_background.webp' %}" alt="Новость"/>
@@ -232,7 +237,70 @@
     </div>
 </div>
 
-{% block extra_js %}
-{% endblock extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Удаляем старые функции fadeIn/fadeOut, если они были здесь
 
+    const avatarClickableArea = document.getElementById('avatarClickableArea');
+    const avatarInput = document.getElementById('id_avatar_input');
+    const avatarUploadForm = document.getElementById('avatarUploadForm');
+
+    if (avatarClickableArea && avatarInput && avatarUploadForm) {
+        avatarClickableArea.addEventListener('click', function() {
+            avatarInput.click();
+        });
+
+        avatarInput.addEventListener('change', function() {
+            if (this.files && this.files.length > 0) {
+                avatarUploadForm.submit();
+            } 
+        });
+    }
+
+    // Новая логика переключения вкладок с CSS-анимацией
+    const tabs = document.querySelectorAll('.profile-main-tab-item');
+    const tabContents = document.querySelectorAll('.profile-main-content-tab');
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            const currentActiveTab = document.querySelector('.profile-main-tab-item.active-tab');
+            const currentActiveContent = document.querySelector('.profile-main-content-tab.active-content');
+            const targetTabId = this.getAttribute('data-tab');
+            const newActiveContent = document.getElementById(targetTabId + 'Content');
+
+            if (currentActiveTab === this || !newActiveContent) {
+                return; 
+            }
+
+            tabs.forEach(t => t.classList.remove('active-tab'));
+            this.classList.add('active-tab');
+
+            if (currentActiveContent) {
+                currentActiveContent.classList.remove('active-content');
+            }
+
+            requestAnimationFrame(() => {
+                newActiveContent.classList.add('active-content');
+            });
+        });
+    });
+
+    // Устанавливаем начальное активное состояние
+    const initialActiveTab = document.querySelector('.profile-main-tab-item.active-tab');
+    if (initialActiveTab) {
+        const initialTargetTabId = initialActiveTab.getAttribute('data-tab');
+        const initialActiveContent = document.getElementById(initialTargetTabId + 'Content');
+        if (initialActiveContent) {
+            tabContents.forEach(content => {
+                if (content !== initialActiveContent) {
+                    content.classList.remove('active-content');
+                }
+            });
+            if (!initialActiveContent.classList.contains('active-content')) {
+                 initialActiveContent.classList.add('active-content'); 
+            }
+        }
+    }
+});
+</script>
 {% endblock %}
