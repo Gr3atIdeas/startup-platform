@@ -335,14 +335,12 @@
 
 /* StyledActionbutton (Edit Profile Button container) -> .profile-main-edit-btn-container */
 .profile-main-edit-btn-container {
-    justify-content: flex-start; /* From StyledActionbutton */
-    align-items: flex-start;    /* From StyledActionbutton */
-    gap: 15px;                 /* From StyledActionbutton */
-    display: inline-flex;      /* From StyledActionbutton */
-    /* Overriding some of these with flex-end as per previous CSS */
-    width: auto; /* Let it size by content */
-    justify-content: flex-end; 
-    align-self: flex-end; /* Ensure it aligns to the right of .profile-main-content */
+    display: flex; /* Изменено с inline-flex */
+    justify-content: flex-end; /* Выравнивает кнопку вправо */
+    width: 100%; /* Занимает всю ширину родителя */
+    /* gap: 15px;  Этот gap был для внутреннего содержимого, если бы оно было, но у нас одна кнопка */
+    /* align-items: flex-start;  Не нужно, если justify-content работает */
+    /* align-self: flex-end;  Не нужно, если width: 100% и justify-content */
 }
 /* StyledButton (Edit Profile Button itself) -> .profile-main-edit-btn */
 .profile-main-edit-btn {
