@@ -14,35 +14,40 @@ html, body {
 
 /* StyledFeatured -> .profile-page-wrapper */
 .profile-page-wrapper {
-    width: 100%; /* Изменено с 100vw */
+    width: 100%; 
     position: relative;
     padding-bottom: 55px;
     display: flex;
     flex-direction: column;
-    align-items: center; 
+    /* align-items: center; /* Убрано, чтобы не мешать banner с vw */
 }
 
 /* StyledImagefromrawpixelid597407jpeg1 -> .profile-main-banner */
 .profile-main-banner {
     height: 395px;
     object-fit: cover;
-    width: 100vw; /* Занимает всю ширину окна просмотра */
-    position: relative; /* Для корректного применения transform */
+    width: 100vw; 
+    position: relative; 
     left: 50%;
     transform: translateX(-50%);
+    /* Попробуем так, чтобы баннер выровнялся по левому краю viewport, если translateX(-50%) не работает как надо из-за родителя */
+    /* margin-left: calc(-50vw + 50%); */ 
 }
 
 /* StyledAutolayout -> .profile-content-container */
 .profile-content-container {
-    width: 95%; /* Изменено с фиксированного значения для адаптивности */
-    max-width: 1303px; /* Максимальная ширина сохраняется */
+    width: 95%; 
+    max-width: 1303px; 
     justify-content: space-between;
-    align-items: flex-start; /* Sidebar and main content will be at the top of this container */
+    align-items: flex-start; 
     display: flex;
     margin-top: -110px;
     position: relative;
-    z-index: 1; /* Ensure it's above the banner if banner had a z-index or for stacking context */
+    z-index: 1; 
     gap: 20px; 
+    /* Добавим margin auto для центрирования, если profile-page-wrapper больше не центрирует через align-items */
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /* StyledProfile -> .profile-sidebar */
