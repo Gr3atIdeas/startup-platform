@@ -66,14 +66,10 @@
     height: 160px;
     position: relative;
     background: #45B26B; /* Placeholder bg from styled component */
-    overflow: hidden; /* Может мешать внешнему box-shadow, если он будет слишком большим */
-    border-radius: 50%; /* Уже должно быть 128px, но 50% надежнее для круга */
-    cursor: pointer; /* Уже было в инлайн стиле, но лучше в CSS */
-    transition: box-shadow 0.3s ease-in-out;
-}
-
-.profile-sidebar-avatar-wrapper:hover {
-    box-shadow: 0 0 15px 7px rgba(245, 219, 12, 0.6); /* Желтое свечение при наведении */
+    overflow: hidden; 
+    border-radius: 50%; 
+    cursor: pointer; 
+    /* transition: box-shadow 0.3s ease-in-out; /* Убрали ховер-эффект */
 }
 
 /* StyledAustinwadeX6Uj51n5CE8unsplash1 -> .profile-sidebar-avatar-img */
@@ -249,12 +245,22 @@
 }
 
 .profile-sidebar-social-icon-row-item-img {
-    /* width: 25px; /* Размеры будут разные для VK и LinkedIn, задаются ниже */
-    /* height: 25px; */
-    padding: 5px; /* Добавляем внутренний отступ */
-    background-color: #777E90; /* Фон из Figma */
-    border-radius: 5px; /* Небольшое скругление для фона */
-    box-sizing: content-box; /* Чтобы padding не влиял на указанные width/height */
+    /* padding: 5px; /* Убрали padding */
+    /* background-color: #777E90; /* Убрали фон */
+    /* border-radius: 5px; /* Убрали скругление для фона */
+    /* box-sizing: content-box; /* Не нужно без padding */
+    display: block; /* Для корректного отображения SVG как блока */
+}
+
+/* Размеры для новых SVG иконок */
+.profile-sidebar-social-icons-row img.profile-sidebar-social-icon-row-item-img[alt="VK"] {
+    width: 32px; /* Примерный размер, можно будет подстроить */
+    height: 32px;
+}
+
+.profile-sidebar-social-icons-row img.profile-sidebar-social-icon-row-item-img[alt="LinkedIn"] {
+    width: 32px; /* Примерный размер, можно будет подстроить */
+    height: 32px;
 }
 
 /* StyledImage36 -> first img in .profile-sidebar-social-icons-row */
@@ -389,32 +395,41 @@
 /* StyledSubNavigation -> .profile-main-tabs */
 .profile-main-tabs {
     display: flex;
-    gap: 12px; /* Из Figma */
-    /* margin-bottom: 24px; /* Убрано, чтобы gap родителя .profile-main-startups-section работал корректно */
-}
-/* StyledSubnavitem -> .profile-main-tab-item */
-.profile-main-tab-item {
-    padding: 6px 12px;
-    border-radius: 100px; /* Скругление для неактивной вкладки */
-    cursor: pointer;
-    color: rgba(255, 255, 255, 0.50); /* Цвет текста для "Стартапы" в неактивном состоянии (из Figma для "Стартапы") */
-    font-size: 14px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 300;
-    line-height: 18px;
-    transition: background-color 0.3s ease, color 0.3s ease;
-    /* text-box-trim: trim-both; /* Свойства text-box-* не являются стандартными CSS */
-    /* text-box-edge: cap alphabetic; */
-    display: flex; /* Для выравнивания текста, если нужно */
-    justify-content: center;
-    align-items: center;
-}
-.profile-main-tab-item.active-tab {
-    background-color: #E6E8EC; /* Фон активной вкладки "Новости" из Figma */
-    color: #23262F; /* Цвет текста активной вкладки "Новости" из Figma */
-    border-radius: 10px; /* Скругление для активной вкладки */
+    gap: 12px; 
 }
 
+.profile-main-tab-item {
+    padding: 6px 12px;
+    font-family: 'Unbounded', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 18px;
+    word-wrap: break-word;
+    cursor: pointer;
+    border: none; /* Сброс границы от возможных общих стилей кнопок */
+    background: transparent; /* Явный прозрачный фон для неактивной */
+    color: rgba(255, 255, 255, 0.50); /* Цвет для неактивной вкладки (как "Стартапы" в примере Figma) */
+    border-radius: 100px; /* Скругление для неактивной вкладки (как "Стартапы" в примере Figma) */
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.2s ease, color 0.2s ease; /* Плавный переход для ховера, если будет */
+}
+
+.profile-main-tab-item:hover {
+    /* Можно добавить эффект ховера для неактивных, если нужно, например, чуть изменить цвет текста или фона */
+     color: rgba(255, 255, 255, 0.75);
+}
+
+.profile-main-tab-item.active-tab {
+    background: #E6E8EC; /* Фон активной вкладки из Figma */
+    color: #23262F; /* Цвет текста активной вкладки из Figma */
+    border-radius: 10px; /* Скругление для активной вкладки из Figma */
+}
+
+.profile-main-tab-item.active-tab:hover {
+    color: #23262F; /* Чтобы при ховере на активную цвет не менялся на цвет неактивной */
+}
 
 /* Startup Card container: StyledFrame1019, StyledFrame1020 etc. */
 /* These are wrappers for each card + image + divider. We have .profile-main-startup-card-item for the card, and then image and divider are siblings */
@@ -693,20 +708,21 @@ body {
 
 /* Общий контейнер для содержимого вкладок (стартапы и новости) */
 .profile-main-content-tab {
-    display: none; /* Изначально скрыто, управляется JS через active-content */
+    display: none; /* Изначально скрыто, управляется JS */
     flex-direction: column; 
     width: 100%; 
     box-sizing: border-box;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.4s ease-in-out, visibility 0s linear 0.4s;
+    /* Убираем CSS-анимацию opacity/visibility, будет управляться JS */
+    /* opacity: 0; */
+    /* visibility: hidden; */
+    /* transition: opacity 0.4s ease-in-out, visibility 0s linear 0.4s; */
 }
 
 .profile-main-content-tab.active-content {
     display: flex; 
-    opacity: 1;
-    visibility: visible;
-    transition-delay: 0s; /* Сброс задержки для активной вкладки */
+    /* opacity: 1; */ /* Управляется JS */
+    /* visibility: visible; */ /* Управляется JS */
+    /* transition-delay: 0s; */
 }
 
 /* Стили для секции стартапов */
@@ -798,34 +814,35 @@ body {
 }
 
 .profile-news-card-title {
-    margin: 17px 17px 0 17px; 
+    margin: 17px 17px 8px 17px; /* Уменьшен нижний отступ */
     color: black;
     font-size: 16px;
     font-family: 'Unbounded', sans-serif;
     font-weight: 400;
-    line-height: 1.3; /* Увеличено для лучшей читаемости и предотвращения срезания */
+    line-height: 1.3;
     word-wrap: break-word;
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
-    -webkit-line-clamp: 2; 
+    -webkit-line-clamp: 2; /* Оставляем 2 строки для заголовка */
     -webkit-box-orient: vertical;
+    min-height: calc(16px * 1.3 * 2); /* Минимальная высота для двух строк */
 }
 
 .profile-news-card-description {
-    margin: 12px 17px 17px 17px; 
+    margin: 0 17px 17px 17px; /* Верхний отступ 0, нижний 17px */
     color: rgba(0, 0, 0, 0.20); 
     font-size: 12px;
     font-family: 'Unbounded', sans-serif;
     font-weight: 300;
     letter-spacing: 0.12px;
     word-wrap: break-word;
-    line-height: 1.5; /* Увеличено для лучшей читаемости */
+    line-height: 1.45; /* Немного увеличена для лучшей читаемости в меньшем кол-ве строк */
     flex-grow: 1; 
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
-    -webkit-line-clamp: 4; /* Увеличено до 4 строк, если flex-grow позволяет */
+    -webkit-line-clamp: 3; /* Уменьшено до 3 строк для описания */
     -webkit-box-orient: vertical;
 }
 

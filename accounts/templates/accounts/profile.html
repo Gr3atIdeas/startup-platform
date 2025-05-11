@@ -80,8 +80,8 @@
             </a>
             
             <div class="profile-sidebar-social-icons-row">
-                <img class="profile-sidebar-social-icon-row-item-img" src="{% static 'accounts/images/profile/vk_icon.png' %}" alt="VK" />
-                <img class="profile-sidebar-social-icon-row-item-img" src="{% static 'accounts/images/profile/linkedin_icon.png' %}" alt="LinkedIn" />
+                <img class="profile-sidebar-social-icon-row-item-img" src="{% static 'accounts/images/profile/vk_icon_social.svg' %}" alt="VK" />
+                <img class="profile-sidebar-social-icon-row-item-img" src="{% static 'accounts/images/profile/linkedin_icon_social.svg' %}" alt="LinkedIn" />
             </div>
             <div class="profile-sidebar-divider"></div>
             <div class="profile-sidebar-date-joined">На площадке с {{ user.created_at|date:"d M Y"|default:"Неизвестно" }}</div>
@@ -191,7 +191,7 @@
                     <!-- /Макет стартапа 3 -->
                 </div>
 
-                <div class="profile-main-content-tab" id="newsContent" style="display: none;">
+                <div class="profile-main-content-tab" id="newsContent">
                     {# Обертка для применения стилей отступов, тени из Figma, теперь стили в CSS через #newsContent #}
                     <div class="profile-news-items-container">
                         <div class="profile-news-card-item">
@@ -250,59 +250,83 @@ document.addEventListener('DOMContentLoaded', function() {
 
         avatarInput.addEventListener('change', function() {
             if (this.files && this.files.length > 0) {
-                // Файл выбран, автоматически отправляем форму
-                // Можно добавить проверку размера/типа файла здесь перед отправкой, если нужно
                 avatarUploadForm.submit();
             } 
-            // fileNameDisplay больше не видим, так что его обновление не нужно
         });
     }
 
-    // Логика переключения вкладок
+    // Логика переключения вкладок с JS анимацией
     const tabs = document.querySelectorAll('.profile-main-tab-item');
     const tabContents = document.querySelectorAll('.profile-main-content-tab');
+    const animationDuration = 300; // мс, должно совпадать с CSS transition-duration если бы он был
 
     tabs.forEach(tab => {
         tab.addEventListener('click', function() {
-            // Убираем active-tab со всех табов
+            const currentActiveTab = document.querySelector('.profile-main-tab-item.active-tab');
+            const currentActiveContent = document.querySelector('.profile-main-content-tab.active-content');
+            const targetTabId = this.getAttribute('data-tab');
+            const newActiveContent = document.getElementById(targetTabId + 'Content');
+
+            if (currentActiveTab === this) {
+                return; // Клик по уже активной вкладке, ничего не делаем
+            }
+
+            // Убираем active-tab со всех табов и добавляем к нажатому
             tabs.forEach(t => t.classList.remove('active-tab'));
-            // Добавляем active-tab к нажатому табу
             this.classList.add('active-tab');
 
-            const targetTab = this.getAttribute('data-tab');
-
-            // Скрываем все содержимое вкладок
-            tabContents.forEach(content => {
-                content.style.display = 'none';
-                content.classList.remove('active-content');
+            functionfadeOut(currentActiveContent, () => {
+                currentActiveContent.classList.remove('active-content');
+                currentActiveContent.style.display = 'none'; // Скрываем после анимации
+                
+                fadeIn(newActiveContent);
+                newActiveContent.classList.add('active-content');
             });
-
-            // Показываем содержимое для активной вкладки
-            const activeContent = document.getElementById(targetTab + 'Content');
-            if (activeContent) {
-                activeContent.style.display = 'flex'; // или 'block', в зависимости от того, как должен отображаться контент
-                activeContent.classList.add('active-content');
-            }
         });
     });
 
-    // Устанавливаем начальное активное состояние, если необходимо
-    // Например, чтобы первая вкладка "Стартапы" была активной при загрузке
+    function fadeOut(element, callback) {
+        if (!element) { if (callback) callback(); return; }
+        element.style.opacity = 1;
+        (function fade() {
+            let val = parseFloat(element.style.opacity);
+            if (!((val -= 0.1) < 0)) {
+                element.style.opacity = val;
+                requestAnimationFrame(fade);
+            } else {
+                element.style.opacity = 0; // Убедимся, что в конце opacity 0
+                if (callback) callback();
+            }
+        })();
+    }
+
+    function fadeIn(element) {
+        if (!element) return;
+        element.style.opacity = 0;
+        element.style.display = 'flex'; // Или 'block', в зависимости от того, как должен отображаться контент
+        (function fade() {
+            let val = parseFloat(element.style.opacity);
+            if (!((val += 0.1) > 1)) {
+                element.style.opacity = val;
+                requestAnimationFrame(fade);
+            }
+        })();
+    }
+
+    // Устанавливаем начальное активное состояние (без анимации)
     const initialActiveTab = document.querySelector('.profile-main-tab-item.active-tab');
     if (initialActiveTab) {
-        const initialTargetTab = initialActiveTab.getAttribute('data-tab');
-        const initialActiveContent = document.getElementById(initialTargetTab + 'Content');
+        const initialTargetTabId = initialActiveTab.getAttribute('data-tab');
+        const initialActiveContent = document.getElementById(initialTargetTabId + 'Content');
         if (initialActiveContent) {
-            // Убедимся, что только контент активной вкладки видим
             tabContents.forEach(content => {
-                if (content.id === initialTargetTab + 'Content') {
-                    content.style.display = 'flex'; // или 'block'
-                    content.classList.add('active-content');
-                } else {
-                    content.style.display = 'none';
-                    content.classList.remove('active-content');
-                }
+                content.style.display = 'none';
+                content.style.opacity = 0;
+                content.classList.remove('active-content');
             });
+            initialActiveContent.style.display = 'flex';
+            initialActiveContent.style.opacity = 1;
+            initialActiveContent.classList.add('active-content');
         }
     }
 });
