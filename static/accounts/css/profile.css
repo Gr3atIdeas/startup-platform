@@ -203,6 +203,7 @@
     width: 40px; 
     height: 40px;
     box-sizing: border-box;
+    background-color: rgba(255, 255, 255, 0.08); /* Добавлен фон для видимости иконок */
 }
 /* StyledIconsShareSquareLine / StyledIconsMoreLine -> .profile-sidebar-social-icon-placeholder1/2 */
 /* Removed styles for .profile-sidebar-social-icon-placeholder1/2 and their -inner parts */
@@ -368,18 +369,17 @@
 /* StyledFollowing -> .profile-main-startups-section */
 .profile-main-startups-section {
     align-self: stretch;
-    padding: 32px 32px 45px 32px; 
+    padding: 0; /* Убраны внутренние отступы, они будут в #startupsContent и #newsContent */
     background: transparent; /* Прозрачный фон */
-    box-shadow: 0px 40px 32px -24px rgba(0, 0, 0, 0.12);
-    overflow: hidden;
+    box-shadow: none; /* Тень будет на #startupsContent и #newsContent */
+    /* overflow: hidden; /* Временно убрано для отладки стартапов */
     border-radius: 10px;
     flex-direction: column;
     justify-content: flex-start;
-    align-items: flex-start;
-    gap: 48px; /* Original gap from StyledFollowing */
+    align-items: stretch; /* Чтобы дочерние .profile-main-content-tab растягивались */
+    gap: 48px; /* Original gap from StyledFollowing, (между табами и контентом) */
     display: flex;
-    margin-top: 165px; /* Поднято на 10px (было 175px) */
-    /* This value might need fine-tuning after checking in browser. Goal is to start below 395px banner height. */
+    margin-top: 165px; 
 }
 
 /* StyledSubNavigation -> .profile-main-tabs */
@@ -429,15 +429,15 @@
 /* StyledFrame947 -> .profile-main-startup-card-item (this is the card itself) */
 .profile-main-startup-card-item {
     align-self: stretch;
-    padding: 24px; /* Уменьшены паддинги */
+    padding: 24px;
     overflow: hidden;
-    border-radius: 10px;
-    justify-content: space-between; /* Распределит card-content и image по краям */
+    /* border-radius: 10px; /* У карточки стартапа нет своего радиуса, если она внутри #startupsContent с радиусом */
+    justify-content: space-between; 
     align-items: center;
     display: flex;
-    background-color: transparent; /* ИЗМЕНЕНО: Фон сделан прозрачным */
+    background-color: transparent; 
     box-sizing: border-box;
-    gap: 20px; /* Промежуток между контентом и картинкой */
+    gap: 20px; 
 }
 
 /* Content within the card, before image */
@@ -615,11 +615,21 @@
 
 /* StyledDivider01 -> .profile-main-startup-list-divider */
 .profile-main-startup-list-divider {
-    width: 912px; /* from styled */
-    max-width: 100%; /* make it responsive */
-    height: 4px; /* from styled */
-    /* position: relative; */ /* not needed */
+    width: 100%; /* Растягиваем разделитель */
+    /* max-width: 100%; */ /* Уже 100% */
+    height: 4px; 
     background: rgba(255, 255, 255, 0.50);
+    margin-top: 20px; /* Отступ сверху до разделителя */
+    margin-bottom: 20px; /* Отступ снизу от разделителя */
+}
+
+/* Убедимся, что последний разделитель не добавляет лишний отступ, если он есть */
+#startupsContent .profile-main-startup-card-item:last-of-type + .profile-main-startup-list-divider {
+    display: none;
+}
+/* Если разделитель после каждого, то последний не нужен */
+#startupsContent .profile-main-startup-list-divider:last-child {
+    display: none;
 }
 
 .profile-main-no-startups {
@@ -680,40 +690,75 @@ body {
 
 /* Общий контейнер для содержимого вкладок (стартапы и новости) */
 .profile-main-content-tab {
-    /* display: none; /* Скрыто по умолчанию, управляется JS */
-    /* flex-direction: column; /* Если контент должен быть в колонку */
-    /* gap: 20px; /* Общий отступ для элементов внутри вкладки */
-    /* padding-top: 32px; /* Внутренний отступ сверху (из Figma для обертки новостей) */
-    /* padding-bottom: 45px; /* Внутренний отступ снизу (из Figma для обертки новостей) */
-    /* padding-left и padding-right могут быть не нужны, если profile-main-content уже их имеет */
-    /* box-shadow: 0px 40px 32px -24px rgba(0, 0, 0, 0.12); /* Тень из Figma */
-    /* overflow: hidden; /* Обрезка контента из Figma */
-    /* border-radius: 10px; /* Скругление из Figma */
+    display: none; /* Скрыто по умолчанию, управляется JS */
+    flex-direction: column; /* Общее правило для контента вкладок */
+    width: 100%; /* Растягиваем на всю ширину родителя (.profile-main-startups-section) */
+    box-sizing: border-box;
 }
 
-/* .profile-main-content-tab.active-content {
-    display: flex; /* Или block, в зависимости от содержимого */
-/* } */
+.profile-main-content-tab.active-content {
+    display: flex; /* Показываем активную вкладку */
+}
+
+/* Стили для секции стартапов */
+#startupsContent {
+    padding: 32px; /* Внутренние отступы как у новостей */
+    background: transparent; /* Фон как у родителя */
+    box-shadow: 0px 40px 32px -24px rgba(0, 0, 0, 0.12); /* Тень как у новостей */
+    border-radius: 10px; /* Скругление как у новостей */
+    overflow: hidden; /* Если нужно обрезать контент */
+    gap: 0; /* Разделители .profile-main-startup-list-divider управляют вертикальными отступами */
+}
+
+.profile-main-startup-card-item {
+    align-self: stretch;
+    padding: 24px;
+    overflow: hidden;
+    /* border-radius: 10px; /* У карточки стартапа нет своего радиуса, если она внутри #startupsContent с радиусом */
+    justify-content: space-between; 
+    align-items: center;
+    display: flex;
+    background-color: transparent; 
+    box-sizing: border-box;
+    gap: 20px; 
+}
+
+.profile-main-startup-list-divider {
+    width: 100%; /* Растягиваем разделитель */
+    /* max-width: 100%; */ /* Уже 100% */
+    height: 4px; 
+    background: rgba(255, 255, 255, 0.50);
+    margin-top: 20px; /* Отступ сверху до разделителя */
+    margin-bottom: 20px; /* Отступ снизу от разделителя */
+}
+
+/* Убедимся, что последний разделитель не добавляет лишний отступ, если он есть */
+#startupsContent .profile-main-startup-card-item:last-of-type + .profile-main-startup-list-divider {
+    display: none;
+}
+/* Если разделитель после каждого, то последний не нужен */
+#startupsContent .profile-main-startup-list-divider:last-child {
+    display: none;
+}
 
 /* Стили для секции новостей */
 #newsContent {
-    /* padding-top: 32px; /* Уже может быть в .profile-main-content-tab или в общей обертке */
-    /* padding-bottom: 45px; */
-    /* box-shadow: 0px 40px 32px -24px rgba(0, 0, 0, 0.12); /* Если тень нужна именно для этого блока */
-    /* overflow: hidden; */
-    /* border-radius: 10px; */
-    display: flex; /* Это уже установлено в JS, но можно для ясности */
-    flex-direction: column;
-    /* justify-content: flex-start; /* Это уже установлено в JS */
-    /* align-items: flex-start; /* Это уже установлено в JS */
-    gap: 24px; /* Уменьшим gap с 48px до 24px, т.к. табы уже имеют отступ */
+    /* display: flex; /* Уже установлено через .profile-main-content-tab.active-content */
+    /* flex-direction: column; /* Уже установлено через .profile-main-content-tab */
+    gap: 32px; /* Отступ между элементами внутри #newsContent, например, если бы был заголовок */
+    padding: 32px;
+    padding-bottom: 45px; 
+    box-shadow: 0px 40px 32px -24px rgba(0, 0, 0, 0.12); 
+    border-radius: 10px; 
+    overflow: hidden; /* Если нужен */
+    background-color: transparent; /* Фон самой секции новостей - прозрачный, карточки белые */
 }
 
 .profile-news-items-container {
     align-self: stretch;
     display: flex;
     flex-wrap: wrap;
-    justify-content: flex-start; /* или space-between, если нужно растянуть по ширине */
+    justify-content: flex-start; 
     align-items: flex-start;
     align-content: flex-start;
     gap: 20px; /* Отступ между карточками новостей */
@@ -783,23 +828,24 @@ body {
 }
 
 /* Адаптивность для карточек новостей */
-@media (max-width: 992px) { /* Примерная точка, когда 3 карточки в ряд не помещаются */
+@media (max-width: 991px) { /* Скорректировано значение для лучшего перехода */
     .profile-news-items-container {
-        justify-content: center; /* Центрируем карточки, если их меньше чем на всю ширину */
+        justify-content: space-around; /* Центрируем или распределяем, если 2 карточки */
     }
     .profile-news-card-item {
         width: calc(50% - 10px); /* Две карточки в ряд с учетом gap */
     }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 639px) { /* Скорректировано значение */
     .profile-news-card-item {
         width: 100%; /* Одна карточка в ряд на маленьких экранах */
     }
     .profile-main-tabs {
-        padding-left: 16px; /* Уменьшаем отступы для табов на мобильных */
+        padding-left: 16px; 
         padding-right: 16px;
     }
+    #startupsContent,
     #newsContent {
         padding-left: 16px;
         padding-right: 16px;
