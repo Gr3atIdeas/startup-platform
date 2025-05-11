@@ -241,62 +241,50 @@
 document.addEventListener('DOMContentLoaded', function () {
     const tabButtons = document.querySelectorAll('.profile-main-tab-item');
     const contentPanes = document.querySelectorAll('.profile-main-content-tab');
-    const startupsContent = document.getElementById('startupsContent'); // Получаем блок стартапов
+    // const startupsContent = document.getElementById('startupsContent'); // Эта переменная не используется в текущей логике setActiveTab
 
-    // Функция для установки активной вкладки
     function setActiveTab(activeButton) {
-        // Деактивируем все кнопки и панели
         tabButtons.forEach(btn => btn.classList.remove('active-tab'));
         contentPanes.forEach(pane => {
             pane.classList.remove('active-content');
-            pane.style.display = 'none'; // Убедимся, что все панели скрыты
+            pane.style.display = 'none';
         });
 
-        // Активируем нажатую кнопку
         activeButton.classList.add('active-tab');
-
-        // Активируем соответствующую панель контента
         const targetContentId = activeButton.getAttribute('data-tab');
         const targetContentPane = document.getElementById(targetContentId);
 
         if (targetContentPane) {
             targetContentPane.classList.add('active-content');
-            targetContentPane.style.display = 'flex'; // Используем flex для отображения активной вкладки
-                                                    // или 'block', или 'grid' в зависимости от содержимого
-            // Если активная вкладка "Новости", то для ее контейнера используем grid
-            if (targetContentId === 'newsContent') {
-                const newsContainer = targetContentPane.querySelector('.profile-news-items-container');
-                if (newsContainer) {
-                    targetContentPane.style.display = 'block'; // Для #newsContent используем block, т.к. внутри grid
-                }
-            } else if (targetContentId === 'startupsContent') {
-                 targetContentPane.style.display = 'flex'; // Убедимся, что стартапы используют flex
+            // Определяем, как отображать контент в зависимости от типа
+            if (targetContentId === 'newsContent' && targetContentPane.querySelector('.profile-news-items-container')) {
+                targetContentPane.style.display = 'block'; // #newsContent содержит grid, поэтому сам блок display: block
+            } else {
+                targetContentPane.style.display = 'flex'; // По умолчанию flex (например, для #startupsContent)
             }
         }
     }
 
-    // Добавляем обработчики событий на кнопки вкладок
     tabButtons.forEach(button => {
         button.addEventListener('click', function () {
             setActiveTab(this);
         });
     });
 
-    // Устанавливаем вкладку "Стартапы" активной по умолчанию
     const defaultActiveButton = document.querySelector('.profile-main-tab-item[data-tab="startupsContent"]');
     if (defaultActiveButton) {
         setActiveTab(defaultActiveButton);
     } else if (tabButtons.length > 0) {
-        // Если вкладка "Стартапы" не найдена, активируем первую доступную вкладку
         setActiveTab(tabButtons[0]);
     }
-    
+
     // Avatar upload preview
     const avatarInput = document.getElementById('avatar');
     const avatarPreview = document.getElementById('avatar-preview');
-    const defaultAvatar = "{% static 'accounts/images/avatars/default_avatar.png' %}"; // Путь к дефолтному аватару
 
     if (avatarInput && avatarPreview) {
+        const initialAvatarSrc = avatarPreview.src; // Запоминаем начальный src аватара
+
         avatarInput.addEventListener('change', function(event) {
             const file = event.target.files[0];
             if (file) {
@@ -307,19 +295,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 reader.readAsDataURL(file);
             } else {
                 // Если файл не выбран (например, пользователь нажал "отмена"),
-                // проверяем, есть ли у пользователя уже аватар или используем дефолтный
-                const currentUserAvatar = "{{ user.profile.avatar.url }}";
-                if (currentUserAvatar && currentUserAvatar !== 'None') {
-                    avatarPreview.src = currentUserAvatar;
-                } else {
-                    avatarPreview.src = defaultAvatar;
-                }
+                // восстанавливаем исходный аватар.
+                avatarPreview.src = initialAvatarSrc;
             }
         });
     }
 
     // File name display for avatar upload
-    const fileInput = document.getElementById('avatar');
+    const fileInput = document.getElementById('avatar'); // Убедитесь, что id='avatar' у вашего input type=file
     const fileNameDisplay = document.getElementById('file-name-display');
     const chooseFileBtn = document.querySelector('.choose-file-btn');
 
