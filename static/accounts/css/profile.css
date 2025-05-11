@@ -16,20 +16,20 @@ html, body {
 .profile-page-wrapper {
     width: 100%; /* Изменено с 100vw */
     position: relative;
-    /* left: 50%; /* Эти свойства больше не нужны если width: 100% и нет явного смещения */
-    /* transform: translateX(-50%); */
     padding-bottom: 55px;
     display: flex;
     flex-direction: column;
     align-items: center; 
-    /* overflow-x: hidden; /* Уже установлено на html, body */
 }
 
 /* StyledImagefromrawpixelid597407jpeg1 -> .profile-main-banner */
 .profile-main-banner {
     height: 395px;
     object-fit: cover;
-    width: 100%; /* Будет 100% от .profile-page-wrapper (т.е. 100vw) */
+    width: 100vw; /* Занимает всю ширину окна просмотра */
+    position: relative; /* Для корректного применения transform */
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 /* StyledAutolayout -> .profile-content-container */
@@ -760,15 +760,15 @@ body {
     flex-direction: column; 
     gap: 20px; 
     opacity: 0;
-    /* transform: translateY(20px); /* Временно убрано для диагностики артефакта с затемнением */
-    transition: opacity 0.3s ease-out; /* Убрана transition для transform */
+    transform: translateY(20px); /* Возвращаем transform для анимации "выезжания" */
+    transition: opacity 0.3s ease-out, transform 0.3s ease-out; /* Возвращаем transform в transition */
     width: 100%; 
 }
 
 .profile-main-content-tab.active-content {
     display: flex; /* Показываем активный контент */
     opacity: 1;
-    /* transform: translateY(0); /* Временно убрано */
+    transform: translateY(0); /* Возвращаем transform для анимации "выезжания" */
 }
 
 /* Стили для секции стартапов */
