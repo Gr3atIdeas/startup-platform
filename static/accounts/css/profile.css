@@ -19,6 +19,7 @@ html, body {
     padding-bottom: 55px;
     display: flex;
     flex-direction: column;
+    background-color: #011223; /* Явный темный фон для страницы */
     /* align-items: center; /* Убрано, чтобы не мешать banner с vw */
 }
 
@@ -765,16 +766,16 @@ body {
     flex-direction: column; 
     gap: 20px; 
     opacity: 0;
-    /* transform: translateY(20px); /* Временно убрано для диагностики */
-    transition: opacity 0.3s ease-out; /* Оставляем только opacity для теста */
+    transform: translateY(10px); /* Возвращаем transform, но с меньшим значением */
+    transition: opacity 0.3s ease-out, transform 0.3s ease-out; /* Возвращаем transform в transition */
     width: 100%; 
-    will-change: opacity; /* Подсказка браузеру для оптимизации анимации прозрачности */
+    will-change: opacity, transform; /* Подсказка браузеру для оптимизации */
 }
 
 .profile-main-content-tab.active-content {
     display: flex; /* Показываем активный контент */
     opacity: 1;
-    /* transform: translateY(0); /* Временно убрано для диагностики */
+    transform: translateY(0); /* Возвращаем transform */
 }
 
 /* Стили для секции стартапов */
@@ -842,13 +843,12 @@ body {
 .profile-news-card-item {
     width: 284px; /* Ширина карточки из Figma */
     height: 251px; /* Высота карточки из Figma */
-    /* background: white; /* Временно убрано для диагностики тени */
-    background: transparent; /* Временно для диагностики тени */
+    background: white; /* Восстанавливаем фон карточек новостей */
     overflow: hidden;
     border-radius: 10px;
     display: flex;
     flex-direction: column;
-    /* box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05); /* Временно убрано для диагностики тени */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05); /* Восстанавливаем тень карточек новостей */
     transition: transform 0.2s ease-in-out;
 }
 
