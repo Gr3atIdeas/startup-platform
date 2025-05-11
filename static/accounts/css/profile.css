@@ -333,6 +333,10 @@
     align-items: flex-end; 
     gap: 100px; /* Original gap from StyledFrame1018 */
     display: flex;
+    background-color: #011B35; /* Фон как у сайдбара */
+    padding: 24px; /* Внутренние отступы */
+    border-radius: 10px; /* Скругление углов как у сайдбара */
+    box-sizing: border-box; /* Чтобы padding не увеличивал общий размер */
 }
 
 /* StyledActionbutton (Edit Profile Button container) -> .profile-main-edit-btn-container */
@@ -748,7 +752,7 @@ body {
     display: none; /* По умолчанию скрыто */
     width: 100%; 
     opacity: 0;
-    transition: opacity 0.3s ease-in-out;
+    /* transition: opacity 0.3s ease-in-out; */ /* Удалена анимация прозрачности */
     /* Удаляем position, transform, visibility, так как они больше не нужны для этой анимации */
 }
 
