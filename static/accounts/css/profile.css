@@ -4,13 +4,12 @@
 .profile-page-wrapper {
     width: 100vw; /* Занимает всю ширину окна просмотра */
     position: relative;
-    left: 50%;
-    transform: translateX(-50%);
     padding-bottom: 55px;
     display: flex;
     flex-direction: column;
     align-items: center; /* Центрирует .profile-content-container, если он уже */
     overflow-x: hidden; /* Предотвращаем горизонтальную прокрутку на самом wrapper */
+    box-sizing: border-box; /* ADDED */
 }
 
 /* StyledImagefromrawpixelid597407jpeg1 -> .profile-main-banner */
@@ -744,16 +743,13 @@ body {
 
 /* Общий контейнер для содержимого вкладок (стартапы и новости) */
 .profile-main-content-tab {
-    display: none; /* По умолчанию скрыто */
+    display: flex; /* По умолчанию теперь flex, а не none */
     flex-direction: column; 
     gap: 20px; 
     opacity: 0;
     transform: translateY(20px); 
-    transition: opacity 0.3s ease-out, transform 0.3s ease-out; /* Убрана transition для visibility и position */
-    width: 100%; 
-    /* visibility: hidden; /* Больше не нужно, управляется через display */
-    /* position: absolute; /* Убрано, чтобы избежать проблем с высотой и наложением */
-    /* left: 0; /* Убрано */
+    transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+    width: 100%;
 }
 
 .profile-main-content-tab.active-content {

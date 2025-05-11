@@ -276,52 +276,63 @@ document.addEventListener('DOMContentLoaded', function() {
             this.classList.add('active-tab');
 
             if (currentActiveContent) {
-                currentActiveContent.classList.remove('active-content');
+                currentActiveContent.classList.remove('active-content'); // Запускает fade-out анимацию
+                setTimeout(() => {
+                    // Проверяем, не стала ли вкладка снова активной за это время
+                    if (currentActiveContent && !currentActiveContent.classList.contains('active-content')) {
+                        currentActiveContent.style.display = 'none';
+                    }
+                }, 300); // Должно совпадать с длительностью transition в CSS
             }
 
-            requestAnimationFrame(() => {
-                newActiveContent.classList.add('active-content');
-            });
+            if (newActiveContent) {
+                newActiveContent.style.display = 'flex'; // Делаем видимым для анимации
+                requestAnimationFrame(() => { // Даем браузеру обработать display:flex
+                    newActiveContent.classList.add('active-content'); // Запускает fade-in анимацию
+                });
+            }
         });
     });
 
-    // Устанавливаем начальное активное состояние
+    // Устанавливаем начальное активное состояние и скрываем неактивные
     const initialActiveTab = document.querySelector('.profile-main-tab-item.active-tab');
+    let explicitlySetInitialContent = false;
+
     if (initialActiveTab) {
         const initialTargetTabId = initialActiveTab.getAttribute('data-tab');
-        const initialActiveContent = document.getElementById(initialTargetTabId + 'Content');
-        if (initialActiveContent) {
-            tabContents.forEach(content => {
-                if (content !== initialActiveContent) {
-                    content.classList.remove('active-content');
-                }
-            });
-            if (!initialActiveContent.classList.contains('active-content')) {
-                 initialActiveContent.classList.add('active-content'); 
+        const initialActiveContentElement = document.getElementById(initialTargetTabId + 'Content');
+        if (initialActiveContentElement) {
+            if (!initialActiveContentElement.classList.contains('active-content')) {
+                 initialActiveContentElement.classList.add('active-content'); 
             }
+            // initialActiveContentElement.style.display = 'flex'; // CSS уже должен делать это через .active-content и базовый класс
+            explicitlySetInitialContent = true;
         } else {
-            // Если у активной вкладки нет контента, делаем ее неактивной
-            initialActiveTab.classList.remove('active-tab');
-            // И пытаемся активировать первую вкладку по умолчанию
-            if (tabs.length > 0) {
-                tabs[0].classList.add('active-tab');
-                const firstTabId = tabs[0].getAttribute('data-tab');
-                const firstContent = document.getElementById(firstTabId + 'Content');
-                if (firstContent) {
-                    tabContents.forEach(content => content.classList.remove('active-content')); // Сначала деактивируем все
-                    firstContent.classList.add('active-content');
-                }
-            }
+            initialActiveTab.classList.remove('active-tab'); // Если контента нет, вкладка не активна
         }
-    } else if (tabs.length > 0) { // Если ни одна вкладка не активна в HTML, активируем первую
+    }
+    
+    // Если активная вкладка не была найдена или ее контент не был установлен, активируем первую
+    if (!explicitlySetInitialContent && tabs.length > 0) {
         tabs[0].classList.add('active-tab');
         const firstTabId = tabs[0].getAttribute('data-tab');
         const firstContent = document.getElementById(firstTabId + 'Content');
         if (firstContent) {
-            tabContents.forEach(content => content.classList.remove('active-content')); // Сначала деактивируем все
-            firstContent.classList.add('active-content');
+            if (!firstContent.classList.contains('active-content')) {
+                firstContent.classList.add('active-content');
+            }
+            // firstContent.style.display = 'flex'; // CSS уже должен делать это
         }
     }
+
+    // Скрываем все неактивные блоки контента
+    tabContents.forEach(content => {
+        if (!content.classList.contains('active-content')) {
+            content.style.display = 'none';
+        } else {
+            content.style.display = 'flex'; // Убедимся, что активный отображается как flex
+        }
+    });
 });
 </script>
 {% endblock %}
