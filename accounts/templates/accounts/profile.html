@@ -58,11 +58,7 @@
                     <img src="{% static 'accounts/images/profile/share_icon.svg' %}" alt="Share" class="profile-sidebar-social-icon-img">
                 </div>
                 <div class="profile-sidebar-social-icon-round-item">
-                     <div class="profile-sidebar-social-icon-placeholder2">
-                        {#{% static 'accounts/images/icons/social_placeholder_2.svg' %}#}
-                        <div class="icon-placeholder-inner-2-1"></div>
-                        <div class="icon-placeholder-inner-2-2"></div>
-                    </div>
+                     <img src="{% static 'accounts/images/profile/dots.svg' %}" alt="More options" class="profile-sidebar-social-icon-img">
                 </div>
             </div>
             
@@ -84,15 +80,8 @@
             </a>
             
             <div class="profile-sidebar-social-icons-row">
-                <img class="profile-sidebar-social-icon-row-item-img" src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Соцсеть 1" />
-                <div class="profile-sidebar-social-icon-row-item-div"></div>
-                <img class="profile-sidebar-social-icon-row-item-img" src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Соцсеть 2" />
-                <div class="profile-sidebar-social-icon-row-item-div"></div>
-                <div class="profile-sidebar-social-icon-row-item-complex-div">
-                    <div class="icon-complex-inner1"></div>
-                    <div class="icon-complex-inner2"></div>
-                    <div class="icon-complex-inner3"></div>
-                </div>
+                <img class="profile-sidebar-social-icon-row-item-img" src="{% static 'accounts/images/profile/vk_icon.png' %}" alt="VK" />
+                <img class="profile-sidebar-social-icon-row-item-img" src="{% static 'accounts/images/profile/linkedin_icon.png' %}" alt="LinkedIn" />
             </div>
             <div class="profile-sidebar-divider"></div>
             <div class="profile-sidebar-date-joined">На площадке с {{ user.created_at|date:"d M Y"|default:"Неизвестно" }}</div>
