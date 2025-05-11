@@ -19,7 +19,7 @@ html, body {
     padding-bottom: 55px;
     display: flex;
     flex-direction: column;
-    background-color: #011223; /* Явный темный фон для страницы */
+    /* background-color: #011223; /* Убираем явный фон страницы, возвращаем как было */
     /* align-items: center; /* Убрано, чтобы не мешать banner с vw */
 }
 
@@ -782,7 +782,7 @@ body {
 #startupsContent {
     padding: 32px; 
     background: transparent; 
-    box-shadow: 0px 40px 32px -24px rgba(0, 0, 0, 0.12); 
+    /* box-shadow: 0px 40px 32px -24px rgba(0, 0, 0, 0.12); /* Временно убираем для диагностики */
     border-radius: 10px; 
     overflow: hidden; 
     gap: 0; /* Разделители .profile-main-startup-list-divider управляют вертикальными отступами */
@@ -821,13 +821,11 @@ body {
 
 /* Стили для секции новостей */
 #newsContent {
-    /* Применяем те же стили контейнера, что и у #startupsContent для визуальной согласованности */
     padding: 32px; 
-    background: transparent; /* Должен наследоваться, но для явности можно указать */
-    box-shadow: 0px 40px 32px -24px rgba(0, 0, 0, 0.12); 
+    background: transparent; 
+    /* box-shadow: 0px 40px 32px -24px rgba(0, 0, 0, 0.12); /* Временно убираем для диагностики */
     border-radius: 10px; 
     overflow: hidden; 
-    /* gap: свой по умолчанию от .profile-main-content-tab (20px) или управляется .profile-news-items-container */
 }
 
 .profile-news-items-container {
