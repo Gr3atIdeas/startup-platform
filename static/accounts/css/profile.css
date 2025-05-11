@@ -26,7 +26,7 @@
     justify-content: space-between;
     align-items: flex-start; /* Sidebar and main content will be at the top of this container */
     display: flex;
-    margin-top: -140px; /* Изменено с -275px. Определяет, насколько блок "заезжает" на баннер */
+    margin-top: -110px; /* Изменено с -140px. (-140 + 30 = -110) */
     position: relative;
     z-index: 1; /* Ensure it's above the banner if banner had a z-index or for stacking context */
     gap: 20px; 
@@ -743,41 +743,38 @@ body {
 
 /* Общий контейнер для содержимого вкладок (стартапы и новости) */
 .profile-main-content-tab {
-    /* display: none; */ /* Убрали */
+    display: none; /* По умолчанию скрыто, управляется JS */
+    width: 100%; 
+    /* Убираем стили, связанные с предыдущей CSS-анимацией:
     flex-direction: column; 
     gap: 20px; 
     opacity: 0;
     transform: translateY(20px); 
     transition: opacity 0.3s ease-out, transform 0.3s ease-out, visibility 0s linear 0.3s; 
-    width: 100%; 
     visibility: hidden; 
     position: absolute; 
     left: 0; 
-    /* top: 0; /* Пока закомментируем, если табы и контент в одном потоке, top:0 от родителя .profile-main-startups-section может быть не то, что нужно */
-    /* Нужно, чтобы блок контента был ПОД табами. Tabs имеют свою высоту. */
-    /* Возможно, top должен быть равен высоте блока табов. */
-    /* Или проще не делать position:absolute, а просто display:none/flex */
+    */
 }
 
 .profile-main-content-tab.active-content {
-    display: flex; 
+    display: flex; /* Активная вкладка отображается как flex-контейнер */
+    flex-direction: column; /* Чтобы контент внутри вкладки (карточки) располагался вертикально */
+    /* gap: 20px; /* Отступы между элементами лучше задавать специфично для #startupsContent и #newsContent */
+    /* Убираем стили, связанные с предыдущей CSS-анимацией:
     opacity: 1;
     transform: translateY(0);
     visibility: visible; 
     transition: opacity 0.3s ease-out, transform 0.3s ease-out; 
-    position: relative; /* Возвращаем в поток и отменяем absolute */
-    /* Сбрасываем top, если он был установлен */
-    /* top: auto; */ 
+    position: relative; 
+    */
 }
 
 /* Стили для секции стартапов */
 #startupsContent {
-    padding: 32px; /* Внутренние отступы как у новостей */
-    background: transparent; /* Фон как у родителя */
-    box-shadow: 0px 40px 32px -24px rgba(0, 0, 0, 0.12); /* Тень как у новостей */
-    border-radius: 10px; /* Скругление как у новостей */
-    overflow: hidden; /* Если нужно обрезать контент */
-    gap: 0; /* Разделители .profile-main-startup-list-divider управляют вертикальными отступами */
+    /* display: flex; /* Управляется через .active-content */
+    flex-direction: column;
+    gap: 20px; /* Отступ между карточками стартапов */
 }
 
 .profile-main-startup-card-item {
@@ -813,22 +810,16 @@ body {
 
 /* Стили для секции новостей */
 #newsContent {
-    /* display: none; */ /* Убрали */
-    /* Все остальные стили тут не нужны, так как они наследуются или определены в .profile-main-content-tab / .active-content */
-    /* padding: 20px; */
-    /* background-color: #f9f9f9; */
-    /* border-radius: 8px; */
-    /* box-shadow: 0 2px 4px rgba(0,0,0,0.1); */
+    /* display: flex; /* Управляется через .active-content */
+    /* flex-direction: column; /* Для newsContent используется grid */
+    /* gap: 20px; /* Управляется .profile-news-items-container */
 }
 
-.profile-news-items-container {
-    align-self: stretch;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start; 
-    align-items: flex-start;
-    align-content: flex-start;
-    gap: 20px; /* Отступ между карточками новостей */
+.profile-news-items-container { /* Этот класс уже существует и используется для #newsContent */
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    width: 100%;
 }
 
 .profile-news-card-item {

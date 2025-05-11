@@ -239,8 +239,6 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Удаляем старые функции fadeIn/fadeOut, если они были здесь
-
     const avatarClickableArea = document.getElementById('avatarClickableArea');
     const avatarInput = document.getElementById('id_avatar_input');
     const avatarUploadForm = document.getElementById('avatarUploadForm');
@@ -257,9 +255,20 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Новая логика переключения вкладок с CSS-анимацией
     const tabs = document.querySelectorAll('.profile-main-tab-item');
     const tabContents = document.querySelectorAll('.profile-main-content-tab');
+
+    // Инициализация: первая вкладка активна, ее контент виден
+    if (tabs.length > 0 && tabContents.length > 0) {
+        tabs[0].classList.add('active-tab');
+        tabContents[0].style.display = 'flex'; // Используем flex, как в .active-content
+        tabContents[0].classList.add('active-content'); // Добавляем класс для согласованности стилей, если они есть
+        // Остальные скрыты
+        for (let i = 1; i < tabContents.length; i++) {
+            tabContents[i].style.display = 'none';
+            tabContents[i].classList.remove('active-content');
+        }
+    }
 
     tabs.forEach(tab => {
         tab.addEventListener('click', function() {
@@ -268,39 +277,41 @@ document.addEventListener('DOMContentLoaded', function() {
             const targetTabId = this.getAttribute('data-tab');
             const newActiveContent = document.getElementById(targetTabId + 'Content');
 
-            if (currentActiveTab === this || !newActiveContent) {
+            if (currentActiveTab === this || !newActiveContent || !currentActiveContent) {
                 return; 
             }
 
+            // Переключаем активный таб
             tabs.forEach(t => t.classList.remove('active-tab'));
             this.classList.add('active-tab');
 
-            if (currentActiveContent) {
-                currentActiveContent.classList.remove('active-content');
-            }
-
-            requestAnimationFrame(() => {
-                newActiveContent.classList.add('active-content');
+            // Анимация скрытия текущего контента
+            anime({
+                targets: currentActiveContent,
+                opacity: [1, 0],
+                translateY: [0, -10], // Немного вверх при исчезновении
+                duration: 300,
+                easing: 'easeOutQuad',
+                complete: function() {
+                    currentActiveContent.style.display = 'none';
+                    currentActiveContent.classList.remove('active-content');
+                    
+                    // Показываем и анимируем новый контент
+                    newActiveContent.style.display = 'flex'; // Используем flex
+                    newActiveContent.classList.add('active-content');
+                    newActiveContent.style.opacity = '0'; // Начальное состояние для анимации появления
+                    
+                    anime({
+                        targets: newActiveContent,
+                        opacity: [0, 1],
+                        translateY: [10, 0], // Немного снизу при появлении
+                        duration: 300,
+                        easing: 'easeOutQuad'
+                    });
+                }
             });
         });
     });
-
-    // Устанавливаем начальное активное состояние
-    const initialActiveTab = document.querySelector('.profile-main-tab-item.active-tab');
-    if (initialActiveTab) {
-        const initialTargetTabId = initialActiveTab.getAttribute('data-tab');
-        const initialActiveContent = document.getElementById(initialTargetTabId + 'Content');
-        if (initialActiveContent) {
-            tabContents.forEach(content => {
-                if (content !== initialActiveContent) {
-                    content.classList.remove('active-content');
-                }
-            });
-            if (!initialActiveContent.classList.contains('active-content')) {
-                 initialActiveContent.classList.add('active-content'); 
-            }
-        }
-    }
 });
 </script>
 {% endblock %}
