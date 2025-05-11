@@ -745,37 +745,24 @@ body {
 
 /* Общий контейнер для содержимого вкладок (стартапы и новости) */
 .profile-main-content-tab {
-    display: none; /* По умолчанию скрыто, управляется JS */
+    display: none; /* По умолчанию скрыто */
     width: 100%; 
-    /* Убираем стили, связанные с предыдущей CSS-анимацией:
-    flex-direction: column; 
-    gap: 20px; 
     opacity: 0;
-    transform: translateY(20px); 
-    transition: opacity 0.3s ease-out, transform 0.3s ease-out, visibility 0s linear 0.3s; 
-    visibility: hidden; 
-    position: absolute; 
-    left: 0; 
-    */
+    transition: opacity 0.3s ease-in-out;
+    /* Удаляем position, transform, visibility, так как они больше не нужны для этой анимации */
 }
 
 .profile-main-content-tab.active-content {
-    display: flex; /* Активная вкладка отображается как flex-контейнер */
-    flex-direction: column; /* Чтобы контент внутри вкладки (карточки) располагался вертикально */
-    /* gap: 20px; /* Отступы между элементами лучше задавать специфично для #startupsContent и #newsContent */
-    /* Убираем стили, связанные с предыдущей CSS-анимацией:
+    display: flex; /* Или block/grid в зависимости от содержимого по умолчанию */
+    flex-direction: column; 
     opacity: 1;
-    transform: translateY(0);
-    visibility: visible; 
-    transition: opacity 0.3s ease-out, transform 0.3s ease-out; 
-    position: relative; 
-    */
+    /* Если #newsContent должен быть grid, это можно переопределить ниже */
 }
 
 /* Стили для секции стартапов */
 #startupsContent {
     /* display: flex; /* Управляется через .active-content */
-    flex-direction: column;
+    /* flex-direction: column; /* Уже установлено в .active-content */
     gap: 20px; /* Отступ между карточками стартапов */
 }
 
@@ -812,9 +799,14 @@ body {
 
 /* Стили для секции новостей */
 #newsContent {
-    /* display: flex; /* Управляется через .active-content */
-    /* flex-direction: column; /* Для newsContent используется grid */
+    /* display: flex; /* Управляется через .active-content, но будет переопределено на block/grid */
+    /* flex-direction: column; /* Не нужно, если display: grid у дочернего .profile-news-items-container */
     /* gap: 20px; /* Управляется .profile-news-items-container */
+}
+
+/* Переопределение display для #newsContent, если он активен */
+#newsContent.active-content {
+    display: block; /* Контейнер для grid должен быть block или grid сам по себе */
 }
 
 .profile-news-items-container { /* Этот класс уже существует и используется для #newsContent */

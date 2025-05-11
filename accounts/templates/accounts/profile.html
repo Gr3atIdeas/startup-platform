@@ -6,10 +6,6 @@
 {% block head_extra %}
   {{ block.super }}
   <link rel="stylesheet" href="{% static 'accounts/css/profile.css' %}?v={% now 'U' %}" />
-  {# Дополнительные шрифты, если нужны именно для этой страницы, уже могут быть в base.html или global.css #}
-  {# <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400&display=swap" /> #}
-  {# <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@700&display=swap" /> #}
-  {# <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Circe:wght@400&display=swap" /> #}
 {% endblock %}
 
 {% block content %}
@@ -19,7 +15,8 @@
         <div class="profile-sidebar">
             <div class="profile-sidebar-user-info-block">
                 <div class="profile-sidebar-avatar-wrapper" id="avatarClickableArea" style="cursor: pointer;" title="Изменить аватар">
-                    <img class="profile-sidebar-avatar-img" src="{% if user.profile_picture_url %}{{ user.profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}" alt="Аватар пользователя" />
+                    {# Используем ID для JS предпросмотра, если будете его раскомментировать #}
+                    <img class="profile-sidebar-avatar-img" id="profileSidebarAvatarImg" src="{% if user.profile_picture_url %}{{ user.profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}" alt="Аватар пользователя" />
                 </div>
                 <div class="profile-sidebar-text-details">
                     <div class="profile-sidebar-name-role">
@@ -50,7 +47,7 @@
                         <img src="{% static 'accounts/images/profile/Globe_Line.svg' %}" alt="Website" class="profile-sidebar-website-icon-img">
                         <a href="{{ user.website_url }}" target="_blank" class="profile-sidebar-website-link">{{ user.website_url }}</a>
                     </div>
-    {% endif %}
+                    {% endif %}
                 </div>
             </div>
             <div class="profile-sidebar-social-icons-round">
@@ -61,24 +58,23 @@
                      <img src="{% static 'accounts/images/profile/dots.svg' %}" alt="More options" class="profile-sidebar-social-icon-img">
                 </div>
             </div>
-            
+
         {% if is_own_profile %}
-            <div class="profile-avatar-upload-section" style="display: none;"> {# Скрываем этот блок, но оставляем форму для JS #}
+            {# Форма загрузки аватара. id_avatar_input используется в JS. #}
+            <div class="profile-avatar-upload-section" style="display: none;">
                 <h4>Загрузить аватарку</h4>
                 <form method="post" enctype="multipart/form-data" id="avatarUploadForm" class="avatar-upload-form">
                 {% csrf_token %}
                     <input type="file" name="avatar" accept="image/*" required id="id_avatar_input" class="file-input-hidden">
-                    <button type="button" onclick="document.getElementById('id_avatar_input').click();" class="btn btn-secondary choose-file-btn">Выберите файл</button>
-                    <div id="fileNameDisplay" class="file-name-display">Файл не выбран</div>
-                    <button type="submit" class="btn btn-primary upload-btn">Загрузить</button>
-            </form>
+                    {# Можно удалить кнопки выбора и загрузки файла отсюда, если JS управляет только кликом по id_avatar_input #}
+                </form>
             </div>
         {% endif %}
 
             <a href="#" class="profile-sidebar-my-galaxy-btn">
                 <div class="profile-sidebar-my-galaxy-btn-text">Моя Галактика</div>
             </a>
-            
+
             <div class="profile-sidebar-social-icons-row">
                 <img class="profile-sidebar-social-icon-row-item-img" src="{% static 'accounts/images/profile/vk_icon_social.svg' %}" alt="VK" />
                 <img class="profile-sidebar-social-icon-row-item-img" src="{% static 'accounts/images/profile/linkedin_icon_social.svg' %}" alt="LinkedIn" />
@@ -99,10 +95,10 @@
 
             <div class="profile-main-startups-section">
                 <div class="profile-main-tabs">
-                    <div class="profile-main-tab-item active-tab" data-tab="startups">Стартапы</div>
-                    <div class="profile-main-tab-item" data-tab="news">Новости</div>
+                    <div class="profile-main-tab-item active-tab" data-tab="startupsContent">Стартапы</div>
+                    <div class="profile-main-tab-item" data-tab="newsContent">Новости</div>
                 </div>
-                
+
                 <div class="profile-main-content-tab active-content" id="startupsContent">
                     <!-- Макет стартапа 1 -->
                     <div class="profile-main-startup-card-item">
@@ -161,7 +157,7 @@
                     </div>
                     <div class="profile-main-startup-list-divider"></div>
                     <!-- /Макет стартапа 2 -->
-                    
+
                     <!-- Макет стартапа 3 -->
                     <div class="profile-main-startup-card-item">
                         <div class="profile-main-startup-card-content">
@@ -192,7 +188,6 @@
                 </div>
 
                 <div class="profile-main-content-tab" id="newsContent">
-                    {# Обертка для применения стилей отступов, тени из Figma, теперь стили в CSS через #newsContent #}
                     <div class="profile-news-items-container">
                         <div class="profile-news-card-item">
                             <img src="{% static 'accounts/images/startups/inside_cards_background.webp' %}" alt="Новость"/>
@@ -237,88 +232,84 @@
     </div>
 </div>
 
+{% block extra_js %}
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    const tabButtons = document.querySelectorAll('.profile-main-tab-item');
-    const contentPanes = document.querySelectorAll('.profile-main-content-tab');
-    // const startupsContent = document.getElementById('startupsContent'); // Эта переменная не используется в текущей логике setActiveTab
+    const tabs = document.querySelectorAll('.profile-main-tab-item');
+    const panes = document.querySelectorAll('.profile-main-content-tab');
 
-    function setActiveTab(activeButton) {
-        tabButtons.forEach(btn => btn.classList.remove('active-tab'));
-        contentPanes.forEach(pane => {
+    function showTabContent(targetTabElement) {
+        // Сначала деактивируем все вкладки и панели
+        tabs.forEach(t => t.classList.remove('active-tab'));
+        panes.forEach(pane => {
             pane.classList.remove('active-content');
-            pane.style.display = 'none';
         });
 
-        activeButton.classList.add('active-tab');
-        const targetContentId = activeButton.getAttribute('data-tab');
-        const targetContentPane = document.getElementById(targetContentId);
+        // Активируем нажатую вкладку
+        targetTabElement.classList.add('active-tab');
 
-        if (targetContentPane) {
-            targetContentPane.classList.add('active-content');
-            // Определяем, как отображать контент в зависимости от типа
-            if (targetContentId === 'newsContent' && targetContentPane.querySelector('.profile-news-items-container')) {
-                targetContentPane.style.display = 'block'; // #newsContent содержит grid, поэтому сам блок display: block
-            } else {
-                targetContentPane.style.display = 'flex'; // По умолчанию flex (например, для #startupsContent)
-            }
+        // Показываем соответствующую панель контента
+        const targetContentId = targetTabElement.getAttribute('data-tab');
+        const targetPane = document.getElementById(targetContentId);
+        if (targetPane) {
+            targetPane.classList.add('active-content');
         }
     }
 
-    tabButtons.forEach(button => {
-        button.addEventListener('click', function () {
-            setActiveTab(this);
+    tabs.forEach(tab => {
+        tab.addEventListener('click', function () {
+            showTabContent(this);
         });
     });
 
-    const defaultActiveButton = document.querySelector('.profile-main-tab-item[data-tab="startupsContent"]');
-    if (defaultActiveButton) {
-        setActiveTab(defaultActiveButton);
-    } else if (tabButtons.length > 0) {
-        setActiveTab(tabButtons[0]);
-    }
-
-    // Avatar upload preview
-    const avatarInput = document.getElementById('avatar');
-    const avatarPreview = document.getElementById('avatar-preview');
-
-    if (avatarInput && avatarPreview) {
-        const initialAvatarSrc = avatarPreview.src; // Запоминаем начальный src аватара
-
-        avatarInput.addEventListener('change', function(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    avatarPreview.src = e.target.result;
-                }
-                reader.readAsDataURL(file);
-            } else {
-                // Если файл не выбран (например, пользователь нажал "отмена"),
-                // восстанавливаем исходный аватар.
-                avatarPreview.src = initialAvatarSrc;
+    const initialActiveTab = document.querySelector('.profile-main-tab-item[data-tab="startupsContent"]');
+    if (initialActiveTab) {
+        if (initialActiveTab.classList.contains('active-tab')) {
+            const targetContentId = initialActiveTab.getAttribute('data-tab');
+            const targetPane = document.getElementById(targetContentId);
+            if (targetPane) {
+                panes.forEach(pane => pane.classList.remove('active-content')); // Убедимся, что только он активен
+                targetPane.classList.add('active-content');
             }
-        });
+        } else {
+             showTabContent(initialActiveTab); // Активируем, если не активен
+        }
+    } else if (tabs.length > 0) {
+        // Если вкладки "Стартапы" нет, активируем первую доступную
+        showTabContent(tabs[0]);
     }
 
-    // File name display for avatar upload
-    const fileInput = document.getElementById('avatar'); // Убедитесь, что id='avatar' у вашего input type=file
-    const fileNameDisplay = document.getElementById('file-name-display');
-    const chooseFileBtn = document.querySelector('.choose-file-btn');
+    // Логика для клика по аватару (оставлена, как была в вашем файле)
+    const avatarClickableArea = document.getElementById('avatarClickableArea');
+    const avatarInput = document.getElementById('id_avatar_input'); 
+    const avatarUploadForm = document.getElementById('avatarUploadForm');
 
-    if (chooseFileBtn && fileInput && fileNameDisplay) {
-        chooseFileBtn.addEventListener('click', function() {
-            fileInput.click();
+    if (avatarClickableArea && avatarInput && avatarUploadForm) {
+        avatarClickableArea.addEventListener('click', function() {
+            avatarInput.click();
         });
 
-        fileInput.addEventListener('change', function() {
+        avatarInput.addEventListener('change', function() {
             if (this.files && this.files.length > 0) {
-                fileNameDisplay.textContent = this.files[0].name;
-            } else {
-                fileNameDisplay.textContent = 'Файл не выбран';
+                // Для предпросмотра перед отправкой, можно использовать FileReader.
+                // Убедитесь, что у img аватара в сайдбаре есть id, например 'profileSidebarAvatarImg'
+                /*
+                const profileSidebarAvatarImg = document.getElementById('profileSidebarAvatarImg');
+                if (profileSidebarAvatarImg) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        profileSidebarAvatarImg.src = e.target.result;
+                    }
+                    reader.readAsDataURL(this.files[0]);
+                }
+                */
+                // Если нужен немедленный сабмит после выбора файла:
+                avatarUploadForm.submit();
             }
         });
     }
 });
 </script>
+{% endblock extra_js %}
+
 {% endblock %}
