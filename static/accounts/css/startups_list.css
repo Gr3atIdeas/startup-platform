@@ -579,23 +579,25 @@ body {
     flex-grow: 1; 
     height: 20px; /* ! Адаптированная высота */
     position: relative;
-    /* background: rgba(0, 0, 0, 0.27); */
     background-color: #0B1A3F; /* ! Точный темный фон из detail (:root --dark-card-bg) */
     border-radius: 10px; 
     overflow: hidden;
-    /* box-shadow: 6px 6px 10px 0px rgba(0, 0, 0, 0.25); */
     border: 1px solid #1D3059; /* ! Точная рамка из detail (:root --border-color) */
-    /* Убираем тень, в detail ее нет у этого элемента */
+    /* Добавляем внутренние отступы */
+    padding: 2px; /* Создаем отступ для внутреннего бара */
+    box-sizing: border-box; /* Учитываем padding в общем размере */
 }
 
 .progress-animation-container { /* Анимируемый передний план */
     position: absolute;
-    height: 100%;
-    top: 0;
-    left: 0;
-    /* background: linear-gradient(90deg, #FFC85E 0%, #FFB800 100%); */
+    /* height: 100%; Заменяем на top/bottom/left */
+    top: 2px;    /* Отступ сверху, равный padding родителя */
+    left: 2px;   /* Отступ слева, равный padding родителя */
+    bottom: 2px; /* Отступ снизу, равный padding родителя */
+    /* Width устанавливается через инлайн-стиль */
     background: linear-gradient(90deg, #08E5CF 0%, #345DFF 100%); /* ! ПРАВИЛЬНЫЙ сине-зеленый градиент из detail */
-    border-radius: 10px; 
+    /* Уменьшаем border-radius, чтобы соответствовать отступам */
+    border-radius: 8px; /* Чуть меньше, чем у родителя (10px - 2px) */
     overflow: hidden; 
     transition: width 0.5s ease-in-out; 
 }
@@ -668,7 +670,6 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    /* color: rgba(0, 0, 0, 0.75); */
     color: #ffffff; /* ! ПРАВИЛЬНЫЙ БЕЛЫЙ цвет текста из detail */
     font-family: 'Unbounded', sans-serif;
     font-size: 10px; 
@@ -677,7 +678,7 @@ body {
     white-space: nowrap;
     z-index: 3; 
     text-shadow: none; 
-    padding: 0 5px;
+    padding: 0 5px; /* Оставляем горизонтальный padding для текста */
     box-sizing: border-box;
 }
 
