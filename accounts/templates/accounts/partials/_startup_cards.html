@@ -42,9 +42,8 @@
         <div class="progress-bar-visual"> {# Визуальная часть #}
           <div class="progress-animation-container" style="width: '{{ progress }}%';"> {# Анимируемый контейнер #}
             <div class="progress-planets"></div> {# Для анимации планет #}
-            <span class="progress-percentage">{{ progress|floatformat:0 }}%</span> {# Текст процента #}
           </div>
-          {# Блок .progress-backers-info из detail здесь не нужен #}
+          <span class="progress-percentage">{{ progress|floatformat:0 }}%</span>
         </div>
         {# Блок .progress-backers-info из detail здесь не нужен #}
       </div>

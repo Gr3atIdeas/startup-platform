@@ -577,7 +577,7 @@ body {
 
 .progress-bar-visual { /* Визуальная часть */
     flex-grow: 1; 
-    height: 20px; /* ! Адаптированная высота */
+    height: 30px; /* ! Увеличена высота до 30px (было 20px) */
     position: relative;
     background-color: #0B1A3F; /* ! Точный темный фон из detail (:root --dark-card-bg) */
     border-radius: 10px; 
@@ -664,26 +664,21 @@ body {
 /* --- Конец анимации "планет" --- */
 
 .progress-percentage { /* Текст процентов - стили из detail */
-    position: absolute;
+    position: absolute; /* Позиционируется относительно .progress-bar-visual */
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    color: #ffffff; /* Убеждаемся, что цвет белый */
+    color: #ffffff; 
     font-family: 'Unbounded', sans-serif;
-    font-size: 10px; 
+    font-size: 12px; /* Немного увеличим шрифт для большей высоты бара */ 
     font-weight: 700; 
     line-height: 1;
     white-space: nowrap;
-    z-index: 3; 
+    z-index: 3; /* Должен быть выше .progress-animation-container, если тот имеет z-index */
     text-shadow: none; 
     padding: 0 5px; 
     box-sizing: border-box;
-    /* Дополнительные стили для гарантированного центрирования, если transform не всегда срабатывает */
-    display: flex; /* Используем flex для простого центрирования */
-    align-items: center; /* Выравниваем по вертикали */
-    justify-content: center; /* Выравниваем по горизонтали */
-    width: 100%; /* Растягиваем на всю ширину родителя (progress-animation-container) */
-    height: 100%; /* Растягиваем на всю высоту родителя */
+    /* Убираем flex и width/height 100%, т.к. left/top/transform достаточно для центрирования */
 }
 
 /* Стиль для backers-info, если он будет добавлен позже */
