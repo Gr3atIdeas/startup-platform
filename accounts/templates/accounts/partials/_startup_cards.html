@@ -28,14 +28,21 @@
         </span>
       </div>
 
+      <div class="startup-category-row">
+          {% if startup.direction and startup.direction.direction_name %}
+            <span class="category-tag-figma">{{ startup.direction.direction_name|translate_category }}</span>
+          {% else %}
+            <span class="category-tag-figma category-tag-placeholder">Категория не указана</span>
+          {% endif %}
+      </div>
+
       {% with progress=startup.get_progress_percentage|default:0 %}
-      <div class="category-progress-container-figma">
-        {% if startup.direction and startup.direction.direction_name %}
-          <span class="category-tag-figma">{{ startup.direction.direction_name|translate_category }}</span>
-        {% endif %}
-        <div class="progress-bar-container-figma">
-          <div class="progress-bar-fill-figma" data-progress="{{ progress|floatformat:0 }}"></div>
-          <span class="progress-percentage-figma">{{ progress|floatformat:0 }}%</span>
+      <div class="startup-progress-row">
+        <div class="progress-bar-wrapper">
+          <div class="progress-bar-bg">
+            <div class="progress-animation-container" style="width: '{{ progress }}%';"></div>
+          </div>
+          <span class="progress-percentage">{{ progress|floatformat:0 }}%</span>
         </div>
       </div>
       {% endwith %}
@@ -59,10 +66,6 @@
 
       <p class="startup-short-description">{{ startup.short_description|truncatewords:15|default:"" }}</p>
 
-      <a href="{% url 'startup_detail' startup_id=startup.startup_id %}" class="detail-link-text-figma">
-        Подробнее
-      </a>
-      
       <a href="{% url 'startup_detail' startup_id=startup.startup_id %}" class="detail-link" aria-label="Подробнее о {{ startup.title }}"></a>
     </div>
   </div>

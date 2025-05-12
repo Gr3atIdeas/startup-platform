@@ -3,7 +3,6 @@ body {
   margin: 0;
   padding-top: 23px;
   padding-bottom: 45px;
-  padding-left: 71px;
   box-sizing: border-box;
   overflow-x: hidden;
   background-color: #f0f2f5;
@@ -23,6 +22,8 @@ body {
   box-sizing: border-box;
   max-width: 1303px;
   margin: 0 auto;
+  padding-left: 71px;
+  padding-right: 71px;
 }
 
 
@@ -166,53 +167,17 @@ body {
 }
 
 
-.show-button, .pagination-btn, .startup-card {
-    position: relative;
-    overflow: hidden;
-    transform: translateZ(0);
-}
-
-.position-aware-effect {
-    content: '';
-    position: absolute;
-    display: block;
-    width: 0;
-    height: 0;
-    pointer-events: none;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.3);
-    transform: translate(-50%, -50%);
-    transition: width 0.6s ease-out, height 0.6s ease-out, opacity 0.6s ease-out;
-    z-index: 2;
-    opacity: 1;
-    animation: ripple 0.6s ease-out forwards;
-    will-change: width, height, opacity, transform;
-}
-
-@keyframes ripple {
-  from {
-    width: 0;
-    height: 0;
-    opacity: 0.5;
-  }
-  to {
-    width: 300%;
-    height: 300%;
-    opacity: 0;
-  }
-}
-
-
 .sidebar {
   background: #FFF;
-  height: 718px;
-  width: 254px;
+  width: 330px;
+  height: 448px;
   padding: 53px 28px;
   border-radius: 10px;
   box-sizing: border-box;
   display: flex;
   justify-content: center;
   overflow-y: auto;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 
@@ -458,7 +423,11 @@ body {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   box-sizing: border-box;
   overflow: visible;
-  padding-top: 35px;
+}
+
+.startup-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 6px 8px 12px rgba(0, 0, 0, 0.3);
 }
 
 
@@ -471,7 +440,7 @@ body {
   gap: 13px;
   align-items: flex-start;
   height: 100%;
-  margin-top: 76px;
+  margin-top: 104px;
   align-items: center;
 }
 
@@ -483,12 +452,14 @@ body {
   justify-content: center;
   overflow: hidden;
   position: absolute;
-  top: 0px;
+  top: -28px;
   left: 50%;
   transform: translateX(-50%);
   background-color: #e9ecef;
   z-index: 2;
   border-radius: 0;
+  border: 3px solid white;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15);
 }
 
 .startup-image img {
@@ -567,10 +538,11 @@ body {
 }
 
 
-.category-progress-container-figma {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+.startup-category-row {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 5px;
 }
 
 .category-tag-figma {
@@ -588,40 +560,56 @@ body {
   flex-shrink: 0;
 }
 
-.progress-bar-container-figma {
-  flex-grow: 1;
-  height: 27px;
-  background: black;
-  border-radius: 5px;
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  padding-right: 8px;
-  box-sizing: border-box;
+.category-tag-placeholder {
+    background-color: #e0e0e0;
+    color: #757575;
 }
 
-.progress-bar-fill-figma {
+.startup-progress-row {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.progress-bar-wrapper {
+  width: 100%;
+  position: relative;
+  height: 27px;
+}
+
+.progress-bar-bg {
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  border-radius: 5px;
+  overflow: hidden;
   position: absolute;
-  left: 0;
   top: 0;
+  left: 0;
+}
+
+.progress-animation-container {
   height: 100%;
   background-color: #FFEF2B;
   border-radius: 5px;
-  transition: width 0.5s ease-out;
+  transition: width 0.8s ease-out;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
-.progress-percentage-figma {
+.progress-percentage {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
   color: black;
   font-size: 12px;
   font-family: Unbounded;
   font-weight: 300;
   letter-spacing: 0.12px;
-  word-wrap: break-word;
-  position: relative;
-  z-index: 1;
   line-height: 1;
+  z-index: 1;
 }
 
 
@@ -706,20 +694,7 @@ body {
 }
 
 .detail-link-text-figma {
-    color: #004E9F;
-    font-size: 12px;
-    font-family: Unbounded;
-    font-weight: 300;
-    letter-spacing: 0.12px;
-    word-wrap: break-word;
-    cursor: pointer;
-    text-decoration: none;
-    line-height: 1;
-    transition: color 0.3s ease;
-}
-
-.detail-link-text-figma:hover {
-    color: #003d7a;
+    display: none;
 }
 
 .detail-link {
@@ -762,6 +737,8 @@ body {
       max-width: 100%;
       grid-template-columns: 220px 1fr;
       gap: 15px;
+      padding-left: 20px;
+      padding-right: 20px;
   }
   .sidebar {
       width: 220px;
@@ -770,30 +747,29 @@ body {
   }
   .startups-grid {
       gap: 15px;
+      justify-content: center;
   }
   .startup-card {
-      width: calc(50% - 8px);
+      width: calc(33.333% - 10px);
+      max-width: 330px;
       height: auto;
-      padding-top: 25px;
+      padding-top: 0;
+      margin-bottom: 30px;
   }
    .startup-card-inner {
-       margin-top: 60px;
+       margin-top: 80px;
        padding: 0 15px 15px 15px;
        gap: 10px;
    }
    .startup-image {
        width: 100px;
        height: 90px;
+       top: -22px;
    }
-   .category-progress-container-figma {
-       flex-direction: column;
-       align-items: flex-start;
-       gap: 5px;
+   .progress-bar-container-figma {
+       width: 100%;
    }
-    .progress-bar-container-figma {
-        width: 100%;
-    }
-    .catalog-search {
+   .catalog-search {
         height: 38px;
     }
     .catalog-search-input {
@@ -805,6 +781,8 @@ body {
   .catalog-container {
     grid-template-columns: 1fr;
     gap: 20px;
+    padding-left: 15px;
+    padding-right: 15px;
   }
 
   .sidebar {
@@ -825,12 +803,17 @@ body {
   }
   .startup-card {
       width: calc(50% - 10px);
+      margin-bottom: 35px;
   }
 }
 
 @media (max-width: 740px) {
   body {
       padding: 15px;
+  }
+  .catalog-container {
+      padding-left: 10px;
+      padding-right: 10px;
   }
   .startups-grid {
     justify-content: center;
@@ -841,6 +824,7 @@ body {
     width: 100%;
     max-width: 350px;
     height: auto;
+    margin-bottom: 40px;
   }
 
   .catalog-title {
@@ -852,12 +836,13 @@ body {
 
    .startup-card-inner {
      padding: 0 15px 15px 15px;
-     margin-top: 65px;
+     margin-top: 90px;
      gap: 8px;
    }
    .startup-image {
        width: 110px;
        height: 98px;
+       top: -24px;
    }
 
    .startup-title { font-size: 18px; line-height: 1.3; }
@@ -882,11 +867,16 @@ body {
 
 @media (max-width: 400px) {
     body { padding: 10px; }
+    .catalog-container {
+        padding-left: 5px;
+        padding-right: 5px;
+    }
     .startups-grid {
         gap: 10px;
     }
     .startup-card {
         max-width: 100%;
+        margin-bottom: 30px;
     }
      .sidebar { padding: 15px; }
      #filterForm { gap: 20px; }

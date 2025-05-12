@@ -269,112 +269,51 @@
     }
     // --- Конец логики поиска ---
 
-    // Эффект Position Aware для кнопок (Показать) и карточек стартапов
-    // var interactiveElements = document.querySelectorAll('.pagination-btn, .show-button, .catalog-search-btn, .startup-card');
-    // Убираем .pagination-btn, .catalog-search-btn из селектора
+    // <<< Удаляем код для старого hover-эффекта (position-aware) >>>
+    /*
     var interactiveElements = document.querySelectorAll('.show-button, .startup-card'); 
-
     interactiveElements.forEach(function(element) {
       element.addEventListener('mouseenter', function(e) {
-        if (this.disabled) return;
-
-        // Determine the target for the ripple effect
-        let rippleTarget = this; // Default to the element itself (for buttons)
-        if (this.classList.contains('startup-card')) {
-            // For cards, target the inner div
-            const innerDiv = this.querySelector('.startup-card-inner');
-            if (innerDiv) {
-                rippleTarget = innerDiv; // Target the inner div for ripple append
-            } else {
-                // Fallback to the card itself if inner not found
-            }
-        }
-
-        var parentOffset = rippleTarget.getBoundingClientRect(), // Get offset of the ripple target
-            relX = e.clientX - parentOffset.left,
-            relY = e.clientY - parentOffset.top;
-
-        var span = document.createElement('span');
-        span.style.top = relY + 'px';
-        span.style.left = relX + 'px';
-        span.classList.add('position-aware-effect');
-
-        // Add wave-active to the MAIN element (card or button) to trigger CSS
-        // Оставляем wave-active, если оно используется в CSS для чего-то еще
-        // this.classList.add('wave-active'); 
-
-        var existingEffect = rippleTarget.querySelector('.position-aware-effect');
-        if (existingEffect) {
-            existingEffect.remove();
-        }
-
-        rippleTarget.appendChild(span); // Append ripple to the correct target
-
-        span.addEventListener('animationend', function() {
-            try {
-                if (span.parentNode === rippleTarget) {
-                    rippleTarget.removeChild(span);
-                }
-            } catch (error) {
-                // Node might have been removed already, ignore
-            }
-            // Remove wave-active from the MAIN element after animation
-            // element.classList.remove('wave-active');
-        });
+        // ... (весь код добавления position-aware-effect)
       });
-
-       // Remove wave-active on mouseleave from the MAIN element
-        element.addEventListener('mouseleave', function(e) {
-            // Find the correct target to remove the ripple from
-            let rippleTarget = this;
-             if (this.classList.contains('startup-card')) {
-                 const innerDiv = this.querySelector('.startup-card-inner');
-                 if (innerDiv) rippleTarget = innerDiv;
-            }
-            const ripple = rippleTarget.querySelector('.position-aware-effect');
-            if (ripple) {
-                 try {
-                     ripple.remove();
-                 } catch(error) {}
-            }
-            // this.classList.remove('wave-active'); // Remove from main element
-        });
+       element.addEventListener('mouseleave', function(e) {
+            // ... (весь код удаления position-aware-effect)
+       });
     });
+    */
+    // <<< Конец удаления старого hover-эффекта >>>
 
     // <<< Начало: Логика "Показать еще" и "Скрыть" - ЗАМЕНЕНА >>>
-    // Старый код для "Показать еще" удален, так как используется цифровая пагинация
-    // const showMoreBtn = document.getElementById('showMoreBtn');
-    // const hideBtn = document.getElementById('hideBtn');
-    // const startupsGrid = document.getElementById('startupsGrid');
-    // const paginationInfo = document.getElementById('paginationInfo');
-    // ... (весь старый код fetch и обработчиков)
-
-    // <<< Конец: Логика "Показать еще" и "Скрыть" - ЗАМЕНЕНА >>>
+    // ... (код для пагинации остается без изменений)
 
     // --- Инициализация прогресс-баров для карточек --- 
-    // Функция для обновления прогресс-баров
-    function updateProgressBarsFigma(containerElement) {
+    // <<< Изменяем функцию для работы с новой структурой >>>
+    function updateAnimatedProgressBars(containerElement) {
       if (!containerElement) return;
-      // Ищем контейнеры прогресс-бара Figma
-      const progressContainers = containerElement.querySelectorAll('.progress-bar-container-figma');
-      progressContainers.forEach(container => {
-        const progressFill = container.querySelector('.progress-bar-fill-figma');
-        const progressPercentSpan = container.querySelector('.progress-percentage-figma');
-        const progressData = progressFill ? progressFill.dataset.progress : null;
-        const progressPercent = progressData ? parseInt(progressData, 10) : 0;
-
-        if (progressFill) {
-          progressFill.style.width = progressPercent + '%';
-        }
-        if (progressPercentSpan) {
-          progressPercentSpan.textContent = progressPercent + '%';
+      // Ищем новые обертки прогресс-бара
+      const progressWrappers = containerElement.querySelectorAll('.progress-bar-wrapper');
+      progressWrappers.forEach(wrapper => {
+        // Находим анимируемый контейнер и спан с процентами внутри обертки
+        const animationContainer = wrapper.querySelector('.progress-animation-container');
+        const percentageSpan = wrapper.querySelector('.progress-percentage');
+        
+        if (animationContainer && percentageSpan) {
+          // Получаем процент из текста спана (предполагаем формат "XX%")
+          const percentageText = percentageSpan.textContent || '0%';
+          const progressPercent = parseInt(percentageText, 10) || 0;
+          
+          // Устанавливаем ширину анимируемого контейнера
+          // Используем setTimeout для небольшой задержки, чтобы анимация сработала при загрузке
+          setTimeout(() => {
+            animationContainer.style.width = progressPercent + '%';
+          }, 100); // Небольшая задержка
         }
       });
     }
 
     // Инициализируем прогресс-бары при загрузке для текущей сетки
     const initialGrid = document.getElementById('startupsGrid');
-    updateProgressBarsFigma(initialGrid);
+    updateAnimatedProgressBars(initialGrid); // Вызываем обновленную функцию
     // --- Конец инициализации прогресс-баров --- 
 
     // --- Обработка отправки формы фильтров --- 
