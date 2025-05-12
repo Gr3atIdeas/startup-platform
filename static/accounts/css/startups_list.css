@@ -579,14 +579,13 @@ body {
     flex-grow: 1; 
     height: 20px; /* ! Адаптированная высота */
     position: relative;
-    /* background-color: #0B1A3F; */
-    background: rgba(0, 0, 0, 0.27); /* ! Фон из detail */
-    /* border-radius: 12px; */
-    border-radius: 10px; /* ! В detail используется 10px для этого контейнера */
+    /* background: rgba(0, 0, 0, 0.27); */
+    background-color: #0B1A3F; /* ! Точный темный фон из detail (:root --dark-card-bg) */
+    border-radius: 10px; 
     overflow: hidden;
-    /* border: 1px solid #1D3059; */
-    box-shadow: 6px 6px 10px 0px rgba(0, 0, 0, 0.25); /* ! Тень из detail */
-    /* backdrop-filter: blur(10px); */ /* Может не работать или конфликтовать, пока уберу */
+    /* box-shadow: 6px 6px 10px 0px rgba(0, 0, 0, 0.25); */
+    border: 1px solid #1D3059; /* ! Точная рамка из detail (:root --border-color) */
+    /* Убираем тень, в detail ее нет у этого элемента */
 }
 
 .progress-animation-container { /* Анимируемый передний план */
@@ -594,10 +593,9 @@ body {
     height: 100%;
     top: 0;
     left: 0;
-    /* background: linear-gradient(90deg, #7B61FF 0%, #A89AFF 100%); */
-    background: linear-gradient(90deg, #FFC85E 0%, #FFB800 100%); /* ! Желтый градиент из detail (var(--accent-yellow) = #FFC85E) */
-    /* border-radius: 12px; */
-    border-radius: 10px; /* ! В detail используется 10px для внутреннего контейнера */
+    /* background: linear-gradient(90deg, #FFC85E 0%, #FFB800 100%); */
+    background: linear-gradient(90deg, #08E5CF 0%, #345DFF 100%); /* ! ПРАВИЛЬНЫЙ сине-зеленый градиент из detail */
+    border-radius: 10px; 
     overflow: hidden; 
     transition: width 0.5s ease-in-out; 
 }
