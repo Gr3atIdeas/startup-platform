@@ -234,9 +234,15 @@
                 </div>
             </div>
         </div>
-        <div id="profileEditBlock" style="display:none;">
+        <div id="profileEditBlock" class="profile-edit-animated" style="display:none; opacity:0; pointer-events:none;">
             <div class="profile-edit-wrapper">
                 <div class="profile-edit-header-block">
+                    <button class="profile-edit-back-btn" id="profileEditBackBtn" type="button">
+                        <svg width="24" height="24" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="profile-edit-back-icon">
+                          <path d="M12.6668 7.99992H3.3335M3.3335 7.99992L8.00016 12.6666M3.3335 7.99992L8.00016 3.33325" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span>Назад</span>
+                    </button>
                     <div class="profile-edit-title">Изменить профиль</div>
                     <div class="profile-edit-desc">Вы можете добавить URL сайта и добавить ваши соц сети, чтобы другие пользователи смогли больше узнать о вас</div>
                 </div>
@@ -268,7 +274,7 @@
                                 <div class="profile-edit-char-counter">50/50</div>
                             </div>
                         </div>
-                        <div class="profile-edit-section">
+                        <div class="profile-edit-section" style="margin-top:40px;">
                             <div class="profile-edit-section-title">Социальные сети</div>
                             <div class="profile-edit-field">
                                 <div class="profile-edit-field-label profile-edit-field-label-sm">telegram</div>
@@ -322,56 +328,36 @@ document.addEventListener('DOMContentLoaded', function() {
     // Новая логика переключения вкладок с CSS-анимацией и transitionend
     const tabs = document.querySelectorAll('.profile-main-tab-item');
     const tabContents = document.querySelectorAll('.profile-main-content-tab');
-
+    // Анимация вкладок
     tabs.forEach(tab => {
         tab.addEventListener('click', function(event) {
-            event.preventDefault(); // Предотвращаем стандартное поведение, если это ссылка
-
+            event.preventDefault();
             const currentActiveTab = document.querySelector('.profile-main-tab-item.active-tab');
             const currentActiveContent = document.querySelector('.profile-main-content-tab.active-content');
             const targetTabId = this.getAttribute('data-tab');
             const newActiveContent = document.getElementById(targetTabId + 'Content');
-
-            if (currentActiveTab === this || !newActiveContent) {
-                return; 
-            }
-
-            // 1. Убираем активность с текущей вкладки и контента (запускаем анимацию исчезновения)
-            if (currentActiveTab) {
-                currentActiveTab.classList.remove('active-tab');
-            }
-            
+            if (currentActiveTab === this || !newActiveContent) return;
+            if (currentActiveTab) currentActiveTab.classList.remove('active-tab');
             if (currentActiveContent) {
                 currentActiveContent.classList.remove('active-content');
-
-                // 2. Ожидаем завершения анимации исчезновения
-                currentActiveContent.addEventListener('transitionend', function handleTransitionEnd() {
-                    // 3. Скрываем старый контент окончательно
-                    this.style.display = 'none'; 
-
-                    // 4. Активируем новую вкладку и ее контент
-                    tabs.forEach(t => t.classList.remove('active-tab')); // Убедимся, что только одна вкладка активна
+                currentActiveContent.classList.add('profile-fade-out');
+                setTimeout(() => {
+                    currentActiveContent.style.display = 'none';
+                    currentActiveContent.classList.remove('profile-fade-out');
+                    tabs.forEach(t => t.classList.remove('active-tab'));
                     tab.classList.add('active-tab');
-                    
-                    newActiveContent.style.display = 'flex'; // Устанавливаем display перед анимацией
-                    // Используем requestAnimationFrame для гарантии, что display применился перед добавлением класса анимации
-                    requestAnimationFrame(() => {
+                    newActiveContent.style.display = 'flex';
+                    setTimeout(() => {
                         newActiveContent.classList.add('active-content');
-                    });
-
-                    // Удаляем обработчик, чтобы он не сработал снова
-                    this.removeEventListener('transitionend', handleTransitionEnd);
-                }, { once: true }); // {once: true} автоматически удалит обработчик после первого срабатывания
+                    }, 10);
+                }, 300);
             } else {
-                // Если не было активного контента (например, при первой загрузке или ошибке)
-                // Просто активируем новую вкладку и контент
                 tabs.forEach(t => t.classList.remove('active-tab'));
                 tab.classList.add('active-tab');
-                
                 newActiveContent.style.display = 'flex';
-                requestAnimationFrame(() => {
+                setTimeout(() => {
                     newActiveContent.classList.add('active-content');
-                });
+                }, 10);
             }
         });
     });
@@ -422,19 +408,47 @@ document.addEventListener('DOMContentLoaded', function() {
     const editBtn = document.getElementById('editProfileBtn');
     const profileViewBlock = document.getElementById('profileViewBlock');
     const profileEditBlock = document.getElementById('profileEditBlock');
+    const backBtn = document.getElementById('profileEditBackBtn');
+    const clearBtn = document.querySelector('.profile-edit-clear-btn');
+    // Анимация перехода между просмотром и редактированием профиля
+    function showEditBlock() {
+        profileViewBlock.classList.add('profile-fade-out');
+        setTimeout(() => {
+            profileViewBlock.style.display = 'none';
+            profileEditBlock.style.display = 'block';
+            setTimeout(() => {
+                profileEditBlock.style.opacity = 1;
+                profileEditBlock.style.pointerEvents = 'auto';
+                profileEditBlock.classList.add('profile-fade-in');
+            }, 10);
+        }, 300);
+    }
+    function hideEditBlock() {
+        profileEditBlock.classList.remove('profile-fade-in');
+        profileEditBlock.style.opacity = 0;
+        profileEditBlock.style.pointerEvents = 'none';
+        setTimeout(() => {
+            profileEditBlock.style.display = 'none';
+            profileViewBlock.style.display = 'block';
+            profileViewBlock.classList.remove('profile-fade-out');
+        }, 300);
+    }
     if (editBtn && profileViewBlock && profileEditBlock) {
         editBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            profileViewBlock.style.display = 'none';
-            profileEditBlock.style.display = 'block';
+            showEditBlock();
         });
     }
-    // Кнопка "Очистить" возвращает к просмотру профиля
-    const clearBtn = document.querySelector('.profile-edit-clear-btn');
+    if (backBtn) {
+        backBtn.addEventListener('click', function() {
+            hideEditBlock();
+        });
+    }
     if (clearBtn) {
         clearBtn.addEventListener('click', function() {
-            profileEditBlock.style.display = 'none';
-            profileViewBlock.style.display = 'block';
+            document.querySelectorAll('.profile-edit-input[contenteditable]').forEach(el => {
+                el.innerText = '';
+            });
         });
     }
 });

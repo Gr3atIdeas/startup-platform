@@ -1055,6 +1055,7 @@ body {
     font-family: 'Unbounded', sans-serif;
     font-weight: 400;
     line-height: 18px;
+    margin-bottom: 0;
 }
 .profile-edit-field {
     display: flex;
@@ -1278,5 +1279,62 @@ body {
         width: 96px;
         height: 144px;
         top: -24px;
+    }
+}
+
+/* Анимация появления/исчезновения для редактирования профиля и вкладок */
+.profile-edit-animated {
+    transition: opacity 0.3s, transform 0.3s;
+    will-change: opacity, transform;
+}
+.profile-fade-in {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+    pointer-events: auto;
+}
+.profile-fade-out {
+    opacity: 0 !important;
+    transform: translateY(20px) !important;
+    pointer-events: none;
+}
+
+/* Кнопка назад */
+.profile-edit-back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: none;
+    color: #FCFCFD;
+    font-size: 16px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
+    cursor: pointer;
+    margin-right: 24px;
+    margin-bottom: 8px;
+    padding: 0;
+    transition: color 0.2s;
+}
+.profile-edit-back-btn:hover {
+    color: #45B26B;
+}
+.profile-edit-back-icon {
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/* Отступ для блока социальных сетей */
+.profile-edit-section-title {
+    margin-bottom: 0;
+}
+.profile-edit-section[style*="margin-top:40px"] {
+    margin-top: 40px !important;
+}
+
+@media (max-width: 700px) {
+    .profile-edit-back-btn {
+        margin-right: 12px;
     }
 } 
