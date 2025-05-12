@@ -288,26 +288,29 @@
     // ... (код для пагинации остается без изменений)
 
     // --- Инициализация прогресс-баров для карточек --- 
-    // <<< Изменяем функцию для работы с новой структурой >>>
+    // <<< Корректируем функцию для работы со структурой из startup_detail (progress-container) >>>
     function updateAnimatedProgressBars(containerElement) {
       if (!containerElement) return;
-      // Ищем новые обертки прогресс-бара
-      const progressWrappers = containerElement.querySelectorAll('.progress-bar-wrapper');
-      progressWrappers.forEach(wrapper => {
-        // Находим анимируемый контейнер и спан с процентами внутри обертки
-        const animationContainer = wrapper.querySelector('.progress-animation-container');
-        const percentageSpan = wrapper.querySelector('.progress-percentage');
+      // Ищем контейнеры прогресс-бара
+      const progressContainers = containerElement.querySelectorAll('.progress-container');
+      
+      progressContainers.forEach(container => {
+        const progressBar = container.querySelector('.progress-bar');
+        const progressTextSpan = container.querySelector('.progress-text');
         
-        if (animationContainer && percentageSpan) {
-          // Получаем процент из текста спана (предполагаем формат "XX%")
-          const percentageText = percentageSpan.textContent || '0%';
-          const progressPercent = parseInt(percentageText, 10) || 0;
+        if (progressBar && progressTextSpan) {
+          // Получаем процент из текста (например, "75%")
+          const textContent = progressTextSpan.textContent || '0%';
+          const progressPercentValue = parseInt(textContent, 10) || 0;
           
-          // Устанавливаем ширину анимируемого контейнера
+          // Устанавливаем ширину анимируемого контейнера (progressBar)
           // Используем setTimeout для небольшой задержки, чтобы анимация сработала при загрузке
           setTimeout(() => {
-            animationContainer.style.width = progressPercent + '%';
+            progressBar.style.width = progressPercentValue + '%';
           }, 100); // Небольшая задержка
+        } else {
+          if (!progressBar) console.error('Progress bar element (.progress-bar) not found in container:', container);
+          if (!progressTextSpan) console.error('Progress text element (.progress-text) not found in container:', container);
         }
       });
     }
