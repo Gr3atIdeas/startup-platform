@@ -543,7 +543,7 @@ body {
   display: flex;
   justify-content: center;
   width: 100%;
-  margin-bottom: 5px;
+  margin-bottom: 2px;
 }
 
 .category-tag-figma {
@@ -582,7 +582,7 @@ body {
     background-color: #0B1A3F; /* ! Точный темный фон из detail (:root --dark-card-bg) */
     border-radius: 10px; 
     overflow: hidden;
-    border: 1px solid #1D3059; /* ! Точная рамка из detail (:root --border-color) */
+    border: 2px solid #1D3059; /* ! Увеличена рамка до 2px и Точная рамка из detail (:root --border-color) */
     /* Добавляем внутренние отступы */
     padding: 2px; /* Создаем отступ для внутреннего бара */
     box-sizing: border-box; /* Учитываем padding в общем размере */
@@ -590,14 +590,12 @@ body {
 
 .progress-animation-container { /* Анимируемый передний план */
     position: absolute;
-    /* height: 100%; Заменяем на top/bottom/left */
     top: 2px;    /* Отступ сверху, равный padding родителя */
     left: 2px;   /* Отступ слева, равный padding родителя */
     bottom: 2px; /* Отступ снизу, равный padding родителя */
     /* Width устанавливается через инлайн-стиль */
     background: linear-gradient(90deg, #08E5CF 0%, #345DFF 100%); /* ! ПРАВИЛЬНЫЙ сине-зеленый градиент из detail */
-    /* Уменьшаем border-radius, чтобы соответствовать отступам */
-    border-radius: 8px; /* Чуть меньше, чем у родителя (10px - 2px) */
+    border-radius: 6px; /* Уменьшен радиус (10px родителя - 2px рамка - 2px padding = 6px) */
     overflow: hidden; 
     transition: width 0.5s ease-in-out; 
 }
@@ -670,7 +668,7 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    color: #ffffff; /* ! ПРАВИЛЬНЫЙ БЕЛЫЙ цвет текста из detail */
+    color: #ffffff; /* Убеждаемся, что цвет белый */
     font-family: 'Unbounded', sans-serif;
     font-size: 10px; 
     font-weight: 700; 
@@ -678,8 +676,14 @@ body {
     white-space: nowrap;
     z-index: 3; 
     text-shadow: none; 
-    padding: 0 5px; /* Оставляем горизонтальный padding для текста */
+    padding: 0 5px; 
     box-sizing: border-box;
+    /* Дополнительные стили для гарантированного центрирования, если transform не всегда срабатывает */
+    display: flex; /* Используем flex для простого центрирования */
+    align-items: center; /* Выравниваем по вертикали */
+    justify-content: center; /* Выравниваем по горизонтали */
+    width: 100%; /* Растягиваем на всю ширину родителя (progress-animation-container) */
+    height: 100%; /* Растягиваем на всю высоту родителя */
 }
 
 /* Стиль для backers-info, если он будет добавлен позже */
@@ -1131,7 +1135,7 @@ body {
     letter-spacing: 0.08px;
     width: 100%;
     text-align: left;
-    margin-top: 10px;
+    margin-top: 15px;
 }
 
 
