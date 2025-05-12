@@ -18,7 +18,6 @@
 
     <div class="startup-card-inner">
       <h3 class="startup-title">{{ startup.title }}</h3>
-      <p class="startup-short-description">{{ startup.short_description|truncatewords:15|default:"" }}</p>
       
       <div class="startup-rating-comments">
         <span class="rating-text">Рейтинг {{ startup.get_average_rating|floatformat:1 }}/5 ({{ startup.total_voters }})</span>
@@ -80,6 +79,8 @@
               <p><strong>Условия:</strong> {{ startup.terms|linebreaksbr|default:"Условия не указаны." }}</p>
           </div>
       </div>
+      
+      <div class="startup-short-description-bottom">{{ startup.short_description|truncatewords:15|default:"" }}</div>
     </div>
   </div>
 {% endfor %} 
