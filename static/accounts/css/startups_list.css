@@ -596,47 +596,84 @@ body {
     transition: width 0.8s ease-out; /* Плавная анимация ширины */
 }
 
-/* --- Анимация планет --- */
-.progress-planets {
-    position: absolute;
-    width: 200%; /* Шире контейнера для движения */
+/* --- Анимация "планет" (светящиеся точки) ИЗ STARTUP_DETAIL.CSS --- */
+.progress-planets { /* Этот блок теперь контейнер для псевдоэлементов */
+    position: relative; /* Был absolute, меняем на relative для позиционирования псевдоэлементов */
+    width: 100%;
     height: 100%;
-    top: 0;
-    left: 0;
-    background-image: url('../images/planets/progress_texture.svg'); /* Путь к текстуре планет */
-    background-size: auto 100%; /* Масштабируем по высоте */
-    background-repeat: repeat-x;
-    opacity: 0.15; /* Полупрозрачность */
-    animation: movePlanets 15s linear infinite; /* Анимация движения */
+    /* Удаляем фон и анимацию отсюда */
 }
 
-/* Если вдруг файл не найдется, можно оставить просто фон */
-.progress-planets:only-child { /* Если нет background-image, просто фиолетовый */
-     background-image: none;
+.progress-planets::before,
+.progress-planets::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+    /* Применяем общую анимацию, но с разными задержками */
+    animation: movePlanets 8s linear infinite;
 }
 
+.progress-planets::before {
+    width: 12px; /* Размер большей "планеты" */
+    height: 12px;
+    margin-top: -6px; /* Центрируем по вертикали */
+    left: 10%; /* Начальная позиция */
+    animation-delay: 0s;
+}
+
+.progress-planets::after {
+    width: 8px; /* Размер меньшей "планеты" */
+    height: 8px;
+    margin-top: -4px; /* Центрируем по вертикали */
+    left: 60%; /* Начальная позиция */
+    animation-delay: -4s; /* Сдвиг по времени для разнообразия */
+}
+
+/* Добавляем псевдоэлемент к самому animation-container для еще одной точки */
+.progress-animation-container::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 30%;
+    width: 10px;
+    height: 10px;
+    margin-top: -5px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.6);
+    box-shadow: 0 0 6px rgba(255, 255, 255, 0.7);
+    /* Используем ту же анимацию, но с другими параметрами */
+    animation: movePlanets 10s linear infinite alternate; /* alternate меняет направление */
+    animation-delay: -2s;
+}
+
+/* Анимация @keyframes из startup_detail.css */
 @keyframes movePlanets {
-    0% {
-        transform: translateX(0);
-    }
-    100% {
-        transform: translateX(-50%); /* Сдвиг на половину ширины для цикла */
-    }
+    0% { transform: translateX(0) translateY(-1px) scale(1); opacity: 0.7; }
+    25% { transform: translateX(20px) translateY(1px) scale(1.1); opacity: 0.9; }
+    50% { transform: translateX(-10px) translateY(0) scale(1); opacity: 0.8; }
+    75% { transform: translateX(15px) translateY(-2px) scale(0.9); opacity: 1; }
+    100% { transform: translateX(0) translateY(-1px) scale(1); opacity: 0.7; }
 }
-/* --- Конец анимации планет --- */
+/* --- Конец анимации "планет" --- */
 
-.progress-percentage { /* Текст процентов */
+.progress-percentage { /* Текст процентов - оставляем адаптированные стили */
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     color: #FFFFFF; /* Белый текст */
     font-family: 'Unbounded', sans-serif;
-    font-size: 11px; /* ! Адаптированный размер шрифта */
+    font-size: 11px; /* Адаптированный размер шрифта */
     font-weight: 500; /* Medium */
     line-height: 1;
     white-space: nowrap;
-    z-index: 1; /* Поверх анимации */
+    z-index: 3; /* Поверх планет и фона */
+    text-shadow: 0 1px 2px rgba(0,0,0,0.6); /* Тень для читаемости */
+    padding: 0 5px;
+    box-sizing: border-box;
 }
 
 /* Стиль для backers-info, если он будет добавлен позже */
