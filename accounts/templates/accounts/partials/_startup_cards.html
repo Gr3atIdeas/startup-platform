@@ -36,20 +36,12 @@
           {% endif %}
       </div>
 
-      <!-- Строка с прогресс-баром (структура как на detail) -->
+      <!-- Прогресс-бар как на startup_detail.html с классом progress-bar-visual -->
       {% with progress=startup.get_progress_percentage|default:0 %}
-      {# <div class="startup-progress-row">
-        <div class="progress-bar-wrapper"> 
-          <div class="progress-bar-bg"> 
-            <div class="progress-animation-container" style="width: '{{ progress }}%';"></div> 
-          </div>
-          <span class="progress-percentage">{{ progress|floatformat:0 }}%</span> 
-        </div>
-      </div> #}
-      <!-- Новый прогресс-бар как на startup_detail.html -->
-      <div class="progress-container"> {# Общий контейнер для прогресс-бара #}
-        <div class="progress-bar" style="width: '{{ progress|default:0 }}%';"></div>
-        <span class="progress-text">{{ progress|default:0|floatformat:0 }}%</span>
+      <div class="progress-bar-visual"> {# Обертка из startup_detail.html #}
+        <div class="progress-bar-background"></div>
+        <div class="progress-bar-foreground" style="width: '{{ progress }}%';"></div> {# Задаем ширину инлайново для JS #}
+        <span class="progress-bar-text">{{ progress|floatformat:0 }}%</span>
       </div>
       {% endwith %}
 
