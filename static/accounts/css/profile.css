@@ -782,7 +782,6 @@ body {
 #startupsContent {
     padding: 32px; 
     background: transparent; 
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08); /* Еще более простая и минимальная тень */
     border-radius: 10px; 
     overflow: hidden; 
     gap: 0; /* Разделители .profile-main-startup-list-divider управляют вертикальными отступами */
@@ -823,7 +822,6 @@ body {
 #newsContent {
     padding: 32px; 
     background: transparent; 
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08); /* Еще более простая и минимальная тень */
     border-radius: 10px; 
     overflow: hidden; 
 }
