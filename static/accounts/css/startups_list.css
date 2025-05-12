@@ -566,23 +566,27 @@ body {
     color: #757575;
 }
 
-/* === Стили прогресс-бара из startup_detail.css (Адаптированные) === */
-.progress-container { /* Обертка, если нужна будет для flex в будущем */
+/* === Стили прогресс-бара ТОЧНО из startup_detail.css (Адаптированные) === */
+.progress-container { 
     width: 100%;
-    margin-top: 5px; /* Отступ сверху */
-    display: flex; /* На случай, если добавим backers-info */
+    margin-top: 5px; 
+    display: flex; 
     align-items: center;
     gap: 10px;
 }
 
 .progress-bar-visual { /* Визуальная часть */
-    flex-grow: 1; /* Занимает доступное место */
-    height: 20px; /* ! Адаптированная высота для карточки */
+    flex-grow: 1; 
+    height: 20px; /* ! Адаптированная высота */
     position: relative;
-    background-color: #0B1A3F; /* Темный фон из detail */
-    border-radius: 12px; /* ! Точно как в detail */
+    /* background-color: #0B1A3F; */
+    background: rgba(0, 0, 0, 0.27); /* ! Фон из detail */
+    /* border-radius: 12px; */
+    border-radius: 10px; /* ! В detail используется 10px для этого контейнера */
     overflow: hidden;
-    border: 1px solid #1D3059; /* Рамка из detail */
+    /* border: 1px solid #1D3059; */
+    box-shadow: 6px 6px 10px 0px rgba(0, 0, 0, 0.25); /* ! Тень из detail */
+    /* backdrop-filter: blur(10px); */ /* Может не работать или конфликтовать, пока уберу */
 }
 
 .progress-animation-container { /* Анимируемый передний план */
@@ -590,18 +594,19 @@ body {
     height: 100%;
     top: 0;
     left: 0;
-    background: linear-gradient(90deg, #7B61FF 0%, #A89AFF 100%); /* Фиолетовый градиент из detail */
-    border-radius: 12px; /* ! Точно как в detail */
-    overflow: hidden; /* Скрываем выходящие планеты */
-    transition: width 0.5s ease-in-out; /* ! Точно как в detail */
+    /* background: linear-gradient(90deg, #7B61FF 0%, #A89AFF 100%); */
+    background: linear-gradient(90deg, #FFC85E 0%, #FFB800 100%); /* ! Желтый градиент из detail (var(--accent-yellow) = #FFC85E) */
+    /* border-radius: 12px; */
+    border-radius: 10px; /* ! В detail используется 10px для внутреннего контейнера */
+    overflow: hidden; 
+    transition: width 0.5s ease-in-out; 
 }
 
 /* --- Анимация "планет" (светящиеся точки) ИЗ STARTUP_DETAIL.CSS --- */
-.progress-planets { /* Этот блок теперь контейнер для псевдоэлементов */
-    position: relative; /* Был absolute, меняем на relative для позиционирования псевдоэлементов */
+.progress-planets { 
+    position: relative; 
     width: 100%;
     height: 100%;
-    /* Удаляем фон и анимацию отсюда */
 }
 
 .progress-planets::before,
@@ -610,68 +615,71 @@ body {
     position: absolute;
     top: 50%;
     border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.7);
-    box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
-    /* Применяем общую анимацию, но с разными задержками */
+    /* background-color: rgba(255, 255, 255, 0.7); */
+    background-color: #FFC85E; /* ! Цвет планет из detail (var(--accent-yellow)) */
+    /* box-shadow: 0 0 8px rgba(255, 255, 255, 0.8); */
+    box-shadow: 0 0 5px #FFC85E, 0 0 10px #FFC85E; /* ! Свечение из detail */
     animation: movePlanets 8s linear infinite;
 }
 
 .progress-planets::before {
-    width: 12px; /* Размер большей "планеты" */
-    height: 12px;
-    margin-top: -6px; /* Центрируем по вертикали */
-    left: 10%; /* Начальная позиция */
+    width: 10px; /* ! Размеры из detail (там они чуть меньше) */
+    height: 10px;
+    margin-top: -5px; 
+    left: 10%; 
     animation-delay: 0s;
 }
 
 .progress-planets::after {
-    width: 8px; /* Размер меньшей "планеты" */
-    height: 8px;
-    margin-top: -4px; /* Центрируем по вертикали */
-    left: 60%; /* Начальная позиция */
-    animation-delay: -4s; /* Сдвиг по времени для разнообразия */
+    width: 6px; /* ! Размеры из detail */
+    height: 6px;
+    margin-top: -3px; 
+    left: 60%; 
+    animation-delay: -4s; 
 }
 
-/* Добавляем псевдоэлемент к самому animation-container для еще одной точки */
-.progress-animation-container::before {
+.progress-animation-container::before { /* Дополнительная точка из detail */
     content: '';
     position: absolute;
     top: 50%;
     left: 30%;
-    width: 10px;
-    height: 10px;
-    margin-top: -5px;
+    width: 8px; /* ! Размер из detail */
+    height: 8px;
+    margin-top: -4px;
     border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.6);
-    box-shadow: 0 0 6px rgba(255, 255, 255, 0.7);
-    /* Используем ту же анимацию, но с другими параметрами */
-    animation: movePlanets 10s linear infinite alternate; /* alternate меняет направление */
+    /* background-color: rgba(255, 255, 255, 0.6); */
+    background-color: #FFC85E; /* ! Цвет из detail */
+    /* box-shadow: 0 0 6px rgba(255, 255, 255, 0.7); */
+    box-shadow: 0 0 4px #FFC85E, 0 0 8px #FFC85E; /* ! Свечение из detail */
+    animation: movePlanets 10s linear infinite alternate; 
     animation-delay: -2s;
 }
 
 /* Анимация @keyframes из startup_detail.css */
 @keyframes movePlanets {
-    0% { transform: translateX(0) translateY(-1px) scale(1); opacity: 0.7; }
-    25% { transform: translateX(20px) translateY(1px) scale(1.1); opacity: 0.9; }
-    50% { transform: translateX(-10px) translateY(0) scale(1); opacity: 0.8; }
-    75% { transform: translateX(15px) translateY(-2px) scale(0.9); opacity: 1; }
-    100% { transform: translateX(0) translateY(-1px) scale(1); opacity: 0.7; }
+    0% { transform: translateX(0) translateY(-1px) scale(1); opacity: 0.6; } /* ! Opacity из detail */
+    25% { transform: translateX(15px) translateY(1px) scale(1.05); opacity: 0.8; } /* ! Параметры из detail */
+    50% { transform: translateX(-8px) translateY(0) scale(1); opacity: 0.7; } /* ! Параметры из detail */
+    75% { transform: translateX(12px) translateY(-2px) scale(0.95); opacity: 0.9; } /* ! Параметры из detail */
+    100% { transform: translateX(0) translateY(-1px) scale(1); opacity: 0.6; } /* ! Opacity из detail */
 }
 /* --- Конец анимации "планет" --- */
 
-.progress-percentage { /* Текст процентов - исправляем */
+.progress-percentage { /* Текст процентов - стили из detail */
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    color: #FFFFFF; /* Белый текст */
+    /* color: #FFFFFF; */
+    color: rgba(0, 0, 0, 0.75); /* ! Цвет текста из detail */
     font-family: 'Unbounded', sans-serif;
-    font-size: 11px; /* Адаптированный размер шрифта */
-    font-weight: 700; /* ! Bold как в detail */
+    font-size: 10px; /* ! Адаптированный и чуть меньше для карточки (в detail 11px) */
+    font-weight: 700; 
     line-height: 1;
     white-space: nowrap;
-    z-index: 3; /* ! Как в detail */
-    text-shadow: 0 1px 2px rgba(0,0,0,0.6); /* ! Тень как в detail */
+    z-index: 3; 
+    /* text-shadow: 0 1px 2px rgba(0,0,0,0.6); */
+    text-shadow: none; /* ! В detail нет тени у этого текста */
     padding: 0 5px;
     box-sizing: border-box;
 }
