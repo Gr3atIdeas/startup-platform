@@ -36,14 +36,20 @@
           {% endif %}
       </div>
 
+      <!-- Строка с прогресс-баром (структура как на detail) -->
       {% with progress=startup.get_progress_percentage|default:0 %}
-      <div class="startup-progress-row">
-        <div class="progress-bar-wrapper">
-          <div class="progress-bar-bg">
-            <div class="progress-animation-container" style="width: '{{ progress }}%';"></div>
+      {# <div class="startup-progress-row">
+        <div class="progress-bar-wrapper"> 
+          <div class="progress-bar-bg"> 
+            <div class="progress-animation-container" style="width: '{{ progress }}%';"></div> 
           </div>
-          <span class="progress-percentage">{{ progress|floatformat:0 }}%</span>
+          <span class="progress-percentage">{{ progress|floatformat:0 }}%</span> 
         </div>
+      </div> #}
+      <!-- Новый прогресс-бар как на startup_detail.html -->
+      <div class="progress-container"> {# Общий контейнер для прогресс-бара #}
+        <div class="progress-bar" style="width: '{{ progress|default:0 }}%';"></div>
+        <span class="progress-text">{{ progress|default:0|floatformat:0 }}%</span>
       </div>
       {% endwith %}
 
@@ -56,7 +62,7 @@
       </div>
 
       <div class="funding-goal-container-figma">
-        <span class="funding-goal-text-figma">Цель финансирования: {{ startup.funding_goal|default:0|floatformat:0|intcomma }} ₽</span>
+        <span class="funding-goal-text-figma">Цель: {{ startup.funding_goal|default:0|floatformat:0|intcomma }} ₽</span>
       </div>
 
       <div class="investor-count-container-figma">
