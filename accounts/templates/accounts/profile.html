@@ -90,13 +90,13 @@
         <div class="profile-main-content">
         {% if is_own_profile %}
             <div class="profile-main-edit-btn-container">
-                <a href="#" class="profile-main-edit-btn">
+                <a href="#" class="profile-main-edit-btn" id="editProfileBtn">
                     <div class="profile-main-edit-btn-text">Редактировать профиль</div>
                     <img src="{% static 'accounts/images/profile/Edit_Line.svg' %}" alt="Редактировать" class="profile-main-edit-btn-icon"/>
                 </a>
             </div>
         {% endif %}
-
+        <div id="profileViewBlock">
             <div class="profile-main-startups-section">
                 <div class="profile-main-tabs">
                     <div class="profile-main-tab-item active-tab" data-tab="startups">Стартапы</div>
@@ -234,6 +234,68 @@
                 </div>
             </div>
         </div>
+        <div id="profileEditBlock" style="display:none;">
+            <div class="profile-edit-wrapper">
+                <div class="profile-edit-header-block">
+                    <div class="profile-edit-title">Изменить профиль</div>
+                    <div class="profile-edit-desc">Вы можете добавить URL сайта и добавить ваши соц сети, чтобы другие пользователи смогли больше узнать о вас</div>
+                </div>
+                <div class="profile-edit-main-row">
+                    <div class="profile-edit-avatar-col">
+                        <div class="profile-edit-avatar-wrapper">
+                            <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Аватар" class="profile-edit-avatar-img"/>
+                        </div>
+                        <div class="profile-edit-avatar-info">
+                            <div class="profile-edit-avatar-label">Profile photo</div>
+                            <div class="profile-edit-avatar-hint">Рекомендация <br>по размеру изображения 400х400 🙌</div>
+                            <div class="profile-edit-avatar-btn">Обновить</div>
+                        </div>
+                    </div>
+                    <div class="profile-edit-fields-col">
+                        <div class="profile-edit-section">
+                            <div class="profile-edit-section-title">Информация профиля</div>
+                            <div class="profile-edit-field">
+                                <div class="profile-edit-field-label">Имя пользователя</div>
+                                <div class="profile-edit-input profile-edit-input-text" contenteditable="true" data-placeholder="Введите имя"></div>
+                            </div>
+                            <div class="profile-edit-field">
+                                <div class="profile-edit-field-label">Портфолио или сайт</div>
+                                <div class="profile-edit-input profile-edit-input-text" contenteditable="true" data-placeholder="URL"></div>
+                            </div>
+                            <div class="profile-edit-field">
+                                <div class="profile-edit-field-label">Обо мне</div>
+                                <div class="profile-edit-input profile-edit-input-textarea" contenteditable="true" data-placeholder="Расскажите о вас в нескольких предложениях"></div>
+                                <div class="profile-edit-char-counter">50/50</div>
+                            </div>
+                        </div>
+                        <div class="profile-edit-section">
+                            <div class="profile-edit-section-title">Социальные сети</div>
+                            <div class="profile-edit-field">
+                                <div class="profile-edit-field-label profile-edit-field-label-sm">telegram</div>
+                                <div class="profile-edit-input-social">
+                                    <span class="profile-edit-input-at">@</span>
+                                    <span class="profile-edit-input-social-placeholder">telegram username</span>
+                                    <div class="profile-edit-social-add-btn">Добавить</div>
+                                </div>
+                            </div>
+                            <div class="profile-edit-add-social-btn">
+                                <img src="{% static 'accounts/images/profile/add-circle-outline.svg' %}" alt="Добавить" class="profile-edit-add-social-icon"/>
+                                <span>Добавить еще аккаунт</span>
+                            </div>
+                        </div>
+                        <div class="profile-edit-hint">Чтобы обновить настройки, вам следует подписать сообщение через свой кошелек. Нажмите "Обновить профиль", затем подпишите сообщение</div>
+                        <div class="profile-edit-divider"></div>
+                        <div class="profile-edit-actions">
+                            <div class="profile-edit-save-btn">Сохранить изменений</div>
+                            <div class="profile-edit-clear-btn">
+                                <img src="{% static 'accounts/images/profile/close_circle.svg' %}" alt="Очистить" class="profile-edit-clear-icon"/>
+                                <span>Очистить</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -356,6 +418,25 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     initializeActiveTab(); // Вызываем функцию инициализации
+
+    const editBtn = document.getElementById('editProfileBtn');
+    const profileViewBlock = document.getElementById('profileViewBlock');
+    const profileEditBlock = document.getElementById('profileEditBlock');
+    if (editBtn && profileViewBlock && profileEditBlock) {
+        editBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            profileViewBlock.style.display = 'none';
+            profileEditBlock.style.display = 'block';
+        });
+    }
+    // Кнопка "Очистить" возвращает к просмотру профиля
+    const clearBtn = document.querySelector('.profile-edit-clear-btn');
+    if (clearBtn) {
+        clearBtn.addEventListener('click', function() {
+            profileEditBlock.style.display = 'none';
+            profileViewBlock.style.display = 'block';
+        });
+    }
 });
 </script>
 {% endblock %}

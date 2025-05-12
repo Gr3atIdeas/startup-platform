@@ -921,4 +921,362 @@ body {
 /* Стили для секции стартапов (если нужно что-то общее с новостями вынести или адаптировать) */
 /* .profile-main-startups-section { ... } */
 /* .profile-main-startup-card-item { ... } */
-/* ... и т.д. */ 
+/* ... и т.д. */
+
+/* === Стили для блока редактирования профиля === */
+.profile-edit-wrapper {
+    width: 100%;
+    max-width: 1330px;
+    margin: 0 auto;
+    padding: 45px 0 100px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 64px;
+}
+.profile-edit-header-block {
+    width: 100%;
+    max-width: 736px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+}
+.profile-edit-title {
+    color: #FCFCFD;
+    font-size: 35px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 600;
+    line-height: 35px;
+    word-wrap: break-word;
+}
+.profile-edit-desc {
+    color: #777E90;
+    font-size: 14px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    line-height: 18px;
+    word-wrap: break-word;
+    max-width: 736px;
+}
+.profile-edit-main-row {
+    width: 100%;
+    display: flex;
+    gap: 32px;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+.profile-edit-avatar-col {
+    display: flex;
+    flex-direction: row;
+    gap: 32px;
+    align-items: flex-start;
+    flex: 1 1 0;
+    min-width: 200px;
+}
+.profile-edit-avatar-wrapper {
+    width: 128px;
+    height: 128px;
+    background: #45B26B;
+    border-radius: 160px;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.profile-edit-avatar-img {
+    width: 128px;
+    height: 192px;
+    object-fit: cover;
+    position: absolute;
+    left: 0;
+    top: -34.67px;
+}
+.profile-edit-avatar-info {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+.profile-edit-avatar-label {
+    color: #FCFCFD;
+    font-size: 16px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
+    line-height: 16px;
+}
+.profile-edit-avatar-hint {
+    color: #777E90;
+    font-size: 11px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.11px;
+    word-wrap: break-word;
+    width: 138px;
+}
+.profile-edit-avatar-btn {
+    width: 142px;
+    height: 40px;
+    padding: 12px 25px;
+    border-radius: 10px;
+    outline: 1px solid #fff;
+    outline-offset: -1px;
+    display: flex;
+    align-items: center;
+    color: #F5F5F5;
+    font-size: 16px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
+    line-height: 16px;
+    cursor: pointer;
+    background: transparent;
+    gap: 9px;
+    justify-content: flex-start;
+}
+.profile-edit-fields-col {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    flex: 1 1 0;
+    min-width: 300px;
+}
+.profile-edit-section {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    align-items: flex-start;
+    width: 100%;
+}
+.profile-edit-section-title {
+    color: #fff;
+    font-size: 20px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
+    line-height: 18px;
+}
+.profile-edit-field {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    min-width: 200px;
+    height: 72px;
+}
+.profile-edit-field-label {
+    color: #fff;
+    font-size: 16px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
+    line-height: 16px;
+}
+.profile-edit-field-label-sm {
+    font-size: 12px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    line-height: 12px;
+}
+.profile-edit-input {
+    align-self: stretch;
+    padding: 12px 16px;
+    border-radius: 12px;
+    outline: 1px solid #fff;
+    outline-offset: -1px;
+    background: transparent;
+    color: #fff;
+    font-family: 'Unbounded', sans-serif;
+    font-size: 12px;
+    font-weight: 300;
+    letter-spacing: 0.12px;
+    min-height: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.profile-edit-input-text[contenteditable]:empty:before {
+    content: attr(data-placeholder);
+    color: #777E90;
+    font-size: 12px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.12px;
+}
+.profile-edit-input-textarea {
+    min-height: 96px;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    display: flex;
+    width: 100%;
+}
+.profile-edit-input-textarea[contenteditable]:empty:before {
+    content: attr(data-placeholder);
+    color: #777E90;
+    font-size: 12px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.12px;
+}
+.profile-edit-char-counter {
+    align-self: flex-end;
+    color: #fff;
+    font-size: 8px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.08px;
+}
+.profile-edit-input-social {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 12px 12px 16px;
+    border-radius: 12px;
+    outline: 1px solid #fff;
+    outline-offset: -1px;
+    background: transparent;
+    width: 100%;
+    justify-content: space-between;
+}
+.profile-edit-input-at {
+    color: #fff;
+    font-size: 14px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    line-height: 24px;
+}
+.profile-edit-input-social-placeholder {
+    color: #777E90;
+    font-size: 14px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    line-height: 24px;
+}
+.profile-edit-social-add-btn {
+    padding: 8px 12px;
+    border-radius: 10px;
+    outline: 1px solid #fff;
+    outline-offset: -1px;
+    color: #fff;
+    font-size: 12px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.12px;
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+.profile-edit-add-social-btn {
+    height: 40px;
+    padding: 12px 25px;
+    border-radius: 10px;
+    outline: 1px solid #fff;
+    outline-offset: -1px;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    color: #fff;
+    font-size: 16px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
+    line-height: 16px;
+    background: transparent;
+    cursor: pointer;
+    margin-top: 8px;
+}
+.profile-edit-add-social-icon {
+    width: 24px;
+    height: 24px;
+    margin-right: 8px;
+}
+.profile-edit-hint {
+    color: #777E90;
+    font-size: 12px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.12px;
+    margin-top: 24px;
+    margin-bottom: 8px;
+}
+.profile-edit-divider {
+    width: 100%;
+    height: 1px;
+    background: #fff;
+    margin: 24px 0;
+}
+.profile-edit-actions {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+}
+.profile-edit-save-btn {
+    padding: 16px 24px;
+    border-radius: 10px;
+    background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%);
+    color: #fff;
+    font-size: 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    line-height: 16px;
+    text-align: center;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.profile-edit-clear-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #fff;
+    font-size: 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    line-height: 16px;
+    cursor: pointer;
+}
+.profile-edit-clear-icon {
+    width: 24px;
+    height: 24px;
+    margin-right: 8px;
+}
+
+@media (max-width: 1200px) {
+    .profile-edit-main-row {
+        flex-direction: column;
+        gap: 40px;
+    }
+    .profile-edit-avatar-col, .profile-edit-fields-col {
+        width: 100%;
+        min-width: 0;
+    }
+}
+@media (max-width: 700px) {
+    .profile-edit-wrapper {
+        padding: 20px 0 40px 0;
+        gap: 32px;
+    }
+    .profile-edit-title {
+        font-size: 24px;
+        line-height: 28px;
+    }
+    .profile-edit-header-block {
+        gap: 8px;
+    }
+    .profile-edit-main-row {
+        gap: 24px;
+    }
+    .profile-edit-avatar-wrapper {
+        width: 96px;
+        height: 96px;
+    }
+    .profile-edit-avatar-img {
+        width: 96px;
+        height: 144px;
+        top: -24px;
+    }
+} 
