@@ -4,7 +4,7 @@
 {% load accounts_extras %}
 
 {% for startup in page_obj %}
-  <div class="startup-card">
+  <div class="startup-card" data-startup-id="{{ startup.startup_id }}">
     <span class="startup-franchise-tag">Франшиза</span>
     <div class="startup-image">
       {% if startup.logo_urls %}
@@ -18,40 +18,27 @@
 
     <div class="startup-card-inner">
       <h3 class="startup-title">{{ startup.title }}</h3>
-      <p class="startup-short-description">{{ startup.short_description|truncatewords:15|default:"" }}</p>
-      
       <div class="startup-rating-comments">
         <span class="rating-text">Рейтинг {{ startup.get_average_rating|floatformat:1 }}/5 ({{ startup.total_voters }})</span>
         <span class="comments-count">
-          <i class="far fa-comment"></i>
-          {{ startup.comments.count|default:0 }}
+          <svg class="comment-icon" viewBox="0 0 16 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M14.222 0H1.778C0.796 0 0 .734 0 1.64v8.197c0 .906.796 1.64 1.778 1.64h9.778l3.556 3.28V11.477h.888c.982 0 1.778-.734 1.778-1.64V1.64C16 .734 15.204 0 14.222 0z" fill="currentColor"/>
+          </svg>
+          <span>{{ startup.comments.count|default:0 }}</span>
         </span>
       </div>
 
       {% with progress=startup.get_progress_percentage|default:0 %}
-      <div class="progress-container">
-        <div class="progress-bar-visual" data-progress="{{ progress|floatformat:0 }}">
-          {% if progress > 0 %}
-            <div class="progress-animation-container">
-              <div class="progress-planets"></div>
-            </div>
-            <span class="progress-percentage">{{ progress|floatformat:0 }}%</span>
-          {% else %}
-            <span class="progress-percentage">0%</span>
-          {% endif %}
-        </div>
-        <div class="investor-count">
-          <i class="fas fa-users"></i>
-          <span>({{ startup.get_investors_count }})</span>
+      <div class="category-progress-container-figma">
+        {% if startup.direction and startup.direction.direction_name %}
+          <span class="category-tag-figma">{{ startup.direction.direction_name|translate_category }}</span>
+        {% endif %}
+        <div class="progress-bar-container-figma">
+          <div class="progress-bar-fill-figma" data-progress="{{ progress|floatformat:0 }}"></div>
+          <span class="progress-percentage-figma">{{ progress|floatformat:0 }}%</span>
         </div>
       </div>
       {% endwith %}
-
-      {% if startup.direction and startup.direction.direction_name %}
-        <div class="startup-category-frame">
-            <span class="category-tag">{{ startup.direction.direction_name|translate_category }}</span>
-        </div>
-      {% endif %}
 
       <div class="investment-type">
         {% if startup.both_mode %}Инвестирование+Выкуп
@@ -61,25 +48,22 @@
         {% endif %}
       </div>
 
-      <div class="card-funding-goal">
-        <span>Цель:</span>
-        <span>{{ startup.funding_goal|default:0|floatformat:0|intcomma }} ₽</span>
+      <div class="funding-goal-container-figma">
+        <span class="funding-goal-text-figma">Цель финансирования: {{ startup.funding_goal|default:0|floatformat:0|intcomma }} ₽</span>
       </div>
 
-      <div class="card-amount-raised">
-        <span>Собрано:</span>
-        <span>{{ startup.amount_raised|default:0|floatformat:0|intcomma }} ₽</span>
+      <div class="investor-count-container-figma">
+        <i class="fas fa-users investor-icon-figma"></i>
+        <span class="investor-count-text-figma">Инвестировало ({{ startup.get_investors_count }})</span>
       </div>
 
-      <a href="{% url 'startup_detail' startup_id=startup.startup_id %}" class="detail-link">Подробнее</a>
+      <p class="startup-short-description">{{ startup.short_description|truncatewords:15|default:"" }}</p>
+
+      <a href="{% url 'startup_detail' startup_id=startup.startup_id %}" class="detail-link-text-figma">
+        Подробнее
+      </a>
       
-      <div class="description-popup">
-          <h4 class="description-popup-title">Описание</h4>
-          <div class="description-popup-content">
-              <p>{{ startup.description|linebreaksbr|default:"Нет подробного описания." }}</p>
-              <p><strong>Условия:</strong> {{ startup.terms|linebreaksbr|default:"Условия не указаны." }}</p>
-          </div>
-      </div>
+      <a href="{% url 'startup_detail' startup_id=startup.startup_id %}" class="detail-link" aria-label="Подробнее о {{ startup.title }}"></a>
     </div>
   </div>
 {% endfor %} 

@@ -13,6 +13,10 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&display=swap">
   {# <<< Восстанавливаем noUiSlider CSS >>> #}
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.css">
+  {# <<< Подключаем шрифт Inter, используемый в Figma для значений рейтинга >>> #}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Unbounded:wght@300;400;500;700&display=swap" rel="stylesheet">
   {# <<< Комментируем rangeslider.js CSS >>> #}
 
   {# JS пока не подключаем здесь #}
@@ -21,25 +25,29 @@
 {% endblock %}
 
 {% block content %}
-<div class="catalog-wrapper">
+{# <div class="catalog-wrapper"> Переносим обертки с паддингами в body в CSS #}
   <div class="catalog-container">
     <!-- Боковая панель с фильтрами -->
-    <div class="sidebar">
+    <aside class="sidebar"> {# Используем aside для семантики #}
       <form method="get" id="filterForm">
+        {# Блок сортировки #}
         <div class="sort-dropdown">
-          <h2 class="categories-title">Показать сначала</h2>
+          <div class="sort-dropdown-title">Показать сначала</div> {# Новый title class #}
           <select name="sort_order" id="sortOrder">
             <option value="newest" {% if sort_order == 'newest' %}selected{% endif %}>Новые</option>
             <option value="oldest" {% if sort_order == 'oldest' %}selected{% endif %}>Старые</option>
           </select>
         </div>
-        
+
+        {# Блок категорий #}
         <h2 class="categories-title">Категории</h2>
-        
+        {# Здесь можно добавить кастомный скроллбар как в Figma, но это усложнит #}
+        {# <div class="scrollbar-track"><div class="scrollbar-thumb"></div></div> #}
         <ul class="categories-list">
           {% for dir in directions %}
             <li class="category-item">
               <label class="category-label">
+                {# Меняем порядок: чекбокс, потом текст #}
                 <input type="checkbox" name="category" value="{{ dir.direction_name }}" class="category-checkbox" {% if dir.direction_name in selected_categories %}checked{% endif %}>
                 <span class="category-name">
                     {% with original_name=dir.direction_name|default:"" %}
@@ -48,7 +56,7 @@
                         {% elif original_name == "Delivery" %}Доставка
                         {% elif original_name == "Cafe" %}Кафе/рестораны
                         {% elif original_name == "Fastfood" %}Фастфуд
-                        {% elif original_name == "Health" %}Здоровье
+                        {% elif original_name == "Health" %}Здоровье {# Исправлено Здооровье на Здоровье #}
                         {% elif original_name == "Beauty" %}Красота
                         {% elif original_name == "Transport" %}Транспорт
                         {% elif original_name == "Sport" %}Спорт
@@ -67,46 +75,58 @@
             <li>Категории не найдены.</li>
           {% endfor %}
         </ul>
-        
-        <!-- Фильтр рейтинга -->
-        <div class="rating-filter">
-          {# <<< Восстанавливаем разметку для noUiSlider >>> #}
-          <label class="rating-label">Рейтинг: <span id="ratingRangeValues">{{ min_rating|default:0|floatformat:1 }} - {{ max_rating|default:5|floatformat:1 }}</span></label>
-          <div id="ratingSlider"></div> {# <<< Контейнер для noUiSlider >>> #}
-          {# <<< Восстанавливаем скрытые поля >>> #}
-          <input type="hidden" name="min_rating" id="minRatingInput" value="{{ min_rating|default:0|floatformat:1 }}">
-          <input type="hidden" name="max_rating" id="maxRatingInput" value="{{ max_rating|default:5|floatformat:1 }}">
-        </div>
-        
-        <!-- Микроинвестиции -->
+
+        {# Блок микроинвестиций #}
         <div class="micro-investment">
-          <div class="micro-investment-label-wrapper">
-            <span class="micro-label">Микроинвестиции</span>
-            <span class="help-icon">?</span>
-          </div>
+          {# В Figma нет label-wrapper, делаем напрямую #}
+          <span class="micro-label">Микроинвестиции</span>
+          <span class="help-icon" title="Информация о микроинвестициях">?</span> {# Добавляем title #}
+          {# Переключатель #}
           <div class="toggle-switch {% if micro_investment %}active{% endif %}" id="microToggle" onclick="toggleMicroInvestment()">
             <div class="toggle-handle"></div>
           </div>
           <input type="hidden" name="micro_investment" id="microInvestmentInput" value="{% if micro_investment %}1{% else %}0{% endif %}">
         </div>
-        
+
+        <!-- Фильтр рейтинга -->
+        <div class="rating-filter">
+          <div class="rating-label-container"> {# Новый контейнер #}
+            <label class="rating-label">Рейтинг</label>
+            {# Меняем id для значения диапазона #}
+            <span id="ratingValueDisplay" class="rating-value-display">{{ min_rating|default:0|floatformat:1 }} - {{ max_rating|default:5|floatformat:1 }}</span>
+          </div>
+          <div id="ratingSlider"></div> {# Контейнер для noUiSlider #}
+          {# Скрытые поля остаются без изменений #}
+          <input type="hidden" name="min_rating" id="minRatingInput" value="{{ min_rating|default:0|floatformat:1 }}">
+          <input type="hidden" name="max_rating" id="maxRatingInput" value="{{ max_rating|default:5|floatformat:1 }}">
+          <div class="rating-range-label">Диапозон</div> {# Подпись как в Figma #}
+        </div>
+
+        {# Скрытое поле для поиска остается #}
         <input type="hidden" name="search" value="{{ search_query|default_if_none:'' }}">
-        
+
         <!-- Кнопка показать -->
-        <button type="submit" class="show-button">Показать</button>
+        {# Добавляем data-атрибуты из Figma, если они нужны для JS #}
+        <button type="submit" class="show-button" data-has-icon-end="false" data-has-icon-start="false" data-size="Medium" data-state="Default" data-variant="Primary">Показать</button>
       </form>
-    </div>
-    
+    </aside>
+
     <!-- Область с карточками стартапов и поиском -->
     <div class="startups-content">
       <!-- Поисковая строка -->
       <div class="catalog-search-wrapper">
         <div class="catalog-search">
+          {# Вставляем поле ввода #}
           <input type="text" class="catalog-search-input" placeholder="Поиск по каталогу" value="{{ search_query|default_if_none:'' }}">
-          <button class="catalog-search-btn"><i class="fas fa-search"></i></button>
+          {# Вставляем кнопку с SVG иконкой #}
+          <button type="button" class="catalog-search-btn" title="Поиск"> {# Используем type="button" если не сабмит #}
+            <svg viewBox="0 0 28 27" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12.417 21.375c4.836 0 8.75-3.914 8.75-8.75s-3.914-8.75-8.75-8.75-8.75 3.914-8.75 8.75 3.914 8.75 8.75 8.75zM22.923 23.274l-5.067-4.892" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> {# Используем currentColor и stroke #}
+            </svg>
+          </button>
         </div>
       </div>
-      
+
       <!-- Сетка стартапов -->
       <div class="startups-grid" id="startupsGrid">
         {% if page_obj %} {# Проверяем page_obj вместо approved_startups #}
@@ -119,41 +139,48 @@
         {% endif %}
       </div>
 
-      {# <<< Начало: Контейнер для пагинации и кнопки "Показать еще" >>> #}
+      {# <<< Начало: Контейнер для пагинации >>> #}
       <div class="pagination-controls">
-          {# Информационный блок пагинации (будет обновляться JS) #}
-          <div class="pagination-info" id="paginationInfo">
-              {% if page_obj and paginator.num_pages > 1 %}
-                  {# Начальное состояние, если передано из view #}
-                  <p>Страница {{ page_obj.number }} из {{ paginator.num_pages }}. Показано {{ page_obj.object_list|length }} из {{ paginator.count }} стартапов.</p>
-              {% elif page_obj %}
-                   <p>Показано {{ paginator.count }} стартапов.</p> {# Если только одна страница #}
-              {% endif %}
-          </div>
+          {# Информационный блок пагинации теперь не используется #}
+          {# <div class="pagination-info" id="paginationInfo"> ... </div> #}
 
-          {# <<< Начало: Контейнер для кнопок Показать/Скрыть >>> #}
-          <div class="show-more-container">
-              {# Кнопка "Скрыть" (изначально скрыта) #}
-              <button class="pagination-btn hide-btn" id="hideBtn">
-                  Скрыть <i class="fas fa-eye-slash"></i>
-              </button>
+          {# <<< Начало: Контейнер для кнопок Показать/Скрыть - заменяем на цифровую пагинацию >>> #}
+          {# <div class="show-more-container"> ... </div> #}
+          {% if page_obj and paginator.num_pages > 1 %}
+            <div class="pagination-numbers">
+                {# Логика отображения пагинации - может потребовать кастомный тег или сложную логику здесь #}
+                {# Пример простой логики #}
+                {% if page_obj.has_previous %}
+                    <a href="?page=1">&laquo; First</a>
+                    <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                {% endif %}
 
-              {# Кнопка "Показать еще" #}
-              {# Отображается, если initial_has_next=True передано из view #}
-              {% if initial_has_next %}
-                  {# Добавляем общий класс pagination-btn и вложенный span для текста #}
-                  <button class="pagination-btn show-more-btn" id="showMoreBtn" data-next-page="2" data-initial-count="{{ page_obj.object_list|length|default:6 }}">
-                      <span class="btn-text">Показать еще </span><i class="fas fa-eye"></i>
-                  </button>
-              {% endif %}
-          </div>
-          {# <<< Конец: Контейнер для кнопок Показать/Скрыть >>> #}
+                {# Отображаем номера страниц (упрощенный вариант) #}
+                {% for num in paginator.page_range %}
+                    {% if page_obj.number == num %}
+                        <span class="current-page">{{ num }}</span>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                        <a href="?page={{ num }}">{{ num }}</a>
+                    {% elif num == page_obj.number|add:'-3' or num == page_obj.number|add:'3' %}
+                        <span class="dots">...</span>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">Next</a>
+                    <a href="?page={{ paginator.num_pages }}">Last &raquo;</a>
+                {% endif %}
+            </div>
+           {% elif page_obj %} {# Если только одна страница, ничего не показываем #}
+                {# <p>Показано {{ paginator.count }} стартапов.</p> #}
+           {% endif %}
+          {# <<< Конец: Замена на цифровую пагинацию >>> #}
       </div>
-      {# <<< Конец: Контейнер для пагинации и кнопки "Показать еще" >>> #}
+      {# <<< Конец: Контейнер для пагинации >>> #}
 
     </div> {# Конец .startups-content #}
   </div> {# Конец .catalog-container #}
-</div> {# Конец .catalog-wrapper #}
+{# </div> Закрывающий div для .catalog-wrapper убран #}
 
 {# Удаляем старый скрипт rangeslider #}
 {# <script src="https://cdnjs.cloudflare.com/ajax/libs/rangeslider.js/2.3.0/rangeslider.min.js"></script> #}
@@ -162,12 +189,14 @@
   document.addEventListener('DOMContentLoaded', function() {
     // <<< Начинаем инициализацию noUiSlider >>>
     var ratingSlider = document.getElementById('ratingSlider');
-    var ratingRangeValues = document.getElementById('ratingRangeValues');
+    // var ratingRangeValues = document.getElementById('ratingRangeValues'); Заменяем ID
+    var ratingValueDisplay = document.getElementById('ratingValueDisplay');
     var minRatingInput = document.getElementById('minRatingInput');
     var maxRatingInput = document.getElementById('maxRatingInput');
 
     // Проверяем, что все элементы существуют и библиотеки подключены
-    if (ratingSlider && ratingRangeValues && minRatingInput && maxRatingInput && typeof noUiSlider !== 'undefined' && typeof wNumb !== 'undefined') {
+    // if (ratingSlider && ratingRangeValues && minRatingInput && maxRatingInput && typeof noUiSlider !== 'undefined' && typeof wNumb !== 'undefined') {
+    if (ratingSlider && ratingValueDisplay && minRatingInput && maxRatingInput && typeof noUiSlider !== 'undefined' && typeof wNumb !== 'undefined') {
         // Получаем начальные значения из скрытых полей
         var initialMin = parseFloat(minRatingInput.value) || 0;
         var initialMax = parseFloat(maxRatingInput.value) || 5;
@@ -181,9 +210,13 @@
             },
             step: 0.1,                     // Шаг
             format: wNumb({                // Форматирование для отображения
-                decimals: 1
+                decimals: 1,
+                thousand: '', // Убираем разделитель тысяч
+                suffix: ''    // Убираем суффикс
             }),
-            tooltips: false                 // Отключаем встроенные тултипы
+            tooltips: false,                 // Отключаем встроенные тултипы
+            behaviour: 'tap-drag',         // Позволяет перетаскивать и кликать
+            pips: false                    // Отключаем точки на слайдере
         });
 
         // Обновляем span и скрытые поля при изменении слайдера
@@ -192,7 +225,8 @@
             var minValue = values[0];
             var maxValue = values[1];
 
-            ratingRangeValues.textContent = minValue + ' - ' + maxValue;
+            // ratingRangeValues.textContent = minValue + ' - ' + maxValue; Заменяем ID
+            ratingValueDisplay.textContent = minValue + ' - ' + maxValue;
             minRatingInput.value = minValue;
             maxRatingInput.value = maxValue;
         });
@@ -200,7 +234,8 @@
         console.error('Не удалось инициализировать noUiSlider. Элементы не найдены или библиотеки не подключены.');
         // Выводим, чего не хватает
         if (!ratingSlider) console.error('Элемент #ratingSlider не найден');
-        if (!ratingRangeValues) console.error('Элемент #ratingRangeValues не найден');
+        // if (!ratingRangeValues) console.error('Элемент #ratingRangeValues не найден');
+        if (!ratingValueDisplay) console.error('Элемент #ratingValueDisplay не найден');
         if (!minRatingInput) console.error('Элемент #minRatingInput не найден');
         if (!maxRatingInput) console.error('Элемент #maxRatingInput не найден');
         if (typeof noUiSlider === 'undefined') console.error('Библиотека noUiSlider не подключена');
@@ -208,33 +243,36 @@
     }
     // <<< Конец инициализации noUiSlider >>>
 
-    // Функция для работы с поиском
+    // --- Логика поиска --- 
     var searchInput = document.querySelector('.catalog-search-input');
     var searchBtn = document.querySelector('.catalog-search-btn');
-    var filterForm = document.getElementById('filterForm'); // Получаем форму
+    var filterForm = document.getElementById('filterForm'); 
+    var searchInputHidden = filterForm.querySelector('input[name="search"]');
 
-    if (searchBtn && searchInput && filterForm) { // Проверяем наличие формы
-        searchBtn.addEventListener('click', function() {
-          var searchInputHidden = filterForm.querySelector('input[name="search"]'); // Ищем поле внутри формы
-          if (searchInputHidden) {
-              searchInputHidden.value = searchInput.value;
-          }
-          filterForm.submit();
-        });
-
-        searchInput.addEventListener('keypress', function(e) {
-          if (e.key === 'Enter') {
-            var searchInputHidden = filterForm.querySelector('input[name="search"]'); // Ищем поле внутри формы
-             if (searchInputHidden) {
-                searchInputHidden.value = searchInput.value;
-             }
+    function performSearch() {
+        if (searchInputHidden && searchInput && filterForm) {
+            searchInputHidden.value = searchInput.value;
             filterForm.submit();
-          }
-        });
+        }
     }
 
-    // Эффект Position Aware для кнопок пагинации и карточек стартапов
-    var interactiveElements = document.querySelectorAll('.pagination-btn, .show-button, .catalog-search-btn, .startup-card'); // Selector remains the same
+    if (searchBtn) {
+        searchBtn.addEventListener('click', performSearch);
+    }
+
+    if (searchInput) {
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+    }
+    // --- Конец логики поиска ---
+
+    // Эффект Position Aware для кнопок (Показать) и карточек стартапов
+    // var interactiveElements = document.querySelectorAll('.pagination-btn, .show-button, .catalog-search-btn, .startup-card');
+    // Убираем .pagination-btn, .catalog-search-btn из селектора
+    var interactiveElements = document.querySelectorAll('.show-button, .startup-card'); 
 
     interactiveElements.forEach(function(element) {
       element.addEventListener('mouseenter', function(e) {
@@ -243,12 +281,12 @@
         // Determine the target for the ripple effect
         let rippleTarget = this; // Default to the element itself (for buttons)
         if (this.classList.contains('startup-card')) {
-            // For cards, find the inner wrapper
-            const wrapper = this.querySelector('.startup-card-inner');
-            if (wrapper) {
-                rippleTarget = wrapper; // Target the wrapper for ripple append
+            // For cards, target the inner div
+            const innerDiv = this.querySelector('.startup-card-inner');
+            if (innerDiv) {
+                rippleTarget = innerDiv; // Target the inner div for ripple append
             } else {
-                console.warn('Could not find .startup-card-inner inside .startup-card');
+                // Fallback to the card itself if inner not found
             }
         }
 
@@ -262,7 +300,8 @@
         span.classList.add('position-aware-effect');
 
         // Add wave-active to the MAIN element (card or button) to trigger CSS
-        this.classList.add('wave-active');
+        // Оставляем wave-active, если оно используется в CSS для чего-то еще
+        // this.classList.add('wave-active'); 
 
         var existingEffect = rippleTarget.querySelector('.position-aware-effect');
         if (existingEffect) {
@@ -272,11 +311,15 @@
         rippleTarget.appendChild(span); // Append ripple to the correct target
 
         span.addEventListener('animationend', function() {
-            if (span.parentNode === rippleTarget) {
-                rippleTarget.removeChild(span);
+            try {
+                if (span.parentNode === rippleTarget) {
+                    rippleTarget.removeChild(span);
+                }
+            } catch (error) {
+                // Node might have been removed already, ignore
             }
             // Remove wave-active from the MAIN element after animation
-            element.classList.remove('wave-active');
+            // element.classList.remove('wave-active');
         });
       });
 
@@ -285,223 +328,101 @@
             // Find the correct target to remove the ripple from
             let rippleTarget = this;
              if (this.classList.contains('startup-card')) {
-                 const wrapper = this.querySelector('.startup-card-inner');
-                 if (wrapper) rippleTarget = wrapper;
+                 const innerDiv = this.querySelector('.startup-card-inner');
+                 if (innerDiv) rippleTarget = innerDiv;
             }
             const ripple = rippleTarget.querySelector('.position-aware-effect');
             if (ripple) {
-                ripple.remove();
+                 try {
+                     ripple.remove();
+                 } catch(error) {}
             }
-            this.classList.remove('wave-active'); // Remove from main element
+            // this.classList.remove('wave-active'); // Remove from main element
         });
     });
 
-    // <<< Начало: Логика "Показать еще" и "Скрыть" >>>
-    const showMoreBtn = document.getElementById('showMoreBtn');
-    const hideBtn = document.getElementById('hideBtn');
-    const startupsGrid = document.getElementById('startupsGrid');
-    const paginationInfo = document.getElementById('paginationInfo');
-    const initialVisibleCount = parseInt(showMoreBtn?.dataset.initialCount || '6'); // Количество видимых изначально
-    let initialPaginationText = paginationInfo?.innerHTML || ''; // Сохраняем исходный текст пагинации
+    // <<< Начало: Логика "Показать еще" и "Скрыть" - ЗАМЕНЕНА >>>
+    // Старый код для "Показать еще" удален, так как используется цифровая пагинация
+    // const showMoreBtn = document.getElementById('showMoreBtn');
+    // const hideBtn = document.getElementById('hideBtn');
+    // const startupsGrid = document.getElementById('startupsGrid');
+    // const paginationInfo = document.getElementById('paginationInfo');
+    // ... (весь старый код fetch и обработчиков)
 
-    // Функция обновления прогресс-баров
-    function updateProgressBars(containerElement) {
+    // <<< Конец: Логика "Показать еще" и "Скрыть" - ЗАМЕНЕНА >>>
+
+    // --- Инициализация прогресс-баров для карточек --- 
+    // Функция для обновления прогресс-баров
+    function updateProgressBarsFigma(containerElement) {
       if (!containerElement) return;
-      const progressVisuals = containerElement.querySelectorAll('.progress-bar-visual');
-      progressVisuals.forEach(visual => {
-        const progressPercent = parseInt(visual.dataset.progress || '0', 10);
-        const animationContainer = visual.querySelector('.progress-animation-container');
-        const percentageText = visual.querySelector('.progress-percentage');
+      // Ищем контейнеры прогресс-бара Figma
+      const progressContainers = containerElement.querySelectorAll('.progress-bar-container-figma');
+      progressContainers.forEach(container => {
+        const progressFill = container.querySelector('.progress-bar-fill-figma');
+        const progressPercentSpan = container.querySelector('.progress-percentage-figma');
+        const progressData = progressFill ? progressFill.dataset.progress : null;
+        const progressPercent = progressData ? parseInt(progressData, 10) : 0;
 
-        if (progressPercent > 0) {
-          if (animationContainer) {
-            animationContainer.style.width = progressPercent + '%';
-          }
-          if (percentageText) {
-            percentageText.textContent = progressPercent + '%';
-          }
-           // Убедимся, что контейнер анимации видим, если он был скрыт
-           if(animationContainer && animationContainer.style.display === 'none') {
-              animationContainer.style.display = '';
-           }
-        } else {
-          // Скрываем или обнуляем контейнер анимации при 0%
-          if (animationContainer) {
-            animationContainer.style.width = '0%';
-             // animationContainer.style.display = 'none'; // Можно и скрыть, если нужно
-          }
-          if (percentageText) {
-            percentageText.textContent = '0%';
-          }
+        if (progressFill) {
+          progressFill.style.width = progressPercent + '%';
+        }
+        if (progressPercentSpan) {
+          progressPercentSpan.textContent = progressPercent + '%';
         }
       });
     }
 
-    // Инициализируем прогресс-бары при загрузке
+    // Инициализируем прогресс-бары при загрузке для текущей сетки
     const initialGrid = document.getElementById('startupsGrid');
-    updateProgressBars(initialGrid);
+    updateProgressBarsFigma(initialGrid);
+    // --- Конец инициализации прогресс-баров --- 
 
-    // --- Обработчик кнопки "Показать еще" --- (без изменений в fetch, но сохраняем текст пагинации при первой загрузке)
-    if (showMoreBtn && startupsGrid) {
-      if (!initialPaginationText && paginationInfo) { // Если текст не был загружен сразу (на случай, если initial_has_next=False)
-          // Попробуем получить текст из шаблона, если он есть
-          const initialP = paginationInfo.querySelector('p');
-          if (initialP) {
-              initialPaginationText = `<p>${initialP.innerHTML}</p>`;
-          }
-      }
-      showMoreBtn.addEventListener('click', function() {
-        const button = this;
-        const nextPage = button.dataset.nextPage;
-        if (!nextPage) return;
-
-        // Сохраняем initialPaginationText ПЕРЕД ПЕРВЫМ запросом AJAX, если он еще пуст
-        if (!initialPaginationText && paginationInfo && paginationInfo.innerHTML.trim() !== '') {
-            initialPaginationText = paginationInfo.innerHTML;
-        }
-
-        const currentUrl = new URL(window.location.href);
-        const params = new URLSearchParams(currentUrl.search);
-        params.set('page', nextPage);
-        const fetchUrl = `${currentUrl.pathname}?${params.toString()}`;
-
-        // --- Отображаем состояние загрузки --- 
-        const textSpanLoading = button.querySelector('.btn-text');
-        const iconLoading = button.querySelector('i');
-        if (textSpanLoading) textSpanLoading.textContent = 'Загрузка...'; 
-        if (iconLoading) iconLoading.style.display = 'none'; // Скрываем иконку
-        button.disabled = true;
-        // --- Конец состояния загрузки ---
-
-        fetch(fetchUrl, {
-            method: 'GET',
-            headers: {'X-Requested-With': 'XMLHttpRequest'}
-        })
-        .then(response => {
-            if (!response.ok) {
-                 return response.text().then(text => {throw new Error(`HTTP error ${response.status}: ${text || 'Server error'}`);});
-            }
-            const contentType = response.headers.get("content-type");
-            if (contentType && contentType.indexOf("application/json") !== -1) {
-                return response.json();
-            } else {
-                return response.text().then(text => {throw new Error(`Unexpected response type: ${contentType}. Content: ${text}`);});
-            }
-        })
-        .then(data => {
-            if (data.html) {
-                // Создаем временный контейнер, чтобы обновить прогресс-бары ДО вставки
-                const tempDiv = document.createElement('div');
-                tempDiv.innerHTML = data.html;
-                updateProgressBars(tempDiv); // Обновляем бары во временном контейнере
-                
-                // Вставляем уже обновленный HTML
-                startupsGrid.insertAdjacentHTML('beforeend', tempDiv.innerHTML);
-            }
-
-            // Считаем ТОЛЬКО видимые карточки (на всякий случай, хотя теперь скрытых быть не должно)
-            const currentVisibleCount = startupsGrid.querySelectorAll('.startup-card:not([style*="display: none"])').length;
-
-            // Обновляем пагинацию
-            if (paginationInfo && data.count !== undefined && data.page_number !== undefined && data.num_pages !== undefined) {
-                 if (data.num_pages > 1) {
-                    paginationInfo.innerHTML = `<p>Страница ${data.page_number} из ${data.num_pages}. Показано ${currentVisibleCount} из ${data.count} стартапов.</p>`;
-                 } else {
-                     paginationInfo.innerHTML = `<p>Показано ${currentVisibleCount} из ${data.count} стартапов.</p>`;
-                 }
-            }
-
-            // Показываем кнопку "Скрыть"
-            if (hideBtn) {
-                hideBtn.style.display = 'inline-flex';
-            }
-
-            if (data.has_next) {
-                button.dataset.nextPage = parseInt(nextPage) + 1;
-                 // Восстанавливаем кнопку, изменяя только текст в span и показывая иконку
-                 button.disabled = false;
-                 const textSpan = button.querySelector('.btn-text');
-                 if (textSpan) textSpan.textContent = 'Показать еще ';
-                 const icon = button.querySelector('i'); // Иконка должна быть
-                 if (icon) icon.style.display = ''; // Показываем иконку
-            } else {
-                button.style.display = 'none';
-                 if (paginationInfo && data.count !== undefined) {
-                      // Считаем видимые карточки и здесь
-                     const finalVisibleCount = startupsGrid.querySelectorAll('.startup-card:not([style*="display: none"])').length;
-                     paginationInfo.innerHTML = `<p>Показаны все ${finalVisibleCount} из ${data.count} стартапов.</p>`;
-                 }
-            }
-        })
-        .catch(error => {
-            console.error('Ошибка при загрузке стартапов:', error);
-             // Восстанавливаем кнопку, изменяя только текст в span и показывая иконку
-             button.disabled = false;
-             const textSpan = button.querySelector('.btn-text');
-             if (textSpan) textSpan.textContent = 'Показать еще ';
-             const icon = button.querySelector('i'); // Иконка должна быть
-             if (icon) icon.style.display = ''; // Показываем иконку
-             if (paginationInfo) {
-                 // ... (обработка ошибки без изменений) ...
-                 let errorP = paginationInfo.querySelector('.error-message');
-                 if (!errorP) {
-                     errorP = document.createElement('p');
-                     errorP.style.color = 'red';
-                     errorP.className = 'error-message';
-                     paginationInfo.appendChild(errorP);
-                 }
-                 errorP.textContent = `Не удалось загрузить больше стартапов (${error.message}). Попробуйте еще раз.`;
-             }
-        });
-      });
-    }
-
-    // --- Обработчик кнопки "Скрыть" --- (исправленный)
-    if (hideBtn && startupsGrid && showMoreBtn) {
-        hideBtn.addEventListener('click', function() {
-            const allCards = startupsGrid.querySelectorAll('.startup-card');
-
-            // Удаляем все карточки, кроме первых initialVisibleCount
-            allCards.forEach((card, index) => {
-                if (index >= initialVisibleCount) {
-                    card.remove(); // <<< Удаляем карточку из DOM
-                } else {
-                    card.style.display = ''; // Убедимся, что первые видны (на случай, если были скрыты)
+    // --- Обработка отправки формы фильтров --- 
+    // Обновляем URL при отправке формы, чтобы пагинация работала с фильтрами
+    if (filterForm) {
+        filterForm.addEventListener('submit', function(e) {
+            // Не предотвращаем стандартную отправку, просто модифицируем action
+            const formData = new FormData(filterForm);
+            const params = new URLSearchParams();
+            // Добавляем все параметры формы, кроме пустых и 'page'
+            formData.forEach((value, key) => {
+                if (value && key !== 'page') { 
+                    params.append(key, value);
                 }
             });
+            // Устанавливаем action формы с новыми параметрами
+            // filterForm.action = `?${params.toString()}`; 
+            // Отправка GET запросом и так передаст параметры
+        });
 
-            // Скрываем кнопку "Скрыть"
-            this.style.display = 'none';
-
-            // Показываем кнопку "Показать еще" и сбрасываем страницу/состояние
-            showMoreBtn.style.display = 'inline-flex';
-            showMoreBtn.dataset.nextPage = '2';
-            showMoreBtn.disabled = false;
-            // Восстанавливаем, изменяя только текст в span и показывая иконку
-            const textSpan = showMoreBtn.querySelector('.btn-text');
-            if (textSpan) textSpan.textContent = 'Показать еще ';
-            const icon = showMoreBtn.querySelector('i'); // Иконка должна быть
-            if (icon) icon.style.display = ''; // Показываем иконку
-
-            // Восстанавливаем исходный текст пагинации
-            if (paginationInfo && initialPaginationText) {
-                paginationInfo.innerHTML = initialPaginationText;
-                 const errorP = paginationInfo.querySelector('.error-message');
-                 if (errorP) errorP.remove();
-            } else if (paginationInfo) {
-                 paginationInfo.innerHTML = '';
+        // Обновляем ссылки пагинации, чтобы они включали текущие фильтры
+        const paginationLinks = document.querySelectorAll('.pagination-numbers a');
+        const currentParams = new URLSearchParams(window.location.search);
+        const filterParams = new URLSearchParams();
+        
+        // Собираем только параметры фильтрации
+        currentParams.forEach((value, key) => {
+            if (key !== 'page') { // Исключаем параметр страницы
+                filterParams.append(key, value);
             }
         });
-    }
-    // <<< Конец логики "Показать еще" и "Скрыть" >>>
+        const filterQueryString = filterParams.toString();
 
-  });
-  
-  // Функция для переключения микроинвестиций
+        paginationLinks.forEach(link => {
+            const url = new URL(link.href);
+            const pageNum = url.searchParams.get('page');
+            link.href = `?${filterQueryString}${filterQueryString ? '&' : ''}page=${pageNum}`;
+        });
+    }
+    // --- Конец обработки формы фильтров --- 
+
+  }); // Конец DOMContentLoaded
+
+  // Функция для переключения микроинвестиций (остается)
   function toggleMicroInvestment() {
     var toggle = document.getElementById('microToggle');
     var input = document.getElementById('microInvestmentInput');
-    
+
     if (toggle.classList.contains('active')) {
       toggle.classList.remove('active');
       input.value = '0';
@@ -509,9 +430,7 @@
       toggle.classList.add('active');
       input.value = '1';
     }
-    // Опционально: если изменение этого поля должно влиять на фильтр,
-    // можно автоматически отправить форму: document.getElementById('filterForm').submit();
-    // Но обычно пользователь ожидает нажатия кнопки "Показать"
+    // Авто-сабмит не делаем, пользователь нажмет "Показать"
   }
 </script>
 {% endblock %}
