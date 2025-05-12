@@ -22,8 +22,6 @@ body {
   box-sizing: border-box;
   max-width: 1303px;
   margin: 0 auto;
-  padding-left: 71px;
-  padding-right: 71px;
 }
 
 
@@ -407,6 +405,7 @@ body {
   max-width: 1032px;
   padding: 0;
   box-sizing: border-box;
+  margin-top: 35px;
 }
 
 
@@ -446,7 +445,7 @@ body {
 }
 
 .startup-image {
-  width: 123px;
+  width: 111px;
   height: 111px;
   display: flex;
   align-items: center;
@@ -764,8 +763,8 @@ body {
    }
    .startup-image {
        width: 100px;
-       height: 90px;
-       top: -22px;
+       height: 100px;
+       top: -25px;
    }
    .progress-bar-container-figma {
        width: 100%;
@@ -841,9 +840,9 @@ body {
      gap: 8px;
    }
    .startup-image {
-       width: 110px;
-       height: 98px;
-       top: -24px;
+       width: 100px;
+       height: 100px;
+       top: -25px;
    }
 
    .startup-title { font-size: 18px; line-height: 1.3; }
@@ -874,6 +873,7 @@ body {
     }
     .startups-grid {
         gap: 10px;
+        margin-top: 25px;
     }
     .startup-card {
         max-width: 100%;
