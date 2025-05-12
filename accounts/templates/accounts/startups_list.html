@@ -151,8 +151,8 @@
                 {# Логика отображения пагинации - может потребовать кастомный тег или сложную логику здесь #}
                 {# Пример простой логики #}
                 {% if page_obj.has_previous %}
-                    <a href="?page=1">&laquo; First</a>
-                    <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                    {# <a href="?page=1">&laquo; First</a> #}
+                    <a href="?page={{ page_obj.previous_page_number }}">Назад</a> {# Previous -> Назад #}
                 {% endif %}
 
                 {# Отображаем номера страниц (упрощенный вариант) #}
@@ -167,8 +167,9 @@
                 {% endfor %}
 
                 {% if page_obj.has_next %}
-                    <a href="?page={{ page_obj.next_page_number }}">Next</a>
-                    <a href="?page={{ paginator.num_pages }}">Last &raquo;</a>
+                    <a href="?page={{ page_obj.next_page_number }}">Вперед</a> {# Next -> Вперед #}
+                    {# <a href="?page={{ paginator.num_pages }}">Last &raquo;</a> #}
+                    <a href="?page={{ paginator.num_pages }}">Последняя &raquo;</a> {# Last -> Последняя #}
                 {% endif %}
             </div>
            {% elif page_obj %} {# Если только одна страница, ничего не показываем #}

@@ -399,7 +399,8 @@ body {
 .startups-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
+  row-gap: 55px;
+  column-gap: 20px;
   justify-content: flex-start;
   width: 100%;
   max-width: 1032px;
@@ -418,7 +419,7 @@ body {
   position: relative;
   text-decoration: none;
   color: inherit;
-  width: 330px;
+  width: 328px;
   height: 448px;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   box-sizing: border-box;
@@ -750,11 +751,10 @@ body {
       justify-content: center;
   }
   .startup-card {
-      width: calc(33.333% - 10px);
-      max-width: 330px;
+      width: 328px;
+      max-width: 328px;
       height: auto;
       padding-top: 0;
-      margin-bottom: 30px;
   }
    .startup-card-inner {
        margin-top: 80px;
@@ -1056,6 +1056,7 @@ body {
     letter-spacing: 0.08px;
     width: 100%;
     text-align: left;
+    margin-top: 5px;
 }
 
 
