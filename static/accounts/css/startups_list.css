@@ -566,48 +566,82 @@ body {
     color: #757575;
 }
 
-/* --- Новые стили для .progress-bar-visual (адаптированные под карточку) --- */
-.progress-bar-visual {
+/* === Стили прогресс-бара из startup_detail.css (Адаптированные) === */
+.progress-container { /* Обертка, если нужна будет для flex в будущем */
     width: 100%;
-    height: 20px; /* Адаптированная высота для карточки */
-    position: relative;
-    border-radius: 10px; /* Скругление как у родителя */
-    overflow: hidden; /* Чтобы foreground не вылезал */
     margin-top: 5px; /* Отступ сверху */
+    display: flex; /* На случай, если добавим backers-info */
+    align-items: center;
+    gap: 10px;
 }
 
-.progress-bar-background {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background-color: #EBEBEB; /* Цвет фона */
+.progress-bar-visual { /* Визуальная часть */
+    flex-grow: 1; /* Занимает доступное место */
+    height: 20px; /* ! Адаптированная высота для карточки */
+    position: relative;
+    background-color: #0B1A3F; /* Темный фон из detail */
     border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #1D3059; /* Рамка из detail */
+}
+
+.progress-animation-container { /* Анимируемый передний план */
+    position: absolute;
+    height: 100%;
     top: 0;
     left: 0;
+    background: linear-gradient(90deg, #7B61FF 0%, #A89AFF 100%); /* Фиолетовый градиент из detail */
+    border-radius: 10px;
+    overflow: hidden; /* Скрываем выходящие планеты */
+    transition: width 0.8s ease-out; /* Плавная анимация ширины */
 }
 
-.progress-bar-foreground {
+/* --- Анимация планет --- */
+.progress-planets {
     position: absolute;
+    width: 200%; /* Шире контейнера для движения */
     height: 100%;
-    background: linear-gradient(90deg, #FFDA1A 0%, #F6DE00 100%); /* Градиент */
-    border-radius: 10px;
     top: 0;
     left: 0;
-    transition: width 0.6s ease-in-out; /* Анимация ширины */
+    background-image: url('../images/planets/progress_texture.svg'); /* Путь к текстуре планет */
+    background-size: auto 100%; /* Масштабируем по высоте */
+    background-repeat: repeat-x;
+    opacity: 0.15; /* Полупрозрачность */
+    animation: movePlanets 15s linear infinite; /* Анимация движения */
 }
 
-.progress-bar-text {
+/* Если вдруг файл не найдется, можно оставить просто фон */
+.progress-planets:only-child { /* Если нет background-image, просто фиолетовый */
+     background-image: none;
+}
+
+@keyframes movePlanets {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%); /* Сдвиг на половину ширины для цикла */
+    }
+}
+/* --- Конец анимации планет --- */
+
+.progress-percentage { /* Текст процентов */
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 11px; /* Адаптированный размер шрифта */
+    color: #FFFFFF; /* Белый текст */
     font-family: 'Unbounded', sans-serif;
-    font-weight: 400;
-    color: #000000;
+    font-size: 11px; /* ! Адаптированный размер шрифта */
+    font-weight: 500; /* Medium */
+    line-height: 1;
     white-space: nowrap;
-    z-index: 1; /* Поверх других слоев */
+    z-index: 1; /* Поверх анимации */
 }
+
+/* Стиль для backers-info, если он будет добавлен позже */
+/* .progress-backers-info { ... } */
+/* ============================================================== */
 
 
 .investment-type {

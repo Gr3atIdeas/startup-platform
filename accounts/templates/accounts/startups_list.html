@@ -288,33 +288,30 @@
     // ... (код для пагинации остается без изменений)
 
     // --- Инициализация прогресс-баров для карточек --- 
-    // <<< Корректируем функцию для работы со структурой progress-bar-visual >>>
+    // <<< Корректируем функцию для работы со структурой progress-bar-visual / animation-container >>>
     function updateAnimatedProgressBars(containerElement) {
       if (!containerElement) return;
       // Ищем обертки .progress-bar-visual
       const visualContainers = containerElement.querySelectorAll('.progress-bar-visual');
       
       visualContainers.forEach(container => {
-        // Находим внутренние элементы
-        const foregroundBar = container.querySelector('.progress-bar-foreground');
-        const textSpan = container.querySelector('.progress-bar-text');
+        // Находим анимируемый контейнер и текст
+        const animationContainer = container.querySelector('.progress-animation-container');
+        const percentageSpan = container.querySelector('.progress-percentage');
         
-        if (foregroundBar && textSpan) {
+        if (animationContainer && percentageSpan) {
           // Получаем процент из текста (например, "75%")
-          const textContent = textSpan.textContent || '0%';
+          const textContent = percentageSpan.textContent || '0%';
           const progressPercentValue = parseInt(textContent, 10) || 0;
           
-          // Устанавливаем ширину элемента foreground
-          // Используем setTimeout для небольшой задержки, чтобы анимация сработала при загрузке
+          // Устанавливаем ширину элемента animation-container
           setTimeout(() => {
-            foregroundBar.style.width = progressPercentValue + '%';
-          }, 100); // Небольшая задержка
-          
-          // Текст уже должен быть правильным из шаблона, но на всякий случай обновим:
-          // textSpan.textContent = progressPercentValue + '%';
+            animationContainer.style.width = progressPercentValue + '%';
+          }, 100); // Небольшая задержка для срабатывания transition
+
         } else {
-          if (!foregroundBar) console.error('Foreground bar (.progress-bar-foreground) not found in:', container);
-          if (!textSpan) console.error('Progress text span (.progress-bar-text) not found in:', container);
+          if (!animationContainer) console.error('Animation container (.progress-animation-container) not found in:', container);
+          if (!percentageSpan) console.error('Progress text span (.progress-percentage) not found in:', container);
         }
       });
     }

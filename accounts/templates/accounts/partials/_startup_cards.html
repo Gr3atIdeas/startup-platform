@@ -36,12 +36,16 @@
           {% endif %}
       </div>
 
-      <!-- Прогресс-бар как на startup_detail.html с классом progress-bar-visual -->
+      <!-- Прогресс-бар ТОЧНО как на startup_detail.html -->
       {% with progress=startup.get_progress_percentage|default:0 %}
-      <div class="progress-bar-visual"> {# Обертка из startup_detail.html #}
-        <div class="progress-bar-background"></div>
-        <div class="progress-bar-foreground" style="width: '{{ progress }}%';"></div> {# Задаем ширину инлайново для JS #}
-        <span class="progress-bar-text">{{ progress|floatformat:0 }}%</span>
+      <div class="progress-container"> {# Используем обертку от detail #}
+        <div class="progress-bar-visual"> {# Визуальная часть #}
+          <div class="progress-animation-container" style="width: '{{ progress }}%';"> {# Анимируемый контейнер #}
+            <div class="progress-planets"></div> {# Для анимации планет #}
+          </div>
+          <span class="progress-percentage">{{ progress|floatformat:0 }}%</span> {# Текст процента #}
+        </div>
+        {# Блок .progress-backers-info из detail здесь не нужен #}
       </div>
       {% endwith %}
 
