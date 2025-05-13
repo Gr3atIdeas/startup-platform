@@ -1,199 +1,207 @@
 {% extends 'accounts/base.html' %}
+{% load static %}
 
 {% block title %}Новости{% endblock %}
 
 {% block head_extra %}
-  <style>
-    .news-feed {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-    .news-card {
-      margin-bottom: 30px;
-      background: #FFFFFF;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      position: relative;
-    }
-    .news-image {
-      width: 100%;
-      height: 300px;
-      object-fit: cover;
-      display: block;
-      margin: 0 auto;
-    }
-    .news-content {
-      padding: 20px;
-    }
-    .news-title {
-      font-family: 'Circe', sans-serif;
-      font-weight: 700;
-      font-size: 24px;
-      margin: 0 0 10px 0;
-    }
-    .news-meta {
-      font-family: 'Circe', sans-serif;
-      font-size: 14px;
-      color: #A9A9A9;
-      margin-bottom: 10px;
-    }
-    .news-tags {
-      font-family: 'Circe', sans-serif;
-      font-size: 14px;
-      color: #7B61FF;
-      margin-bottom: 10px;
-    }
-    .news-excerpt {
-      font-family: 'Circe', sans-serif;
-      font-size: 16px;
-      color: #000000;
-      line-height: 1.5;
-    }
-    .create-news-btn {
-      display: inline-block;
-      padding: 10px 20px;
-      background: #7B61FF;
-      color: #FFFFFF;
-      text-decoration: none;
-      border-radius: 99px;
-      margin-bottom: 20px;
-      cursor: pointer;
-    }
-    .delete-news-btn {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: #FF6161;
-      color: #FFFFFF;
-      border: none;
-      padding: 5px 10px;
-      border-radius: 5px;
-      cursor: pointer;
-      font-family: 'Circe', sans-serif;
-      font-size: 14px;
-    }
-    /* Стили для popup */
-    .popup-overlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.5);
-      z-index: 1000;
-      justify-content: center;
-      align-items: center;
-    }
-    .popup {
-      background: #FFFFFF;
-      padding: 20px;
-      border-radius: 12px;
-      width: 500px;
-      max-width: 90%;
-      position: relative;
-    }
-    .popup-close {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: none;
-      border: none;
-      font-size: 20px;
-      cursor: pointer;
-    }
-    .form-group {
-      margin-bottom: 20px;
-    }
-    .form-group label {
-      display: block;
-      font-family: 'Circe', sans-serif;
-      font-size: 16px;
-      margin-bottom: 5px;
-    }
-    .form-group input,
-    .form-group textarea {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #E5E7EB;
-      border-radius: 8px;
-      font-family: 'Circe', sans-serif;
-      font-size: 14px;
-    }
-    .form-group textarea {
-      height: 200px;
-      resize: vertical;
-    }
-    .submit-btn {
-      padding: 10px 20px;
-      background: #7B61FF;
-      color: #FFFFFF;
-      border: none;
-      border-radius: 99px;
-      cursor: pointer;
-    }
-  </style>
+  <link rel="stylesheet" href="{% static 'accounts/css/news.css' %}">
 {% endblock %}
 
 {% block content %}
-<div class="news-feed">
-  {% if user.is_authenticated and user.role.role_name == 'moderator' %}
-    <a href="#" class="create-news-btn" onclick="openPopup()">Добавить новость</a>
-  {% endif %}
-
-  <!-- Popup для создания новости -->
-  <div class="popup-overlay" id="newsPopup">
-    <div class="popup">
-      <button class="popup-close" onclick="closePopup()">×</button>
-      <h2>Создать новость</h2>
-      <form id="newsForm" enctype="multipart/form-data">
-        {% csrf_token %}
-        <div class="form-group">
-          <label for="id_title">Заголовок</label>
-          <input type="text" name="title" id="id_title" required>
-        </div>
-        <div class="form-group">
-          <label for="id_content">Текст новости</label>
-          <textarea name="content" id="id_content" required></textarea>
-        </div>
-        <div class="form-group">
-          <label for="id_image">Картинка</label>
-          <input type="file" name="image" id="id_image" accept="image/*">
-        </div>
-        <button type="submit" class="submit-btn">Создать</button>
-      </form>
-    </div>
+<div class="news-page-container">
+  <div class="search-bar-container">
+    <input type="text" placeholder="Поиск по каталогу" class="search-input">
+    <button class="search-button">
+      <img src="{% static 'accounts/images/search.svg' %}" alt="Поиск">
+    </button>
   </div>
 
-  {% for article in articles %}
-    <div class="news-card">
-      {% if user.is_authenticated and user.role.role_name == 'moderator' %}
-        <button class="delete-news-btn" onclick="deleteNews({{ article.article_id }})">Удалить</button>
-      {% endif %}
-      {% if article.get_image_url %}
-        <a href="{% url 'news_detail' article.article_id %}">
-          <img src="{{ article.get_image_url }}" alt="{{ article.title }}" class="news-image">
+  <div class="main-content-area">
+    <aside class="sidebar">
+      <div class="sidebar-block">
+        <a href="#" class="suggest-news-btn" onclick="openPopup()">
+          Предложить новость
+          <img src="{% static 'accounts/images/add-circle-outline.svg' %}" alt="Добавить новость">
         </a>
-      {% endif %}
-      <div class="news-content">
-        <h2 class="news-title">{{ article.title }}</h2>
-        <div class="news-meta">
-          {{ article.published_at|date:"d.m.Y H:i" }} | Автор: {{ article.author.email|default:"Неизвестно" }}
+      </div>
+      <div class="sidebar-block">
+        <label for="sort-by" class="sidebar-label">Показать сначала</label>
+        <select id="sort-by" class="sidebar-select">
+          <option value="new">Новые</option>
+          <option value="old">Старые</option>
+          <option value="rating">Популярные</option>
+        </select>
+      </div>
+      <div class="sidebar-block">
+        <h3 class="sidebar-title">Категории</h3>
+        <ul class="category-list">
+          <li><input type="checkbox" id="cat-medicine" name="category" value="medicine" checked> <label for="cat-medicine">Медицина</label></li>
+          <li><input type="checkbox" id="cat-auto" name="category" value="auto"> <label for="cat-auto">Автомобили</label></li>
+          <li><input type="checkbox" id="cat-delivery" name="category" value="delivery"> <label for="cat-delivery">Доставка</label></li>
+          <li><input type="checkbox" id="cat-cafe" name="category" value="cafe"> <label for="cat-cafe">Кафе/рестораны</label></li>
+          <li><input type="checkbox" id="cat-fastfood" name="category" value="fastfood"> <label for="cat-fastfood">Фастфуд</label></li>
+          <li><input type="checkbox" id="cat-health" name="category" value="health"> <label for="cat-health">Здоровье</label></li>
+          <li><input type="checkbox" id="cat-beauty" name="category" value="beauty"> <label for="cat-beauty">Красота</label></li>
+          <li><input type="checkbox" id="cat-transport" name="category" value="transport"> <label for="cat-transport">Транспорт</label></li>
+          <li><input type="checkbox" id="cat-sport" name="category" value="sport"> <label for="cat-sport">Спорт</label></li>
+          <li><input type="checkbox" id="cat-psychology" name="category" value="psychology"> <label for="cat-psychology">Психология</label></li>
+          <li><input type="checkbox" id="cat-ai" name="category" value="ai"> <label for="cat-ai">ИИ</label></li>
+        </ul>
+      </div>
+      <div class="sidebar-block microinvest-block">
+        <label for="microinvest" class="sidebar-label">Микроинвестиции</label>
+        <span class="help-icon" title="Информация о микроинвестициях">?</span>
+        <label class="switch">
+          <input type="checkbox" id="microinvest">
+          <span class="slider round"></span>
+        </label>
+      </div>
+      <div class="sidebar-block rating-block">
+        <div class="rating-header">
+          <label class="sidebar-label">Рейтинг</label>
+          <span class="rating-value">0-3,2</span>
         </div>
-        <div class="news-tags">
-          Теги: {{ article.tags|default:"Нет тегов" }}
-        </div>
-        <div class="news-excerpt">
-          {{ article.content|truncatewords:30 }}
+        <input type="range" min="0" max="5" value="3.2" step="0.1" class="rating-slider">
+        <span class="rating-range-label">Диапазон</span>
+      </div>
+      <div class="sidebar-block">
+        <button class="show-filters-btn">Показать</button>
+      </div>
+    </aside>
+
+    <div class="news-feed-column">
+      <!-- Popup для создания новости -->
+      <div class="popup-overlay" id="newsPopup">
+        <div class="popup">
+          <button class="popup-close" onclick="closePopup()">×</button>
+          <h2>Создать новость</h2>
+          <form id="newsForm" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+              <label for="id_title">Заголовок</label>
+              <input type="text" name="title" id="id_title" required>
+            </div>
+            <div class="form-group">
+              <label for="id_content">Текст новости</label>
+              <textarea name="content" id="id_content" required></textarea>
+            </div>
+            <div class="form-group">
+              <label for="id_image">Картинка</label>
+              <input type="file" name="image" id="id_image" accept="image/*">
+            </div>
+            <button type="submit" class="submit-btn">Создать</button>
+          </form>
         </div>
       </div>
-    </div>
-  {% empty %}
-    <p>Новостей пока нет.</p>
-  {% endfor %}
-</div>
+
+      <div class="news-grid">
+        {% for article in articles %}
+          <div class="news-card">
+            {% if user.is_authenticated and user.role.role_name == 'moderator' %}
+              <button class="delete-news-btn" onclick="deleteNews({{ article.article_id }})">Удалить</button>
+            {% endif %}
+            
+            <a href="{% url 'news_detail' article.article_id %}" class="news-image-link">
+              {% if article.get_image_url %}
+                <img src="{{ article.get_image_url }}" alt="{{ article.title }}" class="news-image">
+              {% else %}
+                <img src="https://placehold.co/295x173/E0E0E0/B0B0B0?text=Новость" alt="{{ article.title|default:"Заголовок новости" }}" class="news-image">
+              {% endif %}
+            </a>
+            
+            <div class="news-content">
+              <div class="news-card-header">
+                 <img src="{{ article.author.avatar.url|default:'https://placehold.co/39x39/7B61FF/FFFFFF?text=A' }}" alt="Аватар" class="news-avatar">
+                 <div class="news-title-meta">
+                    <h2 class="news-title"><a href="{% url 'news_detail' article.article_id %}">{{ article.title|default:"Заголовок новости" }}</a></h2>
+                    <div class="news-meta">
+                      {{ article.published_at|date:"d M Y"|default:"2 дня назад" }} | Автор: {{ article.author.get_full_name|default:article.author.email|default:"Неизвестно" }}
+                    </div>
+                 </div>
+              </div>
+              <div class="news-tags">
+                Теги: {{ article.tags|default:"Нет тегов" }}
+              </div>
+              <div class="news-excerpt">
+                {{ article.content|truncatewords:25|default:"Наш стартап разрабатывает инновационную платформу для телемедицины, которая обеспечивает пользователям доступ к качественным медицинским консультациям..." }}
+              </div>
+            </div>
+          </div>
+        {% empty %}
+          {% comment %}This block will be rendered if there are no articles. We'll add static cards below anyway for layout purposes.{% endcomment %}
+        {% endfor %}
+
+        <!-- Static example cards for layout (total 6 with the one from loop if it exists) -->
+        {% for i in "12345" %}
+        <div class="news-card {% if i == '4' %}news-card-ad{% endif %}"> <!-- Example: 4th static card is an ad -->
+            <a href="#" class="news-image-link">
+                <img src="https://placehold.co/295x173/A9A9A9/FFFFFF?text=Новость+{{ i }}" alt="Новость {{ i }}" class="news-image">
+                {% if i == '4' %}
+                <div class="ad-label-on-image">
+                    <img src="{% static 'accounts/images/alert-circle.svg' %}" alt="Реклама"> Реклама
+                </div>
+                {% endif %}
+            </a>
+            <div class="news-content">
+              <div class="news-card-header">
+                 <img src="https://placehold.co/39x39/C6BBFE/FFFFFF?text={{ i }}" alt="Аватар автора" class="news-avatar">
+                 <div class="news-title-meta">
+                    <h2 class="news-title"><a href="#">Ромашка {{ i }}</a></h2>
+                    <div class="news-meta">
+                      2 дня назад | Автор: Неизвестно
+                    </div>
+                 </div>
+              </div>
+              <div class="news-tags">
+                Теги: Медицина, Инновации
+              </div>
+              <div class="news-excerpt">
+                Наш стартап разрабатывает инновационную платформу для телемедицины, которая обеспечивает пользователям доступ к качественным медицинским консультациям в любое время и в любом месте...
+              </div>
+            </div>
+        </div>
+        {% endfor %}
+         <!-- One more static card to make it 6 if articles is empty -->
+        <div class="news-card">
+            <a href="#" class="news-image-link">
+                <img src="https://placehold.co/295x173/D3D3D3/000000?text=Новость+6" alt="Новость 6" class="news-image">
+            </a>
+            <div class="news-content">
+              <div class="news-card-header">
+                 <img src="https://placehold.co/39x39/E6E6FA/000000?text=6" alt="Аватар автора" class="news-avatar">
+                 <div class="news-title-meta">
+                    <h2 class="news-title"><a href="#">Еще одна Ромашка</a></h2>
+                    <div class="news-meta">
+                      3 дня назад | Автор: Аноним
+                    </div>
+                 </div>
+              </div>
+              <div class="news-tags">
+                Теги: Технологии
+              </div>
+              <div class="news-excerpt">
+                Описание еще одного интересного стартапа, который меняет мир к лучшему с помощью новейших технологий и разработок.
+              </div>
+            </div>
+        </div>
+
+      </div> <!-- news-grid -->
+
+      <div class="pagination">
+        <a href="#" class="page-item current">1</a>
+        <a href="#" class="page-item">2</a>
+        <a href="#" class="page-item">3</a>
+        <span class="page-item dots">...</span>
+        <a href="#" class="page-item">67</a>
+        <a href="#" class="page-item">68</a>
+      </div>
+       <div class="show-more-container">
+         <button class="show-more-btn">Показать еще</button>
+       </div>
+
+    </div> <!-- news-feed-column -->
+  </div> <!-- main-content-area -->
+</div> <!-- news-page-container -->
 
 <script>
   function openPopup() {
@@ -209,12 +217,13 @@
     e.preventDefault();
 
     const formData = new FormData(this);
+    const csrfToken = formData.get('csrfmiddlewaretoken');
 
     fetch("{% url 'news' %}", {
       method: 'POST',
       body: formData,
       headers: {
-        'X-CSRFToken': '{{ csrf_token }}'
+        'X-CSRFToken': csrfToken
       }
     })
     .then(response => response.json())
@@ -223,7 +232,7 @@
         closePopup();
         location.reload();
       } else {
-        alert(data.error || 'Ошибка при создании новости');
+        alert(data.error || 'Ошибка при создании новости: ' + JSON.stringify(data.errors));
       }
     })
     .catch(error => {
@@ -236,11 +245,13 @@
     if (!confirm('Вы уверены, что хотите удалить эту новость?')) {
       return;
     }
+    const csrfToken = '{{ csrf_token }}';
 
     fetch(`/news/${articleId}/delete/`, {
       method: 'POST',
       headers: {
-        'X-CSRFToken': '{{ csrf_token }}'
+        'X-CSRFToken': csrfToken,
+        'Content-Type': 'application/json'
       }
     })
     .then(response => response.json())

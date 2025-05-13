@@ -1,0 +1,657 @@
+/* Global page styles */
+body {
+  background-color: #F0F2F5; /* Example background for the page, adjust as per figma outer bg */
+  font-family: 'Unbounded', sans-serif; /* Default font */
+}
+
+.news-page-container {
+  width: 100%;
+  max-width: 1440px; /* Based on Figma total width hint */
+  margin: 0 auto;
+  padding: 45px 20px; /* Adjusted padding */
+  box-sizing: border-box;
+}
+
+/* Search Bar */
+.search-bar-container {
+  display: flex;
+  max-width: 1028px; /* From Figma */
+  margin: 0 auto 40px auto; /* Centered, with bottom margin */
+  background: #004E9F; /* Figma search bar background */
+  border-radius: 10px;
+  padding: 5px;
+}
+
+.search-input {
+  flex-grow: 1;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 7px; /* Inner white input radius */
+  font-family: 'Unbounded', sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  color: #1E1E1E;
+  background: white; /* Figma input background */
+}
+.search-input::placeholder {
+  color: #CBCBCB; /* Figma placeholder text color */
+  font-weight: 300;
+}
+
+.search-button {
+  background: transparent;
+  border: none;
+  padding: 0 10px 0 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-button img {
+  width: 20px; /* Adjust as needed */
+  height: 20px; /* Adjust as needed */
+  /* Styles for search icon if it was SVG paths */
+  /* For white icon on blue bg: filter: brightness(0) invert(1); */
+}
+
+/* Main Content Area */
+.main-content-area {
+  display: flex;
+  gap: 21px; /* Gap from Figma */
+}
+
+/* Sidebar */
+.sidebar {
+  width: 254px; /* Figma sidebar width */
+  background: white;
+  border-radius: 10px;
+  padding: 30px 28px; /* Adjusted padding, figma has 53px top/bottom */
+  box-sizing: border-box;
+  height: fit-content; /* Adjust height or make it sticky if needed */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.sidebar-block {
+  margin-bottom: 30px; /* Spacing between blocks */
+}
+.sidebar-block:last-child {
+  margin-bottom: 0;
+}
+
+.suggest-news-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* To push icon to the right */
+  padding: 12px 20px; /* Adjusted padding */
+  background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+  color: black;
+  font-size: 16px;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 400;
+  line-height: 16px;
+  text-decoration: none;
+  text-align: center;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.suggest-news-btn img {
+  width: 20px; /* Adjust icon size */
+  height: 20px;
+  margin-left: 9px;
+}
+
+.sidebar-label {
+  display: block;
+  color: black;
+  font-size: 12px;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.12px;
+  margin-bottom: 8px;
+}
+
+.sidebar-select {
+  width: 100%;
+  padding: 12px 16px;
+  background: white;
+  border-radius: 5px;
+  border: 1px solid #D9D9D9;
+  font-family: 'Unbounded', sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  color: #1E1E1E;
+  appearance: none; /* For custom arrow */
+  background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4 6L8 10L12 6' stroke='%231E1E1E' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+}
+
+.sidebar-title {
+  color: black;
+  font-size: 20px;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 400;
+  line-height: 18px;
+  margin-bottom: 15px;
+}
+
+.category-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 200px; /* Example max height */
+  overflow-y: auto; /* Scroll for categories */
+  padding-right: 10px; /* Space for scrollbar */
+}
+
+.category-list li {
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.category-list label {
+  color: black;
+  font-size: 12px;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.12px;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.category-list input[type="checkbox"] {
+  width: 13px; /* Figma size */
+  height: 13px;
+  border-radius: 2px;
+  border: 1px solid black;
+  appearance: none;
+  cursor: pointer;
+  position: relative;
+}
+
+.category-list input[type="checkbox"]:checked {
+  background-color: #004E9F;
+  border-color: #004E9F;
+}
+
+.category-list input[type="checkbox"]:checked::after {
+  content: '';
+  position: absolute;
+  left: 3px;
+  top: 0px;
+  width: 4px;
+  height: 8px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+/* Scrollbar for category list */
+.category-list::-webkit-scrollbar {
+  width: 5px;
+}
+.category-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 2px;
+}
+.category-list::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.20); /* --Color1 from Figma */
+  border-radius: 2px;
+}
+.category-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.30);
+}
+
+
+.microinvest-block {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.microinvest-block .sidebar-label {
+  margin-bottom: 0;
+}
+
+/* Switch toggle styles */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 40px; /* Figma size */
+  height: 24px; /* Figma size */
+}
+
+.switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #D9D9D9; /* Off state color from Figma */
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px; /* Figma inner circle */
+  width: 18px;  /* Figma inner circle */
+  left: 3px;    /* Positioning from Figma */
+  bottom: 3px;  /* Positioning from Figma */
+  background-color: white; /* Icon-Brand-On-Brand for off state */
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #004E9F; /* On state color from Figma */
+}
+
+input:checked + .slider:before {
+  transform: translateX(16px); /* Width_of_switch (40) - left_pos (3) - width_of_circle (18) - desired_right_gap (3) = 16px */
+  background-color: #F5F5F5; /* Icon-Brand-On-Brand for on state */
+}
+
+.slider.round {
+  border-radius: 9999px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+/* Help icon for microinvestments */
+.help-icon {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 16px; 
+  height: 16px;
+  border-radius: 50%;
+  background-color: #D9D9D9; 
+  color: white; 
+  font-size: 10px; 
+  font-weight: bold; 
+  cursor: help;
+  margin-left: 8px; /* Adjusted margin slightly to visually center with toggle */
+  user-select: none; 
+  font-family: 'Circe', sans-serif; 
+  line-height: 16px; 
+}
+
+.rating-block .rating-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.rating-block .rating-value {
+  text-align: right;
+  color: #1E1E1E;
+  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  line-height: 19.60px;
+}
+
+.rating-slider {
+  width: 100%;
+  height: 4px; /* Figma track height */
+  background: #EBEBEB; /* Figma track color */
+  border-radius: 9999px;
+  appearance: none;
+  outline: none;
+  margin-bottom: 5px; /* Space before "Диапазон" */
+}
+
+/* Webkit (Chrome, Safari, Edge) */
+.rating-slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 16px; /* Figma thumb size */
+  height: 16px; /* Figma thumb size */
+  background: #004E9F; /* Figma thumb color */
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* Firefox */
+.rating-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  background: #004E9F;
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+}
+
+.rating-range-label {
+  display: block;
+  color: #757575; /* Text-Default-Secondary */
+  font-size: 8px;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.08px;
+}
+
+.show-filters-btn {
+  width: 100%;
+  padding: 12px 35px;
+  background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%);
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+  border: none;
+  color: #F5F5F5; /* Text-Brand-On-Brand */
+  font-size: 16px;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 400;
+  line-height: 16px;
+  cursor: pointer;
+}
+
+/* News Feed Column */
+.news-feed-column {
+  flex-grow: 1;
+  /* max-width will be handled by news-grid if needed */
+}
+
+/* News Grid */
+.news-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Responsive grid */
+  gap: 20px; /* Gap from Figma */
+  margin-bottom: 40px; /* Space before pagination */
+}
+
+/* Original styles from news.html, slightly adapted */
+.news-card {
+  background: #FFFFFF;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25); /* Figma shadow */
+  outline: 1px solid #C6BBFE; /* Figma outline */
+  outline-offset: -1px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.news-image-link {
+  display: block;
+  position: relative; /* For ad label positioning */
+}
+
+.news-image {
+  width: 100%;
+  height: 173px; /* Figma image height */
+  object-fit: cover;
+  display: block;
+  border-top-left-radius: 7px; /* Match inner image radius from Figma */
+  border-top-right-radius: 7px;
+}
+
+.news-content {
+  padding: 20px 21px; /* Figma padding */
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1; /* Ensure content area fills card */
+  gap: 15px; /* Gap from Figma */
+}
+
+.news-card-header {
+  display: flex;
+  align-items: center;
+  gap: 11px; /* Figma gap */
+}
+
+.news-avatar {
+  width: 39px; /* Figma avatar size */
+  height: 39px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.news-title-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* Figma gap */
+}
+
+.news-title {
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 16px;
+  color: black;
+  margin: 0;
+}
+.news-title a {
+  color: inherit;
+  text-decoration: none;
+}
+.news-title a:hover {
+  text-decoration: underline;
+}
+
+.news-meta {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 12px;
+  font-weight: 300;
+  letter-spacing: 0.12px;
+  color: black; /* Figma text color */
+  line-height: 1.3; /* Adjusted for better readability */
+}
+
+.news-tags {
+  font-family: 'Unbounded', sans-serif; /* Changed from Circe to match most text */
+  font-size: 12px; /* Adjusted size for consistency */
+  color: #7B61FF; /* Original color, consider if it fits the new design */
+  /* margin-bottom: 10px; */ /* Removed as gap handles spacing */
+  line-height: 1.3;
+}
+
+.news-excerpt {
+  font-family: 'Unbounded', sans-serif; /* Changed from Circe */
+  font-size: 12px;
+  font-weight: 300;
+  letter-spacing: 0.12px;
+  color: black; /* Figma text color */
+  line-height: 1.5;
+  flex-grow: 1; /* Allow excerpt to take available space */
+}
+
+.delete-news-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #FF6161;
+  color: #FFFFFF;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: 'Circe', sans-serif; /* Keep Circe as it was specific */
+  font-size: 12px; /* Adjusted for consistency */
+  z-index: 10; /* Ensure it's above image */
+}
+
+/* Ad specific styles */
+.news-card-ad {
+  /* Special border or background if needed, outline already present */
+}
+
+.ad-label-on-image {
+  position: absolute;
+  bottom: 10px; /* Adjust as per figma (padding-bottom: 20px) */
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(217, 217, 217, 0.58); /* Figma bg */
+  border-radius: 10px;
+  padding: 4px 10px; /* Figma padding */
+  display: flex;
+  align-items: center;
+  gap: 7px; /* Figma gap */
+  color: white;
+  font-size: 12px;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.12px;
+}
+
+.ad-label-on-image img { /* If an icon is used */
+  width: 16px; /* Adjust */
+  height: 16px;
+}
+
+
+/* Popup styles - largely from original, check for conflicts */
+.popup-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+}
+.popup {
+  background: #FFFFFF;
+  padding: 20px;
+  border-radius: 12px;
+  width: 500px;
+  max-width: 90%;
+  position: relative;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+.popup-close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #888;
+}
+.popup-close:hover {
+  color: #000;
+}
+
+.popup h2 {
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 400;
+  font-size: 20px;
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+.form-group label {
+  display: block;
+  font-family: 'Unbounded', sans-serif; /* Changed from Circe */
+  font-size: 14px; /* Adjusted */
+  font-weight: 300;
+  margin-bottom: 8px;
+}
+.form-group input[type="text"],
+.form-group textarea,
+.form-group input[type="file"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  font-family: 'Unbounded', sans-serif; /* Changed from Circe */
+  font-size: 14px;
+  box-sizing: border-box;
+}
+.form-group textarea {
+  min-height: 150px; /* Adjusted */
+  resize: vertical;
+}
+
+.submit-btn {
+  padding: 12px 25px;
+  background: #7B61FF; /* Original color */
+  color: #FFFFFF;
+  border: none;
+  border-radius: 99px;
+  cursor: pointer;
+  font-family: 'Unbounded', sans-serif; /* Changed from Circe */
+  font-size: 16px;
+  font-weight: 400;
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px; /* Gap between page items, Figma uses 31px for numbers */
+  margin-bottom: 20px;
+}
+
+.page-item {
+  padding: 8px 12px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: white; /* Default color from Figma */
+  font-size: 14px;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 300;
+  line-height: 18px;
+}
+
+.page-item.current {
+  background: white;
+  color: #004E9F; /* Blue color from Figma */
+}
+
+.page-item.dots {
+  color: white;
+  font-size: 16px;
+  font-family: 'Inter', sans-serif; /* ... uses Inter */
+  font-weight: 700;
+  padding: 8px 0; /* Adjust padding for dots */
+}
+
+.show-more-container {
+    display: flex;
+    justify-content: center;
+}
+
+.show-more-btn {
+  padding: 12px 35px;
+  background: transparent; /* Figma button appears to have white text, blackish border */
+  border: 1px solid white; /* Figma outline */
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+  color: #F5F5F5; /* Text-Brand-On-Brand (whiteish) */
+  font-size: 16px;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 400;
+  line-height: 16px;
+  cursor: pointer;
+  display: flex; /* To align icon and text */
+  align-items: center;
+  gap: 9px; /* Figma gap */
+}
+
+/* If show-more-btn has an icon, add styles for it here */
+/* .show-more-btn img { ... } */
+
