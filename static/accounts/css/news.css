@@ -7,7 +7,7 @@ body {
   background-color: #1A294A; /* Dark blue from screenshot */
   font-family: 'Unbounded', sans-serif; /* Default font */
   padding-top: 23px; /* Added padding like catalog */
-  padding-bottom: 45px; /* Added padding like catalog */
+  padding-bottom: 0px; /* REMOVED padding like catalog */
   /* padding-left: 20px; */ /* REMOVING side paddings from body */
   /* padding-right: 20px; */ /* REMOVING side paddings from body */
   box-sizing: border-box;
@@ -87,7 +87,7 @@ body {
   box-sizing: border-box;
   height: fit-content; /* Adjust height or make it sticky if needed */
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  margin-top: 83px; /* Approximate height of search bar (43px) + its bottom margin (40px) */
+  margin-top: 93px; /* Approximate height of search bar + its bottom margin + additional 10px */
 }
 
 .sidebar-block {
@@ -445,8 +445,9 @@ input:checked + .slider:before {
 /* News Grid */
 .news-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Responsive grid */
-  gap: 20px; /* Gap from Figma */
+  grid-template-columns: repeat(auto-fill, 337px); /* Using fixed card width */
+  gap: 20px !important; /* Ensure gap is applied */
+  justify-content: space-around; /* Distribute items if space is left over */
   margin-bottom: 40px; /* Space before pagination */
 }
 
