@@ -33,6 +33,7 @@ body {
   background: #004E9F; /* Figma search bar background - Brighter blue */
   border-radius: 10px;
   padding: 5px;
+  box-sizing: border-box; /* Added to ensure padding doesn't increase overall width */
 }
 
 .search-input {
@@ -87,7 +88,7 @@ body {
   box-sizing: border-box;
   height: fit-content; /* Adjust height or make it sticky if needed */
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  margin-top: 93px; /* Approximate height of search bar + its bottom margin + additional 10px */
+  margin-top: 90px; /* Adjusted to align with news cards (search bar height ~50px + margin 40px) */
 }
 
 .sidebar-block {
