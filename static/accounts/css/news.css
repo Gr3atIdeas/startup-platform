@@ -1,4 +1,8 @@
 /* Global page styles */
+/* html, body { */
+    /* overflow-x: visible !important; */ /* Attempt to fix footer bg clipping - REMOVING THIS */
+/* } */
+
 body {
   background-color: #1A294A; /* Dark blue from screenshot */
   font-family: 'Unbounded', sans-serif; /* Default font */
@@ -391,18 +395,22 @@ input:checked + .slider:before {
   background: #FFFFFF; /* Card is white */
   border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Softer shadow, closer to some mockups */
-  border: 1px solid #C6BBFE; /* Figma outline color as border */
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  border: 1px solid #C6BBFE;
   position: relative;
   display: flex;
   flex-direction: column;
   width: 337px; /* Figma width */
   height: 396px; /* Figma height */
+  padding: 10px; /* Added padding to create inner border effect */
 }
 
 .news-image-link {
   display: block;
   position: relative; /* For ad label positioning */
+  /* No background needed if card is white */
+  border-radius: 7px; /* Match image radius from figma */
+  overflow: hidden; /* To clip the image inside */
 }
 
 .news-image {
@@ -412,10 +420,11 @@ input:checked + .slider:before {
   display: block;
   /* border-top-left-radius: 7px; */ /* Removed for card to handle rounding */
   /* border-top-right-radius: 7px; */ /* Removed for card to handle rounding */
+  /* border-radius will be handled by news-image-link now */
 }
 
 .news-content {
-  padding: 20px 21px; /* Figma padding */
+  padding: 15px 11px 10px 11px; /* Adjusted padding: original (20px 21px) minus card padding (10px around) for top/sides, reduced bottom a bit */
   display: flex;
   flex-direction: column;
   flex-grow: 1; /* Ensure content area fills card */
@@ -675,7 +684,7 @@ input:checked + .slider:before {
   border: none;
   box-shadow: none;
   height: 4px; /* Figma track height */
-  margin-bottom: 5px; /* Space before "Диапазон" label */
+  margin-bottom: 25px; /* Increased margin-bottom to push "Диапазон" down (5px original + 20px) */
 }
 
 .rating-filter .noUi-connect {
