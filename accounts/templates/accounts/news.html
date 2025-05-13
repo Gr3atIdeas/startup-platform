@@ -11,13 +11,6 @@
 
 {% block content %}
 <div class="news-page-container">
-  <div class="search-bar-container">
-    <input type="text" placeholder="Поиск по каталогу" class="search-input">
-    <button class="search-button">
-      <img src="{% static 'accounts/images/search.svg' %}" alt="Поиск">
-    </button>
-  </div>
-
   <div class="main-content-area">
     <aside class="sidebar">
       <div class="sidebar-block">
@@ -77,6 +70,14 @@
     </aside>
 
     <div class="news-feed-column">
+      <!-- Search bar MOVED here -->
+      <div class="search-bar-container">
+        <input type="text" placeholder="Поиск по каталогу" class="search-input">
+        <button class="search-button">
+          <img src="{% static 'accounts/images/search.svg' %}" alt="Поиск">
+        </button>
+      </div>
+
       <!-- Popup для создания новости -->
       <div class="popup-overlay" id="newsPopup">
         <div class="popup">

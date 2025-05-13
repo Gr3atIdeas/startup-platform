@@ -2,13 +2,18 @@
 body {
   background-color: #1A294A; /* Dark blue from screenshot */
   font-family: 'Unbounded', sans-serif; /* Default font */
+  padding-top: 23px; /* Added padding like catalog */
+  padding-bottom: 45px; /* Added padding like catalog */
+  padding-left: 20px; /* Example horizontal padding */
+  padding-right: 20px; /* Example horizontal padding */
+  box-sizing: border-box; /* Ensure padding is included in width/height */
 }
 
 .news-page-container {
   width: 100%;
-  max-width: 1440px; /* Based on Figma total width hint */
+  max-width: 1303px; /* Changed to match catalog-container */
   margin: 0 auto;
-  padding: 45px 20px; /* Adjusted padding */
+  /* padding: 45px 20px; */ /* Removed padding, moved to body */
   box-sizing: border-box;
   /* No background here, inherits from body or specific children get backgrounds */
 }
@@ -16,8 +21,8 @@ body {
 /* Search Bar */
 .search-bar-container {
   display: flex;
-  max-width: 1028px; /* From Figma */
-  margin: 0 auto 40px auto; /* Centered, with bottom margin */
+  width: 100%; /* Take full width of parent */
+  margin: 0 0 20px 0; /* Only bottom margin, no auto side margins */
   background: #004E9F; /* Figma search bar background - Brighter blue */
   border-radius: 10px;
   padding: 5px;
@@ -58,7 +63,10 @@ body {
 
 /* Main Content Area */
 .main-content-area {
-  display: flex;
+  /* display: flex; */ /* Changed to grid */
+  display: grid;
+  grid-template-columns: 254px 1fr; /* Sidebar fixed, feed takes rest */
+  align-items: flex-start; /* Align items to the start of the grid area */
   gap: 21px; /* Gap from Figma */
 }
 
@@ -350,11 +358,11 @@ input:checked + .slider:before {
 .show-filters-btn {
   width: 100%;
   padding: 12px 35px;
-  background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%);
+  background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%) !important;
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
   border-radius: 10px;
   border: none;
-  color: #F5F5F5; /* Text-Brand-On-Brand */
+  color: #F5F5F5 !important;
   font-size: 16px;
   font-family: 'Unbounded', sans-serif;
   font-weight: 400;
@@ -382,9 +390,10 @@ input:checked + .slider:before {
   background: #FFFFFF; /* Card is white */
   border-radius: 10px;
   overflow: hidden;
-  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25); /* Figma shadow */
-  outline: 1px solid #C6BBFE; /* Figma outline */
-  outline-offset: -1px;
+  /* box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25); */ /* Original Figma shadow */
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Softer shadow, closer to some mockups */
+  border: 1px solid #C6BBFE; /* Figma outline color as border */
+  /* outline-offset: -1px; */ /* Removed */
   position: relative;
   display: flex;
   flex-direction: column;
@@ -640,19 +649,19 @@ input:checked + .slider:before {
 
 .show-more-btn {
   padding: 12px 35px;
-  background: transparent; /* Figma button appears to have white text, blackish border */
-  border: 1px solid white; /* Figma outline */
+  background: transparent !important;
+  border: 1px solid white !important;
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
   border-radius: 10px;
-  color: #F5F5F5; /* Text-Brand-On-Brand (whiteish) */
+  color: #F5F5F5 !important;
   font-size: 16px;
   font-family: 'Unbounded', sans-serif;
   font-weight: 400;
   line-height: 16px;
   cursor: pointer;
-  display: flex; /* To align icon and text */
+  display: flex;
   align-items: center;
-  gap: 9px; /* Figma gap */
+  gap: 9px;
 }
 
 /* If show-more-btn has an icon, add styles for it here */
@@ -681,10 +690,8 @@ input:checked + .slider:before {
   border: none;
   box-shadow: none; /* Remove default shadow if any */
   cursor: pointer;
-  /* Positioning: noUiSlider handles top/left for handles. 
-     If vertical adjustment is needed, it's often via :before/:after or specific handle classes */
-  right: -8px; /* Half of its width to align center */
-  top: -6px; /* (track_height - handle_height) / 2 = (4 - 16) / 2 = -6px */
+  right: -8px;
+  top: -6px;
 }
 
 .rating-filter .noUi-handle:focus {
@@ -693,22 +700,19 @@ input:checked + .slider:before {
 
 .rating-filter .noUi-handle:before,
 .rating-filter .noUi-handle:after {
-    display: none; /* Remove default noUiSlider handle pseudo-elements if any */
+    display: none;
 }
 
-/* Ensure .rating-range-label is styled as per previous setup or Figma */
 .rating-range-label {
   display: block;
-  color: #757575; /* Text-Default-Secondary */
+  color: #757575;
   font-size: 8px;
   font-family: 'Unbounded', sans-serif;
   font-weight: 300;
   letter-spacing: 0.08px;
-  /* margin-top: 5px; Added via slider margin-bottom */
 }
 
-/* Adjusting .rating-value to match ID used in news.html if it was .rating-value-display */
-.rating-filter .rating-value { /* Targetting the span within .rating-header for news page */
+.rating-filter .rating-value {
   text-align: right;
   color: #1E1E1E;
   font-size: 14px;
