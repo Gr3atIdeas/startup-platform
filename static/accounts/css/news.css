@@ -16,7 +16,7 @@ body {
 
 .news-page-container {
   width: 100%;
-  max-width: 1303px; /* Changed to match catalog-container */
+  max-width: 1303px; /* Reverted to original size before last change */
   margin: 0 auto;
   padding-left: 20px; /* ADDING side paddings back to container */
   padding-right: 20px; /* ADDING side paddings back to container */
@@ -445,7 +445,7 @@ input:checked + .slider:before {
 /* News Grid */
 .news-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, 337px); /* Using fixed card width */
+  grid-template-columns: repeat(auto-fill, 316px); /* Using new calculated card width */
   gap: 20px !important; /* Ensure gap is applied */
   justify-content: space-around; /* Distribute items if space is left over */
   margin-bottom: 40px; /* Space before pagination */
@@ -461,7 +461,7 @@ input:checked + .slider:before {
   position: relative;
   display: flex;
   flex-direction: column;
-  width: 337px; /* Figma width */
+  width: 316px; /* New Figma width to fit 3 in a row */
   height: 396px; /* Figma height */
 }
 
