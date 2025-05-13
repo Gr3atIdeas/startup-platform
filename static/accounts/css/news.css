@@ -1,6 +1,6 @@
 /* Global page styles */
 body {
-  background-color: #F0F2F5; /* Example background for the page, adjust as per figma outer bg */
+  background-color: #1A294A; /* Dark blue from screenshot */
   font-family: 'Unbounded', sans-serif; /* Default font */
 }
 
@@ -10,6 +10,7 @@ body {
   margin: 0 auto;
   padding: 45px 20px; /* Adjusted padding */
   box-sizing: border-box;
+  /* No background here, inherits from body or specific children get backgrounds */
 }
 
 /* Search Bar */
@@ -17,7 +18,7 @@ body {
   display: flex;
   max-width: 1028px; /* From Figma */
   margin: 0 auto 40px auto; /* Centered, with bottom margin */
-  background: #004E9F; /* Figma search bar background */
+  background: #004E9F; /* Figma search bar background - Brighter blue */
   border-radius: 10px;
   padding: 5px;
 }
@@ -64,7 +65,7 @@ body {
 /* Sidebar */
 .sidebar {
   width: 254px; /* Figma sidebar width */
-  background: white;
+  background: white; /* Sidebar is white */
   border-radius: 10px;
   padding: 30px 28px; /* Adjusted padding, figma has 53px top/bottom */
   box-sizing: border-box;
@@ -102,6 +103,7 @@ body {
   width: 20px; /* Adjust icon size */
   height: 20px;
   margin-left: 9px;
+  filter: brightness(0%); /* Make icon black */
 }
 
 .sidebar-label {
@@ -363,7 +365,8 @@ input:checked + .slider:before {
 /* News Feed Column */
 .news-feed-column {
   flex-grow: 1;
-  /* max-width will be handled by news-grid if needed */
+  /* This column should not have its own background, 
+     so the body/news-page-container background shows through */
 }
 
 /* News Grid */
@@ -376,7 +379,7 @@ input:checked + .slider:before {
 
 /* Original styles from news.html, slightly adapted */
 .news-card {
-  background: #FFFFFF;
+  background: #FFFFFF; /* Card is white */
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25); /* Figma shadow */
@@ -397,8 +400,8 @@ input:checked + .slider:before {
   height: 173px; /* Figma image height */
   object-fit: cover;
   display: block;
-  border-top-left-radius: 7px; /* Match inner image radius from Figma */
-  border-top-right-radius: 7px;
+  /* border-top-left-radius: 7px; */ /* Removed for card to handle rounding */
+  /* border-top-right-radius: 7px; */ /* Removed for card to handle rounding */
 }
 
 .news-content {
@@ -654,4 +657,70 @@ input:checked + .slider:before {
 
 /* If show-more-btn has an icon, add styles for it here */
 /* .show-more-btn img { ... } */
+
+/* Styles for noUiSlider (Rating Filter) */
+.rating-filter .noUi-target {
+  background: #EBEBEB; /* Figma track color */
+  border-radius: 9999px;
+  border: none;
+  box-shadow: none;
+  height: 4px; /* Figma track height */
+  margin-bottom: 5px; /* Space before "Диапазон" label */
+}
+
+.rating-filter .noUi-connect {
+  background: #004E9F; /* Figma selected range color */
+  border-radius: 9999px;
+}
+
+.rating-filter .noUi-handle {
+  width: 16px; /* Figma thumb size */
+  height: 16px; /* Figma thumb size */
+  border-radius: 50%;
+  background: #004E9F; /* Figma thumb color */
+  border: none;
+  box-shadow: none; /* Remove default shadow if any */
+  cursor: pointer;
+  /* Positioning: noUiSlider handles top/left for handles. 
+     If vertical adjustment is needed, it's often via :before/:after or specific handle classes */
+  right: -8px; /* Half of its width to align center */
+  top: -6px; /* (track_height - handle_height) / 2 = (4 - 16) / 2 = -6px */
+}
+
+.rating-filter .noUi-handle:focus {
+  outline: none;
+}
+
+.rating-filter .noUi-handle:before,
+.rating-filter .noUi-handle:after {
+    display: none; /* Remove default noUiSlider handle pseudo-elements if any */
+}
+
+/* Ensure .rating-range-label is styled as per previous setup or Figma */
+.rating-range-label {
+  display: block;
+  color: #757575; /* Text-Default-Secondary */
+  font-size: 8px;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.08px;
+  /* margin-top: 5px; Added via slider margin-bottom */
+}
+
+/* Adjusting .rating-value to match ID used in news.html if it was .rating-value-display */
+.rating-filter .rating-value { /* Targetting the span within .rating-header for news page */
+  text-align: right;
+  color: #1E1E1E;
+  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  line-height: 19.60px;
+}
+
+.rating-block .rating-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
 
