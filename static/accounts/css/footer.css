@@ -5,6 +5,7 @@
   min-height: 660px;
   position: relative;
   background: linear-gradient(180deg, #011D39 0%, black 100%);
+  overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
