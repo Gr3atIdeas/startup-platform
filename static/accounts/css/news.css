@@ -7,6 +7,7 @@ body {
   padding-left: 20px; /* Example horizontal padding */
   padding-right: 20px; /* Example horizontal padding */
   box-sizing: border-box; /* Ensure padding is included in width/height */
+  /* overflow-x: hidden; */ /* Ensure this is not set if it causes issues with footer */
 }
 
 .news-page-container {
@@ -22,7 +23,7 @@ body {
 .search-bar-container {
   display: flex;
   width: 100%; /* Take full width of parent */
-  margin: 0 0 20px 0; /* Only bottom margin, no auto side margins */
+  margin: 0 0 40px 0; /* Bottom margin 40px */
   background: #004E9F; /* Figma search bar background - Brighter blue */
   border-radius: 10px;
   padding: 5px;
@@ -390,13 +391,13 @@ input:checked + .slider:before {
   background: #FFFFFF; /* Card is white */
   border-radius: 10px;
   overflow: hidden;
-  /* box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25); */ /* Original Figma shadow */
   box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Softer shadow, closer to some mockups */
   border: 1px solid #C6BBFE; /* Figma outline color as border */
-  /* outline-offset: -1px; */ /* Removed */
   position: relative;
   display: flex;
   flex-direction: column;
+  width: 337px; /* Figma width */
+  height: 396px; /* Figma height */
 }
 
 .news-image-link {
