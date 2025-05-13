@@ -8,9 +8,9 @@ body {
   font-family: 'Unbounded', sans-serif; /* Default font */
   padding-top: 23px; /* Added padding like catalog */
   padding-bottom: 45px; /* Added padding like catalog */
-  padding-left: 20px; /* Example horizontal padding */
-  padding-right: 20px; /* Example horizontal padding */
-  box-sizing: border-box; /* Ensure padding is included in width/height */
+  /* padding-left: 20px; */ /* REMOVING side paddings from body */
+  /* padding-right: 20px; */ /* REMOVING side paddings from body */
+  box-sizing: border-box;
   /* overflow-x: hidden; */ /* Ensure this is not set if it causes issues with footer */
 }
 
@@ -18,7 +18,8 @@ body {
   width: 100%;
   max-width: 1303px; /* Changed to match catalog-container */
   margin: 0 auto;
-  /* padding: 45px 20px; */ /* Removed padding, moved to body */
+  padding-left: 20px; /* ADDING side paddings back to container */
+  padding-right: 20px; /* ADDING side paddings back to container */
   box-sizing: border-box;
   /* No background here, inherits from body or specific children get backgrounds */
   /* overflow: hidden; */ /* Ensure this container does not hide overflowing children unnecessarily unless intended */
@@ -86,6 +87,7 @@ body {
   box-sizing: border-box;
   height: fit-content; /* Adjust height or make it sticky if needed */
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin-top: 83px; /* Approximate height of search bar (43px) + its bottom margin (40px) */
 }
 
 .sidebar-block {
