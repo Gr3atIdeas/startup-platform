@@ -504,33 +504,20 @@ body {
     gap: 20px;
 }
 
+/* Задаем белый фон и убираем padding для main.content на страницах деталей новостей */
+main.content:has(.page-content-wrapper-white) {
+  background-color: white !important; /* Убеждаемся, что фон белый */
+  padding: 0 !important; /* Убираем стандартные отступы main.content */
+}
+
 .page-content-wrapper-white {
-    background-color: white;
-    width: 100%; /* Убедимся, что занимает всю ширину родителя (.content) */
-    box-sizing: border-box; /* Важно, чтобы padding не влиял на общую ширину/высоту относительно 100% */
+    background-color: white; /* Этот фон теперь может быть избыточен, но оставим для надежности */
+    width: 100%; 
+    box-sizing: border-box; 
     
-    /* Компенсируем padding: 20px 0; из main.content в global.css */
-    margin-top: -20px;
-    margin-bottom: -20px;
+    /* Убираем предыдущие попытки с margin */
+    margin: 0; 
     
-    /* Добавляем внутренний padding, чтобы контент не прилипал кверху/книзу */
-    padding-top: 20px;
-    padding-bottom: 20px;
-
-    /* Если main.content также имел бы горизонтальные padding, их бы тоже нужно было компенсировать: */
-    /* Например, если бы было padding: 20px; на main.content:
-    margin-left: -20px;
-    margin-right: -20px;
-    padding-left: 20px; 
-    padding-right: 20px;
-    */
-
-    /* Чтобы обертка растягивалась на всю высоту контента + компенсированный padding */
-    /* min-height можно установить, если нужно гарантировать высоту, но обычно контент сам растянет.
-       Однако, так как main.content имеет flex-grow: 1, нам нужно убедиться,
-       что page-content-wrapper-white также может расти.
-       Обычно, будучи блочным элементом внутри flex-item, он будет вести себя нормально.
-       Если main.content является flex-контейнером (а он просто flex-item для body),
-       тогда для page-content-wrapper-white может потребоваться flex-grow: 1;
-    */
+    /* Возвращаем вертикальные отступы, которые раньше были у main.content */
+    padding: 20px 0;
 }
