@@ -532,3 +532,211 @@ main.content:has(.page-content-wrapper-white) {
     padding: 20px 0; /* Отступы сверху/снизу для всего блока контента от хедера/футера */
     /* min-height: 100%; */ /* Больше не нужен */
 }
+
+/* Comments Section Styles */
+.comments-section-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center; /* Центрируем внутренний блок комментариев */
+  margin-top: 30px; /* Отступ сверху от основного контента новости */
+  margin-bottom: 30px; /* Отступ снизу перед похожими статьями или футером */
+}
+
+.comments-section {
+  width: 100%;
+  max-width: 800px; /* Совпадает с шириной news-article-main */
+  display: flex;
+  flex-direction: column;
+  gap: 25px; /* Увеличил gap для общего блока */
+  font-family: 'Unbounded', sans-serif;
+}
+
+.comments-header {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 15px;
+}
+
+.comments-title {
+  color: black;
+  font-size: 30px; /* Немного уменьшил для гармонии */
+  font-weight: 600;
+  line-height: 35px;
+  margin: 0;
+}
+
+.comments-list-container {
+  display: flex;
+  align-self: stretch;
+  justify-content: space-between; /* Для возможного кастомного скроллбара, сейчас не используется */
+}
+
+.comments-list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.comment-item {
+  display: flex;
+  align-self: stretch;
+  justify-content: space-between;
+  align-items: flex-start; /* Выравнивание по верху для аватара и текста */
+  padding-bottom: 15px;
+  border-bottom: 1px solid #eee; /* Разделитель между комментариями */
+}
+
+.comment-item:last-child {
+  border-bottom: none;
+}
+
+.comment-content {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 17px;
+  flex-grow: 1;
+}
+
+.comment-avatar {
+  width: 39px;
+  height: 39px;
+  border-radius: 50%;
+  object-fit: cover; /* Чтобы изображение не искажалось */
+}
+
+.comment-text-block {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 8px; /* Уменьшил gap между именем и текстом */
+  flex-grow: 1;
+}
+
+.comment-author-name {
+  color: black;
+  font-size: 16px;
+  font-weight: 500; /* Сделал чуть жирнее для выделения */
+  line-height: 1.2;
+}
+
+.comment-text {
+  color: black;
+  font-size: 14px; /* Немного увеличил для читаемости */
+  font-weight: 300;
+  line-height: 1.4;
+  letter-spacing: 0.12px;
+  word-wrap: break-word;
+}
+
+.comment-meta {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-end;
+  gap: 11px;
+  min-width: 100px; /* Чтобы дата не переносилась слишком рано */
+  text-align: right;
+}
+
+.comment-date {
+  color: rgba(0, 0, 0, 0.4); /* Сделал цвет чуть темнее, var(--Color1, rgba(0, 0, 0, 0.20)) был очень светлым */
+  font-size: 12px;
+  font-weight: 300;
+  letter-spacing: 0.12px;
+}
+
+.comments-show-more-btn-container {
+    display: flex;
+    justify-content: flex-start; /* Кнопка по левому краю списка комм-ев */
+    margin-top: 10px;
+}
+
+.comments-show-more-btn {
+  height: 40px;
+  padding: 0 25px; /* Уменьшил горизонтальные паддинги */
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15); /* Смягчил тень */
+  border-radius: 10px;
+  border: 1px solid #004E9F;
+  background-color: white;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 9px;
+  display: inline-flex;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.comments-show-more-btn:hover {
+    background-color: #f0f0f0;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
+}
+
+.comments-show-more-text {
+  color: #004E9F;
+  font-size: 15px; /* Уменьшил немного */
+  font-weight: 400;
+  line-height: 1;
+}
+
+.comments-show-more-icon svg path {
+  fill: #004E9F;
+}
+
+.add-comment-form-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 20px; /* Отступ от списка комментариев */
+}
+
+.add-comment-textarea {
+  width: 100%;
+  min-height: 100px; /* Минимальная высота */
+  background: white;
+  border-radius: 10px; /* Скруглил */
+  border: 1px #D0D0D0 solid; /* Сделал рамку светлее */
+  padding: 10px 15px;
+  font-family: 'Unbounded', sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.4;
+  color: black;
+}
+
+.add-comment-textarea::placeholder {
+  color: #B0B0B0; /* Сделал плейсхолдер чуть темнее */
+  font-weight: 300;
+}
+
+.add-comment-submit-btn {
+  height: 40px;
+  padding: 0 30px; /* Уменьшил горизонтальные паддинги */
+  background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%);
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15); /* Смягчил тень */
+  border-radius: 10px;
+  border: none;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  display: inline-flex;
+  align-self: flex-start; /* Кнопка по левому краю */
+  cursor: pointer;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.add-comment-submit-btn:hover {
+    background: linear-gradient(0deg, #003D7A 0%, #005ABF 100%);
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
+}
+
+.add-comment-submit-text {
+  color: #F5F5F5;
+  font-size: 15px; /* Уменьшил немного */
+  font-weight: 400;
+  line-height: 1;
+}
