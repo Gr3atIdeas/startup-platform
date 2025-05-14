@@ -408,6 +408,7 @@ nav.nav-menu > a.header-nav-link.header-role-button.create-startup-button .creat
 .catalog-dropdown-item.no-wave-effect {
   all: unset !important; 
 
+  /* Сначала все сбрасываем, потом задаем нужное */
   display: flex !important; 
   align-items: center !important; 
   justify-content: center !important; 
@@ -416,7 +417,6 @@ nav.nav-menu > a.header-nav-link.header-role-button.create-startup-button .creat
   width: 100% !important; 
   box-sizing: border-box !important;
   
-  color: #000000 !important; /* Явный черный цвет текста В ОБЫЧНОМ СОСТОЯНИИ */
   font-family: 'Unbounded', sans-serif !important;
   font-size: 14px !important; 
   font-weight: 300 !important; 
@@ -435,16 +435,22 @@ nav.nav-menu > a.header-nav-link.header-role-button.create-startup-button .creat
   -moz-appearance: none !important;
   appearance: none !important;
 
+  /* ЯВНО УСТАНАВЛИВАЕМ ЦВЕТ ПОСЛЕ UNSET */
+  color: #000000 !important; 
+
   transition: transform 0.2s ease, font-weight 0.2s ease !important; 
 }
 
 .catalog-dropdown-item.no-wave-effect:hover {
+  /* Сброс для ховера на всякий случай */
   background: none !important;
   background-color: transparent !important;
   border: none !important;
   box-shadow: none !important;
-  color: #000000 !important; /* Явный черный цвет текста при наведении (остается черным) */
+  /* ЯВНО УСТАНАВЛИВАЕМ ЦВЕТ ПРИ ХОВЕРЕ (остается черным) */
+  color: #000000 !important; 
 
+  /* Нужные стили для ховера */
   font-weight: 700 !important; 
   transform: scale(1.05) !important; 
 }
