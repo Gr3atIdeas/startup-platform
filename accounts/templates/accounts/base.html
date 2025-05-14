@@ -51,19 +51,51 @@
       </div>
       <nav class="nav-menu">
             <div class="header-nav-links">
-                <a href="{% url 'startups_list' %}" class="header-nav-link">Каталог</a>
-                <a href="{% url 'news' %}" class="header-nav-link">Новости</a>
-                <a href="{% url 'cosmochat' %}" class="header-nav-link cosmochat-link">CosmoChat</a>
-            </div>
-            {# Блок для дополнительных кнопок ролей перед кнопкой Профиля/Войти #}
-        {% if user.is_authenticated %}
-                {% if user.role.role_name == 'moderator' %}
-                    <a href="{% url 'moderator_dashboard' %}" class="header-nav-link header-role-button">Заявки</a>
-                    <a href="{% url 'create_startup' %}" class="header-nav-link header-role-button">Создать стартап</a>
+                {% if not user.is_authenticated %}
+                    <a href="{% url 'startups_list' %}" class="header-nav-link">Каталог</a>
+                    <a href="{% url 'news' %}" class="header-nav-link">Новости</a>
+                    <a href="#" class="header-nav-link">FAQ</a> {# Заменить # на актуальный URL для FAQ #}
+                {% elif user.role.role_name == 'investor' %}
+                    <a href="{% url 'startups_list' %}" class="header-nav-link">Каталог</a>
+                    <a href="{% url 'investments' %}" class="header-nav-link">Портфель</a> {# Убедитесь, что URL 'investments' существует #}
+                    <a href="{% url 'news' %}" class="header-nav-link">Новости</a>
+                    <a href="{% url 'cosmochat' %}" class="header-nav-link cosmochat-link">CosmoChat</a>
                 {% elif user.role.role_name == 'startuper' %}
-                    <a href="{% url 'create_startup' %}" class="header-nav-link header-role-button">Создать стартап</a>
-          {% endif %}
-          {% endif %}
+                    <a href="{% url 'startups_list' %}" class="header-nav-link">Каталог</a>
+                    <a href="{% url 'my_startups' %}" class="header-nav-link">Мои стартапы</a> {# Убедитесь, что URL 'my_startups' существует #}
+                    <a href="{% url 'news' %}" class="header-nav-link">Новости</a>
+                    <a href="{% url 'cosmochat' %}" class="header-nav-link cosmochat-link">CosmoChat</a>
+                {% elif user.role.role_name == 'moderator' %}
+                    <div class="catalog-dropdown-container">
+                        <button class="header-nav-link catalog-dropdown-button">Каталог</button>
+                        <div class="catalog-dropdown-menu">
+                            <a href="{% url 'startups_list' %}" class="catalog-dropdown-item">
+                                <img src="{% static 'accounts/images/icons/planet.svg' %}" alt="Стартапы" class="catalog-dropdown-item-icon">
+                                Стартапы
+                            </a>
+                            <a href="#" class="catalog-dropdown-item"> {# Заменить # на актуальный URL для Франшиз #}
+                                <img src="{% static 'accounts/images/icons/rocket-sharp.svg' %}" alt="Франшизы" class="catalog-dropdown-item-icon">
+                                Франшизы
+                            </a>
+                        </div>
+                    </div>
+                    <a href="{% url 'news' %}" class="header-nav-link">Новости</a>
+                    <a href="{% url 'cosmochat' %}" class="header-nav-link cosmochat-link">CosmoChat</a>
+                    <a href="{% url 'moderator_dashboard' %}" class="header-nav-link">Заявки</a> {# Убедитесь, что URL 'moderator_dashboard' это Заявки #}
+                    <a href="#" class="header-nav-link">Сделки</a> {# Заменить # на актуальный URL для Сделок #}
+                    <a href="#" class="header-nav-link">Поддержка</a> {# Заменить # на актуальный URL для Поддержки #}
+                {% endif %}
+            </div>
+
+            {# Блок для дополнительных кнопок ролей перед кнопкой Профиля/Войти #}
+            {% if user.is_authenticated %}
+                {% if user.role.role_name == 'startuper' %}
+                    <a href="{% url 'create_startup' %}" class="header-nav-link header-role-button create-startup-button">
+                        Создать
+                        <img src="{% static 'accounts/images/add-circle-outline.svg' %}" alt="Создать стартап" class="create-startup-icon">
+                    </a>
+                {% endif %}
+            {% endif %}
         </nav>
         <div class="header-auth-section">
             {% if user.is_authenticated %}
@@ -173,6 +205,40 @@
   <script src="https://cdn.jsdelivr.net/npm/glightbox@3.2.0/dist/js/glightbox.min.js"></script>
   <script src="{% static 'accounts/js/button_effects.js' %}"></script>
   <script src="{% static 'accounts/js/global_styles.js' %}"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const catalogDropdownButton = document.querySelector('.catalog-dropdown-button');
+        const catalogDropdownMenu = document.querySelector('.catalog-dropdown-menu');
+
+        if (catalogDropdownButton && catalogDropdownMenu) {
+            catalogDropdownButton.addEventListener('click', function (event) {
+                event.stopPropagation();
+                catalogDropdownMenu.classList.toggle('open');
+            });
+
+            document.addEventListener('click', function (event) {
+                if (catalogDropdownMenu.classList.contains('open') && !catalogDropdownMenu.contains(event.target) && !catalogDropdownButton.contains(event.target)) {
+                    catalogDropdownMenu.classList.remove('open');
+                }
+            });
+        }
+
+        const profileDropdownButton = document.querySelector('.profile-dropdown-button');
+        const profileDropdownMenu = document.querySelector('.profile-dropdown-menu');
+
+        if (profileDropdownButton && profileDropdownMenu) {
+            profileDropdownButton.addEventListener('click', function (event) {
+                event.stopPropagation();
+                profileDropdownMenu.classList.toggle('open');
+            });
+            document.addEventListener('click', function (event) {
+                if (profileDropdownMenu.classList.contains('open') && !profileDropdownMenu.contains(event.target) && !profileDropdownButton.contains(event.target)) {
+                    profileDropdownMenu.classList.remove('open');
+                }
+            });
+        }
+    });
+  </script>
   {% block body_scripts %}
     {# Дочерние шаблоны могут добавлять скрипты сюда #}
   {% endblock %}
