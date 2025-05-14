@@ -1,11 +1,12 @@
 body {
-  background-color: white; /* Ensuring white background for the page */
+  background-color: white !important; /* Ensuring white background for the page */
 }
 .news-detail-container {
   display: flex;
   flex-direction: column;
   padding: 20px 71px; /* Main container padding */
   gap: 20px; /* Gap between back button and content */
+  background-color: white; /* Ensure the container itself is white */
 }
 
 /* Back button styles */
@@ -58,7 +59,7 @@ body {
 /* Main content and sidebar layout */
 .news-content-layout {
   width: 100%;
-  background: white;
+  background: white; /* Ensures this inner layout is also white */
   justify-content: flex-start; /* Aligns main content and sidebar */
   align-items: flex-start;
   gap: 91px; /* Gap between main content and sidebar */
@@ -217,7 +218,7 @@ body {
 .rating-icon-container .icon-filled {
   opacity: 0; /* По умолчанию скрыта */
   z-index: 2;
-  /* Цвет для заполненной иконки можно задать через fill в SVG или CSS фильтрами, если SVG это позволяет */
+  /* Цвет для заполненной иконки можно задать через fill in SVG or CSS filters if SVG allows */
   /* filter: none; /* Сбрасываем фильтры для заполненной */
 }
 .rating-icon-container .icon-empty { /* Теперь это тоже full_filled_planet.svg */
