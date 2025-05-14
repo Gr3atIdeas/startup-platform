@@ -69,11 +69,11 @@
                     <div class="catalog-dropdown-container">
                         <button class="header-nav-link catalog-dropdown-button">Каталог</button>
                         <div class="catalog-dropdown-menu">
-                            <a href="{% url 'startups_list' %}" class="catalog-dropdown-item">
+                            <a href="{% url 'startups_list' %}" class="catalog-dropdown-item no-wave-effect">
                                 <img src="{% static 'accounts/images/icons/planet.svg' %}" alt="Стартапы" class="catalog-dropdown-item-icon">
                                 Стартапы
                             </a>
-                            <a href="#" class="catalog-dropdown-item"> {# Заменить # на актуальный URL для Франшиз #}
+                            <a href="#" class="catalog-dropdown-item no-wave-effect"> {# Заменить # на актуальный URL для Франшиз #}
                                 <img src="{% static 'accounts/images/icons/rocket-sharp.svg' %}" alt="Франшизы" class="catalog-dropdown-item-icon">
                                 Франшизы
                             </a>
@@ -212,9 +212,11 @@
         const catalogDropdownContainer = document.querySelector('.catalog-dropdown-container');
 
         if (catalogDropdownButton && catalogDropdownMenu && catalogDropdownContainer) {
+            console.log('Catalog dropdown elements found');
             catalogDropdownButton.addEventListener('click', function (event) {
                 event.stopPropagation();
                 catalogDropdownContainer.classList.toggle('open');
+                console.log('Catalog container classList after toggle:', catalogDropdownContainer.classList);
             });
 
             document.addEventListener('click', function (event) {
@@ -222,8 +224,11 @@
                     !catalogDropdownMenu.contains(event.target) && 
                     !catalogDropdownButton.contains(event.target)) {
                     catalogDropdownContainer.classList.remove('open');
+                    console.log('Clicked outside, catalog container classList:', catalogDropdownContainer.classList);
                 }
             });
+        } else {
+            console.error('Catalog dropdown elements NOT found');
         }
 
         const profileDropdownButton = document.querySelector('.profile-dropdown-button');

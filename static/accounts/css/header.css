@@ -374,10 +374,17 @@ nav.nav-menu > a.header-nav-link.header-role-button.create-startup-button .creat
   /* background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%); */
 }
 
+.catalog-dropdown-button:focus + .catalog-dropdown-menu { 
+  display: flex; 
+  flex-direction: column;
+  align-items: center;
+}
+
+/* По умолчанию меню скрыто */
 .catalog-dropdown-menu {
-  display: none;
+  display: none !important; /* Максимальный приоритет для скрытия по умолчанию */
   position: absolute;
-  background-color: #FFFFFF;
+  background-color: #FFFFFF; 
   min-width: 220px; 
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
@@ -386,44 +393,60 @@ nav.nav-menu > a.header-nav-link.header-role-button.create-startup-button .creat
   top: calc(100% + 10px); 
   padding: 10px 0; 
   border: 1px solid var(--border-light-gray);
-  display: flex;
-  flex-direction: column;
+  flex-direction: column; /* Эти стили будут применены, когда display станет flex */
   align-items: center;
 }
 
-.catalog-dropdown-container.open .catalog-dropdown-menu,
-.catalog-dropdown-button:focus + .catalog-dropdown-menu { 
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+/* Отображение меню только когда у контейнера есть класс .open */
+.catalog-dropdown-container.open .catalog-dropdown-menu {
+  display: flex !important; /* Принудительно показываем */
 }
 
-.catalog-dropdown-item {
-  color: #000000 !important;
-  padding: 10px 15px !important;
-  text-decoration: none !important;
+/* Убираем правило display:flex для .catalog-dropdown-button:focus + .catalog-dropdown-menu, если оно еще есть */
+/* .catalog-dropdown-button:focus + .catalog-dropdown-menu { display: none !important; } */
+
+.catalog-dropdown-item.no-wave-effect {
+  all: unset !important; 
+
   display: flex !important; 
   align-items: center !important; 
   justify-content: center !important; 
   gap: 10px !important; 
-  font-family: 'Unbounded', sans-serif !important;
-  font-size: 14px !important; 
-  font-weight: 300 !important;
-  line-height: 18px !important;
-  white-space: nowrap !important;
-  background-color: transparent !important; 
-  border: none !important; 
+  padding: 10px 15px !important; 
   width: 100% !important; 
   box-sizing: border-box !important;
+  
+  color: #000000 !important; 
+  font-family: 'Unbounded', sans-serif !important;
+  font-size: 14px !important; 
+  font-weight: 300 !important; 
+  line-height: 18px !important;
+  text-decoration: none !important;
+  white-space: nowrap !important;
+  cursor: pointer !important;
+  
+  background: none !important;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  outline: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+
   transition: transform 0.2s ease, font-weight 0.2s ease !important; 
-  cursor: pointer;
 }
 
-.catalog-dropdown-item:hover {
-  background-color: transparent !important; 
-  font-weight: 700 !important;
+.catalog-dropdown-item.no-wave-effect:hover {
+  background: none !important;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: #000000 !important; 
+
+  font-weight: 700 !important; 
   transform: scale(1.05) !important; 
-  color: #000000 !important;
 }
 
 .catalog-dropdown-item-icon {
