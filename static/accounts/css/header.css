@@ -202,12 +202,12 @@
   position: relative;
   box-sizing: border-box;
   box-shadow: none !important;
-  transition: border-color 0.3s ease, border-width 0.3s ease;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .profile-dropdown-button:hover .profile-avatar-wrapper {
-  box-shadow: none !important;
-  border: 5px solid #FFEF2B !important;
+  border-color: #FFEF2B !important;
+  box-shadow: 0 0 0 4px #FFEF2B !important;
 }
 
 .profile-dropdown-avatar {
@@ -328,19 +328,18 @@
 
 /* Стили для кнопки "Создать стартап" */
 .create-startup-button {
-    background-color: #3FFF47 !important; /* Ярко-зеленый цвет фона */
+    background: #3FFF47 !important; /* Используем background вместо background-color для большей специфичности */
     color: #000000 !important; /* Черный цвет текста */
     padding: 8px 16px !important;
     border-radius: 5px !important;
     display: inline-flex !important;
     align-items: center !important;
     gap: 8px !important;
-    font-family: 'Unbounded', sans-serif !important; /* Используем Unbounded с sans-serif как запасной */
-    font-weight: 500 !important; /* Немного жирнее для выделения */
-    font-size: 14px !important; /* Размер шрифта */
-    line-height: 18px !important; /* Высота строки */
+    font-family: 'Unbounded', sans-serif !important;
+    font-weight: 500 !important; 
+    font-size: 14px !important; /* Убеждаемся, что размер шрифта применен */
+    line-height: 18px !important;
     text-decoration: none !important; 
-    /* word-wrap: break-word; уже есть в .header-nav-link, но можно добавить для надежности если кнопка не наследует .header-nav-link */
 }
 
 .create-startup-button .create-startup-icon {
