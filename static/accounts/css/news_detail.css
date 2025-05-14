@@ -4,9 +4,13 @@ body {
 .news-detail-container {
   display: flex;
   flex-direction: column;
-  padding: 20px 71px; /* Main container padding */
-  gap: 20px; /* Gap between back button and content */
-  background-color: white; /* Ensure the container itself is white */
+  padding: 20px 71px; /* Внутренние отступы контейнера контента */
+  gap: 20px; 
+  
+  /* Центрируем сам блок контента на странице */
+  max-width: 1440px; /* Ограничиваем ширину контентной части */
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* Back button styles */
@@ -510,26 +514,21 @@ body {
 /*  padding: 0 !important; */ /* Убираем стандартные отступы main.content */
 /* } */
 
+/* Заставляем main.content быть полноэкранным и белым на этой странице */
+main.content:has(.page-content-wrapper-white) {
+  background-color: white !important;
+  max-width: none !important;
+  width: 100% !important;
+  padding: 0 !important; /* Убираем оригинальные отступы main.content */
+  box-sizing: border-box; /* На всякий случай */
+}
+
 .page-content-wrapper-white {
-    /* background-color: white; */ /* Этот фон теперь может быть избыточен, но оставим для надежности */
-    background-color: lightcoral; /* Временно для отладки границ блока */
+    /* background-color: white; */ /* Больше не нужен, родитель белый */
     width: 100%; 
     box-sizing: border-box; 
     
-    /* Убираем предыдущие попытки с margin */
-    /* margin: 0; */ 
-    
-    /* Возвращаем вертикальные отступы, которые раньше были у main.content */
-    /* padding: 20px 0; */
-
-    /* Компенсируем padding: 20px 0; из main.content в global.css */
-    margin-top: -20px;
-    margin-bottom: -20px;
-    
-    /* Добавляем внутренний padding, чтобы контент не прилипал кверху/книзу */
-    padding-top: 20px;
-    padding-bottom: 20px;
-
-    /* Пытаемся растянуть на всю высоту родительского content-box */
-    min-height: 100%; 
+    margin: 0; /* Сбрасываем предыдущие попытки */
+    padding: 20px 0; /* Отступы сверху/снизу для всего блока контента от хедера/футера */
+    /* min-height: 100%; */ /* Больше не нужен */
 }
