@@ -505,19 +505,31 @@ body {
 }
 
 /* Задаем белый фон и убираем padding для main.content на страницах деталей новостей */
-main.content:has(.page-content-wrapper-white) {
-  background-color: white !important; /* Убеждаемся, что фон белый */
-  padding: 0 !important; /* Убираем стандартные отступы main.content */
-}
+/* main.content:has(.page-content-wrapper-white) {
+  background-color: white !important; */ /* Убеждаемся, что фон белый */
+/*  padding: 0 !important; */ /* Убираем стандартные отступы main.content */
+/* } */
 
 .page-content-wrapper-white {
-    background-color: white; /* Этот фон теперь может быть избыточен, но оставим для надежности */
+    /* background-color: white; */ /* Этот фон теперь может быть избыточен, но оставим для надежности */
+    background-color: lightcoral; /* Временно для отладки границ блока */
     width: 100%; 
     box-sizing: border-box; 
     
     /* Убираем предыдущие попытки с margin */
-    margin: 0; 
+    /* margin: 0; */ 
     
     /* Возвращаем вертикальные отступы, которые раньше были у main.content */
-    padding: 20px 0;
+    /* padding: 20px 0; */
+
+    /* Компенсируем padding: 20px 0; из main.content в global.css */
+    margin-top: -20px;
+    margin-bottom: -20px;
+    
+    /* Добавляем внутренний padding, чтобы контент не прилипал кверху/книзу */
+    padding-top: 20px;
+    padding-bottom: 20px;
+
+    /* Пытаемся растянуть на всю высоту родительского content-box */
+    min-height: 100%; 
 }
