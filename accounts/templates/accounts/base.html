@@ -35,6 +35,18 @@
   <!-- Подключаем Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+  <style>
+    /* Прямое применение стиля для цвета текста пунктов подменю каталога */
+    .catalog-dropdown-item.no-wave-effect,
+    .catalog-dropdown-item.no-wave-effect:link,
+    .catalog-dropdown-item.no-wave-effect:visited {
+      color: #000000 !important;
+    }
+    .catalog-dropdown-item.no-wave-effect:hover {
+      color: #000000 !important; /* Остается черным при наведении */
+    }
+  </style>
+
   {% block head_extra %}
     {{ block.super }}
   {% endblock %}
