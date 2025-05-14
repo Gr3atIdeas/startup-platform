@@ -534,21 +534,25 @@ main.content:has(.page-content-wrapper-white) {
 }
 
 /* Comments Section Styles */
+/*
 .comments-section-wrapper {
   width: 100%;
   display: flex;
-  justify-content: center; /* Центрируем внутренний блок комментариев */
-  margin-top: 30px; /* Отступ сверху от основного контента новости */
-  margin-bottom: 30px; /* Отступ снизу перед похожими статьями или футером */
+  justify-content: center; 
+  margin-top: 30px; 
+  margin-bottom: 30px; 
 }
+*/
 
 .comments-section {
   width: 100%;
-  max-width: 800px; /* Совпадает с шириной news-article-main */
+  max-width: 800px; 
   display: flex;
   flex-direction: column;
-  gap: 25px; /* Увеличил gap для общего блока */
+  gap: 25px; 
   font-family: 'Unbounded', sans-serif;
+  margin-top: 30px; /* ADDED */
+  margin-bottom: 30px; /* ADDED */
 }
 
 .comments-header {
@@ -657,27 +661,27 @@ main.content:has(.page-content-wrapper-white) {
 
 .comments-show-more-btn {
   height: 40px;
-  padding: 0 25px; /* Уменьшил горизонтальные паддинги */
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15); /* Смягчил тень */
+  padding: 0 25px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15);
   border-radius: 10px;
   border: 1px solid #004E9F;
-  background-color: white;
+  background-color: transparent;
   justify-content: flex-start;
   align-items: center;
-  gap: 9px;
+  gap: 8px;
   display: inline-flex;
   cursor: pointer;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
 }
 
 .comments-show-more-btn:hover {
-    background-color: #f0f0f0;
+    background-color: rgba(0, 78, 159, 0.1);
     box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
 }
 
 .comments-show-more-text {
   color: #004E9F;
-  font-size: 15px; /* Уменьшил немного */
+  font-size: 15px;
   font-weight: 400;
   line-height: 1;
 }
@@ -715,16 +719,16 @@ main.content:has(.page-content-wrapper-white) {
 
 .add-comment-submit-btn {
   height: 40px;
-  padding: 0 30px; /* Уменьшил горизонтальные паддинги */
+  padding: 0 30px;
   background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%);
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15); /* Смягчил тень */
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15);
   border-radius: 10px;
   border: none;
   justify-content: center;
   align-items: center;
   gap: 8px;
   display: inline-flex;
-  align-self: flex-start; /* Кнопка по левому краю */
+  align-self: flex-start;
   cursor: pointer;
   transition: background 0.3s ease, box-shadow 0.3s ease;
 }
@@ -736,7 +740,7 @@ main.content:has(.page-content-wrapper-white) {
 
 .add-comment-submit-text {
   color: #F5F5F5;
-  font-size: 15px; /* Уменьшил немного */
+  font-size: 15px;
   font-weight: 400;
   line-height: 1;
 }

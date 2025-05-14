@@ -148,59 +148,58 @@
             <div class="stat-text">{{ article.comments_count|default:0 }}</div>
           </div>
         </div>
-      </div>
 
-      <!-- Comments Section -->
-      <div class="comments-section-wrapper">
+        <!-- Comments Section MOVED HERE -->
         <div class="comments-section">
-          <div class="comments-header">
-            <h2 class="comments-title">Комментарии</h2>
-          </div>
-
-          <div class="comments-list-container">
-            <div class="comments-list">
-              {% for i in "123" %} {# Placeholder loop for comments #}
-              <div class="comment-item">
-                <div class="comment-content">
-                  <img class="comment-avatar" src="https://placehold.co/39x39/{% if i == '1' %}7B61FF{% elif i == '2' %}FF6161{% else %}61FFB7{% endif %}/FFFFFF?text={% if i == '1' %}В{% elif i == '2' %}С{% else %}А{% endif %}" alt="Аватар пользователя"/>
-                  <div class="comment-text-block">
-                    <div class="comment-author-name">
-                      {% if i == '1' %}Виктор
-                      {% elif i == '2' %}Сергей
-                      {% else %}Анна{% endif %}
-                    </div>
-                    <div class="comment-text">Само направление сейчас актуально и я уже инвестировала в похожий стартап. Советую!</div>
-                  </div>
-                </div>
-                <div class="comment-meta">
-                  <div class="comment-date">25/07/2024</div>
-                </div>
-              </div>
-              {% endfor %}
-              
-              <div class="comments-show-more-btn-container">
-                  <button type="button" class="comments-show-more-btn">
-                      <span class="comments-show-more-text">Показать еще</span>
-                      <span class="comments-show-more-icon">
-                          <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                              <path d="M1.41 0.589966L6 5.16997L10.59 0.589966L12 1.99997L6 7.99997L0 1.99997L1.41 0.589966Z" fill="#004E9F"/>
-                          </svg>
-                      </span>
-                  </button>
-              </div>
+            <div class="comments-header">
+                <h2 class="comments-title">Комментарии</h2>
             </div>
-            {# <div class="comments-scrollbar"></div> #}
-          </div>
 
-          <div class="add-comment-form-container">
-            <textarea class="add-comment-textarea" placeholder="Написать комментарий..."></textarea>
-            <button type="button" class="add-comment-submit-btn">
-              <span class="add-comment-submit-text">Оставить комментарий</span>
-            </button>
-          </div>
+            <div class="comments-list-container">
+                <div class="comments-list">
+                    {% for i in "123" %} {# Placeholder loop for comments #}
+                    <div class="comment-item">
+                        <div class="comment-content">
+                            <img class="comment-avatar" src="https://placehold.co/39x39/{% if i == '1' %}7B61FF{% elif i == '2' %}FF6161{% else %}61FFB7{% endif %}/FFFFFF?text={% if i == '1' %}В{% elif i == '2' %}С{% else %}А{% endif %}" alt="Аватар пользователя"/>
+                            <div class="comment-text-block">
+                                <div class="comment-author-name">
+                                    {% if i == '1' %}Виктор
+                                    {% elif i == '2' %}Сергей
+                                    {% else %}Анна{% endif %}
+                                </div>
+                                <div class="comment-text">Само направление сейчас актуально и я уже инвестировала в похожий стартап. Советую!</div>
+                            </div>
+                        </div>
+                        <div class="comment-meta">
+                            <div class="comment-date">25/07/2024</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    
+                    <div class="comments-show-more-btn-container">
+                        <button type="button" class="comments-show-more-btn">
+                            <span class="comments-show-more-text">Показать еще</span>
+                            <span class="comments-show-more-icon">
+                                <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M1.41 0.589966L6 5.16997L10.59 0.589966L12 1.99997L6 7.99997L0 1.99997L1.41 0.589966Z" fill="#004E9F"/>
+                                </svg>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+                {# <div class="comments-scrollbar"></div> #}
+            </div>
+
+            <div class="add-comment-form-container">
+                <textarea class="add-comment-textarea" placeholder="Написать комментарий..."></textarea>
+                <button type="button" class="add-comment-submit-btn">
+                    <span class="add-comment-submit-text">Оставить комментарий</span>
+                </button>
+            </div>
         </div>
-      </div>
-      <!-- End Comments Section -->
+        <!-- End Comments Section -->
+
+      </div> {# This closes news-article-main #}
 
       <!-- Sidebar with Similar Articles -->
       <div class="sidebar-similar-articles">
