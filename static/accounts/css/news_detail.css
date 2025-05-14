@@ -497,3 +497,17 @@ body {
     color: black; /* Match stat-text color */
     font-size: 14px; /* Match stat-text size */
 }
+
+.similar-articles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.page-content-wrapper-white {
+    background-color: white;
+    /* Возможно, потребуется добавить padding, если контент прилипает к краям */
+    /* padding: 20px; */ /* Пример */
+    /* min-height для растягивания фона, если контента мало,
+       но это зависит от общей структуры и того, как footer прижат вниз */
+}

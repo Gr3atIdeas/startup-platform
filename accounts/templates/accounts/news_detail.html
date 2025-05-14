@@ -11,168 +11,170 @@
 {% endblock %}
 
 {% block content %}
-<div class="news-detail-container">
-  <!-- Back Button -->
-  <div class="back-button-container">
-    <a href="{% if request.META.HTTP_REFERER %}{{ request.META.HTTP_REFERER }}{% else %}{% url 'news' %}{% endif %}" class="back-button">
-      <div class="back-button-arrow">
-        <div class="back-button-arrow-inner"></div>
-      </div>
-      <div class="back-button-text">Назад</div>
-    </a>
-  </div>
-
-  <div class="news-content-layout">
-    <!-- Main Article Content -->
-    <div class="news-article-main">
-      <div class="news-article-header">
-        <div class="article-meta-rating-row">
-          <div class="author-info-block">
-            <div class="author-details">
-              <img class="author-avatar" src="{{ article.author.profile.avatar.url|default:'https://placehold.co/39x39/7B61FF/FFFFFF?text=A' }}" alt="{{ article.author.email|default:'Автор' }}"/>
-              <div class="author-name-time">
-                <div class="author-name">{{ article.author.get_full_name|default:article.author.email|default:"Аноним" }}</div>
-                <div class="publish-time">{{ article.published_at|timesince }} назад</div>
-              </div>
-            </div>
-            <div class="article-stats-small">
-              <div class="stat-item">
-                <form method="post" style="margin: 0; display: flex;">
-                  {% csrf_token %}
-                  <button type="submit" name="like" class="like-button {% if user_liked %}liked{% endif %}">
-                    <i class="fas fa-heart"></i>
-                    <span class="like-count">{{ likes_count }}</span>
-                  </button>
-                </form>
-              </div>
-              <div class="stat-item">
-                <div class="stat-icon">
-                  <img src="{% static 'accounts/images/news/chat_icon.svg' %}" alt="Комментарии">
-                </div>
-                <div class="stat-text">{{ article.comments_count|default:0 }}</div>
-              </div>
-            </div>
-          </div>
-          <div class="rating-block">
-            {% with simulated_rating=3 %} {# Устанавливаем фиксированный рейтинг для демонстрации #}
-            <div class="rating-text">Рейтинг {{ simulated_rating }}/5</div>
-            <div class="rating-icons">
-                <div class="rating-stars" data-rating="{{ simulated_rating }}">
-                    {% for i in "12345" %}
-                        <span class="rating-icon-container {% if forloop.counter <= simulated_rating %}is-filled{% else %}is-empty{% endif %}">
-                            <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="Планета закрашенная" class="icon-filled">
-                            <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="Планета контур" class="icon-empty"> {# Используем тот же SVG #}
-                        </span>
-                    {% endfor %}
-                </div>
-            </div>
-            {% endwith %}
-          </div>
+<div class="page-content-wrapper-white"> {# Новая обертка для белого фона #}
+  <div class="news-detail-container">
+    <!-- Back Button -->
+    <div class="back-button-container">
+      <a href="{% if request.META.HTTP_REFERER %}{{ request.META.HTTP_REFERER }}{% else %}{% url 'news' %}{% endif %}" class="back-button">
+        <div class="back-button-arrow">
+          <div class="back-button-arrow-inner"></div>
         </div>
+        <div class="back-button-text">Назад</div>
+      </a>
+    </div>
 
-        {% if article.get_image_url %}
-          <img class="article-main-image" src="{{ article.get_image_url }}" alt="{{ article.title }}">
-        {% else %}
-          <img class="article-main-image" src="https://placehold.co/800x314/EEE/CCC?text=Главное+изображение" alt="{{ article.title }}">
-        {% endif %}
+    <div class="news-content-layout">
+      <!-- Main Article Content -->
+      <div class="news-article-main">
+        <div class="news-article-header">
+          <div class="article-meta-rating-row">
+            <div class="author-info-block">
+              <div class="author-details">
+                <img class="author-avatar" src="{{ article.author.profile.avatar.url|default:'https://placehold.co/39x39/7B61FF/FFFFFF?text=A' }}" alt="{{ article.author.email|default:'Автор' }}"/>
+                <div class="author-name-time">
+                  <div class="author-name">{{ article.author.get_full_name|default:article.author.email|default:"Аноним" }}</div>
+                  <div class="publish-time">{{ article.published_at|timesince }} назад</div>
+                </div>
+              </div>
+              <div class="article-stats-small">
+                <div class="stat-item">
+                  <form method="post" style="margin: 0; display: flex;">
+                    {% csrf_token %}
+                    <button type="submit" name="like" class="like-button {% if user_liked %}liked{% endif %}">
+                      <i class="fas fa-heart"></i>
+                      <span class="like-count">{{ likes_count }}</span>
+                    </button>
+                  </form>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-icon">
+                    <img src="{% static 'accounts/images/news/chat_icon.svg' %}" alt="Комментарии">
+                  </div>
+                  <div class="stat-text">{{ article.comments_count|default:0 }}</div>
+                </div>
+              </div>
+            </div>
+            <div class="rating-block">
+              {% with simulated_rating=3 %} {# Устанавливаем фиксированный рейтинг для демонстрации #}
+              <div class="rating-text">Рейтинг {{ simulated_rating }}/5</div>
+              <div class="rating-icons">
+                  <div class="rating-stars" data-rating="{{ simulated_rating }}">
+                      {% for i in "12345" %}
+                          <span class="rating-icon-container {% if forloop.counter <= simulated_rating %}is-filled{% else %}is-empty{% endif %}">
+                              <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="Планета закрашенная" class="icon-filled">
+                              <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="Планета контур" class="icon-empty"> {# Используем тот же SVG #}
+                          </span>
+                      {% endfor %}
+                  </div>
+              </div>
+              {% endwith %}
+            </div>
+          </div>
 
-        <div class="article-title-large">
-          {{ article.title }}
-          {% if user.is_authenticated and user.role.role_name == 'moderator' %}
-            <button class="delete-news-btn" onclick="deleteNews({{ article.article_id }})">Удалить</button>
+          {% if article.get_image_url %}
+            <img class="article-main-image" src="{{ article.get_image_url }}" alt="{{ article.title }}">
+          {% else %}
+            <img class="article-main-image" src="https://placehold.co/800x314/EEE/CCC?text=Главное+изображение" alt="{{ article.title }}">
           {% endif %}
-        </div>
-      </div>
 
-      <div class="article-content-body">
-        <div class="content-text-full-width">
-            {{ article.content|linebreaksbr }}
-        </div>
-
-        {# Example content blocks from user HTML - adapt with real data if available #}
-        <div class="content-row">
-          <div class="content-image-block">
-            <img class="content-image" src="https://placehold.co/267x267/EEE/CCC?text=Изображение+1" alt="Ромашка шкаф/стеллаж">
-            <div class="image-caption">Ромашка шкаф/стеллаж</div>
-          </div>
-          <div class="content-text">
-            Наш стартап разрабатывает инновационную платформу для телемедицины, которая обеспечивает пользователям доступ к качественным медицинским консультациям в любое время и в любом месте, уменьшая необходимость в личных визитах к врачам...<br/><br/>Наш стартап разрабатывает инновационную платформу для телемедицины, которая обеспечивает пользователям доступ к качественным медицинским консультациям в любое время и в любом месте, уменьшая необходимость в личных визитах к врачам...
-          </div>
-        </div>
-        
-        <div class="content-row">
-          <div class="content-text">
-            Наш стартап разрабатывает инновационную платформу для телемедицины, которая обеспечивает пользователям доступ к качественным медицинским консультациям в любое время и в любом месте, уменьшая необходимость в личных визитах к врачам...<br/><br/>Наш стартап разрабатывает инновационную платформу для телемедицины, которая обеспечивает пользователям доступ к качественным медицинским консультациям в любое время и в любом месте, уменьшая необходимость в личных визитах к врачам...
-          </div>
-          <div class="content-image-block">
-            <img class="content-image" src="https://placehold.co/267x267/DDD/BBB?text=Изображение+2" alt="Ромашка шкаф/стеллаж">
-            <div class="image-caption">Ромашка шкаф/стеллаж</div>
+          <div class="article-title-large">
+            {{ article.title }}
+            {% if user.is_authenticated and user.role.role_name == 'moderator' %}
+              <button class="delete-news-btn" onclick="deleteNews({{ article.article_id }})">Удалить</button>
+            {% endif %}
           </div>
         </div>
 
-        <div class="content-text-full-width">
-            Наш стартап разрабатывает инновационную платформу для телемедицины, которая обеспечивает пользователям доступ к качественным медицинским консультациям в любое время и в любом месте, уменьшая необходимость в личных визитах к врачам...
-        </div>
-        
-        <img class="content-image-large" src="https://placehold.co/800x314/AAA/999?text=Большое+изображение" alt="Большое изображение в тексте">
-        
-        <div class="content-text-full-width">
-            Наш стартап разрабатывает инновационную платформу для телемедицины, которая обеспечивает пользователям доступ к качественным медицинским консультациям в любое время и в любом месте, уменьшая необходимость в личных визитах к врачам...
-        </div>
-      </div>
-
-      <div class="article-footer-stats">
-        <div class="stat-item">
-           <div class="stat-icon">
-             <i class="fas fa-eye" style="font-size: 20px; color: #777;"></i>
-           </div>
-           <div class="stat-text">{{ views_count }} просмотров</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-icon">
-            <img src="{% static 'accounts/images/news/thumbs-up.svg' %}" alt="Лайки">
+        <div class="article-content-body">
+          <div class="content-text-full-width">
+              {{ article.content|linebreaksbr }}
           </div>
-          <div class="stat-text">{{ likes_count }}</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-icon">
-            <img src="{% static 'accounts/images/news/thumbs-down.svg' %}" alt="Дизлайки">
-          </div>
-          <div class="stat-text">{{ article.dislikes_count|default:0 }}</div> 
-        </div>
-        <div class="stat-item">
-          <div class="stat-icon">
-            <img src="{% static 'accounts/images/news/chat_icon.svg' %}" alt="Комментарии">
-          </div>
-          <div class="stat-text">{{ article.comments_count|default:0 }}</div>
-        </div>
-      </div>
-    </div>
 
-    <!-- Sidebar with Similar Articles -->
-    <div class="sidebar-similar-articles">
-      <div class="sidebar-title">Похожие статьи</div>
-      {% for i in "123" %} 
-      <div class="similar-article-card">
-        <img class="similar-article-image" src="https://placehold.co/409x214/AEC/9DB?text=Новость+{{forloop.counter}}" alt="Похожая статья {{forloop.counter}}">
-        
-        {% if forloop.counter == 2 %} 
-        <div class="ad-label-on-image">
-          <img src="{% static 'accounts/images/alert-circle.svg' %}" alt="Реклама"> Реклама
-        </div>
-        {% endif %}
-
-        <div class="similar-article-content">
-            <div class="similar-article-title">Инвестиции будущего или как быть на волне трендов {{forloop.counter}}</div>
-            <div class="similar-article-description">
-            Наш стартап разрабатывает инновационную платформу для телемедицины, которая обеспечивает пользователям доступ к качественным медицинским консультациям...
+          {# Example content blocks from user HTML - adapt with real data if available #}
+          <div class="content-row">
+            <div class="content-image-block">
+              <img class="content-image" src="https://placehold.co/267x267/EEE/CCC?text=Изображение+1" alt="Ромашка шкаф/стеллаж">
+              <div class="image-caption">Ромашка шкаф/стеллаж</div>
             </div>
+            <div class="content-text">
+              Наш стартап разрабатывает инновационную платформу для телемедицины, которая обеспечивает пользователям доступ к качественным медицинским консультациям в любое время и в любом месте, уменьшая необходимость в личных визитах к врачам...<br/><br/>Наш стартап разрабатывает инновационную платформу для телемедицины, которая обеспечивает пользователям доступ к качественным медицинским консультациям в любое время и в любом месте, уменьшая необходимость в личных визитах к врачам...
+            </div>
+          </div>
+          
+          <div class="content-row">
+            <div class="content-text">
+              Наш стартап разрабатывает инновационную платформу для телемедицины, которая обеспечивает пользователям доступ к качественным медицинским консультациям в любое время и в любом месте, уменьшая необходимость в личных визитах к врачам...<br/><br/>Наш стартап разрабатывает инновационную платформу для телемедицины, которая обеспечивает пользователям доступ к качественным медицинским консультациям в любое время и в любом месте, уменьшая необходимость в личных визитах к врачам...
+            </div>
+            <div class="content-image-block">
+              <img class="content-image" src="https://placehold.co/267x267/DDD/BBB?text=Изображение+2" alt="Ромашка шкаф/стеллаж">
+              <div class="image-caption">Ромашка шкаф/стеллаж</div>
+            </div>
+          </div>
+
+          <div class="content-text-full-width">
+              Наш стартап разрабатывает инновационную платформу для телемедицины, которая обеспечивает пользователям доступ к качественным медицинским консультациям в любое время и в любом месте, уменьшая необходимость в личных визитах к врачам...
+          </div>
+          
+          <img class="content-image-large" src="https://placehold.co/800x314/AAA/999?text=Большое+изображение" alt="Большое изображение в тексте">
+          
+          <div class="content-text-full-width">
+              Наш стартап разрабатывает инновационную платформу для телемедицины, которая обеспечивает пользователям доступ к качественным медицинским консультациям в любое время и в любом месте, уменьшая необходимость в личных визитах к врачам...
+          </div>
+        </div>
+
+        <div class="article-footer-stats">
+          <div class="stat-item">
+             <div class="stat-icon">
+               <i class="fas fa-eye" style="font-size: 20px; color: #777;"></i>
+             </div>
+             <div class="stat-text">{{ views_count }} просмотров</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-icon">
+              <img src="{% static 'accounts/images/news/thumbs-up.svg' %}" alt="Лайки">
+            </div>
+            <div class="stat-text">{{ likes_count }}</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-icon">
+              <img src="{% static 'accounts/images/news/thumbs-down.svg' %}" alt="Дизлайки">
+            </div>
+            <div class="stat-text">{{ article.dislikes_count|default:0 }}</div> 
+          </div>
+          <div class="stat-item">
+            <div class="stat-icon">
+              <img src="{% static 'accounts/images/news/chat_icon.svg' %}" alt="Комментарии">
+            </div>
+            <div class="stat-text">{{ article.comments_count|default:0 }}</div>
+          </div>
         </div>
       </div>
-      {% endfor %}
+
+      <!-- Sidebar with Similar Articles -->
+      <div class="sidebar-similar-articles">
+        <div class="sidebar-title">Похожие статьи</div>
+        {% for i in "123" %} 
+        <div class="similar-article-card">
+          <img class="similar-article-image" src="https://placehold.co/409x214/AEC/9DB?text=Новость+{{forloop.counter}}" alt="Похожая статья {{forloop.counter}}">
+          
+          {% if forloop.counter == 2 %} 
+          <div class="ad-label-on-image">
+            <img src="{% static 'accounts/images/alert-circle.svg' %}" alt="Реклама"> Реклама
+          </div>
+          {% endif %}
+
+          <div class="similar-article-content">
+              <div class="similar-article-title">Инвестиции будущего или как быть на волне трендов {{forloop.counter}}</div>
+              <div class="similar-article-description">
+              Наш стартап разрабатывает инновационную платформу для телемедицины, которая обеспечивает пользователям доступ к качественным медицинским консультациям...
+              </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
     </div>
   </div>
-</div>
+</div> {# Конец page-content-wrapper-white #}
 
 <script>
   function deleteNews(articleId) {
