@@ -416,7 +416,7 @@ nav.nav-menu > a.header-nav-link.header-role-button.create-startup-button .creat
   width: 100% !important; 
   box-sizing: border-box !important;
   
-  color: #000000 !important; 
+  color: #000000 !important; /* Явный черный цвет текста */
   font-family: 'Unbounded', sans-serif !important;
   font-size: 14px !important; 
   font-weight: 300 !important; 
@@ -443,7 +443,7 @@ nav.nav-menu > a.header-nav-link.header-role-button.create-startup-button .creat
   background-color: transparent !important;
   border: none !important;
   box-shadow: none !important;
-  color: #000000 !important; 
+  color: #000000 !important; /* Явный черный цвет текста при наведении */
 
   font-weight: 700 !important; 
   transform: scale(1.05) !important; 

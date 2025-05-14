@@ -245,6 +245,45 @@
                 }
             });
         }
+
+        // Функция для очистки элементов подменю каталога от эффектов button_effects.js
+        function cleanCatalogSubmenuItems() {
+            const submenuItems = document.querySelectorAll('.catalog-dropdown-item.no-wave-effect');
+            submenuItems.forEach(item => {
+                // Удаляем span для эффекта волны, если он есть
+                const waveSpan = item.querySelector('span.wave-effect');
+                if (waveSpan) {
+                    waveSpan.remove();
+                }
+                // Удаляем data-атрибут, который мог быть добавлен button_effects.js
+                item.removeAttribute('data-position-aware-initialized');
+                // Сбрасываем инлайн-стили, которые мог добавить скрипт (особенно border)
+                item.style.border = 'none'; 
+                // Если текст был обернут в span с z-index, пытаемся это убрать (сложнее, если структура сильно изменена)
+                // Этот шаг может потребовать более детального анализа структуры, которую создает button_effects.js
+                // Пока что ограничимся удалением волны и рамки.
+            });
+            console.log('Cleaned catalog submenu items.');
+        }
+
+        // Вызываем очистку при первоначальной загрузке
+        cleanCatalogSubmenuItems();
+
+        // Также вызываем очистку, когда меню каталога открывается
+        if (catalogDropdownButton && catalogDropdownContainer) {
+            const observer = new MutationObserver(mutationsList => {
+                for (const mutation of mutationsList) {
+                    if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                        if (catalogDropdownContainer.classList.contains('open')) {
+                            // Небольшая задержка, чтобы button_effects.js мог сначала отработать, если он реагирует на появление элементов
+                            setTimeout(cleanCatalogSubmenuItems, 50);
+                        }
+                    }
+                }
+            });
+            observer.observe(catalogDropdownContainer, { attributes: true });
+        }
+
     });
   </script>
   {% block body_scripts %}
