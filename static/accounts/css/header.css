@@ -119,7 +119,7 @@
   padding: 8px 16px;
   border-radius: 5px;
   color: var(--Color5, white);
-  font-size: 14px;
+  font-size: 14px !important;
   font-family: 'Unbounded', sans-serif;
   font-weight: 300;
   line-height: 18px;
@@ -150,7 +150,7 @@
   gap: 9px;
   display: inline-flex;
   color: black;
-  font-size: 16px;
+  font-size: 14px !important;
   font-family: 'Unbounded', sans-serif;
   font-weight: 400;
   line-height: 16px;
@@ -331,8 +331,8 @@
 nav.nav-menu > a.header-nav-link.header-role-button.create-startup-button {
     background: #3FFF47 !important;
     color: #000000 !important;
-    padding: 8px 16px !important; /* Паддинги могут оставаться от .header-nav-link, но можно и тут указать */
-    border-radius: 5px !important; /* Аналогично */
+    padding: 8px 16px !important; 
+    border-radius: 5px !important; 
     display: inline-flex !important;
     align-items: center !important;
     gap: 8px !important;
@@ -341,7 +341,7 @@ nav.nav-menu > a.header-nav-link.header-role-button.create-startup-button {
     font-size: 14px !important;
     line-height: 18px !important;
     text-decoration: none !important; 
-    border: none !important; /* Убираем возможную границу от других стилей */
+    border: none !important; 
 }
 
 /* Если иконка внутри кнопки "Создать" должна быть тоже черной */
@@ -362,12 +362,11 @@ nav.nav-menu > a.header-nav-link.header-role-button.create-startup-button .creat
   cursor: pointer;
   display: flex;
   align-items: center;
-  color: var(--Color5, white) !important; /* Новый текстовый стиль */
-  font-size: 14px !important; /* Новый текстовый стиль */
-  font-family: 'Unbounded', sans-serif !important; /* Новый текстовый стиль (sans-serif как запасной) */
-  font-weight: 300 !important; /* Новый текстовый стиль */
-  line-height: 18px !important; /* Новый текстовый стиль */
-  /* word-wrap: break-word; уже есть в .header-nav-link, но можно добавить для надежности */
+  color: var(--Color5, white) !important; 
+  font-size: 14px !important;
+  font-family: 'Unbounded', sans-serif !important; 
+  font-weight: 300 !important; 
+  line-height: 18px !important; 
 }
 
 .catalog-dropdown-button:hover {
@@ -379,42 +378,55 @@ nav.nav-menu > a.header-nav-link.header-role-button.create-startup-button .creat
   display: none;
   position: absolute;
   background-color: #FFFFFF;
-  min-width: 220px; /* Ширина подменю */
+  min-width: 220px; 
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
-  z-index: 100; /* Убедимся, что меню поверх других элементов */
-  left: 0; /* Выравнивание по левому краю кнопки */
-  top: calc(100% + 10px); /* Отступ от кнопки */
-  padding: 10px 0; /* Внутренние отступы */
-  border: 1px solid var(--border-light-gray); /* Граница как у других выпадающих меню */
+  z-index: 100; 
+  left: 0; 
+  top: calc(100% + 10px); 
+  padding: 10px 0; 
+  border: 1px solid var(--border-light-gray);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.catalog-dropdown-container.open .catalog-dropdown-menu, /* Показывать, когда у родителя есть класс open */
-.catalog-dropdown-button:focus + .catalog-dropdown-menu, /* Для доступности: показывать при фокусе на кнопке */
-.catalog-dropdown-menu:hover { /* Держать открытым при наведении на само меню */
-  display: block;
+.catalog-dropdown-container.open .catalog-dropdown-menu,
+.catalog-dropdown-button:focus + .catalog-dropdown-menu, 
+.catalog-dropdown-menu:hover { 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .catalog-dropdown-item {
-  color: #000000; /* Черный текст для элементов меню */
-  padding: 12px 20px;
+  color: #000000; 
+  padding: 10px 15px;
   text-decoration: none;
   display: flex;
   align-items: center;
-  gap: 12px; /* Отступ между иконкой и текстом */
+  justify-content: center;
+  gap: 10px; 
   font-family: 'Unbounded', sans-serif;
-  font-size: 14px; /* Размер шрифта как в вашем примере */
+  font-size: 14px; 
   font-weight: 300;
   line-height: 18px;
   white-space: nowrap;
+  background-color: transparent !important;
+  border: none !important;
+  width: 100%;
+  box-sizing: border-box;
+  transition: transform 0.2s ease, font-weight 0.2s ease;
 }
 
 .catalog-dropdown-item:hover {
-  background-color: #f0f0f0; /* Фон при наведении */
+  background-color: transparent !important;
+  font-weight: 700;
+  transform: scale(1.05);
+  color: #000000;
 }
 
 .catalog-dropdown-item-icon {
-  width: 25px; /* Размер иконок как в вашем примере */
+  width: 25px; 
   height: 25px;
-  /* filter: brightness(0); Если иконки SVG и нужно менять цвет, можно использовать filter */
 } 
