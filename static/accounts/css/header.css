@@ -121,7 +121,7 @@
   color: var(--Color5, white);
   font-size: 14px !important;
   font-family: 'Unbounded', sans-serif;
-  font-weight: 300;
+  font-weight: 300 !important;
   line-height: 18px;
   word-wrap: break-word;
   text-decoration: none; 
@@ -392,38 +392,38 @@ nav.nav-menu > a.header-nav-link.header-role-button.create-startup-button .creat
 }
 
 .catalog-dropdown-container.open .catalog-dropdown-menu,
-.catalog-dropdown-button:focus + .catalog-dropdown-menu, 
-.catalog-dropdown-menu:hover { 
+.catalog-dropdown-button:focus + .catalog-dropdown-menu { 
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
 .catalog-dropdown-item {
-  color: #000000; 
-  padding: 10px 15px;
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px; 
-  font-family: 'Unbounded', sans-serif;
-  font-size: 14px; 
-  font-weight: 300;
-  line-height: 18px;
-  white-space: nowrap;
-  background-color: transparent !important;
-  border: none !important;
-  width: 100%;
-  box-sizing: border-box;
-  transition: transform 0.2s ease, font-weight 0.2s ease;
+  color: #000000 !important;
+  padding: 10px 15px !important;
+  text-decoration: none !important;
+  display: flex !important; 
+  align-items: center !important; 
+  justify-content: center !important; 
+  gap: 10px !important; 
+  font-family: 'Unbounded', sans-serif !important;
+  font-size: 14px !important; 
+  font-weight: 300 !important;
+  line-height: 18px !important;
+  white-space: nowrap !important;
+  background-color: transparent !important; 
+  border: none !important; 
+  width: 100% !important; 
+  box-sizing: border-box !important;
+  transition: transform 0.2s ease, font-weight 0.2s ease !important; 
+  cursor: pointer;
 }
 
 .catalog-dropdown-item:hover {
-  background-color: transparent !important;
-  font-weight: 700;
-  transform: scale(1.05);
-  color: #000000;
+  background-color: transparent !important; 
+  font-weight: 700 !important;
+  transform: scale(1.05) !important; 
+  color: #000000 !important;
 }
 
 .catalog-dropdown-item-icon {

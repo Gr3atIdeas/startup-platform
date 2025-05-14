@@ -209,16 +209,19 @@
     document.addEventListener('DOMContentLoaded', function () {
         const catalogDropdownButton = document.querySelector('.catalog-dropdown-button');
         const catalogDropdownMenu = document.querySelector('.catalog-dropdown-menu');
+        const catalogDropdownContainer = document.querySelector('.catalog-dropdown-container');
 
-        if (catalogDropdownButton && catalogDropdownMenu) {
+        if (catalogDropdownButton && catalogDropdownMenu && catalogDropdownContainer) {
             catalogDropdownButton.addEventListener('click', function (event) {
                 event.stopPropagation();
-                catalogDropdownMenu.classList.toggle('open');
+                catalogDropdownContainer.classList.toggle('open');
             });
 
             document.addEventListener('click', function (event) {
-                if (catalogDropdownMenu.classList.contains('open') && !catalogDropdownMenu.contains(event.target) && !catalogDropdownButton.contains(event.target)) {
-                    catalogDropdownMenu.classList.remove('open');
+                if (catalogDropdownContainer.classList.contains('open') && 
+                    !catalogDropdownMenu.contains(event.target) && 
+                    !catalogDropdownButton.contains(event.target)) {
+                    catalogDropdownContainer.classList.remove('open');
                 }
             });
         }
