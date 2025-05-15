@@ -16,7 +16,7 @@
         <div id="scene">
           <div id="galaxy">
             <div id="logo" style="background-image: url('{{ logo_data.image }}');"></div>
-            {% for planet in planets_data|slice:":10" %} <!-- Ограничиваем до 10 стартапов -->
+            {% for planet in planets_data|slice:":9" %} <!-- Ограничиваем до 9 стартапов -->
               <div class="orbit" style="--orbit-size: {{ planet.orbit_size }}px; --orbit-time: {{ planet.orbit_time }}s;">
                 <div class="planet-orientation">
                   <div class="planet" style="--planet-size: {{ planet.planet_size }}px; background-image: url('{{ planet.image }}');" data-id="{{ planet.id }}"></div>
@@ -65,8 +65,12 @@
 
 {% block body_scripts %}
   <script>
+    // Передаём информацию о пользователе из контекста
+    const isAuthenticated = {{ is_authenticated|yesno:"true,false" }};
+    const isStartuper = {{ is_startuper|yesno:"true,false" }};
+
     const startups = {
-      {% for planet in planets_data|slice:":10" %} <!-- Ограничиваем до 10 стартапов -->
+      {% for planet in planets_data|slice:":9" %}
         '{{ planet.id }}': {
           name: '{{ planet.name }}',
           description: '{{ planet.description }}',
@@ -75,7 +79,7 @@
           funding: '{{ planet.funding }}',
           investors: '{{ planet.investors }}',
           image: '{{ planet.image }}',
-          startup_id: '{{ planet.startup_id }}'
+          startup_id: '{{ planet.startup_id|default:"null" }}'
         }{% if not forloop.last %},{% endif %}
       {% endfor %}
     };
@@ -138,6 +142,20 @@
       planet.style.backgroundImage = `url('${startups[id].image}')`;
       planet.addEventListener('click', (e) => {
         e.stopPropagation();
+
+        // Проверяем, является ли планета "create-startup"
+        if (id === 'create-startup') {
+          if (isAuthenticated && isStartuper) {
+            // Если пользователь — стартапер, перенаправляем на создание стартапа
+            window.location.href = "{% url 'create_startup' %}";
+          } else if (!isAuthenticated) {
+            // Если пользователь — гость, перенаправляем на регистрацию
+            window.location.href = "{% url 'register' %}";
+          }
+          return; // Прерываем выполнение, чтобы не показывать карточку
+        }
+
+        // Логика для обычных планет-стартапов
         const startup = startups[id];
 
         planetImage.style.backgroundImage = `url('${startup.image}')`;

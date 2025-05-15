@@ -1615,16 +1615,39 @@ def planetary_system(request):
         }
         planets_data.append(planet_data)
 
+    # Добавляем планету с плюсом для создания стартапа
+    create_planet_data = {
+        'id': 'create-startup',  # Специальный ID для отличия от стартапов
+        'startup_id': None,  # Нет startup_id, так как это не стартап
+        'name': 'Создать стартап',
+        'description': 'Нажмите, чтобы создать новый стартап',
+        'rating': '',
+        'progress': '',
+        'funding': '',
+        'investors': '',
+        'image': 'https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/0.png',
+        'orbit_size': 200,
+        'orbit_time': 80,
+        'planet_size': 60,
+    }
+    planets_data.append(create_planet_data)
+
     # Данные для логотипа планетарной системы
     logo_data = {
         'image': 'https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/planets/Group%20645.png'
     }
+
+    # Добавляем информацию о пользователе в контекст
+    is_authenticated = request.user.is_authenticated
+    is_startuper = is_authenticated and hasattr(request.user, 'role') and request.user.role.role_name == 'startuper'
 
     context = {
         'planets_data': planets_data,
         'directions': directions,
         'selected_galaxy': selected_galaxy,
         'logo_data': logo_data,
+        'is_authenticated': is_authenticated,
+        'is_startuper': is_startuper,
     }
     return render(request, 'accounts/planetary_system.html', context)
 
