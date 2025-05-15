@@ -101,6 +101,7 @@
     border-radius: 50%;
     margin-left: calc(-0.5 * var(--orbit-size));
     margin-top: calc(-0.5 * var(--orbit-size));
+    transform: scaleY(0.80); /* Сплющиваем орбиту по вертикали */
     transform-style: preserve-3d;
     z-index: 1;
     transition: all 0.5s ease;
