@@ -75,8 +75,10 @@
           name: '{{ planet.name }}',
           description: '{{ planet.description }}',
           rating: '{{ planet.rating }}',
+          comment_count: {{ planet.comment_count|default:0 }},
           progress: '{{ planet.progress }}',
-          funding: '{{ planet.funding }}',
+          direction: '{{ planet.direction }}',
+          funding_goal: '{{ planet.funding_goal }}',
           investors: '{{ planet.investors }}',
           image: '{{ planet.image }}',
           startup_id: '{{ planet.startup_id|default:"null" }}'
@@ -160,11 +162,11 @@
 
         planetImage.style.backgroundImage = `url('${startup.image}')`;
         startupName.textContent = startup.name;
-        startupRating.textContent = `Рейтинг ${startup.rating}`;
+        startupRating.textContent = `Рейтинг ${startup.rating} | Комментариев: ${startup.comment_count}`; // Добавляем количество комментариев
         startupProgress.textContent = startup.progress;
-        startupFunding.textContent = `Цель финансирования: ${startup.funding}`;
+        startupFunding.textContent = `Цель финансирования: ${startup.funding_goal}`; // Используем funding_goal
         startupInvestors.textContent = startup.investors;
-        startupDescription.textContent = startup.description;
+        startupDescription.innerHTML = `<strong>Направление:</strong> ${startup.direction}<br><br>${startup.description}`; // Добавляем направление
 
         // Сохраняем startup_id текущего стартапа
         currentStartupId = startup.startup_id;

@@ -1599,15 +1599,26 @@ def planetary_system(request):
         orbit_time = 80 + (idx - 1) * 20
         planet_size = idx * 2 + 50
 
+        # Получаем количество комментариев
+        comment_count = Comments.objects.filter(startup_id=startup).count()
+
+        # Получаем направление
+        direction = startup.direction.direction_name if startup.direction else 'Не указано'
+
+        # Получаем цель финансирования (предполагаю, что это поле funding_goal в модели Startups)
+        funding_goal = startup.funding_goal or 0  # Если поле funding_goal не существует, нужно добавить его в модель
+
         planet_data = {
             'id': idx,
-            'startup_id': startup.startup_id,  # Добавляем startup_id
-            'name': startup.title,
-            'description': startup.description,
-            'rating': f"{startup.get_average_rating():.1f}/5 ({startup.total_voters})",
+            'startup_id': startup.startup_id,
+            'name': startup.title or 'Без названия',
+            'description': startup.description or 'Описание отсутствует',
+            'rating': f"{startup.get_average_rating():.1f}/5 ({startup.total_voters or 0})",
+            'comment_count': comment_count,  # Количество комментариев
             'progress': f"{startup.get_progress_percentage():.0f}%",
-            'funding': f"{startup.amount_raised or 0} ₽",
-            'investors': f"Инвесторов: {startup.get_investors_count()}",
+            'direction': direction,  # Направление
+            'funding_goal': f"{int(funding_goal):,d} ₽".replace(',', ' '),  # Цель финансирования
+            'investors': f"Инвесторов: {startup.get_investors_count() or 0}",
             'image': logo_url,
             'orbit_size': orbit_size,
             'orbit_time': orbit_time,
@@ -1615,31 +1626,30 @@ def planetary_system(request):
         }
         planets_data.append(planet_data)
 
-    # Добавляем планету с плюсом для создания стартапа
-    create_planet_data = {
-        'id': 'create-startup',  # Специальный ID для отличия от стартапов
-        'startup_id': None,  # Нет startup_id, так как это не стартап
-        'name': 'Создать стартап',
-        'description': 'Нажмите, чтобы создать новый стартап',
-        'rating': '',
-        'progress': '',
-        'funding': '',
-        'investors': '',
-        'image': 'https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/0.png',
-        'orbit_size': 200,
-        'orbit_time': 80,
-        'planet_size': 60,
-    }
-    planets_data.append(create_planet_data)
+    # Добавляем планету с плюсом для создания стартапа только для гостей и стартаперов
+    is_authenticated = request.user.is_authenticated
+    is_startuper = is_authenticated and hasattr(request.user, 'role') and request.user.role.role_name == 'startuper'
+    if not is_authenticated or is_startuper:  # Только для гостей и стартаперов
+        create_planet_data = {
+            'id': 'create-startup',  # Специальный ID для отличия от стартапов
+            'startup_id': None,  # Нет startup_id, так как это не стартап
+            'name': 'Создать стартап',
+            'description': 'Нажмите, чтобы создать новый стартап',
+            'rating': '',
+            'progress': '',
+            'funding': '',
+            'investors': '',
+            'image': 'https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/0.png',
+            'orbit_size': 200,
+            'orbit_time': 80,
+            'planet_size': 60,
+        }
+        planets_data.append(create_planet_data)
 
     # Данные для логотипа планетарной системы
     logo_data = {
         'image': 'https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/planets/Group%20645.png'
     }
-
-    # Добавляем информацию о пользователе в контекст
-    is_authenticated = request.user.is_authenticated
-    is_startuper = is_authenticated and hasattr(request.user, 'role') and request.user.role.role_name == 'startuper'
 
     context = {
         'planets_data': planets_data,

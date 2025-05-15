@@ -138,7 +138,7 @@
 }
 
 #info-card {
-    position: absolute; /* Изменяем на absolute */
+    position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -152,14 +152,17 @@
     z-index: 20;
     display: none;
     text-align: center;
+    overflow: visible; /* Позволяем элементам выходить за границы */
 }
 
 #info-card .planet-image {
     width: 100px;
     height: 100px;
     border-radius: 50%;
-    margin: 0 auto 10px;
+    margin: 0 auto -50px; /* Сдвигаем вверх, чтобы выйти за верхнюю границу */
     background-size: cover;
+    position: relative; /* Позиционируем относительно карточки */
+    top: -50px; /* Сдвигаем ещё выше */
 }
 
 #info-card h2 {
