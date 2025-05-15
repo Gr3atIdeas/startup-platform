@@ -2,7 +2,7 @@
 .planetary-system-wrapper {
     padding: 20px;
     width: 100%; /* Возвращаем полную ширину */
-    height: calc(70vh - 40px); /* Уменьшаем высоту на 30% (было 100vh) */
+    height: calc(85vh - 40px); /* Уменьшаем высоту на 30% (было 100vh) */
     box-sizing: border-box;
     margin: 0 auto;
 }
@@ -14,7 +14,7 @@
     box-sizing: border-box;
     border: 2px solid rgba(255, 255, 255, 0.3);
     border-radius: 10px;
-    overflow: hidden;
+    /* Убираем overflow: hidden */
     background: #000; /* Добавляем чёрный фон, чтобы перекрыть фоновое изображение страницы */
 }
 
@@ -38,7 +38,7 @@
     background: url('https://www.transparenttextures.com/patterns/stardust.png') repeat;
     opacity: 0.5;
     animation: parallax 100s linear infinite;
-    z-index: -1;
+    z-index: 0;
 }
 
 @keyframes parallax {
