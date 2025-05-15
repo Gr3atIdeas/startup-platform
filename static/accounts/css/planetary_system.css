@@ -198,7 +198,7 @@
     border-radius: 5px;
     font-family: 'Unbounded', sans-serif;
     font-weight: 300;
-    display: none; /* Скрываем кнопку, так как она уже добавлена в JS */
+    display: block;
 }
 
 #info-card .progress-bar .progress {
@@ -427,6 +427,6 @@
 }
 
 .galaxy-item.selected {
-    background: rgba(255, 255, 255, 0.5);
+    background: #004E9F !important;
     transform: scale(1.2);
 }
