@@ -1,10 +1,10 @@
 /* Стили для планетарной системы */
 .planetary-system-wrapper {
     padding: 20px;
-    width: 70%; /* Уменьшаем ширину на 30% (было 100%) */
-    height: calc(100vh - 40px);
+    width: 100%; /* Возвращаем полную ширину */
+    height: calc(70vh - 40px); /* Уменьшаем высоту на 30% (было 100vh) */
     box-sizing: border-box;
-    margin: 0 auto; /* Центрируем контейнер */
+    margin: 0 auto;
 }
 
 .planetary-system-container {
@@ -14,7 +14,8 @@
     box-sizing: border-box;
     border: 2px solid rgba(255, 255, 255, 0.3);
     border-radius: 10px;
-    overflow: hidden; /* Ограничиваем содержимое контейнером */
+    overflow: hidden;
+    background: #000; /* Добавляем чёрный фон, чтобы перекрыть фоновое изображение страницы */
 }
 
 .space-background {
@@ -103,7 +104,7 @@
     border-radius: 50%;
     margin-left: calc(-0.5 * var(--orbit-size));
     margin-top: calc(-0.5 * var(--orbit-size));
-    transform: scaleY(0.80);
+    transform: scaleY(0.95);
     transform-style: preserve-3d;
     z-index: 1;
     transition: all 0.5s ease;
