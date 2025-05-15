@@ -152,29 +152,33 @@
     z-index: 20;
     display: none;
     text-align: center;
-    overflow: visible; /* Позволяем элементам выходить за границы */
+    overflow: visible;
 }
 
 #info-card .planet-image {
     width: 100px;
     height: 100px;
     border-radius: 50%;
-    margin: 0 auto -50px; /* Сдвигаем вверх, чтобы выйти за верхнюю границу */
+    margin: 0 auto -50px;
     background-size: cover;
-    position: relative; /* Позиционируем относительно карточки */
-    top: -50px; /* Сдвигаем ещё выше */
+    position: relative;
+    top: -50px;
 }
 
 #info-card h2 {
-    margin: 0 0 5px;
-    font-size: 24px;
+    margin: 10px 0 5px;
+    font-size: 20px;
     color: #000;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
 }
 
 #info-card .rating {
-    font-size: 16px;
-    color: #555;
+    font-size: 12px;
+    color: #004E9F;
     margin-bottom: 10px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
 }
 
 #info-card .progress-bar {
@@ -182,6 +186,7 @@
     align-items: center;
     justify-content: center;
     margin: 10px 0;
+    width: 100%;
 }
 
 #info-card .progress-bar button {
@@ -189,8 +194,11 @@
     border: none;
     background: #000;
     color: white;
-    font-size: 14px;
-    border-radius: 5px 0 0 5px;
+    font-size: 12px;
+    border-radius: 5px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    display: none; /* Скрываем кнопку, так как она уже добавлена в JS */
 }
 
 #info-card .progress-bar .progress {
@@ -202,21 +210,27 @@
 }
 
 #info-card .funding {
-    font-size: 14px;
+    font-size: 12px;
     color: #555;
     margin: 10px 0;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
 }
 
 #info-card .investors {
-    font-size: 14px;
-    color: #555;
+    font-size: 12px;
+    color: #4E4F51;
     margin-bottom: 15px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
 }
 
 #info-card .description {
-    font-size: 14px;
+    font-size: 12px;
     color: #555;
     margin-bottom: 15px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
 }
 
 #info-card .more-details {

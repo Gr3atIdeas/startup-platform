@@ -1605,19 +1605,27 @@ def planetary_system(request):
         # Получаем направление
         direction = startup.direction.direction_name if startup.direction else 'Не указано'
 
-        # Получаем цель финансирования (предполагаю, что это поле funding_goal в модели Startups)
-        funding_goal = startup.funding_goal or 0  # Если поле funding_goal не существует, нужно добавить его в модель
+        # Определяем тип инвестирования
+        if startup.only_invest:
+            investment_type = "Инвестирование"
+        elif startup.only_buy:
+            investment_type = "Выкуп"
+        elif startup.both_mode:
+            investment_type = "Выкуп+инвестирование"
+        else:
+            investment_type = "Не указано"
 
         planet_data = {
             'id': idx,
             'startup_id': startup.startup_id,
             'name': startup.title or 'Без названия',
-            'description': startup.description or 'Описание отсутствует',
+            'description': startup.short_description or startup.description or 'Описание отсутствует',  # Используем short_description
             'rating': f"{startup.get_average_rating():.1f}/5 ({startup.total_voters or 0})",
-            'comment_count': comment_count,  # Количество комментариев
+            'comment_count': comment_count,
             'progress': f"{startup.get_progress_percentage():.0f}%",
-            'direction': direction,  # Направление
-            'funding_goal': f"{int(funding_goal):,d} ₽".replace(',', ' '),  # Цель финансирования
+            'direction': direction,
+            'investment_type': investment_type,
+            'funding_goal': f"{int(startup.funding_goal or 0):,d} ₽".replace(',', ' '),
             'investors': f"Инвесторов: {startup.get_investors_count() or 0}",
             'image': logo_url,
             'orbit_size': orbit_size,

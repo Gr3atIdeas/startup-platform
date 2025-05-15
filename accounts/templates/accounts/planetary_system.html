@@ -4,7 +4,8 @@
 {% block title %}Планетарная система стартапов{% endblock %}
 
 {% block head_extra %}
-<link rel="stylesheet" href="{% static 'accounts/css/planetary_system.css' %}">
+  <link rel="stylesheet" href="{% static 'accounts/css/planetary_system.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 {% endblock %}
 
 {% block content %}
@@ -78,6 +79,7 @@
           comment_count: {{ planet.comment_count|default:0 }},
           progress: '{{ planet.progress }}',
           direction: '{{ planet.direction }}',
+          investment_type: '{{ planet.investment_type }}',
           funding_goal: '{{ planet.funding_goal }}',
           investors: '{{ planet.investors }}',
           image: '{{ planet.image }}',
@@ -162,11 +164,33 @@
 
         planetImage.style.backgroundImage = `url('${startup.image}')`;
         startupName.textContent = startup.name;
-        startupRating.textContent = `Рейтинг ${startup.rating} | Комментариев: ${startup.comment_count}`; // Добавляем количество комментариев
-        startupProgress.textContent = startup.progress;
-        startupFunding.textContent = `Цель финансирования: ${startup.funding_goal}`; // Используем funding_goal
-        startupInvestors.textContent = startup.investors;
-        startupDescription.innerHTML = `<strong>Направление:</strong> ${startup.direction}<br><br>${startup.description}`; // Добавляем направление
+        startupRating.textContent = `Рейтинг ${startup.rating} | Комментариев: ${startup.comment_count}`;
+        startupProgress.innerHTML = `
+          <div class="progress-bar-visual">
+            <div class="progress-animation-container" style="width: ${startup.progress};">
+              <div class="progress-planets"></div>
+            </div>
+            <span class="progress-percentage">${startup.progress}</span>
+          </div>
+        `;
+        startupFunding.innerHTML = `
+          <strong>Направление:</strong> ${startup.direction}<br>
+          <div class="funding-goal-container-figma">
+            <span class="funding-goal-text-figma">Цель финансирования: ${startup.funding_goal}</span>
+          </div>
+        `;
+        startupInvestors.innerHTML = `
+          <div class="investor-count-container-figma">
+            <i class="fas fa-users investor-icon-figma"></i>
+            <span class="investor-count-text-figma">${startup.investors}</span>
+          </div>
+        `;
+        startupDescription.innerHTML = `
+          <div class="progress-bar">
+            <button>${startup.investment_type}</button>
+          </div>
+          <div class="startup-short-description">${startup.description}</div>
+        `;
 
         // Сохраняем startup_id текущего стартапа
         currentStartupId = startup.startup_id;
