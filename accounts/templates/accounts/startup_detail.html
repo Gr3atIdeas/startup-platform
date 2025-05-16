@@ -144,7 +144,7 @@
 
           <a href="{% url 'edit_startup' startup_id=startup.startup_id %}" 
              class="action-button edit-button" 
-             {% if not user.is_authenticated or (user != startup.owner and (not hasattr(user, 'role') or not user.role or user.role.role_name != 'moderator')) %}
+             {% if not user.is_authenticated or (user != startup.owner and not (hasattr(user, 'role') and user.role and user.role.role_name == 'moderator')) %}
                disabled
              {% endif %}>
             Редактировать
