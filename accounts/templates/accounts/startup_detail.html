@@ -607,13 +607,11 @@
         {% endfor %}
 
         {# Возвращаем кнопку "Показать еще" как пятый элемент сетки #}
-        {% if similar_startups|length > 4 %} 
-          <div class="similar-card show-more-placeholder">
-             <button class="action-button show-more-similar">
-               <i class="fas fa-redo"></i> Показать еще
-             </button>
-          </div>
-        {% endif %}
+        <div class="similar-card show-more-placeholder">
+           <button class="action-button show-more-similar">
+             <i class="fas fa-redo"></i> Показать еще
+           </button>
+        </div>
       </div> {# Конец similar-startups-grid #}
     </div>
   </div>
