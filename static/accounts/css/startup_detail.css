@@ -67,11 +67,12 @@ a:hover {
 /* Кнопка назад */
 .back-link-container {
   margin-bottom: 30px;
-  max-width: 1303px; /* Добавлено */
-  margin-left: auto; /* Добавлено */
-  margin-right: auto; /* Добавлено */
-  padding: 0 30px; /* Добавлено для выравнивания внутреннего контента */
-  box-sizing: border-box; /* Добавлено */
+  /* max-width: 1303px; */ /* Заменено на width */
+  width: 1303px; /* Явно задаем ширину */
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 30px;
+  box-sizing: border-box;
 }
 
 .back-button {
@@ -253,15 +254,15 @@ a:hover {
 
 .top-section {
   display: flex;
-  gap: 30px; /* Промежуток между колонками */
-  /* margin-bottom: 40px; */ /* Будет управляться margin-auto у родителя или останется */
-  width: 100%; /* Остается для заполнения max-width */
-  max-width: 1303px; /* Добавлено */
-  margin-left: auto; /* Добавлено */
-  margin-right: auto; /* Добавлено */
-  margin-bottom: 40px; /* Восстановлен оригинальный отступ снизу */
-  padding: 0 30px; /* Добавлено для выравнивания внутреннего контента */
-  box-sizing: border-box; /* Добавлено */
+  gap: 30px;
+  /* width: 100%; */ /* Заменено на width */
+  /* max-width: 1303px; */ /* Убрано, так как есть width */
+  width: 1303px; /* Явно задаем ширину */
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 40px;
+  padding: 0 30px;
+  box-sizing: border-box;
 }
 
 /* ------------------ */
@@ -2232,5 +2233,15 @@ body.glightbox-open .glightbox-container {
     width: 15px !important; /* Размер иконки крестика */
     height: 15px !important;
     fill: white !important;
+}
+
+/* --- Стили для блока модератора --- */
+/* Добавляем стили для .moderator-section-container если их нет, или модифицируем существующие */
+.moderator-section-container {
+    /* max-width: 1303px; */ /* Заменено на width */
+    width: 1303px; /* Явно задаем ширину */
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 30px; /* Для выравнивания внутреннего контента */
 }
 
