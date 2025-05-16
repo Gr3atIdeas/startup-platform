@@ -112,12 +112,13 @@
             </div>
             {% endif %}
           </div>
+        </div>
 
-          <div class="rating-comments-container"> {# Переносим рейтинг/комментарии сюда #}
-            <div class="rating-container"> {# Переносим рейтинг/комментарии сюда #}
-              {# Возвращаем текст "Рейтинг:" #}
+        <div class="actions-top-right">
+          {# --- ПЕРЕМЕЩЕННЫЙ БЛОК РЕЙТИНГА И КОММЕНТАРИЕВ --- #}
+          <div class="rating-comments-container">
+            <div class="rating-container">
               <span class="rating-label">Рейтинг {{ average_rating|floatformat:"1" }}/5</span>
-              {# ---> Возвращаем |default:0 для data-rating <--- #}
               <div class="rating-stars" data-rating="{{ average_rating|floatformat:"-2"|default:0 }}" {% if user.is_authenticated and not user_has_voted %}data-interactive="true"{% endif %}>
                   {% for i in "12345" %}
                     <span class="rating-icon-container" {% if user.is_authenticated and not user_has_voted %}data-value="{{ forloop.counter }}"{% endif %}>
@@ -129,12 +130,9 @@
             </div>
             <a href="#comments-section" class="comments-link">Комментарии</a>
           </div>
-        </div>
-
-        <div class="actions-top-right">
-          {# Новый инфо-бейдж #}
+          {# --- КОНЕЦ ПЕРЕМЕЩЕННОГО БЛОКА --- #}
+          
           <div class="startup-info-badge">
-            {# Логика вывода текста на основе полей модели #}
             {% if startup.both_mode %}
               Инвестирование+Выкуп
             {% elif startup.only_invest %}
@@ -142,14 +140,11 @@
             {% elif startup.only_buy %}
               Выкуп
             {% endif %}
-
           </div>
 
-          {# Кнопка Редактировать #}
           <button class="action-button edit-button"
             {% if user.is_authenticated %}
               {% if startup.owner == user or user.role.role_name == 'moderator' %}
-                {# Пользователь авторизован И (он владелец ИЛИ модератор) -> кнопка активна #}
               {% else %}
                 disabled
               {% endif %}
@@ -159,74 +154,94 @@
             Редактировать
           </button>
 
-          {# Кнопка Продать активы #}
           {% if user.is_authenticated and startup.owner == user %}
-              {# Кнопка была удалена, но endif нужен #}
-          {% endif %} {# <<-- ВОЗВРАЩАЕМ ЭТОТ ENDIF #}
-
-          {# Кнопка Инвестировать и поле суммы - ОСТАВЛЯЕМ для инвесторов, но ВНЕ ЭТОГО БЛОКА? #}
-          {# Нужно решить, где будет кнопка Инвестировать согласно новому дизайну #}
+          {% endif %}
 
         </div>
-      </div> {# Конец startup-header-actions-wrapper #}
+      </div> 
 
-      {# --- ОБЕРТКА ДЛЯ ТАБОВ И КОНТЕНТА --- #}
       <div class="tabbed-content-wrapper">
-        {# --- ТАБЫ НАВИГАЦИИ --- #}
         <div class="tab-navigation">
           <button class="tab-button active" data-target="info-section"><span>Информация</span></button>
           <button class="tab-button" data-target="gallery-section"><span>Галерея</span></button>
           <button class="tab-button" data-target="stages-section"><span>Этапы</span></button>
           <button class="tab-button" data-target="documents-section"><span>Документы</span></button>
           <button class="tab-button" data-target="conditions-section"><span>Условия</span></button>
-          {# Удаляем таб комментариев #}
-          {# <button class="tab-button" data-target="comments-section"><span>Комментарии</span></button> #}
         </div>
 
-        {# --- Контейнер для секций, управляемых табами --- #}
         <div class="tab-content-container">
-          {# Секция ИНФОРМАЦИЯ (по умолчанию активна) #}
           <div id="info-section" class="content-section active">
-            <div class="info-blocks">
-              <div class="info-block presentation-block">
-                <i class="fas fa-file-alt icon"></i>
-                <span class="info-block-title">Презентация</span>
-                {% if startup.pitch_deck_url %}
-                  <a href="{{ startup.pitch_deck_url }}" target="_blank" class="action-button view-button">Смотреть</a>
-                {% else %}
-                  <button class="action-button view-button" disabled>Смотреть</button>
-                {% endif %}
-              </div>
-              <div class="info-block collected-sum-block">
-                <i class="fas fa-coins icon"></i>
-                <span class="info-block-title">Собранная сумма</span>
-                <span class="info-block-value">{{ startup.amount_raised|default:0|floatformat:0|intcomma }} ₽</span>
-              </div>
-              {# --- Новый блок: Стадия --- #}
-              <div class="info-block stage-block">
-                <i class="fas fa-tasks icon"></i> {# Иконка для стадии, можно изменить #}
-                <span class="info-block-title">Стадия</span>
-                <span class="info-block-value">{{ startup.stage.stage_name|default:"Не указана" }}</span>
+            {# --- Сначала текстовые блоки "Вводная" и "О проекте" --- #}
+            <div class="about-section">
+              <h2 class="section-title">Вводная</h2> {# Изменено с "О проекте" на "Вводная" #}
+              <div class="section-content">
+                <p>{{ startup.short_description|default:"Нет вводного описания." }}</p> {# Убран тег strong #}
               </div>
             </div>
-
-            <div class="about-section">
-              {# --- Изменения в секции "О проекте" --- #}
+            <div class="about-section"> {# Отдельный блок для "О проекте" #}
               <h2 class="section-title">О проекте</h2>
               <div class="section-content">
-                {# Показываем "Вводную" как первую часть описания #}
-                <p><strong>Вводная:</strong> {{ startup.short_description|default:"Нет вводного описания." }}</p>
-                <p><strong>Подробное описание:</strong></p>
+                {# <p><strong>Подробное описание:</strong></p> #} {# Можно убрать, если заголовок уже есть #}
                 <p>{{ startup.description|linebreaksbr|default:"Нет подробного описания." }}</p>
                 {% if startup.additional_info %}
                   <p><strong>Основные функции:</strong></p>
                   {{ startup.additional_info|linebreaksbr }}
                 {% endif %}
+                 {# Ссылка "Читать дальше" пока не активна, можно добавить логику позже #}
+                 <a href="#" class="read-more-link" style="display: none;">Читать дальше</a>
+              </div>
+            </div>
+
+            {# --- Затем сетка из 4 информационных карточек --- #}
+            <div class="info-card-grid">
+              <!-- Block 1: Презентация -->
+              <div class="info-card">
+                <div class="info-card-icon-container">
+                  <img src="{% static 'accounts/images/startups/image.svg' %}" alt="Презентация" class="info-card-icon">
+                </div>
+                <span class="info-card-title">Презентация</span>
+                {% if startup.pitch_deck_url %}
+                  <a href="{{ startup.pitch_deck_url }}" target="_blank" class="action-button info-card-button view-button">Смотреть</a>
+                {% else %}
+                  <button class="action-button info-card-button view-button" disabled>Смотреть</button>
+                {% endif %}
+              </div>
+
+              <!-- Block 2: Оценка (Average Rating) -->
+              <div class="info-card">
+                <div class="info-card-icon-container">
+                  <img src="{% static 'accounts/images/startups/award.svg' %}" alt="Оценка" class="info-card-icon">
+                </div>
+                <span class="info-card-title">Оценка</span>
+                <div class="info-card-value-button accent-yellow-bg">
+                  {{ average_rating|default:0|floatformat:"1" }}
+                </div>
+              </div>
+
+              <!-- Block 3: Собранная сумма -->
+              <div class="info-card">
+                <div class="info-card-icon-container">
+                  <img src="{% static 'accounts/images/startups/piggy-bank.svg' %}" alt="Собранная сумма" class="info-card-icon">
+                </div>
+                <span class="info-card-title">Собранная сумма</span>
+                <div class="info-card-value-button accent-blue-bg">
+                  {{ startup.amount_raised|default:0|floatformat:0|intcomma }} ₽
+                </div>
+              </div>
+
+              <!-- Block 4: Стадия -->
+              <div class="info-card">
+                <div class="info-card-icon-container">
+                  <img src="{% static 'accounts/images/startups/boxes.svg' %}" alt="Стадия" class="info-card-icon">
+                </div>
+                <span class="info-card-title">Стадия</span>
+                <div class="info-card-value-button accent-white-bg">
+                  {{ startup.stage.stage_name|default:"Не указана" }}
+                </div>
               </div>
             </div>
           </div>
 
-          {# Секция ГАЛЕРЕЯ #}
           <div id="gallery-section" class="content-section media-section">
             <h2 class="section-title">Галерея</h2>
 
@@ -292,10 +307,10 @@
             {# Добавьте сюда контент для условий #}
             <p>{{ startup.terms|linebreaksbr|default:"Условия не указаны." }}</p>
           </div>
-        </div> {# Конец tab-content-container #}
-      </div> {# Конец tabbed-content-wrapper #}
-    </div> {# Конец right-column #}
-  </div> {# Конец top-section #}
+        </div> 
+      </div> 
+    </div> 
+  </div> 
 
   {# --- КОНТЕЙНЕР ДЛЯ БЛОКА МОДЕРАТОРА --- #}
   <div class="moderator-section-container my-4"> {# Добавлен общий контейнер и отступ #}

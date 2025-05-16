@@ -918,73 +918,15 @@ a:hover {
   gap: 20px;
 }
 
-.content-section#info-section .info-block {
-  background-color: var(--dark-card-bg, #0B1A3F);
-  border-radius: 12px;
-  padding: 15px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: 8px;
-  border: 1px solid var(--border-color);
-  min-height: 140px;
-  box-sizing: border-box;
-}
-
-.content-section#info-section .info-block .icon {
-    font-size: 20px;
-    color: var(--text-placeholder);
-    margin-bottom: 5px;
-    margin-top: 5px;
-}
-.content-section#info-section .info-block-title {
-    font-size: 13px;
-    color: var(--text-placeholder);
-    order: 2;
-}
-.content-section#info-section .info-block-value {
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--text-primary);
-    order: 1;
-}
-.content-section#info-section .info-block.presentation-block .action-button.view-button {
-    margin-top: 10px;
-    order: 3;
-    background-color: var(--button-yellow, #F7BF4F);
-    color: var(--primary-dark-blue);
-    padding: 10px 20px;
-    font-size: 14px;
-    border-radius: 8px;
-    width: 100%;
-    margin-top: auto;
-}
-.content-section#info-section .info-block.presentation-block .action-button.view-button:hover {
-     background-color: #e0ae44;
-}
-.content-section#info-section .info-block.collected-sum-block .info-block-value {
-    background-color: var(--button-blue, #345DFF);
-    color: var(--text-primary);
-    padding: 5px 15px;
-    border-radius: 8px;
-    display: inline-block;
-    width: 80%;
-}
-.content-section#info-section .info-block.stage-block .info-block-value {
-    background-color: #e9ecef;
-    color: var(--primary-dark-blue);
-    padding: 5px 15px;
-    border-radius: 8px;
-    display: inline-block;
-    width: 80%;
-}
-
 .content-section#info-section .about-section {
-    margin-top: 30px;
+    margin-top: 0; /* Убираем верхний отступ у первого about-section */
     background-color: transparent;
     padding: 0;
     border: none;
+    margin-bottom: 30px; /* Добавляем отступ снизу перед карточками */
+}
+.content-section#info-section .about-section + .about-section {
+    margin-top: 20px; /* Отступ между "Вводная" и "О проекте" */
 }
 
 .content-section#info-section .about-section .section-content {
@@ -1000,6 +942,124 @@ a:hover {
 .content-section#info-section .about-section .section-content strong {
     color: var(--text-primary);
     font-weight: 600;
+}
+
+/* Новые стили для .info-card-grid и .info-card */
+.info-card-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 25px; /* Уменьшаем gap с 45px до 25px чтобы уместить 4 блока в ряд */
+  justify-content: space-between; /* Распределяем карточки по всей ширине */
+  margin-top: 30px;
+}
+
+.info-card {
+  /* width: 231px; */ /* Ширина из Figma */
+  flex-basis: calc(25% - 18.75px); /* (100% - 3*25px) / 4.  18.75px = 3*25px / 4 */
+  max-width: 231px; /* Максимальная ширина из Figma */
+  min-width: 200px; /* Минимальная ширина для адаптивности */
+  height: 173px;    /* Высота из Figma */
+  background: linear-gradient(0deg, #181E30 0%, #181E30 100%), linear-gradient(180deg, #004E9F 0%, #001C39 100%); /* Цвета из Figma */
+  box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px; /* Уменьшаем внутренний gap с 16px до 10px */
+  padding: 15px;
+  box-sizing: border-box;
+  transition: transform 0.3s ease;
+}
+.info-card:hover {
+    transform: translateY(-5px);
+}
+
+.info-card-icon-container {
+  width: 55px;
+  height: 55px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 5px; /* Небольшой отступ под иконкой */
+}
+
+.info-card-icon {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.info-card-title {
+  color: var(--text-primary);
+  font-size: 18px; /* Уменьшаем с 20px до 18px для лучшего вида */
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 400;
+  line-height: 1.2;
+  text-align: center;
+  word-wrap: break-word;
+}
+
+/* Стили для кнопок/значений внутри info-card */
+.info-card .action-button.info-card-button.view-button,
+.info-card .info-card-value-button {
+  align-self: stretch;
+  height: 40px;
+  padding: 0 15px; /* Горизонтальный паддинг для содержимого */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px; /* Единообразный радиус, Figma был 10px для кнопки и 5px для значений */
+  font-family: 'Unbounded', sans-serif;
+  text-align: center;
+  margin-top: auto; /* Прижимает кнопку/значение к низу карточки */
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.info-card .action-button.info-card-button.view-button {
+  background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+  color: black;
+  font-size: 15px; /* Уменьшаем с 16px */
+  font-weight: 400;
+  line-height: 1;
+}
+.info-card .action-button.info-card-button.view-button:hover {
+    background: linear-gradient(180deg, #e8da20 0%, #e4e2c1 100%);
+}
+.info-card .action-button.info-card-button.view-button:disabled {
+    background: var(--button-grey);
+    color: var(--text-placeholder);
+    opacity: 0.7;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+
+.info-card .info-card-value-button {
+  font-size: 15px; /* Уменьшаем с 16px */
+  font-weight: 400;
+  line-height: 1;
+  padding-top: 0; /* Убираем лишние внутренние отступы, т.к. высота фиксирована */
+  padding-bottom: 0;
+}
+
+.info-card .info-card-value-button.accent-yellow-bg {
+  background-color: #FFEF2B; /* var(--accent-yellow) */
+  color: black;
+}
+
+.info-card .info-card-value-button.accent-blue-bg {
+  background-color: #004E9F; /* var(--button-blue) - Figma */
+  color: white;
+}
+
+.info-card .info-card-value-button.accent-white-bg {
+  background-color: white;
+  color: #1E1E1E; /* var(--primary-dark-blue) - Figma */
+  font-size: 13px; /* Уменьшаем с 14px, было 300 вес, теперь 400 */
+  font-weight: 300; /* Возвращаем вес из Figma для этого блока*/
 }
 
 /* Секция ГАЛЕРЕЯ */
@@ -1521,26 +1581,35 @@ a:hover {
 /* ======================================== */
 .similar-startups-section {
   margin-top: 60px;
-  /* padding: 70px 30px; */ /* Изменено */
-  padding: 70px 0; /* Убраны боковые отступы */
-  background-color: var(--primary-dark-blue); /* Темный фон по умолчанию */
+  /* padding: 70px 30px; */ /* Изменено - убираем паддинг отсюда */
+  padding: 0;
+  /* background-color: var(--primary-dark-blue); */ /* Убираем фон отсюда */
+  /* background-image: url('../images/startups/inside_cards_background.webp'); */ /* Убираем фон отсюда */
+  /* background-size: cover; */
+  /* background-position: center; */
+  /* background-repeat: no-repeat; */
+  /* border-radius: 15px; */ /* Убираем радиус отсюда */
+  box-sizing: border-box;
+  background-color: var(--primary-dark-blue); /* Фоновый цвет для пространства за пределами контейнера, если он не покрывает всю ширину */
+}
+
+.similar-startups-container {
+  width: 100%; /* Занимает всю ширину родителя, но ограничивается max-width */
+  max-width: 1303px; /* Ширина контентной сетки */
+  margin: 0 auto;
+  padding: 70px 30px; /* Внутренние отступы для контента */
+  box-sizing: border-box;
+  position: relative;
+  
+  /* Стили фона и рамки, перенесенные сюда и адаптированные под Figma */
+  background-color: black; /* Из Figma <div style="... background: black; ..."> */
   background-image: url('../images/startups/inside_cards_background.webp');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  border-radius: 15px;
-  box-sizing: border-box;
-}
-
-.similar-startups-container {
-  width: 100%;
-  margin: 0 auto;
-  padding: 0 30px; /* Добавлено для выравнивания внутреннего контента */
-  box-sizing: border-box; /* Добавлено */
-  /* max-width: 1303px; */ /* Добавлено - меняем на width */
-  width: 1303px;
-  position: relative;
-  /* box-sizing: border-box; уже был - оставляем один */
+  border-radius: 20px; /* Из Figma <div style="... border-radius: 20px; ..."> */
+  overflow: hidden; /* Из Figma <div style="... overflow: hidden; ..."> */
+  box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.25); /* Из Figma */
 }
 
 .similar-title {
