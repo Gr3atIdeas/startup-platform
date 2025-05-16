@@ -206,12 +206,12 @@ def startup_detail(request, startup_id):
     # Получаем распределение рейтингов
     rating_distribution_query = (
         UserVotes.objects.filter(startup=startup)
-        .values('vote_value') # Группируем по значению голоса
-        .annotate(count=Count('vote_value')) # Считаем количество для каждого значения
-        .order_by('-vote_value') # Опционально: сортируем
+        .values('rating') # Группируем по значению голоса
+        .annotate(count=Count('rating')) # Считаем количество для каждого значения
+        .order_by('-rating') # Опционально: сортируем
     )
     # Преобразуем в словарь {значение_рейтинга: количество}
-    rating_distribution = {item['vote_value']: item['count'] for item in rating_distribution_query}
+    rating_distribution = {item['rating']: item['count'] for item in rating_distribution_query}
     # Убедимся, что все значения от 1 до 5 присутствуют, даже если их нет в голосах
     for i in range(1, 6):
         rating_distribution.setdefault(i, 0)
