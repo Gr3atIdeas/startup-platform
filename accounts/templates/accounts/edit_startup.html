@@ -11,435 +11,294 @@
 
 <div class="startup-form-container">
     <div class="form-navigation-header">
-        <a href="{% url 'startup_detail' startup_id=startup.startup_id %}" class="back-button">&larr; Назад к стартапу</a> {# Ссылка назад на детали #}
+        <a href="{% url 'startup_detail' startup_id=startup.startup_id %}" class="back-button">&larr; Назад к стартапу</a>
         <h2 class="form-main-title">Редактирование стартапа</h2>
     </div>
 
-    <form method="post" enctype="multipart/form-data" id="startupForm">
+    <form method="post" enctype="multipart/form-data" id="startupForm" novalidate>
         {% csrf_token %}
 
-        <div class="form-grid">
-            <!-- Левая колонка -->
-            <div class="form-column-left">
-                <div class="form-group logo-upload-group">
-                    <label for="{{ form.logo.id_for_label }}" class="logo-upload-label">
-                        {# Показываем существующий логотип, если он есть #}
-                        {% with logo_file_id=startup.logo_urls|first %}
+        <!-- Верхний блок: Лого и основные поля -->
+        <div class="form-section-top">
+            <div class="form-top-grid">
+                <div class="form-top-left">
+                    <div class="form-group logo-upload-group">
+                        <label for="{{ form.logo.id_for_label }}" class="logo-upload-label">
+                            {% with logo_file_id=startup.logo_urls|first %}
                             <div class="logo-placeholder" id="logoPlaceholder" {% if logo_file_id %}style="display:none;"{% endif %}>
-                                <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Upload Logo">
-                                <span>Загрузить новый логотип</span>
+                                <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Upload Logo Icon">
+                                <span>*Загрузить логотип</span>
                             </div>
                             <img src="{% if logo_file_id %}{% get_file_url_tag logo_file_id startup.startup_id 'logo' %}{% else %}""{% endif %}" alt="Логотип" class="logo-preview" id="logoPreview" {% if not logo_file_id %}style="display:none;"{% endif %}>
-                        {% endwith %}
-                    </label>
-                    {{ form.logo|add_class:"form-control-file"|attr:"id:id_logo_input"|attr:"style:display:none;" }}
-                    {% if form.logo.errors %}
-                        <span class="error-message">{{ form.logo.errors|first }}</span>
-                    {% endif %}
-                </div>
-
-                <div class="form-group">
-                    <label for="{{ form.title.id_for_label }}">{{ form.title.label }}</label>
-                    {{ form.title|add_class:"form-control" }}
-                    {% if form.title.errors %}<span class="error-message">{{ form.title.errors|first }}</span>{% endif %}
-                </div>
-
-                <div class="form-group">
-                    <label for="{{ form.direction.id_for_label }}">{{ form.direction.label }}</label>
-                    {{ form.direction|add_class:"form-control" }}
-                    {% if form.direction.errors %}<span class="error-message">{{ form.direction.errors|first }}</span>{% endif %}
-                </div>
-                
-                <div class="form-group">
-                    <label for="{{ form.funding_goal.id_for_label }}">{{ form.funding_goal.label }}</label>
-                    {{ form.funding_goal|add_class:"form-control"|attr:"placeholder:Введите сумму" }}
-                    {% if form.funding_goal.errors %}<span class="error-message">{{ form.funding_goal.errors|first }}</span>{% endif %}
-                </div>
-
-                <div class="form-group">
-                    <label for="{{ form.stage.id_for_label }}">{{ form.stage.label }}</label>
-                    {{ form.stage|add_class:"form-control" }}
-                    {% if form.stage.errors %}<span class="error-message">{{ form.stage.errors|first }}</span>{% endif %}
-                </div>
-                </div>
-
-            <!-- Правая колонка -->
-            <div class="form-column-right">
-                <div class="investment-type-section">
-                    <div class="form-group checkbox-group">
-                         {{ form.micro_investment_available|add_class:"form-check-input" }}
-                        <label for="{{ form.micro_investment_available.id_for_label }}" class="form-check-label">
-                            {{ form.micro_investment_available.label }}
+                            {% endwith %}
                         </label>
-                        {% if form.micro_investment_available.errors %}<span class="error-message">{{ form.micro_investment_available.errors|first }}</span>{% endif %}
+                        {{ form.logo|add_class:"form-control-file"|attr:"id:id_logo_input"|attr:"style:display:none;" }}
+                        {% if form.logo.errors %}
+                            <span class="error-message">{{ form.logo.errors|first }}</span>
+                        {% endif %}
                     </div>
-                    <div class="form-group">
-                        <label for="{{ form.investment_type.id_for_label }}">{{ form.investment_type.label }}</label>
-                        {# Устанавливаем выбранное значение для investment_type #}
-                        {% with current_type=form.investment_type.value|default:"" %}
-                           {{ form.investment_type|add_class:"form-control" }}
-                        {% endwith %}
-                        {% if form.investment_type.errors %}<span class="error-message">{{ form.investment_type.errors|first }}</span>{% endif %}
+                    <div class="form-fields-left">
+                        <div class="form-group">
+                            <label for="{{ form.title.id_for_label }}">*{{ form.title.label }}</label>
+                            <div class="input-wrapper">
+                                {{ form.title|add_class:"form-control"|attr:"placeholder:Ромашка" }}
+                            </div>
+                            {% if form.title.errors %}<span class="error-message">{{ form.title.errors|first }}</span>{% endif %}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.direction.id_for_label }}">*{{ form.direction.label }}</label>
+                            <div class="input-wrapper select-wrapper">
+                                {{ form.direction|add_class:"form-control" }}
+                                <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="dropdown arrow" class="select-arrow">
+                            </div>
+                            {% if form.direction.errors %}<span class="error-message">{{ form.direction.errors|first }}</span>{% endif %}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.funding_goal.id_for_label }}">*{{ form.funding_goal.label }}</label>
+                            <div class="input-wrapper">
+                                {{ form.funding_goal|add_class:"form-control"|attr:"placeholder:Введите сумму ₽" }}
+                            </div>
+                            {% if form.funding_goal.errors %}<span class="error-message">{{ form.funding_goal.errors|first }}</span>{% endif %}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.stage.id_for_label }}">*{{ form.stage.label }}</label>
+                            <div class="input-wrapper select-wrapper">
+                                {{ form.stage|add_class:"form-control" }}
+                                 <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="dropdown arrow" class="select-arrow">
+                            </div>
+                            {% if form.stage.errors %}<span class="error-message">{{ form.stage.errors|first }}</span>{% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="form-top-right">
+                    <div class="investment-type-card">
+                        <div class="form-group checkbox-group micro-investment-group">
+                            <input type="checkbox" 
+                                   name="{{ form.micro_investment_available.name }}" 
+                                   id="{{ form.micro_investment_available.id_for_label }}" 
+                                   class="form-check-input-hidden" 
+                                   {% if startup.micro_investment_available %}checked{% endif %}>
+                            <label for="{{ form.micro_investment_available.id_for_label }}" class="micro-investment-label-new">
+                                <span class="micro-checkbox-visual">
+                                    <span class="micro-checkbox-unchecked"></span>
+                                    <img src="{% static 'accounts/images/creat_startup/checkmark-circle-blue.svg' %}" alt="checked" class="micro-checkbox-checked" style="display:none;">
+                                </span>
+                                <span class="checkbox-text-span">Микроинвестиции доступны</span>
+                            </label>
+                            {% if form.micro_investment_available.errors %}<span class="error-message">{{ form.micro_investment_available.errors|first }}</span>{% endif %}
+                        </div>
+                        <div class="form-group investment-type-group">
+                            <label for="{{ form.investment_type.id_for_label }}" class="investment-type-label">Тип инвестирования</label>
+                            <div class="input-wrapper select-wrapper">
+                                {{ form.investment_type|add_class:"form-control" }}
+                                <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="dropdown arrow" class="select-arrow">
+                            </div>
+                            {% if form.investment_type.errors %}<span class="error-message">{{ form.investment_type.errors|first }}</span>{% endif %}
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Поля под колонками -->
-        <div class="form-group full-width">
-            <label for="{{ form.short_description.id_for_label }}">{{ form.short_description.label }}</label>
-            {{ form.short_description|add_class:"form-control" }}
-            <div class="small-text">Краткое описание вашего стартапа, основные моменты.</div>
-            {% if form.short_description.errors %}<span class="error-message">{{ form.short_description.errors|first }}</span>{% endif %}
+        <!-- Новый общий контейнер для основного контента формы -->
+        <div class="form-main-content-wrapper">
+
+            <!-- Секция Вводная и Описание -->
+            <div class="form-content-section">
+                <div class="form-group full-width">
+                    <label for="{{ form.short_description.id_for_label }}">*{{ form.short_description.label }}</label>
+                    {{ form.short_description|add_class:"form-control"|attr:"placeholder:Наш стартап разрабатывает инновационную платформу для..." }}
+                    <div class="small-text">Краткое описание вашего стартапа, основные моменты.</div>
+                    {% if form.short_description.errors %}<span class="error-message">{{ form.short_description.errors|first }}</span>{% endif %}
+                </div>
+                <div class="form-group full-width">
+                    <label for="{{ form.description.id_for_label }}">*{{ form.description.label }}</label>
+                    {{ form.description|add_class:"form-control"|attr:"placeholder:Наш стартап разрабатывает инновационную платформу для телемедицины, которая обеспечивает пользователям доступ..." }}
+                    <div class="small-text">Подробное описание вашего стартапа. Расскажите о проблеме, решении, команде и т.д.</div>
+                    {% if form.description.errors %}<span class="error-message">{{ form.description.errors|first }}</span>{% endif %}
+                </div>
             </div>
 
-        <div class="form-group full-width">
-            <label for="{{ form.description.id_for_label }}">{{ form.description.label }}</label>
-            {{ form.description|add_class:"form-control" }}
-            <div class="small-text">Подробное описание вашего стартапа. Расскажите о проблеме, решении, команде и т.д.</div>
-            {% if form.description.errors %}<span class="error-message">{{ form.description.errors|first }}</span>{% endif %}
-        </div>
-
-        <div class="upload-section-grid">
-            <div class="form-group upload-box">
-                <label for="{{ form.creatives.id_for_label }}">{{ form.creatives.label }} (Загрузите новые, чтобы заменить)</label>
-                <div class="file-upload-area" id="creativesDropArea">
-                    {{ form.creatives|attr:"multiple:true" }}
-                    <p>Перетащите файлы сюда или нажмите для выбора</p>
-                    <div class="small-text">Допустимые форматы: JPG, PNG, GIF (до 3 файлов)</div>
+            <!-- Секция Изображения, Видео, Презентация, Оценка, Собранная сумма -->
+             <div class="form-content-section">
+                <div class="upload-section-grid media-and-finance-grid">
+                    <!-- Блок Изображения -->
+                    <div class="form-group upload-box" id="creativesDropArea">
+                        <label for="id_creatives_input">*Изображения (новые или для замены)</label>
+                        {{ form.creatives|attr:"style:display:none"|attr:"multiple:true"|attr:"id:id_creatives_input" }}
+                        <div class="custom-file-upload-button" onclick="document.getElementById('id_creatives_input').click()">Выбрать файлы</div>
+                        <div class="small-text">Допустимый формат PNG, JPEG (до 3 файлов)</div>
+                        <div id="creativesPreview" class="file-preview-area">
+                            {% for file_meta in existing_creatives %}
+                                <div class="file-preview-item existing-file" data-file-id="{{ file_meta.id }}">
+                                    <img src="{{ file_meta.url }}" alt="Креатив">
+                                    <p>{{ file_meta.name }}</p>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        {% if form.creatives.errors %}<span class="error-message">{{ form.creatives.errors|first }}</span>{% endif %}
+                    </div>
+                    <!-- Блок Видео -->
+                    <div class="form-group upload-box" id="videoDropArea">
+                        <label for="id_video_input">*Видео (новое или для замены)</label>
+                        {{ form.video|attr:"style:display:none"|attr:"id:id_video_input" }}
+                        <div class="custom-file-upload-button" onclick="document.getElementById('id_video_input').click()">Выбрать файл</div>
+                        <div class="small-text">Допустимый формат MOV, MP4 (1 файл)</div>
+                        <div id="videoPreview" class="file-preview-area">
+                            {% if existing_video %}
+                                <div class="file-preview-item existing-file" data-file-id="{{ existing_video.id }}">
+                                    <video controls src="{{ existing_video.url }}" style="max-width: 200px; max-height: 150px;"></video>
+                                    <p>{{ existing_video.name }}</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                        {% if form.video.errors %}<span class="error-message">{{ form.video.errors|first }}</span>{% endif %}
+                    </div>
+                    <!-- Блок Презентация, Оценка, Собранная сумма -->
+                    <div class="presentation-finance-group">
+                        <div class="form-group">
+                            <label for="{{ form.pitch_deck_url.id_for_label }}">{{ form.pitch_deck_url.label }}</label>
+                            <div class="input-wrapper">
+                                {{ form.pitch_deck_url|add_class:"form-control"|attr:"placeholder:URL" }}
+                            </div>
+                            {% if form.pitch_deck_url.errors %}<span class="error-message">{{ form.pitch_deck_url.errors|first }}</span>{% endif %}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.valuation.id_for_label }}">{{ form.valuation.label }}</label>
+                            <div class="input-wrapper valuation-input">
+                                {{ form.valuation|add_class:"form-control"|attr:"placeholder:1"|attr:"type:number"|attr:"min:1" }}
+                                <div class="valuation-spin-buttons">
+                                    <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="increase value" class="spin-up">
+                                    <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="decrease value" class="spin-down">
+                                </div>
+                            </div>
+                            {% if form.valuation.errors %}<span class="error-message">{{ form.valuation.errors|first }}</span>{% endif %}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.amount_raised.id_for_label }}">{{ form.amount_raised.label }}</label>
+                            <div class="input-wrapper">
+                                {{ form.amount_raised|add_class:"form-control"|attr:"placeholder:Введите сумму"|attr:"type:number" }}
+                            </div>
+                            {% if form.amount_raised.errors %}<span class="error-message">{{ form.amount_raised.errors|first }}</span>{% endif %}
+                        </div>
+                    </div>
                 </div>
-                <div id="creativesPreview" class="file-preview-area">
-                     {# Показываем существующие креативы #}
-                     {% for file_id in startup.creatives_urls %}
-                         <div class="file-preview-item existing-file">
-                             <img src="{% get_file_url_tag file_id startup.startup_id 'creative' %}" alt="Креатив" style="max-width:100px; max-height:100px;">
-                             <p>Существующий файл</p>
-                             {# Можно добавить кнопку удаления, но это усложнит логику #}
-                         </div>
-                     {% endfor %}
-                </div>
-                {% if form.creatives.errors %}<span class="error-message">{{ form.creatives.errors|first }}</span>{% endif %}
             </div>
 
-            <div class="form-group upload-box">
-                <label for="{{ form.video.id_for_label }}">{{ form.video.label }} (Загрузите новое, чтобы заменить)</label>
-                 <div class="file-upload-area" id="videoDropArea">
-                    {{ form.video }}
-                    <p>Перетащите файл сюда или нажмите для выбора</p>
-                    <div class="small-text">Допустимый формат: MP4, MOV (1 файл)</div>
+            <!-- Секция Условия -->
+             <div class="form-content-section">
+                <div class="form-group full-width">
+                    <label for="{{ form.terms.id_for_label }}">*{{ form.terms.label }}</label>
+                    {{ form.terms|add_class:"form-control"|attr:"placeholder:Договоры займа сроком на 12 месяцев..." }}
+                    <div class="small-text">Условия инвестирования или выкупа, если они уже определены.</div>
+                    {% if form.terms.errors %}<span class="error-message">{{ form.terms.errors|first }}</span>{% endif %}
                 </div>
-                <div id="videoPreview" class="file-preview-area">
-                     {# Показываем существующее видео #}
-                     {% with video_file_id=startup.video_urls|first %}
-                         {% if video_file_id %}
-                             <div class="file-preview-item existing-file">
-                                 <video controls src="{% get_file_url_tag video_file_id startup.startup_id 'video' %}" style="max-width:100px; max-height:100px;"></video>
-                                 <p>Существующее видео</p>
-                             </div>
-                         {% endif %}
-                     {% endwith %}
-                </div>
-                {% if form.video.errors %}<span class="error-message">{{ form.video.errors|first }}</span>{% endif %}
             </div>
             
-            <div class="form-group">
-                <label for="{{ form.pitch_deck_url.id_for_label }}">{{ form.pitch_deck_url.label }}</label>
-                {{ form.pitch_deck_url|add_class:"form-control" }}
-                {% if form.pitch_deck_url.errors %}<span class="error-message">{{ form.pitch_deck_url.errors|first }}</span>{% endif %}
+            <!-- Блок таймлайна -->
+             <div class="form-content-section timeline-section-wrapper">
+                 <h3 class="section-title">*Этапы</h3>
+                <div class="timeline" id="timeline">
+                    <div class="timeline-progress-container">
+                        <div class="timeline-progress-line"></div>
+                        <div class="timeline-progress-filled" id="timelineProgressFilled"></div>
+                    </div>
+                    {% for i in "12345" %}
+                    <div class="timeline-step" data-step="{{ i }}">
+                        <div class="step-number-wrapper" id="stepNumber{{ i }}">
+                             {% if i == "1" %}<img src="{% static 'accounts/images/creat_startup/Frame 996.svg' %}" alt="Иконка Этап 1" class="step-icon">{% endif %}
+                             {% if i == "2" %}<img src="{% static 'accounts/images/creat_startup/Frame 995.svg' %}" alt="Иконка Этап 2" class="step-icon">{% endif %}
+                             {% if i == "3" %}<img src="{% static 'accounts/images/creat_startup/Frame 994.svg' %}" alt="Иконка Этап 3" class="step-icon">{% endif %}
+                             {% if i == "4" %}<img src="{% static 'accounts/images/creat_startup/Frame 993.svg' %}" alt="Иконка Этап 4" class="step-icon">{% endif %}
+                             {% if i == "5" %}<img src="{% static 'accounts/images/creat_startup/Frame 992.svg' %}" alt="Иконка Этап 5" class="step-icon">{% endif %}
+                        </div>
+                        <div class="step-text">Этап {{ i }}</div>
+                        <button type="button" class="btn-select-current-step" data-step-target="{{ i }}">Мы здесь</button>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div id="step-descriptions">
+                    {% for i_str in "12345" %}
+                    {% with i=i_str|add:0 %}{# Преобразуем строку в число для индексации #}
+                    <div class="timeline-description-container" id="step-description-{{ i }}" data-step-content="{{ i }}">
+                        <div class="timeline-description-header">
+                            <div class="timeline-description-title-wrapper">
+                                <div class="timeline-description-title">Этап {{ i }}</div>
+                            </div>
+                        </div>
+                        {% with current_timeline_event=timeline_steps|get_timeline_event_by_step:i %}
+                        <textarea class="timeline-description-textarea" name="step_description_{{ i }}" placeholder="Описание" required>{{ current_timeline_event.description|default:"" }}</textarea>
+                        {% endwith %}
+                    </div>
+                    {% endwith %}
+                    {% endfor %}
+                </div>
+                <input type="hidden" name="step_number" id="step_number" value="{{ startup.step_number|default:1 }}">
+            </div>
+
+            <!-- Секция Документы (Пруфы) -->
+             <div class="form-content-section">
+                <div class="form-group upload-box full-width" id="proofsDropArea">
+                    <label for="id_proofs_input">*Документы (новые или для замены)</label>
+                    {{ form.proofs|attr:"style:display:none"|attr:"multiple:true"|attr:"id:id_proofs_input" }}
+                    <div class="custom-file-upload-button" onclick="document.getElementById('id_proofs_input').click()">Выбрать файл</div>
+                    <div class="small-text">Допустимый формат Doc, Excel, PDF (до 3 файлов)</div>
+                    <div id="proofsPreview" class="file-preview-area">
+                        {% for file_meta in existing_proofs %}
+                            <div class="file-preview-item existing-file" data-file-id="{{ file_meta.id }}">
+                                <img src="{% static 'accounts/images/icons/file_icon.svg' %}" alt="file icon" class="file-icon" style="width: 40px; height: auto;">
+                                <p><a href="{{ file_meta.url }}" target="_blank">{{ file_meta.name }}</a></p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    {% if form.proofs.errors %}<span class="error-message">{{ form.proofs.errors|first }}</span>{% endif %}
                 </div>
             </div>
 
-        <div class="form-row-valuation-raised">
-            <div class="form-group">
-                <label for="{{ form.valuation.id_for_label }}">{{ form.valuation.label }}</label>
-                {{ form.valuation|add_class:"form-control"|attr:"placeholder:Введите сумму" }}
-                {% if form.valuation.errors %}<span class="error-message">{{ form.valuation.errors|first }}</span>{% endif %}
-            </div>
-
-            <div class="form-group">
-                <label for="{{ form.amount_raised.id_for_label }}">{{ form.amount_raised.label }}</label>
-                {{ form.amount_raised|add_class:"form-control"|attr:"placeholder:Введите сумму" }}
-                {% if form.amount_raised.errors %}<span class="error-message">{{ form.amount_raised.errors|first }}</span>{% endif %}
-            </div>
-        </div>
-
-        <div class="form-group full-width">
-            <label for="{{ form.terms.id_for_label }}">{{ form.terms.label }}</label>
-            {{ form.terms|add_class:"form-control" }}
-            <div class="small-text">Условия инвестирования или выкупа, если они уже определены.</div>
-            {% if form.terms.errors %}<span class="error-message">{{ form.terms.errors|first }}</span>{% endif %}
-        </div>
-        
-        <!-- Блок таймлайна -->
-        <h3 class="section-title">Этапы</h3>
-        <div class="timeline" id="timeline">
-            {% for i in "12345"|make_list %}
-            <div class="timeline-step" data-step="{{ i }}">
-                {# Добавляем класс active для текущего сохраненного шага #}
-                <div class="step-number {% if forloop.counter <= startup.step_number %}active{% endif %}" id="step{{ i }}">{{ i }}</div>
-                <div class="step-text">Этап {{ i }}</div>
-            </div>
-            {% endfor %}
-        </div>
-
-        <div id="step-descriptions">
-            {% for i in "12345"|make_list %}
-                <div class="timeline-description-container {% if forloop.counter == startup.step_number %}active{% endif %}" id="step-description-{{ i }}" data-step-content="{{ i }}">
-                    <div class="timeline-description-header">
-                        <div class="timeline-description-title">Этап {{ i }}</div>
-                        <button type="button" class="btn-select-current" data-step-target="{{ i }}">Мы здесь</button>
+            <!-- Согласия -->
+             <div class="form-content-section agreement-section-outer-wrapper">
+                <div class="agreement-section">
+                    <h3 class="section-title">Согласие</h3>
+                    <div class="form-group checkbox-group">
+                        {{ form.agree_rules|attr:"id:id_agree_rules"|add_class:"form-check-input-hidden" }}
+                        <label for="id_agree_rules" class="custom-checkbox-label">
+                            <span class="custom-checkbox-visual">
+                                <span class="custom-checkbox-unchecked"></span>
+                                <span class="custom-checkbox-checked"></span>
+                            </span>
+                            <span class="checkbox-text">{{ form.agree_rules.label }}</span>
+                        </label>
+                        {% if form.agree_rules.errors %}<span class="error-message">{{ form.agree_rules.errors|first }}</span>{% endif %}
                     </div>
-                    <textarea class="timeline-description-textarea" name="step_description_{{ i }}" placeholder="Добавьте описание для этого этапа..." required>{{ timeline_steps|get_item:i|default:"" }}</textarea>
+                    <div class="form-group checkbox-group">
+                        {{ form.agree_data_processing|attr:"id:id_agree_data_processing"|add_class:"form-check-input-hidden" }}
+                        <label for="id_agree_data_processing" class="custom-checkbox-label">
+                            <span class="custom-checkbox-visual">
+                                <span class="custom-checkbox-unchecked"></span>
+                                <span class="custom-checkbox-checked"></span>
+                            </span>
+                            <span class="checkbox-text">{{ form.agree_data_processing.label }}</span>
+                        </label>
+                        {% if form.agree_data_processing.errors %}<span class="error-message">{{ form.agree_data_processing.errors|first }}</span>{% endif %}
+                    </div>
                 </div>
-            {% endfor %}
-        </div>
-        <!-- Скрытое поле для текущего этапа -->
-        <input type="hidden" name="step_number" id="step_number" value="{{ startup.step_number|default:1 }}">
+            </div>
+        </div> <!-- Конец form-main-content-wrapper -->
 
-        <div class="form-group upload-box full-width">
-            <label for="{{ form.proofs.id_for_label }}">{{ form.proofs.label }} * (Загрузите новые, чтобы заменить)</label>
-            <div class="file-upload-area" id="proofsDropArea">
-                {{ form.proofs|attr:"multiple:true" }}
-                <p>Перетащите файлы сюда или нажмите для выбора</p>
-                <div class="small-text">Допустимые форматы: PDF, DOC, Excel (до 3 файлов)</div>
-            </div>
-            <div id="proofsPreview" class="file-preview-area">
-                {# Показываем существующие пруфы #}
-                {% for file_id in startup.proofs_urls %}
-                    <div class="file-preview-item existing-file">
-                        <img src="{% static 'accounts/images/icons/file_icon.svg' %}" alt="file icon" class="file-icon">
-                        <p><a href="{% get_file_url_tag file_id startup.startup_id 'proof' %}" target="_blank">Существующий пруф</a></p>
-                        {# Можно добавить кнопку удаления #}
-                    </div>
-                {% endfor %}
-            </div>
-            {% if form.proofs.errors %}<span class="error-message">{{ form.proofs.errors|first }}</span>{% endif %}
-        </div>
-
-        <!-- Согласия -->
-        <div class="agreement-section">
-            <h3 class="section-title">Согласие</h3>
-            <div class="form-group checkbox-group">
-                    {{ form.agree_rules }}
-                <label for="{{ form.agree_rules.id_for_label }}">{{ form.agree_rules.label }}</label>
-                {% if form.agree_rules.errors %}<span class="error-message">{{ form.agree_rules.errors|first }}</span>{% endif %}
-            </div>
-            <div class="form-group checkbox-group">
-                    {{ form.agree_data_processing }}
-                <label for="{{ form.agree_data_processing.id_for_label }}">{{ form.agree_data_processing.label }}</label>
-                {% if form.agree_data_processing.errors %}<span class="error-message">{{ form.agree_data_processing.errors|first }}</span>{% endif %}
-            </div>
-        </div>
-
-        <!-- Кнопка отправки -->
-        <div class="submit-button-container">
-        <button type="submit" class="submit-button">Обновить и отправить на модерацию</button> {# Измененный текст кнопки #}
+        <div class="form-actions">
+            <button type="submit" class="btn-submit-startup" id="submitStartupBtn">Сохранить изменения</button>
         </div>
     </form>
 </div>
 
-{# Копируем тот же JS, что и в create_startup, с небольшими адаптациями для предзаполнения #}
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // --- Логотип (уже настроен на показ существующего через HTML) ---
-    const logoInput = document.getElementById('id_logo_input');
-    const logoPlaceholder = document.getElementById('logoPlaceholder');
-    const logoPreviewImg = document.getElementById('logoPreview');
+<div class="error-modal" id="errorModal" style="display: none;">
+    <div class="error-modal-content">
+        <span class="close-error-modal" id="closeErrorModal">&times;</span>
+        <h3>Обнаружены ошибки:</h3>
+        <ul id="errorList"></ul>
+        <p>Пожалуйста, исправьте ошибки и попробуйте снова.</p>
+    </div>
+</div>
 
-    if (logoInput && logoPlaceholder && logoPreviewImg) {
-        logoPlaceholder.addEventListener('click', () => logoInput.click());
-        logoPreviewImg.addEventListener('click', () => logoInput.click());
-
-        logoInput.addEventListener('change', function() {
-        const file = this.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                    logoPreviewImg.src = e.target.result;
-                    logoPreviewImg.style.display = 'block';
-                    logoPlaceholder.style.display = 'none';
-            };
-            reader.readAsDataURL(file);
-        }
-    });
-    }
-
-    // --- Логика таймлайна ---
-    const timelineSteps = document.querySelectorAll('.timeline-step');
-    const descriptionContainers = document.querySelectorAll('.timeline-description-container');
-    const currentStepInput = document.getElementById('step_number');
-    const setCurrentButtons = document.querySelectorAll('.btn-select-current');
-    const initialStep = parseInt(currentStepInput.value) || 1; // Получаем начальный шаг
-
-    function selectStep(stepNumber) {
-        descriptionContainers.forEach(container => {
-            container.classList.toggle('active', container.dataset.stepContent == stepNumber);
-        });
-        timelineSteps.forEach(step => {
-            step.classList.toggle('active-step-display', step.dataset.step == stepNumber);
-        });
-    }
-
-    function setCurrentStep(stepNumber) {
-        currentStepInput.value = stepNumber;
-        timelineSteps.forEach(step => {
-            const stepNum = parseInt(step.dataset.step);
-            const stepCircle = step.querySelector('.step-number');
-            if (stepCircle) {
-                stepCircle.classList.toggle('active', stepNum <= stepNumber);
-            }
-        });
-        // Также выделяем выбранный шаг в таймлайне и показываем его описание
-        selectStep(stepNumber);
-    }
-
-    timelineSteps.forEach(step => {
-        step.addEventListener('click', function() {
-            const stepNum = this.dataset.step;
-            selectStep(stepNum);
-        });
-    });
-
-    setCurrentButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const stepNum = this.dataset.stepTarget;
-            setCurrentStep(stepNum);
-        });
-    });
-    
-    // Инициализация: показать сохраненный этап
-    if (timelineSteps.length > 0) {
-        setCurrentStep(initialStep);
-    }
-
-
-    // --- Обработка отправки формы ---
-    const startupForm = document.getElementById('startupForm');
-    if (startupForm) {
-        startupForm.addEventListener('submit', function(e) {
-        const submitButton = this.querySelector('button[type="submit"]');
-        if (submitButton.disabled) {
-            e.preventDefault();
-            return;
-        }
-        submitButton.disabled = true;
-        submitButton.textContent = 'Отправка...';
-    });
-    }
-
-    // --- Drag & Drop для файлов ---
-    // При редактировании добавляем к превью существующие файлы, а новые добавляются рядом
-    function setupDragAndDrop(inputId, dropAreaId, previewAreaId, maxFiles = 1, allowedTypes = ['image/jpeg', 'image/png', 'image/gif']) {
-        const fileInput = document.getElementById(inputId);
-        const dropArea = document.getElementById(dropAreaId);
-        const previewArea = document.getElementById(previewAreaId);
-
-        if (!fileInput || !dropArea || !previewArea) return;
-
-        dropArea.addEventListener('click', () => fileInput.click());
-        dropArea.addEventListener('dragover', (event) => { event.preventDefault(); dropArea.classList.add('dragover'); });
-        dropArea.addEventListener('dragleave', () => { dropArea.classList.remove('dragover'); });
-        dropArea.addEventListener('drop', (event) => {
-            event.preventDefault(); dropArea.classList.remove('dragover');
-            const files = event.dataTransfer.files;
-            handleFiles(files, fileInput, previewArea, maxFiles, allowedTypes);
-        });
-        fileInput.addEventListener('change', (event) => {
-            const files = event.target.files;
-            handleFiles(files, fileInput, previewArea, maxFiles, allowedTypes);
-        });
-    }
-
-    function handleFiles(files, fileInput, previewArea, maxFiles, allowedTypes) {
-        let newFilesList = new DataTransfer();
-        // При редактировании мы НЕ добавляем старые файлы в newFilesList,
-        // т.к. инпут предназначен только для НОВЫХ файлов.
-        // Старые файлы удаляются/заменяются на бэкенде, если загружены новые.
-
-        // Очищаем только превью НОВЫХ файлов при загрузке одного файла, если не multiple
-        if (!fileInput.multiple) {
-             previewArea.querySelectorAll('.file-preview-item:not(.existing-file)').forEach(el => el.remove());
-        }
-
-        let currentNewFileCount = previewArea.querySelectorAll('.file-preview-item:not(.existing-file)').length;
-
-        for (let i = 0; i < files.length; i++) {
-            const file = files[i];
-            if (fileInput.multiple && (currentNewFileCount + newFilesList.items.length) >= maxFiles) {
-                alert(`Можно загрузить не более ${maxFiles} новых файлов.`);
-                break;
-            }
-            if (!allowedTypes.includes(file.type) && allowedTypes.length > 0 && !(allowedTypes.includes('application/pdf') && file.name.endsWith('.pdf')) && !(allowedTypes.includes('application/msword') && file.name.endsWith('.doc')) && !(allowedTypes.includes('application/vnd.openxmlformats-officedocument.wordprocessingml.document') && file.name.endsWith('.docx')) && !(allowedTypes.includes('application/vnd.ms-excel') && file.name.endsWith('.xls')) && !(allowedTypes.includes('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') && file.name.endsWith('.xlsx'))) {
-                 alert(`Файл ${file.name} имеет неподдерживаемый тип. Разрешены: ${allowedTypes.join(', ')}`);
-                 continue;
-            }
-
-            if (!fileInput.multiple) { // Для single file input, заменяем файл
-                newFilesList = new DataTransfer(); // Очищаем, чтобы добавить только один
-                previewArea.querySelectorAll('.file-preview-item:not(.existing-file)').forEach(el => el.remove());
-            }
-            newFilesList.items.add(file);
-            
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                let previewItem;
-                // Добавляем класс new-file для возможности удаления только новых
-                if (file.type.startsWith('image/')) {
-                    previewItem = `<div class="file-preview-item new-file"><img src="${e.target.result}" alt="${file.name}"><p>${file.name}</p><button type="button" class="remove-file-btn" data-filename="${file.name}">&times;</button></div>`;
-                } else if (file.type.startsWith('video/')) {
-                     previewItem = `<div class="file-preview-item new-file"><video controls src="${e.target.result}"></video><p>${file.name}</p><button type="button" class="remove-file-btn" data-filename="${file.name}">&times;</button></div>`;
-                } else { // Для других типов файлов
-                    previewItem = `<div class="file-preview-item new-file"><img src="{% static 'accounts/images/icons/file_icon.svg' %}" alt="file icon" class="file-icon"><p>${file.name}</p><button type="button" class="remove-file-btn" data-filename="${file.name}">&times;</button></div>`;
-                }
-                 previewArea.insertAdjacentHTML('beforeend', previewItem);
-            };
-            reader.readAsDataURL(file);
-        }
-        fileInput.files = newFilesList.files; // Обновляем файлы в инпуте
-    }
-    
-    // Удаление файла из превью (только для НОВЫХ файлов)
-    document.addEventListener('click', function(event) {
-        if (event.target.classList.contains('remove-file-btn')) {
-            const previewItem = event.target.closest('.file-preview-item');
-            // Удаляем только если это НОВЫЙ файл
-            if (previewItem && previewItem.classList.contains('new-file')) { 
-                const fileNameToRemove = event.target.dataset.filename;
-                const previewArea = previewItem.parentElement;
-                const fileInputId = previewArea.id.replace('Preview', ''); 
-                const fileInput = document.querySelector(`input[name="${fileInputId}"]`);
-
-                if (fileInput) {
-                    const dt = new DataTransfer();
-                    const files = Array.from(fileInput.files);
-                    files.forEach(file => {
-                        if (file.name !== fileNameToRemove) {
-                            dt.items.add(file);
-                        }
-                    });
-                    fileInput.files = dt.files; 
-                }
-                previewItem.remove(); 
-            }
-        }
-    });
-
-    // Настраиваем Drag & Drop для полей
-    setupDragAndDrop('{{ form.creatives.id_for_label }}', 'creativesDropArea', 'creativesPreview', 3, ['image/jpeg', 'image/png', 'image/gif']);
-    setupDragAndDrop('{{ form.video.id_for_label }}', 'videoDropArea', 'videoPreview', 1, ['video/mp4', 'video/quicktime', 'video/x-msvideo']); 
-    setupDragAndDrop('{{ form.proofs.id_for_label }}', 'proofsDropArea', 'proofsPreview', 3, ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']);
-
-    // --- Установка начального значения для investment_type --- 
-    const investmentTypeSelect = document.querySelector('select[name="investment_type"]');
-    if (investmentTypeSelect) {
-        // Напрямую присваиваем значение из Django, убедившись, что это строка для JS
-        let currentStartupType = '{% if startup.both_mode %}both{% elif startup.only_invest %}invest{% elif startup.only_buy %}buy{% else %}{% endif %}';
-        
-        if (currentStartupType) {
-            investmentTypeSelect.value = currentStartupType;
-        }
-    }
-
-});
-</script>
+<script src="{% static 'accounts/js/startup_form.js' %}"></script>
 {% endblock %}

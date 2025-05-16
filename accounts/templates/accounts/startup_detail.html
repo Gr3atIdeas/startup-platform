@@ -327,7 +327,7 @@
                 <div class="timeline-descriptions-display">
                     {% for event in timeline_events %}
                     <div class="timeline-description-item {% if event.step_number == startup.step_number %}active{% endif %}">
-                        <h4>{{ event.title|default:"Этап" }} {{event.step_number}}</h4>
+                        <h4>{% if event.title %}{{ event.title }}{% else %}Этап {{ event.step_number }}{% endif %}</h4>
                         <p>{{ event.description|linebreaksbr|default:"Описание для этого этапа отсутствует." }}</p>
                     </div>
                     {% endfor %}
@@ -347,7 +347,7 @@
                         <li class="document-item">
                             <a href="{% get_file_url_tag doc.file_url startup.startup_id 'proof' %}" target="_blank" class="document-link">
                                 <i class="fas fa-file-alt document-icon"></i>
-                                <span class="document-name">{{ doc.file_url }}</span> {# Лучше иметь имя файла, а не только ID #}
+                                <span class="document-name">{{ doc.original_file_name|default:doc.file_url }}</span>
                             </a>
                             {# Можно добавить дату загрузки, если нужно: {{ doc.uploaded_at|date:"d.m.Y" }} #}
                         </li>
