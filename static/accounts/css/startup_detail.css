@@ -2313,3 +2313,188 @@ body.glightbox-open .glightbox-container {
     padding: 0 30px; /* Для выравнивания внутреннего контента - оставляем как было */
 }
 
+/* ======================================== */
+/*          СТИЛИ ДЛЯ ТАЙМЛАЙНА           */
+/* (Адаптировано из startup_form.css)   */
+/* ======================================== */
+
+.timeline-display-wrapper {
+    margin-top: 20px;
+    padding: 20px;
+    /* border: 1px solid var(--border-color); */ /* Убрал рамку, если не нужна */
+    border-radius: 10px;
+    /* background-color: var(--secondary-blue); */ /* Убрал фон, если основной фон страницы подходит */
+}
+
+.timeline {
+    display: flex;
+    justify-content: space-around; /* Распределяем иконки по ширине */
+    align-items: center;
+    position: relative;
+    margin-bottom: 30px; /* Отступ от описаний */
+    padding: 0 10px; /* Небольшие отступы по краям */
+}
+
+.timeline-progress-container {
+    position: absolute;
+    top: 50%; /* Центрируем линию по вертикали относительно иконок */
+    left: 0;
+    width: 100%;
+    height: 4px; /* Толщина линии */
+    transform: translateY(-50%);
+    z-index: 1; /* Под иконками */
+}
+
+.timeline-progress-line,
+.timeline-progress-filled {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    border-radius: 2px;
+}
+
+.timeline-progress-line {
+    width: 100%;
+    background-color: var(--border-color); /* Цвет неактивной части линии */
+}
+
+.timeline-progress-filled {
+    width: 0%; /* Задается инлайн-стилем */
+    background-color: var(--accent-purple); /* Цвет активной части линии */
+    transition: width 0.5s ease-in-out;
+}
+
+.timeline-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 8px;
+    position: relative; /* Для z-index */
+    z-index: 2; /* Иконки над линией прогресса */
+}
+
+.step-number-wrapper {
+    width: 48px; /* Размер кружка иконки */
+    height: 48px;
+    border-radius: 50%;
+    background-color: var(--dark-card-bg); /* Фон кружка */
+    border: 2px solid var(--border-color); /* Рамка кружка */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.step-number-wrapper .step-icon {
+    width: 24px; /* Размер самой иконки внутри кружка */
+    height: 24px;
+    object-fit: contain;
+}
+
+/* Стили для активного и пройденного этапа */
+.timeline-step.active-step-display .step-number-wrapper {
+    border-color: var(--accent-yellow); /* Желтая рамка для активного */
+    background-color: var(--accent-yellow); /* Желтый фон для активного */
+}
+.timeline-step.active-step-display .step-number-wrapper .step-icon {
+    /* Можно изменить цвет иконки, если она SVG и позволяет это */
+    filter: brightness(0.8); /* Пример: немного затемнить иконку на активном фоне */
+}
+
+.timeline-step.completed-step-display .step-number-wrapper {
+    border-color: var(--accent-purple); /* Фиолетовая рамка для пройденного */
+    background-color: var(--accent-purple); /* Фиолетовый фон для пройденного */
+}
+
+.timeline-step .step-text {
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.timeline-step.active-step-display .step-text {
+    color: var(--accent-yellow);
+    font-weight: 700;
+}
+
+.timeline-step.completed-step-display .step-text {
+    color: var(--accent-purple);
+}
+
+/* Описания этапов */
+.timeline-descriptions-display {
+    margin-top: 20px;
+}
+
+.timeline-description-item {
+    padding: 15px;
+    background-color: var(--dark-card-bg); /* Фон для блока описания */
+    border-radius: 8px;
+    margin-bottom: 15px; /* Отступ между описаниями */
+    border: 1px solid var(--border-color);
+    display: none; /* По умолчанию скрыты */
+}
+
+.timeline-description-item.active {
+    display: block; /* Показываем только активное описание */
+    border-left: 3px solid var(--accent-yellow); /* Акцент для активного */
+}
+
+.timeline-description-item h4 {
+    font-size: 18px;
+    color: var(--accent-yellow);
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.timeline-description-item p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 0;
+}
+
+/* Стили для списка документов */
+.document-list {
+    list-style-type: none;
+    padding-left: 0;
+    margin-top: 15px;
+}
+
+.document-item {
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: var(--dark-card-bg);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    transition: background-color 0.3s ease;
+}
+
+.document-item:hover {
+    background-color: var(--secondary-blue);
+}
+
+.document-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text-primary);
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.document-link:hover {
+    color: var(--accent-purple);
+}
+
+.document-icon {
+    font-size: 20px;
+    color: var(--accent-yellow);
+}
+
+.document-name {
+    word-break: break-all; /* Перенос длинных имен файлов */
+}
+

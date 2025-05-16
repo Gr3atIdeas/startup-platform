@@ -142,17 +142,13 @@
             {% endif %}
           </div>
 
-          <button class="action-button edit-button"
-            {% if user.is_authenticated %}
-              {% if startup.owner == user or user.role.role_name == 'moderator' %}
-              {% else %}
-                disabled
-              {% endif %}
-            {% else %}
-              disabled
-            {% endif %}>
+          <a href="{% url 'edit_startup' startup_id=startup.startup_id %}" 
+             class="action-button edit-button" 
+             {% if not user.is_authenticated or (user != startup.owner and (not hasattr(user, 'role') or not user.role or user.role.role_name != 'moderator')) %}
+               disabled
+             {% endif %}>
             Редактировать
-          </button>
+          </a>
 
           {% if user.is_authenticated and startup.owner == user %}
           {% endif %}
@@ -290,15 +286,69 @@
           {# Секция ЭТАПЫ (пустая) #}
           <div id="stages-section" class="content-section">
             <h2 class="section-title">Этапы</h2>
+            {% if timeline_events %}
+            <div class="timeline-display-wrapper"> 
+                <div class="timeline" id="startupTimelineDisplay">
+                    <div class="timeline-progress-container">
+                        <div class="timeline-progress-line"></div>
+                        {% with total_steps=5 current_step=startup.step_number|default:1 %}
+                            {% if current_step > 1 %}
+                                {% if current_step >= total_steps %}
+                                    {% widthratio 1 1 100 as progress_width %} {# 100% #}
+                                {% else %}
+                                    {% widthratio current_step|add:"-1" total_steps|add:"-1" 100 as progress_width %}
+                                {% endif %}
+                            {% else %}
+                                {% firstof 0 as progress_width %} {# 0% #}
+                            {% endif %}
+                        {% endwith %}
+                        <div class="timeline-progress-filled" style="width: {{ progress_width }}%;"></div>
+                    </div>
+                    {% for event in timeline_events %}
+                    <div class="timeline-step {% if event.step_number == startup.step_number %}active-step-display{% elif event.step_number < startup.step_number %}completed-step-display{% endif %}" data-step="{{ event.step_number }}">
+                        <div class="step-number-wrapper">
+                             {% if event.step_number == 1 %}<img src="{% static 'accounts/images/creat_startup/Frame 996.svg' %}" alt="Иконка Этап 1" class="step-icon">{% endif %}
+                             {% if event.step_number == 2 %}<img src="{% static 'accounts/images/creat_startup/Frame 995.svg' %}" alt="Иконка Этап 2" class="step-icon">{% endif %}
+                             {% if event.step_number == 3 %}<img src="{% static 'accounts/images/creat_startup/Frame 994.svg' %}" alt="Иконка Этап 3" class="step-icon">{% endif %}
+                             {% if event.step_number == 4 %}<img src="{% static 'accounts/images/creat_startup/Frame 993.svg' %}" alt="Иконка Этап 4" class="step-icon">{% endif %}
+                             {% if event.step_number == 5 %}<img src="{% static 'accounts/images/creat_startup/Frame 992.svg' %}" alt="Иконка Этап 5" class="step-icon">{% endif %}
+                        </div>
+                        <div class="step-text">{{ event.title|default:event.step_number }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="timeline-descriptions-display">
+                    {% for event in timeline_events %}
+                    <div class="timeline-description-item {% if event.step_number == startup.step_number %}active{% endif %}">
+                        <h4>{{ event.title|default:"Этап" }} {{event.step_number}}</h4>
+                        <p>{{ event.description|linebreaksbr|default:"Описание для этого этапа отсутствует." }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% else %}
             <p>Информация об этапах проекта пока не добавлена.</p>
-            {# Сюда можно будет добавить таймлайн или список этапов #}
+            {% endif %}
           </div>
 
           {# Секция ДОКУМЕНТЫ (пустая) #}
           <div id="documents-section" class="content-section">
             <h2 class="section-title">Документы</h2>
-            <p>Документы по проекту пока не загружены.</p>
-            {# Сюда можно будет добавить список ссылок на документы #}
+            {% if startup_documents %}
+                <ul class="document-list">
+                    {% for doc in startup_documents %}
+                        <li class="document-item">
+                            <a href="{% get_file_url_tag doc.file_url startup.startup_id 'proof' %}" target="_blank" class="document-link">
+                                <i class="fas fa-file-alt document-icon"></i>
+                                <span class="document-name">{{ doc.file_url }}</span> {# Лучше иметь имя файла, а не только ID #}
+                            </a>
+                            {# Можно добавить дату загрузки, если нужно: {{ doc.uploaded_at|date:"d.m.Y" }} #}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>Документы по проекту пока не загружены.</p>
+            {% endif %}
           </div>
 
           {# Секция УСЛОВИЯ (пустая) #}

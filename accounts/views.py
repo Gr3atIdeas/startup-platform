@@ -191,137 +191,84 @@ def startup_detail(request, startup_id):
     timeline = StartupTimeline.objects.filter(startup=startup)
     average_rating = startup.sum_votes / startup.total_voters if startup.total_voters > 0 else 0
     # Аннотируем рейтинг пользователя к каждому комментарию
-    comments = Comments.objects.filter(startup_id=startup).annotate(
-        user_rating=models.Subquery(
-            UserVotes.objects.filter(
-                startup=models.OuterRef('startup_id'), 
-                user=models.OuterRef('user_id')
-            ).values('rating')[:1]
-        )
-    ).order_by('-created_at')
-    investors_count = startup.get_investors_count()
-    progress_percentage = startup.get_progress_percentage()
+    comments = Comments.objects.filter(startup=startup, parent_comment__isnull=True).order_by('-created_at')
+    form = CommentForm()
 
-    # --- Расчет распределения голосов --- 
-    rating_distribution = UserVotes.objects.filter(startup=startup)\
-                                         .values('rating')\
-                                         .annotate(count=Count('rating'))\
-                                         .order_by('-rating')
-    # Преобразуем в удобный словарь {5: count5, 4: count4, ...}
-    rating_distribution_dict = {item['rating']: item['count'] for item in rating_distribution}
-    # Дополняем нулями для тех оценок, которых нет
-    for i in range(1, 6):
-        rating_distribution_dict.setdefault(i, 0)
-    # --- Конец расчета --- 
+    # Получаем средний рейтинг и количество голосов
+    average_rating = startup.get_average_rating()
+    total_votes = startup.total_voters
 
-    # ---> Добавляем расчет максимального количества голосов <--- 
-    max_rating_count = 0
-    if rating_distribution_dict: # Проверяем, что словарь не пустой
-        max_rating_count = max(rating_distribution_dict.values()) if rating_distribution_dict else 0
-    # ---> Конец добавления <--- 
-
-    # ---> Рассчитываем общее количество голосов <--- 
-    total_votes_count = sum(rating_distribution_dict.values())
-    # ---> Конец расчета <--- 
-
-    # --- Получаем похожие стартапы --- 
-    similar_startups = Startups.objects.filter(
-        status='approved' # Только одобренные
-    ).exclude(
-        startup_id=startup_id # Исключаем текущий
-    ).order_by('?')[:5] # Берем 5 случайных
-    # Примечание: .order_by('?') может быть медленным на больших таблицах
-    # Возможно, в будущем понадобится более сложная логика (по категории, тегам и т.д.)
-
-    # ---> Добавляем аннотацию рейтинга для похожих стартапов <--- 
-    similar_startups = similar_startups.annotate(
-        average_rating_calc=Avg(
-            models.ExpressionWrapper(
-                models.F('sum_votes') * 1.0 / models.F('total_voters'),
-                output_field=FloatField()
-            ),
-            filter=models.Q(total_voters__gt=0)
-        )
-    ).annotate(
-         average_rating=Coalesce('average_rating_calc', 0.0)
-    )
-    # ---> Конец добавления <--- 
-
+    # Проверяем, голосовал ли текущий пользователь
     user_has_voted = False
-    can_invest = False
     if request.user.is_authenticated:
         user_has_voted = UserVotes.objects.filter(user=request.user, startup=startup).exists()
-        can_invest = request.user.role.role_name == 'investor'
 
-    if request.user.is_authenticated and hasattr(request.user, 'role') and request.user.role.role_name == 'moderator':
-        # Обработка изменения статуса
-        if request.method == 'POST' and 'status' in request.POST:
-            new_status = request.POST.get('status')
-            if new_status in ['approved', 'blocked', 'closed']:
-                startup.status = new_status
-                startup.status_id = ReviewStatuses.objects.get(status_name=new_status.capitalize())
-                startup.save()
-                messages.success(request, f'Статус стартапа изменён на "{new_status.capitalize()}".')
-                return redirect('startup_detail', startup_id=startup_id)
+    # Получаем распределение рейтингов
+    rating_distribution_query = (
+        UserVotes.objects.filter(startup=startup)
+        .values('vote_value') # Группируем по значению голоса
+        .annotate(count=Count('vote_value')) # Считаем количество для каждого значения
+        .order_by('-vote_value') # Опционально: сортируем
+    )
+    # Преобразуем в словарь {значение_рейтинга: количество}
+    rating_distribution = {item['vote_value']: item['count'] for item in rating_distribution_query}
+    # Убедимся, что все значения от 1 до 5 присутствуют, даже если их нет в голосах
+    for i in range(1, 6):
+        rating_distribution.setdefault(i, 0)
 
-        # Обработка одобрения/отклонения для статуса pending
-        if request.method == 'POST' and 'moderator_comment' in request.POST:
-            comment = request.POST.get('moderator_comment', '')
-            action = request.POST.get('action', '')
-            if action == 'approve':
-                startup.moderator_comment = comment
-                startup.status = 'approved'
-                startup.status_id = ReviewStatuses.objects.get(status_name='Approved')
-                startup.save()
-                messages.success(request, 'Стартап одобрен.')
-                return redirect('startup_detail', startup_id=startup_id)
-            elif action == 'reject':
-                startup.moderator_comment = comment
-                startup.status = 'rejected'
-                startup.status_id = ReviewStatuses.objects.get(status_name='Rejected')
-                startup.save()
-                messages.success(request, 'Стартап отклонен.')
-                return redirect('startup_detail', startup_id=startup_id)
+    # Похожие стартапы (оставляем текущую логику)
+    similar_startups = Startups.objects.filter(direction=startup.direction, status='approved').exclude(startup_id=startup.startup_id).annotate(avg_rating=Avg('user_votes__vote_value')).order_by('-avg_rating')[:8]
 
-    if request.method == 'POST' and request.user.is_authenticated and 'content' in request.POST:
-        form = CommentForm(request.POST)
-        if form.is_valid():
-            comment = form.save(commit=False)
-            comment.startup_id = startup
-            comment.user_id = request.user
-            comment.save()
-            return redirect('startup_detail', startup_id=startup_id)
-    else:
-        form = CommentForm()
+    # Медиафайлы
+    logo_urls = startup.logo_urls if isinstance(startup.logo_urls, list) else []
+    creatives_urls = startup.creatives_urls if isinstance(startup.creatives_urls, list) else []
+    video_urls = startup.video_urls if isinstance(startup.video_urls, list) else []
 
+    # Определяем, нужно ли показывать комментарий модератора
     show_moderator_comment = False
-    if request.user.is_authenticated:
-        if (hasattr(request.user, 'role') and request.user.role.role_name == 'moderator') or request.user == startup.owner:
-            show_moderator_comment = True
+    if startup.status == 'rejected' or (startup.status == 'approved' and startup.is_edited):
+        show_moderator_comment = True
 
-    return render(request, 'accounts/startup_detail.html', {
+    # Прогресс инвестиций
+    progress_percentage = 0
+    if startup.funding_goal and startup.funding_goal > 0:
+        progress_percentage = (startup.amount_raised / startup.funding_goal) * 100 if startup.amount_raised else 0
+        progress_percentage = min(progress_percentage, 100) # Не больше 100%
+    
+    investors_count = startup.get_investors_count() # Используем новый метод
+
+    # Этапы стартапа (таймлайн)
+    timeline_events = StartupTimeline.objects.filter(startup=startup).order_by('step_number')
+
+    # Документы стартапа (типа "proof")
+    # Сначала получим объект FileTypes для "proof"
+    try:
+        proof_file_type = FileTypes.objects.get(type_name='proof')
+        startup_documents = FileStorage.objects.filter(startup=startup, file_type=proof_file_type).order_by('-uploaded_at')
+    except FileTypes.DoesNotExist:
+        startup_documents = FileStorage.objects.none() # Возвращаем пустой QuerySet, если тип "proof" не найден
+        # Раскомментируйте следующую строку, если хотите показывать сообщение пользователю
+        # messages.warning(request, "Тип файлов 'proof' не найден в системе. Документы не могут быть отображены.")
+
+    context = {
         'startup': startup,
-        'logo_urls': startup.logo_urls or [],
-        'creatives_urls': startup.creatives_urls or [],
-        'proofs_urls': startup.proofs_urls or [],
-        'video_urls': startup.video_urls or [],
-        'timeline': timeline,
-        'average_rating': average_rating,
-        'direction_name': startup.direction.direction_name if startup.direction else 'Не указано',
-        'stage_name': startup.stage.stage_name if startup.stage else 'Не указано',
-        'owner_email': startup.owner.email if startup.owner else 'Не указано',
         'comments': comments,
         'form': form,
-        'show_moderator_comment': show_moderator_comment,
+        'average_rating': average_rating,
+        'total_votes_count': total_votes, # Передаем общее количество голосов
         'user_has_voted': user_has_voted,
-        'can_invest': can_invest,
-        'investors_count': investors_count,
+        'rating_distribution': rating_distribution,
+        'similar_startups': similar_startups,
+        'logo_urls': logo_urls,
+        'creatives_urls': creatives_urls,
+        'video_urls': video_urls,
+        'show_moderator_comment': show_moderator_comment,
         'progress_percentage': progress_percentage,
-        'similar_startups': similar_startups, # <-- Добавляем похожие стартапы в контекст
-        'rating_distribution': rating_distribution_dict, # <-- Добавляем распределение рейтинга
-        'max_rating_count': max_rating_count, # <-- Передаем максимальное количество
-        'total_votes_count': total_votes_count # <-- Передаем общее количество голосов
-    })
+        'investors_count': investors_count,
+        'timeline_events': timeline_events,
+        'startup_documents': startup_documents,
+    }
+    return render(request, 'accounts/startup_detail.html', context)
 
 # Новая view-функция для AJAX-запроса похожих стартапов
 def load_similar_startups(request, startup_id: int): # <-- Явно указываем тип int
