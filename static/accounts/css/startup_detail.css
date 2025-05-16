@@ -67,6 +67,11 @@ a:hover {
 /* Кнопка назад */
 .back-link-container {
   margin-bottom: 30px;
+  max-width: 1303px; /* Добавлено */
+  margin-left: auto; /* Добавлено */
+  margin-right: auto; /* Добавлено */
+  padding: 0 30px; /* Добавлено для выравнивания внутреннего контента */
+  box-sizing: border-box; /* Добавлено */
 }
 
 .back-button {
@@ -249,8 +254,14 @@ a:hover {
 .top-section {
   display: flex;
   gap: 30px; /* Промежуток между колонками */
-  margin-bottom: 40px; /* Отступ снизу */
-  width: 100%; /* Занимаем всю доступную ширину */
+  /* margin-bottom: 40px; */ /* Будет управляться margin-auto у родителя или останется */
+  width: 100%; /* Остается для заполнения max-width */
+  max-width: 1303px; /* Добавлено */
+  margin-left: auto; /* Добавлено */
+  margin-right: auto; /* Добавлено */
+  margin-bottom: 40px; /* Восстановлен оригинальный отступ снизу */
+  padding: 0 30px; /* Добавлено для выравнивания внутреннего контента */
+  box-sizing: border-box; /* Добавлено */
 }
 
 /* ------------------ */
@@ -1502,7 +1513,8 @@ a:hover {
 /* ======================================== */
 .similar-startups-section {
   margin-top: 60px;
-  padding: 70px 30px;
+  /* padding: 70px 30px; */ /* Изменено */
+  padding: 70px 0; /* Убраны боковые отступы */
   background-color: var(--primary-dark-blue); /* Темный фон по умолчанию */
   background-image: url('../images/startups/inside_cards_background.webp');
   background-size: cover;
@@ -1515,9 +1527,12 @@ a:hover {
 .similar-startups-container {
   width: 100%;
   margin: 0 auto;
-  padding: 0;
+  /* padding: 0; */ /* Изменено */
+  padding: 0 30px; /* Добавлено для выравнивания внутреннего контента */
+  box-sizing: border-box; /* Добавлено */
+  max-width: 1303px; /* Добавлено */
   position: relative;
-  box-sizing: border-box;
+  /* box-sizing: border-box; уже был */
 }
 
 .similar-title {
