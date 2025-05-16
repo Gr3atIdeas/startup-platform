@@ -112,10 +112,7 @@
             </div>
             {% endif %}
           </div>
-        </div>
-
-        <div class="actions-top-right">
-          {# --- ПЕРЕМЕЩЕННЫЙ БЛОК РЕЙТИНГА И КОММЕНТАРИЕВ --- #}
+          {# --- ВОЗВРАЩАЕМ РЕЙТИНГ И КОММЕНТАРИИ СЮДА --- #}
           <div class="rating-comments-container">
             <div class="rating-container">
               <span class="rating-label">Рейтинг {{ average_rating|floatformat:"1" }}/5</span>
@@ -130,8 +127,11 @@
             </div>
             <a href="#comments-section" class="comments-link">Комментарии</a>
           </div>
-          {# --- КОНЕЦ ПЕРЕМЕЩЕННОГО БЛОКА --- #}
-          
+          {# --- КОНЕЦ ВОЗВРАЩЕННОГО БЛОКА --- #}
+        </div>
+
+        <div class="actions-top-right">
+          {# Блок .rating-comments-container был убран отсюда и возвращен в .startup-header #}
           <div class="startup-info-badge">
             {% if startup.both_mode %}
               Инвестирование+Выкуп

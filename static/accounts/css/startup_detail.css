@@ -1581,35 +1581,27 @@ a:hover {
 /* ======================================== */
 .similar-startups-section {
   margin-top: 60px;
-  /* padding: 70px 30px; */ /* Изменено - убираем паддинг отсюда */
-  padding: 0;
-  /* background-color: var(--primary-dark-blue); */ /* Убираем фон отсюда */
-  /* background-image: url('../images/startups/inside_cards_background.webp'); */ /* Убираем фон отсюда */
-  /* background-size: cover; */
-  /* background-position: center; */
-  /* background-repeat: no-repeat; */
-  /* border-radius: 15px; */ /* Убираем радиус отсюда */
-  box-sizing: border-box;
-  background-color: var(--primary-dark-blue); /* Фоновый цвет для пространства за пределами контейнера, если он не покрывает всю ширину */
-}
-
-.similar-startups-container {
-  width: 100%; /* Занимает всю ширину родителя, но ограничивается max-width */
-  max-width: 1303px; /* Ширина контентной сетки */
-  margin: 0 auto;
-  padding: 70px 30px; /* Внутренние отступы для контента */
-  box-sizing: border-box;
-  position: relative;
-  
-  /* Стили фона и рамки, перенесенные сюда и адаптированные под Figma */
-  background-color: black; /* Из Figma <div style="... background: black; ..."> */
+  padding: 70px 0; /* Только вертикальные отступы, фон будет на всю ширину */
+  background-color: black; /* Цвет фона из Figma */
   background-image: url('../images/startups/inside_cards_background.webp');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  border-radius: 20px; /* Из Figma <div style="... border-radius: 20px; ..."> */
-  overflow: hidden; /* Из Figma <div style="... overflow: hidden; ..."> */
-  box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.25); /* Из Figma */
+  border-radius: 20px; /* Закругленные углы для всей секции */
+  overflow: hidden; /* Чтобы фон обрезался по радиусу */
+  box-sizing: border-box;
+  /* box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.25); */ /* Тень лучше на внутренний контейнер или убрать, если фон на всю ширину */
+}
+
+.similar-startups-container {
+  width: 100%; 
+  max-width: 1303px; /* Ширина контентной сетки */
+  margin: 0 auto; /* Центрирование контента */
+  padding: 0 30px; /* Внутренние горизонтальные отступы для самого контента */
+  box-sizing: border-box;
+  position: relative;
+  /* Стили фона и рамки были перенесены в .similar-startups-section */
+  /* Убираем отсюда background-color, background-image, border-radius, overflow, box-shadow */ 
 }
 
 .similar-title {
