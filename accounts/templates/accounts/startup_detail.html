@@ -148,7 +148,7 @@
                disabled
              {% elif user == startup.owner %}
                {# Это владелец, кнопка активна (нет disabled) #}
-             {% elif hasattr(user, 'role') and user.role and user.role.role_name == 'moderator' %}
+             {% elif user.role and user.role.role_name == 'moderator' %}
                {# Это модератор, кнопка активна (нет disabled) #}
              {% else %}
                disabled {# Для всех остальных (не аутентифицирован И не владелец И не модератор) #}
