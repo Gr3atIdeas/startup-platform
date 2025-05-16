@@ -217,7 +217,7 @@ def startup_detail(request, startup_id):
         rating_distribution.setdefault(i, 0)
 
     # Похожие стартапы (оставляем текущую логику)
-    similar_startups = Startups.objects.filter(direction=startup.direction, status='approved').exclude(startup_id=startup.startup_id).annotate(avg_rating=Avg('user_votes__vote_value')).order_by('-avg_rating')[:8]
+    similar_startups = Startups.objects.filter(direction=startup.direction, status='approved').exclude(startup_id=startup.startup_id).annotate(avg_rating=Avg('uservotes__rating')).order_by('-avg_rating')[:8]
 
     # Медиафайлы
     logo_urls = startup.logo_urls if isinstance(startup.logo_urls, list) else []
