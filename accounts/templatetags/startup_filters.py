@@ -4,21 +4,25 @@ from django import template
 # Создаём объект register
 register = template.Library()
 
-@register.filter
-def get_by_step(timeline, step_number):
+@register.filter(name='get_timeline_event_by_step')
+def get_timeline_event_by_step(timeline_events, step_number):
     """
-    Извлекает описание этапа таймлайна по номеру шага.
+    Извлекает объект события таймлайна по номеру шага.
     Args:
-        timeline: QuerySet объектов StartupTimeline.
+        timeline_events: QuerySet или список объектов StartupTimeline.
         step_number: Номер шага (int).
     Returns:
-        Описание этапа или пустая строка, если этап не найден.
+        Объект StartupTimeline или None, если этап не найден.
     """
     try:
-        step = timeline.filter(step_number=int(step_number)).first()
-        return step.description if step and step.description else ''
-    except (ValueError, AttributeError):
-        return ''
+        # Убедимся, что step_number - это число
+        step_number = int(step_number)
+        for event in timeline_events:
+            if event.step_number == step_number:
+                return event
+        return None # Если не найдено
+    except (ValueError, AttributeError, TypeError): # Добавил TypeError на случай если timeline_events не итерируемый
+        return None
 
 @register.filter
 def get_item(dictionary, key):
