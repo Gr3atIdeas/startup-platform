@@ -191,7 +191,7 @@ def startup_detail(request, startup_id):
     timeline = StartupTimeline.objects.filter(startup=startup)
     average_rating = startup.sum_votes / startup.total_voters if startup.total_voters > 0 else 0
     # Аннотируем рейтинг пользователя к каждому комментарию
-    comments = Comments.objects.filter(startup=startup, parent_comment_id__isnull=True).order_by('-created_at')
+    comments = Comments.objects.filter(startup_id=startup, parent_comment_id__isnull=True).order_by('-created_at')
     form = CommentForm()
 
     # Получаем средний рейтинг и количество голосов
