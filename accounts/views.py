@@ -1564,6 +1564,16 @@ def planetary_system(request):
 
     # Формируем данные для планет
     planets_data = []
+    # Генерируем случайные размеры орбит
+    min_orbit_size = 200  # Минимальный размер орбиты
+    max_orbit_size = 800  # Максимальный размер орбиты
+    orbit_step = 50       # Минимальное расстояние между орбитами
+
+    # Создаём список доступных размеров орбит с шагом orbit_step
+    available_sizes = list(range(min_orbit_size, max_orbit_size + orbit_step, orbit_step))
+    import random
+    random.shuffle(available_sizes)  # Перемешиваем размеры
+
     for idx, startup in enumerate(planetary_startups, 1):
         # Проверяем наличие logo_urls
         if not startup.logo_urls or not isinstance(startup.logo_urls, list) or len(startup.logo_urls) == 0:
@@ -1594,26 +1604,75 @@ def planetary_system(request):
                 logger.error(f"Ошибка при генерации URL для логотипа стартапа {startup.startup_id}: {str(e)}")
                 logo_url = 'https://via.placeholder.com/150'
 
-        # Вычисляем размеры орбит и планет
-        orbit_size = 200 + (idx - 1) * 100
+        # Выбираем случайный размер орбиты из доступных
+        if idx <= len(available_sizes):
+            orbit_size = available_sizes[idx - 1]
+        else:
+            orbit_size = min_orbit_size + (idx - 1) * orbit_step  # Fallback, если закончились размеры
+
         orbit_time = 80 + (idx - 1) * 20
         planet_size = idx * 2 + 50
 
+        # Получаем количество комментариев
+        comment_count = Comments.objects.filter(startup_id=startup).count()
+
+        # Получаем направление
+        direction = startup.direction.direction_name if startup.direction else 'Не указано'
+
+        # Определяем тип инвестирования
+        if startup.only_invest:
+            investment_type = "Инвестирование"
+        elif startup.only_buy:
+            investment_type = "Выкуп"
+        elif startup.both_mode:
+            investment_type = "Выкуп+инвестирование"
+        else:
+            investment_type = "Не указано"
+
         planet_data = {
             'id': idx,
-            'startup_id': startup.startup_id,  # Добавляем startup_id
-            'name': startup.title,
-            'description': startup.description,
-            'rating': f"{startup.get_average_rating():.1f}/5 ({startup.total_voters})",
+            'startup_id': startup.startup_id,
+            'name': startup.title or 'Без названия',
+            'description': startup.short_description or startup.description or 'Описание отсутствует',
+            'rating': f"{startup.get_average_rating():.1f}/5 ({startup.total_voters or 0})",
+            'comment_count': comment_count,
             'progress': f"{startup.get_progress_percentage():.0f}%",
-            'funding': f"{startup.amount_raised or 0} ₽",
-            'investors': f"Инвесторов: {startup.get_investors_count()}",
+            'direction': direction,
+            'investment_type': investment_type,
+            'funding_goal': f"{int(startup.funding_goal or 0):,d} ₽".replace(',', ' '),
+            'investors': f"Инвесторов: {startup.get_investors_count() or 0}",
             'image': logo_url,
             'orbit_size': orbit_size,
             'orbit_time': orbit_time,
             'planet_size': planet_size,
         }
         planets_data.append(planet_data)
+
+    # Добавляем планету с плюсом для создания стартапа только для гостей и стартаперов
+    is_authenticated = request.user.is_authenticated
+    is_startuper = is_authenticated and hasattr(request.user, 'role') and request.user.role.role_name == 'startuper'
+    if not is_authenticated or is_startuper:  # Только для гостей и стартаперов
+        # Выбираем случайный размер орбиты для планеты с плюсом
+        if len(available_sizes) > len(planetary_startups):
+            orbit_size = available_sizes[len(planetary_startups)]
+        else:
+            orbit_size = min_orbit_size + len(planetary_startups) * orbit_step
+
+        create_planet_data = {
+            'id': 'create-startup',
+            'startup_id': None,
+            'name': 'Создать стартап',
+            'description': 'Нажмите, чтобы создать новый стартап',
+            'rating': '',
+            'progress': '',
+            'funding': '',
+            'investors': '',
+            'image': 'https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/0.png',
+            'orbit_size': orbit_size,
+            'orbit_time': 80,
+            'planet_size': 60,
+        }
+        planets_data.append(create_planet_data)
 
     # Данные для логотипа планетарной системы
     logo_data = {
@@ -1625,6 +1684,8 @@ def planetary_system(request):
         'directions': directions,
         'selected_galaxy': selected_galaxy,
         'logo_data': logo_data,
+        'is_authenticated': is_authenticated,
+        'is_startuper': is_startuper,
     }
     return render(request, 'accounts/planetary_system.html', context)
 
