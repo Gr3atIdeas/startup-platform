@@ -689,6 +689,7 @@ a:hover {
   flex-direction: column;
   gap: 5px;
   flex-grow: 1;
+  min-width: 0; /* Позволяем сжиматься и переносить контент */
 }
 
 .startup-name {
@@ -697,11 +698,13 @@ a:hover {
   line-height: 1.2;
   margin: 0;
   color: var(--text-primary);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  /* white-space: nowrap;  УДАЛЕНО */
+  /* overflow: hidden;     УДАЛЕНО */
+  /* text-overflow: ellipsis; УДАЛЕНО */
+  word-wrap: break-word; /* Добавлено для лучшего переноса */
+  overflow-wrap: break-word; /* Добавлено для лучшего переноса */
   display: block;
-  max-width: 100%;
+  /* max-width: 100%; */ /* Можно оставить или скорректировать при необходимости */
 }
 
 .header-meta {
