@@ -372,9 +372,9 @@ body {
     width: auto; /* Ширина будет определяться содержимым */
     max-width: calc(540px + 724px + 39px + 110px); /* Левый + Правый + gap + паддинги контейнера модалки */
     height: auto; 
-    max-height: calc(100vh - 40px); /* Чтобы не выходило за экран */
+    /* max-height: calc(100vh - 40px); /* Чтобы не выходило за экран */ /* Убрал, чтобы высота определялась контентом или фиксированной высотой блоков */
     position: relative;
-    overflow: hidden; /* Чтобы дочерние элементы с блюром не вылезали */
+    overflow: visible; /* Меняем на visible, чтобы кнопка закрытия не обрезалась, если выходит за пределы padding */
     display: flex; 
     flex-direction: row; /* Два блока рядом */
     padding: 55px; /* Та самая "рамка" в 55px */
@@ -384,8 +384,8 @@ body {
 
 .modal-close-button {
     position: absolute;
-    top: 20px; /* Отступ от края "рамки" */
-    right: 20px; /* Отступ от края "рамки" */
+    top: 15px; /* Отступ от ВЕРХНЕГО края .modal-popup (снаружи padding) */
+    right: 15px; /* Отступ от ПРАВОГО края .modal-popup (снаружи padding) */
     background: rgba(255, 255, 255, 0.1);
     border: none;
     cursor: pointer;
@@ -414,7 +414,7 @@ body {
 
 .modal-promo-card { /* Левый блок - теперь просто плейсхолдер с фоновой картинкой */
     width: 540px;
-    height: 521px;
+    height: 521px; /* Фиксированная высота, как у правого блока */
     min-width: 540px; /* Фиксированная ширина */
     background-color: #0E163D; /* Фоновый цвет на случай, если картинка не загрузится */
     background-image: url("https://placehold.co/540x521/0E163D/FFFFFF?text=Placeholder&font=unbounded"); /* Онлайн-плейсхолдер */
@@ -504,21 +504,22 @@ body {
     display: flex;
     flex-direction: column;
     overflow: hidden; 
-    background-color: rgba(0, 0, 0, 0.63); /* Черный 63% */
+    background-color: rgba(34, 34, 34, 0.85); /* Темно-серый (например, #222222) с полупрозрачностью 85% */
     border-radius: 12px; /* Небольшое скругление для этого блока */
-    backdrop-filter: blur(8px); /* Блюр для этого блока */
-    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(10px); /* Блюр для этого блока */
+    -webkit-backdrop-filter: blur(10px);
     height: 521px; /* Как левый блок */
 }
 
 .modal-notification-list-title { /* Заголовок над списком уведомлений в модальном окне */
-    color: #FFEF2B;
-    font-size: 18px; /* Уменьшил, чтобы не конкурировал с промо */
-    font-weight: 500;
-    margin-bottom: 20px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid rgba(255,255,255,0.15);
-    text-align: center; /* По центру, как на скриншоте */
+    /* color: #FFEF2B; */
+    /* font-size: 18px; */
+    /* font-weight: 500; */
+    /* margin-bottom: 20px; */
+    /* padding-bottom: 15px; */
+    /* border-bottom: 1px solid rgba(255,255,255,0.15); */
+    /* text-align: center; */
+    display: none; /* Скрываем заголовок, так как нужен полный дубль списка */
 }
 
 .modal-notification-list {

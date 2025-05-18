@@ -109,35 +109,31 @@ document.addEventListener('DOMContentLoaded', function () {
     const modalOverlay = document.getElementById('notification-modal-overlay');
     const modalCloseButton = document.getElementById('notification-modal-close');
     
-    // Элементы только для правой части модального окна, которые будут обновляться
     const modalNotificationList = modalOverlay.querySelector('.modal-notification-list');
-    const modalNotificationListTitle = modalOverlay.querySelector('.modal-notification-list-title');
+    // const modalNotificationListTitle = modalOverlay.querySelector('.modal-notification-list-title'); // Заголовок теперь скрыт через CSS
 
-    if (!modalOverlay || !modalCloseButton || !modalNotificationList || !modalNotificationListTitle) {
-        // console.error('Необходимые элементы модального окна для деталей уведомлений не найдены!');
+    // Исходный контейнер всех уведомлений на странице
+    const originalNotificationsContainer = document.querySelector('.notifications-list-section .notifications-list-items');
+
+    if (!modalOverlay || !modalCloseButton || !modalNotificationList || !originalNotificationsContainer) {
         return;
     }
 
     notificationBubbles.forEach(bubble => {
         bubble.addEventListener('click', function () {
-            const parentItem = this.closest('.notification-item');
-            if (!parentItem) {
-                return;
-            }
-            
-            // Обновляем заголовок списка уведомлений в правой части
-            if(modalNotificationListTitle) modalNotificationListTitle.textContent = `Информация по уведомлению`;
-
-            // Клонируем весь родительский .notification-item и вставляем в правую часть
-            if(modalNotificationList) {
-                modalNotificationList.innerHTML = ''; 
-                const clickedItemClone = parentItem.cloneNode(true);
-                // Убедимся, что у клонированного элемента нет обработчиков, чтобы избежать рекурсии или ошибок
-                const newBubble = clickedItemClone.querySelector('.notification-item-bubble');
-                if (newBubble) {
-                    newBubble.replaceWith(newBubble.cloneNode(true)); // Пересоздаем узел, чтобы сбросить обработчики
-                }
-                modalNotificationList.appendChild(clickedItemClone);
+            // Копируем ВСЕ уведомления из оригинального контейнера в модальное окно
+            if (modalNotificationList) {
+                modalNotificationList.innerHTML = ''; // Очищаем предыдущее содержимое
+                const allNotificationItems = originalNotificationsContainer.querySelectorAll('.notification-item');
+                allNotificationItems.forEach(item => {
+                    const clone = item.cloneNode(true);
+                    // Убедимся, что у клонированных пузырей нет лишних обработчиков, если они добавлялись динамически
+                    const clonedBubble = clone.querySelector('.notification-item-bubble');
+                    if (clonedBubble) {
+                        clonedBubble.replaceWith(clonedBubble.cloneNode(true)); 
+                    }
+                    modalNotificationList.appendChild(clone);
+                });
             }
             
             modalOverlay.style.display = 'flex';

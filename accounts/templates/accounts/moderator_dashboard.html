@@ -6,7 +6,7 @@
 
 {% block head_extra %}
 <link rel="stylesheet" href="{% static 'accounts/css/moderator_dashboard.css' %}">
-<style>
+    <style>
     .category-dropdown-menu {
         display: none; /* Скрыто по умолчанию */
         position: absolute;
@@ -38,7 +38,7 @@
     /* Стиль для выделения активной кнопки */
     .filter-button.active {
         background: #004E9F;
-        color: white;
+            color: white;
         border-color: #004E9F; /* Убедимся, что и рамка того же цвета */
     }
     .filter-button.active img.filter-icon {
@@ -260,13 +260,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 </a>
             </div>
 
-            {% if pending_startups %}
+    {% if pending_startups %}
             <div class="startup-cards-grid">
                 {% for startup in pending_startups %}
                 <div class="startup-card-item">
                     <div class="startup-card-item-content">
                         <div class="startup-card-main-info">
-                            {% if startup.planet_logo %}
+                                {% if startup.planet_logo %}
                                 <img src="{{ startup.planet_logo.url }}" alt="{{ startup.title }} logo" class="startup-card-image">
                             {% else %}
                                 <div class="startup-card-image-placeholder">Нет лого</div>
@@ -289,19 +289,19 @@ document.addEventListener('DOMContentLoaded', function () {
                                                 <span class="author-rating">Рейтинг 4,2/5</span> {# Placeholder #}
                                                 <a href="#" class="author-reviews-link">Отзывы</a> {# Placeholder #}
                                             </div>
-                                        {% else %}
+                                {% else %}
                                             <div class="author-avatar-placeholder"></div>
                                             <div class="author-text-details">
                                                 <span class="author-name">Автор не указан</span>
                                             </div>
-                                        {% endif %}
+                                {% endif %}
                                     </div>
                                 </div>
 
                                 <div class="detail-group">
                                     <span class="detail-label">Наименование</span>
                                     <h3 class="startup-name">{{ startup.title }}</h3>
-                                </div>
+                            </div>
 
                                 <div class="detail-group">
                                     <span class="detail-label">Категория</span>
@@ -361,13 +361,13 @@ document.addEventListener('DOMContentLoaded', function () {
                             </div>
                             <div class="action-buttons-group">
                                  <form method="post" action="{% url 'approve_startup' startup.startup_id %}" class="inline-form">
-                                    {% csrf_token %}
+                                {% csrf_token %}
                                     <button type="submit" class="action-button approve">Одобрить</button>
-                                </form>
+                            </form>
                                 <form method="post" action="{% url 'reject_startup' startup.startup_id %}" class="inline-form">
-                                    {% csrf_token %}
+                                {% csrf_token %}
                                     <button type="submit" class="action-button reject">Отклонить</button>
-                                </form>
+                            </form>
                                 <a href="{% url 'startup_detail' startup.startup_id %}" class="action-button details">К заявке</a>
                             </div>
                         </div>
@@ -389,7 +389,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 </svg>
             </a>
         </div>
-        {% endif %}
+    {% endif %}
     </div>
 </body>
 {% endblock %}
