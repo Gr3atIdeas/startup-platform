@@ -88,7 +88,7 @@ body {
 .promo-title-main {
     color: white;
     font-size: 55px;
-    font-family: 'Blippo-Black CY', sans-serif; /* Укажите правильное имя шрифта, если оно другое */
+    font-family: 'Blippo Local', sans-serif; /* Укажите правильное имя шрифта, если оно другое */
     font-weight: 400; /* В Figma указан Blippo-Black CY [Rus by me], что может быть кастомным именем */
     line-height: 1.2; /* Скорректировано для читаемости */
     word-wrap: break-word;
@@ -97,7 +97,7 @@ body {
 .promo-title-accent {
     color: #FFEF2B;
     font-size: 55px;
-    font-family: 'Blippo-Black CY', sans-serif;
+    font-family: 'Blippo Local', sans-serif;
     font-weight: 400;
     line-height: 1.2;
     word-wrap: break-word;
@@ -246,7 +246,7 @@ body {
     padding-left: calc((100% - 1280px) / 2 + 20px); /* Динамический отступ для выравнивания с контентом */
     color: #FFEF2B;
     font-size: 50px; /* Уменьшил для лучшего вида */
-    font-family: 'Blippo-Black CY', sans-serif;
+    font-family: 'Blippo Local', sans-serif;
     font-weight: 400;
     line-height: 1.1; /* Уменьшил */
     word-wrap: break-word;

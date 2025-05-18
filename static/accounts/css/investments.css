@@ -234,7 +234,7 @@ body {
 
 .analytics-title {
   /* font-family: 'Unbounded', sans-serif; */ /* Заменяем шрифт */
-  font-family: 'Blippo-Black CY [Rus by me]', sans-serif; /* Новый шрифт */
+  font-family: 'Blippo Local', sans-serif; /* Новый шрифт */
   font-weight: 400; /* Новый вес */
   font-size: 55px; /* Новый размер */
   line-height: 18px; /* Новая высота строки (может вызвать наложение) */
@@ -423,7 +423,7 @@ body {
 .startups-title-main,
 .startups-title-sub {
   /* font-family: 'Koulen', sans-serif; */ /* Заменяем шрифт */
-  font-family: 'Blippo-Black CY [Rus by me]', sans-serif; /* Новый шрифт */
+  font-family: 'Blippo Local', sans-serif; /* Новый шрифт */
   font-weight: 400; /* Новый вес */
   font-size: 55px; /* Новый размер */
   line-height: 1.0; /* Устанавливаем нормальную высоту строки (100% от размера шрифта) */
@@ -900,7 +900,7 @@ body {
 }
 
 .modal-title {
-  font-family: 'Blippo-Black CY [Rus by me]', sans-serif;
+  font-family: 'Blippo Local', sans-serif;
   font-weight: 400;
   font-size: 28px;
   line-height: 1.2;
@@ -1135,7 +1135,7 @@ body.modal-open-blur .portfolio-container > *:not(.modal-overlay) { /* Допо�
 }
 
 .modal-title {
-  font-family: 'Blippo-Black CY [Rus by me]', sans-serif;
+  font-family: 'Blippo Local', sans-serif;
   font-weight: 400;
   font-size: 28px;
   line-height: 1.2;

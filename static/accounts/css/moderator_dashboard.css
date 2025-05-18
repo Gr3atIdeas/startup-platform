@@ -5,32 +5,6 @@ body.moderator-dashboard-body {
     font-family: 'Unbounded', sans-serif; /* Default font from mockup */
 }
 
-/* It's good practice to ensure custom fonts are loaded.
-   Add @font-face rules in your main CSS or ensure they are linked.
-@font-face {
-    font-family: 'Blippo-Black CY [Rus by me]';
-    src: url('/path/to/blippo-black-cy.woff2') format('woff2'),
-         url('/path/to/blippo-black-cy.woff') format('woff');
-    font-weight: 400;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Unbounded';
-    src: url('/path/to/unbounded-regular.woff2') format('woff2'),
-         url('/path/to/unbounded-regular.woff') format('woff');
-    font-weight: 300; / * Or other weights as needed * /
-    font-style: normal;
-}
-@font-face {
-    font-family: 'Unbounded';
-    src: url('/path/to/unbounded-bold.woff2') format('woff2'),
-         url('/path/to/unbounded-bold.woff') format('woff');
-    font-weight: 400; / * Or other weights as needed * /
-    font-style: normal;
-}
-*/
-
 .moderator-page-container {
     width: 100%;
     max-width: 1280px; /* Based on mockup */
@@ -61,7 +35,7 @@ body.moderator-dashboard-body {
 /* Ensuring title styles are very specific and match mockup */
 div.moderator-page-container > header.page-header > div.header-title-block > h1.header-title-main {
     color: white !important; /* Force color */
-    font-family: 'Blippo-Black CY [Rus by me]', sans-serif !important; /* Force font */
+    font-family: 'Blippo Local', sans-serif !important; /* Force font */
     font-size: 55px !important; /* Force font size */
     font-weight: 400 !important; /* Force font weight */
     line-height: 1.1 !important; /* Mockup 18px for 55px font is too small, using 1.1 for readability */
@@ -72,7 +46,7 @@ div.moderator-page-container > header.page-header > div.header-title-block > h1.
 
 div.moderator-page-container > header.page-header > div.header-title-block > h2.header-title-highlight {
     color: #FFEF2B !important; /* Force color */
-    font-family: 'Blippo-Black CY [Rus by me]', sans-serif !important; /* Force font */
+    font-family: 'Blippo Local', sans-serif !important; /* Force font */
     font-size: 55px !important; /* Force font size */
     font-weight: 400 !important; /* Force font weight */
     line-height: 1.1 !important; /* Similar to above */
