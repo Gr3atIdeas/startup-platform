@@ -68,14 +68,13 @@
                                 <div class="detail-group">
                                     <span class="detail-label">Автор</span>
                                     <div class="author-info">
-                                        {# Assuming startup.user.profile.avatar.url or similar for avatar #}
-                                        {% if startup.user.profile.avatar %}
-                                            <img src="{{ startup.user.profile.avatar.url }}" alt="{{ startup.user.username|default:'Автор' }}" class="author-avatar">
+                                        {% if startup.owner and startup.owner.profile.avatar %}
+                                            <img src="{{ startup.owner.profile.avatar.url }}" alt="{{ startup.owner.username|default:'Автор' }}" class="author-avatar">
                                         {% else %}
                                              <div class="author-avatar-placeholder"></div> {# Placeholder for avatar #}
                                         {% endif %}
                                         <div class="author-text-details">
-                                            <span class="author-name">{{ startup.user.get_full_name|default:startup.user.username|default:"Не указан" }}</span>
+                                            <span class="author-name">{{ startup.owner.get_full_name|default:startup.owner.username|default:"Не указан" }}</span>
                                             <span class="author-rating">Рейтинг 4,2/5</span> {# Placeholder #}
                                             <a href="#" class="author-reviews-link">Отзывы</a> {# Placeholder #}
                                         </div>
@@ -98,7 +97,16 @@
                                     <span class="detail-label">Тип</span>
                                     <div class="type-tag">
                                         {# Assuming startup.type or similar field exists, using placeholder for now #}
-                                        <span class="type-tag-text">{{ startup.type_of_investment|default:"Выкуп+инвестирование" }}</span>
+                                        {# We need to determine how 'type_of_investment' is stored. Based on StartupForm, it could be 'invest', 'buy', 'both'. We need a mapping to display text. #}
+                                        {% if startup.only_invest %}
+                                            <span class="type-tag-text">Инвестирование</span>
+                                        {% elif startup.only_buy %}
+                                            <span class="type-tag-text">Выкуп</span>
+                                        {% elif startup.both_mode %}
+                                            <span class="type-tag-text">Выкуп+инвестирование</span>
+                                        {% else %}
+                                            <span class="type-tag-text">Не указан</span>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>
@@ -106,7 +114,7 @@
 
                         <div class="startup-description-group">
                             <span class="detail-label">Описание</span>
-                            <p class="startup-description-text">{{ startup.description|default:"Описание отсутствует."|truncatewords:30 }}</p>
+                            <p class="startup-description-text">{{ startup.description|default:startup.short_description|default:"Описание отсутствует."|truncatewords:30 }}</p>
                         </div>
 
                         <div class="funding-info-actions">
