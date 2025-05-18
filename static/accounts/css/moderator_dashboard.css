@@ -183,7 +183,7 @@ div.moderator-page-container > header.page-header > div.header-title-block > h2.
     width: calc((100% - 20px) / 2); /* Corrected calc for 2 columns with one 20px gap */
     /* max-width: 610px; /* Fallback or control, (1240px content - 20px gap) / 2 */
     /* Forcing a slightly smaller max-width to ensure fit, can be adjusted */
-    max-width: 580px; /* Let's try slightly smaller to be safe */
+    max-width: 610px; /* Adjusted max-width */
     padding: 20px;
     background: white;
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
@@ -569,7 +569,7 @@ div.startup-card-item div.funding-info-actions div.action-buttons-group a.action
 @media (max-width: 860px) { /* Breakpoint for single column cards */
     .startup-card-item {
         width: 100%; 
-        max-width: 580px; /* Or a bit more if only one column */
+        max-width: 610px; /* Adjusted max-width */
         margin-left: auto; /* Center single column */
         margin-right: auto; /* Center single column */
     }
