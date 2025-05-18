@@ -20,11 +20,12 @@
   <!-- Подключаем Google Fonts и Unbounded -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Koulen&family=Circe:wght@400;700&family=Inter:wght@400;700&family=Unbounded:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Koulen&family=Circe:wght@400;700&family=Inter:wght@400;700&display=swap" rel="stylesheet">
   {# Ссылка на Blippo-Black CY, если он используется локально и не через @font-face в CSS #}
   {# <link rel="stylesheet" href="{% static 'path/to/blippo-font.css' %}"> #}
   
   <!-- Глобальные стили -->
+  <link rel="stylesheet" href="{% static 'accounts/css/fonts.css' %}?v={% now 'U' %}">
   <link rel="stylesheet" href="{% static 'accounts/css/global.css' %}?v={% now 'U' %}">
   <link rel="stylesheet" href="{% static 'accounts/css/footer.css' %}?v={% now 'U' %}"> 
   

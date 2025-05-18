@@ -1,0 +1,13 @@
+@font-face {
+    font-family: 'Blippo Local';
+    src: url('../fonts/blippo_blackcyrusbyme.otf') format('opentype');
+    font-weight: normal; 
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Unbounded';
+    src: url('../fonts/Unbounded-VariableFont_wght.ttf') format('truetype-variations');
+    font-weight: 200 900; 
+    font-style: normal;
+} 
