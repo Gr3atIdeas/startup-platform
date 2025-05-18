@@ -7,14 +7,15 @@
 {% block head_extra %}
 <link rel="stylesheet" href="{% static 'accounts/css/moderator_dashboard.css' %}">
 <script>
-    // Placeholder for future JS if needed for filters, search, etc.
     document.addEventListener('DOMContentLoaded', function () {
-        // Example: make "Все" button active by default or based on URL params
         const filterButtons = document.querySelectorAll('.filter-button');
         filterButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                filterButtons.forEach(btn => btn.classList.remove('active')); // Or toggle 'inactive'
-                this.classList.add('active');
+            // TODO: Logic to set active based on URL query parameters if needed
+            button.addEventListener('click', function(event) {
+                // Basic example: remove active from all, add to clicked
+                // For actual filtering, you'd likely navigate or use AJAX
+                // filterButtons.forEach(btn => btn.classList.remove('active'));
+                // this.classList.add('active');
             });
         });
     });
@@ -34,15 +35,11 @@
         <section class="filters-and-actions">
             <div class="filter-bar">
                 <div class="filter-search">
-                    {# Original SVG search icon structure from mockup - consider replacing with actual SVG via {% static %} #}
-                    <div style="width: 22px; height: 22px; position: relative; opacity: 0.60; overflow: hidden">
-                        <div style="width: 14.67px; height: 14.67px; left: 1.75px; top: 2.75px; position: absolute; border: 1.50px #A1A0A0 solid;"></div>
-                        <div style="width: 3.99px; height: 3.99px; left: 14.27px; top: 15.26px; position: absolute; border: 1.50px #A1A0A0 solid;"></div>
-                    </div>
+                    <img src="{% static 'accounts/images/search.svg' %}" alt="Поиск">
                     <input type="text" placeholder="Поиск">
                 </div>
-                <a href="?filter=all" class="filter-button active">Все</a>
-                <a href="?filter=category" class="filter-button inactive">
+                <a href="?filter=all" class="filter-button active">Все</a> 
+                <a href="?filter=category_filter" class="filter-button inactive">
                     Категории
                     <img src="{% static 'accounts/images/icons/expand_more.svg' %}" alt="Категории" class="filter-icon">
                 </a>
@@ -74,7 +71,7 @@
                                             {% elif startup.owner.profile_picture_url %}
                                                 <img src="{{ startup.owner.profile_picture_url }}" alt="{{ startup.owner.get_full_name|default:startup.owner.email|default:'Автор' }}" class="author-avatar">
                                             {% else %}
-                                                 <div class="author-avatar-placeholder"></div> {# Placeholder for avatar #}
+                                                 <div class="author-avatar-placeholder"></div>
                                             {% endif %}
                                             <div class="author-text-details">
                                                 <span class="author-name">{{ startup.owner.get_full_name|default:startup.owner.email|default:"Не указан" }}</span>
@@ -98,15 +95,33 @@
                                 <div class="detail-group">
                                     <span class="detail-label">Категория</span>
                                     <div class="category-tag">
-                                        <span class="category-tag-text">{{ startup.direction.direction_name|default:"Не указана" }}</span>
+                                        <span class="category-tag-text">
+                                            {% with original_name=startup.direction.direction_name|default:""|lower %}
+                                                {% if original_name == "medicine" %}Медицина
+                                                {% elif original_name == "auto" %}Автомобили
+                                                {% elif original_name == "delivery" %}Доставка
+                                                {% elif original_name == "cafe" or original_name == "кафе/рестораны" %}Кафе/рестораны
+                                                {% elif original_name == "fastfood" %}Фастфуд
+                                                {% elif original_name == "health" %}Здоровье
+                                                {% elif original_name == "beauty" %}Красота
+                                                {% elif original_name == "transport" %}Транспорт
+                                                {% elif original_name == "sport" %}Спорт
+                                                {% elif original_name == "psychology" %}Психология
+                                                {% elif original_name == "ai" or original_name == "ии" %}ИИ
+                                                {% elif original_name == "finance" %}Финансы
+                                                {% elif original_name == "healthcare" %}Здравоохранение
+                                                {% elif original_name == "technology" %}Технологии
+                                                {# Добавьте другие категории и их переводы здесь, если они есть в вашей системе #}
+                                                {% else %}{{ startup.direction.direction_name|default:"Не указана" }}{# Возвращаем оригинал или "Не указано" #}
+                                                {% endif %}
+                                            {% endwith %}
+                                        </span>
                                     </div>
                                 </div>
 
                                 <div class="detail-group">
                                     <span class="detail-label">Тип</span>
                                     <div class="type-tag">
-                                        {# Assuming startup.type or similar field exists, using placeholder for now #}
-                                        {# We need to determine how 'type_of_investment' is stored. Based on StartupForm, it could be 'invest', 'buy', 'both'. We need a mapping to display text. #}
                                         {% if startup.only_invest %}
                                             <span class="type-tag-text">Инвестирование</span>
                                         {% elif startup.only_buy %}
@@ -125,24 +140,24 @@
                             <span class="detail-label">Описание</span>
                             <p class="startup-description-text">{{ startup.description|default:startup.short_description|default:"Описание отсутствует."|truncatewords:30 }}</p>
                         </div>
+                    </div> {# End of startup-card-item-content #}
 
-                        <div class="funding-info-actions">
-                            <div class="funding-details-row">
-                                <div class="funding-goal-block">
-                                    <span class="funding-goal-label">Цель финансирования</span>
-                                    <span class="funding-goal-amount">{{ startup.funding_goal|default:"0"|intcomma }} &#8381;</span>
-                                </div>
-                                <div class="action-buttons-group">
-                                     <form method="post" action="{% url 'approve_startup' startup.startup_id %}" class="inline-form">
-                                        {% csrf_token %}
-                                        <button type="submit" class="action-button primary">Одобрить</button>
-                                    </form>
-                                    <form method="post" action="{% url 'reject_startup' startup.startup_id %}" class="inline-form">
-                                        {% csrf_token %}
-                                        <button type="submit" class="action-button danger">Отклонить</button>
-                                    </form>
-                                    <a href="{% url 'startup_detail' startup.startup_id %}" class="action-button secondary">К заявке</a>
-                                </div>
+                    <div class="funding-info-actions">
+                        <div class="funding-details-row">
+                            <div class="funding-goal-block">
+                                <span class="funding-goal-label">Цель финансирования</span>
+                                <span class="funding-goal-amount">{{ startup.funding_goal|default:"0"|intcomma }} &#8381;</span>
+                            </div>
+                            <div class="action-buttons-group">
+                                 <form method="post" action="{% url 'approve_startup' startup.startup_id %}" class="inline-form">
+                                    {% csrf_token %}
+                                    <button type="submit" class="action-button approve">Одобрить</button>
+                                </form>
+                                <form method="post" action="{% url 'reject_startup' startup.startup_id %}" class="inline-form">
+                                    {% csrf_token %}
+                                    <button type="submit" class="action-button reject">Отклонить</button>
+                                </form>
+                                <a href="{% url 'startup_detail' startup.startup_id %}" class="action-button details">К заявке</a>
                             </div>
                         </div>
                     </div>
@@ -154,12 +169,13 @@
             {% endif %}
         </section>
 
-        {% if pending_startups %} {# Assuming "Показать еще" is for pagination, show if there are items #}
+        {% if pending_startups %} 
         <div class="show-more-bar">
             <a href="#" class="show-more-button">
                 Показать еще
-                {# Placeholder for eye icon from mockup - ideally replace with SVG #}
-                 <div class="show-more-icon-placeholder"><div></div></div>
+                <svg class="icon-eye" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="16px" height="16px">
+                    <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                </svg>
             </a>
         </div>
         {% endif %}
