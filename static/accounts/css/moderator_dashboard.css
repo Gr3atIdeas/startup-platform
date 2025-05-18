@@ -1,0 +1,630 @@
+/* General body and container styles from mockup and base.html context */
+body.moderator-dashboard-body {
+    background-color: #0E163D; /* Assuming this is the dark blue background from the image */
+    color: white;
+    font-family: 'Unbounded', sans-serif; /* Default font from mockup */
+}
+
+/* It's good practice to ensure custom fonts are loaded.
+   Add @font-face rules in your main CSS or ensure they are linked.
+@font-face {
+    font-family: 'Blippo-Black CY [Rus by me]';
+    src: url('/path/to/blippo-black-cy.woff2') format('woff2'),
+         url('/path/to/blippo-black-cy.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Unbounded';
+    src: url('/path/to/unbounded-regular.woff2') format('woff2'),
+         url('/path/to/unbounded-regular.woff') format('woff');
+    font-weight: 300; / * Or other weights as needed * /
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Unbounded';
+    src: url('/path/to/unbounded-bold.woff2') format('woff2'),
+         url('/path/to/unbounded-bold.woff') format('woff');
+    font-weight: 400; / * Or other weights as needed * /
+    font-style: normal;
+}
+*/
+
+.moderator-page-container {
+    width: 100%;
+    max-width: 1280px; /* Based on mockup */
+    margin: 0 auto;
+    padding: 40px 20px; /* Added some padding */
+    display: flex;
+    flex-direction: column;
+    gap: 60px; /* Gap from main container in mockup */
+}
+
+.page-header {
+    /* width: 1280px; From mockup, but container handles width */
+    justify-content: flex-start;
+    align-items: center;
+    /* gap: 677px; This gap seems too large and specific, adjust as needed or rely on flex behavior */
+    display: flex; /* For potential future elements next to title block */
+}
+
+.header-title-block {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 15px;
+    display: inline-flex;
+}
+
+.header-title-main {
+    align-self: stretch;
+    color: white;
+    font-size: 55px;
+    font-family: 'Blippo-Black CY [Rus by me]', sans-serif;
+    font-weight: 400;
+    line-height: 1.1; /* Adjusted from 18px as it was too small for 55px font */
+    word-wrap: break-word;
+}
+
+.header-title-highlight {
+    align-self: stretch;
+    color: #FFEF2B;
+    font-size: 55px;
+    font-family: 'Blippo-Black CY [Rus by me]', sans-serif;
+    font-weight: 400;
+    line-height: 1.1; /* Adjusted */
+    word-wrap: break-word;
+}
+
+.filters-and-actions {
+    align-self: stretch;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 28px;
+    display: flex;
+}
+
+.filter-bar {
+    justify-content: flex-start;
+    align-items: center;
+    gap: 30px;
+    display: inline-flex;
+    flex-wrap: wrap; /* Allow filters to wrap on smaller screens */
+}
+
+.filter-search {
+    width: 352px;
+    padding: 8px 30px;
+    background: rgba(255, 255, 255, 0.19);
+    border-radius: 10px;
+    border: 1px solid #004E9F;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 8px;
+    display: flex;
+}
+.filter-search input::placeholder {
+    color: #A1A0A0;
+}
+.filter-search input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #A1A0A0;
+    font-size: 12px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.12px;
+    width: 100%;
+}
+.filter-search-icon-placeholder { /* Placeholder for actual SVG */
+    width: 22px;
+    height: 22px;
+    opacity: 0.60;
+    /* Styles for the placeholder divs if not using SVG */
+}
+.filter-search-icon-placeholder div:first-child {
+    width: 14.67px; height: 14.67px; border: 1.50px #A1A0A0 solid;
+}
+.filter-search-icon-placeholder div:last-child {
+    width: 3.99px; height: 3.99px; border: 1.50px #A1A0A0 solid;
+}
+
+
+.filter-button {
+    padding: 8px 30px;
+    border-radius: 10px;
+    border: 1px solid #004E9F;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    display: flex;
+    cursor: pointer;
+    text-decoration: none;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    line-height: 18px;
+    font-size: 14px;
+}
+.filter-button img.filter-icon {
+    width: 16px;
+    height: 16px;
+}
+
+
+.filter-button.active {
+    background: #004E9F;
+    color: white;
+}
+
+.filter-button.inactive {
+    background: white;
+    color: black;
+}
+.filter-button.inactive img.filter-icon {
+    filter: invert(0%); /* Or specify black version of icon */
+}
+.filter-button.active img.filter-icon {
+    filter: invert(100%); /* Or specify white version of icon */
+}
+
+
+/* Startup cards grid */
+.startup-cards-grid {
+    align-self: stretch;
+    justify-content: flex-start; /* Changed from center to align cards to the start */
+    align-items: flex-start; /* Align items to the start of the cross axis */
+    gap: 20px;
+    display: flex; /* Changed from inline-flex */
+    flex-wrap: wrap;
+}
+
+.startup-card-item {
+    width: calc(50% - 10px); /* Two cards per row, with 20px gap */
+    max-width: 637px; /* Max width from mockup */
+    min-width: 300px; /* Minimum width for responsiveness */
+    padding: 20px 21px;
+    background: white;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 12px;
+    border: 1px solid #C6BBFE;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px; /* Gap inside the card */
+    display: flex; /* Changed from inline-flex */
+    color: black; /* Default text color inside card */
+}
+
+.startup-card-item-content {
+    align-self: stretch;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 24px;
+    display: flex;
+}
+
+.startup-card-main-info {
+    align-self: stretch;
+    justify-content: flex-start;
+    align-items: flex-start; /* Align image and text block top */
+    gap: 22px;
+    display: flex;
+}
+
+.startup-card-image {
+    width: 311px;
+    height: 225px; /* Fixed height as per mockup image */
+    align-self: stretch; /* Original mockup had this, but might conflict with fixed height */
+    border-radius: 7px;
+    object-fit: cover; /* Ensure image covers the area */
+}
+.startup-card-image-placeholder {
+    width: 311px;
+    height: 225px;
+    border-radius: 7px;
+    background-color: #e0e0e0; /* Placeholder background */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #757575;
+}
+
+
+.startup-card-details {
+    /* width: 258px; This will be flexible */
+    flex: 1; /* Allow this section to take remaining space */
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 15px;
+    display: inline-flex;
+}
+
+.detail-group {
+    width: 100%; /* Changed from 254px to be responsive */
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 7px;
+    display: flex;
+}
+
+.detail-label {
+    align-self: stretch;
+    color: rgba(0, 0, 0, 0.32);
+    font-size: 12px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.12px;
+    word-wrap: break-word;
+}
+
+.author-info {
+    justify-content: flex-start;
+    align-items: flex-start; /* Align avatar and text top */
+    gap: 11px;
+    display: inline-flex;
+}
+
+.author-avatar {
+    width: 39px;
+    height: 39px;
+    border-radius: 9999px;
+    object-fit: cover;
+}
+.author-avatar-placeholder {
+    width: 39px;
+    height: 39px;
+    border-radius: 9999px;
+    background-color: #e0e0e0;
+}
+
+
+.author-text-details {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 7px;
+    display: inline-flex;
+}
+
+.author-name {
+    color: black;
+    font-size: 20px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
+    line-height: 18px; /* Keep an eye on this line height with 20px font */
+    word-wrap: break-word;
+}
+
+.author-rating {
+    color: #A9A9A9;
+    font-size: 12px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.12px;
+    word-wrap: break-word;
+}
+
+.author-reviews-link {
+    color: #7B61FF;
+    font-size: 12px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.12px;
+    word-wrap: break-word;
+    text-decoration: none; /* Optional */
+}
+.author-reviews-link:hover {
+    text-decoration: underline; /* Optional */
+}
+
+.startup-name {
+    align-self: stretch;
+    color: black;
+    font-size: 20px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
+    line-height: 18px;
+    word-wrap: break-word;
+}
+
+.category-tag, .type-tag {
+    padding: 9px 17px;
+    background: #050505;
+    border-radius: 5px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    display: inline-flex; /* So it only takes content width */
+}
+
+.category-tag-text, .type-tag-text {
+    text-align: center;
+    color: white;
+    font-size: 12px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.12px;
+    word-wrap: break-word;
+}
+
+.startup-description-group {
+    align-self: stretch;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 10px;
+    display: flex;
+}
+
+.startup-description-text {
+    /* width: 591px; Making it responsive */
+    align-self: stretch;
+    color: black;
+    font-size: 12px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.12px;
+    word-wrap: break-word;
+    max-height: 5.4em; /* Approx 3 lines, adjust as needed */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* Number of lines to show */
+    -webkit-box-orient: vertical;
+}
+
+
+.funding-info-actions {
+    align-self: stretch;
+    /* height: 121px; Height will be auto based on content + padding */
+    padding: 20px 19px; /* Adjusted padding from mockup's 38px top/bottom */
+    background: #EBEBEB;
+    border-radius: 7px;
+    flex-direction: column; /* Stack funding goal and buttons */
+    justify-content: center;
+    align-items: center; /* Center content within this box */
+    gap: 15px; /* Gap between funding text and button row */
+    display: flex;
+}
+.funding-details-row { /* For horizontal layout of funding and buttons */
+    display: flex;
+    justify-content: space-between; /* Puts funding on left, buttons on right */
+    align-items: center;
+    gap: 20px; /* Gap between funding block and buttons block */
+    width: 100%;
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+}
+
+
+.funding-goal-block {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 10px;
+    display: inline-flex;
+}
+
+.funding-goal-label {
+    color: black;
+    font-size: 14px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    line-height: 18px;
+    word-wrap: break-word;
+}
+
+.funding-goal-amount {
+    align-self: stretch;
+    color: black;
+    font-size: 20px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
+    line-height: 18px;
+    word-wrap: break-word;
+}
+
+.action-buttons-group {
+    justify-content: flex-start; /* Align buttons to the start of their container */
+    align-items: center;
+    gap: 15px;
+    display: flex; /* Changed from inline-flex */
+    flex-wrap: wrap; /* Allow buttons to wrap */
+}
+
+.action-button {
+    height: 40px;
+    padding: 12px 35px;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    display: inline-flex;
+    font-size: 16px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
+    line-height: 16px;
+    word-wrap: break-word;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+}
+
+.action-button.primary {
+    background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%);
+    color: #F5F5F5;
+}
+.action-button.primary:hover {
+    background: linear-gradient(0deg, #003c7a 0%, #005bb0 100%);
+}
+
+
+.action-button.secondary {
+    outline: 1px black solid;
+    color: black;
+    background: white; /* Ensure background for outlined button */
+}
+.action-button.secondary:hover {
+    background: #f0f0f0;
+}
+
+.action-button.danger { /* For reject button */
+    background: #dc2626; /* red-600 */
+    color: white;
+}
+.action-button.danger:hover {
+    background: #b91c1c; /* red-700 */
+}
+
+
+.show-more-bar {
+    justify-content: flex-start; /* As per mockup */
+    align-items: flex-start; /* As per mockup */
+    display: inline-flex; /* As per mockup */
+    margin-top: 20px; /* Add some space above */
+}
+
+.show-more-button {
+    height: 40px;
+    padding: 12px 35px;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    border: 1px white solid; /* Corrected from outline */
+    justify-content: flex-start;
+    align-items: center;
+    gap: 9px;
+    display: inline-flex;
+    color: #F5F5F5;
+    font-size: 16px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
+    line-height: 16px;
+    word-wrap: break-word;
+    text-decoration: none;
+    background: transparent; /* Assuming transparent background */
+}
+.show-more-button:hover {
+    background: rgba(255,255,255,0.1);
+}
+
+.show-more-button img { /* For the eye icon */
+    width: 16px;
+    height: 16px;
+    /* Mockup shows complex path for eye, best to use SVG */
+}
+/* Fallback for the icon div from mockup if not using img/SVG */
+.show-more-icon-placeholder {
+    width: 16px; height: 16px; position: relative; overflow: hidden;
+}
+.show-more-icon-placeholder div {
+    width: 14.67px; height: 10px; left: 0.66px; top: 3px; position: absolute; background: white;
+}
+
+
+.no-applications {
+    text-align: center;
+    font-size: 1.25rem; /* text-lg */
+    color: #A1A0A0; /* A grey color, adjust as needed */
+    padding: 40px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+    .startup-card-item {
+        width: calc(50% - 10px); /* Maintain two columns if space */
+    }
+}
+
+@media (max-width: 768px) {
+    .filter-bar {
+        gap: 10px; /* Reduce gap for smaller screens */
+        justify-content: center;
+    }
+    .filter-button {
+        padding: 8px 15px; /* Reduce padding */
+    }
+    .filter-search {
+        width: 100%; /* Full width search on small screens */
+    }
+    .startup-card-item {
+        width: 100%; /* One card per row */
+        max-width: none;
+    }
+    .startup-card-main-info {
+        flex-direction: column; /* Stack image and details */
+        align-items: center; /* Center them when stacked */
+    }
+    .startup-card-image, .startup-card-image-placeholder {
+        width: 100%; /* Full width image */
+        max-width: 311px; /* But not larger than original design */
+        height: auto; /* Adjust height proportionally */
+        align-self: center;
+    }
+    .startup-card-details {
+        width: 100%;
+        align-items: center; /* Center details text */
+    }
+    .detail-group, .startup-name, .startup-description-text {
+        text-align: center;
+    }
+    .category-tag, .type-tag {
+        align-self: center;
+    }
+    .funding-details-row {
+        flex-direction: column;
+        gap: 15px;
+        align-items: center;
+    }
+    .action-buttons-group {
+        justify-content: center; /* Center buttons */
+    }
+}
+
+@media (max-width: 480px) {
+    .header-title-main, .header-title-highlight {
+        font-size: 40px; /* Reduce title font size */
+    }
+    .action-button {
+        padding: 10px 20px; /* Adjust button padding */
+        font-size: 14px;
+    }
+    .show-more-button {
+         padding: 10px 20px;
+         font-size: 14px;
+    }
+}
+
+/* Styles for form display (to make forms inline for buttons) */
+.inline-form {
+    display: inline; /* Or display: inline-block; if margin/padding is needed directly on form */
+}
+
+/* Original status styles - might not be used directly in the new design, but keeping for reference or potential reuse */
+.status {
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 0.9em;
+    display: inline-block; /* To allow padding and be on its own line if needed */
+    margin-bottom: 10px; /* Example spacing */
+}
+.status-approved {
+    background-color: #16a34a; /* bg-green-600 */
+    color: white;
+}
+.status-rejected {
+    background-color: #dc2626; /* bg-red-600 */
+    color: white;
+}
+.status-pending {
+    background-color: #f59e0b; /* amber-500, mockup has no pending status directly on card display */
+    color: white;
+}
+
+
