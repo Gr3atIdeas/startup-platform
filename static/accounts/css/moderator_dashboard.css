@@ -172,6 +172,7 @@ div.moderator-page-container > header.page-header > div.header-title-block > h2.
 /* Startup cards grid */
 .startup-cards-grid {
     align-self: stretch;
+    width: 100%; /* Ensure it takes full width of its container */
     justify-content: flex-start; /* Changed from center to align cards to the start */
     align-items: stretch; /* Make cards same height in a row */
     gap: 20px;
