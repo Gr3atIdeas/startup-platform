@@ -1939,3 +1939,10 @@ def my_startups(request):
         logger.error(f"Произошла ошибка в my_startups: {str(e)}", exc_info=True)
         messages.error(request, 'Произошла ошибка при загрузке страницы. Пожалуйста, попробуйте снова.')
         return redirect('profile')
+
+@login_required
+def deals_view(request):
+    if not hasattr(request.user, 'role') or request.user.role.role_name != 'moderator':
+        messages.error(request, 'Доступ к этой странице разрешен только модераторам.')
+        return redirect('home') # Или на другую страницу, например, профиль
+    return render(request, 'accounts/deals.html')

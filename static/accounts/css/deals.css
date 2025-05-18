@@ -1,0 +1,365 @@
+/* static/accounts/css/deals.css */
+body {
+    background-color: #0E163D; /* Темно-синий фон, как на других страницах */
+    color: #333; /* Основной цвет текста для контраста на белом */
+}
+
+.deals-page-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Чтобы контейнер не растягивался на всю высоту экрана */
+    padding: 40px 20px;
+    min-height: calc(100vh - 120px); /* Примерная высота (viewport - header ~80px - footer ~40px), настройте */
+    box-sizing: border-box;
+}
+
+.deals-main-wrapper {
+    width: 100%;
+    max-width: 1280px;
+    display: flex;
+    background: white;
+    box-shadow: 6px 6px 15px rgba(0, 0, 0, 0.25);
+    border-radius: 32px;
+    gap: 0; /* Убираем gap, чтобы колонки прилегали, а разделитель был через border */
+    font-family: 'Unbounded', sans-serif;
+    min-height: 700px; /* Минимальная высота для демонстрации */
+    overflow: hidden; /* Чтобы скругленные углы работали и для дочерних элементов */
+}
+
+.chat-list-column {
+    width: 330px; /* Ширина левой колонки, была 350 */
+    padding: 25px 15px; /* Уменьшил горизонтальный паддинг */
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Уменьшил gap между элементами */
+    border-right: 1px solid #e8e8e8; /* Более светлый разделитель */
+    overflow-y: auto;
+    flex-shrink: 0; /* Чтобы колонка не сжималась */
+}
+
+.chat-item {
+    display: flex;
+    align-items: center;
+    gap: 12px; 
+    padding: 12px 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.chat-item:hover, .chat-item.active {
+    background-color: #eef2f7; /* Обновленный цвет фона */
+}
+
+.chat-item-avatar {
+    width: 55px; /* Уменьшил */
+    height: 55px;
+    border-radius: 16px; 
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.chat-item-info {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px; 
+    min-width: 0; 
+}
+
+.chat-item-name {
+    color: black;
+    font-size: 14px; /* Уменьшил */
+    font-weight: 500; 
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.chat-item-status {
+    color: #797979;
+    font-size: 11px; /* Уменьшил */
+    font-weight: 300;
+    letter-spacing: 0.12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.chat-item-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 5px; 
+    font-size: 10px; /* Уменьшил */
+    font-weight: 300;
+    letter-spacing: 0.12px;
+    color: #A9A9A9;
+    min-width: 60px; 
+    text-align: right;
+    flex-shrink: 0;
+}
+.chat-item-meta .chat-item-time {
+    color: black;
+    font-size: 11px;
+}
+
+.chat-item-badge {
+    width: 20px; 
+    height: 20px;
+    background: #004E9F;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 11px; /* Уменьшил */
+    font-weight: 400; /* Сделал чуть жирнее для читаемости */
+    line-height: 1;
+}
+
+.chat-window-column {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    /* height: 100%; Убрал, т.к. deals-main-wrapper уже имеет min-height */
+}
+
+.chat-messages-area {
+    flex-grow: 1;
+    padding: 20px; /* Уменьшил паддинг */
+    background: white;
+    display: flex;
+    flex-direction: column; 
+    position: relative;
+    overflow-y: auto; 
+}
+
+.chat-actions-top {
+    display: flex;
+    justify-content: center; 
+    gap: 20px; 
+    padding: 15px 0; 
+    margin-bottom: 20px; /* Отодвинул от сообщений */
+    /* border-bottom: 1px solid #eee; Убрал, т.к. фон и так белый */
+    /* position: sticky; /* Убрал sticky, чтобы не перекрывало верхнюю часть чата при скролле */
+    /* top: 0; */
+    /* background: white; */
+    /* z-index: 10; */
+}
+
+.btn {
+    padding: 10px 28px; /* Немного изменил паддинг */
+    border-radius: 8px; /* Слегка уменьшил радиус */
+    font-size: 15px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
+    line-height: 1.2;
+    cursor: pointer;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease, outline 0.2s ease;
+    border: none;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.btn-approve {
+    background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
+    color: black;
+}
+.btn-approve:hover {
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+.btn-reject {
+    background: white;
+    color: black;
+    outline: 1px solid #ccc; /* Сделал контур светлее */
+}
+.btn-reject:hover {
+    background: #f5f5f5;
+    outline-color: #bbb;
+}
+
+.messages-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* Уменьшил gap */
+    width: 100%;
+    padding-bottom: 10px; /* Уменьшил */
+    margin-top: auto; /* Это прижмет блок сообщений к низу */
+}
+
+
+.message-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px; /* Уменьшил */
+}
+.message-date-separator {
+    align-self: center;
+    color: #A4A4A4;
+    font-size: 10px; 
+    font-weight: 300;
+    letter-spacing: 0.08px;
+    padding: 4px 12px;
+    background-color: #f0f0f0; /* Сделал чуть темнее */
+    border-radius: 8px;
+    margin: 8px 0;
+}
+.new-messages-separator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 8px 0;
+}
+.new-messages-separator span {
+    color: #004E9F; /* Сделал цвет текста синим */
+    font-size: 10px;
+    font-weight: 400; /* Сделал жирнее */
+    letter-spacing: 0.08px;
+    padding: 4px 12px;
+    background-color: #e6f0ff; /* Светло-синий фон */
+    border-radius: 10px;
+}
+
+
+.message-bubble {
+    max-width: 70%; /* Уменьшил */
+    padding: 10px 14px;
+    border-radius: 18px; 
+    font-size: 12.5px; /* Немного изменил */
+    line-height: 1.45;
+    word-wrap: break-word;
+    position: relative; 
+}
+
+.message-bubble.received {
+    background: #004E9F;
+    color: white;
+    border-bottom-left-radius: 6px; 
+    align-self: flex-start; 
+}
+
+.message-bubble.sent {
+    background: #E9E9EB;
+    color: black;
+    border-bottom-right-radius: 6px;
+    align-self: flex-end; 
+}
+.message-content {
+    margin-bottom: 2px;
+}
+.message-link {
+    color: #FFEF2B;
+    text-decoration: underline;
+}
+.message-link:hover {
+    text-decoration: none;
+}
+
+.message-time {
+    font-size: 9.5px; /* Уменьшил */
+    color: rgba(255, 255, 255, 0.75);
+    text-align: right;
+    display: block; 
+    margin-top: 4px;
+}
+.message-bubble.sent .message-time {
+    color: #888; /* Сделал темнее для лучшего контраста */
+}
+
+.scroll-to-bottom-indicator {
+    position: absolute;
+    bottom: 20px; /* Отступ от самого низа области сообщений */
+    right: 25px;
+    width: 32px; /* Уменьшил */
+    height: 32px;
+    background: rgba(217, 217, 217, 0.8); /* Полупрозрачный */
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+    transition: background-color 0.2s ease;
+}
+.scroll-to-bottom-indicator:hover {
+    background: rgba(200, 200, 200, 0.9);
+}
+.scroll-to-bottom-indicator img {
+    width: 14px; 
+    height: 14px;
+}
+
+.new-message-notification {
+    position: absolute;
+    bottom: 45px; /* Скорректировал позицию */
+    right: 15px;
+    width: 18px; /* Уменьшил */
+    height: 18px;
+    background: #004E9F;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 10px;
+    font-family: 'Helvetica Neue', sans-serif; 
+    font-weight: 500;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+    border: 1px solid white; /* Белая обводка для отделения */
+}
+
+
+.chat-input-area {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px; /* Уменьшил паддинги */
+    border-top: 1px solid #e8e8e8;
+    background: #f9f9f9; 
+    /* border-radius: 0 0 32px 0; Убрал, т.к. wrapper имеет overflow:hidden */
+    flex-shrink: 0; /* Чтобы не сжималось */
+}
+
+.attach-button, .send-button {
+    background: none;
+    border: none;
+    padding: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+}
+.attach-button:hover, .send-button:hover {
+    background-color: #e0e0e0;
+}
+
+.attach-button img, .send-button img {
+    width: 20px; /* Уменьшил */
+    height: 20px;
+}
+
+.message-input {
+    flex-grow: 1;
+    height: 42px; /* Уменьшил */
+    padding: 10px 15px;
+    background: white; /* Сделал фон белым для контраста */
+    border-radius: 8px; 
+    border: 1px solid #dcdcdc;
+    font-size: 13px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.1px;
+    color: #333;
+    margin: 0 8px;
+}
+.message-input::placeholder {
+    color: #b0b0b0; 
+}
+.message-input:focus {
+    outline: none;
+    border-color: #004E9F;
+    box-shadow: 0 0 0 2px rgba(0, 78, 159, 0.2);
+}
