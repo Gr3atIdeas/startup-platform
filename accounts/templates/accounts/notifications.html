@@ -112,11 +112,19 @@
 {% block script_extra %}
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    // Изменяем селектор, чтобы выбирать именно "пузыри" уведомлений
+    console.log('DOM Content Loaded - Notification Modal Script Initializing'); // DEBUG
+
     const notificationBubbles = document.querySelectorAll('.notifications-list-section .notification-item-bubble');
+    console.log('Found notification bubbles:', notificationBubbles.length, notificationBubbles); // DEBUG
+
     const modalOverlay = document.getElementById('notification-modal-overlay');
     const modalCloseButton = document.getElementById('notification-modal-close');
     const modalPopup = document.getElementById('notification-modal-popup');
+
+    if (!modalOverlay || !modalCloseButton || !modalPopup) {
+        console.error('Modal core elements (overlay, close button, or popup) not found!'); // DEBUG
+        return;
+    }
 
     const modalPromoTitle = modalPopup.querySelector('.modal-promo-title');
     const modalNotificationList = modalPopup.querySelector('.modal-notification-list');
@@ -124,43 +132,45 @@ document.addEventListener('DOMContentLoaded', function () {
     const modalPromoSubtitle = modalPopup.querySelector('.modal-promo-subtitle');
     const modalPromoMainImg = modalPopup.querySelector('.modal-promo-main-img');
 
+    if (!modalPromoTitle || !modalNotificationList || !modalPromoAction || !modalPromoSubtitle || !modalPromoMainImg) {
+        console.error('One or more modal content elements not found! Check classes/IDs.'); // DEBUG
+        // Не прерываем выполнение полностью, т.к. основная логика открытия/закрытия может работать
+    }
+
     let modalNotificationListTitle = modalPopup.querySelector('.modal-notification-list-title');
     if (!modalNotificationListTitle && modalNotificationList) {
+        console.log('Modal notification list title not found, creating it.'); // DEBUG
         modalNotificationListTitle = document.createElement('div');
         modalNotificationListTitle.className = 'modal-notification-list-title';
         modalNotificationList.parentNode.insertBefore(modalNotificationListTitle, modalNotificationList);
     }
 
-    if (!modalOverlay || !modalCloseButton || !modalPopup || !modalPromoTitle || !modalNotificationList || !modalPromoAction || !modalPromoSubtitle || !modalPromoMainImg) {
-        console.error('Один или несколько элементов модального окна не найдены! Проверьте ID и классы в HTML и JS.');
-        return;
-    }
-
-    notificationBubbles.forEach(bubble => {
+    notificationBubbles.forEach((bubble, index) => {
+        console.log('Attaching click listener to bubble #', index, bubble); // DEBUG
         bubble.addEventListener('click', function () {
-            // 'this' теперь ссылается на .notification-item-bubble
-            // Нам нужно найти родительский .notification-item для получения некоторых данных
+            console.log('Notification bubble clicked:', this); // DEBUG
+
             const parentItem = this.closest('.notification-item');
+            console.log('Parent .notification-item:', parentItem); // DEBUG
             if (!parentItem) {
-                console.error('Не удалось найти родительский .notification-item для пузыря:', this);
+                console.error('Could not find parent .notification-item for bubble:', this);
                 return;
             }
 
             const notificationId = parentItem.dataset.notificationId || 'N/A';
             const date = parentItem.querySelector('.notification-date')?.textContent || 'Дата не указана';
             const time = parentItem.querySelector('.notification-time')?.textContent || 'Время не указано';
-            // Текст сообщения берем непосредственно из пузыря
             const message = this.querySelector('p')?.textContent || 'Детали уведомления отсутствуют.';
+            console.log('Extracted data:', { notificationId, date, time, message }); // DEBUG
 
-            // --- Логика определения данных стартапа (пример) ---
             let startupName = "Детализация";
             let startupImage = "https://placehold.co/286x261/000000/FFFFFF?text=Startup";
             let startupUrl = "#";
 
             if (message.toLowerCase().includes('стартап')) {
-                const match = message.match(/стартап\s*"?(С\S+)/i); // Исправлено регулярное выражение для лучшего захвата
+                const match = message.match(/стартап\s*"?(С\S+)/i);
                  if (match && match[1]) {
-                    startupName = match[1].replace(/[",.]/g, ''); // Убираем кавычки и точки из имени
+                    startupName = match[1].replace(/[",.]/g, '');
                 }
             } else if (message.includes("Ромашка")) {
                 startupName = "Ромашка";
@@ -168,45 +178,57 @@ document.addEventListener('DOMContentLoaded', function () {
                 startupUrl = "/startup/romashka/";
             }
             
-            // Пример получения данных стартапа из data-атрибутов родительского элемента
             const linkedStartupName = parentItem.dataset.startupName;
             if (linkedStartupName) startupName = linkedStartupName;
             const linkedStartupImage = parentItem.dataset.startupImage;
             if (linkedStartupImage) startupImage = linkedStartupImage;
             const linkedStartupUrl = parentItem.dataset.startupUrl;
             if (linkedStartupUrl) startupUrl = linkedStartupUrl;
+            console.log('Final startup data for modal:', { startupName, startupImage, startupUrl }); // DEBUG
             
-            modalPromoSubtitle.textContent = "Уведомление от стартапа";
-            modalPromoTitle.textContent = startupName;
-            modalPromoMainImg.src = startupImage;
-            modalPromoMainImg.alt = `Логотип стартапа ${startupName}`;
-            modalPromoAction.href = startupUrl;
+            if(modalPromoSubtitle) modalPromoSubtitle.textContent = "Уведомление от стартапа";
+            if(modalPromoTitle) modalPromoTitle.textContent = startupName;
+            if(modalPromoMainImg) {
+                modalPromoMainImg.src = startupImage;
+                modalPromoMainImg.alt = `Логотип стартапа ${startupName}`;
+            }
+            if(modalPromoAction) modalPromoAction.href = startupUrl;
 
             if(modalNotificationListTitle) modalNotificationListTitle.textContent = `Информация по уведомлению`;
 
-            modalNotificationList.innerHTML = ''; 
-            // Клонируем весь родительский .notification-item, чтобы сохранить структуру
-            const clickedItemClone = parentItem.cloneNode(true);
-            // Можно удалить обработчики событий с клона, если они не нужны в модалке
-            // clickedItemClone.querySelectorAll('*').forEach(el => el.onclick = null); 
-            modalNotificationList.appendChild(clickedItemClone);
+            if(modalNotificationList) {
+                modalNotificationList.innerHTML = ''; 
+                const clickedItemClone = parentItem.cloneNode(true);
+                modalNotificationList.appendChild(clickedItemClone);
+            } else {
+                console.error('modalNotificationList is not available to append content!'); // DEBUG
+            }
             
+            console.log('Attempting to display modal overlay...'); // DEBUG
             modalOverlay.style.display = 'flex';
+            console.log('Modal overlay display set to flex.'); // DEBUG
         });
     });
 
-    modalCloseButton.addEventListener('click', function () {
-        modalOverlay.style.display = 'none';
-    });
+    if (modalCloseButton) {
+        modalCloseButton.addEventListener('click', function () {
+            console.log('Modal close button clicked.'); // DEBUG
+            modalOverlay.style.display = 'none';
+        });
+    } else {
+        console.error('Modal close button not found for attaching event listener!'); // DEBUG
+    }
 
     modalOverlay.addEventListener('click', function (event) {
         if (event.target === modalOverlay) {
+            console.log('Clicked on modal overlay (background). Closing modal.'); // DEBUG
             modalOverlay.style.display = 'none';
         }
     });
 
     document.addEventListener('keydown', function (event) {
         if (event.key === 'Escape' && modalOverlay.style.display === 'flex') {
+            console.log('Escape key pressed. Closing modal.'); // DEBUG
             modalOverlay.style.display = 'none';
         }
     });
