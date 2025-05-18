@@ -937,8 +937,64 @@ def moderator_dashboard(request):
     if not request.user.is_authenticated or request.user.role.role_name != 'moderator':
         messages.error(request, 'У вас нет прав для этого действия.')
         return redirect('home')
-    pending_startups = Startups.objects.filter(status='pending')
-    return render(request, 'accounts/moderator_dashboard.html', {'pending_startups': pending_startups})
+
+    pending_startups_list = Startups.objects.filter(status='pending')
+    
+    # Получаем только те категории, у которых есть стартапы в статусе 'pending'
+    # или все категории, если нужно отображать даже пустые
+    # Вариант 1: Категории только с активными стартапами на модерации
+    # active_categories_ids = pending_startups_list.filter(direction__isnull=False).values_list('direction_id', flat=True).distinct()
+    # all_categories = Directions.objects.filter(pk__in=active_categories_ids).order_by('direction_name')
+    # Вариант 2: Все категории из справочника Directions
+    all_categories = Directions.objects.all().order_by('direction_name')
+
+
+    # Получаем параметры фильтрации и сортировки из GET-запроса
+    selected_category_name = request.GET.get('category')
+    sort_order = request.GET.get('sort')
+    filter_type = request.GET.get('filter') # Для обработки ?filter=all
+
+    # Если выбран "Все", сбрасываем категорию и сортировку
+    if filter_type == 'all':
+        selected_category_name = None
+        sort_order = None
+
+    # Фильтрация по категории
+    if selected_category_name:
+        # Используем __iexact для регистронезависимого сравнения, если нужно, или оставляем __exact
+        pending_startups_list = pending_startups_list.filter(direction__direction_name__iexact=selected_category_name)
+
+    # Сортировка
+    if sort_order == 'newest':
+        # Убедитесь, что у Startups есть поле created_at или аналогичное (например, startup_id для имитации)
+        # Если created_at нет, можно использовать -startup_id для обратного порядка по ID
+        if hasattr(Startups, 'created_at'):
+            pending_startups_list = pending_startups_list.order_by('-created_at')
+        else:
+            pending_startups_list = pending_startups_list.order_by('-startup_id') # Запасной вариант сортировки
+    else:
+        # Сортировка по умолчанию, если не 'newest' и не было другой сортировки ранее
+        # (например, по ID или дате добавления)
+        if hasattr(Startups, 'created_at'):
+            pending_startups_list = pending_startups_list.order_by('-created_at') # По умолчанию тоже новые сначала
+        else:
+            pending_startups_list = pending_startups_list.order_by('-startup_id')
+
+
+    # Пагинация на стороне сервера (пока не используется активно для "показать еще", но может пригодиться)
+    # paginator = Paginator(pending_startups_list, 4) # 4 стартапа на странице
+    # page_number = request.GET.get('page')
+    # startups_page_obj = paginator.get_page(page_number)
+
+    context = {
+        # 'pending_startups': startups_page_obj, # Если используется серверная пагинация
+        'pending_startups': pending_startups_list, # Передаем весь список для JS пагинации
+        'all_categories': all_categories,
+        'selected_category_name': selected_category_name,
+        'current_sort_order': sort_order,
+        'filter_type': filter_type
+    }
+    return render(request, 'accounts/moderator_dashboard.html', context)
 
 def approve_startup(request, startup_id):
     if not request.user.is_authenticated or request.user.role.role_name != 'moderator':
