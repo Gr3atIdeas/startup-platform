@@ -417,7 +417,7 @@ body {
     height: 521px;
     min-width: 540px; /* Фиксированная ширина */
     background-color: #0E163D; /* Фоновый цвет на случай, если картинка не загрузится */
-    background-image: url("{% static 'accounts/images/placeholders/modal_placeholder_bg.jpg' %}"); /* Плейсхолдер */
+    background-image: url("https://placehold.co/540x521/0E163D/FFFFFF?text=Placeholder&font=unbounded"); /* Онлайн-плейсхолдер */
     background-size: cover; /* Масштабировать изображение, чтобы покрыть блок */
     background-position: center; /* Центрировать изображение */
     position: relative;
