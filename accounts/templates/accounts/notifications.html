@@ -30,8 +30,8 @@
 
         <div class="notifications-list-section">
             <div class="notifications-list-items">
-                {% for i in "x"|ljust:6 %} {# Создаем 6 элементов для примера #}
-                <div class="notification-item" data-notification-id="{{ i }}">
+                {% for i in "x"|ljust:7 %} {# Создаем 7 элементов для примера (было 6) #}
+                <div class="notification-item" data-notification-id="{{ i }}{{ forloop.counter }}"> {# Добавил counter для уникальности ID в примере #}
                     <div class="notification-item-meta">
                         <span class="notification-date">25/03/2025</span>
                         <span class="notification-time">12:30</span>
