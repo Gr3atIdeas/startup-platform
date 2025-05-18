@@ -49,7 +49,7 @@
     </div>
 
     <div class="notifications-section-title">
-        ВАШИ СТАРТАПЫ
+        СТАРТАПЫ
     </div>
 
     <div class="notifications-related-startups">
@@ -57,14 +57,14 @@
         <div class="related-startup-card">
             <img src="https://placehold.co/123x111" alt="Лого стартапа">
             <span class="related-startup-name">Ромашка {{forloop.counter}}</span>
-        </div>
-        <div class="related-startup-badge">
-            <span>{{ forloop.counter|add:2 }}</span>
+            <div class="related-startup-badge">
+                <span>{{ forloop.counter|add:2 }}</span>
+            </div>
         </div>
         {% endfor %}
          <!-- Пустышка для выравнивания последнего ряда, если нужно -->
         <div class="related-startup-card-empty-spacer"></div>
-        <div class="related-startup-badge-empty-spacer"></div>
+        {# <div class="related-startup-badge-empty-spacer"></div> Удаляем, т.к. бейдж теперь внутри карточки #}
     </div>
 </div>
 {% endblock %}

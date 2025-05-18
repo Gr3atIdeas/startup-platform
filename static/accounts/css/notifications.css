@@ -149,77 +149,103 @@ body {
 }
 
 
-.notifications-list-section {
-    width: 724px;
-    padding: 30px 40px; /* Уменьшил padding, чтобы лучше соответствовать правому блоку из макета */
-    background: rgba(255, 255, 255, 0.10);
-    border-radius: 20px;
-    display: flex; /* Для позиционирования скроллбара */
-    gap: 15px; /* Пространство между списком и скроллбаром */
+.notifications-list-section { /* Основной контейнер для списка уведомлений и скроллбара */
+    width: 724px; /* Ширина из Figma, если она фиксированная, или можно использовать flex-grow */
+    padding: 41px 70px; /* Внутренние отступы из Figma */
+    background: rgba(255, 255, 255, 0.10); /* Фон из Figma */
+    border-radius: 20px; /* Скругление из Figma */
+    display: flex; /* Для расположения списка уведомлений и кастомного скроллбара рядом */
+    gap: 10px; /* Отступ между списком и скроллбаром, если он есть. В Figma gap:91px, но это до скроллбара, сам список и скроллбар могут быть ближе */
     box-sizing: border-box;
     max-height: 521px; /* Как у промо-карты */
+    flex-shrink: 0; 
+    overflow: hidden; /* Чтобы внутренний скролл работал */
+}
+
+.notifications-list-items { /* Контейнер для самих элементов уведомлений */
+    flex-grow: 1; /* Занимает доступное пространство */
+    display: flex;
+    flex-direction: column;
+    gap: 40px; /* Вертикальный отступ между уведомлениями из Figma */
+    overflow-y: auto; /* Включаем скролл, если контента много */
+    padding-right: 15px; /* Небольшой отступ справа, чтобы контент не прилипал к кастомному скроллбару */
+}
+
+/* Стилизация нативного скроллбара (если кастомный не используется или для fallback) */
+.notifications-list-items::-webkit-scrollbar {
+  width: 8px; /* Ширина скроллбара */
+}
+.notifications-list-items::-webkit-scrollbar-track {
+  background: transparent; /* Прозрачный трек */
+}
+.notifications-list-items::-webkit-scrollbar-thumb {
+  background-color: rgba(0,0,0,0.3); /* Цвет бегунка, как в Figma (var --Color1) */
+  border-radius: 6px; /* Скругление бегунка */
+  border: 2px solid transparent; /* Прозрачная обводка для эффекта padding */
+  background-clip: content-box;
+}
+
+.notification-item { /* Каждый отдельный элемент уведомления */
+    display: flex; /* Используем flex для расположения меты и бабла */
+    align-items: center; /* Выравнивание по центру вертикали, в Figma align-items: flex-end, но это для группы элементов */
+    gap: 20px; /* Горизонтальный отступ между метой и баблом из Figma */
+    width: 100%; /* Занимает всю доступную ширину */
+}
+
+.notification-item-meta { /* Блок с датой и временем */
+    width: 56px; /* Фиксированная ширина из Figma */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Элементы сверху */
+    align-items: flex-end; /* Текст справа */
+    gap: 10px; /* Отступ между датой и временем из Figma */
     flex-shrink: 0; /* Чтобы блок не сжимался */
 }
 
-.notifications-list-items {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 25px; /* Пространство между уведомлениями */
-    overflow-y: auto; /* Позволяет скроллить, если контента много */
-    padding-right: 15px; /* Отступ для собственного скроллбара */
-}
-/* Стилизация нативного скроллбара (опционально, если кастомный не используется) */
-.notifications-list-items::-webkit-scrollbar {
-  width: 0px; /* Скрываем стандартный скроллбар, если делаем кастомный */
-  background: transparent;
-}
-
-.notification-item {
-    display: flex;
-    align-items: flex-start; /* Выравнивание по верху меты и бабла */
-    gap: 15px;
-}
-
-.notification-item-meta {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end; /* Дата и время справа */
-    gap: 3px;
+.notification-date,
+.notification-time {
+    color: white;
     font-size: 8px;
+    font-family: 'Unbounded', sans-serif;
     font-weight: 300;
-    line-height: 1.5; /* Для читаемости */
-    color: white;
-    width: 60px; /* Фиксированная ширина для выравнивания */
-    flex-shrink: 0;
+    line-height: 18px; /* Из Figma, но может быть велико для 8px, можно уменьшить до 1.2-1.5 */
+    word-wrap: break-word;
+    text-align: right; /* Явно указываем выравнивание */
 }
 
-.notification-item-bubble {
-    flex-grow: 1;
-    padding: 10px 18px; /* Уменьшил padding */
-    background: rgba(255, 255, 255, 0.16);
-    border-radius: 99px; /* Овальная форма */
-    color: white;
-    font-size: 14px;
-    font-weight: 300;
-    line-height: 18px;
+.notification-item-bubble { /* "Бабл" с текстом уведомления */
+    flex-grow: 1; /* Занимает оставшееся пространство */
+    height: auto; /* Автоматическая высота по контенту, в Figma 40px, но может быть динамической */
+    padding: 8px 24px; /* Внутренние отступы из Figma */
+    background: rgba(255, 255, 255, 0.16); /* Фон из Figma */
+    border-radius: 99px; /* Овальная форма из Figma */
+    display: flex; /* Для центрирования текста, если нужно */
+    justify-content: flex-start; /* Текст слева */
+    align-items: center;
 }
 .notification-item-bubble p {
     margin: 0;
+    color: white;
+    font-size: 14px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    line-height: 18px; /* Из Figma */
+    word-wrap: break-word;
 }
 
-.notifications-scrollbar-track {
+.notifications-scrollbar-track { /* Кастомный трек скроллбара */
     width: 10px;
-    background: rgba(0, 0, 0, 0.20);
-    border-radius: 6px;
-    height: 100%; /* Занимает всю высоту родителя .notifications-list-section */
-    position: relative; /* Для позиционирования бегунка */
-    display: none; /* Пока скроем, если используется нативный */
+    background: rgba(0, 0, 0, 0.20); /* Цвет из Figma (var --Color1) */
+    border-radius: 6px; /* Скругление из Figma */
+    height: 346px; /* Фиксированная высота из Figma, но лучше делать height: 100%; */
+    /* height: 100%; */ /* Предпочтительнее для адаптивности */
+    position: relative; 
+    /* display: none; */ /* Показываем, если используем кастомный скролл */
 }
-.notifications-scrollbar-thumb {
+.notifications-scrollbar-thumb { /* Кастомный бегунок скроллбара */
     width: 100%;
-    height: 50px; /* Примерная высота бегунка, будет меняться JS */
-    background: rgba(255, 255, 255, 0.3);
+    height: 50px; /* Примерная высота, будет меняться JS или CSS calc() */
+    background: rgba(255,255,255,0.4); /* Сделаем его светлее для видимости на темном треке */
     border-radius: 6px;
     position: absolute;
     top: 0;
@@ -260,8 +286,8 @@ body {
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start; /* Элементы начинаются слева */
-    align-items: center; /* Выравнивание по центру вертикально для элементов в ряду */
-    gap: 20px; /* Расстояние между карточками и бейджами */
+    align-items: flex-start; /* Выравнивание по верху для карточек разной высоты */
+    gap: 20px; /* Расстояние между карточками */
 }
 
 .related-startup-card {
@@ -275,6 +301,7 @@ body {
     gap: 8px; /* Уменьшил gap */
     width: 155px; /* Примерная ширина, чтобы уместилось несколько в ряд */
     box-sizing: border-box;
+    position: relative; /* Для позиционирования бейджа */
 }
 .related-startup-card img {
     width: 100px; /* Уменьшил изображение */
@@ -294,19 +321,23 @@ body {
 }
 
 .related-startup-badge {
-    width: 38px;
-    height: 38px;
+    width: 28px; /* Уменьшил для лучшего вида */
+    height: 28px; /* Уменьшил для лучшего вида */
     background: #FF0000;
-    border-radius: 20px;
+    border-radius: 50%; /* Делаем круглым */
     display: flex;
     justify-content: center;
     align-items: center;
     color: white;
-    font-size: 16px;
+    font-size: 14px; /* Уменьшил шрифт */
     font-family: 'Unbounded', sans-serif;
-    font-weight: 400;
-    line-height: 1; /* Для центрирования цифры */
-    flex-shrink: 0; /* Чтобы бейдж не сжимался */
+    font-weight: 500; /* Сделал немного жирнее */
+    line-height: 1;
+    position: absolute; /* Абсолютное позиционирование */
+    top: -10px;        /* Смещение вверх */
+    right: -10px;       /* Смещение вправо */
+    box-shadow: 0px 1px 3px rgba(0,0,0,0.3); /* Небольшая тень */
+    border: 2px solid white; /* Белая обводка для отделения */
 }
 .related-startup-badge span {
     line-height: 1;
@@ -321,6 +352,6 @@ body {
     margin: 0;
     visibility: hidden; /* Скрыто, но занимает место */
 }
-.related-startup-badge-empty-spacer {
-    width: 38px; /* Такая же ширина как у бейджа */
-}
+/* .related-startup-badge-empty-spacer { */ /* Удаляем, так как бейдж теперь внутри карточки */
+    /* width: 38px; */ /* Такая же ширина как у бейджа */
+/* } */
