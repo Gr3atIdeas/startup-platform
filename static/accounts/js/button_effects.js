@@ -145,7 +145,7 @@ function initPositionAware() {
 
         button.addEventListener('mouseenter', handleMouseEnter);
         button.addEventListener('mouseleave', handleMouseLeave);
-        button.addEventListener('touchstart', handleTouchStart);
+        button.addEventListener('touchstart', handleTouchStart, { passive: true });
         
         button.setAttribute('data-position-aware-initialized', 'true');
     });

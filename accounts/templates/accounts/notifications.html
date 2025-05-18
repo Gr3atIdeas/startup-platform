@@ -98,12 +98,113 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal-notification-scrollbar-track">
+                {# Удаляем кастомный скроллбар, так как стилизуем нативный для modal-notification-list #}
+                {# <div class="modal-notification-scrollbar-track">
                     <div class="modal-notification-scrollbar-thumb"></div>
-                </div>
+                </div> #}
             </div>
         </div>
     </div>
 </div>
 
+{% endblock %}
+
+{% block script_extra %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const notificationItems = document.querySelectorAll('.notifications-list-section .notification-item'); // Уточнил селектор
+    const modalOverlay = document.getElementById('notification-modal-overlay');
+    const modalCloseButton = document.getElementById('notification-modal-close');
+    const modalPopup = document.getElementById('notification-modal-popup');
+
+    const modalPromoTitle = modalPopup.querySelector('.modal-promo-title');
+    const modalNotificationList = modalPopup.querySelector('.modal-notification-list');
+    const modalPromoAction = modalPopup.querySelector('.modal-promo-action');
+    const modalPromoSubtitle = modalPopup.querySelector('.modal-promo-subtitle');
+    const modalPromoMainImg = modalPopup.querySelector('.modal-promo-main-img');
+
+    // Заголовок для списка уведомлений в модалке (если его нет, создадим)
+    let modalNotificationListTitle = modalPopup.querySelector('.modal-notification-list-title');
+    if (!modalNotificationListTitle && modalNotificationList) {
+        modalNotificationListTitle = document.createElement('div');
+        modalNotificationListTitle.className = 'modal-notification-list-title';
+        modalNotificationList.parentNode.insertBefore(modalNotificationListTitle, modalNotificationList);
+    }
+
+    if (!modalOverlay || !modalCloseButton || !modalPopup || !modalPromoTitle || !modalNotificationList || !modalPromoAction || !modalPromoSubtitle || !modalPromoMainImg) {
+        console.error('Один или несколько элементов модального окна не найдены! Проверьте ID и классы в HTML и JS.');
+        return;
+    }
+
+    notificationItems.forEach(item => {
+        item.addEventListener('click', function () {
+            const notificationId = this.dataset.notificationId || 'N/A'; // Получаем ID, если есть
+            const date = item.querySelector('.notification-date')?.textContent || 'Дата не указана';
+            const time = item.querySelector('.notification-time')?.textContent || 'Время не указано';
+            const message = item.querySelector('.notification-item-bubble p')?.textContent || 'Детали уведомления отсутствуют.';
+
+            // --- Логика определения данных стартапа (пример) ---
+            let startupName = "Детализация"; // По умолчанию
+            let startupImage = "https://placehold.co/286x261/000000/FFFFFF?text=Startup"; // Default image
+            let startupUrl = "#";
+
+            // Пытаемся извлечь имя стартапа из текста уведомления или ID
+            // Это очень упрощенный пример, в реальном приложении данные должны приходить с бэкенда или быть в data-атрибутах
+            if (message.toLowerCase().includes('стартап')) {
+                // Пробуем найти что-то похожее на имя после слова "стартап"
+                const match = message.match(/стартап\s*"?([^"\s,.]+)"?/i);
+                if (match && match[1]) {
+                    startupName = match[1];
+                }
+            } else if (message.includes("Ромашка")) { // Пример для "Ромашка"
+                startupName = "Ромашка";
+                startupImage = "https://placehold.co/286x261/E6E6FA/000000?text=Ромашка"; // Пример картинки для Ромашки
+                startupUrl = "/startup/romashka/"; // Пример URL
+            }
+            // Можно добавить больше логики для других стартапов или использовать data-атрибуты на .notification-item
+            // Например: data-startup-name="Ромашка" data-startup-image="url" data-startup-url="url"
+            const linkedStartupName = item.dataset.startupName;
+            if (linkedStartupName) startupName = linkedStartupName;
+            const linkedStartupImage = item.dataset.startupImage;
+            if (linkedStartupImage) startupImage = linkedStartupImage;
+            const linkedStartupUrl = item.dataset.startupUrl;
+            if (linkedStartupUrl) startupUrl = linkedStartupUrl;
+            
+            // Обновляем промо-карточку в модальном окне
+            modalPromoSubtitle.textContent = "Уведомление от стартапа";
+            modalPromoTitle.textContent = startupName;
+            modalPromoMainImg.src = startupImage;
+            modalPromoMainImg.alt = `Логотип стартапа ${startupName}`;
+            modalPromoAction.href = startupUrl;
+
+            // Обновляем заголовок списка уведомлений
+            if(modalNotificationListTitle) modalNotificationListTitle.textContent = `Информация по уведомлению`;
+
+            // Клонируем и добавляем нажатое уведомление в модальное окно
+            modalNotificationList.innerHTML = ''; // Очищаем предыдущие
+            const clickedItemClone = item.cloneNode(true);
+            modalNotificationList.appendChild(clickedItemClone);
+            
+            modalOverlay.style.display = 'flex';
+        });
+    });
+
+    modalCloseButton.addEventListener('click', function () {
+        modalOverlay.style.display = 'none';
+    });
+
+    modalOverlay.addEventListener('click', function (event) {
+        if (event.target === modalOverlay) {
+            modalOverlay.style.display = 'none';
+        }
+    });
+
+    // Закрытие модального окна по клавише Escape
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape' && modalOverlay.style.display === 'flex') {
+            modalOverlay.style.display = 'none';
+        }
+    });
+});
+</script>
 {% endblock %}
