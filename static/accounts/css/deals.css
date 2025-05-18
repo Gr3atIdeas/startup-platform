@@ -149,35 +149,50 @@ body {
     /* z-index: 10; */
 }
 
-.btn {
-    padding: 10px 28px; /* Немного изменил паддинг */
-    border-radius: 8px; /* Слегка уменьшил радиус */
-    font-size: 15px;
+.btn { /* Общие стили для кнопок */
+    /* width: 100%; */ /* Убрал, чтобы ширина определялась контентом и padding */
+    /* height: 100%; */ /* Убрал, чтобы высота определялась контентом и padding */
+    padding-left: 35px;
+    padding-right: 35px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    border-radius: 10px;
+    font-size: 16px; /* Из Figma */
     font-family: 'Unbounded', sans-serif;
-    font-weight: 400;
-    line-height: 1.2;
+    font-weight: 400; /* Из Figma */
+    line-height: 16px; /* Из Figma */
+    word-wrap: break-word; /* Из Figma */
     cursor: pointer;
     transition: background-color 0.2s ease, box-shadow 0.2s ease, outline 0.2s ease;
     border: none;
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.15);
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25); /* Из Figma */
+    display: inline-flex; /* Из Figma */
+    justify-content: center; /* Из Figma */
+    align-items: center; /* Из Figma */
+    gap: 8px; /* Из Figma (для .btn-approve, для .btn-reject 9px, но для единообразия можно 8px) */
+    overflow: hidden; /* Из Figma */
 }
 
 .btn-approve {
-    background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
-    color: black;
+    background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%); /* Из Figma */
+    color: black; /* Из Figma */
+    /* outline: none; */ /* Убедимся, что нет outline от других стилей */
 }
 .btn-approve:hover {
-    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.25);
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.35); /* Немного усилил тень при ховере */
+    background: linear-gradient(180deg, #fde800 0%, #f7f5c0 100%); /* Чуть темнее градиент при ховере */
 }
 
 .btn-reject {
-    background: white;
-    color: black;
-    outline: 1px solid #ccc; /* Сделал контур светлее */
+    background: transparent; /* Прозрачный фон */
+    color: black; /* Из Figma */
+    outline: 1px solid black; /* Рамка из Figma */
+    outline-offset: -1px; /* Из Figma */
+    /* gap: 9px; /* Из Figma (если нужно строго следовать) */
 }
 .btn-reject:hover {
-    background: #f5f5f5;
-    outline-color: #bbb;
+    background: rgba(0, 0, 0, 0.05); /* Легкий фон при наведении для обратной связи */
+    outline-color: #333; /* Слегка темнее рамка при наведении */
 }
 
 .messages-container {
