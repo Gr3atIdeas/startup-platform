@@ -68,16 +68,25 @@
                                 <div class="detail-group">
                                     <span class="detail-label">Автор</span>
                                     <div class="author-info">
-                                        {% if startup.owner and startup.owner.profile.avatar %}
-                                            <img src="{{ startup.owner.profile.avatar.url }}" alt="{{ startup.owner.username|default:'Автор' }}" class="author-avatar">
+                                        {% if startup.owner %}
+                                            {% if startup.owner.profile.avatar %}
+                                                <img src="{{ startup.owner.profile.avatar.url }}" alt="{{ startup.owner.get_full_name|default:startup.owner.email|default:'Автор' }}" class="author-avatar">
+                                            {% elif startup.owner.profile_picture_url %}
+                                                <img src="{{ startup.owner.profile_picture_url }}" alt="{{ startup.owner.get_full_name|default:startup.owner.email|default:'Автор' }}" class="author-avatar">
+                                            {% else %}
+                                                 <div class="author-avatar-placeholder"></div> {# Placeholder for avatar #}
+                                            {% endif %}
+                                            <div class="author-text-details">
+                                                <span class="author-name">{{ startup.owner.get_full_name|default:startup.owner.email|default:"Не указан" }}</span>
+                                                <span class="author-rating">Рейтинг 4,2/5</span> {# Placeholder #}
+                                                <a href="#" class="author-reviews-link">Отзывы</a> {# Placeholder #}
+                                            </div>
                                         {% else %}
-                                             <div class="author-avatar-placeholder"></div> {# Placeholder for avatar #}
+                                            <div class="author-avatar-placeholder"></div>
+                                            <div class="author-text-details">
+                                                <span class="author-name">Автор не указан</span>
+                                            </div>
                                         {% endif %}
-                                        <div class="author-text-details">
-                                            <span class="author-name">{{ startup.owner.get_full_name|default:startup.owner.username|default:"Не указан" }}</span>
-                                            <span class="author-rating">Рейтинг 4,2/5</span> {# Placeholder #}
-                                            <a href="#" class="author-reviews-link">Отзывы</a> {# Placeholder #}
-                                        </div>
                                     </div>
                                 </div>
 
