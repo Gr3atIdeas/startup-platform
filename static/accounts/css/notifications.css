@@ -193,13 +193,13 @@ body {
 }
 
 .notification-item-meta { /* Блок с датой и временем */
-    width: 56px; /* Фиксированная ширина из Figma */
+    width: 56px;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start; /* Элементы сверху */
-    align-items: flex-end; /* Текст справа */
-    gap: 10px; /* Отступ между датой и временем из Figma */
-    flex-shrink: 0; /* Чтобы блок не сжимался */
+    justify-content: flex-start; 
+    align-items: flex-end; 
+    gap: 10px; 
+    flex-shrink: 0; 
 }
 
 .notification-date,
@@ -208,16 +208,16 @@ body {
     font-size: 8px;
     font-family: 'Unbounded', sans-serif;
     font-weight: 300;
-    line-height: 18px; /* Из Figma, но может быть велико для 8px, можно уменьшить до 1.2-1.5 */
+    line-height: 1.2; /* Скорректировано для 8px */
     word-wrap: break-word;
-    text-align: right; /* Явно указываем выравнивание */
+    text-align: right; 
 }
 
 .notification-item-bubble { /* "Бабл" с текстом уведомления */
     flex-grow: 1; /* Занимает оставшееся пространство */
     height: auto; /* Автоматическая высота по контенту, в Figma 40px, но может быть динамической */
     padding: 8px 24px; /* Внутренние отступы из Figma */
-    background: rgba(255, 255, 255, 0.16); /* Фон из Figma */
+    background: rgba(255, 255, 255, 0.16); /* ИСПРАВЛЕННЫЙ ЦВЕТ ФОНА */
     border-radius: 99px; /* Овальная форма из Figma */
     display: flex; /* Для центрирования текста, если нужно */
     justify-content: flex-start; /* Текст слева */
@@ -231,27 +231,8 @@ body {
     font-weight: 300;
     line-height: 18px; /* Из Figma */
     word-wrap: break-word;
-}
-
-.notifications-scrollbar-track { /* Кастомный трек скроллбара */
-    width: 10px;
-    background: rgba(0, 0, 0, 0.20); /* Цвет из Figma (var --Color1) */
-    border-radius: 6px; /* Скругление из Figma */
-    height: 346px; /* Фиксированная высота из Figma, но лучше делать height: 100%; */
-    /* height: 100%; */ /* Предпочтительнее для адаптивности */
-    position: relative; 
-    /* display: none; */ /* Показываем, если используем кастомный скролл */
-}
-.notifications-scrollbar-thumb { /* Кастомный бегунок скроллбара */
-    width: 100%;
-    height: 50px; /* Примерная высота, будет меняться JS или CSS calc() */
-    background: rgba(255,255,255,0.4); /* Сделаем его светлее для видимости на темном треке */
-    border-radius: 6px;
-    position: absolute;
-    top: 0;
     cursor: grab;
 }
-
 
 .notifications-section-title {
     align-self: flex-start; /* Заголовок слева */

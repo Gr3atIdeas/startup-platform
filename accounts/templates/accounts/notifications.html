@@ -31,7 +31,7 @@
         <div class="notifications-list-section">
             <div class="notifications-list-items">
                 {% for i in "x"|ljust:6 %} {# Создаем 6 элементов для примера #}
-                <div class="notification-item">
+                <div class="notification-item" data-notification-id="{{ i }}">
                     <div class="notification-item-meta">
                         <span class="notification-date">25/03/2025</span>
                         <span class="notification-time">12:30</span>
@@ -41,9 +41,6 @@
                     </div>
                 </div>
                 {% endfor %}
-            </div>
-            <div class="notifications-scrollbar-track">
-                 <div class="notifications-scrollbar-thumb"></div>
             </div>
         </div>
     </div>
@@ -67,4 +64,46 @@
         {# <div class="related-startup-badge-empty-spacer"></div> Удаляем, т.к. бейдж теперь внутри карточки #}
     </div>
 </div>
+
+<!-- Модальное окно для уведомлений -->
+<div id="notification-modal-overlay" class="modal-overlay">
+    <div id="notification-modal-popup" class="modal-popup">
+        <button id="notification-modal-close" class="modal-close-button">
+            <img src="{% static 'accounts/images/icons/Close_yellow.svg' %}" alt="Закрыть">
+        </button>
+        <div class="modal-content-wrapper">
+            <div class="modal-promo-card">
+                <div class="modal-promo-bg-elements">
+                    <div class="modal-promo-blur-1"></div>
+                    <div class="modal-promo-blur-2"></div>
+                </div>
+                <div class="modal-promo-text">
+                    <div class="modal-promo-subtitle">Стартап</div>
+                    <div class="modal-promo-title">Ромашка</div> {# Динамически будет меняться #}
+                </div>
+                <img class="modal-promo-main-img" src="https://placehold.co/286x261" alt="Изображение стартапа" />
+                <div class="modal-promo-gradient"></div>
+                <a href="#" class="btn modal-promo-action">Перейти</a> {# URL будет меняться #}
+            </div>
+            <div class="modal-notification-details">
+                <div class="modal-notification-list">
+                    <!-- Сюда будут копироваться уведомления или отображаться детали одного -->
+                    <div class="notification-item"> {# Пример структуры, будет заполняться JS #}
+                        <div class="notification-item-meta">
+                            <span class="notification-date">25/03/2025</span>
+                            <span class="notification-time">12:30</span>
+                        </div>
+                        <div class="notification-item-bubble">
+                            <p>User 67346 инвестировал 7 899 ₽</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-notification-scrollbar-track">
+                    <div class="modal-notification-scrollbar-thumb"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock %}
