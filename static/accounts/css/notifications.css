@@ -412,41 +412,47 @@ body {
 
 /* Удаляем .modal-content-wrapper, так как .modal-popup теперь flex-контейнер для двух блоков */
 
-.modal-promo-card { /* Левый блок */
+.modal-promo-card { /* Левый блок - теперь просто плейсхолдер с фоновой картинкой */
     width: 540px;
     height: 521px;
     min-width: 540px; /* Фиксированная ширина */
-    background-color: #0E163D; /* Непрозрачный фон для левого блока, как на первом скриншоте */
+    background-color: #0E163D; /* Фоновый цвет на случай, если картинка не загрузится */
+    background-image: url("{% static 'accounts/images/placeholders/modal_placeholder_bg.jpg' %}"); /* Плейсхолдер */
+    background-size: cover; /* Масштабировать изображение, чтобы покрыть блок */
+    background-position: center; /* Центрировать изображение */
     position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: center; /* Выравнивание по центру */
-    align-items: center;
-    padding: 30px; /* Внутренние отступы */
+    /* display: flex; /* Больше не нужен flex, так как дочерних элементов для выравнивания нет */
+    /* flex-direction: column; */
+    /* justify-content: center; */ 
+    /* align-items: center; */
+    /* padding: 30px;  Убираем внутренние отступы, если это просто фон */
     box-sizing: border-box;
     overflow: hidden;
-    text-align: center;
+    /* text-align: center; */
     border-radius: 20px; /* Скругление углов */
     flex-shrink: 0;
 }
 
+/* Элементы блюра можно оставить, если они создают желаемый эффект поверх фоновой картинки */
 .modal-promo-bg-elements {
-    position: absolute; width: 100%; height: 100%; top: 0; left: 0; overflow: hidden; z-index: 0;
+    position: absolute; width: 100%; height: 100%; top: 0; left: 0; overflow: hidden; z-index: 0; /* z-index: 0 чтобы быть под контентом, если он есть, но над основным фоном */
 }
-.modal-promo-blur-1 { /* Адаптируем блюр элементы, если они нужны для левого блока */
+.modal-promo-blur-1 { 
     width: 400px; height: 400px; left: -150px; top: -100px; position: absolute;
-    background: #004E9F; box-shadow: 0 0 150px 150px #004E9F; border-radius: 50%; opacity: 0.7;
+    background: #004E9F; box-shadow: 0 0 150px 150px #004E9F; border-radius: 50%; opacity: 0.5; /* Уменьшил непрозрачность */
 }
 .modal-promo-blur-2 {
     width: 350px; height: 350px; right: -120px; bottom: -80px; position: absolute;
-    background: rgba(97, 165, 255, 0.35); box-shadow: 0 0 120px 120px rgba(97, 165, 255, 0.35); border-radius: 50%; opacity: 0.7;
+    background: rgba(97, 165, 255, 0.35); box-shadow: 0 0 120px 120px rgba(97, 165, 255, 0.25); border-radius: 50%; opacity: 0.5; /* Уменьшил непрозрачность */
 }
 
+/* Удаляем или комментируем стили для .modal-promo-text, .modal-promo-main-img, .modal-promo-action, так как их нет в HTML */
+/*
 .modal-promo-text {
     position: relative; z-index: 2; margin-bottom: 20px;
 }
 .modal-promo-subtitle { 
-    font-size: 20px; /* Крупнее */
+    font-size: 20px; 
     color: #FFFFFF; 
     margin-bottom: 8px; 
     font-weight: 300;
@@ -454,39 +460,40 @@ body {
     letter-spacing: 1px;
 }
 .modal-promo-title {
-    font-size: 60px; /* Значительно крупнее */
-    font-family: 'Blippo-Black CY', sans-serif; /* Предполагаемый шрифт с картинки */
-    color: #FFEF2B; /* Желтый */
+    font-size: 60px; 
+    font-family: 'Blippo-Black CY', sans-serif; 
+    color: #FFEF2B; 
     line-height: 1.1;
-    margin-bottom: 30px; /* Больше отступ */
+    margin-bottom: 30px; 
 }
 .modal-promo-main-img {
     position: relative; z-index: 1;
     width: 100%;
-    max-width: 280px; /* Размер планеты с первого скриншота */
+    max-width: 280px; 
     height: auto;
     margin-top: 20px;
-    margin-bottom: 40px; /* Больше отступ до кнопки */
+    margin-bottom: 40px; 
 }
 
 .modal-promo-action.btn {
     position: relative; z-index: 4;
-    padding: 15px 50px; /* Кнопка крупнее */
+    padding: 15px 50px; 
     background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
     box-shadow: 0px 4px 10px rgba(0,0,0,0.3);
     border-radius: 12px;
     color: black;
-    font-size: 18px; /* Текст на кнопке крупнее */
+    font-size: 18px; 
     font-weight: 500;
     text-decoration: none;
     transition: all 0.2s ease;
-    margin-top: auto; /* Прижимаем кнопку к низу, если flex-direction: column */
+    margin-top: auto; 
 }
 .modal-promo-action.btn:hover {
     background: linear-gradient(180deg, #f2e00a 0%, #e9e7c3 100%);
     box-shadow: 0px 6px 15px rgba(0,0,0,0.4);
     transform: translateY(-2px);
 }
+*/
 
 .modal-notification-details { /* Правый блок */
     flex-grow: 1;

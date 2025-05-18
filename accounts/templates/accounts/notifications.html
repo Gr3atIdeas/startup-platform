@@ -72,18 +72,13 @@
             <img src="{% static 'accounts/images/icons/Close_yellow.svg' %}" alt="Закрыть">
         </button>
         
-        {# Левая часть - статичный плейсхолдер #}
+        {# Левая часть - теперь только плейсхолдер с фоновой картинкой, заданной в CSS #}
         <div class="modal-promo-card">
-            <div class="modal-promo-bg-elements">
+            <div class="modal-promo-bg-elements"> {# Оставляем для блюр-эффектов поверх фона #}
                 <div class="modal-promo-blur-1"></div>
                 <div class="modal-promo-blur-2"></div>
             </div>
-            <div class="modal-promo-text">
-                <div class="modal-promo-subtitle">Стартап</div>
-                <div class="modal-promo-title">Ромашка</div>
-            </div>
-            <img class="modal-promo-main-img" src="{% static 'accounts/images/planets/planet_placeholder_modal.png' %}" alt="Изображение стартапа Ромашка" /> {# Замените на реальный путь к картинке планеты #}
-            <a href="#" class="btn modal-promo-action">Перейти</a>
+            {# Все текстовые элементы, изображение и кнопка отсюда удалены #}
         </div>
 
         {# Правая часть - детали уведомления (динамическая) #}
