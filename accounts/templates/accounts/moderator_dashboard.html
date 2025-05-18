@@ -147,7 +147,7 @@
                         <div class="funding-details-row">
                             <div class="funding-goal-block">
                                 <span class="funding-goal-label">Цель финансирования</span>
-                                <span class="funding-goal-amount">{{ startup.funding_goal|default:"0"|intcomma }} &#8381;</span>
+                                <span class="funding-goal-amount">{{ startup.funding_goal|default:"0"|floatformat:"0"|intcomma }} &#8381;</span>
                             </div>
                             <div class="action-buttons-group">
                                  <form method="post" action="{% url 'approve_startup' startup.startup_id %}" class="inline-form">
