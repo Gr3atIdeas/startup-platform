@@ -29,7 +29,7 @@ body {
 
 .notifications-promo-card {
     width: 540px;
-    height: 521px;
+    height: 521px; /* Высота как у промо-карты, и теперь как у списка уведомлений */
     position: relative;
     background-color: black; /* Фоновый цвет, если изображение не загрузится */
     background-image: url('https://placehold.co/540x521'); /* Замените на реальный фон позже */
@@ -157,7 +157,7 @@ body {
     display: flex; /* Для расположения списка уведомлений и кастомного скроллбара рядом */
     gap: 10px; /* Отступ между списком и скроллбаром, если он есть. В Figma gap:91px, но это до скроллбара, сам список и скроллбар могут быть ближе */
     box-sizing: border-box;
-    height: 630px; /* Новая фиксированная высота, или можно использовать min-height/max-height по необходимости */
+    height: 521px; /* Новая высота, как у промо-карты */
     flex-shrink: 0; 
     overflow: hidden; /* Чтобы внутренний скролл работал */
 }
