@@ -112,7 +112,8 @@
 {% block script_extra %}
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    const notificationItems = document.querySelectorAll('.notifications-list-section .notification-item'); // Уточнил селектор
+    // Изменяем селектор, чтобы выбирать именно "пузыри" уведомлений
+    const notificationBubbles = document.querySelectorAll('.notifications-list-section .notification-item-bubble');
     const modalOverlay = document.getElementById('notification-modal-overlay');
     const modalCloseButton = document.getElementById('notification-modal-close');
     const modalPopup = document.getElementById('notification-modal-popup');
@@ -123,7 +124,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const modalPromoSubtitle = modalPopup.querySelector('.modal-promo-subtitle');
     const modalPromoMainImg = modalPopup.querySelector('.modal-promo-main-img');
 
-    // Заголовок для списка уведомлений в модалке (если его нет, создадим)
     let modalNotificationListTitle = modalPopup.querySelector('.modal-notification-list-title');
     if (!modalNotificationListTitle && modalNotificationList) {
         modalNotificationListTitle = document.createElement('div');
@@ -136,53 +136,59 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
     }
 
-    notificationItems.forEach(item => {
-        item.addEventListener('click', function () {
-            const notificationId = this.dataset.notificationId || 'N/A'; // Получаем ID, если есть
-            const date = item.querySelector('.notification-date')?.textContent || 'Дата не указана';
-            const time = item.querySelector('.notification-time')?.textContent || 'Время не указано';
-            const message = item.querySelector('.notification-item-bubble p')?.textContent || 'Детали уведомления отсутствуют.';
+    notificationBubbles.forEach(bubble => {
+        bubble.addEventListener('click', function () {
+            // 'this' теперь ссылается на .notification-item-bubble
+            // Нам нужно найти родительский .notification-item для получения некоторых данных
+            const parentItem = this.closest('.notification-item');
+            if (!parentItem) {
+                console.error('Не удалось найти родительский .notification-item для пузыря:', this);
+                return;
+            }
+
+            const notificationId = parentItem.dataset.notificationId || 'N/A';
+            const date = parentItem.querySelector('.notification-date')?.textContent || 'Дата не указана';
+            const time = parentItem.querySelector('.notification-time')?.textContent || 'Время не указано';
+            // Текст сообщения берем непосредственно из пузыря
+            const message = this.querySelector('p')?.textContent || 'Детали уведомления отсутствуют.';
 
             // --- Логика определения данных стартапа (пример) ---
-            let startupName = "Детализация"; // По умолчанию
-            let startupImage = "https://placehold.co/286x261/000000/FFFFFF?text=Startup"; // Default image
+            let startupName = "Детализация";
+            let startupImage = "https://placehold.co/286x261/000000/FFFFFF?text=Startup";
             let startupUrl = "#";
 
-            // Пытаемся извлечь имя стартапа из текста уведомления или ID
-            // Это очень упрощенный пример, в реальном приложении данные должны приходить с бэкенда или быть в data-атрибутах
             if (message.toLowerCase().includes('стартап')) {
-                // Пробуем найти что-то похожее на имя после слова "стартап"
-                const match = message.match(/стартап\s*"?([^"\s,.]+)"?/i);
-                if (match && match[1]) {
-                    startupName = match[1];
+                const match = message.match(/стартап\s*"?(С\S+)/i); // Исправлено регулярное выражение для лучшего захвата
+                 if (match && match[1]) {
+                    startupName = match[1].replace(/[",.]/g, ''); // Убираем кавычки и точки из имени
                 }
-            } else if (message.includes("Ромашка")) { // Пример для "Ромашка"
+            } else if (message.includes("Ромашка")) {
                 startupName = "Ромашка";
-                startupImage = "https://placehold.co/286x261/E6E6FA/000000?text=Ромашка"; // Пример картинки для Ромашки
-                startupUrl = "/startup/romashka/"; // Пример URL
+                startupImage = "https://placehold.co/286x261/E6E6FA/000000?text=Ромашка";
+                startupUrl = "/startup/romashka/";
             }
-            // Можно добавить больше логики для других стартапов или использовать data-атрибуты на .notification-item
-            // Например: data-startup-name="Ромашка" data-startup-image="url" data-startup-url="url"
-            const linkedStartupName = item.dataset.startupName;
+            
+            // Пример получения данных стартапа из data-атрибутов родительского элемента
+            const linkedStartupName = parentItem.dataset.startupName;
             if (linkedStartupName) startupName = linkedStartupName;
-            const linkedStartupImage = item.dataset.startupImage;
+            const linkedStartupImage = parentItem.dataset.startupImage;
             if (linkedStartupImage) startupImage = linkedStartupImage;
-            const linkedStartupUrl = item.dataset.startupUrl;
+            const linkedStartupUrl = parentItem.dataset.startupUrl;
             if (linkedStartupUrl) startupUrl = linkedStartupUrl;
             
-            // Обновляем промо-карточку в модальном окне
             modalPromoSubtitle.textContent = "Уведомление от стартапа";
             modalPromoTitle.textContent = startupName;
             modalPromoMainImg.src = startupImage;
             modalPromoMainImg.alt = `Логотип стартапа ${startupName}`;
             modalPromoAction.href = startupUrl;
 
-            // Обновляем заголовок списка уведомлений
             if(modalNotificationListTitle) modalNotificationListTitle.textContent = `Информация по уведомлению`;
 
-            // Клонируем и добавляем нажатое уведомление в модальное окно
-            modalNotificationList.innerHTML = ''; // Очищаем предыдущие
-            const clickedItemClone = item.cloneNode(true);
+            modalNotificationList.innerHTML = ''; 
+            // Клонируем весь родительский .notification-item, чтобы сохранить структуру
+            const clickedItemClone = parentItem.cloneNode(true);
+            // Можно удалить обработчики событий с клона, если они не нужны в модалке
+            // clickedItemClone.querySelectorAll('*').forEach(el => el.onclick = null); 
             modalNotificationList.appendChild(clickedItemClone);
             
             modalOverlay.style.display = 'flex';
@@ -199,7 +205,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Закрытие модального окна по клавише Escape
     document.addEventListener('keydown', function (event) {
         if (event.key === 'Escape' && modalOverlay.style.display === 'flex') {
             modalOverlay.style.display = 'none';
