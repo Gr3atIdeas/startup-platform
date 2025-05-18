@@ -37,5 +37,6 @@ urlpatterns = [
     # URL для подгрузки похожих стартапов - ИСПРАВЛЯЕМ ТИП ID НА INT
     path('load_similar_startups/<int:startup_id>/', views.load_similar_startups, name='load_similar_startups'),
     path('deals/', views.deals_view, name='deals_page'), # Новый маршрут для страницы Сделки
+    path('notifications/', views.notifications_view, name='notifications_page'), # Новый маршрут для страницы Уведомления
     path('favicon.ico', RedirectView.as_view(url='/static/images/favicon.png', permanent=True)),
 ]

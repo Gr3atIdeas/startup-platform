@@ -1,0 +1,326 @@
+/* static/accounts/css/notifications.css */
+body {
+    background: linear-gradient(153deg, black 0%, #00346B 25%, #004E9F 48%, #01366D 64%, #020202 100%);
+    background-attachment: fixed; /* Чтобы градиент не скроллился */
+}
+
+.notifications-page-wrapper {
+    padding-top: 20px; /* Отступ сверху от хедера */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px; /* Расстояние между блоками */
+    padding-bottom: 50px; /* Отступ снизу до футера */
+    color: white;
+    font-family: 'Unbounded', sans-serif;
+    overflow-x: hidden; /* Предотвратить горизонтальный скролл из-за больших заголовков */
+}
+
+.notifications-content-container {
+    display: flex;
+    justify-content: center; /* Выравниваем по центру */
+    align-items: flex-start; /* Карточка и список уведомлений сверху */
+    gap: 30px; /* Расстояние между карточкой и списком */
+    width: 100%;
+    max-width: 1280px; /* Ограничиваем ширину */
+    padding: 0 20px; /* Боковые отступы для контейнера */
+    box-sizing: border-box;
+}
+
+.notifications-promo-card {
+    width: 540px;
+    height: 521px;
+    position: relative;
+    background-color: black; /* Фоновый цвет, если изображение не загрузится */
+    background-image: url('https://placehold.co/540x521'); /* Замените на реальный фон позже */
+    background-size: cover;
+    background-position: center;
+    box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+    border-radius: 20px;
+    display: flex; /* Для позиционирования кнопки */
+    flex-direction: column;
+    justify-content: center; /* Центрирование текстового контента */
+    align-items: center;
+    flex-shrink: 0; /* Чтобы карточка не сжималась */
+}
+
+.promo-card-background-elements {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    overflow: hidden; /* Чтобы блюр-круги не выходили за пределы */
+}
+
+.promo-bg-blur-circle-1 {
+    width: 453px;
+    height: 453px;
+    left: -126px;
+    top: -265px;
+    position: absolute;
+    background: #004E9F;
+    box-shadow: 0 0 250px 250px #004E9F; /* Примерный эффект блюра через box-shadow */
+    border-radius: 9999px;
+    /* filter: blur(250px); /* filter: blur может быть затратным */
+}
+
+.promo-bg-blur-circle-2 {
+    width: 411px;
+    height: 411px;
+    left: 250px; /* Скорректировано для лучшего вида */
+    top: 134px;
+    position: absolute;
+    background: rgba(97, 165, 255, 0.45);
+    box-shadow: 0 0 250px 250px rgba(97, 165, 255, 0.45);
+    border-radius: 9999px;
+    /* filter: blur(250px); */
+}
+
+.promo-card-text-content {
+    position: relative; /* Чтобы текст был над блюром и картинками */
+    z-index: 2;
+    text-align: center;
+    margin-bottom: 150px; /* Отступ для кнопки и изображений */
+}
+
+.promo-title-main {
+    color: white;
+    font-size: 55px;
+    font-family: 'Blippo-Black CY', sans-serif; /* Укажите правильное имя шрифта, если оно другое */
+    font-weight: 400; /* В Figma указан Blippo-Black CY [Rus by me], что может быть кастомным именем */
+    line-height: 1.2; /* Скорректировано для читаемости */
+    word-wrap: break-word;
+}
+
+.promo-title-accent {
+    color: #FFEF2B;
+    font-size: 55px;
+    font-family: 'Blippo-Black CY', sans-serif;
+    font-weight: 400;
+    line-height: 1.2;
+    word-wrap: break-word;
+}
+
+/* Стили для декоративных изображений внутри промо-карточки */
+.promo-img-1, .promo-img-2, .promo-img-3, .promo-img-4, .promo-img-5 {
+    position: absolute;
+    z-index: 1; /* Под текстом, над блюром */
+}
+.promo-img-1 { width: 112px; height: 81px; left: 11px; top: 336px; }
+.promo-img-2 { width: 158.19px; height: 97.66px; left: 390px; top: 405.83px; transform: rotate(169deg); } /* Скорректировал left */
+.promo-img-3 { width: 108px; height: 105px; left: 349px; top: 283px; }
+.promo-img-4 { width: 125px; height: 125px; left: 88px; top: 283px; }
+.promo-img-5 { width: 261.11px; height: 238px; left: 139.45px; top: 197px; }
+
+
+.promo-card-gradient-overlay {
+    width: 100%; /* Ширина родителя */
+    height: 255px; /* Высота из Figma */
+    left: 0;  /* Позиционирование от левого края родителя */
+    top: 266px; /* Позиционирование от верхнего края родителя (521px - 255px) */
+    position: absolute;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, black 100%); /* Градиент изменен для плавности */
+    z-index: 3; /* Над изображениями, под кнопкой */
+    /* box-shadow: 0px 0px 55px 27.5px rgba(0,0,0,0.75); */ /* Упрощенный блюр через box-shadow, если filter: blur не используется */
+    /* filter: blur(27.50px); */ /* filter:blur может быть ресурсоемким */
+}
+
+.promo-action-button.btn { /* Используем .btn для общих стилей кнопки */
+    position: absolute;
+    bottom: 40px; /* Отступ снизу */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 4; /* Над градиентом */
+    padding: 12px 30px; /* Увеличил горизонтальный padding для вида */
+    background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    color: black;
+    font-size: 16px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
+    line-height: 16px;
+    text-decoration: none;
+}
+.promo-action-button.btn:hover {
+    background: linear-gradient(180deg, #f2e00a 0%, #e9e7c3 100%); /* Затемняем при наведении */
+}
+
+
+.notifications-list-section {
+    width: 724px;
+    padding: 30px 40px; /* Уменьшил padding, чтобы лучше соответствовать правому блоку из макета */
+    background: rgba(255, 255, 255, 0.10);
+    border-radius: 20px;
+    display: flex; /* Для позиционирования скроллбара */
+    gap: 15px; /* Пространство между списком и скроллбаром */
+    box-sizing: border-box;
+    max-height: 521px; /* Как у промо-карты */
+    flex-shrink: 0; /* Чтобы блок не сжимался */
+}
+
+.notifications-list-items {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 25px; /* Пространство между уведомлениями */
+    overflow-y: auto; /* Позволяет скроллить, если контента много */
+    padding-right: 15px; /* Отступ для собственного скроллбара */
+}
+/* Стилизация нативного скроллбара (опционально, если кастомный не используется) */
+.notifications-list-items::-webkit-scrollbar {
+  width: 0px; /* Скрываем стандартный скроллбар, если делаем кастомный */
+  background: transparent;
+}
+
+.notification-item {
+    display: flex;
+    align-items: flex-start; /* Выравнивание по верху меты и бабла */
+    gap: 15px;
+}
+
+.notification-item-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end; /* Дата и время справа */
+    gap: 3px;
+    font-size: 8px;
+    font-weight: 300;
+    line-height: 1.5; /* Для читаемости */
+    color: white;
+    width: 60px; /* Фиксированная ширина для выравнивания */
+    flex-shrink: 0;
+}
+
+.notification-item-bubble {
+    flex-grow: 1;
+    padding: 10px 18px; /* Уменьшил padding */
+    background: rgba(255, 255, 255, 0.16);
+    border-radius: 99px; /* Овальная форма */
+    color: white;
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 18px;
+}
+.notification-item-bubble p {
+    margin: 0;
+}
+
+.notifications-scrollbar-track {
+    width: 10px;
+    background: rgba(0, 0, 0, 0.20);
+    border-radius: 6px;
+    height: 100%; /* Занимает всю высоту родителя .notifications-list-section */
+    position: relative; /* Для позиционирования бегунка */
+    display: none; /* Пока скроем, если используется нативный */
+}
+.notifications-scrollbar-thumb {
+    width: 100%;
+    height: 50px; /* Примерная высота бегунка, будет меняться JS */
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 6px;
+    position: absolute;
+    top: 0;
+    cursor: grab;
+}
+
+
+.notifications-section-title {
+    align-self: flex-start; /* Заголовок слева */
+    padding-left: calc((100% - 1280px) / 2 + 20px); /* Динамический отступ для выравнивания с контентом */
+    color: #FFEF2B;
+    font-size: 50px; /* Уменьшил для лучшего вида */
+    font-family: 'Blippo-Black CY', sans-serif;
+    font-weight: 400;
+    line-height: 1.1; /* Уменьшил */
+    word-wrap: break-word;
+    margin-top: 20px; /* Добавил отступ сверху */
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 1280px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-right: 20px;
+}
+@media (max-width: 1320px) { /* Примерный breakpoint, когда 1280px + padding не влезает */
+    .notifications-section-title {
+        padding-left: 40px; /* Фиксированный отступ для меньших экранов */
+        padding-right: 40px;
+    }
+}
+
+
+.notifications-related-startups {
+    width: 100%;
+    max-width: 1280px; /* Ограничиваем ширину */
+    padding: 0 20px; /* Боковые отступы */
+    box-sizing: border-box;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start; /* Элементы начинаются слева */
+    align-items: center; /* Выравнивание по центру вертикально для элементов в ряду */
+    gap: 20px; /* Расстояние между карточками и бейджами */
+}
+
+.related-startup-card {
+    padding: 15px; /* Уменьшил padding */
+    background: white;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 8px; /* Уменьшил gap */
+    width: 155px; /* Примерная ширина, чтобы уместилось несколько в ряд */
+    box-sizing: border-box;
+}
+.related-startup-card img {
+    width: 100px; /* Уменьшил изображение */
+    height: 90px;
+    object-fit: cover;
+    border-radius: 5px; /* Небольшое скругление для картинки */
+}
+.related-startup-name {
+    align-self: stretch;
+    text-align: center;
+    color: black;
+    font-size: 14px; /* Уменьшил шрифт */
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
+    line-height: 1.3;
+    word-wrap: break-word;
+}
+
+.related-startup-badge {
+    width: 38px;
+    height: 38px;
+    background: #FF0000;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 16px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
+    line-height: 1; /* Для центрирования цифры */
+    flex-shrink: 0; /* Чтобы бейдж не сжимался */
+}
+.related-startup-badge span {
+    line-height: 1;
+}
+
+/* Пустышки для выравнивания, если последний ряд неполный */
+.related-startup-card-empty-spacer,
+.related-startup-badge-empty-spacer {
+    width: 155px; /* Такая же ширина как у карточки */
+    height: 0; /* Не занимает высоту */
+    padding: 0;
+    margin: 0;
+    visibility: hidden; /* Скрыто, но занимает место */
+}
+.related-startup-badge-empty-spacer {
+    width: 38px; /* Такая же ширина как у бейджа */
+}

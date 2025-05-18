@@ -1946,3 +1946,11 @@ def deals_view(request):
         messages.error(request, 'Доступ к этой странице разрешен только модераторам.')
         return redirect('home') # Или на другую страницу, например, профиль
     return render(request, 'accounts/deals.html')
+
+@login_required
+def notifications_view(request):
+    # В будущем здесь будет логика получения уведомлений для пользователя
+    context = {
+        'notifications': [] # Пока пустой список для примера
+    }
+    return render(request, 'accounts/notifications.html', context)

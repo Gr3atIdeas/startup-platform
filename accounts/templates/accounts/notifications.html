@@ -1,0 +1,70 @@
+{% extends 'accounts/base.html' %}
+{% load static %}
+
+{% block title %}Уведомления{% endblock %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="{% static 'accounts/css/notifications.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="notifications-page-wrapper">
+    <div class="notifications-content-container">
+        <div class="notifications-promo-card">
+            <div class="promo-card-background-elements">
+                <div class="promo-bg-blur-circle-1"></div>
+                <div class="promo-bg-blur-circle-2"></div>
+            </div>
+            <div class="promo-card-text-content">
+                <div class="promo-title-main">Мои</div>
+                <div class="promo-title-accent">СТАРТАПЫ</div>
+            </div>
+            <img class="promo-img-1" src="https://placehold.co/112x81" alt="Promo image" />
+            <img class="promo-img-2" src="https://placehold.co/158x98" alt="Promo image" />
+            <img class="promo-img-3" src="https://placehold.co/108x105" alt="Promo image" />
+            <img class="promo-img-4" src="https://placehold.co/125x125" alt="Promo image" />
+            <img class="promo-img-5" src="https://placehold.co/261x238" alt="Promo image" />
+            <div class="promo-card-gradient-overlay"></div>
+            <a href="{% url 'my_startups' %}" class="btn promo-action-button">Перейти</a>
+        </div>
+
+        <div class="notifications-list-section">
+            <div class="notifications-list-items">
+                {% for i in "x"|ljust:6 %} {# Создаем 6 элементов для примера #}
+                <div class="notification-item">
+                    <div class="notification-item-meta">
+                        <span class="notification-date">25/03/2025</span>
+                        <span class="notification-time">12:30</span>
+                    </div>
+                    <div class="notification-item-bubble">
+                        <p>User 67346 инвестировал 7 899 ₽</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="notifications-scrollbar-track">
+                 <div class="notifications-scrollbar-thumb"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="notifications-section-title">
+        ВАШИ СТАРТАПЫ
+    </div>
+
+    <div class="notifications-related-startups">
+        {% for i in "x"|ljust:7 %} {# Создаем 7 элементов для примера #}
+        <div class="related-startup-card">
+            <img src="https://placehold.co/123x111" alt="Лого стартапа">
+            <span class="related-startup-name">Ромашка {{forloop.counter}}</span>
+        </div>
+        <div class="related-startup-badge">
+            <span>{{ forloop.counter|add:2 }}</span>
+        </div>
+        {% endfor %}
+         <!-- Пустышка для выравнивания последнего ряда, если нужно -->
+        <div class="related-startup-card-empty-spacer"></div>
+        <div class="related-startup-badge-empty-spacer"></div>
+    </div>
+</div>
+{% endblock %}
