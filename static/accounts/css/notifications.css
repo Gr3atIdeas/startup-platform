@@ -365,27 +365,25 @@ body {
 }
 
 .modal-popup {
-    /* background-color: #020928; Убираем фон, так как основной фон будет от оверлея или дочерних элементов */
     color: white;
-    border-radius: 20px; /* Скругление как у внутреннего левого блока */
+    border-radius: 20px; 
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
-    width: auto; /* Ширина будет определяться содержимым */
-    max-width: calc(540px + 724px + 39px + 110px); /* Левый + Правый + gap + паддинги контейнера модалки */
+    width: auto; 
     height: auto; 
-    /* max-height: calc(100vh - 40px); /* Чтобы не выходило за экран */ /* Убрал, чтобы высота определялась контентом или фиксированной высотой блоков */
     position: relative;
-    overflow: visible; /* Меняем на visible, чтобы кнопка закрытия не обрезалась, если выходит за пределы padding */
+    overflow: visible; 
     display: flex; 
-    flex-direction: row; /* Два блока рядом */
-    padding: 55px; /* Та самая "рамка" в 55px */
-    background: transparent; /* Сам попап прозрачный, фон дают внутренние блоки или оверлей */
-    gap: 39px; /* Отступ между левым и правым блоком */
+    flex-direction: row; 
+    padding: 55px; 
+    background: transparent; 
+    gap: 39px; 
 }
 
-.modal-close-button {
-    position: absolute;
-    top: 15px; /* Отступ от ВЕРХНЕГО края .modal-popup (снаружи padding) */
-    right: 15px; /* Отступ от ПРАВОГО края .modal-popup (снаружи padding) */
+/* Увеличиваем специфичность и добавляем !important для теста */
+#notification-modal-popup > #notification-modal-close.modal-close-button {
+    position: absolute !important;
+    top: 15px !important; 
+    right: 15px !important; 
     background: rgba(255, 255, 255, 0.1);
     border: none;
     cursor: pointer;
@@ -497,28 +495,21 @@ body {
 
 .modal-notification-details { /* Правый блок */
     flex-grow: 1;
-    min-width: 400px; /* Чтобы не сжимался слишком сильно */
-    max-width: 700px; /* Ограничение ширины */
+    min-width: 400px; 
+    max-width: 700px; 
     padding: 30px;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
     overflow: hidden; 
-    background-color: rgba(34, 34, 34, 0.85); /* Темно-серый (например, #222222) с полупрозрачностью 85% */
-    border-radius: 12px; /* Небольшое скругление для этого блока */
-    backdrop-filter: blur(10px); /* Блюр для этого блока */
-    -webkit-backdrop-filter: blur(10px);
-    height: 521px; /* Как левый блок */
+    background-color: rgba(50, 50, 50, 0.75); /* Сделал еще более прозрачным и чуть светлее (было 34,34,34,0.85) для теста */
+    border-radius: 12px; 
+    backdrop-filter: blur(12px); /* Немного увеличил блюр */
+    -webkit-backdrop-filter: blur(12px);
+    height: 521px; 
 }
 
-.modal-notification-list-title { /* Заголовок над списком уведомлений в модальном окне */
-    /* color: #FFEF2B; */
-    /* font-size: 18px; */
-    /* font-weight: 500; */
-    /* margin-bottom: 20px; */
-    /* padding-bottom: 15px; */
-    /* border-bottom: 1px solid rgba(255,255,255,0.15); */
-    /* text-align: center; */
+.modal-notification-list-title { 
     display: none; /* Скрываем заголовок, так как нужен полный дубль списка */
 }
 
