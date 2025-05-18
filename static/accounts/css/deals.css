@@ -149,50 +149,53 @@ body {
     /* z-index: 10; */
 }
 
-.btn { /* Общие стили для кнопок */
-    /* width: 100%; */ /* Убрал, чтобы ширина определялась контентом и padding */
-    /* height: 100%; */ /* Убрал, чтобы высота определялась контентом и padding */
+.chat-actions-top .btn { /* Увеличиваем специфичность для кнопок в chat-actions-top */
+    /* width: 100%; */
+    /* height: 100%; */
     padding-left: 35px;
     padding-right: 35px;
     padding-top: 12px;
     padding-bottom: 12px;
     border-radius: 10px;
-    font-size: 16px; /* Из Figma */
+    font-size: 16px; 
     font-family: 'Unbounded', sans-serif;
-    font-weight: 400; /* Из Figma */
-    line-height: 16px; /* Из Figma */
-    word-wrap: break-word; /* Из Figma */
+    font-weight: 400 !important; /* Явно указываем и повышаем приоритет */
+    line-height: 16px; 
+    word-wrap: break-word; 
     cursor: pointer;
     transition: background-color 0.2s ease, box-shadow 0.2s ease, outline 0.2s ease;
-    border: none;
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25); /* Из Figma */
-    display: inline-flex; /* Из Figma */
-    justify-content: center; /* Из Figma */
-    align-items: center; /* Из Figma */
-    gap: 8px; /* Из Figma (для .btn-approve, для .btn-reject 9px, но для единообразия можно 8px) */
-    overflow: hidden; /* Из Figma */
+    border: none; /* Убеждаемся, что нет border от других стилей */
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25); 
+    display: inline-flex; 
+    justify-content: center; 
+    align-items: center; 
+    gap: 8px; 
+    overflow: hidden; 
+    color: black !important; /* Явно устанавливаем цвет текста и повышаем приоритет */
+    background: none; /* Сбрасываем background от общего .btn, если он там есть */
 }
 
-.btn-approve {
-    background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%); /* Из Figma */
-    color: black; /* Из Figma */
-    /* outline: none; */ /* Убедимся, что нет outline от других стилей */
+.chat-actions-top .btn-approve {
+    background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%) !important; /* Повышаем приоритет */
+    color: black !important; /* Явно устанавливаем цвет текста и повышаем приоритет */
+    outline: none !important; /* Убедимся, что нет outline от других стилей */
+    border: none !important; /* Убедимся, что нет border */
 }
-.btn-approve:hover {
-    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.35); /* Немного усилил тень при ховере */
-    background: linear-gradient(180deg, #fde800 0%, #f7f5c0 100%); /* Чуть темнее градиент при ховере */
+.chat-actions-top .btn-approve:hover {
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.35); 
+    background: linear-gradient(180deg, #fde800 0%, #f7f5c0 100%) !important; /* Повышаем приоритет */
 }
 
-.btn-reject {
-    background: transparent; /* Прозрачный фон */
-    color: black; /* Из Figma */
-    outline: 1px solid black; /* Рамка из Figma */
-    outline-offset: -1px; /* Из Figma */
-    /* gap: 9px; /* Из Figma (если нужно строго следовать) */
+.chat-actions-top .btn-reject {
+    background: transparent !important; /* Повышаем приоритет */
+    color: black !important; /* Явно устанавливаем цвет текста и повышаем приоритет */
+    outline: 1px solid black !important; /* Повышаем приоритет */
+    outline-offset: -1px; 
+    border: none !important; /* Убедимся, что нет border от других стилей, кроме outline */
 }
-.btn-reject:hover {
-    background: rgba(0, 0, 0, 0.05); /* Легкий фон при наведении для обратной связи */
-    outline-color: #333; /* Слегка темнее рамка при наведении */
+.chat-actions-top .btn-reject:hover {
+    background: rgba(0, 0, 0, 0.05) !important; /* Повышаем приоритет */
+    outline-color: #333 !important; /* Повышаем приоритет */
 }
 
 .messages-container {
