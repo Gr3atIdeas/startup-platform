@@ -38,7 +38,7 @@ body.moderator-dashboard-body {
     padding: 40px 20px; /* Added some padding */
     display: flex;
     flex-direction: column;
-    gap: 60px; /* Gap from main container in mockup */
+    gap: 30px; /* Adjusted main gap */
 }
 
 .page-header {
@@ -47,35 +47,38 @@ body.moderator-dashboard-body {
     align-items: center;
     /* gap: 677px; This gap seems too large and specific, adjust as needed or rely on flex behavior */
     display: flex; /* For potential future elements next to title block */
+    margin-bottom: 30px; /* Added margin like in mockup */
 }
 
 .header-title-block {
     flex-direction: column;
     justify-content: flex-start;
-    align-items: flex-start;
+    align-items: flex-start; /* Ensure left alignment */
     gap: 5px; /* Adjusted gap for title based on visual feedback */
     display: inline-flex;
 }
 
-/* Ensuring title styles are specific enough */
-.moderator-page-container .page-header .header-title-block .header-title-main {
-    align-self: stretch;
-    color: white;
-    font-size: 55px;
-    font-family: 'Blippo-Black CY [Rus by me]', sans-serif;
-    font-weight: 400;
-    line-height: 1.1; /* Kept for readability over 18px */
-    word-wrap: break-word;
+/* Ensuring title styles are very specific and match mockup */
+div.moderator-page-container > header.page-header > div.header-title-block > h1.header-title-main {
+    color: white !important; /* Force color */
+    font-family: 'Blippo-Black CY [Rus by me]', sans-serif !important; /* Force font */
+    font-size: 55px !important; /* Force font size */
+    font-weight: 400 !important; /* Force font weight */
+    line-height: 1.1 !important; /* Mockup 18px for 55px font is too small, using 1.1 for readability */
+    align-self: flex-start; /* Ensure it doesn't stretch if parent is wider */
+    margin: 0; /* Reset any default margins */
+    padding: 0; /* Reset any default padding */
 }
 
-.moderator-page-container .page-header .header-title-block .header-title-highlight {
-    align-self: stretch;
-    color: #FFEF2B;
-    font-size: 55px;
-    font-family: 'Blippo-Black CY [Rus by me]', sans-serif;
-    font-weight: 400;
-    line-height: 1.1; /* Kept for readability */
-    word-wrap: break-word;
+div.moderator-page-container > header.page-header > div.header-title-block > h2.header-title-highlight {
+    color: #FFEF2B !important; /* Force color */
+    font-family: 'Blippo-Black CY [Rus by me]', sans-serif !important; /* Force font */
+    font-size: 55px !important; /* Force font size */
+    font-weight: 400 !important; /* Force font weight */
+    line-height: 1.1 !important; /* Similar to above */
+    align-self: flex-start;
+    margin: 0;
+    padding: 0;
 }
 
 .filters-and-actions {
@@ -97,7 +100,7 @@ body.moderator-dashboard-body {
 
 .filter-search {
     width: 352px;
-    padding: 8px 30px;
+    padding: 8px 15px; /* Adjusted padding */
     background: rgba(255, 255, 255, 0.19);
     border-radius: 10px;
     border: 1px solid #004E9F;
@@ -127,7 +130,7 @@ body.moderator-dashboard-body {
 }
 
 .filter-button {
-    padding: 8px 30px;
+    padding: 8px 25px; /* Adjusted padding */
     border-radius: 10px;
     border: 1px solid #004E9F;
     justify-content: center;
@@ -140,6 +143,8 @@ body.moderator-dashboard-body {
     font-weight: 300;
     line-height: 18px;
     font-size: 14px;
+    height: 40px; /* Match search bar height */
+    box-sizing: border-box; /* Include padding and border in height */
 }
 .filter-button img.filter-icon {
     width: 16px;
@@ -175,11 +180,11 @@ body.moderator-dashboard-body {
 }
 
 .startup-card-item {
-    /* width: calc(50% - 10px); original was 20px gap -> 10px per side */
-    width: calc(50% - 10px); /* For 20px gap: (100% - 20px_gap) / 2_columns = 50% - 10px */
-    max-width: 637px; /* Max width from mockup */
-    /* min-width: 300px; removing min-width to let calc work better */
-    padding: 20px 21px;
+    width: calc((100% - 20px) / 2); /* Corrected calc for 2 columns with one 20px gap */
+    /* max-width: 610px; /* Fallback or control, (1240px content - 20px gap) / 2 */
+    /* Forcing a slightly smaller max-width to ensure fit, can be adjusted */
+    max-width: 580px; /* Let's try slightly smaller to be safe */
+    padding: 20px;
     background: white;
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
     border-radius: 12px;
@@ -189,6 +194,7 @@ body.moderator-dashboard-body {
     gap: 15px; /* Adjusted gap inside card */
     display: flex; /* Changed from inline-flex */
     color: black; /* Default text color inside card */
+    box-sizing: border-box; /* Ensure padding and border are part of width calculation */
 }
 
 .startup-card-item-content {
@@ -204,22 +210,22 @@ body.moderator-dashboard-body {
 .startup-card-main-info {
     align-self: stretch;
     justify-content: flex-start;
-    align-items: flex-start; /* Align image and text block top */
-    gap: 22px;
+    align-items: flex-start; /* Changed from center on smaller screens */
+    gap: 20px; /* Adjusted gap */
     display: flex;
+    flex-direction: row; /* Default to row */
 }
 
 .startup-card-image {
-    width: 311px;
-    height: 225px; /* Fixed height as per mockup image */
-    align-self: stretch; /* Original mockup had this, but might conflict with fixed height */
+    width: 250px; /* Reduced image width to help card fit */
+    height: 180px; /* Reduced image height proportionally */
     border-radius: 7px;
     object-fit: cover; /* Ensure image covers the area */
     flex-shrink: 0; /* Prevent image from shrinking */
 }
 .startup-card-image-placeholder {
-    width: 311px;
-    height: 225px;
+    width: 250px;
+    height: 180px;
     border-radius: 7px;
     background-color: #e0e0e0; /* Placeholder background */
     display: flex;
@@ -231,22 +237,21 @@ body.moderator-dashboard-body {
 
 
 .startup-card-details {
-    /* width: 258px; This will be flexible */
-    flex: 1; /* Allow this section to take remaining space */
+    flex: 1;
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
-    gap: 12px; /* Adjusted gap in details */
+    gap: 10px; /* Adjusted gap */
     display: flex; /* Changed from inline-flex for better flex behavior */
     min-width: 0; /* Allows text to wrap properly in flex item */
 }
 
 .detail-group {
-    width: 100%; /* Changed from 254px to be responsive */
+    width: 100%;
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
-    gap: 7px;
+    gap: 5px; /* Reduced gap */
     display: flex;
 }
 
@@ -262,8 +267,8 @@ body.moderator-dashboard-body {
 
 .author-info {
     justify-content: flex-start;
-    align-items: flex-start; /* Align avatar and text top */
-    gap: 11px;
+    align-items: center; /* Align items center */
+    gap: 10px;
     display: inline-flex;
 }
 
@@ -285,24 +290,24 @@ body.moderator-dashboard-body {
 
 .author-text-details {
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: center; /* Align text center vertically */
     align-items: flex-start;
-    gap: 5px; /* Adjusted gap */
+    gap: 3px; /* Reduced gap */
     display: inline-flex;
 }
 
 .author-name {
     color: black;
-    font-size: 20px;
+    font-size: 18px; /* Slightly reduced from 20px */
     font-family: 'Unbounded', sans-serif;
-    font-weight: 400;
+    font-weight: 500; /* Adjusted from 400 */
     line-height: 1.2; /* Adjusted for 20px font */
     word-wrap: break-word;
 }
 
 .author-rating {
     color: #A9A9A9;
-    font-size: 12px;
+    font-size: 11px; /* Slightly reduced */
     font-family: 'Unbounded', sans-serif;
     font-weight: 300;
     letter-spacing: 0.12px;
@@ -311,9 +316,9 @@ body.moderator-dashboard-body {
 
 .author-reviews-link {
     color: #7B61FF;
-    font-size: 12px;
+    font-size: 11px; /* Slightly reduced */
     font-family: 'Unbounded', sans-serif;
-    font-weight: 300;
+    font-weight: 400; /* Adjusted */
     letter-spacing: 0.12px;
     word-wrap: break-word;
     text-decoration: none; /* Optional */
@@ -325,27 +330,27 @@ body.moderator-dashboard-body {
 .startup-name {
     align-self: stretch;
     color: black;
-    font-size: 20px;
+    font-size: 18px; /* Slightly reduced */
     font-family: 'Unbounded', sans-serif;
-    font-weight: 400;
+    font-weight: 500; /* Adjusted */
     line-height: 1.2; /* Adjusted for 20px font */
     word-wrap: break-word;
 }
 
 .category-tag, .type-tag {
-    padding: 7px 15px; /* Adjusted padding */
+    padding: 6px 12px; /* Adjusted padding */
     background: #050505;
     border-radius: 5px;
     justify-content: center;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     display: inline-flex; /* So it only takes content width */
 }
 
 .category-tag-text, .type-tag-text {
     text-align: center;
     color: white;
-    font-size: 12px;
+    font-size: 11px; /* Slightly reduced */
     font-family: 'Unbounded', sans-serif;
     font-weight: 300;
     letter-spacing: 0.12px;
@@ -357,7 +362,7 @@ body.moderator-dashboard-body {
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
-    gap: 10px;
+    gap: 8px;
     display: flex;
 }
 
@@ -383,7 +388,7 @@ body.moderator-dashboard-body {
 .funding-info-actions {
     align-self: stretch;
     /* height: 121px; Height will be auto based on content + padding */
-    padding: 15px 19px; /* Adjusted padding */
+    padding: 15px;
     background: #EBEBEB;
     border-radius: 7px;
     flex-direction: column; /* Stack funding goal and buttons */
@@ -405,16 +410,16 @@ body.moderator-dashboard-body {
 
 .funding-goal-block {
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: center; /* Center text */
     align-items: flex-start;
-    gap: 8px; /* Adjusted gap */
+    gap: 5px; /* Reduced gap */
     display: inline-flex;
     text-align: left; /* Ensure text aligns left */
 }
 
 .funding-goal-label {
     color: black;
-    font-size: 14px;
+    font-size: 13px; /* Reduced */
     font-family: 'Unbounded', sans-serif;
     font-weight: 300;
     line-height: 1.2;
@@ -424,9 +429,9 @@ body.moderator-dashboard-body {
 .funding-goal-amount {
     align-self: stretch;
     color: black;
-    font-size: 20px;
+    font-size: 18px; /* Reduced */
     font-family: 'Unbounded', sans-serif;
-    font-weight: 400;
+    font-weight: 500; /* Adjusted */
     line-height: 1.2;
     word-wrap: break-word;
 }
@@ -441,20 +446,23 @@ body.moderator-dashboard-body {
 }
 
 /* Specificity for action buttons */
-.startup-card-item .funding-info-actions .action-buttons-group .action-button {
-    min-width: 110px; /* Adjusted for better fit, can be flexible */
-    height: 40px;
-    padding: 0 15px; /* Padding L/R */
+div.startup-card-item div.funding-info-actions div.action-buttons-group button.action-button,
+div.startup-card-item div.funding-info-actions div.action-buttons-group a.action-button {
+    min-width: auto; /* Allow buttons to size based on content + padding */
+    flex: 1 1 0; /* Allow buttons to grow and shrink, basis 0 */
+    max-width: 150px; /* Prevent buttons from becoming too wide */
+    height: 38px; /* Adjusted height */
+    padding: 0 12px; 
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
     border-radius: 10px;
     justify-content: center;
     align-items: center;
     gap: 8px;
     display: inline-flex;
-    font-size: 16px;
+    font-size: 14px; /* Reduced font size */
     font-family: 'Unbounded', sans-serif;
-    font-weight: 400;
-    line-height: 16px;
+    font-weight: 500; /* Adjusted */
+    line-height: 1; /* Adjusted line height for button text */
     word-wrap: break-word;
     text-decoration: none;
     border: none;
@@ -463,30 +471,30 @@ body.moderator-dashboard-body {
     flex-shrink: 0; /* Prevent buttons from shrinking too much */
 }
 
-.startup-card-item .funding-info-actions .action-buttons-group .action-button.approve {
-    background: #16a34a; /* Green color */
-    color: #F5F5F5;
+div.startup-card-item div.funding-info-actions div.action-buttons-group button.action-button.approve {
+    background: #16a34a !important;
+    color: #F5F5F5 !important;
 }
-.startup-card-item .funding-info-actions .action-buttons-group .action-button.approve:hover {
-    background: #15803d; /* Darker green */
-}
-
-.startup-card-item .funding-info-actions .action-buttons-group .action-button.reject {
-    background: #dc2626; /* Red color */
-    color: white;
-}
-.startup-card-item .funding-info-actions .action-buttons-group .action-button.reject:hover {
-    background: #b91c1c; /* Darker red */
+div.startup-card-item div.funding-info-actions div.action-buttons-group button.action-button.approve:hover {
+    background: #15803d !important;
 }
 
-.startup-card-item .funding-info-actions .action-buttons-group .action-button.details {
-    background: white;
-    color: black;
-    border: 1px black solid;
-     padding: 0 14px; /* Adjust padding to account for border */
+div.startup-card-item div.funding-info-actions div.action-buttons-group button.action-button.reject {
+    background: #dc2626 !important;
+    color: white !important;
 }
-.startup-card-item .funding-info-actions .action-buttons-group .action-button.details:hover {
-    background: #f0f0f0;
+div.startup-card-item div.funding-info-actions div.action-buttons-group button.action-button.reject:hover {
+    background: #b91c1c !important;
+}
+
+div.startup-card-item div.funding-info-actions div.action-buttons-group a.action-button.details {
+    background: white !important;
+    color: black !important;
+    border: 1px black solid !important;
+    padding: 0 11px; /* Adjust padding for border */
+}
+div.startup-card-item div.funding-info-actions div.action-buttons-group a.action-button.details:hover {
+    background: #f0f0f0 !important;
 }
 
 .show-more-bar {
@@ -544,18 +552,29 @@ body.moderator-dashboard-body {
 
 /* Responsive adjustments */
 @media (max-width: 1200px) {
-    /* Cards already calc(50% - 10px) */
-     .startup-card-main-info {
-        flex-direction: column; /* Stack image and details if not enough space */
+    .startup-card-main-info {
+        flex-direction: column; 
         align-items: center;
     }
     .startup-card-image, .startup-card-image-placeholder {
-        width: 100%; /* Allow image to take full width of its new column */
-        max-width: 311px; /* But not larger than design */
+        width: 100%; 
+        max-width: 250px; /* Match reduced image width */
     }
     .startup-card-details {
-        align-items: center; /* Center details when stacked */
+        align-items: center; 
         text-align: center;
+    }
+}
+
+@media (max-width: 860px) { /* Breakpoint for single column cards */
+    .startup-card-item {
+        width: 100%; 
+        max-width: 580px; /* Or a bit more if only one column */
+        margin-left: auto; /* Center single column */
+        margin-right: auto; /* Center single column */
+    }
+     .startup-card-main-info {
+        flex-direction: row; /* Revert to row if space for single card */
     }
 }
 
@@ -570,10 +589,12 @@ body.moderator-dashboard-body {
     .filter-search {
         width: 100%;
     }
-    .startup-card-item {
-        width: 100%; /* Full width for single column */
-        max-width: none; 
+    /* .startup-card-item is already 100% width below 860px */
+    .startup-card-main-info {
+        flex-direction: column; /* Stack again on very small screens */
+        align-items: center;
     }
+
     .funding-details-row {
         flex-direction: column;
         gap: 15px;
@@ -581,29 +602,37 @@ body.moderator-dashboard-body {
     }
     .action-buttons-group {
         justify-content: center;
-        width: 100%; /* Allow button group to take full width */
+        width: 100%; 
     }
-    .startup-card-item .funding-info-actions .action-buttons-group .action-button {
-        min-width: 100px; 
-        flex-grow: 1; /* Allow buttons to grow equally if needed */
+    div.startup-card-item div.funding-info-actions div.action-buttons-group button.action-button,
+    div.startup-card-item div.funding-info-actions div.action-buttons-group a.action-button {
+        min-width: 90px; 
+        flex-grow: 1; 
+        font-size: 13px; /* Further reduce for small screens */
+        padding: 0 10px;
+        height: 36px;
     }
 }
 
 @media (max-width: 480px) {
-    .header-title-main, .header-title-highlight {
-        font-size: 40px;
+    div.moderator-page-container > header.page-header > div.header-title-block > h1.header-title-main,
+    div.moderator-page-container > header.page-header > div.header-title-block > h2.header-title-highlight {
+        font-size: 40px !important;
     }
-    .startup-card-item .funding-info-actions .action-buttons-group .action-button {
-        font-size: 14px;
-        min-width: 90px;
-        height: 36px;
-        padding: 0 10px;
+    .startup-card-image, .startup-card-image-placeholder {
+        width: 100%;
+        height: auto;
+        max-width: none;
     }
-    .show-more-button {
-         padding: 10px 20px;
-         font-size: 14px;
-         height: 36px;
+    .startup-card-details {
+        min-width: 0; /* Ensure it can shrink */
     }
+     div.startup-card-item div.funding-info-actions div.action-buttons-group button.action-button,
+     div.startup-card-item div.funding-info-actions div.action-buttons-group a.action-button {
+        font-size: 12px;
+        min-width: 80px;
+    }
+
 }
 
 /* Styles for form display (to make forms inline for buttons) */
