@@ -1693,7 +1693,7 @@ def planetary_system(request):
     
     # Подготавливаем и сериализуем directions_data
     # JS ожидает массив объектов, где каждый объект имеет direction_name
-    directions_list = list(directions.values('direction_name', 'description')) # Добавим описание, если оно есть и нужно в JS
+    directions_list = list(directions.values('direction_name')) # Убрал 'description'
     directions_data_json = json.dumps(directions_list)
     
     context = {
