@@ -29,20 +29,16 @@ body {
 
 .notifications-promo-card {
     width: 540px;
-    height: 521px; /* Высота как у промо-карты, и теперь как у списка уведомлений */
+    height: 521px;
     position: relative;
-    background-color: black; /* Фоновый цвет, если изображение не загрузится */
-    background-image: url('../images/mainimg_notification.png'); /* ИЗМЕНЕНО */
+    background-color: black;
+    background-image: url('../images/mainimg_notification.png');
     background-size: cover;
     background-position: center;
     box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.25);
     overflow: hidden;
     border-radius: 20px;
-    display: flex; /* Для позиционирования кнопки */
-    flex-direction: column;
-    justify-content: center; /* Центрирование текстового контента */
-    align-items: center;
-    flex-shrink: 0; /* Чтобы карточка не сжималась */
+    flex-shrink: 0;
 }
 
 .promo-card-background-elements {
