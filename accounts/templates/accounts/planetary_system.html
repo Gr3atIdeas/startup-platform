@@ -18,7 +18,7 @@
           <div id="solar-system">
             <div id="scene">
               <div id="galaxy">
-                <div id="logo" style="background-image: url('{{ logo_data.image if logo_data.image else "" }}');"></div>
+                <div id="logo" style="background-image: url('{{ logo_data.image|default_if_none:"" }}');"></div>
                 {% for planet in planets_data %} <!-- Ограничение теперь должно быть во view при подготовке planets_data_json -->
                   <div class="orbit" style="--orbit-size: {{ planet.orbit_size }}px; --orbit-time: {{ planet.orbit_time }}s;">
                     <div class="planet-orientation">
@@ -75,7 +75,7 @@
           "planetsData": {{ planets_data_json|safe }},
           "directionsData": {{ directions_data_json|safe }},
           "selectedGalaxy": "{{ selected_galaxy|escapejs }}",
-          "logoImage": "{{ logo_data.image|escapejs if logo_data.image else '' }}",
+          "logoImage": "{{ logo_data.image|default_if_none:''|escapejs }}",
           "urls": {
                 "createStartup": "{% url 'create_startup' %}",
                 "register": "{% url 'register' %}",
