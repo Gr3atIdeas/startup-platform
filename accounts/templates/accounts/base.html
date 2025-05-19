@@ -248,9 +248,7 @@
                 profileDropdownMenu.classList.toggle('open');
             });
             document.addEventListener('click', function (event) {
-                if (profileDropdownMenu.classList.contains('open') && 
-                    !profileDropdownMenu.contains(event.target) &&
-                    !profileDropdownButton.contains(event.target)) {
+                if (profileDropdownMenu.classList.contains('open') && !profileDropdownMenu.contains(event.target) && !profileDropdownButton.contains(event.target)) {
                     profileDropdownMenu.classList.remove('open');
                 }
             });
@@ -285,6 +283,6 @@
 
     });
   </script>
-  {% block script_extra %}{# Этот блок для дополнительных скриптов из дочерних шаблонов #}{% endblock %}
+  {% block script_extra %}{% endblock %}
 </body>
 </html>
