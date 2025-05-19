@@ -91,58 +91,89 @@
 {% block script_extra %}
 <script>
 document.addEventListener('DOMContentLoaded', function () {
+    // Код для модального окна уведомлений (существующий)
     const notificationBubbles = document.querySelectorAll('.notifications-list-section .notification-item-bubble');
     const modalOverlay = document.getElementById('notification-modal-overlay');
     const modalCloseButton = document.getElementById('notification-modal-close');
-    
     const modalNotificationList = modalOverlay.querySelector('.modal-notification-list');
-    // const modalNotificationListTitle = modalOverlay.querySelector('.modal-notification-list-title'); // Заголовок теперь скрыт через CSS
-
-    // Исходный контейнер всех уведомлений на странице
     const originalNotificationsContainer = document.querySelector('.notifications-list-section .notifications-list-items');
 
-    if (!modalOverlay || !modalCloseButton || !modalNotificationList || !originalNotificationsContainer) {
-        return;
-    }
-
-    notificationBubbles.forEach(bubble => {
-        bubble.addEventListener('click', function () {
-            // Копируем ВСЕ уведомления из оригинального контейнера в модальное окно
-            if (modalNotificationList) {
-                modalNotificationList.innerHTML = ''; // Очищаем предыдущее содержимое
-                const allNotificationItems = originalNotificationsContainer.querySelectorAll('.notification-item');
-                allNotificationItems.forEach(item => {
-                    const clone = item.cloneNode(true);
-                    // Убедимся, что у клонированных пузырей нет лишних обработчиков, если они добавлялись динамически
-                    const clonedBubble = clone.querySelector('.notification-item-bubble');
-                    if (clonedBubble) {
-                        clonedBubble.replaceWith(clonedBubble.cloneNode(true)); 
-                    }
-                    modalNotificationList.appendChild(clone);
-                });
-            }
-            
-            modalOverlay.style.display = 'flex';
+    if (modalOverlay && modalCloseButton && modalNotificationList && originalNotificationsContainer) {
+        notificationBubbles.forEach(bubble => {
+            bubble.addEventListener('click', function () {
+                if (modalNotificationList) {
+                    modalNotificationList.innerHTML = '';
+                    const allNotificationItems = originalNotificationsContainer.querySelectorAll('.notification-item');
+                    allNotificationItems.forEach(item => {
+                        const clone = item.cloneNode(true);
+                        const clonedBubble = clone.querySelector('.notification-item-bubble');
+                        if (clonedBubble) {
+                            clonedBubble.replaceWith(clonedBubble.cloneNode(true)); 
+                        }
+                        modalNotificationList.appendChild(clone);
+                    });
+                }
+                modalOverlay.style.display = 'flex';
+            });
         });
-    });
 
-    if (modalCloseButton) {
         modalCloseButton.addEventListener('click', function () {
             modalOverlay.style.display = 'none';
         });
+
+        modalOverlay.addEventListener('click', function (event) {
+            if (event.target === modalOverlay) {
+                modalOverlay.style.display = 'none';
+            }
+        });
+
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape' && modalOverlay.style.display === 'flex') {
+                modalOverlay.style.display = 'none';
+            }
+        });
     }
 
-    modalOverlay.addEventListener('click', function (event) {
-        if (event.target === modalOverlay) {
-            modalOverlay.style.display = 'none';
-        }
-    });
+    // Новый код для "липкой" промо-карты
+    const promoCard = document.querySelector('.notifications-promo-card');
+    const listSection = document.querySelector('.notifications-list-section');
+    const contentContainer = document.querySelector('.notifications-content-container');
 
-    document.addEventListener('keydown', function (event) {
-        if (event.key === 'Escape' && modalOverlay.style.display === 'flex') {
-            modalOverlay.style.display = 'none';
-        }
-    });
+    if (promoCard && listSection && contentContainer) {
+        const promoCardInitialTop = promoCard.offsetTop;
+        const contentContainerPaddingLeft = parseFloat(window.getComputedStyle(contentContainer).paddingLeft);
+        const promoCardWidth = promoCard.offsetWidth;
+        const gapBetweenCardAndList = parseFloat(window.getComputedStyle(contentContainer).gap);
+
+        let isSticky = false;
+
+        window.addEventListener('scroll', function() {
+            const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+
+            // Определяем точку, когда верхний край contentContainer достигает верха окна + небольшой отступ
+            const stickyTriggerPoint = contentContainer.offsetTop - 20; // 20px - такой же отступ, как у sticky top
+
+            if (scrollPosition > stickyTriggerPoint) {
+                if (!isSticky) {
+                    // Сохраняем текущее положение левого края карточки относительно окна
+                    const currentCardLeft = promoCard.getBoundingClientRect().left;
+                    promoCard.style.left = currentCardLeft + 'px'; // Устанавливаем left перед тем как сделать fixed
+                    
+                    promoCard.classList.add('sticky-promo');
+                    // Компенсируем сдвиг списка уведомлений
+                    listSection.style.marginLeft = (promoCardWidth + gapBetweenCardAndList) + 'px';
+                    isSticky = true;
+                }
+            } else {
+                if (isSticky) {
+                    promoCard.classList.remove('sticky-promo');
+                    promoCard.style.left = ''; // Сбрасываем left
+                    listSection.style.marginLeft = '0px';
+                    isSticky = false;
+                }
+            }
+        });
+    }
 });
 </script>
 {% endblock %}
