@@ -32,7 +32,7 @@ body {
     height: 521px; /* Высота как у промо-карты, и теперь как у списка уведомлений */
     position: relative;
     background-color: black; /* Фоновый цвет, если изображение не загрузится */
-    background-image: url('https://placehold.co/540x521'); /* Замените на реальный фон позже */
+    background-image: url('../images/mainimg_notification.png'); /* ИЗМЕНЕНО */
     background-size: cover;
     background-position: center;
     box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.25);
@@ -88,18 +88,18 @@ body {
 .promo-title-main {
     color: white;
     font-size: 55px;
-    font-family: 'Blippo Local', sans-serif; /* Укажите правильное имя шрифта, если оно другое */
-    font-weight: 400; /* В Figma указан Blippo-Black CY [Rus by me], что может быть кастомным именем */
-    line-height: 1.2; /* Скорректировано для читаемости */
+    font-family: 'Blippo Local', sans-serif; /* Убедимся, что шрифт Blippo Local используется */
+    font-weight: 400; /* Соответствует Blippo-Black */
+    line-height: 1.2; /* Оставляем относительный line-height для больших шрифтов */
     word-wrap: break-word;
 }
 
 .promo-title-accent {
-    color: #FFEF2B;
+    color: #FFEF2B; /* var(--Color7, #FFEF2B) - используем прямое значение */
     font-size: 55px;
-    font-family: 'Blippo Local', sans-serif;
-    font-weight: 400;
-    line-height: 1.2;
+    font-family: 'Blippo Local', sans-serif; /* Убедимся, что шрифт Blippo Local используется */
+    font-weight: 400; /* Соответствует Blippo-Black */
+    line-height: 1.2; /* Оставляем относительный line-height для больших шрифтов */
     word-wrap: break-word;
 }
 
@@ -129,20 +129,27 @@ body {
 
 .promo-action-button.btn { /* Используем .btn для общих стилей кнопки */
     position: absolute;
-    bottom: 40px; /* Отступ снизу */
-    left: 50%;
-    transform: translateX(-50%);
+    top: 438px; /* ИЗМЕНЕНО согласно макету */
+    left: 186px; /* ИЗМЕНЕНО согласно макету */
+    width: 168px; /* ИЗМЕНЕНО согласно макету */
+    height: 40px; /* ИЗМЕНЕНО согласно макету */
     z-index: 4; /* Над градиентом */
-    padding: 12px 30px; /* Увеличил горизонтальный padding для вида */
+    padding: 0; /* Убираем padding, так как размеры фиксированы, текст будет центрирован через flex */
+    display: flex; /* Для центрирования текста */
+    align-items: center; /* Для центрирования текста */
+    justify-content: center; /* Для центрирования текста */
     background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+    box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.25); /* ИЗМЕНЕНО согласно макету (0px #00000040)*/
     border-radius: 10px;
     color: black;
     font-size: 16px;
     font-family: 'Unbounded', sans-serif;
     font-weight: 400;
-    line-height: 16px;
+    line-height: 16px; /* Соответствует запросу */
     text-decoration: none;
+    /* border-width: Stroke/Border; - это не стандартное CSS свойство, проигнорируем или уточним, если это важно */
+    /* padding: Space/300; - было в описании, но убрали, т.к. фиксированные размеры и flex-центровка текста */
+    /* gap: Space/200; - было в описании, не применимо к кнопке с текстом */
 }
 .promo-action-button.btn:hover {
     background: linear-gradient(180deg, #f2e00a 0%, #e9e7c3 100%); /* Затемняем при наведении */
@@ -208,7 +215,7 @@ body {
     font-size: 8px;
     font-family: 'Unbounded', sans-serif;
     font-weight: 300;
-    line-height: 1.2; /* Скорректировано для 8px */
+    line-height: 1.2; /* Оставляем относительный line-height для 8px шрифта, 18px из запроса слишком много */
     word-wrap: break-word;
     text-align: right; 
 }
@@ -229,7 +236,7 @@ body {
     font-size: 14px;
     font-family: 'Unbounded', sans-serif;
     font-weight: 300;
-    line-height: 18px; /* Из Figma */
+    line-height: 18px; /* Соответствует запросу */
     word-wrap: break-word;
 }
 
@@ -244,11 +251,11 @@ body {
 .notifications-section-title {
     align-self: flex-start; /* Заголовок слева */
     padding-left: calc((100% - 1280px) / 2 + 20px); /* Динамический отступ для выравнивания с контентом */
-    color: #FFEF2B;
-    font-size: 50px; /* Уменьшил для лучшего вида */
-    font-family: 'Blippo Local', sans-serif;
-    font-weight: 400;
-    line-height: 1.1; /* Уменьшил */
+    color: #FFEF2B; /* var(--Color7, #FFEF2B) - используем прямое значение */
+    font-size: 55px; /* ИЗМЕНЕНО согласно запросу */
+    font-family: 'Blippo Local', sans-serif; /* Убедимся, что шрифт Blippo Local используется */
+    font-weight: 400; /* Соответствует Blippo-Black */
+    line-height: 1.2; /* Оставляем относительный line-height, 18px из запроса слишком много для 55px */
     word-wrap: break-word;
     margin-top: 20px; /* Добавил отступ сверху */
     box-sizing: border-box;
@@ -301,10 +308,10 @@ body {
     align-self: stretch;
     text-align: center;
     color: black;
-    font-size: 14px; /* Уменьшил шрифт */
+    font-size: 16px; /* ИЗМЕНЕНО согласно запросу */
     font-family: 'Unbounded', sans-serif;
     font-weight: 400;
-    line-height: 1.3;
+    line-height: 1.3; /* line-height: 16px из запроса может быть слишком жестким, 1.3 даст немного больше воздуха */
     word-wrap: break-word;
 }
 
@@ -317,10 +324,10 @@ body {
     justify-content: center;
     align-items: center;
     color: white;
-    font-size: 14px; /* Уменьшил шрифт */
+    font-size: 16px; /* ИЗМЕНЕНО согласно запросу */
     font-family: 'Unbounded', sans-serif;
-    font-weight: 500; /* Сделал немного жирнее */
-    line-height: 1;
+    font-weight: 400; /* ИЗМЕНЕНО согласно запросу */
+    line-height: 1; /* Для центрирования числа в круге, line-height: 16px из запроса не нужен */
     position: absolute; /* Абсолютное позиционирование */
     top: -10px;        /* Смещение вверх */
     right: -10px;       /* Смещение вправо */

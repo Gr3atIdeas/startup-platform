@@ -1,0 +1,12 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+- Always review the entire structure of the project before making any changes.
+- When modifying code, delete the old code instead of commenting it out.
+- Never change the names of existing variables in the project.
+- When creating a new variable, always check if a similar variable already exists in the project and use it if available.
+
+These rules are mandatory for all contributors working on this project in Cursor.
+
