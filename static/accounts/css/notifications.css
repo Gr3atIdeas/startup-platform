@@ -33,20 +33,27 @@ body {
     position: relative;
     background-color: black;
     background-image: url('../images/mainimg_notification.png');
-    background-size: cover;
+    background-size: cover; /* Изображение будет обрезаться при уменьшении */
     background-position: center;
     box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.25);
     overflow: hidden;
     border-radius: 20px;
     flex-shrink: 0;
-    transition: top 0.3s ease-out, width 0.3s ease-out; /* Добавляем transition для плавности */
+    /* Обновляем transition для плавности изменения размеров и положения */
+    transition: top 0.3s ease-out, width 0.3s ease-out, height 0.3s ease-out, left 0.3s ease-out;
 }
 
 .notifications-promo-card.sticky-promo {
     position: fixed;
     top: 20px; /* Отступ от верха окна в 'липком' состоянии */
-    /* width остается тот же, так как он задан явно */
+    /* Размеры уменьшены примерно в 3 раза */
+    width: 180px;  /* 540 / 3 */
+    height: 174px; /* 521 / 3 */
     z-index: 999; /* Чтобы быть поверх другого контента */
+    /* Для фона можно оставить cover, или изменить на contain, или вообще другой фон */
+    /* background-size: contain; */
+    /* background-image: none; */
+    /* background-color: #1a1a1a; */
 }
 
 .promo-card-background-elements {
@@ -152,12 +159,24 @@ body {
     line-height: 16px; 
     text-decoration: none;
     border: none; /* Явно указываем отсутствие рамки, если buttons.css её добавляет */
+    /* Плавный переход для свойств кнопки */
+    transition: width 0.3s ease-out, height 0.3s ease-out, top 0.3s ease-out, left 0.3s ease-out, font-size 0.3s ease-out, line-height 0.3s ease-out;
 }
 .notifications-promo-card .promo-action-button.btn:hover { /* Увеличиваем специфичность */
     background: linear-gradient(180deg, #f2e00a 0%, #e9e7c3 100%) !important; /* Добавляем !important */
     color: black !important; /* Гарантируем черный цвет и при наведении */
 }
 
+/* Стили для кнопки в состоянии sticky-promo */
+.notifications-promo-card.sticky-promo .promo-action-button.btn {
+    width: 140px; /* Уменьшаем кнопку, но оставляем читаемой */
+    height: 36px;
+    font-size: 14px;
+    line-height: 14px; /* Для корректного отображения текста кнопки */
+    /* Центрируем кнопку в уменьшенной карточке (180x174) */
+    top: calc(50% - 18px);  /* (174px / 2) - (36px / 2) = 87px - 18px = 69px */
+    left: calc(50% - 70px); /* (180px / 2) - (140px / 2) = 90px - 70px = 20px */
+}
 
 .notifications-list-section { /* Основной контейнер для списка уведомлений и скроллбара */
     width: 724px; /* Ширина из Figma, если она фиксированная, или можно использовать flex-grow */

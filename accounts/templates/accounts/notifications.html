@@ -140,35 +140,35 @@ document.addEventListener('DOMContentLoaded', function () {
     const contentContainer = document.querySelector('.notifications-content-container');
 
     if (promoCard && listSection && contentContainer) {
-        const promoCardInitialTop = promoCard.offsetTop;
-        const contentContainerPaddingLeft = parseFloat(window.getComputedStyle(contentContainer).paddingLeft);
-        const promoCardWidth = promoCard.offsetWidth;
-        const gapBetweenCardAndList = parseFloat(window.getComputedStyle(contentContainer).gap);
+        const originalPromoCardWidth = promoCard.offsetWidth; 
+        const shrunkenPromoCardWidth = originalPromoCardWidth / 3; // Ширина уменьшенной карточки
+        // gap из CSS notifications-content-container { gap: 30px; }
+        const gapBetweenCardAndList = parseFloat(window.getComputedStyle(contentContainer).gap) || 30; 
 
         let isSticky = false;
 
         window.addEventListener('scroll', function() {
             const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
-
-            // Определяем точку, когда верхний край contentContainer достигает верха окна + небольшой отступ
-            const stickyTriggerPoint = contentContainer.offsetTop - 20; // 20px - такой же отступ, как у sticky top
+            // stickyTriggerPoint определяет, когда верхний край contentContainer достигает верха окна + отступ (20px)
+            const stickyTriggerPoint = contentContainer.offsetTop - 20; 
 
             if (scrollPosition > stickyTriggerPoint) {
                 if (!isSticky) {
-                    // Сохраняем текущее положение левого края карточки относительно окна
+                    // Сохраняем текущее положение левого края карточки относительно окна ПЕРЕД тем, как сделать fixed
                     const currentCardLeft = promoCard.getBoundingClientRect().left;
-                    promoCard.style.left = currentCardLeft + 'px'; // Устанавливаем left перед тем как сделать fixed
+                    promoCard.style.left = currentCardLeft + 'px'; 
                     
                     promoCard.classList.add('sticky-promo');
-                    // Компенсируем сдвиг списка уведомлений
-                    listSection.style.marginLeft = (promoCardWidth + gapBetweenCardAndList) + 'px';
+                    
+                    // Смещаем список уведомлений на ширину УМЕНЬШЕННОЙ карточки + гэп
+                    listSection.style.marginLeft = (shrunkenPromoCardWidth + gapBetweenCardAndList) + 'px';
                     isSticky = true;
                 }
             } else {
                 if (isSticky) {
                     promoCard.classList.remove('sticky-promo');
-                    promoCard.style.left = ''; // Сбрасываем left
-                    listSection.style.marginLeft = '0px';
+                    promoCard.style.left = ''; // Сбрасываем left, чтобы карточка вернулась в поток документа
+                    listSection.style.marginLeft = '0px'; // Возвращаем отступ списка в исходное состояние
                     isSticky = false;
                 }
             }
