@@ -24,7 +24,14 @@
                 {% for planet in planets_data|slice:":9" %} <!-- Ограничиваем до 9 стартапов -->
                   <div class="orbit" style="--orbit-size: {{ planet.orbit_size }}px; --orbit-time: {{ planet.orbit_time }}s;">
                     <div class="planet-orientation">
-                      <div class="planet" style="--planet-size: {{ planet.planet_size }}px; background-image: url('{{ planet.image|escapejs }}');" data-id="{{ planet.id|escapejs }}"></div>
+                      <div class="planet"
+                           style="--planet-size: {{ planet.planet_size }}px;
+                                  {% if planet.image %}
+                                  background-image: url('{{ planet.image|escapejs }}');
+                                  {% else %}
+                                  background-image: url('{% static 'accounts/images/default_planet_placeholder.png' %}');
+                                  {% endif %}"
+                           data-id="{{ planet.id|escapejs }}"></div>
                     </div>
                   </div>
                 {% endfor %}
@@ -154,19 +161,26 @@
 
               if (!startups[id]) {
                   console.error("No startup data found for planet ID: " + id);
-                  planet.style.backgroundImage = "url('https://via.placeholder.com/150/000000/FFFFFF/?text=Error')";
+                  planet.style.backgroundImage = "url('{% static 'accounts/images/default_planet_error.png' %}')";
                   return;
               }
 
-              const img = new Image();
-              img.src = startups[id].image;
-              img.onload = () => {
-                  console.log("Image loaded for startup " + id + ": " + startups[id].image);
-              };
-              img.onerror = () => {
-                  console.error("Failed to load image for startup " + id + ": " + startups[id].image);
-                  planet.style.backgroundImage = "url('https://via.placeholder.com/150/FF0000/FFFFFF/?text=ImgLoadErr')";
-              };
+              const startupImageURL = startups[id].image;
+
+              if (startupImageURL && startupImageURL.trim() !== '') {
+                const img = new Image();
+                img.src = startupImageURL;
+                img.onload = () => {
+                    console.log("Image loaded for startup " + id + ": " + startupImageURL);
+                    planet.style.backgroundImage = "url('" + startupImageURL + "')";
+                };
+                img.onerror = () => {
+                    console.error("Failed to load image for startup " + id + " from URL: " + startupImageURL);
+                    planet.style.backgroundImage = "url('{% static 'accounts/images/default_planet_error.png' %}')";
+                };
+              } else {
+                  console.warn("Startup " + id + " has empty image URL in startups data. HTML should have set a placeholder.");
+              }
 
               planet.addEventListener('click', (e) => {
                 console.log("Planet clicked: " + id);

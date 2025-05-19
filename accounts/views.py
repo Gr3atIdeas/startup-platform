@@ -30,6 +30,7 @@ import datetime # Добавляем для работы с датами
 from django.db.models.functions import Coalesce # Добавляем Coalesce
 import collections # Добавляем для defaultdict
 from dateutil.relativedelta import relativedelta
+from .utils import get_file_url, is_uuid # Добавляем импорт нужных функций
 
 
 logger = logging.getLogger(__name__)
@@ -1530,6 +1531,10 @@ def leave_chat(request, chat_id):
 
 # accounts/views.py
 import boto3
+from django.conf import settings # Убедимся, что settings импортированы
+from .utils import get_file_url, is_uuid # Добавляем импорт нужных функций
+import logging # Убедимся, что logging импортирован
+logger = logging.getLogger(__name__) # Получаем логгер
 
 def planetary_system(request):
     # Получаем все направления из базы данных
@@ -1578,34 +1583,30 @@ def planetary_system(request):
     random.shuffle(available_sizes)  # Перемешиваем размеры
 
     for idx, startup in enumerate(planetary_startups, 1):
-        # Проверяем наличие logo_urls
-        if not startup.logo_urls or not isinstance(startup.logo_urls, list) or len(startup.logo_urls) == 0:
-            logger.warning(f"Стартап {startup.startup_id} ({startup.title}) не имеет логотипа в logo_urls")
-            logo_url = 'https://via.placeholder.com/150'
+        logo_url = None # Инициализируем logo_url
+        if startup.logo_urls and isinstance(startup.logo_urls, list) and len(startup.logo_urls) > 0:
+            file_id = startup.logo_urls[0]
+            if file_id: # Убедимся, что file_id не пустой
+                if not is_uuid(file_id): # Если это не UUID, считаем, что это готовый URL
+                    logo_url = file_id
+                    logger.info(f"Используется прямой URL из logo_urls для стартапа {startup.startup_id}: {logo_url}")
+                else: # Если это UUID, генерируем URL через get_file_url
+                    try:
+                        logo_url = get_file_url(file_id, startup.startup_id, 'logo')
+                        if logo_url:
+                            logger.info(f"Сгенерирован URL через get_file_url для стартапа {startup.startup_id}: {logo_url}")
+                        else:
+                            logger.warning(f"get_file_url не вернул URL для стартапа {startup.startup_id}, file_id: {file_id}")
+                    except Exception as e:
+                        logger.error(f"Ошибка при вызове get_file_url для стартапа {startup.startup_id}, file_id: {file_id}: {str(e)}")
+            else:
+                logger.warning(f"Первый элемент в logo_urls для стартапа {startup.startup_id} пуст.")
         else:
-            try:
-                # Формируем префикс для поиска файла в папке startups/{startup_id}/logos/
-                prefix = f"startups/{startup.startup_id}/logos/"
+            logger.warning(f"Стартап {startup.startup_id} ({startup.title}) не имеет logo_urls или logo_urls не является списком/пуст.")
 
-                # Ищем файлы в этой папке
-                response = s3_client.list_objects_v2(
-                    Bucket=settings.AWS_STORAGE_BUCKET_NAME,
-                    Prefix=prefix
-                )
-
-                # Проверяем, есть ли файлы в папке
-                if 'Contents' in response and len(response['Contents']) > 0:
-                    # Берём первый (и единственный) файл
-                    file_key = response['Contents'][0]['Key']
-                    # Генерируем URL без подписи, так как файл публичный
-                    logo_url = f"https://storage.yandexcloud.net/{settings.AWS_STORAGE_BUCKET_NAME}/{file_key}"
-                    logger.info(f"Сгенерирован URL для логотипа стартапа {startup.startup_id}: {logo_url}")
-                else:
-                    logger.warning(f"Файл для логотипа стартапа {startup.startup_id} не найден в бакете по префиксу {prefix}")
-                    logo_url = 'https://via.placeholder.com/150'
-            except Exception as e:
-                logger.error(f"Ошибка при генерации URL для логотипа стартапа {startup.startup_id}: {str(e)}")
-                logo_url = 'https://via.placeholder.com/150'
+        if not logo_url: # Если URL так и не получен, используем заглушку
+            logger.warning(f"Используется URL-заглушка для стартапа {startup.startup_id} ({startup.title})")
+            logo_url = 'https://via.placeholder.com/150/FF0000/FFFFFF/?text=NoImgV'
 
         # Выбираем случайный размер орбиты из доступных
         if idx <= len(available_sizes):
