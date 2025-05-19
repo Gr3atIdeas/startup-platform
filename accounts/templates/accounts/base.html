@@ -214,6 +214,10 @@
       </div>
     </div>
   </footer>
+
+  <!-- СКРИПТЫ БУДУТ ПЕРЕМЕЩЕНЫ ОТСЮДА -->
+  <!-- {% block script_extra %}{% endblock %} БУДЕТ ПЕРЕМЕЩЕН И ПЕРЕИМЕНОВАН -->
+
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/glightbox@3.2.0/dist/js/glightbox.min.js"></script>
   <script src="{% static 'accounts/js/button_effects.js' %}"></script>
@@ -248,41 +252,52 @@
                 profileDropdownMenu.classList.toggle('open');
             });
             document.addEventListener('click', function (event) {
-                if (profileDropdownMenu.classList.contains('open') && !profileDropdownMenu.contains(event.target) && !profileDropdownButton.contains(event.target)) {
+                if (profileDropdownMenu.classList.contains('open') && 
+                    !profileDropdownMenu.contains(event.target) && 
+                    !profileDropdownButton.contains(event.target)) {
                     profileDropdownMenu.classList.remove('open');
                 }
             });
         }
-
+        
+        // Восстановленный и дополненный код для очистки стилей элементов подменю каталога
         function cleanCatalogSubmenuItems() {
             const submenuItems = document.querySelectorAll('.catalog-dropdown-item.no-wave-effect');
             submenuItems.forEach(item => {
+                // Удаляем существующие спаны с эффектом волны, если они есть
                 const waveSpan = item.querySelector('span.wave-effect');
                 if (waveSpan) {
                     waveSpan.remove();
                 }
-                item.removeAttribute('data-position-aware-initialized');
-                item.style.border = 'none'; 
+                // Сбрасываем data-атрибут, если он используется для инициализации эффектов
+                item.removeAttribute('data-position-aware-initialized'); 
+                // Можно также сбросить другие инлайн-стили, если они добавляются динамически
+                // item.style.border = ''; // Пример сброса рамки
             });
         }
 
+        // Вызываем функцию сразу при загрузке DOM, чтобы очистить стили
         cleanCatalogSubmenuItems();
 
+        // Наблюдаем за изменениями в контейнере выпадающего меню каталога
         if (catalogDropdownButton && catalogDropdownContainer) {
             const observer = new MutationObserver(mutationsList => {
                 for (const mutation of mutationsList) {
+                    // Если класс контейнера изменился (например, добавился 'open')
                     if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
                         if (catalogDropdownContainer.classList.contains('open')) {
-                            setTimeout(cleanCatalogSubmenuItems, 50);
+                            // Выполняем очистку стилей с небольшой задержкой,
+                            // чтобы дать время другим скриптам (например, button_effects.js) отработать
+                            setTimeout(cleanCatalogSubmenuItems, 50); 
                         }
                     }
                 }
             });
+            // Начинаем наблюдение за атрибутами контейнера
             observer.observe(catalogDropdownContainer, { attributes: true });
         }
-
     });
   </script>
-  {% block script_extra %}{% endblock %}
+  {% block body_scripts %}{% endblock %}
 </body>
 </html>
