@@ -135,6 +135,9 @@
     let offsetY = 0;
     let scale = 1;
 
+    // Отладка: Проверяем, сколько планет найдено
+    console.log('Found planets:', planets.length);
+
     planets.forEach(planet => {
       const randomAngle = Math.random() * 360;
       planet.parentElement.parentElement.style.setProperty('--random-angle', `${randomAngle}deg`);
@@ -143,12 +146,29 @@
       planet.parentElement.parentElement.style.setProperty('--random-speed-factor', randomSpeedFactor);
 
       const id = planet.getAttribute('data-id');
-      planet.style.backgroundImage = `url('${startups[id].image}')`;
+
+      // Отладка: Проверяем ID планеты и данные в startups
+      console.log(`Planet ID: ${id}, Startup data:`, startups[id]);
+
+      // Проверяем загрузку изображения
+      const img = new Image();
+      img.src = startups[id].image;
+      img.onload = () => {
+          console.log(`Image loaded for startup ${id}: ${startups[id].image}`);
+      };
+      img.onerror = () => {
+          console.error(`Failed to load image for startup ${id}: ${startups[id].image}`);
+          // Устанавливаем запасное изображение
+          planet.style.backgroundImage = `url('https://via.placeholder.com/150')`;
+      };
+
       planet.addEventListener('click', (e) => {
+        console.log(`Planet clicked: ${id}`); // Отладка: Проверяем, срабатывает ли клик
         e.stopPropagation();
 
         // Проверяем, является ли планета "create-startup"
         if (id === 'create-startup') {
+          console.log('Clicked on create-startup planet');
           if (isAuthenticated && isStartuper) {
             // Если пользователь — стартапер, перенаправляем на создание стартапа
             window.location.href = "{% url 'create_startup' %}";
@@ -161,6 +181,7 @@
 
         // Логика для обычных планет-стартапов
         const startup = startups[id];
+        console.log('Startup data:', startup); // Отладка: Проверяем данные стартапа
 
         planetImage.style.backgroundImage = `url('${startup.image}')`;
         startupName.textContent = startup.name;
@@ -176,7 +197,7 @@
         startupFunding.innerHTML = `
           <strong>Направление:</strong> ${startup.direction}<br>
           <div class="funding-goal-container-figma">
-            <span class="funding-goal-text-figma">Цель финансирования: ${startup.funding}</span>  // Заменяем funding_goal на funding
+            <span class="funding-goal-text-figma">Цель финансирования: ${startup.funding}</span>
           </div>
         `;
         startupInvestors.innerHTML = `
@@ -194,6 +215,7 @@
 
         // Сохраняем startup_id текущего стартапа
         currentStartupID = startup.startup_id;  // Переименовываем currentStartupId в currentStartupID
+        console.log('Current Startup ID:', currentStartupID); // Отладка
 
         planets.forEach(p => p.classList.remove('active'));
         planet.classList.add('active');
@@ -209,6 +231,7 @@
     });
 
     closeCard.addEventListener('click', () => {
+      console.log('Close card clicked'); // Отладка
       infoCard.style.display = 'none';
       planets.forEach(p => p.classList.remove('active'));
 
@@ -219,6 +242,7 @@
           planetObj.startTime += pauseDuration;
         });
         isPaused = false;
+        console.log('Resuming planet rotation'); // Отладка
       }
 
       // Обновляем время последнего взаимодействия
@@ -226,6 +250,7 @@
     });
 
     moreDetails.addEventListener('click', () => {
+      console.log('More details clicked'); // Отладка
       // Проверяем, есть ли текущий startup_id
       if (currentStartupID) {  // Переименовываем currentStartupId в currentStartupID
         // Перенаправляем пользователя на страницу стартапа
@@ -245,6 +270,7 @@
           planetObj.startTime += pauseDuration;
         });
         isPaused = false;
+        console.log('Resuming planet rotation after more details'); // Отладка
       }
 
       // Обновляем время последнего взаимодействия
@@ -252,6 +278,7 @@
     });
 
     solarSystem.addEventListener('mousedown', (e) => {
+      console.log('Solar system mousedown'); // Отладка
       e.preventDefault();
       const rect = solarSystem.getBoundingClientRect();
       startX = e.clientX - rect.left;
@@ -293,12 +320,14 @@
     });
 
     document.addEventListener('mouseup', () => {
+      console.log('Mouse up'); // Отладка
       isDragging = false;
       solarSystem.classList.remove('dragging');
       lastInteractionTime = Date.now();
     });
 
     solarSystem.addEventListener('wheel', (e) => {
+      console.log('Solar system wheel'); // Отладка
       e.preventDefault();
       const rect = solarSystem.getBoundingClientRect();
       const delta = e.deltaY > 0 ? -0.1 : 0.1;
@@ -316,6 +345,7 @@
     });
 
     infoCard.addEventListener('mousedown', (e) => {
+      console.log('Info card mousedown'); // Отладка
       e.stopPropagation();
       lastInteractionTime = Date.now();
     });
@@ -330,6 +360,7 @@
     function checkInactivity() {
       const now = Date.now();
       if (now - lastInteractionTime >= inactivityTimeout && !isReturningToCenter && !isPaused) {
+        console.log('Returning to center due to inactivity'); // Отладка
         isReturningToCenter = true;
         const startX = offsetX;
         const startY = offsetY;
@@ -361,6 +392,9 @@
     setInterval(checkInactivity, 1000);
 
     function updatePlanets() {
+      console.log('updatePlanets called'); // Отладка
+      console.log('isPaused:', isPaused); // Отладка
+
       const now = Date.now();
       
       frameCount++;
@@ -377,21 +411,36 @@
       }
 
       planetObjects.forEach(planetObj => {
-        const elapsedSeconds = (now - planetObj.startTime) / 1000;
-        const orbitTimeSeconds = planetObj.orbitTime * planetObj.speedFactor;
-        const progress = (elapsedSeconds % orbitTimeSeconds) / orbitTimeSeconds;
-        const angle = planetObj.angle + progress * 360;
-        const angleRad = angle * Math.PI / 180;
-        
-        const radius = planetObj.orbitSize / 2;
-        const x = Math.cos(angleRad) * radius;
-        const y = Math.sin(angleRad) * radius;
-        
-        planetObj.orientation.style.left = `${50 + 50 * (x / radius)}%`;
-        planetObj.orientation.style.top = `${50 + 50 * (y / radius)}%`;
+        try {
+          console.log('Updating planet:', planetObj); // Отладка
+          const elapsedSeconds = (now - planetObj.startTime) / 1000;
+          const orbitTimeSeconds = planetObj.orbitTime * planetObj.speedFactor;
+          console.log('orbitTimeSeconds:', orbitTimeSeconds); // Отладка
+          if (!orbitTimeSeconds || orbitTimeSeconds <= 0) {
+            console.error('Invalid orbitTimeSeconds:', orbitTimeSeconds);
+            return;
+          }
+          const progress = (elapsedSeconds % orbitTimeSeconds) / orbitTimeSeconds;
+          const angle = planetObj.angle + progress * 360;
+          const angleRad = angle * Math.PI / 180;
+          
+          const radius = planetObj.orbitSize / 2;
+          console.log('radius:', radius); // Отладка
+          if (!radius || radius <= 0) {
+            console.error('Invalid radius:', radius);
+            return;
+          }
+          const x = Math.cos(angleRad) * radius;
+          const y = Math.sin(angleRad) * radius;
+          
+          planetObj.orientation.style.left = `${50 + 50 * (x / radius)}%`;
+          planetObj.orientation.style.top = `${50 + 50 * (y / radius)}%`;
 
-        const tiltCompensation = -galaxyTiltAngle;
-        planetObj.element.style.transform = `rotateX(${tiltCompensation}deg)`;
+          const tiltCompensation = -galaxyTiltAngle;
+          planetObj.element.style.transform = `rotateX(${tiltCompensation}deg)`;
+        } catch (error) {
+          console.error('Error updating planet position:', error);
+        }
       });
       
       requestAnimationFrame(updatePlanets);
@@ -425,6 +474,7 @@
     let lastScrollTime = 0;
 
     galaxySelector.addEventListener('wheel', (e) => {
+      console.log('Galaxy selector wheel'); // Отладка
       e.preventDefault();
       const delta = e.deltaY * 5; // Уменьшаем множитель с 10 до 5
       scrollVelocity += delta;
@@ -449,6 +499,7 @@
 
     // Функция для выбора галактики
     function selectGalaxy(galaxyName) {
+        console.log('selectGalaxy called with:', galaxyName); // Отладка
         // Сбрасываем инерцию
         scrollVelocity = 0;
         lastScrollTime = Date.now();
@@ -481,6 +532,7 @@
 
     // Объединяем smoothScroll в одну функцию, сохраняя всю функциональность
     function smoothScroll() {
+        console.log('smoothScroll called'); // Отладка
         const now = Date.now();
         const timeSinceLastScroll = now - lastScrollTime;
 
@@ -532,6 +584,7 @@
 
     document.querySelectorAll('.galaxy-item').forEach(item => {
       item.addEventListener('click', () => {
+        console.log('Galaxy item clicked:', item.getAttribute('data-name')); // Отладка
         const galaxyName = item.getAttribute('data-name');
         window.location.href = `{% url 'planetary_system' %}?galaxy=${encodeURIComponent(galaxyName)}`;
       });
@@ -543,9 +596,11 @@
 
     // Инициализация при загрузке страницы
     document.addEventListener('DOMContentLoaded', () => {
+        console.log('DOMContentLoaded event fired'); // Отладка
         // Получаем сохранённую галактику из localStorage
         const savedGalaxy = localStorage.getItem('selectedGalaxy');
         const initialGalaxy = "{{ selected_galaxy|escapejs }}";
+        console.log('Saved Galaxy:', savedGalaxy, 'Initial Galaxy:', initialGalaxy); // Отладка
 
         // Если есть сохранённая галактика и она отличается от текущей, перенаправляем
         if (savedGalaxy && savedGalaxy !== initialGalaxy) {
@@ -553,6 +608,7 @@
         } else {
             // Иначе центрируем текущую выбранную галактику
             const selectedItems = document.querySelectorAll('.galaxy-item.selected');
+            console.log('Selected items:', selectedItems.length); // Отладка
             if (selectedItems.length > 0) {
                 const firstSelected = selectedItems[0];
                 const containerRect = galaxySelector.getBoundingClientRect();
@@ -575,6 +631,7 @@
 
         // Корректируем позицию выбранной галактики после прокрутки
         galaxySelector.addEventListener('scroll', () => {
+            console.log('Galaxy selector scrolled'); // Отладка
             const selectedItems = document.querySelectorAll('.galaxy-item.selected');
             if (selectedItems.length > 0) {
                 const firstSelected = selectedItems[0];
