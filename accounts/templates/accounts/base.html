@@ -215,15 +215,16 @@
     </div>
   </footer>
 
-  <!-- СКРИПТЫ БУДУТ ПЕРЕМЕЩЕНЫ ОТСЮДА -->
-  <!-- {% block script_extra %}{% endblock %} БУДЕТ ПЕРЕМЕЩЕН И ПЕРЕИМЕНОВАН -->
-
+  <!-- Глобальные скрипты -->
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/glightbox@3.2.0/dist/js/glightbox.min.js"></script>
   <script src="{% static 'accounts/js/button_effects.js' %}"></script>
   <script src="{% static 'accounts/js/global_styles.js' %}"></script>
+  
+  <!-- Скрипты для работы выпадающих меню в хедере (каталог и профиль) -->
   <script>
     document.addEventListener('DOMContentLoaded', function () {
+        // Скрипт для выпадающего меню каталога
         const catalogDropdownButton = document.querySelector('.catalog-dropdown-button');
         const catalogDropdownMenu = document.querySelector('.catalog-dropdown-menu');
         const catalogDropdownContainer = document.querySelector('.catalog-dropdown-container');
@@ -243,23 +244,27 @@
             });
         }
 
+        // Скрипт для выпадающего меню профиля (ВОССТАНОВЛЕНА ОРИГИНАЛЬНАЯ ЛОГИКА)
         const profileDropdownButton = document.querySelector('.profile-dropdown-button');
         const profileDropdownMenu = document.querySelector('.profile-dropdown-menu');
+        // const profileDropdownContainer = document.querySelector('.profile-dropdown-container'); // Эта строка была лишней для данной логики
 
-        if (profileDropdownButton && profileDropdownMenu) {
-            profileDropdownButton.addEventListener('click', function (event) {
-                event.stopPropagation();
-                profileDropdownMenu.classList.toggle('open');
+        if (profileDropdownButton && profileDropdownMenu) { // Возвращено profileDropdownMenu
+            profileDropdownButton.addEventListener('click', function(event) {
+                event.stopPropagation(); // Предотвращаем закрытие меню сразу после открытия
+                profileDropdownMenu.classList.toggle('open'); // Возвращено profileDropdownMenu
             });
-            document.addEventListener('click', function (event) {
-                if (profileDropdownMenu.classList.contains('open') && 
+
+            // Закрытие меню при клике вне его
+            document.addEventListener('click', function(event) {
+                if (profileDropdownMenu.classList.contains('open') && // Возвращено profileDropdownMenu
                     !profileDropdownMenu.contains(event.target) && 
                     !profileDropdownButton.contains(event.target)) {
-                    profileDropdownMenu.classList.remove('open');
+                    profileDropdownMenu.classList.remove('open'); // Возвращено profileDropdownMenu
                 }
             });
         }
-        
+
         // Восстановленный и дополненный код для очистки стилей элементов подменю каталога
         function cleanCatalogSubmenuItems() {
             const submenuItems = document.querySelectorAll('.catalog-dropdown-item.no-wave-effect');
@@ -298,6 +303,10 @@
         }
     });
   </script>
-  {% block body_scripts %}{% endblock %}
+
+  {% block script_extra %}
+    {# Сюда будут добавляться скрипты из дочерних шаблонов #}
+  {% endblock %}
+
 </body>
 </html>
