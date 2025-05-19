@@ -1,12 +1,10 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Планетарная система стартапов{% endblock %}</title>
-    <!-- Подключаем минимальные стили и шрифты -->
-    <link rel="stylesheet" href="{% static 'accounts/css/global.css' %}">
-    <link rel="stylesheet" href="{% static 'accounts/css/fonts.css' %}">
     {% block head_extra %}
       <link rel="stylesheet" href="{% static 'accounts/css/planetary_system.css' %}">
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -89,7 +87,7 @@
                 progress: '{{ planet.progress }}',
                 direction: '{{ planet.direction }}',
                 investment_type: '{{ planet.investment_type }}',
-                funding: '{{ planet.funding_goal }}',  // Заменяем funding_goal на funding
+                funding: '{{ planet.funding_goal }}',  // Исправляем funding_goal на funding
                 investors: '{{ planet.investors }}',
                 image: '{{ planet.image }}',
                 startup_id: '{{ planet.startup_id|default:"null" }}'
