@@ -1653,9 +1653,12 @@ def planetary_system(request):
 
     # Добавляем планету с плюсом для создания стартапа только для гостей и стартаперов
     is_authenticated = request.user.is_authenticated
-    is_startuper = is_authenticated and hasattr(request.user, 'role') and request.user.role.role_name == 'startuper'
+    # Убедимся, что is_startuper определяется корректно, даже если user.role не существует
+    is_startuper = False
+    if is_authenticated and hasattr(request.user, 'role') and request.user.role is not None:
+        is_startuper = request.user.role.role_name == 'startuper'
+        
     if not is_authenticated or is_startuper:  # Только для гостей и стартаперов
-        # Выбираем случайный размер орбиты для планеты с плюсом
         if len(available_sizes) > len(planetary_startups):
             orbit_size = available_sizes[len(planetary_startups)]
         else:
@@ -1663,12 +1666,15 @@ def planetary_system(request):
 
         create_planet_data = {
             'id': 'create-startup',
-            'startup_id': None,
+            'startup_id': None, 
             'name': 'Создать стартап',
             'description': 'Нажмите, чтобы создать новый стартап',
             'rating': '',
+            'comment_count': 0, 
             'progress': '',
-            'funding': '',
+            'direction': '', 
+            'investment_type': '',
+            'funding_goal': '', # В JS это поле используется как funding_goal
             'investors': '',
             'image': 'https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/0.png',
             'orbit_size': orbit_size,
@@ -1682,9 +1688,19 @@ def planetary_system(request):
         'image': 'https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/planets/Group%20645.png'
     }
 
+    # Сериализуем данные в JSON
+    planets_data_json = json.dumps(planets_data)
+    
+    # Подготавливаем и сериализуем directions_data
+    # JS ожидает массив объектов, где каждый объект имеет direction_name
+    directions_list = list(directions.values('direction_name', 'description')) # Добавим описание, если оно есть и нужно в JS
+    directions_data_json = json.dumps(directions_list)
+    
     context = {
-        'planets_data': planets_data,
-        'directions': directions,
+        'planets_data': planets_data, # Оставляем для HTML рендеринга
+        'planets_data_json': planets_data_json, # Для JS
+        'directions': directions, # Оставляем для HTML рендеринга
+        'directions_data_json': directions_data_json, # Для JS
         'selected_galaxy': selected_galaxy,
         'logo_data': logo_data,
         'is_authenticated': is_authenticated,
