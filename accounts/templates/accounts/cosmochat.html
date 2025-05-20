@@ -49,7 +49,7 @@
                     <div class="user-info-new">
                         <h3>{{ user_profile.first_name }} {{ user_profile.last_name }}</h3>
                         <div class="user-role-rating-new">
-                            <div class="rating-stars-new" data-rating="{{ user_profile.rating|default:0|stringformat:".1f"|replace:",","." }}">
+                            <div class="rating-stars-new" data-rating="{{ user_profile.rating|default:0|stringformat:".1f" }}">
                                 {% for i in "12345" %}
                                 <span class="rating-icon-planet-container">
                                     <img src="{% static 'accounts/images/planets/partial_filled_planet.svg' %}" alt="☆" class="icon-empty">
