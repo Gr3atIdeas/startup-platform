@@ -2,7 +2,7 @@
 {% load static %}
 {% load widget_tweaks %}
 
-{% static 'accounts/images/avatars/default_avatar_ufo.png' as default_avatar_src %}
+{# {% static 'accounts/images/avatars/default_avatar_ufo.png' as default_avatar_src %} #}
 
 {% block title %}CosmoChat{% endblock %}
 
@@ -24,6 +24,7 @@
 {% endblock %}
 
 {% block content %}
+{% static 'accounts/images/avatars/default_avatar_ufo.png' as default_avatar_src %}
 <div class="cosmochat-page-wrapper">
     <!-- Верхний блок: Пользователи и Статьи/Новости -->
     <div class="top-section-new">
