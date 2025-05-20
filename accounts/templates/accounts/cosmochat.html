@@ -290,6 +290,14 @@ document.addEventListener('DOMContentLoaded', function() {
         } 
     }
 
+    // Инициализация отображения рейтинга для всех карточек пользователей
+    const userCardsRatingContainers = document.querySelectorAll('.users-list-new .user-card-new .rating-stars-new');
+    userCardsRatingContainers.forEach(container => {
+        if (typeof updateUserRatingDisplay === 'function') {
+            updateUserRatingDisplay(container);
+        }
+    });
+
     const chatFilterButtons = document.querySelectorAll('.chat-filters-new .filter-btn-new');
     chatFilterButtons.forEach(button => {
         button.addEventListener('click', function() {
