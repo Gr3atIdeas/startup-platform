@@ -2,6 +2,8 @@
 {% load static %}
 {% load widget_tweaks %}
 
+{% static 'accounts/images/avatars/default_avatar_ufo.png' as default_avatar_src %}
+
 {% block title %}CosmoChat{% endblock %}
 
 {% block head_extra %}
@@ -43,7 +45,7 @@
             <div class="users-list-new">
                 {% for user_profile in users %} 
                 <div class="user-card-new" onclick="openProfileModal({{ user_profile.user_id }})">
-                    <img src="{{ user_profile.profile_picture_url|default:'{% static 'accounts/images/avatars/default_avatar_ufo.png' %}' }}" alt="{{ user_profile.first_name }}" class="avatar-img">
+                    <img src="{{ user_profile.profile_picture_url|default:default_avatar_src }}" alt="{{ user_profile.first_name }}" class="avatar-img">
                     <div class="user-info-new">
                         <h3>{{ user_profile.first_name }} {{ user_profile.last_name }}</h3>
                         <div class="user-role-rating-new">
@@ -157,7 +159,7 @@
                      data-chat-id="{{ chat.conversation_id }}"
                      data-chat-name="{{ chat.name|escapejs }}"
                      data-chat-type="{{ chat.type|default:'personal' }}" >
-                    <img src="{{ chat.image_url|default:'{% static 'accounts/images/avatars/default_avatar_ufo.png' %}' }}" alt="{{ chat.name }}" class="chat-avatar-img">
+                    <img src="{{ chat.image_url|default:default_avatar_src }}" alt="{{ chat.name }}" class="chat-avatar-img">
                     <div class="chat-item-info-new">
                         <h4>{{ chat.name|truncatechars:25 }}</h4>
                         {% with last_message=chat.get_last_message %}
