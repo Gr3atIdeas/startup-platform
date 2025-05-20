@@ -1,0 +1,842 @@
+/* Убираем старые стили, если они были прямо здесь, или оставляем, если это основной файл стилей */
+/* Стили, перенесенные из <style> тега cosmochat.html, будут ниже, если они еще актуальны */
+
+body.cosmochat-body { /* Применяем фон ко всему body, если это возможно через класс в base.html или напрямую */
+    background: linear-gradient(153deg, black 0%, #00346B 25%, #004E9F 48%, #01366D 64%, #020202 100%);
+    font-family: 'Unbounded', sans-serif;
+    color: white;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+.cosmochat-page-wrapper {
+    width: 100%;
+    min-height: 100vh;
+    padding: 20px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    box-sizing: border-box;
+    color: white; /* Устанавливаем основной цвет текста для страницы */
+}
+
+/* Общие стили */
+.search-input-wrapper-new {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.19);
+    border-radius: 99px;
+    border: 1px solid #004E9F; /* Был outline, сделал border для единообразия */
+    padding: 8px 15px;
+    gap: 8px;
+}
+.search-input-wrapper-new img {
+    width: 22px;
+    height: 22px;
+    opacity: 0.6;
+}
+.search-input-wrapper-new input[type="text"] {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #A1A0A0;
+    font-size: 12px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.12px;
+    width: 100%;
+}
+.search-input-wrapper-new input[type="text"]::placeholder {
+    color: #A1A0A0;
+}
+
+.filter-btn-new {
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    line-height: 18px;
+    color: white;
+    background: transparent;
+    border: 1px solid #004E9F;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+.filter-btn-new.active, .filter-btn-new:hover {
+    background: #004E9F;
+    color: #F5F5F5;
+}
+
+/* --- Верхний блок: Пользователи и Статьи/Новости --- */
+.top-section-new {
+    width: 1303px;
+    max-width: 95%;
+    display: flex;
+    justify-content: space-between;
+    gap: 60px;
+    padding-top: 45px;
+    padding-bottom: 60px;
+}
+
+.users-main-area-new {
+    width: 772px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.user-search-filters-new {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+.user-search-filters-new .search-form-cosmo { /* Класс для формы поиска пользователей */
+    width: 374px;
+}
+.role-filters-new {
+    display: flex;
+    gap: 10px;
+}
+/* Стилизация для Django CheckboxSelectMultiple под кнопки */
+.django-roles-filter {
+    display: flex;
+    gap: 10px;
+}
+.django-roles-filter label {
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    line-height: 18px;
+    color: white;
+    background: transparent;
+    border: 1px solid #004E9F;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    display: inline-block; /* Для правильного отображения */
+}
+.django-roles-filter input[type="checkbox"] {
+    display: none; /* Скрываем оригинальные чекбоксы */
+}
+.django-roles-filter input[type="checkbox"]:checked + label {
+    background: #004E9F;
+    color: #F5F5F5;
+}
+.django-roles-filter label:hover {
+    background: #005aa3; /* Легкий ховер */
+}
+
+
+.users-list-new {
+    display: flex;
+    flex-direction: column;
+    gap: 31px;
+}
+
+.user-card-new {
+    background: white;
+    color: black;
+    border-radius: 10px;
+    padding: 14px 36px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: box-shadow 0.3s;
+}
+.user-card-new:hover {
+    box-shadow: 0 4px 15px rgba(0, 78, 159, 0.5);
+}
+
+.user-card-new .avatar-img {
+    width: 86px;
+    height: 86px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.user-card-new .user-info-new {
+    width: 120px;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+}
+.user-card-new .user-info-new h3 {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 16px;
+    margin: 0;
+}
+.user-role-rating-new {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    align-items: flex-start;
+}
+.rating-stars-new {
+    display: flex;
+    gap: 3px; /* Немного увеличил расстояние между планетами */
+}
+
+/* Убираем старые стили для img напрямую внутри .rating-stars-new, если они были */
+/* .rating-stars-new img { ... } */
+
+.rating-icon-planet-container {
+    display: inline-block;
+    width: 22px; /* Размер планеты */
+    height: 22px; /* Размер планеты */
+    line-height: 22px; /* Для вертикального выравнивания, если вдруг внутри текст */
+    position: relative; /* Для позиционирования вложенных иконок */
+}
+
+.rating-icon-planet-container .icon-empty,
+.rating-icon-planet-container .icon-filled {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.rating-icon-planet-container .icon-empty {
+    z-index: 1;
+    /* Можно добавить opacity, если empty_planet.svg это просто серая версия full_filled_planet.svg 
+    opacity: 0.3; */
+}
+
+.rating-icon-planet-container .icon-filled {
+    z-index: 2;
+    /* Ширина будет управляться JS, но на всякий случай можно поставить overflow: hidden, 
+       хотя для SVG это обычно не нужно, если viewBox корректный */
+    overflow: hidden; /* Гарантирует, что часть SVG будет скрыта, если ширина меньше 100% */
+}
+
+.icon-planet-empty {
+    opacity: 0.5; /* Пример: делаем пустые планеты полупрозрачными, если используется одна и та же SVG */
+    /* Если у вас есть отдельный SVG для пустой планеты (например, только контур), 
+       то этот стиль opacity может не понадобиться или его можно заменить на fill: none; stroke: white; и т.д. внутри SVG */
+}
+
+.user-role-rating-new .role-text {
+    font-size: 12px;
+    font-weight: 300;
+    color: #A9A9A9;
+    letter-spacing: 0.12px;
+    margin: 0;
+}
+
+.user-card-new .user-stats-new {
+    width: 223px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 300;
+    letter-spacing: 0.12px;
+}
+.user-card-new .user-stats-new p {
+    margin: 0;
+    color: #A9A9A9;
+}
+.user-card-new .user-stats-new span {
+    color: black;
+}
+
+.chat-btn-on-card {
+    padding: 12px;
+    background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%);
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 5px;
+    color: #F5F5F5;
+    font-size: 16px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
+    line-height: 16px;
+    border: none;
+    cursor: pointer;
+    width: 147px;
+    text-align: center;
+}
+
+.pagination-new {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    margin-top: 20px; /* Дополнительный отступ сверху */
+}
+.show-more-btn-new {
+    padding: 12px 35px;
+    border-radius: 10px;
+    border: 1px white solid; /* Был outline */
+    background: transparent;
+    color: #F5F5F5;
+    font-size: 16px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    cursor: pointer;
+}
+.show-more-btn-new img {
+    width: 16px;
+    height: 16px;
+}
+.page-numbers-new {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Уменьшил gap */
+    font-size: 14px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+}
+.page-numbers-new .page-number-item {
+    cursor: pointer;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 8px;
+}
+.page-numbers-new .page-number-item.current {
+    background: white;
+    color: #004E9F;
+}
+.page-numbers-new .page-number-item:not(.dots):not(.current):hover {
+    background: rgba(255,255,255,0.2);
+}
+
+
+.articles-section-new {
+    width: 409px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+.articles-section-new h2 {
+    font-size: 35px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 600;
+    line-height: 35px;
+    margin: 0;
+}
+.article-card-item {
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 21px;
+    position: relative;
+}
+.article-card-item .article-image {
+    width: 100%;
+    height: 214px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+.article-card-item h3 {
+    font-size: 20px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
+    line-height: 1.3;
+    margin: 0;
+    padding: 0 5px;
+    color: white;
+}
+.article-card-item p.description {
+    font-size: 14px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    line-height: 1.4;
+    margin: 0;
+    padding: 0 5px;
+    color: white;
+}
+.article-card-item .ad-badge-new {
+    position: absolute;
+    top: 10px; /* Сделал ближе к верху */
+    right: 10px;
+    background: rgba(217, 217, 217, 0.58);
+    border-radius: 10px;
+    padding: 4px 10px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    color: white;
+}
+.article-card-item .ad-badge-new img {
+    width: 16px; /* Уменьшил иконку */
+    height: 16px;
+}
+.article-card-item .category-info {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    padding: 0 5px;
+    color: white;
+}
+.article-card-item .category-badge-new {
+    background: #031A30;
+    color: #FFEF2B;
+    padding: 9px 15px;
+    border-radius: 5px;
+    font-size: 12px;
+}
+
+/* --- Нижний блок: Чаты --- */
+.main-chat-area-new {
+    width: 1303px;
+    max-width: 95%;
+    min-height: 725px;
+    background: white;
+    box-shadow: 6px 6px 15px rgba(0, 0, 0, 0.25);
+    border-radius: 15px;
+    padding: 36px 38px;
+    display: flex;
+    gap: 61px;
+    color: black; /* Текст внутри этого блока по умолчанию черный */
+    box-sizing: border-box;
+}
+
+.chat-list-column-new {
+    width: 351px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.chat-list-header-new {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+.chat-list-header-new .chat-search-input-wrapper { /* Используем общий .search-input-wrapper-new */
+    flex-grow: 1;
+    border-color: #004E9F; /* Рамка как в макете */
+    background: #f0f0f0; /* Фон для поля поиска в чатах */
+}
+.chat-list-header-new .chat-search-input-wrapper input {
+    color: #333; /* Темный текст в поле поиска */
+}
+.chat-list-header-new .chat-search-input-wrapper input::placeholder {
+    color: #A1A0A0;
+}
+.chat-list-header-new .add-chat-btn-icon {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    /* Ожидается SVG или img тег в HTML */
+}
+
+.chat-filters-new {
+    display: flex;
+    gap: 14px;
+}
+.chat-filters-new .filter-btn-new {
+    padding: 11px 25px;
+    border-radius: 99px;
+    font-size: 12px;
+    color: black; /* Текст по умолчанию черный */
+}
+.chat-filters-new .filter-btn-new.active, .chat-filters-new .filter-btn-new:hover {
+    background: #004E9F;
+    color: white;
+}
+
+.chat-items-list-new {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    max-height: 500px;
+    overflow-y: auto;
+    padding-right: 5px; /* Небольшой отступ для скроллбара */
+}
+.chat-item-new {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    border: 1px solid transparent; /* Для активного состояния */
+}
+.chat-item-new:hover {
+    background-color: #f2f4ff; /* Легкий фон при наведении */
+}
+.chat-item-new.active {
+    background-color: #e6efff; /* Более заметный фон для активного чата */
+    border-color: #004E9F;
+}
+.chat-item-new .chat-avatar-img {
+    width: 77px;
+    height: 77px;
+    border-radius: 22px;
+    object-fit: cover;
+}
+.chat-item-info-new {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    overflow: hidden;
+}
+.chat-item-info-new h4 {
+    font-size: 16px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: black;
+}
+.chat-item-info-new .last-message-preview {
+    font-size: 12px;
+    color: #797979;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.chat-item-meta-new {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 5px;
+    font-size: 12px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    min-width: 70px;
+    text-align: right;
+}
+.chat-item-meta-new .timestamp-chat {
+    color: black;
+}
+.chat-item-meta-new .unread-badge-chat {
+    background: #004E9F;
+    color: white;
+    font-size: 12px;
+    padding: 3px 7px;
+    border-radius: 12px; /* Сделал более овальным */
+    min-width: 18px;
+    text-align: center;
+    line-height: 1;
+}
+.chat-item-meta-new .date-chat-preview {
+    color: #A9A9A9;
+    font-size: 12px;
+}
+
+.chat-window-column-new {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    border-radius: 15px;
+    border: 1px solid #004E9F;
+    min-height: 650px; /* Примерно 725 (общая) - 2*36 (паддинги) - заголовок/ввод */
+}
+
+.no-chat-selected-placeholder {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 21px;
+    padding: 50px;
+    text-align: center;
+}
+.no-chat-selected-placeholder img {
+    width: 160px;
+    height: 160px;
+}
+.no-chat-selected-placeholder h2 {
+    font-size: 35px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 600;
+    color: black;
+    margin: 0;
+}
+
+.chat-active-header {
+    padding: 15px 25px;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex; /* По умолчанию flex, JS будет управлять видимостью всего блока .chat-window-column-new */
+    align-items: center;
+    justify-content: space-between;
+}
+.chat-active-header #chatWindowTitle {
+    font-size: 20px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 500;
+    margin: 0;
+    color: black;
+}
+.chat-active-header .chat-header-actions button {
+    background: transparent;
+    border: 1px solid #004E9F;
+    color: #004E9F;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 10px;
+    font-family: 'Unbounded', sans-serif;
+    font-size: 14px;
+}
+.chat-active-header .chat-header-actions button:hover {
+    background: #004E9F;
+    color: white;
+}
+
+.chat-messages-area {
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto;
+    background: #f9f9f9;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.message-bubble-new {
+    max-width: 70%;
+    padding: 10px 15px;
+    border-radius: 18px; /* Закругленные углы */
+    font-size: 14px;
+    font-family: 'Unbounded', sans-serif;
+    line-height: 1.4;
+}
+.message-bubble-new .message-sender-name {
+    font-weight: 600;
+    font-size: 13px;
+    margin-bottom: 4px;
+    color: #333; /* Цвет имени отправителя */
+}
+.message-bubble-new .message-text-content {
+    word-wrap: break-word;
+}
+.message-bubble-new .message-meta-info {
+    font-size: 11px;
+    color: #888;
+    margin-top: 5px;
+    text-align: right;
+}
+.message-bubble-new .message-meta-info .status-icon {
+    margin-left: 5px;
+    color: #007bff;
+}
+
+.other-user-message {
+    background-color: #e9e9eb; /* Светло-серый для чужих */
+    color: black;
+    align-self: flex-start;
+    border-bottom-left-radius: 4px; /* Один угол острый */
+}
+.current-user-message {
+    background-color: #004E9F; /* Синий для своих */
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 4px; /* Один угол острый */
+}
+.current-user-message .message-sender-name { color: #e0e0e0; } /* Светлое имя для своих сообщений */
+.current-user-message .message-meta-info { color: #c0c0c0; } /* Светлые метаданные */
+
+
+.system-notification-message .message-text-content {
+    background-color: #f0f0f0;
+    color: #555;
+    text-align: center;
+    font-style: italic;
+    padding: 8px;
+    border-radius: 8px;
+    align-self: center;
+    width: 100%; /* Системное сообщение на всю ширину */
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+
+.chat-input-field-area {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px 25px;
+    border-top: 1px solid #e0e0e0;
+}
+.chat-input-field-area .attach-file-btn {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    /* Ожидается SVG/img */
+}
+.chat-input-field-area #messageFormNew { /* ID формы */
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    background: #F3F3F3;
+    border-radius: 10px;
+}
+.chat-input-field-area #messageFormNew textarea { /* Textarea из Django формы */
+    flex-grow: 1;
+    border: none;
+    outline: none;
+    padding: 12px 18px;
+    background: transparent;
+    color: #333;
+    font-size: 14px;
+    font-family: 'Unbounded', sans-serif;
+    resize: none;
+    min-height: 24px; /* (45px общая высота - 2* ~10px паддинги) */
+    line-height: 1.4;
+}
+.chat-input-field-area #messageFormNew textarea::placeholder {
+    color: #D8D7D7;
+    font-weight: 300;
+}
+.chat-input-field-area #messageFormNew .send-message-btn {
+    background: transparent;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+}
+.chat-input-field-area #messageFormNew .send-message-btn img {
+    width: 24px;
+    height: 24px;
+    /* Ожидается SVG/img */
+}
+
+/* Стили для модальных окон - из старого css, адаптированы */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.7);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Unbounded', sans-serif;
+}
+.modal {
+  background: #FFFFFF;
+  color: black;
+  padding: 30px;
+  border-radius: 12px;
+  width: 450px;
+  max-width: 90%;
+  position: relative;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+}
+.modal-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #777;
+}
+.modal-close:hover { color: #333; }
+
+.modal img#profileAvatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  margin: 0 auto 20px auto;
+  display: block;
+  object-fit: cover;
+}
+.modal h3#profileName, .modal h3 { /* Общий для заголовков модалок */
+  font-size: 22px;
+  font-weight: 500;
+  margin: 0 0 15px;
+  text-align: center;
+  font-family: 'Unbounded', sans-serif;
+}
+.modal p {
+  font-size: 14px;
+  color: #555;
+  margin: 0 0 10px;
+  line-height: 1.5;
+  font-family: 'Unbounded', sans-serif;
+}
+.modal p#profileRole, .modal p#profileRating {
+    text-align: center;
+    color: #004E9F;
+    font-weight: 400;
+}
+.modal button.action-btn, .modal a button.action-btn { /* Общий класс для кнопок */
+  padding: 10px 20px;
+  background: #004E9F;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 20px;
+  font-family: 'Unbounded', sans-serif;
+  font-size: 16px;
+  display: block;
+  width: 100%;
+  text-align: center;
+  transition: background-color 0.2s;
+  box-sizing: border-box; /* Для корректной ширины с padding */
+}
+.modal button.action-btn:hover, .modal a button.action-btn:hover {
+    background: #003B7A;
+}
+.modal a#profileLink button.action-btn { /* Кнопка "К профилю" */
+    background: #6c757d;
+}
+.modal a#profileLink button.action-btn:hover {
+    background: #5a6268;
+}
+
+.participants-list {
+  max-height: 300px;
+  overflow-y: auto;
+  margin-top: 15px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+}
+.participant-item {
+  padding: 12px 15px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-size: 14px;
+  font-family: 'Unbounded', sans-serif;
+}
+.participant-item:last-child { border-bottom: none; }
+.participant-item:hover { background-color: #f2f4ff; }
+.participant-item.disabled {
+  background-color: #e9ecef;
+  cursor: not-allowed;
+  color: #A9A9A9;
+}
+
+/* --- Удалить СТАРЫЕ неиспользуемые стили --- */
+/* Селекторы типа .cosmochat-container, .social-section, .user-card (старый), .chat-section, .chat-list (старый) и т.д. */
+/* должны быть удалены, если они полностью заменены новыми с суффиксом -new или другой логикой */
+/* Например, старый .cosmochat-container был заменен на .cosmochat-page-wrapper */
+/* Старый .social-section заменен на .top-section-new и .users-main-area-new */
+
+/* Очистка старых стилей (оставляю несколько для примера, что нужно удалить) */
+/* .social-section { display: none !important; } */
+/* .chat-section { display: none !important; } */
+/* ... и так далее для всех старых корневых селекторов */

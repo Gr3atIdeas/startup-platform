@@ -1,821 +1,355 @@
 {% extends 'accounts/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
 
 {% block title %}CosmoChat{% endblock %}
 
 {% block head_extra %}
+  <link rel="stylesheet" href="{% static 'accounts/css/cosmochat.css' %}">
   <style>
-    .cosmochat-container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 20px;
+    /* Стили для body, чтобы фон применился */
+    body {
+        background: linear-gradient(153deg, black 0%, #00346B 25%, #004E9F 48%, #01366D 64%, #020202 100%);
+        font-family: 'Unbounded', sans-serif; /* Убедитесь, что шрифт Unbounded подключен */
+        color: white;
     }
-
-    /* Соцсеть */
-    .social-section {
-      margin-bottom: 40px;
-    }
-    .social-section h2 {
-      font-family: 'Circe', sans-serif;
-      font-size: 24px;
-      margin-bottom: 20px;
-    }
-    .search-form {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      margin-bottom: 20px;
-    }
-    .search-form input[type="text"] {
-      width: 300px;
-      padding: 8px;
-      border: 1px solid #E5E7EB;
-      border-radius: 8px;
-    }
-    .search-form label {
-      font-family: 'Circe', sans-serif;
-      font-size: 16px;
-    }
-    .roles-filter {
-      display: flex;
-      gap: 10px;
-    }
-    .roles-filter label {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-    .users-list {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 20px;
-    }
-    .user-card {
-      background: #FFFFFF;
-      border-radius: 12px;
-      padding: 15px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      cursor: pointer;
-      transition: transform 0.2s;
-    }
-    .user-card:hover {
-      transform: translateY(-2px);
-    }
-    .user-card img {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      margin-bottom: 10px;
-    }
-    .user-card h3 {
-      font-family: 'Circe', sans-serif;
-      font-size: 16px;
-      margin: 0 0 5px;
-    }
-    .user-card p {
-      font-family: 'Circe', sans-serif;
-      font-size: 14px;
-      color: #A9A9A9;
-      margin: 0;
-    }
-
-    /* Чаты */
-    .chat-section {
-      display: flex;
-      gap: 20px;
-      height: 500px;
-    }
-    .chat-list {
-      width: 300px;
-      background: #FFFFFF;
-      border-radius: 12px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      overflow-y: auto;
-    }
-    .chat-item {
-      padding: 15px;
-      border-bottom: 1px solid #E5E7EB;
-      cursor: pointer;
-      transition: background-color 0.2s;
-    }
-    .chat-item:hover {
-      background-color: #F2F4FF;
-    }
-    .chat-item.active {
-      background-color: #E5E7EB;
-    }
-    .chat-item h3 {
-      font-family: 'Circe', sans-serif;
-      font-size: 16px;
-      margin: 0 0 5px;
-    }
-    .chat-item p {
-      font-family: 'Circe', sans-serif;
-      font-size: 14px;
-      color: #A9A9A9;
-      margin: 0;
-    }
-    .chat-item .status {
-      font-size: 12px;
-      color: #7B61FF;
-    }
-    .chat-interface {
-      flex: 1;
-      background: #FFFFFF;
-      border-radius: 12px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      display: flex;
-      flex-direction: column;
-    }
-    .chat-header {
-      padding: 15px;
-      border-bottom: 1px solid #E5E7EB;
-    }
-    .chat-header h3 {
-      font-family: 'Circe', sans-serif;
-      font-size: 18px;
-      margin: 0 0 10px;
-    }
-    .chat-participants {
-      display: flex;
-      gap: 10px;
-    }
-    .chat-participants span {
-      font-family: 'Circe', sans-serif;
-      font-size: 14px;
-      color: #A9A9A9;
-    }
-    .chat-messages {
-      flex: 1;
-      padding: 15px;
-      overflow-y: auto;
-    }
-    .message {
-      margin-bottom: 15px;
-      display: flex;
-      flex-direction: column;
-    }
-    .message.own {
-      align-items: flex-end;
-    }
-    .message .message-content {
-      max-width: 70%;
-      padding: 10px;
-      border-radius: 12px;
-      font-family: 'Circe', sans-serif;
-      font-size: 14px;
-    }
-    .message:not(.own) .message-content {
-      background-color: #F2F4FF;
-    }
-    .message.own .message-content {
-      background-color: #7B61FF;
-      color: #FFFFFF;
-    }
-    .message-meta {
-      font-family: 'Circe', sans-serif;
-      font-size: 12px;
-      color: #A9A9A9;
-      margin-top: 5px;
-    }
-    .message-meta .status {
-      margin-left: 5px;
-    }
-    .message.system .message-content {
-      background-color: #E5E7EB;
-      color: #666;
-      text-align: center;
-      font-style: italic;
-    }
-    .chat-input {
-      padding: 15px;
-      border-top: 1px solid #E5E7EB;
-    }
-    .chat-input form {
-      display: flex;
-      gap: 10px;
-    }
-    .chat-input textarea {
-      flex: 1;
-      padding: 8px;
-      border: 1px solid #E5E7EB;
-      border-radius: 8px;
-      resize: none;
-      min-height: 40px;
-      font-family: 'Circe', sans-serif;
-      font-size: 14px;
-      display: block;
-    }
-    .chat-input button {
-      padding: 8px 16px;
-      background: #7B61FF;
-      color: #FFFFFF;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-
-    /* Модальное окно профиля */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.5);
-      z-index: 1000;
-      justify-content: center;
-      align-items: center;
-    }
-    .modal {
-      background: #FFFFFF;
-      padding: 20px;
-      border-radius: 12px;
-      width: 400px;
-      max-width: 90%;
-      position: relative;
-    }
-    .modal-close {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: none;
-      border: none;
-      font-size: 20px;
-      cursor: pointer;
-    }
-    .modal img {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      margin-bottom: 15px;
-    }
-    .modal h3 {
-      font-family: 'Circe', sans-serif;
-      font-size: 20px;
-      margin: 0 0 10px;
-    }
-    .modal p {
-      font-family: 'Circe', sans-serif;
-      font-size: 14px;
-      color: #A9A9A9;
-      margin: 0 0 5px;
-    }
-    .modal button {
-      padding: 8px 16px;
-      background: #7B61FF;
-      color: #FFFFFF;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      margin-top: 15px;
-    }
-
-    .add-participant-btn {
-      padding: 5px 10px;
-      background: #7B61FF;
-      color: #FFFFFF;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-family: 'Circe', sans-serif;
-      font-size: 14px;
-      margin-bottom: 10px;
-    }
-    .leave-chat-btn {
-      padding: 5px 10px;
-      background: #FF6161;
-      color: #FFFFFF;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-family: 'Circe', sans-serif;
-      font-size: 14px;
-      margin-bottom: 10px;
-      margin-left: 10px;
-    }
-
-    /* Стили для модального окна выбора участников */
-    .participants-list {
-      max-height: 300px;
-      overflow-y: auto;
-      margin-top: 10px;
-    }
-    .participant-item {
-      padding: 10px;
-      border-bottom: 1px solid #E5E7EB;
-      cursor: pointer;
-      transition: background-color 0.2s;
-    }
-    .participant-item:hover {
-      background-color: #F2F4FF;
-    }
-    .participant-item.disabled {
-      background-color: #E5E7EB;
-      cursor: not-allowed;
-      color: #A9A9A9;
+    /* Фикс для header, если он перекрывается */
+    header {
+        position: relative;
+        z-index: 10; /* Выше, чем основной контент, если есть пересечения */
     }
   </style>
 {% endblock %}
 
 {% block content %}
-<div class="cosmochat-container">
-  <!-- Соцсеть -->
-  <div class="social-section">
-    <h2>Пользователи</h2>
-    <form class="search-form">
-      {{ search_form.query }}
-      <div class="roles-filter">
-        {{ search_form.roles.label_tag }}
-        {{ search_form.roles }}
-      </div>
-      <button type="submit" class="submit-btn">Поиск</button>
-    </form>
-    <div class="users-list">
-      {% for user in users %}
-        <div class="user-card" onclick="openProfileModal({{ user.user_id }})">
-          <img src="{{ user.profile_picture_url|default:'/static/accounts/images/layout/image12.png' }}" alt="{{ user.first_name }} {{ user.last_name }}">
-          <h3>{{ user.first_name }} {{ user.last_name }}</h3>
-          <p>Роль: {{ user.role.role_name|capfirst }}</p>
-          <p>Рейтинг: {{ user.rating|default:"Нет рейтинга" }}</p>
-        </div>
-      {% endfor %}
-    </div>
-  </div>
+<div class="cosmochat-page-wrapper">
+    <!-- Верхний блок: Пользователи и Статьи/Новости -->
+    <div class="top-section-new">
+        <!-- Левая колонка: Поиск пользователей и список пользователей -->
+        <div class="users-main-area-new">
+            <form method="get" action="." class="user-search-filters-new">
+                <div class="search-input-wrapper-new search-form-cosmo">
+                    {% render_field search_form.query class+="search-query-input" placeholder="Поиск" %}
+                    <img src="{% static 'accounts/images/cosmochat/search_icon_grey.png' %}" alt="Поиск">
+                </div>
+                <div class="role-filters-new django-roles-filter">
+                    {% for choice in search_form.roles %}
+                        {{ choice.tag }} <label for="{{ choice.id_for_label }}">{{ choice.choice_label }}</label>
+                    {% endfor %}
+                </div>
+                <button type="submit" class="filter-btn-new" style="background: #004E9F; color: #F5F5F5;">Применить</button>
+            </form>
 
-  <!-- Чаты -->
-  <div class="chat-section">
-    <div class="chat-list">
-      {% for chat in chats %}
-        <div class="chat-item {% if forloop.first %}active{% endif %}" onclick="loadChat({{ chat.conversation_id }})" data-chat-id="{{ chat.conversation_id }}">
-          <h3>{{ chat.name|truncatechars:30 }}</h3>
-          {% with last_message=chat.get_last_message %}
-            {% if last_message %}
-              <p>{{ last_message.message_text|truncatechars:50 }}</p>
-              <p>{{ last_message.created_at|date:"d.m.Y H:i" }}
-                <span class="status">
-                  {% if last_message.is_read %}
-                    (Прочитано)
-                  {% else %}
-                    (Не прочитано)
-                  {% endif %}
-                </span>
-              </p>
-            {% else %}
-              <p>Сообщений пока нет</p>
+            <div class="users-list-new">
+                {% for user_profile in users %} 
+                <div class="user-card-new" onclick="openProfileModal({{ user_profile.user_id }})">
+                    <img src="{{ user_profile.profile_picture_url|default:'/static/accounts/images/cosmochat/avatar_placeholder_general.png' }}" alt="{{ user_profile.first_name }}" class="avatar-img">
+                    <div class="user-info-new">
+                        <h3>{{ user_profile.first_name }} {{ user_profile.last_name }}</h3>
+                        <div class="user-role-rating-new">
+                            <div class="rating-stars-new" data-rating="{{ user_profile.rating|default:0|stringformat:".1f"|replace:",","." }}">
+                                {% for i in "12345" %}
+                                <span class="rating-icon-planet-container">
+                                    <img src="{% static 'accounts/images/planets/empty_planet.svg' %}" alt="☆" class="icon-empty">
+                                    <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="★" class="icon-filled" style="width: 0%;">
+                                </span>
+                                {% endfor %}
+                            </div>
+                            <p class="role-text">{{ user_profile.role.role_name|capfirst }}</p>
+                        </div>
+                    </div>
+                    <div class="user-stats-new">
+                        {% if user_profile.role.role_name == "investor" %}
+                        <p>Инвестирует от: <span>{{ user_profile.investorprofile.investment_range_min|default:"N/A" }}₽</span></p>
+                        <p>Инвестировал в: <span>{{ user_profile.investorprofile.completed_projects_count|default:0 }} стартапов</span></p>
+                        {% elif user_profile.role.role_name == "startuper" %}
+                        <p>Мин. вклад: <span>{{ user_profile.startuperprofile.min_investment_needed|default:"N/A" }}₽</span></p>
+                        <p>Открыл: <span>{{ user_profile.startuperprofile.projects_count|default:0 }} стартапов</span></p>
+                        {% else %}
+                         <p>Нет данных о роли</p>
+                        {% endif %}
+                    </div>
+                    <button type="button" class="chat-btn-on-card" onclick="event.stopPropagation(); startChatWithUser({{ user_profile.user_id }});">Чат</button>
+                </div>
+                {% empty %}
+                <p>Пользователи не найдены.</p>
+                {% endfor %}
+            </div>
+
+            {% if users.has_other_pages %}
+            <div class="pagination-new">
+                <div class="page-numbers-new">
+                    {% if users.has_previous %}
+                        <a href="?page=1{% for key, value in request.GET.items %}{% if key != 'page' %}&amp;{{ key }}={{ value }}{% endif %}{% endfor %}" class="page-number-item">&laquo;</a>
+                        <a href="?page={{ users.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&amp;{{ key }}={{ value }}{% endif %}{% endfor %}" class="page-number-item">&lsaquo;</a>
+                    {% endif %}
+
+                    {% for num in users.paginator.page_range %}
+                        {% if users.number == num %}
+                            <span class="page-number-item current">{{ num }}</span>
+                        {% elif num > users.number|add:'-3' and num < users.number|add:'3' %}
+                             <a href="?page={{ num }}{% for key, value in request.GET.items %}{% if key != 'page' %}&amp;{{ key }}={{ value }}{% endif %}{% endfor %}" class="page-number-item">{{ num }}</a>
+                        {% elif forloop.first or forloop.last %}
+                             <a href="?page={{ num }}{% for key, value in request.GET.items %}{% if key != 'page' %}&amp;{{ key }}={{ value }}{% endif %}{% endfor %}" class="page-number-item">{{ num }}</a>
+                        {% elif num == users.number|add:'-3' or num == users.number|add:'3' %}
+                            <span class="page-number-item dots">...</span>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if users.has_next %}
+                        <a href="?page={{ users.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&amp;{{ key }}={{ value }}{% endif %}{% endfor %}" class="page-number-item">&rsaquo;</a>
+                        <a href="?page={{ users.paginator.num_pages }}{% for key, value in request.GET.items %}{% if key != 'page' %}&amp;{{ key }}={{ value }}{% endif %}{% endfor %}" class="page-number-item">&raquo;</a>
+                    {% endif %}
+                </div>
+            </div>
             {% endif %}
-          {% endwith %}
+
         </div>
-      {% empty %}
-        <p>Чатов пока нет. Начните новый чат!</p>
-      {% endfor %}
-    </div>
-    <div class="chat-interface">
-      <div class="chat-header">
-        <h3>Выберите чат</h3>
-        <button onclick="openAddParticipantModal()" class="add-participant-btn">Добавить участника</button>
-        <button onclick="leaveChat()" class="leave-chat-btn">Удалить чат</button>
-        <div class="chat-participants"></div>
-      </div>
-      <div class="chat-messages"></div>
-      <div class="chat-input">
-        <form id="messageForm">
-          {% csrf_token %}
-          <input type="hidden" id="chatId" name="chat_id" value="">
-          {{ message_form.message_text }}
-          <button type="submit">Отправить</button>
-        </form>
-      </div>
-    </div>
-  </div>
 
-  <!-- Модальное окно профиля -->
-  <div class="modal-overlay" id="profileModal">
-    <div class="modal">
-      <button class="modal-close" onclick="closeProfileModal()">×</button>
-      <img id="profileAvatar" src="" alt="Аватар">
-      <h3 id="profileName"></h3>
-      <p id="profileRole"></p>
-      <p id="profileRating"></p>
-      <p id="profileBio"></p>
-      <button onclick="startChat()">Начать чат</button>
-      <a id="profileLink" href="#"><button>К профилю</button></a> <!-- Новая кнопка -->
-    </div>
-  </div>
+        <div class="articles-section-new">
+            <h2>Стартапы и статьи</h2>
+            
+            <div class="article-card-item">
+                <img src="https://loremflickr.com/409/214/technology,startup?random=1" alt="Инвестиции будущего" class="article-image">
+                <h3>Инвестиции будущего или как быть на волне трендов</h3>
+                <p class="description">Наш стартап разрабатывает инновационную платформу для телемедицины, которая обеспечивает пользователям доступ...</p>
+            </div>
+            
+            <div class="article-card-item">
+                <img src="https://loremflickr.com/409/214/business,innovation?random=2" alt="Инвестиции будущего" class="article-image">
+                <div class="ad-badge-new">
+                    <img src="{% static 'accounts/images/cosmochat/ad_icon.png' %}" alt="Реклама">
+                    <span>Реклама</span>
+                </div>
+                <h3>Инвестиции будущего или как быть на волне трендов</h3>
+                <p class="description">Наш стартап разрабатывает инновационную платформу для телемедицины, которая обеспечивает пользователям доступ...</p>
+            </div>
 
-  <!-- Модальное окно выбора участников -->
-  <div class="modal-overlay" id="addParticipantModal">
-    <div class="modal">
-      <button class="modal-close" onclick="closeAddParticipantModal()">×</button>
-      <h3>Добавить участника</h3>
-      <div class="participants-list" id="participantsList"></div>
+            <div class="article-card-item">
+                <img src="https://loremflickr.com/409/214/medical,health?random=3" alt="Ромашка" class="article-image">
+                <h3>Ромашка</h3>
+                <div class="category-info">
+                    Категория: <span class="category-badge-new">Медицина</span>
+                </div>
+                <p class="description">Наш стартап разрабатывает инновационную платформу для телемедицины, которая обеспечивает пользователям доступ...</p>
+            </div>
+        </div>
     </div>
-  </div>
+
+    <div class="main-chat-area-new">
+        <div class="chat-list-column-new">
+            <div class="chat-list-header-new">
+                <div class="search-input-wrapper-new chat-search-input-wrapper">
+                    <input type="text" id="chatSearchInput" placeholder="Поиск по чатам">
+                    <img src="{% static 'accounts/images/cosmochat/search_icon_grey.png' %}" alt="Поиск">
+                </div>
+                <img src="{% static 'accounts/images/cosmochat/add_chat_icon.png' %}" alt="Добавить чат" class="add-chat-btn-icon" onclick="openCreateChatModal()">
+            </div>
+            <div class="chat-filters-new">
+                <button type="button" class="filter-btn-new active" data-filter="all">Все</button>
+                <button type="button" class="filter-btn-new" data-filter="chats">Чаты</button>
+                <button type="button" class="filter-btn-new" data-filter="groups">Группы</button>
+            </div>
+            <div class="chat-items-list-new" id="chatListContainer">
+                {% for chat in chats %}
+                <div class="chat-item-new {% if forloop.first and not current_chat_id %}active{% elif chat.conversation_id == current_chat_id %}active{% endif %}" 
+                     onclick="loadChat({{ chat.conversation_id }})" 
+                     data-chat-id="{{ chat.conversation_id }}"
+                     data-chat-name="{{ chat.name|escapejs }}"
+                     data-chat-type="{{ chat.type|default:'personal' }}" >
+                    <img src="{{ chat.image_url|default:'/static/accounts/images/cosmochat/dialogicon.png' }}" alt="{{ chat.name }}" class="chat-avatar-img">
+                    <div class="chat-item-info-new">
+                        <h4>{{ chat.name|truncatechars:25 }}</h4>
+                        {% with last_message=chat.get_last_message %}
+                            {% if last_message %}
+                            <p class="last-message-preview">
+                                {% if last_message.sender_id == request.user.user_id %}Вы: {% endif %}
+                                {{ last_message.message_text|truncatechars:30 }}
+                            </p>
+                            {% else %}
+                            <p class="last-message-preview">Нет сообщений</p>
+                            {% endif %}
+                        {% endwith %}
+                    </div>
+                    <div class="chat-item-meta-new">
+                        {% with last_message=chat.get_last_message %}
+                            {% if last_message %}
+                            <span class="timestamp-chat">{{ last_message.created_at|date:"H:i" }}</span>
+                                {% if chat.unread_count > 0 %}
+                                <span class="unread-badge-chat">{{ chat.unread_count }}</span>
+                                {% endif %}
+                            <span class="date-chat-preview">{{ last_message.created_at|date:"d/m/Y" }}</span>
+                            {% else %}
+                            <span class="timestamp-chat"></span>
+                            <span class="date-chat-preview"></span>
+                            {% endif %}
+                        {% endwith %}
+                    </div>
+                </div>
+                {% empty %}
+                <p style="text-align: center; padding: 20px; color: #797979;">У вас пока нет чатов. Найдите пользователя и начните диалог!</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="chat-window-column-new" id="chatWindowColumn">
+            <div class="chat-active-header" id="chatActiveHeader" style="display: none;">
+                <h3 id="chatWindowTitle">Название чата</h3>
+                <div class="chat-header-actions">
+                    <button onclick="openAddParticipantModal()" id="addParticipantBtn" class="add-participant-btn-new-style">Добавить</button>
+                    <button onclick="leaveChat()" id="leaveChatBtn" class="leave-chat-btn-new-style">Покинуть</button>
+                </div>
+            </div>
+
+            <div class="chat-messages-area" id="chatMessagesArea">
+            </div>
+            
+            <div class="no-chat-selected-placeholder" id="noChatSelectedPlaceholder">
+                <img src="{% static 'accounts/images/cosmochat/dialogicon.png' %}" alt="Выберите чат">
+                <h2>Выберите чат</h2>
+            </div>
+
+            <div class="chat-input-field-area" id="chatInputFieldArea" style="display: none;">
+                <img src="{% static 'accounts/images/cosmochat/attach_icon.png' %}" alt="Прикрепить" class="attach-file-btn" id="attachFileBtn">
+                <form id="messageFormNew" style="width: 100%;">
+                    {% csrf_token %}
+                    <input type="hidden" id="chatIdInput" name="chat_id" value="">
+                    {% render_field message_form.message_text placeholder="Сообщение" rows="1" %}
+                    <button type="submit" class="send-message-btn">
+                        <img src="{% static 'accounts/images/cosmochat/send_icon.png' %}" alt="Отправить">
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="profileModal">
+      <div class="modal">
+        <button class="modal-close" onclick="closeProfileModal()">×</button>
+        <img id="profileAvatar" src="" alt="Аватар">
+        <h3 id="profileName"></h3>
+        <p id="profileRole"></p>
+        <p id="profileRating"></p>
+        <p id="profileBio"></p>
+        <button class="action-btn" onclick="startChat()">Начать чат</button>
+        <a id="profileLink" href="#"><button class="action-btn">К профилю</button></a>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="addParticipantModal">
+      <div class="modal">
+        <button class="modal-close" onclick="closeAddParticipantModal()">×</button>
+        <h3>Добавить участника</h3>
+        <div class="participants-list" id="participantsList">
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="createChatModal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeCreateChatModal()">×</button>
+            <h3>Создать новый чат</h3>
+            <p>Выберите пользователя из списка слева, чтобы начать с ним чат, или найдите через поиск.</p>
+            <p>Функционал создания групповых чатов будет добавлен позже.</p>
+            <button class="action-btn" onclick="closeCreateChatModal()">Понятно</button>
+        </div>
+    </div>
+
 </div>
 
+<script src="{% static 'accounts/js/cosmochat.js' %}"></script>
+{% endblock %}
+
+{% block body_extra_js %}
 <script>
-  let currentChatId = null;
-  let currentProfileUserId = null;
-  let lastMessageTimestamp = null; // Для отслеживания времени последнего сообщения
-  let pollingInterval = null; // Для хранения интервала опроса
-  let currentParticipants = []; // Для хранения текущих участников чата
-  let displayedMessageIds = new Set(); // Храним ID отображённых сообщений
+// Устанавливаем REQUEST_USER_ID для JavaScript
+window.REQUEST_USER_ID = {{ request.user.user_id|default:0 }};
 
-  document.addEventListener('DOMContentLoaded', function() {
-    // Загружаем первый чат при загрузке страницы
-    const firstChat = document.querySelector('.chat-item');
-    if (firstChat) {
-      const chatId = firstChat.getAttribute('data-chat-id');
-      loadChat(chatId);
+document.addEventListener('DOMContentLoaded', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const openChatId = urlParams.get('open_chat_id');
+
+    if (openChatId) {
+        if (typeof loadChat === 'function') loadChat(openChatId);
+    } else {
+        const firstChatEl = document.querySelector('.chat-item-new.active');
+        if (firstChatEl && typeof currentChatId !== 'undefined' && !currentChatId && typeof loadChat === 'function') {
+            // Не загружаем первый чат автоматически, если это не указано в URL
+        } 
     }
 
-    // Обработка отправки сообщения
-    document.getElementById('messageForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      if (!currentChatId) {
-        alert('Выберите чат для отправки сообщения');
-        return;
-      }
-
-      const formData = new FormData(this);
-      formData.append('chat_id', currentChatId);
-
-      fetch("{% url 'send_message' %}", {
-        method: 'POST',
-        body: formData,
-        headers: {
-          'X-CSRFToken': '{{ csrf_token }}'
-        }
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          appendMessage(data.message);
-          updateChatList(data.message);
-          lastMessageTimestamp = data.message.created_at_iso;
-          this.reset();
-        } else {
-          alert(data.error || 'Ошибка при отправке сообщения');
-        }
-      })
-      .catch(error => {
-        console.error('Ошибка:', error);
-        alert('Произошла ошибка при отправке сообщения');
-      });
-    });
-  });
-
-  function loadChat(chatId) {
-    currentChatId = chatId;
-    document.getElementById('chatId').value = chatId;
-
-    // Останавливаем предыдущий опрос, если он был
-    if (pollingInterval) {
-      clearInterval(pollingInterval);
-    }
-
-    // Очищаем список отображённых сообщений
-    displayedMessageIds.clear();
-
-    // Обновляем активный чат в списке
-    document.querySelectorAll('.chat-item').forEach(item => {
-      item.classList.remove('active');
-      if (item.getAttribute('data-chat-id') == chatId) {
-        item.classList.add('active');
-      }
-    });
-
-    // Загружаем все сообщения (без параметра since)
-    fetch(`/cosmochat/${chatId}/`, {
-      headers: {
-        'X-CSRFToken': '{{ csrf_token }}'
-      }
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        const messagesDiv = document.querySelector('.chat-messages');
-        messagesDiv.innerHTML = ''; // Очищаем область сообщений
-        data.messages.forEach(msg => appendMessage(msg));
-
-        const participantsDiv = document.querySelector('.chat-participants');
-        participantsDiv.innerHTML = data.participants.map(p => `<span>${p.name} (${p.role})</span>`).join(', ');
-
-        // Сохраняем текущих участников для проверки ролей
-        currentParticipants = data.participants;
-
-        // Устанавливаем время последнего сообщения
-        if (data.messages.length > 0) {
-          lastMessageTimestamp = data.messages[data.messages.length - 1].created_at_iso;
-        } else {
-          lastMessageTimestamp = null;
-        }
-
-        // Прокручиваем вниз
-        messagesDiv.scrollTop = messagesDiv.scrollHeight;
-
-        // Отмечаем сообщения как прочитанные
-        fetch(`/cosmochat/mark-read/${chatId}/`, {
-          method: 'POST',
-          headers: {
-            'X-CSRFToken': '{{ csrf_token }}'
-          }
+    const chatFilterButtons = document.querySelectorAll('.chat-filters-new .filter-btn-new');
+    chatFilterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            chatFilterButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+            if (typeof filterChats === 'function') filterChats(this.dataset.filter); 
         });
-
-        // Запускаем опрос новых сообщений
-        startPolling();
-      } else {
-        alert(data.error || 'Ошибка при загрузке чата');
-      }
-    })
-    .catch(error => {
-      console.error('Ошибка:', error);
-      alert('Произошла ошибка при загрузке чата');
     });
-  }
+});
 
-  function startPolling() {
-    pollingInterval = setInterval(() => {
-      if (!currentChatId) return;
+const chatSearchInput = document.getElementById('chatSearchInput');
+if (chatSearchInput) {
+    chatSearchInput.addEventListener('keyup', function() {
+        const searchTerm = this.value.toLowerCase();
+        const chatItems = document.querySelectorAll('.chat-items-list-new .chat-item-new');
+        chatItems.forEach(item => {
+            const chatName = item.dataset.chatName ? item.dataset.chatName.toLowerCase() : '';
+            if (chatName.includes(searchTerm)) {
+                item.style.display = 'flex';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    });
+}
 
-      console.log(`[${new Date().toISOString()}] Опрос новых сообщений для чата ${currentChatId}`);
+function openCreateChatModal() {
+    const modal = document.getElementById('createChatModal');
+    if(modal) modal.style.display = 'flex';
+}
+function closeCreateChatModal() {
+    const modal = document.getElementById('createChatModal');
+    if(modal) modal.style.display = 'none';
+}
 
-      // Добавляем параметр since, если есть lastMessageTimestamp
-      const url = lastMessageTimestamp 
-        ? `/cosmochat/${currentChatId}/?since=${encodeURIComponent(lastMessageTimestamp)}`
-        : `/cosmochat/${currentChatId}/`;
-
-      fetch(url, {
+function startChatWithUser(userId) {
+    fetch(`/cosmochat/start-chat/${userId}/`, {
+        method: 'POST',
         headers: {
-          'X-CSRFToken': '{{ csrf_token }}'
+            'X-CSRFToken': '{{ csrf_token }}',
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
         }
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          const messagesDiv = document.querySelector('.chat-messages');
-          const newMessages = data.messages; // Сервер уже отфильтровал сообщения
-
-          console.log(`[${new Date().toISOString()}] Найдено новых сообщений: ${newMessages.length}`);
-
-          newMessages.forEach(msg => appendMessage(msg));
-
-          if (newMessages.length > 0) {
-            lastMessageTimestamp = newMessages[newMessages.length - 1].created_at_iso;
-            messagesDiv.scrollTop = messagesDiv.scrollHeight;
-
-            // Обновляем статус в списке чатов
-            updateChatList(newMessages[newMessages.length - 1]);
-
-            // Отмечаем новые сообщения как прочитанные
-            fetch(`/cosmochat/mark-read/${currentChatId}/`, {
-              method: 'POST',
-              headers: {
-                'X-CSRFToken': '{{ csrf_token }}'
-              }
-            });
-          }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success && data.chat_id) {
+            if (typeof loadChat === 'function') { 
+                let chatExists = false;
+                document.querySelectorAll('.chat-item-new').forEach(item => {
+                    if(item.dataset.chatId == data.chat_id) {
+                        chatExists = true;
+                    }
+                });
+                if (chatExists) {
+                     loadChat(data.chat_id);
+                } else {
+                    window.location.href = window.location.pathname + '?open_chat_id=' + data.chat_id + '&new_chat=true';
+                }
+                if (typeof closeProfileModal === 'function') closeProfileModal();
+            } else {
+                 window.location.href = window.location.pathname + '?open_chat_id=' + data.chat_id + '&new_chat=true';
+            }
         } else {
-          console.error('Ошибка от сервера:', data.error);
+            alert(data.error || 'Ошибка при создании или открытии чата');
         }
-      })
-      .catch(error => {
-        console.error('Ошибка при опросе новых сообщений:', error);
-      });
-    }, 5000); // Опрашиваем каждые 5 секунд
-  }
-
-  function appendMessage(msg) {
-    // Проверяем, не было ли сообщение уже отображено
-    if (displayedMessageIds.has(msg.message_id)) {
-      return; // Пропускаем, если сообщение уже отображено
-    }
-
-    const messagesDiv = document.querySelector('.chat-messages');
-    const messageDiv = document.createElement('div');
-    messageDiv.className = `message ${msg.is_own ? 'own' : ''} ${msg.sender_id ? '' : 'system'}`;
-    messageDiv.dataset.messageId = msg.message_id; // Сохраняем message_id в элементе
-    messageDiv.innerHTML = `
-      <div class="message-content">${msg.message_text}</div>
-      <div class="message-meta">
-        ${msg.sender_name || 'Система'} | ${msg.created_at}
-        ${msg.sender_id ? `<span class="status">${msg.is_read ? '✓✓' : '✓'}</span>` : ''}
-      </div>
-    `;
-    messagesDiv.appendChild(messageDiv);
-    messagesDiv.scrollTop = messagesDiv.scrollHeight;
-
-    // Добавляем message_id в список отображённых
-    displayedMessageIds.add(msg.message_id);
-  }
-
-  function updateChatList(lastMessage) {
-    const chatItem = document.querySelector(`.chat-item[data-chat-id="${currentChatId}"]`);
-    if (chatItem) {
-      let messageTextP = chatItem.querySelector('p:nth-child(2)');
-      let metaP = chatItem.querySelector('p:nth-child(3)');
-
-      // Если элементов <p> нет (например, было "Сообщений пока нет"), заменяем или добавляем их
-      if (!messageTextP) {
-        messageTextP = document.createElement('p');
-        chatItem.appendChild(messageTextP);
-      }
-      if (!metaP) {
-        metaP = document.createElement('p');
-        chatItem.appendChild(metaP);
-      }
-
-      // Обновляем содержимое
-      messageTextP.textContent = lastMessage.message_text.substring(0, 50);
-      metaP.innerHTML = `${lastMessage.created_at} <span class="status">${lastMessage.is_read ? '(Прочитано)' : '(Не прочитано)'}</span>`;
-    }
-  }
-
-  function openProfileModal(userId) {
-    currentProfileUserId = userId;
-    fetch(`/profile/?user_id=${userId}`, {
-      headers: {
-        'X-CSRFToken': '{{ csrf_token }}'
-      }
-    })
-    .then(response => response.json())
-    .then(data => {
-      // Добавляем '/' в начало пути, если его нет
-      const profilePictureUrl = data.profile_picture_url ? 
-        (data.profile_picture_url.startsWith('/') ? data.profile_picture_url : `/${data.profile_picture_url}`) : 
-        '/static/accounts/images/layout/image12.png';
-      
-      document.getElementById('profileAvatar').src = profilePictureUrl;
-      document.getElementById('profileName').textContent = `${data.first_name} ${data.last_name}`;
-      document.getElementById('profileRole').textContent = `Роль: ${data.role}`;
-      document.getElementById('profileRating').textContent = `Рейтинг: ${data.rating || 'Нет рейтинга'}`;
-      document.getElementById('profileBio').textContent = `О себе: ${data.bio || 'Нет информации'}`;
-      document.getElementById('profileLink').href = `/profile/${userId}/`;
-      document.getElementById('profileModal').style.display = 'flex';
     })
     .catch(error => {
-      console.error('Ошибка:', error);
-      alert('Произошла ошибка при загрузке профиля');
+        console.error('Ошибка:', error);
+        alert('Произошла ошибка при создании или открытии чата.');
     });
-  }
+}
 
-  function closeProfileModal() {
-    document.getElementById('profileModal').style.display = 'none';
-    currentProfileUserId = null;
-  }
-
-  function startChat() {
-    if (!currentProfileUserId) {
-      alert('Ошибка: пользователь не выбран');
-      return;
-    }
-
-    fetch(`/cosmochat/start-chat/${currentProfileUserId}/`, {
-      method: 'POST',
-      headers: {
-        'X-CSRFToken': '{{ csrf_token }}'
-      }
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        location.reload();
-      } else {
-        alert(data.error || 'Ошибка при создании чата');
-      }
-    })
-    .catch(error => {
-      console.error('Ошибка:', error);
-      alert('Произошла ошибка при создании чата');
-    });
-  }
-
-  function openAddParticipantModal() {
-      if (!currentChatId) {
-          alert('Выберите чат для добавления участника');
-          return;
-      }
-
-      // Проверяем количество участников
-      if (currentParticipants.length >= 3) {
-          alert('В чате уже максимальное количество участников (3)');
-          return;
-      }
-
-      // Получаем список доступных пользователей
-      fetch(`/cosmochat/?chat_id=${currentChatId}`, {
-          headers: {
-              'X-CSRFToken': '{{ csrf_token }}',
-              'X-Requested-With': 'XMLHttpRequest' // Исправляем заголовок (некоторые серверы ожидают X-Requested-With)
-          }
-      })
-      .then(response => {
-          // Логируем статус ответа
-          console.log('Статус ответа:', response.status);
-          if (!response.ok) {
-              // Проверяем, является ли ответ HTML
-              return response.text().then(text => {
-                  console.error('Ответ сервера:', text);
-                  throw new Error(`HTTP error! status: ${response.status}, response: ${text.substring(0, 100)}...`);
-              });
-          }
-          return response.json();
-      })
-      .then(data => {
-          const participantsList = document.getElementById('participantsList');
-          participantsList.innerHTML = '';
-
-          // Получаем роли текущих участников
-          const currentRoles = currentParticipants.map(p => p.role.toLowerCase());
-          const allRoles = ['startuper', 'investor', 'moderator'];
-          const availableRoles = allRoles.filter(role => !currentRoles.includes(role));
-
-          data.users.forEach(user => {
-              const isDisabled = !availableRoles.includes(user.role.toLowerCase());
-              const item = document.createElement('div');
-              item.className = `participant-item ${isDisabled ? 'disabled' : ''}`;
-              item.innerHTML = `${user.name} (${user.role})`;
-              if (!isDisabled) {
-                  item.onclick = () => addParticipant(user.user_id);
-              }
-              participantsList.appendChild(item);
-          });
-
-          document.getElementById('addParticipantModal').style.display = 'flex';
-      })
-      .catch(error => {
-          console.error('Ошибка:', error);
-          alert('Произошла ошибка при загрузке списка пользователей: ' + error.message);
-      });
-  }
-
-  function closeAddParticipantModal() {
-    document.getElementById('addParticipantModal').style.display = 'none';
-  }
-
-  function addParticipant(userId) {
-    if (!currentChatId) {
-      alert('Выберите чат для добавления участника');
-      return;
-    }
-
-    fetch(`/cosmochat/add-participant/${currentChatId}/?user_id=${userId}`, {
-      method: 'POST',
-      headers: {
-        'X-CSRFToken': '{{ csrf_token }}'
-      }
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        const participantsDiv = document.querySelector('.chat-participants');
-        const currentParticipantsHtml = participantsDiv.innerHTML ? participantsDiv.innerHTML + ', ' : '';
-        participantsDiv.innerHTML = currentParticipantsHtml + `<span>${data.new_participant.name} (${data.new_participant.role})</span>`;
-        currentParticipants.push(data.new_participant);
-        closeAddParticipantModal();
-      } else {
-        alert(data.error || 'Ошибка при добавлении участника');
-      }
-    })
-    .catch(error => {
-      console.error('Ошибка:', error);
-      alert('Произошла ошибка при добавлении участника');
-    });
-  }
-
-  function leaveChat() {
-    if (!currentChatId) {
-      alert('Выберите чат для удаления');
-      return;
-    }
-
-    if (!confirm('Вы уверены, что хотите покинуть этот чат?')) {
-      return;
-    }
-
-    fetch(`/cosmochat/leave-chat/${currentChatId}/`, {
-      method: 'POST',
-      headers: {
-        'X-CSRFToken': '{{ csrf_token }}'
-      }
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        if (data.deleted) {
-          alert('Чат удалён, так как все участники покинули его');
-        } else {
-          alert('Вы покинули чат. Он всё ещё доступен другим участникам');
-        }
-        location.reload();
-      } else {
-        alert(data.error || 'Ошибка при покидании чата');
-      }
-    })
-    .catch(error => {
-      console.error('Ошибка:', error);
-      alert('Произошла ошибка при покидании чата');
-    });
-  }
 </script>
 {% endblock %}
