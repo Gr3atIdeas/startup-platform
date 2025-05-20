@@ -30,7 +30,7 @@
             <form method="get" action="." class="user-search-filters-new">
                 <div class="search-input-wrapper-new search-form-cosmo">
                     {% render_field search_form.query class+="search-query-input" placeholder="Поиск" %}
-                    <img src="{% static 'accounts/images/cosmochat/search_icon_grey.png' %}" alt="Поиск">
+                    <img src="{% static 'accounts/images/cosmochat/search.svg' %}" alt="Поиск">
                 </div>
                 <div class="role-filters-new django-roles-filter">
                     {% for choice in search_form.roles %}
@@ -43,14 +43,14 @@
             <div class="users-list-new">
                 {% for user_profile in users %} 
                 <div class="user-card-new" onclick="openProfileModal({{ user_profile.user_id }})">
-                    <img src="{{ user_profile.profile_picture_url|default:'/static/accounts/images/cosmochat/avatar_placeholder_general.png' }}" alt="{{ user_profile.first_name }}" class="avatar-img">
+                    <img src="{{ user_profile.profile_picture_url|default:'{% static 'accounts/images/avatars/default_avatar_ufo.png' %}' }}" alt="{{ user_profile.first_name }}" class="avatar-img">
                     <div class="user-info-new">
                         <h3>{{ user_profile.first_name }} {{ user_profile.last_name }}</h3>
                         <div class="user-role-rating-new">
                             <div class="rating-stars-new" data-rating="{{ user_profile.rating|default:0|stringformat:".1f"|replace:",","." }}">
                                 {% for i in "12345" %}
                                 <span class="rating-icon-planet-container">
-                                    <img src="{% static 'accounts/images/planets/empty_planet.svg' %}" alt="☆" class="icon-empty">
+                                    <img src="{% static 'accounts/images/planets/partial_filled_planet.svg' %}" alt="☆" class="icon-empty">
                                     <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="★" class="icon-filled" style="width: 0%;">
                                 </span>
                                 {% endfor %}
@@ -117,10 +117,10 @@
             
             <div class="article-card-item">
                 <img src="https://loremflickr.com/409/214/business,innovation?random=2" alt="Инвестиции будущего" class="article-image">
-                <div class="ad-badge-new">
+                <!-- <div class="ad-badge-new">
                     <img src="{% static 'accounts/images/cosmochat/ad_icon.png' %}" alt="Реклама">
                     <span>Реклама</span>
-                </div>
+                </div> -->
                 <h3>Инвестиции будущего или как быть на волне трендов</h3>
                 <p class="description">Наш стартап разрабатывает инновационную платформу для телемедицины, которая обеспечивает пользователям доступ...</p>
             </div>
@@ -141,9 +141,9 @@
             <div class="chat-list-header-new">
                 <div class="search-input-wrapper-new chat-search-input-wrapper">
                     <input type="text" id="chatSearchInput" placeholder="Поиск по чатам">
-                    <img src="{% static 'accounts/images/cosmochat/search_icon_grey.png' %}" alt="Поиск">
+                    <img src="{% static 'accounts/images/cosmochat/search.svg' %}" alt="Поиск">
                 </div>
-                <img src="{% static 'accounts/images/cosmochat/add_chat_icon.png' %}" alt="Добавить чат" class="add-chat-btn-icon" onclick="openCreateChatModal()">
+                <img src="{% static 'accounts/images/cosmochat/add-circle-outline.svg' %}" alt="Добавить чат" class="add-chat-btn-icon" onclick="openCreateChatModal()">
             </div>
             <div class="chat-filters-new">
                 <button type="button" class="filter-btn-new active" data-filter="all">Все</button>
@@ -157,7 +157,7 @@
                      data-chat-id="{{ chat.conversation_id }}"
                      data-chat-name="{{ chat.name|escapejs }}"
                      data-chat-type="{{ chat.type|default:'personal' }}" >
-                    <img src="{{ chat.image_url|default:'/static/accounts/images/cosmochat/dialogicon.png' }}" alt="{{ chat.name }}" class="chat-avatar-img">
+                    <img src="{{ chat.image_url|default:'{% static 'accounts/images/avatars/default_avatar_ufo.png' %}' }}" alt="{{ chat.name }}" class="chat-avatar-img">
                     <div class="chat-item-info-new">
                         <h4>{{ chat.name|truncatechars:25 }}</h4>
                         {% with last_message=chat.get_last_message %}
@@ -210,13 +210,13 @@
             </div>
 
             <div class="chat-input-field-area" id="chatInputFieldArea" style="display: none;">
-                <img src="{% static 'accounts/images/cosmochat/attach_icon.png' %}" alt="Прикрепить" class="attach-file-btn" id="attachFileBtn">
+                <img src="{% static 'accounts/images/cosmochat/attach.svg' %}" alt="Прикрепить" class="attach-file-btn" id="attachFileBtn">
                 <form id="messageFormNew" style="width: 100%;">
                     {% csrf_token %}
                     <input type="hidden" id="chatIdInput" name="chat_id" value="">
                     {% render_field message_form.message_text placeholder="Сообщение" rows="1" %}
                     <button type="submit" class="send-message-btn">
-                        <img src="{% static 'accounts/images/cosmochat/send_icon.png' %}" alt="Отправить">
+                        <img src="{% static 'accounts/images/cosmochat/send.svg' %}" alt="Отправить">
                     </button>
                 </form>
             </div>
@@ -261,11 +261,24 @@
 {% endblock %}
 
 {% block body_extra_js %}
+{{ request.user.user_id|default:0|json_script:"request_user_id_data" }}
 <script>
 // Устанавливаем REQUEST_USER_ID для JavaScript
-window.REQUEST_USER_ID = {{ request.user.user_id|default:0 }};
+// window.REQUEST_USER_ID = {{ request.user.user_id|default:0 }};
 
 document.addEventListener('DOMContentLoaded', function() {
+    const userIdDataElement = document.getElementById('request_user_id_data');
+    if (userIdDataElement) {
+        try {
+            window.REQUEST_USER_ID = JSON.parse(userIdDataElement.textContent);
+        } catch (e) {
+            console.error('Error parsing REQUEST_USER_ID:', e);
+            window.REQUEST_USER_ID = 0; // Fallback
+        }
+    } else {
+        window.REQUEST_USER_ID = 0; // Fallback if element not found
+    }
+
     const urlParams = new URLSearchParams(window.location.search);
     const openChatId = urlParams.get('open_chat_id');
 
