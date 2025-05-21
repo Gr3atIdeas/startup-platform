@@ -49,7 +49,7 @@
   </style>
 
   {% block head_extra %}
-    {{ block.super }}
+    {# Убрали {{ block.super }} — это корневой шаблон, и подтягивать содержимое не нужно #}
   {% endblock %}
 </head>
 <body>
@@ -57,12 +57,12 @@
     <div class="header-content-wrapper">
         <a href="{% url 'home' %}" class="header-logo-link">
             <img src="{% static 'accounts/images/white_logo_header.svg' %}" alt="Great Ideas Logo" class="header-logo-icon-img" style="height: 50px; width: auto;"> 
-      </a>
+        </a>
         <div class="header-search-bar">
             <img src="{% static 'accounts/images/search.svg' %}" alt="Search" class="header-search-icon-img">
             <input type="text" placeholder="Поиск" class="header-search-input">
-      </div>
-      <nav class="nav-menu">
+        </div>
+        <nav class="nav-menu">
             <div class="header-nav-links">
                 {% if not user.is_authenticated %}
                     <a href="{% url 'startups_list' %}" class="header-nav-link">Каталог</a>
@@ -136,15 +136,15 @@
                         <a href="#" class="profile-dropdown-item">FAQ</a>       {# Временный URL #}
                         <a href="{% url 'logout' %}" class="profile-dropdown-item profile-dropdown-logout">
                             <i class="fas fa-sign-out-alt"></i> Выйти
-          </a>
+                        </a>
                     </div>
                 </div>
-        {% else %}
+            {% else %}
                 <a href="{% url 'login' %}" class="header-auth-button-link header-login-button">
-            Войти
+                    Войти
                     <img src="{% static 'accounts/images/add-circle-outline.svg' %}" alt="icon" class="header-auth-button-icon">
-          </a>
-        {% endif %}
+                </a>
+            {% endif %}
         </div>
     </div>
   </header>
@@ -159,11 +159,11 @@
             <div class="footer-brand-info">
                 <div class="footer-brand-title">Great ideas</div>
                 <div class="footer-brand-tagline">Раскройте открывающиеся возможности и будьте частью инновационной волны</div>
-          </div>
+            </div>
             <div class="footer-social-links">
                 <a href="#" title="VK"><img src="{% static 'accounts/images/layout/vk_footer.svg' %}" alt="VK" class="footer-social-icon"></a>
                 <a href="#" title="Telegram"><img src="{% static 'accounts/images/layout/telegram_footer.svg' %}" alt="Telegram" class="footer-social-icon"></a>
-          </div>
+            </div>
         </div>
         
         <div class="footer-middle-section">
@@ -189,19 +189,19 @@
                         <a href="#" class="footer-menu-link">Франшизы</a>
                         <a href="{% url 'news' %}" class="footer-menu-link">Новости</a>
                         <a href="{% url 'cosmochat' %}" class="footer-menu-link">CosmoChat</a>
-            </div>
-          </div>
+                    </div>
+                </div>
                 <div class="footer-menu-column">
                     <div class="footer-menu-title">О нас</div>
                     <div class="footer-menu-links">
                         <a href="#" class="footer-menu-link">FAQ</a>
                         <a href="#" class="footer-menu-link">Поддержка</a>
                         <a href="#" class="footer-menu-link">Контакты</a>
-          </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-    
+        
         <div class="footer-bottom-section">
             {# <div class="footer-bottom-bar"></div> #} {# Этот элемент теперь не нужен здесь, управляется из CSS или интегрирован в copyright-section #}
             <div class="footer-copyright-section">
@@ -209,9 +209,9 @@
                 <div class="footer-legal-links">
                     <a href="#" class="footer-legal-link">Политика конфиденциальности</a>
                     <a href="#" class="footer-legal-link">Оферта</a>
-          </div>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
   </footer>
 
