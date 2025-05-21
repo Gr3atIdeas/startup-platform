@@ -7,13 +7,12 @@ from django.core.files.storage import default_storage
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.utils import timezone
-from django.urls import reverse
 import json
 import logging
 import os
 from django.conf import settings
 from django.db import models  # Добавляем для models.Q
-from .forms import RegisterForm, LoginForm, StartupForm, CommentForm, MessageForm, UserSearchForm, UserProfileForm  # Добавляем MessageForm и UserSearchForm
+from .forms import RegisterForm, LoginForm, StartupForm, CommentForm, MessageForm, UserSearchForm  # Добавляем MessageForm и UserSearchForm
 from .models import Users, Directions, Startups, ReviewStatuses, UserVotes, StartupTimeline, FileStorage, EntityTypes, FileTypes, InvestmentTransactions, TransactionTypes, PaymentMethods, Comments, NewsArticles, NewsLikes, NewsViews, ChatConversations, ChatParticipants, Messages, MessageStatuses
 from .models import creative_upload_path, proof_upload_path, video_upload_path
 import uuid
@@ -461,6 +460,7 @@ def investments(request):
 def legal(request):
     return render(request, 'accounts/legal.html')
 
+# accounts/views.py
 def profile(request, user_id=None):
     if not request.user.is_authenticated:
         messages.error(request, 'Пожалуйста, войдите в систему, чтобы просмотреть профиль.')
@@ -484,136 +484,16 @@ def profile(request, user_id=None):
             'profile_picture_url': user.profile_picture_url
         })
 
-    # Получаем стартапы пользователя
-    user_startups = Startups.objects.filter(owner=profile_user, status='approved').annotate(
-        average_rating=Avg(
-            models.ExpressionWrapper(
-                Coalesce(models.F('sum_votes'), 0) * 1.0 / Coalesce(models.F('total_voters'), 1),
-                output_field=FloatField()
-            ),
-            filter=models.Q(total_voters__gt=0),
-            default=0.0
-        ),
-        comment_count=Count('comments')
-    ).order_by('-created_at')
-
-    # Получаем новости пользователя (для модераторов)
-    user_news = NewsArticles.objects.filter(author=profile_user).order_by('-published_at')
-
-    # Инициализируем S3-клиент для доступа к Yandex Object Storage
-    s3_client = boto3.client(
-        's3',
-        aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-        aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
-        endpoint_url=settings.AWS_S3_ENDPOINT_URL,
-        region_name=settings.AWS_S3_REGION_NAME
-    )
-
-    # Формируем URL для аватара
-    avatar_url = profile_user.profile_picture_url
-    if avatar_url:
-        try:
-            # Проверяем, существует ли файл в S3
-            file_key = avatar_url.replace(f"https://storage.yandexcloud.net/{settings.AWS_STORAGE_BUCKET_NAME}/", "")
-            s3_client.head_object(Bucket=settings.AWS_STORAGE_BUCKET_NAME, Key=file_key)
-            logger.info(f"Аватар пользователя {profile_user.user_id} найден: {avatar_url}")
-        except Exception as e:
-            logger.error(f"Ошибка при проверке аватара пользователя {profile_user.user_id}: {str(e)}")
-            avatar_url = 'https://via.placeholder.com/150'
-    else:
-        avatar_url = 'https://via.placeholder.com/150'
-
     # Обработка загрузки аватара (доступно только для своего профиля)
     if request.method == 'POST' and 'avatar' in request.FILES and profile_user == request.user:
         avatar = request.FILES['avatar']
-        # Генерируем имя файла
-        ext = os.path.splitext(avatar.name)[1]
-        filename = f"avatars/user_{request.user.user_id}_avatar{ext}"
-        # Удаляем старый аватар, если он есть
-        if profile_user.profile_picture_url:
-            try:
-                old_file_key = profile_user.profile_picture_url.replace(f"https://storage.yandexcloud.net/{settings.AWS_STORAGE_BUCKET_NAME}/", "")
-                s3_client.delete_object(Bucket=settings.AWS_STORAGE_BUCKET_NAME, Key=old_file_key)
-                logger.info(f"Старый аватар пользователя {profile_user.user_id} удалён: {old_file_key}")
-            except Exception as e:
-                logger.error(f"Ошибка при удалении старого аватара пользователя {profile_user.user_id}: {str(e)}")
-        # Загружаем новый аватар
-        try:
-            s3_client.upload_fileobj(
-                avatar,
-                settings.AWS_STORAGE_BUCKET_NAME,
-                filename,
-                ExtraArgs={'ACL': 'public-read', 'ContentType': avatar.content_type}
-            )
-            avatar_url = f"https://storage.yandexcloud.net/{settings.AWS_STORAGE_BUCKET_NAME}/{filename}"
-            request.user.profile_picture_url = avatar_url
-            request.user.save()
-            messages.success(request, 'Аватарка успешно загружена!')
-            logger.info(f"Новый аватар пользователя {profile_user.user_id} загружен: {avatar_url}")
-        except Exception as e:
-            logger.error(f"Ошибка при загрузке аватара пользователя {profile_user.user_id}: {str(e)}")
-            messages.error(request, 'Ошибка при загрузке аватара.')
+        filename = f'avatars/user_{request.user.user_id}_avatar{os.path.splitext(avatar.name)[1]}'
+        file_path = default_storage.save(filename, avatar)
+        request.user.profile_picture_url = default_storage.url(file_path)
+        request.user.save()
+        messages.success(request, 'Аватарка успешно загружена!')
 
-    # Обработка редактирования профиля
-    if request.method == 'POST' and 'edit_profile' in request.POST and profile_user == request.user:
-        form = UserProfileForm(request.POST, instance=request.user)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Профиль успешно обновлён!')
-            return redirect('profile')
-        else:
-            messages.error(request, 'Ошибка при обновлении профиля.')
-    else:
-        form = UserProfileForm(instance=profile_user)
-
-    # Подготавливаем данные для стартапов
-    startups_data = []
-    for startup in user_startups:
-        # Формируем URL для изображения
-        logo_url = 'https://via.placeholder.com/150'
-        if startup.logo_urls and isinstance(startup.logo_urls, list) and len(startup.logo_urls) > 0:
-            try:
-                prefix = f"startups/{startup.startup_id}/logos/"
-                response = s3_client.list_objects_v2(
-                    Bucket=settings.AWS_STORAGE_BUCKET_NAME,
-                    Prefix=prefix
-                )
-                if 'Contents' in response and len(response['Contents']) > 0:
-                    file_key = response['Contents'][0]['Key']
-                    logo_url = f"https://storage.yandexcloud.net/{settings.AWS_STORAGE_BUCKET_NAME}/{file_key}"
-                    logger.info(f"Сгенерирован URL для логотипа стартапа {startup.startup_id}: {logo_url}")
-            except Exception as e:
-                logger.error(f"Ошибка при генерации URL для логотипа стартапа {startup.startup_id}: {str(e)}")
-
-        startup_data = {
-            'name': startup.title or 'Без названия',
-            'rating': f"Рейтинг {startup.get_average_rating():.1f}/5 ({startup.total_voters or 0})",
-            'comment_count': startup.comment_count,
-            'category': startup.direction.direction_name if startup.direction else 'Без категории',
-            'progress': f"{startup.get_progress_percentage()}%",
-            'image': logo_url,
-            'detail_url': reverse('startup_detail', args=[startup.startup_id])
-        }
-        startups_data.append(startup_data)
-
-    # Подготавливаем данные для новостей
-    news_data = []
-    for article in user_news:
-        news_data.append({
-            'title': article.title,
-            'description': article.content[:100] + '...' if len(article.content) > 100 else article.content,
-            'image': article.get_image_url() or 'https://via.placeholder.com/150',
-        })
-
-    context = {
-        'user': profile_user,
-        'is_own_profile': profile_user == request.user,
-        'form': form,
-        'startups_data': startups_data,
-        'news_data': news_data,
-        'avatar_url': avatar_url,
-    }
-    return render(request, 'accounts/profile.html', context)
+    return render(request, 'accounts/profile.html', {'user': profile_user, 'is_own_profile': profile_user == request.user})
 
 @login_required
 def create_startup(request):

@@ -1,6 +1,5 @@
 from django import forms
 from .models import Users, Startups, Directions, StartupStages, ReviewStatuses, Comments
-import json
 
 # Кастомный виджет для загрузки нескольких файлов
 class MultipleFileInput(forms.ClearableFileInput):
@@ -49,42 +48,6 @@ class LoginForm(forms.Form):
     email = forms.EmailField(label="Email")
     password = forms.CharField(widget=forms.PasswordInput, label="Пароль")
 
-# Форма редактирования профиля
-class UserProfileForm(forms.ModelForm):
-    class Meta:
-        model = Users
-        fields = ['first_name', 'last_name', 'bio', 'website_url', 'phone', 'show_phone', 'social_links']
-        widgets = {
-            'first_name': forms.TextInput(attrs={'class': 'profile-edit-input profile-edit-input-text', 'data-placeholder': 'Введите имя'}),
-            'last_name': forms.TextInput(attrs={'class': 'profile-edit-input profile-edit-input-text', 'data-placeholder': 'Введите фамилию'}),
-            'bio': forms.Textarea(attrs={'class': 'profile-edit-input profile-edit-input-textarea', 'data-placeholder': 'Расскажите о вас в нескольких предложениях'}),
-            'website_url': forms.URLInput(attrs={'class': 'profile-edit-input profile-edit-input-text', 'data-placeholder': 'URL'}),
-            'phone': forms.TextInput(attrs={'class': 'profile-edit-input profile-edit-input-text', 'data-placeholder': 'Введите телефон'}),
-            'show_phone': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
-            'social_links': forms.Textarea(attrs={'class': 'profile-edit-input profile-edit-input-textarea', 'data-placeholder': 'Социальные сети в формате JSON'}),
-        }
-        labels = {
-            'first_name': 'Имя пользователя',
-            'last_name': 'Фамилия',
-            'bio': 'Обо мне',
-            'website_url': 'Портфолио или сайт',
-            'phone': 'Телефон',
-            'show_phone': 'Показывать телефон другим пользователям',
-            'social_links': 'Социальные сети (JSON)',
-        }
-
-    def clean_social_links(self):
-        social_links = self.cleaned_data.get('social_links')
-        if social_links:
-            try:
-                # Если передали строку, пытаемся её распарсить
-                if isinstance(social_links, str):
-                    social_links = json.loads(social_links)
-                if not isinstance(social_links, dict):
-                    raise forms.ValidationError("Социальные сети должны быть в формате JSON-объекта")
-            except json.JSONDecodeError:
-                raise forms.ValidationError("Неверный формат JSON для социальных сетей")
-        return social_links
 
 # Форма создания стартапа
 class StartupForm(forms.ModelForm):
