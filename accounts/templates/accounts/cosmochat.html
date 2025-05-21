@@ -271,6 +271,120 @@
 </div>
 
 <script src="{% static 'accounts/js/cosmochat.js' %}"></script>
+
+<script>
+// Резервный скрипт, на случай если основной не загрузится
+document.addEventListener('DOMContentLoaded', function() {
+    // Открытие модального окна профиля
+    document.querySelectorAll('.user-card-new').forEach(card => {
+        card.addEventListener('click', function() {
+            const userId = this.dataset.userId;
+            if (userId && typeof openProfileModal === 'function') {
+                openProfileModal(userId);
+            }
+        });
+    });
+
+    // Кнопки чата на карточках пользователей
+    document.querySelectorAll('.chat-btn-on-card').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const userId = this.dataset.userId;
+            if (userId && typeof startChatWithUser === 'function') {
+                startChatWithUser(userId);
+            }
+        });
+    });
+
+    // Клик по элементам чата
+    document.querySelectorAll('.chat-item-new').forEach(item => {
+        item.addEventListener('click', function() {
+            const chatId = this.dataset.chatId;
+            if (chatId && typeof loadChat === 'function') {
+                loadChat(chatId);
+            }
+        });
+    });
+
+    // Обработчики для модальных окон
+    const createChatBtn = document.getElementById('createChatBtn');
+    if (createChatBtn) {
+        createChatBtn.addEventListener('click', function() {
+            const modal = document.getElementById('createChatModal');
+            if(modal) modal.style.display = 'flex';
+        });
+    }
+
+    const closeCreateChatModalBtn = document.getElementById('closeCreateChatModalBtn');
+    if (closeCreateChatModalBtn) {
+        closeCreateChatModalBtn.addEventListener('click', function() {
+            const modal = document.getElementById('createChatModal');
+            if(modal) modal.style.display = 'none';
+        });
+    }
+
+    const createChatModalCloseBtn = document.getElementById('createChatModalCloseBtn');
+    if (createChatModalCloseBtn) {
+        createChatModalCloseBtn.addEventListener('click', function() {
+            const modal = document.getElementById('createChatModal');
+            if(modal) modal.style.display = 'none';
+        });
+    }
+
+    // Функция для обновления отображения рейтинга с планетами
+    function updateUserRatingDisplay(container) {
+        console.log("Обновление рейтинга для", container, "Рейтинг:", container ? container.dataset.rating : "N/A");
+        if (!container) return;
+        
+        const ratingString = container.dataset.rating;
+        if (typeof ratingString === 'undefined') return;
+
+        console.log("Рейтинг (строка):", ratingString);
+        const iconContainers = container.querySelectorAll('.rating-icon-planet-container');
+        console.log("Найдено контейнеров для планет:", iconContainers.length);
+        
+        const ratingValue = parseFloat(ratingString) || 0;
+        console.log("Рейтинг (число):", ratingValue);
+        
+        const fullStars = Math.floor(ratingValue);
+        const partialPercentage = (ratingValue - fullStars) * 100;
+        console.log("Целых звезд:", fullStars, "Частичный процент:", partialPercentage);
+
+        iconContainers.forEach((container, index) => {
+            const filledIcon = container.querySelector('.icon-filled');
+            if (!filledIcon) {
+                console.warn("Не найдена заполненная иконка в контейнере", index);
+                return; 
+            }
+
+            let fillWidth = '0%';
+            if (index < fullStars) {
+                fillWidth = '100%';
+            } else if (index === fullStars && partialPercentage > 0) {
+                fillWidth = `${partialPercentage}%`;
+            }
+            console.log(`Планета ${index+1}: ширина заполнения = ${fillWidth}`);
+            filledIcon.style.width = fillWidth;
+        });
+    }
+
+    // Инициализация отображения рейтинга
+    const ratingContainers = document.querySelectorAll('.rating-stars-new');
+    console.log("Найдено контейнеров с рейтингом:", ratingContainers.length);
+    ratingContainers.forEach(container => {
+        updateUserRatingDisplay(container);
+    });
+
+    // Отложенный повторный вызов для обновления рейтингов (иногда DOM не успевает загрузиться)
+    setTimeout(() => {
+        const ratingContainers = document.querySelectorAll('.rating-stars-new');
+        console.log("Повторно: найдено контейнеров с рейтингом:", ratingContainers.length);
+        ratingContainers.forEach(container => {
+            updateUserRatingDisplay(container);
+        });
+    }, 1000);
+});
+</script>
 {% endblock %}
 
 {% block body_extra_js %}

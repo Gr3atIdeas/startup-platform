@@ -272,6 +272,10 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
     margin-top: 30px; /* Увеличиваем отступ сверху для большей видимости */
     margin-bottom: 20px; /* Добавляем отступ снизу */
     width: 100%; /* Ширина на весь контейнер */
+    background-color: rgba(0, 78, 159, 0.1); /* Добавляем фон для блока пагинации */
+    padding: 15px 0;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 .show-more-btn-new {
     padding: 12px 35px;
@@ -294,8 +298,8 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
 .page-numbers-new {
     display: flex;
     align-items: center;
-    gap: 10px; /* Уменьшил gap для компактности */
-    font-size: 14px;
+    gap: 8px; /* Уменьшаем расстояние для компактности */
+    font-size: 16px; /* Увеличиваем размер шрифта */
     font-family: 'Unbounded', sans-serif;
     font-weight: 300;
     flex-wrap: wrap; /* Добавляем перенос на маленьких экранах */
@@ -304,25 +308,34 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
 .page-numbers-new .page-number-item {
     cursor: pointer;
     color: white;
-    padding: 10px 14px; /* Увеличиваем размер для лучшей видимости */
+    padding: 10px 16px; /* Увеличиваем размер для лучшей видимости */
     border-radius: 8px;
     line-height: 1; /* Уменьшаем высоту строки */
     text-decoration: none; /* Убираем подчеркивание у ссылок */
     display: inline-block; /* Гарантируем блочное поведение */
     min-width: 15px; /* Минимальная ширина для цифр */
     text-align: center; /* Центрируем текст */
+    border: 1px solid rgba(255, 255, 255, 0.3); /* Добавляем рамку */
+    transition: all 0.2s ease;
 }
 .page-numbers-new .page-number-item.current {
     background: white;
     color: #004E9F;
-    font-weight: 500; /* Делаем текущую страницу немного жирнее */
+    font-weight: 600; /* Делаем текущую страницу жирнее */
+    border-color: white;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5); /* Добавляем свечение */
 }
 .page-numbers-new .page-number-item:not(.dots):not(.current):hover {
-    background: rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.25);
+    border-color: white;
 }
 .page-numbers-new .page-number-item.disabled {
     opacity: 0.5;
     cursor: not-allowed;
+}
+.page-numbers-new .dots {
+    color: rgba(255, 255, 255, 0.7);
+    padding: 0 5px;
 }
 
 
