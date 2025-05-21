@@ -1338,3 +1338,26 @@ body {
         margin-right: 12px;
     }
 } 
+
+
+
+
+.profile-sidebar-social-link {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #ffffff;
+}
+.profile-sidebar-social-link strong {
+    color: #F5DB0C;
+    margin-right: 5px;
+}
+
+
+#id_social_links {
+    display: none;
+}
+
+
+.planet-icon:hover {
+    opacity: 0.8;
+}

@@ -489,9 +489,12 @@ class Users(AbstractBaseUser):
     first_name = models.CharField(max_length=100, blank=True, null=True)
     last_name = models.CharField(max_length=100, blank=True, null=True)
     phone = models.CharField(max_length=20, blank=True, null=True)
+    show_phone = models.BooleanField(default=False)  # Новое поле
     role = models.ForeignKey('Roles', models.SET_NULL, blank=True, null=True, db_column='role_id')
     profile_picture_url = models.CharField(max_length=255, blank=True, null=True)
     bio = models.TextField(blank=True, null=True)
+    website_url = models.CharField(max_length=255, blank=True, null=True)  # Уже есть
+    social_links = models.JSONField(blank=True, null=True, default=dict)  # Новое поле для соцсетей
     rating = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
     status = models.ForeignKey('UserStatuses', models.SET_DEFAULT, default=1, blank=True, null=True, db_column='status_id')
     created_at = models.DateTimeField(default=timezone.now)
