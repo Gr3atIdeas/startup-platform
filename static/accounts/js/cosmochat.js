@@ -105,7 +105,10 @@ function loadChat(chatId) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            if(chatMessagesArea) chatMessagesArea.innerHTML = '';
+            if(chatMessagesArea) {
+                chatMessagesArea.innerHTML = '';
+                displayedMessageIds.clear();
+            }
             data.messages.forEach(msg => appendMessage(msg, false)); 
             
             if(chatWindowTitle && data.chat_name) chatWindowTitle.textContent = data.chat_name;
@@ -192,13 +195,16 @@ function startPolling() {
             if (data.success) {
                 const newMessages = data.messages;
                 if (newMessages.length > 0) {
-                    newMessages.forEach(msg => appendMessage(msg, false)); 
+                    newMessages.forEach(msg => {
+                        if (!displayedMessageIds.has(msg.message_id)) {
+                            appendMessage(msg, false);
+                        }
+                    }); 
                     lastMessageTimestamp = newMessages[newMessages.length - 1].created_at_iso;
                     if(chatMessagesArea) chatMessagesArea.scrollTop = chatMessagesArea.scrollHeight;
                     updateChatListItem(newMessages[newMessages.length - 1]);
                     
-                    // Отмечаем новые сообщения как прочитанные только если окно чата активно (не обязательно, т.к. mark-read вызывается при загрузке)
-                     fetch(`/cosmochat/mark-read/${currentChatId}/`, {
+                    fetch(`/cosmochat/mark-read/${currentChatId}/`, {
                         method: 'POST',
                         headers: { 'X-CSRFToken': csrfToken, 'X-Requested-With': 'XMLHttpRequest' }
                     });
@@ -238,10 +244,11 @@ function appendMessage(msg, isOwnMessageSentJustNow) {
         </div>
     `;
     chatMessagesArea.appendChild(messageDiv);
+    displayedMessageIds.add(msg.message_id);
+    
     if (isOwnMessageSentJustNow || chatMessagesArea.scrollHeight - chatMessagesArea.scrollTop < chatMessagesArea.clientHeight + 150) {
          chatMessagesArea.scrollTop = chatMessagesArea.scrollHeight;
     }
-    displayedMessageIds.add(msg.message_id);
 }
 
 function updateChatListItem(lastMessage) {

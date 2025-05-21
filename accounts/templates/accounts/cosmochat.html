@@ -44,10 +44,10 @@
 
             <div class="users-list-new" id="usersList">
                 {% for user_profile in users %} 
-                <div class="user-card-new {% if forloop.counter > 5 %}hidden-user{% endif %}" data-user-id="{{ user_profile.user_id }}" data-user-index="{{ forloop.counter0 }}">
+                <div class="user-card-new {% if forloop.counter > 8 %}hidden-user{% endif %}" data-user-id="{{ user_profile.user_id }}" data-user-index="{{ forloop.counter0 }}" data-role="{{ user_profile.role.role_name }}">
                     <img src="{{ user_profile.profile_picture_url|default:default_avatar_src }}" alt="{{ user_profile.first_name }}" class="avatar-img">
                     <div class="user-info-new">
-                        <h3>{{ user_profile.first_name }} {{ user_profile.last_name }}</h3>
+                        <h3>{{ user_profile.first_name }} {% if user_profile.last_name %}{{ user_profile.last_name|slice:":1" }}.{% endif %}</h3>
                         <div class="user-role-rating-new">
                             <div class="rating-stars-new" data-rating="{{ user_profile.rating|default:0|stringformat:".1f" }}">
                                 {% with rating=user_profile.rating|default:0 %}
@@ -66,7 +66,17 @@
                                 {% endfor %}
                                 {% endwith %}
                             </div>
-                            <p class="role-text">{{ user_profile.role.role_name|capfirst }}</p>
+                            <p class="role-text">
+                                {% if user_profile.role.role_name == "investor" %}
+                                    Инвестор
+                                {% elif user_profile.role.role_name == "startuper" %}
+                                    Стартапер
+                                {% elif user_profile.role.role_name == "moderator" %}
+                                    Модератор
+                                {% else %}
+                                    {{ user_profile.role.role_name|capfirst }}
+                                {% endif %}
+                            </p>
                         </div>
                     </div>
                     <div class="user-stats-new">
@@ -91,6 +101,10 @@
                 <div class="page-numbers-new" id="userPagination">
                     <!-- JavaScript-пагинация будет добавлена здесь -->
                 </div>
+                <button type="button" class="show-more-btn-new" id="showMoreUsersBtn">
+                    Показать еще
+                    <img src="{% static 'accounts/images/icons/downarraow.svg' %}" alt="↓">
+                </button>
             </div>
 
         </div>
@@ -326,6 +340,14 @@ document.addEventListener('DOMContentLoaded', function() {
     if (leaveChatBtn) {
         leaveChatBtn.addEventListener('click', leaveChat);
     }
+
+    // Обработчик для кнопки "Показать еще"
+    const showMoreBtn = document.getElementById('showMoreUsersBtn');
+    if (showMoreBtn) {
+        showMoreBtn.addEventListener('click', function() {
+            showMoreUsers();
+        });
+    }
     
     // Функции для клиентской пагинации
     function setupClientPagination() {
@@ -335,7 +357,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (!usersList || !paginationContainer || userCards.length === 0) return;
         
-        const itemsPerPage = 5;
+        const itemsPerPage = 8; // Изменили с 5 на 8
         const totalPages = Math.ceil(userCards.length / itemsPerPage);
         
         // Создаем пагинацию
@@ -395,7 +417,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (index >= startIndex && index < endIndex) {
                     card.classList.remove('hidden-user');
                 } else {
-                    card.classList.add('hidden-user');
+                    // Если карточка уже была показана через "Показать еще", не скрываем её
+                    if (!card.classList.contains('show-more-revealed')) {
+                        card.classList.add('hidden-user');
+                    }
                 }
             });
         }
@@ -410,6 +435,72 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
         }
+    }
+
+    // Функция для показа дополнительных пользователей
+    let additionalUsersShown = 0;
+    function showMoreUsers() {
+        const usersList = document.getElementById('usersList');
+        const hiddenUserCards = usersList ? usersList.querySelectorAll('.user-card-new.hidden-user') : [];
+        
+        if (!usersList || hiddenUserCards.length === 0) {
+            // Если больше нет скрытых пользователей, можно скрыть кнопку
+            const showMoreBtn = document.getElementById('showMoreUsersBtn');
+            if (showMoreBtn) showMoreBtn.style.display = 'none';
+            return;
+        }
+        
+        // Показываем следующие 5 скрытых карточек
+        const showCount = Math.min(5, hiddenUserCards.length);
+        for (let i = 0; i < showCount; i++) {
+            hiddenUserCards[i].classList.remove('hidden-user');
+            hiddenUserCards[i].classList.add('show-more-revealed');
+            additionalUsersShown++;
+        }
+        
+        // Если больше нет скрытых пользователей, скрываем кнопку
+        if (hiddenUserCards.length <= showCount) {
+            const showMoreBtn = document.getElementById('showMoreUsersBtn');
+            if (showMoreBtn) showMoreBtn.style.display = 'none';
+        }
+    }
+    
+    // Фильтрация пользователей по роли
+    document.querySelectorAll('.django-roles-filter input[type="checkbox"]').forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            filterUsersByRole();
+        });
+    });
+
+    function filterUsersByRole() {
+        const selectedRoles = [];
+        document.querySelectorAll('.django-roles-filter input[type="checkbox"]:checked').forEach(checkbox => {
+            const roleLabel = document.querySelector(`label[for="${checkbox.id}"]`).textContent.toLowerCase();
+            let roleValue = '';
+            
+            if (roleLabel.includes('инвестор')) {
+                roleValue = 'investor';
+            } else if (roleLabel.includes('стартапер')) {
+                roleValue = 'startuper';
+            } else if (roleLabel.includes('модератор')) {
+                roleValue = 'moderator';
+            }
+            
+            if (roleValue) {
+                selectedRoles.push(roleValue);
+            }
+        });
+        
+        const userCards = document.querySelectorAll('#usersList .user-card-new');
+        userCards.forEach(card => {
+            const role = card.dataset.role;
+            
+            if (selectedRoles.length === 0 || selectedRoles.includes(role)) {
+                card.style.display = '';
+            } else {
+                card.style.display = 'none';
+            }
+        });
     }
     
     // Инициализируем пагинацию
