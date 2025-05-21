@@ -44,7 +44,7 @@
 
             <div class="users-list-new">
                 {% for user_profile in users %} 
-                <div class="user-card-new" onclick="openProfileModal({{ user_profile.user_id }})">
+                <div class="user-card-new" data-user-id="{{ user_profile.user_id }}">
                     <img src="{{ user_profile.profile_picture_url|default:default_avatar_src }}" alt="{{ user_profile.first_name }}" class="avatar-img">
                     <div class="user-info-new">
                         <h3>{{ user_profile.first_name }} {{ user_profile.last_name }}</h3>
@@ -72,7 +72,7 @@
                          <p>Нет данных о роли</p>
                         {% endif %}
                     </div>
-                    <button type="button" class="chat-btn-on-card" onclick="event.stopPropagation(); startChatWithUser({{ user_profile.user_id }});">Чат</button>
+                    <button type="button" class="chat-btn-on-card" data-user-id="{{ user_profile.user_id }}">Чат</button>
                 </div>
                 {% empty %}
                 <p>Пользователи не найдены.</p>
@@ -157,7 +157,7 @@
                     <input type="text" id="chatSearchInput" placeholder="Поиск по чатам">
                     <img src="{% static 'accounts/images/cosmochat/search.svg' %}" alt="Поиск">
                 </div>
-                <img src="{% static 'accounts/images/cosmochat/edit.svg' %}" alt="Добавить чат" class="add-chat-btn-icon" onclick="openCreateChatModal()">
+                <img src="{% static 'accounts/images/cosmochat/edit.svg' %}" alt="Добавить чат" class="add-chat-btn-icon" id="createChatBtn">
             </div>
             <div class="chat-filters-new">
                 <button type="button" class="filter-btn-new active" data-filter="all">Все</button>
@@ -167,7 +167,6 @@
             <div class="chat-items-list-new" id="chatListContainer">
                 {% for chat in chats %}
                 <div class="chat-item-new {% if forloop.first and not current_chat_id %}active{% elif chat.conversation_id == current_chat_id %}active{% endif %}" 
-                     onclick="loadChat({{ chat.conversation_id }})" 
                      data-chat-id="{{ chat.conversation_id }}"
                      data-chat-name="{{ chat.name|escapejs }}"
                      data-chat-type="{{ chat.type|default:'personal' }}" >
@@ -210,8 +209,8 @@
             <div class="chat-active-header" id="chatActiveHeader" style="display: none;">
                 <h3 id="chatWindowTitle">Название чата</h3>
                 <div class="chat-header-actions">
-                    <button onclick="openAddParticipantModal()" id="addParticipantBtn" class="add-participant-btn-new-style">Добавить</button>
-                    <button onclick="leaveChat()" id="leaveChatBtn" class="leave-chat-btn-new-style">Покинуть</button>
+                    <button id="addParticipantBtn" class="add-participant-btn-new-style">Добавить</button>
+                    <button id="leaveChatBtn" class="leave-chat-btn-new-style">Покинуть</button>
                 </div>
             </div>
 
@@ -239,20 +238,20 @@
 
     <div class="modal-overlay" id="profileModal">
       <div class="modal">
-        <button class="modal-close" onclick="closeProfileModal()">×</button>
+        <button class="modal-close" id="closeProfileModalBtn">×</button>
         <img id="profileAvatar" src="" alt="Аватар">
         <h3 id="profileName"></h3>
         <p id="profileRole"></p>
         <p id="profileRating"></p>
         <p id="profileBio"></p>
-        <button class="action-btn" onclick="startChat()">Начать чат</button>
+        <button class="action-btn" id="startChatBtn">Начать чат</button>
         <a id="profileLink" href="#"><button class="action-btn">К профилю</button></a>
       </div>
     </div>
 
     <div class="modal-overlay" id="addParticipantModal">
       <div class="modal">
-        <button class="modal-close" onclick="closeAddParticipantModal()">×</button>
+        <button class="modal-close" id="closeAddParticipantModalBtn">×</button>
         <h3>Добавить участника</h3>
         <div class="participants-list" id="participantsList">
         </div>
@@ -261,11 +260,11 @@
 
     <div class="modal-overlay" id="createChatModal">
         <div class="modal">
-            <button class="modal-close" onclick="closeCreateChatModal()">×</button>
+            <button class="modal-close" id="closeCreateChatModalBtn">×</button>
             <h3>Создать новый чат</h3>
             <p>Выберите пользователя из списка слева, чтобы начать с ним чат, или найдите через поиск.</p>
             <p>Функционал создания групповых чатов будет добавлен позже.</p>
-            <button class="action-btn" onclick="closeCreateChatModal()">Понятно</button>
+            <button class="action-btn" id="createChatModalCloseBtn">Понятно</button>
         </div>
     </div>
 
@@ -276,115 +275,4 @@
 
 {% block body_extra_js %}
 {{ request.user.user_id|default:0|json_script:"request_user_id_data" }}
-<script>
-// Устанавливаем REQUEST_USER_ID для JavaScript
-// window.REQUEST_USER_ID = {{ request.user.user_id|default:0 }};
-
-document.addEventListener('DOMContentLoaded', function() {
-    const userIdDataElement = document.getElementById('request_user_id_data');
-    if (userIdDataElement) {
-        try {
-            window.REQUEST_USER_ID = JSON.parse(userIdDataElement.textContent);
-        } catch (e) {
-            console.error('Error parsing REQUEST_USER_ID:', e);
-            window.REQUEST_USER_ID = 0; // Fallback
-        }
-    } else {
-        window.REQUEST_USER_ID = 0; // Fallback if element not found
-    }
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const openChatId = urlParams.get('open_chat_id');
-
-    if (openChatId) {
-        if (typeof loadChat === 'function') loadChat(openChatId);
-    } else {
-        const firstChatEl = document.querySelector('.chat-item-new.active');
-        if (firstChatEl && typeof currentChatId !== 'undefined' && !currentChatId && typeof loadChat === 'function') {
-            // Не загружаем первый чат автоматически, если это не указано в URL
-        } 
-    }
-
-    // Инициализация отображения рейтинга для всех карточек пользователей
-    const userCardsRatingContainers = document.querySelectorAll('.users-list-new .user-card-new .rating-stars-new');
-    userCardsRatingContainers.forEach(container => {
-        if (typeof updateUserRatingDisplay === 'function') {
-            updateUserRatingDisplay(container);
-        }
-    });
-
-    const chatFilterButtons = document.querySelectorAll('.chat-filters-new .filter-btn-new');
-    chatFilterButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            chatFilterButtons.forEach(btn => btn.classList.remove('active'));
-            this.classList.add('active');
-            if (typeof filterChats === 'function') filterChats(this.dataset.filter); 
-        });
-    });
-});
-
-const chatSearchInput = document.getElementById('chatSearchInput');
-if (chatSearchInput) {
-    chatSearchInput.addEventListener('keyup', function() {
-        const searchTerm = this.value.toLowerCase();
-        const chatItems = document.querySelectorAll('.chat-items-list-new .chat-item-new');
-        chatItems.forEach(item => {
-            const chatName = item.dataset.chatName ? item.dataset.chatName.toLowerCase() : '';
-            if (chatName.includes(searchTerm)) {
-                item.style.display = 'flex';
-            } else {
-                item.style.display = 'none';
-            }
-        });
-    });
-}
-
-function openCreateChatModal() {
-    const modal = document.getElementById('createChatModal');
-    if(modal) modal.style.display = 'flex';
-}
-function closeCreateChatModal() {
-    const modal = document.getElementById('createChatModal');
-    if(modal) modal.style.display = 'none';
-}
-
-function startChatWithUser(userId) {
-    fetch(`/cosmochat/start-chat/${userId}/`, {
-        method: 'POST',
-        headers: {
-            'X-CSRFToken': '{{ csrf_token }}',
-            'Content-Type': 'application/json',
-            'X-Requested-With': 'XMLHttpRequest'
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success && data.chat_id) {
-            if (typeof loadChat === 'function') { 
-                let chatExists = false;
-                document.querySelectorAll('.chat-item-new').forEach(item => {
-                    if(item.dataset.chatId == data.chat_id) {
-                        chatExists = true;
-                    }
-                });
-                if (chatExists) {
-                     loadChat(data.chat_id);
-                } else {
-                    window.location.href = window.location.pathname + '?open_chat_id=' + data.chat_id + '&new_chat=true';
-                }
-                if (typeof closeProfileModal === 'function') closeProfileModal();
-            } else {
-                 window.location.href = window.location.pathname + '?open_chat_id=' + data.chat_id + '&new_chat=true';
-            }
-        } else {
-            alert(data.error || 'Ошибка при создании или открытии чата');
-        }
-    })
-    .catch(error => {
-        console.error('Ошибка:', error);
-        alert('Произошла ошибка при создании или открытии чата.');
-    });
-}
-
-</script>
 {% endblock %}

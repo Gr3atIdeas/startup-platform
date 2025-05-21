@@ -492,4 +492,202 @@ function updateUserRatingDisplay(starsContainer) {
         }
         filledIcon.style.width = fillWidth;
     });
-} 
+}
+
+// Функция для фильтрации чатов
+function filterChats(filter) {
+    const chatItems = document.querySelectorAll('.chat-items-list-new .chat-item-new');
+    chatItems.forEach(item => {
+        const chatType = item.dataset.chatType || 'personal';
+        
+        if (filter === 'all') {
+            item.style.display = 'flex';
+        } else if (filter === 'chats' && chatType === 'personal') {
+            item.style.display = 'flex';
+        } else if (filter === 'groups' && chatType === 'group') {
+            item.style.display = 'flex';
+        } else {
+            item.style.display = 'none';
+        }
+    });
+}
+
+// Функция для начала чата с пользователем
+function startChatWithUser(userId) {
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    
+    fetch(`/cosmochat/start-chat/${userId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrfToken,
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success && data.chat_id) {
+            if (typeof loadChat === 'function') { 
+                let chatExists = false;
+                document.querySelectorAll('.chat-item-new').forEach(item => {
+                    if(item.dataset.chatId == data.chat_id) {
+                        chatExists = true;
+                    }
+                });
+                if (chatExists) {
+                     loadChat(data.chat_id);
+                } else {
+                    window.location.href = window.location.pathname + '?open_chat_id=' + data.chat_id + '&new_chat=true';
+                }
+                if (typeof closeProfileModal === 'function') closeProfileModal();
+            } else {
+                 window.location.href = window.location.pathname + '?open_chat_id=' + data.chat_id + '&new_chat=true';
+            }
+        } else {
+            alert(data.error || 'Ошибка при создании или открытии чата');
+        }
+    })
+    .catch(error => {
+        console.error('Ошибка:', error);
+        alert('Произошла ошибка при создании или открытии чата.');
+    });
+}
+
+// Функции для модальных окон создания чата
+function openCreateChatModal() {
+    const modal = document.getElementById('createChatModal');
+    if(modal) modal.style.display = 'flex';
+}
+
+function closeCreateChatModal() {
+    const modal = document.getElementById('createChatModal');
+    if(modal) modal.style.display = 'none';
+}
+
+// Инициализация при загрузке документа
+document.addEventListener('DOMContentLoaded', function() {
+    const userIdDataElement = document.getElementById('request_user_id_data');
+    if (userIdDataElement) {
+        try {
+            window.REQUEST_USER_ID = JSON.parse(userIdDataElement.textContent);
+        } catch (e) {
+            console.error('Error parsing REQUEST_USER_ID:', e);
+            window.REQUEST_USER_ID = 0; // Fallback
+        }
+    } else {
+        window.REQUEST_USER_ID = 0; // Fallback if element not found
+    }
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const openChatId = urlParams.get('open_chat_id');
+
+    if (openChatId) {
+        if (typeof loadChat === 'function') loadChat(openChatId);
+    } else {
+        const firstChatEl = document.querySelector('.chat-item-new.active');
+        if (firstChatEl && typeof currentChatId !== 'undefined' && !currentChatId && typeof loadChat === 'function') {
+            // Не загружаем первый чат автоматически, если это не указано в URL
+        } 
+    }
+
+    // Инициализация отображения рейтинга для всех карточек пользователей
+    const userCardsRatingContainers = document.querySelectorAll('.users-list-new .user-card-new .rating-stars-new');
+    userCardsRatingContainers.forEach(container => {
+        if (typeof updateUserRatingDisplay === 'function') {
+            updateUserRatingDisplay(container);
+        }
+    });
+
+    // Обработчики для кнопок фильтрации чатов
+    const chatFilterButtons = document.querySelectorAll('.chat-filters-new .filter-btn-new');
+    chatFilterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            chatFilterButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+            if (typeof filterChats === 'function') filterChats(this.dataset.filter); 
+        });
+    });
+    
+    // Обработчик поиска по чатам
+    const chatSearchInput = document.getElementById('chatSearchInput');
+    if (chatSearchInput) {
+        chatSearchInput.addEventListener('keyup', function() {
+            const searchTerm = this.value.toLowerCase();
+            const chatItems = document.querySelectorAll('.chat-items-list-new .chat-item-new');
+            chatItems.forEach(item => {
+                const chatName = item.dataset.chatName ? item.dataset.chatName.toLowerCase() : '';
+                if (chatName.includes(searchTerm)) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+    }
+    
+    // Добавляем обработчики для карточек пользователей
+    document.querySelectorAll('.user-card-new').forEach(card => {
+        card.addEventListener('click', function() {
+            const userId = this.dataset.userId;
+            if (userId) openProfileModal(userId);
+        });
+    });
+    
+    // Обработчики для кнопок чата на карточках
+    document.querySelectorAll('.chat-btn-on-card').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.stopPropagation(); // Предотвращаем всплытие события
+            const userId = this.dataset.userId;
+            if (userId) startChatWithUser(userId);
+        });
+    });
+    
+    // Обработчики для чатов в списке
+    document.querySelectorAll('.chat-item-new').forEach(item => {
+        item.addEventListener('click', function() {
+            const chatId = this.dataset.chatId;
+            if (chatId) loadChat(chatId);
+        });
+    });
+    
+    // Кнопки модальных окон
+    const createChatBtn = document.getElementById('createChatBtn');
+    if (createChatBtn) {
+        createChatBtn.addEventListener('click', openCreateChatModal);
+    }
+    
+    const closeCreateChatModalBtn = document.getElementById('closeCreateChatModalBtn');
+    if (closeCreateChatModalBtn) {
+        closeCreateChatModalBtn.addEventListener('click', closeCreateChatModal);
+    }
+    
+    const createChatModalCloseBtn = document.getElementById('createChatModalCloseBtn');
+    if (createChatModalCloseBtn) {
+        createChatModalCloseBtn.addEventListener('click', closeCreateChatModal);
+    }
+    
+    const closeProfileModalBtn = document.getElementById('closeProfileModalBtn');
+    if (closeProfileModalBtn) {
+        closeProfileModalBtn.addEventListener('click', closeProfileModal);
+    }
+    
+    const startChatBtn = document.getElementById('startChatBtn');
+    if (startChatBtn) {
+        startChatBtn.addEventListener('click', startChat);
+    }
+    
+    const addParticipantBtn = document.getElementById('addParticipantBtn');
+    if (addParticipantBtn) {
+        addParticipantBtn.addEventListener('click', openAddParticipantModal);
+    }
+    
+    const closeAddParticipantModalBtn = document.getElementById('closeAddParticipantModalBtn');
+    if (closeAddParticipantModalBtn) {
+        closeAddParticipantModalBtn.addEventListener('click', closeAddParticipantModal);
+    }
+    
+    const leaveChatBtn = document.getElementById('leaveChatBtn');
+    if (leaveChatBtn) {
+        leaveChatBtn.addEventListener('click', leaveChat);
+    }
+}); 
