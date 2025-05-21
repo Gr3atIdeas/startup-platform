@@ -207,6 +207,7 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
     z-index: 1;
     /* Можно добавить opacity, если empty_planet.svg это просто серая версия full_filled_planet.svg 
     opacity: 0.3; */
+    opacity: 0.3; /* Делаем "пустую" иконку (которая на самом деле partial_filled_planet) полупрозрачной */
 }
 
 .rating-icon-planet-container .icon-filled {

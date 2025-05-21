@@ -40,7 +40,6 @@
                         {{ choice.tag }} <label for="{{ choice.id_for_label }}">{{ choice.choice_label }}</label>
                     {% endfor %}
                 </div>
-                <button type="submit" class="filter-btn-new" style="background: #004E9F; color: #F5F5F5;">Применить</button>
             </form>
 
             <div class="users-list-new">
@@ -53,6 +52,7 @@
                             <div class="rating-stars-new" data-rating="{{ user_profile.rating|default:0|stringformat:".1f" }}">
                                 {% for i in "12345" %}
                                 <span class="rating-icon-planet-container">
+                                    {# Используем partial_filled_planet.svg как основу (пустую) и full_filled_planet.svg для заполнения #}
                                     <img src="{% static 'accounts/images/planets/partial_filled_planet.svg' %}" alt="☆" class="icon-empty">
                                     <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="★" class="icon-filled" style="width: 0%;">
                                 </span>
@@ -85,23 +85,38 @@
                     {% if users.has_previous %}
                         <a href="?page=1{% for key, value in request.GET.items %}{% if key != 'page' %}&amp;{{ key }}={{ value }}{% endif %}{% endfor %}" class="page-number-item">&laquo;</a>
                         <a href="?page={{ users.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&amp;{{ key }}={{ value }}{% endif %}{% endfor %}" class="page-number-item">&lsaquo;</a>
+                    {% else %}
+                        <span class="page-number-item disabled">&laquo;</span>
+                        <span class="page-number-item disabled">&lsaquo;</span>
                     {% endif %}
 
                     {% for num in users.paginator.page_range %}
                         {% if users.number == num %}
                             <span class="page-number-item current">{{ num }}</span>
-                        {% elif num > users.number|add:'-3' and num < users.number|add:'3' %}
-                             <a href="?page={{ num }}{% for key, value in request.GET.items %}{% if key != 'page' %}&amp;{{ key }}={{ value }}{% endif %}{% endfor %}" class="page-number-item">{{ num }}</a>
-                        {% elif forloop.first or forloop.last %}
-                             <a href="?page={{ num }}{% for key, value in request.GET.items %}{% if key != 'page' %}&amp;{{ key }}={{ value }}{% endif %}{% endfor %}" class="page-number-item">{{ num }}</a>
-                        {% elif num == users.number|add:'-3' or num == users.number|add:'3' %}
+                        {% elif num > users.number|add:'-2' and num < users.number|add:'2' %} {# Показывать 1 страницу до и 1 после текущей #}
+                            <a href="?page={{ num }}{% for key, value in request.GET.items %}{% if key != 'page' %}&amp;{{ key }}={{ value }}{% endif %}{% endfor %}" class="page-number-item">{{ num }}</a>
+                        {% elif num == users.number|add:'-2' and num != 1 %}
                             <span class="page-number-item dots">...</span>
+                        {% elif num == users.number|add:'2' and num != users.paginator.num_pages %}
+                            <span class="page-number-item dots">...</span>
+                        {% endif %}
+                        {% comment %} Всегда показывать первую и последнюю страницу {% endcomment %}
+                        {% if forloop.first and users.number > 2 and users.paginator.num_pages > 3 %}
+                             <a href="?page=1{% for key, value in request.GET.items %}{% if key != 'page' %}&amp;{{ key }}={{ value }}{% endif %}{% endfor %}" class="page-number-item">1</a>
+                             {% if users.number > 3 and users.paginator.num_pages > 4 %} <span class="page-number-item dots">...</span> {% endif %}
+                        {% endif %}
+                         {% if forloop.last and users.number < users.paginator.num_pages|add:'-1' and users.paginator.num_pages > 3 %}
+                             {% if users.number < users.paginator.num_pages|add:'-2' and users.paginator.num_pages > 4 %} <span class="page-number-item dots">...</span> {% endif %}
+                             <a href="?page={{ users.paginator.num_pages }}{% for key, value in request.GET.items %}{% if key != 'page' %}&amp;{{ key }}={{ value }}{% endif %}{% endfor %}" class="page-number-item">{{ users.paginator.num_pages }}</a>
                         {% endif %}
                     {% endfor %}
 
                     {% if users.has_next %}
                         <a href="?page={{ users.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&amp;{{ key }}={{ value }}{% endif %}{% endfor %}" class="page-number-item">&rsaquo;</a>
                         <a href="?page={{ users.paginator.num_pages }}{% for key, value in request.GET.items %}{% if key != 'page' %}&amp;{{ key }}={{ value }}{% endif %}{% endfor %}" class="page-number-item">&raquo;</a>
+                    {% else %}
+                        <span class="page-number-item disabled">&rsaquo;</span>
+                        <span class="page-number-item disabled">&raquo;</span>
                     {% endif %}
                 </div>
             </div>
@@ -142,7 +157,7 @@
                     <input type="text" id="chatSearchInput" placeholder="Поиск по чатам">
                     <img src="{% static 'accounts/images/cosmochat/search.svg' %}" alt="Поиск">
                 </div>
-                <img src="{% static 'accounts/images/cosmochat/add-circle-outline.svg' %}" alt="Добавить чат" class="add-chat-btn-icon" onclick="openCreateChatModal()">
+                <img src="{% static 'accounts/images/cosmochat/edit.svg' %}" alt="Добавить чат" class="add-chat-btn-icon" onclick="openCreateChatModal()">
             </div>
             <div class="chat-filters-new">
                 <button type="button" class="filter-btn-new active" data-filter="all">Все</button>
