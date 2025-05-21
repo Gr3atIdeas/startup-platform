@@ -42,21 +42,29 @@
                 </div>
             </form>
 
-            <div class="users-list-new">
+            <div class="users-list-new" id="usersList">
                 {% for user_profile in users %} 
-                <div class="user-card-new" data-user-id="{{ user_profile.user_id }}">
+                <div class="user-card-new {% if forloop.counter > 5 %}hidden-user{% endif %}" data-user-id="{{ user_profile.user_id }}" data-user-index="{{ forloop.counter0 }}">
                     <img src="{{ user_profile.profile_picture_url|default:default_avatar_src }}" alt="{{ user_profile.first_name }}" class="avatar-img">
                     <div class="user-info-new">
                         <h3>{{ user_profile.first_name }} {{ user_profile.last_name }}</h3>
                         <div class="user-role-rating-new">
                             <div class="rating-stars-new" data-rating="{{ user_profile.rating|default:0|stringformat:".1f" }}">
+                                {% with rating=user_profile.rating|default:0 %}
                                 {% for i in "12345" %}
+                                {% with star_index=forloop.counter0 %}
                                 <span class="rating-icon-planet-container">
-                                    {# Используем partial_filled_planet.svg как основу (пустую) и full_filled_planet.svg для заполнения #}
+                                    {% if star_index < rating|floatformat:"0"|add:"0" %}
+                                    <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="★" class="icon-filled">
+                                    {% elif star_index == rating|floatformat:"0"|add:"0" and rating > rating|floatformat:"0"|add:"0" %}
+                                    <img src="{% static 'accounts/images/planets/partial_filled_planet.svg' %}" alt="☆" class="icon-filled">
+                                    {% else %}
                                     <img src="{% static 'accounts/images/planets/partial_filled_planet.svg' %}" alt="☆" class="icon-empty">
-                                    <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="★" class="icon-filled" style="width: 0%;">
+                                    {% endif %}
                                 </span>
+                                {% endwith %}
                                 {% endfor %}
+                                {% endwith %}
                             </div>
                             <p class="role-text">{{ user_profile.role.role_name|capfirst }}</p>
                         </div>
@@ -79,48 +87,11 @@
                 {% endfor %}
             </div>
 
-            {% if users.has_other_pages %}
             <div class="pagination-new">
-                <div class="page-numbers-new">
-                    {% if users.has_previous %}
-                        <a href="?page=1{% for key, value in request.GET.items %}{% if key != 'page' %}&amp;{{ key }}={{ value }}{% endif %}{% endfor %}" class="page-number-item">&laquo;</a>
-                        <a href="?page={{ users.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&amp;{{ key }}={{ value }}{% endif %}{% endfor %}" class="page-number-item">&lsaquo;</a>
-                    {% else %}
-                        <span class="page-number-item disabled">&laquo;</span>
-                        <span class="page-number-item disabled">&lsaquo;</span>
-                    {% endif %}
-
-                    {% for num in users.paginator.page_range %}
-                        {% if users.number == num %}
-                            <span class="page-number-item current">{{ num }}</span>
-                        {% elif num > users.number|add:'-2' and num < users.number|add:'2' %} {# Показывать 1 страницу до и 1 после текущей #}
-                            <a href="?page={{ num }}{% for key, value in request.GET.items %}{% if key != 'page' %}&amp;{{ key }}={{ value }}{% endif %}{% endfor %}" class="page-number-item">{{ num }}</a>
-                        {% elif num == users.number|add:'-2' and num != 1 %}
-                            <span class="page-number-item dots">...</span>
-                        {% elif num == users.number|add:'2' and num != users.paginator.num_pages %}
-                            <span class="page-number-item dots">...</span>
-                        {% endif %}
-                        {% comment %} Всегда показывать первую и последнюю страницу {% endcomment %}
-                        {% if forloop.first and users.number > 2 and users.paginator.num_pages > 3 %}
-                             <a href="?page=1{% for key, value in request.GET.items %}{% if key != 'page' %}&amp;{{ key }}={{ value }}{% endif %}{% endfor %}" class="page-number-item">1</a>
-                             {% if users.number > 3 and users.paginator.num_pages > 4 %} <span class="page-number-item dots">...</span> {% endif %}
-                        {% endif %}
-                         {% if forloop.last and users.number < users.paginator.num_pages|add:'-1' and users.paginator.num_pages > 3 %}
-                             {% if users.number < users.paginator.num_pages|add:'-2' and users.paginator.num_pages > 4 %} <span class="page-number-item dots">...</span> {% endif %}
-                             <a href="?page={{ users.paginator.num_pages }}{% for key, value in request.GET.items %}{% if key != 'page' %}&amp;{{ key }}={{ value }}{% endif %}{% endfor %}" class="page-number-item">{{ users.paginator.num_pages }}</a>
-                        {% endif %}
-                    {% endfor %}
-
-                    {% if users.has_next %}
-                        <a href="?page={{ users.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&amp;{{ key }}={{ value }}{% endif %}{% endfor %}" class="page-number-item">&rsaquo;</a>
-                        <a href="?page={{ users.paginator.num_pages }}{% for key, value in request.GET.items %}{% if key != 'page' %}&amp;{{ key }}={{ value }}{% endif %}{% endfor %}" class="page-number-item">&raquo;</a>
-                    {% else %}
-                        <span class="page-number-item disabled">&rsaquo;</span>
-                        <span class="page-number-item disabled">&raquo;</span>
-                    {% endif %}
+                <div class="page-numbers-new" id="userPagination">
+                    <!-- JavaScript-пагинация будет добавлена здесь -->
                 </div>
             </div>
-            {% endif %}
 
         </div>
 
@@ -330,59 +301,119 @@ document.addEventListener('DOMContentLoaded', function() {
             if(modal) modal.style.display = 'none';
         });
     }
-
-    // Функция для обновления отображения рейтинга с планетами
-    function updateUserRatingDisplay(container) {
-        console.log("Обновление рейтинга для", container, "Рейтинг:", container ? container.dataset.rating : "N/A");
-        if (!container) return;
-        
-        const ratingString = container.dataset.rating;
-        if (typeof ratingString === 'undefined') return;
-
-        console.log("Рейтинг (строка):", ratingString);
-        const iconContainers = container.querySelectorAll('.rating-icon-planet-container');
-        console.log("Найдено контейнеров для планет:", iconContainers.length);
-        
-        const ratingValue = parseFloat(ratingString) || 0;
-        console.log("Рейтинг (число):", ratingValue);
-        
-        const fullStars = Math.floor(ratingValue);
-        const partialPercentage = (ratingValue - fullStars) * 100;
-        console.log("Целых звезд:", fullStars, "Частичный процент:", partialPercentage);
-
-        iconContainers.forEach((container, index) => {
-            const filledIcon = container.querySelector('.icon-filled');
-            if (!filledIcon) {
-                console.warn("Не найдена заполненная иконка в контейнере", index);
-                return; 
-            }
-
-            let fillWidth = '0%';
-            if (index < fullStars) {
-                fillWidth = '100%';
-            } else if (index === fullStars && partialPercentage > 0) {
-                fillWidth = `${partialPercentage}%`;
-            }
-            console.log(`Планета ${index+1}: ширина заполнения = ${fillWidth}`);
-            filledIcon.style.width = fillWidth;
-        });
+    
+    const closeProfileModalBtn = document.getElementById('closeProfileModalBtn');
+    if (closeProfileModalBtn) {
+        closeProfileModalBtn.addEventListener('click', closeProfileModal);
     }
-
-    // Инициализация отображения рейтинга
-    const ratingContainers = document.querySelectorAll('.rating-stars-new');
-    console.log("Найдено контейнеров с рейтингом:", ratingContainers.length);
-    ratingContainers.forEach(container => {
-        updateUserRatingDisplay(container);
-    });
-
-    // Отложенный повторный вызов для обновления рейтингов (иногда DOM не успевает загрузиться)
-    setTimeout(() => {
-        const ratingContainers = document.querySelectorAll('.rating-stars-new');
-        console.log("Повторно: найдено контейнеров с рейтингом:", ratingContainers.length);
-        ratingContainers.forEach(container => {
-            updateUserRatingDisplay(container);
+    
+    const startChatBtn = document.getElementById('startChatBtn');
+    if (startChatBtn) {
+        startChatBtn.addEventListener('click', startChat);
+    }
+    
+    const addParticipantBtn = document.getElementById('addParticipantBtn');
+    if (addParticipantBtn) {
+        addParticipantBtn.addEventListener('click', openAddParticipantModal);
+    }
+    
+    const closeAddParticipantModalBtn = document.getElementById('closeAddParticipantModalBtn');
+    if (closeAddParticipantModalBtn) {
+        closeAddParticipantModalBtn.addEventListener('click', closeAddParticipantModal);
+    }
+    
+    const leaveChatBtn = document.getElementById('leaveChatBtn');
+    if (leaveChatBtn) {
+        leaveChatBtn.addEventListener('click', leaveChat);
+    }
+    
+    // Функции для клиентской пагинации
+    function setupClientPagination() {
+        const usersList = document.getElementById('usersList');
+        const userCards = usersList ? usersList.querySelectorAll('.user-card-new') : [];
+        const paginationContainer = document.getElementById('userPagination');
+        
+        if (!usersList || !paginationContainer || userCards.length === 0) return;
+        
+        const itemsPerPage = 5;
+        const totalPages = Math.ceil(userCards.length / itemsPerPage);
+        
+        // Создаем пагинацию
+        let paginationHTML = '';
+        
+        // Кнопка "Назад"
+        paginationHTML += `<span class="page-number-item" data-page="prev">&lsaquo;</span>`;
+        
+        // Номера страниц
+        for (let i = 1; i <= totalPages; i++) {
+            paginationHTML += `<span class="page-number-item ${i === 1 ? 'current' : ''}" data-page="${i}">${i}</span>`;
+        }
+        
+        // Кнопка "Вперед"
+        paginationHTML += `<span class="page-number-item" data-page="next">&rsaquo;</span>`;
+        
+        paginationContainer.innerHTML = paginationHTML;
+        
+        // Устанавливаем текущую страницу
+        let currentPage = 1;
+        
+        // Показываем первую страницу
+        showPage(currentPage);
+        
+        // Добавляем обработчики для кнопок пагинации
+        const pageButtons = paginationContainer.querySelectorAll('.page-number-item');
+        pageButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const page = this.dataset.page;
+                
+                if (page === 'prev') {
+                    if (currentPage > 1) {
+                        currentPage--;
+                        showPage(currentPage);
+                        updateActivePage();
+                    }
+                } else if (page === 'next') {
+                    if (currentPage < totalPages) {
+                        currentPage++;
+                        showPage(currentPage);
+                        updateActivePage();
+                    }
+                } else {
+                    currentPage = parseInt(page);
+                    showPage(currentPage);
+                    updateActivePage();
+                }
+            });
         });
-    }, 1000);
+        
+        // Функция для показа определенной страницы
+        function showPage(page) {
+            const startIndex = (page - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            
+            userCards.forEach((card, index) => {
+                if (index >= startIndex && index < endIndex) {
+                    card.classList.remove('hidden-user');
+                } else {
+                    card.classList.add('hidden-user');
+                }
+            });
+        }
+        
+        // Функция для обновления активной страницы в пагинации
+        function updateActivePage() {
+            pageButtons.forEach(button => {
+                if (button.dataset.page === currentPage.toString()) {
+                    button.classList.add('current');
+                } else {
+                    button.classList.remove('current');
+                }
+            });
+        }
+    }
+    
+    // Инициализируем пагинацию
+    setupClientPagination();
 });
 </script>
 {% endblock %}
