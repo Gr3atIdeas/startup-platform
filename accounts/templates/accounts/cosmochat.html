@@ -442,8 +442,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const createChatBtn = document.getElementById('createChatBtn');
     if (createChatBtn) {
         createChatBtn.addEventListener('click', function() {
-            const modal = document.getElementById('createChatModal');
-            if(modal) modal.style.display = 'flex';
+            // Пытаемся вызвать новую функцию, если она существует
+            if (typeof openGroupChatModal === 'function') {
+                openGroupChatModal();
+            } else {
+                // Резервный вариант - открываем старое модальное окно
+                const modal = document.getElementById('createChatModal');
+                if(modal) modal.style.display = 'flex';
+            }
         });
     }
 
