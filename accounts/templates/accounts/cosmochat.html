@@ -87,19 +87,13 @@
                         <h3>{{ user_profile.first_name }} {% if user_profile.last_name %}{{ user_profile.last_name|slice:":1" }}.{% endif %}</h3>
                         <div class="user-role-rating-new">
                             <div class="rating-stars-new" data-rating="{{ user_profile.rating|default:0|stringformat:".1f" }}">
-                                {% with rating=user_profile.rating|default:0 %}
+                                {% with rating_value=user_profile.rating|default:0 %}
                                 {% for i in "12345" %}
-                                {% with star_index=forloop.counter0 %}
                                 <span class="rating-icon-planet-container">
-                                    {% if star_index < rating|floatformat:"0"|add:"0" %}
-                                    <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="★" class="icon-filled">
-                                    {% elif star_index == rating|floatformat:"0"|add:"0" and rating > rating|floatformat:"0"|add:"0" %}
-                                    <img src="{% static 'accounts/images/planets/partial_filled_planet.svg' %}" alt="☆" class="icon-filled">
-                                    {% else %}
-                                    <img src="{% static 'accounts/images/planets/partial_filled_planet.svg' %}" alt="☆" class="icon-empty">
-                                    {% endif %}
+                                    <img src="{% static 'accounts/images/planets/partial_filled_planet.svg' %}" alt="Empty Planet" class="icon-empty">
+                                    <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="Filled Planet" class="icon-filled">
+                                    {# JavaScript будет управлять шириной .icon-filled на основе data-rating #}
                                 </span>
-                                {% endwith %}
                                 {% endfor %}
                                 {% endwith %}
                             </div>

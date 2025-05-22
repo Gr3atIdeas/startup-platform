@@ -1010,7 +1010,7 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
     right: 0;
     bottom: 0;
     background: rgba(0, 0, 0, 0.71);
-    backdrop-filter: blur(2px);
+    backdrop-filter: blur(10px);
     z-index: 2000;
     display: none;
     justify-content: center;
@@ -1025,13 +1025,13 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
 
 .group-chat-modal {
     position: relative;
-    width: 812px;
+    width: 502px;
     max-width: 90vw;
     padding: 45px;
     background: white;
     border-radius: 10px;
     box-shadow: 0px 30px 32px -23px rgba(0, 0, 0, 0.12);
-    max-height: 68vh; /* Уменьшено на 20% от 85vh */
+    max-height: 68vh;
     overflow-y: auto;
     overflow-x: hidden;
     transform: scale(0.95);
@@ -1102,6 +1102,14 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
     background: transparent;
     border: none;
     outline: none;
+    color: #A1A0A0;
+    font-size: 12px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.12px;
+}
+
+.group-chat-modal-search-input::placeholder {
     color: #A1A0A0;
     font-size: 12px;
     font-family: 'Unbounded', sans-serif;
