@@ -1059,38 +1059,37 @@ function showPage(page) {
 
 // Функции для работы с модальным окном создания группового чата
 function openGroupChatModal() {
-    // ---> ИНИЦИАЛИЗАЦИЯ ЭЛЕМЕНТОВ МОДАЛЬНОГО ОКНА ЗДЕСЬ
     const groupChatModal = document.getElementById('groupChatModal');
     if (!groupChatModal) {
         console.error('#groupChatModal not found!');
         return;
     }
-    // Элементы внутри модального окна получаем здесь, когда оно точно открывается
+    // Получаем элементы здесь для использования внутри этой функции и для передачи, если это все еще нужно где-то
     const groupChatContentWrapper = groupChatModal.querySelector('#groupChatModalContentWrapper');
     const groupChatDetailsView = groupChatModal.querySelector('#groupChatDetailsView');
     const selectedUserPillsContainer = groupChatModal.querySelector('#selectedUserPillsContainer');
-    const groupChatSearchInput = groupChatModal.querySelector('#groupChatSearchInput');
     const groupChatUsersList = groupChatModal.querySelector('#groupChatUsersList');
     const selectedUsersCountElement = groupChatModal.querySelector('#selectedUsersCount');
-    // Кнопки для навигации внутри модалки уже обрабатываются в DOMContentLoaded, т.к. они всегда в DOM
-    
+
     console.log('openGroupChatModal called', {
-        groupChatContentWrapper,
-        groupChatDetailsView,
-        selectedUserPillsContainer,
-        groupChatSearchInput,
-        groupChatUsersList,
-        selectedUsersCountElement
+        groupChatContentWrapper: !!groupChatContentWrapper, // Логируем true/false для проверки наличия
+        groupChatDetailsView: !!groupChatDetailsView,
+        selectedUserPillsContainer: !!selectedUserPillsContainer,
+        groupChatUsersList: !!groupChatUsersList,
+        selectedUsersCountElement: !!selectedUsersCountElement
     });
 
-    if (!groupChatContentWrapper || !groupChatDetailsView || !selectedUserPillsContainer || !groupChatSearchInput || !groupChatUsersList || !selectedUsersCountElement ){
-        console.error('One or more crucial elements inside #groupChatModal are missing!');
-        // Можно добавить return или более явное сообщение об ошибке пользователю, если это критично
+    if (!groupChatContentWrapper || !groupChatDetailsView) {
+        console.error('CRITICAL: groupChatContentWrapper or groupChatDetailsView is STILL null inside openGroupChatModal after querySelector!');
+        // Не продолжать, если основные контейнеры видов не найдены
+        return; 
     }
 
     selectedGroupChatUserIds = [];
-    if(selectedUserPillsContainer) renderSelectedUserPills(selectedUserPillsContainer, groupChatUsersList); // Передаем аргументы
-    toggleGroupChatModalView(false, groupChatContentWrapper, groupChatDetailsView, groupChatUsersList, selectedUserPillsContainer); // Передаем аргументы
+    if(selectedUserPillsContainer && groupChatUsersList) renderSelectedUserPills(selectedUserPillsContainer, groupChatUsersList);
+    
+    // toggleGroupChatModalView теперь сама найдет нужные элементы
+    toggleGroupChatModalView(false); 
 
     groupChatModal.style.display = 'flex';
     setTimeout(() => {
@@ -1103,8 +1102,12 @@ function openGroupChatModal() {
         btn.classList.remove('inactive');
     });
 
-    if(groupChatUsersList) loadGroupChatUsers(groupChatUsersList, selectedUsersCountElement, selectedUserPillsContainer);
-    if(selectedUsersCountElement) updateSelectedUsersCount(selectedUsersCountElement);
+    if(groupChatUsersList && selectedUsersCountElement && selectedUserPillsContainer) {
+        loadGroupChatUsers(groupChatUsersList, selectedUsersCountElement, selectedUserPillsContainer);
+    }
+    if(selectedUsersCountElement) {
+        updateSelectedUsersCount(selectedUsersCountElement);
+    }
 }
 
 function closeGroupChatModal() {
@@ -1218,13 +1221,21 @@ function createGroupChat(chatName, userIds) {
     // ... (остальная часть функции createGroupChat)
 }
 
-function toggleGroupChatModalView(showDetailsView, groupChatContentWrapper, groupChatDetailsView, groupChatUsersList, pillsContainer) { // Принимаем элементы
+function toggleGroupChatModalView(showDetailsView) {
     console.log('toggleGroupChatModalView called with:', showDetailsView);
+    // Получаем элементы здесь, чтобы быть уверенными в их актуальности
+    const groupChatContentWrapper = document.getElementById('groupChatModalContentWrapper');
+    const groupChatDetailsView = document.getElementById('groupChatDetailsView');
+
     if (!groupChatContentWrapper || !groupChatDetailsView) {
-        console.error('toggleGroupChatModalView: groupChatContentWrapper or groupChatDetailsView is null!');
+        console.error('toggleGroupChatModalView: groupChatContentWrapper or groupChatDetailsView is null! GETTING THEM BY ID.');
         return;
     }
-    const countElement = document.getElementById('selectedUsersCount'); // Получаем здесь, если нужно
+
+    // Получаем остальные элементы, если они нужны для логики этой функции или вызываемых из нее
+    const groupChatUsersList = document.getElementById('groupChatUsersList');
+    const pillsContainer = document.getElementById('selectedUserPillsContainer');
+    const countElement = document.getElementById('selectedUsersCount');
 
     if (showDetailsView) {
         groupChatContentWrapper.style.display = 'none';
@@ -1232,15 +1243,18 @@ function toggleGroupChatModalView(showDetailsView, groupChatContentWrapper, grou
     } else {
         groupChatContentWrapper.style.display = 'flex';
         groupChatDetailsView.style.display = 'none';
-        if(groupChatUsersList && countElement && pillsContainer) loadGroupChatUsers(groupChatUsersList, countElement, pillsContainer);
-        if(pillsContainer && groupChatUsersList) renderSelectedUserPills(pillsContainer, groupChatUsersList);
+        if(groupChatUsersList && countElement && pillsContainer) {
+             loadGroupChatUsers(groupChatUsersList, countElement, pillsContainer);
+        }
+        if(pillsContainer && groupChatUsersList) {
+            renderSelectedUserPills(pillsContainer, groupChatUsersList);
+        }
     }
 }
 
-function renderSelectedParticipantsForDetailsView(groupChatUsersListFromCaller) { // Принимаем groupChatUsersList
+function renderSelectedParticipantsForDetailsView(groupChatUsersListFromCaller) { 
     console.log('renderSelectedParticipantsForDetailsView called');
-    const groupChatSelectedParticipantsList = document.getElementById('groupChatSelectedParticipantsList'); // Получаем здесь
-    // Используем переданный groupChatUsersListFromCaller или получаем его снова, если не передан
+    const groupChatSelectedParticipantsList = document.getElementById('groupChatSelectedParticipantsList'); 
     const usersList = groupChatUsersListFromCaller || document.getElementById('groupChatUsersList'); 
 
     if (!groupChatSelectedParticipantsList || !usersList) {
