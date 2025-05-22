@@ -1007,33 +1007,41 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
     position: fixed;
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.71);
-    backdrop-filter: blur(10px);
-    z-index: 2000;
-    display: none;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.71); /* Как было в cosmochat, но можно взять из notifications: rgba(0, 0, 0, 0.5) */
+    display: none; 
     justify-content: center;
     align-items: center;
+    z-index: 2000; /* Как было в cosmochat */
+    font-family: 'Unbounded', sans-serif;
+    padding: 20px; 
+    box-sizing: border-box;
+    backdrop-filter: blur(10px); 
+    -webkit-backdrop-filter: blur(10px);
     opacity: 0;
     transition: opacity 0.3s ease;
 }
 
 .group-chat-modal-overlay.active {
     opacity: 1;
+    display: flex; /* Добавлено для корректного появления */
 }
 
-.group-chat-modal {
-    position: relative;
-    width: 502px;
+.group-chat-modal { /* Ранее .modal-popup */
+    color: black; /* Текст внутри модального окна по умолчанию черный */
+    border-radius: 20px; 
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+    width: 502px; /* Ширина, как была задана ранее для group-chat-modal */
     max-width: 90vw;
-    padding: 45px;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0px 30px 32px -23px rgba(0, 0, 0, 0.12);
-    max-height: 68vh;
-    overflow-y: auto;
-    overflow-x: hidden;
+    position: relative;
+    overflow: hidden; /* Изменено с visible на hidden, чтобы скругление работало */
+    display: flex; 
+    flex-direction: column; /* Контент будет располагаться вертикально */
+    background: white; /* Фон модального окна - белый */
+    max-height: 85vh; /* Ограничение по высоте */
+
+    /* Анимации появления, как были в cosmochat.css */
     transform: scale(0.95);
     opacity: 0;
     transition: transform 0.3s ease, opacity 0.3s ease;
@@ -1044,11 +1052,55 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
     opacity: 1;
 }
 
+.group-chat-modal-close { /* Ранее .modal-close-button */
+    position: absolute !important;
+    top: -15px !important; /* Смещено выше, как в макете пользователя */
+    right: -15px !important; /* Смещено правее, как в макете пользователя */
+    background: #FFEF2B; /* Желтый фон, как в макете пользователя */
+    border: none;
+    cursor: pointer;
+    z-index: 2100; /* Выше чем z-index оверлея */
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    box-shadow: 0px 2px 5px rgba(0,0,0,0.2); /* Небольшая тень */
+}
+
+.group-chat-modal-close:hover {
+    background: #f2e00a;
+    transform: scale(1.1);
+}
+
+.group-chat-modal-close img {
+    width: 14px; /* Размер крестика */
+    height: 14px;
+    display: block; 
+}
+
+.group-chat-modal-content-wrapper {
+    padding: 45px; /* Внутренние отступы для контента */
+    padding-top: 30px; /* Меньше отступ сверху из-за вынесенной кнопки закрытия */
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 30px; /* Отступы между элементами внутри, можно настроить */
+}
+
+/* --- Существующие стили для group-chat-modal (некоторые могут быть изменены или удалены ниже) --- */
+/* Старые стили для .group-chat-modal-overlay и .group-chat-modal будут заменены выше */
+
+
+/* Оставляем и адаптируем остальные стили для контента модального окна */
+
 .group-chat-modal-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 48px;
+    /* margin-bottom: 48px; Удаляем, теперь gap у wrapper */
 }
 
 .group-chat-modal-title {
@@ -1088,7 +1140,8 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-bottom: 48px;
+    /* margin-bottom: 48px; Удаляем, теперь gap у wrapper */
+    box-sizing: border-box; /* Добавлено для корректного расчета ширины */
 }
 
 .group-chat-modal-search-icon {
@@ -1102,14 +1155,14 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
     background: transparent;
     border: none;
     outline: none;
-    color: #A1A0A0;
+    color: #A1A0A0; 
     font-size: 12px;
     font-family: 'Unbounded', sans-serif;
     font-weight: 300;
     letter-spacing: 0.12px;
 }
 
-.group-chat-modal-search-input::placeholder {
+.group-chat-modal-search-input::placeholder { 
     color: #A1A0A0;
     font-size: 12px;
     font-family: 'Unbounded', sans-serif;
@@ -1120,7 +1173,8 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
 .group-chat-modal-role-filters {
     display: flex;
     gap: 11px;
-    margin-bottom: 48px;
+    /* margin-bottom: 48px; Удаляем, теперь gap у wrapper */
+    justify-content: center; /* Центрируем кнопки фильтров */
 }
 
 .group-chat-modal-role-btn {
@@ -1138,40 +1192,42 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
 
 .group-chat-modal-role-btn.active {
     background: #004E9F;
-    color: white;
+    color: white; 
 }
 
 .group-chat-modal-role-btn.inactive {
     background: #D6D6D6;
-    color: black;
+    color: black; 
 }
 
 .group-chat-modal-users {
     display: flex;
     flex-direction: column;
-    gap: 32px;
-    max-height: 300px;
+    gap: 20px; /* Уменьшен gap между пользователями */
+    max-height: 300px; /* Ограничиваем высоту списка пользователей, если нужно */
     overflow-y: auto;
     overflow-x: hidden;
+    /* padding-right: 5px;  Для кастомного скроллбара ниже */
 }
 
 .group-chat-modal-user {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 5px 0; /* Небольшие отступы для каждого пользователя */
 }
 
 .group-chat-modal-user-info {
     display: flex;
     align-items: center;
-    gap: 24px;
+    gap: 15px; /* Уменьшен gap */
 }
 
 .group-chat-modal-user-avatar {
     width: 58px;
     height: 58px;
     border-radius: 29px;
-    border: 1px solid #004E9F;
+    border: 1px solid #004E9F; 
     object-fit: cover;
 }
 
@@ -1184,13 +1240,13 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
 .group-chat-modal-user-firstname,
 .group-chat-modal-user-lastname {
     color: black;
-    font-size: 20px;
+    font-size: 18px; /* Немного уменьшен шрифт для компактности */
     font-family: 'Unbounded', sans-serif;
     font-weight: 400;
-    line-height: 18px;
+    line-height: 1.2; /* Адаптивная высота строки */
 }
 
-/* Улучшенные чекбоксы */
+/* Улучшенные чекбоксы - стили остаются без изменений */
 .group-chat-modal-checkbox {
     width: 24px;
     height: 24px;
@@ -1232,7 +1288,7 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
     border-bottom: 2px solid white;
     transform: rotate(-45deg);
     display: none;
-    box-sizing: content-box;
+    box-sizing: content-box; 
 }
 
 .group-chat-modal-checkbox.checked .group-chat-modal-checkbox-empty {
@@ -1247,42 +1303,30 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
     display: block;
 }
 
-.group-chat-modal-close {
-    position: absolute;
-    top: -40px;
-    right: -40px;
-    width: 30px;
-    height: 30px;
-    background: #FFEF2B;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    z-index: 2100;
-}
+/* Старую кнопку закрытия модального окна удаляем, так как она заменена на новую .group-chat-modal-close */
+/* .group-chat-modal-close (старая) { ... } */
 
-.group-chat-modal-close img {
-    width: 12px;
-    height: 12px;
-}
 
-/* Кастомный скроллбар */
-::-webkit-scrollbar {
+/* Кастомный скроллбар для .group-chat-modal-users (если нужен) */
+.group-chat-modal-users::-webkit-scrollbar {
     width: 6px;
     height: 6px;
 }
 
-::-webkit-scrollbar-track {
-    background: #f1f1f1;
+.group-chat-modal-users::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0.05); /* Чуть темнее для белого фона */
     border-radius: 3px;
 }
 
-::-webkit-scrollbar-thumb {
-    background: #004E9F;
+.group-chat-modal-users::-webkit-scrollbar-thumb {
+    background: #004E9F; 
     border-radius: 3px;
 }
 
-::-webkit-scrollbar-thumb:hover {
+.group-chat-modal-users::-webkit-scrollbar-thumb:hover {
     background: #003b7a;
 }
+
+/* Удаляем старые стили, которые полностью заменяются или больше не нужны */
+/* Старые .group-chat-modal-overlay и .group-chat-modal стили удаляются, 
+   так как они полностью переопределены в начале этого блока */

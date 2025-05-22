@@ -287,28 +287,30 @@
     <!-- Модальное окно создания группового чата -->
     <div class="group-chat-modal-overlay" id="groupChatModal">
         <div class="group-chat-modal">
-            <div class="group-chat-modal-close" id="closeGroupChatModalBtn">
+            <button class="group-chat-modal-close" id="closeGroupChatModalBtn">
                 <img src="{% static 'accounts/images/icons/Close_yellow.svg' %}" alt="Закрыть">
-            </div>
+            </button>
             
-            <div class="group-chat-modal-header">
-                <div class="group-chat-modal-title">Выберите пользователей</div>
-                <div class="group-chat-modal-count" id="selectedUsersCount">0/10</div>
-                <div class="group-chat-modal-next" id="createGroupChatBtn">Далее</div>
-            </div>
-            
-            <div class="group-chat-modal-search">
-                <img src="{% static 'accounts/images/cosmochat/search.svg' %}" alt="Поиск" class="group-chat-modal-search-icon">
-                <input type="text" class="group-chat-modal-search-input" placeholder="Кого вы хотите пригласить?" id="groupChatSearchInput">
-            </div>
-            
-            <div class="group-chat-modal-role-filters">
-                <button class="group-chat-modal-role-btn active" data-role="startuper">Стартапер</button>
-                <button class="group-chat-modal-role-btn inactive" data-role="investor">Инвестор</button>
-            </div>
-            
-            <div class="group-chat-modal-users" id="groupChatUsersList">
-                <!-- Пользователи будут добавлены через JavaScript -->
+            <div class="group-chat-modal-content-wrapper">
+                <div class="group-chat-modal-header">
+                    <div class="group-chat-modal-title">Выберите пользователей</div>
+                    <div class="group-chat-modal-count" id="selectedUsersCount">0/10</div>
+                    <div class="group-chat-modal-next" id="createGroupChatBtn">Далее</div>
+                </div>
+                
+                <div class="group-chat-modal-search">
+                    <img src="{% static 'accounts/images/cosmochat/search.svg' %}" alt="Поиск" class="group-chat-modal-search-icon">
+                    <input type="text" class="group-chat-modal-search-input" placeholder="Кого вы хотите пригласить?" id="groupChatSearchInput">
+                </div>
+                
+                <div class="group-chat-modal-role-filters">
+                    <button class="group-chat-modal-role-btn active" data-role="startuper">Стартапер</button>
+                    <button class="group-chat-modal-role-btn inactive" data-role="investor">Инвестор</button>
+                </div>
+                
+                <div class="group-chat-modal-users" id="groupChatUsersList">
+                    <!-- Пользователи будут добавлены через JavaScript -->
+                </div>
             </div>
         </div>
     </div>
