@@ -170,6 +170,10 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
     font-weight: 400;
     line-height: 16px;
     margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 120px; /* Ширина блока user-info-new */
 }
 .user-role-rating-new {
     display: flex;
@@ -322,6 +326,28 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
 .show-more-btn-new img {
     width: 16px;
     height: 16px;
+}
+
+.hide-btn-new {
+    padding: 12px 35px;
+    border-radius: 10px;
+    border: 1px white solid;
+    background: transparent;
+    color: #F5F5F5;
+    font-size: 16px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.pagination-buttons-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
 }
 
 .articles-section-new {
@@ -561,6 +587,8 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
     border-radius: 15px;
     border: 1px solid #004E9F;
     min-height: 650px; /* Примерно 725 (общая) - 2*36 (паддинги) - заголовок/ввод */
+    max-height: 650px; /* Добавляем максимальную высоту, чтобы блок не расширялся */
+    overflow: hidden; /* Скрываем переполнение */
 }
 
 .no-chat-selected-placeholder {
@@ -618,11 +646,12 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
 .chat-messages-area {
     flex-grow: 1;
     padding: 20px;
-    overflow-y: auto;
+    overflow-y: auto; /* Добавляем вертикальный скроллбар */
     background: #f9f9f9;
     display: flex;
     flex-direction: column;
     gap: 15px;
+    max-height: calc(650px - 60px - 60px); /* Максимальная высота за вычетом высоты header и input area */
 }
 .message-bubble-new {
     max-width: 70%;

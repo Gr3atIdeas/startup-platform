@@ -697,4 +697,139 @@ document.addEventListener('DOMContentLoaded', function() {
     if (leaveChatBtn) {
         leaveChatBtn.addEventListener('click', leaveChat);
     }
-}); 
+
+    // Обработчик для кнопки "Показать еще"
+    const showMoreBtn = document.getElementById('showMoreUsersBtn');
+    if (showMoreBtn) {
+        showMoreBtn.addEventListener('click', function() {
+            showMoreUsers();
+        });
+    }
+});
+
+// Функция для показа дополнительных пользователей
+let additionalUsersShown = 0;
+function showMoreUsers() {
+    const usersList = document.getElementById('usersList');
+    const hiddenUserCards = usersList ? usersList.querySelectorAll('.user-card-new.hidden-user') : [];
+    const paginationContainer = document.getElementById('userPagination');
+    const showMoreBtn = document.getElementById('showMoreUsersBtn');
+    
+    if (!usersList || hiddenUserCards.length === 0) {
+        // Если больше нет скрытых пользователей, можно скрыть кнопку
+        if (showMoreBtn) showMoreBtn.style.display = 'none';
+        return;
+    }
+    
+    // Скрываем пагинацию с цифрами и меняем отображение кнопок
+    if (paginationContainer) {
+        paginationContainer.style.display = 'none';
+    }
+    
+    // Если контейнер для кнопок еще не создан, создаем его
+    let buttonsContainer = document.querySelector('.pagination-buttons-container');
+    if (!buttonsContainer) {
+        buttonsContainer = document.createElement('div');
+        buttonsContainer.className = 'pagination-buttons-container';
+        const paginationNew = document.querySelector('.pagination-new');
+        if (paginationNew) {
+            paginationNew.appendChild(buttonsContainer);
+        }
+    }
+    
+    // Показываем кнопку "Скрыть", если её еще нет
+    let hideBtn = document.getElementById('hideUsersBtn');
+    if (!hideBtn) {
+        hideBtn = document.createElement('button');
+        hideBtn.id = 'hideUsersBtn';
+        hideBtn.className = 'hide-btn-new';
+        hideBtn.textContent = 'Скрыть';
+        hideBtn.addEventListener('click', hideExtraUsers);
+        buttonsContainer.appendChild(hideBtn);
+    } else {
+        hideBtn.style.display = 'flex';
+    }
+    
+    // Перемещаем кнопку "Показать еще" в контейнер, если она еще не там
+    if (showMoreBtn && showMoreBtn.parentElement !== buttonsContainer) {
+        buttonsContainer.appendChild(showMoreBtn);
+    }
+    
+    // Показываем следующие 5 скрытых карточек
+    const showCount = Math.min(5, hiddenUserCards.length);
+    for (let i = 0; i < showCount; i++) {
+        hiddenUserCards[i].classList.remove('hidden-user');
+        hiddenUserCards[i].classList.add('show-more-revealed');
+        additionalUsersShown++;
+    }
+    
+    // Если больше нет скрытых пользователей, скрываем кнопку "Показать еще"
+    if (hiddenUserCards.length <= showCount) {
+        if (showMoreBtn) showMoreBtn.style.display = 'none';
+    }
+}
+
+// Функция для скрытия дополнительных пользователей и возврата к пагинации
+function hideExtraUsers() {
+    const usersList = document.getElementById('usersList');
+    const paginationContainer = document.getElementById('userPagination');
+    const buttonsContainer = document.querySelector('.pagination-buttons-container');
+    const hideBtn = document.getElementById('hideUsersBtn');
+    const showMoreBtn = document.getElementById('showMoreUsersBtn');
+    
+    // Возвращаем отображение пагинации с цифрами
+    if (paginationContainer) {
+        paginationContainer.style.display = 'flex';
+    }
+    
+    // Скрываем кнопку "Скрыть"
+    if (hideBtn) {
+        hideBtn.style.display = 'none';
+    }
+    
+    // Возвращаем кнопку "Показать еще" в исходное положение
+    if (showMoreBtn && buttonsContainer) {
+        document.querySelector('.pagination-new').appendChild(showMoreBtn);
+        showMoreBtn.style.display = 'flex';
+    }
+    
+    // Скрываем все карточки, которые были показаны через "Показать еще"
+    const revealedCards = usersList ? usersList.querySelectorAll('.user-card-new.show-more-revealed') : [];
+    revealedCards.forEach(card => {
+        card.classList.add('hidden-user');
+        card.classList.remove('show-more-revealed');
+    });
+    
+    // Сбрасываем счетчик показанных дополнительных пользователей
+    additionalUsersShown = 0;
+    
+    // Восстанавливаем состояние текущей страницы
+    const currentPageBtn = document.querySelector('.page-number-item.current');
+    if (currentPageBtn) {
+        const currentPage = parseInt(currentPageBtn.dataset.page);
+        showPage(currentPage);
+    }
+}
+
+// Функция для показа определенной страницы
+function showPage(page) {
+    const usersList = document.getElementById('usersList');
+    const userCards = usersList ? usersList.querySelectorAll('.user-card-new') : [];
+    const itemsPerPage = 8; // Изменили с 5 на 8
+    
+    if (!usersList || userCards.length === 0) return;
+    
+    const startIndex = (page - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    
+    userCards.forEach((card, index) => {
+        if (index >= startIndex && index < endIndex) {
+            card.classList.remove('hidden-user');
+        } else {
+            // Если карточка уже была показана через "Показать еще", не скрываем её
+            if (!card.classList.contains('show-more-revealed')) {
+                card.classList.add('hidden-user');
+            }
+        }
+    });
+} 
