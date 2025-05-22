@@ -1040,8 +1040,8 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
     flex-direction: column; 
     background: white; 
     /* max-height: 85vh; Управляется высотой контента и паддингами */
-    padding-top: 45px;
-    padding-bottom: 45px;
+    padding-top: 30px; /* Уменьшено с 45px */
+    padding-bottom: 30px; /* Уменьшено с 45px */
     padding-left: 300px;
     padding-right: 300px;
     box-sizing: border-box; /* Чтобы паддинги учитывались в общей ширине/высоте */
@@ -1092,12 +1092,12 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
 
 .group-chat-modal-content-wrapper {
     width: 474px; /* Расширена на ~15% (было 412px) */
-    max-height: 680px; 
+    max-height: 580px; /* Уменьшено с 680px, чтобы уменьшить общую высоту */
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: 20px; /* Уменьшен gap между основными блоками */
-    padding: 30px; /* Общие внутренние отступы контентной части */
+    gap: 15px; /* Уменьшен gap между основными блоками, было 20px */
+    padding: 20px; /* Уменьшены внутренние отступы, было 30px */
     box-sizing: border-box;
 }
 
@@ -1510,4 +1510,16 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
 .participants-actions-list .participant-name {
     color: black;
     font-size: 18px; /* Уменьшено с 20px */
+}
+
+/* Стили для второго вида модального окна (будут дополняться) */
+.group-chat-modal-details-view { /* Добавляем стили для этого блока */
+    width: 474px; /* Такая же ширина как у content-wrapper первого вида */
+    max-height: 580px; /* Такая же максимальная высота */
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 20px;
+    box-sizing: border-box;
 }

@@ -92,9 +92,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // Обработчик для кнопки "Далее" в модальном окне группового чата
     if (navigateToDetailsViewBtn) {
         navigateToDetailsViewBtn.addEventListener('click', function() {
+            console.log('#navigateToDetailsViewBtn clicked'); // <-- ОТЛАДКА
             if (selectedGroupChatUserIds.length > 0) {
-                renderSelectedParticipantsForDetailsView(); // Сначала рендерим список
-                if (groupChatNameInput) { // Авто-заполнение имени чата
+                console.log('Selected users:', selectedGroupChatUserIds); // <-- ОТЛАДКА
+                console.log('Calling renderSelectedParticipantsForDetailsView...'); // <-- ОТЛАДКА
+                renderSelectedParticipantsForDetailsView(); 
+                if (groupChatNameInput) { 
                     const firstFewNames = selectedGroupChatUserIds
                         .map(userId => {
                             const userDiv = groupChatUsersList.querySelector(`.group-chat-modal-user[data-user-id="${userId}"] .group-chat-modal-user-firstname`);
@@ -105,7 +108,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         .join(', ');
                     groupChatNameInput.value = firstFewNames || "Новый групповой чат";
                 }
-                toggleGroupChatModalView(true); // Затем переключаем вид
+                console.log('Calling toggleGroupChatModalView(true)...'); // <-- ОТЛАДКА
+                toggleGroupChatModalView(true); 
             } else {
                 alert("Выберите хотя бы одного пользователя.");
             }
@@ -1226,7 +1230,11 @@ function createGroupChat(chatName, userIds) {
 
 // Переключение между видами модального окна группового чата
 function toggleGroupChatModalView(showDetailsView) {
-    if (!groupChatContentWrapper || !groupChatDetailsView) return;
+    console.log('toggleGroupChatModalView called with:', showDetailsView); // <-- ОТЛАДКА
+    if (!groupChatContentWrapper || !groupChatDetailsView) {
+        console.error('groupChatContentWrapper or groupChatDetailsView is null!'); // <-- ОТЛАДКА
+        return;
+    }
 
     if (showDetailsView) {
         groupChatContentWrapper.style.display = 'none';
@@ -1242,7 +1250,11 @@ function toggleGroupChatModalView(showDetailsView) {
 
 // Рендер выбранных участников для второго вида (детали чата)
 function renderSelectedParticipantsForDetailsView() {
-    if (!groupChatSelectedParticipantsList || !groupChatUsersList) return;
+    console.log('renderSelectedParticipantsForDetailsView called'); // <-- ОТЛАДКА
+    if (!groupChatSelectedParticipantsList || !groupChatUsersList) {
+        console.error('groupChatSelectedParticipantsList or groupChatUsersList is null!'); // <-- ОТЛАДКА
+        return;
+    }
     groupChatSelectedParticipantsList.innerHTML = ''; // Очищаем
 
     selectedGroupChatUserIds.forEach(userId => {
