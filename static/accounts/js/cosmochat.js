@@ -497,19 +497,25 @@ function updateUserRatingDisplay(starsContainer) {
 
     iconContainers.forEach((container, index) => {
         const filledIcon = container.querySelector('.icon-filled');
+        const emptyIcon = container.querySelector('.icon-empty');
+        
         if (!filledIcon) {
             console.warn(`[updateUserRatingDisplay] Filled icon not found in planet container ${index + 1}`);
             return; 
         }
 
-        let fillWidth = '0%';
         if (index < fullStars) {
-            fillWidth = '100%';
+            // Полностью заполненная планета
+            filledIcon.style.width = '100%';
         } else if (index === fullStars && partialPercentage > 0) {
-            fillWidth = `${partialPercentage}%`;
+            // Частично заполненная планета
+            filledIcon.style.width = `${partialPercentage}%`;
+        } else {
+            // Пустая планета
+            filledIcon.style.width = '0%';
         }
-        console.log(`Setting star ${index + 1} width to ${fillWidth}`);
-        filledIcon.style.width = fillWidth;
+        
+        console.log(`Setting star ${index + 1} width to ${index < fullStars ? '100%' : (index === fullStars ? partialPercentage + '%' : '0%')}`);
     });
 }
 
@@ -554,13 +560,23 @@ function startChatWithUser(userId) {
                     }
                 });
                 if (chatExists) {
-                     loadChat(data.chat_id);
+                    loadChat(data.chat_id);
+                    
+                    // Скролл к нижней части страницы, где находится окно чата
+                    document.querySelector('.main-chat-area-new').scrollIntoView({ behavior: 'smooth' });
+                    
+                    // Закрываем все модальные окна
+                    if (typeof closeProfileModal === 'function') closeProfileModal();
+                    
+                    // Закрываем выпадающее меню поиска
+                    const searchDropdown = document.getElementById('searchDropdown');
+                    if (searchDropdown) searchDropdown.style.display = 'none';
                 } else {
                     window.location.href = window.location.pathname + '?open_chat_id=' + data.chat_id + '&new_chat=true';
                 }
                 if (typeof closeProfileModal === 'function') closeProfileModal();
             } else {
-                 window.location.href = window.location.pathname + '?open_chat_id=' + data.chat_id + '&new_chat=true';
+                window.location.href = window.location.pathname + '?open_chat_id=' + data.chat_id + '&new_chat=true';
             }
         } else {
             alert(data.error || 'Ошибка при создании или открытии чата');
@@ -905,10 +921,10 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Кнопки модальных окон
+    // Обработчики для модальных окон
     const createChatBtn = document.getElementById('createChatBtn');
     if (createChatBtn) {
-        createChatBtn.addEventListener('click', openCreateChatModal);
+        createChatBtn.addEventListener('click', openGroupChatModal);
     }
     
     const closeCreateChatModalBtn = document.getElementById('closeCreateChatModalBtn');
@@ -944,6 +960,70 @@ document.addEventListener('DOMContentLoaded', function() {
     const leaveChatBtn = document.getElementById('leaveChatBtn');
     if (leaveChatBtn) {
         leaveChatBtn.addEventListener('click', leaveChat);
+    }
+    
+    // Обработчики для модального окна группового чата
+    const closeGroupChatModalBtn = document.getElementById('closeGroupChatModalBtn');
+    if (closeGroupChatModalBtn) {
+        closeGroupChatModalBtn.addEventListener('click', closeGroupChatModal);
+    }
+    
+    // Закрытие модального окна группового чата по клику вне модального окна
+    const groupChatModal = document.getElementById('groupChatModal');
+    if (groupChatModal) {
+        groupChatModal.addEventListener('click', function(event) {
+            if (event.target === groupChatModal) {
+                closeGroupChatModal();
+            }
+        });
+    }
+    
+    // Закрытие модального окна группового чата по нажатию ESC
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            closeGroupChatModal();
+        }
+    });
+    
+    // Обработчик для кнопки "Далее" в модальном окне группового чата
+    const createGroupChatBtn = document.getElementById('createGroupChatBtn');
+    if (createGroupChatBtn) {
+        createGroupChatBtn.addEventListener('click', createGroupChat);
+    }
+    
+    // Обработчики для переключения фильтров ролей в модальном окне группового чата
+    const roleFilterBtns = document.querySelectorAll('.group-chat-modal-role-btn');
+    roleFilterBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            roleFilterBtns.forEach(b => {
+                b.classList.remove('active');
+                b.classList.add('inactive');
+            });
+            this.classList.add('active');
+            this.classList.remove('inactive');
+            
+            loadGroupChatUsers();
+        });
+    });
+    
+    // Обработчик для поиска в модальном окне группового чата
+    const groupChatSearchInput = document.getElementById('groupChatSearchInput');
+    if (groupChatSearchInput) {
+        groupChatSearchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const userItems = document.querySelectorAll('.group-chat-modal-user');
+            
+            userItems.forEach(item => {
+                const firstName = item.querySelector('.group-chat-modal-user-firstname').textContent.toLowerCase();
+                const lastName = item.querySelector('.group-chat-modal-user-lastname').textContent.toLowerCase();
+                
+                if (firstName.includes(searchTerm) || lastName.includes(searchTerm)) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
     }
 
     // Обработчик для кнопки "Показать еще"
@@ -1085,5 +1165,148 @@ function showPage(page) {
                 card.classList.add('hidden-user');
             }
         }
+    });
+}
+
+// Функции для работы с модальным окном создания группового чата
+function openGroupChatModal() {
+    const modal = document.getElementById('groupChatModal');
+    if (!modal) return;
+    
+    modal.style.display = 'flex';
+    
+    // Загружаем пользователей
+    loadGroupChatUsers();
+    
+    // Устанавливаем счетчик выбранных пользователей
+    updateSelectedUsersCount();
+}
+
+function closeGroupChatModal() {
+    const modal = document.getElementById('groupChatModal');
+    if (modal) modal.style.display = 'none';
+}
+
+function loadGroupChatUsers() {
+    const usersList = document.getElementById('groupChatUsersList');
+    if (!usersList) return;
+    
+    // Очищаем список
+    usersList.innerHTML = '';
+    
+    // Получаем пользователей из DOM (как и для выпадающего списка поиска)
+    const userCards = document.querySelectorAll('.user-card-new');
+    const users = [];
+    
+    userCards.forEach(card => {
+        const userId = card.dataset.userId;
+        const avatarImg = card.querySelector('.avatar-img');
+        const nameElement = card.querySelector('h3');
+        
+        if (userId && nameElement) {
+            const name = nameElement.textContent.trim();
+            const nameParts = name.split(' ');
+            const firstName = nameParts[0];
+            const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
+            
+            const avatarSrc = avatarImg ? avatarImg.src : '/static/accounts/images/avatars/default_avatar_ufo.png';
+            const role = card.dataset.role;
+            
+            users.push({
+                user_id: userId,
+                first_name: firstName,
+                last_name: lastName,
+                profile_picture_url: avatarSrc,
+                role: role
+            });
+        }
+    });
+    
+    // Фильтруем по активной роли
+    const activeRoleBtn = document.querySelector('.group-chat-modal-role-btn.active');
+    const activeRole = activeRoleBtn ? activeRoleBtn.dataset.role : 'startuper';
+    
+    const filteredUsers = users.filter(user => user.role === activeRole);
+    
+    // Добавляем пользователей в список
+    filteredUsers.forEach(user => {
+        const userItem = document.createElement('div');
+        userItem.className = 'group-chat-modal-user';
+        userItem.dataset.userId = user.user_id;
+        
+        userItem.innerHTML = `
+            <div class="group-chat-modal-user-info">
+                <img src="${user.profile_picture_url}" alt="${user.first_name}" class="group-chat-modal-user-avatar">
+                <div class="group-chat-modal-user-name">
+                    <div class="group-chat-modal-user-firstname">${user.first_name}</div>
+                    <div class="group-chat-modal-user-lastname">${user.last_name}</div>
+                </div>
+            </div>
+            <div class="group-chat-modal-checkbox" data-user-id="${user.user_id}">
+                <div class="group-chat-modal-checkbox-empty"></div>
+                <div class="group-chat-modal-checkbox-filled"></div>
+                <div class="group-chat-modal-checkbox-tick"></div>
+            </div>
+        `;
+        
+        usersList.appendChild(userItem);
+    });
+    
+    // Добавляем обработчики для чекбоксов
+    document.querySelectorAll('.group-chat-modal-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('click', function() {
+            this.classList.toggle('checked');
+            updateSelectedUsersCount();
+        });
+    });
+}
+
+function updateSelectedUsersCount() {
+    const countElement = document.getElementById('selectedUsersCount');
+    if (!countElement) return;
+    
+    const checkedCheckboxes = document.querySelectorAll('.group-chat-modal-checkbox.checked');
+    const count = checkedCheckboxes.length;
+    
+    countElement.textContent = `${count}/10`;
+}
+
+function createGroupChat() {
+    const checkedCheckboxes = document.querySelectorAll('.group-chat-modal-checkbox.checked');
+    const selectedUserIds = Array.from(checkedCheckboxes).map(checkbox => checkbox.dataset.userId);
+    
+    if (selectedUserIds.length === 0) {
+        alert('Пожалуйста, выберите хотя бы одного пользователя');
+        return;
+    }
+    
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    
+    fetch('/cosmochat/create-group-chat/', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrfToken,
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: JSON.stringify({
+            user_ids: selectedUserIds
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success && data.chat_id) {
+            loadChat(data.chat_id);
+            closeGroupChatModal();
+            
+            // Скролл к нижней части страницы, где находится окно чата
+            document.querySelector('.main-chat-area-new').scrollIntoView({ behavior: 'smooth' });
+        } else {
+            alert(data.error || 'Ошибка при создании группового чата');
+        }
+    })
+    .catch(error => {
+        console.error('Ошибка:', error);
+        alert('Произошла ошибка при создании группового чата.');
     });
 } 

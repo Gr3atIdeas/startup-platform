@@ -333,7 +333,7 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
     align-items: center;
     gap: 9px;
     cursor: pointer;
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+    box-shadow: none; /* Убираем тень */
 }
 
 .show-more-btn-new i {
@@ -354,7 +354,7 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
     align-items: center;
     gap: 9px;
     cursor: pointer;
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+    box-shadow: none; /* Убираем тень */
     margin-left: 10px;
 }
 
@@ -1001,3 +1001,232 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
 /* .social-section { display: none !important; } */
 /* .chat-section { display: none !important; } */
 /* ... и так далее для всех старых корневых селекторов */
+
+/* Стили для модального окна создания группового чата */
+.group-chat-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.71);
+    backdrop-filter: blur(10px);
+    z-index: 2000;
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.group-chat-modal {
+    position: relative;
+    width: 1012px;
+    max-width: 90vw;
+    padding: 45px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0px 30px 32px -23px rgba(0, 0, 0, 0.12);
+}
+
+.group-chat-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 48px;
+}
+
+.group-chat-modal-title {
+    text-align: center;
+    color: black;
+    font-size: 16px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
+    line-height: 16px;
+}
+
+.group-chat-modal-count {
+    text-align: center;
+    color: #5A5A5A;
+    font-size: 14px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    line-height: 18px;
+}
+
+.group-chat-modal-next {
+    text-align: center;
+    color: #004E9F;
+    font-size: 16px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
+    line-height: 16px;
+    cursor: pointer;
+}
+
+.group-chat-modal-search {
+    width: 100%;
+    padding: 8px 30px;
+    background: rgba(255, 255, 255, 0.19);
+    border-radius: 99px;
+    border: 1px solid #004E9F;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 48px;
+}
+
+.group-chat-modal-search-icon {
+    width: 22px;
+    height: 22px;
+    opacity: 0.6;
+}
+
+.group-chat-modal-search-input {
+    flex-grow: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #A1A0A0;
+    font-size: 12px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.12px;
+}
+
+.group-chat-modal-role-filters {
+    display: flex;
+    gap: 11px;
+    margin-bottom: 48px;
+}
+
+.group-chat-modal-role-btn {
+    padding: 8px 30px;
+    border-radius: 99px;
+    font-size: 12px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.12px;
+    border: none;
+    cursor: pointer;
+}
+
+.group-chat-modal-role-btn.active {
+    background: #004E9F;
+    color: white;
+}
+
+.group-chat-modal-role-btn.inactive {
+    background: #D6D6D6;
+    color: rgba(255, 255, 255, 0.66);
+}
+
+.group-chat-modal-users {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.group-chat-modal-user {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.group-chat-modal-user-info {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.group-chat-modal-user-avatar {
+    width: 58px;
+    height: 58px;
+    border-radius: 29px;
+    border: 1px solid #004E9F;
+    object-fit: cover;
+}
+
+.group-chat-modal-user-name {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.group-chat-modal-user-firstname,
+.group-chat-modal-user-lastname {
+    color: black;
+    font-size: 20px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
+    line-height: 18px;
+}
+
+.group-chat-modal-checkbox {
+    width: 24px;
+    height: 24px;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.group-chat-modal-checkbox-empty {
+    width: 18px;
+    height: 18px;
+    position: absolute;
+    left: 3px;
+    top: 3px;
+    background: #F4F4F4;
+    border: 2px solid #004E9F;
+}
+
+.group-chat-modal-checkbox-filled {
+    width: 18px;
+    height: 18px;
+    position: absolute;
+    left: 3px;
+    top: 3px;
+    background: #004E9F;
+    display: none;
+}
+
+.group-chat-modal-checkbox-tick {
+    width: 9px;
+    height: 7.5px;
+    position: absolute;
+    left: 7.5px;
+    top: 8.25px;
+    border-left: 2px solid white;
+    border-bottom: 2px solid white;
+    transform: rotate(-45deg);
+    display: none;
+}
+
+.group-chat-modal-checkbox.checked .group-chat-modal-checkbox-empty {
+    display: none;
+}
+
+.group-chat-modal-checkbox.checked .group-chat-modal-checkbox-filled {
+    display: block;
+}
+
+.group-chat-modal-checkbox.checked .group-chat-modal-checkbox-tick {
+    display: block;
+}
+
+.group-chat-modal-close {
+    position: absolute;
+    top: 26px;
+    right: 26px;
+    width: 30px;
+    height: 30px;
+    background: #FFEF2B;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.group-chat-modal-close img {
+    width: 10px;
+    height: 10px;
+}
