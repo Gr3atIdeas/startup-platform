@@ -336,9 +336,8 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
 }
 
-.show-more-btn-new img {
-    width: 16px;
-    height: 16px;
+.show-more-btn-new i {
+    font-size: 16px;
 }
 
 .hide-btn-new {
@@ -942,6 +941,10 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
     padding-bottom: 10px;
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none; /* IE и Edge */
+    user-select: none; /* Предотвращение выделения текста */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 
 .search-dropdown-users::-webkit-scrollbar {
@@ -955,6 +958,10 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
     gap: 7px;
     min-width: 58px;
     cursor: pointer;
+    user-select: none; /* Предотвращение выделения текста */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 
 .search-dropdown-user img {
@@ -962,6 +969,9 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
     height: 58px;
     border-radius: 29px;
     object-fit: cover;
+    user-drag: none; /* Предотвращение перетаскивания изображений */
+    -webkit-user-drag: none;
+    pointer-events: none; /* Предотвращение взаимодействия с изображением */
 }
 
 .search-dropdown-user-name {
@@ -975,6 +985,10 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 58px;
+    user-select: none; /* Предотвращение выделения текста */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 
 /* --- Удалить СТАРЫЕ неиспользуемые стили --- */

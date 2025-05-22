@@ -479,24 +479,26 @@ if (typeof window.REQUEST_USER_ID === 'undefined') {
 // Функция для обновления отображения рейтинга планетами
 function updateUserRatingDisplay(starsContainer) {
     if (!starsContainer) {
-        // console.error("[updateUserRatingDisplay] Container not found for user card.");
+        console.error("[updateUserRatingDisplay] Container not found for user card.");
         return;
     }
     const ratingString = starsContainer.dataset.rating;
     if (typeof ratingString === 'undefined') {
-        // console.warn("[updateUserRatingDisplay] data-rating attribute not found on container:", starsContainer);
+        console.warn("[updateUserRatingDisplay] data-rating attribute not found on container:", starsContainer);
         return;
     }
 
     const iconContainers = starsContainer.querySelectorAll('.rating-icon-planet-container');
     const ratingValue = parseFloat(ratingString) || 0;
+    console.log(`Updating rating for user with rating ${ratingValue}`);
+    
     const fullStars = Math.floor(ratingValue);
     const partialPercentage = (ratingValue - fullStars) * 100;
 
     iconContainers.forEach((container, index) => {
         const filledIcon = container.querySelector('.icon-filled');
         if (!filledIcon) {
-            // console.warn(`[updateUserRatingDisplay] Filled icon not found in planet container ${index + 1}`);
+            console.warn(`[updateUserRatingDisplay] Filled icon not found in planet container ${index + 1}`);
             return; 
         }
 
@@ -506,6 +508,7 @@ function updateUserRatingDisplay(starsContainer) {
         } else if (index === fullStars && partialPercentage > 0) {
             fillWidth = `${partialPercentage}%`;
         }
+        console.log(`Setting star ${index + 1} width to ${fillWidth}`);
         filledIcon.style.width = fillWidth;
     });
 }
@@ -617,23 +620,37 @@ function setupSearchDropdown() {
     // Добавляем обработчики для горизонтального свайпа
     const userContainers = document.querySelectorAll('.search-dropdown-users');
     userContainers.forEach(container => {
+        // Предотвращаем выделение текста при перетаскивании
+        container.addEventListener('selectstart', function(e) {
+            if (isDragging) {
+                e.preventDefault();
+                return false;
+            }
+        });
+        
         // Начало перетаскивания
         container.addEventListener('mousedown', function(e) {
             isDragging = true;
             startX = e.pageX - container.offsetLeft;
             scrollLeft = container.scrollLeft;
             container.style.cursor = 'grabbing';
+            
+            // Предотвращаем выделение текста
+            e.preventDefault();
+            document.body.style.userSelect = 'none';
         });
         
         // Прекращение перетаскивания
         container.addEventListener('mouseup', function() {
             isDragging = false;
             container.style.cursor = 'grab';
+            document.body.style.userSelect = '';
         });
         
         container.addEventListener('mouseleave', function() {
             isDragging = false;
             container.style.cursor = 'grab';
+            document.body.style.userSelect = '';
         });
         
         // Перетаскивание
@@ -652,58 +669,38 @@ function setupSearchDropdown() {
 
 // Загрузка данных для выпадающего списка
 function loadDropdownData() {
-    // Загрузка недавних контактов
-    fetch('/cosmochat/recent-contacts/', {
-        headers: { 'X-CSRFToken': csrfToken, 'X-Requested-With': 'XMLHttpRequest' }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            populateUserSection('recentUsers', data.users);
-        }
-    })
-    .catch(error => console.error('Ошибка при загрузке недавних контактов:', error));
+    // Получаем список пользователей из существующих карточек в DOM
+    const userCards = document.querySelectorAll('.user-card-new');
+    const users = [];
     
-    // Загрузка инвесторов
-    fetch('/cosmochat/users-by-role/?role=investor', {
-        headers: { 'X-CSRFToken': csrfToken, 'X-Requested-With': 'XMLHttpRequest' }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            populateUserSection('investorUsers', data.users);
-        }
-    })
-    .catch(error => console.error('Ошибка при загрузке инвесторов:', error));
-    
-    // Загрузка стартаперов
-    fetch('/cosmochat/users-by-role/?role=startuper', {
-        headers: { 'X-CSRFToken': csrfToken, 'X-Requested-With': 'XMLHttpRequest' }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            populateUserSection('startuperUsers', data.users);
-        }
-    })
-    .catch(error => console.error('Ошибка при загрузке стартаперов:', error));
-    
-    // Если не удается получить данные с сервера, используем тестовые данные
-    setTimeout(() => {
-        const recentUsers = document.getElementById('recentUsers');
-        const investorUsers = document.getElementById('investorUsers');
-        const startuperUsers = document.getElementById('startuperUsers');
+    userCards.forEach(card => {
+        const userId = card.dataset.userId;
+        const avatarImg = card.querySelector('.avatar-img');
+        const nameElement = card.querySelector('h3');
         
-        if (recentUsers && recentUsers.childElementCount === 0) {
-            populateUserSectionWithTestData('recentUsers');
+        if (userId && nameElement) {
+            const name = nameElement.textContent.trim();
+            const avatarSrc = avatarImg ? avatarImg.src : '/static/accounts/images/avatars/default_avatar_ufo.png';
+            const role = card.dataset.role;
+            
+            users.push({
+                user_id: userId,
+                first_name: name,
+                profile_picture_url: avatarSrc,
+                role: role
+            });
         }
-        if (investorUsers && investorUsers.childElementCount === 0) {
-            populateUserSectionWithTestData('investorUsers');
-        }
-        if (startuperUsers && startuperUsers.childElementCount === 0) {
-            populateUserSectionWithTestData('startuperUsers');
-        }
-    }, 1000);
+    });
+    
+    // Разделяем пользователей по ролям
+    const recentUsers = users.slice(0, 5); // Берем первых 5 как "недавние"
+    const investorUsers = users.filter(user => user.role === 'investor');
+    const startuperUsers = users.filter(user => user.role === 'startuper');
+    
+    // Заполняем секции
+    populateUserSection('recentUsers', recentUsers);
+    populateUserSection('investorUsers', investorUsers);
+    populateUserSection('startuperUsers', startuperUsers);
 }
 
 // Заполнение секции пользователями
@@ -723,7 +720,7 @@ function populateUserSection(sectionId, users) {
             const avatarSrc = user.profile_picture_url || defaultAvatarSrc;
             
             userItem.innerHTML = `
-                <img src="${avatarSrc}" alt="${user.first_name}">
+                <img src="${avatarSrc}" alt="${user.first_name}" draggable="false">
                 <div class="search-dropdown-user-name">${user.first_name}</div>
             `;
             
@@ -738,34 +735,6 @@ function populateUserSection(sectionId, users) {
     }
 }
 
-// Заполнение секции тестовыми данными (если API не работает)
-function populateUserSectionWithTestData(sectionId) {
-    const section = document.getElementById(sectionId);
-    if (!section) return;
-    
-    section.innerHTML = '';
-    
-    const names = ['Виталий', 'Александр', 'Екатерина', 'Ольга', 'Михаил', 'Сергей'];
-    const defaultAvatarSrc = '/static/accounts/images/avatars/default_avatar_ufo.png';
-    
-    for (let i = 0; i < 5; i++) {
-        const userItem = document.createElement('div');
-        userItem.className = 'search-dropdown-user';
-        userItem.setAttribute('data-user-id', `test-${i}`);
-        
-        userItem.innerHTML = `
-            <img src="${defaultAvatarSrc}" alt="${names[i]}">
-            <div class="search-dropdown-user-name">${names[i]}</div>
-        `;
-        
-        userItem.addEventListener('click', function() {
-            alert(`Запуск чата с ${names[i]} (тестовый режим)`);
-        });
-        
-        section.appendChild(userItem);
-    }
-}
-
 // Очистка секции поиска
 function clearSearchSection(section) {
     const sectionId = section === 'recent' ? 'recentUsers' : 
@@ -777,22 +746,6 @@ function clearSearchSection(section) {
         if (sectionElement) {
             sectionElement.innerHTML = '<div class="search-dropdown-empty">Нет пользователей</div>';
         }
-        
-        // Также можно отправить запрос на сервер для очистки
-        fetch(`/cosmochat/clear-search-section/?section=${section}`, {
-            method: 'POST',
-            headers: { 
-                'X-CSRFToken': csrfToken, 
-                'X-Requested-With': 'XMLHttpRequest' 
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                console.log(`Секция ${section} очищена`);
-            }
-        })
-        .catch(error => console.error(`Ошибка при очистке секции ${section}:`, error));
     }
 }
 
@@ -892,11 +845,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Инициализация отображения рейтинга для всех карточек пользователей
-    const userCardsRatingContainers = document.querySelectorAll('.users-list-new .user-card-new .rating-stars-new');
+    const userCardsRatingContainers = document.querySelectorAll('.rating-stars-new');
+    console.log(`Found ${userCardsRatingContainers.length} rating containers to update`);
+    
     userCardsRatingContainers.forEach(container => {
-        if (typeof updateUserRatingDisplay === 'function') {
-            updateUserRatingDisplay(container);
-        }
+        console.log(`Processing rating container with data-rating=${container.dataset.rating}`);
+        updateUserRatingDisplay(container);
     });
 
     // Обработчики для кнопок фильтрации чатов
