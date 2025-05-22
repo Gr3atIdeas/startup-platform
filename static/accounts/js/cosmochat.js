@@ -490,32 +490,31 @@ function updateUserRatingDisplay(starsContainer) {
 
     const iconContainers = starsContainer.querySelectorAll('.rating-icon-planet-container');
     const ratingValue = parseFloat(ratingString) || 0;
-    console.log(`Updating rating for user with rating ${ratingValue}`);
     
-    const fullStars = Math.floor(ratingValue);
-    const partialPercentage = (ratingValue - fullStars) * 100;
-
     iconContainers.forEach((container, index) => {
         const filledIcon = container.querySelector('.icon-filled');
-        const emptyIcon = container.querySelector('.icon-empty');
-        
         if (!filledIcon) {
             console.warn(`[updateUserRatingDisplay] Filled icon not found in planet container ${index + 1}`);
             return; 
         }
+        
+        const emptyIcon = container.querySelector('.icon-empty');
+        if (!emptyIcon) {
+            console.warn(`[updateUserRatingDisplay] Empty icon not found in planet container ${index + 1}`);
+            return;
+        }
 
-        if (index < fullStars) {
-            // Полностью заполненная планета
+        if (index < Math.floor(ratingValue)) {
+            // Полная звезда
             filledIcon.style.width = '100%';
-        } else if (index === fullStars && partialPercentage > 0) {
-            // Частично заполненная планета
-            filledIcon.style.width = `${partialPercentage}%`;
+        } else if (index === Math.floor(ratingValue) && ratingValue % 1 > 0) {
+            // Частичная звезда
+            const percentage = (ratingValue % 1) * 100;
+            filledIcon.style.width = `${percentage}%`;
         } else {
-            // Пустая планета
+            // Пустая звезда
             filledIcon.style.width = '0%';
         }
-        
-        console.log(`Setting star ${index + 1} width to ${index < fullStars ? '100%' : (index === fullStars ? partialPercentage + '%' : '0%')}`);
     });
 }
 
@@ -590,8 +589,8 @@ function startChatWithUser(userId) {
 
 // Функции для модальных окон создания чата
 function openCreateChatModal() {
-    const modal = document.getElementById('createChatModal');
-    if(modal) modal.style.display = 'flex';
+    // Вместо открытия старого окна, теперь открываем новое
+    openGroupChatModal();
 }
 
 function closeCreateChatModal() {
@@ -924,6 +923,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Обработчики для модальных окон
     const createChatBtn = document.getElementById('createChatBtn');
     if (createChatBtn) {
+        createChatBtn.removeEventListener('click', openCreateChatModal); // Удаляем старый обработчик, если он есть
         createChatBtn.addEventListener('click', openGroupChatModal);
     }
     

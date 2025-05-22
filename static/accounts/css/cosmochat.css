@@ -1010,7 +1010,7 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
     right: 0;
     bottom: 0;
     background: rgba(0, 0, 0, 0.71);
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(2px);
     z-index: 2000;
     display: none;
     justify-content: center;
@@ -1019,7 +1019,7 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
 
 .group-chat-modal {
     position: relative;
-    width: 1012px;
+    width: 812px;
     max-width: 90vw;
     padding: 45px;
     background: white;
@@ -1107,6 +1107,7 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
     letter-spacing: 0.12px;
     border: none;
     cursor: pointer;
+    transition: all 0.3s ease;
 }
 
 .group-chat-modal-role-btn.active {
@@ -1176,6 +1177,7 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
     top: 3px;
     background: #F4F4F4;
     border: 2px solid #004E9F;
+    border-radius: 50%;
 }
 
 .group-chat-modal-checkbox-filled {
@@ -1185,6 +1187,7 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
     left: 3px;
     top: 3px;
     background: #004E9F;
+    border-radius: 50%;
     display: none;
 }
 
@@ -1214,8 +1217,8 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
 
 .group-chat-modal-close {
     position: absolute;
-    top: 26px;
-    right: 26px;
+    top: 15px;
+    right: 15px;
     width: 30px;
     height: 30px;
     background: #FFEF2B;
@@ -1224,6 +1227,7 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    z-index: 2100;
 }
 
 .group-chat-modal-close img {
