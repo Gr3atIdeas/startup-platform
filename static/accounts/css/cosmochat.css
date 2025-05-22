@@ -95,6 +95,7 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
 }
 .user-search-filters-new .search-form-cosmo { /* Класс для формы поиска пользователей */
     width: 374px;
+    position: relative;
 }
 .role-filters-new {
     display: flex;
@@ -285,10 +286,11 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
 .page-numbers-new {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 31px; /* Увеличенный отступ между цифрами */
     font-size: 14px;
     font-family: 'Unbounded', sans-serif;
     font-weight: 300;
+    line-height: 18px;
 }
 
 .page-numbers-new .page-number-item {
@@ -309,20 +311,31 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
     background: rgba(255,255,255,0.2);
 }
 
+.page-numbers-new .dots {
+    color: white;
+    font-size: 16px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    line-height: 22.40px;
+}
+
 .show-more-btn-new {
     padding: 12px 35px;
     border-radius: 10px;
-    border: 1px white solid; /* Был outline */
+    border: 1px white solid;
     background: transparent;
     color: #F5F5F5;
     font-size: 16px;
     font-family: 'Unbounded', sans-serif;
     font-weight: 400;
+    line-height: 16px;
     display: flex;
     align-items: center;
     gap: 9px;
     cursor: pointer;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
 }
+
 .show-more-btn-new img {
     width: 16px;
     height: 16px;
@@ -337,10 +350,12 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
     font-size: 16px;
     font-family: 'Unbounded', sans-serif;
     font-weight: 400;
+    line-height: 16px;
     display: flex;
     align-items: center;
     gap: 9px;
     cursor: pointer;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
     margin-left: 10px;
 }
 
@@ -870,6 +885,96 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
   background-color: #e9ecef;
   cursor: not-allowed;
   color: #A9A9A9;
+}
+
+/* Стили для выпадающего окна поиска */
+.search-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    max-width: 374px;
+    background: white;
+    box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    border: 1px solid #004E9F;
+    margin-top: 10px;
+    z-index: 100;
+    overflow-y: auto;
+    max-height: 500px;
+    display: none;
+    padding: 20px;
+}
+
+.search-dropdown-section {
+    margin-bottom: 25px;
+}
+
+.search-dropdown-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.search-dropdown-title {
+    color: black;
+    font-size: 16px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
+    line-height: 16px;
+}
+
+.search-dropdown-clear {
+    color: #004E9F;
+    font-size: 12px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.12px;
+    cursor: pointer;
+}
+
+.search-dropdown-users {
+    display: flex;
+    gap: 17px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE и Edge */
+}
+
+.search-dropdown-users::-webkit-scrollbar {
+    display: none; /* Chrome, Safari и Opera */
+}
+
+.search-dropdown-user {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 7px;
+    min-width: 58px;
+    cursor: pointer;
+}
+
+.search-dropdown-user img {
+    width: 58px;
+    height: 58px;
+    border-radius: 29px;
+    object-fit: cover;
+}
+
+.search-dropdown-user-name {
+    color: black;
+    font-size: 12px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.12px;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 58px;
 }
 
 /* --- Удалить СТАРЫЕ неиспользуемые стили --- */

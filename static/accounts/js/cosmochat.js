@@ -4,6 +4,9 @@ let lastMessageTimestamp = null;
 let pollingInterval = null; 
 let currentParticipants = []; 
 let displayedMessageIds = new Set();
+let isDragging = false;
+let startX;
+let scrollLeft;
 
 const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
@@ -62,6 +65,12 @@ document.addEventListener('DOMContentLoaded', function() {
     userCardsRatingContainers.forEach(container => {
         updateUserRatingDisplay(container);
     });
+
+    // Инициализация выпадающего списка поиска
+    setupSearchDropdown();
+    
+    // Обновление HTML-разметки для пагинации
+    updatePaginationHTML();
 });
 
 function showNoChatSelected() {
@@ -571,6 +580,291 @@ function closeCreateChatModal() {
     if(modal) modal.style.display = 'none';
 }
 
+// Функции для поиска и выпадающего списка
+function setupSearchDropdown() {
+    const searchInput = document.querySelector('.search-query-input');
+    const searchDropdown = document.getElementById('searchDropdown');
+    
+    if (!searchInput || !searchDropdown) return;
+    
+    // Показать выпадающий список при фокусе на поле поиска
+    searchInput.addEventListener('focus', function() {
+        searchDropdown.style.display = 'block';
+        loadDropdownData();
+    });
+    
+    // Скрыть выпадающий список при клике вне его
+    document.addEventListener('click', function(event) {
+        if (!searchInput.contains(event.target) && !searchDropdown.contains(event.target)) {
+            searchDropdown.style.display = 'none';
+        }
+    });
+    
+    // Предотвращаем скрытие при клике внутри выпадающего списка
+    searchDropdown.addEventListener('click', function(event) {
+        event.stopPropagation();
+    });
+    
+    // Добавляем обработчики для кнопок "Очистить"
+    const clearButtons = document.querySelectorAll('.search-dropdown-clear');
+    clearButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const section = this.getAttribute('data-section');
+            clearSearchSection(section);
+        });
+    });
+    
+    // Добавляем обработчики для горизонтального свайпа
+    const userContainers = document.querySelectorAll('.search-dropdown-users');
+    userContainers.forEach(container => {
+        // Начало перетаскивания
+        container.addEventListener('mousedown', function(e) {
+            isDragging = true;
+            startX = e.pageX - container.offsetLeft;
+            scrollLeft = container.scrollLeft;
+            container.style.cursor = 'grabbing';
+        });
+        
+        // Прекращение перетаскивания
+        container.addEventListener('mouseup', function() {
+            isDragging = false;
+            container.style.cursor = 'grab';
+        });
+        
+        container.addEventListener('mouseleave', function() {
+            isDragging = false;
+            container.style.cursor = 'grab';
+        });
+        
+        // Перетаскивание
+        container.addEventListener('mousemove', function(e) {
+            if (!isDragging) return;
+            e.preventDefault();
+            const x = e.pageX - container.offsetLeft;
+            const walk = (x - startX) * 2; // Множитель для увеличения скорости прокрутки
+            container.scrollLeft = scrollLeft - walk;
+        });
+        
+        // Установка курсора для показа возможности перетаскивания
+        container.style.cursor = 'grab';
+    });
+}
+
+// Загрузка данных для выпадающего списка
+function loadDropdownData() {
+    // Загрузка недавних контактов
+    fetch('/cosmochat/recent-contacts/', {
+        headers: { 'X-CSRFToken': csrfToken, 'X-Requested-With': 'XMLHttpRequest' }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            populateUserSection('recentUsers', data.users);
+        }
+    })
+    .catch(error => console.error('Ошибка при загрузке недавних контактов:', error));
+    
+    // Загрузка инвесторов
+    fetch('/cosmochat/users-by-role/?role=investor', {
+        headers: { 'X-CSRFToken': csrfToken, 'X-Requested-With': 'XMLHttpRequest' }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            populateUserSection('investorUsers', data.users);
+        }
+    })
+    .catch(error => console.error('Ошибка при загрузке инвесторов:', error));
+    
+    // Загрузка стартаперов
+    fetch('/cosmochat/users-by-role/?role=startuper', {
+        headers: { 'X-CSRFToken': csrfToken, 'X-Requested-With': 'XMLHttpRequest' }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            populateUserSection('startuperUsers', data.users);
+        }
+    })
+    .catch(error => console.error('Ошибка при загрузке стартаперов:', error));
+    
+    // Если не удается получить данные с сервера, используем тестовые данные
+    setTimeout(() => {
+        const recentUsers = document.getElementById('recentUsers');
+        const investorUsers = document.getElementById('investorUsers');
+        const startuperUsers = document.getElementById('startuperUsers');
+        
+        if (recentUsers && recentUsers.childElementCount === 0) {
+            populateUserSectionWithTestData('recentUsers');
+        }
+        if (investorUsers && investorUsers.childElementCount === 0) {
+            populateUserSectionWithTestData('investorUsers');
+        }
+        if (startuperUsers && startuperUsers.childElementCount === 0) {
+            populateUserSectionWithTestData('startuperUsers');
+        }
+    }, 1000);
+}
+
+// Заполнение секции пользователями
+function populateUserSection(sectionId, users) {
+    const section = document.getElementById(sectionId);
+    if (!section) return;
+    
+    section.innerHTML = '';
+    
+    if (users && users.length > 0) {
+        users.forEach(user => {
+            const userItem = document.createElement('div');
+            userItem.className = 'search-dropdown-user';
+            userItem.setAttribute('data-user-id', user.user_id);
+            
+            const defaultAvatarSrc = '/static/accounts/images/avatars/default_avatar_ufo.png';
+            const avatarSrc = user.profile_picture_url || defaultAvatarSrc;
+            
+            userItem.innerHTML = `
+                <img src="${avatarSrc}" alt="${user.first_name}">
+                <div class="search-dropdown-user-name">${user.first_name}</div>
+            `;
+            
+            userItem.addEventListener('click', function() {
+                startChatWithUser(user.user_id);
+            });
+            
+            section.appendChild(userItem);
+        });
+    } else {
+        section.innerHTML = '<div class="search-dropdown-empty">Нет пользователей</div>';
+    }
+}
+
+// Заполнение секции тестовыми данными (если API не работает)
+function populateUserSectionWithTestData(sectionId) {
+    const section = document.getElementById(sectionId);
+    if (!section) return;
+    
+    section.innerHTML = '';
+    
+    const names = ['Виталий', 'Александр', 'Екатерина', 'Ольга', 'Михаил', 'Сергей'];
+    const defaultAvatarSrc = '/static/accounts/images/avatars/default_avatar_ufo.png';
+    
+    for (let i = 0; i < 5; i++) {
+        const userItem = document.createElement('div');
+        userItem.className = 'search-dropdown-user';
+        userItem.setAttribute('data-user-id', `test-${i}`);
+        
+        userItem.innerHTML = `
+            <img src="${defaultAvatarSrc}" alt="${names[i]}">
+            <div class="search-dropdown-user-name">${names[i]}</div>
+        `;
+        
+        userItem.addEventListener('click', function() {
+            alert(`Запуск чата с ${names[i]} (тестовый режим)`);
+        });
+        
+        section.appendChild(userItem);
+    }
+}
+
+// Очистка секции поиска
+function clearSearchSection(section) {
+    const sectionId = section === 'recent' ? 'recentUsers' : 
+                      section === 'investors' ? 'investorUsers' : 
+                      section === 'startupers' ? 'startuperUsers' : null;
+    
+    if (sectionId) {
+        const sectionElement = document.getElementById(sectionId);
+        if (sectionElement) {
+            sectionElement.innerHTML = '<div class="search-dropdown-empty">Нет пользователей</div>';
+        }
+        
+        // Также можно отправить запрос на сервер для очистки
+        fetch(`/cosmochat/clear-search-section/?section=${section}`, {
+            method: 'POST',
+            headers: { 
+                'X-CSRFToken': csrfToken, 
+                'X-Requested-With': 'XMLHttpRequest' 
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log(`Секция ${section} очищена`);
+            }
+        })
+        .catch(error => console.error(`Ошибка при очистке секции ${section}:`, error));
+    }
+}
+
+// Обновление HTML-разметки для пагинации
+function updatePaginationHTML() {
+    const usersList = document.getElementById('usersList');
+    const userCards = usersList ? usersList.querySelectorAll('.user-card-new') : [];
+    const paginationContainer = document.getElementById('userPagination');
+    
+    if (!usersList || !paginationContainer || userCards.length === 0) return;
+    
+    const itemsPerPage = 8;
+    const totalPages = Math.ceil(userCards.length / itemsPerPage);
+    
+    let paginationHTML = '';
+    
+    // Кнопка "Назад"
+    paginationHTML += `<span class="page-number-item" data-page="prev">&lsaquo;</span>`;
+    
+    // Номера страниц
+    if (totalPages <= 7) {
+        // Показываем все страницы, если их <= 7
+        for (let i = 1; i <= totalPages; i++) {
+            paginationHTML += `<span class="page-number-item ${i === 1 ? 'current' : ''}" data-page="${i}">${i}</span>`;
+        }
+    } else {
+        // Показываем 1, 2, 3, ..., last-2, last-1, last
+        for (let i = 1; i <= 3; i++) {
+            paginationHTML += `<span class="page-number-item ${i === 1 ? 'current' : ''}" data-page="${i}">${i}</span>`;
+        }
+        
+        paginationHTML += `<span class="dots">...</span>`;
+        
+        for (let i = totalPages - 2; i <= totalPages; i++) {
+            paginationHTML += `<span class="page-number-item" data-page="${i}">${i}</span>`;
+        }
+    }
+    
+    // Кнопка "Вперед"
+    paginationHTML += `<span class="page-number-item" data-page="next">&rsaquo;</span>`;
+    
+    paginationContainer.innerHTML = paginationHTML;
+    
+    // Добавляем обработчики для кнопок пагинации
+    const pageButtons = paginationContainer.querySelectorAll('.page-number-item');
+    pageButtons.forEach(button => {
+        if (button.classList.contains('dots')) return;
+        
+        button.addEventListener('click', function() {
+            const page = this.dataset.page;
+            
+            if (page === 'prev') {
+                if (currentPage > 1) {
+                    currentPage--;
+                    showPage(currentPage);
+                    updateActivePage();
+                }
+            } else if (page === 'next') {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    showPage(currentPage);
+                    updateActivePage();
+                }
+            } else {
+                currentPage = parseInt(page);
+                showPage(currentPage);
+                updateActivePage();
+            }
+        });
+    });
+}
+
 // Инициализация при загрузке документа
 document.addEventListener('DOMContentLoaded', function() {
     const userIdDataElement = document.getElementById('request_user_id_data');
@@ -705,6 +999,12 @@ document.addEventListener('DOMContentLoaded', function() {
             showMoreUsers();
         });
     }
+
+    // Инициализация выпадающего списка поиска
+    setupSearchDropdown();
+    
+    // Обновление HTML-разметки для пагинации
+    updatePaginationHTML();
 });
 
 // Функция для показа дополнительных пользователей
