@@ -1406,6 +1406,8 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
     font-size: 16px;
     font-family: 'Unbounded', sans-serif;
     font-weight: 400;
+    flex-grow: 1; /* Чтобы заголовок занимал доступное место и кнопка "Создать" ушла вправо */
+    text-align: center; /* Центрируем текст заголовка */
 }
 
 .selected-chat-info {
@@ -1439,7 +1441,7 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
     font-size: 18px; /* Уменьшено с 20px для лучшего вида */
     font-family: 'Unbounded', sans-serif;
     font-weight: 400;
-    color: black;
+    color: black; /* Изменен цвет текста на черный */
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;

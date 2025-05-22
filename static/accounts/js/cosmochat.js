@@ -167,6 +167,15 @@ document.addEventListener('DOMContentLoaded', function() {
             closeGroupChatModal();
         }
     });
+
+    // ---> НОВОЕ: Обработчик для кнопки закрытия модального окна группового чата
+    const closeGroupChatModalBtn = document.getElementById('closeGroupChatModalBtn');
+    if (closeGroupChatModalBtn) {
+        closeGroupChatModalBtn.addEventListener('click', function() {
+            closeGroupChatModal();
+        });
+    }
+    // <--- КОНЕЦ НОВОГО
 });
 
 function showNoChatSelected() {
@@ -1219,7 +1228,22 @@ function createGroupChat(chatName, userIds) {
             user_ids: userIds
         })
     })
-    // ... (остальная часть функции createGroupChat)
+    .then(response => response.json())
+    .then(data => {
+        if (data.success && data.chat_id) {
+            closeGroupChatModal();
+            // Перезагружаем страницу, чтобы новый чат появился в списке
+            // и автоматически открылся, если это реализовано на бэкенде
+            // или через параметры URL, как new_chat=true&open_chat_id=ID
+            window.location.href = window.location.pathname + `?open_chat_id=${data.chat_id}&new_chat=true`;
+        } else {
+            alert(data.error || 'Ошибка при создании группового чата');
+        }
+    })
+    .catch(error => {
+        console.error('Ошибка создания группового чата:', error);
+        alert('Произошла ошибка при создании группового чата.');
+    });
 }
 
 function toggleGroupChatModalView(showDetailsView) {
@@ -1299,9 +1323,9 @@ function renderSelectedUserPills(pillsContainer, usersList) { // Принима�
             const pill = document.createElement('div');
             pill.className = 'selected-user-pill';
             pill.dataset.userId = userId;
-            const pillNameSpan = document.createElement('span'); // Изменено имя переменной
-            pillNameSpan.className = 'pill-name';
-            pillNameSpan.textContent = pillNameText.length > 15 ? pillNameText.substring(0, 13) + '...' : pillNameText;
+            const pillNameElement = document.createElement('span'); // Исправлено имя переменной
+            pillNameElement.className = 'pill-name';
+            pillNameElement.textContent = pillNameText.length > 15 ? pillNameText.substring(0, 13) + '...' : pillNameText;
             const removeIcon = document.createElement('span');
             removeIcon.className = 'pill-remove-icon';
             removeIcon.innerHTML = '&times;';
@@ -1319,7 +1343,7 @@ function renderSelectedUserPills(pillsContainer, usersList) { // Принима�
                 if(currentPillsContainer && currentUsersList) renderSelectedUserPills(currentPillsContainer, currentUsersList);
                 if(currentCountElement) updateSelectedUsersCount(currentCountElement);
             });
-            pill.appendChild(pillNameSpan);
+            pill.appendChild(pillNameElement); // Исправлено имя переменной
             pill.appendChild(removeIcon);
             pillsContainer.appendChild(pill);
         }
