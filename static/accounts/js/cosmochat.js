@@ -476,21 +476,12 @@ if (typeof window.REQUEST_USER_ID === 'undefined') {
     }
 }
 
-// Временная функция для генерации случайного рейтинга
-function generateRandomRating() {
-    return (Math.random() * 5).toFixed(1);
-}
-
 // Функция для обновления отображения рейтинга планетами
 function updateUserRatingDisplay(starsContainer) {
     if (!starsContainer) {
         console.error("[updateUserRatingDisplay] Container not found for user card.");
         return;
     }
-    
-    // Временное решение: устанавливаем случайный рейтинг
-    const randomRating = generateRandomRating();
-    starsContainer.dataset.rating = randomRating;
     
     const ratingString = starsContainer.dataset.rating;
     if (typeof ratingString === 'undefined') {
@@ -1006,6 +997,9 @@ document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener('keydown', function(event) {
         if (event.key === 'Escape') {
             closeGroupChatModal();
+            // Убеждаемся, что старое модальное окно тоже закрыто
+            const oldModal = document.getElementById('createChatModal');
+            if (oldModal) oldModal.style.display = 'none';
         }
     });
     
@@ -1208,6 +1202,11 @@ function openGroupChatModal() {
     
     modal.style.display = 'flex';
     
+    // Добавляем класс для анимации
+    setTimeout(() => {
+        modal.classList.add('active');
+    }, 10);
+    
     // Активируем обе кнопки ролей изначально
     const roleButtons = document.querySelectorAll('.group-chat-modal-role-btn');
     roleButtons.forEach(btn => {
@@ -1224,7 +1223,15 @@ function openGroupChatModal() {
 
 function closeGroupChatModal() {
     const modal = document.getElementById('groupChatModal');
-    if (modal) modal.style.display = 'none';
+    if (!modal) return;
+    
+    // Запускаем анимацию исчезания
+    modal.classList.remove('active');
+    
+    // Дожидаемся окончания анимации и скрываем модальное окно
+    setTimeout(() => {
+        modal.style.display = 'none';
+    }, 300);
 }
 
 function loadGroupChatUsers() {

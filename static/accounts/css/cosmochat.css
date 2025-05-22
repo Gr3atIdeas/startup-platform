@@ -1015,6 +1015,12 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
     display: none;
     justify-content: center;
     align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.group-chat-modal-overlay.active {
+    opacity: 1;
 }
 
 .group-chat-modal {
@@ -1025,8 +1031,17 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
     background: white;
     border-radius: 10px;
     box-shadow: 0px 30px 32px -23px rgba(0, 0, 0, 0.12);
-    max-height: 85vh;
+    max-height: 68vh; /* Уменьшено на 20% от 85vh */
     overflow-y: auto;
+    overflow-x: hidden;
+    transform: scale(0.95);
+    opacity: 0;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.group-chat-modal-overlay.active .group-chat-modal {
+    transform: scale(1);
+    opacity: 1;
 }
 
 .group-chat-modal-header {
@@ -1110,7 +1125,7 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
     border: none;
     cursor: pointer;
     transition: all 0.3s ease;
-    display: inline-block; /* Убедимся, что кнопки видны */
+    display: inline-block;
 }
 
 .group-chat-modal-role-btn.active {
@@ -1120,15 +1135,16 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
 
 .group-chat-modal-role-btn.inactive {
     background: #D6D6D6;
-    color: rgba(255, 255, 255, 0.66);
+    color: black;
 }
 
 .group-chat-modal-users {
     display: flex;
     flex-direction: column;
     gap: 32px;
-    max-height: 400px;
+    max-height: 300px;
     overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .group-chat-modal-user {
@@ -1166,11 +1182,11 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
     line-height: 18px;
 }
 
+/* Улучшенные чекбоксы */
 .group-chat-modal-checkbox {
     width: 24px;
     height: 24px;
     position: relative;
-    overflow: hidden;
     cursor: pointer;
 }
 
@@ -1183,6 +1199,7 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
     background: #F4F4F4;
     border: 2px solid #004E9F;
     border-radius: 50%;
+    box-sizing: border-box;
 }
 
 .group-chat-modal-checkbox-filled {
@@ -1194,18 +1211,20 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
     background: #004E9F;
     border-radius: 50%;
     display: none;
+    box-sizing: border-box;
 }
 
 .group-chat-modal-checkbox-tick {
-    width: 9px;
-    height: 7.5px;
+    width: 8px;
+    height: 5px;
     position: absolute;
-    left: 7.5px;
-    top: 8.25px;
+    left: 5px;
+    top: 7px;
     border-left: 2px solid white;
     border-bottom: 2px solid white;
     transform: rotate(-45deg);
     display: none;
+    box-sizing: content-box;
 }
 
 .group-chat-modal-checkbox.checked .group-chat-modal-checkbox-empty {
@@ -1222,8 +1241,8 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
 
 .group-chat-modal-close {
     position: absolute;
-    top: 15px;
-    right: 15px;
+    top: -40px;
+    right: -40px;
     width: 30px;
     height: 30px;
     background: #FFEF2B;
@@ -1236,6 +1255,26 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
 }
 
 .group-chat-modal-close img {
-    width: 10px;
-    height: 10px;
+    width: 12px;
+    height: 12px;
+}
+
+/* Кастомный скроллбар */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #004E9F;
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #003b7a;
 }
