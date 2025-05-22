@@ -1095,17 +1095,17 @@ function openGroupChatModal() {
     setTimeout(() => {
         groupChatModalOverlay.classList.add('active');
     }, 10);
-
+    
     const groupChatModalElement = groupChatModalOverlay.querySelector('.group-chat-modal'); // Получаем сам блок модального окна
     if (groupChatModalElement) {
         const roleButtons = groupChatModalElement.querySelectorAll('.group-chat-modal-role-btn');
-        roleButtons.forEach(btn => {
-            btn.classList.add('active');
-            btn.classList.remove('inactive');
-        });
+    roleButtons.forEach(btn => {
+        btn.classList.add('active');
+        btn.classList.remove('inactive');
+    });
     }
-
-
+    
+    
     if(groupChatUsersList && selectedUsersCountElement && selectedUserPillsContainer) {
         loadGroupChatUsers(groupChatUsersList, selectedUsersCountElement, selectedUserPillsContainer);
     }
@@ -1148,7 +1148,7 @@ function loadGroupChatUsers(usersListElement, countElement, pillsContainer) { //
             });
         }
     });
-
+    
     const groupChatModal = document.getElementById('groupChatModal');
     const activeRoleBtns = groupChatModal ? groupChatModal.querySelectorAll('.group-chat-modal-role-btn.active') : [];
     const activeRoles = Array.from(activeRoleBtns).map(btn => btn.dataset.role);
@@ -1156,7 +1156,7 @@ function loadGroupChatUsers(usersListElement, countElement, pillsContainer) { //
     if (activeRoles.length > 0) {
         filteredUsers = users.filter(user => activeRoles.includes(user.role));
     }
-
+    
     filteredUsers.forEach(user => {
         const userItem = document.createElement('div');
         userItem.className = 'group-chat-modal-user';
@@ -1178,7 +1178,7 @@ function loadGroupChatUsers(usersListElement, countElement, pillsContainer) { //
         `;
         usersListElement.appendChild(userItem);
     });
-
+    
     usersListElement.querySelectorAll('.group-chat-modal-checkbox').forEach(checkbox => {
         checkbox.addEventListener('click', function() {
             this.classList.toggle('checked');
@@ -1207,7 +1207,7 @@ function updateSelectedUsersCount(countElement) { // Принимаем элем
 function createGroupChat(chatName, userIds) {
     // ... (код без изменений, csrfTokenValue должен быть csrfToken)
     const csrfTokenValue = csrfToken;
-     fetch('/cosmochat/create-group-chat/', {
+    fetch('/cosmochat/create-group-chat/', {
         method: 'POST',
         headers: {
             'X-CSRFToken': csrfTokenValue,
@@ -1241,7 +1241,7 @@ function toggleGroupChatModalView(showDetailsView) {
     if (showDetailsView) {
         groupChatContentWrapper.style.display = 'none';
         groupChatDetailsView.style.display = 'flex';
-    } else {
+        } else {
         groupChatContentWrapper.style.display = 'flex';
         groupChatDetailsView.style.display = 'none';
         if(groupChatUsersList && countElement && pillsContainer) {
