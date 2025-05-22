@@ -1059,20 +1059,20 @@ function showPage(page) {
 
 // Функции для работы с модальным окном создания группового чата
 function openGroupChatModal() {
-    const groupChatModal = document.getElementById('groupChatModal');
-    if (!groupChatModal) {
-        console.error('#groupChatModal not found!');
+    const groupChatModalOverlay = document.getElementById('groupChatModal');
+    if (!groupChatModalOverlay) {
+        console.error('#groupChatModal (overlay) not found!');
         return;
     }
-    // Получаем элементы здесь для использования внутри этой функции и для передачи, если это все еще нужно где-то
-    const groupChatContentWrapper = groupChatModal.querySelector('#groupChatModalContentWrapper');
-    const groupChatDetailsView = groupChatModal.querySelector('#groupChatDetailsView');
-    const selectedUserPillsContainer = groupChatModal.querySelector('#selectedUserPillsContainer');
-    const groupChatUsersList = groupChatModal.querySelector('#groupChatUsersList');
-    const selectedUsersCountElement = groupChatModal.querySelector('#selectedUsersCount');
+
+    const groupChatContentWrapper = document.getElementById('groupChatModalContentWrapper');
+    const groupChatDetailsView = document.getElementById('groupChatDetailsView');
+    const selectedUserPillsContainer = document.getElementById('selectedUserPillsContainer');
+    const groupChatUsersList = document.getElementById('groupChatUsersList');
+    const selectedUsersCountElement = document.getElementById('selectedUsersCount');
 
     console.log('openGroupChatModal called', {
-        groupChatContentWrapper: !!groupChatContentWrapper, // Логируем true/false для проверки наличия
+        groupChatContentWrapper: !!groupChatContentWrapper,
         groupChatDetailsView: !!groupChatDetailsView,
         selectedUserPillsContainer: !!selectedUserPillsContainer,
         groupChatUsersList: !!groupChatUsersList,
@@ -1080,33 +1080,34 @@ function openGroupChatModal() {
     });
 
     if (!groupChatContentWrapper || !groupChatDetailsView) {
-        console.error('CRITICAL: groupChatContentWrapper or groupChatDetailsView is STILL null inside openGroupChatModal after querySelector!');
-        // Не продолжать, если основные контейнеры видов не найдены
-        return; 
+        console.error('CRITICAL: groupChatContentWrapper or groupChatDetailsView is STILL null inside openGroupChatModal after getElementById!');
+        return;
     }
 
     selectedGroupChatUserIds = [];
-    if(selectedUserPillsContainer && groupChatUsersList) renderSelectedUserPills(selectedUserPillsContainer, groupChatUsersList);
+    if(selectedUserPillsContainer && groupChatUsersList) {
+        renderSelectedUserPills(selectedUserPillsContainer, groupChatUsersList);
+    }
     
-    // toggleGroupChatModalView теперь сама найдет нужные элементы
     toggleGroupChatModalView(false); 
 
-    groupChatModal.style.display = 'flex';
+    groupChatModalOverlay.style.display = 'flex';
     setTimeout(() => {
-        groupChatModal.classList.add('active');
+        groupChatModalOverlay.classList.add('active');
     }, 10);
 
-    const roleButtons = groupChatModal.querySelectorAll('.group-chat-modal-role-btn');
-    roleButtons.forEach(btn => {
-        btn.classList.add('active');
-        btn.classList.remove('inactive');
-    });
+    const groupChatModalElement = groupChatModalOverlay.querySelector('.group-chat-modal'); // Получаем сам блок модального окна
+    if (groupChatModalElement) {
+        const roleButtons = groupChatModalElement.querySelectorAll('.group-chat-modal-role-btn');
+        roleButtons.forEach(btn => {
+            btn.classList.add('active');
+            btn.classList.remove('inactive');
+        });
+    }
+
 
     if(groupChatUsersList && selectedUsersCountElement && selectedUserPillsContainer) {
         loadGroupChatUsers(groupChatUsersList, selectedUsersCountElement, selectedUserPillsContainer);
-    }
-    if(selectedUsersCountElement) {
-        updateSelectedUsersCount(selectedUsersCountElement);
     }
 }
 
