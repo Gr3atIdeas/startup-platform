@@ -476,12 +476,22 @@ if (typeof window.REQUEST_USER_ID === 'undefined') {
     }
 }
 
+// Временная функция для генерации случайного рейтинга
+function generateRandomRating() {
+    return (Math.random() * 5).toFixed(1);
+}
+
 // Функция для обновления отображения рейтинга планетами
 function updateUserRatingDisplay(starsContainer) {
     if (!starsContainer) {
         console.error("[updateUserRatingDisplay] Container not found for user card.");
         return;
     }
+    
+    // Временное решение: устанавливаем случайный рейтинг
+    const randomRating = generateRandomRating();
+    starsContainer.dataset.rating = randomRating;
+    
     const ratingString = starsContainer.dataset.rating;
     if (typeof ratingString === 'undefined') {
         console.warn("[updateUserRatingDisplay] data-rating attribute not found on container:", starsContainer);
@@ -923,8 +933,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // Обработчики для модальных окон
     const createChatBtn = document.getElementById('createChatBtn');
     if (createChatBtn) {
-        createChatBtn.removeEventListener('click', openCreateChatModal); // Удаляем старый обработчик, если он есть
-        createChatBtn.addEventListener('click', openGroupChatModal);
+        // Убираем все существующие обработчики
+        const newCreateChatBtn = createChatBtn.cloneNode(true);
+        if (createChatBtn.parentNode) {
+            createChatBtn.parentNode.replaceChild(newCreateChatBtn, createChatBtn);
+        }
+        
+        // Добавляем новый обработчик
+        newCreateChatBtn.addEventListener('click', openGroupChatModal);
     }
     
     const closeCreateChatModalBtn = document.getElementById('closeCreateChatModalBtn');
@@ -965,7 +981,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // Обработчики для модального окна группового чата
     const closeGroupChatModalBtn = document.getElementById('closeGroupChatModalBtn');
     if (closeGroupChatModalBtn) {
-        closeGroupChatModalBtn.addEventListener('click', closeGroupChatModal);
+        closeGroupChatModalBtn.addEventListener('click', function() {
+            closeGroupChatModal();
+            // Убеждаемся, что старое модальное окно тоже закрыто
+            const oldModal = document.getElementById('createChatModal');
+            if (oldModal) oldModal.style.display = 'none';
+        });
     }
     
     // Закрытие модального окна группового чата по клику вне модального окна
@@ -974,6 +995,9 @@ document.addEventListener('DOMContentLoaded', function() {
         groupChatModal.addEventListener('click', function(event) {
             if (event.target === groupChatModal) {
                 closeGroupChatModal();
+                // Убеждаемся, что старое модальное окно тоже закрыто
+                const oldModal = document.getElementById('createChatModal');
+                if (oldModal) oldModal.style.display = 'none';
             }
         });
     }
@@ -995,10 +1019,19 @@ document.addEventListener('DOMContentLoaded', function() {
     const roleFilterBtns = document.querySelectorAll('.group-chat-modal-role-btn');
     roleFilterBtns.forEach(btn => {
         btn.addEventListener('click', function() {
-            roleFilterBtns.forEach(b => {
-                b.classList.remove('active');
-                b.classList.add('inactive');
-            });
+            // Если кнопка уже активна и это не единственная активная кнопка - снимаем выделение
+            if (this.classList.contains('active')) {
+                // Проверяем, есть ли другие активные кнопки
+                const activeButtons = document.querySelectorAll('.group-chat-modal-role-btn.active');
+                if (activeButtons.length > 1) {
+                    this.classList.remove('active');
+                    this.classList.add('inactive');
+                    loadGroupChatUsers();
+                }
+                return;
+            }
+            
+            // Если нажата неактивная кнопка - активируем её
             this.classList.add('active');
             this.classList.remove('inactive');
             
@@ -1175,6 +1208,13 @@ function openGroupChatModal() {
     
     modal.style.display = 'flex';
     
+    // Активируем обе кнопки ролей изначально
+    const roleButtons = document.querySelectorAll('.group-chat-modal-role-btn');
+    roleButtons.forEach(btn => {
+        btn.classList.add('active');
+        btn.classList.remove('inactive');
+    });
+    
     // Загружаем пользователей
     loadGroupChatUsers();
     
@@ -1222,11 +1262,15 @@ function loadGroupChatUsers() {
         }
     });
     
-    // Фильтруем по активной роли
-    const activeRoleBtn = document.querySelector('.group-chat-modal-role-btn.active');
-    const activeRole = activeRoleBtn ? activeRoleBtn.dataset.role : 'startuper';
+    // Получаем активные роли
+    const activeRoleBtns = document.querySelectorAll('.group-chat-modal-role-btn.active');
+    const activeRoles = Array.from(activeRoleBtns).map(btn => btn.dataset.role);
     
-    const filteredUsers = users.filter(user => user.role === activeRole);
+    // Фильтруем пользователей по активным ролям, если выбраны
+    let filteredUsers = users;
+    if (activeRoles.length > 0) {
+        filteredUsers = users.filter(user => activeRoles.includes(user.role));
+    }
     
     // Добавляем пользователей в список
     filteredUsers.forEach(user => {
