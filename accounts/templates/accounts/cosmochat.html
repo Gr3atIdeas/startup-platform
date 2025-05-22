@@ -81,48 +81,92 @@
 
             <div class="users-list-new" id="usersList">
                 {% for user_profile in users %} 
-                <div class="user-card-new {% if forloop.counter > 8 %}hidden-user{% endif %}" data-user-id="{{ user_profile.user_id }}" data-user-index="{{ forloop.counter0 }}" data-role="{{ user_profile.role.role_name }}">
-                    <img src="{{ user_profile.profile_picture_url|default:default_avatar_src }}" alt="{{ user_profile.first_name }}" class="avatar-img">
-                    <div class="user-info-new">
-                        <h3>{{ user_profile.first_name }} {% if user_profile.last_name %}{{ user_profile.last_name|slice:":1" }}.{% endif %}</h3>
-                        <div class="user-role-rating-new">
-                            <div class="rating-stars-new" data-rating="{{ user_profile.rating|default:0|stringformat:".1f" }}">
-                                {% with rating_value=user_profile.rating|default:0 %}
-                                {% for i in "12345" %}
-                                <span class="rating-icon-planet-container">
-                                    <img src="{% static 'accounts/images/planets/partial_filled_planet.svg' %}" alt="Empty Planet" class="icon-empty">
-                                    <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="Filled Planet" class="icon-filled">
-                                    {# JavaScript будет управлять шириной .icon-filled на основе data-rating #}
-                                </span>
-                                {% endfor %}
-                                {% endwith %}
+                {% comment %} Определяем фейковый рейтинг для первых нескольких пользователей для теста {% endcomment %}
+                {% cycle 4.5 3.2 2.0 0.8 5.0 1.7 as fake_rating silent %}
+                {% if forloop.counter <= 6 %}
+                    {% with effective_rating=fake_rating %}
+                    <div class="user-card-new {% if forloop.counter > 8 %}hidden-user{% endif %}" data-user-id="{{ user_profile.user_id }}" data-user-index="{{ forloop.counter0 }}" data-role="{{ user_profile.role.role_name }}">
+                        <img src="{{ user_profile.profile_picture_url|default:default_avatar_src }}" alt="{{ user_profile.first_name }}" class="avatar-img">
+                        <div class="user-info-new">
+                            <h3>{{ user_profile.first_name }} {% if user_profile.last_name %}{{ user_profile.last_name|slice:":1" }}.{% endif %}</h3>
+                            <div class="user-role-rating-new">
+                                <div class="rating-stars-new" data-rating="{{ effective_rating|stringformat:".1f" }}">
+                                    {% for i in "12345" %}
+                                    <span class="rating-icon-planet-container">
+                                        <img src="{% static 'accounts/images/planets/partial_filled_planet.svg' %}" alt="Empty Planet" class="icon-empty">
+                                        <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="Filled Planet" class="icon-filled">
+                                    </span>
+                                    {% endfor %}
+                                </div>
+                                <p class="role-text">
+                                    {% if user_profile.role.role_name == "investor" %}
+                                        Инвестор
+                                    {% elif user_profile.role.role_name == "startuper" %}
+                                        Стартапер
+                                    {% elif user_profile.role.role_name == "moderator" %}
+                                        Модератор
+                                    {% else %}
+                                        {{ user_profile.role.role_name|capfirst }}
+                                    {% endif %}
+                                </p>
                             </div>
-                            <p class="role-text">
-                                {% if user_profile.role.role_name == "investor" %}
-                                    Инвестор
-                                {% elif user_profile.role.role_name == "startuper" %}
-                                    Стартапер
-                                {% elif user_profile.role.role_name == "moderator" %}
-                                    Модератор
-                                {% else %}
-                                    {{ user_profile.role.role_name|capfirst }}
-                                {% endif %}
-                            </p>
                         </div>
+                        <div class="user-stats-new">
+                            {% if user_profile.role.role_name == "investor" %}
+                            <p>Инвестирует от: <span>{{ user_profile.investorprofile.investment_range_min|default:"N/A" }}₽</span></p>
+                            <p>Инвестировал в: <span>{{ user_profile.investorprofile.completed_projects_count|default:0 }} стартапов</span></p>
+                            {% elif user_profile.role.role_name == "startuper" %}
+                            <p>Мин. вклад: <span>{{ user_profile.startuperprofile.min_investment_needed|default:"N/A" }}₽</span></p>
+                            <p>Открыл: <span>{{ user_profile.startuperprofile.projects_count|default:0 }} стартапов</span></p>
+                            {% else %}
+                             <p>Нет данных о роли</p>
+                            {% endif %}
+                        </div>
+                        <button type="button" class="chat-btn-on-card" data-user-id="{{ user_profile.user_id }}">Чат</button>
                     </div>
-                    <div class="user-stats-new">
-                        {% if user_profile.role.role_name == "investor" %}
-                        <p>Инвестирует от: <span>{{ user_profile.investorprofile.investment_range_min|default:"N/A" }}₽</span></p>
-                        <p>Инвестировал в: <span>{{ user_profile.investorprofile.completed_projects_count|default:0 }} стартапов</span></p>
-                        {% elif user_profile.role.role_name == "startuper" %}
-                        <p>Мин. вклад: <span>{{ user_profile.startuperprofile.min_investment_needed|default:"N/A" }}₽</span></p>
-                        <p>Открыл: <span>{{ user_profile.startuperprofile.projects_count|default:0 }} стартапов</span></p>
-                        {% else %}
-                         <p>Нет данных о роли</p>
-                        {% endif %}
+                    {% endwith %}
+                {% else %}
+                    {# Для остальных пользователей используем реальный рейтинг #}
+                    <div class="user-card-new {% if forloop.counter > 8 %}hidden-user{% endif %}" data-user-id="{{ user_profile.user_id }}" data-user-index="{{ forloop.counter0 }}" data-role="{{ user_profile.role.role_name }}">
+                        <img src="{{ user_profile.profile_picture_url|default:default_avatar_src }}" alt="{{ user_profile.first_name }}" class="avatar-img">
+                        <div class="user-info-new">
+                            <h3>{{ user_profile.first_name }} {% if user_profile.last_name %}{{ user_profile.last_name|slice:":1" }}.{% endif %}</h3>
+                            <div class="user-role-rating-new">
+                                <div class="rating-stars-new" data-rating="{{ user_profile.rating|default:0|stringformat:".1f" }}">
+                                    {% for i in "12345" %}
+                                    <span class="rating-icon-planet-container">
+                                        <img src="{% static 'accounts/images/planets/partial_filled_planet.svg' %}" alt="Empty Planet" class="icon-empty">
+                                        <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="Filled Planet" class="icon-filled">
+                                    </span>
+                                    {% endfor %}
+                                </div>
+                                <p class="role-text">
+                                    {% if user_profile.role.role_name == "investor" %}
+                                        Инвестор
+                                    {% elif user_profile.role.role_name == "startuper" %}
+                                        Стартапер
+                                    {% elif user_profile.role.role_name == "moderator" %}
+                                        Модератор
+                                    {% else %}
+                                        {{ user_profile.role.role_name|capfirst }}
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="user-stats-new">
+                            {% if user_profile.role.role_name == "investor" %}
+                            <p>Инвестирует от: <span>{{ user_profile.investorprofile.investment_range_min|default:"N/A" }}₽</span></p>
+                            <p>Инвестировал в: <span>{{ user_profile.investorprofile.completed_projects_count|default:0 }} стартапов</span></p>
+                            {% elif user_profile.role.role_name == "startuper" %}
+                            <p>Мин. вклад: <span>{{ user_profile.startuperprofile.min_investment_needed|default:"N/A" }}₽</span></p>
+                            <p>Открыл: <span>{{ user_profile.startuperprofile.projects_count|default:0 }} стартапов</span></p>
+                            {% else %}
+                             <p>Нет данных о роли</p>
+                            {% endif %}
+                        </div>
+                        <button type="button" class="chat-btn-on-card" data-user-id="{{ user_profile.user_id }}">Чат</button>
                     </div>
-                    <button type="button" class="chat-btn-on-card" data-user-id="{{ user_profile.user_id }}">Чат</button>
-                </div>
+                {% endif %}
                 {% empty %}
                 <p>Пользователи не найдены.</p>
                 {% endfor %}
