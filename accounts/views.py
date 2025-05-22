@@ -1966,7 +1966,69 @@ def deals_view(request):
 @login_required
 def notifications_view(request):
     # В будущем здесь будет логика получения уведомлений для пользователя
-    context = {
-        'notifications': [] # Пока пустой список для примера
-    }
-    return render(request, 'accounts/notifications.html', context)
+    # notifications = Notifications.objects.filter(user=request.user).order_by('-created_at')
+    # context = {'notifications': notifications}
+    # return render(request, 'accounts/notifications.html', context)
+    
+    # Временная заглушка, пока нет модели Notifications
+    return render(request, 'accounts/notifications.html')
+
+@login_required
+def create_group_chat(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            chat_name = data.get('name')
+            user_ids = data.get('user_ids')
+
+            if not chat_name or not isinstance(chat_name, str) or len(chat_name.strip()) == 0:
+                return JsonResponse({'success': False, 'error': 'Название чата не может быть пустым.'}, status=400)
+            
+            if not user_ids or not isinstance(user_ids, list) or len(user_ids) == 0:
+                return JsonResponse({'success': False, 'error': 'Необходимо выбрать хотя бы одного участника.'}, status=400)
+
+            # Создаем групповой чат
+            conversation = ChatConversations.objects.create(
+                name=chat_name.strip(),
+                type='group',
+                creator=request.user
+            )
+
+            # Добавляем текущего пользователя как участника
+            ChatParticipants.objects.create(
+                conversation=conversation,
+                user=request.user
+            )
+
+            # Добавляем остальных выбранных пользователей
+            added_participants_count = 0
+            for user_id in user_ids:
+                try:
+                    user_to_add = Users.objects.get(user_id=user_id)
+                    # Проверяем, что пользователь еще не добавлен (на случай дубликатов в user_ids)
+                    if not ChatParticipants.objects.filter(conversation=conversation, user=user_to_add).exists():
+                        ChatParticipants.objects.create(
+                            conversation=conversation,
+                            user=user_to_add
+                        )
+                        added_participants_count += 1
+                except Users.DoesNotExist:
+                    logger.warning(f"Пользователь с ID {user_id} не найден при создании группового чата {conversation.conversation_id}")
+                    # Можно проигнорировать или вернуть ошибку, если критично
+            
+            if added_participants_count == 0 and not ChatParticipants.objects.filter(conversation=conversation, user=request.user).count() > 1: # Если только создатель
+                 # Если не удалось добавить никого кроме создателя (и создатель там один)
+                 # Можно удалить чат, если он не имеет смысла без других участников
+                 # conversation.delete()
+                 # return JsonResponse({'success': False, 'error': 'Не удалось добавить выбранных участников.'}, status=400)
+                 pass # Пока оставляем так, даже если только создатель
+
+            return JsonResponse({'success': True, 'chat_id': conversation.conversation_id, 'chat_name': conversation.name})
+
+        except json.JSONDecodeError:
+            return JsonResponse({'success': False, 'error': 'Неверный формат данных (JSON).'}, status=400)
+        except Exception as e:
+            logger.error(f"Ошибка при создании группового чата: {e}")
+            return JsonResponse({'success': False, 'error': f'Внутренняя ошибка сервера: {e}'}, status=500)
+    
+    return JsonResponse({'success': False, 'error': 'Метод не разрешен.'}, status=405)

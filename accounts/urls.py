@@ -21,6 +21,7 @@ urlpatterns = [
     path('cosmochat/start-chat/<int:user_id>/', views.start_chat, name='start_chat'),
     path('cosmochat/add-participant/<int:chat_id>/', views.add_participant, name='add_participant'),
     path('cosmochat/leave-chat/<int:chat_id>/', views.leave_chat, name='leave_chat'),
+    path('cosmochat/create-group-chat/', views.create_group_chat, name='create_group_chat'),
     path('profile/', views.profile, name='profile'),
     path('profile/<int:user_id>/', views.profile, name='user_profile'),  # Новый маршрут
     path('create-startup/', views.create_startup, name='create_startup'),
