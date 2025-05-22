@@ -338,10 +338,13 @@
                 <div class="group-chat-modal-header">
                     <div class="group-chat-modal-title">Выберите пользователей</div>
                     <div class="group-chat-modal-count" id="selectedUsersCount">0/10</div>
-                    <div class="group-chat-modal-next" id="createGroupChatBtn">Далее</div>
+                    <div class="group-chat-modal-next" id="navigateToDetailsViewBtn">Далее</div>
                 </div>
                 
                 <div class="group-chat-modal-search">
+                    <div class="selected-user-pills-container" id="selectedUserPillsContainer">
+                        {# Сюда будут добавляться "таблетки" выбранных пользователей #}
+                    </div>
                     <img src="{% static 'accounts/images/cosmochat/search.svg' %}" alt="Поиск" class="group-chat-modal-search-icon">
                     <input type="text" class="group-chat-modal-search-input" placeholder="Кого вы хотите пригласить?" id="groupChatSearchInput">
                 </div>
@@ -353,6 +356,45 @@
                 
                 <div class="group-chat-modal-users" id="groupChatUsersList">
                     <!-- Пользователи будут добавлены через JavaScript -->
+                </div>
+            </div>
+
+            <div class="group-chat-modal-details-view" id="groupChatDetailsView" style="display: none;">
+                <div class="modal-header-nav">
+                    <div class="nav-action" id="groupChatGoBackBtn">
+                        <span class="icon-back-arrow"></span> Назад
+                    </div>
+                    <div class="nav-title">Новый чат</div>
+                    <div class="nav-action" id="confirmGroupChatCreationBtn">Создать</div>
+                </div>
+
+                <div class="selected-chat-info">
+                    <div class="chat-icon-placeholder">
+                        {# Можно вставить SVG иконку группы #}
+                        <svg class="group-icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M16 13C17.6569 13 19 11.6569 19 10C19 8.34315 17.6569 7 16 7C14.3431 7 13 8.34315 13 10C13 11.6569 14.3431 13 16 13Z" stroke="#004E9F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M8 13C9.65685 13 11 11.6569 11 10C11 8.34315 9.65685 7 8 7C6.34315 7 5 8.34315 5 10C5 11.6569 6.34315 13 8 13Z" stroke="#004E9F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M12 21V17C12 15.8954 12.8954 15 14 15H18C19.1046 15 20 15.8954 20 17V21" stroke="#004E9F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M4 21V17C4 15.8954 4.89543 15 6 15H10C11.1046 15 12 15.8954 12 17V21" stroke="#004E9F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <input type="text" class="chat-name-display-input" id="groupChatNameInput" placeholder="Название группового чата">
+                </div>
+
+                <div class="participants-actions-list">
+                    <div class="action-item" id="groupChatAddMoreParticipantsBtn">
+                        <span class="action-item-icon"></span>
+                        Добавить участника
+                    </div>
+                    <div id="groupChatSelectedParticipantsList">
+                        {# Сюда JS будет добавлять выбранных участников для отображения #}
+                        <!-- Пример элемента участника:
+                        <div class="participant-display-item">
+                            <img src="avatar.png" alt="Имя Фамилия">
+                            <span class="participant-name">Имя Фамилия</span>
+                        </div>
+                        -->
+                    </div>
                 </div>
             </div>
         </div>

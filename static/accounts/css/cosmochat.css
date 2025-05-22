@@ -1032,7 +1032,7 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
     color: black; /* Текст внутри модального окна по умолчанию черный */
     border-radius: 20px; 
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
-    width: 1012px; /* Новая ширина: 412px (контент) + 300px (отступ слева) + 300px (отступ справа) */
+    width: 1074px; /* Новая ширина: 474px (контент) + 300px (отступ слева) + 300px (отступ справа) */
     max-width: 95vw; /* Ограничение по ширине окна браузера */
     position: relative;
     overflow: hidden; 
@@ -1091,9 +1091,8 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
 }
 
 .group-chat-modal-content-wrapper {
-    width: 412px; 
-    /* height: 731px; /* Убрана фиксированная высота, будет авто по контенту до max-height */
-    max-height: 680px; /* Уменьшена для вмещения 6 пользователей и элементов */
+    width: 474px; /* Расширена на ~15% (было 412px) */
+    max-height: 680px; 
     overflow-y: auto;
     display: flex;
     flex-direction: column;
@@ -1145,7 +1144,7 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
 
 .group-chat-modal-search {
     width: 100%;
-    padding: 8px 20px; /* Уменьшены боковые паддинги */
+    padding: 8px 15px; /* Уменьшены боковые паддинги */
     background: rgba(255, 255, 255, 0.19);
     border-radius: 99px;
     border: 1px solid #004E9F;
@@ -1154,6 +1153,7 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
     gap: 8px;
     /* margin-bottom: 48px; Удаляем, теперь gap у wrapper */
     box-sizing: border-box; /* Добавлено для корректного расчета ширины */
+    flex-wrap: wrap; /* Позволит таблеткам переноситься, если их много */
 }
 
 .group-chat-modal-search-icon {
@@ -1172,6 +1172,7 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
     font-family: 'Unbounded', sans-serif;
     font-weight: 300;
     letter-spacing: 0.12px;
+    min-width: 150px; /* Минимальная ширина для поля ввода */
 }
 
 .group-chat-modal-search-input::placeholder { 
@@ -1222,9 +1223,9 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
 
 .group-chat-modal-user {
     display: flex;
-    justify-content: space-between; /* Чекбокс будет справа */
+    justify-content: space-between; 
     align-items: center;
-    padding: 4px 0; /* Уменьшены вертикальные отступы */
+    padding: 4px 10px 4px 0; /* Уменьшены вертикальные отступы, добавлен правый отступ для чекбокса */
 }
 
 .group-chat-modal-user-info {
@@ -1341,3 +1342,172 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
 /* Удаляем старые стили, которые полностью заменяются или больше не нужны */
 /* Старые .group-chat-modal-overlay и .group-chat-modal стили удаляются, 
    так как они полностью переопределены в начале этого блока */
+
+/* Стили для "таблеток" выбранных пользователей в строке поиска */
+.selected-user-pills-container { /* Новый контейнер для таблеток внутри строки поиска */
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-right: 8px; /* Отступ от иконки поиска или инпута */
+}
+
+.selected-user-pill {
+    display: inline-flex; /* Используем inline-flex для выравнивания текста и крестика */
+    align-items: center;
+    background-color: #004E9F;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 10px;
+    font-size: 14px; /* Немного меньше чем в примере (16px) для компактности */
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
+    line-height: 1.2; /* Адаптивная высота строки */
+    white-space: nowrap;
+    overflow: hidden; /* Для обрезки текста, если .pill-name будет с text-overflow */
+}
+
+.pill-name {
+    margin-right: 6px;
+    text-overflow: ellipsis; /* Если будет механизм сокращения текста */
+    overflow: hidden;
+    max-width: 100px; /* Примерная максимальная ширина имени в таблетке */
+}
+
+.pill-remove-icon {
+    width: 10px;
+    height: 10px;
+    background-color: white;
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23000'%3E%3Cpath d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'/%3E%3C/svg%3E");
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23000'%3E%3Cpath d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'/%3E%3C/svg%3E");
+    mask-size: contain;
+    -webkit-mask-size: contain;
+    cursor: pointer;
+}
+
+/* Стили для второго вида модального окна (будут дополняться) */
+.group-chat-modal-view-details .modal-header-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding-bottom: 20px; /* Отступ снизу */
+    border-bottom: 1px solid #e0e0e0; /* Разделитель */
+    margin-bottom: 20px;
+}
+
+.modal-header-nav .nav-action {
+    color: #004E9F;
+    font-size: 16px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.modal-header-nav .nav-action .icon-back-arrow { /* Пример для иконки "Назад" */
+    width: 9.33px; 
+    height: 9.33px; 
+    border-left: 2px solid #004E9F;
+    border-bottom: 2px solid #004E9F;
+    transform: rotate(45deg);
+}
+
+.modal-header-nav .nav-title {
+    color: black;
+    font-size: 16px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
+}
+
+.selected-chat-info {
+    width: 100%;
+    padding: 23px 22px;
+    border-radius: 10px;
+    border: 1px solid black;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.selected-chat-info .chat-icon-placeholder {
+    width: 43px;
+    height: 43px;
+    border-radius: 50%;
+    border: 1px solid #004E9F;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Внутри будет SVG иконка группы */
+}
+/* SVG иконка группы (пример) */
+.group-icon-svg {
+    width: 24px; height: 24px; 
+}
+
+.selected-chat-info .chat-name-display {
+    flex-grow: 1;
+    font-size: 18px; /* Уменьшено с 20px для лучшего вида */
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
+    color: black;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    /* background-color: #8DBAF9; Убран фон из примера HTML */
+}
+
+.participants-actions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Уменьшен с 24px */
+    width: 100%;
+}
+
+.participants-actions-list .action-item,
+.participants-actions-list .participant-display-item {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Уменьшен с 24px */
+    font-size: 16px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
+}
+
+.participants-actions-list .action-item {
+    color: #004E9F;
+    cursor: pointer;
+}
+
+.participants-actions-list .action-item-icon { /* Для иконки "Добавить участника" */
+    width: 24px; height: 24px; 
+    /* Стили для иконки (можно SVG inline или через mask-image) */
+    border: 2px solid #004E9F; 
+    border-radius: 50%;
+    position: relative;
+}
+.participants-actions-list .action-item-icon::before, 
+.participants-actions-list .action-item-icon::after {
+    content: '';
+    position: absolute;
+    background-color: #004E9F;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+.participants-actions-list .action-item-icon::before { /* Горизонтальная палочка */
+    width: 10px; height: 2px;
+}
+.participants-actions-list .action-item-icon::after { /* Вертикальная палочка */
+    width: 2px; height: 10px;
+}
+
+.participants-actions-list .participant-display-item img { /* Аватар участника */
+    width: 58px; height: 58px; border-radius: 29px; border: 1px solid #004E9F;
+}
+
+.participants-actions-list .participant-name {
+    color: black;
+    font-size: 18px; /* Уменьшено с 20px */
+}

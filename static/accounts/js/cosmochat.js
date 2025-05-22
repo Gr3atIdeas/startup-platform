@@ -8,6 +8,9 @@ let isDragging = false;
 let startX;
 let scrollLeft;
 
+// ---> НОВОЕ: Массив для хранения ID выбранных пользователей для группового чата
+let selectedGroupChatUserIds = [];
+
 const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
 // Элементы DOM
@@ -34,6 +37,20 @@ const addParticipantModal = document.getElementById('addParticipantModal');
 const participantsList = document.getElementById('participantsList');
 const addParticipantBtn = document.getElementById('addParticipantBtn'); // кнопка в шапке чата
 const leaveChatBtn = document.getElementById('leaveChatBtn'); // кнопка в шапке чата
+
+const groupChatModal = document.getElementById('groupChatModal');
+const groupChatContentWrapper = document.getElementById('groupChatModalContentWrapper'); // Вид 1
+const groupChatDetailsView = document.getElementById('groupChatDetailsView'); // Вид 2
+const selectedUserPillsContainer = document.getElementById('selectedUserPillsContainer');
+const groupChatSearchInput = document.getElementById('groupChatSearchInput');
+const groupChatUsersList = document.getElementById('groupChatUsersList');
+const selectedUsersCountElement = document.getElementById('selectedUsersCount');
+const navigateToDetailsViewBtn = document.getElementById('navigateToDetailsViewBtn');
+const groupChatGoBackBtn = document.getElementById('groupChatGoBackBtn');
+const confirmGroupChatCreationBtn = document.getElementById('confirmGroupChatCreationBtn');
+const groupChatNameInput = document.getElementById('groupChatNameInput');
+const groupChatSelectedParticipantsList = document.getElementById('groupChatSelectedParticipantsList');
+const groupChatAddMoreParticipantsBtn = document.getElementById('groupChatAddMoreParticipantsBtn');
 
 document.addEventListener('DOMContentLoaded', function() {
     if (messageFormNew) {
@@ -71,6 +88,58 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Обновление HTML-разметки для пагинации
     updatePaginationHTML();
+
+    // Обработчик для кнопки "Далее" в модальном окне группового чата
+    if (navigateToDetailsViewBtn) {
+        navigateToDetailsViewBtn.addEventListener('click', function() {
+            if (selectedGroupChatUserIds.length > 0) {
+                renderSelectedParticipantsForDetailsView(); // Сначала рендерим список
+                if (groupChatNameInput) { // Авто-заполнение имени чата
+                    const firstFewNames = selectedGroupChatUserIds
+                        .map(userId => {
+                            const userDiv = groupChatUsersList.querySelector(`.group-chat-modal-user[data-user-id="${userId}"] .group-chat-modal-user-firstname`);
+                            return userDiv ? userDiv.textContent : '';
+                        })
+                        .filter(name => name)
+                        .slice(0, 3) // Берем первые 3 имени
+                        .join(', ');
+                    groupChatNameInput.value = firstFewNames || "Новый групповой чат";
+                }
+                toggleGroupChatModalView(true); // Затем переключаем вид
+            } else {
+                alert("Выберите хотя бы одного пользователя.");
+            }
+        });
+    }
+
+    if (groupChatGoBackBtn) {
+        groupChatGoBackBtn.addEventListener('click', function() {
+            toggleGroupChatModalView(false);
+        });
+    }
+
+    if (confirmGroupChatCreationBtn) {
+        confirmGroupChatCreationBtn.addEventListener('click', function() {
+            const chatName = groupChatNameInput ? groupChatNameInput.value.trim() : "Групповой чат";
+            if (!chatName) {
+                alert("Пожалуйста, введите название чата.");
+                groupChatNameInput.focus();
+                return;
+            }
+            if (selectedGroupChatUserIds.length === 0) {
+                alert("Нет выбранных участников. Пожалуйста, вернитесь и выберите участников.");
+                toggleGroupChatModalView(false);
+                return;
+            }
+            createGroupChat(chatName, selectedGroupChatUserIds);
+        });
+    }
+    
+    if (groupChatAddMoreParticipantsBtn) {
+        groupChatAddMoreParticipantsBtn.addEventListener('click', function() {
+            toggleGroupChatModalView(false); // Возвращаемся к списку выбора пользователей
+        });
+    }
 });
 
 function showNoChatSelected() {
@@ -834,240 +903,6 @@ function updatePaginationHTML() {
     });
 }
 
-// Инициализация при загрузке документа
-document.addEventListener('DOMContentLoaded', function() {
-    const userIdDataElement = document.getElementById('request_user_id_data');
-    if (userIdDataElement) {
-        try {
-            window.REQUEST_USER_ID = JSON.parse(userIdDataElement.textContent);
-        } catch (e) {
-            console.error('Error parsing REQUEST_USER_ID:', e);
-            window.REQUEST_USER_ID = 0; // Fallback
-        }
-    } else {
-        window.REQUEST_USER_ID = 0; // Fallback if element not found
-    }
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const openChatId = urlParams.get('open_chat_id');
-
-    if (openChatId) {
-        if (typeof loadChat === 'function') loadChat(openChatId);
-    } else {
-        const firstChatEl = document.querySelector('.chat-item-new.active');
-        if (firstChatEl && typeof currentChatId !== 'undefined' && !currentChatId && typeof loadChat === 'function') {
-            // Не загружаем первый чат автоматически, если это не указано в URL
-        } 
-    }
-
-    // Инициализация отображения рейтинга для всех карточек пользователей
-    const userCardsRatingContainers = document.querySelectorAll('.rating-stars-new');
-    console.log(`Found ${userCardsRatingContainers.length} rating containers to update`);
-    
-    userCardsRatingContainers.forEach(container => {
-        console.log(`Processing rating container with data-rating=${container.dataset.rating}`);
-        updateUserRatingDisplay(container);
-    });
-
-    // Обработчики для кнопок фильтрации чатов
-    const chatFilterButtons = document.querySelectorAll('.chat-filters-new .filter-btn-new');
-    chatFilterButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            chatFilterButtons.forEach(btn => btn.classList.remove('active'));
-            this.classList.add('active');
-            if (typeof filterChats === 'function') filterChats(this.dataset.filter); 
-        });
-    });
-    
-    // Обработчик поиска по чатам
-    const chatSearchInput = document.getElementById('chatSearchInput');
-    if (chatSearchInput) {
-        chatSearchInput.addEventListener('keyup', function() {
-            const searchTerm = this.value.toLowerCase();
-            const chatItems = document.querySelectorAll('.chat-items-list-new .chat-item-new');
-            chatItems.forEach(item => {
-                const chatName = item.dataset.chatName ? item.dataset.chatName.toLowerCase() : '';
-                if (chatName.includes(searchTerm)) {
-                    item.style.display = 'flex';
-                } else {
-                    item.style.display = 'none';
-                }
-            });
-        });
-    }
-    
-    // Добавляем обработчики для карточек пользователей
-    document.querySelectorAll('.user-card-new').forEach(card => {
-        card.addEventListener('click', function() {
-            const userId = this.dataset.userId;
-            if (userId) openProfileModal(userId);
-        });
-    });
-    
-    // Обработчики для кнопок чата на карточках
-    document.querySelectorAll('.chat-btn-on-card').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-            e.stopPropagation(); // Предотвращаем всплытие события
-            const userId = this.dataset.userId;
-            if (userId) startChatWithUser(userId);
-        });
-    });
-    
-    // Обработчики для чатов в списке
-    document.querySelectorAll('.chat-item-new').forEach(item => {
-        item.addEventListener('click', function() {
-            const chatId = this.dataset.chatId;
-            if (chatId) loadChat(chatId);
-        });
-    });
-    
-    // Обработчики для модальных окон
-    const createChatBtn = document.getElementById('createChatBtn');
-    if (createChatBtn) {
-        // Убираем все существующие обработчики
-        const newCreateChatBtn = createChatBtn.cloneNode(true);
-        if (createChatBtn.parentNode) {
-            createChatBtn.parentNode.replaceChild(newCreateChatBtn, createChatBtn);
-        }
-        
-        // Добавляем новый обработчик
-        newCreateChatBtn.addEventListener('click', openGroupChatModal);
-    }
-    
-    const closeCreateChatModalBtn = document.getElementById('closeCreateChatModalBtn');
-    if (closeCreateChatModalBtn) {
-        closeCreateChatModalBtn.addEventListener('click', closeCreateChatModal);
-    }
-    
-    const createChatModalCloseBtn = document.getElementById('createChatModalCloseBtn');
-    if (createChatModalCloseBtn) {
-        createChatModalCloseBtn.addEventListener('click', closeCreateChatModal);
-    }
-    
-    const closeProfileModalBtn = document.getElementById('closeProfileModalBtn');
-    if (closeProfileModalBtn) {
-        closeProfileModalBtn.addEventListener('click', closeProfileModal);
-    }
-    
-    const startChatBtn = document.getElementById('startChatBtn');
-    if (startChatBtn) {
-        startChatBtn.addEventListener('click', startChat);
-    }
-    
-    const addParticipantBtn = document.getElementById('addParticipantBtn');
-    if (addParticipantBtn) {
-        addParticipantBtn.addEventListener('click', openAddParticipantModal);
-    }
-    
-    const closeAddParticipantModalBtn = document.getElementById('closeAddParticipantModalBtn');
-    if (closeAddParticipantModalBtn) {
-        closeAddParticipantModalBtn.addEventListener('click', closeAddParticipantModal);
-    }
-    
-    const leaveChatBtn = document.getElementById('leaveChatBtn');
-    if (leaveChatBtn) {
-        leaveChatBtn.addEventListener('click', leaveChat);
-    }
-    
-    // Обработчики для модального окна группового чата
-    const closeGroupChatModalBtn = document.getElementById('closeGroupChatModalBtn');
-    if (closeGroupChatModalBtn) {
-        closeGroupChatModalBtn.addEventListener('click', function() {
-            closeGroupChatModal();
-            // Убеждаемся, что старое модальное окно тоже закрыто
-            const oldModal = document.getElementById('createChatModal');
-            if (oldModal) oldModal.style.display = 'none';
-        });
-    }
-    
-    // Закрытие модального окна группового чата по клику вне модального окна
-    const groupChatModal = document.getElementById('groupChatModal');
-    if (groupChatModal) {
-        groupChatModal.addEventListener('click', function(event) {
-            if (event.target === groupChatModal) {
-                closeGroupChatModal();
-                // Убеждаемся, что старое модальное окно тоже закрыто
-                const oldModal = document.getElementById('createChatModal');
-                if (oldModal) oldModal.style.display = 'none';
-            }
-        });
-    }
-    
-    // Закрытие модального окна группового чата по нажатию ESC
-    document.addEventListener('keydown', function(event) {
-        if (event.key === 'Escape') {
-            closeGroupChatModal();
-            // Убеждаемся, что старое модальное окно тоже закрыто
-            const oldModal = document.getElementById('createChatModal');
-            if (oldModal) oldModal.style.display = 'none';
-        }
-    });
-    
-    // Обработчик для кнопки "Далее" в модальном окне группового чата
-    const createGroupChatBtn = document.getElementById('createGroupChatBtn');
-    if (createGroupChatBtn) {
-        createGroupChatBtn.addEventListener('click', createGroupChat);
-    }
-    
-    // Обработчики для переключения фильтров ролей в модальном окне группового чата
-    const roleFilterBtns = document.querySelectorAll('.group-chat-modal-role-btn');
-    roleFilterBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
-            // Если кнопка уже активна и это не единственная активная кнопка - снимаем выделение
-            if (this.classList.contains('active')) {
-                // Проверяем, есть ли другие активные кнопки
-                const activeButtons = document.querySelectorAll('.group-chat-modal-role-btn.active');
-                if (activeButtons.length > 1) {
-                    this.classList.remove('active');
-                    this.classList.add('inactive');
-                    loadGroupChatUsers();
-                }
-                return;
-            }
-            
-            // Если нажата неактивная кнопка - активируем её
-            this.classList.add('active');
-            this.classList.remove('inactive');
-            
-            loadGroupChatUsers();
-        });
-    });
-    
-    // Обработчик для поиска в модальном окне группового чата
-    const groupChatSearchInput = document.getElementById('groupChatSearchInput');
-    if (groupChatSearchInput) {
-        groupChatSearchInput.addEventListener('input', function() {
-            const searchTerm = this.value.toLowerCase();
-            const userItems = document.querySelectorAll('.group-chat-modal-user');
-            
-            userItems.forEach(item => {
-                const firstName = item.querySelector('.group-chat-modal-user-firstname').textContent.toLowerCase();
-                const lastName = item.querySelector('.group-chat-modal-user-lastname').textContent.toLowerCase();
-                
-                if (firstName.includes(searchTerm) || lastName.includes(searchTerm)) {
-                    item.style.display = 'flex';
-                } else {
-                    item.style.display = 'none';
-                }
-            });
-        });
-    }
-
-    // Обработчик для кнопки "Показать еще"
-    const showMoreBtn = document.getElementById('showMoreUsersBtn');
-    if (showMoreBtn) {
-        showMoreBtn.addEventListener('click', function() {
-            showMoreUsers();
-        });
-    }
-
-    // Инициализация выпадающего списка поиска
-    setupSearchDropdown();
-    
-    // Обновление HTML-разметки для пагинации
-    updatePaginationHTML();
-});
-
 // Функция для показа дополнительных пользователей
 let additionalUsersShown = 0;
 function showMoreUsers() {
@@ -1200,6 +1035,10 @@ function openGroupChatModal() {
     const modal = document.getElementById('groupChatModal');
     if (!modal) return;
     
+    selectedGroupChatUserIds = []; // ---> НОВОЕ: Сбрасываем выбранных пользователей при каждом открытии
+    renderSelectedUserPills(); // ---> НОВОЕ: Очищаем таблетки
+    toggleGroupChatModalView(false); // ---> НОВОЕ: Убеждаемся, что открывается первый вид
+
     modal.style.display = 'flex';
     
     // Добавляем класс для анимации
@@ -1235,11 +1074,11 @@ function closeGroupChatModal() {
 }
 
 function loadGroupChatUsers() {
-    const usersList = document.getElementById('groupChatUsersList');
-    if (!usersList) return;
+    const usersListElement = document.getElementById('groupChatUsersList'); // Изменено имя переменной для ясности
+    if (!usersListElement) return;
     
     // Очищаем список
-    usersList.innerHTML = '';
+    usersListElement.innerHTML = '';
     
     // Получаем пользователей из DOM (как и для выпадающего списка поиска)
     const userCards = document.querySelectorAll('.user-card-new');
@@ -1284,6 +1123,9 @@ function loadGroupChatUsers() {
         const userItem = document.createElement('div');
         userItem.className = 'group-chat-modal-user';
         userItem.dataset.userId = user.user_id;
+
+        // ---> НОВОЕ: Проверяем, выбран ли пользователь уже
+        const isChecked = selectedGroupChatUserIds.includes(user.user_id);
         
         userItem.innerHTML = `
             <div class="group-chat-modal-user-info">
@@ -1293,55 +1135,75 @@ function loadGroupChatUsers() {
                     <div class="group-chat-modal-user-lastname">${user.last_name}</div>
                 </div>
             </div>
-            <div class="group-chat-modal-checkbox" data-user-id="${user.user_id}">
+            <div class="group-chat-modal-checkbox ${isChecked ? 'checked' : ''}" data-user-id="${user.user_id}">
                 <div class="group-chat-modal-checkbox-empty"></div>
                 <div class="group-chat-modal-checkbox-filled"></div>
                 <div class="group-chat-modal-checkbox-tick"></div>
             </div>
         `;
         
-        usersList.appendChild(userItem);
+        usersListElement.appendChild(userItem); // Используем usersListElement
     });
     
     // Добавляем обработчики для чекбоксов
-    document.querySelectorAll('.group-chat-modal-checkbox').forEach(checkbox => {
+    document.querySelectorAll('#groupChatUsersList .group-chat-modal-checkbox').forEach(checkbox => {
         checkbox.addEventListener('click', function() {
             this.classList.toggle('checked');
+            const userId = this.dataset.userId;
+            if (this.classList.contains('checked')) {
+                if (!selectedGroupChatUserIds.includes(userId)) {
+                    selectedGroupChatUserIds.push(userId);
+                }
+            } else {
+                selectedGroupChatUserIds = selectedGroupChatUserIds.filter(id => id !== userId);
+            }
+            renderSelectedUserPills(); // ---> НОВОЕ: Обновляем "таблетки"
             updateSelectedUsersCount();
         });
     });
 }
 
 function updateSelectedUsersCount() {
-    const countElement = document.getElementById('selectedUsersCount');
+    // const countElement = document.getElementById('selectedUsersCount'); // Старое
+    const countElement = selectedUsersCountElement; // Используем объявленную константу
     if (!countElement) return;
     
-    const checkedCheckboxes = document.querySelectorAll('.group-chat-modal-checkbox.checked');
-    const count = checkedCheckboxes.length;
-    
+    // const checkedCheckboxes = document.querySelectorAll('.group-chat-modal-checkbox.checked'); // Старый способ
+    // const count = checkedCheckboxes.length;
+    const count = selectedGroupChatUserIds.length; // ---> НОВОЕ: Используем длину массива
+
     countElement.textContent = `${count}/10`;
 }
 
-function createGroupChat() {
-    const checkedCheckboxes = document.querySelectorAll('.group-chat-modal-checkbox.checked');
-    const selectedUserIds = Array.from(checkedCheckboxes).map(checkbox => checkbox.dataset.userId);
+// ---> ИЗМЕНЕНО: createGroupChat теперь принимает имя чата и ID пользователей
+function createGroupChat(chatName, userIds) {
+    // const checkedCheckboxes = document.querySelectorAll('.group-chat-modal-checkbox.checked'); // Убрали, userIds передаются
+    // const selectedUserIds = Array.from(checkedCheckboxes).map(checkbox => checkbox.dataset.userId);
     
-    if (selectedUserIds.length === 0) {
+    if (userIds.length === 0) {
         alert('Пожалуйста, выберите хотя бы одного пользователя');
+        toggleGroupChatModalView(false); // Возвращаемся к выбору, если вдруг вызвали без юзеров
+        return;
+    }
+     if (!chatName) {
+        alert('Пожалуйста, укажите название чата.');
+        // Остаемся на виде деталей, фокус на инпут имени
+        if(groupChatNameInput) groupChatNameInput.focus();
         return;
     }
     
-    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    const csrfTokenValue = csrfToken; // Используем объявленную константу
     
     fetch('/cosmochat/create-group-chat/', {
         method: 'POST',
         headers: {
-            'X-CSRFToken': csrfToken,
+            'X-CSRFToken': csrfTokenValue,
             'Content-Type': 'application/json',
             'X-Requested-With': 'XMLHttpRequest'
         },
         body: JSON.stringify({
-            user_ids: selectedUserIds
+            name: chatName, // ---> НОВОЕ: Передаем имя чата
+            user_ids: userIds
         })
     })
     .then(response => response.json())
@@ -1359,5 +1221,89 @@ function createGroupChat() {
     .catch(error => {
         console.error('Ошибка:', error);
         alert('Произошла ошибка при создании группового чата.');
+    });
+}
+
+// Переключение между видами модального окна группового чата
+function toggleGroupChatModalView(showDetailsView) {
+    if (!groupChatContentWrapper || !groupChatDetailsView) return;
+
+    if (showDetailsView) {
+        groupChatContentWrapper.style.display = 'none';
+        groupChatDetailsView.style.display = 'flex'; // или 'block', в зависимости от CSS
+    } else {
+        groupChatContentWrapper.style.display = 'flex'; // или 'block'
+        groupChatDetailsView.style.display = 'none';
+        // При возврате к списку пользователей, обновляем его на случай изменений
+        loadGroupChatUsers(); 
+        renderSelectedUserPills();
+    }
+}
+
+// Рендер выбранных участников для второго вида (детали чата)
+function renderSelectedParticipantsForDetailsView() {
+    if (!groupChatSelectedParticipantsList || !groupChatUsersList) return;
+    groupChatSelectedParticipantsList.innerHTML = ''; // Очищаем
+
+    selectedGroupChatUserIds.forEach(userId => {
+        const userDiv = groupChatUsersList.querySelector(`.group-chat-modal-user[data-user-id="${userId}"]`);
+        if (userDiv) {
+            const avatarSrc = userDiv.querySelector('.group-chat-modal-user-avatar').src;
+            const firstName = userDiv.querySelector('.group-chat-modal-user-firstname').textContent;
+            const lastName = userDiv.querySelector('.group-chat-modal-user-lastname').textContent;
+            const participantNameText = `${firstName} ${lastName}`;
+
+            const participantItem = document.createElement('div');
+            participantItem.className = 'participant-display-item'; // Используем класс из вашего CSS
+            
+            participantItem.innerHTML = `
+                <img src="${avatarSrc}" alt="${participantNameText}">
+                <span class="participant-name">${participantNameText}</span>
+            `;
+            groupChatSelectedParticipantsList.appendChild(participantItem);
+        }
+    });
+}
+
+// Обработчики для переключения фильтров ролей в модальном окне группового чата
+function renderSelectedUserPills() {
+    if (!selectedUserPillsContainer || !groupChatUsersList) return;
+    selectedUserPillsContainer.innerHTML = ''; // Очищаем контейнер
+
+    selectedGroupChatUserIds.forEach(userId => {
+        const userDiv = groupChatUsersList.querySelector(`.group-chat-modal-user[data-user-id="${userId}"]`);
+        if (userDiv) {
+            const firstName = userDiv.querySelector('.group-chat-modal-user-firstname').textContent;
+            const lastNameInitial = userDiv.querySelector('.group-chat-modal-user-lastname').textContent.charAt(0);
+            const pillNameText = `${firstName} ${lastNameInitial}.`;
+
+            const pill = document.createElement('div');
+            pill.className = 'selected-user-pill';
+            pill.dataset.userId = userId;
+
+            const pillName = document.createElement('span');
+            pillName.className = 'pill-name';
+            pillName.textContent = pillNameText.length > 15 ? pillNameText.substring(0, 13) + '...' : pillNameText; // Сокращаем длинные имена
+
+            const removeIcon = document.createElement('span');
+            removeIcon.className = 'pill-remove-icon';
+            removeIcon.innerHTML = '&times;'; // Или SVG крестик
+            removeIcon.addEventListener('click', function() {
+                const userIdToRemove = this.parentElement.dataset.userId;
+                // Убираем пользователя из выбранных
+                selectedGroupChatUserIds = selectedGroupChatUserIds.filter(id => id !== userIdToRemove);
+                // Снимаем галочку с чекбокса
+                const checkbox = groupChatUsersList.querySelector(`.group-chat-modal-checkbox[data-user-id="${userIdToRemove}"]`);
+                if (checkbox) {
+                    checkbox.classList.remove('checked');
+                }
+                renderSelectedUserPills(); // Перерисовываем "таблетки"
+                updateSelectedUsersCount(); // Обновляем счетчик
+            });
+
+            pill.appendChild(pillName);
+            pill.appendChild(removeIcon);
+            selectedUserPillsContainer.appendChild(pill);
+        }
     });
 } 
