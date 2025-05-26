@@ -1,0 +1,335 @@
+/* static/accounts/css/support_orders.css */
+
+body {
+    font-family: 'Unbounded', sans-serif; /* Убедитесь, что шрифт Unbounded подключен глобально или здесь */
+    margin: 0;
+    overflow-x: hidden; /* Предотвращаем горизонтальный скролл, если будет нужно */
+}
+
+.support-orders-page {
+    position: relative;
+    width: 100%; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box; 
+    padding-top: 0;
+    padding-bottom: 0;
+    z-index: 0;
+}
+
+.support-orders-page::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100vw; /* Фон на всю ширину окна */
+    background-color: #fff; /* Белый фон */
+    z-index: -1;
+}
+
+.support-orders-container {
+    width: 100%;
+    max-width: 1303px; /* Как в макете */
+    padding: 40px 20px; /* Внутренние отступы для контента, можно настроить */
+    display: flex;
+    flex-direction: column;
+    gap: 40px; /* Отступы между секциями, можно настроить */
+    position: relative;
+    z-index: 1;
+    box-sizing: border-box;
+}
+
+/* Ссылка "Назад" */
+.back-link-container {
+    margin-bottom: 20px; /* Отступ снизу от ссылки "Назад" */
+    display: flex;
+    justify-content: flex-start; 
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #000; /* Цвет текста ссылки из макета (был white на темном фоне) */
+    font-size: 12px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.12px;
+    text-decoration: none;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+.back-link-icon {
+    width: 16px;
+    height: 16px;
+    /* Если иконка SVG и цвет нужно менять через CSS:
+    filter: brightness(0); 
+    */
+}
+
+/* Заголовок страницы и кнопка "Новая заявка" */
+.page-header-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 1032px; /* Ширина из макета */
+    margin: 0 auto;    /* Центрирование */
+    margin-bottom: 30px; /* Отступ снизу */
+}
+
+.page-header-section h1 {
+    color: black;
+    font-size: 35px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 600;
+    line-height: 35px;
+    margin: 0;
+}
+
+/* Стили для кнопок .btn.btn-primary и .btn.btn-secondary нужно взять из global.css или buttons.css */
+/* Если их там нет, можно добавить базовые стили здесь */
+.btn.btn-primary {
+    background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%);
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    color: #F5F5F5;
+    font-size: 16px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
+    line-height: 16px;
+    padding: 12px 35px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+}
+
+.btn.btn-secondary {
+    background: #E0E0E0; /* Примерный цвет для вторичной кнопки */
+    border-radius: 10px;
+    color: black;
+    font-size: 16px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
+    line-height: 16px;
+    padding: 12px 35px;
+    text-decoration: none;
+    border: 1px solid #B0B0B0;
+    cursor: pointer;
+}
+
+/* Поиск внутри страницы заявок */
+.search-section {
+    width: 100%;
+    max-width: 663px; /* Ширина из макета */
+    /* margin: 0 auto; */ /* Если нужно центрировать */
+    margin-bottom: 30px;
+}
+
+.search-bar-inline {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.19); /* В макете был почти прозрачный, на белом фоне будет просто белый */
+    border-radius: 10px;
+    outline: 1px solid #004E9F;
+    padding: 8px 15px; 
+    box-sizing: border-box;
+}
+
+.search-input-inline {
+    flex-grow: 1;
+    border: none;
+    background: transparent;
+    font-size: 12px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.12px;
+    color: #A1A0A0;
+    padding: 10px;
+}
+
+.search-input-inline::placeholder {
+    color: #A1A0A0;
+}
+
+.search-button-inline {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+}
+.search-button-inline img {
+    width: 22px; /* Размер иконки поиска */
+    height: 22px;
+    opacity: 0.6;
+}
+
+/* Список заявок */
+.orders-list-section {
+    display: flex;
+    flex-direction: column;
+    gap: 24px; /* Отступ между карточками заявок */
+    width: 100%;
+    max-width: 1032px; /* Ширина из макета */
+    margin: 0 auto;    /* Центрирование */
+}
+
+.order-card {
+    padding: 24px 31px;
+    border-radius: 10px;
+    outline: 1px solid black;
+    background-color: white; /* Фон карточки */
+}
+
+.order-details-grid {
+    display: grid;
+    grid-template-columns: auto 1fr auto auto; /* Колонки: Дата, Тема (гибкая), Статус, Номер */
+    gap: 50px; /* Горизонтальный отступ между блоками деталей */
+    align-items: flex-start; /* Выравнивание по верху */
+}
+
+.order-detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* Отступ между меткой и значением (был 24px в макете, уменьшил для компактности) */
+}
+
+.detail-label {
+    color: #B0B0B0;
+    font-size: 14px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    line-height: 18px;
+}
+
+.detail-value {
+    color: black;
+    font-size: 14px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    line-height: 18px;
+}
+
+/* Специальный стиль для темы, чтобы она занимала больше места */
+.order-detail-topic {
+    /* grid-column: span 2;  Если нужно чтобы тема занимала 2 колонки если убрать статус и номер */
+}
+
+.status-closed {
+    /* color: #FF0000; */ /* Пример цвета для закрытого статуса */
+}
+
+.status-open {
+    color: #008000; /* Пример цвета для открытого статуса */
+}
+
+/* Дополнительная информация внизу */
+.additional-info-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 40px;
+    width: 100%;
+    max-width: 1032px; /* Ширина из макета */
+    margin: 0 auto;    /* Центрирование */
+    margin-top: 50px; /* Отступ сверху */
+}
+
+.info-block-left {
+    flex-basis: 451px; /* Ширина из макета */
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+}
+
+.info-block-right {
+    flex-basis: 726px; /* Ширина из макета, но flex-grow может быть лучше */
+    flex-grow: 1; 
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 726px;
+}
+
+.additional-info-section p {
+    color: black;
+    font-size: 14px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    line-height: 18px;
+    margin: 0;
+}
+
+.additional-info-section a {
+    color: #004E9F;
+    text-decoration: none;
+}
+
+.additional-info-section a:hover {
+    text-decoration: underline;
+}
+
+
+/* Адаптивность */
+@media (max-width: 1024px) {
+    .order-details-grid {
+        grid-template-columns: 1fr 1fr; /* Две колонки */
+        gap: 20px 30px; /* row-gap column-gap */
+    }
+    .order-detail-topic {
+        grid-column: span 2; /* Тема занимает всю вторую строку */
+    }
+    .additional-info-section {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    .info-block-left, .info-block-right {
+        flex-basis: auto;
+        width: 100%;
+        max-width: 600px;
+        align-items: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .support-orders-container {
+        padding: 30px 15px;
+        gap: 30px;
+    }
+    .page-header-section {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .page-header-section h1 {
+        font-size: 28px;
+    }
+    .search-section {
+        max-width: 100%;
+        margin-bottom: 20px;
+    }
+    .order-card {
+        padding: 20px;
+    }
+    .order-details-grid {
+        grid-template-columns: 1fr; /* Одна колонка */
+        gap: 15px;
+    }
+    .order-detail-topic {
+        grid-column: span 1; 
+    }
+    .additional-info-section {
+        margin-top: 30px;
+    }
+
+}
+
+

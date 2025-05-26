@@ -1979,19 +1979,20 @@ def create_group_chat(request):
         try:
             data = json.loads(request.body)
             chat_name = data.get('name')
-            user_ids = data.get('user_ids')
+            user_ids = data.get('user_ids') # Ожидаем список ID пользователей для добавления
 
             if not chat_name or not isinstance(chat_name, str) or len(chat_name.strip()) == 0:
                 return JsonResponse({'success': False, 'error': 'Название чата не может быть пустым.'}, status=400)
             
+            # Проверка на минимальное количество участников (например, хотя бы один выбранный, плюс создатель)
             if not user_ids or not isinstance(user_ids, list) or len(user_ids) == 0:
-                return JsonResponse({'success': False, 'error': 'Необходимо выбрать хотя бы одного участника.'}, status=400)
- 
+                return JsonResponse({'success': False, 'error': 'Необходимо выбрать хотя бы одного участника для группового чата.'}, status=400)
+
             # Создаем групповой чат
             conversation = ChatConversations.objects.create(
                 conversation_name=chat_name.strip(), # Используем conversation_name
                 is_group_chat=True, # Устанавливаем флаг группового чата
-                created_by=request.user,
+                created_by=request.user, # Указываем создателя чата
                 updated_at=timezone.now() # Устанавливаем время обновления
             )
  
@@ -2032,5 +2033,13 @@ def create_group_chat(request):
     return JsonResponse({'success': False, 'error': 'Метод не разрешен.'}, status=405)
 
 def support_page_view(request):
-    """Отображает страницу поддержки."""
     return render(request, 'accounts/support.html')
+
+@login_required # Предполагаем, что страница заявок доступна только авторизованным
+def support_orders_view(request):
+    # Здесь в будущем будет логика получения заявок пользователя
+    # context = {
+    #     'orders': SupportOrder.objects.filter(user=request.user).order_by('-created_at') 
+    # }
+    # return render(request, 'accounts/support_orders.html', context)
+    return render(request, 'accounts/support_orders.html') # Пока просто рендерим шаблон

@@ -1,0 +1,102 @@
+{% extends "accounts/base.html" %}
+{% load static %}
+
+{% block title %}Мои заявки - Поддержка{% endblock %}
+
+{% block head_extra %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'accounts/css/support_orders.css' %}?v={% now 'U' %}">
+<style>
+  /* Обнуляем вертикальные отступы для main.content на этой странице */
+  main.content {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="support-orders-page">
+  <div class="support-orders-container">
+    <div class="back-link-container">
+      <a href="{% url 'support' %}" class="back-link">
+        <img src="{% static 'accounts/images/icons/chevron-left.svg' %}" alt="Назад" class="back-link-icon"> <!-- Предполагаемая иконка -->
+        <span>Назад</span>
+      </a>
+    </div>
+
+    <section class="page-header-section">
+      <h1>Мои заявки</h1>
+      <a href="#" class="btn btn-primary">Новая заявка</a> {# TODO: Ссылка на создание новой заявки #}
+    </section>
+
+    <section class="search-section">
+        <div class="search-bar-inline">
+            <input type="text" placeholder="Поиск по теме или номеру заявки..." class="search-input-inline">
+            <button class="search-button-inline">
+                 <img src="{% static 'accounts/images/support/search.svg' %}" alt="Поиск">
+            </button>
+        </div>
+    </section>
+    
+    <section class="orders-list-section">
+      {# Пример заявки 1 #}
+      <div class="order-card">
+        <div class="order-details-grid">
+          <div class="order-detail-item">
+            <span class="detail-label">Создана</span>
+            <span class="detail-value">06.06.2025</span>
+          </div>
+          <div class="order-detail-item order-detail-topic">
+            <span class="detail-label">Тема</span>
+            <span class="detail-value">Передача портфеля в другой аккаунт</span>
+          </div>
+          <div class="order-detail-item">
+            <span class="detail-label">Статус</span>
+            <span class="detail-value status-closed">Закрыта</span> {# Можно добавить классы для статусов #}
+          </div>
+          <div class="order-detail-item">
+            <span class="detail-label">Номер</span>
+            <span class="detail-value">#83947938753</span>
+          </div>
+        </div>
+      </div>
+      {# Пример заявки 2 #}
+      <div class="order-card">
+        <div class="order-details-grid">
+          <div class="order-detail-item">
+            <span class="detail-label">Создана</span>
+            <span class="detail-value">05.06.2025</span>
+          </div>
+          <div class="order-detail-item order-detail-topic">
+            <span class="detail-label">Тема</span>
+            <span class="detail-value">Вопрос по функционалу платформы</span>
+          </div>
+          <div class="order-detail-item">
+            <span class="detail-label">Статус</span>
+            <span class="detail-value status-open">Открыта</span>
+          </div>
+          <div class="order-detail-item">
+            <span class="detail-label">Номер</span>
+            <span class="detail-value">#83947938754</span>
+          </div>
+        </div>
+      </div>
+      {# Здесь будет цикл для отображения заявок с бэкенда #}
+    </section>
+
+    <section class="additional-info-section">
+      <div class="info-block-left">
+        <p>Ответы на большинство вопросов подробно описаны в нашем <a href="#">справочном центре</a> и <a href="#">частых вопросах</a>.</p>
+        <a href="#" class="btn btn-secondary">Справочный центр</a> {# TODO: Актуальная ссылка #}
+      </div>
+      <div class="info-block-right">
+        <p>Среднее время ответа в рабочие часы (понедельник-пятница, с 10:00 до 18:00) - 2 часа</p>
+        <p>При высокой загрузке время ответа может быть увеличено</p>
+        <p>В выходные дни мы отвечаем в течение суток</p>
+      </div>
+    </section>
+
+  </div>
+</div>
+{% endblock %}

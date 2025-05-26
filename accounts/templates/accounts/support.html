@@ -21,7 +21,7 @@
         <section class="help-section">
             <h1>Чем мы можем вам помочь?</h1>
             <div class="search-bar-container">
-                <input type="text" placeholder="Ключевое слово, например "стартап"" class="search-input">
+                <input type="text" placeholder="Ключевое слово, например &quot;стартап&quot;" class="search-input">
                 <button class="search-button">
                     <img src="{% static 'accounts/images/support/search.svg' %}" alt="Поиск">
                 </button>
@@ -36,13 +36,13 @@
                 </div>
                 <img src="{% static 'accounts/images/support/clipboard-list.svg' %}" alt="Справочный центр" class="info-card-icon">
             </div>
-            <div class="info-card">
+            <a href="{% url 'support_orders' %}" class="info-card info-card-link">
                 <div class="info-card-text">
                     <h2>Написать нам</h2>
                     <p>Не нашли ответ на вопрос?</p>
                 </div>
                 <img src="{% static 'accounts/images/support/edit.svg' %}" alt="Написать нам" class="info-card-icon">
-            </div>
+            </a>
         </section>
 
         <section class="knowledge-base-section">

@@ -40,5 +40,6 @@ urlpatterns = [
     path('deals/', views.deals_view, name='deals_page'), # Новый маршрут для страницы Сделки
     path('notifications/', views.notifications_view, name='notifications_page'), # Новый маршрут для страницы Уведомления
     path('support/', views.support_page_view, name='support'), # Новый маршрут для страницы поддержки
+    path('support/orders/', views.support_orders_view, name='support_orders'), # Новый маршрут для страницы заявок в поддержку
     path('favicon.ico', RedirectView.as_view(url='/static/images/favicon.png', permanent=True)),
 ]
