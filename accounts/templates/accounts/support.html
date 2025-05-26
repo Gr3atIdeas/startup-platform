@@ -3,9 +3,19 @@
 
 {% block title %}Поддержка - Great Ideas{% endblock %}
 
-{% block content %}
+{% block head_extra %}
+{{ block.super }}
 <link rel="stylesheet" href="{% static 'accounts/css/support.css' %}">
+<style>
+  /* Обнуляем вертикальные отступы для main.content на странице поддержки */
+  main.content {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+</style>
+{% endblock %}
 
+{% block content %}
 <div class="support-page">
     <div class="support-container">
         <section class="help-section">

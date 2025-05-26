@@ -96,7 +96,7 @@
                     <a href="{% url 'cosmochat' %}" class="header-nav-link cosmochat-link">CosmoChat</a>
                     <a href="{% url 'moderator_dashboard' %}" class="header-nav-link">Заявки</a> {# Убедитесь, что URL 'moderator_dashboard' это Заявки #}
                     <a href="{% url 'deals_page' %}" class="header-nav-link">Сделки</a>
-                    <a href="#" class="header-nav-link">Поддержка</a> {# Заменить # на актуальный URL для Поддержки #}
+                    <a href="{% url 'support' %}" class="header-nav-link">Поддержка</a> {# ЗАМЕНЕН URL #}
                 {% endif %}
             </div>
 
