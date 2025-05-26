@@ -2042,4 +2042,19 @@ def support_orders_view(request):
     #     'orders': SupportOrder.objects.filter(user=request.user).order_by('-created_at') 
     # }
     # return render(request, 'accounts/support_orders.html', context)
-    return render(request, 'accounts/support_orders.html') # Пока просто рендерим шаблон
+    return render(request, 'accounts/support_orders.html')
+
+@login_required # Предполагаем, что создание заявки доступно только авторизованным
+def support_contact_view(request):
+    # Здесь в будущем будет логика обработки формы создания заявки
+    # if request.method == 'POST':
+    #     form = SupportContactForm(request.POST)
+    #     if form.is_valid():
+    #         # Process the data in form.cleaned_data
+    #         # ...
+    #         return redirect('support_orders') # Или на страницу с сообщением об успехе
+    # else:
+    #     form = SupportContactForm()
+    # context = {'form': form}
+    # return render(request, 'accounts/support_contact.html', context)
+    return render(request, 'accounts/support_contact.html')
