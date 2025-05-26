@@ -11,7 +11,7 @@ body {
     width: 100%; 
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: center; /* Оставляем центрирование самой страницы */
     box-sizing: border-box; 
     padding-top: 0;
     padding-bottom: 0;
@@ -32,11 +32,12 @@ body {
 
 .support-orders-container {
     width: 100%;
-    max-width: 1303px; /* Как в макете */
+    max-width: 1032px; /* ИСПОЛЬЗУЕМ МАКСИМАЛЬНУЮ ШИРИНУ КАК У ДРУГИХ БЛОКОВ КОНТЕНТА */
     padding: 40px 20px; /* Внутренние отступы для контента, можно настроить */
     display: flex;
     flex-direction: column;
-    gap: 40px; /* Отступы между секциями, можно настроить */
+    align-items: flex-start; /* ВЫРАВНИВАНИЕ ВСЕХ ДОЧЕРНИХ ЭЛЕМЕНТОВ ПО ЛЕВОМУ КРАЮ */
+    gap: 30px; /* Уменьшил основной gap для контейнера */
     position: relative;
     z-index: 1;
     box-sizing: border-box;
@@ -44,9 +45,10 @@ body {
 
 /* Ссылка "Назад" */
 .back-link-container {
-    margin-bottom: 20px; /* Отступ снизу от ссылки "Назад" */
+    /* margin-bottom: 20px; Управляется gap-ом родителя */
     display: flex;
     justify-content: flex-start; 
+    width: 100%; /* Чтобы занимал всю ширину и выравнивался по flex-start контейнера */
 }
 
 .back-link {
@@ -68,9 +70,7 @@ body {
 .back-link-icon {
     width: 16px;
     height: 16px;
-    /* Если иконка SVG и цвет нужно менять через CSS:
-    filter: brightness(0); 
-    */
+    filter: brightness(0); /* Делаем SVG иконку черной */
 }
 
 /* Заголовок страницы и кнопка "Новая заявка" */
@@ -78,10 +78,10 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
-    max-width: 1032px; /* Ширина из макета */
-    margin: 0 auto;    /* Центрирование */
-    margin-bottom: 30px; /* Отступ снизу */
+    width: 100%; /* Занимает всю доступную ширину */
+    /* max-width: 1032px; - Уже установлено у родителя */
+    /* margin: 0 auto;  Убираем центрирование, т.к. родитель flex-start */
+    /* margin-bottom: 30px; Управляется gap-ом родителя */
 }
 
 .page-header-section h1 {
@@ -99,7 +99,7 @@ body {
     background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%);
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
     border-radius: 10px;
-    color: #F5F5F5;
+    color: #F5F5F5 !important; /* Белый текст */
     font-size: 16px;
     font-family: 'Unbounded', sans-serif;
     font-weight: 400;
@@ -110,36 +110,52 @@ body {
     cursor: pointer;
 }
 
+.btn.btn-primary:hover {
+    background: linear-gradient(0deg, #003c8a 0%, #005ac0 100%); /* Чуть темнее при наведении */
+}
+
 .btn.btn-secondary {
-    background: #E0E0E0; /* Примерный цвет для вторичной кнопки */
+    background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%); /* Делаем как primary */
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
     border-radius: 10px;
-    color: black;
+    color: #F5F5F5 !important; /* Белый текст */
     font-size: 16px;
     font-family: 'Unbounded', sans-serif;
     font-weight: 400;
     line-height: 16px;
     padding: 12px 35px;
     text-decoration: none;
-    border: 1px solid #B0B0B0;
+    border: none; /* Убираем рамку, если была */
     cursor: pointer;
+}
+
+.btn.btn-secondary:hover {
+    background: linear-gradient(0deg, #003c8a 0%, #005ac0 100%); 
 }
 
 /* Поиск внутри страницы заявок */
 .search-section {
     width: 100%;
-    max-width: 663px; /* Ширина из макета */
-    /* margin: 0 auto; */ /* Если нужно центрировать */
-    margin-bottom: 30px;
+    max-width: 663px; 
+    /* margin: 0 auto; Убираем */
+    /* margin-bottom: 30px; Управляется gap-ом родителя */
 }
 
 .search-bar-inline {
-    display: flex;
+    display: flex; /* Для размещения иконки и инпута */
     align-items: center;
-    background: rgba(255, 255, 255, 0.19); /* В макете был почти прозрачный, на белом фоне будет просто белый */
+    background: #fff; /* Белый фон для контейнера */
     border-radius: 10px;
     outline: 1px solid #004E9F;
     padding: 8px 15px; 
     box-sizing: border-box;
+}
+
+.search-bar-inline .search-icon-inline {
+    width: 22px;
+    height: 22px;
+    opacity: 0.6;
+    margin-right: 10px; /* Отступ от инпута */
 }
 
 .search-input-inline {
@@ -151,53 +167,51 @@ body {
     font-weight: 300;
     letter-spacing: 0.12px;
     color: #A1A0A0;
-    padding: 10px;
+    padding: 10px 0; /* Убираем боковые паддинги инпута, если иконка близко */
+    outline: none; /* Убираем стандартный outline при фокусе */
 }
 
 .search-input-inline::placeholder {
     color: #A1A0A0;
 }
 
-.search-button-inline {
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 5px;
-}
-.search-button-inline img {
-    width: 22px; /* Размер иконки поиска */
-    height: 22px;
-    opacity: 0.6;
-}
+/* Убираем кнопку поиска, если она была */
+/* .search-button-inline ... */
 
 /* Список заявок */
 .orders-list-section {
     display: flex;
     flex-direction: column;
-    gap: 24px; /* Отступ между карточками заявок */
-    width: 100%;
-    max-width: 1032px; /* Ширина из макета */
-    margin: 0 auto;    /* Центрирование */
+    gap: 24px; 
+    width: 100%; /* Занимает всю доступную ширину */
+    /* max-width: 1032px; - Уже установлено у родителя .support-orders-container */
+    /* margin: 0 auto; Убираем */
 }
 
 .order-card {
     padding: 24px 31px;
     border-radius: 10px;
     outline: 1px solid black;
-    background-color: white; /* Фон карточки */
+    background-color: white;
+    display: block; /* Чтобы ссылка занимала всю область карточки */
+    text-decoration: none; /* Убираем подчеркивание у ссылки-карточки */
+}
+
+.order-card:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Пример эффекта при наведении */
 }
 
 .order-details-grid {
     display: grid;
-    grid-template-columns: auto 1fr auto auto; /* Колонки: Дата, Тема (гибкая), Статус, Номер */
-    gap: 50px; /* Горизонтальный отступ между блоками деталей */
-    align-items: flex-start; /* Выравнивание по верху */
+    grid-template-columns: auto 1fr auto auto;
+    gap: 50px;
+    align-items: flex-start;
 }
 
 .order-detail-item {
     display: flex;
     flex-direction: column;
-    gap: 12px; /* Отступ между меткой и значением (был 24px в макете, уменьшил для компактности) */
+    gap: 12px;
 }
 
 .detail-label {
@@ -235,21 +249,21 @@ body {
     justify-content: space-between;
     align-items: flex-start;
     gap: 40px;
-    width: 100%;
-    max-width: 1032px; /* Ширина из макета */
-    margin: 0 auto;    /* Центрирование */
-    margin-top: 50px; /* Отступ сверху */
+    width: 100%; /* Занимает всю доступную ширину */
+    /* max-width: 1032px; - Уже установлено у родителя */
+    /* margin: 0 auto; Убираем */
+    /* margin-top: 50px; Управляется gap-ом родителя */
 }
 
 .info-block-left {
-    flex-basis: 451px; /* Ширина из макета */
+    flex-basis: 451px;
     display: flex;
     flex-direction: column;
     gap: 26px;
 }
 
 .info-block-right {
-    flex-basis: 726px; /* Ширина из макета, но flex-grow может быть лучше */
+    flex-basis: 726px;
     flex-grow: 1; 
     display: flex;
     flex-direction: column;
@@ -278,12 +292,16 @@ body {
 
 /* Адаптивность */
 @media (max-width: 1024px) {
+    .support-orders-container {
+        max-width: 100%; /* На меньших экранах контейнер может быть по всей ширине */
+        padding: 30px 15px;
+    }
     .order-details-grid {
-        grid-template-columns: 1fr 1fr; /* Две колонки */
-        gap: 20px 30px; /* row-gap column-gap */
+        grid-template-columns: 1fr 1fr; 
+        gap: 20px 30px; 
     }
     .order-detail-topic {
-        grid-column: span 2; /* Тема занимает всю вторую строку */
+        grid-column: span 2; 
     }
     .additional-info-section {
         flex-direction: column;
@@ -301,35 +319,40 @@ body {
 @media (max-width: 768px) {
     .support-orders-container {
         padding: 30px 15px;
-        gap: 30px;
+        gap: 20px;
     }
     .page-header-section {
         flex-direction: column;
         gap: 20px;
-        text-align: center;
-        margin-bottom: 20px;
+        align-items: flex-start; /* Выравнивание по левому краю на мобильных */
+        text-align: left;
+        margin-bottom: 10px;
     }
     .page-header-section h1 {
         font-size: 28px;
     }
     .search-section {
         max-width: 100%;
-        margin-bottom: 20px;
+        margin-bottom: 10px;
     }
     .order-card {
         padding: 20px;
     }
     .order-details-grid {
-        grid-template-columns: 1fr; /* Одна колонка */
+        grid-template-columns: 1fr; 
         gap: 15px;
     }
     .order-detail-topic {
         grid-column: span 1; 
     }
     .additional-info-section {
-        margin-top: 30px;
+        margin-top: 20px;
+        align-items: flex-start; /* Выравнивание по левому краю на мобильных */
+        text-align: left;
     }
-
+    .info-block-left, .info-block-right {
+        align-items: flex-start;
+    }
 }
 
 

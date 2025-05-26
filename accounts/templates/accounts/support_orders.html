@@ -32,16 +32,17 @@
 
     <section class="search-section">
         <div class="search-bar-inline">
+            <img src="{% static 'accounts/images/support/search.svg' %}" alt="Поиск" class="search-icon-inline"> 
             <input type="text" placeholder="Поиск по теме или номеру заявки..." class="search-input-inline">
-            <button class="search-button-inline">
+            {# <button class="search-button-inline">
                  <img src="{% static 'accounts/images/support/search.svg' %}" alt="Поиск">
-            </button>
+            </button> #} <!-- Убрана отдельная кнопка поиска, иконка теперь в инпуте -->
         </div>
     </section>
     
     <section class="orders-list-section">
       {# Пример заявки 1 #}
-      <div class="order-card">
+      <a href="#" class="order-card"> {# Обернули в ссылку #}
         <div class="order-details-grid">
           <div class="order-detail-item">
             <span class="detail-label">Создана</span>
@@ -60,9 +61,9 @@
             <span class="detail-value">#83947938753</span>
           </div>
         </div>
-      </div>
+      </a>
       {# Пример заявки 2 #}
-      <div class="order-card">
+      <a href="#" class="order-card"> {# Обернули в ссылку #}
         <div class="order-details-grid">
           <div class="order-detail-item">
             <span class="detail-label">Создана</span>
@@ -81,7 +82,7 @@
             <span class="detail-value">#83947938754</span>
           </div>
         </div>
-      </div>
+      </a>
       {# Здесь будет цикл для отображения заявок с бэкенда #}
     </section>
 
