@@ -7,12 +7,12 @@ body {
 }
 
 .support-page {
-    /* Стили для фона, как в макете, если нужно покрыть всю страницу */
-    /* background: linear-gradient(153deg, black 0%, #00346B 25%, #004E9F 48%, #01366D 64%, #020202 100%); */
-    /* padding-top: 20px; */ /* Убрано, т.к. header уже есть */
+    background-color: #fff; /* Явно задаем белый фон для всей области контента страницы */
+    width: 100%; /* Занимает всю ширину родительского контейнера (main.content) */
     display: flex;
     flex-direction: column;
     align-items: center;
+    box-sizing: border-box; /* Чтобы padding не влиял на общую ширину 100% */
 }
 
 .support-container {
@@ -95,7 +95,7 @@ body {
 .info-cards-section {
     display: flex;
     justify-content: center; /* Центрирование карточек */
-    align-items: flex-start; /* Выравнивание по верху, если высота разная */
+    align-items: stretch; /* ИЗМЕНЕНО: Карточки будут одинаковой высоты */
     gap: 51px;
     width: 100%;
     max-width: 1032px; /* Ширина из макета */
@@ -188,6 +188,7 @@ body {
     font-weight: 300;
     line-height: 18px;
     text-decoration: none;
+    white-space: nowrap; /* ДОБАВЛЕНО: Текст не будет переноситься */
 }
 
 .knowledge-base-header a:hover {
