@@ -131,7 +131,7 @@
                         <a href="{% url 'startups_list' %}" class="profile-dropdown-item">Стартапы</a> {# Исправлено на каталог #}
                         {# <a href="{% url 'profile_settings' %}" class="profile-dropdown-item">Настройки</a> #} {# Нужен URL для настроек #}
                         <a href="#" class="profile-dropdown-item">Настройки</a> {# Временный #}
-                        <a href="#" class="profile-dropdown-item">Поддержка</a> {# Временный URL #}
+                        <a href="{% url 'support' %}" class="profile-dropdown-item">Поддержка</a> {# ЗАМЕНЕН URL #}
                         <a href="#" class="profile-dropdown-item">Контакты</a> {# Временный URL #}
                         <a href="#" class="profile-dropdown-item">FAQ</a>       {# Временный URL #}
                         <a href="{% url 'logout' %}" class="profile-dropdown-item profile-dropdown-logout">

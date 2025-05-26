@@ -1,0 +1,471 @@
+/* static/accounts/css/support.css */
+
+body {
+    font-family: 'Unbounded', sans-serif;
+    margin: 0;
+    background-color: #fff; /* Белый фон для основного контента */
+}
+
+.support-page {
+    /* Стили для фона, как в макете, если нужно покрыть всю страницу */
+    /* background: linear-gradient(153deg, black 0%, #00346B 25%, #004E9F 48%, #01366D 64%, #020202 100%); */
+    /* padding-top: 20px; */ /* Убрано, т.к. header уже есть */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.support-container {
+    width: 100%;
+    max-width: 1303px; /* Максимальная ширина контента */
+    padding: 60px 0; /* Отступы сверху и снизу как в макете */
+    display: flex;
+    flex-direction: column;
+    gap: 100px; /* Отступ между основными секциями */
+}
+
+/* Секция "Чем мы можем вам помочь?" */
+.help-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 42px;
+    width: 100%;
+    max-width: 1032px; /* Ширина из макета */
+    margin: 0 auto; /* Центрирование */
+}
+
+.help-section h1 {
+    color: black;
+    font-size: 35px;
+    font-weight: 600;
+    line-height: 35px;
+    text-align: center;
+    margin: 0;
+}
+
+.search-bar-container {
+    width: 100%;
+    height: 82px;
+    background: #004E9F;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px; /* Внутренние отступы */
+    box-sizing: border-box;
+}
+
+.search-input {
+    flex-grow: 1;
+    height: 53px;
+    background: white;
+    border-radius: 7px;
+    border: none;
+    padding: 0 20px;
+    font-size: 14px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    line-height: 18px;
+    color: #CBCBCB;
+}
+
+.search-input::placeholder {
+    color: #CBCBCB;
+}
+
+.search-button {
+    width: 53px; /* Примерно квадратная кнопка */
+    height: 53px;
+    background: transparent; /* Прозрачный фон */
+    border: none;
+    padding: 0;
+    margin-left: 15px; /* Отступ от инпута */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-button img {
+    width: 35px; /* Размер иконки */
+    height: 35px;
+}
+
+/* Секция с карточками "Справочный центр" и "Написать нам" */
+.info-cards-section {
+    display: flex;
+    justify-content: center; /* Центрирование карточек */
+    align-items: flex-start; /* Выравнивание по верху, если высота разная */
+    gap: 51px;
+    width: 100%;
+    max-width: 1032px; /* Ширина из макета */
+    margin: 0 auto; /* Центрирование */
+}
+
+.info-card {
+    background: white;
+    border-radius: 10px;
+    outline: 1px solid #004E9F;
+    padding: 75px 46px;
+    display: flex;
+    justify-content: space-between; /* Текст слева, иконка справа */
+    align-items: flex-start; /* Выравнивание по верху */
+    gap: 10px;
+    flex-basis: calc(50% - 25.5px); /* Расчет ширины с учетом gap */
+    box-sizing: border-box;
+}
+
+.info-card:first-child {
+   /* width: 589px; */ /* Ширина из макета, но лучше использовать flex-basis */
+}
+
+.info-card:last-child {
+    /* width: 392px; */ /* Ширина из макета */
+}
+
+.info-card-text {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    flex-grow: 1;
+}
+
+.info-card h2 {
+    color: black;
+    font-size: 20px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 600;
+    line-height: 35px;
+    margin: 0;
+}
+
+.info-card p {
+    color: black;
+    font-size: 14px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    line-height: 18px;
+    margin: 0;
+}
+
+.info-card-icon {
+    width: 75px;
+    height: 75px;
+    object-fit: contain; /* Чтобы иконка не искажалась */
+}
+
+/* Секция "База знаний" */
+.knowledge-base-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 37px;
+    width: 100%;
+}
+
+.knowledge-base-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px; /* Уменьшил gap для соответствия макету */
+    width: 200px; /* Ширина из макета */
+}
+
+.knowledge-base-header h2 {
+    color: black;
+    font-size: 20px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 600;
+    line-height: 35px;
+    text-align: center;
+    margin: 0;
+}
+
+.knowledge-base-header a {
+    color: black; /* В макете черный, не синий */
+    font-size: 14px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    line-height: 18px;
+    text-decoration: none;
+}
+
+.knowledge-base-header a:hover {
+    text-decoration: underline;
+}
+
+.knowledge-base-cards {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch; /* Чтобы карточки были одинаковой высоты */
+    gap: 25px; /* Примерный отступ, нужно будет подобрать */
+    width: 100%;
+}
+
+.knowledge-card {
+    background: white;
+    border-radius: 10px;
+    outline: 1px solid #004E9F;
+    padding: 40px; /* Уменьшил вертикальные паддинги */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px; /* Уменьшил gap */
+    text-align: center;
+    flex: 1; /* Равномерное распределение пространства */
+    min-width: 300px; /* Минимальная ширина для адаптивности */
+    box-sizing: border-box;
+}
+
+.knowledge-card img {
+    width: 165px;
+    height: 127px;
+    object-fit: contain;
+}
+
+.knowledge-card h3 {
+    color: black;
+    font-size: 20px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 600;
+    line-height: 35px;
+    margin: 0;
+}
+
+.knowledge-card p {
+    color: black;
+    font-size: 14px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    line-height: 18px;
+    margin: 0;
+    width: 100%; /* Для выравнивания текста по центру */
+    max-width: 327px; /* Из макета */
+}
+
+/* Секция "Самые популярные статьи" */
+.popular-articles-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 59px;
+    width: 100%;
+}
+
+.popular-articles-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.popular-articles-header h2 {
+    color: black;
+    font-size: 35px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 600;
+    line-height: 35px;
+    margin: 0;
+}
+
+.popular-articles-header a {
+    color: #004E9F;
+    font-size: 14px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
+    line-height: 18px;
+    text-decoration: none;
+}
+
+.popular-articles-header a:hover {
+    text-decoration: underline;
+}
+
+.articles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(600px, 1fr)); /* Адаптивная сетка */
+    gap: 25px;
+    width: 100%;
+}
+
+.article-card {
+    background: white;
+    border-radius: 10px;
+    outline: 1px solid #004E9F;
+    padding: 21px 30px; /* Скорректировал паддинги */
+    display: flex;
+    align-items: center;
+    gap: 20px; /* Уменьшил gap */
+    /* width: 639px; */ /* Убрал фиксированную ширину для грида */
+    box-sizing: border-box;
+}
+
+.article-icon {
+    width: 53px;
+    height: 53px;
+    object-fit: contain;
+}
+
+.article-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 5px; /* Отступ между заголовком и датой */
+}
+
+.article-info h3 {
+    color: black;
+    font-size: 20px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 600;
+    line-height: 1.2; /* Более компактная высота строки */
+    margin: 0;
+}
+
+.article-info p {
+    color: black;
+    font-size: 14px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    line-height: 18px;
+    margin: 0;
+}
+
+/* Адаптивность */
+@media (max-width: 1300px) { /* Немного меньше max-width контейнера */
+    .support-container {
+        padding: 40px 20px;
+        gap: 60px;
+    }
+
+    .info-cards-section {
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
+    }
+
+    .info-card {
+        flex-basis: 100%; /* Карточки занимают всю ширину на меньших экранах */
+        max-width: 600px;
+        padding: 40px 30px;
+    }
+
+    .knowledge-base-cards {
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
+    }
+
+    .knowledge-card {
+        width: 100%;
+        max-width: 450px;
+    }
+
+    .articles-grid {
+        grid-template-columns: 1fr; /* Одна колонка на маленьких экранах */
+    }
+
+    .article-card {
+       /* width: 100%; */ /* Занимает доступную ширину */
+    }
+}
+
+@media (max-width: 768px) {
+    .help-section h1 {
+        font-size: 28px;
+        line-height: 30px;
+    }
+
+    .search-bar-container {
+        height: 70px;
+        padding: 0 15px;
+    }
+
+    .search-input {
+        height: 45px;
+        font-size: 13px;
+    }
+
+    .search-button {
+        width: 45px;
+        height: 45px;
+    }
+    .search-button img {
+        width: 28px;
+        height: 28px;
+    }
+
+    .info-card h2, .knowledge-card h3, .article-info h3 {
+        font-size: 18px;
+        line-height: 1.3;
+    }
+
+    .info-card p, .knowledge-card p, .article-info p {
+        font-size: 13px;
+    }
+
+    .knowledge-base-header h2, .popular-articles-header h2 {
+        font-size: 24px;
+    }
+
+    .popular-articles-header {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+        text-align: center;
+    }
+
+}
+
+@media (max-width: 480px) {
+    .support-container {
+        padding: 30px 15px;
+        gap: 40px;
+    }
+    .help-section h1 {
+        font-size: 24px;
+    }
+
+    .search-bar-container {
+        flex-direction: column;
+        height: auto;
+        background: transparent; /* Убираем фон, т.к. элементы будут отдельно */
+        gap: 15px;
+        padding: 0;
+    }
+    .search-input {
+        width: 100%;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .search-button {
+        background-color: #004E9F; /* Делаем кнопку заметной */
+        border-radius: 7px;
+        width: 100%;
+    }
+    .search-button img {
+       filter: brightness(0) invert(1); /* Делаем иконку белой */
+    }
+
+    .info-card, .knowledge-card, .article-card {
+        padding: 25px 20px;
+    }
+
+    .info-card-icon {
+        width: 60px;
+        height: 60px;
+    }
+
+    .knowledge-card img {
+        width: 120px;
+        height: auto;
+    }
+
+    .article-card {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    .article-icon {
+        margin-bottom: 10px;
+    }
+}

@@ -1986,20 +1986,21 @@ def create_group_chat(request):
             
             if not user_ids or not isinstance(user_ids, list) or len(user_ids) == 0:
                 return JsonResponse({'success': False, 'error': 'Необходимо выбрать хотя бы одного участника.'}, status=400)
-
+ 
             # Создаем групповой чат
             conversation = ChatConversations.objects.create(
-                name=chat_name.strip(),
-                type='group',
-                creator=request.user
+                conversation_name=chat_name.strip(), # Используем conversation_name
+                is_group_chat=True, # Устанавливаем флаг группового чата
+                created_by=request.user,
+                updated_at=timezone.now() # Устанавливаем время обновления
             )
-
+ 
             # Добавляем текущего пользователя как участника
             ChatParticipants.objects.create(
                 conversation=conversation,
                 user=request.user
             )
-
+ 
             # Добавляем остальных выбранных пользователей
             added_participants_count = 0
             for user_id in user_ids:
@@ -2016,14 +2017,11 @@ def create_group_chat(request):
                     logger.warning(f"Пользователь с ID {user_id} не найден при создании группового чата {conversation.conversation_id}")
                     # Можно проигнорировать или вернуть ошибку, если критично
             
-            if added_participants_count == 0 and not ChatParticipants.objects.filter(conversation=conversation, user=request.user).count() > 1: # Если только создатель
-                 # Если не удалось добавить никого кроме создателя (и создатель там один)
-                 # Можно удалить чат, если он не имеет смысла без других участников
-                 # conversation.delete()
-                 # return JsonResponse({'success': False, 'error': 'Не удалось добавить выбранных участников.'}, status=400)
-                 pass # Пока оставляем так, даже если только создатель
+            # Логика ниже была закомментирована в оригинале, возможно, стоит ее пересмотреть или удалить
+            # if added_participants_count == 0 and not ChatParticipants.objects.filter(conversation=conversation, user=request.user).count() > 1: 
+            #      pass 
 
-            return JsonResponse({'success': True, 'chat_id': conversation.conversation_id, 'chat_name': conversation.name})
+            return JsonResponse({'success': True, 'chat_id': conversation.conversation_id, 'chat_name': conversation.conversation_name})
 
         except json.JSONDecodeError:
             return JsonResponse({'success': False, 'error': 'Неверный формат данных (JSON).'}, status=400)
@@ -2032,3 +2030,7 @@ def create_group_chat(request):
             return JsonResponse({'success': False, 'error': f'Внутренняя ошибка сервера: {e}'}, status=500)
     
     return JsonResponse({'success': False, 'error': 'Метод не разрешен.'}, status=405)
+
+def support_page_view(request):
+    """Отображает страницу поддержки."""
+    return render(request, 'accounts/support.html')
