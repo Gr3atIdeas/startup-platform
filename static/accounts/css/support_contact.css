@@ -165,24 +165,21 @@ body {
     font-family: 'Unbounded', sans-serif;
     font-weight: 300;
     line-height: 18px;
+    padding-right: 25px; /* Добавляем место для иконки-картинки */
 }
 
 .select-wrapper select:focus {
     outline: none;
 }
 
-.select-arrow {
+.select-arrow-icon {
     pointer-events: none;
-    content: '';
     position: absolute;
-    right: 16px; /* Положение стрелки */
+    right: 16px; /* Положение иконки */
     top: 50%;
     transform: translateY(-50%);
-    width: 0;
-    height: 0;
-    border-left: 4px solid transparent;
-    border-right: 4px solid transparent;
-    border-top: 4px solid #1E1E1E; /* Цвет стрелки */
+    width: 16px; /* Размер иконки из макета */
+    height: 16px; /* Размер иконки из макета */
 }
 
 .btn-submit-support {

@@ -26,7 +26,7 @@
 
     <div class="support-contact-main-content">
       <section class="form-section">
-        <form action="" method="post"> {# TODO: Add actual form action and method if needed #}
+        <form action="" method="post"> 
           {% csrf_token %}
           <div class="form-group">
             <label for="role">Роль</label>
@@ -34,9 +34,8 @@
               <select name="role" id="role">
                 <option value="investor">Инвестор</option>
                 <option value="startup">Стартапер</option>
-                <option value="other">Другое</option>
               </select>
-              <span class="select-arrow"></span>
+              <img src="{% static 'accounts/images/support/chevron_down.svg' %}" alt="" class="select-arrow-icon">
             </div>
           </div>
 
@@ -67,7 +66,7 @@
       <section class="info-section">
         <h2>Есть вопрос?</h2>
         <div class="search-bar-support-contact">
-          <img src="{% static 'accounts/images/icons/search_icon_gray.svg' %}" alt="Поиск" class="search-icon"> {# Замените на актуальный путь, если необходимо #}
+          <img src="{% static 'accounts/images/support/search_gray.svg' %}" alt="Поиск" class="search-icon">
           <input type="text" placeholder="Поиск">
         </div>
         <a href="#" class="image-link">
