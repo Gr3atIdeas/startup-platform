@@ -3,31 +3,44 @@
 body {
     font-family: 'Unbounded', sans-serif;
     margin: 0;
-    background-color: #fff; /* Белый фон для основного контента */
+    /* background-color: #fff; */ /* Можно убрать, если фон body и так белый глобально */
+    overflow-x: hidden; /* Предотвращаем горизонтальный скролл */
 }
 
 .support-page {
-    background-color: #fff; /* Явно задаем белый фон для всей области контента страницы */
-    width: 100vw; /* Занимает 100% ширины видимой области окна */
-    position: relative; /* Для корректной работы left/right */
-    left: 50%;
-    transform: translateX(-50%);
+    position: relative; /* Для позиционирования псевдоэлемента */
+    width: 100%; 
     display: flex;
     flex-direction: column;
     align-items: center;
-    box-sizing: border-box; /* Чтобы padding не влиял на общую ширину */
-    padding-top: 60px; /* Добавляем отступ сверху, который был у .support-container */
-    padding-bottom: 60px; /* Добавляем отступ снизу, который был у .support-container */
+    box-sizing: border-box; 
+    padding-top: 0;    /* Убираем паддинг отсюда */
+    padding-bottom: 0; /* Убираем паддинг отсюда */
+    z-index: 0; /* Контекст для z-index псевдоэлемента */
+}
+
+.support-page::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100vw; /* Фон на всю ширину окна */
+    background-color: #fff;
+    z-index: -1; /* Фон под контентом .support-page */
 }
 
 .support-container {
     width: 100%;
     max-width: 1303px; /* Максимальная ширина контента */
-    /* padding: 60px 0;  Убрано, т.к. перенесли в .support-page */
+    padding-top: 60px;    /* Отступ для контента */
+    padding-bottom: 60px; /* Отступ для контента */
     display: flex;
     flex-direction: column;
     gap: 100px; /* Отступ между основными секциями */
-    /* background-color: transparent;  Убедимся, что контейнер прозрачный, если фон задан для .support-page */
+    position: relative; /* Чтобы быть над псевдоэлементом ::before родителя */
+    z-index: 1;       /* Чтобы быть над псевдоэлементом ::before родителя */
 }
 
 /* Секция "Чем мы можем вам помочь?" */
