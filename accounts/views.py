@@ -1414,20 +1414,18 @@ def delete_news(request, article_id):
     return JsonResponse({'success': True})
 
 # accounts/views.py
+@login_required
 def cosmochat(request):
-    # Проверяем авторизацию
     if not request.user.is_authenticated:
         if request.headers.get('x-requested-with') == 'XMLHttpRequest':
             return JsonResponse({'success': False, 'error': 'Требуется авторизация'}, status=401)
         messages.error(request, 'Пожалуйста, войдите в систему, чтобы получить доступ к чату.')
         return redirect('login')
 
-    # Получаем чаты пользователя
     chats = ChatConversations.objects.filter(
         chatparticipants__user=request.user
     ).order_by('-updated_at')
 
-    # Форма для поиска пользователей
     search_form = UserSearchForm(request.GET)
     users = Users.objects.all()
     if search_form.is_valid():
@@ -1435,17 +1433,15 @@ def cosmochat(request):
         roles = search_form.cleaned_data.get('roles', [])
         if query:
             users = users.filter(
-                models.Q(email__icontains=query) | 
-                models.Q(first_name__icontains=query) |
-                models.Q(last_name__icontains=query)
+                Q(email__icontains=query) | 
+                Q(first_name__icontains=query) |
+                Q(last_name__icontains=query)
             )
         if roles:
             users = users.filter(role__role_name__in=roles)
 
-    # Исключаем текущего пользователя из списка
     users = users.exclude(user_id=request.user.user_id)
 
-    # Если есть параметр chat_id, исключаем текущих участников чата
     chat_id = request.GET.get('chat_id')
     if chat_id:
         chat = ChatConversations.objects.filter(conversation_id=chat_id).first()
@@ -1456,10 +1452,16 @@ def cosmochat(request):
             if request.headers.get('x-requested-with') == 'XMLHttpRequest':
                 return JsonResponse({'success': False, 'error': 'Чат не найден'}, status=404)
 
-    # Создаём форму для отправки сообщений
+    # Логирование для отладки
+    for user in users[:5]:
+        logger.info(f"Cosmochat User ID: {user.user_id}, Profile Picture URL: {user.profile_picture_url}")
+    for chat in chats[:5]:
+        participants = chat.chatparticipants_set.exclude(user=request.user)
+        participant_ids = [p.user.user_id for p in participants if p.user]
+        logger.info(f"Chat ID: {chat.conversation_id}, Participants (excluding self): {participant_ids}")
+
     message_form = MessageForm()
 
-    # Если это AJAX-запрос, возвращаем JSON
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         users_data = [{
             'user_id': user.user_id,

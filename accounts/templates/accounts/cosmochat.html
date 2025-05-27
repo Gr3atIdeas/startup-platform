@@ -212,13 +212,14 @@
             </div>
             <div class="chat-items-list-new" id="chatListContainer">
                 {% for chat in chats %}
-                {% with participant=chat.chatparticipants_set.exclude(user=request.user).first.user %}
+                {% with participant=chat.chatparticipants_set.exclude(user=request.user).first %}
+                {% if participant %}
                 <div class="chat-item-new {% if forloop.first and not current_chat_id %}active{% elif chat.conversation_id == current_chat_id %}active{% endif %}" 
                      data-chat-id="{{ chat.conversation_id }}"
                      data-chat-name="{{ chat.name|escapejs }}"
                      data-chat-type="{{ chat.type|default:'personal' }}">
-                    <img src="{% if participant.profile_picture_url %}{% get_file_url_tag participant.profile_picture_url participant.user_id 'avatar' %}{% else %}{{ default_avatar_src }}{% endif %}" 
-                         alt="{{ participant.first_name|default:'Чат' }}" class="chat-avatar-img">
+                    <img src="{% if participant.user.profile_picture_url %}{% get_file_url_tag participant.user.profile_picture_url participant.user.user_id 'avatar' %}{% else %}{{ default_avatar_src }}{% endif %}" 
+                         alt="{{ participant.user.first_name|default:'Чат' }}" class="chat-avatar-img">
                     <div class="chat-item-info-new">
                         <h4>{{ chat.name|truncatechars:25 }}</h4>
                         {% with last_message=chat.get_last_message %}
@@ -247,6 +248,7 @@
                         {% endwith %}
                     </div>
                 </div>
+                {% endif %}
                 {% endwith %}
                 {% empty %}
                 <p style="text-align: center; padding: 20px; color: #797979;">У вас пока нет чатов. Найдите пользователя и начните диалог!</p>
