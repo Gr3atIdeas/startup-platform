@@ -1454,11 +1454,15 @@ def cosmochat(request):
 
     # Логирование для отладки
     for user in users[:5]:
-        logger.info(f"Cosmochat User ID: {user.user_id}, Profile Picture URL: {user.profile_picture_url}")
+        profile_url = user.get_profile_picture_url() if user.profile_picture_url else 'None'
+        logger.info(f"Cosmochat User ID: {user.user_id}, Profile Picture URL: {user.profile_picture_url}, Generated URL: {profile_url}")
     for chat in chats[:5]:
-        participants = chat.chatparticipants_set.exclude(user=request.user)
-        participant_ids = [p.user.user_id for p in participants if p.user]
-        logger.info(f"Chat ID: {chat.conversation_id}, Participants (excluding self): {participant_ids}")
+        participants = chat.chatparticipants_set.all()
+        participant_info = [
+            f"ID: {p.user.user_id}, Picture: {p.user.get_profile_picture_url() or 'None'}" 
+            for p in participants if p.user and p.user != request.user
+        ]
+        logger.info(f"Chat ID: {chat.conversation_id}, Participants (excluding self): {participant_info}")
 
     message_form = MessageForm()
 

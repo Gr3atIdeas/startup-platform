@@ -1,7 +1,6 @@
 {% extends 'accounts/base.html' %}
 {% load static %}
 {% load widget_tweaks %}
-{% load file_tags %}
 
 {% block title %}CosmoChat{% endblock %}
 
@@ -82,7 +81,7 @@
                 {% if forloop.counter <= 6 %}
                     {% with effective_rating=fake_rating %}
                     <div class="user-card-new {% if forloop.counter > 8 %}hidden-user{% endif %}" data-user-id="{{ user_profile.user_id }}" data-user-index="{{ forloop.counter0 }}" data-role="{{ user_profile.role.role_name }}">
-                        <img src="{% if user_profile.profile_picture_url %}{% get_file_url_tag user_profile.profile_picture_url user_profile.user_id 'avatar' %}{% else %}{{ default_avatar_src }}{% endif %}" 
+                        <img src="{% if user_profile.get_profile_picture_url %}{{ user_profile.get_profile_picture_url }}{% else %}{{ default_avatar_src }}{% endif %}" 
                              alt="{{ user_profile.first_name|default:'Пользователь' }}" class="avatar-img">
                         <div class="user-info-new">
                             <h3>{{ user_profile.first_name }} {% if user_profile.last_name %}{{ user_profile.last_name|slice:":1" }}.{% endif %}</h3>
@@ -119,7 +118,7 @@
                     {% endwith %}
                 {% else %}
                     <div class="user-card-new {% if forloop.counter > 8 %}hidden-user{% endif %}" data-user-id="{{ user_profile.user_id }}" data-user-index="{{ forloop.counter0 }}" data-role="{{ user_profile.role.role_name }}">
-                        <img src="{% if user_profile.profile_picture_url %}{% get_file_url_tag user_profile.profile_picture_url user_profile.user_id 'avatar' %}{% else %}{{ default_avatar_src }}{% endif %}" 
+                        <img src="{% if user_profile.get_profile_picture_url %}{{ user_profile.get_profile_picture_url }}{% else %}{{ default_avatar_src }}{% endif %}" 
                              alt="{{ user_profile.first_name|default:'Пользователь' }}" class="avatar-img">
                         <div class="user-info-new">
                             <h3>{{ user_profile.first_name }} {% if user_profile.last_name %}{{ user_profile.last_name|slice:":1" }}.{% endif %}</h3>
@@ -212,13 +211,13 @@
             </div>
             <div class="chat-items-list-new" id="chatListContainer">
                 {% for chat in chats %}
-                {% with participant=chat.chatparticipants_set.exclude(user=request.user).first %}
-                {% if participant %}
+                {% with participant=chat.chatparticipants_set.all|first %}
+                {% if participant and participant.user != request.user %}
                 <div class="chat-item-new {% if forloop.first and not current_chat_id %}active{% elif chat.conversation_id == current_chat_id %}active{% endif %}" 
                      data-chat-id="{{ chat.conversation_id }}"
                      data-chat-name="{{ chat.name|escapejs }}"
                      data-chat-type="{{ chat.type|default:'personal' }}">
-                    <img src="{% if participant.user.profile_picture_url %}{% get_file_url_tag participant.user.profile_picture_url participant.user.user_id 'avatar' %}{% else %}{{ default_avatar_src }}{% endif %}" 
+                    <img src="{% if participant.user.get_profile_picture_url %}{{ participant.user.get_profile_picture_url }}{% else %}{{ default_avatar_src }}{% endif %}" 
                          alt="{{ participant.user.first_name|default:'Чат' }}" class="chat-avatar-img">
                     <div class="chat-item-info-new">
                         <h4>{{ chat.name|truncatechars:25 }}</h4>
@@ -349,7 +348,7 @@
                     <div class="group-chat-modal-user" data-user-id="{{ user.user_id }}">
                         <div class="group-chat-modal-user-info">
                             <img class="group-chat-modal-user-avatar" 
-                                 src="{% if user.profile_picture_url %}{% get_file_url_tag user.profile_picture_url user.user_id 'avatar' %}{% else %}{{ default_avatar_src }}{% endif %}" 
+                                 src="{% if user.get_profile_picture_url %}{{ user.get_profile_picture_url }}{% else %}{{ default_avatar_src }}{% endif %}" 
                                  alt="{{ user.first_name|default:'Пользователь' }}">
                             <div class="group-chat-modal-user-name">
                                 <span class="group-chat-modal-user-firstname">{{ user.first_name|default:"Имя" }}</span>
