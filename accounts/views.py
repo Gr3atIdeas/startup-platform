@@ -487,11 +487,17 @@ def profile(request, user_id=None):
     # Обработка загрузки аватара (доступно только для своего профиля)
     if request.method == 'POST' and 'avatar' in request.FILES and profile_user == request.user:
         avatar = request.FILES['avatar']
-        filename = f'avatars/user_{request.user.user_id}_avatar{os.path.splitext(avatar.name)[1]}'
-        file_path = default_storage.save(filename, avatar)
-        request.user.profile_picture_url = default_storage.url(file_path)
-        request.user.save()
-        messages.success(request, 'Аватарка успешно загружена!')
+        avatar_id = str(uuid.uuid4())
+        file_path = f"users/{request.user.user_id}/avatar/{avatar_id}_{avatar.name}"
+        try:
+            default_storage.save(file_path, avatar)
+            request.user.profile_picture_url = file_path
+            request.user.save()
+            logger.info(f"Аватар сохранён для user_id {request.user.user_id} по пути: {file_path}")
+            messages.success(request, 'Аватарка успешно загружена!')
+        except Exception as e:
+            logger.error(f"Ошибка при сохранении аватара для user_id {request.user.user_id}: {str(e)}")
+            messages.error(request, 'Ошибка при загрузке аватара. Пожалуйста, попробуйте снова.')
 
     return render(request, 'accounts/profile.html', {'user': profile_user, 'is_own_profile': profile_user == request.user})
 

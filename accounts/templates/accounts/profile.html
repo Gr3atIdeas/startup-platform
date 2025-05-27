@@ -19,7 +19,7 @@
         <div class="profile-sidebar">
             <div class="profile-sidebar-user-info-block">
                 <div class="profile-sidebar-avatar-wrapper" id="avatarClickableArea" style="cursor: pointer;" title="Изменить аватар">
-                    <img class="profile-sidebar-avatar-img" src="{% if user.profile_picture_url %}{{ user.profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}" alt="Аватар пользователя" />
+                    <img class="profile-sidebar-avatar-img" src="{% if user.profile_picture_url %}{% get_file_url_tag user.profile_picture_url|extract_uuid user.user_id 'avatar' %}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}" alt="Аватар пользователя" />
                 </div>
                 <div class="profile-sidebar-text-details">
                     <div class="profile-sidebar-name-role">
@@ -50,7 +50,7 @@
                         <img src="{% static 'accounts/images/profile/Globe_Line.svg' %}" alt="Website" class="profile-sidebar-website-icon-img">
                         <a href="{{ user.website_url }}" target="_blank" class="profile-sidebar-website-link">{{ user.website_url }}</a>
                     </div>
-    {% endif %}
+                    {% endif %}
                 </div>
             </div>
             <div class="profile-sidebar-social-icons-round">
@@ -62,18 +62,18 @@
                 </div>
             </div>
             
-        {% if is_own_profile %}
-            <div class="profile-avatar-upload-section" style="display: none;"> {# Скрываем этот блок, но оставляем форму для JS #}
+            {% if is_own_profile %}
+            <div class="profile-avatar-upload-section" style="display: none;">
                 <h4>Загрузить аватарку</h4>
                 <form method="post" enctype="multipart/form-data" id="avatarUploadForm" class="avatar-upload-form">
-                {% csrf_token %}
+                    {% csrf_token %}
                     <input type="file" name="avatar" accept="image/*" required id="id_avatar_input" class="file-input-hidden">
                     <button type="button" onclick="document.getElementById('id_avatar_input').click();" class="btn btn-secondary choose-file-btn">Выберите файл</button>
                     <div id="fileNameDisplay" class="file-name-display">Файл не выбран</div>
                     <button type="submit" class="btn btn-primary upload-btn">Загрузить</button>
-            </form>
+                </form>
             </div>
-        {% endif %}
+            {% endif %}
 
             <a href="#" class="profile-sidebar-my-galaxy-btn">
                 <div class="profile-sidebar-my-galaxy-btn-text">Моя Галактика</div>
@@ -88,214 +88,213 @@
         </div>
 
         <div class="profile-main-content">
-        {% if is_own_profile %}
+            {% if is_own_profile %}
             <div class="profile-main-edit-btn-container">
                 <a href="#" class="profile-main-edit-btn" id="editProfileBtn">
                     <div class="profile-main-edit-btn-text">Редактировать профиль</div>
                     <img src="{% static 'accounts/images/profile/Edit_Line.svg' %}" alt="Редактировать" class="profile-main-edit-btn-icon"/>
                 </a>
             </div>
-        {% endif %}
-        <div id="profileViewBlock">
-            <div class="profile-main-startups-section">
-                <div class="profile-main-tabs">
-                    <div class="profile-main-tab-item active-tab" data-tab="startups">Стартапы</div>
-                    <div class="profile-main-tab-item" data-tab="news">Новости</div>
-                </div>
-                
-                <div class="profile-main-content-tab active-content" id="startupsContent">
-                    <!-- Макет стартапа 1 -->
-                    <div class="profile-main-startup-card-item">
-                        <div class="profile-main-startup-card-content">
-                            <div class="profile-main-startup-info">
-                                <div class="profile-main-startup-name">Ромашка (Макет)</div>
-                                <div class="profile-main-startup-rating-reviews">
-                                    <span class="profile-main-startup-rating">Рейтинг 4.2/5 (534)</span>
-                                    <div class="profile-main-startup-reviews">
-                                        <img src="{% static 'accounts/images/profile/chat_icon.svg' %}" alt="Reviews" class="profile-main-startup-review-icon-img">
-                                        <span>17</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="profile-main-startup-category-progress">
-                                <div class="profile-main-startup-category-tag">Медицина</div>
-                                <div class="progress-bar-and-text-container">
-                                    <div class="profile-main-startup-progress-bar-bg">
-                                         <div class="profile-main-startup-progress-bar-fg" style="width: 65%;"></div>
-                                    </div>
-                                    <span class="profile-main-startup-progress-text">65%</span>
-                                </div>
-                            </div>
-                            <a href="#" class="btn btn-primary profile-main-startup-details-btn">Подробнее</a>
-                        </div>
-                        <img class="profile-main-startup-image" src="{% static 'accounts/images/profile/Rectangle_4196.png' %}" alt="Изображение стартапа" />
+            {% endif %}
+            <div id="profileViewBlock">
+                <div class="profile-main-startups-section">
+                    <div class="profile-main-tabs">
+                        <div class="profile-main-tab-item active-tab" data-tab="startups">Стартапы</div>
+                        <div class="profile-main-tab-item" data-tab="news">Новости</div>
                     </div>
-                    <div class="profile-main-startup-list-divider"></div>
-                    <!-- /Макет стартапа 1 -->
-
-                    <!-- Макет стартапа 2 -->
-                    <div class="profile-main-startup-card-item">
-                        <div class="profile-main-startup-card-content">
-                            <div class="profile-main-startup-info">
-                                <div class="profile-main-startup-name">Космический Лифт (Макет)</div>
-                                <div class="profile-main-startup-rating-reviews">
-                                    <span class="profile-main-startup-rating">Рейтинг 4.8/5 (1203)</span>
-                                    <div class="profile-main-startup-reviews">
-                                        <img src="{% static 'accounts/images/profile/chat_icon.svg' %}" alt="Reviews" class="profile-main-startup-review-icon-img">
-                                        <span>42</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="profile-main-startup-category-progress">
-                                <div class="profile-main-startup-category-tag">Технологии</div>
-                                <div class="progress-bar-and-text-container">
-                                    <div class="profile-main-startup-progress-bar-bg">
-                                         <div class="profile-main-startup-progress-bar-fg" style="width: 85%;"></div>
-                                    </div>
-                                    <span class="profile-main-startup-progress-text">85%</span>
-                                </div>
-                            </div>
-                            <a href="#" class="btn btn-primary profile-main-startup-details-btn">Подробнее</a>
-                        </div>
-                        <img class="profile-main-startup-image" src="{% static 'accounts/images/profile/Rectangle_4196.png' %}" alt="Изображение стартапа" />
-                    </div>
-                    <div class="profile-main-startup-list-divider"></div>
-                    <!-- /Макет стартапа 2 -->
                     
-                    <!-- Макет стартапа 3 -->
-                    <div class="profile-main-startup-card-item">
-                        <div class="profile-main-startup-card-content">
-                            <div class="profile-main-startup-info">
-                                <div class="profile-main-startup-name">Вечная Батарейка (Макет)</div>
-                                <div class="profile-main-startup-rating-reviews">
-                                    <span class="profile-main-startup-rating">Рейтинг 3.9/5 (250)</span>
-                                    <div class="profile-main-startup-reviews">
-                                        <img src="{% static 'accounts/images/profile/chat_icon.svg' %}" alt="Reviews" class="profile-main-startup-review-icon-img">
-                                        <span>9</span>
+                    <div class="profile-main-content-tab active-content" id="startupsContent">
+                        <!-- Макет стартапа 1 -->
+                        <div class="profile-main-startup-card-item">
+                            <div class="profile-main-startup-card-content">
+                                <div class="profile-main-startup-info">
+                                    <div class="profile-main-startup-name">Ромашка (Макет)</div>
+                                    <div class="profile-main-startup-rating-reviews">
+                                        <span class="profile-main-startup-rating">Рейтинг 4.2/5 (534)</span>
+                                        <div class="profile-main-startup-reviews">
+                                            <img src="{% static 'accounts/images/profile/chat_icon.svg' %}" alt="Reviews" class="profile-main-startup-review-icon-img">
+                                            <span>17</span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="profile-main-startup-category-progress">
-                                <div class="profile-main-startup-category-tag">Энергетика</div>
-                                <div class="progress-bar-and-text-container">
-                                    <div class="profile-main-startup-progress-bar-bg">
-                                         <div class="profile-main-startup-progress-bar-fg" style="width: 40%;"></div>
+                                <div class="profile-main-startup-category-progress">
+                                    <div class="profile-main-startup-category-tag">Медицина</div>
+                                    <div class="progress-bar-and-text-container">
+                                        <div class="profile-main-startup-progress-bar-bg">
+                                             <div class="profile-main-startup-progress-bar-fg" style="width: 65%;"></div>
+                                        </div>
+                                        <span class="profile-main-startup-progress-text">65%</span>
                                     </div>
-                                    <span class="profile-main-startup-progress-text">40%</span>
                                 </div>
+                                <a href="#" class="btn btn-primary profile-main-startup-details-btn">Подробнее</a>
                             </div>
-                            <a href="#" class="btn btn-primary profile-main-startup-details-btn">Подробнее</a>
+                            <img class="profile-main-startup-image" src="{% static 'accounts/images/profile/Rectangle_4196.png' %}" alt="Изображение стартапа" />
                         </div>
-                        <img class="profile-main-startup-image" src="{% static 'accounts/images/profile/Rectangle_4196.png' %}" alt="Изображение стартапа" />
-                    </div>
-                    <!-- /Макет стартапа 3 -->
-                </div>
+                        <div class="profile-main-startup-list-divider"></div>
+                        <!-- /Макет стартапа 1 -->
 
-                <div class="profile-main-content-tab" id="newsContent">
-                    {# Обертка для применения стилей отступов, тени из Figma, теперь стили в CSS через #newsContent #}
-                    <div class="profile-news-items-container">
-                        <div class="profile-news-card-item">
-                            <img src="{% static 'accounts/images/startups/inside_cards_background.webp' %}" alt="Новость"/>
-                            <div class="profile-news-card-title">Лучшие ракеты или турбо режим на лайте (Макет)</div>
-                            <div class="profile-news-card-description">Наш стартап разрабатывает инновационную платформу для... (Макет)</div>
+                        <!-- Макет стартапа 2 -->
+                        <div class="profile-main-startup-card-item">
+                            <div class="profile-main-startup-card-content">
+                                <div class="profile-main-startup-info">
+                                    <div class="profile-main-startup-name">Космический Лифт (Макет)</div>
+                                    <div class="profile-main-startup-rating-reviews">
+                                        <span class="profile-main-startup-rating">Рейтинг 4.8/5 (1203)</span>
+                                        <div class="profile-main-startup-reviews">
+                                            <img src="{% static 'accounts/images/profile/chat_icon.svg' %}" alt="Reviews" class="profile-main-startup-review-icon-img">
+                                            <span>42</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="profile-main-startup-category-progress">
+                                    <div class="profile-main-startup-category-tag">Технологии</div>
+                                    <div class="progress-bar-and-text-container">
+                                        <div class="profile-main-startup-progress-bar-bg">
+                                             <div class="profile-main-startup-progress-bar-fg" style="width: 85%;"></div>
+                                        </div>
+                                        <span class="profile-main-startup-progress-text">85%</span>
+                                    </div>
+                                </div>
+                                <a href="#" class="btn btn-primary profile-main-startup-details-btn">Подробнее</a>
+                            </div>
+                            <img class="profile-main-startup-image" src="{% static 'accounts/images/profile/Rectangle_4196.png' %}" alt="Изображение стартапа" />
                         </div>
-                        <div class="profile-news-card-item">
-                            <img src="{% static 'accounts/images/startups/inside_cards_background.webp' %}" alt="Новость"/>
-                            <div class="profile-news-card-title">Лучшие ракеты или турбо режим на лайте 2 (Макет)</div>
-                            <div class="profile-news-card-description">Наш стартап разрабатывает инновационную платформу для... (Макет)</div>
+                        <div class="profile-main-startup-list-divider"></div>
+                        <!-- /Макет стартапа 2 -->
+                        
+                        <!-- Макет стартапа 3 -->
+                        <div class="profile-main-startup-card-item">
+                            <div class="profile-main-startup-card-content">
+                                <div class="profile-main-startup-info">
+                                    <div class="profile-main-startup-name">Вечная Батарейка (Макет)</div>
+                                    <div class="profile-main-startup-rating-reviews">
+                                        <span class="profile-main-startup-rating">Рейтинг 3.9/5 (250)</span>
+                                        <div class="profile-main-startup-reviews">
+                                            <img src="{% static 'accounts/images/profile/chat_icon.svg' %}" alt="Reviews" class="profile-main-startup-review-icon-img">
+                                            <span>9</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="profile-main-startup-category-progress">
+                                    <div class="profile-main-startup-category-tag">Энергетика</div>
+                                    <div class="progress-bar-and-text-container">
+                                        <div class="profile-main-startup-progress-bar-bg">
+                                             <div class="profile-main-startup-progress-bar-fg" style="width: 40%;"></div>
+                                        </div>
+                                        <span class="profile-main-startup-progress-text">40%</span>
+                                    </div>
+                                </div>
+                                <a href="#" class="btn btn-primary profile-main-startup-details-btn">Подробнее</a>
+                            </div>
+                            <img class="profile-main-startup-image" src="{% static 'accounts/images/profile/Rectangle_4196.png' %}" alt="Изображение стартапа" />
                         </div>
-                         <div class="profile-news-card-item">
-                            <img src="{% static 'accounts/images/startups/inside_cards_background.webp' %}" alt="Новость"/>
-                            <div class="profile-news-card-title">Лучшие ракеты или турбо режим на лайте 3 (Макет)</div>
-                            <div class="profile-news-card-description">Наш стартап разрабатывает инновационную платформу для... (Макет)</div>
+                        <!-- /Макет стартапа 3 -->
+                    </div>
+
+                    <div class="profile-main-content-tab" id="newsContent">
+                        <div class="profile-news-items-container">
+                            <div class="profile-news-card-item">
+                                <img src="{% static 'accounts/images/startups/inside_cards_background.jpg' %}" alt="Новость"/>
+                                <div class="profile-news-card-title">Лучшие ракеты или турбо режим на лайте (Макет)</div>
+                                <div class="profile-news-card-description">Наш стартап разрабатывает инновационную платформу для... (Макет)</div>
+                            </div>
+                            <div class="profile-news-card-item">
+                                <img src="{% static 'accounts/images/startups/inside_cards_background.webp' %}" alt="Новость"/>
+                                <div class="profile-news-card-title">Лучшие ракеты или турбо режим на лайте 2 (Макет)</div>
+                                <div class="profile-news-card-description">Наш стартап разрабатывает инновационную платформу для... (Макет)</div>
+                            </div>
+                             <div class="profile-news-card-item">
+                                <img src="{% static 'accounts/images/startups/inside_cards_background.webp' %}" alt="Новость"/>
+                                <div class="profile-news-card-title">Лучшие ракеты или турбо режим на лайте 3 (Макет)</div>
+                                <div class="profile-news-card-description">Наш стартап разрабатывает инновационную платформу для... (Макет)</div>
+                            </div>
+                            <div class="profile-news-card-item">
+                                <img src="{% static 'accounts/images/startups/inside_cards_background.webp' %}" alt="Новость"/>
+                                <div class="profile-news-card-title">Новость 4: Экологические инициативы (Макет)</div>
+                                <div class="profile-news-card-description">Обсуждаем последние тренды в сфере зеленых технологий и их влияние... (Макет)</div>
+                            </div>
+                            <div class="profile-news-card-item">
+                                <img src="{% static 'accounts/images/startups/inside_cards_background.webp' %}" alt="Новость"/>
+                                <div class="profile-news-card-title">Новость 5: Прорыв в AI (Макет)</div>
+                                <div class="profile-news-card-description">Новые алгоритмы машинного обучения, которые изменят индустрию... (Макет)</div>
+                            </div>
+                            <div class="profile-news-card-item">
+                                <img src="{% static 'accounts/images/startups/inside_cards_background.webp' %}" alt="Новость"/>
+                                <div class="profile-news-card-title">Новость 6: Финансирование стартапов (Макет)</div>
+                                <div class="profile-news-card-description">Как привлечь инвестиции в свой проект в текущих условиях рынка... (Макет)</div>
+                            </div>
+                            <div class="profile-news-card-item">
+                                <img src="{% static 'accounts/images/startups/inside_cards_background.webp' %}" alt="Новость"/>
+                                <div class="profile-news-card-title">Новость 7: Будущее космотуризма (Макет)</div>
+                                <div class="profile-news-card-description">Анализ перспектив и вызовов для частных космических компаний... (Макет)</div>
+                            </div>
                         </div>
-                        <div class="profile-news-card-item">
-                            <img src="{% static 'accounts/images/startups/inside_cards_background.webp' %}" alt="Новость"/>
-                            <div class="profile-news-card-title">Новость 4: Экологические инициативы (Макет)</div>
-                            <div class="profile-news-card-description">Обсуждаем последние тренды в сфере зеленых технологий и их влияние... (Макет)</div>
-                        </div>
-                        <div class="profile-news-card-item">
-                            <img src="{% static 'accounts/images/startups/inside_cards_background.webp' %}" alt="Новость"/>
-                            <div class="profile-news-card-title">Новость 5: Прорыв в AI (Макет)</div>
-                            <div class="profile-news-card-description">Новые алгоритмы машинного обучения, которые изменят индустрию... (Макет)</div>
-                        </div>
-                        <div class="profile-news-card-item">
-                            <img src="{% static 'accounts/images/startups/inside_cards_background.webp' %}" alt="Новость"/>
-                            <div class="profile-news-card-title">Новость 6: Финансирование стартапов (Макет)</div>
-                            <div class="profile-news-card-description">Как привлечь инвестиции в свой проект в текущих условиях рынка... (Макет)</div>
-                        </div>
-                        <div class="profile-news-card-item">
-                            <img src="{% static 'accounts/images/startups/inside_cards_background.webp' %}" alt="Новость"/>
-                            <div class="profile-news-card-title">Новость 7: Будущее космотуризма (Макет)</div>
-                            <div class="profile-news-card-description">Анализ перспектив и вызовов для частных космических компаний... (Макет)</div>
-                        </div>
-                        <!-- Добавьте больше карточек новостей здесь, если нужно -->
                     </div>
                 </div>
             </div>
-        </div>
-        <div id="profileEditBlock" class="profile-edit-animated" style="display:none; opacity:0; pointer-events:none;">
-            <div class="profile-edit-wrapper">
-                <div class="profile-edit-header-block">
-                    <button class="profile-edit-back-btn" id="profileEditBackBtn" type="button">
-                        <svg width="24" height="24" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="profile-edit-back-icon">
-                          <path d="M12.6668 7.99992H3.3335M3.3335 7.99992L8.00016 12.6666M3.3335 7.99992L8.00016 3.33325" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                        <span>Назад</span>
-                    </button>
-                    <div class="profile-edit-title">Изменить профиль</div>
-                    <div class="profile-edit-desc">Вы можете добавить URL сайта и добавить ваши соц сети, чтобы другие пользователи смогли больше узнать о вас</div>
-                </div>
-                <div class="profile-edit-main-row">
-                    <div class="profile-edit-avatar-col">
-                        <div class="profile-edit-avatar-wrapper">
-                            <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Аватар" class="profile-edit-avatar-img"/>
-                        </div>
-                        <div class="profile-edit-avatar-info">
-                            <div class="profile-edit-avatar-label">Profile photo</div>
-                            <div class="profile-edit-avatar-hint">Рекомендация <br>по размеру изображения 400х400 🙌</div>
-                            <div class="profile-edit-avatar-btn">Обновить</div>
-                        </div>
+            <div id="profileEditBlock" class="profile-edit-animated" style="display:none; opacity:0; pointer-events:none;">
+                <div class="profile-edit-wrapper">
+                    <div class="profile-edit-header-block">
+                        <button class="profile-edit-back-btn" id="profileEditBackBtn" type="button">
+                            <svg width="24" height="24" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="profile-edit-back-icon">
+                              <path d="M12.6668 7.99992H3.3335M3.3335 7.99992L8.00016 12.6666M3.3335 7.99992L8.00016 3.33325" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <span>Назад</span>
+                        </button>
+                        <div class="profile-edit-title">Изменить профиль</div>
+                        <div class="profile-edit-desc">Вы можете добавить URL сайта и добавить ваши соц сети, чтобы другие пользователи смогли больше узнать о вас</div>
                     </div>
-                    <div class="profile-edit-fields-col">
-                        <div class="profile-edit-section">
-                            <div class="profile-edit-section-title">Информация профиля</div>
-                            <div class="profile-edit-field">
-                                <div class="profile-edit-field-label">Имя пользователя</div>
-                                <div class="profile-edit-input profile-edit-input-text" contenteditable="true" data-placeholder="Введите имя"></div>
+                    <div class="profile-edit-main-row">
+                        <div class="profile-edit-avatar-col">
+                            <div class="profile-edit-avatar-wrapper">
+                                <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Аватар" class="profile-edit-avatar-img"/>
                             </div>
-                            <div class="profile-edit-field">
-                                <div class="profile-edit-field-label">Портфолио или сайт</div>
-                                <div class="profile-edit-input profile-edit-input-text" contenteditable="true" data-placeholder="URL"></div>
-                            </div>
-                            <div class="profile-edit-field">
-                                <div class="profile-edit-field-label">Обо мне</div>
-                                <div class="profile-edit-input profile-edit-input-textarea" contenteditable="true" data-placeholder="Расскажите о вас в нескольких предложениях"></div>
-                                <div class="profile-edit-char-counter">50/50</div>
+                            <div class="profile-edit-avatar-info">
+                                <div class="profile-edit-avatar-label">Profile photo</div>
+                                <div class="profile-edit-avatar-hint">Рекомендация <br>по размеру изображения 400х400 🙌</div>
+                                <div class="profile-edit-avatar-btn">Обновить</div>
                             </div>
                         </div>
-                        <div class="profile-edit-section" style="margin-top:40px;">
-                            <div class="profile-edit-section-title">Социальные сети</div>
-                            <div class="profile-edit-field">
-                                <div class="profile-edit-field-label profile-edit-field-label-sm">telegram</div>
-                                <div class="profile-edit-input-social">
-                                    <span class="profile-edit-input-at">@</span>
-                                    <span class="profile-edit-input-social-placeholder">telegram username</span>
-                                    <div class="profile-edit-social-add-btn">Добавить</div>
+                        <div class="profile-edit-fields-col">
+                            <div class="profile-edit-section">
+                                <div class="profile-edit-section-title">Информация профиля</div>
+                                <div class="profile-edit-field">
+                                    <div class="profile-edit-field-label">Имя пользователя</div>
+                                    <div class="profile-edit-input profile-edit-input-text" contenteditable="true" data-placeholder="Введите имя"></div>
+                                </div>
+                                <div class="profile-edit-field">
+                                    <div class="profile-edit-field-label">Портфолио или сайт</div>
+                                    <div class="profile-edit-input profile-edit-input-text" contenteditable="true" data-placeholder="URL"></div>
+                                </div>
+                                <div class="profile-edit-field">
+                                    <div class="profile-edit-field-label">Обо мне</div>
+                                    <div class="profile-edit-input profile-edit-input-textarea" contenteditable="true" data-placeholder="Расскажите о вас в нескольких предложениях"></div>
+                                    <div class="profile-edit-char-counter">50/50</div>
                                 </div>
                             </div>
-                            <div class="profile-edit-add-social-btn">
-                                <img src="{% static 'accounts/images/profile/add-circle-outline.svg' %}" alt="Добавить" class="profile-edit-add-social-icon"/>
-                                <span>Добавить еще аккаунт</span>
+                            <div class="profile-edit-section" style="margin-top:40px;">
+                                <div class="profile-edit-section-title">Социальные сети</div>
+                                <div class="profile-edit-field">
+                                    <div class="profile-edit-field-label profile-edit-field-label-sm">telegram</div>
+                                    <div class="profile-edit-input-social">
+                                        <span class="profile-edit-input-at">@</span>
+                                        <span class="profile-edit-input-social-placeholder">telegram username</span>
+                                        <div class="profile-edit-social-add-btn">Добавить</div>
+                                    </div>
+                                </div>
+                                <div class="profile-edit-add-social-btn">
+                                    <img src="{% static 'accounts/images/profile/add-circle-outline.svg' %}" alt="Добавить" class="profile-edit-add-social-icon"/>
+                                    <span>Добавить еще аккаунт</span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="profile-edit-hint">Чтобы обновить настройки, вам следует подписать сообщение через свой кошелек. Нажмите "Обновить профиль", затем подпишите сообщение</div>
-                        <div class="profile-edit-divider"></div>
-                        <div class="profile-edit-actions">
-                            <div class="profile-edit-save-btn">Сохранить изменений</div>
-                            <div class="profile-edit-clear-btn">
-                                <img src="{% static 'accounts/images/profile/close_circle.svg' %}" alt="Очистить" class="profile-edit-clear-icon"/>
-                                <span>Очистить</span>
+                            <div class="profile-edit-hint">Чтобы обновить настройки, вам следует подписать сообщение через свой кошелек. Нажмите "Обновить профиль", затем подпишите сообщение</div>
+                            <div class="profile-edit-divider"></div>
+                            <div class="profile-edit-actions">
+                                <div class="profile-edit-save-btn">Сохранить изменений</div>
+                                <div class="profile-edit-clear-btn">
+                                    <img src="{% static 'accounts/images/profile/close_circle.svg' %}" alt="Очистить" class="profile-edit-clear-icon"/>
+                                    <span>Очистить</span>
+                                </div>
                             </div>
                         </div>
                     </div>
