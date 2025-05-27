@@ -570,7 +570,7 @@ def profile(request, user_id=None):
                     messages.success(request, 'Профиль успешно обновлён!')
                 except Exception as e:
                     logger.error(f"Ошибка при обновлении профиля для user_id {request.user.user_id}: {str(e)}")
-                    messages.error(request, 'Ошибка при сохранении профиля. Пожалуйста, попробуйте снова.')
+                    messages.error(request, 'Ошибка при сохранении профиля.')
             else:
                 messages.error(request, 'Форма содержит ошибки.')
                 return render(request, 'accounts/profile.html', {'user': profile_user, 'is_own_profile': True, 'form': form})

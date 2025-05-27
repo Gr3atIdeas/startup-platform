@@ -500,6 +500,9 @@ class Users(AbstractBaseUser):
     last_login = models.DateTimeField(blank=True, null=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
+    show_phone = models.BooleanField(default=False)
+    website_url = models.CharField(max_length=255, blank=True, null=True)  # Добавляем поле
+    social_links = models.JSONField(blank=True, null=True)
 
     objects = UserManager()
 
