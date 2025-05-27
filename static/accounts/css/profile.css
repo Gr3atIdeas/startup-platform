@@ -1416,3 +1416,20 @@ body {
     order: -1;
     background-color: #011B35; /* Фон на случай, если изображение не загрузилось */
 }
+
+/* Стили для кликабельной карточки новости */
+.profile-news-card-link {
+    text-decoration: none; /* Убираем подчёркивание */
+    display: block; /* Чтобы ссылка занимала всю карточку */
+    width: 100%;
+    height: 100%;
+}
+
+/* Сохраняем ховер-эффект для карточки внутри ссылки */
+.profile-news-card-link .profile-news-card-item {
+    transition: transform 0.2s ease-in-out;
+}
+
+.profile-news-card-link:hover .profile-news-card-item {
+    transform: translateY(-5px); /* Сохраняем существующий ховер-эффект */
+}

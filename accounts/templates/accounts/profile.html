@@ -1,6 +1,6 @@
 {% extends 'accounts/base.html' %}
 {% load static %}
-{% load file_tags %} {# Добавляем загрузку тега file_tags #}
+{% load file_tags %}
 
 {% block title %}Профиль пользователя{% endblock %}
 
@@ -173,11 +173,13 @@
                         <div class="profile-news-items-container">
                             {% if news_page %}
                                 {% for news in news_page %}
-                                    <div class="profile-news-card-item">
-                                        <img src="{% if news.get_image_url %}{{ news.get_image_url }}{% else %}{% static 'accounts/images/startups/inside_cards_background.webp' %}{% endif %}" alt="Новость"/>
-                                        <div class="profile-news-card-title">{{ news.title }}</div>
-                                        <div class="profile-news-card-description">{{ news.content|truncatechars:100 }}</div>
-                                    </div>
+                                    <a href="{% url 'news_detail' news.article_id %}" class="profile-news-card-link">
+                                        <div class="profile-news-card-item">
+                                            <img src="{% if news.get_image_url %}{{ news.get_image_url }}{% else %}{% static 'accounts/images/startups/inside_cards_background.webp' %}{% endif %}" alt="Новость"/>
+                                            <div class="profile-news-card-title">{{ news.title }}</div>
+                                            <div class="profile-news-card-description">{{ news.content|truncatechars:100 }}</div>
+                                        </div>
+                                    </a>
                                 {% endfor %}
                                 <!-- Пагинация для новостей -->
                                 {% if news_page.paginator.num_pages > 1 %}
