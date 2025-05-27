@@ -481,19 +481,45 @@ def profile(request, user_id=None):
             'role': user.role.role_name if user.role else 'Неизвестно',
             'rating': float(user.rating) if user.rating else None,
             'bio': user.bio,
-            'profile_picture_url': user.profile_picture_url
+            'profile_picture_url': user.get_profile_picture_url() if user.profile_picture_url else None
         })
 
     # Обработка загрузки аватара (доступно только для своего профиля)
     if request.method == 'POST' and 'avatar' in request.FILES and profile_user == request.user:
         avatar = request.FILES['avatar']
+        # Валидация формата
+        allowed_mimes = ['image/jpeg', 'image/png']
+        if avatar.content_type not in allowed_mimes:
+            messages.error(request, 'Допустимы только файлы PNG или JPEG.')
+            return render(request, 'accounts/profile.html', {'user': profile_user, 'is_own_profile': True})
+
+        # Валидация размера (5 МБ = 5 * 1024 * 1024 байт)
+        max_size = 5 * 1024 * 1024
+        if avatar.size > max_size:
+            messages.error(request, 'Размер файла не должен превышать 5 МБ.')
+            return render(request, 'accounts/profile.html', {'user': profile_user, 'is_own_profile': True})
+
         avatar_id = str(uuid.uuid4())
         file_path = f"users/{request.user.user_id}/avatar/{avatar_id}_{avatar.name}"
         try:
+            # Сохранение файла
             default_storage.save(file_path, avatar)
-            request.user.profile_picture_url = file_path
+            # Сохранение UUID в profile_picture_url
+            request.user.profile_picture_url = avatar_id
             request.user.save()
-            logger.info(f"Аватар сохранён для user_id {request.user.user_id} по пути: {file_path}")
+
+            # Сохранение метаданных в file_storage
+            entity_type, _ = EntityTypes.objects.get_or_create(type_name='user')
+            file_type, _ = FileTypes.objects.get_or_create(type_name='avatar')
+            FileStorage.objects.create(
+                entity_type=entity_type,
+                entity_id=request.user.user_id,
+                file_url=avatar_id,
+                file_type=file_type,
+                uploaded_at=timezone.now()
+            )
+
+            logger.info(f"Аватар сохранён для user_id {request.user.user_id} по пути: {file_path}, UUID: {avatar_id}")
             messages.success(request, 'Аватарка успешно загружена!')
         except Exception as e:
             logger.error(f"Ошибка при сохранении аватара для user_id {request.user.user_id}: {str(e)}")

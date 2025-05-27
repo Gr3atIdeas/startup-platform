@@ -5,6 +5,7 @@ from django.contrib.auth.hashers import make_password, check_password
 from django.utils import timezone
 from django.utils.text import slugify
 from django.db.models import JSONField  # Новый импорт для JSONField
+from accounts.utils import is_uuid, get_file_url
 import os
 import logging
 
@@ -533,6 +534,12 @@ class Users(AbstractBaseUser):
 
     def has_module_perms(self, app_label):
         return self.is_staff
+
+    def get_profile_picture_url(self):
+        """Генерирует URL аватара из profile_picture_url."""
+        if self.profile_picture_url and is_uuid(self.profile_picture_url):
+            return get_file_url(self.profile_picture_url, self.user_id, 'avatar')
+        return None
     
 class NewsArticles(models.Model):
     article_id = models.AutoField(primary_key=True)

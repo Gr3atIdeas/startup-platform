@@ -19,7 +19,7 @@
         <div class="profile-sidebar">
             <div class="profile-sidebar-user-info-block">
                 <div class="profile-sidebar-avatar-wrapper" id="avatarClickableArea" style="cursor: pointer;" title="Изменить аватар">
-                    <img class="profile-sidebar-avatar-img" src="{% if user.profile_picture_url %}{% get_file_url_tag user.profile_picture_url|extract_uuid user.user_id 'avatar' %}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}" alt="Аватар пользователя" />
+                    <img class="profile-sidebar-avatar-img" src="{% if user.get_profile_picture_url %}{{ user.get_profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}" alt="Аватар пользователя" />
                 </div>
                 <div class="profile-sidebar-text-details">
                     <div class="profile-sidebar-name-role">
@@ -67,7 +67,7 @@
                 <h4>Загрузить аватарку</h4>
                 <form method="post" enctype="multipart/form-data" id="avatarUploadForm" class="avatar-upload-form">
                     {% csrf_token %}
-                    <input type="file" name="avatar" accept="image/*" required id="id_avatar_input" class="file-input-hidden">
+                    <input type="file" name="avatar" accept="image/png,image/jpeg" required id="id_avatar_input" class="file-input-hidden">
                     <button type="button" onclick="document.getElementById('id_avatar_input').click();" class="btn btn-secondary choose-file-btn">Выберите файл</button>
                     <div id="fileNameDisplay" class="file-name-display">Файл не выбран</div>
                     <button type="submit" class="btn btn-primary upload-btn">Загрузить</button>
@@ -194,7 +194,7 @@
                     <div class="profile-main-content-tab" id="newsContent">
                         <div class="profile-news-items-container">
                             <div class="profile-news-card-item">
-                                <img src="{% static 'accounts/images/startups/inside_cards_background.jpg' %}" alt="Новость"/>
+                                <img src="{% static 'accounts/images/startups/inside_cards_background.webp' %}" alt="Новость"/>
                                 <div class="profile-news-card-title">Лучшие ракеты или турбо режим на лайте (Макет)</div>
                                 <div class="profile-news-card-description">Наш стартап разрабатывает инновационную платформу для... (Макет)</div>
                             </div>
