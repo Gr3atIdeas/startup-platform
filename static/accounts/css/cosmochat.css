@@ -1520,3 +1520,9 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
     padding: 20px;
     box-sizing: border-box;
 }
+
+
+/* Стили для аватарок */
+.avatar-img, .chat-avatar-img, .group-chat-modal-user-avatar {
+    background-color: #011B35; /* Тёмный фон для плейсхолдера */
+}

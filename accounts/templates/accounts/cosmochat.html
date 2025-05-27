@@ -1,8 +1,7 @@
 {% extends 'accounts/base.html' %}
 {% load static %}
 {% load widget_tweaks %}
-
-{# {% static 'accounts/images/avatars/default_avatar_ufo.png' as default_avatar_src %} #}
+{% load file_tags %}
 
 {% block title %}CosmoChat{% endblock %}
 
@@ -10,16 +9,14 @@
   <link rel="stylesheet" href="{% static 'accounts/css/cosmochat.css' %}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <style>
-    /* Стили для body, чтобы фон применился */
     body {
         background: linear-gradient(153deg, black 0%, #00346B 25%, #004E9F 48%, #01366D 64%, #020202 100%);
-        font-family: 'Unbounded', sans-serif; /* Убедитесь, что шрифт Unbounded подключен */
+        font-family: 'Unbounded', sans-serif;
         color: white;
     }
-    /* Фикс для header, если он перекрывается */
     header {
         position: relative;
-        z-index: 10; /* Выше, чем основной контент, если есть пересечения */
+        z-index: 10;
     }
   </style>
 {% endblock %}
@@ -80,17 +77,17 @@
             </form>
 
             <div class="users-list-new" id="usersList">
-                {% for user_profile in users %} 
-                {% comment %} Определяем фейковый рейтинг для первых нескольких пользователей для теста {% endcomment %}
+                {% for user_profile in users %}
                 {% cycle 4.5 3.2 2.0 0.8 5.0 1.7 as fake_rating silent %}
                 {% if forloop.counter <= 6 %}
                     {% with effective_rating=fake_rating %}
                     <div class="user-card-new {% if forloop.counter > 8 %}hidden-user{% endif %}" data-user-id="{{ user_profile.user_id }}" data-user-index="{{ forloop.counter0 }}" data-role="{{ user_profile.role.role_name }}">
-                        <img src="{{ user_profile.profile_picture_url|default:default_avatar_src }}" alt="{{ user_profile.first_name }}" class="avatar-img">
+                        <img src="{% if user_profile.profile_picture_url %}{% get_file_url_tag user_profile.profile_picture_url user_profile.user_id 'avatar' %}{% else %}{{ default_avatar_src }}{% endif %}" 
+                             alt="{{ user_profile.first_name|default:'Пользователь' }}" class="avatar-img">
                         <div class="user-info-new">
                             <h3>{{ user_profile.first_name }} {% if user_profile.last_name %}{{ user_profile.last_name|slice:":1" }}.{% endif %}</h3>
                             <div class="user-role-rating-new">
-                                <div class="rating-stars-new" data-rating="{{ effective_rating|stringformat:".1f" }}">
+                                <div class="rating-stars-new" data-rating="{{ effective_rating|stringformat:'.1f' }}">
                                     {% for i in "12345" %}
                                     <span class="rating-icon-planet-container">
                                         <img src="{% static 'accounts/images/planets/partial_filled_planet.svg' %}" alt="Empty Planet" class="icon-empty">
@@ -99,15 +96,10 @@
                                     {% endfor %}
                                 </div>
                                 <p class="role-text">
-                                    {% if user_profile.role.role_name == "investor" %}
-                                        Инвестор
-                                    {% elif user_profile.role.role_name == "startuper" %}
-                                        Стартапер
-                                    {% elif user_profile.role.role_name == "moderator" %}
-                                        Модератор
-                                    {% else %}
-                                        {{ user_profile.role.role_name|capfirst }}
-                                    {% endif %}
+                                    {% if user_profile.role.role_name == "investor" %}Инвестор
+                                    {% elif user_profile.role.role_name == "startuper" %}Стартапер
+                                    {% elif user_profile.role.role_name == "moderator" %}Модератор
+                                    {% else %}{{ user_profile.role.role_name|capfirst }}{% endif %}
                                 </p>
                             </div>
                         </div>
@@ -119,20 +111,20 @@
                             <p>Мин. вклад: <span>{{ user_profile.startuperprofile.min_investment_needed|default:"N/A" }}₽</span></p>
                             <p>Открыл: <span>{{ user_profile.startuperprofile.projects_count|default:0 }} стартапов</span></p>
                             {% else %}
-                             <p>Нет данных о роли</p>
+                            <p>Нет данных о роли</p>
                             {% endif %}
                         </div>
                         <button type="button" class="chat-btn-on-card" data-user-id="{{ user_profile.user_id }}">Чат</button>
                     </div>
                     {% endwith %}
                 {% else %}
-                    {# Для остальных пользователей используем реальный рейтинг #}
                     <div class="user-card-new {% if forloop.counter > 8 %}hidden-user{% endif %}" data-user-id="{{ user_profile.user_id }}" data-user-index="{{ forloop.counter0 }}" data-role="{{ user_profile.role.role_name }}">
-                        <img src="{{ user_profile.profile_picture_url|default:default_avatar_src }}" alt="{{ user_profile.first_name }}" class="avatar-img">
+                        <img src="{% if user_profile.profile_picture_url %}{% get_file_url_tag user_profile.profile_picture_url user_profile.user_id 'avatar' %}{% else %}{{ default_avatar_src }}{% endif %}" 
+                             alt="{{ user_profile.first_name|default:'Пользователь' }}" class="avatar-img">
                         <div class="user-info-new">
                             <h3>{{ user_profile.first_name }} {% if user_profile.last_name %}{{ user_profile.last_name|slice:":1" }}.{% endif %}</h3>
                             <div class="user-role-rating-new">
-                                <div class="rating-stars-new" data-rating="{{ user_profile.rating|default:0|stringformat:".1f" }}">
+                                <div class="rating-stars-new" data-rating="{{ user_profile.rating|default:0|stringformat:'.1f' }}">
                                     {% for i in "12345" %}
                                     <span class="rating-icon-planet-container">
                                         <img src="{% static 'accounts/images/planets/partial_filled_planet.svg' %}" alt="Empty Planet" class="icon-empty">
@@ -141,15 +133,10 @@
                                     {% endfor %}
                                 </div>
                                 <p class="role-text">
-                                    {% if user_profile.role.role_name == "investor" %}
-                                        Инвестор
-                                    {% elif user_profile.role.role_name == "startuper" %}
-                                        Стартапер
-                                    {% elif user_profile.role.role_name == "moderator" %}
-                                        Модератор
-                                    {% else %}
-                                        {{ user_profile.role.role_name|capfirst }}
-                                    {% endif %}
+                                    {% if user_profile.role.role_name == "investor" %}Инвестор
+                                    {% elif user_profile.role.role_name == "startuper" %}Стартапер
+                                    {% elif user_profile.role.role_name == "moderator" %}Модератор
+                                    {% else %}{{ user_profile.role.role_name|capfirst }}{% endif %}
                                 </p>
                             </div>
                         </div>
@@ -161,7 +148,7 @@
                             <p>Мин. вклад: <span>{{ user_profile.startuperprofile.min_investment_needed|default:"N/A" }}₽</span></p>
                             <p>Открыл: <span>{{ user_profile.startuperprofile.projects_count|default:0 }} стартапов</span></p>
                             {% else %}
-                             <p>Нет данных о роли</p>
+                            <p>Нет данных о роли</p>
                             {% endif %}
                         </div>
                         <button type="button" class="chat-btn-on-card" data-user-id="{{ user_profile.user_id }}">Чат</button>
@@ -181,7 +168,6 @@
                     <i class="fa-solid fa-eye"></i>
                 </button>
             </div>
-
         </div>
 
         <div class="articles-section-new">
@@ -226,11 +212,13 @@
             </div>
             <div class="chat-items-list-new" id="chatListContainer">
                 {% for chat in chats %}
+                {% with participant=chat.chatparticipants_set.exclude(user=request.user).first.user %}
                 <div class="chat-item-new {% if forloop.first and not current_chat_id %}active{% elif chat.conversation_id == current_chat_id %}active{% endif %}" 
                      data-chat-id="{{ chat.conversation_id }}"
                      data-chat-name="{{ chat.name|escapejs }}"
-                     data-chat-type="{{ chat.type|default:'personal' }}" >
-                    <img src="{{ chat.image_url|default:default_avatar_src }}" alt="{{ chat.name }}" class="chat-avatar-img">
+                     data-chat-type="{{ chat.type|default:'personal' }}">
+                    <img src="{% if participant.profile_picture_url %}{% get_file_url_tag participant.profile_picture_url participant.user_id 'avatar' %}{% else %}{{ default_avatar_src }}{% endif %}" 
+                         alt="{{ participant.first_name|default:'Чат' }}" class="chat-avatar-img">
                     <div class="chat-item-info-new">
                         <h4>{{ chat.name|truncatechars:25 }}</h4>
                         {% with last_message=chat.get_last_message %}
@@ -259,6 +247,7 @@
                         {% endwith %}
                     </div>
                 </div>
+                {% endwith %}
                 {% empty %}
                 <p style="text-align: center; padding: 20px; color: #797979;">У вас пока нет чатов. Найдите пользователя и начните диалог!</p>
                 {% endfor %}
@@ -299,7 +288,7 @@
     <div class="modal-overlay" id="profileModal">
       <div class="modal">
         <button class="modal-close" id="closeProfileModalBtn">×</button>
-        <img id="profileAvatar" src="" alt="Аватар">
+        <img id="profileAvatar" src="{{ default_avatar_src }}" alt="Аватар">
         <h3 id="profileName"></h3>
         <p id="profileRole"></p>
         <p id="profileRating"></p>
@@ -343,7 +332,6 @@
                 
                 <div class="group-chat-modal-search">
                     <div class="selected-user-pills-container" id="selectedUserPillsContainer">
-                        {# Сюда будут добавляться "таблетки" выбранных пользователей #}
                     </div>
                     <img src="{% static 'accounts/images/cosmochat/search.svg' %}" alt="Поиск" class="group-chat-modal-search-icon">
                     <input type="text" class="group-chat-modal-search-input" placeholder="Кого вы хотите пригласить?" id="groupChatSearchInput">
@@ -355,7 +343,24 @@
                 </div>
                 
                 <div class="group-chat-modal-users" id="groupChatUsersList">
-                    <!-- Пользователи будут добавлены через JavaScript -->
+                    {% for user in users %}
+                    <div class="group-chat-modal-user" data-user-id="{{ user.user_id }}">
+                        <div class="group-chat-modal-user-info">
+                            <img class="group-chat-modal-user-avatar" 
+                                 src="{% if user.profile_picture_url %}{% get_file_url_tag user.profile_picture_url user.user_id 'avatar' %}{% else %}{{ default_avatar_src }}{% endif %}" 
+                                 alt="{{ user.first_name|default:'Пользователь' }}">
+                            <div class="group-chat-modal-user-name">
+                                <span class="group-chat-modal-user-firstname">{{ user.first_name|default:"Имя" }}</span>
+                                <span class="group-chat-modal-user-lastname">{{ user.last_name|default:"Фамилия" }}</span>
+                            </div>
+                        </div>
+                        <div class="group-chat-modal-checkbox">
+                            <div class="group-chat-modal-checkbox-empty"></div>
+                            <div class="group-chat-modal-checkbox-filled"></div>
+                            <div class="group-chat-modal-checkbox-tick"></div>
+                        </div>
+                    </div>
+                    {% endfor %}
                 </div>
             </div>
 
@@ -370,7 +375,6 @@
 
                 <div class="selected-chat-info">
                     <div class="chat-icon-placeholder">
-                        {# Можно вставить SVG иконку группы #}
                         <svg class="group-icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M16 13C17.6569 13 19 11.6569 19 10C19 8.34315 17.6569 7 16 7C14.3431 7 13 8.34315 13 10C13 11.6569 14.3431 13 16 13Z" stroke="#004E9F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             <path d="M8 13C9.65685 13 11 11.6569 11 10C11 8.34315 9.65685 7 8 7C6.34315 7 5 8.34315 5 10C5 11.6569 6.34315 13 8 13Z" stroke="#004E9F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -387,27 +391,17 @@
                         Добавить участника
                     </div>
                     <div id="groupChatSelectedParticipantsList">
-                        {# Сюда JS будет добавлять выбранных участников для отображения #}
-                        <!-- Пример элемента участника:
-                        <div class="participant-display-item">
-                            <img src="avatar.png" alt="Имя Фамилия">
-                            <span class="participant-name">Имя Фамилия</span>
-                        </div>
-                        -->
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
 </div>
 
 <script src="{% static 'accounts/js/cosmochat.js' %}"></script>
 
 <script>
-// Резервный скрипт, на случай если основной не загрузится
 document.addEventListener('DOMContentLoaded', function() {
-    // Открытие модального окна профиля
     document.querySelectorAll('.user-card-new').forEach(card => {
         card.addEventListener('click', function() {
             const userId = this.dataset.userId;
@@ -417,7 +411,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Кнопки чата на карточках пользователей
     document.querySelectorAll('.chat-btn-on-card').forEach(btn => {
         btn.addEventListener('click', function(e) {
             e.stopPropagation();
@@ -428,7 +421,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Клик по элементам чата
     document.querySelectorAll('.chat-item-new').forEach(item => {
         item.addEventListener('click', function() {
             const chatId = this.dataset.chatId;
@@ -438,17 +430,14 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Обработчики для модальных окон
     const createChatBtn = document.getElementById('createChatBtn');
     if (createChatBtn) {
         createChatBtn.addEventListener('click', function() {
-            // Пытаемся вызвать новую функцию, если она существует
             if (typeof openGroupChatModal === 'function') {
                 openGroupChatModal();
             } else {
-                // Резервный вариант - открываем старое модальное окно
                 const modal = document.getElementById('createChatModal');
-                if(modal) modal.style.display = 'flex';
+                if (modal) modal.style.display = 'flex';
             }
         });
     }
@@ -457,7 +446,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (closeCreateChatModalBtn) {
         closeCreateChatModalBtn.addEventListener('click', function() {
             const modal = document.getElementById('createChatModal');
-            if(modal) modal.style.display = 'none';
+            if (modal) modal.style.display = 'none';
         });
     }
 
@@ -465,7 +454,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (createChatModalCloseBtn) {
         createChatModalCloseBtn.addEventListener('click', function() {
             const modal = document.getElementById('createChatModal');
-            if(modal) modal.style.display = 'none';
+            if (modal) modal.style.display = 'none';
         });
     }
     
@@ -494,7 +483,6 @@ document.addEventListener('DOMContentLoaded', function() {
         leaveChatBtn.addEventListener('click', leaveChat);
     }
 
-    // Обработчик для кнопки "Показать еще"
     const showMoreBtn = document.getElementById('showMoreUsersBtn');
     if (showMoreBtn) {
         showMoreBtn.addEventListener('click', function() {
@@ -502,7 +490,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Функции для клиентской пагинации
     function setupClientPagination() {
         const usersList = document.getElementById('usersList');
         const userCards = usersList ? usersList.querySelectorAll('.user-card-new') : [];
@@ -510,32 +497,21 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (!usersList || !paginationContainer || userCards.length === 0) return;
         
-        const itemsPerPage = 8; // Изменили с 5 на 8
+        const itemsPerPage = 8;
         const totalPages = Math.ceil(userCards.length / itemsPerPage);
         
-        // Создаем пагинацию
         let paginationHTML = '';
-        
-        // Кнопка "Назад"
-        paginationHTML += `<span class="page-number-item" data-page="prev">&lsaquo;</span>`;
-        
-        // Номера страниц
+        paginationHTML += `<span class="page-number-item" data-page="prev">‹</span>`;
         for (let i = 1; i <= totalPages; i++) {
             paginationHTML += `<span class="page-number-item ${i === 1 ? 'current' : ''}" data-page="${i}">${i}</span>`;
         }
-        
-        // Кнопка "Вперед"
-        paginationHTML += `<span class="page-number-item" data-page="next">&rsaquo;</span>`;
+        paginationHTML += `<span class="page-number-item" data-page="next">›</span>`;
         
         paginationContainer.innerHTML = paginationHTML;
         
-        // Устанавливаем текущую страницу
         let currentPage = 1;
-        
-        // Показываем первую страницу
         showPage(currentPage);
         
-        // Добавляем обработчики для кнопок пагинации
         const pageButtons = paginationContainer.querySelectorAll('.page-number-item');
         pageButtons.forEach(button => {
             button.addEventListener('click', function() {
@@ -561,7 +537,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
         
-        // Функция для показа определенной страницы
         function showPage(page) {
             const startIndex = (page - 1) * itemsPerPage;
             const endIndex = startIndex + itemsPerPage;
@@ -570,7 +545,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (index >= startIndex && index < endIndex) {
                     card.classList.remove('hidden-user');
                 } else {
-                    // Если карточка уже была показана через "Показать еще", не скрываем её
                     if (!card.classList.contains('show-more-revealed')) {
                         card.classList.add('hidden-user');
                     }
@@ -578,7 +552,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
         
-        // Функция для обновления активной страницы в пагинации
         function updateActivePage() {
             pageButtons.forEach(button => {
                 if (button.dataset.page === currentPage.toString()) {
@@ -590,20 +563,17 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Функция для показа дополнительных пользователей
     let additionalUsersShown = 0;
     function showMoreUsers() {
         const usersList = document.getElementById('usersList');
         const hiddenUserCards = usersList ? usersList.querySelectorAll('.user-card-new.hidden-user') : [];
         
         if (!usersList || hiddenUserCards.length === 0) {
-            // Если больше нет скрытых пользователей, можно скрыть кнопку
             const showMoreBtn = document.getElementById('showMoreUsersBtn');
             if (showMoreBtn) showMoreBtn.style.display = 'none';
             return;
         }
         
-        // Показываем следующие 5 скрытых карточек
         const showCount = Math.min(5, hiddenUserCards.length);
         for (let i = 0; i < showCount; i++) {
             hiddenUserCards[i].classList.remove('hidden-user');
@@ -611,14 +581,12 @@ document.addEventListener('DOMContentLoaded', function() {
             additionalUsersShown++;
         }
         
-        // Если больше нет скрытых пользователей, скрываем кнопку
         if (hiddenUserCards.length <= showCount) {
             const showMoreBtn = document.getElementById('showMoreUsersBtn');
             if (showMoreBtn) showMoreBtn.style.display = 'none';
         }
     }
     
-    // Фильтрация пользователей по роли
     document.querySelectorAll('.django-roles-filter input[type="checkbox"]').forEach(checkbox => {
         checkbox.addEventListener('change', function() {
             filterUsersByRole();
@@ -630,7 +598,6 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('.django-roles-filter input[type="checkbox"]:checked').forEach(checkbox => {
             const roleLabel = document.querySelector(`label[for="${checkbox.id}"]`).textContent.toLowerCase();
             let roleValue = '';
-            
             if (roleLabel.includes('инвестор')) {
                 roleValue = 'investor';
             } else if (roleLabel.includes('стартапер')) {
@@ -638,7 +605,6 @@ document.addEventListener('DOMContentLoaded', function() {
             } else if (roleLabel.includes('модератор')) {
                 roleValue = 'moderator';
             }
-            
             if (roleValue) {
                 selectedRoles.push(roleValue);
             }
@@ -647,7 +613,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const userCards = document.querySelectorAll('#usersList .user-card-new');
         userCards.forEach(card => {
             const role = card.dataset.role;
-            
             if (selectedRoles.length === 0 || selectedRoles.includes(role)) {
                 card.style.display = '';
             } else {
@@ -656,7 +621,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Инициализируем пагинацию
     setupClientPagination();
 });
 </script>
