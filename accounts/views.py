@@ -17,7 +17,7 @@ from .models import Users, Directions, Startups, ReviewStatuses, UserVotes, Star
 from .models import creative_upload_path, proof_upload_path, video_upload_path
 import uuid
 from .models import Comments
-from .forms import CommentForm
+from .forms import CommentForm, ProfileEditForm
 from django.db.models import Count, Sum, Avg, F, FloatField, Max, Min, Q # Добавляем Q
 from decimal import Decimal
 from .models import NewsArticles, NewsLikes, NewsViews  # Добавляем новые модели
@@ -460,19 +460,16 @@ def investments(request):
 def legal(request):
     return render(request, 'accounts/legal.html')
 
-# accounts/views.py
 def profile(request, user_id=None):
     if not request.user.is_authenticated:
         messages.error(request, 'Пожалуйста, войдите в систему, чтобы просмотреть профиль.')
         return redirect('login')
 
-    # Если передан user_id, показываем профиль этого пользователя
     if user_id:
         profile_user = get_object_or_404(Users, user_id=user_id)
     else:
         profile_user = request.user
 
-    # Если запрос через AJAX для профиля
     if request.GET.get('user_id'):
         user = get_object_or_404(Users, user_id=request.GET.get('user_id'))
         return JsonResponse({
@@ -484,48 +481,142 @@ def profile(request, user_id=None):
             'profile_picture_url': user.get_profile_picture_url() if user.profile_picture_url else None
         })
 
-    # Обработка загрузки аватара (доступно только для своего профиля)
-    if request.method == 'POST' and 'avatar' in request.FILES and profile_user == request.user:
-        avatar = request.FILES['avatar']
-        # Валидация формата
-        allowed_mimes = ['image/jpeg', 'image/png']
-        if avatar.content_type not in allowed_mimes:
-            messages.error(request, 'Допустимы только файлы PNG или JPEG.')
-            return render(request, 'accounts/profile.html', {'user': profile_user, 'is_own_profile': True})
+    # Инициализация формы редактирования
+    if profile_user == request.user:
+        form = ProfileEditForm(instance=profile_user)
+    else:
+        form = None
 
-        # Валидация размера (5 МБ = 5 * 1024 * 1024 байт)
-        max_size = 5 * 1024 * 1024
-        if avatar.size > max_size:
-            messages.error(request, 'Размер файла не должен превышать 5 МБ.')
-            return render(request, 'accounts/profile.html', {'user': profile_user, 'is_own_profile': True})
+    if request.method == 'POST':
+        if profile_user != request.user:
+            messages.error(request, 'Вы не можете редактировать чужой профиль.')
+            return redirect('profile')
 
-        avatar_id = str(uuid.uuid4())
-        file_path = f"users/{request.user.user_id}/avatar/{avatar_id}_{avatar.name}"
-        try:
-            # Сохранение файла
-            default_storage.save(file_path, avatar)
-            # Сохранение UUID в profile_picture_url
-            request.user.profile_picture_url = avatar_id
-            request.user.save()
+        # Обработка загрузки аватара
+        if 'avatar' in request.FILES:
+            avatar = request.FILES['avatar']
+            allowed_mimes = ['image/jpeg', 'image/png']
+            if avatar.content_type not in allowed_mimes:
+                messages.error(request, 'Допустимы только файлы PNG или JPEG.')
+                return render(request, 'accounts/profile.html', {'user': profile_user, 'is_own_profile': True, 'form': form})
 
-            # Сохранение метаданных в file_storage
-            entity_type, _ = EntityTypes.objects.get_or_create(type_name='user')
-            file_type, _ = FileTypes.objects.get_or_create(type_name='avatar')
-            FileStorage.objects.create(
-                entity_type=entity_type,
-                entity_id=request.user.user_id,
-                file_url=avatar_id,
-                file_type=file_type,
-                uploaded_at=timezone.now()
-            )
+            max_size = 5 * 1024 * 1024
+            if avatar.size > max_size:
+                messages.error(request, 'Размер файла не должен превышать 5 МБ.')
+                return render(request, 'accounts/profile.html', {'user': profile_user, 'is_own_profile': True, 'form': form})
 
-            logger.info(f"Аватар сохранён для user_id {request.user.user_id} по пути: {file_path}, UUID: {avatar_id}")
-            messages.success(request, 'Аватарка успешно загружена!')
-        except Exception as e:
-            logger.error(f"Ошибка при сохранении аватара для user_id {request.user.user_id}: {str(e)}")
-            messages.error(request, 'Ошибка при загрузке аватара. Пожалуйста, попробуйте снова.')
+            avatar_id = str(uuid.uuid4())
+            file_path = f"users/{request.user.user_id}/avatar/{avatar_id}_{avatar.name}"
+            try:
+                # Удаление старых аватарок
+                s3_client = boto3.client(
+                    's3',
+                    endpoint_url=settings.AWS_S3_ENDPOINT_URL,
+                    aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+                    aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+                    region_name=settings.AWS_S3_REGION_NAME
+                )
+                bucket_name = settings.AWS_STORAGE_BUCKET_NAME
+                prefix = f"users/{request.user.user_id}/avatar/"
+                response = s3_client.list_objects_v2(Bucket=bucket_name, Prefix=prefix)
+                if 'Contents' in response:
+                    for obj in response['Contents']:
+                        s3_client.delete_object(Bucket=bucket_name, Key=obj['Key'])
+                        logger.info(f"Удалён старый аватар: {obj['Key']}")
 
-    return render(request, 'accounts/profile.html', {'user': profile_user, 'is_own_profile': profile_user == request.user})
+                # Удаление старых записей в file_storage
+                FileStorage.objects.filter(
+                    entity_type__type_name='user',
+                    entity_id=request.user.user_id,
+                    file_type__type_name='avatar'
+                ).delete()
+
+                # Сохранение нового аватара
+                default_storage.save(file_path, avatar)
+                request.user.profile_picture_url = avatar_id
+                request.user.save()
+
+                # Сохранение метаданных в file_storage
+                entity_type, _ = EntityTypes.objects.get_or_create(type_name='user')
+                file_type, _ = FileTypes.objects.get_or_create(type_name='avatar')
+                FileStorage.objects.create(
+                    entity_type=entity_type,
+                    entity_id=request.user.user_id,
+                    file_url=avatar_id,
+                    file_type=file_type,
+                    uploaded_at=timezone.now()
+                )
+
+                logger.info(f"Аватар сохранён для user_id {request.user.user_id} по пути: {file_path}, UUID: {avatar_id}")
+                messages.success(request, 'Аватарка успешно загружена!')
+            except Exception as e:
+                logger.error(f"Ошибка при сохранении аватара для user_id {request.user.user_id}: {str(e)}")
+                messages.error(request, 'Ошибка при загрузке аватара. Пожалуйста, попробуйте снова.')
+
+        # Обработка редактирования профиля
+        elif 'edit_profile' in request.POST:
+            form = ProfileEditForm(request.POST, instance=request.user)
+            if form.is_valid():
+                try:
+                    user = form.save(commit=False)
+                    # Обработка Telegram в social_links (JSONB)
+                    telegram = form.cleaned_data.get('telegram')
+                    if telegram:
+                        user.social_links = {'telegram': telegram}
+                    else:
+                        user.social_links = {}
+                    user.save()
+                    logger.info(f"Профиль обновлён для user_id {request.user.user_id}")
+                    messages.success(request, 'Профиль успешно обновлён!')
+                except Exception as e:
+                    logger.error(f"Ошибка при обновлении профиля для user_id {request.user.user_id}: {str(e)}")
+                    messages.error(request, 'Ошибка при сохранении профиля. Пожалуйста, попробуйте снова.')
+            else:
+                messages.error(request, 'Форма содержит ошибки.')
+                return render(request, 'accounts/profile.html', {'user': profile_user, 'is_own_profile': True, 'form': form})
+
+    return render(request, 'accounts/profile.html', {'user': profile_user, 'is_own_profile': profile_user == request.user, 'form': form})
+
+def delete_avatar(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'success': False, 'error': 'Требуется авторизация'}, status=401)
+
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Неверный метод запроса'}, status=405)
+
+    try:
+        # Удаление файлов аватара из Yandex Object Storage
+        s3_client = boto3.client(
+            's3',
+            endpoint_url=settings.AWS_S3_ENDPOINT_URL,
+            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+            region_name=settings.AWS_S3_REGION_NAME
+        )
+        bucket_name = settings.AWS_STORAGE_BUCKET_NAME
+        prefix = f"users/{request.user.user_id}/avatar/"
+        response = s3_client.list_objects_v2(Bucket=bucket_name, Prefix=prefix)
+        if 'Contents' in response:
+            for obj in response['Contents']:
+                s3_client.delete_object(Bucket=bucket_name, Key=obj['Key'])
+                logger.info(f"Удалён аватар: {obj['Key']}")
+
+        # Удаление записей в file_storage
+        FileStorage.objects.filter(
+            entity_type__type_name='user',
+            entity_id=request.user.user_id,
+            file_type__type_name='avatar'
+        ).delete()
+
+        # Очистка profile_picture_url
+        request.user.profile_picture_url = None
+        request.user.save()
+
+        logger.info(f"Аватар удалён для user_id {request.user.user_id}")
+        return JsonResponse({'success': True, 'message': 'Аватар успешно удалён.'})
+    except Exception as e:
+        logger.error(f"Ошибка при удалении аватара для user_id {request.user.user_id}: {str(e)}")
+        return JsonResponse({'success': False, 'error': 'Ошибка при удалении аватара.'}, status=500)
 
 @login_required
 def create_startup(request):

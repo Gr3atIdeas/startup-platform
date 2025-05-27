@@ -1,5 +1,7 @@
 from django import forms
 from .models import Users, Startups, Directions, StartupStages, ReviewStatuses, Comments
+from django import forms
+from .models import Users
 
 # Кастомный виджет для загрузки нескольких файлов
 class MultipleFileInput(forms.ClearableFileInput):
@@ -176,3 +178,35 @@ class UserSearchForm(forms.Form):
         widget=forms.CheckboxSelectMultiple,
         label="Роли"
     )
+
+
+class ProfileEditForm(forms.ModelForm):
+    telegram = forms.CharField(max_length=50, required=False, label="Telegram", widget=forms.TextInput(attrs={'placeholder': '@username'}))
+    
+    class Meta:
+        model = Users
+        fields = ['first_name', 'last_name', 'website_url', 'bio']
+        widgets = {
+            'first_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Введите имя'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Введите фамилию'}),
+            'website_url': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'https://example.com'}),
+            'bio': forms.Textarea(attrs={'class': 'form-control', 'rows': 5, 'placeholder': 'Расскажите о себе'}),
+        }
+        labels = {
+            'first_name': 'Имя',
+            'last_name': 'Фамилия',
+            'website_url': 'Портфолио или сайт',
+            'bio': 'О себе',
+        }
+
+    def clean_telegram(self):
+        telegram = self.cleaned_data.get('telegram')
+        if telegram and not telegram.startswith('@'):
+            telegram = f"@{telegram}"
+        return telegram
+
+    def clean_bio(self):
+        bio = self.cleaned_data.get('bio')
+        if bio and len(bio) > 50:
+            raise forms.ValidationError('Описание не должно превышать 50 символов.')
+        return bio

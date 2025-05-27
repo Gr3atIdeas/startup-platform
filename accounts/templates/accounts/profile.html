@@ -6,10 +6,6 @@
 {% block head_extra %}
   {{ block.super }}
   <link rel="stylesheet" href="{% static 'accounts/css/profile.css' %}?v={% now 'U' %}" />
-  {# Дополнительные шрифты, если нужны именно для этой страницы, уже могут быть в base.html или global.css #}
-  {# <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400&display=swap" /> #}
-  {# <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@700&display=swap" /> #}
-  {# <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Circe:wght@400&display=swap" /> #}
 {% endblock %}
 
 {% block content %}
@@ -19,7 +15,14 @@
         <div class="profile-sidebar">
             <div class="profile-sidebar-user-info-block">
                 <div class="profile-sidebar-avatar-wrapper" id="avatarClickableArea" style="cursor: pointer;" title="Изменить аватар">
-                    <img class="profile-sidebar-avatar-img" src="{% if user.get_profile_picture_url %}{{ user.get_profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}" alt="Аватар пользователя" />
+                    <img class="profile-sidebar-avatar-img" src="{% if user.get_profile_picture_url %}{{ user.get_profile_picture_url }}{% else %}{% static 'accounts/images/avatars/user.png' %}{% endif %}" alt="Аватар пользователя" />
+                    {% if is_own_profile and user.get_profile_picture_url %}
+                    <button class="profile-sidebar-avatar-delete" id="deleteAvatarBtn" title="Удалить аватар">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 4L4 12M4 4L12 12" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                    {% endif %}
                 </div>
                 <div class="profile-sidebar-text-details">
                     <div class="profile-sidebar-name-role">
@@ -49,6 +52,11 @@
                     <div class="profile-sidebar-website">
                         <img src="{% static 'accounts/images/profile/Globe_Line.svg' %}" alt="Website" class="profile-sidebar-website-icon-img">
                         <a href="{{ user.website_url }}" target="_blank" class="profile-sidebar-website-link">{{ user.website_url }}</a>
+                    </div>
+                    {% endif %}
+                    {% if user.social_links.telegram %}
+                    <div class="profile-sidebar-social-link">
+                        <span>Telegram: <a href="https://t.me/{{ user.social_links.telegram|slice:'1:' }}" target="_blank">{{ user.social_links.telegram }}</a></span>
                     </div>
                     {% endif %}
                 </div>
@@ -247,55 +255,55 @@
                     <div class="profile-edit-main-row">
                         <div class="profile-edit-avatar-col">
                             <div class="profile-edit-avatar-wrapper">
-                                <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Аватар" class="profile-edit-avatar-img"/>
+                                <img src="{% if user.get_profile_picture_url %}{{ user.get_profile_picture_url }}{% else %}{% static 'accounts/images/avatars/user.png' %}{% endif %}" alt="Аватар" class="profile-edit-avatar-img"/>
                             </div>
                             <div class="profile-edit-avatar-info">
                                 <div class="profile-edit-avatar-label">Profile photo</div>
                                 <div class="profile-edit-avatar-hint">Рекомендация <br>по размеру изображения 400х400 🙌</div>
-                                <div class="profile-edit-avatar-btn">Обновить</div>
+                                <div class="profile-edit-avatar-btn" onclick="document.getElementById('id_avatar_input').click();">Обновить</div>
                             </div>
                         </div>
                         <div class="profile-edit-fields-col">
-                            <div class="profile-edit-section">
-                                <div class="profile-edit-section-title">Информация профиля</div>
-                                <div class="profile-edit-field">
-                                    <div class="profile-edit-field-label">Имя пользователя</div>
-                                    <div class="profile-edit-input profile-edit-input-text" contenteditable="true" data-placeholder="Введите имя"></div>
-                                </div>
-                                <div class="profile-edit-field">
-                                    <div class="profile-edit-field-label">Портфолио или сайт</div>
-                                    <div class="profile-edit-input profile-edit-input-text" contenteditable="true" data-placeholder="URL"></div>
-                                </div>
-                                <div class="profile-edit-field">
-                                    <div class="profile-edit-field-label">Обо мне</div>
-                                    <div class="profile-edit-input profile-edit-input-textarea" contenteditable="true" data-placeholder="Расскажите о вас в нескольких предложениях"></div>
-                                    <div class="profile-edit-char-counter">50/50</div>
-                                </div>
-                            </div>
-                            <div class="profile-edit-section" style="margin-top:40px;">
-                                <div class="profile-edit-section-title">Социальные сети</div>
-                                <div class="profile-edit-field">
-                                    <div class="profile-edit-field-label profile-edit-field-label-sm">telegram</div>
-                                    <div class="profile-edit-input-social">
-                                        <span class="profile-edit-input-at">@</span>
-                                        <span class="profile-edit-input-social-placeholder">telegram username</span>
-                                        <div class="profile-edit-social-add-btn">Добавить</div>
+                            <form method="post" id="profileEditForm">
+                                {% csrf_token %}
+                                <input type="hidden" name="edit_profile" value="1">
+                                <div class="profile-edit-section">
+                                    <div class="profile-edit-section-title">Информация профиля</div>
+                                    <div class="profile-edit-field">
+                                        <div class="profile-edit-field-label">{{ form.first_name.label }}</div>
+                                        {{ form.first_name }}
+                                    </div>
+                                    <div class="profile-edit-field">
+                                        <div class="profile-edit-field-label">{{ form.last_name.label }}</div>
+                                        {{ form.last_name }}
+                                    </div>
+                                    <div class="profile-edit-field">
+                                        <div class="profile-edit-field-label">{{ form.website_url.label }}</div>
+                                        {{ form.website_url }}
+                                    </div>
+                                    <div class="profile-edit-field">
+                                        <div class="profile-edit-field-label">{{ form.bio.label }}</div>
+                                        {{ form.bio }}
+                                        <div class="profile-edit-char-counter" id="bioCounter">50/50</div>
                                     </div>
                                 </div>
-                                <div class="profile-edit-add-social-btn">
-                                    <img src="{% static 'accounts/images/profile/add-circle-outline.svg' %}" alt="Добавить" class="profile-edit-add-social-icon"/>
-                                    <span>Добавить еще аккаунт</span>
+                                <div class="profile-edit-section" style="margin-top:40px;">
+                                    <div class="profile-edit-section-title">Социальные сети</div>
+                                    <div class="profile-edit-field">
+                                        <div class="profile-edit-field-label profile-edit-field-label-sm">{{ form.telegram.label }}</div>
+                                        {{ form.telegram }}
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="profile-edit-hint">Чтобы обновить настройки, вам следует подписать сообщение через свой кошелек. Нажмите "Обновить профиль", затем подпишите сообщение</div>
-                            <div class="profile-edit-divider"></div>
-                            <div class="profile-edit-actions">
-                                <div class="profile-edit-save-btn">Сохранить изменений</div>
-                                <div class="profile-edit-clear-btn">
-                                    <img src="{% static 'accounts/images/profile/close_circle.svg' %}" alt="Очистить" class="profile-edit-clear-icon"/>
-                                    <span>Очистить</span>
+                                <div class="profile-edit-hint">Чтобы обновить настройки, нажмите "Сохранить изменений".</div>
+                                <div class="profile-edit-divider"></div>
+                                <div class="profile-edit-actions">
+                                    <button type="submit" class="profile-edit-save-btn">Сохранить изменений</button>
+                                    <div class="profile-edit-clear-btn" id="clearFormBtn">
+                                        <img src="{% static 'accounts/images/profile/close_circle.svg' %}" alt="Очистить" class="profile-edit-clear-icon"/>
+                                        <span>Очистить</span>
+                                    </div>
                                 </div>
-                            </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -306,12 +314,45 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Удаляем старые функции fadeIn/fadeOut, если они были здесь
-
     const avatarClickableArea = document.getElementById('avatarClickableArea');
     const avatarInput = document.getElementById('id_avatar_input');
     const avatarUploadForm = document.getElementById('avatarUploadForm');
+    const deleteAvatarBtn = document.getElementById('deleteAvatarBtn');
+    const editBtn = document.getElementById('editProfileBtn');
+    const profileViewBlock = document.getElementById('profileViewBlock');
+    const profileEditBlock = document.getElementById('profileEditBlock');
+    const backBtn = document.getElementById('profileEditBackBtn');
+    const clearBtn = document.getElementById('clearFormBtn');
+    const profileEditForm = document.getElementById('profileEditForm');
+    const bioInput = document.querySelector('#profileEditForm textarea[name="bio"]');
+    const bioCounter = document.getElementById('bioCounter');
 
+    // Анимация перехода
+    function showEditBlock() {
+        profileViewBlock.classList.add('profile-fade-out');
+        setTimeout(() => {
+            profileViewBlock.style.display = 'none';
+            profileEditBlock.style.display = 'block';
+            setTimeout(() => {
+                profileEditBlock.style.opacity = 1;
+                profileEditBlock.style.pointerEvents = 'auto';
+                profileEditBlock.classList.add('profile-fade-in');
+            }, 10);
+        }, 300);
+    }
+
+    function hideEditBlock() {
+        profileEditBlock.classList.remove('profile-fade-in');
+        profileEditBlock.style.opacity = 0;
+        profileEditBlock.style.pointerEvents = 'none';
+        setTimeout(() => {
+            profileEditBlock.style.display = 'none';
+            profileViewBlock.style.display = 'block';
+            profileViewBlock.classList.remove('profile-fade-out');
+        }, 300);
+    }
+
+    // Загрузка аватара
     if (avatarClickableArea && avatarInput && avatarUploadForm) {
         avatarClickableArea.addEventListener('click', function() {
             avatarInput.click();
@@ -320,14 +361,110 @@ document.addEventListener('DOMContentLoaded', function() {
         avatarInput.addEventListener('change', function() {
             if (this.files && this.files.length > 0) {
                 avatarUploadForm.submit();
-            } 
+            }
         });
     }
 
-    // Новая логика переключения вкладок с CSS-анимацией и transitionend
+    // Удаление аватара
+    if (deleteAvatarBtn) {
+        deleteAvatarBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (confirm('Вы уверены, что хотите удалить аватар?')) {
+                fetch("{% url 'delete_avatar' %}", {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.querySelector('.profile-sidebar-avatar-img').src = "{% static 'accounts/images/avatars/user.png' %}";
+                        deleteAvatarBtn.style.display = 'none';
+                        alert(data.message);
+                    } else {
+                        alert(data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Ошибка:', error);
+                    alert('Произошла ошибка при удалении аватара.');
+                });
+            }
+        });
+    }
+
+    // Редактирование профиля
+    if (editBtn && profileViewBlock && profileEditBlock) {
+        editBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            showEditBlock();
+        });
+    }
+
+    if (backBtn) {
+        backBtn.addEventListener('click', function() {
+            hideEditBlock();
+        });
+    }
+
+    if (clearBtn) {
+        clearBtn.addEventListener('click', function() {
+            profileEditForm.reset();
+            if (bioInput) {
+                bioCounter.textContent = '50/50';
+            }
+        });
+    }
+
+    // Счётчик символов для bio
+    if (bioInput && bioCounter) {
+        function updateBioCounter() {
+            const remaining = 50 - bioInput.value.length;
+            bioCounter.textContent = `${remaining}/50`;
+            if (remaining < 0) {
+                bioCounter.style.color = 'red';
+            } else {
+                bioCounter.style.color = '';
+            }
+        }
+        bioInput.addEventListener('input', updateBioCounter);
+        updateBioCounter();
+    }
+
+    // Отправка формы редактирования
+    if (profileEditForm) {
+        profileEditForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(profileEditForm);
+            fetch("{% url 'profile' %}", {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message);
+                    window.location.reload();
+                } else {
+                    alert(data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Ошибка:', error);
+                alert('Произошла ошибка при сохранении профиля.');
+            });
+        });
+    }
+
+    // Переключение вкладок
     const tabs = document.querySelectorAll('.profile-main-tab-item');
     const tabContents = document.querySelectorAll('.profile-main-content-tab');
-    // Анимация вкладок
+
     tabs.forEach(tab => {
         tab.addEventListener('click', function(event) {
             event.preventDefault();
@@ -361,10 +498,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Инициализация активной вкладки при загрузке страницы
     function initializeActiveTab() {
         let initialActiveTab = document.querySelector('.profile-main-tab-item.active-tab');
-        if (!initialActiveTab && tabs.length > 0) { // Если нет активной, берем первую
+        if (!initialActiveTab && tabs.length > 0) {
             initialActiveTab = tabs[0];
             initialActiveTab.classList.add('active-tab');
         }
@@ -375,16 +511,15 @@ document.addEventListener('DOMContentLoaded', function() {
             if (initialActiveContent) {
                 tabContents.forEach(content => {
                     if (content !== initialActiveContent) {
-                        content.style.display = 'none'; // Скрываем неактивные сразу
+                        content.style.display = 'none';
                         content.classList.remove('active-content');
                     }
                 });
                 initialActiveContent.style.display = 'flex';
-                // Добавляем active-content с небольшой задержкой для возможной анимации при загрузке
                 requestAnimationFrame(() => {
-                     initialActiveContent.classList.add('active-content'); 
+                    initialActiveContent.classList.add('active-content');
                 });
-            } else if (tabs.length > 0) { // Если у активной вкладки нет контента, активируем первую
+            } else if (tabs.length > 0) {
                 initialActiveTab.classList.remove('active-tab');
                 tabs[0].classList.add('active-tab');
                 const firstTabId = tabs[0].getAttribute('data-tab');
@@ -402,54 +537,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     }
-    initializeActiveTab(); // Вызываем функцию инициализации
-
-    const editBtn = document.getElementById('editProfileBtn');
-    const profileViewBlock = document.getElementById('profileViewBlock');
-    const profileEditBlock = document.getElementById('profileEditBlock');
-    const backBtn = document.getElementById('profileEditBackBtn');
-    const clearBtn = document.querySelector('.profile-edit-clear-btn');
-    // Анимация перехода между просмотром и редактированием профиля
-    function showEditBlock() {
-        profileViewBlock.classList.add('profile-fade-out');
-        setTimeout(() => {
-            profileViewBlock.style.display = 'none';
-            profileEditBlock.style.display = 'block';
-            setTimeout(() => {
-                profileEditBlock.style.opacity = 1;
-                profileEditBlock.style.pointerEvents = 'auto';
-                profileEditBlock.classList.add('profile-fade-in');
-            }, 10);
-        }, 300);
-    }
-    function hideEditBlock() {
-        profileEditBlock.classList.remove('profile-fade-in');
-        profileEditBlock.style.opacity = 0;
-        profileEditBlock.style.pointerEvents = 'none';
-        setTimeout(() => {
-            profileEditBlock.style.display = 'none';
-            profileViewBlock.style.display = 'block';
-            profileViewBlock.classList.remove('profile-fade-out');
-        }, 300);
-    }
-    if (editBtn && profileViewBlock && profileEditBlock) {
-        editBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            showEditBlock();
-        });
-    }
-    if (backBtn) {
-        backBtn.addEventListener('click', function() {
-            hideEditBlock();
-        });
-    }
-    if (clearBtn) {
-        clearBtn.addEventListener('click', function() {
-            document.querySelectorAll('.profile-edit-input[contenteditable]').forEach(el => {
-                el.innerText = '';
-            });
-        });
-    }
+    initializeActiveTab();
 });
 </script>
 {% endblock %}

@@ -1,6 +1,7 @@
 # accounts/urls.py
 from django.views.generic import RedirectView
 from django.urls import path
+from accounts.views import profile, delete_avatar
 from . import views
 
 urlpatterns = [
@@ -35,7 +36,7 @@ urlpatterns = [
     path('search-suggestions/', views.search_suggestions, name='search_suggestions'),
     path('planetary-system/', views.planetary_system, name='planetary_system'),  # Новый маршрут
     path('my_startups/', views.my_startups, name='my_startups'),  # Изменяем my-startups на my_startups
-    # URL для подгрузки похожих стартапов - ИСПРАВЛЯЕМ ТИП ID НА INT
+    path('profile/delete-avatar/', delete_avatar, name='delete_avatar'),
     path('load_similar_startups/<int:startup_id>/', views.load_similar_startups, name='load_similar_startups'),
     path('deals/', views.deals_view, name='deals_page'), # Новый маршрут для страницы Сделки
     path('notifications/', views.notifications_view, name='notifications_page'), # Новый маршрут для страницы Уведомления
