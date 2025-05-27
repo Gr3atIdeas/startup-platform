@@ -489,8 +489,7 @@ def profile(request, user_id=None):
 
     if request.method == 'POST':
         if profile_user != request.user:
-            messages.error(request, 'Вы не можете редактировать чужой профиль.')
-            return redirect('profile')
+            return JsonResponse({'success': False, 'error': 'Вы не можете редактировать чужой профиль.'}, status=403)
 
         # Обработка загрузки аватара
         if 'avatar' in request.FILES:
@@ -498,11 +497,15 @@ def profile(request, user_id=None):
             allowed_mimes = ['image/jpeg', 'image/png']
             if avatar.content_type not in allowed_mimes:
                 messages.error(request, 'Допустимы только файлы PNG или JPEG.')
+                if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                    return JsonResponse({'success': False, 'error': 'Допустимы только файлы PNG или JPEG.'})
                 return render(request, 'accounts/profile.html', {'user': profile_user, 'is_own_profile': True, 'form': form})
 
             max_size = 5 * 1024 * 1024
             if avatar.size > max_size:
                 messages.error(request, 'Размер файла не должен превышать 5 МБ.')
+                if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                    return JsonResponse({'success': False, 'error': 'Размер файла не должен превышать 5 МБ.'})
                 return render(request, 'accounts/profile.html', {'user': profile_user, 'is_own_profile': True, 'form': form})
 
             avatar_id = str(uuid.uuid4())
@@ -549,9 +552,14 @@ def profile(request, user_id=None):
 
                 logger.info(f"Аватар сохранён для user_id {request.user.user_id} по пути: {file_path}, UUID: {avatar_id}")
                 messages.success(request, 'Аватарка успешно загружена!')
+                if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                    return JsonResponse({'success': True, 'message': 'Аватарка успешно загружена!'})
             except Exception as e:
                 logger.error(f"Ошибка при сохранении аватара для user_id {request.user.user_id}: {str(e)}")
-                messages.error(request, 'Ошибка при загрузке аватара. Пожалуйста, попробуйте снова.')
+                messages.error(request, 'Ошибка при загрузке аватара.')
+                if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                    return JsonResponse({'success': False, 'error': 'Ошибка при загрузке аватара.'})
+            return redirect('profile')
 
         # Обработка редактирования профиля
         elif 'edit_profile' in request.POST:
@@ -559,21 +567,23 @@ def profile(request, user_id=None):
             if form.is_valid():
                 try:
                     user = form.save(commit=False)
-                    # Обработка Telegram в social_links (JSONB)
                     telegram = form.cleaned_data.get('telegram')
-                    if telegram:
-                        user.social_links = {'telegram': telegram}
-                    else:
-                        user.social_links = {}
+                    user.social_links = {'telegram': telegram} if telegram else {}
                     user.save()
                     logger.info(f"Профиль обновлён для user_id {request.user.user_id}")
+                    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                        return JsonResponse({'success': True, 'message': 'Профиль успешно обновлён!'})
                     messages.success(request, 'Профиль успешно обновлён!')
                 except Exception as e:
                     logger.error(f"Ошибка при обновлении профиля для user_id {request.user.user_id}: {str(e)}")
+                    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                        return JsonResponse({'success': False, 'error': 'Ошибка при сохранении профиля.'})
                     messages.error(request, 'Ошибка при сохранении профиля.')
             else:
+                if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                    return JsonResponse({'success': False, 'error': 'Форма содержит ошибки.', 'errors': form.errors})
                 messages.error(request, 'Форма содержит ошибки.')
-                return render(request, 'accounts/profile.html', {'user': profile_user, 'is_own_profile': True, 'form': form})
+            return render(request, 'accounts/profile.html', {'user': profile_user, 'is_own_profile': True, 'form': form})
 
     return render(request, 'accounts/profile.html', {'user': profile_user, 'is_own_profile': profile_user == request.user, 'form': form})
 

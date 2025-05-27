@@ -16,8 +16,8 @@
             <div class="profile-sidebar-user-info-block">
                 <div class="profile-sidebar-avatar-wrapper" id="avatarClickableArea" style="cursor: pointer;" title="Изменить аватар">
                     <img class="profile-sidebar-avatar-img" src="{% if user.get_profile_picture_url %}{{ user.get_profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}" alt="Аватар пользователя" />
-                    {% if is_own_profile and user.get_profile_picture_url %}
-                    <button class="profile-sidebar-avatar-delete" id="deleteAvatarBtn" title="Удалить аватар">
+                    {% if is_own_profile %}
+                    <button class="profile-sidebar-avatar-delete" id="deleteAvatarBtn" title="Удалить аватар" {% if not user.get_profile_picture_url %}style="display: none;"{% endif %}>
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M12 4L4 12M4 4L12 12" stroke="white" stroke-width="2" stroke-linecap="round"/>
                         </svg>
@@ -442,7 +442,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 method: 'POST',
                 body: formData,
                 headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': '{{ csrf_token }}'  // Добавляем CSRF-токен
                 }
             })
             .then(response => response.json())
@@ -451,7 +452,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     alert(data.message);
                     window.location.reload();
                 } else {
-                    alert(data.error);
+                    alert(data.error || 'Произошла ошибка при сохранении профиля.');
+                    if (data.errors) {
+                        console.log('Ошибки формы:', data.errors);
+                    }
                 }
             })
             .catch(error => {
