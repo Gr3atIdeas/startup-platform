@@ -1364,3 +1364,44 @@ body {
     width: 12px;
     height: 12px;
 }
+
+/* Пагинация для стартапов и новостей */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.pagination-link {
+    color: #FCFCFD;
+    font-size: 14px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 5px;
+    transition: background 0.2s, color 0.2s;
+}
+
+.pagination-link:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #FFF;
+}
+
+.pagination-link.active {
+    background: #E6E8EC;
+    color: #23262F;
+    cursor: default;
+}
+
+/* Сообщение для пустого списка новостей */
+.profile-main-no-news {
+    color: #777E90;
+    font-size: 16px;
+    text-align: center;
+    width: 100%;
+    padding: 20px 0;
+}

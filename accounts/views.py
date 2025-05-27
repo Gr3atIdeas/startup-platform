@@ -487,6 +487,20 @@ def profile(request, user_id=None):
     else:
         form = None
 
+    # Получение стартапов, где пользователь является владельцем
+    startups = Startups.objects.filter(owner=profile_user).select_related('direction').annotate(
+        comment_count=Count('comments')
+    ).order_by('-created_at')
+    startups_paginator = Paginator(startups, 3)  # 3 стартапа на страницу
+    startups_page_number = request.GET.get('startups_page', 1)
+    startups_page = startups_paginator.get_page(startups_page_number)
+
+    # Получение новостей, созданных пользователем
+    news = NewsArticles.objects.filter(author=profile_user).order_by('-published_at')
+    news_paginator = Paginator(news, 6)  # 6 новостей на страницу
+    news_page_number = request.GET.get('news_page', 1)
+    news_page = news_paginator.get_page(news_page_number)
+
     if request.method == 'POST':
         if profile_user != request.user:
             return JsonResponse({'success': False, 'error': 'Вы не можете редактировать чужой профиль.'}, status=403)
@@ -499,19 +513,30 @@ def profile(request, user_id=None):
                 messages.error(request, 'Допустимы только файлы PNG или JPEG.')
                 if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
                     return JsonResponse({'success': False, 'error': 'Допустимы только файлы PNG или JPEG.'})
-                return render(request, 'accounts/profile.html', {'user': profile_user, 'is_own_profile': True, 'form': form})
+                return render(request, 'accounts/profile.html', {
+                    'user': profile_user,
+                    'is_own_profile': True,
+                    'form': form,
+                    'startups_page': startups_page,
+                    'news_page': news_page
+                })
 
             max_size = 5 * 1024 * 1024
             if avatar.size > max_size:
                 messages.error(request, 'Размер файла не должен превышать 5 МБ.')
                 if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
                     return JsonResponse({'success': False, 'error': 'Размер файла не должен превышать 5 МБ.'})
-                return render(request, 'accounts/profile.html', {'user': profile_user, 'is_own_profile': True, 'form': form})
+                return render(request, 'accounts/profile.html', {
+                    'user': profile_user,
+                    'is_own_profile': True,
+                    'form': form,
+                    'startups_page': startups_page,
+                    'news_page': news_page
+                })
 
             avatar_id = str(uuid.uuid4())
             file_path = f"users/{request.user.user_id}/avatar/{avatar_id}_{avatar.name}"
             try:
-                # Удаление старых аватарок
                 s3_client = boto3.client(
                     's3',
                     endpoint_url=settings.AWS_S3_ENDPOINT_URL,
@@ -527,19 +552,16 @@ def profile(request, user_id=None):
                         s3_client.delete_object(Bucket=bucket_name, Key=obj['Key'])
                         logger.info(f"Удалён старый аватар: {obj['Key']}")
 
-                # Удаление старых записей в file_storage
                 FileStorage.objects.filter(
                     entity_type__type_name='user',
                     entity_id=request.user.user_id,
                     file_type__type_name='avatar'
                 ).delete()
 
-                # Сохранение нового аватара
                 default_storage.save(file_path, avatar)
                 request.user.profile_picture_url = avatar_id
                 request.user.save()
 
-                # Сохранение метаданных в file_storage
                 entity_type, _ = EntityTypes.objects.get_or_create(type_name='user')
                 file_type, _ = FileTypes.objects.get_or_create(type_name='avatar')
                 FileStorage.objects.create(
@@ -583,9 +605,21 @@ def profile(request, user_id=None):
                 if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
                     return JsonResponse({'success': False, 'error': 'Форма содержит ошибки.', 'errors': form.errors})
                 messages.error(request, 'Форма содержит ошибки.')
-            return render(request, 'accounts/profile.html', {'user': profile_user, 'is_own_profile': True, 'form': form})
+            return render(request, 'accounts/profile.html', {
+                'user': profile_user,
+                'is_own_profile': True,
+                'form': form,
+                'startups_page': startups_page,
+                'news_page': news_page
+            })
 
-    return render(request, 'accounts/profile.html', {'user': profile_user, 'is_own_profile': profile_user == request.user, 'form': form})
+    return render(request, 'accounts/profile.html', {
+        'user': profile_user,
+        'is_own_profile': profile_user == request.user,
+        'form': form,
+        'startups_page': startups_page,
+        'news_page': news_page
+    })
 
 def delete_avatar(request):
     if not request.user.is_authenticated:
