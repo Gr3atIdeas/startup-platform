@@ -15,7 +15,7 @@
         <div class="profile-sidebar">
             <div class="profile-sidebar-user-info-block">
                 <div class="profile-sidebar-avatar-wrapper" id="avatarClickableArea" style="cursor: pointer;" title="Изменить аватар">
-                    <img class="profile-sidebar-avatar-img" src="{% if user.get_profile_picture_url %}{{ user.get_profile_picture_url }}{% else %}{% static 'accounts/images/avatars/user.png' %}{% endif %}" alt="Аватар пользователя" />
+                    <img class="profile-sidebar-avatar-img" src="{% if user.get_profile_picture_url %}{{ user.get_profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}" alt="Аватар пользователя" />
                     {% if is_own_profile and user.get_profile_picture_url %}
                     <button class="profile-sidebar-avatar-delete" id="deleteAvatarBtn" title="Удалить аватар">
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -255,7 +255,7 @@
                     <div class="profile-edit-main-row">
                         <div class="profile-edit-avatar-col">
                             <div class="profile-edit-avatar-wrapper">
-                                <img src="{% if user.get_profile_picture_url %}{{ user.get_profile_picture_url }}{% else %}{% static 'accounts/images/avatars/user.png' %}{% endif %}" alt="Аватар" class="profile-edit-avatar-img"/>
+                                <img src="{% if user.get_profile_picture_url %}{{ user.get_profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}" alt="Аватар" class="profile-edit-avatar-img"/>
                             </div>
                             <div class="profile-edit-avatar-info">
                                 <div class="profile-edit-avatar-label">Profile photo</div>
@@ -380,7 +380,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        document.querySelector('.profile-sidebar-avatar-img').src = "{% static 'accounts/images/avatars/user.png' %}";
+                        document.querySelector('.profile-sidebar-avatar-img').src = "{% static 'accounts/images/avatars/default_avatar_ufo.png' %}";
                         deleteAvatarBtn.style.display = 'none';
                         alert(data.message);
                     } else {
