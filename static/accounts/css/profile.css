@@ -1405,3 +1405,14 @@ body {
     width: 100%;
     padding: 20px 0;
 }
+
+/* Улучшение отображения логотипов стартапов */
+.profile-main-startup-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 12px;
+    flex-shrink: 0;
+    order: -1;
+    background-color: #011B35; /* Фон на случай, если изображение не загрузилось */
+}

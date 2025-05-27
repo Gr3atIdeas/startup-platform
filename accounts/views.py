@@ -487,13 +487,20 @@ def profile(request, user_id=None):
     else:
         form = None
 
-    # Получение стартапов, где пользователь является владельцем
-    startups = Startups.objects.filter(owner=profile_user).select_related('direction').annotate(
+    # Получение стартапов, где пользователь является владельцем, только approved и pending
+    startups = Startups.objects.filter(
+        owner=profile_user,
+        status__in=['approved', 'pending']
+    ).select_related('direction').annotate(
         comment_count=Count('comments')
-    ).order_by('-created_at')
+    ).order_by('-created_at')  # Новые стартапы первыми
     startups_paginator = Paginator(startups, 3)  # 3 стартапа на страницу
     startups_page_number = request.GET.get('startups_page', 1)
     startups_page = startups_paginator.get_page(startups_page_number)
+
+    # Логирование для отладки логотипов
+    for startup in startups_page:
+        logger.info(f"Стартап ID: {startup.startup_id}, Title: {startup.title}, Logo URLs: {startup.logo_urls}")
 
     # Получение новостей, созданных пользователем
     news = NewsArticles.objects.filter(author=profile_user).order_by('-published_at')

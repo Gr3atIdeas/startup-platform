@@ -1,5 +1,6 @@
 {% extends 'accounts/base.html' %}
 {% load static %}
+{% load file_tags %} {# Добавляем загрузку тега file_tags #}
 
 {% block title %}Профиль пользователя{% endblock %}
 
@@ -137,7 +138,9 @@
                                         </div>
                                         <a href="{% url 'startup_detail' startup.startup_id %}" class="btn btn-primary profile-main-startup-details-btn">Подробнее</a>
                                     </div>
-                                    <img class="profile-main-startup-image" src="{% if startup.get_logo_url %}{{ startup.get_logo_url }}{% else %}{% static 'accounts/images/profile/Rectangle_4196.png' %}{% endif %}" alt="Изображение стартапа" />
+                                    <img class="profile-main-startup-image" 
+                                         src="{% if startup.logo_urls and startup.logo_urls.0 %}{% get_file_url_tag startup.logo_urls.0 startup.startup_id 'logo' %}{% else %}{% static 'accounts/images/profile/Rectangle_4196.png' %}{% endif %}" 
+                                         alt="Изображение стартапа" />
                                 </div>
                                 {% if not forloop.last %}
                                     <div class="profile-main-startup-list-divider"></div>
@@ -147,7 +150,7 @@
                             {% if startups_page.paginator.num_pages > 1 %}
                                 <div class="pagination">
                                     {% if startups_page.has_previous %}
-                                        <a href="?startups_page={{ startups_page.previous_page_number }}{% if news_page.number != 1 %}&news_page={{ news_page.number }}{% endif %}" class="pagination-link">&laquo; Предыдущая</a>
+                                        <a href="?startups_page={{ startups_page.previous_page_number }}{% if news_page.number != 1 %}&news_page={{ news_page.number }}{% endif %}" class="pagination-link">« Предыдущая</a>
                                     {% endif %}
                                     {% for num in startups_page.paginator.page_range %}
                                         {% if num == startups_page.number %}
@@ -157,7 +160,7 @@
                                         {% endif %}
                                     {% endfor %}
                                     {% if startups_page.has_next %}
-                                        <a href="?startups_page={{ startups_page.next_page_number }}{% if news_page.number != 1 %}&news_page={{ news_page.number }}{% endif %}" class="pagination-link">Следующая &raquo;</a>
+                                        <a href="?startups_page={{ startups_page.next_page_number }}{% if news_page.number != 1 %}&news_page={{ news_page.number }}{% endif %}" class="pagination-link">Следующая »</a>
                                     {% endif %}
                                 </div>
                             {% endif %}
@@ -180,7 +183,7 @@
                                 {% if news_page.paginator.num_pages > 1 %}
                                     <div class="pagination">
                                         {% if news_page.has_previous %}
-                                            <a href="?news_page={{ news_page.previous_page_number }}{% if startups_page.number != 1 %}&startups_page={{ startups_page.number }}{% endif %}" class="pagination-link">&laquo; Предыдущая</a>
+                                            <a href="?news_page={{ news_page.previous_page_number }}{% if startups_page.number != 1 %}&startups_page={{ startups_page.number }}{% endif %}" class="pagination-link">« Предыдущая</a>
                                         {% endif %}
                                         {% for num in news_page.paginator.page_range %}
                                             {% if num == news_page.number %}
@@ -190,7 +193,7 @@
                                             {% endif %}
                                         {% endfor %}
                                         {% if news_page.has_next %}
-                                            <a href="?news_page={{ news_page.next_page_number }}{% if startups_page.number != 1 %}&startups_page={{ startups_page.number }}{% endif %}" class="pagination-link">Следующая &raquo;</a>
+                                            <a href="?news_page={{ news_page.next_page_number }}{% if startups_page.number != 1 %}&startups_page={{ startups_page.number }}{% endif %}" class="pagination-link">Следующая »</a>
                                         {% endif %}
                                     </div>
                                 {% endif %}
