@@ -38,6 +38,16 @@ logger = logging.getLogger(__name__)
 def home(request):
     return render(request, 'accounts/home.html')
 
+# Страница FAQ
+def faq_page_view(request):
+    return render(request, 'accounts/faq.html')
+
+# Страница Контакты
+def contacts_page_view(request):
+    # Пока просто рендерим заглушку, если такого шаблона нет
+    # или создайте accounts/contacts.html по аналогии с faq.html
+    return render(request, 'accounts/contacts.html', {})
+
 # Регистрация пользователя
 def register(request):
     if request.method == 'POST':

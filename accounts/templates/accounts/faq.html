@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}FAQ - Great Ideas{% endblock %}
+
+{% block head_extra %}
+    <link rel="stylesheet" href="{% static 'accounts/css/faq.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="faq-page-wrapper">
+    <div class="faq-main-container">
+        <div class="faq-header-block">
+            <div class="faq-title-section">
+                <h1 class="faq-main-title-text">FAQ</h1>
+                <p class="faq-subtitle-text">Часто <br>задаваемые вопросы</p>
+            </div>
+            <div class="faq-ask-question-section">
+                <p class="faq-ask-question-prompt">Не нашли ответа?</p>
+                <a href="#" class="faq-ask-question-button">Задать вопрос</a>
+            </div>
+        </div>
+
+        <div class="faq-content-block">
+            <div class="faq-left-panel">
+                <div class="faq-question-category" data-question-id="what-is-great-ideas">
+                    Что такое «Great Ideas»?
+                </div>
+
+                <div class="faq-accordion-category">
+                    <div class="faq-accordion-header">
+                        <span>Для стартаперов и владельцев франшиз</span>
+                        <img src="{% static 'accounts/images/faq/chevron_down.svg' %}" alt="toggle" class="faq-chevron-icon">
+                    </div>
+                    <div class="faq-accordion-content">
+                        <div class="faq-accordion-category nested">
+                            <div class="faq-accordion-header">
+                                <span>Создание и ведение профиля стартапа</span>
+                                <img src="{% static 'accounts/images/faq/chevron_down.svg' %}" alt="toggle" class="faq-chevron-icon">
+                            </div>
+                            <div class="faq-accordion-content">
+                                <div class="faq-question-item" data-question-id="how-to-register">Как зарегистрироваться на платформе «Great Ideas»?</div>
+                                <div class="faq-question-item" data-question-id="how-to-setup-profile">Как правильно оформить профиль стартапа?</div>
+                                <div class="faq-question-item" data-question-id="can-edit-info">Можно ли редактировать информацию после публикации?</div>
+                                <div class="faq-question-item active" data-question-id="franchise-types">Какие виды франшиз можно размещать?</div>
+                                <div class="faq-question-item" data-question-id="franchise-limits">Есть ли ограничения на размещение франшиз?</div>
+                                <div class="faq-question-item" data-question-id="franchise-requirements">Какие требования для размещения франшизы?</div>
+                                <div class="faq-question-item" data-question-id="franchise-verification">Проверяет ли платформа франшизы перед публикацией?</div>
+                                <div class="faq-question-item" data-question-id="franchise-data-privacy">Как защищена конфиденциальность данных франшизы?</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-accordion-category">
+                    <div class="faq-accordion-header">
+                        <span>Привлечение инвестиций</span>
+                        <img src="{% static 'accounts/images/faq/chevron_down.svg' %}" alt="toggle" class="faq-chevron-icon">
+                    </div>
+                    <div class="faq-accordion-content">
+                        <!-- Placeholder for investment questions -->
+                         <div class="faq-question-item" data-question-id="investment-placeholder">Как привлечь инвестиции? (Пример)</div>
+                    </div>
+                </div>
+                
+                <div class="faq-accordion-category">
+                     <div class="faq-accordion-header">
+                        <span>Для инвесторов</span>
+                        <img src="{% static 'accounts/images/faq/chevron_down.svg' %}" alt="toggle" class="faq-chevron-icon">
+                    </div>
+                    <div class="faq-accordion-content">
+                        <!-- Placeholder for investor questions -->
+                        <div class="faq-question-item" data-question-id="investor-placeholder">Как найти проект для инвестиций? (Пример)</div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="faq-right-panel">
+                <h2 class="faq-answer-title" id="faqAnswerTitle">Какие виды франшиз можно размещать?</h2>
+                <div class="faq-answer-body" id="faqAnswerBody">
+                    <p>Франшизы в сферах общественного питания, розничной торговли, услуг для бизнеса, образования, здоровья/красоты, IT и других.</p>
+                    <a href="#" class="faq-answer-details-link">
+                        Список доступных сфер
+                        <img src="{% static 'accounts/images/faq/bluearrow.svg' %}" alt="Перейти">
+                    </a>
+                </div>
+            </div>
+            <div class="faq-custom-scrollbar-visual"></div>
+        </div>
+    </div>
+</div>
+
+{# Sample Q&A data, to be used by JS or loaded dynamically if needed #}
+<script type="application/json" id="faqData">
+{
+    "what-is-great-ideas": {
+        "title": "Что такое «Great Ideas»?",
+        "answer": "<p>«Great Ideas» — это инновационная платформа, соединяющая перспективные стартапы и франшизы с инвесторами и предпринимателями. Мы помогаем идеям расти и воплощаться в жизнь.</p>"
+    },
+    "how-to-register": {
+        "title": "Как зарегистрироваться на платформе «Great Ideas»?",
+        "answer": "<p>Для регистрации на платформе «Great Ideas» перейдите на страницу регистрации, заполните необходимые поля и следуйте инструкциям. Процесс займет всего несколько минут.</p>"
+    },
+    "how-to-setup-profile": {
+        "title": "Как правильно оформить профиль стартапа?",
+        "answer": "<p>Для правильного оформления профиля стартапа предоставьте подробную информацию о вашем проекте, бизнес-модели, команде и финансовых показателях. Качественно заполненный профиль повышает шансы на привлечение инвестиций.</p>"
+    },
+    "can-edit-info": {
+        "title": "Можно ли редактировать информацию после публикации?",
+        "answer": "<p>Да, вы можете редактировать информацию о вашем стартапе или франшизе в личном кабинете после публикации. Рекомендуем поддерживать актуальность данных.</p>"
+    },
+    "franchise-types": {
+        "title": "Какие виды франшиз можно размещать?",
+        "answer": "<p>На платформе можно размещать франшизы в самых разных сферах: общественное питание, розничная торговля, услуги для бизнеса и населения, образование, здоровье и красота, IT, производство и многие другие.</p><a href='#' class='faq-answer-details-link'>Список доступных сфер <img src='{% static 'accounts/images/faq/bluearrow.svg' %}' alt='Перейти'></a>"
+    },
+    "franchise-limits": {
+        "title": "Есть ли ограничения на размещение франшиз?",
+        "answer": "<p>Мы приветствуем качественные и проверенные франшизы. Существуют определённые критерии отбора, направленные на защиту интересов инвесторов и пользователей платформы. Подробнее с условиями можно ознакомиться в соответствующем разделе правил.</p>"
+    },
+    "franchise-requirements": {
+        "title": "Какие требования для размещения франшизы?",
+        "answer": "<p>Основные требования включают наличие зарегистрированного юридического лица, детально проработанный бизнес-план франшизы, положительную репутацию и готовность предоставить всю необходимую документацию для проверки.</p>"
+    },
+    "franchise-verification": {
+        "title": "Проверяет ли платформа франшизы перед публикацией?",
+        "answer": "<p>Да, все франшизы проходят процедуру верификации перед публикацией на платформе. Это помогает обеспечить высокое качество предложений и безопасность для потенциальных франчайзи.</p>"
+    },
+    "franchise-data-privacy": {
+        "title": "Как защищена конфиденциальность данных франшизы?",
+        "answer": "<p>Мы уделяем большое внимание защите данных. Вся конфиденциальная информация защищена современными технологиями шифрования и доступна только авторизованным пользователям в соответствии с нашей политикой конфиденциальности.</p>"
+    },
+    "investment-placeholder": {
+        "title": "Как привлечь инвестиции?",
+        "answer": "<p>Детально опишите свой проект, его преимущества и потенциал роста. Подготовьте качественную презентацию и финансовую модель. Активно участвуйте в жизни платформы.</p>"
+    },
+    "investor-placeholder": {
+        "title": "Как найти проект для инвестиций?",
+        "answer": "<p>Используйте фильтры каталога, изучайте профили стартапов и франшиз, обращайте внимание на их бизнес-показатели и команду. Вы также можете подписаться на обновления по интересующим вас сферам.</p>"
+    }
+}
+</script>
+<script src="{% static 'accounts/js/faq.js' %}" defer></script>
+{% endblock %}
