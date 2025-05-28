@@ -128,6 +128,8 @@ html, body {
     align-items: flex-start;
     gap: 4px;
     display: inline-flex;
+    flex-wrap: wrap; /* Разрешаем перенос */
+    max-width: 100%; /* Ограничиваем максимальную ширину */
 }
 .profile-sidebar-name span { /* Corresponds to multiple <StyledP> or <StyledSpan> in React for name parts */
     color: #FCFCFD;
@@ -197,7 +199,8 @@ html, body {
     font-weight: 300;
     letter-spacing: 0.12px;
     word-wrap: break-word;
-    width: 186px; /* from previous CSS, seems consistent */
+    width: 100%; /* Занимаем всю доступную ширину */
+    max-width: 186px; /* Ограничиваем максимальную ширину как в макете */
     text-align: center;
 }
 
@@ -206,9 +209,45 @@ html, body {
     gap: 8px; /* From StyledAddress02 */
     display: flex; /* Added for icon and link alignment */
     align-items: center; /* Added for icon and link alignment */
+    width: 100%; /* Занимаем всю доступную ширину */
+    overflow: hidden; /* Скрываем то, что не помещается */
 }
 /* StyledIconsGlobeLine -> .profile-sidebar-globe-icon */
 /* Removed styles for .profile-sidebar-globe-icon and its -inner parts as it's replaced by img */
+
+.profile-sidebar-website-link {
+    white-space: nowrap; /* Запрещаем перенос строки */
+    overflow: hidden; /* Скрываем лишний текст */
+    text-overflow: ellipsis; /* Добавляем многоточие */
+    display: block; /* Чтобы text-overflow работал корректно */
+    max-width: calc(100% - 24px); /* Оставляем место для иконки (16px + 8px gap) */
+    color: #777E90; /* Цвет как в макете, если нужен */
+    text-decoration: none; /* Убираем подчеркивание, если есть */
+}
+
+.profile-sidebar-social-link {
+    width: 100%;
+    overflow: hidden; /* Скрываем то, что не помещается */
+    white-space: nowrap; /* Текст в одну строку */
+}
+
+.profile-sidebar-social-link span {
+    display: inline-block; /* Чтобы text-overflow работал для вложенной ссылки */
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.profile-sidebar-social-link a {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline; /* или inline-block, если нужно больше контроля над размерами */
+    /* max-width не нужен здесь, т.к. родительский span уже обрезает */
+    color: #777E90; /* Цвет как в макете, если нужен */
+    text-decoration: none; /* Убираем подчеркивание, если есть */
+}
 
 /* StyledFrame932 (round share icons container) -> .profile-sidebar-social-icons-round */
 .profile-sidebar-social-icons-round {
@@ -347,7 +386,7 @@ html, body {
     max-width: 100%;
     flex-direction: column;
     justify-content: flex-start;
-    align-items: flex-end; 
+    align-items: flex-start; /* Изменено с flex-end на flex-start */
     gap: 100px; /* Original gap from StyledFrame1018 */
     display: flex;
 }
