@@ -111,6 +111,8 @@ html, body {
     align-items: center;
     gap: 20px;
     display: flex;
+    width: 100%; /* Добавляем, чтобы ограничить ширину дочерних элементов */
+    overflow: hidden; /* Добавляем, чтобы обрезать контент, если он все равно выходит */
 }
 
 /* StyledFrame931 (Name, Role, ID block) */
@@ -127,9 +129,10 @@ html, body {
     justify-content: flex-start;
     align-items: flex-start;
     gap: 4px;
-    display: inline-flex;
+    display: flex; /* Меняем на flex для лучшего контроля над переносом */
     flex-wrap: wrap; /* Разрешаем перенос */
     max-width: 100%; /* Ограничиваем максимальную ширину */
+    word-break: break-word; /* Добавляем для принудительного переноса длинных слов */
 }
 .profile-sidebar-name span { /* Corresponds to multiple <StyledP> or <StyledSpan> in React for name parts */
     color: #FCFCFD;
@@ -220,7 +223,7 @@ html, body {
     overflow: hidden; /* Скрываем лишний текст */
     text-overflow: ellipsis; /* Добавляем многоточие */
     display: block; /* Чтобы text-overflow работал корректно */
-    max-width: calc(100% - 24px); /* Оставляем место для иконки (16px + 8px gap) */
+    max-width: 100%; /* Занимает всю доступную ширину родителя .profile-sidebar-website */
     color: #777E90; /* Цвет как в макете, если нужен */
     text-decoration: none; /* Убираем подчеркивание, если есть */
 }
@@ -244,7 +247,7 @@ html, body {
     overflow: hidden;
     text-overflow: ellipsis;
     display: inline; /* или inline-block, если нужно больше контроля над размерами */
-    /* max-width не нужен здесь, т.к. родительский span уже обрезает */
+    max-width: 100%; /* Убедимся, что ссылка тоже обрезается */
     color: #777E90; /* Цвет как в макете, если нужен */
     text-decoration: none; /* Убираем подчеркивание, если есть */
 }

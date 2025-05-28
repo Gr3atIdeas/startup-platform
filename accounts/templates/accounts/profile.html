@@ -128,7 +128,13 @@
                                             </div>
                                         </div>
                                         <div class="profile-main-startup-category-progress">
-                                            <div class="profile-main-startup-category-tag">{{ startup.direction.direction_name|default:"Без категории" }}</div>
+                                            <div class="profile-main-startup-category-tag">
+                                                {% if startup.direction.direction_name == "Fastfood" %}Фастфуд
+                                                {% elif startup.direction.direction_name == "Technology" %}Технологии
+                                                {% elif startup.direction.direction_name == "Finance" %}Финансы
+                                                {% else %}{{ startup.direction.direction_name|default:"Без категории" }}
+                                                {% endif %}
+                                            </div>
                                             <div class="progress-bar-and-text-container">
                                                 <div class="profile-main-startup-progress-bar-bg">
                                                     <div class="profile-main-startup-progress-bar-fg" style="width: {{ startup.get_progress_percentage }}%;"></div>
