@@ -47,6 +47,7 @@ body, html {
     flex-direction: column;
     gap: 55px; /* Отступ между хедером FAQ и основным блоком */
     box-sizing: border-box;
+    background-color: transparent; /* Явно устанавливаем прозрачный фон */
     /* padding-bottom: 65px; /* Отступ снизу, если нужен */
 }
 
@@ -55,6 +56,7 @@ body, html {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    background-color: transparent; /* Явно устанавливаем прозрачный фон */
     /* padding-top: 20px; убрано, т.к. есть на wrapper */
 }
 
@@ -142,8 +144,11 @@ body, html {
 
 .faq-left-panel {
     width: 535px; /* (559 - 24)px, но округлим до 535 для симметрии с отступом 24px*/
+    /* Уменьшим ширину на величину правого паддинга для скроллбара */
+    width: calc(535px - 10px); /* 10px - предполагаемый отступ для скроллбара */
     height: calc(100% - 64px); /* 797px - 32px (top) - 32px (bottom) */
     padding: 32px 24px;
+    padding-right: calc(24px + 10px); /* Добавляем 10px справа для скроллбара, чтобы он не прилегал к краю */
     display: flex;
     flex-direction: column;
     gap: 20px; /* Промежуток между элементами */
@@ -161,6 +166,9 @@ body, html {
 .faq-left-panel::-webkit-scrollbar-track {
     background: transparent; /* Фон трека скроллбара */
     border-radius: 4px;
+    /* Добавим небольшой отступ справа от трека, чтобы он не прилипал к контенту */
+    /* Это может не сработать во всех браузерах так, как ожидается для track */
+    /* Более надежно - сделать padding для самого .faq-left-panel */
 }
 
 .faq-left-panel::-webkit-scrollbar-thumb {
