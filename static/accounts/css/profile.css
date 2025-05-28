@@ -228,7 +228,7 @@ html, body {
     max-width: 100%; /* Занимает всю доступную ширину родителя .profile-sidebar-website */
     color: #777E90; /* Цвет как в макете, если нужен */
     text-decoration: none; /* Убираем подчеркивание, если есть */
-    font-size: 6px; /* Уменьшаем шрифт в два раза (исходный 12px) */
+    font-size: 10px; 
 }
 
 .profile-sidebar-social-link {
@@ -253,7 +253,7 @@ html, body {
     max-width: 100%; /* Убедимся, что ссылка тоже обрезается */
     color: #777E90; /* Цвет как в макете, если нужен */
     text-decoration: none; /* Убираем подчеркивание, если есть */
-    font-size: 6px; /* Уменьшаем шрифт в два раза (исходный 12px) */
+    font-size: 10px; 
 }
 
 /* StyledFrame932 (round share icons container) -> .profile-sidebar-social-icons-round */
