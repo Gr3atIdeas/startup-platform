@@ -1,31 +1,32 @@
 @font-face {
     font-family: 'Unbounded';
-    src: url('../fonts/Unbounded-Light.woff2') format('woff2'); /* Путь к вашему файлу шрифта */
+    src: url('../fonts/Unbounded-Light.ttf') format('truetype'); /* ИСПРАВЛЕН ПУТЬ И ФОРМАТ */
     font-weight: 300;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'Unbounded';
-    src: url('../fonts/Unbounded-Regular.woff2') format('woff2'); /* Путь к вашему файлу шрифта */
+    src: url('../fonts/Unbounded-Regular.ttf') format('truetype'); /* ИСПРАВЛЕН ПУТЬ И ФОРМАТ */
     font-weight: 400;
     font-style: normal;
 }
 
 @font-face {
-    font-family: 'Blippo-Black CY [Rus by me]'; /* Используйте точное имя, как в Figma */
-    src: url('../fonts/BlippoBlackCYRus.woff2') format('woff2'); /* Предполагаемое имя файла, замените на актуальное */
-    font-weight: 400; /* Или '900' если это Black */
+    font-family: 'Blippo-Black CY [Rus by me]';
+    src: url('../fonts/blippo_blackcyrusbyme.otf') format('opentype'); /* ИСПРАВЛЕН ПУТЬ И ФОРМАТ */
+    font-weight: 400; /* Или 900, если шрифт очень жирный */
     font-style: normal;
 }
 
+/*
 @font-face {
     font-family: 'Ubuntu';
-    src: url('../fonts/Ubuntu-Regular.woff2') format('woff2'); /* Путь к вашему файлу шрифта */
+    src: url('../fonts/Ubuntu-Regular.woff2') format('woff2'); 
     font-weight: 400;
     font-style: normal;
 }
-
+*/
 
 body, html {
     margin: 0;
@@ -300,7 +301,7 @@ body, html {
 
 .faq-answer-title {
     color: #191919;
-    font-family: 'Ubuntu', sans-serif;
+    font-family: 'Ubuntu', sans-serif; /* ЗАМЕНА: Ubuntu временно заменен на sans-serif */
     font-size: 24px;
     font-weight: 400;
     line-height: 1; /* 24px */
@@ -310,7 +311,7 @@ body, html {
 
 .faq-answer-body {
     color: #191919;
-    font-family: 'Ubuntu', sans-serif;
+    font-family: 'Ubuntu', sans-serif; /* ЗАМЕНА: Ubuntu временно заменен на sans-serif */
     font-size: 16px;
     font-weight: 400;
     line-height: 1.0625; /* 17px / 16px */
