@@ -122,17 +122,19 @@ html, body {
     align-items: center;
     gap: 10px;
     display: flex;
+    width: 100%; /* Добавляем для корректного центрирования дочерних flex-элементов */
 }
 
 /* StyledNameName -> .profile-sidebar-name */
 .profile-sidebar-name {
-    justify-content: flex-start;
-    align-items: flex-start;
+    justify-content: center; /* Изменено на center для центрирования имени */
+    align-items: center; /* Добавлено для центрирования по вертикали, если имя переносится */
     gap: 4px;
     display: flex; /* Меняем на flex для лучшего контроля над переносом */
     flex-wrap: wrap; /* Разрешаем перенос */
     max-width: 100%; /* Ограничиваем максимальную ширину */
     word-break: break-word; /* Добавляем для принудительного переноса длинных слов */
+    text-align: center; /* Дополнительно для центрирования текста внутри span, если они станут блочными */
 }
 .profile-sidebar-name span { /* Corresponds to multiple <StyledP> or <StyledSpan> in React for name parts */
     color: #FCFCFD;
@@ -226,6 +228,7 @@ html, body {
     max-width: 100%; /* Занимает всю доступную ширину родителя .profile-sidebar-website */
     color: #777E90; /* Цвет как в макете, если нужен */
     text-decoration: none; /* Убираем подчеркивание, если есть */
+    font-size: 6px; /* Уменьшаем шрифт в два раза (исходный 12px) */
 }
 
 .profile-sidebar-social-link {
@@ -250,6 +253,7 @@ html, body {
     max-width: 100%; /* Убедимся, что ссылка тоже обрезается */
     color: #777E90; /* Цвет как в макете, если нужен */
     text-decoration: none; /* Убираем подчеркивание, если есть */
+    font-size: 6px; /* Уменьшаем шрифт в два раза (исходный 12px) */
 }
 
 /* StyledFrame932 (round share icons container) -> .profile-sidebar-social-icons-round */
