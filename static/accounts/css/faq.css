@@ -31,7 +31,8 @@ body, html {
     width: 100%;
     min-height: 100vh; /* Гарантирует, что фон занимает всю высоту экрана */
     padding-top: 20px; /* Отступ сверху как в макете */
-    background: linear-gradient(153deg, black 0%, #00346B 25%, #004E9F 48%, #01366D 64%, #020202 100%);
+    /* background: linear-gradient(153deg, black 0%, #00346B 25%, #004E9F 48%, #01366D 64%, #020202 100%); */ /* ИЗМЕНЕНО: фон убран */
+    background: none; /* Явно указываем отсутствие фона */
     overflow: hidden; /* Как в макете, но может потребоваться настройка, если контент будет выходить за рамки */
     display: flex;
     flex-direction: column;
@@ -143,9 +144,10 @@ body, html {
 }
 
 .faq-left-panel {
-    width: 535px; /* ИЗМЕНЕНО: Возвращена ширина */
+    width: 535px;
     height: calc(100% - 64px); /* 797px - 32px (top) - 32px (bottom) */
-    padding: 32px 24px; /* ИЗМЕНЕНО: Возвращены стандартные паддинги */
+    /* padding: 32px 24px; ИЗМЕНЕНО: правый паддинг будет увеличен */
+    padding: 32px 34px 32px 24px; /* top, right (24+10), bottom, left. Отступ справа увеличен на 10px для смещения скроллбара */
     display: flex;
     flex-direction: column;
     gap: 20px; /* Промежуток между элементами */
@@ -163,7 +165,7 @@ body, html {
 .faq-left-panel::-webkit-scrollbar-track {
     background: transparent; /* Фон трека скроллбара */
     border-radius: 4px;
-    margin-right: 10px; /* ИЗМЕНЕНО: Добавлен отступ справа для смещения трека влево */
+    /* margin-right: 10px; ИЗМЕНЕНО: Удален margin, так как он не сработал */
     /* Добавим небольшой отступ справа от трека, чтобы он не прилипал к контенту */
     /* Это может не сработать во всех браузерах так, как ожидается для track */
     /* Более надежно - сделать padding для самого .faq-left-panel */
