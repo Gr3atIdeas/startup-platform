@@ -826,7 +826,10 @@ body {
 
 /* Стили для секции стартапов */
 #startupsContent {
-    padding: 32px; 
+    padding-top: 32px; 
+    padding-right: 32px;
+    padding-bottom: 32px;
+    padding-left: 0; /* Убираем отступ слева */
     background: transparent; 
     border-radius: 10px; 
     overflow: hidden; 
@@ -866,7 +869,10 @@ body {
 
 /* Стили для секции новостей */
 #newsContent {
-    padding: 32px; 
+    padding-top: 32px; 
+    padding-right: 32px;
+    padding-bottom: 32px;
+    padding-left: 0; /* Убираем отступ слева */
     background: transparent; 
     border-radius: 10px; 
     overflow: hidden; 
