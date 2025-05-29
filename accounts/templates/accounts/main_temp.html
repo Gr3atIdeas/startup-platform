@@ -1,13 +1,14 @@
+{% extends 'accounts/base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Главная страница</title>
+
+{% block title %}Главная страница (временная){% endblock %}
+
+{% block head_extra %}
+    {{ block.super }}
     <link rel="stylesheet" href="{% static 'accounts/css/main_temp.css' %}">
-</head>
-<body>
+{% endblock %}
+
+{% block content %}
     <div class="main-container">
         <div class="header-block">
             <div class="placeholder-image header-placeholder">Большой плейсхолдер</div>
@@ -534,7 +535,7 @@
                     <div class="story-card-description">Наш стартап разрабатывает инновационную платформу для телемедицины, которая обеспечивает пользователям доступ к качественным медицинским консультациям в любое время и в любом месте, уменьшая необходимость в личных визитах к врачам...</div>
                     <div class="placeholder-image story-card-rating-placeholder">Placeholder for rating stars</div>
                 </div>
-                <div class="story-card-item"> <!-- Duplicate card from example -->
+                <div class="story-card-item">
                     <div class="story-card-top-bg"></div>
                     <div class="placeholder-image story-card-avatar">Плейсхолдер</div>
                     <div class="story-card-name">Алена</div>
@@ -961,5 +962,4 @@
     </div>
 
     <script src="{% static 'accounts/js/main_temp.js' %}"></script>
-</body>
-</html>
+{% endblock content %}
