@@ -94,20 +94,10 @@ body {
     left: 71px;
     top: 45px;
     position: absolute;
-    background: linear-gradient(180deg, #004E9F 0%, black 100%); /* Возвращен градиент */
-    /* background-image: url('../images/layout/header_bg.png'); */ /* Удалено фоновое изображение */
-    /* background-size: cover; */
-    /* background-position: center; */
+    background: linear-gradient(180deg, #004E9F 0%, black 100%); /* Только градиент */
     box-shadow: 6px 6px 24px -13px rgba(156.20, 156.20, 156.20, 0.25);
     overflow: hidden;
     border-radius: 10px;
-}
-
-.header-placeholder {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    opacity: 1; /* Возвращена видимость плейсхолдера */
 }
 
 .header-content {
@@ -116,14 +106,13 @@ body {
     left: 109px; /* Отступ слева по макету */
     top: 314px; /* Отступ сверху по макету */
     position: absolute;
-    /* justify-content: center; */ /* Выравнивание по макету */
     display: flex;
     flex-direction: column;
-    gap: 5px; /* Пространство между строками текста */
+    /* gap: 5px; */ /* Управляется line-height */
 }
 
 .platform-text {
-    color: #FFFFFF; /* Белый цвет по макету */
+    color: #FFEF2B; /* Желтый цвет по макету */
     font-size: 16px;
     font-family: 'Unbounded';
     font-weight: 400;
@@ -132,7 +121,7 @@ body {
 }
 
 .ideas-text {
-    color: #FFEF2B; /* Желтый цвет по макету */
+    color: white; /* Белый цвет по макету */
     font-size: 16px;
     font-family: 'Unbounded';
     font-weight: 400;
@@ -144,52 +133,51 @@ body {
     left: 109px;
     top: 148px;
     position: absolute;
-    text-box-trim: trim-both; /* Consider browser compatibility */
-    text-box-edge: cap alphabetic; /* Consider browser compatibility */
+    text-box-trim: trim-both;
+    text-box-edge: cap alphabetic;
     color: white;
-    font-size: 80px; /* Размер шрифта по макету */
+    font-size: 80px;
     font-family: 'Blippo-Black CY [Rus by me]';
     font-weight: 400;
     text-transform: uppercase;
-    line-height: 0.6875; /* 55px / 80px */
+    line-height: 55px; /* 0.6875 * 80px */
     word-wrap: break-word;
 }
 
 .title-future {
     left: 109px;
-    top: 219px; /* Скорректировано для лучшего соответствия */
+    top: 219px;
     position: absolute;
-    text-box-trim: trim-both; /* Consider browser compatibility */
-    text-box-edge: cap alphabetic; /* Consider browser compatibility */
+    text-box-trim: trim-both;
+    text-box-edge: cap alphabetic;
     color: #FFEF2B;
-    font-size: 80px; /* Размер шрифта по макету */
+    font-size: 80px;
     font-family: 'Blippo-Black CY [Rus by me]';
     font-weight: 400;
     text-transform: uppercase;
-    line-height: 0.6875; /* 55px / 80px */
+    line-height: 55px; /* 0.6875 * 80px */
     word-wrap: break-word;
 }
 
-.button-create-project { /* Обновленный класс */
+.button-create-project { /* Кнопка "Зарегистрировать стартап" */
     padding-left: 16px;
     padding-right: 16px;
     padding-top: 12px;
     padding-bottom: 12px;
     left: 109px;
-    top: 422px;
+    top: 422px; /* Положение первой кнопки */
     position: absolute;
     background: #004E9F;
     border-radius: 10px;
     justify-content: center;
     align-items: center;
     gap: 12px;
-    display: inline-flex;
-    border: 1px solid #FFEF2B; /* Желтая рамка */
+    /* border: 1px solid #FFEF2B; */ /* Убираем рамку, если ее нет в новом макете */
     cursor: pointer;
 }
 
-.button-create-project .button-text { /* Текст внутри кнопки */
-    color: #FFEF2B; /* Желтый текст */
+.button-create-project .button-text { /* Текст "Зарегистрировать стартап" */
+    color: #FCFCFD; /* Цвет по макету */
     font-size: 14px;
     font-family: 'Unbounded';
     font-weight: 300;
@@ -197,25 +185,32 @@ body {
     word-wrap: break-word;
 }
 
-.button-icon-rocket { /* Иконка ракеты */
-    width: 16px; /* Ширина иконки */
-    height: 16px; /* Высота иконки */
-    background: #FFEF2B; /* Желтый квадрат вместо SVG */
-    /* background-image: url('../images/icons/rocket_icon.svg'); */ /* Удален SVG */
-    /* background-size: contain; */
-    /* background-repeat: no-repeat; */
-    /* background-position: center; */
+.custom-icon {
+    width: 16px;
+    height: 16px;
+    position: relative;
+    overflow: hidden;
 }
 
-.button-join { /* Обновленный класс для кнопки "Присоединиться" */
+.icon-register-startup::before { /* Псевдоэлемент для иконки */
+    content: '';
+    width: 9.33px;
+    height: 6px;
+    left: 3.33px;
+    top: 4.67px;
+    position: absolute;
+    background: #FCFCFD; /* Цвет иконки по макету */
+}
+
+.button-join { /* Кнопка "Найти стартап" */
     padding-left: 16px;
     padding-right: 16px;
     padding-top: 12px;
     padding-bottom: 12px;
-    left: 300px; /* Скорректировано положение */
-    top: 422px;
+    left: 109px;
+    top: 475px; /* Положение второй кнопки, под первой */
     position: absolute;
-    background: #FFEF2B; /* Желтый фон */
+    background: #FFEF2B;
     border-radius: 10px;
     justify-content: center;
     align-items: center;
@@ -224,7 +219,7 @@ body {
     cursor: pointer;
 }
 
-.button-join .button-text-black { /* Текст внутри кнопки */
+.button-join .button-text-black { /* Текст "Найти стартап" */
     color: black;
     font-size: 14px;
     font-family: 'Unbounded';
@@ -233,31 +228,28 @@ body {
     word-wrap: break-word;
 }
 
-.button-icon-arrow { /* Иконка стрелки */
-    width: 16px; /* Ширина иконки */
-    height: 16px; /* Высота иконки */
-    background: black; /* Черный квадрат вместо SVG */
-    /* background-image: url('../images/icons/arrow_icon.svg'); */ /* Удален SVG */
-    /* background-size: contain; */
-    /* background-repeat: no-repeat; */
-    /* background-position: center; */
+.icon-find-startup::before { /* Псевдоэлемент для иконки */
+    content: '';
+    width: 9.33px;
+    height: 6px;
+    left: 3.33px;
+    top: 4.67px;
+    position: absolute;
+    background: black; /* Цвет иконки по макету */
 }
 
-/* Старые стили для кнопок и иконок удалены или закомментированы */
-/* .button-register-startup ... */
-/* .button-text ... */
-/* .button-icon-register ... */
-/* .button-find-startup ... */
-/* .button-text-black ... */
-/* .button-icon-find ... */
+/* Удаляем старые стили для иконок .button-icon-rocket и .button-icon-arrow */
+/* .button-icon-rocket { ... } */
+/* .button-icon-arrow { ... } */
 
 
 /* Орбиты */
 .orbit-line-1, .orbit-line-2, .orbit-line-3, .orbit-line-4, .orbit-line-5 {
     position: absolute;
-    border-radius: 50%;
-    border: 1px solid rgba(255, 255, 255, 0.2); /* Полупрозрачная белая линия */
-    /* filter: blur(0.5px); */ /* Убрал размытие, если не нужно */
+    border-radius: 9999px; /* Максимальное скругление для круга/эллипса */
+    border: 1px solid white; /* Сплошная белая линия */
+    box-shadow: 3px 3px 3px rgba(0,0,0,0.1); /* Пример тени, можно настроить */
+    filter: blur(1.50px);
 }
 
 .orbit-line-1 {
@@ -295,81 +287,37 @@ body {
     top: 65px;
 }
 
-/* Старые стили для .blur-circle- удалены */
-/* .blur-circle-1 ... */
+/* Удаляем стили для старых декоративных элементов */
+/* .header-decoration { ... } */
+/* .header-decoration .placeholder-image { ... } */
+/* .planet-lg-yellow { ... } */
+/* .planet-md-blue-stripes { ... } */
+/* .planet-md-orange-spots { ... } */
+/* .planet-sm-purple { ... } */
+/* .planet-sm-blue { ... } */
+/* .planet-xs-grey { ... } */
+/* .rocket-ship { ... } */
+/* .planet-earth-like { ... } */
 
-/* Декоративные элементы в шапке (планеты, ракета) */
-.header-decoration {
-    position: absolute;
-    overflow: hidden; /* Если плейсхолдер больше элемента */
-}
-.header-decoration .placeholder-image {
-    width: 100%;
+/* Стили для нового правого плейсхолдера */
+.header-right-placeholder {
+    width: 50%; /* Примерная ширина, нужно будет подогнать по макету */
     height: 100%;
+    position: absolute;
+    right: 0;
+    top: 0;
+    background-color: #cccccc; /* Стандартный цвет плейсхолдера */
     display: flex;
-    align-items: center;
     justify-content: center;
-    font-size: 10px; /* Меньший текст для плейсхолдеров */
-    color: #333;
-    background-color: rgba(204, 204, 204, 0.5); /* Полупрозрачный фон */
-    border-radius: 50%; /* Для круглых планет */
+    align-items: center;
+    color: #555555;
+    font-family: sans-serif;
+    text-align: center;
+    font-size: 20px;
+    /* background-image: url(https://placehold.co/650x708); */ /* Можно использовать, если нужно конкретное изображение-плейсхолдер */
+    /* background-size: cover; */
+    /* background-position: center; */
 }
-
-/* Конкретные элементы декораций - размеры и положения по макету */
-/* Их нужно будет заменить на реальные изображения */
-.planet-lg-yellow { /* Большая желтая планета (Сатурн) */
-    width: 250px; height: 160px; /* Примерные размеры, нужно уточнить */
-    left: 1000px; top: 50px;
-}
-.planet-lg-yellow .placeholder-image {
-    border-radius: 40% / 60%; /* Эллипс для Сатурна */
-}
-
-
-.planet-md-blue-stripes { /* Средняя сине-полосатая планета */
-    width: 140px; height: 140px;
-    left: 650px; top: 60px;
-}
-
-.planet-md-orange-spots { /* Средняя оранжевая планета с пятнами */
-    width: 100px; height: 100px;
-    left: 950px; top: 120px;
-}
-
-.planet-sm-purple { /* Маленькая фиолетовая планета */
-    width: 70px; height: 70px;
-    left: 690px; top: 270px;
-}
-
-.planet-sm-blue { /* Маленькая синяя планета */
-    width: 80px; height: 80px;
-    left: 850px; top: 380px;
-}
-
-.planet-xs-grey { /* Очень маленькая серая планета */
-    width: 40px; height: 40px;
-    left: 1100px; top: 480px;
-}
-
-.rocket-ship { /* Ракета */
-    width: 120px; height: 180px; /* Примерные размеры */
-    left: 750px; top: 400px;
-}
-.rocket-ship .placeholder-image {
-    border-radius: 50% 50% 10% 10% / 60% 60% 10% 10%; /* Форма ракеты */
-}
-
-.planet-earth-like { /* Планета типа Земля */
-    width: 130px; height: 130px;
-    left: 1050px; top: 530px;
-}
-
-
-/* Старые стили для .image-placeholder- удалены */
-/* .image-placeholder-1 ... */
-
-/* Decorative elements below header - оставляем пока без изменений */
-/* ... existing code ... */
 
 /* Features block */
 .features-block-container {
