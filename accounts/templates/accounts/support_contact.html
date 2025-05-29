@@ -26,13 +26,39 @@
 
     <div class="support-contact-main-content">
       <section class="form-section">
-        <form action="" method="post" enctype="multipart/form-data">
+        <form action="" method="post"> 
           {% csrf_token %}
-          {{ form.as_p }}
           <div class="form-group">
-            <label for="{{ form.attachment.id_for_label }}">Вложение</label>
-            {{ form.attachment }}
+            <label for="role">Роль</label>
+            <div class="select-wrapper">
+              <select name="role" id="role">
+                <option value="investor">Инвестор</option>
+                <option value="startup">Стартапер</option>
+              </select>
+              <img src="{% static 'accounts/images/support/chevron_down.svg' %}" alt="" class="select-arrow-icon">
+            </div>
           </div>
+
+          <div class="form-group">
+            <label for="subject">Тема обращения</label>
+            <input type="text" name="subject" id="subject" placeholder="Кратко опиши тему обращения">
+          </div>
+
+          <div class="form-group">
+            <label for="name">Ваше имя</label>
+            <input type="text" name="name" id="name" placeholder="Имя">
+          </div>
+
+          <div class="form-group">
+            <label for="email">Ваша почта</label>
+            <input type="email" name="email" id="email" placeholder="Email">
+          </div>
+
+          <div class="form-group">
+            <label for="comment">Комментарий</label>
+            <textarea name="comment" id="comment" placeholder="Комментарий" rows="5"></textarea>
+          </div>
+
           <button type="submit" class="btn-submit-support">Отправить</button>
         </form>
       </section>
@@ -50,10 +76,4 @@
     </div>
   </div>
 </div>
-
-<script src="{% static 'accounts/js/support_contact.js' %}"></script>
-{% endblock %}
-
-{% block body_extra_js %}
-{{ request.user.user_id|default:0|json_script:"request_user_id_data" }}
 {% endblock %}

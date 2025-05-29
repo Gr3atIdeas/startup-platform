@@ -10,15 +10,14 @@ from django.utils import timezone
 import json
 import logging
 import os
-
 from django.conf import settings
 from django.db import models  # Добавляем для models.Q
 from .forms import RegisterForm, LoginForm, StartupForm, CommentForm, MessageForm, UserSearchForm  # Добавляем MessageForm и UserSearchForm
-from .models import Users, Directions, Startups, ReviewStatuses, UserVotes, StartupTimeline, FileStorage, EntityTypes, FileTypes, InvestmentTransactions, TransactionTypes, PaymentMethods, Comments, NewsArticles, NewsLikes, NewsViews, ChatConversations, ChatParticipants, Messages, MessageStatuses, SupportOrder
+from .models import Users, Directions, Startups, ReviewStatuses, UserVotes, StartupTimeline, FileStorage, EntityTypes, FileTypes, InvestmentTransactions, TransactionTypes, PaymentMethods, Comments, NewsArticles, NewsLikes, NewsViews, ChatConversations, ChatParticipants, Messages, MessageStatuses
 from .models import creative_upload_path, proof_upload_path, video_upload_path
 import uuid
 from .models import Comments
-from .forms import CommentForm, ProfileEditForm, SupportContactForm
+from .forms import CommentForm, ProfileEditForm
 from django.db.models import Count, Sum, Avg, F, FloatField, Max, Min, Q # Добавляем Q
 from decimal import Decimal
 from .models import NewsArticles, NewsLikes, NewsViews  # Добавляем новые модели
@@ -31,7 +30,6 @@ import datetime # Добавляем для работы с датами
 from django.db.models.functions import Coalesce # Добавляем Coalesce
 import collections # Добавляем для defaultdict
 from dateutil.relativedelta import relativedelta
-import requests  # Для Telegram API
 
 
 logger = logging.getLogger(__name__)
@@ -2240,72 +2238,19 @@ def support_orders_view(request):
     # return render(request, 'accounts/support_orders.html', context)
     return render(request, 'accounts/support_orders.html')
 
-@login_required
+@login_required # Предполагаем, что создание заявки доступно только авторизованным
 def support_contact_view(request):
-    if request.method == 'POST':
-        form = SupportContactForm(request.POST, request.FILES)
-        if form.is_valid():
-            try:
-                # Создание заявки
-                order = form.save(commit=False)
-                order.user = request.user
-                order.status = 'open'
-                order.save()
+    # Здесь в будущем будет логика обработки формы создания заявки
+    # if request.method == 'POST':
+    #     form = SupportContactForm(request.POST)
+    #     if form.is_valid():
+    #         # Process the data in form.cleaned_data
+    #         # ...
+    #         return redirect('support_orders') # Или на страницу с сообщением об успехе
+    # else:
+    #     form = SupportContactForm()
+    # context = {'form': form}
+    # return render(request, 'accounts/support_contact.html', context)
+    return render(request, 'accounts/support_contact.html')
 
-                # Формирование сообщения для Telegram
-                role_display = dict(SupportOrder._meta.get_field('role').choices).get(order.role, order.role)
-                message = (
-                    f"<b>Новая заявка #SUPP-{order.order_id}</b>\n"
-                    f"Пользователь: {order.name} ({order.telegram})\n"
-                    f"Email: {request.user.email}\n"
-                    f"User ID: {request.user.user_id}\n"
-                    f"Роль: {role_display}\n"
-                    f"Тема: {order.subject}\n"
-                    f"Комментарий: {order.comment}"
-                )
 
-                # Отправка в Telegram
-                bot_token = "7843250850:AAEL8hapR_WVcG2mMNUhWvK-I0DMYG042Ko"  # Заменить на реальный токен
-                chat_id = "2064613329"
-                telegram_url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
-                payload = {
-                    "chat_id": chat_id,
-                    "text": message,
-                    "parse_mode": "HTML"
-                }
-
-                response = requests.post(telegram_url, json=payload)
-                if response.status_code != 200:
-                    logger.error(f"Ошибка отправки сообщения в Telegram: {response.text}")
-                    return JsonResponse({'success': False, 'error': 'Ошибка при отправке заявки в Telegram.'})
-
-                # Отправка вложения, если есть
-                attachment = form.cleaned_data.get('attachment')
-                if attachment:
-                    telegram_doc_url = f"https://api.telegram.org/bot{bot_token}/sendDocument"
-                    files = {'document': (attachment.name, attachment.file, attachment.content_type)}
-                    doc_payload = {
-                        "chat_id": chat_id,
-                        "caption": f"Вложение к заявке #SUPP-{order.order_id}"
-                    }
-                    doc_response = requests.post(telegram_doc_url, data=doc_payload, files=files)
-                    if doc_response.status_code != 200:
-                        logger.error(f"Ошибка отправки вложения в Telegram: {doc_response.text}")
-                        return JsonResponse({'success': False, 'error': 'Ошибка при отправке вложения в Telegram.'})
-
-                logger.info(f"Заявка #SUPP-{order.order_id} создана и отправлена в Telegram для user_id {request.user.user_id}")
-                return JsonResponse({'success': True, 'message': 'Заявка успешно отправлена!'})
-
-            except Exception as e:
-                logger.error(f"Ошибка при создании заявки для user_id {request.user.user_id}: {str(e)}")
-                return JsonResponse({'success': False, 'error': 'Произошла ошибка при отправке заявки.'})
-        else:
-            return JsonResponse({'success': False, 'error': 'Форма содержит ошибки.', 'errors': form.errors})
-    else:
-        initial_data = {
-            'role': request.user.role.role_name if request.user.role else 'startuper',
-            'name': request.user.first_name or 'Пользователь',
-            'telegram': request.user.social_links.get('telegram', '') if request.user.social_links else ''
-        }
-        form = SupportContactForm(initial=initial_data)
-    return render(request, 'accounts/support_contact.html', {'form': form})
