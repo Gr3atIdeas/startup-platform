@@ -94,44 +94,49 @@ body {
     left: 71px;
     top: 45px;
     position: absolute;
-    background: linear-gradient(180deg, #004E9F 0%, black 100%);
+    background: linear-gradient(180deg, #004E9F 0%, black 100%); /* Возвращен градиент */
+    /* background-image: url('../images/layout/header_bg.png'); */ /* Удалено фоновое изображение */
+    /* background-size: cover; */
+    /* background-position: center; */
     box-shadow: 6px 6px 24px -13px rgba(156.20, 156.20, 156.20, 0.25);
     overflow: hidden;
     border-radius: 10px;
 }
 
 .header-placeholder {
-    width: 1303px;
-    height: 708px;
+    width: 100%;
+    height: 100%;
     position: absolute;
+    opacity: 1; /* Возвращена видимость плейсхолдера */
 }
 
 .header-content {
-    width: 390px;
-    height: 66px;
-    left: 109px;
-    top: 314px;
+    width: 390px; /* Ширина по макету */
+    height: auto; /* Высота по содержимому */
+    left: 109px; /* Отступ слева по макету */
+    top: 314px; /* Отступ сверху по макету */
     position: absolute;
-    justify-content: center;
+    /* justify-content: center; */ /* Выравнивание по макету */
     display: flex;
     flex-direction: column;
+    gap: 5px; /* Пространство между строками текста */
 }
 
-.marketplace-text {
-    color: #FFEF2B;
+.platform-text {
+    color: #FFFFFF; /* Белый цвет по макету */
     font-size: 16px;
     font-family: 'Unbounded';
     font-weight: 400;
-    line-height: 19.20px;
+    line-height: 1.2; /* 19.20px */
     word-wrap: break-word;
 }
 
-.investors-text {
-    color: white;
+.ideas-text {
+    color: #FFEF2B; /* Желтый цвет по макету */
     font-size: 16px;
     font-family: 'Unbounded';
     font-weight: 400;
-    line-height: 19.20px;
+    line-height: 1.2; /* 19.20px */
     word-wrap: break-word;
 }
 
@@ -142,30 +147,30 @@ body {
     text-box-trim: trim-both; /* Consider browser compatibility */
     text-box-edge: cap alphabetic; /* Consider browser compatibility */
     color: white;
-    font-size: 80px;
+    font-size: 80px; /* Размер шрифта по макету */
     font-family: 'Blippo-Black CY [Rus by me]';
     font-weight: 400;
     text-transform: uppercase;
-    line-height: 55px;
+    line-height: 0.6875; /* 55px / 80px */
     word-wrap: break-word;
 }
 
 .title-future {
     left: 109px;
-    top: 219px;
+    top: 219px; /* Скорректировано для лучшего соответствия */
     position: absolute;
     text-box-trim: trim-both; /* Consider browser compatibility */
     text-box-edge: cap alphabetic; /* Consider browser compatibility */
     color: #FFEF2B;
-    font-size: 80px;
+    font-size: 80px; /* Размер шрифта по макету */
     font-family: 'Blippo-Black CY [Rus by me]';
     font-weight: 400;
     text-transform: uppercase;
-    line-height: 55px;
+    line-height: 0.6875; /* 55px / 80px */
     word-wrap: break-word;
 }
 
-.button-register-startup {
+.button-create-project { /* Обновленный класс */
     padding-left: 16px;
     padding-right: 16px;
     padding-top: 12px;
@@ -179,12 +184,12 @@ body {
     align-items: center;
     gap: 12px;
     display: inline-flex;
+    border: 1px solid #FFEF2B; /* Желтая рамка */
+    cursor: pointer;
 }
 
-.button-text {
-    text-box-trim: trim-both; /* Consider browser compatibility */
-    text-box-edge: cap alphabetic; /* Consider browser compatibility */
-    color: #FCFCFD;
+.button-create-project .button-text { /* Текст внутри кнопки */
+    color: #FFEF2B; /* Желтый текст */
     font-size: 14px;
     font-family: 'Unbounded';
     font-weight: 300;
@@ -192,41 +197,34 @@ body {
     word-wrap: break-word;
 }
 
-.button-icon-container {
-    width: 16px;
-    height: 16px;
-    position: relative;
-    overflow: hidden;
+.button-icon-rocket { /* Иконка ракеты */
+    width: 16px; /* Ширина иконки */
+    height: 16px; /* Высота иконки */
+    background: #FFEF2B; /* Желтый квадрат вместо SVG */
+    /* background-image: url('../images/icons/rocket_icon.svg'); */ /* Удален SVG */
+    /* background-size: contain; */
+    /* background-repeat: no-repeat; */
+    /* background-position: center; */
 }
 
-.button-icon-register {
-    width: 9.33px;
-    height: 6px;
-    left: 3.33px;
-    top: 4.67px;
-    position: absolute;
-    background: #FCFCFD;
-}
-
-.button-find-startup {
+.button-join { /* Обновленный класс для кнопки "Присоединиться" */
     padding-left: 16px;
     padding-right: 16px;
     padding-top: 12px;
     padding-bottom: 12px;
-    left: 109px;
-    top: 475px;
+    left: 300px; /* Скорректировано положение */
+    top: 422px;
     position: absolute;
-    background: #FFEF2B;
+    background: #FFEF2B; /* Желтый фон */
     border-radius: 10px;
     justify-content: center;
     align-items: center;
     gap: 12px;
     display: inline-flex;
+    cursor: pointer;
 }
 
-.button-text-black {
-    text-box-trim: trim-both; /* Consider browser compatibility */
-    text-box-edge: cap alphabetic; /* Consider browser compatibility */
+.button-join .button-text-black { /* Текст внутри кнопки */
     color: black;
     font-size: 14px;
     font-family: 'Unbounded';
@@ -235,425 +233,277 @@ body {
     word-wrap: break-word;
 }
 
-.button-icon-find {
-    width: 9.33px;
-    height: 6px;
-    left: 3.33px;
-    top: 4.67px;
-    position: absolute;
-    background: black;
+.button-icon-arrow { /* Иконка стрелки */
+    width: 16px; /* Ширина иконки */
+    height: 16px; /* Высота иконки */
+    background: black; /* Черный квадрат вместо SVG */
+    /* background-image: url('../images/icons/arrow_icon.svg'); */ /* Удален SVG */
+    /* background-size: contain; */
+    /* background-repeat: no-repeat; */
+    /* background-position: center; */
 }
 
-/* Blur circles */
-.blur-circle-1 {
+/* Старые стили для кнопок и иконок удалены или закомментированы */
+/* .button-register-startup ... */
+/* .button-text ... */
+/* .button-icon-register ... */
+/* .button-find-startup ... */
+/* .button-text-black ... */
+/* .button-icon-find ... */
+
+
+/* Орбиты */
+.orbit-line-1, .orbit-line-2, .orbit-line-3, .orbit-line-4, .orbit-line-5 {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Полупрозрачная белая линия */
+    /* filter: blur(0.5px); */ /* Убрал размытие, если не нужно */
+}
+
+.orbit-line-1 {
     width: 1013px;
     height: 784px;
     left: 639px;
     top: -38px;
-    position: absolute;
-    box-shadow: 3px 3px 3px;
-    border-radius: 9999px;
-    border: 1px white solid;
-    filter: blur(1.50px);
 }
 
-.blur-circle-2 {
+.orbit-line-2 {
     width: 1013px;
     height: 696px;
     left: 900px;
     top: 5px;
-    position: absolute;
-    box-shadow: 3px 3px 3px;
-    border-radius: 9999px;
-    border: 1px white solid;
-    filter: blur(1.50px);
 }
 
-.blur-circle-3 {
+.orbit-line-3 {
     width: 1013px;
     height: 754px;
     left: 728px;
     top: -22px;
-    position: absolute;
-    box-shadow: 3px 3px 3px;
-    border-radius: 9999px;
-    border: 1px white solid;
-    filter: blur(1.50px);
 }
 
-.blur-circle-4 {
+.orbit-line-4 {
     width: 1013px;
     height: 651px;
     left: 960px;
     top: 28px;
-    position: absolute;
-    box-shadow: 3px 3px 3px;
-    border-radius: 9999px;
-    border: 1px white solid;
-    filter: blur(1.50px);
 }
 
-.blur-circle-5 {
+.orbit-line-5 {
     width: 1013px;
     height: 576px;
     left: 1059px;
     top: 65px;
-    position: absolute;
-    box-shadow: 3px 3px 3px;
-    border-radius: 9999px;
-    border: 1px white solid;
-    filter: blur(1.50px);
 }
 
-/* Image placeholders in header */
-.image-placeholder-1 {
-    width: 173px;
-    height: 177px;
-    left: 630px;
-    top: 427px;
+/* Старые стили для .blur-circle- удалены */
+/* .blur-circle-1 ... */
+
+/* Декоративные элементы в шапке (планеты, ракета) */
+.header-decoration {
     position: absolute;
-    overflow: hidden;
+    overflow: hidden; /* Если плейсхолдер больше элемента */
 }
-.image-placeholder-1 .placeholder-image {
-    width: 172.13px;
-    height: 176.08px;
+.header-decoration .placeholder-image {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px; /* Меньший текст для плейсхолдеров */
+    color: #333;
+    background-color: rgba(204, 204, 204, 0.5); /* Полупрозрачный фон */
+    border-radius: 50%; /* Для круглых планет */
 }
 
-.image-placeholder-2 {
-    width: 90px;
-    height: 88px;
-    left: 969px;
-    top: 113px;
-    position: absolute;
-    overflow: hidden;
+/* Конкретные элементы декораций - размеры и положения по макету */
+/* Их нужно будет заменить на реальные изображения */
+.planet-lg-yellow { /* Большая желтая планета (Сатурн) */
+    width: 250px; height: 160px; /* Примерные размеры, нужно уточнить */
+    left: 1000px; top: 50px;
 }
-.image-placeholder-2 .placeholder-image {
-    width: 89.97px;
-    height: 87.80px;
+.planet-lg-yellow .placeholder-image {
+    border-radius: 40% / 60%; /* Эллипс для Сатурна */
 }
 
-.image-placeholder-3 {
-    width: 193px;
-    height: 140px;
-    left: 694px;
-    top: 245px;
-    position: absolute;
-    overflow: hidden;
-}
-.image-placeholder-3 .placeholder-image {
-    width: 192.58px;
-    height: 139.69px;
+
+.planet-md-blue-stripes { /* Средняя сине-полосатая планета */
+    width: 140px; height: 140px;
+    left: 650px; top: 60px;
 }
 
-.image-placeholder-4 {
-    width: 121.44px;
-    height: 101.20px;
-    left: 1106px;
-    top: 47px;
-    position: absolute;
-    overflow: hidden;
-}
-.image-placeholder-4 .placeholder-image {
-    width: 104.30px;
-    height: 63.06px;
+.planet-md-orange-spots { /* Средняя оранжевая планета с пятнами */
+    width: 100px; height: 100px;
+    left: 950px; top: 120px;
 }
 
-.image-placeholder-5 {
-    width: 147px;
-    height: 144px;
-    left: 867px;
-    top: 372px;
-    position: absolute;
-    overflow: hidden;
-}
-.image-placeholder-5 .placeholder-image {
-    width: 131.77px;
-    height: 128.17px;
+.planet-sm-purple { /* Маленькая фиолетовая планета */
+    width: 70px; height: 70px;
+    left: 690px; top: 270px;
 }
 
-.image-placeholder-6 {
-    width: 141px;
-    height: 141px;
-    left: 664px;
-    top: 72px;
-    position: absolute;
-    overflow: hidden;
-}
-.image-placeholder-6 .placeholder-image {
-    width: 140.81px;
-    height: 140.81px;
+.planet-sm-blue { /* Маленькая синяя планета */
+    width: 80px; height: 80px;
+    left: 850px; top: 380px;
 }
 
-.image-placeholder-7 {
-    width: 103px;
-    height: 105px;
-    left: 867px;
-    top: 589px;
-    position: absolute;
-    overflow: hidden;
-}
-.image-placeholder-7 .placeholder-image {
-    width: 91.65px;
-    height: 93.91px;
+.planet-xs-grey { /* Очень маленькая серая планета */
+    width: 40px; height: 40px;
+    left: 1100px; top: 480px;
 }
 
-.image-placeholder-8 {
-    width: 138px;
-    height: 138px;
-    left: 1077px;
-    top: 535px;
-    position: absolute;
-    overflow: hidden;
+.rocket-ship { /* Ракета */
+    width: 120px; height: 180px; /* Примерные размеры */
+    left: 750px; top: 400px;
 }
-.image-placeholder-8 .placeholder-image {
-    width: 123.74px;
-    height: 121.99px;
+.rocket-ship .placeholder-image {
+    border-radius: 50% 50% 10% 10% / 60% 60% 10% 10%; /* Форма ракеты */
 }
 
-/* Decorative elements below header */
-.decorative-blur-circle {
-    width: 194px;
-    height: 190px;
-    left: 1225px;
-    top: 271px;
-    position: absolute;
-    background: #FAF7DB;
-    box-shadow: 25px 25px 25px;
-    border-radius: 9999px;
-    filter: blur(12.50px);
+.planet-earth-like { /* Планета типа Земля */
+    width: 130px; height: 130px;
+    left: 1050px; top: 530px;
 }
 
-.decorative-black-box-1 {
-    width: 226.96px;
-    height: 222px;
-    left: 1218px;
-    top: 264px;
-    position: absolute;
-    background: black;
-}
 
-.decorative-black-box-2 {
-    width: 227.21px;
-    height: 222.66px;
-    left: 1217.83px;
-    top: 263.71px;
-    position: absolute;
-    background: black;
-}
+/* Старые стили для .image-placeholder- удалены */
+/* .image-placeholder-1 ... */
 
-.decorative-placeholder-1 {
-    width: 226.15px;
-    height: 221.62px;
-    left: 1217.83px;
-    top: 263.71px;
-    position: absolute;
-}
-
-.decorative-icon-container {
-    width: 144.81px;
-    height: 65.80px;
-    left: 1259.19px;
-    top: 329.91px;
-    position: absolute;
-    overflow: hidden;
-}
-
-.decorative-icon-box-1 {
-    width: 142.64px;
-    height: 20.81px;
-    left: 1.72px;
-    top: 44.99px;
-    position: absolute;
-    background: #1A1A18;
-}
-
-.decorative-icon-box-2 {
-    width: 100.19px;
-    height: 38.61px;
-    left: 0px;
-    top: 0.01px;
-    position: absolute;
-    background: #1A1A18;
-}
-
-.decorative-placeholder-2 {
-    width: 165px;
-    height: 127px;
-    left: 604px;
-    top: 346px;
-    position: absolute;
-}
+/* Decorative elements below header - оставляем пока без изменений */
+/* ... existing code ... */
 
 /* Features block */
 .features-block-container {
     width: 100%;
-    /* height: 100%; */ /* Removed fixed height */
-    padding-top: 45px;
-    padding-bottom: 45px;
+    padding-top: 80px; /* Увеличен отступ сверху */
+    padding-bottom: 60px; /* Увеличен отступ снизу */
     padding-left: 71px;
+    padding-right: 71px; /* Добавлен отступ справа */
+    box-sizing: border-box; /* Чтобы padding не увеличивал общую ширину */
     overflow: hidden;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 10px;
-    display: inline-flex; /* This might need to be block or flex depending on layout */
-    flex-direction: column; /* Added to stack elements vertically */
+    display: flex; /* Используем flex для расположения why-us-and-arrows и features-block */
+    flex-direction: column; /* Элементы будут идти друг под другом */
+    align-items: center; /* Центрируем контент по горизонтали */
+    gap: 40px; /* Пространство между заголовком/стрелками и карточками */
+}
+
+.why-us-and-arrows {
+    width: 1303px; /* Фиксированная ширина как у других блоков */
+    display: flex;
+    justify-content: space-between; /* Размещаем заголовок слева, стрелки справа */
+    align-items: flex-end; /* Выравниваем по нижней части */
+    margin-bottom: 20px; /* Отступ снизу, как в why-us-block */
 }
 
 .features-block {
-    justify-content: flex-start;
+    width: 1303px; /* Фиксированная ширина для карточек */
+    justify-content: space-between; /* Распределяем карточки равномерно */
     align-items: flex-start;
-    gap: 20px;
-    display: flex; /* Changed to flex for horizontal layout of cards */
-    flex-wrap: wrap; /* Allow wrapping if not enough space */
+    gap: 20px; /* Пространство между карточками, если они будут переноситься */
+    display: flex;
+    flex-wrap: nowrap; /* Карточки не должны переноситься на новую строку по макету */
 }
 
 .feature-card {
-    width: 449px;
-    height: 514px;
+    width: 305px; /* Новая ширина карточки (1303 - 3*20) / 4  ~= 305 */
+    height: 380px; /* Новая высота карточки по макету */
     position: relative;
-    background: white;
+    background: #0A131A; /* Темный фон карточки по макету */
     overflow: hidden;
-    border-radius: 20px;
-}
-
-.feature-title {
-    left: 43px;
-    top: 337px;
-    position: absolute;
-    text-box-trim: trim-both; /* Consider browser compatibility */
-    text-box-edge: cap alphabetic; /* Consider browser compatibility */
-    color: #004E9F;
-    font-size: 55px;
-    font-family: 'Blippo-Black CY [Rus by me]';
-    font-weight: 400;
-    line-height: 18px;
-    word-wrap: break-word;
-}
-
-.feature-description {
-    width: 390px;
-    height: 66px;
-    left: 43px;
-    top: 403px;
-    position: absolute;
-    justify-content: center;
+    border-radius: 10px; /* Скругление углов по макету */
+    padding: 20px; /* Внутренние отступы */
+    box-sizing: border-box;
     display: flex;
-    flex-direction: column;
-    color: #004E9F;
-    font-size: 16px;
-    font-family: 'Unbounded';
-    font-weight: 400;
-    line-height: 19.20px;
-    word-wrap: break-word;
-}
-
-.feature-description-community {
-    width: 390px;
-    left: 43px;
-    top: 407px;
-    position: absolute;
-    justify-content: center;
-    display: flex;
-    flex-direction: column;
-    color: #004E9F;
-    font-size: 16px;
-    font-family: 'Unbounded';
-    font-weight: 400;
-    line-height: 19.20px;
-    word-wrap: break-word;
-}
-
-.feature-description-transparency {
-    width: 390px;
-    left: 43px;
-    top: 407px;
-    position: absolute;
-    justify-content: center;
-    display: flex;
-    flex-direction: column;
-    color: #004E9F;
-    font-size: 16px;
-    font-family: 'Unbounded';
-    font-weight: 400;
-    line-height: 19.20px;
-    word-wrap: break-word;
-}
-
-.feature-description-support {
-    width: 390px;
-    left: 43px;
-    top: 407px;
-    position: absolute;
-    justify-content: center;
-    display: flex;
-    flex-direction: column;
-    color: #004E9F;
-    font-size: 16px;
-    font-family: 'Unbounded';
-    font-weight: 400;
-    line-height: 19.20px;
-    word-wrap: break-word;
+    flex-direction: column; /* Элементы внутри карточки - столбиком */
 }
 
 .feature-placeholder {
-    width: 449px;
-    height: 309px;
-    left: 0px;
+    width: 100%; /* Плейсхолдер на всю ширину карточки */
+    height: 180px; /* Высота плейсхолдера по макету */
+    left: 0px; /* Убраны, так как позиционирование через flex */
     top: 0px;
-    position: absolute;
+    /* position: absolute; */ /* Убрано, позиционирование через flex */
+    margin-bottom: 20px; /* Отступ под плейсхолдером */
+    border-radius: 5px; /* Небольшое скругление для плейсхолдера */
 }
 
-/* Why Us block */
-.why-us-block {
-    width: 1303px;
-    justify-content: space-between;
-    align-items: flex-end;
-    display: flex;
-    margin-top: 20px; /* Added margin for spacing */
+.feature-title {
+    /* left: 43px; */ /* Удалены абсолютные позиционирования */
+    /* top: 337px; */
+    /* position: absolute; */
+    text-box-trim: trim-both;
+    text-box-edge: cap alphabetic;
+    color: #FFFFFF; /* Белый цвет заголовка */
+    font-size: 24px; /* Размер шрифта заголовка по макету */
+    font-family: \'Unbounded\'; /* Шрифт изменен на Unbounded по макету */
+    font-weight: 600; /* SemiBold */
+    line-height: 1.2; /* Примерно 29px */
+    word-wrap: break-word;
+    margin-bottom: 10px; /* Отступ под заголовком */
 }
 
+.feature-description,
+.feature-description-community,
+.feature-description-transparency,
+.feature-description-support {
+    width: 100%; /* На всю ширину карточки */
+    /* height: 66px; */ /* Убрана фиксированная высота */
+    /* left: 43px; */ /* Удалены абсолютные позиционирования */
+    /* top: 403px; */
+    /* position: absolute; */
+    /* justify-content: center; */ /* Убрано, текст по левому краю */
+    /* display: flex; */ /* Убрано, обычный блочный элемент */
+    /* flex-direction: column; */
+    color: #A0A7Ac; /* Светло-серый цвет текста описания */
+    font-size: 14px; /* Размер шрифта описания по макету */
+    font-family: \'Unbounded\';
+    font-weight: 400; /* Regular */
+    line-height: 1.4; /* Примерно 20px */
+    word-wrap: break-word;
+}
+
+/* Стили для why-us-block, который теперь .why-us-and-arrows > .why-us-text-block */
 .why-us-text-block {
-    width: 497px;
+    width: auto; /* Ширина по содержимому */
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
-    gap: 15px;
+    gap: 5px; /* Уменьшен разрыв между строками заголовка */
     display: inline-flex;
 }
 
 .why-us-title-white {
     align-self: stretch;
-    text-box-trim: trim-both; /* Consider browser compatibility */
-    text-box-edge: cap alphabetic; /* Consider browser compatibility */
+    text-box-trim: trim-both;
+    text-box-edge: cap alphabetic;
     color: white;
-    font-size: 55px;
-    font-family: 'Blippo-Black CY [Rus by me]';
+    font-size: 48px; /* Размер заголовка по макету */
+    font-family: \'Blippo-Black CY [Rus by me]\';
     font-weight: 400;
-    line-height: 18px;
+    line-height: 1.1; /* Примерно 53px */
     word-wrap: break-word;
 }
 
 .why-us-title-yellow {
     align-self: stretch;
-    text-box-trim: trim-both; /* Consider browser compatibility */
-    text-box-edge: cap alphabetic; /* Consider browser compatibility */
+    text-box-trim: trim-both;
+    text-box-edge: cap alphabetic;
     color: var(--Color7, #FFEF2B);
-    font-size: 55px;
-    font-family: 'Blippo-Black CY [Rus by me]';
+    font-size: 48px; /* Размер заголовка по макету */
+    font-family: \'Blippo-Black CY [Rus by me]\';
     font-weight: 400;
     text-transform: uppercase;
-    line-height: 18px;
+    line-height: 1.1; /* Примерно 53px */
     word-wrap: break-word;
 }
 
 .navigation-arrows-container {
-    padding-left: 32px;
-    padding-right: 32px;
-    padding-top: 24px;
-    padding-bottom: 24px;
+    /* padding-left: 32px; */ /* Паддинги могут быть не нужны, если отступы через gap */
+    /* padding-right: 32px; */
+    /* padding-top: 24px; */
+    /* padding-bottom: 24px; */
     justify-content: center;
     align-items: center;
-    gap: 24px;
+    gap: 10px; /* Уменьшен gap */
     display: flex;
 }
 
@@ -664,2906 +514,60 @@ body {
     display: flex;
 }
 
-.arrow-left-container {
-    width: 46px;
-    height: 46px;
+.arrow-left-container, .arrow-right-container {
+    width: 40px; /* Уменьшен размер стрелок */
+    height: 40px;
     position: relative;
-    transform: rotate(180deg);
-    transform-origin: top left; /* Corrected typo */
     overflow: hidden;
+    border-radius: 50%; /* Круглые стрелки */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
 }
 
-.arrow-left-bg {
-    width: 34.50px;
-    height: 34.50px;
-    left: 5.75px;
-    top: 6px;
-    position: absolute;
-    background: #FFEF2B;
+.arrow-left-container {
+    /* transform: rotate(180deg); */ /* Вращение не нужно, если иконка уже правильная */
+    /* transform-origin: center; */
+    background: rgba(255, 255, 255, 0.1); /* Фон для левой стрелки */
+}
+.arrow-left-container:hover {
+    background: rgba(255, 255, 255, 0.2);
 }
 
-.arrow-left-border {
-    width: 37.38px;
-    height: 37.38px;
-    left: 4.31px;
-    top: 4.50px;
-    position: absolute;
+
+.arrow-right-container {
+    background: #FFEF2B; /* Желтый фон для правой стрелки */
+}
+.arrow-right-container:hover {
+    background: #E0D020; /* Более темный желтый при наведении */
+}
+
+/* Удаляем старые .arrow-left-bg, .arrow-left-border и т.д. так как фон и форма теперь на контейнере */
+.arrow-left-bg, .arrow-left-border, .arrow-right-bg, .arrow-right-border {
+    display: none;
 }
 
 .arrow-left-icon {
-    width: 11.50px;
-    height: 20.12px;
-    left: 16.53px;
-    top: 13px;
-    position: absolute;
-    background: black;
-}
-
-.arrow-right-container {
-    width: 46px;
-    height: 46px;
-    position: relative;
-    overflow: hidden;
-}
-
-.arrow-right-bg {
-    width: 34.50px;
-    height: 34.50px;
-    left: 5.75px;
-    top: 6px;
-    position: absolute;
-    background: rgba(255, 255, 255, 0.38);
-}
-
-.arrow-right-border {
-    width: 37.38px;
-    height: 37.38px;
-    left: 4.31px;
-    top: 4.50px;
-    position: absolute;
+    width: 10px; /* Размер иконки */
+    height: 10px;
+    /* background: white; */ /* Цвет иконки */
+    border-top: 2px solid white;
+    border-left: 2px solid white;
+    transform: rotate(-45deg);
 }
 
 .arrow-right-icon {
-    width: 11.50px;
-    height: 20.12px;
-    left: 17.97px;
-    top: 13px;
-    position: absolute;
-    background: white;
+    width: 10px; /* Размер иконки */
+    height: 10px;
+    /* background: black; */ /* Цвет иконки */
+    border-top: 2px solid black;
+    border-right: 2px solid black;
+    transform: rotate(45deg);
 }
+
+/* Старый .why-us-block удален или закомментирован */
+/* .why-us-block { ... } */
 
 /* Startuppers block */
-.startuppers-block-container {
-    width: 100%;
-    /* height: 100%; */ /* Removed fixed height */
-    padding-top: 45px;
-    padding-bottom: 45px;
-    padding-left: 71px;
-    overflow: hidden;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 10px;
-    display: inline-flex; /* This might need to be block or flex */
-}
-
-.startuppers-block {
-    width: 1303px;
-    height: 521px;
-    position: relative;
-    overflow: hidden;
-}
-
-.startuppers-content-wrapper {
-    width: 1303px;
-    height: 521px;
-    left: 0px;
-    top: 0px;
-    position: absolute;
-    background: black;
-    overflow: hidden;
-    border-radius: 10px;
-}
-
-.startuppers-image-overlay {
-    width: 1370px;
-    height: 985px;
-    left: -34px;
-    top: -292px;
-    position: absolute;
-    opacity: 0.90;
-    overflow: hidden;
-    /* Contains background images/placeholders, styled separately if needed */
-}
-
-.startuppers-image-overlay > .placeholder-image { /* Style for placeholder inside overlay */
-    width: 1369.19px;
-    height: 983.51px;
-    left: 0px;
-    top: 0px;
-    position: absolute;
-}
-
-.startuppers-image-overlay > div:not(.placeholder-image) { /* Gradient overlay */
-    width: 882px;
-    height: 551px;
-    left: 34px;
-    top: 280px;
-    position: absolute;
-    background: linear-gradient(270deg, rgba(0, 0, 0, 0) 0%, black 100%);
-}
-
-.startuppers-text-content {
-    left: 117px;
-    top: 78px;
-    position: absolute;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 45px;
-    display: inline-flex;
-}
-
-.startuppers-title {
-    width: 375px;
-    text-box-trim: trim-both; /* Consider browser compatibility */
-    text-box-edge: cap alphabetic; /* Consider browser compatibility */
-    justify-content: center;
-    display: flex;
-    flex-direction: column;
-}
-
-.startuppers-title-yellow {
-    color: #FFEF2B;
-    font-size: 35px;
-    font-family: 'Unbounded';
-    font-weight: 600;
-    line-height: 35px;
-    word-wrap: break-word;
-}
-
-.startuppers-title-white {
-    color: #F2F2F2;
-    font-size: 35px;
-    font-family: 'Unbounded';
-    font-weight: 600;
-    line-height: 35px;
-    word-wrap: break-word;
-}
-
-.startuppers-features-list {
-    width: 470px;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 17px;
-    display: flex;
-}
-
-.startupper-feature, .startupper-feature-extended {
-    justify-content: flex-start;
-    align-items: center;
-    gap: 10px;
-    display: inline-flex;
-}
-.startupper-feature-extended {
-    align-self: stretch;
-}
-
-.feature-icon-container {
-    width: 35px;
-    height: 35px;
-    position: relative;
-    overflow: hidden;
-    border-radius: 5px;
-    outline: 1px white solid;
-    outline-offset: -1px;
-}
-
-.feature-icon-box {
-    width: 24px;
-    height: 24px;
-    left: 6px;
-    top: 5px;
-    position: absolute;
-    overflow: hidden;
-}
-
-/* Specific icon shapes */
-.icon-shape-1 { width: 5.52px; height: 5.51px; left: 2.50px; top: 15.99px; position: absolute; outline: 2px white solid; outline-offset: -1px; }
-.icon-shape-2 { width: 13px; height: 13px; left: 9px; top: 2px; position: absolute; outline: 2px white solid; outline-offset: -1px; }
-.icon-shape-3 { width: 7px; height: 4.48px; left: 4px; top: 7.52px; position: absolute; outline: 2px white solid; outline-offset: -1px; }
-.icon-shape-4 { width: 4.48px; height: 7px; left: 12px; top: 13px; position: absolute; outline: 2px white solid; outline-offset: -1px; }
-
-.icon-shape-5 { width: 14px; height: 10px; left: 5px; top: 7px; position: absolute; outline: 2px white solid; outline-offset: -1px; }
-.icon-shape-6 { width: 2px; height: 2px; left: 11px; top: 11px; position: absolute; outline: 2px white solid; outline-offset: -1px; }
-.icon-shape-7 { width: 18px; height: 4px; left: 3px; top: 17px; position: absolute; outline: 2px white solid; outline-offset: -1px; }
-.icon-shape-8 { width: 18px; height: 4px; left: 3px; top: 3px; position: absolute; outline: 2px white solid; outline-offset: -1px; }
-
-.icon-shape-9 { width: 14px; height: 14px; left: 2px; top: 8px; position: absolute; outline: 2px white solid; outline-offset: -1px; }
-.icon-shape-10 { width: 5.10px; height: 8px; left: 2.45px; top: 11px; position: absolute; outline: 2px white solid; outline-offset: -1px; }
-.icon-shape-11 { width: 5.10px; height: 8px; left: 6.45px; top: 7px; position: absolute; outline: 2px white solid; outline-offset: -1px; }
-.icon-shape-12 { width: 5.10px; height: 8px; left: 10.45px; top: 3px; position: absolute; outline: 2px white solid; outline-offset: -1px; }
-.icon-shape-13 { width: 6px; height: 6px; left: 16px; top: 2px; position: absolute; outline: 2px white solid; outline-offset: -1px; }
-.icon-shape-14 { width: 8px; height: 5.10px; left: 5px; top: 16.45px; position: absolute; outline: 2px white solid; outline-offset: -1px; }
-.icon-shape-15 { width: 8px; height: 5.10px; left: 9px; top: 12.45px; position: absolute; outline: 2px white solid; outline-offset: -1px; }
-.icon-shape-16 { width: 8px; height: 5.10px; left: 13px; top: 8.45px; position: absolute; outline: 2px white solid; outline-offset: -1px; }
-
-.feature-text {
-    text-box-trim: trim-both; /* Consider browser compatibility */
-    text-box-edge: cap alphabetic; /* Consider browser compatibility */
-    justify-content: center;
-    display: flex;
-    flex-direction: column;
-    color: white;
-    font-size: 16px;
-    font-family: 'Unbounded';
-    font-weight: 400;
-    line-height: 18px;
-    word-wrap: break-word;
-}
-
-.feature-text-long {
-    width: 334px;
-    text-box-trim: trim-both; /* Consider browser compatibility */
-    text-box-edge: cap alphabetic; /* Consider browser compatibility */
-    justify-content: center;
-    display: flex;
-    flex-direction: column;
-    /* Base color is white, spans will override */
-    color: white; 
-    font-size: 16px;
-    font-family: 'Unbounded';
-    font-weight: 400;
-    line-height: 18px;
-    word-wrap: break-word;
-}
-
-.feature-text-white {
-    color: white;
-}
-.feature-text-yellow {
-    color: #FFEF2B;
-}
-
-
-.button-create-startup {
-    height: 40px;
-    padding-left: 25px;
-    padding-right: 25px;
-    padding-top: 12px;
-    padding-bottom: 12px;
-    background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
-    border-radius: 10px;
-    outline: 1px black solid;
-    outline-offset: -1px;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 9px;
-    display: inline-flex;
-}
-
-.button-create-startup-text {
-    color: black;
-    font-size: 16px;
-    font-family: 'Unbounded';
-    font-weight: 400;
-    line-height: 16px;
-    word-wrap: break-word;
-}
-
-.button-create-startup-icon-container {
-    width: 24px;
-    height: 24px;
-    position: relative;
-    overflow: hidden;
-}
-
-.button-create-startup-icon-bg {
-    width: 19.50px;
-    height: 19.50px;
-    left: 2.25px;
-    top: 2.25px;
-    position: absolute;
-    background: black;
-}
-
-.button-create-startup-icon-inner {
-    width: 9px;
-    height: 9px;
-    left: 7.50px;
-    top: 7.50px;
-    position: absolute;
-    background: black;
-}
-
-/* Startuppers block placeholders */
-.startuppers-placeholder-1 {
-    width: 563px;
-    height: 997.26px;
-    left: 603px;
-    top: 40px;
-    position: absolute;
-}
-
-.startuppers-image-group {
-    width: 407px;
-    height: 878px;
-    left: 683px;
-    top: 98px;
-    position: absolute;
-    overflow: hidden;
-}
-
-.startuppers-placeholder-2 {
-    width: 407px;
-    height: 878px;
-    left: 0px;
-    top: 0px;
-    position: absolute;
-    border-radius: 38px;
-}
-
-.startuppers-placeholder-3 {
-    width: 407px;
-    height: 407px;
-    left: 0px;
-    top: 26px;
-    position: absolute;
-    border-radius: 11px;
-}
-
-/* Investors block */
-.investors-block-container {
-    width: 100%;
-    padding-top: 45px;
-    padding-bottom: 45px;
-    padding-left: 71px;
-    overflow: hidden;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 10px;
-    display: inline-flex;
-}
-
-.investors-block {
-    width: 1303px;
-    height: 521px;
-    position: relative;
-    background: white;
-    border-radius: 10px;
-}
-
-.investors-text-content {
-    width: 591px; /* Adjusted width */
-    left: 92px;
-    top: 55px;
-    position: absolute;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 27px;
-    display: inline-flex;
-}
-
-.investors-title {
-    width: 375px;
-    text-box-trim: trim-both;
-    text-box-edge: cap alphabetic;
-    justify-content: center;
-    display: flex;
-    flex-direction: column;
-}
-
-.investors-title-blue {
-    color: #004E9F;
-    font-size: 35px;
-    font-family: 'Unbounded';
-    font-weight: 600;
-    line-height: 35px;
-    word-wrap: break-word;
-}
-
-.investors-title-black {
-    color: black;
-    font-size: 35px;
-    font-family: 'Unbounded';
-    font-weight: 600;
-    line-height: 35px;
-    word-wrap: break-word;
-}
-
-.investors-features-list {
-    align-self: stretch;
-    justify-content: flex-start;
-    align-items: flex-end; /* Adjusted alignment */
-    gap: 15px;
-    display: inline-flex;
-}
-
-.investor-feature-card {
-    width: 187px;
-    height: 181px;
-    position: relative;
-    background: linear-gradient(180deg, #004E9F 0%, #001C39 100%);
-    overflow: hidden;
-    border-radius: 10px;
-    display: flex; /* Added for centering text */
-    justify-content: center; /* Added for centering text */
-    align-items: center; /* Added for centering text */
-    text-align: center; /* Added for centering text */
-}
-
-.investor-feature-text {
-    width: 159px;
-    /* left: 14px; top: 93px; position: absolute; */ /* Removed absolute positioning */
-    text-box-trim: trim-both;
-    text-box-edge: cap alphabetic;
-    color: white;
-    font-size: 14px;
-    font-family: 'Unbounded';
-    font-weight: 400;
-    line-height: 18px;
-    word-wrap: break-word;
-}
-.investor-feature-text-long{
-    width: 159px;
-    text-box-trim: trim-both;
-    text-box-edge: cap alphabetic;
-    color: white;
-    font-size: 14px;
-    font-family: 'Unbounded';
-    font-weight: 400;
-    line-height: 18px;
-    word-wrap: break-word;
-}
-
-
-.investor-feature-image-1 {
-    width: 165px;
-    height: 127px;
-    position: relative;
-}
-
-.investor-feature-image-2 {
-    width: 165px;
-    height: 127px;
-    position: relative;
-}
-
-.investor-feature-image-3 {
-    width: 129px;
-    height: 99px;
-    position: relative;
-}
-
-.button-view-startups {
-    height: 40px;
-    padding-left: 25px;
-    padding-right: 25px;
-    padding-top: 12px;
-    padding-bottom: 12px;
-    background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
-    border-radius: 10px;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 9px;
-    display: inline-flex;
-}
-
-.button-view-startups-text {
-    color: black;
-    font-size: 16px;
-    font-family: 'Unbounded';
-    font-weight: 400;
-    line-height: 16px;
-    word-wrap: break-word;
-}
-
-.button-view-startups-icon-container {
-    width: 24px;
-    height: 24px;
-    position: relative;
-    overflow: hidden;
-}
-
-.button-view-startups-icon-outer {
-    width: 20px;
-    height: 14px;
-    left: 2px;
-    top: 5px;
-    position: absolute;
-    outline: 2px black solid;
-    outline-offset: -1px;
-}
-
-.button-view-startups-icon-inner {
-    width: 6px;
-    height: 6px;
-    left: 9px;
-    top: 9px;
-    position: absolute;
-    outline: 2px black solid;
-    outline-offset: -1px;
-}
-
-.investors-image-section {
-    width: 771px; 
-    height: 553px;
-    left: 712px; 
-    top: -16px;
-    position: absolute;
-    overflow: hidden;
-}
-
-.investors-image-bg-1 {
-    width: 771px;
-    height: 553px;
-    left: 0px;
-    top: 0px;
-    position: absolute;
-    background: black;
-}
-
-.investors-image-bg-2 {
-    width: 771px;
-    height: 553px;
-    left: 0px;
-    top: 0px;
-    position: absolute;
-    background: black;
-}
-
-.investors-main-placeholder {
-    width: 770.17px;
-    height: 552.40px;
-    left: 0px;
-    top: 0px;
-    position: absolute;
-}
-
-.investors-secondary-placeholder {
-    width: 427.87px;
-    height: 289.92px;
-    left: 199px;
-    top: 263px;
-    position: absolute;
-}
-
-.investors-icon-placeholder {
-    width: 96px;
-    height: 96px;
-    left: 255.34px;
-    top: 135px;
-    position: absolute;
-}
-
-/* Explore Worlds Block */
-.explore-worlds-container {
-    width: 100%;
-    /* height: 100%; */ /* Adjusted */
-    padding-top: 23px;
-    padding-bottom: 45px;
-    padding-left: 71px;
-    padding-right: 71px;
-    overflow: hidden;
-    justify-content: space-between;
-    align-items: flex-start;
-    display: inline-flex; /* Or block, depending on desired layout flow */
-}
-
-.explore-worlds-content {
-    width: 1334px; /* Ensure this fits within the container or adjust as needed */
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 55px;
-    display: inline-flex;
-}
-
-.explore-worlds-title-section {
-    width: 491px;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 18px;
-    display: flex; /* Changed from inline-flex for proper column layout */
-}
-
-.explore-worlds-title-white {
-    align-self: stretch;
-    text-box-trim: trim-both;
-    text-box-edge: cap alphabetic;
-    color: white;
-    font-size: 55px;
-    font-family: 'Blippo-Black CY [Rus by me]';
-    font-weight: 400;
-    line-height: 55px;
-    word-wrap: break-word;
-}
-
-.explore-worlds-title-yellow {
-    align-self: stretch;
-    text-box-trim: trim-both;
-    text-box-edge: cap alphabetic;
-    color: #FFEF2B;
-    font-size: 55px;
-    font-family: 'Blippo-Black CY [Rus by me]';
-    font-weight: 400;
-    text-transform: uppercase;
-    line-height: 55px;
-    word-wrap: break-word;
-}
-
-.explore-worlds-main-area {
-    align-self: stretch;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 41px;
-    display: inline-flex;
-}
-
-.explore-worlds-left-column {
-    width: 593px;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 21px;
-    display: inline-flex;
-}
-
-.explore-worlds-large-card {
-    align-self: stretch;
-    height: 514px;
-    position: relative;
-    background: #041A32;
-    overflow: hidden;
-    border-radius: 20px;
-}
-
-.explore-placeholder-1 {
-    width: 388.42px;
-    height: 345.36px;
-    left: 168.70px;
-    top: 85.64px;
-    position: absolute;
-}
-
-.explore-placeholder-2 {
-    width: 122.15px;
-    height: 345.36px;
-    left: 36px;
-    top: 83px;
-    position: absolute;
-}
-
-.button-all-startups {
-    height: 40px;
-    padding-left: 25px;
-    padding-right: 25px;
-    padding-top: 12px;
-    padding-bottom: 12px;
-    background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
-    border-radius: 10px;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 9px;
-    display: inline-flex;
-}
-
-.button-all-startups-text {
-    color: black;
-    font-size: 16px;
-    font-family: 'Unbounded';
-    font-weight: 400;
-    line-height: 16px;
-    word-wrap: break-word;
-}
-
-.button-all-startups-icon-container {
-    width: 16px;
-    height: 16px;
-    position: relative;
-    overflow: hidden;
-}
-
-.button-all-startups-icon {
-    width: 9.33px;
-    height: 6px;
-    left: 3.33px;
-    top: 4.67px;
-    position: absolute;
-    background: black;
-}
-
-.explore-worlds-center-column {
-    width: 355px;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 49px;
-    display: inline-flex;
-}
-
-.startup-card {
-    align-self: stretch;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 20px;
-    display: inline-flex;
-    /* width: 355px; Ensure cards fit */
-}
-
-.startup-card-image {
-    width: 160px;
-    height: 156px;
-    position: relative;
-    border-radius: 10px
-}
-
-.startup-card-info {
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 16px;
-    display: inline-flex;
-    flex: 1; /* Allow info to take remaining space */
-}
-
-.startup-card-header {
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 8px;
-    display: flex;
-}
-
-.startup-name {
-    width: 167px; /* Or adjust as needed */
-    color: #FCFCFD;
-    font-size: 16px;
-    font-family: 'Unbounded';
-    font-weight: 400;
-    line-height: 16px;
-    word-wrap: break-word;
-}
-
-.startup-rating-section {
-    /* width: 155px; */ /* Let it be flexible */
-    justify-content: flex-start;
-    align-items: center;
-    gap: 11px;
-    display: inline-flex;
-}
-
-.startup-avatar-container {
-    width: 24px;
-    height: 24px;
-    position: relative;
-    background: #9757D7;
-    overflow: hidden;
-    border-radius: 36px;
-}
-
-.startup-avatar {
-    width: 24px;
-    height: 36px;
-    left: 0px;
-    top: -6.50px;
-    position: absolute;
-}
-
-.startup-rating {
-    padding-top: 8px;
-    padding-bottom: 6px;
-    padding-left: 8px;
-    padding-right: 8px;
-    border-radius: 4px;
-    outline: 2px var(--Color7, #FFEF2B) solid;
-    outline-offset: -2px;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    display: flex;
-}
-
-.startup-rating-text {
-    text-box-trim: trim-both;
-    text-box-edge: cap alphabetic;
-    color: var(--Color7, #FFEF2B);
-    font-size: 12px;
-    font-family: 'Unbounded';
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.12px;
-    word-wrap: break-word;
-}
-
-.startup-description {
-    width: 175px; /* Or adjust as needed */
-    text-box-trim: trim-both;
-    text-box-edge: cap alphabetic;
-    color: #E6E8EC;
-    font-size: 8px;
-    font-family: 'Unbounded';
-    font-weight: 300;
-    line-height: 9px;
-    word-wrap: break-word;
-}
-
-.button-details {
-    padding-left: 12px;
-    padding-right: 12px;
-    padding-top: 8px;
-    padding-bottom: 8px;
-    background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%);
-    border-radius: 10px;
-    justify-content: center;
-    align-items: center;
-    gap: 12px;
-    display: inline-flex;
-}
-
-.button-details-text {
-    text-box-trim: trim-both;
-    text-box-edge: cap alphabetic;
-    color: #FCFCFD;
-    font-size: 14px;
-    font-family: 'Unbounded';
-    font-weight: 300;
-    line-height: 18px;
-    word-wrap: break-word;
-}
-
-.divider-line {
-    width: 1px;
-    height: 566px;
-    position: relative; /* Or remove if not needed for layout */
-    background: rgba(255, 255, 255, 0.13);
-}
-
-.explore-worlds-right-column {
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    display: inline-flex;
-    flex: 1; /* Allow to take remaining space */
-}
-
-.latest-updates-title {
-    color: #777E90;
-    font-size: 12px;
-    font-family: 'Poppins', sans-serif; /* Added Poppins font */
-    font-weight: 600;
-    line-height: 20px;
-    word-wrap: break-word;
-}
-
-.updates-list {
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    display: flex;
-}
-
-.update-item {
-    width: 229px; /* Or adjust as needed */
-    padding-top: 20px;
-    padding-bottom: 20px;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-end; /* Check if this is intended */
-    gap: 23px;
-    display: flex;
-}
-
-.update-item-content{
-    align-self: stretch;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 21px;
-    display: inline-flex;
-}
-
-.updater-avatar-section {
-    width: 56px;
-    height: 56px;
-    position: relative;
-    border-radius: 64px; /* Outer circle for badge positioning */
-}
-
-.updater-avatar-container {
-    width: 56px;
-    height: 56px;
-    left: 0px;
-    top: 0px;
-    position: absolute;
-    background: #9757D7;
-    overflow: hidden;
-    border-radius: 48px; /* Inner image circle */
-}
-
-.updater-avatar {
-    width: 56px;
-    height: 83.99px;
-    left: 0px;
-    top: -15.17px;
-    position: absolute;
-}
-
-.updater-avatar-badge {
-    padding-left: 8px;
-    padding-right: 8px;
-    padding-top: 2px;
-    padding-bottom: 2px;
-    left: -4px;
-    top: -4px;
-    position: absolute;
-    background: #FCFCFD;
-    overflow: hidden;
-    border-radius: 64px;
-    outline: 2px #141416 solid;
-    outline-offset: -2px;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 10px;
-    display: inline-flex;
-}
-
-.updater-avatar-badge-text {
-    width: 8px; /* Check if this width is intended */
-    color: #23262F;
-    font-size: 12px;
-    font-family: 'Poppins', sans-serif; /* Added Poppins font */
-    font-weight: 600;
-    line-height: 20px;
-    word-wrap: break-word;
-}
-
-.updater-info {
-    width: 152px; /* Or adjust as needed */
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 5px;
-    display: inline-flex;
-}
-
-.updater-name-section {
-    align-self: stretch;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 4px;
-    display: inline-flex;
-}
-
-.updater-name-part {
-    text-box-trim: trim-both;
-    text-box-edge: cap alphabetic;
-    color: #FCFCFD;
-    font-size: 14px;
-    font-family: 'Unbounded';
-    font-weight: 300;
-    line-height: 18px;
-    word-wrap: break-word;
-}
-
-.updater-rating-section {
-    justify-content: flex-start;
-    align-items: center;
-    gap: 9px;
-    display: inline-flex;
-}
-
-.updater-rating-label {
-    text-box-trim: trim-both;
-    text-box-edge: cap alphabetic;
-    color: #777E90;
-    font-size: 12px;
-    font-family: 'Unbounded';
-    font-weight: 300;
-    letter-spacing: 0.12px;
-    word-wrap: break-word;
-}
-
-.updater-rating-value {
-    text-box-trim: trim-both;
-    text-box-edge: cap alphabetic;
-    color: #E6E8EC;
-    font-size: 14px;
-    font-family: 'Unbounded';
-    font-weight: 300;
-    line-height: 18px;
-    word-wrap: break-word;
-}
-
-.update-item-divider {
-    align-self: stretch;
-    height: 1px;
-    position: relative;
-    background: rgba(255, 255, 255, 0.13);
-}
-
-.button-all-startups-alt {
-    padding-left: 16px;
-    padding-right: 16px;
-    padding-top: 12px;
-    padding-bottom: 12px;
-    border-radius: 10px;
-    outline: 1px white solid;
-    outline-offset: -1px;
-    justify-content: center;
-    align-items: center;
-    gap: 12px;
-    display: inline-flex;
-    margin-top: 20px; /* Added margin for spacing */
-}
-
-.button-all-startups-alt-text {
-    text-box-trim: trim-both;
-    text-box-edge: cap alphabetic;
-    color: #FCFCFD;
-    font-size: 14px;
-    font-family: 'Unbounded';
-    font-weight: 300;
-    line-height: 18px;
-    word-wrap: break-word;
-}
-
-.button-all-startups-alt-icon-container {
-    width: 16px;
-    height: 16px;
-    position: relative;
-    overflow: hidden;
-}
-
-.button-all-startups-alt-icon {
-    width: 9.33px;
-    height: 6px;
-    left: 3.33px;
-    top: 4.67px;
-    position: absolute;
-    background: #FCFCFD;
-}
-
-/* How Galaxy Works Block */
-.how-galaxy-works-container {
-    width: 100%;
-    /* height: 100%; */ /* Adjusted */
-    padding-left: 71px;
-    padding-right: 71px;
-    padding-top: 55px;
-    padding-bottom: 55px;
-    overflow: hidden;
-    justify-content: space-between; /* Or center, depending on desired layout */
-    align-items: flex-start; /* Or center */
-    display: inline-flex; /* Or block */
-}
-
-.how-galaxy-works-content {
-    width: 1303px; /* Ensure this fits */
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 55px;
-    display: inline-flex;
-}
-
-.how-galaxy-works-title-section {
-    width: 671px; /* Adjust as needed */
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 20px;
-    display: flex;
-}
-
-.how-galaxy-works-title-white {
-    align-self: stretch;
-    text-box-trim: trim-both;
-    text-box-edge: cap alphabetic;
-    text-align: center;
-    color: white;
-    font-size: 55px;
-    font-family: 'Blippo-Black CY [Rus by me]';
-    font-weight: 400;
-    text-transform: uppercase;
-    line-height: 55px;
-    word-wrap: break-word;
-}
-
-.how-galaxy-works-title-yellow {
-    align-self: stretch;
-    text-box-trim: trim-both;
-    text-box-edge: cap alphabetic;
-    text-align: center;
-    color: #FFEF2B;
-    font-size: 55px;
-    font-family: 'Blippo-Black CY [Rus by me]';
-    font-weight: 400;
-    text-transform: uppercase;
-    line-height: 55px;
-    word-wrap: break-word;
-}
-
-.how-galaxy-works-placeholder {
-    align-self: stretch;
-    height: 672px;
-    position: relative;
-    border-radius: 20px;
-}
-
-.how-galaxy-works-step-title {
-    align-self: stretch;
-    text-box-trim: trim-both;
-    text-box-edge: cap alphabetic;
-    text-align: center;
-    color: white;
-    font-size: 20px;
-    font-family: 'Unbounded';
-    font-weight: 400;
-    line-height: 55px;
-    word-wrap: break-word;
-}
-
-.how-galaxy-works-navigation {
-    justify-content: flex-start;
-    align-items: center;
-    gap: 12px;
-    display: inline-flex;
-}
-
-.nav-arrow-left-hidden {
-    width: 46px;
-    height: 46px;
-    position: relative;
-    transform: rotate(180deg);
-    transform-origin: top left;
-    opacity: 0; /* Hidden */
-    overflow: hidden;
-}
-
-.nav-arrow-left-bg-hidden {
-    width: 34.50px;
-    height: 34.50px;
-    left: 5.75px;
-    top: 6px;
-    position: absolute;
-    background: #FFEF2B;
-}
-
-.nav-arrow-left-border-hidden {
-    width: 37.38px;
-    height: 37.38px;
-    left: 4.31px;
-    top: 4.50px;
-    position: absolute;
-}
-
-.nav-arrow-left-icon-hidden {
-    width: 11.50px;
-    height: 20.12px;
-    left: 16.53px;
-    top: 13px;
-    position: absolute;
-    background: black;
-}
-
-.step-indicator {
-    width: 205px;
-    height: 62px;
-    position: relative;
-    background: #FFEF2B;
-    overflow: hidden;
-    border-radius: 10px;
-}
-
-.step-indicator-text {
-    left: 67px;
-    top: 23px;
-    position: absolute;
-    text-box-trim: trim-both;
-    text-box-edge: cap alphabetic;
-    text-align: center;
-    color: black;
-    font-size: 20px;
-    font-family: 'Unbounded';
-    font-weight: 400;
-    text-transform: uppercase;
-    line-height: 55px; /* This seems large for 20px font, adjust if needed */
-    word-wrap: break-word;
-}
-
-.nav-arrow-right {
-    width: 46px;
-    height: 46px;
-    position: relative;
-    overflow: hidden;
-}
-
-.nav-arrow-right-bg {
-    width: 34.50px;
-    height: 34.50px;
-    left: 5.75px;
-    top: 6px;
-    position: absolute;
-    background: rgba(255, 255, 255, 0.38);
-}
-
-.nav-arrow-right-border {
-    width: 37.38px;
-    height: 37.38px;
-    left: 4.31px;
-    top: 4.50px;
-    position: absolute;
-}
-
-.nav-arrow-right-icon {
-    width: 11.50px;
-    height: 20.12px;
-    left: 17.97px;
-    top: 13px;
-    position: absolute;
-    background: white;
-}
-
-/* Great Ideas Block */
-.great-ideas-outer-container {
-    width: 100%;
-    /* height: 100%; */ /* Adjusted */
-    padding-left: 71px;
-    padding-right: 71px;
-    padding-top: 55px;
-    padding-bottom: 55px;
-    overflow: hidden;
-    justify-content: space-between; /* Or center */
-    align-items: flex-start; /* Or center */
-    display: inline-flex; /* Or block */
-}
-
-.great-ideas-main-wrapper {
-    width: 1303px; /* Fixed width */
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 39px;
-    display: inline-flex;
-}
-
-.great-ideas-block {
-    width: 1303px;
-    height: 521px;
-    position: relative;
-    background: linear-gradient(270deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.76) 100%);
-    overflow: hidden;
-    border-radius: 10px;
-}
-
-.great-ideas-bg-placeholder {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    /* Specific background image will be applied here if not a solid placeholder */
-}
-
-.great-ideas-img-1 {
-    width: 563px;
-    height: 997.26px;
-    left: 617px;
-    top: 0px;
-    position: absolute;
-}
-
-.great-ideas-img-2-container {
-    width: 407px;
-    height: 878px;
-    left: 697px;
-    top: 58px;
-    position: absolute;
-    overflow: hidden;
-}
-
-.great-ideas-img-2 {
-    width: 407px;
-    height: 878px;
-    left: 0px;
-    top: 0px;
-    position: absolute;
-    box-shadow: 4px 4px 4px;
-    border-radius: 38px;
-    filter: blur(2px);
-}
-
-.great-ideas-chat-bubbles {
-    width: 546px;
-    left: 715px; 
-    top: 120px;
-    position: absolute;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 10px;
-    display: inline-flex;
-}
-
-.chat-bubble-group {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start; /* Align label to the start of the bubble */
-    gap: 5px; /* Space between bubble and label */
-    width: 100%; /* Ensure group takes full width */
-}
-
-.chat-bubble {
-    /* align-self: stretch; */ /* Removed to allow bubble to size to content */
-    position: relative; /* For tail positioning */
-    padding: 20px 12px;
-    border-radius: 18px;
-    display: flex; /* To manage content rotation if needed directly on this div */
-    /* justify-content: flex-start; */ /* Handled by inner rotated div */
-    /* align-items: flex-start; */ /* Handled by inner rotated div */
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
-    max-width: 543px; /* Max width for the bubble */
-}
-
-.chat-bubble.purple {
-    background: #7B61FF;
-    /* width: 543px; */ /* Set on parent or manage with flex */
-}
-
-.chat-bubble.blue {
-    background: #468CF7;
-    width: 374px; /* Specific width from style */
-}
-
-.chat-bubble.dark-blue {
-    background: #004E9F;
-    /* width: 284px; */ /* Group parent handles width */
-    align-self: stretch; /* If this specific bubble needs to stretch */
-}
-
-.chat-bubble-content-rotated {
-    /* flex: 1 1 0; */ /* Allow content to fill */
-    transform: rotate(180deg);
-    transform-origin: top left;
-    text-box-trim: trim-both;
-    text-box-edge: cap alphabetic;
-    color: white;
-    font-size: 14px;
-    font-family: 'Unbounded';
-    font-weight: 300;
-    line-height: 18px;
-    word-wrap: break-word;
-    /* padding: 20px 12px; Moved to .chat-bubble */
-    width: 100%; /* Ensure it takes the rotated parent's width */
-    height: 100%; /* Ensure it takes the rotated parent's height */
-}
-
-.chat-bubble-tail-container {
-    width: 0.10px; /* Effectively zero width visually */
-    height: 20px;
-    transform: rotate(180deg);
-    transform-origin: top left;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    display: inline-flex; /* Changed to inline-flex to sit beside content if needed, though likely absolutely positioned */
-    position: absolute; /* Position tail relative to bubble */
-    /* Adjust right/left and top/bottom as per original Figma */
-    right: -11px; /* Example positioning for a right-aligned tail */
-    top: 50%; /* Center vertically */
-    transform: translateY(-50%) rotate(180deg); /* Adjust rotation if needed */
-}
-
-.chat-bubble-tail-shape {
-    width: 11px; /* Approximate from original */
-    height: 20px;
-    position: relative; /* Child of the container */
-    /* background: color-var; Will inherit or be set specifically */
-    /* This needs to be a triangle or similar shape, often done with borders */
-    clip-path: polygon(0 50%, 100% 0, 100% 100%); /* Example triangle pointing left */
-}
-
-.chat-bubble-tail-shape.purple { background: #7B61FF; }
-.chat-bubble-tail-shape.blue { background: #468CF7; }
-.chat-bubble-tail-shape.dark-blue { background: #004E9F; }
-
-
-.chat-bubble-label {
-    padding: 10px 20px;
-    background: white;
-    border-radius: 20px;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    display: inline-flex; /* To size to content */
-    text-box-trim: trim-both;
-    text-box-edge: cap alphabetic;
-    font-size: 14px;
-    font-family: 'Unbounded';
-    font-weight: 300;
-    line-height: 18px;
-    word-wrap: break-word;
-    margin-top: 5px; /* Space from the bubble if label is below */
-    /* The original Figma has labels sometimes above, sometimes below. This CSS assumes below. */
-}
-
-.chat-bubble-label.purple { color: #7B61FF; outline: 1px #7B61FF solid; outline-offset: -1px; }
-.chat-bubble-label.dark-blue { color: #004E9F; outline: 1px #004E9F solid; outline-offset: -1px; }
-
-
-.great-ideas-text-section {
-    width: 405px;
-    left: 165px;
-    top: 205px;
-    position: absolute;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 20px;
-    display: inline-flex;
-}
-
-.great-ideas-title {
-    width: 543px; /* Or adjust to fit content */
-    text-box-trim: trim-both;
-    text-box-edge: cap alphabetic;
-    color: white;
-    font-size: 35px;
-    font-family: 'Unbounded';
-    font-weight: 600;
-    line-height: 35px;
-    word-wrap: break-word;
-}
-
-.great-ideas-description {
-    width: 402px; /* Or adjust to fit content */
-    text-box-trim: trim-both;
-    text-box-edge: cap alphabetic;
-    color: white;
-    font-size: 14px;
-    font-family: 'Unbounded';
-    font-weight: 300;
-    line-height: 18px;
-    word-wrap: break-word;
-}
-
-.great-ideas-cards-container {
-    align-self: stretch;
-    justify-content: flex-start;
-    align-items: center; /* Align items if they have different heights */
-    gap: 39px;
-    display: inline-flex;
-    flex-wrap: wrap; /* Allow wrapping if not enough space */
-}
-
-.info-card {
-    position: relative;
-    overflow: hidden;
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column; /* Stack text below icons/images */
-    justify-content: flex-start; /* Align content to the top */
-    align-items: flex-start; /* Align content to the left */
-}
-
-.gamification-card {
-    width: 540px;
-    height: 521px;
-    background: linear-gradient(180deg, #7B61FF 0%, #4A3A99 100%);
-    padding: 61px; /* Added padding to contain elements */
-    box-sizing: border-box;
-}
-
-.gamification-icons-area {
-    /* height: 124px; Removed fixed height, will adapt */
-    /* left: 126px; top: 296px; Removed absolute positioning */
-    margin-top: auto; /* Push to bottom if card has extra space */
-    justify-content: flex-start;
-    align-items: center;
-    gap: 41px;
-    display: inline-flex;
-}
-
-.appstore-icons-placeholder, .googleplay-icons-placeholder {
-    width: 124px;
-    height: 124px;
-    padding: 20px; /* Approximate based on original divs */
-    background: black;
-    border-radius: 10px;
-    /* flex-direction: column; justify-content: flex-start; align-items: center; gap: 11px; */
-    /* These were for the many small divs inside, now it's one placeholder */
-}
-
-.info-card-text-content {
-    /* width: 418px; */ /* Removed fixed width, let it be flexible */
-    /* left: 61px; top: 61px; */ /* Removed absolute positioning */
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 31px;
-    display: inline-flex;
-    margin-bottom: auto; /* Push to top */
-}
-
-.info-card-title {
-    align-self: stretch;
-    text-box-trim: trim-both;
-    text-box-edge: cap alphabetic;
-    color: white;
-    font-size: 35px;
-    font-family: 'Unbounded';
-    font-weight: 600;
-    line-height: 35px;
-    word-wrap: break-word;
-}
-
-.info-card-description {
-    align-self: stretch;
-    color: white;
-    font-size: 16px;
-    font-family: 'Unbounded';
-    font-weight: 400;
-    line-height: 16px; /* Or 1.5 for better readability */
-    word-wrap: break-word;
-}
-
-.industry-change-card {
-    width: 724px;
-    height: 521px;
-    background: black; /* Base background */
-    padding: 72px 67px; /* Added padding */
-    box-sizing: border-box;
-}
-
-.industry-change-bg-placeholder {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    z-index: 0; /* Behind content */
-}
-
-.industry-change-blur-effect {
-    width: 590px;
-    height: 590px;
-    left: 293px; /* Position as per Figma */
-    top: 111px;
-    position: absolute;
-    background: #004E9F;
-    box-shadow: 500px 500px 500px; /* This might be too extreme */
-    border-radius: 9999px;
-    filter: blur(250px);
-    z-index: 1;
-}
-
-.industry-change-img-1 {
-    width: 327px;
-    height: 298px;
-    left: 490px; /* Position as per Figma */
-    top: 307px;
-    position: absolute;
-    z-index: 2;
-}
-
-.industry-change-img-2-container {
-    width: 253px;
-    height: 190px;
-    left: 293px; /* Position as per Figma */
-    top: 261px;
-    position: absolute;
-    overflow: hidden;
-    z-index: 2;
-}
-
-.industry-change-img-2-bg1, .industry-change-img-2-bg2 {
-    width: 253px;
-    height: 190px;
-    left: 0px;
-    top: 0px;
-    position: absolute;
-    background: black; /* Assuming these are for overlay or effect */
-}
-
-.industry-change-img-2 {
-    width: 252.46px;
-    height: 189.60px;
-    left: 0px;
-    top: 0px;
-    position: absolute;
-}
-
-/* Ensure text content in industry card is above visual elements if needed */
-.industry-change-card .info-card-text-content {
-    position: relative; /* To allow z-index stacking if needed */
-    z-index: 3; /* Above background elements */
-    width: 495px; /* As per Figma */
-}
-
-
-/* Success Stories Block */
-.success-stories-outer-container {
-    width: 100%;
-    padding-top: 45px;
-    padding-bottom: 45px;
-    padding-left: 71px;
-    /* padding-right: 71px; */ /* Removed right padding to allow overflow if needed */
-    overflow: hidden; /* Crucial for horizontal scrolling/carousel effect */
-    justify-content: flex-start;
-    align-items: center;
-    gap: 10px;
-    display: inline-flex; /* Or block */
-}
-
-.success-stories-main-content {
-    width: 1303px; /* Fixed width for content inside */
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 55px;
-    display: inline-flex;
-}
-
-.success-stories-title-area {
-    width: 497px; /* As per Figma */
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 15px;
-    display: flex;
-}
-
-.success-stories-title-white {
-    text-box-trim: trim-both;
-    text-box-edge: cap alphabetic;
-    color: white;
-    font-size: 55px;
-    font-family: 'Blippo-Black CY [Rus by me]';
-    font-weight: 400;
-    line-height: 18px; /* This seems very small for 55px font, adjust if needed */
-    word-wrap: break-word;
-}
-
-.success-stories-title-yellow {
-    text-box-trim: trim-both;
-    text-box-edge: cap alphabetic;
-    color: var(--Color7, #FFEF2B);
-    font-size: 55px;
-    font-family: 'Blippo-Black CY [Rus by me]';
-    font-weight: 400;
-    text-transform: uppercase;
-    line-height: 18px; /* This seems very small for 55px font, adjust if needed */
-    word-wrap: break-word;
-}
-
-.success-stories-carousel-area {
-    width: 1303px; /* Or 100% of its parent if full-width carousel */
-    justify-content: flex-start;
-    align-items: center;
-    gap: 23px;
-    display: inline-flex;
-    overflow-x: auto; /* Enable horizontal scrolling for cards */
-    padding-bottom: 20px; /* Space for scrollbar if it appears */
-}
-
-.carousel-arrow-nav {
-    width: 46px;
-    height: 46px;
-    position: relative; /* Keep for consistency, though maybe not strictly needed if static */
-    overflow: hidden;
-    cursor: pointer;
-}
-
-.carousel-arrow-nav.left {
-    transform: rotate(180deg);
-    transform-origin: center; /* Adjusted origin for better rotation */
-}
-
-.arrow-bg-style {
-    width: 34.50px;
-    height: 34.50px;
-    left: 5.75px;
-    top: 6px;
-    position: absolute;
-    background: rgba(255, 255, 255, 0.38); /* Default for left arrow */
-}
-
-.arrow-border-style {
-    width: 37.38px;
-    height: 37.38px;
-    left: 4.31px;
-    top: 4.50px;
-    position: absolute;
-    /* border: 1px solid transparent;  If a border is visually present in Figma */
-}
-
-.arrow-icon-style {
-    width: 11.50px;
-    height: 20.12px;
-    position: absolute;
-}
-
-.arrow-icon-style.white-icon {
-    background: white;
-    left: 16.53px; /* For left arrow (after rotation) */
-    top: 13px;
-}
-
-.arrow-icon-style.black-icon {
-    background: black;
-    left: 17.97px; /* For right arrow */
-    top: 13px;
-}
-
-.yellow-gradient-bg {
-    background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
-}
-
-.carousel-arrow-nav-rotated-container {
-    /* This extra container is for the rotated right arrow group */
-    transform: rotate(180deg);
-    transform-origin: center;
-    display:inline-flex; /* To contain the rotated arrow properly */
-}
-
-.carousel-arrow-nav.right.rotated {
-    /* No additional rotation needed here as parent container handles it */
-}
-
-
-.story-card-item {
-    min-width: 394px; /* Ensure cards don't shrink too much */
-    width: 394px;
-    height: 468px;
-    position: relative;
-    background: white;
-    overflow: hidden;
-    border-radius: 20px;
-    padding: 41px 45px; /* Added padding */
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start; /* Align content to the start */
-}
-
-.story-card-top-bg {
-    width: 149.81px;
-    height: 116px;
-    left: 199px; /* Position as per Figma */
-    top: 176px;
-    position: absolute;
-    background: rgba(0, 78, 159, 0.07);
-}
-
-.story-card-avatar {
-    width: 131px;
-    height: 131px;
-    /* left: 45px; top: 41px; */ /* Positioned by flex layout now */
-    background: #D9D9D9;
-    border-radius: 9999px;
-    margin-bottom: 20px; /* Space below avatar */
-}
-
-.story-card-name {
-    /* left: 215px; top: 69px; */ /* Positioned by flex */
-    /* position: absolute; */ /* Removed */
-    /* justify-content: center; display: flex; flex-direction: column; */ /* Simplified */
-    color: black;
-    font-size: 20px;
-    font-family: 'Unbounded';
-    font-weight: 400;
-    line-height: 20px;
-    word-wrap: break-word;
-    margin-bottom: 10px; /* Space below name */
-    align-self: flex-start; /* Align to the start of the card if not full width */
-}
-
-.story-card-role-badge {
-    padding: 10px 25px;
-    /* left: 215px; top: 106px; */ /* Positioned by flex */
-    /* position: absolute; */ /* Removed */
-    background: rgba(0, 78, 159, 0.26);
-    overflow: hidden;
-    border-radius: 10px;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    display: inline-flex; /* To size to content */
-    margin-bottom: 20px; /* Space below badge */
-}
-
-.story-card-role-text {
-    text-box-trim: trim-both;
-    text-box-edge: cap alphabetic;
-    justify-content: center;
-    display: flex;
-    flex-direction: column;
-    color: black;
-    font-size: 14px;
-    font-family: 'Unbounded';
-    font-weight: 400;
-    line-height: 14px;
-    word-wrap: break-word;
-}
-
-.story-card-description {
-    width: 304px; /* As per Figma */
-    /* left: 45px; top: 244px; */ /* Positioned by flex */
-    /* position: absolute; */ /* Removed */
-    text-box-trim: trim-both;
-    text-box-edge: cap alphabetic;
-    color: black;
-    font-size: 12px;
-    font-family: 'Unbounded';
-    font-weight: 300;
-    letter-spacing: 0.12px;
-    word-wrap: break-word;
-    margin-bottom: auto; /* Push rating to bottom if space available */
-}
-
-.story-card-rating-placeholder {
-    /* left: 73px; top: 404px; */ /* Positioned by flex */
-    /* position: absolute; */ /* Removed */
-    /* justify-content: flex-start; align-items: center; gap: 5px; display: inline-flex; */
-    width: 100%; /* Take full width for placeholder content */
-    height: 32px; /* Example height */
-    margin-top: 20px; /* Space above rating */
-    /* The original has many small divs for stars, replaced with a single placeholder */
-}
-
-/* Galaxy News Block */
-.galaxy-news-outer-container {
-    width: 100%;
-    padding-top: 60px;
-    padding-bottom: 60px;
-    padding-left: 71px;
-    /* padding-right: 71px; */ /* Allow overflow for content if needed */
-    overflow: hidden;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 10px;
-    display: inline-flex; /* Or block */
-}
-
-.galaxy-news-main-section {
-    width: 1280px; /* Fixed width for inner content */
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 78px;
-    display: inline-flex;
-}
-
-.galaxy-news-header-area {
-    align-self: stretch;
-    justify-content: space-between;
-    align-items: center;
-    display: inline-flex;
-}
-
-.galaxy-news-titles {
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 15px;
-    display: inline-flex;
-}
-
-.galaxy-news-title-white {
-    align-self: stretch;
-    text-box-trim: trim-both;
-    text-box-edge: cap alphabetic;
-    color: white;
-    font-size: 55px;
-    font-family: 'Blippo-Black CY [Rus by me]';
-    font-weight: 400;
-    line-height: 18px; /* Adjust if needed */
-    word-wrap: break-word;
-}
-
-.galaxy-news-title-yellow {
-    align-self: stretch;
-    text-box-trim: trim-both;
-    text-box-edge: cap alphabetic;
-    color: var(--Color7, #FFEF2B);
-    font-size: 55px;
-    font-family: 'Blippo-Black CY [Rus by me]';
-    font-weight: 400;
-    text-transform: uppercase;
-    line-height: 18px; /* Adjust if needed */
-    word-wrap: break-word;
-}
-
-.galaxy-news-subtitle {
-    width: 364px; /* As per Figma */
-    text-box-trim: trim-both;
-    text-box-edge: cap alphabetic;
-    justify-content: center;
-    display: flex;
-    flex-direction: column;
-    color: #F2F2F2;
-    font-size: 20px;
-    font-family: 'Unbounded';
-    font-weight: 400;
-    line-height: 18px; /* Adjust if needed */
-    word-wrap: break-word;
-}
-
-.featured-news-item {
-    width: 403px;
-    height: 212px;
-    position: relative;
-    background: white;
-    overflow: hidden;
-    border-radius: 10px;
-}
-
-.featured-news-img {
-    width: 403px;
-    height: 131px;
-    left: 0px;
-    top: 0px;
-    position: absolute;
-}
-
-.featured-news-details {
-    width: 358px; /* (403 - 2*23 padding approx) */
-    left: 23px;
-    top: 147px;
-    position: absolute;
-    justify-content: flex-start;
-    align-items: center; /* Align button and text */
-    gap: 13px;
-    display: inline-flex;
-}
-
-.featured-news-title-text {
-    flex: 1 1 0; /* Allow text to take available space */
-    text-box-trim: trim-both;
-    text-box-edge: cap alphabetic;
-    justify-content: center;
-    display: flex;
-    flex-direction: column;
-    color: black;
-    font-size: 14px;
-    font-family: 'Unbounded';
-    font-weight: 300;
-    line-height: 18px;
-    word-wrap: break-word;
-}
-
-.featured-news-button {
-    height: 40px;
-    padding-left: 35px;
-    padding-right: 35px;
-    padding-top: 12px;
-    padding-bottom: 12px;
-    background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%);
-    overflow: hidden;
-    border-radius: 10px;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    display: flex;
-}
-
-.featured-news-button-text {
-    color: var(--Text-Brand-On-Brand, #F5F5F5);
-    font-size: 16px;
-    font-family: 'Unbounded';
-    font-weight: 400;
-    line-height: 16px;
-    word-wrap: break-word;
-}
-
-.galaxy-news-grid-area {
-    align-self: stretch;
-    justify-content: flex-start;
-    align-items: center; /* Or flex-start if alignment issues */
-    gap: 20px;
-    display: inline-flex; /* Changed to inline-flex */
-    flex-wrap: wrap; /* Allow wrapping */
-    /* align-content: center; */ /* Removed, flex-start is usually better */
-}
-
-.news-article-card {
-    width: 412px; /* Fixed width for cards */
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    display: inline-flex; /* For proper sizing within the grid */
-}
-
-.news-article-inner {
-    align-self: stretch;
-    padding: 20px 21px; /* Padding from Figma */
-    background: white;
-    overflow: hidden;
-    border-radius: 10px;
-    outline: 1px #C6BBFE solid;
-    outline-offset: -1px;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 10px;
-    display: flex;
-}
-
-.news-article-content {
-    align-self: stretch;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center; /* Center image */
-    gap: 15px;
-    display: flex;
-}
-
-.news-article-img {
-    align-self: stretch;
-    height: 131px;
-    border-radius: 7px;
-}
-
-.news-article-info-wrapper {
-    width: 348px; /* Fixed width from Figma (412 - 2*21 - 2*other_paddings?) -> 370 (img) -> 348 */
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 13px;
-    display: flex;
-}
-
-.news-article-author-info {
-    justify-content: flex-start;
-    align-items: center;
-    gap: 18px;
-    display: inline-flex;
-}
-
-.news-article-author-avatar {
-    width: 44px;
-    height: 44px;
-    border-radius: 100px;
-}
-
-.news-article-author-details {
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 9px;
-    display: inline-flex;
-}
-
-.news-article-author-name {
-    justify-content: center;
-    display: flex;
-    flex-direction: column;
-    color: black;
-    font-size: 16px;
-    font-family: 'Unbounded';
-    font-weight: 400;
-    line-height: 16px;
-    word-wrap: break-word;
-}
-
-.news-article-date {
-    text-box-trim: trim-both;
-    text-box-edge: cap alphabetic;
-    justify-content: center;
-    display: flex;
-    flex-direction: column;
-    color: var(--Color1, rgba(0, 0, 0, 0.20));
-    font-size: 14px;
-    font-family: 'Unbounded';
-    font-weight: 300;
-    line-height: 18px;
-    word-wrap: break-word;
-}
-
-.news-article-text-content {
-    align-self: stretch;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 13px;
-    display: flex;
-}
-
-.news-article-title {
-    align-self: stretch;
-    justify-content: center;
-    display: flex;
-    flex-direction: column;
-    color: black;
-    font-size: 16px;
-    font-family: 'Unbounded';
-    font-weight: 400;
-    line-height: 16px;
-    word-wrap: break-word;
-}
-
-.news-article-summary {
-    align-self: stretch;
-    text-box-trim: trim-both;
-    text-box-edge: cap alphabetic;
-    justify-content: center;
-    display: flex;
-    flex-direction: column;
-    color: var(--Color4, rgba(0, 0, 0, 0.20));
-    font-size: 12px;
-    font-family: 'Unbounded';
-    font-weight: 300;
-    letter-spacing: 0.12px;
-    word-wrap: break-word;
-}
-
-.show-more-news-item {
-    width: 412px; /* Match card width */
-    height: 310px; /* Match card height */
-    padding: 133px 89px; /* Centering based on Figma */
-    box-sizing: border-box; /* Include padding in width/height */
-    border-radius: 20px;
-    outline: 1px white solid;
-    outline-offset: -1px;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    display: inline-flex;
-}
-
-.show-more-news-button {
-    /* height: 40px; */ /* Let it size to content + padding */
-    padding: 12px 35px;
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 10px;
-    outline: 1px white solid;
-    outline-offset: -1px;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 9px;
-    display: inline-flex; /* To wrap content */
-}
-
-.show-more-news-text {
-    color: var(--Text-Brand-On-Brand, #F5F5F5);
-    font-size: 16px;
-    font-family: 'Unbounded';
-    font-weight: 400;
-    line-height: 16px;
-    word-wrap: break-word;
-}
-
-.show-more-news-icon-container {
-    width: 16px;
-    height: 16px;
-    position: relative;
-    overflow: hidden;
-}
-
-.show-more-news-icon {
-    width: 14.67px; /* Placeholder was a div, adjust if it's an actual icon */
-    height: 10px;
-    left: 0.67px;
-    top: 3px;
-    position: absolute;
-    background: white; /* Assuming icon is white */
-}
-
-/* FAQ Styles */
-.faq-page-wrapper {
-    width: 100%;
-    min-height: 100vh;
-    padding-top: 20px;
-    background: none;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    box-sizing: border-box;
-}
-
-.faq-main-container {
-    width: 100%;
-    max-width: 1303px;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 55px;
-    box-sizing: border-box;
-    background: none !important;
-    margin-bottom: 65px;
-}
-
-.faq-header-block {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: none !important;
-}
-
-.faq-title-section {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.faq-main-title-text {
-    color: #FFEF2B;
-    font-family: 'Blippo-Black CY [Rus by me]', sans-serif;
-    font-size: 55px;
-    font-weight: 400;
-    line-height: 1;
-    word-wrap: break-word;
-    margin: 0;
-}
-
-.faq-subtitle-text {
-    color: white;
-    font-family: 'Unbounded', sans-serif;
-    font-size: 20px;
-    font-weight: 400;
-    line-height: 1.2;
-    word-wrap: break-word;
-    margin: 0;
-    width: 273px;
-}
-
-.faq-ask-question-section {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 28px;
-    padding: 24px 32px;
-    width: auto;
-    max-width: 364px;
-}
-
-.faq-ask-question-prompt {
-    color: white;
-    font-family: 'Unbounded', sans-serif;
-    font-size: 20px;
-    font-weight: 400;
-    line-height: 1;
-    word-wrap: break-word;
-    margin: 0;
-}
-
-.faq-ask-question-button {
-    padding: 12px 25px;
-    border-radius: 10px;
-    outline: 1px white solid;
-    outline-offset: -1px;
-    color: white;
-    font-family: 'Unbounded', sans-serif;
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 16px;
-    word-wrap: break-word;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.3s, color 0.3s;
-}
-
-.faq-ask-question-button:hover {
-    background-color: white;
-    color: #004E9F;
-}
-
-.faq-content-block {
-    width: 100%;
-    height: 797px;
-    position: relative;
-    background: #004E9F;
-    box-shadow: 6px 6px 15px rgba(0, 0, 0, 0.25);
-    border-radius: 20px;
-    display: flex;
-    overflow: hidden;
-}
-
-.faq-left-panel {
-    width: 535px;
-    height: calc(100% - 64px);
-    padding: 32px 34px 32px 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    overflow-y: auto;
-    box-sizing: border-box;
-    position: relative;
-}
-
-.faq-left-panel::-webkit-scrollbar {
-    width: 5px;
-}
-
-.faq-left-panel::-webkit-scrollbar-track {
-    background: transparent;
-    border-radius: 4px;
-}
-
-.faq-left-panel::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.34);
-    border-radius: 4px;
-}
-
-.faq-left-panel::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.5);
-}
-
-.faq-question-category,
-.faq-accordion-header,
-.faq-question-item {
-    padding: 10px 24px;
-    border-radius: 99px;
-    font-family: 'Unbounded', sans-serif;
-    cursor: pointer;
-    transition: background-color 0.3s, color 0.3s, outline 0.3s;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-sizing: border-box;
-}
-
-.faq-question-category {
-    background: white;
-    color: black;
-    outline: 2px black solid;
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 1;
-}
-
-.faq-accordion-header {
-    background: white;
-    color: black;
-    outline: 2px black solid;
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 1.19;
-}
-
-.faq-accordion-category.open > .faq-accordion-header {
-    /* Styles for open state if needed */
-}
-
-.faq-accordion-category.nested > .faq-accordion-header {
-    outline: 1px white solid;
-    background: transparent;
-    color: white;
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 1.19;
-}
-
-.faq-accordion-category.nested.open > .faq-accordion-header {
-    /* Styles for open nested state if needed */
-}
-
-.faq-chevron-icon {
-    width: 16px;
-    height: 16px;
-    transition: transform 0.3s ease-in-out;
-}
-
-.faq-accordion-category.open .faq-chevron-icon {
-    transform: rotate(180deg);
-}
-
-.faq-accordion-content {
-    display: none;
-    padding-left: 20px;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 10px;
-}
-
-.faq-accordion-category.open > .faq-accordion-content {
-    display: flex;
-}
-
-.faq-question-item {
-    background: transparent;
-    color: white;
-    outline: 1px white solid;
-    font-size: 14px;
-    font-weight: 300; /* Light */
-    line-height: 1.19; /* 16.66px / 14px */
-}
-
-.faq-question-item.active {
-    background: #FFEF2B; /* var(--Color7, #FFEF2B); */
-    color: black; /* var(--Color2, black); */
-    outline: 2px black solid; /* var(--Color2, black); */
-}
-.faq-question-category:hover,
-.faq-accordion-header:hover, /* This covers non-nested headers */
-.faq-question-item:hover {
-    background-color: #FFEF2B;
-    color: black;
-    outline: 2px black solid;
-}
-
-.faq-accordion-category.nested > .faq-accordion-header:hover,
-.faq-question-item:hover { /* Combined hover for nested headers and items, if they share hover style with non-active items */
-    background-color: rgba(255, 239, 43, 0.8); /* Slightly transparent yellow or a different shade */
-    color: black;
-    outline: 1px black solid; /* Or keep white outline if preferred */
-}
-.faq-question-item.active:hover {
-    background-color: #FFEF2B; /* Keep active style on hover */
-    color: black;
-    outline: 2px black solid;
-}
-
-
-.faq-right-panel {
-    flex-grow: 1; /* Занимает оставшееся пространство */
-    height: calc(100% - 64px); /* 797px - 32px (top) - 32px (bottom) */
-    padding: 32px 45px 32px 35px; /* Отступы по макету (top, right, bottom, left) */
-    display: flex;
-    flex-direction: column;
-    gap: 24px; /* Отступ между заголовком и телом ответа */
-    overflow-y: auto; /* Для прокрутки, если контента много */
-    box-sizing: border-box;
-    position: relative; /* Для кастомного скроллбара */
-    color: white; /* Default text color for this panel */
-}
-
-
-.faq-answer-title {
-    font-family: 'Unbounded', sans-serif;
-    font-size: 20px;
-    font-weight: 400;
-    line-height: 1.2; /* 24px / 20px */
-    word-wrap: break-word;
-    margin: 0;
-    color: white; /* Explicitly white */
-}
-
-.faq-answer-body {
-    font-family: 'Unbounded', sans-serif;
-    font-size: 16px;
-    font-weight: 300; /* Light */
-    line-height: 1.5; /* 24px / 16px */
-    word-wrap: break-word;
-    color: white; /* Explicitly white */
-}
-
-.faq-answer-body p {
-    margin-top: 0;
-    margin-bottom: 1em; /* Standard paragraph spacing */
-}
-.faq-answer-details-link {
-    color: #FFEF2B; /* var(--Color7, #FFEF2B); */
-    text-decoration: none;
-    font-weight: 400; /* Regular or Medium, adjust as needed */
-    display: inline-flex;
-    align-items: center;
-    gap: 8px; /* Space between text and arrow */
-}
-
-.faq-answer-details-link:hover {
-    text-decoration: underline;
-}
-
-.faq-answer-details-link img {
-    width: 16px; /* Adjust size as needed */
-    height: 16px; /* Adjust size as needed */
-    vertical-align: middle; /* Align arrow nicely with text */
-}
-
-/* Стили для кастомного скроллбара в правой панели */
-.faq-right-panel::-webkit-scrollbar {
-    width: 5px;
-}
-.faq-right-panel::-webkit-scrollbar-track {
-    background: transparent; /* Или цвет фона панели, если нужно */
-    border-radius: 4px;
-}
-.faq-right-panel::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.34);
-    border-radius: 4px;
-}
-.faq-right-panel::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.5);
-}
-
-/* This visual scrollbar might not be needed if native scrollbars are styled well */
-.faq-custom-scrollbar-visual {
-    position: absolute;
-    right: 10px; /* Adjust to position correctly beside the left panel\'s content */
-    top: 32px; /* Align with padding */
-    bottom: 32px; /* Align with padding */
-    width: 5px;
-    background: rgba(255, 255, 255, 0.1); /* Softer than the thumb */
-    border-radius: 4px;
-    /* This is a static visual cue, not a functional scrollbar */
-}
-
-@media (max-width: 1350px) { /* Немного больше чем max-width контейнера */
-    .faq-main-container {
-        max-width: 95%;
-        margin-left: auto;
-        margin-right: auto;
-    }
-}
-@media (max-width: 992px) {
-    .faq-header-block {
-        flex-direction: column;
-        align-items: center; /* Центрируем элементы в колонке */
-        gap: 30px; /* Отступ между блоком заголовка и блоком "задать вопрос" */
-    }
-    .faq-ask-question-section {
-        align-items: center; /* Центрируем кнопку и текст в мобильной версии */
-        padding: 20px; /* Уменьшаем паддинги */
-    }
-    .faq-content-block {
-        flex-direction: column;
-        height: auto; /* Автоматическая высота для мобильных устройств */
-        margin-bottom: 40px;
-    }
-    .faq-left-panel {
-        width: 100%; /* Занимает всю ширину */
-        height: auto; /* Авто высота */
-        max-height: 400px; /* Ограничение высоты с прокруткой */
-        padding: 20px; /* Уменьшаем паддинги */
-    }
-    .faq-right-panel {
-        width: 100%; /* Занимает всю ширину */
-        height: auto; /* Авто высота */
-        min-height: 200px; /* Минимальная высота для отображения контента */
-        padding: 20px; /* Уменьшаем паддинги */
-    }
-    .faq-custom-scrollbar-visual {
-        display: none; /* Скрываем кастомный визуальный скроллбар на мобильных */
-    }
-}
-
-@media (max-width: 768px) {
-    .faq-main-title-text {
-        font-size: 40px; /* Уменьшаем размер основного заголовка */
-    }
-    .faq-subtitle-text,
-    .faq-ask-question-prompt {
-        font-size: 18px; /* Уменьшаем размер подзаголовков */
-        width: auto; /* Авто ширина для лучшей адаптации */
-    }
-    .faq-answer-title {
-        font-size: 18px;
-    }
-    .faq-answer-body {
-        font-size: 14px;
-    }
-}
-
-
-/* Styles for the Gallery and Footer/CTA block */
-.gallery-and-footer-wrapper {
-    width: 100%;
-    position: relative;
-    background: white; /* As per the main div in HTML */
-}
-
-.gallery-and-footer-background-gradient { /* Corresponds to the first div inside wrapper */
-    width: 1440px; /* Fixed width from HTML, might need to be responsive */
-    height: 898px; /* Fixed height */
-    position: absolute;
-    left: 0;
-    top: 2px; /* As per HTML */
-    background: linear-gradient(0deg, white 0%, rgba(255, 255, 255, 0) 100%);
-    z-index: 1; /* To be under the content */
-}
-
-.gallery-block { /* Corresponds to the second div inside wrapper */
-    width: 1280px; /* Fixed width */
-    height: 665px; /* Fixed height */
-    position: relative; /* Changed from absolute to relative to its wrapper, or make wrapper relative */
-    margin-left: 80px; /* Auto margins for centering if parent is flex/grid, or fixed positioning */
-    margin-top: 300px; /* As per HTML */
-    /* left: 80px; top: 300px; removed as margin-left/top is used */
-    z-index: 2; /* Above the gradient */
-}
-
-/* Placeholder general style */
-.gallery-block > div[class^="gallery-image-placeholder-"],
-.gallery-block > div[class^="gallery-text-bubble-"] {
-    position: absolute;
-    overflow: hidden; /* To contain images if they are larger */
-    box-sizing: border-box; /* Include padding and border in the element\'s total width and height */
-}
-
-/* Specific placeholders - positions and dimensions from HTML */
-.gallery-image-placeholder-1 {
-    width: 274.29px; height: 274.29px; left: 274.29px; top: 182.86px;
-    background: #E1D6CC; border-radius: 32px; outline: 8px white solid; outline-offset: -8px;
-}
-.gallery-image-placeholder-1 img { width: 258.54px; height: 281px; position: absolute; left: 7.71px; top: -4.86px; }
-
-.gallery-image-placeholder-2 {
-    width: 91.43px; height: 91.43px; left: 731.43px; top: 274.29px;
-    background: #004E9F; border-radius: 32px; outline: 8px white solid; outline-offset: -8px;
-    /* Placeholder for complex inner structure or direct image if simple */
-}
-
-.gallery-image-placeholder-3 {
-    width: 91.43px; height: 91.43px; left: 0px; top: 361.14px;
-    background: #FFD6AD; border-radius: 32px; outline: 8px white solid; outline-offset: -8px;
-}
-.gallery-image-placeholder-3 img { width: 87px; height: 87px; position: absolute; left: 4.50px; top: 1.86px; }
-
-.gallery-image-placeholder-4 {
-    width: 91.43px; height: 91.43px; left: 365.71px; top: 91.43px;
-    background: #F5F4F3; border-radius: 32px; outline: 8px white solid; outline-offset: -8px;
-}
-.gallery-image-placeholder-4 img { width: 144px; height: 81px; position: absolute; left: -46.71px; top: 5.57px; }
-
-.gallery-image-placeholder-5 {
-    width: 91.43px; height: 91.43px; left: 1005.71px; top: 457.14px;
-    background: #F5F4F3; border-radius: 32px; outline: 8px white solid; outline-offset: -8px;
-}
-.gallery-image-placeholder-5 img { width: 94.50px; height: 168px; position: absolute; left: -1.71px; top: -38.14px; }
-
-.gallery-image-placeholder-6 {
-    width: 91.43px; height: 91.43px; left: 1005.71px; top: 365.71px;
-    background: #FDB3AF; border-radius: 32px; outline: 8px white solid; outline-offset: -8px;
-}
-.gallery-image-placeholder-6 img { width: 98px; height: 98px; position: absolute; left: -3.71px; top: -3.71px; }
-
-.gallery-image-placeholder-7 {
-    width: 91.43px; height: 91.43px; left: 457.14px; top: 91.43px;
-    background: #BBA28B; border-radius: 32px; outline: 8px white solid; outline-offset: -8px;
-}
-.gallery-image-placeholder-7 img { width: 122.40px; height: 128px; position: absolute; left: -15.14px; top: -18.43px; }
-
-.gallery-image-placeholder-8 {
-    width: 91.43px; height: 91.43px; left: 457.14px; top: 457.14px;
-    background: #F5F4F3; border-radius: 32px; outline: 8px white solid; outline-offset: -8px;
-    /* Placeholder for complex inner structure or direct image if simple */
-}
-
-.gallery-image-placeholder-9 {
-    width: 91.43px; height: 91.43px; left: 822.86px; top: 91.43px;
-    background: #FB554C; border-radius: 32px; outline: 8px white solid; outline-offset: -8px;
-}
-.gallery-image-placeholder-9 img { width: 92px; height: 92px; position: absolute; left: 0.14px; top: -0.43px; }
-
-.gallery-image-placeholder-10 {
-    width: 182.86px; height: 182.86px; left: 548.57px; top: 274.29px;
-    background: #BBA28B; border-radius: 32px; outline: 8px white solid; outline-offset: -8px;
-}
-.gallery-image-placeholder-10 img { width: 328.89px; height: 185px; position: absolute; left: -73.07px; top: -1.29px; }
-
-.gallery-image-placeholder-11 {
-    width: 182.86px; height: 182.86px; left: 548.57px; top: 457.14px;
-    background: #F5F4F3; border-radius: 32px; outline: 8px white solid; outline-offset: -8px;
-}
-.gallery-image-placeholder-11 img { width: 168px; height: 193px; position: absolute; left: 8.43px; top: -6.14px; }
-
-.gallery-image-placeholder-12 {
-    width: 182.86px; height: 182.86px; left: 91.43px; top: 361.14px;
-    background: #CCE0DE; border-radius: 32px; outline: 8px white solid; outline-offset: -8px;
-}
-.gallery-image-placeholder-12 img { width: 193px; height: 221px; position: absolute; left: 0.07px; top: -19.14px; }
-
-.gallery-image-placeholder-13 {
-    width: 182.86px; height: 182.86px; left: 822.86px; top: 182.86px;
-    background: #8DBAB5; border-radius: 32px; outline: 8px white solid; outline-offset: -8px;
-}
-.gallery-image-placeholder-13 img { width: 197.50px; height: 171px; position: absolute; left: -10.86px; top: 6.14px; }
-
-.gallery-image-placeholder-14 { /* This is div for "Готовы покорить галактику?" text block image with people */
-    width: 274.29px; height: 274.29px; left: 548.57px; top: 0px;
-    background: #CCE0DE; border-radius: 32px; outline: 8px white solid; outline-offset: -8px;
-    /* No direct img tag in HTML, assume background or complex content */
-}
-
-.gallery-image-placeholder-15 {
-    width: 274.29px; height: 274.29px; left: 731.43px; top: 365.71px;
-    background: #FFD6AD; border-radius: 32px; outline: 8px white solid; outline-offset: -8px;
-}
-.gallery-image-placeholder-15 img { width: 301px; height: 274px; position: absolute; left: -13.93px; top: 0.29px; }
-
-.gallery-image-placeholder-16 {
-    width: 274.29px; height: 274.29px; left: 1005.71px; top: 91.43px;
-    background: #EEF1EC; border-radius: 32px; outline: 8px white solid; outline-offset: -8px;
-}
-.gallery-image-placeholder-16 img { width: 307px; height: 275px; position: absolute; left: -16.21px; top: -0.43px; }
-
-.gallery-image-placeholder-17 {
-    width: 274.29px; height: 274.29px; left: 0px; top: 86.86px;
-    background: linear-gradient(0deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%), #FDE9E3;
-    border-radius: 32px; outline: 8px white solid; outline-offset: -8px;
-}
-.gallery-image-placeholder-17 img { width: 360px; height: 296px; position: absolute; left: -43px; top: -10.86px; }
-
-.gallery-image-placeholder-18 {
-    width: 182.86px; height: 182.86px; left: 274.29px; top: 457.14px;
-    background: #FB554C; border-radius: 32px; outline: 8px white solid; outline-offset: -8px;
-}
-.gallery-image-placeholder-18 img { width: 234px; height: 234px; position: absolute; left: -25.29px; top: -25.14px; }
-
-.gallery-image-placeholder-19 {
-    width: 182.86px; height: 182.86px; left: 1097.14px; top: 365.71px;
-    background: #F4BB44; border-radius: 32px; outline: 8px white solid; outline-offset: -8px;
-}
-.gallery-image-placeholder-19 img { width: 236px; height: 183px; position: absolute; left: -25.64px; top: 0.29px; }
-
-/* Text bubbles */
-.gallery-text-bubble-1 {
-    padding: 8px 24px 8px 16px; left: 703px; top: 32px;
-    background: black; border-radius: 99px; display: inline-flex; align-items: center; gap: 8px;
-}
-.gallery-text-bubble-2 {
-    padding: 8px 24px 8px 16px; left: 447px; top: 254px;
-    background: white; border-radius: 99px; display: inline-flex; align-items: center; gap: 8px;
-}
-.gallery-text-bubble-3 {
-    padding: 8px 24px 8px 16px; left: 200px; top: 437px;
-    background: white; border-radius: 99px; display: inline-flex; align-items: center; gap: 8px;
-}
-.gallery-text-bubble-4 {
-    padding: 8px 24px 8px 16px; left: 904px; top: 346px;
-    background: #FB554C; border-radius: 99px; display: inline-flex; align-items: center; gap: 8px;
-}
-.gallery-text-bubble-5 {
-    padding: 8px 24px 8px 16px; left: -60px; top: 300px;
-    background: black; border-radius: 99px; display: inline-flex; align-items: center; gap: 8px;
-}
-
-.gallery-icon-placeholder { /* Common for all icon divs inside bubbles */
-    width: 16px; height: 16px; position: relative; overflow: hidden;
-    /* Backgrounds for specific icons would be added here or via more specific classes if icons differ */
-}
-/* Example for one icon's inner div - assuming all icons are similar structure but different path data */
-.gallery-text-bubble-1 .gallery-icon-placeholder::before { /* Using pseudo-element for path data */
-    content: ""; display: block; width: 9.34px; height: 12.67px;
-    background: white; position: absolute; left: 3.33px; top: 1.67px;
-    /* This is a simplification. SVG paths are complex. Consider using actual SVGs or icon fonts. */
-    /* For now, this creates a white rectangle. Replace with actual icon. */
-}
-.gallery-text-bubble-2 .gallery-icon-placeholder::before {
-    content: ""; display: block; width: 13.33px; height: 6.67px;
-    background: black; position: absolute; left: 1.33px; top: 4.67px;
-}
-.gallery-text-bubble-3 .gallery-icon-placeholder::before {
-    content: ""; display: block; width: 13.33px; height: 13.33px;
-    background: black; position: absolute; left: 1.33px; top: 1.33px;
-}
-.gallery-text-bubble-4 .gallery-icon-placeholder::before {
-    content: ""; display: block; width: 13.34px; height: 11.76px;
-    background: white; position: absolute; left: 1.33px; top: 2.12px;
-}
-.gallery-text-bubble-5 .gallery-icon-placeholder::before {
-    content: ""; display: block; width: 14.67px; height: 14px;
-    background: white; position: absolute; left: 0.67px; top: 1px;
-}
-
-
-.gallery-text-content {
-    font-size: 16px; font-family: 'Circe', sans-serif; font-weight: 700; line-height: 24px; word-wrap: break-word;
-    display: flex; flex-direction: column; justify-content: center;
-}
-.gallery-text-bubble-1 .gallery-text-content,
-.gallery-text-bubble-5 .gallery-text-content { color: white; }
-.gallery-text-bubble-2 .gallery-text-content,
-.gallery-text-bubble-3 .gallery-text-content { color: black; }
-.gallery-text-bubble-4 .gallery-text-content { color: white; }
-
-
-/* Footer CTA Block */
-.footer-cta-block { /* Corresponds to the div with class .footer-cta-block */
-    width: 1278px; /* Fixed width */
-    position: absolute; /* As per HTML, relative to its parent (.gallery-and-footer-wrapper) */
-    left: 80px;
-    top: 80px;
-    display: inline-flex; /* As per HTML */
-    justify-content: space-between;
-    align-items: center;
-    z-index: 3; /* Above gallery if overlaps, or ensure no overlap */
-}
-
-.footer-cta-text-section {
-    display: inline-flex;
-    flex-direction: column;
-    gap: 15px;
-    align-items: flex-start;
-}
-
-.footer-cta-title-ready {
-    align-self: stretch;
-    color: black;
-    font-size: 55px;
-    font-family: 'Blippo-Black CY [Rus by me]', sans-serif;
-    font-weight: 400;
-    line-height: 18px; /* This is very small for 55px font, might be a typo in Figma */
-    word-wrap: break-word;
-    /* text-box-trim and text-box-edge are not standard CSS, consider alternatives or ignore */
-}
-
-.footer-cta-title-conquer {
-    align-self: stretch;
-    color: #004E9F;
-    font-size: 55px;
-    font-family: 'Blippo-Black CY [Rus by me]', sans-serif;
-    font-weight: 400;
-    line-height: 18px; /* Same as above, likely needs adjustment */
-    word-wrap: break-word;
-}
-
-.footer-cta-buttons-section {
-    display: inline-flex;
-    flex-direction: column;
-    gap: 24px;
-    padding: 24px 32px; /* Padding from HTML on a wrapper not explicitly made a class */
-    align-items: flex-start;
-}
-
-.footer-cta-button-startup,
-.footer-cta-button-invest {
-    height: 40px; /* Fixed height from inner content sizing */
-    padding: 12px 25px;
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 10px;
-    display: inline-flex;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 9px;
-    cursor: pointer;
-}
-
-.footer-cta-button-startup {
-    background: linear-gradient(180deg, #004E9F 0%, #001C39 100%);
-}
-
-.footer-cta-button-invest {
-    background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
-}
-
-.footer-cta-button-text {
-    font-family: 'Unbounded', sans-serif;
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 16px;
-    word-wrap: break-word;
-}
-.footer-cta-button-startup .footer-cta-button-text { color: white; }
-.footer-cta-button-invest .footer-cta-button-text { color: black; }
-
-
-.footer-cta-icon-placeholder-startup,
-.footer-cta-icon-placeholder-invest {
-    width: 24px; height: 24px; position: relative; overflow: hidden;
-}
-/* Placeholder for startup icon parts */
-.footer-cta-icon-placeholder-startup::before {
-    content: ""; position: absolute; width: 19.50px; height: 19.50px; left: 2.25px; top: 2.25px; background: white;
-}
-.footer-cta-icon-placeholder-startup::after { /* Simplified second part of icon */
-    content: ""; position: absolute; width: 9px; height: 9px; left: 7.50px; top: 7.50px; background: white; opacity: 0.5; /* To differentiate */
-}
-
-/* Placeholder for invest icon parts - this is very complex, using simplified shapes */
-.footer-cta-icon-placeholder-invest > div { position: absolute; outline: 2px black solid; outline-offset: -1px; }
-.invest-icon-part1 { width: 18px; height: 6px; left: 3px; top: 2px; }
-.invest-icon-part2 { width: 5px; height: 2.70px; left: 3px; top: 12px; }
-.invest-icon-part3 { width: 9.99px; height: 9.50px; left: 12px; top: 12.50px; }
-.invest-icon-part4 { width: 4px; height: 4px; left: 12px; top: 12px; }
-.invest-icon-part5 { width: 7px; height: 16.93px; left: 3px; top: 5px; }
-
-
-/* Decorative squares */
-.decorative-square-1 {
-    width: 110.31px; height: 111.70px; left: 506.40px; top: 292px; /* From HTML */
-    position: absolute; background: black; z-index: 0; /* Below other elements if overlapping */
-}
-.decorative-square-2 {
-    width: 111.11px; height: 112.58px; left: 506.18px; top: 291.47px; /* From HTML */
-    position: absolute; background: black; z-index: 0; /* Below other elements if overlapping */
-    /* Note: these two squares are almost identical in pos/size, might be a mistake in Figma */
-}
+/* ... existing code ... */
