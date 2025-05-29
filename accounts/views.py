@@ -38,6 +38,10 @@ logger = logging.getLogger(__name__)
 def home(request):
     return render(request, 'accounts/home.html')
 
+# Временная главная страница (для неавторизованных)
+def main_temp_view(request):
+    return render(request, 'accounts/main_temp.html')
+
 # Страница FAQ
 def faq_page_view(request):
     return render(request, 'accounts/faq.html')
