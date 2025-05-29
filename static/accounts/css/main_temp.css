@@ -506,7 +506,7 @@ body {
 }
 
 .arrow-right-icon {
-    width: 10px; /* Размер иконки */
+    width: 10px;
     height: 10px;
     /* background: black; */ /* Цвет иконки */
     border-top: 2px solid black;
@@ -518,4 +518,2174 @@ body {
 /* .why-us-block { ... } */
 
 /* Startuppers block */
+.startuppers-block-container {
+    width: 100%;
+    padding: 60px 71px; /* Отступы как у других основных блоков */
+    box-sizing: border-box;
+    position: relative;
+    background-color: #081017; /* Темный фон, как на макете для этого блока */
+    /* Позже можно будет добавить фоновое изображение, если потребуется */
+    display: flex;
+    justify-content: center; /* Центрируем основной контент блока */
+}
+
+.startuppers-block {
+    width: 1303px; /* Фиксированная ширина контентной части */
+    position: relative;
+    display: flex; /* Используем flex для расположения текстового контента и изображений/плейсхолдеров */
+    justify-content: space-between;
+    align-items: center;
+}
+
+.startuppers-content-wrapper {
+    position: relative; /* Для позиционирования оверлея, если он будет */
+    z-index: 2; /* Чтобы текст был поверх некоторых фоновых элементов */
+    width: 50%; /* Примерно половина блока для текстового контента */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Текст прижат влево */
+}
+
+.startuppers-image-overlay {
+    /* Стили для оверлея, если он будет использоваться поверх фонового изображения */
+    /* Например: position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); */
+}
+
+.startuppers-text-content {
+    /* Дополнительные стили, если нужны */
+}
+
+.startuppers-title {
+    margin-bottom: 40px; /* Отступ под заголовком */
+}
+
+.startuppers-title-yellow {
+    color: #FFEF2B;
+    font-size: 48px;
+    font-family: 'Blippo-Black CY [Rus by me]';
+    font-weight: 400;
+    text-transform: uppercase;
+    line-height: 1.1;
+}
+
+.startuppers-title-white {
+    color: white;
+    font-size: 48px;
+    font-family: 'Blippo-Black CY [Rus by me]';
+    font-weight: 400;
+    text-transform: uppercase;
+    line-height: 1.1;
+}
+
+.startuppers-features-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Расстояние между пунктами списка */
+    margin-bottom: 40px; /* Отступ под списком */
+}
+
+.startupper-feature, .startupper-feature-extended {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Расстояние между иконкой и текстом */
+}
+
+.feature-icon-container {
+    /* Стили для контейнера иконки, если нужны */
+}
+
+.feature-icon-box {
+    width: 40px; /* Размер бокса для иконки */
+    height: 40px;
+    background-color: rgba(255, 255, 255, 0.1); /* Полупрозрачный фон для иконки */
+    border-radius: 5px; /* Скругление */
+    display: flex; /* Для стилизации внутренних "пикселей" иконки, если они будут */
+    align-items: center;
+    justify-content: center;
+    /* Пока оставим простым квадратом, иконки-пиксели добавим позже, если нужно будет точно воспроизводить */
+}
+
+/* Стили для icon-shape-* можно будет детализировать, если потребуется кастомная форма иконок */
+.icon-shape-1, .icon-shape-2, .icon-shape-3, .icon-shape-4,
+.icon-shape-5, .icon-shape-6, .icon-shape-7, .icon-shape-8,
+.icon-shape-9, .icon-shape-10, .icon-shape-11, .icon-shape-12,
+.icon-shape-13, .icon-shape-14, .icon-shape-15, .icon-shape-16 {
+    /* background-color: #FFEF2B; */ /* Пример цвета для "пикселей" */
+    /* width: 5px; height: 5px; margin: 1px; */
+}
+
+.feature-text, .feature-text-long {
+    color: white;
+    font-size: 18px;
+    font-family: 'Unbounded';
+    font-weight: 400;
+    line-height: 1.4;
+}
+
+.feature-text-long .feature-text-white {
+    color: white;
+}
+.feature-text-long .feature-text-yellow {
+    color: #FFEF2B;
+}
+
+.button-create-startup {
+    padding: 12px 24px;
+    background: #FFEF2B; /* Желтый фон кнопки */
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    border: none;
+}
+
+.button-create-startup-text {
+    color: black;
+    font-size: 16px;
+    font-family: 'Unbounded';
+    font-weight: 500; /* Medium */
+    line-height: 1.2;
+}
+
+.button-create-startup-icon-container {
+    width: 20px; /* Размер контейнера иконки */
+    height: 20px;
+    position: relative;
+}
+
+.button-create-startup-icon-bg {
+    width: 100%;
+    height: 100%;
+    background-color: black; /* Фон для иконки (кружок) */
+    border-radius: 50%;
+}
+
+.button-create-startup-icon-inner {
+    /* Для плюсика внутри. Можно сделать через псевдоэлементы */
+    position: absolute;
+    width: 10px;
+    height: 2px;
+    background-color: #FFEF2B; /* Цвет плюсика */
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.button-create-startup-icon-inner::after {
+    content: '';
+    position: absolute;
+    width: 2px;
+    height: 10px;
+    background-color: #FFEF2B; /* Цвет плюсика */
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+
+/* Стили для плейсхолдеров изображений справа */
+.startuppers-placeholder-1, .startuppers-placeholder-2, .startuppers-placeholder-3 {
+    background-color: #333; /* Темный плейсхолдер */
+    color: #888;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+}
+
+.startuppers-image-group {
+    display: flex;
+    flex-direction: column; /* Или row, в зависимости от макета */
+    gap: 20px;
+    width: 45%; /* Примерно половина блока для изображений */
+    align-items: center; /* или flex-start/flex-end */
+}
+
+.startuppers-placeholder-1 {
+    width: 100%; /* Если это один большой плейсхолдер справа */
+    height: 400px; /* Примерная высота */
+    /* Если startuppers-placeholder-1 это фоновое изображение под текстом, его стили должны быть другими */
+}
+
+/* Если startuppers-placeholder-1 - это отдельный элемент справа, то: */
+/* .startuppers-block { display: flex; } */
+/* .startuppers-content-wrapper { width: 50%; } */
+/* .startuppers-image-column { width: 50%; display: flex; flex-direction: column; align-items: center; gap: 20px; } */
+/* И тогда startuppers-placeholder-1, startuppers-image-group поместить в этот image-column */
+
+
+.startuppers-placeholder-2 {
+    width: 250px; /* Пример */
+    height: 180px; /* Пример */
+}
+
+.startuppers-placeholder-3 {
+    width: 250px; /* Пример */
+    height: 180px; /* Пример */
+}
+
+/* Investors block */
+.investors-block-container {
+    width: 100%;
+    padding: 80px 71px; /* Отступы сверху/снизу и по бокам */
+    box-sizing: border-box;
+    background-color: #FFFFFF; /* Белый фон для этого блока */
+    display: flex;
+    justify-content: center;
+}
+
+.investors-block {
+    width: 1303px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 40px; /* Пространство между текстовой частью и изображениями */
+}
+
+.investors-text-content {
+    width: 45%; /* Ширина текстового блока */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.investors-title {
+    margin-bottom: 30px;
+}
+
+.investors-title-blue {
+    color: #004E9F; /* Синий цвет */
+    font-size: 48px;
+    font-family: 'Blippo-Black CY [Rus by me]';
+    font-weight: 400;
+    text-transform: uppercase;
+    line-height: 1.1;
+}
+
+.investors-title-black {
+    color: black;
+    font-size: 48px;
+    font-family: 'Blippo-Black CY [Rus by me]';
+    font-weight: 400;
+    text-transform: uppercase;
+    line-height: 1.1;
+}
+
+.investors-features-list {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr auto; /* Текст карточки | Плейсхолдер картинки */
+    align-items: center;
+    gap: 15px 10px; /* row-gap | column-gap */
+    margin-bottom: 40px;
+}
+
+.investor-feature-card {
+    background-color: #F0F4F8; /* Светло-серый фон карточки */
+    padding: 15px 20px;
+    border-radius: 10px;
+    height: 60px; /* Фиксированная высота для выравнивания */
+    display: flex;
+    align-items: center;
+}
+
+.investor-feature-text, .investor-feature-text-long {
+    color: black;
+    font-size: 16px;
+    font-family: 'Unbounded';
+    font-weight: 400;
+    line-height: 1.3;
+}
+
+.placeholder-image.investor-feature-image-1,
+.placeholder-image.investor-feature-image-2,
+.placeholder-image.investor-feature-image-3 {
+    width: 60px;
+    height: 60px;
+    background-color: #D9E2EC; /* Фон для маленьких плейсхолдеров-картинок */
+    border-radius: 10px;
+    color: #8295A9;
+    font-size: 10px;
+}
+
+.button-view-startups {
+    padding: 12px 24px;
+    background: #004E9F; /* Синий фон кнопки */
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    border: none;
+}
+
+.button-view-startups-text {
+    color: white;
+    font-size: 16px;
+    font-family: 'Unbounded';
+    font-weight: 500;
+    line-height: 1.2;
+}
+
+.button-view-startups-icon-container {
+    width: 20px;
+    height: 20px;
+    position: relative;
+}
+
+.button-view-startups-icon-outer {
+    width: 100%;
+    height: 100%;
+    background-color: white; /* Белый фон для иконки (кружок) */
+    border-radius: 50%;
+}
+
+.button-view-startups-icon-inner {
+    /* Для стрелки внутри. Можно сделать через псевдоэлементы или SVG */
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-top: 5px solid #004E9F; /* Синяя стрелка */
+    border-bottom: 5px solid transparent;
+    border-left: 7px solid #004E9F; /* Синяя стрелка */
+    left: 50%;
+    top: 50%;
+    transform: translate(-40%, -50%); /* Центрирование стрелки */
+}
+
+.investors-image-section {
+    width: 50%; /* Ширина секции с изображениями */
+    height: 450px; /* Примерная высота, подогнать по макету */
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.investors-image-bg-1 {
+    position: absolute;
+    width: 80%;
+    height: 80%;
+    background-color: #D6EFFF; /* Голубой фон 1 */
+    border-radius: 20px;
+    left: 0;
+    bottom: 0;
+    z-index: 1;
+}
+
+.investors-image-bg-2 {
+    position: absolute;
+    width: 70%;
+    height: 70%;
+    background-color: #ADD9F4; /* Более темный голубой фон 2 */
+    border-radius: 20px;
+    right: 0;
+    top: 0;
+    z-index: 2;
+}
+
+.placeholder-image.investors-main-placeholder {
+    width: 300px; /* Размеры основного плейсхолдера */
+    height: 300px;
+    background-color: #A0C0D8; /* Темнее фон для плейсхолдера */
+    color: #FFFFFF;
+    border-radius: 15px;
+    position: relative;
+    z-index: 3;
+    font-size: 16px;
+}
+
+.placeholder-image.investors-secondary-placeholder {
+    width: 150px;
+    height: 150px;
+    background-color: #B8D3E5;
+    color: #FFFFFF;
+    border-radius: 10px;
+    position: absolute;
+    z-index: 4;
+    bottom: 20px; /* Примерное позиционирование */
+    right: 20px;
+    font-size: 12px;
+}
+
+.placeholder-image.investors-icon-placeholder {
+    width: 80px;
+    height: 80px;
+    background-color: #FFEF2B; /* Желтый плейсхолдер для иконки */
+    color: black;
+    border-radius: 50%;
+    position: absolute;
+    z-index: 5;
+    top: 20px; /* Примерное позиционирование */
+    left: 20px;
+    font-size: 10px;
+}
+
+/* Explore worlds block */
+.explore-worlds-container {
+    width: 100%;
+    padding: 60px 71px; /* Стандартные отступы */
+    box-sizing: border-box;
+    background-color: #081017; /* Темный фон */
+    display: flex;
+    justify-content: center;
+}
+
+.explore-worlds-content {
+    width: 1303px; /* Фиксированная ширина контента */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Центрируем заголовок */
+}
+
+.explore-worlds-title-section {
+    display: flex;
+    flex-direction: column; /* Заголовки друг под другом */
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.explore-worlds-title-white {
+    color: white;
+    font-size: 48px;
+    font-family: 'Blippo-Black CY [Rus by me]';
+    font-weight: 400;
+    text-transform: uppercase;
+    line-height: 1.1;
+}
+
+.explore-worlds-title-yellow {
+    color: #FFEF2B;
+    font-size: 48px;
+    font-family: 'Blippo-Black CY [Rus by me]';
+    font-weight: 400;
+    text-transform: uppercase;
+    line-height: 1.1;
+}
+
+.explore-worlds-main-area {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    gap: 30px; /* Пространство между колонками */
+}
+
+.explore-worlds-left-column {
+    width: 25%; /* Ширина левой колонки */
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.explore-worlds-large-card {
+    width: 100%;
+    height: 400px; /* Примерная высота */
+    background-color: #1A242D; /* Фон для большой карточки */
+    border-radius: 10px;
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Плейсхолдеры внутри */
+}
+
+.placeholder-image.explore-placeholder-1 {
+    width: 100%;
+    height: 60%;
+    background-color: #333;
+    border-radius: 5px;
+    color: #888;
+}
+
+.placeholder-image.explore-placeholder-2 {
+    width: 100%;
+    height: 35%;
+    background-color: #444;
+    border-radius: 5px;
+    color: #888;
+}
+
+.button-all-startups {
+    width: 100%;
+    padding: 15px 20px;
+    background: #FFEF2B;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    border: none;
+}
+
+.button-all-startups-text {
+    color: black;
+    font-size: 16px;
+    font-family: 'Unbounded';
+    font-weight: 500;
+}
+
+.button-all-startups-icon-container {
+    width: 20px;
+    height: 20px;
+}
+
+.button-all-startups-icon {
+    width: 100%;
+    height: 100%;
+    background-color: black; /* Заглушка для иконки */
+    border-radius: 3px;
+}
+
+.explore-worlds-center-column {
+    width: 45%; /* Ширина центральной колонки */
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.startup-card {
+    width: 100%;
+    background-color: #0A131A; /* Темный фон карточки стартапа */
+    border-radius: 10px;
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.placeholder-image.startup-card-image {
+    width: 100%;
+    height: 150px; /* Высота изображения в карточке */
+    background-color: #333;
+    border-radius: 5px;
+    color: #888;
+}
+
+.startup-card-info {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.startup-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.startup-name {
+    color: white;
+    font-size: 20px;
+    font-family: 'Unbounded';
+    font-weight: 600;
+}
+
+.startup-rating-section {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.startup-avatar-container {
+    width: 30px;
+    height: 30px;
+}
+
+.placeholder-image.startup-avatar {
+    width: 100%;
+    height: 100%;
+    background-color: #555;
+    border-radius: 50%;
+    color: #ccc;
+    font-size: 10px;
+}
+
+.startup-rating {
+    background-color: rgba(255, 239, 43, 0.1); /* Полупрозрачный желтый фон */
+    padding: 3px 8px;
+    border-radius: 5px;
+}
+
+.startup-rating-text {
+    color: #FFEF2B; /* Желтый текст рейтинга */
+    font-size: 12px;
+    font-family: 'Unbounded';
+    font-weight: 500;
+}
+
+.startup-description {
+    color: #A0A7AC; /* Светло-серый */
+    font-size: 14px;
+    font-family: 'Unbounded';
+    font-weight: 400;
+    line-height: 1.4;
+}
+
+.button-details {
+    padding: 8px 15px;
+    background-color: #004E9F;
+    border-radius: 8px;
+    align-self: flex-start; /* Кнопка слева */
+    cursor: pointer;
+}
+
+.button-details-text {
+    color: white;
+    font-size: 14px;
+    font-family: 'Unbounded';
+    font-weight: 400;
+}
+
+.divider-line {
+    width: 1px;
+    background-color: rgba(255, 255, 255, 0.1); /* Полупрозрачная линия-разделитель */
+    align-self: stretch; /* Растягиваем по высоте родителя */
+}
+
+.explore-worlds-right-column {
+    width: 25%; /* Ширина правой колонки */
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.latest-updates-title {
+    color: white;
+    font-size: 18px;
+    font-family: 'Unbounded';
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.updates-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.update-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.update-item-content {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.updater-avatar-section {
+    position: relative;
+}
+
+.updater-avatar-container {
+    width: 40px;
+    height: 40px;
+}
+
+.placeholder-image.updater-avatar {
+    width: 100%;
+    height: 100%;
+    background-color: #555;
+    border-radius: 50%;
+    color: #ccc;
+    font-size: 10px;
+}
+
+.updater-avatar-badge {
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    width: 16px;
+    height: 16px;
+    background-color: #FFEF2B;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.updater-avatar-badge-text {
+    color: black;
+    font-size: 10px;
+    font-family: 'Unbounded';
+    font-weight: 600;
+}
+
+.updater-info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.updater-name-section {
+    display: flex;
+    gap: 5px;
+}
+
+.updater-name-part {
+    color: white;
+    font-size: 14px;
+    font-family: 'Unbounded';
+    font-weight: 500;
+}
+
+.updater-rating-section {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.updater-rating-label {
+    color: #A0A7AC;
+    font-size: 12px;
+    font-family: 'Unbounded';
+    font-weight: 400;
+}
+
+.updater-rating-value {
+    color: white;
+    font-size: 12px;
+    font-family: 'Unbounded';
+    font-weight: 500;
+}
+
+.update-item-divider {
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.1);
+    margin-top: 15px;
+}
+
+.button-all-startups-alt {
+    margin-top: 20px; /* Отступ сверху для кнопки в правой колонке */
+    padding: 12px 15px;
+    background: transparent; /* Прозрачный фон */
+    border: 1px solid #FFEF2B; /* Желтая рамка */
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.button-all-startups-alt-text {
+    color: #FFEF2B; /* Желтый текст */
+    font-size: 14px;
+    font-family: 'Unbounded';
+    font-weight: 500;
+}
+
+.button-all-startups-alt-icon-container {
+     width: 18px;
+    height: 18px;
+}
+
+.button-all-startups-alt-icon {
+    width: 100%;
+    height: 100%;
+    background-color: #FFEF2B; /* Желтая заглушка для иконки */
+    border-radius: 3px;
+}
+
+/* How Galaxy Works block */
+.how-galaxy-works-container {
+    width: 100%;
+    padding: 80px 71px; /* Стандартные отступы */
+    box-sizing: border-box;
+    background-color: #004E9F; /* Синий фон, как на макете */
+    display: flex;
+    justify-content: center;
+}
+
+.how-galaxy-works-content {
+    width: 1303px; /* Фиксированная ширина контента */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Все элементы по центру */
+    gap: 30px; /* Расстояние между элементами */
+}
+
+.how-galaxy-works-title-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* margin-bottom уже учтен в gap родителя */
+}
+
+.how-galaxy-works-title-white {
+    color: white;
+    font-size: 48px;
+    font-family: 'Blippo-Black CY [Rus by me]';
+    font-weight: 400;
+    text-transform: uppercase;
+    line-height: 1.1;
+}
+
+.how-galaxy-works-title-yellow {
+    color: #FFEF2B;
+    font-size: 48px;
+    font-family: 'Blippo-Black CY [Rus by me]';
+    font-weight: 400;
+    text-transform: uppercase;
+    line-height: 1.1;
+}
+
+.placeholder-image.how-galaxy-works-placeholder {
+    width: 600px; /* Примерная ширина основного плейсхолдера */
+    height: 400px; /* Примерная высота */
+    background-color: #335C87; /* Более темный синий для плейсхолдера */
+    border-radius: 15px;
+    color: #A8C5E0;
+    font-size: 18px;
+}
+
+.how-galaxy-works-step-title {
+    color: white;
+    font-size: 24px;
+    font-family: 'Unbounded';
+    font-weight: 600; /* SemiBold */
+    line-height: 1.2;
+}
+
+.how-galaxy-works-navigation {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.nav-arrow-left-hidden, .nav-arrow-right {
+    width: 48px;
+    height: 48px;
+    position: relative;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.nav-arrow-left-hidden {
+    background: rgba(255, 255, 255, 0.1); /* Полупрозрачный фон для неактивной стрелки */
+}
+
+.nav-arrow-right {
+    background: #FFEF2B; /* Желтый фон для активной стрелки */
+}
+
+.nav-arrow-left-bg-hidden, .nav-arrow-right-bg {
+    /* Уже не нужны, фон на родительском элементе */
+    display: none;
+}
+
+.nav-arrow-left-border-hidden, .nav-arrow-right-border {
+    /* Можно добавить рамку, если нужно, прямо на .nav-arrow-left-hidden/.nav-arrow-right */
+    /* Например: border: 1px solid rgba(255,255,255,0.3); */
+    display: none; 
+}
+
+.nav-arrow-left-icon-hidden {
+    width: 12px;
+    height: 12px;
+    border-top: 2px solid rgba(255, 255, 255, 0.5); /* Полупрозрачная иконка */
+    border-left: 2px solid rgba(255, 255, 255, 0.5);
+    transform: rotate(-45deg);
+}
+
+.nav-arrow-right-icon {
+    width: 12px;
+    height: 12px;
+    border-top: 2px solid black; /* Черная иконка */
+    border-right: 2px solid black;
+    transform: rotate(45deg);
+}
+
+.step-indicator {
+    padding: 8px 15px;
+    background: rgba(255, 255, 255, 0.1); /* Полупрозрачный фон индикатора */
+    border-radius: 20px; /* Овальная форма */
+}
+
+.step-indicator-text {
+    color: white;
+    font-size: 16px;
+    font-family: 'Unbounded';
+    font-weight: 500;
+}
+
+/* Great Ideas block */
+.great-ideas-outer-container {
+    width: 100%;
+    padding: 60px 71px; /* Стандартные отступы */
+    box-sizing: border-box;
+    background-color: #081017; /* Темный фон */
+    display: flex;
+    justify-content: center;
+}
+
+.great-ideas-main-wrapper {
+    width: 1303px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px; /* Расстояние между основным блоком Great Ideas и нижними карточками */
+}
+
+.great-ideas-block {
+    width: 100%;
+    height: 550px; /* Примерная высота по макету */
+    position: relative; /* Для позиционирования внутренних элементов */
+    background-color: #1A242D; /* Фон самого блока */
+    border-radius: 15px;
+    overflow: hidden; /* Чтобы скруглялись и внутренние фоновые плейсхолдеры */
+    padding: 40px;
+    box-sizing: border-box;
+    display: flex; /* Для расположения текстовой секции и чат-баблов */
+    justify-content: space-between;
+    align-items: center;
+}
+
+.placeholder-image.great-ideas-bg-placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Если это будет изображение */
+    background-color: #2A3B4A; /* Цвет фона, если нет картинки */
+    opacity: 0.5; /* Полупрозрачность фона, если нужно */
+    z-index: 1;
+}
+
+.placeholder-image.great-ideas-img-1 {
+    width: 200px; /* Пример */
+    height: 300px;
+    background-color: #333;
+    border-radius: 10px;
+    position: absolute; /* Позиционирование по макету */
+    left: 60px;
+    bottom: 40px;
+    z-index: 2;
+    color: #888;
+}
+
+.great-ideas-img-2-container {
+    width: 180px; /* Пример */
+    height: 250px;
+    position: absolute; /* Позиционирование по макету */
+    left: 220px;
+    bottom: 80px;
+    z-index: 3;
+    background-color: #444;
+    border-radius: 10px;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.placeholder-image.great-ideas-img-2 {
+    width: 100%;
+    height: 100%;
+    background-color: #555;
+    border-radius: 5px;
+    color: #aaa;
+}
+
+.great-ideas-text-section {
+    width: 35%; /* Ширина текстового блока */
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    z-index: 2;
+    position: relative; /* Чтобы был над фоновым плейсхолдером */
+    align-self: center; /* Центрируем по вертикали */
+    margin-left: auto; /* Прижимаем к правому краю */
+    padding-right: 40px; /* Отступ от правого края */
+}
+
+.great-ideas-title {
+    color: white;
+    font-size: 70px; /* Размер по макету */
+    font-family: 'Blippo-Black CY [Rus by me]';
+    font-weight: 400;
+    text-transform: uppercase;
+    line-height: 1;
+}
+
+.great-ideas-description {
+    color: #A0A7AC; /* Светло-серый */
+    font-size: 16px;
+    font-family: 'Unbounded';
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+.great-ideas-chat-bubbles {
+    width: 55%; /* Ширина блока с чат-баблами */
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: flex-start; /* Баблы начинаются слева */
+    padding-left: 20px;
+}
+
+.chat-bubble-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Лейбл под баблом */
+}
+
+.chat-bubble {
+    padding: 15px 20px;
+    border-radius: 10px;
+    position: relative;
+    max-width: 280px; /* Максимальная ширина бабла */
+    margin-bottom: 5px; /* Отступ до лейбла */
+}
+
+.chat-bubble.purple {
+    background-color: #6B4EFF;
+}
+.chat-bubble.blue {
+    background-color: #007BFF;
+    margin-left: 40px; /* Сдвиг для синего бабла */
+}
+.chat-bubble.dark-blue {
+    background-color: #003F7F;
+}
+
+.chat-bubble-content-rotated {
+    color: white;
+    font-size: 13px;
+    font-family: 'Unbounded';
+    font-weight: 400;
+    line-height: 1.4;
+    /* Для вертикального текста, если нужно будет: */
+    /* writing-mode: vertical-rl; */
+    /* text-orientation: mixed; */
+    /* transform: rotate(180deg); */ /* Если текст вверх ногами */
+}
+
+.chat-bubble-tail-container {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    bottom: -10px; /* Позиционирование хвостика */
+    /* Разное позиционирование для разных баблов */
+}
+
+.chat-bubble.purple .chat-bubble-tail-container {
+    left: 20px;
+}
+.chat-bubble.blue .chat-bubble-tail-container {
+    left: calc(50% - 10px); /* Примерно по центру */
+}
+.chat-bubble.dark-blue .chat-bubble-tail-container {
+    right: 20px;
+}
+
+.chat-bubble-tail-shape {
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+}
+
+.chat-bubble-tail-shape.purple {
+    border-top: 10px solid #6B4EFF;
+}
+.chat-bubble-tail-shape.blue {
+    border-top: 10px solid #007BFF;
+}
+.chat-bubble-tail-shape.dark-blue {
+    border-top: 10px solid #003F7F;
+}
+
+.chat-bubble-label {
+    font-size: 12px;
+    font-family: 'Unbounded';
+    font-weight: 500;
+}
+.chat-bubble-label.purple {
+    color: #AB9CFF;
+}
+.chat-bubble-label.dark-blue {
+    color: #66A2CC;
+    margin-left: 40px; /* Сдвиг для лейбла */
+}
+/* Для синего бабла лейбл не указан в HTML */
+
+/* Нижние карточки */
+.great-ideas-cards-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+}
+
+.info-card {
+    width: calc(50% - 15px); /* Две карточки в ряду */
+    height: 300px; /* Примерная высота */
+    border-radius: 15px;
+    padding: 30px;
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Контент распределен по высоте */
+}
+
+.gamification-card {
+    background-color: #FFEF2B; /* Желтый фон */
+}
+
+.gamification-icons-area {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.placeholder-image.appstore-icons-placeholder,
+.placeholder-image.googleplay-icons-placeholder {
+    width: 120px; /* Пример */
+    height: 40px;
+    background-color: rgba(0,0,0,0.1);
+    border-radius: 5px;
+    color: black;
+    font-size: 10px;
+}
+
+.info-card-text-content {
+    /* Стили для текстового блока внутри карточки */
+}
+
+.info-card-title {
+    font-size: 24px;
+    font-family: 'Unbounded';
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.gamification-card .info-card-title {
+    color: black;
+}
+
+.info-card-description {
+    font-size: 14px;
+    font-family: 'Unbounded';
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+.gamification-card .info-card-description {
+    color: #333333;
+}
+
+.industry-change-card {
+    background-color: #003F7F; /* Темно-синий фон */
+}
+
+.industry-change-card .info-card-title,
+.industry-change-card .info-card-description {
+    color: white;
+    position: relative; /* Чтобы текст был над фоновыми элементами */
+    z-index: 3;
+}
+
+.placeholder-image.industry-change-bg-placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background-color: #002E5C; /* Еще темнее синий для фона */
+    opacity: 0.7;
+    z-index: 1;
+}
+
+.industry-change-blur-effect {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    background-color: rgba(77, 159, 255, 0.3);
+    border-radius: 50%;
+    filter: blur(30px);
+    top: 20px;
+    right: 20px;
+    z-index: 2;
+}
+
+.placeholder-image.industry-change-img-1 {
+    width: 150px; /* Пример */
+    height: 100px;
+    background-color: #335C87;
+    border-radius: 8px;
+    position: absolute;
+    top: 40px;
+    left: 40px;
+    z-index: 2;
+    color: #A8C5E0;
+}
+
+.industry-change-img-2-container {
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+    width: 120px; /* Пример */
+    height: 160px;
+    z-index: 2;
+}
+
+.industry-change-img-2-bg1 {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: #1A5BAA;
+    border-radius: 8px;
+    transform: rotate(-5deg);
+    z-index: 1;
+}
+
+.industry-change-img-2-bg2 {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: #007BFF;
+    border-radius: 8px;
+    transform: rotate(5deg);
+    z-index: 2;
+}
+
+.placeholder-image.industry-change-img-2 {
+    width: 100%;
+    height: 100%;
+    background-color: #66A2CC;
+    border-radius: 8px;
+    position: relative;
+    z-index: 3;
+    color: white;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+/* Success Stories block */
+.success-stories-outer-container {
+    width: 100%;
+    padding: 60px 71px; /* Стандартные отступы */
+    box-sizing: border-box;
+    background-color: #081017; /* Темный фон */
+    display: flex;
+    justify-content: center;
+}
+
+.success-stories-main-content {
+    width: 1303px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Центрируем заголовок */
+    gap: 40px; /* Отступ между заголовком и каруселью */
+}
+
+.success-stories-title-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.success-stories-title-white {
+    color: white;
+    font-size: 48px;
+    font-family: 'Blippo-Black CY [Rus by me]';
+    font-weight: 400;
+    text-transform: uppercase;
+    line-height: 1.1;
+}
+
+.success-stories-title-yellow {
+    color: #FFEF2B;
+    font-size: 48px;
+    font-family: 'Blippo-Black CY [Rus by me]';
+    font-weight: 400;
+    text-transform: uppercase;
+    line-height: 1.1;
+}
+
+.success-stories-carousel-area {
+    width: 100%;
+    display: flex;
+    align-items: center; /* Выравниваем стрелки и карточки по центру */
+    justify-content: space-between; /* Стрелки по бокам, карточки между ними */
+    gap: 20px; /* Отступы между элементами карусели, если их больше чем помещается */
+    /* Для реализации реальной карусели потребуется JS. Пока стилизуем видимую часть. */
+    overflow: hidden; /* Скрываем карточки, которые не помещаются */
+}
+
+.carousel-arrow-nav {
+    width: 48px;
+    height: 48px;
+    position: relative;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    flex-shrink: 0; /* Чтобы стрелки не сжимались */
+}
+
+.carousel-arrow-nav.left {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* .carousel-arrow-nav.right уже есть в HTML как .carousel-arrow-nav-rotated-container > .carousel-arrow-nav.right.rotated */
+.carousel-arrow-nav-rotated-container {
+    /* Контейнер для правой стрелки, если нужно особое позиционирование */
+}
+
+.carousel-arrow-nav.right.rotated {
+    background: #FFEF2B;
+}
+
+.arrow-bg-style, .arrow-border-style {
+    display: none; /* Фон и рамка теперь на родительском .carousel-arrow-nav */
+}
+
+.arrow-icon-style {
+    width: 12px;
+    height: 12px;
+}
+
+.arrow-icon-style.white-icon {
+    border-top: 2px solid white;
+    border-left: 2px solid white;
+    transform: rotate(-45deg);
+}
+
+.carousel-arrow-nav.right.rotated .arrow-icon-style.black-icon {
+    border-top: 2px solid black;
+    border-right: 2px solid black;
+    transform: rotate(45deg);
+}
+
+.story-card-item {
+    width: 280px; /* Ширина карточки, (1303 - 2*48 - 3*20) / 4 ~ 280 если 4 карточки и отступы */
+    min-width: 280px; /* Чтобы карточки не сжимались слишком сильно */
+    height: 380px; /* Высота карточки по макету */
+    background-color: #1A242D; /* Фон карточки */
+    border-radius: 15px;
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Центральное выравнивание контента карточки */
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.story-card-top-bg {
+    width: 100%;
+    height: 80px; /* Высота верхнего фона */
+    background-color: #004E9F; /* Синий фон */
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-radius: 15px 15px 0 0;
+    z-index: 1;
+}
+
+.placeholder-image.story-card-avatar {
+    width: 100px;
+    height: 100px;
+    background-color: #555;
+    border-radius: 50%;
+    border: 3px solid #1A242D; /* Обводка в цвет фона карточки для эффекта вырезания */
+    margin-top: 30px; /* Чтобы аватар частично заходил на синий фон */
+    margin-bottom: 15px;
+    position: relative;
+    z-index: 2;
+    color: #ccc;
+}
+
+.story-card-name {
+    color: white;
+    font-size: 20px;
+    font-family: 'Unbounded';
+    font-weight: 600;
+    margin-bottom: 8px;
+    position: relative;
+    z-index: 2;
+}
+
+.story-card-role-badge {
+    background-color: #FFEF2B;
+    padding: 5px 15px;
+    border-radius: 15px;
+    margin-bottom: 15px;
+    position: relative;
+    z-index: 2;
+}
+
+.story-card-role-text {
+    color: black;
+    font-size: 12px;
+    font-family: 'Unbounded';
+    font-weight: 500;
+}
+
+.story-card-description {
+    color: #A0A7AC;
+    font-size: 13px;
+    font-family: 'Unbounded';
+    font-weight: 400;
+    line-height: 1.5;
+    margin-bottom: 15px;
+    position: relative;
+    z-index: 2;
+    flex-grow: 1; /* Чтобы описание занимало доступное место */
+}
+
+.placeholder-image.story-card-rating-placeholder {
+    width: 120px;
+    height: 20px;
+    background-color: #333;
+    border-radius: 5px;
+    position: relative;
+    z-index: 2;
+    color: #888;
+    font-size: 10px;
+}
+
+/* Galaxy News block */
+.galaxy-news-outer-container {
+    width: 100%;
+    padding: 60px 71px; /* Стандартные отступы */
+    box-sizing: border-box;
+    background-color: #004E9F; /* Синий фон */
+    display: flex;
+    justify-content: center;
+}
+
+.galaxy-news-main-section {
+    width: 1303px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px; /* Отступ между хедером новостей и сеткой */
+}
+
+.galaxy-news-header-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Заголовки по центру */
+    gap: 15px; /* Отступы внутри хедера */
+    margin-bottom: 20px; /* Дополнительный отступ перед большой новостью */
+}
+
+.galaxy-news-titles {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.galaxy-news-title-white {
+    color: white;
+    font-size: 48px;
+    font-family: 'Blippo-Black CY [Rus by me]';
+    font-weight: 400;
+    text-transform: uppercase;
+    line-height: 1.1;
+}
+
+.galaxy-news-title-yellow {
+    color: #FFEF2B;
+    font-size: 48px;
+    font-family: 'Blippo-Black CY [Rus by me]';
+    font-weight: 400;
+    text-transform: uppercase;
+    line-height: 1.1;
+}
+
+.galaxy-news-subtitle {
+    color: #A8C5E0; /* Светло-синий/серый */
+    font-size: 18px;
+    font-family: 'Unbounded';
+    font-weight: 400;
+}
+
+.featured-news-item {
+    width: 100%;
+    height: 350px; /* Высота большой новости */
+    background-color: #003F7F; /* Темно-синий фон */
+    border-radius: 15px;
+    position: relative;
+    overflow: hidden;
+    display: flex; /* Для позиционирования текста и кнопки */
+    align-items: flex-end; /* Текст и кнопка внизу */
+    padding: 30px;
+    box-sizing: border-box;
+}
+
+.placeholder-image.featured-news-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #002E5C; /* Очень темно-синий для плейсхолдера фона */
+    object-fit: cover;
+    z-index: 1;
+    color: #66A2CC;
+}
+
+.featured-news-details {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.featured-news-title-text {
+    color: white;
+    font-size: 24px;
+    font-family: 'Unbounded';
+    font-weight: 600;
+    max-width: 70%; /* Ограничение ширины заголовка */
+}
+
+.featured-news-button {
+    padding: 10px 20px;
+    background-color: #FFEF2B;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.featured-news-button-text {
+    color: black;
+    font-size: 14px;
+    font-family: 'Unbounded';
+    font-weight: 500;
+}
+
+.galaxy-news-grid-area {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Адаптивная сетка */
+    gap: 30px;
+    align-items: start; /* Выравнивание по верху, если карточки разной высоты */
+}
+
+.news-article-card {
+    background-color: #0A131A; /* Темный фон карточки */
+    border-radius: 10px;
+    overflow: hidden;
+    /* height: 420px; */ /* Убрана фиксированная высота, пусть определяется контентом */
+}
+
+.news-article-inner {
+    /* Дополнительная обертка, если нужна */
+}
+
+.news-article-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.placeholder-image.news-article-img {
+    width: 100%;
+    height: 180px; /* Высота изображения в карточке */
+    background-color: #333;
+    color: #888;
+}
+
+.news-article-info-wrapper {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    flex-grow: 1; /* Чтобы блок занимал доступное место */
+}
+
+.news-article-author-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.placeholder-image.news-article-author-avatar {
+    width: 40px;
+    height: 40px;
+    background-color: #555;
+    border-radius: 50%;
+    color: #ccc;
+    font-size: 10px;
+}
+
+.news-article-author-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.news-article-author-name {
+    color: white;
+    font-size: 14px;
+    font-family: 'Unbounded';
+    font-weight: 500;
+}
+
+.news-article-date {
+    color: #A0A7AC;
+    font-size: 12px;
+    font-family: 'Unbounded';
+    font-weight: 400;
+}
+
+.news-article-text-content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.news-article-title {
+    color: white;
+    font-size: 18px;
+    font-family: 'Unbounded';
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.news-article-summary {
+    color: #A0A7AC;
+    font-size: 14px;
+    font-family: 'Unbounded';
+    font-weight: 400;
+    line-height: 1.4;
+}
+
+.show-more-news-item {
+    /* Этот элемент должен быть последним в гриде. */
+    /* Можно сделать его на всю ширину, если потребуется: grid-column: 1 / -1; */
+    /* Либо он будет такой же карточкой, как и другие, но с кнопкой */
+    background-color: #0A131A; /* Такой же фон, как у других карточек */
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px; /* Для соответствия другим карточкам по отступам */
+    min-height: 150px; /* Минимальная высота, чтобы кнопка не была слишком маленькой */
+}
+
+.show-more-news-button {
+    padding: 12px 25px;
+    background: transparent;
+    border: 1px solid #FFEF2B;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.show-more-news-text {
+    color: #FFEF2B;
+    font-size: 14px;
+    font-family: 'Unbounded';
+    font-weight: 500;
+}
+
+.show-more-news-icon-container {
+    width: 20px;
+    height: 20px;
+}
+
+.placeholder-image.show-more-news-icon {
+    width: 100%;
+    height: 100%;
+    background-color: #FFEF2B; /* Желтая иконка-плейсхолдер */
+    border-radius: 3px;
+    color: black;
+}
+
+/* FAQ block */
+.faq-page-wrapper {
+    width: 100%;
+    padding: 80px 71px; /* Стандартные отступы */
+    box-sizing: border-box;
+    background-color: #081017; /* Темный фон */
+    display: flex;
+    justify-content: center;
+}
+
+.faq-main-container {
+    width: 1303px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.faq-header-block {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end; /* Выравнивание по нижней линии */
+}
+
+.faq-title-section {
+    /* Контейнер для FAQ и "Часто задаваемые..." */
+}
+
+.faq-main-title-text {
+    color: white;
+    font-size: 80px;
+    font-family: 'Blippo-Black CY [Rus by me]';
+    font-weight: 400;
+    text-transform: uppercase;
+    line-height: 0.8; /* Сжатая высота строки для большого заголовка */
+    margin: 0;
+}
+
+.faq-subtitle-text {
+    color: #A0A7AC;
+    font-size: 18px;
+    font-family: 'Unbounded';
+    font-weight: 400;
+    line-height: 1.3;
+    margin-top: 5px;
+}
+
+.faq-ask-question-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end; /* Кнопка и текст справа */
+    gap: 8px;
+}
+
+.faq-ask-question-prompt {
+    color: #A0A7AC;
+    font-size: 14px;
+    font-family: 'Unbounded';
+    font-weight: 400;
+    margin: 0;
+}
+
+.faq-ask-question-button {
+    padding: 10px 20px;
+    background-color: #FFEF2B;
+    border-radius: 8px;
+    color: black;
+    font-size: 14px;
+    font-family: 'Unbounded';
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+}
+
+.faq-content-block {
+    display: flex;
+    gap: 30px; /* Пространство между левой и правой панелями */
+    height: 500px; /* Фиксированная высота для блока с прокруткой */
+    position: relative; /* Для кастомного скроллбара */
+}
+
+.faq-left-panel {
+    width: 35%;
+    background-color: #1A242D; /* Фон левой панели */
+    border-radius: 10px;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-y: auto; /* Включаем прокрутку для левой панели */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    scrollbar-width: thin; 
+    scrollbar-color: #FFEF2B #111A21;
+}
+
+.faq-left-panel::-webkit-scrollbar {
+    width: 8px;
+}
+
+.faq-left-panel::-webkit-scrollbar-track {
+    background: #111A21;
+    border-radius: 10px;
+}
+
+.faq-left-panel::-webkit-scrollbar-thumb {
+    background-color: #FFEF2B;
+    border-radius: 10px;
+    border: 2px solid #111A21;
+}
+
+.faq-question-category, 
+.faq-accordion-header,   
+.faq-question-item      
+{
+    padding: 12px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    font-family: 'Unbounded';
+    font-weight: 400;
+    font-size: 14px;
+    color: #A0A7AC;
+}
+
+.faq-question-category.active,
+.faq-question-item.active {
+    background-color: #004E9F;
+    color: white;
+}
+
+.faq-question-category:not(.active):hover,
+.faq-accordion-header:hover,
+.faq-question-item:not(.active):hover {
+    background-color: #2A3B4A;
+    color: white;
+}
+
+.faq-accordion-category {
+    /* Стили для контейнера группы аккордеона */
+}
+
+.faq-accordion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 500; /* Заголовки категорий жирнее */
+    /* color: white; убрано, чтобы наследовался и менялся цвет при ховере/активности */
+}
+
+.faq-chevron-icon {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.3s ease;
+    filter: grayscale(50%) brightness(1.5); /* Чтобы иконка была светлее на темном фоне */
+}
+
+.faq-accordion-category.open > .faq-accordion-header .faq-chevron-icon {
+    transform: rotate(180deg);
+}
+
+.faq-accordion-category.open > .faq-accordion-header {
+    color: white; /* Заголовок открытой категории - белый */
+}
+
+
+.faq-accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+    padding-left: 15px; 
+    display: flex;
+    flex-direction: column;
+    gap: 8px; 
+}
+
+.faq-accordion-category.open > .faq-accordion-content {
+    max-height: 1000px; /* Достаточно большая высота для содержимого */
+    margin-top: 5px;
+}
+
+.faq-accordion-category.nested {
+    /* Специфичные стили для вложенных аккордеонов, если нужны */
+}
+
+.faq-right-panel {
+    width: 65%;
+    background-color: #1A242D; /* Фон правой панели, такой же как у левой */
+    border-radius: 10px;
+    padding: 30px; /* Больше отступы для контента */
+    box-sizing: border-box;
+    overflow-y: auto; /* Включаем прокрутку */
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    scrollbar-width: thin; 
+    scrollbar-color: #FFEF2B #111A21; /* Такой же скроллбар */
+}
+
+.faq-right-panel::-webkit-scrollbar {
+    width: 8px;
+}
+
+.faq-right-panel::-webkit-scrollbar-track {
+    background: #111A21;
+    border-radius: 10px;
+}
+
+.faq-right-panel::-webkit-scrollbar-thumb {
+    background-color: #FFEF2B;
+    border-radius: 10px;
+    border: 2px solid #111A21;
+}
+
+.faq-answer-title {
+    color: white;
+    font-size: 24px;
+    font-family: 'Unbounded';
+    font-weight: 600; /* SemiBold */
+    line-height: 1.3;
+    margin: 0;
+}
+
+.faq-answer-body {
+    color: #A0A7AC; /* Светло-серый текст ответа */
+    font-size: 16px;
+    font-family: 'Unbounded';
+    font-weight: 400;
+    line-height: 1.6;
+}
+
+.faq-answer-body p {
+    margin-top: 0;
+    margin-bottom: 1em; /* Стандартный отступ между параграфами */
+}
+
+.faq-answer-body p:last-child {
+    margin-bottom: 0;
+}
+
+.faq-answer-details-link {
+    color: #FFEF2B; /* Желтый цвет для ссылки */
+    text-decoration: none;
+    font-weight: 500; /* Medium */
+    display: inline-flex; /* Для выравнивания иконки */
+    align-items: center;
+    gap: 8px; /* Расстояние между текстом и иконкой */
+}
+
+.faq-answer-details-link:hover {
+    text-decoration: underline;
+}
+
+.faq-answer-details-link img {
+    width: 16px; /* Размер иконки-стрелки */
+    height: auto;
+}
+
+.faq-custom-scrollbar-visual {
+    /* Этот элемент был в HTML, но при текущей реализации с overflow:auto он не нужен. */
+    /* Если дизайн требует видимого отдельного элемента скроллбара, его нужно будет стилизовать иначе. */
+    /* Пока что можно скрыть или удалить из HTML, если стандартной прокрутки достаточно. */
+    display: none; 
+}
+
+/* Gallery and Footer block */
+.gallery-and-footer-wrapper {
+    width: 100%;
+    padding: 0 71px 80px 71px; /* Отступы: верх 0 (т.к. отступ от FAQ уже есть), бока, низ */
+    box-sizing: border-box;
+    background-color: #081017; /* Темный фон, продолжается от FAQ */
+    display: flex;
+    flex-direction: column; /* Галерея и CTA друг под другом */
+    align-items: center; /* Центрируем контент */
+    gap: 60px; /* Расстояние между галереей и CTA */
+}
+
+.gallery-block {
+    width: 1303px; /* Фиксированная ширина */
+    height: 700px; /* Примерная фиксированная высота для коллажа */
+    position: relative; /* Для абсолютного позиционирования плейсхолдеров */
+    /* background-color: #111A21; */ /* Можно добавить легкий фон для отладки */
+}
+
+/* Стили для плейсхолдеров изображений в галерее */
+/* Используем классы из HTML: gallery-image-placeholder-1 ... gallery-image-placeholder-19 */
+
+.gallery-block > div[class^="gallery-image-placeholder-"] {
+    position: absolute; /* Все плейсхолдеры позиционируются абсолютно */
+    background-color: #333; /* Общий цвет для плейсхолдеров-блоков */
+    color: #888;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: sans-serif;
+    font-size: 12px;
+    border-radius: 8px; /* Небольшое скругление */
+    overflow: hidden; /* Чтобы img не вылезал за скругленные углы */
+}
+
+.gallery-block > div[class^="gallery-image-placeholder-"] img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Картинка заполняет плейсхолдер */
+}
+
+/* Позиционирование и размеры для каждого плейсхолдера согласно макету */
+/* Эти значения нужно будет точно подогнать */
+
+.gallery-image-placeholder-1 { top: 20px; left: 30px; width: 259px; height: 281px; }
+.gallery-image-placeholder-2 { /* С фоном через CSS */ 
+    top: 50px; left: 320px; width: 190px; height: 160px; 
+    background: url('https://placehold.co/190x160/555/ccc?text=Placeholder+BG') center/cover no-repeat;
+}
+.gallery-image-placeholder-3 { top: 230px; left: 320px; width: 87px; height: 87px; }
+.gallery-image-placeholder-4 { top: 230px; left: 420px; width: 144px; height: 81px; }
+.gallery-image-placeholder-5 { top: 330px; left: 30px; width: 94px; height: 168px; }
+.gallery-image-placeholder-6 { top: 330px; left: 140px; width: 98px; height: 98px; }
+.gallery-image-placeholder-7 { top: 330px; left: 460px; width: 122px; height: 128px; }
+.gallery-image-placeholder-8 { /* С фоном через CSS */
+    top: 10px; left: 550px; width: 280px; height: 200px; 
+    background: url('https://placehold.co/280x200/444/bbb?text=Placeholder+BG2') center/cover no-repeat;
+}
+.gallery-image-placeholder-9 { top: 230px; left: 580px; width: 92px; height: 92px; }
+.gallery-image-placeholder-10 { top: 350px; left: 590px; width: 329px; height: 185px; }
+.gallery-image-placeholder-11 { top: 80px; left: 850px; width: 168px; height: 193px; }
+.gallery-image-placeholder-12 { top: 300px; left: 820px; width: 193px; height: 221px; }
+.gallery-image-placeholder-13 { top: 40px; left: 1040px; width: 197px; height: 171px; }
+.gallery-image-placeholder-14 { /* С фоном через CSS */
+    top: 230px; left: 1040px; width: 230px; height: 180px; 
+    background: url('https://placehold.co/230x180/666/ddd?text=Placeholder+BG3') center/cover no-repeat;
+}
+.gallery-image-placeholder-15 { top: 430px; left: 1000px; width: 301px; height: 274px; }
+.gallery-image-placeholder-16 { top: 550px; left: 30px; width: 307px; height: 130px; /* Сделал ниже, чтобы не перекрывать много */}
+.gallery-image-placeholder-17 { top: 550px; left: 350px; width: 360px; height: 130px; }
+.gallery-image-placeholder-18 { top: 550px; left: 730px; width: 234px; height: 130px; }
+.gallery-image-placeholder-19 { top: 10px; left: 0; width: 236px; height: 183px; background-color: #222; z-index: -1; /* Пример очень фонового элемента */ }
+
+/* Стили для текстовых пузырей в галерее */
+.gallery-block > div[class^="gallery-text-bubble-"] {
+    position: absolute;
+    background-color: rgba(0, 78, 159, 0.85); /* Полупрозрачный синий фон */
+    backdrop-filter: blur(5px); /* Эффект размытия фона */
+    color: white;
+    padding: 12px 18px;
+    border-radius: 25px; /* Овальная форма */
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Unbounded';
+    font-size: 13px;
+    font-weight: 400;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.gallery-icon-placeholder {
+    width: 20px;
+    height: 20px;
+    background-color: #FFEF2B; /* Желтый для иконки-плейсхолдера */
+    border-radius: 50%;
+    /* Можно добавить SVG иконку позже */
+}
+
+/* Позиционирование для каждого текстового пузыря */
+.gallery-text-bubble-1 { top: 180px; left: 150px; }
+.gallery-text-bubble-2 { top: 450px; left: 80px; }
+.gallery-text-bubble-3 { top: 250px; left: 750px; transform: rotate(-5deg); }
+.gallery-text-bubble-4 { top: 50px; left: 950px; transform: rotate(3deg); background-color: rgba(255, 239, 43, 0.85); color: black; }
+.gallery-text-bubble-4 .gallery-icon-placeholder { background-color: #004E9F; }
+.gallery-text-bubble-5 { top: 600px; left: 500px; }
+
+
+.footer-cta-block {
+    width: 100%; /* На всю ширину родителя .gallery-and-footer-wrapper (т.е. 1303px) */
+    background-color: #003F7F; /* Темно-синий фон */
+    border-radius: 15px;
+    padding: 50px 70px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.footer-cta-text-section {
+    /* Контейнер для текста */
+}
+
+.footer-cta-title-ready,
+.footer-cta-title-conquer {
+    color: white;
+    font-family: 'Blippo-Black CY [Rus by me]';
+    font-weight: 400;
+    font-size: 48px;
+    text-transform: uppercase;
+    line-height: 1.1;
+}
+
+.footer-cta-title-conquer {
+    color: #FFEF2B; /* Желтый для второго слова */
+}
+
+.footer-cta-buttons-section {
+    display: flex;
+    gap: 20px;
+}
+
+.footer-cta-button-startup,
+.footer-cta-button-invest {
+    padding: 15px 25px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: 'Unbounded';
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.footer-cta-button-startup {
+    background-color: #FFEF2B;
+    color: black;
+}
+.footer-cta-button-startup:hover {
+    background-color: #E0D020;
+}
+
+
+.footer-cta-button-invest {
+    background-color: transparent;
+    color: white;
+    border: 1px solid #FFEF2B;
+}
+.footer-cta-button-invest:hover {
+    background-color: rgba(255, 239, 43, 0.1);
+}
+
+.footer-cta-icon-placeholder-startup,
+.footer-cta-icon-placeholder-invest {
+    width: 20px;
+    height: 20px;
+    border-radius: 3px; /* Прямоугольная иконка-плейсхолдер */
+}
+
+.footer-cta-icon-placeholder-startup {
+    background-color: black;
+}
+
+.footer-cta-icon-placeholder-invest {
+    background-color: #FFEF2B;
+}
+
+.decorative-square-1,
+.decorative-square-2 {
+    position: absolute; /* Позиционирование относительно .gallery-and-footer-wrapper */
+    width: 80px;
+    height: 80px;
+    background-color: rgba(255, 239, 43, 0.1); /* Полупрозрачный желтый */
+    border-radius: 10px;
+    z-index: -1; /* Под контентом, но над основным фоном блока */
+}
+
+.decorative-square-1 {
+    bottom: 60px; /* От низа .gallery-and-footer-wrapper */
+    left: 40px; /* От левого края .gallery-and-footer-wrapper */
+    transform: rotate(15deg);
+}
+
+.decorative-square-2 {
+    bottom: 100px;
+    right: 40px;
+    transform: rotate(-15deg);
+    width: 60px;
+    height: 60px;
+    background-color: rgba(0, 78, 159, 0.15); /* Полупрозрачный синий */
+}
+
+
 /* ... existing code ... */
