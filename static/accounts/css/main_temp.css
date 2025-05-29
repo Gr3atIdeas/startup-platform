@@ -77,31 +77,41 @@ body {
 .section-container { /* Общий класс для внутренних контейнеров секций */
     width: 100%;
     max-width: 1303px; /* Стандартная максимальная ширина контента */
+    /* background-color: transparent; /* По умолчанию прозрачный, чтобы был виден фон секции или body */
+    /* border-radius: 10px; /* Общее скругление для контейнеров, если нужно */
+    /* overflow: hidden; /* Если нужно обрезать выходящий контент */
     position: relative; /* Для позиционирования дочерних элементов */
     display: flex; /* Часто используется для выравнивания */
     flex-direction: column; /* По умолчанию элементы внутри контейнера идут друг под другом */
     align-items: center; /* Часто используется для центрирования */
-    /* Стили ниже специфичны для конкретных блоков и будут переопределены */
-    /* background-color: transparent; */
-    /* border-radius: 10px; */
-    /* overflow: hidden; */
 }
 
 
 /* --- Header Block --- */
-/* .main-container из HTML больше не нужен, его роль выполняют .section-wrapper и .section-container */
+/* .main-container из HTML больше не нужен как основная обертка с отступами, 
+   вместо него будет .section-wrapper для каждой секции */
+.main-container { /* Используем этот класс теперь только для самого первого блока */
+    width: 100%;
+    padding-left: 71px;
+    padding-right: 71px;
+    padding-top: 45px;
+    padding-bottom: 45px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    /* background-color: transparent; /* Фон блока должен быть прозрачным, чтобы был виден фон body */
+}
 
-.header-block { /* Теперь это .section-container для первого блока */
-    /* width: 100%; - уже есть в .section-container */
-    /* max-width: 1303px; - уже есть в .section-container */
+.header-block {
+    width: 100%; /* Занимает всю ширину .main-container (который имеет max-width) */
+    max-width: 1303px; /* Ограничиваем максимальную ширину */
     height: 708px;
-    /* position: relative; - уже есть в .section-container */
+    position: relative;
     background: linear-gradient(180deg, #004E9F 0%, black 100%);
     box-shadow: 6px 6px 24px -13px rgba(156, 156, 156, 0.25);
     overflow: hidden;
     border-radius: 10px;
-    /* align-items: flex-start; /* Для header-block нужно выравнивание по умолчанию */
-    /* justify-content: flex-start; */
+    /* margin: 0 auto; /* Центрируем, если родитель не flex */
 }
 
 .header-content {
@@ -325,7 +335,18 @@ body {
     z-index: 2; /* Поверх декоративного круга */
 }
 
-.decorative-blur-circle-header { display: none; } /* Был дубликат, убедимся, что старые не используются */
+.decorative-blur-circle-header {
+    width: 194px;
+    height: 190px;
+    left: 1225px; /* Скорректировано, чтобы быть под элементом GI */
+    top: 271px;   /* Скорректировано */
+    position: absolute;
+    background: #FAF7DB;
+    box-shadow: 0px 0px 25px 15px #FAF7DB; /* Усилим эффект тени для имитации размытия */
+    border-radius: 9999px;
+    filter: blur(12.50px); /* Это свойство применится к самому элементу, не к тени. Эффект может отличаться от макета */
+    z-index: 1; /* Под элементом GI */
+}
 
 /* Если нужны стили для текста "Gi... Great ideas" внутри плейсхолдера */
 /* .gi-text-placeholder { ... } */
@@ -341,16 +362,20 @@ body {
 .decorative-placeholder-2 { display: none; }
 
 /* Features Section ("Почему выбирают нас?") */
-/* .features-section-container - удален, используется .section-wrapper */
-
-.features-section-content { /* Это .section-container для блока "Почему выбирают нас?" */
-    /* max-width, width, align-items, flex-direction - наследуются от .section-container */
-    /* background-color: transparent; - фон всей секции прозрачный (через body или .section-wrapper) */
-    gap: 40px; /* Добавим отступ между заголовком и каруселью */
+.features-section-container { /* Это будет наш .section-wrapper */
+    width: 100%;
+    padding: 60px 71px;
+    box-sizing: border-box;
+    overflow: hidden; 
+    display: flex;
+    flex-direction: column; 
+    align-items: center; 
+    background-color: transparent; /* ФОН СЕКЦИИ ПРОЗРАЧНЫЙ */
 }
 
-.features-header { 
-    width: 100%; /* Растягиваем на всю ширину .features-section-content */
+.features-header { /* Это будет .section-container или его часть */
+    width: 100%;
+    max-width: 1303px; 
     display: flex;
     justify-content: space-between;
     align-items: flex-end; 
@@ -500,18 +525,26 @@ body {
 */
 
 /* Create Planet Section */
-/* .create-planet-section - удален, используется .section-wrapper */
+.create-planet-section { /* Это .section-wrapper */
+    width: 100%;
+    padding: 45px 71px; /* Общие отступы */
+    box-sizing: border-box;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    background-color: transparent; /* ФОН СЕКЦИИ ПРОЗРАЧНЫЙ */
+}
 
-.create-planet-container { /* Это .section-container для блока "Создайте свою планету" */
-    /* width: 100%; max-width: 1303px; - наследуются */
+.create-planet-container { /* Это .section-container */
+    width: 100%;
+    max-width: 1303px;
     height: 521px;
-    /* position: relative; - наследуется */
-    background: black; 
+    position: relative;
+    background: black; /* Сам блок остается черным с картинкой */
     overflow: hidden;
     border-radius: 10px;
     display: flex; 
-    align-items: center; 
-    justify-content: flex-start; /* Контент слева, телефон справа */
+    align-items: center;
 }
 
 .create-planet-bg-image {
@@ -746,22 +779,26 @@ body {
 }
 
 /* Investors Section */
-/* .investors-section-wrapper - удален, используется .section-wrapper */
-/* Дополнительный класс .investors-section-outer-bg на .section-wrapper для задания фона #F5F5F5 */
-.investors-section-outer-bg {
-    background-color: #F5F5F5;
+.investors-section-wrapper { /* Это .section-wrapper */
+    width: 100%;
+    padding: 45px 71px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    background-color: #F5F5F5; /* Этот блок имеет СВЕТЛЫЙ фон */
+    overflow: hidden; 
 }
 
-.investors-container { /* Это .section-container для блока "Инвесторы" */
-    /* width: 100%; max-width: 1303px; - наследуются */
+.investors-container { /* Это .section-container */
+    width: 100%;
+    max-width: 1303px;
     height: 521px;
-    /* position: relative; - наследуется */
+    position: relative;
     background: white; /* Сам блок остается БЕЛЫМ */
     border-radius: 10px;
-    display: flex; 
-    align-items: center; 
+    display: flex;
+    align-items: center;
     overflow: hidden; 
-    justify-content: space-between; /* Контент слева, картинка справа */
 }
 
 .investors-content-left {
@@ -917,13 +954,23 @@ body {
 }
 
 /* Explore Worlds Section */
-/* .explore-worlds-section - удален, используется .section-wrapper */
+.explore-worlds-section { /* Это .section-wrapper */
+    width: 100%;
+    padding: 23px 71px 45px 71px; 
+    box-sizing: border-box;
+    background-color: transparent; /* ФОН СЕКЦИИ ПРОЗРАЧНЫЙ */
+    overflow: hidden;
+    display: flex; /* Для центрирования .explore-worlds-container */
+    justify-content: center;
+}
 
-.explore-worlds-container { /* Это .section-container для блока "Исследуйте миры" */
-    /* width: 100%; max-width: 1303px; - наследуются */
-    /* display: flex; flex-direction: column; align-items: center; - наследуются */
+.explore-worlds-container { /* Это .section-container */
+    width: 100%;
+    max-width: 1303px; /* Скорректировано с 1334px до 1303px для единообразия */
+    /* margin: 0 auto; */ /* Уже центрируется родителем */
+    display: flex;
+    flex-direction: column;
     gap: 55px; 
-    padding-top: 23px; /* Уменьшенный верхний паддинг для этого блока */
 }
 
 .explore-title-group {
@@ -1289,10 +1336,23 @@ body {
 }
 
 /* How Galaxy Works Section */
-/* .how-galaxy-works-section - удален, используется .section-wrapper */
+.how-galaxy-works-section { /* Это .section-wrapper */
+    width: 100%;
+    padding: 55px 71px; 
+    box-sizing: border-box;
+    background-color: transparent; /* ФОН СЕКЦИИ ПРОЗРАЧНЫЙ */
+    overflow: hidden;
+    display: flex; /* Для центрирования .how-galaxy-works-container */
+    justify-content: center;
+}
 
-.how-galaxy-works-container { /* Это .section-container для блока "Как работает галактика" */
-    /* width: 100%; max-width: 1303px; display:flex; flex-direction:column; align-items:center; - наследуются */
+.how-galaxy-works-container { /* Это .section-container */
+    width: 100%;
+    max-width: 1303px; 
+    /* margin: 0 auto; */
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
     gap: 55px; 
 }
 
@@ -1451,16 +1511,21 @@ body {
 }
 
 /* Great Ideas Section */
-/* .great-ideas-section-wrapper - удален, используется .section-wrapper */
-
-.great-ideas-content-holder { /* Это .section-container для блока "Great Ideas" */
-    /* width: 100%; max-width: 1303px; - наследуются */
-    /* display: flex; flex-direction: column; align-items: center; - наследуются */
-    gap: 39px; /* Отступ между .great-ideas-main-block и .great-ideas-secondary-cards-row */
+.great-ideas-section-wrapper { /* Это .section-wrapper */
+    width: 100%;
+    padding: 55px 71px; 
+    box-sizing: border-box;
+    background-color: transparent; /* ФОН СЕКЦИИ ПРОЗРАЧНЫЙ */
+    display: flex;
+    flex-direction: column; /* Основной блок и карточки друг под другом */
+    align-items: center; /* Центрируем содержимое */
+    gap: 39px; 
+    overflow: hidden;
 }
 
-.great-ideas-main-block { 
-    width: 100%; /* Растягиваем на всю ширину .great-ideas-content-holder */
+.great-ideas-main-block { /* Часть .section-container */
+    width: 100%;
+    max-width: 1303px;
     height: 521px;
     position: relative;
     border-radius: 10px;
@@ -1824,10 +1889,23 @@ body {
 }
 
 /* Success Stories Section */
-/* .success-stories-section - удален, используется .section-wrapper */
+.success-stories-section { /* Это .section-wrapper */
+    width: 100%;
+    padding: 45px 71px;
+    box-sizing: border-box;
+    background-color: transparent; /* ФОН СЕКЦИИ ПРОЗРАЧНЫЙ */
+    overflow: hidden;
+    display: flex; /* Для центрирования .success-stories-container */
+    justify-content: center;
+}
 
-.success-stories-container { /* Это .section-container для блока "Истории успеха" */
-    /* width: 100%; max-width: 1303px; display:flex; flex-direction:column; align-items:center; - наследуются */
+.success-stories-container { /* Это .section-container */
+    width: 100%;
+    max-width: 1303px;
+    /* margin: 0 auto; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     gap: 55px;
 }
 
@@ -2034,12 +2112,22 @@ body {
 }
 
 /* Galaxy News Section */
-/* .galaxy-news-section - удален, используется .section-wrapper */
+.galaxy-news-section { /* Это .section-wrapper */
+    width: 100%;
+    padding: 60px 71px;
+    box-sizing: border-box;
+    background-color: transparent; /* ФОН СЕКЦИИ ПРОЗРАЧНЫЙ */
+    overflow: hidden;
+    display: flex; /* Для центрирования .galaxy-news-container */
+    justify-content: center;
+}
 
-.galaxy-news-container { /* Это .section-container для блока "Новости галактики" */
-    /* width: 100%; - наследуется */
+.galaxy-news-container { /* Это .section-container */
+    width: 100%;
     max-width: 1280px; /* Оставил 1280px, как было, но можно унифицировать до 1303px */
-    /* display: flex; flex-direction: column; align-items: center; - наследуются */
+    /* margin: 0 auto; */
+    display: flex;
+    flex-direction: column;
     gap: 78px; 
 }
 
@@ -2277,18 +2365,26 @@ body {
 }
 
 /* Stay Updated Section */
-/* .stay-updated-section - удален, используется .section-wrapper */
+.stay-updated-section { /* Это .section-wrapper */
+    width: 100%;
+    padding: 45px 71px 55px 71px; 
+    box-sizing: border-box;
+    background-color: transparent; /* ФОН СЕКЦИИ ПРОЗРАЧНЫЙ */
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+}
 
-.stay-updated-container { /* Это .section-container для блока "Будьте в курсе" */
-    /* width: 100%; max-width: 1303px; - наследуются */
+.stay-updated-container { /* Это .section-container */
+    width: 100%;
+    max-width: 1303px;
     height: 576px;
-    /* position: relative; - наследуется */
-    background-color: black; 
+    position: relative;
+    background-color: black; /* Сам блок остается черным с картинкой */
     box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.25);
     border-radius: 20px;
     overflow: hidden;
     display: flex; 
-    flex-direction: row; /* Изменено с column для расположения левой и правой части в ряд */
     justify-content: space-between;
     align-items: flex-start; 
     padding: 73px 62px; 
@@ -2594,13 +2690,25 @@ body {
 }
 
 /* FAQ Section Styles */
-/* .faq-page-wrapper - удален, используется .section-wrapper */
+.faq-page-wrapper { /* Это .section-wrapper */
+    width: 100%;
+    padding: 60px 71px; 
+    background: transparent; /* ФОН СЕКЦИИ ПРОЗРАЧНЫЙ */
+    overflow: hidden; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
+}
 
-.faq-main-container { /* Это .section-container для FAQ */
-    /* width: 100%; max-width: 1303px; display: flex; flex-direction: column; - наследуются */
+.faq-main-container { /* Это .section-container */
+    width: 100%;
+    max-width: 1303px; 
+    display: flex;
+    flex-direction: column;
     gap: 55px; 
-    /* box-sizing: border-box; - наследуется */
-    background: none !important; /* Убираем фон, так как основной фон будет у .faq-content-block */
+    box-sizing: border-box;
+    background: none !important; /* Фон самого блока FAQ (синий) остается */
 }
 
 .faq-header-block {
@@ -2621,7 +2729,7 @@ body {
     color: #FFEF2B; 
     font-family: 'Blippo-Black CY [Rus by me]', sans-serif;
     font-size: 55px;
-    font-weight: 400; 
+    font-weight: 400;
     line-height: 1; 
     word-wrap: break-word;
     margin: 0;
@@ -2726,8 +2834,8 @@ body {
 }
 
 
-.faq-question-category,
-.faq-accordion-header,
+.faq-question-category, 
+.faq-accordion-header,   
 .faq-question-item {
     padding: 10px 24px; 
     border-radius: 99px; 
@@ -2877,7 +2985,7 @@ body {
 }
 
 .faq-answer-title {
-    color: white; 
+    color: white;
     font-family: 'Unbounded', sans-serif;
     font-size: 25px;
     font-weight: 600;
@@ -2960,7 +3068,7 @@ body {
         height: auto; /* Автоматическая высота для мобильных */
     }
     .faq-left-panel {
-        width: 100%;
+    width: 100%;
         height: auto; /* Автоматическая высота */
         max-height: 400px; /* Ограничение высоты с прокруткой */
         padding-right: 24px; /* Возвращаем симметричный паддинг */
@@ -2999,7 +3107,7 @@ body {
         font-size: 14px;
     }
     .faq-accordion-category.nested > .faq-accordion-header {
-        font-size: 13px;
+    font-size: 13px;
     }
      .faq-question-item {
         font-size: 11px;
