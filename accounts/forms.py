@@ -1,7 +1,8 @@
 from django import forms
-from .models import Users, Startups, Directions, StartupStages, ReviewStatuses, Comments
+from .models import Users, Startups, Directions, StartupStages, ReviewStatuses, Comments, SupportOrder
 from django import forms
 from .models import Users
+import re
 
 # Кастомный виджет для загрузки нескольких файлов
 class MultipleFileInput(forms.ClearableFileInput):
@@ -210,3 +211,51 @@ class ProfileEditForm(forms.ModelForm):
         if bio and len(bio) > 50:
             raise forms.ValidationError('Описание не должно превышать 50 символов.')
         return bio
+
+class SupportContactForm(forms.ModelForm):
+    attachment = forms.FileField(required=False, label="Вложение", help_text="PNG, JPEG, PDF, до 5 МБ")
+
+    class Meta:
+        model = SupportOrder
+        fields = ['role', 'subject', 'name', 'telegram', 'comment', 'attachment']
+        widgets = {
+            'role': forms.Select(attrs={'class': 'form-control'}),
+            'subject': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Кратко опиши тему обращения'}),
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Имя'}),
+            'telegram': forms.TextInput(attrs={'class': 'form-control', 'placeholder': '@example'}),
+            'comment': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Комментарий', 'rows': 5}),
+        }
+        labels = {
+            'role': 'Роль',
+            'subject': 'Тема обращения',
+            'name': 'Ваше имя',
+            'telegram': 'Ваш Telegram',
+            'comment': 'Комментарий',
+        }
+
+    def clean_telegram(self):
+        telegram = self.cleaned_data.get('telegram')
+        if not telegram:
+            raise forms.ValidationError('Telegram-ник обязателен.')
+        if not re.match(r'^@[\w]+$', telegram):
+            raise forms.ValidationError('Telegram-ник должен начинаться с @ и содержать только буквы, цифры или подчеркивания.')
+        if len(telegram) > 50:
+            raise forms.ValidationError('Telegram-ник не должен превышать 50 символов.')
+        return telegram
+
+    def clean_comment(self):
+        comment = self.cleaned_data.get('comment')
+        if len(comment) > 500:
+            raise forms.ValidationError('Комментарий не должен превышать 500 символов.')
+        return comment
+
+    def clean_attachment(self):
+        attachment = self.cleaned_data.get('attachment')
+        if attachment:
+            allowed_mimes = ['image/png', 'image/jpeg', 'application/pdf']
+            if attachment.content_type not in allowed_mimes:
+                raise forms.ValidationError('Допустимы только файлы PNG, JPEG или PDF.')
+            max_size = 5 * 1024 * 1024  # 5 МБ
+            if attachment.size > max_size:
+                raise forms.ValidationError('Размер файла не должен превышать 5 МБ.')
+        return attachment

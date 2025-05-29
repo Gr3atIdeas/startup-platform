@@ -630,3 +630,29 @@ class Messages(models.Model):
     def is_read(self):
         """Проверяет, прочитано ли сообщение."""
         return self.status.status_name == 'read'
+
+class SupportOrder(models.Model):
+    order_id = models.AutoField(primary_key=True)
+    user = models.ForeignKey('Users', on_delete=models.CASCADE, related_name='support_orders')
+    role = models.CharField(max_length=50, choices=[
+        ('investor', 'Инвестор'),
+        ('startuper', 'Стартапер'),
+        ('moderator', 'Модератор')
+    ])
+    subject = models.CharField(max_length=255)
+    name = models.CharField(max_length=100)
+    telegram = models.CharField(max_length=50)
+    comment = models.TextField(max_length=500)
+    status = models.CharField(max_length=20, choices=[
+        ('open', 'Открыта'),
+        ('closed', 'Закрыта')
+    ], default='open')
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        managed = True
+        db_table = 'support_orders'
+
+    def __str__(self):
+        return f"Заявка #SUPP-{self.order_id} от {self.name}"
