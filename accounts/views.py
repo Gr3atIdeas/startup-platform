@@ -2265,7 +2265,7 @@ def support_contact_view(request):
                 )
 
                 # Отправка в Telegram
-                bot_token = "123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11"  # Заменить на реальный токен
+                bot_token = "7843250850:AAEL8hapR_WVcG2mMNUhWvK-I0DMYG042Ko"  # Заменить на реальный токен
                 chat_id = "2064613329"
                 telegram_url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
                 payload = {
