@@ -210,3 +210,4 @@ class ProfileEditForm(forms.ModelForm):
         if bio and len(bio) > 50:
             raise forms.ValidationError('Описание не должно превышать 50 символов.')
         return bio
+

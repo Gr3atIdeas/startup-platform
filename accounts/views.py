@@ -2252,3 +2252,5 @@ def support_contact_view(request):
     # context = {'form': form}
     # return render(request, 'accounts/support_contact.html', context)
     return render(request, 'accounts/support_contact.html')
+
+

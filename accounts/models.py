@@ -630,3 +630,4 @@ class Messages(models.Model):
     def is_read(self):
         """Проверяет, прочитано ли сообщение."""
         return self.status.status_name == 'read'
+
