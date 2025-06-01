@@ -280,43 +280,68 @@
 </div>
 
 <script>
-    const creatStartupStaticUrl = "{% static 'accounts/images/creat_startup/' %}";
-    const planetChoices = [{% for choice in form.planet_image.field.choices %}"{{ choice.0|escapejs }}"{% if not forloop.last %},{% endif %}{% endfor %}];
-    const planetBaseUrl = "https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/";
+const creatStartupStaticUrl = "{% static 'accounts/images/creat_startup/' %}";
+const planetChoices = [{% for choice in form.planet_image.field.choices %}"{{ choice.0|escapejs }}"{% if not forloop.last %},{% endif %}{% endfor %}];
+const planetBaseUrl = "https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/";
 
-    document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function() {
+    // --- Предзагрузка планет ---
+    const planetImages = {};
+    planetChoices.forEach(choice => {
+        const img = new Image();
+        img.src = planetBaseUrl + choice;
+        planetImages[choice] = img;
+    });
+
     // --- Планеты ---
     const planetInput = document.getElementById('id_planet_image');
     const planetPreview = document.getElementById('planetPreview');
     const prevButton = document.querySelector('.planet-nav-button.prev-planet');
     const nextButton = document.querySelector('.planet-nav-button.next-planet');
     let currentPlanetIndex = 0;
+    let isAnimating = false;
 
-    function updatePlanetDisplay() {
-        if (planetChoices.length === 0) {
-        planetPreview.src = 'https://via.placeholder.com/150';
-        planetInput.value = '';
-        return;
-        }
-        planetPreview.src = planetBaseUrl + planetChoices[currentPlanetIndex];
-        planetInput.value = planetChoices[currentPlanetIndex];
+    function updatePlanetDisplay(direction) {
+        if (isAnimating) return; // Предотвращаем запуск новой анимации, пока текущая не завершена
+        isAnimating = true;
+
+        // Устанавливаем новую планету
+        const newPlanet = planetChoices[currentPlanetIndex];
+        planetPreview.src = planetBaseUrl + newPlanet;
+        planetInput.value = newPlanet;
+
+        // Удаляем старые классы анимации и добавляем новую
         planetPreview.classList.remove('slide-left', 'slide-right');
-        void planetPreview.offsetWidth; // Trigger reflow
-        planetPreview.classList.add(currentPlanetIndex > 0 ? 'slide-right' : 'slide-left');
+        planetPreview.classList.add(direction === 'next' ? 'slide-right' : 'slide-left');
+
+        // После завершения анимации возвращаем планету в центр
+        setTimeout(() => {
+            planetPreview.classList.remove('slide-left', 'slide-right');
+            planetPreview.style.transform = 'translateX(0)';
+            planetPreview.style.opacity = '1';
+            isAnimating = false;
+        }, 300); // Длительность анимации (0.3s)
     }
 
     prevButton.addEventListener('click', () => {
+        if (planetChoices.length === 0) return;
         currentPlanetIndex = (currentPlanetIndex - 1 + planetChoices.length) % planetChoices.length;
-        updatePlanetDisplay();
+        updatePlanetDisplay('prev');
     });
 
     nextButton.addEventListener('click', () => {
+        if (planetChoices.length === 0) return;
         currentPlanetIndex = (currentPlanetIndex + 1) % planetChoices.length;
-        updatePlanetDisplay();
+        updatePlanetDisplay('next');
     });
 
+    // Инициализация первой планеты
     if (planetChoices.length > 0) {
-        updatePlanetDisplay();
+        planetPreview.src = planetBaseUrl + planetChoices[0];
+        planetInput.value = planetChoices[0];
+    } else {
+        planetPreview.src = 'https://via.placeholder.com/150';
+        planetInput.value = '';
     }
 
     // --- Логотип ---

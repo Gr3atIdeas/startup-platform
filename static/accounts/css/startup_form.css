@@ -1305,27 +1305,32 @@ body, .startup-form-container { /* Example, adjust selector as needed */
 .planet-display {
     width: 450px;
     height: 451px;
-    border-radius: 5px;
+    border-radius: 10px;
     background-color: #333;
     overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
 }
 
 .planet-preview {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-    transition: transform 0.3s ease;
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        position: absolute;
+        transition: opacity 0.3s ease, transform 0.3s ease;
+        opacity: 1;
 }
 
 .planet-preview.slide-left {
-    transform: translateX(-100%);
+    opacity: 0;
+    transform: translateX(-50%);
 }
 
 .planet-preview.slide-right {
-    transform: translateX(100%);
+    opacity: 0;
+    transform: translateX(50%);
 }
 
 .logo-upload-group .logo-upload-label {
