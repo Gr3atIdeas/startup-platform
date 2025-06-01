@@ -301,7 +301,6 @@ a:hover {
   display: none; /* Скрываем старый контейнер */
 }
 
-/* Новый контейнер для планеты */
 .planet-display-container {
   width: 451px;
   height: 40px;
@@ -310,11 +309,7 @@ a:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--secondary-blue);
   position: relative;
-  background-image: url('../images/starry_background.webp');
-  background-size: cover;
-  animation: starry-twinkle 10s infinite linear;
 }
 
 /* Анимация звездного фона */
