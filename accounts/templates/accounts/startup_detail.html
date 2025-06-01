@@ -49,16 +49,26 @@
           </div>
         {% endif %}
         
-        <div class="startup-logo-container">
-            {% if startup.logo_urls %}
-                {% with logo_file_id=startup.logo_urls.0 %}
-                    <img src="{% get_file_url_tag logo_file_id startup.startup_id 'logo' %}" alt="Логотип {{ startup.title }}" class="startup-logo-actual">
-                {% endwith %}
-            {% else %}
-                {# Заменяем отображение планеты на плейсхолдер логотипа #}
-                <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Логотип не загружен" class="startup-logo-placeholder">
-            {% endif %}
+        <div class="planet-display-container">
+          <div class="space-background"></div>
+          <div class="stars"></div>
+          {% if startup.planet_image %}
+            <img src="https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/{{ startup.planet_image }}" alt="Планета {{ startup.title }}" class="planet-image">
+          {% else %}
+            <img src="{% static 'accounts/images/icons/planet_placeholder.svg' %}" alt="Планета не выбрана" class="planet-placeholder">
+          {% endif %}
         </div>
+        
+        <div class="logo-display-container">
+          {% if startup.logo_urls %}
+            {% with logo_file_id=startup.logo_urls.0 %}
+              <img src="{% get_file_url_tag logo_file_id startup.startup_id 'logo' %}" alt="Логотип {{ startup.title }}" class="logo-image">
+            {% endwith %}
+          {% else %}
+            <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Логотип не загружен" class="logo-placeholder">
+          {% endif %}
+        </div>
+        
         <button class="action-button chat-button">Чат</button>
       </div>
       

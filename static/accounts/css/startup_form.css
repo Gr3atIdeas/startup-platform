@@ -68,15 +68,16 @@ body {
     flex-grow: 1; /* Позволяет занимать доступное пространство */
 }
 
+/* Обновленные стили для .logo-upload-label */
 .logo-upload-group .logo-upload-label {
     display: block;
-    width: 288px;
-    height: 288px;
+    width: 144px; /* Уменьшено с 288px */
+    height: 144px; /* Уменьшено с 288px */
     border-radius: 5px;
-    background-color: #333; /* Примерный цвет фона, если изображение не загружено */
+    background-color: #333;
     cursor: pointer;
     position: relative;
-    overflow: hidden; /* Чтобы img не вылезал за рамки */
+    overflow: hidden;
 }
 
 .logo-upload-group .logo-placeholder {
@@ -1257,4 +1258,71 @@ body, .startup-form-container { /* Example, adjust selector as needed */
     color: #e74c3c; /* Яркий красный цвет для ошибки */
     font-size: 0.85rem;
     margin-top: 5px;
+}
+
+/* Новые стили для выбора планеты */
+.planet-upload-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.planet-upload-group .planet-upload-label {
+    font-size: 12px;
+    font-family: Unbounded;
+    font-weight: 300;
+    letter-spacing: 0.12px;
+    color: white;
+}
+
+.planet-selector {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.planet-nav-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.planet-nav-button img {
+    width: 16px;
+    height: 16px;
+}
+
+.planet-nav-button.prev-planet img {
+    transform: rotate(90deg);
+}
+
+.planet-nav-button.next-planet img {
+    transform: rotate(-90deg);
+}
+
+.planet-display {
+    width: 144px;
+    height: 144px;
+    border-radius: 5px;
+    background-color: #333;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.planet-preview {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+.planet-preview.slide-left {
+    transform: translateX(-100%);
+}
+
+.planet-preview.slide-right {
+    transform: translateX(100%);
 }

@@ -382,7 +382,7 @@ class Startups(models.Model):
     created_at = models.DateTimeField(blank=True, null=True)
     updated_at = models.DateTimeField(blank=True, null=True)
     status = models.CharField(max_length=20, default='pending')
-    status_id = models.ForeignKey(ReviewStatuses, models.DO_NOTHING, blank=True, null=True, db_column='status_id', default=3)
+    status_id = models.ForeignKey('ReviewStatuses', models.DO_NOTHING, blank=True, null=True, db_column='status_id', default=3)
     only_invest = models.BooleanField(default=False)
     only_buy = models.BooleanField(default=False)
     both_mode = models.BooleanField(default=False)
@@ -397,35 +397,27 @@ class Startups(models.Model):
     moderator_comment = models.TextField(blank=True, null=True)
     for_sale = models.BooleanField(default=False)
     step_number = models.IntegerField(default=1)
-    logo_urls = JSONField(default=list)
-    creatives_urls = JSONField(blank=True, null=True, default=list)
-    proofs_urls = JSONField(blank=True, null=True, default=list)
-    video_urls = JSONField(blank=True, null=True, default=list)
+    logo_urls = models.JSONField(default=list)
+    creatives_urls = models.JSONField(blank=True, null=True, default=list)
+    proofs_urls = models.JSONField(blank=True, null=True, default=list)
+    video_urls = models.JSONField(blank=True, null=True, default=list)
+    planet_image = models.CharField(max_length=50, blank=True, null=True)  # Новое поле
 
     class Meta:
         managed = True
         db_table = 'startups'
 
     def get_average_rating(self):
-        """Вычисляет средний рейтинг на основе sum_votes и total_voters."""
         if self.total_voters > 0:
             return float(self.sum_votes) / self.total_voters
         return 0.0
 
     def get_logo_url(self):
-        """Генерирует URL первого логотипа из logo_urls."""
-        if self.logo_urls and isinstance(self.logo_urls, list) and len(self.logo_urls) > 0 and self.logo_urls[0]:
-            try:
-                from django.core.files.storage import default_storage
-                logo_url = default_storage.url(f"startups/{self.startup_id}/logos/{self.logo_urls[0]}_")
-                logger.info(f"Сгенерирован URL для логотипа стартапа {self.startup_id}: {logo_url}")
-                return logo_url
-            except Exception as e:
-                logger.error(f"Ошибка при генерации URL для логотипа стартапа {self.startup_id}: {str(e)}")
+        if self.logo_urls and isinstance(self.logo_urls, list) and len(self.logo_urls) > 0:
+            return get_file_url(self.logo_urls[0], self.startup_id, 'logo')
         return None
-    
+
     def get_investors_count(self):
-        """Подсчитывает количество уникальных инвесторов для стартапа."""
         return InvestmentTransactions.objects.filter(
             startup=self,
             transaction_status='completed'
@@ -436,14 +428,12 @@ class Startups(models.Model):
             amount_raised = self.amount_raised or 0
             try:
                 percentage = (amount_raised / self.funding_goal) * 100
-                # Ограничиваем от 0 до 100 и ОКРУГЛЯЕМ до ближайшего целого
                 capped_percentage = min(max(percentage, 0), 100)
                 return round(capped_percentage)
             except (TypeError, ZeroDivisionError, ValueError):
-                # Добавил ValueError на случай проблем с Decimal->float в round, хотя не должно
-                return 0 
+                return 0
         return 0
-    
+
     def get_status_display(self):
         statuses = {
             'pending': 'На рассмотрении',

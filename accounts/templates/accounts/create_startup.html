@@ -9,17 +9,35 @@
 
 <div class="startup-form-container">
     <div class="form-navigation-header">
-        <a href="{% url 'startups_list' %}" class="back-button">&larr; Назад</a>
+        <a href="{% url 'startups_list' %}" class="back-button">← Назад</a>
         <h2 class="form-main-title">Создание стартапа</h2>
     </div>
 
     <form method="post" enctype="multipart/form-data" id="startupForm" novalidate>
         {% csrf_token %}
 
-        <!-- Верхний блок: Лого и основные поля -->
+        <!-- Верхний блок: Планета, Логотип и основные поля -->
         <div class="form-section-top">
             <div class="form-top-grid">
                 <div class="form-top-left">
+                    <div class="form-group planet-upload-group">
+                        <label class="planet-upload-label">Выберите планету *</label>
+                        <div class="planet-selector">
+                            <button type="button" class="planet-nav-button prev-planet" aria-label="Предыдущая планета">
+                                <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="Previous">
+                            </button>
+                            <div class="planet-display">
+                                <img src="" alt="Планета" class="planet-preview" id="planetPreview">
+                            </div>
+                            <button type="button" class="planet-nav-button next-planet" aria-label="Следующая планета">
+                                <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="Next">
+                            </button>
+                        </div>
+                        {{ form.planet_image|add_class:"form-control"|attr:"id:id_planet_image" }}
+                        {% if form.planet_image.errors %}
+                            <span class="error-message">{{ form.planet_image.errors|first }}</span>
+                        {% endif %}
+                    </div>
                     <div class="form-group logo-upload-group">
                         <label for="{{ form.logo.id_for_label }}" class="logo-upload-label">
                             <div class="logo-placeholder" id="logoPlaceholder">
@@ -254,7 +272,7 @@
 
         </div> <!-- Конец form-main-content-wrapper -->
 
-        <!-- Кнопка отправки (вне общего контейнера) -->
+        <!-- Кнопка отправки -->
         <div class="submit-button-container">
             <button type="submit" class="submit-button">Отправить на модерацию</button>
         </div>
@@ -263,8 +281,44 @@
 
 <script>
 const creatStartupStaticUrl = "{% static 'accounts/images/creat_startup/' %}";
+const planetChoices = [{% for choice in form.planet_image.field.choices %}"{{ choice.0|escapejs }}"{% if not forloop.last %},{% endif %}{% endfor %}];
+const planetBaseUrl = "https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/";
 
 document.addEventListener('DOMContentLoaded', function() {
+    // --- Планеты ---
+    const planetInput = document.getElementById('id_planet_image');
+    const planetPreview = document.getElementById('planetPreview');
+    const prevButton = document.querySelector('.planet-nav-button.prev-planet');
+    const nextButton = document.querySelector('.planet-nav-button.next-planet');
+    let currentPlanetIndex = 0;
+
+    function updatePlanetDisplay() {
+        if (planetChoices.length === 0) {
+            planetPreview.src = 'https://via.placeholder.com/150';
+            planetInput.value = '';
+            return;
+        }
+        planetPreview.src = planetBaseUrl + planetChoices[currentPlanetIndex];
+        planetInput.value = planetChoices[currentPlanetIndex];
+        planetPreview.classList.remove('slide-left', 'slide-right');
+        void planetPreview.offsetWidth; // Trigger reflow
+        planetPreview.classList.add(currentPlanetIndex > 0 ? 'slide-right' : 'slide-left');
+    }
+
+    prevButton.addEventListener('click', () => {
+        currentPlanetIndex = (currentPlanetIndex - 1 + planetChoices.length) % planetChoices.length;
+        updatePlanetDisplay();
+    });
+
+    nextButton.addEventListener('click', () => {
+        currentPlanetIndex = (currentPlanetIndex + 1) % planetChoices.length;
+        updatePlanetDisplay();
+    });
+
+    if (planetChoices.length > 0) {
+        updatePlanetDisplay();
+    }
+
     // --- Логотип ---
     const logoInput = document.getElementById('id_logo_input');
     const logoPlaceholder = document.getElementById('logoPlaceholder');
@@ -275,26 +329,26 @@ document.addEventListener('DOMContentLoaded', function() {
         logoPreviewImg.addEventListener('click', () => logoInput.click());
 
         logoInput.addEventListener('change', function() {
-        const file = this.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
                     logoPreviewImg.src = e.target.result;
                     logoPreviewImg.style.display = 'block';
                     logoPlaceholder.style.display = 'none';
-            };
-            reader.readAsDataURL(file);
-        }
-    });
+                };
+                reader.readAsDataURL(file);
+            }
+        });
     }
 
-    // --- Логика таймлайна (Обновлено) ---
+    // --- Логика таймлайна ---
     const timelineSteps = document.querySelectorAll('.timeline-step');
     const descriptionContainers = document.querySelectorAll('.timeline-description-container');
     const currentStepInput = document.getElementById('step_number');
     const setCurrentButtons = document.querySelectorAll('.btn-select-current-step');
-    const timelineProgressFilled = document.getElementById('timelineProgressFilled'); // Полоса прогресса
-    const totalSteps = 5; // Общее количество шагов
+    const timelineProgressFilled = document.getElementById('timelineProgressFilled');
+    const totalSteps = 5;
 
     function selectStepDescription(stepNumber) {
         descriptionContainers.forEach(container => {
@@ -313,54 +367,46 @@ document.addEventListener('DOMContentLoaded', function() {
             const stepNum = parseInt(step.dataset.step);
             const stepWrapper = step.querySelector('.step-number-wrapper');
             
-            step.classList.remove('active-step-display'); // Сначала убираем у всех свечение
-            stepWrapper.classList.remove('active'); // Убираем активную раскраску у всех
-            // stepWrapper.classList.remove('future-step'); // future-step больше не используется для стилизации напрямую
-
+            step.classList.remove('active-step-display');
+            stepWrapper.classList.remove('active');
+            
             if (stepNum <= currentStep) {
-                stepWrapper.classList.add('active'); // Пройденные и текущий этап - активные (цветные)
-            } else {
-                // Будущие этапы - неактивные (по умолчанию будут черно-белыми по CSS)
+                stepWrapper.classList.add('active');
             }
             
-            // Показываем описание и свечение только для выбранного текущего этапа
             if (stepNum === currentStep) {
-                selectStepDescription(currentStep); // Показываем описание (эта функция также добавляет active-step-display)
+                selectStepDescription(currentStep);
             }
         });
 
-        // Обновление полосы прогресса
         let progressPercentage = 0;
         if (currentStep > 1) {
-            // Прогресс рассчитывается как (текущий_шаг - 1) / (всего_шагов - 1)
-            // Чтобы на 1 шаге было 0%, на последнем 100%
             progressPercentage = ((currentStep - 1) / (totalSteps - 1)) * 100;
         }
-        if(timelineProgressFilled) {
-             timelineProgressFilled.style.width = `${progressPercentage}%`;
+        if (timelineProgressFilled) {
+            timelineProgressFilled.style.width = `${progressPercentage}%`;
         }
     }
 
     timelineSteps.forEach(step => {
         step.addEventListener('click', function() {
             const stepNum = this.dataset.step;
-            selectStepDescription(stepNum); // Только показываем описание при клике на круг
+            selectStepDescription(stepNum);
         });
     });
 
     setCurrentButtons.forEach(button => {
         button.addEventListener('click', function() {
             const stepNum = this.dataset.stepTarget;
-            setCurrentStep(stepNum); // Устанавливаем как текущий этап
+            setCurrentStep(stepNum);
         });
     });
     
-    // Инициализация таймлайна при загрузке (устанавливаем шаг 1)
     if (timelineSteps.length > 0) {
         setCurrentStep(1);
     }
 
-    // --- Прокрутка к первой ошибке Django при загрузке страницы ---
+    // --- Прокрутка к первой ошибке Django ---
     const firstServerSideError = document.querySelector('.error-message:not(.custom-validation-error)');
     if (firstServerSideError) {
         const errorParentGroup = firstServerSideError.closest('.form-group, .upload-box, .agreement-section');
@@ -370,83 +416,66 @@ document.addEventListener('DOMContentLoaded', function() {
             if (inputField && inputField.type !== 'checkbox') {
                 inputField.classList.add('input-error');
             } else if (inputField && (inputField.type === 'checkbox' || inputField.classList.contains('custom-checkbox-label')) && errorParentGroup.classList.contains('checkbox-group')) {
-                 errorParentGroup.classList.add('input-error'); // Подсветка группы кастомного чекбокса
+                errorParentGroup.classList.add('input-error');
             }
         } else {
             firstServerSideError.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
     }
 
-    // --- ОБНОВЛЕННАЯ Обработка отправки формы --- 
+    // --- Обработка отправки формы ---
     const startupForm = document.getElementById('startupForm');
     if (startupForm) {
-        // Helper function to create and display error messages
         function displayValidationMessage(element, message, fieldType = 'input') {
-            // Remove existing error for this element
             const parentGroup = element.closest('.form-group, .upload-box, .logo-upload-group');
             let existingErrorMsg = null;
             if (parentGroup) {
                 existingErrorMsg = parentGroup.querySelector('.custom-validation-error.field-specific-error');
-            } else {
-                // For elements not in a group, check next sibling (less common)
-                if (element.nextElementSibling && element.nextElementSibling.classList.contains('custom-validation-error')){
-                    existingErrorMsg = element.nextElementSibling;
-                }
+            } else if (element.nextElementSibling && element.nextElementSibling.classList.contains('custom-validation-error')) {
+                existingErrorMsg = element.nextElementSibling;
             }
             if (existingErrorMsg) {
                 existingErrorMsg.remove();
             }
 
             const errorMsg = document.createElement('p');
-            errorMsg.className = 'error-message custom-validation-error field-specific-error'; // Added field-specific-error
+            errorMsg.className = 'error-message custom-validation-error field-specific-error';
             errorMsg.textContent = message;
 
             if (parentGroup) {
-                parentGroup.appendChild(errorMsg); // Append error inside the group for better structure
+                parentGroup.appendChild(errorMsg);
                 if (fieldType === 'fileButton' && element.classList.contains('custom-file-upload-button')) {
                     element.classList.add('input-error');
-                } else if (element.type !== 'checkbox') { // Don't add to checkbox input itself
-                     element.classList.add('input-error');
+                } else if (element.type !== 'checkbox') {
+                    element.classList.add('input-error');
                 }
-                // For custom checkboxes, the error highlighting is handled by adding .input-error to parentGroup
             } else {
-                // Fallback: insert after the element if no parentGroup found
                 element.parentNode.insertBefore(errorMsg, element.nextSibling);
                 element.classList.add('input-error');
             }
-            return errorMsg; // Return the error message element for scrollIntoView
+            return errorMsg;
         }
 
         startupForm.addEventListener('submit', function(e) {
             let firstInvalidElementOrGroup = null;
             let validationPassed = true;
 
-            // Сброс предыдущих ошибок
             document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
-            document.querySelectorAll('.custom-validation-error').forEach(el => el.remove()); 
-            // document.querySelectorAll('.file-upload-area').forEach(el => el.classList.remove('input-error')); // .file-upload-area не используется как основной класс для ошибок
-            // document.querySelectorAll('.upload-box .custom-file-upload-button').forEach(el => el.classList.remove('input-error')); // Сброс выше
-            // document.querySelectorAll('.checkbox-group').forEach(el => el.classList.remove('input-error')); // Сброс выше
+            document.querySelectorAll('.custom-validation-error').forEach(el => el.remove());
             document.querySelectorAll('.timeline-step .step-number-wrapper').forEach(el => el.classList.remove('error-step'));
 
-            // --- Валидация всех обязательных полей --- 
             const requiredFields = [
-                // Текстовые поля и textarea
                 { id: '{{ form.title.id_for_label }}', name: 'Название стартапа', type: 'text' },
-                { id: '{{ form.funding_goal.id_for_label }}', name: 'Цель финансирования', type: 'text' }, // или number
+                { id: '{{ form.funding_goal.id_for_label }}', name: 'Цель финансирования', type: 'text' },
                 { id: '{{ form.short_description.id_for_label }}', name: 'Вводная', type: 'textarea' },
                 { id: '{{ form.description.id_for_label }}', name: 'Описание', type: 'textarea' },
                 { id: '{{ form.terms.id_for_label }}', name: 'Условия', type: 'textarea' },
-
-                // Select поля (проверка на выбранное значение)
                 { id: '{{ form.direction.id_for_label }}', name: 'Направление', type: 'select' },
                 { id: '{{ form.stage.id_for_label }}', name: 'Стадия', type: 'select' },
-
-                // Файловые поля
-                { id: 'id_logo_input', name: 'Логотип', type: 'file', required: true }, 
+                { id: 'id_logo_input', name: 'Логотип', type: 'file', required: true },
                 { id: 'id_creatives_input', name: 'Изображения', type: 'file', required: true },
                 { id: 'id_video_input', name: 'Видео', type: 'file', required: true },
-                // { id: 'id_proofs_input', name: 'Документы', type: 'file', required: true }, // Валидируется ниже отдельно
+                { id: 'id_planet_image', name: 'Планета', type: 'hidden' }
             ];
 
             for (const field of requiredFields) {
@@ -457,8 +486,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         if (!element.value.trim()) {
                             isInvalid = true;
                         }
-                    } else if (field.type === 'select') {
-                        if (element.value === '' || element.value === null) { // Или специфичное значение для "не выбрано"
+                    } else if (field.type === 'select' || field.type === 'hidden') {
+                        if (element.value === '' || element.value === null) {
                             isInvalid = true;
                         }
                     } else if (field.type === 'file' && field.required) {
@@ -473,14 +502,13 @@ document.addEventListener('DOMContentLoaded', function() {
                         if (!firstInvalidElementOrGroup) {
                             firstInvalidElementOrGroup = errorElement.closest('.form-group, .upload-box, .logo-upload-group') || errorElement;
                         }
-                        // Для файловых полей, если кнопка кастомная
                         if (field.type === 'file') {
                             const parentBox = element.closest('.upload-box, .logo-upload-group');
                             const uploadButton = parentBox ? parentBox.querySelector('.custom-file-upload-button, .logo-placeholder') : null;
                             if (uploadButton) {
                                 uploadButton.classList.add('input-error');
-                                if (!firstInvalidElementOrGroup || firstInvalidElementOrGroup === errorElement) { // Если еще не установлено или это ошибка самого поля
-                                     firstInvalidElementOrGroup = uploadButton;
+                                if (!firstInvalidElementOrGroup || firstInvalidElementOrGroup === errorElement) {
+                                    firstInvalidElementOrGroup = uploadButton;
                                 }
                             }
                         }
@@ -488,7 +516,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
 
-            // 1. Валидация описаний этапов таймлайна (оставляем существующую логику)
             const timelineTextareas = startupForm.querySelectorAll('textarea.timeline-description-textarea');
             let timelineErrorDisplayed = false;
             let firstTimelineErrorTextarea = null;
@@ -508,20 +535,19 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     if (!timelineErrorDisplayed) {
                         const timelineSection = document.getElementById('timeline');
-                        const timelineWrapper = timelineSection?.closest('.timeline-section-wrapper'); // Ищем обертку
+                        const timelineWrapper = timelineSection?.closest('.timeline-section-wrapper');
                         if (timelineWrapper && !timelineWrapper.querySelector('.custom-validation-error.timeline-general-error')) {
                             const errorMsg = document.createElement('p');
                             errorMsg.className = 'error-message custom-validation-error timeline-general-error';
                             errorMsg.textContent = 'Пожалуйста, заполните описания для всех пяти этапов таймлайна.';
-                             // Вставляем после h3
-                             const titleElement = timelineWrapper.querySelector('h3.section-title');
-                             if (titleElement) {
-                                 titleElement.parentNode.insertBefore(errorMsg, titleElement.nextSibling);
-                             } else {
-                                 timelineWrapper.insertBefore(errorMsg, timelineWrapper.firstChild);
-                             }
+                            const titleElement = timelineWrapper.querySelector('h3.section-title');
+                            if (titleElement) {
+                                titleElement.parentNode.insertBefore(errorMsg, titleElement.nextSibling);
+                            } else {
+                                timelineWrapper.insertBefore(errorMsg, timelineWrapper.firstChild);
+                            }
                             timelineErrorDisplayed = true;
-                            if (!firstInvalidElementOrGroup) firstInvalidElementOrGroup = timelineWrapper; // Скролл к обертке
+                            if (!firstInvalidElementOrGroup) firstInvalidElementOrGroup = timelineWrapper;
                         }
                     }
                 }
@@ -533,76 +559,69 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (!firstInvalidElementOrGroup) firstInvalidElementOrGroup = firstTimelineErrorTextarea;
             }
 
-            // 2. Валидация поля "Документы" (Пруфы) (оставляем существующую)
             const proofsInput = document.getElementById('id_proofs_input');
             const proofsLabelText = document.querySelector('label[for="id_proofs_input"]')?.textContent || '';
             const proofsUploadButton = proofsInput?.closest('.upload-box')?.querySelector('.custom-file-upload-button');
-            if (proofsInput && proofsLabelText.includes('*')) { 
+            if (proofsInput && proofsLabelText.includes('*')) {
                 if (proofsInput.files.length === 0) {
                     validationPassed = false;
                     const errorEl = displayValidationMessage(proofsUploadButton || proofsInput, 'Пожалуйста, загрузите Документы.', proofsUploadButton ? 'fileButton' : 'file');
                     if (!firstInvalidElementOrGroup) firstInvalidElementOrGroup = proofsUploadButton || proofsInput;
                 }
             }
-            
-            // 3. Валидация чекбокса "Согласие с правилами" (оставляем существующую)
+
             const agreeRulesCheckbox = document.getElementById('id_agree_rules');
-            if (agreeRulesCheckbox && (document.querySelector('label[for="id_agree_rules"] span.checkbox-text')?.textContent?.includes('*') || true)) { // Убрал includes('*') т.к. по логике они обязательны
-                if(!agreeRulesCheckbox.checked){
+            if (agreeRulesCheckbox && document.querySelector('label[for="id_agree_rules"] span.checkbox-text')?.textContent?.includes('*')) {
+                if (!agreeRulesCheckbox.checked) {
                     validationPassed = false;
                     const parentDiv = agreeRulesCheckbox.closest('.checkbox-group');
                     const errorEl = displayValidationMessage(parentDiv || agreeRulesCheckbox, 'Необходимо подтвердить согласие с правилами.', 'checkbox');
-                    if(parentDiv) parentDiv.classList.add('input-error');
+                    if (parentDiv) parentDiv.classList.add('input-error');
                     if (!firstInvalidElementOrGroup) firstInvalidElementOrGroup = parentDiv || agreeRulesCheckbox;
                 }
             }
 
-            // 4. Валидация чекбокса "Согласие на обработку данных" (оставляем существующую)
             const agreeDataProcessingCheckbox = document.getElementById('id_agree_data_processing');
-            if (agreeDataProcessingCheckbox && (document.querySelector('label[for="id_agree_data_processing"] span.checkbox-text')?.textContent?.includes('*') || true )) { // Убрал includes('*')
-                if(!agreeDataProcessingCheckbox.checked){
+            if (agreeDataProcessingCheckbox && document.querySelector('label[for="id_agree_data_processing"] span.checkbox-text')?.textContent?.includes('*')) {
+                if (!agreeDataProcessingCheckbox.checked) {
                     validationPassed = false;
                     const parentDiv = agreeDataProcessingCheckbox.closest('.checkbox-group');
                     const errorEl = displayValidationMessage(parentDiv || agreeDataProcessingCheckbox, 'Необходимо подтвердить согласие на обработку персональных данных.', 'checkbox');
-                    if(parentDiv) parentDiv.classList.add('input-error');
+                    if (parentDiv) parentDiv.classList.add('input-error');
                     if (!firstInvalidElementOrGroup) firstInvalidElementOrGroup = parentDiv || agreeDataProcessingCheckbox;
                 }
             }
 
-            // Логика предотвращения отправки и скролла
             const submitButton = this.querySelector('button[type="submit"]');
             if (!validationPassed) {
-                e.preventDefault(); 
+                e.preventDefault();
                 if (submitButton) {
                     submitButton.disabled = false;
                     submitButton.textContent = 'Отправить на модерацию';
                 }
                 if (firstInvalidElementOrGroup) {
-                    // Проверяем, является ли первый невалидный элемент текстовым полем таймлайна
-                    if (firstInvalidElementOrGroup.classList && firstInvalidElementOrGroup.classList.contains('timeline-description-textarea')){
+                    if (firstInvalidElementOrGroup.classList && firstInvalidElementOrGroup.classList.contains('timeline-description-textarea')) {
                         const container = firstInvalidElementOrGroup.closest('.timeline-description-container');
-                        // Если контейнер активен (виден), скроллим к полю
-                        if (container && container.classList.contains('active')){
-                             firstInvalidElementOrGroup.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        } else { // Иначе скроллим к началу секции таймлайна
-                           const timelineWrapper = document.querySelector('.timeline-section-wrapper');
-                           if (timelineWrapper) {
-                               timelineWrapper.scrollIntoView({ behavior: 'smooth', block: 'start' }); // Скролл к началу секции
-                           }
+                        if (container && container.classList.contains('active')) {
+                            firstInvalidElementOrGroup.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        } else {
+                            const timelineWrapper = document.querySelector('.timeline-section-wrapper');
+                            if (timelineWrapper) {
+                                timelineWrapper.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            }
                         }
-                    } else if (firstInvalidElementOrGroup.closest('.timeline-section-wrapper')) { // Если ошибка в заголовке таймлайна
-                         firstInvalidElementOrGroup.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    } else { // Для всех остальных ошибок
+                    } else if (firstInvalidElementOrGroup.closest('.timeline-section-wrapper')) {
+                        firstInvalidElementOrGroup.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    } else {
                         firstInvalidElementOrGroup.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     }
                 }
                 return false;
             } else {
-                // Блокировка кнопки при успешной валидации
                 if (submitButton) {
-                    if (submitButton.disabled) { 
-                         e.preventDefault();
-                         return;
+                    if (submitButton.disabled) {
+                        e.preventDefault();
+                        return;
                     }
                     submitButton.disabled = true;
                     submitButton.textContent = 'Отправка...';
@@ -611,57 +630,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // --- Helper function to display file upload errors ---
-    function displayFileUploadError(inputId, message) {
-        const fileInput = document.getElementById(inputId);
-        if (!fileInput) {
-            console.error('File input not found for error display:', inputId);
-            return;
-        }
-        // Находим родительский .upload-box или .logo-upload-group по fileInput
-        const dropArea = fileInput.closest('.upload-box, .logo-upload-group'); 
-
-        if (!dropArea) {
-            console.error('Drop area (parent .upload-box or .logo-upload-group) not found for input:', inputId);
-            return;
-        }
-
-        // Remove existing file-specific error message for this drop area
-        const existingError = dropArea.querySelector('.custom-validation-error.file-specific-upload-error');
-        if (existingError) {
-            existingError.remove();
-        }
-
-        const errorMsgElement = document.createElement('p');
-        errorMsgElement.className = 'error-message custom-validation-error file-specific-upload-error';
-        errorMsgElement.textContent = message;
-
-        // Try to append after the 'small-text' element or the upload button
-        const smallText = dropArea.querySelector('.small-text');
-        const uploadButton = dropArea.querySelector('.custom-file-upload-button');
-
-        if (smallText && smallText.nextSibling) {
-            smallText.parentNode.insertBefore(errorMsgElement, smallText.nextSibling);
-        } else if (smallText) {
-            smallText.parentNode.appendChild(errorMsgElement);
-        } else if (uploadButton && uploadButton.nextSibling) {
-            uploadButton.parentNode.insertBefore(errorMsgElement, uploadButton.nextSibling);
-        } else if (uploadButton) {
-            uploadButton.parentNode.appendChild(errorMsgElement);
-        } else {
-            dropArea.appendChild(errorMsgElement); // Fallback
-        }
-
-        if (uploadButton) {
-            uploadButton.classList.add('input-error');
-        } else {
-            dropArea.classList.add('input-error');
-        }
-        
-        errorMsgElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
-
-    // --- Drag & Drop для файлов (Обновлено для документов) ---
+    // --- Drag & Drop для файлов ---
     function setupDragAndDrop(inputId, dropAreaId, previewAreaId, allowedTypesDetails, isMultiple = false, maxFiles = 1) {
         const dropArea = document.getElementById(dropAreaId);
         const fileInput = document.getElementById(inputId);
@@ -672,27 +641,24 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
-        // Clear file input value before click to ensure change event fires even for the same file
         const customButton = dropArea.querySelector('.custom-file-upload-button');
         if (customButton) {
             customButton.addEventListener('click', () => {
                 console.log(`Clearing fileInput.value for ${inputId} before click.`);
-                fileInput.value = null; // << СБРОС ЗНАЧЕНИЯ ПЕРЕД ОТКРЫТИЕМ ДИАЛОГА
-                // fileInput.click(); // Это уже делается в HTML через onclick
+                fileInput.value = null;
             });
         }
 
-        checkPlaceholderVisibility(dropAreaId); 
+        checkPlaceholderVisibility(dropAreaId);
 
         dropArea.addEventListener('click', (e) => {
             if (e.target.closest('.delete-file-btn') || e.target.closest('.edit-file-btn')) {
                 return;
             }
-            // Сбрасываем значение перед программным кликом, если клик идет по dropArea, а не по кнопке
             if (!e.target.closest('.custom-file-upload-button')) {
-                 console.log(`Clearing fileInput.value for ${inputId} via dropArea click.`);
-                 fileInput.value = null;
-                 fileInput.click();
+                console.log(`Clearing fileInput.value for ${inputId} via dropArea click.`);
+                fileInput.value = null;
+                fileInput.click();
             }
         });
 
@@ -732,13 +698,11 @@ document.addEventListener('DOMContentLoaded', function() {
         updateFileActionButtonsState(previewAreaId);
     }
 
-    // Общая функция для обработки файлов и отображения превью
     function handleFiles(files, inputId, previewAreaId, allowedTypesDetails, isMultiple, maxFiles) {
         const fileInput = document.getElementById(inputId);
         const previewArea = document.getElementById(previewAreaId);
         const existingFileCount = previewArea.children.length;
 
-        // Удаляем предыдущие ошибки для этого поля загрузки
         const dropArea = fileInput.closest('.upload-box, .logo-upload-group');
         if (dropArea) {
             const existingError = dropArea.querySelector('.custom-validation-error.file-specific-upload-error');
@@ -753,7 +717,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log(`handleFiles called for inputId: ${inputId}. Received ${files.length} files. IsMultiple: ${isMultiple}, MaxFiles: ${maxFiles}, ExistingFilesInPreview: ${existingFileCount}`);
 
         if (!isMultiple) {
-            previewArea.innerHTML = ''; // Очищаем превью для одиночных файлов
+            previewArea.innerHTML = '';
             console.log('Cleared preview area for single file input.');
         }
 
@@ -767,10 +731,9 @@ document.addEventListener('DOMContentLoaded', function() {
         } else if (!isMultiple && filesToProcess.length > maxFiles) {
             displayFileUploadError(inputId, `Можно загрузить не более ${maxFiles} файла для этого поля.`);
             filesToProcess = filesToProcess.slice(0, maxFiles);
-            console.log(`Slicing files for single input (e.g. via drag-drop). New filesToProcess count: ${filesToProcess.length}`);
+            console.log(`Slicing files for single input. New filesToProcess count: ${filesToProcess.length}`);
         }
         
-        // Обновляем files в fileInput, если количество файлов было изменено из-за maxFiles
         if (filesToProcess.length < Array.from(files).length) {
             const dataTransfer = new DataTransfer();
             filesToProcess.forEach(file => dataTransfer.items.add(file));
@@ -795,22 +758,20 @@ document.addEventListener('DOMContentLoaded', function() {
             
             console.log(`File ${fileName} - Allowed: ${isAllowed}. Type found: ${fileType}, Ext found: ${fileExtension}. Allowed mimes: ${allowedTypesDetails.mimes.join(',')}, Allowed exts: ${allowedTypesDetails.extensions.join(',')}`);
 
-
             if (!isAllowed) {
                 displayFileUploadError(inputId, `Файл "${file.name}" имеет неподдерживаемый тип или расширение. Допустимые форматы: ${allowedTypesDetails.extensions.map(ext => ext.toUpperCase()).join(', ')}`);
                 console.warn(`File ${file.name} has unsupported type. Skipping.`);
-                // Удаляем этот файл из fileInput.files, если он там оказался (особенно актуально для drag-n-drop)
                 if (fileInput) {
                     const dt = new DataTransfer();
                     Array.from(fileInput.files).forEach(f => {
                         if (f.name !== file.name || f.size !== file.size || f.lastModified !== file.lastModified) {
-                           dt.items.add(f);
+                            dt.items.add(f);
                         }
                     });
                     fileInput.files = dt.files;
-                     console.log(`Removed disallowed file ${file.name} from input ${inputId}. New input count: ${fileInput.files.length}`);
+                    console.log(`Removed disallowed file ${file.name} from input ${inputId}. New input count: ${fileInput.files.length}`);
                 }
-                return; 
+                return;
             }
 
             const reader = new FileReader();
@@ -847,11 +808,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (!isMultiple) {
                     previewArea.innerHTML = previewItemHTML;
                 } else {
-                     if (previewArea.children.length < maxFiles) {
+                    if (previewArea.children.length < maxFiles) {
                         previewArea.insertAdjacentHTML('beforeend', previewItemHTML);
                     }
                 }
-                updateFileActionButtonsState(previewAreaId); 
+                updateFileActionButtonsState(previewAreaId);
             };
 
             if (file.type.startsWith('image/')) {
@@ -859,60 +820,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 reader.readAsDataURL(file);
             } else {
                 console.log(`Processing ${file.name} as non-image. Triggering onload directly.`);
-                reader.onload({ target: { result: null } }); 
+                reader.onload({ target: { result: null } });
             }
         });
 
         if (fileInput) {
-             fileInput.dataset.hadFile = previewArea.children.length > 0 ? 'true' : 'false';
-             console.log(`Finished processing for ${inputId}. Preview area has ${previewArea.children.length} items. hadFile: ${fileInput.dataset.hadFile}`);
+            fileInput.dataset.hadFile = previewArea.children.length > 0 ? 'true' : 'false';
+            console.log(`Finished processing for ${inputId}. Preview area has ${previewArea.children.length} items. hadFile: ${fileInput.dataset.hadFile}`);
         }
         updateFileActionButtonsState(previewAreaId);
-
-        // Микроинвестиции
-        const microCheckboxInput = document.getElementById('id_micro_investment_available');
-        const microLabel = document.querySelector('label[for="id_micro_investment_available"].micro-investment-label-new');
-
-        if (microCheckboxInput && microLabel) {
-            const visualUnchecked = microLabel.querySelector('.micro-checkbox-unchecked');
-            const visualChecked = microLabel.querySelector('.micro-checkbox-checked');
-
-            if (visualUnchecked && visualChecked) {
-                const updateMicroCheckboxVisual = () => {
-                    if (microCheckboxInput.checked) {
-                        visualUnchecked.style.display = 'none';
-                        visualChecked.style.display = 'inline-block';
-                    } else {
-                        visualUnchecked.style.display = 'inline-block';
-                        visualChecked.style.display = 'none';
-                    }
-                };
-
-                // Устанавливаем начальное состояние при загрузке
-                updateMicroCheckboxVisual();
-
-                // Обработчик клика на label
-                microLabel.addEventListener('click', function(e) {
-                    // Не предотвращаем стандартное поведение, label for сам переключит input
-                    // Просто обновим визуализацию ПОСЛЕ того, как браузер изменит состояние инпута
-                    // Используем setTimeout, чтобы дать браузеру время обновить .checked состояние
-                    setTimeout(updateMicroCheckboxVisual, 0);
-                });
-
-                // Также слушаем событие change на самом инпуте (на случай, если он меняется другим способом)
-                microCheckboxInput.addEventListener('change', updateMicroCheckboxVisual);
-
-            } else {
-                console.error('Visual elements for micro-investment checkbox not found inside label.');
-            }
-        } else {
-            console.error('Micro-investment checkbox input or its new label not found.');
-        }
     }
     
-    // Удаление файла из превью и из fileInput.files (Обновлено)
     document.addEventListener('click', function(event) {
-        const deleteButton = event.target.closest('.delete-file-btn'); // изменено с remove-file-btn
+        const deleteButton = event.target.closest('.delete-file-btn');
         if (deleteButton) {
             const previewItem = deleteButton.closest('.file-preview-item');
             if (!previewItem) return;
@@ -920,28 +840,25 @@ document.addEventListener('DOMContentLoaded', function() {
             const fileNameToRemove = previewItem.dataset.filename;
             const previewArea = previewItem.parentElement;
             
-            // Определяем связанный input по ID previewArea
-            // Например, creativesPreview -> id_creatives_input
-            const inputId = previewArea.id.replace('Preview', '_input'); 
+            const inputId = previewArea.id.replace('Preview', '_input');
             const fileInput = document.getElementById(inputId);
 
             if (fileInput) {
                 const dt = new DataTransfer();
                 const files = Array.from(fileInput.files);
                 files.forEach(file => {
-                    if (CSS.escape(file.name) !== fileNameToRemove) { // Сравнение экранированных имен
+                    if (CSS.escape(file.name) !== fileNameToRemove) {
                         dt.items.add(file);
                     }
                 });
-                fileInput.files = dt.files; // Обновляем files в input
+                fileInput.files = dt.files;
             }
-            previewItem.remove(); // Удаляем элемент из DOM
-            checkPlaceholderVisibility(previewArea.id.replace('Preview', 'DropArea')); // Обновляем видимость плейсхолдера
+            previewItem.remove();
+            checkPlaceholderVisibility(previewArea.id.replace('Preview', 'DropArea'));
             updateFileActionButtonsState(previewArea.id);
         }
     });
 
-    // Настройка Drag & Drop для всех полей
     setupDragAndDrop('id_creatives_input', 'creativesDropArea', 'creativesPreview', 
         { mimes: ['image/jpeg', 'image/png'], extensions: ['jpg', 'jpeg', 'png'] }, true, 3);
     setupDragAndDrop('id_video_input', 'videoDropArea', 'videoPreview', 
@@ -949,10 +866,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setupDragAndDrop('id_proofs_input', 'proofsDropArea', 'proofsPreview', 
         { mimes: ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'], extensions: ['pdf', 'doc', 'docx', 'xls', 'xlsx'] }, true, 3);
 
-
-    // --- Logic for custom checkboxes (Обновлено) ---
     function setupCustomCheckboxes() {
-        // Согласия
         document.querySelectorAll('.agreement-section .custom-checkbox-label').forEach(label => {
             const inputId = label.getAttribute('for');
             const input = document.getElementById(inputId);
@@ -963,9 +877,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 const updateAgreementIcons = () => {
                     if (input.checked) {
                         uncheckedVisual.style.display = 'none';
-                        checkedVisual.style.display = 'block'; // или 'inline-block' / 'flex' в зависимости от CSS для галочки
+                        checkedVisual.style.display = 'block';
                     } else {
-                        uncheckedVisual.style.display = 'block'; // или 'inline-block' / 'flex'
+                        uncheckedVisual.style.display = 'block';
                         checkedVisual.style.display = 'none';
                     }
                 };
@@ -974,7 +888,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // Микроинвестиции
         const microCheckboxInput = document.getElementById('id_micro_investment_available');
         const microLabel = document.querySelector('label[for="id_micro_investment_available"].micro-investment-label-new');
 
@@ -992,21 +905,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         visualChecked.style.display = 'none';
                     }
                 };
-
-                // Устанавливаем начальное состояние при загрузке
                 updateMicroCheckboxVisual();
-
-                // Обработчик клика на label
                 microLabel.addEventListener('click', function(e) {
-                    // Не предотвращаем стандартное поведение, label for сам переключит input
-                    // Просто обновим визуализацию ПОСЛЕ того, как браузер изменит состояние инпута
-                    // Используем setTimeout, чтобы дать браузеру время обновить .checked состояние
                     setTimeout(updateMicroCheckboxVisual, 0);
                 });
-
-                // Также слушаем событие change на самом инпуте (на случай, если он меняется другим способом)
                 microCheckboxInput.addEventListener('change', updateMicroCheckboxVisual);
-
             } else {
                 console.error('Visual elements for micro-investment checkbox not found inside label.');
             }
@@ -1016,7 +919,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     setupCustomCheckboxes();
 
-    // --- Translate Direction Options --- 
     function translateDirectionOptions() {
         const directionSelect = document.getElementById('{{ form.direction.id_for_label }}');
         if (!directionSelect) {
@@ -1039,11 +941,10 @@ document.addEventListener('DOMContentLoaded', function() {
             "Finance": "Финансы",
             "Healthcare": "Здравоохранение",
             "Technology": "Технологии"
-            // Добавьте другие переводы по аналогии, если необходимо
         };
 
         Array.from(directionSelect.options).forEach(option => {
-            const originalValue = option.textContent.trim(); // или option.value, если value содержит англ. название
+            const originalValue = option.textContent.trim();
             if (translations[originalValue]) {
                 option.textContent = translations[originalValue];
             }
@@ -1051,7 +952,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     translateDirectionOptions();
 
-    // --- Spin buttons for Valuation --- (Добавлено)
     const valuationInput = document.querySelector('.valuation-input input[type="number"]');
     const spinUp = document.querySelector('.valuation-spin-buttons .spin-up');
     const spinDown = document.querySelector('.valuation-spin-buttons .spin-down');
@@ -1065,7 +965,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Обновление состояния кнопок редактирования/удаления
     function updateFileActionButtonsState(previewAreaId) {
         const previewArea = document.getElementById(previewAreaId);
         if (!previewArea) return;
@@ -1074,36 +973,63 @@ document.addEventListener('DOMContentLoaded', function() {
         items.forEach(item => {
             const editBtn = item.querySelector('.edit-file-btn');
             const deleteBtn = item.querySelector('.delete-file-btn');
-            const fileName = item.dataset.filename; 
+            const fileName = item.dataset.filename;
 
             if (editBtn) {
-                editBtn.style.display = 'none'; // Функционал редактирования пока не реализован
+                editBtn.style.display = 'none';
             }
-            // Логика для deleteBtn уже в общем обработчике кликов документа
         });
     }
     
-    // Показываем/скрываем плейсхолдер (для кнопок "Выбрать файл")
     function checkPlaceholderVisibility(dropAreaId) {
         const dropArea = document.getElementById(dropAreaId);
         if (!dropArea) return;
-
-        // Эта функция, возможно, больше не нужна в таком виде, 
-        // так как "плейсхолдер" - это сама кнопка "Выбрать файл", которая всегда видна.
-        // Если речь шла о каком-то другом плейсхолдере, нужно уточнить.
-        // const previewAreaId = dropAreaId.replace('DropArea', 'Preview');
-        // const previewArea = document.getElementById(previewAreaId);
-        // const placeholder = dropArea.querySelector('.upload-placeholder'); // Если есть такой класс
-
-        // if (placeholder && previewArea) {
-        //     if (previewArea.children.length > 0) {
-        //         placeholder.style.display = 'none';
-        //     } else {
-        //         placeholder.style.display = 'flex'; 
-        //     }
-        // }
     }
 
+    function displayFileUploadError(inputId, message) {
+        const fileInput = document.getElementById(inputId);
+        if (!fileInput) {
+            console.error('File input not found for error display:', inputId);
+            return;
+        }
+        const dropArea = fileInput.closest('.upload-box, .logo-upload-group');
+        if (!dropArea) {
+            console.error('Drop area not found for input:', inputId);
+            return;
+        }
+
+        const existingError = dropArea.querySelector('.custom-validation-error.file-specific-upload-error');
+        if (existingError) {
+            existingError.remove();
+        }
+
+        const errorMsgElement = document.createElement('p');
+        errorMsgElement.className = 'error-message custom-validation-error file-specific-upload-error';
+        errorMsgElement.textContent = message;
+
+        const smallText = dropArea.querySelector('.small-text');
+        const uploadButton = dropArea.querySelector('.custom-file-upload-button');
+
+        if (smallText && smallText.nextSibling) {
+            smallText.parentNode.insertBefore(errorMsgElement, smallText.nextSibling);
+        } else if (smallText) {
+            smallText.parentNode.appendChild(errorMsgElement);
+        } else if (uploadButton && uploadButton.nextSibling) {
+            uploadButton.parentNode.insertBefore(errorMsgElement, uploadButton.nextSibling);
+        } else if (uploadButton) {
+            uploadButton.parentNode.appendChild(errorMsgElement);
+        } else {
+            dropArea.appendChild(errorMsgElement);
+        }
+
+        if (uploadButton) {
+            uploadButton.classList.add('input-error');
+        } else {
+            dropArea.classList.add('input-error');
+        }
+        
+        errorMsgElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
 });
 </script>
 {% endblock %}

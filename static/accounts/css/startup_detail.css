@@ -281,38 +281,88 @@ a:hover {
 }
 
 .planet-container {
-  /* Возвращаем исходные размеры и стили */
   width: 451px;
   height: 491px;
   flex-shrink: 0;
   border-radius: 10px;
-  border: 2px solid #353945; /* Подбираем цвет рамки под темную тему, если нужно */
-  /* background-color: #0e1014; */ /* Или ваш var(--dark-card-bg) */
-  background-color: var(--dark-card-bg); 
+  border: 2px solid #353945;
+  background-color: var(--dark-card-bg);
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* justify-content: space-around; */ /* Заменим на space-between для прижатия кнопки вниз */
-  justify-content: space-between; 
+  justify-content: space-between;
   padding: 20px;
   box-sizing: border-box;
   position: relative;
 }
 
+/* Удаляем старые стили для .startup-logo-container */
 .startup-logo-container {
-    /* Занимает всю доступную ширину и высоту, оставляя место под кнопку */
-    width: 100%; 
-    flex-grow: 1; /* Позволяем растягиваться по высоте */
-    margin-bottom: 20px; /* Отступ перед кнопкой чата */
-    border-radius: 10px; 
-    overflow: hidden; 
-    display: flex; 
-    align-items: center;
-    justify-content: center;
-    background-color: var(--secondary-blue); /* Фон на случай отсутствия лого */
-    position: relative; 
-    min-height: 0; /* Для корректной работы flex-grow */
+  display: none; /* Скрываем старый контейнер */
 }
+
+/* Новый контейнер для планеты */
+.planet-display-container {
+  width: 451px;
+  height: 40px;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--secondary-blue);
+  position: relative;
+  background-image: url('../images/starry_background.webp');
+  background-size: cover;
+  animation: starry-twinkle 10s infinite linear;
+}
+
+/* Анимация звездного фона */
+@keyframes starry-twinkle {
+  0% { background-position: 0 0; }
+  100% { background-position: 100px 100px; }
+}
+
+/* Изображение планеты */
+.planet-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+/* Плейсхолдер планеты */
+.planet-placeholder {
+  width: 30px;
+  height: 30px;
+  opacity: 0.5;
+}
+
+/* Новый контейнер для логотипа */
+.logo-display-container {
+  width: 451px;
+  height: 60px;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--secondary-blue);
+}
+
+/* Изображение логотипа */
+.logo-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+/* Плейсхолдер логотипа */
+.logo-placeholder {
+  width: 30px;
+  height: 30px;
+  opacity: 0.5;
+}
+
 
 .startup-logo-actual {
     display: block;
@@ -2501,3 +2551,50 @@ body.glightbox-open .glightbox-container {
     word-break: break-all; /* Перенос длинных имен файлов */
 }
 
+
+/* Звездный фон (космос) */
+.space-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('https://images.unsplash.com/photo-1447433819943-74a20987a81b') no-repeat center center;
+  background-size: cover;
+  z-index: 1;
+}
+
+/* Движущиеся звезды */
+.stars {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('https://www.transparenttextures.com/patterns/stardust.png') repeat;
+  opacity: 0.5;
+  animation: parallax 100s linear infinite;
+  z-index: 2;
+}
+
+/* Анимация параллакса для звезд */
+@keyframes parallax {
+  from { background-position: 0 0; }
+  to { background-position: 1000px 1000px; }
+}
+
+/* Изображение планеты */
+.planet-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  z-index: 3; /* Планета на переднем плане */
+}
+
+/* Плейсхолдер планеты */
+.planet-placeholder {
+  width: 30px;
+  height: 30px;
+  opacity: 0.5;
+  z-index: 3; /* Плейсхолдер на переднем плане */
+}

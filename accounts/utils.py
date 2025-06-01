@@ -43,3 +43,26 @@ def is_uuid(value):
         return True
     except ValueError:
         return False
+    
+from botocore.exceptions import ClientError
+
+def get_planet_urls():
+    s3_client = boto3.client(
+        's3',
+        endpoint_url=settings.AWS_S3_ENDPOINT_URL,
+        aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+        aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+        region_name=settings.AWS_S3_REGION_NAME
+    )
+    bucket_name = settings.AWS_STORAGE_BUCKET_NAME
+    prefix = 'choosable_planets/'
+    try:
+        response = s3_client.list_objects_v2(Bucket=bucket_name, Prefix=prefix)
+        if 'Contents' not in response:
+            logger.warning(f"No files found in {prefix}")
+            return []
+        planets = [obj['Key'].split('/')[-1] for obj in response['Contents'] if obj['Key'] != prefix]
+        return planets
+    except ClientError as e:
+        logger.error(f"Error listing planets: {e}")
+        return []

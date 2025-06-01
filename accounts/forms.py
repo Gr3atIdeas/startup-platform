@@ -2,6 +2,7 @@ from django import forms
 from .models import Users, Startups, Directions, StartupStages, ReviewStatuses, Comments
 from django import forms
 from .models import Users
+from .utils import get_planet_urls
 
 # Кастомный виджет для загрузки нескольких файлов
 class MultipleFileInput(forms.ClearableFileInput):
@@ -53,17 +54,23 @@ class LoginForm(forms.Form):
 
 # Форма создания стартапа
 class StartupForm(forms.ModelForm):
-    logo = forms.ImageField(label='Логотип', required=False, help_text="Загрузите логотип стартапа (изображение)")
-    creatives = MultipleFileField(required=False, help_text="Загрузите изображения (множественные файлы: PNG, JPEG)")
-    proofs = MultipleFileField(required=False, help_text="Загрузите документы (множественные файлы: PDF, DOC, TXT и т.д.)")
-    direction = forms.ModelChoiceField(queryset=Directions.objects.all(), label='Направление', required=True)
-    stage = forms.ModelChoiceField(queryset=StartupStages.objects.all(), label='Стадия', required=True)
-    agree_rules = forms.BooleanField(label='Согласен с правилами', required=True)
-    agree_data_processing = forms.BooleanField(label='Согласен с обработкой данных', required=True)
-    micro_investment_available = forms.BooleanField(required=False)
-    video = forms.FileField(required=False, help_text="Загрузите основное видео (MP4, MOV)")
-    short_description = forms.CharField(widget=forms.Textarea(attrs={'rows': 3}), label='Вводная (краткое описание)', required=False)
-    terms = forms.CharField(widget=forms.Textarea(attrs={'rows': 5}), label='Условия', required=False)
+    logo = forms.ImageField(label='Логотип *', required=True, help_text="Загрузите логотип стартапа (изображение)")
+    creatives = MultipleFileField(required=True, help_text="Загрузите изображения (до 3 файлов: PNG, JPEG)")
+    proofs = MultipleFileField(required=True, help_text="Загрузите документы (до 3 файлов: PDF, DOC, TXT)")
+    direction = forms.ModelChoiceField(queryset=Directions.objects.all(), label='Направление *', required=True)
+    stage = forms.ModelChoiceField(queryset=StartupStages.objects.all(), label='Стадия *', required=True)
+    agree_rules = forms.BooleanField(label='Согласен с правилами *', required=True)
+    agree_data_processing = forms.BooleanField(label='Согласен с обработкой данных *', required=True)
+    micro_investment_available = forms.BooleanField(required=False, label='Микроинвестиции доступны')
+    video = forms.FileField(required=True, help_text="Загрузите видео (MP4, MOV)")
+    short_description = forms.CharField(widget=forms.Textarea(attrs={'rows': 3}), label='Вводная *', required=True)
+    terms = forms.CharField(widget=forms.Textarea(attrs={'rows': 5}), label='Условия *', required=True)
+    planet_image = forms.ChoiceField(
+        choices=[(p, p) for p in get_planet_urls()],
+        label='Выберите планету *',
+        required=True,
+        widget=forms.HiddenInput(attrs={'id': 'id_planet_image'})
+    )
 
     INVESTMENT_TYPE_CHOICES = [
         ('invest', 'Инвестирование'),
@@ -72,7 +79,7 @@ class StartupForm(forms.ModelForm):
     ]
     investment_type = forms.ChoiceField(
         choices=INVESTMENT_TYPE_CHOICES,
-        label='Тип инвестирования',
+        label='Тип инвестирования *',
         required=True,
         widget=forms.Select(attrs={'class': 'form-control'})
     )
@@ -81,19 +88,18 @@ class StartupForm(forms.ModelForm):
         model = Startups
         fields = [
             'title', 'short_description', 'description', 'terms', 'funding_goal', 'amount_raised', 'valuation', 'pitch_deck_url', 'logo',
-            'direction', 'stage', 'investment_type',
-            'agree_rules', 'agree_data_processing', 'micro_investment_available',
-            'creatives', 'proofs', 'video'
+            'direction', 'stage', 'investment_type', 'agree_rules', 'agree_data_processing', 'micro_investment_available',
+            'creatives', 'proofs', 'video', 'planet_image'
         ]
         widgets = {
-            'title': forms.TextInput(attrs={'class': 'form-control'}),
-            'short_description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Краткое описание стартапа (до 255 символов)'}),
+            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ромашка'}),
+            'short_description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Краткое описание стартапа'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 5, 'placeholder': 'Подробное описание стартапа'}),
-            'terms': forms.Textarea(attrs={'class': 'form-control', 'rows': 5, 'placeholder': 'Условия сотрудничества, если есть'}),
-            'funding_goal': forms.NumberInput(attrs={'class': 'form-control'}),
-            'amount_raised': forms.NumberInput(attrs={'class': 'form-control'}),
-            'valuation': forms.NumberInput(attrs={'class': 'form-control'}),
-            'pitch_deck_url': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'https://example.com/presentation'}),
+            'terms': forms.Textarea(attrs={'class': 'form-control', 'rows': 5, 'placeholder': 'Условия сотрудничества'}),
+            'funding_goal': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Введите сумму ₽'}),
+            'amount_raised': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Введите сумму'}),
+            'valuation': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': '1'}),
+            'pitch_deck_url': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'https://example.com'}),
             'direction': forms.Select(attrs={'class': 'form-control'}),
             'stage': forms.Select(attrs={'class': 'form-control'}),
             'logo': forms.FileInput(attrs={'class': 'form-control-file'}),
@@ -102,7 +108,7 @@ class StartupForm(forms.ModelForm):
             'title': 'Название стартапа *',
             'short_description': 'Вводная *',
             'description': 'Описание *',
-            'terms': 'Условия',
+            'terms': 'Условия *',
             'funding_goal': 'Цель финансирования (₽) *',
             'amount_raised': 'Собранная сумма (₽)',
             'valuation': 'Оценка (₽)',
@@ -110,14 +116,44 @@ class StartupForm(forms.ModelForm):
             'investment_type': 'Тип инвестирования *',
             'direction': 'Направление *',
             'stage': 'Стадия *',
-            'logo': 'Логотип',
-            'creatives': 'Изображения',
-            'video': 'Видео',
-            'proofs': 'Документы',
-            'micro_investment_available': 'Включить микро-инвестиции',
+            'logo': 'Логотип *',
+            'creatives': 'Изображения *',
+            'video': 'Видео *',
+            'proofs': 'Документы *',
+            'micro_investment_available': 'Микроинвестиции доступны',
             'agree_rules': 'Согласен с правилами *',
             'agree_data_processing': 'Согласен с обработкой данных *',
         }
+
+    def clean_title(self):
+        title = self.cleaned_data.get('title')
+        if not self.instance or not self.instance.pk:
+            if Startups.objects.filter(title__iexact=title).exists():
+                raise forms.ValidationError("Стартап с таким названием уже существует.")
+        else:
+            if Startups.objects.filter(title__iexact=title).exclude(pk=self.instance.pk).exists():
+                raise forms.ValidationError("Другой стартап с таким названием уже существует.")
+        return title
+
+    def clean(self):
+        cleaned_data = super().clean()
+        creatives = cleaned_data.get('creatives', [])
+        if isinstance(creatives, list) and all(isinstance(item, list) for item in creatives):
+            cleaned_data['creatives'] = [file for sublist in creatives for file in sublist]
+        elif creatives and not isinstance(creatives, list):
+            cleaned_data['creatives'] = [creatives]
+        else:
+            cleaned_data['creatives'] = creatives if creatives else []
+
+        proofs = cleaned_data.get('proofs', [])
+        if isinstance(proofs, list) and all(isinstance(item, list) for item in proofs):
+            cleaned_data['proofs'] = [file for sublist in proofs for file in sublist]
+        elif proofs and not isinstance(proofs, list):
+            cleaned_data['proofs'] = [proofs]
+        else:
+            cleaned_data['proofs'] = proofs if proofs else []
+
+        return cleaned_data
 
     def clean_title(self):
         title = self.cleaned_data.get('title')

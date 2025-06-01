@@ -698,7 +698,6 @@ def create_startup(request):
             except ReviewStatuses.DoesNotExist:
                 raise ValueError("Статус 'Pending' не найден в базе данных.")
             
-            # Обработка типа инвестирования
             investment_type = form.cleaned_data.get('investment_type')
             if investment_type == 'invest':
                 startup.only_invest = True
@@ -709,18 +708,17 @@ def create_startup(request):
                 startup.only_buy = True
                 startup.both_mode = False
             elif investment_type == 'both':
-                startup.only_invest = False # или True, в зависимости от вашей логики, если 'both' подразумевает и то, и другое
-                startup.only_buy = False    # или True
+                startup.only_invest = False
+                startup.only_buy = False
                 startup.both_mode = True
 
-            # Устанавливаем текущий шаг из формы
             startup.step_number = int(request.POST.get('step_number', 1))
-            startup.save() # Сохраняем основные данные стартапа, включая short_description и terms
+            startup.planet_image = form.cleaned_data.get('planet_image')
+            startup.save()
 
-            # Сохранение всех 5 этапов таймлайна
             for i in range(1, 6):
                 description = request.POST.get(f'step_description_{i}', '').strip()
-                if description:  # Сохраняем только этапы с описанием
+                if description:
                     StartupTimeline.objects.create(
                         startup=startup,
                         step_number=i,
@@ -728,37 +726,42 @@ def create_startup(request):
                         description=description
                     )
 
-            # Инициализация списков для ID файлов
             logo_ids = []
             creatives_ids = []
             proofs_ids = []
             video_ids = []
 
-            # Сохранение логотипа
             logo = form.cleaned_data.get('logo')
             if logo:
                 logo_id = str(uuid.uuid4())
-                file_path = f"startups/{startup.startup_id}/logos/{logo_id}_{logo.name}"
-                default_storage.save(file_path, logo)
-                logo_ids.append(logo_id)
-                logger.info(f"Логотип сохранён с ID: {logo_id}")
+                base_name = os.path.splitext(logo.name)[0]
+                ext = os.path.splitext(logo.name)[1]
+                safe_name = slugify(base_name) + ext
+                file_path = f"startups/{startup.startup_id}/logos/{logo_id}_{safe_name}"
+                try:
+                    default_storage.save(file_path, logo)
+                    logo_ids.append(logo_id)
+                    logger.info(f"Логотип сохранён: {file_path}")
+                except Exception as e:
+                    logger.error(f"Ошибка сохранения логотипа: {e}")
+                    raise
 
-            # Сохранение креативов
             creatives = form.cleaned_data.get('creatives', [])
             if creatives:
-                # OLD: creative_type = FileTypes.objects.get(type_name='creative')
-                # OLD: entity_type = EntityTypes.objects.get(type_name='startup')
                 creative_type, _ = FileTypes.objects.get_or_create(type_name='creative')
                 entity_type, _ = EntityTypes.objects.get_or_create(type_name='startup')
                 for creative_file in creatives:
                     if not hasattr(creative_file, 'name'):
-                        logger.warning(f"Пропущен креатив, так как это не файл: {creative_file}")
+                        logger.warning(f"Пропущен креатив: {creative_file}")
                         continue
                     creative_id = str(uuid.uuid4())
-                    file_path = f"startups/{startup.startup_id}/creatives/{creative_id}_{creative_file.name}"
+                    base_name = os.path.splitext(creative_file.name)[0]
+                    ext = os.path.splitext(creative_file.name)[1]
+                    safe_name = slugify(base_name) + ext
+                    file_path = f"startups/{startup.startup_id}/creatives/{creative_id}_{safe_name}"
                     default_storage.save(file_path, creative_file)
                     creatives_ids.append(creative_id)
-                    file_storage = FileStorage(
+                    FileStorage.objects.create(
                         entity_type=entity_type,
                         entity_id=startup.startup_id,
                         file_type=creative_type,
@@ -766,25 +769,24 @@ def create_startup(request):
                         uploaded_at=timezone.now(),
                         startup=startup
                     )
-                    file_storage.save()
-                    logger.info(f"Креатив сохранён с ID: {creative_id}")
+                    logger.info(f"Креатив сохранён: {file_path}")
 
-            # Сохранение пруфов
             proofs = form.cleaned_data.get('proofs', [])
             if proofs:
-                # OLD: proof_type = FileTypes.objects.get(type_name='proof')
-                # OLD: entity_type = EntityTypes.objects.get(type_name='startup') # entity_type уже получен выше, можно переиспользовать или получить снова с get_or_create
                 proof_type, _ = FileTypes.objects.get_or_create(type_name='proof')
-                entity_type, _ = EntityTypes.objects.get_or_create(type_name='startup') # Повторный вызов для безопасности, если он не был получен ранее
+                entity_type, _ = EntityTypes.objects.get_or_create(type_name='startup')
                 for proof_file in proofs:
                     if not hasattr(proof_file, 'name'):
-                        logger.warning(f"Пропущен пруф, так как это не файл: {proof_file}")
+                        logger.warning(f"Пропущен пруф: {proof_file}")
                         continue
                     proof_id = str(uuid.uuid4())
-                    file_path = f"startups/{startup.startup_id}/proofs/{proof_id}_{proof_file.name}"
+                    base_name = os.path.splitext(proof_file.name)[0]
+                    ext = os.path.splitext(proof_file.name)[1]
+                    safe_name = slugify(base_name) + ext
+                    file_path = f"startups/{startup.startup_id}/proofs/{proof_id}_{safe_name}"
                     default_storage.save(file_path, proof_file)
                     proofs_ids.append(proof_id)
-                    file_storage = FileStorage(
+                    FileStorage.objects.create(
                         entity_type=entity_type,
                         entity_id=startup.startup_id,
                         file_type=proof_type,
@@ -792,20 +794,20 @@ def create_startup(request):
                         uploaded_at=timezone.now(),
                         startup=startup
                     )
-                    file_storage.save()
-                    logger.info(f"Пруф сохранён с ID: {proof_id}")
+                    logger.info(f"Пруф сохранён: {file_path}")
 
-            # Сохранение видео
             video = form.cleaned_data.get('video')
             if video:
                 video_id = str(uuid.uuid4())
-                file_path = f"startups/{startup.startup_id}/videos/{video_id}_{video.name}"
+                base_name = os.path.splitext(video.name)[0]
+                ext = os.path.splitext(video.name)[1]
+                safe_name = slugify(base_name) + ext
+                file_path = f"startups/{startup.startup_id}/videos/{video_id}_{safe_name}"
                 default_storage.save(file_path, video)
                 video_ids.append(video_id)
                 video_type, _ = FileTypes.objects.get_or_create(type_name='video')
-                # OLD: entity_type = EntityTypes.objects.get(type_name='startup')
-                entity_type, _ = EntityTypes.objects.get_or_create(type_name='startup') # Убедимся, что он есть
-                file_storage = FileStorage(
+                entity_type, _ = EntityTypes.get_or_create(type_name='startup')
+                FileStorage.objects.create(
                     entity_type=entity_type,
                     entity_id=startup.startup_id,
                     file_type=video_type,
@@ -813,81 +815,19 @@ def create_startup(request):
                     uploaded_at=timezone.now(),
                     startup=startup
                 )
-                file_storage.save()
-                logger.info(f"Видео сохранено с ID: {video_id}")
+                logger.info(f"Видео сохранено: {file_path}")
 
-            # Сохранение списков ID в поля jsonb
             startup.logo_urls = logo_ids
             startup.creatives_urls = creatives_ids
             startup.proofs_urls = proofs_ids
             startup.video_urls = video_ids
             startup.save()
 
-            # Логирование (оставлено без изменений)
-            logger.info("=== Отправка стартапа на модерацию ===")
-            logger.info(f"Стартап ID: {startup.startup_id}")
-            if logo:
-                logger.info(f"Логотип: {logo.name}, размер: {logo.size} байт")
-                logger.info(f"ID логотипа: {logo_ids[0] if logo_ids else 'Не сохранён'}")
-            else:
-                logger.info("Логотип не загружен")
-            if creatives:
-                logger.info(f"Креативы: {len(creatives)} файлов")
-                for i, creative_file in enumerate(creatives, 1):
-                    if hasattr(creative_file, 'name'):
-                        logger.info(f"Креатив {i}: {creative_file.name}, размер: {creative_file.size} байт")
-                    else:
-                        logger.info(f"Креатив {i}: Неверный формат (не файл): {creative_file}")
-            else:
-                logger.info("Креативы не загружены")
-            if proofs:
-                logger.info(f"Пруфы: {len(proofs)} файлов")
-                for i, proof_file in enumerate(proofs, 1):
-                    if hasattr(proof_file, 'name'):
-                        logger.info(f"Пруф {i}: {proof_file.name}, размер: {proof_file.size} байт")
-                    else:
-                        logger.info(f"Пруф {i}: Неверный формат (не файл): {proof_file}")
-            else:
-                logger.info("Пруфы не загружены")
-            if video:
-                logger.info(f"Видео: {video.name}, размер: {video.size} байт")
-                logger.info(f"ID видео: {video_ids[0] if video_ids else 'Не сохранён'}")
-            else:
-                logger.info("Видео не загружено")
-            logger.info("=== Переменные окружения ===")
-            for key, value in os.environ.items():
-                logger.info(f"{key}: {value}")
-            logger.info("=== Настройки Yandex Object Storage ===")
-            logger.info(f"AWS_ACCESS_KEY_ID: {getattr(settings, 'AWS_ACCESS_KEY_ID', 'Не задано')}")
-            logger.info(f"AWS_SECRET_ACCESS_KEY: {getattr(settings, 'AWS_SECRET_ACCESS_KEY', 'Не задано')}")
-            logger.info(f"AWS_STORAGE_BUCKET_NAME: {getattr(settings, 'AWS_STORAGE_BUCKET_NAME', 'Не задано')}")
-            logger.info(f"AWS_S3_ENDPOINT_URL: {getattr(settings, 'AWS_S3_ENDPOINT_URL', 'Не задано')}")
-            logger.info(f"AWS_DEFAULT_ACL: {getattr(settings, 'AWS_DEFAULT_ACL', 'Не задано')}")
-            logger.info("=== Проверка STORAGES ===")
-            logger.info(f"STORAGES['default']['BACKEND']: {settings.STORAGES['default']['BACKEND']}")
-            logger.info(f"default_storage: {default_storage.__class__.__name__}")
-            logger.info("=== Проверка подключения к Yandex Object Storage ===")
-            try:
-                from storages.backends.s3boto3 import S3Boto3Storage
-                from django.core.files.base import ContentFile
-                storage = S3Boto3Storage()
-                test_file_name = f"test/test_file_{startup.startup_id}.txt"
-                test_content = "This is a test file to check Yandex Object Storage connection."
-                test_file = ContentFile(test_content.encode('utf-8'))
-                storage.save(test_file_name, test_file)
-                logger.info(f"Тестовый файл успешно сохранён: {test_file_name}")
-                test_file_url = storage.url(test_file_name)
-                logger.info(f"URL тестового файла: {test_file_url}")
-                storage.delete(test_file_name)
-                logger.info(f"Тестовый файл удалён: {test_file_name}")
-            except Exception as e:
-                logger.error(f"Ошибка подключения к Yandex Object Storage: {str(e)}", exc_info=True)
-
+            logger.info(f"Стартап создан: ID={startup.startup_id}, Planet={startup.planet_image}")
             messages.success(request, f'Стартап "{startup.title}" успешно создан и отправлен на модерацию!')
-            return redirect('startup_creation_success') # <--- ИЗМЕНЕНО ЗДЕСЬ
+            return redirect('startup_creation_success')
         else:
             messages.error(request, 'Форма содержит ошибки.')
-            # Здесь оставляем render, чтобы показать ошибки на той же странице
             return render(request, 'accounts/create_startup.html', {'form': form, 'timeline_steps': request.POST})
     else:
         form = StartupForm()
