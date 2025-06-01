@@ -740,7 +740,9 @@ def create_startup(request):
                 safe_name = slugify(base_name) + ext
                 file_path = f"startups/{startup.startup_id}/logos/{logo_id}_{safe_name}"
                 try:
+                    logger.info(f"Попытка сохранить логотип по пути: {file_path}")
                     default_storage.save(file_path, logo)
+                    logger.info(f"Логотип успешно сохранён по пути: {file_path}")
                     logo_ids.append(logo_id)
                     logger.info(f"Логотип сохранён: {file_path}")
                 except Exception as e:
