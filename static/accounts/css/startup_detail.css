@@ -2722,3 +2722,19 @@ body.glightbox-open .glightbox-container {
     line-height: 1.6;
     margin: 0;
 }
+
+.rating-stars[data-interactive="true"] .rating-icon-container {
+    cursor: pointer;
+}
+
+.rating-icon-container .icon-filled {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0%;
+    overflow: hidden;
+    z-index: 2;
+    filter: none;
+    transition: width 0.2s ease;
+}
