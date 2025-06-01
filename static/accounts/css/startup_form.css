@@ -64,7 +64,7 @@ body {
 .form-top-left {
     display: flex;
     align-items: flex-start;
-    gap: 35px; /* Отступ между лого и полями слева */
+    gap: 20px; /* Отступ между лого и полями слева */
     flex-grow: 1; /* Позволяет занимать доступное пространство */
 }
 
@@ -1265,6 +1265,7 @@ body, .startup-form-container { /* Example, adjust selector as needed */
     display: flex;
     flex-direction: column;
     gap: 10px;
+    width: 100%;
 }
 
 .planet-upload-group .planet-upload-label {
@@ -1302,8 +1303,8 @@ body, .startup-form-container { /* Example, adjust selector as needed */
 }
 
 .planet-display {
-    width: 144px;
-    height: 144px;
+    width: 450px;
+    height: 451px;
     border-radius: 5px;
     background-color: #333;
     overflow: hidden;
@@ -1325,4 +1326,15 @@ body, .startup-form-container { /* Example, adjust selector as needed */
 
 .planet-preview.slide-right {
     transform: translateX(100%);
+}
+
+.logo-upload-group .logo-upload-label {
+    display: block;
+    width: 200px;
+    height: 100px; /* Половина высоты области планет */
+    border-radius: 5px;
+    background-color: #333;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
 }

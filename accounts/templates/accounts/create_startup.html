@@ -20,38 +20,38 @@
         <div class="form-section-top">
             <div class="form-top-grid">
                 <div class="form-top-left">
-                    <div class="form-group planet-upload-group">
-                        <label class="planet-upload-label">Выберите планету *</label>
-                        <div class="planet-selector">
-                            <button type="button" class="planet-nav-button prev-planet" aria-label="Предыдущая планета">
-                                <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="Previous">
-                            </button>
-                            <div class="planet-display">
-                                <img src="" alt="Планета" class="planet-preview" id="planetPreview">
-                            </div>
-                            <button type="button" class="planet-nav-button next-planet" aria-label="Следующая планета">
-                                <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="Next">
-                            </button>
-                        </div>
-                        {{ form.planet_image|add_class:"form-control"|attr:"id:id_planet_image" }}
-                        {% if form.planet_image.errors %}
-                            <span class="error-message">{{ form.planet_image.errors|first }}</span>
-                        {% endif %}
+                <div class="form-group planet-upload-group">
+                    <label class="planet-upload-label">Выберите планету *</label>
+                    <div class="planet-selector">
+                    <button type="button" class="planet-nav-button prev-planet" aria-label="Предыдущая планета">
+                        <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="Previous">
+                    </button>
+                    <div class="planet-display">
+                        <img src="" alt="Планета" class="planet-preview" id="planetPreview">
                     </div>
-                    <div class="form-group logo-upload-group">
-                        <label for="{{ form.logo.id_for_label }}" class="logo-upload-label">
-                            <div class="logo-placeholder" id="logoPlaceholder">
-                                <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Upload Logo Icon">
-                                <span>*Загрузить логотип</span>
-                            </div>
-                            <img src="" alt="Логотип" class="logo-preview" id="logoPreview" style="display:none;">
-                        </label>
-                        {{ form.logo|add_class:"form-control-file"|attr:"id:id_logo_input"|attr:"style:display:none;" }}
-                        {% if form.logo.errors %}
-                            <span class="error-message">{{ form.logo.errors|first }}</span>
-                        {% endif %}
+                    <button type="button" class="planet-nav-button next-planet" aria-label="Следующая планета">
+                        <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="Next">
+                    </button>
                     </div>
-                    <div class="form-fields-left">
+                    {{ form.planet_image|add_class:"form-control"|attr:"id:id_planet_image" }}
+                    {% if form.planet_image.errors %}
+                    <span class="error-message">{{ form.planet_image.errors|first }}</span>
+                    {% endif %}
+                </div>
+                <div class="form-group logo-upload-group">
+                    <label for="{{ form.logo.id_for_label }}" class="logo-upload-label">
+                    <div class="logo-placeholder" id="logoPlaceholder">
+                        <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Upload Logo Icon">
+                        <span>*Загрузить логотип</span>
+                    </div>
+                    <img src="" alt="Логотип" class="logo-preview" id="logoPreview" style="display:none;">
+                    </label>
+                    {{ form.logo|add_class:"form-control-file"|attr:"id:id_logo_input"|attr:"style:display:none;" }}
+                    {% if form.logo.errors %}
+                    <span class="error-message">{{ form.logo.errors|first }}</span>
+                    {% endif %}
+                </div>
+                <div class="form-fields-left">
                         <div class="form-group">
                             <label for="{{ form.title.id_for_label }}">*{{ form.title.label }}</label>
                             <div class="input-wrapper">
@@ -280,11 +280,11 @@
 </div>
 
 <script>
-const creatStartupStaticUrl = "{% static 'accounts/images/creat_startup/' %}";
-const planetChoices = [{% for choice in form.planet_image.field.choices %}"{{ choice.0|escapejs }}"{% if not forloop.last %},{% endif %}{% endfor %}];
-const planetBaseUrl = "https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/";
+    const creatStartupStaticUrl = "{% static 'accounts/images/creat_startup/' %}";
+    const planetChoices = [{% for choice in form.planet_image.field.choices %}"{{ choice.0|escapejs }}"{% if not forloop.last %},{% endif %}{% endfor %}];
+    const planetBaseUrl = "https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/";
 
-document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function() {
     // --- Планеты ---
     const planetInput = document.getElementById('id_planet_image');
     const planetPreview = document.getElementById('planetPreview');
@@ -294,9 +294,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function updatePlanetDisplay() {
         if (planetChoices.length === 0) {
-            planetPreview.src = 'https://via.placeholder.com/150';
-            planetInput.value = '';
-            return;
+        planetPreview.src = 'https://via.placeholder.com/150';
+        planetInput.value = '';
+        return;
         }
         planetPreview.src = planetBaseUrl + planetChoices[currentPlanetIndex];
         planetInput.value = planetChoices[currentPlanetIndex];
