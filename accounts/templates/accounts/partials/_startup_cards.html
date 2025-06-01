@@ -5,10 +5,11 @@
 
 {% for startup in page_obj %}
   <div class="startup-card" data-startup-id="{{ startup.startup_id }}">
-    <span class="startup-franchise-tag">Франшиза</span>
+    <!-- Надпись "Франшиза" заменена на "Стартап" -->
+    <span class="startup-franchise-tag">Стартап</span>
     <div class="startup-image">
-      {% if startup.logo_urls %}
-        <img src="{% get_file_url_tag startup.logo_urls.0 startup.startup_id 'logo' %}" alt="{{ startup.title }}" class="startup-logo-img">
+      {% if startup.planet_image %}
+        <img src="https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/{{ startup.planet_image }}" alt="Планета {{ startup.title }}" class="planet-image">
       {% else %}
         <div class="startup-image-placeholder">
           {{ startup.title|make_list|first|upper }}
@@ -17,7 +18,15 @@
     </div>
 
     <div class="startup-card-inner">
-      <h3 class="startup-title">{{ startup.title }}</h3>
+      <!-- Добавляем контейнер для названия и логотипа -->
+      <div class="startup-title-container">
+        {% if startup.logo_urls %}
+          <div class="startup-logo">
+            <img src="{% get_file_url_tag startup.logo_urls.0 startup.startup_id 'logo' %}" alt="Логотип {{ startup.title }}">
+          </div>
+        {% endif %}
+        <h3 class="startup-title">{{ startup.title }}</h3>
+      </div>
       <div class="startup-rating-comments">
         <span class="rating-text">Рейтинг {{ startup.get_average_rating|floatformat:1 }}/5 ({{ startup.total_voters }})</span>
         <span class="comments-count">
@@ -29,23 +38,22 @@
       </div>
 
       <div class="startup-category-row">
-          {% if startup.direction and startup.direction.direction_name %}
-            <span class="category-tag-figma">{{ startup.direction.direction_name|translate_category }}</span>
-          {% else %}
-            <span class="category-tag-figma category-tag-placeholder">Категория не указана</span>
-          {% endif %}
+        {% if startup.direction and startup.direction.direction_name %}
+          <span class="category-tag-figma">{{ startup.direction.direction_name|translate_category }}</span>
+        {% else %}
+          <span class="category-tag-figma category-tag-placeholder">Категория не указана</span>
+        {% endif %}
       </div>
 
       <!-- Прогресс-бар ТОЧНО как на startup_detail.html -->
       {% with progress=startup.get_progress_percentage|default:0 %}
-      <div class="progress-container"> {# Используем обертку от detail #}
-        <div class="progress-bar-visual"> {# Визуальная часть #}
-          <div class="progress-animation-container" style="width: '{{ progress }}%';"> {# Анимируемый контейнер #}
-            <div class="progress-planets"></div> {# Для анимации планет #}
+      <div class="progress-container">
+        <div class="progress-bar-visual">
+          <div class="progress-animation-container" style="width: {{ progress }}%;">
+            <div class="progress-planets"></div>
           </div>
           <span class="progress-percentage">{{ progress|floatformat:0 }}%</span>
         </div>
-        {# Блок .progress-backers-info из detail здесь не нужен #}
       </div>
       {% endwith %}
 
@@ -71,4 +79,4 @@
       <a href="{% url 'startup_detail' startup_id=startup.startup_id %}" class="detail-link" aria-label="Подробнее о {{ startup.title }}"></a>
     </div>
   </div>
-{% endfor %} 
+{% endfor %}

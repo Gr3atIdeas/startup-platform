@@ -65,6 +65,29 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Новая функция для анимации прогресс-бара
+    function updateAnimatedProgressBars(containerElement) {
+        if (!containerElement) return;
+        const visualContainers = containerElement.querySelectorAll('.progress-bar-visual');
+        
+        visualContainers.forEach(container => {
+            const animationContainer = container.querySelector('.progress-animation-container');
+            const percentageSpan = container.querySelector('.progress-percentage');
+            
+            if (animationContainer && percentageSpan) {
+                const textContent = percentageSpan.textContent || '0%';
+                const progressPercentValue = parseInt(textContent, 10) || 0;
+                
+                setTimeout(() => {
+                    animationContainer.style.width = progressPercentValue + '%';
+                }, 100);
+            } else {
+                if (!animationContainer) console.error('Animation container (.progress-animation-container) not found in:', container);
+                if (!percentageSpan) console.error('Progress text span (.progress-percentage) not found in:', container);
+            }
+        });
+    }
+
     // 1. Синхронизация прогресс-бара
     const progressAnimationContainer = document.querySelector('.progress-animation-container');
     const progressPercentageSpan = document.querySelector('.progress-percentage');
@@ -74,6 +97,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const initialProgressValue = parseFloat(initialProgressWidth) || 0;
         progressPercentageSpan.textContent = `${Math.round(initialProgressValue)}%`;
     }
+
+    // Вызываем функцию анимации прогресс-бара
+    const startupDetailPage = document.querySelector('.startup-detail-page');
+    updateAnimatedProgressBars(startupDetailPage);
 
     // 2. Отображение начального рейтинга
     const ratingDisplayContainer = '.rating-stars[data-rating]';

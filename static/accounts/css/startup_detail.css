@@ -2738,3 +2738,74 @@ body.glightbox-open .glightbox-container {
     filter: none;
     transition: width 0.2s ease;
 }
+
+/* Стили для прогресс-бара (уже есть, но для контекста) */
+.progress-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.progress-bar-visual {
+    position: relative;
+    width: 100%;
+    height: 24px;
+    background: var(--dark-card-bg);
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+}
+
+.progress-animation-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--accent-yellow) 0%, var(--accent-purple) 100%);
+    transition: width 1s ease;
+}
+
+.progress-percentage {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--text-primary);
+    font-family: 'Unbounded', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.progress-backers-info {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+.progress-backers-info i {
+    color: var(--accent-yellow);
+}
+
+/* Новые стили для цели инвестиций */
+.funding-goal-info {
+    display: flex;
+    gap: 8px;
+    color: var(--text-secondary);
+    font-family: 'Unbounded', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.funding-goal-label {
+    color: var(--text-secondary);
+}
+
+.funding-goal-value {
+    color: var(--text-primary);
+    font-weight: 600;
+}
