@@ -2351,14 +2351,17 @@ body.glightbox-open .glightbox-container {
     fill: white !important;
 }
 
-/* --- Стили для блока модератора --- */
-/* Добавляем стили для .moderator-section-container если их нет, или модифицируем существующие */
+/* Стили для .moderator-section-container */
 .moderator-section-container {
-    /* width: 1303px; */ /* Явно задаем ширину - было в прошлом шаге, сохраняем */
     width: 1303px;
     margin-left: auto;
     margin-right: auto;
-    padding: 0 30px; /* Для выравнивания внутреннего контента - оставляем как было */
+    padding: 0 30px;
+    background: var(--secondary-blue); /* Добавляем тёмный фон */
+    border-radius: 20px; /* Добавляем закругление */
+    border: 1px solid var(--border-color); /* Добавляем рамку */
+    box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.25); /* Добавляем тень */
+    backdrop-filter: blur(10px); /* Добавляем размытие */
 }
 
 /* ======================================== */
@@ -2592,4 +2595,130 @@ body.glightbox-open .glightbox-container {
   height: 30px;
   opacity: 0.5;
   z-index: 3; /* Плейсхолдер на переднем плане */
+}
+
+/* Стили для блока модерации */
+.moderator-section-container .moderator-review-section.card {
+    background-color: var(--secondary-blue); /* Тёмный фон, как в других блоках */
+    border: 1px solid var(--border-color); /* Рамка в стиле страницы */
+    border-radius: 15px; /* Закругление, как у других блоков */
+    box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.25); /* Тень, как у других блоков */
+    backdrop-filter: blur(10px); /* Размытие, как у других блоков */
+}
+
+.moderator-section-container .moderator-review-section .card-header {
+    background-color: transparent; /* Прозрачный фон заголовка */
+    border-bottom: 1px solid var(--border-color); /* Разделитель */
+    padding: 15px 20px;
+}
+
+.moderator-section-container .moderator-review-section .card-header h4 {
+    color: var(--accent-yellow); /* Желтый цвет заголовка */
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.moderator-section-container .moderator-review-section .card-body {
+    padding: 20px;
+}
+
+.moderator-section-container .moderator-review-section .form-label {
+    color: var(--text-primary); /* Белый цвет текста */
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+.moderator-section-container .moderator-review-section .moderator-comment-textarea {
+    width: 100%;
+    height: 104px;
+    background-color: var(--dark-card-bg); /* Тёмный фон для textarea */
+    border: 1px solid var(--border-color); /* Рамка в стиле страницы */
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-family: 'Unbounded', sans-serif;
+    font-size: 14px;
+    color: var(--text-primary); /* Белый цвет текста */
+    resize: vertical;
+    margin-bottom: 16px;
+    box-sizing: border-box;
+    line-height: 1.5;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.moderator-section-container .moderator-review-section .moderator-comment-textarea::placeholder {
+    color: var(--text-secondary); /* Светло-серый цвет плейсхолдера */
+}
+
+.moderator-section-container .moderator-review-section .moderator-comment-textarea:focus {
+    outline: none;
+    border-color: var(--accent-purple); /* Фиолетовый акцент при фокусе */
+    background-color: var(--dark-card-bg);
+    box-shadow: none;
+}
+
+/* Кнопки "Одобрить" и "Отклонить" */
+.moderator-section-container .moderator-review-section .btn-success {
+    background-color: var(--success-green); /* Зелёный цвет для "Одобрить" */
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-family: 'Unbounded', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--primary-dark-blue); /* Тёмный текст для контраста */
+    transition: background-color 0.3s ease;
+}
+
+.moderator-section-container .moderator-review-section .btn-success:hover {
+    background-color: #2cb302; /* Чуть темнее зелёный при наведении */
+}
+
+.moderator-section-container .moderator-review-section .btn-danger {
+    background-color: var(--danger-red); /* Красный цвет для "Отклонить" */
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-family: 'Unbounded', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary); /* Белый текст */
+    transition: background-color 0.3s ease;
+}
+
+.moderator-section-container .moderator-review-section .btn-danger:hover {
+    background-color: #d94343; /* Чуть темнее красный при наведении */
+}
+
+.moderator-section-container .moderator-comment-display.card {
+    background-color: var(--secondary-blue); /* Тёмный фон */
+    border: 1px solid var(--border-color); /* Рамка в стиле страницы */
+    border-radius: 15px;
+    box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(10px);
+}
+
+.moderator-section-container .moderator-comment-display .card-header {
+    background-color: transparent;
+    border-bottom: 1px solid var(--border-color);
+    padding: 15px 20px;
+}
+
+.moderator-section-container .moderator-comment-display .card-header h5 {
+    color: var(--accent-yellow); /* Желтый цвет заголовка */
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.moderator-section-container .moderator-comment-display .card-body {
+    padding: 20px;
+}
+
+.moderator-section-container .moderator-comment-display .card-text {
+    color: var(--text-secondary); /* Светло-серый текст */
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0;
 }

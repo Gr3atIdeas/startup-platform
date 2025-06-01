@@ -205,7 +205,6 @@ def startup_detail(request, startup_id):
     startup = get_object_or_404(Startups, startup_id=startup_id)
     timeline = StartupTimeline.objects.filter(startup=startup)
     average_rating = startup.sum_votes / startup.total_voters if startup.total_voters > 0 else 0
-    # Аннотируем рейтинг пользователя к каждому комментарию
     comments = Comments.objects.filter(startup_id=startup, parent_comment_id__isnull=True).order_by('-created_at')
     form = CommentForm()
 
@@ -221,17 +220,15 @@ def startup_detail(request, startup_id):
     # Получаем распределение рейтингов
     rating_distribution_query = (
         UserVotes.objects.filter(startup=startup)
-        .values('rating') # Группируем по значению голоса
-        .annotate(count=Count('rating')) # Считаем количество для каждого значения
-        .order_by('-rating') # Опционально: сортируем
+        .values('rating')
+        .annotate(count=Count('rating'))
+        .order_by('-rating')
     )
-    # Преобразуем в словарь {значение_рейтинга: количество}
     rating_distribution = {item['rating']: item['count'] for item in rating_distribution_query}
-    # Убедимся, что все значения от 1 до 5 присутствуют, даже если их нет в голосах
     for i in range(1, 6):
         rating_distribution.setdefault(i, 0)
 
-    # Похожие стартапы (оставляем текущую логику)
+    # Похожие стартапы
     similar_startups = Startups.objects.filter(direction=startup.direction, status='approved').exclude(startup_id=startup.startup_id).annotate(avg_rating=Avg('uservotes__rating')).order_by('-avg_rating')[:8]
 
     # Медиафайлы
@@ -241,36 +238,31 @@ def startup_detail(request, startup_id):
 
     # Определяем, нужно ли показывать комментарий модератора
     show_moderator_comment = False
-    if startup.status == 'rejected' or (startup.status == 'approved' and startup.is_edited):
+    if startup.moderator_comment and (request.user == startup.owner or (request.user.is_authenticated and hasattr(request.user, 'role') and request.user.role.role_name == 'moderator')):
         show_moderator_comment = True
 
     # Прогресс инвестиций
     progress_percentage = 0
     if startup.funding_goal and startup.funding_goal > 0:
         progress_percentage = (startup.amount_raised / startup.funding_goal) * 100 if startup.amount_raised else 0
-        progress_percentage = min(progress_percentage, 100) # Не больше 100%
-    
-    investors_count = startup.get_investors_count() # Используем новый метод
+        progress_percentage = min(progress_percentage, 100)
 
-    # Этапы стартапа (таймлайн)
+    investors_count = startup.get_investors_count()
     timeline_events = StartupTimeline.objects.filter(startup=startup).order_by('step_number')
 
-    # Документы стартапа (типа "proof")
-    # Сначала получим объект FileTypes для "proof"
+    # Документы стартапа
     try:
         proof_file_type = FileTypes.objects.get(type_name='proof')
         startup_documents = FileStorage.objects.filter(startup=startup, file_type=proof_file_type).order_by('-uploaded_at')
     except FileTypes.DoesNotExist:
-        startup_documents = FileStorage.objects.none() # Возвращаем пустой QuerySet, если тип "proof" не найден
-        # Раскомментируйте следующую строку, если хотите показывать сообщение пользователю
-        # messages.warning(request, "Тип файлов 'proof' не найден в системе. Документы не могут быть отображены.")
+        startup_documents = FileStorage.objects.none()
 
     context = {
         'startup': startup,
         'comments': comments,
         'form': form,
         'average_rating': average_rating,
-        'total_votes_count': total_votes, # Передаем общее количество голосов
+        'total_votes_count': total_votes,
         'user_has_voted': user_has_voted,
         'rating_distribution': rating_distribution,
         'similar_startups': similar_startups,

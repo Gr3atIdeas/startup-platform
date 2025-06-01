@@ -379,37 +379,35 @@
     </div> 
   </div> 
 
-  {# --- КОНТЕЙНЕР ДЛЯ БЛОКА МОДЕРАТОРА --- #}
-  <div class="moderator-section-container my-4"> {# Добавлен общий контейнер и отступ #}
+  <div class="moderator-section-container my-4">
       {% if user.is_authenticated and user.role.role_name == 'moderator' and startup.status == 'pending' %}
-        <div class="moderator-review-section card"> {# Убран my-4, так как он на контейнере #}
-          <div class="card-header">
-            <h4>Модерация стартапа</h4>
-          </div>
-          <div class="card-body">
-            <form method="post">
-              {% csrf_token %}
-              <div class="mb-3">
-                <label for="moderator_comment_area" class="form-label">Комментарий модератора:</label>
-                <textarea class="form-control" id="moderator_comment_area" name="moderator_comment" rows="3">{{ startup.moderator_comment|default:'' }}</textarea>
+          <div class="moderator-review-section card">
+              <div class="card-header">
+                  <h4>Модерация стартапа</h4>
               </div>
-              <button type="submit" name="action" value="approve" class="btn btn-success me-2">Одобрить</button>
-              <button type="submit" name="action" value="reject" class="btn btn-danger">Отклонить</button>
-            </form>
+              <div class="card-body">
+                  <form method="post" action="{% url 'approve_startup' startup_id=startup.startup_id %}">
+                      {% csrf_token %}
+                      <div class="mb-3">
+                          <label for="moderator_comment_area" class="form-label">Комментарий модератора:</label>
+                          <textarea class="form-control moderator-comment-textarea" id="moderator_comment_area" name="moderator_comment" rows="3">{{ startup.moderator_comment|default:'' }}</textarea>
+                      </div>
+                      <button type="submit" name="action" value="approve" class="btn btn-success me-2">Одобрить</button>
+                      <button type="submit" formaction="{% url 'reject_startup' startup_id=startup.startup_id %}" name="action" value="reject" class="btn btn-danger">Отклонить</button>
+                  </form>
+              </div>
           </div>
-        </div>
-      {% elif show_moderator_comment and startup.moderator_comment %} 
-        <div class="moderator-comment-display card bg-light"> {# Убран my-4 #}
-           <div class="card-header">
-             <h5>Комментарий модератора:</h5>
-           </div>
-           <div class="card-body">
-             <p class="card-text">{{ startup.moderator_comment }}</p>
-           </div>
-        </div>
+      {% elif show_moderator_comment and startup.moderator_comment %}
+          <div class="moderator-comment-display card">
+              <div class="card-header">
+                  <h5>Комментарий модератора:</h5>
+              </div>
+              <div class="card-body">
+                  <p class="card-text">{{ startup.moderator_comment }}</p>
+              </div>
+          </div>
       {% endif %}
   </div>
-  {# --- КОНЕЦ КОНТЕЙНЕРА ДЛЯ БЛОКА МОДЕРАТОРА --- #}
 
   <div id="comments-section">
     {# 1. Заголовок с иконкой #}
