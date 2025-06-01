@@ -697,8 +697,10 @@ def create_startup(request):
             try:
                 startup.status_id = ReviewStatuses.objects.get(status_name='Pending')
             except ReviewStatuses.DoesNotExist:
-                raise ValueError("Статус 'Pending' не найден в базе данных.")
-            
+                logger.error("Статус 'Pending' не найден в базе данных.")
+                messages.error(request, "Статус 'Pending' не найден в базе данных.")
+                return render(request, 'accounts/create_startup.html', {'form': form, 'timeline_steps': request.POST})
+
             investment_type = form.cleaned_data.get('investment_type')
             if investment_type == 'invest':
                 startup.only_invest = True
@@ -715,8 +717,17 @@ def create_startup(request):
 
             startup.step_number = int(request.POST.get('step_number', 1))
             startup.planet_image = form.cleaned_data.get('planet_image')
-            startup.save()
 
+            # Гарантируем, что startup сохранен и startup_id сгенерирован
+            logger.info("Сохранение стартапа перед обработкой файлов...")
+            startup.save()
+            logger.info(f"Стартап сохранен, startup_id: {startup.startup_id}")
+            if not startup.startup_id:
+                logger.error("Ошибка: startup_id не сгенерирован после сохранения!")
+                messages.error(request, "Произошла ошибка при создании стартапа: ID не сгенерирован.")
+                return render(request, 'accounts/create_startup.html', {'form': form, 'timeline_steps': request.POST})
+
+            # Сохранение этапов таймлайна
             for i in range(1, 6):
                 description = request.POST.get(f'step_description_{i}', '').strip()
                 if description:
@@ -727,28 +738,44 @@ def create_startup(request):
                         description=description
                     )
 
+            # Инициализация списков для ID
             logo_ids = []
             creatives_ids = []
             proofs_ids = []
             video_ids = []
 
+            # Сохранение логотипа
             logo = form.cleaned_data.get('logo')
             if logo:
                 logo_id = str(uuid.uuid4())
                 base_name = os.path.splitext(logo.name)[0]
                 ext = os.path.splitext(logo.name)[1]
-                safe_name = slugify(base_name) + ext
+                # Обрабатываем base_name для удаления некорректных символов
+                safe_base_name = ''.join(c for c in base_name if c.isalnum() or c in ('-', '_'))
+                safe_name = slugify(safe_base_name) + ext
                 file_path = f"startups/{startup.startup_id}/logos/{logo_id}_{safe_name}"
+                logo_type, _ = FileTypes.objects.get_or_create(type_name='logo')
+                entity_type, _ = EntityTypes.objects.get_or_create(type_name='startup')
                 try:
                     logger.info(f"Попытка сохранить логотип по пути: {file_path}")
                     default_storage.save(file_path, logo)
                     logger.info(f"Логотип успешно сохранён по пути: {file_path}")
                     logo_ids.append(logo_id)
+                    FileStorage.objects.create(
+                        entity_type=entity_type,
+                        entity_id=startup.startup_id,
+                        file_type=logo_type,
+                        file_url=logo_id,
+                        uploaded_at=timezone.now(),
+                        startup=startup
+                    )
                     logger.info(f"Логотип сохранён: {file_path}")
                 except Exception as e:
-                    logger.error(f"Ошибка сохранения логотипа: {e}")
-                    raise
+                    logger.error(f"Ошибка сохранения логотипа: {e}", exc_info=True)
+                    messages.warning(request, "Не удалось сохранить логотип, но стартап создан.")
+                    # Не прерываем выполнение
 
+            # Сохранение креативов
             creatives = form.cleaned_data.get('creatives', [])
             if creatives:
                 creative_type, _ = FileTypes.objects.get_or_create(type_name='creative')
@@ -760,20 +787,29 @@ def create_startup(request):
                     creative_id = str(uuid.uuid4())
                     base_name = os.path.splitext(creative_file.name)[0]
                     ext = os.path.splitext(creative_file.name)[1]
-                    safe_name = slugify(base_name) + ext
+                    safe_base_name = ''.join(c for c in base_name if c.isalnum() or c in ('-', '_'))
+                    safe_name = slugify(safe_base_name) + ext
                     file_path = f"startups/{startup.startup_id}/creatives/{creative_id}_{safe_name}"
-                    default_storage.save(file_path, creative_file)
-                    creatives_ids.append(creative_id)
-                    FileStorage.objects.create(
-                        entity_type=entity_type,
-                        entity_id=startup.startup_id,
-                        file_type=creative_type,
-                        file_url=creative_id,
-                        uploaded_at=timezone.now(),
-                        startup=startup
-                    )
-                    logger.info(f"Креатив сохранён: {file_path}")
+                    try:
+                        logger.info(f"Попытка сохранить креатив по пути: {file_path}")
+                        default_storage.save(file_path, creative_file)
+                        logger.info(f"Креатив успешно сохранён по пути: {file_path}")
+                        creatives_ids.append(creative_id)
+                        FileStorage.objects.create(
+                            entity_type=entity_type,
+                            entity_id=startup.startup_id,
+                            file_type=creative_type,
+                            file_url=creative_id,
+                            uploaded_at=timezone.now(),
+                            startup=startup
+                        )
+                        logger.info(f"Креатив сохранён: {file_path}")
+                    except Exception as e:
+                        logger.error(f"Ошибка сохранения креатива: {e}", exc_info=True)
+                        messages.warning(request, "Не удалось сохранить один из креативов, но стартап создан.")
+                        # Не прерываем выполнение
 
+            # Сохранение пруфов
             proofs = form.cleaned_data.get('proofs', [])
             if proofs:
                 proof_type, _ = FileTypes.objects.get_or_create(type_name='proof')
@@ -785,41 +821,59 @@ def create_startup(request):
                     proof_id = str(uuid.uuid4())
                     base_name = os.path.splitext(proof_file.name)[0]
                     ext = os.path.splitext(proof_file.name)[1]
-                    safe_name = slugify(base_name) + ext
+                    safe_base_name = ''.join(c for c in base_name if c.isalnum() or c in ('-', '_'))
+                    safe_name = slugify(safe_base_name) + ext
                     file_path = f"startups/{startup.startup_id}/proofs/{proof_id}_{safe_name}"
-                    default_storage.save(file_path, proof_file)
-                    proofs_ids.append(proof_id)
-                    FileStorage.objects.create(
-                        entity_type=entity_type,
-                        entity_id=startup.startup_id,
-                        file_type=proof_type,
-                        file_url=proof_id,
-                        uploaded_at=timezone.now(),
-                        startup=startup
-                    )
-                    logger.info(f"Пруф сохранён: {file_path}")
+                    try:
+                        logger.info(f"Попытка сохранить пруф по пути: {file_path}")
+                        default_storage.save(file_path, proof_file)
+                        logger.info(f"Пруф успешно сохранён по пути: {file_path}")
+                        proofs_ids.append(proof_id)
+                        FileStorage.objects.create(
+                            entity_type=entity_type,
+                            entity_id=startup.startup_id,
+                            file_type=proof_type,
+                            file_url=proof_id,
+                            uploaded_at=timezone.now(),
+                            startup=startup
+                        )
+                        logger.info(f"Пруф сохранён: {file_path}")
+                    except Exception as e:
+                        logger.error(f"Ошибка сохранения пруфа: {e}", exc_info=True)
+                        messages.warning(request, "Не удалось сохранить один из пруфов, но стартап создан.")
+                        # Не прерываем выполнение
 
+            # Сохранение видео
             video = form.cleaned_data.get('video')
             if video:
                 video_id = str(uuid.uuid4())
                 base_name = os.path.splitext(video.name)[0]
                 ext = os.path.splitext(video.name)[1]
-                safe_name = slugify(base_name) + ext
+                safe_base_name = ''.join(c for c in base_name if c.isalnum() or c in ('-', '_'))
+                safe_name = slugify(safe_base_name) + ext
                 file_path = f"startups/{startup.startup_id}/videos/{video_id}_{safe_name}"
-                default_storage.save(file_path, video)
-                video_ids.append(video_id)
                 video_type, _ = FileTypes.objects.get_or_create(type_name='video')
-                entity_type, _ = EntityTypes.get_or_create(type_name='startup')
-                FileStorage.objects.create(
-                    entity_type=entity_type,
-                    entity_id=startup.startup_id,
-                    file_type=video_type,
-                    file_url=video_id,
-                    uploaded_at=timezone.now(),
-                    startup=startup
-                )
-                logger.info(f"Видео сохранено: {file_path}")
+                entity_type, _ = EntityTypes.objects.get_or_create(type_name='startup')
+                try:
+                    logger.info(f"Попытка сохранить видео по пути: {file_path}")
+                    default_storage.save(file_path, video)
+                    logger.info(f"Видео успешно сохранено по пути: {file_path}")
+                    video_ids.append(video_id)
+                    FileStorage.objects.create(
+                        entity_type=entity_type,
+                        entity_id=startup.startup_id,
+                        file_type=video_type,
+                        file_url=video_id,
+                        uploaded_at=timezone.now(),
+                        startup=startup
+                    )
+                    logger.info(f"Видео сохранено: {file_path}")
+                except Exception as e:
+                    logger.error(f"Ошибка сохранения видео: {e}", exc_info=True)
+                    messages.warning(request, "Не удалось сохранить видео, но стартап создан.")
+                    # Не прерываем выполнение
 
+            # Сохранение списков ID в поля jsonb
             startup.logo_urls = logo_ids
             startup.creatives_urls = creatives_ids
             startup.proofs_urls = proofs_ids
