@@ -30,6 +30,7 @@ import datetime # Добавляем для работы с датами
 from django.db.models.functions import Coalesce # Добавляем Coalesce
 import collections # Добавляем для defaultdict
 from dateutil.relativedelta import relativedelta
+from django.utils.text import slugify
 
 
 logger = logging.getLogger(__name__)
