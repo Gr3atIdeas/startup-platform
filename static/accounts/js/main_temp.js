@@ -383,4 +383,205 @@ document.addEventListener('DOMContentLoaded', function () {
     } else {
         // console.warn('Необходимые элементы для FAQ не найдены.');
     }
+
+    // Карусель для блока .featured1 ("Почему выбирают нас?")
+    function initFeatured1Carousel() {
+        const carouselViewPort = document.querySelector('.featured1 .featured2');
+        if (!carouselViewPort) return;
+        // Создадим внутренний контейнер для всех карточек, если его еще нет
+        let carouselInnerContainer = carouselViewPort.querySelector('.featured1-carousel-inner');
+        if (!carouselInnerContainer) {
+            carouselInnerContainer = document.createElement('div');
+            carouselInnerContainer.classList.add('featured1-carousel-inner');
+            // Перемещаем все карточки внутрь нового контейнера
+            while (carouselViewPort.firstChild) {
+                carouselInnerContainer.appendChild(carouselViewPort.firstChild);
+            }
+            carouselViewPort.appendChild(carouselInnerContainer);
+        }
+
+        const cards = carouselInnerContainer.querySelectorAll('.featured1 .container');
+        const prevButton = document.querySelector('.featured1 .button3');
+        const nextButton = document.querySelector('.featured1 .button4');
+        const dotsContainer = document.querySelector('.featured1 .chevron-forward-circle-outline-parent');
+        const dots = dotsContainer ? dotsContainer.querySelectorAll('img[class^="chevron-forward-circle-outline-icon"]') : [];
+
+        if (cards.length === 0 || !prevButton || !nextButton || dots.length === 0) {
+            return;
+        }
+
+        let currentIndex = 0;
+        const totalCards = cards.length; 
+
+        function updateCarousel() {
+            const cardWidth = cards[0].offsetWidth;
+            const gap = parseInt(getComputedStyle(carouselInnerContainer).gap || '0');
+            const totalShift = currentIndex * (cardWidth + gap);
+            carouselInnerContainer.style.transform = `translateX(-${totalShift}px)`;
+
+            dots.forEach((dot, index) => {
+                const isActive = index === currentIndex;
+                dot.classList.toggle('active', isActive);
+                // Управление классами для смены src иконки точки
+                if (isActive) {
+                    if (dot.classList.contains('chevron-forward-circle-outline-icon1')) {
+                        dot.classList.remove('chevron-forward-circle-outline-icon1');
+                        dot.classList.add('chevron-forward-circle-outline-icon');
+                    }
+                } else {
+                    if (dot.classList.contains('chevron-forward-circle-outline-icon')) {
+                        dot.classList.remove('chevron-forward-circle-outline-icon');
+                        dot.classList.add('chevron-forward-circle-outline-icon1');
+                    }
+                }
+            });
+
+            // Обновление состояния кнопок (активная/неактивная)
+            const prevButtonChevron = prevButton.querySelector('.chevron-left');
+            const nextButtonChevron = nextButton.querySelector('.chevron-left');
+            
+            if (currentIndex === 0) {
+                if (prevButtonChevron) prevButtonChevron.style.background = 'rgba(255, 255, 255, 0.38)';
+                if (prevButton.querySelector('.vector-icon')) prevButton.querySelector('.vector-icon').style.filter = 'invert(1) brightness(1.5)';
+            } else {
+                if (prevButtonChevron) prevButtonChevron.style.background = '#FFEF2B';
+                if (prevButton.querySelector('.vector-icon')) prevButton.querySelector('.vector-icon').style.filter = '';
+            }
+
+            if (currentIndex >= totalCards - 1) { // Показываем по одной карточке
+                if (nextButtonChevron) nextButtonChevron.style.background = 'rgba(255, 255, 255, 0.38)';
+                if (nextButton.querySelector('.vector-icon1')) nextButton.querySelector('.vector-icon1').style.filter = 'invert(1) brightness(1.5)';
+            } else {
+                if (nextButtonChevron) nextButtonChevron.style.background = '#FFEF2B';
+                if (nextButton.querySelector('.vector-icon1')) nextButton.querySelector('.vector-icon1').style.filter = '';
+            }
+        }
+
+        prevButton.addEventListener('click', () => {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateCarousel();
+            }
+        });
+
+        nextButton.addEventListener('click', () => {
+            if (currentIndex < totalCards - 1) { // По одной карточке
+                currentIndex++;
+                updateCarousel();
+            }
+        });
+
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                currentIndex = index;
+                updateCarousel();
+            });
+        });
+
+        // Ensure the inner container allows for all cards in a row
+        if (cards.length > 0) {
+          const cardWidth = cards[0].offsetWidth;
+          const gap = parseInt(getComputedStyle(carouselViewPort).gap || '0');
+          carouselInnerContainer.style.display = 'flex';
+          carouselInnerContainer.style.gap = `${gap}px`;
+          // carouselInnerContainer.style.width = `${totalCards * cardWidth + (totalCards - 1) * gap}px`;
+        }
+
+        updateCarousel(); 
+        window.addEventListener('resize', updateCarousel); // Update on resize
+    }
+
+    function initFeatured6Carousel() {
+        const slidesWrapper = document.querySelector('.featured6 .slides-wrapper-featured6');
+        if (!slidesWrapper) return;
+        const slides = slidesWrapper.querySelectorAll('.slide-featured6');
+        const prevButton = document.querySelector('.featured6 .featured6-prev');
+        const nextButton = document.querySelector('.featured6 .featured6-next');
+        const stepIndicator = document.querySelector('.featured6 .div55');
+
+        if (slides.length === 0 || !prevButton || !nextButton || !stepIndicator) return;
+        let currentIndex = 0;
+
+        function updateCarousel() {
+            slides.forEach((slide, index) => {
+                slide.style.display = (index === currentIndex) ? 'flex' : 'none';
+            });
+            stepIndicator.textContent = `${currentIndex + 1} шаг`;
+        }
+
+        prevButton.addEventListener('click', () => {
+            currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+            updateCarousel();
+        });
+        nextButton.addEventListener('click', () => {
+            currentIndex = (currentIndex + 1) % slides.length;
+            updateCarousel();
+        });
+        updateCarousel();
+    }
+
+    function initFeatured8Carousel() {
+        const carouselViewPort = document.querySelector('.featured8 .chevron-forward-circle-outline-container');
+        if (!carouselViewPort) return;
+
+        let carouselInnerContainer = carouselViewPort.querySelector('.featured8-carousel-inner');
+        if (!carouselInnerContainer) {
+            carouselInnerContainer = document.createElement('div');
+            carouselInnerContainer.classList.add('featured8-carousel-inner');
+            while (carouselViewPort.firstChild) {
+                carouselInnerContainer.appendChild(carouselViewPort.firstChild);
+            }
+            carouselViewPort.appendChild(carouselInnerContainer);
+        }
+        
+        const cards = carouselInnerContainer.querySelectorAll('.parent22');
+        const prevButton = document.querySelector('.featured8 .featured8-prev'); 
+        const nextButton = document.querySelector('.featured8 .featured8-next'); 
+
+        if (cards.length === 0 || !prevButton || !nextButton) return;
+
+        let currentIndex = 0;
+        const numCards = cards.length;
+        const visibleCards = 3; // Based on mockup
+
+        function updateCarousel() {
+            const cardWidth = cards[0].offsetWidth;
+            const gap = parseInt(getComputedStyle(carouselInnerContainer).gap || '20'); // 20px is the gap from CSS
+            const totalShift = currentIndex * (cardWidth + gap);
+            carouselInnerContainer.style.transform = `translateX(-${totalShift}px)`;
+
+            prevButton.style.display = currentIndex === 0 ? 'none' : 'flex';
+            nextButton.style.display = currentIndex >= numCards - visibleCards ? 'none' : 'flex';
+        }
+        
+        prevButton.addEventListener('click', () => {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateCarousel();
+            }
+        });
+
+        nextButton.addEventListener('click', () => {
+            if (currentIndex < numCards - visibleCards) {
+                currentIndex++;
+                updateCarousel();
+            }
+        });
+
+        if (cards.length > 0) {
+            const cardWidth = cards[0].offsetWidth;
+            const gap = parseInt(getComputedStyle(carouselViewPort).gap || '20');
+            carouselInnerContainer.style.display = 'flex';
+            carouselInnerContainer.style.gap = `${gap}px`;
+            // carouselInnerContainer.style.width = `${numCards * cardWidth + (numCards - 1) * gap}px`; 
+        }
+
+        updateCarousel();
+        window.addEventListener('resize', updateCarousel);
+    }
+
+    // Инициализация всех каруселей
+    initFeatured1Carousel();
+    initFeatured6Carousel();
+    initFeatured8Carousel();
 });
