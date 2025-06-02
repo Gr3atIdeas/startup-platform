@@ -64,7 +64,7 @@
 @font-face {
     font-family: 'Blippo Black';
     src: url('../fonts/blippo_blackcyrusbyme.otf') format('opentype');
-    font-weight: normal;
+    font-weight: normal; /* Figma указывает font-weight: 400 для Blippo, что обычно normal */
     font-style: normal;
 }
 
@@ -76,563 +76,2291 @@ body {
     color: #333;
     margin: 0;
     padding: 0;
+    background: linear-gradient(153deg, black 0%, #00346B 25%, #004E9F 48%, #01366D 64%, #020202 100%);
+    /* background-image взят из основного div в figma, но без него градиент будет виден */
+    /* overflow: hidden; /* Может мешать прокрутке, если контент длиннее экрана */
 }
 
 .div {
-    /* Общие стили для основного контейнера, если нужны */
-    /* Например, максимальная ширина или отступы */
-    /* max-width: 1200px; */
-    /* margin: 0 auto; */
+    width: 100%;
+    /* height: 100%; /* Может быть нежелательно, если контент должен прокручиваться */
+    padding-top: 20px; /* Из Figma */
+    display: flex; /* Изменено с inline-flex для лучшего контроля */
+    flex-direction: column;
+    align-items: center; /* Центрируем основной контент */
+    overflow-x: hidden; /* Предотвращаем горизонтальную прокрутку */
 }
 
-/* Стили для секции "featured" - первый экран */
+/* Стили для секции "featured" - первый экран (аналог div с width: 1445px; height: 798px из Figma) */
+.featured {
+    width: 1445px; /* Из Figma */
+    height: 798px; /* Из Figma */
+    position: relative;
+    overflow: hidden;
+    display: flex; /* Для .group внутри */
+    justify-content: center; /* Центрируем .group */
+    align-items: center; /* Центрируем .group */
+}
+
 .featured .group {
-    position: relative; /* Для позиционирования дочерних элементов */
-    /* Стилизация фона, отступов и т.д. по макету */
+    width: 1303px; /* Из Figma */
+    height: 708px; /* Из Figma */
+    /* left: 71px; top: 45px; /* Убрано, т.к. центрируем через flex родителя */
+    position: relative; /* Изменено с absolute для упрощения */
+    background: linear-gradient(180deg, #004E9F 0%, black 100%);
+    box-shadow: 6px 6px 24px -13px rgba(156, 156, 156, 0.25); /* Figma: rgba(156.20, 156.20, 156.20, 0.25) */
+    border-radius: 10px;
+    overflow: hidden; /* Figma */
+    /* background-image: url(https://placehold.co/1303x708); /* Плейсхолдер для фона */
 }
 
-.featured .txt {
-    /* Стили для основного текстового блока в .featured */
-    /* Пример: font-size, color, line-height */
+/* Элементы внутри .featured .group позиционируются абсолютно, как в Figma */
+.featured .div5 { /* Контейнер для текста "Маркетплейс..." */
+    width: 390px;
+    height: 66px;
+    left: 109px;
+    top: 314px;
+    position: absolute;
+    display: flex; /* Figma: justify-content: center; display: flex; flex-direction: column */
+    flex-direction: column;
+    justify-content: center;
 }
 
-.featured .txt .span {
-    /* Стили для второй части текста в .featured .txt, если отличаются */
-}
-
-.featured .div6,
-.featured .div7 {
-    font-family: 'Blippo Black', sans-serif;
-    font-size: 72px;
-    /* text-align, color, letter-spacing, text-transform по макету */
-}
-.featured .div6 {
-    color: #1a1a1a; /* Пример */
-}
-.featured .div7 {
-    color: #ff5722; /* Пример */
-}
-
-.featured .button1,
-.featured .button2 {
-    /* Стили для кнопок */
-    /* display: inline-flex; */
-    /* align-items: center; */
-    /* padding: 10px 20px; */
-    /* background-color: #007bff; */
-    /* color: white; */
-    /* text-decoration: none; */
-    /* border-radius: 5px; */
-    /* margin: 5px; */
-}
-
-.featured .button1 .cosmochat,
-.featured .button2 .cosmochat {
-    /* margin-right: 8px; */
-}
-
-/* Продолжение стилизации для всех остальных элементов из main_temp.html */
-/* Необходимо пройтись по каждому классу и элементу и добавить соответствующие стили */
-/* ... */
-
-/* Пример стилизации текстовых элементов на основе предположений о "текстовых стилях" из Figma */
-
-.div5 .txt {
-    font-size: 20px;
-    line-height: 1.5;
-    color: #333;
-}
-.div5 .txt .span {
-    font-weight: bold;
-}
-
-.div6 {
-    font-size: 72px; /* Предполагаемый размер */
-    font-family: 'Blippo Black', sans-serif;
-    color: #1a1a1a;
-    /* Другие стили из Figma, если есть (letter-spacing, text-transform etc.) */
-}
-
-.div7 {
-    font-size: 72px; /* Предполагаемый размер */
-    font-family: 'Blippo Black', sans-serif;
-    color: #ff5722; /* Пример цвета */
-    /* ... */
-}
-
-.button1 .cosmochat, .button2 .cosmochat {
-    font-size: 16px;
-    font-weight: 500; /* Medium */
-}
-
-.heading .parent3 .div16, .heading .parent3 .div17 {
-    font-size: 48px; /* Предполагаемый размер */
-    font-family: 'Blippo Black', sans-serif;
-    /* ... */
-}
-.div8 {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 10px;
-}
-
-.div9, .div11 {
-    font-size: 16px;
-    line-height: 1.6;
-    color: #555;
-}
-
-.heading1 .div18 .txt {
-    font-size: 40px;
-    font-family: 'Blippo Black', sans-serif;
-}
-.heading1 .div18 .txt .span1 {
-    /* Стили для выделенной части, если есть */
-}
-
-.faq, .div20, .div22 {
-    font-size: 18px;
-}
-
-.div20 .txt .span2 {
-    font-style: italic; /* Пример */
-}
-
-.parent5 .div22, .parent7 .div22 {
-    font-size: 18px;
-    font-weight: 500;
-}
-
-.div23 .txt {
-    font-size: 40px;
-    font-family: 'Blippo Black', sans-serif;
-}
-.div23 .txt .span3 {
-    /* ... */
-}
-.div24, .div25, .div26 {
-    font-size: 18px;
-}
-
-.parent8 .div28, .parent8 .div29 {
-    font-size: 48px;
-    font-family: 'Blippo Black', sans-serif;
-}
-
-.voltforge-dynamics {
-    font-size: 20px;
-    font-weight: bold;
-}
-.popular, .of-20 {
-    font-size: 14px;
-}
-.voltforge { /* Описание стартапа */
-    font-size: 15px;
-    line-height: 1.5;
-    margin-top: 10px;
-    margin-bottom: 15px;
-}
-.button5 .cosmochat {
-    font-size: 16px;
-    font-weight: 500;
-}
-
-.div31 { /* Последние обновления */
-    font-size: 28px;
-    font-weight: bold;
-    margin-bottom: 20px;
-}
-.user .name-parent .cosmochat { /* Имя и фамилия пользователя */
-    font-size: 16px;
-    font-weight: 500;
-}
-.great-edeas, .div36 { /* Рейтинг */
-    font-size: 14px;
-}
-
-.parent18 .div52, .parent18 .div29 { /* Как работает наша галактика? */
-    font-size: 48px;
-    font-family: 'Blippo Black', sans-serif;
-}
-.div55 { /* 1 шаг */
-    font-size: 16px;
-    font-weight: bold;
-}
-
-.great-ideas { /* Great Ideas в секции с мобильным приложением */
-    font-size: 36px;
-    font-family: 'Blippo Black', sans-serif;
-    margin-bottom: 10px;
-}
-.div56 { /* Описание под Great Ideas */
-    font-size: 16px;
-    line-height: 1.6;
-    color: #555;
-}
-.message-wrapper .cosmochat, .message-container .cosmochat { /* Умные уведомления, Мобильная аналитика */
-    font-size: 14px;
-}
-.parent19 .div57 { /* Геймификация бизнеса, Стартапы, меняющие индустрию */
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 8px;
-}
-.div58, .div60 { /* Описания под заголовками */
-    font-size: 15px;
-    line-height: 1.6;
-    color: #555;
-}
-
-.parent21 .faq { /* Истории успеха */
-    font-size: 20px; /* Или другой размер по макету */
-    font-weight: 500;
-    margin-bottom: 5px;
-}
-.div62 { /* в нашей галактике */
-    font-size: 48px;
-    font-family: 'Blippo Black', sans-serif;
-}
-.div63 { /* Имя в отзыве */
-    font-size: 18px;
-    font-weight: bold;
-}
-.parent22 .wrapper3 .div22 { /* Роль в отзыве (Инвестор/Стартапер) */
-    font-size: 14px;
-    font-style: italic;
-    color: #777;
-}
-.div65 { /* Текст отзыва */
-    font-size: 15px;
-    line-height: 1.6;
-}
-
-.heading2 .div16, .heading2 .div17 { /* Новости нашей галактики */
-    font-size: 48px;
-    font-family: 'Blippo Black', sans-serif;
-}
-.great-ideas1 { /* Свежие новости на платформе Great Ideas */
-    font-size: 18px;
-    color: #555;
-    margin-bottom: 20px;
-}
-.div77 { /* Заголовок большой новости */
-    font-size: 22px;
-    font-weight: bold;
-}
-.button9 .div22 { /* Подробнее для новости */
-    font-size: 16px;
-    font-weight: 500;
-}
-.parent28 .div22 { /* Ромашка (автор новости) */
-    font-size: 14px;
-    font-weight: 500;
-}
-.div79 { /* 2 дня назад */
-    font-size: 12px;
-    color: #777;
-}
-.div80 { /* Заголовок маленькой новости */
-    font-size: 16px;
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-.div81 { /* Краткое описание маленькой новости */
-    font-size: 14px;
-    line-height: 1.5;
-}
-.button-parent .div22 { /* Показать еще */
-    font-size: 16px;
-    font-weight: 500;
-}
-
-.form1 .cosmochat { /* Email (лейбл для инпута) */
-    font-size: 16px;
-}
-.div98 { /* Я даю согласие... */
-    font-size: 14px;
-}
-.parent38 .div22 { /* Подписаться */
-    font-size: 16px;
-    font-weight: 500;
-}
-.frame-parent31 .div16, .frame-parent31 .div101 { /* Будьте в курсе новых звезд! */
-    font-size: 36px; /* Или другой размер по макету */
-    font-family: 'Blippo Black', sans-serif;
-}
-.div102 { /* Получай свежие новости... */
-    font-size: 16px;
-    line-height: 1.6;
-}
-.div102 .span4 {
-    font-weight: bold;
-}
-.parent40 .div16 { /* Бонус */
-    font-size: 24px;
-    font-weight: bold;
-}
-.div104 { /* Получите чек-лист... */
-    font-size: 16px;
-}
-
-.faq-parent .faq { /* FAQ */
-    font-size: 20px;
-    font-weight: 500;
-}
-.div105 .txt .p { /* Часто задаваемые вопросы */
-    font-size: 48px;
-    font-family: 'Blippo Black', sans-serif;
-    margin: 0; /* Убрать стандартные отступы параграфа, если нужно */
-    line-height: 1.2;
-}
-.div106 { /* Не нашли ответа? */
-    font-size: 16px;
-}
-.wrapper7 .div22 { /* Задать вопрос */
-    font-size: 16px;
-    font-weight: 500;
-}
-.div108 { /* Какие виды франшиз можно размещать? (активный вопрос) */
-    font-size: 18px;
-    font-weight: bold;
-}
-.it { /* Ответ на вопрос */
-    font-size: 16px;
-    line-height: 1.6;
-}
-.parent42 .great-edeas { /* Список доступных сфер */
-    font-size: 16px;
-    color: #007bff; /* Пример цвета ссылки */
-    text-decoration: underline;
-}
-.button12 .div22 { /* Что такое «Great Ideas»? (заголовок секции FAQ) */
-    font-size: 20px;
-    font-weight: bold;
-}
-.div110, .div111, .great-ideas3 { /* Вопросы в FAQ */
-    font-size: 16px;
-}
-
-
-.heading4 .div16, .heading4 .div148 { /* Готовы покорить галактику? */
-    font-size: 48px;
-    font-family: 'Blippo Black', sans-serif;
-}
-.parent46 .div22, .parent47 .div22 { /* Создать стартап, Инвестировать (в CTA) */
-    font-size: 18px;
-    font-weight: 500;
-}
-
-/* Общие стили для классов, которые могут повторяться */
-.cosmochat {
-    /* Можно задать общий стиль для .cosmochat, если он везде одинаковый */
-    /* Например, font-family: 'Unbounded', sans-serif; */
-}
-
-
-/* Добавьте сюда остальные стили, следуя структуре HTML и макету Figma. */
-/* Важно: эти стили являются предположением и должны быть скорректированы согласно макету. */
-/* Особое внимание уделите отступам, выравниваниям, цветам и точным размерам шрифтов. */
-
-/* Пример для классов из HTML, которые не были явно упомянуты выше */
-.featured1, .featured3, .featured4, .featured5, .featured6, .featured7, .featured8, .featured9, .featured10, .featured14, .cta {
-    padding: 40px 20px; /* Пример общих отступов для секций */
-    /* border-bottom: 1px solid #eee; */ /* Пример разделителя */
-}
-
-/* Стили для изображений-плейсхолдеров, если нужно задать им размеры или поведение */
-img[src^="https://placehold.co"] {
-    /* background-color: #ddd; */ /* Фон для плейсхолдера */
-    /* border: 1px solid #ccc; */
-    /* object-fit: cover; */ /* Как изображение должно вписываться */
-}
-
-/* Стили для иконок, если они требуют особого позиционирования или размеров */
-.iconsarrow-right-2line, .frame-icon, .add-circle-outline-icon, .iconeye, 
-.vector-icon, .chevron-forward-circle-outline-icon, .avatar01-icon, .message-send-time, .bubble-tail,
-.send .vector-icon22, .campaign .vector-icon23 {
-    /* display: inline-block; */
-    /* vertical-align: middle; */
-}
-
-.div8 { /* Геймификация, Сообщество, Прозрачность, Поддержка - Заголовки */
-    font-family: 'Blippo Black', sans-serif; /* Из Figma: Blippo-Black CY [Rus by me] */
-    color: #004E9F;
-    font-size: 55px;
-    font-weight: 400; /* Figma указывает 400 для Blippo, что обычно normal */
-    line-height: 18px; /* Прямое значение из Figma */
-    /* margin-bottom для текста по макету, если он был в инлайновых стилях ранее, здесь его нет */
-}
-
-.div9, .div11 { /* Описания под .div8: "Создавайте планеты...", "Объединяем визионеров..." и т.д. */
+.featured .div5 .txt {
     font-family: 'Unbounded', sans-serif;
-    color: #004E9F;
-    font-size: 16px;
     font-weight: 400;
+    font-size: 16px;
     line-height: 19.20px; /* Прямое значение из Figma */
+    word-wrap: break-word;
 }
-
-.heading .parent3 .div16, .heading .parent3 .div17 {
-    font-family: 'Blippo Black', sans-serif;
-    font-size: 55px; /* Из Figma для "Почему" и "выбирают нас?" */
-    font-weight: 400;
-    line-height: 18px;
-    /* text-align, color по макету */
-}
-.heading .parent3 .div16 { /* "Почему" */
-    color: white;
-}
-.heading .parent3 .div17 { /* "выбирают нас?" */
-    color: #FFEF2B; /* var(--Color7, #FFEF2B) из Figma */
-    text-transform: uppercase;
-}
-
-.heading1 .div18 .txt {
-    font-family: 'Unbounded', sans-serif;
-    font-size: 35px;
-    font-weight: 600; /* SemiBold */
-    line-height: 35px;
-    /* color по макету */
-}
-.heading1 .div18 .txt > span:first-child { /* Стартаперы, */
+.featured .div5 .txt > span:first-child { /* "Маркетплейс" */
     color: #FFEF2B;
 }
-.heading1 .div18 .txt .span1 { /* создайте свою планету! */
+.featured .div5 .txt .span { /* ", где стартаперы..." */
+    color: white;
+}
+
+.featured .div6 { /* "Создавай" */
+    left: 109px;
+    top: 148px;
+    position: absolute;
+    color: white;
+    font-size: 80px;
+    font-family: 'Blippo Black', sans-serif;
+    font-weight: 400; /* Normal для Blippo */
+    text-transform: uppercase;
+    line-height: 55px; /* Прямое значение из Figma */
+    word-wrap: break-word;
+}
+
+.featured .div7 { /* "будущее" */
+    left: 109px;
+    top: 219px;
+    position: absolute;
+    color: #FFEF2B;
+    font-size: 80px;
+    font-family: 'Blippo Black', sans-serif;
+    font-weight: 400; /* Normal для Blippo */
+    text-transform: uppercase;
+    line-height: 55px; /* Прямое значение из Figma */
+    word-wrap: break-word;
+}
+
+.featured .button1 { /* "Зарегистрировать стартап" */
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    left: 109px;
+    top: 422px;
+    position: absolute;
+    background: #004E9F;
+    border-radius: 10px;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    display: inline-flex;
+    text-decoration: none;
+}
+.featured .button1 .cosmochat {
+    color: #FCFCFD;
+    font-size: 14px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300; /* Light */
+    line-height: 18px;
+    word-wrap: break-word;
+}
+.featured .button1 img.iconsarrow-right-2line { /* Иконка стрелки */
+    width: 16px;
+    height: 16px;
+    /* Figma использует div с background для иконки, заменяем на img */
+}
+
+
+.featured .button2 { /* "Найти стартап" */
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    left: 109px;
+    top: 475px;
+    position: absolute;
+    background: #FFEF2B;
+    border-radius: 10px;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    display: inline-flex;
+    text-decoration: none;
+}
+.featured .button2 .cosmochat {
+    color: black;
+    font-size: 14px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300; /* Light */
+    line-height: 18px;
+    word-wrap: break-word;
+}
+.featured .button2 img.iconsarrow-right-2line { /* Иконка стрелки */
+    width: 16px;
+    height: 16px;
+}
+
+/* Декоративные элементы (круги) в .featured .group */
+.featured .frame-child { /* width: 1013px; height: 784px; left: 639px; top: -38px; */
+    width: 1013px; height: 784px; left: 639px; top: -38px; position: absolute;
+    box-shadow: 3px 3px 3px; border-radius: 9999px; border: 1px white solid; filter: blur(1.50px);
+}
+.featured .frame-item { /* width: 1013px; height: 696px; left: 900px; top: 5px; */
+    width: 1013px; height: 696px; left: 900px; top: 5px; position: absolute;
+    box-shadow: 3px 3px 3px; border-radius: 9999px; border: 1px white solid; filter: blur(1.50px);
+}
+.featured .frame-inner { /* width: 1013px; height: 754px; left: 728px; top: -22px; */
+    width: 1013px; height: 754px; left: 728px; top: -22px; position: absolute;
+    box-shadow: 3px 3px 3px; border-radius: 9999px; border: 1px white solid; filter: blur(1.50px);
+}
+.featured .ellipse-div { /* width: 1013px; height: 651px; left: 960px; top: 28px; */
+    width: 1013px; height: 651px; left: 960px; top: 28px; position: absolute;
+    box-shadow: 3px 3px 3px; border-radius: 9999px; border: 1px white solid; filter: blur(1.50px);
+}
+.featured .frame-child1 { /* width: 1013px; height: 576px; left: 1059px; top: 65px; */
+    width: 1013px; height: 576px; left: 1059px; top: 65px; position: absolute;
+    box-shadow: 3px 3px 3px; border-radius: 9999px; border: 1px white solid; filter: blur(1.50px);
+}
+
+/* Изображения-иконки в .featured .group (плейсхолдеры) */
+.featured .icon1 { left: 630px; top: 427px; position: absolute; width: 173px; height: 177px; }
+.featured .icon2 { width: 140px; height: 156px; left: 969px; top: 113px; position: absolute; /* Figma: w90 h88, HTML: w140 h156. Using HTML */ }
+.featured .icon3 { width: 175px; height: 158px; left: 694px; top: 245px; position: absolute; /* Figma: w193 h140, HTML: w175 h158. Using HTML */}
+.featured .icon4 { width: 138px; height: 156px; left: 1106px; top: 47px; position: absolute; /* Figma: w121.44 h101.20, HTML: w138 h156. Using HTML */ }
+.featured .icon5 { width: 175px; height: 168px; left: 867px; top: 372px; position: absolute; /* Figma: w147 h144, HTML: w175 h168. Using HTML */ }
+.featured .icon6 { width: 150px; height: 162px; left: 664px; top: 72px; position: absolute; /* Figma: w141 h141, HTML: w150 h162. Using HTML */ }
+.featured .icon7 { width: 162px; height: 169px; left: 867px; top: 589px; position: absolute; /* Figma: w103 h105, HTML: w162 h169. Using HTML */ }
+.featured .icon8 { width: 193px; height: 186px; left: 1077px; top: 535px; position: absolute; /* Figma: w138 h138, HTML: w193 h186. Using HTML */ }
+
+/* Дополнительные изображения в .featured (вне .group) */
+.featured .featured-child { /* width: 208px; height: 199px; left: 1225px; top: 271px; - из Figma, но HTML structure другая */
+    /* Этот элемент в HTML находится на одном уровне с group, а в Figma - внутри внешнего div */
+    /* Позиционирование может потребовать корректировки или изменения HTML */
+    position: absolute; /* Пример, если он должен быть поверх .group */
+    width: 208px; height: 199px;
+    left: calc(50% + 1225px - 1445px/2); /* Примерное позиционирование относительно центра .featured */
+    top: 271px;
+    /* background: #FAF7DB; box-shadow: 25px 25px 25px; border-radius: 9999px; filter: blur(12.50px); /* Из Figma */
+}
+.featured .featured-item {
+    /* width: 19px; height: 25px; */
+    /* Позиционирование и стили для этого элемента, если нужны */
+}
+
+
+/* Секция .featured1 (карточки "Геймификация", "Сообщество", "Почему выбирают нас?") */
+.featured1 {
+    width: 1445px; /* Из Figma */
+    padding-top: 45px;    /* Из Figma */
+    padding-bottom: 45px; /* Из Figma */
+    padding-left: 71px;   /* Из Figma */
+    /* padding-right: 71px; /* Figma не указывает, но логично для симметрии */
+    overflow: hidden; /* Из Figma */
+    display: flex; /* Из Figma: inline-flex, заменено для лучшего контроля */
+    flex-direction: column; /* Чтобы .featured-parent и .heading шли друг под другом */
+    align-items: flex-start; /* Figma: align-items: center; но контент внутри блоков выровнен по левому краю */
+    gap: 10px; /* Из Figma */
+    box-sizing: border-box;
+}
+
+.featured1 .featured-parent {
+    display: flex;
+    flex-direction: column; /* .featured2 и .heading будут друг под другом */
+    width: 100%; /* Занимает всю ширину .featured1 (за вычетом padding) */
+    gap: 20px; /* Примерный отступ между карточками и заголовком "Почему выбирают нас" */
+}
+
+.featured1 .featured2 { /* Контейнер для карточек */
+    display: flex; /* Из Figma: display: flex */
+    justify-content: flex-start; /* Из Figma */
+    align-items: flex-start; /* Из Figma */
+    gap: 20px; /* Из Figma */
+    width: 100%; /* Растягиваем на всю доступную ширину */
+    flex-wrap: nowrap; /* Предотвращаем перенос карточек, если они не влезают */
+    overflow-x: auto; /* Позволяем горизонтальную прокрутку, если карточек много */
+}
+
+.featured1 .container { /* Каждая карточка ("Геймификация" и т.д.) */
+    width: 449px;  /* Из Figma */
+    height: 514px; /* Из Figma */
+    position: relative;
+    background: white;
+    overflow: hidden;
+    border-radius: 20px;
+    padding: 43px; /* Отступы внутри карточки, чтобы текст не прилегал к краям */
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end; /* Текст и картинка будут снизу */
+}
+.featured1 .container img.rectangle-icon {
+    width: calc(100% + 86px); /* Компенсируем padding контейнера, чтобы картинка была во всю ширину */
+    height: 309px; /* Из Figma */
+    position: absolute;
+    left: -43px; /* Компенсируем padding */
+    top: -43px;  /* Компенсируем padding */
+    object-fit: cover; /* Чтобы изображение заполняло область */
+    z-index: 1;
+}
+
+.featured1 .container .div8 { /* Заголовок карточки "Геймификация", "Сообщество" */
+    position: relative; z-index: 2; /* Чтобы текст был поверх картинки */
+    /* left: 43px; top: 337px; /* Убрано, позиционирование через flex */
+    color: #004E9F;
+    font-size: 55px;
+    font-family: 'Blippo Black', sans-serif;
+    font-weight: 400; /* Normal для Blippo */
+    line-height: 1.1; /* Figma: 18px, что слишком мало. Скорректировано. */
+    word-wrap: break-word;
+    margin-bottom: 15px; /* Отступ между заголовком и описанием */
+}
+
+.featured1 .container .div9,
+.featured1 .container .div11 { /* Описание в карточке */
+    position: relative; z-index: 2; /* Чтобы текст был поверх картинки */
+    /* width: 390px; height: 66px; left: 43px; top: 403px; /* Убрано */
+    color: #004E9F;
+    font-size: 16px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
+    line-height: 19.20px; /* Прямое значение из Figma */
+    word-wrap: break-word;
+}
+
+.featured1 .heading { /* "Почему выбирают нас?" и кнопки-стрелки */
+    width: calc(100% - 43px); /* Figma: width: 1303px, выравниваем по левому краю карточек (учитываем padding .featured1) */
+    display: flex; /* Из Figma */
+    justify-content: space-between; /* Из Figma */
+    align-items: flex-end; /* Из Figma */
+    margin-top: 30px; /* Дополнительный отступ сверху */
+}
+
+.featured1 .heading .parent3 { /* "Почему выбирают нас?" */
+    width: 497px; /* Из Figma */
+    display: flex; /* Figma: inline-flex, заменено */
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 0; /* Figma: 15px, но line-height уже дает отступ */
+}
+.featured1 .heading .parent3 .div16 { /* "Почему" */
+    align-self: stretch;
+    color: white;
+    font-size: 55px;
+    font-family: 'Blippo Black', sans-serif;
+    font-weight: 400; /* Normal для Blippo */
+    line-height: 1.1; /* Figma: 18px. Скорректировано. */
+    word-wrap: break-word;
+}
+.featured1 .heading .parent3 .div17 { /* "выбирают нас?" */
+    align-self: stretch;
+    color: #FFEF2B; /* var(--Color7, #FFEF2B) */
+    font-size: 55px;
+    font-family: 'Blippo Black', sans-serif;
+    font-weight: 400; /* Normal для Blippo */
+    text-transform: uppercase;
+    line-height: 1.1; /* Figma: 18px. Скорректировано. */
+    word-wrap: break-word;
+}
+
+.featured1 .heading .wrap { /* Кнопки-стрелки и точки */
+    padding: 24px 32px; /* Из Figma */
+    justify-content: center;
+    align-items: center;
+    gap: 24px; /* Из Figma */
+    display: flex;
+}
+.featured1 .heading .button3, /* Кнопка-стрелка влево */
+.featured1 .heading .button4 { /* Кнопка-стрелка вправо */
+    width: 46px;
+    height: 46px;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+}
+.featured1 .heading .button3 {
+    /* transform: rotate(180deg); /* Из Figma для левой стрелки */
+    /* transform-origin: center; */
+}
+.featured1 .heading .button3 .chevron-left,
+.featured1 .heading .button4 .chevron-left {
+    width: 34.50px; height: 34.50px; left: 5.75px; top: 6px; position: absolute;
+    /* background: #FFEF2B; /* Для активной кнопки */
+    background: rgba(255, 255, 255, 0.38); /* Для неактивной */
+    border-radius: 50%; /* Делаем круглыми */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.featured1 .heading .button3 .chevron-left { /* Активная кнопка */
+     background: #FFEF2B;
+}
+
+.featured1 .heading .button3 .vector-icon, /* Иконка внутри кнопки */
+.featured1 .heading .button4 .vector-icon1 {
+    width: 9px; /* Figma: 11.50px */
+    height: 16px; /* Figma: 20.12px */
+    /* background: black; /* Для активной кнопки */
+    /* background: white; /* Для неактивной */
+}
+.featured1 .heading .button3 .vector-icon {
+    /* filter: brightness(0); /* Делаем черной для активной кнопки */
+}
+.featured1 .heading .button4 .vector-icon1 {
+    transform: rotate(180deg); /* Поворачиваем для стрелки вправо */
+}
+
+
+.featured1 .heading .chevron-forward-circle-outline-parent { /* Точки-индикаторы */
+    display: flex;
+    gap: 10px; /* Отступ между точками */
+}
+.featured1 .heading .chevron-forward-circle-outline-icon,
+.featured1 .heading .chevron-forward-circle-outline-icon1 {
+    width: 12px; /* Размер точек, можно настроить */
+    height: 12px;
+    background: rgba(255, 255, 255, 0.38); /* Цвет неактивной точки */
+    border-radius: 50%;
+}
+.featured1 .heading .chevron-forward-circle-outline-icon { /* Активная точка */
+    background: #FFEF2B;
+}
+
+
+/* Секция .featured3 ("Стартаперы, создайте свою планету!") */
+.featured3 {
+    width: 1445px; /* Из Figma */
+    padding: 45px 71px; /* Из Figma */
+    overflow: hidden; /* Из Figma */
+    display: flex; /* Из Figma: inline-flex, заменено */
+    justify-content: center; /* Figma: flex-start */
+    align-items: center; /* Из Figma */
+    gap: 10px; /* Из Figma */
+    box-sizing: border-box;
+}
+
+.featured3 .frame-parent { /* width: 1303px; height: 521px; */
+    width: 1303px;
+    height: 521px;
+    position: relative;
+    overflow: hidden;
+    display: flex; /* Добавлено для расположения .parent4 и .scale-1200... */
+    justify-content: space-between; /* Разнести по сторонам */
+    align-items: center;
+    background: black; /* Из Figma */
+    border-radius: 10px; /* Из Figma */
+}
+
+/* Левая часть с текстом и кнопками */
+.featured3 .parent4 {
+    /* left: 117px; top: 78px; position: absolute; /* Убрано, позиционируем через flex */
+    display: flex; /* Figma: inline-flex */
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 45px; /* Из Figma */
+    padding-left: 117px; /* Отступ слева */
+    z-index: 2; /* Чтобы было поверх фонового изображения/градиента */
+}
+
+.featured3 .heading1 { /* Контейнер для заголовка, списка и кнопки */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 45px;
+}
+
+.featured3 .heading1 .div18 { /* "Стартаперы, создайте свою планету!" */
+    width: 375px; /* Из Figma */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.featured3 .heading1 .div18 .txt {
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 600; /* SemiBold */
+    font-size: 35px;
+    line-height: 35px; /* Прямое значение из Figma */
+    word-wrap: break-word;
+}
+.featured3 .heading1 .div18 .txt > span:first-child { /* "Стартаперы," */
+    color: #FFEF2B;
+}
+.featured3 .heading1 .div18 .txt .span1 { /* " создайте свою планету!" */
     color: #F2F2F2;
 }
 
-.faq, /* Используется в нескольких местах как заголовок или метка */
-.div20 .txt, /* Получить экспертную поддержку... */
-.div20, /* Продать идею... */
-.div22 { /* Создать стартап, Посмотреть стартапы, Все стартапы, Подробнее ... */
-    font-family: 'Unbounded', sans-serif; /* Базовый для этих элементов */
-    font-size: 16px; /* Базовый размер, будет уточняться */
-    font-weight: 400; /* Базовый вес, будет уточняться */
-    /* color, line-height по макету для каждого конкретного случая */
+.featured3 .frame-group { /* Список преимуществ */
+    width: 470px; /* Из Figma */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 17px; /* Из Figma */
 }
-
-/* Уточнение для "Найти финансирование", "Продать идею или масштабировать бизнес" */
-.frame-group .chevron-forward-circle-outline-parent:nth-child(1) .faq, /* Найти финансирование */
-.frame-group .frame-parent2 .div20 { /* Продать идею или масштабировать бизнес */
-    color: white;
-    font-size: 16px;
-    font-family: 'Unbounded';
+.featured3 .chevron-forward-circle-outline-parent, /* Каждый пункт списка */
+.featured3 .frame-parent2 {
+    display: flex; /* Figma: inline-flex */
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px; /* Из Figma */
+}
+.featured3 .frame-icon { /* Иконка-галочка */
+    width: 35px; /* Из Figma */
+    height: 35px; /* Из Figma */
+    /* Figma: outline: 1px white solid; */
+    /* В HTML это img, стилизуем его */
+    border: 1px solid white;
+    border-radius: 5px;
+    padding: 5px; /* Чтобы иконка внутри была меньше */
+    box-sizing: border-box;
+}
+.featured3 .faq, /* Текст "Найти финансирование" */
+.featured3 .div20 { /* Текст "Получить экспертную поддержку", "Продать идею" */
+    font-family: 'Unbounded', sans-serif;
     font-weight: 400;
-    line-height: 18px;
-}
-
-/* Уточнение для "Получить экспертную поддержку" */
-.frame-group .chevron-forward-circle-outline-parent:nth-child(2) .div20 .txt > span:first-child {
-    color: white;
     font-size: 16px;
-    font-family: 'Unbounded';
-    font-weight: 400;
-    line-height: 18px;
+    line-height: 18px; /* Прямое значение из Figma */
+    word-wrap: break-word;
 }
-/* Уточнение для "(менторство, аналитика)" */
-.frame-group .chevron-forward-circle-outline-parent:nth-child(2) .div20 .txt .span2 {
+.featured3 .faq {
+    color: white;
+}
+.featured3 .div20 .txt > span:first-child { /* "Получить экспертную поддержку " */
+    color: white;
+}
+.featured3 .div20 .txt .span2 { /* "(менторство, аналитика)" */
     color: #FFEF2B;
-    font-size: 16px;
-    font-family: 'Unbounded';
-    font-weight: 400;
-    line-height: 18px;
-    font-style: normal; /* Убираем italic если был по умолчанию */
+}
+.featured3 .frame-parent2 .div20 { /* "Продать идею или масштабировать бизнес" */
+    color: white;
 }
 
-/* Уточнение для кнопки "Создать стартап" в этой секции */
+.featured3 .parent5 { /* Кнопка "Создать стартап" */
+    height: 40px; /* Из Figma */
+    padding: 12px 25px; /* Из Figma */
+    background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
+    border-radius: 10px;
+    /* outline: 1px black solid; /* Из Figma */
+    border: 1px solid black; /* Замена outline */
+    justify-content: flex-start;
+    align-items: center;
+    gap: 9px; /* Из Figma */
+    display: inline-flex;
+    text-decoration: none;
+    box-sizing: border-box;
+}
 .featured3 .parent5 .div22 {
     color: black;
     font-size: 16px;
-    font-family: 'Unbounded';
+    font-family: 'Unbounded', sans-serif;
     font-weight: 400;
-    line-height: 16px;
+    line-height: 16px; /* Прямое значение из Figma */
+    word-wrap: break-word;
+}
+.featured3 .parent5 .add-circle-outline-icon {
+    width: 24px;
+    height: 24px;
 }
 
-.div23 .txt { /* Инвесторы, найдите свою звезду! */
-    font-family: 'Unbounded', sans-serif; /* В Figma Unbounded, не Blippo */
-    font-size: 35px;
-    font-weight: 600; /* SemiBold */
-    line-height: 35px;
-    /* color по макету */
+/* Правая часть с изображениями */
+.featured3 .icon9 { /* Основное изображение placeholder 610x514 */
+    /* Это изображение в HTML было перед heading1, но по макету оно справа */
+    /* width: 563px; height: 997.26px; left: 603px; top: 40px; position: absolute; /* Из Figma */
+    position: absolute; /* Позиционируем абсолютно внутри .frame-parent */
+    right: 0; /* Прижимаем к правому краю */
+    top: 50%; /* Центрируем по вертикали */
+    transform: translateY(-50%);
+    width: auto; /* Пусть ширина определяется высотой и aspect-ratio */
+    height: 90%; /* Примерная высота, чтобы вписалось */
+    max-width: 50%; /* Ограничиваем ширину */
+    object-fit: contain;
+    z-index: 1;
 }
-.div23 .txt > span:first-child { /* Инвесторы, */
+
+.featured3 .scale-1200-photoroom-2-parent {
+    /* Это блок с фиолетовой планетой и векторами, в HTML он после .parent4 */
+    /* По макету он должен быть справа, возможно, перекрывая .icon9 */
+    position: absolute;
+    right: 50px; /* Примерный отступ от правого края */
+    top: 50%;
+    transform: translateY(-50%);
+    width: 414px; /* Из HTML */
+    height: auto;
+    z-index: 2;
+}
+.featured3 .scale-1200-photoroom-2-icon {
+    width: 100%;
+    height: auto;
+}
+.featured3 .vector-parent {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    /* Стили для frame-child7 и frame-child8, если они должны быть видны */
+}
+.featured3 .frame-child7, .featured3 .frame-child8 {
+    display: none; /* Скрываем, если это просто плейсхолдеры */
+}
+
+/* Градиентный фон для .featured3 .frame-parent (из Figma) */
+.featured3 .frame-parent::before {
+    content: "";
+    width: 882px;
+    height: 551px; /* Из Figma, но может быть 100% высоты родителя */
+    left: 34px;
+    top: 280px; /* Из Figma, возможно, 0 */
+    position: absolute;
+    background: linear-gradient(270deg, rgba(0, 0, 0, 0) 0%, black 100%);
+    z-index: 1; /* Под текстом, над фоновым изображением .icon9 */
+    opacity: 0.9; /* Из Figma */
+    border-radius: 10px;
+}
+
+
+/* Секция .featured4 ("Инвесторы, найдите свою звезду!") */
+.featured4 {
+    width: 1445px; /* Из Figma */
+    padding: 45px 71px; /* Из Figma */
+    overflow: hidden; /* Из Figma */
+    display: flex; /* Замена inline-flex */
+    justify-content: center;
+    align-items: center;
+    gap: 10px; /* Из Figma */
+    box-sizing: border-box;
+}
+
+.featured4 .frame-parent3 { /* width: 1303px; height: 521px; */
+    width: 1303px;
+    height: 521px;
+    position: relative;
+    background: white; /* Из Figma */
+    border-radius: 10px; /* Из Figma */
+    display: flex;
+    justify-content: space-between; /* Текст слева, картинка справа */
+    align-items: center;
+    overflow: hidden; /* Чтобы картинка не вылезала */
+}
+
+.featured4 .parent6 { /* Левый блок с текстом и элементами */
+    /* width: 591px; left: 92px; top: 55px; position: absolute; /* Из Figma */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 27px; /* Из Figma */
+    padding-left: 92px; /* Отступ слева */
+    padding-top: 55px; /* Отступ сверху */
+    box-sizing: border-box;
+    width: 50%; /* Примерно половина ширины */
+}
+
+.featured4 .parent6 .div23 { /* "Инвесторы, найдите свою звезду!" */
+    width: 375px; /* Из Figma */
+}
+.featured4 .parent6 .div23 .txt {
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 600; /* SemiBold */
+    font-size: 35px;
+    line-height: 35px; /* Прямое значение из Figma */
+    word-wrap: break-word;
+}
+.featured4 .parent6 .div23 .txt > span:first-child { /* "Инвесторы, " */
     color: #004E9F;
 }
-.div23 .txt .span3 { /* найдите свою звезду! */
+.featured4 .parent6 .div23 .txt .span3 { /* "найдите свою звезду!" */
     color: black;
 }
 
-.div24, .div25, .div26 { /* Доступ к проверенным стартапам, Диверсификация, Удобная аналитика */
-    font-family: 'Unbounded', sans-serif;
+.featured4 .group-parent { /* Контейнер для трех блоков с преимуществами */
+    align-self: stretch; /* Растянуть по ширине .parent6 */
+    display: flex; /* Figma: inline-flex */
+    justify-content: flex-start; /* Figma: align-items: flex-end */
+    align-items: flex-end;
+    gap: 15px; /* Из Figma */
+}
+.featured4 .group-div, /* Каждый из трех блоков */
+.featured4 .frame-parent5 {
+    width: 187px; /* Из Figma */
+    height: 181px; /* Из Figma */
+    position: relative;
+    background: linear-gradient(180deg, #004E9F 0%, #001C39 100%);
+    overflow: hidden;
+    border-radius: 10px;
+    padding: 14px; /* Внутренние отступы */
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end; /* Текст внизу */
+    align-items: center; /* Текст по центру горизонтально */
+}
+.featured4 .group-div .wrapper,
+.featured4 .frame-parent5 .wrapper1 {
+    width: 159px; /* Из Figma */
+    text-align: center; /* Из Figma */
+}
+.featured4 .div24, /* "Доступ к проверенным стартапам" */
+.featured4 .div25, /* "Диверсификация портфеля" */
+.featured4 .div26 { /* "Удобная аналитика..." */
     color: white;
     font-size: 14px;
+    font-family: 'Unbounded', sans-serif;
     font-weight: 400;
-    line-height: 18px;
+    line-height: 18px; /* Прямое значение из Figma */
+    word-wrap: break-word;
+}
+/* Иконки-плейсхолдеры внутри .group-div и .frame-parent5 */
+.featured4 .group-child, .featured4 .group-item, .featured4 .group-inner {
+    position: absolute;
+    top: 20px; /* Примерное положение иконки сверху */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30px; height: 30px; /* Из HTML */
 }
 
-/* Уточнение для кнопки "Посмотреть стартапы" в этой секции */
+
+.featured4 .parent7 { /* Кнопка "Посмотреть стартапы" */
+    height: 40px; /* Из Figma */
+    padding: 12px 25px; /* Из Figma */
+    background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
+    border-radius: 10px;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 9px; /* Из Figma */
+    display: inline-flex;
+    text-decoration: none;
+    box-sizing: border-box;
+    margin-top: 20px; /* Дополнительный отступ сверху */
+}
 .featured4 .parent7 .div22 {
     color: black;
     font-size: 16px;
-    font-family: 'Unbounded';
+    font-family: 'Unbounded', sans-serif;
     font-weight: 400;
-    line-height: 16px;
+    line-height: 16px; /* Прямое значение из Figma */
+    word-wrap: break-word;
+}
+.featured4 .parent7 .iconeye {
+    width: 24px;
+    height: 24px;
 }
 
-.parent8 .div28, /* Исследуйте */
-.parent8 .div29 { /* новые миры */
-    font-family: 'Blippo Black', sans-serif;
+.featured4 .icon10 { /* Правое изображение */
+    /* width: 771px; height: 553px; left: 712px; top: -16px; /* Из Figma */
+    width: auto; /* Занимает оставшееся место */
+    max-width: 50%;
+    height: 100%;
+    object-fit: cover; /* или contain, в зависимости от желаемого эффекта */
+    border-radius: 0 10px 10px 0; /* Скругляем только правые углы, если нужно */
+}
+
+/* Секция .featured5 ("Исследуйте новые миры") */
+.featured5 {
+    width: 1445px;
+    padding: 23px 71px 45px 71px; /* top/bottom/left/right из Figma */
+    overflow: hidden;
+    display: flex; /* inline-flex в Figma */
+    flex-direction: column; /* Чтобы заголовок и контент шли друг под другом */
+    /* justify-content: space-between; /* из Figma, но тут лучше column */
+    align-items: flex-start; /* из Figma */
+    box-sizing: border-box;
+    gap: 55px; /* Из Figma */
+}
+
+.featured5 .frame-parent6 { /* width: 1334px; ... gap: 55px; */
+    width: 100%; /* Заполняем доступное пространство */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 55px;
+}
+
+.featured5 .parent8 { /* Заголовок "Исследуйте новые миры" */
+    /* width: 491px; ... gap: 18px; */
+    align-self: flex-start; /* Выравнивание по левому краю */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 0; /* Figma: 18px. Уменьшено, line-height даст отступ */
+}
+.featured5 .parent8 .div28 { /* "Исследуйте" */
+    align-self: stretch;
+    color: white;
     font-size: 55px;
+    font-family: 'Blippo Black', sans-serif;
     font-weight: 400;
-    line-height: 55px;
-    /* color по макету */
+    line-height: 55px; /* Прямое значение из Figma */
+    word-wrap: break-word;
 }
-.parent8 .div28 { /* Исследуйте */
-    color: white; 
-}
-.parent8 .div29 { /* новые миры */
+.featured5 .parent8 .div29 { /* "новые миры" */
+    align-self: stretch;
     color: #FFEF2B;
+    font-size: 55px;
+    font-family: 'Blippo Black', sans-serif;
+    font-weight: 400;
     text-transform: uppercase;
+    line-height: 55px; /* Прямое значение из Figma */
+    word-wrap: break-word;
 }
 
-/* Кнопка "Все стартапы" в секции featured5 */
+.featured5 .frame-parent7 { /* Основной контент секции: картинка слева, карточки и список справа */
+    align-self: stretch;
+    display: flex; /* inline-flex в Figma */
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 41px; /* Из Figma */
+}
+
+.featured5 .frame-parent8 { /* Левый блок с большой картинкой и кнопкой */
+    width: 593px; /* Из Figma */
+    display: flex; /* inline-flex в Figma */
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center; /* Кнопка по центру */
+    gap: 21px; /* Из Figma */
+}
+.featured5 .group-wrapper { /* Контейнер для большой картинки */
+    align-self: stretch;
+    height: 514px; /* Из Figma */
+    position: relative;
+    background: #041A32; /* Из Figma */
+    overflow: hidden;
+    border-radius: 20px; /* Из Figma */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.featured5 .rectangle-parent { /* Для позиционирования img внутри */
+    width: 100%; height: 100%; position: relative;
+}
+.featured5 .group-child1 { /* img 314x218 */
+    /* Figma: width: 388.42px; height: 345.36px; left: 168.70px; top: 85.64px; */
+    position: absolute;
+    width: 314px; height: 218px; /* Из HTML */
+    /* Позиционирование нужно будет подобрать или взять из Figma, если картинка конкретная */
+    left: 50%; top: 50%; transform: translate(-70%, -50%); /* Пример */
+}
+.featured5 .group-child2 { /* img 299x187 */
+    /* Figma: width: 122.15px; height: 345.36px; left: 36px; top: 83px; */
+    position: absolute;
+    width: 299px; height: 187px; /* Из HTML */
+    left: 50%; top: 50%; transform: translate(-30%, -30%); /* Пример */
+}
+
+.featured5 .parent9 { /* Кнопка "Все стартапы" под картинкой */
+    height: 40px; /* Из Figma */
+    padding: 12px 25px; /* Из Figma */
+    background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
+    border-radius: 10px;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 9px; /* Из Figma */
+    display: inline-flex;
+    text-decoration: none;
+    box-sizing: border-box;
+}
 .featured5 .parent9 .div22 {
     color: black;
     font-size: 16px;
-    font-family: 'Unbounded';
+    font-family: 'Unbounded', sans-serif;
     font-weight: 400;
-    line-height: 16px;
+    line-height: 16px; /* Прямое значение из Figma */
+    word-wrap: break-word;
+}
+.featured5 .parent9 .iconsarrow-right-2line {
+    width: 16px; height: 16px;
 }
 
-.voltforge-dynamics { /* Название стартапа в карточке: VoltForge Dynamics, NeuroBloom */
-    font-family: 'Unbounded', sans-serif;
-    color: #FCFCFD; /* Из Figma */
+.featured5 .frame-parent9 { /* Блок с тремя карточками стартапов */
+    width: 355px; /* Из Figma */
+    display: flex; /* inline-flex в Figma */
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 20px; /* Figma: 49px между группами карточек, 20px между элементами внутри группы */
+}
+.featured5 .frame-wrapper { /* Обертка для каждой карточки */
+    align-self: stretch;
+}
+.featured5 .frame-parent10 { /* Сама карточка стартапа */
+    /* width: 355px; /* Из Figma */
+    align-self: stretch;
+    display: flex; /* Figma: inline-flex, заменено для лучшего контроля */
+    justify-content: space-between; /* Картинка слева, контент справа */
+    align-items: center; /* Figma: align-items: flex-start */
+    gap: 20px; /* Из Figma */
+}
+.featured5 .frame-parent10 .frame-child9 { /* Картинка стартапа */
+    width: 160px; /* Из Figma */
+    height: 156px; /* Из Figma */
+    border-radius: 10px; /* Из Figma */
+    object-fit: cover;
+}
+.featured5 .content { /* Правая часть карточки с текстом */
+    flex-grow: 1; /* Занять оставшееся место */
+    display: flex; /* inline-flex в Figma */
+    flex-direction: column;
+    justify-content: center; /* Figma: align-items: flex-start */
+    align-items: flex-start;
+    gap: 16px; /* Из Figma */
+}
+.featured5 .voltforge-dynamics-parent {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 8px; /* Из Figma */
+}
+.featured5 .voltforge-dynamics { /* Название стартапа */
+    /* width: 167px; /* Из Figma - может быть гибким */
+    color: #FCFCFD;
     font-size: 16px;
-    font-weight: 400;
-    line-height: 16px;
-}
-
-.info .label2 .popular { /* Рейтинг в карточке: 4,4/5 */
     font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
+    line-height: 16px; /* Прямое значение из Figma */
+    word-wrap: break-word;
+}
+.featured5 .info { /* Аватар и рейтинг */
+    /* width: 155px; /* Из Figma - может быть гибким */
+    display: flex; /* inline-flex в Figma */
+    justify-content: flex-start;
+    align-items: center;
+    gap: 11px; /* Из Figma */
+}
+.featured5 .avatar01-icon {
+    width: 24px; height: 24px;
+    background: #9757D7; /* Из Figma */
+    border-radius: 36px; /* Из Figma */
+    overflow: hidden;
+}
+.featured5 .label2 { /* Контейнер для рейтинга "4,4/5" */
+    padding: 6px 8px; /* Figma: top/bottom 8/6. Усреднено. */
+    border-radius: 4px; /* Из Figma */
+    outline: 2px solid #FFEF2B; /* var(--Color7, #FFEF2B) */
+    /* outline-offset: -2px; /* Figma */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px; /* Из Figma */
+}
+.featured5 .popular { /* "4,4/5" */
     color: #FFEF2B; /* var(--Color7, #FFEF2B) */
     font-size: 12px;
+    font-family: 'Unbounded', sans-serif;
     font-weight: 500; /* Medium */
     text-transform: uppercase;
-    letter-spacing: 0.12px;
+    letter-spacing: 0.12px; /* Из Figma */
+    word-wrap: break-word;
 }
-
-.voltforge { /* Описание стартапа в карточке */
+.featured5 .of-20 { /* "1 of 4" - этого нет в Figma в этом блоке, но есть в HTML */
+    font-size: 12px;
+    color: #E6E8EC; /* Пример */
+}
+.featured5 .voltforge { /* Описание стартапа */
+    /* width: 175px; /* Из Figma - может быть гибким */
+    color: #E6E8EC;
+    font-size: 8px; /* Прямое значение из Figma - очень маленькое! */
     font-family: 'Unbounded', sans-serif;
-    color: #E6E8EC; /* Из Figma */
-    font-size: 8px; /* !!! Очень маленький размер из Figma, возможно, ошибка в макете или требует корректировки */
     font-weight: 300; /* Light */
-    line-height: 9px; /* Из Figma */
-    /* margin-top/bottom для текста по макету */
+    line-height: 9px; /* Прямое значение из Figma */
+    word-wrap: break-word;
 }
-
-.button5 .cosmochat { /* Подробнее в карточке стартапа */
-    font-family: 'Unbounded', sans-serif;
-    color: #FCFCFD; /* Из Figma */
+.featured5 .button5 { /* Кнопка "Подробнее" */
+    padding: 8px 12px; /* Из Figma */
+    background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%);
+    border-radius: 10px;
+    justify-content: center;
+    align-items: center;
+    gap: 12px; /* Из Figma */
+    display: inline-flex;
+    text-decoration: none;
+}
+.featured5 .button5 .cosmochat {
+    color: #FCFCFD;
     font-size: 14px;
+    font-family: 'Unbounded', sans-serif;
     font-weight: 300; /* Light */
-    line-height: 18px;
+    line-height: 18px; /* Прямое значение из Figma */
+    word-wrap: break-word;
 }
+
+.featured5 .divider { /* Разделитель */
+    width: 1px;
+    height: 566px; /* Из Figma */
+    background: rgba(255, 255, 255, 0.13); /* Из Figma */
+}
+
+.featured5 .creators { /* "Последние обновления от стартаперов" */
+    display: flex; /* inline-flex в Figma */
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 20px; /* Отступ между заголовком и списком, примерный */
+}
+.featured5 .div31 { /* Заголовок "Последние обновления..." */
+    color: #777E90; /* Из Figma (Poppins, но используем Unbounded) */
+    font-size: 12px; /* Figma: Poppins 12px 600. */
+    font-family: 'Unbounded', sans-serif; /* Адаптация */
+    font-weight: 600; /* SemiBold */
+    line-height: 20px; /* Из Figma */
+    word-wrap: break-word;
+}
+.featured5 .frame-parent13 { /* Список стартаперов */
+    display: flex; /* flex в Figma */
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start; /* Figma: align-items: flex-end для button8, но для списка лучше flex-start */
+    gap: 0; /* Отступы между элементами списка будут через padding/margin */
+}
+.featured5 .frame-parent14 { /* Каждый элемент списка (пользователь + разделитель) */
+    width: 229px; /* Из Figma */
+    padding: 20px 0; /* Figma: top/bottom 20px */
+    display: flex;
+    flex-direction: column;
+    /* justify-content: flex-start; /* Figma: align-items: flex-end для gap: 23px */
+    align-items: stretch; /* Растягиваем user-parent и divider1 */
+    gap: 23px; /* Из Figma */
+}
+.featured5 .user-parent {
+    align-self: stretch;
+    display: flex; /* inline-flex в Figma */
+    justify-content: flex-start;
+    align-items: center;
+    gap: 21px; /* Из Figma */
+}
+.featured5 .user {
+    width: 56px; height: 56px;
+    position: relative;
+    border-radius: 64px; /* Из Figma */
+}
+.featured5 .avatar01-icon3 { /* Аватар */
+    width: 56px; height: 56px;
+    background: #9757D7; /* Из Figma */
+    border-radius: 48px; /* Из Figma */
+    overflow: hidden;
+    object-fit: cover;
+}
+.featured5 .number { /* Цифра на аватаре */
+    padding: 2px 8px; /* Из Figma */
+    left: -4px; top: -4px; position: absolute; /* Из Figma */
+    background: #FCFCFD;
+    border-radius: 64px; /* Из Figma */
+    outline: 2px solid #141416; /* Из Figma */
+    /* outline-offset: -2px; /* Figma */
+    display: inline-flex; /* Figma */
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 10px; /* Figma */
+}
+.featured5 .div32 { /* "6" */
+    width: 8px; /* Из Figma */
+    color: #23262F; /* Figma: Poppins */
+    font-size: 12px; /* Figma: Poppins */
+    font-family: 'Unbounded', sans-serif; /* Адаптация */
+    font-weight: 600; /* SemiBold */
+    line-height: 20px; /* Figma */
+    word-wrap: break-word;
+    text-align: center;
+}
+.featured5 .name-parent {
+    /* width: 152px; /* Из Figma */
+    flex-grow: 1;
+    display: flex; /* inline-flex в Figma */
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 5px; /* Из Figma */
+}
+.featured5 .name-parent .frame-wrapper { /* Обертка для имени и фамилии */
+    align-self: stretch;
+}
+.featured5 .parent10 { /* Имя и Фамилия */
+    align-self: stretch;
+    display: flex; /* inline-flex в Figma */
+    justify-content: flex-start;
+    align-items: flex-start; /* Figma: align-items: center */
+    gap: 4px; /* Из Figma */
+}
+.featured5 .name-parent .cosmochat { /* "Виктор", "Смирнов" */
+    color: #FCFCFD;
+    font-size: 14px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300; /* Light */
+    line-height: 18px; /* Прямое значение из Figma */
+    word-wrap: break-word;
+}
+.featured5 .parent11 { /* Рейтинг и значение */
+    display: flex; /* inline-flex в Figma */
+    justify-content: flex-start;
+    align-items: center;
+    gap: 9px; /* Из Figma */
+}
+.featured5 .great-edeas { /* "Рейтинг" */
+    color: #777E90; /* Figma: Poppins */
+    font-size: 12px; /* Figma: Poppins */
+    font-family: 'Unbounded', sans-serif; /* Адаптация */
+    font-weight: 300; /* Light */
+    letter-spacing: 0.12px; /* Из Figma */
+    word-wrap: break-word;
+}
+.featured5 .div36 { /* "4,5/5" */
+    color: #E6E8EC;
+    font-size: 14px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300; /* Light */
+    line-height: 18px; /* Прямое значение из Figma */
+    word-wrap: break-word;
+}
+.featured5 .divider1 { /* Разделитель под пользователем */
+    align-self: stretch;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.13); /* Из Figma */
+}
+
+.featured5 .button8 { /* Кнопка "Все стартапы" в списке */
+    padding: 12px 16px; /* Из Figma */
+    border-radius: 10px;
+    outline: 1px solid white; /* Из Figma */
+    /* outline-offset: -1px; /* Figma */
+    justify-content: center;
+    align-items: center;
+    gap: 12px; /* Из Figma */
+    display: inline-flex; /* Figma */
+    text-decoration: none;
+    margin-top: 20px; /* Добавлено для отступа */
+    align-self: flex-start; /* Выровнять по левому краю, а не по Figma flex-end */
+}
+.featured5 .button8 .cosmochat {
+    color: #FCFCFD;
+    font-size: 14px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300; /* Light */
+    line-height: 18px; /* Прямое значение из Figma */
+    word-wrap: break-word;
+}
+.featured5 .button8 .iconsarrow-right-2line {
+    width: 16px; height: 16px;
+}
+/* Стили для следующих секций будут добавлены позже */
+/* .featured6, .featured7, .featured8, .featured9, .featured10, .featured14, .cta */
+
+/* Универсальные классы */
+.txt { /* Если где-то используется просто .txt */
+    /* Можно задать базовые стили */
+}
+
+.cosmochat { /* Если где-то используется просто .cosmochat */
+    /* Можно задать общие стили, но лучше уточнять контекст */
+}
+
+/* Секция .featured6 ("Как работает наша галактика?") */
+.featured6 {
+    width: 1445px; /* Из Figma */
+    padding: 45px 71px; /* Предполагаемые отступы по аналогии с другими .featured */
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    margin-top: 50px; /* Отступ от предыдущей секции */
+}
+
+.featured6 .frame-parent18 {
+    width: 100%; /* Занимает всю ширину .featured6 (1303px effective) */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Центрируем контент */
+    gap: 30px; /* Отступ между элементами */
+}
+
+.featured6 .parent18 { /* Заголовок "Как работает наша галактика?" */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Центрируем текст заголовка */
+    gap: 5px;
+}
+
+.featured6 .parent18 .div52 { /* "Как работает" */
+    color: white;
+    font-size: 55px;
+    font-family: 'Blippo Black', sans-serif;
+    font-weight: 400; /* Normal для Blippo */
+    line-height: 1.1; /* Корректировка line-height */
+    word-wrap: break-word;
+    text-align: center;
+}
+
+.featured6 .parent18 .div29 { /* "наша галактика?" - используется класс из .featured5 */
+    color: #FFEF2B; /* Желтый */
+    font-size: 55px;
+    font-family: 'Blippo Black', sans-serif;
+    font-weight: 400; /* Normal для Blippo */
+    text-transform: uppercase;
+    line-height: 1.1; /* Корректировка line-height */
+    word-wrap: break-word;
+    text-align: center;
+}
+
+.featured6 .frame-child12 { /* Большое изображение-плейсхолдер */
+    width: 1000px; /* Из HTML */
+    height: 500px; /* Из HTML */
+    object-fit: cover;
+    border-radius: 10px; /* Для единообразия */
+}
+
+.featured6 .div28 { /* "Регистрация стартапа" - используется класс из .featured5 */
+    color: white;
+    font-size: 35px; /* Размер по аналогии с заголовками подсекций */
+    font-family: 'Blippo Black', sans-serif;
+    font-weight: 400;
+    line-height: 1.2;
+    word-wrap: break-word;
+    text-align: center;
+}
+
+.featured6 .chevron-forward-circle-outline-group { /* Навигация/шаги */
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.featured6 .chevron-forward-circle-outline-icon2,
+.featured6 .chevron-forward-circle-outline-icon1 { /* Иконки-стрелки */
+    width: 28px; /* Из HTML */
+    height: 28px; /* Из HTML */
+    cursor: pointer;
+    /* Стили для фона/цвета стрелок могут быть добавлены, если они активны/неактивны */
+}
+.featured6 .chevron-forward-circle-outline-icon1{
+    /* Может потребоваться transform: rotate(180deg) если это "вперед" */
+}
+
+
+.featured6 .wrapper2 { /* Обертка для текста шага */
+    padding: 8px 16px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+}
+
+.featured6 .div55 { /* "1 шаг" */
+    color: white;
+    font-size: 16px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
+    line-height: 1.2;
+    word-wrap: break-word;
+}
+
+/* Секция .featured7 ("Great Ideas это платформа...") */
+.featured7 {
+    width: 1445px;
+    padding: 45px 71px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    margin-top: 50px;
+}
+
+.featured7 .frame-parent19 {
+    width: 100%;
+    display: flex;
+    flex-direction: column; /* Основные блоки будут располагаться вертикально */
+    align-items: center;
+    gap: 40px; /* Отступ между верхним и нижним блоками */
+}
+
+.featured7 .group-container { /* Верхний блок: картинка слева, текст справа */
+    display: flex;
+    align-items: center; /* Выравнивание по центру вертикали */
+    gap: 40px;
+    width: 100%;
+}
+
+.featured7 .group-frame { /* Обертка для левой части с картинкой */
+    flex-shrink: 0; /* Предотвратить сжатие */
+}
+
+.featured7 .scale-1200-photoroom-2-group {
+    width: 414px; /* Из HTML для scale-1200-photoroom-2-icon */
+    height: 414px; /* Из HTML для scale-1200-photoroom-2-icon */
+    position: relative;
+}
+
+.featured7 .scale-1200-photoroom-2-icon { /* Основная картинка (фиолетовая планета) */
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.featured7 .group-child3 { /* Маленькая картинка, наложенная сверху */
+    position: absolute;
+    width: 271px; height: 168px; /* Из HTML */
+    bottom: 10px; /* Примерное позиционирование */
+    left: -50px;  /* Примерное позиционирование */
+    object-fit: contain;
+    z-index: 1;
+}
+
+.featured7 .group-parent1 { /* Контейнер для "Умные уведомления" и "Мобильная аналитика" */
+    position: absolute;
+    top: 50px; /* Пример */
+    right: -100px; /* Пример */
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    z-index: 2;
+}
+
+.featured7 .message-send-time-parent,
+.featured7 .frame-parent20 { /* Блоки с текстом и "хвостиком" */
+    position: relative;
+    padding: 10px 15px;
+    background: white;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+}
+.featured7 .message-send-time-parent .cosmochat,
+.featured7 .frame-parent20 .cosmochat {
+    color: #004E9F;
+    font-size: 14px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 500; /* Medium */
+}
+.featured7 .message-send-time { /* Иконка */
+    width: 20px; height: 20px;
+}
+.featured7 .bubble-tail,
+.featured7 .bubble-tail1 { /* "Хвостик" для сообщения */
+    width: 11px; height: 17px; /* Из HTML */
+    position: absolute;
+    left: -10px; /* Пример, чтобы указывал на картинку */
+    top: 50%;
+    transform: translateY(-50%);
+    /* Это img, так что src должен быть корректным */
+}
+.featured7 .frame-parent20 {
+    align-self: flex-end; /* Сместить правее */
+}
+.featured7 .frame-parent20 .bubble-tail1 {
+    left: auto;
+    right: -10px; /* Хвостик справа, если сообщение правее */
+}
+
+
+.featured7 .great-ideas-parent { /* Правый текстовый блок */
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.featured7 .great-ideas { /* Заголовок "Great Ideas" */
+    color: white;
+    font-size: 35px;
+    font-family: 'Blippo Black', sans-serif;
+    font-weight: 400;
+    line-height: 1.2;
+}
+
+.featured7 .div56 { /* Описание */
+    color: #E6E8EC; /* Светло-серый */
+    font-size: 16px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300; /* Light */
+    line-height: 1.6;
+}
+
+.featured7 .frame-parent21 { /* Нижний блок с двумя под-блоками */
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start; /* Выравнивание по верху */
+    gap: 40px;
+    width: 100%;
+}
+
+.featured7 .frame-parent22, /* Левый под-блок ("Геймификация бизнеса") */
+.featured7 .ellipse-parent { /* Правый под-блок ("Стартапы, меняющие индустрию") */
+    flex: 1; /* Занимают равное пространство */
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 25px;
+    background: rgba(0, 0, 0, 0.2); /* Полупрозрачный фон */
+    border-radius: 10px;
+}
+
+.featured7 .frame-parent23 { /* Контейнер для иконок телефонов */
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+.featured7 .group-group,
+.featured7 .group-parent2 {
+    display: flex;
+    gap: 10px;
+}
+.featured7 .group-icon, .featured7 .group-icon1, .featured7 .group-icon2,
+.featured7 .frame-child13, .featured7 .frame-child14, .featured7 .path46-icon {
+    width: 63px; height: 106px; /* Из HTML */
+    object-fit: contain;
+}
+
+.featured7 .parent19 { /* Текст для "Геймификация бизнеса" */
+    text-align: center;
+}
+.featured7 .div57 { /* Заголовок типа "Геймификация бизнеса" */
+    color: #FFEF2B; /* Желтый */
+    font-size: 24px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 600; /* SemiBold */
+    line-height: 1.3;
+    margin-bottom: 10px;
+}
+.featured7 .div58, /* Описание для "Геймификация бизнеса" */
+.featured7 .div60 { /* Описание для "Стартапы, меняющие индустрию" */
+    color: white;
+    font-size: 14px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300; /* Light */
+    line-height: 1.5;
+}
+
+.featured7 .ellipse-parent {
+    align-items: center; /* Центрируем контент в правом блоке */
+    position: relative; /* Для позиционирования иконок */
+}
+.featured7 .frame-child15 { /* Фоновый эллипс */
+    width: 200px; /* Пример */
+    height: 200px; /* Пример */
+    background: rgba(255, 239, 43, 0.1); /* Очень бледный желтый */
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 0;
+}
+.featured7 .icon11, .featured7 .icon12 { /* Иконки поверх эллипса */
+    position: relative; /* Чтобы были над эллипсом */
+    z-index: 1;
+    margin-bottom: 15px; /* Отступ от текста */
+}
+.featured7 .icon11 { width: 230px; height: 230px; /* Из HTML */ object-fit: contain;}
+.featured7 .icon12 { width: 167px; height: 164px; /* Из HTML */ object-fit: contain; margin-top: -80px; /* Наложение */}
+
+.featured7 .parent20 { /* Текст для "Стартапы, меняющие индустрию" */
+    text-align: center;
+    position: relative; z-index: 1;
+}
+
+
+/* Секция .featured8 ("Истории успеха") */
+.featured8 {
+    width: 1445px;
+    padding: 45px 71px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    box-sizing: border-box;
+    margin-top: 50px;
+}
+
+.featured8 .frame-parent18 { /* Используется тот же класс, что и в .featured6 */
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+}
+
+.featured8 .parent21 { /* Заголовок "Истории успеха в нашей галактике" */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+.featured8 .parent21 .faq { /* "Истории успеха" - используется класс из .featured3 */
+    color: white;
+    font-size: 55px;
+    font-family: 'Blippo Black', sans-serif;
+    font-weight: 400;
+    line-height: 1.1;
+    text-align: center;
+}
+.featured8 .parent21 .div62 { /* "в нашей галактике" */
+    color: #FFEF2B;
+    font-size: 55px;
+    font-family: 'Blippo Black', sans-serif;
+    font-weight: 400;
+    text-transform: uppercase;
+    line-height: 1.1;
+    text-align: center;
+}
+
+.featured8 .frame-parent25 { /* Контейнер для карусели отзывов */
+    width: 100%;
+    position: relative; /* Для кнопок навигации */
+    display: flex; /* Для центрирования .chevron-forward-circle-outline-container */
+    justify-content: center;
+}
+
+.featured8 .chevron-forward-circle-outline-container { /* Горизонтальный контейнер для карточек */
+    display: flex;
+    gap: 20px; /* Отступ между карточками */
+    overflow-x: auto; /* Горизонтальная прокрутка */
+    padding: 20px 0; /* Отступы для тени и чтобы скроллбар не прилипал */
+    /* Скрыть скроллбар, если нужно (кроссбраузерно) */
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+.featured8 .chevron-forward-circle-outline-container::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}
+
+
+.featured8 .parent22 { /* Карточка отзыва */
+    width: 300px; /* Фиксированная ширина карточки */
+    flex-shrink: 0; /* Чтобы карточки не сжимались */
+    padding: 25px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0px 5px 15px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Центрируем контент */
+    text-align: center;
+    gap: 15px;
+}
+.featured8 .parent22 .icon13 { /* Иконка кавычек */
+    width: 30px; height: 24px; /* Из HTML */
+    opacity: 0.5; /* Сделать менее заметными */
+}
+/* .frame-child16 - это div, возможно, для фона аватара или декоративный */
+.featured8 .parent22 .frame-child16 {
+    width: 60px;
+    height: 60px;
+    background-color: #004E9F; /* Пример */
+    border-radius: 50%;
+    /* Можно добавить img для аватара внутрь */
+    margin-bottom: 10px;
+}
+.featured8 .parent22 .div63 { /* Имя "Виктор", "Евгений" */
+    color: #004E9F;
+    font-size: 20px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 600; /* SemiBold */
+}
+.featured8 .wrapper3 .div22 { /* Роль "Инвестор", "Стартапер" - используется класс из .featured3 .parent5 */
+    color: #333;
+    font-size: 14px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
+    background-color: #FFEF2B;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+.featured8 .parent22 .div65 { /* Текст отзыва */
+    color: #555;
+    font-size: 13px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300; /* Light */
+    line-height: 1.6;
+    flex-grow: 1; /* Чтобы занимал доступное место и карточки были одной высоты */
+}
+.featured8 .vector-group { /* Звезды рейтинга */
+    display: flex;
+    gap: 5px;
+}
+.featured8 .vector-group img { /* Каждая звезда */
+    width: 12px; height: 11px; /* Из HTML */
+}
+/* frame-child17 и frame-child18 могут быть для неполных звезд */
+
+
+.featured8 .chevron-forward-circle-outline-icon { /* Левая стрелка навигации (если нужна) */
+    position: absolute;
+    left: 0px; /* Отступ от края */
+    top: 50%;
+    transform: translateY(-50%);
+    width: 32px; height: 32px; /* Из HTML group-child4, но тут .chevron... */
+    cursor: pointer;
+    z-index: 10;
+    /* Стилизация как у других стрелок */
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    display:flex; align-items:center; justify-content:center;
+}
+.featured8 .group-child4 { /* Правая стрелка навигации */
+    position: absolute;
+    right: 0px; /* Отступ от края */
+    top: 50%;
+    transform: translateY(-50%);
+    width: 32px; height: 32px; /* Из HTML */
+    cursor: pointer;
+    z-index: 10;
+    /* Стилизация как у других стрелок */
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    display:flex; align-items:center; justify-content:center;
+}
+.featured8 .chevron-forward-circle-outline-icon img,
+.featured8 .group-child4 img {
+    /* filter: brightness(0) invert(1); /* Для белой стрелки на темном фоне, если нужно */
+}
+
+
+/* Секция .featured9 ("Новости нашей галактики") */
+.featured9 {
+    width: 1445px;
+    padding: 45px 71px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    box-sizing: border-box;
+    margin-top: 50px;
+}
+
+.featured9 .heading-parent {
+    width: 100%;
+    display: flex;
+    gap: 40px; /* Отступ между левым (главная новость) и правым (список новостей) блоками */
+    align-items: flex-start;
+}
+
+.featured9 .heading2 { /* Левый блок: Заголовок и главная новость */
+    flex: 2; /* Занимает больше места */
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.featured9 .parent26 { /* Заголовок "Новости нашей галактики" */
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+.featured9 .parent26 .div16 { /* "Новости" - используется класс из .featured1 */
+    color: white;
+    font-size: 55px;
+    font-family: 'Blippo Black', sans-serif;
+    font-weight: 400;
+    line-height: 1.1;
+}
+.featured9 .parent26 .div17 { /* "нашей галактики" - используется класс из .featured1 */
+    color: #FFEF2B;
+    font-size: 55px;
+    font-family: 'Blippo Black', sans-serif;
+    font-weight: 400;
+    text-transform: uppercase;
+    line-height: 1.1;
+}
+
+.featured9 .great-ideas1 { /* Подзаголовок "Свежие новости..." */
+    color: #E6E8EC;
+    font-size: 16px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300; /* Light */
+    line-height: 1.5;
+}
+
+.featured9 .rectangle-group { /* Главная новость */
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+}
+.featured9 .frame-child26 { /* Изображение главной новости */
+    width: 100%; /* Растянуть на всю ширину .rectangle-group */
+    height: auto; /* Автоматическая высота для сохранения пропорций */
+    max-height: 300px; /* Из HTML, но можно настроить */
+    object-fit: cover;
+    display: block;
+}
+.featured9 .parent27 { /* Текст и кнопка поверх изображения */
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px;
+    background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 100%);
+    box-sizing: border-box;
+    color: white;
+}
+.featured9 .div77 { /* Заголовок главной новости */
+    font-size: 24px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 600; /* SemiBold */
+    margin-bottom: 15px;
+}
+.featured9 .button9 .div22 { /* Кнопка "Подробнее" */
+    color: black;
+    font-size: 14px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
+    background-color: #FFEF2B;
+    padding: 10px 15px;
+    border-radius: 8px;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.featured9 .instance-parent { /* Правый блок: список мелких новостей */
+    flex: 1; /* Занимает меньше места */
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-height: 500px; /* Ограничение высоты для прокрутки */
+    overflow-y: auto;
+    padding-right: 10px; /* Для скроллбара */
+}
+/* Стилизация скроллбара для .instance-parent (опционально) */
+.featured9 .instance-parent::-webkit-scrollbar {
+    width: 5px;
+}
+.featured9 .instance-parent::-webkit-scrollbar-thumb {
+    background: #FFEF2B;
+    border-radius: 5px;
+}
+
+
+.featured9 .instance-wrapper .frame-wrapper3 { /* Обертка для карточки новости */
+    /* Этот дополнительный div может не требовать спец. стилей */
+}
+.featured9 .rectangle-container { /* Карточка новости */
+    display: flex;
+    gap: 15px;
+    background: rgba(255,255,255,0.05);
+    padding: 15px;
+    border-radius: 8px;
+}
+.featured9 .frame-child27 { /* Изображение в карточке новости */
+    width: 120px; /* Фиксированная ширина, высота из HTML 140px */
+    height: 100px; /* Скорректируем для лучшего вида */
+    object-fit: cover;
+    border-radius: 5px;
+    flex-shrink: 0;
+}
+.featured9 .frame-parent26 { /* Текстовый контент карточки */
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex-grow: 1;
+}
+.featured9 .img-7665-parent { /* Автор и дата */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.featured9 .img-7665-icon { /* Аватар автора */
+    width: 32px; height: 32px; /* Из HTML */
+    border-radius: 50%;
+    object-fit: cover;
+}
+.featured9 .parent28 .div22 { /* Имя автора - используется класс */
+    color: #FFEF2B;
+    font-size: 14px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 500; /* Medium */
+}
+.featured9 .parent28 .div79 { /* Дата "2 дня назад" */
+    color: #bbb;
+    font-size: 12px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300; /* Light */
+}
+.featured9 .parent29 .div80 { /* Заголовок новости */
+    color: white;
+    font-size: 15px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 500; /* Medium */
+    line-height: 1.3;
+}
+.featured9 .parent29 .div81 { /* Краткое описание новости */
+    color: #ccc;
+    font-size: 12px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300; /* Light */
+    line-height: 1.4;
+}
+
+.featured9 .instance-wrapper3 { /* Кнопка "Показать еще" */
+    margin-top: 10px;
+    text-align: center;
+}
+.featured9 .instance-wrapper4 .button-parent {
+    display: inline-flex; /* Чтобы кнопка не растягивалась на всю ширину */
+    align-items: center;
+    gap: 8px;
+    padding: 10px 15px;
+    background: #FFEF2B;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+}
+.featured9 .button-parent .div22 { /* Текст "Показать еще" */
+    color: black;
+    font-size: 14px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 500; /* Medium */
+}
+.featured9 .iconsarrow-right-2line { /* Иконка стрелки вниз */
+    width: 11px; height: 6px; /* Из HTML vector-icon20 */
+}
+
+
+/* Секция .featured10 ("Будьте в курсе новых звезд!") - Подписка */
+.featured10 {
+    width: 1445px;
+    padding: 45px 71px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    box-sizing: border-box;
+    margin-top: 50px;
+}
+
+.featured10 .featured11 { /* Основной контейнер секции */
+    width: 100%;
+    padding: 40px;
+    background: linear-gradient(135deg, #00346B 0%, #004E9F 100%); /* Пример градиента */
+    border-radius: 10px;
+    position: relative; /* Для декоративных элементов */
+    display: flex;
+    justify-content: space-between; /* Разделение на левый и правый блоки */
+    align-items: center;
+    gap: 40px;
+}
+/* Декоративные элементы - можно стилизовать, если они видны, иначе скрыть */
+.featured10 .featured-inner,
+.featured10 .featured-child1 {
+    display: none;
+    /* width: ...; height: ...; position: absolute; background: ...; border-radius: ...; */
+}
+
+.featured10 .frame-parent31 { /* Левый блок: Заголовок и описание */
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.featured10 .parent3 { /* Заголовок "Будьте в курсе новых звезд!" - используется класс из .featured1 */
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+.featured10 .parent3 .div16 { /* "Будьте в курсе" */
+    color: white;
+    font-size: 40px; /* Немного меньше для этой секции */
+    font-family: 'Blippo Black', sans-serif;
+    font-weight: 400;
+    line-height: 1.1;
+}
+.featured10 .parent3 .div101 { /* "новых звезд!" */
+    color: #FFEF2B;
+    font-size: 40px;
+    font-family: 'Blippo Black', sans-serif;
+    font-weight: 400;
+    text-transform: uppercase;
+    line-height: 1.1;
+}
+
+.featured10 .featured12 { /* Описание с иконкой */
+    /* Контейнер для featured13 */
+}
+.featured10 .featured13 {
+    display: flex;
+    align-items: flex-start; /* Иконка и текст на одном уровне */
+    gap: 15px;
+}
+.featured10 .icon18 { /* Иконка "campaign" */
+    width: 24px; height: 24px; /* Примерный размер */
+    background-color: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.featured10 .campaign { /* Внутренний контейнер иконки */
+    width: 14px; height: 16px; /* Из HTML */
+}
+.featured10 .div102 { /* Текст описания */
+    color: #E6E8EC;
+    font-size: 15px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300; /* Light */
+    line-height: 1.6;
+}
+.featured10 .div102 .span4 { /* "свежие новости" */
+    font-weight: 500; /* Medium */
+    color: #FFEF2B;
+}
+
+.featured10 .frame-parent32 { /* Бонус (Чек-лист) */
+    margin-top: 20px;
+    padding: 20px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+.featured10 .parent40 { /* Текст бонуса */
+    flex-grow: 1;
+}
+.featured10 .parent40 .div16 { /* "Бонус" */
+    color: #FFEF2B;
+    font-size: 20px;
+    font-family: 'Blippo Black', sans-serif;
+    font-weight: 400;
+    margin-bottom: 5px;
+}
+.featured10 .parent40 .div104 { /* "Получите чек-лист..." */
+    color: white;
+    font-size: 14px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300; /* Light */
+}
+.featured10 .frame-child32 { /* Изображение/иконка для чек-листа */
+    width: 80px;
+    height: 80px;
+    background-color: #FFEF2B; /* Пример */
+    border-radius: 5px;
+    /* Можно добавить src для img placeholder */
+}
+
+
+.featured10 .form { /* Правый блок: Форма подписки */
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-width: 400px; /* Ограничение ширины формы */
+}
+.featured10 .form1 input[type="email"], /* Поле для Email */
+.featured10 .form1 .cosmochat /* Используется div для плейсхолдера */
+{
+    width: 100%;
+    padding: 12px 15px;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    font-family: 'Unbounded', sans-serif;
+    color: #333;
+    box-sizing: border-box;
+}
+/* Если .cosmochat это div-плейсхолдер, а не input */
+.featured10 .form1 .cosmochat {
+    color: #777; /* Цвет плейсхолдера */
+     /* Стили для input */
+    background: white;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    font-family: 'Unbounded', sans-serif;
+    padding: 12px 15px;
+    box-sizing: border-box;
+}
+
+
+.featured10 .wrap1 { /* Контейнер для чекбокса и кнопки */
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.featured10 .text { /* Чекбокс и текст согласия */
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer; /* Для кликабельности */
+}
+.featured10 .icon17 { /* "Галочка" / чекбокс */
+    width: 20px; height: 20px;
+    border: 2px solid #FFEF2B;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent; /* Или white, если активен */
+    flex-shrink: 0;
+}
+.featured10 .check { /* Внутренняя галочка */
+    width: 14px; height: 10px; /* Из HTML */
+    /* Видимость галочки будет управляться JS или :checked */
+}
+.featured10 .div98 { /* "Я даю согласие..." */
+    color: #E6E8EC;
+    font-size: 12px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300; /* Light */
+    line-height: 1.4;
+}
+.featured10 .parent38 { /* Кнопка "Подписаться" */
+    background: #FFEF2B;
+    border-radius: 8px;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    cursor: pointer;
+    text-decoration: none;
+}
+.featured10 .parent38 .div22 { /* Текст кнопки */
+    color: black;
+    font-size: 16px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 500; /* Medium */
+}
+.featured10 .send { /* Иконка отправки */
+    width: 14px; height: 14px; /* Из HTML */
+}
+
+
+/* Секция .featured14 (FAQ) */
+.featured14 {
+    width: 1445px;
+    padding: 45px 71px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    box-sizing: border-box;
+    margin-top: 50px;
+}
+
+.featured14 .heading-group {
+    width: 100%;
+    display: flex;
+    gap: 40px; /* Отступ между левой (заголовок) и правой (аккордеон) частями */
+    align-items: flex-start;
+}
+
+.featured14 .heading2 { /* Левый блок: Заголовок и кнопка "Задать вопрос" */
+    flex: 1; /* Занимает меньше места */
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+.featured14 .faq-parent { /* Заголовок "FAQ Часто задаваемые вопросы" */
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+.featured14 .faq-parent .faq { /* "FAQ" - используется класс */
+    color: white;
+    font-size: 55px;
+    font-family: 'Blippo Black', sans-serif;
+    font-weight: 400;
+    line-height: 1.1;
+}
+.featured14 .div105 { /* "Часто задаваемые вопросы" */
+    color: #FFEF2B;
+    font-size: 24px;
+    font-family: 'Blippo Black', sans-serif;
+    font-weight: 400;
+    text-transform: uppercase;
+    line-height: 1.2;
+}
+.featured14 .div105 .p { margin: 0; }
+
+
+.featured14 .text1 { /* "Не нашли ответа? Задать вопрос" */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+}
+.featured14 .div106 { /* "Не нашли ответа?" */
+    color: #E6E8EC;
+    font-size: 16px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300; /* Light */
+}
+.featured14 .wrapper7 .div22 { /* Кнопка "Задать вопрос" */
+    color: black;
+    font-size: 14px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 500; /* Medium */
+    background-color: #FFEF2B;
+    padding: 10px 15px;
+    border-radius: 8px;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.featured14 .rectangle-parent5 { /* Правый блок: Аккордеон */
+    flex: 2; /* Занимает больше места */
+    background: white;
+    border-radius: 10px;
+    padding: 30px;
+    position: relative; /* Для декоративных линий */
+    color: #333; /* Основной цвет текста внутри аккордеона */
+}
+/* Декоративные линии */
+.featured14 .rectangle-div { /* Верхняя линия */
+    position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
+    width: 80%; height: 2px; background: #eee;
+}
+.featured14 .frame-child33 { /* Нижняя линия */
+    position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+    width: 80%; height: 2px; background: #eee;
+}
+.featured14 .frame-child35 { /* Вертикальная линия (может быть между колонками, если их две) */
+    position: absolute; top: 50%; left: 35%; /* Примерное положение, если слева список, справа ответ */
+    transform: translateY(-50%);
+    width: 2px; height: 80%; background: #eee;
+}
+
+
+.featured14 .parent41 { /* Открытый/активный элемент аккордеона */
+    margin-bottom: 20px; /* Отступ от списка вопросов */
+    padding-left: calc(35% + 20px); /* Если есть вертикальная линия слева */
+}
+.featured14 .div108 { /* Заголовок открытого вопроса */
+    color: #004E9F;
+    font-size: 18px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 600; /* SemiBold */
+    margin-bottom: 10px;
+}
+.featured14 .it-parent { /* Текст ответа */
+    font-size: 14px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300; /* Light */
+    line-height: 1.6;
+    color: #555;
+}
+.featured14 .parent42 { /* Ссылка "Список доступных сфер" */
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.featured14 .parent42 .great-edeas { /* Текст ссылки */
+    color: #004E9F;
+    font-size: 14px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 500; /* Medium */
+    text-decoration: underline;
+    cursor: pointer;
+}
+.featured14 .frame-child34 { /* Иконка-стрелка для ссылки */
+    width: 6px; height: 10px; /* Из HTML */
+}
+
+.featured14 .button-group { /* Список вопросов (левая колонка аккордеона) */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    /* Если есть вертикальная линия, то ограничить ширину */
+    /* width: 35%; */
+    /* float: left; /* Для расположения слева от ответа */
+}
+
+.featured14 .button12, .featured14 .button13, .featured14 .button14,
+.featured14 .button15, .featured14 .button18 { /* Кнопки-вопросы */
+    width: 100%;
+    padding: 12px 15px;
+    background: #f7f7f7;
+    border-radius: 8px;
+    text-align: left;
+    cursor: pointer;
+    border: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    transition: background-color 0.2s;
+}
+.featured14 .button12:hover, .featured14 .button13:hover, .featured14 .button14:hover,
+.featured14 .button15:hover, .featured14 .button18:hover {
+    background-color: #e9e9e9;
+}
+/* Активная кнопка (можно добавить класс .active через JS) */
+.featured14 .button-group > div.active {
+    background-color: #004E9F;
+    color: white;
+    border-color: #004E9F;
+}
+.featured14 .button-group > div.active .div22,
+.featured14 .button-group > div.active .div110,
+.featured14 .button-group > div.active .div111,
+.featured14 .button-group > div.active .great-ideas3 {
+    color: white;
+}
+.featured14 .button-group > div.active .iconsarrow-right-2line img {
+    filter: brightness(0) invert(1); /* Белая стрелка на темном фоне */
+}
+
+
+.featured14 .button-group .div22, /* Текст вопроса (используются разные классы) */
+.featured14 .div110, .featured14 .div111, .featured14 .great-ideas3 {
+    flex-grow: 1;
+    color: #333;
+    font-size: 14px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
+}
+.featured14 .iconsarrow-right-2line { /* Иконка-стрелка для вопроса */
+    width: 16px; height: 16px; /* Из HTML */
+    flex-shrink: 0;
+    transition: transform 0.2s;
+}
+.featured14 .button-group > div.active .iconsarrow-right-2line {
+    transform: rotate(90deg); /* Поворот стрелки для активного элемента */
+}
+.featured14 .button-container { /* Вложенный список вопросов */
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-left: 20px; /* Отступ для вложенности */
+    margin-top: 5px;
+}
+
+
+/* Секция .cta ("Готовы покорить галактику?") */
+.cta {
+    width: 1445px;
+    padding: 0; /* CTA часто без внешних отступов, фон на всю ширину */
+    margin-top: 50px;
+    margin-bottom: 50px; /* Отступ снизу перед футером */
+    height: 361px; /* Из HTML для clip-path-group, основной блок будет таким же или чуть больше */
+    position: relative;
+    overflow: hidden;
+    display: flex; /* Для позиционирования контента */
+    align-items: center;
+    justify-content: center; /* Центрируем .heading4 */
+    border-radius: 10px; /* Если нужно скругление как у других блоков */
+}
+
+.cta .div146 { /* Фоновый слой/цвет/градиент */
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: linear-gradient(45deg, #001C39 0%, #004E9F 100%); /* Пример */
+    z-index: 1;
+}
+
+.cta .clip-path-group { /* Фоновое изображение с clip-path */
+    position: absolute;
+    top: 0; right: 0; /* Или другое позиционирование */
+    width: 600px; height: 361px; /* Из HTML */
+    object-fit: cover;
+    /* clip-path: polygon(...); Если нужен сложный clip-path */
+    z-index: 2;
+    opacity: 0.7; /* Сделать изображение полупрозрачным, чтобы текст был читаемым */
+}
+
+.cta .heading4 { /* Контейнер для текста и кнопок */
+    position: relative;
+    z-index: 3; /* Поверх фона и изображения */
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    padding: 20px; /* Чтобы контент не прилипал к краям */
+}
+
+.cta .parent45 { /* Заголовок "Готовы покорить галактику?" */
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+.cta .parent45 .div16 { /* "Готовы" - используется класс */
+    color: white;
+    font-size: 55px;
+    font-family: 'Blippo Black', sans-serif;
+    font-weight: 400;
+    line-height: 1.1;
+}
+.cta .parent45 .div148 { /* "покорить галактику?" */
+    color: #FFEF2B;
+    font-size: 55px;
+    font-family: 'Blippo Black', sans-serif;
+    font-weight: 400;
+    text-transform: uppercase;
+    line-height: 1.1;
+}
+
+.cta .text2 { /* Контейнер для двух кнопок */
+    display: flex;
+    gap: 20px;
+}
+.cta .parent46, /* Кнопка "Создать стартап" */
+.cta .parent47 { /* Кнопка "Инвестировать" */
+    padding: 12px 25px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    font-size: 16px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 500; /* Medium */
+    cursor: pointer;
+}
+
+.cta .parent46 { /* "Создать стартап" - желтая кнопка */
+    background: #FFEF2B;
+    color: black;
+}
+.cta .parent46 .add-circle-outline-icon { /* Иконка */
+    width: 24px; height: 24px;
+    /* filter: brightness(0); /* Если иконка светлая, а фон темный */
+}
+
+.cta .parent47 { /* "Инвестировать" - синяя/белая кнопка */
+    background: #004E9F; /* Или белый с синей рамкой */
+    color: white;
+    border: 2px solid #FFEF2B; /* Желтая рамка для контраста */
+}
+.cta .parent47 .iconeye { /* Иконка */
+    width: 24px; height: 24px;
+    filter: brightness(0) invert(1); /* Если иконка темная, а фон светлый, и наоборот */
+}
+
+
+/* Универсальные классы (если есть глобальные переопределения) */
+.txt {
+    /* Базовые стили для .txt, если они не переопределены локально */
+}
+
+.cosmochat {
+    /* Базовые стили для .cosmochat, если они не переопределены локально */
+    /* Например, color: white; font-family: 'Unbounded', sans-serif; */
+} 
