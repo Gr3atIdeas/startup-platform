@@ -5,8 +5,9 @@ from accounts.views import profile, delete_avatar
 from . import views
 
 urlpatterns = [
-    path('', views.home, name='home'),
-    path('main_temp/', views.main_temp_view, name='main_temp'),
+    path('', views.home, name='home'),  # Оставляем для авторизованных, изменим логику в views.py
+    path('main_temp_page/', views.display_main_temp_page, name='main_temp_page'), # Маршрут для временной главной страницы
+    # path('main_temp/', views.main_temp_view, name='main_temp'), # Комментируем старый main_temp, если он больше не нужен
     path('register/', views.register, name='register'),
     path('login/', views.user_login, name='login'),
     path('logout/', views.user_logout, name='logout'),

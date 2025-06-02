@@ -37,9 +37,15 @@ logger = logging.getLogger(__name__)
 
 # Главная страница
 def home(request):
+    if not request.user.is_authenticated:
+        return redirect('main_temp_page') # Перенаправляем на временную главную, если не авторизован
     return render(request, 'accounts/home.html')
 
-# Временная главная страница (для неавторизованных)
+# Новая временная главная страница (для всех)
+def display_main_temp_page(request): # Изменено имя представления
+    return render(request, 'accounts/main_temp.html')
+
+# Старая временная главная страница (если еще нужна)
 def main_temp_view(request):
     return render(request, 'accounts/main_temp.html')
 
