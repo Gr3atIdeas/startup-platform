@@ -2809,3 +2809,18 @@ body.glightbox-open .glightbox-container {
     color: var(--text-primary);
     font-weight: 600;
 }
+
+/* Стили для новых кнопок модератора */
+.actions-top-right .action-button.add-investment-button,
+.actions-top-right .action-button.change-owner-button,
+.actions-top-right .action-button.add-investor-button {
+    background-color: var(--button-blue); /* Такой же цвет, как у кнопки "Редактировать" */
+    color: var(--text-primary);
+    border-radius: 10px;
+}
+
+.actions-top-right .action-button.add-investment-button:hover,
+.actions-top-right .action-button.change-owner-button:hover,
+.actions-top-right .action-button.add-investor-button:hover {
+    background-color: #2a4ecc; /* Такой же hover-эффект, как у "Редактировать" */
+}

@@ -83,11 +83,6 @@
           <i class="fas fa-users"></i>
           <span>({{ investors_count }})</span>
         </div>
-        <!-- Добавляем цель инвестиций -->
-        <div class="funding-goal-info">
-          <span class="funding-goal-label">Цель:</span>
-          <span class="funding-goal-value">{{ startup.funding_goal|default:0|floatformat:0|intcomma }} ₽</span>
-        </div>
       </div>
       
       <div class="author-info-left">
@@ -110,11 +105,15 @@
       {# Этот контейнер теперь будет стилизоваться через CSS #}
       <div class="startup-header-actions-wrapper"> 
         <div class="startup-header">
-          <h1 class="startup-name" title="{{ startup.title }}">{{ startup.title }}</h1> {# Добавляем title для полного названия #}
+          <h1 class="startup-name" title="{{ startup.title }}">{{ startup.title }}</h1>
           <div class="header-meta">
             {# Применяем фильтр для перевода категории #}
             <span class="category-value">{{ startup.direction.direction_name|translate_category|default:"Без категории" }}</span>
-
+            <!-- Добавляем цель инвестиций сюда -->
+            <div class="funding-goal-info">
+              <span class="funding-goal-label">Цель:</span>
+              <span class="funding-goal-value">{{ startup.funding_goal|default:0|floatformat:0|intcomma }} ₽</span>
+            </div>
             {# Новый блок для Микроинвестиций #}
             {% if startup.only_invest or startup.both_mode %}
             <div class="microinvestment-badge">
@@ -167,9 +166,18 @@
             Редактировать
           </a>
 
-          {% if user.is_authenticated and startup.owner == user %}
+          {# Добавляем новые кнопки для модераторов #}
+          {% if user.is_authenticated and user.role.role_name == 'moderator' %}
+            <button type="button" class="action-button add-investment-button">
+              Добавить инвестицию
+            </button>
+            <button type="button" class="action-button change-owner-button">
+              Сменить владельца
+            </button>
+            <button type="button" class="action-button add-investor-button">
+              Добавить инвестора
+            </button>
           {% endif %}
-
         </div>
       </div> 
 
