@@ -2739,58 +2739,6 @@ body.glightbox-open .glightbox-container {
     transition: width 0.2s ease;
 }
 
-/* Стили для прогресс-бара (уже есть, но для контекста) */
-.progress-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    margin: 20px 0;
-}
-
-.progress-bar-visual {
-    position: relative;
-    width: 100%;
-    height: 24px;
-    background: var(--dark-card-bg);
-    border-radius: 12px;
-    overflow: hidden;
-    border: 1px solid var(--border-color);
-}
-
-.progress-animation-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 0%;
-    background: linear-gradient(90deg, var(--accent-yellow) 0%, var(--accent-purple) 100%);
-    transition: width 1s ease;
-}
-
-.progress-percentage {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: var(--text-primary);
-    font-family: 'Unbounded', sans-serif;
-    font-size: 14px;
-    font-weight: 600;
-}
-
-.progress-backers-info {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    color: var(--text-secondary);
-    font-size: 14px;
-}
-
-.progress-backers-info i {
-    color: var(--accent-yellow);
-}
-
 /* Новые стили для цели инвестиций */
 .funding-goal-info {
     display: flex;
@@ -2823,4 +2771,74 @@ body.glightbox-open .glightbox-container {
 .actions-top-right .action-button.change-owner-button:hover,
 .actions-top-right .action-button.add-investor-button:hover {
     background-color: #2a4ecc; /* Такой же hover-эффект, как у "Редактировать" */
+}
+
+/* Стили для модальных окон */
+.modal-backdrop {
+    background-color: rgba(0, 8, 25, 0.8);
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    background-color: var(--dark-card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 15px;
+    color: var(--text-primary);
+}
+
+.modal-header {
+    border-bottom: 1px solid var(--border-color);
+    padding: 15px 20px;
+}
+
+.modal-title {
+    color: var(--accent-yellow);
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+.modal-footer {
+    border-top: 1px solid var(--border-color);
+    padding: 15px 20px;
+}
+
+.btn-close {
+    filter: invert(1);
+    opacity: 0.7;
+}
+
+.btn-close:hover {
+    opacity: 1;
+}
+
+.list-group-item {
+    background-color: var(--secondary-blue);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    margin-bottom: 5px;
+    cursor: pointer;
+}
+
+.list-group-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+#currentInvestorsList .investor-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: var(--secondary-blue);
+    border: 1px solid var(--border-color);
+    margin-bottom: 5px;
+    border-radius: 8px;
+}
+
+#currentInvestorsList .investor-item input {
+    width: 100px;
+    margin-left: 10px;
 }

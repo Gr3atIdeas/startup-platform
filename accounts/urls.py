@@ -48,4 +48,9 @@ urlpatterns = [
     path('favicon.ico', RedirectView.as_view(url='/static/images/favicon.png', permanent=True)),
     path('faq/', views.faq_page_view, name='faq'),
     path('contacts/', views.contacts_page_view, name='contacts'),
+    path('change_owner/<int:startup_id>/', views.change_owner, name='change_owner'),
+    path('get_investors/<int:startup_id>/', views.get_investors, name='get_investors'),
+    path('add_investor/<int:startup_id>/', views.add_investor, name='add_investor'),
+    path('edit_investment/<int:startup_id>/<int:user_id>/', views.edit_investment, name='edit_investment'),
+    path('delete_investment/<int:startup_id>/<int:user_id>/', views.delete_investment, name='delete_investment'),
 ]

@@ -166,17 +166,18 @@
             Редактировать
           </a>
 
-          {# Добавляем новые кнопки для модераторов #}
+          {# Добавляем новые кнопки для модераторов с условиями #}
           {% if user.is_authenticated and user.role.role_name == 'moderator' %}
-            <button type="button" class="action-button add-investment-button">
-              Добавить инвестицию
-            </button>
-            <button type="button" class="action-button change-owner-button">
-              Сменить владельца
-            </button>
-            <button type="button" class="action-button add-investor-button">
-              Добавить инвестора
-            </button>
+            {% if startup.both_mode or startup.only_buy %}
+              <button type="button" class="action-button change-owner-button">
+                Сменить владельца
+              </button>
+            {% endif %}
+            {% if startup.both_mode or startup.only_invest %}
+              <button type="button" class="action-button add-investor-button">
+                Добавить инвестора
+              </button>
+            {% endif %}
           {% endif %}
         </div>
       </div> 
@@ -629,6 +630,116 @@
            </button>
         </div>
       </div> {# Конец similar-startups-grid #}
+    </div>
+  </div>
+
+  {# Добавляем модальные окна для функционала модератора #}
+  <!-- Модальное окно 1: Поиск пользователей для смены владельца -->
+  <div class="modal fade" id="changeOwnerModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Сменить владельца</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <input type="text" id="userSearchInput" class="form-control mb-3" placeholder="Поиск пользователей...">
+          <ul id="userSearchResults" class="list-group"></ul>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="action-button" data-bs-dismiss="modal">Закрыть</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Модальное окно 2: Подтверждение смены владельца -->
+  <div class="modal fade" id="confirmChangeOwnerModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Подтверждение действия</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Вы уверены, что хотите сменить владельца стартапа на <strong id="newOwnerName"></strong>?</p>
+          <input type="hidden" id="newOwnerId">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="action-button" data-bs-dismiss="modal">Отмена</button>
+          <button type="button" class="action-button confirm-change-owner">Подтвердить</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Модальное окно: Добавить инвестора -->
+  <div class="modal fade" id="addInvestorModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Добавить инвестора</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <h6>Поиск пользователей</h6>
+          <input type="text" id="investorSearchInput" class="form-control mb-3" placeholder="Поиск пользователей...">
+          <ul id="investorSearchResults" class="list-group mb-4"></ul>
+
+          <h6>Новая инвестиция</h6>
+          <div class="mb-3">
+            <label for="investmentAmount" class="form-label">Сумма инвестиции (₽)</label>
+            <input type="number" id="investmentAmount" class="form-control" placeholder="Введите сумму">
+          </div>
+          <button type="button" id="addInvestmentButton" class="action-button mb-4" disabled>Добавить</button>
+
+          <h6>Текущие инвесторы</h6>
+          <div id="currentInvestorsList"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="action-button" data-bs-dismiss="modal">Закрыть</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Модальное окно: Подтверждение редактирования инвестиции -->
+  <div class="modal fade" id="confirmEditInvestmentModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Подтверждение редактирования</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Вы уверены, что хотите изменить сумму инвестиции пользователя <strong id="editInvestorName"></strong> на <span id="editInvestmentAmount"></span> ₽?</p>
+          <input type="hidden" id="editInvestorId">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="action-button" data-bs-dismiss="modal">Отмена</button>
+          <button type="button" class="action-button confirm-edit-investment">Подтвердить</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Модальное окно: Подтверждение удаления инвестиции -->
+  <div class="modal fade" id="confirmDeleteInvestmentModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Подтверждение удаления</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Вы уверены, что хотите удалить инвестицию пользователя <strong id="deleteInvestorName"></strong> на сумму <span id="deleteInvestmentAmount"></span> ₽?</p>
+          <input type="hidden" id="deleteInvestorId">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="action-button" data-bs-dismiss="modal">Отмена</button>
+          <button type="button" class="action-button confirm-delete-investment">Подтвердить</button>
+        </div>
+      </div>
     </div>
   </div>
 
