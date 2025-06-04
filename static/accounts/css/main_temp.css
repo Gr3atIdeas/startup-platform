@@ -43,12 +43,14 @@
 html {
     height: 100%; 
     min-height: 100%;
-    background: #000000; /* Базовый черный фон для html */
+    background: linear-gradient(to bottom, #000000 0%, #01366D 50%, #004E9F 100%); /* Фон на html */
+    background-repeat: no-repeat;
+    background-attachment: scroll;
     width: 100%; 
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    overflow-x: hidden; /* Предотвращаем горизонтальный скролл на html */
+    overflow-x: hidden; 
 }
 
 body {
@@ -56,29 +58,28 @@ body {
     font-weight: normal;
     font-size: 16px;
     line-height: 1.6;
-    color: #FCFCFD; /* Основной цвет текста - белый для темного фона */
+    color: #FCFCFD; 
     margin: 0;
     padding: 0;
-    background: transparent; /* Убираем фон с body */
-    /* background-repeat и background-attachment не нужны для прозрачного фона */
+    background: transparent; /* body прозрачный */
     overflow-x: hidden; 
     min-height: 100%; 
-    display: flex; 
-    flex-direction: column; 
-    width: 100%; /* Добавляем ширину на всю страницу */
+    width: 100%; 
     box-sizing: border-box;
+    display: flex; /* Для flex-grow у .div */
+    flex-direction: column; /* Для flex-grow у .div */
 }
 
 .div { /* Общий контейнер страницы */
     width: 100%;
-    min-width: 100%; 
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Убеждаемся, что это свойство на месте */
-    background: linear-gradient(to bottom, #000000 0%, #01366D 50%, #004E9F 100%); 
-    background-repeat: no-repeat;
-    background-attachment: scroll;
-    flex-grow: 1; 
+    /* min-width: 100%; */ /* width: 100% должно быть достаточно */
+    display: flex; /* Для align-items: center */
+    flex-direction: column; /* Основная ось - вертикальная для секций */
+    align-items: center; /* Центрируем дочерние секции */
+    background: transparent !important; /* .div прозрачный, показываем фон html */
+    /* background-repeat и background-attachment не нужны для прозрачного фона */
+    flex-grow: 1; /* Растягиваем .div по высоте внутри body */
+    box-sizing: border-box; /* Добавляем для консистентности */
 }
 
 /* --- Секция 1: Featured (Главный экран) --- */
