@@ -108,7 +108,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Открываем первый активный вопрос и его родительские аккордеоны при загрузке
-    const initiallyActiveItem = document.querySelector('.faq-question-item.active');
+    const initiallyActiveItem = document.querySelector('.faq-question-item.active, .faq-question-category.active');
     if (initiallyActiveItem) {
         // Кликаем, чтобы загрузить контент
         initiallyActiveItem.click(); 
