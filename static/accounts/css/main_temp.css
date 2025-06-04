@@ -43,8 +43,7 @@
 html {
     height: 100%; 
     min-height: 100%;
-    background: transparent; /* Убираем фон с html */
-    /* Убираем background-repeat и background-attachment с html, так как фона нет */
+    background: #000000; /* Базовый черный фон для html */
 }
 
 body {
@@ -55,13 +54,12 @@ body {
     color: #FCFCFD; /* Основной цвет текста - белый для темного фона */
     margin: 0;
     padding: 0;
-    background: linear-gradient(to bottom, #000000 0%, #01366D 50%, #004E9F 100%); /* Возвращаем градиент на body */
-    background-repeat: no-repeat; /* Добавляем для body */
-    background-attachment: scroll; /* Добавляем для body */
+    background: transparent; /* Убираем фон с body */
+    /* background-repeat и background-attachment не нужны для прозрачного фона */
     overflow-x: hidden; 
     min-height: 100%; 
-    display: flex; /* Делаем body flex-контейнером */
-    flex-direction: column; /* Основная ось - вертикальная */
+    display: flex; 
+    flex-direction: column; 
 }
 
 .div { /* Общий контейнер страницы */
@@ -69,9 +67,12 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    background: transparent !important;
-    flex-grow: 1; /* Позволяем .div расти, чтобы занять доступное пространство */
-    /* overflow-x: hidden; */ /* Убираем это свойство */
+    /* background: transparent !important; */ /* Убираем этот стиль */
+    background: linear-gradient(to bottom, #000000 0%, #01366D 50%, #004E9F 100%); /* Применяем градиент сюда */
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    flex-grow: 1; 
+    /* overflow-x: hidden; */ 
 }
 
 /* --- Секция 1: Featured (Главный экран) --- */
