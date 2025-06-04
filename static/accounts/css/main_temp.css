@@ -41,11 +41,10 @@
 }
 
 html {
-    /* height: 100%; */ /* Убираем или комментируем, чтобы html мог растягиваться */
+    height: 100%; 
     min-height: 100%;
-    background: linear-gradient(to bottom, #000000 0%, #01366D 50%, #004E9F 100%);
-    background-repeat: no-repeat;
-    background-attachment: scroll; 
+    background: transparent; /* Убираем фон с html */
+    /* Убираем background-repeat и background-attachment с html, так как фона нет */
 }
 
 body {
@@ -56,10 +55,11 @@ body {
     color: #FCFCFD; /* Основной цвет текста - белый для темного фона */
     margin: 0;
     padding: 0;
-    background: transparent; /* Делаем body прозрачным */
-    overflow-x: hidden; /* Добавляем это свойство, чтобы убрать горизонтальный скроллбар */
-    min-height: 100%; /* Гарантируем, что body занимает как минимум всю высоту html */
-    /* Убираем все остальные background-свойства с body */
+    background: linear-gradient(to bottom, #000000 0%, #01366D 50%, #004E9F 100%); /* Возвращаем градиент на body */
+    background-repeat: no-repeat; /* Добавляем для body */
+    background-attachment: scroll; /* Добавляем для body */
+    overflow-x: hidden; 
+    min-height: 100%; 
 }
 
 .div { /* Общий контейнер страницы */
