@@ -273,8 +273,8 @@ body {
 
 .featured1 .heading .arrow-left-control .vector-icon,
 .featured1 .heading .arrow-right-control .vector-icon1 {
-    width: 40px; /* Увеличиваем фиксированную ширину */
-    height: 40px; /* Увеличиваем фиксированную высоту */
+    width: 100% !important; /* Занимаем всю ширину родителя с высоким приоритетом */
+    height: 100% !important; /* Занимаем всю высоту родителя с высоким приоритетом */
     object-fit: contain; 
 }
 
