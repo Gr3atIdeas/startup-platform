@@ -2224,6 +2224,127 @@ def create_group_chat(request):
 def support_page_view(request):
     return render(request, 'accounts/support.html')
 
+
+@login_required
+def change_owner(request, startup_id):
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Неверный метод запроса'})
+
+    if not request.user.role or request.user.role.role_name != 'moderator':
+        return JsonResponse({'success': False, 'error': 'У вас нет прав для этого действия'})
+
+    startup = get_object_or_404(Startups, startup_id=startup_id)
+    new_owner_id = request.POST.get('new_owner_id')
+    new_owner = get_object_or_404(Users, user_id=new_owner_id)
+
+    startup.owner = new_owner
+    startup.save()
+
+    return JsonResponse({'success': True})
+
+@login_required
+def get_investors(request, startup_id):
+    if not request.user.role or request.user.role.role_name != 'moderator':
+        return JsonResponse({'success': False, 'error': 'У вас нет прав для этого действия'})
+
+    startup = get_object_or_404(Startups, startup_id=startup_id)
+    investments = InvestmentTransactions.objects.filter(
+        startup=startup,
+        transaction_status='completed'
+    ).select_related('investor')
+
+    investors = [
+        {
+            'user_id': inv.investor.user_id,
+            'name': f"{inv.investor.first_name} {inv.investor.last_name}",
+            'amount': float(inv.amount)
+        }
+        for inv in investments
+    ]
+
+    return JsonResponse({'success': True, 'investors': investors})
+
+@login_required
+def add_investor(request, startup_id):
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Неверный метод запроса'})
+
+    if not request.user.role or request.user.role.role_name != 'moderator':
+        return JsonResponse({'success': False, 'error': 'У вас нет прав для этого действия'})
+
+    startup = get_object_or_404(Startups, startup_id=startup_id)
+    user_id = request.POST.get('user_id')
+    amount = Decimal(request.POST.get('amount', '0'))
+
+    if amount <= 0:
+        return JsonResponse({'success': False, 'error': 'Сумма должна быть больше 0'})
+
+    investor = get_object_or_404(Users, user_id=user_id)
+
+    transaction = InvestmentTransactions(
+        startup=startup,
+        investor=investor,
+        amount=amount,
+        transaction_type=TransactionTypes.objects.get(type_name='investment'),
+        transaction_status='completed',
+        payment_method=PaymentMethods.objects.get(method_name='default'),
+        created_at=timezone.now(),
+        updated_at=timezone.now()
+    )
+    transaction.save()
+
+    startup.amount_raised = (startup.amount_raised or Decimal('0')) + amount
+    startup.save()
+
+    return JsonResponse({'success': True})
+
+@login_required
+def edit_investment(request, startup_id, user_id):
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Неверный метод запроса'})
+
+    if not request.user.role or request.user.role.role_name != 'moderator':
+        return JsonResponse({'success': False, 'error': 'У вас нет прав для этого действия'})
+
+    startup = get_object_or_404(Startups, startup_id=startup_id)
+    investor = get_object_or_404(Users, user_id=user_id)
+    new_amount = Decimal(request.POST.get('amount', '0'))
+
+    if new_amount <= 0:
+        return JsonResponse({'success': False, 'error': 'Сумма должна быть больше 0'})
+
+    transaction = get_object_or_404(InvestmentTransactions, startup=startup, investor=investor, transaction_status='completed')
+    old_amount = transaction.amount
+    transaction.amount = new_amount
+    transaction.updated_at = timezone.now()
+    transaction.save()
+
+    startup.amount_raised = (startup.amount_raised or Decimal('0')) - old_amount + new_amount
+    startup.save()
+
+    return JsonResponse({'success': True})
+
+@login_required
+def delete_investment(request, startup_id, user_id):
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Неверный метод запроса'})
+
+    if not request.user.role or request.user.role.role_name != 'moderator':
+        return JsonResponse({'success': False, 'error': 'У вас нет прав для этого действия'})
+
+    startup = get_object_or_404(Startups, startup_id=startup_id)
+    investor = get_object_or_404(Users, user_id=user_id)
+    transaction = get_object_or_404(InvestmentTransactions, startup=startup, investor=investor, transaction_status='completed')
+
+    amount = transaction.amount
+    transaction.delete()
+
+    startup.amount_raised = (startup.amount_raised or Decimal('0')) - amount
+    startup.save()
+
+    return JsonResponse({'success': True})
+
+
 @login_required # Предполагаем, что страница заявок доступна только авторизованным
 def support_orders_view(request):
     # Здесь в будущем будет логика получения заявок пользователя

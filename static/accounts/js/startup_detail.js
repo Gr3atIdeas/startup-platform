@@ -1,4 +1,3 @@
-// Функция для получения CSRF-токена
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -65,7 +64,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Новая функция для анимации прогресс-бара
+    // Функция для анимации прогресс-бара
     function updateAnimatedProgressBars(containerElement) {
         if (!containerElement) return;
         const visualContainers = containerElement.querySelectorAll('.progress-bar-visual');
@@ -88,21 +87,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // 1. Синхронизация прогресс-бара
-    const progressAnimationContainer = document.querySelector('.progress-animation-container');
-    const progressPercentageSpan = document.querySelector('.progress-percentage');
-    if (progressAnimationContainer && progressPercentageSpan) {
-        const initialProgressWidth = progressAnimationContainer.style.width || '0%';
-        progressAnimationContainer.style.width = initialProgressWidth;
-        const initialProgressValue = parseFloat(initialProgressWidth) || 0;
-        progressPercentageSpan.textContent = `${Math.round(initialProgressValue)}%`;
-    }
-
     // Вызываем функцию анимации прогресс-бара
     const startupDetailPage = document.querySelector('.startup-detail-page');
     updateAnimatedProgressBars(startupDetailPage);
 
-    // 2. Отображение начального рейтинга
+    // Отображение начального рейтинга
     const ratingDisplayContainer = '.rating-stars[data-rating]';
     const ratingCommentsSelector = '.comment-rating';
 
@@ -159,7 +148,7 @@ document.addEventListener('DOMContentLoaded', function() {
         updateRatingDisplay('.overall-rating-stars', overallRating);
     }
 
-    // 3. Логика "Показать еще" / "Скрыть" для комментариев
+    // Логика "Показать еще" / "Скрыть" для комментариев
     const showMoreCommentsBtn = document.querySelector('.show-more-comments');
     const hideCommentsBtn = document.querySelector('.hide-comments-button');
     const commentsToShow = 5;
@@ -188,7 +177,7 @@ document.addEventListener('DOMContentLoaded', function() {
         showMoreCommentsBtn.style.display = 'none';
     }
 
-    // 4. Логика голосования и эффект наведения
+    // Логика голосования и эффект наведения
     const interactiveStarsContainer = document.querySelector('.rating-stars[data-interactive="true"]');
     if (isUserAuthenticated && !hasUserVoted && interactiveStarsContainer) {
         const iconContainers = interactiveStarsContainer.querySelectorAll('.rating-icon-container[data-value]');
@@ -291,7 +280,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // 5. Инициализация GLightbox
+    // Инициализация GLightbox
     if (typeof GLightbox !== 'undefined') {
         const lightbox = GLightbox({
             selector: '.glightbox',
@@ -357,7 +346,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error('GLightbox is not defined. Check if the library is loaded correctly.');
     }
 
-    // 6. Логика переключения табов
+    // Логика переключения табов
     const tabContainer = document.querySelector('.tab-navigation');
     const contentSections = document.querySelectorAll('.content-section');
     const tabButtons = document.querySelectorAll('.tab-button');
@@ -385,7 +374,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // 7. Обработчик для "Показать еще" похожие стартапы
+    // Обработчик для "Показать еще" похожие стартапы
     const showMoreSimilarBtn = document.querySelector('.action-button.show-more-similar');
     const similarGrid = document.querySelector('.similar-startups-grid');
 
@@ -444,7 +433,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // 8. Обработчик для ссылки "Комментарии"
+    // Обработчик для ссылки "Комментарии"
     const commentsLink = document.querySelector('.comments-link[href="#comments-section"]');
     const commentsTabButton = document.querySelector('.tab-button[data-target="comments-section"]');
     const commentsSection = document.getElementById('comments-section');
@@ -470,6 +459,307 @@ document.addEventListener('DOMContentLoaded', function() {
                     commentsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }, 100);
             }
+        });
+    }
+
+    // Функция debounce для ограничения частоты запросов
+    function debounce(func, delay) {
+        let timeoutId;
+        return function(...args) {
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(() => func.apply(this, args), delay);
+        };
+    }
+
+    // Обработчик кнопки "Сменить владельца"
+    const changeOwnerButtons = document.querySelectorAll('.change-owner-button');
+    changeOwnerButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const modal = new bootstrap.Modal(document.getElementById('changeOwnerModal'));
+            modal.show();
+
+            const searchInput = document.getElementById('userSearchInput');
+            const searchResults = document.getElementById('userSearchResults');
+
+            // Поиск пользователей с debounce
+            const debouncedSearch = debounce(function(query) {
+                if (query.length < 2) {
+                    searchResults.innerHTML = '';
+                    return;
+                }
+
+                fetch(`/search-suggestions/?q=${encodeURIComponent(query)}`, {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    searchResults.innerHTML = '';
+                    if (data.suggestions.length === 0) {
+                        searchResults.innerHTML = '<li class="list-group-item">Пользователи не найдены</li>';
+                        return;
+                    }
+                    data.suggestions.forEach(user => {
+                        const li = document.createElement('li');
+                        li.classList.add('list-group-item');
+                        li.textContent = user;
+                        li.dataset.userId = user.user_id;
+                        li.addEventListener('click', function() {
+                            const confirmModal = new bootstrap.Modal(document.getElementById('confirmChangeOwnerModal'));
+                            document.getElementById('newOwnerName').textContent = user;
+                            document.getElementById('newOwnerId').value = user.user_id;
+                            modal.hide();
+                            confirmModal.show();
+                        });
+                        searchResults.appendChild(li);
+                    });
+                })
+                .catch(error => {
+                    console.error('Ошибка поиска:', error);
+                    searchResults.innerHTML = '<li class="list-group-item">Ошибка поиска</li>';
+                });
+            }, 300);
+
+            searchInput.addEventListener('input', function() {
+                debouncedSearch(this.value.trim());
+            });
+        });
+    });
+
+    // Подтверждение смены владельца
+    const confirmChangeOwnerBtn = document.querySelector('.confirm-change-owner');
+    if (confirmChangeOwnerBtn) {
+        confirmChangeOwnerBtn.addEventListener('click', function() {
+            const newOwnerId = document.getElementById('newOwnerId').value;
+
+            fetch(`/change_owner/${startupId}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: `new_owner_id=${newOwnerId}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Владелец успешно изменён!');
+                    location.reload();
+                } else {
+                    alert(data.error || 'Произошла ошибка при смене владельца. Проверьте данные и попробуйте снова.');
+                }
+            })
+            .catch(error => {
+                console.error('Ошибка:', error);
+                alert('Произошла ошибка сети при смене владельца. Проверьте соединение и попробуйте снова.');
+            });
+        });
+    }
+
+    // Обработчик кнопки "Добавить инвестора"
+    const addInvestorButtons = document.querySelectorAll('.add-investor-button');
+    addInvestorButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const modal = new bootstrap.Modal(document.getElementById('addInvestorModal'));
+            modal.show();
+
+            const investorSearchInput = document.getElementById('investorSearchInput');
+            const investorSearchResults = document.getElementById('investorSearchResults');
+            const investmentAmountInput = document.getElementById('investmentAmount');
+            const addInvestmentButton = document.getElementById('addInvestmentButton');
+            let selectedInvestorId = null;
+
+            // Загрузка списка текущих инвесторов
+            fetch(`/get_investors/${startupId}/`, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const investorsList = document.getElementById('currentInvestorsList');
+                investorsList.innerHTML = '';
+                if (data.investors.length === 0) {
+                    investorsList.innerHTML = '<p>Инвесторы отсутствуют.</p>';
+                    return;
+                }
+                data.investors.forEach(investor => {
+                    const div = document.createElement('div');
+                    div.classList.add('investor-item');
+                    div.innerHTML = `
+                        <span>${investor.name} (ID: ${investor.user_id})</span>
+                        <div>
+                            <input type="number" value="${investor.amount}" data-user-id="${investor.user_id}">
+                            <button class="action-button edit-investment-btn">Изменить</button>
+                            <button class="action-button delete-investment-btn" style="background-color: var(--danger-red); margin-left: 5px;">Удалить</button>
+                        </div>
+                    `;
+                    investorsList.appendChild(div);
+
+                    // Обработчик изменения суммы
+                    div.querySelector('.edit-investment-btn').addEventListener('click', function() {
+                        const newAmount = div.querySelector('input').value;
+                        const confirmModal = new bootstrap.Modal(document.getElementById('confirmEditInvestmentModal'));
+                        document.getElementById('editInvestorName').textContent = investor.name;
+                        document.getElementById('editInvestmentAmount').textContent = newAmount;
+                        document.getElementById('editInvestorId').value = investor.user_id;
+                        confirmModal.show();
+                    });
+
+                    // Обработчик удаления инвестиции
+                    div.querySelector('.delete-investment-btn').addEventListener('click', function() {
+                        const confirmModal = new bootstrap.Modal(document.getElementById('confirmDeleteInvestmentModal'));
+                        document.getElementById('deleteInvestorName').textContent = investor.name;
+                        document.getElementById('deleteInvestmentAmount').textContent = investor.amount;
+                        document.getElementById('deleteInvestorId').value = investor.user_id;
+                        confirmModal.show();
+                    });
+                });
+            })
+            .catch(error => {
+                console.error('Ошибка загрузки инвесторов:', error);
+                const investorsList = document.getElementById('currentInvestorsList');
+                investorsList.innerHTML = '<p>Ошибка загрузки инвесторов.</p>';
+            });
+
+            // Поиск пользователей с debounce
+            const debouncedInvestorSearch = debounce(function(query) {
+                if (query.length < 2) {
+                    investorSearchResults.innerHTML = '';
+                    return;
+                }
+
+                fetch(`/search-suggestions/?q=${encodeURIComponent(query)}`, {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    investorSearchResults.innerHTML = '';
+                    if (data.suggestions.length === 0) {
+                        investorSearchResults.innerHTML = '<li class="list-group-item">Пользователи не найдены</li>';
+                        return;
+                    }
+                    data.suggestions.forEach(user => {
+                        const li = document.createElement('li');
+                        li.classList.add('list-group-item');
+                        li.textContent = user;
+                        li.dataset.userId = user.user_id;
+                        li.addEventListener('click', function() {
+                            selectedInvestorId = user.user_id;
+                            investorSearchInput.value = user;
+                            investorSearchResults.innerHTML = '';
+                            addInvestmentButton.disabled = !investmentAmountInput.value || !selectedInvestorId;
+                        });
+                        investorSearchResults.appendChild(li);
+                    });
+                })
+                .catch(error => {
+                    console.error('Ошибка поиска:', error);
+                    investorSearchResults.innerHTML = '<li class="list-group-item">Ошибка поиска</li>';
+                });
+            }, 300);
+
+            investorSearchInput.addEventListener('input', function() {
+                debouncedInvestorSearch(this.value.trim());
+            });
+
+            // Валидация суммы
+            investmentAmountInput.addEventListener('input', function() {
+                addInvestmentButton.disabled = !this.value || !selectedInvestorId;
+            });
+
+            // Добавление инвестиции
+            addInvestmentButton.addEventListener('click', function() {
+                const amount = investmentAmountInput.value;
+                fetch(`/add_investor/${startupId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-CSRFToken': getCookie('csrftoken'),
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: `user_id=${selectedInvestorId}&amount=${amount}`
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Инвестор успешно добавлен!');
+                        location.reload();
+                    } else {
+                        alert(data.error || 'Ошибка при добавлении инвестора. Проверьте данные и попробуйте снова.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Ошибка:', error);
+                    alert('Произошла ошибка сети при добавлении инвестора. Проверьте соединение и попробуйте снова.');
+                });
+            });
+        });
+    });
+
+    // Подтверждение редактирования инвестиции
+    const confirmEditInvestmentBtn = document.querySelector('.confirm-edit-investment');
+    if (confirmEditInvestmentBtn) {
+        confirmEditInvestmentBtn.addEventListener('click', function() {
+            const userId = document.getElementById('editInvestorId').value;
+            const newAmount = document.getElementById('editInvestmentAmount').textContent;
+
+            fetch(`/edit_investment/${startupId}/${userId}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: `amount=${newAmount}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Сумма инвестиции успешно изменена!');
+                    location.reload();
+                } else {
+                    alert(data.error || 'Ошибка при изменении суммы. Проверьте данные и попробуйте снова.');
+                }
+            })
+            .catch(error => {
+                console.error('Ошибка:', error);
+                alert('Произошла ошибка сети при изменении суммы. Проверьте соединение и попробуйте снова.');
+            });
+        });
+    }
+
+    // Подтверждение удаления инвестиции
+    const confirmDeleteInvestmentBtn = document.querySelector('.confirm-delete-investment');
+    if (confirmDeleteInvestmentBtn) {
+        confirmDeleteInvestmentBtn.addEventListener('click', function() {
+            const userId = document.getElementById('deleteInvestorId').value;
+
+            fetch(`/delete_investment/${startupId}/${userId}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Инвестиция успешно удалена!');
+                    location.reload();
+                } else {
+                    alert(data.error || 'Ошибка при удалении инвестиции. Проверьте данные и попробуйте снова.');
+                }
+            })
+            .catch(error => {
+                console.error('Ошибка:', error);
+                alert('Произошла ошибка сети при удалении инвестиции. Проверьте соединение и попробуйте снова.');
+            });
         });
     }
 });
