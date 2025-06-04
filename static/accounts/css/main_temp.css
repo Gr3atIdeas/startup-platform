@@ -48,7 +48,7 @@ body {
     color: #FCFCFD; /* Основной цвет текста - белый для темного фона */
     margin: 0;
     padding: 0;
-    background: linear-gradient(153deg, black 0%, #00346B 25%, #004E9F 48%, #01366D 64%, #020202 100%);
+    background: linear-gradient(153deg, #01030D 0%, #002D69 35%, #004E9F 65%, #01030D 100%);
     overflow-x: hidden; /* Добавляем это свойство, чтобы убрать горизонтальный скроллбар */
 }
 

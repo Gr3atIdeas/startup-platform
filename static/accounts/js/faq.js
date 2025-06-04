@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const questionItems = document.querySelectorAll('.faq-question-item, .faq-question-category');
     const faqAnswerTitle = document.getElementById('faqAnswerTitle');
     const faqAnswerBody = document.getElementById('faqAnswerBody');
-    const chevronIconPath = "{% static 'accounts/images/faq/chevron_down.svg' %}"; // Store path for JS use
 
     let faqData = {};
     try {
@@ -88,14 +87,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 // необходимо заменить плейсхолдер на актуальный путь к статике.
                 // Этот путь должен быть доступен JS, например, через data-атрибут или глобальную переменную.
                 // Предположим, что bluearrow.svg всегда в одном месте
-                const staticPath = document.body.dataset.staticBluearrowPath || '/{% static "accounts/images/faq/bluearrow.svg" %}'.replace("{% static '", "").replace("' %}", "");
-                let answerHTML = faqData[questionId].answer;
+                // Удаляем const staticPath = document.body.dataset.staticBluearrowPath || '/{% static "accounts/images/faq/bluearrow.svg" %}'.replace("{% static '", "").replace("' %}", "");
+                // let answerHTML = faqData[questionId].answer;
                 
                 // Замена плейсхолдера для статики в HTML ответа
                 // Обратите внимание: это упрощенная замена. Если {% static %} используется сложнее, потребуется более robust решение.
-                answerHTML = answerHTML.replace(/{% static 'accounts\/images\/faq\/bluearrow.svg' %}/g, staticPath);
+                // Удаляем answerHTML = answerHTML.replace(/{% static 'accounts\/images\/faq\/bluearrow.svg' %}/g, staticPath);
 
-                faqAnswerBody.innerHTML = answerHTML;
+                faqAnswerBody.innerHTML = faqData[questionId].answer; // Используем напрямую, т.к. пути уже разрешены
             } else {
                 if (!faqData[questionId]) console.warn(`No data found for question ID: ${questionId}`);
                 if (!faqAnswerTitle) console.warn('faqAnswerTitle element not found');
@@ -126,18 +125,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }
             parent = parent.parentElement.closest('.faq-accordion-category');
-        }
-    }
-
-    // Сохраняем путь к bluearrow.svg в data-атрибут body для использования в JS
-    // Это нужно сделать, если путь генерируется Django и мы хотим его использовать в JS безопасно
-    // В HTML-шаблоне это может быть установлено так: <body data-static-bluearrow-path="{% static 'accounts/images/faq/bluearrow.svg' %}">
-    // Здесь мы просто убедимся, что он есть, если нет, JS будет использовать заглушку, что не идеально
-    if (!document.body.dataset.staticBluearrowPath) {
-        // Пытаемся извлечь из одного из линков, если он уже отрисован
-        const exampleLink = document.querySelector('.faq-answer-details-link img[src*="bluearrow.svg"]');
-        if (exampleLink) {
-            document.body.dataset.staticBluearrowPath = exampleLink.getAttribute('src');
         }
     }
 });
