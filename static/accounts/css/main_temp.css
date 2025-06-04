@@ -44,6 +44,11 @@ html {
     height: 100%; 
     min-height: 100%;
     background: #000000; /* Базовый черный фон для html */
+    width: 100%; 
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    overflow-x: hidden; /* Предотвращаем горизонтальный скролл на html */
 }
 
 body {
@@ -60,34 +65,37 @@ body {
     min-height: 100%; 
     display: flex; 
     flex-direction: column; 
+    width: 100%; /* Добавляем ширину на всю страницу */
+    box-sizing: border-box;
 }
 
 .div { /* Общий контейнер страницы */
     width: 100%;
+    min-width: 100%; 
     display: flex;
     flex-direction: column;
-    align-items: center;
-    /* background: transparent !important; */ /* Убираем этот стиль */
-    background: linear-gradient(to bottom, #000000 0%, #01366D 50%, #004E9F 100%); /* Применяем градиент сюда */
+    align-items: center; /* Убеждаемся, что это свойство на месте */
+    background: linear-gradient(to bottom, #000000 0%, #01366D 50%, #004E9F 100%); 
     background-repeat: no-repeat;
     background-attachment: scroll;
     flex-grow: 1; 
-    /* overflow-x: hidden; */ 
 }
 
 /* --- Секция 1: Featured (Главный экран) --- */
 .featured {
     width: 100%;
-    max-width: 1445px; /* Максимальная ширина как в макете */
+    max-width: 1445px; 
     height: 798px;
     position: relative;
     overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 20px; /* Небольшие отступы по бокам */
+    padding: 20px; 
     box-sizing: border-box;
     background: transparent !important;
+    margin-left: auto; /* Центрирование */
+    margin-right: auto; /* Центрирование */
 }
 
 .featured .group {
@@ -474,13 +482,15 @@ body {
 .featured3 {
     width: 100%;
     max-width: 1445px;
-    padding: 45px 71px; /* Возвращаем исходный padding */
+    padding: 45px 71px; 
     box-sizing: border-box;
     display: flex;
     justify-content: center;
     align-items: center;
     margin-top: 60px;
     background: transparent !important;
+    margin-left: auto; /* Центрирование */
+    margin-right: auto; /* Центрирование */
 }
 
 .featured3 .frame-parent {
@@ -629,6 +639,8 @@ body {
     align-items: center;
     margin-top: 60px;
     background: transparent !important;
+    margin-left: auto; /* Центрирование */
+    margin-right: auto; /* Центрирование */
 }
 
 .featured4 .frame-parent3 {
@@ -751,10 +763,12 @@ body {
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: flex-start; /* Внутреннее выравнивание этого блока */
     gap: 55px;
     margin-top: 60px;
     background: transparent !important;
+    margin-left: auto; /* Центрирование */
+    margin-right: auto; /* Центрирование */
 }
 
 .featured5 .frame-parent6 { 
@@ -990,8 +1004,10 @@ body {
     justify-content: center;
     align-items: center;
     margin-top: 60px;
-    background-color: transparent; /* Ярко-синий фон */
+    background: transparent !important; 
     border-radius: 10px;
+    margin-left: auto; /* Центрирование */
+    margin-right: auto; /* Центрирование */
 }
 
 .featured6 .frame-parent18 { /* Внутренний контейнер */
@@ -1107,8 +1123,10 @@ body {
     justify-content: center;
     align-items: center;
     margin-top: 60px;
-    background-color: transparent; /* Синий фон */
+    background: transparent !important; 
     border-radius: 10px;
+    margin-left: auto; /* Центрирование */
+    margin-right: auto; /* Центрирование */
 }
 
 .featured7 .frame-parent19 { /* Общий контейнер */
@@ -1227,14 +1245,16 @@ body {
 .featured8.success-stories-carousel-outer {
     width: 100%;
     max-width: 1445px;
-    padding: 45px 0; /* Убраны боковые padding, карусель на всю ширину */
+    padding: 45px 0; 
     box-sizing: border-box;
-    overflow: hidden; /* Уже есть, отлично */
+    overflow: hidden; 
     display: flex;
     justify-content: center;
     margin-top: 60px;
     background: transparent !important;
-    position: relative; /* !!! Добавляем это свойство !!! */
+    position: relative; 
+    margin-left: auto; /* Центрирование */
+    margin-right: auto; /* Центрирование */
 }
 
 .featured8 .frame-parent18 { /* Внутренний контейнер для заголовка и карусели */
@@ -1367,8 +1387,10 @@ body {
     display: flex;
     justify-content: center;
     margin-top: 60px;
-    background-color: transparent; /* Темно-синий фон */
+    background: transparent !important; 
     border-radius: 10px;
+    margin-left: auto; /* Центрирование */
+    margin-right: auto; /* Центрирование */
 }
 
 .featured9 .heading-parent { /* Общий контейнер для левой и правой колонок */
@@ -1488,6 +1510,8 @@ body {
     display: flex; justify-content: center;
     margin-top: 60px;
     background: transparent !important;
+    margin-left: auto; /* Центрирование */
+    margin-right: auto; /* Центрирование */
 }
 
 .featured10 .featured11 { /* Основной контейнер */
@@ -1599,9 +1623,9 @@ body {
 .cta {
     width: 100%;
     max-width: 1445px;
-    height: auto; /* Высота по контенту */
-    min-height: 380px; /* Минимальная высота */
-    margin: 80px auto 50px auto; /* отступы сверху/снизу, центрирование */
+    height: auto; 
+    min-height: 380px; 
+    margin: 80px auto 50px auto; /* Уже есть auto для горизонтальных отступов */
     position: relative;
     overflow: hidden;
     display: flex;
@@ -1610,7 +1634,9 @@ body {
     border-radius: 15px;
     padding: 40px;
     box-sizing: border-box;
-    background-color: transparent; /* Темный фон по умолчанию */
+    background: transparent !important; 
+    /* margin-left: auto; */ /* Уже есть в сокращенной записи margin */
+    /* margin-right: auto; */ /* Уже есть в сокращенной записи margin */
 }
 
 .cta .div146 { /* Фоновый слой/цвет/градиент */
