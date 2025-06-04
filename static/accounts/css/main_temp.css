@@ -49,6 +49,7 @@ body {
     margin: 0;
     padding: 0;
     background: linear-gradient(153deg, black 0%, #00346B 25%, #004E9F 48%, #01366D 64%, #020202 100%);
+    overflow-x: hidden; /* Добавляем это свойство, чтобы убрать горизонтальный скроллбар */
 }
 
 .div { /* Общий контейнер страницы */
@@ -272,8 +273,8 @@ body {
 
 .featured1 .heading .arrow-left-control .vector-icon,
 .featured1 .heading .arrow-right-control .vector-icon1 {
-    width: 32px; /* Устанавливаем фиксированную ширину */
-    height: 32px; /* Устанавливаем фиксированную высоту */
+    width: 40px; /* Увеличиваем фиксированную ширину */
+    height: 40px; /* Увеличиваем фиксированную высоту */
     object-fit: contain; 
 }
 
