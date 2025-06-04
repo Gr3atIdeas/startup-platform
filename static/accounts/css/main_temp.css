@@ -56,7 +56,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    overflow-x: hidden;
+    /* overflow-x: hidden; */ /* Убираем это свойство */
 }
 
 /* --- Секция 1: Featured (Главный экран) --- */
@@ -272,8 +272,8 @@ body {
 
 .featured1 .heading .arrow-left-control .vector-icon,
 .featured1 .heading .arrow-right-control .vector-icon1 {
-    width: 100%; /* Иконка занимает всю ширину кнопки-родителя */
-    height: 100%; /* Иконка занимает всю высоту кнопки-родителя */
+    width: 32px; /* Устанавливаем фиксированную ширину */
+    height: 32px; /* Устанавливаем фиксированную высоту */
     object-fit: contain; 
 }
 
