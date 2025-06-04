@@ -206,8 +206,8 @@ body {
 /* --- Секция 2: Featured1 (Почему выбирают нас? + Карусель) --- */
 .featured1 {
     width: 100%;
-    max-width: 1445px;
-    padding: 45px 0; /* Убраны боковые отступы, только верх/низ */
+    /* max-width: 1445px; */ /* Убираем ограничение по максимальной ширине */
+    padding: 45px 0; 
     box-sizing: border-box;
     /* overflow: hidden; - Убираем, чтобы карусель могла выходить за пределы */
     background-color: transparent;
@@ -272,9 +272,9 @@ body {
 
 .featured1 .heading .arrow-left-control .vector-icon,
 .featured1 .heading .arrow-right-control .vector-icon1 {
-    width: 46px; /* Размер самой иконки */
-    height: 46px; /* Размер самой иконки */
-    object-fit: contain; /* Или cover, в зависимости от SVG */
+    width: 100%; /* Иконка занимает всю ширину кнопки-родителя */
+    height: 100%; /* Иконка занимает всю высоту кнопки-родителя */
+    object-fit: contain; 
 }
 
 /* Стили для неактивных кнопок SVG */
@@ -1210,11 +1210,12 @@ body {
     max-width: 1445px;
     padding: 45px 0; /* Убраны боковые padding, карусель на всю ширину */
     box-sizing: border-box;
-    overflow: hidden;
+    overflow: hidden; /* Уже есть, отлично */
     display: flex;
     justify-content: center;
     margin-top: 60px;
     background-color: transparent; /* Фон по умолчанию */
+    position: relative; /* !!! Добавляем это свойство !!! */
 }
 
 .featured8 .frame-parent18 { /* Внутренний контейнер для заголовка и карусели */
