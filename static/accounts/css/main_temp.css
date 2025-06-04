@@ -207,36 +207,140 @@ body {
 .featured1 {
     width: 100%;
     max-width: 1445px;
-    padding: 45px 71px; /* Соответствует макету */
+    padding: 45px 0; /* Убраны боковые отступы, только верх/низ */
     box-sizing: border-box;
-    overflow: hidden; /* Соответствует макету */
+    overflow: hidden; 
     background-color: transparent;
 }
 
+/* Стили для заголовка блока */
+.featured1 .heading { 
+    width: 100%; 
+    max-width: 1303px; /* Контейнер для заголовка и контролов */
+    margin: 0 auto 40px auto; /* Центрирование и отступ снизу до карусели */
+    padding: 0 71px; /* Боковые отступы для текста заголовка, если .featured1 их не имеет */
+    box-sizing: border-box;
+    display: flex; 
+    justify-content: space-between; 
+    align-items: flex-end; 
+}
+
+/* Оставляем стили для .parent3 (Почему выбирают нас?) и .wrap (контролы) как есть или корректируем при необходимости */
+.featured1 .heading .parent3 { 
+    display: flex;
+    flex-direction: column;
+    gap: 15px; 
+}
+.featured1 .heading .parent3 .div16 { 
+    color: white; 
+    font-size: 55px; 
+    font-family: 'Blippo Black', sans-serif; 
+    font-weight: normal; 
+    line-height: 1; 
+    word-wrap: break-word;
+}
+.featured1 .heading .parent3 .div17 { 
+    color: #FFEF2B; 
+    font-size: 55px; 
+    font-family: 'Blippo Black', sans-serif; 
+    font-weight: normal; 
+    text-transform: uppercase; 
+    line-height: 1; 
+    word-wrap: break-word;
+}
+
+.featured1 .heading .wrap { 
+    padding: 24px 0; /* Убираем боковой padding 32px, т.к. сам .heading уже имеет боковые отступы 71px */
+    justify-content: center;
+    align-items: center;
+    gap: 24px; 
+    display: flex;
+}
+
+/* Стили для кнопок-стрелок */
+.featured1 .heading .arrow-left-control,
+.featured1 .heading .arrow-right-control {
+    width: 46px; 
+    height: 46px; 
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Убираем overflow: hidden, если SVG должен выходить за рамки плейсхолдера */
+    /* border-radius: 50%; - если SVG сам круглый, это не нужно */
+}
+
+.featured1 .heading .arrow-left-control .chevron-left,
+.featured1 .heading .arrow-right-control .chevron-left {
+    width: 100%; /* Занимает всю кнопку */
+    height: 100%; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: none; /* Убираем желтый фон, т.к. SVG его должен содержать */
+    border-radius: 0; /* Убираем border-radius, если SVG сам круглый */
+}
+
+.featured1 .heading .arrow-left-control .vector-icon,
+.featured1 .heading .arrow-right-control .vector-icon1 {
+    width: 100%; /* SVG занимает всю область родителя .chevron-left */
+    height: 100%; 
+    object-fit: contain;
+}
+
+/* Стили для неактивных кнопок SVG */
+.featured1 .heading .arrow-left-control.disabled .vector-icon,
+.featured1 .heading .arrow-right-control.disabled .vector-icon1 {
+    opacity: 0.5; /* Пример стиля для неактивного SVG */
+}
+
+/* Стили для точек остаются как были, но возможно потребуется корректировка их количества в HTML/JS */
+.featured1 .heading .chevron-forward-circle-outline-parent { 
+    display: flex;
+    gap: 10px; 
+}
+.featured1 .heading .chevron-forward-circle-outline-icon,
+.featured1 .heading .chevron-forward-circle-outline-icon1 {
+    width: 12px; 
+    height: 12px;
+    background: rgba(255, 255, 255, 0.38); 
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.featured1 .heading .chevron-forward-circle-outline-icon.active {
+    background: #FFEF2B; 
+}
+
+/* Стили для карусели */
 .featured1 .features-carousel-wrapper {
     width: 100%;
     position: relative; 
+    /* margin-top: 40px; Отступ уже задан для .heading margin-bottom */
 }
 
-.featured1 .features-carousel {
+.featured1 .features-carousel { /* Это viewport карусели */
     display: flex; 
     overflow: hidden; 
+    width: 1387px; /* (3 * 449px cards) + (2 * 20px gaps) */
+    margin: 0 auto; /* Центрирование viewport */
 }
 
 .featured1-carousel-inner {
     display: flex;
-    gap: 20px; /* Отступ между карточками как в макете */
+    gap: 20px; 
     transition: transform 0.5s ease-in-out;
 }
 
 .featured1 .feature-card { 
     min-width: 449px; 
-    width: 449px; /* Соответствует макету */
-    height: 514px; /* Соответствует макету */
+    width: 449px; 
+    height: 514px; 
     position: relative;
-    background: white; /* Соответствует макету */
-    overflow: hidden; /* Соответствует макету */
-    border-radius: 20px; /* Соответствует макету */
+    background: white; 
+    overflow: hidden; 
+    border-radius: 20px; 
     padding: 43px; 
     box-sizing: border-box;
     display: flex;
@@ -246,7 +350,7 @@ body {
 
 .featured1 .feature-card img.rectangle-icon {
     width: 100%; 
-    height: 309px; /* Соответствует макету */
+    height: 309px; 
     position: absolute;
     left: 0; 
     top: 0;  
@@ -257,41 +361,30 @@ body {
 .featured1 .feature-card .div8 { 
     position: relative; 
     z-index: 2; 
-    color: #004E9F; /* Соответствует макету */
-    font-size: 55px; /* Соответствует макету */
+    color: #004E9F; 
+    font-size: 55px; 
     font-family: 'Blippo Black', sans-serif; 
     font-weight: normal; 
-    line-height: 1; /* Обновлено, без единиц измерения */
-    overflow-wrap: break-word; /* Стандартное свойство */
-    hyphens: auto; /* Включаем автоматические переносы */
-    word-wrap: break-word; /* Оставляем для совместимости, но overflow-wrap приоритетнее */
+    line-height: 1; 
+    overflow-wrap: break-word; 
+    hyphens: auto; 
+    word-wrap: break-word; 
     margin-bottom: 15px; 
 }
 
 .featured1 .feature-card .div9,
 .featured1 .feature-card .div11 { 
-    position: relative; z-index: 2;
-    color: #004E9F;
-    font-size: 16px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 400;
-    line-height: 1.3;
+    position: relative; 
+    z-index: 2;
+    width: 390px; 
+    color: #004E9F; 
+    font-size: 16px; 
+    font-family: 'Unbounded', sans-serif; 
+    font-weight: 400; 
+    line-height: 1.2; 
     word-wrap: break-word;
 }
 
-.featured1 .heading { 
-    width: 100%; 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: flex-end; 
-    margin-top: 40px;
-}
-
-.featured1 .heading .parent3 { 
-    display: flex;
-    flex-direction: column;
-    gap: 15px; /* Добавлен отступ между строками заголовка */
-}
 .featured1 .heading .parent3 .div16 { 
     color: white; /* Соответствует макету */
     font-size: 55px;

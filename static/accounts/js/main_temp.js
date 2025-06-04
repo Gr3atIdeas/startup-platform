@@ -7,11 +7,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const featuresWrapper = document.querySelector('.features-carousel-wrapper');
     const featuresArrowLeft = document.querySelector('.arrow-left-control');
     const featuresArrowRight = document.querySelector('.arrow-right-control');
-    const featuresDotsContainer = document.querySelector('.featured1 .chevron-forward-circle-outline-parent');
-    let featuresDots = [];
-    if (featuresDotsContainer) {
-        featuresDots = Array.from(featuresDotsContainer.querySelectorAll('img[class^="chevron-forward-circle-outline-icon"]'));
-    }
 
     if (featuresCarousel && featuresWrapper && featuresArrowLeft && featuresArrowRight) {
         const featureCards = featuresCarousel.querySelectorAll('.feature-card');
@@ -27,11 +22,6 @@ document.addEventListener('DOMContentLoaded', function () {
             function updateFeaturesControls() {
                 featuresArrowLeft.classList.toggle('disabled', currentCardIndex === 0);
                 featuresArrowRight.classList.toggle('disabled', currentCardIndex >= maxCardIndex);
-                if (featuresDots.length > 0) {
-                    featuresDots.forEach((dot, index) => {
-                        dot.classList.toggle('active', index === currentCardIndex);
-                    });
-                }
             }
             
             let carouselInnerContainer = featuresCarousel.querySelector('.featured1-carousel-inner');
@@ -61,16 +51,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     updateFeaturesControls();
                 }
             });
-
-            if (featuresDots.length > 0) {
-                featuresDots.forEach((dot, index) => {
-                    dot.addEventListener('click', () => {
-                        currentCardIndex = Math.min(index, maxCardIndex);
-                        carouselInnerContainer.style.transform = 'translateX(-' + (currentCardIndex * scrollAmount) + 'px)';
-                        updateFeaturesControls();
-                    });
-                });
-            }
 
             updateFeaturesControls();
 
@@ -344,8 +324,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     const walk = (x - startXSuccess) * 1.5;
                     let newTransform = scrollLeftSuccess_draggable - walk;
                     const overscroll = scrollAmountSuccess / 2;
-                    currentScrollSuccess = Math.max(-overscroll, Math.min(newTransform, maxScrollSuccess + overscroll));
-                    successInner.style.transform = 'translateX(-' + currentScrollSuccess + 'px)';
+                    newTransform = Math.max(-overscroll, Math.min(newTransform, maxScrollSuccess + overscroll));
+                    successInner.style.transform = 'translateX(-' + newTransform + 'px)';
                 });
             }
         } else {
