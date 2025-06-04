@@ -382,7 +382,7 @@ body {
 .featured3 {
     width: 100%;
     max-width: 1445px;
-    padding: 97px 71px 45px 71px; /* Обновленный padding top/bottom */
+    padding: 45px 71px; /* Возвращаем исходный padding */
     box-sizing: border-box;
     display: flex;
     justify-content: center;
@@ -394,25 +394,24 @@ body {
     width: 1303px;
     height: 521px;
     position: relative;
-    display: flex; /* Оставляем flex для общего случая, но потомки будут позиционироваться и абсолютно */
-    /* justify-content: space-between; - убрано, т.к. левый блок фиксирован, правые абсолютно */
+    display: flex;
+    justify-content: space-between; /* Возвращаем исходное значение */
     align-items: center;
     background: #000000; 
     border-radius: 10px;
     overflow: hidden;
-    padding: 50px; /* Внутренние отступы для левого блока */
+    padding: 50px; 
     box-sizing: border-box;
 }
 
 .featured3 .parent4 { /* Левая часть с текстом */
     display: flex;
     flex-direction: column;
-    justify-content: flex-start; /* Изменено для соответствия макету (top: 53) */
+    justify-content: center; /* Возвращаем исходное значение */
     align-items: flex-start;
     gap: 45px;
-    z-index: 2; /* Поверх фоновых ракет, но под планетой если она выше */
-    width: auto; /* Ширина будет по контенту, но ограничена padding родителя */
-    /* left: 52px, top: 53px - позиционирование через padding родителя .frame-parent */
+    z-index: 2;
+    width: 45%; /* Возвращаем исходное значение */
 }
 
 .featured3 .heading1 .div18 { 
@@ -422,13 +421,13 @@ body {
     font-family: 'Unbounded', sans-serif;
     font-weight: 600; 
     font-size: 35px;
-    line-height: 1; /* 35px / 35px */
+    line-height: 1.1; /* Возвращаем исходное значение */
     word-wrap: break-word;
-    color: #F2F2F2; /* Базовый цвет текста */
+    /* Убираем явно заданный color, чтобы он наследовался от span-ов ниже */
 }
-.featured3 .heading1 .div18 .txt .startup-highlight { /* Span для "Стартаперы," */
-    color: #FFEF2B;
-}
+.featured3 .heading1 .div18 .txt > span:first-child { color: #FFEF2B; } /* Исходный стиль */
+.featured3 .heading1 .div18 .txt .span1 { color: #F2F2F2; } /* Исходный стиль */
+/* Удаляем .startup-highlight, так как его нет в исходном HTML */
 
 .featured3 .frame-group { 
     width: 100%; 
@@ -446,10 +445,9 @@ body {
 .featured3 .frame-icon { 
     width: 35px; 
     height: 35px; 
-    /* Стили для border и padding из макета уже тут не нужны, если это SVG иконка */
-    /* border: 1px solid white; */
-    /* border-radius: 8.17px; */
-    /* padding: 5.83px; */
+    border: 1px solid white; /* Возвращаем исходный стиль */
+    border-radius: 8px;    /* Возвращаем исходный стиль */
+    padding: 5px;          /* Возвращаем исходный стиль */
     box-sizing: border-box;
     display: flex; justify-content: center; align-items: center;
 }
@@ -458,97 +456,73 @@ body {
     font-family: 'Unbounded', sans-serif;
     font-weight: 400;
     font-size: 16px;
-    line-height: 1.2; /* 19.20px / 16px */
+    line-height: 1.3; /* Возвращаем исходное значение */
     word-wrap: break-word;
-    color: white;
+    /* Цвет будет наследоваться от span-ов ниже или от общего правила */
 }
-
-.featured3 .div20 .txt .support-highlight { /* Span для "(менторство, аналитика)" */
-    color: #FFEF2B;
-}
+.featured3 .faq { color: white; } /* Исходный стиль */
+.featured3 .div20 .txt > span:first-child { color: white; } /* Исходный стиль */
+.featured3 .div20 .txt .span2 { color: #FFEF2B; } /* Исходный стиль */
+.featured3 .frame-parent2 .div20 { color: white; } /* Исходный стиль */
+/* Удаляем .support-highlight */
 
 .featured3 .parent5 { /* Кнопка "Создать стартап" */
     padding: 12px 25px;
     background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
     border-radius: 10px;
-    border: 1px black solid;
+    border: 1px solid black; /* Возвращаем исходный стиль */
     justify-content: flex-start;
     align-items: center;
     gap: 9px;
     display: inline-flex;
     text-decoration: none;
     box-sizing: border-box;
-    margin-top: 20px; /* Отступ сверху от списка */
+    margin-top: 20px; 
 }
 .featured3 .parent5 .div22 {
     color: black;
     font-size: 16px;
     font-family: 'Unbounded', sans-serif;
     font-weight: 500;
-    line-height: 1.125; /* 18px / 16px */
+    line-height: 1; /* Возвращаем исходное значение */
 }
 .featured3 .parent5 .add-circle-outline-icon {
     width: 24px; height: 24px;
 }
 
 /* Правая часть с изображениями в .featured3 */
-.featured3 .icon9 { /* Основное фоновое изображение (businessmen_on_planet.png) */
+.featured3 .icon9 { /* Основное фоновое изображение (космос) */
     position: absolute;
-    left: 693px; /* Из макета */
-    top: 7px;    /* Из макета */
-    width: 610px; /* Из макета */
-    height: 514px;/* Из макета */
-    object-fit: contain; /* Чтобы не обрезалось, если размеры контейнера отличаются */
+    right: 0;     /* Возвращаем исходное значение */
+    top: 0;       /* Возвращаем исходное значение */
+    width: 60%;   /* Возвращаем исходное значение */
+    height: 100%; /* Возвращаем исходное значение */
+    object-fit: cover;
     z-index: 0;
+    opacity: 0.7; 
+    border-radius: 0 10px 10px 0;
 }
 
-.featured3 .scale-1200-photoroom-2-parent { /* Контейнер для фиолетовой планеты */
+.featured3 .scale-1200-photoroom-2-parent { /* Планета */
     position: absolute;
-    left: 794px; /* Из макета */
-    top: 53px;   /* Из макета */
-    width: 414px; /* Из макета */
-    height: 414px;/* Из макета */
-    z-index: 1; /* Поверх основного фона, но под текстом если он перекрывает */
+    right: 60px;  /* Возвращаем исходное значение */
+    bottom: 40px; /* Возвращаем исходное значение */
+    width: 414px; 
+    height: auto; /* Возвращаем исходное значение */
+    z-index: 1;
 }
 .featured3 .scale-1200-photoroom-2-icon { /* Фиолетовая планета */
     width: 100%;
-    height: 100%;
-    object-fit: contain;
-    filter: drop-shadow(0px 10px 30px rgba(155, 89, 182, 0.5)); /* Тень как в текущем CSS */
+    height: auto; /* Возвращаем исходное значение */
+    object-fit: contain; /* Было object-fit: contain, оставляем для корректного отображения */
+    filter: drop-shadow(0px 10px 30px rgba(155, 89, 182, 0.5)); 
 }
 
 .featured3 .vector-parent { 
-    display: none !important; /* Убедимся, что старый контейнер ракет скрыт */
+    display: none; /* Исходное состояние - скрыто. Если плейсхолдеры должны быть видны, нужно будет поменять на flex/block */
 }
 
-.featured3 .abs-rocket {
-    position: absolute;
-    object-fit: contain;
-    z-index: 0; /* За планетой, но над фоном businessmen_on_planet */
-}
-
-.featured3 .rocket-1 {
-    width: 70px; /* Пример, или берем из SVG, если он масштабируемый */
-    height: auto;
-    left: 852px; /* Из макета (относительно .frame-parent) */
-    top: 267px;  /* Из макета */
-}
-
-.featured3 .rocket-2 {
-    width: 80px; 
-    height: auto;
-    left: 820px; 
-    top: 187px;
-}
-
-.featured3 .rocket-3 {
-    width: 60px; 
-    height: auto;
-    /* Координаты для третьей ракеты, можно настроить */
-    left: 750px; 
-    top: 380px;
-     opacity: 0.8; /* Пример, чтобы не были слишком яркими */
-}
+/* Удаляем стили для .abs-rocket и его вариаций */
 
 
 /* --- Секция 4: Featured4 (Инвесторы) --- */
