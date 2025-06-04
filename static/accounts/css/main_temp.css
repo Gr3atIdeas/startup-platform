@@ -209,7 +209,7 @@ body {
     max-width: 1445px;
     padding: 45px 0; /* Убраны боковые отступы, только верх/низ */
     box-sizing: border-box;
-    overflow: hidden; 
+    /* overflow: hidden; - Убираем, чтобы карусель могла выходить за пределы */
     background-color: transparent;
 }
 
@@ -267,35 +267,23 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    /* Убираем overflow: hidden, если SVG должен выходить за рамки плейсхолдера */
-    /* border-radius: 50%; - если SVG сам круглый, это не нужно */
-}
-
-.featured1 .heading .arrow-left-control .chevron-left,
-.featured1 .heading .arrow-right-control .chevron-left {
-    width: 100%; /* Занимает всю кнопку */
-    height: 100%; 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: none; /* Убираем желтый фон, т.к. SVG его должен содержать */
-    border-radius: 0; /* Убираем border-radius, если SVG сам круглый */
+    /* Убираем фон и рамки отсюда, если SVG содержит их */
 }
 
 .featured1 .heading .arrow-left-control .vector-icon,
 .featured1 .heading .arrow-right-control .vector-icon1 {
-    width: 100%; /* SVG занимает всю область родителя .chevron-left */
-    height: 100%; 
-    object-fit: contain;
+    width: 46px; /* Размер самой иконки */
+    height: 46px; /* Размер самой иконки */
+    object-fit: contain; /* Или cover, в зависимости от SVG */
 }
 
 /* Стили для неактивных кнопок SVG */
 .featured1 .heading .arrow-left-control.disabled .vector-icon,
 .featured1 .heading .arrow-right-control.disabled .vector-icon1 {
-    opacity: 0.5; /* Пример стиля для неактивного SVG */
+    opacity: 0.5; 
 }
 
-/* Стили для точек остаются как были, но возможно потребуется корректировка их количества в HTML/JS */
+/* Удаляем стили для точек */
 .featured1 .heading .chevron-forward-circle-outline-parent { 
     display: flex;
     gap: 10px; 
@@ -322,9 +310,11 @@ body {
 
 .featured1 .features-carousel { /* Это viewport карусели */
     display: flex; 
-    overflow: hidden; 
-    width: 1387px; /* (3 * 449px cards) + (2 * 20px gaps) */
-    margin: 0 auto; /* Центрирование viewport */
+    overflow: hidden;  /* Оставляем для обрезки внутреннего контейнера */
+    /* width: 1387px; */ /* Убираем фиксированную ширину */
+    /* margin: 0 auto; */ /* Убираем центрирование */
+    margin-left: 71px; /* Выравниваем по левому краю контента */
+    width: calc(100vw - 71px); /* Ширина до правого края окна браузера */
 }
 
 .featured1-carousel-inner {
@@ -366,9 +356,11 @@ body {
     font-family: 'Blippo Black', sans-serif; 
     font-weight: normal; 
     line-height: 1; 
-    overflow-wrap: break-word; 
-    hyphens: auto; 
-    word-wrap: break-word; 
+    /* Убираем свойства переноса */
+    /* overflow-wrap: break-word; */
+    /* hyphens: auto; */
+    /* word-wrap: break-word; */
+    white-space: nowrap; /* Запрещаем перенос */
     margin-bottom: 15px; 
 }
 
@@ -423,16 +415,6 @@ body {
     justify-content: center;
     align-items: center;
     transition: background-color 0.3s, opacity 0.3s;
-}
-
-.featured1 .heading .arrow-left-control .chevron-left,
-.featured1 .heading .arrow-right-control .chevron-left {
-    width: 34.50px; height: 34.50px; 
-    border-radius: 50%; 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: #FFEF2B; /* Активная по умолчанию */
 }
 
 .featured1 .heading .arrow-left-control .vector-icon,
