@@ -335,7 +335,8 @@ document.addEventListener('DOMContentLoaded', function () {
         // console.warn('Элементы карусели "Истории успеха" не найдены.');
     }
 
-    // --- FAQ Logic ---
+    // --- FAQ Logic --- Комментируем этот блок, так как логика будет в faq.js
+    /*
     const faqAccordionCategories = document.querySelectorAll('.faq-accordion-category');
     const faqQuestionItems = document.querySelectorAll('.faq-question-item, .faq-question-category');
     const faqAnswerTitleElement = document.getElementById('faqAnswerTitle');
@@ -344,11 +345,11 @@ document.addEventListener('DOMContentLoaded', function () {
     if (faqAccordionCategories.length > 0 && faqQuestionItems.length > 0 && faqAnswerTitleElement && faqAnswerBodyElement) {
         let faqData = {};
         try {
-            const faqDataElement = document.getElementById('faqDataContainer');
+            const faqDataElement = document.getElementById('faqDataContainer'); // Используем faqData вместо faqDataContainer
             if (faqDataElement && faqDataElement.textContent) {
                 faqData = JSON.parse(faqDataElement.textContent);
             } else {
-                // console.warn('FAQ data element (faqDataContainer) or its content not found. FAQ will not work.');
+                // console.warn('FAQ data element (faqData) or its content not found. FAQ will not work.');
             }
         } catch (error) {
             // console.error('Error parsing FAQ data:', error);
@@ -433,6 +434,7 @@ document.addEventListener('DOMContentLoaded', function () {
     } else {
         // console.warn('Необходимые элементы для FAQ не найдены.');
     }
+    */
 
     // Закомментированные вызовы, так как функции initFeatured1Carousel, initFeatured6Carousel, initFeatured8Carousel были либо удалены, либо их логика интегрирована/пересмотрена.
     // initFeatured1Carousel(); 

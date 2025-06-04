@@ -3,6 +3,11 @@
 
 {% block title %}Главная страница{% endblock %}
 
+{% block head_extra %}
+    <link rel="stylesheet" type="text/css" href="{% static 'accounts/css/main_temp.css' %}">
+    <link rel="stylesheet" href="{% static 'accounts/css/faq.css' %}">
+{% endblock %}
+
 {% block content %}
 <link rel="stylesheet" type="text/css" href="{% static 'accounts/css/main_temp.css' %}">
 
@@ -586,83 +591,6 @@
             </div>
         </div>
     </div>
-    <div class="featured14">
-        <div class="heading-group">
-            <div class="faq-left-column">
-            <div class="heading2">
-                <div class="faq-parent">
-                    <div class="faq">FAQ</div>
-                    <div class="div105">
-                        <span class="txt">
-                            <p class="p">Часто </p>
-                            <p class="p">задаваемые вопросы</p>
-                        </span>
-                    </div>
-                </div>
-                <div class="text1">
-                    <div class="div106">Не нашли ответа?</div>
-                    <div class="wrapper7">
-                        <div class="div22">Задать вопрос</div>
-                    </div>
-                </div>
-            </div>
-                <div class="faq-categories-column">
-                    <div class="faq-accordion-category open">
-                        <div class="faq-accordion-header">
-                            <span>Для стартаперов и владельцев франшиз</span>
-                            <img class="faq-chevron-icon" src="https://placehold.co/16x16/004E9F/FFFFFF?text=v" alt="v">
-                </div>
-                        <div class="faq-accordion-content" style="display: flex;">
-                            <div class="faq-question-item active" data-question-id="q1">Создание и ведение профиля стартапа</div>
-                            <div class="faq-question-item" data-question-id="q2">Как зарегистрироваться на платформе «Great Ideas»?</div>
-                            <div class="faq-question-item" data-question-id="q3">Как правильно оформить профиль стартапа?</div>
-                            <div class="faq-question-item" data-question-id="q4">Можно ли редактировать информацию после публикации?</div>
-                </div>
-                        </div>
-                    <div class="faq-accordion-category">
-                        <div class="faq-accordion-header">
-                            <span>Франшизы</span>
-                            <img class="faq-chevron-icon" src="https://placehold.co/16x16/004E9F/FFFFFF?text=v" alt="v">
-                    </div>
-                        <div class="faq-accordion-content">
-                            <div class="faq-question-item" data-question-id="q5">Какие виды франшиз можно размещать?</div>
-                            <div class="faq-question-item" data-question-id="q6">Есть ли ограничения на размещение франшиз?</div>
-                            <div class="faq-question-item" data-question-id="q7">Какие требования для размещения франшизы?</div>
-                            <div class="faq-question-item" data-question-id="q8">Проверяет ли платформа франшизы перед публикацией?</div>
-                            <div class="faq-question-item" data-question-id="q9">Как защищена конфиденциальность данных франшизы?</div>
-                </div>
-                    </div>
-                     <div class="faq-accordion-category">
-                        <div class="faq-accordion-header">
-                            <span>Привлечение инвестиций</span>
-                            <img class="faq-chevron-icon" src="https://placehold.co/16x16/004E9F/FFFFFF?text=v" alt="v">
-                            </div>
-                        <div class="faq-accordion-content">
-                            <div class="faq-question-item" data-question-id="q10">Как работает система поиска инвесторов?</div>
-                            <div class="faq-question-item" data-question-id="q11">Какие комиссии взимает платформа?</div>
-                        </div>
-                                </div>
-                    <div class="faq-accordion-category">
-                        <div class="faq-accordion-header">
-                            <span>Для инвесторов</span>
-                            <img class="faq-chevron-icon" src="https://placehold.co/16x16/004E9F/FFFFFF?text=v" alt="v">
-                            </div>
-                         <div class="faq-accordion-content">
-                            <div class="faq-question-item" data-question-id="q12">Как найти и выбрать стартап для инвестирования?</div>
-                            <div class="faq-question-item" data-question-id="q13">Какие гарантии безопасности сделок?</div>
-                            </div>
-                            </div>
-                            </div>
-                            </div>
-            <div class="faq-right-column">
-                <div id="faqAnswerTitle" class="faq-answer-title">Создание и ведение профиля стартапа</div>
-                <div id="faqAnswerBody" class="faq-answer-body">
-                    <p>Зарегистрируйтесь, заполните подробную информацию о вашем проекте, команде, бизнес-модели и финансовых показателях. Регулярно обновляйте профиль, чтобы привлекать внимание инвесторов.</p>
-                    <p>Список доступных сфер: IT, финтех, медицина, образование, экология, ритейл и многие другие.</p>
-                            </div>
-                            </div>
-        </div>
-    </div>
     <div class="cta">
         <div class="cta-content">
         <div class="heading4">
@@ -686,62 +614,236 @@
 </div>
 </div>
 
-<script type="application/json" id="faqDataContainer">
+<!-- ЗАМЕНЯЕМ СТАРЫЙ БЛОК FAQ НА НОВЫЙ -->
+<div class="faq-page-wrapper" style="background-color: #0E2A57; padding: 45px 71px; margin-top: 60px; border-radius: 10px;">
+    <div class="faq-main-container" style="background-color: transparent; box-shadow: none; border-radius: 0; width:100%; max-width: 1303px; margin: 0 auto;">
+        <div class="faq-header-block" style="background-color: transparent; padding: 0 0 30px 0; display: flex; justify-content: space-between; align-items: flex-end;">
+            <div class="faq-title-section">
+                <h1 class="faq-main-title-text" style="color: #FFF; font-size: 55px; text-align:left; font-family: 'Blippo Black', sans-serif; line-height: 1;">FAQ</h1>
+                <p class="faq-subtitle-text" style="color: #FFEF2B; font-size: 22px; text-align:left; line-height: 1.2; font-family: 'Blippo Black', sans-serif; text-transform: uppercase;">Часто <br>задаваемые вопросы</p>
+            </div>
+            <div class="faq-ask-question-section" style="border: 1px solid #FFEF2B; background-color: transparent; padding: 15px 25px; border-radius: 10px; text-align: center;">
+                <p class="faq-ask-question-prompt" style="color: #FFF; margin-bottom: 10px; font-size: 14px; font-weight: 300;">Не нашли ответа?</p>
+                <a href="{% url 'support' %}" class="faq-ask-question-button" style="background-color: #FFEF2B; color: #000; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 500; font-size: 14px;">Задать вопрос</a>
+            </div>
+        </div>
+
+        <div class="faq-content-block" style="background-color: #FFF; border-radius: 10px; height: auto; min-height: 500px; display: flex;">
+            <div class="faq-left-panel" style="background-color: #FFF; border-radius: 10px 0 0 10px; width: 40%; padding: 32px 24px; overflow-y: auto;">
+                <div class="faq-question-category active" data-question-id="what-is-great-ideas">
+                    Что такое «Great Ideas»?
+                </div>
+                <div class="faq-accordion-category">
+                    <div class="faq-accordion-header">
+                        <span>Для стартаперов и владельцев франшиз</span>
+                        <img src="{% static 'accounts/images/faq/chevron_down.svg' %}" alt="toggle" class="faq-chevron-icon">
+                    </div>
+                    <div class="faq-accordion-content">
+                        <div class="faq-accordion-category nested">
+                            <div class="faq-accordion-header">
+                                <span>Создание и ведение профиля стартапа</span>
+                                <img src="{% static 'accounts/images/faq/chevron_down.svg' %}" alt="toggle" class="faq-chevron-icon">
+                            </div>
+                            <div class="faq-accordion-content">
+                                <div class="faq-question-item" data-question-id="how-to-register">Как зарегистрироваться на платформе «Great Ideas»?</div>
+                                <div class="faq-question-item" data-question-id="how-to-setup-profile">Как правильно оформить профиль стартапа?</div>
+                                <div class="faq-question-item" data-question-id="can-edit-info">Можно ли редактировать информацию после публикации?</div>
+                                <div class="faq-question-item" data-question-id="franchise-types">Какие виды франшиз можно размещать?</div>
+                                <div class="faq-question-item" data-question-id="franchise-limits">Есть ли ограничения на размещение франшиз?</div>
+                                <div class="faq-question-item" data-question-id="franchise-requirements">Какие требования для размещения франшизы?</div>
+                                <div class="faq-question-item" data-question-id="franchise-verification">Проверяет ли платформа франшизы перед публикацией?</div>
+                                <div class="faq-question-item" data-question-id="franchise-data-privacy">Как защищена конфиденциальность данных франшизы?</div>
+                            </div>
+                        </div>
+                        <div class="faq-accordion-category nested">
+                            <div class="faq-accordion-header">
+                                <span>Привлечение инвестиций</span>
+                                <img src="{% static 'accounts/images/faq/chevron_down.svg' %}" alt="toggle" class="faq-chevron-icon">
+                            </div>
+                            <div class="faq-accordion-content">
+                                <div class="faq-question-item" data-question-id="how-to-get-noticed">Как сделать мой стартап заметным для инвесторов?</div>
+                                <div class="faq-question-item" data-question-id="minimum-goal">Что такое минимальная цель и что будет, если я её не достигну?</div>
+                                <div class="faq-question-item" data-question-id="attract-more-investors">Как я могу привлечь больше инвесторов?</div>
+                            </div>
+                        </div>
+                        <div class="faq-accordion-category nested">
+                            <div class="faq-accordion-header">                               
+                                <span>Продажа стартапа или франшизы</span>
+                                <img src="{% static 'accounts/images/faq/chevron_down.svg' %}" alt="toggle" class="faq-chevron-icon">
+                            </div>
+                            <div class="faq-accordion-content">
+                                <div class="faq-question-item" data-question-id="how-to-sell-startup">Как выставить стартап на продажу?</div>
+                                <div class="faq-question-item" data-question-id="sell-part-of-company">Можно ли продать только часть компании?</div>
+                            </div>
+                        </div>
+                         <div class="faq-accordion-category nested">
+                            <div class="faq-accordion-header">
+                                <span>Категории стартапов</span>
+                                <img src="{% static 'accounts/images/faq/chevron_down.svg' %}" alt="toggle" class="faq-chevron-icon">
+                            </div>
+                            <div class="faq-accordion-content">
+                                <div class="faq-question-item" data-question-id="startup-categories-allowed">Какие категории стартапов можно размещать?</div>
+                                <div class="faq-question-item" data-question-id="startup-categories-forbidden">Какие категории стартапов нельзя размещать?</div>
+                            </div>
+                        </div>
+                        <div class="faq-accordion-category nested">
+                            <div class="faq-accordion-header">
+                                <span>Правовые и финансовые вопросы</span>
+                                <img src="{% static 'accounts/images/faq/chevron_down.svg' %}" alt="toggle" class="faq-chevron-icon">
+                            </div>
+                            <div class="faq-accordion-content">
+                                <div class="faq-question-item" data-question-id="required-documents">Какие документы нужно предоставить?</div>
+                                <div class="faq-question-item" data-question-id="platform-commission">Какая комиссия взимается с успешного проекта?</div>
+                                <div class="faq-question-item" data-question-id="data-confidentiality-legal">Как защищена конфиденциальность данных?</div>
+                            </div>
+                        </div>
+                        <div class="faq-accordion-category nested">
+                            <div class="faq-accordion-header">
+                                <span>Услуги специалистов и подрядчиков</span>
+                                <img src="{% static 'accounts/images/faq/chevron_down.svg' %}" alt="toggle" class="faq-chevron-icon">
+                            </div>
+                            <div class="faq-accordion-content">
+                                <div class="faq-question-item" data-question-id="specialists-on-platform">Каких специалистов можно найти на платформе?</div>
+                                <div class="faq-question-item" data-question-id="specialist-quality-check">Как проверяется качество специалистов?</div>
+                                <div class="faq-question-item" data-question-id="protecting-ip">Как защитить интеллектуальную собственность?</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="faq-accordion-category">
+                     <div class="faq-accordion-header">
+                        <span>Для инвесторов</span>
+                        <img src="{% static 'accounts/images/faq/chevron_down.svg' %}" alt="toggle" class="faq-chevron-icon">
+                    </div>
+                    <div class="faq-accordion-content">
+                        <div class="faq-accordion-category nested">
+                            <div class="faq-accordion-header">
+                                <span>Регистрация и настройка профиля</span>
+                                <img src="{% static 'accounts/images/faq/chevron_down.svg' %}" alt="toggle" class="faq-chevron-icon">
+                            </div>
+                            <div class="faq-accordion-content">
+                                <div class="faq-question-item" data-question-id="who-can-be-investor">Кто может стать инвестором на платформе?</div>
+                                <div class="faq-question-item" data-question-id="accredited-investor-status">Как подтвердить статус аккредитованного инвестора?</div>
+                            </div>
+                        </div>
+                        <div class="faq-accordion-category nested">
+                            <div class="faq-accordion-header">
+                                <span>Поиск и анализ стартапов, франшиз и подрядчиков</span>
+                                <img src="{% static 'accounts/images/faq/chevron_down.svg' %}" alt="toggle" class="faq-chevron-icon">
+                            </div>
+                            <div class="faq-accordion-content">
+                                <div class="faq-question-item" data-question-id="find-suitable-startups">Как найти подходящие стартапы?</div>
+                                <div class="faq-question-item" data-question-id="request-additional-data">Можно ли запросить дополнительные данные у стартапа?</div>
+                                <div class="faq-question-item" data-question-id="investment-risks">Какие риски связаны с инвестициями?</div>
+                            </div>
+                        </div>
+                        <div class="faq-accordion-category nested">
+                            <div class="faq-accordion-header">
+                                <span>Инвестирование и сделки</span>
+                                <img src="{% static 'accounts/images/faq/chevron_down.svg' %}" alt="toggle" class="faq-chevron-icon">
+                            </div>
+                            <div class="faq-accordion-content">
+                                <div class="faq-question-item" data-question-id="how-to-invest">Как я могу инвестировать в стартап или франшизу?</div>
+                                <div class="faq-question-item" data-question-id="investment-confirmation">Как я получу подтверждение своей инвестиции?</div>
+                                <div class="faq-question-item" data-question-id="can-sell-investment">Могу ли я продать свою инвестицию?</div>
+                            </div>
+                        </div>
+                        <div class="faq-accordion-category nested">
+                            <div class="faq-accordion-header">
+                                <span>Комиссии и расходы</span>
+                                <img src="{% static 'accounts/images/faq/chevron_down.svg' %}" alt="toggle" class="faq-chevron-icon">
+                            </div>
+                            <div class="faq-accordion-content">
+                                <div class="faq-question-item" data-question-id="commission-for-investing">Есть ли комиссия за инвестирование?</div>
+                                <div class="faq-question-item" data-question-id="cancel-investment">Могу ли я отменить свою инвестицию?</div>
+                            </div>
+                        </div>
+                         <div class="faq-accordion-category nested">
+                            <div class="faq-accordion-header">
+                                <span>Правовые аспекты и поддержка</span>
+                                <img src="{% static 'accounts/images/faq/chevron_down.svg' %}" alt="toggle" class="faq-chevron-icon">
+                            </div>
+                            <div class="faq-accordion-content">
+                                <div class="faq-question-item" data-question-id="investment-confirmation-docs">Какие документы подтверждают мою инвестицию?</div>
+                                <div class="faq-question-item" data-question-id="contact-startup-founders">Как я могу связаться с основателями стартапа?</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="faq-right-panel" style="background-color: #e6f0ff; border-radius: 0 10px 10px 0; width: 60%; padding: 32px 40px;">
+                <h2 class="faq-answer-title" id="faqAnswerTitle">Что такое «Great Ideas»?</h2>
+                <div class="faq-answer-body" id="faqAnswerBody">
+                    <p>«Great Ideas» — это маркетплейс стартапов, где стартаперы размещают свои проекты, а инвесторы исследуют их в поисках лучших идей для инвестиций или покупки.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="application/json" id="faqData">
 {
-  "q1": {
-    "title": "Создание и ведение профиля стартапа",
-    "answer": "<p>Зарегистрируйтесь, заполните подробную информацию о вашем проекте, команде, бизнес-модели и финансовых показателях. Регулярно обновляйте профиль, чтобы привлекать внимание инвесторов.</p><p>Список доступных сфер: IT, финтех, медицина, образование, экология, ритейл и многие другие.</p>"
-  },
-  "q2": {
-    "title": "Как зарегистрироваться на платформе «Great Ideas»?",
-    "answer": "<p>Нажмите кнопку 'Регистрация', выберите тип аккаунта (стартапер или инвестор) и следуйте инструкциям. Потребуется подтверждение email.</p>"
-  },
-  "q3": {
-    "title": "Как правильно оформить профиль стартапа?",
-    "answer": "<p>Максимально полно и честно опишите вашу идею, команду, рынок, бизнес-модель, текущие достижения и запрашиваемые инвестиции. Приложите презентацию и финансовый план.</p>"
-  },
-  "q4": {
-    "title": "Можно ли редактировать информацию после публикации?",
-    "answer": "<p>Да, вы можете в любой момент редактировать и обновлять информацию в профиле вашего стартапа через личный кабинет.</p>"
-  },
-  "q5": {
-    "title": "Какие виды франшиз можно размещать?",
-    "answer": "<p>Мы принимаем франшизы из различных сфер: общественное питание, розничная торговля, услуги для бизнеса и населения, образование, IT, красота и здоровье, производство и другие. Главное – это наличие проверенной бизнес-модели и потенциала для масштабирования.</p>"
-  },
-  "q6": {
-    "title": "Есть ли ограничения на размещение франшиз?",
-    "answer": "<p>Франшиза должна быть юридически оформлена и не должна нарушать законодательство. Мы не размещаем проекты, связанные с финансовыми пирамидами, азартными играми (кроме легальных) и другой сомнительной деятельностью.</p>"
-  },
-  "q7": {
-    "title": "Какие требования для размещения франшизы?",
-    "answer": "<p>Необходимо предоставить подробное описание франшизы, включая бизнес-план, финансовые показатели, условия для франчайзи, описание поддержки и обучения. Важно наличие успешно работающих точек (собственных или франчайзинговых).</p>"
-  },
-  "q8": {
-    "title": "Проверяет ли платформа франшизы перед публикацией?",
-    "answer": "<p>Да, все франшизы проходят предварительную модерацию на соответствие нашим правилам и достоверность предоставленной информации. Однако, мы рекомендуем инвесторам проводить собственную комплексную проверку (due diligence) перед заключением сделки.</p>"
-  },
-  "q9": {
-    "title": "Как защищена конфиденциальность данных франшизы?",
-    "answer": "<p>Вы сами определяете, какая информация будет общедоступна, а какая будет предоставляться потенциальным инвесторам только после подписания NDA (соглашения о неразглашении), если это необходимо.</p>"
-  },
-  "q10": {
-    "title": "Как работает система поиска инвесторов?",
-    "answer": "<p>Инвесторы могут искать проекты по различным фильтрам (сфера, стадия, сумма инвестиций). Ваш стартап также может быть рекомендован инвесторам нашей системой на основе их предпочтений. Активно участвуйте в жизни платформы, обновляйте информацию – это повышает ваши шансы.</p>"
-  },
-  "q11": {
-    "title": "Какие комиссии взимает платформа?",
-    "answer": "<p>Регистрация и размещение стартапа бесплатны. Комиссия взимается только с успешных сделок по привлечению инвестиций. Подробные условия указаны в пользовательском соглашении.</p>"
-  },
-  "q12": {
-    "title": "Как найти и выбрать стартап для инвестирования?",
-    "answer": "<p>Используйте фильтры поиска, изучайте профили стартапов, презентации и финансовые модели. Обращайте внимание на команду, рынок и потенциал роста. Вы можете напрямую связываться со стартаперами для уточнения деталей.</p>"
-  },
-  "q13": {
-    "title": "Какие гарантии безопасности сделок?",
-    "answer": "<p>Платформа предоставляет инструменты для безопасного общения и обмена документами. Мы рекомендуем проводить все переговоры и юридическое оформление сделок с привлечением квалифицированных юристов. Платформа не является гарантом возврата инвестиций, так как венчурные инвестиции сопряжены с высокими рисками.</p>"
-  }
+    "what-is-great-ideas": {"title": "Что такое «Great Ideas»?", "answer": "<p>«Great Ideas» — это маркетплейс стартапов, где стартаперы размещают свои проекты, а инвесторы исследуют их в поисках лучших идей для инвестиций или покупки.</p>"},
+    "how-to-register": {"title": "Как зарегистрироваться на платформе «Great Ideas»?", "answer": "<p>Зарегистрируйтесь через форму на главной странице. Подтвердите почту и заполните профиль.</p>"},
+    "how-to-setup-profile": {"title": "Как правильно оформить профиль стартапа?", "answer": "<p>Добавьте логотип, описание проекта, команду, презентацию и ключевые данные. <a href=\'#\' class=\'faq-answer-details-link\'>Узнайте больше о том, как правильно регистрировать проект <img src=\'{% static ''accounts/images/faq/bluearrow.svg'' %}\' alt=\'Перейти\'></a></p>"},
+    "can-edit-info": {"title": "Можно ли редактировать информацию после публикации?", "answer": "<p>Да, вы можете редактировать информацию, но изменения будут проходить модерацию.</p>"},
+    "franchise-types": {"title": "Какие виды франшиз можно размещать?", "answer": "<p>Франшизы в сферах общественного питания, розничной торговли, услуг для бизнеса, образования, здоровья/красоты, IT и других. <a href=\'#\' class=\'faq-answer-details-link\'>Список доступных сфер <img src=\'{% static ''accounts/images/faq/bluearrow.svg'' %}\' alt=\'Перейти\'></a></p>"},
+    "franchise-limits": {"title": "Есть ли ограничения на размещение франшиз?", "answer": "<p>Нельзя размещать франшизы в сферах азартных игр, MLM, финансовых пирамид, взрослого контента и запрещенных законом видов деятельности.</p>"},
+    "franchise-requirements": {"title": "Какие требования для размещения франшизы?", "answer": "<p>Зарегистрированный бизнес, подтвержденная бизнес-модель, финансовая отчетность, наличие сайта и маркетинговых материалов.</p>"},
+    "franchise-verification": {"title": "Проверяет ли платформа франшизы перед публикацией?", "answer": "<p>Да, все франшизы проходят модерацию на соответствие требованиям платформы. Однако Great Ideas не несет ответственности за финансовое состояние или успех франшизы. Инвесторам рекомендуется самостоятельно изучать и проверять проекты перед инвестированием.</p>"},
+    "franchise-data-privacy": {"title": "Как защищена конфиденциальность данных франшизы?", "answer": "<p>Названия компаний и чувствительные данные скрыты до подписания NDA с заинтересованным инвестором.</p>"},
+    "how-to-get-noticed": {"title": "Как сделать мой стартап заметным для инвесторов?", "answer": "<p>Заполните профиль максимально детально, добавьте видео-презентацию и кейсы.</p>"},
+    "minimum-goal": {"title": "Что такое минимальная цель и что будет, если я её не достигну?", "answer": "<p>Минимальная цель – это сумма, необходимая для запуска проекта. Если она не достигнута, инвестиции возвращаются инвесторам. (требует обсуждение с клиентом).</p>"},
+    "attract-more-investors": {"title": "Как я могу привлечь больше инвесторов?", "answer": "<p>Регулярно обновляйте информацию, публикуйте новости о развитии проекта, участвуйте в обсуждениях.</p>"},
+    "how-to-sell-startup": {"title": "Как выставить стартап на продажу?", "answer": "<p>В разделе «Создать стартап/франшизу» выберите тип «Продажа бизнеса».</p>"},
+    "sell-part-of-company": {"title": "Можно ли продать только часть компании?", "answer": "<p>Да, вы можете предложить долевую продажу.</p>"},
+    "startup-categories-allowed": {"title": "Какие категории стартапов можно размещать?", "answer": "<p>Технологические, электронная коммерция, инновационные продукты, гейминг, образование, креативные индустрии, наука, экология.</p>"},
+    "startup-categories-forbidden": {"title": "Какие категории стартапов нельзя размещать?", "answer": "<p>Контент для взрослых, финансовые пирамиды, азартные игры, нелегальная фармацевтика, политика, криптовалюты.</p>"},
+    "required-documents": {"title": "Какие документы нужно предоставить?", "answer": "<p>Для стартапов - презентация, бизнес-план, финансовая модель. Для франшиз - договор франчайзинга, презентация, фин. показатели. <a href=\'#\' class=\'faq-answer-details-link\'>Подробнее о документах <img src=\'{% static ''accounts/images/faq/bluearrow.svg'' %}\' alt=\'Перейти\'></a></p>"},
+    "platform-commission": {"title": "Какая комиссия взимается с успешного проекта?", "answer": "<p>Комиссия составляет [X]% от суммы привлеченных инвестиций или продажи бизнеса. (требует обсуждение с клиентом)</p>"},
+    "data-confidentiality-legal": {"title": "Как защищена конфиденциальность данных?", "answer": "<p>Мы используем шифрование данных и предоставляем возможность подписания NDA. <a href=\'#\' class=\'faq-answer-details-link\'>Политика конфиденциальности <img src=\'{% static ''accounts/images/faq/bluearrow.svg'' %}\' alt=\'Перейти\'></a></p>"},
+    "specialists-on-platform": {"title": "Каких специалистов можно найти на платформе?", "answer": "<p>Маркетологов, разработчиков, дизайнеров, юристов, финансовых консультантов и других. (требует обсуждение с клиентом).</p>"},
+    "specialist-quality-check": {"title": "Как проверяется качество специалистов?", "answer": "<p>Мы проверяем портфолио и отзывы, но рекомендуем проводить собственное собеседование. (требует обсуждение с клиентом).</p>"},
+    "protecting-ip": {"title": "Как защитить интеллектуальную собственность?", "answer": "<p>Регистрируйте товарные знаки и патенты, используйте NDA. <a href=\'#\' class=\'faq-answer-details-link\'>Рекомендации по защите ИС <img src=\'{% static ''accounts/images/faq/bluearrow.svg'' %}\' alt=\'Перейти\'></a></p>"},
+    "who-can-be-investor": {"title": "Кто может стать инвестором на платформе?", "answer": "<p>Физические и юридические лица, готовые инвестировать в стартапы и франшизы.</p>"},
+    "accredited-investor-status": {"title": "Как подтвердить статус аккредитованного инвестора?", "answer": "<p>Предоставьте выписку из банка или брокерского счета. (требует обсуждение с клиентом).</p>"},
+    "find-suitable-startups": {"title": "Как найти подходящие стартапы?", "answer": "<p>Используйте фильтры по категориям, стадиям, сумме инвестиций. Изучайте профили и презентации. <a href=\'#\' class=\'faq-answer-details-link\'>Советы по выбору проектов <img src=\'{% static ''accounts/images/faq/bluearrow.svg'' %}\' alt=\'Перейти\'></a></p>"},
+    "request-additional-data": {"title": "Можно ли запросить дополнительные данные у стартапа?", "answer": "<p>Да, после подписания NDA вы можете запросить финансовую отчетность и другие документы.</p>"},
+    "investment-risks": {"title": "Какие риски связаны с инвестициями?", "answer": "<p>Высокая вероятность потери инвестиций, длительный срок окупаемости, отсутствие гарантий прибыли. <a href=\'#\' class='faq-answer-details-link\'>Подробнее о рисках <img src=\'{% static ''accounts/images/faq/bluearrow.svg'' %}\' alt=\'Перейти\'></a></p>"},
+    "how-to-invest": {"title": "Как я могу инвестировать в стартап или франшизу?", "answer": "<p>Свяжитесь с основателями через платформу, обсудите условия и заключите договор.</p>"},
+    "investment-confirmation": {"title": "Как я получу подтверждение своей инвестиции?", "answer": "<p>Вы получите договор и выписку о переводе средств. (требует обсуждение с клиентом).</p>"},
+    "can-sell-investment": {"title": "Могу ли я продать свою инвестицию?", "answer": "<p>Да, на вторичном рынке или по договоренности с другими инвесторами. (требует обсуждение с клиентом).</p>"},
+    "commission-for-investing": {"title": "Есть ли комиссия за инвестирование?", "answer": "<p>Нет, инвесторы не платят комиссию платформе. (требует обсуждение с клиентом).</p>"},
+    "cancel-investment": {"title": "Могу ли я отменить свою инвестицию?", "answer": "<p>До завершения раунда финансирования, в соответствии с условиями договора. (требует обсуждение с клиентом).</p>"},
+    "investment-confirmation-docs": {"title": "Какие документы подтверждают мою инвестицию?", "answer": "<p>Договор инвестирования, выписка о владении долей/акциями. (требует обсуждение с клиентом).</p>"},
+    "contact-startup-founders": {"title": "Как я могу связаться с основателями стартапа?", "answer": "<p>Через личные сообщения на платформе после взаимного интереса.</p>"}
 }
 </script>
 
+<div class="cta">
+    <div class="cta-content">
+    <div class="heading4">
+        <div class="parent45">
+            <div class="div16">Готовы</div>
+            <div class="div148">покорить галактику?</div>
+        </div>
+        <div class="text2">
+                <div class="parent46 cta-button">
+                <div class="div22">Создать стартап</div>
+                    <img class="add-circle-outline-icon" alt="Add" src="https://placehold.co/24x24/000000/FFFFFF?text=%2B">
+                </div>
+                    <div class="parent47 cta-button">
+                    <div class="div22">Инвестировать</div>
+                        <img class="iconeye" alt="Eye" src="https://placehold.co/24x24/FFFFFF/004E9F?text=E">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <img class="clip-path-group cta-image" alt="Galaxy Art" src="https://placehold.co/600x361/1a2a45/FFFFFF?text=CTA+ART">
+</div>
+</div>
+
 <script src="{% static 'accounts/js/main_temp.js' %}"></script>
+<script src="{% static 'accounts/js/faq.js' %}"></script>
 {% endblock %}
