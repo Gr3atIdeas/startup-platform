@@ -78,7 +78,11 @@ body {
     max-width: 1303px;
     height: 708px;
     position: relative;
-    background: transparent; /* Прозрачный фон по требованию */
+    /* background: transparent; */ /* Убираем старый прозрачный фон */
+    background-image: url('../images/main_page/main_page_1stblockBG.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     border-radius: 10px;
     overflow: hidden;
     display: flex;
@@ -203,39 +207,37 @@ body {
 .featured1 {
     width: 100%;
     max-width: 1445px;
-    padding: 45px 71px;
+    padding: 45px 71px; /* Соответствует макету */
     box-sizing: border-box;
-    overflow: hidden;
-    background-color: transparent; /* Фон всей секции если отличается от body */
+    overflow: hidden; /* Соответствует макету */
+    background-color: transparent;
 }
 
 .featured1 .features-carousel-wrapper {
     width: 100%;
-    position: relative; /* Для кнопок навигации, если они абсолютные */
+    position: relative; 
 }
 
 .featured1 .features-carousel {
-    display: flex; /* Контейнер для .featured1-carousel-inner */
-    overflow: hidden; /* JS будет управлять transform translateX */
-    /* padding: 0; */
+    display: flex; 
+    overflow: hidden; 
 }
 
-/* JS создает .featured1-carousel-inner, ему нужны стили */
 .featured1-carousel-inner {
     display: flex;
-    gap: 20px; /* Отступ между карточками */
+    gap: 20px; /* Отступ между карточками как в макете */
     transition: transform 0.5s ease-in-out;
 }
 
-.featured1 .feature-card { /* Каждая карточка */
-    min-width: 449px;  /* Из Figma, используем min-width для карусели */
-    width: 449px;
-    height: 514px;
+.featured1 .feature-card { 
+    min-width: 449px; 
+    width: 449px; /* Соответствует макету */
+    height: 514px; /* Соответствует макету */
     position: relative;
-    background: white;
-    overflow: hidden;
-    border-radius: 20px;
-    padding: 43px;
+    background: white; /* Соответствует макету */
+    overflow: hidden; /* Соответствует макету */
+    border-radius: 20px; /* Соответствует макету */
+    padding: 43px; 
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -243,8 +245,8 @@ body {
 }
 
 .featured1 .feature-card img.rectangle-icon {
-    width: 100%; /* Растягиваем по ширине карточки */
-    height: 309px; 
+    width: 100%; 
+    height: 309px; /* Соответствует макету */
     position: absolute;
     left: 0; 
     top: 0;  
@@ -283,7 +285,7 @@ body {
 }
 
 .featured1 .heading .parent3 { 
-    display: flex; 
+    display: flex;
     flex-direction: column;
     gap: 0; 
 }
@@ -339,8 +341,8 @@ body {
 
 .featured1 .heading .arrow-left-control .vector-icon,
 .featured1 .heading .arrow-right-control .vector-icon1 {
-    width: 9px; 
-    height: 16px; 
+    width: 9px;
+    height: 16px;
     object-fit: contain;
 }
 
@@ -688,7 +690,7 @@ body {
     width: 45%; /* Примерно */
     display: flex;
     flex-direction: column;
-    align-items: center; 
+    align-items: center;
     gap: 25px;
 }
 .featured5 .group-wrapper { 
@@ -737,7 +739,7 @@ body {
 .featured5 .frame-wrapper { align-self: stretch; }
 .featured5 .frame-parent10 { /* Карточка стартапа */
     align-self: stretch;
-    display: flex; 
+    display: flex;
     flex-direction: column; /* Картинка сверху, текст снизу */
     background: #0E2A57; /* Фон карточки */
     border-radius: 15px;
@@ -932,8 +934,8 @@ body {
 }
 
 .featured6 .galaxy-step-card .frame-child12 { 
-    width: 1000px; 
-    height: 500px; 
+    width: 1000px;
+    height: 500px;
     object-fit: cover;
     border-radius: 10px;
 }
@@ -1695,18 +1697,18 @@ body {
 @media (max-width: 1350px) {
     .featured3 .frame-parent,
     .featured4 .frame-parent3 {
-        flex-direction: column;
+    flex-direction: column;
         height: auto;
         padding: 30px;
     }
     .featured3 .parent4, .featured4 .parent6 {
         width: 100%;
-        align-items: center;
+    align-items: center;
         text-align: center;
         padding-left: 0;
     }
     .featured3 .icon9, .featured4 .icon10, .featured3 .scale-1200-photoroom-2-parent {
-        position: relative;
+    position: relative;
         width: 70%; max-width: 400px;
         height: auto;
         margin-top: 30px;
@@ -1714,8 +1716,8 @@ body {
         transform: none;
     }
     .featured5 .frame-parent7 {
-        flex-direction: column;
-        align-items: center;
+    flex-direction: column;
+    align-items: center;
     }
     .featured5 .frame-parent8, .featured5 .frame-parent9, .featured5 .creators {
         width: 100%;
@@ -1724,7 +1726,7 @@ body {
     .featured5 .divider { display: none; }
 
     .featured9 .heading-parent {
-        flex-direction: column;
+    flex-direction: column;
     }
     .featured9 .heading2, .featured9 .instance-parent {
         flex: 0 0 100%;
@@ -1732,7 +1734,7 @@ body {
     }
 
     .featured10 .featured11 {
-        flex-direction: column;
+    flex-direction: column;
         gap: 40px;
         padding: 30px;
     }
@@ -1744,7 +1746,7 @@ body {
     .featured10 .frame-parent32 { justify-content: center; }
 
     .featured14 .heading-group {
-        flex-direction: column;
+    flex-direction: column;
         padding: 30px;
     }
     .featured14 .faq-left-column, .featured14 .faq-right-column {
@@ -1760,7 +1762,7 @@ body {
     }
     .cta .cta-content {
         max-width: 100%;
-        align-items: center;
+    align-items: center;
         text-align: center;
         margin-right: 0;
     }

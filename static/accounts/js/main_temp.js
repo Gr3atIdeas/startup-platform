@@ -7,6 +7,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const featuresWrapper = document.querySelector('.features-carousel-wrapper');
     const featuresArrowLeft = document.querySelector('.arrow-left-control');
     const featuresArrowRight = document.querySelector('.arrow-right-control');
+    const featuresDotsContainer = document.querySelector('.featured1 .chevron-forward-circle-outline-parent');
+    let featuresDots = [];
+    if (featuresDotsContainer) {
+        featuresDots = Array.from(featuresDotsContainer.querySelectorAll('img[class^="chevron-forward-circle-outline-icon"]'));
+    }
 
     if (featuresCarousel && featuresWrapper && featuresArrowLeft && featuresArrowRight) {
         const featureCards = featuresCarousel.querySelectorAll('.feature-card');
@@ -14,83 +19,108 @@ document.addEventListener('DOMContentLoaded', function () {
             const cardWidth = featureCards[0].offsetWidth;
             const gap = parseInt(getComputedStyle(featuresCarousel).gap) || 20;
             const visibleCards = 3;
-            let currentScroll = 0;
+            let currentCardIndex = 0;
             const scrollAmount = cardWidth + gap;
-            const maxScroll = (featureCards.length - visibleCards) * scrollAmount;
+            const totalCards = featureCards.length;
+            const maxCardIndex = Math.max(0, totalCards - visibleCards);
 
-            function updateFeaturesArrows() {
-                featuresArrowLeft.style.opacity = currentScroll <= 0 ? '0.5' : '1';
-                featuresArrowLeft.style.pointerEvents = currentScroll <= 0 ? 'none' : 'auto';
-                featuresArrowRight.style.opacity = currentScroll >= maxScroll ? '0.5' : '1';
-                featuresArrowRight.style.pointerEvents = currentScroll >= maxScroll ? 'none' : 'auto';
+            function updateFeaturesControls() {
+                featuresArrowLeft.classList.toggle('disabled', currentCardIndex === 0);
+                featuresArrowRight.classList.toggle('disabled', currentCardIndex >= maxCardIndex);
+                if (featuresDots.length > 0) {
+                    featuresDots.forEach((dot, index) => {
+                        dot.classList.toggle('active', index === currentCardIndex);
+                    });
+                }
+            }
+            
+            let carouselInnerContainer = featuresCarousel.querySelector('.featured1-carousel-inner');
+            if (!carouselInnerContainer) {
+                carouselInnerContainer = document.createElement('div');
+                carouselInnerContainer.classList.add('featured1-carousel-inner');
+                while (featuresCarousel.firstChild) {
+                    carouselInnerContainer.appendChild(featuresCarousel.firstChild);
+                }
+                featuresCarousel.appendChild(carouselInnerContainer);
+                carouselInnerContainer.style.display = 'flex';
+                carouselInnerContainer.style.gap = `${gap}px`;
             }
 
             featuresArrowLeft.addEventListener('click', () => {
-                currentScroll -= scrollAmount;
-                if (currentScroll < 0) currentScroll = 0;
-                featuresCarousel.style.transform = 'translateX(-' + currentScroll + 'px)';
-                updateFeaturesArrows();
+                if (currentCardIndex > 0) {
+                    currentCardIndex--;
+                    carouselInnerContainer.style.transform = 'translateX(-' + (currentCardIndex * scrollAmount) + 'px)';
+                    updateFeaturesControls();
+                }
             });
 
             featuresArrowRight.addEventListener('click', () => {
-                currentScroll += scrollAmount;
-                if (currentScroll > maxScroll) currentScroll = maxScroll;
-                featuresCarousel.style.transform = 'translateX(-' + currentScroll + 'px)';
-                updateFeaturesArrows();
+                if (currentCardIndex < maxCardIndex) {
+                    currentCardIndex++;
+                    carouselInnerContainer.style.transform = 'translateX(-' + (currentCardIndex * scrollAmount) + 'px)';
+                    updateFeaturesControls();
+                }
             });
 
-            updateFeaturesArrows();
+            if (featuresDots.length > 0) {
+                featuresDots.forEach((dot, index) => {
+                    dot.addEventListener('click', () => {
+                        currentCardIndex = Math.min(index, maxCardIndex);
+                        carouselInnerContainer.style.transform = 'translateX(-' + (currentCardIndex * scrollAmount) + 'px)';
+                        updateFeaturesControls();
+                    });
+                });
+            }
+
+            updateFeaturesControls();
 
             let isDownFeatures = false;
             let startXFeatures;
-            let scrollLeftFeatures;
+            let scrollLeftFeatures_draggable;
 
             featuresWrapper.addEventListener('mousedown', (e) => {
                 isDownFeatures = true;
                 featuresWrapper.classList.add('active-drag');
                 startXFeatures = e.pageX - featuresWrapper.offsetLeft;
-                scrollLeftFeatures = currentScroll;
-                featuresCarousel.style.transition = 'none';
+                scrollLeftFeatures_draggable = currentCardIndex * scrollAmount;
+                if (carouselInnerContainer) carouselInnerContainer.style.transition = 'none';
             });
 
-            featuresWrapper.addEventListener('mouseleave', () => {
+            function handleDragEnd() {
                 if (!isDownFeatures) return;
                 isDownFeatures = false;
                 featuresWrapper.classList.remove('active-drag');
-                featuresCarousel.style.transition = 'transform 0.3s ease-out';
-                const newScroll = Math.round(currentScroll / scrollAmount) * scrollAmount;
-                currentScroll = Math.max(0, Math.min(newScroll, maxScroll));
-                featuresCarousel.style.transform = 'translateX(-' + currentScroll + 'px)';
-                updateFeaturesArrows();
+                if (carouselInnerContainer) carouselInnerContainer.style.transition = 'transform 0.3s ease-out';
+                
+                const currentTransform = parseFloat(getComputedStyle(carouselInnerContainer).transform.split(',')[4] || 0);
+                currentCardIndex = Math.round(-currentTransform / scrollAmount);
+                currentCardIndex = Math.max(0, Math.min(currentCardIndex, maxCardIndex));
+                
+                if (carouselInnerContainer) carouselInnerContainer.style.transform = 'translateX(-' + (currentCardIndex * scrollAmount) + 'px)';
+                updateFeaturesControls();
                 setTimeout(() => {
-                    featuresCarousel.style.transition = 'transform 0.5s ease-in-out';
+                    if (carouselInnerContainer) carouselInnerContainer.style.transition = 'transform 0.5s ease-in-out';
                 }, 300);
-            });
+            }
 
-            featuresWrapper.addEventListener('mouseup', () => {
-                if (!isDownFeatures) return;
-                isDownFeatures = false;
-                featuresWrapper.classList.remove('active-drag');
-                featuresCarousel.style.transition = 'transform 0.3s ease-out';
-                const newScroll = Math.round(currentScroll / scrollAmount) * scrollAmount;
-                currentScroll = Math.max(0, Math.min(newScroll, maxScroll));
-                featuresCarousel.style.transform = 'translateX(-' + currentScroll + 'px)';
-                updateFeaturesArrows();
-                setTimeout(() => {
-                    featuresCarousel.style.transition = 'transform 0.5s ease-in-out';
-                }, 300);
-            });
+            featuresWrapper.addEventListener('mouseleave', handleDragEnd);
+            featuresWrapper.addEventListener('mouseup', handleDragEnd);
 
             featuresWrapper.addEventListener('mousemove', (e) => {
-                if (!isDownFeatures) return;
+                if (!isDownFeatures || !carouselInnerContainer) return;
                 e.preventDefault();
                 const x = e.pageX - featuresWrapper.offsetLeft;
                 const walk = (x - startXFeatures) * 1.5;
-                let newScrollVal = scrollLeftFeatures - walk;
-                const overScrollDrag = scrollAmount / 3;
-                currentScroll = Math.max(-overScrollDrag, Math.min(newScrollVal, maxScroll + overScrollDrag));
-                featuresCarousel.style.transform = 'translateX(-' + currentScroll + 'px)';
+                let newScrollVal = scrollLeftFeatures_draggable - walk;
+                
+                const overScrollDragLimit = scrollAmount / 2;
+                const minPossibleTransform = -(maxCardIndex * scrollAmount) - overScrollDragLimit;
+                const maxPossibleTransform = overScrollDragLimit;
+
+                newScrollVal = Math.max(minPossibleTransform, Math.min(newScrollVal, maxPossibleTransform));
+                carouselInnerContainer.style.transform = 'translateX(-' + newScrollVal + 'px)';
             });
+
         } else {
             // console.warn('Карточки в карусели "Почему выбирают нас?" не найдены.');
         }
@@ -113,7 +143,27 @@ document.addEventListener('DOMContentLoaded', function () {
             const totalGalaxyCards = galaxyCards.length;
 
             function updateGalaxyCarousel() {
-                galaxyCarousel.style.transform = 'translateX(-' + (currentGalaxyIndex * 100) + '%)';
+                let galaxyInner = galaxyCarousel.querySelector('.galaxy-carousel-inner');
+                if (!galaxyInner) {
+                    galaxyInner = document.createElement('div');
+                    galaxyInner.classList.add('galaxy-carousel-inner');
+                    galaxyInner.style.display = 'flex';
+                    galaxyInner.style.width = `${totalGalaxyCards * 100}%`;
+                    galaxyCards.forEach(card => {
+                        card.style.width = `${100 / totalGalaxyCards}%`;
+                        galaxyInner.appendChild(card);
+                    });
+                    galaxyCarousel.appendChild(galaxyInner);
+                } else {
+                    galaxyInner.style.display = 'flex';
+                    galaxyInner.style.width = `${totalGalaxyCards * 100}%`;
+                     galaxyCards.forEach(card => {
+                        card.style.width = `${100 / totalGalaxyCards}%`;
+                    });
+                }
+
+                galaxyInner.style.transform = 'translateX(-' + (currentGalaxyIndex * (100 / totalGalaxyCards)) + '%)';
+                
                 const currentCardData = galaxyCards[currentGalaxyIndex].querySelector('.galaxy-step-data');
                 if (currentCardData) {
                     currentStepTitleElement.textContent = currentCardData.dataset.stepTitle || 'Заголовок шага';
@@ -144,21 +194,23 @@ document.addEventListener('DOMContentLoaded', function () {
             let galaxyStartX;
             let galaxyScrollLeftPx;
             let galaxyWalked = 0;
+            let galaxyInnerForDrag = galaxyCarousel.querySelector('.galaxy-carousel-inner') || galaxyCarousel;
 
             galaxyWrapper.addEventListener('mousedown', (e) => {
                 galaxyIsDown = true;
                 galaxyWrapper.classList.add('active-drag');
                 galaxyStartX = e.pageX;
-                galaxyScrollLeftPx = -currentGalaxyIndex * galaxyWrapper.offsetWidth;
+                const currentPercentageOffset = currentGalaxyIndex * (100 / totalGalaxyCards);
+                galaxyScrollLeftPx = -(currentPercentageOffset / 100 * galaxyWrapper.offsetWidth);
                 galaxyWalked = 0;
-                galaxyCarousel.style.transition = 'none';
+                galaxyInnerForDrag.style.transition = 'none';
             });
 
             function handleGalaxyDragEnd() {
                 if (!galaxyIsDown) return;
                 galaxyIsDown = false;
                 galaxyWrapper.classList.remove('active-drag');
-                galaxyCarousel.style.transition = 'transform 0.5s ease-in-out';
+                galaxyInnerForDrag.style.transition = 'transform 0.5s ease-in-out';
                 
                 const threshold = galaxyWrapper.offsetWidth / 4;
 
@@ -181,11 +233,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 let newTransformPx = galaxyScrollLeftPx + galaxyWalked;
 
                 const overscrollLimit = galaxyWrapper.offsetWidth / 3;
-                const minTransformPx = -( (totalGalaxyCards -1) * galaxyWrapper.offsetWidth + overscrollLimit);
+                const minTransformPx = -( (totalGalaxyCards -1) * galaxyWrapper.offsetWidth / totalGalaxyCards + overscrollLimit);
                 const maxTransformPx = overscrollLimit;
                 newTransformPx = Math.max(minTransformPx, Math.min(maxTransformPx, newTransformPx));
 
-                galaxyCarousel.style.transform = 'translateX(' + newTransformPx + 'px)';
+                galaxyInnerForDrag.style.transform = 'translateX(' + newTransformPx + 'px)';
             });
             updateGalaxyCarousel();
         } else {
@@ -202,84 +254,100 @@ document.addEventListener('DOMContentLoaded', function () {
     const successArrowRight = document.querySelector('.success-stories-arrow-right');
 
     if (successCarousel && successWrapper && successArrowLeft && successArrowRight) {
-        const successCards = successCarousel.querySelectorAll('.success-story-card');
+        let successInner = successCarousel.querySelector('.featured8-carousel-inner');
+        if (!successInner) {
+            successInner = document.createElement('div');
+            successInner.classList.add('featured8-carousel-inner');
+            successInner.style.display = 'flex';
+            const successCardsTemp = Array.from(successCarousel.querySelectorAll('.success-story-card'));
+            successCardsTemp.forEach(card => successInner.appendChild(card));
+            successCarousel.innerHTML = '';
+            successCarousel.appendChild(successInner);
+        }
+        
+        const successCards = successInner.querySelectorAll('.success-story-card');
         if (successCards.length > 0) {
-            const cardWidth = successCards[0].offsetWidth;
-            const gap = parseInt(getComputedStyle(successCarousel).gap) || 20;
-            const visibleCards = 3;
-            let currentScroll = 0;
-            const scrollAmount = cardWidth + gap;
-            const maxScroll = Math.max(0, (successCards.length - visibleCards) * scrollAmount);
-
+            const cardWidthSuccess = successCards[0].offsetWidth;
+            const gapSuccess = parseInt(getComputedStyle(successInner).gap) || 20;
+            const visibleCardsSuccess = 3;
+            let currentScrollSuccess = 0;
+            const scrollAmountSuccess = cardWidthSuccess + gapSuccess;
+            const maxScrollSuccess = Math.max(0, (successCards.length - visibleCardsSuccess) * scrollAmountSuccess);
 
             function updateSuccessArrows() {
-                successArrowLeft.classList.toggle('disabled', currentScroll <= 0);
-                successArrowRight.classList.toggle('disabled', currentScroll >= maxScroll && maxScroll > 0);
-                 if (maxScroll <= 0) {
+                successArrowLeft.classList.toggle('disabled', currentScrollSuccess <= 0);
+                successArrowRight.classList.toggle('disabled', currentScrollSuccess >= maxScrollSuccess && maxScrollSuccess > 0);
+                 if (maxScrollSuccess <= 0) {
                     successArrowLeft.classList.add('disabled');
                     successArrowRight.classList.add('disabled');
                 }
             }
 
             successArrowLeft.addEventListener('click', () => {
-                if (currentScroll > 0) {
-                    currentScroll -= scrollAmount;
-                    if (currentScroll < 0) currentScroll = 0;
-                    successCarousel.style.transform = 'translateX(-' + currentScroll + 'px)';
+                if (currentScrollSuccess > 0) {
+                    currentScrollSuccess -= scrollAmountSuccess;
+                    if (currentScrollSuccess < 0) currentScrollSuccess = 0;
+                    successInner.style.transform = 'translateX(-' + currentScrollSuccess + 'px)';
                     updateSuccessArrows();
                 }
             });
 
             successArrowRight.addEventListener('click', () => {
-                 if (currentScroll < maxScroll) {
-                    currentScroll += scrollAmount;
-                    if (currentScroll > maxScroll) currentScroll = maxScroll;
-                    successCarousel.style.transform = 'translateX(-' + currentScroll + 'px)';
+                 if (currentScrollSuccess < maxScrollSuccess) {
+                    currentScrollSuccess += scrollAmountSuccess;
+                    if (currentScrollSuccess > maxScrollSuccess) currentScrollSuccess = maxScrollSuccess;
+                    successInner.style.transform = 'translateX(-' + currentScrollSuccess + 'px)';
                     updateSuccessArrows();
                 }
             });
             
             updateSuccessArrows();
 
-            let isDownSuccess = false;
-            let startXSuccess;
-            let scrollLeftSuccess;
+            if(successWrapper) {
+                let isDownSuccess = false;
+                let startXSuccess;
+                let scrollLeftSuccess_draggable;
 
-            successWrapper.addEventListener('mousedown', (e) => {
-                isDownSuccess = true;
-                successWrapper.classList.add('active-drag');
-                startXSuccess = e.pageX - successWrapper.offsetLeft;
-                scrollLeftSuccess = currentScroll;
-                successCarousel.style.transition = 'none';
-            });
+                successWrapper.addEventListener('mousedown', (e) => {
+                    isDownSuccess = true;
+                    successWrapper.classList.add('active-drag');
+                    startXSuccess = e.pageX - successWrapper.offsetLeft;
+                    scrollLeftSuccess_draggable = currentScrollSuccess;
+                    successInner.style.transition = 'none';
+                });
 
-            function handleSuccessDragEnd() {
-                if (!isDownSuccess) return;
-                isDownSuccess = false;
-                successWrapper.classList.remove('active-drag');
-                successCarousel.style.transition = 'transform 0.3s ease-out';
-                const newScroll = Math.round(currentScroll / scrollAmount) * scrollAmount;
-                currentScroll = Math.max(0, Math.min(newScroll, maxScroll));
-                successCarousel.style.transform = 'translateX(-' + currentScroll + 'px)';
-                updateSuccessArrows();
-                setTimeout(() => {
-                    successCarousel.style.transition = 'transform 0.5s ease-in-out';
-                }, 300);
+                function handleSuccessDragEnd() {
+                    if (!isDownSuccess) return;
+                    isDownSuccess = false;
+                    successWrapper.classList.remove('active-drag');
+                    successInner.style.transition = 'transform 0.3s ease-out';
+                    
+                    const currentTransform = parseFloat(getComputedStyle(successInner).transform.split(',')[4] || 0);
+                    let newIndex = Math.round(-currentTransform / scrollAmountSuccess);
+                    newIndex = Math.max(0, Math.min(newIndex, successCards.length - visibleCardsSuccess));
+                    currentScrollSuccess = newIndex * scrollAmountSuccess;
+
+                    successInner.style.transform = 'translateX(-' + currentScrollSuccess + 'px)';
+                    updateSuccessArrows();
+                    setTimeout(() => {
+                        successInner.style.transition = 'transform 0.5s ease-in-out';
+                    }, 300);
+                }
+
+                successWrapper.addEventListener('mouseleave', handleSuccessDragEnd);
+                successWrapper.addEventListener('mouseup', handleSuccessDragEnd);
+
+                successWrapper.addEventListener('mousemove', (e) => {
+                    if (!isDownSuccess) return;
+                    e.preventDefault();
+                    const x = e.pageX - successWrapper.offsetLeft;
+                    const walk = (x - startXSuccess) * 1.5;
+                    let newTransform = scrollLeftSuccess_draggable - walk;
+                    const overscroll = scrollAmountSuccess / 2;
+                    currentScrollSuccess = Math.max(-overscroll, Math.min(newTransform, maxScrollSuccess + overscroll));
+                    successInner.style.transform = 'translateX(-' + currentScrollSuccess + 'px)';
+                });
             }
-
-            successWrapper.addEventListener('mouseleave', handleSuccessDragEnd);
-            successWrapper.addEventListener('mouseup', handleSuccessDragEnd);
-
-            successWrapper.addEventListener('mousemove', (e) => {
-                if (!isDownSuccess) return;
-                e.preventDefault();
-                const x = e.pageX - successWrapper.offsetLeft;
-                const walk = (x - startXSuccess) * 1.5;
-                let newTransform = scrollLeftSuccess - walk;
-                const overscroll = scrollAmount / 3;
-                currentScroll = Math.max(-overscroll, Math.min(newTransform, maxScroll + overscroll));
-                successCarousel.style.transform = 'translateX(-' + currentScroll + 'px)';
-            });
         } else {
             // console.warn('Карточки в карусели "Истории успеха" не найдены.');
         }
@@ -300,10 +368,10 @@ document.addEventListener('DOMContentLoaded', function () {
             if (faqDataElement && faqDataElement.textContent) {
                 faqData = JSON.parse(faqDataElement.textContent);
             } else {
-                console.warn('FAQ data element (faqDataContainer) or its content not found. FAQ will not work.');
+                // console.warn('FAQ data element (faqDataContainer) or its content not found. FAQ will not work.');
             }
         } catch (error) {
-            console.error('Error parsing FAQ data:', error);
+            // console.error('Error parsing FAQ data:', error);
         }
 
         faqAccordionCategories.forEach(category => {
@@ -353,7 +421,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     faqAnswerTitleElement.textContent = faqData[questionId].title;
                     faqAnswerBodyElement.innerHTML = faqData[questionId].answer;
                 } else {
-                    if (!faqData[questionId]) console.warn('No data found for question ID: ' + questionId);
+                    if (!faqData[questionId]) {
+                        // console.warn('No data found for question ID: ' + questionId);
+                    }
                 }
             });
         });
@@ -384,204 +454,8 @@ document.addEventListener('DOMContentLoaded', function () {
         // console.warn('Необходимые элементы для FAQ не найдены.');
     }
 
-    // Карусель для блока .featured1 ("Почему выбирают нас?")
-    function initFeatured1Carousel() {
-        const carouselViewPort = document.querySelector('.featured1 .featured2');
-        if (!carouselViewPort) return;
-        // Создадим внутренний контейнер для всех карточек, если его еще нет
-        let carouselInnerContainer = carouselViewPort.querySelector('.featured1-carousel-inner');
-        if (!carouselInnerContainer) {
-            carouselInnerContainer = document.createElement('div');
-            carouselInnerContainer.classList.add('featured1-carousel-inner');
-            // Перемещаем все карточки внутрь нового контейнера
-            while (carouselViewPort.firstChild) {
-                carouselInnerContainer.appendChild(carouselViewPort.firstChild);
-            }
-            carouselViewPort.appendChild(carouselInnerContainer);
-        }
-
-        const cards = carouselInnerContainer.querySelectorAll('.featured1 .container');
-        const prevButton = document.querySelector('.featured1 .button3');
-        const nextButton = document.querySelector('.featured1 .button4');
-        const dotsContainer = document.querySelector('.featured1 .chevron-forward-circle-outline-parent');
-        const dots = dotsContainer ? dotsContainer.querySelectorAll('img[class^="chevron-forward-circle-outline-icon"]') : [];
-
-        if (cards.length === 0 || !prevButton || !nextButton || dots.length === 0) {
-            return;
-        }
-
-        let currentIndex = 0;
-        const totalCards = cards.length; 
-
-        function updateCarousel() {
-            const cardWidth = cards[0].offsetWidth;
-            const gap = parseInt(getComputedStyle(carouselInnerContainer).gap || '0');
-            const totalShift = currentIndex * (cardWidth + gap);
-            carouselInnerContainer.style.transform = `translateX(-${totalShift}px)`;
-
-            dots.forEach((dot, index) => {
-                const isActive = index === currentIndex;
-                dot.classList.toggle('active', isActive);
-                // Управление классами для смены src иконки точки
-                if (isActive) {
-                    if (dot.classList.contains('chevron-forward-circle-outline-icon1')) {
-                        dot.classList.remove('chevron-forward-circle-outline-icon1');
-                        dot.classList.add('chevron-forward-circle-outline-icon');
-                    }
-                } else {
-                    if (dot.classList.contains('chevron-forward-circle-outline-icon')) {
-                        dot.classList.remove('chevron-forward-circle-outline-icon');
-                        dot.classList.add('chevron-forward-circle-outline-icon1');
-                    }
-                }
-            });
-
-            // Обновление состояния кнопок (активная/неактивная)
-            const prevButtonChevron = prevButton.querySelector('.chevron-left');
-            const nextButtonChevron = nextButton.querySelector('.chevron-left');
-            
-            if (currentIndex === 0) {
-                if (prevButtonChevron) prevButtonChevron.style.background = 'rgba(255, 255, 255, 0.38)';
-                if (prevButton.querySelector('.vector-icon')) prevButton.querySelector('.vector-icon').style.filter = 'invert(1) brightness(1.5)';
-            } else {
-                if (prevButtonChevron) prevButtonChevron.style.background = '#FFEF2B';
-                if (prevButton.querySelector('.vector-icon')) prevButton.querySelector('.vector-icon').style.filter = '';
-            }
-
-            if (currentIndex >= totalCards - 1) { // Показываем по одной карточке
-                if (nextButtonChevron) nextButtonChevron.style.background = 'rgba(255, 255, 255, 0.38)';
-                if (nextButton.querySelector('.vector-icon1')) nextButton.querySelector('.vector-icon1').style.filter = 'invert(1) brightness(1.5)';
-            } else {
-                if (nextButtonChevron) nextButtonChevron.style.background = '#FFEF2B';
-                if (nextButton.querySelector('.vector-icon1')) nextButton.querySelector('.vector-icon1').style.filter = '';
-            }
-        }
-
-        prevButton.addEventListener('click', () => {
-            if (currentIndex > 0) {
-                currentIndex--;
-                updateCarousel();
-            }
-        });
-
-        nextButton.addEventListener('click', () => {
-            if (currentIndex < totalCards - 1) { // По одной карточке
-                currentIndex++;
-                updateCarousel();
-            }
-        });
-
-        dots.forEach((dot, index) => {
-            dot.addEventListener('click', () => {
-                currentIndex = index;
-                updateCarousel();
-            });
-        });
-
-        // Ensure the inner container allows for all cards in a row
-        if (cards.length > 0) {
-          const cardWidth = cards[0].offsetWidth;
-          const gap = parseInt(getComputedStyle(carouselViewPort).gap || '0');
-          carouselInnerContainer.style.display = 'flex';
-          carouselInnerContainer.style.gap = `${gap}px`;
-          // carouselInnerContainer.style.width = `${totalCards * cardWidth + (totalCards - 1) * gap}px`;
-        }
-
-        updateCarousel(); 
-        window.addEventListener('resize', updateCarousel); // Update on resize
-    }
-
-    function initFeatured6Carousel() {
-        const slidesWrapper = document.querySelector('.featured6 .slides-wrapper-featured6');
-        if (!slidesWrapper) return;
-        const slides = slidesWrapper.querySelectorAll('.slide-featured6');
-        const prevButton = document.querySelector('.featured6 .featured6-prev');
-        const nextButton = document.querySelector('.featured6 .featured6-next');
-        const stepIndicator = document.querySelector('.featured6 .div55');
-
-        if (slides.length === 0 || !prevButton || !nextButton || !stepIndicator) return;
-        let currentIndex = 0;
-
-        function updateCarousel() {
-            slides.forEach((slide, index) => {
-                slide.style.display = (index === currentIndex) ? 'flex' : 'none';
-            });
-            stepIndicator.textContent = `${currentIndex + 1} шаг`;
-        }
-
-        prevButton.addEventListener('click', () => {
-            currentIndex = (currentIndex - 1 + slides.length) % slides.length;
-            updateCarousel();
-        });
-        nextButton.addEventListener('click', () => {
-            currentIndex = (currentIndex + 1) % slides.length;
-            updateCarousel();
-        });
-        updateCarousel();
-    }
-
-    function initFeatured8Carousel() {
-        const carouselViewPort = document.querySelector('.featured8 .chevron-forward-circle-outline-container');
-        if (!carouselViewPort) return;
-
-        let carouselInnerContainer = carouselViewPort.querySelector('.featured8-carousel-inner');
-        if (!carouselInnerContainer) {
-            carouselInnerContainer = document.createElement('div');
-            carouselInnerContainer.classList.add('featured8-carousel-inner');
-            while (carouselViewPort.firstChild) {
-                carouselInnerContainer.appendChild(carouselViewPort.firstChild);
-            }
-            carouselViewPort.appendChild(carouselInnerContainer);
-        }
-        
-        const cards = carouselInnerContainer.querySelectorAll('.parent22');
-        const prevButton = document.querySelector('.featured8 .featured8-prev'); 
-        const nextButton = document.querySelector('.featured8 .featured8-next'); 
-
-        if (cards.length === 0 || !prevButton || !nextButton) return;
-
-        let currentIndex = 0;
-        const numCards = cards.length;
-        const visibleCards = 3; // Based on mockup
-
-        function updateCarousel() {
-            const cardWidth = cards[0].offsetWidth;
-            const gap = parseInt(getComputedStyle(carouselInnerContainer).gap || '20'); // 20px is the gap from CSS
-            const totalShift = currentIndex * (cardWidth + gap);
-            carouselInnerContainer.style.transform = `translateX(-${totalShift}px)`;
-
-            prevButton.style.display = currentIndex === 0 ? 'none' : 'flex';
-            nextButton.style.display = currentIndex >= numCards - visibleCards ? 'none' : 'flex';
-        }
-        
-        prevButton.addEventListener('click', () => {
-            if (currentIndex > 0) {
-                currentIndex--;
-                updateCarousel();
-            }
-        });
-
-        nextButton.addEventListener('click', () => {
-            if (currentIndex < numCards - visibleCards) {
-                currentIndex++;
-                updateCarousel();
-            }
-        });
-
-        if (cards.length > 0) {
-            const cardWidth = cards[0].offsetWidth;
-            const gap = parseInt(getComputedStyle(carouselViewPort).gap || '20');
-            carouselInnerContainer.style.display = 'flex';
-            carouselInnerContainer.style.gap = `${gap}px`;
-            // carouselInnerContainer.style.width = `${numCards * cardWidth + (numCards - 1) * gap}px`; 
-        }
-
-        updateCarousel();
-        window.addEventListener('resize', updateCarousel);
-    }
-
-    // Инициализация всех каруселей
-    initFeatured1Carousel();
-    initFeatured6Carousel();
-    initFeatured8Carousel();
+    // Закомментированные вызовы, так как функции initFeatured1Carousel, initFeatured6Carousel, initFeatured8Carousel были либо удалены, либо их логика интегрирована/пересмотрена.
+    // initFeatured1Carousel(); 
+    // initFeatured6Carousel();
+    // initFeatured8Carousel();
 });
