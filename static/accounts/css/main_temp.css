@@ -60,6 +60,8 @@ body {
     background-attachment: scroll; /* Добавляем для body */
     overflow-x: hidden; 
     min-height: 100%; 
+    display: flex; /* Делаем body flex-контейнером */
+    flex-direction: column; /* Основная ось - вертикальная */
 }
 
 .div { /* Общий контейнер страницы */
@@ -68,6 +70,7 @@ body {
     flex-direction: column;
     align-items: center;
     background: transparent !important;
+    flex-grow: 1; /* Позволяем .div расти, чтобы занять доступное пространство */
     /* overflow-x: hidden; */ /* Убираем это свойство */
 }
 
