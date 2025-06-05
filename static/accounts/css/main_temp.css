@@ -491,11 +491,10 @@ body {
     margin-top: 60px;
     margin-left: auto; 
     margin-right: auto; 
-    /* background-color: #011223; */ /* Убираем фон с обертки .featured3 */
-    /* z-index: 3; */ /* z-index будет управляться через JS или задан статично для sticky */
-    position: -webkit-sticky; /* Возвращаем sticky */
+    /* background-color: #011223; */ /* Фон убран с .featured3, он на .frame-parent */
+    position: -webkit-sticky;
     position: sticky;
-    /* top: значение будет установлено JS */
+    /* top и z-index будут установлены JS */
 }
 
 .featured3 .frame-parent {
@@ -779,13 +778,14 @@ body {
 
 .featured4 .icon10 { /* Фоновое изображение инвесторов */
     position: absolute;
-    right: -10%; /* Смещаем вправо, чтобы часть вылезла (подбирать значение) */
+    left: 0; /* Начинается от левого края родителя */
+    right: auto; /* Убираем right, чтобы не конфликтовал с left и width */
     top: 0;
-    width: 65%; /* Ширина больше, чем 50-55%, чтобы покрыть и вылезти */ 
+    width: 115%; /* Чтобы покрыть всю ширину (100%) и вылезти справа (15%) */ 
     height: 100%;
     object-fit: cover; 
-    border-radius: 0 10px 10px 0;
-    z-index: 0; /* Фон, ниже текста */
+    /* border-radius: 0 10px 10px 0; */ /* Убираем, если фон должен быть без закругления на вылезающей части или будет обрезан родителем */
+    z-index: 0; 
     opacity: 1;
 }
 
