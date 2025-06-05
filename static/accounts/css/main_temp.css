@@ -1680,7 +1680,7 @@ body {
     width: 100%;
     max-width: 1445px;
     height: auto; 
-    min-height: 380px; 
+    /* min-height: 380px; */ 
     margin: 80px auto 50px auto; /* Уже есть auto для горизонтальных отступов */
     position: relative;
     overflow: hidden;
