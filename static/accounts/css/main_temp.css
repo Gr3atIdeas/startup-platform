@@ -494,9 +494,10 @@ body {
     margin-left: auto; 
     margin-right: auto; 
     /* background-color: #011223; */ /* Фон убран с .featured3, он на .frame-parent */
-    /* position: -webkit-sticky; */ /* Удаляем эту строку */
-    /* position: sticky; */ /* Удаляем эту строку */
-    /* top и z-index будут установлены JS */
+    position: -webkit-sticky; /* Добавляем sticky */
+    position: sticky;         /* Добавляем sticky */
+    top: 0px;                 /* Прилипает к верху main.content */
+    z-index: 5;               /* Ниже чем featured4 */
 }
 
 .featured3 .frame-parent {
@@ -667,8 +668,12 @@ body {
     margin-left: auto; 
     margin-right: auto; 
     /* background-color: #001833; */ /* Убираем фон с обертки .featured4, будет на .frame-parent3 */
-    position: relative; /* Не sticky, будет прокручиваться под .featured3 */
-    z-index: 2; /* Ниже чем .featured3 */
+    position: -webkit-sticky; /* Добавляем sticky */
+    position: sticky;         /* Добавляем sticky */
+    top: 30px;                /* Прилипает ниже featured3 для наложения */
+    z-index: 10;              /* Выше чем featured3 */
+    /* position: relative; */ /* Это было для JS, теперь не нужно */
+    /* z-index: 2; */       /* Это было для JS, теперь не нужно */
 }
 
 .featured4 .frame-parent3 {
