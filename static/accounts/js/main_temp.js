@@ -444,111 +444,117 @@ document.addEventListener('DOMContentLoaded', function () {
     // --- НОВЫЙ СКРИПТ STICKY ДЛЯ Featured3 и Featured4 ---
     const stickyElement = document.querySelector('.featured3');
     const scrollStopElement = document.querySelector('.featured4');
-    const header = document.getElementById('main-header'); // Убедитесь, что у хедера есть ID 'main-header'
+    const header = document.getElementById('main-header'); 
+    const mainElement = document.querySelector('main.content'); // Наш контейнер прокрутки
 
-    if (stickyElement && scrollStopElement && header) {
+    if (stickyElement && scrollStopElement && header && mainElement) {
         let headerHeight = 0;
-        let stickyElementInitialTop = 0;
-        // let scrollStopElementInitialTop = 0; // Не используется в текущей логике, но может понадобиться для других условий
-        let isCurrentlySticky = false;
+        let stickyElementInitialTop = 0; 
+        let f4InitialAbsoluteTopInMain = 0; // ОБЪЯВЛЯЕМ ЗДЕСЬ
 
-        const getElementAbsoluteTop = (el) => {
+        const getElementAbsoluteTop = (el, scrollContainer) => {
             let top = 0;
             let currentEl = el;
+            let accumulatedScroll = 0;
+            if (scrollContainer && scrollContainer.contains(currentEl)) {
+            }
+
             while (currentEl) {
                 top += currentEl.offsetTop;
+                if (currentEl.offsetParent === scrollContainer) break; 
                 currentEl = currentEl.offsetParent;
             }
-            return top;
+            return top; 
         };
 
         const calculatePositions = () => {
-            headerHeight = header.offsetHeight || 80; // Запасное значение, если хедер скрыт или его высота 0
-            stickyElementInitialTop = getElementAbsoluteTop(stickyElement);
-            // scrollStopElementInitialTop = getElementAbsoluteTop(scrollStopElement);
+            headerHeight = header.offsetHeight || 80;
+            stickyElementInitialTop = getElementAbsoluteTop(stickyElement, mainElement);
+            f4InitialAbsoluteTopInMain = getElementAbsoluteTop(scrollStopElement, mainElement); // ВЫЧИСЛЯЕМ ЗДЕСЬ
             
-            console.log(`[StickyDebug-NEW] Recalculated Positions: HeaderH: ${headerHeight}, StickyElementInitialTop: ${stickyElementInitialTop}`);
-            // Принудительно вызвать handleScroll после пересчета, чтобы обновить состояние
+            console.log(`[StickyDebug-V3.1] Recalculated Positions: HeaderH: ${headerHeight}, F3_InitialAbsTopInMain: ${stickyElementInitialTop}, F4_InitialAbsTopInMain: ${f4InitialAbsoluteTopInMain}`);
             handleScrollLogic(); 
         };
 
         const handleScrollLogic = () => {
-            const wpo = window.pageYOffset;
-            const dst = document.documentElement.scrollTop;
-            const bst = document.body.scrollTop;
+            const currentScrollY = mainElement.scrollTop; 
             
-            const mainElement = document.querySelector('main.content');
-            const mainElementScrollTop = mainElement ? mainElement.scrollTop : 0;
+            const f3Rect = stickyElement.getBoundingClientRect(); 
+            const f4Rect = scrollStopElement.getBoundingClientRect(); 
+            // f4InitialAbsoluteTopInMain теперь используется из внешней области видимости
 
-            // Пытаемся определить истинный currentScrollY
-            let currentScrollY = wpo || dst || bst || 0;
-            if (currentScrollY === 0 && mainElementScrollTop > 0) {
-                console.log("[StickyDebug-NEW] Using main.content.scrollTop as currentScrollY!");
-                currentScrollY = mainElementScrollTop;
-            }
+            console.log(`[StickyDebug-V3.1] ScrollY_Main: ${currentScrollY.toFixed(0)}, HeaderH: ${headerHeight.toFixed(0)}`);
+            console.log(`[StickyDebug-V3.1] F3_InitialAbsTopInMain: ${stickyElementInitialTop.toFixed(0)}, F3_VP_Top: ${f3Rect.top.toFixed(0)}`);
+            console.log(`[StickyDebug-V3.1] F4_InitialAbsTopInMain: ${f4InitialAbsoluteTopInMain.toFixed(0)}, F4_VP_Top: ${f4Rect.top.toFixed(0)}, F4_VP_Bottom: ${f4Rect.bottom.toFixed(0)}`);
 
-            // const stickyElementRect = stickyElement.getBoundingClientRect(); // Используем initialTop для точки прилипания
-            const scrollStopElementRect = scrollStopElement.getBoundingClientRect();
-
-            console.log(`[StickyDebug-NEW] Scroll Vals: WPO: ${wpo.toFixed(0)}, DST: ${dst.toFixed(0)}, BST: ${bst.toFixed(0)}, MainScrollT: ${mainElementScrollTop.toFixed(0)}`);
-            console.log(`[StickyDebug-NEW] Effective CurrentScrollY: ${currentScrollY.toFixed(0)}, IsSticky: ${isCurrentlySticky}`);
-            console.log(`[StickyDebug-NEW] HeaderH: ${headerHeight.toFixed(0)}, StickyInitialTop: ${stickyElementInitialTop.toFixed(0)}, StopElemRectBottom: ${scrollStopElementRect.bottom.toFixed(0)}`);
-
-            const stickTriggerPoint = stickyElementInitialTop - headerHeight;
-            // Условие отлипания: нижняя граница .featured4 поднялась выше высоты хедера
-            const unstickConditionDueToStopElement = scrollStopElementRect.bottom < headerHeight;
-
-            if (unstickConditionDueToStopElement) {
-                if (isCurrentlySticky) {
-                    console.log("[StickyDebug-NEW] Action: UNSTICKING .featured3 (StopElement passed header)");
-                    stickyElement.style.position = 'relative';
+            const f3ShouldStickPoint = stickyElementInitialTop - headerHeight;
+            const f4ShouldStickAndOverlayPoint = f4InitialAbsoluteTopInMain - headerHeight;
+            const f4FullyScrolledPastPoint = f4InitialAbsoluteTopInMain + scrollStopElement.offsetHeight - headerHeight;
+            
+            const resetF3ToNotSticky = () => {
+                if (stickyElement.style.position === 'sticky') {
+                    console.log("[StickyDebug-V3.1] --- Resetting F3 to NOT STICKY");
+                    stickyElement.style.position = 'relative'; 
                     stickyElement.style.top = 'auto';
-                    stickyElement.style.zIndex = '3'; // z-index по умолчанию
-                    isCurrentlySticky = false;
+                    stickyElement.style.zIndex = '3'; 
                 }
-                // Если блок "отлип" из-за scrollStopElement, он не должен снова "прилипать",
-                // пока scrollStopElement не вернется на подходящую позицию.
-                // Поэтому здесь можно завершить обработку для данного события скролла.
-                return; 
-            }
+            };
+            const resetF4ToNotSticky = () => {
+                if (scrollStopElement.style.position === 'sticky') {
+                     console.log("[StickyDebug-V3.1] --- Resetting F4 to NOT STICKY");
+                    scrollStopElement.style.position = 'relative'; 
+                    scrollStopElement.style.top = 'auto';
+                    scrollStopElement.style.zIndex = '4'; 
+                }
+            };
+            
+            // Логика
+            if (currentScrollY >= f4FullyScrolledPastPoint) {
+                // console.log("[StickyDebug-V3.1] Case 1: F4 fully scrolled past. Both F3 and F4 relative.");
+                resetF3ToNotSticky();
+                resetF4ToNotSticky();
+            } 
+            else if (currentScrollY >= f4ShouldStickAndOverlayPoint) {
+                // console.log("[StickyDebug-V3.1] Case 2: F4 should be sticky and overlay F3.");
+                stickyElement.style.position = 'sticky'; 
+                stickyElement.style.top = `${headerHeight}px`;
+                stickyElement.style.zIndex = '5'; 
 
-            if (currentScrollY >= stickTriggerPoint) {
-                if (!isCurrentlySticky) {
-                    console.log("[StickyDebug-NEW] Action: STICKING .featured3");
-                    stickyElement.style.position = 'sticky';
-                    stickyElement.style.top = `${headerHeight}px`;
-                    stickyElement.style.zIndex = '10'; // z-index для "прилипшего" состояния
-                    isCurrentlySticky = true;
-                }
-            } else { // currentScrollY < stickTriggerPoint (прокрутили вверх выше точки прилипания)
-                if (isCurrentlySticky) {
-                    console.log("[StickyDebug-NEW] Action: UNSTICKING .featured3 (Scrolled UP above stick point)");
-                    stickyElement.style.position = 'relative';
-                    stickyElement.style.top = 'auto';
-                    stickyElement.style.zIndex = '3';
-                    isCurrentlySticky = false;
-                }
+                scrollStopElement.style.position = 'sticky';
+                scrollStopElement.style.top = `${headerHeight}px`;
+                scrollStopElement.style.zIndex = '10'; 
+            }
+            else if (currentScrollY >= f3ShouldStickPoint) {
+                // console.log("[StickyDebug-V3.1] Case 3: F3 should be sticky, F4 is normal flow (below).");
+                stickyElement.style.position = 'sticky';
+                stickyElement.style.top = `${headerHeight}px`;
+                stickyElement.style.zIndex = '5'; 
+                resetF4ToNotSticky(); 
+            }
+            else { 
+                // console.log("[StickyDebug-V3.1] Case 4: Both F3 and F4 in normal flow (top of page).");
+                resetF3ToNotSticky();
+                resetF4ToNotSticky();
             }
         };
 
-        // Первоначальный расчет и установка слушателей
-        // Ждем полной загрузки DOM для более точных расчетов offsetTop
         if (document.readyState === "complete" || document.readyState === "interactive") {
             calculatePositions();
         } else {
             document.addEventListener('DOMContentLoaded', calculatePositions);
         }
         
-        window.addEventListener('scroll', handleScrollLogic);
-        window.addEventListener('resize', calculatePositions); // Пересчитывать при изменении размера окна
+        mainElement.addEventListener('scroll', handleScrollLogic); 
+        window.addEventListener('resize', calculatePositions); 
 
-        console.log('[StickyDebug-NEW] Sticky script initialized for .featured3 and .featured4.');
+        console.log('[StickyDebug-V3.1] Sticky script initialized for .featured3, .featured4, listening on main.content.');
 
     } else {
-        if (!stickyElement) console.warn('[StickyDebug-NEW] Sticky Element (.featured3) not found.');
-        if (!scrollStopElement) console.warn('[StickyDebug-NEW] Scroll Stop Element (.featured4) not found.');
-        if (!header) console.warn('[StickyDebug-NEW] Header (#main-header) not found.');
-        console.warn('[StickyDebug-NEW] Sticky script NOT initialized.');
+        if (!stickyElement) console.warn('[StickyDebug-V3.1] Sticky Element (.featured3) not found.');
+        if (!scrollStopElement) console.warn('[StickyDebug-V3.1] Scroll Stop Element (.featured4) not found.');
+        if (!header) console.warn('[StickyDebug-V3.1] Header (#main-header) not found.');
+        if (!mainElement) console.warn('[StickyDebug-V3.1] Main scroll container (main.content) not found.');
+        console.warn('[StickyDebug-V3.1] Sticky script NOT initialized.');
     }
     // --- КОНЕЦ НОВОГО СКРИПТА STICKY ---
     
