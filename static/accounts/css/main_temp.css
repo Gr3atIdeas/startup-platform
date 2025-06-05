@@ -51,6 +51,7 @@ html {
     padding: 0;
     box-sizing: border-box;
     overflow-x: hidden; 
+    overflow-y: auto; /* <--- ДОБАВЛЕНО */
 }
 
 body {
@@ -63,6 +64,7 @@ body {
     padding: 0;
     background: transparent; /* body прозрачный */
     overflow-x: hidden; 
+    overflow-y: auto; /* <--- ДОБАВЛЕНО */
     min-height: 100%; 
     width: 100%; 
     box-sizing: border-box;
