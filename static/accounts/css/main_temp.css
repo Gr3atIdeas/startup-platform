@@ -80,7 +80,6 @@ body {
     align-items: center; /* Центрируем дочерние секции */
     background: transparent !important; /* .div прозрачный, показываем фон html */
     /* background-repeat и background-attachment не нужны для прозрачного фона */
-    flex-grow: 1; /* Растягиваем .div по высоте внутри body */
     box-sizing: border-box; /* Добавляем для консистентности */
 }
 
