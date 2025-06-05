@@ -473,11 +473,25 @@ document.addEventListener('DOMContentLoaded', function () {
         };
 
         const handleScrollLogic = () => {
-            const currentScrollY = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+            const wpo = window.pageYOffset;
+            const dst = document.documentElement.scrollTop;
+            const bst = document.body.scrollTop;
+            
+            const mainElement = document.querySelector('main.content');
+            const mainElementScrollTop = mainElement ? mainElement.scrollTop : 0;
+
+            // Пытаемся определить истинный currentScrollY
+            let currentScrollY = wpo || dst || bst || 0;
+            if (currentScrollY === 0 && mainElementScrollTop > 0) {
+                console.log("[StickyDebug-NEW] Using main.content.scrollTop as currentScrollY!");
+                currentScrollY = mainElementScrollTop;
+            }
+
             // const stickyElementRect = stickyElement.getBoundingClientRect(); // Используем initialTop для точки прилипания
             const scrollStopElementRect = scrollStopElement.getBoundingClientRect();
 
-            console.log(`[StickyDebug-NEW] Scroll Event: CurrentScrollY: ${currentScrollY.toFixed(0)}, IsSticky: ${isCurrentlySticky}`);
+            console.log(`[StickyDebug-NEW] Scroll Vals: WPO: ${wpo.toFixed(0)}, DST: ${dst.toFixed(0)}, BST: ${bst.toFixed(0)}, MainScrollT: ${mainElementScrollTop.toFixed(0)}`);
+            console.log(`[StickyDebug-NEW] Effective CurrentScrollY: ${currentScrollY.toFixed(0)}, IsSticky: ${isCurrentlySticky}`);
             console.log(`[StickyDebug-NEW] HeaderH: ${headerHeight.toFixed(0)}, StickyInitialTop: ${stickyElementInitialTop.toFixed(0)}, StopElemRectBottom: ${scrollStopElementRect.bottom.toFixed(0)}`);
 
             const stickTriggerPoint = stickyElementInitialTop - headerHeight;
