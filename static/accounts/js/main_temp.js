@@ -473,7 +473,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             stickyElementInitialTop = getElementAbsoluteTopInContainer(stickyElement, mainElement);
             
-            console.log(`[StickySimplified-v3] Recalculated: HeaderH: ${headerHeight}, F3_InitialAbsTopInMain: ${stickyElementInitialTop}`);
+            console.log(`[StickySimplified-v4] Recalculated: HeaderH: ${headerHeight}, F3_InitialAbsTopInMain: ${stickyElementInitialTop}`);
             
             handleScrollLogic(); 
             
@@ -485,20 +485,20 @@ document.addEventListener('DOMContentLoaded', function () {
             const f3Rect = stickyElement.getBoundingClientRect(); 
             const mainRect = mainElement.getBoundingClientRect();
 
-            console.log(`[StickySimplified-v3] ScrollLogic: ScrollY_Main: ${currentScrollY.toFixed(0)}, F3_VP_Top: ${f3Rect.top.toFixed(0)}, F3_InitialTop: ${stickyElementInitialTop.toFixed(0)}, Main_VP_Top: ${mainRect.top.toFixed(0)}, WinScrollY: ${window.pageYOffset.toFixed(0)}`);
+            console.log(`[StickySimplified-v4] ScrollLogic: ScrollY_Main: ${currentScrollY.toFixed(0)}, F3_VP_Top: ${f3Rect.top.toFixed(0)}, F3_InitialTop: ${stickyElementInitialTop.toFixed(0)}, Main_VP_Top: ${mainRect.top.toFixed(0)}, WinScrollY: ${window.pageYOffset.toFixed(0)}`);
 
-            const stickPoint = stickyElementInitialTop - headerHeight;
+            const stickPoint = stickyElementInitialTop;
 
             if (currentScrollY >= stickPoint) {
-                if (stickyElement.style.position !== 'sticky' || stickyElement.style.top !== `${headerHeight}px`) {
-                    console.log("[StickySimplified-v3] --- F3 becomes STICKY");
+                if (stickyElement.style.position !== 'sticky' || stickyElement.style.top !== '0px') {
+                    console.log("[StickySimplified-v4] --- F3 becomes STICKY");
                     stickyElement.style.position = 'sticky';
-                    stickyElement.style.top = `${headerHeight}px`;
+                    stickyElement.style.top = '0px';
                     stickyElement.style.zIndex = '10'; 
                 }
             } else { 
                 if (stickyElement.style.position === 'sticky') {
-                    console.log("[StickySimplified-v3] --- F3 becomes RELATIVE (scrolled up)");
+                    console.log("[StickySimplified-v4] --- F3 becomes RELATIVE (scrolled up)");
                     stickyElement.style.position = 'relative';
                     stickyElement.style.top = 'auto';
                     stickyElement.style.zIndex = '3'; 
@@ -524,13 +524,13 @@ document.addEventListener('DOMContentLoaded', function () {
             resizeTimeout = setTimeout(calculatePositions, 250); 
         });
         
-        console.log('[StickySimplified-v3] Simplified sticky script initialized for .featured3, listening on main.content.');
+        console.log('[StickySimplified-v4] Simplified sticky script initialized for .featured3, listening on main.content.');
 
     } else {
-        if (!stickyElement) console.warn('[StickySimplified-v3] .featured3 not found.');
-        if (!header) console.warn('[StickySimplified-v3] Header (#main-header) not found.');
-        if (!mainElement) console.warn('[StickySimplified-v3] Main scroll container (main.content) not found.');
-        console.warn('[StickySimplified-v3] Simplified sticky script NOT initialized.');
+        if (!stickyElement) console.warn('[StickySimplified-v4] .featured3 not found.');
+        if (!header) console.warn('[StickySimplified-v4] Header (#main-header) not found.');
+        if (!mainElement) console.warn('[StickySimplified-v4] Main scroll container (main.content) not found.');
+        console.warn('[StickySimplified-v4] Simplified sticky script NOT initialized.');
     }
     // --- КОНЕЦ УПРОЩЕННОГО STICKY СКРИПТА ---
     

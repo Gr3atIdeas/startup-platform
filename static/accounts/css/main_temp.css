@@ -494,8 +494,8 @@ body {
     margin-left: auto; 
     margin-right: auto; 
     /* background-color: #011223; */ /* Фон убран с .featured3, он на .frame-parent */
-    position: -webkit-sticky;
-    position: sticky;
+    /* position: -webkit-sticky; */ /* Удаляем эту строку */
+    /* position: sticky; */ /* Удаляем эту строку */
     /* top и z-index будут установлены JS */
 }
 
