@@ -844,6 +844,6 @@
 </div>
 </div>
 
-<script src="{% static 'accounts/js/main_temp.js' %}"></script>
-<script src="{% static 'accounts/js/faq.js' %}"></script>
+<script src="{% static 'accounts/js/main_temp.js' %}?v={% now 'U' %}"></script>
+<script src="{% static 'accounts/js/faq.js' %}?v={% now 'U' %}"></script>
 {% endblock %}

@@ -444,14 +444,14 @@ document.addEventListener('DOMContentLoaded', function () {
     // --- Sticky Scrolling for Featured3 (featured4 scrolls normally) ---
     const featured3Sticky = document.querySelector('.featured3');
     const featured4Block = document.querySelector('.featured4');
-    const headerSticky = document.querySelector('.header'); 
+    const headerSticky = document.querySelector('#main-header'); 
     let headerHeightSticky = 80; 
 
     if (headerSticky && headerSticky.offsetHeight > 0) {
         headerHeightSticky = headerSticky.offsetHeight;
         console.log('[StickyDebug] Header height for sticky:', headerHeightSticky);
     } else {
-        console.warn('[StickyDebug] Header element .header not found or has no height. Using default:', headerHeightSticky);
+        console.warn('[StickyDebug] Header element #main-header not found or has no height. Using default:', headerHeightSticky);
     }
 
     if (featured3Sticky && featured4Block) {
