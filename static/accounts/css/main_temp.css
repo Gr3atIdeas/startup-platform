@@ -493,6 +493,8 @@ body {
     margin-left: auto; 
     margin-right: auto; 
     /* overflow: hidden; */ /* Убираем overflow с самого sticky-контейнера */
+    background-color: #011223; /* Фон для всего блока featured3 */
+    z-index: 3; /* Чтобы был выше featured4 при наложении */
 }
 
 .featured3 .frame-parent {
@@ -502,7 +504,6 @@ body {
     /* display: flex; */ /* Убираем flex, т.к. .parent4 будет позиционироваться абсолютно или через padding родителя */
     /* justify-content: space-between; */
     /* align-items: center; */
-    background: transparent; /* Фон теперь от .icon9 */
     border-radius: 10px;
     overflow: hidden; /* Обязательно для обрезки .icon9 по радиусу */
     /* padding: 50px; */ /* Убираем общий padding, .parent4 будет позиционироваться */
@@ -667,6 +668,8 @@ body {
     background: transparent !important;
     margin-left: auto; /* Центрирование */
     margin-right: auto; /* Центрирование */
+    background-color: #001833; /* Фон для всего блока featured4 */
+    z-index: 2; /* Чтобы уходил под featured3 при наложении */
 }
 
 .featured4 .frame-parent3 {

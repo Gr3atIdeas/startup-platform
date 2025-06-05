@@ -442,6 +442,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // initFeatured8Carousel();
 
     // --- Sticky Scrolling for Featured3 and Featured4 ---    
+    /* Удаляем весь этот блок, так как sticky больше не нужен
     const featured3 = document.querySelector('.featured3');
     const featured4 = document.querySelector('.featured4');
     const header = document.querySelector('.header'); 
@@ -505,4 +506,5 @@ document.addEventListener('DOMContentLoaded', function () {
     } else {
         // console.warn('Elements .featured3 or .featured4 not found for sticky scrolling.');
     }
+    */
 });
