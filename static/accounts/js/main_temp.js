@@ -448,10 +448,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (stickyElement && header && mainElement) {
         let headerHeight = 0;
-        let stickyElementInitialTop = 0; // Начальная позиция .featured3 внутри mainElement
+        let stickyElementInitialTop = 0; 
+        let isCalculatingPositions = false; // Lock
 
         const getElementAbsoluteTopInContainer = (el, container) => {
-            let top = el.offsetTop; // Начинаем с offsetTop относительно прямого offsetParent
+            let top = el.offsetTop; 
             let currentEl = el.offsetParent;
             while (currentEl && currentEl !== container) {
                 top += currentEl.offsetTop;
@@ -461,63 +462,74 @@ document.addEventListener('DOMContentLoaded', function () {
         };
 
         const calculatePositions = () => {
+            if (isCalculatingPositions) return; 
+            isCalculatingPositions = true;
+
             headerHeight = header.offsetHeight || 80;
-            const originalPosition = stickyElement.style.position;
-            const originalTop = stickyElement.style.top;
+            
             stickyElement.style.position = 'relative'; 
             stickyElement.style.top = 'auto';
-            
+            stickyElement.style.zIndex = '3'; 
+
             stickyElementInitialTop = getElementAbsoluteTopInContainer(stickyElement, mainElement);
             
-            // Возвращаем стили, если они были (но они должны быть relative/auto здесь)
-            // stickyElement.style.position = originalPosition; 
-            // stickyElement.style.top = originalTop;
-
-            console.log(`[StickySimplified] Recalculated: HeaderH: ${headerHeight}, F3_InitialAbsTopInMain: ${stickyElementInitialTop}`);
+            console.log(`[StickySimplified-v2] Recalculated: HeaderH: ${headerHeight}, F3_InitialAbsTopInMain: ${stickyElementInitialTop}`);
+            
             handleScrollLogic(); 
+            
+            isCalculatingPositions = false;
         };
 
         const handleScrollLogic = () => {
             const currentScrollY = mainElement.scrollTop;
             const f3Rect = stickyElement.getBoundingClientRect(); 
 
-            console.log(`[StickySimplified] ScrollY_Main: ${currentScrollY.toFixed(0)}, F3_VP_Top: ${f3Rect.top.toFixed(0)}, F3_InitialTop: ${stickyElementInitialTop.toFixed(0)}`);
+            console.log(`[StickySimplified-v2] ScrollLogic: ScrollY_Main: ${currentScrollY.toFixed(0)}, F3_VP_Top: ${f3Rect.top.toFixed(0)}, F3_InitialTop: ${stickyElementInitialTop.toFixed(0)}`);
 
             const stickPoint = stickyElementInitialTop - headerHeight;
 
             if (currentScrollY >= stickPoint) {
-                if (stickyElement.style.position !== 'sticky') {
-                    console.log("[StickySimplified] --- F3 becomes STICKY");
+                if (stickyElement.style.position !== 'sticky' || stickyElement.style.top !== `${headerHeight}px`) {
+                    console.log("[StickySimplified-v2] --- F3 becomes STICKY");
                     stickyElement.style.position = 'sticky';
                     stickyElement.style.top = `${headerHeight}px`;
                     stickyElement.style.zIndex = '10'; 
                 }
             } else { 
                 if (stickyElement.style.position === 'sticky') {
-                    console.log("[StickySimplified] --- F3 becomes RELATIVE (scrolled up)");
+                    console.log("[StickySimplified-v2] --- F3 becomes RELATIVE (scrolled up)");
                     stickyElement.style.position = 'relative';
                     stickyElement.style.top = 'auto';
                     stickyElement.style.zIndex = '3'; 
                 }
             }
         };
+        
+        const performInitialCalculation = () => {
+            calculatePositions();
+        };
 
         if (document.readyState === "complete" || document.readyState === "interactive") {
-            setTimeout(calculatePositions, 100); 
+            setTimeout(performInitialCalculation, 250); 
         } else {
-            document.addEventListener('DOMContentLoaded', () => setTimeout(calculatePositions, 100));
+            document.addEventListener('DOMContentLoaded', () => setTimeout(performInitialCalculation, 250));
         }
         
         mainElement.addEventListener('scroll', handleScrollLogic);
-        window.addEventListener('resize', calculatePositions); 
-
-        console.log('[StickySimplified] Simplified sticky script initialized for .featured3, listening on main.content.');
+        
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(calculatePositions, 250); 
+        });
+        
+        console.log('[StickySimplified-v2] Simplified sticky script initialized for .featured3, listening on main.content.');
 
     } else {
-        if (!stickyElement) console.warn('[StickySimplified] .featured3 not found.');
-        if (!header) console.warn('[StickySimplified] Header (#main-header) not found.');
-        if (!mainElement) console.warn('[StickySimplified] Main scroll container (main.content) not found.');
-        console.warn('[StickySimplified] Simplified sticky script NOT initialized.');
+        if (!stickyElement) console.warn('[StickySimplified-v2] .featured3 not found.');
+        if (!header) console.warn('[StickySimplified-v2] Header (#main-header) not found.');
+        if (!mainElement) console.warn('[StickySimplified-v2] Main scroll container (main.content) not found.');
+        console.warn('[StickySimplified-v2] Simplified sticky script NOT initialized.');
     }
     // --- КОНЕЦ УПРОЩЕННОГО STICKY СКРИПТА ---
     
