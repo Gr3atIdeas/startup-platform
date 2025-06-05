@@ -449,53 +449,63 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (headerSticky && headerSticky.offsetHeight > 0) {
         headerHeightSticky = headerSticky.offsetHeight;
-        // console.log('Header height for sticky:', headerHeightSticky);
+        console.log('[StickyDebug] Header height for sticky:', headerHeightSticky);
+    } else {
+        console.warn('[StickyDebug] Header element .header not found or has no height. Using default:', headerHeightSticky);
     }
 
-    if (featured3Sticky) { 
-        // Просто применяем sticky стили, чтобы проверить, работает ли sticky в принципе
-        featured3Sticky.style.position = 'sticky';
-        featured3Sticky.style.top = `${headerHeightSticky}px`;
-        featured3Sticky.style.zIndex = '10'; 
-        // console.log('Applied basic sticky to .featured3. Top:', headerHeightSticky);
-
-        /* Закомментируем сложную логику отлипания для теста
+    if (featured3Sticky && featured4Block) {
         const featured3NaturalOffsetTop = featured3Sticky.offsetTop;
         let isFeatured3CurrentlySticky = false;
-        featured3Sticky.style.zIndex = '3'; 
+
+        console.log('[StickyDebug] Initial featured3NaturalOffsetTop:', featured3NaturalOffsetTop);
+
+        // Устанавливаем начальное состояние НЕ sticky
+        featured3Sticky.style.position = 'relative';
+        featured3Sticky.style.top = 'auto';
+        featured3Sticky.style.zIndex = '3'; // z-index для relative (ниже чем у sticky featured4, если бы тот был sticky)
 
         window.addEventListener('scroll', () => {
             const scrollY = window.pageYOffset; 
             const featured4Rect = featured4Block.getBoundingClientRect();
+
+            // console.log('[StickyDebug] scrollY:', scrollY, 'featured4Rect.bottom:', featured4Rect.bottom, 'headerHeightSticky:', headerHeightSticky);
+
             const shouldBecomeSticky = scrollY >= (featured3NaturalOffsetTop - headerHeightSticky);
-            const shouldUnstick = featured4Block ? featured4Rect.bottom < headerHeightSticky : false; // Проверка на featured4Block
+            const shouldUnstick = featured4Rect.bottom < headerHeightSticky;
+
+            // console.log('[StickyDebug] isCurrentlySticky:', isFeatured3CurrentlySticky, 'shouldBecomeSticky:', shouldBecomeSticky, 'shouldUnstick:', shouldUnstick);
 
             if (shouldUnstick) {
                 if (isFeatured3CurrentlySticky) {
                     featured3Sticky.style.position = 'relative';
                     featured3Sticky.style.top = 'auto';
-                    featured3Sticky.style.zIndex = '3';
+                    featured3Sticky.style.zIndex = '3'; 
                     isFeatured3CurrentlySticky = false;
+                    console.log('[StickyDebug] Featured3 UNSTUCK (featured4 scrolled past)');
                 }
             } else if (shouldBecomeSticky) {
                 if (!isFeatured3CurrentlySticky) {
                     featured3Sticky.style.position = 'sticky';
                     featured3Sticky.style.top = `${headerHeightSticky}px`;
-                    featured3Sticky.style.zIndex = '10';
+                    featured3Sticky.style.zIndex = '10'; // z-index для sticky (выше .featured4)
                     isFeatured3CurrentlySticky = true;
+                    console.log('[StickyDebug] Featured3 STICKY');
                 }
             } else {
+                // Если мы прокрутили вверх, выше точки первоначального прилипания
                 if (isFeatured3CurrentlySticky) {
                     featured3Sticky.style.position = 'relative';
                     featured3Sticky.style.top = 'auto';
                     featured3Sticky.style.zIndex = '3';
                     isFeatured3CurrentlySticky = false;
+                    console.log('[StickyDebug] Featured3 reset to NOT STICKY (scrolled above sticky point)');
                 }
             }
         });
-        */
     } else {
-        // console.warn ('.featured3 not found for sticky script.');
+        if (!featured3Sticky) console.warn ('[StickyDebug] .featured3 not found for sticky script.');
+        if (!featured4Block) console.warn ('[StickyDebug] .featured4 not found for sticky script logic.');
     }
     
     /* Удаляем старый код для динамического z-index, если он еще остался
