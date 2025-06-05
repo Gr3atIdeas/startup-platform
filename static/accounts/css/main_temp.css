@@ -875,17 +875,29 @@ body {
     align-self: stretch;
     height: 514px; 
     position: relative;
-    background: transparent; 
+    background: #041A32; 
     overflow: hidden;
     border-radius: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
 }
-.featured5 .rectangle-parent .group-child-main-img { 
-    width: 100%; height: 100%; 
-    object-fit: cover;
+
+.featured5 .group-child-main-img-1 {
+    width: 122.15px;
+    height: 345.36px;
+    left: 36px;
+    top: 83px;
+    position: absolute;
 }
+.featured5 .group-child-main-img-2 {
+    width: 388.42px;
+    height: 345.36px;
+    left: 168.70px;
+    top: 85.64px;
+    position: absolute;
+}
+
 
 .featured5 .parent9 { /* Кнопка "Все стартапы" */
     padding: 12px 25px;
@@ -911,40 +923,45 @@ body {
     width: 28%; /* Примерно */
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 49px;
 }
 
 .featured5 .frame-wrapper { align-self: stretch; }
 .featured5 .frame-parent10 { /* Карточка стартапа */
     align-self: stretch;
     display: flex;
-    flex-direction: column; /* Картинка сверху, текст снизу */
-    background: #0E2A57; /* Фон карточки */
-    border-radius: 15px;
-    overflow: hidden;
-    padding: 0; /* Без внутреннего паддинга, картинка на всю ширину */
-    gap: 0;
+    flex-direction: row; /* Картинка слева, текст справа */
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    background: transparent;
+    padding: 0;
 }
 .featured5 .frame-parent10 .frame-child9 { /* Картинка стартапа */
-    width: 100%; 
-    height: 200px; 
+    width: 160px; 
+    height: 156px; 
     object-fit: cover;
+    border-radius: 10px;
+    flex-shrink: 0;
 }
-.featured5 .content { /* Текст под картинкой */
-    padding: 20px;
+.featured5 .content { /* Текст справа от картинки */
+    padding: 0;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 16px;
+    flex-grow: 1;
 }
 .featured5 .voltforge-dynamics-parent {
     display: flex; flex-direction: column; gap: 8px;
 }
 .featured5 .voltforge-dynamics { 
     color: #FCFCFD;
-    font-size: 18px;
+    font-size: 16px;
     font-family: 'Unbounded', sans-serif;
-    font-weight: 500;
-    line-height: 1.2;
+    font-weight: 400;
+    line-height: 1;
 }
 .featured5 .info { 
     display: flex; align-items: center; gap: 10px;
@@ -973,12 +990,15 @@ body {
     font-family: 'Unbounded', sans-serif;
     font-weight: 300;
     line-height: 1.5;
-    height: 58px; /* Ограничение высоты для 3-4 строк */
-    overflow: hidden;
-    text-overflow: ellipsis;
+    /* height: auto;  */ /* Убираем ограничение высоты */
+    overflow: visible;
+    text-overflow: initial;
+    width: 175px;
+    font-size: 8px;
+    line-height: 9px;
 }
 .featured5 .button5 { 
-    padding: 10px 15px;
+    padding: 8px 12px;
     background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%);
     border-radius: 8px;
     gap: 10px;
@@ -987,7 +1007,7 @@ body {
     align-self: flex-start; /* Кнопка слева */
 }
 .featured5 .button5 .cosmochat {
-    color: #FCFCFD; font-size: 14px; font-family: 'Unbounded', sans-serif; font-weight: 400; line-height: 1;
+    color: #FCFCFD; font-size: 14px; font-family: 'Unbounded', sans-serif; font-weight: 300; line-height: 1;
 }
 
 .featured5 .creators { /* "Последние обновления от стартаперов" */
@@ -995,8 +1015,8 @@ body {
     display: flex; flex-direction: column; gap: 20px;
 }
 .featured5 .div31 { 
-    color: #b0b8c9; /* Светлее, чем 777E90 */
-    font-size: 14px; 
+    color: #777E90; /* Светлее, чем 777E90 */
+    font-size: 12px; 
     font-family: 'Unbounded', sans-serif; 
     font-weight: 500;
 }
@@ -1021,14 +1041,14 @@ body {
     flex-grow: 1; display: flex; flex-direction: column; gap: 5px;
 }
 .featured5 .name-wrapper .cosmochat-name { 
-    color: #FCFCFD; font-size: 15px; font-family: 'Unbounded', sans-serif; font-weight: 500;
+    color: #FCFCFD; font-size: 14px; font-family: 'Unbounded', sans-serif; font-weight: 300;
 }
 .featured5 .rating-wrapper {
     display: flex; align-items: center; gap: 5px;
     font-size: 12px; font-family: 'Unbounded', sans-serif; font-weight: 300;
 }
 .featured5 .rating-stars { color: #FFEF2B; }
-.featured5 .rating-value { color: #b0b8c9; }
+.featured5 .rating-value { color: #E6E8EC; }
 
 .featured5 .divider1 { 
     align-self: stretch; height: 1px; background: rgba(255, 255, 255, 0.13);
@@ -1045,7 +1065,7 @@ body {
     align-self: flex-start;
 }
 .featured5 .button8 .cosmochat {
-    color: #FCFCFD; font-size: 14px; font-family: 'Unbounded', sans-serif; font-weight: 400;
+    color: #FCFCFD; font-size: 14px; font-family: 'Unbounded', sans-serif; font-weight: 300;
 }
 .featured5 .button8 .iconsarrow-right-2line { width: 16px; height: 16px; }
 
