@@ -466,18 +466,23 @@ document.addEventListener('DOMContentLoaded', function () {
         featured3Sticky.style.zIndex = '3'; // z-index для relative (ниже чем у sticky featured4, если бы тот был sticky)
 
         window.addEventListener('scroll', () => {
-            const scrollY = window.pageYOffset; 
+            const scrollY = window.pageYOffset;
+            const featured3Rect = featured3Sticky.getBoundingClientRect();
             const featured4Rect = featured4Block.getBoundingClientRect();
 
-            // console.log('[StickyDebug] scrollY:', scrollY, 'featured4Rect.bottom:', featured4Rect.bottom, 'headerHeightSticky:', headerHeightSticky);
-
-            const shouldBecomeSticky = scrollY >= (featured3NaturalOffsetTop - headerHeightSticky);
+            const stickConditionPoint = featured3NaturalOffsetTop - headerHeightSticky;
+            const shouldBecomeSticky = scrollY >= stickConditionPoint;
+            // Условие для отлипания: нижняя граница блока featured4 находится выше верхней границы хедера
             const shouldUnstick = featured4Rect.bottom < headerHeightSticky;
 
-            // console.log('[StickyDebug] isCurrentlySticky:', isFeatured3CurrentlySticky, 'shouldBecomeSticky:', shouldBecomeSticky, 'shouldUnstick:', shouldUnstick);
+            console.log(`[StickyDebug] ScrollY: ${scrollY.toFixed(0)}, F3_ViewportTop: ${featured3Rect.top.toFixed(0)}, F4_ViewportBottom: ${featured4Rect.bottom.toFixed(0)}, HeaderH: ${headerHeightSticky}`);
+            console.log(`[StickyDebug] --- Conditions --- IsCurrentlySticky: ${isFeatured3CurrentlySticky ? 'YES' : 'NO'}`);
+            console.log(`[StickyDebug] BecomeSticky?: (ScrollY ${scrollY.toFixed(0)} >= StickPoint ${stickConditionPoint.toFixed(0)}) -> ${shouldBecomeSticky}`);
+            console.log(`[StickyDebug] Unstick?: (F4_VB ${featured4Rect.bottom.toFixed(0)} < HeaderH ${headerHeightSticky}) -> ${shouldUnstick}`);
 
             if (shouldUnstick) {
                 if (isFeatured3CurrentlySticky) {
+                    console.log('[StickyDebug] === Action: UNSTICKING featured3 (F4 bottom passed header) ===');
                     featured3Sticky.style.position = 'relative';
                     featured3Sticky.style.top = 'auto';
                     featured3Sticky.style.zIndex = '3'; 
@@ -486,15 +491,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             } else if (shouldBecomeSticky) {
                 if (!isFeatured3CurrentlySticky) {
+                    console.log('[StickyDebug] === Action: STICKING featured3 ===');
                     featured3Sticky.style.position = 'sticky';
                     featured3Sticky.style.top = `${headerHeightSticky}px`;
                     featured3Sticky.style.zIndex = '10'; // z-index для sticky (выше .featured4)
                     isFeatured3CurrentlySticky = true;
                     console.log('[StickyDebug] Featured3 STICKY');
                 }
-            } else {
-                // Если мы прокрутили вверх, выше точки первоначального прилипания
+            } else { // Scrolled back up above the sticky point
                 if (isFeatured3CurrentlySticky) {
+                    console.log('[StickyDebug] === Action: RESETTING featured3 to relative (scrolled UP above sticky point) ===');
                     featured3Sticky.style.position = 'relative';
                     featured3Sticky.style.top = 'auto';
                     featured3Sticky.style.zIndex = '3';
