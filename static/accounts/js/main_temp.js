@@ -514,10 +514,10 @@ document.addEventListener('DOMContentLoaded', function () {
         };
 
         window.addEventListener('scroll', () => handleScroll('window'));
-        document.addEventListener('scroll', () => handleScroll('document'));
-        document.body.addEventListener('scroll', () => handleScroll('document.body'));
+        // document.addEventListener('scroll', () => handleScroll('document')); // Удаляем этот обработчик
+        // document.body.addEventListener('scroll', () => handleScroll('document.body')); // Удаляем этот обработчик
 
-        console.log('[StickyDebug] Scroll event listeners ADDED (or attempt was made) to window, document, and document.body.');
+        console.log('[StickyDebug] Scroll event listener ADDED to window.');
     } else {
         if (!featured3Sticky) console.warn ('[StickyDebug] .featured3 not found for sticky script.');
         if (!featured4Block) console.warn ('[StickyDebug] .featured4 not found for sticky script logic.');
