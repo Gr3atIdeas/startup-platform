@@ -489,24 +489,22 @@ body {
     justify-content: center;
     align-items: center;
     margin-top: 60px;
-    /* background: transparent !important; */ /* Убрано */
     margin-left: auto; 
     margin-right: auto; 
-    /* overflow: hidden; */ /* Убираем overflow с самого sticky-контейнера */
-    background-color: #011223; /* Фон для всего блока featured3 */
-    z-index: 3; /* Чтобы был выше featured4 при наложении */
+    /* background-color: #011223; */ /* Убираем фон с обертки .featured3 */
+    /* z-index: 3; */ /* z-index будет управляться через JS или задан статично для sticky */
+    position: -webkit-sticky; /* Возвращаем sticky */
+    position: sticky;
+    /* top: значение будет установлено JS */
 }
 
 .featured3 .frame-parent {
     width: 1303px;
-    height: 521px; /* Можно заменить на min-height или удалить, если высота по контенту */
+    height: 521px; 
     position: relative;
-    /* display: flex; */ /* Убираем flex, т.к. .parent4 будет позиционироваться абсолютно или через padding родителя */
-    /* justify-content: space-between; */
-    /* align-items: center; */
+    background: #011223; /* Фон теперь здесь, на контентном блоке */
     border-radius: 10px;
-    overflow: hidden; /* Обязательно для обрезки .icon9 по радиусу */
-    /* padding: 50px; */ /* Убираем общий padding, .parent4 будет позиционироваться */
+    overflow: hidden; 
     box-sizing: border-box;
 }
 
@@ -664,25 +662,25 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 60px;
-    background: transparent !important;
-    margin-left: auto; /* Центрирование */
-    margin-right: auto; /* Центрирование */
-    background-color: #001833; /* Фон для всего блока featured4 */
-    z-index: 2; /* Чтобы уходил под featured3 при наложении */
+    margin-top: 60px; 
+    margin-left: auto; 
+    margin-right: auto; 
+    /* background-color: #001833; */ /* Убираем фон с обертки .featured4, будет на .frame-parent3 */
+    position: relative; /* Не sticky, будет прокручиваться под .featured3 */
+    z-index: 2; /* Ниже чем .featured3 */
 }
 
 .featured4 .frame-parent3 {
     width: 1303px;
     height: 521px;
     position: relative;
-    background-color: transparent; /* Темно-синий фон */
+    background-color: #001833; /* Фон на контентном блоке */
     border-radius: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    overflow: hidden;
-    padding: 50px; /* Внутренние отступы */
+    /* display: flex; */ /* Убираем flex отсюда, если он не нужен для позиционирования .parent6 и .icon10 */
+    /* justify-content: space-between; */
+    /* align-items: center; */
+    overflow: visible; /* Чтобы .icon10 мог вылезать */
+    padding: 50px; 
     box-sizing: border-box;
 }
 
@@ -692,37 +690,32 @@ body {
     justify-content: center;
     align-items: flex-start;
     gap: 35px;
-    width: 50%;
+    width: 55%; /* Немного увеличим место для текста, т.к. фон будет вылезать */
+    position: relative; /* Для z-index, чтобы текст был выше фона */
     z-index: 1;
 }
 
-.featured4 .parent6 .div23 .txt {
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 600;
-    font-size: 35px;
-    line-height: 1.1;
-    word-wrap: break-word;
-}
-.featured4 .parent6 .div23 .txt > span:first-child { color: #82a7e2; } /* Светлее синий для контраста - оставляем как есть, или можно #A5B4FC для сиреневого оттенка */
-.featured4 .parent6 .div23 .txt .span3 { color: #FFEF2B; } /* Желтый акцент */
+.featured4 .parent6 .div23 .txt > span:first-child { color: #82a7e2; }
+.featured4 .parent6 .div23 .txt .span3 { color: #FFEF2B; }
 
 .featured4 .group-parent { 
     align-self: stretch;
     display: flex;
-    /* justify-content: flex-start; */ /* Раскомментировал и изменил на space-around для лучшего распределения */
+    flex-direction: row; /* Явно указываем ряд */
     justify-content: space-around; 
-    align-items: stretch; /* Растянуть карточки по высоте */
+    align-items: flex-start; /* Выравнивание по верху, т.к. иконки вылезают */
     gap: 20px;
-    flex-wrap: wrap; /* Добавил для адаптивности, если карточек станет больше или ширина экрана уменьшится */
+    flex-wrap: nowrap; /* Запрещаем перенос, если хотим строгий ряд */
+    margin-top: 20px; /* Добавляем отступ сверху для карточек */
 }
+
 .featured4 .group-div {
     width: 187px; 
-    min-height: 220px; /* Немного увеличил для более крупных иконок и текста */
+    min-height: 220px; 
     position: relative; 
     background: linear-gradient(180deg, #004E9F 0%, #001C39 100%);
     border-radius: 10px;
-    /* padding: 35px 14px 20px 14px; */ /* Заменяем на более контролируемый padding */
-    padding: 0 14px 20px 14px; /* Убираем верхний padding отсюда, он будет через card-icon-container */
+    padding: 0 14px 20px 14px; 
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -732,41 +725,22 @@ body {
     gap: 10px; 
 }
 
-/* Удаляем старый стиль для плейсхолдера иконки, если он еще есть */
-.featured4 .group-div .icon-placeholder {
-    display: none;
-}
-
 .featured4 .group-div .card-icon-container {
     width: 100%;
-    /* height: 40px; */ /* Высота теперь будет зависеть от иконки и ее "вылезания" */
-    min-height: 60px; /* Минимальная высота, чтобы текст не слишком близко подходил */
-    margin-top: -40px; /* Отрицательный margin, чтобы сдвинуть контейнер иконки вверх */
-                               /* Это значение (или часть его) должно компенсировать "вылезание" */
+    min-height: 80px; /* Увеличиваем для больших иконок */
+    margin-top: -60px; /* Увеличиваем отрицательный отступ для больших иконок */
     position: relative;
     display: flex;
     justify-content: center;
-    align-items: flex-end; /* Иконка будет align-items:flex-end, чтобы "дно" иконки было на этой линии */
-    margin-bottom: 10px; /* Отступ до текста, уменьшен с 15px */
-    z-index: 1; /* Чтобы иконка была над фоном карточки, если что */
+    align-items: flex-end; 
+    margin-bottom: 10px; 
+    z-index: 1; 
 }
 
 .featured4 .group-div .card-icon {
-    width: 110px;  /* Увеличиваем размер иконки */
-    height: 110px; 
+    width: 140px;  /* Увеличиваем размер иконки ~x2 от 70px */
+    height: 140px; 
     object-fit: contain;
-    /* position: absolute; */ /* Уже не нужно, если контейнер сдвигается */
-    /* top: -25px; */ 
-    /* left: 50%; */
-    /* transform: translateX(-50%); */
-    /* z-index: 1; */ /* z-index на контейнере */
-}
-
-.featured4 .group-div .wrapper, .featured4 .group-div .wrapper1 {
-    flex-grow: 1; 
-    display: flex;
-    flex-direction: column;
-    justify-content: center; /* Центрируем текст, если он короткий */
 }
 
 .featured4 .div24, 
@@ -803,16 +777,16 @@ body {
     width: 24px; height: 24px;
 }
 
-.featured4 .icon10 { /* Правое изображение (инвестор) */
+.featured4 .icon10 { /* Фоновое изображение инвесторов */
     position: absolute;
-    right: 0;
+    right: -10%; /* Смещаем вправо, чтобы часть вылезла (подбирать значение) */
     top: 0;
-    width: 55%; 
+    width: 65%; /* Ширина больше, чем 50-55%, чтобы покрыть и вылезти */ 
     height: 100%;
-    object-fit: cover; /* Должно быть cover, чтобы заполнять пространство */
+    object-fit: cover; 
     border-radius: 0 10px 10px 0;
-    z-index: 0;
-    opacity: 1; /* Убрал излишнюю прозрачность */
+    z-index: 0; /* Фон, ниже текста */
+    opacity: 1;
 }
 
 /* --- Секция 5: Featured5 (Исследуйте новые миры) --- */

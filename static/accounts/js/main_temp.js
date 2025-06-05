@@ -441,8 +441,21 @@ document.addEventListener('DOMContentLoaded', function () {
     // initFeatured6Carousel();
     // initFeatured8Carousel();
 
-    // --- Sticky Scrolling for Featured3 and Featured4 ---    
-    /* Удаляем весь этот блок, так как sticky больше не нужен
+    // --- Sticky Scrolling for Featured3 (featured4 scrolls normally) ---
+    const featured3Sticky = document.querySelector('.featured3');
+    const headerSticky = document.querySelector('.header'); // Используем другое имя переменной во избежание конфликтов
+    let headerHeightSticky = 80; 
+
+    if (headerSticky && headerSticky.offsetHeight > 0) {
+        headerHeightSticky = headerSticky.offsetHeight;
+    }
+
+    if (featured3Sticky) {
+        featured3Sticky.style.top = `${headerHeightSticky}px`;
+        featured3Sticky.style.zIndex = '10'; // Задаем z-index для sticky блока, чтобы он был выше featured4
+    }
+    
+    /* Удаляем старый код для динамического z-index, если он еще остался
     const featured3 = document.querySelector('.featured3');
     const featured4 = document.querySelector('.featured4');
     const header = document.querySelector('.header'); 
