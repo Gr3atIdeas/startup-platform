@@ -444,63 +444,65 @@ document.addEventListener('DOMContentLoaded', function () {
     // --- Sticky Scrolling for Featured3 and Featured4 ---    
     const featured3 = document.querySelector('.featured3');
     const featured4 = document.querySelector('.featured4');
-    const header = document.querySelector('.header'); // Предполагаем, что у вас есть шапка с классом .header
-    let headerHeight = 80; // Значение по умолчанию, если шапка не найдена
+    const header = document.querySelector('.header'); 
+    let headerHeight = 80; // Default if no header or header has no height
 
-    if (header) {
+    if (header && header.offsetHeight > 0) {
         headerHeight = header.offsetHeight;
+        // console.log('Header found. Height:', headerHeight);
+    } else {
+        // console.warn('Header element with class .header not found or has no height. Using default headerHeight:', headerHeight);
     }
 
     if (featured3 && featured4) {
-        // Устанавливаем top для sticky с учетом высоты шапки
+        // console.log('Applying sticky styles to featured3 and featured4. Top offset:', headerHeight);
+        featured3.style.position = 'sticky'; // Убедимся что sticky применяется
         featured3.style.top = `${headerHeight}px`;
+        
+        featured4.style.position = 'sticky'; // Убедимся что sticky применяется
         featured4.style.top = `${headerHeight}px`;
 
         // Начальные z-index
         featured3.style.zIndex = '20'; 
         featured4.style.zIndex = '19'; 
+        // console.log('Initial z-index - featured3:', featured3.style.zIndex, 'featured4:', featured4.style.zIndex);
 
-        let lastScrollY = window.scrollY;
-        let isFeatured4OnTop = false;
+        let isFeatured4CurrentlyOnTop = false;
 
         window.addEventListener('scroll', function() {
             const featured3Rect = featured3.getBoundingClientRect();
             const featured4Rect = featured4.getBoundingClientRect();
-            const currentScrollY = window.scrollY;
+            
+            // Проверяем, "прилип" ли блок featured4 к заданной позиции top
+            // Добавляем небольшой допуск (например, 2px) для точности сравнения
+            const isFeatured4StickyNow = featured4Rect.top <= headerHeight + 2 && featured4Rect.top >= headerHeight -2;
 
-            // Определяем, "прилип" ли блок featured4
-            // featured4Rect.top примерно равен headerHeight когда он прилип
-            const isFeatured4Sticky = featured4Rect.top <= headerHeight + 2 && featured4Rect.top >= headerHeight - 2;
-            // Определяем, "прилип" ли блок featured3
-            const isFeatured3Sticky = featured3Rect.top <= headerHeight + 2 && featured3Rect.top >= headerHeight - 2;
-
-            if (isFeatured4Sticky) {
-                // Если featured4 прилип, он должен быть поверх featured3
-                if (!isFeatured4OnTop) {
+            if (isFeatured4StickyNow) {
+                // Если featured4 "прилип" и еще не наверху, делаем его выше featured3
+                if (!isFeatured4CurrentlyOnTop) {
                     featured3.style.zIndex = '19';
                     featured4.style.zIndex = '20';
-                    isFeatured4OnTop = true;
+                    isFeatured4CurrentlyOnTop = true;
+                    // console.log('Featured4 is sticky and now on top. z-index - featured3:', featured3.style.zIndex, 'featured4:', featured4.style.zIndex);
                 }
-            } else if (featured4Rect.top > headerHeight + 2) {
-                 // Если featured4 еще не достиг точки прилипания (или уже проскроллен выше и отлип)
-                 // featured3 должен быть сверху, если он сам прилип или еще не проскроллен
-                if (isFeatured4OnTop) {
+            } else {
+                // Если featured4 не "прилип" (он либо выше, либо ниже точки прилипания)
+                // или если featured3 должен быть снова сверху (например, при скролле вверх)
+                const featured3IsAboveFeatured4Bottom = featured3Rect.bottom > featured4Rect.bottom;
+                const featured4IsBelowStickyPoint = featured4Rect.top > headerHeight + 2;
+
+                if (isFeatured4CurrentlyOnTop && (featured4IsBelowStickyPoint || featured3IsAboveFeatured4Bottom )) {
+                    // Если featured4 был наверху, но теперь он ниже точки прилипания ИЛИ
+                    // если мы скроллим вверх так, что низ featured3 оказался ниже низа featured4 (редкий случай, но для полноты)
+                    // возвращаем featured3 наверх
                     featured3.style.zIndex = '20';
                     featured4.style.zIndex = '19';
-                    isFeatured4OnTop = false;
-                }
-            } 
-            // Дополнительное условие: если мы скроллим вверх и featured4 "отлипает", 
-            // а featured3 снова становится видимым/актуальным sticky элементом
-            else if (currentScrollY < lastScrollY && featured3Rect.bottom > headerHeight && featured4Rect.top > headerHeight + 5) {
-                 if (isFeatured4OnTop) {
-                    featured3.style.zIndex = '20';
-                    featured4.style.zIndex = '19';
-                    isFeatured4OnTop = false;
+                    isFeatured4CurrentlyOnTop = false;
+                    // console.log('Featured4 is NOT sticky or scrolled up, featured3 back on top. z-index - featured3:', featured3.style.zIndex, 'featured4:', featured4.style.zIndex);
                 }
             }
-            
-            lastScrollY = currentScrollY;
         });
+    } else {
+        // console.warn('Elements .featured3 or .featured4 not found for sticky scrolling.');
     }
 });

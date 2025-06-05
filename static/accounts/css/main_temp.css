@@ -489,37 +489,74 @@ body {
     justify-content: center;
     align-items: center;
     margin-top: 60px;
-    background: transparent !important;
-    margin-left: auto; /* Центрирование */
-    margin-right: auto; /* Центрирование */
+    /* background: transparent !important; */ /* Убрано */
+    margin-left: auto; 
+    margin-right: auto; 
+    /* overflow: hidden; */ /* Убираем overflow с самого sticky-контейнера */
 }
 
 .featured3 .frame-parent {
     width: 1303px;
-    height: 521px;
+    height: 521px; /* Можно заменить на min-height или удалить, если высота по контенту */
     position: relative;
-    display: flex;
-    justify-content: space-between; /* Возвращаем исходное значение */
-    align-items: center;
-    background: transparent;
+    /* display: flex; */ /* Убираем flex, т.к. .parent4 будет позиционироваться абсолютно или через padding родителя */
+    /* justify-content: space-between; */
+    /* align-items: center; */
+    background: transparent; /* Фон теперь от .icon9 */
     border-radius: 10px;
-    overflow: hidden;
-    padding: 50px;
+    overflow: hidden; /* Обязательно для обрезки .icon9 по радиусу */
+    /* padding: 50px; */ /* Убираем общий padding, .parent4 будет позиционироваться */
     box-sizing: border-box;
 }
 
+.featured3 .icon9 {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0; /* Фон */
+    /* border-radius: 0 10px 10px 0; */ /* Удаляем, т.к. это полный фон, обрезается родителем */
+    opacity: 1;
+}
+
 .featured3 .parent4 { /* Левая часть с текстом */
+    position: relative; /* Изменено на relative для потока, либо absolute для точного позиционирования */
+    z-index: 2; /* Выше .icon9 и .gradient-overlay внутри себя */
     display: flex;
     flex-direction: column;
-    justify-content: center; /* Возвращаем исходное значение */
+    justify-content: center;
     align-items: flex-start;
-    gap: 45px;
-    z-index: 2;
-    width: 45%; /* Возвращаем исходное значение */
+    gap: 35px; /* Уменьшил немного gap с 45px до 35px */
+    width: 50%; /* Ширина текстового блока */
+    padding: 50px 50px 50px 70px; /* Внутренние отступы для текста, слева больше */
+    box-sizing: border-box;
+    height: 100%; /* Чтобы занимал всю высоту .frame-parent для градиента */
+}
+
+.featured3 .parent4 .gradient-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(270deg, rgba(0, 0, 0, 0) 0%, rgba(0,0,0,0.7) 60%, rgba(0,0,0,0.9) 100%);
+    z-index: 1; /* Между основным фоном .icon9 и текстом в .heading1 и т.д. */
+    pointer-events: none; /* Чтобы не мешал кликам по тексту и кнопкам */
+}
+
+/* Текстовые элементы внутри .parent4 должны быть выше градиента */
+.featured3 .parent4 > .heading1,
+.featured3 .parent4 > .frame-group,
+.featured3 .parent4 > .parent5 {
+    position: relative;
+    z-index: 2; /* Выше .gradient-overlay */
 }
 
 .featured3 .heading1 .div18 { 
-    width: 375px; 
+    width: auto; /* Чтобы ширина была по тексту, а не фиксированная 375px */
+    max-width: 450px; /* Ограничение, чтобы не слишком растягивался */
 }
 .featured3 .heading1 .div18 .txt {
     font-family: 'Unbounded', sans-serif;
@@ -595,18 +632,6 @@ body {
 }
 
 /* Правая часть с изображениями в .featured3 */
-.featured3 .icon9 { /* Основное фоновое изображение (космос) */
-    position: absolute;
-    right: 0;     /* Возвращаем исходное значение */
-    top: 0;       /* Возвращаем исходное значение */
-    width: 60%;   /* Возвращаем исходное значение */
-    height: 100%; /* Возвращаем исходное значение */
-    object-fit: cover;
-    z-index: 0;
-    opacity: 1; /* Убрал излишнюю прозрачность, если основное изображение уже с эффектами */
-    border-radius: 0 10px 10px 0;
-}
-
 .featured3 .scale-1200-photoroom-2-parent { /* Планета */
     position: absolute;
     right: 60px;  /* Возвращаем исходное значение */
@@ -675,7 +700,7 @@ body {
     line-height: 1.1;
     word-wrap: break-word;
 }
-.featured4 .parent6 .div23 .txt > span:first-child { color: #82a7e2; } /* Светлее синий для контраста */
+.featured4 .parent6 .div23 .txt > span:first-child { color: #82a7e2; } /* Светлее синий для контраста - оставляем как есть, или можно #A5B4FC для сиреневого оттенка */
 .featured4 .parent6 .div23 .txt .span3 { color: #FFEF2B; } /* Желтый акцент */
 
 .featured4 .group-parent { 
@@ -689,18 +714,18 @@ body {
 }
 .featured4 .group-div {
     width: 187px; 
-    min-height: 200px; /* Добавил минимальную высоту для консистентности */
+    min-height: 220px; /* Немного увеличил для более крупных иконок и текста */
     position: relative; 
     background: linear-gradient(180deg, #004E9F 0%, #001C39 100%);
     border-radius: 10px;
-    padding: 35px 14px 20px 14px; /* Увеличен верхний padding для "вылезшей" иконки */
+    /* padding: 35px 14px 20px 14px; */ /* Заменяем на более контролируемый padding */
+    padding: 0 14px 20px 14px; /* Убираем верхний padding отсюда, он будет через card-icon-container */
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    /* justify-content: space-between; */ /* Закомментировал, т.к. gap и flex-grow для текста должны работать */
     align-items: center;
     text-align: center;
-    overflow: visible; /* Чтобы иконка могла "вылезти" */
+    overflow: visible; 
     gap: 10px; 
 }
 
@@ -711,29 +736,31 @@ body {
 
 .featured4 .group-div .card-icon-container {
     width: 100%;
-    height: 40px; /* Часть иконки, которая будет "внутри" видимой части карточки до вылезания */
+    /* height: 40px; */ /* Высота теперь будет зависеть от иконки и ее "вылезания" */
+    min-height: 60px; /* Минимальная высота, чтобы текст не слишком близко подходил */
+    margin-top: -40px; /* Отрицательный margin, чтобы сдвинуть контейнер иконки вверх */
+                               /* Это значение (или часть его) должно компенсировать "вылезание" */
     position: relative;
     display: flex;
     justify-content: center;
-    align-items: flex-start; /* Чтобы top для card-icon работал относительно верха контейнера */
-    margin-bottom: 15px; /* Отступ до текста */
+    align-items: flex-end; /* Иконка будет align-items:flex-end, чтобы "дно" иконки было на этой линии */
+    margin-bottom: 10px; /* Отступ до текста, уменьшен с 15px */
+    z-index: 1; /* Чтобы иконка была над фоном карточки, если что */
 }
 
 .featured4 .group-div .card-icon {
-    width: 70px; /* Уменьшил немного для лучшего вида в карточке 187px */
-    height: 70px;
+    width: 110px;  /* Увеличиваем размер иконки */
+    height: 110px; 
     object-fit: contain;
-    position: absolute;
-    top: -25px; /* (70px * 0.15 = 10.5px) + запас. (70 - 40 высота контейнера)/2 + небольшой сдвиг вверх */
-    /* top: -15%; - процент от высоты родителя card-icon-container (40px) будет мало, 15% от 70px = 10.5px */
-    /* Если нужно строго 15% от высоты самой иконки, то top: calc(-70px * 0.15); */
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1;
+    /* position: absolute; */ /* Уже не нужно, если контейнер сдвигается */
+    /* top: -25px; */ 
+    /* left: 50%; */
+    /* transform: translateX(-50%); */
+    /* z-index: 1; */ /* z-index на контейнере */
 }
 
 .featured4 .group-div .wrapper, .featured4 .group-div .wrapper1 {
-    flex-grow: 1; /* Чтобы текст занимал доступное место и карточки были одной высоты */
+    flex-grow: 1; 
     display: flex;
     flex-direction: column;
     justify-content: center; /* Центрируем текст, если он короткий */
