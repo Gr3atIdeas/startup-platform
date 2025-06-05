@@ -694,8 +694,22 @@ body {
     z-index: 1;
 }
 
-.featured4 .parent6 .div23 .txt > span:first-child { color: #82a7e2; }
-.featured4 .parent6 .div23 .txt .span3 { color: #FFEF2B; }
+.featured4 .parent6 .div23 .txt > span:first-child { 
+    color: #004E9F; /* Изменено по макету */
+    font-size: 35px;
+    font-family: 'Unbounded', sans-serif; /* Уже должно быть, но для явности */
+    font-weight: 600;
+    line-height: 35px; /* Изменено по макету */
+    word-wrap: break-word; /* Уже должно быть */
+}
+.featured4 .parent6 .div23 .txt .span3 { 
+    color: black; /* Изменено по макету */
+    font-size: 35px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 600;
+    line-height: 35px; /* Изменено по макету */
+    word-wrap: break-word;
+}
 
 .featured4 .group-parent { 
     align-self: stretch;
@@ -710,7 +724,8 @@ body {
 
 .featured4 .group-div {
     width: 187px; 
-    min-height: 220px; 
+    height: 187px; /* Делаем квадратным */
+    /* min-height: 220px; */ /* Убираем min-height */
     position: relative; 
     background: linear-gradient(180deg, #004E9F 0%, #001C39 100%);
     border-radius: 10px;
@@ -749,7 +764,7 @@ body {
     font-size: 14px;
     font-family: 'Unbounded', sans-serif;
     font-weight: 400;
-    line-height: 1.4;
+    line-height: 18px; /* Изменено по макету */
     word-wrap: break-word;
 }
 
@@ -769,8 +784,8 @@ body {
     color: black;
     font-size: 16px;
     font-family: 'Unbounded', sans-serif;
-    font-weight: 500;
-    line-height: 1;
+    font-weight: 400; /* Изменено по макету */
+    line-height: 16px; /* Изменено по макету */
 }
 .featured4 .parent7 .iconeye {
     width: 24px; height: 24px;

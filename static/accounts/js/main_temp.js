@@ -443,60 +443,59 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // --- Sticky Scrolling for Featured3 (featured4 scrolls normally) ---
     const featured3Sticky = document.querySelector('.featured3');
-    const featured4Block = document.querySelector('.featured4'); // Добавляем селектор для 4-го блока
+    const featured4Block = document.querySelector('.featured4');
     const headerSticky = document.querySelector('.header'); 
     let headerHeightSticky = 80; 
 
     if (headerSticky && headerSticky.offsetHeight > 0) {
         headerHeightSticky = headerSticky.offsetHeight;
+        // console.log('Header height for sticky:', headerHeightSticky);
     }
 
-    if (featured3Sticky && featured4Block) { // Убедимся, что и 4-й блок найден
-        const featured3NaturalOffsetTop = featured3Sticky.offsetTop; // Запоминаем начальное положение 3-го блока
-        let isFeatured3CurrentlySticky = false;
+    if (featured3Sticky) { 
+        // Просто применяем sticky стили, чтобы проверить, работает ли sticky в принципе
+        featured3Sticky.style.position = 'sticky';
+        featured3Sticky.style.top = `${headerHeightSticky}px`;
+        featured3Sticky.style.zIndex = '10'; 
+        // console.log('Applied basic sticky to .featured3. Top:', headerHeightSticky);
 
-        // Устанавливаем начальный z-index для featured3, если он не sticky
-        featured3Sticky.style.zIndex = '3'; // z-index для relative позиционирования (как у featured4 в CSS)
+        /* Закомментируем сложную логику отлипания для теста
+        const featured3NaturalOffsetTop = featured3Sticky.offsetTop;
+        let isFeatured3CurrentlySticky = false;
+        featured3Sticky.style.zIndex = '3'; 
 
         window.addEventListener('scroll', () => {
-            const scrollY = window.pageYOffset; // Текущая прокрутка страницы
-            const featured4Rect = featured4Block.getBoundingClientRect(); // Положение 4-го блока относительно viewport
-
-            // Условие, когда 3-й блок должен СТАТЬ sticky:
-            // Когда верхняя граница его естественного положения достигнет линии прилипания (под шапкой)
+            const scrollY = window.pageYOffset; 
+            const featured4Rect = featured4Block.getBoundingClientRect();
             const shouldBecomeSticky = scrollY >= (featured3NaturalOffsetTop - headerHeightSticky);
-
-            // Условие, когда 3-й блок должен ПЕРЕСТАТЬ быть sticky:
-            // Когда нижняя граница 4-го блока поднимется ВЫШЕ линии прилипания
-            const shouldUnstick = featured4Rect.bottom < headerHeightSticky;
+            const shouldUnstick = featured4Block ? featured4Rect.bottom < headerHeightSticky : false; // Проверка на featured4Block
 
             if (shouldUnstick) {
                 if (isFeatured3CurrentlySticky) {
-                    featured3Sticky.style.position = 'relative'; // или 'static'
+                    featured3Sticky.style.position = 'relative';
                     featured3Sticky.style.top = 'auto';
-                    featured3Sticky.style.zIndex = '3'; // Возвращаем z-index как у обычного блока
+                    featured3Sticky.style.zIndex = '3';
                     isFeatured3CurrentlySticky = false;
-                    // console.log('Featured3 UNSTICKED');
                 }
             } else if (shouldBecomeSticky) {
                 if (!isFeatured3CurrentlySticky) {
                     featured3Sticky.style.position = 'sticky';
                     featured3Sticky.style.top = `${headerHeightSticky}px`;
-                    featured3Sticky.style.zIndex = '10'; // z-index для sticky блока (выше featured4)
+                    featured3Sticky.style.zIndex = '10';
                     isFeatured3CurrentlySticky = true;
-                    // console.log('Featured3 STICKY');
                 }
             } else {
-                 // Если мы выше точки прилипания, блок должен быть не sticky
                 if (isFeatured3CurrentlySticky) {
-                    featured3Sticky.style.position = 'relative'; // или 'static'
+                    featured3Sticky.style.position = 'relative';
                     featured3Sticky.style.top = 'auto';
                     featured3Sticky.style.zIndex = '3';
                     isFeatured3CurrentlySticky = false;
-                    // console.log('Featured3 reset to NOT STICKY (scrolled above)');
                 }
             }
         });
+        */
+    } else {
+        // console.warn ('.featured3 not found for sticky script.');
     }
     
     /* Удаляем старый код для динамического z-index, если он еще остался
