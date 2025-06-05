@@ -465,7 +465,9 @@ document.addEventListener('DOMContentLoaded', function () {
         featured3Sticky.style.top = 'auto';
         featured3Sticky.style.zIndex = '3'; // z-index для relative (ниже чем у sticky featured4, если бы тот был sticky)
 
+        console.log('[StickyDebug] Attempting to add scroll event listener...');
         window.addEventListener('scroll', () => {
+            console.log('[StickyDebug] Scroll event FIRED!');
             const scrollY = window.pageYOffset;
             const featured3Rect = featured3Sticky.getBoundingClientRect();
             const featured4Rect = featured4Block.getBoundingClientRect();
@@ -509,6 +511,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }
         });
+        console.log('[StickyDebug] Scroll event listener ADDED (or at least, attempt was made).');
     } else {
         if (!featured3Sticky) console.warn ('[StickyDebug] .featured3 not found for sticky script.');
         if (!featured4Block) console.warn ('[StickyDebug] .featured4 not found for sticky script logic.');
