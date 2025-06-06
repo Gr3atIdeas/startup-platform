@@ -1290,12 +1290,14 @@ html::-webkit-scrollbar-button {
     display: flex;
     gap: 15px;
     margin-top: auto;
+    justify-content: center;
 }
 
 .featured7 .app-store-btn img {
     height: 115px;
     width: auto;
     border-radius: 5px;
+    aspect-ratio: 1 / 1;
 }
 
 .featured7 .frame-parent21 {
@@ -1326,7 +1328,7 @@ html::-webkit-scrollbar-button {
 
 .featured7 .card-industry {
     background-color: black;
-    padding: 72px 67px;
+    padding: 61px 67px;
     flex: 6.5;
 }
 
