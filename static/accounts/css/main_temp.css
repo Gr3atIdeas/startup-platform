@@ -1247,118 +1247,28 @@ html::-webkit-scrollbar-button {
 .featured7 .group-container {
     display: flex;
     align-items: center;
-    justify-content: flex-start; /* Changed */
+    justify-content: flex-start;
     gap: 60px;
     width: 100%;
-    background: linear-gradient(270deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.76) 100%); /* Corrected */
+    background-image: url('../images/main_page/7blockmain.jpg');
+    background-size: cover;
+    background-position: center;
     border-radius: 10px;
-    padding: 40px;
+    padding: 60px;
     box-sizing: border-box;
     min-height: 521px;
     position: relative;
 }
 
 .featured7 .great-ideas-parent {
-    flex: 0 0 40%; /* Changed */
+    flex: 0 0 40%;
     display: flex;
     flex-direction: column;
     gap: 20px;
-    max-width: 405px; /* Changed */
-    position: relative; /* Changed */
-    z-index: 2; /* Changed */
-}
-
-.featured7 .group-frame {
-    position: absolute; /* Changed */
-    top: -100px; /* Changed */
-    right: -250px; /* Changed */
-    width: 997px; /* Changed */
-    height: 997px; /* Changed */
-    z-index: 1; /* Changed */
-}
-
-.featured7 .scale-1200-photoroom-2-group {
-    width: 100%;
-    height: 100%;
+    max-width: 405px;
     position: relative;
+    z-index: 2;
 }
-
-.featured7 .phone-mockup {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    position: relative;
-    z-index: 5;
-}
-
-.featured7 .message-bubbles {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 6;
-}
-
-.featured7 .message-bubble {
-    position: absolute;
-    padding: 12px 20px;
-    border-radius: 18px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 300;
-    font-size: 14px;
-    line-height: 18px;
-    color: white;
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
-}
-.featured7 .message-bubble p {
-    margin: 0;
-}
-
-/* Positioning based on the new reference frame */
-.featured7 .bubble-1 { /* Получайте... */
-    background: #7B61FF;
-    width: 280px;
-    top: 215px;
-    left: 20px;
-}
-
-.featured7 .bubble-2 { /* Умные уведомления */
-    background: white;
-    color: #7B61FF;
-    padding: 10px 20px;
-    border: 1px solid #7B61FF;
-    width: fit-content;
-    white-space: nowrap;
-    top: 170px;
-    left: 480px;
-}
-
-.featured7 .bubble-3 { /* Мгновенный доступ */
-    background: #468CF7;
-    width: 300px;
-    top: 360px;
-    left: 10px;
-}
-
-.featured7 .bubble-4 { /* Мобильная аналитика */
-    background: white;
-    color: #004E9F;
-    padding: 10px 20px;
-    border: 1px solid #004E9F;
-    width: fit-content;
-    white-space: nowrap;
-    top: 500px;
-    left: 510px;
-}
-
-.featured7 .bubble-5 { /* Отслеживайте... */
-    background: #004E9F;
-    width: 284px;
-    top: 550px;
-    left: 40px;
-}
-
 
 .featured7 .great-ideas {
     color: white;
@@ -1379,7 +1289,7 @@ html::-webkit-scrollbar-button {
 .featured7 .app-store-buttons {
     display: flex;
     gap: 15px;
-    margin-top: auto; /* Push to bottom */
+    margin-top: auto;
 }
 
 .featured7 .app-store-btn img {
@@ -1400,14 +1310,14 @@ html::-webkit-scrollbar-button {
     flex: 1;
     display: flex;
     flex-direction: column;
-    justify-content: space-between; /* Changed */
+    justify-content: space-between;
     gap: 20px;
-    padding: 61px; /* Changed */
+    padding: 61px;
     border-radius: 10px;
     color: white;
     position: relative;
     overflow: hidden;
-    min-height: 521px; /* Changed */
+    min-height: 521px;
 }
 
 .featured7 .card-gamification {
@@ -1434,7 +1344,7 @@ html::-webkit-scrollbar-button {
     background-image: url('../images/main_page/7blockastron.jpg');
     background-size: cover;
     background-position: center;
-    opacity: 1; /* Changed */
+    opacity: 1;
     z-index: 1;
 }
 
