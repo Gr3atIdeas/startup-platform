@@ -1107,9 +1107,9 @@ body {
 /* JS-управляемая карусель */
 .featured6 .galaxy-carousel {
     width: 1000px; /* Ширина одного слайда */
-    overflow: hidden; /* Скрываем остальные слайды */
-    position: relative; /* Для абсолютного позиционирования слайдов, если понадобится */
-    display: flex; /* Для внутреннего контейнера, который будет смещаться */
+    height: 500px; /* Высота по картинке */
+    position: relative; 
+    overflow: hidden; 
 }
 
 .featured6 .galaxy-carousel-inner { /* Этот класс JS не использует, но может быть полезен для стилизации обертки слайдов */
@@ -1118,19 +1118,26 @@ body {
 }
 
 .featured6 .galaxy-step-card {
-    min-width: 1000px; /* Каждый слайд занимает всю ширину обертки */
-    display: none; /* Скрываем все слайды по умолчанию, JS покажет активный */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex; /* Для выравнивания картинки внутри */
     flex-direction: column;
     align-items: center;
+    justify-content: center; /* Центрируем картинку, если она меньше */
     gap: 20px; 
     box-sizing: border-box;
     opacity: 0;
-    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+    transition: opacity 0.8s ease-in-out; /* Плавный переход */
+    pointer-events: none; /* Не кликать по неактивным */
 }
 
 .featured6 .galaxy-step-card.active-step {
-    display: flex; /* Показываем активный слайд */
     opacity: 1;
+    pointer-events: auto; /* Можно кликать по активной */
+    z-index: 1; /* Активная карточка поверх остальных */
 }
 
 .featured6 .galaxy-step-card .frame-child12 { 

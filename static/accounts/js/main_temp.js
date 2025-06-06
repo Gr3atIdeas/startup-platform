@@ -131,7 +131,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const currentCardData = galaxyCards[currentGalaxyIndex].querySelector('.galaxy-step-data');
                 if (currentCardData) {
                     currentStepTitleElement.textContent = currentCardData.dataset.stepTitle || 'Заголовок шага';
-                    stepIndicatorButtonText.textContent = (currentCardData.dataset.stepNumber || '') + ' ШАГ';
+                    stepIndicatorButtonText.textContent = (currentCardData.dataset.stepNumber || '') + '  ШАГ';
                 }
             }
 
