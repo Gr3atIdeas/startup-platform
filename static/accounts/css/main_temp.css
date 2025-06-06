@@ -53,7 +53,7 @@ html {
     overflow-x: hidden; 
     overflow-y: auto; /* Включаем вертикальную прокрутку */
     scrollbar-width: thin; /* Для Firefox */
-    scrollbar-color: #FFEF2B #011223; /* Цвета для Firefox */
+    scrollbar-color: #FFEF2B transparent; /* Цвета для Firefox: ползунок и прозрачный фон */
 }
 
 body {
@@ -76,21 +76,24 @@ body {
 
 /* Кастомный скроллбар для Webkit-браузеров (Chrome, Safari) */
 html::-webkit-scrollbar {
-  width: 10px; /* Ширина скроллбара */
+  width: 8px; /* Ширина скроллбара */
 }
 
 html::-webkit-scrollbar-track {
-  background: #011223; /* Цвет фона скроллбара */
+  background: transparent; /* Убираем фон у трека */
 }
 
 html::-webkit-scrollbar-thumb {
   background-color: #FFEF2B; /* Цвет ползунка */
-  border-radius: 5px; /* Скругление углов */
-  border: 2px solid #011223; /* Рамка в цвет фона для отступа */
+  border-radius: 4px; /* Скругление углов */
 }
 
 html::-webkit-scrollbar-thumb:hover {
   background-color: #e6d329; /* Цвет ползунка при наведении */
+}
+
+html::-webkit-scrollbar-button {
+  display: none; /* Скрываем стрелочки */
 }
 
 .div { /* Общий контейнер страницы */
@@ -1227,13 +1230,13 @@ html::-webkit-scrollbar-thumb:hover {
     justify-content: center;
     align-items: center;
     margin-top: 60px;
-    background: transparent !important; 
+    background: transparent !important;
     border-radius: 10px;
-    margin-left: auto; /* Центрирование */
-    margin-right: auto; /* Центрирование */
+    margin-left: auto;
+    margin-right: auto;
 }
 
-.featured7 .frame-parent19 { /* Общий контейнер */
+.featured7 .frame-parent19 {
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -1241,109 +1244,208 @@ html::-webkit-scrollbar-thumb:hover {
     gap: 50px;
 }
 
-.featured7 .group-container { /* Верхний блок: картинка слева, текст справа */
+.featured7 .group-container {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 60px;
     width: 100%;
+    background: linear-gradient(270deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.76) 100%);
+    border-radius: 10px;
+    padding: 40px;
+    box-sizing: border-box;
 }
 
-.featured7 .group-frame { flex-shrink: 0; position: relative; }
+.featured7 .great-ideas-parent {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 450px;
+}
+
+.featured7 .group-frame {
+    flex: 1;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 500px;
+}
 
 .featured7 .scale-1200-photoroom-2-group {
-    width: 414px;
-    height: 414px;
+    width: 407px;
+    height: auto;
     position: relative;
 }
-.featured7 .phone-mockup { /* Телефон */
-    width: 100%; height: 100%;
+
+.featured7 .phone-mockup {
+    width: 100%;
+    height: auto;
     object-fit: contain;
-    filter: drop-shadow(0px 10px 25px rgba(0,0,0,0.3));
+    position: relative;
+    z-index: 5;
 }
 
 .featured7 .message-bubbles {
     position: absolute;
-    top: 40px;
-    left: -100px; /* Смещаем влево от телефона */
-    width: 250px; /* Ширина для облачков */
-    display: flex; flex-direction: column; gap: 70px; /* Большой отступ между облачками */
-    z-index: 2;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 6;
 }
 
 .featured7 .message-bubble {
-    padding: 12px 18px;
-    background: white;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    box-shadow: 0px 5px 15px rgba(0,0,0,0.15);
-    position: relative;
+    position: absolute;
+    padding: 15px;
+    border-radius: 18px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 18px;
+    color: white;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
 }
-.featured7 .message-bubble.left { align-self: flex-start; }
-.featured7 .message-bubble.right { align-self: flex-end; margin-top: -30px; /* Наложение */ }
+.featured7 .message-bubble p {
+    margin: 0;
+}
 
-.featured7 .message-bubble .cosmochat {
+.featured7 .bubble-1 { /* Get personalized offers... */
+    background: #7B61FF;
+    width: 250px;
+    top: 5%;
+    left: -180px;
+}
+
+.featured7 .bubble-2 { /* Smart notifications */
+    background: white;
+    color: #7B61FF;
+    border: 1px solid #7B61FF;
+    width: fit-content;
+    white-space: nowrap;
+    top: 30%;
+    right: -150px;
+}
+
+.featured7 .bubble-3 { /* Instant access */
+    background: #468CF7;
+    width: 280px;
+    top: 45%;
+    left: -220px;
+}
+
+.featured7 .bubble-4 { /* Mobile analytics */
+    background: white;
     color: #004E9F;
+    border: 1px solid #004E9F;
+    width: fit-content;
+    white-space: nowrap;
+    bottom: 25%;
+    right: -150px;
+}
+
+.featured7 .bubble-5 { /* Track portfolio growth */
+    background: #004E9F;
+    width: 260px;
+    bottom: 5%;
+    left: -200px;
+}
+
+
+.featured7 .great-ideas {
+    color: white;
+    font-size: 35px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 600;
+    line-height: 35px;
+}
+
+.featured7 .div56 {
+    color: white;
     font-size: 14px;
     font-family: 'Unbounded', sans-serif;
-    font-weight: 500;
-}
-.featured7 .message-send-time { width: 20px; height: 20px; }
-
-.featured7 .bubble-tail, .featured7 .bubble-tail1 {
-    width: 20px; height: 20px; /* Увеличим размер */
-    position: absolute;
-    background-color: white;
-    transform: rotate(45deg);
-    z-index: -1; /* Под облачком */
-}
-.featured7 .message-bubble.left .bubble-tail {
-    right: -8px; /* Хвост справа, указывает на телефон */
-    top: calc(50% - 10px);
-}
-.featured7 .message-bubble.right .bubble-tail1 {
-    left: -8px; /* Хвост слева, указывает на телефон */
-    top: calc(50% - 10px);
+    font-weight: 300;
+    line-height: 18px;
 }
 
-.featured7 .great-ideas-parent { /* Правый текстовый блок */
-    flex-grow: 1; display: flex; flex-direction: column; gap: 20px;
-}
-.featured7 .great-ideas { 
-    color: white; font-size: 48px; /* Крупнее */ font-family: 'Blippo Black', sans-serif; font-weight: normal; line-height: 1.1;
-}
-.featured7 .div56 { 
-    color: #E6E8EC; font-size: 17px; font-family: 'Unbounded', sans-serif; font-weight: 300; line-height: 1.6;
-}
 .featured7 .app-store-buttons {
-    display: flex; gap: 15px; margin-top: 15px;
-}
-.featured7 .app-store-btn img {
-    height: 45px; width: auto; border-radius: 5px;
+    display: flex;
+    gap: 15px;
+    margin-top: 15px;
 }
 
-.featured7 .frame-parent21 { /* Нижний блок с двумя фичами */
-    display: flex; justify-content: space-between; align-items: flex-start; gap: 40px; width: 100%;
+.featured7 .app-store-btn img {
+    height: 45px;
+    width: auto;
+    border-radius: 5px;
+}
+
+.featured7 .frame-parent21 {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    gap: 40px;
+    width: 100%;
 }
 
 .featured7 .frame-parent22 {
     flex: 1;
-    display: flex; flex-direction: column; align-items: center; text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     gap: 20px;
-    padding: 30px;
-    background: rgba(0, 0, 0, 0.15); 
-    border-radius: 15px;
+    padding: 40px;
+    border-radius: 10px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    min-height: 300px;
 }
-.featured7 .feature7-icon {
-    width: 120px; height: 80px; object-fit: contain; margin-bottom: 10px;
+
+.featured7 .card-gamification {
+     background: linear-gradient(180deg, #7B61FF 0%, #4A3A99 100%);
 }
-.featured7 .div57 { 
-    color: #FFEF2B; font-size: 22px; font-family: 'Unbounded', sans-serif; font-weight: 600; line-height: 1.3; margin-bottom: 10px;
+
+.featured7 .card-industry {
+    background-color: black;
 }
-.featured7 .div58, .featured7 .div60 { 
-    color: white; font-size: 14px; font-family: 'Unbounded', sans-serif; font-weight: 300; line-height: 1.5;
+
+.featured7 .card-industry .parent20 {
+    position: relative;
+    z-index: 2;
 }
+
+.featured7 .card-industry::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('../images/main_page/7blockastron.jpg');
+    background-size: cover;
+    background-position: center;
+    opacity: 0.5;
+    z-index: 1;
+}
+
+.featured7 .div57 {
+    font-size: 35px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 600;
+    line-height: 35px;
+    margin-bottom: 20px;
+}
+
+.featured7 .div58,
+.featured7 .div60 {
+    font-size: 16px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
 
 /* --- Секция 8: Featured8 (Истории успеха) --- */
 .featured8.success-stories-carousel-outer {
