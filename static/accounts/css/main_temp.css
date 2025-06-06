@@ -1316,12 +1316,12 @@ html::-webkit-scrollbar-button {
     color: white;
     position: relative;
     overflow: hidden;
-    min-height: 521px;
 }
 
 .featured7 .card-gamification {
      background: linear-gradient(180deg, #7B61FF 0%, #4A3A99 100%);
      flex: 3;
+     aspect-ratio: 1 / 1;
 }
 
 .featured7 .card-industry {
