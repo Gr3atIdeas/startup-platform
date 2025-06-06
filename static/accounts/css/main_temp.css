@@ -51,7 +51,9 @@ html {
     padding: 0;
     box-sizing: border-box;
     overflow-x: hidden; 
-    /* overflow-y: auto; */ /* <--- УДАЛЯЕМ ЭТО */
+    overflow-y: auto; /* Включаем вертикальную прокрутку */
+    scrollbar-width: thin; /* Для Firefox */
+    scrollbar-color: #FFEF2B #011223; /* Цвета для Firefox */
 }
 
 body {
@@ -70,6 +72,25 @@ body {
     box-sizing: border-box;
     display: flex; /* Для flex-grow у .div */
     flex-direction: column; /* Для flex-grow у .div */
+}
+
+/* Кастомный скроллбар для Webkit-браузеров (Chrome, Safari) */
+html::-webkit-scrollbar {
+  width: 10px; /* Ширина скроллбара */
+}
+
+html::-webkit-scrollbar-track {
+  background: #011223; /* Цвет фона скроллбара */
+}
+
+html::-webkit-scrollbar-thumb {
+  background-color: #FFEF2B; /* Цвет ползунка */
+  border-radius: 5px; /* Скругление углов */
+  border: 2px solid #011223; /* Рамка в цвет фона для отступа */
+}
+
+html::-webkit-scrollbar-thumb:hover {
+  background-color: #e6d329; /* Цвет ползунка при наведении */
 }
 
 .div { /* Общий контейнер страницы */
