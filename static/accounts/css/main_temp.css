@@ -1250,9 +1250,7 @@ html::-webkit-scrollbar-button {
     justify-content: flex-start; /* Changed */
     gap: 60px;
     width: 100%;
-    background-image: url('../images/main_page/7block_bg.jpg'); /* New BG Image */
-    background-size: cover;
-    background-position: center;
+    background: linear-gradient(270deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.76) 100%); /* Corrected */
     border-radius: 10px;
     padding: 40px;
     box-sizing: border-box;
