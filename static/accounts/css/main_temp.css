@@ -1293,7 +1293,7 @@ html::-webkit-scrollbar-button {
 }
 
 .featured7 .app-store-btn img {
-    height: 45px;
+    height: 135px;
     width: auto;
     border-radius: 5px;
 }
@@ -1307,7 +1307,6 @@ html::-webkit-scrollbar-button {
 }
 
 .featured7 .frame-parent22 {
-    flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -1322,11 +1321,13 @@ html::-webkit-scrollbar-button {
 
 .featured7 .card-gamification {
      background: linear-gradient(180deg, #7B61FF 0%, #4A3A99 100%);
+     flex: 3;
 }
 
 .featured7 .card-industry {
     background-color: black;
     padding: 72px 67px;
+    flex: 7;
 }
 
 .featured7 .card-industry .parent20 {
