@@ -121,105 +121,53 @@ document.addEventListener('DOMContentLoaded', function () {
         if (galaxyCards.length > 0) {
             let currentGalaxyIndex = 0;
             const totalGalaxyCards = galaxyCards.length;
+            let galaxyAutoplayInterval = null;
 
             function updateGalaxyCarousel() {
-                let galaxyInner = galaxyCarousel.querySelector('.galaxy-carousel-inner');
-                if (!galaxyInner) {
-                    galaxyInner = document.createElement('div');
-                    galaxyInner.classList.add('galaxy-carousel-inner');
-                    galaxyInner.style.display = 'flex';
-                    galaxyInner.style.width = `${totalGalaxyCards * 100}%`;
-                    galaxyCards.forEach(card => {
-                        card.style.width = `${100 / totalGalaxyCards}%`;
-                        galaxyInner.appendChild(card);
-                    });
-                    galaxyCarousel.appendChild(galaxyInner);
-                } else {
-                    galaxyInner.style.display = 'flex';
-                    galaxyInner.style.width = `${totalGalaxyCards * 100}%`;
-                     galaxyCards.forEach(card => {
-                        card.style.width = `${100 / totalGalaxyCards}%`;
-                    });
-                }
-
-                galaxyInner.style.transform = 'translateX(-' + (currentGalaxyIndex * (100 / totalGalaxyCards)) + '%)';
+                galaxyCards.forEach((card, index) => {
+                    card.classList.toggle('active-step', index === currentGalaxyIndex);
+                });
                 
                 const currentCardData = galaxyCards[currentGalaxyIndex].querySelector('.galaxy-step-data');
                 if (currentCardData) {
                     currentStepTitleElement.textContent = currentCardData.dataset.stepTitle || 'Заголовок шага';
                     stepIndicatorButtonText.textContent = (currentCardData.dataset.stepNumber || '') + ' ШАГ';
                 }
-                galaxyCards.forEach((card, index) => {
-                    card.classList.toggle('active-step', index === currentGalaxyIndex);
-                });
-                arrowLeftGalaxy.classList.toggle('disabled', currentGalaxyIndex === 0);
-                arrowRightGalaxy.classList.toggle('disabled', currentGalaxyIndex === totalGalaxyCards - 1);
             }
 
-            arrowLeftGalaxy.addEventListener('click', () => {
-                if (currentGalaxyIndex > 0) {
-                    currentGalaxyIndex--;
-                    updateGalaxyCarousel();
-                }
-            });
-
-            arrowRightGalaxy.addEventListener('click', () => {
-                if (currentGalaxyIndex < totalGalaxyCards - 1) {
-                    currentGalaxyIndex++;
-                    updateGalaxyCarousel();
-                }
-            });
-
-            let galaxyIsDown = false;
-            let galaxyStartX;
-            let galaxyScrollLeftPx;
-            let galaxyWalked = 0;
-            let galaxyInnerForDrag = galaxyCarousel.querySelector('.galaxy-carousel-inner') || galaxyCarousel;
-
-            galaxyWrapper.addEventListener('mousedown', (e) => {
-                galaxyIsDown = true;
-                galaxyWrapper.classList.add('active-drag');
-                galaxyStartX = e.pageX;
-                const currentPercentageOffset = currentGalaxyIndex * (100 / totalGalaxyCards);
-                galaxyScrollLeftPx = -(currentPercentageOffset / 100 * galaxyWrapper.offsetWidth);
-                galaxyWalked = 0;
-                galaxyInnerForDrag.style.transition = 'none';
-            });
-
-            function handleGalaxyDragEnd() {
-                if (!galaxyIsDown) return;
-                galaxyIsDown = false;
-                galaxyWrapper.classList.remove('active-drag');
-                galaxyInnerForDrag.style.transition = 'transform 0.5s ease-in-out';
-                
-                const threshold = galaxyWrapper.offsetWidth / 4;
-
-                if (galaxyWalked < -threshold) {
-                    if (currentGalaxyIndex < totalGalaxyCards - 1) currentGalaxyIndex++;
-                } else if (galaxyWalked > threshold) {
-                    if (currentGalaxyIndex > 0) currentGalaxyIndex--;
+            function advanceSlide(direction) {
+                if (direction === 'next') {
+                    currentGalaxyIndex = (currentGalaxyIndex + 1) % totalGalaxyCards;
+                } else {
+                    currentGalaxyIndex = (currentGalaxyIndex - 1 + totalGalaxyCards) % totalGalaxyCards;
                 }
                 updateGalaxyCarousel();
             }
 
-            galaxyWrapper.addEventListener('mouseleave', handleGalaxyDragEnd);
-            galaxyWrapper.addEventListener('mouseup', handleGalaxyDragEnd);
+            function resetAutoplay() {
+                clearInterval(galaxyAutoplayInterval);
+                galaxyAutoplayInterval = setInterval(() => {
+                    advanceSlide('next');
+                }, 10000); // 10 seconds
+            }
 
-            galaxyWrapper.addEventListener('mousemove', (e) => {
-                if (!galaxyIsDown) return;
-                e.preventDefault();
-                const currentX = e.pageX;
-                galaxyWalked = currentX - galaxyStartX;
-                let newTransformPx = galaxyScrollLeftPx + galaxyWalked;
-
-                const overscrollLimit = galaxyWrapper.offsetWidth / 3;
-                const minTransformPx = -( (totalGalaxyCards -1) * galaxyWrapper.offsetWidth / totalGalaxyCards + overscrollLimit);
-                const maxTransformPx = overscrollLimit;
-                newTransformPx = Math.max(minTransformPx, Math.min(maxTransformPx, newTransformPx));
-
-                galaxyInnerForDrag.style.transform = 'translateX(' + newTransformPx + 'px)';
+            arrowLeftGalaxy.addEventListener('click', () => {
+                advanceSlide('prev');
+                resetAutoplay();
             });
+
+            arrowRightGalaxy.addEventListener('click', () => {
+                advanceSlide('next');
+                resetAutoplay();
+            });
+
+            // Stop autoplay on hover for better UX
+            galaxyWrapper.addEventListener('mouseenter', () => clearInterval(galaxyAutoplayInterval));
+            galaxyWrapper.addEventListener('mouseleave', () => resetAutoplay());
+            
             updateGalaxyCarousel();
+            resetAutoplay();
+
         } else {
             // console.warn('Карточки в карусели "Галактика" не найдены.');
         }
