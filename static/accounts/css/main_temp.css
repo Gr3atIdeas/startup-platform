@@ -1647,7 +1647,7 @@ html::-webkit-scrollbar-button {
     display: flex;
     flex-wrap: wrap;
     row-gap: 20px;
-    column-gap: 33.5px;
+    column-gap: 32px;
     justify-content: flex-start;
     align-items: center;
 }
