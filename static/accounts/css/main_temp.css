@@ -1445,16 +1445,18 @@ html::-webkit-scrollbar-button {
     box-sizing: border-box;
     box-shadow: 0px 8px 25px rgba(0,0,0,0.1);
     position: relative;
+    overflow: hidden; /* Add overflow hidden to contain the quote icon */
 }
 
 .featured8 .success-story-card .quote-icon {
     position: absolute;
-    top: 176px;
-    left: 199px;
-    width: 150px;
-    height: 116px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 250px;
+    height: auto;
     z-index: 0;
-    opacity: 0.2;
+    opacity: 0.07; /* Make it a very subtle background element */
 }
 
 .featured8 .success-story-card .avatar-icon {
@@ -1514,11 +1516,13 @@ html::-webkit-scrollbar-button {
 
 .featured8 .rating-container {
     position: absolute;
-    left: 45px; 
+    left: 50%;
+    transform: translateX(-50%);
     bottom: 40px;
     display: flex;
-    gap: 5px;
+    gap: 8px; /* Increase gap slightly */
     z-index: 1;
+    width: fit-content; /* Ensure transform works correctly */
 }
 
 .featured8 .rating-container img {
@@ -1544,8 +1548,8 @@ html::-webkit-scrollbar-button {
     z-index: 10;
 }
 
-.featured8 .success-stories-arrow-left { left: 20px; }
-.featured8 .success-stories-arrow-right { right: 20px; }
+.featured8 .success-stories-arrow-left { left: 71px; } /* Align with content */
+.featured8 .success-stories-arrow-right { right: 71px; } /* Align with content */
 
 .featured8 .success-stories-arrow-left:hover,
 .featured8 .success-stories-arrow-right:hover {
