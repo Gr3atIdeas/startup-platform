@@ -1347,29 +1347,18 @@ html::-webkit-scrollbar-button {
     padding: 45px 0; 
     box-sizing: border-box;
     /* overflow: hidden; */ /* We need overflow for carousel */
-    /* display: flex; */
-    /* flex-direction: column; */
-    /* align-items: center; */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center children (header and carousel wrapper) */
     gap: 40px;
     margin-top: 60px;
     background: transparent !important;
     position: relative;
 }
 
-.featured8 .frame-parent18 {
-    width: 100%;
-    /* max-width: 1303px; */ /* Let it be full width */
-    padding: 0; /* No padding on the main container */
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    /* align-items: center; */ /* REMOVED to allow carousel to be full-width */
-    gap: 40px;
-}
-
 .featured8 .parent21 { /* Заголовок */
     width: 100%;
-    max-width: 1303px;
+    max-width: 1303px; /* Constrain the header */
     padding: 0 71px; /* Add padding here for alignment */
     box-sizing: border-box;
     display: flex; 
@@ -1387,7 +1376,8 @@ html::-webkit-scrollbar-button {
 }
 
 .featured8 .success-stories-carousel-container-with-arrows {
-    width: 100%;
+    width: 100%; /* Take full width of parent */
+    align-self: stretch; /* Override parent's align-items: center */
     position: relative;
     /* display: flex; */
     /* align-items: center; */
