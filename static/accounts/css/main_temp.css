@@ -123,14 +123,14 @@ html::-webkit-scrollbar-button {
     height: 798px;
     position: relative;
     overflow: hidden;
-    /* display: flex; */
-    /* justify-content: center; */
-    /* align-items: center; */
-    padding: 20px 71px; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px; 
     box-sizing: border-box;
     background: transparent !important;
-    margin-left: auto;
-    margin-right: auto;
+    margin-left: auto; /* Центрирование */
+    margin-right: auto; /* Центрирование */
 }
 
 .featured .group {
@@ -148,7 +148,7 @@ html::-webkit-scrollbar-button {
     display: flex;
     flex-direction: column; /* Для внутреннего расположения элементов */
     justify-content: center; /* Центрирование по вертикали */
-    padding-left: 109px; /* Отступ для текстового контента */
+    padding-left: 0; /* Adjusted padding - было 109px */
     box-sizing: border-box;
 }
 
@@ -1071,19 +1071,18 @@ html::-webkit-scrollbar-button {
     padding: 45px 71px;
     box-sizing: border-box;
     overflow: hidden;
-    /* display: flex; */
-    /* justify-content: center; */
-    /* align-items: center; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
     margin-top: 60px;
     background: transparent !important; 
     border-radius: 10px;
-    margin-left: auto;
-    margin-right: auto;
+    margin-left: auto; /* Центрирование */
+    margin-right: auto; /* Центрирование */
 }
 
 .featured6 .frame-parent18 { /* Внутренний контейнер */
     width: 100%;
-    /* max-width: 1303px; */ /* This is now redundant as parent has padding */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -1102,7 +1101,7 @@ html::-webkit-scrollbar-button {
 
 /* JS-управляемая карусель */
 .featured6 .galaxy-carousel {
-    width: 100%; /* Ширина одного слайда */
+    width: 1000px; /* Ширина одного слайда */
     height: 500px; /* Высота по картинке */
     position: relative; 
     overflow: hidden; 
@@ -1137,7 +1136,7 @@ html::-webkit-scrollbar-button {
 }
 
 .featured6 .galaxy-step-card .frame-child12 { 
-    width: 100%;
+    width: 1000px;
     height: 500px;
     object-fit: cover;
     border-radius: 10px;
