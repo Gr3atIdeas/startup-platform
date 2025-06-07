@@ -1386,17 +1386,26 @@ html::-webkit-scrollbar-button {
 
 .featured8 .frame-parent18 {
     width: 100%;
-    max-width: 1303px; /* Ограничение как у других блоков */
-    padding: 0 71px; /* Восстанавливаем боковые отступы здесь */
+    /* max-width: 1303px; */ /* Let it be full width */
+    padding: 0; /* No padding on the main container */
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 40px;
 }
 
 .featured8 .parent21 { /* Заголовок */
-    display: flex; flex-direction: column; align-items: center; gap: 5px;
+    width: 100%;
+    max-width: 1303px;
+    padding: 0 71px; /* Add padding here for alignment */
+    box-sizing: border-box;
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    gap: 5px;
 }
+
 .featured8 .parent21 .faq { 
     color: white; font-size: 55px; font-family: 'Blippo Black', sans-serif; font-weight: normal; line-height: 1.0;
 }
@@ -1523,12 +1532,12 @@ html::-webkit-scrollbar-button {
 
 .featured8 .success-stories-arrow-left,
 .featured8 .success-stories-arrow-right {
-    width: 40px; height: 40px;
-    background-color: rgba(255, 255, 255, 0.2);
+    width: 46px; height: 46px;
+    /* background-color: rgba(255, 255, 255, 0.2); */ /* Using SVG background */
     border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
     cursor: pointer;
-    transition: background-color 0.3s, opacity 0.3s;
+    transition: transform 0.2s, opacity 0.3s;
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
@@ -1540,19 +1549,21 @@ html::-webkit-scrollbar-button {
 
 .featured8 .success-stories-arrow-left:hover,
 .featured8 .success-stories-arrow-right:hover {
-    background-color: rgba(255, 255, 255, 0.4);
+    transform: translateY(-50%) scale(1.1);
 }
 
 .featured8 .success-stories-arrow-left.disabled,
 .featured8 .success-stories-arrow-right.disabled {
-    opacity: 0.5;
+    opacity: 0.4;
     pointer-events: none;
+    transform: translateY(-50%) scale(1);
 }
 
-.featured8 .success-stories-arrow-left img,
-.featured8 .success-stories-arrow-right img {
-    width: 18px; height: 18px; object-fit: contain;
-    filter: brightness(0) invert(1);
+.featured8 .success-stories-arrow-left,
+.featured8 .success-stories-arrow-right {
+    width: 46px; 
+    height: 46px;
+    object-fit: contain;
 }
 
 /* --- Секция 9: Featured9 (Новости) --- */
