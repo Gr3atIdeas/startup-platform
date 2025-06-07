@@ -1240,7 +1240,7 @@ html::-webkit-scrollbar-button {
     justify-content: flex-start;
     gap: 60px;
     width: 100%;
-    background-image: url('../images/main_page/7blockmain.jpg');
+    background-image: url('../images/main_page/7blockmain.webp');
     background-size: cover;
     background-position: center;
     border-radius: 10px;
@@ -1334,7 +1334,7 @@ html::-webkit-scrollbar-button {
     left: 0;
     right: 0;
     bottom: 0;
-    background-image: url('../images/main_page/7blockastron.jpg');
+    background-image: url('../images/main_page/7blockastron.webp');
     background-size: cover;
     background-position: center;
     opacity: 1;
@@ -1770,11 +1770,11 @@ html::-webkit-scrollbar-button {
 }
 
 .featured9 .news-show-more-button-container .btn {
-    border: 1px solid white;
+    border: 1px solid white !important;
     padding: 12px 35px;
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
     line-height: 1;
-    background-color: transparent;
+    background: transparent !important;
     transition: background-color 0.3s ease;
 }
 
@@ -1797,122 +1797,292 @@ html::-webkit-scrollbar-button {
 
 /* --- Секция 10: Featured10 (Подписка) --- */
 .featured10 {
-    width: 100%;
+    padding: 45px 71px 55px 71px;
+    justify-content: flex-start;
+    margin: 60px auto 0 auto;
     max-width: 1445px;
-    padding: 45px 71px;
     box-sizing: border-box;
     overflow: hidden;
-    display: flex; justify-content: center;
-    margin-top: 60px;
-    background: transparent !important;
-    margin-left: auto; /* Центрирование */
-    margin-right: auto; /* Центрирование */
+    display: flex;
+    align-items: center;
 }
 
-.featured10 .featured11 { /* Основной контейнер */
+.subscription-card {
+    width: 1303px;
+    height: 576px;
+    position: relative;
+    background-color: black;
+    box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+    border-radius: 20px;
+    background-size: cover;
+    background-position: center;
+}
+
+.subscription-bg-blur-1 {
+    width: 854px;
+    height: 854px;
+    left: 1013px;
+    top: -39px;
+    position: absolute;
+    background: rgba(97, 165, 255, 0.45);
+    box-shadow: 500px 500px 500px;
+    border-radius: 9999px;
+    filter: blur(250px);
+}
+
+.subscription-bg-blur-2 {
+    width: 590px;
+    height: 590px;
+    left: -83px;
+    top: -295px;
+    position: absolute;
+    background: #004E9F;
+    box-shadow: 500px 500px 500px;
+    border-radius: 9999px;
+    filter: blur(250px);
+}
+
+.subscription-form-wrapper {
+    width: 620px;
+    padding: 32px;
+    left: 34px;
+    top: 253px;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 24px;
+    box-sizing: border-box;
+}
+
+.email-input-wrapper {
+    align-self: stretch;
+    padding: 24px 32px;
+    border-radius: 5px;
+    outline: 1px white solid;
+    outline-offset: -1px;
+}
+
+.email-input {
     width: 100%;
-    padding: 50px 60px;
-    background: transparent; /* Очень темный фон */
-    border-radius: 15px;
-    display: flex; justify-content: space-between; align-items: center; gap: 60px;
-    box-shadow: 0px 10px 30px rgba(0,0,0,0.3);
+    background: transparent;
+    border: none;
+    outline: none;
+    color: white;
+    font-size: 14px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    line-height: 18px;
 }
 
-.featured10 .featured10-content-left { /* Левый блок: Заголовок, описание, бонус */
-    flex: 1.2; /* Чуть больше места */
-    display: flex; flex-direction: column; gap: 25px;
-}
-.featured10 .parent3 { /* Заголовок */
-    display: flex; flex-direction: column; gap: 5px;
-}
-.featured10 .parent3 .div16 { /* "Будьте в курсе" */
-    color: white; font-size: 48px; font-family: 'Blippo Black', sans-serif; font-weight: normal; line-height: 1.0;
-}
-.featured10 .parent3 .div101 { /* "новых звезд!" */
-    color: #FFEF2B; font-size: 48px; font-family: 'Blippo Black', sans-serif; font-weight: normal; text-transform: uppercase; line-height: 1.0;
+.email-input::placeholder {
+    color: white;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
 }
 
-.featured10 .featured13 { /* Описание с иконкой */
-    display: flex; align-items: flex-start; gap: 15px;
-}
-.featured10 .icon18 { /* Иконка */
-    width: 30px; height: 30px;
-    background-color: rgba(255,255,255,0.15);
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-}
-.featured10 .campaign img { width: 14px; height: 16px; filter: brightness(0) invert(1); }
-
-.featured10 .div102 { /* Текст описания */
-    color: #E6E8EC; font-size: 15px; font-family: 'Unbounded', sans-serif; font-weight: 300; line-height: 1.6;
-}
-.featured10 .div102 .span4 { font-weight: 500; color: #FFEF2B; }
-
-.featured10 .frame-parent32 { /* Бонус (Чек-лист) */
-    margin-top: 20px; padding: 25px; background: rgba(255,255,255,0.05); border-radius: 10px;
-    display: flex; align-items: center; gap: 25px;
-}
-.featured10 .parent40 { flex-grow: 1; }
-.featured10 .parent40 .div16 { /* "Бонус" */
-    color: #FFEF2B; font-size: 22px; font-family: 'Blippo Black', sans-serif; font-weight: normal; margin-bottom: 8px;
-}
-.featured10 .parent40 .div104 { /* "Получите чек-лист..." */
-    color: white; font-size: 14px; font-family: 'Unbounded', sans-serif; font-weight: 300;
-}
-.featured10 .bonus-image { 
-    width: 100px; height: 100px; border-radius: 8px; object-fit: cover;
+.form-bottom-row {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 113px;
 }
 
-.featured10 .form-container-featured10 { /* Правый блок: Форма подписки */
-    flex: 1;
-    display: flex; flex-direction: column; gap: 20px;
-    max-width: 450px;
-}
-.featured10 .email-input-featured10 {
-    width: 100%; padding: 15px 20px; background: white; border-radius: 8px;
-    border: 1px solid #ccc; font-size: 16px; font-family: 'Unbounded', sans-serif;
-    color: #333; box-sizing: border-box; transition: border-color 0.3s, box-shadow 0.3s;
-}
-.featured10 .email-input-featured10::placeholder { color: #888; }
-.featured10 .email-input-featured10:focus {
-    border-color: #004E9F; box-shadow: 0 0 0 3px rgba(0, 78, 159, 0.2);
+.consent-label {
+    padding: 16px 32px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    cursor: pointer;
 }
 
-.featured10 .wrap1 { display: flex; flex-direction: column; gap: 20px; }
-.featured10 .custom-checkbox-label {
-    display: flex; align-items: center; gap: 12px; cursor: pointer;
+.consent-checkbox-input {
+    display: none;
 }
-.featured10 .custom-checkbox-input { display: none; /* Скрываем стандартный чекбокс */ }
 
-.featured10 .custom-checkbox-visual {
-    width: 22px; height: 22px; border: 2px solid #FFEF2B; border-radius: 4px;
-    display: flex; align-items: center; justify-content: center;
-    background-color: transparent; transition: background-color 0.2s;
+.consent-checkbox-visual {
+    width: 24px;
+    height: 24px;
+    position: relative;
+    background: white;
+    overflow: hidden;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     flex-shrink: 0;
 }
-.featured10 .custom-checkbox-input:checked + .custom-checkbox-visual {
-    background-color: #FFEF2B;
-}
-.featured10 .custom-checkbox-visual .check img {
-    display: none; /* Скрываем галочку по умолчанию */
-    width: 12px; height: 9px; object-fit: contain;
-}
-.featured10 .custom-checkbox-input:checked + .custom-checkbox-visual .check img {
-    display: block; /* Показываем при checked */
+
+.consent-checkbox-visual .check-icon {
+    display: none;
+    width: 11.17px;
+    height: 8.38px;
 }
 
-.featured10 .div98 { /* "Я даю согласие..." */
-    color: #E6E8EC; font-size: 12px; font-family: 'Unbounded', sans-serif; font-weight: 300; line-height: 1.4;
+.consent-checkbox-input:checked ~ .consent-checkbox-visual .check-icon {
+    display: block;
 }
-.featured10 .subscribe-button-featured10 {
-    background: #FFEF2B; border-radius: 8px; padding: 15px 25px;
-    display: flex; align-items: center; justify-content: center; gap: 10px;
-    cursor: pointer; text-decoration: none; border: none;
-    font-size: 16px; font-family: 'Unbounded', sans-serif; font-weight: 600; color: black;
-    transition: background-color 0.3s;
+
+.consent-text {
+    width: 161px;
+    color: white;
+    font-size: 8px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.08px;
 }
-.featured10 .subscribe-button-featured10:hover { background-color: #ffd700; }
-.featured10 .send img { width: 14px; height: 14px; }
+
+.subscribe-btn {
+    height: 40px;
+    padding: 12px 25px;
+    background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 9px;
+    display: flex;
+    border: none;
+    cursor: pointer;
+    font-weight: 400;
+    line-height: 16px;
+    text-decoration: none;
+}
+
+.subscribe-btn span {
+    color: black;
+    font-size: 16px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
+}
+
+.send-icon {
+    width: 14.77px;
+    height: 11.31px;
+}
+
+.subscription-info {
+    left: 62px;
+    top: 73px;
+    position: absolute;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 167px;
+}
+
+.info-main-text {
+    width: 497px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.info-title {
+    align-self: stretch;
+    color: white;
+    font-size: 55px;
+    font-family: 'Blippo Black', sans-serif;
+    font-weight: 400;
+    line-height: 1;
+}
+
+.info-subtitle {
+    align-self: stretch;
+    color: #FFEF2B;
+    font-size: 55px;
+    font-family: 'Blippo Black', sans-serif;
+    font-weight: 400;
+    line-height: 1;
+    text-transform: uppercase;
+}
+
+.info-promo {
+    width: 510px;
+    padding: 24px 32px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 24px;
+    box-sizing: border-box;
+}
+
+.promo-icon-container {
+    width: 32px;
+    height: 32px;
+    background: #FFEF2B;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.promo-icon-container img {
+    width: 17.78px;
+    height: 13.52px;
+}
+
+.promo-text {
+    flex: 1 1 0;
+    color: white;
+    font-size: 12px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.12px;
+    margin: 0;
+}
+
+.promo-text .highlight-red {
+    color: #FB554C;
+}
+
+.subscription-bonus {
+    left: 810px;
+    top: 350px;
+    position: absolute;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-end;
+    gap: 17px;
+}
+
+.bonus-text-content {
+    width: 189px;
+    height: 85px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 25px;
+}
+
+.bonus-title {
+    align-self: stretch;
+    text-align: right;
+    color: #FFEF2B;
+    font-size: 55px;
+    font-family: 'Blippo Black', sans-serif;
+    font-weight: 400;
+    line-height: 1;
+}
+
+.bonus-description {
+    align-self: stretch;
+    text-align: right;
+    color: white;
+    font-size: 12px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.12px;
+}
+
+.bonus-image-placeholder {
+    width: 169px;
+    height: 169px;
+    background: white;
+    border-radius: 10px;
+}
 
 /* --- Секция 12: CTA (Call to Action) --- */
 .cta {
