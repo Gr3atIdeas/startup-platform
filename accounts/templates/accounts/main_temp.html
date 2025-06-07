@@ -655,27 +655,6 @@
             </div>
         </div>
     </div>
-    <div class="cta">
-        <div class="cta-content">
-        <div class="heading4">
-            <div class="parent45">
-                <div class="div16">Готовы</div>
-                <div class="div148">покорить галактику?</div>
-            </div>
-            <div class="text2">
-                    <a href="#" class="btn btn--primary cta-button">
-                        <span>Создать стартап</span>
-                        <img class="icon" alt="Add" src="https://placehold.co/24x24/000000/FFFFFF?text=%2B">
-                    </a>
-                    <a href="#" class="btn btn--secondary-yellow cta-button">
-                        <span>Инвестировать</span>
-                        <img class="icon" alt="Eye" src="https://placehold.co/24x24/FFFFFF/004E9F?text=E">
-                    </a>
-            </div>
-        </div>
-    </div>
-        <img class="clip-path-group cta-image" alt="Galaxy Art" src="https://placehold.co/600x361/1a2a45/FFFFFF?text=CTA+ART">
-    </div>
 </div>
 
 <!-- ЗАМЕНЯЕМ СТАРЫЙ БЛОК FAQ НА НОВЫЙ -->
@@ -845,6 +824,25 @@
     </div>
 </div>
 
+<div class="final-cta-section">
+    <div class="final-cta-content-wrapper">
+        <div class="final-cta-headings">
+            <div class="final-cta-heading-main">Готовы</div>
+            <div class="final-cta-heading-sub">покорить галактику?</div>
+        </div>
+        <div class="final-cta-buttons">
+            <a href="#" class="btn btn-cta-create">
+                <span>Создать стартап</span>
+                <img class="icon" src="{% static 'accounts/images/main_page/add-circle-outline.svg' %}" alt="Создать стартап">
+            </a>
+            <a href="#" class="btn btn-cta-invest">
+                <span>Инвестировать</span>
+                <img class="icon" src="{% static 'accounts/images/main_page/invest_button_icon.svg' %}" alt="Инвестировать">
+            </a>
+        </div>
+    </div>
+</div>
+
 <script type="application/json" id="faqData">
 {
     "what-is-great-ideas": {"title": "Что такое «Great Ideas»?", "answer": "<p>«Great Ideas» — это маркетплейс стартапов, где стартаперы размещают свои проекты, а инвесторы исследуют их в поисках лучших идей для инвестиций или покупки.</p>"},
@@ -884,27 +882,6 @@
 }
 </script>
 
-<div class="cta">
-    <div class="cta-content">
-    <div class="heading4">
-        <div class="parent45">
-            <div class="div16">Готовы</div>
-            <div class="div148">покорить галактику?</div>
-        </div>
-        <div class="text2">
-                <a href="#" class="btn btn--primary cta-button">
-                    <span>Создать стартап</span>
-                    <img class="icon" alt="Add" src="https://placehold.co/24x24/000000/FFFFFF?text=%2B">
-                </a>
-                <a href="#" class="btn btn--secondary-yellow cta-button">
-                    <span>Инвестировать</span>
-                    <img class="icon" alt="Eye" src="https://placehold.co/24x24/FFFFFF/004E9F?text=E">
-                </a>
-        </div>
-    </div>
-</div>
-    <img class="clip-path-group cta-image" alt="Galaxy Art" src="https://placehold.co/600x361/1a2a45/FFFFFF?text=CTA+ART">
-</div>
 </div>
 
 <script src="{% static 'accounts/js/main_temp.js' %}?v={% now 'U' %}"></script>

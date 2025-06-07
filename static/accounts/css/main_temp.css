@@ -2083,92 +2083,101 @@ html::-webkit-scrollbar-button {
     border-radius: 10px;
 }
 
-/* --- Секция 12: CTA (Call to Action) --- */
-.cta {
+/* --- Final CTA Section --- */
+.final-cta-section {
     width: 100%;
-    max-width: 1445px;
-    height: auto; 
-    /* min-height: 380px; */ 
-    margin: 80px auto 50px auto; /* Уже есть auto для горизонтальных отступов */
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 15px;
-    padding: 40px;
+    max-width: 1303px;
+    margin: 80px auto 50px auto;
+    padding: 60px 0;
     box-sizing: border-box;
-    background: transparent !important; 
-    /* margin-left: auto; */ /* Уже есть в сокращенной записи margin */
-    /* margin-right: auto; */ /* Уже есть в сокращенной записи margin */
+    background: linear-gradient(0deg, white 0%, rgba(255, 255, 255, 0.0) 100%);
+    border-radius: 10px;
 }
 
-.cta .div146 { /* Фоновый слой/цвет/градиент */
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    /* background: linear-gradient(45deg, #001C39 0%, #004E9F 100%); */ /* ЗАМЕНЕНО */
-    background: transparent; /* Очень темный фон, как на макете */
-    z-index: 1;
+.final-cta-content-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 71px;
+    box-sizing: border-box;
 }
 
-.cta .clip-path-group { /* Фоновое изображение с clip-path */
-    position: absolute;
-    top: 0; right: 0; /* Или другое позиционирование */
-    width: 600px; height: 361px; /* Из HTML */
-    object-fit: cover;
-    /* clip-path: polygon(...); Если нужен сложный clip-path */
-    z-index: 2;
-    opacity: 0.7; /* Сделать изображение полупрозрачным, чтобы текст был читаемым */
-}
-
-.cta .heading4 { /* Контейнер для текста и кнопок */
-    position: relative;
-    z-index: 3; /* Поверх фона и изображения */
-    text-align: center;
+.final-cta-headings {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 30px;
-    padding: 20px; /* Чтобы контент не прилипал к краям */
+    gap: 15px;
 }
 
-.cta .parent45 { /* Заголовок "Готовы покорить галактику?" */
-    display: flex; flex-direction: column; gap: 5px;
-}
-.cta .parent45 .div16 { /* "Готовы" - используется класс */
-    color: white; font-size: 60px; font-family: 'Blippo Black', sans-serif; font-weight: normal; line-height: 1.0;
-}
-.cta .parent45 .div148 { 
-    color: #FFEF2B; font-size: 60px; font-family: 'Blippo Black', sans-serif; font-weight: normal; text-transform: uppercase; line-height: 1.0;
-}
-
-.cta .text2 { /* Контейнер для двух кнопок */
-    display: flex; gap: 20px; align-items: center;
-}
-.cta .parent46, /* Кнопка "Создать стартап" */
-.cta .parent47 { /* Кнопка "Инвестировать" */
-    padding: 15px 30px;
-    border-radius: 10px;
-    display: flex; align-items: center; gap: 12px;
-    text-decoration: none;
-    font-size: 16px; font-family: 'Unbounded', sans-serif; font-weight: 600;
-    cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-}
-
-.cta .parent46 { /* "Создать стартап" - желтая кнопка */
-    background: #FFEF2B;
+.final-cta-heading-main {
     color: black;
+    font-size: 55px;
+    font-family: 'Blippo Black', sans-serif;
+    font-weight: normal;
+    line-height: 1.1;
 }
-.cta .parent46 .add-circle-outline-icon { width: 24px; height: 24px; }
 
-.cta .parent47 { /* "Инвестировать" - синяя/белая кнопка */
-    background: transparent;
-    color: white;
-    border: 2px solid #FFEF2B;
+.final-cta-heading-sub {
+    color: #004E9F;
+    font-size: 55px;
+    font-family: 'Blippo Black', sans-serif;
+    font-weight: normal;
+    line-height: 1.1;
 }
-.cta .parent47 .iconeye { width: 24px; height: 24px; filter: brightness(0) invert(1); }
+
+.final-cta-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.btn-cta-create, .btn-cta-invest {
+    height: 40px;
+    padding: 12px 25px !important;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 10px !important;
+    display: inline-flex !important;
+    align-items: center;
+    gap: 9px;
+    text-decoration: none !important;
+    border: none !important;
+    box-sizing: border-box;
+}
+
+.btn-cta-create {
+    background: #004E9F !important;
+}
+
+.btn-cta-create span {
+    color: white !important;
+    font-size: 16px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
+    line-height: 16px;
+}
+
+.btn-cta-create .icon {
+    width: 24px;
+    height: 24px;
+    filter: brightness(0) invert(1);
+}
+
+.btn-cta-invest {
+    background: #FFEF2B !important;
+}
+
+.btn-cta-invest span {
+    color: black !important;
+    font-size: 16px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
+    line-height: 16px;
+}
+
+.btn-cta-invest .icon {
+    width: 24px;
+    height: 24px;
+}
 
 /* Адаптивность (пример) */
 @media (max-width: 1350px) {
@@ -2264,7 +2273,7 @@ html::-webkit-scrollbar-button {
     .featured .icon8 {width: 180px; height: auto;}
 
     .featured1, .featured3, .featured4, .featured5, .featured6.galaxy-carousel-wrapper, 
-    .featured7, .featured8.success-stories-carousel-outer, .featured9, .featured10, .featured14, .cta {
+    .featured7, .featured8.success-stories-carousel-outer, .featured9, .featured10, .featured14, .final-cta-section {
         padding-left: 20px;
         padding-right: 20px;
     }
@@ -2289,8 +2298,14 @@ html::-webkit-scrollbar-button {
     .featured8 .success-stories-arrow-left { left: 5px; }
     .featured8 .success-stories-arrow-right { right: 5px; }
 
-    .cta .parent45 .div16, .cta .parent45 .div148 {
+    .final-cta-content-wrapper {
+        flex-direction: column;
+        gap: 30px;
+        text-align: center;
+        padding: 0 20px;
+    }
+
+    .final-cta-heading-main, .final-cta-heading-sub {
         font-size: 40px;
     }
-    .cta .text2 { flex-direction: column; }
 }
