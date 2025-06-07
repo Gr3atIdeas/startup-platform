@@ -119,18 +119,15 @@ html::-webkit-scrollbar-button {
 /* --- Секция 1: Featured (Главный экран) --- */
 .featured {
     width: 100%;
-    max-width: 1445px; 
     height: 798px;
     position: relative;
     overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 20px 71px; 
+    padding: 20px 0; /* Adjusted padding */
     box-sizing: border-box;
     background: transparent !important;
-    margin-left: auto; /* Центрирование */
-    margin-right: auto; /* Центрирование */
 }
 
 .featured .group {
@@ -1067,7 +1064,6 @@ html::-webkit-scrollbar-button {
 /* --- Секция 6: Featured6 (Как работает наша галактика?) --- */
 .featured6.galaxy-carousel-wrapper {
     width: 100%;
-    max-width: 1445px;
     padding: 45px 0;
     box-sizing: border-box;
     overflow: hidden;
@@ -1077,8 +1073,6 @@ html::-webkit-scrollbar-button {
     margin-top: 60px;
     background: transparent !important; 
     border-radius: 10px;
-    margin-left: auto; /* Центрирование */
-    margin-right: auto; /* Центрирование */
 }
 
 .featured6 .frame-parent18 { /* Внутренний контейнер */
