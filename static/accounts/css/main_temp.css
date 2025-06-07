@@ -148,7 +148,7 @@ html::-webkit-scrollbar-button {
     display: flex;
     flex-direction: column; /* Для внутреннего расположения элементов */
     justify-content: center; /* Центрирование по вертикали */
-    padding-left: 0; /* Adjusted padding - было 109px */
+    padding-left: 109px; /* Отступ для текстового контента */
     box-sizing: border-box;
 }
 
@@ -1101,7 +1101,7 @@ html::-webkit-scrollbar-button {
 
 /* JS-управляемая карусель */
 .featured6 .galaxy-carousel {
-    width: 1000px; /* Ширина одного слайда */
+    width: 100%; /* Ширина одного слайда */
     height: 500px; /* Высота по картинке */
     position: relative; 
     overflow: hidden; 
@@ -1136,9 +1136,9 @@ html::-webkit-scrollbar-button {
 }
 
 .featured6 .galaxy-step-card .frame-child12 { 
-    width: 1000px;
+    width: 100%;
     height: 500px;
-    object-fit: cover;
+    object-fit: contain;
     border-radius: 10px;
 }
 .featured6 .galaxy-step-data { display: none; } /* Скрываем данные для JS */
