@@ -1418,7 +1418,7 @@ html::-webkit-scrollbar-button {
     width: 250px;
     height: auto;
     z-index: 0;
-    opacity: 0.25; /* Make it a bit more visible */
+    opacity: 0.5; /* Make it a bit more visible */
 }
 
 .featured8 .success-story-card .avatar-icon {
@@ -1429,6 +1429,7 @@ html::-webkit-scrollbar-button {
     height: 131px;
     border-radius: 50%;
     z-index: 1;
+    clip-path: polygon(0 0, 50% 0, 50% 100%, 0% 100%);
 }
 
 .featured8 .success-story-card .user-name {
@@ -1502,42 +1503,32 @@ html::-webkit-scrollbar-button {
 .featured8 .success-stories-arrow-left,
 .featured8 .success-stories-arrow-right {
     width: 46px; height: 46px;
-    /* background-color: rgba(255, 255, 255, 0.2); */ /* Using SVG background */
     border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
     cursor: pointer;
     transition: transform 0.2s, opacity 0.3s;
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    z-index: 999;
+    z-index: 10;
 }
 
 .featured8 .success-stories-arrow-left { 
-    left: 20px; /* Align with content */
-    transform: translateY(-50%) rotate(180deg);
+    left: 20px; 
 }
 .featured8 .success-stories-arrow-right { 
-    right: 20px; /* Align with content */
+    right: 20px;
 }
 
-.featured8 .success-stories-arrow-left:hover {
-    transform: translateY(-50%) rotate(180deg) scale(1.1);
-}
+.featured8 .success-stories-arrow-left:hover,
 .featured8 .success-stories-arrow-right:hover {
     transform: translateY(-50%) scale(1.1);
 }
 
-.featured8 .success-stories-arrow-left.disabled {
-    opacity: 0.4;
-    pointer-events: none;
-    transform: translateY(-50%) rotate(180deg);
-}
-
+.featured8 .success-stories-arrow-left.disabled,
 .featured8 .success-stories-arrow-right.disabled {
     opacity: 0.4;
     pointer-events: none;
-    transform: translateY(-50%);
+    transform: translateY(-50%) scale(1);
 }
 
 .featured8 .success-stories-arrow-left,

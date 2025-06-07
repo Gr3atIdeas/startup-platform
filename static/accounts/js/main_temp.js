@@ -190,17 +190,32 @@ document.addEventListener('DOMContentLoaded', function () {
             const gap = parseInt(getComputedStyle(successInner).gap) || 25;
             const scrollAmount = cardWidth + gap;
             const totalCards = successCards.length;
-            
-            // Calculate how many cards are visible
             const carouselWidth = successCarousel.offsetWidth;
             const visibleCards = Math.floor(carouselWidth / scrollAmount);
-            
             const maxCardIndex = Math.max(0, totalCards - visibleCards);
             let currentCardIndex = 0;
 
+            const iconGrey = "{% static 'accounts/images/main_page/chevron-forward-circle-outline.svg' %}";
+            const iconYellow = "{% static 'accounts/images/main_page/chevron-forward-circle-outline (1).svg' %}";
+
             function updateSuccessControls() {
-                successArrowLeft.classList.toggle('disabled', currentCardIndex === 0);
-                successArrowRight.classList.toggle('disabled', currentCardIndex >= maxCardIndex);
+                // Left Arrow Logic
+                if (currentCardIndex > 0) {
+                    successArrowLeft.src = iconYellow;
+                    successArrowLeft.classList.remove('disabled');
+                } else {
+                    successArrowLeft.src = iconGrey;
+                    successArrowLeft.classList.add('disabled');
+                }
+
+                // Right Arrow Logic
+                if (currentCardIndex >= maxCardIndex) {
+                    successArrowRight.src = iconGrey;
+                    successArrowRight.classList.add('disabled');
+                } else {
+                    successArrowRight.src = iconYellow;
+                    successArrowRight.classList.remove('disabled');
+                }
             }
 
             successArrowLeft.addEventListener('click', () => {
