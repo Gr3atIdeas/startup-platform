@@ -1071,9 +1071,9 @@ html::-webkit-scrollbar-button {
     padding: 45px 71px;
     box-sizing: border-box;
     overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    /* display: flex; */
+    /* justify-content: center; */
+    /* align-items: center; */
     margin-top: 60px;
     background: transparent !important; 
     border-radius: 10px;
