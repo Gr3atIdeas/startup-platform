@@ -1916,8 +1916,8 @@ html::-webkit-scrollbar-button {
 
 .consent-checkbox-visual .check-icon {
     display: none;
-    width: 11.17px;
-    height: 8.38px;
+    width: 16px;
+    height: 16px;
 }
 
 .consent-checkbox-input:checked ~ .consent-checkbox-visual .check-icon {
@@ -1936,7 +1936,7 @@ html::-webkit-scrollbar-button {
 .subscribe-btn {
     height: 40px;
     padding: 12px 25px;
-    background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
+    background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%) !important;
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
     border-radius: 10px;
     justify-content: flex-start;
