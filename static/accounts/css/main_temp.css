@@ -1086,7 +1086,7 @@ html::-webkit-scrollbar-button {
     display: flex;
     flex-direction: column;
     align-items: center; /* This was forcing the carousel to be centered */
-    gap: 30px;
+    gap: 55px;
 }
 
 .featured6 .parent18 { /* Заголовок */
@@ -1102,7 +1102,7 @@ html::-webkit-scrollbar-button {
 /* JS-управляемая карусель */
 .featured6 .galaxy-carousel {
     width: 100%; /* Ширина одного слайда */
-    height: 500px; /* Высота по картинке */
+    height: 672px; /* Высота по картинке */
     position: relative; 
     overflow: hidden;
     align-self: stretch; /* Override parent's align-items: center */
@@ -1138,16 +1138,16 @@ html::-webkit-scrollbar-button {
 
 .featured6 .galaxy-step-card .frame-child12 { 
     width: 100%;
-    height: 500px;
+    height: 672px;
     object-fit: contain;
-    border-radius: 10px;
+    border-radius: 20px;
 }
 .featured6 .galaxy-step-data { display: none; } /* Скрываем данные для JS */
 
 .featured6 .galaxy-navigation {
     display: flex;
     align-items: center;
-    gap: 25px;
+    gap: 12px;
 }
 
 .featured6 .galaxy-arrow-left,
@@ -1170,25 +1170,30 @@ html::-webkit-scrollbar-button {
 }
 
 .featured6 .galaxy-step-indicator {
-    display: flex; flex-direction: column; align-items: center; gap: 8px;
 }
 .featured6 .galaxy-step-current-title {
     color: white;
-    font-size: 24px;
+    font-size: 20px;
     font-family: 'Unbounded', sans-serif;
-    font-weight: 500;
+    font-weight: 400;
     text-align: center;
+    line-height: 55px;
 }
 .featured6 .galaxy-step-number-button {
-    padding: 8px 20px;
-    background-color: rgba(0, 0, 0, 0.2);
-    border-radius: 20px;
+    width: 205px;
+    height: 62px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #FFEF2B;
+    border-radius: 10px;
 }
 .featured6 .galaxy-step-number-text {
-    color: #FFEF2B;
-    font-size: 16px;
+    color: black;
+    font-size: 20px;
     font-family: 'Unbounded', sans-serif;
-    font-weight: 600;
+    font-weight: 400;
+    text-transform: uppercase;
 }
 
 /* --- Секция 7: Featured7 (Great Ideas это платформа...) --- */
@@ -1639,7 +1644,8 @@ html::-webkit-scrollbar-button {
 .featured9 .news-grid-container {
     display: flex;
     flex-wrap: wrap;
-    gap: 20px;
+    row-gap: 20px;
+    column-gap: 33.5px;
     justify-content: flex-start;
     align-items: center;
 }
@@ -1659,6 +1665,7 @@ html::-webkit-scrollbar-button {
     display: flex;
     flex-direction: column;
     gap: 15px;
+    height: 310px;
 }
 
 .featured9 .news-card-img {
@@ -1721,6 +1728,9 @@ html::-webkit-scrollbar-button {
     font-weight: 400;
     line-height: 1;
     margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .featured9 .news-card-summary {
@@ -1729,14 +1739,19 @@ html::-webkit-scrollbar-button {
     font-family: 'Unbounded', sans-serif;
     font-weight: 300;
     letter-spacing: 0.12px;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .featured9 .news-show-more-wrapper {
     width: 412px;
     height: 310px;
     border-radius: 20px;
-    outline: 1px white solid;
-    outline-offset: -1px;
+    outline: 2px white dashed;
+    outline-offset: -2px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1746,6 +1761,7 @@ html::-webkit-scrollbar-button {
     border: 1px solid white;
     padding: 12px 35px;
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+    line-height: 1;
 }
 
 .featured9 .news-show-more-button-container .btn span {
@@ -1757,9 +1773,8 @@ html::-webkit-scrollbar-button {
 }
 
 .featured9 .news-show-more-button-container .btn .icon {
-    filter: invert(1);
-    width: 16px;
-    height: 16px;
+    width: 24px;
+    height: 24px;
 }
 
 /* --- Секция 10: Featured10 (Подписка) --- */
