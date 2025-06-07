@@ -53,12 +53,16 @@ html {
     background-attachment: scroll;
     width: 100%; 
     margin: 0;
-    padding: 0;
+    padding: 0; /* No padding on the main container */
     box-sizing: border-box;
     overflow-x: hidden; 
     overflow-y: auto; /* Включаем вертикальную прокрутку */
     scrollbar-width: thin; /* Для Firefox */
     scrollbar-color: #FFEF2B transparent; /* Цвета для Firefox: ползунок и прозрачный фон */
+    display: flex;
+    flex-direction: column;
+    /* align-items: center; */ /* Remove centering from here */
+    gap: 40px;
 }
 
 body {
@@ -1371,6 +1375,7 @@ html::-webkit-scrollbar-button {
     flex-direction: column; 
     align-items: center; 
     gap: 5px;
+    margin: 0 auto; /* Center the header manually */
 }
 
 .featured8 .parent21 .faq { 
