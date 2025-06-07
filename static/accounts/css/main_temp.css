@@ -1413,9 +1413,9 @@ html::-webkit-scrollbar-button {
 .featured8 .success-story-card .quote-icon {
     position: absolute;
     top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 250px;
+    right: 20px;
+    transform: translateY(-50%);
+    width: 150px;
     height: auto;
     z-index: 0;
     opacity: 0.5; /* Make it a bit more visible */
@@ -1428,8 +1428,7 @@ html::-webkit-scrollbar-button {
     width: 131px; 
     height: 131px;
     border-radius: 50%;
-    z-index: 1;
-    clip-path: polygon(0 0, 50% 0, 50% 100%, 0% 100%);
+    z-index: 2; /* Ensure avatar is above the quote icon */
 }
 
 .featured8 .success-story-card .user-name {
@@ -1482,7 +1481,7 @@ html::-webkit-scrollbar-button {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    bottom: 40px;
+    bottom: 20px; /* Moved 20px down */
     display: flex;
     gap: 8px; /* Increase gap slightly */
     z-index: 1;

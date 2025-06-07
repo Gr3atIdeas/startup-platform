@@ -177,11 +177,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // --- Success Stories Carousel ---
     const successCarousel = document.querySelector('.success-stories-carousel');
-    const successWrapper = document.querySelector('.success-stories-carousel-outer');
+    const successContainer = document.querySelector('.success-stories-carousel-container-with-arrows');
     const successArrowLeft = document.querySelector('.success-stories-arrow-left');
     const successArrowRight = document.querySelector('.success-stories-arrow-right');
 
-    if (successCarousel && successWrapper && successArrowLeft && successArrowRight) {
+    if (successCarousel && successContainer && successArrowLeft && successArrowRight) {
         const successInner = successCarousel.querySelector('.featured8-carousel-inner');
         const successCards = successInner ? successInner.querySelectorAll('.success-story-card') : [];
 
@@ -195,17 +195,19 @@ document.addEventListener('DOMContentLoaded', function () {
             const maxCardIndex = Math.max(0, totalCards - visibleCards);
             let currentCardIndex = 0;
 
-            const iconGrey = "{% static 'accounts/images/main_page/chevron-forward-circle-outline.svg' %}";
-            const iconYellow = "{% static 'accounts/images/main_page/chevron-forward-circle-outline (1).svg' %}";
+            const iconGrey = successContainer.dataset.iconGrey;
+            const iconYellow = successContainer.dataset.iconYellow;
 
             function updateSuccessControls() {
                 // Left Arrow Logic
                 if (currentCardIndex > 0) {
                     successArrowLeft.src = iconYellow;
                     successArrowLeft.classList.remove('disabled');
+                    successArrowLeft.style.transform = 'translateY(-50%) rotate(180deg)';
                 } else {
                     successArrowLeft.src = iconGrey;
                     successArrowLeft.classList.add('disabled');
+                    successArrowLeft.style.transform = 'translateY(-50%) rotate(180deg)';
                 }
 
                 // Right Arrow Logic
