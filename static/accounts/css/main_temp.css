@@ -1362,7 +1362,7 @@ html::-webkit-scrollbar-button {
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    /* align-items: center; */ /* REMOVED to allow carousel to be full-width */
     gap: 40px;
 }
 
