@@ -195,27 +195,28 @@ document.addEventListener('DOMContentLoaded', function () {
             const maxCardIndex = Math.max(0, totalCards - visibleCards);
             let currentCardIndex = 0;
 
-            const iconGrey = successContainer.dataset.iconGrey;
-            const iconYellow = successContainer.dataset.iconYellow;
+            const iconLeftInactive = successContainer.dataset.iconLeftInactive;
+            const iconRightActive = successContainer.dataset.iconRightActive;
+            // Assuming the active left and inactive right icons follow a naming convention
+            const iconLeftActive = iconLeftInactive.replace('left', 'right'); // Heuristic
+            const iconRightInactive = iconRightActive.replace('right', 'left'); // Heuristic
 
             function updateSuccessControls() {
                 // Left Arrow Logic
                 if (currentCardIndex > 0) {
-                    successArrowLeft.src = iconYellow;
+                    successArrowLeft.src = iconRightActive; // Active left is yellow, like active right
                     successArrowLeft.classList.remove('disabled');
-                    successArrowLeft.style.transform = 'translateY(-50%) rotate(180deg)';
                 } else {
-                    successArrowLeft.src = iconGrey;
+                    successArrowLeft.src = iconLeftInactive; // Inactive left is grey
                     successArrowLeft.classList.add('disabled');
-                    successArrowLeft.style.transform = 'translateY(-50%) rotate(180deg)';
                 }
 
                 // Right Arrow Logic
                 if (currentCardIndex >= maxCardIndex) {
-                    successArrowRight.src = iconGrey;
+                    successArrowRight.src = iconLeftInactive; // Inactive right is grey, like inactive left
                     successArrowRight.classList.add('disabled');
                 } else {
-                    successArrowRight.src = iconYellow;
+                    successArrowRight.src = iconRightActive; // Active right is yellow
                     successArrowRight.classList.remove('disabled');
                 }
             }
@@ -252,10 +253,10 @@ document.addEventListener('DOMContentLoaded', function () {
             });
 
         } else {
-            // console.warn('Карточки в карусели "Истории успеха" не найдены.');
+            console.warn('Карточки в карусели "Истории успеха" не найдены.');
         }
     } else {
-        // console.warn('Элементы карусели "Истории успеха" не найдены.');
+        console.warn('Элементы карусели "Истории успеха" не найдены.');
     }
 
     // Блок скрипта для sticky эффекта был здесь и теперь удален.
