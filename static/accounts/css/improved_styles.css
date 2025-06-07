@@ -112,6 +112,30 @@ a:hover, button:hover {
   color: var(--text-dark);
 }
 
+/* Синяя кнопка */
+.btn--blue {
+  background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%);
+  color: var(--text-light);
+  border: none;
+}
+
+.btn--blue:hover {
+  background: linear-gradient(0deg, #004186 0%, #005bb5 100%);
+  color: var(--text-light);
+}
+
+/* Второстепенная кнопка с желтой рамкой */
+.btn--secondary-yellow {
+  background-color: transparent;
+  color: var(--text-light);
+  border: 1px solid var(--yellow-accent);
+}
+
+.btn--secondary-yellow:hover {
+  background-color: var(--yellow-accent);
+  color: var(--text-dark);
+}
+
 /* Кнопка с иконкой */
 .btn .icon {
   width: 20px;

@@ -6,6 +6,7 @@
 {% block head_extra %}
     <link rel="stylesheet" type="text/css" href="{% static 'accounts/css/main_temp.css' %}">
     <link rel="stylesheet" href="{% static 'accounts/css/faq.css' %}">
+    <link rel="stylesheet" href="{% static 'accounts/css/improved_styles.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -22,14 +23,14 @@
             </div>
             <div class="div6">Создавай </div>
             <div class="div7">будущее</div>
-            <div class="button1">
-                <div class="cosmochat">Зарегистрировать стартап</div>
-                <img class="iconsarrow-right-2line" alt="Placeholder" src="https://placehold.co/16x16">
-            </div>
-            <div class="button2">
-                <div class="cosmochat">Найти стартап</div>
-                <img class="iconsarrow-right-2line" alt="Placeholder" src="https://placehold.co/16x16">
-            </div>
+            <a href="#" class="btn btn--secondary">
+                <span>Зарегистрировать стартап</span>
+                <img class="icon" src="https://placehold.co/16x16" alt="Arrow">
+            </a>
+            <a href="#" class="btn btn--primary">
+                <span>Найти стартап</span>
+                <img class="icon" src="https://placehold.co/16x16" alt="Arrow">
+            </a>
             <div class="frame-child"></div>
             <div class="frame-item"></div>
             <div class="frame-inner"></div>
@@ -120,9 +121,9 @@
                                 <div class="div20">Продать идею или масштабировать бизнес</div>
                             </div>
                         </div>
-                        <a href="{% url 'login' %}?next={% url 'create_startup' %}" class="parent5" style="text-decoration: none;">
-                            <div class="div22">Создать стартап</div>
-                            <img class="add-circle-outline-icon" alt="Add" src="https://placehold.co/24x24/000000/FFFFFF?text=%2B">
+                        <a href="{% url 'login' %}?next={% url 'create_startup' %}" class="btn btn--primary" style="text-decoration: none;">
+                            <span>Создать стартап</span>
+                            <img class="icon" src="https://placehold.co/24x24/000000/FFFFFF?text=%2B" alt="Add">
                         </a>
                     </div>
                 </div>
@@ -163,10 +164,10 @@
                             </div>
                         </div>
                     </div>
-                    <div class="parent7">
-                        <div class="div22">Посмотреть стартапы</div>
-                        <img class="iconeye" alt="Eye" src="https://placehold.co/24x24/000000/FFFFFF?text=E">
-                    </div>
+                    <a href="#" class="btn btn--primary">
+                        <span>Посмотреть стартапы</span>
+                        <img class="icon" alt="Eye" src="https://placehold.co/24x24/000000/FFFFFF?text=E">
+                    </a>
                 </div>
                 <img class="icon10" alt="Инвесторы находят звезду" src="{% static 'accounts/images/main_page/4th_block_main_background.png' %}">
             </div>
@@ -185,10 +186,10 @@
                         <img class="group-child-main-img-1" alt="Sidebar startups" src="{% static 'accounts/images/main_page/siddebar_startups_preview.png' %}">
                         <img class="group-child-main-img-2" alt="Startups preview" src="{% static 'accounts/images/main_page/startups_preview.png' %}">
                     </div>
-                    <div class="parent9">
-                        <div class="div22">Все стартапы</div>
-                        <img class="iconsarrow-right-2line" alt="Arrow" src="https://placehold.co/16x16/000000/FFFFFF?text=%3E">
-                    </div>
+                    <a href="#" class="btn btn--primary">
+                        <span>Все стартапы</span>
+                        <img class="icon" alt="Arrow" src="https://placehold.co/16x16/000000/FFFFFF?text=%3E">
+                    </a>
                 </div>
                 <div class="divider"></div>
                 <div class="frame-parent9">
@@ -206,9 +207,9 @@
                                     </div>
                                 </div>
                                 <div class="voltforge-description">VoltForge разрабатывает твердотельные батареи с графеновыми наноструктурами, которые заряжаются...</div>
-                                <div class="button5">
-                                    <div class="cosmochat">Подробнее</div>
-                                </div>
+                                <a href="#" class="btn btn--blue">
+                                    <span>Подробнее</span>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -226,9 +227,9 @@
                                     </div>
                                 </div>
                                 <div class="voltforge-description">NeuroBloom предлагает носимый гаджет с ИИ, который анализирует нейронные паттерны...</div>
-                                <div class="button5">
-                                    <div class="cosmochat">Подробнее</div>
-                                </div>
+                                <a href="#" class="btn btn--blue">
+                                    <span>Подробнее</span>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -236,20 +237,18 @@
                         <div class="frame-parent10">
                             <img class="frame-child9" alt="BioCrop Nexus" src="{% static 'accounts/images/main_page/biocrop_nexus.png' %}">
                             <div class="content">
-                                <div class="voltforge-dynamics-parent">
-                                    <div class="voltforge-dynamics">BioCrop Nexus</div>
-                                    <div class="info">
-                                        <img class="avatar01-icon" alt="Avatar" src="https://placehold.co/24x24/9757D7/FFF">
-                                        <div class="label2">
-                                            <div class="popular">4,2/5</div>
-                                        </div>
+                                <div class.="voltforge-dynamics">BioCrop Nexus</div>
+                                <div class="info">
+                                    <img class="avatar01-icon" alt="Avatar" src="https://placehold.co/24x24/9757D7/FFF">
+                                    <div class="label2">
+                                        <div class="popular">4,2/5</div>
                                     </div>
                                 </div>
-                                <div class="voltforge-description">BioCrop Nexus создает генетически оптимизированные семена, устойчивые к климату...</div>
-                                <div class="button5">
-                                    <div class="cosmochat">Подробнее</div>
-                                </div>
                             </div>
+                            <div class="voltforge-description">BioCrop Nexus создает генетически оптимизированные семена, устойчивые к климату...</div>
+                            <a href="#" class="btn btn--blue">
+                                <span>Подробнее</span>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -298,10 +297,10 @@
                                 </div>
                             <div class="divider1"></div>
                         </div>
-                        <div class="button8">
-                            <div class="cosmochat">Все стартапы</div>
-                            <img class="iconsarrow-right-2line" alt="Arrow" src="https://placehold.co/16x16/FFFFFF/000000?text=%3E">
-                        </div>
+                        <a href="#" class="btn btn--secondary">
+                            <span>Все стартапы</span>
+                            <img class="icon" alt="Arrow" src="https://placehold.co/16x16/FFFFFF/000000?text=%3E">
+                        </a>
                     </div>
                 </div>
             </div>
@@ -378,7 +377,7 @@
                 <div class="div62">в нашей галактике</div>
             </div>
             <div class="success-stories-carousel-container-with-arrows">
-                <img class="success-stories-arrow-left" alt="Prev" src="{% static 'accounts/images/main_page/chevron-forward-circle-outline (1).svg' %}">
+                <img class="success-stories-arrow-left" alt="Prev" src="{% static 'accounts/images/main_page/chevron-forward-circle-outline.svg' %}">
                 <div class="success-stories-carousel">
                     <div class="featured8-carousel-inner">
                         <div class="parent22 success-story-card">
@@ -480,7 +479,7 @@
                         </div>
                     </div>
                 </div>
-                <img class="success-stories-arrow-right" alt="Next" src="{% static 'accounts/images/main_page/chevron-forward-circle-outline.svg' %}">
+                <img class="success-stories-arrow-right" alt="Next" src="{% static 'accounts/images/main_page/chevron-forward-circle-outline (1).svg' %}">
             </div>
         </div>
     </div>
@@ -496,9 +495,9 @@
                     <img class="frame-child26" alt="Placeholder" src="https://placehold.co/500x300/16a085/FFFFFF?text=Main+News">
                     <div class="parent27">
                         <div class="div77">Лучшие ракеты или турбо режим на лайте</div>
-                        <div class="button9">
-                            <div class="div22">Подробнее</div>
-                        </div>
+                        <a href="#" class="btn btn--primary">
+                            <span>Подробнее</span>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -559,12 +558,10 @@
                 </div>
                 <div class="instance-wrapper3">
                     <div class="instance-wrapper4">
-                        <div class="button-parent">
-                            <div class="div22">Показать еще</div>
-                            <div class="iconsarrow-right-2line">
-                                <img class="vector-icon20" alt="Arrow Down" src="https://placehold.co/11x6/000000/FFFFFF?text=v">
-                            </div>
-                        </div>
+                        <a href="#" class="btn btn--primary">
+                            <span>Показать еще</span>
+                            <img class="icon" alt="Arrow Down" src="https://placehold.co/11x6/000000/FFFFFF?text=v">
+                        </a>
                     </div>
                 </div>
             </div>
@@ -612,11 +609,9 @@
                             </span>
                             <span class="div98">Я даю согласие на обработку персональных данных</span>
                         </label>
-                        <button type="submit" class="parent38 subscribe-button-featured10">
-                            <span class="div22">Подписаться</span>
-                            <span class="send">
-                                <img class="vector-icon22" alt="Send" src="https://placehold.co/14x14/000000/FFFFFF?text=%3E">
-                            </span>
+                        <button type="submit" class="btn btn--primary">
+                            <span>Подписаться</span>
+                            <img class="icon" alt="Send" src="https://placehold.co/14x14/000000/FFFFFF?text=%3E">
                         </button>
                     </div>
                             </div>
@@ -631,14 +626,14 @@
                 <div class="div148">покорить галактику?</div>
             </div>
             <div class="text2">
-                    <div class="parent46 cta-button">
-                    <div class="div22">Создать стартап</div>
-                        <img class="add-circle-outline-icon" alt="Add" src="https://placehold.co/24x24/000000/FFFFFF?text=%2B">
-                </div>
-                    <div class="parent47 cta-button">
-                    <div class="div22">Инвестировать</div>
-                        <img class="iconeye" alt="Eye" src="https://placehold.co/24x24/FFFFFF/004E9F?text=E">
-                </div>
+                    <a href="#" class="btn btn--primary cta-button">
+                        <span>Создать стартап</span>
+                        <img class="icon" alt="Add" src="https://placehold.co/24x24/000000/FFFFFF?text=%2B">
+                    </a>
+                    <a href="#" class="btn btn--secondary-yellow cta-button">
+                        <span>Инвестировать</span>
+                        <img class="icon" alt="Eye" src="https://placehold.co/24x24/FFFFFF/004E9F?text=E">
+                    </a>
             </div>
         </div>
     </div>
@@ -860,15 +855,14 @@
             <div class="div148">покорить галактику?</div>
         </div>
         <div class="text2">
-                <div class="parent46 cta-button">
-                <div class="div22">Создать стартап</div>
-                    <img class="add-circle-outline-icon" alt="Add" src="https://placehold.co/24x24/000000/FFFFFF?text=%2B">
-                </div>
-                    <div class="parent47 cta-button">
-                    <div class="div22">Инвестировать</div>
-                        <img class="iconeye" alt="Eye" src="https://placehold.co/24x24/FFFFFF/004E9F?text=E">
-                </div>
-            </div>
+                <a href="#" class="btn btn--primary cta-button">
+                    <span>Создать стартап</span>
+                    <img class="icon" alt="Add" src="https://placehold.co/24x24/000000/FFFFFF?text=%2B">
+                </a>
+                <a href="#" class="btn btn--secondary-yellow cta-button">
+                    <span>Инвестировать</span>
+                    <img class="icon" alt="Eye" src="https://placehold.co/24x24/FFFFFF/004E9F?text=E">
+                </a>
         </div>
     </div>
 </div>
