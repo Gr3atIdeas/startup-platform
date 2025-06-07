@@ -1371,20 +1371,20 @@ html::-webkit-scrollbar-button {
 /* --- Секция 8: Featured8 (Истории успеха) --- */
 .featured8.success-stories-carousel-outer {
     width: 100%;
-    max-width: 1445px;
+    /* max-width: 1445px; */ /* Let it be full width */
     padding: 45px 0; 
     box-sizing: border-box;
-    overflow: hidden; 
+    /* overflow: hidden; */ /* We need overflow for carousel */
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
     margin-top: 60px;
     background: transparent !important;
-    position: relative; 
-    margin-left: auto; /* Центрирование */
-    margin-right: auto; /* Центрирование */
+    position: relative;
 }
 
-.featured8 .frame-parent18 { /* Внутренний контейнер для заголовка и карусели */
+.featured8 .frame-parent18 {
     width: 100%;
     max-width: 1303px; /* Ограничение как у других блоков */
     padding: 0 71px; /* Восстанавливаем боковые отступы здесь */
@@ -1392,7 +1392,6 @@ html::-webkit-scrollbar-button {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 40px;
 }
 
 .featured8 .parent21 { /* Заголовок */
@@ -1405,74 +1404,121 @@ html::-webkit-scrollbar-button {
     color: #FFEF2B; font-size: 55px; font-family: 'Blippo Black', sans-serif; font-weight: normal; text-transform: uppercase; line-height: 1.0;
 }
 
-/* Контейнер для карусели и стрелок по бокам */
 .featured8 .success-stories-carousel-container-with-arrows {
     width: 100%;
-    position: relative; /* Для абсолютного позиционирования стрелок */
+    position: relative;
     display: flex;
     align-items: center;
 }
 
 .featured8 .success-stories-carousel {
-    display: flex; /* Контейнер для .featured8-carousel-inner */
+    display: flex;
     overflow: hidden;
-    width: 100%; /* Ширина для отображения 3 карточек */
-    margin: 0 auto;
-    padding: 10px 0; /* Небольшой отступ для тени карточек */
+    margin-left: 71px;
+    width: calc(100% - 71px);
+    padding: 20px 0;
 }
 
-.featured8-carousel-inner {
+.featured8 .featured8-carousel-inner {
     display: flex;
-    gap: 25px; /* Отступ между карточками */
+    gap: 25px;
     transition: transform 0.5s ease-in-out;
 }
 
 .featured8 .success-story-card {
-    min-width: calc((100% - 50px) / 3); /* Расчет ширины для 3 карточек с учетом gap */
-    flex: 0 0 auto; /* Чтобы карточки не сжимались и не растягивались */
+    min-width: 394px;
+    width: 394px;
+    height: 468px;
+    flex: 0 0 auto;
     background: white;
-    border-radius: 15px;
-    padding: 30px 25px;
+    border-radius: 20px;
+    padding: 40px 45px;
     box-sizing: border-box;
     box-shadow: 0px 8px 25px rgba(0,0,0,0.1);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 15px;
+    position: relative;
 }
 
-.featured8 .success-story-card .icon13 { /* Кавычки */
-    width: 30px; height: 24px; opacity: 0.4;
+.featured8 .success-story-card .quote-icon {
+    position: absolute;
+    top: 176px;
+    left: 199px;
+    width: 150px;
+    height: 116px;
+    z-index: 0;
+    opacity: 0.2;
 }
-.featured8 .avatar-placeholder {
-    width: 70px; height: 70px;
+
+.featured8 .success-story-card .avatar-icon {
+    position: absolute;
+    top: 41px;
+    left: 45px;
+    width: 131px; 
+    height: 131px;
     border-radius: 50%;
-    background-size: cover;
-    background-position: center;
-    margin-bottom: 5px;
-}
-.featured8 .success-story-card .div63 { /* Имя */
-    color: #004E9F; font-size: 20px; font-family: 'Unbounded', sans-serif; font-weight: 600;
-}
-.featured8 .wrapper3 .div22 { /* Роль */
-    color: #333; font-size: 13px; font-family: 'Unbounded', sans-serif; font-weight: 400;
-    background-color: #f0f0f0; padding: 5px 12px; border-radius: 15px;
-    text-transform: uppercase; letter-spacing: 0.5px;
-}
-.featured8 .success-story-card .div65 { /* Текст отзыва */
-    color: #555; font-size: 14px; font-family: 'Unbounded', sans-serif; font-weight: 300; line-height: 1.6;
-    flex-grow: 1; /* Растянуть для одинаковой высоты */
-    margin-bottom: 10px;
-}
-.featured8 .rating-stars-testimonial {
-    color: #FFC107; /* Цвет звезд */
-    font-size: 18px;
+    z-index: 1;
 }
 
-.featured8 .success-stories-controls {
-    /* Эти стрелки теперь внутри .frame-parent18 и позиционируются по бокам .success-stories-carousel */
-    /* Позиционирование будет настроено в JS или через flex */
+.featured8 .success-story-card .user-name {
+    position: absolute;
+    left: 215px; 
+    top: 69px;
+    color: black;
+    font-size: 20px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
+    line-height: 1;
+    z-index: 1;
+}
+
+.featured8 .user-role-container {
+    position: absolute;
+    left: 215px; 
+    top: 106px;
+    padding: 10px 25px;
+    background: rgba(0, 78, 159, 0.26);
+    border-radius: 10px;
+    z-index: 1;
+}
+
+.featured8 .user-role {
+    color: black;
+    font-size: 14px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
+    line-height: 1;
+}
+
+.featured8 .review-text {
+    position: absolute;
+    width: 304px;
+    left: 45px; 
+    top: 244px;
+    color: black;
+    font-size: 12px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.12px;
+    line-height: 1.5;
+    text-align: left;
+    z-index: 1;
+}
+
+.featured8 .rating-container {
+    position: absolute;
+    left: 45px; 
+    bottom: 40px;
+    display: flex;
+    gap: 5px;
+    z-index: 1;
+}
+
+.featured8 .rating-container img {
+    width: 32px;
+    height: 32px;
+}
+
+.featured8 .rating-container img.half-star {
+    clip-path: polygon(0 0, 50% 0, 50% 100%, 0% 100%);
 }
 
 .featured8 .success-stories-arrow-left,
@@ -1483,13 +1529,19 @@ html::-webkit-scrollbar-button {
     display: flex; align-items: center; justify-content: center;
     cursor: pointer;
     transition: background-color 0.3s, opacity 0.3s;
-    position: absolute; /* Позиционируем относительно .success-stories-carousel-outer */
+    position: absolute;
     top: 50%;
     transform: translateY(-50%);
     z-index: 10;
 }
-.featured8 .success-stories-arrow-left { left: 20px; /* Отступ от края */ }
-.featured8 .success-stories-arrow-right { right: 20px; /* Отступ от края */ }
+
+.featured8 .success-stories-arrow-left { left: 20px; }
+.featured8 .success-stories-arrow-right { right: 20px; }
+
+.featured8 .success-stories-arrow-left:hover,
+.featured8 .success-stories-arrow-right:hover {
+    background-color: rgba(255, 255, 255, 0.4);
+}
 
 .featured8 .success-stories-arrow-left.disabled,
 .featured8 .success-stories-arrow-right.disabled {
@@ -1502,7 +1554,6 @@ html::-webkit-scrollbar-button {
     width: 18px; height: 18px; object-fit: contain;
     filter: brightness(0) invert(1);
 }
-
 
 /* --- Секция 9: Featured9 (Новости) --- */
 .featured9 {
