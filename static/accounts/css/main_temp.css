@@ -1085,7 +1085,7 @@ html::-webkit-scrollbar-button {
     width: 100%;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    /* align-items: center; */ /* This was forcing the carousel to be centered */
     gap: 30px;
 }
 
