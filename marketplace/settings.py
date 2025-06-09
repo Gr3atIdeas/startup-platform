@@ -140,12 +140,20 @@ DEFAULT_CHARSET = 'utf-8'
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
+    BASE_DIR / "static",
     BASE_DIR / "static/dist", # Vite будет собирать файлы сюда
 ]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # Vite App Dir
 VITE_APP_DIR = BASE_DIR / "static/src"
+
+# Django Vite
+DJANGO_VITE = {
+    "default": {
+        "manifest_path": BASE_DIR / "static/dist/.vite/manifest.json",
+    }
+}
 
 # Media files
 MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.storage.yandexcloud.net/'
