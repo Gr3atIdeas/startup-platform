@@ -27,6 +27,7 @@ echo "--- BUILDING FRONTEND ---"
 npm run build
 
 echo "--- COLLECTING STATIC FILES ---"
-python manage.py collectstatic --noinput
+# Используем Python из виртуального окружения проекта напрямую
+/opt/render/project/src/.venv/bin/python manage.py collectstatic --noinput
 
 echo "--- BUILD SCRIPT FINISHED SUCCESSFULLY ---" 
