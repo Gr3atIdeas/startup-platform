@@ -1,4 +1,4 @@
 import { createApp } from 'vue'
-import App from '../components/App.vue'
+import ModeratorMainPage from '../components/ModeratorMainPage.vue'
 
-createApp(App).mount('#app') 
+createApp(ModeratorMainPage).mount('#app') 
