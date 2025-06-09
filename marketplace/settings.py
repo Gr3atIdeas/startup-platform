@@ -152,6 +152,7 @@ VITE_APP_DIR = BASE_DIR / "static/src"
 DJANGO_VITE = {
     "default": {
         "manifest_path": BASE_DIR / "static/dist/.vite/manifest.json",
+        "static_url_prefix": "dist",
     }
 }
 
