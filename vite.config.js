@@ -5,17 +5,14 @@ import vue from '@vitejs/plugin-vue'
 export default defineConfig({
   plugins: [vue()],
   root: './static/src', // Указываем корень, где лежат исходники фронтенда
+  base: '/static/', // Указываем базовый URL для собранных ассетов
   build: {
-    outDir: '../dist', // Куда Vite будет собирать билд
+    outDir: '../dist', // Собираем в static/dist
     manifest: true,
     rollupOptions: {
       input: {
-        main: './static/src/js/main.js', // Основной входной файл
+        main: 'js/main.js', // Точка входа относительно root
       },
     },
-  },
-  server: {
-    port: 3000, // Порт для dev-сервера
-    open: false,
   },
 }) 

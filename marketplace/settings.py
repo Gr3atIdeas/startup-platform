@@ -68,6 +68,7 @@ INSTALLED_APPS = [
     'storages',  # Убедись, что 'storages' добавлен
     'widget_tweaks',  # Добавляем widget_tweaks
     'django.contrib.humanize',  # Добавляем humanize
+    'vite', # Добавляем django-vite
 ]
 
 MIDDLEWARE = [
@@ -138,8 +139,13 @@ DEFAULT_CHARSET = 'utf-8'
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / "static"]
+STATICFILES_DIRS = [
+    BASE_DIR / "static/dist", # Vite будет собирать файлы сюда
+]
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
+# Vite App Dir
+VITE_APP_DIR = BASE_DIR / "static/src"
 
 # Media files
 MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.storage.yandexcloud.net/'
