@@ -26,8 +26,10 @@ npm install
 echo "--- BUILDING FRONTEND ---"
 npm run build
 
-echo "--- COLLECTING STATIC FILES ---"
-# Используем Python из виртуального окружения проекта напрямую
-/opt/render/project/src/.venv/bin/python manage.py collectstatic --noinput
+echo "--- Activating virtual environment ---"
+source /opt/render/project/src/.venv/bin/activate
+
+echo "--- Collecting static files (with activated venv) ---"
+python manage.py collectstatic --noinput
 
 echo "--- BUILD SCRIPT FINISHED SUCCESSFULLY ---" 
