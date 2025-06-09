@@ -68,7 +68,7 @@ INSTALLED_APPS = [
     'storages',  # Убедись, что 'storages' добавлен
     'widget_tweaks',  # Добавляем widget_tweaks
     'django.contrib.humanize',  # Добавляем humanize
-    'vite', # Добавляем django-vite
+    'django_vite', # Правильное имя приложения
 ]
 
 MIDDLEWARE = [
