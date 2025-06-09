@@ -15,10 +15,10 @@ export default defineConfig({
     // Манифест для интеграции с Django.
     manifest: true,
     rollupOptions: {
-      // Указываем полный путь к входному файлу, относительно корня проекта.
-      input: {
-        main: './static/src/js/main.js',
-      },
+      // Указываем входной файл в виде массива, чтобы ключ в манифесте совпадал с путем.
+      input: [
+        './static/src/js/main.js'
+      ],
     },
   },
 }) 
