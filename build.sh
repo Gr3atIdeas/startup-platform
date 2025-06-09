@@ -2,34 +2,20 @@
 # exit on error
 set -o errexit
 
-echo "--- STARTING BUILD SCRIPT ---"
-echo "Current directory: $(pwd)"
-echo "Listing files: $(ls -la)"
-
-echo "--- CHECKING PYTHON ENVIRONMENT ---"
-which python
-python --version
-which pip
-pip --version
-
-echo "--- INSTALLING PYTHON DEPENDENCIES ---"
+echo "--- Installing Python dependencies ---"
 pip install -r requirements.txt
 
-echo "--- VERIFYING PYTHON DEPENDENCIES ---"
-echo "--- INSTALLED PACKAGES START ---"
-pip freeze
-echo "--- INSTALLED PACKAGES END ---"
-
-echo "--- INSTALLING JS DEPENDENCIES ---"
+echo "--- Installing JS dependencies ---"
 npm install
 
-echo "--- BUILDING FRONTEND ---"
+echo "--- Building frontend ---"
 npm run build
 
-echo "--- Activating virtual environment ---"
-source /opt/render/project/src/.venv/bin/activate
+echo "--- PRE-FLIGHT CHECK ---"
+# Эта команда заставит Python показать нам, где он ищет модули.
+/opt/render/project/src/.venv/bin/python -c "import sys, os; print('--- Python sys.path:'); print(sys.path); print('--- site-packages content:'); os.system('ls -lA /opt/render/project/src/.venv/lib/python3.10/site-packages/')"
 
-echo "--- Collecting static files (with activated venv) ---"
-python manage.py collectstatic --noinput
+echo "--- Collecting static files ---"
+/opt/render/project/src/.venv/bin/python manage.py collectstatic --noinput
 
 echo "--- BUILD SCRIPT FINISHED SUCCESSFULLY ---" 
