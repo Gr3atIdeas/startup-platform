@@ -80,6 +80,7 @@
                     <a href="{% url 'news' %}" class="header-nav-link">Новости</a>
                     <a href="{% url 'cosmochat' %}" class="header-nav-link cosmochat-link">CosmoChat</a>
                 {% elif user.role.role_name == 'moderator' %}
+                    <a href="{% url 'main_page_moderator' %}" class="header-nav-link">Главная</a>
                     <div class="catalog-dropdown-container">
                         <button class="header-nav-link catalog-dropdown-button">Каталог</button>
                         <div class="catalog-dropdown-menu">
@@ -198,6 +199,7 @@
                         <a href="{% url 'faq' %}" class="footer-menu-link">FAQ</a>
                         <a href="{% url 'support' %}" class="footer-menu-link">Поддержка</a>
                         <a href="{% url 'contacts' %}" class="footer-menu-link">Контакты</a> {# Предполагая, что есть URL 'contacts' #}
+                        <a href="{% url 'legal' %}" class="footer-menu-link">Правовая информация</a>
                     </div>
                 </div>
             </div>
@@ -296,5 +298,6 @@
   {% block script_extra %}
     {# Сюда будут добавляться скрипты из дочерних шаблонов #}
   {% endblock %}
+  {% block scripts %}{% endblock %}
 </body>
 </html>

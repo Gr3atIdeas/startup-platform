@@ -1115,9 +1115,17 @@ def edit_startup(request, startup_id):
         form = StartupForm(instance=startup)
     return render(request, 'accounts/edit_startup.html', {'form': form, 'startup': startup, 'timeline_steps': timeline_steps})
 
+@login_required
+def main_page_moderator(request):
+    if not request.user.role or request.user.role.role_name != 'moderator':
+        messages.error(request, "У вас нет прав для доступа к этой странице.")
+        return redirect('home')
+    return render(request, 'accounts/main_page_moderator.html')
+
 # Панель модератора
 def moderator_dashboard(request):
-    if not request.user.is_authenticated or request.user.role.role_name != 'moderator':
+    # Проверяем, что пользователь - модератор
+    if not request.user.is_authenticated or not hasattr(request.user, 'role') or request.user.role.role_name != 'moderator':
         messages.error(request, 'У вас нет прав для этого действия.')
         return redirect('home')
 

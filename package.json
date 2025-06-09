@@ -1,0 +1,29 @@
+{
+  "name": "startup-platform-main",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Monisarek/startup-platform.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Monisarek/startup-platform/issues"
+  },
+  "homepage": "https://github.com/Monisarek/startup-platform#readme",
+  "description": "",
+  "dependencies": {
+    "@vitejs/plugin-vue": "^5.0.5",
+    "sass": "^1.77.4",
+    "vue": "^3.4.29"
+  },
+  "devDependencies": {
+    "vite": "^5.2.13"
+  }
+}
