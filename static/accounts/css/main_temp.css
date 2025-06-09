@@ -65,6 +65,20 @@ html {
     gap: 40px;
 }
 
+.btn--yellow-gradient, .btn--yellow-gradient:visited {
+    background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%) !important;
+    border: none !important;
+    color: #000000 !important;
+}
+
+.btn--yellow-gradient span {
+    color: #000000 !important;
+}
+
+.btn--yellow-gradient .icon {
+    filter: brightness(0) invert(0);
+}
+
 .btn--blue, .btn--blue:visited {
     background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%) !important;
     border: none !important;
@@ -1134,7 +1148,7 @@ html::-webkit-scrollbar-button {
     display: flex; /* Для выравнивания картинки внутри */
     flex-direction: column;
     align-items: center;
-    justify-content: center; /* Центрируем картинку, если она меньше */
+    justify-content: flex-start; /* Выравниваем по верху, чтобы обрезалась нижняя часть */
     gap: 20px; 
     box-sizing: border-box;
     opacity: 0;
@@ -1152,8 +1166,10 @@ html::-webkit-scrollbar-button {
 
 .featured6 .galaxy-step-card .frame-child12 { 
     width: 100%;
-    height: 504px;
+    height: auto; /* Автоматическая высота для сохранения пропорций */
+    min-height: 504px; /* Минимальная высота равна высоте контейнера */
     object-fit: cover;
+    object-position: top center; /* Фокусируемся на верхней части изображения */
 }
 .featured6 .galaxy-step-data { display: none; } /* Скрываем данные для JS */
 
@@ -2286,7 +2302,7 @@ html::-webkit-scrollbar-button {
 
     .final-cta-image {
         margin-top: 40px;
-    }
+    } 
 }
 
 @media (max-width: 768px) {
