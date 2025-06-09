@@ -595,6 +595,7 @@ html::-webkit-scrollbar-button {
     display: flex;
     flex-direction: column;
     gap: 17px;
+    margin: 40px 0;
 }
 .featured3 .chevron-forward-circle-outline-parent,
 .featured3 .frame-parent2 {

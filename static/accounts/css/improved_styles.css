@@ -112,6 +112,10 @@ a:hover, button:hover {
   color: var(--text-dark);
 }
 
+.btn--secondary .icon {
+  filter: brightness(0) invert(1);
+}
+
 /* Синяя кнопка */
 .btn--blue {
   background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%);
