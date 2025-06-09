@@ -2,16 +2,31 @@
 # exit on error
 set -o errexit
 
-echo "--- Installing Python dependencies ---"
+echo "--- STARTING BUILD SCRIPT ---"
+echo "Current directory: $(pwd)"
+echo "Listing files: $(ls -la)"
+
+echo "--- CHECKING PYTHON ENVIRONMENT ---"
+which python
+python --version
+which pip
+pip --version
+
+echo "--- INSTALLING PYTHON DEPENDENCIES ---"
 pip install -r requirements.txt
 
-echo "--- Installing JS dependencies ---"
+echo "--- VERIFYING PYTHON DEPENDENCIES ---"
+echo "--- INSTALLED PACKAGES START ---"
+pip freeze
+echo "--- INSTALLED PACKAGES END ---"
+
+echo "--- INSTALLING JS DEPENDENCIES ---"
 npm install
 
-echo "--- Building frontend ---"
+echo "--- BUILDING FRONTEND ---"
 npm run build
 
-echo "--- Collecting static files ---"
+echo "--- COLLECTING STATIC FILES ---"
 python manage.py collectstatic --noinput
 
-echo "--- Build successful ---" 
+echo "--- BUILD SCRIPT FINISHED SUCCESSFULLY ---" 
