@@ -11,11 +11,8 @@ npm install
 echo "--- Building frontend ---"
 npm run build
 
-echo "--- PRE-FLIGHT CHECK ---"
-# Эта команда заставит Python показать нам, где он ищет модули.
-/opt/render/project/src/.venv/bin/python -c "import sys, os; print('--- Python sys.path:'); print(sys.path); print('--- site-packages content:'); os.system('ls -lA /opt/render/project/src/.venv/lib/python3.10/site-packages/')"
-
 echo "--- Collecting static files ---"
+# Используем Python из виртуального окружения проекта напрямую
 /opt/render/project/src/.venv/bin/python manage.py collectstatic --noinput
 
-echo "--- BUILD SCRIPT FINISHED SUCCESSFULLY ---" 
+echo "--- Build successful ---" 
