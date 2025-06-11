@@ -169,13 +169,13 @@ export default {
 
 .carousel-container {
   display: flex;
-  gap: 39px;
   transition: transform 0.5s ease-in-out;
   padding-left: 0;
 }
 
 .carousel-card {
   flex: 0 0 801px;
+  margin-right: 39px;
   height: 609px;
   position: relative;
   background-image: linear-gradient(180deg, rgba(0, 78, 159, 0.4) 0%, rgba(0, 0, 0, 0.7) 100%), url('/static/accounts/images/main_page_moderator/bg_carusel_card.webp');
@@ -189,6 +189,10 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+
+  &:last-child {
+    margin-right: 0;
+  }
 
   .carousel-avatar {
     position: absolute;
