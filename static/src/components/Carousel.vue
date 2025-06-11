@@ -123,8 +123,6 @@ export default {
 }
 
 .carousel-wrapper {
-  display: flex;
-  align-items: center;
   position: relative;
   padding-left: calc((100% - 1303px) / 2);
   width: 100%;
@@ -164,18 +162,18 @@ export default {
   backdrop-filter: blur(10px);
   padding: 54px 0 54px 54px;
   overflow: hidden;
-  flex: 1;
+  width: 100%;
 }
 
 .carousel-container {
   display: flex;
+  gap: 39px;
   transition: transform 0.5s ease-in-out;
   padding-left: 0;
 }
 
 .carousel-card {
   flex: 0 0 801px;
-  margin-right: 39px;
   height: 609px;
   position: relative;
   background-image: linear-gradient(180deg, rgba(0, 78, 159, 0.4) 0%, rgba(0, 0, 0, 0.7) 100%), url('/static/accounts/images/main_page_moderator/bg_carusel_card.webp');
