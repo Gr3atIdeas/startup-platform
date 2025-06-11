@@ -1,271 +1,222 @@
 <template>
   <div class="moderator-main-page">
-    <div class="main-content">
-      <section class="dashboard">
-        <div class="dashboard__grid">
-          <DashboardCard 
-            title="Сделки на покупку/продажу" 
-            grid-area="deals"
-            :centered="true"
-            style="min-height: 346px"
-          />
-          <DashboardCard 
-            title="Заявки на новые стартап" 
-            :notification-count="2" 
-            grid-area="applications"
-            style="min-height: 346px"
-          />
-          <DashboardCard 
-            type="image"
-            img-src="https://placehold.co/191x346"
-            grid-area="p-small"
-            style="min-height: 346px"
-          />
-          <DashboardCard 
-            title="Новости" 
-            :notification-count="4" 
-            grid-area="news"
-          />
-          <DashboardCard 
-            type="image"
-            img-src="https://placehold.co/180x180"
-            grid-area="p-square"
-          />
-          <DashboardCard 
-            title="Поддержка" 
-            :notification-count="3" 
-            grid-area="support"
-          />
-        </div>
-      </section>
+    <div class="grid-container">
+      <!-- Top Row -->
+      <div class="grid-item large-item">
+        <img src="/static/accounts/images/main_page_moderator/hands_upper_block.webp" alt="Сделки на покупку" class="background-image mirrored">
+        <div class="overlay-text">Сделки на покупку</div>
+        <div class="notification-badge">3</div>
+      </div>
+      <div class="grid-item large-item">
+        <img src="/static/accounts/images/main_page_moderator/planets_upperblock.webp" alt="Заявки на новые стартапы" class="background-image">
+        <div class="overlay-text">Заявки на новые стартапы</div>
+        <div class="notification-badge">8</div>
+      </div>
 
-      <section class="startups-chat">
-        <div class="startups-chat__header">
-          <h2>Чат</h2>
-          <h2 class="text-yellow">СТАРТАПОВ</h2>
-        </div>
-        <div class="carousel-container">
-          <div class="carousel">
-            <div class="carousel-card" v-for="i in 3" :key="i">
-              <div class="carousel-card__header">
-                <span class="startup-name">Ромашка</span>
-                <div class="investment-info">
-                  <span>Вы инвестировали</span>
-                  <span class="amount">3 675 998 ₽</span>
-                </div>
-              </div>
-              <img class="carousel-card__main-img" src="https://placehold.co/363x373" alt="startup image">
-              <div class="carousel-card__footer">
-                <div class="updates">
-                  <p>User 67346 инвестировал 7 899 ₽</p>
-                  <p>User 67346 понравился комментарий user 74839</p>
-                </div>
-                <div class="actions">
-                    <button class="btn btn--primary">К стартапу</button>
-                    <button class="btn-icon">
-                        <span class="icon-placeholder"></span>
-                        <span>Чат</span>
-                    </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <!-- Middle Row -->
+      <div class="grid-item small-item">
+        <img src="/static/accounts/images/main_page_moderator/planet_upperblock.webp" alt="Planet" class="background-image">
+      </div>
+      <div class="grid-item medium-item">
+        <img src="/static/accounts/images/main_page_moderator/sound_upperblock.webp" alt="Новости" class="background-image">
+        <div class="overlay-text">Новости</div>
+      </div>
+      <div class="grid-item small-item">
+        <img src="/static/accounts/images/main_page_moderator/rocket_upperblock.webp" alt="Rocket" class="background-image">
+      </div>
+
+      <!-- Bottom Row -->
+      <div class="grid-item large-item">
+          <img src="/static/accounts/images/main_page_moderator/bg_block_support.webp" alt="Поддержка" class="background-image">
+          <div class="overlay-text">Поддержка</div>
+          <button class="action-button">Перейти</button>
+      </div>
+      <div class="grid-item large-item">
+          <!-- Placeholder for another block or can be merged -->
+          <div class="overlay-text">Пользователи</div>
+           <button class="action-button">Управление</button>
+      </div>
+    </div>
+
+    <!-- Carousel Section -->
+    <div class="carousel-container">
+      <div class="carousel-card" v-for="i in 3" :key="i">
+        <img src="/static/accounts/images/main_page_moderator/bg_carusel_card.webp" class="carousel-bg">
+        <img src="/static/accounts/images/main_page_moderator/planet_logo_carusel.webp" class="carousel-avatar">
+        <div class="carousel-title">Название стартапа {{ i }}</div>
+        <div class="carousel-description">Краткое описание проекта в несколько строк.</div>
+        <button class="action-button">Подробнее</button>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import DashboardCard from './DashboardCard.vue';
-
 export default {
-  name: 'ModeratorMainPage',
-  components: {
-    DashboardCard
-  }
+  name: 'ModeratorMainPage'
 }
 </script>
 
-<style lang="scss" scoped>
-// Fonts and basic styles
-body {
-  font-family: 'Unbounded', sans-serif;
-}
-
+<style scoped>
+/* General Page Styles */
 .moderator-main-page {
-  background: linear-gradient(153deg, black 0%, #00346B 25%, #004E9F 48%, #01366D 64%, #020202 100%);
+  padding: 2rem;
+  /* The global gradient background should be inherited, this is a fallback */
+  background-color: #0F0F2D; 
   color: white;
-  padding: 20px;
-  min-height: 100vh;
+  font-family: 'Gilroy', sans-serif;
 }
 
-.main-content {
-  max-width: 1303px;
-  margin: 0 auto;
+/* Grid Layout */
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: auto auto auto;
+  gap: 20px;
+  margin-bottom: 40px;
 }
 
-.btn {
-  border-radius: 10px;
-  border: none;
-  cursor: pointer;
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 16px;
-  padding: 12px 35px;
-  box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.25);
-
-  &--primary {
-    background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
-    color: black;
-  }
-}
-
-.dashboard {
-  padding-top: 45px;
-
-  &__grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 30px;
-    
-    grid-template-areas:
-      "deals deals applications applications applications p-small"
-      "news news news news p-square support";
-  }
-}
-
-.startups-chat {
-  padding-top: 45px;
-
-  &__header {
-    display: flex;
-    gap: 15px;
-    margin-left: 71px;
-    h2 {
-      font-family: 'Blippo-Black CY [Rus by me]', sans-serif;
-      font-size: 55px;
-      font-weight: 400;
-      line-height: 1.2;
-    }
-    .text-yellow {
-      color: #FFEF2B;
-    }
-  }
-}
-
-.carousel-container {
-    padding: 10px 0 45px 0;
-    overflow-x: auto;
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none;  /* Internet Explorer 10+ */
-    &::-webkit-scrollbar { /* WebKit */
-        width: 0;
-        height: 0;
-    }
-}
-
-.carousel {
-  display: flex;
-  gap: 39px;
-  padding: 45px;
-  background: rgba(0, 0, 0, 0.18);
-  border-radius: 32px;
-  backdrop-filter: blur(10px);
-}
-
-.carousel-card {
-  flex: 0 0 801px;
-  height: 609px;
-  background: linear-gradient(180deg, #004E9F 0%, black 100%);
-  box-shadow: 6px 6px 10px rgba(123, 97, 255, 0.25);
-  border-radius: 10px;
-  outline: 1px solid #C6BBFE;
+.grid-item {
   position: relative;
+  border-radius: 15px;
   overflow: hidden;
-  padding: 32px;
+  background-color: #1a1a3a;
+  padding: 20px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  min-height: 200px;
+}
 
-  &__main-img {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      width: 363px;
-      height: 373px;
-  }
+.background-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+  border-radius: 15px;
+}
 
-  &__header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      .startup-name {
-          font-size: 35px;
-          font-weight: 600;
-      }
-      .investment-info {
-          background: rgba(43, 251, 255, 0.4);
-          border-radius: 10px;
-          padding: 15px 21px;
-          backdrop-filter: blur(2px);
-          font-size: 12px;
-          font-weight: 300;
-          .amount {
-              color: #FFEF2B;
-              font-size: 16px;
-              font-weight: 400;
-              display: block;
-          }
-      }
-  }
-  
-  &__footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      z-index: 2;
+.mirrored {
+  transform: scaleX(-1);
+}
 
-      .updates p {
-        background: rgba(255, 255, 255, 0.16);
-        border-radius: 10px;
-        padding: 8px 24px;
-        margin-bottom: 15px;
-        font-size: 14px;
-        font-weight: 300;
-        backdrop-filter: blur(5px);
-      }
-      
-      .actions {
-          display: flex;
-          align-items: flex-end;
-          gap: 15px;
+.overlay-text {
+  position: relative;
+  z-index: 2;
+  font-size: 24px;
+  font-weight: bold;
+}
 
-          .btn-icon {
-              background: white;
-              color: black;
-              width: 68px;
-              height: 68px;
-              border-radius: 50%;
-              border: none;
-              cursor: pointer;
-              font-size: 14px;
-              font-weight: 300;
-              display: flex;
-              flex-direction: column;
-              align-items: center;
-              justify-content: center;
-              gap: 4px;
+.notification-badge {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: linear-gradient(to right, #FFEF2B, #F9F7D6);
+    color: #1e1e1e;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    z-index: 3;
+    border: 2px solid #1a1a3a;
+}
 
-              .icon-placeholder {
-                  width: 24px;
-                  height: 24px;
-                  border: 1px solid black; // Placeholder for icon
-              }
-          }
-      }
-  }
+/* Spanning items in the grid */
+.large-item { grid-column: span 2; }
+.medium-item { grid-column: span 2; }
+.small-item { grid-column: span 1; }
+
+/* Specific item adjustments based on new layout */
+.grid-container .small-item:nth-child(3) { grid-column: 1 / 2; }
+.grid-container .medium-item:nth-child(4) { grid-column: 2 / 4; }
+.grid-container .small-item:nth-child(5) { grid-column: 4 / 5; }
+.grid-container .large-item:nth-child(6) { grid-column: 1 / 3; }
+.grid-container .large-item:nth-child(7) { grid-column: 3 / 5; }
+
+
+/* Action Button */
+.action-button {
+  position: relative;
+  z-index: 2;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #FFEF2B 0%, #F9F7D6 100%);
+  color: #333;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s;
+  align-self: flex-start; /* Align button to the start of the flex container */
+  margin-top: auto; /* Push to the bottom */
+}
+
+.action-button:hover {
+  transform: scale(1.05);
+}
+
+/* Carousel Styles */
+.carousel-container {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto; /* Simple scroll for now */
+  padding-bottom: 20px;
+}
+
+.carousel-card {
+  position: relative;
+  flex: 0 0 300px;
+  height: 400px;
+  border-radius: 15px;
+  overflow: hidden;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.carousel-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+}
+
+.carousel-avatar {
+  position: relative;
+  z-index: 2;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin-bottom: 20px;
+}
+
+.carousel-title {
+  position: relative;
+  z-index: 2;
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.carousel-description {
+  position: relative;
+  z-index: 2;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.carousel-card .action-button {
+  align-self: center;
+  margin-top: auto;
 }
 </style> 
