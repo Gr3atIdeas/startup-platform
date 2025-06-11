@@ -7,10 +7,10 @@
       </h2>
     </div>
     <div class="carousel-wrapper">
+      <button @click="prevSlide" class="carousel-arrow left">
+        <img src="/static/accounts/images/main_page_moderator/chevron-back-circle-outline.svg" alt="Назад">
+      </button>
       <div class="carousel-container-wrapper">
-        <button @click="prevSlide" class="carousel-arrow left">
-          <img src="/static/accounts/images/main_page_moderator/chevron-back-circle-outline.svg" alt="Назад">
-        </button>
         <div class="carousel-container" :style="{ transform: `translateX(-${currentSlide * (801 + 39)}px)` }">
             <div class="carousel-card" v-for="i in 3" :key="i">
                 <img src="/static/accounts/images/main_page_moderator/planet_logo_carusel.webp" class="carousel-avatar" alt="Planet Logo">
@@ -148,7 +148,7 @@ export default {
     }
 
     &.left {
-      left: calc(((100% - 1303px) / 2) + 20px);
+      left: calc(((100% - 1303px) / 2) + 60px);
     }
     
     &.right { 
@@ -165,14 +165,13 @@ export default {
   padding: 54px;
   overflow: hidden;
   width: 100%;
-  position: relative;
 }
 
 .carousel-container {
   display: flex;
   gap: 39px;
   transition: transform 0.5s ease-in-out;
-  padding-left: 0; // Center alignment
+  padding-left: 0;
 }
 
 .carousel-card {
@@ -250,8 +249,8 @@ export default {
     }
     .btn-chat {
         background: white;
-        width: 86px; // Increased width to fit content
-        height: 86px; // Increased height
+        width: 86px;
+        height: 86px;
         border-radius: 50%;
         border: none;
         cursor: pointer;
