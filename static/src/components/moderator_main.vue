@@ -84,10 +84,13 @@
                             <p>Вышло обновления новости по стартапу</p>
                         </div>
                         <div class="actions">
+                            <div class="chat-action">
+                                <button class="btn-chat">
+                                    <img src="/static/accounts/images/main_page_moderator/chatbubbles-outline.svg" alt="Чат">
+                                </button>
+                                <span>Чат</span>
+                            </div>
                             <button class="btn-primary">К стартапу</button>
-                            <button class="btn-chat">
-                                <!-- Chat Icon will be a background image -->
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -297,7 +300,7 @@ export default {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    &.left { left: 20px; }
+    &.left { left: calc((100% - 1303px) / 2 - 80px); }
     &.right { right: 20px; }
     img { width: 50px; height: 50px; }
   }
@@ -305,25 +308,26 @@ export default {
 
 .carousel-container-wrapper {
   background: rgba(0, 0, 0, 0.18);
-  border-radius: 32px;
+  border-radius: 32px 0 0 32px;
   backdrop-filter: blur(10px);
-  padding: 54px 0;
+  padding: 54px 0 54px 94px;
   overflow: hidden;
-  width: 100%;
+  width: auto;
+  margin-left: calc((100% - 1303px) / 2);
 }
 
 .carousel-container {
   display: flex;
   gap: 39px;
   transition: transform 0.5s ease-in-out;
-  padding-left: calc((100% - 1303px)/2 + 20px); // Center alignment
+  padding-left: 0; // Center alignment
 }
 
 .carousel-card {
   flex: 0 0 801px;
   height: 609px;
   position: relative;
-  background-image: url('/static/accounts/images/main_page_moderator/bg_carusel_card.webp');
+  background-image: linear-gradient(180deg, rgba(0, 78, 159, 0.4) 0%, rgba(0, 0, 0, 0.7) 100%), url('/static/accounts/images/main_page_moderator/bg_carusel_card.webp');
   background-size: cover;
   background-position: center;
   box-shadow: 6px 6px 10px rgba(123, 97, 255, 0.25);
@@ -379,7 +383,22 @@ export default {
         font-weight: 300;
         backdrop-filter: blur(5px);
     }
-    .actions { display: flex; align-items: flex-end; gap: 15px; }
+    .actions {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+    .chat-action {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        span {
+            font-size: 14px;
+            font-weight: 300;
+        }
+    }
     .btn-chat {
         background: white;
         width: 68px;
@@ -387,6 +406,13 @@ export default {
         border-radius: 50%;
         border: none;
         cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        img {
+            width: 32px;
+            height: 32px;
+        }
     }
   }
 }
