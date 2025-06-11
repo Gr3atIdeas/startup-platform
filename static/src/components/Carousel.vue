@@ -148,11 +148,11 @@ export default {
     }
 
     &.left {
-      left: 20px;
+      left: calc(((100% - 1303px) / 2) + 20px);
     }
     
     &.right { 
-        right: calc(((100% - 1303px) / 2) + 40px);
+      right: calc(((100% - 1303px) / 2) + 40px);
     }
     img { width: 50px; height: 50px; display: block; }
   }
