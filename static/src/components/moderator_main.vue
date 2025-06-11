@@ -315,6 +315,7 @@ img, .card, .carousel-card, .carousel-arrow {
     padding: 0;
     margin-top: 45px;
     width: 100%;
+    overflow: hidden;
     .carousel-title-container {
         max-width: 1303px;
         margin: 0 auto 20px auto;
@@ -370,8 +371,8 @@ img, .card, .carousel-card, .carousel-arrow {
   padding: 54px;
   overflow: hidden;
   width: 100%;
-  padding-right: 300px;
-  margin-right: -300px;
+  padding-right: 3000px;
+  margin-right: -3000px;
 }
 
 .carousel-container {
