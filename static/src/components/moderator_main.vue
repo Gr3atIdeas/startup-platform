@@ -133,6 +133,30 @@ export default {
 }
 </script>
 
+<style>
+/* Global Styles for Custom Scrollbar & Non-Draggable Images */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #061e38; 
+}
+::-webkit-scrollbar-thumb {
+  background-color: #004E9F;
+  border-radius: 5px;
+  border: 2px solid #061e38;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: #C6BBFE;
+}
+img, .card, .carousel-card {
+  user-select: none;
+  -webkit-user-drag: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+</style>
+
 <style lang="scss" scoped>
 @font-face {
     font-family: 'Blippo-Black CY [Rus by me]';
@@ -308,11 +332,9 @@ export default {
 }
 
 .carousel-wrapper {
-  display: flex;
-  align-items: center;
-  position: relative;
-  margin-left: calc((100% - 1303px) / 2);
-  width: calc(100% - (100% - 1303px) / 2);
+  position: absolute;
+  left: calc((100% - 1303px) / 2);
+  right: 0;
   
   .carousel-arrow {
     background: transparent;
@@ -333,8 +355,8 @@ export default {
 
     &.left { left: 30px; }
     &.right { 
-        right: 20px;
-        position: absolute; 
+        right: calc((100vw - 1303px) / 2 + 20px);
+        position: fixed; 
     }
     img { width: 50px; height: 50px; display: block; }
   }
