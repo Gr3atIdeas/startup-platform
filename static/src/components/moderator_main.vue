@@ -59,8 +59,10 @@
     <!-- Carousel Section -->
     <div class="carousel-section">
       <div class="carousel-title-container">
-        <h2 class="chat-title">Чат</h2>
-        <h2 class="chat-title-highlight">СТАРТАПОВ</h2>
+        <h2>
+          Чат<br>
+          <span class="chat-title-highlight">СТАРТАПОВ</span>
+        </h2>
       </div>
       <div class="carousel-wrapper">
         <button @click="prevSlide" class="carousel-arrow left">
@@ -84,13 +86,13 @@
                             <p>Вышло обновления новости по стартапу</p>
                         </div>
                         <div class="actions">
+                            <button class="btn-primary">К стартапу</button>
                             <div class="chat-action">
                                 <button class="btn-chat">
                                     <img src="/static/accounts/images/main_page_moderator/chatbubbles-outline.svg" alt="Чат">
+                                    <span>Чат</span>
                                 </button>
-                                <span>Чат</span>
                             </div>
-                            <button class="btn-primary">К стартапу</button>
                         </div>
                     </div>
                 </div>
@@ -276,13 +278,19 @@ export default {
     padding: 0;
     margin-top: 45px;
     width: 100%;
+    overflow: hidden; // To contain the full-bleed carousel
     .carousel-title-container {
-        display: flex;
-        gap: 15px;
         max-width: 1303px;
         margin: 0 auto 20px auto;
-        padding: 0 20px;
-        h2 { margin: 0; font-size: 55px; font-weight: 400; font-family: 'Blippo-Black CY [Rus by me]'; }
+        padding: 75px 20px;
+        h2 { 
+            margin: 0; 
+            font-size: 55px; 
+            font-weight: 400; 
+            font-family: 'Blippo-Black CY [Rus by me]'; 
+            line-height: 1.1;
+            text-align: left;
+        }
         .chat-title-highlight { color: #FFEF2B; }
     }
 }
@@ -294,15 +302,24 @@ export default {
   width: 100%;
   .carousel-arrow {
     background: transparent;
-    border: none;
+    border: 2px solid transparent;
+    border-radius: 50%;
     cursor: pointer;
     z-index: 10;
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    &.left { left: calc((100% - 1303px) / 2 - 80px); }
+    padding: 5px;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      border-color: rgba(198, 187, 254, 0.7);
+      background: rgba(0,0,0,0.2);
+    }
+
+    &.left { left: calc((100% - 1303px) / 2 + 30px); }
     &.right { right: 20px; }
-    img { width: 50px; height: 50px; }
+    img { width: 50px; height: 50px; display: block; }
   }
 }
 
@@ -312,8 +329,9 @@ export default {
   backdrop-filter: blur(10px);
   padding: 54px 0 54px 94px;
   overflow: hidden;
-  width: auto;
   margin-left: calc((100% - 1303px) / 2);
+  width: calc(100% - ((100% - 1303px) / 2));
+  box-sizing: border-box;
 }
 
 .carousel-container {
@@ -385,33 +403,39 @@ export default {
     }
     .actions {
         display: flex;
-        flex-direction: column;
-        align-items: center;
+        align-items: flex-end;
+        justify-content: space-between;
         gap: 15px;
     }
     .chat-action {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 8px;
-        span {
-            font-size: 14px;
-            font-weight: 300;
-        }
+        // No specific styles needed here now, can be removed if not used for other layout purposes
     }
     .btn-chat {
         background: white;
-        width: 68px;
-        height: 68px;
+        width: 86px; // Increased width to fit content
+        height: 86px; // Increased height
         border-radius: 50%;
         border: none;
         cursor: pointer;
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
+        gap: 4px;
+        padding-top: 7px;
+        padding-bottom: 7px;
+        color: black;
+        font-family: 'Unbounded', sans-serif;
+        
         img {
             width: 32px;
             height: 32px;
+            margin-bottom: 4px;
+        }
+        span {
+            font-size: 14px;
+            font-weight: 300;
+            line-height: 1;
         }
     }
   }
