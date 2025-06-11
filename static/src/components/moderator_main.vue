@@ -291,7 +291,6 @@ export default {
     padding: 0;
     margin-top: 45px;
     width: 100%;
-    overflow: hidden; // To contain the full-bleed carousel
     .carousel-title-container {
         max-width: 1303px;
         margin: 0 auto 20px auto;
@@ -309,6 +308,8 @@ export default {
 }
 
 .carousel-wrapper {
+  display: flex;
+  align-items: center;
   position: relative;
   margin-left: calc((100% - 1303px) / 2);
   width: calc(100% - (100% - 1303px) / 2);
