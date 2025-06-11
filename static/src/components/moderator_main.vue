@@ -29,12 +29,11 @@
          <img src="/static/accounts/images/main_page_moderator/planet_upperblock.webp" class="card-bg" alt="Planet">
       </div>
       <div class="card news-card">
-        <img src="/static/accounts/images/main_page_moderator/sound_upperblock.webp" class="card-bg" alt="Новости">
-        <div class="card-overlay-dark"></div>
         <div class="card-content left-align">
           <h3>Новости</h3>
           <button class="btn-primary">Перейти</button>
         </div>
+        <img src="/static/accounts/images/main_page_moderator/sound_upperblock.webp" class="news-image" alt="Новости">
         <div class="notification-badge">4</div>
       </div>
       <div class="card support-card">
@@ -73,7 +72,7 @@
                         <div class="updates">
                             <p>User 67346 инвестировал 7 899 ₽</p>
                             <p>User 67346 понравился комментарий user 74839</p>
-                             <p>Вышло обновления новости по стартапу</p>
+                            <p>Вышло обновления новости по стартапу</p>
                         </div>
                         <div class="actions">
                             <button class="btn-primary">К стартапу</button>
@@ -90,7 +89,11 @@
         </button>
       </div>
        <div class="carousel-dots">
-            <span v-for="i in totalSlides" :key="i" class="dot" :class="{ active: currentSlide === i - 1 }"></span>
+            <span v-for="n in totalSlides" :key="n" 
+                  class="dot" 
+                  :class="{ 'active': n - 1 === currentSlide }"
+                  @click="currentSlide = n - 1">
+            </span>
         </div>
     </div>
   </div>
@@ -118,11 +121,8 @@ export default {
 
 <style lang="scss" scoped>
 .moderator-main-page {
-  padding: 20px 0;
   color: white;
   font-family: 'Unbounded', sans-serif;
-  max-width: 1440px;
-  margin: 0 auto;
 }
 
 .dashboard-grid {
@@ -130,16 +130,24 @@ export default {
     grid-template-columns: 389px 1fr 191px;
     grid-template-rows: 346px 180px;
     gap: 30px;
-    justify-content: center;
     max-width: 1303px;
-    margin: 0 auto 45px auto;
+    margin: 45px auto;
     
     .card {
         position: relative;
         border-radius: 10px;
-        overflow: hidden;
+        overflow: visible; // Allow badge to overflow
         background: linear-gradient(180deg, #004E9F 0%, black 100%);
         box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.25);
+        
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
         h3 {
             font-size: 20px;
             font-weight: 400;
@@ -147,7 +155,7 @@ export default {
             margin: 0;
         }
     }
-    .card-bg {
+    .card-bg, .news-image {
         position: absolute;
         top: 0;
         left: 0;
@@ -155,6 +163,7 @@ export default {
         height: 100%;
         object-fit: cover;
         z-index: 1;
+        border-radius: 10px;
     }
     .mirrored { transform: scaleX(-1); }
 
@@ -167,6 +176,7 @@ export default {
         background: linear-gradient(180deg, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0.55) 100%);
         filter: blur(27.5px);
         z-index: 2;
+        border-radius: 10px;
     }
     .card-overlay-dark {
         position: absolute;
@@ -176,6 +186,7 @@ export default {
         top: 0;
         background: linear-gradient(270deg, rgba(0, 0, 0, 0.10) 0%, rgba(0, 0, 0, 0.50) 100%);
         z-index: 2;
+        border-radius: 10px;
     }
     .card-content {
         position: relative;
@@ -197,9 +208,24 @@ export default {
 
     .deals-card { grid-area: 1 / 1 / 2 / 2; }
     .applications-card { grid-area: 1 / 2 / 2 / 3; }
-    .image-card-tall { grid-area: 1 / 3 / 2 / 4; background: none; box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.20);}
-    .image-card-small-planet { grid-area: 2 / 1 / 3 / 2; width: 180px; height: 180px; background: none; box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.20); justify-self: end;}
-    .news-card { grid-area: 2 / 2 / 3 / 3; width: 730px; }
+    .image-card-tall { grid-area: 1 / 3 / 2 / 4; background: none; box-shadow: none; overflow: hidden; .card-bg { object-fit: cover; } }
+    .image-card-small-planet { grid-area: 2 / 1 / 3 / 2; width: 180px; height: 180px; background: none; box-shadow: none; overflow: hidden; justify-self: end; .card-bg { object-fit: cover; } }
+    .news-card {
+        grid-area: 2 / 2 / 3 / 3;
+        width: 730px;
+        display: flex;
+        align-items: center;
+        padding: 0;
+        .card-content { width: 50%; }
+        .news-image {
+            position: relative;
+            width: 50%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+            border-radius: 0 10px 10px 0;
+        }
+    }
     .support-card { grid-area: 2 / 3 / 3 / 4; width: 290px; }
 
     .notification-badge {
@@ -213,34 +239,38 @@ export default {
         align-items: center;
         font-size: 18px;
         font-weight: 400;
-        z-index: 4;
-        top: 15px;
-        right: 15px;
+        z-index: 5;
+        top: -8px;
+        right: -8px;
         border: 2px solid #0F0F2D;
     }
 }
 
 .btn-primary {
-  padding: 12px 35px;
-  background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
-  box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.25);
-  border-radius: 10px;
-  color: black;
-  font-size: 16px;
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 400;
-  border: none;
-  cursor: pointer;
-  line-height: 16px;
-  height: 40px;
+  padding: 12px 35px !important;
+  background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%) !important;
+  box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.25) !important;
+  border-radius: 10px !important;
+  color: black !important;
+  font-size: 16px !important;
+  font-family: 'Unbounded', sans-serif !important;
+  font-weight: 400 !important;
+  border: none !important;
+  cursor: pointer !important;
+  line-height: 16px !important;
+  height: 40px !important;
+  min-width: auto !important;
 }
 
 .carousel-section {
-    width: 100%;
+    padding: 0;
+    margin-top: 45px;
     .carousel-title-container {
         display: flex;
         gap: 15px;
-        margin-left: 71px;
+        max-width: 1303px;
+        margin: 0 auto 20px auto;
+        padding: 0 20px;
         h2 { margin: 0; font-size: 55px; font-weight: 400; font-family: 'Blippo-Black CY [Rus by me]'; }
         .chat-title-highlight { color: #FFEF2B; }
     }
@@ -249,16 +279,18 @@ export default {
 .carousel-wrapper {
   display: flex;
   align-items: center;
-  margin-top: 20px;
   position: relative;
+  width: 100%;
   .carousel-arrow {
     background: transparent;
     border: none;
     cursor: pointer;
     z-index: 10;
     position: absolute;
-    &.left { left: 15px; }
-    &.right { right: 15px; }
+    top: 50%;
+    transform: translateY(-50%);
+    &.left { left: 20px; }
+    &.right { right: 20px; }
     img { width: 50px; height: 50px; }
   }
 }
@@ -267,7 +299,7 @@ export default {
   background: rgba(0, 0, 0, 0.18);
   border-radius: 32px;
   backdrop-filter: blur(10px);
-  padding: 54px 45px;
+  padding: 54px 0;
   overflow: hidden;
   width: 100%;
 }
@@ -276,6 +308,7 @@ export default {
   display: flex;
   gap: 39px;
   transition: transform 0.5s ease-in-out;
+  padding-left: calc((100% - 1303px)/2 + 45px); // Center alignment
 }
 
 .carousel-card {
@@ -357,6 +390,8 @@ export default {
         height: 12px;
         background: white;
         border-radius: 50%;
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
         &.active {
             width: 70px;
             background: #FFEF2B;
