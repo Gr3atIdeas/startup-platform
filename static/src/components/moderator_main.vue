@@ -135,53 +135,35 @@ export default {
 
 <style lang="scss" scoped>
 @font-face {
-  font-family: 'Unbounded';
-  src: url('/static/accounts/fonts/Unbounded-Regular.ttf') format('truetype');
-  font-weight: 300;
-  font-style: normal;
+    font-family: 'Blippo-Black CY [Rus by me]';
+    src: url('/static/accounts/fonts/blippo_blackcyrusbyme.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
 }
 
 @font-face {
-  font-family: 'Unbounded';
-  src: url('/static/accounts/fonts/Unbounded-Regular.ttf') format('truetype');
-  font-weight: 400;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Unbounded';
-  src: url('/static/accounts/fonts/Unbounded-SemiBold.ttf') format('truetype');
-  font-weight: 600;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Blippo-Black CY [Rus by me]';
-  src: url('/static/accounts/fonts/blippo_blackcyrusbyme.otf') format('opentype');
+    font-family: 'Unbounded';
+    src: url('/static/accounts/fonts/Unbounded-VariableFont_wght.ttf') format('truetype');
+    font-weight: 300 900;
 }
 
 .moderator-main-page {
   color: white;
   font-family: 'Unbounded', sans-serif;
   width: 100%;
-  overflow-x: hidden;
 }
 
 .dashboard-grid {
-    display: grid;
-    grid-template-columns: 389px 663px 1fr;
-    grid-template-rows: 346px 180px;
-    grid-template-areas:
-      "deals apps rocket"
-      "planet news support";
+    display: flex;
+    flex-wrap: wrap;
     gap: 30px;
     max-width: 1303px;
     margin: 45px auto;
-
+    
     .card {
         position: relative;
         border-radius: 10px;
-        overflow: visible; 
+        overflow: visible; // Allow badge to overflow
         background: linear-gradient(180deg, #004E9F 0%, black 100%);
         box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.25);
         
@@ -196,7 +178,7 @@ export default {
         h3 {
             font-size: 20px;
             font-weight: 400;
-            line-height: 1.2;
+            line-height: 18px;
             margin: 0;
         }
     }
@@ -248,30 +230,12 @@ export default {
         }
     }
 
-    .deals-card { grid-area: deals; }
-    .applications-card { grid-area: apps; }
-    .image-card-tall { 
-      grid-area: rocket; 
-      background: none; 
-      box-shadow: none;
-      .card-inner { 
-        overflow: hidden; 
-        .card-bg { object-fit: cover; } 
-      } 
-    }
-    .image-card-small-planet { 
-      grid-area: planet; 
-      background: none; 
-      box-shadow: none;
-      align-self: end;
-      .card-inner { 
-        overflow: hidden; 
-        .card-bg { object-fit: cover; } 
-      } 
-    }
+    .deals-card { width: 389px; height: 346px; }
+    .applications-card { width: 663px; height: 346px; }
+    .image-card-tall { width: 191px; height: 346px; background: none; box-shadow: none; .card-inner { overflow: hidden; .card-bg { object-fit: cover; } } }
+    .image-card-small-planet { width: 180px; height: 180px; background: none; box-shadow: none; .card-inner { overflow: hidden; .card-bg { object-fit: cover; } } }
     .news-card {
-        grid-area: news;
-        grid-column: span 2;
+        width: 773px; height: 180px;
         .card-inner {
             display: flex;
             align-items: center;
@@ -287,10 +251,7 @@ export default {
             border-radius: 0 10px 10px 0;
         }
     }
-    .support-card { 
-      grid-area: support;
-      justify-self: end;
-    }
+    .support-card { width: 290px; height: 180px; }
 
     .notification-badge {
         position: absolute;
@@ -324,44 +285,35 @@ export default {
   line-height: 16px !important;
   height: 40px !important;
   min-width: auto !important;
-  white-space: nowrap;
 }
 
 .carousel-section {
-    padding: 75px 0;
+    padding: 0;
     margin-top: 45px;
+    width: 100%;
+    overflow: hidden; // To contain the full-bleed carousel
     .carousel-title-container {
         max-width: 1303px;
-        margin: 0 auto 75px auto;
-        padding: 0 20px;
+        margin: 0 auto 20px auto;
+        padding: 75px 20px;
         h2 { 
             margin: 0; 
             font-size: 55px; 
             font-weight: 400; 
-            font-family: 'Blippo-Black CY [Rus by me]', sans-serif;
-            line-height: 1.2;
+            font-family: 'Blippo-Black CY [Rus by me]'; 
+            line-height: 1.1;
             text-align: left;
-            color: white;
         }
         .chat-title-highlight { color: #FFEF2B; }
     }
 }
 
 .carousel-wrapper {
+  display: flex;
+  align-items: center;
   position: relative;
-
-  .carousel-container-wrapper {
-    overflow: hidden;
-  }
-
-  .carousel-container {
-    display: flex;
-    gap: 39px;
-    transition: transform 0.5s ease-in-out;
-    padding-left: calc((100vw - 1303px) / 2);
-    padding-right: calc((100vw - 1303px) / 2);
-    box-sizing: content-box;
-  }
+  margin-left: calc((100% - 1303px) / 2);
+  width: calc(100% - ((100% - 1303px) / 2));
   
   .carousel-arrow {
     background: transparent;
@@ -380,10 +332,30 @@ export default {
       background: rgba(0,0,0,0.2);
     }
 
-    &.left { left: calc((100vw - 1303px) / 2 - 60px) }
-    &.right { right: calc((100vw - 1303px) / 2 - 60px) }
+    &.left { left: 30px; }
+    &.right { 
+        right: 20px;
+        position: fixed; 
+    }
     img { width: 50px; height: 50px; display: block; }
   }
+}
+
+.carousel-container-wrapper {
+  background: rgba(0, 0, 0, 0.18);
+  border-radius: 32px;
+  backdrop-filter: blur(10px);
+  padding: 54px;
+  padding-right: 150px;
+  overflow: hidden;
+  width: 100%;
+}
+
+.carousel-container {
+  display: flex;
+  gap: 39px;
+  transition: transform 0.5s ease-in-out;
+  padding-left: 0; // Center alignment
 }
 
 .carousel-card {
@@ -450,18 +422,19 @@ export default {
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 20px;
+        gap: 15px;
     }
     .chat-action {
         order: 1;
     }
     .btn-primary {
         order: 2;
+        white-space: nowrap;
     }
     .btn-chat {
         background: white;
-        width: 86px;
-        height: 86px;
+        width: 86px; // Increased width to fit content
+        height: 86px; // Increased height
         border-radius: 50%;
         border: none;
         cursor: pointer;
@@ -493,7 +466,7 @@ export default {
     justify-content: center;
     gap: 13px;
     max-width: 1303px;
-    margin: 40px auto 0 auto;
+    margin: 20px auto;
     padding: 0 20px;
     .dot {
         width: 12px;
