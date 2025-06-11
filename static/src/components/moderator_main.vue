@@ -314,7 +314,10 @@ img, .card, .carousel-card, .carousel-arrow {
 .carousel-section {
     padding: 0;
     margin-top: 45px;
-    width: 100%;
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
     overflow: hidden;
     .carousel-title-container {
         max-width: 1303px;
