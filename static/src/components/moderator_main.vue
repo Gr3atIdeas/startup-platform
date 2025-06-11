@@ -1,48 +1,57 @@
 <template>
   <div class="moderator-main-page">
     <div class="dashboard-grid">
-      <!-- Row 1 -->
       <div class="card deals-card">
-        <img src="/static/accounts/images/main_page_moderator/hands_upper_block.webp" class="card-bg mirrored" alt="Сделки">
-        <div class="card-overlay"></div>
-        <div class="card-content">
-          <h3>Сделки на покупку/продажу</h3>
-          <button class="btn-primary">Перейти</button>
-        </div>
+         <div class="card-inner">
+            <img src="/static/accounts/images/main_page_moderator/hands_upper_block.webp" class="card-bg mirrored" alt="Сделки">
+            <div class="card-overlay"></div>
+            <div class="card-content">
+              <h3>Сделки на покупку/продажу</h3>
+              <button class="btn-primary">Перейти</button>
+            </div>
+         </div>
         <div class="notification-badge">1</div>
       </div>
       <div class="card applications-card">
-        <img src="/static/accounts/images/main_page_moderator/planets_upperblock.webp" class="card-bg" alt="Заявки">
-        <div class="card-overlay-dark"></div>
-        <div class="card-content left-align">
-          <h3>Заявки на новые стартапы</h3>
-          <button class="btn-primary">Перейти</button>
-        </div>
+         <div class="card-inner">
+            <img src="/static/accounts/images/main_page_moderator/planets_upperblock.webp" class="card-bg" alt="Заявки">
+            <div class="card-overlay-dark"></div>
+            <div class="card-content left-align">
+              <h3>Заявки на новые стартапы</h3>
+              <button class="btn-primary">Перейти</button>
+            </div>
+         </div>
         <div class="notification-badge">2</div>
       </div>
       <div class="card image-card-tall">
-         <img src="/static/accounts/images/main_page_moderator/rocket_upperblock.webp" class="card-bg" alt="Rocket">
+         <div class="card-inner">
+            <img src="/static/accounts/images/main_page_moderator/rocket_upperblock.webp" class="card-bg" alt="Rocket">
+         </div>
       </div>
-
-      <!-- Row 2 -->
       <div class="card image-card-small-planet">
-         <img src="/static/accounts/images/main_page_moderator/planet_upperblock.webp" class="card-bg" alt="Planet">
+         <div class="card-inner">
+            <img src="/static/accounts/images/main_page_moderator/planet_upperblock.webp" class="card-bg" alt="Planet">
+         </div>
       </div>
       <div class="card news-card">
-        <div class="card-content left-align">
-          <h3>Новости</h3>
-          <button class="btn-primary">Перейти</button>
-        </div>
-        <img src="/static/accounts/images/main_page_moderator/sound_upperblock.webp" class="news-image" alt="Новости">
+         <div class="card-inner">
+            <div class="card-content left-align">
+              <h3>Новости</h3>
+              <button class="btn-primary">Перейти</button>
+            </div>
+            <img src="/static/accounts/images/main_page_moderator/sound_upperblock.webp" class="news-image" alt="Новости">
+         </div>
         <div class="notification-badge">4</div>
       </div>
       <div class="card support-card">
-        <img src="/static/accounts/images/main_page_moderator/bg_block_support.webp" class="card-bg" alt="Поддержка">
-        <div class="card-overlay-dark"></div>
-        <div class="card-content left-align">
-          <h3>Поддержка</h3>
-          <button class="btn-primary">Перейти</button>
-        </div>
+         <div class="card-inner">
+            <img src="/static/accounts/images/main_page_moderator/bg_block_support.webp" class="card-bg" alt="Поддержка">
+            <div class="card-overlay-dark"></div>
+            <div class="card-content left-align">
+              <h3>Поддержка</h3>
+              <button class="btn-primary">Перейти</button>
+            </div>
+         </div>
         <div class="notification-badge">3</div>
       </div>
     </div>
@@ -123,12 +132,12 @@ export default {
 .moderator-main-page {
   color: white;
   font-family: 'Unbounded', sans-serif;
+  width: 100%;
 }
 
 .dashboard-grid {
-    display: grid;
-    grid-template-columns: 389px 1fr 191px;
-    grid-template-rows: 346px 180px;
+    display: flex;
+    flex-wrap: wrap;
     gap: 30px;
     max-width: 1303px;
     margin: 45px auto;
@@ -163,7 +172,6 @@ export default {
         height: 100%;
         object-fit: cover;
         z-index: 1;
-        border-radius: 10px;
     }
     .mirrored { transform: scaleX(-1); }
 
@@ -176,7 +184,6 @@ export default {
         background: linear-gradient(180deg, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0.55) 100%);
         filter: blur(27.5px);
         z-index: 2;
-        border-radius: 10px;
     }
     .card-overlay-dark {
         position: absolute;
@@ -186,7 +193,6 @@ export default {
         top: 0;
         background: linear-gradient(270deg, rgba(0, 0, 0, 0.10) 0%, rgba(0, 0, 0, 0.50) 100%);
         z-index: 2;
-        border-radius: 10px;
     }
     .card-content {
         position: relative;
@@ -206,16 +212,17 @@ export default {
         }
     }
 
-    .deals-card { grid-area: 1 / 1 / 2 / 2; }
-    .applications-card { grid-area: 1 / 2 / 2 / 3; }
-    .image-card-tall { grid-area: 1 / 3 / 2 / 4; background: none; box-shadow: none; overflow: hidden; .card-bg { object-fit: cover; } }
-    .image-card-small-planet { grid-area: 2 / 1 / 3 / 2; width: 180px; height: 180px; background: none; box-shadow: none; overflow: hidden; justify-self: end; .card-bg { object-fit: cover; } }
+    .deals-card { width: 389px; height: 346px; }
+    .applications-card { width: 620px; height: 346px; }
+    .image-card-tall { width: 191px; height: 346px; background: none; box-shadow: none; .card-inner { overflow: hidden; .card-bg { object-fit: cover; } } }
+    .image-card-small-planet { width: 180px; height: 180px; background: none; box-shadow: none; .card-inner { overflow: hidden; .card-bg { object-fit: cover; } } }
     .news-card {
-        grid-area: 2 / 2 / 3 / 3;
-        width: 730px;
-        display: flex;
-        align-items: center;
-        padding: 0;
+        width: 730px; height: 180px;
+        .card-inner {
+            display: flex;
+            align-items: center;
+            padding: 0;
+        }
         .card-content { width: 50%; }
         .news-image {
             position: relative;
@@ -226,7 +233,7 @@ export default {
             border-radius: 0 10px 10px 0;
         }
     }
-    .support-card { grid-area: 2 / 3 / 3 / 4; width: 290px; }
+    .support-card { width: 290px; height: 180px; }
 
     .notification-badge {
         position: absolute;
@@ -265,6 +272,7 @@ export default {
 .carousel-section {
     padding: 0;
     margin-top: 45px;
+    width: 100%;
     .carousel-title-container {
         display: flex;
         gap: 15px;
@@ -308,14 +316,16 @@ export default {
   display: flex;
   gap: 39px;
   transition: transform 0.5s ease-in-out;
-  padding-left: calc((100% - 1303px)/2 + 45px); // Center alignment
+  padding-left: calc((100% - 1303px)/2 + 20px); // Center alignment
 }
 
 .carousel-card {
   flex: 0 0 801px;
   height: 609px;
   position: relative;
-  background: linear-gradient(180deg, #004E9F 0%, black 100%);
+  background-image: url('/static/accounts/images/main_page_moderator/bg_carusel_card.webp');
+  background-size: cover;
+  background-position: center;
   box-shadow: 6px 6px 10px rgba(123, 97, 255, 0.25);
   border-radius: 10px;
   outline: 1px #C6BBFE solid;
@@ -384,7 +394,9 @@ export default {
     display: flex;
     justify-content: center;
     gap: 13px;
-    margin-top: 20px;
+    max-width: 1303px;
+    margin: 20px auto;
+    padding: 0 20px;
     .dot {
         width: 12px;
         height: 12px;
