@@ -164,7 +164,7 @@ export default {
   backdrop-filter: blur(10px);
   padding: 54px 0 54px 54px;
   overflow: hidden;
-  width: 100%;
+  flex: 1;
 }
 
 .carousel-container {
