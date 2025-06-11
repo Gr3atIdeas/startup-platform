@@ -336,7 +336,9 @@ img, .card, .carousel-card, .carousel-arrow {
   display: flex;
   align-items: center;
   position: relative;
-  margin-left: calc((100% - 1303px) / 2);
+  padding-left: calc((100% - 1303px) / 2);
+  width: 100%;
+  box-sizing: border-box;
   
   .carousel-arrow {
     background: transparent;
@@ -355,7 +357,7 @@ img, .card, .carousel-card, .carousel-arrow {
       background: rgba(0,0,0,0.2);
     }
 
-    &.left { left: 30px; }
+    &.left { left: calc(((100% - 1303px) / 2) + 30px); }
     &.right { 
         right: 40px;
         position: absolute; 
@@ -371,8 +373,6 @@ img, .card, .carousel-card, .carousel-arrow {
   padding: 54px;
   overflow: hidden;
   width: 100%;
-  padding-right: 3000px;
-  margin-right: -3000px;
 }
 
 .carousel-container {
