@@ -29,12 +29,12 @@
                     </div>
                     <div class="actions">
                         <div class="chat-action">
-                            <button class="btn-chat">
+                            <a href="/cosmochat/" class="btn-chat">
                                 <img src="/static/accounts/images/main_page_moderator/chatbubbles-outline.svg" alt="Чат">
                                 <span>Чат</span>
-                            </button>
+                            </a>
                         </div>
-                        <button class="btn-primary">К стартапу</button>
+                        <a href="/cosmochat/" class="btn-primary">К стартапу</a>
                     </div>
                 </div>
             </div>
@@ -123,6 +123,8 @@ export default {
 }
 
 .carousel-wrapper {
+  display: flex;
+  align-items: center;
   position: relative;
   padding-left: calc((100% - 1303px) / 2);
   width: 100%;
@@ -162,7 +164,7 @@ export default {
   backdrop-filter: blur(10px);
   padding: 54px 0 54px 54px;
   overflow: hidden;
-  width: 100%;
+  flex: 1;
 }
 
 .carousel-container {

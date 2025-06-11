@@ -7,7 +7,7 @@
             <div class="card-overlay"></div>
             <div class="card-content">
               <h3>Сделки на покупку/продажу</h3>
-              <button class="btn-primary">Перейти</button>
+              <a href="/deals/" class="btn-primary">Перейти</a>
             </div>
          </div>
         <div class="notification-badge">1</div>
@@ -18,7 +18,7 @@
             <div class="card-overlay-dark"></div>
             <div class="card-content left-align">
               <h3>Заявки на новые стартапы</h3>
-              <button class="btn-primary">Перейти</button>
+              <a href="/moderator-dashboard/" class="btn-primary">Перейти</a>
             </div>
          </div>
         <div class="notification-badge">2</div>
@@ -37,7 +37,7 @@
          <div class="card-inner">
             <div class="card-content left-align">
               <h3>Новости</h3>
-              <button class="btn-primary">Перейти</button>
+              <a href="/news/" class="btn-primary">Перейти</a>
             </div>
             <img src="/static/accounts/images/main_page_moderator/sound_upperblock.webp" class="news-image" alt="Новости">
          </div>
@@ -49,7 +49,7 @@
             <div class="card-overlay-dark"></div>
             <div class="card-content left-align">
               <h3>Поддержка</h3>
-              <button class="btn-primary">Перейти</button>
+              <a href="/support/" class="btn-primary">Перейти</a>
             </div>
          </div>
         <div class="notification-badge">3</div>
