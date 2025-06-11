@@ -165,6 +165,7 @@ export default {
   padding: 54px 0 54px 54px;
   overflow: hidden;
   flex: 1;
+  box-sizing: border-box;
 }
 
 .carousel-container {
