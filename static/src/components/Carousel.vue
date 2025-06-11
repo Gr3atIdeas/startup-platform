@@ -129,6 +129,7 @@ export default {
   padding-left: calc((100% - 1303px) / 2);
   width: 100%;
   box-sizing: border-box;
+  overflow: hidden;
   
   .carousel-arrow {
     background: transparent;
