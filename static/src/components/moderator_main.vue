@@ -1,51 +1,95 @@
 <template>
   <div class="moderator-main-page">
-    <div class="grid-container">
-      <!-- Top Row -->
-      <div class="grid-item large-item">
-        <img src="/static/accounts/images/main_page_moderator/hands_upper_block.webp" alt="Сделки на покупку" class="background-image mirrored">
-        <div class="overlay-text">Сделки на покупку</div>
-        <div class="notification-badge">3</div>
-      </div>
-      <div class="grid-item large-item">
-        <img src="/static/accounts/images/main_page_moderator/planets_upperblock.webp" alt="Заявки на новые стартапы" class="background-image">
-        <div class="overlay-text">Заявки на новые стартапы</div>
-        <div class="notification-badge">8</div>
-      </div>
-
-      <!-- Middle Row -->
-      <div class="grid-item small-item">
-        <img src="/static/accounts/images/main_page_moderator/planet_upperblock.webp" alt="Planet" class="background-image">
-      </div>
-      <div class="grid-item medium-item">
-        <img src="/static/accounts/images/main_page_moderator/sound_upperblock.webp" alt="Новости" class="background-image">
-        <div class="overlay-text">Новости</div>
-      </div>
-      <div class="grid-item small-item">
-        <img src="/static/accounts/images/main_page_moderator/rocket_upperblock.webp" alt="Rocket" class="background-image">
+    <!-- Dashboard Grid -->
+    <div class="dashboard-grid">
+      <!-- Deals Card -->
+      <div class="card deals-card">
+        <img src="/static/accounts/images/main_page_moderator/hands_upper_block.webp" class="card-bg mirrored" alt="Сделки на покупку">
+        <div class="card-overlay"></div>
+        <div class="card-content">
+          <h3>Сделки на покупку/продажу</h3>
+          <button class="btn-primary">Перейти</button>
+        </div>
+        <div class="notification-badge" style="top: -10px; right: -10px;">1</div>
       </div>
 
-      <!-- Bottom Row -->
-      <div class="grid-item large-item">
-          <img src="/static/accounts/images/main_page_moderator/bg_block_support.webp" alt="Поддержка" class="background-image">
-          <div class="overlay-text">Поддержка</div>
-          <button class="action-button">Перейти</button>
+      <!-- Applications Card -->
+      <div class="card applications-card">
+        <img src="/static/accounts/images/main_page_moderator/planets_upperblock.webp" class="card-bg" alt="Заявки на новые стартапы">
+        <div class="card-overlay dark"></div>
+        <div class="card-content left-align">
+          <h3>Заявки на новые стартапы</h3>
+          <button class="btn-primary">Перейти</button>
+        </div>
+        <div class="notification-badge" style="top: -10px; right: -10px;">2</div>
       </div>
-      <div class="grid-item large-item">
-          <!-- Placeholder for another block or can be merged -->
-          <div class="overlay-text">Пользователи</div>
-           <button class="action-button">Управление</button>
+      
+      <!-- Planet Image Card -->
+      <div class="card image-card-tall">
+         <img src="/static/accounts/images/main_page_moderator/planet_upperblock.webp" class="card-bg" alt="Planet">
+      </div>
+
+      <!-- News Card -->
+      <div class="card news-card">
+        <img src="/static/accounts/images/main_page_moderator/sound_upperblock.webp" class="card-bg" alt="Новости">
+        <div class="card-overlay dark"></div>
+        <div class="card-content left-align">
+          <h3>Новости</h3>
+          <button class="btn-primary">Перейти</button>
+        </div>
+        <div class="notification-badge" style="top: -10px; right: -10px;">4</div>
+      </div>
+      
+      <!-- Rocket Image Card -->
+      <div class="card image-card-square">
+        <img src="/static/accounts/images/main_page_moderator/rocket_upperblock.webp" class="card-bg" alt="Rocket">
+      </div>
+
+      <!-- Support Card -->
+      <div class="card support-card">
+        <img src="/static/accounts/images/main_page_moderator/bg_block_support.webp" class="card-bg" alt="Поддержка">
+        <div class="card-overlay dark"></div>
+        <div class="card-content left-align">
+          <h3>Поддержка</h3>
+          <button class="btn-primary">Перейти</button>
+        </div>
+        <div class="notification-badge" style="top: -10px; right: -10px;">3</div>
       </div>
     </div>
 
     <!-- Carousel Section -->
-    <div class="carousel-container">
-      <div class="carousel-card" v-for="i in 3" :key="i">
-        <img src="/static/accounts/images/main_page_moderator/bg_carusel_card.webp" class="carousel-bg">
-        <img src="/static/accounts/images/main_page_moderator/planet_logo_carusel.webp" class="carousel-avatar">
-        <div class="carousel-title">Название стартапа {{ i }}</div>
-        <div class="carousel-description">Краткое описание проекта в несколько строк.</div>
-        <button class="action-button">Подробнее</button>
+    <div class="carousel-section">
+      <div class="carousel-title-container">
+        <h2 class="chat-title">Чат</h2>
+        <h2 class="chat-title-highlight">СТАРТАПОВ</h2>
+      </div>
+      <div class="carousel-container-wrapper">
+        <div class="carousel-container">
+          <div class="carousel-card" v-for="i in 3" :key="i">
+            <img src="/static/accounts/images/main_page_moderator/bg_carusel_card.webp" class="carousel-bg" alt="Card Background">
+            <img src="/static/accounts/images/main_page_moderator/planet_logo_carusel.webp" class="carousel-avatar" alt="Avatar">
+            <div class="carousel-card-header">
+                <span class="startup-name">Ромашка</span>
+                <div class="investment-info">
+                    <span>Вы инвестировали</span>
+                    <span class="amount">3 675 998 ₽</span>
+                </div>
+            </div>
+            <div class="carousel-card-footer">
+                <div class="updates">
+                    <p>User 67346 инвестировал 7 899 ₽</p>
+                    <p>User 67346 понравился комментарий</p>
+                </div>
+                <div class="actions">
+                    <button class="btn-primary">К стартапу</button>
+                    <button class="btn-chat">
+                        <!-- Chat Icon Placeholder -->
+                        <span>Чат</span>
+                    </button>
+                </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -53,42 +97,37 @@
 
 <script>
 export default {
-  name: 'ModeratorMainPage'
+  name: 'ModeratorMainPage',
 }
 </script>
 
 <style scoped>
-/* General Page Styles */
 .moderator-main-page {
-  padding: 2rem;
-  /* The global gradient background should be inherited, this is a fallback */
-  background-color: #0F0F2D; 
-  color: white;
-  font-family: 'Gilroy', sans-serif;
-}
-
-/* Grid Layout */
-.grid-container {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: auto auto auto;
-  gap: 20px;
-  margin-bottom: 40px;
-}
-
-.grid-item {
-  position: relative;
-  border-radius: 15px;
-  overflow: hidden;
-  background-color: #1a1a3a;
+  width: 100%;
   padding: 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  min-height: 200px;
+  background: linear-gradient(153deg, black 0%, #00346B 25%, #004E9F 48%, #01366D 64%, #020202 100%);
+  color: white;
+  font-family: 'Unbounded', sans-serif;
 }
 
-.background-image {
+.dashboard-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: center;
+  max-width: 1303px;
+  margin: 0 auto 45px auto;
+}
+
+.card {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.25);
+  background: linear-gradient(180deg, #004E9F 0%, black 100%);
+}
+
+.card-bg {
   position: absolute;
   top: 0;
   left: 0;
@@ -96,127 +135,215 @@ export default {
   height: 100%;
   object-fit: cover;
   z-index: 1;
-  border-radius: 15px;
 }
 
 .mirrored {
   transform: scaleX(-1);
 }
 
-.overlay-text {
-  position: relative;
+.card-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 55%;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0.55) 100%);
+  filter: blur(27.5px);
   z-index: 2;
-  font-size: 24px;
-  font-weight: bold;
+}
+.card-overlay.dark {
+    background: linear-gradient(270deg, rgba(0, 0, 0, 0.14) 0%, rgba(0, 0, 0, 0.30) 100%);
+}
+
+.card-content {
+  position: relative;
+  z-index: 3;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  text-align: center;
+  height: 100%;
+}
+.card-content.left-align {
+    align-items: flex-start;
+    text-align: left;
+}
+
+.card h3 {
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.2;
+  margin-bottom: 20px;
+}
+
+.btn-primary {
+  padding: 12px 35px;
+  background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
+  box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+  color: black;
+  font-size: 16px;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 400;
+  border: none;
+  cursor: pointer;
 }
 
 .notification-badge {
     position: absolute;
-    top: -10px;
-    right: -10px;
-    background: linear-gradient(to right, #FFEF2B, #F9F7D6);
-    color: #1e1e1e;
-    border-radius: 50%;
     width: 30px;
     height: 30px;
+    background: #FF1B1B;
+    border-radius: 50%;
     display: flex;
-    align-items: center;
     justify-content: center;
-    font-weight: bold;
-    z-index: 3;
-    border: 2px solid #1a1a3a;
+    align-items: center;
+    font-size: 18px;
+    font-weight: 400;
+    z-index: 4;
+    border: 2px solid #0F0F2D;
 }
 
-/* Spanning items in the grid */
-.large-item { grid-column: span 2; }
-.medium-item { grid-column: span 2; }
-.small-item { grid-column: span 1; }
 
-/* Specific item adjustments based on new layout */
-.grid-container .small-item:nth-child(3) { grid-column: 1 / 2; }
-.grid-container .medium-item:nth-child(4) { grid-column: 2 / 4; }
-.grid-container .small-item:nth-child(5) { grid-column: 4 / 5; }
-.grid-container .large-item:nth-child(6) { grid-column: 1 / 3; }
-.grid-container .large-item:nth-child(7) { grid-column: 3 / 5; }
+/* Card specific sizes */
+.deals-card { width: 389px; height: 346px; }
+.applications-card { width: 620px; height: 346px; }
+.image-card-tall { width: 191px; height: 346px; box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.20); background: none;}
+.image-card-square { width: 180px; height: 180px; box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.20); background: none;}
+.news-card { width: 730px; height: 180px; }
+.support-card { width: 290px; height: 180px; }
 
 
-/* Action Button */
-.action-button {
-  position: relative;
-  z-index: 2;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 8px;
-  background: linear-gradient(90deg, #FFEF2B 0%, #F9F7D6 100%);
-  color: #333;
-  font-weight: bold;
-  cursor: pointer;
-  transition: transform 0.2s;
-  align-self: flex-start; /* Align button to the start of the flex container */
-  margin-top: auto; /* Push to the bottom */
+/* Carousel Section */
+.carousel-section {
+    max-width: 1303px;
+    margin: 0 auto;
+}
+.carousel-title-container {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+.chat-title {
+    font-family: 'Blippo-Black CY [Rus by me]', sans-serif;
+    font-size: 55px;
+    font-weight: 400;
+    color: white;
+}
+.chat-title-highlight {
+    font-family: 'Blippo-Black CY [Rus by me]', sans-serif;
+    font-size: 55px;
+    font-weight: 400;
+    color: #FFEF2B;
 }
 
-.action-button:hover {
-  transform: scale(1.05);
+.carousel-container-wrapper {
+  background: rgba(0, 0, 0, 0.18);
+  border-radius: 32px;
+  backdrop-filter: blur(10px);
+  padding: 45px;
+  overflow-x: auto;
 }
 
-/* Carousel Styles */
 .carousel-container {
   display: flex;
-  gap: 20px;
-  overflow-x: auto; /* Simple scroll for now */
-  padding-bottom: 20px;
+  gap: 39px;
 }
 
 .carousel-card {
+  flex: 0 0 801px;
+  height: 609px;
   position: relative;
-  flex: 0 0 300px;
-  height: 400px;
-  border-radius: 15px;
+  background: linear-gradient(180deg, #004E9F 0%, black 100%);
+  box-shadow: 6px 6px 10px rgba(123, 97, 255, 0.25);
+  border-radius: 10px;
+  outline: 1px #C6BBFE solid;
   overflow: hidden;
-  padding: 20px;
+  padding: 32px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
+  justify-content: space-between;
 }
 
 .carousel-bg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: 1;
+    position: absolute;
+    top:0;
+    left:0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
 }
-
 .carousel-avatar {
-  position: relative;
-  z-index: 2;
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  margin-bottom: 20px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 363px;
+    height: 373px;
+    z-index: 2;
 }
 
-.carousel-title {
-  position: relative;
-  z-index: 2;
-  font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 10px;
+.carousel-card-header, .carousel-card-footer {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
 }
 
-.carousel-description {
-  position: relative;
-  z-index: 2;
-  font-size: 14px;
-  margin-bottom: 20px;
+.carousel-card-header {
+    align-items: flex-start;
+}
+.startup-name {
+    font-size: 35px;
+    font-weight: 600;
+}
+.investment-info {
+    background: rgba(43, 251, 255, 0.4);
+    border-radius: 10px;
+    padding: 15px 21px;
+    backdrop-filter: blur(2px);
+    font-size: 12px;
+    font-weight: 300;
+}
+.investment-info .amount {
+    color: #FFEF2B;
+    font-size: 16px;
+    font-weight: 400;
+    display: block;
 }
 
-.carousel-card .action-button {
-  align-self: center;
-  margin-top: auto;
+.carousel-card-footer {
+    align-items: flex-end;
 }
+.updates p {
+    background: rgba(255, 255, 255, 0.16);
+    border-radius: 10px;
+    padding: 8px 24px;
+    margin-bottom: 15px;
+    font-size: 14px;
+    font-weight: 300;
+    backdrop-filter: blur(5px);
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+.btn-chat {
+    background: white;
+    color: black;
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 300;
+}
+
 </style> 
