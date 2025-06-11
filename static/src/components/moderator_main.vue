@@ -110,6 +110,7 @@ img, .card, .carousel-card, .carousel-arrow {
 }
 
 .moderator-main-page {
+  background: linear-gradient(178.72deg, #000000 0%, #00346B 25.00%, #004E9F 47.60%, #01366D 64.42%, #020202 100%);
   color: white;
   font-family: 'Unbounded', sans-serif;
   width: 100%;
