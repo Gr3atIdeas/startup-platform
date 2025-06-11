@@ -2,7 +2,7 @@
   <div class="moderator-main-page">
     <!-- Dashboard Grid -->
     <div class="dashboard-grid">
-      <!-- Deals Card -->
+      <!-- Top Row -->
       <div class="card deals-card">
         <img src="/static/accounts/images/main_page_moderator/hands_upper_block.webp" class="card-bg mirrored" alt="Сделки на покупку">
         <div class="card-overlay"></div>
@@ -12,8 +12,6 @@
         </div>
         <div class="notification-badge" style="top: -10px; right: -10px;">1</div>
       </div>
-
-      <!-- Applications Card -->
       <div class="card applications-card">
         <img src="/static/accounts/images/main_page_moderator/planets_upperblock.webp" class="card-bg" alt="Заявки на новые стартапы">
         <div class="card-overlay dark"></div>
@@ -24,28 +22,23 @@
         <div class="notification-badge" style="top: -10px; right: -10px;">2</div>
       </div>
       
-      <!-- Planet Image Card -->
+      <!-- Middle Row -->
       <div class="card image-card-tall">
          <img src="/static/accounts/images/main_page_moderator/planet_upperblock.webp" class="card-bg" alt="Planet">
       </div>
-
-      <!-- News Card -->
       <div class="card news-card">
-        <img src="/static/accounts/images/main_page_moderator/sound_upperblock.webp" class="card-bg" alt="Новости">
-        <div class="card-overlay dark"></div>
         <div class="card-content left-align">
           <h3>Новости</h3>
           <button class="btn-primary">Перейти</button>
         </div>
+        <img src="/static/accounts/images/main_page_moderator/sound_upperblock.webp" class="news-card-img" alt="Новости">
         <div class="notification-badge" style="top: -10px; right: -10px;">4</div>
       </div>
-      
-      <!-- Rocket Image Card -->
       <div class="card image-card-square">
         <img src="/static/accounts/images/main_page_moderator/rocket_upperblock.webp" class="card-bg" alt="Rocket">
       </div>
 
-      <!-- Support Card -->
+      <!-- Bottom Row -->
       <div class="card support-card">
         <img src="/static/accounts/images/main_page_moderator/bg_block_support.webp" class="card-bg" alt="Поддержка">
         <div class="card-overlay dark"></div>
@@ -59,33 +52,44 @@
 
     <!-- Carousel Section -->
     <div class="carousel-section">
-      <div class="carousel-title-container">
-        <h2 class="chat-title">Чат</h2>
-        <h2 class="chat-title-highlight">СТАРТАПОВ</h2>
+      <div class="carousel-header">
+        <div class="carousel-title-container">
+          <h2 class="chat-title">Чат</h2>
+          <h2 class="chat-title-highlight">СТАРТАПОВ</h2>
+        </div>
+        <div class="carousel-controls">
+          <button @click="prevSlide" class="carousel-arrow">
+            <img src="/static/accounts/images/main_page_moderator/chevron-back-circle-outline.svg" alt="Previous">
+          </button>
+          <button @click="nextSlide" class="carousel-arrow">
+            <img src="/static/accounts/images/main_page_moderator/chevron-forward-circle-outline.svg" alt="Next">
+          </button>
+        </div>
       </div>
       <div class="carousel-container-wrapper">
-        <div class="carousel-container">
+        <div class="carousel-container" :style="{ transform: `translateX(-${currentSlide * 840}px)` }">
           <div class="carousel-card" v-for="i in 3" :key="i">
             <img src="/static/accounts/images/main_page_moderator/bg_carusel_card.webp" class="carousel-bg" alt="Card Background">
-            <img src="/static/accounts/images/main_page_moderator/planet_logo_carusel.webp" class="carousel-avatar" alt="Avatar">
-            <div class="carousel-card-header">
-                <span class="startup-name">Ромашка</span>
-                <div class="investment-info">
-                    <span>Вы инвестировали</span>
-                    <span class="amount">3 675 998 ₽</span>
+            <div class="carousel-content-wrapper">
+                <img src="/static/accounts/images/main_page_moderator/planet_logo_carusel.webp" class="carousel-avatar" alt="Avatar">
+                <div class="carousel-card-header">
+                    <span class="startup-name">Ромашка</span>
+                    <div class="investment-info">
+                        <span>Вы инвестировали</span>
+                        <span class="amount">3 675 998 ₽</span>
+                    </div>
                 </div>
-            </div>
-            <div class="carousel-card-footer">
-                <div class="updates">
-                    <p>User 67346 инвестировал 7 899 ₽</p>
-                    <p>User 67346 понравился комментарий</p>
-                </div>
-                <div class="actions">
-                    <button class="btn-primary">К стартапу</button>
-                    <button class="btn-chat">
-                        <!-- Chat Icon Placeholder -->
-                        <span>Чат</span>
-                    </button>
+                <div class="carousel-card-footer">
+                    <div class="updates">
+                        <p>User 67346 инвестировал 7 899 ₽</p>
+                        <p>User 67346 понравился комментарий</p>
+                    </div>
+                    <div class="actions">
+                        <button class="btn-primary">К стартапу</button>
+                         <button class="btn-primary btn-chat">
+                            <span>Чат</span>
+                        </button>
+                    </div>
                 </div>
             </div>
           </div>
@@ -98,6 +102,28 @@
 <script>
 export default {
   name: 'ModeratorMainPage',
+  data() {
+    return {
+      currentSlide: 0,
+      totalSlides: 3,
+    };
+  },
+  methods: {
+    nextSlide() {
+      if (this.currentSlide < this.totalSlides - 1) {
+        this.currentSlide++;
+      } else {
+        this.currentSlide = 0; // Loop back to start
+      }
+    },
+    prevSlide() {
+      if (this.currentSlide > 0) {
+        this.currentSlide--;
+      } else {
+        this.currentSlide = this.totalSlides - 1; // Loop to end
+      }
+    },
+  },
 }
 </script>
 
@@ -105,7 +131,7 @@ export default {
 .moderator-main-page {
   width: 100%;
   padding: 20px;
-  background: linear-gradient(153deg, black 0%, #00346B 25%, #004E9F 48%, #01366D 64%, #020202 100%);
+  // background: linear-gradient(153deg, black 0%, #00346B 25%, #004E9F 48%, #01366D 64%, #020202 100%);
   color: white;
   font-family: 'Unbounded', sans-serif;
 }
@@ -177,6 +203,7 @@ export default {
   &.left-align {
     align-items: flex-start;
     text-align: left;
+    width: 50%;
   }
 }
 
@@ -191,6 +218,10 @@ export default {
   font-weight: 400;
   border: none;
   cursor: pointer;
+  
+  &.btn-chat {
+    min-width: 120px;
+  }
 }
 
 .notification-badge {
@@ -205,28 +236,52 @@ export default {
     font-size: 18px;
     font-weight: 400;
     z-index: 4;
-    border: 2px solid #0F0F2D;
+    border: 2px solid rgba(15, 15, 45, 0.5);
+    top: -10px;
+    right: -10px;
 }
 
-
-/* Card specific sizes */
+/* Card specific sizes and layouts */
 .deals-card { width: 389px; height: 346px; }
 .applications-card { width: 620px; height: 346px; }
-.image-card-tall { width: 191px; height: 346px; box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.20); background: none;}
+.image-card-tall { width: 191px; height: 180px; box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.20); background: none;}
+.news-card {
+  width: 730px;
+  height: 180px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-right: 20px;
+  .card-content {
+    justify-content: center;
+    height: auto;
+  }
+}
+.news-card-img {
+  width: 50%;
+  height: 100%;
+  object-fit: cover;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
 .image-card-square { width: 180px; height: 180px; box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.20); background: none;}
-.news-card { width: 730px; height: 180px; }
-.support-card { width: 290px; height: 180px; }
+.support-card { width: 1101px; height: 180px; }
 
 
 /* Carousel Section */
 .carousel-section {
     max-width: 1303px;
-    margin: 0 auto;
+    margin: 45px auto 0 auto;
+}
+.carousel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
 }
 .carousel-title-container {
     display: flex;
     gap: 15px;
-    margin-bottom: 20px;
 }
 .chat-title {
     font-family: 'Blippo-Black CY [Rus by me]', sans-serif;
@@ -241,64 +296,73 @@ export default {
     color: #FFEF2B;
 }
 
+.carousel-controls {
+  display: flex;
+  gap: 10px;
+  .carousel-arrow {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    img {
+      width: 40px;
+      height: 40px;
+    }
+  }
+}
+
 .carousel-container-wrapper {
   background: rgba(0, 0, 0, 0.18);
   border-radius: 32px;
   backdrop-filter: blur(10px);
   padding: 45px;
-  overflow-x: auto;
+  overflow: hidden;
 }
 
 .carousel-container {
   display: flex;
   gap: 39px;
+  transition: transform 0.5s ease-in-out;
 }
 
 .carousel-card {
   flex: 0 0 801px;
-  height: 609px;
+  height: auto;
   position: relative;
-  background: linear-gradient(180deg, #004E9F 0%, black 100%);
+  background: none; // The bg is now on the image
   box-shadow: 6px 6px 10px rgba(123, 97, 255, 0.25);
   border-radius: 10px;
   outline: 1px #C6BBFE solid;
   overflow: hidden;
+  .carousel-bg {
+    z-index: 1;
+  }
+}
+.carousel-content-wrapper {
+  position: relative;
+  z-index: 2;
   padding: 32px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  gap: 20px;
 }
 
-.carousel-bg {
-    position: absolute;
-    top:0;
-    left:0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    z-index: 1;
-}
 .carousel-avatar {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 363px;
-    height: 373px;
-    z-index: 2;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    align-self: center;
+    margin-bottom: 20px;
+    border: 3px solid #004E9F;
 }
 
 .carousel-card-header, .carousel-card-footer {
-    position: relative;
-    z-index: 3;
     display: flex;
     justify-content: space-between;
     width: 100%;
+    align-items: center;
 }
 
-.carousel-card-header {
-    align-items: flex-start;
-}
 .startup-name {
     font-size: 35px;
     font-weight: 600;
@@ -310,6 +374,7 @@ export default {
     backdrop-filter: blur(2px);
     font-size: 12px;
     font-weight: 300;
+    text-align: right;
     .amount {
         color: #FFEF2B;
         font-size: 16px;
@@ -318,9 +383,6 @@ export default {
     }
 }
 
-.carousel-card-footer {
-    align-items: flex-end;
-}
 .updates p {
     background: rgba(255, 255, 255, 0.16);
     border-radius: 10px;
@@ -335,17 +397,6 @@ export default {
     display: flex;
     align-items: center;
     gap: 15px;
-}
-.btn-chat {
-    background: white;
-    color: black;
-    width: 68px;
-    height: 68px;
-    border-radius: 50%;
-    border: none;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 300;
 }
 
 </style> 
