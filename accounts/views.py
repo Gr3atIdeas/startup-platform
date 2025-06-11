@@ -1117,10 +1117,11 @@ def edit_startup(request, startup_id):
 
 @login_required
 def main_page_moderator(request):
-    if not request.user.role or request.user.role.role_name != 'moderator':
-        messages.error(request, "У вас нет прав для доступа к этой странице.")
-        return redirect('home')
-    return render(request, 'accounts/main_page_moderator.html')
+    if not hasattr(request.user, 'role') or request.user.role.role_name != 'moderator':
+        messages.error(request, 'У вас нет прав для доступа к этой странице.')
+        return redirect('home')  # Или на другую страницу, например, страницу входа
+
+    return render(request, 'accounts/moderator_main.html')
 
 # Панель модератора
 def moderator_dashboard(request):
