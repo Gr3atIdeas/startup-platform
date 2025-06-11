@@ -134,6 +134,32 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@font-face {
+  font-family: 'Unbounded';
+  src: url('/static/accounts/fonts/Unbounded-Regular.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Unbounded';
+  src: url('/static/accounts/fonts/Unbounded-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Unbounded';
+  src: url('/static/accounts/fonts/Unbounded-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Blippo-Black CY [Rus by me]';
+  src: url('/static/accounts/fonts/blippo_blackcyrusbyme.otf') format('opentype');
+}
+
 .moderator-main-page {
   color: white;
   font-family: 'Unbounded', sans-serif;
@@ -219,7 +245,7 @@ export default {
 
     .deals-card { width: 389px; height: 346px; }
     .applications-card { width: 663px; height: 346px; }
-    .image-card-tall { width: 191px; height: 346px; background: none; box-shadow: none; .card-inner { overflow: hidden; .card-bg { object-fit: cover; } } }
+    .image-card-tall { width: 224px; height: 346px; background: none; box-shadow: none; .card-inner { overflow: hidden; .card-bg { object-fit: cover; } } }
     .image-card-small-planet { width: 180px; height: 180px; background: none; box-shadow: none; .card-inner { overflow: hidden; .card-bg { object-fit: cover; } } }
     .news-card {
         width: 773px; height: 180px;
@@ -278,10 +304,10 @@ export default {
     padding: 0;
     margin-top: 45px;
     width: 100%;
-    overflow: hidden; // To contain the full-bleed carousel
+    overflow-x: clip;
     .carousel-title-container {
         max-width: 1303px;
-        margin: 0 auto 20px auto;
+        margin: 0 auto;
         padding: 75px 20px;
         h2 { 
             margin: 0; 
@@ -296,11 +322,10 @@ export default {
 }
 
 .carousel-wrapper {
-  display: flex;
-  align-items: center;
   position: relative;
-  width: auto; // Let content define width
-  margin-left: calc((100% - 1303px) / 2);
+  width: 100%;
+  padding-left: calc((100vw - 1303px) / 2);
+  box-sizing: border-box;
   
   .carousel-arrow {
     background: transparent;
@@ -319,7 +344,7 @@ export default {
       background: rgba(0,0,0,0.2);
     }
 
-    &.left { left: 30px; }
+    &.left { left: calc((100vw - 1303px) / 2 + 30px); }
     &.right { right: 20px; }
     img { width: 50px; height: 50px; display: block; }
   }
@@ -404,7 +429,7 @@ export default {
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 15px;
+        gap: 20px;
     }
     .chat-action {
         order: 1;
@@ -415,8 +440,8 @@ export default {
     }
     .btn-chat {
         background: white;
-        width: 86px; // Increased width to fit content
-        height: 86px; // Increased height
+        width: 86px;
+        height: 86px;
         border-radius: 50%;
         border: none;
         cursor: pointer;
