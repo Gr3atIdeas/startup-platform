@@ -113,6 +113,7 @@ img, .card, .carousel-card, .carousel-arrow {
   color: white;
   font-family: 'Unbounded', sans-serif;
   width: 100%;
+  overflow-x: hidden;
 }
 
 .dashboard-grid {
