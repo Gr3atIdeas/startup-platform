@@ -86,13 +86,13 @@
                             <p>Вышло обновления новости по стартапу</p>
                         </div>
                         <div class="actions">
-                            <button class="btn-primary">К стартапу</button>
                             <div class="chat-action">
                                 <button class="btn-chat">
                                     <img src="/static/accounts/images/main_page_moderator/chatbubbles-outline.svg" alt="Чат">
                                     <span>Чат</span>
                                 </button>
                             </div>
+                            <button class="btn-primary">К стартапу</button>
                         </div>
                     </div>
                 </div>
@@ -218,11 +218,11 @@ export default {
     }
 
     .deals-card { width: 389px; height: 346px; }
-    .applications-card { width: 620px; height: 346px; }
+    .applications-card { width: 663px; height: 346px; }
     .image-card-tall { width: 191px; height: 346px; background: none; box-shadow: none; .card-inner { overflow: hidden; .card-bg { object-fit: cover; } } }
     .image-card-small-planet { width: 180px; height: 180px; background: none; box-shadow: none; .card-inner { overflow: hidden; .card-bg { object-fit: cover; } } }
     .news-card {
-        width: 730px; height: 180px;
+        width: 773px; height: 180px;
         .card-inner {
             display: flex;
             align-items: center;
@@ -299,7 +299,9 @@ export default {
   display: flex;
   align-items: center;
   position: relative;
-  width: 100%;
+  width: auto; // Let content define width
+  margin-left: calc((100% - 1303px) / 2);
+  
   .carousel-arrow {
     background: transparent;
     border: 2px solid transparent;
@@ -317,7 +319,7 @@ export default {
       background: rgba(0,0,0,0.2);
     }
 
-    &.left { left: calc((100% - 1303px) / 2 + 30px); }
+    &.left { left: 30px; }
     &.right { right: 20px; }
     img { width: 50px; height: 50px; display: block; }
   }
@@ -325,13 +327,10 @@ export default {
 
 .carousel-container-wrapper {
   background: rgba(0, 0, 0, 0.18);
-  border-radius: 32px 0 0 32px;
+  border-radius: 32px;
   backdrop-filter: blur(10px);
-  padding: 54px 0 54px 94px;
+  padding: 54px 94px;
   overflow: hidden;
-  margin-left: calc((100% - 1303px) / 2);
-  width: calc(100% - ((100% - 1303px) / 2));
-  box-sizing: border-box;
 }
 
 .carousel-container {
@@ -403,12 +402,16 @@ export default {
     }
     .actions {
         display: flex;
-        align-items: flex-end;
-        justify-content: space-between;
+        flex-direction: column;
+        align-items: center;
         gap: 15px;
     }
     .chat-action {
-        // No specific styles needed here now, can be removed if not used for other layout purposes
+        order: 1;
+    }
+    .btn-primary {
+        order: 2;
+        white-space: nowrap;
     }
     .btn-chat {
         background: white;
