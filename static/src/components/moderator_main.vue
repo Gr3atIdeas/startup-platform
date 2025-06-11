@@ -309,11 +309,9 @@ export default {
 }
 
 .carousel-wrapper {
-  display: flex;
-  align-items: center;
   position: relative;
   margin-left: calc((100% - 1303px) / 2);
-  width: calc(100% - ((100% - 1303px) / 2));
+  width: calc(100% - (100% - 1303px) / 2);
   
   .carousel-arrow {
     background: transparent;
@@ -335,7 +333,7 @@ export default {
     &.left { left: 30px; }
     &.right { 
         right: 20px;
-        position: fixed; 
+        position: absolute; 
     }
     img { width: 50px; height: 50px; display: block; }
   }
@@ -343,10 +341,9 @@ export default {
 
 .carousel-container-wrapper {
   background: rgba(0, 0, 0, 0.18);
-  border-radius: 32px;
+  border-radius: 32px 0 0 32px;
   backdrop-filter: blur(10px);
   padding: 54px;
-  padding-right: 150px;
   overflow: hidden;
   width: 100%;
 }
