@@ -336,7 +336,6 @@ img, .card, .carousel-card, .carousel-arrow {
   align-items: center;
   position: relative;
   margin-left: calc((100% - 1303px) / 2);
-  padding-right: calc((100vw - 100%)/2);
   
   .carousel-arrow {
     background: transparent;
@@ -357,7 +356,7 @@ img, .card, .carousel-card, .carousel-arrow {
 
     &.left { left: 30px; }
     &.right { 
-        right: 20px;
+        right: 40px;
         position: absolute; 
     }
     img { width: 50px; height: 50px; display: block; }
@@ -371,6 +370,8 @@ img, .card, .carousel-card, .carousel-arrow {
   padding: 54px;
   overflow: hidden;
   width: 100%;
+  padding-right: 300px;
+  margin-right: -300px;
 }
 
 .carousel-container {
