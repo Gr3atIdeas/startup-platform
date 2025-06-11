@@ -149,7 +149,7 @@ export default {
 ::-webkit-scrollbar-thumb:hover {
   background-color: #C6BBFE;
 }
-img, .card, .carousel-card {
+img, .card, .carousel-card, .carousel-arrow {
   user-select: none;
   -webkit-user-drag: none;
   -moz-user-select: none;
@@ -332,9 +332,11 @@ img, .card, .carousel-card {
 }
 
 .carousel-wrapper {
-  position: absolute;
-  left: calc((100% - 1303px) / 2);
-  right: 0;
+  display: flex;
+  align-items: center;
+  position: relative;
+  margin-left: calc((100% - 1303px) / 2);
+  padding-right: calc((100vw - 100%)/2);
   
   .carousel-arrow {
     background: transparent;
@@ -355,8 +357,8 @@ img, .card, .carousel-card {
 
     &.left { left: 30px; }
     &.right { 
-        right: calc((100vw - 1303px) / 2 + 20px);
-        position: fixed; 
+        right: 20px;
+        position: absolute; 
     }
     img { width: 50px; height: 50px; display: block; }
   }
