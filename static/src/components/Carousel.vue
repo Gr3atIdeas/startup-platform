@@ -163,7 +163,6 @@ export default {
   background: rgba(0, 0, 0, 0.18);
   border-radius: 32px 0 0 32px;
   backdrop-filter: blur(10px);
-  padding: 54px 0 54px 54px;
   overflow: hidden;
   flex: 1;
   box-sizing: border-box;
