@@ -101,7 +101,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .moderator-main-page {
   width: 100%;
   padding: 20px;
@@ -125,6 +125,13 @@ export default {
   overflow: hidden;
   box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.25);
   background: linear-gradient(180deg, #004E9F 0%, black 100%);
+
+  h3 {
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1.2;
+    margin-bottom: 20px;
+  }
 }
 
 .card-bg {
@@ -150,9 +157,10 @@ export default {
   background: linear-gradient(180deg, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0.55) 100%);
   filter: blur(27.5px);
   z-index: 2;
-}
-.card-overlay.dark {
+
+  &.dark {
     background: linear-gradient(270deg, rgba(0, 0, 0, 0.14) 0%, rgba(0, 0, 0, 0.30) 100%);
+  }
 }
 
 .card-content {
@@ -165,17 +173,11 @@ export default {
   align-items: center;
   text-align: center;
   height: 100%;
-}
-.card-content.left-align {
+
+  &.left-align {
     align-items: flex-start;
     text-align: left;
-}
-
-.card h3 {
-  font-size: 20px;
-  font-weight: 400;
-  line-height: 1.2;
-  margin-bottom: 20px;
+  }
 }
 
 .btn-primary {
@@ -308,12 +310,12 @@ export default {
     backdrop-filter: blur(2px);
     font-size: 12px;
     font-weight: 300;
-}
-.investment-info .amount {
-    color: #FFEF2B;
-    font-size: 16px;
-    font-weight: 400;
-    display: block;
+    .amount {
+        color: #FFEF2B;
+        font-size: 16px;
+        font-weight: 400;
+        display: block;
+    }
 }
 
 .carousel-card-footer {
