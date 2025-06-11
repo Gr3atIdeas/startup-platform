@@ -7,38 +7,38 @@
       </h2>
     </div>
     <div class="carousel-wrapper">
-      <button @click="prevSlide" class="carousel-arrow left">
-        <img src="/static/accounts/images/main_page_moderator/chevron-back-circle-outline.svg" alt="Назад">
-      </button>
       <div class="carousel-container-wrapper">
-          <div class="carousel-container" :style="{ transform: `translateX(-${currentSlide * (801 + 39)}px)` }">
-              <div class="carousel-card" v-for="i in 3" :key="i">
-                  <img src="/static/accounts/images/main_page_moderator/planet_logo_carusel.webp" class="carousel-avatar" alt="Planet Logo">
-                  <div class="carousel-card-header">
-                      <span class="startup-name">Ромашка</span>
-                      <div class="investment-info">
-                          <span>Вы инвестировали</span>
-                          <span class="amount">3 675 998 ₽</span>
-                      </div>
-                  </div>
-                  <div class="carousel-card-footer">
-                      <div class="updates">
-                          <p>User 67346 инвестировал 7 899 ₽</p>
-                          <p>User 67346 понравился комментарий user 74839</p>
-                          <p>Вышло обновления новости по стартапу</p>
-                      </div>
-                      <div class="actions">
-                          <div class="chat-action">
-                              <button class="btn-chat">
-                                  <img src="/static/accounts/images/main_page_moderator/chatbubbles-outline.svg" alt="Чат">
-                                  <span>Чат</span>
-                              </button>
-                          </div>
-                          <button class="btn-primary">К стартапу</button>
-                      </div>
-                  </div>
-              </div>
-          </div>
+        <button @click="prevSlide" class="carousel-arrow left">
+          <img src="/static/accounts/images/main_page_moderator/chevron-back-circle-outline.svg" alt="Назад">
+        </button>
+        <div class="carousel-container" :style="{ transform: `translateX(-${currentSlide * (801 + 39)}px)` }">
+            <div class="carousel-card" v-for="i in 3" :key="i">
+                <img src="/static/accounts/images/main_page_moderator/planet_logo_carusel.webp" class="carousel-avatar" alt="Planet Logo">
+                <div class="carousel-card-header">
+                    <span class="startup-name">Ромашка</span>
+                    <div class="investment-info">
+                        <span>Вы инвестировали</span>
+                        <span class="amount">3 675 998 ₽</span>
+                    </div>
+                </div>
+                <div class="carousel-card-footer">
+                    <div class="updates">
+                        <p>User 67346 инвестировал 7 899 ₽</p>
+                        <p>User 67346 понравился комментарий user 74839</p>
+                        <p>Вышло обновления новости по стартапу</p>
+                    </div>
+                    <div class="actions">
+                        <div class="chat-action">
+                            <button class="btn-chat">
+                                <img src="/static/accounts/images/main_page_moderator/chatbubbles-outline.svg" alt="Чат">
+                                <span>Чат</span>
+                            </button>
+                        </div>
+                        <button class="btn-primary">К стартапу</button>
+                    </div>
+                </div>
+            </div>
+        </div>
       </div>
       <button @click="nextSlide" class="carousel-arrow right">
           <img src="/static/accounts/images/main_page_moderator/chevron-forward-circle-outline.svg" alt="Вперед">
@@ -147,10 +147,12 @@ export default {
       background: rgba(0,0,0,0.2);
     }
 
-    &.left { left: calc(((100% - 1303px) / 2) + 30px); }
+    &.left {
+      left: 20px;
+    }
+    
     &.right { 
         right: calc(((100% - 1303px) / 2) + 40px);
-        position: absolute; 
     }
     img { width: 50px; height: 50px; display: block; }
   }
@@ -163,6 +165,7 @@ export default {
   padding: 54px;
   overflow: hidden;
   width: 100%;
+  position: relative;
 }
 
 .carousel-container {
@@ -296,4 +299,4 @@ export default {
         }
     }
 }
-</style> 
+</style>
