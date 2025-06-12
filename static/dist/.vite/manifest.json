@@ -10,6 +10,10 @@
       "assets/global-D7VDd7EY.css"
     ]
   },
+  "static/accounts/fonts/Unbounded-Regular.ttf": {
+    "file": "assets/Unbounded-Regular-DdODyGPg.ttf",
+    "src": "static/accounts/fonts/Unbounded-Regular.ttf"
+  },
   "static/accounts/fonts/Unbounded-VariableFont_wght.ttf": {
     "file": "assets/Unbounded-VariableFont_wght-HsRHSyHp.ttf",
     "src": "static/accounts/fonts/Unbounded-VariableFont_wght.ttf"
@@ -51,7 +55,7 @@
     "src": "static/accounts/images/main_page_moderator/sound_upperblock.webp"
   },
   "static/src/js/investor_main.js": {
-    "file": "assets/investor_main-B692JaMH.js",
+    "file": "assets/investor_main-Bj3-c78X.js",
     "name": "investor_main",
     "src": "static/src/js/investor_main.js",
     "isEntry": true,
@@ -59,9 +63,10 @@
       "_global-Cy6piX8H.js"
     ],
     "css": [
-      "assets/investor_main-D109rKSc.css"
+      "assets/investor_main-DHph7yJX.css"
     ],
     "assets": [
+      "assets/Unbounded-Regular-DdODyGPg.ttf",
       "assets/blippo_blackcyrusbyme-eYkDlaEE.otf",
       "assets/Unbounded-VariableFont_wght-HsRHSyHp.ttf"
     ]
