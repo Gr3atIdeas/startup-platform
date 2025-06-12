@@ -535,11 +535,11 @@ function setupChatPagination() {
     const totalPages = Math.ceil(chatItems.length / itemsPerPage);
     
     let paginationHTML = '';
-    paginationHTML += `<span class="page-number-item" data-page="prev">&lsaquo;</span>`;
+    paginationHTML += `<span class="page-number-item" data-page="prev">‹</span>`;
     for (let i = 1; i <= totalPages; i++) {
         paginationHTML += `<span class="page-number-item ${i === 1 ? 'current' : ''}" data-page="${i}">${i}</span>`;
     }
-    paginationHTML += `<span class="page-number-item" data-page="next">&rsaquo;</span>`;
+    paginationHTML += `<span class="page-number-item" data-page="next">›</span>`;
     
     paginationContainer.innerHTML = paginationHTML;
     
@@ -584,16 +584,21 @@ function setupChatPagination() {
             }
         });
     }
-    
-    function updateActiveChatPage() {
-        pageButtons.forEach(button => {
-            if (button.dataset.page === currentPage.toString()) {
-                button.classList.add('current');
-            } else {
-                button.classList.remove('current');
-            }
-        });
-    }
+}
+
+function updateActiveChatPage() {
+    const pageButtons = document.getElementById('chatPagination').querySelectorAll('.page-number-item');
+    let currentPage = 1;
+    pageButtons.forEach(button => {
+        if (button.classList.contains('current')) {
+            currentPage = parseInt(button.dataset.page);
+        }
+        if (button.dataset.page === currentPage.toString()) {
+            button.classList.add('current');
+        } else {
+            button.classList.remove('current');
+        }
+    });
 }
 
 function showMoreChats() {
