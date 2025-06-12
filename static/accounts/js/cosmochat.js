@@ -598,20 +598,15 @@ if (messageTextInput) {
     });
 }
 
-// Установить ID текущего пользователя (должно быть установлено в Django шаблоне)
-// Пример: <script>window.REQUEST_USER_ID = {{ request.user.user_id }};</script> в конце base.html или в cosmochat.html
-if (typeof window.REQUEST_USER_ID === 'undefined') {
-     // Получаем user_id из data-атрибута на элементе body или другом видном месте
-    const bodyUserId = document.body.dataset.userId;
-    if (bodyUserId) {
-        window.REQUEST_USER_ID = parseInt(bodyUserId);
+// Установить ID текущего пользователя из JSON-данных, переданных через json_script
+document.addEventListener('DOMContentLoaded', function() {
+    const requestUserIdData = JSON.parse(document.getElementById('request_user_id_data').textContent);
+    if (requestUserIdData) {
+        window.REQUEST_USER_ID = parseInt(requestUserIdData);
     } else {
         console.warn('REQUEST_USER_ID не установлен. Некоторые функции чата могут работать некорректно.');
-        // Попытка извлечь из скрытого поля, если оно есть для какой-либо формы на странице (менее надежно)
-        const userIdField = document.querySelector('input[name="user_id_holder"]'); // Пример
-        if (userIdField) window.REQUEST_USER_ID = parseInt(userIdField.value);
     }
-}
+});
 
 // Функция для обновления отображения рейтинга планетами
 function updateUserRatingDisplay(starsContainer) {
