@@ -1,13 +1,13 @@
 {
-  "_CustomScrollbar-!~{003}~.js": {
-    "file": "assets/CustomScrollbar-CKM8J16P.css",
-    "src": "_CustomScrollbar-!~{003}~.js"
+  "_global-!~{003}~.js": {
+    "file": "assets/global-D7VDd7EY.css",
+    "src": "_global-!~{003}~.js"
   },
-  "_CustomScrollbar-Dq8ygv1g.js": {
-    "file": "assets/CustomScrollbar-Dq8ygv1g.js",
-    "name": "CustomScrollbar",
+  "_global-CgCEqFWJ.js": {
+    "file": "assets/global-CgCEqFWJ.js",
+    "name": "global",
     "css": [
-      "assets/CustomScrollbar-CKM8J16P.css"
+      "assets/global-D7VDd7EY.css"
     ]
   },
   "static/accounts/fonts/Unbounded-VariableFont_wght.ttf": {
@@ -51,15 +51,15 @@
     "src": "static/accounts/images/main_page_moderator/sound_upperblock.webp"
   },
   "static/src/js/investor_main.js": {
-    "file": "assets/investor_main-ClIugFBW.js",
+    "file": "assets/investor_main-FJO0cnNe.js",
     "name": "investor_main",
     "src": "static/src/js/investor_main.js",
     "isEntry": true,
     "imports": [
-      "_CustomScrollbar-Dq8ygv1g.js"
+      "_global-CgCEqFWJ.js"
     ],
     "css": [
-      "assets/investor_main-CrNGyZ37.css"
+      "assets/investor_main-BkYMLqAQ.css"
     ],
     "assets": [
       "assets/blippo_blackcyrusbyme-eYkDlaEE.otf",
@@ -67,15 +67,15 @@
     ]
   },
   "static/src/js/main.js": {
-    "file": "assets/main-COs7Fro3.js",
+    "file": "assets/main-BVCP-2-n.js",
     "name": "main",
     "src": "static/src/js/main.js",
     "isEntry": true,
     "imports": [
-      "_CustomScrollbar-Dq8ygv1g.js"
+      "_global-CgCEqFWJ.js"
     ],
     "css": [
-      "assets/main-Chauiaax.css"
+      "assets/main-BZyu73tf.css"
     ],
     "assets": [
       "assets/planet_logo_carusel-DErSZkDt.webp",
