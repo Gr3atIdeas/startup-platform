@@ -66,16 +66,16 @@
       "assets/Unbounded-VariableFont_wght-HsRHSyHp.ttf"
     ]
   },
-  "static/src/js/main.js": {
-    "file": "assets/main-B3GqhPEl.js",
-    "name": "main",
-    "src": "static/src/js/main.js",
+  "static/src/js/moderator_main.js": {
+    "file": "assets/moderator_main-CC7SByAl.js",
+    "name": "moderator_main",
+    "src": "static/src/js/moderator_main.js",
     "isEntry": true,
     "imports": [
       "_global-Cy6piX8H.js"
     ],
     "css": [
-      "assets/main-BZyu73tf.css"
+      "assets/moderator_main-BZyu73tf.css"
     ],
     "assets": [
       "assets/planet_logo_carusel-DErSZkDt.webp",

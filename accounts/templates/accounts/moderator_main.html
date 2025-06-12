@@ -7,7 +7,8 @@
 {% block head_extra %}
     {# Старые стили можно будет удалить или перенести в Vue компоненты #}
     {# <link rel="stylesheet" href="{% static 'accounts/css/main_page_moderator.css' %}?v={% now 'U' %}"> #}
-    {% vite_asset 'static/src/js/main.js' %}
+    <link rel="stylesheet" href="{% static 'accounts/css/moderator_main.css' %}">
+    {% vite_asset 'static/src/js/moderator_main.js' %}
 {% endblock %}
 
 {% block content %}

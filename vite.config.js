@@ -17,9 +17,12 @@ export default defineConfig({
     rollupOptions: {
       // Указываем входной файл в виде массива, чтобы ключ в манифесте совпадал с путем.
       input: [
-        './static/src/js/main.js',
+        './static/src/js/moderator_main.js',
         './static/src/js/investor_main.js'
       ],
+      output: {
+        // ... existing code ...
+      },
     },
   },
 }) 
