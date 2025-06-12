@@ -51,7 +51,7 @@
     "src": "static/accounts/images/main_page_moderator/sound_upperblock.webp"
   },
   "static/src/js/investor_main.js": {
-    "file": "assets/investor_main-B8f1N2PA.js",
+    "file": "assets/investor_main-B692JaMH.js",
     "name": "investor_main",
     "src": "static/src/js/investor_main.js",
     "isEntry": true,
@@ -59,7 +59,7 @@
       "_global-Cy6piX8H.js"
     ],
     "css": [
-      "assets/investor_main-DQPuXLjr.css"
+      "assets/investor_main-D109rKSc.css"
     ],
     "assets": [
       "assets/blippo_blackcyrusbyme-eYkDlaEE.otf",

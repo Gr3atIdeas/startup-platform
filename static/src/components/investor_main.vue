@@ -238,8 +238,6 @@
       <div class="title-startups">СТАРТАПОВ</div>
     </div>
 
-    <FAQ />
-
     <div class="chat-section-content">
       <div class="chat-content-inner">
         <div class="empty-chat-placeholder">
@@ -405,6 +403,8 @@
         </div>
       </div>
     </div>
+
+    <FAQ />
   </div>
 </template>
 
