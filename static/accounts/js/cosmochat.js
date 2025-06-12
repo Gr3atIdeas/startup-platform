@@ -598,13 +598,25 @@ if (messageTextInput) {
     });
 }
 
-// Установить ID текущего пользователя из JSON-данных, переданных через json_script
+// Установить ID текущего пользователя из JSON-данных, переданных через json_script с проверкой
 document.addEventListener('DOMContentLoaded', function() {
-    const requestUserIdData = JSON.parse(document.getElementById('request_user_id_data').textContent);
-    if (requestUserIdData) {
-        window.REQUEST_USER_ID = parseInt(requestUserIdData);
+    const requestUserIdElement = document.getElementById('request_user_id_data');
+    if (requestUserIdElement && requestUserIdElement.textContent) {
+        const requestUserIdData = JSON.parse(requestUserIdElement.textContent);
+        if (requestUserIdData) {
+            window.REQUEST_USER_ID = parseInt(requestUserIdData);
+        } else {
+            console.warn('REQUEST_USER_ID не установлен. Получено пустое значение из JSON.');
+        }
     } else {
-        console.warn('REQUEST_USER_ID не установлен. Некоторые функции чата могут работать некорректно.');
+        console.error('Элемент request_user_id_data не найден или пуст. Проверьте шаблон.');
+        // Падбэк: попытка получить из body.dataset.userId
+        const bodyUserId = document.body.dataset.userId;
+        if (bodyUserId) {
+            window.REQUEST_USER_ID = parseInt(bodyUserId);
+        } else {
+            console.warn('REQUEST_USER_ID не установлен. Некоторые функции чата могут работать некорректно.');
+        }
     }
 });
 
