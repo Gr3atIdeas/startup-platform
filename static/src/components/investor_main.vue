@@ -238,6 +238,8 @@
       <div class="title-startups">СТАРТАПОВ</div>
     </div>
 
+    <FAQ />
+
     <div class="chat-section-content">
       <div class="chat-content-inner">
         <div class="empty-chat-placeholder">
@@ -403,46 +405,23 @@
         </div>
       </div>
     </div>
-
-    <div class="faq-section">
-      <div class="faq-content">
-        <div class="faq-header">
-          <div class="faq-title">FAQ</div>
-          <div class="faq-subtitle">
-            Часто задаваемые вопросы<br/>Не нашли ответа?<br/>
-            <span class="support-link">Поддержка</span>
-          </div>
-        </div>
-        <div class="faq-body">
-          <img class="faq-bg" src="https://placehold.co/1303x797" />
-          <div class="faq-answer-panel"></div>
-          <div class="faq-questions-panel">
-            <div class="faq-question-btn" v-for="i in 4" :key="'q1'+i">Где можно скачать отчет?</div>
-            <div class="faq-question-btn active">Как создать стартап?</div>
-            <div class="faq-question-btn" v-for="i in 6" :key="'q2'+i">Как создать стартап?</div>
-          </div>
-          <div class="faq-scrollbar"></div>
-          <div class="faq-answer-text">
-            <span class="text-primary">Создать стартап можно только пользователю со статусом стартапер. Для этого вас нужно перейти с раздел </span>
-            <span class="text-highlight">“Стартапы”</span>
-            <span class="text-primary"> и нажать кнопку “Создать стартап” {скрин}<br/><br/>Или вы можете найти кнопку в верхней части меню платформы</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
   </div>
 </template>
 
-<script>
-export default {
-  name: 'InvestorMainPage',
-  data() {
-    return {
-      // ...
-    };
-  },
+<script setup>
+import { ref, onMounted } from 'vue';
+import FAQ from './FAQ.vue';
+
+const sliderValue = ref(50);
+const activeTab = ref('startups');
+
+const selectTab = (tab) => {
+  activeTab.value = tab;
 };
+
+onMounted(() => {
+  // Any on-mounted logic can go here
+});
 </script>
 
 <style lang="scss" scoped>
@@ -1620,140 +1599,5 @@ export default {
   font-family: 'Unbounded', sans-serif;
   font-weight: 400;
   line-height: 16px;
-}
-
-.faq-section {
-  width: 1445px;
-  padding: 20px 71px 45px 71px;
-  overflow: hidden;
-  display: inline-flex;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 10px;
-}
-
-.faq-content {
-  width: 1303px;
-  display: inline-flex;
-  flex-direction: column;
-  gap: 55px;
-}
-
-.faq-header {
-  align-self: stretch;
-  display: inline-flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.faq-title {
-  color: #FFEF2B;
-  font-size: 55px;
-  font-family: 'Blippo-Black CY [Rus by me]', sans-serif;
-  font-weight: 400;
-  line-height: 18px;
-}
-
-.faq-subtitle {
-  width: 364px;
-  font-size: 20px;
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 400;
-  line-height: 18px;
-  color: white;
-
-  .support-link {
-    color: #FFEF2B;
-  }
-}
-
-.faq-body {
-  align-self: stretch;
-  height: 797px;
-  position: relative;
-}
-
-.faq-bg {
-  width: 1303px;
-  height: 797px;
-  left: 0px;
-  top: 0px;
-  position: absolute;
-  background: linear-gradient(180deg, #004E9F 0%, #097EF7 100%);
-  box-shadow: 0px 10px 23px 5px rgba(0, 0, 0, 0.18);
-  border-radius: 10px;
-  border: 2px rgba(255, 255, 255, 0.36) solid;
-}
-
-.faq-answer-panel {
-  width: 818px;
-  height: 756px;
-  left: 441px;
-  top: 21px;
-  position: absolute;
-  background: white;
-  box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.25) inset;
-  border-radius: 32px;
-  border: 1px #818CE5 solid;
-}
-
-.faq-questions-panel {
-  width: 327px;
-  left: 35px;
-  top: 57px;
-  position: absolute;
-  display: inline-flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.faq-question-btn {
-  height: 40px;
-  padding: 8px 24px;
-  background: white;
-  border-radius: 99px;
-  outline: 1px black solid;
-  outline-offset: -1px;
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-  color: black;
-  font-size: 16px;
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 400;
-  line-height: 16px;
-  cursor: pointer;
-
-  &.active {
-    background: #FFEF2B;
-    outline: none;
-    font-size: 20px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-  }
-}
-
-.faq-scrollbar {
-  width: 10px;
-  height: 170px;
-  left: 411px;
-  top: 37px;
-  position: absolute;
-  background: rgba(255, 255, 255, 0.34);
-  border-radius: 4px;
-}
-
-.faq-answer-text {
-  width: 500px;
-  left: 600px;
-  top: 107px;
-  position: absolute;
-  font-size: 24px;
-  font-family: 'Circe', sans-serif;
-  font-weight: 400;
-  line-height: 24px;
-  .text-primary { color: #2353D9; }
-  .text-highlight { color: #7B61FF; }
 }
 </style> 

@@ -3,8 +3,8 @@
     "file": "assets/global-D7VDd7EY.css",
     "src": "_global-!~{003}~.js"
   },
-  "_global-CgCEqFWJ.js": {
-    "file": "assets/global-CgCEqFWJ.js",
+  "_global-Cy6piX8H.js": {
+    "file": "assets/global-Cy6piX8H.js",
     "name": "global",
     "css": [
       "assets/global-D7VDd7EY.css"
@@ -51,15 +51,15 @@
     "src": "static/accounts/images/main_page_moderator/sound_upperblock.webp"
   },
   "static/src/js/investor_main.js": {
-    "file": "assets/investor_main-FJO0cnNe.js",
+    "file": "assets/investor_main-B8f1N2PA.js",
     "name": "investor_main",
     "src": "static/src/js/investor_main.js",
     "isEntry": true,
     "imports": [
-      "_global-CgCEqFWJ.js"
+      "_global-Cy6piX8H.js"
     ],
     "css": [
-      "assets/investor_main-BkYMLqAQ.css"
+      "assets/investor_main-DQPuXLjr.css"
     ],
     "assets": [
       "assets/blippo_blackcyrusbyme-eYkDlaEE.otf",
@@ -67,12 +67,12 @@
     ]
   },
   "static/src/js/main.js": {
-    "file": "assets/main-BVCP-2-n.js",
+    "file": "assets/main-B3GqhPEl.js",
     "name": "main",
     "src": "static/src/js/main.js",
     "isEntry": true,
     "imports": [
-      "_global-CgCEqFWJ.js"
+      "_global-Cy6piX8H.js"
     ],
     "css": [
       "assets/main-BZyu73tf.css"
