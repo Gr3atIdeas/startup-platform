@@ -56,4 +56,7 @@ urlpatterns = [
     path('add_investor/<int:startup_id>/', views.add_investor, name='add_investor'),
     path('edit_investment/<int:startup_id>/<int:user_id>/', views.edit_investment, name='edit_investment'),
     path('delete_investment/<int:startup_id>/<int:user_id>/', views.delete_investment, name='delete_investment'),
+    path('cosmochat/available-users-for-chat/<int:chat_id>/', views.available_users_for_chat, name='available_users_for_chat'),
+    path('cosmochat/rename-chat/<int:chat_id>/', views.rename_chat, name='rename_chat'),
+    path('cosmochat/available_users/', views.available_users, name='available_users'),
 ]

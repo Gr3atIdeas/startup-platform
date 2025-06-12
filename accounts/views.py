@@ -1656,41 +1656,41 @@ def start_chat(request, user_id):
 @login_required
 def add_participant(request, chat_id):
     if request.method != 'POST':
-        return JsonResponse({'success': False, 'error': 'Неверный метод запроса'})
+        return JsonResponse({'success': False, 'error': 'Неверный метод запроса'}, status=405)
 
     chat = get_object_or_404(ChatConversations, conversation_id=chat_id)
     if not chat.chatparticipants_set.filter(user=request.user).exists():
-        return JsonResponse({'success': False, 'error': 'У вас нет доступа к этому чату'})
+        return JsonResponse({'success': False, 'error': 'У вас нет доступа к этому чату'}, status=403)
 
-    # Проверяем, сколько участников уже в чате
-    participants = chat.get_participants()
-    if participants.count() >= 3:
-        return JsonResponse({'success': False, 'error': 'В чате уже максимальное количество участников (3)'})
+    user_id = request.POST.get('user_id')
+    if not user_id:
+        return JsonResponse({'success': False, 'error': 'Не указан пользователь'}, status=400)
 
-    # Определяем текущие роли в чате
-    current_roles = {p.user.role.role_name.lower() for p in participants if p.user and p.user.role}
-    required_roles = {'startuper', 'investor', 'moderator'}
-    missing_role = (required_roles - current_roles).pop() if (required_roles - current_roles) else None
-    if not missing_role:
-        return JsonResponse({'success': False, 'error': 'Все роли уже заняты'})
+    try:
+        new_user = Users.objects.get(user_id=user_id)
+    except Users.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Пользователь не найден'}, status=404)
 
-    # Находим пользователя с недостающей ролью (сортируем по количеству чатов)
-    new_user = Users.objects.filter(
-        role__role_name__iexact=missing_role
-    ).exclude(
-        user_id__in=[p.user.user_id for p in participants]
-    ).annotate(
-        chat_count=Count('chatparticipants')
-    ).order_by('chat_count').first()
-    if not new_user:
-        return JsonResponse({'success': False, 'error': f'Не найден пользователь с ролью {missing_role}'})
+    if chat.chatparticipants_set.filter(user=new_user).exists():
+        return JsonResponse({'success': False, 'error': 'Пользователь уже в чате'}, status=400)
 
-    # Добавляем нового участника
+    if chat.is_group_chat:
+        if new_user.role and new_user.role.role_name.lower() == 'moderator':
+            return JsonResponse({'success': False, 'error': 'Модераторы не могут быть добавлены в групповой чат'}, status=400)
+    else:
+        participants = chat.get_participants()
+        if participants.count() >= 3:
+            return JsonResponse({'success': False, 'error': 'В личном чате максимум 3 участника'}, status=400)
+
+        current_roles = {p.user.role.role_name.lower() for p in participants if p.user and p.user.role}
+        if new_user.role and new_user.role.role_name.lower() in current_roles:
+            return JsonResponse({'success': False, 'error': 'Пользователь с такой ролью уже в чате'}, status=400)
+
     ChatParticipants.objects.create(conversation=chat, user=new_user)
-    chat.name = f"{chat.name} + {new_user.first_name}"
     chat.updated_at = timezone.now()
     chat.save()
 
+    logger.info(f"Добавлен участник {new_user.user_id} в чат {chat.conversation_id}")
     return JsonResponse({
         'success': True,
         'new_participant': {
@@ -1699,6 +1699,29 @@ def add_participant(request, chat_id):
             'role': new_user.role.role_name if new_user.role else 'Неизвестно'
         }
     })
+
+@login_required
+def available_users_for_chat(request, chat_id):
+    chat = get_object_or_404(ChatConversations, conversation_id=chat_id)
+    if not chat.chatparticipants_set.filter(user=request.user).exists():
+        return JsonResponse({'success': False, 'error': 'У вас нет доступа к этому чату'}, status=403)
+
+    current_participant_ids = chat.chatparticipants_set.values_list('user_id', flat=True)
+    users = Users.objects.exclude(user_id__in=current_participant_ids).exclude(user_id=request.user.user_id)
+
+    if chat.is_group_chat:
+        users = users.exclude(role__role_name='moderator')
+    else:
+        current_roles = chat.chatparticipants_set.exclude(user=request.user).values_list('user__role__role_name', flat=True)
+        users = users.filter(role__role_name__in=['startuper', 'investor', 'moderator']).exclude(role__role_name__in=current_roles)
+
+    users_data = [{
+        'user_id': user.user_id,
+        'name': f"{user.first_name} {user.last_name}",
+        'role': user.role.role_name if user.role else 'Неизвестно'
+    } for user in users]
+
+    return JsonResponse({'success': True, 'users': users_data})
 
 @login_required
 def leave_chat(request, chat_id):
@@ -2181,62 +2204,60 @@ def notifications_view(request):
 
 @login_required
 def create_group_chat(request):
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            chat_name = data.get('name')
-            user_ids = data.get('user_ids') # Ожидаем список ID пользователей для добавления
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Метод не разрешен.'}, status=405)
 
-            if not chat_name or not isinstance(chat_name, str) or len(chat_name.strip()) == 0:
-                return JsonResponse({'success': False, 'error': 'Название чата не может быть пустым.'}, status=400)
-            
-            # Проверка на минимальное количество участников (например, хотя бы один выбранный, плюс создатель)
-            if not user_ids or not isinstance(user_ids, list) or len(user_ids) == 0:
-                return JsonResponse({'success': False, 'error': 'Необходимо выбрать хотя бы одного участника для группового чата.'}, status=400)
+    try:
+        data = json.loads(request.body)
+        chat_name = data.get('name')
+        user_ids = data.get('user_ids')
 
-            # Создаем групповой чат
-            conversation = ChatConversations.objects.create(
-                conversation_name=chat_name.strip(), # Используем conversation_name
-                is_group_chat=True, # Устанавливаем флаг группового чата
-                created_by=request.user, # Указываем создателя чата
-                updated_at=timezone.now() # Устанавливаем время обновления
-            )
- 
-            # Добавляем текущего пользователя как участника
-            ChatParticipants.objects.create(
-                conversation=conversation,
-                user=request.user
-            )
- 
-            # Добавляем остальных выбранных пользователей
-            added_participants_count = 0
-            for user_id in user_ids:
-                try:
-                    user_to_add = Users.objects.get(user_id=user_id)
-                    # Проверяем, что пользователь еще не добавлен (на случай дубликатов в user_ids)
-                    if not ChatParticipants.objects.filter(conversation=conversation, user=user_to_add).exists():
-                        ChatParticipants.objects.create(
-                            conversation=conversation,
-                            user=user_to_add
-                        )
-                        added_participants_count += 1
-                except Users.DoesNotExist:
-                    logger.warning(f"Пользователь с ID {user_id} не найден при создании группового чата {conversation.conversation_id}")
-                    # Можно проигнорировать или вернуть ошибку, если критично
-            
-            # Логика ниже была закомментирована в оригинале, возможно, стоит ее пересмотреть или удалить
-            # if added_participants_count == 0 and not ChatParticipants.objects.filter(conversation=conversation, user=request.user).count() > 1: 
-            #      pass 
+        if not chat_name or not isinstance(chat_name, str) or len(chat_name.strip()) == 0:
+            return JsonResponse({'success': False, 'error': 'Название чата не может быть пустым.'}, status=400)
 
-            return JsonResponse({'success': True, 'chat_id': conversation.conversation_id, 'chat_name': conversation.conversation_name})
+        if not user_ids or not isinstance(user_ids, list) or len(user_ids) == 0:
+            return JsonResponse({'success': False, 'error': 'Необходимо выбрать хотя бы одного участника.'}, status=400)
 
-        except json.JSONDecodeError:
-            return JsonResponse({'success': False, 'error': 'Неверный формат данных (JSON).'}, status=400)
-        except Exception as e:
-            logger.error(f"Ошибка при создании группового чата: {e}")
-            return JsonResponse({'success': False, 'error': f'Внутренняя ошибка сервера: {e}'}, status=500)
-    
-    return JsonResponse({'success': False, 'error': 'Метод не разрешен.'}, status=405)
+        # Проверка, что нет модераторов
+        moderators = Users.objects.filter(user_id__in=user_ids, role__role_name='moderator')
+        if moderators.exists():
+            logger.warning(f"Попытка добавить модераторов в групповой чат: {moderators.values_list('user_id', flat=True)}")
+            return JsonResponse({'success': False, 'error': 'Модераторы не могут быть добавлены в групповой чат.'}, status=400)
+
+        conversation = ChatConversations.objects.create(
+            name=chat_name.strip(),
+            is_group_chat=True,
+            created_at=timezone.now(),
+            updated_at=timezone.now()
+        )
+
+        ChatParticipants.objects.create(
+            conversation=conversation,
+            user=request.user
+        )
+
+        added_count = 0
+        for user_id in user_ids:
+            try:
+                user_to_add = Users.objects.get(user_id=user_id)
+                if not ChatParticipants.objects.filter(conversation=conversation, user=user_to_add).exists():
+                    ChatParticipants.objects.create(
+                        conversation=conversation,
+                        user=user_to_add
+                    )
+                    added_count += 1
+            except Users.DoesNotExist:
+                logger.warning(f"Пользователь с ID {user_id} не найден при создании группы {conversation.conversation_id}")
+
+        logger.info(f"Групповой чат создан: ID={conversation.conversation_id}, Название={chat_name}, Участников={added_count+1}")
+        return JsonResponse({'success': True, 'chat_id': conversation.conversation_id, 'chat_name': chat_name})
+
+    except json.JSONDecodeError:
+        logger.error("Неверный формат JSON в create_group_chat")
+        return JsonResponse({'success': False, 'error': 'Неверный формат данных (JSON).'}, status=400)
+    except Exception as e:
+        logger.error(f"Ошибка при создании группового чата: {str(e)}")
+        return JsonResponse({'success': False, 'error': f'Ошибка: {str(e)}'}, status=500)
 
 def support_page_view(request):
     return render(request, 'accounts/support.html')
@@ -2386,4 +2407,42 @@ def support_contact_view(request):
     # return render(request, 'accounts/support_contact.html', context)
     return render(request, 'accounts/support_contact.html')
 
+@login_required
+def rename_chat(request, chat_id):
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Неверный метод запроса'}, status=405)
 
+    chat = get_object_or_404(ChatConversations, conversation_id=chat_id)
+    if not chat.chatparticipants_set.filter(user=request.user).exists():
+        return JsonResponse({'success': False, 'error': 'У вас нет доступа к этому чату'}, status=403)
+
+    try:
+        data = json.loads(request.body)
+        new_name = data.get('name', '').strip()
+        if not new_name:
+            return JsonResponse({'success': False, 'error': 'Название не может быть пустым'}, status=400)
+
+        chat.name = new_name
+        chat.updated_at = timezone.now()
+        chat.save()
+
+        logger.info(f"Чат {chat.conversation_id} переименован в {new_name}")
+        return JsonResponse({'success': True, 'chat_name': new_name})
+    except json.JSONDecodeError:
+        logger.error("Неверный формат JSON в rename_chat")
+        return JsonResponse({'success': False, 'error': 'Неверный формат данных'}, status=400)
+    except Exception as e:
+        logger.error(f"Ошибка при переименовании чата {chat_id}: {str(e)}")
+        return JsonResponse({'success': False, 'error': f'Ошибка: {str(e)}'}, status=500)
+    
+
+@login_required
+def available_users(request):
+    users = Users.objects.exclude(user_id=request.user.user_id).exclude(role__role_name='moderator')
+    users_data = [{
+        'user_id': user.user_id,
+        'name': f"{user.first_name} {user.last_name}",
+        'role': user.role.role_name if user.role else 'unknown',
+        'profile_picture_url': user.get_profile_picture_url() or ''
+    } for user in users]
+    return JsonResponse({'success': True, 'users': users_data})

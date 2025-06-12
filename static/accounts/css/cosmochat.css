@@ -1526,3 +1526,26 @@ body.cosmochat-body { /* Применяем фон ко всему body, есл�
 .avatar-img, .chat-avatar-img, .group-chat-modal-user-avatar {
     background-color: #011B35; /* Тёмный фон для плейсхолдера */
 }
+.rename-chat-btn {
+    margin-left: 15px;
+    padding: 5px 15px;
+    background: #004E9F;
+    border: none;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    font-family: 'Unbounded', sans-serif;
+    font-size: 14px;
+}
+#chatNameInput {
+    margin-left: 15px;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #004E9F;
+    background: #fff;
+    color: #000;
+    font-family: 'Unbounded', sans-serif;
+    font-size: 14px;
+}
+.hidden-chat { display: none !important; }
+.pagination-buttons-container-chats { display: flex; justify-content: center; gap: 10px; }

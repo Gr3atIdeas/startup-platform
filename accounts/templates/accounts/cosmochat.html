@@ -7,17 +7,6 @@
 {% block head_extra %}
   <link rel="stylesheet" href="{% static 'accounts/css/cosmochat.css' %}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <style>
-    body {
-        background: linear-gradient(153deg, black 0%, #00346B 25%, #004E9F 48%, #01366D 64%, #020202 100%);
-        font-family: 'Unbounded', sans-serif;
-        color: white;
-    }
-    header {
-        position: relative;
-        z-index: 10;
-    }
-  </style>
 {% endblock %}
 
 {% block content %}
@@ -159,31 +148,25 @@
             </div>
 
             <div class="pagination-new">
-                <div class="page-numbers-new" id="userPagination">
-                    <!-- JavaScript-пагинация будет добавлена здесь -->
-                </div>
+                <div class="page-numbers-new" id="userPagination"></div>
                 <button type="button" class="show-more-btn-new" id="showMoreUsersBtn">
-                    Показать еще
-                    <i class="fa-solid fa-eye"></i>
+                    Показать еще <i class="fa-solid fa-eye"></i>
                 </button>
             </div>
         </div>
 
         <div class="articles-section-new">
             <h2>Стартапы и статьи</h2>
-            
             <div class="article-card-item">
                 <img src="https://loremflickr.com/409/214/technology,startup?random=1" alt="Инвестиции будущего" class="article-image">
                 <h3>Инвестиции будущего или как быть на волне трендов</h3>
                 <p class="description">Наш стартап разрабатывает инновационную платформу для телемедицины, которая обеспечивает пользователям доступ...</p>
             </div>
-            
             <div class="article-card-item">
                 <img src="https://loremflickr.com/409/214/business,innovation?random=2" alt="Инвестиции будущего" class="article-image">
                 <h3>Инвестиции будущего или как быть на волне трендов</h3>
                 <p class="description">Наш стартап разрабатывает инновационную платформу для телемедицины, которая обеспечивает пользователям доступ...</p>
             </div>
-
             <div class="article-card-item">
                 <img src="https://loremflickr.com/409/214/medical,health?random=3" alt="Ромашка" class="article-image">
                 <h3>Ромашка</h3>
@@ -213,10 +196,10 @@
                 {% for chat in chats %}
                 {% with participant=chat.chatparticipants_set.all|first %}
                 {% if participant and participant.user != request.user %}
-                <div class="chat-item-new {% if forloop.first and not current_chat_id %}active{% elif chat.conversation_id == current_chat_id %}active{% endif %}" 
+                <div class="chat-item-new {% if forloop.counter > 5 %}hidden-chat{% endif %}" 
                      data-chat-id="{{ chat.conversation_id }}"
                      data-chat-name="{{ chat.name|escapejs }}"
-                     data-chat-type="{{ chat.type|default:'personal' }}">
+                     data-chat-type="{% if chat.is_group_chat %}group{% else %}personal{% endif %}">
                     <img src="{% if participant.user.get_profile_picture_url %}{{ participant.user.get_profile_picture_url }}{% else %}{{ default_avatar_src }}{% endif %}" 
                          alt="{{ participant.user.first_name|default:'Чат' }}" class="chat-avatar-img">
                     <div class="chat-item-info-new">
@@ -253,19 +236,26 @@
                 <p style="text-align: center; padding: 20px; color: #797979;">У вас пока нет чатов. Найдите пользователя и начните диалог!</p>
                 {% endfor %}
             </div>
+            <div class="pagination-new">
+                <div class="page-numbers-new" id="chatPagination"></div>
+                <button type="button" class="show-more-btn-new" id="showMoreChatsBtn">
+                    Показать еще <i class="fa-solid fa-eye"></i>
+                </button>
+            </div>
         </div>
 
         <div class="chat-window-column-new" id="chatWindowColumn">
             <div class="chat-active-header" id="chatActiveHeader" style="display: none;">
                 <h3 id="chatWindowTitle">Название чата</h3>
+                <button id="renameChatBtn" class="rename-chat-btn">Переименовать</button>
+                <input type="text" id="chatNameInput" style="display: none;" placeholder="Новое название чата">
                 <div class="chat-header-actions">
                     <button id="addParticipantBtn" class="add-participant-btn-new-style">Добавить</button>
                     <button id="leaveChatBtn" class="leave-chat-btn-new-style">Покинуть</button>
                 </div>
             </div>
 
-            <div class="chat-messages-area" id="chatMessagesArea">
-            </div>
+            <div class="chat-messages-area" id="chatMessagesArea"></div>
             
             <div class="no-chat-selected-placeholder" id="noChatSelectedPlaceholder">
                 <img src="{% static 'accounts/images/cosmochat/dialogicon.png' %}" alt="Выберите чат">
@@ -287,34 +277,23 @@
     </div>
 
     <div class="modal-overlay" id="profileModal">
-      <div class="modal">
-        <button class="modal-close" id="closeProfileModalBtn">×</button>
-        <img id="profileAvatar" src="{{ default_avatar_src }}" alt="Аватар">
-        <h3 id="profileName"></h3>
-        <p id="profileRole"></p>
-        <p id="profileRating"></p>
-        <p id="profileBio"></p>
-        <button class="action-btn" id="startChatBtn">Начать чат</button>
-        <a id="profileLink" href="#"><button class="action-btn">К профилю</button></a>
-      </div>
+        <div class="modal">
+            <button class="modal-close" id="closeProfileModalBtn">×</button>
+            <img id="profileAvatar" src="{{ default_avatar_src }}" alt="Аватар">
+            <h3 id="profileName"></h3>
+            <p id="profileRole"></p>
+            <p id="profileRating"></p>
+            <p id="profileBio"></p>
+            <button class="action-btn" id="startChatBtn">Начать чат</button>
+            <a id="profileLink" href="#"><button class="action-btn">К профилю</button></a>
+        </div>
     </div>
 
     <div class="modal-overlay" id="addParticipantModal">
-      <div class="modal">
-        <button class="modal-close" id="closeAddParticipantModalBtn">×</button>
-        <h3>Добавить участника</h3>
-        <div class="participants-list" id="participantsList">
-        </div>
-      </div>
-    </div>
-
-    <div class="modal-overlay" id="createChatModal">
         <div class="modal">
-            <button class="modal-close" id="closeCreateChatModalBtn">×</button>
-            <h3>Создать новый чат</h3>
-            <p>Выберите пользователя из списка слева, чтобы начать с ним чат, или найдите через поиск.</p>
-            <p>Функционал создания групповых чатов будет добавлен позже.</p>
-            <button class="action-btn" id="createChatModalCloseBtn">Понятно</button>
+            <button class="modal-close" id="closeAddParticipantModalBtn">×</button>
+            <h3>Добавить участника</h3>
+            <div class="participants-list" id="participantsList"></div>
         </div>
     </div>
 
@@ -332,8 +311,7 @@
                 </div>
                 
                 <div class="group-chat-modal-search">
-                    <div class="selected-user-pills-container" id="selectedUserPillsContainer">
-                    </div>
+                    <div class="selected-user-pills-container" id="selectedUserPillsContainer"></div>
                     <img src="{% static 'accounts/images/cosmochat/search.svg' %}" alt="Поиск" class="group-chat-modal-search-icon">
                     <input type="text" class="group-chat-modal-search-input" placeholder="Кого вы хотите пригласить?" id="groupChatSearchInput">
                 </div>
@@ -388,11 +366,9 @@
 
                 <div class="participants-actions-list">
                     <div class="action-item" id="groupChatAddMoreParticipantsBtn">
-                        <span class="action-item-icon"></span>
-                        Добавить участника
+                        <span class="action-item-icon"></span> Добавить участника
                     </div>
-                    <div id="groupChatSelectedParticipantsList">
-                    </div>
+                    <div id="groupChatSelectedParticipantsList"></div>
                 </div>
             </div>
         </div>
@@ -436,26 +412,7 @@ document.addEventListener('DOMContentLoaded', function() {
         createChatBtn.addEventListener('click', function() {
             if (typeof openGroupChatModal === 'function') {
                 openGroupChatModal();
-            } else {
-                const modal = document.getElementById('createChatModal');
-                if (modal) modal.style.display = 'flex';
             }
-        });
-    }
-
-    const closeCreateChatModalBtn = document.getElementById('closeCreateChatModalBtn');
-    if (closeCreateChatModalBtn) {
-        closeCreateChatModalBtn.addEventListener('click', function() {
-            const modal = document.getElementById('createChatModal');
-            if (modal) modal.style.display = 'none';
-        });
-    }
-
-    const createChatModalCloseBtn = document.getElementById('createChatModalCloseBtn');
-    if (createChatModalCloseBtn) {
-        createChatModalCloseBtn.addEventListener('click', function() {
-            const modal = document.getElementById('createChatModal');
-            if (modal) modal.style.display = 'none';
         });
     }
     
@@ -484,149 +441,248 @@ document.addEventListener('DOMContentLoaded', function() {
         leaveChatBtn.addEventListener('click', leaveChat);
     }
 
-    const showMoreBtn = document.getElementById('showMoreUsersBtn');
-    if (showMoreBtn) {
-        showMoreBtn.addEventListener('click', function() {
+    const showMoreUsersBtn = document.getElementById('showMoreUsersBtn');
+    if (showMoreUsersBtn) {
+        showMoreUsersBtn.addEventListener('click', function() {
             showMoreUsers();
         });
     }
-    
-    function setupClientPagination() {
-        const usersList = document.getElementById('usersList');
-        const userCards = usersList ? usersList.querySelectorAll('.user-card-new') : [];
-        const paginationContainer = document.getElementById('userPagination');
-        
-        if (!usersList || !paginationContainer || userCards.length === 0) return;
-        
-        const itemsPerPage = 8;
-        const totalPages = Math.ceil(userCards.length / itemsPerPage);
-        
-        let paginationHTML = '';
-        paginationHTML += `<span class="page-number-item" data-page="prev">‹</span>`;
-        for (let i = 1; i <= totalPages; i++) {
-            paginationHTML += `<span class="page-number-item ${i === 1 ? 'current' : ''}" data-page="${i}">${i}</span>`;
-        }
-        paginationHTML += `<span class="page-number-item" data-page="next">›</span>`;
-        
-        paginationContainer.innerHTML = paginationHTML;
-        
-        let currentPage = 1;
-        showPage(currentPage);
-        
-        const pageButtons = paginationContainer.querySelectorAll('.page-number-item');
-        pageButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const page = this.dataset.page;
-                
-                if (page === 'prev') {
-                    if (currentPage > 1) {
-                        currentPage--;
-                        showPage(currentPage);
-                        updateActivePage();
-                    }
-                } else if (page === 'next') {
-                    if (currentPage < totalPages) {
-                        currentPage++;
-                        showPage(currentPage);
-                        updateActivePage();
-                    }
-                } else {
-                    currentPage = parseInt(page);
-                    showPage(currentPage);
-                    updateActivePage();
-                }
-            });
+
+    const showMoreChatsBtn = document.getElementById('showMoreChatsBtn');
+    if (showMoreChatsBtn) {
+        showMoreChatsBtn.addEventListener('click', function() {
+            showMoreChats();
         });
-        
-        function showPage(page) {
-            const startIndex = (page - 1) * itemsPerPage;
-            const endIndex = startIndex + itemsPerPage;
-            
-            userCards.forEach((card, index) => {
-                if (index >= startIndex && index < endIndex) {
-                    card.classList.remove('hidden-user');
-                } else {
-                    if (!card.classList.contains('show-more-revealed')) {
-                        card.classList.add('hidden-user');
-                    }
-                }
-            });
-        }
-        
-        function updateActivePage() {
-            pageButtons.forEach(button => {
-                if (button.dataset.page === currentPage.toString()) {
-                    button.classList.add('current');
-                } else {
-                    button.classList.remove('current');
-                }
-            });
-        }
     }
 
-    let additionalUsersShown = 0;
-    function showMoreUsers() {
-        const usersList = document.getElementById('usersList');
-        const hiddenUserCards = usersList ? usersList.querySelectorAll('.user-card-new.hidden-user') : [];
-        
-        if (!usersList || hiddenUserCards.length === 0) {
-            const showMoreBtn = document.getElementById('showMoreUsersBtn');
-            if (showMoreBtn) showMoreBtn.style.display = 'none';
-            return;
-        }
-        
-        const showCount = Math.min(5, hiddenUserCards.length);
-        for (let i = 0; i < showCount; i++) {
-            hiddenUserCards[i].classList.remove('hidden-user');
-            hiddenUserCards[i].classList.add('show-more-revealed');
-            additionalUsersShown++;
-        }
-        
-        if (hiddenUserCards.length <= showCount) {
-            const showMoreBtn = document.getElementById('showMoreUsersBtn');
-            if (showMoreBtn) showMoreBtn.style.display = 'none';
-        }
+    const renameChatBtn = document.getElementById('renameChatBtn');
+    if (renameChatBtn) {
+        renameChatBtn.addEventListener('click', function() {
+            const chatNameInput = document.getElementById('chatNameInput');
+            const chatWindowTitle = document.getElementById('chatWindowTitle');
+            if (chatNameInput && chatWindowTitle) {
+                chatNameInput.style.display = 'inline-block';
+                chatWindowTitle.style.display = 'none';
+                renameChatBtn.style.display = 'none';
+                chatNameInput.value = chatWindowTitle.textContent;
+                chatNameInput.focus();
+            }
+        });
     }
+
+    const chatNameInput = document.getElementById('chatNameInput');
+    if (chatNameInput) {
+        chatNameInput.addEventListener('blur', function() {
+            const newName = chatNameInput.value.trim();
+            const chatWindowTitle = document.getElementById('chatWindowTitle');
+            const renameChatBtn = document.getElementById('renameChatBtn');
+            if (newName && currentChatId && chatWindowTitle && renameChatBtn) {
+                fetch(`/cosmochat/rename-chat/${currentChatId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify({ name: newName })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        chatWindowTitle.textContent = data.chat_name;
+                        const chatItem = document.querySelector(`.chat-item-new[data-chat-id="${currentChatId}"]`);
+                        if (chatItem) {
+                            chatItem.dataset.chatName = data.chat_name;
+                            const chatNameElement = chatItem.querySelector('h4');
+                            if (chatNameElement) {
+                                chatNameElement.textContent = data.chat_name.slice(0, 25) + (data.chat_name.length > 25 ? '...' : '');
+                            }
+                        }
+                    } else {
+                        alert(data.error || 'Ошибка при переименовании чата');
+                    }
+                })
+                .catch(error => {
+                    console.error('Ошибка при переименовании:', error);
+                    alert('Произошла ошибка при переименовании чата.');
+                });
+            }
+            if (chatNameInput && chatWindowTitle && renameChatBtn) {
+                chatNameInput.style.display = 'none';
+                chatWindowTitle.style.display = '';
+                renameChatBtn.style.display = 'inline-block';
+            }
+        });
+
+        chatNameInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                chatNameInput.blur();
+            }
+        });
+    }
+
+    setupChatPagination();
+});
+
+function setupChatPagination() {
+    const chatList = document.getElementById('chatListContainer');
+    const chatItems = chatList ? chatList.querySelectorAll('.chat-item-new') : [];
+    const paginationContainer = document.getElementById('chatPagination');
     
-    document.querySelectorAll('.django-roles-filter input[type="checkbox"]').forEach(checkbox => {
-        checkbox.addEventListener('change', function() {
-            filterUsersByRole();
+    if (!chatList || !paginationContainer || chatItems.length === 0) return;
+    
+    const itemsPerPage = 5;
+    const totalPages = Math.ceil(chatItems.length / itemsPerPage);
+    
+    let paginationHTML = '';
+    paginationHTML += `<span class="page-number-item" data-page="prev">&lsaquo;</span>`;
+    for (let i = 1; i <= totalPages; i++) {
+        paginationHTML += `<span class="page-number-item ${i === 1 ? 'current' : ''}" data-page="${i}">${i}</span>`;
+    }
+    paginationHTML += `<span class="page-number-item" data-page="next">&rsaquo;</span>`;
+    
+    paginationContainer.innerHTML = paginationHTML;
+    
+    let currentPage = 1;
+    showChatPage(currentPage);
+    
+    const pageButtons = paginationContainer.querySelectorAll('.page-number-item');
+    pageButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const page = this.dataset.page;
+            if (page === 'prev') {
+                if (currentPage > 1) {
+                    currentPage--;
+                    showChatPage(currentPage);
+                    updateActiveChatPage();
+                }
+            } else if (page === 'next') {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    showChatPage(currentPage);
+                    updateActiveChatPage();
+                }
+            } else {
+                currentPage = parseInt(page);
+                showChatPage(currentPage);
+                updateActiveChatPage();
+            }
         });
     });
-
-    function filterUsersByRole() {
-        const selectedRoles = [];
-        document.querySelectorAll('.django-roles-filter input[type="checkbox"]:checked').forEach(checkbox => {
-            const roleLabel = document.querySelector(`label[for="${checkbox.id}"]`).textContent.toLowerCase();
-            let roleValue = '';
-            if (roleLabel.includes('инвестор')) {
-                roleValue = 'investor';
-            } else if (roleLabel.includes('стартапер')) {
-                roleValue = 'startuper';
-            } else if (roleLabel.includes('модератор')) {
-                roleValue = 'moderator';
-            }
-            if (roleValue) {
-                selectedRoles.push(roleValue);
-            }
-        });
+    
+    function showChatPage(page) {
+        const startIndex = (page - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
         
-        const userCards = document.querySelectorAll('#usersList .user-card-new');
-        userCards.forEach(card => {
-            const role = card.dataset.role;
-            if (selectedRoles.length === 0 || selectedRoles.includes(role)) {
-                card.style.display = '';
+        chatItems.forEach((item, index) => {
+            if (index >= startIndex && index < endIndex) {
+                item.classList.remove('hidden-chat');
             } else {
-                card.style.display = 'none';
+                if (!item.classList.contains('show-more-revealed')) {
+                    item.classList.add('hidden-chat');
+                }
             }
         });
     }
     
-    setupClientPagination();
-});
+    function updateActiveChatPage() {
+        pageButtons.forEach(button => {
+            if (button.dataset.page === currentPage.toString()) {
+                button.classList.add('current');
+            } else {
+                button.classList.remove('current');
+            }
+        });
+    }
+}
+
+function showMoreChats() {
+    const chatList = document.getElementById('chatListContainer');
+    const hiddenChatItems = chatList ? chatList.querySelectorAll('.chat-item-new.hidden-chat') : [];
+    const paginationContainer = document.getElementById('chatPagination');
+    const showMoreBtn = document.getElementById('showMoreChatsBtn');
+    
+    if (!chatList || hiddenChatItems.length === 0) {
+        if (showMoreBtn) showMoreBtn.style.display = 'none';
+        return;
+    }
+    
+    if (paginationContainer) {
+        paginationContainer.style.display = 'none';
+    }
+    
+    let buttonsContainer = document.querySelector('.pagination-buttons-container-chats');
+    if (!buttonsContainer) {
+        buttonsContainer = document.createElement('div');
+        buttonsContainer.className = 'pagination-buttons-container-chats';
+        const paginationNew = chatList.parentElement.querySelector('.pagination-new');
+        if (paginationNew) {
+            paginationNew.appendChild(buttonsContainer);
+        }
+    }
+    
+    let hideBtn = document.getElementById('hideChatsBtn');
+    if (!hideBtn) {
+        hideBtn = document.createElement('button');
+        hideBtn.id = 'hideChatsBtn';
+        hideBtn.className = 'hide-btn-new';
+        hideBtn.textContent = 'Скрыть';
+        hideBtn.addEventListener('click', hideExtraChats);
+        buttonsContainer.appendChild(hideBtn);
+    } else {
+        hideBtn.style.display = 'flex';
+    }
+    
+    if (showMoreBtn && showMoreBtn.parentElement !== buttonsContainer) {
+        buttonsContainer.appendChild(showMoreBtn);
+    }
+    
+    const showCount = Math.min(5, hiddenChatItems.length);
+    for (let i = 0; i < showCount; i++) {
+        hiddenChatItems[i].classList.remove('hidden-chat');
+        hiddenChatItems[i].classList.add('show-more-revealed');
+    }
+    
+    if (hiddenChatItems.length <= showCount) {
+        if (showMoreBtn) showMoreBtn.style.display = 'none';
+    }
+}
+
+function hideExtraChats() {
+    const chatList = document.getElementById('chatListContainer');
+    const paginationContainer = document.getElementById('chatPagination');
+    const buttonsContainer = document.querySelector('.pagination-buttons-container-chats');
+    const hideBtn = document.getElementById('hideChatsBtn');
+    const showMoreBtn = document.getElementById('showMoreChatsBtn');
+    
+    if (paginationContainer) {
+        paginationContainer.style.display = 'flex';
+    }
+    
+    if (hideBtn) {
+        hideBtn.style.display = 'none';
+    }
+    
+    if (showMoreBtn && buttonsContainer) {
+        chatList.parentElement.querySelector('.pagination-new').appendChild(showMoreBtn);
+        showMoreBtn.style.display = 'flex';
+    }
+    
+    const revealedChats = chatList ? chatList.querySelectorAll('.chat-item-new.show-more-revealed') : [];
+    revealedChats.forEach(chat => {
+        chat.classList.add('hidden-chat');
+        chat.classList.remove('show-more-revealed');
+    });
+    
+    const currentPageBtn = document.querySelector('#chatPagination .page-number-item.current');
+    if (currentPageBtn) {
+        const currentPage = parseInt(currentPageBtn.dataset.page);
+        showChatPage(currentPage);
+    }
+}
 </script>
 {% endblock %}
 
-{% block body_extra_js %}
+{% block body_extra %}
 {{ request.user.user_id|default:0|json_script:"request_user_id_data" }}
 {% endblock %}
