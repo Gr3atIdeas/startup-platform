@@ -540,9 +540,8 @@ class ChatConversations(models.Model):
     updated_at = models.DateTimeField(blank=True, null=True)
     is_group_chat = models.BooleanField(default=False)  # Новое поле
 
-
     class Meta:
-        managed = False
+        managed = True
         db_table = 'chat_conversations'
 
     def get_participants(self):

@@ -13,6 +13,9 @@ echo "--- VITE MANIFEST CONTENT ---"
 cat static/dist/.vite/manifest.json || echo "Manifest file not found"
 echo "--- END VITE MANIFEST CONTENT ---"
 
+echo "--- Applying database migrations ---"
+python manage.py migrate
+
 echo "--- Collecting static files ---"
 
 /opt/render/project/src/.venv/bin/python manage.py collectstatic --noinput --clear
