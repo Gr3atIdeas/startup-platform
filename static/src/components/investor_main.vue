@@ -1,499 +1,452 @@
 <template>
-  <div class="investor-main-page">
-    <div class="hero-section">
-      <div class="hero-content">
-        <div class="planet-background">
-            <div class="orbit orbit-1"></div>
-            <div class="orbit orbit-2"></div>
-            <div class="orbit orbit-3"></div>
-            <div class="orbit orbit-4"></div>
-            <div class="orbit orbit-5"></div>
-            <div class="orbit orbit-6"></div>
-            <div class="glowing-orb"></div>
-            <div class="placeholder-black-1"></div>
-            <div class="placeholder-black-2"></div>
-            <img class="main-planet" src="https://placehold.co/97x95" />
-            <div class="placeholder-black-3"></div>
-            <div class="placeholder-black-4"></div>
-            <div class="placeholder-black-5"></div>
-            <div class="placeholder-black-6"></div>
-            <div class="placeholder-black-7"></div>
-            <div class="placeholder-black-8"></div>
-            <div class="placeholder-black-9"></div>
-            <div class="placeholder-black-10"></div>
-            <div class="placeholder-black-11"></div>
-            <div class="target-icon">
-                <div class="target-circle-1"></div>
-                <div class="target-circle-2"></div>
-            </div>
-            <div class="hero-text">
-                <p>Начни свое приключение по Great Ideas...</p>
-                <button class="btn btn-primary">Начать</button>
-            </div>
-
-            <div class="arrow-buttons">
-              <div class="arrow-button-left">
-                  <div class="arrow-icon-container">
-                      <div class="arrow-icon"></div>
-                  </div>
+  <CustomScrollbar>
+    <div class="investor-main-page">
+      <div class="hero-section">
+        <div class="hero-content">
+          <div class="planet-background">
+              <div class="orbit orbit-1"></div>
+              <div class="orbit orbit-2"></div>
+              <div class="orbit orbit-3"></div>
+              <div class="orbit orbit-4"></div>
+              <div class="orbit orbit-5"></div>
+              <div class="orbit orbit-6"></div>
+              <div class="glowing-orb"></div>
+              <div class="placeholder-black-1"></div>
+              <div class="placeholder-black-2"></div>
+              <img class="main-planet" src="https://placehold.co/97x95" />
+              <div class="placeholder-black-3"></div>
+              <div class="placeholder-black-4"></div>
+              <div class="placeholder-black-5"></div>
+              <div class="placeholder-black-6"></div>
+              <div class="placeholder-black-7"></div>
+              <div class="placeholder-black-8"></div>
+              <div class="placeholder-black-9"></div>
+              <div class="placeholder-black-10"></div>
+              <div class="placeholder-black-11"></div>
+              <div class="target-icon">
+                  <div class="target-circle-1"></div>
+                  <div class="target-circle-2"></div>
               </div>
-              <div class="arrow-button-right">
-                  <div class="arrow-icon-container">
-                      <div class="arrow-icon"></div>
-                  </div>
+              <div class="hero-text">
+                  <p>Начни свое приключение по Great Ideas...</p>
+                  <button class="btn btn-primary">Начать</button>
               </div>
-            </div>
 
-            <div class="categories-slider">
-                <div class="category-tag">Медицина</div>
-                <img class="category-img-1" src="https://placehold.co/135x64" />
-                <img class="category-img-2" src="https://placehold.co/87x65" />
-                <img class="category-img-3" src="https://placehold.co/55x54" />
-                <img class="category-img-4" src="https://placehold.co/45x44" />
-                <img class="category-img-5" src="https://placehold.co/55x54" />
-                <img class="category-img-6" src="https://placehold.co/45x44" />
-                <img class="category-img-7" src="https://placehold.co/55x54" />
-                <img class="category-img-8" src="https://placehold.co/45x44" />
-                <img class="category-img-9" src="https://placehold.co/55x54" />
-                <img class="category-img-10" src="https://placehold.co/45x44" />
-                <img class="category-img-11" src="https://placehold.co/55x54" />
-                <img class="category-img-12" src="https://placehold.co/45x44" />
-                <img class="category-img-13" src="https://placehold.co/55x54" />
-                <img class="category-img-14" src="https://placehold.co/45x44" />
-            </div>
-             <button class="btn btn-secondary all-startups-btn">Все стартапы</button>
-        </div>
-      </div>
-    </div>
+              <div class="arrow-buttons">
+                <div class="arrow-button-left">
+                    <div class="arrow-icon-container">
+                        <div class="arrow-icon"></div>
+                    </div>
+                </div>
+                <div class="arrow-button-right">
+                    <div class="arrow-icon-container">
+                        <div class="arrow-icon"></div>
+                    </div>
+                </div>
+              </div>
 
-    <div class="investors-find-star-section">
-      <div class="investors-find-star-content">
-        <div class="investors-text-content">
-          <div class="investors-title">
-            <span class="text-blue">Инвесторы, </span>
-            <span class="text-black">найдите свою звезду!</span>
-          </div>
-          <div class="features-grid">
-            <div class="feature-card">
-              <div class="feature-text">Доступ к проверенным стартапам</div>
-            </div>
-            <img src="https://placehold.co/165x127" class="feature-img"/>
-            <div class="feature-card">
-              <div class="feature-text">Диверсификация портфеля</div>
-            </div>
-            <img src="https://placehold.co/165x127" class="feature-img"/>
-            <div class="feature-card">
-              <div class="feature-text">Удобная аналитика и фильтры для выбора проектов</div>
-            </div>
-            <img src="https://placehold.co/129x99" class="feature-img-small"/>
-          </div>
-          <button class="btn btn-secondary view-startups-btn">
-            <span>Посмотреть стартапы</span>
-            <div class="icon-placeholder">
-              <div class="icon-shape-1"></div>
-              <div class="icon-shape-2"></div>
-            </div>
-          </button>
-        </div>
-        <div class="investors-image-section">
-          <div class="investors-image-container">
-            <img class="main-img" src="https://placehold.co/770x552" />
-            <img class="secondary-img" src="https://placehold.co/428x290" />
-            <img class="small-img" src="https://placehold.co/96x96" />
+              <div class="categories-slider">
+                  <div class="category-tag">Медицина</div>
+                  <img class="category-img-1" src="https://placehold.co/135x64" />
+                  <img class="category-img-2" src="https://placehold.co/87x65" />
+                  <img class="category-img-3" src="https://placehold.co/55x54" />
+                  <img class="category-img-4" src="https://placehold.co/45x44" />
+                  <img class="category-img-5" src="https://placehold.co/55x54" />
+                  <img class="category-img-6" src="https://placehold.co/45x44" />
+                  <img class="category-img-7" src="https://placehold.co/55x54" />
+                  <img class="category-img-8" src="https://placehold.co/45x44" />
+                  <img class="category-img-9" src="https://placehold.co/55x54" />
+                  <img class="category-img-10" src="https://placehold.co/45x44" />
+                  <img class="category-img-11" src="https://placehold.co/55x54" />
+                  <img class="category-img-12" src="https://placehold.co/45x44" />
+                  <img class="category-img-13" src="https://placehold.co/55x54" />
+                  <img class="category-img-14" src="https://placehold.co/45x44" />
+              </div>
+               <button class="btn btn-secondary all-startups-btn">Все стартапы</button>
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="explore-worlds-section">
-      <div class="explore-worlds-content">
-        <div class="title-section">
-          <div class="title-explore">Исследуйте</div>
-          <div class="title-new-worlds">новые миры</div>
-        </div>
-        <div class="content-grid">
-          <div class="left-panel">
-            <div class="scanner-section">
-              <div class="found-startups">
-                Найдено <span class="startup-count">423</span> стартапов
+      <div class="investors-find-star-section">
+        <div class="investors-find-star-content">
+          <div class="investors-text-content">
+            <div class="investors-title">
+              <span class="text-blue">Инвесторы, </span>
+              <span class="text-black">найдите свою звезду!</span>
+            </div>
+            <div class="features-grid">
+              <div class="feature-card">
+                <div class="feature-text">Доступ к проверенным стартапам</div>
               </div>
-            </div>
-            <div class="scanner-info">
-              <div class="status">
-                <div class="status-indicator"></div>
-                Следующий запуск сканера через 24 часа
+              <img src="https://placehold.co/165x127" class="feature-img"/>
+              <div class="feature-card">
+                <div class="feature-text">Диверсификация портфеля</div>
               </div>
-              <button class="btn btn-secondary">Запустить сканер</button>
-            </div>
-          </div>
-          <div class="right-panel">
-            <div class="startup-card">
-              <img src="https://placehold.co/160x156" alt="VoltForge Dynamics" />
-              <div class="startup-info">
-                <div class="startup-header">
-                  <div class="startup-name">VoltForge Dynamics</div>
-                  <div class="startup-rating">
-                    <img src="https://placehold.co/24x36" class="rating-avatar" />
-                    <div class="rating-badge">4,4/5</div>
-                  </div>
-                </div>
-                <p class="startup-description">VoltForge разрабатывает твердотельные батареи с графеновыми наноструктурами, которые заряжаются...</p>
-                <button class="btn btn-primary btn-sm">Подробнее</button>
+              <img src="https://placehold.co/165x127" class="feature-img"/>
+              <div class="feature-card">
+                <div class="feature-text">Удобная аналитика и фильтры для выбора проектов</div>
               </div>
+              <img src="https://placehold.co/129x99" class="feature-img-small"/>
             </div>
-            <div class="startup-card">
-              <img src="https://placehold.co/160x156" alt="NeuroBloom" />
-              <div class="startup-info">
-                <div class="startup-header">
-                  <div class="startup-name">NeuroBloom</div>
-                  <div class="startup-rating">
-                    <img src="https://placehold.co/24x36" class="rating-avatar" />
-                    <div class="rating-badge">4,4/5</div>
-                  </div>
-                </div>
-                <p class="startup-description">NeuroBloom предлагает носимый гаджет с ИИ, который анализирует нейронные паттерны для раннего выявления тревоги, депрессии и выгорания.</p>
-                <button class="btn btn-primary btn-sm">Подробнее</button>
-              </div>
-            </div>
-            <div class="startup-card">
-              <img src="https://placehold.co/160x156" alt="BioCrop Nexus" />
-              <div class="startup-info">
-                <div class="startup-header">
-                  <div class="startup-name">BioCrop Nexus</div>
-                  <div class="startup-rating">
-                     <img src="https://placehold.co/24x36" class="rating-avatar" />
-                    <div class="rating-badge">4,4/5</div>
-                  </div>
-                </div>
-                <p class="startup-description">BioCrop Nexus создает генетически оптимизированные семена, устойчивые к экстремальным климатическим условиям и вредителям.</p>
-                <button class="btn btn-primary btn-sm">Подробнее</button>
-              </div>
-            </div>
-          </div>
-          <div class="divider"></div>
-          <div class="updates-panel">
-            <div class="updates-title">Последние обновления от стартаперов 🔥</div>
-            <div class="updates-list">
-              <div class="updater-item">
-                <div class="updater-info">
-                  <div class="updater-avatar-container">
-                    <img src="https://placehold.co/56x84" class="updater-avatar" />
-                    <div class="updater-rank">6</div>
-                  </div>
-                  <div class="updater-details">
-                    <div class="updater-name">Виктор Смирнов</div>
-                    <div class="updater-rating">Рейтинг <span>4,5/5</span></div>
-                  </div>
-                </div>
-                <div class="item-divider"></div>
-              </div>
-               <div class="updater-item">
-                <div class="updater-info">
-                  <div class="updater-avatar-container">
-                    <img src="https://placehold.co/56x84" class="updater-avatar" />
-                    <div class="updater-rank">6</div>
-                  </div>
-                  <div class="updater-details">
-                    <div class="updater-name">Виктор Смирнов</div>
-                    <div class="updater-rating">Рейтинг <span>4,5/5</span></div>
-                  </div>
-                </div>
-                <div class="item-divider"></div>
-              </div>
-               <div class="updater-item">
-                <div class="updater-info">
-                  <div class="updater-avatar-container">
-                    <img src="https://placehold.co/56x84" class="updater-avatar" />
-                    <div class="updater-rank">6</div>
-                  </div>
-                  <div class="updater-details">
-                    <div class="updater-name">Виктор Смирнов</div>
-                    <div class="updater-rating">Рейтинг <span>4,5/5</span></div>
-                  </div>
-                </div>
-                <div class="item-divider"></div>
-              </div>
-               <div class="updater-item">
-                <div class="updater-info">
-                  <div class="updater-avatar-container">
-                    <img src="https://placehold.co/56x84" class="updater-avatar" />
-                    <div class="updater-rank">6</div>
-                  </div>
-                  <div class="updater-details">
-                    <div class="updater-name">Виктор Смирнов</div>
-                    <div class="updater-rating">Рейтинг <span>4,5/5</span></div>
-                  </div>
-                </div>
-                <div class="item-divider"></div>
-              </div>
-            </div>
-            <button class="btn btn-outline">Все стартапы</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="chat-section-title">
-      <div class="title-chat">Чат</div>
-      <div class="title-startups">СТАРТАПОВ</div>
-    </div>
-
-    <div class="chat-section-content">
-      <div class="chat-content-inner">
-        <div class="empty-chat-placeholder">
-          <div class="empty-chat-text">Вы только начинаете свое путешествие, поэтому здесь пока пусто</div>
-          <div class="empty-chat-image-container">
-            <img src="https://placehold.co/372x279" />
-          </div>
-        </div>
-        <div class="start-journey-section">
-          <div class="start-journey-title">Начните свое путешествие вместе с Great Ideas</div>
-          <div class="start-journey-subtitle">Какие направления вас интересуют?</div>
-          <div class="categories-selection">
-            <div class="category-item">
-              <img src="https://placehold.co/179x142" />
-              <div class="category-name">Медицина</div>
-            </div>
-            <div class="category-item selected">
-              <img src="https://placehold.co/179x142" />
-              <div class="category-name">Технологии</div>
-            </div>
-            <div class="category-item">
-              <img src="https://placehold.co/179x142" />
-              <div class="category-name">Медицина</div>
-            </div>
-            <div class="category-item">
-              <img src="https://placehold.co/179x142" />
-              <div class="category-name">Медицина</div>
-            </div>
-            <div class="category-item">
-              <img src="https://placehold.co/179x142" />
-              <div class="category-name">Медицина</div>
-            </div>
-            <div class="category-item">
-              <img src="https://placehold.co/179x142" />
-              <div class="category-name">Медицина</div>
-            </div>
-          </div>
-          <button class="btn btn-secondary">Подобрать стартап</button>
-        </div>
-      </div>
-    </div>
-    
-    <div class="news-section">
-      <div class="news-content">
-        <div class="news-title-section">
-          <div class="news-title-cosmo">Cosmo</div>
-          <div class="news-title-news">NEWS</div>
-        </div>
-        <div class="news-subtitle">Свежие новости на платформе Great Ideas</div>
-        <div class="news-card">
-          <img src="https://placehold.co/403x131" alt="News image" />
-          <div class="news-card-content">
-            <p>Лучшие ракеты или турбо режим на лайте</p>
-            <button class="btn btn-primary">Подробнее</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="startup-cards-section">
-      <div class="startup-card-grid">
-        <div class="startup-card-item" v-for="i in 5" :key="i">
-          <div class="card-inner">
-            <div class="card-content">
-              <img class="card-banner" src="https://placehold.co/370x131" />
-              <div class="card-details">
-                <div class="author-info">
-                  <img class="author-avatar" src="https://placehold.co/44x44" />
-                  <div class="author-text">
-                    <div class="author-name">Ромашка</div>
-                    <div class="post-date">2 дня назад</div>
-                  </div>
-                </div>
-                <div class="startup-description-block">
-                  <div class="startup-title">Лучшие ракеты или турбо режим на лайте</div>
-                  <div class="startup-summary">Наш стартап разрабатывает инновационную платформу для...</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="show-more-card">
-          <div class="show-more-button-container">
-            <button class="btn btn-primary show-more-btn">
-              <span>Показать еще</span>
-              <div class="arrow-icon-container-show-more">
-                <div class="arrow-icon-show-more"></div>
+            <button class="btn btn-secondary view-startups-btn">
+              <span>Посмотреть стартапы</span>
+              <div class="icon-placeholder">
+                <div class="icon-shape-1"></div>
+                <div class="icon-shape-2"></div>
               </div>
             </button>
           </div>
+          <div class="investors-image-section">
+            <div class="investors-image-container">
+              <img class="main-img" src="https://placehold.co/770x552" />
+              <img class="secondary-img" src="https://placehold.co/428x290" />
+              <img class="small-img" src="https://placehold.co/96x96" />
+            </div>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="great-ideas-section">
-      <div class="great-ideas-content">
-        <div class="great-ideas-banner">
-          <img class="banner-bg-img" src="https://placehold.co/563x997" />
-          <div class="phone-mockup-container">
-            <img class="phone-mockup-img" src="https://placehold.co/407x878" />
+      <div class="explore-worlds-section">
+        <div class="explore-worlds-content">
+          <div class="title-section">
+            <div class="title-explore">Исследуйте</div>
+            <div class="title-new-worlds">новые миры</div>
           </div>
-          <div class="notifications-container">
-            <div class="notification-item-1">
-              <div class="notification-bubble-1">
-                Получайте персонализированные предложения о стартапах, которые соответствуют вашим интересам, где бы вы ни были.
-              </div>
-              <div class="notification-tail-1">
-                <div class="tail-shape-1"></div>
-              </div>
-            </div>
-            <div class="notification-tag-1">Умные уведомления</div>
-            <div class="notification-item-2">
-              <div class="notification-bubble-2">
-                Мгновенный доступ<br/><br/>Просматривайте, анализируйте и вкладывайте в проекты через интуитивный интерфейс.
-              </div>
-              <div class="notification-tail-2">
-                <div class="tail-shape-2"></div>
-              </div>
-            </div>
-            <div class="notification-group-3">
-              <div class="notification-tag-2">Мобильная аналитика</div>
-              <div class="notification-item-3">
-                <div class="notification-bubble-3">
-                  Отслеживайте рост портфеля, подписывайте документы — без ПК и долгих загрузок.
-                </div>
-                <div class="notification-tail-3">
-                  <div class="tail-shape-3"></div>
+          <div class="content-grid">
+            <div class="left-panel">
+              <div class="scanner-section">
+                <div class="found-startups">
+                  Найдено <span class="startup-count">423</span> стартапов
                 </div>
               </div>
-            </div>
-          </div>
-          <div class="banner-text-content">
-            <div class="banner-title">Great Ideas</div>
-            <div class="banner-subtitle">это платформа, которая превращает ваш смартфон в портал для глобальных инвестиций. Больше не нужно привязываться к офису или времени</div>
-          </div>
-        </div>
-        <div class="features-section">
-          <div class="feature-card-gamification">
-            <div class="gamification-icons">
-              <div class="icon-set-1">
-                <!-- Placeholder divs for white shapes -->
-              </div>
-              <div class="icon-set-2">
-                 <!-- Placeholder divs for colored shapes -->
+              <div class="scanner-info">
+                <div class="status">
+                  <div class="status-indicator"></div>
+                  Следующий запуск сканера через 24 часа
+                </div>
+                <button class="btn btn-secondary">Запустить сканер</button>
               </div>
             </div>
-            <div class="gamification-text">
-              <div class="gamification-title">Геймификация бизнеса</div>
-              <div class="gamification-description">Удобное приложение для инвестирования и открытия стартапа. Предлагай идеи для бизнеса и инвестируй в будущее </div>
+            <div class="right-panel">
+              <div class="startup-card">
+                <img src="https://placehold.co/160x156" alt="VoltForge Dynamics" />
+                <div class="startup-info">
+                  <div class="startup-header">
+                    <div class="startup-name">VoltForge Dynamics</div>
+                    <div class="startup-rating">
+                      <img src="https://placehold.co/24x36" class="rating-avatar" />
+                      <div class="rating-badge">4,4/5</div>
+                    </div>
+                  </div>
+                  <p class="startup-description">VoltForge разрабатывает твердотельные батареи с графеновыми наноструктурами, которые заряжаются...</p>
+                  <button class="btn btn-primary btn-sm">Подробнее</button>
+                </div>
+              </div>
+              <div class="startup-card">
+                <img src="https://placehold.co/160x156" alt="NeuroBloom" />
+                <div class="startup-info">
+                  <div class="startup-header">
+                    <div class="startup-name">NeuroBloom</div>
+                    <div class="startup-rating">
+                      <img src="https://placehold.co/24x36" class="rating-avatar" />
+                      <div class="rating-badge">4,4/5</div>
+                    </div>
+                  </div>
+                  <p class="startup-description">NeuroBloom предлагает носимый гаджет с ИИ, который анализирует нейронные паттерны для раннего выявления тревоги, депрессии и выгорания.</p>
+                  <button class="btn btn-primary btn-sm">Подробнее</button>
+                </div>
+              </div>
+              <div class="startup-card">
+                <img src="https://placehold.co/160x156" alt="BioCrop Nexus" />
+                <div class="startup-info">
+                  <div class="startup-header">
+                    <div class="startup-name">BioCrop Nexus</div>
+                    <div class="startup-rating">
+                       <img src="https://placehold.co/24x36" class="rating-avatar" />
+                      <div class="rating-badge">4,4/5</div>
+                    </div>
+                  </div>
+                  <p class="startup-description">BioCrop Nexus создает генетически оптимизированные семена, устойчивые к экстремальным климатическим условиям и вредителям.</p>
+                  <button class="btn btn-primary btn-sm">Подробнее</button>
+                </div>
+              </div>
             </div>
-          </div>
-          <div class="feature-card-industry-change">
-             <div class="industry-change-blur-effect"></div>
-            <img class="industry-change-img-1" src="https://placehold.co/327x298" />
-            <div class="industry-change-img-2-container">
-                <img class="industry-change-img-2" src="https://placehold.co/252x190" />
-            </div>
-            <div class="industry-change-text">
-              <div class="industry-change-title">Стартапы, меняющие индустрию</div>
-              <div class="industry-change-description">Все больше стартапов разрабатывают технологии. Инвестирование в эти компании — это шанс поддержать инновации и извлечь выгоду от растущего рынка</div>
+            <div class="divider"></div>
+            <div class="updates-panel">
+              <div class="updates-title">Последние обновления от стартаперов 🔥</div>
+              <div class="updates-list">
+                <div class="updater-item">
+                  <div class="updater-info">
+                    <div class="updater-avatar-container">
+                      <img src="https://placehold.co/56x84" class="updater-avatar" />
+                      <div class="updater-rank">6</div>
+                    </div>
+                    <div class="updater-details">
+                      <div class="updater-name">Виктор Смирнов</div>
+                      <div class="updater-rating">Рейтинг <span>4,5/5</span></div>
+                    </div>
+                  </div>
+                  <div class="item-divider"></div>
+                </div>
+                 <div class="updater-item">
+                  <div class="updater-info">
+                    <div class="updater-avatar-container">
+                      <img src="https://placehold.co/56x84" class="updater-avatar" />
+                      <div class="updater-rank">6</div>
+                    </div>
+                    <div class="updater-details">
+                      <div class="updater-name">Виктор Смирнов</div>
+                      <div class="updater-rating">Рейтинг <span>4,5/5</span></div>
+                    </div>
+                  </div>
+                  <div class="item-divider"></div>
+                </div>
+                 <div class="updater-item">
+                  <div class="updater-info">
+                    <div class="updater-avatar-container">
+                      <img src="https://placehold.co/56x84" class="updater-avatar" />
+                      <div class="updater-rank">6</div>
+                    </div>
+                    <div class="updater-details">
+                      <div class="updater-name">Виктор Смирнов</div>
+                      <div class="updater-rating">Рейтинг <span>4,5/5</span></div>
+                    </div>
+                  </div>
+                  <div class="item-divider"></div>
+                </div>
+                 <div class="updater-item">
+                  <div class="updater-info">
+                    <div class="updater-avatar-container">
+                      <img src="https://placehold.co/56x84" class="updater-avatar" />
+                      <div class="updater-rank">6</div>
+                    </div>
+                    <div class="updater-details">
+                      <div class="updater-name">Виктор Смирнов</div>
+                      <div class="updater-rating">Рейтинг <span>4,5/5</span></div>
+                    </div>
+                  </div>
+                  <div class="item-divider"></div>
+                </div>
+              </div>
+              <button class="btn btn-outline">Все стартапы</button>
             </div>
           </div>
         </div>
       </div>
+
+      <div class="chat-section-title">
+        <div class="title-chat">Чат</div>
+        <div class="title-startups">СТАРТАПОВ</div>
+      </div>
+
+      <div class="chat-section-content">
+        <div class="chat-content-inner">
+          <div class="empty-chat-placeholder">
+            <div class="empty-chat-text">Вы только начинаете свое путешествие, поэтому здесь пока пусто</div>
+            <div class="empty-chat-image-container">
+              <img src="https://placehold.co/372x279" />
+            </div>
+          </div>
+          <div class="start-journey-section">
+            <div class="start-journey-title">Начните свое путешествие вместе с Great Ideas</div>
+            <div class="start-journey-subtitle">Какие направления вас интересуют?</div>
+            <div class="categories-selection">
+              <div class="category-item">
+                <img src="https://placehold.co/179x142" />
+                <div class="category-name">Медицина</div>
+              </div>
+              <div class="category-item selected">
+                <img src="https://placehold.co/179x142" />
+                <div class="category-name">Технологии</div>
+              </div>
+              <div class="category-item">
+                <img src="https://placehold.co/179x142" />
+                <div class="category-name">Медицина</div>
+              </div>
+              <div class="category-item">
+                <img src="https://placehold.co/179x142" />
+                <div class="category-name">Медицина</div>
+              </div>
+              <div class="category-item">
+                <img src="https://placehold.co/179x142" />
+                <div class="category-name">Медицина</div>
+              </div>
+              <div class="category-item">
+                <img src="https://placehold.co/179x142" />
+                <div class="category-name">Медицина</div>
+              </div>
+            </div>
+            <button class="btn btn-secondary">Подобрать стартап</button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="news-section">
+        <div class="news-content">
+          <div class="news-title-section">
+            <div class="news-title-cosmo">Cosmo</div>
+            <div class="news-title-news">NEWS</div>
+          </div>
+          <div class="news-subtitle">Свежие новости на платформе Great Ideas</div>
+          <div class="news-card">
+            <img src="https://placehold.co/403x131" alt="News image" />
+            <div class="news-card-content">
+              <p>Лучшие ракеты или турбо режим на лайте</p>
+              <button class="btn btn-primary">Подробнее</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="startup-cards-section">
+        <div class="startup-card-grid">
+          <div class="startup-card-item" v-for="i in 5" :key="i">
+            <div class="card-inner">
+              <div class="card-content">
+                <img class="card-banner" src="https://placehold.co/370x131" />
+                <div class="card-details">
+                  <div class="author-info">
+                    <img class="author-avatar" src="https://placehold.co/44x44" />
+                    <div class="author-text">
+                      <div class="author-name">Ромашка</div>
+                      <div class="post-date">2 дня назад</div>
+                    </div>
+                  </div>
+                  <div class="startup-description-block">
+                    <div class="startup-title">Лучшие ракеты или турбо режим на лайте</div>
+                    <div class="startup-summary">Наш стартап разрабатывает инновационную платформу для...</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="show-more-card">
+            <div class="show-more-button-container">
+              <button class="btn btn-primary show-more-btn">
+                <span>Показать еще</span>
+                <div class="arrow-icon-container-show-more">
+                  <div class="arrow-icon-show-more"></div>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="great-ideas-section">
+        <div class="great-ideas-content">
+          <div class="great-ideas-banner">
+            <img class="banner-bg-img" src="https://placehold.co/563x997" />
+            <div class="phone-mockup-container">
+              <img class="phone-mockup-img" src="https://placehold.co/407x878" />
+            </div>
+            <div class="notifications-container">
+              <div class="notification-item-1">
+                <div class="notification-bubble-1">
+                  Получайте персонализированные предложения о стартапах, которые соответствуют вашим интересам, где бы вы ни были.
+                </div>
+                <div class="notification-tail-1">
+                  <div class="tail-shape-1"></div>
+                </div>
+              </div>
+              <div class="notification-tag-1">Умные уведомления</div>
+              <div class="notification-item-2">
+                <div class="notification-bubble-2">
+                  Мгновенный доступ<br/><br/>Просматривайте, анализируйте и вкладывайте в проекты через интуитивный интерфейс.
+                </div>
+                <div class="notification-tail-2">
+                  <div class="tail-shape-2"></div>
+                </div>
+              </div>
+              <div class="notification-group-3">
+                <div class="notification-tag-2">Мобильная аналитика</div>
+                <div class="notification-item-3">
+                  <div class="notification-bubble-3">
+                    Отслеживайте рост портфеля, подписывайте документы — без ПК и долгих загрузок.
+                  </div>
+                  <div class="notification-tail-3">
+                    <div class="tail-shape-3"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="banner-text-content">
+              <div class="banner-title">Great Ideas</div>
+              <div class="banner-subtitle">это платформа, которая превращает ваш смартфон в портал для глобальных инвестиций. Больше не нужно привязываться к офису или времени</div>
+            </div>
+          </div>
+          <div class="features-section">
+            <div class="feature-card-gamification">
+              <div class="gamification-icons">
+                <div class="icon-set-1">
+                  <!-- Placeholder divs for white shapes -->
+                </div>
+                <div class="icon-set-2">
+                   <!-- Placeholder divs for colored shapes -->
+                </div>
+              </div>
+              <div class="gamification-text">
+                <div class="gamification-title">Геймификация бизнеса</div>
+                <div class="gamification-description">Удобное приложение для инвестирования и открытия стартапа. Предлагай идеи для бизнеса и инвестируй в будущее </div>
+              </div>
+            </div>
+            <div class="feature-card-industry-change">
+               <div class="industry-change-blur-effect"></div>
+              <img class="industry-change-img-1" src="https://placehold.co/327x298" />
+              <div class="industry-change-img-2-container">
+                  <img class="industry-change-img-2" src="https://placehold.co/252x190" />
+              </div>
+              <div class="industry-change-text">
+                <div class="industry-change-title">Стартапы, меняющие индустрию</div>
+                <div class="industry-change-description">Все больше стартапов разрабатывают технологии. Инвестирование в эти компании — это шанс поддержать инновации и извлечь выгоду от растущего рынка</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-section">
+        <div class="faq-content">
+          <div class="faq-header">
+            <div class="faq-title">FAQ</div>
+            <div class="faq-subtitle">
+              Часто задаваемые вопросы<br/>Не нашли ответа?<br/>
+              <span class="support-link">Поддержка</span>
+            </div>
+          </div>
+          <div class="faq-body">
+            <img class="faq-bg" src="https://placehold.co/1303x797" />
+            <div class="faq-answer-panel"></div>
+            <div class="faq-questions-panel">
+              <div class="faq-question-btn" v-for="i in 4" :key="'q1'+i">Где можно скачать отчет?</div>
+              <div class="faq-question-btn active">Как создать стартап?</div>
+              <div class="faq-question-btn" v-for="i in 6" :key="'q2'+i">Как создать стартап?</div>
+            </div>
+            <div class="faq-scrollbar"></div>
+            <div class="faq-answer-text">
+              <span class="text-primary">Создать стартап можно только пользователю со статусом стартапер. Для этого вас нужно перейти с раздел </span>
+              <span class="text-highlight">“Стартапы”</span>
+              <span class="text-primary"> и нажать кнопку “Создать стартап” {скрин}<br/><br/>Или вы можете найти кнопку в верхней части меню платформы</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
-
-    <div class="faq-section">
-      <div class="faq-content">
-        <div class="faq-header">
-          <div class="faq-title">FAQ</div>
-          <div class="faq-subtitle">
-            Часто задаваемые вопросы<br/>Не нашли ответа?<br/>
-            <span class="support-link">Поддержка</span>
-          </div>
-        </div>
-        <div class="faq-body">
-          <img class="faq-bg" src="https://placehold.co/1303x797" />
-          <div class="faq-answer-panel"></div>
-          <div class="faq-questions-panel">
-            <div class="faq-question-btn" v-for="i in 4" :key="'q1'+i">Где можно скачать отчет?</div>
-            <div class="faq-question-btn active">Как создать стартап?</div>
-            <div class="faq-question-btn" v-for="i in 6" :key="'q2'+i">Как создать стартап?</div>
-          </div>
-          <div class="faq-scrollbar"></div>
-          <div class="faq-answer-text">
-            <span class="text-primary">Создать стартап можно только пользователю со статусом стартапер. Для этого вас нужно перейти с раздел </span>
-            <span class="text-highlight">“Стартапы”</span>
-            <span class="text-primary"> и нажать кнопку “Создать стартап” {скрин}<br/><br/>Или вы можете найти кнопку в верхней части меню платформы</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <footer class="main-footer">
-      <div class="footer-content">
-        <div class="footer-top">
-          <div class="brand-info">
-            <div class="brand-title">Great ideas</div>
-            <div class="brand-tagline">Раскройте открывающиеся возможности и будьте частью инновационной волны</div>
-          </div>
-          <div class="social-links">
-            <div class="social-icon"></div>
-            <div class="social-icon"></div>
-          </div>
-        </div>
-        <div class="footer-navigation">
-          <div class="nav-column">
-            <div class="nav-title">Меню</div>
-            <div class="nav-links">
-              <a href="#">Каталог</a>
-              <a href="#">Портфель</a>
-              <a href="#">Стартапы</a>
-              <a href="#">Франшизы</a>
-              <a href="#">Новости</a>
-              <a href="#">CosmoChat</a>
-            </div>
-          </div>
-          <div class="nav-column">
-            <div class="nav-title">О нас</div>
-            <div class="nav-links">
-              <a href="#">FAQ</a>
-              <a href="#">Поддержка</a>
-              <a href="#">Контакты</a>
-            </div>
-          </div>
-        </div>
-        <div class="app-downloads">
-          <!-- placeholder divs -->
-        </div>
-        <div class="subscribe-section">
-          <button class="btn btn-outline-light">
-            <span>Подписаться на новости</span>
-            <div class="subscribe-icon">
-              <div class="icon-bg"></div>
-              <div class="icon-fg"></div>
-            </div>
-          </button>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <div class="footer-bottom-content">
-          <div class="copyright">© 2025 Great Ideas</div>
-          <div class="legal-links">
-            <a href="#">Политика конфидициальности</a>
-            <a href="#">Офферта</a>
-          </div>
-        </div>
-      </div>
-    </footer>
-
-  </div>
+  </CustomScrollbar>
 </template>
 
 <script>
+import CustomScrollbar from './shared/CustomScrollbar.vue';
+
 export default {
   name: 'InvestorMainPage',
+  components: {
+    CustomScrollbar,
+  },
+  data() {
+// ... existing code ...
+  },
 };
 </script>
 
@@ -1809,198 +1762,6 @@ export default {
     line-height: 24px;
     .text-primary { color: #2353D9; }
     .text-highlight { color: #7B61FF; }
-  }
-
-  .main-footer {
-    width: 1440px;
-    height: 660px;
-    position: relative;
-    background: linear-gradient(180deg, #011D39 0%, black 100%);
-    overflow: hidden;
-    color: white;
-  }
-
-  .footer-content {
-      position: relative;
-      z-index: 1;
-  }
-
-  .footer-top {
-    width: 1316px;
-    left: 62px;
-    top: 88px;
-    position: absolute;
-    display: inline-flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .brand-info {
-    width: 535px;
-    display: inline-flex;
-    flex-direction: column;
-    gap: 36px;
-  }
-
-  .brand-title {
-    align-self: stretch;
-    color: white;
-    font-size: 100px;
-    font-family: 'Blippo-Black CY [Rus by me]', sans-serif;
-    font-weight: 400;
-    text-transform: uppercase;
-    line-height: 18px;
-  }
-
-  .brand-tagline {
-    width: 316px;
-    color: white;
-    font-size: 12px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 300;
-    letter-spacing: 0.12px;
-  }
-
-  .social-links {
-    display: flex;
-    gap: 22px;
-    .social-icon {
-      width: 48px;
-      height: 48px;
-      position: relative; // Add content later
-    }
-  }
-
-  .footer-navigation {
-    left: 780px;
-    top: 225px;
-    position: absolute;
-    display: inline-flex;
-    gap: 52px;
-  }
-
-  .nav-column {
-    width: 290px;
-    padding: 24px 32px;
-    display: inline-flex;
-    flex-direction: column;
-    gap: 32px;
-  }
-
-  .nav-title {
-    align-self: stretch;
-    color: #FFEF2B;
-    font-size: 16px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 400;
-    line-height: 16px;
-  }
-
-  .nav-links {
-    align-self: stretch;
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-    a {
-      color: white;
-      font-size: 14px;
-      font-family: 'Unbounded', sans-serif;
-      font-weight: 300;
-      line-height: 18px;
-      text-decoration: none;
-      &:hover {
-        text-decoration: underline;
-      }
-    }
-  }
-
-  .app-downloads {
-      left: 62px;
-      top: 437px;
-      position: absolute;
-      display: inline-flex;
-      gap: 23px;
-      // placeholder divs inside
-  }
-
-  .subscribe-section {
-    position: absolute;
-    left: 62px;
-    top: 245px;
-    .btn-outline-light {
-      border-radius: 10px;
-      outline: 1px white solid;
-      outline-offset: -1px;
-      display: inline-flex;
-      align-items: center;
-      gap: 9px;
-      padding: 12px 25px;
-      color: #F5F5F5;
-      font-size: 16px;
-      font-family: 'Unbounded', sans-serif;
-      font-weight: 400;
-      line-height: 16px;
-    }
-  }
-
-  .subscribe-icon {
-    width: 24px;
-    height: 24px;
-    position: relative;
-    overflow: hidden;
-    .icon-bg {
-      width: 19.50px;
-      height: 19.50px;
-      left: 2.25px;
-      top: 2.25px;
-      position: absolute;
-      background: white;
-    }
-    .icon-fg {
-      width: 9px;
-      height: 9px;
-      left: 7.50px;
-      top: 7.50px;
-      position: absolute;
-      background: white;
-    }
-  }
-
-  .footer-bottom {
-    width: 1440px;
-    height: 48px;
-    left: 0px;
-    top: 612px;
-    position: absolute;
-    background: white;
-    color: #4E4F51;
-  }
-
-  .footer-bottom-content {
-    width: 1315px;
-    left: 63px;
-    top: 15px; // Vertically center
-    position: absolute;
-    display: inline-flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .copyright, .legal-links a {
-    font-size: 12px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 300;
-    letter-spacing: 0.12px;
-    color: #4E4F51;
-    text-decoration: none;
-  }
-
-  .legal-links {
-    display: flex;
-    gap: 40px;
-    a:hover {
-        text-decoration: underline;
-    }
   }
 }
 </style> 

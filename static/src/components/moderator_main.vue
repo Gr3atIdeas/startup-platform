@@ -1,99 +1,79 @@
 <template>
-  <div class="moderator-main-page">
-    <div class="dashboard-grid">
-      <div class="card deals-card">
-         <div class="card-inner">
-            <img src="/static/accounts/images/main_page_moderator/hands_upper_block.webp" class="card-bg mirrored" alt="Сделки">
-            <div class="card-overlay"></div>
-            <div class="card-content">
-              <h3>Сделки на покупку/продажу</h3>
-              <a href="/deals/" class="btn-primary">Перейти</a>
-            </div>
-         </div>
-        <div class="notification-badge">1</div>
+  <CustomScrollbar>
+    <div class="moderator-main-page">
+      <div class="dashboard-grid">
+        <div class="card deals-card">
+           <div class="card-inner">
+              <img src="/static/accounts/images/main_page_moderator/hands_upper_block.webp" class="card-bg mirrored" alt="Сделки">
+              <div class="card-overlay"></div>
+              <div class="card-content">
+                <h3>Сделки на покупку/продажу</h3>
+                <a href="/deals/" class="btn-primary">Перейти</a>
+              </div>
+           </div>
+          <div class="notification-badge">1</div>
+        </div>
+        <div class="card applications-card">
+           <div class="card-inner">
+              <img src="/static/accounts/images/main_page_moderator/planets_upperblock.webp" class="card-bg" alt="Заявки">
+              <div class="card-overlay-dark"></div>
+              <div class="card-content left-align">
+                <h3>Заявки на новые стартапы</h3>
+                <a href="/moderator-dashboard/" class="btn-primary">Перейти</a>
+              </div>
+           </div>
+          <div class="notification-badge">2</div>
+        </div>
+        <div class="card image-card-tall">
+           <div class="card-inner">
+              <img src="/static/accounts/images/main_page_moderator/rocket_upperblock.webp" class="card-bg" alt="Rocket">
+           </div>
+        </div>
+        <div class="card image-card-small-planet">
+           <div class="card-inner">
+              <img src="/static/accounts/images/main_page_moderator/planet_upperblock.webp" class="card-bg" alt="Planet">
+           </div>
+        </div>
+        <div class="card news-card">
+           <div class="card-inner">
+              <div class="card-content left-align">
+                <h3>Новости</h3>
+                <a href="/news/" class="btn-primary">Перейти</a>
+              </div>
+              <img src="/static/accounts/images/main_page_moderator/sound_upperblock.webp" class="news-image" alt="Новости">
+           </div>
+          <div class="notification-badge">4</div>
+        </div>
+        <div class="card support-card">
+           <div class="card-inner">
+              <img src="/static/accounts/images/main_page_moderator/bg_block_support.webp" class="card-bg" alt="Поддержка">
+              <div class="card-overlay-dark"></div>
+              <div class="card-content left-align">
+                <h3>Поддержка</h3>
+                <a href="/support/" class="btn-primary">Перейти</a>
+              </div>
+           </div>
+          <div class="notification-badge">3</div>
+        </div>
       </div>
-      <div class="card applications-card">
-         <div class="card-inner">
-            <img src="/static/accounts/images/main_page_moderator/planets_upperblock.webp" class="card-bg" alt="Заявки">
-            <div class="card-overlay-dark"></div>
-            <div class="card-content left-align">
-              <h3>Заявки на новые стартапы</h3>
-              <a href="/moderator-dashboard/" class="btn-primary">Перейти</a>
-            </div>
-         </div>
-        <div class="notification-badge">2</div>
-      </div>
-      <div class="card image-card-tall">
-         <div class="card-inner">
-            <img src="/static/accounts/images/main_page_moderator/rocket_upperblock.webp" class="card-bg" alt="Rocket">
-         </div>
-      </div>
-      <div class="card image-card-small-planet">
-         <div class="card-inner">
-            <img src="/static/accounts/images/main_page_moderator/planet_upperblock.webp" class="card-bg" alt="Planet">
-         </div>
-      </div>
-      <div class="card news-card">
-         <div class="card-inner">
-            <div class="card-content left-align">
-              <h3>Новости</h3>
-              <a href="/news/" class="btn-primary">Перейти</a>
-            </div>
-            <img src="/static/accounts/images/main_page_moderator/sound_upperblock.webp" class="news-image" alt="Новости">
-         </div>
-        <div class="notification-badge">4</div>
-      </div>
-      <div class="card support-card">
-         <div class="card-inner">
-            <img src="/static/accounts/images/main_page_moderator/bg_block_support.webp" class="card-bg" alt="Поддержка">
-            <div class="card-overlay-dark"></div>
-            <div class="card-content left-align">
-              <h3>Поддержка</h3>
-              <a href="/support/" class="btn-primary">Перейти</a>
-            </div>
-         </div>
-        <div class="notification-badge">3</div>
-      </div>
-    </div>
 
-    <Carousel />
-  </div>
+      <Carousel />
+    </div>
+  </CustomScrollbar>
 </template>
 
 <script>
 import Carousel from './Carousel.vue';
+import CustomScrollbar from './shared/CustomScrollbar.vue';
 
 export default {
   name: 'ModeratorMainPage',
   components: {
-    Carousel
+    Carousel,
+    CustomScrollbar,
   }
 }
 </script>
-
-<style>
-/* Global Styles for Custom Scrollbar & Non-Draggable Images */
-::-webkit-scrollbar {
-  width: 10px;
-}
-::-webkit-scrollbar-track {
-  background: #061e38; 
-}
-::-webkit-scrollbar-thumb {
-  background-color: #004E9F;
-  border-radius: 5px;
-  border: 2px solid #061e38;
-}
-::-webkit-scrollbar-thumb:hover {
-  background-color: #C6BBFE;
-}
-img, .card, .carousel-card, .carousel-arrow {
-  user-select: none;
-  -webkit-user-drag: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-}
-</style>
 
 <style lang="scss" scoped>
 @font-face {
