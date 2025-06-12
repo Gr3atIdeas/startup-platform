@@ -126,10 +126,9 @@ export default {
   display: flex;
   align-items: center;
   position: relative;
-  padding-left: calc((100vw - 1303px) / 2);
+  padding-left: calc((100% - 1303px) / 2);
   width: 100%;
   box-sizing: border-box;
-  overflow: hidden;
   
   .carousel-arrow {
     background: transparent;
@@ -149,11 +148,11 @@ export default {
     }
 
     &.left {
-      left: calc(((100vw - 1303px) / 2) + 60px);
+      left: calc(((100% - 1303px) / 2) + 60px);
     }
     
     &.right { 
-      right: calc(((100vw - 1303px) / 2) + 40px);
+      right: calc(((100% - 1303px) / 2) + 40px);
     }
     img { width: 50px; height: 50px; display: block; }
   }
@@ -166,7 +165,6 @@ export default {
   padding: 54px 0 54px 54px;
   overflow: hidden;
   flex: 1;
-  box-sizing: border-box;
 }
 
 .carousel-container {
