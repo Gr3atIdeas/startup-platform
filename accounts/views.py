@@ -1117,19 +1117,27 @@ def edit_startup(request, startup_id):
 
 @login_required
 def main_page_moderator(request):
-    if not hasattr(request.user, 'role') or request.user.role.role_name != 'moderator':
-        messages.error(request, 'У вас нет прав для доступа к этой странице.')
-        return redirect('home')  # Или на другую страницу, например, страницу входа
+    """
+    Отображает главную страницу для модератора.
+    """
+    # Дополнительная проверка, что пользователь - модератор
+    if not request.user.role or request.user.role.role_name != 'moderator':
+        return redirect('home')  # или на страницу с ошибкой доступа
 
     return render(request, 'accounts/moderator_main.html')
 
-# Панель модератора
-def moderator_dashboard(request):
-    # Проверяем, что пользователь - модератор
-    if not request.user.is_authenticated or not hasattr(request.user, 'role') or request.user.role.role_name != 'moderator':
-        messages.error(request, 'У вас нет прав для этого действия.')
+@login_required
+def investor_main(request):
+    """
+    Отображает главную страницу для инвестора.
+    """
+    if not request.user.role or request.user.role.role_name != 'investor':
         return redirect('home')
 
+    return render(request, 'accounts/investor_main.html')
+
+# Панель модератора
+def moderator_dashboard(request):
     pending_startups_list = Startups.objects.filter(status='pending')
     
     # Получаем только те категории, у которых есть стартапы в статусе 'pending'

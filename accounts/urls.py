@@ -32,6 +32,7 @@ urlpatterns = [
     path('create-startup/success/', views.startup_creation_success, name='startup_creation_success'),
     path('edit-startup/<int:startup_id>/', views.edit_startup, name='edit_startup'),
     path('moderator-main/', views.main_page_moderator, name='main_page_moderator'),
+    path('investor-main/', views.investor_main, name='investor_main'),
     path('moderator-dashboard/', views.moderator_dashboard, name='moderator_dashboard'),
     path('approve-startup/<int:startup_id>/', views.approve_startup, name='approve_startup'),
     path('reject-startup/<int:startup_id>/', views.reject_startup, name='reject_startup'),
