@@ -176,6 +176,19 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     // <--- КОНЕЦ НОВОГО
+
+    // Добавляем обработчики для фильтров чатов
+    const chatFilterButtons = document.querySelectorAll('.chat-filters-new .filter-btn-new');
+    chatFilterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            chatFilterButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+            filterChats(this.dataset.filter);
+        });
+    });
+
+    // Инициализация фильтров ролей
+    setupRoleFilters();
 });
 
 function showNoChatSelected() {
@@ -270,7 +283,7 @@ function handleSendMessage(e) {
     formData.append('chat_id', currentChatId);
     formData.append('message_text', messageText);
 
-    fetch("/cosmochat/send-message/", { // Используем прямой URL, если он известен, или {% url 'send_message' %}
+    fetch("/cosmochat/send-message/", {
         method: 'POST',
         body: formData,
         headers: { 'X-CSRFToken': csrfToken, 'X-Requested-With': 'XMLHttpRequest' }
@@ -438,12 +451,43 @@ function closeProfileModal() {
 }
 
 function startChat() { // Эта функция вызывается из МОДАЛЬНОГО ОКНА ПРОФИЛЯ
-    if (!currentProfileUserId) {
+    const userId = currentProfileUserId;
+    if (!userId) {
         alert('Ошибка: пользователь не выбран');
         return;
     }
-    // Вызываем startChatWithUser, которая уже содержит логику создания/открытия чата
-    startChatWithUser(currentProfileUserId);
+    fetch(`/cosmochat/start-chat/${userId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrfToken,
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success && data.chat_id) {
+            let chatExists = false;
+            document.querySelectorAll('.chat-item-new').forEach(item => {
+                if (item.dataset.chatId == data.chat_id) {
+                    chatExists = true;
+                }
+            });
+            if (chatExists) {
+                loadChat(data.chat_id);
+                document.querySelector('.main-chat-area-new').scrollIntoView({ behavior: 'smooth' });
+            } else {
+                window.location.href = window.location.pathname + '?open_chat_id=' + data.chat_id + '&new_chat=true';
+            }
+            closeProfileModal();
+        } else {
+            alert(data.error || 'Ошибка при создании чата');
+        }
+    })
+    .catch(error => {
+        console.error('Ошибка создания чата:', error);
+        alert('Произошла ошибка при создании чата');
+    });
 }
 
 function openAddParticipantModal() {
@@ -456,7 +500,7 @@ function openAddParticipantModal() {
         return;
     }
 
-    fetch(`/cosmochat/available-users-for-chat/${currentChatId}/`, { // Нужна новая ручка на бэкенде
+    fetch(`/cosmochat/available-users-for-chat/${currentChatId}/`, {
         headers: { 'X-CSRFToken': csrfToken, 'X-Requested-With': 'XMLHttpRequest' }
     })
     .then(response => response.json())
@@ -466,20 +510,12 @@ function openAddParticipantModal() {
         
         const currentParticipantIds = currentParticipants.map(p => p.user_id);
         const currentRoles = currentParticipants.map(p => p.role.toLowerCase());
-        // const allRoles = ['startuper', 'investor', 'moderator']; // Это лучше получать с сервера или определять иначе
-        // const availableRoles = allRoles.filter(role => !currentRoles.includes(role));
 
         if (data.users && data.users.length > 0) {
             data.users.forEach(user => {
-                // Не добавляем уже участвующих
                 if (currentParticipantIds.includes(user.user_id)) return;
 
-                // Проверка на уникальность ролей (если чат не групповой)
-                // Эту логику лучше перенести на сервер или уточнить правила для групповых чатов
                 let isDisabled = false;
-                // if (currentParticipants.length < 2 && currentRoles.includes(user.role.toLowerCase())) {
-                //     isDisabled = true; // Запрещаем, если такая роль уже есть и участников меньше 2 (т.е. это будет 2-й с такой же ролью)
-                // }
 
                 const item = document.createElement('div');
                 item.className = `participant-item ${isDisabled ? 'disabled' : ''}`;
@@ -514,12 +550,9 @@ function addParticipantToChat(userId) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            // Обновить список участников в UI (например, в шапке чата)
-            // currentParticipants.push(data.new_participant);
-            // loadChat(currentChatId); // Перезагрузить чат, чтобы обновить все данные
             alert('Участник добавлен! Информация обновится.');
             closeAddParticipantModal();
-            loadChat(currentChatId); // Перезагружаем чат
+            loadChat(currentChatId);
         } else {
             alert(data.error || 'Ошибка при добавлении участника');
         }
@@ -546,7 +579,6 @@ function leaveChat() {
         if (data.success) {
             alert(data.message || 'Вы покинули чат.');
             currentChatId = null;
-            // Перезагрузить страницу или обновить список чатов
             location.reload(); 
         } else {
             alert(data.error || 'Ошибка при выходе из чата');
@@ -644,8 +676,6 @@ function filterChats(filter) {
 
 // Функция для начала чата с пользователем
 function startChatWithUser(userId) {
-    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-    
     fetch(`/cosmochat/start-chat/${userId}/`, {
         method: 'POST',
         headers: {
@@ -657,29 +687,18 @@ function startChatWithUser(userId) {
     .then(response => response.json())
     .then(data => {
         if (data.success && data.chat_id) {
-            if (typeof loadChat === 'function') { 
-                let chatExists = false;
-                document.querySelectorAll('.chat-item-new').forEach(item => {
-                    if(item.dataset.chatId == data.chat_id) {
-                        chatExists = true;
-                    }
-                });
-                if (chatExists) {
-                    loadChat(data.chat_id);
-                    
-                    // Скролл к нижней части страницы, где находится окно чата
-                    document.querySelector('.main-chat-area-new').scrollIntoView({ behavior: 'smooth' });
-                    
-                    // Закрываем все модальные окна
-                    if (typeof closeProfileModal === 'function') closeProfileModal();
-                    
-                    // Закрываем выпадающее меню поиска
-                    const searchDropdown = document.getElementById('searchDropdown');
-                    if (searchDropdown) searchDropdown.style.display = 'none';
-                } else {
-                    window.location.href = window.location.pathname + '?open_chat_id=' + data.chat_id + '&new_chat=true';
+            let chatExists = false;
+            document.querySelectorAll('.chat-item-new').forEach(item => {
+                if(item.dataset.chatId == data.chat_id) {
+                    chatExists = true;
                 }
-                if (typeof closeProfileModal === 'function') closeProfileModal();
+            });
+            if (chatExists) {
+                loadChat(data.chat_id);
+                document.querySelector('.main-chat-area-new').scrollIntoView({ behavior: 'smooth' });
+                closeProfileModal();
+                const searchDropdown = document.getElementById('searchDropdown');
+                if (searchDropdown) searchDropdown.style.display = 'none';
             } else {
                 window.location.href = window.location.pathname + '?open_chat_id=' + data.chat_id + '&new_chat=true';
             }
@@ -1108,12 +1127,11 @@ function openGroupChatModal() {
     const groupChatModalElement = groupChatModalOverlay.querySelector('.group-chat-modal'); // Получаем сам блок модального окна
     if (groupChatModalElement) {
         const roleButtons = groupChatModalElement.querySelectorAll('.group-chat-modal-role-btn');
-    roleButtons.forEach(btn => {
-        btn.classList.add('active');
-        btn.classList.remove('inactive');
-    });
+        roleButtons.forEach(btn => {
+            btn.classList.add('active');
+            btn.classList.remove('inactive');
+        });
     }
-    
     
     if(groupChatUsersList && selectedUsersCountElement && selectedUserPillsContainer) {
         loadGroupChatUsers(groupChatUsersList, selectedUsersCountElement, selectedUserPillsContainer);
@@ -1129,81 +1147,77 @@ function closeGroupChatModal() {
     }, 300);
 }
 
-function loadGroupChatUsers(usersListElement, countElement, pillsContainer) { // Принимаем элементы как аргументы
+function loadGroupChatUsers(usersListElement, countElement, pillsContainer) {
     console.log('loadGroupChatUsers called');
     if (!usersListElement) {
         console.error('loadGroupChatUsers: usersListElement is null!');
         return;
     }
-    usersListElement.innerHTML = '';
+    const activeRoleButtons = document.querySelectorAll('.group-chat-modal-role-btn.active');
+    const activeRoles = Array.from(activeRoleButtons).map(btn => btn.dataset.role);
     
-    const allUserCards = document.querySelectorAll('.user-card-new'); // Получаем всех пользователей со страницы
-    const users = [];
-    allUserCards.forEach(card => {
-        // ... (логика сбора данных о пользователях, как и раньше)
-        const userId = card.dataset.userId;
-        const avatarImg = card.querySelector('.avatar-img');
-        const nameElement = card.querySelector('h3');
-        if (userId && nameElement) {
-            const name = nameElement.textContent.trim();
-            const nameParts = name.split(' ');
-            const firstName = nameParts[0];
-            const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
-            const avatarSrc = avatarImg ? avatarImg.src : '/static/accounts/images/avatars/default_avatar_ufo.png';
-            const role = card.dataset.role;
-            users.push({
-                user_id: userId, first_name: firstName, last_name: lastName,
-                profile_picture_url: avatarSrc, role: role
-            });
-        }
-    });
-    
-    const groupChatModal = document.getElementById('groupChatModal');
-    const activeRoleBtns = groupChatModal ? groupChatModal.querySelectorAll('.group-chat-modal-role-btn.active') : [];
-    const activeRoles = Array.from(activeRoleBtns).map(btn => btn.dataset.role);
-    let filteredUsers = users;
-    if (activeRoles.length > 0) {
-        filteredUsers = users.filter(user => activeRoles.includes(user.role));
-    }
-    
-    filteredUsers.forEach(user => {
-        const userItem = document.createElement('div');
-        userItem.className = 'group-chat-modal-user';
-        userItem.dataset.userId = user.user_id;
-        const isChecked = selectedGroupChatUserIds.includes(user.user_id);
-        userItem.innerHTML = `
-            <div class="group-chat-modal-user-info">
-                <img src="${user.profile_picture_url}" alt="${user.first_name}" class="group-chat-modal-user-avatar">
-                <div class="group-chat-modal-user-name">
-                    <div class="group-chat-modal-user-firstname">${user.first_name}</div>
-                    <div class="group-chat-modal-user-lastname">${user.last_name}</div>
-                </div>
-            </div>
-            <div class="group-chat-modal-checkbox ${isChecked ? 'checked' : ''}" data-user-id="${user.user_id}">
-                <div class="group-chat-modal-checkbox-empty"></div>
-                <div class="group-chat-modal-checkbox-filled"></div>
-                <div class="group-chat-modal-checkbox-tick"></div>
-            </div>
-        `;
-        usersListElement.appendChild(userItem);
-    });
-    
-    usersListElement.querySelectorAll('.group-chat-modal-checkbox').forEach(checkbox => {
-        checkbox.addEventListener('click', function() {
-            this.classList.toggle('checked');
-            const userId = this.dataset.userId;
-            if (this.classList.contains('checked')) {
-                if (!selectedGroupChatUserIds.includes(userId)) selectedGroupChatUserIds.push(userId);
-            } else {
-                selectedGroupChatUserIds = selectedGroupChatUserIds.filter(id => id !== userId);
+    fetch('/cosmochat/available_users/', {
+        headers: { 'X-CSRFToken': csrfToken, 'X-Requested-With': 'XMLHttpRequest' }
+    })
+    .then(response => response.json())
+    .then(data => {
+        usersListElement.innerHTML = '';
+        if (data.success && data.users) {
+            const filteredUsers = activeRoles.length > 0 
+                ? data.users.filter(user => activeRoles.includes(user.role.toLowerCase()))
+                : data.users;
+                
+            if (filteredUsers.length === 0) {
+                usersListElement.innerHTML = '<p style="padding: 10px; text-align: center;">Нет доступных пользователей для выбранной роли.</p>';
+                return;
             }
-            if(pillsContainer && usersListElement) renderSelectedUserPills(pillsContainer, usersListElement); // Передаем usersListElement
-            if(countElement) updateSelectedUsersCount(countElement);
-        });
+            
+            filteredUsers.forEach(user => {
+                const userItem = document.createElement('div');
+                userItem.className = 'group-chat-modal-user';
+                userItem.dataset.userId = user.user_id;
+                const isChecked = selectedGroupChatUserIds.includes(user.user_id.toString());
+                userItem.innerHTML = `
+                    <div class="group-chat-modal-user-info">
+                        <img class="group-chat-modal-user-avatar" src="${user.profile_picture_url || '/static/accounts/images/avatars/default_avatar_ufo.png'}" alt="${user.name}">
+                        <div class="group-chat-modal-user-name">
+                            <span class="group-chat-modal-user-firstname">${user.name.split(' ')[0]}</span>
+                            <span class="group-chat-modal-user-lastname">${user.name.split(' ').slice(1).join(' ')}</span>
+                        </div>
+                    </div>
+                    <div class="group-chat-modal-checkbox ${isChecked ? 'checked' : ''}" data-user-id="${user.user_id}">
+                        <div class="group-chat-modal-checkbox-empty"></div>
+                        <div class="group-chat-modal-checkbox-filled"></div>
+                        <div class="group-chat-modal-checkbox-tick"></div>
+                    </div>
+                `;
+                usersListElement.appendChild(userItem);
+            });
+
+            usersListElement.querySelectorAll('.group-chat-modal-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('click', function() {
+                    this.classList.toggle('checked');
+                    const userId = this.dataset.userId;
+                    if (this.classList.contains('checked')) {
+                        if (!selectedGroupChatUserIds.includes(userId)) selectedGroupChatUserIds.push(userId);
+                    } else {
+                        selectedGroupChatUserIds = selectedGroupChatUserIds.filter(id => id !== userId);
+                    }
+                    renderSelectedUserPills(pillsContainer, usersListElement);
+                    updateSelectedUsersCount(countElement);
+                });
+            });
+        } else {
+            usersListElement.innerHTML = '<p style="padding: 10px; text-align: center;">Нет доступных пользователей.</p>';
+        }
+    })
+    .catch(error => {
+        console.error('Ошибка загрузки пользователей:', error);
+        usersListElement.innerHTML = '<p style="padding: 10px; text-align: center;">Ошибка загрузки.</p>';
     });
 }
 
-function updateSelectedUsersCount(countElement) { // Принимаем элемент как аргумент
+function updateSelectedUsersCount(countElement) {
     console.log('updateSelectedUsersCount called');
     if (!countElement) {
         console.error('updateSelectedUsersCount: countElement is null!');
@@ -1214,17 +1228,15 @@ function updateSelectedUsersCount(countElement) { // Принимаем элем
 }
 
 function createGroupChat(chatName, userIds) {
-    // ... (код без изменений, csrfTokenValue должен быть csrfToken)
-    const csrfTokenValue = csrfToken;
     fetch('/cosmochat/create-group-chat/', {
         method: 'POST',
         headers: {
-            'X-CSRFToken': csrfTokenValue,
+            'X-CSRFToken': csrfToken,
             'Content-Type': 'application/json',
             'X-Requested-With': 'XMLHttpRequest'
         },
         body: JSON.stringify({
-            name: chatName, 
+            name: chatName,
             user_ids: userIds
         })
     })
@@ -1232,23 +1244,20 @@ function createGroupChat(chatName, userIds) {
     .then(data => {
         if (data.success && data.chat_id) {
             closeGroupChatModal();
-            // Перезагружаем страницу, чтобы новый чат появился в списке
-            // и автоматически открылся, если это реализовано на бэкенде
-            // или через параметры URL, как new_chat=true&open_chat_id=ID
-            window.location.href = window.location.pathname + `?open_chat_id=${data.chat_id}&new_chat=true`;
+            loadChat(data.chat_id);
+            selectedGroupChatUserIds = [];
         } else {
             alert(data.error || 'Ошибка при создании группового чата');
         }
     })
     .catch(error => {
         console.error('Ошибка создания группового чата:', error);
-        alert('Произошла ошибка при создании группового чата.');
+        alert('Произошла ошибка при создании группового чата');
     });
 }
 
 function toggleGroupChatModalView(showDetailsView) {
     console.log('toggleGroupChatModalView called with:', showDetailsView);
-    // Получаем элементы здесь, чтобы быть уверенными в их актуальности
     const groupChatContentWrapper = document.getElementById('groupChatModalContentWrapper');
     const groupChatDetailsView = document.getElementById('groupChatDetailsView');
 
@@ -1257,7 +1266,6 @@ function toggleGroupChatModalView(showDetailsView) {
         return;
     }
 
-    // Получаем остальные элементы, если они нужны для логики этой функции или вызываемых из нее
     const groupChatUsersList = document.getElementById('groupChatUsersList');
     const pillsContainer = document.getElementById('selectedUserPillsContainer');
     const countElement = document.getElementById('selectedUsersCount');
@@ -1265,7 +1273,7 @@ function toggleGroupChatModalView(showDetailsView) {
     if (showDetailsView) {
         groupChatContentWrapper.style.display = 'none';
         groupChatDetailsView.style.display = 'flex';
-        } else {
+    } else {
         groupChatContentWrapper.style.display = 'flex';
         groupChatDetailsView.style.display = 'none';
         if(groupChatUsersList && countElement && pillsContainer) {
@@ -1290,7 +1298,6 @@ function renderSelectedParticipantsForDetailsView(groupChatUsersListFromCaller) 
     selectedGroupChatUserIds.forEach(userId => {
         const userDiv = usersList.querySelector(`.group-chat-modal-user[data-user-id="${userId}"]`);
         if (userDiv) {
-            // ... (код как раньше)
             const avatarSrc = userDiv.querySelector('.group-chat-modal-user-avatar').src;
             const firstName = userDiv.querySelector('.group-chat-modal-user-firstname').textContent;
             const lastName = userDiv.querySelector('.group-chat-modal-user-lastname').textContent;
@@ -1306,7 +1313,7 @@ function renderSelectedParticipantsForDetailsView(groupChatUsersListFromCaller) 
     });
 }
 
-function renderSelectedUserPills(pillsContainer, usersList) { // Принимаем элементы как аргументы
+function renderSelectedUserPills(pillsContainer, usersList) {
     console.log('renderSelectedUserPills called');
     if (!pillsContainer || !usersList) {
         console.error('renderSelectedUserPills: pillsContainer or usersList is null!');
@@ -1316,14 +1323,13 @@ function renderSelectedUserPills(pillsContainer, usersList) { // Принима�
     selectedGroupChatUserIds.forEach(userId => {
         const userDiv = usersList.querySelector(`.group-chat-modal-user[data-user-id="${userId}"]`);
         if (userDiv) {
-            // ... (код как раньше, но используем переданные usersList и pillsContainer)
             const firstName = userDiv.querySelector('.group-chat-modal-user-firstname').textContent;
             const lastNameInitial = userDiv.querySelector('.group-chat-modal-user-lastname').textContent.charAt(0);
             const pillNameText = `${firstName} ${lastNameInitial}.`;
             const pill = document.createElement('div');
             pill.className = 'selected-user-pill';
             pill.dataset.userId = userId;
-            const pillNameElement = document.createElement('span'); // Исправлено имя переменной
+            const pillNameElement = document.createElement('span');
             pillNameElement.className = 'pill-name';
             pillNameElement.textContent = pillNameText.length > 15 ? pillNameText.substring(0, 13) + '...' : pillNameText;
             const removeIcon = document.createElement('span');
@@ -1335,7 +1341,6 @@ function renderSelectedUserPills(pillsContainer, usersList) { // Принима�
                 const checkbox = usersList.querySelector(`.group-chat-modal-checkbox[data-user-id="${userIdToRemove}"]`);
                 if (checkbox) checkbox.classList.remove('checked');
                 
-                // Передаем элементы в рекурсивные вызовы
                 const currentPillsContainer = document.getElementById('selectedUserPillsContainer');
                 const currentUsersList = document.getElementById('groupChatUsersList');
                 const currentCountElement = document.getElementById('selectedUsersCount');
@@ -1343,9 +1348,24 @@ function renderSelectedUserPills(pillsContainer, usersList) { // Принима�
                 if(currentPillsContainer && currentUsersList) renderSelectedUserPills(currentPillsContainer, currentUsersList);
                 if(currentCountElement) updateSelectedUsersCount(currentCountElement);
             });
-            pill.appendChild(pillNameElement); // Исправлено имя переменной
+            pill.appendChild(pillNameElement);
             pill.appendChild(removeIcon);
             pillsContainer.appendChild(pill);
         }
     });
-} 
+}
+
+function setupRoleFilters() {
+    const roleButtons = document.querySelectorAll('.group-chat-modal-role-btn');
+    const usersList = document.getElementById('groupChatUsersList');
+    const countElement = document.getElementById('selectedUsersCount');
+    const pillsContainer = document.getElementById('selectedUserPillsContainer');
+
+    roleButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            button.classList.toggle('active');
+            button.classList.toggle('inactive', !button.classList.contains('active'));
+            loadGroupChatUsers(usersList, countElement, pillsContainer);
+        });
+    });
+}
