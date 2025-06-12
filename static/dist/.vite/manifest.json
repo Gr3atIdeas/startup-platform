@@ -1,0 +1,86 @@
+{
+  "__plugin-vue_export-helper-DrSajaM7.js": {
+    "file": "assets/_plugin-vue_export-helper-DrSajaM7.js",
+    "name": "_plugin-vue_export-helper"
+  },
+  "static/accounts/fonts/Unbounded-VariableFont_wght.ttf": {
+    "file": "assets/Unbounded-VariableFont_wght-HsRHSyHp.ttf",
+    "src": "static/accounts/fonts/Unbounded-VariableFont_wght.ttf"
+  },
+  "static/accounts/fonts/blippo_blackcyrusbyme.otf": {
+    "file": "assets/blippo_blackcyrusbyme-eYkDlaEE.otf",
+    "src": "static/accounts/fonts/blippo_blackcyrusbyme.otf"
+  },
+  "static/accounts/images/main_page_moderator/bg_block_support.webp": {
+    "file": "assets/bg_block_support-BwDRcH__.webp",
+    "src": "static/accounts/images/main_page_moderator/bg_block_support.webp"
+  },
+  "static/accounts/images/main_page_moderator/bg_carusel_card.webp": {
+    "file": "assets/bg_carusel_card-Ck3Kj-fp.webp",
+    "src": "static/accounts/images/main_page_moderator/bg_carusel_card.webp"
+  },
+  "static/accounts/images/main_page_moderator/hands_upper_block.webp": {
+    "file": "assets/hands_upper_block-DIs-uoBX.webp",
+    "src": "static/accounts/images/main_page_moderator/hands_upper_block.webp"
+  },
+  "static/accounts/images/main_page_moderator/planet_logo_carusel.webp": {
+    "file": "assets/planet_logo_carusel-DErSZkDt.webp",
+    "src": "static/accounts/images/main_page_moderator/planet_logo_carusel.webp"
+  },
+  "static/accounts/images/main_page_moderator/planet_upperblock.webp": {
+    "file": "assets/planet_upperblock-DugddhQo.webp",
+    "src": "static/accounts/images/main_page_moderator/planet_upperblock.webp"
+  },
+  "static/accounts/images/main_page_moderator/planets_upperblock.webp": {
+    "file": "assets/planets_upperblock-BnuXSnjf.webp",
+    "src": "static/accounts/images/main_page_moderator/planets_upperblock.webp"
+  },
+  "static/accounts/images/main_page_moderator/rocket_upperblock.webp": {
+    "file": "assets/rocket_upperblock-UEvuQewB.webp",
+    "src": "static/accounts/images/main_page_moderator/rocket_upperblock.webp"
+  },
+  "static/accounts/images/main_page_moderator/sound_upperblock.webp": {
+    "file": "assets/sound_upperblock-BlQbK9kC.webp",
+    "src": "static/accounts/images/main_page_moderator/sound_upperblock.webp"
+  },
+  "static/src/js/investor_main.js": {
+    "file": "assets/investor_main-rLjA5KIO.js",
+    "name": "investor_main",
+    "src": "static/src/js/investor_main.js",
+    "isEntry": true,
+    "imports": [
+      "__plugin-vue_export-helper-DrSajaM7.js"
+    ],
+    "css": [
+      "assets/investor_main-CB6AIzAJ.css"
+    ],
+    "assets": [
+      "assets/blippo_blackcyrusbyme-eYkDlaEE.otf",
+      "assets/Unbounded-VariableFont_wght-HsRHSyHp.ttf"
+    ]
+  },
+  "static/src/js/main.js": {
+    "file": "assets/main-BhCVU1k5.js",
+    "name": "main",
+    "src": "static/src/js/main.js",
+    "isEntry": true,
+    "imports": [
+      "__plugin-vue_export-helper-DrSajaM7.js"
+    ],
+    "css": [
+      "assets/main--lnbjdoM.css"
+    ],
+    "assets": [
+      "assets/planet_logo_carusel-DErSZkDt.webp",
+      "assets/hands_upper_block-DIs-uoBX.webp",
+      "assets/planets_upperblock-BnuXSnjf.webp",
+      "assets/rocket_upperblock-UEvuQewB.webp",
+      "assets/planet_upperblock-DugddhQo.webp",
+      "assets/sound_upperblock-BlQbK9kC.webp",
+      "assets/bg_block_support-BwDRcH__.webp",
+      "assets/blippo_blackcyrusbyme-eYkDlaEE.otf",
+      "assets/bg_carusel_card-Ck3Kj-fp.webp",
+      "assets/Unbounded-VariableFont_wght-HsRHSyHp.ttf"
+    ]
+  }
+}
