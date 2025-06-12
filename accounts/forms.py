@@ -66,7 +66,7 @@ class StartupForm(forms.ModelForm):
     short_description = forms.CharField(widget=forms.Textarea(attrs={'rows': 3}), label='Вводная *', required=True)
     terms = forms.CharField(widget=forms.Textarea(attrs={'rows': 5}), label='Условия *', required=True)
     planet_image = forms.ChoiceField(
-        choices=[(p, p) for p in get_planet_urls()],
+        choices=[],  # Заполняется в __init__
         label='Выберите планету *',
         required=True,
         widget=forms.HiddenInput(attrs={'id': 'id_planet_image'})
@@ -83,6 +83,15 @@ class StartupForm(forms.ModelForm):
         required=True,
         widget=forms.Select(attrs={'class': 'form-control'})
     )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        try:
+            self.fields['planet_image'].choices = [(p, p) for p in get_planet_urls()]
+        except Exception as e:
+            # Логгирование ошибки или обработка случая, когда S3 недоступен
+            print(f"Error fetching planet URLs: {e}")
+            self.fields['planet_image'].choices = []
 
     class Meta:
         model = Startups
