@@ -194,16 +194,14 @@
             </div>
             <div class="chat-items-list-new" id="chatListContainer">
                 {% for chat in chats %}
-                {% with participant=chat.chatparticipants_set.all|first %}
-                {% if participant and participant.user != request.user %}
                 <div class="chat-item-new" 
                      data-chat-id="{{ chat.conversation_id }}"
-                     data-chat-name="{{ chat.name|escapejs }}"
+                     data-chat-name="{{ chat.display_name|escapejs }}"
                      data-chat-type="{% if chat.is_group_chat %}group{% else %}personal{% endif %}">
-                    <img src="{% if participant.user.get_profile_picture_url %}{{ participant.user.get_profile_picture_url }}{% else %}{{ default_avatar_src }}{% endif %}" 
-                         alt="{{ participant.user.first_name|default:'Чат' }}" class="chat-avatar-img">
+                    <img src="{% if chat.display_avatar %}{{ chat.display_avatar }}{% else %}{% static 'accounts/images/cosmochat/group_avatar.svg' %}{% endif %}" 
+                         alt="{{ chat.display_name }}" class="chat-avatar-img">
                     <div class="chat-item-info-new">
-                        <h4>{{ chat.name|truncatechars:25 }}</h4>
+                        <h4>{{ chat.display_name|truncatechars:25 }}</h4>
                         {% with last_message=chat.get_last_message %}
                             {% if last_message %}
                             <p class="last-message-preview">
@@ -230,8 +228,6 @@
                         {% endwith %}
                     </div>
                 </div>
-                {% endif %}
-                {% endwith %}
                 {% empty %}
                 <p style="text-align: center; padding: 20px; color: #797979;">У вас пока нет чатов. Найдите пользователя и начните диалог!</p>
                 {% endfor %}

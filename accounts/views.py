@@ -1449,10 +1449,38 @@ def cosmochat(request):
         messages.error(request, 'Пожалуйста, войдите в систему, чтобы получить доступ к чату.')
         return redirect('login')
 
+    # Получаем все чаты пользователя с предзагрузкой связанных данных для оптимизации
     chats = ChatConversations.objects.filter(
         chatparticipants__user=request.user
-    ).order_by('-updated_at')
+    ).prefetch_related(
+        'chatparticipants_set__user__userprofile' # Загружаем участников, их user-объекты и профили
+    ).annotate(
+        latest_message_time=Max('chatmessages__created_at') # Аннотируем для сортировки
+    ).order_by(F('latest_message_time').desc(nulls_last=True), '-updated_at')
 
+    # Обрабатываем чаты, чтобы добавить нужные для отображения поля
+    for chat in chats:
+        if chat.is_group_chat:
+            chat.display_name = chat.name
+            # Для групповых чатов можно будет задать дефолтный аватар
+            chat.display_avatar = None # или '/static/path/to/group_avatar.png'
+        else:
+            # Для личных чатов находим второго участника
+            other_participant = None
+            for p in chat.chatparticipants_set.all():
+                if p.user_id != request.user.user_id:
+                    other_participant = p
+                    break
+            
+            if other_participant and other_participant.user:
+                user_profile = other_participant.user
+                chat.display_name = f"{user_profile.first_name or ''} {user_profile.last_name or ''}".strip()
+                chat.display_avatar = user_profile.get_profile_picture_url()
+            else:
+                # На случай, если в личном чате только 1 участник (ошибочные данные)
+                chat.display_name = "Удаленный чат"
+                chat.display_avatar = None
+                
     search_form = UserSearchForm(request.GET)
     users = Users.objects.all()
     if search_form.is_valid():
