@@ -1634,12 +1634,13 @@ def start_chat(request, user_id):
     ).first()
 
     if existing_chat:
-        return JsonResponse({'success': True, 'chat_id': existing_chat.conversation_id})
+        # Если чат уже существует, просто сообщаем его ID
+        return JsonResponse({'success': True, 'chat_id': existing_chat.conversation_id, 'existed': True})
 
     # Создаём новый приватный чат
     chat = ChatConversations.objects.create(
         name=f"Чат {request.user.first_name} и {target_user.first_name}",
-        is_group_chat=False,  # Явно указываем, что это не групповой чат
+        is_group_chat=False,
         created_at=timezone.now(),
         updated_at=timezone.now()
     )
@@ -1648,7 +1649,22 @@ def start_chat(request, user_id):
     ChatParticipants.objects.create(conversation=chat, user=request.user)
     ChatParticipants.objects.create(conversation=chat, user=target_user)
 
-    return JsonResponse({'success': True, 'chat_id': chat.conversation_id})
+    # Формируем данные для рендеринга на фронтенде
+    chat_data = {
+        'conversation_id': chat.conversation_id,
+        'name': chat.name,
+        'is_group_chat': chat.is_group_chat,
+        # Для приватного чата участник - это второй пользователь
+        'participant': {
+            'user_id': target_user.user_id,
+            'first_name': target_user.first_name,
+            'profile_picture_url': target_user.get_profile_picture_url(),
+        },
+        'last_message': None, # У нового чата нет сообщений
+        'unread_count': 0
+    }
+
+    return JsonResponse({'success': True, 'chat': chat_data, 'existed': False})
 
 
 @login_required
@@ -2260,8 +2276,18 @@ def create_group_chat(request):
             ]
             ChatParticipants.objects.bulk_create(participants_to_create)
 
+        # Формируем данные для рендеринга на фронтенде
+        chat_data = {
+            'conversation_id': conversation.conversation_id,
+            'name': conversation.name,
+            'is_group_chat': conversation.is_group_chat,
+            'participant': None, # Для группового чата используем дефолтную иконку
+            'last_message': None,
+            'unread_count': 0
+        }
+
         logger.info(f"Групповой чат создан: ID={conversation.conversation_id}, Название={chat_name}, Участников={len(all_participant_users)}")
-        return JsonResponse({'success': True, 'chat_id': conversation.conversation_id, 'chat_name': chat_name})
+        return JsonResponse({'success': True, 'chat': chat_data})
 
     except json.JSONDecodeError:
         logger.error("Неверный формат JSON в create_group_chat")

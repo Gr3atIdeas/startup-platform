@@ -674,39 +674,32 @@ function filterChats(filter) {
         if (paginationContainer) paginationContainer.style.display = 'flex';
         if (showMoreContainer) showMoreContainer.style.display = 'flex';
         chatItems.forEach(item => item.style.display = ''); // Сбрасываем инлайновый стиль
-        // Восстанавливаем видимость согласно пагинации
+        // Восстанавливаем видимость согласно пагинации, если она есть
         const currentPageBtn = document.querySelector('#chatPagination .page-number-item.current');
         if (currentPageBtn) {
             const currentPage = parseInt(currentPageBtn.dataset.page);
-            // Эта функция определена в HTML-шаблоне
-            if (typeof showChatPage === 'function') {
-                showChatPage(currentPage);
-            }
+            showChatPage(currentPage);
         }
     } else {
-        // Если выбран другой фильтр, скрываем пагинацию
+        // Для фильтров "Чаты" или "Группы" скрываем пагинацию
         if (paginationContainer) paginationContainer.style.display = 'none';
         if (showMoreContainer) showMoreContainer.style.display = 'none';
-
+        
         chatItems.forEach(item => {
-            const chatType = item.dataset.chatType || 'personal';
-            let shouldBeVisible = false;
-
-            if (filter === 'chats' && chatType === 'personal') {
-                shouldBeVisible = true;
-            } else if (filter === 'groups' && chatType === 'group') {
-                shouldBeVisible = true;
+            const type = item.getAttribute('data-chat-type');
+            if (filter === 'chats' && type === 'personal') {
+                item.style.display = 'flex';
+            } else if (filter === 'groups' && type === 'group') {
+                item.style.display = 'flex';
+            } else {
+                item.style.display = 'none';
             }
-
-            // Управляем видимостью напрямую
-            item.style.display = shouldBeVisible ? 'flex' : 'none';
         });
     }
 }
 
-// Функция для начала чата с пользователем
+// Обновленная функция для старта личного чата
 function startChatWithUser(userId) {
-    console.log(`[DEBUG] Попытка создать/открыть чат с пользователем ID: ${userId}`);
     fetch(`/cosmochat/start-chat/${userId}/`, {
         method: 'POST',
         headers: {
@@ -716,40 +709,92 @@ function startChatWithUser(userId) {
         }
     })
     .then(response => {
-        console.log('[DEBUG] Получен ответ от сервера (startChat):', response);
         if (!response.ok) {
-            console.error(`[DEBUG] Ошибка сети: ${response.status} ${response.statusText}`);
-            alert(`Произошла ошибка сети: ${response.status}. Пожалуйста, попробуйте еще раз.`);
+            throw new Error(`Сетевая ошибка: ${response.status}`);
         }
         return response.json();
     })
     .then(data => {
-        console.log('[DEBUG] Получены данные от сервера (startChat):', data);
-        if (data.success && data.chat_id) {
-            console.log(`[DEBUG] Успех! ID чата: ${data.chat_id}. Перезагружаем страницу...`);
-            // Вместо сложной логики просто перезагружаем страницу с параметром,
-            // чтобы сервер мог отобразить новый чат.
-            window.location.href = `${window.location.pathname}?open_chat_id=${data.chat_id}`;
+        if (data.success) {
+            if (data.existed) {
+                loadChat(data.chat_id);
+            } else {
+                const newChatItem = createChatItemElement(data.chat);
+                if (newChatItem) {
+                    const chatListContainer = document.getElementById('chatListContainer');
+                    const noChatsMessage = chatListContainer.querySelector('p');
+                    if (noChatsMessage) {
+                        noChatsMessage.remove();
+                    }
+                    chatListContainer.prepend(newChatItem);
+                    loadChat(data.chat.conversation_id);
+                }
+            }
+            if (typeof closeProfileModal === 'function') closeProfileModal();
+            const searchDropdown = document.getElementById('searchDropdown');
+            if (searchDropdown) searchDropdown.style.display = 'none';
+            document.querySelector('.main-chat-area-new').scrollIntoView({ behavior: 'smooth', block: 'start' });
         } else {
-            console.error('[DEBUG] Сервер вернул ошибку (startChat):', data.error);
-            alert(`Не удалось создать или открыть чат: ${data.error || 'Неизвестная ошибка'}`);
+            alert(`Не удалось начать чат: ${data.error || 'Неизвестная ошибка'}`);
         }
     })
     .catch(error => {
-        console.error('[DEBUG] Критическая ошибка fetch (startChat):', error);
-        alert('Произошла критическая ошибка при создании чата. Подробности в консоли.');
+        console.error('Ошибка при создании чата:', error);
+        alert('Произошла критическая ошибка при попытке начать чат.');
     });
 }
 
-// Функции для модальных окон создания чата
-function openCreateChatModal() {
-    // Вместо открытия старого окна, теперь открываем новое
-    openGroupChatModal();
+// Обновленная функция для создания группового чата
+function createGroupChat(chatName, userIds) {
+    if (!chatName || userIds.length === 0) {
+        alert('Необходимо указать название чата и выбрать участников.');
+        return;
+    }
+
+    fetch('/cosmochat/create-group-chat/', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrfToken,
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: JSON.stringify({ name: chatName, user_ids: userIds })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`Сетевая ошибка: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success && data.chat) {
+            const newChatItem = createChatItemElement(data.chat);
+            if (newChatItem) {
+                const chatListContainer = document.getElementById('chatListContainer');
+                const noChatsMessage = chatListContainer.querySelector('p');
+                if (noChatsMessage) {
+                    noChatsMessage.remove();
+                }
+                chatListContainer.prepend(newChatItem);
+                loadChat(data.chat.conversation_id);
+            }
+            if (typeof closeGroupChatModal === 'function') {
+                closeGroupChatModal();
+            }
+            document.querySelector('.main-chat-area-new').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+            alert(`Ошибка создания группового чата: ${data.error || 'Неизвестная ошибка'}`);
+        }
+    })
+    .catch(error => {
+        console.error('Ошибка при создании группового чата:', error);
+        alert('Произошла критическая ошибка при создании группового чата.');
+    });
 }
 
-function closeCreateChatModal() {
-    const modal = document.getElementById('createChatModal');
-    if(modal) modal.style.display = 'none';
+function openCreateChatModal() {
+    // Эта функция может быть использована для открытия общего модального окна
+    // для выбора типа чата (личный/групповой), если потребуется.
 }
 
 // Функции для поиска и выпадающего списка
@@ -1256,44 +1301,6 @@ function updateSelectedUsersCount(countElement) {
     countElement.textContent = `${count}/10`;
 }
 
-function createGroupChat(chatName, userIds) {
-    console.log(`[DEBUG] Попытка создать групповой чат. Название: "${chatName}", Участники:`, userIds);
-    fetch('/cosmochat/create-group-chat/', {
-        method: 'POST',
-        headers: {
-            'X-CSRFToken': csrfToken,
-            'Content-Type': 'application/json',
-            'X-Requested-With': 'XMLHttpRequest'
-        },
-        body: JSON.stringify({
-            name: chatName,
-            user_ids: userIds
-        })
-    })
-    .then(response => {
-        console.log('[DEBUG] Получен ответ от сервера (createGroupChat):', response);
-        if (!response.ok) {
-            console.error(`[DEBUG] Ошибка сети: ${response.status} ${response.statusText}`);
-            alert(`Произошла ошибка сети: ${response.status}. Пожалуйста, попробуйте еще раз.`);
-        }
-        return response.json();
-    })
-    .then(data => {
-        console.log('[DEBUG] Получены данные от сервера (createGroupChat):', data);
-        if (data.success && data.chat_id) {
-            console.log(`[DEBUG] Успех! ID группового чата: ${data.chat_id}. Перезагружаем страницу...`);
-            window.location.href = `${window.location.pathname}?open_chat_id=${data.chat_id}`;
-        } else {
-            console.error('[DEBUG] Сервер вернул ошибку (createGroupChat):', data.error);
-            alert(`Не удалось создать групповой чат: ${data.error || 'Неизвестная ошибка'}`);
-        }
-    })
-    .catch(error => {
-        console.error('[DEBUG] Критическая ошибка fetch (createGroupChat):', error);
-        alert('Произошла критическая ошибка при создании группового чата. Подробности в консоли.');
-    });
-}
-
 function toggleGroupChatModalView(showDetailsView) {
     console.log('toggleGroupChatModalView called with:', showDetailsView);
     const groupChatContentWrapper = document.getElementById('groupChatModalContentWrapper');
@@ -1406,4 +1413,46 @@ function setupRoleFilters() {
             loadGroupChatUsers(usersList, countElement, pillsContainer);
         });
     });
+}
+
+// Новая вспомогательная функция для создания элемента чата в списке
+function createChatItemElement(chat) {
+    const defaultAvatarSrc = document.getElementById('profileAvatar')?.src || '/static/accounts/images/avatars/default_avatar_ufo.png';
+    let avatarUrl = defaultAvatarSrc;
+    let avatarAlt = chat.name;
+    let chatType = chat.is_group_chat ? 'group' : 'personal';
+
+    // Для личного чата ставим аватар собеседника
+    if (chatType === 'personal' && chat.participant && chat.participant.profile_picture_url) {
+        avatarUrl = chat.participant.profile_picture_url;
+        avatarAlt = chat.participant.first_name || 'Чат';
+    } else if (chatType === 'group') {
+        // Можно добавить кастомную иконку для групп
+    }
+
+    const chatItem = document.createElement('div');
+    chatItem.className = 'chat-item-new';
+    chatItem.dataset.chatId = chat.conversation_id;
+    chatItem.dataset.chatName = chat.name;
+    chatItem.dataset.chatType = chatType;
+
+    chatItem.innerHTML = `
+        <img src="${avatarUrl}" alt="${avatarAlt}" class="chat-avatar-img">
+        <div class="chat-item-info-new">
+            <h4>${chat.name.substring(0, 25)}</h4>
+            <p class="last-message-preview">Нет сообщений</p>
+        </div>
+        <div class="chat-item-meta-new">
+            <span class="timestamp-chat"></span>
+            <span class="date-chat-preview"></span>
+        </div>
+    `;
+    
+    chatItem.addEventListener('click', function() {
+        if (typeof loadChat === 'function') {
+            loadChat(this.dataset.chatId);
+        }
+    });
+
+    return chatItem;
 }
