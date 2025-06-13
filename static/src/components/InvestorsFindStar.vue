@@ -80,110 +80,117 @@
 .featured4 {
     width: 100%;
     max-width: 1445px;
-    height: auto; /* Changed from fixed height */
+    height: 521px;
     position: relative;
     overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 40px 20px; /* Adjusted padding */
+    padding: 20px;
     box-sizing: border-box;
     background-color: white;
     border-radius: 10px;
-    margin: 0 auto; /* Center the component */
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .featured4 .frame-parent3 {
     width: 100%;
-    max-width: 1200px; /* Adjusted for better layout */
+    max-width: 1303px;
+    height: 100%;
     position: relative;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
-    gap: 40px;
+    gap: 20px;
+    z-index: 1;
 }
 
-.featured4 .parent6 { /* Left block with text */
-    flex-basis: 50%;
+.featured4 .parent6 {
+    width: 45%;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 40px;
+    gap: 30px;
     z-index: 2;
-    padding-right: 20px; /* Spacing from the image */
+    padding-left: 100px;
 }
 
 .featured4 .parent6 .div23 {
-    font-family: 'Unbounded', sans-serif;
     font-size: 35px;
+    font-family: 'Unbounded', sans-serif;
     font-weight: 600;
-    line-height: 1.2;
+    line-height: 1.1;
 }
-
-.featured4 .parent6 .div23 .txt > span:first-child {
+.featured4 .parent6 .div23 .txt > span:first-child { 
     color: #004E9F;
 }
-
-.featured4 .parent6 .div23 .txt .span3 {
-    color: black;
+.featured4 .parent6 .div23 .txt .span3 { 
+    color: #000000;
 }
 
-.featured4 .group-parent {
+.featured4 .group-parent { 
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    align-items: flex-start;
+    gap: 15px;
     width: 100%;
 }
 
 .featured4 .group-div {
+    width: 100%;
+    background: #F2F2F2;
+    border-radius: 10px;
     display: flex;
     align-items: center;
-    background: linear-gradient(180deg, #004E9F 0%, #001C39 100%);
-    border-radius: 10px;
-    padding: 15px;
+    padding: 10px;
     gap: 15px;
-    color: white;
-    width: 100%;
     box-sizing: border-box;
 }
 
 .featured4 .group-div .card-icon-container {
     flex-shrink: 0;
+    width: 125px;
+    height: 96px;
 }
 
 .featured4 .group-div .card-icon {
-    width: 100px; /* fixed size */
-    height: 80px;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
-    border-radius: 5px;
 }
 
-.featured4 .div24,
+.featured4 .div24, 
 .featured4 .div25,
 .featured4 .div26 {
     font-family: 'Unbounded', sans-serif;
     font-size: 14px;
-    line-height: 1.5;
     font-weight: 400;
+    line-height: 1.3;
+    color: black;
 }
 
 .featured4 .wrapper,
 .featured4 .wrapper1 {
     display: flex;
     align-items: center;
+    flex-grow: 1;
 }
-
 
 .featured4 .btn {
-    align-self: flex-start;
+    margin-top: 15px;
 }
 
-
-.featured4 .icon10 { /* Background image of investors */
-    flex-basis: 50%;
-    height: 450px; /* Adjust height as needed */
-    object-fit: cover;
-    border-radius: 10px;
+.featured4 .icon10 {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: auto;
+    max-width: 55%;
+    object-fit: contain;
     z-index: 1;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
 }
 </style> 
