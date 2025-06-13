@@ -375,8 +375,6 @@
     </div>
 </div>
 
-<script src="{% static 'accounts/js/cosmochat.js' %}"></script>
-
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.user-card-new').forEach(card => {
@@ -690,4 +688,5 @@ function hideExtraChats() {
 
 {% block body_extra %}
 {{ request.user.user_id|default:0|json_script:"request_user_id_data" }}
+<script src="{% static 'accounts/js/cosmochat.js' %}"></script>
 {% endblock %}
