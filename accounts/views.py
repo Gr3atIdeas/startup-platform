@@ -31,6 +31,7 @@ from django.db.models.functions import Coalesce # Добавляем Coalesce
 import collections # Добавляем для defaultdict
 from dateutil.relativedelta import relativedelta
 from django.utils.text import slugify
+from django.db import transaction
 
 
 logger = logging.getLogger(__name__)
@@ -1621,36 +1622,33 @@ def start_chat(request, user_id):
     if target_user == request.user:
         return JsonResponse({'success': False, 'error': 'Нельзя создать чат с самим собой'})
 
-    # Проверяем, существует ли чат между пользователями
-    existing_chats = ChatConversations.objects.filter(
+    # Ищем существующий приватный чат (не групповой) именно с этими двумя участниками
+    existing_chat = ChatConversations.objects.annotate(
+        num_participants=Count('chatparticipants')
+    ).filter(
+        is_group_chat=False,
+        num_participants=2,
         chatparticipants__user=request.user
-    ).filter(chatparticipants__user=target_user)
-    if existing_chats.exists():
-        chat = existing_chats.first()
-        return JsonResponse({'success': True, 'chat_id': chat.conversation_id})
+    ).filter(
+        chatparticipants__user=target_user
+    ).first()
 
-    # Определяем роли
-    user_role = request.user.role.role_name.lower() if request.user.role else None
-    target_role = target_user.role.role_name.lower() if target_user.role else None
-    if not user_role or not target_role:
-        return JsonResponse({'success': False, 'error': 'Роли пользователей не определены'})
+    if existing_chat:
+        return JsonResponse({'success': True, 'chat_id': existing_chat.conversation_id})
 
-    # Создаём чат только с двумя участниками
-    chat = ChatConversations(
-        name=f"Чат {request.user.first_name} + {target_user.first_name}",
+    # Создаём новый приватный чат
+    chat = ChatConversations.objects.create(
+        name=f"Чат {request.user.first_name} и {target_user.first_name}",
+        is_group_chat=False,  # Явно указываем, что это не групповой чат
         created_at=timezone.now(),
         updated_at=timezone.now()
     )
-    chat.save()
 
     # Добавляем участников
     ChatParticipants.objects.create(conversation=chat, user=request.user)
     ChatParticipants.objects.create(conversation=chat, user=target_user)
 
     return JsonResponse({'success': True, 'chat_id': chat.conversation_id})
-
-
-
 
 
 @login_required
@@ -2209,55 +2207,68 @@ def create_group_chat(request):
 
     try:
         data = json.loads(request.body)
-        chat_name = data.get('name')
-        user_ids = data.get('user_ids')
+        chat_name = data.get('name', '').strip()
+        user_ids = data.get('user_ids', [])
 
-        if not chat_name or not isinstance(chat_name, str) or len(chat_name.strip()) == 0:
+        if not chat_name:
             return JsonResponse({'success': False, 'error': 'Название чата не может быть пустым.'}, status=400)
 
-        if not user_ids or not isinstance(user_ids, list) or len(user_ids) == 0:
+        if not user_ids:
             return JsonResponse({'success': False, 'error': 'Необходимо выбрать хотя бы одного участника.'}, status=400)
 
-        # Проверка, что нет модераторов
-        moderators = Users.objects.filter(user_id__in=user_ids, role__role_name='moderator')
-        if moderators.exists():
-            logger.warning(f"Попытка добавить модераторов в групповой чат: {moderators.values_list('user_id', flat=True)}")
+        # Убедимся, что user_ids это список целых чисел и без дубликатов
+        try:
+            participant_ids = list(set(int(uid) for uid in user_ids))
+        except (ValueError, TypeError):
+            return JsonResponse({'success': False, 'error': 'Неверный формат ID пользователей.'}, status=400)
+            
+        # Убираем ID текущего пользователя из списка, т.к. он добавляется автоматически
+        if request.user.user_id in participant_ids:
+            participant_ids.remove(request.user.user_id)
+        
+        if not participant_ids:
+            return JsonResponse({'success': False, 'error': 'Нельзя создать групповой чат только с самим собой.'}, status=400)
+
+        # Проверяем, что в участниках нет модераторов
+        if Users.objects.filter(user_id__in=participant_ids, role__role_name='moderator').exists():
             return JsonResponse({'success': False, 'error': 'Модераторы не могут быть добавлены в групповой чат.'}, status=400)
 
-        conversation = ChatConversations.objects.create(
-            name=chat_name.strip(),
-            is_group_chat=True,
-            created_at=timezone.now(),
-            updated_at=timezone.now()
-        )
+        with transaction.atomic():
+            # Создаем чат
+            conversation = ChatConversations.objects.create(
+                name=chat_name,
+                is_group_chat=True,
+                created_at=timezone.now(),
+                updated_at=timezone.now()
+            )
 
-        ChatParticipants.objects.create(
-            conversation=conversation,
-            user=request.user
-        )
+            # Собираем список всех участников (включая создателя)
+            all_participant_users = [request.user]
+            users_to_add = Users.objects.filter(user_id__in=participant_ids)
+            all_participant_users.extend(list(users_to_add))
 
-        added_count = 0
-        for user_id in user_ids:
-            try:
-                user_to_add = Users.objects.get(user_id=user_id)
-                if not ChatParticipants.objects.filter(conversation=conversation, user=user_to_add).exists():
-                    ChatParticipants.objects.create(
-                        conversation=conversation,
-                        user=user_to_add
-                    )
-                    added_count += 1
-            except Users.DoesNotExist:
-                logger.warning(f"Пользователь с ID {user_id} не найден при создании группы {conversation.conversation_id}")
+            # Проверяем, что все пользователи найдены
+            if len(all_participant_users) != len(participant_ids) + 1:
+                 # Это редкий случай, если ID был в списке, но пользователь был удален
+                 logger.error(f"Не все пользователи найдены для создания чата. Передано ID: {participant_ids}")
+                 raise Exception("Один или несколько пользователей не найдены.")
 
-        logger.info(f"Групповой чат создан: ID={conversation.conversation_id}, Название={chat_name}, Участников={added_count+1}")
+            # Создаем записи участников
+            participants_to_create = [
+                ChatParticipants(conversation=conversation, user=user)
+                for user in all_participant_users
+            ]
+            ChatParticipants.objects.bulk_create(participants_to_create)
+
+        logger.info(f"Групповой чат создан: ID={conversation.conversation_id}, Название={chat_name}, Участников={len(all_participant_users)}")
         return JsonResponse({'success': True, 'chat_id': conversation.conversation_id, 'chat_name': chat_name})
 
     except json.JSONDecodeError:
         logger.error("Неверный формат JSON в create_group_chat")
         return JsonResponse({'success': False, 'error': 'Неверный формат данных (JSON).'}, status=400)
     except Exception as e:
-        logger.error(f"Ошибка при создании группового чата: {str(e)}")
-        return JsonResponse({'success': False, 'error': f'Ошибка: {str(e)}'}, status=500)
+        logger.error(f"Ошибка при создании группового чата: {str(e)}", exc_info=True)
+        return JsonResponse({'success': False, 'error': 'Внутренняя ошибка сервера.'}, status=500)
 
 def support_page_view(request):
     return render(request, 'accounts/support.html')
