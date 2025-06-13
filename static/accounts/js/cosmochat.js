@@ -706,6 +706,7 @@ function filterChats(filter) {
 
 // Функция для начала чата с пользователем
 function startChatWithUser(userId) {
+    console.log(`[DEBUG] Попытка создать/открыть чат с пользователем ID: ${userId}`);
     fetch(`/cosmochat/start-chat/${userId}/`, {
         method: 'POST',
         headers: {
@@ -714,31 +715,29 @@ function startChatWithUser(userId) {
             'X-Requested-With': 'XMLHttpRequest'
         }
     })
-    .then(response => response.json())
+    .then(response => {
+        console.log('[DEBUG] Получен ответ от сервера (startChat):', response);
+        if (!response.ok) {
+            console.error(`[DEBUG] Ошибка сети: ${response.status} ${response.statusText}`);
+            alert(`Произошла ошибка сети: ${response.status}. Пожалуйста, попробуйте еще раз.`);
+        }
+        return response.json();
+    })
     .then(data => {
+        console.log('[DEBUG] Получены данные от сервера (startChat):', data);
         if (data.success && data.chat_id) {
-            let chatExists = false;
-            document.querySelectorAll('.chat-item-new').forEach(item => {
-                if(item.dataset.chatId == data.chat_id) {
-                    chatExists = true;
-                }
-            });
-            if (chatExists) {
-                loadChat(data.chat_id);
-                document.querySelector('.main-chat-area-new').scrollIntoView({ behavior: 'smooth' });
-                closeProfileModal();
-                const searchDropdown = document.getElementById('searchDropdown');
-                if (searchDropdown) searchDropdown.style.display = 'none';
-            } else {
-                window.location.href = window.location.pathname + '?open_chat_id=' + data.chat_id + '&new_chat=true';
-            }
+            console.log(`[DEBUG] Успех! ID чата: ${data.chat_id}. Перезагружаем страницу...`);
+            // Вместо сложной логики просто перезагружаем страницу с параметром,
+            // чтобы сервер мог отобразить новый чат.
+            window.location.href = `${window.location.pathname}?open_chat_id=${data.chat_id}`;
         } else {
-            alert(data.error || 'Ошибка при создании или открытии чата');
+            console.error('[DEBUG] Сервер вернул ошибку (startChat):', data.error);
+            alert(`Не удалось создать или открыть чат: ${data.error || 'Неизвестная ошибка'}`);
         }
     })
     .catch(error => {
-        console.error('Ошибка:', error);
-        alert('Произошла ошибка при создании или открытии чата.');
+        console.error('[DEBUG] Критическая ошибка fetch (startChat):', error);
+        alert('Произошла критическая ошибка при создании чата. Подробности в консоли.');
     });
 }
 
@@ -1258,6 +1257,7 @@ function updateSelectedUsersCount(countElement) {
 }
 
 function createGroupChat(chatName, userIds) {
+    console.log(`[DEBUG] Попытка создать групповой чат. Название: "${chatName}", Участники:`, userIds);
     fetch('/cosmochat/create-group-chat/', {
         method: 'POST',
         headers: {
@@ -1270,19 +1270,27 @@ function createGroupChat(chatName, userIds) {
             user_ids: userIds
         })
     })
-    .then(response => response.json())
+    .then(response => {
+        console.log('[DEBUG] Получен ответ от сервера (createGroupChat):', response);
+        if (!response.ok) {
+            console.error(`[DEBUG] Ошибка сети: ${response.status} ${response.statusText}`);
+            alert(`Произошла ошибка сети: ${response.status}. Пожалуйста, попробуйте еще раз.`);
+        }
+        return response.json();
+    })
     .then(data => {
+        console.log('[DEBUG] Получены данные от сервера (createGroupChat):', data);
         if (data.success && data.chat_id) {
-            closeGroupChatModal();
-            loadChat(data.chat_id);
-            selectedGroupChatUserIds = [];
+            console.log(`[DEBUG] Успех! ID группового чата: ${data.chat_id}. Перезагружаем страницу...`);
+            window.location.href = `${window.location.pathname}?open_chat_id=${data.chat_id}`;
         } else {
-            alert(data.error || 'Ошибка при создании группового чата');
+            console.error('[DEBUG] Сервер вернул ошибку (createGroupChat):', data.error);
+            alert(`Не удалось создать групповой чат: ${data.error || 'Неизвестная ошибка'}`);
         }
     })
     .catch(error => {
-        console.error('Ошибка создания группового чата:', error);
-        alert('Произошла ошибка при создании группового чата');
+        console.error('[DEBUG] Критическая ошибка fetch (createGroupChat):', error);
+        alert('Произошла критическая ошибка при создании группового чата. Подробности в консоли.');
     });
 }
 
