@@ -66,44 +66,7 @@
       </div>
     </div>
 
-    <div class="investors-find-star-section">
-      <div class="investors-find-star-content">
-        <div class="investors-text-content">
-          <div class="investors-title">
-            <span class="text-blue">Инвесторы, </span>
-            <span class="text-black">найдите свою звезду!</span>
-          </div>
-          <div class="features-grid">
-            <div class="feature-card">
-              <div class="feature-text">Доступ к проверенным стартапам</div>
-            </div>
-            <img src="https://placehold.co/165x127" class="feature-img"/>
-            <div class="feature-card">
-              <div class="feature-text">Диверсификация портфеля</div>
-            </div>
-            <img src="https://placehold.co/165x127" class="feature-img"/>
-            <div class="feature-card">
-              <div class="feature-text">Удобная аналитика и фильтры для выбора проектов</div>
-            </div>
-            <img src="https://placehold.co/129x99" class="feature-img-small"/>
-          </div>
-          <button class="btn btn-secondary view-startups-btn">
-            <span>Посмотреть стартапы</span>
-            <div class="icon-placeholder">
-              <div class="icon-shape-1"></div>
-              <div class="icon-shape-2"></div>
-            </div>
-          </button>
-        </div>
-        <div class="investors-image-section">
-          <div class="investors-image-container">
-            <img class="main-img" src="https://placehold.co/770x552" />
-            <img class="secondary-img" src="https://placehold.co/428x290" />
-            <img class="small-img" src="https://placehold.co/96x96" />
-          </div>
-        </div>
-      </div>
-    </div>
+    <InvestorsFindStar />
 
     <div class="explore-worlds-section">
       <div class="explore-worlds-content">
@@ -411,6 +374,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import FAQ from './FAQ.vue';
+import InvestorsFindStar from './InvestorsFindStar.vue';
 
 const sliderValue = ref(50);
 const activeTab = ref('startups');
