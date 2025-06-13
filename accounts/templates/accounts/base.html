@@ -302,5 +302,11 @@
     {# Сюда будут добавляться скрипты из дочерних шаблонов #}
   {% endblock %}
   {% block scripts %}{% endblock %}
+
+  <script src="{% static 'accounts/js/jquery.min.js' %}"></script>
+  <script src="{% static 'accounts/js/popper.js' %}"></script>
+  <script src="{% static 'accounts/js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'accounts/js/main.js' %}"></script>
+  {% block body_extra %}{% endblock %}
 </body>
 </html>
