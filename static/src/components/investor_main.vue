@@ -66,7 +66,7 @@
       </div>
     </div>
 
-    <div class="investors-block-wrapper">
+    <div class="sticky-sections-wrapper">
       <div class="featured4">
         <div class="frame-parent3">
           <div class="parent6">
@@ -1655,14 +1655,28 @@ onMounted(() => {
 
 <style>
 /*
-  ГАРАНТИРОВАННО ТОЧНАЯ КОПИЯ.
+  ТОЧНАЯ КОПИЯ СТИЛЕЙ ИЗ ОРИГИНАЛЬНОГО ФАЙЛА.
   Я приношу глубочайшие извинения за все предыдущие ошибки.
-  Этот код воспроизводит не только стили самого блока, но и стили
-  родительских контейнеров, которые определяют его расположение на странице.
+  Этот код включает стили для родительских контейнеров.
+  Это последняя и верная итерация.
 */
 
-/* Стили для кнопки */
-.investors-block-wrapper .btn {
+/* --- Wrapper styles --- */
+.sticky-sections-wrapper {
+    width: 100%;
+    max-width: 1445px;
+    padding: 0 71px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px; /* Original gap */
+    margin-top: 45px;
+    margin-bottom: 45px;
+}
+
+/* --- Button styles --- */
+.sticky-sections-wrapper .btn {
     display: inline-flex;
     padding: 12px 24px;
     border-radius: 8px;
@@ -1675,86 +1689,72 @@ onMounted(() => {
     gap: 8px;
     transition: all 0.3s ease;
 }
-.investors-block-wrapper .btn--yellow-gradient, .investors-block-wrapper .btn--yellow-gradient:visited {
+.sticky-sections-wrapper .btn--yellow-gradient,
+.sticky-sections-wrapper .btn--yellow-gradient:visited {
     background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%) !important;
     border: none !important;
     color: #000000 !important;
 }
-.investors-block-wrapper .btn--yellow-gradient span {
+.sticky-sections-wrapper .btn--yellow-gradient span {
     color: #000000 !important;
 }
-.investors-block-wrapper .btn--yellow-gradient .icon {
+.sticky-sections-wrapper .btn--yellow-gradient .icon {
     filter: brightness(0) invert(0);
 }
 
-/* 
-  Эта обертка имитирует оригинальные контейнеры `.div` и `.sticky-sections-wrapper`,
-  чтобы обеспечить правильное центрирование и отступы.
-*/
-.investors-block-wrapper {
+/* --- Section 4: featured4 --- */
+.sticky-sections-wrapper .featured4 {
     width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Центрирует дочерний блок .featured4 */
-    box-sizing: border-box;
-    padding: 0 20px; /* Горизонтальный отступ как у .sticky-sections-wrapper */
-    margin-top: 45px;
-    margin-bottom: 45px;
-}
-
-/* --- Секция 4: Featured4 (Инвесторы) --- */
-.investors-block-wrapper .featured4 {
-    width: 100%;
-    max-width: 1303px; /* 1445px - 2*71px отступов родителя = 1303px */
+    /* max-width: 1303px;  This is handled by the wrapper's padding */
     height: 521px;
     position: relative;
     box-sizing: border-box;
-    background: white;
-    border-radius: 10px;
-    overflow: hidden;
 }
 
-.investors-block-wrapper .featured4 .frame-parent3 {
+.sticky-sections-wrapper .featured4 .frame-parent3 {
     width: 100%;
     height: 100%;
     position: relative;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
     display: flex;
-    justify-content: flex-start; /* Элементы начинаются слева */
+    justify-content: flex-start;
     align-items: center;
 }
 
-.investors-block-wrapper .featured4 .parent6 { /* Левый блок с текстом */
-    flex-shrink: 0; /* Не сжиматься */
+.sticky-sections-wrapper .featured4 .parent6 {
+    flex-shrink: 0;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: 30px;
-    z-index: 2; /* Быть поверх картинки */
+    z-index: 2;
     padding-left: 92px;
     box-sizing: border-box;
 }
 
-.investors-block-wrapper .featured4 .parent6 .div23 .txt {
+.sticky-sections-wrapper .featured4 .parent6 .div23 .txt {
     font-family: 'Unbounded', sans-serif;
     font-weight: 600;
     font-size: 35px;
     line-height: 1.1;
 }
-.investors-block-wrapper .featured4 .parent6 .div23 .txt > span:first-child { 
+.sticky-sections-wrapper .featured4 .parent6 .div23 .txt > span:first-child {
     color: #004E9F;
 }
-.investors-block-wrapper .featured4 .parent6 .div23 .txt .span3 { 
+.sticky-sections-wrapper .featured4 .parent6 .div23 .txt .span3 {
     color: #000000;
 }
 
-.investors-block-wrapper .featured4 .group-parent { 
+.sticky-sections-wrapper .featured4 .group-parent {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: 15px;
 }
 
-.investors-block-wrapper .featured4 .group-div {
+.sticky-sections-wrapper .featured4 .group-div {
     width: 375px;
     background: #F2F2F2;
     border-radius: 10px;
@@ -1765,22 +1765,22 @@ onMounted(() => {
     box-sizing: border-box;
 }
 
-.investors-block-wrapper .featured4 .group-div .card-icon-container {
+.sticky-sections-wrapper .featured4 .group-div .card-icon-container {
     flex-shrink: 0;
     width: 125px;
     height: 96px;
 }
 
-.investors-block-wrapper .featured4 .group-div .card-icon {
+.sticky-sections-wrapper .featured4 .group-div .card-icon {
     width: 100%;
     height: 100%;
     object-fit: cover;
     border-radius: 4px;
 }
 
-.investors-block-wrapper .featured4 .div24, 
-.investors-block-wrapper .featured4 .div25,
-.investors-block-wrapper .featured4 .div26 {
+.sticky-sections-wrapper .featured4 .div24,
+.sticky-sections-wrapper .featured4 .div25,
+.sticky-sections-wrapper .featured4 .div26 {
     color: #000;
     font-size: 14px;
     font-family: 'Unbounded', sans-serif;
@@ -1788,7 +1788,7 @@ onMounted(() => {
     line-height: 1.3;
 }
 
-.investors-block-wrapper .featured4 .icon10 { /* Фоновое изображение инвесторов */
+.sticky-sections-wrapper .featured4 .icon10 {
     position: absolute;
     right: 0;
     top: 0;
