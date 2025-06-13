@@ -1455,7 +1455,7 @@ def cosmochat(request):
     ).prefetch_related(
         'chatparticipants_set__user__userprofile' # Загружаем участников, их user-объекты и профили
     ).annotate(
-        latest_message_time=Max('chatmessages__created_at') # Аннотируем для сортировки
+        latest_message_time=Max('messages__created_at') # Аннотируем для сортировки
     ).order_by(F('latest_message_time').desc(nulls_last=True), '-updated_at')
 
     # Обрабатываем чаты, чтобы добавить нужные для отображения поля
