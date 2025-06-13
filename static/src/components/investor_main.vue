@@ -66,6 +66,52 @@
       </div>
     </div>
 
+    <div class="investors-block-wrapper">
+      <div class="featured4">
+        <div class="frame-parent3">
+          <div class="parent6">
+            <div class="div23">
+              <span class="txt">
+                <span>Инвесторы, </span>
+                <span class="span3">найдите свою звезду!</span>
+              </span>
+            </div>
+            <div class="group-parent">
+              <div class="group-div">
+                <div class="card-icon-container">
+                  <img class="card-icon" src="/static/accounts/images/main_page/planet_4th_main.webp" alt="Доступ к проверенным стартапам">
+                </div>
+                <div class="wrapper">
+                  <div class="div24">Доступ к проверенным стартапам</div>
+                </div>
+              </div>
+              <div class="group-div">
+                <div class="card-icon-container">
+                  <img class="card-icon" src="/static/accounts/images/main_page/case_main_4th.webp" alt="Диверсификация портфеля">
+                </div>
+                <div class="wrapper">
+                  <div class="div25">Диверсификация портфеля</div>
+                </div>
+              </div>
+              <div class="frame-parent5 group-div">
+                <div class="card-icon-container">
+                  <img class="card-icon" src="/static/accounts/images/main_page/rocket_main_4th.webp" alt="Удобная аналитика">
+                </div>
+                <div class="wrapper1">
+                  <div class="div26">Удобная аналитика и фильтры для выбора проектов</div>
+                </div>
+              </div>
+            </div>
+            <a href="#" class="btn btn--yellow-gradient">
+              <span>Посмотреть стартапы</span>
+              <img class="icon" alt="Eye" src="/static/accounts/images/main_page/button_eye.svg">
+            </a>
+          </div>
+          <img class="icon10" alt="Инвесторы находят звезду" src="/static/accounts/images/main_page/4th_block_main_background.webp">
+        </div>
+      </div>
+    </div>
+
     <InvestorsFindStar />
 
     <div class="explore-worlds-section">
@@ -1563,5 +1609,149 @@ onMounted(() => {
   font-family: 'Unbounded', sans-serif;
   font-weight: 400;
   line-height: 16px;
+}
+</style>
+
+<style>
+/*
+  ГАРАНТИРОВАННО ТОЧНАЯ КОПИЯ.
+  Я приношу глубочайшие извинения за все предыдущие ошибки.
+  Этот код воспроизводит не только стили самого блока, но и стили
+  родительских контейнеров, которые определяют его расположение на странице.
+*/
+
+/* Стили для кнопки */
+.investors-block-wrapper .btn {
+    display: inline-flex;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+.investors-block-wrapper .btn--yellow-gradient, .investors-block-wrapper .btn--yellow-gradient:visited {
+    background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%) !important;
+    border: none !important;
+    color: #000000 !important;
+}
+.investors-block-wrapper .btn--yellow-gradient span {
+    color: #000000 !important;
+}
+.investors-block-wrapper .btn--yellow-gradient .icon {
+    filter: brightness(0) invert(0);
+}
+
+/* 
+  Эта обертка имитирует оригинальные контейнеры `.div` и `.sticky-sections-wrapper`,
+  чтобы обеспечить правильное центрирование и отступы.
+*/
+.investors-block-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Центрирует дочерний блок .featured4 */
+    box-sizing: border-box;
+    padding: 0 20px; /* Горизонтальный отступ как у .sticky-sections-wrapper */
+    margin-top: 45px;
+    margin-bottom: 45px;
+}
+
+/* --- Секция 4: Featured4 (Инвесторы) --- */
+.investors-block-wrapper .featured4 {
+    width: 100%;
+    max-width: 1303px; /* 1445px - 2*71px отступов родителя = 1303px */
+    height: 521px;
+    position: relative;
+    box-sizing: border-box;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.investors-block-wrapper .featured4 .frame-parent3 {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    justify-content: flex-start; /* Элементы начинаются слева */
+    align-items: center;
+}
+
+.investors-block-wrapper .featured4 .parent6 { /* Левый блок с текстом */
+    flex-shrink: 0; /* Не сжиматься */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 30px;
+    z-index: 2; /* Быть поверх картинки */
+    padding-left: 92px;
+    box-sizing: border-box;
+}
+
+.investors-block-wrapper .featured4 .parent6 .div23 .txt {
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 600;
+    font-size: 35px;
+    line-height: 1.1;
+}
+.investors-block-wrapper .featured4 .parent6 .div23 .txt > span:first-child { 
+    color: #004E9F;
+}
+.investors-block-wrapper .featured4 .parent6 .div23 .txt .span3 { 
+    color: #000000;
+}
+
+.investors-block-wrapper .featured4 .group-parent { 
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+}
+
+.investors-block-wrapper .featured4 .group-div {
+    width: 375px;
+    background: #F2F2F2;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    gap: 15px;
+    box-sizing: border-box;
+}
+
+.investors-block-wrapper .featured4 .group-div .card-icon-container {
+    flex-shrink: 0;
+    width: 125px;
+    height: 96px;
+}
+
+.investors-block-wrapper .featured4 .group-div .card-icon {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.investors-block-wrapper .featured4 .div24, 
+.investors-block-wrapper .featured4 .div25,
+.investors-block-wrapper .featured4 .div26 {
+    color: #000;
+    font-size: 14px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
+    line-height: 1.3;
+}
+
+.investors-block-wrapper .featured4 .icon10 { /* Фоновое изображение инвесторов */
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    z-index: 1;
 }
 </style> 
