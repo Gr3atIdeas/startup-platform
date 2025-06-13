@@ -112,8 +112,6 @@
       </div>
     </div>
 
-    <InvestorsFindStar />
-
     <div class="explore-worlds-section">
       <div class="explore-worlds-content">
         <div class="title-section">
@@ -420,7 +418,6 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import FAQ from './FAQ.vue';
-import InvestorsFindStar from './InvestorsFindStar.vue';
 
 const sliderValue = ref(50);
 const activeTab = ref('startups');
@@ -562,64 +559,108 @@ onMounted(() => {
   }
 }
 
-.investors-find-star-section {
-    width: 1445px; padding: 45px 71px; overflow: hidden;
-    display: inline-flex; justify-content: flex-start; align-items: center; gap: 10px;
+.investors-block-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
+    padding: 0 20px;
+    margin-top: 45px;
+    margin-bottom: 45px;
+}
 
-    .investors-find-star-content {
-        width: 1303px; height: 521px; position: relative; background: white; border-radius: 10px;
-        
-        .investors-text-content {
-            width: 591px; left: 92px; top: 55px; position: absolute;
-            display: inline-flex; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 27px;
-            
-            .investors-title {
-                width: 375px;
-                .text-blue { color: #004E9F; font-size: 35px; font-family: 'Unbounded'; font-weight: 600; line-height: 35px; word-wrap: break-word; }
-                .text-black { color: black; font-size: 35px; font-family: 'Unbounded'; font-weight: 600; line-height: 35px; word-wrap: break-word; }
-            }
+.featured4 {
+    width: 100%;
+    max-width: 1303px;
+    height: 521px;
+    position: relative;
+    box-sizing: border-box;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+}
 
-            .features-grid {
-                align-self: stretch; display: inline-flex; justify-content: flex-start; align-items: flex-end; gap: 15px;
+.frame-parent3 {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
 
-                .feature-card {
-                    width: 187px; height: 181px; position: relative; background: linear-gradient(180deg, #004E9F 0%, #001C39 100%);
-                    overflow: hidden; border-radius: 10px;
-                    
-                    .feature-text {
-                        width: 159px; position: absolute; left: 14px; text-align: center;
-                        color: white; font-size: 14px; font-family: 'Unbounded'; font-weight: 400; line-height: 18px; word-wrap: break-word;
-                        top: 93px;
-                    }
-                }
-                .feature-card:nth-of-type(3) .feature-text { top: 97px; }
-                .feature-card:nth-of-type(5) .feature-text { top: 86px; }
+.parent6 {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 30px;
+    z-index: 2;
+    padding-left: 92px;
+    box-sizing: border-box;
+}
 
-                .feature-img { width: 165px; height: 127px; position: relative; }
-                .feature-img-small { width: 129px; height: 99px; position: relative; }
-            }
+.div23 .txt {
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 600;
+    font-size: 35px;
+    line-height: 1.1;
+}
+.div23 .txt > span:first-child { 
+    color: #004E9F;
+}
+.div23 .txt .span3 { 
+    color: #000000;
+}
 
-            .view-startups-btn {
-                gap: 9px;
-                .icon-placeholder {
-                    width: 24px; height: 24px; position: relative; overflow: hidden;
-                    .icon-shape-1 { width: 20px; height: 14px; left: 2px; top: 5px; position: absolute; outline: 2px black solid; outline-offset: -1px; }
-                    .icon-shape-2 { width: 6px; height: 6px; left: 9px; top: 9px; position: absolute; outline: 2px black solid; outline-offset: -1px; }
-                }
-            }
-        }
+.group-parent { 
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+}
 
-        .investors-image-section {
-            width: 771px; height: 553px; left: 712px; top: -16px; position: absolute; overflow: hidden;
-            .investors-image-container {
-                width: 100%; height: 100%; position: absolute; background: black;
-                img { position: absolute; }
-                .main-img { width: 770.17px; height: 552.40px; left: 0px; top: 0px; }
-                .secondary-img { width: 427.87px; height: 289.92px; left: 199px; top: 263px; }
-                .small-img { width: 96px; height: 96px; left: 255.34px; top: 135px; }
-            }
-        }
-    }
+.group-div {
+    width: 375px;
+    background: #F2F2F2;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    gap: 15px;
+    box-sizing: border-box;
+}
+
+.group-div .card-icon-container {
+    flex-shrink: 0;
+    width: 125px;
+    height: 96px;
+}
+
+.group-div .card-icon {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.group-div .div24, 
+.group-div .div25,
+.group-div .div26 {
+    color: #000;
+    font-size: 14px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
+    line-height: 1.3;
+}
+
+.icon10 {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    z-index: 1;
 }
 
 .explore-worlds-section {
@@ -822,7 +863,7 @@ onMounted(() => {
         .updates-title {
           color: #777E90;
           font-size: 12px;
-          font-family: 'Poppins', sans-serif; // Assuming Poppins is available or use Unbounded
+          font-family: 'Poppins', sans-serif;
           font-weight: 600;
           line-height: 20px;
         }
@@ -970,7 +1011,7 @@ onMounted(() => {
         top: 74px;
         position: absolute;
         overflow: hidden;
-        background: black; // To cover parts of the placeholder
+        background: black;
         img {
           width: 371.89px;
           height: 278.66px;
@@ -1271,7 +1312,7 @@ onMounted(() => {
   font-family: 'Unbounded', sans-serif;
   font-weight: 400;
   line-height: 16px;
-  background: transparent; // Assuming button has no bg color
+  background: transparent;
 }
 
 .arrow-icon-container-show-more {
