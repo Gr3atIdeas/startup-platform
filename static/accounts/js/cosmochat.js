@@ -666,19 +666,42 @@ function updateUserRatingDisplay(starsContainer) {
 // Функция для фильтрации чатов
 function filterChats(filter) {
     const chatItems = document.querySelectorAll('.chat-items-list-new .chat-item-new');
-    chatItems.forEach(item => {
-        const chatType = item.dataset.chatType || 'personal';
-        
-        if (filter === 'all') {
-            item.style.display = 'flex';
-        } else if (filter === 'chats' && chatType === 'personal') {
-            item.style.display = 'flex';
-        } else if (filter === 'groups' && chatType === 'group') {
-            item.style.display = 'flex';
-        } else {
-            item.style.display = 'none';
+    const paginationContainer = document.getElementById('chatPagination');
+    const showMoreContainer = document.querySelector('.pagination-new:has(#showMoreChatsBtn)');
+
+    if (filter === 'all') {
+        // Если выбран фильтр "Все", показываем пагинацию и сбрасываем стили display
+        if (paginationContainer) paginationContainer.style.display = 'flex';
+        if (showMoreContainer) showMoreContainer.style.display = 'flex';
+        chatItems.forEach(item => item.style.display = ''); // Сбрасываем инлайновый стиль
+        // Восстанавливаем видимость согласно пагинации
+        const currentPageBtn = document.querySelector('#chatPagination .page-number-item.current');
+        if (currentPageBtn) {
+            const currentPage = parseInt(currentPageBtn.dataset.page);
+            // Эта функция определена в HTML-шаблоне
+            if (typeof showChatPage === 'function') {
+                showChatPage(currentPage);
+            }
         }
-    });
+    } else {
+        // Если выбран другой фильтр, скрываем пагинацию
+        if (paginationContainer) paginationContainer.style.display = 'none';
+        if (showMoreContainer) showMoreContainer.style.display = 'none';
+
+        chatItems.forEach(item => {
+            const chatType = item.dataset.chatType || 'personal';
+            let shouldBeVisible = false;
+
+            if (filter === 'chats' && chatType === 'personal') {
+                shouldBeVisible = true;
+            } else if (filter === 'groups' && chatType === 'group') {
+                shouldBeVisible = true;
+            }
+
+            // Управляем видимостью напрямую
+            item.style.display = shouldBeVisible ? 'flex' : 'none';
+        });
+    }
 }
 
 // Функция для начала чата с пользователем
