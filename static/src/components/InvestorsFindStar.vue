@@ -49,7 +49,6 @@
 </script>
 
 <style scoped>
-/* General button styles that might be needed */
 .btn {
     display: inline-flex;
     padding: 12px 24px;
@@ -65,143 +64,126 @@
 }
 
 .btn--yellow-gradient, .btn--yellow-gradient:visited {
-    background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
-    border: none;
-    color: #000000;
+    background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%) !important;
+    border: none !important;
+    color: #000000 !important;
 }
 
 .btn--yellow-gradient span {
-    color: #000000;
+    color: #000000 !important;
 }
 
 .btn--yellow-gradient .icon {
     filter: brightness(0) invert(0);
 }
 
-
-/* Styles for featured4 */
 .featured4 {
     width: 100%;
     max-width: 1445px;
-    height: auto;
+    height: auto; /* Changed from fixed height */
     position: relative;
     overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 60px 20px;
+    padding: 40px 20px; /* Adjusted padding */
     box-sizing: border-box;
-    background-color: white; /* Changed from transparent to match investor page style */
-    margin-left: auto;
-    margin-right: auto;
-    border-radius: 10px; /* Added for consistency */
+    background-color: white;
+    border-radius: 10px;
+    margin: 0 auto; /* Center the component */
 }
 
 .featured4 .frame-parent3 {
     width: 100%;
-    max-width: 1303px;
-    height: 100%;
+    max-width: 1200px; /* Adjusted for better layout */
     position: relative;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 20px;
-    z-index: 1;
+    gap: 40px;
 }
 
-.featured4 .parent6 {
-    flex: 1;
-    max-width: 50%;
+.featured4 .parent6 { /* Left block with text */
+    flex-basis: 50%;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 30px;
+    gap: 40px;
     z-index: 2;
+    padding-right: 20px; /* Spacing from the image */
+}
+
+.featured4 .parent6 .div23 {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 35px;
+    font-weight: 600;
+    line-height: 1.2;
 }
 
 .featured4 .parent6 .div23 .txt > span:first-child {
     color: #004E9F;
-    font-size: 35px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 600;
-    line-height: 35px;
-    word-wrap: break-word;
 }
+
 .featured4 .parent6 .div23 .txt .span3 {
     color: black;
-    font-size: 35px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 600;
-    line-height: 35px;
-    word-wrap: break-word;
 }
 
 .featured4 .group-parent {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    gap: 15px;
+    gap: 20px;
     width: 100%;
 }
 
 .featured4 .group-div {
-    width: 100%;
-    max-width: 480px;
-    padding: 20px;
-    background: linear-gradient(180deg, #004E9F 0%, #001C39 100%);
-    border-radius: 10px;
     display: flex;
     align-items: center;
-    gap: 20px;
-    transition: transform 0.3s ease;
-}
-
-.featured4 .group-div:hover {
-    transform: translateY(-5px);
+    background: linear-gradient(180deg, #004E9F 0%, #001C39 100%);
+    border-radius: 10px;
+    padding: 15px;
+    gap: 15px;
+    color: white;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .featured4 .group-div .card-icon-container {
     flex-shrink: 0;
-    width: 80px;
-    height: 80px;
-    overflow: hidden;
-    border-radius: 8px;
 }
 
 .featured4 .group-div .card-icon {
-    width: 100%;
-    height: 100%;
+    width: 100px; /* fixed size */
+    height: 80px;
     object-fit: cover;
+    border-radius: 5px;
 }
+
 .featured4 .div24,
 .featured4 .div25,
 .featured4 .div26 {
-    color: white;
-    font-size: 16px;
     font-family: 'Unbounded', sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
     font-weight: 400;
-    line-height: 1.4;
 }
+
+.featured4 .wrapper,
+.featured4 .wrapper1 {
+    display: flex;
+    align-items: center;
+}
+
 
 .featured4 .btn {
-    text-decoration: none;
+    align-self: flex-start;
 }
 
-.featured4 .btn .icon {
-    width: 24px;
-    height: 24px;
-}
 
-.featured4 .icon10 {
-    position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    width: auto;
-    max-width: 50%;
-    height: 100%;
-    object-fit: contain;
-    z-index: 0;
-    opacity: 0.9;
+.featured4 .icon10 { /* Background image of investors */
+    flex-basis: 50%;
+    height: 450px; /* Adjust height as needed */
+    object-fit: cover;
+    border-radius: 10px;
+    z-index: 1;
 }
 </style> 
