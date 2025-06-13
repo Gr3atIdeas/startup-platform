@@ -48,7 +48,10 @@
 // No script needed for this component yet
 </script>
 
-<style scoped>
+<style>
+/* --- Секция 4: Featured4 (Инвесторы) --- */
+/* Стили скопированы 1 в 1 из main_temp.css и не являются scoped */
+
 .btn {
     display: inline-flex;
     padding: 12px 24px;
@@ -80,15 +83,15 @@
 .featured4 {
     width: 100%;
     max-width: 1445px;
-    height: 521px;
+    height: 521px; /* Фиксированная высота как в макете */
     position: relative;
     overflow: hidden;
-    display: flex;
+    display: flex; /* Для центрирования .frame-parent3 */
     justify-content: center;
     align-items: center;
-    padding: 20px;
+    padding: 0 20px; /* Горизонтальные отступы */
     box-sizing: border-box;
-    background-color: white;
+    background: white; /* Фон секции */
     border-radius: 10px;
     margin-left: auto;
     margin-right: auto;
@@ -96,31 +99,37 @@
 
 .featured4 .frame-parent3 {
     width: 100%;
-    max-width: 1303px;
+    max-width: 1303px; /* Максимальная ширина внутреннего контейнера */
     height: 100%;
     position: relative;
-    display: flex;
-    justify-content: flex-start;
+    display: flex; /* Располагаем текст и картинку рядом */
+    justify-content: flex-start; /* Начинаем с левого края */
     align-items: center;
-    gap: 20px;
-    z-index: 1;
+    z-index: 1; /* Чтобы быть над возможными псевдоэлементами */
 }
 
-.featured4 .parent6 {
-    width: 45%;
+
+.featured4 .parent6 { /* Левый блок с текстом */
+    flex-basis: 45%; /* Занимает 45% ширины */
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: flex-start; /* Элементы прижаты к левому краю */
     gap: 30px;
-    z-index: 2;
-    padding-left: 100px;
+    z-index: 2; /* Поверх фоновой картинки */
+    padding-left: 100px; /* Отступ слева */
+    box-sizing: border-box;
 }
 
 .featured4 .parent6 .div23 {
-    font-size: 35px;
+    width: 100%; /* Занимает всю ширину родителя */
+}
+
+.featured4 .parent6 .div23 .txt {
     font-family: 'Unbounded', sans-serif;
     font-weight: 600;
+    font-size: 35px;
     line-height: 1.1;
+    word-wrap: break-word;
 }
 .featured4 .parent6 .div23 .txt > span:first-child { 
     color: #004E9F;
@@ -130,15 +139,16 @@
 }
 
 .featured4 .group-parent { 
+    width: 100%;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: flex-start; /* Карточки начинаются слева */
     gap: 15px;
-    width: 100%;
 }
 
 .featured4 .group-div {
-    width: 100%;
+    width: 100%; /* Карточка занимает всю ширину родителя (.parent6) */
+    max-width: 375px; /* Но не более */
     background: #F2F2F2;
     border-radius: 10px;
     display: flex;
@@ -150,8 +160,9 @@
 
 .featured4 .group-div .card-icon-container {
     flex-shrink: 0;
-    width: 125px;
+    width: 125px; /* Фиксированная ширина контейнера иконки */
     height: 96px;
+    overflow: hidden;
 }
 
 .featured4 .group-div .card-icon {
@@ -160,35 +171,35 @@
     object-fit: cover;
 }
 
+
 .featured4 .div24, 
 .featured4 .div25,
 .featured4 .div26 {
-    font-family: 'Unbounded', sans-serif;
+    color: #000;
     font-size: 14px;
+    font-family: 'Unbounded', sans-serif;
     font-weight: 400;
     line-height: 1.3;
-    color: black;
 }
-
 .featured4 .wrapper,
 .featured4 .wrapper1 {
-    display: flex;
-    align-items: center;
-    flex-grow: 1;
+    flex-grow: 1; /* Текст занимает оставшееся место */
 }
 
-.featured4 .btn {
+
+.featured4 .btn { /* Стили для кнопки в этой секции */
     margin-top: 15px;
 }
 
-.featured4 .icon10 {
+
+.featured4 .icon10 { /* Фоновое изображение инвесторов */
     position: absolute;
     right: 0;
     top: 0;
     height: 100%;
     width: auto;
-    max-width: 55%;
-    object-fit: contain;
+    max-width: 55%; /* Занимает правую часть */
+    object-fit: cover; /* cover, чтобы заполнить пространство */
     z-index: 1;
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
