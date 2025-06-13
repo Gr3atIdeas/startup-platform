@@ -1453,7 +1453,7 @@ def cosmochat(request):
     chats = ChatConversations.objects.filter(
         chatparticipants__user=request.user
     ).prefetch_related(
-        'chatparticipants_set__user__userprofile' # Загружаем участников, их user-объекты и профили
+        'chatparticipants_set__user'  # Загружаем участников и их user-объекты
     ).annotate(
         latest_message_time=Max('messages__created_at') # Аннотируем для сортировки
     ).order_by(F('latest_message_time').desc(nulls_last=True), '-updated_at')
