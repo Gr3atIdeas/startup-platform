@@ -28,7 +28,7 @@ head_extra %} {{ block.super }} {#
   rel="stylesheet"
 />
 {# <<< Комментируем rangeslider.js CSS >>> #} {# JS пока не подключаем здесь #}
-{% endblock %} {% block content %} {#
+{% endblock head_extra %} {% block content %} {#
 <div class="catalog-wrapper">
   Переносим обертки с паддингами в body в CSS #}
   <div class="catalog-container">

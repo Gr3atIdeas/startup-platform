@@ -249,52 +249,52 @@
                 <a href="{% url 'profile' %}" class="profile-dropdown-item"
                   >Профиль</a
                 >
-                <a href="{% url 'startups_list' %}" class="profile-dropdown-item"
-                  >Стартапы</a
-                >
-                {# Исправлено на каталог #} {#
-                <a
-                  href="{% url 'profile_settings' %}"
-                  class="profile-dropdown-item"
+                <a href="{% url 'settings' %}" class="profile-dropdown-item"
                   >Настройки</a
                 >
-                #} {# Нужен URL для настроек #}
-                <a href="#" class="profile-dropdown-item">Настройки</a> {#
-                Временный #}
-                <a href="{% url 'support' %}" class="profile-dropdown-item"
-                  >Поддержка</a
+                <a href="{% url 'logout' %}" class="profile-dropdown-item"
+                  >Выйти</a
                 >
-                {# ЗАМЕНЕН URL #}
-                <a href="{% url 'contacts' %}" class="profile-dropdown-item"
-                  >Контакты</a
-                >
-                <a href="{% url 'faq' %}" class="profile-dropdown-item">FAQ</a>
-                <a
-                  href="{% url 'logout' %}"
-                  class="profile-dropdown-item profile-dropdown-logout"
-                >
-                  <i class="fas fa-sign-out-alt"></i> Выйти
-                </a>
               </div>
             </div>
           {% else %}
-            <a
-              href="{% url 'login' %}"
-              class="header-auth-button-link header-login-button"
+            <a href="{% url 'login' %}" class="header-auth-button login-button"
+              >Войти</a
             >
-              Войти
-              <img
-                src="{% static 'accounts/images/add-circle-outline.svg' %}"
-                alt="icon"
-                class="header-auth-button-icon"
-              />
-            </a>
+            <a
+              href="{% url 'register' %}"
+              class="header-auth-button register-button"
+              >Регистрация</a
+            >
           {% endif %}
         </div>
       </div>
     </header>
 
-    <main class="content">{% block content %}{% endblock %}</main>
+    <main class="main-content">
+      <div id="alert-container" class="alert-container"></div>
+      {% if messages %}
+        <div class="messages">
+          {% for message in messages %}
+            <div
+              class="alert alert-{{ message.tags }} alert-dismissible fade show"
+              role="alert"
+            >
+              {{ message }}
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"
+                aria-label="Close"
+              ></button>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %} 
+      
+      {% block content %} 
+      {% endblock %}
+    </main>
 
     <footer class="site-footer">
       <div class="footer-positioning-container">
