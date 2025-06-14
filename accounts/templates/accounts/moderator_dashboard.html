@@ -1,493 +1,500 @@
-{% extends 'accounts/base.html' %} {% load static %} {% load humanize %} {%
-block title %}Панель модератора - Заявки{% endblock %} {% block head_extra %}
-<link
-  rel="stylesheet"
-  href="{% static 'accounts/css/moderator_dashboard.css' %}"
-/>
-<style>
-  .category-dropdown-menu {
-    display: none; /* Скрыто по умолчанию */
-    position: absolute;
-    background-color: #f9f9f9;
-    min-width: 200px; /* Немного шире для лучшего вида */
-    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-    z-index: 100; /* Выше других элементов */
-    border-radius: 5px;
-    padding: 5px 0;
-    margin-top: 5px; /* Небольшой отступ от кнопки */
-    max-height: 300px; /* Ограничение высоты с прокруткой */
-    overflow-y: auto; /* Добавить прокрутку, если категорий много */
-  }
-  .category-dropdown-menu a {
-    color: black;
-    padding: 10px 16px; /* Увеличим немного паддинг */
-    text-decoration: none;
-    display: block;
-    font-size: 14px; /* Чуть крупнее шрифт */
-    white-space: nowrap; /* Предотвратить перенос текста категорий */
-  }
-  .category-dropdown-menu a:hover {
-    background-color: #e9e9e9; /* Чуть темнее при наведении */
-  }
-  .filter-button-group {
-    /* Обертка для кнопки и выпадающего списка */
-    position: relative;
-    display: inline-block;
-  }
-  /* Стиль для выделения активной кнопки */
-  .filter-button.active {
-    background: #004e9f;
-    color: white;
-    border-color: #004e9f; /* Убедимся, что и рамка того же цвета */
-  }
-  .filter-button.active img.filter-icon {
-    filter: brightness(0) invert(1);
-  }
-  .filter-button.inactive {
-    background: white;
-    color: black;
-    border: 1px solid #004e9f;
-  }
-  .filter-button.inactive img.filter-icon {
-    filter: none;
-  }
-</style>
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const filterButtons = document.querySelectorAll('.filter-button')
-    const currentUrlParams = new URLSearchParams(window.location.search)
-    const currentCategory = decodeURIComponent(
-      currentUrlParams.get('category') || ''
-    )
-    const currentSort = currentUrlParams.get('sort')
-    const currentFilter = currentUrlParams.get('filter')
+{% extends 'accounts/base.html' %}
+{% load static %}
+{% load humanize %}
 
-    filterButtons.forEach((button) => {
-      button.classList.remove('active')
-      button.classList.add('inactive')
+{% block title %}Панель модератора - Заявки{% endblock %}
 
-      const buttonFilterType = button.dataset.filterType
-      const buttonSortValue = button.dataset.sortValue
-
-      if (
-        buttonFilterType === 'all' &&
-        !currentCategory &&
-        !currentSort &&
-        (!currentFilter || currentFilter === 'all')
-      ) {
-        button.classList.add('active')
-        button.classList.remove('inactive')
-      } else if (buttonFilterType === 'new' && currentSort === 'newest') {
-        button.classList.add('active')
-        button.classList.remove('inactive')
-      }
-    })
-
-    const categoryFilterButton = document.getElementById('categoryFilterButton')
-    const categoryDropdownMenu = document.getElementById('categoryDropdownMenu')
-    const categoryButtonText = categoryFilterButton
-      ? categoryFilterButton.querySelector('.category-button-text')
-      : null
-
-    if (currentCategory && categoryButtonText) {
-      // Попробуем найти элемент в списке категорий с таким значением, чтобы получить его текстовое представление
-      let foundCategoryText = currentCategory
-      const categoryLink = categoryDropdownMenu.querySelector(
-        `a[href*="category=${encodeURIComponent(currentCategory)}"]`
-      )
-      if (categoryLink) {
-        foundCategoryText = categoryLink.textContent.trim()
-      }
-      categoryButtonText.textContent = foundCategoryText
-      categoryFilterButton.classList.remove('inactive')
-      categoryFilterButton.classList.add('active')
-    } else if (categoryButtonText) {
-      categoryButtonText.textContent = 'Категории' // Текст по умолчанию
-    }
-
-    // Если активна категория или сортировка, кнопка "Все" не должна быть активной
-    const allButton = document.getElementById('allFilterButton')
-    if (allButton) {
-      if (currentCategory || currentSort) {
-        allButton.classList.remove('active')
-        allButton.classList.add('inactive')
-      } else {
-        allButton.classList.add('active')
-        allButton.classList.remove('inactive')
-      }
-    }
-
-    if (categoryFilterButton && categoryDropdownMenu) {
-      categoryFilterButton.addEventListener('click', function (event) {
-        event.preventDefault()
-        categoryDropdownMenu.style.display =
-          categoryDropdownMenu.style.display === 'block' ? 'none' : 'block'
-      })
-    }
-
-    document.addEventListener('click', function (event) {
-      if (categoryFilterButton && categoryDropdownMenu) {
-        if (
-          !categoryFilterButton.contains(event.target) &&
-          !categoryDropdownMenu.contains(event.target)
-        ) {
-          categoryDropdownMenu.style.display = 'none'
+{% block head_extra %}
+    <link
+            rel="stylesheet"
+            href="{% static 'accounts/css/moderator_dashboard.css' %}"
+    />
+    <style>
+        .category-dropdown-menu {
+            display: none; /* Скрыто по умолчанию */
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 200px; /* Немного шире для лучшего вида */
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            z-index: 100; /* Выше других элементов */
+            border-radius: 5px;
+            padding: 5px 0;
+            margin-top: 5px; /* Небольшой отступ от кнопки */
+            max-height: 300px; /* Ограничение высоты с прокруткой */
+            overflow-y: auto; /* Добавить прокрутку, если категорий много */
         }
-      }
-    })
+        .category-dropdown-menu a {
+            color: black;
+            padding: 10px 16px; /* Увеличим немного паддинг */
+            text-decoration: none;
+            display: block;
+            font-size: 14px; /* Чуть крупнее шрифт */
+            white-space: nowrap; /* Предотвратить перенос текста категорий */
+        }
+        .category-dropdown-menu a:hover {
+            background-color: #e9e9e9; /* Чуть темнее при наведении */
+        }
+        .filter-button-group {
+            /* Обертка для кнопки и выпадающего списка */
+            position: relative;
+            display: inline-block;
+        }
+        /* Стиль для выделения активной кнопки */
+        .filter-button.active {
+            background: #004e9f;
+            color: white;
+            border-color: #004e9f; /* Убедимся, что и рамка того же цвета */
+        }
+        .filter-button.active img.filter-icon {
+            filter: brightness(0) invert(1);
+        }
+        .filter-button.inactive {
+            background: white;
+            color: black;
+            border: 1px solid #004e9f;
+        }
+        .filter-button.inactive img.filter-icon {
+            filter: none;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const filterButtons = document.querySelectorAll('.filter-button')
+            const currentUrlParams = new URLSearchParams(window.location.search)
+            const currentCategory = decodeURIComponent(
+                currentUrlParams.get('category') || ''
+            )
+            const currentSort = currentUrlParams.get('sort')
+            const currentFilter = currentUrlParams.get('filter')
 
-    const startupCardsGrid = document.querySelector('.startup-cards-grid')
-    if (startupCardsGrid) {
-      const allCards = Array.from(
-        startupCardsGrid.querySelectorAll('.startup-card-item')
-      )
-      const showMoreButton = document.querySelector('.show-more-button')
-      const cardsToShowIncrement = 4
-      let visibleCardsCount = 0
+            filterButtons.forEach((button) => {
+                button.classList.remove('active')
+                button.classList.add('inactive')
 
-      function updateVisibleCards() {
-        allCards.forEach((card, index) => {
-          if (index < visibleCardsCount) {
-            card.style.display = 'flex'
-          } else {
-            card.style.display = 'none'
-          }
+                const buttonFilterType = button.dataset.filterType
+                const buttonSortValue = button.dataset.sortValue
+
+                if (
+                    buttonFilterType === 'all' &&
+                    !currentCategory &&
+                    !currentSort &&
+                    (!currentFilter || currentFilter === 'all')
+                ) {
+                    button.classList.add('active')
+                    button.classList.remove('inactive')
+                } else if (buttonFilterType === 'new' && currentSort === 'newest') {
+                    button.classList.add('active')
+                    button.classList.remove('inactive')
+                }
+            })
+
+            const categoryFilterButton = document.getElementById('categoryFilterButton')
+            const categoryDropdownMenu = document.getElementById('categoryDropdownMenu')
+            const categoryButtonText = categoryFilterButton
+                ? categoryFilterButton.querySelector('.category-button-text')
+                : null
+
+            if (currentCategory && categoryButtonText) {
+                // Попробуем найти элемент в списке категорий с таким значением, чтобы получить его текстовое представление
+                let foundCategoryText = currentCategory
+                const categoryLink = categoryDropdownMenu.querySelector(
+                    `a[href*="category=${encodeURIComponent(currentCategory)}"]`
+                )
+                if (categoryLink) {
+                    foundCategoryText = categoryLink.textContent.trim()
+                }
+                categoryButtonText.textContent = foundCategoryText
+                categoryFilterButton.classList.remove('inactive')
+                categoryFilterButton.classList.add('active')
+            } else if (categoryButtonText) {
+                categoryButtonText.textContent = 'Категории' // Текст по умолчанию
+            }
+
+            // Если активна категория или сортировка, кнопка "Все" не должна быть активной
+            const allButton = document.getElementById('allFilterButton')
+            if (allButton) {
+                if (currentCategory || currentSort) {
+                    allButton.classList.remove('active')
+                    allButton.classList.add('inactive')
+                } else {
+                    allButton.classList.add('active')
+                    allButton.classList.remove('inactive')
+                }
+            }
+
+            if (categoryFilterButton && categoryDropdownMenu) {
+                categoryFilterButton.addEventListener('click', function (event) {
+                    event.preventDefault()
+                    categoryDropdownMenu.style.display =
+                        categoryDropdownMenu.style.display === 'block' ? 'none' : 'block'
+                })
+            }
+
+            document.addEventListener('click', function (event) {
+                if (categoryFilterButton && categoryDropdownMenu) {
+                    if (
+                        !categoryFilterButton.contains(event.target) &&
+                        !categoryDropdownMenu.contains(event.target)
+                    ) {
+                        categoryDropdownMenu.style.display = 'none'
+                    }
+                }
+            })
+
+            const startupCardsGrid = document.querySelector('.startup-cards-grid')
+            if (startupCardsGrid) {
+                const allCards = Array.from(
+                    startupCardsGrid.querySelectorAll('.startup-card-item')
+                )
+                const showMoreButton = document.querySelector('.show-more-button')
+                const cardsToShowIncrement = 4
+                let visibleCardsCount = 0
+
+                function updateVisibleCards() {
+                    allCards.forEach((card, index) => {
+                        if (index < visibleCardsCount) {
+                            card.style.display = 'flex'
+                        } else {
+                            card.style.display = 'none'
+                        }
+                    })
+
+                    if (visibleCardsCount >= allCards.length) {
+                        if (showMoreButton) showMoreButton.style.display = 'none'
+                    } else {
+                        if (showMoreButton) showMoreButton.style.display = 'inline-flex'
+                    }
+                }
+
+                if (allCards.length > 0) {
+                    // Только если есть карточки
+                    visibleCardsCount = cardsToShowIncrement
+                    updateVisibleCards()
+
+                    if (showMoreButton) {
+                        if (allCards.length <= cardsToShowIncrement) {
+                            showMoreButton.style.display = 'none'
+                        } else {
+                            showMoreButton.style.display = 'inline-flex'
+                        }
+                        showMoreButton.addEventListener('click', function (event) {
+                            event.preventDefault()
+                            visibleCardsCount += cardsToShowIncrement
+                            updateVisibleCards()
+                        })
+                    }
+                } else {
+                    if (showMoreButton) showMoreButton.style.display = 'none' // Скрыть если карточек нет
+                }
+            }
+
+            const newFilterButton = document.getElementById('newFilterButton')
+            if (newFilterButton) {
+                newFilterButton.addEventListener('click', function (event) {
+                    event.preventDefault()
+                    const params = new URLSearchParams(window.location.search)
+                    params.delete('filter') // Удаляем filter=all, если он был
+
+                    if (params.get('sort') === 'newest') {
+                        params.delete('sort')
+                        // Если при повторном клике на "Новые" нужно сбросить и категорию:
+                        // params.delete('category');
+                        // window.location.search = params.toString(); // Это может оставить пустой search
+                        // Лучше перенаправить на чистый URL или с filter=all
+                        if (!params.has('category')) {
+                            // Если и категории нет, то это полный сброс
+                            window.location.href = window.location.pathname + '?filter=all'
+                        } else {
+                            window.location.search = params.toString() // Оставляем категорию, если она была
+                        }
+                    } else {
+                        params.set('sort', 'newest')
+                        window.location.search = params.toString()
+                    }
+                })
+            }
+
+            const allFilterButtonRef = document.getElementById('allFilterButton') // Переименовал, чтобы не было конфликта
+            if (allFilterButtonRef) {
+                allFilterButtonRef.addEventListener('click', function (event) {
+                    event.preventDefault()
+                    window.location.href = window.location.pathname + '?filter=all'
+                })
+            }
         })
+    </script>
+{% endblock %}
 
-        if (visibleCardsCount >= allCards.length) {
-          if (showMoreButton) showMoreButton.style.display = 'none'
-        } else {
-          if (showMoreButton) showMoreButton.style.display = 'inline-flex'
-        }
-      }
-
-      if (allCards.length > 0) {
-        // Только если есть карточки
-        visibleCardsCount = cardsToShowIncrement
-        updateVisibleCards()
-
-        if (showMoreButton) {
-          if (allCards.length <= cardsToShowIncrement) {
-            showMoreButton.style.display = 'none'
-          } else {
-            showMoreButton.style.display = 'inline-flex'
-          }
-          showMoreButton.addEventListener('click', function (event) {
-            event.preventDefault()
-            visibleCardsCount += cardsToShowIncrement
-            updateVisibleCards()
-          })
-        }
-      } else {
-        if (showMoreButton) showMoreButton.style.display = 'none' // Скрыть если карточек нет
-      }
-    }
-
-    const newFilterButton = document.getElementById('newFilterButton')
-    if (newFilterButton) {
-      newFilterButton.addEventListener('click', function (event) {
-        event.preventDefault()
-        const params = new URLSearchParams(window.location.search)
-        params.delete('filter') // Удаляем filter=all, если он был
-
-        if (params.get('sort') === 'newest') {
-          params.delete('sort')
-          // Если при повторном клике на "Новые" нужно сбросить и категорию:
-          // params.delete('category');
-          // window.location.search = params.toString(); // Это может оставить пустой search
-          // Лучше перенаправить на чистый URL или с filter=all
-          if (!params.has('category')) {
-            // Если и категории нет, то это полный сброс
-            window.location.href = window.location.pathname + '?filter=all'
-          } else {
-            window.location.search = params.toString() // Оставляем категорию, если она была
-          }
-        } else {
-          params.set('sort', 'newest')
-          window.location.search = params.toString()
-        }
-      })
-    }
-
-    const allFilterButtonRef = document.getElementById('allFilterButton') // Переименовал, чтобы не было конфликта
-    if (allFilterButtonRef) {
-      allFilterButtonRef.addEventListener('click', function (event) {
-        event.preventDefault()
-        window.location.href = window.location.pathname + '?filter=all'
-      })
-    }
-  })
-</script>
-{% endblock %} {% block content %}
-<body class="moderator-dashboard-body">
-  <div class="moderator-page-container">
-    <header class="page-header">
-      <div class="header-title-block">
-        <h1 class="header-title-main">Заявки на</h1>
-        <h2 class="header-title-highlight">СТАРТАПЫ</h2>
-      </div>
-    </header>
-
-    <section class="filters-and-actions">
-      <div class="filter-bar">
-        <div class="filter-search">
-          <img src="{% static 'accounts/images/search.svg' %}" alt="Поиск" />
-          <input type="text" placeholder="Поиск" />
-        </div>
-        <a
-          href="?filter=all"
-          class="filter-button"
-          data-filter-type="all"
-          id="allFilterButton"
-          >Все</a
-        >
-        <div class="filter-button-group">
-          <a
-            href="#"
-            class="filter-button"
-            id="categoryFilterButton"
-            data-filter-type="category_trigger"
-          >
-            <span class="category-button-text">Категории</span>
-            <img
-              src="{% static 'accounts/images/icons/expand_more.svg' %}"
-              alt="Категории"
-              class="filter-icon"
-            />
-          </a>
-          <div class="category-dropdown-menu" id="categoryDropdownMenu">
-            {% if all_categories %} {% for category_obj in all_categories %} {#
-            Изменено имя переменной цикла #}
-            <a
-              href="?category={{ category_obj.direction_name|urlencode }}{% if current_sort_order %}&sort={{ current_sort_order }}{% endif %}"
-              data-category-value="{{ category_obj.direction_name }}"
-            >
-              {% with original_name=category_obj.direction_name|lower %} {% if
-              original_name == "medicine" %}Медицина {% elif original_name ==
-              "auto" %}Автомобили {% elif original_name == "delivery" %}Доставка
-              {% elif original_name == "cafe" or original_name ==
-              "кафе/рестораны" %}Кафе/рестораны {% elif original_name ==
-              "fastfood" %}Фастфуд {% elif original_name == "health" %}Здоровье
-              {% elif original_name == "beauty" %}Красота {% elif original_name
-              == "transport" %}Транспорт {% elif original_name == "sport"
-              %}Спорт {% elif original_name == "psychology" %}Психология {% elif
-              original_name == "ai" or original_name == "ии" %}ИИ {% elif
-              original_name == "finance" %}Финансы {% elif original_name ==
-              "healthcare" %}Здравоохранение {% elif original_name ==
-              "technology" %}Технологии {% else %}{{
-              category_obj.direction_name|capfirst }} {% endif %} {% endwith %}
-            </a>
-            {% endfor %} {% else %}
-            <span
-              style="
-                padding: 10px 16px;
-                display: block;
-                color: #555;
-                font-size: 14px;
-              "
-              >Категорий нет</span
-            >
-            {% endif %}
-          </div>
-        </div>
-        <a
-          href="#"
-          class="filter-button"
-          id="newFilterButton"
-          data-filter-type="new"
-          data-sort-value="newest"
-        >
-          <img
-            src="{% static 'accounts/images/icons/swap-vertical-outline.svg' %}"
-            alt="Новые"
-            class="filter-icon"
-          />
-          Новые
-        </a>
-      </div>
-
-      {% if pending_startups %}
-      <div class="startup-cards-grid">
-        {% for startup in pending_startups %}
-        <div class="startup-card-item">
-          <div class="startup-card-item-content">
-            <div class="startup-card-main-info">
-              {% if startup.planet_logo %}
-              <img
-                src="{{ startup.planet_logo.url }}"
-                alt="{{ startup.title }} logo"
-                class="startup-card-image"
-              />
-              {% else %}
-              <div class="startup-card-image-placeholder">Нет лого</div>
-              {% endif %}
-
-              <div class="startup-card-details">
-                <div class="detail-group">
-                  <span class="detail-label">Автор</span>
-                  <div class="author-info">
-                    {% if startup.owner %} {% if startup.owner.profile.avatar %}
-                    <img
-                      src="{{ startup.owner.profile.avatar.url }}"
-                      alt="{{ startup.owner.get_full_name|default:startup.owner.email|default:'Автор' }}"
-                      class="author-avatar"
-                    />
-                    {% elif startup.owner.profile_picture_url %}
-                    <img
-                      src="{{ startup.owner.profile_picture_url }}"
-                      alt="{{ startup.owner.get_full_name|default:startup.owner.email|default:'Автор' }}"
-                      class="author-avatar"
-                    />
-                    {% else %}
-                    <div class="author-avatar-placeholder"></div>
-                    {% endif %}
-                    <div class="author-text-details">
-                      <span class="author-name"
-                        >{{
-                        startup.owner.get_full_name|default:startup.owner.email|default:"Не
-                        указан" }}</span
-                      >
-                      <span class="author-rating">Рейтинг 4,2/5</span> {#
-                      Placeholder #}
-                      <a href="#" class="author-reviews-link">Отзывы</a> {#
-                      Placeholder #}
-                    </div>
-                    {% else %}
-                    <div class="author-avatar-placeholder"></div>
-                    <div class="author-text-details">
-                      <span class="author-name">Автор не указан</span>
-                    </div>
-                    {% endif %}
-                  </div>
-                </div>
-
-                <div class="detail-group">
-                  <span class="detail-label">Наименование</span>
-                  <h3 class="startup-name">{{ startup.title }}</h3>
-                </div>
-
-                <div class="detail-group">
-                  <span class="detail-label">Категория</span>
-                  <div class="category-tag">
-                    <span class="category-tag-text">
-                      {% with
-                      original_name=startup.direction.direction_name|default:""|lower
-                      %} {% if original_name == "medicine" %}Медицина {% elif
-                      original_name == "auto" %}Автомобили {% elif original_name
-                      == "delivery" %}Доставка {% elif original_name == "cafe"
-                      or original_name == "кафе/рестораны" %}Кафе/рестораны {%
-                      elif original_name == "fastfood" %}Фастфуд {% elif
-                      original_name == "health" %}Здоровье {% elif original_name
-                      == "beauty" %}Красота {% elif original_name == "transport"
-                      %}Транспорт {% elif original_name == "sport" %}Спорт {%
-                      elif original_name == "psychology" %}Психология {% elif
-                      original_name == "ai" or original_name == "ии" %}ИИ {%
-                      elif original_name == "finance" %}Финансы {% elif
-                      original_name == "healthcare" %}Здравоохранение {% elif
-                      original_name == "technology" %}Технологии {# Добавьте
-                      другие категории и их переводы здесь, если они есть в
-                      вашей системе #} {% else %}{{
-                      startup.direction.direction_name|default:"Не указана" }}{#
-                      Возвращаем оригинал или "Не указано" #} {% endif %} {%
-                      endwith %}
-                    </span>
-                  </div>
-                </div>
-
-                <div class="detail-group">
-                  <span class="detail-label">Тип</span>
-                  <div class="type-tag">
-                    {% if startup.only_invest %}
-                    <span class="type-tag-text">Инвестирование</span>
-                    {% elif startup.only_buy %}
-                    <span class="type-tag-text">Выкуп</span>
-                    {% elif startup.both_mode %}
-                    <span class="type-tag-text">Выкуп+инвестирование</span>
-                    {% else %}
-                    <span class="type-tag-text">Не указан</span>
-                    {% endif %}
-                  </div>
-                </div>
-              </div>
+{% block content %}
+    <body class="moderator-dashboard-body">
+    <div class="moderator-page-container">
+        <header class="page-header">
+            <div class="header-title-block">
+                <h1 class="header-title-main">Заявки на</h1>
+                <h2 class="header-title-highlight">СТАРТАПЫ</h2>
             </div>
+        </header>
 
-            <div class="startup-description-group">
-              <span class="detail-label">Описание</span>
-              <p class="startup-description-text">
-                {{
-                startup.description|default:startup.short_description|default:"Описание
-                отсутствует."|truncatewords:30 }}
-              </p>
-            </div>
-          </div>
-          {# End of startup-card-item-content #}
-
-          <div class="funding-info-actions">
-            <div class="funding-details-row">
-              <div class="funding-goal-block">
-                <span class="funding-goal-label">Цель финансирования</span>
-                <span class="funding-goal-amount"
-                  >{{ startup.funding_goal|default:"0"|floatformat:"0"|intcomma
-                  }} &#8381;</span
-                >
-              </div>
-              <div class="action-buttons-group">
-                <form
-                  method="post"
-                  action="{% url 'approve_startup' startup.startup_id %}"
-                  class="inline-form"
-                >
-                  {% csrf_token %}
-                  <button type="submit" class="action-button approve">
-                    Одобрить
-                  </button>
-                </form>
-                <form
-                  method="post"
-                  action="{% url 'reject_startup' startup.startup_id %}"
-                  class="inline-form"
-                >
-                  {% csrf_token %}
-                  <button type="submit" class="action-button reject">
-                    Отклонить
-                  </button>
-                </form>
+        <section class="filters-and-actions">
+            <div class="filter-bar">
+                <div class="filter-search">
+                    <img src="{% static 'accounts/images/search.svg' %}" alt="Поиск" />
+                    <input type="text" placeholder="Поиск" />
+                </div>
                 <a
-                  href="{% url 'startup_detail' startup.startup_id %}"
-                  class="action-button details"
-                  >К заявке</a
+                        href="?filter=all"
+                        class="filter-button"
+                        data-filter-type="all"
+                        id="allFilterButton"
+                >Все</a
                 >
-              </div>
+                <div class="filter-button-group">
+                    <a
+                            href="#"
+                            class="filter-button"
+                            id="categoryFilterButton"
+                            data-filter-type="category_trigger"
+                    >
+                        <span class="category-button-text">Категории</span>
+                        <img
+                                src="{% static 'accounts/images/icons/expand_more.svg' %}"
+                                alt="Категории"
+                                class="filter-icon"
+                        />
+                    </a>
+                    <div class="category-dropdown-menu" id="categoryDropdownMenu">
+                        {% if all_categories %} {% for category_obj in all_categories %} {#
+                        Изменено имя переменной цикла #}
+                        <a
+                                href="?category={{ category_obj.direction_name|urlencode }}{% if current_sort_order %}&sort={{ current_sort_order }}{% endif %}"
+                                data-category-value="{{ category_obj.direction_name }}"
+                        >
+                            {% with original_name=category_obj.direction_name|lower %} {% if
+                            original_name == "medicine" %}Медицина {% elif original_name ==
+                            "auto" %}Автомобили {% elif original_name == "delivery" %}Доставка
+                            {% elif original_name == "cafe" or original_name ==
+                            "кафе/рестораны" %}Кафе/рестораны {% elif original_name ==
+                            "fastfood" %}Фастфуд {% elif original_name == "health" %}Здоровье
+                            {% elif original_name == "beauty" %}Красота {% elif original_name
+                            == "transport" %}Транспорт {% elif original_name == "sport"
+                            %}Спорт {% elif original_name == "psychology" %}Психология {% elif
+                            original_name == "ai" or original_name == "ии" %}ИИ {% elif
+                            original_name == "finance" %}Финансы {% elif original_name ==
+                            "healthcare" %}Здравоохранение {% elif original_name ==
+                            "technology" %}Технологии {% else %}{{
+                            category_obj.direction_name|capfirst }} {% endif %} {% endwith %}
+                        </a>
+                        {% endfor %} {% else %}
+                        <span
+                                style="
+                                    padding: 10px 16px;
+                                    display: block;
+                                    color: #555;
+                                    font-size: 14px;
+                                "
+                        >Категорий нет</span
+                        >
+                        {% endif %}
+                    </div>
+                </div>
+                <a
+                        href="#"
+                        class="filter-button"
+                        id="newFilterButton"
+                        data-filter-type="new"
+                        data-sort-value="newest"
+                >
+                    <img
+                            src="{% static 'accounts/images/icons/swap-vertical-outline.svg' %}"
+                            alt="Новые"
+                            class="filter-icon"
+                    />
+                    Новые
+                </a>
             </div>
-          </div>
-        </div>
-        {% endfor %}
-      </div>
-      {% else %}
-      <p class="no-applications">Нет заявок на рассмотрение.</p>
-      {% endif %}
-    </section>
 
-    {% if pending_startups and pending_startups|length > 4 %} {# Кнопка
-    "Показать еще" только если есть что показывать #}
-    <div class="show-more-bar">
-      <a href="#" class="show-more-button">
-        Показать еще
-        <svg
-          class="icon-eye"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="currentColor"
-          width="16px"
-          height="16px"
-        >
-          <path
-            d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"
-          />
-        </svg>
-      </a>
+            {% if pending_startups %}
+            <div class="startup-cards-grid">
+                {% for startup in pending_startups %}
+                <div class="startup-card-item">
+                    <div class="startup-card-item-content">
+                        <div class="startup-card-main-info">
+                            {% if startup.planet_logo %}
+                            <img
+                                    src="{{ startup.planet_logo.url }}"
+                                    alt="{{ startup.title }} logo"
+                                    class="startup-card-image"
+                            />
+                            {% else %}
+                            <div class="startup-card-image-placeholder">Нет лого</div>
+                            {% endif %}
+
+                            <div class="startup-card-details">
+                                <div class="detail-group">
+                                    <span class="detail-label">Автор</span>
+                                    <div class="author-info">
+                                        {% if startup.owner %} {% if startup.owner.profile.avatar %}
+                                        <img
+                                                src="{{ startup.owner.profile.avatar.url }}"
+                                                alt="{{ startup.owner.get_full_name|default:startup.owner.email|default:'Автор' }}"
+                                                class="author-avatar"
+                                        />
+                                        {% elif startup.owner.profile_picture_url %}
+                                        <img
+                                                src="{{ startup.owner.profile_picture_url }}"
+                                                alt="{{ startup.owner.get_full_name|default:startup.owner.email|default:'Автор' }}"
+                                                class="author-avatar"
+                                        />
+                                        {% else %}
+                                        <div class="author-avatar-placeholder"></div>
+                                        {% endif %}
+                                        <div class="author-text-details">
+                                            <span class="author-name"
+                                            >{{
+                                            startup.owner.get_full_name|default:startup.owner.email|default:"Не
+                                            указан" }}</span
+                                            >
+                                            <span class="author-rating">Рейтинг 4,2/5</span> {#
+                                            Placeholder #}
+                                            <a href="#" class="author-reviews-link">Отзывы</a> {#
+                                            Placeholder #}
+                                        </div>
+                                        {% else %}
+                                        <div class="author-avatar-placeholder"></div>
+                                        <div class="author-text-details">
+                                            <span class="author-name">Автор не указан</span>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <div class="detail-group">
+                                    <span class="detail-label">Наименование</span>
+                                    <h3 class="startup-name">{{ startup.title }}</h3>
+                                </div>
+
+                                <div class="detail-group">
+                                    <span class="detail-label">Категория</span>
+                                    <div class="category-tag">
+                                        <span class="category-tag-text">
+                                            {% with
+                                            original_name=startup.direction.direction_name|default:""|lower
+                                            %} {% if original_name == "medicine" %}Медицина {% elif
+                                            original_name == "auto" %}Автомобили {% elif original_name
+                                            == "delivery" %}Доставка {% elif original_name == "cafe"
+                                            or original_name == "кафе/рестораны" %}Кафе/рестораны {%
+                                            elif original_name == "fastfood" %}Фастфуд {% elif
+                                            original_name == "health" %}Здоровье {% elif original_name
+                                            == "beauty" %}Красота {% elif original_name == "transport"
+                                            %}Транспорт {% elif original_name == "sport" %}Спорт {%
+                                            elif original_name == "psychology" %}Психология {% elif
+                                            original_name == "ai" or original_name == "ии" %}ИИ {%
+                                            elif original_name == "finance" %}Финансы {% elif
+                                            original_name == "healthcare" %}Здравоохранение {% elif
+                                            original_name == "technology" %}Технологии {# Добавьте
+                                            другие категории и их переводы здесь, если они есть в
+                                            вашей системе #} {% else %}{{
+                                            startup.direction.direction_name|default:"Не указана" }}{#
+                                            Возвращаем оригинал или "Не указано" #} {% endif %} {%
+                                            endwith %}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="detail-group">
+                                    <span class="detail-label">Тип</span>
+                                    <div class="type-tag">
+                                        {% if startup.only_invest %}
+                                        <span class="type-tag-text">Инвестирование</span>
+                                        {% elif startup.only_buy %}
+                                        <span class="type-tag-text">Выкуп</span>
+                                        {% elif startup.both_mode %}
+                                        <span class="type-tag-text">Выкуп+инвестирование</span>
+                                        {% else %}
+                                        <span class="type-tag-text">Не указан</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="startup-description-group">
+                            <span class="detail-label">Описание</span>
+                            <p class="startup-description-text">
+                                {{
+                                startup.description|default:startup.short_description|default:"Описание
+                                отсутствует."|truncatewords:30 }}
+                            </p>
+                        </div>
+                    </div>
+                    {# End of startup-card-item-content #}
+
+                    <div class="funding-info-actions">
+                        <div class="funding-details-row">
+                            <div class="funding-goal-block">
+                                <span class="funding-goal-label">Цель финансирования</span>
+                                <span class="funding-goal-amount"
+                                >{{ startup.funding_goal|default:"0"|floatformat:"0"|intcomma
+                                }} &#8381;</span
+                                >
+                            </div>
+                            <div class="action-buttons-group">
+                                <form
+                                        method="post"
+                                        action="{% url 'approve_startup' startup.startup_id %}"
+                                        class="inline-form"
+                                >
+                                    {% csrf_token %}
+                                    <button type="submit" class="action-button approve">
+                                        Одобрить
+                                    </button>
+                                </form>
+                                <form
+                                        method="post"
+                                        action="{% url 'reject_startup' startup.startup_id %}"
+                                        class="inline-form"
+                                >
+                                    {% csrf_token %}
+                                    <button type="submit" class="action-button reject">
+                                        Отклонить
+                                    </button>
+                                </form>
+                                <a
+                                        href="{% url 'startup_detail' startup.startup_id %}"
+                                        class="action-button details"
+                                >К заявке</a
+                                >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="no-applications">Нет заявок на рассмотрение.</p>
+            {% endif %}
+        </section>
+
+        {% if pending_startups and pending_startups|length > 4 %} {# Кнопка
+        "Показать еще" только если есть что показывать #}
+        <div class="show-more-bar">
+            <a href="#" class="show-more-button">
+                Показать еще
+                <svg
+                        class="icon-eye"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        width="16px"
+                        height="16px"
+                >
+                    <path
+                            d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"
+                    />
+                </svg>
+            </a>
+        </div>
+        {% endif %}
     </div>
-    {% endif %}
-  </div>
 </body>
 {% endblock %}

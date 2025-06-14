@@ -1,63 +1,64 @@
-{% extends 'accounts/base.html' %} {% block title %}Регистрация{% endblock %} {%
-block content %}
-<style>
-  .content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: calc(100vh - 120px); /* Учитываем высоту шапки */
-    padding-top: 20px; /* Дополнительный отступ */
-  }
+{% extends 'accounts/base.html' %}
+{% block title %}Регистрация{% endblock %}
+{% block content %}
+    <style>
+        .content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 120px); /* Учитываем высоту шапки */
+            padding-top: 20px; /* Дополнительный отступ */
+        }
 
-  .auth-box {
-    background: white;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    max-width: 400px;
-    width: 100%;
-    margin-top: 20px; /* Отступ сверху для предотвращения прилипания */
-  }
+        .auth-box {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            margin-top: 20px; /* Отступ сверху для предотвращения прилипания */
+        }
 
-  .auth-box h1 {
-    margin-bottom: 20px;
-  }
+        .auth-box h1 {
+            margin-bottom: 20px;
+        }
 
-  .auth-box form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
+        .auth-box form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
 
-  .auth-box input {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
+        .auth-box input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
 
-  .auth-box button {
-    background-color: rgb(175, 0, 239);
-    color: white;
-    font-weight: bold;
-    padding: 10px;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-  }
+        .auth-box button {
+            background-color: rgb(175, 0, 239);
+            color: white;
+            font-weight: bold;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
 
-  .auth-box button:hover {
-    background-color: yellow;
-  }
-</style>
+        .auth-box button:hover {
+            background-color: yellow;
+        }
+    </style>
 
-<div class="content">
-  <div class="auth-box">
-    <h1>Регистрация</h1>
-    <form method="post">
-      {% csrf_token %} {{ form.as_p }}
-      <button type="submit">Зарегистрироваться</button>
-    </form>
-  </div>
-</div>
+    <div class="content">
+        <div class="auth-box">
+            <h1>Регистрация</h1>
+            <form method="post">
+                {% csrf_token %} {{ form.as_p }}
+                <button type="submit">Зарегистрироваться</button>
+            </form>
+        </div>
+    </div>
 {% endblock %}

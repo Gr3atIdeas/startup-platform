@@ -88,9 +88,9 @@ block title %}Создание стартапа{% endblock %} {% block content %
                 form.title|add_class:"form-control"|attr:"placeholder:Ромашка"
                 }}
               </div>
-              {% if form.title.errors %}<span class="error-message"
-                >{{ form.title.errors|first }}</span
-              >{% endif %}
+              {% if form.title.errors %}
+              <span class="error-message">{{ form.title.errors|first }}</span>
+              {% endif %}
             </div>
             <div class="form-group">
               <label for="{{ form.direction.id_for_label }}"
@@ -104,9 +104,11 @@ block title %}Создание стартапа{% endblock %} {% block content %
                   class="select-arrow"
                 />
               </div>
-              {% if form.direction.errors %}<span class="error-message"
+              {% if form.direction.errors %}
+              <span class="error-message"
                 >{{ form.direction.errors|first }}</span
-              >{% endif %}
+              >
+              {% endif %}
             </div>
             <div class="form-group">
               <label for="{{ form.funding_goal.id_for_label }}"
@@ -117,9 +119,11 @@ block title %}Создание стартапа{% endblock %} {% block content %
                 form.funding_goal|add_class:"form-control"|attr:"placeholder:Введите
                 сумму ₽" }}
               </div>
-              {% if form.funding_goal.errors %}<span class="error-message"
+              {% if form.funding_goal.errors %}
+              <span class="error-message"
                 >{{ form.funding_goal.errors|first }}</span
-              >{% endif %}
+              >
+              {% endif %}
             </div>
             <div class="form-group">
               <label for="{{ form.stage.id_for_label }}"
@@ -133,9 +137,9 @@ block title %}Создание стартапа{% endblock %} {% block content %
                   class="select-arrow"
                 />
               </div>
-              {% if form.stage.errors %}<span class="error-message"
-                >{{ form.stage.errors|first }}</span
-              >{% endif %}
+              {% if form.stage.errors %}
+              <span class="error-message">{{ form.stage.errors|first }}</span>
+              {% endif %}
             </div>
           </div>
         </div>
@@ -160,10 +164,11 @@ block title %}Создание стартапа{% endblock %} {% block content %
                 </span>
                 <span class="checkbox-text-span">Микроинвестиции доступны</span>
               </label>
-              {% if form.micro_investment_available.errors %}<span
-                class="error-message"
+              {% if form.micro_investment_available.errors %}
+              <span class="error-message"
                 >{{ form.micro_investment_available.errors|first }}</span
-              >{% endif %}
+              >
+              {% endif %}
             </div>
             <div class="form-group investment-type-group">
               <label
@@ -179,9 +184,11 @@ block title %}Создание стартапа{% endblock %} {% block content %
                   class="select-arrow"
                 />
               </div>
-              {% if form.investment_type.errors %}<span class="error-message"
+              {% if form.investment_type.errors %}
+              <span class="error-message"
                 >{{ form.investment_type.errors|first }}</span
-              >{% endif %}
+              >
+              {% endif %}
             </div>
           </div>
         </div>
@@ -202,9 +209,11 @@ block title %}Создание стартапа{% endblock %} {% block content %
           <div class="small-text">
             Краткое описание вашего стартапа, основные моменты.
           </div>
-          {% if form.short_description.errors %}<span class="error-message"
+          {% if form.short_description.errors %}
+          <span class="error-message"
             >{{ form.short_description.errors|first }}</span
-          >{% endif %}
+          >
+          {% endif %}
         </div>
         <div class="form-group full-width">
           <label for="{{ form.description.id_for_label }}"
@@ -217,9 +226,9 @@ block title %}Создание стартапа{% endblock %} {% block content %
             Подробное описание вашего стартапа. Расскажите о проблеме, решении,
             команде и т.д.
           </div>
-          {% if form.description.errors %}<span class="error-message"
-            >{{ form.description.errors|first }}</span
-          >{% endif %}
+          {% if form.description.errors %}
+          <span class="error-message">{{ form.description.errors|first }}</span>
+          {% endif %}
         </div>
       </div>
 
@@ -242,9 +251,9 @@ block title %}Создание стартапа{% endblock %} {% block content %
               Допустимый формат PNG, JPEG (до 3 файлов)
             </div>
             <div id="creativesPreview" class="file-preview-area"></div>
-            {% if form.creatives.errors %}<span class="error-message"
-              >{{ form.creatives.errors|first }}</span
-            >{% endif %}
+            {% if form.creatives.errors %}
+            <span class="error-message">{{ form.creatives.errors|first }}</span>
+            {% endif %}
           </div>
           <!-- Блок Видео -->
           <div class="form-group upload-box" id="videoDropArea">
@@ -258,9 +267,9 @@ block title %}Создание стартапа{% endblock %} {% block content %
             </div>
             <div class="small-text">Допустимый формат MOV, MP4 (1 файл)</div>
             <div id="videoPreview" class="file-preview-area"></div>
-            {% if form.video.errors %}<span class="error-message"
-              >{{ form.video.errors|first }}</span
-            >{% endif %}
+            {% if form.video.errors %}
+            <span class="error-message">{{ form.video.errors|first }}</span>
+            {% endif %}
           </div>
           <!-- Блок Презентация, Оценка, Собранная сумма -->
           <div class="presentation-finance-group">
@@ -273,9 +282,11 @@ block title %}Создание стартапа{% endblock %} {% block content %
                 form.pitch_deck_url|add_class:"form-control"|attr:"placeholder:URL"
                 }}
               </div>
-              {% if form.pitch_deck_url.errors %}<span class="error-message"
+              {% if form.pitch_deck_url.errors %}
+              <span class="error-message"
                 >{{ form.pitch_deck_url.errors|first }}</span
-              >{% endif %}
+              >
+              {% endif %}
             </div>
             <div class="form-group">
               <label for="{{ form.valuation.id_for_label }}"
@@ -298,9 +309,11 @@ block title %}Создание стартапа{% endblock %} {% block content %
                   />
                 </div>
               </div>
-              {% if form.valuation.errors %}<span class="error-message"
+              {% if form.valuation.errors %}
+              <span class="error-message"
                 >{{ form.valuation.errors|first }}</span
-              >{% endif %}
+              >
+              {% endif %}
             </div>
             <div class="form-group">
               <label for="{{ form.amount_raised.id_for_label }}"
@@ -311,9 +324,11 @@ block title %}Создание стартапа{% endblock %} {% block content %
                 form.amount_raised|add_class:"form-control"|attr:"placeholder:Введите
                 сумму"|attr:"type:number" }}
               </div>
-              {% if form.amount_raised.errors %}<span class="error-message"
+              {% if form.amount_raised.errors %}
+              <span class="error-message"
                 >{{ form.amount_raised.errors|first }}</span
-              >{% endif %}
+              >
+              {% endif %}
             </div>
           </div>
         </div>
@@ -330,9 +345,9 @@ block title %}Создание стартапа{% endblock %} {% block content %
           <div class="small-text">
             Условия инвестирования или выкупа, если они уже определены.
           </div>
-          {% if form.terms.errors %}<span class="error-message"
-            >{{ form.terms.errors|first }}</span
-          >{% endif %}
+          {% if form.terms.errors %}
+          <span class="error-message">{{ form.terms.errors|first }}</span>
+          {% endif %}
         </div>
       </div>
 
@@ -424,9 +439,9 @@ block title %}Создание стартапа{% endblock %} {% block content %
             Допустимый формат Doc, Excel, PDF (до 3 файлов)
           </div>
           <div id="proofsPreview" class="file-preview-area"></div>
-          {% if form.proofs.errors %}<span class="error-message"
-            >{{ form.proofs.errors|first }}</span
-          >{% endif %}
+          {% if form.proofs.errors %}
+          <span class="error-message">{{ form.proofs.errors|first }}</span>
+          {% endif %}
         </div>
       </div>
 
@@ -445,9 +460,11 @@ block title %}Создание стартапа{% endblock %} {% block content %
               </span>
               <span class="checkbox-text">{{ form.agree_rules.label }}</span>
             </label>
-            {% if form.agree_rules.errors %}<span class="error-message"
+            {% if form.agree_rules.errors %}
+            <span class="error-message"
               >{{ form.agree_rules.errors|first }}</span
-            >{% endif %}
+            >
+            {% endif %}
           </div>
           <div class="form-group checkbox-group">
             {{
@@ -462,10 +479,11 @@ block title %}Создание стартапа{% endblock %} {% block content %
                 >{{ form.agree_data_processing.label }}</span
               >
             </label>
-            {% if form.agree_data_processing.errors %}<span
-              class="error-message"
+            {% if form.agree_data_processing.errors %}
+            <span class="error-message"
               >{{ form.agree_data_processing.errors|first }}</span
-            >{% endif %}
+            >
+            {% endif %}
           </div>
         </div>
       </div>

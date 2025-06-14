@@ -97,7 +97,9 @@
       }
     </style>
 
-    {% block head_extra %} {{ block.super }} {% endblock %}
+    {% block head_extra %}
+      {{ block.super }}
+    {% endblock %}
   </head>
   <body>
     <header id="main-header">
@@ -121,171 +123,172 @@
         <nav class="nav-menu">
           <div class="header-nav-links">
             {% if not user.is_authenticated %}
-            <a href="{% url 'startups_list' %}" class="header-nav-link"
-              >Каталог</a
-            >
-            <a href="{% url 'news' %}" class="header-nav-link">Новости</a>
-            <a href="{% url 'faq' %}" class="header-nav-link">FAQ</a>
+              <a href="{% url 'startups_list' %}" class="header-nav-link"
+                >Каталог</a
+              >
+              <a href="{% url 'news' %}" class="header-nav-link">Новости</a>
+              <a href="{% url 'faq' %}" class="header-nav-link">FAQ</a>
             {% elif user.role.role_name == 'investor' %}
-            <a href="{% url 'startups_list' %}" class="header-nav-link"
-              >Каталог</a
-            >
-            <a href="{% url 'investments' %}" class="header-nav-link"
-              >Портфель</a
-            >
-            {# Убедитесь, что URL 'investments' существует #}
-            <a href="{% url 'news' %}" class="header-nav-link">Новости</a>
-            <a
-              href="{% url 'cosmochat' %}"
-              class="header-nav-link cosmochat-link"
-              >CosmoChat</a
-            >
+              <a href="{% url 'startups_list' %}" class="header-nav-link"
+                >Каталог</a
+              >
+              <a href="{% url 'investments' %}" class="header-nav-link"
+                >Портфель</a
+              >
+              {# Убедитесь, что URL 'investments' существует #}
+              <a href="{% url 'news' %}" class="header-nav-link">Новости</a>
+              <a
+                href="{% url 'cosmochat' %}"
+                class="header-nav-link cosmochat-link"
+                >CosmoChat</a
+              >
             {% elif user.role.role_name == 'startuper' %}
-            <a href="{% url 'startups_list' %}" class="header-nav-link"
-              >Каталог</a
-            >
-            <a href="{% url 'my_startups' %}" class="header-nav-link"
-              >Мои стартапы</a
-            >
-            {# Убедитесь, что URL 'my_startups' существует #}
-            <a href="{% url 'news' %}" class="header-nav-link">Новости</a>
-            <a
-              href="{% url 'cosmochat' %}"
-              class="header-nav-link cosmochat-link"
-              >CosmoChat</a
-            >
+              <a href="{% url 'startups_list' %}" class="header-nav-link"
+                >Каталог</a
+              >
+              <a href="{% url 'my_startups' %}" class="header-nav-link"
+                >Мои стартапы</a
+              >
+              {# Убедитесь, что URL 'my_startups' существует #}
+              <a href="{% url 'news' %}" class="header-nav-link">Новости</a>
+              <a
+                href="{% url 'cosmochat' %}"
+                class="header-nav-link cosmochat-link"
+                >CosmoChat</a
+              >
             {% elif user.role.role_name == 'moderator' %}
-            <a href="{% url 'home' %}" class="header-nav-link">Главная</a>
-            <div class="catalog-dropdown-container">
-              <button class="header-nav-link catalog-dropdown-button">
-                Каталог
-              </button>
-              <div class="catalog-dropdown-menu">
-                <a
-                  href="{% url 'startups_list' %}"
-                  class="catalog-dropdown-item no-wave-effect"
-                >
-                  <img
-                    src="{% static 'accounts/images/icons/planet.svg' %}"
-                    alt="Стартапы"
-                    class="catalog-dropdown-item-icon"
-                  />
-                  Стартапы
-                </a>
-                <a href="#" class="catalog-dropdown-item no-wave-effect">
-                  {# Заменить # на актуальный URL для Франшиз #}
-                  <img
-                    src="{% static 'accounts/images/icons/rocket-sharp.svg' %}"
-                    alt="Франшизы"
-                    class="catalog-dropdown-item-icon"
-                  />
-                  Франшизы
-                </a>
+              <a href="{% url 'home' %}" class="header-nav-link">Главная</a>
+              <div class="catalog-dropdown-container">
+                <button class="header-nav-link catalog-dropdown-button">
+                  Каталог
+                </button>
+                <div class="catalog-dropdown-menu">
+                  <a
+                    href="{% url 'startups_list' %}"
+                    class="catalog-dropdown-item no-wave-effect"
+                  >
+                    <img
+                      src="{% static 'accounts/images/icons/planet.svg' %}"
+                      alt="Стартапы"
+                      class="catalog-dropdown-item-icon"
+                    />
+                    Стартапы
+                  </a>
+                  <a href="#" class="catalog-dropdown-item no-wave-effect">
+                    {# Заменить # на актуальный URL для Франшиз #}
+                    <img
+                      src="{% static 'accounts/images/icons/rocket-sharp.svg' %}"
+                      alt="Франшизы"
+                      class="catalog-dropdown-item-icon"
+                    />
+                    Франшизы
+                  </a>
+                </div>
               </div>
-            </div>
-            <a href="{% url 'news' %}" class="header-nav-link">Новости</a>
-            <a
-              href="{% url 'cosmochat' %}"
-              class="header-nav-link cosmochat-link"
-              >CosmoChat</a
-            >
-            <a href="{% url 'moderator_dashboard' %}" class="header-nav-link"
-              >Заявки</a
-            >
-            {# Убедитесь, что URL 'moderator_dashboard' это Заявки #}
-            <a href="{% url 'deals_page' %}" class="header-nav-link">Сделки</a>
-            <a href="{% url 'support' %}" class="header-nav-link">Поддержка</a>
-            {# ЗАМЕНЕН URL #} {% endif %}
+              <a href="{% url 'news' %}" class="header-nav-link">Новости</a>
+              <a
+                href="{% url 'cosmochat' %}"
+                class="header-nav-link cosmochat-link"
+                >CosmoChat</a
+              >
+              <a href="{% url 'moderator_dashboard' %}" class="header-nav-link"
+                >Заявки</a
+              >
+              {# Убедитесь, что URL 'moderator_dashboard' это Заявки #}
+              <a href="{% url 'deals_page' %}" class="header-nav-link">Сделки</a>
+              <a href="{% url 'support' %}" class="header-nav-link">Поддержка</a>
+            {% endif %}
           </div>
 
           {# Блок для дополнительных кнопок ролей перед кнопкой Профиля/Войти #}
-          {% if user.is_authenticated %} {% if user.role.role_name ==
-          'startuper' %}
-          <a
-            href="{% url 'create_startup' %}"
-            class="header-nav-link header-role-button create-startup-button"
-          >
-            Создать
-            <img
-              src="{% static 'accounts/images/add-circle-outline.svg' %}"
-              alt="Создать стартап"
-              class="create-startup-icon"
-            />
-          </a>
-          {% endif %} {% endif %}
+          {% if user.is_authenticated %}
+            {% if user.role.role_name == 'startuper' %}
+              <a
+                href="{% url 'create_startup' %}"
+                class="header-nav-link header-role-button create-startup-button"
+              >
+                Создать
+                <img
+                  src="{% static 'accounts/images/add-circle-outline.svg' %}"
+                  alt="Создать стартап"
+                  class="create-startup-icon"
+                />
+              </a>
+            {% endif %}
+          {% endif %}
         </nav>
         <div class="header-auth-section">
           {% if user.is_authenticated %}
-          <div class="profile-dropdown-container">
-            <button class="profile-dropdown-button no-wave-effect">
-              <div class="profile-avatar-wrapper">
-                <img
-                  src="{% if user.get_profile_picture_url %}{{ user.get_profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}"
-                  alt="Аватар"
-                  class="profile-dropdown-avatar"
-                />
-              </div>
-              {# <i class="fas fa-chevron-down profile-dropdown-chevron"></i> #}
-              {# Шеврон пока уберем, на скрине его нет #}
-            </button>
-            <div class="profile-dropdown-menu">
-              <a
-                href="{% url 'notifications_page' %}"
-                class="profile-dropdown-item profile-dropdown-notifications"
-              >
-                <span class="notification-icon-background">
+            <div class="profile-dropdown-container">
+              <button class="profile-dropdown-button no-wave-effect">
+                <div class="profile-avatar-wrapper">
                   <img
-                    src="{% static 'accounts/images/bell.svg' %}"
-                    alt="Уведомления"
-                    class="profile-dropdown-item-icon"
+                    src="{% if user.get_profile_picture_url %}{{ user.get_profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}"
+                    alt="Аватар"
+                    class="profile-dropdown-avatar"
                   />
-                </span>
-                Уведомления {# Здесь может быть счетчик уведомлений, если он
-                есть в контексте #}
-              </a>
-              <a href="{% url 'profile' %}" class="profile-dropdown-item"
-                >Профиль</a
-              >
-              <a href="{% url 'startups_list' %}" class="profile-dropdown-item"
-                >Стартапы</a
-              >
-              {# Исправлено на каталог #} {#
-              <a
-                href="{% url 'profile_settings' %}"
-                class="profile-dropdown-item"
-                >Настройки</a
-              >
-              #} {# Нужен URL для настроек #}
-              <a href="#" class="profile-dropdown-item">Настройки</a> {#
-              Временный #}
-              <a href="{% url 'support' %}" class="profile-dropdown-item"
-                >Поддержка</a
-              >
-              {# ЗАМЕНЕН URL #}
-              <a href="{% url 'contacts' %}" class="profile-dropdown-item"
-                >Контакты</a
-              >
-              <a href="{% url 'faq' %}" class="profile-dropdown-item">FAQ</a>
-              <a
-                href="{% url 'logout' %}"
-                class="profile-dropdown-item profile-dropdown-logout"
-              >
-                <i class="fas fa-sign-out-alt"></i> Выйти
-              </a>
+                </div>
+                {# <i class="fas fa-chevron-down profile-dropdown-chevron"></i> #}
+                {# Шеврон пока уберем, на скрине его нет #}
+              </button>
+              <div class="profile-dropdown-menu">
+                <a
+                  href="{% url 'notifications_page' %}"
+                  class="profile-dropdown-item profile-dropdown-notifications"
+                >
+                  <span class="notification-icon-background">
+                    <img
+                      src="{% static 'accounts/images/bell.svg' %}"
+                      alt="Уведомления"
+                      class="profile-dropdown-item-icon"
+                    />
+                  </span>
+                  Уведомления {# Здесь может быть счетчик уведомлений, если он
+                  есть в контексте #}
+                </a>
+                <a href="{% url 'profile' %}" class="profile-dropdown-item"
+                  >Профиль</a
+                >
+                <a href="{% url 'startups_list' %}" class="profile-dropdown-item"
+                  >Стартапы</a
+                >
+                {# Исправлено на каталог #} {#
+                <a
+                  href="{% url 'profile_settings' %}"
+                  class="profile-dropdown-item"
+                  >Настройки</a
+                >
+                #} {# Нужен URL для настроек #}
+                <a href="#" class="profile-dropdown-item">Настройки</a> {#
+                Временный #}
+                <a href="{% url 'support' %}" class="profile-dropdown-item"
+                  >Поддержка</a
+                >
+                {# ЗАМЕНЕН URL #}
+                <a href="{% url 'contacts' %}" class="profile-dropdown-item"
+                  >Контакты</a
+                >
+                <a href="{% url 'faq' %}" class="profile-dropdown-item">FAQ</a>
+                <a
+                  href="{% url 'logout' %}"
+                  class="profile-dropdown-item profile-dropdown-logout"
+                >
+                  <i class="fas fa-sign-out-alt"></i> Выйти
+                </a>
+              </div>
             </div>
-          </div>
           {% else %}
-          <a
-            href="{% url 'login' %}"
-            class="header-auth-button-link header-login-button"
-          >
-            Войти
-            <img
-              src="{% static 'accounts/images/add-circle-outline.svg' %}"
-              alt="icon"
-              class="header-auth-button-icon"
-            />
-          </a>
+            <a
+              href="{% url 'login' %}"
+              class="header-auth-button-link header-login-button"
+            >
+              Войти
+              <img
+                src="{% static 'accounts/images/add-circle-outline.svg' %}"
+                alt="icon"
+                class="header-auth-button-icon"
+              />
+            </a>
           {% endif %}
         </div>
       </div>

@@ -1,525 +1,535 @@
-{% extends 'accounts/base.html' %} {% load static %} {% load humanize %} {% load
-accounts_extras %} {% load math_filters %} {% load startup_filters %} {% block
-title %}Мои стартапы{% endblock %} {% block head_extra %} {{ block.super }} {#
-<link rel="stylesheet" href="{% static 'css/main_styles.css' %}" /> #}
-<link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
-/>
-<link
-  rel="stylesheet"
-  href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&display=swap"
-/>
-<link rel="stylesheet" href="{% static 'accounts/css/investments.css' %}" />
-{# Добавляем стили для раздела заявок #}
-<style>
-  .applications-section {
-    color: #ffffff;
-    padding: 40px 0;
-    margin-top: 40px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-  }
-  .applications-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end; /* Выравниваем по нижнему краю */
-    margin-bottom: 30px;
-  }
-  .applications-titles {
-    display: flex;
-    flex-direction: column;
-    line-height: 0.8; /* Сближаем строки */
-  }
-  .applications-title-main,
-  .applications-title-sub {
-    font-family: 'Blippo Local', sans-serif; /* Новый шрифт */
-    font-weight: 400; /* Новый вес */
-    font-size: 45px; /* Чуть меньше */
-    line-height: 1;
-    letter-spacing: -0.02em;
-    margin: 0;
-    text-transform: uppercase;
-  }
-  .applications-title-main {
-    color: #ffffff;
-  }
-  .applications-title-sub {
-    color: #ffef2b;
-  }
+{% extends 'accounts/base.html' %}
+{% load static %}
+{% load humanize %}
+{% load accounts_extras %}
+{% load math_filters %}
+{% load startup_filters %}
 
-  .applications-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
-  }
-  .application-card {
-    background-color: #1a1d2e; /* Темный фон для карточки заявки */
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    transition:
-      background-color 0.3s linear,
-      border-color 0.3s linear;
-  }
-  .application-card:hover {
-    background-color: #212538;
-    border-color: rgba(255, 255, 255, 0.2);
-  }
-  .application-title {
-    font-size: 16px;
-    font-weight: 500;
-    color: #ffffff;
-    margin-bottom: 5px;
-  }
-  .application-status {
-    font-size: 14px;
-    font-weight: 500;
-    padding: 4px 10px;
-    border-radius: 12px;
-    display: inline-block; /* Чтобы padding работал */
-    margin-bottom: 10px;
-    text-align: center;
-    min-width: 100px; /* Минимальная ширина для выравнивания */
-  }
-  /* Стили для статусов заявок */
-  .status-approved {
-    background-color: #28a745;
-    color: #fff;
-  }
-  .status-pending {
-    background-color: #ffc107;
-    color: #191919;
-  }
-  .status-rejected {
-    background-color: #dc3545;
-    color: #fff;
-  }
-  .status-blocked {
-    background-color: #6c757d;
-    color: #fff;
-  } /* Добавим стиль для blocked */
-  .status-closed {
-    background-color: #343a40;
-    color: #fff;
-  } /* Добавим стиль для closed */
+{% block title %}Мои стартапы{% endblock %}
 
-  .application-comment {
-    font-size: 13px;
-    color: rgba(255, 255, 255, 0.7);
-    font-style: italic;
-    margin-top: auto; /* Прижимаем комментарий к низу */
-    padding-top: 10px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-  }
-  .application-card a {
-    color: #ffef2b;
-    text-decoration: none;
-    font-weight: 500;
-    margin-top: 10px;
-    display: inline-block;
-  }
-  .application-card a:hover {
-    text-decoration: underline;
-  }
+{% block head_extra %}
+    {{ block.super }}
+    {# <link rel="stylesheet" href="{% static 'css/main_styles.css' %}" /> #}
+    <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&display=swap"
+    />
+    <link rel="stylesheet" href="{% static 'accounts/css/investments.css' %}" />
+    {# Добавляем стили для раздела заявок #}
+    <style>
+      .applications-section {
+        color: #ffffff;
+        padding: 40px 0;
+        margin-top: 40px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .applications-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end; /* Выравниваем по нижнему краю */
+        margin-bottom: 30px;
+      }
+      .applications-titles {
+        display: flex;
+        flex-direction: column;
+        line-height: 0.8; /* Сближаем строки */
+      }
+      .applications-title-main,
+      .applications-title-sub {
+        font-family: 'Blippo Local', sans-serif; /* Новый шрифт */
+        font-weight: 400; /* Новый вес */
+        font-size: 45px; /* Чуть меньше */
+        line-height: 1;
+        letter-spacing: -0.02em;
+        margin: 0;
+        text-transform: uppercase;
+      }
+      .applications-title-main {
+        color: #ffffff;
+      }
+      .applications-title-sub {
+        color: #ffef2b;
+      }
 
-  /* Стили для планетарной системы */
-  .planetary-system-container {
-    position: relative;
-    width: 100%;
-    height: 400px;
-    overflow: hidden;
-    background: radial-gradient(circle at center, #1a1a2e 0%, #0a0a1e 100%);
-  }
+      .applications-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+      }
+      .application-card {
+        background-color: #1a1d2e; /* Темный фон для карточки заявки */
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        transition:
+          background-color 0.3s linear,
+          border-color 0.3s linear;
+      }
+      .application-card:hover {
+        background-color: #212538;
+        border-color: rgba(255, 255, 255, 0.2);
+      }
+      .application-title {
+        font-size: 16px;
+        font-weight: 500;
+        color: #ffffff;
+        margin-bottom: 5px;
+      }
+      .application-status {
+        font-size: 14px;
+        font-weight: 500;
+        padding: 4px 10px;
+        border-radius: 12px;
+        display: inline-block; /* Чтобы padding работал */
+        margin-bottom: 10px;
+        text-align: center;
+        min-width: 100px; /* Минимальная ширина для выравнивания */
+      }
+      /* Стили для статусов заявок */
+      .status-approved {
+        background-color: #28a745;
+        color: #fff;
+      }
+      .status-pending {
+        background-color: #ffc107;
+        color: #191919;
+      }
+      .status-rejected {
+        background-color: #dc3545;
+        color: #fff;
+      }
+      .status-blocked {
+        background-color: #6c757d;
+        color: #fff;
+      } /* Добавим стиль для blocked */
+      .status-closed {
+        background-color: #343a40;
+        color: #fff;
+      } /* Добавим стиль для closed */
 
-  .planetary-system {
-    width: 100%;
-    height: 100%;
-    position: relative;
-    perspective: 1000px;
-    cursor: grab;
-  }
+      .application-comment {
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.7);
+        font-style: italic;
+        margin-top: auto; /* Прижимаем комментарий к низу */
+        padding-top: 10px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .application-card a {
+        color: #ffef2b;
+        text-decoration: none;
+        font-weight: 500;
+        margin-top: 10px;
+        display: inline-block;
+      }
+      .application-card a:hover {
+        text-decoration: underline;
+      }
 
-  .planetary-system.dragging {
-    cursor: grabbing;
-  }
+      /* Стили для планетарной системы */
+      .planetary-system-container {
+        position: relative;
+        width: 100%;
+        height: 400px;
+        overflow: hidden;
+        background: radial-gradient(circle at center, #1a1a2e 0%, #0a0a1e 100%);
+      }
 
-  .planetary-system .space-background {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: url('https://images.unsplash.com/photo-1447433819943-74a20987a81b')
-      no-repeat center center;
-    background-size: cover;
-    z-index: -1;
-  }
+      .planetary-system {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        perspective: 1000px;
+        cursor: grab;
+      }
 
-  .planetary-system .stars {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: url('https://www.transparenttextures.com/patterns/stardust.png')
-      repeat;
-    opacity: 0.5;
-    animation: parallax 100s linear infinite;
-    z-index: -1;
-  }
+      .planetary-system.dragging {
+        cursor: grabbing;
+      }
 
-  @keyframes parallax {
-    from {
-      background-position: 0 0;
-    }
-    to {
-      background-position: 1000px 1000px;
-    }
-  }
+      .planetary-system .space-background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url('https://images.unsplash.com/photo-1447433819943-74a20987a81b')
+          no-repeat center center;
+        background-size: cover;
+        z-index: -1;
+      }
 
-  .planetary-system #scene {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) translate(0px, 0px) scale(1);
-    transform-style: preserve-3d;
-  }
+      .planetary-system .stars {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url('https://www.transparenttextures.com/patterns/stardust.png')
+          repeat;
+        opacity: 0.5;
+        animation: parallax 100s linear infinite;
+        z-index: -1;
+      }
 
-  .planetary-system #galaxy {
-    position: absolute;
-    top: 0;
-    left: 0;
-    transform: rotateX(45deg);
-    transform-style: preserve-3d;
-  }
+      @keyframes parallax {
+        from {
+          background-position: 0 0;
+        }
+        to {
+          background-position: 1000px 1000px;
+        }
+      }
 
-  .planetary-system #logo {
-    width: 60px;
-    height: 60px;
-    background-size: cover;
-    border-radius: 50%;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) rotateX(-45deg);
-    z-index: 10;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    font-weight: bold;
-    color: #333;
-    text-align: center;
-    line-height: 1.2;
-  }
+      .planetary-system #scene {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) translate(0px, 0px) scale(1);
+        transform-style: preserve-3d;
+      }
 
-  .planetary-system .orbit {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: var(--orbit-size);
-    height: var(--orbit-size);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 50%;
-    margin-left: calc(-0.5 * var(--orbit-size));
-    margin-top: calc(-0.5 * var(--orbit-size));
-    transform-style: preserve-3d;
-    z-index: 1;
-    transition: all 0.5s ease;
-  }
+      .planetary-system #galaxy {
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform: rotateX(45deg);
+        transform-style: preserve-3d;
+      }
 
-  .planetary-system .planet-orientation {
-    position: absolute;
-    transform-style: preserve-3d;
-  }
+      .planetary-system #logo {
+        width: 60px;
+        height: 60px;
+        background-size: cover;
+        border-radius: 50%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotateX(-45deg);
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: bold;
+        color: #333;
+        text-align: center;
+        line-height: 1.2;
+      }
 
-  .planetary-system .planet {
-    position: absolute;
-    width: var(--planet-size);
-    height: var(--planet-size);
-    margin-left: calc(-0.5 * var(--planet-size));
-    margin-top: calc(-0.5 * var(--planet-size));
-    border-radius: 50%;
-    background-size: cover;
-    cursor: pointer;
-    transform-style: preserve-3d;
-    z-index: 5;
-    transition: all 0.3s ease;
-  }
+      .planetary-system .orbit {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: var(--orbit-size);
+        height: var(--orbit-size);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        margin-left: calc(-0.5 * var(--orbit-size));
+        margin-top: calc(-0.5 * var(--orbit-size));
+        transform-style: preserve-3d;
+        z-index: 1;
+        transition: all 0.5s ease;
+      }
 
-  .planetary-system .planet:hover {
-    transform: scale(1.1);
-  }
+      .planetary-system .planet-orientation {
+        position: absolute;
+        transform-style: preserve-3d;
+      }
 
-  .planetary-system .planet.active {
-    transform: scale(1.2);
-  }
+      .planetary-system .planet {
+        position: absolute;
+        width: var(--planet-size);
+        height: var(--planet-size);
+        margin-left: calc(-0.5 * var(--planet-size));
+        margin-top: calc(-0.5 * var(--planet-size));
+        border-radius: 50%;
+        background-size: cover;
+        cursor: pointer;
+        transform-style: preserve-3d;
+        z-index: 5;
+        transition: all 0.3s ease;
+      }
 
-  .planetary-system #info-card {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(255, 255, 255, 0.95);
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    max-width: 300px;
-    width: 90%;
-    color: #333;
-    z-index: 20;
-    display: none;
-    text-align: center;
-  }
+      .planetary-system .planet:hover {
+        transform: scale(1.1);
+      }
 
-  .planetary-system #info-card .planet-image {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    margin: 0 auto 8px;
-    background-size: cover;
-  }
+      .planetary-system .planet.active {
+        transform: scale(1.2);
+      }
 
-  .planetary-system #info-card h2 {
-    margin: 0 0 4px;
-    font-size: 18px;
-    color: #000;
-  }
+      .planetary-system #info-card {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(255, 255, 255, 0.95);
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        max-width: 300px;
+        width: 90%;
+        color: #333;
+        z-index: 20;
+        display: none;
+        text-align: center;
+      }
 
-  .planetary-system #info-card .rating {
-    font-size: 14px;
-    color: #555;
-    margin-bottom: 8px;
-  }
+      .planetary-system #info-card .planet-image {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        margin: 0 auto 8px;
+        background-size: cover;
+      }
 
-  .planetary-system #info-card .progress-bar {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 8px 0;
-  }
+      .planetary-system #info-card h2 {
+        margin: 0 0 4px;
+        font-size: 18px;
+        color: #000;
+      }
 
-  .planetary-system #info-card .progress-bar button {
-    padding: 4px 8px;
-    border: none;
-    background: #000;
-    color: white;
-    font-size: 12px;
-    border-radius: 4px 0 0 4px;
-  }
+      .planetary-system #info-card .rating {
+        font-size: 14px;
+        color: #555;
+        margin-bottom: 8px;
+      }
 
-  .planetary-system #info-card .progress-bar .progress {
-    background: #ffd700;
-    padding: 4px;
-    font-size: 12px;
-    font-weight: bold;
-    border-radius: 0 4px 4px 0;
-  }
+      .planetary-system #info-card .progress-bar {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 8px 0;
+      }
 
-  .planetary-system #info-card .funding {
-    font-size: 12px;
-    color: #555;
-    margin: 8px 0;
-  }
+      .planetary-system #info-card .progress-bar button {
+        padding: 4px 8px;
+        border: none;
+        background: #000;
+        color: white;
+        font-size: 12px;
+        border-radius: 4px 0 0 4px;
+      }
 
-  .planetary-system #info-card .investors {
-    font-size: 12px;
-    color: #555;
-    margin-bottom: 12px;
-  }
+      .planetary-system #info-card .progress-bar .progress {
+        background: #ffd700;
+        padding: 4px;
+        font-size: 12px;
+        font-weight: bold;
+        border-radius: 0 4px 4px 0;
+      }
 
-  .planetary-system #info-card .description {
-    font-size: 12px;
-    color: #555;
-    margin-bottom: 12px;
-  }
+      .planetary-system #info-card .funding {
+        font-size: 12px;
+        color: #555;
+        margin: 8px 0;
+      }
 
-  .planetary-system #info-card .more-details {
-    padding: 8px 16px;
-    background: none;
-    border: none;
-    color: #007bff;
-    font-size: 14px;
-    cursor: pointer;
-  }
+      .planetary-system #info-card .investors {
+        font-size: 12px;
+        color: #555;
+        margin-bottom: 12px;
+      }
 
-  .planetary-system #close-card {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    background: #ffd700;
-    border: none;
-    font-size: 16px;
-    cursor: pointer;
-    color: #000;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+      .planetary-system #info-card .description {
+        font-size: 12px;
+        color: #555;
+        margin-bottom: 12px;
+      }
 
-  .planetary-system #crosshair {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 16px;
-    height: 16px;
-    transform: translate(-50%, -50%);
-    z-index: 100;
-  }
+      .planetary-system #info-card .more-details {
+        padding: 8px 16px;
+        background: none;
+        border: none;
+        color: #007bff;
+        font-size: 14px;
+        cursor: pointer;
+      }
 
-  .planetary-system #crosshair::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 0;
-    width: 100%;
-    height: 1px;
-    background: rgba(255, 255, 255, 0.7);
-    transform: translateY(-50%);
-  }
+      .planetary-system #close-card {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: #ffd700;
+        border: none;
+        font-size: 16px;
+        cursor: pointer;
+        color: #000;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
 
-  .planetary-system #crosshair::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 50%;
-    width: 1px;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.7);
-    transform: translateX(-50%);
-  }
+      .planetary-system #crosshair {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 16px;
+        height: 16px;
+        transform: translate(-50%, -50%);
+        z-index: 100;
+      }
 
-  .planetary-system #crosshair-coords {
-    position: absolute;
-    top: 50%;
-    left: calc(50% + 15px);
-    transform: translateY(-50%);
-    color: white;
-    font-size: 10px;
-    background: rgba(0, 0, 0, 0.5);
-    padding: 4px;
-    border-radius: 4px;
-    z-index: 100;
-  }
+      .planetary-system #crosshair::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 0;
+        width: 100%;
+        height: 1px;
+        background: rgba(255, 255, 255, 0.7);
+        transform: translateY(-50%);
+      }
 
-  .planetary-system #mouse-coords {
-    position: absolute;
-    color: white;
-    font-size: 10px;
-    background: rgba(0, 0, 0, 0.5);
-    padding: 4px;
-    border-radius: 4px;
-    pointer-events: none;
-    z-index: 100;
-  }
+      .planetary-system #crosshair::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 50%;
+        width: 1px;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.7);
+        transform: translateX(-50%);
+      }
 
-  .planetary-system #axes {
-    position: absolute;
-    bottom: 8px;
-    right: 8px;
-    width: 40px;
-    height: 40px;
-    transform-style: preserve-3d;
-    z-index: 100;
-  }
+      .planetary-system #crosshair-coords {
+        position: absolute;
+        top: 50%;
+        left: calc(50% + 15px);
+        transform: translateY(-50%);
+        color: white;
+        font-size: 10px;
+        background: rgba(0, 0, 0, 0.5);
+        padding: 4px;
+        border-radius: 4px;
+        z-index: 100;
+      }
 
-  .planetary-system .axis {
-    position: absolute;
-    width: 1px;
-    height: 20px;
-    transform-origin: bottom center;
-  }
+      .planetary-system #mouse-coords {
+        position: absolute;
+        color: white;
+        font-size: 10px;
+        background: rgba(0, 0, 0, 0.5);
+        padding: 4px;
+        border-radius: 4px;
+        pointer-events: none;
+        z-index: 100;
+      }
 
-  .planetary-system #axis-x {
-    background: red;
-    transform: rotateY(90deg) translateZ(10px);
-  }
+      .planetary-system #axes {
+        position: absolute;
+        bottom: 8px;
+        right: 8px;
+        width: 40px;
+        height: 40px;
+        transform-style: preserve-3d;
+        z-index: 100;
+      }
 
-  .planetary-system #axis-y {
-    background: green;
-    transform: translateZ(10px);
-  }
+      .planetary-system .axis {
+        position: absolute;
+        width: 1px;
+        height: 20px;
+        transform-origin: bottom center;
+      }
 
-  .planetary-system #axis-z {
-    background: blue;
-    transform: rotateX(90deg) translateZ(10px);
-  }
+      .planetary-system #axis-x {
+        background: red;
+        transform: rotateY(90deg) translateZ(10px);
+      }
 
-  .planetary-system .axis-label {
-    position: absolute;
-    color: white;
-    font-size: 8px;
-    transform: translateZ(15px);
-  }
+      .planetary-system #axis-y {
+        background: green;
+        transform: translateZ(10px);
+      }
 
-  .planetary-system #label-x {
-    left: 25px;
-    top: 10px;
-    color: red;
-  }
+      .planetary-system #axis-z {
+        background: blue;
+        transform: rotateX(90deg) translateZ(10px);
+      }
 
-  .planetary-system #label-y {
-    left: 10px;
-    top: -5px;
-    color: green;
-  }
+      .planetary-system .axis-label {
+        position: absolute;
+        color: white;
+        font-size: 8px;
+        transform: translateZ(15px);
+      }
 
-  .planetary-system #label-z {
-    left: 10px;
-    top: 25px;
-    color: blue;
-  }
+      .planetary-system #label-x {
+        left: 25px;
+        top: 10px;
+        color: red;
+      }
 
-  .planetary-system #fps {
-    position: absolute;
-    top: 8px;
-    left: 8px;
-    background: rgba(0, 0, 0, 0.5);
-    color: white;
-    padding: 4px;
-    border-radius: 3px;
-    font-size: 10px;
-    z-index: 100;
-  }
+      .planetary-system #label-y {
+        left: 10px;
+        top: -5px;
+        color: green;
+      }
 
-  .status-filter-buttons {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-  }
+      .planetary-system #label-z {
+        left: 10px;
+        top: 25px;
+        color: blue;
+      }
 
-  .status-filter-btn {
-    padding: 8px 16px;
-    background-color: #1a1d2e;
-    color: #ffffff;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 5px;
-    font-size: 14px;
-    cursor: pointer;
-    transition:
-      background-color 0.3s,
-      border-color 0.3s;
-  }
+      .planetary-system #fps {
+        position: absolute;
+        top: 8px;
+        left: 8px;
+        background: rgba(0, 0, 0, 0.5);
+        color: white;
+        padding: 4px;
+        border-radius: 3px;
+        font-size: 10px;
+        z-index: 100;
+      }
 
-  .status-filter-btn:hover {
-    background-color: #212538;
-    border-color: rgba(255, 255, 255, 0.2);
-  }
+      .status-filter-buttons {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+      }
 
-  .status-filter-btn.active {
-    background-color: #ffef2b;
-    color: #191919;
-    border-color: #ffef2b;
-  }
-</style>
-{% endblock %} {% block content %} {% if user.is_authenticated and
-user.role.role_name == 'startuper' %}
+      .status-filter-btn {
+        padding: 8px 16px;
+        background-color: #1a1d2e;
+        color: #ffffff;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 5px;
+        font-size: 14px;
+        cursor: pointer;
+        transition:
+          background-color 0.3s,
+          border-color 0.3s;
+      }
+
+      .status-filter-btn:hover {
+        background-color: #212538;
+        border-color: rgba(255, 255, 255, 0.2);
+      }
+
+      .status-filter-btn.active {
+        background-color: #ffef2b;
+        color: #191919;
+        border-color: #ffef2b;
+      }
+    </style>
+{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated and user.role.role_name == 'startuper' %}
 <div class="portfolio-container">
   <!-- Верхняя секция с аналитикой -->
   <div class="analytics-section">

@@ -69,7 +69,8 @@ block.super }}
                 user.role.role_name == "investor" %}Инвестор {% elif
                 user.role.role_name == "moderator" %}Модератор {% elif
                 user.role.role_name == "administrator" %}Администратор {% else
-                %}{{ user.role.role_name|default:"Роль не указана" }}{% endif %}
+                %}{{ user.role.role_name|default:"Роль не указана" }} {% endif
+                %}
               </span>
             </div>
             <div class="profile-sidebar-id">

@@ -38,7 +38,7 @@
     {% for i in "x"|ljust:7 %} {# Создаем 7 элементов для примера #}
     <div class="related-startup-card">
       <img src="https://placehold.co/123x111" alt="Лого стартапа" />
-      <span class="related-startup-name">Ромашка {{forloop.counter}}</span>
+      <span class="related-startup-name">Ромашка {{ forloop.counter }}</span>
       <div class="related-startup-badge">
         <span>{{ forloop.counter|add:2 }}</span>
       </div>
@@ -95,7 +95,6 @@
     </div>
   </div>
 </div>
-
 {% endblock %} {% block script_extra %}
 <script>
   document.addEventListener('DOMContentLoaded', function () {
