@@ -1,18 +1,39 @@
 [tool.ruff]
 line-length = 88
-extend-exclude = [
-    "node_modules",
-    "venv",
+target-version = "py310"
+exclude = [
+    ".git",
+    "__pycache__",
     ".venv",
-    "static",
+    "venv",
     "staticfiles",
+    "node_modules",
     "accounts/templates",
     "marketplace/templates",
+    "static/src",
 ]
 
 [tool.ruff.lint]
-select = ["E", "F", "W", "I", "N", "C4", "B"]
-ignore = ["E501"]
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "C4", # flake8-comprehensions
+    "B",  # flake8-bugbear
+]
+ignore = ["E501"] # ignore line length errors, handled by the formatter
+
+[tool.ruff.lint.isort]
+known-first-party = ["accounts", "marketplace"]
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.ruff.lint.per-file-ignores]
+"manage.py" = ["E402"]
+"settings.py" = ["E402"]
+"**/migrations/*.py" = ["E501"]
 
 [tool.mypy]
 python_version = "3.11"
