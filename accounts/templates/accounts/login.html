@@ -1,5 +1,6 @@
-{% extends 'accounts/base.html' %} {% load static %} {% block title %}Вход{%
-endblock %} {% block head_extra %} {{ block.super }}
+{% extends 'accounts/base.html' %} {% load static %} {% block title %}Вход{% endblock %}
+{% block head_extra %}
+{{ block.super }}
 <style>
   /* Убираем старые стили фона */
   /* #liquid-background-container ... */
@@ -159,10 +160,14 @@ endblock %} {% block head_extra %} {{ block.super }}
     border-top: 1px solid rgba(255, 255, 255, 0.1); /* Тонкая линия сверху */
   }
 </style>
-{% endblock %} {% block content %} {# Добавляем canvas для звездного поля #}
+{% endblock %}
+
+{% block content %}
+{# Добавляем canvas для звездного поля #}
 <canvas id="starfield-canvas"></canvas>
 
-{# Удален старый SVG контейнер #} {#
+{# Удален старый SVG контейнер #}
+{#
 <div id="liquid-background-container">...</div>
 #}
 
@@ -193,7 +198,8 @@ endblock %} {% block head_extra %} {{ block.super }}
   </div>
 </div>
 
-{# Удален старый скрипт LiquidButton #} {#
+{# Удален старый скрипт LiquidButton #}
+{#
 <script>
   ... LiquidButton class ...
 </script>
@@ -252,101 +258,72 @@ endblock %} {% block head_extra %} {{ block.super }}
       targetOffsetY = a.clientY
     })
 
-    // Инициализация/Сброс звезды
-    function u(a) {
-      // a = star object
-      a.x = (m() * d - d * 0.5) * p // Случайное X в пределах (-d/2*p, d/2*p)
-      a.y = (m() * e - e * 0.5) * p // Случайное Y в пределах (-e/2*p, e/2*p)
-      a.a = p // Z-координата (глубина/масштаб), НАЧИНАЕТСЯ ДАЛЕКО
-      // a.b=0; // Предыдущая экранная X координата - НЕ НУЖНА
-      // a.c=0; // Предыдущая экранная Y координата - НЕ НУЖНА
-    }
-
-    // Создаем начальные звезды
-    for (let v = 0; v < V; v++) {
-      let w = {} // w = star object
-      u(w)
-      q.push(w)
-    }
-
-    // Функция основного цикла анимации
-    function drawFrame() {
-      k.fillStyle = '#000' // Черный фон на каждом кадре
-      k.fillRect(0, 0, d, e)
-
-      // Центр смещения (зависит от положения мыши) - ЗАМЕНЕНО НА ПЛАВНОЕ СМЕЩЕНИЕ
-      // const offsetX = i; // Используем напрямую позицию мыши
-      // const offsetY = j;
-
-      // Плавно интерполируем текущее смещение к целевому
-      const interpolationFactor = 0.03 // Меньше значение = ЕЩЕ более плавное/медленное движение
-      currentOffsetX += (targetOffsetX - currentOffsetX) * interpolationFactor
-      currentOffsetY += (targetOffsetY - currentOffsetY) * interpolationFactor
-
-      for (let h = 0; h < V; h++) {
-        const b = q[h] // b = текущая звезда
-        const currentX = b.x / b.a // Экранная X = Мировая X / Глубина
-        const currentY = b.y / b.a // Экранная Y = Мировая Y / Глубина
-        // Увеличиваем базовый размер звезд для видимости
-        const baseSize = (1 / b.a) * 2.5 + 0.5 // Сделали звезды чуть меньше
-        // Добавляем фактор мерцания
-        const twinkleFactor = 0.8 + Math.random() * 0.4 // Сделали мерцание менее резким
-        const z = baseSize * twinkleFactor // Итоговый размер с мерцанием
-
-        // Рисуем белую круглую "голову" звезды
-        k.fillStyle = '#fff' // Устанавливаем белый цвет
-        k.beginPath()
-        // Рисуем круг: arc(x, y, radius, startAngle, endAngle) - ИСПОЛЬЗУЕМ ПЛАВНОЕ СМЕЩЕНИЕ и размер z
-        k.arc(
-          currentX + currentOffsetX,
-          currentY + currentOffsetY,
-          z / 2,
-          0,
-          Math.PI * 2
-        ) // Делим z на 2 для радиуса
-        k.fill()
-
-        // Приближаем звезду (уменьшаем глубину)
-        b.a -= s
-
-        // Если звезда вышла за пределы глубины или экрана, сбрасываем её
-        // Проверяем экранные координаты со смещением - ИСПОЛЬЗУЕМ ПЛАВНОЕ СМЕЩЕНИЕ
-        const screenX = currentX + currentOffsetX
-        const screenY = currentY + currentOffsetY
-        // Условие сброса: звезда слишком близко или ушла за экран
-        if (
-          b.a < 0.01 ||
-          screenX < -z ||
-          screenX > d + z ||
-          screenY < -z ||
-          screenY > e + z
-        ) {
-          u(b) // Сбросить звезду в центр "туннеля"
-          // Сбрасываем предыдущие координаты - НЕ НУЖНО
-          // b.b = 0;
-          // b.c = 0;
-        }
-      }
-      r += 0.015 // Увеличиваем фазу для пульсации цвета (сейчас не влияет на цвет звезд)
-    }
-
     // Обработчик изменения размера окна
-    function onResize() {
+    E('resize', function () {
       d = c.innerWidth
       e = c.innerHeight
       g.width = d
       g.height = e
-      // Сбрасываем предыдущие координаты звезд при ресайзе, чтобы избежать артефактов
-      for (let star of q) {
-        star.b = 0
-        star.c = 0
-      }
+    })
+
+    function J(star) {
+      // J = reset star
+      star.x = (m() * d - d / 2) * p
+      star.y = (m() * e - e / 2) * p
+      star.z = m() * p * 100 // Увеличили разброс по z
     }
-    c.addEventListener('resize', onResize, false)
 
-    // Запускаем анимацию
-    setInterval(drawFrame, 25) // ~40 FPS
-  })
+    function K() {
+      // K = draw frame
+      // Плавное смещение текущего положения к целевому
+      currentOffsetX += (targetOffsetX - currentOffsetX) * 0.05
+      currentOffsetY += (targetOffsetY - currentOffsetY) * 0.05
+
+      // Вместо очистки добавляем полупрозрачный черный прямоугольник для эффекта "хвостов"
+      k.fillStyle = 'rgba(0,0,0,0.4)'
+      k.fillRect(0, 0, d, e)
+      r += 0.01 // Медленно изменяем синус для цвета
+      const t = n(r) * Q // t = color sin factor
+      for (let u = V; u--; ) {
+        const v = q[u] // v = star
+        let w = v.x / v.z // w = projected x
+        let x = v.y / v.z // x = projected y
+        const y = v.z / 1000 // y = alpha, size factor
+
+        if (w < -d / 2 || w > d / 2 || x < -e / 2 || x > e / 2) {
+          J(v)
+          continue
+        }
+
+        k.beginPath()
+        k.fillStyle =
+          'rgb(' +
+          o(W - y * W - t) +
+          ',' +
+          o(W - y * W) +
+          ',' +
+          o(W - y * W + t) +
+          ')'
+        k.arc(
+          w + currentOffsetX, // Смещаем относительно текущего положения
+          x + currentOffsetY, // Смещаем относительно текущего положения
+          y * 3, // Размер звезды
+          0,
+          2 * l.PI,
+        )
+        k.fill()
+        v.z -= s // Двигаем звезду ближе к камере
+      }
+      c.requestAnimationFrame(K)
+    }
+
+    // Инициализация звезд
+    for (let z = V; z--; ) {
+      q[z] = { x: 0, y: 0, z: 0 };
+      J(q[z]);
+    }
+
+    K(); // Запускаем анимацию
+  });
 </script>
-
 {% endblock %}

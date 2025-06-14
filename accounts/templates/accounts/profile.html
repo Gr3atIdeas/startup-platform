@@ -31,14 +31,7 @@ block.super }}
             class="profile-sidebar-avatar-delete"
             id="deleteAvatarBtn"
             title="Удалить аватар"
-            {%
-            if
-            not
-            user.get_profile_picture_url
-            %}style="display: none;"
-            {%
-            endif
-            %}
+            {% if not user.get_profile_picture_url %}style="display: none;"{% endif %}
           >
             <svg
               width="16"
@@ -65,12 +58,7 @@ block.super }}
             </div>
             <div class="profile-sidebar-role">
               <span>
-                {% if user.role.role_name == "startuper" %}Стартапер {% elif
-                user.role.role_name == "investor" %}Инвестор {% elif
-                user.role.role_name == "moderator" %}Модератор {% elif
-                user.role.role_name == "administrator" %}Администратор {% else
-                %}{{ user.role.role_name|default:"Роль не указана" }} {% endif
-                %}
+                {% if user.role.role_name == "startuper" %}Стартапер{% elif user.role.role_name == "investor" %}Инвестор{% elif user.role.role_name == "moderator" %}Модератор{% elif user.role.role_name == "administrator" %}Администратор{% else %}{{ user.role.role_name|default:"Роль не указана" }}{% endif %}
               </span>
             </div>
             <div class="profile-sidebar-id">
@@ -236,12 +224,7 @@ block.super }}
                 </div>
                 <div class="profile-main-startup-category-progress">
                   <div class="profile-main-startup-category-tag">
-                    {% if startup.direction.direction_name == "Fastfood"
-                    %}Фастфуд {% elif startup.direction.direction_name ==
-                    "Technology" %}Технологии {% elif
-                    startup.direction.direction_name == "Finance" %}Финансы {%
-                    else %}{{ startup.direction.direction_name|default:"Без
-                    категории" }} {% endif %}
+                    {% if startup.direction.direction_name == "Fastfood" %}Фастфуд{% elif startup.direction.direction_name == "Technology" %}Технологии{% elif startup.direction.direction_name == "Finance" %}Финансы{% else %}{{ startup.direction.direction_name|default:"Без категории" }}{% endif %}
                   </div>
                   <div class="progress-bar-and-text-container">
                     <div class="profile-main-startup-progress-bar-bg">
