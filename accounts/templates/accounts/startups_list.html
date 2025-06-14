@@ -1,119 +1,78 @@
-{% extends 'accounts/base.html' %} {% load static %} {% load file_tags %} {%
-load humanize %} {% block title %}Каталог стартапов{% endblock %} {% block
-head_extra %} {{ block.super }} {#
-<link
-  rel="stylesheet"
-  href="{% static 'accounts/css/startups_list_styles.css' %}"
-/>
-<-- Закомментируем или удалим, если файла нет #}
-<link rel="stylesheet" href="{% static 'accounts/css/startups_list.css' %}" />
-<link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-/>
-<link
-  rel="stylesheet"
-  href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&display=swap"
-/>
-{# <<< Восстанавливаем noUiSlider CSS >>> #}
-<link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.css"
-/>
-{# <<< Подключаем шрифт Inter, используемый в Figma для значений рейтинга >>> #}
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link
-  href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Unbounded:wght@300;400;500;700&display=swap"
-  rel="stylesheet"
-/>
-{# <<< Комментируем rangeslider.js CSS >>> #} {# JS пока не подключаем здесь #}
-{% endblock head_extra %} {% block content %} {#
-<div class="catalog-wrapper">
-  Переносим обертки с паддингами в body в CSS #}
+{% extends 'accounts/base.html' %}
+{% load static %}
+{% load file_tags %}
+{% load humanize %}
+
+{% block title %}Каталог стартапов{% endblock %}
+
+{% block head_extra %}
+  {{ block.super }}
+  {# <link rel="stylesheet" href="{% static 'accounts/css/startups_list_styles.css' %}"> <-- Закомментируем или удалим, если файла нет #}
+  <link rel="stylesheet" href="{% static 'accounts/css/startups_list.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&display=swap">
+  {# <<< Восстанавливаем noUiSlider CSS >>> #}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.css">
+  {# <<< Подключаем шрифт Inter, используемый в Figma для значений рейтинга >>> #}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Unbounded:wght@300;400;500;700&display=swap" rel="stylesheet">
+  {# <<< Комментируем rangeslider.js CSS >>> #}
+
+  {# JS пока не подключаем здесь #}
+
+
+{% endblock %}
+
+{% block content %}
+{# <div class="catalog-wrapper"> Переносим обертки с паддингами в body в CSS #}
   <div class="catalog-container">
     <!-- Боковая панель с фильтрами -->
-    <aside class="sidebar">
-      {# Используем aside для семантики #}
+    <aside class="sidebar"> {# Используем aside для семантики #}
       <form method="get" id="filterForm">
         {# Блок сортировки #}
         <div class="sort-dropdown">
-          <div class="sort-dropdown-title">Показать сначала</div>
-          {# Новый title class #}
+          <div class="sort-dropdown-title">Показать сначала</div> {# Новый title class #}
           <select name="sort_order" id="sortOrder">
-            <option
-              value="newest"
-              {%
-              if
-              sort_order=""
-              ="newest"
-              %}selected{%
-              endif
-              %}
-            >
-              Новые
-            </option>
-            <option
-              value="oldest"
-              {%
-              if
-              sort_order=""
-              ="oldest"
-              %}selected{%
-              endif
-              %}
-            >
-              Старые
-            </option>
+            <option value="newest" {% if sort_order == 'newest' %}selected{% endif %}>Новые</option>
+            <option value="oldest" {% if sort_order == 'oldest' %}selected{% endif %}>Старые</option>
           </select>
         </div>
 
         {# Блок категорий #}
         <h2 class="categories-title">Категории</h2>
-        {# Здесь можно добавить кастомный скроллбар как в Figma, но это усложнит
-        #} {#
-        <div class="scrollbar-track"><div class="scrollbar-thumb"></div></div>
-        #}
+        {# Здесь можно добавить кастомный скроллбар как в Figma, но это усложнит #}
+        {# <div class="scrollbar-track"><div class="scrollbar-thumb"></div></div> #}
         <ul class="categories-list">
           {% for dir in directions %}
-          <li class="category-item">
-            <label class="category-label">
-              {# Меняем порядок: чекбокс, потом текст #}
-              <input
-                type="checkbox"
-                name="category"
-                value="{{ dir.direction_name }}"
-                class="category-checkbox"
-                {%
-                if
-                dir.direction_name
-                in
-                selected_categories
-                %}checked{%
-                endif
-                %}
-              />
-              <span class="category-name">
-                {% with original_name=dir.direction_name|default:"" %} {% if
-                original_name == "Medicine" %}Медицина {% elif original_name ==
-                "Auto" %}Автомобили {% elif original_name == "Delivery"
-                %}Доставка {% elif original_name == "Cafe" %}Кафе/рестораны {%
-                elif original_name == "Fastfood" %}Фастфуд {% elif original_name
-                == "Health" %}Здоровье {# Исправлено Здооровье на Здоровье #} {%
-                elif original_name == "Beauty" %}Красота {% elif original_name
-                == "Transport" %}Транспорт {% elif original_name == "Sport"
-                %}Спорт {% elif original_name == "Psychology" %}Психология {%
-                elif original_name == "AI" %}ИИ {% elif original_name ==
-                "Finance" %}Финансы {% elif original_name == "Healthcare"
-                %}Здравоохранение {% elif original_name == "Technology"
-                %}Технологии {% else %}{{ original_name|default:"Не указано"
-                }}{# Возвращаем оригинал или "Не указано" #} {% endif %} {%
-                endwith %}
-              </span>
-            </label>
-          </li>
+            <li class="category-item">
+              <label class="category-label">
+                {# Меняем порядок: чекбокс, потом текст #}
+                <input type="checkbox" name="category" value="{{ dir.direction_name }}" class="category-checkbox" {% if dir.direction_name in selected_categories %}checked{% endif %}>
+                <span class="category-name">
+                    {% with original_name=dir.direction_name|default:"" %}
+                        {% if original_name == "Medicine" %}Медицина
+                        {% elif original_name == "Auto" %}Автомобили
+                        {% elif original_name == "Delivery" %}Доставка
+                        {% elif original_name == "Cafe" %}Кафе/рестораны
+                        {% elif original_name == "Fastfood" %}Фастфуд
+                        {% elif original_name == "Health" %}Здоровье {# Исправлено Здооровье на Здоровье #}
+                        {% elif original_name == "Beauty" %}Красота
+                        {% elif original_name == "Transport" %}Транспорт
+                        {% elif original_name == "Sport" %}Спорт
+                        {% elif original_name == "Psychology" %}Психология
+                        {% elif original_name == "AI" %}ИИ
+                        {% elif original_name == "Finance" %}Финансы
+                        {% elif original_name == "Healthcare" %}Здравоохранение
+                        {% elif original_name == "Technology" %}Технологии
+                        {% else %}{{ original_name|default:"Не указано" }}{# Возвращаем оригинал или "Не указано" #}
+                        {% endif %}
+                    {% endwith %}
+                </span>
+              </label>
+            </li>
           {% empty %}
-          <li>Категории не найдены.</li>
+            <li>Категории не найдены.</li>
           {% endfor %}
         </ul>
 
@@ -121,73 +80,34 @@ head_extra %} {{ block.super }} {#
         <div class="micro-investment">
           {# В Figma нет label-wrapper, делаем напрямую #}
           <span class="micro-label">Микроинвестиции</span>
-          <span class="help-icon" title="Информация о микроинвестициях">?</span>
-          {# Добавляем title #} {# Переключатель #}
-          <div
-            class="toggle-switch {% if micro_investment %}active{% endif %}"
-            id="microToggle"
-            onclick="toggleMicroInvestment()"
-          >
+          <span class="help-icon" title="Информация о микроинвестициях">?</span> {# Добавляем title #}
+          {# Переключатель #}
+          <div class="toggle-switch {% if micro_investment %}active{% endif %}" id="microToggle" onclick="toggleMicroInvestment()">
             <div class="toggle-handle"></div>
           </div>
-          <input
-            type="hidden"
-            name="micro_investment"
-            id="microInvestmentInput"
-            value="{% if micro_investment %}1{% else %}0{% endif %}"
-          />
+          <input type="hidden" name="micro_investment" id="microInvestmentInput" value="{% if micro_investment %}1{% else %}0{% endif %}">
         </div>
 
         <!-- Фильтр рейтинга -->
         <div class="rating-filter">
-          <div class="rating-label-container">
-            {# Новый контейнер #}
+          <div class="rating-label-container"> {# Новый контейнер #}
             <label class="rating-label">Рейтинг</label>
             {# Меняем id для значения диапазона #}
-            <span id="ratingValueDisplay" class="rating-value-display"
-              >{{ min_rating|default:0|floatformat:1 }} - {{
-              max_rating|default:5|floatformat:1 }}</span
-            >
+            <span id="ratingValueDisplay" class="rating-value-display">{{ min_rating|default:0|floatformat:1 }} - {{ max_rating|default:5|floatformat:1 }}</span>
           </div>
-          <div id="ratingSlider"></div>
-          {# Контейнер для noUiSlider #} {# Скрытые поля остаются без изменений
-          #}
-          <input
-            type="hidden"
-            name="min_rating"
-            id="minRatingInput"
-            value="{{ min_rating|default:0|floatformat:1 }}"
-          />
-          <input
-            type="hidden"
-            name="max_rating"
-            id="maxRatingInput"
-            value="{{ max_rating|default:5|floatformat:1 }}"
-          />
-          <div class="rating-range-label">Диапозон</div>
-          {# Подпись как в Figma #}
+          <div id="ratingSlider"></div> {# Контейнер для noUiSlider #}
+          {# Скрытые поля остаются без изменений #}
+          <input type="hidden" name="min_rating" id="minRatingInput" value="{{ min_rating|default:0|floatformat:1 }}">
+          <input type="hidden" name="max_rating" id="maxRatingInput" value="{{ max_rating|default:5|floatformat:1 }}">
+          <div class="rating-range-label">Диапозон</div> {# Подпись как в Figma #}
         </div>
 
         {# Скрытое поле для поиска остается #}
-        <input
-          type="hidden"
-          name="search"
-          value="{{ search_query|default_if_none:'' }}"
-        />
+        <input type="hidden" name="search" value="{{ search_query|default_if_none:'' }}">
 
         <!-- Кнопка показать -->
         {# Добавляем data-атрибуты из Figma, если они нужны для JS #}
-        <button
-          type="submit"
-          class="show-button"
-          data-has-icon-end="false"
-          data-has-icon-start="false"
-          data-size="Medium"
-          data-state="Default"
-          data-variant="Primary"
-        >
-          Показать
-        </button>
+        <button type="submit" class="show-button" data-has-icon-end="false" data-has-icon-start="false" data-size="Medium" data-state="Default" data-variant="Primary">Показать</button>
       </form>
     </aside>
 
@@ -197,28 +117,11 @@ head_extra %} {{ block.super }} {#
       <div class="catalog-search-wrapper">
         <div class="catalog-search">
           {# Вставляем поле ввода #}
-          <input
-            type="text"
-            class="catalog-search-input"
-            placeholder="Поиск по каталогу"
-            value="{{ search_query|default_if_none:'' }}"
-          />
+          <input type="text" class="catalog-search-input" placeholder="Поиск по каталогу" value="{{ search_query|default_if_none:'' }}">
           {# Вставляем кнопку с SVG иконкой #}
-          <button type="button" class="catalog-search-btn" title="Поиск">
-            {# Используем type="button" если не сабмит #}
-            <svg
-              viewBox="0 0 28 27"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M12.417 21.375c4.836 0 8.75-3.914 8.75-8.75s-3.914-8.75-8.75-8.75-8.75 3.914-8.75 8.75 3.914 8.75 8.75 8.75zM22.923 23.274l-5.067-4.892"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              {# Используем currentColor и stroke #}
+          <button type="button" class="catalog-search-btn" title="Поиск"> {# Используем type="button" если не сабмит #}
+            <svg viewBox="0 0 28 27" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12.417 21.375c4.836 0 8.75-3.914 8.75-8.75s-3.914-8.75-8.75-8.75-8.75 3.914-8.75 8.75 3.914 8.75 8.75 8.75zM22.923 23.274l-5.067-4.892" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> {# Используем currentColor и stroke #}
             </svg>
           </button>
         </div>
@@ -226,162 +129,150 @@ head_extra %} {{ block.super }} {#
 
       <!-- Сетка стартапов -->
       <div class="startups-grid" id="startupsGrid">
-        {% if page_obj %} {# Проверяем page_obj вместо approved_startups #} {#
-        <<< Включаем частичный шаблон для отрисовки карточек >>> #} {% include
-        'accounts/partials/_startup_cards.html' with page_obj=page_obj %} {%
-        else %}
-        <div class="no-startups">
-          <p>В настоящее время нет доступных стартапов. Загляните позже!</p>
-        </div>
+        {% if page_obj %} {# Проверяем page_obj вместо approved_startups #}
+          {# <<< Включаем частичный шаблон для отрисовки карточек >>> #}
+          {% include 'accounts/partials/_startup_cards.html' with page_obj=page_obj %}
+        {% else %}
+          <div class="no-startups">
+            <p>В настоящее время нет доступных стартапов. Загляните позже!</p>
+          </div>
         {% endif %}
       </div>
 
       {# <<< Начало: Контейнер для пагинации >>> #}
       <div class="pagination-controls">
-        {# Информационный блок пагинации теперь не используется #} {#
-        <div class="pagination-info" id="paginationInfo">...</div>
-        #} {# <<< Начало: Контейнер для кнопок Показать/Скрыть - заменяем на
-        цифровую пагинацию >>> #} {#
-        <div class="show-more-container">...</div>
-        #} {% if page_obj and paginator.num_pages > 1 %}
-        <div class="pagination-numbers">
-          {# Логика отображения пагинации - может потребовать кастомный тег или
-          сложную логику здесь #} {# Пример простой логики #} {% if
-          page_obj.has_previous %} {# <a href="?page=1">&laquo; First</a> #}
-          <a href="?page={{ page_obj.previous_page_number }}">Назад</a> {#
-          Previous -> Назад #} {% endif %} {# Отображаем номера страниц
-          (упрощенный вариант) #} {% for num in paginator.page_range %} {% if
-          page_obj.number == num %}
-          <span class="current-page">{{ num }}</span>
-          {% elif num > page_obj.number|add:'-3' and num <
-          page_obj.number|add:'3' %}
-          <a href="?page={{ num }}">{{ num }}</a>
-          {% elif num == page_obj.number|add:'-3' or num ==
-          page_obj.number|add:'3' %}
-          <span class="dots">...</span>
-          {% endif %} {% endfor %} {% if page_obj.has_next %}
-          <a href="?page={{ page_obj.next_page_number }}">Вперед</a> {# Next ->
-          Вперед #} {#
-          <a href="?page={{ paginator.num_pages }}">Last &raquo;</a> #}
-          <a href="?page={{ paginator.num_pages }}">Последняя &raquo;</a> {#
-          Last -> Последняя #} {% endif %}
-        </div>
-        {% elif page_obj %} {# Если только одна страница, ничего не показываем
-        #} {#
-        <p>Показано {{ paginator.count }} стартапов.</p>
-        #} {% endif %} {# <<< Конец: Замена на цифровую пагинацию >>> #}
+          {# Информационный блок пагинации теперь не используется #}
+          {# <div class="pagination-info" id="paginationInfo"> ... </div> #}
+
+          {# <<< Начало: Контейнер для кнопок Показать/Скрыть - заменяем на цифровую пагинацию >>> #}
+          {# <div class="show-more-container"> ... </div> #}
+          {% if page_obj and paginator.num_pages > 1 %}
+            <div class="pagination-numbers">
+                {# Логика отображения пагинации - может потребовать кастомный тег или сложную логику здесь #}
+                {# Пример простой логики #}
+                {% if page_obj.has_previous %}
+                    {# <a href="?page=1">&laquo; First</a> #}
+                    <a href="?page={{ page_obj.previous_page_number }}">Назад</a> {# Previous -> Назад #}
+                {% endif %}
+
+                {# Отображаем номера страниц (упрощенный вариант) #}
+                {% for num in paginator.page_range %}
+                    {% if page_obj.number == num %}
+                        <span class="current-page">{{ num }}</span>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                        <a href="?page={{ num }}">{{ num }}</a>
+                    {% elif num == page_obj.number|add:'-3' or num == page_obj.number|add:'3' %}
+                        <span class="dots">...</span>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">Вперед</a> {# Next -> Вперед #}
+                    {# <a href="?page={{ paginator.num_pages }}">Last &raquo;</a> #}
+                    <a href="?page={{ paginator.num_pages }}">Последняя &raquo;</a> {# Last -> Последняя #}
+                {% endif %}
+            </div>
+           {% elif page_obj %} {# Если только одна страница, ничего не показываем #}
+                {# <p>Показано {{ paginator.count }} стартапов.</p> #}
+           {% endif %}
+          {# <<< Конец: Замена на цифровую пагинацию >>> #}
       </div>
       {# <<< Конец: Контейнер для пагинации >>> #}
-    </div>
-    {# Конец .startups-content #}
-  </div>
-  {# Конец .catalog-container #} {#
-</div>
-Закрывающий div для .catalog-wrapper убран #} {# Удаляем старый скрипт
-rangeslider #} {#
-<script src="https://cdnjs.cloudflare.com/ajax/libs/rangeslider.js/2.3.0/rangeslider.min.js"></script>
-#}
+
+    </div> {# Конец .startups-content #}
+  </div> {# Конец .catalog-container #}
+{# </div> Закрывающий div для .catalog-wrapper убран #}
+
+{# Удаляем старый скрипт rangeslider #}
+{# <script src="https://cdnjs.cloudflare.com/ajax/libs/rangeslider.js/2.3.0/rangeslider.min.js"></script> #}
 
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
+  document.addEventListener('DOMContentLoaded', function() {
     // <<< Начинаем инициализацию noUiSlider >>>
-    var ratingSlider = document.getElementById('ratingSlider')
+    var ratingSlider = document.getElementById('ratingSlider');
     // var ratingRangeValues = document.getElementById('ratingRangeValues'); Заменяем ID
-    var ratingValueDisplay = document.getElementById('ratingValueDisplay')
-    var minRatingInput = document.getElementById('minRatingInput')
-    var maxRatingInput = document.getElementById('maxRatingInput')
+    var ratingValueDisplay = document.getElementById('ratingValueDisplay');
+    var minRatingInput = document.getElementById('minRatingInput');
+    var maxRatingInput = document.getElementById('maxRatingInput');
 
     // Проверяем, что все элементы существуют и библиотеки подключены
     // if (ratingSlider && ratingRangeValues && minRatingInput && maxRatingInput && typeof noUiSlider !== 'undefined' && typeof wNumb !== 'undefined') {
-    if (
-      ratingSlider &&
-      ratingValueDisplay &&
-      minRatingInput &&
-      maxRatingInput &&
-      typeof noUiSlider !== 'undefined' &&
-      typeof wNumb !== 'undefined'
-    ) {
-      // Получаем начальные значения из скрытых полей
-      var initialMin = parseFloat(minRatingInput.value) || 0
-      var initialMax = parseFloat(maxRatingInput.value) || 5
+    if (ratingSlider && ratingValueDisplay && minRatingInput && maxRatingInput && typeof noUiSlider !== 'undefined' && typeof wNumb !== 'undefined') {
+        // Получаем начальные значения из скрытых полей
+        var initialMin = parseFloat(minRatingInput.value) || 0;
+        var initialMax = parseFloat(maxRatingInput.value) || 5;
 
-      noUiSlider.create(ratingSlider, {
-        start: [initialMin, initialMax], // Начальные значения
-        connect: true, // Соединять ползунки
-        range: {
-          min: 0,
-          max: 5,
-        },
-        step: 0.1, // Шаг
-        format: wNumb({
-          // Форматирование для отображения
-          decimals: 1,
-          thousand: '', // Убираем разделитель тысяч
-          suffix: '', // Убираем суффикс
-        }),
-        tooltips: false, // Отключаем встроенные тултипы
-        behaviour: 'tap-drag', // Позволяет перетаскивать и кликать
-        pips: false, // Отключаем точки на слайдере
-      })
+        noUiSlider.create(ratingSlider, {
+            start: [initialMin, initialMax], // Начальные значения
+            connect: true,                 // Соединять ползунки
+            range: {
+                'min': 0,
+                'max': 5
+            },
+            step: 0.1,                     // Шаг
+            format: wNumb({                // Форматирование для отображения
+                decimals: 1,
+                thousand: '', // Убираем разделитель тысяч
+                suffix: ''    // Убираем суффикс
+            }),
+            tooltips: false,                 // Отключаем встроенные тултипы
+            behaviour: 'tap-drag',         // Позволяет перетаскивать и кликать
+            pips: false                    // Отключаем точки на слайдере
+        });
 
-      // Обновляем span и скрытые поля при изменении слайдера
-      ratingSlider.noUiSlider.on('update', function (values, handle) {
-        // values[0] - значение левого ползунка, values[1] - правого
-        var minValue = values[0]
-        var maxValue = values[1]
+        // Обновляем span и скрытые поля при изменении слайдера
+        ratingSlider.noUiSlider.on('update', function (values, handle) {
+            // values[0] - значение левого ползунка, values[1] - правого
+            var minValue = values[0];
+            var maxValue = values[1];
 
-        // ratingRangeValues.textContent = minValue + ' - ' + maxValue; Заменяем ID
-        ratingValueDisplay.textContent = minValue + ' - ' + maxValue
-        minRatingInput.value = minValue
-        maxRatingInput.value = maxValue
-      })
+            // ratingRangeValues.textContent = minValue + ' - ' + maxValue; Заменяем ID
+            ratingValueDisplay.textContent = minValue + ' - ' + maxValue;
+            minRatingInput.value = minValue;
+            maxRatingInput.value = maxValue;
+        });
     } else {
-      console.error(
-        'Не удалось инициализировать noUiSlider. Элементы не найдены или библиотеки не подключены.'
-      )
-      // Выводим, чего не хватает
-      if (!ratingSlider) console.error('Элемент #ratingSlider не найден')
-      // if (!ratingRangeValues) console.error('Элемент #ratingRangeValues не найден');
-      if (!ratingValueDisplay)
-        console.error('Элемент #ratingValueDisplay не найден')
-      if (!minRatingInput) console.error('Элемент #minRatingInput не найден')
-      if (!maxRatingInput) console.error('Элемент #maxRatingInput не найден')
-      if (typeof noUiSlider === 'undefined')
-        console.error('Библиотека noUiSlider не подключена')
-      if (typeof wNumb === 'undefined')
-        console.error('Библиотека wNumb не подключена')
+        console.error('Не удалось инициализировать noUiSlider. Элементы не найдены или библиотеки не подключены.');
+        // Выводим, чего не хватает
+        if (!ratingSlider) console.error('Элемент #ratingSlider не найден');
+        // if (!ratingRangeValues) console.error('Элемент #ratingRangeValues не найден');
+        if (!ratingValueDisplay) console.error('Элемент #ratingValueDisplay не найден');
+        if (!minRatingInput) console.error('Элемент #minRatingInput не найден');
+        if (!maxRatingInput) console.error('Элемент #maxRatingInput не найден');
+        if (typeof noUiSlider === 'undefined') console.error('Библиотека noUiSlider не подключена');
+        if (typeof wNumb === 'undefined') console.error('Библиотека wNumb не подключена');
     }
     // <<< Конец инициализации noUiSlider >>>
 
-    // --- Логика поиска ---
-    var searchInput = document.querySelector('.catalog-search-input')
-    var searchBtn = document.querySelector('.catalog-search-btn')
-    var filterForm = document.getElementById('filterForm')
-    var searchInputHidden = filterForm.querySelector('input[name="search"]')
+    // --- Логика поиска --- 
+    var searchInput = document.querySelector('.catalog-search-input');
+    var searchBtn = document.querySelector('.catalog-search-btn');
+    var filterForm = document.getElementById('filterForm'); 
+    var searchInputHidden = filterForm.querySelector('input[name="search"]');
 
     function performSearch() {
-      if (searchInputHidden && searchInput && filterForm) {
-        searchInputHidden.value = searchInput.value
-        filterForm.submit()
-      }
+        if (searchInputHidden && searchInput && filterForm) {
+            searchInputHidden.value = searchInput.value;
+            filterForm.submit();
+        }
     }
 
     if (searchBtn) {
-      searchBtn.addEventListener('click', performSearch)
+        searchBtn.addEventListener('click', performSearch);
     }
 
     if (searchInput) {
-      searchInput.addEventListener('keypress', function (e) {
-        if (e.key === 'Enter') {
-          performSearch()
-        }
-      })
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
     }
     // --- Конец логики поиска ---
 
     // <<< Удаляем код для старого hover-эффекта (position-aware) >>>
     /*
-    var interactiveElements = document.querySelectorAll('.show-button, .startup-card');
+    var interactiveElements = document.querySelectorAll('.show-button, .startup-card'); 
     interactiveElements.forEach(function(element) {
       element.addEventListener('mouseenter', function(e) {
         // ... (весь код добавления position-aware-effect)
@@ -396,110 +287,101 @@ rangeslider #} {#
     // <<< Начало: Логика "Показать еще" и "Скрыть" - ЗАМЕНЕНА >>>
     // ... (код для пагинации остается без изменений)
 
-    // --- Инициализация прогресс-баров для карточек ---
+    // --- Инициализация прогресс-баров для карточек --- 
     // <<< Корректируем функцию для работы со структурой progress-bar-visual / animation-container >>>
     function updateAnimatedProgressBars(containerElement) {
-      if (!containerElement) return
+      if (!containerElement) return;
       // Ищем обертки .progress-bar-visual
-      const visualContainers = containerElement.querySelectorAll(
-        '.progress-bar-visual'
-      )
-
-      visualContainers.forEach((container) => {
+      const visualContainers = containerElement.querySelectorAll('.progress-bar-visual');
+      
+      visualContainers.forEach(container => {
         // Находим анимируемый контейнер и текст
-        const animationContainer = container.querySelector(
-          '.progress-animation-container'
-        )
-        const percentageSpan = container.querySelector('.progress-percentage')
-
+        const animationContainer = container.querySelector('.progress-animation-container');
+        const percentageSpan = container.querySelector('.progress-percentage');
+        
         if (animationContainer && percentageSpan) {
           // Получаем процент из текста (например, "75%")
-          const textContent = percentageSpan.textContent || '0%'
-          const progressPercentValue = parseInt(textContent, 10) || 0
-
+          const textContent = percentageSpan.textContent || '0%';
+          const progressPercentValue = parseInt(textContent, 10) || 0;
+          
           // Устанавливаем ширину элемента animation-container
           setTimeout(() => {
-            animationContainer.style.width = progressPercentValue + '%'
-          }, 100) // Небольшая задержка для срабатывания transition
+            animationContainer.style.width = progressPercentValue + '%';
+          }, 100); // Небольшая задержка для срабатывания transition
+
         } else {
-          if (!animationContainer)
-            console.error(
-              'Animation container (.progress-animation-container) not found in:',
-              container
-            )
-          if (!percentageSpan)
-            console.error(
-              'Progress text span (.progress-percentage) not found in:',
-              container
-            )
+          if (!animationContainer) console.error('Animation container (.progress-animation-container) not found in:', container);
+          if (!percentageSpan) console.error('Progress text span (.progress-percentage) not found in:', container);
         }
-      })
+      });
     }
 
     // Инициализируем прогресс-бары при загрузке для текущей сетки
-    const initialGrid = document.getElementById('startupsGrid')
-    updateAnimatedProgressBars(initialGrid) // Вызываем обновленную функцию
-    // --- Конец инициализации прогресс-баров ---
+    const initialGrid = document.getElementById('startupsGrid');
+    updateAnimatedProgressBars(initialGrid); // Вызываем обновленную функцию
+    // --- Конец инициализации прогресс-баров --- 
 
-    // --- Обработка отправки формы фильтров ---
+    // --- Обработка отправки формы фильтров --- 
     // Обновляем URL при отправке формы, чтобы пагинация работала с фильтрами
     if (filterForm) {
-      filterForm.addEventListener('submit', function (e) {
-        // Не предотвращаем стандартную отправку, просто модифицируем action
-        const formData = new FormData(filterForm)
-        const params = new URLSearchParams()
-        // Добавляем все параметры формы, кроме пустых и 'page'
-        formData.forEach((value, key) => {
-          if (value && key !== 'page') {
-            params.append(key, value)
-          }
-        })
-        // Устанавливаем action формы с новыми параметрами
-        // filterForm.action = `?${params.toString()}`;
-        // Отправка GET запросом и так передаст параметры
-      })
+        filterForm.addEventListener('submit', function(e) {
+            // Не предотвращаем стандартную отправку, просто модифицируем action
+            const formData = new FormData(filterForm);
+            const params = new URLSearchParams();
+            // Добавляем все параметры формы, кроме пустых и 'page'
+            formData.forEach((value, key) => {
+                if (value && key !== 'page') { 
+                    params.append(key, value);
+                }
+            });
+            // Устанавливаем action формы с новыми параметрами
+            // filterForm.action = `?${params.toString()}`; 
+            // Отправка GET запросом и так передаст параметры
+        });
 
-      // Обновляем ссылки пагинации, чтобы они включали текущие фильтры
-      const paginationLinks = document.querySelectorAll('.pagination-numbers a')
-      const currentParams = new URLSearchParams(window.location.search)
-      const filterParams = new URLSearchParams()
+        // Обновляем ссылки пагинации, чтобы они включали текущие фильтры
+        const paginationLinks = document.querySelectorAll('.pagination-numbers a');
+        const currentParams = new URLSearchParams(window.location.search);
+        const filterParams = new URLSearchParams();
+        
+        // Собираем только параметры фильтрации
+        currentParams.forEach((value, key) => {
+            if (key !== 'page') { // Исключаем параметр страницы
+                filterParams.append(key, value);
+            }
+        });
+        const filterQueryString = filterParams.toString();
 
-      // Собираем только параметры фильтрации
-      currentParams.forEach((value, key) => {
-        if (key !== 'page') {
-          // Исключаем параметр страницы
-          filterParams.append(key, value)
-        }
-      })
-      const filterQueryString = filterParams.toString()
-
-      paginationLinks.forEach((link) => {
-        const url = new URL(link.href)
-        const pageNum = url.searchParams.get('page')
-        link.href = `?${filterQueryString}${filterQueryString ? '&' : ''}page=${pageNum}`
-      })
+        paginationLinks.forEach(link => {
+            const url = new URL(link.href);
+            const pageNum = url.searchParams.get('page');
+            link.href = `?${filterQueryString}${filterQueryString ? '&' : ''}page=${pageNum}`;
+        });
     }
-    // --- Конец обработки формы фильтров ---
-  }) // Конец DOMContentLoaded
+    // --- Конец обработки формы фильтров --- 
+
+  }); // Конец DOMContentLoaded
 
   // Функция для переключения микроинвестиций (остается)
   function toggleMicroInvestment() {
-    var toggle = document.getElementById('microToggle')
-    var input = document.getElementById('microInvestmentInput')
+    var toggle = document.getElementById('microToggle');
+    var input = document.getElementById('microInvestmentInput');
 
     if (toggle.classList.contains('active')) {
-      toggle.classList.remove('active')
-      input.value = '0'
+      toggle.classList.remove('active');
+      input.value = '0';
     } else {
-      toggle.classList.add('active')
-      input.value = '1'
+      toggle.classList.add('active');
+      input.value = '1';
     }
     // Авто-сабмит не делаем, пользователь нажмет "Показать"
   }
 </script>
-{% endblock %} {% block body_scripts %} {{ block.super }} {# На случай, если в
-base.html уже есть скрипты в этом блоке #} {# <<< Подключаем JS noUiSlider и
-wNumb здесь >>> #}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/wnumb/1.2.0/wNumb.min.js"></script>
+{% endblock %}
+
+{% block body_scripts %}
+  {{ block.super }} {# На случай, если в base.html уже есть скрипты в этом блоке #}
+  {# <<< Подключаем JS noUiSlider и wNumb здесь >>> #}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/wnumb/1.2.0/wNumb.min.js"></script>
 {% endblock %}

@@ -1,207 +1,179 @@
-{% extends 'accounts/base.html' %} {% load static %} {% block title %}Уведомления{% endblock %}
+{% extends 'accounts/base.html' %}
+{% load static %}
+
+{% block title %}Уведомления{% endblock %}
+
 {% block head_extra %}
-<link rel="stylesheet" href="{% static 'accounts/css/notifications.css' %}" />
-{% endblock %} {% block content %}
+<link rel="stylesheet" href="{% static 'accounts/css/notifications.css' %}">
+{% endblock %}
+
+{% block content %}
 <div class="notifications-page-wrapper">
-  <div class="notifications-content-container">
-    <div class="notifications-promo-card">
-      <a href="{% url 'my_startups' %}" class="btn promo-action-button"
-        >Перейти</a
-      >
+    <div class="notifications-content-container">
+        <div class="notifications-promo-card">
+            <a href="{% url 'my_startups' %}" class="btn promo-action-button">Перейти</a>
+        </div>
+
+        <div class="notifications-list-section">
+            <div class="notifications-list-items">
+                {% for i in "x"|ljust:7 %} {# Создаем 7 элементов для примера (было 6) #}
+                <div class="notification-item" data-notification-id="{{ i }}{{ forloop.counter }}"> {# Добавил counter для уникальности ID в примере #}
+                    <div class="notification-item-meta">
+                        <span class="notification-date">25/03/2025</span>
+                        <span class="notification-time">12:30</span>
+                    </div>
+                    <div class="notification-item-bubble">
+                        <p>User 67346 инвестировал 7 899 ₽</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
     </div>
 
-    <div class="notifications-list-section">
-      <div class="notifications-list-items">
-        {% for i in "x"|ljust:7 %} {# Создаем 7 элементов для примера (было 6)
-        #}
-        <div
-          class="notification-item"
-          data-notification-id="{{ i }}{{ forloop.counter }}"
-        >
-          {# Добавил counter для уникальности ID в примере #}
-          <div class="notification-item-meta">
-            <span class="notification-date">25/03/2025</span>
-            <span class="notification-time">12:30</span>
-          </div>
-          <div class="notification-item-bubble">
-            <p>User 67346 инвестировал 7 899 ₽</p>
-          </div>
+    <div class="notifications-section-title">
+        СТАРТАПЫ
+    </div>
+
+    <div class="notifications-related-startups">
+        {% for i in "x"|ljust:7 %} {# Создаем 7 элементов для примера #}
+        <div class="related-startup-card">
+            <img src="https://placehold.co/123x111" alt="Лого стартапа">
+            <span class="related-startup-name">Ромашка {{forloop.counter}}</span>
+            <div class="related-startup-badge">
+                <span>{{ forloop.counter|add:2 }}</span>
+            </div>
         </div>
         {% endfor %}
-      </div>
+         <!-- Пустышка для выравнивания последнего ряда, если нужно -->
+        <div class="related-startup-card-empty-spacer"></div>
+        {# <div class="related-startup-badge-empty-spacer"></div> Удаляем, т.к. бейдж теперь внутри карточки #}
     </div>
-  </div>
-
-  <div class="notifications-section-title">СТАРТАПЫ</div>
-
-  <div class="notifications-related-startups">
-    {% for i in "x"|ljust:7 %} {# Создаем 7 элементов для примера #}
-    <div class="related-startup-card">
-      <img src="https://placehold.co/123x111" alt="Лого стартапа" />
-      <span class="related-startup-name">Ромашка {{ forloop.counter }}</span>
-      <div class="related-startup-badge">
-        <span>{{ forloop.counter|add:2 }}</span>
-      </div>
-    </div>
-    {% endfor %}
-    <!-- Пустышка для выравнивания последнего ряда, если нужно -->
-    <div class="related-startup-card-empty-spacer"></div>
-    {#
-    <div class="related-startup-badge-empty-spacer"></div>
-    Удаляем, т.к. бейдж теперь внутри карточки #}
-  </div>
 </div>
 
 <!-- Модальное окно для уведомлений -->
 <div id="notification-modal-overlay" class="modal-overlay">
-  <div id="notification-modal-popup" class="modal-popup">
-    <button
-      id="notification-modal-close"
-      class="modal-close-button no-wave-effect"
-    >
-      <img
-        src="{% static 'accounts/images/icons/Close_yellow.svg' %}"
-        alt="Закрыть"
-      />
-    </button>
-
-    {# Левая часть - теперь только плейсхолдер с фоновой картинкой, заданной в
-    CSS #}
-    <div class="modal-promo-card">
-      <div class="modal-promo-bg-elements">
-        {# Оставляем для блюр-эффектов поверх фона #}
-        <div class="modal-promo-blur-1"></div>
-        <div class="modal-promo-blur-2"></div>
-      </div>
-      {# Все текстовые элементы, изображение и кнопка отсюда удалены #}
-    </div>
-
-    {# Правая часть - детали уведомления (динамическая) #}
-    <div class="modal-notification-details">
-      <div class="modal-notification-list-title">Информация по уведомлению</div>
-      <div class="modal-notification-list">
-        <!-- Сюда будут копироваться уведомления -->
-        <div class="notification-item">
-          {# Пример структуры, будет очищаться и заполняться JS #}
-          <div class="notification-item-meta">
-            <span class="notification-date"></span>
-            <span class="notification-time"></span>
-          </div>
-          <div class="notification-item-bubble">
-            <p></p>
-          </div>
+    <div id="notification-modal-popup" class="modal-popup">
+        <button id="notification-modal-close" class="modal-close-button no-wave-effect">
+            <img src="{% static 'accounts/images/icons/Close_yellow.svg' %}" alt="Закрыть">
+        </button>
+        
+        {# Левая часть - теперь только плейсхолдер с фоновой картинкой, заданной в CSS #}
+        <div class="modal-promo-card">
+            <div class="modal-promo-bg-elements"> {# Оставляем для блюр-эффектов поверх фона #}
+                <div class="modal-promo-blur-1"></div>
+                <div class="modal-promo-blur-2"></div>
+            </div>
+            {# Все текстовые элементы, изображение и кнопка отсюда удалены #}
         </div>
-      </div>
+
+        {# Правая часть - детали уведомления (динамическая) #}
+        <div class="modal-notification-details">
+            <div class="modal-notification-list-title">Информация по уведомлению</div>
+            <div class="modal-notification-list">
+                <!-- Сюда будут копироваться уведомления -->
+                <div class="notification-item"> {# Пример структуры, будет очищаться и заполняться JS #}
+                    <div class="notification-item-meta">
+                        <span class="notification-date"></span>
+                        <span class="notification-time"></span>
+                    </div>
+                    <div class="notification-item-bubble">
+                        <p></p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
-{% endblock %} {% block script_extra %}
+
+{% endblock %}
+
+{% block script_extra %}
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function () {
     // Код для модального окна уведомлений (существующий)
-    const notificationBubbles = document.querySelectorAll(
-      '.notifications-list-section .notification-item-bubble'
-    )
-    const modalOverlay = document.getElementById('notification-modal-overlay')
-    const modalCloseButton = document.getElementById('notification-modal-close')
-    const modalNotificationList = modalOverlay.querySelector(
-      '.modal-notification-list'
-    )
-    const originalNotificationsContainer = document.querySelector(
-      '.notifications-list-section .notifications-list-items'
-    )
+    const notificationBubbles = document.querySelectorAll('.notifications-list-section .notification-item-bubble');
+    const modalOverlay = document.getElementById('notification-modal-overlay');
+    const modalCloseButton = document.getElementById('notification-modal-close');
+    const modalNotificationList = modalOverlay.querySelector('.modal-notification-list');
+    const originalNotificationsContainer = document.querySelector('.notifications-list-section .notifications-list-items');
 
-    if (
-      modalOverlay &&
-      modalCloseButton &&
-      modalNotificationList &&
-      originalNotificationsContainer
-    ) {
-      notificationBubbles.forEach((bubble) => {
-        bubble.addEventListener('click', function () {
-          if (modalNotificationList) {
-            modalNotificationList.innerHTML = ''
-            const allNotificationItems =
-              originalNotificationsContainer.querySelectorAll(
-                '.notification-item'
-              )
-            allNotificationItems.forEach((item) => {
-              const clone = item.cloneNode(true)
-              const clonedBubble = clone.querySelector(
-                '.notification-item-bubble'
-              )
-              if (clonedBubble) {
-                clonedBubble.replaceWith(clonedBubble.cloneNode(true))
-              }
-              modalNotificationList.appendChild(clone)
-            })
-          }
-          modalOverlay.style.display = 'flex'
-        })
-      })
+    if (modalOverlay && modalCloseButton && modalNotificationList && originalNotificationsContainer) {
+        notificationBubbles.forEach(bubble => {
+            bubble.addEventListener('click', function () {
+                if (modalNotificationList) {
+                    modalNotificationList.innerHTML = '';
+                    const allNotificationItems = originalNotificationsContainer.querySelectorAll('.notification-item');
+                    allNotificationItems.forEach(item => {
+                        const clone = item.cloneNode(true);
+                        const clonedBubble = clone.querySelector('.notification-item-bubble');
+                        if (clonedBubble) {
+                            clonedBubble.replaceWith(clonedBubble.cloneNode(true)); 
+                        }
+                        modalNotificationList.appendChild(clone);
+                    });
+                }
+                modalOverlay.style.display = 'flex';
+            });
+        });
 
-      modalCloseButton.addEventListener('click', function () {
-        modalOverlay.style.display = 'none'
-      })
+        modalCloseButton.addEventListener('click', function () {
+            modalOverlay.style.display = 'none';
+        });
 
-      modalOverlay.addEventListener('click', function (event) {
-        if (event.target === modalOverlay) {
-          modalOverlay.style.display = 'none'
-        }
-      })
+        modalOverlay.addEventListener('click', function (event) {
+            if (event.target === modalOverlay) {
+                modalOverlay.style.display = 'none';
+            }
+        });
 
-      document.addEventListener('keydown', function (event) {
-        if (event.key === 'Escape' && modalOverlay.style.display === 'flex') {
-          modalOverlay.style.display = 'none'
-        }
-      })
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape' && modalOverlay.style.display === 'flex') {
+                modalOverlay.style.display = 'none';
+            }
+        });
     }
 
     // Новый код для "липкой" промо-карты
-    const promoCard = document.querySelector('.notifications-promo-card')
-    const listSection = document.querySelector('.notifications-list-section')
-    const contentContainer = document.querySelector(
-      '.notifications-content-container'
-    )
+    const promoCard = document.querySelector('.notifications-promo-card');
+    const listSection = document.querySelector('.notifications-list-section');
+    const contentContainer = document.querySelector('.notifications-content-container');
 
     if (promoCard && listSection && contentContainer) {
-      const originalPromoCardWidth = promoCard.offsetWidth
-      const shrunkenPromoCardWidth = originalPromoCardWidth / 3 // Ширина уменьшенной карточки
-      // gap из CSS notifications-content-container { gap: 30px; }
-      const gapBetweenCardAndList =
-        parseFloat(window.getComputedStyle(contentContainer).gap) || 30
+        const originalPromoCardWidth = promoCard.offsetWidth; 
+        const shrunkenPromoCardWidth = originalPromoCardWidth / 3; // Ширина уменьшенной карточки
+        // gap из CSS notifications-content-container { gap: 30px; }
+        const gapBetweenCardAndList = parseFloat(window.getComputedStyle(contentContainer).gap) || 30; 
 
-      let isSticky = false
+        let isSticky = false;
 
-      window.addEventListener('scroll', function () {
-        const scrollPosition =
-          window.pageYOffset || document.documentElement.scrollTop
-        // stickyTriggerPoint определяет, когда верхний край contentContainer достигает верха окна + отступ (20px)
-        const stickyTriggerPoint = contentContainer.offsetTop - 20
+        window.addEventListener('scroll', function() {
+            const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+            // stickyTriggerPoint определяет, когда верхний край contentContainer достигает верха окна + отступ (20px)
+            const stickyTriggerPoint = contentContainer.offsetTop - 20; 
 
-        if (scrollPosition > stickyTriggerPoint) {
-          if (!isSticky) {
-            // Сохраняем текущее положение левого края карточки относительно окна ПЕРЕД тем, как сделать fixed
-            const currentCardLeft = promoCard.getBoundingClientRect().left
-            promoCard.style.left = currentCardLeft + 'px'
-
-            promoCard.classList.add('sticky-promo')
-
-            // Смещаем список уведомлений на ширину УМЕНЬШЕННОЙ карточки + гэп
-            listSection.style.marginLeft =
-              shrunkenPromoCardWidth + gapBetweenCardAndList + 'px'
-            isSticky = true
-          }
-        } else {
-          if (isSticky) {
-            promoCard.classList.remove('sticky-promo')
-            promoCard.style.left = '' // Сбрасываем left, чтобы карточка вернулась в поток документа
-            listSection.style.marginLeft = '0px' // Возвращаем отступ списка в исходное состояние
-            isSticky = false
-          }
-        }
-      })
+            if (scrollPosition > stickyTriggerPoint) {
+                if (!isSticky) {
+                    // Сохраняем текущее положение левого края карточки относительно окна ПЕРЕД тем, как сделать fixed
+                    const currentCardLeft = promoCard.getBoundingClientRect().left;
+                    promoCard.style.left = currentCardLeft + 'px'; 
+                    
+                    promoCard.classList.add('sticky-promo');
+                    
+                    // Смещаем список уведомлений на ширину УМЕНЬШЕННОЙ карточки + гэп
+                    listSection.style.marginLeft = (shrunkenPromoCardWidth + gapBetweenCardAndList) + 'px';
+                    isSticky = true;
+                }
+            } else {
+                if (isSticky) {
+                    promoCard.classList.remove('sticky-promo');
+                    promoCard.style.left = ''; // Сбрасываем left, чтобы карточка вернулась в поток документа
+                    listSection.style.marginLeft = '0px'; // Возвращаем отступ списка в исходное состояние
+                    isSticky = false;
+                }
+            }
+        });
     }
-  })
+});
 </script>
 {% endblock %}

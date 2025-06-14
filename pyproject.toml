@@ -1,5 +1,14 @@
 [tool.ruff]
 line-length = 88
+extend-exclude = [
+    "node_modules",
+    "venv",
+    ".venv",
+    "static",
+    "staticfiles",
+    "accounts/templates",
+    "marketplace/templates",
+]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "N", "C4", "B"]

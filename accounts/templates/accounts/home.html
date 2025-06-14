@@ -1,434 +1,407 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Скоро</title>
     <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-
-      body {
-        font-family: 'Segoe UI', Arial, sans-serif;
-        overflow: hidden;
-        height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background: #000;
-        color: #fff;
-      }
-
-      #background-video {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        z-index: -1;
-        opacity: 0.8;
-      }
-
-      /* Запасной фон на случай, если видео не загрузится */
-      body.video-failed {
-        background: #000
-          url('https://via.placeholder.com/1920x1080?text=Video+Failed')
-          no-repeat center center/cover;
-      }
-
-      /* Создаем эффект звезд */
-      .stars {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: -1;
-        pointer-events: none;
-      }
-
-      .timer {
-        transform: scale(0.7);
-        position: absolute;
-        top: 40px;
-        text-align: center;
-        color: #fff;
-        background: rgba(0, 0, 0, 0.6);
-        padding: 25px 40px;
-        border-radius: 15px;
-        backdrop-filter: blur(8px);
-        box-shadow:
-          0 0 25px rgba(32, 215, 255, 0.5),
-          0 0 40px rgba(32, 215, 255, 0.3),
-          inset 0 0 15px rgba(0, 128, 255, 0.2);
-        border: 1px solid rgba(32, 215, 255, 0.3);
-        z-index: 10;
-      }
-
-      .timer h1 {
-        font-size: 28px;
-        margin-bottom: 20px;
-        letter-spacing: 1px;
-        text-transform: uppercase;
-        font-weight: 600;
-        color: #fff;
-        text-shadow:
-          0 0 10px rgba(32, 215, 255, 0.8),
-          0 0 20px rgba(32, 215, 255, 0.5);
-      }
-
-      .countdown {
-        display: flex;
-        gap: 15px;
-        flex-wrap: nowrap; /* Запрещаем перенос элементов */
-        justify-content: center;
-      }
-
-      .time-block {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        min-width: 80px;
-      }
-
-      /* Контейнер для перелистывания */
-      .flip-container {
-        position: relative;
-        width: 70px;
-        height: 90px;
-        perspective: 1000px;
-      }
-
-      .flipper {
-        position: relative;
-        width: 100%;
-        height: 100%;
-        transform-style: preserve-3d;
-        transition: transform 0.6s;
-      }
-
-      .front,
-      .back {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        backface-visibility: hidden;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 40px;
-        font-weight: bold;
-        color: #fff;
-        background: linear-gradient(135deg, #0a1029, #1a2059);
-        border-radius: 8px;
-        box-shadow:
-          0 4px 10px rgba(0, 0, 0, 0.5),
-          inset 0 0 8px rgba(32, 215, 255, 0.4);
-        border: 1px solid rgba(32, 215, 255, 0.3);
-        text-shadow: 0 0 8px rgba(32, 215, 255, 0.8);
-      }
-
-      .front {
-        transform: rotateX(0deg);
-        background: linear-gradient(135deg, #0a1029, #1a2059);
-      }
-
-      .back {
-        transform: rotateX(180deg);
-        background: linear-gradient(135deg, #0a1029, #1a2059);
-      }
-
-      .flip-container.flip .flipper {
-        transform: rotateX(-180deg);
-      }
-
-      .time-block span:last-child {
-        font-size: 14px;
-        margin-top: 12px;
-        opacity: 0.9;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        color: rgba(32, 215, 255, 1);
-        text-shadow: 0 0 5px rgba(32, 215, 255, 0.8);
-      }
-
-      @keyframes rotate {
-        from {
-          transform: translate(-50%, -50%) rotate(0deg);
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        to {
-          transform: translate(-50%, -50%) rotate(360deg);
-        }
-      }
 
-      /* Мобильная адаптация */
-      @media (max-width: 768px) {
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #000;
+            color: #fff;
+        }
+
+        #background-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+            opacity: 0.8;
+        }
+
+        /* Запасной фон на случай, если видео не загрузится */
+        body.video-failed {
+            background: #000 url('https://via.placeholder.com/1920x1080?text=Video+Failed') no-repeat center center/cover;
+        }
+
+        /* Создаем эффект звезд */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
         .timer {
-          padding: 15px 20px;
-          top: 20px;
+            transform: scale(0.7);
+            position: absolute;
+            top: 40px;
+            text-align: center;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 25px 40px;
+            border-radius: 15px;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 0 25px rgba(32, 215, 255, 0.5), 
+                        0 0 40px rgba(32, 215, 255, 0.3), 
+                        inset 0 0 15px rgba(0, 128, 255, 0.2);
+            border: 1px solid rgba(32, 215, 255, 0.3);
+            z-index: 10;
         }
 
         .timer h1 {
-          font-size: 20px;
-        }
-
-        .flip-container {
-          width: 50px;
-          height: 65px;
-        }
-
-        .front,
-        .back {
-          font-size: 28px;
-        }
-
-        .time-block span:last-child {
-          font-size: 12px;
+            font-size: 28px;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-weight: 600;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(32, 215, 255, 0.8), 
+                         0 0 20px rgba(32, 215, 255, 0.5);
         }
 
         .countdown {
-          gap: 10px; /* Уменьшаем расстояние между блоками */
-        }
-      }
-
-      @media (max-width: 480px) {
-        .countdown {
-          flex-direction: row; /* Принудительно горизонтальное расположение */
-          flex-wrap: nowrap; /* Запрещаем перенос */
-          gap: 8px; /* Уменьшаем расстояние */
-          justify-content: center;
+            display: flex;
+            gap: 15px;
+            flex-wrap: nowrap; /* Запрещаем перенос элементов */
+            justify-content: center;
         }
 
         .time-block {
-          min-width: 50px; /* Уменьшаем минимальную ширину */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 80px;
         }
 
+        /* Контейнер для перелистывания */
         .flip-container {
-          width: 45px; /* Уменьшаем размер контейнера */
-          height: 60px;
+            position: relative;
+            width: 70px;
+            height: 90px;
+            perspective: 1000px;
         }
 
-        .front,
-        .back {
-          font-size: 24px; /* Уменьшаем шрифт */
+        .flipper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
         }
-      }
+
+        .front, .back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 40px;
+            font-weight: bold;
+            color: #fff;
+            background: linear-gradient(135deg, #0a1029, #1a2059);
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5), 
+                        inset 0 0 8px rgba(32, 215, 255, 0.4);
+            border: 1px solid rgba(32, 215, 255, 0.3);
+            text-shadow: 0 0 8px rgba(32, 215, 255, 0.8);
+        }
+
+        .front {
+            transform: rotateX(0deg);
+            background: linear-gradient(135deg, #0a1029, #1a2059);
+        }
+
+        .back {
+            transform: rotateX(180deg);
+            background: linear-gradient(135deg, #0a1029, #1a2059);
+        }
+
+        .flip-container.flip .flipper {
+            transform: rotateX(-180deg);
+        }
+
+        .time-block span:last-child {
+            font-size: 14px;
+            margin-top: 12px;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(32, 215, 255, 1);
+            text-shadow: 0 0 5px rgba(32, 215, 255, 0.8);
+        }
+
+        @keyframes rotate {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* Мобильная адаптация */
+        @media (max-width: 768px) {
+            .timer {
+                padding: 15px 20px;
+                top: 20px;
+            }
+
+            .timer h1 {
+                font-size: 20px;
+            }
+
+            .flip-container {
+                width: 50px;
+                height: 65px;
+            }
+
+            .front, .back {
+                font-size: 28px;
+            }
+
+            .time-block span:last-child {
+                font-size: 12px;
+            }
+
+            .countdown {
+                gap: 10px; /* Уменьшаем расстояние между блоками */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .countdown {
+                flex-direction: row; /* Принудительно горизонтальное расположение */
+                flex-wrap: nowrap; /* Запрещаем перенос */
+                gap: 8px; /* Уменьшаем расстояние */
+                justify-content: center;
+            }
+
+            .time-block {
+                min-width: 50px; /* Уменьшаем минимальную ширину */
+            }
+
+            .flip-container {
+                width: 45px; /* Уменьшаем размер контейнера */
+                height: 60px;
+            }
+
+            .front, .back {
+                font-size: 24px; /* Уменьшаем шрифт */
+            }
+        }
     </style>
-  </head>
-  <body>
+</head>
+<body>
     <div class="stars"></div>
     <div class="orbit orbit-1"></div>
     <div class="orbit orbit-2"></div>
 
     <video id="background-video" autoplay muted loop playsinline>
-      Ваш браузер не поддерживает видео.
+        Ваш браузер не поддерживает видео.
     </video>
 
     <div class="timer">
-      <div class="countdown">
-        <div class="time-block">
-          <div class="flip-container" id="days-container">
-            <div class="flipper">
-              <div class="front" id="days-front">00</div>
-              <div class="back" id="days-back">00</div>
+        <div class="countdown">
+            <div class="time-block">
+                <div class="flip-container" id="days-container">
+                    <div class="flipper">
+                        <div class="front" id="days-front">00</div>
+                        <div class="back" id="days-back">00</div>
+                    </div>
+                </div>
+                <span>Дней</span>
             </div>
-          </div>
-          <span>Дней</span>
-        </div>
-        <div class="time-block">
-          <div class="flip-container" id="hours-container">
-            <div class="flipper">
-              <div class="front" id="hours-front">00</div>
-              <div class="back" id="hours-back">00</div>
+            <div class="time-block">
+                <div class="flip-container" id="hours-container">
+                    <div class="flipper">
+                        <div class="front" id="hours-front">00</div>
+                        <div class="back" id="hours-back">00</div>
+                    </div>
+                </div>
+                <span>Часов</span>
             </div>
-          </div>
-          <span>Часов</span>
-        </div>
-        <div class="time-block">
-          <div class="flip-container" id="minutes-container">
-            <div class="flipper">
-              <div class="front" id="minutes-front">00</div>
-              <div class="back" id="minutes-back">00</div>
+            <div class="time-block">
+                <div class="flip-container" id="minutes-container">
+                    <div class="flipper">
+                        <div class="front" id="minutes-front">00</div>
+                        <div class="back" id="minutes-back">00</div>
+                    </div>
+                </div>
+                <span>Минут</span>
             </div>
-          </div>
-          <span>Минут</span>
-        </div>
-        <div class="time-block">
-          <div class="flip-container" id="seconds-container">
-            <div class="flipper">
-              <div class="front" id="seconds-front">00</div>
-              <div class="back" id="seconds-back">00</div>
+            <div class="time-block">
+                <div class="flip-container" id="seconds-container">
+                    <div class="flipper">
+                        <div class="front" id="seconds-front">00</div>
+                        <div class="back" id="seconds-back">00</div>
+                    </div>
+                </div>
+                <span>Секунд</span>
             </div>
-          </div>
-          <span>Секунд</span>
         </div>
-      </div>
     </div>
 
     <script>
-      // Определение устройства
-      const isMobile =
-        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-          navigator.userAgent
-        )
-      const isAndroid = /Android/i.test(navigator.userAgent)
-      const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent)
+        // Определение устройства
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        const isAndroid = /Android/i.test(navigator.userAgent);
+        const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
 
-      // Ссылки на видео
-      const desktopVideo =
-        'https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/%D0%B7%D0%B0%D0%B3%D0%BB%D1%83%D1%88%D0%BA%D0%B0_%D0%B4%D0%B5%D1%81%D0%BA.mp4'
-      const mobileVideo =
-        'https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/%D0%B7%D0%B0%D0%B3%D0%BB%D1%83%D1%88%D0%BA%D0%B0%20%D0%BC%D0%BE%D0%B1.mp4'
+        // Ссылки на видео
+        const desktopVideo = "https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/%D0%B7%D0%B0%D0%B3%D0%BB%D1%83%D1%88%D0%BA%D0%B0_%D0%B4%D0%B5%D1%81%D0%BA.mp4";
+        const mobileVideo = "https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/%D0%B7%D0%B0%D0%B3%D0%BB%D1%83%D1%88%D0%BA%D0%B0%20%D0%BC%D0%BE%D0%B1.mp4";
 
-      // Установка нужного видео
-      const video = document.getElementById('background-video')
-      video.src = isMobile ? mobileVideo : desktopVideo
+        // Установка нужного видео
+        const video = document.getElementById("background-video");
+        video.src = isMobile ? mobileVideo : desktopVideo;
 
-      // Условно убираем playsinline для Android, если это вызывает проблему
-      if (isAndroid) {
-        video.removeAttribute('playsinline')
-      }
+        // Условно убираем playsinline для Android, если это вызывает проблему
+        if (isAndroid) {
+            video.removeAttribute('playsinline');
+        }
 
-      // Обработка загрузки и воспроизведения видео
-      video.addEventListener('loadeddata', () => {
-        console.log('Видео загружено, начинаем воспроизведение...')
-        video.play().catch((error) => {
-          console.error('Ошибка автопроигрывания:', error)
-          // Попробуем запустить воспроизведение через небольшой таймаут для Android
-          if (isAndroid) {
+        // Обработка загрузки и воспроизведения видео
+        video.addEventListener('loadeddata', () => {
+            console.log("Видео загружено, начинаем воспроизведение...");
+            video.play().catch(error => {
+                console.error("Ошибка автопроигрывания:", error);
+                // Попробуем запустить воспроизведение через небольшой таймаут для Android
+                if (isAndroid) {
+                    setTimeout(() => {
+                        video.play().catch(err => {
+                            console.error("Повторная ошибка автопроигрывания на Android:", err);
+                        });
+                    }, 1000);
+                }
+            });
+        });
+
+        // Обработка ошибок загрузки видео
+        video.addEventListener('error', (e) => {
+            console.error("Ошибка загрузки видео:", e);
+            // Показываем запасной фон, если видео не загрузилось
+            document.body.classList.add('video-failed');
+        });
+
+        // Добавляем событие для проверки воспроизведения
+        video.addEventListener('play', () => {
+            console.log("Видео начало воспроизведение");
+        });
+
+        // Добавляем событие для проверки зацикливания
+        video.addEventListener('ended', () => {
+            console.log("Видео закончилось, должно зациклиться...");
+        });
+
+        // Проверка поддержки MP4
+        const canPlayMp4 = video.canPlayType('video/mp4');
+        console.log("Поддержка MP4:", canPlayMp4);
+
+        // Таймер
+        const countDownDate = new Date("July 1, 2025 00:00:00").getTime();
+
+        let prevDays = null, prevHours = null, prevMinutes = null, prevSeconds = null;
+
+        // Инициализация текущего времени на фронтальных частях
+        const now = new Date().getTime();
+        const distance = countDownDate - now;
+
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        const formattedDays = days < 10 ? "0" + days : days;
+        const formattedHours = hours < 10 ? "0" + hours : hours;
+        const formattedMinutes = minutes < 10 ? "0" + minutes : minutes;
+        const formattedSeconds = seconds < 10 ? "0" + seconds : seconds;
+
+        document.getElementById('days-front').innerText = formattedDays;
+        document.getElementById('hours-front').innerText = formattedHours;
+        document.getElementById('minutes-front').innerText = formattedMinutes;
+        document.getElementById('seconds-front').innerText = formattedSeconds;
+
+        prevDays = days;
+        prevHours = hours;
+        prevMinutes = minutes;
+        prevSeconds = seconds;
+
+        const timer = setInterval(() => {
+            const now = new Date().getTime();
+            const distance = countDownDate - now;
+
+            if (distance < 0) {
+                clearInterval(timer);
+                document.querySelector(".timer h1").innerText = "Мы запустились!";
+                document.querySelector(".countdown").innerHTML = "";
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            const formattedDays = days < 10 ? "0" + days : days;
+            const formattedHours = hours < 10 ? "0" + hours : hours;
+            const formattedMinutes = minutes < 10 ? "0" + minutes : minutes;
+            const formattedSeconds = seconds < 10 ? "0" + seconds : seconds;
+
+            // Запуск анимации при изменении значений
+            if (prevDays !== days) {
+                flipNumber('days', formattedDays);
+            }
+            if (prevHours !== hours) {
+                flipNumber('hours', formattedHours);
+            }
+            if (prevMinutes !== minutes) {
+                flipNumber('minutes', formattedMinutes);
+            }
+            if (prevSeconds !== seconds) {
+                flipNumber('seconds', formattedSeconds);
+            }
+
+            // Обновление предыдущих значений
+            prevDays = days;
+            prevHours = hours;
+            prevMinutes = minutes;
+            prevSeconds = seconds;
+        }, 1000);
+
+        function flipNumber(unit, newValue) {
+            // Получаем элементы
+            const flipContainer = document.getElementById(`${unit}-container`);
+            const frontElement = document.getElementById(`${unit}-front`);
+            const backElement = document.getElementById(`${unit}-back`);
+
+            // Устанавливаем значение на обратной стороне
+            backElement.innerText = newValue;
+
+            // Запускаем анимацию
+            flipContainer.classList.add('flip');
+
+            // По завершении анимации меняем значения и сбрасываем состояние
             setTimeout(() => {
-              video.play().catch((err) => {
-                console.error(
-                  'Повторная ошибка автопроигрывания на Android:',
-                  err
-                )
-              })
-            }, 1000)
-          }
-        })
-      })
-
-      // Обработка ошибок загрузки видео
-      video.addEventListener('error', (e) => {
-        console.error('Ошибка загрузки видео:', e)
-        // Показываем запасной фон, если видео не загрузилось
-        document.body.classList.add('video-failed')
-      })
-
-      // Добавляем событие для проверки воспроизведения
-      video.addEventListener('play', () => {
-        console.log('Видео начало воспроизведение')
-      })
-
-      // Добавляем событие для проверки зацикливания
-      video.addEventListener('ended', () => {
-        console.log('Видео закончилось, должно зациклиться...')
-      })
-
-      // Проверка поддержки MP4
-      const canPlayMp4 = video.canPlayType('video/mp4')
-      console.log('Поддержка MP4:', canPlayMp4)
-
-      // Таймер
-      const countDownDate = new Date('July 1, 2025 00:00:00').getTime()
-
-      let prevDays = null,
-        prevHours = null,
-        prevMinutes = null,
-        prevSeconds = null
-
-      // Инициализация текущего времени на фронтальных частях
-      const now = new Date().getTime()
-      const distance = countDownDate - now
-
-      const days = Math.floor(distance / (1000 * 60 * 60 * 24))
-      const hours = Math.floor(
-        (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-      )
-      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))
-      const seconds = Math.floor((distance % (1000 * 60)) / 1000)
-
-      const formattedDays = days < 10 ? '0' + days : days
-      const formattedHours = hours < 10 ? '0' + hours : hours
-      const formattedMinutes = minutes < 10 ? '0' + minutes : minutes
-      const formattedSeconds = seconds < 10 ? '0' + seconds : seconds
-
-      document.getElementById('days-front').innerText = formattedDays
-      document.getElementById('hours-front').innerText = formattedHours
-      document.getElementById('minutes-front').innerText = formattedMinutes
-      document.getElementById('seconds-front').innerText = formattedSeconds
-
-      prevDays = days
-      prevHours = hours
-      prevMinutes = minutes
-      prevSeconds = seconds
-
-      const timer = setInterval(() => {
-        const now = new Date().getTime()
-        const distance = countDownDate - now
-
-        if (distance < 0) {
-          clearInterval(timer)
-          document.querySelector('.timer h1').innerText = 'Мы запустились!'
-          document.querySelector('.countdown').innerHTML = ''
-          return
+                flipContainer.classList.remove('flip');
+                frontElement.innerText = newValue;
+            }, 160);
         }
-
-        const days = Math.floor(distance / (1000 * 60 * 60 * 24))
-        const hours = Math.floor(
-          (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-        )
-        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))
-        const seconds = Math.floor((distance % (1000 * 60)) / 1000)
-
-        const formattedDays = days < 10 ? '0' + days : days
-        const formattedHours = hours < 10 ? '0' + hours : hours
-        const formattedMinutes = minutes < 10 ? '0' + minutes : minutes
-        const formattedSeconds = seconds < 10 ? '0' + seconds : seconds
-
-        // Запуск анимации при изменении значений
-        if (prevDays !== days) {
-          flipNumber('days', formattedDays)
-        }
-        if (prevHours !== hours) {
-          flipNumber('hours', formattedHours)
-        }
-        if (prevMinutes !== minutes) {
-          flipNumber('minutes', formattedMinutes)
-        }
-        if (prevSeconds !== seconds) {
-          flipNumber('seconds', formattedSeconds)
-        }
-
-        // Обновление предыдущих значений
-        prevDays = days
-        prevHours = hours
-        prevMinutes = minutes
-        prevSeconds = seconds
-      }, 1000)
-
-      function flipNumber(unit, newValue) {
-        // Получаем элементы
-        const flipContainer = document.getElementById(`${unit}-container`)
-        const frontElement = document.getElementById(`${unit}-front`)
-        const backElement = document.getElementById(`${unit}-back`)
-
-        // Устанавливаем значение на обратной стороне
-        backElement.innerText = newValue
-
-        // Запускаем анимацию
-        flipContainer.classList.add('flip')
-
-        // По завершении анимации меняем значения и сбрасываем состояние
-        setTimeout(() => {
-          flipContainer.classList.remove('flip')
-          frontElement.innerText = newValue
-        }, 160)
-      }
     </script>
-  </body>
+</body>
 </html>

@@ -1,9 +1,19 @@
-{% extends "accounts/base.html" %} {% load static %} {% load django_vite %} {%
-block title %}Главная страница | Инвестор{% endblock %} {% block head_extra %}
-{% vite_asset 'static/src/js/investor_main.js' %} {% endblock %} {% block
-content %}
-<div id="app">
-  <!-- Сюда будет смонтировано Vue-приложение -->
-</div>
-{% endblock %} {% block scripts %} {# django-vite автоматически подключит сюда
-JS, так как CSS уже был подключен в head #} {% endblock %}
+{% extends "accounts/base.html" %}
+{% load static %}
+{% load django_vite %}
+
+{% block title %}Главная страница | Инвестор{% endblock %}
+
+{% block head_extra %}
+    {% vite_asset 'static/src/js/investor_main.js' %}
+{% endblock %}
+
+{% block content %}
+  <div id="app">
+    <!-- Сюда будет смонтировано Vue-приложение -->
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  {# django-vite автоматически подключит сюда JS, так как CSS уже был подключен в head #}
+{% endblock %} 

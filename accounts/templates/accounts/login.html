@@ -1,329 +1,327 @@
-{% extends 'accounts/base.html' %} {% load static %} {% block title %}Вход{% endblock %}
+{% extends 'accounts/base.html' %}
+{% load static %}
+
+{% block title %}Вход{% endblock %}
+
 {% block head_extra %}
 {{ block.super }}
 <style>
-  /* Убираем старые стили фона */
-  /* #liquid-background-container ... */
-  /* #liquid-background-svg ... */
+    /* Убираем старые стили фона */
+    /* #liquid-background-container ... */
+    /* #liquid-background-svg ... */
 
-  /* Устанавливаем черный фон для body */
-  body {
-    background: #000 !important; /* Черный фон */
-    overflow: hidden; /* Убираем прокрутку, как предполагал скрипт */
-  }
+    /* Устанавливаем черный фон для body */
+    body {
+        background: #000 !important; /* Черный фон */
+        overflow: hidden; /* Убираем прокрутку, как предполагал скрипт */
+    }
 
-  /* Стили для canvas звездного поля */
-  #starfield-canvas {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1; /* Позади всего контента */
-    display: block; /* Предотвращаем лишние отступы */
-  }
+    /* Стили для canvas звездного поля */
+    #starfield-canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1; /* Позади всего контента */
+        display: block; /* Предотвращаем лишние отступы */
+    }
 
-  /* Центрируем main.content для страницы входа */
-  main.content {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-grow: 1; /* Убедимся, что он растягивается */
-    padding: 20px; /* Добавим немного отступов */
-    position: relative; /* Чтобы z-index работал */
-    z-index: 1; /* Контент поверх canvas */
-  }
+    /* Центрируем main.content для страницы входа */
+    main.content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-grow: 1; /* Убедимся, что он растягивается */
+        padding: 20px; /* Добавим немного отступов */
+        position: relative; /* Чтобы z-index работал */
+        z-index: 1; /* Контент поверх canvas */
+    }
 
-  /* Стили для основного контента (auth-container) */
-  .auth-container {
-    position: relative;
-    z-index: 1; /* Убеждаемся, что контент над фоном */
-    background: rgba(40, 40, 40, 0.6); /* Темный полупрозрачный фон */
-    backdrop-filter: blur(5px); /* Эффект размытия под контейнером */
-    padding: 30px; /* Увеличим внутренние отступы */
-    border-radius: 10px;
-    max-width: 450px;
-    width: 100%; /* Чтобы не растягивался бесконечно на больших экранах */
-    box-sizing: border-box; /* Учитываем padding в ширине */
-    margin: 0; /* Убираем внешние отступы */
-  }
-  .auth-box {
-    background: transparent; /* Делаем внутренний бокс прозрачным */
-    box-shadow: none; /* Убираем тень */
-    padding: 0; /* Убираем внутренние отступы */
-    text-align: center; /* Центрируем текст внутри */
-  }
+    /* Стили для основного контента (auth-container) */
+    .auth-container {
+        position: relative;
+        z-index: 1; /* Убеждаемся, что контент над фоном */
+         background: rgba(40, 40, 40, 0.6); /* Темный полупрозрачный фон */
+        backdrop-filter: blur(5px); /* Эффект размытия под контейнером */
+        padding: 30px; /* Увеличим внутренние отступы */
+        border-radius: 10px;
+        max-width: 450px;
+        width: 100%; /* Чтобы не растягивался бесконечно на больших экранах */
+        box-sizing: border-box; /* Учитываем padding в ширине */
+        margin: 0; /* Убираем внешние отступы */
+    }
+    .auth-box {
+         background: transparent; /* Делаем внутренний бокс прозрачным */
+         box-shadow: none; /* Убираем тень */
+         padding: 0; /* Убираем внутренние отступы */
+         text-align: center; /* Центрируем текст внутри */
+    }
 
-  /* Дополнительные стили для формы, чтобы она выглядела хорошо на темном фоне */
-  .auth-box h1 {
-    color: #fff; /* Белый текст для заголовка */
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5); /* Тень для читаемости */
-    margin-bottom: 25px; /* Добавим отступ снизу */
-  }
-  .auth-box .form-group {
-    margin-bottom: 15px; /* Отступ между полями */
-    text-align: left; /* Выравнивание текста по левому краю для полей */
-  }
-  .auth-box form label {
-    color: #eee; /* Светлый цвет для меток */
-    font-weight: bold;
-    display: block; /* Метка над полем */
-    margin-bottom: 5px;
-  }
-  /* Стилизуем стандартные виджеты Django */
-  .auth-box input[type='email'],
-  .auth-box input[type='password'] {
-    background-color: rgba(
-      255,
-      255,
-      255,
-      0.8
-    ); /* Полупрозрачный фон для полей */
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    color: #333;
-    padding: 10px;
-    border-radius: 5px;
-    width: 100%;
-    box-sizing: border-box;
-  }
-  /* Убираем стили Django для ошибок по умолчанию, если они мешают */
-  .auth-box .errors {
-    color: #ffdddd;
-    font-size: 0.9em;
-    list-style: none;
-    padding: 5px 0 0 0;
-    margin: 0;
-  }
-  .auth-box button {
-    background-color: blue !important; /* Тест: Ярко-синяя кнопка */
-    border: 1px solid #ffffff; /* Белая рамка для контраста */
-    transition:
-      background-color 0.3s,
-      color 0.3s;
-    color: #ffffff !important; /* Белый текст, принудительно */
-    font-weight: bold;
-    padding: 12px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    width: 100%;
-    margin-top: 10px;
-  }
-  .auth-box button:hover {
-    background-color: rgba(255, 239, 43, 0.9); /* Яркий желтый при наведении */
-    color: #333;
-  }
-  .auth-box p,
-  .auth-box p a {
-    color: #eee; /* Светлый текст для ссылки регистрации */
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
-    margin-top: 20px; /* Отступ сверху для ссылки */
-    font-size: 0.9em;
-  }
-  .auth-box p a:hover {
-    color: #fff;
-    text-decoration: underline;
-  }
-  /* Стили для сообщений */
-  .messages {
-    padding: 0;
-    margin-bottom: 15px;
-  }
-  .messages li {
-    color: #fff;
-    background-color: rgba(0, 0, 0, 0.5);
-    padding: 10px;
-    border-radius: 5px;
-    margin-bottom: 10px;
-    list-style: none;
-    text-align: left;
-  }
-  .messages li.success {
-    background-color: rgba(40, 167, 69, 0.7);
-  }
-  .messages li.error {
-    background-color: rgba(220, 53, 69, 0.7);
-  }
-  .messages li.warning {
-    background-color: rgba(255, 193, 7, 0.7);
-  }
-  .messages li.info {
-    background-color: rgba(23, 162, 184, 0.7);
-  }
+    /* Дополнительные стили для формы, чтобы она выглядела хорошо на темном фоне */
+     .auth-box h1 {
+        color: #fff; /* Белый текст для заголовка */
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.5); /* Тень для читаемости */
+        margin-bottom: 25px; /* Добавим отступ снизу */
+     }
+     .auth-box .form-group {
+         margin-bottom: 15px; /* Отступ между полями */
+         text-align: left; /* Выравнивание текста по левому краю для полей */
+     }
+     .auth-box form label {
+        color: #eee; /* Светлый цвет для меток */
+        font-weight: bold;
+        display: block; /* Метка над полем */
+        margin-bottom: 5px;
+     }
+     /* Стилизуем стандартные виджеты Django */
+     .auth-box input[type="email"],
+     .auth-box input[type="password"] {
+         background-color: rgba(255, 255, 255, 0.8); /* Полупрозрачный фон для полей */
+         border: 1px solid rgba(255, 255, 255, 0.5);
+         color: #333;
+         padding: 10px;
+         border-radius: 5px;
+         width: 100%;
+         box-sizing: border-box;
+     }
+     /* Убираем стили Django для ошибок по умолчанию, если они мешают */
+     .auth-box .errors {
+         color: #ffdddd;
+         font-size: 0.9em;
+         list-style: none;
+         padding: 5px 0 0 0;
+         margin: 0;
+     }
+      .auth-box button {
+         background-color: blue !important; /* Тест: Ярко-синяя кнопка */
+         border: 1px solid #FFFFFF; /* Белая рамка для контраста */
+         transition: background-color 0.3s, color 0.3s;
+         color: #FFFFFF !important; /* Белый текст, принудительно */
+         font-weight: bold;
+         padding: 12px 20px;
+         border-radius: 5px;
+         cursor: pointer;
+         width: 100%;
+         margin-top: 10px;
+      }
+      .auth-box button:hover {
+         background-color: rgba(255, 239, 43, 0.9); /* Яркий желтый при наведении */
+         color: #333;
+      }
+     .auth-box p, .auth-box p a {
+         color: #eee; /* Светлый текст для ссылки регистрации */
+         text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
+         margin-top: 20px; /* Отступ сверху для ссылки */
+         font-size: 0.9em;
+     }
+     .auth-box p a:hover {
+         color: #fff;
+         text-decoration: underline;
+     }
+     /* Стили для сообщений */
+     .messages {
+         padding: 0;
+         margin-bottom: 15px;
+     }
+     .messages li {
+         color: #fff;
+         background-color: rgba(0,0,0,0.5);
+         padding: 10px;
+         border-radius: 5px;
+         margin-bottom: 10px;
+         list-style: none;
+         text-align: left;
+     }
+     .messages li.success { background-color: rgba(40, 167, 69, 0.7); }
+     .messages li.error { background-color: rgba(220, 53, 69, 0.7); }
+     .messages li.warning { background-color: rgba(255, 193, 7, 0.7); }
+     .messages li.info { background-color: rgba(23, 162, 184, 0.7); }
 
-  /* Скрытие основной части футера на странице входа */
-  .site-footer .footer-main-content {
-    display: none;
-  }
-  /* Можно добавить стили для copyright bar, если нужно */
-  .footer-copyright-bar {
-    background-color: rgba(0, 0, 0, 0.8); /* Сделаем фон чуть прозрачнее */
-    border-top: 1px solid rgba(255, 255, 255, 0.1); /* Тонкая линия сверху */
-  }
+    /* Скрытие основной части футера на странице входа */
+    .site-footer .footer-main-content {
+        display: none;
+    }
+    /* Можно добавить стили для copyright bar, если нужно */
+    .footer-copyright-bar {
+         background-color: rgba(0, 0, 0, 0.8); /* Сделаем фон чуть прозрачнее */
+         border-top: 1px solid rgba(255, 255, 255, 0.1); /* Тонкая линия сверху */
+    }
 </style>
 {% endblock %}
 
+
 {% block content %}
-{# Добавляем canvas для звездного поля #}
-<canvas id="starfield-canvas"></canvas>
+    {# Добавляем canvas для звездного поля #}
+    <canvas id="starfield-canvas"></canvas>
 
-{# Удален старый SVG контейнер #}
-{#
-<div id="liquid-background-container">...</div>
-#}
+    {# Удален старый SVG контейнер #}
+    {# <div id="liquid-background-container">...</div> #}
 
-<div class="auth-container">
-  <div class="auth-box">
-    <h1>Вход</h1>
-    <form method="post">
-      {% csrf_token %} {# Явный рендеринг полей #}
-      <div class="form-group">
-        <label for="{{ form.email.id_for_label }}"
-          >{{ form.email.label }}</label
-        >
-        {{ form.email }} {% if form.email.errors %}
-        <div class="errors">{{ form.email.errors }}</div>
-        {% endif %}
-      </div>
-      <div class="form-group">
-        <label for="{{ form.password.id_for_label }}"
-          >{{ form.password.label }}</label
-        >
-        {{ form.password }} {% if form.password.errors %}
-        <div class="errors">{{ form.password.errors }}</div>
-        {% endif %}
-      </div>
-      <button type="submit">Войти</button>
-    </form>
-    <p>Нет аккаунта? <a href="{% url 'register' %}">Зарегистрироваться</a></p>
-  </div>
-</div>
+    <div class="auth-container">
+        <div class="auth-box">
+            <h1>Вход</h1>
+            <form method="post">
+                {% csrf_token %}
+                {# Явный рендеринг полей #}
+                <div class="form-group">
+                    <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+                    {{ form.email }}
+                    {% if form.email.errors %}
+                        <div class="errors">{{ form.email.errors }}</div>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.password.id_for_label }}">{{ form.password.label }}</label>
+                    {{ form.password }}
+                    {% if form.password.errors %}
+                        <div class="errors">{{ form.password.errors }}</div>
+                    {% endif %}
+                </div>
+                <button type="submit">Войти</button>
+            </form>
+            <p>Нет аккаунта? <a href="{% url 'register' %}">Зарегистрироваться</a></p>
+        </div>
+    </div>
 
 {# Удален старый скрипт LiquidButton #}
-{#
-<script>
-  ... LiquidButton class ...
-</script>
-#}
+{# <script> ... LiquidButton class ... </script> #}
 
 <script>
-  // Оборачиваем в DOMContentLoaded для гарантии наличия canvas
-  document.addEventListener('DOMContentLoaded', () => {
-    const D = document
+// Оборачиваем в DOMContentLoaded для гарантии наличия canvas
+document.addEventListener('DOMContentLoaded', () => {
+    const D=document;
     // Убрано прямое изменение стилей body: d=D.body.style;d.margin=0;d.overflow="hidden";
-    const c = window
-    let d = c.innerWidth // Ширина окна
-    let e = c.innerHeight // Высота окна
+    const c=window;
+    let d=c.innerWidth; // Ширина окна
+    let e=c.innerHeight; // Высота окна
     // Изменено: Получаем canvas по ID
-    const g = D.getElementById('starfield-canvas') // g = canvas element
+    const g=D.getElementById('starfield-canvas'); // g = canvas element
     if (!g) {
-      console.error('Starfield canvas not found!')
-      return
+        console.error("Starfield canvas not found!");
+        return;
     }
-    let i = d / 2 // mouse x center
-    let j = e / 2 // mouse y center
-    g.width = d
-    g.height = e
-    const k = g.getContext('2d') // k = context
+    let i=d/2; // mouse x center
+    let j=e/2; // mouse y center
+    g.width=d;
+    g.height=e;
+    const k=g.getContext("2d"); // k = context
     if (!k) {
-      console.error('Could not get 2D context for starfield canvas!')
-      return
+        console.error("Could not get 2D context for starfield canvas!");
+        return;
     }
     // Добавляем переменные для плавного смещения
-    let targetOffsetX = d / 2
-    let targetOffsetY = e / 2
-    let currentOffsetX = d / 2
-    let currentOffsetY = e / 2
+    let targetOffsetX = d / 2;
+    let targetOffsetY = e / 2;
+    let currentOffsetX = d / 2;
+    let currentOffsetY = e / 2;
 
-    k.globalAlpha = 0.7 // Возвращаем полупрозрачность для эффекта свечения
-    const l = Math
-    const m = l.random
-    const n = l.sin
-    const o = l.floor
-    const p = 10 // Начальный множитель для координат (z-координата?)
-    const q = [] // Массив звезд
-    let r = 0 // Переменная для синуса (цвет)
-    let s = 0.05 // Скорость приближения звезд - ЗАМЕДЛИЛИ ЕЩЕ
-    const V = 750 // Количество звезд - УВЕЛИЧИЛИ
-    const W = 190 // Базовое значение для цвета
-    const Q = 0.3 // Множитель для синуса (разнообразие цветов)
+    k.globalAlpha = 0.7; // Возвращаем полупрозрачность для эффекта свечения
+    const l=Math;
+    const m=l.random;
+    const n=l.sin;
+    const o=l.floor;
+    const p=10; // Начальный множитель для координат (z-координата?)
+    const q=[]; // Массив звезд
+    let r=0; // Переменная для синуса (цвет)
+    let s=0.05; // Скорость приближения звезд - ЗАМЕДЛИЛИ ЕЩЕ
+    const V=750; // Количество звезд - УВЕЛИЧИЛИ
+    const W=190; // Базовое значение для цвета
+    const Q=0.3; // Множитель для синуса (разнообразие цветов)
 
     function E(eventName, handler) {
-      // Используем window вместо canvas для событий мыши, чтобы они работали по всему экрану
-      c.addEventListener(eventName, handler, false)
+        // Используем window вместо canvas для событий мыши, чтобы они работали по всему экрану
+        c.addEventListener(eventName, handler, false);
     }
 
     // Обработчик движения мыши - Обновляем целевое смещение
-    E('mousemove', function (a) {
-      targetOffsetX = a.clientX
-      targetOffsetY = a.clientY
-    })
+    E("mousemove", function(a){
+        targetOffsetX=a.clientX;
+        targetOffsetY=a.clientY;
+    });
+
+    // Инициализация/Сброс звезды
+    function u(a) { // a = star object
+        a.x=(m()*d - d*0.5)*p; // Случайное X в пределах (-d/2*p, d/2*p)
+        a.y=(m()*e - e*0.5)*p; // Случайное Y в пределах (-e/2*p, e/2*p)
+        a.a = p; // Z-координата (глубина/масштаб), НАЧИНАЕТСЯ ДАЛЕКО
+        // a.b=0; // Предыдущая экранная X координата - НЕ НУЖНА
+        // a.c=0; // Предыдущая экранная Y координата - НЕ НУЖНА
+    }
+
+    // Создаем начальные звезды
+    for(let v=0; v<V; v++) {
+        let w={}; // w = star object
+        u(w);
+        q.push(w);
+    }
+
+    // Функция основного цикла анимации
+    function drawFrame() {
+        k.fillStyle="#000"; // Черный фон на каждом кадре
+        k.fillRect(0,0,d,e);
+
+        // Центр смещения (зависит от положения мыши) - ЗАМЕНЕНО НА ПЛАВНОЕ СМЕЩЕНИЕ
+        // const offsetX = i; // Используем напрямую позицию мыши
+        // const offsetY = j;
+
+        // Плавно интерполируем текущее смещение к целевому
+        const interpolationFactor = 0.03; // Меньше значение = ЕЩЕ более плавное/медленное движение
+        currentOffsetX += (targetOffsetX - currentOffsetX) * interpolationFactor;
+        currentOffsetY += (targetOffsetY - currentOffsetY) * interpolationFactor;
+
+        for(let h=0; h<V; h++) {
+            const b = q[h]; // b = текущая звезда
+            const currentX = b.x / b.a; // Экранная X = Мировая X / Глубина
+            const currentY = b.y / b.a; // Экранная Y = Мировая Y / Глубина
+            // Увеличиваем базовый размер звезд для видимости
+            const baseSize = 1 / b.a * 2.5 + 0.5; // Сделали звезды чуть меньше
+            // Добавляем фактор мерцания
+            const twinkleFactor = 0.8 + Math.random() * 0.4; // Сделали мерцание менее резким
+            const z = baseSize * twinkleFactor; // Итоговый размер с мерцанием
+
+            // Рисуем белую круглую "голову" звезды
+            k.fillStyle = '#fff'; // Устанавливаем белый цвет
+            k.beginPath();
+            // Рисуем круг: arc(x, y, radius, startAngle, endAngle) - ИСПОЛЬЗУЕМ ПЛАВНОЕ СМЕЩЕНИЕ и размер z
+            k.arc(currentX + currentOffsetX, currentY + currentOffsetY, z / 2, 0, Math.PI * 2); // Делим z на 2 для радиуса
+            k.fill();
+
+            // Приближаем звезду (уменьшаем глубину)
+            b.a -= s;
+
+            // Если звезда вышла за пределы глубины или экрана, сбрасываем её
+            // Проверяем экранные координаты со смещением - ИСПОЛЬЗУЕМ ПЛАВНОЕ СМЕЩЕНИЕ
+            const screenX = currentX + currentOffsetX;
+            const screenY = currentY + currentOffsetY;
+            // Условие сброса: звезда слишком близко или ушла за экран
+            if(b.a < 0.01 || screenX < -z || screenX > d + z || screenY < -z || screenY > e + z) {
+                 u(b); // Сбросить звезду в центр "туннеля"
+                 // Сбрасываем предыдущие координаты - НЕ НУЖНО
+                 // b.b = 0;
+                 // b.c = 0;
+            }
+        }
+        r += 0.015; // Увеличиваем фазу для пульсации цвета (сейчас не влияет на цвет звезд)
+    }
 
     // Обработчик изменения размера окна
-    E('resize', function () {
-      d = c.innerWidth
-      e = c.innerHeight
-      g.width = d
-      g.height = e
-    })
-
-    function J(star) {
-      // J = reset star
-      star.x = (m() * d - d / 2) * p
-      star.y = (m() * e - e / 2) * p
-      star.z = m() * p * 100 // Увеличили разброс по z
-    }
-
-    function K() {
-      // K = draw frame
-      // Плавное смещение текущего положения к целевому
-      currentOffsetX += (targetOffsetX - currentOffsetX) * 0.05
-      currentOffsetY += (targetOffsetY - currentOffsetY) * 0.05
-
-      // Вместо очистки добавляем полупрозрачный черный прямоугольник для эффекта "хвостов"
-      k.fillStyle = 'rgba(0,0,0,0.4)'
-      k.fillRect(0, 0, d, e)
-      r += 0.01 // Медленно изменяем синус для цвета
-      const t = n(r) * Q // t = color sin factor
-      for (let u = V; u--; ) {
-        const v = q[u] // v = star
-        let w = v.x / v.z // w = projected x
-        let x = v.y / v.z // x = projected y
-        const y = v.z / 1000 // y = alpha, size factor
-
-        if (w < -d / 2 || w > d / 2 || x < -e / 2 || x > e / 2) {
-          J(v)
-          continue
+    function onResize() {
+        d = c.innerWidth;
+        e = c.innerHeight;
+        g.width = d;
+        g.height = e;
+        // Сбрасываем предыдущие координаты звезд при ресайзе, чтобы избежать артефактов
+        for(let star of q) {
+           star.b = 0;
+           star.c = 0;
         }
-
-        k.beginPath()
-        k.fillStyle =
-          'rgb(' +
-          o(W - y * W - t) +
-          ',' +
-          o(W - y * W) +
-          ',' +
-          o(W - y * W + t) +
-          ')'
-        k.arc(
-          w + currentOffsetX, // Смещаем относительно текущего положения
-          x + currentOffsetY, // Смещаем относительно текущего положения
-          y * 3, // Размер звезды
-          0,
-          2 * l.PI,
-        )
-        k.fill()
-        v.z -= s // Двигаем звезду ближе к камере
-      }
-      c.requestAnimationFrame(K)
     }
+    c.addEventListener('resize', onResize, false);
 
-    // Инициализация звезд
-    for (let z = V; z--; ) {
-      q[z] = { x: 0, y: 0, z: 0 };
-      J(q[z]);
-    }
-
-    K(); // Запускаем анимацию
-  });
+    // Запускаем анимацию
+    setInterval(drawFrame, 25); // ~40 FPS
+});
 </script>
+
 {% endblock %}

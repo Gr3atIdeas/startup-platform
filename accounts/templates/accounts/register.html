@@ -1,5 +1,7 @@
 {% extends 'accounts/base.html' %}
+
 {% block title %}Регистрация{% endblock %}
+
 {% block content %}
     <style>
         .content {
@@ -56,7 +58,8 @@
         <div class="auth-box">
             <h1>Регистрация</h1>
             <form method="post">
-                {% csrf_token %} {{ form.as_p }}
+                {% csrf_token %}
+                {{ form.as_p }}
                 <button type="submit">Зарегистрироваться</button>
             </form>
         </div>

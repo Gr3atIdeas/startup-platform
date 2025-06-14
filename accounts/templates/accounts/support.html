@@ -4,121 +4,88 @@
 {% block title %}Поддержка - Great Ideas{% endblock %}
 
 {% block head_extra %}
-    {{ block.super }}
-    <link rel="stylesheet" href="{% static 'accounts/css/support.css' %}" />
-    <style>
-        /* Обнуляем вертикальные отступы для main.content на странице поддержки */
-        main.content {
-            padding-top: 0 !important;
-            padding-bottom: 0 !important;
-        }
-    </style>
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'accounts/css/support.css' %}">
+<style>
+  /* Обнуляем вертикальные отступы для main.content на странице поддержки */
+  main.content {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+</style>
 {% endblock %}
 
 {% block content %}
-    <div class="support-page">
-        <div class="support-container">
-            <section class="help-section">
-                <h1>Чем мы можем вам помочь?</h1>
-                <div class="search-bar-container">
-                    <input
-                            type="text"
-                            placeholder='Ключевое слово, например "стартап"'
-                            class="search-input"
-                    />
-                    <button class="search-button">
-                        <img
-                                src="{% static 'accounts/images/support/search.svg' %}"
-                                alt="Поиск"
-                        />
-                    </button>
-                </div>
-            </section>
+<div class="support-page">
+    <div class="support-container">
+        <section class="help-section">
+            <h1>Чем мы можем вам помочь?</h1>
+            <div class="search-bar-container">
+                <input type="text" placeholder="Ключевое слово, например &quot;стартап&quot;" class="search-input">
+                <button class="search-button">
+                    <img src="{% static 'accounts/images/support/search.svg' %}" alt="Поиск">
+                </button>
+            </div>
+        </section>
 
-            <section class="info-cards-section">
-                <div class="info-card">
-                    <div class="info-card-text">
-                        <h2>Справочный центр</h2>
-                        <p>
-                            Подробные инструкции по функциям, ответы на часто задаваемые вопросы
-                            и ознакомительный тур
-                        </p>
-                    </div>
-                    <img
-                            src="{% static 'accounts/images/support/clipboard-list.svg' %}"
-                            alt="Справочный центр"
-                            class="info-card-icon"
-                    />
+        <section class="info-cards-section">
+            <div class="info-card">
+                <div class="info-card-text">
+                    <h2>Справочный центр</h2>
+                    <p>Подробные инструкции по функциям, ответы на часто задаваемые вопросы и ознакомительный тур</p>
                 </div>
-                <a href="{% url 'support_orders' %}" class="info-card info-card-link">
-                    <div class="info-card-text">
-                        <h2>Написать нам</h2>
-                        <p>Не нашли ответ на вопрос?</p>
-                    </div>
-                    <img
-                            src="{% static 'accounts/images/support/edit.svg' %}"
-                            alt="Написать нам"
-                            class="info-card-icon"
-                    />
-                </a>
-            </section>
+                <img src="{% static 'accounts/images/support/clipboard-list.svg' %}" alt="Справочный центр" class="info-card-icon">
+            </div>
+            <a href="{% url 'support_orders' %}" class="info-card info-card-link">
+                <div class="info-card-text">
+                    <h2>Написать нам</h2>
+                    <p>Не нашли ответ на вопрос?</p>
+                </div>
+                <img src="{% static 'accounts/images/support/edit.svg' %}" alt="Написать нам" class="info-card-icon">
+            </a>
+        </section>
 
-            <section class="knowledge-base-section">
-                <div class="knowledge-base-header">
-                    <h2>База знаний</h2>
-                    <a href="#">Просмотреть все статьи</a>
+        <section class="knowledge-base-section">
+            <div class="knowledge-base-header">
+                <h2>База знаний</h2>
+                <a href="#">Просмотреть все статьи</a>
+            </div>
+            <div class="knowledge-base-cards">
+                <div class="knowledge-card">
+                    <img src="{% static 'accounts/images/support/4ace3d4ce6d561cfa11b7a12e719a6b7c998647f.png' %}" alt="Стартаперам">
+                    <h3>Стартаперам</h3>
+                    <p>Узнай какой стартап привлечет больше инвесторов</p>
                 </div>
-                <div class="knowledge-base-cards">
-                    <div class="knowledge-card">
-                        <img
-                                src="{% static 'accounts/images/support/4ace3d4ce6d561cfa11b7a12e719a6b7c998647f.png' %}"
-                                alt="Стартаперам"
-                        />
-                        <h3>Стартаперам</h3>
-                        <p>Узнай какой стартап привлечет больше инвесторов</p>
-                    </div>
-                    <div class="knowledge-card">
-                        <img
-                                src="{% static 'accounts/images/support/68dd3ed48a8c3043ea1ccb371470585592d0d663.png' %}"
-                                alt="Инвесторам"
-                        />
-                        <h3>Инвесторам</h3>
-                        <p>
-                            Узнайте, как вы можете пополнить свой портфель следить за аналитикой
-                        </p>
-                    </div>
-                    <div class="knowledge-card">
-                        <img
-                                src="{% static 'accounts/images/support/e0edf2b9d70d9a9cbd48cd7e80087bde13b6f1a2.png' %}"
-                                alt="Great Ideas"
-                        />
-                        <h3>Great Ideas</h3>
-                        <p>Узнайте о площадке больше, обо всех аспектах и структуре</p>
-                    </div>
+                <div class="knowledge-card">
+                    <img src="{% static 'accounts/images/support/68dd3ed48a8c3043ea1ccb371470585592d0d663.png' %}" alt="Инвесторам">
+                    <h3>Инвесторам</h3>
+                    <p>Узнайте, как вы можете пополнить свой портфель следить за аналитикой</p>
                 </div>
-            </section>
+                <div class="knowledge-card">
+                    <img src="{% static 'accounts/images/support/e0edf2b9d70d9a9cbd48cd7e80087bde13b6f1a2.png' %}" alt="Great Ideas">
+                    <h3>Great Ideas</h3>
+                    <p>Узнайте о площадке больше, обо всех аспектах и структуре</p>
+                </div>
+            </div>
+        </section>
 
-            <section class="popular-articles-section">
-                <div class="popular-articles-header">
-                    <h2>Самые популярные статьи</h2>
-                    <a href="#">Посмотреть все статьи</a>
+        <section class="popular-articles-section">
+            <div class="popular-articles-header">
+                <h2>Самые популярные статьи</h2>
+                <a href="#">Посмотреть все статьи</a>
+            </div>
+            <div class="articles-grid">
+                {% for i in "12345" %}
+                <div class="article-card">
+                    <img src="{% static 'accounts/images/support/file-text.svg' %}" alt="Статья" class="article-icon">
+                    <div class="article-info">
+                        <h3>Ресурсы для стартапера</h3>
+                        <p>Изменено в Пт, 15 Сен, 2025 в 9:05 АМ</p>
+                    </div>
                 </div>
-                <div class="articles-grid">
-                    {% for i in "12345" %}
-                        <div class="article-card">
-                            <img
-                                    src="{% static 'accounts/images/support/file-text.svg' %}"
-                                    alt="Статья"
-                                    class="article-icon"
-                            />
-                            <div class="article-info">
-                                <h3>Ресурсы для стартапера</h3>
-                                <p>Изменено в Пт, 15 Сен, 2025 в 9:05 АМ</p>
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
-            </section>
-        </div>
+                {% endfor %}
+            </div>
+        </section>
     </div>
+</div>
 {% endblock %}
