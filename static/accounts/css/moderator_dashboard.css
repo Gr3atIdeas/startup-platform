@@ -1,640 +1,726 @@
 /* General body and container styles from mockup and base.html context */
 body.moderator-dashboard-body {
-    background-color: #0E163D; /* Assuming this is the dark blue background from the image */
-    color: white;
-    font-family: 'Unbounded', sans-serif; /* Default font from mockup */
+  background-color: #0e163d; /* Assuming this is the dark blue background from the image */
+  color: white;
+  font-family: Unbounded, sans-serif; /* Default font from mockup */
 }
 
 .moderator-page-container {
-    width: 100%;
-    max-width: 1280px; /* Based on mockup */
-    margin: 0 auto;
-    padding: 40px 20px; /* Added some padding */
-    display: flex;
-    flex-direction: column;
-    gap: 30px; /* Adjusted main gap */
+  width: 100%;
+  max-width: 1280px; /* Based on mockup */
+  margin: 0 auto;
+  padding: 40px 20px; /* Added some padding */
+  display: flex;
+  flex-direction: column;
+  gap: 30px; /* Adjusted main gap */
 }
 
 .page-header {
-    /* width: 1280px; From mockup, but container handles width */
-    justify-content: flex-start;
-    align-items: center;
-    /* gap: 677px; This gap seems too large and specific, adjust as needed or rely on flex behavior */
-    display: flex; /* For potential future elements next to title block */
-    margin-bottom: 30px; /* Added margin like in mockup */
+  /* width: 1280px; From mockup, but container handles width */
+  justify-content: flex-start;
+  align-items: center;
+
+  /* gap: 677px; This gap seems too large and specific, adjust as needed or rely on flex behavior */
+  display: flex; /* For potential future elements next to title block */
+  margin-bottom: 30px; /* Added margin like in mockup */
 }
 
 .header-title-block {
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start; /* Ensure left alignment */
-    gap: 5px; /* Adjusted gap for title based on visual feedback */
-    display: inline-flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start; /* Ensure left alignment */
+  gap: 5px; /* Adjusted gap for title based on visual feedback */
+  display: inline-flex;
 }
 
 /* Ensuring title styles are very specific and match mockup */
-div.moderator-page-container > header.page-header > div.header-title-block > h1.header-title-main {
-    color: white !important; /* Force color */
-    font-family: 'Blippo Local', sans-serif !important; /* Force font */
-    font-size: 55px !important; /* Force font size */
-    font-weight: 400 !important; /* Force font weight */
-    line-height: 1.1 !important; /* Mockup 18px for 55px font is too small, using 1.1 for readability */
-    align-self: flex-start; /* Ensure it doesn't stretch if parent is wider */
-    margin: 0; /* Reset any default margins */
-    padding: 0; /* Reset any default padding */
+div.moderator-page-container
+  > header.page-header
+  > div.header-title-block
+  > h1.header-title-main {
+  color: white !important; /* Force color */
+  font-family: 'Blippo Local', sans-serif !important; /* Force font */
+  font-size: 55px !important; /* Force font size */
+  font-weight: 400 !important; /* Force font weight */
+  line-height: 1.1 !important; /* Mockup 18px for 55px font is too small, using 1.1 for readability */
+  align-self: flex-start; /* Ensure it doesn't stretch if parent is wider */
+  margin: 0; /* Reset any default margins */
+  padding: 0; /* Reset any default padding */
 }
 
-div.moderator-page-container > header.page-header > div.header-title-block > h2.header-title-highlight {
-    color: #FFEF2B !important; /* Force color */
-    font-family: 'Blippo Local', sans-serif !important; /* Force font */
-    font-size: 55px !important; /* Force font size */
-    font-weight: 400 !important; /* Force font weight */
-    line-height: 1.1 !important; /* Similar to above */
-    align-self: flex-start;
-    margin: 0;
-    padding: 0;
+div.moderator-page-container
+  > header.page-header
+  > div.header-title-block
+  > h2.header-title-highlight {
+  color: #ffef2b !important; /* Force color */
+  font-family: 'Blippo Local', sans-serif !important; /* Force font */
+  font-size: 55px !important; /* Force font size */
+  font-weight: 400 !important; /* Force font weight */
+  line-height: 1.1 !important; /* Similar to above */
+  align-self: flex-start;
+  margin: 0;
+  padding: 0;
 }
 
 .filters-and-actions {
-    align-self: stretch;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 28px;
-    display: flex;
+  align-self: stretch;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 28px;
+  display: flex;
 }
 
 .filter-bar {
-    justify-content: flex-start;
-    align-items: center;
-    gap: 30px;
-    display: inline-flex;
-    flex-wrap: wrap; /* Allow filters to wrap on smaller screens */
+  justify-content: flex-start;
+  align-items: center;
+  gap: 30px;
+  display: inline-flex;
+  flex-wrap: wrap; /* Allow filters to wrap on smaller screens */
 }
 
 .filter-search {
-    width: 352px;
-    padding: 8px 15px; /* Adjusted padding */
-    background: rgba(255, 255, 255, 0.19);
-    border-radius: 10px;
-    border: 1px solid #004E9F;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 8px;
-    display: flex;
+  width: 352px;
+  padding: 8px 15px; /* Adjusted padding */
+  background: rgb(255 255 255 / 19%);
+  border-radius: 10px;
+  border: 1px solid #004e9f;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
+  display: flex;
 }
+
 .filter-search img {
-    width: 18px; /* Adjusted size from mockup */
-    height: 18px;
-    opacity: 0.60; /* As per mockup for the placeholder */
+  width: 18px; /* Adjusted size from mockup */
+  height: 18px;
+  opacity: 0.6; /* As per mockup for the placeholder */
 }
+
 .filter-search input::placeholder {
-    color: #A1A0A0;
+  color: #a1a0a0;
 }
+
 .filter-search input {
-    background: transparent;
-    border: none;
-    outline: none;
-    color: #A1A0A0; /* Color for typed text, can be white for better contrast */
-    font-size: 12px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 300;
-    letter-spacing: 0.12px;
-    width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #a1a0a0; /* Color for typed text, can be white for better contrast */
+  font-size: 12px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.12px;
+  width: 100%;
 }
 
 .filter-button {
-    padding: 8px 25px; /* Adjusted padding */
-    border-radius: 10px;
-    border: 1px solid #004E9F;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    display: flex;
-    cursor: pointer;
-    text-decoration: none;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 300;
-    line-height: 18px;
-    font-size: 14px;
-    height: 40px; /* Match search bar height */
-    box-sizing: border-box; /* Include padding and border in height */
-}
-.filter-button img.filter-icon {
-    width: 16px;
-    height: 16px;
+  padding: 8px 25px; /* Adjusted padding */
+  border-radius: 10px;
+  border: 1px solid #004e9f;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  display: flex;
+  cursor: pointer;
+  text-decoration: none;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  line-height: 18px;
+  font-size: 14px;
+  height: 40px; /* Match search bar height */
+  box-sizing: border-box; /* Include padding and border in height */
 }
 
+.filter-button img.filter-icon {
+  width: 16px;
+  height: 16px;
+}
 
 .filter-button.active {
-    background: #004E9F;
-    color: white;
+  background: #004e9f;
+  color: white;
 }
+
 .filter-button.active img.filter-icon {
-    filter: brightness(0) invert(1); /* Makes black SVG white */
+  filter: brightness(0) invert(1); /* Makes black SVG white */
 }
 
 .filter-button.inactive {
-    background: white;
-    color: black;
-}
-.filter-button.inactive img.filter-icon {
-    filter: none; /* Default for black SVG on white background */
+  background: white;
+  color: black;
 }
 
+.filter-button.inactive img.filter-icon {
+  filter: none; /* Default for black SVG on white background */
+}
 
 /* Startup cards grid */
 .startup-cards-grid {
-    align-self: stretch;
-    width: 100%; /* Ensure it takes full width of its container */
-    justify-content: flex-start; /* Changed from center to align cards to the start */
-    align-items: stretch; /* Make cards same height in a row */
-    gap: 20px;
-    display: flex; /* Changed from inline-flex */
-    flex-wrap: wrap;
+  align-self: stretch;
+  width: 100%; /* Ensure it takes full width of its container */
+  justify-content: flex-start; /* Changed from center to align cards to the start */
+  align-items: stretch; /* Make cards same height in a row */
+  gap: 20px;
+  display: flex; /* Changed from inline-flex */
+  flex-wrap: wrap;
 }
 
 .startup-card-item {
-    width: 630px; /* Adjusted width */
-    /* max-width: 610px; /* Fallback or control, (1240px content - 20px gap) / 2 */
-    /* Forcing a slightly smaller max-width to ensure fit, can be adjusted */
-    max-width: 630px; /* Adjusted max-width */
-    padding: 20px;
-    background: white;
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 12px;
-    border: 1px solid #C6BBFE;
-    flex-direction: column;
-    justify-content: space-between; /* Ensures content pushes footer down */
-    gap: 15px; /* Adjusted gap inside card */
-    display: flex; /* Changed from inline-flex */
-    color: black; /* Default text color inside card */
-    box-sizing: border-box; /* Ensure padding and border are part of width calculation */
+  width: 630px; /* Adjusted width */
+
+  /* max-width: 610px; /* Fallback or control, (1240px content - 20px gap) / 2 */
+
+  /* Forcing a slightly smaller max-width to ensure fit, can be adjusted */
+  max-width: 630px; /* Adjusted max-width */
+  padding: 20px;
+  background: white;
+  box-shadow: 2px 2px 4px rgb(0 0 0 / 25%);
+  border-radius: 12px;
+  border: 1px solid #c6bbfe;
+  flex-direction: column;
+  justify-content: space-between; /* Ensures content pushes footer down */
+  gap: 15px; /* Adjusted gap inside card */
+  display: flex; /* Changed from inline-flex */
+  color: black; /* Default text color inside card */
+  box-sizing: border-box; /* Ensure padding and border are part of width calculation */
 }
 
 .startup-card-item-content {
-    align-self: stretch;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 20px; /* Adjusted gap in content */
-    display: flex;
-    flex-grow: 1; /* Allows content to grow and push footer */
+  align-self: stretch;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 20px; /* Adjusted gap in content */
+  display: flex;
+  flex-grow: 1; /* Allows content to grow and push footer */
 }
 
 .startup-card-main-info {
-    align-self: stretch;
-    justify-content: flex-start;
-    align-items: flex-start; /* Changed from center on smaller screens */
-    gap: 20px; /* Adjusted gap */
-    display: flex;
-    flex-direction: row; /* Default to row */
+  align-self: stretch;
+  justify-content: flex-start;
+  align-items: flex-start; /* Changed from center on smaller screens */
+  gap: 20px; /* Adjusted gap */
+  display: flex;
+  flex-direction: row; /* Default to row */
 }
 
 .startup-card-image {
-    width: 250px; /* Reduced image width to help card fit */
-    height: 180px; /* Reduced image height proportionally */
-    border-radius: 7px;
-    object-fit: cover; /* Ensure image covers the area */
-    flex-shrink: 0; /* Prevent image from shrinking */
-}
-.startup-card-image-placeholder {
-    width: 250px;
-    height: 180px;
-    border-radius: 7px;
-    background-color: #e0e0e0; /* Placeholder background */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #757575;
-    flex-shrink: 0;
+  width: 250px; /* Reduced image width to help card fit */
+  height: 180px; /* Reduced image height proportionally */
+  border-radius: 7px;
+  object-fit: cover; /* Ensure image covers the area */
+  flex-shrink: 0; /* Prevent image from shrinking */
 }
 
+.startup-card-image-placeholder {
+  width: 250px;
+  height: 180px;
+  border-radius: 7px;
+  background-color: #e0e0e0; /* Placeholder background */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #757575;
+  flex-shrink: 0;
+}
 
 .startup-card-details {
-    flex: 1;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 10px; /* Adjusted gap */
-    display: flex; /* Changed from inline-flex for better flex behavior */
-    min-width: 0; /* Allows text to wrap properly in flex item */
+  flex: 1;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 10px; /* Adjusted gap */
+  display: flex; /* Changed from inline-flex for better flex behavior */
+  min-width: 0; /* Allows text to wrap properly in flex item */
 }
 
 .detail-group {
-    width: 100%;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 5px; /* Reduced gap */
-    display: flex;
+  width: 100%;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 5px; /* Reduced gap */
+  display: flex;
 }
 
 .detail-label {
-    align-self: stretch;
-    color: rgba(0, 0, 0, 0.32);
-    font-size: 12px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 300;
-    letter-spacing: 0.12px;
-    word-wrap: break-word;
+  align-self: stretch;
+  color: rgb(0 0 0 / 32%);
+  font-size: 12px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.12px;
+  word-wrap: break-word;
 }
 
 .author-info {
-    justify-content: flex-start;
-    align-items: center; /* Align items center */
-    gap: 10px;
-    display: inline-flex;
+  justify-content: flex-start;
+  align-items: center; /* Align items center */
+  gap: 10px;
+  display: inline-flex;
 }
 
 .author-avatar {
-    width: 39px;
-    height: 39px;
-    border-radius: 9999px;
-    object-fit: cover;
-    flex-shrink: 0;
-}
-.author-avatar-placeholder {
-    width: 39px;
-    height: 39px;
-    border-radius: 9999px;
-    background-color: #e0e0e0;
-    flex-shrink: 0;
+  width: 39px;
+  height: 39px;
+  border-radius: 9999px;
+  object-fit: cover;
+  flex-shrink: 0;
 }
 
+.author-avatar-placeholder {
+  width: 39px;
+  height: 39px;
+  border-radius: 9999px;
+  background-color: #e0e0e0;
+  flex-shrink: 0;
+}
 
 .author-text-details {
-    flex-direction: column;
-    justify-content: center; /* Align text center vertically */
-    align-items: flex-start;
-    gap: 3px; /* Reduced gap */
-    display: inline-flex;
+  flex-direction: column;
+  justify-content: center; /* Align text center vertically */
+  align-items: flex-start;
+  gap: 3px; /* Reduced gap */
+  display: inline-flex;
 }
 
 .author-name {
-    color: black;
-    font-size: 18px; /* Slightly reduced from 20px */
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 500; /* Adjusted from 400 */
-    line-height: 1.2; /* Adjusted for 20px font */
-    word-wrap: break-word;
+  color: black;
+  font-size: 18px; /* Slightly reduced from 20px */
+  font-family: Unbounded, sans-serif;
+  font-weight: 500; /* Adjusted from 400 */
+  line-height: 1.2; /* Adjusted for 20px font */
+  word-wrap: break-word;
 }
 
 .author-rating {
-    color: #A9A9A9;
-    font-size: 11px; /* Slightly reduced */
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 300;
-    letter-spacing: 0.12px;
-    word-wrap: break-word;
+  color: #a9a9a9;
+  font-size: 11px; /* Slightly reduced */
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.12px;
+  word-wrap: break-word;
 }
 
 .author-reviews-link {
-    color: #7B61FF;
-    font-size: 11px; /* Slightly reduced */
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 400; /* Adjusted */
-    letter-spacing: 0.12px;
-    word-wrap: break-word;
-    text-decoration: none; /* Optional */
+  color: #7b61ff;
+  font-size: 11px; /* Slightly reduced */
+  font-family: Unbounded, sans-serif;
+  font-weight: 400; /* Adjusted */
+  letter-spacing: 0.12px;
+  word-wrap: break-word;
+  text-decoration: none; /* Optional */
 }
+
 .author-reviews-link:hover {
-    text-decoration: underline; /* Optional */
+  text-decoration: underline; /* Optional */
 }
 
 .startup-name {
-    align-self: stretch;
-    color: black;
-    font-size: 18px; /* Slightly reduced */
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 500; /* Adjusted */
-    line-height: 1.2; /* Adjusted for 20px font */
-    word-wrap: break-word;
+  align-self: stretch;
+  color: black;
+  font-size: 18px; /* Slightly reduced */
+  font-family: Unbounded, sans-serif;
+  font-weight: 500; /* Adjusted */
+  line-height: 1.2; /* Adjusted for 20px font */
+  word-wrap: break-word;
 }
 
-.category-tag, .type-tag {
-    padding: 6px 12px; /* Adjusted padding */
-    background: #050505;
-    border-radius: 5px;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    display: inline-flex; /* So it only takes content width */
+.category-tag,
+.type-tag {
+  padding: 6px 12px; /* Adjusted padding */
+  background: #050505;
+  border-radius: 5px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  display: inline-flex; /* So it only takes content width */
 }
 
-.category-tag-text, .type-tag-text {
-    text-align: center;
-    color: white;
-    font-size: 11px; /* Slightly reduced */
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 300;
-    letter-spacing: 0.12px;
-    word-wrap: break-word;
+.category-tag-text,
+.type-tag-text {
+  text-align: center;
+  color: white;
+  font-size: 11px; /* Slightly reduced */
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.12px;
+  word-wrap: break-word;
 }
 
 .startup-description-group {
-    align-self: stretch;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 8px;
-    display: flex;
+  align-self: stretch;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 8px;
+  display: flex;
 }
 
 .startup-description-text {
-    /* width: 591px; Making it responsive */
-    align-self: stretch;
-    color: black;
-    font-size: 12px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 300;
-    letter-spacing: 0.12px;
-    word-wrap: break-word;
-    max-height: 3.6em; /* Approx 3 lines, adjust if needed (1.2em line-height * 3) */
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    line-height: 1.2em; /* Added for consistency with max-height calculation */
+  /* width: 591px; Making it responsive */
+  align-self: stretch;
+  color: black;
+  font-size: 12px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.12px;
+  word-wrap: break-word;
+  max-height: 3.6em; /* Approx 3 lines, adjust if needed (1.2em line-height * 3) */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  line-height: 1.2em; /* Added for consistency with max-height calculation */
 }
-
 
 .funding-info-actions {
-    align-self: stretch;
-    /* height: 121px; Height will be auto based on content + padding */
-    padding: 15px;
-    background: #EBEBEB;
-    border-radius: 7px;
-    flex-direction: column; /* Stack funding goal and buttons */
-    justify-content: center;
-    align-items: center; /* Center content within this box */
-    gap: 15px; /* Gap between funding text and button row */
-    display: flex;
-    margin-top: auto; /* Pushes this block to the bottom of the card */
-}
-.funding-details-row { /* For horizontal layout of funding and buttons */
-    display: flex;
-    justify-content: space-between; /* Puts funding on left, buttons on right */
-    align-items: center;
-    gap: 15px; /* Adjusted gap */
-    width: 100%;
-    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+  align-self: stretch;
+
+  /* height: 121px; Height will be auto based on content + padding */
+  padding: 15px;
+  background: #ebebeb;
+  border-radius: 7px;
+  flex-direction: column; /* Stack funding goal and buttons */
+  justify-content: center;
+  align-items: center; /* Center content within this box */
+  gap: 15px; /* Gap between funding text and button row */
+  display: flex;
+  margin-top: auto; /* Pushes this block to the bottom of the card */
 }
 
+.funding-details-row {
+  /* For horizontal layout of funding and buttons */
+  display: flex;
+  justify-content: space-between; /* Puts funding on left, buttons on right */
+  align-items: center;
+  gap: 15px; /* Adjusted gap */
+  width: 100%;
+  flex-wrap: wrap; /* Allow wrapping on smaller screens */
+}
 
 .funding-goal-block {
-    flex-direction: column;
-    justify-content: center; /* Center text */
-    align-items: flex-start;
-    gap: 5px; /* Reduced gap */
-    display: inline-flex;
-    text-align: left; /* Ensure text aligns left */
+  flex-direction: column;
+  justify-content: center; /* Center text */
+  align-items: flex-start;
+  gap: 5px; /* Reduced gap */
+  display: inline-flex;
+  text-align: left; /* Ensure text aligns left */
 }
 
 .funding-goal-label {
-    color: black;
-    font-size: 13px; /* Reduced */
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 300;
-    line-height: 1.2;
-    word-wrap: break-word;
+  color: black;
+  font-size: 13px; /* Reduced */
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  line-height: 1.2;
+  word-wrap: break-word;
 }
 
 .funding-goal-amount {
-    align-self: stretch;
-    color: black;
-    font-size: 18px; /* Reduced */
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 500; /* Adjusted */
-    line-height: 1.2;
-    word-wrap: break-word;
+  align-self: stretch;
+  color: black;
+  font-size: 18px; /* Reduced */
+  font-family: Unbounded, sans-serif;
+  font-weight: 500; /* Adjusted */
+  line-height: 1.2;
+  word-wrap: break-word;
 }
 
 .action-buttons-group {
-    justify-content: flex-end; /* Align buttons to the right */
-    align-items: center;
-    gap: 10px;
-    display: flex;
-    flex-wrap: wrap;
-    flex-grow: 1; /* Allow group to take space */
+  justify-content: flex-end; /* Align buttons to the right */
+  align-items: center;
+  gap: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  flex-grow: 1; /* Allow group to take space */
 }
 
 /* Specificity for action buttons */
-div.startup-card-item div.funding-info-actions div.action-buttons-group button.action-button,
-div.startup-card-item div.funding-info-actions div.action-buttons-group a.action-button {
-    min-width: auto; /* Allow buttons to size based on content + padding */
-    flex: 1 1 0; /* Allow buttons to grow and shrink, basis 0 */
-    max-width: 150px; /* Prevent buttons from becoming too wide */
-    height: 38px; /* Adjusted height */
-    padding: 0 12px; 
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 10px;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    display: inline-flex;
-    font-size: 14px; /* Reduced font size */
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 500; /* Adjusted */
-    line-height: 1; /* Adjusted line height for button text */
-    word-wrap: break-word;
-    text-decoration: none;
-    border: none;
-    cursor: pointer;
-    text-align: center;
-    flex-shrink: 0; /* Prevent buttons from shrinking too much */
+div.startup-card-item
+  div.funding-info-actions
+  div.action-buttons-group
+  button.action-button,
+div.startup-card-item
+  div.funding-info-actions
+  div.action-buttons-group
+  a.action-button {
+  min-width: auto; /* Allow buttons to size based on content + padding */
+  flex: 1 1 0; /* Allow buttons to grow and shrink, basis 0 */
+  max-width: 150px; /* Prevent buttons from becoming too wide */
+  height: 38px; /* Adjusted height */
+  padding: 0 12px;
+  box-shadow: 2px 2px 4px rgb(0 0 0 / 25%);
+  border-radius: 10px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  display: inline-flex;
+  font-size: 14px; /* Reduced font size */
+  font-family: Unbounded, sans-serif;
+  font-weight: 500; /* Adjusted */
+  line-height: 1; /* Adjusted line height for button text */
+  word-wrap: break-word;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+  flex-shrink: 0; /* Prevent buttons from shrinking too much */
 }
 
-div.startup-card-item div.funding-info-actions div.action-buttons-group button.action-button.approve {
-    background: #16a34a !important;
-    color: #F5F5F5 !important;
-}
-div.startup-card-item div.funding-info-actions div.action-buttons-group button.action-button.approve:hover {
-    background: #15803d !important;
-}
-
-div.startup-card-item div.funding-info-actions div.action-buttons-group button.action-button.reject {
-    background: #dc2626 !important;
-    color: white !important;
-}
-div.startup-card-item div.funding-info-actions div.action-buttons-group button.action-button.reject:hover {
-    background: #b91c1c !important;
+div.startup-card-item
+  div.funding-info-actions
+  div.action-buttons-group
+  button.action-button.approve {
+  background: #16a34a !important;
+  color: #f5f5f5 !important;
 }
 
-div.startup-card-item div.funding-info-actions div.action-buttons-group a.action-button.details {
-    background: white !important;
-    color: black !important;
-    border: 1px black solid !important;
-    padding: 0 11px; /* Adjust padding for border */
+div.startup-card-item
+  div.funding-info-actions
+  div.action-buttons-group
+  button.action-button.approve:hover {
+  background: #15803d !important;
 }
-div.startup-card-item div.funding-info-actions div.action-buttons-group a.action-button.details:hover {
-    background: #f0f0f0 !important;
+
+div.startup-card-item
+  div.funding-info-actions
+  div.action-buttons-group
+  button.action-button.reject {
+  background: #dc2626 !important;
+  color: white !important;
+}
+
+div.startup-card-item
+  div.funding-info-actions
+  div.action-buttons-group
+  button.action-button.reject:hover {
+  background: #b91c1c !important;
+}
+
+div.startup-card-item
+  div.funding-info-actions
+  div.action-buttons-group
+  a.action-button.details {
+  background: white !important;
+  color: black !important;
+  border: 1px black solid !important;
+  padding: 0 11px; /* Adjust padding for border */
+}
+
+div.startup-card-item
+  div.funding-info-actions
+  div.action-buttons-group
+  a.action-button.details:hover {
+  background: #f0f0f0 !important;
 }
 
 .show-more-bar {
-    justify-content: center; /* Center the button */
-    align-items: center;
-    display: flex; /* Use flex to center */
-    margin-top: 30px; /* Increased margin */
-    width: 100%;
+  justify-content: center; /* Center the button */
+  align-items: center;
+  display: flex; /* Use flex to center */
+  margin-top: 30px; /* Increased margin */
+  width: 100%;
 }
 
 .show-more-button {
-    height: 40px;
-    padding: 12px 35px;
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 10px;
-    border: 1px white solid;
-    justify-content: center; /* Center content in button */
-    align-items: center;
-    gap: 9px;
-    display: inline-flex;
-    color: #F5F5F5;
-    font-size: 16px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 400;
-    line-height: 16px;
-    word-wrap: break-word;
-    text-decoration: none;
-    background: transparent;
+  height: 40px;
+  padding: 12px 35px;
+  box-shadow: 2px 2px 4px rgb(0 0 0 / 25%);
+  border-radius: 10px;
+  border: 1px white solid;
+  justify-content: center; /* Center content in button */
+  align-items: center;
+  gap: 9px;
+  display: inline-flex;
+  color: #f5f5f5;
+  font-size: 16px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 400;
+  line-height: 16px;
+  word-wrap: break-word;
+  text-decoration: none;
+  background: transparent;
 }
+
 .show-more-button:hover {
-    background: rgba(255,255,255,0.1);
+  background: rgb(255 255 255 / 10%);
 }
 
 .show-more-button .icon-eye {
-    width: 16px;
-    height: 16px;
-    fill: white;
+  width: 16px;
+  height: 16px;
+  fill: white;
 }
+
 /* Fallback for the icon div from mockup if not using img/SVG */
 .show-more-icon-placeholder {
-    width: 16px; height: 16px; position: relative; overflow: hidden;
-}
-.show-more-icon-placeholder div {
-    width: 14.67px; height: 10px; left: 0.66px; top: 3px; position: absolute; background: white;
+  width: 16px;
+  height: 16px;
+  position: relative;
+  overflow: hidden;
 }
 
+.show-more-icon-placeholder div {
+  width: 14.67px;
+  height: 10px;
+  left: 0.66px;
+  top: 3px;
+  position: absolute;
+  background: white;
+}
 
 .no-applications {
-    text-align: center;
-    font-size: 1.25rem; /* text-lg */
-    color: #A1A0A0; /* A grey color, adjust as needed */
-    padding: 40px;
-    width: 100%; /* Ensure it takes full width to center text if grid is empty */
+  text-align: center;
+  font-size: 1.25rem; /* text-lg */
+  color: #a1a0a0; /* A grey color, adjust as needed */
+  padding: 40px;
+  width: 100%; /* Ensure it takes full width to center text if grid is empty */
 }
 
 /* Responsive adjustments */
-@media (max-width: 1200px) {
-    .startup-card-main-info {
-        flex-direction: column; 
-        align-items: center;
-    }
-    .startup-card-image, .startup-card-image-placeholder {
-        width: 100%; 
-        max-width: 250px; /* Match reduced image width */
-    }
-    .startup-card-details {
-        align-items: center; 
-        text-align: center;
-    }
+@media (width <= 1200px) {
+  .startup-card-main-info {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .startup-card-image,
+  .startup-card-image-placeholder {
+    width: 100%;
+    max-width: 250px; /* Match reduced image width */
+  }
+
+  .startup-card-details {
+    align-items: center;
+    text-align: center;
+  }
 }
 
-@media (max-width: 860px) { /* Breakpoint for single column cards */
-    .startup-card-item {
-        width: 100%; 
-        max-width: 630px; /* Adjusted max-width for consistency */
-        margin-left: auto; /* Center single column */
-        margin-right: auto; /* Center single column */
-    }
-     .startup-card-main-info {
-        flex-direction: row; /* Revert to row if space for single card */
-    }
+@media (width <= 860px) {
+  /* Breakpoint for single column cards */
+  .startup-card-item {
+    width: 100%;
+    max-width: 630px; /* Adjusted max-width for consistency */
+    margin-left: auto; /* Center single column */
+    margin-right: auto; /* Center single column */
+  }
+
+  .startup-card-main-info {
+    flex-direction: row; /* Revert to row if space for single card */
+  }
 }
 
-@media (max-width: 768px) {
-    .filter-bar {
-        gap: 10px;
-        justify-content: center;
-    }
-    .filter-button {
-        padding: 8px 15px;
-    }
-    .filter-search {
-        width: 100%;
-    }
-    /* .startup-card-item is already 100% width below 860px */
-    .startup-card-main-info {
-        flex-direction: column; /* Stack again on very small screens */
-        align-items: center;
-    }
+@media (width <= 768px) {
+  .filter-bar {
+    gap: 10px;
+    justify-content: center;
+  }
 
-    .funding-details-row {
-        flex-direction: column;
-        gap: 15px;
-        align-items: center;
-    }
-    .action-buttons-group {
-        justify-content: center;
-        width: 100%; 
-    }
-    div.startup-card-item div.funding-info-actions div.action-buttons-group button.action-button,
-    div.startup-card-item div.funding-info-actions div.action-buttons-group a.action-button {
-        min-width: 90px; 
-        flex-grow: 1; 
-        font-size: 13px; /* Further reduce for small screens */
-        padding: 0 10px;
-        height: 36px;
-    }
+  .filter-button {
+    padding: 8px 15px;
+  }
+
+  .filter-search {
+    width: 100%;
+  }
+
+  /* .startup-card-item is already 100% width below 860px */
+  .startup-card-main-info {
+    flex-direction: column; /* Stack again on very small screens */
+    align-items: center;
+  }
+
+  .funding-details-row {
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+  }
+
+  .action-buttons-group {
+    justify-content: center;
+    width: 100%;
+  }
+
+  div.startup-card-item
+    div.funding-info-actions
+    div.action-buttons-group
+    button.action-button,
+  div.startup-card-item
+    div.funding-info-actions
+    div.action-buttons-group
+    a.action-button {
+    min-width: 90px;
+    flex-grow: 1;
+    font-size: 13px; /* Further reduce for small screens */
+    padding: 0 10px;
+    height: 36px;
+  }
 }
 
-@media (max-width: 480px) {
-    div.moderator-page-container > header.page-header > div.header-title-block > h1.header-title-main,
-    div.moderator-page-container > header.page-header > div.header-title-block > h2.header-title-highlight {
-        font-size: 40px !important;
-    }
-    .startup-card-image, .startup-card-image-placeholder {
-        width: 100%;
-        height: auto;
-        max-width: none;
-    }
-    .startup-card-details {
-        min-width: 0; /* Ensure it can shrink */
-    }
-     div.startup-card-item div.funding-info-actions div.action-buttons-group button.action-button,
-     div.startup-card-item div.funding-info-actions div.action-buttons-group a.action-button {
-        font-size: 12px;
-        min-width: 80px;
-    }
+@media (width <= 480px) {
+  div.moderator-page-container
+    > header.page-header
+    > div.header-title-block
+    > h1.header-title-main,
+  div.moderator-page-container
+    > header.page-header
+    > div.header-title-block
+    > h2.header-title-highlight {
+    font-size: 40px !important;
+  }
 
+  .startup-card-image,
+  .startup-card-image-placeholder {
+    width: 100%;
+    height: auto;
+    max-width: none;
+  }
+
+  .startup-card-details {
+    min-width: 0; /* Ensure it can shrink */
+  }
+
+  div.startup-card-item
+    div.funding-info-actions
+    div.action-buttons-group
+    button.action-button,
+  div.startup-card-item
+    div.funding-info-actions
+    div.action-buttons-group
+    a.action-button {
+    font-size: 12px;
+    min-width: 80px;
+  }
 }
 
 /* Styles for form display (to make forms inline for buttons) */
 .inline-form {
-    display: inline-block; /* Changed to inline-block to allow gap/margin on form itself */
+  display: inline-block; /* Changed to inline-block to allow gap/margin on form itself */
 }
 
 /* Original status styles - might not be used directly in the new design, but keeping for reference or potential reuse */
 .status {
-    padding: 5px 10px;
-    border-radius: 5px;
-    font-weight: bold;
-    font-size: 0.9em;
-    display: inline-block; /* To allow padding and be on its own line if needed */
-    margin-bottom: 10px; /* Example spacing */
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-weight: bold;
+  font-size: 0.9em;
+  display: inline-block; /* To allow padding and be on its own line if needed */
+  margin-bottom: 10px; /* Example spacing */
 }
+
 .status-approved {
-    background-color: #16a34a; /* bg-green-600 */
-    color: white;
+  background-color: #16a34a; /* bg-green-600 */
+  color: white;
 }
+
 .status-rejected {
-    background-color: #dc2626; /* bg-red-600 */
-    color: white;
+  background-color: #dc2626; /* bg-red-600 */
+  color: white;
 }
+
 .status-pending {
-    background-color: #f59e0b; /* amber-500, mockup has no pending status directly on card display */
-    color: white;
+  background-color: #f59e0b; /* amber-500, mockup has no pending status directly on card display */
+  color: white;
 }
-
-

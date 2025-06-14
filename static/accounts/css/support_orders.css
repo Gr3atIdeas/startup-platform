@@ -1,354 +1,389 @@
 /* static/accounts/css/support_orders.css */
 
 body {
-    font-family: 'Unbounded', sans-serif; /* Убедитесь, что шрифт Unbounded подключен глобально или здесь */
-    margin: 0;
-    overflow-x: hidden; /* Предотвращаем горизонтальный скролл, если будет нужно */
+  font-family:
+    Unbounded, sans-serif; /* Убедитесь, что шрифт Unbounded подключен глобально или здесь */
+  margin: 0;
+  overflow-x: hidden; /* Предотвращаем горизонтальный скролл, если будет нужно */
 }
 
 .support-orders-page {
-    position: relative;
-    width: 100%; 
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Оставляем центрирование самой страницы */
-    box-sizing: border-box; 
-    padding-top: 0;
-    padding-bottom: 0;
-    z-index: 0;
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Оставляем центрирование самой страницы */
+  box-sizing: border-box;
+  padding-top: 0;
+  padding-bottom: 0;
+  z-index: 0;
 }
 
 .support-orders-page::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100vw; /* Фон на всю ширину окна */
-    background-color: #fff; /* Белый фон */
-    z-index: -1;
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw; /* Фон на всю ширину окна */
+  background-color: #fff; /* Белый фон */
+  z-index: -1;
 }
 
 .support-orders-container {
-    width: 100%;
-    max-width: 1032px; /* ИСПОЛЬЗУЕМ МАКСИМАЛЬНУЮ ШИРИНУ КАК У ДРУГИХ БЛОКОВ КОНТЕНТА */
-    padding: 40px 20px; /* Внутренние отступы для контента, можно настроить */
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start; /* ВЫРАВНИВАНИЕ ВСЕХ ДОЧЕРНИХ ЭЛЕМЕНТОВ ПО ЛЕВОМУ КРАЮ */
-    gap: 30px; /* Уменьшил основной gap для контейнера */
-    position: relative;
-    z-index: 1;
-    box-sizing: border-box;
+  width: 100%;
+  max-width: 1032px; /* ИСПОЛЬЗУЕМ МАКСИМАЛЬНУЮ ШИРИНУ КАК У ДРУГИХ БЛОКОВ КОНТЕНТА */
+  padding: 40px 20px; /* Внутренние отступы для контента, можно настроить */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* ВЫРАВНИВАНИЕ ВСЕХ ДОЧЕРНИХ ЭЛЕМЕНТОВ ПО ЛЕВОМУ КРАЮ */
+  gap: 30px; /* Уменьшил основной gap для контейнера */
+  position: relative;
+  z-index: 1;
+  box-sizing: border-box;
 }
 
 /* Ссылка "Назад" */
 .back-link-container {
-    /* margin-bottom: 20px; Управляется gap-ом родителя */
-    display: flex;
-    justify-content: flex-start; 
-    width: 100%; /* Чтобы занимал всю ширину и выравнивался по flex-start контейнера */
+  /* margin-bottom: 20px; Управляется gap-ом родителя */
+  display: flex;
+  justify-content: flex-start;
+  width: 100%; /* Чтобы занимал всю ширину и выравнивался по flex-start контейнера */
 }
 
 .back-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    color: #000; /* Цвет текста ссылки из макета (был white на темном фоне) */
-    font-size: 12px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 300;
-    letter-spacing: 0.12px;
-    text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #000; /* Цвет текста ссылки из макета (был white на темном фоне) */
+  font-size: 12px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.12px;
+  text-decoration: none;
 }
 
 .back-link:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 .back-link-icon {
-    width: 16px;
-    height: 16px;
-    filter: brightness(0); /* Делаем SVG иконку черной */
+  width: 16px;
+  height: 16px;
+  filter: brightness(0); /* Делаем SVG иконку черной */
 }
 
 /* Заголовок страницы и кнопка "Новая заявка" */
 .page-header-section {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%; /* Занимает всю доступную ширину */
-    /* max-width: 1032px; - Уже установлено у родителя */
-    /* margin: 0 auto;  Убираем центрирование, т.к. родитель flex-start */
-    /* margin-bottom: 30px; Управляется gap-ом родителя */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%; /* Занимает всю доступную ширину */
+
+  /* max-width: 1032px; - Уже установлено у родителя */
+
+  /* margin: 0 auto;  Убираем центрирование, т.к. родитель flex-start */
+
+  /* margin-bottom: 30px; Управляется gap-ом родителя */
 }
 
 .page-header-section h1 {
-    color: black;
-    font-size: 35px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 600;
-    line-height: 35px;
-    margin: 0;
+  color: black;
+  font-size: 35px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 600;
+  line-height: 35px;
+  margin: 0;
 }
 
 /* Стили для кнопок .btn.btn-primary и .btn.btn-secondary нужно взять из global.css или buttons.css */
+
 /* Если их там нет, можно добавить базовые стили здесь */
 .btn.btn-primary {
-    background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%) !important;
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25) !important;
-    border-radius: 10px !important;
-    color: #F5F5F5 !important; /* Белый текст */
-    font-size: 16px !important;
-    font-family: 'Unbounded', sans-serif !important;
-    font-weight: 400 !important;
-    line-height: 16px !important;
-    padding: 12px 35px !important;
-    text-decoration: none !important;
-    border: none !important;
-    cursor: pointer !important;
+  background: linear-gradient(0deg, #004e9f 0%, #006edf 100%) !important;
+  box-shadow: 2px 2px 4px rgb(0 0 0 / 25%) !important;
+  border-radius: 10px !important;
+  color: #f5f5f5 !important; /* Белый текст */
+  font-size: 16px !important;
+  font-family: Unbounded, sans-serif !important;
+  font-weight: 400 !important;
+  line-height: 16px !important;
+  padding: 12px 35px !important;
+  text-decoration: none !important;
+  border: none !important;
+  cursor: pointer !important;
 }
 
 .btn.btn-primary:hover {
-    background: linear-gradient(0deg, #003c8a 0%, #005ac0 100%) !important; /* Чуть темнее при наведении */
+  background: linear-gradient(
+    0deg,
+    #003c8a 0%,
+    #005ac0 100%
+  ) !important; /* Чуть темнее при наведении */
 }
 
 .btn.btn-secondary {
-    background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%) !important; /* Делаем как primary */
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25) !important;
-    border-radius: 10px !important;
-    color: #F5F5F5 !important; /* Белый текст */
-    font-size: 16px !important;
-    font-family: 'Unbounded', sans-serif !important;
-    font-weight: 400 !important;
-    line-height: 16px !important;
-    padding: 12px 35px !important;
-    text-decoration: none !important;
-    border: none !important; /* Убираем рамку, если была */
-    cursor: pointer !important;
+  background: linear-gradient(
+    0deg,
+    #004e9f 0%,
+    #006edf 100%
+  ) !important; /* Делаем как primary */
+  box-shadow: 2px 2px 4px rgb(0 0 0 / 25%) !important;
+  border-radius: 10px !important;
+  color: #f5f5f5 !important; /* Белый текст */
+  font-size: 16px !important;
+  font-family: Unbounded, sans-serif !important;
+  font-weight: 400 !important;
+  line-height: 16px !important;
+  padding: 12px 35px !important;
+  text-decoration: none !important;
+  border: none !important; /* Убираем рамку, если была */
+  cursor: pointer !important;
 }
 
 .btn.btn-secondary:hover {
-    background: linear-gradient(0deg, #003c8a 0%, #005ac0 100%) !important; 
+  background: linear-gradient(0deg, #003c8a 0%, #005ac0 100%) !important;
 }
 
 /* Поиск внутри страницы заявок */
 .search-section {
-    width: 100%;
-    max-width: 663px; 
-    /* margin: 0 auto; Убираем */
-    /* margin-bottom: 30px; Управляется gap-ом родителя */
+  width: 100%;
+  max-width: 663px;
+
+  /* margin: 0 auto; Убираем */
+
+  /* margin-bottom: 30px; Управляется gap-ом родителя */
 }
 
 .search-bar-inline {
-    display: flex; /* Для размещения иконки и инпута */
-    align-items: center;
-    background: #fff; /* Белый фон для контейнера */
-    border-radius: 10px;
-    outline: 1px solid #004E9F;
-    padding: 8px 15px; 
-    box-sizing: border-box;
+  display: flex; /* Для размещения иконки и инпута */
+  align-items: center;
+  background: #fff; /* Белый фон для контейнера */
+  border-radius: 10px;
+  outline: 1px solid #004e9f;
+  padding: 8px 15px;
+  box-sizing: border-box;
 }
 
 /* Убираем стили для иконки поиска, так как иконка будет удалена из HTML */
+
 /* .search-bar-inline .search-icon-inline ... */
 
 .search-input-inline {
-    flex-grow: 1;
-    border: none;
-    background: transparent;
-    font-size: 12px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 300;
-    letter-spacing: 0.12px;
-    color: #A1A0A0;
-    padding: 10px; /* Возвращаем обычный паддинг, так как иконки нет */
-    outline: none; /* Убираем стандартный outline при фокусе */
+  flex-grow: 1;
+  border: none;
+  background: transparent;
+  font-size: 12px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.12px;
+  color: #a1a0a0;
+  padding: 10px; /* Возвращаем обычный паддинг, так как иконки нет */
+  outline: none; /* Убираем стандартный outline при фокусе */
 }
 
 .search-input-inline::placeholder {
-    color: #A1A0A0;
+  color: #a1a0a0;
 }
 
 /* Убираем кнопку поиска, если она была */
+
 /* .search-button-inline ... */
 
 /* Список заявок */
 .orders-list-section {
-    display: flex;
-    flex-direction: column;
-    gap: 24px; 
-    width: 100%; /* Занимает всю доступную ширину */
-    /* max-width: 1032px; - Уже установлено у родителя .support-orders-container */
-    /* margin: 0 auto; Убираем */
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%; /* Занимает всю доступную ширину */
+
+  /* max-width: 1032px; - Уже установлено у родителя .support-orders-container */
+
+  /* margin: 0 auto; Убираем */
 }
 
 .order-card {
-    padding: 24px 31px;
-    border-radius: 10px;
-    outline: 1px solid black;
-    background-color: white;
-    display: block; /* Чтобы ссылка занимала всю область карточки */
-    text-decoration: none; /* Убираем подчеркивание у ссылки-карточки */
+  padding: 24px 31px;
+  border-radius: 10px;
+  outline: 1px solid black;
+  background-color: white;
+  display: block; /* Чтобы ссылка занимала всю область карточки */
+  text-decoration: none; /* Убираем подчеркивание у ссылки-карточки */
 }
 
 .order-card:hover {
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Пример эффекта при наведении */
+  box-shadow: 0 4px 8px rgb(0 0 0 / 10%); /* Пример эффекта при наведении */
 }
 
 .order-details-grid {
-    display: grid;
-    grid-template-columns: auto 1fr auto auto;
-    gap: 50px;
-    align-items: flex-start;
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  gap: 50px;
+  align-items: flex-start;
 }
 
 .order-detail-item {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .detail-label {
-    color: #B0B0B0;
-    font-size: 14px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 300;
-    line-height: 18px;
+  color: #b0b0b0;
+  font-size: 14px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  line-height: 18px;
 }
 
 .detail-value {
-    color: black;
-    font-size: 14px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 300;
-    line-height: 18px;
+  color: black;
+  font-size: 14px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  line-height: 18px;
 }
 
 /* Специальный стиль для темы, чтобы она занимала больше места */
 .order-detail-topic {
-    /* grid-column: span 2;  Если нужно чтобы тема занимала 2 колонки если убрать статус и номер */
+  /* grid-column: span 2;  Если нужно чтобы тема занимала 2 колонки если убрать статус и номер */
 }
 
 .status-closed {
-    /* color: #FF0000; */ /* Пример цвета для закрытого статуса */
+  /* color: #FF0000; */
+
+  /* Пример цвета для закрытого статуса */
 }
 
 .status-open {
-    color: #008000; /* Пример цвета для открытого статуса */
+  color: #008000; /* Пример цвета для открытого статуса */
 }
 
 /* Дополнительная информация внизу */
 .additional-info-section {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 40px;
-    width: 100%; /* Занимает всю доступную ширину */
-    /* max-width: 1032px; - Уже установлено у родителя */
-    /* margin: 0 auto; Убираем */
-    /* margin-top: 50px; Управляется gap-ом родителя */
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 40px;
+  width: 100%; /* Занимает всю доступную ширину */
+
+  /* max-width: 1032px; - Уже установлено у родителя */
+
+  /* margin: 0 auto; Убираем */
+
+  /* margin-top: 50px; Управляется gap-ом родителя */
 }
 
 .info-block-left {
-    flex-basis: 451px;
-    display: flex;
-    flex-direction: column;
-    gap: 26px;
+  flex-basis: 451px;
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
 }
 
 .info-block-right {
-    flex-basis: 726px;
-    flex-grow: 1; 
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    max-width: 726px;
+  flex-basis: 726px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 726px;
 }
 
 .additional-info-section p {
-    color: black;
-    font-size: 14px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 300;
-    line-height: 18px;
-    margin: 0;
+  color: black;
+  font-size: 14px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  line-height: 18px;
+  margin: 0;
 }
 
 .additional-info-section a {
-    color: #004E9F;
-    text-decoration: none;
+  color: #004e9f;
+  text-decoration: none;
 }
 
 .additional-info-section a:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
-
 
 /* Адаптивность */
-@media (max-width: 1024px) {
-    .support-orders-container {
-        max-width: 100%; /* На меньших экранах контейнер может быть по всей ширине */
-        padding: 30px 15px;
-    }
-    .order-details-grid {
-        grid-template-columns: 1fr 1fr; 
-        gap: 20px 30px; 
-    }
-    .order-detail-topic {
-        grid-column: span 2; 
-    }
-    .additional-info-section {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-    }
-    .info-block-left, .info-block-right {
-        flex-basis: auto;
-        width: 100%;
-        max-width: 600px;
-        align-items: center;
-    }
+@media (width <= 1024px) {
+  .support-orders-container {
+    max-width: 100%; /* На меньших экранах контейнер может быть по всей ширине */
+    padding: 30px 15px;
+  }
+
+  .order-details-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 20px 30px;
+  }
+
+  .order-detail-topic {
+    grid-column: span 2;
+  }
+
+  .additional-info-section {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .info-block-left,
+  .info-block-right {
+    flex-basis: auto;
+    width: 100%;
+    max-width: 600px;
+    align-items: center;
+  }
 }
 
-@media (max-width: 768px) {
-    .support-orders-container {
-        padding: 30px 15px;
-        gap: 20px;
-    }
-    .page-header-section {
-        flex-direction: column;
-        gap: 20px;
-        align-items: flex-start; /* Выравнивание по левому краю на мобильных */
-        text-align: left;
-        margin-bottom: 10px;
-    }
-    .page-header-section h1 {
-        font-size: 28px;
-    }
-    .search-section {
-        max-width: 100%;
-        margin-bottom: 10px;
-    }
-    .order-card {
-        padding: 20px;
-    }
-    .order-details-grid {
-        grid-template-columns: 1fr; 
-        gap: 15px;
-    }
-    .order-detail-topic {
-        grid-column: span 1; 
-    }
-    .additional-info-section {
-        margin-top: 20px;
-        align-items: flex-start; /* Выравнивание по левому краю на мобильных */
-        text-align: left;
-    }
-    .info-block-left, .info-block-right {
-        align-items: flex-start;
-    }
+@media (width <= 768px) {
+  .support-orders-container {
+    padding: 30px 15px;
+    gap: 20px;
+  }
+
+  .page-header-section {
+    flex-direction: column;
+    gap: 20px;
+    align-items: flex-start; /* Выравнивание по левому краю на мобильных */
+    text-align: left;
+    margin-bottom: 10px;
+  }
+
+  .page-header-section h1 {
+    font-size: 28px;
+  }
+
+  .search-section {
+    max-width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .order-card {
+    padding: 20px;
+  }
+
+  .order-details-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .order-detail-topic {
+    grid-column: span 1;
+  }
+
+  .additional-info-section {
+    margin-top: 20px;
+    align-items: flex-start; /* Выравнивание по левому краю на мобильных */
+    text-align: left;
+  }
+
+  .info-block-left,
+  .info-block-right {
+    align-items: flex-start;
+  }
 }
-
-

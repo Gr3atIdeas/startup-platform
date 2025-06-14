@@ -10,28 +10,28 @@ body {
 
 /* Обновления для черной темы */
 .black-theme {
-  background-color: #000000;
+  background-color: #000;
 }
 
 /* Стили для футера на странице с черной темой */
 .black-theme footer.site-footer {
-  background-image: none !important; 
-  background-color: #000000 !important;
-  border-top: 1px solid #333333 !important;
+  background-image: none !important;
+  background-color: #000 !important;
+  border-top: 1px solid #333 !important;
 }
 
 .black-theme footer.site-footer .wave-container,
 .black-theme footer.site-footer img,
 .black-theme footer.site-footer svg,
-.black-theme footer.site-footer [class*="wave"],
-.black-theme footer.site-footer [class*="background"] {
+.black-theme footer.site-footer [class*='wave'],
+.black-theme footer.site-footer [class*='background'] {
   display: none !important;
   opacity: 0 !important;
   visibility: hidden !important;
 }
 
 .black-theme footer.site-footer * {
-  color: #FFFFFF !important;
+  color: #fff !important;
   background-image: none !important;
 }
 
@@ -41,38 +41,62 @@ body {
 
 /* Общие стили для страницы инвестиций */
 .investments-container {
-  /* max-width: 100%; */ /* Убираем старое, заменяем на 1303px */
+  /* max-width: 100%; */
+
+  /* Убираем старое, заменяем на 1303px */
   max-width: 1303px; /* Ограничиваем ширину контента */
   margin: 0 auto; /* Центрируем контейнер */
-  /* padding: 0 175px; */ /* Убираем боковые отступы, центрируем через margin */
+
+  /* padding: 0 175px; */
+
+  /* Убираем боковые отступы, центрируем через margin */
   padding: 40px 0; /* Добавляем вертикальные отступы */
   box-sizing: border-box; /* Учитываем padding в общей ширине */
+
   /* Применяем базовый шрифт Unbounded */
-  font-family: 'Unbounded', sans-serif; 
+  font-family: Unbounded, sans-serif;
   font-weight: 300; /* Базовый вес */
   font-size: 14px; /* Базовый размер */
   line-height: 18px; /* Базовая высота строки */
   letter-spacing: -0.28px;
-  color: #FFFFFF;
+  color: #fff;
   animation: fadeIn 0.8s linear;
-  background-color: #0B0D17;
+  background-color: #0b0d17;
 }
 
 /* Применяем стили к конкретным текстовым элементам, где vertical-align имеет смысл */
-.stat-label, .detail-label, .investment-label, .filter-btn, .modal-category-name {
-    vertical-align: middle; /* Применяем vertical-align там, где это может быть уместно */
+.stat-label,
+.detail-label,
+.investment-label,
+.filter-btn,
+.modal-category-name {
+  vertical-align: middle; /* Применяем vertical-align там, где это может быть уместно */
 }
 
 /* Секция аналитики (верхняя часть) */
 .analytics-section {
-  /* background-color: #ffffff; */ /* Убираем фон */
-  /* padding: 40px 0; */ /* Убираем паддинг */
+  /* background-color: #ffffff; */
+
+  /* Убираем фон */
+
+  /* padding: 40px 0; */
+
+  /* Убираем паддинг */
   display: flex;
   gap: 10px; /* Устанавливаем отступ 10px между левой и правой колонками */
-  /* border-radius: 20px; */ /* Убираем радиус */
+
+  /* border-radius: 20px; */
+
+  /* Убираем радиус */
   margin-bottom: 40px;
-  /* box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); */ /* Убираем тень */
-  /* color: #191919; */ /* Убираем цвет, он будет у дочерних */
+
+  /* box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); */
+
+  /* Убираем тень */
+
+  /* color: #191919; */
+
+  /* Убираем цвет, он будет у дочерних */
 }
 
 .analytics-left {
@@ -89,12 +113,18 @@ body {
   position: relative;
   overflow: hidden;
   border-radius: 15px; /* Закругление углов */
-  /* background-color: #1a1d2e; */ /* Убираем старый фон */
-  background-color: #FFFFFF; /* Белый фон как у других блоков */
+
+  /* background-color: #1a1d2e; */
+
+  /* Убираем старый фон */
+  background-color: #fff; /* Белый фон как у других блоков */
   background-size: cover;
   background-position: center;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); /* Добавляем тень */
-  /* padding: 20px; */ /* Паддинг не нужен, если есть фоновое изображение */
+  box-shadow: 0 4px 15px rgb(0 0 0 / 5%); /* Добавляем тень */
+
+  /* padding: 20px; */
+
+  /* Паддинг не нужен, если есть фоновое изображение */
 }
 
 .portfolio-image {
@@ -109,8 +139,8 @@ body {
   position: absolute;
   bottom: 15px;
   right: 15px;
-  background-color: rgba(0, 0, 0, 0.5);
-  color: #ffffff;
+  background-color: rgb(0 0 0 / 50%);
+  color: #fff;
   border: none;
   border-radius: 50%;
   width: 35px;
@@ -123,18 +153,20 @@ body {
 }
 
 .portfolio-image-fullscreen-btn:hover {
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: rgb(0 0 0 / 80%);
 }
 
 /* Секция категорий с радиальными диаграммами */
 .categories-radial-section {
-  /* background-color: #F8F9FA; */ /* Убираем старый фон */
-  background-color: #FFFFFF; /* Белый фон */
+  /* background-color: #F8F9FA; */
+
+  /* Убираем старый фон */
+  background-color: #fff; /* Белый фон */
   padding: 25px;
   border-radius: 15px; /* Закругление углов */
   color: #191919; /* Темный текст */
   overflow: auto; /* Добавляем прокрутку на всякий случай */
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); /* Добавляем тень */
+  box-shadow: 0 4px 15px rgb(0 0 0 / 5%); /* Добавляем тень */
 }
 
 .categories-radial-title {
@@ -164,20 +196,24 @@ body {
   height: 60px;
   border-radius: 50%;
   position: relative;
-  background-color: #E9ECEF; /* Фон круга */
+  background-color: #e9ecef; /* Фон круга */
 }
 
 .radial-chart-progress {
   position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
+  inset: 0;
   border-radius: 50%;
+
   /* Устанавливаем градиент с использованием переменных */
   background: conic-gradient(
-    var(--progress-color, #007bff) calc(var(--percentage, 0) * 1%), 
+    var(--progress-color, #007bff) calc(var(--percentage, 0) * 1%),
     transparent calc(var(--percentage, 0) * 1%)
   );
   mask: radial-gradient(transparent 60%, black 61%);
-  /* transform: rotate(-90deg); */ /* Убираем старый поворот (старт сверху) */
+
+  /* transform: rotate(-90deg); */
+
+  /* Убираем старый поворот (старт сверху) */
   transform: rotate(180deg); /* Новый поворот (старт слева) */
 }
 
@@ -196,14 +232,16 @@ body {
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  border: 2px dashed #CED4DA; /* Пунктирная рамка */
+  border: 2px dashed #ced4da; /* Пунктирная рамка */
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #ADB5BD;
+  color: #adb5bd;
   font-size: 18px;
   cursor: pointer; /* Добавляем курсор */
-  transition: background-color 0.3s ease, border-color 0.3s ease; /* Плавный переход */
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease; /* Плавный переход */
 }
 
 .category-all .radial-chart-all:hover {
@@ -214,26 +252,31 @@ body {
 /* Правая часть аналитики */
 .analytics-content {
   width: 55%; /* Ширина правой колонки */
-  /* padding: 0; */ /* Убираем старый паддинг */
+
+  /* padding: 0; */
+
+  /* Убираем старый паддинг */
   padding: 30px 40px; /* Добавляем внутренние отступы */
   display: flex;
   flex-direction: column;
-  background-color: #FFFFFF; /* Белый фон */
+  background-color: #fff; /* Белый фон */
   border-radius: 20px; /* Закругление углов */
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); /* Добавляем тень */
+  box-shadow: 0 4px 15px rgb(0 0 0 / 5%); /* Добавляем тень */
   color: #191919; /* Темный текст */
 }
 
 /* Заголовок и контролы */
 .analytics-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
 }
 
 .analytics-title {
-  /* font-family: 'Unbounded', sans-serif; */ /* Заменяем шрифт */
+  /* font-family: 'Unbounded', sans-serif; */
+
+  /* Заменяем шрифт */
   font-family: 'Blippo Local', sans-serif; /* Новый шрифт */
   font-weight: 400; /* Новый вес */
   font-size: 55px; /* Новый размер */
@@ -244,25 +287,25 @@ body {
 }
 
 .analytics-controls {
-    display: flex;
-    align-items: center;
-    gap: 15px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
 }
 
 .month-select {
-    padding: 8px 12px;
-    border: 1px solid #ced4da;
-    border-radius: 6px;
-    font-size: 14px;
-    background-color: #fff;
+  padding: 8px 12px;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  font-size: 14px;
+  background-color: #fff;
 }
 
 .analytics-options-btn {
-    background: none;
-    border: none;
-    font-size: 18px;
-    color: #adb5bd;
-    cursor: pointer;
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: #adb5bd;
+  cursor: pointer;
 }
 
 /* Блоки статистики */
@@ -273,14 +316,14 @@ body {
 }
 
 .stats-details {
-  background-color: #FFFFFF; /* Белый фон */
+  background-color: #fff; /* Белый фон */
   border-radius: 10px;
   padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 15px;
   margin-bottom: 25px;
-  border: 1px solid #E9ECEF; /* Легкая рамка */
+  border: 1px solid #e9ecef; /* Легкая рамка */
 }
 
 .stat-item {
@@ -299,7 +342,7 @@ body {
 
 .stat-label {
   font-size: 14px; /* Используем базовый размер 14px */
-  color: #868E96; /* Более светлый серый */
+  color: #868e96; /* Более светлый серый */
   margin-bottom: 8px; /* Отступ снизу для overview */
   font-weight: 300; /* Базовый вес */
   line-height: 18px; /* Базовая высота строки */
@@ -320,15 +363,15 @@ body {
 }
 
 .dark-box {
-  background-color: #343A40;
-  color: #FFFFFF;
+  background-color: #343a40;
+  color: #fff;
   width: 100%; /* Занимает всю ширину родителя */
   box-sizing: border-box; /* Учитываем padding */
 }
 
 .blue-box {
-  background-color: #007BFF;
-  color: #FFFFFF;
+  background-color: #007bff;
+  color: #fff;
   width: 100%; /* Занимает всю ширину родителя */
   box-sizing: border-box; /* Учитываем padding */
 }
@@ -343,45 +386,46 @@ body {
 
 /* Контейнер графика */
 .analytics-chart-container {
-  background-color: #FFFFFF; /* Белый фон */
+  background-color: #fff; /* Белый фон */
   border-radius: 15px;
   padding: 20px;
   flex-grow: 1; /* Занимает оставшееся место */
   margin-bottom: 25px;
   position: relative;
   min-height: 250px; /* Минимальная высота для графика */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    /* Здесь будет JS для отрисовки графика */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Здесь будет JS для отрисовки графика */
 }
 
 .chart-placeholder {
-    /* Стили для плейсхолдера графика, если нужен */
-    width: 100%;
-    height: 100%;
-     background-image: url('data:image/svg+xml;utf8,<svg width="468" height="191" viewBox="0 0 468 191" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="170" width="20" height="20" transform="rotate(-90 20 170)" fill="%234D8AFF"/><rect x="65" y="170" width="75" height="20" transform="rotate(-90 65 170)" fill="%234D8AFF"/><rect x="110" y="170" width="100" height="20" transform="rotate(-90 110 170)" fill="%234D8AFF"/><rect x="155" y="170" width="150" height="20" transform="rotate(-90 155 170)" fill="%234D8AFF"/><rect x="200" y="170" width="170" height="20" transform="rotate(-90 200 170)" fill="%234D8AFF"/><rect x="245" y="170" width="100" height="20" transform="rotate(-90 245 170)" fill="%234D8AFF"/><rect x="290" y="170" width="110" height="20" transform="rotate(-90 290 170)" fill="%234D8AFF"/><rect x="335" y="170" width="120" height="20" transform="rotate(-90 335 170)" fill="%234D8AFF"/><rect x="380" y="170" width="100" height="20" transform="rotate(-90 380 170)" fill="%234D8AFF"/><rect x="425" y="170" width="130" height="20" transform="rotate(-90 425 170)" fill="%234D8AFF"/><rect x="470" y="170" width="100" height="20" transform="rotate(-90 470 170)" fill="%234D8AFF"/><rect x="20" y="170" width="10" height="20" transform="rotate(-90 20 170)" fill="%23FFBC53"/><rect x="65" y="170" width="30" height="20" transform="rotate(-90 65 170)" fill="%23FFBC53"/><rect x="110" y="170" width="40" height="20" transform="rotate(-90 110 170)" fill="%23FFBC53"/><rect x="155" y="170" width="60" height="20" transform="rotate(-90 155 170)" fill="%23FFBC53"/><rect x="200" y="170" width="80" height="20" transform="rotate(-90 200 170)" fill="%23FFBC53"/><rect x="245" y="170" width="50" height="20" transform="rotate(-90 245 170)" fill="%23FFBC53"/><rect x="290" y="170" width="60" height="20" transform="rotate(-90 290 170)" fill="%23FFBC53"/><rect x="335" y="170" width="70" height="20" transform="rotate(-90 335 170)" fill="%23FFBC53"/><rect x="380" y="170" width="50" height="20" transform="rotate(-90 380 170)" fill="%23FFBC53"/><rect x="425" y="170" width="70" height="20" transform="rotate(-90 425 170)" fill="%23FFBC53"/><rect x="470" y="170" width="50" height="20" transform="rotate(-90 470 170)" fill="%23FFBC53"/><rect x="20" y="170" width="5" height="20" transform="rotate(-90 20 170)" fill="%234CE0D2"/><rect x="65" y="170" width="15" height="20" transform="rotate(-90 65 170)" fill="%234CE0D2"/><rect x="110" y="170" width="20" height="20" transform="rotate(-90 110 170)" fill="%234CE0D2"/><rect x="155" y="170" width="30" height="20" transform="rotate(-90 155 170)" fill="%234CE0D2"/><rect x="200" y="170" width="40" height="20" transform="rotate(-90 200 170)" fill="%234CE0D2"/><rect x="245" y="170" width="25" height="20" transform="rotate(-90 245 170)" fill="%234CE0D2"/><rect x="290" y="170" width="30" height="20" transform="rotate(-90 290 170)" fill="%234CE0D2"/><rect x="335" y="170" width="35" height="20" transform="rotate(-90 335 170)" fill="%234CE0D2"/><rect x="380" y="170" width="25" height="20" transform="rotate(-90 380 170)" fill="%234CE0D2"/><rect x="425" y="170" width="35" height="20" transform="rotate(-90 425 170)" fill="%234CE0D2"/><rect x="470" y="170" width="25" height="20" transform="rotate(-90 470 170)" fill="%234CE0D2"/><text x="25" y="185" font-family="Arial" font-size="10" fill="%236c757d">Фев</text><text x="70" y="185" font-family="Arial" font-size="10" fill="%236c757d">Мар</text><text x="115" y="185" font-family="Arial" font-size="10" fill="%236c757d">Апр</text><text x="160" y="185" font-family="Arial" font-size="10" fill="%236c757d">Май</text><text x="200" y="185" font-family="Arial" font-size="10" fill="%236c757d">Июн</text><text x="245" y="185" font-family="Arial" font-size="10" fill="%236c757d">Июл</text><text x="290" y="185" font-family="Arial" font-size="10" fill="%236c757d">Авг</text><text x="335" y="185" font-family="Arial" font-size="10" fill="%236c757d">Сен</text><text x="380" y="185" font-family="Arial" font-size="10" fill="%236c757d">Окт</text><text x="425" y="185" font-family="Arial" font-size="10" fill="%236c757d">Ноя</text><text x="470" y="185" font-family="Arial" font-size="10" fill="%236c757d">Дек</text><text x="0" y="15" font-family="Arial" font-size="10" fill="%236c757d">2000</text><text x="0" y="65" font-family="Arial" font-size="10" fill="%236c757d">1000</text><text x="0" y="115" font-family="Arial" font-size="10" fill="%236c757d">500</text><text x="0" y="165" font-family="Arial" font-size="10" fill="%236c757d">100</text></svg>');
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: contain; /* Масштабируем SVG */
+  /* Стили для плейсхолдера графика, если нужен */
+  width: 100%;
+  height: 100%;
+  background-image: url('data:image/svg+xml;utf8,<svg width="468" height="191" viewBox="0 0 468 191" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="170" width="20" height="20" transform="rotate(-90 20 170)" fill="%234D8AFF"/><rect x="65" y="170" width="75" height="20" transform="rotate(-90 65 170)" fill="%234D8AFF"/><rect x="110" y="170" width="100" height="20" transform="rotate(-90 110 170)" fill="%234D8AFF"/><rect x="155" y="170" width="150" height="20" transform="rotate(-90 155 170)" fill="%234D8AFF"/><rect x="200" y="170" width="170" height="20" transform="rotate(-90 200 170)" fill="%234D8AFF"/><rect x="245" y="170" width="100" height="20" transform="rotate(-90 245 170)" fill="%234D8AFF"/><rect x="290" y="170" width="110" height="20" transform="rotate(-90 290 170)" fill="%234D8AFF"/><rect x="335" y="170" width="120" height="20" transform="rotate(-90 335 170)" fill="%234D8AFF"/><rect x="380" y="170" width="100" height="20" transform="rotate(-90 380 170)" fill="%234D8AFF"/><rect x="425" y="170" width="130" height="20" transform="rotate(-90 425 170)" fill="%234D8AFF"/><rect x="470" y="170" width="100" height="20" transform="rotate(-90 470 170)" fill="%234D8AFF"/><rect x="20" y="170" width="10" height="20" transform="rotate(-90 20 170)" fill="%23FFBC53"/><rect x="65" y="170" width="30" height="20" transform="rotate(-90 65 170)" fill="%23FFBC53"/><rect x="110" y="170" width="40" height="20" transform="rotate(-90 110 170)" fill="%23FFBC53"/><rect x="155" y="170" width="60" height="20" transform="rotate(-90 155 170)" fill="%23FFBC53"/><rect x="200" y="170" width="80" height="20" transform="rotate(-90 200 170)" fill="%23FFBC53"/><rect x="245" y="170" width="50" height="20" transform="rotate(-90 245 170)" fill="%23FFBC53"/><rect x="290" y="170" width="60" height="20" transform="rotate(-90 290 170)" fill="%23FFBC53"/><rect x="335" y="170" width="70" height="20" transform="rotate(-90 335 170)" fill="%23FFBC53"/><rect x="380" y="170" width="50" height="20" transform="rotate(-90 380 170)" fill="%23FFBC53"/><rect x="425" y="170" width="70" height="20" transform="rotate(-90 425 170)" fill="%23FFBC53"/><rect x="470" y="170" width="50" height="20" transform="rotate(-90 470 170)" fill="%23FFBC53"/><rect x="20" y="170" width="5" height="20" transform="rotate(-90 20 170)" fill="%234CE0D2"/><rect x="65" y="170" width="15" height="20" transform="rotate(-90 65 170)" fill="%234CE0D2"/><rect x="110" y="170" width="20" height="20" transform="rotate(-90 110 170)" fill="%234CE0D2"/><rect x="155" y="170" width="30" height="20" transform="rotate(-90 155 170)" fill="%234CE0D2"/><rect x="200" y="170" width="40" height="20" transform="rotate(-90 200 170)" fill="%234CE0D2"/><rect x="245" y="170" width="25" height="20" transform="rotate(-90 245 170)" fill="%234CE0D2"/><rect x="290" y="170" width="30" height="20" transform="rotate(-90 290 170)" fill="%234CE0D2"/><rect x="335" y="170" width="35" height="20" transform="rotate(-90 335 170)" fill="%234CE0D2"/><rect x="380" y="170" width="25" height="20" transform="rotate(-90 380 170)" fill="%234CE0D2"/><rect x="425" y="170" width="35" height="20" transform="rotate(-90 425 170)" fill="%234CE0D2"/><rect x="470" y="170" width="25" height="20" transform="rotate(-90 470 170)" fill="%234CE0D2"/><text x="25" y="185" font-family="Arial" font-size="10" fill="%236c757d">Фев</text><text x="70" y="185" font-family="Arial" font-size="10" fill="%236c757d">Мар</text><text x="115" y="185" font-family="Arial" font-size="10" fill="%236c757d">Апр</text><text x="160" y="185" font-family="Arial" font-size="10" fill="%236c757d">Май</text><text x="200" y="185" font-family="Arial" font-size="10" fill="%236c757d">Июн</text><text x="245" y="185" font-family="Arial" font-size="10" fill="%236c757d">Июл</text><text x="290" y="185" font-family="Arial" font-size="10" fill="%236c757d">Авг</text><text x="335" y="185" font-family="Arial" font-size="10" fill="%236c757d">Сен</text><text x="380" y="185" font-family="Arial" font-size="10" fill="%236c757d">Окт</text><text x="425" y="185" font-family="Arial" font-size="10" fill="%236c757d">Ноя</text><text x="470" y="185" font-family="Arial" font-size="10" fill="%236c757d">Дек</text><text x="0" y="15" font-family="Arial" font-size="10" fill="%236c757d">2000</text><text x="0" y="65" font-family="Arial" font-size="10" fill="%236c757d">1000</text><text x="0" y="115" font-family="Arial" font-size="10" fill="%236c757d">500</text><text x="0" y="165" font-family="Arial" font-size="10" fill="%236c757d">100</text></svg>');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain; /* Масштабируем SVG */
 }
 
 .chart-title-overlay {
-    position: absolute;
-    top: 20px;
-    left: 20px; /* Перемещаем влево как в макете */
-    font-size: 12px;
-    color: #adb5bd;
-    background-color: rgba(255, 255, 255, 0.8);
-    padding: 3px 6px;
-    border-radius: 4px;
+  position: absolute;
+  top: 20px;
+  left: 20px; /* Перемещаем влево как в макете */
+  font-size: 12px;
+  color: #adb5bd;
+  background-color: rgb(255 255 255 / 80%);
+  padding: 3px 6px;
+  border-radius: 4px;
 }
 
 /* Кнопка "Скачать отчет" */
 .download-report-btn {
-  background-color: #FFEF2B; /* Желтый */
-  color: #000000;
-  border: 1px solid #FFEF2B; /* Граница того же цвета */
+  background-color: #ffef2b; /* Желтый */
+  color: #000;
+  border: 1px solid #ffef2b; /* Граница того же цвета */
   border-radius: 25px;
   padding: 12px 30px;
   font-weight: 700; /* Более жирный */
@@ -401,7 +445,7 @@ body {
 
 /* Секция Мои стартапы */
 .my-startups-section {
-  color: #FFFFFF;
+  color: #fff;
   padding: 60px 0;
 }
 
@@ -410,7 +454,7 @@ body {
   justify-content: space-between;
   align-items: flex-end; /* Выравниваем по нижнему краю */
   margin-bottom: 40px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Разделитель */
+  border-bottom: 1px solid rgb(255 255 255 / 10%); /* Разделитель */
   padding-bottom: 30px;
 }
 
@@ -422,24 +466,30 @@ body {
 
 .startups-title-main,
 .startups-title-sub {
-  /* font-family: 'Koulen', sans-serif; */ /* Заменяем шрифт */
+  /* font-family: 'Koulen', sans-serif; */
+
+  /* Заменяем шрифт */
   font-family: 'Blippo Local', sans-serif; /* Новый шрифт */
   font-weight: 400; /* Новый вес */
   font-size: 55px; /* Новый размер */
-  line-height: 1.0; /* Устанавливаем нормальную высоту строки (100% от размера шрифта) */
+  line-height: 1; /* Устанавливаем нормальную высоту строки (100% от размера шрифта) */
   letter-spacing: -0.02em; /* Новый интервал */
   margin: 0;
   text-transform: uppercase;
 }
 
 .startups-title-main {
-  /* color: #FFEF2B; */ /* Убираем желтый цвет */
-  color: #FFFFFF; /* Делаем белым */
+  /* color: #FFEF2B; */
+
+  /* Убираем желтый цвет */
+  color: #fff; /* Делаем белым */
 }
 
 .startups-title-sub {
-  /* color: #FFFFFF; */ /* Убираем белый цвет */
-  color: #FFEF2B; /* Делаем желтым */
+  /* color: #FFFFFF; */
+
+  /* Убираем белый цвет */
+  color: #ffef2b; /* Делаем желтым */
 }
 
 .total-investment {
@@ -448,7 +498,7 @@ body {
 
 .investment-label {
   font-size: 14px; /* Используем базовый размер 14px */
-  color: rgba(255, 255, 255, 0.7);
+  color: rgb(255 255 255 / 70%);
   display: block;
   margin-bottom: 5px;
   font-weight: 300; /* Базовый вес */
@@ -457,8 +507,8 @@ body {
 }
 
 .investment-amount {
-  background-color: rgba(0, 123, 255, 0.8); /* Синий фон из макета */
-  color: #FFFFFF;
+  background-color: rgb(0 123 255 / 80%); /* Синий фон из макета */
+  color: #fff;
   border-radius: 8px; /* Чуть меньше скругление */
   padding: 15px 30px;
   font-weight: 300; /* Базовый вес */
@@ -489,23 +539,25 @@ body {
   width: 100%;
   height: 40px;
   padding: 0 15px 0 40px;
-  background-color: #FFFFFF; /* Белый фон */
-  border: 1px solid #DEE2E6; /* Светло-серая граница */
+  background-color: #fff; /* Белый фон */
+  border: 1px solid #dee2e6; /* Светло-серая граница */
   border-radius: 20px; /* Сильное скругление */
   font-size: 14px;
   color: #495057; /* Темно-серый текст */
   outline: none;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .startups-search-input:focus {
-  border-color: #007BFF;
-  background-color: #FFFFFF;
-  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+  border-color: #007bff;
+  background-color: #fff;
+  box-shadow: 0 0 0 2px rgb(0 123 255 / 25%);
 }
 
 .startups-search-input::placeholder {
-  color: #ADB5BD; /* Светло-серый плейсхолдер */
+  color: #adb5bd; /* Светло-серый плейсхолдер */
 }
 
 .startups-search-wrapper .search-icon {
@@ -513,7 +565,7 @@ body {
   left: 15px;
   top: 50%;
   transform: translateY(-50%);
-  color: #ADB5BD; /* Светло-серая иконка */
+  color: #adb5bd; /* Светло-серая иконка */
   font-size: 16px;
 }
 
@@ -524,17 +576,21 @@ body {
 
 .filter-btn {
   padding: 8px 20px;
-  border: 1px solid #DEE2E6; /* Светло-серая граница */
+  border: 1px solid #dee2e6; /* Светло-серая граница */
   border-radius: 16px; /* Скругление */
-  background-color: #FFFFFF; /* Белый фон */
+  background-color: #fff; /* Белый фон */
   color: #495057; /* Темно-серый текст */
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-weight: 500; /* Средний вес */
   font-size: 14px;
   line-height: 18px;
   letter-spacing: -0.02em;
   cursor: pointer;
-  transition: background-color 0.3s linear, border-color 0.3s linear, color 0.3s linear, box-shadow 0.3s ease;
+  transition:
+    background-color 0.3s linear,
+    border-color 0.3s linear,
+    color 0.3s linear,
+    box-shadow 0.3s ease;
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -547,14 +603,14 @@ body {
 }
 
 .filter-btn.active {
-  background-color: #007BFF; /* Синий фон */
-  color: #FFFFFF; /* Белый текст */
-  border-color: #007BFF;
+  background-color: #007bff; /* Синий фон */
+  color: #fff; /* Белый текст */
+  border-color: #007bff;
 }
 
 .filter-btn.active:hover {
-    background-color: #0056b3; /* Темно-синий при наведении */
-    border-color: #0056b3;
+  background-color: #0056b3; /* Темно-синий при наведении */
+  border-color: #0056b3;
 }
 
 .filter-btn i {
@@ -567,10 +623,10 @@ body {
   position: absolute;
   top: 100%;
   left: 0; /* !!! Выравниваем по левому краю кнопки !!! */
-  background-color: #FFFFFF; /* Белый фон */
-  border: 1px solid #DEE2E6; /* Граница */
+  background-color: #fff; /* Белый фон */
+  border: 1px solid #dee2e6; /* Граница */
   border-radius: 5px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Тень */
+  box-shadow: 0 4px 10px rgb(0 0 0 / 10%); /* Тень */
   padding: 10px 0;
   min-width: 150px;
   z-index: 10;
@@ -587,7 +643,10 @@ body {
   color: #495057; /* Темно-серый текст */
   text-decoration: none;
   font-size: 14px;
-  /* white-space: nowrap; */ /* Убираем запрет переноса */
+
+  /* white-space: nowrap; */
+
+  /* Убираем запрет переноса */
 }
 
 .filter-dropdown-content a:hover {
@@ -606,19 +665,22 @@ body {
 /* Карточка стартапа */
 .startup-card {
   display: flex;
-  background-color: #FFFFFF;
-  border: 1px solid #E9ECEF;
+  background-color: #fff;
+  border: 1px solid #e9ecef;
   border-radius: 12px;
   padding: 20px; /* Уменьшаем паддинг */
   gap: 20px; /* Уменьшаем отступ */
-  transition: background-color 0.3s linear, border-color 0.3s linear, box-shadow 0.3s ease;
+  transition:
+    background-color 0.3s linear,
+    border-color 0.3s linear,
+    box-shadow 0.3s ease;
   overflow: hidden;
   color: #191919;
 }
 
 .startup-card:hover {
   border-color: #dee2e6;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); /* Увеличиваем тень при наведении */
+  box-shadow: 0 4px 15px rgb(0 0 0 / 8%); /* Увеличиваем тень при наведении */
 }
 
 /* Левая часть карточки */
@@ -643,7 +705,7 @@ body {
 }
 
 .startup-name {
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-size: 16px; /* Немного увеличиваем */
   font-weight: 500; /* Средний вес */
   color: #191919;
@@ -661,21 +723,21 @@ body {
 }
 
 .startup-rating .far.fa-star {
-    color: #e9ecef; /* Светло-серые пустые звезды */
+  color: #e9ecef; /* Светло-серые пустые звезды */
 }
 
 .startup-comments {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 13px;
-    color: #868E96; /* Серый цвет */
-    margin-top: 5px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13px;
+  color: #868e96; /* Серый цвет */
+  margin-top: 5px;
 }
 
 .startup-comments i {
-    font-size: 16px;
-    color: #adb5bd; /* Светло-серый для иконки */
+  font-size: 16px;
+  color: #adb5bd; /* Светло-серый для иконки */
 }
 
 /* Правая часть карточки */
@@ -690,24 +752,25 @@ body {
 
 .startup-status-row,
 .startup-category-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 /* УБЕДИМСЯ, ЧТО ЛЕЙБЛ КАТЕГОРИИ ВИДЕН */
 .startup-category-row .detail-label {
-    /* НЕ СКРЫВАЕМ: display: none; */
-    /* Просто оставляем стили по умолчанию */
+  /* НЕ СКРЫВАЕМ: display: none; */
+
+  /* Просто оставляем стили по умолчанию */
 }
 
 .startup-financials {
-    background-color: #F8F9FA; /* Светло-серый фон для блока с суммами */
-    border-radius: 8px;
-    padding: 15px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px; /* Отступ между строками внутри блока */
+  background-color: #f8f9fa; /* Светло-серый фон для блока с суммами */
+  border-radius: 8px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Отступ между строками внутри блока */
 }
 
 .startup-detail-row {
@@ -722,7 +785,7 @@ body {
 }
 
 .detail-label {
-  color: #868E96;
+  color: #868e96;
   font-weight: 400; /* Нормальный вес */
   font-size: 13px;
   line-height: 1.4;
@@ -739,7 +802,8 @@ body {
 
 .status-active,
 .status-funded,
-.status-pending { /* Общие стили для статусов */
+.status-pending {
+  /* Общие стили для статусов */
   font-weight: 500;
   padding: 3px 10px;
   border-radius: 12px; /* Скругление для пилюли */
@@ -748,28 +812,31 @@ body {
 }
 
 .status-active {
-  color: #FFFFFF; /* Белый текст */
-  background-color: #004E9F !important; /* Новый темно-синий + !important для надежности */
+  color: #fff; /* Белый текст */
+  background-color: #004e9f !important; /* Новый темно-синий + !important для надежности */
   padding: 3px 10px; /* Убедимся, что паддинг есть */
   border-radius: 12px; /* Скругление */
   font-size: 12px; /* Размер шрифта */
   font-weight: 500; /* Вес */
 }
+
 .status-funded {
-  color: #FFFFFF;
+  color: #fff;
   background-color: #28a745; /* Зеленый */
 }
+
 .status-pending {
   color: #191919;
   background-color: #ffc107; /* Желтый */
 }
+
 /* Добавьте другие статусы по аналогии */
 
 .startup-category-tag {
   position: static;
   display: inline-block;
   background-color: #191919; /* Черный фон */
-  color: #FFFFFF; /* Белый текст */
+  color: #fff; /* Белый текст */
   border-radius: 6px; /* Скругление */
   padding: 4px 8px; /* Отступы */
   font-size: 12px;
@@ -783,10 +850,10 @@ body {
   justify-content: center;
   gap: 8px;
   padding: 8px 20px; /* Уменьшаем паддинг */
-  border: 1px solid #000000; /* Черная граница */
+  border: 1px solid #000; /* Черная граница */
   border-radius: 20px;
   background-color: transparent;
-  color: #000000; /* Черный текст */
+  color: #000; /* Черный текст */
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
@@ -795,8 +862,8 @@ body {
 }
 
 .show-more-btn:hover {
-  background-color: rgba(0, 0, 0, 0.05); /* Легкий фон при наведении */
-  border-color: #000000;
+  background-color: rgb(0 0 0 / 5%); /* Легкий фон при наведении */
+  border-color: #000;
 }
 
 .show-more-btn i {
@@ -808,7 +875,7 @@ body {
 }
 
 /* Адаптивность */
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .startup-card {
     flex-direction: column;
     gap: 20px;
@@ -828,13 +895,13 @@ body {
   .startup-status-row,
   .startup-category-row,
   .startup-financials .startup-detail-row {
-      width: 100%; /* Растягиваем строки на всю ширину */
-      justify-content: space-between; /* Возвращаем выравнивание */
-  }
-  .startup-financials {
-      width: 90%; /* Немного сужаем блок финансов */
+    width: 100%; /* Растягиваем строки на всю ширину */
+    justify-content: space-between; /* Возвращаем выравнивание */
   }
 
+  .startup-financials {
+    width: 90%; /* Немного сужаем блок финансов */
+  }
 }
 
 /* ==== Стили для модального окна категорий ==== */
@@ -844,27 +911,31 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.6); /* Полупрозрачный фон */
+  background-color: rgb(0 0 0 / 60%); /* Полупрозрачный фон */
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.4s ease, visibility 0s linear 0.4s;
+  transition:
+    opacity 0.4s ease,
+    visibility 0s linear 0.4s;
 }
 
 .modal-overlay.visible {
   opacity: 1;
   visibility: visible;
-  transition: opacity 0.4s ease, visibility 0s linear 0s;
+  transition:
+    opacity 0.4s ease,
+    visibility 0s linear 0s;
 }
 
 .modal-content {
-  background-color: #ffffff;
+  background-color: #fff;
   padding: 30px 40px;
   border-radius: 15px;
-  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 5px 25px rgb(0 0 0 / 20%);
   position: relative;
   max-width: 800px; /* Макс ширина окна */
   width: 90%;
@@ -929,7 +1000,7 @@ body {
 .modal-category-name {
   display: block;
   margin-bottom: 0;
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-weight: 400;
   font-size: 12px;
   line-height: 1.2;
@@ -939,31 +1010,38 @@ body {
 
 /* Стили для радиальной диаграммы ВНУТРИ модального окна */
 .modal-category-item .radial-chart {
-    width: 50px;
-    height: 50px;
-    margin-bottom: 0;
+  width: 50px;
+  height: 50px;
+  margin-bottom: 0;
 }
 
 .modal-category-item .radial-chart-text {
-    font-size: 12px;
-    font-weight: 700;
+  font-size: 12px;
+  font-weight: 700;
 }
 
 /* Эффект блюра для фона */
+
 /* Применяем блюр к основным блокам страницы, исключая модальные окна */
 body.modal-open-blur .site-header, /* Замените .site-header на ваш реальный селектор хедера */
 body.modal-open-blur .main-content, /* Замените .main-content на ваш основной контейнер */
 body.modal-open-blur .site-footer, /* Замените .site-footer на ваш реальный селектор футера */
-body.modal-open-blur .portfolio-container > *:not(.modal-overlay) { /* Дополнительно для содержимого контейнера портфеля */
+body.modal-open-blur .portfolio-container > *:not(.modal-overlay) {
+  /* Дополнительно для содержимого контейнера портфеля */
   filter: blur(5px);
   transition: filter 0.4s ease;
 }
+
 /* ==== Конец стилей для модального окна ==== */
 
 /* Анимации */
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slideInUp {
@@ -971,6 +1049,7 @@ body.modal-open-blur .portfolio-container > *:not(.modal-overlay) { /* Допо�
     transform: translateY(30px);
     opacity: 0;
   }
+
   to {
     transform: translateY(0);
     opacity: 1;
@@ -982,6 +1061,7 @@ body.modal-open-blur .portfolio-container > *:not(.modal-overlay) { /* Допо�
     transform: translateX(-30px);
     opacity: 0;
   }
+
   to {
     transform: translateX(0);
     opacity: 1;
@@ -993,6 +1073,7 @@ body.modal-open-blur .portfolio-container > *:not(.modal-overlay) { /* Допо�
     transform: translateX(30px);
     opacity: 0;
   }
+
   to {
     transform: translateX(0);
     opacity: 1;
@@ -1000,71 +1081,87 @@ body.modal-open-blur .portfolio-container > *:not(.modal-overlay) { /* Допо�
 }
 
 @keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 @keyframes chartGrow {
-  from { width: 0; }
-  to { width: 100%; }
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
 }
 
 /* Адаптивность */
-@media (max-width: 1200px) {
+@media (width <= 1200px) {
   .analytics-section {
     flex-direction: column;
   }
-  
+
   .analytics-left,
   .analytics-content {
     width: 100%;
   }
-  
+
   .startups-grid {
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); /* Адаптивная сетка для меньших экранов */
+    grid-template-columns: repeat(
+      auto-fit,
+      minmax(350px, 1fr)
+    ); /* Адаптивная сетка для меньших экранов */
   }
 }
 
-@media (max-width: 992px) { /* Добавляем еще одну точку */
+@media (width <= 992px) {
+  /* Добавляем еще одну точку */
   .startups-grid {
     grid-template-columns: 1fr; /* Одна колонка на средних экранах */
   }
+
   .analytics-title {
     font-size: 48px;
   }
+
   .startups-title-main,
   .startups-title-sub {
     font-size: 60px;
   }
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .startups-filters {
     flex-direction: column;
     align-items: flex-start;
   }
-  
+
   .startup-card {
     flex-direction: column;
     gap: 30px;
     align-items: center; /* Центрируем левую часть при вертикальном расположении */
   }
-  
+
   .startup-card-left {
     width: auto; /* Автоширина для левой части */
   }
-  
+
   .startup-card-right {
     width: 100%;
     text-align: center; /* Центрируем текст справа */
   }
-  
+
   .startup-detail-row {
     justify-content: center; /* Центрируем строки деталей */
     text-align: left; /* Выравниваем текст в строках по левому краю */
   }
-  
+
   .startup-category-tag {
     position: static; /* Убираем абсолютное позиционирование */
     margin-top: 15px;
@@ -1079,27 +1176,31 @@ body.modal-open-blur .portfolio-container > *:not(.modal-overlay) { /* Допо�
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.6); /* Полупрозрачный фон */
+  background-color: rgb(0 0 0 / 60%); /* Полупрозрачный фон */
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.4s ease, visibility 0s linear 0.4s;
+  transition:
+    opacity 0.4s ease,
+    visibility 0s linear 0.4s;
 }
 
 .modal-overlay.visible {
   opacity: 1;
   visibility: visible;
-  transition: opacity 0.4s ease, visibility 0s linear 0s;
+  transition:
+    opacity 0.4s ease,
+    visibility 0s linear 0s;
 }
 
 .modal-content {
-  background-color: #ffffff;
+  background-color: #fff;
   padding: 30px 40px;
   border-radius: 15px;
-  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 5px 25px rgb(0 0 0 / 20%);
   position: relative;
   max-width: 800px; /* Макс ширина окна */
   width: 90%;
@@ -1164,7 +1265,7 @@ body.modal-open-blur .portfolio-container > *:not(.modal-overlay) { /* Допо�
 .modal-category-name {
   display: block;
   margin-bottom: 0;
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-weight: 400;
   font-size: 12px;
   line-height: 1.2;
@@ -1174,23 +1275,26 @@ body.modal-open-blur .portfolio-container > *:not(.modal-overlay) { /* Допо�
 
 /* Стили для радиальной диаграммы ВНУТРИ модального окна */
 .modal-category-item .radial-chart {
-    width: 50px;
-    height: 50px;
-    margin-bottom: 0;
+  width: 50px;
+  height: 50px;
+  margin-bottom: 0;
 }
 
 .modal-category-item .radial-chart-text {
-    font-size: 12px;
-    font-weight: 700;
+  font-size: 12px;
+  font-weight: 700;
 }
 
 /* Эффект блюра для фона */
+
 /* Применяем блюр к основным блокам страницы, исключая модальные окна */
 body.modal-open-blur .site-header, /* Замените .site-header на ваш реальный селектор хедера */
 body.modal-open-blur .main-content, /* Замените .main-content на ваш основной контейнер */
 body.modal-open-blur .site-footer, /* Замените .site-footer на ваш реальный селектор футера */
-body.modal-open-blur .portfolio-container > *:not(.modal-overlay) { /* Дополнительно для содержимого контейнера портфеля */
+body.modal-open-blur .portfolio-container > *:not(.modal-overlay) {
+  /* Дополнительно для содержимого контейнера портфеля */
   filter: blur(5px);
   transition: filter 0.4s ease;
 }
-/* ==== Конец стилей для модального окна ==== */ 
+
+/* ==== Конец стилей для модального окна ==== */

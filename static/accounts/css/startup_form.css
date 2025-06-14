@@ -1,1251 +1,1357 @@
 /* General Styles */
 body {
-    font-family: 'Unbounded', sans-serif; /* Шрифт по умолчанию */
-    background-color: #1E1E1E; /* Темный фон как в Figma */
-    color: #FFFFFF; /* Белый текст по умолчанию */
-    margin: 0;
-    padding: 20px;
+  font-family: Unbounded, sans-serif; /* Шрифт по умолчанию */
+  background-color: #1e1e1e; /* Темный фон как в Figma */
+  color: #fff; /* Белый текст по умолчанию */
+  margin: 0;
+  padding: 20px;
 }
 
 .startup-form-container {
-    max-width: 1440px; /* Или ширина вашего основного контейнера по макету */
-    margin: 0 auto;
-    padding: 20px; /* Общий паддинг для контейнера */
+  max-width: 1440px; /* Или ширина вашего основного контейнера по макету */
+  margin: 0 auto;
+  padding: 20px; /* Общий паддинг для контейнера */
 }
 
 .form-navigation-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 40px; /* Отступ снизу */
-    padding: 0 50px; /* Паддинги по бокам как в макете (может потребоваться настройка) */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px; /* Отступ снизу */
+  padding: 0 50px; /* Паддинги по бокам как в макете (может потребоваться настройка) */
 }
 
 .back-button {
-    color: #FFFFFF;
-    text-decoration: none;
-    font-size: 16px; /* Размер шрифта кнопки "Назад" */
+  color: #fff;
+  text-decoration: none;
+  font-size: 16px; /* Размер шрифта кнопки "Назад" */
 }
 
 .form-main-title {
-    font-size: 24px; /* Размер основного заголовка */
-    font-weight: 500; /* Или другое значение по макету */
-    color: #FFFFFF;
+  font-size: 24px; /* Размер основного заголовка */
+  font-weight: 500; /* Или другое значение по макету */
+  color: #fff;
 }
 
 /* Стили для секций формы */
 .form-section {
-    /* Убираем стили, так как они теперь в .form-main-content-wrapper */
-    /* background: rgba(255, 255, 255, 0.07); */
-    /* box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.25); */
-    border-radius: 0; /* Сброс, если был */
-    /* border: 1px solid rgba(255, 255, 255, 0.36); */
-    /* backdrop-filter: blur(10px); */
-    padding: 0; /* Внутренние отступы теперь у .form-main-content-wrapper или .form-content-section */
-    margin-bottom: 0; /* Отступы между секциями теперь внутри .form-main-content-wrapper */
+  /* Убираем стили, так как они теперь в .form-main-content-wrapper */
+
+  /* background: rgba(255, 255, 255, 0.07); */
+
+  /* box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.25); */
+  border-radius: 0; /* Сброс, если был */
+
+  /* border: 1px solid rgba(255, 255, 255, 0.36); */
+
+  /* backdrop-filter: blur(10px); */
+  padding: 0; /* Внутренние отступы теперь у .form-main-content-wrapper или .form-content-section */
+  margin-bottom: 0; /* Отступы между секциями теперь внутри .form-main-content-wrapper */
 }
 
 .form-section-top {
-    background: none;
-    box-shadow: none;
-    border: none;
-    backdrop-filter: none;
-    padding: 0;
-    margin-bottom: 30px; /* Уменьшим отступ, если основной контент близко */
+  background: none;
+  box-shadow: none;
+  border: none;
+  backdrop-filter: none;
+  padding: 0;
+  margin-bottom: 30px; /* Уменьшим отступ, если основной контент близко */
 }
 
 .form-top-grid {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 35px; /* Отступ между левой и правой колонкой верхнего блока */
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 35px; /* Отступ между левой и правой колонкой верхнего блока */
 }
 
 .form-top-left {
-    display: flex;
-    align-items: flex-start;
-    gap: 20px; /* Отступ между лого и полями слева */
-    flex-grow: 1; /* Позволяет занимать доступное пространство */
+  display: flex;
+  align-items: flex-start;
+  gap: 20px; /* Отступ между лого и полями слева */
+  flex-grow: 1; /* Позволяет занимать доступное пространство */
 }
 
 /* Обновленные стили для .logo-upload-label */
 .logo-upload-group .logo-upload-label {
-    display: block;
-    width: 144px; /* Уменьшено с 288px */
-    height: 144px; /* Уменьшено с 288px */
-    border-radius: 5px;
-    background-color: #333;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
+  display: block;
+  width: 144px; /* Уменьшено с 288px */
+  height: 144px; /* Уменьшено с 288px */
+  border-radius: 5px;
+  background-color: #333;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
 }
 
 .logo-upload-group .logo-placeholder {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-    color: #a9a9a9;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  color: #a9a9a9;
 }
 
 .logo-upload-group .logo-placeholder img {
-    width: 60px; /* Размер иконки плейсхолдера */
-    height: 60px;
-    margin-bottom: 10px;
+  width: 60px; /* Размер иконки плейсхолдера */
+  height: 60px;
+  margin-bottom: 10px;
 }
 
 .logo-upload-group .logo-preview {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Масштабирование превью */
-    border-radius: 5px;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Масштабирование превью */
+  border-radius: 5px;
 }
 
 .form-fields-left {
-    display: flex;
-    flex-direction: column;
-    gap: 30px; /* Отступ между полями в левой колонке */
-    width: 301px; /* Ширина колонки с полями */
+  display: flex;
+  flex-direction: column;
+  gap: 30px; /* Отступ между полями в левой колонке */
+  width: 301px; /* Ширина колонки с полями */
 }
 
 .form-top-right {
-    width: 531px; /* Ширина правой колонки */
+  width: 531px; /* Ширина правой колонки */
 }
 
 .investment-type-card {
-    border-radius: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.36); /* Как у основного контейнера */
-    /* background-image: url('../images/creat_startup/Frame 992.svg'); */ /* Убираем SVG фон */
-    background-color: rgba(255, 255, 255, 0.07); /* Фон как у основного контейнера */
-    backdrop-filter: blur(10px); /* Размытие как у основного контейнера */
-    padding: 25px 21px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center; /* <<< ДОБАВЛЕНО для вертикального центрирования */
-    gap: 20px;
-    height: 288px;
-    box-sizing: border-box;
-    box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.25); /* Тень как у основного контейнера */
+  border-radius: 10px;
+  border: 1px solid rgb(255 255 255 / 36%); /* Как у основного контейнера */
+
+  /* background-image: url('../images/creat_startup/Frame 992.svg'); */
+
+  /* Убираем SVG фон */
+  background-color: rgb(255 255 255 / 7%); /* Фон как у основного контейнера */
+  backdrop-filter: blur(10px); /* Размытие как у основного контейнера */
+  padding: 25px 21px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* <<< ДОБАВЛЕНО для вертикального центрирования */
+  gap: 20px;
+  height: 288px;
+  box-sizing: border-box;
+  box-shadow: 6px 6px 10px rgb(0 0 0 / 25%); /* Тень как у основного контейнера */
 }
 
 .micro-investment-group {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    width: 100%; /* Растягиваем на всю ширину карточки */
-    justify-content: flex-start; /* Выравниваем по левому краю */
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%; /* Растягиваем на всю ширину карточки */
+  justify-content: flex-start; /* Выравниваем по левому краю */
 }
 
 .micro-investment-group .form-check-input {
-    /* Стандартный чекбокс можно скрыть, если иконка полностью его заменяет
+  /* Стандартный чекбокс можно скрыть, если иконка полностью его заменяет
     или оставить видимым, если он нужен для доступности и должен быть стилизован */
-    order: 1; /* Иконка и текст будут первыми */
-    margin-right: 10px; /* Отступ от стандартного чекбокса до иконки/текста, если он видим */
-    /* Если скрываем, то display: none; */
+  order: 1; /* Иконка и текст будут первыми */
+  margin-right: 10px; /* Отступ от стандартного чекбокса до иконки/текста, если он видим */
+
+  /* Если скрываем, то display: none; */
 }
 
 .micro-investment-group .micro-investment-label-custom {
-    display: flex;
-    align-items: center;
-    gap: 10px; /* Отступ между иконкой и текстом */
-    font-size: 12px;
-    font-family: Unbounded;
-    font-weight: 300;
-    letter-spacing: 0.12px;
-    color: white;
-    cursor: pointer;
-    order: 2; /* Порядок для label */
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Отступ между иконкой и текстом */
+  font-size: 12px;
+  font-family: Unbounded;
+  font-weight: 300;
+  letter-spacing: 0.12px;
+  color: white;
+  cursor: pointer;
+  order: 2; /* Порядок для label */
 }
 
 .micro-investment-group .micro-investment-label-custom .micro-investment-icon {
-    width: 24px;
-    height: 24px;
-    /* order: 1;  Убрано, порядок через flex-контейнер */
+  width: 24px;
+  height: 24px;
+
+  /* order: 1;  Убрано, порядок через flex-контейнер */
 }
+
 .micro-investment-group .micro-investment-label-custom .checkbox-text-span {
-    /* order: 2; Убрано */
+  /* order: 2; Убрано */
 }
 
 .investment-type-group {
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Текст и селект по центру */
-    gap: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Текст и селект по центру */
+  gap: 15px;
 }
 
 .investment-type-label {
-    font-size: 12px;
-    font-family: Unbounded;
-    font-weight: 300;
-    letter-spacing: 0.12px;
-    color: #A9A9A9; /* Цвет как в Figma */
+  font-size: 12px;
+  font-family: Unbounded;
+  font-weight: 300;
+  letter-spacing: 0.12px;
+  color: #a9a9a9; /* Цвет как в Figma */
 }
 
 /* Общие стили для form-group, label, input-wrapper, form-control */
 .form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 10px; /* Отступ между label и input/select */
-    margin-bottom: 0; /* Убираем стандартный margin-bottom, если он есть */
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Отступ между label и input/select */
+  margin-bottom: 0; /* Убираем стандартный margin-bottom, если он есть */
 }
 
 .form-group label {
-    font-size: 12px;
-    font-family: Unbounded;
-    font-weight: 300;
-    letter-spacing: 0.12px;
-    color: white;
-    text-align: left; /* Явное выравнивание для лейблов */
+  font-size: 12px;
+  font-family: Unbounded;
+  font-weight: 300;
+  letter-spacing: 0.12px;
+  color: white;
+  text-align: left; /* Явное выравнивание для лейблов */
 }
 
 .input-wrapper {
-    position: relative; /* Для позиционирования стрелки в select */
-    display: flex; /* Чтобы инпут занимал всю ширину */
+  position: relative; /* Для позиционирования стрелки в select */
+  display: flex; /* Чтобы инпут занимал всю ширину */
 }
 
 .form-control {
-    height: 40px;
-    padding: 12px 16px;
-    background: white;
-    border-radius: 5px;
-    border: 1px solid #D9D9D9;
-    color: #1E1E1E;
-    font-size: 14px;
-    font-family: Unbounded;
-    font-weight: 300;
-    line-height: 18px; /* Соответствует 14px font-size + padding */
-    width: 100%; /* Растягиваем инпут на всю ширину wrapper */
-    box-sizing: border-box;
-    resize: none; /* << ЗАПРЕТ ИЗМЕНЕНИЯ РАЗМЕРА */
+  height: 40px;
+  padding: 12px 16px;
+  background: white;
+  border-radius: 5px;
+  border: 1px solid #d9d9d9;
+  color: #1e1e1e;
+  font-size: 14px;
+  font-family: Unbounded;
+  font-weight: 300;
+  line-height: 18px; /* Соответствует 14px font-size + padding */
+  width: 100%; /* Растягиваем инпут на всю ширину wrapper */
+  box-sizing: border-box;
+  resize: none; /* << ЗАПРЕТ ИЗМЕНЕНИЯ РАЗМЕРА */
 }
 
 .form-control::placeholder {
-    color: #C7C7C7; /* Цвет плейсхолдера */
-    font-size: 14px;
-    font-family: Unbounded;
-    font-weight: 300;
-    backdrop-filter: blur(5px);
-    flex-direction: column;
-    gap: 30px;
-    width: 100%; /* << УБЕДИМСЯ, ЧТО КОНТЕЙНЕР ЗАНИМАЕТ 100% */
-    box-sizing: border-box; /* << УЧИТЫВАЕМ PADDING И BORDER */
+  color: #c7c7c7; /* Цвет плейсхолдера */
+  font-size: 14px;
+  font-family: Unbounded;
+  font-weight: 300;
+  backdrop-filter: blur(5px);
+  flex-direction: column;
+  gap: 30px;
+  width: 100%; /* << УБЕДИМСЯ, ЧТО КОНТЕЙНЕР ЗАНИМАЕТ 100% */
+  box-sizing: border-box; /* << УЧИТЫВАЕМ PADDING И BORDER */
 }
 
 /* Стили для селектов */
 .select-wrapper select.form-control {
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    padding-right: 35px; /* Место для стрелки */
-    /* width: 24px; */
-    /* height: 24px; */
-    /* margin-right: 10px; */
+  appearance: none;
+  appearance: none;
+  appearance: none;
+  padding-right: 35px; /* Место для стрелки */
+
+  /* width: 24px; */
+
+  /* height: 24px; */
+
+  /* margin-right: 10px; */
 }
 
 .select-arrow {
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 16px;
-    height: 16px;
-    pointer-events: none; /* Чтобы не мешала клику по селекту */
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  pointer-events: none; /* Чтобы не мешала клику по селекту */
 }
-
 
 /* --- Стили для полей под колонками (Вводная, Описание и т.д.) --- */
 .form-group.full-width {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 20px; /* Отступ между label, notice, input, small-text */
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Отступ между label, notice, input, small-text */
 }
 
 .form-group.full-width label {
-    font-size: 20px;
-    font-family: Unbounded;
-    font-weight: 400;
-    line-height: 18px;
-    color: white;
+  font-size: 20px;
+  font-family: Unbounded;
+  font-weight: 400;
+  line-height: 18px;
+  color: white;
 }
 
 .required-field-notice {
-    color: #FF0000;
-    font-size: 12px;
-    font-family: Unbounded;
-    font-weight: 300;
-    letter-spacing: 0.12px;
+  color: #f00;
+  font-size: 12px;
+  font-family: Unbounded;
+  font-weight: 300;
+  letter-spacing: 0.12px;
 }
 
 .form-group.full-width .form-control {
-    min-height: 117px;
-    background: white; /* Белый фон для текстовых полей */
-    padding: 29px 15px; /* Паддинги как в Figma */
-    color: black; /* Черный текст */
-    font-size: 14px;
-    font-family: Unbounded;
-    font-weight: 300;
-    line-height: 18px;
-    border-radius: 5px;
-    border: 1px solid #D9D9D9; /* Убедимся, что граница есть */
+  min-height: 117px;
+  background: white; /* Белый фон для текстовых полей */
+  padding: 29px 15px; /* Паддинги как в Figma */
+  color: black; /* Черный текст */
+  font-size: 14px;
+  font-family: Unbounded;
+  font-weight: 300;
+  line-height: 18px;
+  border-radius: 5px;
+  border: 1px solid #d9d9d9; /* Убедимся, что граница есть */
 }
 
 /* Пример для поля с ошибкой (красный фон) */
 .form-group.full-width .form-control.input-error {
-    background: #FEEAEA; /* Красный фон как в Figma для ошибки */
-    border-color: #FF0000 !important; /* Красная граница */
+  background: #feeaea; /* Красный фон как в Figma для ошибки */
+  border-color: #f00 !important; /* Красная граница */
 }
 
 .form-group .small-text {
-    font-size: 12px;
-    color: #C9C8C8; /* Приглушенный цвет для подсказок */
-    margin-top: -10px; /* Подвинуть ближе к инпуту, если нужно */
+  font-size: 12px;
+  color: #c9c8c8; /* Приглушенный цвет для подсказок */
+  margin-top: -10px; /* Подвинуть ближе к инпуту, если нужно */
 }
-
 
 /* --- Upload Section Grid --- */
 .media-and-finance-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); /* Три колонки как в Figma */
-    gap: 45px; /* Отступ между колонками */
-    align-items: flex-start;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Три колонки как в Figma */
+  gap: 45px; /* Отступ между колонками */
+  align-items: flex-start;
 }
 
 .upload-box,
 .presentation-finance-group {
-    display: flex;
-    flex-direction: column;
-    gap: 20px; /* Внутренний отступ между элементами в колонке */
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Внутренний отступ между элементами в колонке */
 }
 
 .presentation-finance-group {
-    gap: 45px; /* Увеличенный отступ для этой группы */
+  gap: 45px; /* Увеличенный отступ для этой группы */
 }
 
 .upload-box > label,
 .presentation-finance-group .form-group > label {
-    font-size: 20px;
-    font-family: Unbounded;
-    font-weight: 400;
-    line-height: 18px;
-    color: white;
+  font-size: 20px;
+  font-family: Unbounded;
+  font-weight: 400;
+  line-height: 18px;
+  color: white;
 }
 
 .custom-file-upload-button {
-    display: inline-flex; /* Чтобы была как кнопка */
-    padding: 12px; 
-    background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 10px;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    color: black;
-    font-size: 16px;
-    font-family: Unbounded;
-    font-weight: 400;
-    line-height: 16px;
-    word-wrap: break-word;
-    cursor: pointer;
-    width: 231px; /* Ширина как в Figma */
-    height: 40px; /* Высота как в Figma */
-    box-sizing: border-box;
-    margin-bottom: 18px; /* Отступ до текста с форматами */
+  display: inline-flex; /* Чтобы была как кнопка */
+  padding: 12px;
+  background: linear-gradient(180deg, #ffef2b 0%, #f9f7d6 100%);
+  box-shadow: 2px 2px 4px rgb(0 0 0 / 25%);
+  border-radius: 10px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  color: black;
+  font-size: 16px;
+  font-family: Unbounded;
+  font-weight: 400;
+  line-height: 16px;
+  word-wrap: break-word;
+  cursor: pointer;
+  width: 231px; /* Ширина как в Figma */
+  height: 40px; /* Высота как в Figma */
+  box-sizing: border-box;
+  margin-bottom: 18px; /* Отступ до текста с форматами */
 }
 
-.upload-box .small-text { /* Для текста "Допустимый формат..." */
-    font-size: 12px;
-    font-family: Unbounded;
-    font-weight: 300;
-    letter-spacing: 0.12px;
-    color: white;
-    text-align: left; /* Выравнивание по левому краю */
-    margin-top: -10px; /* Ближе к кнопке */
+.upload-box .small-text {
+  /* Для текста "Допустимый формат..." */
+  font-size: 12px;
+  font-family: Unbounded;
+  font-weight: 300;
+  letter-spacing: 0.12px;
+  color: white;
+  text-align: left; /* Выравнивание по левому краю */
+  margin-top: -10px; /* Ближе к кнопке */
 }
 
 /* Стили для file-upload-area, если он остается как drop-зона */
 .file-upload-area {
-    border: 2px dashed #757575;
-    border-radius: 10px;
-    padding: 20px;
-    text-align: center;
-    cursor: pointer;
-    background-color: rgba(255, 255, 255, 0.05);
-    display: flex;
-    flex-direction: column; /* Чтобы кнопка и текст были друг под другом */
-    align-items: flex-start; /* Выравнивание кнопки и текста по левому краю */
-    gap: 0; /* Убираем лишний внутренний отступ, если custom-button управляет им */
-}
-/* Если input[type=file] внутри .file-upload-area и должен быть скрыт, а .custom-file-upload-button используется */
-.file-upload-area input[type="file"][style*="display:none"] + .custom-file-upload-button {
-    /* Стили для кнопки, если она идет сразу после скрытого инпута */
-}
-.file-upload-area > p { /* Если текст "Перетащите файлы..." остается */
-    display: none; /* Скрываем, так как есть кастомная кнопка */
+  border: 2px dashed #757575;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  background-color: rgb(255 255 255 / 5%);
+  display: flex;
+  flex-direction: column; /* Чтобы кнопка и текст были друг под другом */
+  align-items: flex-start; /* Выравнивание кнопки и текста по левому краю */
+  gap: 0; /* Убираем лишний внутренний отступ, если custom-button управляет им */
 }
 
+/* Если input[type=file] внутри .file-upload-area и должен быть скрыт, а .custom-file-upload-button используется */
+.file-upload-area
+  input[type='file'][style*='display:none']
+  + .custom-file-upload-button {
+  /* Стили для кнопки, если она идет сразу после скрытого инпута */
+}
+
+.file-upload-area > p {
+  /* Если текст "Перетащите файлы..." остается */
+  display: none; /* Скрываем, так как есть кастомная кнопка */
+}
 
 .file-preview-area {
-    display: flex;
-    flex-direction: column;
-    gap: 14px; /* Отступ между файлами в превью */
-    margin-top: 10px; /* Отступ от кнопки/текста до превью */
+  display: flex;
+  flex-direction: column;
+  gap: 14px; /* Отступ между файлами в превью */
+  margin-top: 10px; /* Отступ от кнопки/текста до превью */
 }
 
 .file-preview-item {
-    display: flex;
-    align-items: center;
-    gap: 14px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
 }
 
 .file-preview-item .drag-handle-mock {
-    /* Заглушка для точек drag, можно использовать SVG или псевдоэлементы */
-    width: 9px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 3px; /* Отступ между точками */
-    align-content: flex-start;
+  /* Заглушка для точек drag, можно использовать SVG или псевдоэлементы */
+  width: 9px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px; /* Отступ между точками */
+  align-content: flex-start;
 }
+
 .file-preview-item .drag-handle-mock span {
-    width: 3px;
-    height: 3px;
-    background: #D9D9D9;
-    border-radius: 50%;
+  width: 3px;
+  height: 3px;
+  background: #d9d9d9;
+  border-radius: 50%;
 }
 
 .file-preview-item img.preview-image, /* для картинок и видео превью */
-.file-preview-item img.file-icon     /* для иконок документов */
-{
-    width: 72px;
-    height: 72px;
-    border-radius: 5px;
-    object-fit: cover;
+.file-preview-item img.file-icon     /* для иконок документов */ {
+  width: 72px;
+  height: 72px;
+  border-radius: 5px;
+  object-fit: cover;
 }
 
 .file-preview-item p.file-name {
-    flex-grow: 1;
-    color: white;
-    font-size: 12px;
-    font-family: Unbounded;
-    font-weight: 300;
-    letter-spacing: 0.12px;
-    word-wrap: break-word;
-    margin: 0;
+  flex-grow: 1;
+  color: white;
+  font-size: 12px;
+  font-family: Unbounded;
+  font-weight: 300;
+  letter-spacing: 0.12px;
+  word-wrap: break-word;
+  margin: 0;
 }
 
 .file-preview-item .file-actions {
-    display: flex;
-    align-items: center;
-    gap: 7px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
 }
 
 .file-preview-item .file-actions button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
 }
+
 .file-preview-item .file-actions img {
-    width: 15px;
-    height: 15px;
+  width: 15px;
+  height: 15px;
 }
 
 /* Поле для URL презентации */
-.presentation-finance-group .input-wrapper .form-control[placeholder="URL"] {
-    width: 100%; /* Растягиваем на всю ширину колонки */
-    max-width: 361px; /* Максимальная ширина как в Figma */
-    height: 40px;
-    padding-top: 12px;
-    padding-bottom: 12px;
-    padding-left: 16px;
-    padding-right: 12px;
-    background-color: white;
-    border: 1px solid #D9D9D9;
-    border-radius: 5px;
-    color: #1E1E1E; /* Цвет введенного текста */
+.presentation-finance-group .input-wrapper .form-control[placeholder='URL'] {
+  width: 100%; /* Растягиваем на всю ширину колонки */
+  max-width: 361px; /* Максимальная ширина как в Figma */
+  height: 40px;
+  padding: 12px 12px 12px 16px;
+  background-color: white;
+  border: 1px solid #d9d9d9;
+  border-radius: 5px;
+  color: #1e1e1e; /* Цвет введенного текста */
 }
-.presentation-finance-group .input-wrapper .form-control[placeholder="URL"]::placeholder {
-    color: #C7C7C7; /* Цвет плейсхолдера */
+
+.presentation-finance-group
+  .input-wrapper
+  .form-control[placeholder='URL']::placeholder {
+  color: #c7c7c7; /* Цвет плейсхолдера */
 }
 
 /* Поля Оценка и Собранная сумма в presentation-finance-group */
 .presentation-finance-group .form-group .input-wrapper .form-control {
-    width: 100%;
-    max-width: 361px; /* Для "Собранная сумма" */
-    height: 40px;
-    background-color: white;
-    border: 1px solid #D9D9D9;
-    border-radius: 5px;
-    color: #1E1E1E;
-    padding: 12px 16px;
+  width: 100%;
+  max-width: 361px; /* Для "Собранная сумма" */
+  height: 40px;
+  background-color: white;
+  border: 1px solid #d9d9d9;
+  border-radius: 5px;
+  color: #1e1e1e;
+  padding: 12px 16px;
 }
 
-.presentation-finance-group .form-group .input-wrapper.valuation-input .form-control {
-    max-width: 117px; /* Для "Оценка" */
-    padding-right: 30px; /* Место для стрелок */
+.presentation-finance-group
+  .form-group
+  .input-wrapper.valuation-input
+  .form-control {
+  max-width: 117px; /* Для "Оценка" */
+  padding-right: 30px; /* Место для стрелок */
 }
 
-.presentation-finance-group .form-group .input-wrapper .form-control::placeholder {
-    color: #C7C7C7;
+.presentation-finance-group
+  .form-group
+  .input-wrapper
+  .form-control::placeholder {
+  color: #c7c7c7;
 }
 
 .valuation-input {
-    position: relative;
+  position: relative;
 }
 
 .valuation-spin-buttons {
-    position: absolute;
-    right: 8px; /* Отступ справа для стрелок */
-    top: 50%;
-    transform: translateY(-50%);
-    display: flex;
-    flex-direction: column;
-    gap: 4px; /* Отступ между стрелками */
+  position: absolute;
+  right: 8px; /* Отступ справа для стрелок */
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 4px; /* Отступ между стрелками */
 }
 
 .valuation-spin-buttons img {
-    width: 10px; /* Размер SVG стрелки */
-    height: 5px;
-    cursor: pointer;
-    filter: brightness(0); /* Делаем SVG черным */
+  width: 10px; /* Размер SVG стрелки */
+  height: 5px;
+  cursor: pointer;
+  filter: brightness(0); /* Делаем SVG черным */
 }
 
 /* --- Timeline Section --- */
 .timeline-section-wrapper.content-section {
-    /* Общие стили для секции таймлайна */
+  /* Общие стили для секции таймлайна */
 }
 
 h3.section-title {
-    /* Стили для заголовка секции (например, *Этапы) */
-    font-size: 20px;
-    font-family: Unbounded;
-    font-weight: 400;
-    line-height: 18px;
-    color: white;
-    margin-bottom: 20px;
+  /* Стили для заголовка секции (например, *Этапы) */
+  font-size: 20px;
+  font-family: Unbounded;
+  font-weight: 400;
+  line-height: 18px;
+  color: white;
+  margin-bottom: 20px;
 }
 
 .timeline {
-    position: relative; 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: flex-start; /* Выравниваем сами шаги по верху, линия будет позиционироваться относительно них */
-    padding-top: 0; 
-    padding-left: 61px; /* Половина ширины иконки (122px / 2) */
-    padding-right: 61px;/* Половина ширины иконки (122px / 2) */
-    margin-bottom: 20px;
-    margin-top: 30px; 
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start; /* Выравниваем сами шаги по верху, линия будет позиционироваться относительно них */
+  padding-top: 0;
+  padding-left: 61px; /* Половина ширины иконки (122px / 2) */
+  padding-right: 61px; /* Половина ширины иконки (122px / 2) */
+  margin-bottom: 20px;
+  margin-top: 30px;
 }
 
-.timeline-progress-container { 
-    position: absolute;
-    top: 64px; /* (122px / 2) + 3px = 61px + 3px = 64px. Сдвиг чуть ниже центра иконки */
-    left: 0px; /* Линия начинается от левого края padding .timeline */
-    right: 0px;/* Линия заканчивается у правого края padding .timeline */
-    height: 4px; /* Толщина линии */
-    z-index: 0; 
-    transform: translateY(-50%); 
+.timeline-progress-container {
+  position: absolute;
+  top: 64px; /* (122px / 2) + 3px = 61px + 3px = 64px. Сдвиг чуть ниже центра иконки */
+  left: 0; /* Линия начинается от левого края padding .timeline */
+  right: 0; /* Линия заканчивается у правого края padding .timeline */
+  height: 4px; /* Толщина линии */
+  z-index: 0;
+  transform: translateY(-50%);
 }
 
 .timeline-progress-line,
 .timeline-progress-filled {
-    position: absolute;
-    height: 100%;
-    border-radius: 2px; /* Половина высоты линии */
+  position: absolute;
+  height: 100%;
+  border-radius: 2px; /* Половина высоты линии */
 }
 
 .timeline-progress-line {
-    left: 0; 
-    width: 100%; 
-    background-color: #4A4A4A; /* Цвет трека линии из Figma (пример) */
+  left: 0;
+  width: 100%;
+  background-color: #4a4a4a; /* Цвет трека линии из Figma (пример) */
 }
 
 .timeline-progress-filled {
-    left: 0;
-    width: 0%; 
-    background: linear-gradient(90deg, #1967B8 2%, #6348EB 26%, #1967B8 50%, #6749E7 78%, #F26162 100%);
-    transition: width 0.3s ease-in-out;
+  left: 0;
+  width: 0%;
+  background: linear-gradient(
+    90deg,
+    #1967b8 2%,
+    #6348eb 26%,
+    #1967b8 50%,
+    #6749e7 78%,
+    #f26162 100%
+  );
+  transition: width 0.3s ease-in-out;
 }
 
 .timeline-step {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    position: relative; 
-    z-index: 1; 
-    width: 122px; /* Ширина шага равна ширине иконки */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+  width: 122px; /* Ширина шага равна ширине иконки */
 }
 
 .step-number-wrapper {
-    width: 122px; 
-    height: 122px; 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    background-color: #000000; /* По умолчанию черный фон для всех (неактивных) */
-    background-image: none; /* Убедимся, что нет градиента по умолчанию */
-    position: relative; 
-    z-index: 1; 
-    margin-bottom: 8px; 
-    transition: background-color 0.3s ease, background-image 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+  width: 122px;
+  height: 122px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: #000; /* По умолчанию черный фон для всех (неактивных) */
+  background-image: none; /* Убедимся, что нет градиента по умолчанию */
+  position: relative;
+  z-index: 1;
+  margin-bottom: 8px;
+  transition:
+    background-color 0.3s ease,
+    background-image 0.3s ease,
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .step-number-wrapper .step-icon {
-    width: 100%; 
-    height: 100%; 
-    object-fit: contain; 
-    filter: grayscale(100%) brightness(0.7); /* По умолчанию иконки серые и чуть темнее (черно-белые) */
-    transition: filter 0.3s ease;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: grayscale(100%) brightness(0.7); /* По умолчанию иконки серые и чуть темнее (черно-белые) */
+  transition: filter 0.3s ease;
 }
 
 /* Стили для активных (пройденных и текущего) этапов */
 .step-number-wrapper.active {
-    /* Стили фона для активных этапов применяются ниже, специфично для каждого data-step */
+  /* Стили фона для активных этапов применяются ниже, специфично для каждого data-step */
 }
 
 .step-number-wrapper.active .step-icon {
-    filter: none; /* Активная иконка становится цветной */
+  filter: none; /* Активная иконка становится цветной */
 }
 
 /* Градиенты и специфичные фоны применяются ТОЛЬКО к активным кружкам (.active) */
-.timeline-step[data-step="1"] .step-number-wrapper.active { 
-    background-image: linear-gradient(307deg, #4392E3 0%, #004E9F 100%); 
-    background-color: transparent; 
+.timeline-step[data-step='1'] .step-number-wrapper.active {
+  background-image: linear-gradient(307deg, #4392e3 0%, #004e9f 100%);
+  background-color: transparent;
 }
-.timeline-step[data-step="2"] .step-number-wrapper.active { 
-    background-image: linear-gradient(307deg, #7B61FF 0%, #3B1ECA 100%); 
-    background-color: transparent;
+
+.timeline-step[data-step='2'] .step-number-wrapper.active {
+  background-image: linear-gradient(307deg, #7b61ff 0%, #3b1eca 100%);
+  background-color: transparent;
 }
-.timeline-step[data-step="3"] .step-number-wrapper.active { 
-    background-image: linear-gradient(217deg, #4392E3 0%, #004E9F 100%); 
-    background-color: transparent;
+
+.timeline-step[data-step='3'] .step-number-wrapper.active {
+  background-image: linear-gradient(217deg, #4392e3 0%, #004e9f 100%);
+  background-color: transparent;
 }
-.timeline-step[data-step="4"] .step-number-wrapper.active {
-    background-image: linear-gradient(307deg, #F26162 0%, #D32F2F 100%); /* Пример красного градиента */
-    background-color: transparent; 
+
+.timeline-step[data-step='4'] .step-number-wrapper.active {
+  background-image: linear-gradient(
+    307deg,
+    #f26162 0%,
+    #d32f2f 100%
+  ); /* Пример красного градиента */
+  background-color: transparent;
 }
-.timeline-step[data-step="5"] .step-number-wrapper.active {
-    background-image: linear-gradient(217deg, #FFEF2B 0%, #F9A825 100%); /* Пример желто-оранжевого градиента */
-    background-color: transparent; 
+
+.timeline-step[data-step='5'] .step-number-wrapper.active {
+  background-image: linear-gradient(
+    217deg,
+    #ffef2b 0%,
+    #f9a825 100%
+  ); /* Пример желто-оранжевого градиента */
+  background-color: transparent;
 }
 
 /* Активный этап для отображения описания (добавляет свечение) */
 .timeline-step.active-step-display .step-number-wrapper {
-    transform: scale(1.05);
-    box-shadow: 0 0 15px rgba(255, 239, 43, 0.7); /* Желтое свечение */
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgb(255 239 43 / 70%); /* Желтое свечение */
 }
 
 /* Будущие этапы (теперь управляются отсутствием .active и начальными стилями .step-number-wrapper) */
+
 /* .timeline-step.future-step .step-number-wrapper { ... } - больше не нужен, т.к. черный фон и серые иконки по умолчанию */
+
 /* .timeline-step.future-step .step-icon { ... } - больше не нужен */
 
 .timeline-description-container {
-    display: none; /* Скрыт по умолчанию */
-    padding: 45px 22px 25px 22px;
-    border-radius: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.36);
-    background-color: rgba(40, 40, 40, 0.3); /* Слегка затемненный фон для контейнера */
-    backdrop-filter: blur(5px);
-    flex-direction: column;
-    gap: 30px;
-    width: 100%; /* << УБЕДИМСЯ, ЧТО КОНТЕЙНЕР ЗАНИМАЕТ 100% */
-    box-sizing: border-box; /* << УЧИТЫВАЕМ PADDING И BORDER */
-    overflow: hidden; /* << ДОБАВЛЕНО для предотвращения выпадения контента */
+  display: none; /* Скрыт по умолчанию */
+  padding: 45px 22px 25px;
+  border-radius: 10px;
+  border: 1px solid rgb(255 255 255 / 36%);
+  background-color: rgb(
+    40 40 40 / 30%
+  ); /* Слегка затемненный фон для контейнера */
+  backdrop-filter: blur(5px);
+  flex-direction: column;
+  gap: 30px;
+  width: 100%; /* << УБЕДИМСЯ, ЧТО КОНТЕЙНЕР ЗАНИМАЕТ 100% */
+  box-sizing: border-box; /* << УЧИТЫВАЕМ PADDING И BORDER */
+  overflow: hidden; /* << ДОБАВЛЕНО для предотвращения выпадения контента */
 }
 
 .timeline-description-container.active {
-    display: flex; /* Показать активный */
-    font-size: 14px;
-    line-height: 18px;
-    border: 1px solid #D9D9D9;
-    resize: none; /* << ЗАПРЕТ ИЗМЕНЕНИЯ РАЗМЕРА (было vertical) */
-    width: 100%; /* << УБЕДИМСЯ, ЧТО TEXTAREA ЗАНИМАЕТ 100% */
-    box-sizing: border-box; /* << УЧИТЫВАЕМ PADDING И BORDER TEXTAREA */
+  display: flex; /* Показать активный */
+  font-size: 14px;
+  line-height: 18px;
+  border: 1px solid #d9d9d9;
+  resize: none; /* << ЗАПРЕТ ИЗМЕНЕНИЯ РАЗМЕРА (было vertical) */
+  width: 100%; /* << УБЕДИМСЯ, ЧТО TEXTAREA ЗАНИМАЕТ 100% */
+  box-sizing: border-box; /* << УЧИТЫВАЕМ PADDING И BORDER TEXTAREA */
 }
 
 .timeline-description-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
 }
 
 .timeline-description-title-wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 
 .timeline-description-title {
-    font-size: 20px;
-    font-family: Unbounded;
-    font-weight: 400;
-    line-height: 18px;
-    color: white;
-    text-align: left;
+  font-size: 20px;
+  font-family: Unbounded;
+  font-weight: 400;
+  line-height: 18px;
+  color: white;
+  text-align: left;
 }
 
 .btn-select-current {
-    padding: 12px 0;
-    background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 10px;
-    color: black;
-    font-size: 16px;
-    font-family: Unbounded;
-    font-weight: 400;
-    line-height: 16px;
-    border: none;
-    cursor: pointer;
-    width: 165px;
-    height: 40px;
-    text-align: center;
+  padding: 12px 0;
+  background: linear-gradient(180deg, #ffef2b 0%, #f9f7d6 100%);
+  box-shadow: 2px 2px 4px rgb(0 0 0 / 25%);
+  border-radius: 10px;
+  color: black;
+  font-size: 16px;
+  font-family: Unbounded;
+  font-weight: 400;
+  line-height: 16px;
+  border: none;
+  cursor: pointer;
+  width: 165px;
+  height: 40px;
+  text-align: center;
 }
 
 .timeline-description-textarea {
-    width: 100%;
-    height: 188px;
-    background: white;
-    border-radius: 10px;
-    padding: 15px;
-    color: black;
-    font-family: Unbounded;
-    font-weight: 300;
-    font-size: 14px;
-    line-height: 18px;
-    border: 1px solid #D9D9D9;
-    resize: none; /* << ЗАПРЕТ ИЗМЕНЕНИЯ РАЗМЕРА */
-    box-sizing: border-box; /* << УЧИТЫВАЕМ PADDING И BORDER TEXTAREA */
-    /* overflow: auto; /* Добавим на случай, если текст все же выходит, но это не должно быть нужно с box-sizing */
+  width: 100%;
+  height: 188px;
+  background: white;
+  border-radius: 10px;
+  padding: 15px;
+  color: black;
+  font-family: Unbounded;
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 18px;
+  border: 1px solid #d9d9d9;
+  resize: none; /* << ЗАПРЕТ ИЗМЕНЕНИЯ РАЗМЕРА */
+  box-sizing: border-box; /* << УЧИТЫВАЕМ PADDING И BORDER TEXTAREA */
+
+  /* overflow: auto; /* Добавим на случай, если текст все же выходит, но это не должно быть нужно с box-sizing */
 }
 
 .timeline-description-textarea::placeholder {
-    color: #C9C8C8;
-    font-size: 12px;
-    font-family: Unbounded;
-    font-weight: 300;
-    letter-spacing: 0.12px;
+  color: #c9c8c8;
+  font-size: 12px;
+  font-family: Unbounded;
+  font-weight: 300;
+  letter-spacing: 0.12px;
 }
 
 .timeline-description-textarea.input-error {
-     border-color: #FF0000 !important;
-     background-color: #FEEAEA; /* Красный фон при ошибке */
+  border-color: #f00 !important;
+  background-color: #feeaea; /* Красный фон при ошибке */
 }
 
 /* --- Agreement Section Wrapper --- */
 .agreement-section-wrapper.content-section {
-    gap: 25px; /* Отступ до блока согласия */
+  gap: 25px; /* Отступ до блока согласия */
 }
 
 .agreement-section {
-    display: flex;
-    flex-direction: column;
-    gap: 15px; /* Отступ между заголовком и чекбоксами */
-    align-items: flex-start; /* Выравниваем все чекбоксы по левому краю */
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Отступ между заголовком и чекбоксами */
+  align-items: flex-start; /* Выравниваем все чекбоксы по левому краю */
 }
 
 .agreement-section .section-title {
-    font-size: 20px;
-    font-family: Unbounded;
-    font-weight: 400;
-    line-height: 18px;
-    color: white;
-    margin-bottom: 0; /* Управляется gap родителя */
-    text-align: left; /* Заголовок слева */
+  font-size: 20px;
+  font-family: Unbounded;
+  font-weight: 400;
+  line-height: 18px;
+  color: white;
+  margin-bottom: 0; /* Управляется gap родителя */
+  text-align: left; /* Заголовок слева */
 }
 
 .agreement-section .checkbox-group {
-    display: flex;
-    align-items: center;
-    gap: 11px;
-    margin-bottom: 0; /* Управляется gap родителя */
-    width: fit-content; /* Чтобы группа не растягивалась */
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin-bottom: 0; /* Управляется gap родителя */
+  width: fit-content; /* Чтобы группа не растягивалась */
 }
 
 .agreement-section .checkbox-group .form-check-input {
-    /* Скрываем стандартный чекбокс, чтобы использовать кастомный SVG */
-    display: none;
+  /* Скрываем стандартный чекбокс, чтобы использовать кастомный SVG */
+  display: none;
 }
 
 .agreement-section .checkbox-group .custom-checkbox-label {
-    display: flex;
-    align-items: center;
-    gap: 11px;
-    cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  cursor: pointer;
 }
 
 .agreement-section .checkbox-group .custom-checkbox-label img.checkbox-icon {
-    width: 24px;
-    height: 24px;
+  width: 24px;
+  height: 24px;
 }
 
 .agreement-section .checkbox-group .custom-checkbox-label span.checkbox-text {
-    color: white;
-    font-size: 16px;
-    font-family: Unbounded;
-    font-weight: 400;
-    line-height: 16px;
+  color: white;
+  font-size: 16px;
+  font-family: Unbounded;
+  font-weight: 400;
+  line-height: 16px;
 }
 
 .agreement-section .checkbox-group .tooltip-icon-wrapper {
-    display: flex; /* Для выравнивания с текстом */
-    align-items: center;
-    margin-left: 0; /* Убираем авто-отступ, если он есть */
+  display: flex; /* Для выравнивания с текстом */
+  align-items: center;
+  margin-left: 0; /* Убираем авто-отступ, если он есть */
 }
 
 .tooltip-icon {
-    width: 12px;
-    height: 12px;
-    background: #D9D9D9;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    font-size: 8px;
-    font-family: 'Circe', sans-serif;
-    font-weight: 400;
-    cursor: pointer;
-    line-height: 12px; /* Для центрирования вопросика */
+  width: 12px;
+  height: 12px;
+  background: #d9d9d9;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 8px;
+  font-family: Circe, sans-serif;
+  font-weight: 400;
+  cursor: pointer;
+  line-height: 12px; /* Для центрирования вопросика */
 }
 
 /* Пример стилей для тултипа (появляется при наведении на ?) */
 .tooltip-content {
-    display: none;
-    position: absolute;
-    bottom: 100%; /* Позиционировать над иконкой */
-    left: 50%;
-    transform: translateX(-50%) translateY(-5px); /* Центрировать и небольшой отступ */
-    background-color: rgba(0, 0, 0, 0.8);
-    color: white;
-    padding: 8px 12px;
-    border-radius: 4px;
-    font-size: 12px;
-    white-space: nowrap;
-    z-index: 10;
-}
-.tooltip-icon-wrapper:hover .tooltip-content {
-    display: block;
+  display: none;
+  position: absolute;
+  bottom: 100%; /* Позиционировать над иконкой */
+  left: 50%;
+  transform: translateX(-50%) translateY(-5px); /* Центрировать и небольшой отступ */
+  background-color: rgb(0 0 0 / 80%);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 10;
 }
 
+.tooltip-icon-wrapper:hover .tooltip-content {
+  display: block;
+}
 
 /* --- Кнопка отправки --- */
 .submit-button-container {
-    text-align: center;
-    margin-top: 40px;
-    padding-bottom: 40px; /* Добавим отступ снизу */
+  text-align: center;
+  margin-top: 40px;
+  padding-bottom: 40px; /* Добавим отступ снизу */
 }
 
 .submit-button {
-    padding: 15px 40px;
-    background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%) !important; /* Желтый градиент + !important для уверенности */
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 10px;
-    color: black !important; /* Черный текст на желтом + !important */
-    font-size: 18px;
-    font-family: Unbounded;
-    font-weight: 500;
-    line-height: 20px;
-    border: none;
-    cursor: pointer;
-    transition: background 0.3s ease, transform 0.1s ease;
+  padding: 15px 40px;
+  background: linear-gradient(
+    180deg,
+    #ffef2b 0%,
+    #f9f7d6 100%
+  ) !important; /* Желтый градиент + !important для уверенности */
+  box-shadow: 2px 2px 4px rgb(0 0 0 / 25%);
+  border-radius: 10px;
+  color: black !important; /* Черный текст на желтом + !important */
+  font-size: 18px;
+  font-family: Unbounded;
+  font-weight: 500;
+  line-height: 20px;
+  border: none;
+  cursor: pointer;
+  transition:
+    background 0.3s ease,
+    transform 0.1s ease;
 }
+
 .submit-button:disabled {
-    background: #777;
-    color: #bbb;
-    cursor: not-allowed;
-    box-shadow: none;
+  background: #777;
+  color: #bbb;
+  cursor: not-allowed;
+  box-shadow: none;
 }
+
 .submit-button:hover:not(:disabled) {
-    background: linear-gradient(180deg, #f5e629 0%, #f0eec9 100%); /* Чуть темнее при наведении */
+  background: linear-gradient(
+    180deg,
+    #f5e629 0%,
+    #f0eec9 100%
+  ); /* Чуть темнее при наведении */
 }
+
 .submit-button:active:not(:disabled) {
-    transform: scale(0.98); /* Небольшое нажатие */
+  transform: scale(0.98); /* Небольшое нажатие */
 }
 
 /* Новый контейнер для основного контента формы */
 .form-main-content-wrapper {
-    background: rgba(255, 255, 255, 0.07);
-    box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.25);
-    border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.36);
-    backdrop-filter: blur(10px);
-    padding: 50px; /* Внутренние отступы как в Figma */
-    display: flex;
-    flex-direction: column;
-    gap: 73px; /* Отступы между секциями внутри контейнера */
-    margin-bottom: 40px; /* Отступ до кнопки "Отправить" */
+  background: rgb(255 255 255 / 7%);
+  box-shadow: 6px 6px 10px rgb(0 0 0 / 25%);
+  border-radius: 20px;
+  border: 1px solid rgb(255 255 255 / 36%);
+  backdrop-filter: blur(10px);
+  padding: 50px; /* Внутренние отступы как в Figma */
+  display: flex;
+  flex-direction: column;
+  gap: 73px; /* Отступы между секциями внутри контейнера */
+  margin-bottom: 40px; /* Отступ до кнопки "Отправить" */
 }
 
 /* Внутренние секции контента */
 .form-content-section {
-    /* Этот класс используется для группировки полей внутри основного контейнера */
-    /* Возможно, не требует специфических стилей, кроме управления gap если нужно */
-    display: flex;
-    flex-direction: column;
-    gap: 20px; /* Примерный отступ между элементами внутри секции */
+  /* Этот класс используется для группировки полей внутри основного контейнера */
+
+  /* Возможно, не требует специфических стилей, кроме управления gap если нужно */
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Примерный отступ между элементами внутри секции */
 }
 
 .form-content-section.timeline-section-wrapper {
-     gap: 30px; /* Специфичный отступ для таймлайна */
+  gap: 30px; /* Специфичный отступ для таймлайна */
 }
 
 .form-content-section.agreement-section-outer-wrapper {
-    gap: 25px; /* Специфичный отступ для согласий */
+  gap: 25px; /* Специфичный отступ для согласий */
 }
 
 /* Адаптивность: убедимся, что паддинги .form-main-content-wrapper уменьшаются */
-@media (max-width: 768px) {
-    .form-main-content-wrapper {
-        padding: 20px; /* Уменьшаем паддинги на мобильных */
-        gap: 40px; /* Уменьшаем отступы между секциями */
-    }
-    /* ... другие мобильные стили ... */
+@media (width <= 768px) {
+  .form-main-content-wrapper {
+    padding: 20px; /* Уменьшаем паддинги на мобильных */
+    gap: 40px; /* Уменьшаем отступы между секциями */
+  }
+
+  /* ... другие мобильные стили ... */
 }
 
 /* Скрываем стандартный чекбокс Django, если используем полностью кастомный */
 .form-check-input-hidden {
-    display: none;
+  display: none;
 }
 
 /* === Custom Checkbox Styles (Agreement Section) === */
 .custom-checkbox-label {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    position: relative; 
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
 }
 
 .custom-checkbox-visual {
-    width: 20px;
-    height: 20px;
-    border: 2px solid #7A8A99; /* Default border color for unchecked state */
-    border-radius: 50%;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 10px;
-    background-color: transparent; /* Unchecked state is transparent circle */
-    transition: background-color 0.2s, border-color 0.2s;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #7a8a99; /* Default border color for unchecked state */
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+  background-color: transparent; /* Unchecked state is transparent circle */
+  transition:
+    background-color 0.2s,
+    border-color 0.2s;
 }
 
 .custom-checkbox-visual::after {
-    content: '';
-    display: block;
-    width: 10px; 
-    height: 5px; 
-    border-left: 2px solid white; 
-    border-bottom: 2px solid white; 
-    transform: rotate(-45deg) translate(-1px, 1px); /* Adjust for better centering */
-    opacity: 0; 
-    transition: opacity 0.2s;
+  content: '';
+  display: block;
+  width: 10px;
+  height: 5px;
+  border-left: 2px solid white;
+  border-bottom: 2px solid white;
+  transform: rotate(-45deg) translate(-1px, 1px); /* Adjust for better centering */
+  opacity: 0;
+  transition: opacity 0.2s;
 }
 
-.form-check-input-hidden:checked + .custom-checkbox-label .custom-checkbox-visual {
-    background-color: #007BFF; 
-    border-color: #007BFF; 
+.form-check-input-hidden:checked
+  + .custom-checkbox-label
+  .custom-checkbox-visual {
+  background-color: #007bff;
+  border-color: #007bff;
 }
 
-.form-check-input-hidden:checked + .custom-checkbox-label .custom-checkbox-visual::after {
-    opacity: 1; 
+.form-check-input-hidden:checked
+  + .custom-checkbox-label
+  .custom-checkbox-visual::after {
+  opacity: 1;
 }
 
 /* === Micro Investment Checkbox Visuals === */
+
 /* Пример специфичного стиля для микроинвестиций, если нужно, чтобы он отличался от согласий */
+
 /* #microInvestmentVisual был удален, используем новую структуру классов */
 
 /* Новые стили для чекбокса микроинвестиций */
 .micro-investment-label-new {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    gap: 10px; /* Отступ между кастомным чекбоксом и текстом */
-    font-size: 12px; /* Размер шрифта из старого .micro-investment-label-custom */
-    font-family: Unbounded;
-    font-weight: 300;
-    letter-spacing: 0.12px;
-    color: white;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  gap: 10px; /* Отступ между кастомным чекбоксом и текстом */
+  font-size: 12px; /* Размер шрифта из старого .micro-investment-label-custom */
+  font-family: Unbounded;
+  font-weight: 300;
+  letter-spacing: 0.12px;
+  color: white;
 }
 
 .micro-checkbox-visual {
-    width: 20px; /* Размер как у чекбоксов согласия */
-    height: 20px;
-    border-radius: 50%;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    position: relative; /* Для позиционирования галочки, если потребуется */
+  width: 20px; /* Размер как у чекбоксов согласия */
+  height: 20px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative; /* Для позиционирования галочки, если потребуется */
 }
 
 .micro-checkbox-unchecked {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    border: 2px solid #FFFFFF; /* Белый кружок */
-    background-color: transparent;
-    box-sizing: border-box;
-    display: inline-block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 2px solid #fff; /* Белый кружок */
+  background-color: transparent;
+  box-sizing: border-box;
+  display: inline-block;
 }
 
 .micro-checkbox-checked {
-    width: 100%; /* Иконка галочки должна занимать весь кружок */
-    height: 100%; 
-    display: none; /* Скрыта по умолчанию */
+  width: 100%; /* Иконка галочки должна занимать весь кружок */
+  height: 100%;
+  display: none; /* Скрыта по умолчанию */
 }
 
 /* Убираем старые стили, если они еще есть */
+
 /*
 .custom-checkbox-visual-micro {
     margin-right: 8px;
-    display: inline-flex; 
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 24px; 
-    height: 24px; 
+    width: 24px;
+    height: 24px;
 }
 
 .custom-checkbox-visual-micro .micro-investment-icon {
-    width: 100%; 
-    height: 100%; 
+    width: 100%;
+    height: 100%;
 }
 */
 
 /* === File Preview Styles === */
 .file-preview-area {
-    margin-top: 10px;
+  margin-top: 10px;
 }
 
 .file-preview-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 8px 12px;
-    border: 1px solid #e0e0e0; /* Lighter border */
-    border-radius: 6px; /* Slightly more rounded */
-    margin-bottom: 8px;
-    background-color: #f7f9fc; /* Light background */
-    box-shadow: 0 1px 2px rgba(0,0,0,0.05); /* Subtle shadow */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border: 1px solid #e0e0e0; /* Lighter border */
+  border-radius: 6px; /* Slightly more rounded */
+  margin-bottom: 8px;
+  background-color: #f7f9fc; /* Light background */
+  box-shadow: 0 1px 2px rgb(0 0 0 / 5%); /* Subtle shadow */
 }
 
 .file-preview-item .file-info {
-    display: flex;
-    align-items: center;
-    gap: 12px; 
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .file-preview-item .file-icon,
 .file-preview-item .preview-image {
-    width: 36px;   
-    height: 36px;  
-    object-fit: cover; 
-    border-radius: 4px; 
-    flex-shrink: 0; /* Prevent icon from shrinking */
+  width: 36px;
+  height: 36px;
+  object-fit: cover;
+  border-radius: 4px;
+  flex-shrink: 0; /* Prevent icon from shrinking */
 }
 
 .file-preview-item .file-text-details {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    overflow: hidden; /* Prevent long names from breaking layout */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden; /* Prevent long names from breaking layout */
 }
 
 .file-preview-item .file-name-display {
-    font-weight: 500; /* Medium weight */
-    color: #2c3e50; /* Darker text */
-    margin: 0;
-    font-size: 0.9rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis; /* Add ellipsis for very long names */
+  font-weight: 500; /* Medium weight */
+  color: #2c3e50; /* Darker text */
+  margin: 0;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* Add ellipsis for very long names */
 }
 
 .file-preview-item .file-type-display {
-    font-size: 0.75rem;
-    color: #7f8c8d; /* Softer grey */
-    margin: 0;
-    text-transform: uppercase;
+  font-size: 0.75rem;
+  color: #7f8c8d; /* Softer grey */
+  margin: 0;
+  text-transform: uppercase;
 }
 
 .file-preview-item .file-actions {
-    display: flex;
-    align-items: center;
-    flex-shrink: 0; /* Prevent action buttons from shrinking */
+  display: flex;
+  align-items: center;
+  flex-shrink: 0; /* Prevent action buttons from shrinking */
 }
 
 .file-preview-item .file-actions button {
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 5px;
-    margin-left: 5px; /* Space between buttons */
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  margin-left: 5px; /* Space between buttons */
 }
 
 .file-preview-item .file-actions button img {
-    width: 16px; 
-    height: 16px; 
-    vertical-align: middle; /* Align icons nicely */
-}
-.file-preview-item .file-actions button:hover img {
-    opacity: 0.7;
+  width: 16px;
+  height: 16px;
+  vertical-align: middle; /* Align icons nicely */
 }
 
+.file-preview-item .file-actions button:hover img {
+  opacity: 0.7;
+}
 
 /* === Timeline Progress Bar Styles === */
 .timeline {
-    position: relative; 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: flex-start; 
-    padding-top: 0; 
-    padding-left: 61px; /* Половина ширины иконки (122px / 2) */
-    padding-right: 61px;/* Половина ширины иконки (122px / 2) */
-    margin-bottom: 20px;
-    margin-top: 30px; 
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-top: 0;
+  padding-left: 61px; /* Половина ширины иконки (122px / 2) */
+  padding-right: 61px; /* Половина ширины иконки (122px / 2) */
+  margin-bottom: 20px;
+  margin-top: 30px;
 }
 
 .timeline-step {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    position: relative; 
-    z-index: 1; 
-    width: 122px; /* Ширина шага равна ширине иконки */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+  width: 122px; /* Ширина шага равна ширине иконки */
 }
 
 /* This container holds the line and its progress fill */
-.timeline .timeline-progress-container { 
-    position: absolute;
-    top: 64px; /* (122px / 2) + 3px = 61px + 3px = 64px. Сдвиг чуть ниже центра иконки */
-    left: 0px; /* Линия начинается от левого края padding .timeline */
-    right: 0px;/* Линия заканчивается у правого края padding .timeline */
-    height: 4px; /* Толщина линии */
-    z-index: 0; 
-    transform: translateY(-50%); 
+.timeline .timeline-progress-container {
+  position: absolute;
+  top: 64px; /* (122px / 2) + 3px = 61px + 3px = 64px. Сдвиг чуть ниже центра иконки */
+  left: 0; /* Линия начинается от левого края padding .timeline */
+  right: 0; /* Линия заканчивается у правого края padding .timeline */
+  height: 4px; /* Толщина линии */
+  z-index: 0;
+  transform: translateY(-50%);
 }
 
 .timeline-progress-line,
 .timeline-progress-filled {
-    position: absolute;
-    height: 100%;
-    border-radius: 2px; /* Половина высоты линии */
+  position: absolute;
+  height: 100%;
+  border-radius: 2px; /* Половина высоты линии */
 }
 
 .timeline-progress-line {
-    left: 0; 
-    width: 100%; 
-    background-color: #4A4A4A; /* Цвет трека линии из Figma (пример) */
+  left: 0;
+  width: 100%;
+  background-color: #4a4a4a; /* Цвет трека линии из Figma (пример) */
 }
 
 .timeline-progress-filled {
-    left: 0;
-    width: 0%; 
-    background: linear-gradient(90deg, #1967B8 2%, #6348EB 26%, #1967B8 50%, #6749E7 78%, #F26162 100%);
-    transition: width 0.3s ease-in-out;
+  left: 0;
+  width: 0%;
+  background: linear-gradient(
+    90deg,
+    #1967b8 2%,
+    #6348eb 26%,
+    #1967b8 50%,
+    #6749e7 78%,
+    #f26162 100%
+  );
+  transition: width 0.3s ease-in-out;
 }
 
-.step-number-wrapper { /* Обертка для SVG иконки этапа */
-    width: 122px; 
-    height: 122px; 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    background-color: #000000; /* По умолчанию черный фон для всех (неактивных) */
-    background-image: none; /* Убедимся, что нет градиента по умолчанию */
-    position: relative; 
-    z-index: 1; 
-    margin-bottom: 8px; 
-    transition: background-color 0.3s ease, background-image 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+.step-number-wrapper {
+  /* Обертка для SVG иконки этапа */
+  width: 122px;
+  height: 122px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: #000; /* По умолчанию черный фон для всех (неактивных) */
+  background-image: none; /* Убедимся, что нет градиента по умолчанию */
+  position: relative;
+  z-index: 1;
+  margin-bottom: 8px;
+  transition:
+    background-color 0.3s ease,
+    background-image 0.3s ease,
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .step-number-wrapper .step-icon {
-    width: 100%; 
-    height: 100%; 
-    object-fit: contain; 
-    filter: grayscale(100%) brightness(0.7); /* По умолчанию иконки серые и чуть темнее (черно-белые) */
-    transition: filter 0.3s ease;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: grayscale(100%) brightness(0.7); /* По умолчанию иконки серые и чуть темнее (черно-белые) */
+  transition: filter 0.3s ease;
 }
 
 /* Стили для активных (пройденных и текущего) этапов */
 .step-number-wrapper.active {
-    /* Стили фона для активных этапов применяются ниже, специфично для каждого data-step */
+  /* Стили фона для активных этапов применяются ниже, специфично для каждого data-step */
 }
 
 .step-number-wrapper.active .step-icon {
-    filter: none; /* Активная иконка становится цветной */
+  filter: none; /* Активная иконка становится цветной */
 }
 
 /* Градиенты и специфичные фоны применяются ТОЛЬКО к активным кружкам (.active) */
-.timeline-step[data-step="1"] .step-number-wrapper.active { 
-    background-image: linear-gradient(307deg, #4392E3 0%, #004E9F 100%); 
-    background-color: transparent; 
+.timeline-step[data-step='1'] .step-number-wrapper.active {
+  background-image: linear-gradient(307deg, #4392e3 0%, #004e9f 100%);
+  background-color: transparent;
 }
-.timeline-step[data-step="2"] .step-number-wrapper.active { 
-    background-image: linear-gradient(307deg, #7B61FF 0%, #3B1ECA 100%); 
-    background-color: transparent;
+
+.timeline-step[data-step='2'] .step-number-wrapper.active {
+  background-image: linear-gradient(307deg, #7b61ff 0%, #3b1eca 100%);
+  background-color: transparent;
 }
-.timeline-step[data-step="3"] .step-number-wrapper.active { 
-    background-image: linear-gradient(217deg, #4392E3 0%, #004E9F 100%); 
-    background-color: transparent;
+
+.timeline-step[data-step='3'] .step-number-wrapper.active {
+  background-image: linear-gradient(217deg, #4392e3 0%, #004e9f 100%);
+  background-color: transparent;
 }
-.timeline-step[data-step="4"] .step-number-wrapper.active {
-    background-image: linear-gradient(307deg, #F26162 0%, #D32F2F 100%); /* Пример красного градиента */
-    background-color: transparent; 
+
+.timeline-step[data-step='4'] .step-number-wrapper.active {
+  background-image: linear-gradient(
+    307deg,
+    #f26162 0%,
+    #d32f2f 100%
+  ); /* Пример красного градиента */
+  background-color: transparent;
 }
-.timeline-step[data-step="5"] .step-number-wrapper.active {
-    background-image: linear-gradient(217deg, #FFEF2B 0%, #F9A825 100%); /* Пример желто-оранжевого градиента */
-    background-color: transparent; 
+
+.timeline-step[data-step='5'] .step-number-wrapper.active {
+  background-image: linear-gradient(
+    217deg,
+    #ffef2b 0%,
+    #f9a825 100%
+  ); /* Пример желто-оранжевого градиента */
+  background-color: transparent;
 }
 
 /* Активный этап для отображения описания (добавляет свечение) */
 .timeline-step.active-step-display .step-number-wrapper {
-    transform: scale(1.05);
-    box-shadow: 0 0 15px rgba(255, 239, 43, 0.7); /* Желтое свечение */
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgb(255 239 43 / 70%); /* Желтое свечение */
 }
 
 /* Будущие этапы (теперь управляются отсутствием .active и начальными стилями .step-number-wrapper) */
+
 /* .timeline-step.future-step .step-number-wrapper { ... } - больше не нужен, т.к. черный фон и серые иконки по умолчанию */
+
 /* .timeline-step.future-step .step-icon { ... } - больше не нужен */
 
 .timeline-description-textarea {
-    width: 100%;
-    height: 188px;
-    background: white;
-    border-radius: 10px;
-    padding: 15px;
-    color: black;
-    font-family: Unbounded;
-    font-weight: 300;
-    font-size: 14px;
-    line-height: 18px;
-    border: 1px solid #D9D9D9;
-    resize: none; /* << ЗАПРЕТ ИЗМЕНЕНИЯ РАЗМЕРА */
-    box-sizing: border-box; /* << УЧИТЫВАЕМ PADDING И BORDER TEXTAREA */
-    /* overflow: auto; /* Добавим на случай, если текст все же выходит, но это не должно быть нужно с box-sizing */
+  width: 100%;
+  height: 188px;
+  background: white;
+  border-radius: 10px;
+  padding: 15px;
+  color: black;
+  font-family: Unbounded;
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 18px;
+  border: 1px solid #d9d9d9;
+  resize: none; /* << ЗАПРЕТ ИЗМЕНЕНИЯ РАЗМЕРА */
+  box-sizing: border-box; /* << УЧИТЫВАЕМ PADDING И BORDER TEXTAREA */
+
+  /* overflow: auto; /* Добавим на случай, если текст все же выходит, но это не должно быть нужно с box-sizing */
 }
 
 /* Если контейнер описания все еще вызывает проблемы с шириной */
 .timeline-description-container {
-    /* ... существующие стили ... */
-    width: 100%;
-    box-sizing: border-box;
-    overflow: hidden; /* << ДОБАВЛЕНО для предотвращения выпадения контента */
+  /* ... существующие стили ... */
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden; /* << ДОБАВЛЕНО для предотвращения выпадения контента */
 }
 
 /* Ensure the overall form background is considered for the timeline icon cutout */
-/* If .startup-form-container or body has a different background, 
+
+/* If .startup-form-container or body has a different background,
    .step-number-wrapper background-color and box-shadow color should match that.
    Assuming default white for now.
 */
-body, .startup-form-container { /* Example, adjust selector as needed */
-    /* background-color: #f8f9fa; /* If this is the page background */
+body,
+.startup-form-container {
+  /* Example, adjust selector as needed */
+  /* background-color: #f8f9fa; /* If this is the page background */
 }
+
 /* If so, then update .step-number-wrapper:
 .step-number-wrapper {
     background-color: #f8f9fa;
@@ -1255,91 +1361,93 @@ body, .startup-form-container { /* Example, adjust selector as needed */
 
 /* Стиль для красной надписи ошибки загрузки файла */
 .custom-validation-error.file-specific-upload-error {
-    color: #e74c3c; /* Яркий красный цвет для ошибки */
-    font-size: 0.85rem;
-    margin-top: 5px;
+  color: #e74c3c; /* Яркий красный цвет для ошибки */
+  font-size: 0.85rem;
+  margin-top: 5px;
 }
 
 /* Новые стили для выбора планеты */
 .planet-upload-group {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
 }
 
 .planet-upload-group .planet-upload-label {
-    font-size: 12px;
-    font-family: Unbounded;
-    font-weight: 300;
-    letter-spacing: 0.12px;
-    color: white;
+  font-size: 12px;
+  font-family: Unbounded;
+  font-weight: 300;
+  letter-spacing: 0.12px;
+  color: white;
 }
 
 .planet-selector {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .planet-nav-button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
 }
 
 .planet-nav-button img {
-    width: 16px;
-    height: 16px;
+  width: 16px;
+  height: 16px;
 }
 
 .planet-nav-button.prev-planet img {
-    transform: rotate(90deg);
+  transform: rotate(90deg);
 }
 
 .planet-nav-button.next-planet img {
-    transform: rotate(-90deg);
+  transform: rotate(-90deg);
 }
 
 .planet-display {
-    width: 450px;
-    height: 451px;
-    border-radius: 10px;
-    background-color: #333;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
+  width: 450px;
+  height: 451px;
+  border-radius: 10px;
+  background-color: #333;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
 }
 
 .planet-preview {
-        max-width: 100%;
-        max-height: 100%;
-        object-fit: contain;
-        position: absolute;
-        transition: opacity 0.3s ease, transform 0.3s ease;
-        opacity: 1;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  position: absolute;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+  opacity: 1;
 }
 
 .planet-preview.slide-left {
-    opacity: 0;
-    transform: translateX(-50%);
+  opacity: 0;
+  transform: translateX(-50%);
 }
 
 .planet-preview.slide-right {
-    opacity: 0;
-    transform: translateX(50%);
+  opacity: 0;
+  transform: translateX(50%);
 }
 
 .logo-upload-group .logo-upload-label {
-    display: block;
-    width: 200px;
-    height: 100px; /* Половина высоты области планет */
-    border-radius: 5px;
-    background-color: #333;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
+  display: block;
+  width: 200px;
+  height: 100px; /* Половина высоты области планет */
+  border-radius: 5px;
+  background-color: #333;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
 }

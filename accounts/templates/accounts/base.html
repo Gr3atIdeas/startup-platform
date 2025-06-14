@@ -1,308 +1,514 @@
 {% load static %}
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}Great Ideas{% endblock %}</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Great Ideas{% endblock %}</title>
 
-  <!-- Favicons -->
-  <link rel="shortcut icon" href="{% static 'accounts/images/favicons/favicon.ico' %}">
-  <link rel="icon" type="image/png" sizes="32x32" href="{% static 'accounts/images/favicons/favicon-32x32.png' %}">
-  <link rel="icon" type="image/png" sizes="16x16" href="{% static 'accounts/images/favicons/favicon-16x16.png' %}">
-  <link rel="apple-touch-icon" href="{% static 'accounts/images/favicons/apple-touch-icon.png' %}">
-  <link rel="manifest" href="{% static 'accounts/images/favicons/site.webmanifest' %}">
-  <!-- End Favicons -->
+    <!-- Favicons -->
+    <link
+      rel="shortcut icon"
+      href="{% static 'accounts/images/favicons/favicon.ico' %}"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="{% static 'accounts/images/favicons/favicon-32x32.png' %}"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="{% static 'accounts/images/favicons/favicon-16x16.png' %}"
+    />
+    <link
+      rel="apple-touch-icon"
+      href="{% static 'accounts/images/favicons/apple-touch-icon.png' %}"
+    />
+    <link
+      rel="manifest"
+      href="{% static 'accounts/images/favicons/site.webmanifest' %}"
+    />
+    <!-- End Favicons -->
 
-  <!-- Подключаем Font Awesome для иконок -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  
-  <!-- Подключаем Google Fonts и Unbounded -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Koulen&family=Circe:wght@400;700&family=Inter:wght@400;700&display=swap" rel="stylesheet">
-  {# Ссылка на Blippo-Black CY, если он используется локально и не через @font-face в CSS #}
-  {# <link rel="stylesheet" href="{% static 'path/to/blippo-font.css' %}"> #}
-  
-  <!-- Глобальные стили -->
-  <link rel="stylesheet" href="{% static 'accounts/css/fonts.css' %}?v={% now 'U' %}">
-  <link rel="stylesheet" href="{% static 'accounts/css/global.css' %}?v={% now 'U' %}">
-  <link rel="stylesheet" href="{% static 'accounts/css/improved_styles.css' %}?v={% now 'U' %}">
-  <link rel="stylesheet" href="{% static 'accounts/css/footer.css' %}?v={% now 'U' %}"> 
-  
-  <!-- Подключение CSS -->
-  <link rel="stylesheet" href="{% static 'accounts/css/header.css' %}?v={% now 'U' %}">
-  <link rel="stylesheet" href="{% static 'accounts/css/buttons.css' %}?v={% now 'U' %}">
+    <!-- Подключаем Font Awesome для иконок -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
 
-  <!-- Подключаем Chart.js -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Подключаем Google Fonts и Unbounded -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Koulen&family=Circe:wght@400;700&family=Inter:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    {# Ссылка на Blippo-Black CY, если он используется локально и не через
+    @font-face в CSS #} {#
+    <link rel="stylesheet" href="{% static 'path/to/blippo-font.css' %}" />
+    #}
 
-  <style>
-    /* Прямое применение стиля для цвета текста пунктов подменю каталога */
-    .catalog-dropdown-item.no-wave-effect,
-    .catalog-dropdown-item.no-wave-effect:link,
-    .catalog-dropdown-item.no-wave-effect:visited {
-      color: #000000 !important;
-    }
-    .catalog-dropdown-item.no-wave-effect:hover {
-      color: #000000 !important; /* Остается черным при наведении */
-    }
-    body {
-      overflow-x: hidden;
-    }
-  </style>
+    <!-- Глобальные стили -->
+    <link
+      rel="stylesheet"
+      href="{% static 'accounts/css/fonts.css' %}?v={% now 'U' %}"
+    />
+    <link
+      rel="stylesheet"
+      href="{% static 'accounts/css/global.css' %}?v={% now 'U' %}"
+    />
+    <link
+      rel="stylesheet"
+      href="{% static 'accounts/css/improved_styles.css' %}?v={% now 'U' %}"
+    />
+    <link
+      rel="stylesheet"
+      href="{% static 'accounts/css/footer.css' %}?v={% now 'U' %}"
+    />
 
-  {% block head_extra %}
-    {{ block.super }}
-  {% endblock %}
-</head>
-<body>
-  <header id="main-header">
-    <div class="header-content-wrapper">
+    <!-- Подключение CSS -->
+    <link
+      rel="stylesheet"
+      href="{% static 'accounts/css/header.css' %}?v={% now 'U' %}"
+    />
+    <link
+      rel="stylesheet"
+      href="{% static 'accounts/css/buttons.css' %}?v={% now 'U' %}"
+    />
+
+    <!-- Подключаем Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+      /* Прямое применение стиля для цвета текста пунктов подменю каталога */
+      .catalog-dropdown-item.no-wave-effect,
+      .catalog-dropdown-item.no-wave-effect:link,
+      .catalog-dropdown-item.no-wave-effect:visited {
+        color: #000000 !important;
+      }
+      .catalog-dropdown-item.no-wave-effect:hover {
+        color: #000000 !important; /* Остается черным при наведении */
+      }
+      body {
+        overflow-x: hidden;
+      }
+    </style>
+
+    {% block head_extra %} {{ block.super }} {% endblock %}
+  </head>
+  <body>
+    <header id="main-header">
+      <div class="header-content-wrapper">
         <a href="{% url 'home' %}" class="header-logo-link">
-            <img src="{% static 'accounts/images/white_logo_header.svg' %}" alt="Great Ideas Logo" class="header-logo-icon-img" style="height: 50px; width: auto;"> 
-      </a>
+          <img
+            src="{% static 'accounts/images/white_logo_header.svg' %}"
+            alt="Great Ideas Logo"
+            class="header-logo-icon-img"
+            style="height: 50px; width: auto"
+          />
+        </a>
         <div class="header-search-bar">
-            <img src="{% static 'accounts/images/search.svg' %}" alt="Search" class="header-search-icon-img">
-            <input type="text" placeholder="Поиск" class="header-search-input">
-      </div>
-      <nav class="nav-menu">
-            <div class="header-nav-links">
-                {% if not user.is_authenticated %}
-                    <a href="{% url 'startups_list' %}" class="header-nav-link">Каталог</a>
-                    <a href="{% url 'news' %}" class="header-nav-link">Новости</a>
-                    <a href="{% url 'faq' %}" class="header-nav-link">FAQ</a>
-                {% elif user.role.role_name == 'investor' %}
-                    <a href="{% url 'startups_list' %}" class="header-nav-link">Каталог</a>
-                    <a href="{% url 'investments' %}" class="header-nav-link">Портфель</a> {# Убедитесь, что URL 'investments' существует #}
-                    <a href="{% url 'news' %}" class="header-nav-link">Новости</a>
-                    <a href="{% url 'cosmochat' %}" class="header-nav-link cosmochat-link">CosmoChat</a>
-                {% elif user.role.role_name == 'startuper' %}
-                    <a href="{% url 'startups_list' %}" class="header-nav-link">Каталог</a>
-                    <a href="{% url 'my_startups' %}" class="header-nav-link">Мои стартапы</a> {# Убедитесь, что URL 'my_startups' существует #}
-                    <a href="{% url 'news' %}" class="header-nav-link">Новости</a>
-                    <a href="{% url 'cosmochat' %}" class="header-nav-link cosmochat-link">CosmoChat</a>
-                {% elif user.role.role_name == 'moderator' %}
-                    <a href="{% url 'home' %}" class="header-nav-link">Главная</a>
-                    <div class="catalog-dropdown-container">
-                        <button class="header-nav-link catalog-dropdown-button">Каталог</button>
-                        <div class="catalog-dropdown-menu">
-                            <a href="{% url 'startups_list' %}" class="catalog-dropdown-item no-wave-effect">
-                                <img src="{% static 'accounts/images/icons/planet.svg' %}" alt="Стартапы" class="catalog-dropdown-item-icon">
-                                Стартапы
-                            </a>
-                            <a href="#" class="catalog-dropdown-item no-wave-effect"> {# Заменить # на актуальный URL для Франшиз #}
-                                <img src="{% static 'accounts/images/icons/rocket-sharp.svg' %}" alt="Франшизы" class="catalog-dropdown-item-icon">
-                                Франшизы
-                            </a>
-                        </div>
-                    </div>
-                    <a href="{% url 'news' %}" class="header-nav-link">Новости</a>
-                    <a href="{% url 'cosmochat' %}" class="header-nav-link cosmochat-link">CosmoChat</a>
-                    <a href="{% url 'moderator_dashboard' %}" class="header-nav-link">Заявки</a> {# Убедитесь, что URL 'moderator_dashboard' это Заявки #}
-                    <a href="{% url 'deals_page' %}" class="header-nav-link">Сделки</a>
-                    <a href="{% url 'support' %}" class="header-nav-link">Поддержка</a> {# ЗАМЕНЕН URL #}
-                {% endif %}
+          <img
+            src="{% static 'accounts/images/search.svg' %}"
+            alt="Search"
+            class="header-search-icon-img"
+          />
+          <input type="text" placeholder="Поиск" class="header-search-input" />
+        </div>
+        <nav class="nav-menu">
+          <div class="header-nav-links">
+            {% if not user.is_authenticated %}
+            <a href="{% url 'startups_list' %}" class="header-nav-link"
+              >Каталог</a
+            >
+            <a href="{% url 'news' %}" class="header-nav-link">Новости</a>
+            <a href="{% url 'faq' %}" class="header-nav-link">FAQ</a>
+            {% elif user.role.role_name == 'investor' %}
+            <a href="{% url 'startups_list' %}" class="header-nav-link"
+              >Каталог</a
+            >
+            <a href="{% url 'investments' %}" class="header-nav-link"
+              >Портфель</a
+            >
+            {# Убедитесь, что URL 'investments' существует #}
+            <a href="{% url 'news' %}" class="header-nav-link">Новости</a>
+            <a
+              href="{% url 'cosmochat' %}"
+              class="header-nav-link cosmochat-link"
+              >CosmoChat</a
+            >
+            {% elif user.role.role_name == 'startuper' %}
+            <a href="{% url 'startups_list' %}" class="header-nav-link"
+              >Каталог</a
+            >
+            <a href="{% url 'my_startups' %}" class="header-nav-link"
+              >Мои стартапы</a
+            >
+            {# Убедитесь, что URL 'my_startups' существует #}
+            <a href="{% url 'news' %}" class="header-nav-link">Новости</a>
+            <a
+              href="{% url 'cosmochat' %}"
+              class="header-nav-link cosmochat-link"
+              >CosmoChat</a
+            >
+            {% elif user.role.role_name == 'moderator' %}
+            <a href="{% url 'home' %}" class="header-nav-link">Главная</a>
+            <div class="catalog-dropdown-container">
+              <button class="header-nav-link catalog-dropdown-button">
+                Каталог
+              </button>
+              <div class="catalog-dropdown-menu">
+                <a
+                  href="{% url 'startups_list' %}"
+                  class="catalog-dropdown-item no-wave-effect"
+                >
+                  <img
+                    src="{% static 'accounts/images/icons/planet.svg' %}"
+                    alt="Стартапы"
+                    class="catalog-dropdown-item-icon"
+                  />
+                  Стартапы
+                </a>
+                <a href="#" class="catalog-dropdown-item no-wave-effect">
+                  {# Заменить # на актуальный URL для Франшиз #}
+                  <img
+                    src="{% static 'accounts/images/icons/rocket-sharp.svg' %}"
+                    alt="Франшизы"
+                    class="catalog-dropdown-item-icon"
+                  />
+                  Франшизы
+                </a>
+              </div>
             </div>
+            <a href="{% url 'news' %}" class="header-nav-link">Новости</a>
+            <a
+              href="{% url 'cosmochat' %}"
+              class="header-nav-link cosmochat-link"
+              >CosmoChat</a
+            >
+            <a href="{% url 'moderator_dashboard' %}" class="header-nav-link"
+              >Заявки</a
+            >
+            {# Убедитесь, что URL 'moderator_dashboard' это Заявки #}
+            <a href="{% url 'deals_page' %}" class="header-nav-link">Сделки</a>
+            <a href="{% url 'support' %}" class="header-nav-link">Поддержка</a>
+            {# ЗАМЕНЕН URL #} {% endif %}
+          </div>
 
-            {# Блок для дополнительных кнопок ролей перед кнопкой Профиля/Войти #}
-            {% if user.is_authenticated %}
-                {% if user.role.role_name == 'startuper' %}
-                    <a href="{% url 'create_startup' %}" class="header-nav-link header-role-button create-startup-button">
-                        Создать
-                        <img src="{% static 'accounts/images/add-circle-outline.svg' %}" alt="Создать стартап" class="create-startup-icon">
-                    </a>
-                {% endif %}
-            {% endif %}
+          {# Блок для дополнительных кнопок ролей перед кнопкой Профиля/Войти #}
+          {% if user.is_authenticated %} {% if user.role.role_name ==
+          'startuper' %}
+          <a
+            href="{% url 'create_startup' %}"
+            class="header-nav-link header-role-button create-startup-button"
+          >
+            Создать
+            <img
+              src="{% static 'accounts/images/add-circle-outline.svg' %}"
+              alt="Создать стартап"
+              class="create-startup-icon"
+            />
+          </a>
+          {% endif %} {% endif %}
         </nav>
         <div class="header-auth-section">
-            {% if user.is_authenticated %}
-                <div class="profile-dropdown-container">
-                    <button class="profile-dropdown-button no-wave-effect">
-                        <div class="profile-avatar-wrapper">
-                            <img src="{% if user.get_profile_picture_url %}{{ user.get_profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}" alt="Аватар" class="profile-dropdown-avatar">
-                        </div>
-                        {# <i class="fas fa-chevron-down profile-dropdown-chevron"></i> #} {# Шеврон пока уберем, на скрине его нет #}
-                    </button>
-                    <div class="profile-dropdown-menu">
-                        <a href="{% url 'notifications_page' %}" class="profile-dropdown-item profile-dropdown-notifications">
-                            <span class="notification-icon-background">
-                                <img src="{% static 'accounts/images/bell.svg' %}" alt="Уведомления" class="profile-dropdown-item-icon">
-                            </span>
-                            Уведомления
-                            {# Здесь может быть счетчик уведомлений, если он есть в контексте #}
-                        </a>
-                        <a href="{% url 'profile' %}" class="profile-dropdown-item">Профиль</a>
-                        <a href="{% url 'startups_list' %}" class="profile-dropdown-item">Стартапы</a> {# Исправлено на каталог #}
-                        {# <a href="{% url 'profile_settings' %}" class="profile-dropdown-item">Настройки</a> #} {# Нужен URL для настроек #}
-                        <a href="#" class="profile-dropdown-item">Настройки</a> {# Временный #}
-                        <a href="{% url 'support' %}" class="profile-dropdown-item">Поддержка</a> {# ЗАМЕНЕН URL #}
-                        <a href="{% url 'contacts' %}" class="profile-dropdown-item">Контакты</a>
-                        <a href="{% url 'faq' %}" class="profile-dropdown-item">FAQ</a>
-                        <a href="{% url 'logout' %}" class="profile-dropdown-item profile-dropdown-logout">
-                            <i class="fas fa-sign-out-alt"></i> Выйти
-                        </a>
-                    </div>
-                </div>
-            {% else %}
-                <a href="{% url 'login' %}" class="header-auth-button-link header-login-button">
-                    Войти
-                    <img src="{% static 'accounts/images/add-circle-outline.svg' %}" alt="icon" class="header-auth-button-icon">
-                </a>
-            {% endif %}
+          {% if user.is_authenticated %}
+          <div class="profile-dropdown-container">
+            <button class="profile-dropdown-button no-wave-effect">
+              <div class="profile-avatar-wrapper">
+                <img
+                  src="{% if user.get_profile_picture_url %}{{ user.get_profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}"
+                  alt="Аватар"
+                  class="profile-dropdown-avatar"
+                />
+              </div>
+              {# <i class="fas fa-chevron-down profile-dropdown-chevron"></i> #}
+              {# Шеврон пока уберем, на скрине его нет #}
+            </button>
+            <div class="profile-dropdown-menu">
+              <a
+                href="{% url 'notifications_page' %}"
+                class="profile-dropdown-item profile-dropdown-notifications"
+              >
+                <span class="notification-icon-background">
+                  <img
+                    src="{% static 'accounts/images/bell.svg' %}"
+                    alt="Уведомления"
+                    class="profile-dropdown-item-icon"
+                  />
+                </span>
+                Уведомления {# Здесь может быть счетчик уведомлений, если он
+                есть в контексте #}
+              </a>
+              <a href="{% url 'profile' %}" class="profile-dropdown-item"
+                >Профиль</a
+              >
+              <a href="{% url 'startups_list' %}" class="profile-dropdown-item"
+                >Стартапы</a
+              >
+              {# Исправлено на каталог #} {#
+              <a
+                href="{% url 'profile_settings' %}"
+                class="profile-dropdown-item"
+                >Настройки</a
+              >
+              #} {# Нужен URL для настроек #}
+              <a href="#" class="profile-dropdown-item">Настройки</a> {#
+              Временный #}
+              <a href="{% url 'support' %}" class="profile-dropdown-item"
+                >Поддержка</a
+              >
+              {# ЗАМЕНЕН URL #}
+              <a href="{% url 'contacts' %}" class="profile-dropdown-item"
+                >Контакты</a
+              >
+              <a href="{% url 'faq' %}" class="profile-dropdown-item">FAQ</a>
+              <a
+                href="{% url 'logout' %}"
+                class="profile-dropdown-item profile-dropdown-logout"
+              >
+                <i class="fas fa-sign-out-alt"></i> Выйти
+              </a>
+            </div>
+          </div>
+          {% else %}
+          <a
+            href="{% url 'login' %}"
+            class="header-auth-button-link header-login-button"
+          >
+            Войти
+            <img
+              src="{% static 'accounts/images/add-circle-outline.svg' %}"
+              alt="icon"
+              class="header-auth-button-icon"
+            />
+          </a>
+          {% endif %}
         </div>
-    </div>
-  </header>
-  
-  <main class="content">
-    {% block content %}{% endblock %}
-  </main>
-  
-  <footer class="site-footer">
-    <div class="footer-positioning-container">
+      </div>
+    </header>
+
+    <main class="content">{% block content %}{% endblock %}</main>
+
+    <footer class="site-footer">
+      <div class="footer-positioning-container">
         <div class="footer-top-section">
-            <div class="footer-brand-info">
-                <div class="footer-brand-title">Great ideas</div>
-                <div class="footer-brand-tagline">Раскройте открывающиеся возможности и будьте частью инновационной волны</div>
+          <div class="footer-brand-info">
+            <div class="footer-brand-title">Great ideas</div>
+            <div class="footer-brand-tagline">
+              Раскройте открывающиеся возможности и будьте частью инновационной
+              волны
             </div>
-            <div class="footer-social-links">
-                <a href="#" title="VK"><img src="{% static 'accounts/images/layout/vk_footer.svg' %}" alt="VK" class="footer-social-icon"></a>
-                <a href="#" title="Telegram"><img src="{% static 'accounts/images/layout/telegram_footer.svg' %}" alt="Telegram" class="footer-social-icon"></a>
-            </div>
+          </div>
+          <div class="footer-social-links">
+            <a href="#" title="VK"
+              ><img
+                src="{% static 'accounts/images/layout/vk_footer.svg' %}"
+                alt="VK"
+                class="footer-social-icon"
+            /></a>
+            <a href="#" title="Telegram"
+              ><img
+                src="{% static 'accounts/images/layout/telegram_footer.svg' %}"
+                alt="Telegram"
+                class="footer-social-icon"
+            /></a>
+          </div>
         </div>
-        
+
         <div class="footer-middle-section">
-            <div class="footer-subscribe-and-apps">
-                <a href="#" class="footer-subscribe-button">
-                    <div class="footer-subscribe-text">Подписаться на новости</div>
-                    <img src="{% static 'accounts/images/add-circle-outline.svg' %}" alt="Подписаться" class="footer-subscribe-icon-img">
-                </a>
-                <div class="footer-app-links-section">
-                    <a href="#"><img src="{% static 'accounts/images/layout/appstore_footer.png' %}" alt="App Store" class="footer-app-link-img"></a>
-                    <a href="#"><img src="{% static 'accounts/images/layout/googleplay_footer.png' %}" alt="Google Play" class="footer-app-link-img"></a>
-                </div>
+          <div class="footer-subscribe-and-apps">
+            <a href="#" class="footer-subscribe-button">
+              <div class="footer-subscribe-text">Подписаться на новости</div>
+              <img
+                src="{% static 'accounts/images/add-circle-outline.svg' %}"
+                alt="Подписаться"
+                class="footer-subscribe-icon-img"
+              />
+            </a>
+            <div class="footer-app-links-section">
+              <a href="#"
+                ><img
+                  src="{% static 'accounts/images/layout/appstore_footer.png' %}"
+                  alt="App Store"
+                  class="footer-app-link-img"
+              /></a>
+              <a href="#"
+                ><img
+                  src="{% static 'accounts/images/layout/googleplay_footer.png' %}"
+                  alt="Google Play"
+                  class="footer-app-link-img"
+              /></a>
             </div>
-            <div class="footer-menus-section">
-                <div class="footer-menu-column">
-                    <div class="footer-menu-title">Меню</div>
-                    <div class="footer-menu-links">
-                        <a href="{% url 'startups_list' %}" class="footer-menu-link">Каталог</a>
-                        {% if user.is_authenticated and user.role.role_name == 'investor' %}
-                        <a href="{% url 'investments' %}" class="footer-menu-link">Портфель</a>
-                        {% endif %}
-                        <a href="{% url 'startups_list' %}" class="footer-menu-link">Стартапы</a>
-                        <a href="#" class="footer-menu-link">Франшизы</a>
-                        <a href="{% url 'news' %}" class="footer-menu-link">Новости</a>
-                        <a href="{% url 'cosmochat' %}" class="footer-menu-link">CosmoChat</a>
-                    </div>
-                </div>
-                <div class="footer-menu-column">
-                    <div class="footer-menu-title">О нас</div>
-                    <div class="footer-menu-links">
-                        <a href="{% url 'faq' %}" class="footer-menu-link">FAQ</a>
-                        <a href="{% url 'support' %}" class="footer-menu-link">Поддержка</a>
-                        <a href="{% url 'contacts' %}" class="footer-menu-link">Контакты</a> {# Предполагая, что есть URL 'contacts' #}
-                        <a href="{% url 'legal' %}" class="footer-menu-link">Правовая информация</a>
-                    </div>
-                </div>
+          </div>
+          <div class="footer-menus-section">
+            <div class="footer-menu-column">
+              <div class="footer-menu-title">Меню</div>
+              <div class="footer-menu-links">
+                <a href="{% url 'startups_list' %}" class="footer-menu-link"
+                  >Каталог</a
+                >
+                {% if user.is_authenticated and user.role.role_name ==
+                'investor' %}
+                <a href="{% url 'investments' %}" class="footer-menu-link"
+                  >Портфель</a
+                >
+                {% endif %}
+                <a href="{% url 'startups_list' %}" class="footer-menu-link"
+                  >Стартапы</a
+                >
+                <a href="#" class="footer-menu-link">Франшизы</a>
+                <a href="{% url 'news' %}" class="footer-menu-link">Новости</a>
+                <a href="{% url 'cosmochat' %}" class="footer-menu-link"
+                  >CosmoChat</a
+                >
+              </div>
             </div>
+            <div class="footer-menu-column">
+              <div class="footer-menu-title">О нас</div>
+              <div class="footer-menu-links">
+                <a href="{% url 'faq' %}" class="footer-menu-link">FAQ</a>
+                <a href="{% url 'support' %}" class="footer-menu-link"
+                  >Поддержка</a
+                >
+                <a href="{% url 'contacts' %}" class="footer-menu-link"
+                  >Контакты</a
+                >
+                {# Предполагая, что есть URL 'contacts' #}
+                <a href="{% url 'legal' %}" class="footer-menu-link"
+                  >Правовая информация</a
+                >
+              </div>
+            </div>
+          </div>
         </div>
-        
+
         <div class="footer-bottom-section">
-            {# <div class="footer-bottom-bar"></div> #} {# Этот элемент теперь не нужен здесь, управляется из CSS или интегрирован в copyright-section #}
-            <div class="footer-copyright-section">
-                <div class="footer-copyright-text">© 2025 Great Ideas</div>
-                <div class="footer-legal-links">
-                    <a href="#" class="footer-legal-link">Политика конфиденциальности</a>
-                    <a href="#" class="footer-legal-link">Оферта</a>
-                </div>
+          {#
+          <div class="footer-bottom-bar"></div>
+          #} {# Этот элемент теперь не нужен здесь, управляется из CSS или
+          интегрирован в copyright-section #}
+          <div class="footer-copyright-section">
+            <div class="footer-copyright-text">© 2025 Great Ideas</div>
+            <div class="footer-legal-links">
+              <a href="#" class="footer-legal-link"
+                >Политика конфиденциальности</a
+              >
+              <a href="#" class="footer-legal-link">Оферта</a>
             </div>
+          </div>
         </div>
-    </div>
-  </footer>
+      </div>
+    </footer>
 
-  <!-- Глобальные скрипты -->
-  <script src="https://code.jquery.com/jquery-3.6.4.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/glightbox@3.2.0/dist/js/glightbox.min.js" defer></script>
-  <script src="{% static 'accounts/js/button_effects.js' %}" defer></script>
-  <script src="{% static 'accounts/js/global_styles.js' %}" defer></script>
-  
-  <!-- Скрипты для работы выпадающих меню в хедере (каталог и профиль) -->
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    <!-- Глобальные скрипты -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js" defer></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/glightbox@3.2.0/dist/js/glightbox.min.js"
+      defer
+    ></script>
+    <script src="{% static 'accounts/js/button_effects.js' %}" defer></script>
+    <script src="{% static 'accounts/js/global_styles.js' %}" defer></script>
+
+    <!-- Скрипты для работы выпадающих меню в хедере (каталог и профиль) -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
         // Скрипт для выпадающего меню каталога
-        const catalogDropdownButton = document.querySelector('.catalog-dropdown-button');
-        const catalogDropdownMenu = document.querySelector('.catalog-dropdown-menu');
-        const catalogDropdownContainer = document.querySelector('.catalog-dropdown-container');
+        const catalogDropdownButton = document.querySelector(
+          '.catalog-dropdown-button'
+        )
+        const catalogDropdownMenu = document.querySelector(
+          '.catalog-dropdown-menu'
+        )
+        const catalogDropdownContainer = document.querySelector(
+          '.catalog-dropdown-container'
+        )
 
-        if (catalogDropdownButton && catalogDropdownMenu && catalogDropdownContainer) {
-            catalogDropdownButton.addEventListener('click', function (event) {
-                event.stopPropagation();
-                catalogDropdownContainer.classList.toggle('open');
-            });
+        if (
+          catalogDropdownButton &&
+          catalogDropdownMenu &&
+          catalogDropdownContainer
+        ) {
+          catalogDropdownButton.addEventListener('click', function (event) {
+            event.stopPropagation()
+            catalogDropdownContainer.classList.toggle('open')
+          })
 
-            document.addEventListener('click', function (event) {
-                if (catalogDropdownContainer.classList.contains('open') && 
-                    !catalogDropdownMenu.contains(event.target) && 
-                    !catalogDropdownButton.contains(event.target)) {
-                    catalogDropdownContainer.classList.remove('open');
-                }
-            });
+          document.addEventListener('click', function (event) {
+            if (
+              catalogDropdownContainer.classList.contains('open') &&
+              !catalogDropdownMenu.contains(event.target) &&
+              !catalogDropdownButton.contains(event.target)
+            ) {
+              catalogDropdownContainer.classList.remove('open')
+            }
+          })
         }
 
         // Скрипт для выпадающего меню профиля
-        const profileDropdownButton = document.querySelector('.profile-dropdown-button');
-        const profileDropdownMenu = document.querySelector('.profile-dropdown-menu');
+        const profileDropdownButton = document.querySelector(
+          '.profile-dropdown-button'
+        )
+        const profileDropdownMenu = document.querySelector(
+          '.profile-dropdown-menu'
+        )
 
         if (profileDropdownButton && profileDropdownMenu) {
-            profileDropdownButton.addEventListener('click', function(event) {
-                event.stopPropagation();
-                profileDropdownMenu.classList.toggle('open');
-            });
+          profileDropdownButton.addEventListener('click', function (event) {
+            event.stopPropagation()
+            profileDropdownMenu.classList.toggle('open')
+          })
 
-            document.addEventListener('click', function(event) {
-                if (profileDropdownMenu.classList.contains('open') && 
-                    !profileDropdownMenu.contains(event.target) && 
-                    !profileDropdownButton.contains(event.target)) {
-                    profileDropdownMenu.classList.remove('open');
-                }
-            });
+          document.addEventListener('click', function (event) {
+            if (
+              profileDropdownMenu.classList.contains('open') &&
+              !profileDropdownMenu.contains(event.target) &&
+              !profileDropdownButton.contains(event.target)
+            ) {
+              profileDropdownMenu.classList.remove('open')
+            }
+          })
         }
 
         // Очистка стилей элементов подменю каталога
         function cleanCatalogSubmenuItems() {
-            const submenuItems = document.querySelectorAll('.catalog-dropdown-item.no-wave-effect');
-            submenuItems.forEach(item => {
-                const waveSpan = item.querySelector('span.wave-effect');
-                if (waveSpan) {
-                    waveSpan.remove();
-                }
-                item.removeAttribute('data-position-aware-initialized');
-            });
+          const submenuItems = document.querySelectorAll(
+            '.catalog-dropdown-item.no-wave-effect'
+          )
+          submenuItems.forEach((item) => {
+            const waveSpan = item.querySelector('span.wave-effect')
+            if (waveSpan) {
+              waveSpan.remove()
+            }
+            item.removeAttribute('data-position-aware-initialized')
+          })
         }
 
-        cleanCatalogSubmenuItems();
+        cleanCatalogSubmenuItems()
 
         if (catalogDropdownButton && catalogDropdownContainer) {
-            const observer = new MutationObserver(mutationsList => {
-                for (const mutation of mutationsList) {
-                    if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
-                        if (catalogDropdownContainer.classList.contains('open')) {
-                            setTimeout(cleanCatalogSubmenuItems, 50);
-                        }
-                    }
+          const observer = new MutationObserver((mutationsList) => {
+            for (const mutation of mutationsList) {
+              if (
+                mutation.type === 'attributes' &&
+                mutation.attributeName === 'class'
+              ) {
+                if (catalogDropdownContainer.classList.contains('open')) {
+                  setTimeout(cleanCatalogSubmenuItems, 50)
                 }
-            });
-            observer.observe(catalogDropdownContainer, { attributes: true });
+              }
+            }
+          })
+          observer.observe(catalogDropdownContainer, { attributes: true })
         }
-    });
-  </script>
+      })
+    </script>
 
-  {% block script_extra %}
-    {# Сюда будут добавляться скрипты из дочерних шаблонов #}
-  {% endblock %}
-  {% block scripts %}{% endblock %}
-
-  {% block body_extra %}{% endblock %}
-</body>
+    {% block script_extra %} {# Сюда будут добавляться скрипты из дочерних
+    шаблонов #} {% endblock %} {% block scripts %}{% endblock %} {% block
+    body_extra %}{% endblock %}
+  </body>
 </html>

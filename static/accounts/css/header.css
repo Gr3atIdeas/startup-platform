@@ -1,4 +1,4 @@
-/* All previous content will be removed */ 
+/* All previous content will be removed */
 
 #main-header {
   width: 100%;
@@ -18,7 +18,7 @@
 }
 
 .header-logo-link {
-  display: inline-block; 
+  display: inline-block;
   margin-right: 8px;
 }
 
@@ -57,9 +57,9 @@
   flex-grow: 1;
   flex-shrink: 1;
   padding: 8px 20px;
-  background: rgba(255, 255, 255, 0.19);
+  background: rgb(255 255 255 / 19%);
   border-radius: 99px;
-  border: 1px #004E9F solid;
+  border: 1px #004e9f solid;
   gap: 8px;
 }
 
@@ -67,7 +67,7 @@
   width: 22px;
   height: 22px;
   position: relative;
-  opacity: 0.60;
+  opacity: 0.6;
   overflow: hidden;
 }
 
@@ -77,7 +77,7 @@
   left: 1.75px;
   top: 2.75px;
   position: absolute;
-  border: 1.50px #A1A0A0 solid;
+  border: 1.5px #a1a0a0 solid;
 }
 
 .header-search-icon-element2 {
@@ -86,16 +86,16 @@
   left: 14.26px;
   top: 15.26px;
   position: absolute;
-  border: 1.50px #A1A0A0 solid;
+  border: 1.5px #a1a0a0 solid;
 }
 
 .header-search-input {
   background: transparent;
   border: none;
   outline: none;
-  color: #A1A0A0;
+  color: #a1a0a0;
   font-size: 12px;
-  font-family: 'Unbounded', sans-serif; 
+  font-family: Unbounded, sans-serif;
   font-weight: 300;
   letter-spacing: 0.12px;
   flex-grow: 1;
@@ -115,20 +115,20 @@
   gap: 16px;
 }
 
-.header-nav-link { 
+.header-nav-link {
   padding: 8px 16px;
   border-radius: 5px;
   color: var(--Color5, white);
   font-size: 14px !important;
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-weight: 300 !important;
   line-height: 18px;
   word-wrap: break-word;
-  text-decoration: none; 
+  text-decoration: none;
 }
 
 .header-nav-link.cosmochat-link:hover {
-  background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%);
+  background: linear-gradient(0deg, #004e9f 0%, #006edf 100%);
 }
 
 .header-auth-section {
@@ -142,16 +142,16 @@
 .header-login-button {
   height: 40px;
   padding: 0 25px;
-  background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
-  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+  background: linear-gradient(180deg, #ffef2b 0%, #f9f7d6 100%);
+  box-shadow: 2px 2px 4px rgb(0 0 0 / 25%);
   border-radius: 10px;
-  justify-content: center; 
+  justify-content: center;
   align-items: center;
   gap: 9px;
   display: inline-flex;
   color: black;
   font-size: 14px !important;
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-weight: 400;
   line-height: 16px;
   text-decoration: none;
@@ -195,7 +195,7 @@
   aspect-ratio: 1/1;
   flex-shrink: 0;
   border-radius: 50%;
-  border: 1px solid #004E9F;
+  border: 1px solid #004e9f;
   overflow: hidden;
   display: flex;
   justify-content: center;
@@ -203,12 +203,14 @@
   background-color: transparent !important;
   position: relative;
   box-shadow: none;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .profile-dropdown-button:hover .profile-avatar-wrapper {
-  border-color: #FFEF2B !important;
-  box-shadow: inset 0 0 0 4px #FFEF2B !important;
+  border-color: #ffef2b !important;
+  box-shadow: inset 0 0 0 4px #ffef2b !important;
 }
 
 .profile-dropdown-avatar {
@@ -225,9 +227,9 @@
 .profile-dropdown-menu {
   display: none;
   position: absolute;
-  background-color: #FFFFFF;
+  background-color: #fff;
   min-width: 250px;
-  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 20px rgb(0 0 0 / 10%);
   border-radius: 10px;
   z-index: 100;
   right: 0;
@@ -240,13 +242,13 @@
 }
 
 .profile-dropdown-item {
-  color: #000000;
+  color: #000;
   padding: 12px 20px;
   text-decoration: none;
   display: flex;
   align-items: center;
   gap: 12px;
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -259,7 +261,7 @@
 }
 
 .profile-dropdown-notifications {
-  color: #004E9F !important;
+  color: #004e9f !important;
 }
 
 .profile-dropdown-item-icon {
@@ -269,7 +271,7 @@
 }
 
 .profile-dropdown-notifications .profile-dropdown-item-icon {
-    filter: none;
+  filter: none;
 }
 
 .notification-icon-background {
@@ -281,72 +283,76 @@
   align-items: center;
   flex-shrink: 0;
   border-radius: 50px;
-  background: #004E9F;
+  background: #004e9f;
 }
 
 .notification-icon-background img.profile-dropdown-item-icon {
-    filter: brightness(0) invert(1);
+  filter: brightness(0) invert(1);
 }
 
 .profile-dropdown-logout i {
-  color: #000000;
+  color: #000;
 }
 
 .header-logo-icon-img {
-  height: 50px; 
+  height: 50px;
   width: auto;
 }
 
 .header-logo-icon-container,
 .header-logo-icon-element1,
 .header-logo-icon-element2 {
-    display: none;
+  display: none;
 }
 
 .header-role-button {
-    padding: 8px 12px;
-    font-size: 14px;
+  padding: 8px 12px;
+  font-size: 14px;
 }
 
 .nav-menu {
-    display: flex;
-    align-items: center;
-    flex-shrink: 1;
-    min-width: 0;
-    gap: 16px;
+  display: flex;
+  align-items: center;
+  flex-shrink: 1;
+  min-width: 0;
+  gap: 16px;
 }
 
 /* Новые стили для SVG иконки поиска */
 .header-search-icon-img {
-    width: 22px; /* Соответствует старому размеру контейнера */
-    height: 22px; /* Соответствует старому размеру контейнера */
-    opacity: 0.8; /* Немного увеличим видимость, можно настроить */
+  width: 22px; /* Соответствует старому размеру контейнера */
+  height: 22px; /* Соответствует старому размеру контейнера */
+  opacity: 0.8; /* Немного увеличим видимость, можно настроить */
 }
 
 .header-search-input {
-    flex-grow: 1;
-} 
+  flex-grow: 1;
+}
 
 /* Стили для кнопки "Создать стартап" - повышаем специфичность */
 nav.nav-menu > a.header-nav-link.header-role-button.create-startup-button {
-    background: #3FFF47 !important;
-    color: #000000 !important;
-    padding: 8px 16px !important; 
-    border-radius: 5px !important; 
-    display: inline-flex !important;
-    align-items: center !important;
-    gap: 8px !important;
-    font-family: 'Unbounded', sans-serif !important;
-    font-weight: 500 !important; 
-    font-size: 14px !important;
-    line-height: 18px !important;
-    text-decoration: none !important; 
-    border: none !important; 
+  background: #3fff47 !important;
+  color: #000 !important;
+  padding: 8px 16px !important;
+  border-radius: 5px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  font-family: Unbounded, sans-serif !important;
+  font-weight: 500 !important;
+  font-size: 14px !important;
+  line-height: 18px !important;
+  text-decoration: none !important;
+  border: none !important;
 }
 
 /* Если иконка внутри кнопки "Создать" должна быть тоже черной */
-nav.nav-menu > a.header-nav-link.header-role-button.create-startup-button .create-startup-icon {
-    filter: brightness(0) !important; /* Делает иконку черной, если она была светлой SVG */
+nav.nav-menu
+  > a.header-nav-link.header-role-button.create-startup-button
+  .create-startup-icon {
+  filter: brightness(
+    0
+  ) !important; /* Делает иконку черной, если она была светлой SVG */
 }
 
 /* Стили для выпадающего меню Каталог */
@@ -362,20 +368,21 @@ nav.nav-menu > a.header-nav-link.header-role-button.create-startup-button .creat
   cursor: pointer;
   display: flex;
   align-items: center;
-  color: var(--Color5, white) !important; 
+  color: var(--Color5, white) !important;
   font-size: 14px !important;
-  font-family: 'Unbounded', sans-serif !important; 
-  font-weight: 300 !important; 
-  line-height: 18px !important; 
+  font-family: Unbounded, sans-serif !important;
+  font-weight: 300 !important;
+  line-height: 18px !important;
 }
 
 .catalog-dropdown-button:hover {
   /* Можно добавить эффект при наведении, если нужно, например, как у CosmoChat */
+
   /* background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%); */
 }
 
-.catalog-dropdown-button:focus + .catalog-dropdown-menu { 
-  display: flex; 
+.catalog-dropdown-button:focus + .catalog-dropdown-menu {
+  display: flex;
   flex-direction: column;
   align-items: center;
 }
@@ -384,14 +391,14 @@ nav.nav-menu > a.header-nav-link.header-role-button.create-startup-button .creat
 .catalog-dropdown-menu {
   display: none !important; /* Максимальный приоритет для скрытия по умолчанию */
   position: absolute;
-  background-color: #FFFFFF; 
-  min-width: 220px; 
-  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  min-width: 220px;
+  box-shadow: 0 4px 20px rgb(0 0 0 / 10%);
   border-radius: 10px;
-  z-index: 100; 
-  left: 0; 
-  top: calc(100% + 10px); 
-  padding: 10px 0; 
+  z-index: 100;
+  left: 0;
+  top: calc(100% + 10px);
+  padding: 10px 0;
   border: 1px solid var(--border-light-gray);
   flex-direction: column; /* Эти стили будут применены, когда display станет flex */
   align-items: center;
@@ -403,42 +410,42 @@ nav.nav-menu > a.header-nav-link.header-role-button.create-startup-button .creat
 }
 
 /* Убираем правило display:flex для .catalog-dropdown-button:focus + .catalog-dropdown-menu, если оно еще есть */
+
 /* .catalog-dropdown-button:focus + .catalog-dropdown-menu { display: none !important; } */
 
 .catalog-dropdown-item.no-wave-effect {
-  all: unset !important; 
+  all: unset !important;
 
   /* Сначала все сбрасываем, потом задаем нужное */
-  display: flex !important; 
-  align-items: center !important; 
-  justify-content: center !important; 
-  gap: 10px !important; 
-  padding: 10px 15px !important; 
-  width: 100% !important; 
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 10px !important;
+  padding: 10px 15px !important;
+  width: 100% !important;
   box-sizing: border-box !important;
-  
-  font-family: 'Unbounded', sans-serif !important;
-  font-size: 14px !important; 
-  font-weight: 300 !important; 
+  font-family: Unbounded, sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 300 !important;
   line-height: 18px !important;
   text-decoration: none !important;
   white-space: nowrap !important;
   cursor: pointer !important;
-  
   background: none !important;
   background-color: transparent !important;
   border: none !important;
   box-shadow: none !important;
   border-radius: 0 !important;
   outline: none !important;
-  -webkit-appearance: none !important;
-  -moz-appearance: none !important;
+  appearance: none !important;
+  appearance: none !important;
   appearance: none !important;
 
   /* ЯВНО УСТАНАВЛИВАЕМ ЦВЕТ ПОСЛЕ UNSET */
-  color: #000000 !important; 
-
-  transition: transform 0.2s ease, font-weight 0.2s ease !important; 
+  color: #000 !important;
+  transition:
+    transform 0.2s ease,
+    font-weight 0.2s ease !important;
 }
 
 .catalog-dropdown-item.no-wave-effect:hover {
@@ -447,15 +454,16 @@ nav.nav-menu > a.header-nav-link.header-role-button.create-startup-button .creat
   background-color: transparent !important;
   border: none !important;
   box-shadow: none !important;
+
   /* ЯВНО УСТАНАВЛИВАЕМ ЦВЕТ ПРИ ХОВЕРЕ (остается черным) */
-  color: #000000 !important; 
+  color: #000 !important;
 
   /* Нужные стили для ховера */
-  font-weight: 700 !important; 
-  transform: scale(1.05) !important; 
+  font-weight: 700 !important;
+  transform: scale(1.05) !important;
 }
 
 .catalog-dropdown-item-icon {
-  width: 25px; 
+  width: 25px;
   height: 25px;
-} 
+}

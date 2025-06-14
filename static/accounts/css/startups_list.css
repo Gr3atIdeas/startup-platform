@@ -1,5 +1,5 @@
 body {
-  font-family: 'Unbounded', 'Helvetica Neue', Arial, sans-serif;
+  font-family: Unbounded, 'Helvetica Neue', Arial, sans-serif;
   margin: 0;
   padding-top: 23px;
   padding-bottom: 45px;
@@ -24,24 +24,23 @@ body {
   margin: 0 auto;
 }
 
-
 .catalog-header {
   width: 100%;
-  margin: 0 auto 20px auto;
+  margin: 0 auto 20px;
   padding: 0;
   box-sizing: border-box;
 }
 
 .catalog-title {
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-weight: 700;
   font-size: 32px;
-  margin: 0 0 10px 0;
-  color: #000000;
+  margin: 0 0 10px;
+  color: #000;
 }
 
 .catalog-subtitle {
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-weight: 300;
   font-size: 14px;
   color: #333;
@@ -50,7 +49,6 @@ body {
   line-height: 18px;
   letter-spacing: -0.28px;
 }
-
 
 .startups-content {
   display: flex;
@@ -69,17 +67,16 @@ body {
   justify-content: center;
 }
 
-
 .catalog-search {
   position: relative;
   width: 100%;
   height: 42px;
   border-radius: 10px;
   overflow: hidden;
-  background: #004E9F;
+  background: #004e9f;
   display: flex;
   align-items: center;
-  padding: 0 4px 0 4px;
+  padding: 0 4px;
   box-sizing: border-box;
 }
 
@@ -91,26 +88,25 @@ body {
   padding: 0 15px;
   font-size: 14px;
   box-sizing: border-box;
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-weight: 300;
-  color: #1E1E1E;
-  background: #FFF;
+  color: #1e1e1e;
+  background: #fff;
   line-height: 18px;
 }
 
 .catalog-search-input::placeholder {
-  color: #CBCBCB;
+  color: #cbcbcb;
   font-size: 14px;
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-weight: 300;
   line-height: 18px;
 }
 
-
 .catalog-search-btn {
   position: static;
   background: none;
-  color: #FFFFFF;
+  color: #fff;
   border: none;
   width: 28px;
   height: 27px;
@@ -125,48 +121,46 @@ body {
 }
 
 .catalog-search-btn svg {
-    width: 18.67px;
-    height: 18px;
-    fill: none;
-    stroke: white;
-    stroke-width: 2;
+  width: 18.67px;
+  height: 18px;
+  fill: none;
+  stroke: white;
+  stroke-width: 2;
 }
 
 .catalog-search-btn svg .search-icon-handle {
-    stroke: white;
-    stroke-width: 2;
+  stroke: white;
+  stroke-width: 2;
 }
 
-
 .show-button {
-    height: 40px;
-    padding: 12px 35px;
-    background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%);
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 10px;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    display: inline-flex;
-    border: none;
-    cursor: pointer;
-    transition: background 0.3s ease;
-    color: #F5F5F5;
-    font-size: 16px;
-    font-family: Unbounded;
-    font-weight: 400;
-    line-height: 16px;
-    word-wrap: break-word;
-    text-align: center;
+  height: 40px;
+  padding: 12px 35px;
+  background: linear-gradient(0deg, #004e9f 0%, #006edf 100%);
+  box-shadow: 2px 2px 4px rgb(0 0 0 / 25%);
+  border-radius: 10px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  display: inline-flex;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  color: #f5f5f5;
+  font-size: 16px;
+  font-family: Unbounded;
+  font-weight: 400;
+  line-height: 16px;
+  word-wrap: break-word;
+  text-align: center;
 }
 
 .show-button:hover {
-     background: linear-gradient(0deg, #003d7a 0%, #005ab4 100%);
+  background: linear-gradient(0deg, #003d7a 0%, #005ab4 100%);
 }
 
-
 .sidebar {
-  background: #FFF;
+  background: #fff;
   width: 254px;
   height: 718px;
   padding: 53px 28px;
@@ -175,10 +169,11 @@ body {
   display: flex;
   justify-content: center;
   overflow-y: auto;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 15%);
 }
-
 
 #filterForm {
   display: flex;
@@ -189,7 +184,6 @@ body {
   width: 197px;
   max-width: 100%;
 }
-
 
 .sort-dropdown {
   width: 100%;
@@ -215,15 +209,17 @@ body {
   height: 40px;
   padding: 12px 16px;
   padding-right: 35px;
-  border: 1px solid #D9D9D9;
+  border: 1px solid #d9d9d9;
   border-radius: 5px;
   font-size: 14px;
   appearance: none;
-  background: #FFFFFF url('data:image/svg+xml,<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6 L8 10 L12 6" stroke="%231E1E1E" stroke-width="1.6" fill="none"/></svg>') no-repeat right 12px center;
+  background: #fff
+    url('data:image/svg+xml,<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 6 L8 10 L12 6" stroke="%231E1E1E" stroke-width="1.6" fill="none"/></svg>')
+    no-repeat right 12px center;
   background-size: 16px 16px;
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-weight: 300;
-  color: #1E1E1E;
+  color: #1e1e1e;
   cursor: pointer;
   line-height: 18px;
   box-sizing: border-box;
@@ -236,10 +232,9 @@ body {
   line-height: 18px;
   letter-spacing: -0.02em;
   margin: 0;
-  color: #000000;
+  color: #000;
   width: 100%;
 }
-
 
 .categories-list {
   list-style: none;
@@ -274,8 +269,8 @@ body {
 }
 
 .category-checkbox:checked {
-  background-color: #004E9F;
-  border-color: #004E9F;
+  background-color: #004e9f;
+  border-color: #004e9f;
 }
 
 .category-name {
@@ -288,7 +283,6 @@ body {
   line-height: 1;
 }
 
-
 .rating-filter {
   width: 100%;
   display: flex;
@@ -297,10 +291,10 @@ body {
 }
 
 .rating-label-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
 }
 
 .rating-label {
@@ -308,19 +302,18 @@ body {
   font-weight: 300;
   font-size: 12px;
   letter-spacing: 0.12px;
-  color: #1E1E1E;
+  color: #1e1e1e;
   margin: 0;
 }
 
 .rating-value-display {
-    color: #1E1E1E;
-    font-size: 14px;
-    font-family: Inter, sans-serif;
-    font-weight: 400;
-    line-height: 19.60px;
-    text-align: right;
+  color: #1e1e1e;
+  font-size: 14px;
+  font-family: Inter, sans-serif;
+  font-weight: 400;
+  line-height: 19.6px;
+  text-align: right;
 }
-
 
 .micro-investment {
   display: flex;
@@ -329,11 +322,10 @@ body {
   width: 100%;
 }
 
-
 .micro-investment-label-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 5px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
 .micro-label {
@@ -348,7 +340,7 @@ body {
   cursor: pointer;
   width: 14px;
   height: 14px;
-  background: #D9D9D9;
+  background: #d9d9d9;
   border-radius: 50%;
   display: flex;
   justify-content: center;
@@ -362,7 +354,6 @@ body {
   box-sizing: border-box;
 }
 
-
 .toggle-switch {
   width: 40px;
   height: 24px;
@@ -375,32 +366,29 @@ body {
 }
 
 .toggle-switch.active {
-  background-color: #004E9F;
+  background-color: #004e9f;
 }
 
 .toggle-handle {
   width: 18px;
   height: 18px;
-  background-color: #F5F5F5;
+  background-color: #f5f5f5;
   border-radius: 50%;
   position: absolute;
   top: 3px;
   left: 3px;
   transition: transform 0.3s ease;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 20%);
 }
 
 .toggle-switch.active .toggle-handle {
   transform: translateX(16px);
 }
 
-
-
 .startups-grid {
   display: flex;
   flex-wrap: wrap;
-  row-gap: 55px;
-  column-gap: 20px;
+  gap: 55px 20px;
   justify-content: flex-start;
   width: 100%;
   max-width: 1032px;
@@ -409,11 +397,10 @@ body {
   margin-top: 35px;
 }
 
-
 .startup-card {
-  background: #FFFFFF;
+  background: #fff;
   border-radius: 10px;
-  box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.25);
+  box-shadow: 4px 4px 6px rgb(0 0 0 / 25%);
   display: flex;
   flex-direction: column;
   position: relative;
@@ -421,25 +408,25 @@ body {
   color: inherit;
   width: 328px;
   height: 448px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
   box-sizing: border-box;
   overflow: visible;
 }
 
 .startup-card:hover {
   transform: translateY(-5px);
-  box-shadow: 6px 8px 12px rgba(0, 0, 0, 0.3);
+  box-shadow: 6px 8px 12px rgb(0 0 0 / 30%);
 }
 
-
 .startup-card-inner {
-  padding: 0 18px 20px 18px;
+  padding: 0 18px 20px;
   display: flex;
   flex-direction: column;
   color: #191919;
   position: static;
   gap: 13px;
-  align-items: flex-start;
   height: 100%;
   margin-top: 104px;
   align-items: center;
@@ -459,8 +446,8 @@ body {
   background-color: #e9ecef;
   z-index: 2;
   border-radius: 50%;
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgb(0 0 0 / 5%);
+  box-shadow: 0 2px 4px rgb(0 0 0 / 15%);
 }
 
 .startup-image img {
@@ -480,21 +467,19 @@ body {
   font-weight: bold;
 }
 
-
 .startup-title {
   font-family: Unbounded, sans-serif;
   font-weight: 400;
   font-size: 20px;
   line-height: 18px;
   margin: 0;
-  color: #000000;
+  color: #000;
   text-align: center;
   width: 100%;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
 
 .startup-rating-comments {
   display: flex;
@@ -506,7 +491,7 @@ body {
 }
 
 .rating-text {
-  color: #004E9F;
+  color: #004e9f;
   font-size: 12px;
   font-weight: 300;
   letter-spacing: 0.12px;
@@ -518,14 +503,15 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #004E9F;
+  color: #004e9f;
 }
 
-.comments-count i, .comments-count svg {
+.comments-count i,
+.comments-count svg {
   width: 16px;
   height: 15px;
-  fill: #004E9F;
-  stroke: #004E9F;
+  fill: #004e9f;
+  stroke: #004e9f;
   stroke-width: 1;
 }
 
@@ -535,9 +521,8 @@ body {
   font-weight: 400;
   line-height: 18px;
   word-wrap: break-word;
-  color: #004E9F;
+  color: #004e9f;
 }
-
 
 .startup-category-row {
   display: flex;
@@ -562,137 +547,176 @@ body {
 }
 
 .category-tag-placeholder {
-    background-color: #e0e0e0;
-    color: #757575;
+  background-color: #e0e0e0;
+  color: #757575;
 }
 
 /* === Стили прогресс-бара ТОЧНО из startup_detail.css (Адаптированные) === */
-.progress-container { 
-    width: 100%;
-    margin-top: 5px; 
-    display: flex; 
-    align-items: center;
-    gap: 10px;
+.progress-container {
+  width: 100%;
+  margin-top: 5px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-.progress-bar-visual { /* Визуальная часть */
-    flex-grow: 1; 
-    height: 30px; /* ! Увеличена высота до 30px (было 20px) */
-    position: relative;
-    background-color: #0B1A3F; /* ! Точный темный фон из detail (:root --dark-card-bg) */
-    border-radius: 10px; 
-    overflow: hidden;
-    border: 2px solid #1D3059; /* ! Увеличена рамка до 2px и Точная рамка из detail (:root --border-color) */
-    /* Добавляем внутренние отступы */
-    padding: 2px; /* Создаем отступ для внутреннего бара */
-    box-sizing: border-box; /* Учитываем padding в общем размере */
+.progress-bar-visual {
+  /* Визуальная часть */
+  flex-grow: 1;
+  height: 30px; /* ! Увеличена высота до 30px (было 20px) */
+  position: relative;
+  background-color: #0b1a3f; /* ! Точный темный фон из detail (:root --dark-card-bg) */
+  border-radius: 10px;
+  overflow: hidden;
+  border: 2px solid #1d3059; /* ! Увеличена рамка до 2px и Точная рамка из detail (:root --border-color) */
+
+  /* Добавляем внутренние отступы */
+  padding: 2px; /* Создаем отступ для внутреннего бара */
+  box-sizing: border-box; /* Учитываем padding в общем размере */
 }
 
-.progress-animation-container { /* Анимируемый передний план */
-    position: absolute;
-    top: 2px;    /* Отступ сверху, равный padding родителя */
-    left: 2px;   /* Отступ слева, равный padding родителя */
-    bottom: 2px; /* Отступ снизу, равный padding родителя */
-    /* Width устанавливается через инлайн-стиль */
-    background: linear-gradient(90deg, #08E5CF 0%, #345DFF 100%); /* ! ПРАВИЛЬНЫЙ сине-зеленый градиент из detail */
-    border-radius: 6px; /* Уменьшен радиус (10px родителя - 2px рамка - 2px padding = 6px) */
-    overflow: hidden; 
-    transition: width 0.5s ease-in-out; 
+.progress-animation-container {
+  /* Анимируемый передний план */
+  position: absolute;
+  top: 2px; /* Отступ сверху, равный padding родителя */
+  left: 2px; /* Отступ слева, равный padding родителя */
+  bottom: 2px; /* Отступ снизу, равный padding родителя */
+
+  /* Width устанавливается через инлайн-стиль */
+  background: linear-gradient(
+    90deg,
+    #08e5cf 0%,
+    #345dff 100%
+  ); /* ! ПРАВИЛЬНЫЙ сине-зеленый градиент из detail */
+  border-radius: 6px; /* Уменьшен радиус (10px родителя - 2px рамка - 2px padding = 6px) */
+  overflow: hidden;
+  transition: width 0.5s ease-in-out;
 }
 
 /* --- Анимация "планет" (светящиеся точки) ИЗ STARTUP_DETAIL.CSS --- */
-.progress-planets { 
-    position: relative; 
-    width: 100%;
-    height: 100%;
+.progress-planets {
+  position: relative;
+  width: 100%;
+  height: 100%;
 }
 
 .progress-planets::before,
 .progress-planets::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    border-radius: 50%;
-    /* background-color: #FFC85E; */
-    background-color: rgba(255, 255, 255, 0.7); /* ! ПРАВИЛЬНЫЙ БЕЛЫЙ цвет планет из detail */
-    /* box-shadow: 0 0 5px #FFC85E, 0 0 10px #FFC85E; */
-    box-shadow: 0 0 8px rgba(255, 255, 255, 0.8); /* ! ПРАВИЛЬНОЕ БЕЛОЕ свечение из detail */
-    animation: movePlanets 8s linear infinite;
+  content: '';
+  position: absolute;
+  top: 50%;
+  border-radius: 50%;
+
+  /* background-color: #FFC85E; */
+  background-color: rgb(
+    255 255 255 / 70%
+  ); /* ! ПРАВИЛЬНЫЙ БЕЛЫЙ цвет планет из detail */
+
+  /* box-shadow: 0 0 5px #FFC85E, 0 0 10px #FFC85E; */
+  box-shadow: 0 0 8px rgb(255 255 255 / 80%); /* ! ПРАВИЛЬНОЕ БЕЛОЕ свечение из detail */
+  animation: movePlanets 8s linear infinite;
 }
 
 .progress-planets::before {
-    width: 10px; /* ! Размеры из detail (там они чуть меньше) */
-    height: 10px;
-    margin-top: -5px; 
-    left: 10%; 
-    animation-delay: 0s;
+  width: 10px; /* ! Размеры из detail (там они чуть меньше) */
+  height: 10px;
+  margin-top: -5px;
+  left: 10%;
+  animation-delay: 0s;
 }
 
 .progress-planets::after {
-    width: 6px; /* ! Размеры из detail */
-    height: 6px;
-    margin-top: -3px; 
-    left: 60%; 
-    animation-delay: -4s; 
+  width: 6px; /* ! Размеры из detail */
+  height: 6px;
+  margin-top: -3px;
+  left: 60%;
+  animation-delay: -4s;
 }
 
-.progress-animation-container::before { /* Дополнительная точка из detail */
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 30%;
-    width: 8px; 
-    height: 8px;
-    margin-top: -4px;
-    border-radius: 50%;
-    /* background-color: #FFC85E; */
-    background-color: rgba(255, 255, 255, 0.6); /* ! ПРАВИЛЬНЫЙ БЕЛЫЙ цвет из detail */
-    /* box-shadow: 0 0 4px #FFC85E, 0 0 8px #FFC85E; */
-    box-shadow: 0 0 6px rgba(255, 255, 255, 0.7); /* ! ПРАВИЛЬНОЕ БЕЛОЕ свечение из detail */
-    animation: movePlanets 10s linear infinite alternate; 
-    animation-delay: -2s;
+.progress-animation-container::before {
+  /* Дополнительная точка из detail */
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 30%;
+  width: 8px;
+  height: 8px;
+  margin-top: -4px;
+  border-radius: 50%;
+
+  /* background-color: #FFC85E; */
+  background-color: rgb(
+    255 255 255 / 60%
+  ); /* ! ПРАВИЛЬНЫЙ БЕЛЫЙ цвет из detail */
+
+  /* box-shadow: 0 0 4px #FFC85E, 0 0 8px #FFC85E; */
+  box-shadow: 0 0 6px rgb(255 255 255 / 70%); /* ! ПРАВИЛЬНОЕ БЕЛОЕ свечение из detail */
+  animation: movePlanets 10s linear infinite alternate;
+  animation-delay: -2s;
 }
 
 /* Анимация @keyframes из startup_detail.css */
 @keyframes movePlanets {
-    0% { transform: translateX(0) translateY(-1px) scale(1); opacity: 0.6; } /* ! Opacity из detail */
-    25% { transform: translateX(15px) translateY(1px) scale(1.05); opacity: 0.8; } /* ! Параметры из detail */
-    50% { transform: translateX(-8px) translateY(0) scale(1); opacity: 0.7; } /* ! Параметры из detail */
-    75% { transform: translateX(12px) translateY(-2px) scale(0.95); opacity: 0.9; } /* ! Параметры из detail */
-    100% { transform: translateX(0) translateY(-1px) scale(1); opacity: 0.6; } /* ! Opacity из detail */
+  0% {
+    transform: translateX(0) translateY(-1px) scale(1);
+    opacity: 0.6;
+  } /* ! Opacity из detail */
+  25% {
+    transform: translateX(15px) translateY(1px) scale(1.05);
+    opacity: 0.8;
+  } /* ! Параметры из detail */
+  50% {
+    transform: translateX(-8px) translateY(0) scale(1);
+    opacity: 0.7;
+  } /* ! Параметры из detail */
+  75% {
+    transform: translateX(12px) translateY(-2px) scale(0.95);
+    opacity: 0.9;
+  } /* ! Параметры из detail */
+  100% {
+    transform: translateX(0) translateY(-1px) scale(1);
+    opacity: 0.6;
+  } /* ! Opacity из detail */
 }
+
 /* --- Конец анимации "планет" --- */
 
-.progress-percentage { /* Текст процентов - стили из detail */
-    position: absolute; /* Позиционируется относительно .progress-bar-visual */
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: #ffffff; 
-    font-family: 'Unbounded', sans-serif;
-    font-size: 12px; /* Немного увеличим шрифт для большей высоты бара */ 
-    font-weight: 700; 
-    line-height: 1;
-    white-space: nowrap;
-    z-index: 3; /* Должен быть выше .progress-animation-container, если тот имеет z-index */
-    text-shadow: none; 
-    padding: 0 5px; 
-    box-sizing: border-box;
-    /* Убираем flex и width/height 100%, т.к. left/top/transform достаточно для центрирования */
+.progress-percentage {
+  /* Текст процентов - стили из detail */
+  position: absolute; /* Позиционируется относительно .progress-bar-visual */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #fff;
+  font-family: Unbounded, sans-serif;
+  font-size: 12px; /* Немного увеличим шрифт для большей высоты бара */
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  z-index: 3; /* Должен быть выше .progress-animation-container, если тот имеет z-index */
+  text-shadow: none;
+  padding: 0 5px;
+  box-sizing: border-box;
+
+  /* Убираем flex и width/height 100%, т.к. left/top/transform достаточно для центрирования */
 }
 
 /* Стиль для backers-info, если он будет добавлен позже */
-/* .progress-backers-info { ... } */
-/* ============================================================== */
 
+/* .progress-backers-info { ... } */
+
+/* ============================================================== */
 
 .investment-type {
   background-color: transparent;
-  /* text-align: center; */ /* Убираем старое */
+
+  /* text-align: center; */
+
+  /* Убираем старое */
   font-weight: 300;
   border: 1px solid black;
   padding: 5px 16px;
-  color: #1E1E1E;
+  color: #1e1e1e;
   border-radius: 5px;
   font-family: Unbounded, sans-serif;
   font-size: 12px;
@@ -704,26 +728,24 @@ body {
   align-self: center; /* ! Центрируем сам блок по горизонтали в flex-контейнере карточки */
 }
 
-
 .funding-goal-container-figma {
-    background: #EBEBEB;
-    border-radius: 5px;
-    padding: 12px;
-    width: 100%;
-    box-sizing: border-box;
-    text-align: center;
+  background: #ebebeb;
+  border-radius: 5px;
+  padding: 12px;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
 }
 
 .funding-goal-text-figma {
-    color: black;
-    font-size: 12px;
-    font-family: Unbounded;
-    font-weight: 300;
-    letter-spacing: 0.12px;
-    word-wrap: break-word;
-    line-height: 1;
+  color: black;
+  font-size: 12px;
+  font-family: Unbounded;
+  font-weight: 300;
+  letter-spacing: 0.12px;
+  word-wrap: break-word;
+  line-height: 1;
 }
-
 
 .investor-count-container-figma {
   display: flex;
@@ -734,15 +756,15 @@ body {
 }
 
 .investor-icon-figma {
-   width: 16px;
-   height: 16px;
-   color: #4E4F51;
-   font-size: 16px;
-   flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  color: #4e4f51;
+  font-size: 16px;
+  flex-shrink: 0;
 }
 
 .investor-count-text-figma {
-  color: #4E4F51;
+  color: #4e4f51;
   font-size: 12px;
   font-family: Unbounded;
   font-weight: 300;
@@ -750,7 +772,6 @@ body {
   word-wrap: break-word;
   line-height: 1;
 }
-
 
 .startup-short-description {
   font-family: Unbounded, sans-serif;
@@ -769,7 +790,7 @@ body {
 }
 
 .detail-link-text-figma {
-    display: none;
+  display: none;
 }
 
 .detail-link {
@@ -787,7 +808,6 @@ body {
   border-radius: 10px;
 }
 
-
 .no-startups {
   text-align: center;
   padding: 40px;
@@ -802,56 +822,63 @@ body {
   margin: 0;
 }
 
-
-
-@media (max-width: 1320px) {
+@media (width <= 1320px) {
   body {
     padding: 20px;
   }
+
   .catalog-container {
-      max-width: 100%;
-      grid-template-columns: 220px 1fr;
-      gap: 15px;
-      padding-left: 20px;
-      padding-right: 20px;
+    max-width: 100%;
+    grid-template-columns: 220px 1fr;
+    gap: 15px;
+    padding-left: 20px;
+    padding-right: 20px;
   }
+
   .sidebar {
-      width: 220px;
-      padding: 30px 20px;
-      height: auto;
+    width: 220px;
+    padding: 30px 20px;
+    height: auto;
   }
+
   .startups-grid {
-      gap: 15px;
-      justify-content: center;
+    gap: 15px;
+    justify-content: center;
   }
+
   .startup-card {
-      width: 328px;
-      max-width: 328px;
-      height: auto;
-      padding-top: 0;
+    width: 328px;
+    max-width: 328px;
+    height: auto;
+    padding-top: 0;
   }
-   .startup-card-inner {
-       margin-top: 80px;
-       padding: 0 15px 15px 15px;
-       gap: 10px;
-   }
-   .startup-image {
-       width: 100px;
-       height: 100px;
-       top: -25px;
-   }
-   .progress-bar-container-figma {
-       width: 100%;
-   }
-   .catalog-search {
-        height: 38px;
-    }
-    .catalog-search-input {
-        height: 30px;
-    }
+
+  .startup-card-inner {
+    margin-top: 80px;
+    padding: 0 15px 15px;
+    gap: 10px;
+  }
+
+  .startup-image {
+    width: 100px;
+    height: 100px;
+    top: -25px;
+  }
+
+  .progress-bar-container-figma {
+    width: 100%;
+  }
+
+  .catalog-search {
+    height: 38px;
+  }
+
+  .catalog-search-input {
+    height: 30px;
+  }
 }
 
-@media (max-width: 960px) {
+@media (width <= 960px) {
   .catalog-container {
     grid-template-columns: 1fr;
     gap: 20px;
@@ -875,20 +902,23 @@ body {
   .startups-grid {
     justify-content: center;
   }
+
   .startup-card {
-      width: calc(50% - 10px);
-      margin-bottom: 35px;
+    width: calc(50% - 10px);
+    margin-bottom: 35px;
   }
 }
 
-@media (max-width: 740px) {
+@media (width <= 740px) {
   body {
-      padding: 15px;
+    padding: 15px;
   }
+
   .catalog-container {
-      padding-left: 10px;
-      padding-right: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
   }
+
   .startups-grid {
     justify-content: center;
     gap: 15px;
@@ -904,67 +934,143 @@ body {
   .catalog-title {
     font-size: 24px;
   }
-   .catalog-subtitle {
+
+  .catalog-subtitle {
     font-size: 13px;
   }
 
-   .startup-card-inner {
-     padding: 0 15px 15px 15px;
-     margin-top: 90px;
-     gap: 8px;
-   }
-   .startup-image {
-       width: 100px;
-       height: 100px;
-       top: -25px;
-   }
+  .startup-card-inner {
+    padding: 0 15px 15px;
+    margin-top: 90px;
+    gap: 8px;
+  }
 
-   .startup-title { font-size: 18px; line-height: 1.3; }
-   .rating-text { font-size: 11px; }
-   .comments-count span { font-size: 12px; }
-   .comments-count svg { width: 14px; height: 13px; }
-   .category-tag-figma { font-size: 11px; padding: 7px 12px; }
-   .progress-bar-container-figma { height: 24px; }
-   .progress-percentage-figma { font-size: 11px; }
-   .investment-type { font-size: 11px; padding: 4px 10px; }
-   .funding-goal-text-figma { font-size: 11px; }
-   .investor-count-text-figma { font-size: 11px; }
-   .startup-short-description { font-size: 12px; -webkit-line-clamp: 2; }
-   .detail-link-text-figma { font-size: 11px; }
+  .startup-image {
+    width: 100px;
+    height: 100px;
+    top: -25px;
+  }
 
-   .catalog-search { height: 36px; }
-   .catalog-search-input { height: 28px; font-size: 13px; }
-   .catalog-search-input::placeholder { font-size: 13px; }
-   .catalog-search-btn { width: 24px; height: 24px;}
-   .catalog-search-btn svg { width: 16px; height: 16px; }
+  .startup-title {
+    font-size: 18px;
+    line-height: 1.3;
+  }
+  .rating-text {
+    font-size: 11px;
+  }
+  .comments-count span {
+    font-size: 12px;
+  }
+  .comments-count svg {
+    width: 14px;
+    height: 13px;
+  }
+  .category-tag-figma {
+    font-size: 11px;
+    padding: 7px 12px;
+  }
+  .progress-bar-container-figma {
+    height: 24px;
+  }
+  .progress-percentage-figma {
+    font-size: 11px;
+  }
+  .investment-type {
+    font-size: 11px;
+    padding: 4px 10px;
+  }
+  .funding-goal-text-figma {
+    font-size: 11px;
+  }
+  .investor-count-text-figma {
+    font-size: 11px;
+  }
+  .startup-short-description {
+    font-size: 12px;
+    -webkit-line-clamp: 2;
+  }
+  .detail-link-text-figma {
+    font-size: 11px;
+  }
+
+  .catalog-search {
+    height: 36px;
+  }
+  .catalog-search-input {
+    height: 28px;
+    font-size: 13px;
+  }
+  .catalog-search-input::placeholder {
+    font-size: 13px;
+  }
+  .catalog-search-btn {
+    width: 24px;
+    height: 24px;
+  }
+  .catalog-search-btn svg {
+    width: 16px;
+    height: 16px;
+  }
 }
 
-@media (max-width: 400px) {
-    body { padding: 10px; }
-    .catalog-container {
-        padding-left: 5px;
-        padding-right: 5px;
-    }
-    .startups-grid {
-        gap: 10px;
-        margin-top: 25px;
-    }
-    .startup-card {
-        max-width: 100%;
-        margin-bottom: 30px;
-    }
-     .sidebar { padding: 15px; }
-     #filterForm { gap: 20px; }
-     .sort-dropdown select { height: 36px; font-size: 13px; }
-     .category-name { font-size: 11px; }
-     .rating-value-display { font-size: 13px; }
-     .toggle-switch { width: 36px; height: 20px; }
-     .toggle-handle { width: 16px; height: 16px; top: 2px; left: 2px; }
-     .toggle-switch.active .toggle-handle { transform: translateX(16px); }
-     .show-button { height: 36px; font-size: 14px; line-height: 14px; padding: 10px 25px; }
-     .startup-title { font-size: 16px; }
-}
+@media (width <= 400px) {
+  body {
+    padding: 10px;
+  }
 
+  .catalog-container {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+
+  .startups-grid {
+    gap: 10px;
+    margin-top: 25px;
+  }
+
+  .startup-card {
+    max-width: 100%;
+    margin-bottom: 30px;
+  }
+  .sidebar {
+    padding: 15px;
+  }
+  #filterForm {
+    gap: 20px;
+  }
+  .sort-dropdown select {
+    height: 36px;
+    font-size: 13px;
+  }
+  .category-name {
+    font-size: 11px;
+  }
+  .rating-value-display {
+    font-size: 13px;
+  }
+  .toggle-switch {
+    width: 36px;
+    height: 20px;
+  }
+  .toggle-handle {
+    width: 16px;
+    height: 16px;
+    top: 2px;
+    left: 2px;
+  }
+  .toggle-switch.active .toggle-handle {
+    transform: translateX(16px);
+  }
+  .show-button {
+    height: 36px;
+    font-size: 14px;
+    line-height: 14px;
+    padding: 10px 25px;
+  }
+  .startup-title {
+    font-size: 16px;
+  }
+}
 
 .pagination-controls {
   display: flex;
@@ -976,11 +1082,9 @@ body {
   gap: 20px;
 }
 
-
 .pagination-info {
   display: none;
 }
-
 
 .show-more-container {
   display: none;
@@ -989,7 +1093,7 @@ body {
 .pagination-controls .show-more-btn {
   height: 40px;
   padding: 12px 35px;
-  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+  box-shadow: 2px 2px 4px rgb(0 0 0 / 25%);
   border-radius: 10px;
   outline: 1px solid white;
   justify-content: center;
@@ -999,13 +1103,16 @@ body {
   background: none !important;
   background-color: transparent !important;
   border: none !important;
-  color: #F5F5F5 !important;
-  font-family: 'Unbounded', sans-serif !important;
+  color: #f5f5f5 !important;
+  font-family: Unbounded, sans-serif !important;
   font-size: 16px !important;
   font-weight: 400 !important;
   line-height: 16px !important;
   cursor: pointer !important;
-  transition: background-color 0.3s ease, color 0.3s ease, outline-color 0.3s ease !important;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease,
+    outline-color 0.3s ease !important;
   text-decoration: none !important;
   margin: 0 !important;
   width: auto !important;
@@ -1013,69 +1120,69 @@ body {
 }
 
 .pagination-controls .show-more-btn:hover {
-  background-color: rgba(255, 255, 255, 0.1) !important;
+  background-color: rgb(255 255 255 / 10%) !important;
   outline-color: #ccc !important;
-  color: #FFFFFF !important;
+  color: #fff !important;
 }
 
 .pagination-controls .show-more-btn i,
 .pagination-controls .show-more-btn svg {
   width: 16px;
   height: 16px;
-  color: #F5F5F5 !important;
-  fill: #F5F5F5 !important;
-  stroke: #F5F5F5 !important;
+  color: #f5f5f5 !important;
+  fill: #f5f5f5 !important;
+  stroke: #f5f5f5 !important;
 }
-
 
 .hide-btn {
   display: none !important;
 }
 
-
 .pagination-numbers {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 15px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 15px;
 }
 
 .pagination-numbers a,
 .pagination-numbers span {
-    text-decoration: none;
-    font-family: Unbounded, sans-serif;
-    font-weight: 300;
-    line-height: 18px;
-    word-wrap: break-word;
-    padding: 8px 12px;
-    border-radius: 8px;
-    transition: background-color 0.3s ease, color 0.3s ease;
+  text-decoration: none;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  line-height: 18px;
+  word-wrap: break-word;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 .pagination-numbers a {
-    color: white;
-    font-size: 14px;
+  color: white;
+  font-size: 14px;
 }
+
 .pagination-numbers a:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgb(255 255 255 / 10%);
 }
 
 .pagination-numbers .current-page {
-    color: #004E9F;
-    font-size: 14px;
-    background: white;
-    font-weight: 400;
+  color: #004e9f;
+  font-size: 14px;
+  background: white;
+  font-weight: 400;
 }
 
 .pagination-numbers .dots {
-    color: white;
-    font-size: 16px;
-    font-family: Inter, sans-serif;
-    font-weight: 700;
-    line-height: 22.40px;
-    padding: 8px 0;
+  color: white;
+  font-size: 16px;
+  font-family: Inter, sans-serif;
+  font-weight: 700;
+  line-height: 22.4px;
+  padding: 8px 0;
 }
-
 
 .startup-franchise-tag {
   position: absolute;
@@ -1084,16 +1191,15 @@ body {
   font-family: Unbounded, sans-serif;
   font-size: 12px;
   font-weight: 300;
-  color: rgba(0, 0, 0, 0.22);
+  color: rgb(0 0 0 / 22%);
   background-color: transparent;
   padding: 0;
   z-index: 1;
   letter-spacing: 0.12px;
 }
 
-
 .rating-filter .noUi-target {
-  background: #EBEBEB;
+  background: #ebebeb;
   height: 4px;
   margin-bottom: 5px;
   box-shadow: none;
@@ -1102,7 +1208,7 @@ body {
 }
 
 .rating-filter .noUi-connect {
-  background: #004E9F;
+  background: #004e9f;
   box-shadow: none;
   border-radius: 9999px;
 }
@@ -1111,58 +1217,59 @@ body {
   width: 16px;
   height: 16px;
   border-radius: 9999px;
-  background: #004E9F;
+  background: #004e9f;
   border: none;
   box-shadow: none;
   cursor: pointer;
   top: -6px;
   right: -8px;
 }
+
 .rating-filter .noUi-handle:focus {
-    outline: none;
+  outline: none;
 }
 
 .rating-range-label {
-    color: #757575;
-    font-size: 8px;
-    font-family: Unbounded;
-    font-weight: 300;
-    letter-spacing: 0.08px;
-    width: 100%;
-    text-align: left;
-    margin-top: 15px;
+  color: #757575;
+  font-size: 8px;
+  font-family: Unbounded;
+  font-weight: 300;
+  letter-spacing: 0.08px;
+  width: 100%;
+  text-align: left;
+  margin-top: 15px;
 }
 
 /* Контейнер для названия и логотипа */
 .startup-title-container {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin: 10px 0;
-    width: 100%;
-    justify-content: center;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 10px 0;
+  width: 100%;
+  justify-content: center;
 }
 
 /* Стили для логотипа */
 .startup-logo {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    overflow: hidden;
-    border: 1px solid rgba(0, 0, 0, 0.05); /* Используем тот же стиль рамки, что у .startup-image */
-    flex-shrink: 0;
-    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.15); /* Уменьшенная тень для меньшего размера */
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid rgb(0 0 0 / 5%); /* Используем тот же стиль рамки, что у .startup-image */
+  flex-shrink: 0;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 15%); /* Уменьшенная тень для меньшего размера */
 }
 
 .startup-logo img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 /* Стили для планеты */
 .startup-image .planet-image {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }

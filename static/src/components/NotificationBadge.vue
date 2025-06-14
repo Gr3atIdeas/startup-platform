@@ -10,9 +10,9 @@ export default {
   props: {
     count: {
       type: Number,
-      default: 0
-    }
-  }
+      default: 0,
+    },
+  },
 }
 </script>
 
@@ -21,7 +21,7 @@ export default {
   position: absolute;
   top: -15px;
   right: -15px;
-  background: #FF1B1B;
+  background: #ff1b1b;
   border-radius: 50%;
   width: 45px;
   height: 45px;
@@ -32,4 +32,4 @@ export default {
   font-weight: 400;
   color: white;
 }
-</style> 
+</style>

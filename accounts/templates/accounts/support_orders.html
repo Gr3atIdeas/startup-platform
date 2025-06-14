@@ -1,11 +1,9 @@
-{% extends "accounts/base.html" %}
-{% load static %}
-
-{% block title %}Мои заявки - Поддержка{% endblock %}
-
-{% block head_extra %}
-{{ block.super }}
-<link rel="stylesheet" href="{% static 'accounts/css/support_orders.css' %}?v={% now 'U' %}">
+{% extends "accounts/base.html" %} {% load static %} {% block title %}Мои заявки
+- Поддержка{% endblock %} {% block head_extra %} {{ block.super }}
+<link
+  rel="stylesheet"
+  href="{% static 'accounts/css/support_orders.css' %}?v={% now 'U' %}"
+/>
 <style>
   /* Обнуляем вертикальные отступы для main.content на этой странице */
   main.content {
@@ -13,32 +11,41 @@
     padding-bottom: 0 !important;
   }
 </style>
-{% endblock %}
-
-{% block content %}
+{% endblock %} {% block content %}
 <div class="support-orders-page">
   <div class="support-orders-container">
     <div class="back-link-container">
       <a href="{% url 'support' %}" class="back-link">
-        <img src="{% static 'accounts/images/support/arrow_left.svg' %}" alt="Назад" class="back-link-icon">
+        <img
+          src="{% static 'accounts/images/support/arrow_left.svg' %}"
+          alt="Назад"
+          class="back-link-icon"
+        />
         <span>Назад</span>
       </a>
     </div>
 
     <section class="page-header-section">
       <h1>Мои заявки</h1>
-      <a href="{% url 'support_contact' %}" class="btn btn-primary">Новая заявка</a>
+      <a href="{% url 'support_contact' %}" class="btn btn-primary"
+        >Новая заявка</a
+      >
     </section>
 
     <section class="search-section">
-        <div class="search-bar-inline">
-            <input type="text" placeholder="Поиск по теме или номеру заявки..." class="search-input-inline">
-        </div>
+      <div class="search-bar-inline">
+        <input
+          type="text"
+          placeholder="Поиск по теме или номеру заявки..."
+          class="search-input-inline"
+        />
+      </div>
     </section>
-    
+
     <section class="orders-list-section">
       {# Пример заявки 1 #}
-      <a href="#" class="order-card"> {# Обернули в ссылку #}
+      <a href="#" class="order-card">
+        {# Обернули в ссылку #}
         <div class="order-details-grid">
           <div class="order-detail-item">
             <span class="detail-label">Создана</span>
@@ -50,7 +57,8 @@
           </div>
           <div class="order-detail-item">
             <span class="detail-label">Статус</span>
-            <span class="detail-value status-closed">Закрыта</span> {# Можно добавить классы для статусов #}
+            <span class="detail-value status-closed">Закрыта</span> {# Можно
+            добавить классы для статусов #}
           </div>
           <div class="order-detail-item">
             <span class="detail-label">Номер</span>
@@ -59,7 +67,8 @@
         </div>
       </a>
       {# Пример заявки 2 #}
-      <a href="#" class="order-card"> {# Обернули в ссылку #}
+      <a href="#" class="order-card">
+        {# Обернули в ссылку #}
         <div class="order-details-grid">
           <div class="order-detail-item">
             <span class="detail-label">Создана</span>
@@ -84,16 +93,22 @@
 
     <section class="additional-info-section">
       <div class="info-block-left">
-        <p>Ответы на большинство вопросов подробно описаны в нашем <a href="#">справочном центре</a> и <a href="#">частых вопросах</a>.</p>
-        <a href="#" class="btn btn-secondary">Справочный центр</a> {# TODO: Актуальная ссылка #}
+        <p>
+          Ответы на большинство вопросов подробно описаны в нашем
+          <a href="#">справочном центре</a> и <a href="#">частых вопросах</a>.
+        </p>
+        <a href="#" class="btn btn-secondary">Справочный центр</a> {# TODO:
+        Актуальная ссылка #}
       </div>
       <div class="info-block-right">
-        <p>Среднее время ответа в рабочие часы (понедельник-пятница, с 10:00 до 18:00) - 2 часа</p>
+        <p>
+          Среднее время ответа в рабочие часы (понедельник-пятница, с 10:00 до
+          18:00) - 2 часа
+        </p>
         <p>При высокой загрузке время ответа может быть увеличено</p>
         <p>В выходные дни мы отвечаем в течение суток</p>
       </div>
     </section>
-
   </div>
 </div>
 {% endblock %}

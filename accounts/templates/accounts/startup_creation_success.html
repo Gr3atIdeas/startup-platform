@@ -1,21 +1,17 @@
-{% extends 'accounts/base.html' %}
-{% load static %}
-
-{% block title %}Стартап на модерации{% endblock %}
-
-{% block content %}
-<link rel="stylesheet" href="{% static 'accounts/css/startup_success.css' %}">
+{% extends 'accounts/base.html' %} {% load static %} {% block title %}Стартап на
+модерации{% endblock %} {% block content %}
+<link rel="stylesheet" href="{% static 'accounts/css/startup_success.css' %}" />
 
 <div class="success-page-container">
-    <div class="success-content-overlay">
-        <h1 class="title-congrats">Поздравляем</h1>
-        <h2 class="title-moderation">стартап на модерации</h2>
-        <a href="{% url 'home' %}" class="btn-main-page">Главная страница</a>
-        <p class="info-text">
-            Когда ваша идея пройдет модерацию, стартап появится в вашем<br>
-            кабинете и вы получите уведомление
-        </p>
-    </div>
+  <div class="success-content-overlay">
+    <h1 class="title-congrats">Поздравляем</h1>
+    <h2 class="title-moderation">стартап на модерации</h2>
+    <a href="{% url 'home' %}" class="btn-main-page">Главная страница</a>
+    <p class="info-text">
+      Когда ваша идея пройдет модерацию, стартап появится в вашем<br />
+      кабинете и вы получите уведомление
+    </p>
+  </div>
 </div>
 
 <style>
@@ -23,4 +19,4 @@
     background-image: url('{% static "accounts/images/startups/startup_create_done.webp" %}');
   }
 </style>
-{% endblock %} 
+{% endblock %}

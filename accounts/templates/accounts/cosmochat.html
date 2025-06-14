@@ -1,511 +1,788 @@
-{% extends 'accounts/base.html' %}
-{% load static %}
-{% load widget_tweaks %}
-
-{% block title %}CosmoChat{% endblock %}
-
-{% block head_extra %}
-  <link rel="stylesheet" href="{% static 'accounts/css/cosmochat.css' %}">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-{% endblock %}
-
-{% block content %}
-{% static 'accounts/images/avatars/default_avatar_ufo.png' as default_avatar_src %}
+{% extends 'accounts/base.html' %} {% load static %} {% load widget_tweaks %} {%
+block title %}CosmoChat{% endblock %} {% block head_extra %}
+<link rel="stylesheet" href="{% static 'accounts/css/cosmochat.css' %}" />
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+/>
+{% endblock %} {% block content %} {% static
+'accounts/images/avatars/default_avatar_ufo.png' as default_avatar_src %}
 <div class="cosmochat-page-wrapper">
-    <!-- Верхний блок: Пользователи и Статьи/Новости -->
-    <div class="top-section-new">
-        <!-- Левая колонка: Поиск пользователей и список пользователей -->
-        <div class="users-main-area-new">
-            <form method="get" action="." class="user-search-filters-new">
-                <div class="search-input-wrapper-new search-form-cosmo">
-                    {% render_field search_form.query class+="search-query-input" placeholder="Поиск" %}
-                    <img src="{% static 'accounts/images/cosmochat/search.svg' %}" alt="Поиск">
-                    
-                    <!-- Выпадающее окно поиска -->
-                    <div id="searchDropdown" class="search-dropdown">
-                        <!-- Недавние -->
-                        <div class="search-dropdown-section">
-                            <div class="search-dropdown-header">
-                                <div class="search-dropdown-title">Недавние</div>
-                                <div class="search-dropdown-clear" data-section="recent">Очистить</div>
-                            </div>
-                            <div class="search-dropdown-users" id="recentUsers">
-                                <!-- Данные будут загружены через JavaScript -->
-                            </div>
-                        </div>
-                        
-                        <!-- Инвесторы -->
-                        <div class="search-dropdown-section">
-                            <div class="search-dropdown-header">
-                                <div class="search-dropdown-title">Инвесторы</div>
-                                <div class="search-dropdown-clear" data-section="investors">Очистить</div>
-                            </div>
-                            <div class="search-dropdown-users" id="investorUsers">
-                                <!-- Данные будут загружены через JavaScript -->
-                            </div>
-                        </div>
-                        
-                        <!-- Стартаперы -->
-                        <div class="search-dropdown-section">
-                            <div class="search-dropdown-header">
-                                <div class="search-dropdown-title">Стартаперы</div>
-                                <div class="search-dropdown-clear" data-section="startupers">Очистить</div>
-                            </div>
-                            <div class="search-dropdown-users" id="startuperUsers">
-                                <!-- Данные будут загружены через JavaScript -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="role-filters-new django-roles-filter">
-                    {% for choice in search_form.roles %}
-                        {{ choice.tag }} <label for="{{ choice.id_for_label }}">{{ choice.choice_label }}</label>
-                    {% endfor %}
-                </div>
-            </form>
+  <!-- Верхний блок: Пользователи и Статьи/Новости -->
+  <div class="top-section-new">
+    <!-- Левая колонка: Поиск пользователей и список пользователей -->
+    <div class="users-main-area-new">
+      <form method="get" action="." class="user-search-filters-new">
+        <div class="search-input-wrapper-new search-form-cosmo">
+          {% render_field search_form.query class+="search-query-input"
+          placeholder="Поиск" %}
+          <img
+            src="{% static 'accounts/images/cosmochat/search.svg' %}"
+            alt="Поиск"
+          />
 
-            <div class="users-list-new" id="usersList">
-                {% for user_profile in users %}
-                {% cycle 4.5 3.2 2.0 0.8 5.0 1.7 as fake_rating silent %}
-                {% if forloop.counter <= 6 %}
-                    {% with effective_rating=fake_rating %}
-                    <div class="user-card-new {% if forloop.counter > 8 %}hidden-user{% endif %}" data-user-id="{{ user_profile.user_id }}" data-user-index="{{ forloop.counter0 }}" data-role="{{ user_profile.role.role_name }}">
-                        <img src="{% if user_profile.get_profile_picture_url %}{{ user_profile.get_profile_picture_url }}{% else %}{{ default_avatar_src }}{% endif %}" 
-                             alt="{{ user_profile.first_name|default:'Пользователь' }}" class="avatar-img">
-                        <div class="user-info-new">
-                            <h3>{{ user_profile.first_name }} {% if user_profile.last_name %}{{ user_profile.last_name|slice:":1" }}.{% endif %}</h3>
-                            <div class="user-role-rating-new">
-                                <div class="rating-stars-new" data-rating="{{ effective_rating|stringformat:'.1f' }}">
-                                    {% for i in "12345" %}
-                                    <span class="rating-icon-planet-container">
-                                        <img src="{% static 'accounts/images/planets/partial_filled_planet.svg' %}" alt="Empty Planet" class="icon-empty">
-                                        <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="Filled Planet" class="icon-filled">
-                                    </span>
-                                    {% endfor %}
-                                </div>
-                                <p class="role-text">
-                                    {% if user_profile.role.role_name == "investor" %}Инвестор
-                                    {% elif user_profile.role.role_name == "startuper" %}Стартапер
-                                    {% elif user_profile.role.role_name == "moderator" %}Модератор
-                                    {% else %}{{ user_profile.role.role_name|capfirst }}{% endif %}
-                                </p>
-                            </div>
-                        </div>
-                        <div class="user-stats-new">
-                            {% if user_profile.role.role_name == "investor" %}
-                            <p>Инвестирует от: <span>{{ user_profile.investorprofile.investment_range_min|default:"N/A" }}₽</span></p>
-                            <p>Инвестировал в: <span>{{ user_profile.investorprofile.completed_projects_count|default:0 }} стартапов</span></p>
-                            {% elif user_profile.role.role_name == "startuper" %}
-                            <p>Мин. вклад: <span>{{ user_profile.startuperprofile.min_investment_needed|default:"N/A" }}₽</span></p>
-                            <p>Открыл: <span>{{ user_profile.startuperprofile.projects_count|default:0 }} стартапов</span></p>
-                            {% else %}
-                            <p>Нет данных о роли</p>
-                            {% endif %}
-                        </div>
-                        <button type="button" class="chat-btn-on-card" data-user-id="{{ user_profile.user_id }}">Чат</button>
-                    </div>
-                    {% endwith %}
-                {% else %}
-                    <div class="user-card-new {% if forloop.counter > 8 %}hidden-user{% endif %}" data-user-id="{{ user_profile.user_id }}" data-user-index="{{ forloop.counter0 }}" data-role="{{ user_profile.role.role_name }}">
-                        <img src="{% if user_profile.get_profile_picture_url %}{{ user_profile.get_profile_picture_url }}{% else %}{{ default_avatar_src }}{% endif %}" 
-                             alt="{{ user_profile.first_name|default:'Пользователь' }}" class="avatar-img">
-                        <div class="user-info-new">
-                            <h3>{{ user_profile.first_name }} {% if user_profile.last_name %}{{ user_profile.last_name|slice:":1" }}.{% endif %}</h3>
-                            <div class="user-role-rating-new">
-                                <div class="rating-stars-new" data-rating="{{ user_profile.rating|default:0|stringformat:'.1f' }}">
-                                    {% for i in "12345" %}
-                                    <span class="rating-icon-planet-container">
-                                        <img src="{% static 'accounts/images/planets/partial_filled_planet.svg' %}" alt="Empty Planet" class="icon-empty">
-                                        <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="Filled Planet" class="icon-filled">
-                                    </span>
-                                    {% endfor %}
-                                </div>
-                                <p class="role-text">
-                                    {% if user_profile.role.role_name == "investor" %}Инвестор
-                                    {% elif user_profile.role.role_name == "startuper" %}Стартапер
-                                    {% elif user_profile.role.role_name == "moderator" %}Модератор
-                                    {% else %}{{ user_profile.role.role_name|capfirst }}{% endif %}
-                                </p>
-                            </div>
-                        </div>
-                        <div class="user-stats-new">
-                            {% if user_profile.role.role_name == "investor" %}
-                            <p>Инвестирует от: <span>{{ user_profile.investorprofile.investment_range_min|default:"N/A" }}₽</span></p>
-                            <p>Инвестировал в: <span>{{ user_profile.investorprofile.completed_projects_count|default:0 }} стартапов</span></p>
-                            {% elif user_profile.role.role_name == "startuper" %}
-                            <p>Мин. вклад: <span>{{ user_profile.startuperprofile.min_investment_needed|default:"N/A" }}₽</span></p>
-                            <p>Открыл: <span>{{ user_profile.startuperprofile.projects_count|default:0 }} стартапов</span></p>
-                            {% else %}
-                            <p>Нет данных о роли</p>
-                            {% endif %}
-                        </div>
-                        <button type="button" class="chat-btn-on-card" data-user-id="{{ user_profile.user_id }}">Чат</button>
-                    </div>
-                {% endif %}
-                {% empty %}
-                <p>Пользователи не найдены.</p>
+          <!-- Выпадающее окно поиска -->
+          <div id="searchDropdown" class="search-dropdown">
+            <!-- Недавние -->
+            <div class="search-dropdown-section">
+              <div class="search-dropdown-header">
+                <div class="search-dropdown-title">Недавние</div>
+                <div class="search-dropdown-clear" data-section="recent">
+                  Очистить
+                </div>
+              </div>
+              <div class="search-dropdown-users" id="recentUsers">
+                <!-- Данные будут загружены через JavaScript -->
+              </div>
+            </div>
+
+            <!-- Инвесторы -->
+            <div class="search-dropdown-section">
+              <div class="search-dropdown-header">
+                <div class="search-dropdown-title">Инвесторы</div>
+                <div class="search-dropdown-clear" data-section="investors">
+                  Очистить
+                </div>
+              </div>
+              <div class="search-dropdown-users" id="investorUsers">
+                <!-- Данные будут загружены через JavaScript -->
+              </div>
+            </div>
+
+            <!-- Стартаперы -->
+            <div class="search-dropdown-section">
+              <div class="search-dropdown-header">
+                <div class="search-dropdown-title">Стартаперы</div>
+                <div class="search-dropdown-clear" data-section="startupers">
+                  Очистить
+                </div>
+              </div>
+              <div class="search-dropdown-users" id="startuperUsers">
+                <!-- Данные будут загружены через JavaScript -->
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="role-filters-new django-roles-filter">
+          {% for choice in search_form.roles %} {{ choice.tag }}
+          <label for="{{ choice.id_for_label }}"
+            >{{ choice.choice_label }}</label
+          >
+          {% endfor %}
+        </div>
+      </form>
+
+      <div class="users-list-new" id="usersList">
+        {% for user_profile in users %} {% cycle 4.5 3.2 2.0 0.8 5.0 1.7 as
+        fake_rating silent %} {% if forloop.counter <= 6 %} {% with
+        effective_rating=fake_rating %}
+        <div
+          class="user-card-new {% if forloop.counter > 8 %}hidden-user{% endif %}"
+          data-user-id="{{ user_profile.user_id }}"
+          data-user-index="{{ forloop.counter0 }}"
+          data-role="{{ user_profile.role.role_name }}"
+        >
+          <img
+            src="{% if user_profile.get_profile_picture_url %}{{ user_profile.get_profile_picture_url }}{% else %}{{ default_avatar_src }}{% endif %}"
+            alt="{{ user_profile.first_name|default:'Пользователь' }}"
+            class="avatar-img"
+          />
+          <div class="user-info-new">
+            <h3>
+              {{ user_profile.first_name }} {% if user_profile.last_name %}{{
+              user_profile.last_name|slice:":1" }}.{% endif %}
+            </h3>
+            <div class="user-role-rating-new">
+              <div
+                class="rating-stars-new"
+                data-rating="{{ effective_rating|stringformat:'.1f' }}"
+              >
+                {% for i in "12345" %}
+                <span class="rating-icon-planet-container">
+                  <img
+                    src="{% static 'accounts/images/planets/partial_filled_planet.svg' %}"
+                    alt="Empty Planet"
+                    class="icon-empty"
+                  />
+                  <img
+                    src="{% static 'accounts/images/planets/full_filled_planet.svg' %}"
+                    alt="Filled Planet"
+                    class="icon-filled"
+                  />
+                </span>
                 {% endfor %}
+              </div>
+              <p class="role-text">
+                {% if user_profile.role.role_name == "investor" %}Инвестор {%
+                elif user_profile.role.role_name == "startuper" %}Стартапер {%
+                elif user_profile.role.role_name == "moderator" %}Модератор {%
+                else %}{{ user_profile.role.role_name|capfirst }}{% endif %}
+              </p>
             </div>
-
-            <div class="pagination-new">
-                <div class="page-numbers-new" id="userPagination"></div>
-                <button type="button" class="show-more-btn-new" id="showMoreUsersBtn">
-                    Показать еще <i class="fa-solid fa-eye"></i>
-                </button>
-            </div>
+          </div>
+          <div class="user-stats-new">
+            {% if user_profile.role.role_name == "investor" %}
+            <p>
+              Инвестирует от:
+              <span
+                >{{
+                user_profile.investorprofile.investment_range_min|default:"N/A"
+                }}₽</span
+              >
+            </p>
+            <p>
+              Инвестировал в:
+              <span
+                >{{
+                user_profile.investorprofile.completed_projects_count|default:0
+                }} стартапов</span
+              >
+            </p>
+            {% elif user_profile.role.role_name == "startuper" %}
+            <p>
+              Мин. вклад:
+              <span
+                >{{
+                user_profile.startuperprofile.min_investment_needed|default:"N/A"
+                }}₽</span
+              >
+            </p>
+            <p>
+              Открыл:
+              <span
+                >{{ user_profile.startuperprofile.projects_count|default:0 }}
+                стартапов</span
+              >
+            </p>
+            {% else %}
+            <p>Нет данных о роли</p>
+            {% endif %}
+          </div>
+          <button
+            type="button"
+            class="chat-btn-on-card"
+            data-user-id="{{ user_profile.user_id }}"
+          >
+            Чат
+          </button>
         </div>
-
-        <div class="articles-section-new">
-            <h2>Стартапы и статьи</h2>
-            <div class="article-card-item">
-                <img src="https://loremflickr.com/409/214/technology,startup?random=1" alt="Инвестиции будущего" class="article-image">
-                <h3>Инвестиции будущего или как быть на волне трендов</h3>
-                <p class="description">Наш стартап разрабатывает инновационную платформу для телемедицины, которая обеспечивает пользователям доступ...</p>
-            </div>
-            <div class="article-card-item">
-                <img src="https://loremflickr.com/409/214/business,innovation?random=2" alt="Инвестиции будущего" class="article-image">
-                <h3>Инвестиции будущего или как быть на волне трендов</h3>
-                <p class="description">Наш стартап разрабатывает инновационную платформу для телемедицины, которая обеспечивает пользователям доступ...</p>
-            </div>
-            <div class="article-card-item">
-                <img src="https://loremflickr.com/409/214/medical,health?random=3" alt="Ромашка" class="article-image">
-                <h3>Ромашка</h3>
-                <div class="category-info">
-                    Категория: <span class="category-badge-new">Медицина</span>
-                </div>
-                <p class="description">Наш стартап разрабатывает инновационную платформу для телемедицины, которая обеспечивает пользователям доступ...</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="main-chat-area-new">
-        <div class="chat-list-column-new">
-            <div class="chat-list-header-new">
-                <div class="search-input-wrapper-new chat-search-input-wrapper">
-                    <input type="text" id="chatSearchInput" placeholder="Поиск по чатам">
-                    <img src="{% static 'accounts/images/cosmochat/search.svg' %}" alt="Поиск">
-                </div>
-                <img src="{% static 'accounts/images/cosmochat/edit.svg' %}" alt="Добавить чат" class="add-chat-btn-icon" id="createChatBtn">
-            </div>
-            <div class="chat-filters-new">
-                <button type="button" class="filter-btn-new active" data-filter="all">Все</button>
-                <button type="button" class="filter-btn-new" data-filter="chats">Чаты</button>
-                <button type="button" class="filter-btn-new" data-filter="groups">Группы</button>
-            </div>
-            <div class="chat-items-list-new" id="chatListContainer">
-                {% for chat in chats %}
-                <div class="chat-item-new" 
-                     data-chat-id="{{ chat.conversation_id }}"
-                     data-chat-name="{{ chat.display_name|escapejs }}"
-                     data-chat-type="{% if chat.is_group_chat %}group{% else %}personal{% endif %}">
-                    <img src="{% if chat.display_avatar %}{{ chat.display_avatar }}{% else %}{% static 'accounts/images/cosmochat/group_avatar.svg' %}{% endif %}" 
-                         alt="{{ chat.display_name }}" class="chat-avatar-img">
-                    <div class="chat-item-info-new">
-                        <h4>{{ chat.display_name|truncatechars:25 }}</h4>
-                        {% with last_message=chat.get_last_message %}
-                            {% if last_message %}
-                            <p class="last-message-preview">
-                                {% if last_message.sender_id == request.user.user_id %}Вы: {% endif %}
-                                {{ last_message.message_text|truncatechars:30 }}
-                            </p>
-                            {% else %}
-                            <p class="last-message-preview">Нет сообщений</p>
-                            {% endif %}
-                        {% endwith %}
-                    </div>
-                    <div class="chat-item-meta-new">
-                        {% with last_message=chat.get_last_message %}
-                            {% if last_message %}
-                            <span class="timestamp-chat">{{ last_message.created_at|date:"H:i" }}</span>
-                                {% if chat.unread_count > 0 %}
-                                <span class="unread-badge-chat">{{ chat.unread_count }}</span>
-                                {% endif %}
-                            <span class="date-chat-preview">{{ last_message.created_at|date:"d/m/Y" }}</span>
-                            {% else %}
-                            <span class="timestamp-chat"></span>
-                            <span class="date-chat-preview"></span>
-                            {% endif %}
-                        {% endwith %}
-                    </div>
-                </div>
-                {% empty %}
-                <p style="text-align: center; padding: 20px; color: #797979;">У вас пока нет чатов. Найдите пользователя и начните диалог!</p>
+        {% endwith %} {% else %}
+        <div
+          class="user-card-new {% if forloop.counter > 8 %}hidden-user{% endif %}"
+          data-user-id="{{ user_profile.user_id }}"
+          data-user-index="{{ forloop.counter0 }}"
+          data-role="{{ user_profile.role.role_name }}"
+        >
+          <img
+            src="{% if user_profile.get_profile_picture_url %}{{ user_profile.get_profile_picture_url }}{% else %}{{ default_avatar_src }}{% endif %}"
+            alt="{{ user_profile.first_name|default:'Пользователь' }}"
+            class="avatar-img"
+          />
+          <div class="user-info-new">
+            <h3>
+              {{ user_profile.first_name }} {% if user_profile.last_name %}{{
+              user_profile.last_name|slice:":1" }}.{% endif %}
+            </h3>
+            <div class="user-role-rating-new">
+              <div
+                class="rating-stars-new"
+                data-rating="{{ user_profile.rating|default:0|stringformat:'.1f' }}"
+              >
+                {% for i in "12345" %}
+                <span class="rating-icon-planet-container">
+                  <img
+                    src="{% static 'accounts/images/planets/partial_filled_planet.svg' %}"
+                    alt="Empty Planet"
+                    class="icon-empty"
+                  />
+                  <img
+                    src="{% static 'accounts/images/planets/full_filled_planet.svg' %}"
+                    alt="Filled Planet"
+                    class="icon-filled"
+                  />
+                </span>
                 {% endfor %}
+              </div>
+              <p class="role-text">
+                {% if user_profile.role.role_name == "investor" %}Инвестор {%
+                elif user_profile.role.role_name == "startuper" %}Стартапер {%
+                elif user_profile.role.role_name == "moderator" %}Модератор {%
+                else %}{{ user_profile.role.role_name|capfirst }}{% endif %}
+              </p>
             </div>
+          </div>
+          <div class="user-stats-new">
+            {% if user_profile.role.role_name == "investor" %}
+            <p>
+              Инвестирует от:
+              <span
+                >{{
+                user_profile.investorprofile.investment_range_min|default:"N/A"
+                }}₽</span
+              >
+            </p>
+            <p>
+              Инвестировал в:
+              <span
+                >{{
+                user_profile.investorprofile.completed_projects_count|default:0
+                }} стартапов</span
+              >
+            </p>
+            {% elif user_profile.role.role_name == "startuper" %}
+            <p>
+              Мин. вклад:
+              <span
+                >{{
+                user_profile.startuperprofile.min_investment_needed|default:"N/A"
+                }}₽</span
+              >
+            </p>
+            <p>
+              Открыл:
+              <span
+                >{{ user_profile.startuperprofile.projects_count|default:0 }}
+                стартапов</span
+              >
+            </p>
+            {% else %}
+            <p>Нет данных о роли</p>
+            {% endif %}
+          </div>
+          <button
+            type="button"
+            class="chat-btn-on-card"
+            data-user-id="{{ user_profile.user_id }}"
+          >
+            Чат
+          </button>
         </div>
+        {% endif %} {% empty %}
+        <p>Пользователи не найдены.</p>
+        {% endfor %}
+      </div>
 
-        <div class="chat-window-column-new" id="chatWindowColumn">
-            <div class="chat-active-header" id="chatActiveHeader" style="display: none;">
-                <h3 id="chatWindowTitle">Название чата</h3>
-                <button id="renameChatBtn" class="rename-chat-btn">Переименовать</button>
-                <input type="text" id="chatNameInput" style="display: none;" placeholder="Новое название чата">
-                <div class="chat-header-actions">
-                    <button id="addParticipantBtn" class="add-participant-btn-new-style">Добавить</button>
-                    <button id="leaveChatBtn" class="leave-chat-btn-new-style">Покинуть</button>
-                </div>
-            </div>
-
-            <div class="chat-messages-area" id="chatMessagesArea"></div>
-            
-            <div class="no-chat-selected-placeholder" id="noChatSelectedPlaceholder">
-                <img src="{% static 'accounts/images/cosmochat/dialogicon.png' %}" alt="Выберите чат">
-                <h2>Выберите чат</h2>
-            </div>
-
-            <div class="chat-input-field-area" id="chatInputFieldArea" style="display: none;">
-                <img src="{% static 'accounts/images/cosmochat/attach.svg' %}" alt="Прикрепить" class="attach-file-btn" id="attachFileBtn">
-                <form id="messageFormNew" style="width: 100%;">
-                    {% csrf_token %}
-                    <input type="hidden" id="chatIdInput" name="chat_id" value="">
-                    {% render_field message_form.message_text placeholder="Сообщение" rows="1" %}
-                    <button type="submit" class="send-message-btn">
-                        <img src="{% static 'accounts/images/cosmochat/send.svg' %}" alt="Отправить">
-                    </button>
-                </form>
-            </div>
-        </div>
+      <div class="pagination-new">
+        <div class="page-numbers-new" id="userPagination"></div>
+        <button type="button" class="show-more-btn-new" id="showMoreUsersBtn">
+          Показать еще <i class="fa-solid fa-eye"></i>
+        </button>
+      </div>
     </div>
 
-    <div class="modal-overlay" id="profileModal">
-        <div class="modal">
-            <button class="modal-close" id="closeProfileModalBtn">×</button>
-            <img id="profileAvatar" src="{{ default_avatar_src }}" alt="Аватар">
-            <h3 id="profileName"></h3>
-            <p id="profileRole"></p>
-            <p id="profileRating"></p>
-            <p id="profileBio"></p>
-            <button class="action-btn" id="startChatBtn">Начать чат</button>
-            <a id="profileLink" href="#"><button class="action-btn">К профилю</button></a>
+    <div class="articles-section-new">
+      <h2>Стартапы и статьи</h2>
+      <div class="article-card-item">
+        <img
+          src="https://loremflickr.com/409/214/technology,startup?random=1"
+          alt="Инвестиции будущего"
+          class="article-image"
+        />
+        <h3>Инвестиции будущего или как быть на волне трендов</h3>
+        <p class="description">
+          Наш стартап разрабатывает инновационную платформу для телемедицины,
+          которая обеспечивает пользователям доступ...
+        </p>
+      </div>
+      <div class="article-card-item">
+        <img
+          src="https://loremflickr.com/409/214/business,innovation?random=2"
+          alt="Инвестиции будущего"
+          class="article-image"
+        />
+        <h3>Инвестиции будущего или как быть на волне трендов</h3>
+        <p class="description">
+          Наш стартап разрабатывает инновационную платформу для телемедицины,
+          которая обеспечивает пользователям доступ...
+        </p>
+      </div>
+      <div class="article-card-item">
+        <img
+          src="https://loremflickr.com/409/214/medical,health?random=3"
+          alt="Ромашка"
+          class="article-image"
+        />
+        <h3>Ромашка</h3>
+        <div class="category-info">
+          Категория: <span class="category-badge-new">Медицина</span>
         </div>
+        <p class="description">
+          Наш стартап разрабатывает инновационную платформу для телемедицины,
+          которая обеспечивает пользователям доступ...
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-chat-area-new">
+    <div class="chat-list-column-new">
+      <div class="chat-list-header-new">
+        <div class="search-input-wrapper-new chat-search-input-wrapper">
+          <input
+            type="text"
+            id="chatSearchInput"
+            placeholder="Поиск по чатам"
+          />
+          <img
+            src="{% static 'accounts/images/cosmochat/search.svg' %}"
+            alt="Поиск"
+          />
+        </div>
+        <img
+          src="{% static 'accounts/images/cosmochat/edit.svg' %}"
+          alt="Добавить чат"
+          class="add-chat-btn-icon"
+          id="createChatBtn"
+        />
+      </div>
+      <div class="chat-filters-new">
+        <button type="button" class="filter-btn-new active" data-filter="all">
+          Все
+        </button>
+        <button type="button" class="filter-btn-new" data-filter="chats">
+          Чаты
+        </button>
+        <button type="button" class="filter-btn-new" data-filter="groups">
+          Группы
+        </button>
+      </div>
+      <div class="chat-items-list-new" id="chatListContainer">
+        {% for chat in chats %}
+        <div
+          class="chat-item-new"
+          data-chat-id="{{ chat.conversation_id }}"
+          data-chat-name="{{ chat.display_name|escapejs }}"
+          data-chat-type="{% if chat.is_group_chat %}group{% else %}personal{% endif %}"
+        >
+          <img
+            src="{% if chat.display_avatar %}{{ chat.display_avatar }}{% else %}{% static 'accounts/images/cosmochat/group_avatar.svg' %}{% endif %}"
+            alt="{{ chat.display_name }}"
+            class="chat-avatar-img"
+          />
+          <div class="chat-item-info-new">
+            <h4>{{ chat.display_name|truncatechars:25 }}</h4>
+            {% with last_message=chat.get_last_message %} {% if last_message %}
+            <p class="last-message-preview">
+              {% if last_message.sender_id == request.user.user_id %}Вы: {%
+              endif %} {{ last_message.message_text|truncatechars:30 }}
+            </p>
+            {% else %}
+            <p class="last-message-preview">Нет сообщений</p>
+            {% endif %} {% endwith %}
+          </div>
+          <div class="chat-item-meta-new">
+            {% with last_message=chat.get_last_message %} {% if last_message %}
+            <span class="timestamp-chat"
+              >{{ last_message.created_at|date:"H:i" }}</span
+            >
+            {% if chat.unread_count > 0 %}
+            <span class="unread-badge-chat">{{ chat.unread_count }}</span>
+            {% endif %}
+            <span class="date-chat-preview"
+              >{{ last_message.created_at|date:"d/m/Y" }}</span
+            >
+            {% else %}
+            <span class="timestamp-chat"></span>
+            <span class="date-chat-preview"></span>
+            {% endif %} {% endwith %}
+          </div>
+        </div>
+        {% empty %}
+        <p style="text-align: center; padding: 20px; color: #797979">
+          У вас пока нет чатов. Найдите пользователя и начните диалог!
+        </p>
+        {% endfor %}
+      </div>
     </div>
 
-    <div class="modal-overlay" id="addParticipantModal">
-        <div class="modal">
-            <button class="modal-close" id="closeAddParticipantModalBtn">×</button>
-            <h3>Добавить участника</h3>
-            <div class="participants-list" id="participantsList"></div>
+    <div class="chat-window-column-new" id="chatWindowColumn">
+      <div
+        class="chat-active-header"
+        id="chatActiveHeader"
+        style="display: none"
+      >
+        <h3 id="chatWindowTitle">Название чата</h3>
+        <button id="renameChatBtn" class="rename-chat-btn">
+          Переименовать
+        </button>
+        <input
+          type="text"
+          id="chatNameInput"
+          style="display: none"
+          placeholder="Новое название чата"
+        />
+        <div class="chat-header-actions">
+          <button id="addParticipantBtn" class="add-participant-btn-new-style">
+            Добавить
+          </button>
+          <button id="leaveChatBtn" class="leave-chat-btn-new-style">
+            Покинуть
+          </button>
         </div>
-    </div>
+      </div>
 
-    <!-- Модальное окно создания группового чата -->
-    <div class="group-chat-modal-overlay" id="groupChatModal">
-        <div class="group-chat-modal">
-            <button class="group-chat-modal-close" id="closeGroupChatModalBtn">
-                <img src="{% static 'accounts/images/icons/Close_yellow.svg' %}" alt="Закрыть">
-            </button>
-            <div class="group-chat-modal-content-wrapper" id="groupChatModalContentWrapper">
-                <div class="group-chat-modal-header">
-                    <div class="group-chat-modal-title">Выберите пользователей</div>
-                    <div class="group-chat-modal-count" id="selectedUsersCount">0/10</div>
-                    <div class="group-chat-modal-next" id="navigateToDetailsViewBtn">Далее</div>
-                </div>
-                
-                <div class="group-chat-modal-search">
-                    <div class="selected-user-pills-container" id="selectedUserPillsContainer"></div>
-                    <img src="{% static 'accounts/images/cosmochat/search.svg' %}" alt="Поиск" class="group-chat-modal-search-icon">
-                    <input type="text" class="group-chat-modal-search-input" placeholder="Кого вы хотите пригласить?" id="groupChatSearchInput">
-                </div>
-                
-                <div class="group-chat-modal-role-filters">
-                    <button class="group-chat-modal-role-btn active" data-role="startuper">Стартапер</button>
-                    <button class="group-chat-modal-role-btn inactive" data-role="investor">Инвестор</button>
-                </div>
-                
-                <div class="group-chat-modal-users" id="groupChatUsersList">
-                    {% for user in users %}
-                    <div class="group-chat-modal-user" data-user-id="{{ user.user_id }}">
-                        <div class="group-chat-modal-user-info">
-                            <img class="group-chat-modal-user-avatar" 
-                                 src="{% if user.get_profile_picture_url %}{{ user.get_profile_picture_url }}{% else %}{{ default_avatar_src }}{% endif %}" 
-                                 alt="{{ user.first_name|default:'Пользователь' }}">
-                            <div class="group-chat-modal-user-name">
-                                <span class="group-chat-modal-user-firstname">{{ user.first_name|default:"Имя" }}</span>
-                                <span class="group-chat-modal-user-lastname">{{ user.last_name|default:"Фамилия" }}</span>
-                            </div>
-                        </div>
-                        <div class="group-chat-modal-checkbox">
-                            <div class="group-chat-modal-checkbox-empty"></div>
-                            <div class="group-chat-modal-checkbox-filled"></div>
-                            <div class="group-chat-modal-checkbox-tick"></div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
+      <div class="chat-messages-area" id="chatMessagesArea"></div>
+
+      <div class="no-chat-selected-placeholder" id="noChatSelectedPlaceholder">
+        <img
+          src="{% static 'accounts/images/cosmochat/dialogicon.png' %}"
+          alt="Выберите чат"
+        />
+        <h2>Выберите чат</h2>
+      </div>
+
+      <div
+        class="chat-input-field-area"
+        id="chatInputFieldArea"
+        style="display: none"
+      >
+        <img
+          src="{% static 'accounts/images/cosmochat/attach.svg' %}"
+          alt="Прикрепить"
+          class="attach-file-btn"
+          id="attachFileBtn"
+        />
+        <form id="messageFormNew" style="width: 100%">
+          {% csrf_token %}
+          <input type="hidden" id="chatIdInput" name="chat_id" value="" />
+          {% render_field message_form.message_text placeholder="Сообщение"
+          rows="1" %}
+          <button type="submit" class="send-message-btn">
+            <img
+              src="{% static 'accounts/images/cosmochat/send.svg' %}"
+              alt="Отправить"
+            />
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="profileModal">
+    <div class="modal">
+      <button class="modal-close" id="closeProfileModalBtn">×</button>
+      <img id="profileAvatar" src="{{ default_avatar_src }}" alt="Аватар" />
+      <h3 id="profileName"></h3>
+      <p id="profileRole"></p>
+      <p id="profileRating"></p>
+      <p id="profileBio"></p>
+      <button class="action-btn" id="startChatBtn">Начать чат</button>
+      <a id="profileLink" href="#"
+        ><button class="action-btn">К профилю</button></a
+      >
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="addParticipantModal">
+    <div class="modal">
+      <button class="modal-close" id="closeAddParticipantModalBtn">×</button>
+      <h3>Добавить участника</h3>
+      <div class="participants-list" id="participantsList"></div>
+    </div>
+  </div>
+
+  <!-- Модальное окно создания группового чата -->
+  <div class="group-chat-modal-overlay" id="groupChatModal">
+    <div class="group-chat-modal">
+      <button class="group-chat-modal-close" id="closeGroupChatModalBtn">
+        <img
+          src="{% static 'accounts/images/icons/Close_yellow.svg' %}"
+          alt="Закрыть"
+        />
+      </button>
+      <div
+        class="group-chat-modal-content-wrapper"
+        id="groupChatModalContentWrapper"
+      >
+        <div class="group-chat-modal-header">
+          <div class="group-chat-modal-title">Выберите пользователей</div>
+          <div class="group-chat-modal-count" id="selectedUsersCount">0/10</div>
+          <div class="group-chat-modal-next" id="navigateToDetailsViewBtn">
+            Далее
+          </div>
+        </div>
+
+        <div class="group-chat-modal-search">
+          <div
+            class="selected-user-pills-container"
+            id="selectedUserPillsContainer"
+          ></div>
+          <img
+            src="{% static 'accounts/images/cosmochat/search.svg' %}"
+            alt="Поиск"
+            class="group-chat-modal-search-icon"
+          />
+          <input
+            type="text"
+            class="group-chat-modal-search-input"
+            placeholder="Кого вы хотите пригласить?"
+            id="groupChatSearchInput"
+          />
+        </div>
+
+        <div class="group-chat-modal-role-filters">
+          <button
+            class="group-chat-modal-role-btn active"
+            data-role="startuper"
+          >
+            Стартапер
+          </button>
+          <button
+            class="group-chat-modal-role-btn inactive"
+            data-role="investor"
+          >
+            Инвестор
+          </button>
+        </div>
+
+        <div class="group-chat-modal-users" id="groupChatUsersList">
+          {% for user in users %}
+          <div class="group-chat-modal-user" data-user-id="{{ user.user_id }}">
+            <div class="group-chat-modal-user-info">
+              <img
+                class="group-chat-modal-user-avatar"
+                src="{% if user.get_profile_picture_url %}{{ user.get_profile_picture_url }}{% else %}{{ default_avatar_src }}{% endif %}"
+                alt="{{ user.first_name|default:'Пользователь' }}"
+              />
+              <div class="group-chat-modal-user-name">
+                <span class="group-chat-modal-user-firstname"
+                  >{{ user.first_name|default:"Имя" }}</span
+                >
+                <span class="group-chat-modal-user-lastname"
+                  >{{ user.last_name|default:"Фамилия" }}</span
+                >
+              </div>
             </div>
-
-            <div class="group-chat-modal-details-view" id="groupChatDetailsView" style="display: none;">
-                <div class="modal-header-nav">
-                    <div class="nav-action" id="groupChatGoBackBtn">
-                        <span class="icon-back-arrow"></span> Назад
-                    </div>
-                    <div class="nav-title">Новый чат</div>
-                    <div class="nav-action" id="confirmGroupChatCreationBtn">Создать</div>
-                </div>
-
-                <div class="selected-chat-info">
-                    <div class="chat-icon-placeholder">
-                        <svg class="group-icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M16 13C17.6569 13 19 11.6569 19 10C19 8.34315 17.6569 7 16 7C14.3431 7 13 8.34315 13 10C13 11.6569 14.3431 13 16 13Z" stroke="#004E9F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M8 13C9.65685 13 11 11.6569 11 10C11 8.34315 9.65685 7 8 7C6.34315 7 5 8.34315 5 10C5 11.6569 6.34315 13 8 13Z" stroke="#004E9F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M12 21V17C12 15.8954 12.8954 15 14 15H18C19.1046 15 20 15.8954 20 17V21" stroke="#004E9F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M4 21V17C4 15.8954 4.89543 15 6 15H10C11.1046 15 12 15.8954 12 17V21" stroke="#004E9F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </div>
-                    <input type="text" class="chat-name-display-input" id="groupChatNameInput" placeholder="Название группового чата">
-                </div>
-
-                <div class="participants-actions-list">
-                    <div class="action-item" id="groupChatAddMoreParticipantsBtn">
-                        <span class="action-item-icon"></span> Добавить участника
-                    </div>
-                    <div id="groupChatSelectedParticipantsList"></div>
-                </div>
+            <div class="group-chat-modal-checkbox">
+              <div class="group-chat-modal-checkbox-empty"></div>
+              <div class="group-chat-modal-checkbox-filled"></div>
+              <div class="group-chat-modal-checkbox-tick"></div>
             </div>
+          </div>
+          {% endfor %}
         </div>
+      </div>
+
+      <div
+        class="group-chat-modal-details-view"
+        id="groupChatDetailsView"
+        style="display: none"
+      >
+        <div class="modal-header-nav">
+          <div class="nav-action" id="groupChatGoBackBtn">
+            <span class="icon-back-arrow"></span> Назад
+          </div>
+          <div class="nav-title">Новый чат</div>
+          <div class="nav-action" id="confirmGroupChatCreationBtn">Создать</div>
+        </div>
+
+        <div class="selected-chat-info">
+          <div class="chat-icon-placeholder">
+            <svg
+              class="group-icon-svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M16 13C17.6569 13 19 11.6569 19 10C19 8.34315 17.6569 7 16 7C14.3431 7 13 8.34315 13 10C13 11.6569 14.3431 13 16 13Z"
+                stroke="#004E9F"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M8 13C9.65685 13 11 11.6569 11 10C11 8.34315 9.65685 7 8 7C6.34315 7 5 8.34315 5 10C5 11.6569 6.34315 13 8 13Z"
+                stroke="#004E9F"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M12 21V17C12 15.8954 12.8954 15 14 15H18C19.1046 15 20 15.8954 20 17V21"
+                stroke="#004E9F"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M4 21V17C4 15.8954 4.89543 15 6 15H10C11.1046 15 12 15.8954 12 17V21"
+                stroke="#004E9F"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </div>
+          <input
+            type="text"
+            class="chat-name-display-input"
+            id="groupChatNameInput"
+            placeholder="Название группового чата"
+          />
+        </div>
+
+        <div class="participants-actions-list">
+          <div class="action-item" id="groupChatAddMoreParticipantsBtn">
+            <span class="action-item-icon"></span> Добавить участника
+          </div>
+          <div id="groupChatSelectedParticipantsList"></div>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('.user-card-new').forEach(card => {
-        card.addEventListener('click', function() {
-            const userId = this.dataset.userId;
-            if (userId && typeof openProfileModal === 'function') {
-                openProfileModal(userId);
-            }
-        });
-    });
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.user-card-new').forEach((card) => {
+      card.addEventListener('click', function () {
+        const userId = this.dataset.userId
+        if (userId && typeof openProfileModal === 'function') {
+          openProfileModal(userId)
+        }
+      })
+    })
 
-    document.querySelectorAll('.chat-btn-on-card').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            const userId = this.dataset.userId;
-            if (userId && typeof startChatWithUser === 'function') {
-                startChatWithUser(userId);
-            }
-        });
-    });
+    document.querySelectorAll('.chat-btn-on-card').forEach((btn) => {
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation()
+        const userId = this.dataset.userId
+        if (userId && typeof startChatWithUser === 'function') {
+          startChatWithUser(userId)
+        }
+      })
+    })
 
-    document.querySelectorAll('.chat-item-new').forEach(item => {
-        item.addEventListener('click', function() {
-            const chatId = this.dataset.chatId;
-            if (chatId && typeof loadChat === 'function') {
-                loadChat(chatId);
-            }
-        });
-    });
+    document.querySelectorAll('.chat-item-new').forEach((item) => {
+      item.addEventListener('click', function () {
+        const chatId = this.dataset.chatId
+        if (chatId && typeof loadChat === 'function') {
+          loadChat(chatId)
+        }
+      })
+    })
 
-    const createChatBtn = document.getElementById('createChatBtn');
+    const createChatBtn = document.getElementById('createChatBtn')
     if (createChatBtn) {
-        createChatBtn.addEventListener('click', function() {
-            if (typeof openGroupChatModal === 'function') {
-                openGroupChatModal();
-            }
-        });
+      createChatBtn.addEventListener('click', function () {
+        if (typeof openGroupChatModal === 'function') {
+          openGroupChatModal()
+        }
+      })
     }
-    
-    const closeProfileModalBtn = document.getElementById('closeProfileModalBtn');
+
+    const closeProfileModalBtn = document.getElementById('closeProfileModalBtn')
     if (closeProfileModalBtn) {
-        closeProfileModalBtn.addEventListener('click', closeProfileModal);
+      closeProfileModalBtn.addEventListener('click', closeProfileModal)
     }
-    
-    const startChatBtn = document.getElementById('startChatBtn');
+
+    const startChatBtn = document.getElementById('startChatBtn')
     if (startChatBtn) {
-        startChatBtn.addEventListener('click', startChat);
+      startChatBtn.addEventListener('click', startChat)
     }
-    
-    const addParticipantBtn = document.getElementById('addParticipantBtn');
+
+    const addParticipantBtn = document.getElementById('addParticipantBtn')
     if (addParticipantBtn) {
-        addParticipantBtn.addEventListener('click', openAddParticipantModal);
+      addParticipantBtn.addEventListener('click', openAddParticipantModal)
     }
-    
-    const closeAddParticipantModalBtn = document.getElementById('closeAddParticipantModalBtn');
+
+    const closeAddParticipantModalBtn = document.getElementById(
+      'closeAddParticipantModalBtn'
+    )
     if (closeAddParticipantModalBtn) {
-        closeAddParticipantModalBtn.addEventListener('click', closeAddParticipantModal);
+      closeAddParticipantModalBtn.addEventListener(
+        'click',
+        closeAddParticipantModal
+      )
     }
-    
-    const leaveChatBtn = document.getElementById('leaveChatBtn');
+
+    const leaveChatBtn = document.getElementById('leaveChatBtn')
     if (leaveChatBtn) {
-        leaveChatBtn.addEventListener('click', leaveChat);
+      leaveChatBtn.addEventListener('click', leaveChat)
     }
 
-    const showMoreUsersBtn = document.getElementById('showMoreUsersBtn');
+    const showMoreUsersBtn = document.getElementById('showMoreUsersBtn')
     if (showMoreUsersBtn) {
-        showMoreUsersBtn.addEventListener('click', function() {
-            showMoreUsers();
-        });
+      showMoreUsersBtn.addEventListener('click', function () {
+        showMoreUsers()
+      })
     }
 
-    const renameChatBtn = document.getElementById('renameChatBtn');
+    const renameChatBtn = document.getElementById('renameChatBtn')
     if (renameChatBtn) {
-        renameChatBtn.addEventListener('click', function() {
-            const chatNameInput = document.getElementById('chatNameInput');
-            const chatWindowTitle = document.getElementById('chatWindowTitle');
-            if (chatNameInput && chatWindowTitle) {
-                chatNameInput.style.display = 'inline-block';
-                chatWindowTitle.style.display = 'none';
-                renameChatBtn.style.display = 'none';
-                chatNameInput.value = chatWindowTitle.textContent;
-                chatNameInput.focus();
-            }
-        });
+      renameChatBtn.addEventListener('click', function () {
+        const chatNameInput = document.getElementById('chatNameInput')
+        const chatWindowTitle = document.getElementById('chatWindowTitle')
+        if (chatNameInput && chatWindowTitle) {
+          chatNameInput.style.display = 'inline-block'
+          chatWindowTitle.style.display = 'none'
+          renameChatBtn.style.display = 'none'
+          chatNameInput.value = chatWindowTitle.textContent
+          chatNameInput.focus()
+        }
+      })
     }
 
-    const chatNameInput = document.getElementById('chatNameInput');
+    const chatNameInput = document.getElementById('chatNameInput')
     if (chatNameInput) {
-        chatNameInput.addEventListener('blur', function() {
-            const newName = chatNameInput.value.trim();
-            const chatWindowTitle = document.getElementById('chatWindowTitle');
-            const renameChatBtn = document.getElementById('renameChatBtn');
-            if (newName && currentChatId && chatWindowTitle && renameChatBtn) {
-                fetch(`/cosmochat/rename-chat/${currentChatId}/`, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
-                        'Content-Type': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest'
-                    },
-                    body: JSON.stringify({ name: newName })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        chatWindowTitle.textContent = data.chat_name;
-                        const chatItem = document.querySelector(`.chat-item-new[data-chat-id="${currentChatId}"]`);
-                        if (chatItem) {
-                            chatItem.dataset.chatName = data.chat_name;
-                            const chatNameElement = chatItem.querySelector('h4');
-                            if (chatNameElement) {
-                                chatNameElement.textContent = data.chat_name.slice(0, 25) + (data.chat_name.length > 25 ? '...' : '');
-                            }
-                        }
-                    } else {
-                        alert(data.error || 'Ошибка при переименовании чата');
-                    }
-                })
-                .catch(error => {
-                    console.error('Ошибка при переименовании:', error);
-                    alert('Произошла ошибка при переименовании чата.');
-                });
-            }
-            if (chatNameInput && chatWindowTitle && renameChatBtn) {
-                chatNameInput.style.display = 'none';
-                chatWindowTitle.style.display = '';
-                renameChatBtn.style.display = 'inline-block';
-            }
-        });
+      chatNameInput.addEventListener('blur', function () {
+        const newName = chatNameInput.value.trim()
+        const chatWindowTitle = document.getElementById('chatWindowTitle')
+        const renameChatBtn = document.getElementById('renameChatBtn')
+        if (newName && currentChatId && chatWindowTitle && renameChatBtn) {
+          fetch(`/cosmochat/rename-chat/${currentChatId}/`, {
+            method: 'POST',
+            headers: {
+              'X-CSRFToken': document.querySelector(
+                '[name=csrfmiddlewaretoken]'
+              ).value,
+              'Content-Type': 'application/json',
+              'X-Requested-With': 'XMLHttpRequest',
+            },
+            body: JSON.stringify({ name: newName }),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.success) {
+                chatWindowTitle.textContent = data.chat_name
+                const chatItem = document.querySelector(
+                  `.chat-item-new[data-chat-id="${currentChatId}"]`
+                )
+                if (chatItem) {
+                  chatItem.dataset.chatName = data.chat_name
+                  const chatNameElement = chatItem.querySelector('h4')
+                  if (chatNameElement) {
+                    chatNameElement.textContent =
+                      data.chat_name.slice(0, 25) +
+                      (data.chat_name.length > 25 ? '...' : '')
+                  }
+                }
+              } else {
+                alert(data.error || 'Ошибка при переименовании чата')
+              }
+            })
+            .catch((error) => {
+              console.error('Ошибка при переименовании:', error)
+              alert('Произошла ошибка при переименовании чата.')
+            })
+        }
+        if (chatNameInput && chatWindowTitle && renameChatBtn) {
+          chatNameInput.style.display = 'none'
+          chatWindowTitle.style.display = ''
+          renameChatBtn.style.display = 'inline-block'
+        }
+      })
 
-        chatNameInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                chatNameInput.blur();
-            }
-        });
+      chatNameInput.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+          chatNameInput.blur()
+        }
+      })
     }
-});
+  })
 </script>
-{% endblock %}
-
-{% block body_extra %}
-{{ request.user.user_id|default:0|json_script:"request_user_id_data" }}
+{% endblock %} {% block body_extra %} {{
+request.user.user_id|default:0|json_script:"request_user_id_data" }}
 <script src="{% static 'accounts/js/cosmochat.js' %}"></script>
 {% endblock %}

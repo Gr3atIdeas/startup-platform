@@ -1,25 +1,36 @@
-# Виртуальное окружение
+# Dependencies
+node_modules/
 venv/
 env/
 
-.env
+# Cache
+.cache/
+.pytest_cache/
+__pycache__/
+
+# IDE / Editor specific
+.idea/
+.vscode/
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+# Django specific
+*.log
+db.sqlite3
+staticfiles/
+
+# OS specific
+.DS_Store
+Thumbs.db
 
 # Локальная база данных
 db.postgres
 
-# Собранные статические файлы
-staticfiles/
-
 # Медиафайлы (если они не нужны в репозитории)
 media/
 
-# Логи и временные файлы
-*.log
-*.pyc
-__pycache__/
-*.py[cod]
-
 # Файлы IDE
-.idea/
 *.swp
-.DS_Store

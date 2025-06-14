@@ -1,32 +1,32 @@
-{% extends "accounts/base.html" %}
-{% load static %}
-
-{% block title %}Создать заявку - Поддержка{% endblock %}
-
-{% block head_extra %}
-{{ block.super }}
-<link rel="stylesheet" href="{% static 'accounts/css/support_contact.css' %}?v={% now 'U' %}">
+{% extends "accounts/base.html" %} {% load static %} {% block title %}Создать
+заявку - Поддержка{% endblock %} {% block head_extra %} {{ block.super }}
+<link
+  rel="stylesheet"
+  href="{% static 'accounts/css/support_contact.css' %}?v={% now 'U' %}"
+/>
 <style>
   main.content {
     padding-top: 0 !important;
     padding-bottom: 0 !important;
   }
 </style>
-{% endblock %}
-
-{% block content %}
+{% endblock %} {% block content %}
 <div class="support-contact-page">
   <div class="support-contact-container">
     <div class="back-link-container">
       <a href="{% url 'support_orders' %}" class="back-link">
-        <img src="{% static 'accounts/images/support/arrow_left.svg' %}" alt="Назад" class="back-link-icon">
+        <img
+          src="{% static 'accounts/images/support/arrow_left.svg' %}"
+          alt="Назад"
+          class="back-link-icon"
+        />
         <span>Назад</span>
       </a>
     </div>
 
     <div class="support-contact-main-content">
       <section class="form-section">
-        <form action="" method="post"> 
+        <form action="" method="post">
           {% csrf_token %}
           <div class="form-group">
             <label for="role">Роль</label>
@@ -35,28 +35,42 @@
                 <option value="investor">Инвестор</option>
                 <option value="startup">Стартапер</option>
               </select>
-              <img src="{% static 'accounts/images/support/chevron_down.svg' %}" alt="" class="select-arrow-icon">
+              <img
+                src="{% static 'accounts/images/support/chevron_down.svg' %}"
+                alt=""
+                class="select-arrow-icon"
+              />
             </div>
           </div>
 
           <div class="form-group">
             <label for="subject">Тема обращения</label>
-            <input type="text" name="subject" id="subject" placeholder="Кратко опиши тему обращения">
+            <input
+              type="text"
+              name="subject"
+              id="subject"
+              placeholder="Кратко опиши тему обращения"
+            />
           </div>
 
           <div class="form-group">
             <label for="name">Ваше имя</label>
-            <input type="text" name="name" id="name" placeholder="Имя">
+            <input type="text" name="name" id="name" placeholder="Имя" />
           </div>
 
           <div class="form-group">
             <label for="email">Ваша почта</label>
-            <input type="email" name="email" id="email" placeholder="Email">
+            <input type="email" name="email" id="email" placeholder="Email" />
           </div>
 
           <div class="form-group">
             <label for="comment">Комментарий</label>
-            <textarea name="comment" id="comment" placeholder="Комментарий" rows="5"></textarea>
+            <textarea
+              name="comment"
+              id="comment"
+              placeholder="Комментарий"
+              rows="5"
+            ></textarea>
           </div>
 
           <button type="submit" class="btn-submit-support">Отправить</button>
@@ -66,11 +80,19 @@
       <section class="info-section">
         <h2>Есть вопрос?</h2>
         <div class="search-bar-support-contact">
-          <img src="{% static 'accounts/images/support/search_gray.svg' %}" alt="Поиск" class="search-icon">
-          <input type="text" placeholder="Поиск">
+          <img
+            src="{% static 'accounts/images/support/search_gray.svg' %}"
+            alt="Поиск"
+            class="search-icon"
+          />
+          <input type="text" placeholder="Поиск" />
         </div>
         <a href="#" class="image-link">
-          <img src="{% static 'accounts/images/support/support_center_block.png' %}" alt="Справочный центр" class="info-image-support-center">
+          <img
+            src="{% static 'accounts/images/support/support_center_block.png' %}"
+            alt="Справочный центр"
+            class="info-image-support-center"
+          />
         </a>
       </section>
     </div>

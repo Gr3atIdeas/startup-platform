@@ -1,46 +1,46 @@
-@import url(https://fonts.googleapis.com/css?family=Open+Sans:400|Raleway:300);
+@import 'https://fonts.googleapis.com/css?family=Open+Sans:400|Raleway:300';
 
 :root {
   --btn-width: auto;
   --btn-height: auto;
   --btn-padding: 0.5em 1.5em;
   --btn-border-radius: 8px;
-  --accent-color: #7B61FF;
-  --accent-hover: #6551D9;
-  --accent-active: #5441B3;
-  --light-color: #FFFFFF;
-  --dark-color: #333333;
+  --accent-color: #7b61ff;
+  --accent-hover: #6551d9;
+  --accent-active: #5441b3;
+  --light-color: #fff;
+  --dark-color: #333;
   --btn-transition: all 0.3s linear;
-  --btn-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  --btn-hover-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  --btn-shadow: 0 4px 6px rgb(0 0 0 / 10%);
+  --btn-hover-shadow: 0 6px 12px rgb(0 0 0 / 15%);
   --gray-bg: #f8f9fa;
   --gray-hover: #e9ecef;
   --text-color: #343a40;
-  --white: #FFFFFF;
+  --white: #fff;
   --blue-gradient: linear-gradient(135deg, #0074cc 0%, #4a94e6 100%);
-  --box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+  --box-shadow: 0 2px 5px rgb(0 0 0 / 15%);
   --transition-time: 0.3s;
   --footer-btn-radius: 4px;
   --logo-size: 32px;
-  --yellow-color: #FFEF2B;
+  --yellow-color: #ffef2b;
   --standard-button-border: #004e9f;
   --exception-button-border: #ffef2b;
 }
 
-button:not(.login-btn):not(.join-button):not(.plyr__control), 
-.btn:not(.login-btn):not(.join-button):not(.plyr__control), 
-input[type="submit"]:not(.login-btn):not(.join-button):not(.plyr__control), 
-input[type="button"]:not(.login-btn):not(.join-button):not(.plyr__control), 
-.catalog-search-btn:not(.login-btn):not(.join-button):not(.plyr__control), 
-.show-button:not(.login-btn):not(.join-button):not(.plyr__control), 
-.detail-button:not(.login-btn):not(.join-button):not(.plyr__control), 
-.create-startup-btn:not(.login-btn):not(.join-button):not(.plyr__control), 
-.logout-btn:not(.login-btn):not(.join-button):not(.plyr__control) {
+button:not(.login-btn, .join-button, .plyr__control),
+.btn:not(.login-btn, .join-button, .plyr__control),
+input[type='submit']:not(.login-btn, .join-button, .plyr__control),
+input[type='button']:not(.login-btn, .join-button, .plyr__control),
+.catalog-search-btn:not(.login-btn, .join-button, .plyr__control),
+.show-button:not(.login-btn, .join-button, .plyr__control),
+.detail-button:not(.login-btn, .join-button, .plyr__control),
+.create-startup-btn:not(.login-btn, .join-button, .plyr__control),
+.logout-btn:not(.login-btn, .join-button, .plyr__control) {
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-size: 16px;
   font-weight: 500;
   text-align: center;
@@ -59,41 +59,42 @@ input[type="button"]:not(.login-btn):not(.join-button):not(.plyr__control),
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: var(--btn-padding, 0.5em 1.5em); 
-  border-radius: var(--btn-border-radius, 8px); 
-  font-family: 'Unbounded', sans-serif;
+  padding: var(--btn-padding, 0.5em 1.5em);
+  border-radius: var(--btn-border-radius, 8px);
+  font-family: Unbounded, sans-serif;
   font-size: 16px;
   font-weight: 500;
   text-align: center;
   text-decoration: none;
   cursor: pointer;
-  overflow: hidden; 
+  overflow: hidden;
   border: none !important;
   outline: none;
   background-color: transparent !important;
-  color: #FFFFFF !important;
-  z-index: 1; 
+  color: #fff !important;
+  z-index: 1;
 }
 
-.login-btn, .join-button {
+.login-btn,
+.join-button {
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: var(--btn-padding, 0.5em 1.5em); 
-  border-radius: var(--btn-border-radius, 8px); 
-  font-family: 'Unbounded', sans-serif;
+  padding: var(--btn-padding, 0.5em 1.5em);
+  border-radius: var(--btn-border-radius, 8px);
+  font-family: Unbounded, sans-serif;
   font-size: 16px;
   font-weight: 500;
   text-align: center;
   text-decoration: none;
   cursor: pointer;
-  overflow: hidden; 
+  overflow: hidden;
   border: 1px solid var(--exception-button-border) !important;
   outline: none;
-  background-color: #FFEF2B !important;
-  color: #000000 !important;
-  z-index: 1; 
+  background-color: #ffef2b !important;
+  color: #000 !important;
+  z-index: 1;
 }
 
 .nav-menu a {
@@ -116,8 +117,8 @@ span.wave-effect {
 
 button > *:not(.wave-effect),
 .btn > *:not(.wave-effect),
-input[type="submit"] > *:not(.wave-effect),
-input[type="button"] > *:not(.wave-effect),
+input[type='submit'] > *:not(.wave-effect),
+input[type='button'] > *:not(.wave-effect),
 .catalog-search-btn > *:not(.wave-effect),
 .show-button > *:not(.wave-effect),
 .detail-button > *:not(.wave-effect),
@@ -128,65 +129,104 @@ input[type="button"] > *:not(.wave-effect),
 .nav-menu a > *:not(.wave-effect) {
   position: relative;
   z-index: 2;
-  transition: color 0.2s linear; 
+  transition: color 0.2s linear;
 }
 
-button::before, button::after,
-.btn::before, .btn::after,
-.join-button::before, .join-button::after,
-.login-btn::before, .login-btn::after,
-.create-startup-btn::before, .create-startup-btn::after,
-.logout-btn::before, .logout-btn::after {
-    position: relative;
-    z-index: 1; 
+button::before,
+button::after,
+.btn::before,
+.btn::after,
+.join-button::before,
+.join-button::after,
+.login-btn::before,
+.login-btn::after,
+.create-startup-btn::before,
+.create-startup-btn::after,
+.logout-btn::before,
+.logout-btn::after {
+  position: relative;
+  z-index: 1;
 }
 
-body button:not(.login-btn):not(.join-button):not(.plyr__control).wave-active,
-body .btn:not(.login-btn):not(.join-button):not(.plyr__control).wave-active,
-body input[type="submit"]:not(.login-btn):not(.join-button):not(.plyr__control).wave-active,
-body input[type="button"]:not(.login-btn):not(.join-button):not(.plyr__control).wave-active,
-body .catalog-search-btn:not(.login-btn):not(.join-button):not(.plyr__control).wave-active,
-body .show-button:not(.login-btn):not(.join-button):not(.plyr__control).wave-active,
-body .detail-button:not(.login-btn):not(.join-button):not(.plyr__control).wave-active,
-body .create-startup-btn:not(.login-btn):not(.join-button):not(.plyr__control).wave-active,
-body .logout-btn:not(.login-btn):not(.join-button):not(.plyr__control).wave-active {
-  color: #ffffff !important;
+body button:not(.login-btn, .join-button, .plyr__control).wave-active,
+body .btn:not(.login-btn, .join-button, .plyr__control).wave-active,
+body
+  input[type='submit']:not(
+    .login-btn,
+    .join-button,
+    .plyr__control
+  ).wave-active,
+body
+  input[type='button']:not(
+    .login-btn,
+    .join-button,
+    .plyr__control
+  ).wave-active,
+body
+  .catalog-search-btn:not(.login-btn, .join-button, .plyr__control).wave-active,
+body .show-button:not(.login-btn, .join-button, .plyr__control).wave-active,
+body .detail-button:not(.login-btn, .join-button, .plyr__control).wave-active,
+body
+  .create-startup-btn:not(.login-btn, .join-button, .plyr__control).wave-active,
+body .logout-btn:not(.login-btn, .join-button, .plyr__control).wave-active {
+  color: #fff !important;
 }
 
 body .login-btn.wave-active,
 body .join-button.wave-active {
-  color: #000000 !important;
+  color: #000 !important;
 }
 
-body button:not(.login-btn):not(.join-button):not(.plyr__control).wave-active *:not(.wave-effect),
-body .btn:not(.login-btn):not(.join-button):not(.plyr__control).wave-active *:not(.wave-effect),
-body input[type="submit"]:not(.login-btn):not(.join-button):not(.plyr__control).wave-active *:not(.wave-effect),
-body input[type="button"]:not(.login-btn):not(.join-button):not(.plyr__control).wave-active *:not(.wave-effect),
-body .catalog-search-btn:not(.login-btn):not(.join-button):not(.plyr__control).wave-active *:not(.wave-effect),
-body .show-button:not(.login-btn):not(.join-button):not(.plyr__control).wave-active *:not(.wave-effect),
-body .detail-button:not(.login-btn):not(.join-button):not(.plyr__control).wave-active *:not(.wave-effect),
-body .create-startup-btn:not(.login-btn):not(.join-button):not(.plyr__control).wave-active *:not(.wave-effect),
-body .logout-btn:not(.login-btn):not(.join-button):not(.plyr__control).wave-active *:not(.wave-effect),
-body .nav-menu a:not(.login-btn):not(.join-button):not(.plyr__control).wave-active *:not(.wave-effect) {
-  color: #ffffff !important;
+body
+  button:not(.login-btn, .join-button, .plyr__control).wave-active
+  *:not(.wave-effect),
+body
+  .btn:not(.login-btn, .join-button, .plyr__control).wave-active
+  *:not(.wave-effect),
+body
+  input[type='submit']:not(.login-btn, .join-button, .plyr__control).wave-active
+  *:not(.wave-effect),
+body
+  input[type='button']:not(.login-btn, .join-button, .plyr__control).wave-active
+  *:not(.wave-effect),
+body
+  .catalog-search-btn:not(.login-btn, .join-button, .plyr__control).wave-active
+  *:not(.wave-effect),
+body
+  .show-button:not(.login-btn, .join-button, .plyr__control).wave-active
+  *:not(.wave-effect),
+body
+  .detail-button:not(.login-btn, .join-button, .plyr__control).wave-active
+  *:not(.wave-effect),
+body
+  .create-startup-btn:not(.login-btn, .join-button, .plyr__control).wave-active
+  *:not(.wave-effect),
+body
+  .logout-btn:not(.login-btn, .join-button, .plyr__control).wave-active
+  *:not(.wave-effect),
+body
+  .nav-menu
+  a:not(.login-btn, .join-button, .plyr__control).wave-active
+  *:not(.wave-effect) {
+  color: #fff !important;
   position: relative;
   z-index: 2;
 }
 
 body .login-btn.wave-active *:not(.wave-effect),
 body .join-button.wave-active *:not(.wave-effect) {
-  color: #000000 !important;
+  color: #000 !important;
   position: relative;
   z-index: 2;
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
   :root {
     --btn-padding: 0.4em 1.2em;
   }
 }
 
-@media (max-width: 480px) {
+@media (width <= 480px) {
   :root {
     --btn-padding: 0.3em 1em;
   }
@@ -195,4 +235,4 @@ body .join-button.wave-active *:not(.wave-effect) {
 .button-secondary:hover {
   color: #000;
   transition: color 0.2s linear;
-} 
+}

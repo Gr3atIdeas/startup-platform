@@ -1,82 +1,112 @@
-{% load file_tags %}
-{% load static %}
-{% load humanize %}
-{% load accounts_extras %}
+{% load file_tags %} {% load static %} {% load humanize %} {% load
+accounts_extras %} {% for startup in page_obj %}
+<div class="startup-card" data-startup-id="{{ startup.startup_id }}">
+  <!-- Надпись "Франшиза" заменена на "Стартап" -->
+  <span class="startup-franchise-tag">Стартап</span>
+  <div class="startup-image">
+    {% if startup.planet_image %}
+    <img
+      src="https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/{{ startup.planet_image }}"
+      alt="Планета {{ startup.title }}"
+      class="planet-image"
+    />
+    {% else %}
+    <div class="startup-image-placeholder">
+      {{ startup.title|make_list|first|upper }}
+    </div>
+    {% endif %}
+  </div>
 
-{% for startup in page_obj %}
-  <div class="startup-card" data-startup-id="{{ startup.startup_id }}">
-    <!-- Надпись "Франшиза" заменена на "Стартап" -->
-    <span class="startup-franchise-tag">Стартап</span>
-    <div class="startup-image">
-      {% if startup.planet_image %}
-        <img src="https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/{{ startup.planet_image }}" alt="Планета {{ startup.title }}" class="planet-image">
+  <div class="startup-card-inner">
+    <!-- Добавляем контейнер для названия и логотипа -->
+    <div class="startup-title-container">
+      {% if startup.logo_urls %}
+      <div class="startup-logo">
+        <img
+          src="{% get_file_url_tag startup.logo_urls.0 startup.startup_id 'logo' %}"
+          alt="Логотип {{ startup.title }}"
+        />
+      </div>
+      {% endif %}
+      <h3 class="startup-title">{{ startup.title }}</h3>
+    </div>
+    <div class="startup-rating-comments">
+      <span class="rating-text"
+        >Рейтинг {{ startup.get_average_rating|floatformat:1 }}/5 ({{
+        startup.total_voters }})</span
+      >
+      <span class="comments-count">
+        <svg
+          class="comment-icon"
+          viewBox="0 0 16 15"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M14.222 0H1.778C0.796 0 0 .734 0 1.64v8.197c0 .906.796 1.64 1.778 1.64h9.778l3.556 3.28V11.477h.888c.982 0 1.778-.734 1.778-1.64V1.64C16 .734 15.204 0 14.222 0z"
+            fill="currentColor"
+          />
+        </svg>
+        <span>{{ startup.comments.count|default:0 }}</span>
+      </span>
+    </div>
+
+    <div class="startup-category-row">
+      {% if startup.direction and startup.direction.direction_name %}
+      <span class="category-tag-figma"
+        >{{ startup.direction.direction_name|translate_category }}</span
+      >
       {% else %}
-        <div class="startup-image-placeholder">
-          {{ startup.title|make_list|first|upper }}
-        </div>
+      <span class="category-tag-figma category-tag-placeholder"
+        >Категория не указана</span
+      >
       {% endif %}
     </div>
 
-    <div class="startup-card-inner">
-      <!-- Добавляем контейнер для названия и логотипа -->
-      <div class="startup-title-container">
-        {% if startup.logo_urls %}
-          <div class="startup-logo">
-            <img src="{% get_file_url_tag startup.logo_urls.0 startup.startup_id 'logo' %}" alt="Логотип {{ startup.title }}">
-          </div>
-        {% endif %}
-        <h3 class="startup-title">{{ startup.title }}</h3>
-      </div>
-      <div class="startup-rating-comments">
-        <span class="rating-text">Рейтинг {{ startup.get_average_rating|floatformat:1 }}/5 ({{ startup.total_voters }})</span>
-        <span class="comments-count">
-          <svg class="comment-icon" viewBox="0 0 16 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M14.222 0H1.778C0.796 0 0 .734 0 1.64v8.197c0 .906.796 1.64 1.778 1.64h9.778l3.556 3.28V11.477h.888c.982 0 1.778-.734 1.778-1.64V1.64C16 .734 15.204 0 14.222 0z" fill="currentColor"/>
-          </svg>
-          <span>{{ startup.comments.count|default:0 }}</span>
-        </span>
-      </div>
-
-      <div class="startup-category-row">
-        {% if startup.direction and startup.direction.direction_name %}
-          <span class="category-tag-figma">{{ startup.direction.direction_name|translate_category }}</span>
-        {% else %}
-          <span class="category-tag-figma category-tag-placeholder">Категория не указана</span>
-        {% endif %}
-      </div>
-
-      <!-- Прогресс-бар ТОЧНО как на startup_detail.html -->
-      {% with progress=startup.get_progress_percentage|default:0 %}
-      <div class="progress-container">
-        <div class="progress-bar-visual">
-          <div class="progress-animation-container" style="width: {{ progress }}%;">
-            <div class="progress-planets"></div>
-          </div>
-          <span class="progress-percentage">{{ progress|floatformat:0 }}%</span>
+    <!-- Прогресс-бар ТОЧНО как на startup_detail.html -->
+    {% with progress=startup.get_progress_percentage|default:0 %}
+    <div class="progress-container">
+      <div class="progress-bar-visual">
+        <div
+          class="progress-animation-container"
+          style="width: {{ progress }}%;"
+        >
+          <div class="progress-planets"></div>
         </div>
+        <span class="progress-percentage">{{ progress|floatformat:0 }}%</span>
       </div>
-      {% endwith %}
-
-      <div class="investment-type">
-        {% if startup.both_mode %}Инвестирование+Выкуп
-        {% elif startup.only_invest %}Только инвестирование
-        {% elif startup.only_buy %}Только выкуп
-        {% else %}Тип не указан
-        {% endif %}
-      </div>
-
-      <div class="funding-goal-container-figma">
-        <span class="funding-goal-text-figma">Цель: {{ startup.funding_goal|default:0|floatformat:0|intcomma }} ₽</span>
-      </div>
-
-      <div class="investor-count-container-figma">
-        <i class="fas fa-users investor-icon-figma"></i>
-        <span class="investor-count-text-figma">Инвестировало ({{ startup.get_investors_count }})</span>
-      </div>
-
-      <p class="startup-short-description">{{ startup.short_description|truncatewords:15|default:"" }}</p>
-
-      <a href="{% url 'startup_detail' startup_id=startup.startup_id %}" class="detail-link" aria-label="Подробнее о {{ startup.title }}"></a>
     </div>
+    {% endwith %}
+
+    <div class="investment-type">
+      {% if startup.both_mode %}Инвестирование+Выкуп {% elif startup.only_invest
+      %}Только инвестирование {% elif startup.only_buy %}Только выкуп {% else
+      %}Тип не указан {% endif %}
+    </div>
+
+    <div class="funding-goal-container-figma">
+      <span class="funding-goal-text-figma"
+        >Цель: {{ startup.funding_goal|default:0|floatformat:0|intcomma }}
+        ₽</span
+      >
+    </div>
+
+    <div class="investor-count-container-figma">
+      <i class="fas fa-users investor-icon-figma"></i>
+      <span class="investor-count-text-figma"
+        >Инвестировало ({{ startup.get_investors_count }})</span
+      >
+    </div>
+
+    <p class="startup-short-description">
+      {{ startup.short_description|truncatewords:15|default:"" }}
+    </p>
+
+    <a
+      href="{% url 'startup_detail' startup_id=startup.startup_id %}"
+      class="detail-link"
+      aria-label="Подробнее о {{ startup.title }}"
+    ></a>
   </div>
+</div>
 {% endfor %}

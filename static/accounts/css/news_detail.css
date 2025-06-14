@@ -1,12 +1,13 @@
 body {
   background-color: white !important; /* Ensuring white background for the page */
 }
+
 .news-detail-container {
   display: flex;
   flex-direction: column;
   padding: 20px 71px; /* Внутренние отступы контейнера контента */
-  gap: 20px; 
-  
+  gap: 20px;
+
   /* Центрируем сам блок контента на странице */
   max-width: 1303px; /* Ограничиваем ширину контентной части, как у хедера */
   margin-left: auto;
@@ -22,11 +23,9 @@ body {
   align-items: flex-start;
   display: inline-flex;
 }
+
 .back-button {
-  padding-top: 5px; /* Adjusted for better alignment within its own block */
-  padding-bottom: 5px;
-  padding-left: 12px;
-  padding-right: 12px;
+  padding: 5px 12px; /* Adjusted for better alignment within its own block */
   border-radius: 8px;
   justify-content: flex-start;
   align-items: center;
@@ -35,26 +34,30 @@ body {
   cursor: pointer;
   text-decoration: none;
 }
+
 .back-button-arrow {
   width: 16px;
   height: 16px;
   position: relative;
   overflow: hidden;
 }
-.back-button-arrow-inner { /* Simplified arrow, consider using SVG or font icon */
+
+.back-button-arrow-inner {
+  /* Simplified arrow, consider using SVG or font icon */
   width: 9.33px;
   height: 9.33px;
   left: 3.33px;
   top: 3.33px;
   position: absolute;
-  border-left: 1.60px black solid;
-  border-bottom: 1.60px black solid;
+  border-left: 1.6px black solid;
+  border-bottom: 1.6px black solid;
   transform: rotate(45deg);
 }
+
 .back-button-text {
   color: black;
   font-size: 12px;
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-weight: 300;
   letter-spacing: 0.12px;
   word-wrap: break-word;
@@ -104,6 +107,7 @@ body {
   gap: 23px;
   display: inline-flex;
 }
+
 .author-details {
   align-self: stretch;
   justify-content: flex-start;
@@ -111,12 +115,14 @@ body {
   gap: 11px;
   display: inline-flex;
 }
+
 .author-avatar {
   width: 39px;
   height: 39px;
   border-radius: 9999px;
   object-fit: cover;
 }
+
 .author-name-time {
   flex-direction: column;
   justify-content: flex-start;
@@ -124,18 +130,20 @@ body {
   gap: 8px;
   display: inline-flex;
 }
+
 .author-name {
   color: #191919;
   font-size: 16px;
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-weight: 400;
   line-height: 16px;
   word-wrap: break-word;
 }
+
 .publish-time {
-  color: rgba(0, 0, 0, 0.20);
+  color: rgb(0 0 0 / 20%);
   font-size: 12px;
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-weight: 300;
   letter-spacing: 0.12px;
   word-wrap: break-word;
@@ -147,27 +155,32 @@ body {
   gap: 16px; /* Gap between likes and comments */
   display: inline-flex;
 }
+
 .stat-item {
   justify-content: flex-start;
   align-items: center;
   gap: 8px;
   display: flex;
 }
-.stat-icon { /* General class for icons */
+
+.stat-icon {
+  /* General class for icons */
   width: 24px;
   height: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
+
 .stat-icon img {
-    max-width: 100%;
-    max-height: 100%;
+  max-width: 100%;
+  max-height: 100%;
 }
+
 .stat-text {
   color: black;
   font-size: 14px;
-  font-family: 'Circe', sans-serif;
+  font-family: Circe, sans-serif;
   font-weight: 400;
   line-height: 18px;
   word-wrap: break-word;
@@ -180,24 +193,27 @@ body {
   gap: 5px;
   display: inline-flex;
 }
+
 .rating-text {
   text-align: right;
-  color: #A9A9A9;
+  color: #a9a9a9;
   font-size: 12px;
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-weight: 300;
   letter-spacing: 0.12px;
   word-wrap: break-word;
 }
 
 /* Rating Stars (Planets) styling based on startup_detail.html */
-.rating-icons { /* This is the container for rating-stars */
+.rating-icons {
+  /* This is the container for rating-stars */
   display: flex;
   align-items: center;
   gap: 5px; /* Gap between planet icons, matches original user HTML */
 }
 
-.rating-stars { /* This will hold multiple rating-icon-container */
+.rating-stars {
+  /* This will hold multiple rating-icon-container */
   display: flex;
   gap: 2px; /* Small gap between individual stars/planets */
 }
@@ -205,7 +221,7 @@ body {
 .rating-icon-container {
   position: relative;
   display: inline-block;
-  width: 20px;  /* Width from user's original planet icon */
+  width: 20px; /* Width from user's original planet icon */
   height: 14px; /* Height from user's original planet icon */
   cursor: default;
 }
@@ -222,27 +238,35 @@ body {
 .rating-icon-container .icon-filled {
   opacity: 0; /* По умолчанию скрыта */
   z-index: 2;
+
   /* Цвет для заполненной иконки можно задать через fill in SVG or CSS filters if SVG allows */
+
   /* filter: none; /* Сбрасываем фильтры для заполненной */
 }
-.rating-icon-container .icon-empty { /* Теперь это тоже full_filled_planet.svg */
+
+.rating-icon-container .icon-empty {
+  /* Теперь это тоже full_filled_planet.svg */
   opacity: 1; /* По умолчанию видима */
   z-index: 1;
+
   /* Делаем ее полупрозрачной или применяем фильтр для вида "контура" или "серой" */
   filter: grayscale(100%) opacity(35%); /* Пример: серая и полупрозрачная */
+
   /* Или просто opacity: 0.3; для простоты */
 }
 
 /* Logic to show filled/empty based on a parent class or data attribute */
-/* Example: if a parent .rating-stars has data-rating="4" 
-   then first 4 .rating-icon-container should show .icon-filled 
-   This requires JS or more complex CSS if static. 
+
+/* Example: if a parent .rating-stars has data-rating="4"
+   then first 4 .rating-icon-container should show .icon-filled
+   This requires JS or more complex CSS if static.
    For now, manually adding a class like 'is-filled' to demo */
 
 .rating-icon-container.is-filled .icon-filled {
   opacity: 1;
   filter: none; /* Убираем фильтры для заполненной иконки */
 }
+
 .rating-icon-container.is-filled .icon-empty {
   opacity: 0;
 }
@@ -251,24 +275,31 @@ body {
 .rating-icon-container.is-empty .icon-filled {
   opacity: 0;
 }
-.rating-icon-container.is-empty .icon-empty { /* icon-empty теперь это full_filled_planet.svg */
+
+.rating-icon-container.is-empty .icon-empty {
+  /* icon-empty теперь это full_filled_planet.svg */
   opacity: 1; /* Уже задано выше, но для ясности */
   filter: grayscale(100%) opacity(35%); /* Убедимся, что стиль применяется */
 }
 
 /* For the one outlined planet from user's original HTML */
 .rating-icon-container.is-outline .icon-empty {
-    opacity: 1;
-    /* To truly make it an outline from a filled SVG, might need filter or specific SVG for outline */
-    /* For now, this relies on icon-empty being an outline version if different from icon-filled */
-    /* If using same full_filled_planet.svg for both, this will just show it. */
-    /* A simple border can simulate an outline on the container if needed: */
-    /* border: 0.50px #FFB700 solid; */ 
-}
-.rating-icon-container.is-outline .icon-filled {
-    opacity: 0;
+  opacity: 1;
+
+  /* To truly make it an outline from a filled SVG, might need filter or specific SVG for outline */
+
+  /* For now, this relies on icon-empty being an outline version if different from icon-filled */
+
+  /* If using same full_filled_planet.svg for both, this will just show it. */
+
+  /* A simple border can simulate an outline on the container if needed: */
+
+  /* border: 0.50px #FFB700 solid; */
 }
 
+.rating-icon-container.is-outline .icon-filled {
+  opacity: 0;
+}
 
 .article-main-image {
   align-self: stretch;
@@ -281,7 +312,7 @@ body {
   align-self: stretch;
   color: black;
   font-size: 35px;
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-weight: 600;
   line-height: 35px; /* Ensure this is intended, might be tight */
   word-wrap: break-word;
@@ -291,13 +322,13 @@ body {
 }
 
 .delete-news-btn {
-  background: #FF6161;
-  color: #FFFFFF;
+  background: #ff6161;
+  color: #fff;
   border: none;
   padding: 8px 15px;
   border-radius: 5px;
   cursor: pointer;
-  font-family: 'Circe', sans-serif;
+  font-family: Circe, sans-serif;
   font-size: 14px;
   margin-left: 20px; /* Spacing from title */
   white-space: nowrap;
@@ -311,6 +342,7 @@ body {
   gap: 24px;
   display: flex;
 }
+
 .content-row {
   align-self: stretch;
   justify-content: flex-start; /* Default left alignment for items */
@@ -318,6 +350,7 @@ body {
   gap: 26px;
   display: flex; /* Use flex for rows */
 }
+
 .content-image-block {
   flex-direction: column;
   justify-content: center;
@@ -326,39 +359,45 @@ body {
   display: inline-flex; /* As per original */
   flex-shrink: 0; /* Prevent image block from shrinking */
 }
+
 .content-image {
   width: 267px;
   height: 267px;
   object-fit: cover;
   border-radius: 28px;
 }
+
 .image-caption {
-  color: rgba(0, 0, 0, 0.20);
+  color: rgb(0 0 0 / 20%);
   font-size: 12px;
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-weight: 300;
   letter-spacing: 0.12px;
   word-wrap: break-word;
 }
+
 .content-text {
   /* width: 383px; Removed fixed width to allow flex to manage it */
   flex-grow: 1; /* Allow text to take available space */
   color: black;
   font-size: 14px;
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-weight: 300;
   line-height: 1.6; /* Improved readability */
   word-wrap: break-word;
 }
-.content-text-full-width { /* For text blocks that span the full width */
+
+.content-text-full-width {
+  /* For text blocks that span the full width */
   align-self: stretch;
   color: black;
   font-size: 14px;
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-weight: 300;
   line-height: 1.6;
   word-wrap: break-word;
 }
+
 .content-image-large {
   align-self: stretch;
   height: 314px;
@@ -373,6 +412,7 @@ body {
   gap: 16px; /* Gap between different stats */
   display: inline-flex;
 }
+
 /* Uses .stat-item, .stat-icon, .stat-text from above */
 
 /* Sidebar - Similar Articles */
@@ -385,12 +425,13 @@ body {
   gap: 25px; /* Adjusted gap from 45px to 25px for better fit with cards */
   display: inline-flex; /* As per original, but flex might be better if items vary */
 }
+
 .sidebar-title {
   /* width: 409px; -- not needed as parent has width */
   height: auto; /* Adjusted from 15px */
   color: black;
   font-size: 35px;
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-weight: 600;
   line-height: 35px;
   word-wrap: break-word;
@@ -399,6 +440,7 @@ body {
 
 .similar-article-card {
   width: 100%; /* Takes width of parent .sidebar-similar-articles */
+
   /* height: 420px; Fixed height - removing for more dynamic content */
   position: relative;
   overflow: hidden;
@@ -406,8 +448,9 @@ body {
   background: #f9f9f9; /* Added a light background for visibility */
   display: flex;
   flex-direction: column;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 5px rgb(0 0 0 / 5%);
 }
+
 .similar-article-image {
   width: 100%;
   height: 214px;
@@ -415,26 +458,29 @@ body {
   border-top-left-radius: 10px; /* Match card radius */
   border-top-right-radius: 10px;
 }
+
 .similar-article-content {
-    padding: 15px; /* Adjusted padding */
-    display: flex;
-    flex-direction: column;
-    gap: 8px; /* Space between title and description */
-    flex-grow: 1; /* Allows content to fill remaining space */
+  padding: 15px; /* Adjusted padding */
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* Space between title and description */
+  flex-grow: 1; /* Allows content to fill remaining space */
 }
+
 .similar-article-title {
   color: black;
   font-size: 20px; /* From user HTML */
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-weight: 400; /* From user HTML */
   line-height: 1.3; /* Adjusted for better fit */
   word-wrap: break-word;
   margin-bottom: 5px; /* Space below title, was 10px */
 }
+
 .similar-article-description {
   color: black; /* From user HTML */
   font-size: 14px; /* From user HTML */
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-weight: 300; /* From user HTML */
   line-height: 1.5; /* Adjusted for readability */
   word-wrap: break-word;
@@ -447,16 +493,19 @@ body {
 }
 
 /* Ad Label Styling - based on news.css .ad-label-on-image */
-.ad-label-on-image { /* Replaces .advertisement-badge from previous version */
+.ad-label-on-image {
+  /* Replaces .advertisement-badge from previous version */
   position: absolute;
   top: 10px; /* Positioned at the top of the image */
   right: 10px;
-  background-color: rgba(0, 0, 0, 0.65); /* Semi-transparent black, slightly darker */
+  background-color: rgb(
+    0 0 0 / 65%
+  ); /* Semi-transparent black, slightly darker */
   color: white;
   padding: 5px 10px; /* Slightly more padding */
   border-radius: 5px;
   font-size: 12px; /* Was 10px, user request for ad-text was 12px */
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-weight: 300;
   letter-spacing: 0.12px; /* From user request for ad-text */
   display: flex;
@@ -466,52 +515,63 @@ body {
   line-height: 1; /* For better vertical alignment of text */
 }
 
-.ad-label-on-image img { /* Icon inside the ad label */
+.ad-label-on-image img {
+  /* Icon inside the ad label */
   width: 16px; /* Adjusted icon size */
   height: 16px;
   filter: brightness(0) invert(1); /* To make a dark icon white, assuming alert-circle.svg is dark */
 }
 
-
 /* General utility for Unbounded font if not globally set */
-.font-unbounded { font-family: 'Unbounded', sans-serif; }
-.font-circe { font-family: 'Circe', sans-serif; }
+.font-unbounded {
+  font-family: Unbounded, sans-serif;
+}
+.font-circe {
+  font-family: Circe, sans-serif;
+}
 
 /* FontAwesome heart for likes */
 .like-button {
   background: none;
   border: none;
   font-size: 16px; /* Consistent with .stat-text */
-  color: #7B61FF;
+  color: #7b61ff;
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 8px; /* Match other stat items */
   padding: 0; /* Remove default button padding */
-  font-family: 'Circe', sans-serif; /* Match stat-text */
+  font-family: Circe, sans-serif; /* Match stat-text */
   font-weight: 400; /* Match stat-text */
 }
+
 .like-button.liked .fa-heart {
-  color: #FF6161; /* Red when liked */
+  color: #ff6161; /* Red when liked */
 }
+
 .like-button .fa-heart {
-    font-size: 20px; /* Slightly larger icon */
+  font-size: 20px; /* Slightly larger icon */
 }
+
 .like-count {
-    color: black; /* Match stat-text color */
-    font-size: 14px; /* Match stat-text size */
+  color: black; /* Match stat-text color */
+  font-size: 14px; /* Match stat-text size */
 }
 
 .similar-articles-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
 }
 
 /* Задаем белый фон и убираем padding для main.content на страницах деталей новостей */
 /* main.content:has(.page-content-wrapper-white) {
   background-color: white !important; */ /* Убеждаемся, что фон белый */
-/*  padding: 0 !important; */ /* Убираем стандартные отступы main.content */
+
+/*  padding: 0 !important; */
+
+/* Убираем стандартные отступы main.content */
+
 /* } */
 
 /* Заставляем main.content быть полноэкранным и белым на этой странице */
@@ -524,33 +584,38 @@ main.content:has(.page-content-wrapper-white) {
 }
 
 .page-content-wrapper-white {
-    /* background-color: white; */ /* Больше не нужен, родитель белый */
-    width: 100%; 
-    box-sizing: border-box; 
-    
-    margin: 0; /* Сбрасываем предыдущие попытки */
-    padding: 20px 0; /* Отступы сверху/снизу для всего блока контента от хедера/футера */
-    /* min-height: 100%; */ /* Больше не нужен */
+  /* background-color: white; */
+
+  /* Больше не нужен, родитель белый */
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0; /* Сбрасываем предыдущие попытки */
+  padding: 20px 0; /* Отступы сверху/снизу для всего блока контента от хедера/футера */
+
+  /* min-height: 100%; */
+
+  /* Больше не нужен */
 }
 
 /* Comments Section Styles */
+
 /*
 .comments-section-wrapper {
   width: 100%;
   display: flex;
-  justify-content: center; 
-  margin-top: 30px; 
-  margin-bottom: 30px; 
+  justify-content: center;
+  margin-top: 30px;
+  margin-bottom: 30px;
 }
 */
 
 .comments-section {
   width: 100%;
-  max-width: 800px; 
+  max-width: 800px;
   display: flex;
   flex-direction: column;
-  gap: 25px; 
-  font-family: 'Unbounded', sans-serif;
+  gap: 25px;
+  font-family: Unbounded, sans-serif;
   margin-top: 30px; /* ADDED */
   margin-bottom: 30px; /* ADDED */
 }
@@ -647,47 +712,52 @@ main.content:has(.page-content-wrapper-white) {
 }
 
 .comment-date {
-  color: rgba(0, 0, 0, 0.4); /* Сделал цвет чуть темнее, var(--Color1, rgba(0, 0, 0, 0.20)) был очень светлым */
+  color: rgb(
+    0 0 0 / 40%
+  ); /* Сделал цвет чуть темнее, var(--Color1, rgba(0, 0, 0, 0.20)) был очень светлым */
   font-size: 12px;
   font-weight: 300;
   letter-spacing: 0.12px;
 }
 
 .comments-show-more-btn-container {
-    display: flex;
-    justify-content: flex-start; /* Кнопка по левому краю списка комм-ев */
-    margin-top: 10px;
+  display: flex;
+  justify-content: flex-start; /* Кнопка по левому краю списка комм-ев */
+  margin-top: 10px;
 }
 
 .comments-show-more-btn {
   height: 40px;
   padding: 0 25px;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 4px rgb(0 0 0 / 15%);
   border-radius: 10px;
-  border: 1px solid #004E9F;
+  border: 1px solid #004e9f;
   background-color: transparent;
   justify-content: flex-start;
   align-items: center;
   gap: 8px;
   display: inline-flex;
   cursor: pointer;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    box-shadow 0.3s ease,
+    color 0.3s ease;
 }
 
 .comments-show-more-btn:hover {
-    background-color: rgba(0, 78, 159, 0.1);
-    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
+  background-color: rgb(0 78 159 / 10%);
+  box-shadow: 0 3px 6px rgb(0 0 0 / 20%);
 }
 
 .comments-show-more-text {
-  color: #004E9F;
+  color: #004e9f;
   font-size: 15px;
   font-weight: 400;
   line-height: 1;
 }
 
 .comments-show-more-icon svg path {
-  fill: #004E9F;
+  fill: #004e9f;
 }
 
 .add-comment-form-container {
@@ -703,9 +773,9 @@ main.content:has(.page-content-wrapper-white) {
   min-height: 100px; /* Минимальная высота */
   background: white;
   border-radius: 10px; /* Скруглил */
-  border: 1px #D0D0D0 solid; /* Сделал рамку светлее */
+  border: 1px #d0d0d0 solid; /* Сделал рамку светлее */
   padding: 10px 15px;
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-size: 14px;
   font-weight: 300;
   line-height: 1.4;
@@ -713,15 +783,15 @@ main.content:has(.page-content-wrapper-white) {
 }
 
 .add-comment-textarea::placeholder {
-  color: #B0B0B0; /* Сделал плейсхолдер чуть темнее */
+  color: #b0b0b0; /* Сделал плейсхолдер чуть темнее */
   font-weight: 300;
 }
 
 .add-comment-submit-btn {
   height: 40px;
   padding: 0 30px;
-  background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%) !important;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15);
+  background: linear-gradient(0deg, #004e9f 0%, #006edf 100%) !important;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 15%);
   border-radius: 10px;
   border: none !important;
   justify-content: center;
@@ -730,16 +800,18 @@ main.content:has(.page-content-wrapper-white) {
   display: inline-flex;
   align-self: flex-start;
   cursor: pointer;
-  transition: background 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    background 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .add-comment-submit-btn:hover {
-    background: linear-gradient(0deg, #003D7A 0%, #005ABF 100%) !important;
-    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
+  background: linear-gradient(0deg, #003d7a 0%, #005abf 100%) !important;
+  box-shadow: 0 3px 6px rgb(0 0 0 / 20%);
 }
 
 .add-comment-submit-text {
-  color: #F5F5F5 !important;
+  color: #f5f5f5 !important;
   font-size: 15px;
   font-weight: 400;
   line-height: 1;

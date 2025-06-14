@@ -2,22 +2,25 @@
 ::-webkit-scrollbar {
   width: 10px;
 }
+
 ::-webkit-scrollbar-track {
   background: #061e38;
 }
+
 ::-webkit-scrollbar-thumb {
-  background-color: #004E9F;
+  background-color: #004e9f;
   border-radius: 5px;
   border: 2px solid #061e38;
 }
+
 ::-webkit-scrollbar-thumb:hover {
-  background-color: #C6BBFE;
+  background-color: #c6bbfe;
 }
 
 /* Optional: Non-Draggable Images - can be useful */
 img {
   user-select: none;
   -webkit-user-drag: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-} 
+  user-select: none;
+  user-select: none;
+}

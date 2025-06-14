@@ -1,519 +1,731 @@
-{% extends 'accounts/base.html' %}
-{% load static %}
-{% load file_tags %}
-
-{% block title %}Профиль пользователя{% endblock %}
-
-{% block head_extra %}
-  {{ block.super }}
-  <link rel="stylesheet" href="{% static 'accounts/css/profile.css' %}?v={% now 'U' %}" />
-{% endblock %}
-
-{% block content %}
+{% extends 'accounts/base.html' %} {% load static %} {% load file_tags %} {%
+block title %}Профиль пользователя{% endblock %} {% block head_extra %} {{
+block.super }}
+<link
+  rel="stylesheet"
+  href="{% static 'accounts/css/profile.css' %}?v={% now 'U' %}"
+/>
+{% endblock %} {% block content %}
 <div class="profile-page-wrapper">
-    <img class="profile-main-banner" src="{% static 'accounts/images/profile/profile_spacebg.webp' %}" alt="Баннер профиля" />
-    <div class="profile-content-container">
-        <div class="profile-sidebar">
-            <div class="profile-sidebar-user-info-block">
-                <div class="profile-sidebar-avatar-wrapper" id="avatarClickableArea" style="cursor: pointer;" title="Изменить аватар">
-                    <img class="profile-sidebar-avatar-img" src="{% if user.get_profile_picture_url %}{{ user.get_profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}" alt="Аватар пользователя" />
-                    {% if is_own_profile %}
-                    <button class="profile-sidebar-avatar-delete" id="deleteAvatarBtn" title="Удалить аватар" {% if not user.get_profile_picture_url %}style="display: none;"{% endif %}>
-                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 4L4 12M4 4L12 12" stroke="white" stroke-width="2" stroke-linecap="round"/>
-                        </svg>
-                    </button>
-                    {% endif %}
-                </div>
-                <div class="profile-sidebar-text-details">
-                    <div class="profile-sidebar-name-role">
-                        <div class="profile-sidebar-name">
-                            <span>{{ user.first_name|default:"Имя" }}</span>
-                            <span>{{ user.last_name|default:"Фамилия" }}</span>
-                        </div>
-                        <div class="profile-sidebar-role">
-                            <span>
-                                {% if user.role.role_name == "startuper" %}Стартапер
-                                {% elif user.role.role_name == "investor" %}Инвестор
-                                {% elif user.role.role_name == "moderator" %}Модератор
-                                {% elif user.role.role_name == "administrator" %}Администратор
-                                {% else %}{{ user.role.role_name|default:"Роль не указана" }}{% endif %}
-                            </span>
-                        </div>
-                        <div class="profile-sidebar-id">
-                            <span>ID {{ user.user_id|default:"Не указан" }}</span>
-                            <div class="profile-sidebar-copy-icon" title="Копировать ID">
-                                <div class="profile-sidebar-copy-icon-inner1"></div>
-                                <div class="profile-sidebar-copy-icon-inner2"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="profile-sidebar-bio">{{ user.bio|default:"Описание отсутствует."}}</div>
-                    {% if user.website_url %}
-                    <div class="profile-sidebar-website">
-                        <img src="{% static 'accounts/images/profile/Globe_Line.svg' %}" alt="Website" class="profile-sidebar-website-icon-img">
-                        <a href="{{ user.website_url }}" target="_blank" class="profile-sidebar-website-link">{{ user.website_url }}</a>
-                    </div>
-                    {% endif %}
-                    {% if user.social_links.telegram %}
-                    <div class="profile-sidebar-social-link">
-                        <span>Telegram: <a href="https://t.me/{{ user.social_links.telegram|slice:'1:' }}" target="_blank">{{ user.social_links.telegram }}</a></span>
-                    </div>
-                    {% endif %}
-                </div>
-            </div>
-            <div class="profile-sidebar-social-icons-round">
-                <div class="profile-sidebar-social-icon-round-item">
-                    <img src="{% static 'accounts/images/profile/share_icon.svg' %}" alt="Share" class="profile-sidebar-social-icon-img">
-                </div>
-                <div class="profile-sidebar-social-icon-round-item">
-                     <img src="{% static 'accounts/images/profile/dots.svg' %}" alt="More options" class="profile-sidebar-social-icon-img">
-                </div>
-            </div>
-            
-            {% if is_own_profile %}
-            <div class="profile-avatar-upload-section" style="display: none;">
-                <h4>Загрузить аватарку</h4>
-                <form method="post" enctype="multipart/form-data" id="avatarUploadForm" class="avatar-upload-form">
-                    {% csrf_token %}
-                    <input type="file" name="avatar" accept="image/png,image/jpeg" required id="id_avatar_input" class="file-input-hidden">
-                    <button type="button" onclick="document.getElementById('id_avatar_input').click();" class="btn btn-secondary choose-file-btn">Выберите файл</button>
-                    <div id="fileNameDisplay" class="file-name-display">Файл не выбран</div>
-                    <button type="submit" class="btn btn-primary upload-btn">Загрузить</button>
-                </form>
-            </div>
-            {% endif %}
-
-            <a href="#" class="profile-sidebar-my-galaxy-btn">
-                <div class="profile-sidebar-my-galaxy-btn-text">Моя Галактика</div>
-            </a>
-            
-            <div class="profile-sidebar-social-icons-row">
-                <img class="profile-sidebar-social-icon-row-item-img" src="{% static 'accounts/images/profile/vk_icon_social.svg' %}" alt="VK" />
-                <img class="profile-sidebar-social-icon-row-item-img" src="{% static 'accounts/images/profile/linkedin_icon_social.svg' %}" alt="LinkedIn" />
-            </div>
-            <div class="profile-sidebar-divider"></div>
-            <div class="profile-sidebar-date-joined">На площадке с {{ user.created_at|date:"d M Y"|default:"Неизвестно" }}</div>
+  <img
+    class="profile-main-banner"
+    src="{% static 'accounts/images/profile/profile_spacebg.webp' %}"
+    alt="Баннер профиля"
+  />
+  <div class="profile-content-container">
+    <div class="profile-sidebar">
+      <div class="profile-sidebar-user-info-block">
+        <div
+          class="profile-sidebar-avatar-wrapper"
+          id="avatarClickableArea"
+          style="cursor: pointer"
+          title="Изменить аватар"
+        >
+          <img
+            class="profile-sidebar-avatar-img"
+            src="{% if user.get_profile_picture_url %}{{ user.get_profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}"
+            alt="Аватар пользователя"
+          />
+          {% if is_own_profile %}
+          <button
+            class="profile-sidebar-avatar-delete"
+            id="deleteAvatarBtn"
+            title="Удалить аватар"
+            {%
+            if
+            not
+            user.get_profile_picture_url
+            %}style="display: none;"
+            {%
+            endif
+            %}
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M12 4L4 12M4 4L12 12"
+                stroke="white"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+            </svg>
+          </button>
+          {% endif %}
         </div>
-
-        <div class="profile-main-content">
-            {% if is_own_profile %}
-            <div class="profile-main-edit-btn-container">
-                <a href="#" class="profile-main-edit-btn" id="editProfileBtn">
-                    <div class="profile-main-edit-btn-text">Редактировать профиль</div>
-                    <img src="{% static 'accounts/images/profile/Edit_Line.svg' %}" alt="Редактировать" class="profile-main-edit-btn-icon"/>
-                </a>
+        <div class="profile-sidebar-text-details">
+          <div class="profile-sidebar-name-role">
+            <div class="profile-sidebar-name">
+              <span>{{ user.first_name|default:"Имя" }}</span>
+              <span>{{ user.last_name|default:"Фамилия" }}</span>
             </div>
-            {% endif %}
-            <div id="profileViewBlock">
-                <div class="profile-main-startups-section">
-                    <div class="profile-main-tabs">
-                        <div class="profile-main-tab-item active-tab" data-tab="startups">Стартапы</div>
-                        <div class="profile-main-tab-item" data-tab="news">Новости</div>
-                    </div>
-                    
-                    <div class="profile-main-content-tab active-content" id="startupsContent">
-                        {% if startups_page %}
-                            {% for startup in startups_page %}
-                                <div class="profile-main-startup-card-item">
-                                    <div class="profile-main-startup-card-content">
-                                        <div class="profile-main-startup-info">
-                                            <div class="profile-main-startup-name">{{ startup.title }}</div>
-                                            <div class="profile-main-startup-rating-reviews">
-                                                <span class="profile-main-startup-rating">Рейтинг {{ startup.get_average_rating|floatformat:1 }}/5 ({{ startup.total_voters }})</span>
-                                                <div class="profile-main-startup-reviews">
-                                                    <img src="{% static 'accounts/images/profile/chat_icon.svg' %}" alt="Reviews" class="profile-main-startup-review-icon-img">
-                                                    <span>{{ startup.comment_count }}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="profile-main-startup-category-progress">
-                                            <div class="profile-main-startup-category-tag">
-                                                {% if startup.direction.direction_name == "Fastfood" %}Фастфуд
-                                                {% elif startup.direction.direction_name == "Technology" %}Технологии
-                                                {% elif startup.direction.direction_name == "Finance" %}Финансы
-                                                {% else %}{{ startup.direction.direction_name|default:"Без категории" }}
-                                                {% endif %}
-                                            </div>
-                                            <div class="progress-bar-and-text-container">
-                                                <div class="profile-main-startup-progress-bar-bg">
-                                                    <div class="profile-main-startup-progress-bar-fg" style="width: {{ startup.get_progress_percentage }}%;"></div>
-                                                </div>
-                                                <span class="profile-main-startup-progress-text">{{ startup.get_progress_percentage }}%</span>
-                                            </div>
-                                        </div>
-                                        <a href="{% url 'startup_detail' startup.startup_id %}" class="btn btn-primary profile-main-startup-details-btn">Подробнее</a>
-                                    </div>
-                                    <img class="profile-main-startup-image" 
-                                         src="{% if startup.logo_urls and startup.logo_urls.0 %}{% get_file_url_tag startup.logo_urls.0 startup.startup_id 'logo' %}{% else %}{% static 'accounts/images/profile/Rectangle_4196.png' %}{% endif %}" 
-                                         alt="Изображение стартапа" />
-                                </div>
-                                {% if not forloop.last %}
-                                    <div class="profile-main-startup-list-divider"></div>
-                                {% endif %}
-                            {% endfor %}
-                            <!-- Пагинация для стартапов -->
-                            {% if startups_page.paginator.num_pages > 1 %}
-                                <div class="pagination">
-                                    {% if startups_page.has_previous %}
-                                        <a href="?startups_page={{ startups_page.previous_page_number }}{% if news_page.number != 1 %}&news_page={{ news_page.number }}{% endif %}" class="pagination-link">« Предыдущая</a>
-                                    {% endif %}
-                                    {% for num in startups_page.paginator.page_range %}
-                                        {% if num == startups_page.number %}
-                                            <span class="pagination-link active">{{ num }}</span>
-                                        {% else %}
-                                            <a href="?startups_page={{ num }}{% if news_page.number != 1 %}&news_page={{ news_page.number }}{% endif %}" class="pagination-link">{{ num }}</a>
-                                        {% endif %}
-                                    {% endfor %}
-                                    {% if startups_page.has_next %}
-                                        <a href="?startups_page={{ startups_page.next_page_number }}{% if news_page.number != 1 %}&news_page={{ news_page.number }}{% endif %}" class="pagination-link">Следующая »</a>
-                                    {% endif %}
-                                </div>
-                            {% endif %}
-                        {% else %}
-                            <div class="profile-main-no-startups">Нет стартапов</div>
-                        {% endif %}
-                    </div>
-
-                    <div class="profile-main-content-tab" id="newsContent">
-                        <div class="profile-news-items-container">
-                            {% if news_page %}
-                                {% for news in news_page %}
-                                    <a href="{% url 'news_detail' news.article_id %}" class="profile-news-card-link">
-                                        <div class="profile-news-card-item">
-                                            <img src="{% if news.get_image_url %}{{ news.get_image_url }}{% else %}{% static 'accounts/images/startups/inside_cards_background.webp' %}{% endif %}" alt="Новость"/>
-                                            <div class="profile-news-card-title">{{ news.title }}</div>
-                                            <div class="profile-news-card-description">{{ news.content|truncatechars:100 }}</div>
-                                        </div>
-                                    </a>
-                                {% endfor %}
-                                <!-- Пагинация для новостей -->
-                                {% if news_page.paginator.num_pages > 1 %}
-                                    <div class="pagination">
-                                        {% if news_page.has_previous %}
-                                            <a href="?news_page={{ news_page.previous_page_number }}{% if startups_page.number != 1 %}&startups_page={{ startups_page.number }}{% endif %}" class="pagination-link">« Предыдущая</a>
-                                        {% endif %}
-                                        {% for num in news_page.paginator.page_range %}
-                                            {% if num == news_page.number %}
-                                                <span class="pagination-link active">{{ num }}</span>
-                                            {% else %}
-                                                <a href="?news_page={{ num }}{% if startups_page.number != 1 %}&startups_page={{ startups_page.number }}{% endif %}" class="pagination-link">{{ num }}</a>
-                                            {% endif %}
-                                        {% endfor %}
-                                        {% if news_page.has_next %}
-                                            <a href="?news_page={{ news_page.next_page_number }}{% if startups_page.number != 1 %}&startups_page={{ startups_page.number }}{% endif %}" class="pagination-link">Следующая »</a>
-                                        {% endif %}
-                                    </div>
-                                {% endif %}
-                            {% else %}
-                                <div class="profile-main-no-news">Нет новостей</div>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
+            <div class="profile-sidebar-role">
+              <span>
+                {% if user.role.role_name == "startuper" %}Стартапер {% elif
+                user.role.role_name == "investor" %}Инвестор {% elif
+                user.role.role_name == "moderator" %}Модератор {% elif
+                user.role.role_name == "administrator" %}Администратор {% else
+                %}{{ user.role.role_name|default:"Роль не указана" }}{% endif %}
+              </span>
             </div>
-            <div id="profileEditBlock" class="profile-edit-animated" style="display:none; opacity:0; pointer-events:none;">
-                <div class="profile-edit-wrapper">
-                    <div class="profile-edit-header-block">
-                        <button class="profile-edit-back-btn" id="profileEditBackBtn" type="button">
-                            <svg width="24" height="24" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="profile-edit-back-icon">
-                              <path d="M12.6668 7.99992H3.3335M3.3335 7.99992L8.00016 12.6666M3.3335 7.99992L8.00016 3.33325" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                            <span>Назад</span>
-                        </button>
-                        <div class="profile-edit-title">Изменить профиль</div>
-                        <div class="profile-edit-desc">Вы можете добавить URL сайта и добавить ваши соц сети, чтобы другие пользователи смогли больше узнать о вас</div>
-                    </div>
-                    <div class="profile-edit-main-row">
-                        <div class="profile-edit-avatar-col">
-                            <div class="profile-edit-avatar-wrapper">
-                                <img src="{% if user.get_profile_picture_url %}{{ user.get_profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}" alt="Аватар" class="profile-edit-avatar-img"/>
-                            </div>
-                            <div class="profile-edit-avatar-info">
-                                <div class="profile-edit-avatar-label">Profile photo</div>
-                                <div class="profile-edit-avatar-hint">Рекомендация <br>по размеру изображения 400х400 🙌</div>
-                                <div class="profile-edit-avatar-btn" onclick="document.getElementById('id_avatar_input').click();">Обновить</div>
-                            </div>
-                        </div>
-                        <div class="profile-edit-fields-col">
-                            <form method="post" id="profileEditForm">
-                                {% csrf_token %}
-                                <input type="hidden" name="edit_profile" value="1">
-                                <div class="profile-edit-section">
-                                    <div class="profile-edit-section-title">Информация профиля</div>
-                                    <div class="profile-edit-field">
-                                        <div class="profile-edit-field-label">{{ form.first_name.label }}</div>
-                                        {{ form.first_name }}
-                                    </div>
-                                    <div class="profile-edit-field">
-                                        <div class="profile-edit-field-label">{{ form.last_name.label }}</div>
-                                        {{ form.last_name }}
-                                    </div>
-                                    <div class="profile-edit-field">
-                                        <div class="profile-edit-field-label">{{ form.website_url.label }}</div>
-                                        {{ form.website_url }}
-                                    </div>
-                                    <div class="profile-edit-field">
-                                        <div class="profile-edit-field-label">{{ form.bio.label }}</div>
-                                        {{ form.bio }}
-                                        <div class="profile-edit-char-counter" id="bioCounter">50/50</div>
-                                    </div>
-                                </div>
-                                <div class="profile-edit-section" style="margin-top:40px;">
-                                    <div class="profile-edit-section-title">Социальные сети</div>
-                                    <div class="profile-edit-field">
-                                        <div class="profile-edit-field-label profile-edit-field-label-sm">{{ form.telegram.label }}</div>
-                                        {{ form.telegram }}
-                                    </div>
-                                </div>
-                                <div class="profile-edit-hint">Чтобы обновить настройки, нажмите "Сохранить изменений".</div>
-                                <div class="profile-edit-divider"></div>
-                                <div class="profile-edit-actions">
-                                    <button type="submit" class="profile-edit-save-btn">Сохранить изменений</button>
-                                    <div class="profile-edit-clear-btn" id="clearFormBtn">
-                                        <img src="{% static 'accounts/images/profile/close_circle.svg' %}" alt="Очистить" class="profile-edit-clear-icon"/>
-                                        <span>Очистить</span>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+            <div class="profile-sidebar-id">
+              <span>ID {{ user.user_id|default:"Не указан" }}</span>
+              <div class="profile-sidebar-copy-icon" title="Копировать ID">
+                <div class="profile-sidebar-copy-icon-inner1"></div>
+                <div class="profile-sidebar-copy-icon-inner2"></div>
+              </div>
             </div>
+          </div>
+          <div class="profile-sidebar-bio">
+            {{ user.bio|default:"Описание отсутствует."}}
+          </div>
+          {% if user.website_url %}
+          <div class="profile-sidebar-website">
+            <img
+              src="{% static 'accounts/images/profile/Globe_Line.svg' %}"
+              alt="Website"
+              class="profile-sidebar-website-icon-img"
+            />
+            <a
+              href="{{ user.website_url }}"
+              target="_blank"
+              class="profile-sidebar-website-link"
+              >{{ user.website_url }}</a
+            >
+          </div>
+          {% endif %} {% if user.social_links.telegram %}
+          <div class="profile-sidebar-social-link">
+            <span
+              >Telegram:
+              <a
+                href="https://t.me/{{ user.social_links.telegram|slice:'1:' }}"
+                target="_blank"
+                >{{ user.social_links.telegram }}</a
+              ></span
+            >
+          </div>
+          {% endif %}
         </div>
+      </div>
+      <div class="profile-sidebar-social-icons-round">
+        <div class="profile-sidebar-social-icon-round-item">
+          <img
+            src="{% static 'accounts/images/profile/share_icon.svg' %}"
+            alt="Share"
+            class="profile-sidebar-social-icon-img"
+          />
+        </div>
+        <div class="profile-sidebar-social-icon-round-item">
+          <img
+            src="{% static 'accounts/images/profile/dots.svg' %}"
+            alt="More options"
+            class="profile-sidebar-social-icon-img"
+          />
+        </div>
+      </div>
+
+      {% if is_own_profile %}
+      <div class="profile-avatar-upload-section" style="display: none">
+        <h4>Загрузить аватарку</h4>
+        <form
+          method="post"
+          enctype="multipart/form-data"
+          id="avatarUploadForm"
+          class="avatar-upload-form"
+        >
+          {% csrf_token %}
+          <input
+            type="file"
+            name="avatar"
+            accept="image/png,image/jpeg"
+            required
+            id="id_avatar_input"
+            class="file-input-hidden"
+          />
+          <button
+            type="button"
+            onclick="document.getElementById('id_avatar_input').click();"
+            class="btn btn-secondary choose-file-btn"
+          >
+            Выберите файл
+          </button>
+          <div id="fileNameDisplay" class="file-name-display">
+            Файл не выбран
+          </div>
+          <button type="submit" class="btn btn-primary upload-btn">
+            Загрузить
+          </button>
+        </form>
+      </div>
+      {% endif %}
+
+      <a href="#" class="profile-sidebar-my-galaxy-btn">
+        <div class="profile-sidebar-my-galaxy-btn-text">Моя Галактика</div>
+      </a>
+
+      <div class="profile-sidebar-social-icons-row">
+        <img
+          class="profile-sidebar-social-icon-row-item-img"
+          src="{% static 'accounts/images/profile/vk_icon_social.svg' %}"
+          alt="VK"
+        />
+        <img
+          class="profile-sidebar-social-icon-row-item-img"
+          src="{% static 'accounts/images/profile/linkedin_icon_social.svg' %}"
+          alt="LinkedIn"
+        />
+      </div>
+      <div class="profile-sidebar-divider"></div>
+      <div class="profile-sidebar-date-joined">
+        На площадке с {{ user.created_at|date:"d M Y"|default:"Неизвестно" }}
+      </div>
     </div>
+
+    <div class="profile-main-content">
+      {% if is_own_profile %}
+      <div class="profile-main-edit-btn-container">
+        <a href="#" class="profile-main-edit-btn" id="editProfileBtn">
+          <div class="profile-main-edit-btn-text">Редактировать профиль</div>
+          <img
+            src="{% static 'accounts/images/profile/Edit_Line.svg' %}"
+            alt="Редактировать"
+            class="profile-main-edit-btn-icon"
+          />
+        </a>
+      </div>
+      {% endif %}
+      <div id="profileViewBlock">
+        <div class="profile-main-startups-section">
+          <div class="profile-main-tabs">
+            <div class="profile-main-tab-item active-tab" data-tab="startups">
+              Стартапы
+            </div>
+            <div class="profile-main-tab-item" data-tab="news">Новости</div>
+          </div>
+
+          <div
+            class="profile-main-content-tab active-content"
+            id="startupsContent"
+          >
+            {% if startups_page %} {% for startup in startups_page %}
+            <div class="profile-main-startup-card-item">
+              <div class="profile-main-startup-card-content">
+                <div class="profile-main-startup-info">
+                  <div class="profile-main-startup-name">
+                    {{ startup.title }}
+                  </div>
+                  <div class="profile-main-startup-rating-reviews">
+                    <span class="profile-main-startup-rating"
+                      >Рейтинг {{ startup.get_average_rating|floatformat:1 }}/5
+                      ({{ startup.total_voters }})</span
+                    >
+                    <div class="profile-main-startup-reviews">
+                      <img
+                        src="{% static 'accounts/images/profile/chat_icon.svg' %}"
+                        alt="Reviews"
+                        class="profile-main-startup-review-icon-img"
+                      />
+                      <span>{{ startup.comment_count }}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="profile-main-startup-category-progress">
+                  <div class="profile-main-startup-category-tag">
+                    {% if startup.direction.direction_name == "Fastfood"
+                    %}Фастфуд {% elif startup.direction.direction_name ==
+                    "Technology" %}Технологии {% elif
+                    startup.direction.direction_name == "Finance" %}Финансы {%
+                    else %}{{ startup.direction.direction_name|default:"Без
+                    категории" }} {% endif %}
+                  </div>
+                  <div class="progress-bar-and-text-container">
+                    <div class="profile-main-startup-progress-bar-bg">
+                      <div
+                        class="profile-main-startup-progress-bar-fg"
+                        style="width: {{ startup.get_progress_percentage }}%;"
+                      ></div>
+                    </div>
+                    <span class="profile-main-startup-progress-text"
+                      >{{ startup.get_progress_percentage }}%</span
+                    >
+                  </div>
+                </div>
+                <a
+                  href="{% url 'startup_detail' startup.startup_id %}"
+                  class="btn btn-primary profile-main-startup-details-btn"
+                  >Подробнее</a
+                >
+              </div>
+              <img
+                class="profile-main-startup-image"
+                src="{% if startup.logo_urls and startup.logo_urls.0 %}{% get_file_url_tag startup.logo_urls.0 startup.startup_id 'logo' %}{% else %}{% static 'accounts/images/profile/Rectangle_4196.png' %}{% endif %}"
+                alt="Изображение стартапа"
+              />
+            </div>
+            {% if not forloop.last %}
+            <div class="profile-main-startup-list-divider"></div>
+            {% endif %} {% endfor %}
+            <!-- Пагинация для стартапов -->
+            {% if startups_page.paginator.num_pages > 1 %}
+            <div class="pagination">
+              {% if startups_page.has_previous %}
+              <a
+                href="?startups_page={{ startups_page.previous_page_number }}{% if news_page.number != 1 %}&news_page={{ news_page.number }}{% endif %}"
+                class="pagination-link"
+                >« Предыдущая</a
+              >
+              {% endif %} {% for num in startups_page.paginator.page_range %} {%
+              if num == startups_page.number %}
+              <span class="pagination-link active">{{ num }}</span>
+              {% else %}
+              <a
+                href="?startups_page={{ num }}{% if news_page.number != 1 %}&news_page={{ news_page.number }}{% endif %}"
+                class="pagination-link"
+                >{{ num }}</a
+              >
+              {% endif %} {% endfor %} {% if startups_page.has_next %}
+              <a
+                href="?startups_page={{ startups_page.next_page_number }}{% if news_page.number != 1 %}&news_page={{ news_page.number }}{% endif %}"
+                class="pagination-link"
+                >Следующая »</a
+              >
+              {% endif %}
+            </div>
+            {% endif %} {% else %}
+            <div class="profile-main-no-startups">Нет стартапов</div>
+            {% endif %}
+          </div>
+
+          <div class="profile-main-content-tab" id="newsContent">
+            <div class="profile-news-items-container">
+              {% if news_page %} {% for news in news_page %}
+              <a
+                href="{% url 'news_detail' news.article_id %}"
+                class="profile-news-card-link"
+              >
+                <div class="profile-news-card-item">
+                  <img
+                    src="{% if news.get_image_url %}{{ news.get_image_url }}{% else %}{% static 'accounts/images/startups/inside_cards_background.webp' %}{% endif %}"
+                    alt="Новость"
+                  />
+                  <div class="profile-news-card-title">{{ news.title }}</div>
+                  <div class="profile-news-card-description">
+                    {{ news.content|truncatechars:100 }}
+                  </div>
+                </div>
+              </a>
+              {% endfor %}
+              <!-- Пагинация для новостей -->
+              {% if news_page.paginator.num_pages > 1 %}
+              <div class="pagination">
+                {% if news_page.has_previous %}
+                <a
+                  href="?news_page={{ news_page.previous_page_number }}{% if startups_page.number != 1 %}&startups_page={{ startups_page.number }}{% endif %}"
+                  class="pagination-link"
+                  >« Предыдущая</a
+                >
+                {% endif %} {% for num in news_page.paginator.page_range %} {%
+                if num == news_page.number %}
+                <span class="pagination-link active">{{ num }}</span>
+                {% else %}
+                <a
+                  href="?news_page={{ num }}{% if startups_page.number != 1 %}&startups_page={{ startups_page.number }}{% endif %}"
+                  class="pagination-link"
+                  >{{ num }}</a
+                >
+                {% endif %} {% endfor %} {% if news_page.has_next %}
+                <a
+                  href="?news_page={{ news_page.next_page_number }}{% if startups_page.number != 1 %}&startups_page={{ startups_page.number }}{% endif %}"
+                  class="pagination-link"
+                  >Следующая »</a
+                >
+                {% endif %}
+              </div>
+              {% endif %} {% else %}
+              <div class="profile-main-no-news">Нет новостей</div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        id="profileEditBlock"
+        class="profile-edit-animated"
+        style="display: none; opacity: 0; pointer-events: none"
+      >
+        <div class="profile-edit-wrapper">
+          <div class="profile-edit-header-block">
+            <button
+              class="profile-edit-back-btn"
+              id="profileEditBackBtn"
+              type="button"
+            >
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 16 16"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                class="profile-edit-back-icon"
+              >
+                <path
+                  d="M12.6668 7.99992H3.3335M3.3335 7.99992L8.00016 12.6666M3.3335 7.99992L8.00016 3.33325"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+              <span>Назад</span>
+            </button>
+            <div class="profile-edit-title">Изменить профиль</div>
+            <div class="profile-edit-desc">
+              Вы можете добавить URL сайта и добавить ваши соц сети, чтобы
+              другие пользователи смогли больше узнать о вас
+            </div>
+          </div>
+          <div class="profile-edit-main-row">
+            <div class="profile-edit-avatar-col">
+              <div class="profile-edit-avatar-wrapper">
+                <img
+                  src="{% if user.get_profile_picture_url %}{{ user.get_profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}"
+                  alt="Аватар"
+                  class="profile-edit-avatar-img"
+                />
+              </div>
+              <div class="profile-edit-avatar-info">
+                <div class="profile-edit-avatar-label">Profile photo</div>
+                <div class="profile-edit-avatar-hint">
+                  Рекомендация <br />по размеру изображения 400х400 🙌
+                </div>
+                <div
+                  class="profile-edit-avatar-btn"
+                  onclick="document.getElementById('id_avatar_input').click();"
+                >
+                  Обновить
+                </div>
+              </div>
+            </div>
+            <div class="profile-edit-fields-col">
+              <form method="post" id="profileEditForm">
+                {% csrf_token %}
+                <input type="hidden" name="edit_profile" value="1" />
+                <div class="profile-edit-section">
+                  <div class="profile-edit-section-title">
+                    Информация профиля
+                  </div>
+                  <div class="profile-edit-field">
+                    <div class="profile-edit-field-label">
+                      {{ form.first_name.label }}
+                    </div>
+                    {{ form.first_name }}
+                  </div>
+                  <div class="profile-edit-field">
+                    <div class="profile-edit-field-label">
+                      {{ form.last_name.label }}
+                    </div>
+                    {{ form.last_name }}
+                  </div>
+                  <div class="profile-edit-field">
+                    <div class="profile-edit-field-label">
+                      {{ form.website_url.label }}
+                    </div>
+                    {{ form.website_url }}
+                  </div>
+                  <div class="profile-edit-field">
+                    <div class="profile-edit-field-label">
+                      {{ form.bio.label }}
+                    </div>
+                    {{ form.bio }}
+                    <div class="profile-edit-char-counter" id="bioCounter">
+                      50/50
+                    </div>
+                  </div>
+                </div>
+                <div class="profile-edit-section" style="margin-top: 40px">
+                  <div class="profile-edit-section-title">Социальные сети</div>
+                  <div class="profile-edit-field">
+                    <div
+                      class="profile-edit-field-label profile-edit-field-label-sm"
+                    >
+                      {{ form.telegram.label }}
+                    </div>
+                    {{ form.telegram }}
+                  </div>
+                </div>
+                <div class="profile-edit-hint">
+                  Чтобы обновить настройки, нажмите "Сохранить изменений".
+                </div>
+                <div class="profile-edit-divider"></div>
+                <div class="profile-edit-actions">
+                  <button type="submit" class="profile-edit-save-btn">
+                    Сохранить изменений
+                  </button>
+                  <div class="profile-edit-clear-btn" id="clearFormBtn">
+                    <img
+                      src="{% static 'accounts/images/profile/close_circle.svg' %}"
+                      alt="Очистить"
+                      class="profile-edit-clear-icon"
+                    />
+                    <span>Очистить</span>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const avatarClickableArea = document.getElementById('avatarClickableArea');
-    const avatarInput = document.getElementById('id_avatar_input');
-    const avatarUploadForm = document.getElementById('avatarUploadForm');
-    const deleteAvatarBtn = document.getElementById('deleteAvatarBtn');
-    const editBtn = document.getElementById('editProfileBtn');
-    const profileViewBlock = document.getElementById('profileViewBlock');
-    const profileEditBlock = document.getElementById('profileEditBlock');
-    const backBtn = document.getElementById('profileEditBackBtn');
-    const clearBtn = document.getElementById('clearFormBtn');
-    const profileEditForm = document.getElementById('profileEditForm');
-    const bioInput = document.querySelector('#profileEditForm textarea[name="bio"]');
-    const bioCounter = document.getElementById('bioCounter');
+  document.addEventListener('DOMContentLoaded', function () {
+    const avatarClickableArea = document.getElementById('avatarClickableArea')
+    const avatarInput = document.getElementById('id_avatar_input')
+    const avatarUploadForm = document.getElementById('avatarUploadForm')
+    const deleteAvatarBtn = document.getElementById('deleteAvatarBtn')
+    const editBtn = document.getElementById('editProfileBtn')
+    const profileViewBlock = document.getElementById('profileViewBlock')
+    const profileEditBlock = document.getElementById('profileEditBlock')
+    const backBtn = document.getElementById('profileEditBackBtn')
+    const clearBtn = document.getElementById('clearFormBtn')
+    const profileEditForm = document.getElementById('profileEditForm')
+    const bioInput = document.querySelector(
+      '#profileEditForm textarea[name="bio"]'
+    )
+    const bioCounter = document.getElementById('bioCounter')
 
     // Анимация перехода
     function showEditBlock() {
-        profileViewBlock.classList.add('profile-fade-out');
+      profileViewBlock.classList.add('profile-fade-out')
+      setTimeout(() => {
+        profileViewBlock.style.display = 'none'
+        profileEditBlock.style.display = 'block'
         setTimeout(() => {
-            profileViewBlock.style.display = 'none';
-            profileEditBlock.style.display = 'block';
-            setTimeout(() => {
-                profileEditBlock.style.opacity = 1;
-                profileEditBlock.style.pointerEvents = 'auto';
-                profileEditBlock.classList.add('profile-fade-in');
-            }, 10);
-        }, 300);
+          profileEditBlock.style.opacity = 1
+          profileEditBlock.style.pointerEvents = 'auto'
+          profileEditBlock.classList.add('profile-fade-in')
+        }, 10)
+      }, 300)
     }
 
     function hideEditBlock() {
-        profileEditBlock.classList.remove('profile-fade-in');
-        profileEditBlock.style.opacity = 0;
-        profileEditBlock.style.pointerEvents = 'none';
-        setTimeout(() => {
-            profileEditBlock.style.display = 'none';
-            profileViewBlock.style.display = 'block';
-            profileViewBlock.classList.remove('profile-fade-out');
-        }, 300);
+      profileEditBlock.classList.remove('profile-fade-in')
+      profileEditBlock.style.opacity = 0
+      profileEditBlock.style.pointerEvents = 'none'
+      setTimeout(() => {
+        profileEditBlock.style.display = 'none'
+        profileViewBlock.style.display = 'block'
+        profileViewBlock.classList.remove('profile-fade-out')
+      }, 300)
     }
 
     // Загрузка аватара
     if (avatarClickableArea && avatarInput && avatarUploadForm) {
-        avatarClickableArea.addEventListener('click', function() {
-            avatarInput.click();
-        });
+      avatarClickableArea.addEventListener('click', function () {
+        avatarInput.click()
+      })
 
-        avatarInput.addEventListener('change', function() {
-            if (this.files && this.files.length > 0) {
-                avatarUploadForm.submit();
-            }
-        });
+      avatarInput.addEventListener('change', function () {
+        if (this.files && this.files.length > 0) {
+          avatarUploadForm.submit()
+        }
+      })
     }
 
     // Удаление аватара
     if (deleteAvatarBtn) {
-        deleteAvatarBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            if (confirm('Вы уверены, что хотите удалить аватар?')) {
-                fetch("{% url 'delete_avatar' %}", {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRFToken': '{{ csrf_token }}',
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        document.querySelector('.profile-sidebar-avatar-img').src = "{% static 'accounts/images/avatars/default_avatar_ufo.png' %}";
-                        deleteAvatarBtn.style.display = 'none';
-                        alert(data.message);
-                    } else {
-                        alert(data.error);
-                    }
-                })
-                .catch(error => {
-                    console.error('Ошибка:', error);
-                    alert('Произошла ошибка при удалении аватара.');
-                });
-            }
-        });
+      deleteAvatarBtn.addEventListener('click', function (e) {
+        e.preventDefault()
+        if (confirm('Вы уверены, что хотите удалить аватар?')) {
+          fetch("{% url 'delete_avatar' %}", {
+            method: 'POST',
+            headers: {
+              'X-CSRFToken': '{{ csrf_token }}',
+              'X-Requested-With': 'XMLHttpRequest',
+            },
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.success) {
+                document.querySelector('.profile-sidebar-avatar-img').src =
+                  "{% static 'accounts/images/avatars/default_avatar_ufo.png' %}"
+                deleteAvatarBtn.style.display = 'none'
+                alert(data.message)
+              } else {
+                alert(data.error)
+              }
+            })
+            .catch((error) => {
+              console.error('Ошибка:', error)
+              alert('Произошла ошибка при удалении аватара.')
+            })
+        }
+      })
     }
 
     // Редактирование профиля
     if (editBtn && profileViewBlock && profileEditBlock) {
-        editBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            showEditBlock();
-        });
+      editBtn.addEventListener('click', function (e) {
+        e.preventDefault()
+        showEditBlock()
+      })
     }
 
     if (backBtn) {
-        backBtn.addEventListener('click', function() {
-            hideEditBlock();
-        });
+      backBtn.addEventListener('click', function () {
+        hideEditBlock()
+      })
     }
 
     if (clearBtn) {
-        clearBtn.addEventListener('click', function() {
-            profileEditForm.reset();
-            if (bioInput) {
-                bioCounter.textContent = '50/50';
-            }
-        });
+      clearBtn.addEventListener('click', function () {
+        profileEditForm.reset()
+        if (bioInput) {
+          bioCounter.textContent = '50/50'
+        }
+      })
     }
 
     // Счётчик символов для bio
     if (bioInput && bioCounter) {
-        function updateBioCounter() {
-            const remaining = 50 - bioInput.value.length;
-            bioCounter.textContent = `${remaining}/50`;
-            if (remaining < 0) {
-                bioCounter.style.color = 'red';
-            } else {
-                bioCounter.style.color = '';
-            }
+      function updateBioCounter() {
+        const remaining = 50 - bioInput.value.length
+        bioCounter.textContent = `${remaining}/50`
+        if (remaining < 0) {
+          bioCounter.style.color = 'red'
+        } else {
+          bioCounter.style.color = ''
         }
-        bioInput.addEventListener('input', updateBioCounter);
-        updateBioCounter();
+      }
+      bioInput.addEventListener('input', updateBioCounter)
+      updateBioCounter()
     }
 
     // Отправка формы редактирования
     if (profileEditForm) {
-        profileEditForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const formData = new FormData(profileEditForm);
-            fetch("{% url 'profile' %}", {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'X-CSRFToken': '{{ csrf_token }}'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert(data.message);
-                    window.location.reload();
-                } else {
-                    alert(data.error || 'Произошла ошибка при сохранении профиля.');
-                    if (data.errors) {
-                        console.log('Ошибки формы:', data.errors);
-                    }
-                }
-            })
-            .catch(error => {
-                console.error('Ошибка:', error);
-                alert('Произошла ошибка при сохранении профиля.');
-            });
-        });
+      profileEditForm.addEventListener('submit', function (e) {
+        e.preventDefault()
+        const formData = new FormData(profileEditForm)
+        fetch("{% url 'profile' %}", {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRFToken': '{{ csrf_token }}',
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              alert(data.message)
+              window.location.reload()
+            } else {
+              alert(data.error || 'Произошла ошибка при сохранении профиля.')
+              if (data.errors) {
+                console.log('Ошибки формы:', data.errors)
+              }
+            }
+          })
+          .catch((error) => {
+            console.error('Ошибка:', error)
+            alert('Произошла ошибка при сохранении профиля.')
+          })
+      })
     }
 
     // Переключение вкладок
-    const tabs = document.querySelectorAll('.profile-main-tab-item');
-    const tabContents = document.querySelectorAll('.profile-main-content-tab');
+    const tabs = document.querySelectorAll('.profile-main-tab-item')
+    const tabContents = document.querySelectorAll('.profile-main-content-tab')
 
-    tabs.forEach(tab => {
-        tab.addEventListener('click', function(event) {
-            event.preventDefault();
-            const currentActiveTab = document.querySelector('.profile-main-tab-item.active-tab');
-            const currentActiveContent = document.querySelector('.profile-main-content-tab.active-content');
-            const targetTabId = this.getAttribute('data-tab');
-            const newActiveContent = document.getElementById(targetTabId + 'Content');
-            if (currentActiveTab === this || !newActiveContent) return;
-            if (currentActiveTab) currentActiveTab.classList.remove('active-tab');
-            if (currentActiveContent) {
-                currentActiveContent.classList.remove('active-content');
-                currentActiveContent.classList.add('profile-fade-out');
-                setTimeout(() => {
-                    currentActiveContent.style.display = 'none';
-                    currentActiveContent.classList.remove('profile-fade-out');
-                    tabs.forEach(t => t.classList.remove('active-tab'));
-                    tab.classList.add('active-tab');
-                    newActiveContent.style.display = 'flex';
-                    setTimeout(() => {
-                        newActiveContent.classList.add('active-content');
-                    }, 10);
-                }, 300);
-            } else {
-                tabs.forEach(t => t.classList.remove('active-tab'));
-                tab.classList.add('active-tab');
-                newActiveContent.style.display = 'flex';
-                setTimeout(() => {
-                    newActiveContent.classList.add('active-content');
-                }, 10);
-            }
-        });
-    });
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', function (event) {
+        event.preventDefault()
+        const currentActiveTab = document.querySelector(
+          '.profile-main-tab-item.active-tab'
+        )
+        const currentActiveContent = document.querySelector(
+          '.profile-main-content-tab.active-content'
+        )
+        const targetTabId = this.getAttribute('data-tab')
+        const newActiveContent = document.getElementById(
+          targetTabId + 'Content'
+        )
+        if (currentActiveTab === this || !newActiveContent) return
+        if (currentActiveTab) currentActiveTab.classList.remove('active-tab')
+        if (currentActiveContent) {
+          currentActiveContent.classList.remove('active-content')
+          currentActiveContent.classList.add('profile-fade-out')
+          setTimeout(() => {
+            currentActiveContent.style.display = 'none'
+            currentActiveContent.classList.remove('profile-fade-out')
+            tabs.forEach((t) => t.classList.remove('active-tab'))
+            tab.classList.add('active-tab')
+            newActiveContent.style.display = 'flex'
+            setTimeout(() => {
+              newActiveContent.classList.add('active-content')
+            }, 10)
+          }, 300)
+        } else {
+          tabs.forEach((t) => t.classList.remove('active-tab'))
+          tab.classList.add('active-tab')
+          newActiveContent.style.display = 'flex'
+          setTimeout(() => {
+            newActiveContent.classList.add('active-content')
+          }, 10)
+        }
+      })
+    })
 
     function initializeActiveTab() {
-        let initialActiveTab = document.querySelector('.profile-main-tab-item.active-tab');
-        if (!initialActiveTab && tabs.length > 0) {
-            initialActiveTab = tabs[0];
-            initialActiveTab.classList.add('active-tab');
-        }
+      let initialActiveTab = document.querySelector(
+        '.profile-main-tab-item.active-tab'
+      )
+      if (!initialActiveTab && tabs.length > 0) {
+        initialActiveTab = tabs[0]
+        initialActiveTab.classList.add('active-tab')
+      }
 
-        if (initialActiveTab) {
-            const initialTargetTabId = initialActiveTab.getAttribute('data-tab');
-            const initialActiveContent = document.getElementById(initialTargetTabId + 'Content');
-            if (initialActiveContent) {
-                tabContents.forEach(content => {
-                    if (content !== initialActiveContent) {
-                        content.style.display = 'none';
-                        content.classList.remove('active-content');
-                    }
-                });
-                initialActiveContent.style.display = 'flex';
-                requestAnimationFrame(() => {
-                    initialActiveContent.classList.add('active-content');
-                });
-            } else if (tabs.length > 0) {
-                initialActiveTab.classList.remove('active-tab');
-                tabs[0].classList.add('active-tab');
-                const firstTabId = tabs[0].getAttribute('data-tab');
-                const firstContent = document.getElementById(firstTabId + 'Content');
-                if (firstContent) {
-                    tabContents.forEach(content => {
-                        content.style.display = 'none';
-                        content.classList.remove('active-content');
-                    });
-                    firstContent.style.display = 'flex';
-                    requestAnimationFrame(() => {
-                        firstContent.classList.add('active-content');
-                    });
-                }
+      if (initialActiveTab) {
+        const initialTargetTabId = initialActiveTab.getAttribute('data-tab')
+        const initialActiveContent = document.getElementById(
+          initialTargetTabId + 'Content'
+        )
+        if (initialActiveContent) {
+          tabContents.forEach((content) => {
+            if (content !== initialActiveContent) {
+              content.style.display = 'none'
+              content.classList.remove('active-content')
             }
+          })
+          initialActiveContent.style.display = 'flex'
+          requestAnimationFrame(() => {
+            initialActiveContent.classList.add('active-content')
+          })
+        } else if (tabs.length > 0) {
+          initialActiveTab.classList.remove('active-tab')
+          tabs[0].classList.add('active-tab')
+          const firstTabId = tabs[0].getAttribute('data-tab')
+          const firstContent = document.getElementById(firstTabId + 'Content')
+          if (firstContent) {
+            tabContents.forEach((content) => {
+              content.style.display = 'none'
+              content.classList.remove('active-content')
+            })
+            firstContent.style.display = 'flex'
+            requestAnimationFrame(() => {
+              firstContent.classList.add('active-content')
+            })
+          }
         }
+      }
     }
-    initializeActiveTab();
-});
+    initializeActiveTab()
+  })
 </script>
 {% endblock %}

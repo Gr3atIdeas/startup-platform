@@ -1,0 +1,19 @@
+# Ignore artifacts:
+build
+dist
+staticfiles
+node_modules
+venv
+
+# Ignore generated files:
+package-lock.json
+
+# Ignore Django migrations
+*/migrations/
+
+# Ignore files with complex Django tags that break prettier
+accounts/templates/accounts/edit_startup.html
+accounts/templates/accounts/main_temp.html
+accounts/templates/accounts/news.html
+accounts/templates/accounts/planetary_system.html
+accounts/templates/accounts/startup_detail.html

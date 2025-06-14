@@ -25,6 +25,11 @@
     "vue": "^3.4.29"
   },
   "devDependencies": {
+    "oxlint": "^1.1.0",
+    "prettier": "^3.5.3",
+    "prettier-plugin-jinja-template": "^2.1.0",
+    "stylelint": "^16.20.0",
+    "stylelint-config-standard-scss": "^15.0.1",
     "vite": "^5.2.13"
   }
 }

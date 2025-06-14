@@ -4,7 +4,8 @@ from django import template
 # Создаём объект register
 register = template.Library()
 
-@register.filter(name='get_timeline_event_by_step')
+
+@register.filter(name="get_timeline_event_by_step")
 def get_timeline_event_by_step(timeline_events, step_number):
     """
     Извлекает объект события таймлайна по номеру шага.
@@ -20,9 +21,14 @@ def get_timeline_event_by_step(timeline_events, step_number):
         for event in timeline_events:
             if event.step_number == step_number:
                 return event
-        return None # Если не найдено
-    except (ValueError, AttributeError, TypeError): # Добавил TypeError на случай если timeline_events не итерируемый
+        return None  # Если не найдено
+    except (
+        ValueError,
+        AttributeError,
+        TypeError,
+    ):  # Добавил TypeError на случай если timeline_events не итерируемый
         return None
+
 
 @register.filter
 def get_item(dictionary, key):
@@ -34,4 +40,4 @@ def get_item(dictionary, key):
     Returns:
         Значение по ключу или пустая строка, если ключ не найден.
     """
-    return dictionary.get(key, '')
+    return dictionary.get(key, "")

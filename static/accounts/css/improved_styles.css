@@ -13,15 +13,15 @@
    ========================================================================== */
 :root {
   /* Цвета (уже есть в global.css, дублируем для контекста) */
-  --primary-color: #7B61FF;
-  --secondary-color: #818CE5;
+  --primary-color: #7b61ff;
+  --secondary-color: #818ce5;
   --text-dark: #191919;
-  --text-light: #FFFFFF;
-  --text-gray: #A9A9A9;
-  --yellow-accent: #FFEF2B;
+  --text-light: #fff;
+  --text-gray: #a9a9a9;
+  --yellow-accent: #ffef2b;
 
   /* Типографика */
-  --font-main: 'Unbounded', Arial, sans-serif;
+  --font-main: 'Unbounded', arial, sans-serif;
   --font-special: 'Blippo Black', sans-serif;
 
   /* Отступы */
@@ -31,7 +31,7 @@
   --spacing-l: 24px;
   --spacing-xl: 32px;
   --spacing-xxl: 64px;
-  
+
   /* Скругления */
   --border-radius-small: 5px;
   --border-radius-medium: 10px;
@@ -46,24 +46,27 @@
 
 /* Плавность для всех элементов, которые могут изменяться */
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
-a, button, input, textarea {
+a,
+button,
+input,
+textarea {
   transition: all var(--transition-speed) ease;
 }
 
-a:hover, button:hover {
+a:hover,
+button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 15px rgb(0 0 0 / 20%);
 }
-
 
 /* ==========================================================================
    3. Улучшенные компоненты (на примере кнопок)
    ========================================================================== */
 
-/* 
+/*
  * Базовый класс для всех кнопок.
  * Он определяет общие стили: отступы, шрифт, скругления и т.д.
  */
@@ -84,7 +87,7 @@ a:hover, button:hover {
   white-space: nowrap;
 }
 
-/* 
+/*
  * Модификаторы для кнопок.
  * Они меняют цвет, фон и другие свойства, не дублируя код.
  */
@@ -118,7 +121,7 @@ a:hover, button:hover {
 
 /* Синяя кнопка */
 .btn--blue {
-  background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%);
+  background: linear-gradient(0deg, #004e9f 0%, #006edf 100%);
   color: var(--text-light);
   border: none;
 }
@@ -144,4 +147,4 @@ a:hover, button:hover {
 .btn .icon {
   width: 20px;
   height: 20px;
-} 
+}

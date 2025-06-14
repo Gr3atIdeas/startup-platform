@@ -1,110 +1,122 @@
 @font-face {
-    font-family: 'Unbounded';
-    src: url('../fonts/Unbounded-Regular.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
+  font-family: Unbounded;
+  src: url('../fonts/Unbounded-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
 }
 
 @font-face {
-    font-family: 'Unbounded';
-    src: url('../fonts/Unbounded-Light.ttf') format('truetype');
-    font-weight: 300;
-    font-style: normal;
+  font-family: Unbounded;
+  src: url('../fonts/Unbounded-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
 }
 
 @font-face {
-    font-family: 'Unbounded';
-    src: url('../fonts/Unbounded-Medium.ttf') format('truetype');
-    font-weight: 500;
-    font-style: normal;
+  font-family: Unbounded;
+  src: url('../fonts/Unbounded-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
 }
 
 @font-face {
-    font-family: 'Unbounded';
-    src: url('../fonts/Unbounded-SemiBold.ttf') format('truetype');
-    font-weight: 600;
-    font-style: normal;
+  font-family: Unbounded;
+  src: url('../fonts/Unbounded-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
 }
 
 @font-face {
-    font-family: 'Unbounded';
-    src: url('../fonts/Unbounded-Bold.ttf') format('truetype');
-    font-weight: bold;
-    font-style: normal;
+  font-family: Unbounded;
+  src: url('../fonts/Unbounded-Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
 }
 
 @font-face {
-    font-family: 'Blippo Black';
-    src: url('../fonts/blippo_blackcyrusbyme.otf') format('opentype');
-    font-weight: normal; 
-    font-style: normal;
+  font-family: 'Blippo Black';
+  src: url('../fonts/blippo_blackcyrusbyme.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
 }
 
 img {
-    user-select: none;
-    -webkit-user-drag: none;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
 html {
-    height: 100%; 
-    min-height: 100%;
-    background: linear-gradient(to bottom, #000000 0%, #01366D 50%, #004E9F 100%); /* Фон на html */
-    background-repeat: no-repeat;
-    background-attachment: scroll;
-    width: 100%; 
-    margin: 0;
-    padding: 0; /* No padding on the main container */
-    box-sizing: border-box;
-    overflow-x: hidden; 
-    overflow-y: auto; /* Включаем вертикальную прокрутку */
-    scrollbar-width: thin; /* Для Firefox */
-    scrollbar-color: #FFEF2B transparent; /* Цвета для Firefox: ползунок и прозрачный фон */
-    display: flex;
-    flex-direction: column;
-    /* align-items: center; */ /* Remove centering from here */
-    gap: 40px;
+  height: 100%;
+  min-height: 100%;
+  background: linear-gradient(
+    to bottom,
+    #000 0%,
+    #01366d 50%,
+    #004e9f 100%
+  ); /* Фон на html */
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  width: 100%;
+  margin: 0;
+  padding: 0; /* No padding on the main container */
+  box-sizing: border-box;
+  overflow: hidden auto; /* Включаем вертикальную прокрутку */
+  scrollbar-width: thin; /* Для Firefox */
+  scrollbar-color: #ffef2b transparent; /* Цвета для Firefox: ползунок и прозрачный фон */
+  display: flex;
+  flex-direction: column;
+
+  /* align-items: center; */
+
+  /* Remove centering from here */
+  gap: 40px;
 }
 
-.btn--yellow-gradient, .btn--yellow-gradient:visited {
-    background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%) !important;
-    border: none !important;
-    color: #000000 !important;
+.btn--yellow-gradient,
+.btn--yellow-gradient:visited {
+  background: linear-gradient(180deg, #ffef2b 0%, #f9f7d6 100%) !important;
+  border: none !important;
+  color: #000 !important;
 }
 
 .btn--yellow-gradient span {
-    color: #000000 !important;
+  color: #000 !important;
 }
 
 .btn--yellow-gradient .icon {
-    filter: brightness(0) invert(0);
+  filter: brightness(0) invert(0);
 }
 
-.btn--blue, .btn--blue:visited {
-    background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%) !important;
-    border: none !important;
+.btn--blue,
+.btn--blue:visited {
+  background: linear-gradient(0deg, #004e9f 0%, #006edf 100%) !important;
+  border: none !important;
 }
 
 .btn--blue span {
-    color: #F5F5F5 !important;
+  color: #f5f5f5 !important;
 }
 
 body {
-    font-family: 'Unbounded', sans-serif;
-    font-weight: normal;
-    font-size: 16px;
-    line-height: 1.6;
-    color: #FCFCFD; 
-    margin: 0;
-    padding: 0;
-    background: transparent; /* body прозрачный */
-    overflow-x: hidden; 
-    /* overflow-y: auto; */ /* <--- УДАЛЯЕМ ЭТО */
-    min-height: 100%; 
-    width: 100%; 
-    box-sizing: border-box;
-    display: flex; /* Для flex-grow у .div */
-    flex-direction: column; /* Для flex-grow у .div */
-    flex-shrink: 0;
+  font-family: Unbounded, sans-serif;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #fcfcfd;
+  margin: 0;
+  padding: 0;
+  background: transparent; /* body прозрачный */
+  overflow-x: hidden;
+
+  /* overflow-y: auto; */
+
+  /* <--- УДАЛЯЕМ ЭТО */
+  min-height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex; /* Для flex-grow у .div */
+  flex-direction: column; /* Для flex-grow у .div */
+  flex-shrink: 0;
 }
 
 /* Кастомный скроллбар для Webkit-браузеров (Chrome, Safari) */
@@ -117,7 +129,7 @@ html::-webkit-scrollbar-track {
 }
 
 html::-webkit-scrollbar-thumb {
-  background-color: #FFEF2B; /* Цвет ползунка */
+  background-color: #ffef2b; /* Цвет ползунка */
   border-radius: 4px; /* Скругление углов */
 }
 
@@ -129,2228 +141,2623 @@ html::-webkit-scrollbar-button {
   display: none; /* Скрываем стрелочки */
 }
 
-.div { /* Общий контейнер страницы */
-    width: 100%;
-    /* min-width: 100%; */ /* width: 100% должно быть достаточно */
-    display: flex; /* Для align-items: center */
-    flex-direction: column; /* Основная ось - вертикальная для секций */
-    align-items: center; /* Центрируем дочерние секции */
-    background: transparent !important; /* .div прозрачный, показываем фон html */
-    /* background-repeat и background-attachment не нужны для прозрачного фона */
-    box-sizing: border-box; /* Добавляем для консистентности */
+.div {
+  /* Общий контейнер страницы */
+  width: 100%;
+
+  /* min-width: 100%; */
+
+  /* width: 100% должно быть достаточно */
+  display: flex; /* Для align-items: center */
+  flex-direction: column; /* Основная ось - вертикальная для секций */
+  align-items: center; /* Центрируем дочерние секции */
+  background: transparent !important; /* .div прозрачный, показываем фон html */
+
+  /* background-repeat и background-attachment не нужны для прозрачного фона */
+  box-sizing: border-box; /* Добавляем для консистентности */
 }
 
 /* --- Секция 1: Featured (Главный экран) --- */
 .featured {
-    width: 100%;
-    max-width: 1445px; 
-    height: 798px;
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px; 
-    box-sizing: border-box;
-    background: transparent !important;
-    margin-left: auto; /* Центрирование */
-    margin-right: auto; /* Центрирование */
+  width: 100%;
+  max-width: 1445px;
+  height: 798px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  box-sizing: border-box;
+  background: transparent !important;
+  margin-left: auto; /* Центрирование */
+  margin-right: auto; /* Центрирование */
 }
 
 .featured .group {
-    width: 100%;
-    max-width: 1303px;
-    height: 708px;
-    position: relative;
-    /* background: transparent; */ /* Убираем старый прозрачный фон */
-    background: transparent;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    border-radius: 10px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column; /* Для внутреннего расположения элементов */
-    justify-content: center; /* Центрирование по вертикали */
-    padding-left: 109px; /* Отступ для текстового контента */
-    box-sizing: border-box;
+  width: 100%;
+  max-width: 1303px;
+  height: 708px;
+  position: relative;
+
+  /* background: transparent; */
+
+  /* Убираем старый прозрачный фон */
+  background: transparent;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column; /* Для внутреннего расположения элементов */
+  justify-content: center; /* Центрирование по вертикали */
+  padding-left: 109px; /* Отступ для текстового контента */
+  box-sizing: border-box;
 }
 
 /* Элементы внутри .featured .group */
-.featured .div5 { 
-    width: 390px;
-    margin-bottom: 30px; /* Отступ под описанием */
+.featured .div5 {
+  width: 390px;
+  margin-bottom: 30px; /* Отступ под описанием */
 }
 
 .featured .div5 .txt {
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 1.4;
-    word-wrap: break-word;
-}
-.featured .div5 .txt > span:first-child { 
-    color: #FFEF2B;
-}
-.featured .div5 .txt .span { 
-    color: white;
+  font-family: Unbounded, sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.4;
+  word-wrap: break-word;
 }
 
-.featured .div6 { 
-    color: white;
-    font-size: 80px;
-    font-family: 'Blippo Black', sans-serif;
-    font-weight: normal;
-    text-transform: uppercase;
-    line-height: 0.7; /* Сжатая высота строки для Blippo */
-    word-wrap: break-word;
+.featured .div5 .txt > span:first-child {
+  color: #ffef2b;
 }
 
-.featured .div7 { 
-    color: #FFEF2B;
-    font-size: 80px;
-    font-family: 'Blippo Black', sans-serif;
-    font-weight: normal;
-    text-transform: uppercase;
-    line-height: 0.7; /* Сжатая высота строки для Blippo */
-    word-wrap: break-word;
-    margin-bottom: 40px; /* Отступ после заголовка */
+.featured .div5 .txt .span {
+  color: white;
+}
+
+.featured .div6 {
+  color: white;
+  font-size: 80px;
+  font-family: 'Blippo Black', sans-serif;
+  font-weight: normal;
+  text-transform: uppercase;
+  line-height: 0.7; /* Сжатая высота строки для Blippo */
+  word-wrap: break-word;
+}
+
+.featured .div7 {
+  color: #ffef2b;
+  font-size: 80px;
+  font-family: 'Blippo Black', sans-serif;
+  font-weight: normal;
+  text-transform: uppercase;
+  line-height: 0.7; /* Сжатая высота строки для Blippo */
+  word-wrap: break-word;
+  margin-bottom: 40px; /* Отступ после заголовка */
 }
 
 /* Декоративные круги и планеты (плейсхолдеры) */
-.featured .frame-child, .featured .frame-item, .featured .frame-inner, .featured .ellipse-div, .featured .frame-child1 {
-    position: absolute;
-    border-radius: 9999px;
-    border: 1px white solid;
-    filter: blur(1px);
-    opacity: 0.3;
+.featured .frame-child,
+.featured .frame-item,
+.featured .frame-inner,
+.featured .ellipse-div,
+.featured .frame-child1 {
+  position: absolute;
+  border-radius: 9999px;
+  border: 1px white solid;
+  filter: blur(1px);
+  opacity: 0.3;
 }
-.featured .frame-child { width: 1013px; height: 784px; left: 60%; top: -5%; }
-.featured .frame-item { width: 900px; height: 696px; left: 75%; top: 0%; }
-.featured .frame-inner { width: 950px; height: 754px; left: 65%; top: -2%; }
-.featured .ellipse-div { width: 800px; height: 651px; left: 80%; top: 5%; }
-.featured .frame-child1 { width: 700px; height: 576px; left: 85%; top: 10%; }
-
-.featured .icon1, .featured .icon2, .featured .icon3, .featured .icon4, .featured .icon5, .featured .icon6, .featured .icon7, .featured .icon8 {
-    position: absolute;
-    object-fit: contain; /* Чтобы плейсхолдеры не искажались */
+.featured .frame-child {
+  width: 1013px;
+  height: 784px;
+  left: 60%;
+  top: -5%;
+}
+.featured .frame-item {
+  width: 900px;
+  height: 696px;
+  left: 75%;
+  top: 0%;
+}
+.featured .frame-inner {
+  width: 950px;
+  height: 754px;
+  left: 65%;
+  top: -2%;
+}
+.featured .ellipse-div {
+  width: 800px;
+  height: 651px;
+  left: 80%;
+  top: 5%;
+}
+.featured .frame-child1 {
+  width: 700px;
+  height: 576px;
+  left: 85%;
+  top: 10%;
 }
 
-.featured .icon1 { width: 193px; height: 186px; right: 50px; bottom: 50px; z-index: 5;} /* Крупная планета справа внизу */
-.featured .icon2 { width: 100px; height: 100px; right: 250px; top: 100px; z-index: 4;} 
-.featured .icon3 { width: 150px; height: 150px; right: 300px; bottom: 150px; z-index: 3; opacity: 0.8;}
-.featured .icon4 { width: 80px; height: 80px; right: 100px; top: 200px; z-index: 2; opacity: 0.7;}
-.featured .icon5 { width: 160px; height: 160px; right: 400px; top: 300px; z-index: 1; opacity: 0.6;}
-.featured .icon6 { width: 130px; height: 130px; right: 500px; bottom: 50px; opacity: 0.5;}
-.featured .icon7 { width: 120px; height: 120px; right: 150px; top: 400px; opacity: 0.4;}
-.featured .icon8 { width: 280px; height: 280px; right: -100px; top: -50px; opacity: 0.9; z-index: 0;} /* Большая фоновая */
+.featured .icon1,
+.featured .icon2,
+.featured .icon3,
+.featured .icon4,
+.featured .icon5,
+.featured .icon6,
+.featured .icon7,
+.featured .icon8 {
+  position: absolute;
+  object-fit: contain; /* Чтобы плейсхолдеры не искажались */
+}
 
-.featured .featured-child, .featured .featured-item { /* Вспомогательные, если нужны по макету */
-    display: none; /* Скрываем, если не используются явно */
+.featured .icon1 {
+  width: 193px;
+  height: 186px;
+  right: 50px;
+  bottom: 50px;
+  z-index: 5;
+} /* Крупная планета справа внизу */
+.featured .icon2 {
+  width: 100px;
+  height: 100px;
+  right: 250px;
+  top: 100px;
+  z-index: 4;
+}
+.featured .icon3 {
+  width: 150px;
+  height: 150px;
+  right: 300px;
+  bottom: 150px;
+  z-index: 3;
+  opacity: 0.8;
+}
+.featured .icon4 {
+  width: 80px;
+  height: 80px;
+  right: 100px;
+  top: 200px;
+  z-index: 2;
+  opacity: 0.7;
+}
+.featured .icon5 {
+  width: 160px;
+  height: 160px;
+  right: 400px;
+  top: 300px;
+  z-index: 1;
+  opacity: 0.6;
+}
+.featured .icon6 {
+  width: 130px;
+  height: 130px;
+  right: 500px;
+  bottom: 50px;
+  opacity: 0.5;
+}
+.featured .icon7 {
+  width: 120px;
+  height: 120px;
+  right: 150px;
+  top: 400px;
+  opacity: 0.4;
+}
+.featured .icon8 {
+  width: 280px;
+  height: 280px;
+  right: -100px;
+  top: -50px;
+  opacity: 0.9;
+  z-index: 0;
+} /* Большая фоновая */
+
+.featured .featured-child,
+.featured .featured-item {
+  /* Вспомогательные, если нужны по макету */
+  display: none; /* Скрываем, если не используются явно */
 }
 
 /* --- Секция 2: Featured1 (Почему выбирают нас? + Карусель) --- */
 .featured1 {
-    width: 100%;
-    /* max-width: 1445px; */ /* Убираем ограничение по максимальной ширине */
-    padding: 45px 0; 
-    box-sizing: border-box;
-    /* overflow: hidden; - Убираем, чтобы карусель могла выходить за пределы */
-    background: transparent !important;
+  width: 100%;
+
+  /* max-width: 1445px; */
+
+  /* Убираем ограничение по максимальной ширине */
+  padding: 45px 0;
+  box-sizing: border-box;
+
+  /* overflow: hidden; - Убираем, чтобы карусель могла выходить за пределы */
+  background: transparent !important;
 }
 
 /* Стили для заголовка блока */
-.featured1 .heading { 
-    width: 100%; 
-    max-width: 1303px; /* Контейнер для заголовка и контролов */
-    margin: 0 auto 40px auto; /* Центрирование и отступ снизу до карусели */
-    padding: 0 71px; /* Боковые отступы для текста заголовка, если .featured1 их не имеет */
-    box-sizing: border-box;
-    display: flex; 
-    justify-content: space-between; 
-    align-items: flex-end; 
+.featured1 .heading {
+  width: 100%;
+  max-width: 1303px; /* Контейнер для заголовка и контролов */
+  margin: 0 auto 40px; /* Центрирование и отступ снизу до карусели */
+  padding: 0 71px; /* Боковые отступы для текста заголовка, если .featured1 их не имеет */
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
 }
 
 /* Оставляем стили для .parent3 (Почему выбирают нас?) и .wrap (контролы) как есть или корректируем при необходимости */
-.featured1 .heading .parent3 { 
-    display: flex;
-    flex-direction: column;
-    gap: 15px; 
-}
-.featured1 .heading .parent3 .div16 { 
-    color: white; 
-    font-size: 55px; 
-    font-family: 'Blippo Black', sans-serif; 
-    font-weight: normal; 
-    line-height: 1; 
-    word-wrap: break-word;
-}
-.featured1 .heading .parent3 .div17 { 
-    color: #FFEF2B; 
-    font-size: 55px; 
-    font-family: 'Blippo Black', sans-serif; 
-    font-weight: normal; 
-    text-transform: uppercase; 
-    line-height: 1; 
-    word-wrap: break-word;
+.featured1 .heading .parent3 {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
-.featured1 .heading .wrap { 
-    padding: 24px 0; /* Убираем боковой padding 32px, т.к. сам .heading уже имеет боковые отступы 71px */
-    justify-content: center;
-    align-items: center;
-    gap: 24px; 
-    display: flex;
+.featured1 .heading .parent3 .div16 {
+  color: white;
+  font-size: 55px;
+  font-family: 'Blippo Black', sans-serif;
+  font-weight: normal;
+  line-height: 1;
+  word-wrap: break-word;
+}
+
+.featured1 .heading .parent3 .div17 {
+  color: #ffef2b;
+  font-size: 55px;
+  font-family: 'Blippo Black', sans-serif;
+  font-weight: normal;
+  text-transform: uppercase;
+  line-height: 1;
+  word-wrap: break-word;
+}
+
+.featured1 .heading .wrap {
+  padding: 24px 0; /* Убираем боковой padding 32px, т.к. сам .heading уже имеет боковые отступы 71px */
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+  display: flex;
 }
 
 /* Стили для кнопок-стрелок */
 .featured1 .heading .arrow-left-control,
 .featured1 .heading .arrow-right-control {
-    width: 46px; 
-    height: 46px; 
-    position: relative;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    /* Убираем фон и рамки отсюда, если SVG содержит их */
+  width: 46px;
+  height: 46px;
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  /* Убираем фон и рамки отсюда, если SVG содержит их */
 }
 
 .featured1 .heading .arrow-left-control .vector-icon,
 .featured1 .heading .arrow-right-control .vector-icon1 {
-    width: 100% !important; /* Занимаем всю ширину родителя с высоким приоритетом */
-    height: 100% !important; /* Занимаем всю высоту родителя с высоким приоритетом */
-    object-fit: contain; 
+  width: 100% !important; /* Занимаем всю ширину родителя с высоким приоритетом */
+  height: 100% !important; /* Занимаем всю высоту родителя с высоким приоритетом */
+  object-fit: contain;
 }
 
 /* Стили для неактивных кнопок SVG */
 .featured1 .heading .arrow-left-control.disabled .vector-icon,
 .featured1 .heading .arrow-right-control.disabled .vector-icon1 {
-    opacity: 0.5; 
+  opacity: 0.5;
 }
 
 /* Удаляем стили для точек */
-.featured1 .heading .chevron-forward-circle-outline-parent { 
-    display: flex;
-    gap: 10px; 
+.featured1 .heading .chevron-forward-circle-outline-parent {
+  display: flex;
+  gap: 10px;
 }
+
 .featured1 .heading .chevron-forward-circle-outline-icon,
 .featured1 .heading .chevron-forward-circle-outline-icon1 {
-    width: 12px; 
-    height: 12px;
-    background: rgba(255, 255, 255, 0.38); 
-    border-radius: 50%;
-    cursor: pointer;
-    transition: background-color 0.3s;
+  width: 12px;
+  height: 12px;
+  background: rgb(255 255 255 / 38%);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
+
 .featured1 .heading .chevron-forward-circle-outline-icon.active {
-    background: #FFEF2B; 
+  background: #ffef2b;
 }
 
 /* Стили для карусели */
 .featured1 .features-carousel-wrapper {
-    width: 100%;
-    position: relative; 
-    /* margin-top: 40px; Отступ уже задан для .heading margin-bottom */
+  width: 100%;
+  position: relative;
+
+  /* margin-top: 40px; Отступ уже задан для .heading margin-bottom */
 }
 
-.featured1 .features-carousel { /* Это viewport карусели */
-    display: flex; 
-    overflow: hidden;  /* Оставляем для обрезки внутреннего контейнера */
-    /* width: 1387px; */ /* Убираем фиксированную ширину */
-    /* margin: 0 auto; */ /* Убираем центрирование */
-    margin-left: 71px; /* Выравниваем по левому краю контента */
-    width: calc(100vw - 71px); /* Ширина до правого края окна браузера */
+.featured1 .features-carousel {
+  /* Это viewport карусели */
+  display: flex;
+  overflow: hidden; /* Оставляем для обрезки внутреннего контейнера */
+
+  /* width: 1387px; */
+
+  /* Убираем фиксированную ширину */
+
+  /* margin: 0 auto; */
+
+  /* Убираем центрирование */
+  margin-left: 71px; /* Выравниваем по левому краю контента */
+  width: calc(100vw - 71px); /* Ширина до правого края окна браузера */
 }
 
 .featured1-carousel-inner {
-    display: flex;
-    gap: 20px; 
-    transition: transform 0.5s ease-in-out;
+  display: flex;
+  gap: 20px;
+  transition: transform 0.5s ease-in-out;
 }
 
-.featured1 .feature-card { 
-    min-width: 449px; 
-    width: 449px; 
-    height: 514px; 
-    position: relative;
-    background: white; 
-    overflow: hidden; 
-    border-radius: 20px; 
-    padding: 43px; 
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end; 
+.featured1 .feature-card {
+  min-width: 449px;
+  width: 449px;
+  height: 514px;
+  position: relative;
+  background: white;
+  overflow: hidden;
+  border-radius: 20px;
+  padding: 43px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
 }
 
 .featured1 .feature-card img.rectangle-icon {
-    width: 100%; 
-    height: 309px; 
-    position: absolute;
-    left: 0; 
-    top: 0;  
-    object-fit: cover;
-    z-index: 1;
+  width: 100%;
+  height: 309px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  object-fit: cover;
+  z-index: 1;
 }
 
-.featured1 .feature-card .div8 { 
-    position: relative; 
-    z-index: 2; 
-    color: #004E9F; 
-    font-size: 55px; 
-    font-family: 'Blippo Black', sans-serif; 
-    font-weight: normal; 
-    line-height: 1; 
-    /* Убираем свойства переноса */
-    /* overflow-wrap: break-word; */
-    /* hyphens: auto; */
-    /* word-wrap: break-word; */
-    white-space: nowrap; /* Запрещаем перенос */
-    margin-bottom: 15px; 
+.featured1 .feature-card .div8 {
+  position: relative;
+  z-index: 2;
+  color: #004e9f;
+  font-size: 55px;
+  font-family: 'Blippo Black', sans-serif;
+  font-weight: normal;
+  line-height: 1;
+
+  /* Убираем свойства переноса */
+
+  /* overflow-wrap: break-word; */
+
+  /* hyphens: auto; */
+
+  /* word-wrap: break-word; */
+  white-space: nowrap; /* Запрещаем перенос */
+  margin-bottom: 15px;
 }
 
 .featured1 .feature-card .div9,
-.featured1 .feature-card .div11 { 
-    position: relative; 
-    z-index: 2;
-    width: 390px; 
-    color: #004E9F; 
-    font-size: 16px; 
-    font-family: 'Unbounded', sans-serif; 
-    font-weight: 400; 
-    line-height: 1.2; 
-    word-wrap: break-word;
+.featured1 .feature-card .div11 {
+  position: relative;
+  z-index: 2;
+  width: 390px;
+  color: #004e9f;
+  font-size: 16px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 400;
+  line-height: 1.2;
+  word-wrap: break-word;
 }
 
-.featured1 .heading .parent3 .div16 { 
-    color: white; /* Соответствует макету */
-    font-size: 55px;
-    font-family: 'Blippo Black', sans-serif;
-    font-weight: normal;
-    line-height: 1.0;
-    word-wrap: break-word;
-}
-.featured1 .heading .parent3 .div17 { 
-    color: #FFEF2B; /* Соответствует макету */
-    font-size: 55px; /* Соответствует макету */
-    font-family: 'Blippo Black', sans-serif; 
-    font-weight: normal; 
-    text-transform: uppercase; /* Соответствует макету */
-    line-height: 1; /* Обновлено, без единиц измерения */
-    word-wrap: break-word;
+.featured1 .heading .parent3 .div16 {
+  color: white; /* Соответствует макету */
+  font-size: 55px;
+  font-family: 'Blippo Black', sans-serif;
+  font-weight: normal;
+  line-height: 1;
+  word-wrap: break-word;
 }
 
-.featured1 .heading .wrap { 
-    padding: 24px 32px; /* Обновлены боковые отступы */
-    justify-content: center;
-    align-items: center;
-    gap: 24px; 
-    display: flex;
+.featured1 .heading .parent3 .div17 {
+  color: #ffef2b; /* Соответствует макету */
+  font-size: 55px; /* Соответствует макету */
+  font-family: 'Blippo Black', sans-serif;
+  font-weight: normal;
+  text-transform: uppercase; /* Соответствует макету */
+  line-height: 1; /* Обновлено, без единиц измерения */
+  word-wrap: break-word;
+}
+
+.featured1 .heading .wrap {
+  padding: 24px 32px; /* Обновлены боковые отступы */
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+  display: flex;
 }
 
 .featured1 .heading .arrow-left-control,
 .featured1 .heading .arrow-right-control {
-    width: 46px;
-    height: 46px;
-    position: relative;
-    overflow: hidden;
-    cursor: pointer;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: background-color 0.3s, opacity 0.3s;
+  width: 46px;
+  height: 46px;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition:
+    background-color 0.3s,
+    opacity 0.3s;
 }
 
 .featured1 .heading .arrow-left-control .vector-icon,
 .featured1 .heading .arrow-right-control .vector-icon1 {
-    width: 9px;
-    height: 16px;
-    object-fit: contain;
+  width: 9px;
+  height: 16px;
+  object-fit: contain;
 }
 
 /* Стили для неактивных кнопок (управляется JS) */
 .featured1 .heading .arrow-left-control.disabled .chevron-left,
 .featured1 .heading .arrow-right-control.disabled .chevron-left {
-    background: rgba(255, 255, 255, 0.38);
+  background: rgb(255 255 255 / 38%);
 }
+
 .featured1 .heading .arrow-left-control.disabled .vector-icon,
 .featured1 .heading .arrow-right-control.disabled .vector-icon1 {
-    filter: brightness(0) invert(1) opacity(0.7);
+  filter: brightness(0) invert(1) opacity(0.7);
 }
 
-.featured1 .heading .chevron-forward-circle-outline-parent { 
-    display: flex;
-    gap: 10px; 
+.featured1 .heading .chevron-forward-circle-outline-parent {
+  display: flex;
+  gap: 10px;
 }
+
 .featured1 .heading .chevron-forward-circle-outline-icon,
 .featured1 .heading .chevron-forward-circle-outline-icon1 {
-    width: 12px; 
-    height: 12px;
-    background: rgba(255, 255, 255, 0.38); 
-    border-radius: 50%;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-.featured1 .heading .chevron-forward-circle-outline-icon.active, /* JS добавляет .active */
-.featured1 .heading img.chevron-forward-circle-outline-icon {
-    background: #FFEF2B;
+  width: 12px;
+  height: 12px;
+  background: rgb(255 255 255 / 38%);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
+.featured1 .heading .chevron-forward-circle-outline-icon.active, /* JS добавляет .active */
+.featured1 .heading img.chevron-forward-circle-outline-icon {
+  background: #ffef2b;
+}
 
 /* --- Секция 3: Featured3 (Стартаперы) --- */
 .featured3 {
-    width: 100%;
-    max-width: 1445px;
-    padding: 45px 71px; 
-    box-sizing: border-box;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 60px;
-    margin-left: auto; 
-    margin-right: auto; 
-    /* background-color: #011223; */ /* Фон убран с .featured3, он на .frame-parent */
-    position: -webkit-sticky; /* Добавляем sticky */
-    position: sticky;         /* Добавляем sticky */
-    top: 0px;                 /* Прилипает к верху main.content */
-    z-index: 5;               /* Ниже чем featured4 */
+  width: 100%;
+  max-width: 1445px;
+  padding: 45px 71px;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 60px;
+  margin-left: auto;
+  margin-right: auto;
+
+  /* background-color: #011223; */
+
+  /* Фон убран с .featured3, он на .frame-parent */
+  position: sticky; /* Добавляем sticky */
+  position: sticky; /* Добавляем sticky */
+  top: 0; /* Прилипает к верху main.content */
+  z-index: 5; /* Ниже чем featured4 */
 }
 
 .featured3 .frame-parent {
-    width: 1303px;
-    height: 521px; 
-    position: relative;
-    background: #011223; /* Фон теперь здесь, на контентном блоке */
-    border-radius: 10px;
-    overflow: hidden; 
-    box-sizing: border-box;
+  width: 1303px;
+  height: 521px;
+  position: relative;
+  background: #011223; /* Фон теперь здесь, на контентном блоке */
+  border-radius: 10px;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 .featured3 .icon9 {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    z-index: 0; /* Фон */
-    /* border-radius: 0 10px 10px 0; */ /* Удаляем, т.к. это полный фон, обрезается родителем */
-    opacity: 1;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0; /* Фон */
+
+  /* border-radius: 0 10px 10px 0; */
+
+  /* Удаляем, т.к. это полный фон, обрезается родителем */
+  opacity: 1;
 }
 
-.featured3 .parent4 { /* Левая часть с текстом */
-    position: relative; /* Изменено на relative для потока, либо absolute для точного позиционирования */
-    z-index: 2; /* Выше .icon9 и .gradient-overlay внутри себя */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 35px; /* Уменьшил немного gap с 45px до 35px */
-    width: 50%; /* Ширина текстового блока */
-    padding: 50px 50px 50px 70px; /* Внутренние отступы для текста, слева больше */
-    box-sizing: border-box;
-    height: 100%; /* Чтобы занимал всю высоту .frame-parent для градиента */
+.featured3 .parent4 {
+  /* Левая часть с текстом */
+  position: relative; /* Изменено на relative для потока, либо absolute для точного позиционирования */
+  z-index: 2; /* Выше .icon9 и .gradient-overlay внутри себя */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 35px; /* Уменьшил немного gap с 45px до 35px */
+  width: 50%; /* Ширина текстового блока */
+  padding: 50px 50px 50px 70px; /* Внутренние отступы для текста, слева больше */
+  box-sizing: border-box;
+  height: 100%; /* Чтобы занимал всю высоту .frame-parent для градиента */
 }
 
 .featured3 .parent4 .gradient-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(270deg, rgba(0, 0, 0, 0) 0%, rgba(0,0,0,0.7) 60%, rgba(0,0,0,0.9) 100%);
-    z-index: 1; /* Между основным фоном .icon9 и текстом в .heading1 и т.д. */
-    pointer-events: none; /* Чтобы не мешал кликам по тексту и кнопкам */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    270deg,
+    rgb(0 0 0 / 0%) 0%,
+    rgb(0 0 0 / 70%) 60%,
+    rgb(0 0 0 / 90%) 100%
+  );
+  z-index: 1; /* Между основным фоном .icon9 и текстом в .heading1 и т.д. */
+  pointer-events: none; /* Чтобы не мешал кликам по тексту и кнопкам */
 }
 
 /* Текстовые элементы внутри .parent4 должны быть выше градиента */
 .featured3 .parent4 > .heading1,
 .featured3 .parent4 > .frame-group,
 .featured3 .parent4 > .parent5 {
-    position: relative;
-    z-index: 2; /* Выше .gradient-overlay */
+  position: relative;
+  z-index: 2; /* Выше .gradient-overlay */
 }
 
-.featured3 .heading1 .div18 { 
-    width: auto; /* Чтобы ширина была по тексту, а не фиксированная 375px */
-    max-width: 450px; /* Ограничение, чтобы не слишком растягивался */
+.featured3 .heading1 .div18 {
+  width: auto; /* Чтобы ширина была по тексту, а не фиксированная 375px */
+  max-width: 450px; /* Ограничение, чтобы не слишком растягивался */
 }
+
 .featured3 .heading1 .div18 .txt {
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 600; 
-    font-size: 35px;
-    line-height: 1.1; /* Возвращаем исходное значение */
-    word-wrap: break-word;
-    /* Убираем явно заданный color, чтобы он наследовался от span-ов ниже */
+  font-family: Unbounded, sans-serif;
+  font-weight: 600;
+  font-size: 35px;
+  line-height: 1.1; /* Возвращаем исходное значение */
+  word-wrap: break-word;
+
+  /* Убираем явно заданный color, чтобы он наследовался от span-ов ниже */
 }
-.featured3 .heading1 .div18 .txt > span:first-child { color: #FFEF2B; } /* Исходный стиль */
-.featured3 .heading1 .div18 .txt .span1 { color: #F2F2F2; } /* Исходный стиль */
+.featured3 .heading1 .div18 .txt > span:first-child {
+  color: #ffef2b;
+} /* Исходный стиль */
+.featured3 .heading1 .div18 .txt .span1 {
+  color: #f2f2f2;
+} /* Исходный стиль */
+
 /* Удаляем .startup-highlight, так как его нет в исходном HTML */
 
-.featured3 .frame-group { 
-    width: 100%; 
-    max-width: 470px;
-    display: flex;
-    flex-direction: column;
-    gap: 17px;
-    margin: 40px 0;
+.featured3 .frame-group {
+  width: 100%;
+  max-width: 470px;
+  display: flex;
+  flex-direction: column;
+  gap: 17px;
+  margin: 40px 0;
 }
+
 .featured3 .chevron-forward-circle-outline-parent,
 .featured3 .frame-parent2 {
-    display: flex;
-    align-items: center;
-    gap: 15px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
 }
-.featured3 .frame-icon { 
-    width: 35px; 
-    height: 35px; 
-    border: 1px solid white; /* Возвращаем исходный стиль */
-    border-radius: 8px;    /* Возвращаем исходный стиль */
-    padding: 5px;          /* Возвращаем исходный стиль */
-    box-sizing: border-box;
-    display: flex; justify-content: center; align-items: center;
+
+.featured3 .frame-icon {
+  width: 35px;
+  height: 35px;
+  border: 1px solid white; /* Возвращаем исходный стиль */
+  border-radius: 8px; /* Возвращаем исходный стиль */
+  padding: 5px; /* Возвращаем исходный стиль */
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-.featured3 .faq, 
+
+.featured3 .faq,
 .featured3 .div20 {
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 1.3; /* Возвращаем исходное значение */
-    word-wrap: break-word;
-    /* Цвет будет наследоваться от span-ов ниже или от общего правила */
+  font-family: Unbounded, sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.3; /* Возвращаем исходное значение */
+  word-wrap: break-word;
+
+  /* Цвет будет наследоваться от span-ов ниже или от общего правила */
 }
-.featured3 .faq { color: white; } /* Исходный стиль */
-.featured3 .div20 .txt > span:first-child { color: white; } /* Исходный стиль */
-.featured3 .div20 .txt .span2 { color: #FFEF2B; } /* Исходный стиль */
-.featured3 .frame-parent2 .div20 { color: white; } /* Исходный стиль */
+.featured3 .faq {
+  color: white;
+} /* Исходный стиль */
+.featured3 .div20 .txt > span:first-child {
+  color: white;
+} /* Исходный стиль */
+.featured3 .div20 .txt .span2 {
+  color: #ffef2b;
+} /* Исходный стиль */
+.featured3 .frame-parent2 .div20 {
+  color: white;
+} /* Исходный стиль */
+
 /* Удаляем .support-highlight */
 
-.featured3 .parent5 { /* Кнопка "Создать стартап" */
-    padding: 12px 25px;
-    background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
-    border-radius: 10px;
-    border: 1px solid black; /* Возвращаем исходный стиль */
-    justify-content: flex-start;
-    align-items: center;
-    gap: 9px;
-    display: inline-flex;
-    text-decoration: none;
-    box-sizing: border-box;
-    margin-top: 20px; 
+.featured3 .parent5 {
+  /* Кнопка "Создать стартап" */
+  padding: 12px 25px;
+  background: linear-gradient(180deg, #ffef2b 0%, #f9f7d6 100%);
+  border-radius: 10px;
+  border: 1px solid black; /* Возвращаем исходный стиль */
+  justify-content: flex-start;
+  align-items: center;
+  gap: 9px;
+  display: inline-flex;
+  text-decoration: none;
+  box-sizing: border-box;
+  margin-top: 20px;
 }
+
 .featured3 .parent5 .div22 {
-    color: black;
-    font-size: 16px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 500;
-    line-height: 1; /* Возвращаем исходное значение */
+  color: black;
+  font-size: 16px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 500;
+  line-height: 1; /* Возвращаем исходное значение */
 }
+
 .featured3 .parent5 .add-circle-outline-icon {
-    width: 24px; height: 24px;
+  width: 24px;
+  height: 24px;
 }
 
 /* Правая часть с изображениями в .featured3 */
-.featured3 .scale-1200-photoroom-2-parent { /* Планета */
-    position: absolute;
-    right: 60px;  /* Возвращаем исходное значение */
-    bottom: 40px; /* Возвращаем исходное значение */
-    width: 414px; 
-    height: auto; /* Возвращаем исходное значение */
-    z-index: 1;
-}
-.featured3 .scale-1200-photoroom-2-icon { /* Фиолетовая планета */
-    width: 100%;
-    height: auto; /* Возвращаем исходное значение */
-    object-fit: contain; /* Было object-fit: contain, оставляем для корректного отображения */
-    filter: drop-shadow(0px 10px 30px rgba(155, 89, 182, 0.5)); 
+.featured3 .scale-1200-photoroom-2-parent {
+  /* Планета */
+  position: absolute;
+  right: 60px; /* Возвращаем исходное значение */
+  bottom: 40px; /* Возвращаем исходное значение */
+  width: 414px;
+  height: auto; /* Возвращаем исходное значение */
+  z-index: 1;
 }
 
-.featured3 .vector-parent { 
-    display: none; /* Исходное состояние - скрыто. Если плейсхолдеры должны быть видны, нужно будет поменять на flex/block */
+.featured3 .scale-1200-photoroom-2-icon {
+  /* Фиолетовая планета */
+  width: 100%;
+  height: auto; /* Возвращаем исходное значение */
+  object-fit: contain; /* Было object-fit: contain, оставляем для корректного отображения */
+  filter: drop-shadow(0 10px 30px rgb(155 89 182 / 50%));
+}
+
+.featured3 .vector-parent {
+  display: none; /* Исходное состояние - скрыто. Если плейсхолдеры должны быть видны, нужно будет поменять на flex/block */
 }
 
 /* Удаляем стили для .abs-rocket и его вариаций */
 
-
 /* --- Секция 4: Featured4 (Инвесторы) --- */
 .featured4 {
-    width: 100%;
-    max-width: 1445px;
-    padding: 45px 71px;
-    box-sizing: border-box;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 60px; 
-    margin-left: auto; 
-    margin-right: auto; 
-    /* background-color: #001833; */ /* Убираем фон с обертки .featured4, будет на .frame-parent3 */
-    position: -webkit-sticky; /* Добавляем sticky */
-    position: sticky;         /* Добавляем sticky */
-    top: 30px;                /* Прилипает ниже featured3 для наложения */
-    z-index: 10;              /* Выше чем featured3 */
-    /* position: relative; */ /* Это было для JS, теперь не нужно */
-    /* z-index: 2; */       /* Это было для JS, теперь не нужно */
+  width: 100%;
+  max-width: 1445px;
+  padding: 45px 71px;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 60px;
+  margin-left: auto;
+  margin-right: auto;
+
+  /* background-color: #001833; */
+
+  /* Убираем фон с обертки .featured4, будет на .frame-parent3 */
+  position: sticky; /* Добавляем sticky */
+  position: sticky; /* Добавляем sticky */
+  top: 30px; /* Прилипает ниже featured3 для наложения */
+  z-index: 10; /* Выше чем featured3 */
+
+  /* position: relative; */
+
+  /* Это было для JS, теперь не нужно */
+
+  /* z-index: 2; */
+
+  /* Это было для JS, теперь не нужно */
 }
 
 .featured4 .frame-parent3 {
-    width: 1303px;
-    height: 521px;
-    position: relative;
-    background-color: #001833; /* Фон на контентном блоке */
-    border-radius: 10px;
-    /* display: flex; */ /* Убираем flex отсюда, если он не нужен для позиционирования .parent6 и .icon10 */
-    /* justify-content: space-between; */
-    /* align-items: center; */
-    overflow: visible; /* Чтобы .icon10 мог вылезать */
-    padding: 50px; 
-    box-sizing: border-box;
+  width: 1303px;
+  height: 521px;
+  position: relative;
+  background-color: #001833; /* Фон на контентном блоке */
+  border-radius: 10px;
+
+  /* display: flex; */
+
+  /* Убираем flex отсюда, если он не нужен для позиционирования .parent6 и .icon10 */
+
+  /* justify-content: space-between; */
+
+  /* align-items: center; */
+  overflow: visible; /* Чтобы .icon10 мог вылезать */
+  padding: 50px;
+  box-sizing: border-box;
 }
 
-.featured4 .parent6 { /* Левый блок с текстом */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 35px;
-    width: 55%; /* Немного увеличим место для текста, т.к. фон будет вылезать */
-    position: relative; /* Для z-index, чтобы текст был выше фона */
-    z-index: 1;
+.featured4 .parent6 {
+  /* Левый блок с текстом */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 35px;
+  width: 55%; /* Немного увеличим место для текста, т.к. фон будет вылезать */
+  position: relative; /* Для z-index, чтобы текст был выше фона */
+  z-index: 1;
 }
 
-.featured4 .parent6 .div23 .txt > span:first-child { 
-    color: #004E9F; /* Изменено по макету */
-    font-size: 35px;
-    font-family: 'Unbounded', sans-serif; /* Уже должно быть, но для явности */
-    font-weight: 600;
-    line-height: 35px; /* Изменено по макету */
-    word-wrap: break-word; /* Уже должно быть */
-}
-.featured4 .parent6 .div23 .txt .span3 { 
-    color: black; /* Изменено по макету */
-    font-size: 35px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 600;
-    line-height: 35px; /* Изменено по макету */
-    word-wrap: break-word;
+.featured4 .parent6 .div23 .txt > span:first-child {
+  color: #004e9f; /* Изменено по макету */
+  font-size: 35px;
+  font-family: Unbounded, sans-serif; /* Уже должно быть, но для явности */
+  font-weight: 600;
+  line-height: 35px; /* Изменено по макету */
+  word-wrap: break-word; /* Уже должно быть */
 }
 
-.featured4 .group-parent { 
-    align-self: stretch;
-    display: flex;
-    flex-direction: row; /* Явно указываем ряд */
-    justify-content: space-around; 
-    align-items: flex-start; /* Выравнивание по верху, т.к. иконки вылезают */
-    gap: 20px;
-    flex-wrap: nowrap; /* Запрещаем перенос, если хотим строгий ряд */
-    margin-top: 20px; /* Добавляем отступ сверху для карточек */
+.featured4 .parent6 .div23 .txt .span3 {
+  color: black; /* Изменено по макету */
+  font-size: 35px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 600;
+  line-height: 35px; /* Изменено по макету */
+  word-wrap: break-word;
+}
+
+.featured4 .group-parent {
+  align-self: stretch;
+  display: flex;
+  flex-flow: row nowrap; /* Явно указываем ряд */
+  justify-content: space-around;
+  align-items: flex-start; /* Выравнивание по верху, т.к. иконки вылезают */
+  gap: 20px; /* Запрещаем перенос, если хотим строгий ряд */
+  margin-top: 20px; /* Добавляем отступ сверху для карточек */
 }
 
 .featured4 .group-div {
-    width: 187px; 
-    height: 187px; /* Делаем квадратным */
-    /* min-height: 220px; */ /* Убираем min-height */
-    position: relative; 
-    background: linear-gradient(180deg, #004E9F 0%, #001C39 100%);
-    border-radius: 10px;
-    padding: 0 14px 20px 14px; 
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    overflow: visible; 
-    gap: 10px; 
+  width: 187px;
+  height: 187px; /* Делаем квадратным */
+
+  /* min-height: 220px; */
+
+  /* Убираем min-height */
+  position: relative;
+  background: linear-gradient(180deg, #004e9f 0%, #001c39 100%);
+  border-radius: 10px;
+  padding: 0 14px 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  overflow: visible;
+  gap: 10px;
 }
 
 .featured4 .group-div .card-icon-container {
-    width: 100%;
-    min-height: 80px; /* Увеличиваем для больших иконок */
-    margin-top: -60px; /* Увеличиваем отрицательный отступ для больших иконок */
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: flex-end; 
-    margin-bottom: 10px; 
-    z-index: 1; 
+  width: 100%;
+  min-height: 80px; /* Увеличиваем для больших иконок */
+  margin-top: -60px; /* Увеличиваем отрицательный отступ для больших иконок */
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  margin-bottom: 10px;
+  z-index: 1;
 }
 
 .featured4 .group-div .card-icon {
-    width: 140px;  /* Увеличиваем размер иконки ~x2 от 70px */
-    height: 140px; 
-    object-fit: contain;
+  width: 140px; /* Увеличиваем размер иконки ~x2 от 70px */
+  height: 140px;
+  object-fit: contain;
 }
 
-.featured4 .div24, 
-.featured4 .div25, 
-.featured4 .div26 { 
-    color: white;
-    font-size: 14px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 400;
-    line-height: 18px; /* Изменено по макету */
-    word-wrap: break-word;
+.featured4 .div24,
+.featured4 .div25,
+.featured4 .div26 {
+  color: white;
+  font-size: 14px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 400;
+  line-height: 18px; /* Изменено по макету */
+  word-wrap: break-word;
 }
 
-.featured4 .parent7 { /* Кнопка "Посмотреть стартапы" */
-    padding: 12px 25px;
-    background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
-    border-radius: 10px;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 9px;
-    display: inline-flex;
-    text-decoration: none;
-    box-sizing: border-box;
-    margin-top: 20px;
+.featured4 .parent7 {
+  /* Кнопка "Посмотреть стартапы" */
+  padding: 12px 25px;
+  background: linear-gradient(180deg, #ffef2b 0%, #f9f7d6 100%);
+  border-radius: 10px;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 9px;
+  display: inline-flex;
+  text-decoration: none;
+  box-sizing: border-box;
+  margin-top: 20px;
 }
+
 .featured4 .parent7 .div22 {
-    color: black;
-    font-size: 16px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 400; /* Изменено по макету */
-    line-height: 16px; /* Изменено по макету */
-}
-.featured4 .parent7 .iconeye {
-    width: 24px; height: 24px;
+  color: black;
+  font-size: 16px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 400; /* Изменено по макету */
+  line-height: 16px; /* Изменено по макету */
 }
 
-.featured4 .icon10 { /* Фоновое изображение инвесторов */
-    position: absolute;
-    left: 0; /* Начинается от левого края родителя */
-    right: auto; /* Убираем right, чтобы не конфликтовал с left и width */
-    top: 0;
-    width: 115%; /* Чтобы покрыть всю ширину (100%) и вылезти справа (15%) */ 
-    height: 100%;
-    object-fit: cover; 
-    /* border-radius: 0 10px 10px 0; */ /* Убираем, если фон должен быть без закругления на вылезающей части или будет обрезан родителем */
-    z-index: 0; 
-    opacity: 1;
+.featured4 .parent7 .iconeye {
+  width: 24px;
+  height: 24px;
+}
+
+.featured4 .icon10 {
+  /* Фоновое изображение инвесторов */
+  position: absolute;
+  left: 0; /* Начинается от левого края родителя */
+  right: auto; /* Убираем right, чтобы не конфликтовал с left и width */
+  top: 0;
+  width: 115%; /* Чтобы покрыть всю ширину (100%) и вылезти справа (15%) */
+  height: 100%;
+  object-fit: cover;
+
+  /* border-radius: 0 10px 10px 0; */
+
+  /* Убираем, если фон должен быть без закругления на вылезающей части или будет обрезан родителем */
+  z-index: 0;
+  opacity: 1;
 }
 
 /* --- Секция 5: Featured5 (Исследуйте новые миры) --- */
 .featured5 {
-    width: 100%;
-    max-width: 1445px;
-    padding: 45px 71px;
-    box-sizing: border-box;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start; /* Внутреннее выравнивание этого блока */
-    gap: 55px;
-    margin-top: 60px;
-    background: transparent !important;
-    margin-left: auto; /* Центрирование */
-    margin-right: auto; /* Центрирование */
+  width: 100%;
+  max-width: 1445px;
+  padding: 45px 71px;
+  box-sizing: border-box;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Внутреннее выравнивание этого блока */
+  gap: 55px;
+  margin-top: 60px;
+  background: transparent !important;
+  margin-left: auto; /* Центрирование */
+  margin-right: auto; /* Центрирование */
 }
 
-.featured5 .frame-parent6 { 
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 40px; /* Уменьшен отступ */
+.featured5 .frame-parent6 {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 40px; /* Уменьшен отступ */
 }
 
-.featured5 .parent8 { /* Заголовок "Исследуйте новые миры" */
-    align-self: flex-start;
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-}
-.featured5 .parent8 .div28 { 
-    color: white;
-    font-size: 55px;
-    font-family: 'Blippo Black', sans-serif;
-    font-weight: normal;
-    line-height: 1.0;
-}
-.featured5 .parent8 .div29 { 
-    color: #FFEF2B;
-    font-size: 55px;
-    font-family: 'Blippo Black', sans-serif;
-    font-weight: normal;
-    text-transform: uppercase;
-    line-height: 1.0;
+.featured5 .parent8 {
+  /* Заголовок "Исследуйте новые миры" */
+  align-self: flex-start;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
 }
 
-.featured5 .frame-parent7 { /* Основной контент: [картинка слева] [разделитель] [карточки] [список справа] */
-    align-self: stretch;
-    display: flex;
-    justify-content: space-between; /* Элементы будут распределены */
-    align-items: flex-start;
-    gap: 30px;
+.featured5 .parent8 .div28 {
+  color: white;
+  font-size: 55px;
+  font-family: 'Blippo Black', sans-serif;
+  font-weight: normal;
+  line-height: 1;
 }
 
-.featured5 .frame-parent8 { /* Левый блок с большой картинкой */
-    width: 45%; /* Примерно */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 25px;
+.featured5 .parent8 .div29 {
+  color: #ffef2b;
+  font-size: 55px;
+  font-family: 'Blippo Black', sans-serif;
+  font-weight: normal;
+  text-transform: uppercase;
+  line-height: 1;
 }
-.featured5 .group-wrapper { 
-    align-self: stretch;
-    height: 514px; 
-    position: relative;
-    background: #041A32; 
-    overflow: hidden;
-    border-radius: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+
+.featured5 .frame-parent7 {
+  /* Основной контент: [картинка слева] [разделитель] [карточки] [список справа] */
+  align-self: stretch;
+  display: flex;
+  justify-content: space-between; /* Элементы будут распределены */
+  align-items: flex-start;
+  gap: 30px;
+}
+
+.featured5 .frame-parent8 {
+  /* Левый блок с большой картинкой */
+  width: 45%; /* Примерно */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 25px;
+}
+
+.featured5 .group-wrapper {
+  align-self: stretch;
+  height: 514px;
+  position: relative;
+  background: #041a32;
+  overflow: hidden;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .featured5 .group-child-main-img-1 {
-    width: 122.15px;
-    height: 345.36px;
-    left: 36px;
-    top: 83px;
-    position: absolute;
+  width: 122.15px;
+  height: 345.36px;
+  left: 36px;
+  top: 83px;
+  position: absolute;
 }
+
 .featured5 .group-child-main-img-2 {
-    width: 388.42px;
-    height: 345.36px;
-    left: 168.70px;
-    top: 85.64px;
-    position: absolute;
+  width: 388.42px;
+  height: 345.36px;
+  left: 168.7px;
+  top: 85.64px;
+  position: absolute;
 }
 
-
-.featured5 .parent9 { /* Кнопка "Все стартапы" */
-    padding: 12px 25px;
-    background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
-    border-radius: 10px;
-    border: 1px solid black;
-    gap: 9px;
-    display: inline-flex; text-decoration: none; box-sizing: border-box;
-    align-items: center;
+.featured5 .parent9 {
+  /* Кнопка "Все стартапы" */
+  padding: 12px 25px;
+  background: linear-gradient(180deg, #ffef2b 0%, #f9f7d6 100%);
+  border-radius: 10px;
+  border: 1px solid black;
+  gap: 9px;
+  display: inline-flex;
+  text-decoration: none;
+  box-sizing: border-box;
+  align-items: center;
 }
+
 .featured5 .parent9 .div22 {
-    color: black; font-size: 16px; font-family: 'Unbounded', sans-serif; font-weight: 500; line-height: 1;
+  color: black;
+  font-size: 16px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 500;
+  line-height: 1;
 }
-.featured5 .parent9 .iconsarrow-right-2line { width: 16px; height: 16px; }
-
-.featured5 .divider { 
-    width: 1px;
-    align-self: stretch; /* Растянуть по высоте .frame-parent7 */
-    background: rgba(255, 255, 255, 0.2);
-}
-
-.featured5 .frame-parent9 { /* Блок с тремя карточками стартапов */
-    width: 28%; /* Примерно */
-    display: flex;
-    flex-direction: column;
-    gap: 49px;
+.featured5 .parent9 .iconsarrow-right-2line {
+  width: 16px;
+  height: 16px;
 }
 
-.featured5 .frame-wrapper { align-self: stretch; }
-.featured5 .frame-parent10 { /* Карточка стартапа */
-    align-self: stretch;
-    display: flex;
-    flex-direction: row; /* Картинка слева, текст справа */
-    justify-content: space-between;
-    align-items: center;
-    gap: 20px;
-    background: transparent;
-    padding: 0;
+.featured5 .divider {
+  width: 1px;
+  align-self: stretch; /* Растянуть по высоте .frame-parent7 */
+  background: rgb(255 255 255 / 20%);
 }
-.featured5 .frame-parent10 .frame-child9 { /* Картинка стартапа */
-    width: 160px; 
-    height: 156px; 
-    object-fit: cover;
-    border-radius: 10px;
-    flex-shrink: 0;
+
+.featured5 .frame-parent9 {
+  /* Блок с тремя карточками стартапов */
+  width: 28%; /* Примерно */
+  display: flex;
+  flex-direction: column;
+  gap: 49px;
 }
-.featured5 .content { /* Текст справа от картинки */
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 16px;
-    flex-grow: 1;
+
+.featured5 .frame-wrapper {
+  align-self: stretch;
 }
+
+.featured5 .frame-parent10 {
+  /* Карточка стартапа */
+  align-self: stretch;
+  display: flex;
+  flex-direction: row; /* Картинка слева, текст справа */
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  background: transparent;
+  padding: 0;
+}
+
+.featured5 .frame-parent10 .frame-child9 {
+  /* Картинка стартапа */
+  width: 160px;
+  height: 156px;
+  object-fit: cover;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+.featured5 .content {
+  /* Текст справа от картинки */
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 16px;
+  flex-grow: 1;
+}
+
 .featured5 .voltforge-dynamics-parent {
-    display: flex; flex-direction: column; gap: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
-.featured5 .voltforge-dynamics { 
-    color: #FCFCFD;
-    font-size: 16px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 400;
-    line-height: 1;
+
+.featured5 .voltforge-dynamics {
+  color: #fcfcfd;
+  font-size: 16px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 400;
+  line-height: 1;
 }
-.featured5 .info { 
-    display: flex; align-items: center; gap: 10px;
+
+.featured5 .info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
+
 .featured5 .avatar01-icon {
-    width: 24px; height: 24px;
-    border-radius: 50%;
-    object-fit: cover;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
 }
-.featured5 .label2 { 
-    padding: 4px 8px;
-    border-radius: 4px;
-    border: 1px solid #FFEF2B;
-    display: flex; justify-content: center; align-items: center;
+
+.featured5 .label2 {
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid #ffef2b;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-.featured5 .popular { 
-    color: #FFEF2B;
-    font-size: 12px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 500;
-    text-transform: uppercase;
+
+.featured5 .popular {
+  color: #ffef2b;
+  font-size: 12px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 500;
+  text-transform: uppercase;
 }
-.featured5 .voltforge-description { 
-    color: #E6E8EC;
-    font-size: 13px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 300;
-    line-height: 1.5;
-    /* height: auto;  */ /* Убираем ограничение высоты */
-    overflow: visible;
-    text-overflow: initial;
-    width: 175px;
-    font-size: 8px;
-    line-height: 9px;
+
+.featured5 .voltforge-description {
+  color: #e6e8ec;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+
+  /* height: auto;  */
+
+  /* Убираем ограничение высоты */
+  overflow: visible;
+  text-overflow: initial;
+  width: 175px;
+  font-size: 8px;
+  line-height: 9px;
 }
-.featured5 .button5 { 
-    padding: 8px 12px;
-    background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%);
-    border-radius: 8px;
-    gap: 10px;
-    display: inline-flex; text-decoration: none;
-    align-items: center; justify-content: center;
-    align-self: flex-start; /* Кнопка слева */
+
+.featured5 .button5 {
+  padding: 8px 12px;
+  background: linear-gradient(0deg, #004e9f 0%, #006edf 100%);
+  border-radius: 8px;
+  gap: 10px;
+  display: inline-flex;
+  text-decoration: none;
+  align-items: center;
+  justify-content: center;
+  align-self: flex-start; /* Кнопка слева */
 }
+
 .featured5 .button5 .cosmochat {
-    color: #FCFCFD; font-size: 14px; font-family: 'Unbounded', sans-serif; font-weight: 300; line-height: 1;
+  color: #fcfcfd;
+  font-size: 14px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  line-height: 1;
 }
 
-.featured5 .creators { /* "Последние обновления от стартаперов" */
-    width: 22%; /* Примерно */
-    display: flex; flex-direction: column; gap: 20px;
+.featured5 .creators {
+  /* "Последние обновления от стартаперов" */
+  width: 22%; /* Примерно */
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
-.featured5 .div31 { 
-    color: #777E90; /* Светлее, чем 777E90 */
-    font-size: 12px; 
-    font-family: 'Unbounded', sans-serif; 
-    font-weight: 500;
+
+.featured5 .div31 {
+  color: #777e90; /* Светлее, чем 777E90 */
+  font-size: 12px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 500;
 }
-.featured5 .frame-parent13 { 
-    display: flex; flex-direction: column; gap: 0;
+
+.featured5 .frame-parent13 {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
 }
-.featured5 .frame-parent14 { 
-    width: 100%;
-    padding: 15px 0;
-    display: flex; flex-direction: column; gap: 15px;
+
+.featured5 .frame-parent14 {
+  width: 100%;
+  padding: 15px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
+
 .featured5 .user-parent {
-    align-self: stretch;
-    display: flex; align-items: center; gap: 15px;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  gap: 15px;
 }
-.featured5 .avatar01-icon3 { 
-    width: 48px; height: 48px;
-    border-radius: 50%;
-    object-fit: cover;
+
+.featured5 .avatar01-icon3 {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
 }
+
 .featured5 .name-parent {
-    flex-grow: 1; display: flex; flex-direction: column; gap: 5px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
-.featured5 .name-wrapper .cosmochat-name { 
-    color: #FCFCFD; font-size: 14px; font-family: 'Unbounded', sans-serif; font-weight: 300;
+
+.featured5 .name-wrapper .cosmochat-name {
+  color: #fcfcfd;
+  font-size: 14px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
 }
+
 .featured5 .rating-wrapper {
-    display: flex; align-items: center; gap: 5px;
-    font-size: 12px; font-family: 'Unbounded', sans-serif; font-weight: 300;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
 }
-.featured5 .rating-stars { color: #FFEF2B; }
-.featured5 .rating-value { color: #E6E8EC; }
+.featured5 .rating-stars {
+  color: #ffef2b;
+}
+.featured5 .rating-value {
+  color: #e6e8ec;
+}
 
-.featured5 .divider1 { 
-    align-self: stretch; height: 1px; background: rgba(255, 255, 255, 0.13);
+.featured5 .divider1 {
+  align-self: stretch;
+  height: 1px;
+  background: rgb(255 255 255 / 13%);
 }
 
-.featured5 .button8 { 
-    padding: 10px 16px;
-    border-radius: 8px;
-    border: 1px solid white;
-    gap: 12px;
-    display: inline-flex; text-decoration: none;
-    align-items: center; justify-content: center;
-    margin-top: 15px;
-    align-self: flex-start;
+.featured5 .button8 {
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: 1px solid white;
+  gap: 12px;
+  display: inline-flex;
+  text-decoration: none;
+  align-items: center;
+  justify-content: center;
+  margin-top: 15px;
+  align-self: flex-start;
 }
+
 .featured5 .button8 .cosmochat {
-    color: #FCFCFD; font-size: 14px; font-family: 'Unbounded', sans-serif; font-weight: 300;
+  color: #fcfcfd;
+  font-size: 14px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
 }
-.featured5 .button8 .iconsarrow-right-2line { width: 16px; height: 16px; }
+.featured5 .button8 .iconsarrow-right-2line {
+  width: 16px;
+  height: 16px;
+}
 
 /* --- Секция 6: Featured6 (Как работает наша галактика?) --- */
 .featured6.galaxy-carousel-wrapper {
-    width: 100%;
-    max-width: 1445px;
-    padding: 45px 0;
-    box-sizing: border-box;
-    overflow: hidden;
-    /* display: flex; */
-    /* justify-content: center; */
-    /* align-items: center; */
-    margin-top: 60px;
-    background: transparent !important; 
-    border-radius: 10px;
-    margin-left: auto; /* Центрирование */
-    margin-right: auto; /* Центрирование */
-    align-items: center; /* This was forcing the carousel to be centered */
-    gap: 55px;
+  width: 100%;
+  max-width: 1445px;
+  padding: 45px 0;
+  box-sizing: border-box;
+  overflow: hidden;
+
+  /* display: flex; */
+
+  /* justify-content: center; */
+
+  /* align-items: center; */
+  margin-top: 60px;
+  background: transparent !important;
+  border-radius: 10px;
+  margin-left: auto; /* Центрирование */
+  margin-right: auto; /* Центрирование */
+  align-items: center; /* This was forcing the carousel to be centered */
+  gap: 55px;
 }
 
-.featured6 .frame-parent18 { /* Внутренний контейнер */
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* This was forcing the carousel to be centered */
-    gap: 55px;
+.featured6 .frame-parent18 {
+  /* Внутренний контейнер */
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* This was forcing the carousel to be centered */
+  gap: 55px;
 }
 
-.featured6 .parent18 { /* Заголовок */
-    display: flex; flex-direction: column; align-items: center; gap: 5px;
+.featured6 .parent18 {
+  /* Заголовок */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
 }
-.featured6 .parent18 .div52 { 
-    color: white; font-size: 55px; font-family: 'Blippo Black', sans-serif; font-weight: normal; line-height: 1.0;
+
+.featured6 .parent18 .div52 {
+  color: white;
+  font-size: 55px;
+  font-family: 'Blippo Black', sans-serif;
+  font-weight: normal;
+  line-height: 1;
 }
-.featured6 .parent18 .div29 { 
-    color: #FFEF2B; font-size: 55px; font-family: 'Blippo Black', sans-serif; font-weight: normal; text-transform: uppercase; line-height: 1.0;
+
+.featured6 .parent18 .div29 {
+  color: #ffef2b;
+  font-size: 55px;
+  font-family: 'Blippo Black', sans-serif;
+  font-weight: normal;
+  text-transform: uppercase;
+  line-height: 1;
 }
 
 /* JS-управляемая карусель */
 .featured6 .galaxy-carousel {
-    width: 100%; /* Ширина одного слайда */
-    height: 504px; /* Высота по картинке */
-    position: relative; 
-    overflow: hidden;
-    align-self: stretch; /* Override parent's align-items: center */
+  width: 100%; /* Ширина одного слайда */
+  height: 504px; /* Высота по картинке */
+  position: relative;
+  overflow: hidden;
+  align-self: stretch; /* Override parent's align-items: center */
 }
 
-.featured6 .galaxy-carousel-inner { /* Этот класс JS не использует, но может быть полезен для стилизации обертки слайдов */
-    display: flex;
-    transition: transform 0.5s ease-in-out;
+.featured6 .galaxy-carousel-inner {
+  /* Этот класс JS не использует, но может быть полезен для стилизации обертки слайдов */
+  display: flex;
+  transition: transform 0.5s ease-in-out;
 }
 
 .featured6 .galaxy-step-card {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex; /* Для выравнивания картинки внутри */
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start; /* Выравниваем по верху, чтобы обрезалась нижняя часть */
-    gap: 20px; 
-    box-sizing: border-box;
-    opacity: 0;
-    transition: opacity 0.8s ease-in-out; /* Плавный переход */
-    pointer-events: none; /* Не кликать по неактивным */
-    border-radius: 20px;
-    overflow: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex; /* Для выравнивания картинки внутри */
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start; /* Выравниваем по верху, чтобы обрезалась нижняя часть */
+  gap: 20px;
+  box-sizing: border-box;
+  opacity: 0;
+  transition: opacity 0.8s ease-in-out; /* Плавный переход */
+  pointer-events: none; /* Не кликать по неактивным */
+  border-radius: 20px;
+  overflow: hidden;
 }
 
 .featured6 .galaxy-step-card.active-step {
-    opacity: 1;
-    pointer-events: auto; /* Можно кликать по активной */
-    z-index: 1; /* Активная карточка поверх остальных */
+  opacity: 1;
+  pointer-events: auto; /* Можно кликать по активной */
+  z-index: 1; /* Активная карточка поверх остальных */
 }
 
-.featured6 .galaxy-step-card .frame-child12 { 
-    width: 100%;
-    height: auto; /* Автоматическая высота для сохранения пропорций */
-    min-height: 504px; /* Минимальная высота равна высоте контейнера */
-    object-fit: cover;
-    object-position: top center; /* Фокусируемся на верхней части изображения */
+.featured6 .galaxy-step-card .frame-child12 {
+  width: 100%;
+  height: auto; /* Автоматическая высота для сохранения пропорций */
+  min-height: 504px; /* Минимальная высота равна высоте контейнера */
+  object-fit: cover;
+  object-position: top center; /* Фокусируемся на верхней части изображения */
 }
-.featured6 .galaxy-step-data { display: none; } /* Скрываем данные для JS */
+.featured6 .galaxy-step-data {
+  display: none;
+} /* Скрываем данные для JS */
 
 .featured6 .galaxy-navigation {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .featured6 .galaxy-arrow-left,
 .featured6 .galaxy-arrow-right {
-    width: 40px; height: 40px;
-    background-color: rgba(255, 255, 255, 0.2);
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer;
-    transition: background-color 0.3s;
+  width: 40px;
+  height: 40px;
+  background-color: rgb(255 255 255 / 20%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
+
 .featured6 .galaxy-arrow-left:hover,
 .featured6 .galaxy-arrow-right:hover {
-    background-color: rgba(255, 255, 255, 0.4);
+  background-color: rgb(255 255 255 / 40%);
 }
+
 .featured6 .galaxy-arrow-left img,
 .featured6 .galaxy-arrow-right img {
-    width: 18px; height: 18px; object-fit: contain;
-    filter: brightness(0) invert(1); /* Белые стрелки */
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  filter: brightness(0) invert(1); /* Белые стрелки */
 }
 
 .featured6 .galaxy-step-indicator {
 }
+
 .featured6 .galaxy-step-current-title {
-    color: white;
-    font-size: 20px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 400;
-    text-align: center;
-    line-height: 55px;
+  color: white;
+  font-size: 20px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 400;
+  text-align: center;
+  line-height: 55px;
 }
+
 .featured6 .galaxy-step-number-button {
-    width: 205px;
-    height: 62px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #FFEF2B;
-    border-radius: 10px;
+  width: 205px;
+  height: 62px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #ffef2b;
+  border-radius: 10px;
 }
+
 .featured6 .galaxy-step-number-text {
-    color: black;
-    font-size: 20px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 400;
-    text-transform: uppercase;
+  color: black;
+  font-size: 20px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 400;
+  text-transform: uppercase;
 }
 
 /* --- Секция 7: Featured7 (Great Ideas это платформа...) --- */
 .featured7 {
-    width: 100%;
-    max-width: 1445px;
-    padding: 60px 71px;
-    box-sizing: border-box;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 60px;
-    background: transparent !important;
-    border-radius: 10px;
-    margin-left: auto;
-    margin-right: auto;
+  width: 100%;
+  max-width: 1445px;
+  padding: 60px 71px;
+  box-sizing: border-box;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 60px;
+  background: transparent !important;
+  border-radius: 10px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .featured7 .frame-parent19 {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 39px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 39px;
 }
 
 .featured7 .group-container {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 60px;
-    width: 100%;
-    background-image: url('../images/main_page/7blockmain.webp');
-    background-size: cover;
-    background-position: center;
-    border-radius: 10px;
-    padding: 60px;
-    box-sizing: border-box;
-    min-height: 521px;
-    position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 60px;
+  width: 100%;
+  background-image: url('../images/main_page/7blockmain.webp');
+  background-size: cover;
+  background-position: center;
+  border-radius: 10px;
+  padding: 60px;
+  box-sizing: border-box;
+  min-height: 521px;
+  position: relative;
 }
 
 .featured7 .great-ideas-parent {
-    flex: 0 0 40%;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    max-width: 405px;
-    position: relative;
-    z-index: 2;
+  flex: 0 0 40%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 405px;
+  position: relative;
+  z-index: 2;
 }
 
 .featured7 .great-ideas {
-    color: white;
-    font-size: 35px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 600;
-    line-height: 35px;
+  color: white;
+  font-size: 35px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 600;
+  line-height: 35px;
 }
 
 .featured7 .div56 {
-    color: white;
-    font-size: 14px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 300;
-    line-height: 18px;
+  color: white;
+  font-size: 14px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  line-height: 18px;
 }
 
 .featured7 .app-store-buttons {
-    display: flex;
-    gap: 15px;
-    margin-top: auto;
-    justify-content: center;
+  display: flex;
+  gap: 15px;
+  margin-top: auto;
+  justify-content: center;
 }
 
 .featured7 .app-store-btn img {
-    height: 115px;
-    width: auto;
-    border-radius: 5px;
-    aspect-ratio: 1 / 1;
+  height: 115px;
+  width: auto;
+  border-radius: 5px;
+  aspect-ratio: 1 / 1;
 }
 
 .featured7 .frame-parent21 {
-    display: flex;
-    justify-content: space-between;
-    align-items: stretch;
-    gap: 39px;
-    width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  gap: 39px;
+  width: 100%;
 }
 
 .featured7 .frame-parent22 {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    gap: 20px;
-    padding: 61px;
-    border-radius: 10px;
-    color: white;
-    position: relative;
-    overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 61px;
+  border-radius: 10px;
+  color: white;
+  position: relative;
+  overflow: hidden;
 }
 
 .featured7 .card-gamification {
-     background: linear-gradient(180deg, #7B61FF 0%, #4A3A99 100%);
-     flex: 3.5;
-     aspect-ratio: 1 / 1;
+  background: linear-gradient(180deg, #7b61ff 0%, #4a3a99 100%);
+  flex: 3.5;
+  aspect-ratio: 1 / 1;
 }
 
 .featured7 .card-industry {
-    background-color: black;
-    padding: 61px 67px;
-    flex: 6.5;
+  background-color: black;
+  padding: 61px 67px;
+  flex: 6.5;
 }
 
 .featured7 .card-industry .parent20 {
-    position: relative;
-    z-index: 2;
+  position: relative;
+  z-index: 2;
 }
 
 .featured7 .card-industry::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: url('../images/main_page/7blockastron.webp');
-    background-size: cover;
-    background-position: center;
-    opacity: 1;
-    z-index: 1;
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('../images/main_page/7blockastron.webp');
+  background-size: cover;
+  background-position: center;
+  opacity: 1;
+  z-index: 1;
 }
 
 .featured7 .div57 {
-    font-size: 35px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 600;
-    line-height: 35px;
-    margin-bottom: 31px;
+  font-size: 35px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 600;
+  line-height: 35px;
+  margin-bottom: 31px;
 }
 
 .featured7 .div58,
 .featured7 .div60 {
-    font-size: 16px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 400;
-    line-height: 1.5;
+  font-size: 16px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 400;
+  line-height: 1.5;
 }
-
 
 /* --- Секция 8: Featured8 (Истории успеха) --- */
 .featured8.success-stories-carousel-outer {
-    width: 100%;
-    /* max-width: 1445px; */ /* Let it be full width */
-    padding: 45px 0; 
-    box-sizing: border-box;
-    /* overflow: hidden; */ /* We need overflow for carousel */
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Center children (header and carousel wrapper) */
-    gap: 40px;
-    margin-top: 60px;
-    background: transparent !important;
-    position: relative;
+  width: 100%;
+
+  /* max-width: 1445px; */
+
+  /* Let it be full width */
+  padding: 45px 0;
+  box-sizing: border-box;
+
+  /* overflow: hidden; */
+
+  /* We need overflow for carousel */
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center children (header and carousel wrapper) */
+  gap: 40px;
+  margin-top: 60px;
+  background: transparent !important;
+  position: relative;
 }
 
-.featured8 .parent21 { /* Заголовок */
-    width: 100%;
-    max-width: 1303px; /* Constrain the header */
-    padding: 0 71px; /* Add padding here for alignment */
-    box-sizing: border-box;
-    display: flex; 
-    flex-direction: column; 
-    align-items: center; 
-    gap: 5px;
-    margin: 0 auto; /* Center the header manually */
+.featured8 .parent21 {
+  /* Заголовок */
+  width: 100%;
+  max-width: 1303px; /* Constrain the header */
+  padding: 0 71px; /* Add padding here for alignment */
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  margin: 0 auto; /* Center the header manually */
 }
 
-.featured8 .parent21 .faq { 
-    color: white; font-size: 55px; font-family: 'Blippo Black', sans-serif; font-weight: normal; line-height: 1.0;
+.featured8 .parent21 .faq {
+  color: white;
+  font-size: 55px;
+  font-family: 'Blippo Black', sans-serif;
+  font-weight: normal;
+  line-height: 1;
 }
-.featured8 .parent21 .div62 { 
-    color: #FFEF2B; font-size: 55px; font-family: 'Blippo Black', sans-serif; font-weight: normal; text-transform: uppercase; line-height: 1.0;
+
+.featured8 .parent21 .div62 {
+  color: #ffef2b;
+  font-size: 55px;
+  font-family: 'Blippo Black', sans-serif;
+  font-weight: normal;
+  text-transform: uppercase;
+  line-height: 1;
 }
 
 .featured8 .success-stories-carousel-container-with-arrows {
-    width: 100%; /* Take full width of parent */
-    align-self: stretch; /* Override parent's align-items: center */
-    position: relative;
-    /* display: flex; */
-    /* align-items: center; */
+  width: 100%; /* Take full width of parent */
+  align-self: stretch; /* Override parent's align-items: center */
+  position: relative;
+
+  /* display: flex; */
+
+  /* align-items: center; */
 }
 
 .featured8 .success-stories-carousel {
-    display: flex;
-    overflow: hidden;
-    margin-left: 71px;
-    width: calc(100vw - 71px);
-    padding: 20px 0;
+  display: flex;
+  overflow: hidden;
+  margin-left: 71px;
+  width: calc(100vw - 71px);
+  padding: 20px 0;
 }
 
 .featured8 .featured8-carousel-inner {
-    display: flex;
-    gap: 25px;
-    transition: transform 0.5s ease-in-out;
+  display: flex;
+  gap: 25px;
+  transition: transform 0.5s ease-in-out;
 }
 
 .featured8 .success-story-card {
-    min-width: 394px;
-    width: 394px;
-    height: 468px;
-    flex: 0 0 auto;
-    background: white;
-    border-radius: 20px;
-    padding: 40px 45px;
-    box-sizing: border-box;
-    box-shadow: 0px 8px 25px rgba(0,0,0,0.1);
-    position: relative;
-    overflow: hidden; /* Add overflow hidden to contain the quote icon */
+  min-width: 394px;
+  width: 394px;
+  height: 468px;
+  flex: 0 0 auto;
+  background: white;
+  border-radius: 20px;
+  padding: 40px 45px;
+  box-sizing: border-box;
+  box-shadow: 0 8px 25px rgb(0 0 0 / 10%);
+  position: relative;
+  overflow: hidden; /* Add overflow hidden to contain the quote icon */
 }
 
 .featured8 .success-story-card .quote-icon {
-    position: absolute;
-    top: 50%;
-    right: 20px;
-    transform: translateY(-50%);
-    width: 150px;
-    height: auto;
-    z-index: 0;
-    opacity: 0.5; /* Make it a bit more visible */
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
+  width: 150px;
+  height: auto;
+  z-index: 0;
+  opacity: 0.5; /* Make it a bit more visible */
 }
 
 .featured8 .success-story-card .avatar-icon {
-    position: absolute;
-    top: 41px;
-    left: 45px;
-    width: 131px; 
-    height: 131px;
-    border-radius: 50%;
-    z-index: 2; /* Ensure avatar is above the quote icon */
+  position: absolute;
+  top: 41px;
+  left: 45px;
+  width: 131px;
+  height: 131px;
+  border-radius: 50%;
+  z-index: 2; /* Ensure avatar is above the quote icon */
 }
 
 .featured8 .success-story-card .user-name {
-    position: absolute;
-    left: 215px; 
-    top: 69px;
-    color: black;
-    font-size: 20px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 400;
-    line-height: 1;
-    z-index: 1;
+  position: absolute;
+  left: 215px;
+  top: 69px;
+  color: black;
+  font-size: 20px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 400;
+  line-height: 1;
+  z-index: 1;
 }
 
 .featured8 .user-role-container {
-    position: absolute;
-    left: 215px; 
-    top: 106px;
-    padding: 10px 25px;
-    background: #e9ecef;
-    border-radius: 10px;
-    z-index: 1;
+  position: absolute;
+  left: 215px;
+  top: 106px;
+  padding: 10px 25px;
+  background: #e9ecef;
+  border-radius: 10px;
+  z-index: 1;
 }
 
 .featured8 .user-role {
-    color: #495057;
-    font-size: 14px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 400;
-    line-height: 1;
-    z-index: 1;
+  color: #495057;
+  font-size: 14px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 400;
+  line-height: 1;
+  z-index: 1;
 }
 
 .featured8 .review-text {
-    position: absolute;
-    width: 304px;
-    left: 45px; 
-    top: 244px;
-    color: black;
-    font-size: 12px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 300;
-    letter-spacing: 0.12px;
-    line-height: 1.5;
-    text-align: left;
-    z-index: 1;
+  position: absolute;
+  width: 304px;
+  left: 45px;
+  top: 244px;
+  color: black;
+  font-size: 12px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.12px;
+  line-height: 1.5;
+  text-align: left;
+  z-index: 1;
 }
 
 .featured8 .rating-container {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    bottom: 5px; /* Moved 15px further down from 20px */
-    display: flex;
-    gap: 8px; /* Increase gap slightly */
-    z-index: 1;
-    width: fit-content; /* Ensure transform works correctly */
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 5px; /* Moved 15px further down from 20px */
+  display: flex;
+  gap: 8px; /* Increase gap slightly */
+  z-index: 1;
+  width: fit-content; /* Ensure transform works correctly */
 }
 
 .featured8 .rating-container img {
-    width: 32px;
-    height: 32px;
-    transform: translateY(-50%);
-    z-index: 99;
+  width: 32px;
+  height: 32px;
+  transform: translateY(-50%);
+  z-index: 99;
 }
 
 .featured8 .rating-container img.half-star {
-    clip-path: polygon(0 0, 50% 0, 50% 100%, 0% 100%);
+  clip-path: polygon(0 0, 50% 0, 50% 100%, 0% 100%);
 }
 
 /* Arrow styles are now minimal, logic is in JS */
 .featured8 .success-stories-arrow-left,
 .featured8 .success-stories-arrow-right {
-    width: 46px; 
-    height: 46px;
-    cursor: pointer;
-    transition: transform 0.2s, opacity 0.3s;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 10;
+  width: 46px;
+  height: 46px;
+  cursor: pointer;
+  transition:
+    transform 0.2s,
+    opacity 0.3s;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
 }
 
-.featured8 .success-stories-arrow-left { 
-    left: 20px; 
+.featured8 .success-stories-arrow-left {
+  left: 20px;
 }
-.featured8 .success-stories-arrow-right { 
-    right: 20px;
+
+.featured8 .success-stories-arrow-right {
+  right: 20px;
 }
 
 .featured8 .success-stories-arrow-left:hover,
 .featured8 .success-stories-arrow-right:hover {
-    transform: translateY(-50%) scale(1.1);
+  transform: translateY(-50%) scale(1.1);
 }
 
 .featured8 .success-stories-arrow-left.disabled,
 .featured8 .success-stories-arrow-right.disabled {
-    opacity: 0.5;
-    pointer-events: none;
-    transform: translateY(-50%) scale(1);
+  opacity: 0.5;
+  pointer-events: none;
+  transform: translateY(-50%) scale(1);
 }
 
 .featured8 .success-stories-arrow-left,
 .featured8 .success-stories-arrow-right {
-    width: 46px; 
-    height: 46px;
-    object-fit: contain;
+  width: 46px;
+  height: 46px;
+  object-fit: contain;
 }
 
 /* --- Секция 9: Featured9 (Новости) --- */
 .featured9 {
-    width: 100%;
-    max-width: 1445px;
-    padding: 60px 71px;
-    box-sizing: border-box;
-    overflow: hidden;
-    margin: 60px auto 0 auto;
-    background: transparent !important;
+  width: 100%;
+  max-width: 1445px;
+  padding: 60px 71px;
+  box-sizing: border-box;
+  overflow: hidden;
+  margin: 60px auto 0;
+  background: transparent !important;
 }
 
 .featured9 .news-container-wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 78px;
+  display: flex;
+  flex-direction: column;
+  gap: 78px;
 }
 
 .featured9 .news-top-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .featured9 .news-title-group {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
 .featured9 .news-title-main {
-    color: white;
-    font-size: 55px;
-    font-family: 'Blippo Black', sans-serif;
-    font-weight: 400;
-    line-height: 1;
+  color: white;
+  font-size: 55px;
+  font-family: 'Blippo Black', sans-serif;
+  font-weight: 400;
+  line-height: 1;
 }
 
 .featured9 .news-title-sub {
-    color: #FFEF2B;
-    font-size: 55px;
-    font-family: 'Blippo Black', sans-serif;
-    font-weight: 400;
-    text-transform: uppercase;
-    line-height: 1;
+  color: #ffef2b;
+  font-size: 55px;
+  font-family: 'Blippo Black', sans-serif;
+  font-weight: 400;
+  text-transform: uppercase;
+  line-height: 1;
 }
 
 .featured9 .news-top-description {
-    max-width: 364px;
-    color: #F2F2F2;
-    font-size: 20px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 400;
-    line-height: 1.2;
+  max-width: 364px;
+  color: #f2f2f2;
+  font-size: 20px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 400;
+  line-height: 1.2;
 }
 
 .featured9 .news-top-card {
-    width: 403px;
-    height: 212px;
-    background: white;
-    border-radius: 10px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
+  width: 403px;
+  height: 212px;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .featured9 .news-top-card-img {
-    width: 100%;
-    height: 131px;
-    object-fit: cover;
+  width: 100%;
+  height: 131px;
+  object-fit: cover;
 }
 
 .featured9 .news-top-card-body {
-    flex-grow: 1;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 23px;
-    gap: 13px;
+  flex-grow: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 23px;
+  gap: 13px;
 }
 
 .featured9 .news-top-card-body p {
-    color: black;
-    font-size: 14px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 300;
-    line-height: 1.3;
-    margin: 0;
+  color: black;
+  font-size: 14px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  line-height: 1.3;
+  margin: 0;
 }
 
 .featured9 .news-top-card-body .btn {
-    padding: 12px 35px;
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 1;
-    flex-shrink: 0;
+  padding: 12px 35px;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1;
+  flex-shrink: 0;
 }
 
 .featured9 .news-grid-container {
-    display: flex;
-    flex-wrap: wrap;
-    row-gap: 20px;
-    column-gap: 30px;
-    justify-content: flex-start;
-    align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px 30px;
+  justify-content: flex-start;
+  align-items: center;
 }
 
 .featured9 .news-card-wrapper {
-    width: 412px;
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 10px;
+  width: 412px;
+  box-shadow: 2px 2px 4px rgb(0 0 0 / 25%);
+  border-radius: 10px;
 }
 
 .featured9 .news-card {
-    background: white;
-    border-radius: 10px;
-    outline: 1px solid #C6BBFE;
-    outline-offset: -1px;
-    padding: 20px 21px;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    height: 310px;
+  background: white;
+  border-radius: 10px;
+  outline: 1px solid #c6bbfe;
+  outline-offset: -1px;
+  padding: 20px 21px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  height: 310px;
 }
 
 .featured9 .news-card-img {
-    width: 100%;
-    height: 131px;
-    border-radius: 7px;
-    object-fit: cover;
+  width: 100%;
+  height: 131px;
+  border-radius: 7px;
+  object-fit: cover;
 }
 
 .featured9 .news-card-content {
-    display: flex;
-    flex-direction: column;
-    gap: 13px;
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
 }
 
 .featured9 .news-card-author-section {
-    display: flex;
-    align-items: center;
-    gap: 18px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
 }
 
 .featured9 .news-card-avatar {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
 }
 
 .featured9 .news-card-author-details {
-    display: flex;
-    flex-direction: column;
-    gap: 9px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
 }
 
 .featured9 .news-card-author-name {
-    color: black;
-    font-size: 16px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 400;
-    line-height: 1;
+  color: black;
+  font-size: 16px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 400;
+  line-height: 1;
 }
 
 .featured9 .news-card-date {
-    color: rgba(0, 0, 0, 0.20);
-    font-size: 14px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 300;
-    line-height: 1.3;
+  color: rgb(0 0 0 / 20%);
+  font-size: 14px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  line-height: 1.3;
 }
 
 .featured9 .news-card-text-section {
-    display: flex;
-    flex-direction: column;
-    gap: 13px;
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
 }
 
 .featured9 .news-card-title {
-    color: black;
-    font-size: 16px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 400;
-    line-height: 1;
-    margin: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  color: black;
+  font-size: 16px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 400;
+  line-height: 1;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .featured9 .news-card-summary {
-    color: rgba(0, 0, 0, 0.20);
-    font-size: 12px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 300;
-    letter-spacing: 0.12px;
-    display: -webkit-box;
-    -webkit-line-clamp: 4;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  color: rgb(0 0 0 / 20%);
+  font-size: 12px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.12px;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .featured9 .news-show-more-wrapper {
-    width: 412px;
-    height: 310px;
-    border-radius: 20px;
-    background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='20' ry='20' stroke='white' stroke-width='2' stroke-dasharray='15, 10'/%3e%3c/svg%3e");
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  width: 412px;
+  height: 310px;
+  border-radius: 20px;
+  background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='20' ry='20' stroke='white' stroke-width='2' stroke-dasharray='15, 10'/%3e%3c/svg%3e");
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .featured9 .news-show-more-button-container .btn {
-    border: 1px solid white !important;
-    padding: 12px 35px;
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
-    line-height: 1;
-    background: transparent !important;
-    transition: background-color 0.3s ease;
+  border: 1px solid white !important;
+  padding: 12px 35px;
+  box-shadow: 2px 2px 4px rgb(0 0 0 / 25%);
+  line-height: 1;
+  background: transparent !important;
+  transition: background-color 0.3s ease;
 }
 
 .featured9 .news-show-more-button-container .btn:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgb(255 255 255 / 10%);
 }
 
 .featured9 .news-show-more-button-container .btn span {
-    color: #F5F5F5;
-    font-size: 16px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 400;
-    line-height: 1;
+  color: #f5f5f5;
+  font-size: 16px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 400;
+  line-height: 1;
 }
 
 .featured9 .news-show-more-button-container .btn .icon {
-    width: 24px;
-    height: 24px;
+  width: 24px;
+  height: 24px;
 }
 
 /* --- Секция 10: Featured10 (Подписка) --- */
 .featured10 {
-    padding: 45px 71px 55px 71px;
-    justify-content: flex-start;
-    margin: 60px auto 0 auto;
-    max-width: 1445px;
-    box-sizing: border-box;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
+  padding: 45px 71px 55px;
+  justify-content: flex-start;
+  margin: 60px auto 0;
+  max-width: 1445px;
+  box-sizing: border-box;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
 }
 
 .subscription-card {
-    width: 1303px;
-    height: 576px;
-    position: relative;
-    background-color: black;
-    box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.25);
-    overflow: hidden;
-    border-radius: 20px;
-    background-size: cover;
-    background-position: center;
-    background-image: url('../images/main_page/10block_bg.webp');
+  width: 1303px;
+  height: 576px;
+  position: relative;
+  background-color: black;
+  box-shadow: 6px 6px 10px rgb(0 0 0 / 25%);
+  overflow: hidden;
+  border-radius: 20px;
+  background-size: cover;
+  background-position: center;
+  background-image: url('../images/main_page/10block_bg.webp');
 }
 
 .subscription-bg-blur-1 {
-    width: 854px;
-    height: 854px;
-    left: 1013px;
-    top: -39px;
-    position: absolute;
-    background: rgba(97, 165, 255, 0.45);
-    border-radius: 9999px;
-    filter: blur(250px);
+  width: 854px;
+  height: 854px;
+  left: 1013px;
+  top: -39px;
+  position: absolute;
+  background: rgb(97 165 255 / 45%);
+  border-radius: 9999px;
+  filter: blur(250px);
 }
 
 .subscription-bg-blur-2 {
-    width: 590px;
-    height: 590px;
-    left: -83px;
-    top: -295px;
-    position: absolute;
-    background: #004E9F;
-    border-radius: 9999px;
-    filter: blur(250px);
+  width: 590px;
+  height: 590px;
+  left: -83px;
+  top: -295px;
+  position: absolute;
+  background: #004e9f;
+  border-radius: 9999px;
+  filter: blur(250px);
 }
 
 .subscription-form-wrapper {
-    width: 620px;
-    padding: 32px;
-    left: 34px;
-    top: 253px;
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 24px;
-    box-sizing: border-box;
+  width: 620px;
+  padding: 32px;
+  left: 34px;
+  top: 253px;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 24px;
+  box-sizing: border-box;
 }
 
 .email-input-wrapper {
-    align-self: stretch;
-    padding: 24px 32px;
-    border-radius: 5px;
-    outline: 1px white solid;
-    outline-offset: -1px;
+  align-self: stretch;
+  padding: 24px 32px;
+  border-radius: 5px;
+  outline: 1px white solid;
+  outline-offset: -1px;
 }
 
 .email-input {
-    width: 100%;
-    background: transparent;
-    border: none;
-    outline: none;
-    color: white;
-    font-size: 14px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 300;
-    line-height: 18px;
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: white;
+  font-size: 14px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  line-height: 18px;
 }
 
 .email-input::placeholder {
-    color: white;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 300;
+  color: white;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
 }
 
 .form-bottom-row {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 113px;
-    margin-top: 15px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 113px;
+  margin-top: 15px;
 }
 
 .consent-label {
-    padding: 16px 32px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    cursor: pointer;
+  padding: 16px 32px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  cursor: pointer;
 }
 
 .consent-checkbox-input {
-    display: none;
+  display: none;
 }
 
 .consent-checkbox-visual {
-    width: 24px;
-    height: 24px;
-    position: relative;
-    background: white;
-    overflow: hidden;
-    border-radius: 8px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  position: relative;
+  background: white;
+  overflow: hidden;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
 }
 
 .consent-checkbox-visual .check-icon {
-    display: none;
-    width: 16px;
-    height: 16px;
+  display: none;
+  width: 16px;
+  height: 16px;
 }
 
 .consent-checkbox-input:checked ~ .consent-checkbox-visual .check-icon {
-    display: block;
+  display: block;
 }
 
 .consent-text {
-    width: 161px;
-    color: white;
-    font-size: 8px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 300;
-    letter-spacing: 0.08px;
+  width: 161px;
+  color: white;
+  font-size: 8px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.08px;
 }
 
 .subscribe-btn {
-    height: 40px;
-    padding: 12px 25px;
-    background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%) !important;
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 10px;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 9px;
-    display: flex;
-    border: none;
-    cursor: pointer;
-    font-weight: 400;
-    line-height: 16px;
-    text-decoration: none;
+  height: 40px;
+  padding: 12px 25px;
+  background: linear-gradient(180deg, #ffef2b 0%, #f9f7d6 100%) !important;
+  box-shadow: 2px 2px 4px rgb(0 0 0 / 25%);
+  border-radius: 10px;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 9px;
+  display: flex;
+  border: none;
+  cursor: pointer;
+  font-weight: 400;
+  line-height: 16px;
+  text-decoration: none;
 }
 
 .subscribe-btn span {
-    color: black;
-    font-size: 16px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 400;
+  color: black;
+  font-size: 16px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 400;
 }
 
 .send-icon {
-    width: 14.77px;
-    height: 11.31px;
+  width: 14.77px;
+  height: 11.31px;
 }
 
 .subscription-info {
-    left: 62px;
-    top: 73px;
-    position: absolute;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 167px;
+  left: 62px;
+  top: 73px;
+  position: absolute;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 167px;
 }
 
 .info-main-text {
-    width: 497px;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+  width: 497px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
 .info-title {
-    align-self: stretch;
-    color: white;
-    font-size: 55px;
-    font-family: 'Blippo Black', sans-serif;
-    font-weight: 400;
-    line-height: 1;
+  align-self: stretch;
+  color: white;
+  font-size: 55px;
+  font-family: 'Blippo Black', sans-serif;
+  font-weight: 400;
+  line-height: 1;
 }
 
 .info-subtitle {
-    align-self: stretch;
-    color: #FFEF2B;
-    font-size: 55px;
-    font-family: 'Blippo Black', sans-serif;
-    font-weight: 400;
-    line-height: 1;
-    text-transform: uppercase;
+  align-self: stretch;
+  color: #ffef2b;
+  font-size: 55px;
+  font-family: 'Blippo Black', sans-serif;
+  font-weight: 400;
+  line-height: 1;
+  text-transform: uppercase;
 }
 
 .info-promo {
-    width: 510px;
-    padding: 24px 32px;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 24px;
-    box-sizing: border-box;
+  width: 510px;
+  padding: 24px 32px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 24px;
+  box-sizing: border-box;
 }
 
 .promo-icon-container {
-    width: 32px;
-    height: 32px;
-    background: #FFEF2B;
-    border-radius: 8px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  background: #ffef2b;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
 }
 
 .promo-icon-container img {
-    width: 17.78px;
-    height: 13.52px;
+  width: 17.78px;
+  height: 13.52px;
 }
 
 .promo-text {
-    flex: 1 1 0;
-    color: white;
-    font-size: 12px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 300;
-    letter-spacing: 0.12px;
-    margin: 0;
+  flex: 1 1 0;
+  color: white;
+  font-size: 12px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.12px;
+  margin: 0;
 }
 
 .promo-text .highlight-red {
-    color: #FB554C;
+  color: #fb554c;
 }
 
 .subscription-bonus {
-    left: 810px;
-    top: 350px;
-    position: absolute;
-    display: flex;
-    justify-content: flex-start;
-    align-items: flex-end;
-    gap: 17px;
+  left: 810px;
+  top: 350px;
+  position: absolute;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-end;
+  gap: 17px;
 }
 
 .bonus-text-content {
-    width: 189px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 25px;
+  width: 189px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 25px;
 }
 
 .bonus-title {
-    align-self: stretch;
-    text-align: right;
-    color: #FFEF2B;
-    font-size: 55px;
-    font-family: 'Blippo Black', sans-serif;
-    font-weight: 400;
-    line-height: 1;
+  align-self: stretch;
+  text-align: right;
+  color: #ffef2b;
+  font-size: 55px;
+  font-family: 'Blippo Black', sans-serif;
+  font-weight: 400;
+  line-height: 1;
 }
 
 .bonus-description {
-    align-self: stretch;
-    text-align: right;
-    color: white;
-    font-size: 12px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 300;
-    letter-spacing: 0.12px;
+  align-self: stretch;
+  text-align: right;
+  color: white;
+  font-size: 12px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.12px;
 }
 
 .bonus-image-placeholder {
-    width: 169px;
-    height: 169px;
-    background: white;
-    border-radius: 10px;
+  width: 169px;
+  height: 169px;
+  background: white;
+  border-radius: 10px;
 }
 
 /* --- Final CTA Section --- */
 .final-cta-section {
-    width: 100vw;
-    height: 900px;
-    margin: 80px 0 -40px 50%;
-    transform: translateX(-50%);
-    background: white;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-top: 60px;
-    box-sizing: border-box;
-    z-index: 5;
+  width: 100vw;
+  height: 900px;
+  margin: 80px 0 -40px 50%;
+  transform: translateX(-50%);
+  background: white;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 60px;
+  box-sizing: border-box;
+  z-index: 5;
 }
 
 .final-cta-content-wrapper {
-    width: 100%;
-    max-width: 1303px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: relative;
-    z-index: 2;
+  width: 100%;
+  max-width: 1303px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  z-index: 2;
 }
 
 .final-cta-headings {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
 .final-cta-heading-main {
-    color: black;
-    font-size: 55px;
-    font-family: 'Blippo Black', sans-serif;
-    font-weight: normal;
-    line-height: 1.1;
+  color: black;
+  font-size: 55px;
+  font-family: 'Blippo Black', sans-serif;
+  font-weight: normal;
+  line-height: 1.1;
 }
 
 .final-cta-heading-sub {
-    color: #004E9F;
-    font-size: 55px;
-    font-family: 'Blippo Black', sans-serif;
-    font-weight: normal;
-    line-height: 1.1;
+  color: #004e9f;
+  font-size: 55px;
+  font-family: 'Blippo Black', sans-serif;
+  font-weight: normal;
+  line-height: 1.1;
 }
 
 .final-cta-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 
-.btn-cta-create, .btn-cta-invest {
-    height: 40px;
-    padding: 12px 25px !important;
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 10px !important;
-    display: inline-flex !important;
-    align-items: center;
-    gap: 9px;
-    text-decoration: none !important;
-    border: none !important;
-    box-sizing: border-box;
+.btn-cta-create,
+.btn-cta-invest {
+  height: 40px;
+  padding: 12px 25px !important;
+  box-shadow: 2px 2px 4px rgb(0 0 0 / 25%);
+  border-radius: 10px !important;
+  display: inline-flex !important;
+  align-items: center;
+  gap: 9px;
+  text-decoration: none !important;
+  border: none !important;
+  box-sizing: border-box;
 }
 
 .btn-cta-create {
-    background: #004E9F !important;
+  background: #004e9f !important;
 }
 
 .btn-cta-create span {
-    color: white !important;
-    font-size: 16px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 400;
-    line-height: 16px;
+  color: white !important;
+  font-size: 16px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 400;
+  line-height: 16px;
 }
 
 .btn-cta-create .icon {
-    width: 24px;
-    height: 24px;
-    filter: brightness(0) invert(1);
+  width: 24px;
+  height: 24px;
+  filter: brightness(0) invert(1);
 }
 
 .btn-cta-invest {
-    background: #FFEF2B !important;
+  background: #ffef2b !important;
 }
 
 .btn-cta-invest span {
-    color: black !important;
-    font-size: 16px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 400;
-    line-height: 16px;
+  color: black !important;
+  font-size: 16px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 400;
+  line-height: 16px;
 }
 
 .btn-cta-invest .icon {
-    width: 24px;
-    height: 24px;
+  width: 24px;
+  height: 24px;
 }
 
 .final-cta-image {
-    width: 1444px;
-    max-width: 100%;
-    height: auto;
-    margin-top: 100px;
-    position: relative;
-    z-index: 1;
+  width: 1444px;
+  max-width: 100%;
+  height: auto;
+  margin-top: 100px;
+  position: relative;
+  z-index: 1;
 }
 
 /* Адаптивность (пример) */
-@media (max-width: 1350px) {
-    .featured3 .frame-parent,
-    .featured4 .frame-parent3 {
+@media (width <= 1350px) {
+  .featured3 .frame-parent,
+  .featured4 .frame-parent3 {
     flex-direction: column;
-        height: auto;
-        padding: 30px;
-    }
-    .featured3 .parent4, .featured4 .parent6 {
-        width: 100%;
+    height: auto;
+    padding: 30px;
+  }
+
+  .featured3 .parent4,
+  .featured4 .parent6 {
+    width: 100%;
     align-items: center;
-        text-align: center;
-        padding-left: 0;
-    }
-    .featured3 .icon9, .featured4 .icon10, .featured3 .scale-1200-photoroom-2-parent {
+    text-align: center;
+    padding-left: 0;
+  }
+
+  .featured3 .icon9,
+  .featured4 .icon10,
+  .featured3 .scale-1200-photoroom-2-parent {
     position: relative;
-        width: 70%; max-width: 400px;
-        height: auto;
-        margin-top: 30px;
-        left: auto; right: auto; bottom: auto; top: auto;
-        transform: none;
-    }
-    .featured5 .frame-parent7 {
+    width: 70%;
+    max-width: 400px;
+    height: auto;
+    margin-top: 30px;
+    inset: auto;
+    transform: none;
+  }
+
+  .featured5 .frame-parent7 {
     flex-direction: column;
     align-items: center;
-    }
-    .featured5 .frame-parent8, .featured5 .frame-parent9, .featured5 .creators {
-        width: 100%;
-        max-width: 500px; /* Ограничение для центральных колонок */
-    }
-    .featured5 .divider { display: none; }
+  }
 
-    .featured9 .heading-parent {
+  .featured5 .frame-parent8,
+  .featured5 .frame-parent9,
+  .featured5 .creators {
+    width: 100%;
+    max-width: 500px; /* Ограничение для центральных колонок */
+  }
+  .featured5 .divider {
+    display: none;
+  }
+
+  .featured9 .heading-parent {
     flex-direction: column;
-    }
-    .featured9 .heading2, .featured9 .instance-parent {
-        flex: 0 0 100%;
-        max-height: none;
-    }
+  }
 
-    .featured10 .featured11 {
+  .featured9 .heading2,
+  .featured9 .instance-parent {
+    flex: 0 0 100%;
+    max-height: none;
+  }
+
+  .featured10 .featured11 {
     flex-direction: column;
-        gap: 40px;
-        padding: 30px;
-    }
-    .featured10 .featured10-content-left, .featured10 .form-container-featured10 {
-        max-width: 100%;
-        align-items: center;
-        text-align: center;
-    }
-    .featured10 .frame-parent32 { justify-content: center; }
+    gap: 40px;
+    padding: 30px;
+  }
 
-    .featured14 .heading-group {
-    flex-direction: column;
-        padding: 30px;
-    }
-    .featured14 .faq-left-column, .featured14 .faq-right-column {
-        flex: 0 0 100%;
-        padding-left: 0;
-        border-left: none;
-    }
-    .featured14 .faq-right-column { margin-top: 30px; border-top: 1px solid #e0e0e0; padding-top: 30px;}
-
-    .cta {
-        padding: 30px;
-        text-align: center;
-    }
-    .cta .cta-content {
-        max-width: 100%;
+  .featured10 .featured10-content-left,
+  .featured10 .form-container-featured10 {
+    max-width: 100%;
     align-items: center;
-        text-align: center;
-        margin-right: 0;
-    }
-    .cta .cta-image {
-        width: 100%;
-        height: 50%;
-        bottom:0; top: auto; right:auto; left: 50%; transform: translateX(-50%);
-        clip-path: polygon(0 20%, 100% 0, 100% 100%, 0% 100%);
-        opacity: 0.2;
-    } 
+    text-align: center;
+  }
+  .featured10 .frame-parent32 {
+    justify-content: center;
+  }
 
-    .final-cta-heading-main, .final-cta-heading-sub {
-        font-size: 40px;
-    }
+  .featured14 .heading-group {
+    flex-direction: column;
+    padding: 30px;
+  }
 
-    .final-cta-section {
-        height: auto;
-        padding-bottom: 60px; /* Adjust padding for better spacing */
-    }
+  .featured14 .faq-left-column,
+  .featured14 .faq-right-column {
+    flex: 0 0 100%;
+    padding-left: 0;
+    border-left: none;
+  }
+  .featured14 .faq-right-column {
+    margin-top: 30px;
+    border-top: 1px solid #e0e0e0;
+    padding-top: 30px;
+  }
 
-    .final-cta-image {
-        margin-top: 40px;
-    } 
+  .cta {
+    padding: 30px;
+    text-align: center;
+  }
+
+  .cta .cta-content {
+    max-width: 100%;
+    align-items: center;
+    text-align: center;
+    margin-right: 0;
+  }
+
+  .cta .cta-image {
+    width: 100%;
+    height: 50%;
+    inset: auto auto 0 50%;
+    transform: translateX(-50%);
+    clip-path: polygon(0 20%, 100% 0, 100% 100%, 0% 100%);
+    opacity: 0.2;
+  }
+
+  .final-cta-heading-main,
+  .final-cta-heading-sub {
+    font-size: 40px;
+  }
+
+  .final-cta-section {
+    height: auto;
+    padding-bottom: 60px; /* Adjust padding for better spacing */
+  }
+
+  .final-cta-image {
+    margin-top: 40px;
+  }
 }
 
-@media (max-width: 768px) {
-    .featured .group {
-        padding-left: 20px;
-        padding-right: 20px;
-        height: auto;
-        min-height: 600px;
-    }
-    .featured .div6, .featured .div7 { font-size: 50px; }
-    .featured .icon1 {width: 120px; height: auto;}
-    .featured .icon8 {width: 180px; height: auto;}
+@media (width <= 768px) {
+  .featured .group {
+    padding-left: 20px;
+    padding-right: 20px;
+    height: auto;
+    min-height: 600px;
+  }
+  .featured .div6,
+  .featured .div7 {
+    font-size: 50px;
+  }
+  .featured .icon1 {
+    width: 120px;
+    height: auto;
+  }
+  .featured .icon8 {
+    width: 180px;
+    height: auto;
+  }
 
-    .featured1, .featured3, .featured4, .featured5, .featured6.galaxy-carousel-wrapper, 
-    .featured7, .featured8.success-stories-carousel-outer, .featured9, .featured10, .featured14, .final-cta-section {
-        padding-left: 20px;
-        padding-right: 20px;
-    }
+  .featured1,
+  .featured3,
+  .featured4,
+  .featured5,
+  .featured6.galaxy-carousel-wrapper,
+  .featured7,
+  .featured8.success-stories-carousel-outer,
+  .featured9,
+  .featured10,
+  .featured14,
+  .final-cta-section {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
 
-    .featured1 .feature-card {
-        min-width: 300px; /* Для мобильных карусель может показывать 1-2 карточки */
-        height: auto;
-    }
-    .featured1 .heading { flex-direction: column; align-items: center; text-align: center; gap: 20px;}
-    .featured1 .heading .wrap { padding: 10px 0; }
+  .featured1 .feature-card {
+    min-width: 300px; /* Для мобильных карусель может показывать 1-2 карточки */
+    height: auto;
+  }
+  .featured1 .heading {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 20px;
+  }
+  .featured1 .heading .wrap {
+    padding: 10px 0;
+  }
 
-    .featured6 .galaxy-carousel, .featured6 .galaxy-step-card .frame-child12 {
-        width: 100%; /* На всю ширину */
-        min-width: 100%;
-        height: auto;
-        max-height: 350px;
-    }
+  .featured6 .galaxy-carousel,
+  .featured6 .galaxy-step-card .frame-child12 {
+    width: 100%; /* На всю ширину */
+    min-width: 100%;
+    height: auto;
+    max-height: 350px;
+  }
 
-    .featured8 .success-story-card {
-        min-width: calc(90% - 20px); /* Почти на всю ширину, если 1 карточка видна */
-    }
-    .featured8 .success-stories-arrow-left { left: 5px; }
-    .featured8 .success-stories-arrow-right { right: 5px; }
+  .featured8 .success-story-card {
+    min-width: calc(
+      90% - 20px
+    ); /* Почти на всю ширину, если 1 карточка видна */
+  }
+  .featured8 .success-stories-arrow-left {
+    left: 5px;
+  }
+  .featured8 .success-stories-arrow-right {
+    right: 5px;
+  }
 
-    .final-cta-content-wrapper {
-        flex-direction: column;
-        gap: 30px;
-        text-align: center;
-        padding: 0 20px;
-    }
+  .final-cta-content-wrapper {
+    flex-direction: column;
+    gap: 30px;
+    text-align: center;
+    padding: 0 20px;
+  }
 
-    .final-cta-heading-main, .final-cta-heading-sub {
-        font-size: 40px;
-    }
+  .final-cta-heading-main,
+  .final-cta-heading-sub {
+    font-size: 40px;
+  }
 }

@@ -1,21 +1,23 @@
-{% extends 'accounts/base.html' %}
-{% load static %}
-{# {% load accounts_extras %} #} {# Убираем загрузку, так как не будем использовать random_int #}
-
-{% block title %}{{ article.title }}{% endblock %}
-
-{% block head_extra %}
-  <link rel="stylesheet" href="{% static 'accounts/css/news_detail.css' %}">
-  {# FontAwesome for heart icon, ensure it is loaded, e.g., in base.html or here #}
-  {# <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"> #}
-{% endblock %}
-
-{% block content %}
-<div class="page-content-wrapper-white"> {# Новая обертка для белого фона #}
+{% extends 'accounts/base.html' %} {% load static %} {# {% load accounts_extras
+%} #} {# Убираем загрузку, так как не будем использовать random_int #} {% block
+title %}{{ article.title }}{% endblock %} {% block head_extra %}
+<link rel="stylesheet" href="{% static 'accounts/css/news_detail.css' %}" />
+{# FontAwesome for heart icon, ensure it is loaded, e.g., in base.html or here
+#} {#
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+/>
+#} {% endblock %} {% block content %}
+<div class="page-content-wrapper-white">
+  {# Новая обертка для белого фона #}
   <div class="news-detail-container">
     <!-- Back Button -->
     <div class="back-button-container">
-      <a href="{% if request.META.HTTP_REFERER %}{{ request.META.HTTP_REFERER }}{% else %}{% url 'news' %}{% endif %}" class="back-button">
+      <a
+        href="{% if request.META.HTTP_REFERER %}{{ request.META.HTTP_REFERER }}{% else %}{% url 'news' %}{% endif %}"
+        class="back-button"
+      >
         <div class="back-button-arrow">
           <div class="back-button-arrow-inner"></div>
         </div>
@@ -30,17 +32,31 @@
           <div class="article-meta-rating-row">
             <div class="author-info-block">
               <div class="author-details">
-                <img class="author-avatar" src="{{ article.author.profile.avatar.url|default:'https://placehold.co/39x39/7B61FF/FFFFFF?text=A' }}" alt="{{ article.author.email|default:'Автор' }}"/>
+                <img
+                  class="author-avatar"
+                  src="{{ article.author.profile.avatar.url|default:'https://placehold.co/39x39/7B61FF/FFFFFF?text=A' }}"
+                  alt="{{ article.author.email|default:'Автор' }}"
+                />
                 <div class="author-name-time">
-                  <div class="author-name">{{ article.author.get_full_name|default:article.author.email|default:"Аноним" }}</div>
-                  <div class="publish-time">{{ article.published_at|timesince }} назад</div>
+                  <div class="author-name">
+                    {{
+                    article.author.get_full_name|default:article.author.email|default:"Аноним"
+                    }}
+                  </div>
+                  <div class="publish-time">
+                    {{ article.published_at|timesince }} назад
+                  </div>
                 </div>
               </div>
               <div class="article-stats-small">
                 <div class="stat-item">
-                  <form method="post" style="margin: 0; display: flex;">
+                  <form method="post" style="margin: 0; display: flex">
                     {% csrf_token %}
-                    <button type="submit" name="like" class="like-button {% if user_liked %}liked{% endif %}">
+                    <button
+                      type="submit"
+                      name="like"
+                      class="like-button {% if user_liked %}liked{% endif %}"
+                    >
                       <i class="fas fa-heart"></i>
                       <span class="like-count">{{ likes_count }}</span>
                     </button>
@@ -48,102 +64,174 @@
                 </div>
                 <div class="stat-item">
                   <div class="stat-icon">
-                    <img src="{% static 'accounts/images/news/chat_icon.svg' %}" alt="Комментарии">
+                    <img
+                      src="{% static 'accounts/images/news/chat_icon.svg' %}"
+                      alt="Комментарии"
+                    />
                   </div>
-                  <div class="stat-text">{{ article.comments_count|default:0 }}</div>
+                  <div class="stat-text">
+                    {{ article.comments_count|default:0 }}
+                  </div>
                 </div>
               </div>
             </div>
             <div class="rating-block">
-              {% with simulated_rating=3 %} {# Устанавливаем фиксированный рейтинг для демонстрации #}
+              {% with simulated_rating=3 %} {# Устанавливаем фиксированный
+              рейтинг для демонстрации #}
               <div class="rating-text">Рейтинг {{ simulated_rating }}/5</div>
               <div class="rating-icons">
-                  <div class="rating-stars" data-rating="{{ simulated_rating }}">
-                      {% for i in "12345" %}
-                          <span class="rating-icon-container {% if forloop.counter <= simulated_rating %}is-filled{% else %}is-empty{% endif %}">
-                              <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="Планета закрашенная" class="icon-filled">
-                              <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="Планета контур" class="icon-empty"> {# Используем тот же SVG #}
-                          </span>
-                      {% endfor %}
-                  </div>
+                <div class="rating-stars" data-rating="{{ simulated_rating }}">
+                  {% for i in "12345" %}
+                  <span
+                    class="rating-icon-container {% if forloop.counter <= simulated_rating %}is-filled{% else %}is-empty{% endif %}"
+                  >
+                    <img
+                      src="{% static 'accounts/images/planets/full_filled_planet.svg' %}"
+                      alt="Планета закрашенная"
+                      class="icon-filled"
+                    />
+                    <img
+                      src="{% static 'accounts/images/planets/full_filled_planet.svg' %}"
+                      alt="Планета контур"
+                      class="icon-empty"
+                    />
+                    {# Используем тот же SVG #}
+                  </span>
+                  {% endfor %}
+                </div>
               </div>
               {% endwith %}
             </div>
           </div>
 
           {% if article.get_image_url %}
-            <img class="article-main-image" src="{{ article.get_image_url }}" alt="{{ article.title }}">
+          <img
+            class="article-main-image"
+            src="{{ article.get_image_url }}"
+            alt="{{ article.title }}"
+          />
           {% else %}
-            <img class="article-main-image" src="https://placehold.co/800x314/EEE/CCC?text=Главное+изображение" alt="{{ article.title }}">
+          <img
+            class="article-main-image"
+            src="https://placehold.co/800x314/EEE/CCC?text=Главное+изображение"
+            alt="{{ article.title }}"
+          />
           {% endif %}
 
           <div class="article-title-large">
-            {{ article.title }}
-            {% if user.is_authenticated and user.role.role_name == 'moderator' %}
-              <button class="delete-news-btn" onclick="deleteNews({{ article.article_id }})">Удалить</button>
+            {{ article.title }} {% if user.is_authenticated and
+            user.role.role_name == 'moderator' %}
+            <button
+              class="delete-news-btn"
+              onclick="deleteNews({{ article.article_id }})"
+            >
+              Удалить
+            </button>
             {% endif %}
           </div>
         </div>
 
         <div class="article-content-body">
           <div class="content-text-full-width">
-              {{ article.content|linebreaksbr }}
+            {{ article.content|linebreaksbr }}
           </div>
 
-          {# Example content blocks from user HTML - adapt with real data if available #}
+          {# Example content blocks from user HTML - adapt with real data if
+          available #}
           <div class="content-row">
             <div class="content-image-block">
-              <img class="content-image" src="https://placehold.co/267x267/EEE/CCC?text=Изображение+1" alt="Ромашка шкаф/стеллаж">
+              <img
+                class="content-image"
+                src="https://placehold.co/267x267/EEE/CCC?text=Изображение+1"
+                alt="Ромашка шкаф/стеллаж"
+              />
               <div class="image-caption">Ромашка шкаф/стеллаж</div>
             </div>
             <div class="content-text">
-              Наш стартап разрабатывает инновационную платформу для телемедицины, которая обеспечивает пользователям доступ к качественным медицинским консультациям в любое время и в любом месте, уменьшая необходимость в личных визитах к врачам...<br/><br/>Наш стартап разрабатывает инновационную платформу для телемедицины, которая обеспечивает пользователям доступ к качественным медицинским консультациям в любое время и в любом месте, уменьшая необходимость в личных визитах к врачам...
+              Наш стартап разрабатывает инновационную платформу для
+              телемедицины, которая обеспечивает пользователям доступ к
+              качественным медицинским консультациям в любое время и в любом
+              месте, уменьшая необходимость в личных визитах к врачам...<br /><br />Наш
+              стартап разрабатывает инновационную платформу для телемедицины,
+              которая обеспечивает пользователям доступ к качественным
+              медицинским консультациям в любое время и в любом месте, уменьшая
+              необходимость в личных визитах к врачам...
             </div>
           </div>
-          
+
           <div class="content-row">
             <div class="content-text">
-              Наш стартап разрабатывает инновационную платформу для телемедицины, которая обеспечивает пользователям доступ к качественным медицинским консультациям в любое время и в любом месте, уменьшая необходимость в личных визитах к врачам...<br/><br/>Наш стартап разрабатывает инновационную платформу для телемедицины, которая обеспечивает пользователям доступ к качественным медицинским консультациям в любое время и в любом месте, уменьшая необходимость в личных визитах к врачам...
+              Наш стартап разрабатывает инновационную платформу для
+              телемедицины, которая обеспечивает пользователям доступ к
+              качественным медицинским консультациям в любое время и в любом
+              месте, уменьшая необходимость в личных визитах к врачам...<br /><br />Наш
+              стартап разрабатывает инновационную платформу для телемедицины,
+              которая обеспечивает пользователям доступ к качественным
+              медицинским консультациям в любое время и в любом месте, уменьшая
+              необходимость в личных визитах к врачам...
             </div>
             <div class="content-image-block">
-              <img class="content-image" src="https://placehold.co/267x267/DDD/BBB?text=Изображение+2" alt="Ромашка шкаф/стеллаж">
+              <img
+                class="content-image"
+                src="https://placehold.co/267x267/DDD/BBB?text=Изображение+2"
+                alt="Ромашка шкаф/стеллаж"
+              />
               <div class="image-caption">Ромашка шкаф/стеллаж</div>
             </div>
           </div>
 
           <div class="content-text-full-width">
-              Наш стартап разрабатывает инновационную платформу для телемедицины, которая обеспечивает пользователям доступ к качественным медицинским консультациям в любое время и в любом месте, уменьшая необходимость в личных визитах к врачам...
+            Наш стартап разрабатывает инновационную платформу для телемедицины,
+            которая обеспечивает пользователям доступ к качественным медицинским
+            консультациям в любое время и в любом месте, уменьшая необходимость
+            в личных визитах к врачам...
           </div>
-          
-          <img class="content-image-large" src="https://placehold.co/800x314/AAA/999?text=Большое+изображение" alt="Большое изображение в тексте">
-          
+
+          <img
+            class="content-image-large"
+            src="https://placehold.co/800x314/AAA/999?text=Большое+изображение"
+            alt="Большое изображение в тексте"
+          />
+
           <div class="content-text-full-width">
-              Наш стартап разрабатывает инновационную платформу для телемедицины, которая обеспечивает пользователям доступ к качественным медицинским консультациям в любое время и в любом месте, уменьшая необходимость в личных визитах к врачам...
+            Наш стартап разрабатывает инновационную платформу для телемедицины,
+            которая обеспечивает пользователям доступ к качественным медицинским
+            консультациям в любое время и в любом месте, уменьшая необходимость
+            в личных визитах к врачам...
           </div>
         </div>
 
         <div class="article-footer-stats">
           <div class="stat-item">
-             <div class="stat-icon">
-               <i class="fas fa-eye" style="font-size: 20px; color: #777;"></i>
-             </div>
-             <div class="stat-text">{{ views_count }} просмотров</div>
+            <div class="stat-icon">
+              <i class="fas fa-eye" style="font-size: 20px; color: #777"></i>
+            </div>
+            <div class="stat-text">{{ views_count }} просмотров</div>
           </div>
           <div class="stat-item">
             <div class="stat-icon">
-              <img src="{% static 'accounts/images/news/thumbs-up.svg' %}" alt="Лайки">
+              <img
+                src="{% static 'accounts/images/news/thumbs-up.svg' %}"
+                alt="Лайки"
+              />
             </div>
             <div class="stat-text">{{ likes_count }}</div>
           </div>
           <div class="stat-item">
             <div class="stat-icon">
-              <img src="{% static 'accounts/images/news/thumbs-down.svg' %}" alt="Дизлайки">
+              <img
+                src="{% static 'accounts/images/news/thumbs-down.svg' %}"
+                alt="Дизлайки"
+              />
             </div>
-            <div class="stat-text">{{ article.dislikes_count|default:0 }}</div> 
+            <div class="stat-text">{{ article.dislikes_count|default:0 }}</div>
           </div>
           <div class="stat-item">
             <div class="stat-icon">
-              <img src="{% static 'accounts/images/news/chat_icon.svg' %}" alt="Комментарии">
+              <img
+                src="{% static 'accounts/images/news/chat_icon.svg' %}"
+                alt="Комментарии"
+              />
             </div>
             <div class="stat-text">{{ article.comments_count|default:0 }}</div>
           </div>
@@ -151,106 +239,140 @@
 
         <!-- Comments Section MOVED HERE -->
         <div class="comments-section">
-            <div class="comments-header">
-                <h2 class="comments-title">Комментарии</h2>
-            </div>
+          <div class="comments-header">
+            <h2 class="comments-title">Комментарии</h2>
+          </div>
 
-            <div class="comments-list-container">
-                <div class="comments-list">
-                    {% for i in "123" %} {# Placeholder loop for comments #}
-                    <div class="comment-item">
-                        <div class="comment-content">
-                            <img class="comment-avatar" src="https://placehold.co/39x39/{% if i == '1' %}7B61FF{% elif i == '2' %}FF6161{% else %}61FFB7{% endif %}/FFFFFF?text={% if i == '1' %}В{% elif i == '2' %}С{% else %}А{% endif %}" alt="Аватар пользователя"/>
-                            <div class="comment-text-block">
-                                <div class="comment-author-name">
-                                    {% if i == '1' %}Виктор
-                                    {% elif i == '2' %}Сергей
-                                    {% else %}Анна{% endif %}
-                                </div>
-                                <div class="comment-text">Само направление сейчас актуально и я уже инвестировала в похожий стартап. Советую!</div>
-                            </div>
-                        </div>
-                        <div class="comment-meta">
-                            <div class="comment-date">25/07/2024</div>
-                        </div>
+          <div class="comments-list-container">
+            <div class="comments-list">
+              {% for i in "123" %} {# Placeholder loop for comments #}
+              <div class="comment-item">
+                <div class="comment-content">
+                  <img
+                    class="comment-avatar"
+                    src="https://placehold.co/39x39/{% if i == '1' %}7B61FF{% elif i == '2' %}FF6161{% else %}61FFB7{% endif %}/FFFFFF?text={% if i == '1' %}В{% elif i == '2' %}С{% else %}А{% endif %}"
+                    alt="Аватар пользователя"
+                  />
+                  <div class="comment-text-block">
+                    <div class="comment-author-name">
+                      {% if i == '1' %}Виктор {% elif i == '2' %}Сергей {% else
+                      %}Анна{% endif %}
                     </div>
-                    {% endfor %}
-                    
-                    <div class="comments-show-more-btn-container">
-                        <button type="button" class="comments-show-more-btn">
-                            <span class="comments-show-more-text">Показать еще</span>
-                            <span class="comments-show-more-icon">
-                                <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M1.41 0.589966L6 5.16997L10.59 0.589966L12 1.99997L6 7.99997L0 1.99997L1.41 0.589966Z" fill="#004E9F"/>
-                                </svg>
-                            </span>
-                        </button>
+                    <div class="comment-text">
+                      Само направление сейчас актуально и я уже инвестировала в
+                      похожий стартап. Советую!
                     </div>
+                  </div>
                 </div>
-                {# <div class="comments-scrollbar"></div> #}
-            </div>
+                <div class="comment-meta">
+                  <div class="comment-date">25/07/2024</div>
+                </div>
+              </div>
+              {% endfor %}
 
-            <div class="add-comment-form-container">
-                <textarea class="add-comment-textarea" placeholder="Написать комментарий..."></textarea>
-                <button type="button" class="add-comment-submit-btn">
-                    <span class="add-comment-submit-text">Оставить комментарий</span>
+              <div class="comments-show-more-btn-container">
+                <button type="button" class="comments-show-more-btn">
+                  <span class="comments-show-more-text">Показать еще</span>
+                  <span class="comments-show-more-icon">
+                    <svg
+                      width="12"
+                      height="8"
+                      viewBox="0 0 12 8"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M1.41 0.589966L6 5.16997L10.59 0.589966L12 1.99997L6 7.99997L0 1.99997L1.41 0.589966Z"
+                        fill="#004E9F"
+                      />
+                    </svg>
+                  </span>
                 </button>
+              </div>
             </div>
+            {#
+            <div class="comments-scrollbar"></div>
+            #}
+          </div>
+
+          <div class="add-comment-form-container">
+            <textarea
+              class="add-comment-textarea"
+              placeholder="Написать комментарий..."
+            ></textarea>
+            <button type="button" class="add-comment-submit-btn">
+              <span class="add-comment-submit-text">Оставить комментарий</span>
+            </button>
+          </div>
         </div>
         <!-- End Comments Section -->
-
-      </div> {# This closes news-article-main #}
+      </div>
+      {# This closes news-article-main #}
 
       <!-- Sidebar with Similar Articles -->
       <div class="sidebar-similar-articles">
         <div class="sidebar-title">Похожие статьи</div>
-        {% for i in "123" %} 
+        {% for i in "123" %}
         <div class="similar-article-card">
-          <img class="similar-article-image" src="https://placehold.co/409x214/AEC/9DB?text=Новость+{{forloop.counter}}" alt="Похожая статья {{forloop.counter}}">
-          
-          {% if forloop.counter == 2 %} 
+          <img
+            class="similar-article-image"
+            src="https://placehold.co/409x214/AEC/9DB?text=Новость+{{forloop.counter}}"
+            alt="Похожая статья {{forloop.counter}}"
+          />
+
+          {% if forloop.counter == 2 %}
           <div class="ad-label-on-image">
-            <img src="{% static 'accounts/images/alert-circle.svg' %}" alt="Реклама"> Реклама
+            <img
+              src="{% static 'accounts/images/alert-circle.svg' %}"
+              alt="Реклама"
+            />
+            Реклама
           </div>
           {% endif %}
 
           <div class="similar-article-content">
-              <div class="similar-article-title">Инвестиции будущего или как быть на волне трендов {{forloop.counter}}</div>
-              <div class="similar-article-description">
-              Наш стартап разрабатывает инновационную платформу для телемедицины, которая обеспечивает пользователям доступ к качественным медицинским консультациям...
-              </div>
+            <div class="similar-article-title">
+              Инвестиции будущего или как быть на волне трендов
+              {{forloop.counter}}
+            </div>
+            <div class="similar-article-description">
+              Наш стартап разрабатывает инновационную платформу для
+              телемедицины, которая обеспечивает пользователям доступ к
+              качественным медицинским консультациям...
+            </div>
           </div>
         </div>
         {% endfor %}
       </div>
     </div>
   </div>
-</div> {# Конец page-content-wrapper-white #}
+</div>
+{# Конец page-content-wrapper-white #}
 
 <script>
   function deleteNews(articleId) {
     if (!confirm('Вы уверены, что хотите удалить эту новость?')) {
-      return;
+      return
     }
 
-    fetch(`/news/${articleId}/delete/`, { 
+    fetch(`/news/${articleId}/delete/`, {
       method: 'POST',
       headers: {
-        'X-CSRFToken': '{{ csrf_token }}'
-      }
+        'X-CSRFToken': '{{ csrf_token }}',
+      },
     })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        window.location.href = "{% url 'news' %}"; 
-      } else {
-        alert(data.error || 'Ошибка при удалении новости');
-      }
-    })
-    .catch(error => {
-      console.error('Ошибка:', error);
-      alert('Произошла ошибка при удалении новости');
-    });
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          window.location.href = "{% url 'news' %}"
+        } else {
+          alert(data.error || 'Ошибка при удалении новости')
+        }
+      })
+      .catch((error) => {
+        console.error('Ошибка:', error)
+        alert('Произошла ошибка при удалении новости')
+      })
   }
 </script>
 {% endblock %}

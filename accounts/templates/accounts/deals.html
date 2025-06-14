@@ -1,77 +1,86 @@
-{% extends 'accounts/base.html' %}
-{% load static %}
-
-{% block title %}Сделки - Панель модератора{% endblock %}
-
-{% block head_extra %}
-<link rel="stylesheet" href="{% static 'accounts/css/deals.css' %}">
-{% endblock %}
-
-{% block content %}
+{% extends 'accounts/base.html' %} {% load static %} {% block title %}Сделки -
+Панель модератора{% endblock %} {% block head_extra %}
+<link rel="stylesheet" href="{% static 'accounts/css/deals.css' %}" />
+{% endblock %} {% block content %}
 <div class="deals-page-container">
-    <div class="deals-main-wrapper">
-        <div class="chat-list-column">
-            <!-- Пример элемента списка чатов (сделки) -->
-            {% for i in "x"|ljust:7 %} {# Создаем 7 элементов для примера #}
-            <div class="chat-item {% if forloop.first %}active{% endif %}"> {# Первый элемент активный для примера #}
-                <img class="chat-item-avatar" src="{% static 'accounts/images/tempavatar.jpg' %}" alt="Аватар пользователя" />
-                <div class="chat-item-info">
-                    <span class="chat-item-name">Виктор</span>
-                    <span class="chat-item-status">Доступен новый отчет!</span>
-                </div>
-                <div class="chat-item-meta">
-                    <span class="chat-item-time">16:30</span>
-                    <div class="chat-item-badge">
-                        <span>3</span>
-                    </div>
-                    <span class="chat-item-date">25/03/2025</span>
-                </div>
-            </div>
-            {% endfor %}
+  <div class="deals-main-wrapper">
+    <div class="chat-list-column">
+      <!-- Пример элемента списка чатов (сделки) -->
+      {% for i in "x"|ljust:7 %} {# Создаем 7 элементов для примера #}
+      <div class="chat-item {% if forloop.first %}active{% endif %}">
+        {# Первый элемент активный для примера #}
+        <img
+          class="chat-item-avatar"
+          src="{% static 'accounts/images/tempavatar.jpg' %}"
+          alt="Аватар пользователя"
+        />
+        <div class="chat-item-info">
+          <span class="chat-item-name">Виктор</span>
+          <span class="chat-item-status">Доступен новый отчет!</span>
         </div>
-
-        <div class="chat-window-column">
-            <div class="chat-messages-area">
-                <div class="chat-actions-top">
-                    <button class="btn btn-approve">Одобрить</button>
-                    <button class="btn btn-reject">Отклонить</button>
-                </div>
-                <div class="messages-container">
-                    <!-- Сообщения будут здесь -->
-                    <div class="message-group">
-                        <div class="message-date-separator">14 марта</div>
-                        <div class="message-bubble received">
-                            <div class="message-content">
-                                Последние новости нашего стартапа<br>
-                                Переходи по ссылке в наш телеграмм канал, чтобы узнать о последних достижения стартапа<br>
-                                <a href="#" class="message-link">ссылка</a>
-                            </div>
-                            <div class="message-time">12:42</div>
-                        </div>
-                         <div class="new-messages-separator">
-                            <span>Новые сообщения</span>
-                        </div>
-                        <div class="message-date-separator">23 марта</div>
-                    </div>
-                     <!-- Заглушка для скролла вниз и значка новых сообщений -->
-                    <div class="scroll-to-bottom-indicator">
-                         <img src="{% static 'accounts/images/icons/downarraow.svg' %}" alt="Вниз">
-                    </div>
-                    <div class="new-message-notification">
-                        <span>2</span>
-                    </div>
-                </div>
-            </div>
-            <div class="chat-input-area">
-                <button class="attach-button">
-                    <img src="{% static 'accounts/images/icons/attach.svg' %}" alt="Прикрепить файл">
-                </button>
-                <input type="text" class="message-input" placeholder="Сообщение">
-                <button class="send-button">
-                    <img src="{% static 'accounts/images/icons/send.svg' %}" alt="Отправить">
-                </button>
-            </div>
+        <div class="chat-item-meta">
+          <span class="chat-item-time">16:30</span>
+          <div class="chat-item-badge">
+            <span>3</span>
+          </div>
+          <span class="chat-item-date">25/03/2025</span>
         </div>
+      </div>
+      {% endfor %}
     </div>
+
+    <div class="chat-window-column">
+      <div class="chat-messages-area">
+        <div class="chat-actions-top">
+          <button class="btn btn-approve">Одобрить</button>
+          <button class="btn btn-reject">Отклонить</button>
+        </div>
+        <div class="messages-container">
+          <!-- Сообщения будут здесь -->
+          <div class="message-group">
+            <div class="message-date-separator">14 марта</div>
+            <div class="message-bubble received">
+              <div class="message-content">
+                Последние новости нашего стартапа<br />
+                Переходи по ссылке в наш телеграмм канал, чтобы узнать о
+                последних достижения стартапа<br />
+                <a href="#" class="message-link">ссылка</a>
+              </div>
+              <div class="message-time">12:42</div>
+            </div>
+            <div class="new-messages-separator">
+              <span>Новые сообщения</span>
+            </div>
+            <div class="message-date-separator">23 марта</div>
+          </div>
+          <!-- Заглушка для скролла вниз и значка новых сообщений -->
+          <div class="scroll-to-bottom-indicator">
+            <img
+              src="{% static 'accounts/images/icons/downarraow.svg' %}"
+              alt="Вниз"
+            />
+          </div>
+          <div class="new-message-notification">
+            <span>2</span>
+          </div>
+        </div>
+      </div>
+      <div class="chat-input-area">
+        <button class="attach-button">
+          <img
+            src="{% static 'accounts/images/icons/attach.svg' %}"
+            alt="Прикрепить файл"
+          />
+        </button>
+        <input type="text" class="message-input" placeholder="Сообщение" />
+        <button class="send-button">
+          <img
+            src="{% static 'accounts/images/icons/send.svg' %}"
+            alt="Отправить"
+          />
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}

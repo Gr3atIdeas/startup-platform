@@ -2,650 +2,744 @@
 
 /* Global box-sizing */
 * {
-    box-sizing: border-box;
-    margin: 0; /* Также сбросим margin по умолчанию, чтобы избежать неожиданных отступов */
-    padding: 0; /* И padding */
+  box-sizing: border-box;
+  margin: 0; /* Также сбросим margin по умолчанию, чтобы избежать неожиданных отступов */
+  padding: 0; /* И padding */
 }
 
-html, body {
-    width: 100%;
-    overflow-x: hidden; /* Предотвращаем горизонтальную прокрутку на самых верхних элементах */
+html,
+body {
+  width: 100%;
+  overflow-x: hidden; /* Предотвращаем горизонтальную прокрутку на самых верхних элементах */
 }
 
 /* StyledFeatured -> .profile-page-wrapper */
 .profile-page-wrapper {
-    width: 100%; 
-    position: relative;
-    padding-bottom: 55px;
-    display: flex;
-    flex-direction: column;
-    /* background-color: #011223; /* Убираем явный фон страницы, возвращаем как было */
-    /* align-items: center; /* Убрано, чтобы не мешать banner с vw */
+  width: 100%;
+  position: relative;
+  padding-bottom: 55px;
+  display: flex;
+  flex-direction: column;
+
+  /* background-color: #011223; /* Убираем явный фон страницы, возвращаем как было */
+
+  /* align-items: center; /* Убрано, чтобы не мешать banner с vw */
 }
 
 /* StyledImagefromrawpixelid597407jpeg1 -> .profile-main-banner */
 .profile-main-banner {
-    height: 395px;
-    object-fit: cover;
-    width: 100vw; 
-    position: relative; 
-    left: 50%;
-    transform: translateX(-50%);
-    /* Попробуем так, чтобы баннер выровнялся по левому краю viewport, если translateX(-50%) не работает как надо из-за родителя */
-    /* margin-left: calc(-50vw + 50%); */ 
+  height: 395px;
+  object-fit: cover;
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+
+  /* Попробуем так, чтобы баннер выровнялся по левому краю viewport, если translateX(-50%) не работает как надо из-за родителя */
+
+  /* margin-left: calc(-50vw + 50%); */
 }
 
 /* StyledAutolayout -> .profile-content-container */
 .profile-content-container {
-    width: 95%; 
-    max-width: 1303px; 
-    justify-content: space-between;
-    align-items: flex-start; 
-    display: flex;
-    margin-top: -110px;
-    position: relative;
-    z-index: 1; 
-    gap: 20px; 
-    /* Добавим margin auto для центрирования, если profile-page-wrapper больше не центрирует через align-items */
-    margin-left: auto;
-    margin-right: auto;
+  width: 95%;
+  max-width: 1303px;
+  justify-content: space-between;
+  align-items: flex-start;
+  display: flex;
+  margin-top: -110px;
+  position: relative;
+  z-index: 1;
+  gap: 20px;
+
+  /* Добавим margin auto для центрирования, если profile-page-wrapper больше не центрирует через align-items */
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* StyledProfile -> .profile-sidebar */
 .profile-sidebar {
-    width: 256px;
-    min-width: 256px;
-    padding: 32px;
-    background: #011B35;
-    box-shadow: 0px 40px 32px -24px rgba(14.88, 14.88, 14.88, 0.12);
-    overflow: hidden;
-    border-radius: 10px;
-    border: 1px solid #353945; 
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 48px; /* Original gap from StyledProfile */
-    display: flex;
-    box-sizing: border-box;
+  width: 256px;
+  min-width: 256px;
+  padding: 32px;
+  background: #011b35;
+  box-shadow: 0 40px 32px -24px rgb(14.88 14.88 14.88 / 12%);
+  overflow: hidden;
+  border-radius: 10px;
+  border: 1px solid #353945;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 48px; /* Original gap from StyledProfile */
+  display: flex;
+  box-sizing: border-box;
 }
 
 /* StyledFrame934 (Container for avatar and text block below it) */
-.profile-sidebar-user-info-block { /* Re-using this class for StyledFrame934 */
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 24px;
-    display: flex;
-    width: 100%;
+.profile-sidebar-user-info-block {
+  /* Re-using this class for StyledFrame934 */
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+  display: flex;
+  width: 100%;
 }
 
 /* StyledAvatar01 -> .profile-sidebar-avatar-wrapper */
 .profile-sidebar-avatar-wrapper {
-    width: 160px;
-    height: 160px;
-    position: relative;
-    background: #45B26B; /* Placeholder bg from styled component */
-    overflow: hidden;
-    border-radius: 50%; 
-    cursor: pointer; 
-    /* transition: box-shadow 0.3s ease-in-out; /* Убеждаемся, что ховер-эффект свечения удален */
+  width: 160px;
+  height: 160px;
+  position: relative;
+  background: #45b26b; /* Placeholder bg from styled component */
+  overflow: hidden;
+  border-radius: 50%;
+  cursor: pointer;
+
+  /* transition: box-shadow 0.3s ease-in-out; /* Убеждаемся, что ховер-эффект свечения удален */
 }
 
 /* Убеждаемся, что ховер-эффект свечения удален */
+
 /* .profile-sidebar-avatar-wrapper:hover {
-    box-shadow: 0 0 15px 7px rgba(245, 219, 12, 0.6); 
+    box-shadow: 0 0 15px 7px rgba(245, 219, 12, 0.6);
 } */
 
 /* StyledAustinwadeX6Uj51n5CE8unsplash1 -> .profile-sidebar-avatar-img */
 .profile-sidebar-avatar-img {
-    width: 100%; /* Adjusted to fill wrapper, original had absolute positioning */
-    height: 100%;
-    object-fit: cover;
-    /* width: 160px; height: 239.97px; left: 0px; top: -43.33px; position: absolute; */ /* Original styles for placeholder */
+  width: 100%; /* Adjusted to fill wrapper, original had absolute positioning */
+  height: 100%;
+  object-fit: cover;
+
+  /* width: 160px; height: 239.97px; left: 0px; top: -43.33px; position: absolute; */
+
+  /* Original styles for placeholder */
 }
 
 /* StyledFrame930 (Text details below avatar) */
-.profile-sidebar-text-details { /* Re-using this class for StyledFrame930 */
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-    display: flex;
-    width: 100%; /* Добавляем, чтобы ограничить ширину дочерних элементов */
-    overflow: hidden; /* Добавляем, чтобы обрезать контент, если он все равно выходит */
+.profile-sidebar-text-details {
+  /* Re-using this class for StyledFrame930 */
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  display: flex;
+  width: 100%; /* Добавляем, чтобы ограничить ширину дочерних элементов */
+  overflow: hidden; /* Добавляем, чтобы обрезать контент, если он все равно выходит */
 }
 
 /* StyledFrame931 (Name, Role, ID block) */
-.profile-sidebar-name-role { /* Re-using for StyledFrame931 */
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 10px;
-    display: flex;
-    width: 100%; /* Добавляем для корректного центрирования дочерних flex-элементов */
+.profile-sidebar-name-role {
+  /* Re-using for StyledFrame931 */
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+  display: flex;
+  width: 100%; /* Добавляем для корректного центрирования дочерних flex-элементов */
 }
 
 /* StyledNameName -> .profile-sidebar-name */
 .profile-sidebar-name {
-    justify-content: center; /* Изменено на center для центрирования имени */
-    align-items: center; /* Добавлено для центрирования по вертикали, если имя переносится */
-    gap: 4px;
-    display: flex; /* Меняем на flex для лучшего контроля над переносом */
-    flex-wrap: wrap; /* Разрешаем перенос */
-    max-width: 100%; /* Ограничиваем максимальную ширину */
-    word-break: break-word; /* Добавляем для принудительного переноса длинных слов */
-    text-align: center; /* Дополнительно для центрирования текста внутри span, если они станут блочными */
+  justify-content: center; /* Изменено на center для центрирования имени */
+  align-items: center; /* Добавлено для центрирования по вертикали, если имя переносится */
+  gap: 4px;
+  display: flex; /* Меняем на flex для лучшего контроля над переносом */
+  flex-wrap: wrap; /* Разрешаем перенос */
+  max-width: 100%; /* Ограничиваем максимальную ширину */
+  word-break: break-word; /* Добавляем для принудительного переноса длинных слов */
+  text-align: center; /* Дополнительно для центрирования текста внутри span, если они станут блочными */
 }
-.profile-sidebar-name span { /* Corresponds to multiple <StyledP> or <StyledSpan> in React for name parts */
-    color: #FCFCFD;
-    font-size: 20px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 400;
-    line-height: 18px;
-    word-wrap: break-word;
+
+.profile-sidebar-name span {
+  /* Corresponds to multiple <StyledP> or <StyledSpan> in React for name parts */
+  color: #fcfcfd;
+  font-size: 20px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 400;
+  line-height: 18px;
+  word-wrap: break-word;
 }
 
 /* StyledAddress (for Role) -> .profile-sidebar-role */
-.profile-sidebar-role span { /* Corresponds to <StyledP> for Role */
-    color: #F5DB0C;
-    font-size: 14px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 300;
-    line-height: 18px;
-    word-wrap: break-word;
+.profile-sidebar-role span {
+  /* Corresponds to <StyledP> for Role */
+  color: #f5db0c;
+  font-size: 14px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  line-height: 18px;
+  word-wrap: break-word;
 }
 
 /* StyledAddress01 (for ID and copy icon) -> .profile-sidebar-id */
 .profile-sidebar-id {
-    display: flex; /* Added for vertical alignment of icon and text */
-    align-items: center; /* Added for vertical alignment */
-    gap: 8px; /* From StyledAddress01 */
+  display: flex; /* Added for vertical alignment of icon and text */
+  align-items: center; /* Added for vertical alignment */
+  gap: 8px; /* From StyledAddress01 */
 }
-.profile-sidebar-id span { /* StyledID89457t94857tspan */
-    color: rgba(251.82, 252.37, 252.88, 0.30);
-    font-size: 12px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 300;
-    letter-spacing: 0.12px;
-    word-wrap: break-word;
+
+.profile-sidebar-id span {
+  /* StyledID89457t94857tspan */
+  color: rgb(251.82 252.37 252.88 / 30%);
+  font-size: 12px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.12px;
+  word-wrap: break-word;
 }
 
 /* StyledCopysharp -> .profile-sidebar-copy-icon */
 .profile-sidebar-copy-icon {
-    width: 11px;
-    height: 11px;
-    position: relative;
-    overflow: hidden;
+  width: 11px;
+  height: 11px;
+  position: relative;
+  overflow: hidden;
 }
+
 /* StyledVector -> .profile-sidebar-copy-icon-inner1 */
 .profile-sidebar-copy-icon-inner1 {
-    width: 7.91px;
-    height: 7.91px;
-    left: 2.41px;
-    top: 2.41px;
-    position: absolute;
-    background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%);
+  width: 7.91px;
+  height: 7.91px;
+  left: 2.41px;
+  top: 2.41px;
+  position: absolute;
+  background: linear-gradient(0deg, #004e9f 0%, #006edf 100%);
 }
+
 /* StyledVector01 -> .profile-sidebar-copy-icon-inner2 */
 .profile-sidebar-copy-icon-inner2 {
-    width: 7.91px;
-    height: 7.91px;
-    left: 0.69px;
-    top: 0.69px;
-    position: absolute;
-    background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%);
+  width: 7.91px;
+  height: 7.91px;
+  left: 0.69px;
+  top: 0.69px;
+  position: absolute;
+  background: linear-gradient(0deg, #004e9f 0%, #006edf 100%);
 }
 
 /* Bio text (StyledP within StyledFrame930) -> .profile-sidebar-bio */
-.profile-sidebar-bio { /* One of the <StyledP> in React */
-    color: #777E90;
-    font-size: 12px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 300;
-    letter-spacing: 0.12px;
-    word-wrap: break-word;
-    width: 100%; /* Занимаем всю доступную ширину */
-    max-width: 186px; /* Ограничиваем максимальную ширину как в макете */
-    text-align: center;
+.profile-sidebar-bio {
+  /* One of the <StyledP> in React */
+  color: #777e90;
+  font-size: 12px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.12px;
+  word-wrap: break-word;
+  width: 100%; /* Занимаем всю доступную ширину */
+  max-width: 186px; /* Ограничиваем максимальную ширину как в макете */
+  text-align: center;
 }
 
 /* StyledAddress02 (for website link) -> .profile-sidebar-website */
 .profile-sidebar-website {
-    gap: 8px; /* From StyledAddress02 */
-    display: flex; /* Added for icon and link alignment */
-    align-items: center; /* Added for icon and link alignment */
-    width: 100%; /* Занимаем всю доступную ширину */
-    overflow: hidden; /* Скрываем то, что не помещается */
+  gap: 8px; /* From StyledAddress02 */
+  display: flex; /* Added for icon and link alignment */
+  align-items: center; /* Added for icon and link alignment */
+  width: 100%; /* Занимаем всю доступную ширину */
+  overflow: hidden; /* Скрываем то, что не помещается */
 }
+
 /* StyledIconsGlobeLine -> .profile-sidebar-globe-icon */
+
 /* Removed styles for .profile-sidebar-globe-icon and its -inner parts as it's replaced by img */
 
 .profile-sidebar-website-link {
-    white-space: nowrap; /* Запрещаем перенос строки */
-    overflow: hidden; /* Скрываем лишний текст */
-    text-overflow: ellipsis; /* Добавляем многоточие */
-    display: block; /* Чтобы text-overflow работал корректно */
-    max-width: 100%; /* Занимает всю доступную ширину родителя .profile-sidebar-website */
-    color: #777E90; /* Цвет как в макете, если нужен */
-    text-decoration: none; /* Убираем подчеркивание, если есть */
-    font-size: 10px; 
+  white-space: nowrap; /* Запрещаем перенос строки */
+  overflow: hidden; /* Скрываем лишний текст */
+  text-overflow: ellipsis; /* Добавляем многоточие */
+  display: block; /* Чтобы text-overflow работал корректно */
+  max-width: 100%; /* Занимает всю доступную ширину родителя .profile-sidebar-website */
+  color: #777e90; /* Цвет как в макете, если нужен */
+  text-decoration: none; /* Убираем подчеркивание, если есть */
+  font-size: 10px;
 }
 
 .profile-sidebar-social-link {
-    width: 100%;
-    overflow: hidden; /* Скрываем то, что не помещается */
-    white-space: nowrap; /* Текст в одну строку */
+  width: 100%;
+  overflow: hidden; /* Скрываем то, что не помещается */
+  white-space: nowrap; /* Текст в одну строку */
 }
 
 .profile-sidebar-social-link span {
-    display: inline-block; /* Чтобы text-overflow работал для вложенной ссылки */
-    max-width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  display: inline-block; /* Чтобы text-overflow работал для вложенной ссылки */
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .profile-sidebar-social-link a {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: inline; /* или inline-block, если нужно больше контроля над размерами */
-    max-width: 100%; /* Убедимся, что ссылка тоже обрезается */
-    color: #777E90; /* Цвет как в макете, если нужен */
-    text-decoration: none; /* Убираем подчеркивание, если есть */
-    font-size: 10px; 
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline; /* или inline-block, если нужно больше контроля над размерами */
+  max-width: 100%; /* Убедимся, что ссылка тоже обрезается */
+  color: #777e90; /* Цвет как в макете, если нужен */
+  text-decoration: none; /* Убираем подчеркивание, если есть */
+  font-size: 10px;
 }
 
 /* StyledFrame932 (round share icons container) -> .profile-sidebar-social-icons-round */
 .profile-sidebar-social-icons-round {
-    gap: 8px; /* From StyledFrame932 */
-    display: inline-flex; /* Ensure they are in a row */
-    justify-content: center;
-    align-items: center;
+  gap: 8px; /* From StyledFrame932 */
+  display: inline-flex; /* Ensure they are in a row */
+  justify-content: center;
+  align-items: center;
 }
+
 /* StyledShareicon and StyledShareicon01 -> .profile-sidebar-social-icon-round-item */
 .profile-sidebar-social-icon-round-item {
-    padding: 10px;
-    overflow: hidden;
-    border-radius: 40px;
-    border: 2px solid #353945; /* outline from styled-component is border here */
-    justify-content: center; /* Center the image icon */
-    align-items: center; /* Center the image icon */
-    display: flex; /* gap:10px from styled component not needed as icon is inner */
-    width: 40px; 
-    height: 40px;
-    box-sizing: border-box;
-    /* background-color: rgba(255, 255, 255, 0.08); /* ОТКАТ ИЗМЕНЕНИЯ */
-}
-/* StyledIconsShareSquareLine / StyledIconsMoreLine -> .profile-sidebar-social-icon-placeholder1/2 */
-/* Removed styles for .profile-sidebar-social-icon-placeholder1/2 and their -inner parts */
+  padding: 10px;
+  overflow: hidden;
+  border-radius: 40px;
+  border: 2px solid #353945; /* outline from styled-component is border here */
+  justify-content: center; /* Center the image icon */
+  align-items: center; /* Center the image icon */
+  display: flex; /* gap:10px from styled component not needed as icon is inner */
+  width: 40px;
+  height: 40px;
+  box-sizing: border-box;
 
+  /* background-color: rgba(255, 255, 255, 0.08); /* ОТКАТ ИЗМЕНЕНИЯ */
+}
+
+/* StyledIconsShareSquareLine / StyledIconsMoreLine -> .profile-sidebar-social-icon-placeholder1/2 */
+
+/* Removed styles for .profile-sidebar-social-icon-placeholder1/2 and their -inner parts */
 
 /* StyledButton (My Galaxy) -> .profile-sidebar-my-galaxy-btn */
 .profile-sidebar-my-galaxy-btn {
-    width: 100%; /* Changed from fixed height to full width */
-    padding: 12px 35px;
-    background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
-    overflow: hidden;
-    border-radius: 10px;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    display: inline-flex; 
-    text-decoration: none; 
-    box-sizing: border-box;
+  width: 100%; /* Changed from fixed height to full width */
+  padding: 12px 35px;
+  background: linear-gradient(180deg, #ffef2b 0%, #f9f7d6 100%);
+  overflow: hidden;
+  border-radius: 10px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  display: inline-flex;
+  text-decoration: none;
+  box-sizing: border-box;
 }
 
-.profile-sidebar-my-galaxy-btn-text { /* New class for inner text */
-    color: black;
-    font-size: 16px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 400;
-    line-height: 16px;
-    white-space: nowrap; /* Ensuring single line */
+.profile-sidebar-my-galaxy-btn-text {
+  /* New class for inner text */
+  color: black;
+  font-size: 16px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 400;
+  line-height: 16px;
+  white-space: nowrap; /* Ensuring single line */
 }
 
 /* StyledSocials -> .profile-sidebar-social-icons-row */
 .profile-sidebar-social-icons-row {
-    padding-top: 8px; padding-bottom: 8px;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 16px;
-    display: inline-flex;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 16px;
+  display: inline-flex;
 }
 
 .profile-sidebar-social-icon-row-item-img {
-    /* img tag inside the a tag */
-    width: 35px; /* Изменено с 30px */
-    height: 35px; /* Изменено с 30px */
-    object-fit: contain;
-    /* background: none; убрал фон по последнему требованию */
-    /* border-radius: 50%; убрал по последнему требованию */
-    /* padding: 5px; убрал по последнему требованию */
+  /* img tag inside the a tag */
+  width: 35px; /* Изменено с 30px */
+  height: 35px; /* Изменено с 30px */
+  object-fit: contain;
+
+  /* background: none; убрал фон по последнему требованию */
+
+  /* border-radius: 50%; убрал по последнему требованию */
+
+  /* padding: 5px; убрал по последнему требованию */
 }
 
 /* Удаляем специфичные правила, чтобы применялись общие 35x35px */
-/* 
+
+/*
 .profile-sidebar-social-icons-row img.profile-sidebar-social-icon-row-item-img[alt="VK"] {
-    width: 30px; 
+    width: 30px;
     height: 30px;
 }
 
 .profile-sidebar-social-icons-row img.profile-sidebar-social-icon-row-item-img[alt="LinkedIn"] {
-    width: 30px; 
+    width: 30px;
     height: 30px;
 }
 */
 
 /* StyledImage36 -> first img in .profile-sidebar-social-icons-row */
-.profile-sidebar-social-icons-row img:first-of-type.profile-sidebar-social-icon-row-item-img {
-    /* Styles for the first icon if different, e.g., margin-right */
-    /* width: 35px; */ /* Эти строки теперь не нужны, т.к. размер задан выше */
-    /* height: 35px; */
+.profile-sidebar-social-icons-row
+  img:first-of-type.profile-sidebar-social-icon-row-item-img {
+  /* Styles for the first icon if different, e.g., margin-right */
+
+  /* width: 35px; */
+
+  /* Эти строки теперь не нужны, т.к. размер задан выше */
+
+  /* height: 35px; */
 }
+
 /* StyledImage37 -> second img in .profile-sidebar-social-icons-row */
-.profile-sidebar-social-icons-row img:nth-of-type(2).profile-sidebar-social-icon-row-item-img {
-    /* Styles for the second icon if different */
-    /* width: 35px; */ /* Эти строки теперь не нужны */
-    /* height: 35px; */
+.profile-sidebar-social-icons-row
+  img:nth-of-type(2).profile-sidebar-social-icon-row-item-img {
+  /* Styles for the second icon if different */
+
+  /* width: 35px; */
+
+  /* Эти строки теперь не нужны */
+
+  /* height: 35px; */
 }
+
 /* StyledIconsInstagramLine -> .profile-sidebar-social-icon-row-item-complex-div */
 .profile-sidebar-social-icon-row-item-complex-div {
-    width: 30px;
-    height: 30px;
-    position: relative;
-    overflow: hidden;
+  width: 30px;
+  height: 30px;
+  position: relative;
+  overflow: hidden;
 }
-.icon-complex-inner1 { /* StyledVector04 */
-    width: 25px; height: 25px; left: 2.50px; top: 2.50px; position: absolute; background: #777E90;
+
+.icon-complex-inner1 {
+  /* StyledVector04 */
+  width: 25px;
+  height: 25px;
+  left: 2.5px;
+  top: 2.5px;
+  position: absolute;
+  background: #777e90;
 }
-.icon-complex-inner2 { /* StyledVector05 */
-    width: 2.50px; height: 2.50px; left: 20px; top: 7.50px; position: absolute; background: #777E90;
+
+.icon-complex-inner2 {
+  /* StyledVector05 */
+  width: 2.5px;
+  height: 2.5px;
+  left: 20px;
+  top: 7.5px;
+  position: absolute;
+  background: #777e90;
 }
-.icon-complex-inner3 { /* StyledVector06 */
-    width: 12.50px; height: 12.50px; left: 8.75px; top: 8.75px; position: absolute; background: #777E90;
+
+.icon-complex-inner3 {
+  /* StyledVector06 */
+  width: 12.5px;
+  height: 12.5px;
+  left: 8.75px;
+  top: 8.75px;
+  position: absolute;
+  background: #777e90;
 }
 
 /* StyledDivider -> .profile-sidebar-divider */
 .profile-sidebar-divider {
-    width: 199px;
-    height: 1px;
-    /* position: relative; */ /* Not needed if just a bg color line */
-    background: #353945;
+  width: 199px;
+  height: 1px;
+
+  /* position: relative; */
+
+  /* Not needed if just a bg color line */
+  background: #353945;
 }
 
 /* Styled152025span / Styled152025 -> .profile-sidebar-date-joined */
 .profile-sidebar-date-joined {
-    color: #777E90;
-    font-size: 12px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 300;
-    letter-spacing: 0.12px;
-    word-wrap: break-word;
-    text-align: center; /* From previous CSS */
-    width: 186px; /* From previous CSS */
+  color: #777e90;
+  font-size: 12px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.12px;
+  word-wrap: break-word;
+  text-align: center; /* From previous CSS */
+  width: 186px; /* From previous CSS */
 }
-
 
 /* StyledFrame1018 -> .profile-main-content */
 .profile-main-content {
-    width: 976px;
-    max-width: 100%;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start; /* Изменено с flex-end на flex-start */
-    gap: 100px; /* Original gap from StyledFrame1018 */
-    display: flex;
+  width: 976px;
+  max-width: 100%;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start; /* Изменено с flex-end на flex-start */
+  gap: 100px; /* Original gap from StyledFrame1018 */
+  display: flex;
 }
 
 /* StyledActionbutton (Edit Profile Button container) -> .profile-main-edit-btn-container */
 .profile-main-edit-btn-container {
-    display: flex; /* Изменено с inline-flex */
-    justify-content: flex-end; /* Выравнивает кнопку вправо */
-    width: 100%; /* Занимает всю ширину родителя */
-    /* gap: 15px;  Этот gap был для внутреннего содержимого, если бы оно было, но у нас одна кнопка */
-    /* align-items: flex-start;  Не нужно, если justify-content работает */
-    /* align-self: flex-end;  Не нужно, если width: 100% и justify-content */
+  display: flex; /* Изменено с inline-flex */
+  justify-content: flex-end; /* Выравнивает кнопку вправо */
+  width: 100%; /* Занимает всю ширину родителя */
+
+  /* gap: 15px;  Этот gap был для внутреннего содержимого, если бы оно было, но у нас одна кнопка */
+
+  /* align-items: flex-start;  Не нужно, если justify-content работает */
+
+  /* align-self: flex-end;  Не нужно, если width: 100% и justify-content */
 }
+
 /* StyledButton (Edit Profile Button itself) -> .profile-main-edit-btn */
 .profile-main-edit-btn {
-    /* height: 40px; */ /* Removed fixed height, let padding define it */
-    padding: 12px 16px;
-    border-radius: 10px;
-    outline: 1px white solid;
-    outline-offset: -1px; 
-    justify-content: center;
-    align-items: center;
-    gap: 12px;
-    display: inline-flex;
-    text-decoration: none; 
-    background: transparent; /* Ensuring no other background is inherited */
-    color: white; /* Default text color for the link itself if any */
+  /* height: 40px; */
+
+  /* Removed fixed height, let padding define it */
+  padding: 12px 16px;
+  border-radius: 10px;
+  outline: 1px white solid;
+  outline-offset: -1px;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  display: inline-flex;
+  text-decoration: none;
+  background: transparent; /* Ensuring no other background is inherited */
+  color: white; /* Default text color for the link itself if any */
 }
 
-.profile-main-edit-btn-text { /* New class for inner text div */
-    text-align: right; 
-    color: white; 
-    font-size: 16px; 
-    font-family: 'Unbounded', sans-serif; 
-    font-weight: 400; 
-    line-height: 16px; 
-    word-wrap: break-word;
+.profile-main-edit-btn-text {
+  /* New class for inner text div */
+  text-align: right;
+  color: white;
+  font-size: 16px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 400;
+  line-height: 16px;
+  word-wrap: break-word;
 }
 
-.profile-main-edit-btn-icon { /* Class for the edit icon img */
-    width: 16px;
-    height: 16px;
+.profile-main-edit-btn-icon {
+  /* Class for the edit icon img */
+  width: 16px;
+  height: 16px;
 }
 
 /* StyledIconsEditLine -> .profile-main-edit-btn-icon (wrapper for img) */
-.profile-main-edit-btn-icon-wrapper { /* New wrapper if needed, or styles on img */
-    width: 16px;
-    height: 16px;
-    position: relative;
-    overflow: hidden;
+.profile-main-edit-btn-icon-wrapper {
+  /* New wrapper if needed, or styles on img */
+  width: 16px;
+  height: 16px;
+  position: relative;
+  overflow: hidden;
 }
-/* StyledShape05 and StyledShape06 for edit icon parts, but we use an SVG now */
-/* .edit-icon-inner1 { width: 12px; height: 1.33px; left: 2px; top: 14px; position: absolute; background: white; } */
-/* .edit-icon-inner2 { width: 12.11px; height: 12.11px; left: 2px; top: 0.55px; position: absolute; background: white; } */
 
+/* StyledShape05 and StyledShape06 for edit icon parts, but we use an SVG now */
+
+/* .edit-icon-inner1 { width: 12px; height: 1.33px; left: 2px; top: 14px; position: absolute; background: white; } */
+
+/* .edit-icon-inner2 { width: 12.11px; height: 12.11px; left: 2px; top: 0.55px; position: absolute; background: white; } */
 
 /* StyledFollowing -> .profile-main-startups-section */
 .profile-main-startups-section {
-    display: flex;
-    flex-direction: column;
-    gap: 48px; /* Расстояние между табами и контентом вкладок */
-    width: 100%; /* Занимает всю ширину .profile-main-content */
-    position: relative; /* Для корректного позиционирования абсолютных дочерних элементов */
+  display: flex;
+  flex-direction: column;
+  gap: 48px; /* Расстояние между табами и контентом вкладок */
+  width: 100%; /* Занимает всю ширину .profile-main-content */
+  position: relative; /* Для корректного позиционирования абсолютных дочерних элементов */
 }
 
 /* StyledSubNavigation -> .profile-main-tabs */
 .profile-main-tabs {
-    display: flex;
-    gap: 12px;
+  display: flex;
+  gap: 12px;
 }
 
 .profile-main-tab-item {
-    /* Сбрасываем только те свойства, которые могут конфликтовать */
-    border: none;
-    outline: none;
-    text-decoration: none;
-    appearance: none; /* Для сброса системных стилей кнопок */
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    margin: 0; /* Сброс внешних отступов */
+  /* Сбрасываем только те свойства, которые могут конфликтовать */
+  border: none;
+  outline: none;
+  text-decoration: none;
+  appearance: none; /* Для сброса системных стилей кнопок */
+  appearance: none;
+  appearance: none;
+  margin: 0; /* Сброс внешних отступов */
 
-    /* Стили из Figma для НЕАКТИВНОЙ вкладки (аналог "Стартапы" в вашем примере, если бы она была неактивна) */
-    box-sizing: border-box; 
-    padding: 6px 12px;
-    font-family: 'Unbounded', sans-serif;
-    font-size: 14px;
-    font-weight: 300;
-    line-height: 18px;
-    word-wrap: break-word;
-    cursor: pointer;
-    background: transparent; 
-    color: rgba(255, 255, 255, 0.50); 
-    border-radius: 100px; /* Как у неактивной "Стартапы" из Figma, если бы вторая кнопка была активна */
-    display: inline-flex; 
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
+  /* Стили из Figma для НЕАКТИВНОЙ вкладки (аналог "Стартапы" в вашем примере, если бы она была неактивна) */
+  box-sizing: border-box;
+  padding: 6px 12px;
+  font-family: Unbounded, sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 18px;
+  word-wrap: break-word;
+  cursor: pointer;
+  background: transparent;
+  color: rgb(255 255 255 / 50%);
+  border-radius: 100px; /* Как у неактивной "Стартапы" из Figma, если бы вторая кнопка была активна */
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
 }
 
 .profile-main-tab-item:hover {
-    color: rgba(255, 255, 255, 0.75); /* Легкое осветление при наведении на неактивную */
-    background: transparent; 
+  color: rgb(
+    255 255 255 / 75%
+  ); /* Легкое осветление при наведении на неактивную */
+  background: transparent;
 }
 
 .profile-main-tab-item.active-tab {
-    /* Сбрасываем только те свойства, которые могут конфликтовать */
-    border: none;
-    outline: none;
-    text-decoration: none;
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    margin: 0;
+  /* Сбрасываем только те свойства, которые могут конфликтовать */
+  border: none;
+  outline: none;
+  text-decoration: none;
+  appearance: none;
+  appearance: none;
+  appearance: none;
+  margin: 0;
 
-    /* Стили из Figma для АКТИВНОЙ вкладки (как "Новости" в вашем примере) */
-    box-sizing: border-box;
-    padding: 6px 12px;
-    font-family: 'Unbounded', sans-serif;
-    font-size: 14px;
-    font-weight: 300;
-    line-height: 18px;
-    word-wrap: break-word;
-    cursor: default; 
-    background: #E6E8EC;
-    color: #23262F; 
-    border-radius: 10px; 
-    display: inline-flex; 
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
+  /* Стили из Figma для АКТИВНОЙ вкладки (как "Новости" в вашем примере) */
+  box-sizing: border-box;
+  padding: 6px 12px;
+  font-family: Unbounded, sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 18px;
+  word-wrap: break-word;
+  cursor: default;
+  background: #e6e8ec;
+  color: #23262f;
+  border-radius: 10px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
 }
 
 .profile-main-tab-item.active-tab:hover {
-    color: #23262F; 
-    background: #E6E8EC; 
+  color: #23262f;
+  background: #e6e8ec;
 }
 
 /* Startup Card container: StyledFrame1019, StyledFrame1020 etc. */
+
 /* These are wrappers for each card + image + divider. We have .profile-main-startup-card-item for the card, and then image and divider are siblings */
-.profile-main-startup-list-item-wrapper { /* New class if needed for card+img+divider block */
-    align-self: stretch;
-    justify-content: flex-start; /* default, but styled-components had it */
-    align-items: flex-start;   /* default */
-    gap: 20px;
-    display: flex; /* changed from inline-flex as it's a block */
-    flex-wrap: wrap; /* from styled-component */
-    align-content: flex-start; /* from styled-component */
-    flex-direction: column; /* To stack card, then image, then divider based on order in HTML */
+.profile-main-startup-list-item-wrapper {
+  /* New class if needed for card+img+divider block */
+  align-self: stretch;
+  place-content: flex-start flex-start; /* default, but styled-components had it */
+  align-items: flex-start; /* default */
+  gap: 20px;
+  display: flex; /* changed from inline-flex as it's a block */
+  flex-flow: column wrap; /* from styled-component */ /* from styled-component */ /* To stack card, then image, then divider based on order in HTML */
 }
 
 /* StyledFrame947 -> .profile-main-startup-card-item (this is the card itself) */
 .profile-main-startup-card-item {
-    align-self: stretch;
-    padding: 24px;
-    overflow: hidden;
-    /* border-radius: 10px; /* У карточки стартапа нет своего радиуса, если она внутри #startupsContent с радиусом */
-    justify-content: space-between; 
-    align-items: center;
-    display: flex;
-    background-color: transparent; 
-    box-sizing: border-box;
-    gap: 20px; 
+  align-self: stretch;
+  padding: 24px;
+  overflow: hidden;
+
+  /* border-radius: 10px; /* У карточки стартапа нет своего радиуса, если она внутри #startupsContent с радиусом */
+  justify-content: space-between;
+  align-items: center;
+  display: flex;
+  background-color: transparent;
+  box-sizing: border-box;
+  gap: 20px;
 }
 
 /* Content within the card, before image */
 .profile-main-startup-card-content {
-    display: flex;
-    flex-grow: 1; /* Позволит этому блоку занять доступное пространство */
-    align-items: center; /* Выровняет их по центру вертикально */
-    gap: 20px; /* Промежуток между info, category/progress, button */
+  display: flex;
+  flex-grow: 1; /* Позволит этому блоку занять доступное пространство */
+  align-items: center; /* Выровняет их по центру вертикально */
+  gap: 20px; /* Промежуток между info, category/progress, button */
 }
 
 /* StyledFrame1012 (Name + Rating/Reviews) -> .profile-main-startup-info */
 .profile-main-startup-info {
-    flex-direction: column;
-    justify-content: center; /* Изменено на center */
-    align-items: flex-start;
-    gap: 13px;
-    display: inline-flex; /* Чтобы не занимал всю ширину flex-родителя */
-    margin-right: auto; /* ДОБАВЛЕНО: Занимает доступное место слева, прижимая остальные элементы вправо */
+  flex-direction: column;
+  justify-content: center; /* Изменено на center */
+  align-items: flex-start;
+  gap: 13px;
+  display: inline-flex; /* Чтобы не занимал всю ширину flex-родителя */
+  margin-right: auto; /* ДОБАВЛЕНО: Занимает доступное место слева, прижимая остальные элементы вправо */
 }
-.profile-main-startup-name { /* Generic text, corresponds to multiple <StyledP> or <StyledSpan> */
-    color: white;
-    font-size: 20px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 400;
-    line-height: 18px;
-    word-wrap: break-word;
+
+.profile-main-startup-name {
+  /* Generic text, corresponds to multiple <StyledP> or <StyledSpan> */
+  color: white;
+  font-size: 20px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 400;
+  line-height: 18px;
+  word-wrap: break-word;
 }
+
 /* StyledFrame952 (Rating + Review Count) -> .profile-main-startup-rating-reviews */
 .profile-main-startup-rating-reviews {
-    width: 185px; /* From StyledFrame952 */
-    justify-content: space-between;
-    align-items: center;
-    display: inline-flex;
+  width: 185px; /* From StyledFrame952 */
+  justify-content: space-between;
+  align-items: center;
+  display: inline-flex;
 }
-.profile-main-startup-rating { /* Styled425534span */
-    color: white;
-    font-size: 12px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 300;
-    letter-spacing: 0.12px;
-    word-wrap: break-word;
+
+.profile-main-startup-rating {
+  /* Styled425534span */
+  color: white;
+  font-size: 12px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.12px;
+  word-wrap: break-word;
 }
+
 /* StyledFrame490 (Review icon + count) -> .profile-main-startup-reviews */
 .profile-main-startup-reviews {
-    gap: 8px; /* From StyledFrame490 */
+  gap: 8px; /* From StyledFrame490 */
 }
+
 .profile-main-startup-review-icon {
-    /* border: 1px solid white; /* outline from styled-component - REMOVED */
-    /* width: 16px; /* REMOVED */
-    /* height: 15px; /* REMOVED */
+  /* border: 1px solid white; /* outline from styled-component - REMOVED */
+
+  /* width: 16px; /* REMOVED */
+
+  /* height: 15px; /* REMOVED */
 }
-.profile-main-startup-reviews span { /* Styled17span */
-    color: white;
-    font-size: 14px;
-    font-family: 'Circe', sans-serif;
-    font-weight: 400;
-    line-height: 18px;
-    word-wrap: break-word;
+
+.profile-main-startup-reviews span {
+  /* Styled17span */
+  color: white;
+  font-size: 14px;
+  font-family: Circe, sans-serif;
+  font-weight: 400;
+  line-height: 18px;
+  word-wrap: break-word;
 }
 
 /* Styles for new image icons */
 .profile-main-startup-review-icon-img {
-    width: 18px; 
-    height: 18px;
-    vertical-align: middle; 
+  width: 18px;
+  height: 18px;
+  vertical-align: middle;
 }
 
 .profile-sidebar-website-icon-img {
-    width: 16px;
-    height: 16px;
-    vertical-align: middle;
-    margin-right: 8px; 
+  width: 16px;
+  height: 16px;
+  vertical-align: middle;
+  margin-right: 8px;
 }
 
-.profile-sidebar-social-icon-img { 
-    width: 20px;
-    height: 20px;
-    display: block; 
+.profile-sidebar-social-icon-img {
+  width: 20px;
+  height: 20px;
+  display: block;
 }
 
 /* StyledFrame1014 (Category tag + Progress bar) -> .profile-main-startup-category-progress */
 .profile-main-startup-category-progress {
-    display: flex; /* ADDED to make tag and progress-bar-container align in a row */
-    flex-direction: row; /* ADDED to confirm row direction */
-    align-items: center; /* ADDED to vertically align items in this row */
-    gap: 15px; /* ADDED gap between tag and progress-bar-container */
-    justify-content: flex-end; /* ДОБАВЛЕНО: Выравнивает содержимое (тег и прогресс-бар) по правому краю этого блока */
+  display: flex; /* ADDED to make tag and progress-bar-container align in a row */
+  flex-direction: row; /* ADDED to confirm row direction */
+  align-items: center; /* ADDED to vertically align items in this row */
+  gap: 15px; /* ADDED gap between tag and progress-bar-container */
+  justify-content: flex-end; /* ДОБАВЛЕНО: Выравнивает содержимое (тег и прогресс-бар) по правому краю этого блока */
 }
+
 /* StyledFrame945 (Tag, prog bar bg, prog bar fg, text) */
-/* .progress-bar-elements-container { 
+/* .progress-bar-elements-container {
     justify-content: flex-start;
     align-items: center;
     gap: 15px;
@@ -654,834 +748,921 @@ html, body {
 
 /* НОВЫЙ КЛАСС */
 .progress-bar-and-text-container {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.profile-main-startup-category-tag { /* StyledEditMenuaction */
-    padding: 9px 17px;
-    background: #050505;
-    border-radius: 5px;
-    justify-content: center;
-    align-items: center;
-    gap: 10px; /* from styled */
-    display: flex; /* from styled */
-    /* Text styles applied directly */
-    color: white;
-    font-size: 12px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 300;
-    letter-spacing: 0.12px;
-    word-wrap: break-word;
-    text-align: center; /* from styled */
+.profile-main-startup-category-tag {
+  /* StyledEditMenuaction */
+  padding: 9px 17px;
+  background: #050505;
+  border-radius: 5px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px; /* from styled */
+  display: flex; /* from styled */
+
+  /* Text styles applied directly */
+  color: white;
+  font-size: 12px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.12px;
+  word-wrap: break-word;
+  text-align: center; /* from styled */
 }
-.profile-main-startup-progress-bar-bg { /* StyledRectangle4197 */
-    width: 100px; /* Уменьшено для соответствия макету */
-    height: 27px; /* ИЗМЕНЕНО: Высота изменена на 27px */
-    background: black;
-    border-radius: 5px;
-    overflow: hidden;
+
+.profile-main-startup-progress-bar-bg {
+  /* StyledRectangle4197 */
+  width: 100px; /* Уменьшено для соответствия макету */
+  height: 27px; /* ИЗМЕНЕНО: Высота изменена на 27px */
+  background: black;
+  border-radius: 5px;
+  overflow: hidden;
 }
-.profile-main-startup-progress-bar-fg { /* StyledRectangle4198 */
-    /* width: 101px; */ /* This will be dynamic via inline style */
-    height: 100%;
-    background: #FFEF2B;
-    border-radius: 5px;
+
+.profile-main-startup-progress-bar-fg {
+  /* StyledRectangle4198 */
+  /* width: 101px; */
+
+  /* This will be dynamic via inline style */
+  height: 100%;
+  background: #ffef2b;
+  border-radius: 5px;
 }
-.profile-main-startup-progress-text { /* Styled65span */
-    color: white; /* ИЗМЕНЕНО на white */
-    font-size: 12px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 300;
-    letter-spacing: 0.12px;
-    word-wrap: break-word;
-    text-align: center; /* from styled */
+
+.profile-main-startup-progress-text {
+  /* Styled65span */
+  color: white; /* ИЗМЕНЕНО на white */
+  font-size: 12px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.12px;
+  word-wrap: break-word;
+  text-align: center; /* from styled */
 }
 
 /* StyledButton02 (Details button) -> .profile-main-startup-details-btn */
 .profile-main-startup-details-btn {
-    height: 40px;
-    padding: 0 30px; /* Горизонтальный паддинг уменьшен */
-    background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%);
-    overflow: hidden;
-    border-radius: 10px;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    display: flex;
-    /* Text styles applied directly */
-    color: var(--Text-Brand-On-Brand, #F5F5F5);
-    font-size: 16px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 400;
-    line-height: 16px;
-    word-wrap: break-word;
-    text-decoration: none; /* Ensure links look like buttons */
-    flex-shrink: 0; /* Чтобы кнопка не сжималась */
+  height: 40px;
+  padding: 0 30px; /* Горизонтальный паддинг уменьшен */
+  background: linear-gradient(0deg, #004e9f 0%, #006edf 100%);
+  overflow: hidden;
+  border-radius: 10px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  display: flex;
+
+  /* Text styles applied directly */
+  color: var(--Text-Brand-On-Brand, #f5f5f5);
+  font-size: 16px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 400;
+  line-height: 16px;
+  word-wrap: break-word;
+  text-decoration: none; /* Ensure links look like buttons */
+  flex-shrink: 0; /* Чтобы кнопка не сжималась */
 }
 
 /* StyledRectangle4196 (Startup Image) -> .profile-main-startup-image */
 .profile-main-startup-image {
-    width: 100px; /* Уменьшено */
-    height: 100px; /* Уменьшено */
-    object-fit: cover;
-    border-radius: 12px; /* Более скругленные */
-    flex-shrink: 0; /* Чтобы картинка не сжималась */
-    order: -1; /* Перемещаем изображение налево */
+  width: 100px; /* Уменьшено */
+  height: 100px; /* Уменьшено */
+  object-fit: cover;
+  border-radius: 12px; /* Более скругленные */
+  flex-shrink: 0; /* Чтобы картинка не сжималась */
+  order: -1; /* Перемещаем изображение налево */
 }
 
 /* StyledDivider01 -> .profile-main-startup-list-divider */
 .profile-main-startup-list-divider {
-    width: 100%; /* Растягиваем разделитель */
-    /* max-width: 100%; */ /* Уже 100% */
-    height: 4px; 
-    background: rgba(255, 255, 255, 0.50);
-    margin-top: 20px; /* Отступ сверху до разделителя */
-    margin-bottom: 20px; /* Отступ снизу от разделителя */
+  width: 100%; /* Растягиваем разделитель */
+
+  /* max-width: 100%; */
+
+  /* Уже 100% */
+  height: 4px;
+  background: rgb(255 255 255 / 50%);
+  margin-top: 20px; /* Отступ сверху до разделителя */
+  margin-bottom: 20px; /* Отступ снизу от разделителя */
 }
 
 /* Убедимся, что последний разделитель не добавляет лишний отступ, если он есть */
-#startupsContent .profile-main-startup-card-item:last-of-type + .profile-main-startup-list-divider {
-    display: none;
+#startupsContent
+  .profile-main-startup-card-item:last-of-type
+  + .profile-main-startup-list-divider {
+  display: none;
 }
+
 /* Если разделитель после каждого, то последний не нужен */
 #startupsContent .profile-main-startup-list-divider:last-child {
-    display: none;
+  display: none;
 }
 
 .profile-main-no-startups {
-    color: #777E90;
-    font-size: 16px;
-    text-align: center;
-    width: 100%;
-    padding: 20px 0;
+  color: #777e90;
+  font-size: 16px;
+  text-align: center;
+  width: 100%;
+  padding: 20px 0;
 }
 
 /* General button styling (ensure .btn class from global/buttons.css is effective) */
 .btn {
-    text-decoration: none;
-    /* other base styles */
+  text-decoration: none;
+
+  /* other base styles */
 }
 
 /* Font family fallbacks should be handled by global.css */
 body {
-    font-family: 'Unbounded', 'Circe', 'DM Sans', Arial, sans-serif;
+  font-family: Unbounded, Circe, 'DM Sans', Arial, sans-serif;
 }
 
 /* Avatar Upload section (from previous manual CSS, ensure it fits) */
 .profile-avatar-upload-section {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    width: 100%;
-    color: #FCFCFD;
-    margin-top: 20px; /* Add some spacing */
-    margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  color: #fcfcfd;
+  margin-top: 20px; /* Add some spacing */
+  margin-bottom: 20px;
 }
+
 .profile-avatar-upload-section h4 {
-    margin-bottom: 10px;
-    font-size: 16px;
-    font-weight: 500;
+  margin-bottom: 10px;
+  font-size: 16px;
+  font-weight: 500;
 }
+
 .avatar-upload-form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
 }
+
 .file-input-hidden {
-    display: none;
+  display: none;
 }
-.choose-file-btn, .upload-btn {
-    width: 100%;
-    max-width: 180px;
+
+.choose-file-btn,
+.upload-btn {
+  width: 100%;
+  max-width: 180px;
 }
+
 .file-name-display {
-    font-size: 12px;
-    color: #777E90;
-    margin-top: 5px;
-    word-break: break-all;
-} 
+  font-size: 12px;
+  color: #777e90;
+  margin-top: 5px;
+  word-break: break-all;
+}
 
 /* Общий контейнер для содержимого вкладок (стартапы и новости) */
 .profile-main-content-tab {
-    display: none; /* По умолчанию скрыто */
-    flex-direction: column; 
-    gap: 20px; 
-    opacity: 0;
-    transform: translateY(10px); /* Возвращаем transform, но с меньшим значением */
-    transition: opacity 0.3s ease-out, transform 0.3s ease-out; /* Возвращаем transform в transition */
-    width: 100%; 
-    will-change: opacity, transform; /* Подсказка браузеру для оптимизации */
+  display: none; /* По умолчанию скрыто */
+  flex-direction: column;
+  gap: 20px;
+  opacity: 0;
+  transform: translateY(
+    10px
+  ); /* Возвращаем transform, но с меньшим значением */
+  transition:
+    opacity 0.3s ease-out,
+    transform 0.3s ease-out; /* Возвращаем transform в transition */
+  width: 100%;
+  will-change: opacity, transform; /* Подсказка браузеру для оптимизации */
 }
 
 .profile-main-content-tab.active-content {
-    display: flex; /* Показываем активный контент */
-    opacity: 1;
-    transform: translateY(0); /* Возвращаем transform */
+  display: flex; /* Показываем активный контент */
+  opacity: 1;
+  transform: translateY(0); /* Возвращаем transform */
 }
 
 /* Стили для секции стартапов */
 #startupsContent {
-    padding-top: 32px; 
-    padding-right: 32px;
-    padding-bottom: 32px;
-    padding-left: 0; /* Убираем отступ слева */
-    background: transparent; 
-    border-radius: 10px; 
-    overflow: hidden; 
-    gap: 0; /* Разделители .profile-main-startup-list-divider управляют вертикальными отступами */
+  padding: 32px 32px 32px 0; /* Убираем отступ слева */
+  background: transparent;
+  border-radius: 10px;
+  overflow: hidden;
+  gap: 0; /* Разделители .profile-main-startup-list-divider управляют вертикальными отступами */
 }
 
 .profile-main-startup-card-item {
-    align-self: stretch;
-    padding: 24px;
-    overflow: hidden;
-    /* border-radius: 10px; /* У карточки стартапа нет своего радиуса, если она внутри #startupsContent с радиусом */
-    justify-content: space-between; 
-    align-items: center;
-    display: flex;
-    background-color: transparent; 
-    box-sizing: border-box;
-    gap: 20px; 
+  align-self: stretch;
+  padding: 24px;
+  overflow: hidden;
+
+  /* border-radius: 10px; /* У карточки стартапа нет своего радиуса, если она внутри #startupsContent с радиусом */
+  justify-content: space-between;
+  align-items: center;
+  display: flex;
+  background-color: transparent;
+  box-sizing: border-box;
+  gap: 20px;
 }
 
 .profile-main-startup-list-divider {
-    width: 100%; /* Растягиваем разделитель */
-    /* max-width: 100%; */ /* Уже 100% */
-    height: 4px; 
-    background: rgba(255, 255, 255, 0.50);
-    margin-top: 20px; /* Отступ сверху до разделителя */
-    margin-bottom: 20px; /* Отступ снизу от разделителя */
+  width: 100%; /* Растягиваем разделитель */
+
+  /* max-width: 100%; */
+
+  /* Уже 100% */
+  height: 4px;
+  background: rgb(255 255 255 / 50%);
+  margin-top: 20px; /* Отступ сверху до разделителя */
+  margin-bottom: 20px; /* Отступ снизу от разделителя */
 }
 
 /* Убедимся, что последний разделитель не добавляет лишний отступ, если он есть */
-#startupsContent .profile-main-startup-card-item:last-of-type + .profile-main-startup-list-divider {
-    display: none;
+#startupsContent
+  .profile-main-startup-card-item:last-of-type
+  + .profile-main-startup-list-divider {
+  display: none;
 }
+
 /* Если разделитель после каждого, то последний не нужен */
 #startupsContent .profile-main-startup-list-divider:last-child {
-    display: none;
+  display: none;
 }
 
 /* Стили для секции новостей */
 #newsContent {
-    padding-top: 32px; 
-    padding-right: 32px;
-    padding-bottom: 32px;
-    padding-left: 0; /* Убираем отступ слева */
-    background: transparent; 
-    border-radius: 10px; 
-    overflow: hidden; 
+  padding: 32px 32px 32px 0; /* Убираем отступ слева */
+  background: transparent;
+  border-radius: 10px;
+  overflow: hidden;
 }
 
 .profile-news-items-container {
-    align-self: stretch;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start; 
-    align-items: flex-start;
-    align-content: flex-start;
-    gap: 20px; /* Отступ между карточками новостей */
+  align-self: stretch;
+  display: flex;
+  flex-wrap: wrap;
+  place-content: flex-start flex-start;
+  align-items: flex-start;
+  gap: 20px; /* Отступ между карточками новостей */
 }
 
 .profile-news-card-item {
-    width: 284px; /* Ширина карточки из Figma */
-    height: 251px; /* Высота карточки из Figma */
-    background: white; /* Восстанавливаем фон карточек новостей */
-    overflow: hidden;
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05); /* Восстанавливаем тень карточек новостей */
-    transition: transform 0.2s ease-in-out;
+  width: 284px; /* Ширина карточки из Figma */
+  height: 251px; /* Высота карточки из Figma */
+  background: white; /* Восстанавливаем фон карточек новостей */
+  overflow: hidden;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 8px rgb(0 0 0 / 5%); /* Восстанавливаем тень карточек новостей */
+  transition: transform 0.2s ease-in-out;
 }
 
 .profile-news-card-item:hover {
-    transform: translateY(-5px); /* Эффект при наведении */
+  transform: translateY(-5px); /* Эффект при наведении */
 }
 
 .profile-news-card-item img {
-    width: 100%; /* Растягиваем изображение по ширине карточки */
-    height: 131px; /* Высота изображения из Figma */
-    object-fit: cover; /* Масштабирование с сохранением пропорций и обрезкой */
-    border-top-left-radius: 7px; /* Скругление углов изображения (соответствует Figma) */
-    border-top-right-radius: 7px;
+  width: 100%; /* Растягиваем изображение по ширине карточки */
+  height: 131px; /* Высота изображения из Figma */
+  object-fit: cover; /* Масштабирование с сохранением пропорций и обрезкой */
+  border-top-left-radius: 7px; /* Скругление углов изображения (соответствует Figma) */
+  border-top-right-radius: 7px;
 }
 
 .profile-news-card-title {
-    margin: 17px 17px 8px 17px; /* Уменьшен нижний отступ */
-    color: black;
-    font-size: 16px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 400;
-    line-height: 1.3;
-    word-wrap: break-word;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 2; /* Оставляем 2 строки для заголовка */
-    -webkit-box-orient: vertical;
-    min-height: calc(16px * 1.3 * 2); /* Минимальная высота для двух строк */
+  margin: 17px 17px 8px; /* Уменьшен нижний отступ */
+  color: black;
+  font-size: 16px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 400;
+  line-height: 1.3;
+  word-wrap: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Оставляем 2 строки для заголовка */
+  -webkit-box-orient: vertical;
+  min-height: calc(16px * 1.3 * 2); /* Минимальная высота для двух строк */
 }
 
 .profile-news-card-description {
-    margin: 0 17px 17px 17px; /* Верхний отступ 0, нижний 17px */
-    color: rgba(0, 0, 0, 0.20); 
-    font-size: 12px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 300;
-    letter-spacing: 0.12px;
-    word-wrap: break-word;
-    line-height: 1.45; /* Немного увеличена для лучшей читаемости в меньшем кол-ве строк */
-    flex-grow: 1; 
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 3; /* Уменьшено до 3 строк для описания */
-    -webkit-box-orient: vertical;
+  margin: 0 17px 17px; /* Верхний отступ 0, нижний 17px */
+  color: rgb(0 0 0 / 20%);
+  font-size: 12px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.12px;
+  word-wrap: break-word;
+  line-height: 1.45; /* Немного увеличена для лучшей читаемости в меньшем кол-ве строк */
+  flex-grow: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* Уменьшено до 3 строк для описания */
+  -webkit-box-orient: vertical;
 }
 
 /* Адаптивность для карточек новостей */
-@media (max-width: 991px) { /* Скорректировано значение для лучшего перехода */
-    .profile-news-items-container {
-        justify-content: space-around; /* Центрируем или распределяем, если 2 карточки */
-    }
-    .profile-news-card-item {
-        width: calc(50% - 10px); /* Две карточки в ряд с учетом gap */
-    }
+@media (width <= 991px) {
+  /* Скорректировано значение для лучшего перехода */
+  .profile-news-items-container {
+    justify-content: space-around; /* Центрируем или распределяем, если 2 карточки */
+  }
+
+  .profile-news-card-item {
+    width: calc(50% - 10px); /* Две карточки в ряд с учетом gap */
+  }
 }
 
-@media (max-width: 639px) { /* Скорректировано значение */
-    .profile-news-card-item {
-        width: 100%; /* Одна карточка в ряд на маленьких экранах */
-    }
-    .profile-main-tabs {
-        padding-left: 16px; 
-        padding-right: 16px;
-    }
-    #startupsContent,
-    #newsContent {
-        padding-left: 16px;
-        padding-right: 16px;
-    }
+@media (width <= 639px) {
+  /* Скорректировано значение */
+  .profile-news-card-item {
+    width: 100%; /* Одна карточка в ряд на маленьких экранах */
+  }
+
+  .profile-main-tabs {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  #startupsContent,
+  #newsContent {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
 }
 
 /* Стили для секции стартапов (если нужно что-то общее с новостями вынести или адаптировать) */
+
 /* .profile-main-startups-section { ... } */
+
 /* .profile-main-startup-card-item { ... } */
+
 /* ... и т.д. */
 
 /* === Стили для блока редактирования профиля === */
 .profile-edit-wrapper {
-    width: 100%;
-    max-width: 1330px;
-    margin: 0 auto;
-    padding: 45px 0 100px 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 64px;
-}
-.profile-edit-header-block {
-    width: 100%;
-    max-width: 736px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 16px;
-}
-.profile-edit-title {
-    color: #FCFCFD;
-    font-size: 35px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 600;
-    line-height: 35px;
-    word-wrap: break-word;
-}
-.profile-edit-desc {
-    color: #777E90;
-    font-size: 14px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 300;
-    line-height: 18px;
-    word-wrap: break-word;
-    max-width: 736px;
-}
-.profile-edit-main-row {
-    width: 100%;
-    display: flex;
-    gap: 32px;
-    align-items: flex-start;
-    justify-content: flex-start;
-}
-.profile-edit-avatar-col {
-    display: flex;
-    flex-direction: row;
-    gap: 32px;
-    align-items: flex-start;
-    flex: 1 1 0;
-    min-width: 200px;
-}
-.profile-edit-avatar-wrapper {
-    width: 128px;
-    height: 128px;
-    background: #45B26B;
-    border-radius: 160px;
-    overflow: hidden;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.profile-edit-avatar-img {
-    width: 128px;
-    height: 192px;
-    object-fit: cover;
-    position: absolute;
-    left: 0;
-    top: -34.67px;
-}
-.profile-edit-avatar-info {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    align-items: flex-start;
-    justify-content: flex-start;
-}
-.profile-edit-avatar-label {
-    color: #FCFCFD;
-    font-size: 16px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 400;
-    line-height: 16px;
-}
-.profile-edit-avatar-hint {
-    color: #777E90;
-    font-size: 11px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 300;
-    letter-spacing: 0.11px;
-    word-wrap: break-word;
-    width: 138px;
-}
-.profile-edit-avatar-btn {
-    width: 142px;
-    height: 40px;
-    padding: 12px 25px;
-    border-radius: 10px;
-    outline: 1px solid #fff;
-    outline-offset: -1px;
-    display: flex;
-    align-items: center;
-    color: #F5F5F5;
-    font-size: 16px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 400;
-    line-height: 16px;
-    cursor: pointer;
-    background: transparent;
-    gap: 9px;
-    justify-content: flex-start;
-}
-.profile-edit-fields-col {
-    display: flex;
-    flex-direction: column;
-    gap: 40px;
-    flex: 1 1 0;
-    min-width: 300px;
-}
-.profile-edit-section {
-    display: flex;
-    flex-direction: column;
-    gap: 32px;
-    align-items: flex-start;
-    width: 100%;
-}
-.profile-edit-section-title {
-    color: #fff;
-    font-size: 20px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 400;
-    line-height: 18px;
-    margin-bottom: 0;
-}
-.profile-edit-field {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    width: 100%;
-    min-width: 200px;
-    height: 72px;
-}
-.profile-edit-field-label {
-    color: #fff;
-    font-size: 16px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 400;
-    line-height: 16px;
-}
-.profile-edit-field-label-sm {
-    font-size: 12px;
-    font-family: 'Poppins', sans-serif;
-    font-weight: 700;
-    text-transform: uppercase;
-    line-height: 12px;
-}
-.profile-edit-input {
-    align-self: stretch;
-    padding: 12px 16px;
-    border-radius: 12px;
-    outline: 1px solid #fff;
-    outline-offset: -1px;
-    background: transparent;
-    color: #fff;
-    font-family: 'Unbounded', sans-serif;
-    font-size: 12px;
-    font-weight: 300;
-    letter-spacing: 0.12px;
-    min-height: 24px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-.profile-edit-input-text[contenteditable]:empty:before {
-    content: attr(data-placeholder);
-    color: #777E90;
-    font-size: 12px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 300;
-    letter-spacing: 0.12px;
-}
-.profile-edit-input-textarea {
-    min-height: 96px;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: flex-start;
-    display: flex;
-    width: 100%;
-}
-.profile-edit-input-textarea[contenteditable]:empty:before {
-    content: attr(data-placeholder);
-    color: #777E90;
-    font-size: 12px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 300;
-    letter-spacing: 0.12px;
-}
-.profile-edit-char-counter {
-    align-self: flex-end;
-    color: #fff;
-    font-size: 8px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 300;
-    letter-spacing: 0.08px;
-}
-.profile-edit-input-social {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 12px 12px 12px 16px;
-    border-radius: 12px;
-    outline: 1px solid #fff;
-    outline-offset: -1px;
-    background: transparent;
-    width: 100%;
-    justify-content: space-between;
-}
-.profile-edit-input-at {
-    color: #fff;
-    font-size: 14px;
-    font-family: 'Poppins', sans-serif;
-    font-weight: 500;
-    line-height: 24px;
-}
-.profile-edit-input-social-placeholder {
-    color: #777E90;
-    font-size: 14px;
-    font-family: 'Poppins', sans-serif;
-    font-weight: 500;
-    line-height: 24px;
-}
-.profile-edit-social-add-btn {
-    padding: 8px 12px;
-    border-radius: 10px;
-    outline: 1px solid #fff;
-    outline-offset: -1px;
-    color: #fff;
-    font-size: 12px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 300;
-    letter-spacing: 0.12px;
-    background: transparent;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-}
-.profile-edit-add-social-btn {
-    height: 40px;
-    padding: 12px 25px;
-    border-radius: 10px;
-    outline: 1px solid #fff;
-    outline-offset: -1px;
-    display: flex;
-    align-items: center;
-    gap: 9px;
-    color: #fff;
-    font-size: 16px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 400;
-    line-height: 16px;
-    background: transparent;
-    cursor: pointer;
-    margin-top: 8px;
-}
-.profile-edit-add-social-icon {
-    width: 24px;
-    height: 24px;
-    margin-right: 8px;
-}
-.profile-edit-hint {
-    color: #777E90;
-    font-size: 12px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 300;
-    letter-spacing: 0.12px;
-    margin-top: 24px;
-    margin-bottom: 8px;
-}
-.profile-edit-divider {
-    width: 100%;
-    height: 1px;
-    background: #fff;
-    margin: 24px 0;
-}
-.profile-edit-actions {
-    display: flex;
-    align-items: center;
-    gap: 32px;
-}
-.profile-edit-save-btn {
-    padding: 16px 24px;
-    border-radius: 10px;
-    background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%);
-    color: #fff;
-    font-size: 16px;
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 700;
-    line-height: 16px;
-    text-align: center;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-.profile-edit-clear-btn {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: #fff;
-    font-size: 16px;
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 700;
-    line-height: 16px;
-    cursor: pointer;
-}
-.profile-edit-clear-icon {
-    width: 24px;
-    height: 24px;
-    margin-right: 8px;
+  width: 100%;
+  max-width: 1330px;
+  margin: 0 auto;
+  padding: 45px 0 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 64px;
 }
 
-@media (max-width: 1200px) {
-    .profile-edit-main-row {
-        flex-direction: column;
-        gap: 40px;
-    }
-    .profile-edit-avatar-col, .profile-edit-fields-col {
-        width: 100%;
-        min-width: 0;
-    }
+.profile-edit-header-block {
+  width: 100%;
+  max-width: 736px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
 }
-@media (max-width: 700px) {
-    .profile-edit-wrapper {
-        padding: 20px 0 40px 0;
-        gap: 32px;
-    }
-    .profile-edit-title {
-        font-size: 24px;
-        line-height: 28px;
-    }
-    .profile-edit-header-block {
-        gap: 8px;
-    }
-    .profile-edit-main-row {
-        gap: 24px;
-    }
-    .profile-edit-avatar-wrapper {
-        width: 96px;
-        height: 96px;
-    }
-    .profile-edit-avatar-img {
-        width: 96px;
-        height: 144px;
-        top: -24px;
-    }
+
+.profile-edit-title {
+  color: #fcfcfd;
+  font-size: 35px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 600;
+  line-height: 35px;
+  word-wrap: break-word;
+}
+
+.profile-edit-desc {
+  color: #777e90;
+  font-size: 14px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  line-height: 18px;
+  word-wrap: break-word;
+  max-width: 736px;
+}
+
+.profile-edit-main-row {
+  width: 100%;
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.profile-edit-avatar-col {
+  display: flex;
+  flex-direction: row;
+  gap: 32px;
+  align-items: flex-start;
+  flex: 1 1 0;
+  min-width: 200px;
+}
+
+.profile-edit-avatar-wrapper {
+  width: 128px;
+  height: 128px;
+  background: #45b26b;
+  border-radius: 160px;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-edit-avatar-img {
+  width: 128px;
+  height: 192px;
+  object-fit: cover;
+  position: absolute;
+  left: 0;
+  top: -34.67px;
+}
+
+.profile-edit-avatar-info {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.profile-edit-avatar-label {
+  color: #fcfcfd;
+  font-size: 16px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 400;
+  line-height: 16px;
+}
+
+.profile-edit-avatar-hint {
+  color: #777e90;
+  font-size: 11px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.11px;
+  word-wrap: break-word;
+  width: 138px;
+}
+
+.profile-edit-avatar-btn {
+  width: 142px;
+  height: 40px;
+  padding: 12px 25px;
+  border-radius: 10px;
+  outline: 1px solid #fff;
+  outline-offset: -1px;
+  display: flex;
+  align-items: center;
+  color: #f5f5f5;
+  font-size: 16px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 400;
+  line-height: 16px;
+  cursor: pointer;
+  background: transparent;
+  gap: 9px;
+  justify-content: flex-start;
+}
+
+.profile-edit-fields-col {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  flex: 1 1 0;
+  min-width: 300px;
+}
+
+.profile-edit-section {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.profile-edit-section-title {
+  color: #fff;
+  font-size: 20px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 400;
+  line-height: 18px;
+  margin-bottom: 0;
+}
+
+.profile-edit-field {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  min-width: 200px;
+  height: 72px;
+}
+
+.profile-edit-field-label {
+  color: #fff;
+  font-size: 16px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 400;
+  line-height: 16px;
+}
+
+.profile-edit-field-label-sm {
+  font-size: 12px;
+  font-family: Poppins, sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  line-height: 12px;
+}
+
+.profile-edit-input {
+  align-self: stretch;
+  padding: 12px 16px;
+  border-radius: 12px;
+  outline: 1px solid #fff;
+  outline-offset: -1px;
+  background: transparent;
+  color: #fff;
+  font-family: Unbounded, sans-serif;
+  font-size: 12px;
+  font-weight: 300;
+  letter-spacing: 0.12px;
+  min-height: 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.profile-edit-input-text[contenteditable]:empty::before {
+  content: attr(data-placeholder);
+  color: #777e90;
+  font-size: 12px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.12px;
+}
+
+.profile-edit-input-textarea {
+  min-height: 96px;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  display: flex;
+  width: 100%;
+}
+
+.profile-edit-input-textarea[contenteditable]:empty::before {
+  content: attr(data-placeholder);
+  color: #777e90;
+  font-size: 12px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.12px;
+}
+
+.profile-edit-char-counter {
+  align-self: flex-end;
+  color: #fff;
+  font-size: 8px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.08px;
+}
+
+.profile-edit-input-social {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 12px 12px 16px;
+  border-radius: 12px;
+  outline: 1px solid #fff;
+  outline-offset: -1px;
+  background: transparent;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.profile-edit-input-at {
+  color: #fff;
+  font-size: 14px;
+  font-family: Poppins, sans-serif;
+  font-weight: 500;
+  line-height: 24px;
+}
+
+.profile-edit-input-social-placeholder {
+  color: #777e90;
+  font-size: 14px;
+  font-family: Poppins, sans-serif;
+  font-weight: 500;
+  line-height: 24px;
+}
+
+.profile-edit-social-add-btn {
+  padding: 8px 12px;
+  border-radius: 10px;
+  outline: 1px solid #fff;
+  outline-offset: -1px;
+  color: #fff;
+  font-size: 12px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.12px;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.profile-edit-add-social-btn {
+  height: 40px;
+  padding: 12px 25px;
+  border-radius: 10px;
+  outline: 1px solid #fff;
+  outline-offset: -1px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: #fff;
+  font-size: 16px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 400;
+  line-height: 16px;
+  background: transparent;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+.profile-edit-add-social-icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 8px;
+}
+
+.profile-edit-hint {
+  color: #777e90;
+  font-size: 12px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.12px;
+  margin-top: 24px;
+  margin-bottom: 8px;
+}
+
+.profile-edit-divider {
+  width: 100%;
+  height: 1px;
+  background: #fff;
+  margin: 24px 0;
+}
+
+.profile-edit-actions {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.profile-edit-save-btn {
+  padding: 16px 24px;
+  border-radius: 10px;
+  background: linear-gradient(0deg, #004e9f 0%, #006edf 100%);
+  color: #fff;
+  font-size: 16px;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 700;
+  line-height: 16px;
+  text-align: center;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.profile-edit-clear-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #fff;
+  font-size: 16px;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 700;
+  line-height: 16px;
+  cursor: pointer;
+}
+
+.profile-edit-clear-icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 8px;
+}
+
+@media (width <= 1200px) {
+  .profile-edit-main-row {
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  .profile-edit-avatar-col,
+  .profile-edit-fields-col {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+@media (width <= 700px) {
+  .profile-edit-wrapper {
+    padding: 20px 0 40px;
+    gap: 32px;
+  }
+
+  .profile-edit-title {
+    font-size: 24px;
+    line-height: 28px;
+  }
+
+  .profile-edit-header-block {
+    gap: 8px;
+  }
+
+  .profile-edit-main-row {
+    gap: 24px;
+  }
+
+  .profile-edit-avatar-wrapper {
+    width: 96px;
+    height: 96px;
+  }
+
+  .profile-edit-avatar-img {
+    width: 96px;
+    height: 144px;
+    top: -24px;
+  }
 }
 
 /* Анимация появления/исчезновения для редактирования профиля и вкладок */
 .profile-edit-animated {
-    transition: opacity 0.3s, transform 0.3s;
-    will-change: opacity, transform;
+  transition:
+    opacity 0.3s,
+    transform 0.3s;
+  will-change: opacity, transform;
 }
+
 .profile-fade-in {
-    opacity: 1 !important;
-    transform: translateY(0) !important;
-    pointer-events: auto;
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+  pointer-events: auto;
 }
+
 .profile-fade-out {
-    opacity: 0 !important;
-    transform: translateY(20px) !important;
-    pointer-events: none;
+  opacity: 0 !important;
+  transform: translateY(20px) !important;
+  pointer-events: none;
 }
 
 /* Кнопка назад */
 .profile-edit-back-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: none;
-    border: none;
-    color: #FCFCFD;
-    font-size: 16px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 400;
-    cursor: pointer;
-    margin-right: 24px;
-    margin-bottom: 8px;
-    padding: 0;
-    transition: color 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  color: #fcfcfd;
+  font-size: 16px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 400;
+  cursor: pointer;
+  margin-right: 24px;
+  margin-bottom: 8px;
+  padding: 0;
+  transition: color 0.2s;
 }
+
 .profile-edit-back-btn:hover {
-    color: #45B26B;
+  color: #45b26b;
 }
+
 .profile-edit-back-icon {
-    width: 24px;
-    height: 24px;
-    display: inline-block;
-    vertical-align: middle;
+  width: 24px;
+  height: 24px;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 /* Отступ для блока социальных сетей */
 .profile-edit-section-title {
-    margin-bottom: 0;
-}
-.profile-edit-section[style*="margin-top:40px"] {
-    margin-top: 40px !important;
+  margin-bottom: 0;
 }
 
-@media (max-width: 700px) {
-    .profile-edit-back-btn {
-        margin-right: 12px;
-    }
-} 
+.profile-edit-section[style*='margin-top:40px'] {
+  margin-top: 40px !important;
+}
+
+@media (width <= 700px) {
+  .profile-edit-back-btn {
+    margin-right: 12px;
+  }
+}
 
 /* Стили для кнопки удаления аватара */
 .profile-sidebar-avatar-delete {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    background: rgba(0, 0, 0, 0.5);
-    border: none;
-    border-radius: 50%;
-    width: 24px;
-    height: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    padding: 0;
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgb(0 0 0 / 50%);
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
 }
 
 .profile-sidebar-avatar-delete:hover {
-    background: rgba(0, 0, 0, 0.7);
+  background: rgb(0 0 0 / 70%);
 }
 
 .profile-sidebar-avatar-delete svg {
-    width: 12px;
-    height: 12px;
+  width: 12px;
+  height: 12px;
 }
 
 /* Пагинация для стартапов и новостей */
 .pagination {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 12px;
-    margin-top: 20px;
-    width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-top: 20px;
+  width: 100%;
 }
 
 .pagination-link {
-    color: #FCFCFD;
-    font-size: 14px;
-    font-family: 'Unbounded', sans-serif;
-    font-weight: 300;
-    text-decoration: none;
-    padding: 6px 12px;
-    border-radius: 5px;
-    transition: background 0.2s, color 0.2s;
+  color: #fcfcfd;
+  font-size: 14px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 5px;
+  transition:
+    background 0.2s,
+    color 0.2s;
 }
 
 .pagination-link:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: #FFF;
+  background: rgb(255 255 255 / 10%);
+  color: #fff;
 }
 
 .pagination-link.active {
-    background: #E6E8EC;
-    color: #23262F;
-    cursor: default;
+  background: #e6e8ec;
+  color: #23262f;
+  cursor: default;
 }
 
 /* Сообщение для пустого списка новостей */
 .profile-main-no-news {
-    color: #777E90;
-    font-size: 16px;
-    text-align: center;
-    width: 100%;
-    padding: 20px 0;
+  color: #777e90;
+  font-size: 16px;
+  text-align: center;
+  width: 100%;
+  padding: 20px 0;
 }
 
 /* Улучшение отображения логотипов стартапов */
 .profile-main-startup-image {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    border-radius: 12px;
-    flex-shrink: 0;
-    order: -1;
-    background-color: #011B35; /* Фон на случай, если изображение не загрузилось */
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 12px;
+  flex-shrink: 0;
+  order: -1;
+  background-color: #011b35; /* Фон на случай, если изображение не загрузилось */
 }
 
 /* Стили для кликабельной карточки новости */
 .profile-news-card-link {
-    text-decoration: none; /* Убираем подчёркивание */
-    display: block; /* Чтобы ссылка занимала всю карточку */
-    width: 100%;
-    height: 100%;
+  text-decoration: none; /* Убираем подчёркивание */
+  display: block; /* Чтобы ссылка занимала всю карточку */
+  width: 100%;
+  height: 100%;
 }
 
 /* Сохраняем ховер-эффект для карточки внутри ссылки */
 .profile-news-card-link .profile-news-card-item {
-    transition: transform 0.2s ease-in-out;
+  transition: transform 0.2s ease-in-out;
 }
 
 .profile-news-card-link:hover .profile-news-card-item {
-    transform: translateY(-5px); /* Сохраняем существующий ховер-эффект */
+  transform: translateY(-5px); /* Сохраняем существующий ховер-эффект */
 }

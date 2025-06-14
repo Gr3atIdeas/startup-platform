@@ -1,17 +1,27 @@
 /* Global page styles */
-html, body {
-    overflow-x: clip; /* Try to prevent horizontal scroll without side-effects */
+html,
+body {
+  overflow-x: clip; /* Try to prevent horizontal scroll without side-effects */
 }
 
 body {
-  background-color: #1A294A; /* Dark blue from screenshot */
-  font-family: 'Unbounded', sans-serif; /* Default font */
+  background-color: #1a294a; /* Dark blue from screenshot */
+  font-family: Unbounded, sans-serif; /* Default font */
   padding-top: 23px; /* Added padding like catalog */
-  padding-bottom: 0px; /* REMOVED padding like catalog */
-  /* padding-left: 20px; */ /* REMOVING side paddings from body */
-  /* padding-right: 20px; */ /* REMOVING side paddings from body */
+  padding-bottom: 0; /* REMOVED padding like catalog */
+
+  /* padding-left: 20px; */
+
+  /* REMOVING side paddings from body */
+
+  /* padding-right: 20px; */
+
+  /* REMOVING side paddings from body */
   box-sizing: border-box;
-  /* overflow-x: hidden; */ /* Ensure this is not set if it causes issues with footer */
+
+  /* overflow-x: hidden; */
+
+  /* Ensure this is not set if it causes issues with footer */
 }
 
 .news-page-container {
@@ -21,16 +31,20 @@ body {
   padding-left: 20px; /* ADDING side paddings back to container */
   padding-right: 20px; /* ADDING side paddings back to container */
   box-sizing: border-box;
+
   /* No background here, inherits from body or specific children get backgrounds */
-  /* overflow: hidden; */ /* Ensure this container does not hide overflowing children unnecessarily unless intended */
+
+  /* overflow: hidden; */
+
+  /* Ensure this container does not hide overflowing children unnecessarily unless intended */
 }
 
 /* Search Bar */
 .search-bar-container {
   display: flex;
   width: 100%; /* Take full width of parent */
-  margin: 0 0 40px 0; /* Bottom margin 40px */
-  background: #004E9F; /* Figma search bar background - Brighter blue */
+  margin: 0 0 40px; /* Bottom margin 40px */
+  background: #004e9f; /* Figma search bar background - Brighter blue */
   border-radius: 10px;
   padding: 5px;
   box-sizing: border-box; /* Added to ensure padding doesn't increase overall width */
@@ -41,14 +55,15 @@ body {
   padding: 10px 15px;
   border: none;
   border-radius: 7px; /* Inner white input radius */
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-size: 14px;
   font-weight: 300;
-  color: #1E1E1E;
+  color: #1e1e1e;
   background: white; /* Figma input background */
 }
+
 .search-input::placeholder {
-  color: #CBCBCB; /* Figma placeholder text color */
+  color: #cbcbcb; /* Figma placeholder text color */
   font-weight: 300;
 }
 
@@ -65,18 +80,25 @@ body {
 .search-button img {
   width: 20px; /* Adjust as needed */
   height: 20px; /* Adjust as needed */
+
   /* Styles for search icon if it was SVG paths */
+
   /* For white icon on blue bg: filter: brightness(0) invert(1); */
 }
 
 /* Main Content Area */
 .main-content-area {
-  /* display: flex; */ /* Changed to grid */
+  /* display: flex; */
+
+  /* Changed to grid */
   display: grid;
   grid-template-columns: 254px 1fr; /* Sidebar fixed, feed takes rest */
   align-items: flex-start; /* Align items to the start of the grid area */
   gap: 21px; /* Gap from Figma */
-  /* overflow: visible; */ /* Default, ensure it is not hidden */
+
+  /* overflow: visible; */
+
+  /* Default, ensure it is not hidden */
 }
 
 /* Sidebar */
@@ -87,13 +109,14 @@ body {
   padding: 30px 28px; /* Adjusted padding, figma has 53px top/bottom */
   box-sizing: border-box;
   height: fit-content; /* Adjust height or make it sticky if needed */
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
   margin-top: 90px; /* Adjusted to align with news cards (search bar height ~50px + margin 40px) */
 }
 
 .sidebar-block {
   margin-bottom: 30px; /* Spacing between blocks */
 }
+
 .sidebar-block:last-child {
   margin-bottom: 0;
 }
@@ -103,12 +126,12 @@ body {
   align-items: center;
   justify-content: space-between; /* To push icon to the right */
   padding: 12px 20px; /* Adjusted padding */
-  background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
-  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+  background: linear-gradient(180deg, #ffef2b 0%, #f9f7d6 100%);
+  box-shadow: 2px 2px 4px rgb(0 0 0 / 25%);
   border-radius: 10px;
   color: black;
   font-size: 16px;
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-weight: 400;
   line-height: 16px;
   text-decoration: none;
@@ -128,7 +151,7 @@ body {
   display: block;
   color: black;
   font-size: 12px;
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-weight: 300;
   letter-spacing: 0.12px;
   margin-bottom: 8px;
@@ -139,11 +162,11 @@ body {
   padding: 12px 16px;
   background: white;
   border-radius: 5px;
-  border: 1px solid #D9D9D9;
-  font-family: 'Unbounded', sans-serif;
+  border: 1px solid #d9d9d9;
+  font-family: Unbounded, sans-serif;
   font-size: 14px;
   font-weight: 300;
-  color: #1E1E1E;
+  color: #1e1e1e;
   appearance: none; /* For custom arrow */
   background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4 6L8 10L12 6' stroke='%231E1E1E' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
@@ -153,7 +176,7 @@ body {
 .sidebar-title {
   color: black;
   font-size: 20px;
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-weight: 400;
   line-height: 18px;
   margin-bottom: 15px;
@@ -177,14 +200,14 @@ body {
 .category-list label {
   color: black;
   font-size: 12px;
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-weight: 300;
   letter-spacing: 0.12px;
   margin-left: 10px;
   cursor: pointer;
 }
 
-.category-list input[type="checkbox"] {
+.category-list input[type='checkbox'] {
   width: 13px; /* Figma size */
   height: 13px;
   border-radius: 2px;
@@ -194,16 +217,16 @@ body {
   position: relative;
 }
 
-.category-list input[type="checkbox"]:checked {
-  background-color: #004E9F;
-  border-color: #004E9F;
+.category-list input[type='checkbox']:checked {
+  background-color: #004e9f;
+  border-color: #004e9f;
 }
 
-.category-list input[type="checkbox"]:checked::after {
+.category-list input[type='checkbox']:checked::after {
   content: '';
   position: absolute;
   left: 3px;
-  top: 0px;
+  top: 0;
   width: 4px;
   height: 8px;
   border: solid white;
@@ -215,18 +238,20 @@ body {
 .category-list::-webkit-scrollbar {
   width: 5px;
 }
+
 .category-list::-webkit-scrollbar-track {
   background: #f1f1f1;
   border-radius: 2px;
 }
+
 .category-list::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.20); /* --Color1 from Figma */
+  background: rgb(0 0 0 / 20%); /* --Color1 from Figma */
   border-radius: 2px;
 }
-.category-list::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.30);
-}
 
+.category-list::-webkit-scrollbar-thumb:hover {
+  background: rgb(0 0 0 / 30%);
+}
 
 .microinvest-block {
   display: flex;
@@ -246,7 +271,7 @@ body {
   height: 24px; /* Figma size */
 }
 
-.switch input { 
+.switch input {
   opacity: 0;
   width: 0;
   height: 0;
@@ -255,39 +280,38 @@ body {
 .slider {
   position: absolute;
   cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #D9D9D9; /* Off state color from Figma */
-  transition: .4s;
+  inset: 0;
+  background-color: #d9d9d9; /* Off state color from Figma */
+  transition: 0.4s;
 }
 
-.slider:before {
+.slider::before {
   position: absolute;
-  content: "";
+  content: '';
   height: 18px; /* Figma inner circle */
-  width: 18px;  /* Figma inner circle */
-  left: 3px;    /* Positioning from Figma */
-  bottom: 3px;  /* Positioning from Figma */
+  width: 18px; /* Figma inner circle */
+  left: 3px; /* Positioning from Figma */
+  bottom: 3px; /* Positioning from Figma */
   background-color: white; /* Icon-Brand-On-Brand for off state */
-  transition: .4s;
+  transition: 0.4s;
 }
 
 input:checked + .slider {
-  background-color: #004E9F; /* On state color from Figma */
+  background-color: #004e9f; /* On state color from Figma */
 }
 
-input:checked + .slider:before {
-  transform: translateX(16px); /* Width_of_switch (40) - left_pos (3) - width_of_circle (18) - desired_right_gap (3) = 16px */
-  background-color: #F5F5F5; /* Icon-Brand-On-Brand for on state */
+input:checked + .slider::before {
+  transform: translateX(
+    16px
+  ); /* Width_of_switch (40) - left_pos (3) - width_of_circle (18) - desired_right_gap (3) = 16px */
+  background-color: #f5f5f5; /* Icon-Brand-On-Brand for on state */
 }
 
 .slider.round {
   border-radius: 9999px;
 }
 
-.slider.round:before {
+.slider.round::before {
   border-radius: 50%;
 }
 
@@ -296,18 +320,18 @@ input:checked + .slider:before {
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  width: 16px; 
+  width: 16px;
   height: 16px;
   border-radius: 50%;
-  background-color: #D9D9D9; 
-  color: white; 
-  font-size: 10px; 
-  font-weight: bold; 
+  background-color: #d9d9d9;
+  color: white;
+  font-size: 10px;
+  font-weight: bold;
   cursor: help;
   margin-left: 8px; /* Adjusted margin slightly to visually center with toggle */
-  user-select: none; 
-  font-family: 'Circe', sans-serif; 
-  line-height: 16px; 
+  user-select: none;
+  font-family: Circe, sans-serif;
+  line-height: 16px;
 }
 
 .rating-block .rating-header {
@@ -319,17 +343,17 @@ input:checked + .slider:before {
 
 .rating-block .rating-value {
   text-align: right;
-  color: #1E1E1E;
+  color: #1e1e1e;
   font-size: 14px;
-  font-family: 'Inter', sans-serif;
+  font-family: Inter, sans-serif;
   font-weight: 400;
-  line-height: 19.60px;
+  line-height: 19.6px;
 }
 
 .rating-slider {
   width: 100%;
   height: 4px; /* Figma track height */
-  background: #EBEBEB; /* Figma track color */
+  background: #ebebeb; /* Figma track color */
   border-radius: 9999px;
   appearance: none;
   outline: none;
@@ -341,7 +365,7 @@ input:checked + .slider:before {
   appearance: none;
   width: 16px; /* Figma thumb size */
   height: 16px; /* Figma thumb size */
-  background: #004E9F; /* Figma thumb color */
+  background: #004e9f; /* Figma thumb color */
   border-radius: 50%;
   cursor: pointer;
 }
@@ -350,14 +374,14 @@ input:checked + .slider:before {
 .rating-slider::-moz-range-thumb {
   width: 16px;
   height: 16px;
-  background: #004E9F;
+  background: #004e9f;
   border-radius: 50%;
   cursor: pointer;
   border: none;
 }
 
 .rating-filter .noUi-target {
-  background: #EBEBEB; /* Figma track color */
+  background: #ebebeb; /* Figma track color */
   border-radius: 9999px;
   border: none;
   box-shadow: none;
@@ -366,7 +390,7 @@ input:checked + .slider:before {
 }
 
 .rating-filter .noUi-connect {
-  background: #004E9F; /* Figma selected range color */
+  background: #004e9f; /* Figma selected range color */
   border-radius: 9999px;
 }
 
@@ -374,7 +398,7 @@ input:checked + .slider:before {
   width: 16px; /* Figma thumb size */
   height: 16px; /* Figma thumb size */
   border-radius: 50%;
-  background: #004E9F; /* Figma thumb color */
+  background: #004e9f; /* Figma thumb color */
   border: none;
   box-shadow: none; /* Remove default shadow if any */
   cursor: pointer;
@@ -386,20 +410,20 @@ input:checked + .slider:before {
   outline: none;
 }
 
-.rating-filter .noUi-handle:before,
-.rating-filter .noUi-handle:after {
-    display: none;
+.rating-filter .noUi-handle::before,
+.rating-filter .noUi-handle::after {
+  display: none;
 }
 
-.rating-filter .noUi-handle:after {
-    display: none; /* Remove default noUiSlider handle pseudo-elements if any */
+.rating-filter .noUi-handle::after {
+  display: none; /* Remove default noUiSlider handle pseudo-elements if any */
 }
 
 .rating-range-label {
   display: block;
   color: #757575;
   font-size: 8px;
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-weight: 300;
   letter-spacing: 0.08px;
   margin-top: 20px; /* Added 20px top margin to push it down */
@@ -407,11 +431,11 @@ input:checked + .slider:before {
 
 .rating-filter .rating-value {
   text-align: right;
-  color: #1E1E1E;
+  color: #1e1e1e;
   font-size: 14px;
-  font-family: 'Inter', sans-serif;
+  font-family: Inter, sans-serif;
   font-weight: 400;
-  line-height: 19.60px;
+  line-height: 19.6px;
 }
 
 .rating-block .rating-header {
@@ -424,13 +448,13 @@ input:checked + .slider:before {
 .show-filters-btn {
   width: 100%;
   padding: 12px 35px;
-  background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%) !important;
-  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+  background: linear-gradient(0deg, #004e9f 0%, #006edf 100%) !important;
+  box-shadow: 2px 2px 4px rgb(0 0 0 / 25%);
   border-radius: 10px;
   border: none;
-  color: #F5F5F5 !important;
+  color: #f5f5f5 !important;
   font-size: 16px;
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-weight: 400;
   line-height: 16px;
   cursor: pointer;
@@ -439,14 +463,18 @@ input:checked + .slider:before {
 /* News Feed Column */
 .news-feed-column {
   flex-grow: 1;
-  /* This column should not have its own background, 
+
+  /* This column should not have its own background,
      so the body/news-page-container background shows through */
 }
 
 /* News Grid */
 .news-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, 316px); /* Using new calculated card width */
+  grid-template-columns: repeat(
+    auto-fill,
+    316px
+  ); /* Using new calculated card width */
   gap: 20px !important; /* Ensure gap is applied */
   justify-content: space-around; /* Distribute items if space is left over */
   margin-bottom: 40px; /* Space before pagination */
@@ -454,11 +482,11 @@ input:checked + .slider:before {
 
 /* Original styles from news.html, slightly adapted */
 .news-card {
-  background: #FFFFFF; /* Card is white */
+  background: #fff; /* Card is white */
   border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Softer shadow, closer to some mockups */
-  border: 1px solid #C6BBFE; /* Figma outline color as border */
+  box-shadow: 0 2px 5px rgb(0 0 0 / 10%); /* Softer shadow, closer to some mockups */
+  border: 1px solid #c6bbfe; /* Figma outline color as border */
   position: relative;
   display: flex;
   flex-direction: column;
@@ -470,19 +498,30 @@ input:checked + .slider:before {
   display: block;
   position: relative; /* For ad label positioning */
   padding: 10px; /* This will act as the inner border */
-  background-color: #FFFFFF; /* Match card background to create the border illusion */
+  background-color: #fff; /* Match card background to create the border illusion */
   box-sizing: border-box; /* Ensure padding is included correctly */
 }
 
 .news-image {
   width: 100%;
-  /* height: 173px; */ /* Original height, might need adjustment or let aspect ratio control it */
-  height: calc(173px - 20px); /* Adjust height to account for top/bottom padding */
+
+  /* height: 173px; */
+
+  /* Original height, might need adjustment or let aspect ratio control it */
+  height: calc(
+    173px - 20px
+  ); /* Adjust height to account for top/bottom padding */
   object-fit: cover;
   display: block;
   border-radius: 3px; /* Optional: slight rounding for the image itself inside the padding */
-  /* border-top-left-radius: 7px; */ /* Removed for card to handle rounding */
-  /* border-top-right-radius: 7px; */ /* Removed for card to handle rounding */
+
+  /* border-top-left-radius: 7px; */
+
+  /* Removed for card to handle rounding */
+
+  /* border-top-right-radius: 7px; */
+
+  /* Removed for card to handle rounding */
 }
 
 .news-content {
@@ -513,23 +552,25 @@ input:checked + .slider:before {
 }
 
 .news-title {
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-weight: 400;
   font-size: 16px;
   line-height: 16px;
   color: black;
   margin: 0;
 }
+
 .news-title a {
   color: inherit;
   text-decoration: none;
 }
+
 .news-title a:hover {
   text-decoration: underline;
 }
 
 .news-meta {
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-size: 12px;
   font-weight: 300;
   letter-spacing: 0.12px;
@@ -538,15 +579,19 @@ input:checked + .slider:before {
 }
 
 .news-tags {
-  font-family: 'Unbounded', sans-serif; /* Changed from Circe to match most text */
+  font-family:
+    Unbounded, sans-serif; /* Changed from Circe to match most text */
   font-size: 12px; /* Adjusted size for consistency */
-  color: #7B61FF; /* Original color, consider if it fits the new design */
-  /* margin-bottom: 10px; */ /* Removed as gap handles spacing */
+  color: #7b61ff; /* Original color, consider if it fits the new design */
+
+  /* margin-bottom: 10px; */
+
+  /* Removed as gap handles spacing */
   line-height: 1.3;
 }
 
 .news-excerpt {
-  font-family: 'Unbounded', sans-serif; /* Changed from Circe */
+  font-family: Unbounded, sans-serif; /* Changed from Circe */
   font-size: 12px;
   font-weight: 300;
   letter-spacing: 0.12px;
@@ -559,13 +604,13 @@ input:checked + .slider:before {
   position: absolute;
   top: 10px;
   right: 10px;
-  background: #FF6161;
-  color: #FFFFFF;
+  background: #ff6161;
+  color: #fff;
   border: none;
   padding: 5px 10px;
   border-radius: 5px;
   cursor: pointer;
-  font-family: 'Circe', sans-serif; /* Keep Circe as it was specific */
+  font-family: Circe, sans-serif; /* Keep Circe as it was specific */
   font-size: 12px; /* Adjusted for consistency */
   z-index: 10; /* Ensure it's above image */
 }
@@ -580,7 +625,7 @@ input:checked + .slider:before {
   bottom: 10px; /* Adjust as per figma (padding-bottom: 20px) */
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(217, 217, 217, 0.58); /* Figma bg */
+  background: rgb(217 217 217 / 58%); /* Figma bg */
   border-radius: 10px;
   padding: 4px 10px; /* Figma padding */
   display: flex;
@@ -588,16 +633,16 @@ input:checked + .slider:before {
   gap: 7px; /* Figma gap */
   color: white;
   font-size: 12px;
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-weight: 300;
   letter-spacing: 0.12px;
 }
 
-.ad-label-on-image img { /* If an icon is used */
+.ad-label-on-image img {
+  /* If an icon is used */
   width: 16px; /* Adjust */
   height: 16px;
 }
-
 
 /* Popup styles - largely from original, check for conflicts */
 .popup-overlay {
@@ -607,20 +652,22 @@ input:checked + .slider:before {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.5);
+  background: rgb(0 0 0 / 50%);
   z-index: 1000;
   justify-content: center;
   align-items: center;
 }
+
 .popup {
-  background: #FFFFFF;
+  background: #fff;
   padding: 20px;
   border-radius: 12px;
   width: 500px;
   max-width: 90%;
   position: relative;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  box-shadow: 0 5px 15px rgb(0 0 0 / 30%);
 }
+
 .popup-close {
   position: absolute;
   top: 10px;
@@ -631,12 +678,13 @@ input:checked + .slider:before {
   cursor: pointer;
   color: #888;
 }
+
 .popup-close:hover {
   color: #000;
 }
 
 .popup h2 {
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-weight: 400;
   font-size: 20px;
   margin-top: 0;
@@ -646,24 +694,27 @@ input:checked + .slider:before {
 .form-group {
   margin-bottom: 20px;
 }
+
 .form-group label {
   display: block;
-  font-family: 'Unbounded', sans-serif; /* Changed from Circe */
+  font-family: Unbounded, sans-serif; /* Changed from Circe */
   font-size: 14px; /* Adjusted */
   font-weight: 300;
   margin-bottom: 8px;
 }
-.form-group input[type="text"],
+
+.form-group input[type='text'],
 .form-group textarea,
-.form-group input[type="file"] {
+.form-group input[type='file'] {
   width: 100%;
   padding: 10px;
-  border: 1px solid #E5E7EB;
+  border: 1px solid #e5e7eb;
   border-radius: 8px;
-  font-family: 'Unbounded', sans-serif; /* Changed from Circe */
+  font-family: Unbounded, sans-serif; /* Changed from Circe */
   font-size: 14px;
   box-sizing: border-box;
 }
+
 .form-group textarea {
   min-height: 150px; /* Adjusted */
   resize: vertical;
@@ -671,12 +722,12 @@ input:checked + .slider:before {
 
 .submit-btn {
   padding: 12px 25px;
-  background: #7B61FF; /* Original color */
-  color: #FFFFFF;
+  background: #7b61ff; /* Original color */
+  color: #fff;
   border: none;
   border-radius: 99px;
   cursor: pointer;
-  font-family: 'Unbounded', sans-serif; /* Changed from Circe */
+  font-family: Unbounded, sans-serif; /* Changed from Circe */
   font-size: 16px;
   font-weight: 400;
 }
@@ -696,38 +747,38 @@ input:checked + .slider:before {
   text-decoration: none;
   color: white; /* Default color from Figma */
   font-size: 14px;
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-weight: 300;
   line-height: 18px;
 }
 
 .page-item.current {
   background: white;
-  color: #004E9F; /* Blue color from Figma */
+  color: #004e9f; /* Blue color from Figma */
 }
 
 .page-item.dots {
   color: white;
   font-size: 16px;
-  font-family: 'Inter', sans-serif; /* ... uses Inter */
+  font-family: Inter, sans-serif; /* ... uses Inter */
   font-weight: 700;
   padding: 8px 0; /* Adjust padding for dots */
 }
 
 .show-more-container {
-    display: flex;
-    justify-content: center;
+  display: flex;
+  justify-content: center;
 }
 
 .show-more-btn {
   padding: 12px 35px;
   background: transparent !important;
   border: 1px solid white !important;
-  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+  box-shadow: 2px 2px 4px rgb(0 0 0 / 25%);
   border-radius: 10px;
-  color: #F5F5F5 !important;
+  color: #f5f5f5 !important;
   font-size: 16px;
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-weight: 400;
   line-height: 16px;
   cursor: pointer;
@@ -737,11 +788,12 @@ input:checked + .slider:before {
 }
 
 /* If show-more-btn has an icon, add styles for it here */
+
 /* .show-more-btn img { ... } */
 
 /* Styles for noUiSlider (Rating Filter) */
 .rating-filter .noUi-target {
-  background: #EBEBEB; /* Figma track color */
+  background: #ebebeb; /* Figma track color */
   border-radius: 9999px;
   border: none;
   box-shadow: none;
@@ -750,7 +802,7 @@ input:checked + .slider:before {
 }
 
 .rating-filter .noUi-connect {
-  background: #004E9F; /* Figma selected range color */
+  background: #004e9f; /* Figma selected range color */
   border-radius: 9999px;
 }
 
@@ -758,7 +810,7 @@ input:checked + .slider:before {
   width: 16px; /* Figma thumb size */
   height: 16px; /* Figma thumb size */
   border-radius: 50%;
-  background: #004E9F; /* Figma thumb color */
+  background: #004e9f; /* Figma thumb color */
   border: none;
   box-shadow: none; /* Remove default shadow if any */
   cursor: pointer;
@@ -770,27 +822,27 @@ input:checked + .slider:before {
   outline: none;
 }
 
-.rating-filter .noUi-handle:before,
-.rating-filter .noUi-handle:after {
-    display: none;
+.rating-filter .noUi-handle::before,
+.rating-filter .noUi-handle::after {
+  display: none;
 }
 
 .rating-range-label {
   display: block;
   color: #757575;
   font-size: 8px;
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-weight: 300;
   letter-spacing: 0.08px;
 }
 
 .rating-filter .rating-value {
   text-align: right;
-  color: #1E1E1E;
+  color: #1e1e1e;
   font-size: 14px;
-  font-family: 'Inter', sans-serif;
+  font-family: Inter, sans-serif;
   font-weight: 400;
-  line-height: 19.60px;
+  line-height: 19.6px;
 }
 
 .rating-block .rating-header {
@@ -799,4 +851,3 @@ input:checked + .slider:before {
   align-items: center;
   margin-bottom: 5px;
 }
-

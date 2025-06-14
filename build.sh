@@ -20,4 +20,4 @@ echo "--- Collecting static files ---"
 
 /opt/render/project/src/.venv/bin/python manage.py collectstatic --noinput --clear
 
-echo "--- Build successful ---" 
+echo "--- Build successful ---"
