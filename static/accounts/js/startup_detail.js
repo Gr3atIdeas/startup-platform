@@ -603,7 +603,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return
       }
       // Используем новый, исправленный URL и логику
-      fetch(`/search_suggestions/?q=${encodeURIComponent(query)}`, {
+      fetch(`/search-suggestions/?q=${encodeURIComponent(query)}`, {
         headers: { 'X-Requested-With': 'XMLHttpRequest' },
       })
       .then(response => response.json())
