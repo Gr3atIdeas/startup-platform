@@ -2967,13 +2967,13 @@ def get_investors(request, startup_id):
 
     startup = get_object_or_404(Startups, startup_id=startup_id)
     investors = InvestmentTransactions.objects.filter(startup=startup).select_related(
-        "user"
+        "investor"
     )
 
     investor_list = [
         {
-            "user_id": tx.user.user_id,
-            "name": tx.user.get_full_name() or tx.user.email,
+            "user_id": tx.investor.user_id,
+            "name": tx.investor.get_full_name() or tx.investor.email,
             "amount": tx.amount,
         }
         for tx in investors
@@ -2999,12 +2999,23 @@ def add_investor(request, startup_id):
                     {"success": False, "error": "Сумма должна быть положительной."}
                 )
 
-            # Создание или обновление транзакции
-            InvestmentTransactions.objects.update_or_create(
-                user=user_to_invest,
-                startup=startup,
-                defaults={"amount": amount, "transaction_type": "investment"},
-            )
+            # Проверяем, существует ли уже транзакция для этого инвестора
+            existing_tx = InvestmentTransactions.objects.filter(
+                startup_id=startup_id, investor=user_to_invest
+            ).first()
+
+            if existing_tx:
+                # Если транзакция существует, обновляем сумму
+                existing_tx.amount = amount
+                existing_tx.save()
+            else:
+                # Создание новой транзакции
+                InvestmentTransactions.objects.create(
+                    investor=user_to_invest,
+                    startup=startup,
+                    amount=amount,
+                    transaction_type="investment",
+                )
             return JsonResponse({"success": True})
         except (json.JSONDecodeError, TypeError, ValueError) as e:
             return JsonResponse({"success": False, "error": f"Неверный формат данных: {e}"})
