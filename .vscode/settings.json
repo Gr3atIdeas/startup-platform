@@ -41,5 +41,6 @@
   "stylelint.validate": ["css", "scss", "vue"],
   
   // Настройки Oxlint
-  "oxlint.enable": true
+  "oxlint.enable": true,
+  "oxc.enable": true
 } 

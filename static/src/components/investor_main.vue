@@ -69,57 +69,66 @@
     </div>
 
     <div class="sticky-sections-wrapper">
-      <div class="featured-investors">
-        <div class="featured-investors__content">
-          <h2 class="featured-investors__title">
-            <span class="featured-investors__title--blue">Инвесторы, </span>
-            <span class="featured-investors__title--black"
-              >найдите свою звезду!</span
-            >
-          </h2>
-          <div class="featured-investors__features">
-            <div class="featured-investors__feature-card">
-              <img
-                src="/static/accounts/images/main_page/planet_4th_main.webp"
-                alt="Доступ к проверенным стартапам"
-                class="featured-investors__feature-icon featured-investors__feature-icon--planet"
-              />
-              <div class="featured-investors__feature-text">
-                Доступ к проверенным стартапам
+      <div class="featured4">
+        <div class="frame-parent3">
+          <div class="parent6">
+            <div class="div23">
+              <span class="txt">
+                <span>Инвесторы, </span>
+                <span class="span3">найдите свою звезду!</span>
+              </span>
+            </div>
+            <div class="group-parent">
+              <div class="group-div">
+                <div class="card-icon-container">
+                  <img
+                    class="card-icon"
+                    src="/static/accounts/images/main_page/planet_4th_main.webp"
+                    alt="Доступ к проверенным стартапам"
+                  />
+                </div>
+                <div class="wrapper">
+                  <div class="div24">Доступ к проверенным стартапам</div>
+                </div>
+              </div>
+              <div class="group-div">
+                <div class="card-icon-container">
+                  <img
+                    class="card-icon"
+                    src="/static/accounts/images/main_page/case_main_4th.webp"
+                    alt="Диверсификация портфеля"
+                  />
+                </div>
+                <div class="wrapper">
+                  <div class="div25">Диверсификация портфеля</div>
+                </div>
+              </div>
+              <div class="group-div">
+                <div class="card-icon-container">
+                  <img
+                    class="card-icon"
+                    src="/static/accounts/images/main_page/rocket_main_4th.webp"
+                    alt="Удобная аналитика"
+                  />
+                </div>
+                <div class="wrapper1">
+                  <div class="div26">
+                    Удобная аналитика и фильтры для выбора проектов
+                  </div>
+                </div>
               </div>
             </div>
-            <div class="featured-investors__feature-card">
+            <a href="#" class="btn btn--yellow-gradient">
+              <span>Посмотреть стартапы</span>
               <img
-                src="/static/accounts/images/main_page/case_main_4th.webp"
-                alt="Диверсификация портфеля"
-                class="featured-investors__feature-icon featured-investors__feature-icon--case"
+                class="icon"
+                alt="Eye"
+                src="/static/accounts/images/main_page/button_eye.svg"
               />
-              <div class="featured-investors__feature-text">
-                Диверсификация портфеля
-              </div>
-            </div>
-            <div class="featured-investors__feature-card">
-              <img
-                src="/static/accounts/images/main_page/rocket_main_4th.webp"
-                alt="Удобная аналитика"
-                class="featured-investors__feature-icon featured-investors__feature-icon--rocket"
-              />
-              <div class="featured-investors__feature-text">
-                Удобная аналитика и фильтры для выбора проектов
-              </div>
-            </div>
+            </a>
           </div>
-          <a href="#" class="btn btn-yellow-gradient">
-            <span>Посмотреть стартапы</span>
-            <div class="btn__icon-eye">
-              <div class="btn__icon-eye-outline"></div>
-              <div class="btn__icon-eye-pupil"></div>
-            </div>
-          </a>
-        </div>
-        <div class="featured-investors__background">
           <img
-            class="featured-investors__bg-img"
+            class="icon10"
             alt="Инвесторы находят звезду"
             src="/static/accounts/images/main_page/4th_block_main_background.webp"
           />
@@ -808,165 +817,108 @@ onMounted(() => {
   margin-bottom: 45px;
 }
 
-.featured-investors {
-  width: 1303px;
-  height: 521px;
+.featured4 {
+  width: 100%;
   position: relative;
-  background: white;
-  border-radius: 10px;
+  box-sizing: border-box;
   overflow: visible;
+  padding: 0;
+  border-radius: var(--border-radius-medium);
+  background: #fff;
 }
 
-.featured-investors__content {
-  position: absolute;
-  left: 92px;
-  top: 55px;
-  display: inline-flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  gap: 27px;
-  z-index: 2;
-}
-
-.featured-investors__title {
-  width: 375px;
-  font-size: 35px;
-  font-family: Unbounded, sans-serif;
-  font-weight: 600;
-  line-height: 35px;
-  word-wrap: break-word;
-}
-
-.featured-investors__title--blue {
-  color: #004e9f;
-}
-
-.featured-investors__title--black {
-  color: black;
-}
-
-.featured-investors__features {
-  display: flex;
-  justify-content: flex-start;
-  align-items: flex-end;
-  gap: 40px;
-}
-
-.featured-investors__feature-card {
-  width: 187px;
-  height: 181px;
+.featured4 .frame-parent3 {
+  width: 100%;
+  height: 100%;
   position: relative;
-  background: linear-gradient(180deg, #004e9f 0%, #001c39 100%);
-  overflow: visible;
-  border-radius: 10px;
   display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
   align-items: center;
-  padding: 20px 15px;
+  padding: 60px 92px;
   box-sizing: border-box;
 }
 
-.featured-investors__feature-icon {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  height: auto;
-  z-index: 1;
-  top: -85px;
+.featured4 .parent6 {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 30px;
+  z-index: 2;
 }
 
-.featured-investors__feature-icon--planet {
-  width: 180px;
+.featured4 .parent6 .div23 .txt {
+  font-family: Unbounded, sans-serif;
+  font-weight: 600;
+  font-size: 35px;
+  line-height: 1.1;
 }
 
-.featured-investors__feature-icon--case {
-  width: 180px;
+.featured4 .parent6 .div23 .txt > span:first-child {
+  color: #004e9f;
 }
 
-.featured-investors__feature-icon--rocket {
-  width: 135px;
-  top: -65px;
+.featured4 .parent6 .div23 .txt .span3 {
+  color: #000;
 }
 
-.featured-investors__feature-text {
-  width: 159px;
-  text-align: center;
-  color: white;
+.featured4 .group-parent {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 15px;
+}
+
+.featured4 .group-div {
+  width: 375px;
+  background: #f2f2f2;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  gap: 15px;
+  box-sizing: border-box;
+}
+
+.featured4 .group-div .card-icon-container {
+  flex-shrink: 0;
+  width: 125px;
+  height: 96px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.featured4 .group-div .card-icon {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.featured4 .div24,
+.featured4 .div25,
+.featured4 .div26 {
+  color: #000;
   font-size: 14px;
   font-family: Unbounded, sans-serif;
   font-weight: 400;
-  line-height: 18px;
-  word-wrap: break-word;
+  line-height: 1.3;
 }
 
-.featured-investors__background {
-  height: 553px;
-  left: 773px;
-  top: -16px;
-  right: -150px;
+.featured4 .icon10 {
   position: absolute;
-  overflow: visible;
+  right: 0;
+  top: 0;
+  height: 100%;
   z-index: 1;
 }
 
-.featured-investors__bg-img {
-  width: auto;
-  height: 100%;
-  left: auto;
-  top: 0;
-  position: absolute;
-  right: 0;
-}
-
-.btn {
-  &-yellow-gradient {
-    height: 40px;
-    padding: 12px 25px;
-    background: linear-gradient(180deg, #ffef2b 0%, #f9f7d6 100%);
-    border-radius: 10px;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 9px;
-    display: inline-flex;
-    color: black;
-    font-size: 16px;
-    font-family: Unbounded, sans-serif;
-    font-weight: 400;
-    line-height: 16px;
-    word-wrap: break-word;
-    text-decoration: none;
-    border: none;
-    cursor: pointer;
-  }
-
-  &__icon-eye {
-    width: 24px;
-    height: 24px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  &__icon-eye-outline {
-    width: 20px;
-    height: 14px;
-    left: 2px;
-    top: 5px;
-    position: absolute;
-    outline: 2px black solid;
-    outline-offset: -1px;
-  }
-
-  &__icon-eye-pupil {
-    width: 6px;
-    height: 6px;
-    left: 9px;
-    top: 9px;
-    position: absolute;
-    outline: 2px black solid;
-    outline-offset: -1px;
-  }
+/*
+  Это должно переопределить все предыдущие стили для .featured-investors
+  и применить точные стили из main_temp.css.
+*/
+.sticky-sections-wrapper {
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .explore-worlds-section {
