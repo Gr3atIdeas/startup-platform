@@ -874,20 +874,20 @@ onMounted(() => {
   transform: translateX(-50%);
   height: auto;
   z-index: 1;
-  top: -50px;
+  top: -85px;
 }
 
 .featured-investors__feature-icon--planet {
-  width: 125px;
+  width: 180px;
 }
 
 .featured-investors__feature-icon--case {
-  width: 125px;
+  width: 180px;
 }
 
 .featured-investors__feature-icon--rocket {
-  width: 90px;
-  top: -40px;
+  width: 135px;
+  top: -65px;
 }
 
 .featured-investors__feature-text {
@@ -902,21 +902,22 @@ onMounted(() => {
 }
 
 .featured-investors__background {
-  width: 771px;
   height: 553px;
-  left: 712px;
+  left: 773px;
   top: -16px;
+  right: -150px;
   position: absolute;
   overflow: visible;
   z-index: 1;
 }
 
 .featured-investors__bg-img {
-  width: 770.17px;
-  height: 552.4px;
-  left: 0;
+  width: auto;
+  height: 100%;
+  left: auto;
   top: 0;
   position: absolute;
+  right: 0;
 }
 
 .btn {
