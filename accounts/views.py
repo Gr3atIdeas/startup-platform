@@ -19,7 +19,7 @@ from django.db import (
     models,  # Добавляем для models.Q
     transaction,
 )
-from django.db.models import Avg, Count, F, FloatField, Max, Min, Q, Sum, OuterRef, Subquery, Exists  # Добавляем Q
+from django.db.models import Avg, Count, F, FloatField, Max, Min, Q, Sum  # Добавляем Q
 from django.db.models.functions import (
     Coalesce,  # Добавляем Coalesce
     TruncMonth,  # Добавляем для группировки по месяцам
@@ -29,7 +29,6 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
 from django.utils import timezone
 from django.utils.text import slugify
-from django.urls import reverse
 
 from .forms import (  # Добавляем MessageForm и UserSearchForm
     CommentForm,
@@ -3201,45 +3200,3 @@ def available_users(request):
         for user in users
     ]
     return JsonResponse({"success": True, "users": users_data})
-
-
-@login_required
-def find_or_create_chat(request, recipient_id):
-    if request.method == 'POST':
-        recipient = get_object_or_404(Users, user_id=recipient_id)
-        
-        if request.user.user_id == recipient.user_id:
-            return JsonResponse({'error': 'You cannot start a chat with yourself.'}, status=400)
-
-        # Ищем существующий личный чат между двумя пользователями
-        # Аннотируем чаты количеством участников
-        user_chats = ChatConversations.objects.filter(
-            is_group_chat=False, 
-            chatparticipants__user=request.user
-        ).annotate(num_participants=Count('chatparticipants'))
-
-        # Фильтруем те, в которых ровно 2 участника
-        personal_chats = user_chats.filter(num_participants=2)
-        
-        # Среди них ищем тот, в котором есть второй участник
-        chat = personal_chats.filter(chatparticipants__user=recipient).first()
-
-        if not chat:
-            # Создаем новый чат
-            chat = ChatConversations.objects.create(is_group_chat=False, created_at=timezone.now(), updated_at=timezone.now())
-            ChatParticipants.objects.create(conversation=chat, user=request.user)
-            ChatParticipants.objects.create(conversation=chat, user=recipient)
-
-        # Возвращаем URL на страницу чата, указывая ID чата
-        chat_url = reverse('cosmochat') + f'?chat_id={chat.conversation_id}'
-        
-        return JsonResponse({'chat_url': chat_url})
-
-    return JsonResponse({'error': 'Invalid request method.'}, status=405)
-
-
-def get_user_rating_for_startup(user_id, startup_id):
-    """
-    // ... existing code ...
-    """
-    pass
