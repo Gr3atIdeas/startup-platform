@@ -2974,7 +2974,7 @@ def get_investors(request, startup_id):
         {
             "user_id": tx.investor.user_id,
             "name": tx.investor.get_full_name() or tx.investor.email,
-            "amount": tx.amount,
+            "amount": float(tx.amount),
         }
         for tx in investors
     ]
@@ -3074,30 +3074,33 @@ def edit_investment(request, startup_id, user_id):
 
 @login_required
 def delete_investment(request, startup_id, user_id):
-    if request.method != "POST":
-        return JsonResponse({"success": False, "error": "Неверный метод запроса"})
+    if not request.user.is_authenticated or request.user.role.role_name != "moderator":
+        return JsonResponse({"error": "Доступ запрещен"}, status=403)
 
-    if not request.user.role or request.user.role.role_name != "moderator":
-        return JsonResponse(
-            {"success": False, "error": "У вас нет прав для этого действия"}
-        )
+    if request.method == "POST":
+        with transaction.atomic():
+            try:
+                user_to_delete = get_object_or_404(Users, pk=user_id)
+                tx = get_object_or_404(
+                    InvestmentTransactions, startup_id=startup_id, investor=user_to_delete
+                )
+                startup = tx.startup
+                tx.delete()
 
-    startup = get_object_or_404(Startups, startup_id=startup_id)
-    investor = get_object_or_404(Users, user_id=user_id)
-    transaction = get_object_or_404(
-        InvestmentTransactions,
-        startup=startup,
-        investor=investor,
-        transaction_status="completed",
-    )
-
-    amount = transaction.amount
-    transaction.delete()
-
-    startup.amount_raised = (startup.amount_raised or Decimal("0")) - amount
-    startup.save()
-
-    return JsonResponse({"success": True})
+                # Пересчитываем сумму, чтобы избежать ошибок синхронизации
+                new_total = startup.investmenttransactions_set.aggregate(total=Sum('amount'))['total'] or Decimal('0')
+                startup.amount_raised = new_total
+                startup.save(update_fields=['amount_raised'])
+                
+                return JsonResponse({"success": True, "new_amount_raised": float(startup.amount_raised) })
+            
+            except InvestmentTransactions.DoesNotExist:
+                return JsonResponse({"error": "Инвестиция не найдена"}, status=404)
+            except Exception as e:
+                logger.error(f"Ошибка при удалении инвестиции: {e}")
+                return JsonResponse({"error": "Внутренняя ошибка сервера"}, status=500)
+    
+    return JsonResponse({"error": "Неверный метод запроса"}, status=405)
 
 
 @login_required  # Предполагаем, что страница заявок доступна только авторизованным
