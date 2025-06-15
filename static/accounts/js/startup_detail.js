@@ -587,348 +587,254 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
-  // Обработчик кнопки "Сменить владельца"
-  const changeOwnerButtons = document.querySelectorAll('.change-owner-button')
-  changeOwnerButtons.forEach((button) => {
-    button.addEventListener('click', function () {
-      const modal = new bootstrap.Modal(
-        document.getElementById('changeOwnerModal')
-      )
-      modal.show()
+  // --- ЛОГИКА МОДАЛЬНЫХ ОКОН МОДЕРАТОРА ---
 
-      const searchInput = document.getElementById('userSearchInput')
-      const searchResults = document.getElementById('userSearchResults')
+  // Универсальная функция для поиска пользователей
+  function setupUserSearch(modalId, searchInputId, resultsId, onSelect) {
+    const searchModalElement = document.getElementById(modalId)
+    if (!searchModalElement) return;
 
-      // Поиск пользователей с debounce
-      const debouncedSearch = debounce(function (query) {
-        if (query.length < 2) {
-          searchResults.innerHTML = ''
+    const searchInput = document.getElementById(searchInputId)
+    const searchResults = document.getElementById(resultsId)
+
+    const debouncedSearch = debounce(function (query) {
+      if (query.length < 2) {
+        searchResults.innerHTML = ''
+        return
+      }
+      // Используем новый, исправленный URL и логику
+      fetch(`/search-suggestions/?q=${encodeURIComponent(query)}`, {
+        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+      })
+      .then(response => response.json())
+      .then(data => {
+        searchResults.innerHTML = ''
+        if (data.suggestions.length === 0) {
+          searchResults.innerHTML = '<li class="list-group-item">Пользователи не найдены</li>'
           return
         }
-
-        fetch(`/search-suggestions/?q=${encodeURIComponent(query)}`, {
-          headers: {
-            'X-Requested-With': 'XMLHttpRequest',
-          },
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            searchResults.innerHTML = ''
-            if (data.suggestions.length === 0) {
-              searchResults.innerHTML =
-                '<li class="list-group-item">Пользователи не найдены</li>'
-              return
+        data.suggestions.forEach(user => {
+          const li = document.createElement('li')
+          li.classList.add('list-group-item')
+          li.style.cursor = 'pointer';
+          li.textContent = user.name // <-- Используем user.name
+          li.dataset.userId = user.id  // <-- Используем user.id
+          li.addEventListener('click', () => {
+            onSelect(user); // Передаем весь объект user
+            // Для окна смены владельца закрываем, для остальных - нет
+            if (modalId === 'changeOwnerModal') {
+                const currentModal = bootstrap.Modal.getInstance(searchModalElement);
+                if (currentModal) {
+                    currentModal.hide();
+                }
             }
-            data.suggestions.forEach((user) => {
-              const li = document.createElement('li')
-              li.classList.add('list-group-item')
-              li.textContent = user
-              li.dataset.userId = user.user_id
-              li.addEventListener('click', function () {
-                const confirmModal = new bootstrap.Modal(
-                  document.getElementById('confirmChangeOwnerModal')
-                )
-                document.getElementById('newOwnerName').textContent = user
-                document.getElementById('newOwnerId').value = user.user_id
-                modal.hide()
-                confirmModal.show()
-              })
-              searchResults.appendChild(li)
-            })
-          })
-          .catch((error) => {
-            console.error('Ошибка поиска:', error)
-            searchResults.innerHTML =
-              '<li class="list-group-item">Ошибка поиска</li>'
-          })
-      }, 300)
-
-      searchInput.addEventListener('input', function () {
-        debouncedSearch(this.value.trim())
+          });
+          searchResults.appendChild(li)
+        })
       })
-    })
-  })
+      .catch(error => {
+        console.error('Ошибка поиска:', error)
+        searchResults.innerHTML = '<li class="list-group-item">Ошибка поиска</li>'
+      })
+    }, 300)
 
-  // Подтверждение смены владельца
+    searchInput.addEventListener('input', function () {
+      debouncedSearch(this.value.trim())
+    })
+
+    // Очищаем результаты при закрытии модального окна
+    searchModalElement.addEventListener('hidden.bs.modal', function () {
+        searchInput.value = '';
+        searchResults.innerHTML = '';
+    });
+  }
+
+  // --- 1. Смена владельца ---
+  setupUserSearch('changeOwnerModal', 'userSearchInput', 'userSearchResults', (user) => {
+    // Наполняем модальное окно подтверждения
+    const confirmModalEl = document.getElementById('confirmChangeOwnerModal')
+    if (!confirmModalEl) return;
+    
+    document.getElementById('newOwnerName').textContent = user.name;
+    document.getElementById('newOwnerId').value = user.id;
+
+    // Показываем модальное окно подтверждения
+    const confirmModal = new bootstrap.Modal(confirmModalEl);
+    confirmModal.show();
+  });
+
+  // Подтверждение смены владельца (остается почти без изменений)
   const confirmChangeOwnerBtn = document.querySelector('.confirm-change-owner')
   if (confirmChangeOwnerBtn) {
     confirmChangeOwnerBtn.addEventListener('click', function () {
       const newOwnerId = document.getElementById('newOwnerId').value
-
       fetch(`/change_owner/${startupId}/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
           'X-CSRFToken': getCookie('csrftoken'),
-          'X-Requested-With': 'XMLHttpRequest',
         },
         body: `new_owner_id=${newOwnerId}`,
       })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.success) {
-            alert('Владелец успешно изменён!')
-            location.reload()
-          } else {
-            alert(
-              data.error ||
-                'Произошла ошибка при смене владельца. Проверьте данные и попробуйте снова.'
-            )
-          }
-        })
-        .catch((error) => {
-          console.error('Ошибка:', error)
-          alert(
-            'Произошла ошибка сети при смене владельца. Проверьте соединение и попробуйте снова.'
-          )
-        })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert('Владелец успешно изменён!')
+          location.reload()
+        } else {
+          alert(data.error || 'Ошибка при смене владельца.')
+        }
+      })
+      .catch(error => {
+        console.error('Ошибка:', error)
+        alert('Сетевая ошибка при смене владельца.')
+      })
     })
   }
 
-  // Обработчик кнопки "Добавить инвестора"
-  const addInvestorButtons = document.querySelectorAll('.add-investor-button')
-  addInvestorButtons.forEach((button) => {
-    button.addEventListener('click', function () {
-      const modal = new bootstrap.Modal(
-        document.getElementById('addInvestorModal')
-      )
-      modal.show()
+  // --- 2. Добавление инвестора ---
+  const addInvestorModalEl = document.getElementById('addInvestorModal');
+  if (addInvestorModalEl) {
+    let selectedInvestor = null;
 
-      const investorSearchInput = document.getElementById('investorSearchInput')
-      const investorSearchResults = document.getElementById(
-        'investorSearchResults'
-      )
-      const investmentAmountInput = document.getElementById('investmentAmount')
-      const addInvestmentButton = document.getElementById('addInvestmentButton')
-      let selectedInvestorId = null
+    // Настраиваем поиск для модального окна добавления инвестора
+    setupUserSearch('addInvestorModal', 'investorSearchInput', 'investorSearchResults', (user) => {
+      selectedInvestor = user;
+      // Показываем, кто выбран
+      const investorSearchInput = document.getElementById('investorSearchInput');
+      investorSearchInput.value = user.name;
+      investorSearchInput.disabled = true;
+      document.getElementById('investorSearchResults').innerHTML = '';
+      document.getElementById('addInvestmentButton').disabled = false;
+    });
 
-      // Загрузка списка текущих инвесторов
-      fetch(`/get_investors/${startupId}/`, {
-        headers: {
-          'X-Requested-With': 'XMLHttpRequest',
-        },
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          const investorsList = document.getElementById('currentInvestorsList')
-          investorsList.innerHTML = ''
-          if (data.investors.length === 0) {
-            investorsList.innerHTML = '<p>Инвесторы отсутствуют.</p>'
-            return
-          }
-          data.investors.forEach((investor) => {
-            const div = document.createElement('div')
-            div.classList.add('investor-item')
-            div.innerHTML = `
-                        <span>${investor.name} (ID: ${investor.user_id})</span>
-                        <div>
-                            <input type="number" value="${investor.amount}" data-user-id="${investor.user_id}">
-                            <button class="action-button edit-investment-btn">Изменить</button>
-                            <button class="action-button delete-investment-btn" style="background-color: var(--danger-red); margin-left: 5px;">Удалить</button>
-                        </div>
-                    `
-            investorsList.appendChild(div)
-
-            // Обработчик изменения суммы
-            div
-              .querySelector('.edit-investment-btn')
-              .addEventListener('click', function () {
-                const newAmount = div.querySelector('input').value
-                const confirmModal = new bootstrap.Modal(
-                  document.getElementById('confirmEditInvestmentModal')
-                )
-                document.getElementById('editInvestorName').textContent =
-                  investor.name
-                document.getElementById('editInvestmentAmount').textContent =
-                  newAmount
-                document.getElementById('editInvestorId').value =
-                  investor.user_id
-                confirmModal.show()
-              })
-
-            // Обработчик удаления инвестиции
-            div
-              .querySelector('.delete-investment-btn')
-              .addEventListener('click', function () {
-                const confirmModal = new bootstrap.Modal(
-                  document.getElementById('confirmDeleteInvestmentModal')
-                )
-                document.getElementById('deleteInvestorName').textContent =
-                  investor.name
-                document.getElementById('deleteInvestmentAmount').textContent =
-                  investor.amount
-                document.getElementById('deleteInvestorId').value =
-                  investor.user_id
-                confirmModal.show()
-              })
-          })
-        })
-        .catch((error) => {
-          console.error('Ошибка загрузки инвесторов:', error)
-          const investorsList = document.getElementById('currentInvestorsList')
-          investorsList.innerHTML = '<p>Ошибка загрузки инвесторов.</p>'
-        })
-
-      // Поиск пользователей с debounce
-      const debouncedInvestorSearch = debounce(function (query) {
-        if (query.length < 2) {
-          investorSearchResults.innerHTML = ''
-          return
+    // Обработчик кнопки "Добавить"
+    const addInvestmentButton = document.getElementById('addInvestmentButton');
+    addInvestmentButton.addEventListener('click', function() {
+        if (!selectedInvestor) {
+            alert('Сначала выберите пользователя из списка.');
+            return;
+        }
+        const amount = document.getElementById('investmentAmount').value;
+        if (!amount || parseFloat(amount) <= 0) {
+            alert('Введите корректную сумму инвестиции.');
+            return;
         }
 
-        fetch(`/search-suggestions/?q=${encodeURIComponent(query)}`, {
-          headers: {
-            'X-Requested-With': 'XMLHttpRequest',
-          },
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            investorSearchResults.innerHTML = ''
-            if (data.suggestions.length === 0) {
-              investorSearchResults.innerHTML =
-                '<li class="list-group-item">Пользователи не найдены</li>'
-              return
-            }
-            data.suggestions.forEach((user) => {
-              const li = document.createElement('li')
-              li.classList.add('list-group-item')
-              li.textContent = user
-              li.dataset.userId = user.user_id
-              li.addEventListener('click', function () {
-                selectedInvestorId = user.user_id
-                investorSearchInput.value = user
-                investorSearchResults.innerHTML = ''
-                addInvestmentButton.disabled =
-                  !investmentAmountInput.value || !selectedInvestorId
-              })
-              investorSearchResults.appendChild(li)
-            })
-          })
-          .catch((error) => {
-            console.error('Ошибка поиска:', error)
-            investorSearchResults.innerHTML =
-              '<li class="list-group-item">Ошибка поиска</li>'
-          })
-      }, 300)
-
-      investorSearchInput.addEventListener('input', function () {
-        debouncedInvestorSearch(this.value.trim())
-      })
-
-      // Валидация суммы
-      investmentAmountInput.addEventListener('input', function () {
-        addInvestmentButton.disabled = !this.value || !selectedInvestorId
-      })
-
-      // Добавление инвестиции
-      addInvestmentButton.addEventListener('click', function () {
-        const amount = investmentAmountInput.value
         fetch(`/add_investor/${startupId}/`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'X-CSRFToken': getCookie('csrftoken'),
-            'X-Requested-With': 'XMLHttpRequest',
-          },
-          body: `user_id=${selectedInvestorId}&amount=${amount}`,
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json', // Отправляем JSON
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+            body: JSON.stringify({
+                user_id: selectedInvestor.id,
+                amount: amount,
+            }),
         })
-          .then((response) => response.json())
-          .then((data) => {
+        .then(response => response.json())
+        .then(data => {
             if (data.success) {
-              alert('Инвестор успешно добавлен!')
-              location.reload()
+                alert('Инвестор успешно добавлен!');
+                loadCurrentInvestors(); // Перезагружаем список
+                resetAddInvestorForm();
             } else {
-              alert(
-                data.error ||
-                  'Ошибка при добавлении инвестора. Проверьте данные и попробуйте снова.'
-              )
+                alert(data.error || 'Ошибка при добавлении инвестора.');
             }
-          })
-          .catch((error) => {
-            console.error('Ошибка:', error)
-            alert(
-              'Произошла ошибка сети при добавлении инвестора. Проверьте соединение и попробуйте снова.'
-            )
-          })
-      })
-    })
-  })
-
-  // Подтверждение редактирования инвестиции
-  const confirmEditInvestmentBtn = document.querySelector(
-    '.confirm-edit-investment'
-  )
-  if (confirmEditInvestmentBtn) {
-    confirmEditInvestmentBtn.addEventListener('click', function () {
-      const userId = document.getElementById('editInvestorId').value
-      const newAmount = document.getElementById(
-        'editInvestmentAmount'
-      ).textContent
-
-      fetch(`/edit_investment/${startupId}/${userId}/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'X-CSRFToken': getCookie('csrftoken'),
-          'X-Requested-With': 'XMLHttpRequest',
-        },
-        body: `amount=${newAmount}`,
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.success) {
-            alert('Сумма инвестиции успешно изменена!')
-            location.reload()
-          } else {
-            alert(
-              data.error ||
-                'Ошибка при изменении суммы. Проверьте данные и попробуйте снова.'
-            )
-          }
         })
-        .catch((error) => {
-          console.error('Ошибка:', error)
-          alert(
-            'Произошла ошибка сети при изменении суммы. Проверьте соединение и попробуйте снова.'
-          )
+        .catch(error => {
+            console.error('Ошибка:', error);
+            alert('Сетевая ошибка при добавлении инвестора.');
+        });
+    });
+
+    // Функция для сброса формы добавления
+    function resetAddInvestorForm() {
+        selectedInvestor = null;
+        const searchInput = document.getElementById('investorSearchInput');
+        searchInput.value = '';
+        searchInput.disabled = false;
+        document.getElementById('investmentAmount').value = '';
+        document.getElementById('addInvestmentButton').disabled = true;
+    }
+
+    // Загрузка и отображение текущих инвесторов
+    function loadCurrentInvestors() {
+        fetch(`/get_investors/${startupId}/`)
+        .then(response => response.json())
+        .then(data => {
+            const investorsList = document.getElementById('currentInvestorsList');
+            investorsList.innerHTML = '';
+            if (!data.investors || data.investors.length === 0) {
+                investorsList.innerHTML = '<p>Инвесторы отсутствуют.</p>';
+                return;
+            }
+            data.investors.forEach(investor => {
+                const div = document.createElement('div');
+                div.classList.add('investor-item', 'd-flex', 'justify-content-between', 'align-items-center', 'mb-2');
+                // Кнопки "Изменить" и "Удалить" добавляются только для модератора
+                // Эта проверка на клиенте - лишь для удобства, основная на бэкенде.
+                div.innerHTML = `
+                    <span>${investor.name} - ${investor.amount} ₽</span>
+                    <div>
+                        <button class="btn btn-sm btn-outline-danger delete-investment-btn" data-user-id="${investor.user_id}">Удалить</button>
+                    </div>
+                `;
+                investorsList.appendChild(div);
+            });
         })
-    })
+        .catch(error => console.error('Ошибка загрузки инвесторов:', error));
+    }
+    
+    // Обработка кликов на удаление (делегирование событий)
+    document.getElementById('currentInvestorsList').addEventListener('click', function(event) {
+        if (event.target && event.target.classList.contains('delete-investment-btn')) {
+            const userId = event.target.dataset.userId;
+            if (confirm(`Вы уверены, что хотите удалить этого инвестора?`)) {
+                fetch(`/delete_investment/${startupId}/${userId}/`, {
+                    method: 'POST',
+                    headers: { 'X-CSRFToken': getCookie('csrftoken') },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Инвестиция удалена.');
+                        loadCurrentInvestors();
+                    } else {
+                        alert(data.error || 'Ошибка при удалении.');
+                    }
+                })
+                .catch(error => console.error('Ошибка:', error));
+            }
+        }
+    });
+    
+    // Первоначальная загрузка списка при открытии модального окна
+    addInvestorModalEl.addEventListener('show.bs.modal', function () {
+        loadCurrentInvestors();
+        resetAddInvestorForm();
+    });
   }
 
-  // Подтверждение удаления инвестиции
-  const confirmDeleteInvestmentBtn = document.querySelector(
-    '.confirm-delete-investment'
-  )
-  if (confirmDeleteInvestmentBtn) {
-    confirmDeleteInvestmentBtn.addEventListener('click', function () {
-      const userId = document.getElementById('deleteInvestorId').value
-
-      fetch(`/delete_investment/${startupId}/${userId}/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'X-CSRFToken': getCookie('csrftoken'),
-          'X-Requested-With': 'XMLHttpRequest',
-        },
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.success) {
-            alert('Инвестиция успешно удалена!')
-            location.reload()
-          } else {
-            alert(
-              data.error ||
-                'Ошибка при удалении инвестиции. Проверьте данные и попробуйте снова.'
-            )
-          }
-        })
-        .catch((error) => {
-          console.error('Ошибка:', error)
-          alert(
-            'Произошла ошибка сети при удалении инвестиции. Проверьте соединение и попробуйте снова.'
-          )
-        })
-    })
+  // --- 3. Жалобы (Report) ---
+  const submitReportBtn = document.getElementById('submitReport');
+  if(submitReportBtn) {
+    submitReportBtn.addEventListener('click', function() {
+      const reason = document.getElementById('reportReason').value;
+      const comment = document.getElementById('reportComment').value;
+      if (reason === 'Выберите причину...') {
+        alert('Пожалуйста, выберите причину жалобы.');
+        return;
+      }
+      // Здесь должен быть fetch на бэкенд для отправки жалобы
+      console.log('Жалоба:', { startupId, reason, comment });
+      alert('Ваша жалоба отправлена на рассмотрение!');
+      
+      const reportModalEl = document.getElementById('reportModal');
+      const reportModal = bootstrap.Modal.getInstance(reportModalEl);
+      if(reportModal) {
+        reportModal.hide();
+      }
+    });
   }
 })

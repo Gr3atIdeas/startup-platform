@@ -245,18 +245,64 @@ def startups_list(request):
 
 def search_suggestions(request):
     query = request.GET.get("q", "").strip()
-    suggestions = []
-    if query:
-        startups = Startups.objects.filter(status="approved", title__icontains=query)[
-            :5
-        ]  # Ограничиваем до 5 предложений
-        suggestions = [startup.title for startup in startups]
-    return JsonResponse({"suggestions": suggestions})
+    users = []
+    if len(query) >= 2:
+        # Ищем пользователей по совпадению в имени, фамилии или email
+        search_results = Users.objects.filter(
+            Q(first_name__icontains=query)
+            | Q(last_name__icontains=query)
+            | Q(email__icontains=query)
+        ).distinct()[:10]
+
+        users = [
+            {"id": user.user_id, "name": f"{user.first_name or ''} {user.last_name or ''} ({user.email})".strip()}
+            for user in search_results
+        ]
+
+    return JsonResponse({"suggestions": users})
 
 
 def startup_detail(request, startup_id):
-    startup = get_object_or_404(Startups, startup_id=startup_id)
-    timeline = StartupTimeline.objects.filter(startup=startup)
+    try:
+        startup = Startups.objects.select_related("owner", "direction", "stage").get(
+            startup_id=startup_id
+        )
+    except Startups.DoesNotExist:
+        return get_object_or_404(Startups, startup_id=startup_id)
+    
+    if request.method == "POST":
+        if not request.user.is_authenticated:
+            return redirect('login') 
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.startup_id = startup
+            comment.user_id = request.user
+            # Пытаемся найти голос пользователя для этого стартапа
+            user_vote = UserVotes.objects.filter(user=request.user, startup=startup).first()
+            if user_vote:
+                comment.user_rating = user_vote.rating
+            comment.save()
+            messages.success(request, "Ваш комментарий был добавлен.")
+            return redirect("startup_detail", startup_id=startup.startup_id)
+        else:
+            messages.error(request, "Ошибка при добавлении комментария.")
+    else:
+        form = CommentForm()
+
+    # Аннотируем рейтинг пользователя для каждого комментария
+    comments_with_rating = Comments.objects.filter(
+        startup_id=startup, parent_comment_id__isnull=True
+    ).annotate(
+        user_rating=models.Subquery(
+            UserVotes.objects.filter(
+                startup=startup,
+                user=models.OuterRef('user_id_id')
+            ).values('rating')[:1]
+        )
+    ).order_by("-created_at")
+    
+    # Получаем средний рейтинг и количество голосов
     average_rating = (
         startup.sum_votes / startup.total_voters if startup.total_voters > 0 else 0
     )
@@ -342,7 +388,7 @@ def startup_detail(request, startup_id):
 
     context = {
         "startup": startup,
-        "comments": comments,
+        "comments": comments_with_rating, # <--- Передаем комментарии с рейтингом
         "form": form,
         "average_rating": average_rating,
         "total_votes_count": total_votes,
@@ -2916,63 +2962,78 @@ def change_owner(request, startup_id):
 
 @login_required
 def get_investors(request, startup_id):
-    if not request.user.role or request.user.role.role_name != "moderator":
-        return JsonResponse(
-            {"success": False, "error": "У вас нет прав для этого действия"}
-        )
+    if not request.user.is_authenticated or request.user.role.role_name != "moderator":
+        return JsonResponse({"error": "Доступ запрещен"}, status=403)
 
     startup = get_object_or_404(Startups, startup_id=startup_id)
-    investments = InvestmentTransactions.objects.filter(
-        startup=startup, transaction_status="completed"
-    ).select_related("investor")
+    investors = InvestmentTransactions.objects.filter(startup=startup).select_related(
+        "investor"
+    )
 
-    investors = [
+    investor_list = [
         {
-            "user_id": inv.investor.user_id,
-            "name": f"{inv.investor.first_name} {inv.investor.last_name}",
-            "amount": float(inv.amount),
+            "user_id": tx.investor.user_id,
+            "name": tx.investor.get_full_name() or tx.investor.email,
+            "amount": float(tx.amount),
         }
-        for inv in investments
+        for tx in investors
     ]
-
-    return JsonResponse({"success": True, "investors": investors})
+    return JsonResponse({"investors": investor_list})
 
 
 @login_required
 def add_investor(request, startup_id):
-    if request.method != "POST":
-        return JsonResponse({"success": False, "error": "Неверный метод запроса"})
+    if not request.user.is_authenticated or request.user.role.role_name != "moderator":
+        return JsonResponse({"error": "Доступ запрещен"}, status=403)
 
-    if not request.user.role or request.user.role.role_name != "moderator":
-        return JsonResponse(
-            {"success": False, "error": "У вас нет прав для этого действия"}
-        )
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            user_id = data.get("user_id")
+            amount = Decimal(data.get("amount"))
+            startup = get_object_or_404(Startups, startup_id=startup_id)
+            user_to_invest = get_object_or_404(Users, user_id=user_id)
 
-    startup = get_object_or_404(Startups, startup_id=startup_id)
-    user_id = request.POST.get("user_id")
-    amount = Decimal(request.POST.get("amount", "0"))
+            if amount <= 0:
+                return JsonResponse(
+                    {"success": False, "error": "Сумма должна быть положительной."}
+                )
 
-    if amount <= 0:
-        return JsonResponse({"success": False, "error": "Сумма должна быть больше 0"})
+            # Проверяем, существует ли уже транзакция для этого инвестора
+            existing_tx = InvestmentTransactions.objects.filter(
+                startup_id=startup_id, investor=user_to_invest
+            ).first()
 
-    investor = get_object_or_404(Users, user_id=user_id)
+            if existing_tx:
+                # Если транзакция существует, обновляем сумму
+                existing_tx.amount = amount
+                existing_tx.save()
+            else:
+                # Создание новой транзакции
+                try:
+                    investment_type_obj = TransactionTypes.objects.get(type_name="investment")
+                    InvestmentTransactions.objects.create(
+                        investor=user_to_invest,
+                        startup=startup,
+                        amount=amount,
+                        transaction_type=investment_type_obj,
+                    )
+                except TransactionTypes.DoesNotExist:
+                    return JsonResponse({"error": "Тип транзакции 'investment' не найден в системе."}, status=500)
 
-    transaction = InvestmentTransactions(
-        startup=startup,
-        investor=investor,
-        amount=amount,
-        transaction_type=TransactionTypes.objects.get(type_name="investment"),
-        transaction_status="completed",
-        payment_method=PaymentMethods.objects.get(method_name="default"),
-        created_at=timezone.now(),
-        updated_at=timezone.now(),
-    )
-    transaction.save()
+            # Обновляем общую сумму инвестиций в стартапе
+            startup.amount_raised = (
+                startup.investmenttransactions_set.aggregate(total=Sum("amount"))["total"]
+            )
+            startup.save()
 
-    startup.amount_raised = (startup.amount_raised or Decimal("0")) + amount
-    startup.save()
+            return JsonResponse({"success": True})
+        except (json.JSONDecodeError, TypeError, ValueError) as e:
+            return JsonResponse({"success": False, "error": f"Неверный формат данных: {e}"})
+        except Exception as e:
+            return JsonResponse({"success": False, "error": str(e)})
 
-    return JsonResponse({"success": True})
+    return JsonResponse({"error": "Метод не поддерживается"}, status=405)
 
 
 @login_required
@@ -3013,30 +3074,33 @@ def edit_investment(request, startup_id, user_id):
 
 @login_required
 def delete_investment(request, startup_id, user_id):
-    if request.method != "POST":
-        return JsonResponse({"success": False, "error": "Неверный метод запроса"})
+    if not request.user.is_authenticated or request.user.role.role_name != "moderator":
+        return JsonResponse({"error": "Доступ запрещен"}, status=403)
 
-    if not request.user.role or request.user.role.role_name != "moderator":
-        return JsonResponse(
-            {"success": False, "error": "У вас нет прав для этого действия"}
-        )
+    if request.method == "POST":
+        with transaction.atomic():
+            try:
+                user_to_delete = get_object_or_404(Users, pk=user_id)
+                tx = get_object_or_404(
+                    InvestmentTransactions, startup_id=startup_id, investor=user_to_delete
+                )
+                startup = tx.startup
+                tx.delete()
 
-    startup = get_object_or_404(Startups, startup_id=startup_id)
-    investor = get_object_or_404(Users, user_id=user_id)
-    transaction = get_object_or_404(
-        InvestmentTransactions,
-        startup=startup,
-        investor=investor,
-        transaction_status="completed",
-    )
-
-    amount = transaction.amount
-    transaction.delete()
-
-    startup.amount_raised = (startup.amount_raised or Decimal("0")) - amount
-    startup.save()
-
-    return JsonResponse({"success": True})
+                # Пересчитываем сумму, чтобы избежать ошибок синхронизации
+                new_total = startup.investmenttransactions_set.aggregate(total=Sum('amount'))['total'] or Decimal('0')
+                startup.amount_raised = new_total
+                startup.save(update_fields=['amount_raised'])
+                
+                return JsonResponse({"success": True, "new_amount_raised": float(startup.amount_raised) })
+            
+            except InvestmentTransactions.DoesNotExist:
+                return JsonResponse({"error": "Инвестиция не найдена"}, status=404)
+            except Exception as e:
+                logger.error(f"Ошибка при удалении инвестиции: {e}")
+                return JsonResponse({"error": "Внутренняя ошибка сервера"}, status=500)
+    
+    return JsonResponse({"error": "Неверный метод запроса"}, status=405)
 
 
 @login_required  # Предполагаем, что страница заявок доступна только авторизованным
