@@ -817,7 +817,8 @@ document.addEventListener('DOMContentLoaded', function () {
     
     function updateStartupFinancials(newAmount, newCount) {
         const pageData = document.querySelector('.startup-detail-page');
-        const fundingGoal = parseFloat(pageData.dataset.fundingGoal) || 0;
+        const fundingGoalString = (pageData.dataset.fundingGoal || '0').replace(',', '.');
+        const fundingGoal = parseFloat(fundingGoalString);
     
         const newProgress = (fundingGoal > 0) ? Math.min((newAmount / fundingGoal) * 100, 100) : 0;
     
@@ -835,7 +836,7 @@ document.addEventListener('DOMContentLoaded', function () {
             progressText.textContent = `${Math.floor(newProgress)}%`;
         }
     
-        const investorCountSpan = document.querySelector('.progress-backers-info span');
+        const investorCountSpan = document.getElementById('investor-count-display');
         if (investorCountSpan) {
             investorCountSpan.textContent = `(${newCount})`;
         }

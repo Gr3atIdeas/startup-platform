@@ -76,9 +76,15 @@
 
       <p class="startup-short-description">{{ startup.short_description|truncatewords:15|default:"" }}</p>
 
-      <div class="card-footer">
-        <span class="text-muted"><i class="fas fa-comments"></i> {{ startup.comment_count }}</span>
-        <span class="text-muted ms-3"><i class="fas fa-users"></i> Инвестировало: {{ startup.investors_count }}</span>
+      <div class="startup-stats">
+        <div class="stat-item">
+          <i class="fas fa-star"></i>
+          <span>{{ startup.average_rating|floatformat:"1" }}/5</span>
+        </div>
+        <div class="stat-item">
+          <i class="fas fa-users"></i>
+          <span>Инвестировало: {{ startup.investors_count }}</span>
+        </div>
       </div>
 
       <a href="{% url 'startup_detail' startup_id=startup.startup_id %}" class="detail-link" aria-label="Подробнее о {{ startup.title }}"></a>
