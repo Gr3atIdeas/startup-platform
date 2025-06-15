@@ -3010,12 +3010,23 @@ def add_investor(request, startup_id):
                 existing_tx.save()
             else:
                 # Создание новой транзакции
-                InvestmentTransactions.objects.create(
-                    investor=user_to_invest,
-                    startup=startup,
-                    amount=amount,
-                    transaction_type="investment",
-                )
+                try:
+                    investment_type_obj = TransactionTypes.objects.get(type_name="investment")
+                    InvestmentTransactions.objects.create(
+                        investor=user_to_invest,
+                        startup=startup,
+                        amount=amount,
+                        transaction_type=investment_type_obj,
+                    )
+                except TransactionTypes.DoesNotExist:
+                    return JsonResponse({"error": "Тип транзакции 'investment' не найден в системе."}, status=500)
+
+            # Обновляем общую сумму инвестиций в стартапе
+            startup.amount_raised = (
+                startup.investmenttransactions_set.aggregate(total=Sum("amount"))["total"]
+            )
+            startup.save()
+
             return JsonResponse({"success": True})
         except (json.JSONDecodeError, TypeError, ValueError) as e:
             return JsonResponse({"success": False, "error": f"Неверный формат данных: {e}"})
