@@ -163,6 +163,7 @@ def startups_list(request):
     # Аннотируем базовые поля + средний рейтинг сразу
     startups_qs = startups_qs.annotate(
         comment_count=Count("comments"),
+        investors_count=Count("investmenttransactions__investor", distinct=True),
         average_rating=Avg(
             models.ExpressionWrapper(
                 models.F("sum_votes") * 1.0 / models.F("total_voters"),
@@ -2979,7 +2980,11 @@ def get_investors(request, startup_id):
                 "amount": float(tx.amount),
             })
 
-    return JsonResponse({"investors": investor_list})
+    html = render_to_string(
+        "accounts/partials/_investors_list.html", 
+        {"investors": investor_list, "startup": startup, "user": request.user}
+    )
+    return JsonResponse({"html": html})
 
 
 @login_required

@@ -1,0 +1,16 @@
+{% if investors %}
+    {% for investor in investors %}
+        <div class="investor-item d-flex justify-content-between align-items-center mb-2">
+            <span>{{ investor.name }} - {{ investor.amount|floatformat:2 }} ₽</span>
+            {% if user.is_authenticated and user.role.role_name == 'moderator' %}
+                <div>
+                    <button class="btn btn-sm btn-outline-danger delete-investment-btn" data-user-id="{{ investor.user_id }}">
+                        Удалить
+                    </button>
+                </div>
+            {% endif %}
+        </div>
+    {% endfor %}
+{% else %}
+    <p>Инвесторы отсутствуют.</p>
+{% endif %} 

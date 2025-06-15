@@ -773,24 +773,7 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .then(data => {
             const investorsList = document.getElementById('currentInvestorsList');
-            investorsList.innerHTML = '';
-            if (!data.investors || data.investors.length === 0) {
-                investorsList.innerHTML = '<p>Инвесторы отсутствуют.</p>';
-                return;
-            }
-            data.investors.forEach(investor => {
-                const div = document.createElement('div');
-                div.classList.add('investor-item', 'd-flex', 'justify-content-between', 'align-items-center', 'mb-2');
-                // Кнопки "Изменить" и "Удалить" добавляются только для модератора
-                // Эта проверка на клиенте - лишь для удобства, основная на бэкенде.
-                div.innerHTML = `
-                    <span>${investor.name} - ${investor.amount} ₽</span>
-                    <div>
-                        <button class="btn btn-sm btn-outline-danger delete-investment-btn" data-user-id="${investor.user_id}">Удалить</button>
-                    </div>
-                `;
-                investorsList.appendChild(div);
-            });
+            investorsList.innerHTML = data.html; // <-- Вставляем готовый HTML
         })
         .catch(error => {
             const investorsList = document.getElementById('currentInvestorsList');
@@ -801,8 +784,9 @@ document.addEventListener('DOMContentLoaded', function () {
     
     // Обработка кликов на удаление (делегирование событий)
     document.getElementById('currentInvestorsList').addEventListener('click', function(event) {
-        if (event.target && event.target.classList.contains('delete-investment-btn')) {
-            const userId = event.target.dataset.userId;
+        const deleteButton = event.target.closest('.delete-investment-btn');
+        if (deleteButton) {
+            const userId = deleteButton.dataset.userId;
             if (confirm(`Вы уверены, что хотите удалить этого инвестора?`)) {
                 fetch(`/delete_investment/${startupId}/${userId}/`, {
                     method: 'POST',
@@ -817,7 +801,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 .then(data => {
                     if (data.success) {
                         alert('Инвестиция удалена.');
-                        loadCurrentInvestors();
+                        loadCurrentInvestors(); // <-- Перезагружаем список (теперь это просто вставка HTML)
                         updateStartupFinancials(data.new_amount_raised, data.new_investor_count);
                     } else {
                         alert(data.error || 'Ошибка при удалении.');
