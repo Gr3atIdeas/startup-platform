@@ -7,9 +7,9 @@
     "dev": "vite",
     "build": "vite build",
     "format": "prettier --write \"static/src/**/*.{js,scss,css,vue,html}\"",
+    "lint": "npm run lint:css && npm run lint:js",
     "lint:css": "stylelint \"static/src/**/*.{css,scss}\"",
-    "lint:js": "eslint \"static/src/**/*.{js,vue}\"",
-    "lint:ox": "oxlint static/src"
+    "lint:js": "oxlint"
   },
   "repository": {
     "type": "git",

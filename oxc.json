@@ -1,0 +1,9 @@
+{
+  "$schema": "https://raw.githubusercontent.com/oxc-project/oxc/main/npm/oxlint/configuration.schema.json",
+  "include": ["static/src/**/*.js", "static/src/**/*.vue", "vite.config.js"],
+  "linter": {
+    "rules": {
+      "vue/multi-word-component-names": "off"
+    }
+  }
+}
