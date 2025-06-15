@@ -78,41 +78,35 @@
             >
           </h2>
           <div class="featured-investors__features">
-            <div class="featured-investors__feature-item">
-              <div class="featured-investors__feature-card">
-                <div class="featured-investors__feature-text">
-                  Доступ к проверенным стартапам
-                </div>
-              </div>
+            <div class="featured-investors__feature-card">
               <img
-                class="featured-investors__feature-separator"
                 src="/static/accounts/images/main_page/planet_4th_main.webp"
-                alt="Иконка планеты"
+                alt="Доступ к проверенным стартапам"
+                class="featured-investors__feature-icon featured-investors__feature-icon--planet"
               />
-            </div>
-            <div class="featured-investors__feature-item">
-              <div class="featured-investors__feature-card">
-                <div class="featured-investors__feature-text">
-                  Диверсификация портфеля
-                </div>
+              <div class="featured-investors__feature-text">
+                Доступ к проверенным стартапам
               </div>
+            </div>
+            <div class="featured-investors__feature-card">
               <img
-                class="featured-investors__feature-separator"
                 src="/static/accounts/images/main_page/case_main_4th.webp"
-                alt="Иконка кейса"
+                alt="Диверсификация портфеля"
+                class="featured-investors__feature-icon featured-investors__feature-icon--case"
               />
-            </div>
-            <div class="featured-investors__feature-item">
-              <div class="featured-investors__feature-card">
-                <div class="featured-investors__feature-text">
-                  Удобная аналитика и фильтры для выбора проектов
-                </div>
+              <div class="featured-investors__feature-text">
+                Диверсификация портфеля
               </div>
+            </div>
+            <div class="featured-investors__feature-card">
               <img
-                class="featured-investors__feature-separator"
                 src="/static/accounts/images/main_page/rocket_main_4th.webp"
-                alt="Иконка ракеты"
+                alt="Удобная аналитика"
+                class="featured-investors__feature-icon featured-investors__feature-icon--rocket"
               />
+              <div class="featured-investors__feature-text">
+                Удобная аналитика и фильтры для выбора проектов
+              </div>
             </div>
           </div>
           <a href="#" class="btn btn-yellow-gradient">
@@ -820,7 +814,7 @@ onMounted(() => {
   position: relative;
   background: white;
   border-radius: 10px;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .featured-investors__content {
@@ -856,18 +850,7 @@ onMounted(() => {
   display: flex;
   justify-content: flex-start;
   align-items: flex-end;
-  gap: 15px;
-}
-
-.featured-investors__feature-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
-
-  &:not(:last-child) {
-    margin-right: 15px;
-  }
+  gap: 40px;
 }
 
 .featured-investors__feature-card {
@@ -875,13 +858,36 @@ onMounted(() => {
   height: 181px;
   position: relative;
   background: linear-gradient(180deg, #004e9f 0%, #001c39 100%);
-  overflow: hidden;
+  overflow: visible;
   border-radius: 10px;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: flex-end;
   align-items: center;
-  padding: 15px;
+  padding: 20px 15px;
   box-sizing: border-box;
+}
+
+.featured-investors__feature-icon {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  height: auto;
+  z-index: 1;
+  top: -50px;
+}
+
+.featured-investors__feature-icon--planet {
+  width: 125px;
+}
+
+.featured-investors__feature-icon--case {
+  width: 125px;
+}
+
+.featured-investors__feature-icon--rocket {
+  width: 90px;
+  top: -40px;
 }
 
 .featured-investors__feature-text {
@@ -895,36 +901,13 @@ onMounted(() => {
   word-wrap: break-word;
 }
 
-.featured-investors__feature-separator {
-  position: absolute;
-  bottom: -5px; /* Adjust as needed */
-  transform: translateX(120%);
-  height: auto;
-}
-
-.featured-investors__feature-item:nth-child(1)
-  .featured-investors__feature-separator {
-  width: 165px;
-}
-
-.featured-investors__feature-item:nth-child(2)
-  .featured-investors__feature-separator {
-  width: 165px;
-}
-
-.featured-investors__feature-item:nth-child(3)
-  .featured-investors__feature-separator {
-  width: 129px;
-  transform: translateX(110%);
-}
-
 .featured-investors__background {
   width: 771px;
   height: 553px;
   left: 712px;
   top: -16px;
   position: absolute;
-  overflow: hidden;
+  overflow: visible;
   z-index: 1;
 }
 
