@@ -3024,15 +3024,19 @@ def add_investor(request, startup_id):
 
             # Обновляем общую сумму инвестиций в стартапе
             startup.amount_raised = (
-                startup.investmenttransactions_set.aggregate(total=Sum("amount"))["total"]
+                startup.investmenttransactions_set.aggregate(total=Sum("amount"))["total"] or Decimal('0')
             )
-            startup.save()
-
-            return JsonResponse({"success": True})
+            startup.save(update_fields=['amount_raised'])
+            new_investor_count = startup.get_investors_count()
+            
+            return JsonResponse({
+                "success": True, 
+                "new_amount_raised": float(startup.amount_raised),
+                "new_investor_count": new_investor_count
+            })
+            
         except (json.JSONDecodeError, TypeError, ValueError) as e:
-            return JsonResponse({"success": False, "error": f"Неверный формат данных: {e}"})
-        except Exception as e:
-            return JsonResponse({"success": False, "error": str(e)})
+            return JsonResponse({"error": f"Неверный формат данных: {str(e)}"}, status=400)
 
     return JsonResponse({"error": "Метод не поддерживается"}, status=405)
 
@@ -3093,7 +3097,14 @@ def delete_investment(request, startup_id, user_id):
                 startup.amount_raised = new_total
                 startup.save(update_fields=['amount_raised'])
                 
-                return JsonResponse({"success": True, "new_amount_raised": float(startup.amount_raised) })
+                # Пересчитываем количество инвесторов
+                new_investor_count = startup.get_investors_count()
+
+                return JsonResponse({
+                    "success": True, 
+                    "new_amount_raised": float(startup.amount_raised),
+                    "new_investor_count": new_investor_count
+                })
             
             except InvestmentTransactions.DoesNotExist:
                 return JsonResponse({"error": "Инвестиция не найдена"}, status=404)

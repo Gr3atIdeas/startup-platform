@@ -738,6 +738,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 alert('Инвестор успешно добавлен!');
                 loadCurrentInvestors(); // Перезагружаем список
                 resetAddInvestorForm();
+                updateStartupFinancials(data.new_amount_raised, data.new_investor_count);
             } else {
                 alert(data.error || 'Ошибка при добавлении инвестора.');
             }
@@ -807,19 +808,54 @@ document.addEventListener('DOMContentLoaded', function () {
                     method: 'POST',
                     headers: { 'X-CSRFToken': getCookie('csrftoken') },
                 })
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        return response.text().then(text => { throw new Error(text) });
+                    }
+                    return response.json();
+                })
                 .then(data => {
                     if (data.success) {
                         alert('Инвестиция удалена.');
                         loadCurrentInvestors();
+                        updateStartupFinancials(data.new_amount_raised, data.new_investor_count);
                     } else {
                         alert(data.error || 'Ошибка при удалении.');
                     }
                 })
-                .catch(error => console.error('Ошибка:', error));
+                .catch(error => {
+                    console.error('Ошибка при удалении инвестиции:', error);
+                    alert('Произошла ошибка при удалении.');
+                });
             }
         }
     });
+    
+    function updateStartupFinancials(newAmount, newCount) {
+        const pageData = document.querySelector('.startup-detail-page');
+        const fundingGoal = parseFloat(pageData.dataset.fundingGoal) || 0;
+    
+        const newProgress = (fundingGoal > 0) ? Math.min((newAmount / fundingGoal) * 100, 100) : 0;
+    
+        const amountRaisedCard = document.querySelector('.info-card-value-button.accent-blue-bg');
+        if (amountRaisedCard) {
+            amountRaisedCard.textContent = `${new Intl.NumberFormat('ru-RU').format(Math.floor(newAmount))} ₽`;
+        }
+    
+        const progressBar = document.querySelector('.progress-animation-container');
+        if (progressBar) {
+            progressBar.style.width = `${newProgress}%`;
+        }
+        const progressText = document.querySelector('.progress-percentage');
+        if (progressText) {
+            progressText.textContent = `${Math.floor(newProgress)}%`;
+        }
+    
+        const investorCountSpan = document.querySelector('.progress-backers-info span');
+        if (investorCountSpan) {
+            investorCountSpan.textContent = `(${newCount})`;
+        }
+    }
     
     // Первоначальная загрузка списка при открытии модального окна
     addInvestorModalEl.addEventListener('show.bs.modal', function () {
