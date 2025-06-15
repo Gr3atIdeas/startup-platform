@@ -69,66 +69,63 @@
     </div>
 
     <div class="sticky-sections-wrapper">
-      <div class="featured4">
-        <div class="frame-parent3">
-          <div class="parent6">
-            <div class="div23">
-              <span class="txt">
-                <span>Инвесторы, </span>
-                <span class="span3">найдите свою звезду!</span>
-              </span>
-            </div>
-            <div class="group-parent">
-              <div class="group-div">
-                <div class="card-icon-container">
-                  <img
-                    class="card-icon"
-                    src="/static/accounts/images/main_page/planet_4th_main.webp"
-                    alt="Доступ к проверенным стартапам"
-                  />
-                </div>
-                <div class="wrapper">
-                  <div class="div24">Доступ к проверенным стартапам</div>
+      <div class="featured-investors">
+        <div class="featured-investors__content">
+          <h2 class="featured-investors__title">
+            <span class="featured-investors__title--blue">Инвесторы, </span>
+            <span class="featured-investors__title--black"
+              >найдите свою звезду!</span
+            >
+          </h2>
+          <div class="featured-investors__features">
+            <div class="featured-investors__feature-item">
+              <div class="featured-investors__feature-card">
+                <div class="featured-investors__feature-text">
+                  Доступ к проверенным стартапам
                 </div>
               </div>
-              <div class="group-div">
-                <div class="card-icon-container">
-                  <img
-                    class="card-icon"
-                    src="/static/accounts/images/main_page/case_main_4th.webp"
-                    alt="Диверсификация портфеля"
-                  />
-                </div>
-                <div class="wrapper">
-                  <div class="div25">Диверсификация портфеля</div>
-                </div>
-              </div>
-              <div class="frame-parent5 group-div">
-                <div class="card-icon-container">
-                  <img
-                    class="card-icon"
-                    src="/static/accounts/images/main_page/rocket_main_4th.webp"
-                    alt="Удобная аналитика"
-                  />
-                </div>
-                <div class="wrapper1">
-                  <div class="div26">
-                    Удобная аналитика и фильтры для выбора проектов
-                  </div>
-                </div>
-              </div>
-            </div>
-            <a href="#" class="btn btn--yellow-gradient">
-              <span>Посмотреть стартапы</span>
               <img
-                class="icon"
-                alt="Eye"
-                src="/static/accounts/images/main_page/button_eye.svg"
+                class="featured-investors__feature-separator"
+                src="/static/accounts/images/main_page/planet_4th_main.webp"
+                alt="Иконка планеты"
               />
-            </a>
+            </div>
+            <div class="featured-investors__feature-item">
+              <div class="featured-investors__feature-card">
+                <div class="featured-investors__feature-text">
+                  Диверсификация портфеля
+                </div>
+              </div>
+              <img
+                class="featured-investors__feature-separator"
+                src="/static/accounts/images/main_page/case_main_4th.webp"
+                alt="Иконка кейса"
+              />
+            </div>
+            <div class="featured-investors__feature-item">
+              <div class="featured-investors__feature-card">
+                <div class="featured-investors__feature-text">
+                  Удобная аналитика и фильтры для выбора проектов
+                </div>
+              </div>
+              <img
+                class="featured-investors__feature-separator"
+                src="/static/accounts/images/main_page/rocket_main_4th.webp"
+                alt="Иконка ракеты"
+              />
+            </div>
           </div>
+          <a href="#" class="btn btn-yellow-gradient">
+            <span>Посмотреть стартапы</span>
+            <div class="btn__icon-eye">
+              <div class="btn__icon-eye-outline"></div>
+              <div class="btn__icon-eye-pupil"></div>
+            </div>
+          </a>
+        </div>
+        <div class="featured-investors__background">
           <img
-            class="icon10"
+            class="featured-investors__bg-img"
             alt="Инвесторы находят звезду"
             src="/static/accounts/images/main_page/4th_block_main_background.webp"
           />
@@ -509,7 +506,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 import FAQ from './FAQ.vue'
 
 const sliderValue = ref(50)
@@ -534,14 +531,14 @@ onMounted(() => {
 }
 
 @font-face {
-  font-family: 'Unbounded';
+  font-family: Unbounded;
   src: url('/static/accounts/fonts/Unbounded-VariableFont_wght.ttf')
     format('truetype');
   font-weight: 300 900;
 }
 
 .investor-main-page {
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   width: 1440px;
   margin: 0 auto;
   overflow: hidden;
@@ -562,12 +559,12 @@ onMounted(() => {
     height: 708px;
     position: relative;
     background: linear-gradient(180deg, black 0%, #004e9f 100%);
-    box-shadow: 0px 10px 23px 5px rgba(0, 0, 0, 0.18);
+    box-shadow: 0 10px 23px 5px rgb(0 0 0 / 18%);
     overflow: hidden;
     border-radius: 10px;
-    outline: 1px solid rgba(255, 255, 255, 0.36);
+    outline: 1px solid rgb(255 255 255 / 36%);
     outline-offset: -1px;
-    background-image: url(https://placehold.co/1303x708);
+    background-image: url('https://placehold.co/1303x708');
 
     .planet-background {
       .orbit {
@@ -577,18 +574,21 @@ onMounted(() => {
         filter: blur(1.5px);
         box-shadow: 3px 3px 3px;
       }
+
       .orbit-1 {
         width: 668.19px;
         height: 203.34px;
         left: 305.43px;
         top: 240.74px;
       }
+
       .orbit-2 {
         width: 681.99px;
         height: 214.13px;
         left: 298.83px;
         top: 235.34px;
       }
+
       .orbit-3 {
         width: 832.9px;
         height: 263.35px;
@@ -597,6 +597,7 @@ onMounted(() => {
         box-shadow: 4px 4px 4px;
         filter: blur(2px);
       }
+
       .orbit-4 {
         width: 850.1px;
         height: 277.34px;
@@ -605,12 +606,14 @@ onMounted(() => {
         box-shadow: 4px 4px 4px;
         filter: blur(2px);
       }
+
       .orbit-5 {
         width: 1012.59px;
         height: 325.53px;
         left: 133px;
         top: 179.47px;
       }
+
       .orbit-6 {
         width: 1033.49px;
         height: 342.81px;
@@ -638,6 +641,7 @@ onMounted(() => {
         position: absolute;
         background: black;
       }
+
       .placeholder-black-2 {
         width: 97.87px;
         height: 95.9px;
@@ -646,6 +650,7 @@ onMounted(() => {
         position: absolute;
         background: black;
       }
+
       .main-planet {
         width: 97.41px;
         height: 95.46px;
@@ -670,9 +675,10 @@ onMounted(() => {
         justify-content: center;
         color: black;
         font-size: 16px;
-        font-family: 'Unbounded';
+        font-family: Unbounded, sans-serif;
         font-weight: 400;
         line-height: 16px;
+
         p {
           word-wrap: break-word;
         }
@@ -691,11 +697,13 @@ onMounted(() => {
           justify-content: center;
           align-items: center;
           gap: 8px;
+
           .arrow-icon-container {
             width: 32px;
             height: 32px;
             position: relative;
             overflow: hidden;
+
             .arrow-icon {
               width: 8.78px;
               height: 14.89px;
@@ -706,12 +714,14 @@ onMounted(() => {
             }
           }
         }
+
         .arrow-button-left {
           left: 403.17px;
           top: 626.17px;
           transform: rotate(180deg);
           transform-origin: top left;
         }
+
         .arrow-button-right {
           left: 900px;
           top: 595px;
@@ -732,15 +742,17 @@ onMounted(() => {
           gap: 10px;
           color: white;
           font-size: 12px;
-          font-family: 'Unbounded';
+          font-family: Unbounded, sans-serif;
           font-weight: 300;
           letter-spacing: 0.12px;
           word-wrap: break-word;
           text-align: center;
         }
+
         [class^='category-img-'] {
           position: absolute;
         }
+
         .category-img-1 {
           width: 135.43px;
           height: 64.5px;
@@ -748,12 +760,14 @@ onMounted(() => {
           top: 579.4px;
           border-radius: 9999px;
         }
+
         .category-img-2 {
           width: 86.74px;
           height: 64.92px;
           left: 665.38px;
           top: 579px;
         }
+
         // ... more images
       }
 
@@ -764,6 +778,7 @@ onMounted(() => {
         top: 619px;
         position: absolute;
         overflow: hidden;
+
         .target-circle-1 {
           width: 46.5px;
           height: 46.5px;
@@ -773,6 +788,7 @@ onMounted(() => {
           outline: 1px white solid;
           outline-offset: -0.5px;
         }
+
         .target-circle-2 {
           width: 23.25px;
           height: 23.25px;
@@ -798,97 +814,175 @@ onMounted(() => {
   margin-bottom: 45px;
 }
 
-.featured4 {
-  width: 100%;
-  max-width: 1303px;
+.featured-investors {
+  width: 1303px;
   height: 521px;
   position: relative;
-  box-sizing: border-box;
   background: white;
   border-radius: 10px;
   overflow: hidden;
 }
 
-.frame-parent3 {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-}
-
-.parent6 {
-  flex-shrink: 0;
-  display: flex;
+.featured-investors__content {
+  position: absolute;
+  left: 92px;
+  top: 55px;
+  display: inline-flex;
   flex-direction: column;
+  justify-content: flex-start;
   align-items: flex-start;
-  gap: 30px;
+  gap: 27px;
   z-index: 2;
-  padding-left: 92px;
-  box-sizing: border-box;
 }
 
-.div23 .txt {
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 600;
+.featured-investors__title {
+  width: 375px;
   font-size: 35px;
-  line-height: 1.1;
+  font-family: Unbounded, sans-serif;
+  font-weight: 600;
+  line-height: 35px;
+  word-wrap: break-word;
 }
-.div23 .txt > span:first-child {
+
+.featured-investors__title--blue {
   color: #004e9f;
 }
-.div23 .txt .span3 {
-  color: #000000;
+
+.featured-investors__title--black {
+  color: black;
 }
 
-.group-parent {
+.featured-investors__features {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-end;
+  gap: 15px;
+}
+
+.featured-investors__feature-item {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 15px;
+  align-items: center;
+  position: relative;
+
+  &:not(:last-child) {
+    margin-right: 15px;
+  }
 }
 
-.group-div {
-  width: 375px;
-  background: #f2f2f2;
+.featured-investors__feature-card {
+  width: 187px;
+  height: 181px;
+  position: relative;
+  background: linear-gradient(180deg, #004e9f 0%, #001c39 100%);
+  overflow: hidden;
   border-radius: 10px;
   display: flex;
+  justify-content: center;
   align-items: center;
-  padding: 10px;
-  gap: 15px;
+  padding: 15px;
   box-sizing: border-box;
 }
 
-.group-div .card-icon-container {
-  flex-shrink: 0;
-  width: 125px;
-  height: 96px;
-}
-
-.group-div .card-icon {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 4px;
-}
-
-.group-div .div24,
-.group-div .div25,
-.group-div .div26 {
-  color: #000;
+.featured-investors__feature-text {
+  width: 159px;
+  text-align: center;
+  color: white;
   font-size: 14px;
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-weight: 400;
-  line-height: 1.3;
+  line-height: 18px;
+  word-wrap: break-word;
 }
 
-.icon10 {
+.featured-investors__feature-separator {
   position: absolute;
-  right: 0;
-  top: 0;
-  height: 100%;
+  bottom: -5px; /* Adjust as needed */
+  transform: translateX(120%);
+  height: auto;
+}
+
+.featured-investors__feature-item:nth-child(1)
+  .featured-investors__feature-separator {
+  width: 165px;
+}
+
+.featured-investors__feature-item:nth-child(2)
+  .featured-investors__feature-separator {
+  width: 165px;
+}
+
+.featured-investors__feature-item:nth-child(3)
+  .featured-investors__feature-separator {
+  width: 129px;
+  transform: translateX(110%);
+}
+
+.featured-investors__background {
+  width: 771px;
+  height: 553px;
+  left: 712px;
+  top: -16px;
+  position: absolute;
+  overflow: hidden;
   z-index: 1;
+}
+
+.featured-investors__bg-img {
+  width: 770.17px;
+  height: 552.4px;
+  left: 0;
+  top: 0;
+  position: absolute;
+}
+
+.btn {
+  &-yellow-gradient {
+    height: 40px;
+    padding: 12px 25px;
+    background: linear-gradient(180deg, #ffef2b 0%, #f9f7d6 100%);
+    border-radius: 10px;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 9px;
+    display: inline-flex;
+    color: black;
+    font-size: 16px;
+    font-family: Unbounded, sans-serif;
+    font-weight: 400;
+    line-height: 16px;
+    word-wrap: break-word;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  &__icon-eye {
+    width: 24px;
+    height: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  &__icon-eye-outline {
+    width: 20px;
+    height: 14px;
+    left: 2px;
+    top: 5px;
+    position: absolute;
+    outline: 2px black solid;
+    outline-offset: -1px;
+  }
+
+  &__icon-eye-pupil {
+    width: 6px;
+    height: 6px;
+    left: 9px;
+    top: 9px;
+    position: absolute;
+    outline: 2px black solid;
+    outline-offset: -1px;
+  }
 }
 
 .explore-worlds-section {
@@ -915,15 +1009,17 @@ onMounted(() => {
 
       .title-explore,
       .title-new-worlds {
-        font-family: 'Blippo-Black CY [Rus by me]';
+        font-family: 'Blippo-Black CY [Rus by me]', sans-serif;
         font-size: 55px;
         font-weight: 400;
         line-height: 55px;
         word-wrap: break-word;
       }
+
       .title-explore {
         color: white;
       }
+
       .title-new-worlds {
         color: #ffef2b;
         text-transform: uppercase;
@@ -949,7 +1045,7 @@ onMounted(() => {
           position: relative;
           overflow: hidden;
           border-radius: 20px;
-          background-image: url(https://placehold.co/593x497);
+          background-image: url('https://placehold.co/593x497');
 
           .found-startups {
             width: 267px;
@@ -958,7 +1054,7 @@ onMounted(() => {
             left: 163.5px;
             top: 52px;
             position: absolute;
-            background: rgba(43, 251.47, 255, 0.4);
+            background: rgb(43 251 255 / 40%);
             border-radius: 10px;
             outline: 1px #2bedff solid;
             backdrop-filter: blur(2px);
@@ -967,10 +1063,11 @@ onMounted(() => {
             align-items: center;
             color: white;
             font-size: 14px;
-            font-family: 'Unbounded';
+            font-family: Unbounded, sans-serif;
             font-weight: 400;
             line-height: 14px;
             word-wrap: break-word;
+
             .startup-count {
               color: #ffef2b;
               margin: 0 5px;
@@ -989,10 +1086,11 @@ onMounted(() => {
             gap: 10px;
             align-items: center;
             font-size: 16px;
-            font-family: 'Unbounded';
+            font-family: Unbounded, sans-serif;
             font-weight: 400;
             line-height: 16px;
-            color: rgba(242, 242, 242, 0.52);
+            color: rgb(242 242 242 / 52%);
+
             .status-indicator {
               width: 11px;
               height: 11px;
@@ -1038,7 +1136,7 @@ onMounted(() => {
                 width: 167px;
                 color: #fcfcfd;
                 font-size: 16px;
-                font-family: 'Unbounded';
+                font-family: Unbounded, sans-serif;
                 font-weight: 400;
                 line-height: 16px;
               }
@@ -1054,6 +1152,7 @@ onMounted(() => {
                   border-radius: 36px;
                   overflow: hidden;
                   background: #9757d7;
+
                   img {
                     width: 24px;
                     height: 36px;
@@ -1068,7 +1167,7 @@ onMounted(() => {
                   outline: 2px solid #ffef2b;
                   color: #ffef2b;
                   font-size: 12px;
-                  font-family: 'Unbounded';
+                  font-family: Unbounded, sans-serif;
                   font-weight: 500;
                   text-transform: uppercase;
                 }
@@ -1079,7 +1178,7 @@ onMounted(() => {
               width: 175px;
               color: #e6e8ec;
               font-size: 8px;
-              font-family: 'Unbounded';
+              font-family: Unbounded, sans-serif;
               font-weight: 300;
               line-height: 9px;
             }
@@ -1090,7 +1189,7 @@ onMounted(() => {
       .divider {
         width: 1px;
         height: 566px;
-        background: rgba(255, 255, 255, 0.13);
+        background: rgb(255 255 255 / 13%);
       }
 
       .updates-panel {
@@ -1101,7 +1200,7 @@ onMounted(() => {
         .updates-title {
           color: #777e90;
           font-size: 12px;
-          font-family: 'Poppins', sans-serif;
+          font-family: Poppins, sans-serif;
           font-weight: 600;
           line-height: 20px;
         }
@@ -1136,6 +1235,7 @@ onMounted(() => {
                   border-radius: 48px;
                   background: #9757d7;
                   overflow: hidden;
+
                   img {
                     width: 56px;
                     height: 83.99px;
@@ -1143,6 +1243,7 @@ onMounted(() => {
                     top: -15.17px;
                   }
                 }
+
                 .updater-rank {
                   position: absolute;
                   top: -4px;
@@ -1153,7 +1254,7 @@ onMounted(() => {
                   padding: 2px 8px;
                   color: #23262f;
                   font-size: 12px;
-                  font-family: 'Poppins', sans-serif;
+                  font-family: Poppins, sans-serif;
                   font-weight: 600;
                 }
               }
@@ -1167,15 +1268,17 @@ onMounted(() => {
                 .updater-name {
                   color: #fcfcfd;
                   font-size: 14px;
-                  font-family: 'Unbounded';
+                  font-family: Unbounded, sans-serif;
                   font-weight: 300;
                   line-height: 18px;
                 }
+
                 .updater-rating {
                   font-size: 12px;
-                  font-family: 'Unbounded';
+                  font-family: Unbounded, sans-serif;
                   font-weight: 300;
                   color: #777e90;
+
                   span {
                     color: #e6e8ec;
                     font-size: 14px;
@@ -1183,10 +1286,11 @@ onMounted(() => {
                 }
               }
             }
+
             .item-divider {
               align-self: stretch;
               height: 1px;
-              background: rgba(255, 255, 255, 0.13);
+              background: rgb(255 255 255 / 13%);
             }
           }
         }
@@ -1206,14 +1310,16 @@ onMounted(() => {
 
   .title-chat,
   .title-startups {
-    font-family: 'Blippo-Black CY [Rus by me]';
+    font-family: 'Blippo-Black CY [Rus by me]', sans-serif;
     font-size: 55px;
     font-weight: 400;
     line-height: 18px;
   }
+
   .title-chat {
     color: white;
   }
+
   .title-startups {
     color: #ffef2b;
   }
@@ -1238,10 +1344,10 @@ onMounted(() => {
       align-self: stretch;
       height: 560px;
       position: relative;
-      box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.25);
+      box-shadow: 6px 6px 10px rgb(0 0 0 / 25%);
       overflow: hidden;
       border-radius: 10px;
-      background-image: url(https://placehold.co/1303x560);
+      background-image: url('https://placehold.co/1303x560');
 
       .empty-chat-text {
         width: 869px;
@@ -1251,7 +1357,7 @@ onMounted(() => {
         text-align: center;
         color: white;
         font-size: 35px;
-        font-family: 'Unbounded';
+        font-family: Unbounded, sans-serif;
         font-weight: 600;
         line-height: 35px;
       }
@@ -1264,6 +1370,7 @@ onMounted(() => {
         position: absolute;
         overflow: hidden;
         background: black;
+
         img {
           width: 371.89px;
           height: 278.66px;
@@ -1286,14 +1393,15 @@ onMounted(() => {
       .start-journey-title {
         color: white;
         font-size: 35px;
-        font-family: 'Unbounded';
+        font-family: Unbounded, sans-serif;
         font-weight: 600;
         line-height: 35px;
       }
+
       .start-journey-subtitle {
         color: white;
         font-size: 20px;
-        font-family: 'Unbounded';
+        font-family: Unbounded, sans-serif;
         font-weight: 400;
         line-height: 18px;
       }
@@ -1304,6 +1412,7 @@ onMounted(() => {
         justify-content: flex-start;
         align-items: center;
         gap: 45px;
+
         .category-item {
           width: 179px;
           display: inline-flex;
@@ -1312,7 +1421,7 @@ onMounted(() => {
           gap: 11px;
           color: white;
           font-size: 16px;
-          font-family: 'Unbounded';
+          font-family: Unbounded, sans-serif;
           font-weight: 400;
           line-height: 16px;
 
@@ -1325,6 +1434,7 @@ onMounted(() => {
           &.selected {
             font-size: 20px;
             line-height: 18px;
+
             img {
               border: 2px #ffef2b solid;
             }
@@ -1353,16 +1463,19 @@ onMounted(() => {
     .news-title-section {
       display: flex;
       flex-direction: column;
+
       .news-title-cosmo,
       .news-title-news {
-        font-family: 'Blippo-Black CY [Rus by me]';
+        font-family: 'Blippo-Black CY [Rus by me]', sans-serif;
         font-size: 55px;
         font-weight: 400;
         line-height: 18px;
       }
+
       .news-title-cosmo {
         color: white;
       }
+
       .news-title-news {
         color: #ffef2b;
       }
@@ -1372,10 +1485,11 @@ onMounted(() => {
       width: 364px;
       color: #f2f2f2;
       font-size: 20px;
-      font-family: 'Unbounded';
+      font-family: Unbounded, sans-serif;
       font-weight: 400;
       line-height: 18px;
     }
+
     .news-card {
       width: 403px;
       height: 212px;
@@ -1406,7 +1520,7 @@ onMounted(() => {
           flex: 1 1 0;
           color: black;
           font-size: 14px;
-          font-family: 'Unbounded';
+          font-family: Unbounded, sans-serif;
           font-weight: 300;
           line-height: 18px;
         }
@@ -1422,7 +1536,6 @@ onMounted(() => {
   align-items: center;
   gap: 20px;
   flex-wrap: wrap;
-  align-content: center;
   padding: 20px;
 }
 
@@ -1436,7 +1549,7 @@ onMounted(() => {
 
 .startup-card-item {
   width: 412px;
-  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+  box-shadow: 2px 2px 4px rgb(0 0 0 / 25%);
   display: flex;
   flex-direction: column;
 }
@@ -1495,15 +1608,15 @@ onMounted(() => {
 .author-name {
   color: black;
   font-size: 16px;
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-weight: 400;
   line-height: 16px;
 }
 
 .post-date {
-  color: rgba(0, 0, 0, 0.2);
+  color: rgb(0 0 0 / 20%);
   font-size: 14px;
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-weight: 300;
   line-height: 18px;
 }
@@ -1519,16 +1632,16 @@ onMounted(() => {
   align-self: stretch;
   color: black;
   font-size: 16px;
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-weight: 400;
   line-height: 16px;
 }
 
 .startup-summary {
   align-self: stretch;
-  color: rgba(0, 0, 0, 0.2);
+  color: rgb(0 0 0 / 20%);
   font-size: 12px;
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-weight: 300;
   letter-spacing: 0.12px;
 }
@@ -1556,7 +1669,7 @@ onMounted(() => {
 .show-more-btn {
   height: 40px;
   padding: 12px 35px;
-  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+  box-shadow: 2px 2px 4px rgb(0 0 0 / 25%);
   border-radius: 10px;
   outline: 1px white solid;
   outline-offset: -1px;
@@ -1566,7 +1679,7 @@ onMounted(() => {
   gap: 9px;
   color: #f5f5f5;
   font-size: 16px;
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-weight: 400;
   line-height: 16px;
   background: transparent;
@@ -1609,8 +1722,8 @@ onMounted(() => {
   height: 521px;
   position: relative;
   background:
-    linear-gradient(270deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.76) 100%),
-    url(https://placehold.co/1303x521);
+    linear-gradient(270deg, rgb(0 0 0 / 0%) 0%, rgb(0 0 0 / 76%) 100%),
+    url('https://placehold.co/1303x521');
   overflow: hidden;
   border-radius: 10px;
 }
@@ -1619,7 +1732,7 @@ onMounted(() => {
   width: 563px;
   height: 997.26px;
   left: 617px;
-  top: 0px;
+  top: 0;
   position: absolute;
 }
 
@@ -1635,8 +1748,8 @@ onMounted(() => {
 .phone-mockup-img {
   width: 407px;
   height: 878px;
-  left: 0px;
-  top: 0px;
+  left: 0;
+  top: 0;
   position: absolute;
   box-shadow: 4px 4px 4px;
   border-radius: 38px;
@@ -1666,7 +1779,7 @@ onMounted(() => {
 
 .notification-item-1 {
   align-self: stretch;
-  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+  box-shadow: 2px 2px 4px rgb(0 0 0 / 25%);
 }
 
 .notification-bubble-1,
@@ -1676,7 +1789,7 @@ onMounted(() => {
   border-radius: 18px;
   color: white;
   font-size: 14px;
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-weight: 300;
   line-height: 18px;
   transform: rotate(180deg);
@@ -1695,6 +1808,7 @@ onMounted(() => {
   height: 20px;
   position: relative;
 }
+
 .tail-shape-1,
 .tail-shape-2,
 .tail-shape-3 {
@@ -1706,12 +1820,15 @@ onMounted(() => {
   transform: rotate(180deg);
   transform-origin: top left;
 }
+
 .tail-shape-1 {
   background: #7b61ff;
 }
+
 .tail-shape-2 {
   background: #468cf7;
 }
+
 .tail-shape-3 {
   background: #004e9f;
 }
@@ -1726,7 +1843,7 @@ onMounted(() => {
   align-items: center;
   gap: 10px;
   font-size: 14px;
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-weight: 300;
   line-height: 18px;
   transform: rotate(180deg);
@@ -1794,7 +1911,7 @@ onMounted(() => {
   width: 543px;
   color: white;
   font-size: 35px;
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-weight: 600;
   line-height: 35px;
 }
@@ -1803,7 +1920,7 @@ onMounted(() => {
   width: 402px;
   color: white;
   font-size: 14px;
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-weight: 300;
   line-height: 18px;
 }
@@ -1839,7 +1956,7 @@ onMounted(() => {
   align-self: stretch;
   color: white;
   font-size: 35px;
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-weight: 600;
   line-height: 35px;
 }
@@ -1848,7 +1965,7 @@ onMounted(() => {
   align-self: stretch;
   color: white;
   font-size: 16px;
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-weight: 400;
   line-height: 16px;
 }
@@ -1857,7 +1974,7 @@ onMounted(() => {
   width: 724px;
   height: 521px;
   position: relative;
-  background: black url(https://placehold.co/724x521);
+  background: black url('https://placehold.co/724x521');
   overflow: hidden;
   border-radius: 10px;
 }
@@ -1891,6 +2008,7 @@ onMounted(() => {
   overflow: hidden;
   background: black;
 }
+
 .industry-change-img-2 {
   width: 252.46px;
   height: 189.6px;
@@ -1911,7 +2029,7 @@ onMounted(() => {
   align-self: stretch;
   color: white;
   font-size: 35px;
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-weight: 600;
   line-height: 35px;
 }
@@ -1920,7 +2038,7 @@ onMounted(() => {
   width: 486px;
   color: white;
   font-size: 16px;
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-weight: 400;
   line-height: 16px;
 }
@@ -1962,15 +2080,18 @@ onMounted(() => {
   gap: 8px;
   transition: all 0.3s ease;
 }
+
 .sticky-sections-wrapper .btn--yellow-gradient,
 .sticky-sections-wrapper .btn--yellow-gradient:visited {
   background: linear-gradient(180deg, #ffef2b 0%, #f9f7d6 100%) !important;
   border: none !important;
-  color: #000000 !important;
+  color: #000 !important;
 }
+
 .sticky-sections-wrapper .btn--yellow-gradient span {
-  color: #000000 !important;
+  color: #000 !important;
 }
+
 .sticky-sections-wrapper .btn--yellow-gradient .icon {
   filter: brightness(0) invert(0);
 }
@@ -1978,6 +2099,7 @@ onMounted(() => {
 /* --- Section 4: featured4 --- */
 .sticky-sections-wrapper .featured4 {
   width: 100%;
+
   /* max-width: 1303px;  This is handled by the wrapper's padding */
   height: 521px;
   position: relative;
@@ -1988,12 +2110,6 @@ onMounted(() => {
   width: 100%;
   height: 100%;
   position: relative;
-  background: white;
-  border-radius: 10px;
-  overflow: hidden;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
 }
 
 .sticky-sections-wrapper .featured4 .parent6 {
@@ -2008,16 +2124,18 @@ onMounted(() => {
 }
 
 .sticky-sections-wrapper .featured4 .parent6 .div23 .txt {
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-weight: 600;
   font-size: 35px;
   line-height: 1.1;
 }
+
 .sticky-sections-wrapper .featured4 .parent6 .div23 .txt > span:first-child {
   color: #004e9f;
 }
+
 .sticky-sections-wrapper .featured4 .parent6 .div23 .txt .span3 {
-  color: #000000;
+  color: #000;
 }
 
 .sticky-sections-wrapper .featured4 .group-parent {
@@ -2056,7 +2174,7 @@ onMounted(() => {
 .sticky-sections-wrapper .featured4 .div26 {
   color: #000;
   font-size: 14px;
-  font-family: 'Unbounded', sans-serif;
+  font-family: Unbounded, sans-serif;
   font-weight: 400;
   line-height: 1.3;
 }

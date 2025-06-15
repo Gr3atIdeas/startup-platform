@@ -7,6 +7,12 @@
     }
   ],
   "rules": {
+    "selector-class-pattern": [
+      "^[a-z0-9]+(?:-[a-z0-9]+)*(__[a-z0-9]+(?:-[a-z0-9]+)*)?(--[a-z0-9]+(?:-[a-z0-9]+)*)?$",
+      {
+        "message": "Selector should be in BEM format (e.g. block-name__element-name--modifier-name)"
+      }
+    ],
     "scss/at-rule-no-unknown": [
       true,
       {
