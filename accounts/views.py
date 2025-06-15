@@ -2970,14 +2970,15 @@ def get_investors(request, startup_id):
         "investor"
     )
 
-    investor_list = [
-        {
-            "user_id": tx.investor.user_id,
-            "name": tx.investor.get_full_name() or tx.investor.email,
-            "amount": float(tx.amount),
-        }
-        for tx in investors
-    ]
+    investor_list = []
+    for tx in investors:
+        if tx.investor:  # <-- Проверяем, что инвестор существует
+            investor_list.append({
+                "user_id": tx.investor.user_id,
+                "name": tx.investor.get_full_name() or tx.investor.email,
+                "amount": float(tx.amount),
+            })
+
     return JsonResponse({"investors": investor_list})
 
 

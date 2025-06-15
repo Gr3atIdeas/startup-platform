@@ -761,7 +761,15 @@ document.addEventListener('DOMContentLoaded', function () {
     // Загрузка и отображение текущих инвесторов
     function loadCurrentInvestors() {
         fetch(`/get_investors/${startupId}/`)
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                // Если статус ошибки, читаем как текст, чтобы увидеть HTML-ошибку
+                return response.text().then(text => { 
+                    throw new Error(`Ошибка сервера: ${response.status}. Ответ: ${text}`);
+                });
+            }
+            return response.json(); // Если все ок, парсим как JSON
+        })
         .then(data => {
             const investorsList = document.getElementById('currentInvestorsList');
             investorsList.innerHTML = '';
@@ -783,7 +791,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 investorsList.appendChild(div);
             });
         })
-        .catch(error => console.error('Ошибка загрузки инвесторов:', error));
+        .catch(error => {
+            const investorsList = document.getElementById('currentInvestorsList');
+            investorsList.innerHTML = '<p class="text-danger">Не удалось загрузить список инвесторов.</p>';
+            console.error('Ошибка загрузки инвесторов:', error)
+        });
     }
     
     // Обработка кликов на удаление (делегирование событий)
@@ -835,6 +847,51 @@ document.addEventListener('DOMContentLoaded', function () {
       if(reportModal) {
         reportModal.hide();
       }
+    });
+  }
+
+  // --- 4. Кнопка "Чат" ---
+  const chatButton = document.querySelector('.chat-button');
+  if(chatButton && isUserAuthenticated) {
+    chatButton.addEventListener('click', function() {
+        const ownerId = pageDataElement.dataset.ownerId;
+        if (!ownerId) {
+            alert('Не удалось определить владельца стартапа.');
+            return;
+        }
+
+        this.textContent = 'Создание чата...';
+        this.disabled = true;
+
+        fetch(`/start_chat/${ownerId}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Перенаправляем пользователя в космочат, сразу открыв нужный диалог
+                window.location.href = `/cosmochat/?chat_id=${data.chat_id || data.chat.conversation_id}`;
+            } else {
+                alert(data.error || 'Не удалось создать или найти чат.');
+                this.textContent = 'Чат';
+                this.disabled = false;
+            }
+        })
+        .catch(error => {
+            console.error('Ошибка при создании чата:', error);
+            alert('Сетевая ошибка. Не удалось создать чат.');
+            this.textContent = 'Чат';
+            this.disabled = false;
+        });
+    });
+  } else if (chatButton && !isUserAuthenticated) {
+    // Если пользователь не авторизован, можно перенаправить его на страницу входа
+    chatButton.addEventListener('click', function() {
+        window.location.href = '/login/';
     });
   }
 })
