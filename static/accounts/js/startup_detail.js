@@ -815,33 +815,45 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
     
-    function updateStartupFinancials(newAmount, newCount) {
-        const pageData = document.querySelector('.startup-detail-page');
-        const fundingGoalString = (pageData.dataset.fundingGoal || '0').replace(/\s/g, '').replace(',', '.');
-        const fundingGoal = parseFloat(fundingGoalString);
-    
-        const newProgress = (fundingGoal > 0) ? Math.min((newAmount / fundingGoal) * 100, 100) : 0;
-    
+    // --- Универсальная функция для обновления финансовых показателей ---
+    function updateStartupFinancials(investorCount, amountRaised) {
+        console.log('Updating financials:', { investorCount, amountRaised });
+
+        // Обновляем счетчик инвесторов под прогресс-баром
+        const investorCountDisplay = document.getElementById('investor-count-display');
+        if (investorCountDisplay) {
+            investorCountDisplay.textContent = `(${investorCount})`;
+        } else {
+            console.error('Element with id "investor-count-display" not found.');
+        }
+
+        // Обновляем общую собранную сумму в информационной карточке
+        // Ищем по классу, так как id был удален
         const amountRaisedCard = document.querySelector('.info-card-value-button.accent-blue-bg');
         if (amountRaisedCard) {
-            amountRaisedCard.textContent = `${new Intl.NumberFormat('ru-RU').format(Math.floor(newAmount))} ₽`;
+            amountRaisedCard.textContent = `${new Intl.NumberFormat('ru-RU').format(Math.floor(amountRaised))} ₽`;
         }
-    
+
+        // Обновляем прогресс-бар
+        const fundingGoal = parseFloat(pageDataElement.dataset.fundingGoal) || 0;
+        const progressPercentage = fundingGoal > 0 ? (amountRaised / fundingGoal) * 100 : 0;
+        
         const progressBar = document.querySelector('.progress-animation-container');
-        if (progressBar) {
-            progressBar.style.width = `${newProgress}%`;
-        }
         const progressText = document.querySelector('.progress-percentage');
-        if (progressText) {
-            progressText.textContent = `${Math.floor(newProgress)}%`;
+
+        if (progressBar) {
+            progressBar.style.width = `${Math.min(progressPercentage, 100)}%`;
         }
-    
-        const investorCountSpan = document.getElementById('investor-count-display');
-        if (investorCountSpan) {
-            investorCountSpan.textContent = `(${newCount})`;
+        if (progressText) {
+            progressText.textContent = `${Math.floor(progressPercentage)}%`;
         }
     }
     
+    // Загрузка и отображение инвесторов в модальном окне
+    async function loadInvestors() {
+        // ... existing code ...
+    }
+
     // Первоначальная загрузка списка при открытии модального окна
     addInvestorModalEl.addEventListener('show.bs.modal', function () {
         loadCurrentInvestors();
