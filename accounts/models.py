@@ -584,9 +584,17 @@ class Users(AbstractBaseUser):
     def check_password(self, raw_password):
         return check_password(raw_password, self.password_hash)
 
+    def get_full_name(self):
+        """
+        Возвращает полное имя пользователя (имя + фамилия).
+        """
+        return f"{self.first_name or ''} {self.last_name or ''}".strip()
+
     @property
     def password(self):
-        return self.password_hash
+        raise AttributeError(
+            "Password should not be accessed directly. Use check_password instead."
+        )
 
     @password.setter
     def password(self, value):
