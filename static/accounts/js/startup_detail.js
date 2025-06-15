@@ -927,4 +927,107 @@ document.addEventListener('DOMContentLoaded', function () {
         window.location.href = '/login/';
     });
   }
+
+  // --- Логика для "Показать еще" для длинных текстов ---
+  function setupTruncateText() {
+    const charLimit = 256;
+    const elements = document.querySelectorAll('.truncatable-text');
+
+    elements.forEach(element => {
+      const originalHTML = element.innerHTML;
+      // Используем textContent для подсчета реальной длины текста без HTML тегов
+      if (element.textContent.trim().length > charLimit) {
+        // Находим основной текстовый узел (обычно <p>)
+        const textNode = element.querySelector('p');
+        if (!textNode) return;
+
+        const fullText = textNode.innerHTML; // Сохраняем с <br> и т.д.
+        const truncatedText = fullText.substring(0, charLimit);
+
+        textNode.innerHTML = `${truncatedText}...`;
+
+        const showMoreButton = document.createElement('button');
+        showMoreButton.textContent = 'Показать еще';
+        showMoreButton.className = 'action-button show-more-text-button';
+        element.appendChild(showMoreButton);
+
+        showMoreButton.addEventListener('click', () => {
+          if (showMoreButton.textContent === 'Показать еще') {
+            textNode.innerHTML = fullText;
+            showMoreButton.textContent = 'Скрыть';
+          } else {
+            textNode.innerHTML = `${truncatedText}...`;
+            showMoreButton.textContent = 'Показать еще';
+          }
+        });
+      }
+    });
+  }
+
+  // --- Логика для кнопок "Чат" и "Написать" ---
+  function setupChatButtons() {
+    const chatButton = document.querySelector('.chat-button');
+    const writeAuthorButton = document.querySelector('.write-author-button');
+    const ownerId = pageDataElement.dataset.ownerId;
+    const userAuthenticated = pageDataElement.dataset.userAuthenticated === 'true';
+
+    if (!userAuthenticated) {
+      // Можно задизейблить кнопки или просто ничего не делать
+      if(chatButton) chatButton.disabled = true;
+      if(writeAuthorButton) writeAuthorButton.disabled = true;
+      return;
+    }
+
+    const handleChatRedirect = async () => {
+      if (!ownerId) {
+        console.error('Owner ID is not defined.');
+        // Можно показать пользователю ошибку
+        return;
+      }
+
+      try {
+        const response = await fetch(`/chats/find_or_create/${ownerId}/`, {
+          method: 'POST',
+          headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Content-Type': 'application/json'
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          if (data.chat_url) {
+            window.location.href = data.chat_url;
+          } else {
+            console.error('Chat URL not found in response');
+          }
+        } else {
+          console.error('Failed to create or find chat', response);
+          // Показать ошибку пользователю
+        }
+      } catch (error) {
+        console.error('Error initiating chat:', error);
+      }
+    };
+
+    if (chatButton) {
+      chatButton.addEventListener('click', handleChatRedirect);
+    }
+    if (writeAuthorButton) {
+      writeAuthorButton.addEventListener('click', handleChatRedirect);
+    }
+  }
+
+  // Инициализация всех функций при загрузке страницы
+  if (pageDataElement) {
+    setupRatingStars();
+    setupSimilarStartups();
+    setupTruncateText(); // Вызываем новую функцию
+    setupChatButtons(); // И эту тоже
+
+    const addInvestorModalEl = document.getElementById('addInvestorModal');
+    if (addInvestorModalEl) {
+      // ... existing code ...
+    }
+  }
 })
