@@ -621,10 +621,12 @@ document.addEventListener('DOMContentLoaded', function () {
           li.dataset.userId = user.id  // <-- Используем user.id
           li.addEventListener('click', () => {
             onSelect(user); // Передаем весь объект user
-            // Скрываем текущее модальное окно Bootstrap'ом
-            const currentModal = bootstrap.Modal.getInstance(searchModalElement);
-            if (currentModal) {
-              currentModal.hide();
+            // Для окна смены владельца закрываем, для остальных - нет
+            if (modalId === 'changeOwnerModal') {
+                const currentModal = bootstrap.Modal.getInstance(searchModalElement);
+                if (currentModal) {
+                    currentModal.hide();
+                }
             }
           });
           searchResults.appendChild(li)

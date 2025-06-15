@@ -451,7 +451,12 @@
                     {% endif %}
                   </div>
                   <div class="comment-content-wrapper">
-                    <div class="comment-author-name">{{ comment.user_id.first_name|default:comment.user_id.email }}</div>
+                    <div class="comment-author-name">
+                      {{ comment.user_id.first_name|default:comment.user_id.email }}
+                      {% if comment.user_rating %}
+                        <span class="comment-author-rating-badge">оценил на {{ comment.user_rating }}</span>
+                      {% endif %}
+                    </div>
                     <div class="comment-body">
                       <p>{{ comment.content }}</p>
                     </div>
@@ -725,12 +730,12 @@
             <label for="investmentAmount" class="form-label">Сумма инвестиции (₽)</label>
             <input type="number" id="investmentAmount" class="form-control" placeholder="Введите сумму">
           </div>
-          <button type="button" id="addInvestmentButton" class="action-button mb-4" disabled>Добавить</button>
-
+          
           <h6>Текущие инвесторы</h6>
           <div id="currentInvestorsList"></div>
         </div>
         <div class="modal-footer">
+          <button type="button" id="addInvestmentButton" class="action-button" disabled>Добавить</button>
           <button type="button" class="action-button" data-bs-dismiss="modal">Закрыть</button>
         </div>
       </div>

@@ -269,8 +269,40 @@ def startup_detail(request, startup_id):
         )
     except Startups.DoesNotExist:
         return get_object_or_404(Startups, startup_id=startup_id)
+    
+    if request.method == "POST":
+        if not request.user.is_authenticated:
+            return redirect('login') 
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.startup_id = startup
+            comment.user_id = request.user
+            # Пытаемся найти голос пользователя для этого стартапа
+            user_vote = UserVotes.objects.filter(user=request.user, startup=startup).first()
+            if user_vote:
+                comment.user_rating = user_vote.rating
+            comment.save()
+            messages.success(request, "Ваш комментарий был добавлен.")
+            return redirect("startup_detail", startup_id=startup.startup_id)
+        else:
+            messages.error(request, "Ошибка при добавлении комментария.")
+    else:
+        form = CommentForm()
 
-    timeline = StartupTimeline.objects.filter(startup=startup)
+    # Аннотируем рейтинг пользователя для каждого комментария
+    comments_with_rating = Comments.objects.filter(
+        startup_id=startup, parent_comment_id__isnull=True
+    ).annotate(
+        user_rating=models.Subquery(
+            UserVotes.objects.filter(
+                startup=startup,
+                user=models.OuterRef('user_id_id')
+            ).values('rating')[:1]
+        )
+    ).order_by("-created_at")
+    
+    # Получаем средний рейтинг и количество голосов
     average_rating = (
         startup.sum_votes / startup.total_voters if startup.total_voters > 0 else 0
     )
@@ -356,7 +388,7 @@ def startup_detail(request, startup_id):
 
     context = {
         "startup": startup,
-        "comments": comments,
+        "comments": comments_with_rating, # <--- Передаем комментарии с рейтингом
         "form": form,
         "average_rating": average_rating,
         "total_votes_count": total_votes,
