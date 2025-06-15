@@ -592,9 +592,7 @@ class Users(AbstractBaseUser):
 
     @property
     def password(self):
-        raise AttributeError(
-            "Password should not be accessed directly. Use check_password instead."
-        )
+        return self.password_hash
 
     @password.setter
     def password(self, value):
