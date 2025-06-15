@@ -817,7 +817,7 @@ document.addEventListener('DOMContentLoaded', function () {
     
     function updateStartupFinancials(newAmount, newCount) {
         const pageData = document.querySelector('.startup-detail-page');
-        const fundingGoalString = (pageData.dataset.fundingGoal || '0').replace(',', '.');
+        const fundingGoalString = (pageData.dataset.fundingGoal || '0').replace(/\s/g, '').replace(',', '.');
         const fundingGoal = parseFloat(fundingGoalString);
     
         const newProgress = (fundingGoal > 0) ? Math.min((newAmount / fundingGoal) * 100, 100) : 0;

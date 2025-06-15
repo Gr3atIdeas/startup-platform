@@ -71,21 +71,10 @@
 
       <div class="investor-count-container-figma">
         <i class="fas fa-users investor-icon-figma"></i>
-        <span class="investor-count-text-figma">Инвестировало ({{ startup.get_investors_count }})</span>
+        <span class="investor-count-text-figma">Инвестировало ({{ startup.investors_count }})</span>
       </div>
 
       <p class="startup-short-description">{{ startup.short_description|truncatewords:15|default:"" }}</p>
-
-      <div class="startup-stats">
-        <div class="stat-item">
-          <i class="fas fa-star"></i>
-          <span>{{ startup.average_rating|floatformat:"1" }}/5</span>
-        </div>
-        <div class="stat-item">
-          <i class="fas fa-users"></i>
-          <span>Инвестировало: {{ startup.investors_count }}</span>
-        </div>
-      </div>
 
       <a href="{% url 'startup_detail' startup_id=startup.startup_id %}" class="detail-link" aria-label="Подробнее о {{ startup.title }}"></a>
     </div>
