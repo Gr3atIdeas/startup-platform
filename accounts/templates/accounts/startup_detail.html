@@ -97,7 +97,7 @@
           <button class="action-button write-author-button">Написать</button>
         </div>
         <div class="creation-date">Создан {{ startup.created_at|date:"d/m/Y" }}</div>
-        <button class="report-button">Пожаловаться</button>
+        <button class="report-button" data-bs-toggle="modal" data-bs-target="#reportModal">Пожаловаться</button>
       </div>
     </div>
     
@@ -169,12 +169,12 @@
           {# Добавляем новые кнопки для модераторов с условиями #}
           {% if user.is_authenticated and user.role.role_name == 'moderator' %}
             {% if startup.both_mode or startup.only_buy %}
-              <button type="button" class="action-button change-owner-button">
+              <button type="button" class="action-button change-owner-button" data-bs-toggle="modal" data-bs-target="#changeOwnerModal">
                 Сменить владельца
               </button>
             {% endif %}
             {% if startup.both_mode or startup.only_invest %}
-              <button type="button" class="action-button add-investor-button">
+              <button type="button" class="action-button add-investor-button" data-bs-toggle="modal" data-bs-target="#addInvestorModal">
                 Добавить инвестора
               </button>
             {% endif %}
@@ -634,6 +634,40 @@
   </div>
 
   {# Добавляем модальные окна для функционала модератора #}
+  <!-- Модальное окно для жалобы -->
+  <div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="reportModalLabel">Пожаловаться на стартап</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="reportForm">
+            <div class="mb-3">
+              <label for="reportReason" class="form-label">Причина жалобы:</label>
+              <select class="form-select" id="reportReason" name="reason">
+                <option selected>Выберите причину...</option>
+                <option value="spam">Спам</option>
+                <option value="fraud">Мошенничество</option>
+                <option value="offensive">Оскорбительный контент</option>
+                <option value="other">Другое</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="reportComment" class="form-label">Комментарий:</label>
+              <textarea class="form-control" id="reportComment" name="comment" rows="4" placeholder="Опишите вашу жалобу"></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="action-button" data-bs-dismiss="modal">Отмена</button>
+          <button type="button" class="action-button action-button-danger" id="submitReport">Отправить</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Модальное окно 1: Поиск пользователей для смены владельца -->
   <div class="modal fade" id="changeOwnerModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
