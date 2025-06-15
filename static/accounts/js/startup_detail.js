@@ -885,45 +885,82 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // --- 4. Кнопка "Чат" ---
   const chatButton = document.querySelector('.chat-button');
-  const writeAuthorButton = document.querySelector('.write-author-button');
-  const ownerId = pageDataElement.dataset.ownerId;
-  const userAuthenticated = pageDataElement.dataset.userAuthenticated === 'true';
-
-  if (chatButton && writeAuthorButton && userAuthenticated) {
-    const handleChatRedirect = async () => {
-      if (!ownerId) {
-        console.error('Owner ID is not defined.');
-        return;
-      }
-      try {
-        const response = await fetch(`/chats/find_or_create/${ownerId}/`, {
-          method: 'POST',
-          headers: {
-            'X-CSRFToken': getCookie('csrftoken'),
-            'Content-Type': 'application/json'
-          },
-        });
-        if (response.ok) {
-          const data = await response.json();
-          if (data.chat_url) {
-            window.location.href = data.chat_url;
-          } else {
-            console.error('Chat URL not found in response');
-          }
-        } else {
-          console.error('Failed to create or find chat', response);
+  if(chatButton && isUserAuthenticated) {
+    chatButton.addEventListener('click', function() {
+        const ownerId = pageDataElement.dataset.ownerId;
+        if (!ownerId) {
+            alert('Не удалось определить владельца стартапа.');
+            return;
         }
-      } catch (error) {
-        console.error('Error initiating chat:', error);
-      }
-    };
 
-    chatButton.addEventListener('click', handleChatRedirect);
-    writeAuthorButton.addEventListener('click', handleChatRedirect);
+        this.textContent = 'Создание чата...';
+        this.disabled = true;
+
+        fetch(`/start_chat/${ownerId}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Перенаправляем пользователя в космочат, сразу открыв нужный диалог
+                window.location.href = `/cosmochat/?chat_id=${data.chat_id || data.chat.conversation_id}`;
+            } else {
+                alert(data.error || 'Не удалось создать или найти чат.');
+                this.textContent = 'Чат';
+                this.disabled = false;
+            }
+        })
+        .catch(error => {
+            console.error('Ошибка при создании чата:', error);
+            alert('Сетевая ошибка. Не удалось создать чат.');
+            this.textContent = 'Чат';
+            this.disabled = false;
+        });
+    });
   } else if (chatButton && !isUserAuthenticated) {
     // Если пользователь не авторизован, можно перенаправить его на страницу входа
     chatButton.addEventListener('click', function() {
         window.location.href = '/login/';
+    });
+  }
+
+  // --- Логика для "Показать еще" для длинных текстов ---
+  function setupTruncateText() {
+    const charLimit = 256;
+    const elements = document.querySelectorAll('.truncatable-text');
+
+    elements.forEach(element => {
+      const originalHTML = element.innerHTML;
+      // Используем textContent для подсчета реальной длины текста без HTML тегов
+      if (element.textContent.trim().length > charLimit) {
+        // Находим основной текстовый узел (обычно <p>)
+        const textNode = element.querySelector('p');
+        if (!textNode) return;
+
+        const fullText = textNode.innerHTML; // Сохраняем с <br> и т.д.
+        const truncatedText = fullText.substring(0, charLimit);
+
+        textNode.innerHTML = `${truncatedText}...`;
+
+        const showMoreButton = document.createElement('button');
+        showMoreButton.textContent = 'Показать еще';
+        showMoreButton.className = 'action-button show-more-text-button';
+        element.appendChild(showMoreButton);
+
+        showMoreButton.addEventListener('click', () => {
+          if (showMoreButton.textContent === 'Показать еще') {
+            textNode.innerHTML = fullText;
+            showMoreButton.textContent = 'Скрыть';
+          } else {
+            textNode.innerHTML = `${truncatedText}...`;
+            showMoreButton.textContent = 'Показать еще';
+          }
+        });
+      }
     });
   }
 
@@ -984,37 +1021,13 @@ document.addEventListener('DOMContentLoaded', function () {
   // Инициализация всех функций при загрузке страницы
   if (pageDataElement) {
     setupRatingStars();
-    setupChatButtons();
-  }
+    setupSimilarStartups();
+    setupTruncateText(); // Вызываем новую функцию
+    setupChatButtons(); // И эту тоже
 
-  const charLimit = 256; // Вы можете изменить это значение
-  const elements = document.querySelectorAll('.truncatable-text');
-
-  elements.forEach(element => {
-    const originalHTML = element.innerHTML;
-    if (element.textContent.trim().length > charLimit) {
-      const textNode = element.querySelector('p');
-      if (!textNode) return;
-
-      const fullText = textNode.innerHTML;
-      const truncatedText = fullText.substring(0, charLimit);
-
-      textNode.innerHTML = `${truncatedText}...`;
-
-      const showMoreButton = document.createElement('button');
-      showMoreButton.textContent = 'Показать еще';
-      showMoreButton.className = 'show-more-button';
-
-      showMoreButton.addEventListener('click', () => {
-        if (showMoreButton.textContent === 'Показать еще') {
-          textNode.innerHTML = fullText;
-          showMoreButton.textContent = 'Скрыть';
-        } else {
-          textNode.innerHTML = `${truncatedText}...`;
-          showMoreButton.textContent = 'Показать еще';
-        }
-      });
-      element.appendChild(showMoreButton);
+    const addInvestorModalEl = document.getElementById('addInvestorModal');
+    if (addInvestorModalEl) {
+      // ... existing code ...
     }
-  });
+  }
 })
