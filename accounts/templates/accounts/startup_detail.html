@@ -198,13 +198,13 @@
             {# --- Сначала текстовые блоки "Вводная" и "О проекте" --- #}
             <div class="about-section">
               <h2 class="section-title">Вводная</h2> {# Изменено с "О проекте" на "Вводная" #}
-              <div class="section-content">
+              <div class="section-content truncatable-text">
                 <p>{{ startup.short_description|default:"Нет вводного описания." }}</p> {# Убран тег strong #}
               </div>
             </div>
             <div class="about-section"> {# Отдельный блок для "О проекте" #}
               <h2 class="section-title">О проекте</h2>
-              <div class="section-content">
+              <div class="section-content truncatable-text">
                 {# <p><strong>Подробное описание:</strong></p> #} {# Можно убрать, если заголовок уже есть #}
                 <p>{{ startup.description|linebreaksbr|default:"Нет подробного описания." }}</p>
                 {% if startup.additional_info %}
