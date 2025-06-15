@@ -10,7 +10,10 @@ __pycache__/
 
 # IDE / Editor specific
 .idea/
-.vscode/
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/launch.json
 
 # Build artifacts
 build/
@@ -34,3 +37,64 @@ media/
 
 # Файлы IDE
 *.swp
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# --- Django ---
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# --- Environment ---
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak
+venv.bak
+
+# --- VSCode ---
+# Игнорируем все, кроме важных для проекта настроек
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/launch.json
+
+# --- Node ---
+node_modules/
+npm-debug.log
+yarn-error.log
+package-lock.json
+# Если вы используете yarn, добавьте yarn.lock
+
+# --- Staticfiles (Django) ---
+staticfiles/
+
+# --- Build assets (Vite) ---
+/static/dist
+
+# Other
+bandit_report.json

@@ -1,0 +1,45 @@
+{
+  // Общие настройки сохранения
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.fixAll.stylelint": "explicit",
+    "source.organizeImports": "explicit" // Это будет использовать Ruff для Python
+  },
+
+  // Форматирование по умолчанию
+  "[python]": {
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.formatOnSave": true
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[vue]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[scss]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+
+  // Настройки Python-линтеров
+  "python.linting.enabled": true,
+  "python.linting.banditEnabled": true,
+  "python.linting.mypyEnabled": true,
+  
+  // Включаем Ruff для линтинга (он будет основным)
+  "ruff.lint.run": "onSave",
+
+  // Настройки JS/CSS-линтеров
+  "eslint.validate": ["javascript", "vue"],
+  "stylelint.validate": ["css", "scss", "vue"],
+  
+  // Настройки Oxlint
+  "oxlint.enable": true
+} 
