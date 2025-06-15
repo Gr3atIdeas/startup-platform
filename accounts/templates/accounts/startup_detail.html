@@ -216,7 +216,7 @@
               </div>
             </div>
 
-            {# --- Затем сетка из 4 информационных карточек --- #}
+            {# --- Затем сетка из 5 информационных карточек --- #}
             <div class="info-card-grid">
               <!-- Block 1: Презентация -->
               <div class="info-card">
@@ -248,12 +248,23 @@
                   <img src="{% static 'accounts/images/startups/piggy-bank.svg' %}" alt="Собранная сумма" class="info-card-icon">
                 </div>
                 <span class="info-card-title">Собранная сумма</span>
-                <div class="info-card-value-button accent-blue-bg">
+                <div id="amount-raised-display" class="info-card-value-button accent-blue-bg">
                   {{ startup.amount_raised|default:0|floatformat:0|intcomma }} ₽
                 </div>
               </div>
 
-              <!-- Block 4: Стадия -->
+              <!-- Block 4: Инвесторы (Новый) -->
+              <div class="info-card">
+                <div class="info-card-icon-container">
+                    <i class="fas fa-users info-card-icon" style="color: #28a745;"></i>
+                </div>
+                <span class="info-card-title">Инвесторы</span>
+                <div id="investor-count-card-display" class="info-card-value-button accent-green-bg">
+                    {{ investors_count|default:0 }}
+                </div>
+              </div>
+
+              <!-- Block 5: Стадия (Возвращен) -->
               <div class="info-card">
                 <div class="info-card-icon-container">
                   <img src="{% static 'accounts/images/startups/boxes.svg' %}" alt="Стадия" class="info-card-icon">
