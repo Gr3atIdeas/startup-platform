@@ -111,10 +111,11 @@
           </div>
           <a href="#" class="btn btn-yellow-gradient">
             <span>Посмотреть стартапы</span>
-            <div class="btn__icon-eye">
-              <div class="btn__icon-eye-outline"></div>
-              <div class="btn__icon-eye-pupil"></div>
-            </div>
+            <img
+              src="/static/accounts/images/main_page/button_eye.svg"
+              alt="Посмотреть"
+              class="btn__icon-eye"
+            />
           </a>
         </div>
         <div class="featured-investors__background">
@@ -535,7 +536,7 @@ onMounted(() => {
   font-family: Unbounded, sans-serif;
   width: 1440px;
   margin: 0 auto;
-  overflow: hidden;
+  overflow-x: clip;
   position: relative;
 }
 
@@ -815,6 +816,7 @@ onMounted(() => {
   background: white;
   border-radius: 10px;
   overflow: visible;
+  margin: 0 auto;
 }
 
 .featured-investors__content {
@@ -849,7 +851,7 @@ onMounted(() => {
 .featured-investors__features {
   display: flex;
   justify-content: flex-start;
-  align-items: flex-end;
+  align-items: flex-start;
   gap: 40px;
 }
 
@@ -862,7 +864,7 @@ onMounted(() => {
   border-radius: 10px;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: flex-start;
   align-items: center;
   padding: 20px 15px;
   box-sizing: border-box;
@@ -874,7 +876,7 @@ onMounted(() => {
   transform: translateX(-50%);
   height: auto;
   z-index: 1;
-  top: -65px;
+  top: -20px;
 }
 
 .featured-investors__feature-icon--planet {
@@ -887,7 +889,7 @@ onMounted(() => {
 
 .featured-investors__feature-icon--rocket {
   width: 110px;
-  top: -55px;
+  top: -15px;
 }
 
 .featured-investors__feature-text {
@@ -899,25 +901,24 @@ onMounted(() => {
   font-weight: 400;
   line-height: 18px;
   word-wrap: break-word;
+  margin-top: 90px;
 }
 
 .featured-investors__background {
   height: 553px;
-  left: 773px;
   top: -16px;
-  right: -200px;
   position: absolute;
-  overflow: visible;
   z-index: 1;
+  right: calc(-50vw + 1303px / 2);
+  width: 50vw;
 }
 
 .featured-investors__bg-img {
   width: auto;
   height: 100%;
-  left: auto;
-  top: 0;
   position: absolute;
   right: 0;
+  top: 0;
 }
 
 .btn {
@@ -945,27 +946,6 @@ onMounted(() => {
     width: 24px;
     height: 24px;
     position: relative;
-    overflow: hidden;
-  }
-
-  &__icon-eye-outline {
-    width: 20px;
-    height: 14px;
-    left: 2px;
-    top: 5px;
-    position: absolute;
-    outline: 2px black solid;
-    outline-offset: -1px;
-  }
-
-  &__icon-eye-pupil {
-    width: 6px;
-    height: 6px;
-    left: 9px;
-    top: 9px;
-    position: absolute;
-    outline: 2px black solid;
-    outline-offset: -1px;
   }
 }
 
@@ -2025,149 +2005,5 @@ onMounted(() => {
   font-family: Unbounded, sans-serif;
   font-weight: 400;
   line-height: 16px;
-}
-</style>
-
-<style>
-/*
-  ТОЧНАЯ КОПИЯ СТИЛЕЙ ИЗ ОРИГИНАЛЬНОГО ФАЙЛА.
-  Я приношу глубочайшие извинения за все предыдущие ошибки.
-  Этот код включает стили для родительских контейнеров.
-  Это последняя и верная итерация.
-*/
-
-/* --- Wrapper styles --- */
-.sticky-sections-wrapper {
-  width: 100%;
-  max-width: 1445px;
-  padding: 0 71px;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 40px; /* Original gap */
-  margin-top: 45px;
-  margin-bottom: 45px;
-}
-
-/* --- Button styles --- */
-.sticky-sections-wrapper .btn {
-  display: inline-flex;
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 500;
-  text-decoration: none;
-  cursor: pointer;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  transition: all 0.3s ease;
-}
-
-.sticky-sections-wrapper .btn--yellow-gradient,
-.sticky-sections-wrapper .btn--yellow-gradient:visited {
-  background: linear-gradient(180deg, #ffef2b 0%, #f9f7d6 100%) !important;
-  border: none !important;
-  color: #000 !important;
-}
-
-.sticky-sections-wrapper .btn--yellow-gradient span {
-  color: #000 !important;
-}
-
-.sticky-sections-wrapper .btn--yellow-gradient .icon {
-  filter: brightness(0) invert(0);
-}
-
-/* --- Section 4: featured4 --- */
-.sticky-sections-wrapper .featured4 {
-  width: 100%;
-
-  /* max-width: 1303px;  This is handled by the wrapper's padding */
-  height: 521px;
-  position: relative;
-  box-sizing: border-box;
-}
-
-.sticky-sections-wrapper .featured4 .frame-parent3 {
-  width: 100%;
-  height: 100%;
-  position: relative;
-}
-
-.sticky-sections-wrapper .featured4 .parent6 {
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 30px;
-  z-index: 2;
-  padding-left: 92px;
-  box-sizing: border-box;
-}
-
-.sticky-sections-wrapper .featured4 .parent6 .div23 .txt {
-  font-family: Unbounded, sans-serif;
-  font-weight: 600;
-  font-size: 35px;
-  line-height: 1.1;
-}
-
-.sticky-sections-wrapper .featured4 .parent6 .div23 .txt > span:first-child {
-  color: #004e9f;
-}
-
-.sticky-sections-wrapper .featured4 .parent6 .div23 .txt .span3 {
-  color: #000;
-}
-
-.sticky-sections-wrapper .featured4 .group-parent {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 15px;
-}
-
-.sticky-sections-wrapper .featured4 .group-div {
-  width: 375px;
-  background: #f2f2f2;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  padding: 10px;
-  gap: 15px;
-  box-sizing: border-box;
-}
-
-.sticky-sections-wrapper .featured4 .group-div .card-icon-container {
-  flex-shrink: 0;
-  width: 125px;
-  height: 96px;
-}
-
-.sticky-sections-wrapper .featured4 .group-div .card-icon {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 4px;
-}
-
-.sticky-sections-wrapper .featured4 .div24,
-.sticky-sections-wrapper .featured4 .div25,
-.sticky-sections-wrapper .featured4 .div26 {
-  color: #000;
-  font-size: 14px;
-  font-family: Unbounded, sans-serif;
-  font-weight: 400;
-  line-height: 1.3;
-}
-
-.sticky-sections-wrapper .featured4 .icon10 {
-  position: absolute;
-  right: 0;
-  top: 0;
-  height: 100%;
-  z-index: 1;
 }
 </style>
