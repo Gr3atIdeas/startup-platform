@@ -534,25 +534,24 @@ onMounted(() => {
 
 .investor-main-page {
   font-family: Unbounded, sans-serif;
-  width: 1540px;
+  width: 1440px;
   margin: 0 auto;
   overflow-x: clip;
   position: relative;
 }
 
 .hero-section {
-  width: 1540px;
+  width: 1445px;
   padding: 45px 71px;
-  box-sizing: border-box;
   overflow: hidden;
   display: inline-flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   gap: 10px;
 
   .hero-content {
-    width: 1398px;
-    height: 760px;
+    width: 1303px;
+    height: 708px;
     position: relative;
     background: linear-gradient(180deg, black 0%, #004e9f 100%);
     box-shadow: 0 10px 23px 5px rgb(0 0 0 / 18%);
@@ -560,7 +559,7 @@ onMounted(() => {
     border-radius: 10px;
     outline: 1px solid rgb(255 255 255 / 36%);
     outline-offset: -1px;
-    background-image: url('https://placehold.co/1398x760');
+    background-image: url('https://placehold.co/1303x708');
 
     .planet-background {
       .orbit {
@@ -811,27 +810,24 @@ onMounted(() => {
 }
 
 .featured-investors {
-  width: 1398px;
-  height: 559px;
+  width: 1303px;
+  height: 521px;
   position: relative;
   background: white;
   border-radius: 10px;
   overflow: visible;
-  margin: 0 auto;
 }
 
 .featured-investors__content {
   position: absolute;
   left: 92px;
+  top: 55px;
   display: inline-flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
   gap: 27px;
-  transform: translateX(-50%);
-  height: auto;
-  z-index: 1;
-  top: -25px;
+  z-index: 2;
 }
 
 .featured-investors__title {
@@ -876,23 +872,20 @@ onMounted(() => {
 .featured-investors__feature-icon {
   position: absolute;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(-50%) scale(1.1);
   height: auto;
   z-index: 1;
-  top: -20px;
 }
 
-.featured-investors__feature-icon--planet {
-  width: 165px;
-}
-
+.featured-investors__feature-icon--planet,
 .featured-investors__feature-icon--case {
-  width: 165px;
+  width: 150px;
+  top: -25px;
 }
 
 .featured-investors__feature-icon--rocket {
-  width: 121px;
-  top: -15px;
+  width: 110px;
+  top: -30px;
 }
 
 .featured-investors__feature-text {
@@ -908,20 +901,22 @@ onMounted(() => {
 }
 
 .featured-investors__background {
-  height: 593px;
+  height: 553px;
   top: -16px;
   position: absolute;
   z-index: 1;
-  right: calc(-50vw + 1398px / 2);
-  width: 50vw;
+  left: 773px;
+  right: -71px;
 }
 
 .featured-investors__bg-img {
-  width: auto;
+  width: 100%;
   height: 100%;
   position: absolute;
   right: 0;
   top: 0;
+  object-fit: cover;
+  object-position: right;
 }
 
 .btn {
