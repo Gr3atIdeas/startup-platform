@@ -2695,18 +2695,49 @@ def my_startups(request):
 
         planetary_startups = []
         for idx, startup in enumerate(approved_startups_annotated, start=1):
-            logo_url = startup.get_logo_url()
-            planet_image_filename = startup.planet_image
-            
-            if planet_image_filename:
-                image_url = f"https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/{planet_image_filename}"
+            # Формируем URL для логотипа
+            if (
+                not startup.logo_urls
+                or not isinstance(startup.logo_urls, list)
+                or len(startup.logo_urls) == 0
+            ):
+                logger.warning(
+                    f"Стартап {startup.startup_id} ({startup.title}) не имеет логотипа в logo_urls"
+                )
+                logo_url = "https://via.placeholder.com/150"
             else:
-                image_url = logo_url
+                try:
+                    # Формируем префикс для поиска файла в папке startups/{startup_id}/logos/
+                    prefix = f"startups/{startup.startup_id}/logos/"
 
-            orbit_size = random.randint(200, 600)
-            orbit_time = random.randint(20, 60)
-            planet_size = random.randint(40, 80)
+                    # Ищем файлы в этой папке
+                    response = s3_client.list_objects_v2(
+                        Bucket=settings.AWS_STORAGE_BUCKET_NAME, Prefix=prefix
+                    )
 
+                    # Проверяем, есть ли файлы в папке
+                    if "Contents" in response and len(response["Contents"]) > 0:
+                        # Берём первый файл
+                        file_key = response["Contents"][0]["Key"]
+                        # Генерируем прямой URL без подписи
+                        logo_url = f"https://storage.yandexcloud.net/{settings.AWS_STORAGE_BUCKET_NAME}/{file_key}"
+                        logger.info(
+                            f"Сгенерирован URL для логотипа стартапа {startup.startup_id}: {logo_url}"
+                        )
+                    else:
+                        logger.warning(
+                            f"Файл для логотипа стартапа {startup.startup_id} не найден в бакете по префиксу {prefix}"
+                        )
+                        logo_url = "https://via.placeholder.com/150"
+                except Exception as e:
+                    logger.error(
+                        f"Ошибка при генерации URL для логотипа стартапа {startup.startup_id}: {str(e)}"
+                    )
+                    logo_url = "https://via.placeholder.com/150"
+
+            orbit_size = (idx * 100) + 100
+            orbit_time = (idx * 20) + 60
+            planet_size = (idx * 2) + 50
             planet_data = {
                 "id": str(idx),
                 "startup_id": startup.startup_id,
@@ -2716,7 +2747,7 @@ def my_startups(request):
                 "progress": f"{startup.get_progress_percentage():.0f}%",
                 "funding": f"{int(startup.amount_raised or 0):,d} ₽".replace(",", " "),
                 "investors": f"Инвесторов: {startup.get_investors_count() or 0}",
-                "image": image_url,
+                "image": logo_url,
                 "orbit_size": orbit_size,
                 "orbit_time": orbit_time,
                 "planet_size": planet_size,
