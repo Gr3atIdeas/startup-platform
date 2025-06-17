@@ -242,74 +242,65 @@ function showActiveChatWindow() {
 }
 
 function loadChat(chatId) {
-  console.log('Загрузка чата:', chatId)
-  currentChatId = chatId
-  if (chatIdInput) chatIdInput.value = chatId
+    console.log('Загрузка чата:', chatId);
+    currentChatId = chatId;
+    if (chatIdInput) chatIdInput.value = chatId;
 
-  if (pollingInterval) {
-    clearInterval(pollingInterval)
-  }
-  displayedMessageIds.clear()
-
-  document.querySelectorAll('.chat-item-new').forEach((item) => {
-    item.classList.remove('active')
-    if (item.getAttribute('data-chat-id') == chatId) {
-      item.classList.add('active')
-      if (chatWindowTitle)
-        chatWindowTitle.textContent = item.dataset.chatName || 'Чат'
+    if (pollingInterval) {
+        clearInterval(pollingInterval);
     }
-  })
+    displayedMessageIds.clear();
 
-  showActiveChatWindow()
-
-  fetch(`/cosmochat/${chatId}/`, {
-    headers: { 'X-CSRFToken': csrfToken, 'X-Requested-With': 'XMLHttpRequest' },
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.success) {
-        if (chatMessagesArea) {
-          chatMessagesArea.innerHTML = ''
-          displayedMessageIds.clear()
+    document.querySelectorAll('.chat-item-new').forEach((item) => {
+        item.classList.remove('active');
+        if (item.getAttribute('data-chat-id') == chatId && !item.classList.contains('hidden-chat')) {
+            item.classList.add('active');
+            if (chatWindowTitle) chatWindowTitle.textContent = item.dataset.chatName || 'Чат';
         }
-        data.messages.forEach((msg) => appendMessage(msg, false))
+    });
 
-        if (chatWindowTitle && data.chat_name)
-          chatWindowTitle.textContent = data.chat_name
-        // Обновление информации об участниках в шапке (если нужно)
-        // const participantsDiv = document.querySelector('.chat-participants'); // TODO: Куда выводить участников?
-        // if (participantsDiv) participantsDiv.innerHTML = data.participants.map(p => `<span>${p.name} (${p.role})</span>`).join(', ');
+    showActiveChatWindow();
 
-        currentParticipants = data.participants || []
+    fetch(`/cosmochat/${chatId}/`, {
+        headers: { 'X-CSRFToken': csrfToken, 'X-Requested-With': 'XMLHttpRequest' },
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.success) {
+                if (chatMessagesArea) {
+                    chatMessagesArea.innerHTML = '';
+                    displayedMessageIds.clear();
+                }
+                data.messages.forEach((msg) => appendMessage(msg, false));
 
-        if (data.messages.length > 0) {
-          lastMessageTimestamp =
-            data.messages[data.messages.length - 1].created_at_iso
-        } else {
-          lastMessageTimestamp = null
-        }
-        if (chatMessagesArea)
-          chatMessagesArea.scrollTop = chatMessagesArea.scrollHeight
+                if (chatWindowTitle && data.chat_name) chatWindowTitle.textContent = data.chat_name;
+                currentParticipants = data.participants || [];
 
-        fetch(`/cosmochat/mark-read/${chatId}/`, {
-          method: 'POST',
-          headers: {
-            'X-CSRFToken': csrfToken,
-            'X-Requested-With': 'XMLHttpRequest',
-          },
+                if (data.messages.length > 0) {
+                    lastMessageTimestamp = data.messages[data.messages.length - 1].created_at_iso;
+                } else {
+                    lastMessageTimestamp = null;
+                }
+                if (chatMessagesArea) chatMessagesArea.scrollTop = chatMessagesArea.scrollHeight;
+
+                fetch(`/cosmochat/mark-read/${chatId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrfToken,
+                        'X-Requested-With': 'XMLHttpRequest',
+                    },
+                });
+                startPolling();
+            } else {
+                alert(data.error || 'Ошибка при загрузке чата');
+                showNoChatSelected();
+            }
         })
-
-        startPolling()
-      } else {
-        alert(data.error || 'Ошибка при загрузке чата')
-        showNoChatSelected()
-      }
-    })
-    .catch((error) => {
-      console.error('Ошибка загрузки чата:', error)
-      alert('Произошла ошибка при загрузке чата.')
-      showNoChatSelected()
-    })
+        .catch((error) => {
+            console.error('Ошибка загрузки чата:', error);
+            alert('Произошла ошибка при загрузке чата.');
+            showNoChatSelected();
+        });
 }
 
 function handleSendMessage(e) {
@@ -349,53 +340,118 @@ function handleSendMessage(e) {
 }
 
 function startPolling() {
-  if (pollingInterval) clearInterval(pollingInterval)
+    if (pollingInterval) clearInterval(pollingInterval);
 
-  pollingInterval = setInterval(() => {
-    if (!currentChatId) return
+    pollingInterval = setInterval(() => {
+        if (!currentChatId) return;
 
-    const url = lastMessageTimestamp
-      ? `/cosmochat/${currentChatId}/?since=${encodeURIComponent(lastMessageTimestamp)}`
-      : `/cosmochat/${currentChatId}/`
+        const url = lastMessageTimestamp
+            ? `/cosmochat/${currentChatId}/?since=${encodeURIComponent(lastMessageTimestamp)}`
+            : `/cosmochat/${currentChatId}/`;
 
-    fetch(url, {
-      headers: {
-        'X-CSRFToken': csrfToken,
-        'X-Requested-With': 'XMLHttpRequest',
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.success) {
-          const newMessages = data.messages
-          if (newMessages.length > 0) {
-            newMessages.forEach((msg) => {
-              if (!displayedMessageIds.has(msg.message_id)) {
-                appendMessage(msg, false)
-              }
-            })
-            lastMessageTimestamp =
-              newMessages[newMessages.length - 1].created_at_iso
-            if (chatMessagesArea)
-              chatMessagesArea.scrollTop = chatMessagesArea.scrollHeight
-            updateChatListItem(newMessages[newMessages.length - 1])
-
-            fetch(`/cosmochat/mark-read/${currentChatId}/`, {
-              method: 'POST',
-              headers: {
+        fetch(url, {
+            headers: {
                 'X-CSRFToken': csrfToken,
                 'X-Requested-With': 'XMLHttpRequest',
-              },
+            },
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.success) {
+                    const newMessages = data.messages;
+                    if (newMessages.length > 0) {
+                        newMessages.forEach((msg) => {
+                            if (!displayedMessageIds.has(msg.message_id)) {
+                                appendMessage(msg, false);
+                            }
+                        });
+                        lastMessageTimestamp = newMessages[newMessages.length - 1].created_at_iso;
+                        if (chatMessagesArea) chatMessagesArea.scrollTop = chatMessagesArea.scrollHeight;
+                        updateChatListItem(newMessages[newMessages.length - 1]);
+                    }
+                    // Обновление списка чатов с учетом роли модератора
+                    fetch('/cosmochat/chat-list/', {
+                        headers: { 'X-CSRFToken': csrfToken, 'X-Requested-With': 'XMLHttpRequest' },
+                    })
+                        .then((response) => response.json())
+                        .then((data) => {
+                            if (data.success) {
+                                const chatListContainer = document.getElementById('chatListContainer');
+                                if (chatListContainer) {
+                                    chatListContainer.innerHTML = '';
+                                    data.chats.forEach((chat) => {
+                                        if (!chat.is_deleted && (!chat.has_left || (window.REQUEST_USER_ID && requestUserRole === 'moderator'))) {
+                                            const chatItem = createChatItemElement(chat);
+                                            chatListContainer.appendChild(chatItem);
+                                        }
+                                    });
+                                }
+                            }
+                        })
+                        .catch((error) => console.error('Ошибка обновления списка чатов:', error));
+                } else {
+                    console.error('Ошибка опроса:', data.error);
+                }
             })
-          }
+            .catch((error) => {
+                console.error('Ошибка при опросе новых сообщений:', error);
+            });
+    }, 5000);
+}
+
+// Инициализация роли пользователя
+document.addEventListener('DOMContentLoaded', function () {
+    const requestUserRoleElement = document.getElementById('request_user_role_data');
+    if (requestUserRoleElement && requestUserRoleElement.textContent) {
+        const roleData = JSON.parse(requestUserRoleElement.textContent);
+        if (roleData) {
+            window.requestUserRole = roleData.role_name;
         } else {
-          console.error('Ошибка опроса:', data.error)
+            console.warn('REQUEST_USER_ROLE не установлен. Получено пустое значение из JSON.');
         }
-      })
-      .catch((error) => {
-        console.error('Ошибка при опросе новых сообщений:', error)
-      })
-  }, 5000)
+    } else {
+        console.error('Элемент request_user_role_data не найден или пуст. Проверьте шаблон.');
+    }
+});
+
+// Функция для удаления сообщения (для модератора)
+function deleteMessage(messageId) {
+    if (confirm('Удалить сообщение?')) {
+        fetch(`/cosmochat/delete-message/${messageId}/`, {
+            method: 'POST',
+            headers: { 'X-CSRFToken': csrfToken, 'X-Requested-With': 'XMLHttpRequest' },
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.success) {
+                    const messageDiv = document.querySelector(`[data-message-id="${messageId}"]`);
+                    if (messageDiv) messageDiv.remove();
+                } else {
+                    alert(data.error || 'Ошибка при удалении сообщения');
+                }
+            })
+            .catch((error) => console.error('Ошибка удаления сообщения:', error));
+    }
+}
+
+
+// Функция для исключения пользователя из группового чата (для модератора)
+function removeParticipant(chatId, userId) {
+    if (confirm('Исключить участника из чата?')) {
+        fetch(`/cosmochat/remove-participant/${chatId}/?user_id=${userId}`, {
+            method: 'POST',
+            headers: { 'X-CSRFToken': csrfToken, 'X-Requested-With': 'XMLHttpRequest' },
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.success) {
+                    loadChat(chatId); // Обновляем список участников
+                } else {
+                    alert(data.error || 'Ошибка при исключении участника');
+                }
+            })
+            .catch((error) => console.error('Ошибка исключения участника:', error));
+    }
 }
 
 function appendMessage(msg, isOwnMessageSentJustNow) {
@@ -572,77 +628,113 @@ function startChat() {
 }
 
 function openAddParticipantModal() {
+  console.log('openAddParticipantModal called, currentChatId:', currentChatId);
   if (!currentChatId) {
-    alert('Выберите чат для добавления участника')
-    return
+    alert('Выберите чат для добавления участника');
+    return;
   }
-  if (currentParticipants.length >= 3) {
-    alert('В чате уже максимальное количество участников (3)')
-    return
+  const chatItem = document.querySelector(`.chat-item-new[data-chat-id="${currentChatId}"]`);
+  const isGroupChat = chatItem && chatItem.dataset.chatType === 'group';
+  console.log('Chat type:', isGroupChat ? 'group' : 'personal', 'Participants count:', currentParticipants.length);
+  if (!isGroupChat && currentParticipants.length >= 3) {
+    alert('В личном чате уже максимальное количество участников (3)');
+    return;
   }
 
+  console.log('Fetching available users for chat:', currentChatId);
   fetch(`/cosmochat/available-users-for-chat/${currentChatId}/`, {
     headers: { 'X-CSRFToken': csrfToken, 'X-Requested-With': 'XMLHttpRequest' },
   })
-    .then((response) => response.json())
+    .then((response) => {
+      console.log('Fetch response status:', response.status);
+      if (!response.ok) {
+        console.error('Failed to fetch available users:', response.statusText);
+      }
+      return response.json();
+    })
     .then((data) => {
-      if (!addParticipantModal || !participantsList) return
-      participantsList.innerHTML = ''
+      console.log('Fetch data:', data);
+      if (!addParticipantModal || !participantsList) {
+        console.error('addParticipantModal or participantsList is null');
+        return;
+      }
+      participantsList.innerHTML = '';
 
-      const currentParticipantIds = currentParticipants.map((p) => p.user_id)
-      const currentRoles = currentParticipants.map((p) => p.role.toLowerCase())
+      const currentParticipantIds = currentParticipants.map((p) => p.user_id);
+      const currentRoles = currentParticipants.map((p) => p.role.toLowerCase());
 
       if (data.users && data.users.length > 0) {
         data.users.forEach((user) => {
-          if (currentParticipantIds.includes(user.user_id)) return
+          if (currentParticipantIds.includes(user.user_id)) return;
 
-          let isDisabled = false
+          let isDisabled = false;
 
-          const item = document.createElement('div')
-          item.className = `participant-item ${isDisabled ? 'disabled' : ''}`
-          item.innerHTML = `${user.name} (${user.role})`
+          const item = document.createElement('div');
+          item.className = `participant-item ${isDisabled ? 'disabled' : ''}`;
+          item.innerHTML = `${user.name} (${user.role})`;
           if (!isDisabled) {
-            item.onclick = () => addParticipantToChat(user.user_id)
+            item.onclick = () => addParticipantToChat(user.user_id);
           }
-          participantsList.appendChild(item)
-        })
+          participantsList.appendChild(item);
+        });
       } else {
         participantsList.innerHTML =
-          '<p style="padding:10px; text-align:center;">Нет доступных пользователей для добавления или все уже в чате.</p>'
+          '<p style="padding:10px; text-align:center;">Нет доступных пользователей для добавления или все уже в чате.</p>';
       }
-      addParticipantModal.style.display = 'flex'
+      console.log('Showing modal');
+      addParticipantModal.classList.add('active');
+      addParticipantModal.style.display = 'flex';
     })
     .catch((error) => {
-      console.error('Ошибка загрузки пользователей:', error)
-      alert('Произошла ошибка при загрузке списка пользователей.')
-    })
+      console.error('Ошибка загрузки пользователей:', error);
+      alert('Произошла ошибка при загрузке списка пользователей.');
+    });
 }
 
 function closeAddParticipantModal() {
-  if (addParticipantModal) addParticipantModal.style.display = 'none'
+  if (addParticipantModal) {
+    console.log('Closing addParticipantModal');
+    addParticipantModal.classList.remove('active');
+    addParticipantModal.style.display = 'none';
+  }
 }
 
 function addParticipantToChat(userId) {
-  if (!currentChatId) return
+    if (!currentChatId) return;
 
-  fetch(`/cosmochat/add-participant/${currentChatId}/?user_id=${userId}`, {
-    method: 'POST',
-    headers: { 'X-CSRFToken': csrfToken, 'X-Requested-With': 'XMLHttpRequest' },
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.success) {
-        alert('Участник добавлен! Информация обновится.')
-        closeAddParticipantModal()
-        loadChat(currentChatId)
-      } else {
-        alert(data.error || 'Ошибка при добавлении участника')
-      }
+    console.log('Attempting to add participant, chatId:', currentChatId, 'userId:', userId);
+    const formData = new FormData();
+    formData.append('user_id', userId);
+
+    fetch(`/cosmochat/add-participant/${currentChatId}/`, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': csrfToken,
+            'X-Requested-With': 'XMLHttpRequest'
+        }
     })
-    .catch((error) => {
-      console.error('Ошибка добавления участника:', error)
-      alert('Произошла ошибка при добавлении участника.')
-    })
+        .then((response) => {
+            console.log('Add participant response status:', response.status);
+            if (!response.ok) {
+                console.error('Failed to add participant:', response.statusText);
+            }
+            return response.json();
+        })
+        .then((data) => {
+            console.log('Add participant data:', data);
+            if (data.success) {
+                alert('Участник добавлен! Информация обновится.');
+                closeAddParticipantModal();
+                loadChat(currentChatId);
+            } else {
+                alert(data.error || 'Ошибка при добавлении участника');
+            }
+        })
+        .catch((error) => {
+            console.error('Ошибка добавления участника:', error);
+            alert('Произошла ошибка при добавлении участника.');
+        });
 }
 
 function leaveChat() {
@@ -1294,74 +1386,36 @@ function showPage(page) {
   })
 }
 
-// Функции для работы с модальным окном создания группового чата
 function openGroupChatModal() {
-  const groupChatModalOverlay = document.getElementById('groupChatModal')
+  console.log('openGroupChatModal called');
+  const groupChatModalOverlay = document.getElementById('groupChatModal');
   if (!groupChatModalOverlay) {
-    console.error('#groupChatModal (overlay) not found!')
-    return
+    console.error('#groupChatModal not found');
+    return;
   }
 
-  const groupChatContentWrapper = document.getElementById(
-    'groupChatModalContentWrapper'
-  )
-  const groupChatDetailsView = document.getElementById('groupChatDetailsView')
-  const selectedUserPillsContainer = document.getElementById(
-    'selectedUserPillsContainer'
-  )
-  const groupChatUsersList = document.getElementById('groupChatUsersList')
-  const selectedUsersCountElement =
-    document.getElementById('selectedUsersCount')
-
-  console.log('openGroupChatModal called', {
-    groupChatContentWrapper: !!groupChatContentWrapper,
-    groupChatDetailsView: !!groupChatDetailsView,
-    selectedUserPillsContainer: !!selectedUserPillsContainer,
-    groupChatUsersList: !!groupChatUsersList,
-    selectedUsersCountElement: !!selectedUsersCountElement,
-  })
-
-  if (!groupChatContentWrapper || !groupChatDetailsView) {
-    console.error(
-      'CRITICAL: groupChatContentWrapper or groupChatDetailsView is STILL null inside openGroupChatModal after getElementById!'
-    )
-    return
-  }
-
-  selectedGroupChatUserIds = []
-  if (selectedUserPillsContainer && groupChatUsersList) {
-    renderSelectedUserPills(selectedUserPillsContainer, groupChatUsersList)
-  }
-
-  toggleGroupChatModalView(false)
-
-  groupChatModalOverlay.style.display = 'flex'
+  selectedGroupChatUserIds = [];
+  groupChatModalOverlay.style.display = 'flex';
   setTimeout(() => {
-    groupChatModalOverlay.classList.add('active')
-  }, 10)
+    groupChatModalOverlay.classList.add('active');
+    console.log('Group chat modal activated');
+  }, 10);
 
-  const groupChatModalElement =
-    groupChatModalOverlay.querySelector('.group-chat-modal') // Получаем сам блок модального окна
+  const groupChatModalElement = groupChatModalOverlay.querySelector('.group-chat-modal');
   if (groupChatModalElement) {
-    const roleButtons = groupChatModalElement.querySelectorAll(
-      '.group-chat-modal-role-btn'
-    )
+    const roleButtons = groupChatModalElement.querySelectorAll('.group-chat-modal-role-btn');
     roleButtons.forEach((btn) => {
-      btn.classList.add('active')
-      btn.classList.remove('inactive')
-    })
+      btn.classList.add('active');
+      btn.classList.remove('inactive');
+    });
   }
 
-  if (
-    groupChatUsersList &&
-    selectedUsersCountElement &&
-    selectedUserPillsContainer
-  ) {
-    loadGroupChatUsers(
-      groupChatUsersList,
-      selectedUsersCountElement,
-      selectedUserPillsContainer
-    )
+  const usersList = document.getElementById('groupChatUsersList');
+  const countElement = document.getElementById('selectedUsersCount');
+  const pillsContainer = document.getElementById('selectedUserPillsContainer');
+  if (usersList && countElement && pillsContainer) {
+    console.log('Loading group chat users');
+    loadGroupChatUsers(usersList, countElement, pillsContainer);
   }
 }
 
@@ -1624,34 +1678,25 @@ function setupRoleFilters() {
   })
 }
 
-// Новая вспомогательная функция для создания элемента чата в списке
 function createChatItemElement(chat) {
-  const defaultAvatarSrc =
-    document.getElementById('profileAvatar')?.src ||
-    '/static/accounts/images/avatars/default_avatar_ufo.png'
-  let avatarUrl = defaultAvatarSrc
-  let avatarAlt = chat.name
-  let chatType = chat.is_group_chat ? 'group' : 'personal'
+    const defaultAvatarSrc = '/static/accounts/images/cosmochat/group_avatar.svg'; // Используем как запасной вариант
+    let avatarUrl = defaultAvatarSrc;
+    let avatarAlt = chat.name;
+    let chatType = chat.is_group_chat ? 'group' : 'personal';
 
-  // Для личного чата ставим аватар собеседника
-  if (
-    chatType === 'personal' &&
-    chat.participant &&
-    chat.participant.profile_picture_url
-  ) {
-    avatarUrl = chat.participant.profile_picture_url
-    avatarAlt = chat.participant.first_name || 'Чат'
-  } else if (chatType === 'group') {
-    // Можно добавить кастомную иконку для групп
-  }
+    // Для личного чата ставим аватар собеседника
+    if (chatType === 'personal' && chat.participant && chat.participant.profile_picture_url) {
+        avatarUrl = chat.participant.profile_picture_url;
+        avatarAlt = chat.participant.first_name || 'Чат';
+    }
 
-  const chatItem = document.createElement('div')
-  chatItem.className = 'chat-item-new'
-  chatItem.dataset.chatId = chat.conversation_id
-  chatItem.dataset.chatName = chat.name
-  chatItem.dataset.chatType = chatType
+    const chatItem = document.createElement('div');
+    chatItem.className = 'chat-item-new';
+    chatItem.dataset.chatId = chat.conversation_id;
+    chatItem.dataset.chatName = chat.name;
+    chatItem.dataset.chatType = chatType;
 
-  chatItem.innerHTML = `
+    chatItem.innerHTML = `
         <img src="${avatarUrl}" alt="${avatarAlt}" class="chat-avatar-img">
         <div class="chat-item-info-new">
             <h4>${chat.name.substring(0, 25)}</h4>
@@ -1661,13 +1706,13 @@ function createChatItemElement(chat) {
             <span class="timestamp-chat"></span>
             <span class="date-chat-preview"></span>
         </div>
-    `
+    `;
 
-  chatItem.addEventListener('click', function () {
-    if (typeof loadChat === 'function') {
-      loadChat(this.dataset.chatId)
-    }
-  })
+    chatItem.addEventListener('click', function () {
+        if (typeof loadChat === 'function') {
+            loadChat(this.dataset.chatId);
+        }
+    });
 
-  return chatItem
+    return chatItem;
 }
