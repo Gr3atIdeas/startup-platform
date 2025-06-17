@@ -2132,45 +2132,28 @@ def start_chat(request, user_id):
 
 @login_required
 def add_participant(request, chat_id):
+    logger.debug(f"Adding participant to chat {chat_id}, user_id: {request.POST.get('user_id')}")
     if request.method != "POST":
-        return JsonResponse(
-            {"success": False, "error": "Неверный метод запроса"}, status=405
-        )
+        return JsonResponse({"success": False, "error": "Неверный метод запроса"}, status=405)
 
     chat = get_object_or_404(ChatConversations, conversation_id=chat_id)
     if not chat.chatparticipants_set.filter(user=request.user).exists():
-        return JsonResponse(
-            {"success": False, "error": "У вас нет доступа к этому чату"}, status=403
-        )
+        return JsonResponse({"success": False, "error": "У вас нет доступа к этому чату"}, status=403)
 
     user_id = request.POST.get("user_id")
     if not user_id:
-        return JsonResponse(
-            {"success": False, "error": "Не указан пользователь"}, status=400
-        )
+        return JsonResponse({"success": False, "error": "Не указан пользователь"}, status=400)
 
     try:
         new_user = Users.objects.get(user_id=user_id)
     except Users.DoesNotExist:
-        return JsonResponse(
-            {"success": False, "error": "Пользователь не найден"}, status=404
-        )
+        logger.error(f"User {user_id} not found")
+        return JsonResponse({"success": False, "error": "Пользователь не найден"}, status=404)
 
     if chat.chatparticipants_set.filter(user=new_user).exists():
-        return JsonResponse(
-            {"success": False, "error": "Пользователь уже в чате"}, status=400
-        )
+        return JsonResponse({"success": False, "error": "Пользователь уже в чате"}, status=400)
 
-    if chat.is_group_chat:
-        if new_user.role and new_user.role.role_name.lower() == "moderator":
-            return JsonResponse(
-                {
-                    "success": False,
-                    "error": "Модераторы не могут быть добавлены в групповой чат",
-                },
-                status=400,
-            )
-    else:
+    if not chat.is_group_chat:  # Личные чаты
         participants = chat.get_participants()
         if participants.count() >= 3:
             return JsonResponse(
@@ -2189,6 +2172,7 @@ def add_participant(request, chat_id):
                 status=400,
             )
 
+    # Для групповых чатов ограничений нет
     ChatParticipants.objects.create(conversation=chat, user=new_user)
     chat.updated_at = timezone.now()
     chat.save()
