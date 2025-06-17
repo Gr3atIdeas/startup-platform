@@ -454,6 +454,11 @@ function startPolling() {
                                             chatListContainer.appendChild(chatItem);
                                         }
                                     });
+                                    // Обновляем текущий чат, если он переименован
+                                    const currentChatItem = chatListContainer.querySelector(`.chat-item-new[data-chat-id="${currentChatId}"]`);
+                                    if (currentChatItem && chatWindowTitle) {
+                                        chatWindowTitle.textContent = currentChatItem.dataset.chatName;
+                                    }
                                 }
                             }
                         })
