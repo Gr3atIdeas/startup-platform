@@ -1125,7 +1125,7 @@ html::-webkit-scrollbar-button {
   margin-right: auto;
 }
 
-.featured7 .frameParent19 {
+.featured7 .frame-parent19 {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -1189,7 +1189,7 @@ html::-webkit-scrollbar-button {
   aspect-ratio: 1 / 1;
 }
 
-.featured7 .frameParent21 {
+.featured7 .frame-parent21 {
   display: flex;
   justify-content: space-between;
   align-items: stretch;
@@ -1197,7 +1197,7 @@ html::-webkit-scrollbar-button {
   width: 100%;
 }
 
-.featured7 .frameParent22 {
+.featured7 .frame-parent22 {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -1253,7 +1253,7 @@ html::-webkit-scrollbar-button {
   line-height: 1.5;
 }
 
-/* --- Секция 9: Featured9 (Новости нашей галактики) --- */
+/* --- Секция 9: Featured9 (Новости) --- */
 .featured9 {
   width: 100%;
   max-width: 1445px;
