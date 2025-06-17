@@ -5,12 +5,8 @@
         "ms-python.vscode-pylance",     // Улучшенная поддержка языка
         "charliermarsh.ruff",           // Линтер и форматтер Ruff
         "ms-python.mypy-type-checker",  // Проверка типов Mypy
-        "ms-python.bandit",             // Линтер безопасности Bandit
 
         // JavaScript / Vue / CSS
-        "dbaeumer.vscode-eslint",       // ESLint
-        "stylelint.vscode-stylelint",   // Stylelint
-        "oxc.oxc-vscode",               // Oxlint
         "vue.volar",                    // Поддержка Vue 3 (заменяет Vetur)
         
         // Общие
