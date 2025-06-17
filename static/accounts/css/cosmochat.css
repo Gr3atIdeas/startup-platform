@@ -1736,3 +1736,21 @@ body.cosmochat-body {
   display: block;
   opacity: 1;
 }
+
+/* Стили для иконок в списке чатов */
+#chatListContainer .chat-item-new .chat-avatar-img[src="/static/accounts/images/cosmochat/group_avatar.svg"],
+#chatListContainer .chat-item-new .chat-avatar-img:not([src]) {
+    width: 77px;
+    height: 77px;
+    border-radius: 22px;
+    background-color: #ffffff; /* Белый фон */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    filter: brightness(0) invert(1); /* Инверсия для синего контура */
+}
+
+/* Убираем стили для модального окна */
+.chat-icon-placeholder {
+    display: none; /* Отключаем, так как иконки не нужны в модальном окне */
+}

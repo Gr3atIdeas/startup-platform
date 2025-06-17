@@ -644,34 +644,41 @@ function closeAddParticipantModal() {
 }
 
 function addParticipantToChat(userId) {
-  if (!currentChatId) return;
+    if (!currentChatId) return;
 
-  console.log('Attempting to add participant, chatId:', currentChatId, 'userId:', userId);
-  fetch(`/cosmochat/add-participant/${currentChatId}/?user_id=${userId}`, {
-    method: 'POST',
-    headers: { 'X-CSRFToken': csrfToken, 'X-Requested-With': 'XMLHttpRequest' },
-  })
-    .then((response) => {
-      console.log('Add participant response status:', response.status);
-      if (!response.ok) {
-        console.error('Failed to add participant:', response.statusText);
-      }
-      return response.json();
+    console.log('Attempting to add participant, chatId:', currentChatId, 'userId:', userId);
+    const formData = new FormData();
+    formData.append('user_id', userId);
+
+    fetch(`/cosmochat/add-participant/${currentChatId}/`, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': csrfToken,
+            'X-Requested-With': 'XMLHttpRequest'
+        }
     })
-    .then((data) => {
-      console.log('Add participant data:', data);
-      if (data.success) {
-        alert('Участник добавлен! Информация обновится.');
-        closeAddParticipantModal();
-        loadChat(currentChatId);
-      } else {
-        alert(data.error || 'Ошибка при добавлении участника');
-      }
-    })
-    .catch((error) => {
-      console.error('Ошибка добавления участника:', error);
-      alert('Произошла ошибка при добавлении участника.');
-    });
+        .then((response) => {
+            console.log('Add participant response status:', response.status);
+            if (!response.ok) {
+                console.error('Failed to add participant:', response.statusText);
+            }
+            return response.json();
+        })
+        .then((data) => {
+            console.log('Add participant data:', data);
+            if (data.success) {
+                alert('Участник добавлен! Информация обновится.');
+                closeAddParticipantModal();
+                loadChat(currentChatId);
+            } else {
+                alert(data.error || 'Ошибка при добавлении участника');
+            }
+        })
+        .catch((error) => {
+            console.error('Ошибка добавления участника:', error);
+            alert('Произошла ошибка при добавлении участника.');
+        });
 }
 
 function leaveChat() {
@@ -1615,34 +1622,25 @@ function setupRoleFilters() {
   })
 }
 
-// Новая вспомогательная функция для создания элемента чата в списке
 function createChatItemElement(chat) {
-  const defaultAvatarSrc =
-    document.getElementById('profileAvatar')?.src ||
-    '/static/accounts/images/avatars/default_avatar_ufo.png'
-  let avatarUrl = defaultAvatarSrc
-  let avatarAlt = chat.name
-  let chatType = chat.is_group_chat ? 'group' : 'personal'
+    const defaultAvatarSrc = '/static/accounts/images/cosmochat/group_avatar.svg'; // Используем как запасной вариант
+    let avatarUrl = defaultAvatarSrc;
+    let avatarAlt = chat.name;
+    let chatType = chat.is_group_chat ? 'group' : 'personal';
 
-  // Для личного чата ставим аватар собеседника
-  if (
-    chatType === 'personal' &&
-    chat.participant &&
-    chat.participant.profile_picture_url
-  ) {
-    avatarUrl = chat.participant.profile_picture_url
-    avatarAlt = chat.participant.first_name || 'Чат'
-  } else if (chatType === 'group') {
-    // Можно добавить кастомную иконку для групп
-  }
+    // Для личного чата ставим аватар собеседника
+    if (chatType === 'personal' && chat.participant && chat.participant.profile_picture_url) {
+        avatarUrl = chat.participant.profile_picture_url;
+        avatarAlt = chat.participant.first_name || 'Чат';
+    }
 
-  const chatItem = document.createElement('div')
-  chatItem.className = 'chat-item-new'
-  chatItem.dataset.chatId = chat.conversation_id
-  chatItem.dataset.chatName = chat.name
-  chatItem.dataset.chatType = chatType
+    const chatItem = document.createElement('div');
+    chatItem.className = 'chat-item-new';
+    chatItem.dataset.chatId = chat.conversation_id;
+    chatItem.dataset.chatName = chat.name;
+    chatItem.dataset.chatType = chatType;
 
-  chatItem.innerHTML = `
+    chatItem.innerHTML = `
         <img src="${avatarUrl}" alt="${avatarAlt}" class="chat-avatar-img">
         <div class="chat-item-info-new">
             <h4>${chat.name.substring(0, 25)}</h4>
@@ -1652,13 +1650,13 @@ function createChatItemElement(chat) {
             <span class="timestamp-chat"></span>
             <span class="date-chat-preview"></span>
         </div>
-    `
+    `;
 
-  chatItem.addEventListener('click', function () {
-    if (typeof loadChat === 'function') {
-      loadChat(this.dataset.chatId)
-    }
-  })
+    chatItem.addEventListener('click', function () {
+        if (typeof loadChat === 'function') {
+            loadChat(this.dataset.chatId);
+        }
+    });
 
-  return chatItem
+    return chatItem;
 }
