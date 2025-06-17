@@ -369,7 +369,7 @@ function startPolling() {
                         if (chatMessagesArea) chatMessagesArea.scrollTop = chatMessagesArea.scrollHeight;
                         updateChatListItem(newMessages[newMessages.length - 1]);
                     }
-                    // Фильтрация удаленных/покинутых чатов
+                    // Обновление списка чатов с учетом роли модератора
                     fetch('/cosmochat/chat-list/', {
                         headers: { 'X-CSRFToken': csrfToken, 'X-Requested-With': 'XMLHttpRequest' },
                     })
@@ -380,7 +380,7 @@ function startPolling() {
                                 if (chatListContainer) {
                                     chatListContainer.innerHTML = '';
                                     data.chats.forEach((chat) => {
-                                        if (!chat.is_deleted && !chat.has_left) {
+                                        if (!chat.is_deleted && (!chat.has_left || (window.REQUEST_USER_ID && requestUserRole === 'moderator'))) {
                                             const chatItem = createChatItemElement(chat);
                                             chatListContainer.appendChild(chatItem);
                                         }
@@ -399,6 +399,20 @@ function startPolling() {
     }, 5000);
 }
 
+// Инициализация роли пользователя
+document.addEventListener('DOMContentLoaded', function () {
+    const requestUserRoleElement = document.getElementById('request_user_role_data');
+    if (requestUserRoleElement && requestUserRoleElement.textContent) {
+        const roleData = JSON.parse(requestUserRoleElement.textContent);
+        if (roleData) {
+            window.requestUserRole = roleData.role_name;
+        } else {
+            console.warn('REQUEST_USER_ROLE не установлен. Получено пустое значение из JSON.');
+        }
+    } else {
+        console.error('Элемент request_user_role_data не найден или пуст. Проверьте шаблон.');
+    }
+});
 
 // Функция для удаления сообщения (для модератора)
 function deleteMessage(messageId) {

@@ -929,6 +929,40 @@ def delete_avatar(request):
             {"success": False, "error": "Ошибка при удалении аватара."}, status=500
         )
 
+@login_required
+def chat_list(request):
+    user = request.user
+    chats = ChatConversations.objects.all()
+    chat_data = []
+
+    for chat in chats:
+        participants = chat.chatparticipants_set.all()
+        has_user = participants.filter(user=user).exists()
+        is_deleted = chat.is_deleted
+        has_left = not has_user and any(p.user != user for p in participants)  # Пользователь вышел, но чат существует
+
+        # Модератор видит все групповые чаты
+        if user.role and user.role.role_name.lower() == "moderator" and chat.is_group_chat:
+            chat_data.append({
+                'conversation_id': chat.conversation_id,
+                'name': chat.name,
+                'is_group_chat': chat.is_group_chat,
+                'is_deleted': is_deleted,
+                'has_left': has_left,
+                'participant': participants.exclude(user=user).first().user if not chat.is_group_chat else None,
+            })
+        # Обычные пользователи видят только свои активные чаты
+        elif not is_deleted and not has_left:
+            chat_data.append({
+                'conversation_id': chat.conversation_id,
+                'name': chat.name,
+                'is_group_chat': chat.is_group_chat,
+                'is_deleted': is_deleted,
+                'has_left': has_left,
+                'participant': participants.exclude(user=user).first().user if not chat.is_group_chat else None,
+            })
+
+    return JsonResponse({'success': True, 'chats': chat_data})
 
 @login_required
 def create_startup(request):
