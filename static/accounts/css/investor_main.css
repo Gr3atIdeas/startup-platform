@@ -1600,7 +1600,7 @@ html::-webkit-scrollbar-button {
   margin-top: 100px;
   position: relative;
   z-index: 1;
-  transform: translateY(-20px);
+  bottom: 20px;
 }
 
 /* Адаптивность (пример) */
