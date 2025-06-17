@@ -994,16 +994,15 @@ html::-webkit-scrollbar-button {
   top: 74px;
   position: absolute;
   overflow: hidden;
-  background: black;
 }
 
 .journey-start-banner-image {
   width: 371.89px;
   height: 278.66px;
   position: absolute;
-  left: 372px;
-  top: 278.66px;
-  transform: rotate(-180deg);
+  left: 0;
+  top: 0;
+  transform: rotate(0deg);
   transform-origin: top left;
 }
 
