@@ -1503,7 +1503,18 @@ html::-webkit-scrollbar-button {
   padding-top: 60px;
   box-sizing: border-box;
   z-index: 5;
-  background: white;
+}
+
+.final-cta-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100vw;
+    height: calc(100% - 40px);
+    background: white;
+    z-index: -1;
 }
 
 .final-cta-content-wrapper {
