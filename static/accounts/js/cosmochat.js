@@ -387,36 +387,61 @@ function startPolling() {
     if (pollingInterval) clearInterval(pollingInterval);
 
     pollingInterval = setInterval(() => {
-        if (!currentChatId) return;
-
-        const url = lastMessageTimestamp
-            ? `/cosmochat/${currentChatId}/?since=${encodeURIComponent(lastMessageTimestamp)}`
-            : `/cosmochat/${currentChatId}/`;
-
-        fetch(url, {
-            headers: {
-                'X-CSRFToken': csrfToken,
-                'X-Requested-With': 'XMLHttpRequest',
-            },
-        })
-            .then((response) => response.json())
+        if (!currentChatId) {
+            fetch('/cosmochat/chat-list/', {
+                headers: { 'X-CSRFToken': csrfToken, 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then((response) => {
+                if (!response.ok) {
+                    console.error('Ошибка при получении списка чатов:', response.status, response.statusText);
+                    return;
+                }
+                return response.json();
+            })
             .then((data) => {
                 if (data.success) {
-                    const newMessages = data.messages;
-                    if (newMessages.length > 0) {
-                        newMessages.forEach((msg) => {
-                            if (!displayedMessageIds.has(msg.message_id)) {
-                                appendMessage(msg, false);
+                    const chatListContainer = document.getElementById('chatListContainer');
+                    if (chatListContainer) {
+                        chatListContainer.innerHTML = '';
+                        data.chats.forEach((chat) => {
+                            if (!chat.is_deleted && (!chat.has_left || (window.REQUEST_USER_ID && requestUserRole === 'moderator'))) {
+                                const chatItem = createChatItemElement(chat);
+                                chatListContainer.appendChild(chatItem);
                             }
                         });
-                        lastMessageTimestamp = newMessages[newMessages.length - 1].created_at_iso;
-                        if (chatMessagesArea) chatMessagesArea.scrollTop = chatMessagesArea.scrollHeight;
-                        updateChatListItem(newMessages[newMessages.length - 1]);
                     }
-                    // Обновление списка чатов с учетом роли модератора
-                    fetch('/cosmochat/chat-list/', {
-                        headers: { 'X-CSRFToken': csrfToken, 'X-Requested-With': 'XMLHttpRequest' },
-                    })
+                } else {
+                    console.error('Ошибка данных списка чатов:', data.error);
+                }
+            })
+            .catch((error) => {
+                console.error('Ошибка при опросе списка чатов:', error);
+            });
+        } else {
+            const url = lastMessageTimestamp
+                ? `/cosmochat/${currentChatId}/?since=${encodeURIComponent(lastMessageTimestamp)}`
+                : `/cosmochat/${currentChatId}/`;
+
+            fetch(url, {
+                headers: { 'X-CSRFToken': csrfToken, 'X-Requested-With': 'XMLHttpRequest' }
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.success) {
+                        const newMessages = data.messages;
+                        if (newMessages.length > 0) {
+                            newMessages.forEach((msg) => {
+                                if (!displayedMessageIds.has(msg.message_id)) {
+                                    appendMessage(msg, false);
+                                }
+                            });
+                            lastMessageTimestamp = newMessages[newMessages.length - 1].created_at_iso;
+                            if (chatMessagesArea) chatMessagesArea.scrollTop = chatMessagesArea.scrollHeight;
+                            updateChatListItem(newMessages[newMessages.length - 1]);
+                        }
+                        fetch('/cosmochat/chat-list/', {
+                            headers: { 'X-CSRFToken': csrfToken, 'X-Requested-With': 'XMLHttpRequest' }
+                        })
                         .then((response) => response.json())
                         .then((data) => {
                             if (data.success) {
@@ -433,13 +458,14 @@ function startPolling() {
                             }
                         })
                         .catch((error) => console.error('Ошибка обновления списка чатов:', error));
-                } else {
-                    console.error('Ошибка опроса:', data.error);
-                }
-            })
-            .catch((error) => {
-                console.error('Ошибка при опросе новых сообщений:', error);
-            });
+                    } else {
+                        console.error('Ошибка опроса:', data.error);
+                    }
+                })
+                .catch((error) => {
+                    console.error('Ошибка при опросе новых сообщений:', error);
+                });
+        }
     }, 5000);
 }
 

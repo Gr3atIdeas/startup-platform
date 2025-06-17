@@ -3300,9 +3300,10 @@ def rename_chat(request, chat_id):
                 {"success": False, "error": "Название не может быть пустым"}, status=400
             )
 
-        chat.name = new_name
-        chat.updated_at = timezone.now()
-        chat.save()
+        with transaction.atomic():
+            chat.name = new_name
+            chat.updated_at = timezone.now()
+            chat.save()
 
         logger.info(f"Чат {chat.conversation_id} переименован в {new_name}")
         return JsonResponse({"success": True, "chat_name": new_name})
@@ -3316,7 +3317,6 @@ def rename_chat(request, chat_id):
         return JsonResponse(
             {"success": False, "error": f"Ошибка: {str(e)}"}, status=500
         )
-
 
 @login_required
 def available_users(request):

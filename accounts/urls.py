@@ -125,4 +125,5 @@ urlpatterns = [
     path('delete-message/<int:message_id>/', views.delete_message, name='delete_message'),
     path('remove-participant/<int:chat_id>/', views.remove_participant, name='remove_participant'),
     path("cosmochat/start-deal/<int:chat_id>/", views.start_deal, name="start_deal"),
+    path('cosmochat/chat-list/', views.chat_list, name='chat_list'),
 ]
