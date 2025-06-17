@@ -969,7 +969,6 @@ html::-webkit-scrollbar-button {
   box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.25);
   overflow: hidden;
   border-radius: 10px;
-  background-image: url(https://placehold.co/1303x560);
   background-size: cover;
   background-position: center;
 }
