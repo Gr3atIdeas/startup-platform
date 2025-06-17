@@ -1512,7 +1512,7 @@ html::-webkit-scrollbar-button {
     left: 50%;
     transform: translateX(-50%);
     width: 100vw;
-    height: calc(100% - 40px);
+    height: 100%;
     background: white;
     z-index: -1;
 }
