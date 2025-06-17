@@ -556,529 +556,160 @@ html::-webkit-scrollbar-button {
   z-index: 0;
   opacity: 1;
 }
-
-/* --- Секция 5: Featured5 (Исследуйте новые миры) --- */
-.featured5 {
+/* --- New Journey Section Styles --- */
+.featured-journey {
   width: 100%;
   max-width: 1445px;
   padding: 45px 71px;
   box-sizing: border-box;
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start; /* Внутреннее выравнивание этого блока */
-  gap: 55px;
   margin-top: 60px;
-  background: transparent !important;
-  margin-left: auto; /* Центрирование */
-  margin-right: auto; /* Центрирование */
+  display: flex;
+  justify-content: center;
 }
 
-.featured5 .frame-parent6 {
-  width: 100%;
+.journey-container {
+  width: 1303px;
   display: flex;
   flex-direction: column;
-  gap: 40px; /* Уменьшен отступ */
+  gap: 78px;
 }
 
-.featured5 .parent8 {
-  /* Заголовок "Исследуйте новые миры" */
-  align-self: flex-start;
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-}
-
-.featured5 .parent8 .div28 {
-  color: white;
-  font-size: 55px;
-  font-family: 'Blippo Black', sans-serif;
-  font-weight: normal;
-  line-height: 1;
-}
-
-.featured5 .parent8 .div29 {
-  color: #ffef2b;
-  font-size: 55px;
-  font-family: 'Blippo Black', sans-serif;
-  font-weight: normal;
-  text-transform: uppercase;
-  line-height: 1;
-}
-
-.featured5 .frame-parent7 {
-  /* Основной контент: [картинка слева] [разделитель] [карточки] [список справа] */
+.journey-banner {
   align-self: stretch;
-  display: flex;
-  justify-content: space-between; /* Элементы будут распределены */
-  align-items: flex-start;
-  gap: 30px;
-}
-
-.featured5 .frame-parent8 {
-  /* Левый блок с большой картинкой */
-  width: 45%; /* Примерно */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 25px;
-}
-
-.featured5 .group-wrapper {
-  align-self: stretch;
-  height: 514px;
+  height: 560px;
   position: relative;
-  background: #041a32;
+  box-shadow: 6px 6px 10px rgb(0 0 0 / 25%);
   overflow: hidden;
-  border-radius: 20px;
+  border-radius: 10px;
+  background-image: url('https://placehold.co/1303x560');
+  background-size: cover;
+  background-position: center;
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
 }
 
-.featured5 .group-child-main-img-1 {
-  width: 122.15px;
-  height: 345.36px;
-  left: 36px;
-  top: 83px;
+.journey-banner-text {
   position: absolute;
-}
-
-.featured5 .group-child-main-img-2 {
-  width: 388.42px;
-  height: 345.36px;
-  left: 168.7px;
-  top: 85.64px;
-  position: absolute;
-}
-
-.featured5 .parent9 {
-  /* Кнопка "Все стартапы" */
-  padding: 12px 25px;
-  background: linear-gradient(180deg, #ffef2b 0%, #f9f7d6 100%);
-  border-radius: 10px;
-  border: 1px solid black;
-  gap: 9px;
-  display: inline-flex;
-  text-decoration: none;
-  box-sizing: border-box;
-  align-items: center;
-}
-
-.featured5 .parent9 .div22 {
-  color: black;
-  font-size: 16px;
-  font-family: Unbounded, sans-serif;
-  font-weight: 500;
-  line-height: 1;
-}
-
-.featured5 .parent9 .iconsarrow-right-2line {
-  width: 16px;
-  height: 16px;
-}
-
-.featured5 .divider {
-  width: 1px;
-  align-self: stretch; /* Растянуть по высоте .frame-parent7 */
-  background: rgb(255 255 255 / 20%);
-}
-
-.featured5 .frame-parent9 {
-  /* Блок с тремя карточками стартапов */
-  width: 28%; /* Примерно */
-  display: flex;
-  flex-direction: column;
-  gap: 49px;
-}
-
-.featured5 .frame-wrapper {
-  align-self: stretch;
-}
-
-.featured5 .frame-parent10 {
-  /* Карточка стартапа */
-  align-self: stretch;
-  display: flex;
-  flex-direction: row; /* Картинка слева, текст справа */
-  justify-content: space-between;
-  align-items: center;
-  gap: 20px;
-  background: transparent;
-  padding: 0;
-}
-
-.featured5 .frame-parent10 .frame-child9 {
-  /* Картинка стартапа */
-  width: 160px;
-  height: 156px;
-  object-fit: cover;
-  border-radius: 10px;
-  flex-shrink: 0;
-}
-
-.featured5 .content {
-  /* Текст справа от картинки */
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 16px;
-  flex-grow: 1;
-}
-
-.featured5 .voltforge-dynamics-parent {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.featured5 .voltforge-dynamics {
-  color: #fcfcfd;
-  font-size: 16px;
-  font-family: Unbounded, sans-serif;
-  font-weight: 400;
-  line-height: 1;
-}
-
-.featured5 .info {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.featured5 .avatar01-icon {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-.featured5 .label2 {
-  padding: 4px 8px;
-  border-radius: 4px;
-  border: 1px solid #ffef2b;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.featured5 .popular {
-  color: #ffef2b;
-  font-size: 12px;
-  font-family: Unbounded, sans-serif;
-  font-weight: 500;
-  text-transform: uppercase;
-}
-
-.featured5 .voltforge-description {
-  color: #e6e8ec;
-  font-family: Unbounded, sans-serif;
-  font-weight: 300;
-
-  /* height: auto;  */
-
-  /* Убираем ограничение высоты */
-  overflow: visible;
-  text-overflow: initial;
-  width: 175px;
-  font-size: 8px;
-  line-height: 9px;
-}
-
-.featured5 .button5 {
-  padding: 8px 12px;
-  background: linear-gradient(0deg, #004e9f 0%, #006edf 100%);
-  border-radius: 8px;
-  gap: 10px;
-  display: inline-flex;
-  text-decoration: none;
-  align-items: center;
-  justify-content: center;
-  align-self: flex-start; /* Кнопка слева */
-}
-
-.featured5 .button5 .cosmochat {
-  color: #fcfcfd;
-  font-size: 14px;
-  font-family: Unbounded, sans-serif;
-  font-weight: 300;
-  line-height: 1;
-}
-
-.featured5 .creators {
-  /* "Последние обновления от стартаперов" */
-  width: 22%; /* Примерно */
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.featured5 .div31 {
-  color: #777e90; /* Светлее, чем 777E90 */
-  font-size: 12px;
-  font-family: Unbounded, sans-serif;
-  font-weight: 500;
-}
-
-.featured5 .frame-parent13 {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-}
-
-.featured5 .frame-parent14 {
-  width: 100%;
-  padding: 15px 0;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.featured5 .user-parent {
-  align-self: stretch;
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.featured5 .avatar01-icon3 {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-.featured5 .name-parent {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.featured5 .name-wrapper .cosmochat-name {
-  color: #fcfcfd;
-  font-size: 14px;
-  font-family: Unbounded, sans-serif;
-  font-weight: 300;
-}
-
-.featured5 .rating-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 12px;
-  font-family: Unbounded, sans-serif;
-  font-weight: 300;
-}
-
-.featured5 .rating-stars {
-  color: #ffef2b;
-}
-
-.featured5 .rating-value {
-  color: #e6e8ec;
-}
-
-.featured5 .divider1 {
-  align-self: stretch;
-  height: 1px;
-  background: rgb(255 255 255 / 13%);
-}
-
-.featured5 .button8 {
-  padding: 10px 16px;
-  border-radius: 8px;
-  border: 1px solid white;
-  gap: 12px;
-  display: inline-flex;
-  text-decoration: none;
-  align-items: center;
-  justify-content: center;
-  margin-top: 15px;
-  align-self: flex-start;
-}
-
-.featured5 .button8 .cosmochat {
-  color: #fcfcfd;
-  font-size: 14px;
-  font-family: Unbounded, sans-serif;
-  font-weight: 300;
-}
-
-.featured5 .button8 .iconsarrow-right-2line {
-  width: 16px;
-  height: 16px;
-}
-
-/* --- Секция 6: Featured6 (Как работает наша галактика?) --- */
-.featured6.galaxy-carousel-wrapper {
-  width: 100%;
-  max-width: 1445px;
-  padding: 45px 0;
-  box-sizing: border-box;
-  overflow: hidden;
-
-  /* display: flex; */
-
-  /* justify-content: center; */
-
-  /* align-items: center; */
-  margin-top: 60px;
-  background: transparent !important;
-  border-radius: 10px;
-  margin-left: auto; /* Центрирование */
-  margin-right: auto; /* Центрирование */
-  align-items: center; /* This was forcing the carousel to be centered */
-  gap: 55px;
-}
-
-.featured6 .frame-parent18 {
-  /* Внутренний контейнер */
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* This was forcing the carousel to be centered */
-  gap: 55px;
-}
-
-.featured6 .parent18 {
-  /* Заголовок */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 5px;
-}
-
-.featured6 .parent18 .div52 {
+  bottom: 50px;
+  width: 869px;
+  text-align: center;
   color: white;
-  font-size: 55px;
-  font-family: 'Blippo Black', sans-serif;
-  font-weight: normal;
-  line-height: 1;
+  font-size: 35px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 600;
+  line-height: 35px;
+  word-wrap: break-word;
 }
 
-.featured6 .parent18 .div29 {
-  color: #ffef2b;
-  font-size: 55px;
-  font-family: 'Blippo Black', sans-serif;
-  font-weight: normal;
-  text-transform: uppercase;
-  line-height: 1;
-}
-
-/* JS-управляемая карусель */
-.featured6 .galaxy-carousel {
-  width: 100%; /* Ширина одного слайда */
-  height: 504px; /* Высота по картинке */
-  position: relative;
-  overflow: hidden;
-  align-self: stretch; /* Override parent's align-items: center */
-}
-
-.featured6 .galaxy-carousel-inner {
-  /* Этот класс JS не использует, но может быть полезен для стилизации обертки слайдов */
-  display: flex;
-  transition: transform 0.5s ease-in-out;
-}
-
-.featured6 .galaxy-step-card {
+.journey-banner-image-container {
+  width: 372px;
+  height: 279px;
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 74px;
+  overflow: hidden;
+}
+
+.journey-banner-image {
   width: 100%;
   height: 100%;
-  display: flex; /* Для выравнивания картинки внутри */
+  object-fit: cover;
+}
+
+.journey-selection {
+  width: 100%;
+  display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start; /* Выравниваем по верху, чтобы обрезалась нижняя часть */
-  gap: 20px;
-  box-sizing: border-box;
-  opacity: 0;
-  transition: opacity 0.8s ease-in-out; /* Плавный переход */
-  pointer-events: none; /* Не кликать по неактивным */
-  border-radius: 20px;
-  overflow: hidden;
+  gap: 32px;
 }
 
-.featured6 .galaxy-step-card.active-step {
-  opacity: 1;
-  pointer-events: auto; /* Можно кликать по активной */
-  z-index: 1; /* Активная карточка поверх остальных */
+.journey-title {
+  color: white;
+  font-size: 35px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 600;
+  line-height: 35px;
+  word-wrap: break-word;
+  text-align: center;
 }
 
-.featured6 .galaxy-step-card .frame-child12 {
-  width: 100%;
-  height: auto; /* Автоматическая высота для сохранения пропорций */
-  min-height: 504px; /* Минимальная высота равна высоте контейнера */
-  object-fit: cover;
-  object-position: top center; /* Фокусируемся на верхней части изображения */
-}
-
-.featured6 .galaxy-step-data {
-  display: none;
-} /* Скрываем данные для JS */
-
-.featured6 .galaxy-navigation {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.featured6 .galaxy-arrow-left,
-.featured6 .galaxy-arrow-right {
-  width: 40px;
-  height: 40px;
-  background-color: rgb(255 255 255 / 20%);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.featured6 .galaxy-arrow-left:hover,
-.featured6 .galaxy-arrow-right:hover {
-  background-color: rgb(255 255 255 / 40%);
-}
-
-.featured6 .galaxy-arrow-left img,
-.featured6 .galaxy-arrow-right img {
-  width: 18px;
-  height: 18px;
-  object-fit: contain;
-  filter: brightness(0) invert(1); /* Белые стрелки */
-}
-
-.featured6 .galaxy-step-current-title {
+.journey-subtitle {
   color: white;
   font-size: 20px;
   font-family: Unbounded, sans-serif;
   font-weight: 400;
+  line-height: 18px;
+  word-wrap: break-word;
   text-align: center;
-  line-height: 55px;
 }
 
-.featured6 .galaxy-step-number-button {
-  width: 205px;
-  height: 62px;
+.journey-categories {
+  align-self: stretch;
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+}
+
+.journey-category-row {
+  align-self: stretch;
   justify-content: center;
   align-items: center;
-  background-color: #ffef2b;
-  border-radius: 10px;
+  gap: 45px;
+  display: inline-flex;
+  flex-wrap: wrap;
 }
 
-.featured6 .galaxy-step-number-text {
-  color: black;
+.journey-category-item,
+.journey-category-item-selected {
+  width: 179px;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 11px;
+  display: inline-flex;
+  text-decoration: none;
+  color: white;
+  cursor: pointer;
+}
+
+.journey-category-item img,
+.journey-category-item-selected img {
+  align-self: stretch;
+  height: 142px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.journey-category-item-selected img {
+  border: 2px #FFEF2B solid;
+}
+
+.journey-category-item div {
+  font-size: 16px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 400;
+  line-height: 16px;
+  word-wrap: break-word;
+}
+
+.journey-category-item-selected div {
   font-size: 20px;
   font-family: Unbounded, sans-serif;
   font-weight: 400;
-  text-transform: uppercase;
+  line-height: 18px;
+  word-wrap: break-word;
 }
 
+.journey-button {
+  width: 224px;
+  height: 40px;
+  text-align: center;
+  justify-content: center;
+}
 /* --- Секция 7: Featured7 (Great Ideas это платформа...) --- */
 .featured7 {
   width: 100%;
