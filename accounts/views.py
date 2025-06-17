@@ -940,35 +940,56 @@ def chat_list(request):
     for chat in chats:
         participants = chat.chatparticipants_set.all()
         has_user = participants.filter(user=user).exists()
-        is_deleted = getattr(chat, 'is_deleted', False)  # Безопасный доступ
+        is_deleted = getattr(chat, 'is_deleted', False)
         has_left = not has_user and any(p.user != user for p in participants)
 
-        # Модератор видит групповые чаты и чаты-сделки
+        # Проверяем доступ только для пользователей, участвующих в чате
+        if not has_user and (not user.role or user.role.role_name.lower() != "moderator"):
+            continue
+
+        # Для модераторов добавляем чаты-сделки и групповые чаты
         if user.role and user.role.role_name.lower() == "moderator" and (chat.is_group_chat or chat.is_deal):
+            other_participant = participants.exclude(user=user).first()
+            participant_info = None
+            if other_participant and not chat.is_group_chat and other_participant.user:
+                participant_info = other_participant.user
             chat_data.append({
                 'conversation_id': chat.conversation_id,
-                'name': chat.name,
+                'name': chat.name if chat.name else f"Чат {chat.conversation_id}",
                 'is_group_chat': chat.is_group_chat,
                 'is_deal': chat.is_deal,
                 'is_deleted': is_deleted,
                 'has_left': has_left,
-                'participant': participants.exclude(user=user).first().user if not chat.is_group_chat else None,
+                'participant': {
+                    'user_id': participant_info.user_id if participant_info else None,
+                    'first_name': participant_info.first_name if participant_info else None,
+                    'last_name': participant_info.last_name if participant_info else None,
+                    'profile_picture_url': participant_info.get_profile_picture_url() if participant_info else None
+                } if participant_info else None,
             })
-        # Обычные пользователи видят только свои активные чаты
-        elif not is_deleted and not has_left:
+        # Для обычных пользователей только их чаты
+        elif not is_deleted and not has_left and has_user:
+            other_participant = participants.exclude(user=user).first()
+            participant_info = None
+            if other_participant and not chat.is_group_chat and other_participant.user:
+                participant_info = other_participant.user
             chat_data.append({
                 'conversation_id': chat.conversation_id,
-                'name': chat.name,
+                'name': chat.name if chat.name else f"Чат {chat.conversation_id}",
                 'is_group_chat': chat.is_group_chat,
                 'is_deal': chat.is_deal,
                 'is_deleted': is_deleted,
                 'has_left': has_left,
-                'participant': participants.exclude(user=user).first().user if not chat.is_group_chat else None,
+                'participant': {
+                    'user_id': participant_info.user_id if participant_info else None,
+                    'first_name': participant_info.first_name if participant_info else None,
+                    'last_name': participant_info.last_name if participant_info else None,
+                    'profile_picture_url': participant_info.get_profile_picture_url() if participant_info else None
+                } if participant_info else None,
             })
 
+    logger.info(f"Chat list generated for user {user.email}: {len(chat_data)} chats")
     return JsonResponse({'success': True, 'chats': chat_data})
-
-
 
 @login_required
 def start_deal(request, chat_id):
@@ -979,11 +1000,9 @@ def start_deal(request, chat_id):
     if not chat.chatparticipants_set.filter(user=request.user).exists():
         return JsonResponse({"success": False, "error": "У вас нет доступа к этому чату"}, status=403)
 
-    # Проверяем, что чат не является групповым и не помечен как сделка
     if chat.is_group_chat or chat.is_deal:
         return JsonResponse({"success": False, "error": "Сделку можно начать только в личном чате, который ещё не является сделкой"}, status=400)
 
-    # Проверяем состав участников (должно быть ровно 2: стартапер и инвестор)
     participants = chat.chatparticipants_set.all()
     if participants.count() != 2:
         return JsonResponse({"success": False, "error": "В чате должно быть ровно два участника"}, status=400)
@@ -992,35 +1011,42 @@ def start_deal(request, chat_id):
     if roles != {"startuper", "investor"}:
         return JsonResponse({"success": False, "error": "Чат должен включать одного стартапера и одного инвестора"}, status=400)
 
+    try:
+        data = json.loads(request.body)
+        initiator_name = data.get('initiator_name', request.user.get_full_name() or 'Пользователь')
+    except json.JSONDecodeError:
+        initiator_name = request.user.get_full_name() or 'Пользователь'
+
     with transaction.atomic():
-        # Устанавливаем флаг сделки
         chat.is_deal = True
         chat.updated_at = timezone.now()
         chat.save()
 
-        # Выбираем случайного модератора
         moderators = Users.objects.filter(role__role_name="moderator")
         if not moderators.exists():
             return JsonResponse({"success": False, "error": "Нет доступных модераторов"}, status=500)
 
         moderator = choice(list(moderators))
-        
-        # Добавляем модератора в чат
-        ChatParticipants.objects.create(
-            conversation=chat,
-            user=moderator
-        )
+        ChatParticipants.objects.create(conversation=chat, user=moderator)
 
-        # Отправляем системное сообщение
         message = Messages(
             conversation=chat,
             sender=None,
-            message_text=f"Сделка начата. Назначен модератор: {moderator.first_name} {moderator.last_name}",
+            message_text=f"Сделку начал {initiator_name}. Назначен модератор: {moderator.get_full_name()}",
             status=MessageStatuses.objects.get(status_name="sent"),
             created_at=timezone.now(),
             updated_at=timezone.now(),
         )
         message.save()
+
+    participants_data = [
+        {
+            "user_id": p.user.user_id,
+            "name": p.user.get_full_name(),
+            "role": p.user.role.role_name if p.user.role else "unknown"
+        }
+        for p in chat.chatparticipants_set.all()
+    ]
 
     logger.info(f"Сделка начата в чате {chat_id}, модератор {moderator.user_id} назначен")
     return JsonResponse({
@@ -1028,8 +1054,9 @@ def start_deal(request, chat_id):
         "message": "Сделка начата, модератор назначен",
         "moderator": {
             "user_id": moderator.user_id,
-            "name": f"{moderator.first_name} {moderator.last_name}"
-        }
+            "name": moderator.get_full_name()
+        },
+        "participants": participants_data
     })
 
 @login_required
@@ -3294,9 +3321,10 @@ def rename_chat(request, chat_id):
                 {"success": False, "error": "Название не может быть пустым"}, status=400
             )
 
-        chat.name = new_name
-        chat.updated_at = timezone.now()
-        chat.save()
+        with transaction.atomic():
+            chat.name = new_name
+            chat.updated_at = timezone.now()
+            chat.save()
 
         logger.info(f"Чат {chat.conversation_id} переименован в {new_name}")
         return JsonResponse({"success": True, "chat_name": new_name})
@@ -3310,7 +3338,6 @@ def rename_chat(request, chat_id):
         return JsonResponse(
             {"success": False, "error": f"Ошибка: {str(e)}"}, status=500
         )
-
 
 @login_required
 def available_users(request):
