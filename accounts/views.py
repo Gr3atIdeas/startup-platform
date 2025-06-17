@@ -943,17 +943,19 @@ def chat_list(request):
         is_deleted = getattr(chat, 'is_deleted', False)
         has_left = not has_user and any(p.user != user for p in participants)
 
-        other_participant = participants.exclude(user=user).first()
-        participant_info = None
-        if other_participant and not chat.is_group_chat and other_participant.user:
-            participant_info = other_participant.user
-        elif chat.is_group_chat:
-            participant_info = None  # Для групповых чатов не указываем участника
+        # Проверяем доступ только для пользователей, участвующих в чате
+        if not has_user and (not user.role or user.role.role_name.lower() != "moderator"):
+            continue
 
+        # Для модераторов добавляем чаты-сделки и групповые чаты
         if user.role and user.role.role_name.lower() == "moderator" and (chat.is_group_chat or chat.is_deal):
+            other_participant = participants.exclude(user=user).first()
+            participant_info = None
+            if other_participant and not chat.is_group_chat and other_participant.user:
+                participant_info = other_participant.user
             chat_data.append({
                 'conversation_id': chat.conversation_id,
-                'name': chat.name,
+                'name': chat.name if chat.name else f"Чат {chat.conversation_id}",
                 'is_group_chat': chat.is_group_chat,
                 'is_deal': chat.is_deal,
                 'is_deleted': is_deleted,
@@ -965,10 +967,15 @@ def chat_list(request):
                     'profile_picture_url': participant_info.get_profile_picture_url() if participant_info else None
                 } if participant_info else None,
             })
-        elif not is_deleted and not has_left:
+        # Для обычных пользователей только их чаты
+        elif not is_deleted and not has_left and has_user:
+            other_participant = participants.exclude(user=user).first()
+            participant_info = None
+            if other_participant and not chat.is_group_chat and other_participant.user:
+                participant_info = other_participant.user
             chat_data.append({
                 'conversation_id': chat.conversation_id,
-                'name': chat.name,
+                'name': chat.name if chat.name else f"Чат {chat.conversation_id}",
                 'is_group_chat': chat.is_group_chat,
                 'is_deal': chat.is_deal,
                 'is_deleted': is_deleted,
@@ -983,7 +990,6 @@ def chat_list(request):
 
     logger.info(f"Chat list generated for user {user.email}: {len(chat_data)} chats")
     return JsonResponse({'success': True, 'chats': chat_data})
-
 
 @login_required
 def start_deal(request, chat_id):

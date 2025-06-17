@@ -454,7 +454,6 @@ function startPolling() {
                                             chatListContainer.appendChild(chatItem);
                                         }
                                     });
-                                    // Обновляем текущий чат, если он переименован
                                     const currentChatItem = chatListContainer.querySelector(`.chat-item-new[data-chat-id="${currentChatId}"]`);
                                     if (currentChatItem && chatWindowTitle) {
                                         chatWindowTitle.textContent = currentChatItem.dataset.chatName;
@@ -1864,18 +1863,18 @@ function setupRoleFilters() {
 function createChatItemElement(chat) {
     const defaultAvatarSrc = '/static/accounts/images/cosmochat/group_avatar.svg';
     let avatarUrl = defaultAvatarSrc;
-    let avatarAlt = chat.name;
+    let avatarAlt = chat.name || `Чат ${chat.conversation_id}`;
     let chatType = chat.is_group_chat ? 'group' : 'personal';
 
     if (chatType === 'personal' && chat.participant && chat.participant.profile_picture_url) {
         avatarUrl = chat.participant.profile_picture_url;
-        avatarAlt = chat.participant.first_name || 'Чат';
+        avatarAlt = `${chat.participant.first_name || 'Чат'} ${chat.participant.last_name || ''}`.trim();
     }
 
     const chatItem = document.createElement('div');
     chatItem.className = 'chat-item-new';
     chatItem.dataset.chatId = chat.conversation_id;
-    chatItem.dataset.chatName = chat.name;
+    chatItem.dataset.chatName = chat.name || `Чат ${chat.conversation_id}`;
     chatItem.dataset.chatType = chatType;
     chatItem.dataset.isDeal = chat.is_deal ? 'true' : 'false';
 
@@ -1883,7 +1882,7 @@ function createChatItemElement(chat) {
         <img src="${avatarUrl}" alt="${avatarAlt}" class="chat-avatar-img">
         <div class="chat-item-info-new">
             <h4>
-                ${chat.name.substring(0, 25)}${chat.name.length > 25 ? '...' : ''}
+                ${(chat.name || `Чат ${chat.conversation_id}`).substring(0, 25)}${(chat.name || `Чат ${chat.conversation_id}`).length > 25 ? '...' : ''}
                 ${chat.is_deal ? '<span class="deal-indicator" title="Сделка"><img src="/static/accounts/images/cosmochat/deal_icon.svg" alt="Сделка" class="deal-icon"></span>' : ''}
             </h4>
             <p class="last-message-preview">Нет сообщений</p>
