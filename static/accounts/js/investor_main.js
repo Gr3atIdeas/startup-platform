@@ -2,6 +2,89 @@
 // We can add functionality here later if needed.
 
 document.addEventListener('DOMContentLoaded', function () {
+  // --- Galaxy Carousel (Как работает наша галактика?) ---
+  const galaxyCarousel = document.querySelector('.galaxy-carousel')
+  const galaxyWrapper = document.querySelector('.galaxy-carousel-wrapper')
+  const arrowLeftGalaxy = document.querySelector('.galaxy-arrow-left')
+  const arrowRightGalaxy = document.querySelector('.galaxy-arrow-right')
+  const currentStepTitleElement = document.querySelector(
+    '.galaxy-step-current-title'
+  )
+  const stepIndicatorButtonText = document.querySelector(
+    '.galaxy-step-number-text'
+  )
+
+  if (
+    galaxyCarousel &&
+    galaxyWrapper &&
+    arrowLeftGalaxy &&
+    arrowRightGalaxy &&
+    currentStepTitleElement &&
+    stepIndicatorButtonText
+  ) {
+    const galaxyCards = galaxyCarousel.querySelectorAll('.galaxy-step-card')
+    if (galaxyCards.length > 0) {
+      let currentGalaxyIndex = 0
+      const totalGalaxyCards = galaxyCards.length
+      let galaxyAutoplayInterval = null
+
+      function updateGalaxyCarousel() {
+        galaxyCards.forEach((card, index) => {
+          card.classList.toggle('active-step', index === currentGalaxyIndex)
+        })
+
+        const currentCardData =
+          galaxyCards[currentGalaxyIndex].querySelector('.galaxy-step-data')
+        if (currentCardData) {
+          currentStepTitleElement.textContent =
+            currentCardData.dataset.stepTitle || 'Заголовок шага'
+          stepIndicatorButtonText.textContent =
+            (currentCardData.dataset.stepNumber || '') + '  ШАГ'
+        }
+      }
+
+      function advanceSlide(direction) {
+        if (direction === 'next') {
+          currentGalaxyIndex = (currentGalaxyIndex + 1) % totalGalaxyCards
+        } else {
+          currentGalaxyIndex =
+            (currentGalaxyIndex - 1 + totalGalaxyCards) % totalGalaxyCards
+        }
+        updateGalaxyCarousel()
+      }
+
+      function resetAutoplay() {
+        clearInterval(galaxyAutoplayInterval)
+        galaxyAutoplayInterval = setInterval(() => {
+          advanceSlide('next')
+        }, 10000) // 10 seconds
+      }
+
+      arrowLeftGalaxy.addEventListener('click', () => {
+        advanceSlide('prev')
+        resetAutoplay()
+      })
+
+      arrowRightGalaxy.addEventListener('click', () => {
+        advanceSlide('next')
+        resetAutoplay()
+      })
+
+      // Stop autoplay on hover for better UX
+      galaxyWrapper.addEventListener('mouseenter', () =>
+        clearInterval(galaxyAutoplayInterval)
+      )
+      galaxyWrapper.addEventListener('mouseleave', () => resetAutoplay())
+
+      updateGalaxyCarousel()
+      resetAutoplay()
+    } else {
+      // console.warn('Карточки в карусели "Галактика" не найдены.');
+    }
+  } else {
+    // console.warn('Элементы карусели "Галактика" не найдены.');
+  }
+
   // --- Success Stories Carousel ---
   const successCarousel = document.querySelector('.success-stories-carousel')
   const successContainer = document.querySelector(
