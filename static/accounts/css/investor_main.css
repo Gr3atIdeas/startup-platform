@@ -1492,11 +1492,10 @@ html::-webkit-scrollbar-button {
 
 /* --- Final CTA Section --- */
 .final-cta-section {
-  width: 100vw;
+  width: 100%;
+  max-width: 1445px;
   height: 900px;
-  margin: 80px 0 -40px 50%;
-  transform: translateX(-50%);
-  background: white;
+  margin: 80px auto -40px auto;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -1504,6 +1503,7 @@ html::-webkit-scrollbar-button {
   padding-top: 60px;
   box-sizing: border-box;
   z-index: 5;
+  background: white;
 }
 
 .final-cta-content-wrapper {
