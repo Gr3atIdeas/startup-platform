@@ -2189,7 +2189,6 @@ def add_participant(request, chat_id):
         }
     )
 
-
 @login_required
 def available_users_for_chat(request, chat_id):
     chat = get_object_or_404(ChatConversations, conversation_id=chat_id)

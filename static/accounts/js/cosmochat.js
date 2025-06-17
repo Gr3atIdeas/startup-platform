@@ -585,12 +585,15 @@ function openAddParticipantModal() {
     return;
   }
 
-  console.log('Fetching available users...');
+  console.log('Fetching available users for chat:', currentChatId);
   fetch(`/cosmochat/available-users-for-chat/${currentChatId}/`, {
     headers: { 'X-CSRFToken': csrfToken, 'X-Requested-With': 'XMLHttpRequest' },
   })
     .then((response) => {
-      console.log('Fetch response received:', response.status);
+      console.log('Fetch response status:', response.status);
+      if (!response.ok) {
+        console.error('Failed to fetch available users:', response.statusText);
+      }
       return response.json();
     })
     .then((data) => {
@@ -641,26 +644,34 @@ function closeAddParticipantModal() {
 }
 
 function addParticipantToChat(userId) {
-  if (!currentChatId) return
+  if (!currentChatId) return;
 
+  console.log('Attempting to add participant, chatId:', currentChatId, 'userId:', userId);
   fetch(`/cosmochat/add-participant/${currentChatId}/?user_id=${userId}`, {
     method: 'POST',
     headers: { 'X-CSRFToken': csrfToken, 'X-Requested-With': 'XMLHttpRequest' },
   })
-    .then((response) => response.json())
+    .then((response) => {
+      console.log('Add participant response status:', response.status);
+      if (!response.ok) {
+        console.error('Failed to add participant:', response.statusText);
+      }
+      return response.json();
+    })
     .then((data) => {
+      console.log('Add participant data:', data);
       if (data.success) {
-        alert('Участник добавлен! Информация обновится.')
-        closeAddParticipantModal()
-        loadChat(currentChatId)
+        alert('Участник добавлен! Информация обновится.');
+        closeAddParticipantModal();
+        loadChat(currentChatId);
       } else {
-        alert(data.error || 'Ошибка при добавлении участника')
+        alert(data.error || 'Ошибка при добавлении участника');
       }
     })
     .catch((error) => {
-      console.error('Ошибка добавления участника:', error)
-      alert('Произошла ошибка при добавлении участника.')
-    })
+      console.error('Ошибка добавления участника:', error);
+      alert('Произошла ошибка при добавлении участника.');
+    });
 }
 
 function leaveChat() {
