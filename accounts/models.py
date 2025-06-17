@@ -668,18 +668,17 @@ class ChatConversations(models.Model):
     name = models.CharField(max_length=255, blank=True, null=True)
     created_at = models.DateTimeField(blank=True, null=True)
     updated_at = models.DateTimeField(blank=True, null=True)
-    is_group_chat = models.BooleanField(default=False)  # Новое поле
+    is_group_chat = models.BooleanField(default=False)
+    is_deal = models.BooleanField(default=False)  # Новое поле для флага сделки
 
     class Meta:
         managed = True
         db_table = "chat_conversations"
 
     def get_participants(self):
-        """Возвращает список участников чата."""
         return self.chatparticipants_set.all()
 
     def get_last_message(self):
-        """Возвращает последнее сообщение в чате."""
         return self.messages_set.order_by("-created_at").first()
 
 

@@ -1754,3 +1754,20 @@ body.cosmochat-body {
 .chat-icon-placeholder {
     display: none; /* Отключаем, так как иконки не нужны в модальном окне */
 }
+
+.start-deal-btn-new-style {
+    background: transparent;
+    border: 1px solid #004e9f;
+    color: #004e9f;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 10px;
+    font-family: Unbounded, sans-serif;
+    font-size: 14px;
+}
+
+.start-deal-btn-new-style:hover {
+    background: #004e9f;
+    color: white;
+}

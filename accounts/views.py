@@ -6,6 +6,8 @@ import logging
 import os
 import uuid
 from decimal import Decimal
+from django.db import transaction
+from random import choice
 
 from dateutil.relativedelta import relativedelta
 from django import forms  # Добавляем импорт
@@ -938,15 +940,16 @@ def chat_list(request):
     for chat in chats:
         participants = chat.chatparticipants_set.all()
         has_user = participants.filter(user=user).exists()
-        is_deleted = chat.is_deleted
-        has_left = not has_user and any(p.user != user for p in participants)  # Пользователь вышел, но чат существует
+        is_deleted = getattr(chat, 'is_deleted', False)  # Безопасный доступ
+        has_left = not has_user and any(p.user != user for p in participants)
 
-        # Модератор видит все групповые чаты
-        if user.role and user.role.role_name.lower() == "moderator" and chat.is_group_chat:
+        # Модератор видит групповые чаты и чаты-сделки
+        if user.role and user.role.role_name.lower() == "moderator" and (chat.is_group_chat or chat.is_deal):
             chat_data.append({
                 'conversation_id': chat.conversation_id,
                 'name': chat.name,
                 'is_group_chat': chat.is_group_chat,
+                'is_deal': chat.is_deal,
                 'is_deleted': is_deleted,
                 'has_left': has_left,
                 'participant': participants.exclude(user=user).first().user if not chat.is_group_chat else None,
@@ -957,12 +960,77 @@ def chat_list(request):
                 'conversation_id': chat.conversation_id,
                 'name': chat.name,
                 'is_group_chat': chat.is_group_chat,
+                'is_deal': chat.is_deal,
                 'is_deleted': is_deleted,
                 'has_left': has_left,
                 'participant': participants.exclude(user=user).first().user if not chat.is_group_chat else None,
             })
 
     return JsonResponse({'success': True, 'chats': chat_data})
+
+
+
+@login_required
+def start_deal(request, chat_id):
+    if request.method != "POST":
+        return JsonResponse({"success": False, "error": "Неверный метод запроса"}, status=405)
+
+    chat = get_object_or_404(ChatConversations, conversation_id=chat_id)
+    if not chat.chatparticipants_set.filter(user=request.user).exists():
+        return JsonResponse({"success": False, "error": "У вас нет доступа к этому чату"}, status=403)
+
+    # Проверяем, что чат не является групповым и не помечен как сделка
+    if chat.is_group_chat or chat.is_deal:
+        return JsonResponse({"success": False, "error": "Сделку можно начать только в личном чате, который ещё не является сделкой"}, status=400)
+
+    # Проверяем состав участников (должно быть ровно 2: стартапер и инвестор)
+    participants = chat.chatparticipants_set.all()
+    if participants.count() != 2:
+        return JsonResponse({"success": False, "error": "В чате должно быть ровно два участника"}, status=400)
+
+    roles = {p.user.role.role_name.lower() for p in participants if p.user and p.user.role}
+    if roles != {"startuper", "investor"}:
+        return JsonResponse({"success": False, "error": "Чат должен включать одного стартапера и одного инвестора"}, status=400)
+
+    with transaction.atomic():
+        # Устанавливаем флаг сделки
+        chat.is_deal = True
+        chat.updated_at = timezone.now()
+        chat.save()
+
+        # Выбираем случайного модератора
+        moderators = Users.objects.filter(role__role_name="moderator")
+        if not moderators.exists():
+            return JsonResponse({"success": False, "error": "Нет доступных модераторов"}, status=500)
+
+        moderator = choice(list(moderators))
+        
+        # Добавляем модератора в чат
+        ChatParticipants.objects.create(
+            conversation=chat,
+            user=moderator
+        )
+
+        # Отправляем системное сообщение
+        message = Messages(
+            conversation=chat,
+            sender=None,
+            message_text=f"Сделка начата. Назначен модератор: {moderator.first_name} {moderator.last_name}",
+            status=MessageStatuses.objects.get(status_name="sent"),
+            created_at=timezone.now(),
+            updated_at=timezone.now(),
+        )
+        message.save()
+
+    logger.info(f"Сделка начата в чате {chat_id}, модератор {moderator.user_id} назначен")
+    return JsonResponse({
+        "success": True,
+        "message": "Сделка начата, модератор назначен",
+        "moderator": {
+            "user_id": moderator.user_id,
+            "name": f"{moderator.first_name} {moderator.last_name}"
+        }
+    })
 
 @login_required
 def create_startup(request):

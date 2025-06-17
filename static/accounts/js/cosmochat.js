@@ -74,18 +74,10 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   // Если при загрузке страницы есть параметр new_chat=true и open_chat_id, то это новый чат
-  // и нужно добавить его в список и загрузить
   const urlParams = new URLSearchParams(window.location.search)
   if (urlParams.get('new_chat') === 'true' && urlParams.get('open_chat_id')) {
     const newChatId = urlParams.get('open_chat_id')
-    // Попытаемся получить информацию о новом чате, чтобы добавить его в список
-    // Это потребует дополнительной Django view или изменения существующей
-    // Пока просто перезагрузим страницу без new_chat, чтобы он подгрузился стандартно, если уже есть
-    // или будет добавлен через polling, если бэкенд его вернет в общем списке.
-    // Для более чистого решения, нужна ручка для получения деталей одного чата по ID.
-    // loadChat(newChatId); // Загружаем новый чат
-    // window.history.replaceState({}, document.title, window.location.pathname + "?open_chat_id=" + newChatId);
-    // Лучше перезагрузить список чатов, если возможно, или просто загрузить чат
+    // Пока перезагрузим список чатов, чтобы новый чат подгрузился
   }
 
   // Показываем плейсхолдер, если чат не выбран
@@ -107,18 +99,49 @@ document.addEventListener('DOMContentLoaded', function () {
   // Обновление HTML-разметки для пагинации
   updatePaginationHTML()
 
+  // Обработчик для кнопки "Начать сделку"
+  const startDealBtn = document.getElementById('startDealBtn')
+  if (startDealBtn) {
+    startDealBtn.addEventListener('click', function () {
+      if (!currentChatId) {
+        alert('Выберите чат для начала сделки')
+        return
+      }
+      const chatItem = document.querySelector(
+        `.chat-item-new[data-chat-id="${currentChatId}"]`
+      )
+      if (
+        !chatItem ||
+        chatItem.dataset.chatType === 'group' ||
+        chatItem.dataset.isDeal === 'true'
+      ) {
+        alert(
+          'Сделку можно начать только в личном чате, который ещё не помечен как сделка'
+        )
+        return
+      }
+      startDealBtn.disabled = true
+      startDealBtn.textContent = 'Инициация сделки...'
+      startDeal(currentChatId)
+    })
+  }
+
+  // Обработчик для кнопки "Покинуть чат"
+  if (leaveChatBtn) {
+    leaveChatBtn.addEventListener('click', leaveChat)
+  }
+
   // Обработчик для кнопки "Далее" в модальном окне группового чата
   if (navigateToDetailsViewBtn) {
     navigateToDetailsViewBtn.addEventListener('click', function () {
       console.log('#navigateToDetailsViewBtn clicked')
       if (selectedGroupChatUserIds.length > 0) {
         console.log('Selected users:', selectedGroupChatUserIds)
-        // Получаем groupChatUsersList здесь, так как он нужен для renderSelectedParticipantsForDetailsView
         const groupChatUsersList = document.getElementById('groupChatUsersList')
         const groupChatNameInput = document.getElementById('groupChatNameInput')
 
         console.log('Calling renderSelectedParticipantsForDetailsView...')
-        renderSelectedParticipantsForDetailsView(groupChatUsersList) // Передаем groupChatUsersList
+        renderSelectedParticipantsForDetailsView(groupChatUsersList)
         if (groupChatNameInput && groupChatUsersList) {
           const firstFewNames = selectedGroupChatUserIds
             .map((userId) => {
@@ -148,7 +171,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   if (confirmGroupChatCreationBtn) {
     confirmGroupChatCreationBtn.addEventListener('click', function () {
-      const groupChatNameInput = document.getElementById('groupChatNameInput') // Получаем здесь
+      const groupChatNameInput = document.getElementById('groupChatNameInput')
       const chatName = groupChatNameInput
         ? groupChatNameInput.value.trim()
         : 'Групповой чат'
@@ -175,11 +198,10 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   // Закрытие модального окна группового чата по клику вне модального окна
-  const groupChatModalOverlay = document.getElementById('groupChatModal') // Используем overlay для клика мимо
+  const groupChatModalOverlay = document.getElementById('groupChatModal')
   if (groupChatModalOverlay) {
     groupChatModalOverlay.addEventListener('click', function (event) {
       if (event.target === groupChatModalOverlay) {
-        // Проверяем, что клик был именно по оверлею
         closeGroupChatModal()
       }
     })
@@ -187,7 +209,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Закрытие модального окна группового чата по нажатию ESC
   document.addEventListener('keydown', function (event) {
-    const groupChatModal = document.getElementById('groupChatModal') // Получаем ссылку на модалку
+    const groupChatModal = document.getElementById('groupChatModal')
     if (
       event.key === 'Escape' &&
       groupChatModal &&
@@ -197,7 +219,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   })
 
-  // ---> НОВОЕ: Обработчик для кнопки закрытия модального окна группового чата
+  // Обработчик для кнопки закрытия модального окна группового чата
   const closeGroupChatModalBtn = document.getElementById(
     'closeGroupChatModalBtn'
   )
@@ -206,7 +228,6 @@ document.addEventListener('DOMContentLoaded', function () {
       closeGroupChatModal()
     })
   }
-  // <--- КОНЕЦ НОВОГО
 
   // Добавляем обработчики для фильтров чатов
   const chatFilterButtons = document.querySelectorAll(
@@ -223,6 +244,19 @@ document.addEventListener('DOMContentLoaded', function () {
   // Инициализация фильтров ролей
   setupRoleFilters()
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 function showNoChatSelected() {
   if (noChatSelectedPlaceholder)
@@ -414,6 +448,68 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
+function startDeal(chatId) {
+  const startDealBtn = document.getElementById('startDealBtn')
+  fetch(`/cosmochat/start-deal/${chatId}/`, {
+    method: 'POST',
+    headers: {
+      'X-CSRFToken': csrfToken,
+      'X-Requested-With': 'XMLHttpRequest'
+    }
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.success) {
+        alert(data.message)
+        // Обновляем интерфейс
+        if (startDealBtn) {
+          startDealBtn.style.display = 'none' // Скрываем кнопку
+          startDealBtn.disabled = false // Сбрасываем disabled
+          startDealBtn.textContent = 'Начать сделку' // Восстанавливаем текст
+        }
+        // Помечаем чат как сделку
+        const chatItem = document.querySelector(
+          `.chat-item-new[data-chat-id="${chatId}"]`
+        )
+        if (chatItem) {
+          chatItem.dataset.isDeal = 'true'
+        }
+        // Добавляем системное сообщение в чат
+        appendMessage(
+          {
+            message_id: `temp_${Date.now()}`,
+            sender_id: null,
+            sender_name: 'Система',
+            message_text: `Сделка начата. Назначен модератор: ${data.moderator.name}`,
+            created_at: new Date().toLocaleString('ru-RU'),
+            created_at_iso: new Date().toISOString(),
+            is_read: true,
+            is_own: false,
+            is_system: true
+          },
+          false
+        )
+        // Обновляем список чатов через polling
+        startPolling()
+      } else {
+        alert(data.error || 'Ошибка при начале сделки')
+        // Восстанавливаем кнопку при ошибке
+        if (startDealBtn) {
+          startDealBtn.disabled = false
+          startDealBtn.textContent = 'Начать сделку'
+        }
+      }
+    })
+    .catch((error) => {
+      console.error('Ошибка начала сделки:', error)
+      alert('Произошла ошибка при начале сделки.')
+      // Восстанавливаем кнопку при ошибке
+      if (startDealBtn) {
+        startDealBtn.disabled = false
+        startDealBtn.textContent = 'Начать сделку'
+      }
+    })
+}
 // Функция для удаления сообщения (для модератора)
 function deleteMessage(messageId) {
     if (confirm('Удалить сообщение?')) {
@@ -1679,24 +1775,25 @@ function setupRoleFilters() {
 }
 
 function createChatItemElement(chat) {
-    const defaultAvatarSrc = '/static/accounts/images/cosmochat/group_avatar.svg'; // Используем как запасной вариант
-    let avatarUrl = defaultAvatarSrc;
-    let avatarAlt = chat.name;
-    let chatType = chat.is_group_chat ? 'group' : 'personal';
+  const defaultAvatarSrc = '/static/accounts/images/cosmochat/group_avatar.svg'
+  let avatarUrl = defaultAvatarSrc
+  let avatarAlt = chat.name
+  let chatType = chat.is_group_chat ? 'group' : 'personal'
 
-    // Для личного чата ставим аватар собеседника
-    if (chatType === 'personal' && chat.participant && chat.participant.profile_picture_url) {
-        avatarUrl = chat.participant.profile_picture_url;
-        avatarAlt = chat.participant.first_name || 'Чат';
-    }
+  // Для личного чата ставим аватар собеседника
+  if (chatType === 'personal' && chat.participant && chat.participant.profile_picture_url) {
+    avatarUrl = chat.participant.profile_picture_url
+    avatarAlt = chat.participant.first_name || 'Чат'
+  }
 
-    const chatItem = document.createElement('div');
-    chatItem.className = 'chat-item-new';
-    chatItem.dataset.chatId = chat.conversation_id;
-    chatItem.dataset.chatName = chat.name;
-    chatItem.dataset.chatType = chatType;
+  const chatItem = document.createElement('div')
+  chatItem.className = 'chat-item-new'
+  chatItem.dataset.chatId = chat.conversation_id
+  chatItem.dataset.chatName = chat.name
+  chatItem.dataset.chatType = chatType
+  chatItem.dataset.isDeal = chat.is_deal ? 'true' : 'false' // Добавляем флаг сделки
 
-    chatItem.innerHTML = `
+  chatItem.innerHTML = `
         <img src="${avatarUrl}" alt="${avatarAlt}" class="chat-avatar-img">
         <div class="chat-item-info-new">
             <h4>${chat.name.substring(0, 25)}</h4>
@@ -1706,13 +1803,13 @@ function createChatItemElement(chat) {
             <span class="timestamp-chat"></span>
             <span class="date-chat-preview"></span>
         </div>
-    `;
+    `
 
-    chatItem.addEventListener('click', function () {
-        if (typeof loadChat === 'function') {
-            loadChat(this.dataset.chatId);
-        }
-    });
+  chatItem.addEventListener('click', function () {
+    if (typeof loadChat === 'function') {
+      loadChat(this.dataset.chatId)
+    }
+  })
 
-    return chatItem;
+  return chatItem
 }
