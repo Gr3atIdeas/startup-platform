@@ -246,18 +246,6 @@ document.addEventListener('DOMContentLoaded', function () {
 })
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 function showNoChatSelected() {
   if (noChatSelectedPlaceholder)
     noChatSelectedPlaceholder.style.display = 'flex'
@@ -309,6 +297,28 @@ function loadChat(chatId) {
 
                 if (chatWindowTitle && data.chat_name) chatWindowTitle.textContent = data.chat_name;
                 currentParticipants = data.participants || [];
+
+                const chatItem = document.querySelector(`.chat-item-new[data-chat-id="${chatId}"]`);
+                const isDeal = chatItem && chatItem.dataset.isDeal === 'true';
+                const isGroupChat = chatItem && chatItem.dataset.chatType === 'group';
+
+                const dealLabel = document.getElementById('dealLabel');
+                const startDealBtn = document.getElementById('startDealBtn');
+                const participantsBtn = document.getElementById('participantsBtn');
+                const participantsListDiv = document.getElementById('chatParticipantsList');
+
+                if (dealLabel) dealLabel.style.display = isDeal ? 'inline' : 'none';
+                if (startDealBtn) startDealBtn.style.display = isDeal ? 'none' : 'inline-block';
+                if (participantsBtn) participantsBtn.style.display = isGroupChat ? 'inline-block' : 'none';
+
+                if (participantsListDiv && isDeal) {
+                    participantsListDiv.innerHTML = currentParticipants.map(p => 
+                        `<span class="participant-name">${p.name} (${p.role})</span>`
+                    ).join(', ');
+                    participantsListDiv.style.display = 'block';
+                } else if (participantsListDiv) {
+                    participantsListDiv.style.display = 'none';
+                }
 
                 if (data.messages.length > 0) {
                     lastMessageTimestamp = data.messages[data.messages.length - 1].created_at_iso;
@@ -449,66 +459,73 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function startDeal(chatId) {
-  const startDealBtn = document.getElementById('startDealBtn')
-  fetch(`/cosmochat/start-deal/${chatId}/`, {
-    method: 'POST',
-    headers: {
-      'X-CSRFToken': csrfToken,
-      'X-Requested-With': 'XMLHttpRequest'
-    }
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.success) {
-        alert(data.message)
-        // Обновляем интерфейс
-        if (startDealBtn) {
-          startDealBtn.style.display = 'none' // Скрываем кнопку
-          startDealBtn.disabled = false // Сбрасываем disabled
-          startDealBtn.textContent = 'Начать сделку' // Восстанавливаем текст
-        }
-        // Помечаем чат как сделку
-        const chatItem = document.querySelector(
-          `.chat-item-new[data-chat-id="${chatId}"]`
-        )
-        if (chatItem) {
-          chatItem.dataset.isDeal = 'true'
-        }
-        // Добавляем системное сообщение в чат
-        appendMessage(
-          {
-            message_id: `temp_${Date.now()}`,
-            sender_id: null,
-            sender_name: 'Система',
-            message_text: `Сделка начата. Назначен модератор: ${data.moderator.name}`,
-            created_at: new Date().toLocaleString('ru-RU'),
-            created_at_iso: new Date().toISOString(),
-            is_read: true,
-            is_own: false,
-            is_system: true
-          },
-          false
-        )
-        // Обновляем список чатов через polling
-        startPolling()
-      } else {
-        alert(data.error || 'Ошибка при начале сделки')
-        // Восстанавливаем кнопку при ошибке
-        if (startDealBtn) {
-          startDealBtn.disabled = false
-          startDealBtn.textContent = 'Начать сделку'
-        }
-      }
+    const startDealBtn = document.getElementById('startDealBtn');
+    const initiatorName = window.REQUEST_USER_ID ? document.querySelector(`.user-card-new[data-user-id="${window.REQUEST_USER_ID}"] h3`)?.textContent || 'Пользователь' : 'Пользователь';
+    fetch(`/cosmochat/start-deal/${chatId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrfToken,
+            'X-Requested-With': 'XMLHttpRequest',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ initiator_name: initiatorName })
     })
-    .catch((error) => {
-      console.error('Ошибка начала сделки:', error)
-      alert('Произошла ошибка при начале сделки.')
-      // Восстанавливаем кнопку при ошибке
-      if (startDealBtn) {
-        startDealBtn.disabled = false
-        startDealBtn.textContent = 'Начать сделку'
-      }
-    })
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.success) {
+                alert(data.message);
+                if (startDealBtn) {
+                    startDealBtn.style.display = 'none';
+                    startDealBtn.disabled = false;
+                    startDealBtn.textContent = 'Начать сделку';
+                }
+                const chatItem = document.querySelector(`.chat-item-new[data-chat-id="${chatId}"]`);
+                if (chatItem) {
+                    chatItem.dataset.isDeal = 'true';
+                    const chatNameElement = chatItem.querySelector('h4');
+                    if (chatNameElement) {
+                        chatNameElement.innerHTML = chatItem.dataset.chatName.slice(0, 25) + (chatItem.dataset.chatName.length > 25 ? '...' : '') +
+                            '<span class="deal-indicator" title="Сделка"><img src="/static/accounts/images/cosmochat/deal_icon.svg" alt="Сделка" class="deal-icon"></span>';
+                    }
+                }
+                const dealLabel = document.getElementById('dealLabel');
+                if (dealLabel) dealLabel.style.display = 'inline';
+                const participantsListDiv = document.getElementById('chatParticipantsList');
+                if (participantsListDiv && data.participants) {
+                    currentParticipants = data.participants;
+                    participantsListDiv.innerHTML = currentParticipants.map(p => 
+                        `<span class="participant-name">${p.name} (${p.role})</span>`
+                    ).join(', ');
+                    participantsListDiv.style.display = 'block';
+                }
+                appendMessage({
+                    message_id: `temp_${Date.now()}`,
+                    sender_id: null,
+                    sender_name: 'Система',
+                    message_text: `Сделку начал ${initiatorName}. Назначен модератор: ${data.moderator.name}`,
+                    created_at: new Date().toLocaleString('ru-RU'),
+                    created_at_iso: new Date().toISOString(),
+                    is_read: true,
+                    is_own: false,
+                    is_system: true
+                }, false);
+                startPolling();
+            } else {
+                alert(data.error || 'Ошибка при начале сделки');
+                if (startDealBtn) {
+                    startDealBtn.disabled = false;
+                    startDealBtn.textContent = 'Начать сделку';
+                }
+            }
+        })
+        .catch((error) => {
+            console.error('Ошибка начала сделки:', error);
+            alert('Произошла ошибка при начале сделки.');
+            if (startDealBtn) {
+                startDealBtn.disabled = false;
+                startDealBtn.textContent = 'Начать сделку';
+            }
+        });
 }
 // Функция для удаления сообщения (для модератора)
 function deleteMessage(messageId) {
@@ -586,6 +603,45 @@ function appendMessage(msg, isOwnMessageSentJustNow) {
   ) {
     chatMessagesArea.scrollTop = chatMessagesArea.scrollHeight
   }
+}
+
+function updateChatName(chatId, newName) {
+    const chatItem = document.querySelector(`.chat-item-new[data-chat-id="${chatId}"]`);
+    if (chatItem) {
+        chatItem.dataset.chatName = newName;
+        const chatNameElement = chatItem.querySelector('h4');
+        if (chatNameElement) {
+            chatNameElement.innerHTML = newName.slice(0, 25) + (newName.length > 25 ? '...' : '') +
+                (chatItem.dataset.isDeal === 'true' ? '<span class="deal-indicator" title="Сделка"><img src="/static/accounts/images/cosmochat/deal_icon.svg" alt="Сделка" class="deal-icon"></span>' : '');
+        }
+    }
+    if (chatWindowTitle && currentChatId === chatId) {
+        chatWindowTitle.textContent = newName;
+    }
+}
+
+function showParticipantsModal() {
+    if (!currentChatId) {
+        alert('Выберите чат для просмотра участников');
+        return;
+    }
+    if (!addParticipantModal || !participantsList) {
+        console.error('addParticipantModal or participantsList is null');
+        return;
+    }
+    participantsList.innerHTML = '';
+    if (currentParticipants.length > 0) {
+        currentParticipants.forEach((user) => {
+            const item = document.createElement('div');
+            item.className = 'participant-item';
+            item.innerHTML = `${user.name} (${user.role})`;
+            participantsList.appendChild(item);
+        });
+    } else {
+        participantsList.innerHTML = '<p style="padding:10px; text-align:center;">Нет участников в чате.</p>';
+    }
+    addParticipantModal.classList.add('active');
+    addParticipantModal.style.display = 'flex';
 }
 
 function updateChatListItem(lastMessage) {
@@ -1775,41 +1831,43 @@ function setupRoleFilters() {
 }
 
 function createChatItemElement(chat) {
-  const defaultAvatarSrc = '/static/accounts/images/cosmochat/group_avatar.svg'
-  let avatarUrl = defaultAvatarSrc
-  let avatarAlt = chat.name
-  let chatType = chat.is_group_chat ? 'group' : 'personal'
+    const defaultAvatarSrc = '/static/accounts/images/cosmochat/group_avatar.svg';
+    let avatarUrl = defaultAvatarSrc;
+    let avatarAlt = chat.name;
+    let chatType = chat.is_group_chat ? 'group' : 'personal';
 
-  // Для личного чата ставим аватар собеседника
-  if (chatType === 'personal' && chat.participant && chat.participant.profile_picture_url) {
-    avatarUrl = chat.participant.profile_picture_url
-    avatarAlt = chat.participant.first_name || 'Чат'
-  }
+    if (chatType === 'personal' && chat.participant && chat.participant.profile_picture_url) {
+        avatarUrl = chat.participant.profile_picture_url;
+        avatarAlt = chat.participant.first_name || 'Чат';
+    }
 
-  const chatItem = document.createElement('div')
-  chatItem.className = 'chat-item-new'
-  chatItem.dataset.chatId = chat.conversation_id
-  chatItem.dataset.chatName = chat.name
-  chatItem.dataset.chatType = chatType
-  chatItem.dataset.isDeal = chat.is_deal ? 'true' : 'false' // Добавляем флаг сделки
+    const chatItem = document.createElement('div');
+    chatItem.className = 'chat-item-new';
+    chatItem.dataset.chatId = chat.conversation_id;
+    chatItem.dataset.chatName = chat.name;
+    chatItem.dataset.chatType = chatType;
+    chatItem.dataset.isDeal = chat.is_deal ? 'true' : 'false';
 
-  chatItem.innerHTML = `
+    chatItem.innerHTML = `
         <img src="${avatarUrl}" alt="${avatarAlt}" class="chat-avatar-img">
         <div class="chat-item-info-new">
-            <h4>${chat.name.substring(0, 25)}</h4>
+            <h4>
+                ${chat.name.substring(0, 25)}${chat.name.length > 25 ? '...' : ''}
+                ${chat.is_deal ? '<span class="deal-indicator" title="Сделка"><img src="/static/accounts/images/cosmochat/deal_icon.svg" alt="Сделка" class="deal-icon"></span>' : ''}
+            </h4>
             <p class="last-message-preview">Нет сообщений</p>
         </div>
         <div class="chat-item-meta-new">
             <span class="timestamp-chat"></span>
             <span class="date-chat-preview"></span>
         </div>
-    `
+    `;
 
-  chatItem.addEventListener('click', function () {
-    if (typeof loadChat === 'function') {
-      loadChat(this.dataset.chatId)
-    }
-  })
+    chatItem.addEventListener('click', function () {
+        if (typeof loadChat === 'function') {
+            loadChat(this.dataset.chatId);
+        }
+    });
 
-  return chatItem
+    return chatItem;
 }

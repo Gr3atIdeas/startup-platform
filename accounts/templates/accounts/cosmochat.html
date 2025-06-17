@@ -202,7 +202,14 @@
                     <img src="{% if chat.display_avatar %}{{ chat.display_avatar }}{% else %}{% static 'accounts/images/cosmochat/group_avatar.svg' %}{% endif %}" 
                          alt="{{ chat.display_name }}" class="chat-avatar-img">
                     <div class="chat-item-info-new">
-                        <h4>{{ chat.display_name|truncatechars:25 }}</h4>
+                        <h4>
+                            {{ chat.display_name|truncatechars:25 }}
+                            {% if chat.is_deal %}
+                            <span class="deal-indicator" title="Сделка">
+                                <img src="{% static 'accounts/images/cosmochat/deal_icon.svg' %}" alt="Сделка" class="deal-icon">
+                            </span>
+                            {% endif %}
+                        </h4>
                         {% with last_message=chat.get_last_message %}
                             {% if last_message %}
                             <p class="last-message-preview">
@@ -237,13 +244,18 @@
 
         <div class="chat-window-column-new" id="chatWindowColumn">
             <div class="chat-active-header" id="chatActiveHeader" style="display: none;">
-                <h3 id="chatWindowTitle">Название чата</h3>
+                <div class="chat-title-section">
+                    <h3 id="chatWindowTitle">Название чата</h3>
+                    <span id="dealLabel" class="deal-label" style="display: none;">Сделка</span>
+                </div>
                 <button id="renameChatBtn" class="rename-chat-btn">Переименовать</button>
                 <input type="text" id="chatNameInput" style="display: none;" placeholder="Новое название чата">
                 <div class="chat-header-actions">
                     <button id="startDealBtn" class="start-deal-btn-new-style">Начать сделку</button>
+                    <button id="participantsBtn" class="participants-btn-new-style" style="display: none;">Участники</button>
                     <button id="leaveChatBtn" class="leave-chat-btn-new-style">Покинуть</button>
                 </div>
+                <div class="chat-participants" id="chatParticipantsList" style="display: none;"></div>
             </div>
 
             <div class="chat-messages-area" id="chatMessagesArea"></div>
@@ -283,7 +295,7 @@
     <div class="modal-overlay" id="addParticipantModal">
         <div class="modal">
             <button class="modal-close" id="closeAddParticipantModalBtn">×</button>
-            <h3>Добавить участника</h3>
+            <h3>Участники чата</h3>
             <div class="participants-list" id="participantsList"></div>
         </div>
     </div>
@@ -454,15 +466,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        chatWindowTitle.textContent = data.chat_name;
-                        const chatItem = document.querySelector(`.chat-item-new[data-chat-id="${currentChatId}"]`);
-                        if (chatItem) {
-                            chatItem.dataset.chatName = data.chat_name;
-                            const chatNameElement = chatItem.querySelector('h4');
-                            if (chatNameElement) {
-                                chatNameElement.textContent = data.chat_name.slice(0, 25) + (data.chat_name.length > 25 ? '...' : '');
-                            }
-                        }
+                        updateChatName(currentChatId, data.chat_name);
+                        startPolling();
                     } else {
                         alert(data.error || 'Ошибка при переименовании чата');
                     }
@@ -474,7 +479,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             if (chatNameInput && chatWindowTitle && renameChatBtn) {
                 chatNameInput.style.display = 'none';
-                chatWindowTitle.style.display = '';
+                chatWindowTitle.style.display = 'inline';
                 renameChatBtn.style.display = 'inline-block';
             }
         });
@@ -482,6 +487,15 @@ document.addEventListener('DOMContentLoaded', function() {
         chatNameInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 chatNameInput.blur();
+            }
+        });
+    }
+
+    const participantsBtn = document.getElementById('participantsBtn');
+    if (participantsBtn) {
+        participantsBtn.addEventListener('click', function() {
+            if (typeof showParticipantsModal === 'function') {
+                showParticipantsModal();
             }
         });
     }
