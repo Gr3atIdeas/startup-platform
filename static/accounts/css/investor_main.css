@@ -923,9 +923,34 @@ html::-webkit-scrollbar-button {
   box-sizing: border-box;
   overflow: hidden;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 40px;
   margin-top: 60px;
+}
+
+.chat-header {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: flex-start;
+}
+
+.chat-header__title,
+.chat-header__subtitle {
+  font-family: 'Blippo Black', sans-serif;
+  font-size: 55px;
+  font-weight: normal;
+  line-height: 1;
+  margin: 0;
+}
+
+.chat-header__title {
+  color: white;
+}
+
+.chat-header__subtitle {
+  color: #ffef2b;
 }
 
 .journey-start-container {
