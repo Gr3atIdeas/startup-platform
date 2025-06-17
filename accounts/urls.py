@@ -122,4 +122,6 @@ urlpatterns = [
     path("cosmochat/available_users/", views.available_users, name="available_users"),
     path('delete_investment/<int:startup_id>/<int:investor_id>/', views.delete_investment, name='delete_investment'),
     path('chats/find_or_create/<int:recipient_id>/', views.find_or_create_chat, name='find_or_create_chat'),
+    path('delete-message/<int:message_id>/', views.delete_message, name='delete_message'),
+    path('remove-participant/<int:chat_id>/', views.remove_participant, name='remove_participant'),
 ]

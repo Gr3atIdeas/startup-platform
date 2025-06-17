@@ -1185,6 +1185,47 @@ def startup_creation_success(request):
     return render(request, "accounts/startup_creation_success.html")
 
 
+@login_required
+def delete_message(request, message_id):
+    message = get_object_or_404(Messages, message_id=message_id)
+    chat = message.conversation
+    if not chat.chatparticipants_set.filter(user=request.user).exists():
+        return JsonResponse({"success": False, "error": "У вас нет доступа к этому чату"}, status=403)
+    
+    if request.user.role and request.user.role.role_name.lower() == "moderator":
+        message.is_deleted = True
+        message.save()
+        return JsonResponse({"success": True})
+    return JsonResponse({"success": False, "error": "Только модератор может удалить сообщение"}, status=403)
+
+@login_required
+def remove_participant(request, chat_id):
+    chat = get_object_or_404(ChatConversations, conversation_id=chat_id)
+    if not chat.chatparticipants_set.filter(user=request.user).exists():
+        return JsonResponse({"success": False, "error": "У вас нет доступа к этому чату"}, status=403)
+    
+    if request.method != "POST":
+        return JsonResponse({"success": False, "error": "Неверный метод запроса"}, status=405)
+
+    user_id = request.POST.get("user_id")
+    if not user_id:
+        return JsonResponse({"success": False, "error": "Не указан пользователь"}, status=400)
+
+    try:
+        user_to_remove = Users.objects.get(user_id=user_id)
+    except Users.DoesNotExist:
+        return JsonResponse({"success": False, "error": "Пользователь не найден"}, status=404)
+
+    if request.user.role and request.user.role.role_name.lower() == "moderator" and chat.is_group_chat:
+        participant = chat.chatparticipants_set.filter(user=user_to_remove).first()
+        if participant:
+            participant.delete()
+            chat.updated_at = timezone.now()
+            chat.save()
+            return JsonResponse({"success": True})
+    return JsonResponse({"success": False, "error": "Только модератор может исключить участника из группового чата"}, status=403)
+
+
 # accounts/views.py
 @login_required
 def edit_startup(request, startup_id):
@@ -2184,7 +2225,7 @@ def add_participant(request, chat_id):
             "new_participant": {
                 "user_id": new_user.user_id,
                 "name": f"{new_user.first_name} {new_user.last_name}",
-                "role": new_user.role.role_name if new_user.role else "Неизвестно",
+                "role": new_user.role.role_name if new_user.role else "Система",
             },
         }
     )
