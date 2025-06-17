@@ -197,7 +197,8 @@
                 <div class="chat-item-new" 
                      data-chat-id="{{ chat.conversation_id }}"
                      data-chat-name="{{ chat.display_name|escapejs }}"
-                     data-chat-type="{% if chat.is_group_chat %}group{% else %}personal{% endif %}">
+                     data-chat-type="{% if chat.is_group_chat %}group{% else %}personal{% endif %}"
+                     data-is-deal="{% if chat.is_deal %}true{% else %}false{% endif %}">
                     <img src="{% if chat.display_avatar %}{{ chat.display_avatar }}{% else %}{% static 'accounts/images/cosmochat/group_avatar.svg' %}{% endif %}" 
                          alt="{{ chat.display_name }}" class="chat-avatar-img">
                     <div class="chat-item-info-new">
@@ -240,7 +241,7 @@
                 <button id="renameChatBtn" class="rename-chat-btn">Переименовать</button>
                 <input type="text" id="chatNameInput" style="display: none;" placeholder="Новое название чата">
                 <div class="chat-header-actions">
-                    <button id="addParticipantBtn" class="add-participant-btn-new-style">Добавить</button>
+                    <button id="startDealBtn" class="start-deal-btn-new-style">Начать сделку</button>
                     <button id="leaveChatBtn" class="leave-chat-btn-new-style">Покинуть</button>
                 </div>
             </div>
@@ -400,11 +401,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const startChatBtn = document.getElementById('startChatBtn');
     if (startChatBtn) {
         startChatBtn.addEventListener('click', startChat);
-    }
-    
-    const addParticipantBtn = document.getElementById('addParticipantBtn');
-    if (addParticipantBtn) {
-        addParticipantBtn.addEventListener('click', openAddParticipantModal);
     }
     
     const closeAddParticipantModalBtn = document.getElementById('closeAddParticipantModalBtn');
