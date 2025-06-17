@@ -48,132 +48,49 @@
         <img class="featured-child" alt="Placeholder" src="https://placehold.co/208x199">
         <img class="featured-item" alt="Placeholder" src="https://placehold.co/19x25">
     </div>
-    <div class="featured1">
-        <div class="heading">
-            <div class="parent3">
-                <div class="div16">Почему</div>
-                <div class="div17">выбирают нас?</div>
+    <div class="featured4">
+        <div class="frame-parent3">
+            <div class="parent6">
+                <div class="div23">
+                    <span class="txt">
+                        <span>Инвесторы, </span>
+                        <span class="span3">найдите свою звезду!</span>
+                    </span>
+                </div>
+                <div class="group-parent">
+                    <div class="group-div">
+                        <div class="card-icon-container">
+                            <img class="card-icon" src="{% static 'accounts/images/main_page/planet_4th_main.webp' %}" alt="Доступ к проверенным стартапам">
+                        </div>
+                        <div class="wrapper">
+                            <div class="div24">Доступ к проверенным стартапам</div>
+                        </div>
+                    </div>
+                    <div class="group-div">
+                        <div class="card-icon-container">
+                            <img class="card-icon" src="{% static 'accounts/images/main_page/case_main_4th.webp' %}" alt="Диверсификация портфеля">
+                        </div>
+                        <div class="wrapper">
+                            <div class="div25">Диверсификация портфеля</div>
+                        </div>
+                    </div>
+                    <div class="frame-parent5 group-div">
+                        <div class="card-icon-container">
+                            <img class="card-icon" src="{% static 'accounts/images/main_page/rocket_main_4th.webp' %}" alt="Удобная аналитика">
+                        </div>
+                        <div class="wrapper1">
+                            <div class="div26">Удобная аналитика и фильтры для выбора проектов</div>
+                        </div>
+                    </div>
+                </div>
+                <a href="#" class="btn btn--yellow-gradient">
+                    <span>Посмотреть стартапы</span>
+                    <img class="icon" alt="Eye" src="{% static 'accounts/images/main_page/button_eye.svg' %}">
+                </a>
             </div>
-            <div class="wrap">
-                <div class="button3 arrow-left-control">
-                    <img class="vector-icon" alt="Previous" src="{% static 'accounts/images/main_page/chevron-forward-circle-outline.svg' %}">
-                </div>
-                <div class="button4 arrow-right-control">
-                    <img class="vector-icon1" alt="Next" src="{% static 'accounts/images/main_page/chevron-forward-circle-outline (1).svg' %}">
-                </div>
-            </div>
-        </div>
-        <div class="featured-parent features-carousel-wrapper">
-            <div class="featured2 features-carousel">
-                <div class="container feature-card">
-                    <div class="div8">Геймификация</div>
-                    <div class="div9">Создавайте планеты и запускайте ракеты — инвестиции как приключение</div>
-                    <img class="rectangle-icon" alt="Placeholder" src="{% static 'accounts/images/main_page/game_rocket.webp' %}">
-                </div>
-                <div class="container feature-card">
-                    <div class="div8">Сообщество</div>
-                    <div class="div11">Объединяем визионеров и инвесторов со всей России</div>
-                    <img class="rectangle-icon" alt="Placeholder" src="{% static 'accounts/images/main_page/community_astronauts.webp' %}">
-                </div>
-                <div class="container feature-card">
-                    <div class="div8">Прозрачность</div>
-                    <div class="div11">Проверенные стартапы и безопасные сделки</div>
-                    <img class="rectangle-icon" alt="Placeholder" src="{% static 'accounts/images/main_page/planets_transparent.webp' %}">
-                </div>
-                <div class="container feature-card">
-                    <div class="div8">Поддержка</div>
-                    <div class="div11">Инструменты для роста стартапов и аналитика для инвесторов</div>
-                    <img class="rectangle-icon" alt="Placeholder" src="{% static 'accounts/images/main_page/support_planet.webp' %}">
-                </div>
-            </div>
+            <img class="icon10" alt="Инвесторы находят звезду" src="{% static 'accounts/images/main_page/4th_block_main_background.webp' %}">
         </div>
     </div>
-
-    <div class="sticky-sections-wrapper">
-        <div class="featured3">
-            <div class="frame-parent">
-                <img class="icon9" alt="Стартаперы создают планету" src="{% static 'accounts/images/main_page/3rd_block_main.webp' %}">
-                <div class="parent4">
-                    <div class="gradient-overlay"></div>
-                    <div class="heading1">
-                        <div class="div18">
-                            <span class="txt">
-                                <span>Стартаперы,</span>
-                                <span class="span1"> создайте свою планету!</span>
-                            </span>
-                        </div>
-                        <div class="frame-group">
-                            <div class="chevron-forward-circle-outline-parent">
-                                <img class="frame-icon" alt="Найти финансирование" src="{% static 'accounts/images/main_page/rocket.svg' %}">
-                                <div class="faq">Найти финансирование</div>
-                            </div>
-                            <div class="chevron-forward-circle-outline-parent">
-                                <img class="frame-icon" alt="Получить экспертную поддержку" src="{% static 'accounts/images/main_page/view.svg' %}">
-                                <div class="div20">
-                                    <span class="txt">
-                                        <span>Получить экспертную поддержку </span>
-                                        <span class="span2">(менторство, аналитика)</span>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="frame-parent2">
-                                <img class="frame-icon" alt="Продать идею или масштабировать бизнес" src="{% static 'accounts/images/main_page/wheat.svg' %}">
-                                <div class="div20">Продать идею или масштабировать бизнес</div>
-                            </div>
-                        </div>
-                        <a href="{% url 'login' %}?next={% url 'create_startup' %}" class="btn btn--yellow-gradient" style="text-decoration: none;">
-                            <span>Создать стартап</span>
-                            <img class="icon" src="{% static 'accounts/images/main_page/add-circle-outline.svg' %}" alt="Add">
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="featured4">
-            <div class="frame-parent3">
-                <div class="parent6">
-                    <div class="div23">
-                        <span class="txt">
-                            <span>Инвесторы, </span>
-                            <span class="span3">найдите свою звезду!</span>
-                        </span>
-                    </div>
-                    <div class="group-parent">
-                        <div class="group-div">
-                            <div class="card-icon-container">
-                                <img class="card-icon" src="{% static 'accounts/images/main_page/planet_4th_main.webp' %}" alt="Доступ к проверенным стартапам">
-                            </div>
-                            <div class="wrapper">
-                                <div class="div24">Доступ к проверенным стартапам</div>
-                            </div>
-                        </div>
-                        <div class="group-div">
-                            <div class="card-icon-container">
-                                <img class="card-icon" src="{% static 'accounts/images/main_page/case_main_4th.webp' %}" alt="Диверсификация портфеля">
-                            </div>
-                            <div class="wrapper">
-                                <div class="div25">Диверсификация портфеля</div>
-                            </div>
-                        </div>
-                        <div class="frame-parent5 group-div">
-                            <div class="card-icon-container">
-                                <img class="card-icon" src="{% static 'accounts/images/main_page/rocket_main_4th.webp' %}" alt="Удобная аналитика">
-                            </div>
-                            <div class="wrapper1">
-                                <div class="div26">Удобная аналитика и фильтры для выбора проектов</div>
-                            </div>
-                        </div>
-                    </div>
-                    <a href="#" class="btn btn--yellow-gradient">
-                        <span>Посмотреть стартапы</span>
-                        <img class="icon" alt="Eye" src="{% static 'accounts/images/main_page/button_eye.svg' %}">
-                    </a>
-                </div>
-                <img class="icon10" alt="Инвесторы находят звезду" src="{% static 'accounts/images/main_page/4th_block_main_background.webp' %}">
-            </div>
-        </div>
-    </div>
-
     <div class="featured5">
         <div class="frame-parent6">
             <div class="parent8">
