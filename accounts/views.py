@@ -1028,13 +1028,13 @@ def start_deal(request, chat_id):
         )
 
     participants = chat.chatparticipants_set.all()
-    if participants.count() != 2:
-        logger.error(f"Chat {chat_id} has {participants.count()} participants, expected 2")
-        return JsonResponse({"success": False, "error": "В чате должно быть ровно два участника"}, status=400)
+    if participants.count() < 2:  # Изменяем с != 2 на < 2, чтобы разрешить добавление модератора
+        logger.error(f"Chat {chat_id} has {participants.count()} participants, expected at least 2")
+        return JsonResponse({"success": False, "error": "В чате должно быть как минимум два участника"}, status=400)
 
     roles = {p.user.role.role_name.lower() for p in participants if p.user and p.user.role}
-    if roles != {"startuper", "investor"}:
-        logger.error(f"Chat {chat_id} roles: {roles}, expected {'startuper', 'investor'}")
+    if not {"startuper", "investor"}.issubset(roles):  # Проверяем, что есть оба роли
+        logger.error(f"Chat {chat_id} roles: {roles}, expected 'startuper' and 'investor'")
         return JsonResponse({"success": False, "error": "Чат должен включать одного стартапера и одного инвестора"}, status=400)
 
     try:
@@ -1084,6 +1084,7 @@ def start_deal(request, chat_id):
 def deals_view(request):
     if not hasattr(request.user, "role") or request.user.role.role_name != "moderator":
         messages.error(request, "Доступ к этой странице разрешен только модераторам.")
+        logger.warning(f"Access denied for user {request.user.user_id} - not a moderator")
         return redirect("home")
 
     status_filter = request.GET.get('status', 'pending')
@@ -1091,25 +1092,23 @@ def deals_view(request):
     if status_filter not in valid_statuses:
         status_filter = 'pending'
 
+    # Логируем текущего пользователя и статус фильтра
+    logger.info(f"Processing deals_view for user_id={request.user.user_id}, status_filter={status_filter}")
+
     # Фильтруем чаты, где is_deal=True и соответствующий deal_status
     deals = ChatConversations.objects.filter(
         is_deal=True,
         deal_status=status_filter
     ).select_related('chatparticipants__user').order_by('-updated_at')
 
-    # Проверяем наличие модератора в чате, но не ограничиваем только текущим пользователем
-    deals = deals.annotate(has_moderator=Exists(
-        ChatParticipants.objects.filter(
-            conversation=OuterRef('pk'),
-            user__role__role_name='moderator'
-        )
-    )).filter(has_moderator=True)
+    # Фильтруем только те сделки, где текущий модератор участвует
+    deals = deals.filter(chatparticipants__user=request.user)
+    logger.info(f"Found {deals.count()} deals for moderator {request.user.user_id}")
 
-    logger.info(f"Fetching deals for moderator {request.user.user_id} with status_filter: {status_filter}, found {deals.count()} deals")
+    # Детальная отладка
     for deal in deals:
         participants = deal.chatparticipants_set.all()
-        moderator = next((p.user for p in participants if p.user.role and p.user.role.role_name == 'moderator'), None)
-        logger.debug(f"Deal {deal.conversation_id}: Moderator found - {moderator.user_id if moderator else 'None'}, Participants: {[p.user.user_id for p in participants]}")
+        logger.debug(f"Deal {deal.conversation_id}: Participants {[(p.user.user_id, p.user.role.role_name if p.user.role else 'None') for p in participants]}, Status: {deal.deal_status}")
 
     deal_data = []
     selected_chat = None
@@ -1118,6 +1117,7 @@ def deals_view(request):
         selected_chat = get_object_or_404(ChatConversations, conversation_id=chat_id, is_deal=True)
         if not selected_chat.chatparticipants_set.filter(user=request.user).exists():
             messages.error(request, "У вас нет доступа к этому чату.")
+            logger.warning(f"No access to chat {chat_id} for user {request.user.user_id}")
             selected_chat = None
         else:
             messages = Messages.objects.filter(conversation=selected_chat).order_by('created_at')
@@ -1129,6 +1129,7 @@ def deals_view(request):
                 'is_own': msg.sender == request.user if msg.sender else False,
             } for msg in messages]
             selected_chat_messages = messages_data
+            logger.info(f"Loaded {len(messages_data)} messages for chat {chat_id}")
 
     for deal in deals:
         participants = deal.chatparticipants_set.all()
@@ -1154,6 +1155,7 @@ def deals_view(request):
         'selected_chat': selected_chat,
         'chat_messages': selected_chat_messages if selected_chat else [],
     }
+    logger.info(f"Rendering deals.html with {len(deal_data)} deals")
     return render(request, "accounts/deals.html", context)
 
 @login_required
