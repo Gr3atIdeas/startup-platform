@@ -1092,62 +1092,77 @@ def deals_view(request):
     if status_filter not in valid_statuses:
         status_filter = 'pending'
 
-    # Логируем текущего пользователя и статус фильтра
+    # Логируем начальные данные
     logger.info(f"Processing deals_view for user_id={request.user.user_id}, status_filter={status_filter}")
 
     # Фильтруем чаты, где is_deal=True и соответствующий deal_status
-    deals = ChatConversations.objects.filter(
-        is_deal=True,
-        deal_status=status_filter
-    ).prefetch_related('chatparticipants_set__user').order_by('-updated_at')  # Используем prefetch_related
+    try:
+        deals_query = ChatConversations.objects.filter(
+            is_deal=True,
+            deal_status=status_filter
+        ).prefetch_related('chatparticipants_set__user').order_by('-updated_at')
+        logger.info(f"Initial query returned {deals_query.count()} deals")
+    except Exception as e:
+        logger.error(f"Error in initial query: {str(e)}")
+        return JsonResponse({"error": f"Database query failed: {str(e)}"}, status=500)
 
     # Фильтруем только те сделки, где текущий модератор участвует
-    deals = deals.filter(chatparticipants__user=request.user)
-    logger.info(f"Found {deals.count()} deals for moderator {request.user.user_id}")
+    deals = deals_query.filter(chatparticipants__user=request.user)
+    logger.info(f"Filtered deals for moderator {request.user.user_id}: {deals.count()}")
 
     # Детальная отладка
     for deal in deals:
-        participants = deal.chatparticipants_set.all()
-        logger.debug(f"Deal {deal.conversation_id}: Participants {[(p.user.user_id, p.user.role.role_name if p.user.role else 'None') for p in participants]}, Status: {deal.deal_status}")
+        try:
+            participants = deal.chatparticipants_set.all()
+            logger.debug(f"Deal {deal.conversation_id}: Participants {[(p.user.user_id, p.user.role.role_name if p.user.role else 'None') for p in participants]}, Status: {deal.deal_status}")
+        except Exception as e:
+            logger.error(f"Error processing deal {deal.conversation_id}: {str(e)}")
 
     deal_data = []
     selected_chat = None
     chat_id = request.GET.get('chat_id')
     if chat_id:
-        selected_chat = get_object_or_404(ChatConversations, conversation_id=chat_id, is_deal=True)
-        if not selected_chat.chatparticipants_set.filter(user=request.user).exists():
-            messages.error(request, "У вас нет доступа к этому чату.")
-            logger.warning(f"No access to chat {chat_id} for user {request.user.user_id}")
+        try:
+            selected_chat = get_object_or_404(ChatConversations, conversation_id=chat_id, is_deal=True)
+            if not selected_chat.chatparticipants_set.filter(user=request.user).exists():
+                messages.error(request, "У вас нет доступа к этому чату.")
+                logger.warning(f"No access to chat {chat_id} for user {request.user.user_id}")
+                selected_chat = None
+            else:
+                messages = Messages.objects.filter(conversation=selected_chat).order_by('created_at')
+                messages_data = [{
+                    'message_id': msg.message_id,
+                    'sender_name': msg.sender.get_full_name() if msg.sender else 'Система',
+                    'message_text': msg.message_text,
+                    'created_at': msg.created_at.strftime('%H:%M %d/%m/%Y') if msg.created_at else '',
+                    'is_own': msg.sender == request.user if msg.sender else False,
+                } for msg in messages]
+                selected_chat_messages = messages_data
+                logger.info(f"Loaded {len(messages_data)} messages for chat {chat_id}")
+        except Exception as e:
+            logger.error(f"Error loading chat {chat_id}: {str(e)}")
+            messages.error(request, "Ошибка загрузки чата.")
             selected_chat = None
-        else:
-            messages = Messages.objects.filter(conversation=selected_chat).order_by('created_at')
-            messages_data = [{
-                'message_id': msg.message_id,
-                'sender_name': msg.sender.get_full_name() if msg.sender else 'Система',
-                'message_text': msg.message_text,
-                'created_at': msg.created_at.strftime('%H:%M %d/%m/%Y') if msg.created_at else '',
-                'is_own': msg.sender == request.user if msg.sender else False,
-            } for msg in messages]
-            selected_chat_messages = messages_data
-            logger.info(f"Loaded {len(messages_data)} messages for chat {chat_id}")
 
     for deal in deals:
-        participants = deal.chatparticipants_set.all()
-        moderator = next((p.user for p in participants if p.user.role and p.user.role.role_name == 'moderator'), None)
-        other_participants = [p.user for p in participants if p.user != moderator]
-        last_message = deal.get_last_message()
+        try:
+            participants = deal.chatparticipants_set.all()
+            moderator = next((p.user for p in participants if p.user.role and p.user.role.role_name == 'moderator'), None)
+            other_participants = [p.user for p in participants if p.user and p.user != moderator]  # Убрали if p.user
 
-        deal_data.append({
-            'conversation_id': deal.conversation_id,
-            'name': deal.name or f"Сделка {deal.conversation_id}",
-            'participants': [f"{p.first_name} {p.last_name}" for p in other_participants if p.user],
-            'moderator': moderator.get_full_name() if moderator else 'Не назначен',
-            'last_message': last_message.message_text if last_message else 'Нет сообщений',
-            'created_at': deal.created_at.strftime('%H:%M') if deal.created_at else '',
-            'date': deal.created_at.strftime('%d/%m/%Y') if deal.created_at else '',
-            'unread_count': Messages.objects.filter(conversation=deal, status__status_name='sent').exclude(sender=moderator).count() if moderator else 0,
-            'deal_status': deal.deal_status,
-        })
+            deal_data.append({
+                'conversation_id': deal.conversation_id,
+                'name': deal.name or f"Сделка {deal.conversation_id}",
+                'participants': [f"{p.first_name} {p.last_name}" for p in other_participants],  # Убрали if p.user
+                'moderator': moderator.get_full_name() if moderator else 'Не назначен',
+                'last_message': deal.get_last_message().message_text if deal.get_last_message() else 'Нет сообщений',
+                'created_at': deal.created_at.strftime('%H:%M') if deal.created_at else '',
+                'date': deal.created_at.strftime('%d/%m/%Y') if deal.created_at else '',
+                'unread_count': Messages.objects.filter(conversation=deal, status__status_name='sent').exclude(sender=moderator).count() if moderator else 0,
+                'deal_status': deal.deal_status,
+            })
+        except Exception as e:
+            logger.error(f"Error processing deal data for {deal.conversation_id}: {str(e)}")
 
     context = {
         'deals': deal_data,
