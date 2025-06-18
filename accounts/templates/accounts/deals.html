@@ -18,6 +18,9 @@
                     <a href="?status=approved" class="filter-btn {% if current_status == 'approved' %}active{% endif %}">Приняты</a>
                     <a href="?status=rejected" class="filter-btn {% if current_status == 'rejected' %}active{% endif %}">Отклонены</a>
                 </div>
+                {% if deals|length == 0 %}
+                    <p>Нет сделок с статусом {{ current_status }}.</p>
+                {% endif %}
                 {% for deal in deals %}
                     <div class="chat-item {% if forloop.first %}active{% endif %}" data-chat-id="{{ deal.conversation_id }}">
                         <img src="{% static 'accounts/images/avatars/default_avatar_ufo.png' %}" alt="{{ deal.name }}" class="chat-item-avatar">
@@ -46,8 +49,8 @@
                                 <button class="btn btn-reject" data-chat-id="{{ deal.conversation_id }}" id="rejectDealBtn">Отклонить</button>
                             </div>
                             <div class="messages-container">
+                                <div class="message-date-separator">{{ deal.date }}</div>
                                 <div class="message-group">
-                                    <div class="message-date-separator">{{ deal.date }}</div>
                                     <div class="message-bubble received">
                                         <div class="message-content">
                                             {{ deal.last_message }}

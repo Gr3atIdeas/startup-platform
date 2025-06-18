@@ -1107,7 +1107,6 @@ def start_deal(request, chat_id):
         }
     )
 
-# accounts/views.py
 @login_required
 def deals_view(request):
     if not hasattr(request.user, "role") or request.user.role.role_name != "moderator":
@@ -1115,7 +1114,7 @@ def deals_view(request):
         return redirect("home")
 
     # Получаем параметр фильтра (активные, принятые или отклонённые)
-    status_filter = request.GET.get('status', 'pending')
+    status_filter = request.GET.get('status', 'pending')  # По умолчанию 'pending'
     valid_statuses = ['pending', 'approved', 'rejected']
 
     if status_filter not in valid_statuses:
@@ -1126,6 +1125,13 @@ def deals_view(request):
         is_deal=True,
         deal_status=status_filter
     ).select_related('chatparticipants__user').order_by('-updated_at')
+
+    # Логирование для отладки
+    logger.info(f"Fetching deals for moderator {request.user.user_id} with status_filter: {status_filter}, found {deals.count()} deals")
+    for deal in deals:
+        participants = deal.chatparticipants_set.all()
+        moderator = next((p.user for p in participants if p.user.role and p.user.role.role_name == 'moderator'), None)
+        logger.debug(f"Deal {deal.conversation_id}: Moderator found - {moderator is not None}")
 
     # Подготовка данных для отображения
     deal_data = []
@@ -1138,7 +1144,7 @@ def deals_view(request):
         deal_data.append({
             'conversation_id': deal.conversation_id,
             'name': deal.name or f"Сделка {deal.conversation_id}",
-            'participants': [f"{p.first_name} {p.last_name}" for p in other_participants],
+            'participants': [f"{p.first_name} {p.last_name}" for p in other_participants if p.user],
             'moderator': moderator.get_full_name() if moderator else 'Не назначен',
             'last_message': last_message.message_text if last_message else 'Нет сообщений',
             'created_at': deal.created_at.strftime('%H:%M') if deal.created_at else '',
