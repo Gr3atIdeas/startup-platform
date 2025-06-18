@@ -663,13 +663,23 @@ class NewsViews(models.Model):
         db_table = "news_views"
 
 
+# accounts/models.py
 class ChatConversations(models.Model):
     conversation_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255, blank=True, null=True)
     created_at = models.DateTimeField(blank=True, null=True)
     updated_at = models.DateTimeField(blank=True, null=True)
     is_group_chat = models.BooleanField(default=False)
-    is_deal = models.BooleanField(default=False)  # Новое поле для флага сделки
+    is_deal = models.BooleanField(default=False)  # Флаг сделки
+    deal_status = models.CharField(
+        max_length=20,
+        choices=[
+            ('pending', 'Ожидает'),
+            ('approved', 'Принята'),
+            ('rejected', 'Отклонена')
+        ],
+        default='pending'
+    )  # Новый статус сделки
 
     class Meta:
         managed = True

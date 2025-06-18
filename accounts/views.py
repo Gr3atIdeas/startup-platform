@@ -1107,6 +1107,114 @@ def start_deal(request, chat_id):
         }
     )
 
+# accounts/views.py
+@login_required
+def deals_view(request):
+    if not hasattr(request.user, "role") or request.user.role.role_name != "moderator":
+        messages.error(request, "Доступ к этой странице разрешен только модераторам.")
+        return redirect("home")
+
+    # Получаем параметр фильтра (активные, принятые или отклонённые)
+    status_filter = request.GET.get('status', 'pending')
+    valid_statuses = ['pending', 'approved', 'rejected']
+
+    if status_filter not in valid_statuses:
+        status_filter = 'pending'
+
+    # Фильтруем чаты, где is_deal=True и соответствующий deal_status
+    deals = ChatConversations.objects.filter(
+        is_deal=True,
+        deal_status=status_filter
+    ).select_related('chatparticipants__user').order_by('-updated_at')
+
+    # Подготовка данных для отображения
+    deal_data = []
+    for deal in deals:
+        participants = deal.chatparticipants_set.all()
+        moderator = next((p.user for p in participants if p.user.role and p.user.role.role_name == 'moderator'), None)
+        other_participants = [p.user for p in participants if p.user != moderator]
+        last_message = deal.get_last_message()
+
+        deal_data.append({
+            'conversation_id': deal.conversation_id,
+            'name': deal.name or f"Сделка {deal.conversation_id}",
+            'participants': [f"{p.first_name} {p.last_name}" for p in other_participants],
+            'moderator': moderator.get_full_name() if moderator else 'Не назначен',
+            'last_message': last_message.message_text if last_message else 'Нет сообщений',
+            'created_at': deal.created_at.strftime('%H:%M') if deal.created_at else '',
+            'date': deal.created_at.strftime('%d/%m/%Y') if deal.created_at else '',
+            'unread_count': Messages.objects.filter(conversation=deal, status__status_name='sent').exclude(sender=moderator).count() if moderator else 0,
+            'deal_status': deal.deal_status,
+        })
+
+    context = {
+        'deals': deal_data,
+        'current_status': status_filter,
+    }
+    return render(request, "accounts/deals.html", context)
+
+@login_required
+def approve_deal(request, chat_id):
+    if request.method != "POST":
+        return JsonResponse({"success": False, "error": "Неверный метод запроса"}, status=405)
+
+    chat = get_object_or_404(ChatConversations, conversation_id=chat_id)
+    if not chat.chatparticipants_set.filter(user=request.user).exists() or (request.user.role and request.user.role.role_name != "moderator"):
+        return JsonResponse({"success": False, "error": "У вас нет прав для этого действия"}, status=403)
+
+    if not chat.is_deal:
+        return JsonResponse({"success": False, "error": "Это не сделка"}, status=400)
+
+    with transaction.atomic():
+        chat.deal_status = 'approved'
+        chat.updated_at = timezone.now()
+        chat.save()
+
+        # Добавляем системное сообщение
+        message = Messages(
+            conversation=chat,
+            sender=None,
+            message_text=f"Сделка #{chat.conversation_id} одобрена модератором {request.user.get_full_name()}",
+            status=MessageStatuses.objects.get(status_name="sent"),
+            created_at=timezone.now(),
+            updated_at=timezone.now(),
+        )
+        message.save()
+
+    logger.info(f"Сделка {chat_id} одобрена модератором {request.user.user_id}")
+    return JsonResponse({"success": True, "message": "Сделка одобрена"})
+
+@login_required
+def reject_deal(request, chat_id):
+    if request.method != "POST":
+        return JsonResponse({"success": False, "error": "Неверный метод запроса"}, status=405)
+
+    chat = get_object_or_404(ChatConversations, conversation_id=chat_id)
+    if not chat.chatparticipants_set.filter(user=request.user).exists() or (request.user.role and request.user.role.role_name != "moderator"):
+        return JsonResponse({"success": False, "error": "У вас нет прав для этого действия"}, status=403)
+
+    if not chat.is_deal:
+        return JsonResponse({"success": False, "error": "Это не сделка"}, status=400)
+
+    with transaction.atomic():
+        chat.deal_status = 'rejected'
+        chat.updated_at = timezone.now()
+        chat.save()
+
+        # Добавляем системное сообщение
+        message = Messages(
+            conversation=chat,
+            sender=None,
+            message_text=f"Сделка #{chat.conversation_id} отклонена модератором {request.user.get_full_name()}",
+            status=MessageStatuses.objects.get(status_name="sent"),
+            created_at=timezone.now(),
+            updated_at=timezone.now(),
+        )
+        message.save()
+
+    logger.info(f"Сделка {chat_id} отклонена модератором {request.user.user_id}")
+    return JsonResponse({"success": True, "message": "Сделка отклонена"})
+
 
 @login_required
 def create_startup(request):

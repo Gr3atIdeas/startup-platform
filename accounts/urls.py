@@ -7,13 +7,8 @@ from accounts.views import delete_avatar
 from . import views
 
 urlpatterns = [
-    path(
-        "", views.home, name="home"
-    ),  # Оставляем для авторизованных, изменим логику в views.py
-    path(
-        "main_temp_page/", views.display_main_temp_page, name="main_temp_page"
-    ),  # Маршрут для временной главной страницы
-    # path('main_temp/', views.main_temp_view, name='main_temp'), # Комментируем старый main_temp, если он больше не нужен
+    path("", views.home, name="home"),
+    path("main_temp_page/", views.display_main_temp_page, name="main_temp_page"),
     path("register/", views.register, name="register"),
     path("login/", views.user_login, name="login"),
     path("logout/", views.user_logout, name="logout"),
@@ -45,7 +40,7 @@ urlpatterns = [
     ),
     path("profile/", views.profile, name="profile"),
     path("profile/delete-avatar/", delete_avatar, name="delete_avatar"),
-    path("profile/<int:user_id>/", views.profile, name="user_profile"),  # Новый маршрут
+    path("profile/<int:user_id>/", views.profile, name="user_profile"),
     path("create-startup/", views.create_startup, name="create_startup"),
     path(
         "create-startup/success/",
@@ -70,10 +65,10 @@ urlpatterns = [
     path("search-suggestions/", views.search_suggestions, name="search_suggestions"),
     path(
         "planetary-system/", views.planetary_system, name="planetary_system"
-    ),  # Новый маршрут
+    ),
     path(
         "my_startups/", views.my_startups, name="my_startups"
-    ),  # Изменяем my-startups на my_startups
+    ),
     path(
         "load_similar_startups/<int:startup_id>/",
         views.load_similar_startups,
@@ -81,19 +76,29 @@ urlpatterns = [
     ),
     path(
         "deals/", views.deals_view, name="deals_page"
-    ),  # Новый маршрут для страницы Сделки
+    ),
+    path(
+        "deals/approve/<int:chat_id>/",
+        views.approve_deal,
+        name="approve_deal"
+    ),
+    path(
+        "deals/reject/<int:chat_id>/",
+        views.reject_deal,
+        name="reject_deal"
+    ),
     path(
         "notifications/", views.notifications_view, name="notifications_page"
-    ),  # Новый маршрут для страницы Уведомления
+    ),
     path(
         "support/", views.support_page_view, name="support"
-    ),  # Новый маршрут для страницы поддержки
+    ),
     path(
         "support/orders/", views.support_orders_view, name="support_orders"
-    ),  # Новый маршрут для страницы заявок в поддержку
+    ),
     path(
         "support/contact/", views.support_contact_view, name="support_contact"
-    ),  # Новый маршрут для страницы создания заявки
+    ),
     path(
         "favicon.ico",
         RedirectView.as_view(url="/static/images/favicon.png", permanent=True),
