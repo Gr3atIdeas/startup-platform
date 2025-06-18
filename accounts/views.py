@@ -1013,62 +1013,45 @@ def chat_list(request):
 @login_required
 def start_deal(request, chat_id):
     if request.method != "POST":
-        return JsonResponse(
-            {"success": False, "error": "Неверный метод запроса"}, status=405
-        )
+        return JsonResponse({"success": False, "error": "Неверный метод запроса"}, status=405)
 
     chat = get_object_or_404(ChatConversations, conversation_id=chat_id)
     if not chat.chatparticipants_set.filter(user=request.user).exists():
-        return JsonResponse(
-            {"success": False, "error": "У вас нет доступа к этому чату"}, status=403
-        )
+        return JsonResponse({"success": False, "error": "У вас нет доступа к этому чату"}, status=403)
 
+    logger.info(f"Starting deal check for chat {chat_id}, participants: {chat.chatparticipants_set.count()}")
     if chat.is_group_chat or chat.is_deal:
+        logger.error(f"Chat {chat_id} is group or already a deal")
         return JsonResponse(
-            {
-                "success": False,
-                "error": "Сделку можно начать только в личном чате, который ещё не является сделкой",
-            },
+            {"success": False, "error": "Сделку можно начать только в личном чате, который ещё не является сделкой"},
             status=400,
         )
 
     participants = chat.chatparticipants_set.all()
     if participants.count() != 2:
-        return JsonResponse(
-            {"success": False, "error": "В чате должно быть ровно два участника"},
-            status=400,
-        )
+        logger.error(f"Chat {chat_id} has {participants.count()} participants, expected 2")
+        return JsonResponse({"success": False, "error": "В чате должно быть ровно два участника"}, status=400)
 
-    roles = {
-        p.user.role.role_name.lower() for p in participants if p.user and p.user.role
-    }
+    roles = {p.user.role.role_name.lower() for p in participants if p.user and p.user.role}
     if roles != {"startuper", "investor"}:
-        return JsonResponse(
-            {
-                "success": False,
-                "error": "Чат должен включать одного стартапера и одного инвестора",
-            },
-            status=400,
-        )
+        logger.error(f"Chat {chat_id} roles: {roles}, expected {'startuper', 'investor'}")
+        return JsonResponse({"success": False, "error": "Чат должен включать одного стартапера и одного инвестора"}, status=400)
 
     try:
         data = json.loads(request.body)
-        initiator_name = data.get(
-            "initiator_name", request.user.get_full_name() or "Пользователь"
-        )
+        initiator_name = data.get("initiator_name", request.user.get_full_name() or "Пользователь")
     except json.JSONDecodeError:
         initiator_name = request.user.get_full_name() or "Пользователь"
 
     with transaction.atomic():
         chat.is_deal = True
+        chat.deal_status = 'pending'  # Явно устанавливаем статус
         chat.updated_at = timezone.now()
         chat.save()
 
         moderators = Users.objects.filter(role__role_name="moderator")
         if not moderators.exists():
-            return JsonResponse(
-                {"success": False, "error": "Нет доступных модераторов"}, status=500
-            )
+            return JsonResponse({"success": False, "error": "Нет доступных модераторов"}, status=500)
 
         moderator = choice(list(moderators))
         ChatParticipants.objects.create(conversation=chat, user=moderator)
@@ -1084,27 +1067,13 @@ def start_deal(request, chat_id):
         message.save()
 
     participants_data = [
-        {
-            "user_id": p.user.user_id,
-            "name": p.user.get_full_name(),
-            "role": p.user.role.role_name if p.user.role else "unknown",
-        }
+        {"user_id": p.user.user_id, "name": p.user.get_full_name(), "role": p.user.role.role_name if p.user.role else "unknown"}
         for p in chat.chatparticipants_set.all()
     ]
 
-    logger.info(
-        f"Сделка начата в чате {chat_id}, модератор {moderator.user_id} назначен"
-    )
+    logger.info(f"Сделка начата в чате {chat_id}, модератор {moderator.user_id} назначен")
     return JsonResponse(
-        {
-            "success": True,
-            "message": "Сделка начата, модератор назначен",
-            "moderator": {
-                "user_id": moderator.user_id,
-                "name": moderator.get_full_name(),
-            },
-            "participants": participants_data,
-        }
+        {"success": True, "message": "Сделка начата, модератор назначен", "moderator": {"user_id": moderator.user_id, "name": moderator.get_full_name()}, "participants": participants_data}
     )
 
 @login_required
@@ -1114,9 +1083,8 @@ def deals_view(request):
         return redirect("home")
 
     # Получаем параметр фильтра (активные, принятые или отклонённые)
-    status_filter = request.GET.get('status', 'pending')  # По умолчанию 'pending'
+    status_filter = request.GET.get('status', 'pending')
     valid_statuses = ['pending', 'approved', 'rejected']
-
     if status_filter not in valid_statuses:
         status_filter = 'pending'
 
@@ -1126,7 +1094,9 @@ def deals_view(request):
         deal_status=status_filter
     ).select_related('chatparticipants__user').order_by('-updated_at')
 
-    # Логирование для отладки
+    # Проверяем, что модератор участвует в чате
+    deals = deals.filter(chatparticipants__user=request.user)
+
     logger.info(f"Fetching deals for moderator {request.user.user_id} with status_filter: {status_filter}, found {deals.count()} deals")
     for deal in deals:
         participants = deal.chatparticipants_set.all()
@@ -1135,6 +1105,25 @@ def deals_view(request):
 
     # Подготовка данных для отображения
     deal_data = []
+    selected_chat = None
+    chat_id = request.GET.get('chat_id')
+    if chat_id:
+        selected_chat = get_object_or_404(ChatConversations, conversation_id=chat_id, is_deal=True)
+        if not selected_chat.chatparticipants_set.filter(user=request.user).exists():
+            messages.error(request, "У вас нет доступа к этому чату.")
+            selected_chat = None
+        else:
+            # Получаем сообщения для выбранного чата
+            messages = Messages.objects.filter(conversation=selected_chat).order_by('created_at')
+            messages_data = [{
+                'message_id': msg.message_id,
+                'sender_name': msg.sender.get_full_name() if msg.sender else 'Система',
+                'message_text': msg.message_text,
+                'created_at': msg.created_at.strftime('%H:%M %d/%m/%Y') if msg.created_at else '',
+                'is_own': msg.sender == request.user if msg.sender else False,
+            } for msg in messages]
+            selected_chat_messages = messages_data
+
     for deal in deals:
         participants = deal.chatparticipants_set.all()
         moderator = next((p.user for p in participants if p.user.role and p.user.role.role_name == 'moderator'), None)
@@ -1156,8 +1145,55 @@ def deals_view(request):
     context = {
         'deals': deal_data,
         'current_status': status_filter,
+        'selected_chat': selected_chat,
+        'chat_messages': selected_chat_messages if selected_chat else [],
     }
     return render(request, "accounts/deals.html", context)
+
+@login_required
+def send_message(request):
+    if request.method != "POST":
+        return JsonResponse({"success": False, "error": "Неверный метод запроса"})
+
+    form = MessageForm(request.POST)
+    if not form.is_valid():
+        return JsonResponse({"success": False, "error": "Неверные данные формы"})
+
+    chat_id = request.POST.get("chat_id")
+    chat = get_object_or_404(ChatConversations, conversation_id=chat_id)
+    if not chat.chatparticipants_set.filter(user=request.user).exists():
+        return JsonResponse({"success": False, "error": "У вас нет доступа к этому чату"})
+
+    # Проверяем, что пользователь — модератор
+    if not request.user.role or request.user.role.role_name != "moderator":
+        return JsonResponse({"success": False, "error": "Только модератор может отправлять сообщения здесь"})
+
+    message = Messages(
+        conversation=chat,
+        sender=request.user,
+        message_text=form.cleaned_data["message_text"],
+        status=MessageStatuses.objects.get(status_name="sent"),
+        created_at=timezone.now(),
+        updated_at=timezone.now(),
+    )
+    message.save()
+
+    chat.updated_at = timezone.now()
+    chat.save()
+
+    return JsonResponse(
+        {
+            "success": True,
+            "message": {
+                "message_id": message.message_id,
+                "sender_name": request.user.get_full_name(),
+                "message_text": message.message_text,
+                "created_at": message.created_at.strftime('%H:%M %d/%m/%Y'),
+                "is_own": True,
+            },
+        }
+    )
+
 
 @login_required
 def approve_deal(request, chat_id):

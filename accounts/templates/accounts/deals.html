@@ -5,6 +5,7 @@
 
 {% block head_extra %}
     <link rel="stylesheet" href="{% static 'accounts/css/deals.css' %}">
+    <script src="{% static 'accounts/js/deals.js' %}"></script>
 {% endblock %}
 
 {% block content %}
@@ -12,7 +13,6 @@
         <div class="deals-main-wrapper">
             <div class="chat-list-column">
                 <h3>Список сделок</h3>
-                <!-- Переключатели для фильтрации -->
                 <div class="deal-status-filters">
                     <a href="?status=pending" class="filter-btn {% if current_status == 'pending' %}active{% endif %}">Ожидают</a>
                     <a href="?status=approved" class="filter-btn {% if current_status == 'approved' %}active{% endif %}">Приняты</a>
@@ -22,7 +22,7 @@
                     <p>Нет сделок с статусом {{ current_status }}.</p>
                 {% endif %}
                 {% for deal in deals %}
-                    <div class="chat-item {% if forloop.first %}active{% endif %}" data-chat-id="{{ deal.conversation_id }}">
+                    <div class="chat-item {% if selected_chat and selected_chat.conversation_id == deal.conversation_id %}active{% endif %}" data-chat-id="{{ deal.conversation_id }}" onclick="loadChat({{ deal.conversation_id }})">
                         <img src="{% static 'accounts/images/avatars/default_avatar_ufo.png' %}" alt="{{ deal.name }}" class="chat-item-avatar">
                         <div class="chat-item-info">
                             <h4 class="chat-item-name">{{ deal.name }}</h4>
@@ -41,43 +41,73 @@
                 {% endfor %}
             </div>
             <div class="chat-window-column">
-                <div class="chat-messages-area">
-                    {% if deals and deals|length > 0 %}
-                        {% with deal=deals|first %}
-                            <div class="chat-actions-top">
-                                <button class="btn btn-approve" data-chat-id="{{ deal.conversation_id }}" id="approveDealBtn">Одобрить</button>
-                                <button class="btn btn-reject" data-chat-id="{{ deal.conversation_id }}" id="rejectDealBtn">Отклонить</button>
-                            </div>
-                            <div class="messages-container">
-                                <div class="message-date-separator">{{ deal.date }}</div>
-                                <div class="message-group">
-                                    <div class="message-bubble received">
-                                        <div class="message-content">
-                                            {{ deal.last_message }}
-                                        </div>
-                                        <span class="message-time">{{ deal.created_at }}</span>
-                                    </div>
+                {% if selected_chat %}
+                    <div class="chat-messages-area">
+                        <div class="chat-actions-top">
+                            <button class="btn btn-approve" data-chat-id="{{ selected_chat.conversation_id }}" id="approveDealBtn">Одобрить</button>
+                            <button class="btn btn-reject" data-chat-id="{{ selected_chat.conversation_id }}" id="rejectDealBtn">Отклонить</button>
+                        </div>
+                        <div class="messages-container">
+                            {% for message in chat_messages %}
+                                <div class="message-bubble {% if message.is_own %}sent{% else %}received{% endif %}">
+                                    <div class="message-content">{{ message.message_text }}</div>
+                                    <span class="message-time">{{ message.created_at }}</span>
+                                    <span class="message-sender">{{ message.sender_name }}</span>
                                 </div>
-                                {% if deal.unread_count > 0 %}
-                                    <div class="new-messages-separator">
-                                        <span>Новые сообщения</span>
-                                    </div>
-                                {% endif %}
-                            </div>
-                        {% endwith %}
-                    {% else %}
-                        <p>Выберите сделку для просмотра деталей.</p>
-                    {% endif %}
-                </div>
+                            {% empty %}
+                                <p>Нет сообщений в этой сделке.</p>
+                            {% endfor %}
+                        </div>
+                        <form id="messageForm" method="post" action="{% url 'send_message' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="chat_id" value="{{ selected_chat.conversation_id }}">
+                            <textarea name="message_text" placeholder="Введите сообщение..." required></textarea>
+                            <button type="submit">Отправить</button>
+                        </form>
+                    </div>
+                {% else %}
+                    <p>Выберите сделку для просмотра деталей и отправки сообщений.</p>
+                {% endif %}
             </div>
         </div>
     </div>
 
     <script>
+        function loadChat(chatId) {
+            window.location.href = `?chat_id=${chatId}&status=${encodeURIComponent('{{ current_status }}')}`;
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
+            const messageForm = document.getElementById('messageForm');
+            if (messageForm) {
+                messageForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const formData = new FormData(this);
+                    fetch(this.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            const messageDiv = document.createElement('div');
+                            messageDiv.className = 'message-bubble sent';
+                            messageDiv.innerHTML = `<div class="message-content">${data.message.message_text}</div><span class="message-time">${data.message.created_at}</span><span class="message-sender">${data.message.sender_name}</span>`;
+                            document.querySelector('.messages-container').appendChild(messageDiv);
+                            this.reset();
+                        } else {
+                            alert(data.error || 'Ошибка отправки сообщения');
+                        }
+                    })
+                    .catch(error => console.error('Ошибка:', error));
+                });
+            }
+
             const approveBtn = document.getElementById('approveDealBtn');
             const rejectBtn = document.getElementById('rejectDealBtn');
-
             if (approveBtn) {
                 approveBtn.addEventListener('click', function() {
                     const chatId = this.getAttribute('data-chat-id');
