@@ -6,7 +6,6 @@ import logging
 import os
 import uuid
 from decimal import Decimal
-from django.db import transaction
 from random import choice
 
 from dateutil.relativedelta import relativedelta
@@ -21,7 +20,19 @@ from django.db import (
     models,  # Добавляем для models.Q
     transaction,
 )
-from django.db.models import Avg, Count, F, FloatField, Max, Min, Q, Sum, OuterRef, Subquery, Exists  # Добавляем Q
+from django.db.models import (  # Добавляем Q
+    Avg,
+    Count,
+    Exists,
+    F,
+    FloatField,
+    Max,
+    Min,
+    OuterRef,
+    Q,
+    Subquery,
+    Sum,
+)
 from django.db.models.functions import (
     Coalesce,  # Добавляем Coalesce
     TruncMonth,  # Добавляем для группировки по месяцам
@@ -29,9 +40,9 @@ from django.db.models.functions import (
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
+from django.urls import reverse
 from django.utils import timezone
 from django.utils.text import slugify
-from django.urls import reverse
 
 from .forms import (  # Добавляем MessageForm и UserSearchForm
     CommentForm,
@@ -259,7 +270,10 @@ def search_suggestions(request):
         ).distinct()[:10]
 
         users = [
-            {"id": user.user_id, "name": f"{user.first_name or ''} {user.last_name or ''} ({user.email})".strip()}
+            {
+                "id": user.user_id,
+                "name": f"{user.first_name or ''} {user.last_name or ''} ({user.email})".strip(),
+            }
             for user in search_results
         ]
 
@@ -273,17 +287,19 @@ def startup_detail(request, startup_id):
         )
     except Startups.DoesNotExist:
         return get_object_or_404(Startups, startup_id=startup_id)
-    
+
     if request.method == "POST":
         if not request.user.is_authenticated:
-            return redirect('login') 
+            return redirect("login")
         form = CommentForm(request.POST)
         if form.is_valid():
             comment = form.save(commit=False)
             comment.startup_id = startup
             comment.user_id = request.user
             # Пытаемся найти голос пользователя для этого стартапа
-            user_vote = UserVotes.objects.filter(user=request.user, startup=startup).first()
+            user_vote = UserVotes.objects.filter(
+                user=request.user, startup=startup
+            ).first()
             if user_vote:
                 comment.user_rating = user_vote.rating
             comment.save()
@@ -295,17 +311,18 @@ def startup_detail(request, startup_id):
         form = CommentForm()
 
     # Аннотируем рейтинг пользователя для каждого комментария
-    comments_with_rating = Comments.objects.filter(
-        startup_id=startup, parent_comment_id__isnull=True
-    ).annotate(
-        user_rating=models.Subquery(
-            UserVotes.objects.filter(
-                startup=startup,
-                user=models.OuterRef('user_id_id')
-            ).values('rating')[:1]
+    comments_with_rating = (
+        Comments.objects.filter(startup_id=startup, parent_comment_id__isnull=True)
+        .annotate(
+            user_rating=models.Subquery(
+                UserVotes.objects.filter(
+                    startup=startup, user=models.OuterRef("user_id_id")
+                ).values("rating")[:1]
+            )
         )
-    ).order_by("-created_at")
-    
+        .order_by("-created_at")
+    )
+
     # Получаем средний рейтинг и количество голосов
     average_rating = (
         startup.sum_votes / startup.total_voters if startup.total_voters > 0 else 0
@@ -392,7 +409,7 @@ def startup_detail(request, startup_id):
 
     context = {
         "startup": startup,
-        "comments": comments_with_rating, # <--- Передаем комментарии с рейтингом
+        "comments": comments_with_rating,  # <--- Передаем комментарии с рейтингом
         "form": form,
         "average_rating": average_rating,
         "total_votes_count": total_votes,
@@ -931,6 +948,7 @@ def delete_avatar(request):
             {"success": False, "error": "Ошибка при удалении аватара."}, status=500
         )
 
+
 @login_required
 def chat_list(request):
     user = request.user
@@ -940,82 +958,136 @@ def chat_list(request):
     for chat in chats:
         participants = chat.chatparticipants_set.all()
         has_user = participants.filter(user=user).exists()
-        is_deleted = getattr(chat, 'is_deleted', False)
+        is_deleted = getattr(chat, "is_deleted", False)
         has_left = not has_user and any(p.user != user for p in participants)
 
         # Проверяем доступ только для пользователей, участвующих в чате
-        if not has_user and (not user.role or user.role.role_name.lower() != "moderator"):
+        if not has_user and (
+            not user.role or user.role.role_name.lower() != "moderator"
+        ):
             continue
 
         # Для модераторов добавляем чаты-сделки и групповые чаты
-        if user.role and user.role.role_name.lower() == "moderator" and (chat.is_group_chat or chat.is_deal):
+        if (
+            user.role
+            and user.role.role_name.lower() == "moderator"
+            and (chat.is_group_chat or chat.is_deal)
+        ):
             other_participant = participants.exclude(user=user).first()
             participant_info = None
             if other_participant and not chat.is_group_chat and other_participant.user:
                 participant_info = other_participant.user
-            chat_data.append({
-                'conversation_id': chat.conversation_id,
-                'name': chat.name if chat.name else f"Чат {chat.conversation_id}",
-                'is_group_chat': chat.is_group_chat,
-                'is_deal': chat.is_deal,
-                'is_deleted': is_deleted,
-                'has_left': has_left,
-                'participant': {
-                    'user_id': participant_info.user_id if participant_info else None,
-                    'first_name': participant_info.first_name if participant_info else None,
-                    'last_name': participant_info.last_name if participant_info else None,
-                    'profile_picture_url': participant_info.get_profile_picture_url() if participant_info else None
-                } if participant_info else None,
-            })
+            chat_data.append(
+                {
+                    "conversation_id": chat.conversation_id,
+                    "name": chat.name if chat.name else f"Чат {chat.conversation_id}",
+                    "is_group_chat": chat.is_group_chat,
+                    "is_deal": chat.is_deal,
+                    "is_deleted": is_deleted,
+                    "has_left": has_left,
+                    "participant": {
+                        "user_id": participant_info.user_id
+                        if participant_info
+                        else None,
+                        "first_name": participant_info.first_name
+                        if participant_info
+                        else None,
+                        "last_name": participant_info.last_name
+                        if participant_info
+                        else None,
+                        "profile_picture_url": participant_info.get_profile_picture_url()
+                        if participant_info
+                        else None,
+                    }
+                    if participant_info
+                    else None,
+                }
+            )
         # Для обычных пользователей только их чаты
         elif not is_deleted and not has_left and has_user:
             other_participant = participants.exclude(user=user).first()
             participant_info = None
             if other_participant and not chat.is_group_chat and other_participant.user:
                 participant_info = other_participant.user
-            chat_data.append({
-                'conversation_id': chat.conversation_id,
-                'name': chat.name if chat.name else f"Чат {chat.conversation_id}",
-                'is_group_chat': chat.is_group_chat,
-                'is_deal': chat.is_deal,
-                'is_deleted': is_deleted,
-                'has_left': has_left,
-                'participant': {
-                    'user_id': participant_info.user_id if participant_info else None,
-                    'first_name': participant_info.first_name if participant_info else None,
-                    'last_name': participant_info.last_name if participant_info else None,
-                    'profile_picture_url': participant_info.get_profile_picture_url() if participant_info else None
-                } if participant_info else None,
-            })
+            chat_data.append(
+                {
+                    "conversation_id": chat.conversation_id,
+                    "name": chat.name if chat.name else f"Чат {chat.conversation_id}",
+                    "is_group_chat": chat.is_group_chat,
+                    "is_deal": chat.is_deal,
+                    "is_deleted": is_deleted,
+                    "has_left": has_left,
+                    "participant": {
+                        "user_id": participant_info.user_id
+                        if participant_info
+                        else None,
+                        "first_name": participant_info.first_name
+                        if participant_info
+                        else None,
+                        "last_name": participant_info.last_name
+                        if participant_info
+                        else None,
+                        "profile_picture_url": participant_info.get_profile_picture_url()
+                        if participant_info
+                        else None,
+                    }
+                    if participant_info
+                    else None,
+                }
+            )
 
     logger.info(f"Chat list generated for user {user.email}: {len(chat_data)} chats")
-    return JsonResponse({'success': True, 'chats': chat_data})
+    return JsonResponse({"success": True, "chats": chat_data})
+
 
 @login_required
 def start_deal(request, chat_id):
     if request.method != "POST":
-        return JsonResponse({"success": False, "error": "Неверный метод запроса"}, status=405)
+        return JsonResponse(
+            {"success": False, "error": "Неверный метод запроса"}, status=405
+        )
 
     chat = get_object_or_404(ChatConversations, conversation_id=chat_id)
     if not chat.chatparticipants_set.filter(user=request.user).exists():
-        return JsonResponse({"success": False, "error": "У вас нет доступа к этому чату"}, status=403)
+        return JsonResponse(
+            {"success": False, "error": "У вас нет доступа к этому чату"}, status=403
+        )
 
     if chat.is_group_chat or chat.is_deal:
-        return JsonResponse({"success": False, "error": "Сделку можно начать только в личном чате, который ещё не является сделкой"}, status=400)
+        return JsonResponse(
+            {
+                "success": False,
+                "error": "Сделку можно начать только в личном чате, который ещё не является сделкой",
+            },
+            status=400,
+        )
 
     participants = chat.chatparticipants_set.all()
     if participants.count() != 2:
-        return JsonResponse({"success": False, "error": "В чате должно быть ровно два участника"}, status=400)
+        return JsonResponse(
+            {"success": False, "error": "В чате должно быть ровно два участника"},
+            status=400,
+        )
 
-    roles = {p.user.role.role_name.lower() for p in participants if p.user and p.user.role}
+    roles = {
+        p.user.role.role_name.lower() for p in participants if p.user and p.user.role
+    }
     if roles != {"startuper", "investor"}:
-        return JsonResponse({"success": False, "error": "Чат должен включать одного стартапера и одного инвестора"}, status=400)
+        return JsonResponse(
+            {
+                "success": False,
+                "error": "Чат должен включать одного стартапера и одного инвестора",
+            },
+            status=400,
+        )
 
     try:
         data = json.loads(request.body)
-        initiator_name = data.get('initiator_name', request.user.get_full_name() or 'Пользователь')
+        initiator_name = data.get(
+            "initiator_name", request.user.get_full_name() or "Пользователь"
+        )
     except json.JSONDecodeError:
-        initiator_name = request.user.get_full_name() or 'Пользователь'
+        initiator_name = request.user.get_full_name() or "Пользователь"
 
     with transaction.atomic():
         chat.is_deal = True
@@ -1024,7 +1096,9 @@ def start_deal(request, chat_id):
 
         moderators = Users.objects.filter(role__role_name="moderator")
         if not moderators.exists():
-            return JsonResponse({"success": False, "error": "Нет доступных модераторов"}, status=500)
+            return JsonResponse(
+                {"success": False, "error": "Нет доступных модераторов"}, status=500
+            )
 
         moderator = choice(list(moderators))
         ChatParticipants.objects.create(conversation=chat, user=moderator)
@@ -1043,21 +1117,26 @@ def start_deal(request, chat_id):
         {
             "user_id": p.user.user_id,
             "name": p.user.get_full_name(),
-            "role": p.user.role.role_name if p.user.role else "unknown"
+            "role": p.user.role.role_name if p.user.role else "unknown",
         }
         for p in chat.chatparticipants_set.all()
     ]
 
-    logger.info(f"Сделка начата в чате {chat_id}, модератор {moderator.user_id} назначен")
-    return JsonResponse({
-        "success": True,
-        "message": "Сделка начата, модератор назначен",
-        "moderator": {
-            "user_id": moderator.user_id,
-            "name": moderator.get_full_name()
-        },
-        "participants": participants_data
-    })
+    logger.info(
+        f"Сделка начата в чате {chat_id}, модератор {moderator.user_id} назначен"
+    )
+    return JsonResponse(
+        {
+            "success": True,
+            "message": "Сделка начата, модератор назначен",
+            "moderator": {
+                "user_id": moderator.user_id,
+                "name": moderator.get_full_name(),
+            },
+            "participants": participants_data,
+        }
+    )
+
 
 @login_required
 def create_startup(request):
@@ -1319,40 +1398,64 @@ def delete_message(request, message_id):
     message = get_object_or_404(Messages, message_id=message_id)
     chat = message.conversation
     if not chat.chatparticipants_set.filter(user=request.user).exists():
-        return JsonResponse({"success": False, "error": "У вас нет доступа к этому чату"}, status=403)
-    
+        return JsonResponse(
+            {"success": False, "error": "У вас нет доступа к этому чату"}, status=403
+        )
+
     if request.user.role and request.user.role.role_name.lower() == "moderator":
         message.is_deleted = True
         message.save()
         return JsonResponse({"success": True})
-    return JsonResponse({"success": False, "error": "Только модератор может удалить сообщение"}, status=403)
+    return JsonResponse(
+        {"success": False, "error": "Только модератор может удалить сообщение"},
+        status=403,
+    )
+
 
 @login_required
 def remove_participant(request, chat_id):
     chat = get_object_or_404(ChatConversations, conversation_id=chat_id)
     if not chat.chatparticipants_set.filter(user=request.user).exists():
-        return JsonResponse({"success": False, "error": "У вас нет доступа к этому чату"}, status=403)
-    
+        return JsonResponse(
+            {"success": False, "error": "У вас нет доступа к этому чату"}, status=403
+        )
+
     if request.method != "POST":
-        return JsonResponse({"success": False, "error": "Неверный метод запроса"}, status=405)
+        return JsonResponse(
+            {"success": False, "error": "Неверный метод запроса"}, status=405
+        )
 
     user_id = request.POST.get("user_id")
     if not user_id:
-        return JsonResponse({"success": False, "error": "Не указан пользователь"}, status=400)
+        return JsonResponse(
+            {"success": False, "error": "Не указан пользователь"}, status=400
+        )
 
     try:
         user_to_remove = Users.objects.get(user_id=user_id)
     except Users.DoesNotExist:
-        return JsonResponse({"success": False, "error": "Пользователь не найден"}, status=404)
+        return JsonResponse(
+            {"success": False, "error": "Пользователь не найден"}, status=404
+        )
 
-    if request.user.role and request.user.role.role_name.lower() == "moderator" and chat.is_group_chat:
+    if (
+        request.user.role
+        and request.user.role.role_name.lower() == "moderator"
+        and chat.is_group_chat
+    ):
         participant = chat.chatparticipants_set.filter(user=user_to_remove).first()
         if participant:
             participant.delete()
             chat.updated_at = timezone.now()
             chat.save()
             return JsonResponse({"success": True})
-    return JsonResponse({"success": False, "error": "Только модератор может исключить участника из группового чата"}, status=403)
+    return JsonResponse(
+        {
+            "success": False,
+            "error": "Только модератор может исключить участника из группового чата",
+        },
+        status=403,
+    )
 
 
 # accounts/views.py
@@ -1648,6 +1751,13 @@ def investor_main(request):
         return redirect("home")
 
     return render(request, "accounts/investor_main.html")
+
+
+@login_required
+def startupper_main(request):
+    if request.user.user_role != "startupper":
+        return redirect("home")
+    return render(request, "accounts/startupper_main.html")
 
 
 # Панель модератора
@@ -2302,26 +2412,38 @@ def start_chat(request, user_id):
 
 @login_required
 def add_participant(request, chat_id):
-    logger.debug(f"Adding participant to chat {chat_id}, user_id: {request.POST.get('user_id')}")
+    logger.debug(
+        f"Adding participant to chat {chat_id}, user_id: {request.POST.get('user_id')}"
+    )
     if request.method != "POST":
-        return JsonResponse({"success": False, "error": "Неверный метод запроса"}, status=405)
+        return JsonResponse(
+            {"success": False, "error": "Неверный метод запроса"}, status=405
+        )
 
     chat = get_object_or_404(ChatConversations, conversation_id=chat_id)
     if not chat.chatparticipants_set.filter(user=request.user).exists():
-        return JsonResponse({"success": False, "error": "У вас нет доступа к этому чату"}, status=403)
+        return JsonResponse(
+            {"success": False, "error": "У вас нет доступа к этому чату"}, status=403
+        )
 
     user_id = request.POST.get("user_id")
     if not user_id:
-        return JsonResponse({"success": False, "error": "Не указан пользователь"}, status=400)
+        return JsonResponse(
+            {"success": False, "error": "Не указан пользователь"}, status=400
+        )
 
     try:
         new_user = Users.objects.get(user_id=user_id)
     except Users.DoesNotExist:
         logger.error(f"User {user_id} not found")
-        return JsonResponse({"success": False, "error": "Пользователь не найден"}, status=404)
+        return JsonResponse(
+            {"success": False, "error": "Пользователь не найден"}, status=404
+        )
 
     if chat.chatparticipants_set.filter(user=new_user).exists():
-        return JsonResponse({"success": False, "error": "Пользователь уже в чате"}, status=400)
+        return JsonResponse(
+            {"success": False, "error": "Пользователь уже в чате"}, status=400
+        )
 
     if not chat.is_group_chat:  # Личные чаты
         participants = chat.get_participants()
@@ -2358,6 +2480,7 @@ def add_participant(request, chat_id):
             },
         }
     )
+
 
 @login_required
 def available_users_for_chat(request, chat_id):
@@ -3128,15 +3251,17 @@ def get_investors(request, startup_id):
     investor_list = []
     for tx in investors:
         if tx.investor:  # <-- Проверяем, что инвестор существует
-            investor_list.append({
-                "user_id": tx.investor.user_id,
-                "name": tx.investor.get_full_name() or tx.investor.email,
-                "amount": float(tx.amount),
-            })
+            investor_list.append(
+                {
+                    "user_id": tx.investor.user_id,
+                    "name": tx.investor.get_full_name() or tx.investor.email,
+                    "amount": float(tx.amount),
+                }
+            )
 
     html = render_to_string(
-        "accounts/partials/_investors_list.html", 
-        {"investors": investor_list, "startup": startup, "user": request.user}
+        "accounts/partials/_investors_list.html",
+        {"investors": investor_list, "startup": startup, "user": request.user},
     )
     return JsonResponse({"html": html})
 
@@ -3171,7 +3296,9 @@ def add_investor(request, startup_id):
             else:
                 # Создание новой транзакции
                 try:
-                    investment_type_obj = TransactionTypes.objects.get(type_name="investment")
+                    investment_type_obj = TransactionTypes.objects.get(
+                        type_name="investment"
+                    )
                     InvestmentTransactions.objects.create(
                         investor=user_to_invest,
                         startup=startup,
@@ -3179,23 +3306,30 @@ def add_investor(request, startup_id):
                         transaction_type=investment_type_obj,
                     )
                 except TransactionTypes.DoesNotExist:
-                    return JsonResponse({"error": "Тип транзакции 'investment' не найден в системе."}, status=500)
+                    return JsonResponse(
+                        {"error": "Тип транзакции 'investment' не найден в системе."},
+                        status=500,
+                    )
 
             # Обновляем общую сумму инвестиций в стартапе
-            startup.amount_raised = (
-                startup.investmenttransactions_set.aggregate(total=Sum("amount"))["total"] or Decimal('0')
-            )
-            startup.save(update_fields=['amount_raised'])
+            startup.amount_raised = startup.investmenttransactions_set.aggregate(
+                total=Sum("amount")
+            )["total"] or Decimal("0")
+            startup.save(update_fields=["amount_raised"])
             new_investor_count = startup.get_investors_count()
-            
-            return JsonResponse({
-                "success": True, 
-                "new_amount_raised": float(startup.amount_raised),
-                "new_investor_count": new_investor_count
-            })
-            
+
+            return JsonResponse(
+                {
+                    "success": True,
+                    "new_amount_raised": float(startup.amount_raised),
+                    "new_investor_count": new_investor_count,
+                }
+            )
+
         except (json.JSONDecodeError, TypeError, ValueError) as e:
-            return JsonResponse({"error": f"Неверный формат данных: {str(e)}"}, status=400)
+            return JsonResponse(
+                {"error": f"Неверный формат данных: {str(e)}"}, status=400
+            )
 
     return JsonResponse({"error": "Метод не поддерживается"}, status=405)
 
@@ -3246,31 +3380,37 @@ def delete_investment(request, startup_id, user_id):
             try:
                 user_to_delete = get_object_or_404(Users, pk=user_id)
                 tx = get_object_or_404(
-                    InvestmentTransactions, startup_id=startup_id, investor=user_to_delete
+                    InvestmentTransactions,
+                    startup_id=startup_id,
+                    investor=user_to_delete,
                 )
                 startup = tx.startup
                 tx.delete()
 
                 # Пересчитываем сумму, чтобы избежать ошибок синхронизации
-                new_total = startup.investmenttransactions_set.aggregate(total=Sum('amount'))['total'] or Decimal('0')
+                new_total = startup.investmenttransactions_set.aggregate(
+                    total=Sum("amount")
+                )["total"] or Decimal("0")
                 startup.amount_raised = new_total
-                startup.save(update_fields=['amount_raised'])
-                
+                startup.save(update_fields=["amount_raised"])
+
                 # Пересчитываем количество инвесторов
                 new_investor_count = startup.get_investors_count()
 
-                return JsonResponse({
-                    "success": True, 
-                    "new_amount_raised": float(startup.amount_raised),
-                    "new_investor_count": new_investor_count
-                })
-            
+                return JsonResponse(
+                    {
+                        "success": True,
+                        "new_amount_raised": float(startup.amount_raised),
+                        "new_investor_count": new_investor_count,
+                    }
+                )
+
             except InvestmentTransactions.DoesNotExist:
                 return JsonResponse({"error": "Инвестиция не найдена"}, status=404)
             except Exception as e:
                 logger.error(f"Ошибка при удалении инвестиции: {e}")
                 return JsonResponse({"error": "Внутренняя ошибка сервера"}, status=500)
-    
+
     return JsonResponse({"error": "Неверный метод запроса"}, status=405)
 
 
@@ -3339,6 +3479,7 @@ def rename_chat(request, chat_id):
             {"success": False, "error": f"Ошибка: {str(e)}"}, status=500
         )
 
+
 @login_required
 def available_users(request):
     users = Users.objects.exclude(user_id=request.user.user_id).exclude(
@@ -3358,37 +3499,42 @@ def available_users(request):
 
 @login_required
 def find_or_create_chat(request, recipient_id):
-    if request.method == 'POST':
+    if request.method == "POST":
         recipient = get_object_or_404(Users, user_id=recipient_id)
-        
+
         if request.user.user_id == recipient.user_id:
-            return JsonResponse({'error': 'You cannot start a chat with yourself.'}, status=400)
+            return JsonResponse(
+                {"error": "You cannot start a chat with yourself."}, status=400
+            )
 
         # Ищем существующий личный чат между двумя пользователями
         # Аннотируем чаты количеством участников
         user_chats = ChatConversations.objects.filter(
-            is_group_chat=False, 
-            chatparticipants__user=request.user
-        ).annotate(num_participants=Count('chatparticipants'))
+            is_group_chat=False, chatparticipants__user=request.user
+        ).annotate(num_participants=Count("chatparticipants"))
 
         # Фильтруем те, в которых ровно 2 участника
         personal_chats = user_chats.filter(num_participants=2)
-        
+
         # Среди них ищем тот, в котором есть второй участник
         chat = personal_chats.filter(chatparticipants__user=recipient).first()
 
         if not chat:
             # Создаем новый чат
-            chat = ChatConversations.objects.create(is_group_chat=False, created_at=timezone.now(), updated_at=timezone.now())
+            chat = ChatConversations.objects.create(
+                is_group_chat=False,
+                created_at=timezone.now(),
+                updated_at=timezone.now(),
+            )
             ChatParticipants.objects.create(conversation=chat, user=request.user)
             ChatParticipants.objects.create(conversation=chat, user=recipient)
 
         # Возвращаем URL на страницу чата, указывая ID чата
-        chat_url = reverse('cosmochat') + f'?chat_id={chat.conversation_id}'
-        
-        return JsonResponse({'chat_url': chat_url})
+        chat_url = reverse("cosmochat") + f"?chat_id={chat.conversation_id}"
 
-    return JsonResponse({'error': 'Invalid request method.'}, status=405)
+        return JsonResponse({"chat_url": chat_url})
+
+    return JsonResponse({"error": "Invalid request method."}, status=405)
 
 
 def get_user_rating_for_startup(user_id, startup_id):

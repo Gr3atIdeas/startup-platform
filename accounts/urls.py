@@ -55,6 +55,7 @@ urlpatterns = [
     path("edit-startup/<int:startup_id>/", views.edit_startup, name="edit_startup"),
     path("moderator-main/", views.main_page_moderator, name="main_page_moderator"),
     path("investor-main/", views.investor_main, name="investor_main"),
+    path("startupper-main/", views.startupper_main, name="startupper_main"),
     path("moderator-dashboard/", views.moderator_dashboard, name="moderator_dashboard"),
     path(
         "approve-startup/<int:startup_id>/",
@@ -120,10 +121,24 @@ urlpatterns = [
     ),
     path("cosmochat/rename-chat/<int:chat_id>/", views.rename_chat, name="rename_chat"),
     path("cosmochat/available_users/", views.available_users, name="available_users"),
-    path('delete_investment/<int:startup_id>/<int:investor_id>/', views.delete_investment, name='delete_investment'),
-    path('chats/find_or_create/<int:recipient_id>/', views.find_or_create_chat, name='find_or_create_chat'),
-    path('delete-message/<int:message_id>/', views.delete_message, name='delete_message'),
-    path('remove-participant/<int:chat_id>/', views.remove_participant, name='remove_participant'),
+    path(
+        "delete_investment/<int:startup_id>/<int:investor_id>/",
+        views.delete_investment,
+        name="delete_investment",
+    ),
+    path(
+        "chats/find_or_create/<int:recipient_id>/",
+        views.find_or_create_chat,
+        name="find_or_create_chat",
+    ),
+    path(
+        "delete-message/<int:message_id>/", views.delete_message, name="delete_message"
+    ),
+    path(
+        "remove-participant/<int:chat_id>/",
+        views.remove_participant,
+        name="remove_participant",
+    ),
     path("cosmochat/start-deal/<int:chat_id>/", views.start_deal, name="start_deal"),
-    path('cosmochat/chat-list/', views.chat_list, name='chat_list'),
+    path("cosmochat/chat-list/", views.chat_list, name="chat_list"),
 ]
