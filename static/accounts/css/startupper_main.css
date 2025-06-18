@@ -359,13 +359,13 @@ html::-webkit-scrollbar-button {
 }
 
 .featured .icon8 {
+  position: absolute;
+  top: 10px;
+  left: 996px;
   width: 280px;
   height: 280px;
-  right: -100px;
-  top: -50px;
-  opacity: 0.9;
-  z-index: 0;
-} /* Большая фоновая */
+  object-fit: cover;
+}
 
 .featured .featured-child,
 .featured .featured-item {
@@ -373,546 +373,296 @@ html::-webkit-scrollbar-button {
   display: none; /* Скрываем, если не используются явно */
 }
 
-/* --- Секция 4: Featured4 (Инвесторы) --- */
-.featured4 {
-  width: 100%;
-  max-width: 1445px;
-  padding: 45px 71px;
-  box-sizing: border-box;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 60px;
-  margin-left: auto;
-  margin-right: auto;
-
-  /* background-color: #001833; */
-
-  /* Убираем фон с обертки .featured4, будет на .frame-parent3 */
-
-  /* position: relative; */
-
-  /* Это было для JS, теперь не нужно */
-
-  /* z-index: 2; */
-
-  /* Это было для JS, теперь не нужно */
-}
-
-.featured4 .frame-parent3 {
-  width: 1303px;
-  height: 521px;
-  position: relative;
-  background-color: #001833; /* Фон на контентном блоке */
-  border-radius: 20px;
-
-  /* display: flex; */
-
-  /* Убираем flex отсюда, если он не нужен для позиционирования .parent6 и .icon10 */
-
-  /* justify-content: space-between; */
-
-  /* align-items: center; */
-  overflow: visible; /* Чтобы .icon10 мог вылезать */
-  padding: 50px;
-  box-sizing: border-box;
-}
-
-.featured4 .parent6 {
-  /* Левый блок с текстом */
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 35px;
-  width: 55%; /* Немного увеличим место для текста, т.к. фон будет вылезать */
-  position: relative; /* Для z-index, чтобы текст был выше фона */
-  z-index: 1;
-}
-
-.featured4 .parent6 .div23 {
-  text-align: center;
-  width: 100%;
-}
-
-.featured4 .parent6 .div23 .txt > span {
-    display: block;
-}
-
-.featured4 .parent6 .div23 .txt > span:first-child {
-  color: #004e9f; /* Изменено по макету */
-  font-size: 35px;
-  font-family: Unbounded, sans-serif; /* Уже должно быть, но для явности */
-  font-weight: 600;
-  line-height: 1.2;
-  word-wrap: break-word; /* Уже должно быть */
-}
-
-.featured4 .parent6 .div23 .txt .span3 {
-  color: black; /* Изменено по макету */
-  font-size: 35px;
-  font-family: Unbounded, sans-serif;
-  font-weight: 600;
-  line-height: 1.2;
-  word-wrap: break-word;
-}
-
-.featured4 .group-parent {
-  align-self: stretch;
-  display: flex;
-  flex-flow: row nowrap; /* Явно указываем ряд */
-  justify-content: space-around;
-  align-items: flex-start; /* Выравнивание по верху, т.к. иконки вылезают */
-  gap: 20px; /* Запрещаем перенос, если хотим строгий ряд */
-  margin-top: 20px; /* Добавляем отступ сверху для карточек */
-}
-
-.featured4 .group-div {
-  width: 187px;
-  height: 187px; /* Делаем квадратным */
-
-  /* min-height: 220px; */
-
-  /* Убираем min-height */
-  position: relative;
-  background: linear-gradient(180deg, #004e9f 0%, #001c39 100%);
-  border-radius: 10px;
-  padding: 0 14px 20px;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  overflow: visible;
-  gap: 10px;
-}
-
-.featured4 .group-div .card-icon-container {
-  width: 100%;
-  min-height: 80px; /* Увеличиваем для больших иконок */
-  margin-top: -60px; /* Увеличиваем отрицательный отступ для больших иконок */
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  margin-bottom: 10px;
-  z-index: 1;
-}
-
-.featured4 .group-div .card-icon {
-  width: 140px; /* Увеличиваем размер иконки ~x2 от 70px */
-  height: 140px;
-  object-fit: contain;
-}
-
-.featured4 .div24,
-.featured4 .div25,
-.featured4 .div26 {
-  color: white;
-  font-size: 14px;
-  font-family: Unbounded, sans-serif;
-  font-weight: 400;
-  line-height: 18px; /* Изменено по макету */
-  word-wrap: break-word;
-}
-
-.featured4 .parent7 {
-  /* Кнопка "Посмотреть стартапы" */
-  padding: 12px 25px;
-  background: linear-gradient(180deg, #ffef2b 0%, #f9f7d6 100%);
-  border-radius: 10px;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 9px;
-  display: inline-flex;
-  text-decoration: none;
-  box-sizing: border-box;
-  margin-top: 20px;
-}
-
-.featured4 .parent7 .div22 {
-  color: black;
-  font-size: 16px;
-  font-family: Unbounded, sans-serif;
-  font-weight: 400; /* Изменено по макету */
-  line-height: 16px; /* Изменено по макету */
-}
-
-.featured4 .parent7 .iconeye {
-  width: 24px;
-  height: 24px;
-}
-
-.featured4 .icon10 {
-  /* Фоновое изображение инвесторов */
-  position: absolute;
-  left: 0; /* Начинается от левого края родителя */
-  right: auto; /* Убираем right, чтобы не конфликтовал с left и width */
-  top: 0;
-  width: 115%; /* Чтобы покрыть всю ширину (100%) и вылезти справа (15%) */
-  height: 100%;
-  object-fit: cover;
-
-  /* border-radius: 0 10px 10px 0; */
-
-  /* Убираем, если фон должен быть без закругления на вылезающей части или будет обрезан родителем */
-  z-index: 0;
-  opacity: 1;
-}
-
-/* --- Секция 5: Featured5 (Исследуйте новые миры) --- */
+/* --- Секция 2: Нет идей для стартапа? (бывшая featured5) --- */
+/* Секция 2: Нет идей для стартапа? (бывшая featured5) */
 .featured5 {
   width: 100%;
   max-width: 1445px;
-  padding: 45px 71px;
+  padding: 80px 70px;
   box-sizing: border-box;
-  overflow: hidden;
   display: flex;
-  flex-direction: column;
-  align-items: flex-start; /* Внутреннее выравнивание этого блока */
-  gap: 55px;
-  margin-top: 60px;
-  background: transparent !important;
-  margin-left: auto; /* Центрирование */
-  margin-right: auto; /* Центрирование */
+  justify-content: center;
+  align-items: center;
+  background: transparent;
+  margin-top: -60px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .featured5 .frame-parent6 {
-  width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 40px; /* Уменьшен отступ */
+  gap: 30px;
+  width: 100%;
 }
 
 .featured5 .parent8 {
-  /* Заголовок "Исследуйте новые миры" */
-  align-self: flex-start;
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 10px;
+  align-items: center;
 }
 
 .featured5 .parent8 .div28 {
   color: white;
   font-size: 55px;
   font-family: 'Blippo Black', sans-serif;
-  font-weight: normal;
-  line-height: 1;
+  font-weight: 400;
+  line-height: 18px;
+  word-wrap: break-word;
 }
 
 .featured5 .parent8 .div29 {
   color: #ffef2b;
   font-size: 55px;
   font-family: 'Blippo Black', sans-serif;
-  font-weight: normal;
+  font-weight: 400;
   text-transform: uppercase;
-  line-height: 1;
+  line-height: 18px;
+  word-wrap: break-word;
+  margin-bottom: 40px;
 }
 
 .featured5 .frame-parent7 {
-  /* Основной контент: [картинка слева] [разделитель] [карточки] [список справа] */
-  align-self: stretch;
   display: flex;
-  justify-content: space-between; /* Элементы будут распределены */
+  gap: 20px;
   align-items: flex-start;
-  gap: 30px;
 }
 
 .featured5 .frame-parent8 {
-  /* Левый блок с большой картинкой */
-  width: 45%; /* Примерно */
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 25px;
+  gap: 24px;
+  flex-basis: 50%;
 }
 
-.featured5 .group-wrapper {
-  align-self: stretch;
-  height: 514px;
-  position: relative;
-  background: #041a32;
-  overflow: hidden;
-  border-radius: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.featured5 .group-child-main-img-1 {
-  width: 122.15px;
-  height: 345.36px;
-  left: 36px;
-  top: 83px;
-  position: absolute;
-}
-
-.featured5 .group-child-main-img-2 {
-  width: 388.42px;
-  height: 345.36px;
-  left: 168.7px;
-  top: 85.64px;
-  position: absolute;
-}
-
-.featured5 .parent9 {
-  /* Кнопка "Все стартапы" */
-  padding: 12px 25px;
-  background: linear-gradient(180deg, #ffef2b 0%, #f9f7d6 100%);
+.featured5 .new-main-image {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
   border-radius: 10px;
-  border: 1px solid black;
-  gap: 9px;
-  display: inline-flex;
-  text-decoration: none;
-  box-sizing: border-box;
-  align-items: center;
 }
 
-.featured5 .parent9 .div22 {
-  color: black;
-  font-size: 16px;
-  font-family: Unbounded, sans-serif;
-  font-weight: 500;
-  line-height: 1;
+.featured5 .inspiration-caption {
+    display: flex; 
+    align-items: center;
+    gap: 24px;
+    width: 100%;
 }
 
-.featured5 .parent9 .iconsarrow-right-2line {
-  width: 16px;
-  height: 16px;
+.featured5 .inspiration-icon-wrapper {
+    width: 32px;
+    height: 32px;
+    background: #FFEF2B;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.featured5 .inspiration-icon {
+    width: 21.33px;
+    height: 21.33px;
+}
+
+.featured5 .inspiration-text {
+    color: #F2F2F2;
+    font-size: 14px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    line-height: 18px;
+    word-wrap: break-word;
 }
 
 .featured5 .divider {
   width: 1px;
-  align-self: stretch; /* Растянуть по высоте .frame-parent7 */
-  background: rgb(255 255 255 / 20%);
+  background-color: rgba(242, 242, 242, 0.3);
+  align-self: stretch;
 }
 
 .featured5 .frame-parent9 {
-  /* Блок с тремя карточками стартапов */
-  width: 28%; /* Примерно */
   display: flex;
   flex-direction: column;
-  gap: 49px;
+  gap: 20px;
+  flex-basis: 50%;
 }
 
 .featured5 .frame-wrapper {
-  align-self: stretch;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.featured5 .frame-parent10 {
+  background-color: #0b0f2a;
+  padding: 16px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: background-color 0.3s;
 }
 
-.featured5 .frame-parent10 {
-  /* Карточка стартапа */
-  align-self: stretch;
-  display: flex;
-  flex-direction: row; /* Картинка слева, текст справа */
-  justify-content: space-between;
-  align-items: center;
-  gap: 20px;
-  background: transparent;
-  padding: 0;
+.featured5 .frame-parent10:hover {
+  background-color: #1a204d;
 }
 
 .featured5 .frame-parent10 .frame-child9 {
-  /* Картинка стартапа */
-  width: 160px;
-  height: 156px;
+  width: 100%;
+  height: 180px;
   object-fit: cover;
-  border-radius: 10px;
-  flex-shrink: 0;
+  border-radius: 8px;
 }
 
 .featured5 .content {
-  /* Текст справа от картинки */
-  padding: 0;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 16px;
-  flex-grow: 1;
+  gap: 12px;
 }
 
 .featured5 .voltforge-dynamics-parent {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .featured5 .voltforge-dynamics {
-  color: #fcfcfd;
-  font-size: 16px;
+  color: white;
+  font-size: 20px;
   font-family: Unbounded, sans-serif;
-  font-weight: 400;
-  line-height: 1;
+  font-weight: 500;
+  word-wrap: break-word;
 }
 
 .featured5 .info {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
-
 .featured5 .avatar01-icon {
   width: 24px;
   height: 24px;
-  border-radius: 50%;
-  object-fit: cover;
+  border-radius: 9999px;
+  border: 1px solid white;
 }
-
 .featured5 .label2 {
-  padding: 4px 8px;
-  border-radius: 4px;
-  border: 1px solid #ffef2b;
-  display: flex;
+  padding: 2px 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
   justify-content: center;
   align-items: center;
 }
-
 .featured5 .popular {
-  color: #ffef2b;
-  font-size: 12px;
+  color: white;
+  font-size: 14px;
   font-family: Unbounded, sans-serif;
-  font-weight: 500;
-  text-transform: uppercase;
+  font-weight: normal;
 }
-
 .featured5 .voltforge-description {
-  color: #e6e8ec;
-  font-family: Unbounded, sans-serif;
-  font-weight: 300;
-
-  /* height: auto;  */
-
-  /* Убираем ограничение высоты */
-  overflow: visible;
-  text-overflow: initial;
-  width: 175px;
-  font-size: 8px;
-  line-height: 9px;
-}
-
-.featured5 .button5 {
-  padding: 8px 12px;
-  background: linear-gradient(0deg, #004e9f 0%, #006edf 100%);
-  border-radius: 8px;
-  gap: 10px;
-  display: inline-flex;
-  text-decoration: none;
-  align-items: center;
-  justify-content: center;
-  align-self: flex-start; /* Кнопка слева */
-}
-
-.featured5 .button5 .cosmochat {
-  color: #fcfcfd;
+  color: #aeb5d1;
   font-size: 14px;
   font-family: Unbounded, sans-serif;
   font-weight: 300;
-  line-height: 1;
+  line-height: 1.4;
+  word-wrap: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-height: 39px;
 }
 
 .featured5 .creators {
-  /* "Последние обновления от стартаперов" */
-  width: 22%; /* Примерно */
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
-
 .featured5 .div31 {
-  color: #777e90; /* Светлее, чем 777E90 */
-  font-size: 12px;
+  color: white;
+  font-size: 20px;
   font-family: Unbounded, sans-serif;
   font-weight: 500;
+  word-wrap: break-word;
 }
 
 .featured5 .frame-parent13 {
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 16px;
 }
 
 .featured5 .frame-parent14 {
-  width: 100%;
-  padding: 15px 0;
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 16px;
 }
 
 .featured5 .user-parent {
-  align-self: stretch;
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 12px;
 }
-
 .featured5 .avatar01-icon3 {
   width: 48px;
   height: 48px;
-  border-radius: 50%;
-  object-fit: cover;
+  border-radius: 9999px;
 }
-
 .featured5 .name-parent {
-  flex-grow: 1;
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 4px;
 }
 
 .featured5 .name-wrapper .cosmochat-name {
-  color: #fcfcfd;
-  font-size: 14px;
+  color: white;
+  font-size: 16px;
   font-family: Unbounded, sans-serif;
-  font-weight: 300;
+  font-weight: 500;
 }
-
 .featured5 .rating-wrapper {
   display: flex;
   align-items: center;
-  gap: 5px;
-  font-size: 12px;
-  font-family: Unbounded, sans-serif;
-  font-weight: 300;
+  gap: 4px;
 }
-
 .featured5 .rating-stars {
   color: #ffef2b;
 }
 
 .featured5 .rating-value {
-  color: #e6e8ec;
+  color: #aeb5d1;
+  font-size: 14px;
 }
 
 .featured5 .divider1 {
-  align-self: stretch;
   height: 1px;
-  background: rgb(255 255 255 / 13%);
+  background-color: rgba(242, 242, 242, 0.2);
 }
 
 .featured5 .button8 {
-  padding: 10px 16px;
-  border-radius: 8px;
-  border: 1px solid white;
-  gap: 12px;
   display: inline-flex;
-  text-decoration: none;
   align-items: center;
   justify-content: center;
-  margin-top: 15px;
-  align-self: flex-start;
+  gap: 8px;
+  padding: 12px 24px;
+  border: 1px solid #ffef2b;
+  border-radius: 8px;
+  color: #ffef2b;
+  text-decoration: none;
+  font-family: Unbounded, sans-serif;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.featured5 .button8:hover {
+  background-color: #ffef2b;
+  color: black;
 }
 
 .featured5 .button8 .cosmochat {
-  color: #fcfcfd;
-  font-size: 14px;
-  font-family: Unbounded, sans-serif;
-  font-weight: 300;
+  font-size: 16px;
 }
-
 .featured5 .button8 .iconsarrow-right-2line {
-  width: 16px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
 }
 
 /* --- New Journey Start Block --- */
