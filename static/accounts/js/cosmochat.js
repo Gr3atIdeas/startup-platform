@@ -291,14 +291,32 @@ document.addEventListener('DOMContentLoaded', function () {
                 .then(data => {
                     if (data.success) {
                         chatWindowTitle.textContent = data.chat_name;
-                        const chatItem = document.querySelector(`.chat-item-new[data-chat-id="${data.chat_id}"]`);
-                        if (chatItem) {
-                            chatItem.dataset.chatName = data.chat_name;
-                            const chatNameElement = chatItem.querySelector('h4');
-                            if (chatNameElement) {
-                                chatNameElement.innerHTML = data.chat_name.slice(0, 25) + (data.chat_name.length > 25 ? '...' : '') +
-                                    (chatItem.dataset.isDeal === 'true' ? '<span class="deal-indicator" title="Сделка"><img src="/static/accounts/images/cosmochat/deal_icon.svg" alt="Сделка" class="deal-icon"></span>' : '');
-                            }
+                        const chatListContainer = document.getElementById('chatListContainer');
+                        if (chatListContainer) {
+                            chatListContainer.innerHTML = '';
+                            fetch('/cosmochat/chat-list/', {
+                                headers: { 'X-CSRFToken': csrfToken, 'X-Requested-With': 'XMLHttpRequest' }
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    data.chats.forEach((chat) => {
+                                        if (!chat.is_deleted && (!chat.has_left || (window.REQUEST_USER_ID && requestUserRole === 'moderator'))) {
+                                            const chatItem = createChatItemElement(chat);
+                                            chatListContainer.appendChild(chatItem);
+                                        }
+                                    });
+                                    const updatedChatItem = chatListContainer.querySelector(`.chat-item-new[data-chat-id="${data.chat_id}"]`);
+                                    if (updatedChatItem) {
+                                        updatedChatItem.dataset.chatName = data.chat_name;
+                                        const chatNameElement = updatedChatItem.querySelector('h4');
+                                        if (chatNameElement) {
+                                            chatNameElement.innerHTML = data.chat_name.slice(0, 25) + (data.chat_name.length > 25 ? '...' : '') +
+                                                (updatedChatItem.dataset.isDeal === 'true' ? '<span class="deal-indicator" title="Сделка"><img src="/static/accounts/images/cosmochat/deal_icon.svg" alt="Сделка" class="deal-icon"></span>' : '');
+                                        }
+                                    }
+                                }
+                            });
                         }
                         startPolling(); // Обновляем список для других пользователей
                         renameChatBtn.disabled = false; // Разблокируем кнопку после успешного переименования
@@ -537,9 +555,10 @@ function startPolling() {
                         if (currentChatItem && chatWindowTitle) {
                             chatWindowTitle.textContent = currentChatItem.dataset.chatName || 'Чат';
                             const lastMessagePreview = currentChatItem.querySelector('.last-message-preview');
-                            if (lastMessagePreview && chat.last_message) {
-                                let previewText = chat.last_message.sender_id == window.REQUEST_USER_ID ? 'Вы: ' : '';
-                                previewText += chat.last_message.message_text;
+                            if (lastMessagePreview && currentChatItem.dataset.lastMessage) {
+                                let lastMessage = JSON.parse(currentChatItem.dataset.lastMessage);
+                                let previewText = lastMessage.sender_id == window.REQUEST_USER_ID ? 'Вы: ' : '';
+                                previewText += lastMessage.message_text;
                                 lastMessagePreview.textContent = previewText.substring(0, 30) + (previewText.length > 30 ? '...' : '');
                             }
                         }
@@ -592,9 +611,10 @@ function startPolling() {
                                     if (currentChatItem && chatWindowTitle) {
                                         chatWindowTitle.textContent = currentChatItem.dataset.chatName || 'Чат';
                                         const lastMessagePreview = currentChatItem.querySelector('.last-message-preview');
-                                        if (lastMessagePreview && chat.last_message) {
-                                            let previewText = chat.last_message.sender_id == window.REQUEST_USER_ID ? 'Вы: ' : '';
-                                            previewText += chat.last_message.message_text;
+                                        if (lastMessagePreview && currentChatItem.dataset.lastMessage) {
+                                            let lastMessage = JSON.parse(currentChatItem.dataset.lastMessage);
+                                            let previewText = lastMessage.sender_id == window.REQUEST_USER_ID ? 'Вы: ' : '';
+                                            previewText += lastMessage.message_text;
                                             lastMessagePreview.textContent = previewText.substring(0, 30) + (previewText.length > 30 ? '...' : '');
                                         }
                                     }
@@ -2017,6 +2037,9 @@ function createChatItemElement(chat) {
     chatItem.dataset.chatName = chat.name || `Чат ${chat.conversation_id}`;
     chatItem.dataset.chatType = chatType;
     chatItem.dataset.isDeal = chat.is_deal ? 'true' : 'false';
+    if (chat.last_message) {
+        chatItem.dataset.lastMessage = JSON.stringify(chat.last_message);
+    }
 
     let lastMessagePreviewText = 'Нет сообщений';
     if (chat.last_message) {
