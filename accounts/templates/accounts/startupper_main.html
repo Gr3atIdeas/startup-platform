@@ -1,16 +1,16 @@
 {% extends 'accounts/base.html' %}
 {% load static %}
 
-{% block title %}Главная страница | Инвестор{% endblock %}
+{% block title %}Главная страница | Стартапер{% endblock %}
 
 {% block head_extra %}
-    <link rel="stylesheet" type="text/css" href="{% static 'accounts/css/investor_main.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'accounts/css/startupper_main.css' %}">
     <link rel="stylesheet" href="{% static 'accounts/css/faq.css' %}">
     <link rel="stylesheet" href="{% static 'accounts/css/improved_styles.css' %}">
 {% endblock %}
 
 {% block content %}
-<link rel="stylesheet" type="text/css" href="{% static 'accounts/css/investor_main.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'accounts/css/startupper_main.css' %}">
 
 <div class="div">
     <div class="featured">
@@ -229,7 +229,7 @@
             <h2 class="chat-header__subtitle">СТАРТАПОВ</h2>
             </div>
         <div class="journey-start-container">
-            <div class="journey-start-banner" style="background-image: url({% static 'accounts/images/investor_main/cosmobg.jpg' %})">
+            <div class="journey-start-banner">
                 <div class="journey-start-banner-text">Вы только начинаете свое путешествие, поэтому здесь пока пусто</div>
                 <div class="journey-start-banner-image-container">
                     <img class="journey-start-banner-image" src="{% static 'accounts/images/investor_main/cosmoboy.png' %}" alt="Cosmo Boy" />
@@ -632,5 +632,5 @@
 {% endblock %}
 
 {% block scripts %}
-    <script src="{% static 'accounts/js/investor_main.js' %}"></script>
+    <script src="{% static 'accounts/js/startupper_main.js' %}"></script>
 {% endblock %}

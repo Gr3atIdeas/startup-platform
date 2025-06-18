@@ -963,6 +963,7 @@ html::-webkit-scrollbar-button {
 }
 
 .journey-start-banner {
+  background-image: url('../images/investor_main/cosmobg.jpg');
   align-self: stretch;
   height: 560px;
   position: relative;
