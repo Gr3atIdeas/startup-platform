@@ -958,70 +958,86 @@ def chat_list(request):
     for chat in chats:
         participants = chat.chatparticipants_set.all()
         has_user = participants.filter(user=user).exists()
-        is_deleted = getattr(chat, 'is_deleted', False)
+        is_deleted = getattr(chat, "is_deleted", False)
         has_left = not has_user and any(p.user != user for p in participants)
 
         # Проверяем доступ только для пользователей, участвующих в чате
-        if not has_user and (not user.role or user.role.role_name.lower() != "moderator"):
+        if not has_user and (
+            not user.role or user.role.role_name.lower() != "moderator"
+        ):
             continue
 
         # Для модераторов добавляем чаты-сделки и групповые чаты
-        if user.role and user.role.role_name.lower() == "moderator" and (chat.is_group_chat or chat.is_deal):
+        if (
+            user.role
+            and user.role.role_name.lower() == "moderator"
+            and (chat.is_group_chat or chat.is_deal)
+        ):
             other_participant = participants.exclude(user=user).first()
             participant_info = None
             if other_participant and not chat.is_group_chat and other_participant.user:
                 participant_info = other_participant.user
-            last_message = chat.messages.order_by('-created_at').first()
-            chat_data.append({
-                'conversation_id': chat.conversation_id,
-                'name': chat.name if chat.name else f"Чат {chat.conversation_id}",
-                'is_group_chat': chat.is_group_chat,
-                'is_deal': chat.is_deal,
-                'is_deleted': is_deleted,
-                'has_left': has_left,
-                'participant': {
-                    'user_id': participant_info.user_id if participant_info else None,
-                    'first_name': participant_info.first_name if participant_info else None,
-                    'last_name': participant_info.last_name if participant_info else None,
-                    'profile_picture_url': participant_info.get_profile_picture_url() if participant_info else None
-                } if participant_info else None,
-                'last_message': {
-                    'message_text': last_message.message_text if last_message else None,
-                    'sender_id': last_message.sender_id if last_message else None,
-                    'created_at_time': last_message.created_at.strftime('%H:%i') if last_message else None,
-                    'created_at_date': last_message.created_at.strftime('%d/%m/%Y') if last_message else None
-                } if last_message else None
-            })
+            chat_data.append(
+                {
+                    "conversation_id": chat.conversation_id,
+                    "name": chat.name if chat.name else f"Чат {chat.conversation_id}",
+                    "is_group_chat": chat.is_group_chat,
+                    "is_deal": chat.is_deal,
+                    "is_deleted": is_deleted,
+                    "has_left": has_left,
+                    "participant": {
+                        "user_id": participant_info.user_id
+                        if participant_info
+                        else None,
+                        "first_name": participant_info.first_name
+                        if participant_info
+                        else None,
+                        "last_name": participant_info.last_name
+                        if participant_info
+                        else None,
+                        "profile_picture_url": participant_info.get_profile_picture_url()
+                        if participant_info
+                        else None,
+                    }
+                    if participant_info
+                    else None,
+                }
+            )
         # Для обычных пользователей только их чаты
         elif not is_deleted and not has_left and has_user:
             other_participant = participants.exclude(user=user).first()
             participant_info = None
             if other_participant and not chat.is_group_chat and other_participant.user:
                 participant_info = other_participant.user
-            last_message = chat.messages.order_by('-created_at').first()
-            chat_data.append({
-                'conversation_id': chat.conversation_id,
-                'name': chat.name if chat.name else f"Чат {chat.conversation_id}",
-                'is_group_chat': chat.is_group_chat,
-                'is_deal': chat.is_deal,
-                'is_deleted': is_deleted,
-                'has_left': has_left,
-                'participant': {
-                    'user_id': participant_info.user_id if participant_info else None,
-                    'first_name': participant_info.first_name if participant_info else None,
-                    'last_name': participant_info.last_name if participant_info else None,
-                    'profile_picture_url': participant_info.get_profile_picture_url() if participant_info else None
-                } if participant_info else None,
-                'last_message': {
-                    'message_text': last_message.message_text if last_message else None,
-                    'sender_id': last_message.sender_id if last_message else None,
-                    'created_at_time': last_message.created_at.strftime('%H:%i') if last_message else None,
-                    'created_at_date': last_message.created_at.strftime('%d/%m/%Y') if last_message else None
-                } if last_message else None
-            })
+            chat_data.append(
+                {
+                    "conversation_id": chat.conversation_id,
+                    "name": chat.name if chat.name else f"Чат {chat.conversation_id}",
+                    "is_group_chat": chat.is_group_chat,
+                    "is_deal": chat.is_deal,
+                    "is_deleted": is_deleted,
+                    "has_left": has_left,
+                    "participant": {
+                        "user_id": participant_info.user_id
+                        if participant_info
+                        else None,
+                        "first_name": participant_info.first_name
+                        if participant_info
+                        else None,
+                        "last_name": participant_info.last_name
+                        if participant_info
+                        else None,
+                        "profile_picture_url": participant_info.get_profile_picture_url()
+                        if participant_info
+                        else None,
+                    }
+                    if participant_info
+                    else None,
+                }
+            )
 
     logger.info(f"Chat list generated for user {user.email}: {len(chat_data)} chats")
-    return JsonResponse({'success': True, 'chats': chat_data})
+    return JsonResponse({"success": True, "chats": chat_data})
 
 
 @login_required
