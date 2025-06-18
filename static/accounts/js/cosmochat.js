@@ -69,181 +69,337 @@ const groupChatAddMoreParticipantsBtn = document.getElementById(
 )
 
 document.addEventListener('DOMContentLoaded', function () {
-  if (messageFormNew) {
-    messageFormNew.addEventListener('submit', handleSendMessage)
-  }
-
-  // Если при загрузке страницы есть параметр new_chat=true и open_chat_id, то это новый чат
-  const urlParams = new URLSearchParams(window.location.search)
-  if (urlParams.get('new_chat') === 'true' && urlParams.get('open_chat_id')) {
-    const newChatId = urlParams.get('open_chat_id')
-    // Пока перезагрузим список чатов, чтобы новый чат подгрузился
-  }
-
-  // Показываем плейсхолдер, если чат не выбран
-  if (!currentChatId) {
-    showNoChatSelected()
-  }
-
-  // Инициализация отображения рейтинга для всех карточек пользователей
-  const userCardsRatingContainers = document.querySelectorAll(
-    '.users-list-new .user-card-new .rating-stars-new'
-  )
-  userCardsRatingContainers.forEach((container) => {
-    updateUserRatingDisplay(container)
-  })
-
-  // Инициализация выпадающего списка поиска
-  setupSearchDropdown()
-
-  // Обновление HTML-разметки для пагинации
-  updatePaginationHTML()
-
-  // Обработчик для кнопки "Начать сделку"
-  const startDealBtn = document.getElementById('startDealBtn')
-  if (startDealBtn) {
-    startDealBtn.addEventListener('click', function () {
-      if (!currentChatId) {
-        alert('Выберите чат для начала сделки')
-        return
-      }
-      const chatItem = document.querySelector(
-        `.chat-item-new[data-chat-id="${currentChatId}"]`
-      )
-      if (
-        !chatItem ||
-        chatItem.dataset.chatType === 'group' ||
-        chatItem.dataset.isDeal === 'true'
-      ) {
-        alert(
-          'Сделку можно начать только в личном чате, который ещё не помечен как сделка'
-        )
-        return
-      }
-      startDealBtn.disabled = true
-      startDealBtn.textContent = 'Инициация сделки...'
-      startDeal(currentChatId)
-    })
-  }
-
-  // Обработчик для кнопки "Покинуть чат"
-  if (leaveChatBtn) {
-    leaveChatBtn.addEventListener('click', leaveChat)
-  }
-
-  // Обработчик для кнопки "Далее" в модальном окне группового чата
-  if (navigateToDetailsViewBtn) {
-    navigateToDetailsViewBtn.addEventListener('click', function () {
-      console.log('#navigateToDetailsViewBtn clicked')
-      if (selectedGroupChatUserIds.length > 0) {
-        console.log('Selected users:', selectedGroupChatUserIds)
-        const groupChatUsersList = document.getElementById('groupChatUsersList')
-        const groupChatNameInput = document.getElementById('groupChatNameInput')
-
-        console.log('Calling renderSelectedParticipantsForDetailsView...')
-        renderSelectedParticipantsForDetailsView(groupChatUsersList)
-        if (groupChatNameInput && groupChatUsersList) {
-          const firstFewNames = selectedGroupChatUserIds
-            .map((userId) => {
-              const userDiv = groupChatUsersList.querySelector(
-                `.group-chat-modal-user[data-user-id="${userId}"] .group-chat-modal-user-firstname`
-              )
-              return userDiv ? userDiv.textContent : ''
-            })
-            .filter((name) => name)
-            .slice(0, 3)
-            .join(', ')
-          groupChatNameInput.value = firstFewNames || 'Новый групповой чат'
-        }
-        console.log('Calling toggleGroupChatModalView(true)...')
-        toggleGroupChatModalView(true)
-      } else {
-        alert('Выберите хотя бы одного пользователя.')
-      }
-    })
-  }
-
-  if (groupChatGoBackBtn) {
-    groupChatGoBackBtn.addEventListener('click', function () {
-      toggleGroupChatModalView(false)
-    })
-  }
-
-  if (confirmGroupChatCreationBtn) {
-    confirmGroupChatCreationBtn.addEventListener('click', function () {
-      const groupChatNameInput = document.getElementById('groupChatNameInput')
-      const chatName = groupChatNameInput
-        ? groupChatNameInput.value.trim()
-        : 'Групповой чат'
-      if (!chatName) {
-        alert('Пожалуйста, введите название чата.')
-        if (groupChatNameInput) groupChatNameInput.focus()
-        return
-      }
-      if (selectedGroupChatUserIds.length === 0) {
-        alert(
-          'Нет выбранных участников. Пожалуйста, вернитесь и выберите участников.'
-        )
-        toggleGroupChatModalView(false)
-        return
-      }
-      createGroupChat(chatName, selectedGroupChatUserIds)
-    })
-  }
-
-  if (groupChatAddMoreParticipantsBtn) {
-    groupChatAddMoreParticipantsBtn.addEventListener('click', function () {
-      toggleGroupChatModalView(false)
-    })
-  }
-
-  // Закрытие модального окна группового чата по клику вне модального окна
-  const groupChatModalOverlay = document.getElementById('groupChatModal')
-  if (groupChatModalOverlay) {
-    groupChatModalOverlay.addEventListener('click', function (event) {
-      if (event.target === groupChatModalOverlay) {
-        closeGroupChatModal()
-      }
-    })
-  }
-
-  // Закрытие модального окна группового чата по нажатию ESC
-  document.addEventListener('keydown', function (event) {
-    const groupChatModal = document.getElementById('groupChatModal')
-    if (
-      event.key === 'Escape' &&
-      groupChatModal &&
-      groupChatModal.style.display === 'flex'
-    ) {
-      closeGroupChatModal()
+    if (messageFormNew) {
+        messageFormNew.addEventListener('submit', handleSendMessage)
     }
-  })
 
-  // Обработчик для кнопки закрытия модального окна группового чата
-  const closeGroupChatModalBtn = document.getElementById(
-    'closeGroupChatModalBtn'
-  )
-  if (closeGroupChatModalBtn) {
-    closeGroupChatModalBtn.addEventListener('click', function () {
-      closeGroupChatModal()
+    // Если при загрузке страницы есть параметр new_chat=true и open_chat_id, то это новый чат
+    const urlParams = new URLSearchParams(window.location.search)
+    if (urlParams.get('new_chat') === 'true' && urlParams.get('open_chat_id')) {
+        const newChatId = urlParams.get('open_chat_id')
+        // Пока перезагрузим список чатов, чтобы новый чат подгрузился
+    }
+
+    // Показываем плейсхолдер, если чат не выбран
+    if (!currentChatId) {
+        showNoChatSelected()
+    }
+
+    // Инициализация отображения рейтинга для всех карточек пользователей
+    const userCardsRatingContainers = document.querySelectorAll(
+        '.users-list-new .user-card-new .rating-stars-new'
+    )
+    userCardsRatingContainers.forEach((container) => {
+        updateUserRatingDisplay(container)
     })
-  }
 
-  // Добавляем обработчики для фильтров чатов
-  const chatFilterButtons = document.querySelectorAll(
-    '.chat-filters-new .filter-btn-new'
-  )
-  chatFilterButtons.forEach((button) => {
-    button.addEventListener('click', function () {
-      chatFilterButtons.forEach((btn) => btn.classList.remove('active'))
-      this.classList.add('active')
-      filterChats(this.dataset.filter)
+    // Инициализация выпадающего списка поиска
+    setupSearchDropdown()
+
+    // Обновление HTML-разметки для пагинации
+    updatePaginationHTML()
+
+    // Объявляем переменные для кнопок один раз
+    const startDealBtn = document.getElementById('startDealBtn');
+    const leaveChatBtn = document.getElementById('leaveChatBtn');
+    const renameChatBtn = document.getElementById('renameChatBtn');
+    const participantsBtn = document.getElementById('participantsBtn');
+
+    // Обработчик для кнопки "Начать сделку"
+    if (startDealBtn) {
+        startDealBtn.addEventListener('click', function () {
+            if (!currentChatId) {
+                alert('Выберите чат для начала сделки')
+                return
+            }
+            const chatItem = document.querySelector(
+                `.chat-item-new[data-chat-id="${currentChatId}"]`
+            )
+            if (
+                !chatItem ||
+                chatItem.dataset.chatType === 'group' ||
+                chatItem.dataset.isDeal === 'true'
+            ) {
+                alert(
+                    'Сделку можно начать только в личном чате, который ещё не помечен как сделка'
+                )
+                return
+            }
+            startDealBtn.disabled = true
+            startDealBtn.textContent = 'Инициация сделки...'
+            startDeal(currentChatId)
+        })
+    }
+
+    // Обработчик для кнопки "Покинуть чат"
+    if (leaveChatBtn) {
+        leaveChatBtn.addEventListener('click', function () {
+            if (!currentChatId) {
+                alert('Выберите чат')
+                return
+            }
+            if (!confirm('Вы уверены, что хотите покинуть/удалить этот чат?')) return
+            leaveChatBtn.disabled = true
+            leaveChatBtn.textContent = 'Выход...'
+            leaveChat()
+        })
+    }
+
+    // Обработчик для кнопки "Далее" в модальном окне группового чата
+    if (navigateToDetailsViewBtn) {
+        navigateToDetailsViewBtn.addEventListener('click', function () {
+            console.log('#navigateToDetailsViewBtn clicked')
+            if (selectedGroupChatUserIds.length > 0) {
+                console.log('Selected users:', selectedGroupChatUserIds)
+                const groupChatUsersList = document.getElementById('groupChatUsersList')
+                const groupChatNameInput = document.getElementById('groupChatNameInput')
+
+                console.log('Calling renderSelectedParticipantsForDetailsView...')
+                renderSelectedParticipantsForDetailsView(groupChatUsersList)
+                if (groupChatNameInput && groupChatUsersList) {
+                    const firstFewNames = selectedGroupChatUserIds
+                        .map((userId) => {
+                            const userDiv = groupChatUsersList.querySelector(
+                                `.group-chat-modal-user[data-user-id="${userId}"] .group-chat-modal-user-firstname`
+                            )
+                            return userDiv ? userDiv.textContent : ''
+                        })
+                        .filter((name) => name)
+                        .slice(0, 3)
+                        .join(', ')
+                    groupChatNameInput.value = firstFewNames || 'Новый групповой чат'
+                }
+                console.log('Calling toggleGroupChatModalView(true)...')
+                toggleGroupChatModalView(true)
+            } else {
+                alert('Выберите хотя бы одного пользователя.')
+            }
+        })
+    }
+
+    if (groupChatGoBackBtn) {
+        groupChatGoBackBtn.addEventListener('click', function () {
+            toggleGroupChatModalView(false)
+        })
+    }
+
+    if (confirmGroupChatCreationBtn) {
+        confirmGroupChatCreationBtn.addEventListener('click', function () {
+            const groupChatNameInput = document.getElementById('groupChatNameInput')
+            const chatName = groupChatNameInput
+                ? groupChatNameInput.value.trim()
+                : 'Групповой чат'
+            if (!chatName) {
+                alert('Пожалуйста, введите название чата.')
+                if (groupChatNameInput) groupChatNameInput.focus()
+                return
+            }
+            if (selectedGroupChatUserIds.length === 0) {
+                alert(
+                    'Нет выбранных участников. Пожалуйста, вернитесь и выберите участников.'
+                )
+                toggleGroupChatModalView(false)
+                return
+            }
+            confirmGroupChatCreationBtn.disabled = true
+            confirmGroupChatCreationBtn.textContent = 'Создание...'
+            createGroupChat(chatName, selectedGroupChatUserIds)
+        })
+    }
+
+    if (groupChatAddMoreParticipantsBtn) {
+        groupChatAddMoreParticipantsBtn.addEventListener('click', function () {
+            toggleGroupChatModalView(false)
+        })
+    }
+
+    // Закрытие модального окна группового чата по клику вне модального окна
+    const groupChatModalOverlay = document.getElementById('groupChatModal')
+    if (groupChatModalOverlay) {
+        groupChatModalOverlay.addEventListener('click', function (event) {
+            if (event.target === groupChatModalOverlay) {
+                closeGroupChatModal()
+            }
+        })
+    }
+
+    // Закрытие модального окна группового чата по нажатию ESC
+    document.addEventListener('keydown', function (event) {
+        const groupChatModal = document.getElementById('groupChatModal')
+        if (
+            event.key === 'Escape' &&
+            groupChatModal &&
+            groupChatModal.style.display === 'flex'
+        ) {
+            closeGroupChatModal()
+        }
     })
-  })
 
-  // Инициализация фильтров ролей
-  setupRoleFilters()
-})
+    // Обработчик для кнопки закрытия модального окна группового чата
+    const closeGroupChatModalBtn = document.getElementById(
+        'closeGroupChatModalBtn'
+    )
+    if (closeGroupChatModalBtn) {
+        closeGroupChatModalBtn.addEventListener('click', function () {
+            closeGroupChatModal()
+        })
+    }
+
+    // Добавляем обработчики для фильтров чатов
+    const chatFilterButtons = document.querySelectorAll(
+        '.chat-filters-new .filter-btn-new'
+    )
+    chatFilterButtons.forEach((button) => {
+        button.addEventListener('click', function () {
+            chatFilterButtons.forEach((btn) => btn.classList.remove('active'))
+            this.classList.add('active')
+            filterChats(this.dataset.filter)
+        })
+    })
+
+    // Инициализация фильтров ролей
+    setupRoleFilters()
+
+    // Обработчик для выпадающего меню действий
+    const chatActionsBtn = document.getElementById('chatActionsBtn');
+    const chatActionsMenu = document.getElementById('chatActionsMenu');
+    if (chatActionsBtn && chatActionsMenu) {
+        chatActionsBtn.addEventListener('click', function() {
+            chatActionsMenu.classList.toggle('open');
+        });
+        document.addEventListener('click', function(event) {
+            if (!chatActionsBtn.contains(event.target) && !chatActionsMenu.contains(event.target)) {
+                chatActionsMenu.classList.remove('open');
+            }
+        });
+    }
+
+    // Обработчик для переименования чата
+    const chatNameInput = document.getElementById('chatNameInput');
+    if (chatNameInput) {
+        chatNameInput.addEventListener('blur', function() {
+            const newName = chatNameInput.value.trim();
+            const chatWindowTitle = document.getElementById('chatWindowTitle');
+            if (newName && currentChatId && chatWindowTitle) {
+                fetch(`/cosmochat/rename-chat/${currentChatId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify({ name: newName })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        chatWindowTitle.textContent = data.chat_name;
+                        const chatItem = document.querySelector(`.chat-item-new[data-chat-id="${currentChatId}"]`);
+                        if (chatItem) {
+                            chatItem.dataset.chatName = data.chat_name;
+                            const chatNameElement = chatItem.querySelector('h4');
+                            if (chatNameElement) {
+                                chatNameElement.innerHTML = data.chat_name.slice(0, 25) + (data.chat_name.length > 25 ? '...' : '') +
+                                    (chatItem.dataset.isDeal === 'true' ? '<span class="deal-indicator" title="Сделка"><img src="/static/accounts/images/cosmochat/deal_icon.svg" alt="Сделка" class="deal-icon"></span>' : '');
+                            }
+                        }
+                        startPolling(); // Обновляем список для других пользователей
+                    } else {
+                        alert(data.error || 'Ошибка при переименовании чата');
+                    }
+                })
+                .catch(error => {
+                    console.error('Ошибка при переименовании:', error);
+                    alert('Произошла ошибка при переименовании чата.');
+                });
+            }
+            if (chatNameInput && chatWindowTitle) {
+                chatNameInput.style.display = 'none';
+                chatWindowTitle.style.display = 'inline';
+                if (renameChatBtn) renameChatBtn.style.display = 'inline-block';
+            }
+        });
+
+        chatNameInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                chatNameInput.blur();
+            }
+        });
+    }
+
+    // Обработчик для кнопки "Переименовать" в выпадающем меню
+    if (renameChatBtn) {
+        renameChatBtn.addEventListener('click', function() {
+            const chatWindowTitle = document.getElementById('chatWindowTitle');
+            const chatNameInput = document.getElementById('chatNameInput');
+            if (chatWindowTitle && chatNameInput) {
+                chatNameInput.value = chatWindowTitle.textContent;
+                chatNameInput.style.display = 'inline';
+                chatWindowTitle.style.display = 'none';
+                renameChatBtn.style.display = 'none';
+                chatNameInput.focus();
+            }
+        });
+    }
+
+    // Обработчик для кнопки "Начать сделку" в выпадающем меню
+    if (startDealBtn) {
+        startDealBtn.addEventListener('click', function() {
+            if (!currentChatId) {
+                alert('Выберите чат для начала сделки');
+                return;
+            }
+            const chatItem = document.querySelector(
+                `.chat-item-new[data-chat-id="${currentChatId}"]`
+            );
+            if (
+                !chatItem ||
+                chatItem.dataset.chatType === 'group' ||
+                chatItem.dataset.isDeal === 'true'
+            ) {
+                alert(
+                    'Сделку можно начать только в личном чате, который ещё не помечен как сделка'
+                );
+                return;
+            }
+            startDealBtn.disabled = true;
+            startDealBtn.textContent = 'Инициация сделки...';
+            startDeal(currentChatId);
+        });
+    }
+
+    // Обработчик для кнопки "Участники" в выпадающем меню
+    if (participantsBtn) {
+        participantsBtn.addEventListener('click', function() {
+            if (!currentChatId) {
+                alert('Выберите чат для просмотра участников');
+                return;
+            }
+            const chatItem = document.querySelector(
+                `.chat-item-new[data-chat-id="${currentChatId}"]`
+            );
+            if (chatItem && chatItem.dataset.chatType !== 'group') {
+                alert('Просмотр участников доступен только в групповых чатах');
+                return;
+            }
+            showParticipantsModal();
+        });
+    }
+
+    // Обработчик для кнопки "Покинуть" в выпадающем меню
+    if (leaveChatBtn) {
+        leaveChatBtn.addEventListener('click', function() {
+            if (!currentChatId) {
+                alert('Выберите чат');
+                return;
+            }
+            if (!confirm('Вы уверены, что хотите покинуть/удалить этот чат?')) return;
+            leaveChatBtn.disabled = true;
+            leaveChatBtn.textContent = 'Выход...';
+            leaveChat();
+        });
+    }
+});
 
 
 function showNoChatSelected() {
