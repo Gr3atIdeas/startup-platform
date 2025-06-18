@@ -6,6 +6,22 @@
 {% block head_extra %}
     <link rel="stylesheet" href="{% static 'accounts/css/deals.css' %}">
     <script src="{% static 'accounts/js/deals.js' %}" type="text/javascript"></script>
+    <style>
+        .deal-status-filters .filter-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .deal-status-filters .approved {
+            color: green;
+        }
+        .deal-status-filters .rejected {
+            color: red;
+        }
+        .chat-window-column p {
+            text-align: center;
+        }
+    </style>
 {% endblock %}
 
 {% block content %}
@@ -14,16 +30,25 @@
             <div class="chat-list-column">
                 <h3>Список сделок</h3>
                 <div class="deal-status-filters">
-                    <a href="{% url 'deals_view' %}?status=pending" class="filter-btn {% if current_status == 'pending' %}active{% endif %}">Ожидают</a>
-                    <a href="{% url 'deals_view' %}?status=approved" class="filter-btn {% if current_status == 'approved' %}active{% endif %}">Приняты</a>
-                    <a href="{% url 'deals_view' %}?status=rejected" class="filter-btn {% if current_status == 'rejected' %}active{% endif %}">Отклонены</a>
+                    <a href="{% url 'deals_view' %}?status=pending" class="filter-btn {% if current_status == 'pending' %}active{% endif %}">
+                        <img src="{% static 'accounts/images/cosmochat/deal_icon.svg' %}" alt="Новые" class="filter-icon">
+                        Новые
+                    </a>
+                    <a href="{% url 'deals_view' %}?status=approved" class="filter-btn {% if current_status == 'approved' %}active approved{% endif %}">
+                        <img src="{% static 'accounts/images/check-mark-button-svgrepo-com.svg' %}" alt="Принятые" class="filter-icon">
+                        Принятые
+                    </a>
+                    <a href="{% url 'deals_view' %}?status=rejected" class="filter-btn {% if current_status == 'rejected' %}active rejected{% endif %}">
+                        <img src="{% static 'accounts/images/cross-mark-button-svgrepo-com.svg' %}" alt="Отклонённые" class="filter-icon">
+                        Отклонённые
+                    </a>
                 </div>
                 {% if deals|length == 0 %}
                     <p>Нет сделок с статусом {{ current_status }}. Debug: User ID {{ request.user.user_id }}</p>
                 {% endif %}
                 {% for deal in deals %}
                     <div class="chat-item {% if selected_chat and selected_chat.conversation_id == deal.conversation_id %}active{% endif %}" data-chat-id="{{ deal.conversation_id }}" onclick="loadChat({{ deal.conversation_id }})">
-                        <img src="{% static 'accounts/images/avatars/default_avatar_ufo.png' %}" alt="{{ deal.name }}" class="chat-item-avatar">
+                        <img src="{% static 'accounts/images/cosmochat/deal_icon.svg' %}" alt="{{ deal.name }}" class="chat-item-avatar">
                         <div class="chat-item-info">
                             <h4 class="chat-item-name">{{ deal.name }}</h4>
                             <p class="chat-item-status">{{ deal.participants|join:', ' }}</p>
@@ -62,7 +87,9 @@
                             {% csrf_token %}
                             <input type="hidden" name="chat_id" value="{{ selected_chat.conversation_id }}">
                             <textarea name="message_text" class="message-input" placeholder="Введите сообщение..." required></textarea>
-                            <button type="submit" class="send-button"><img src="{% static 'accounts/images/send_icon.svg' %}" alt="Send"></button>
+                            <button type="submit" class="send-button">
+                                <img src="{% static 'accounts/images/send_icon.png' %}" alt="Send" onerror="this.src='{% static 'accounts/images/default_icon.png' %}';">
+                            </button>
                         </form>
                     </div>
                 {% else %}
