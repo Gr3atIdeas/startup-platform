@@ -971,7 +971,7 @@ def chat_list(request):
             participant_info = None
             if other_participant and not chat.is_group_chat and other_participant.user:
                 participant_info = other_participant.user
-            last_message = chat.messages.order_by('-created_at').first()
+            last_message = chat.messages_set.order_by('-created_at').first()
             chat_data.append({
                 'conversation_id': chat.conversation_id,
                 'name': chat.name if chat.name else f"Чат {chat.conversation_id}",
@@ -998,7 +998,7 @@ def chat_list(request):
             participant_info = None
             if other_participant and not chat.is_group_chat and other_participant.user:
                 participant_info = other_participant.user
-            last_message = chat.messages.order_by('-created_at').first()
+            last_message = chat.messages_set.order_by('-created_at').first()
             chat_data.append({
                 'conversation_id': chat.conversation_id,
                 'name': chat.name if chat.name else f"Чат {chat.conversation_id}",
