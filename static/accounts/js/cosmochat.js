@@ -522,18 +522,19 @@ function startPolling() {
     if (pollingInterval) clearInterval(pollingInterval);
 
     pollingInterval = setInterval(() => {
+        console.log('Polling...');
         if (!currentChatId) {
             fetch('/cosmochat/chat-list/', {
                 headers: { 'X-CSRFToken': csrfToken, 'X-Requested-With': 'XMLHttpRequest' }
             })
-            .then((response) => {
+            .then(response => {
                 if (!response.ok) {
                     console.error('Ошибка при получении списка чатов:', response.status, response.statusText);
                     return;
                 }
                 return response.json();
             })
-            .then((data) => {
+            .then(data => {
                 if (data.success) {
                     const chatListContainer = document.getElementById('chatListContainer');
                     if (chatListContainer) {
@@ -553,9 +554,7 @@ function startPolling() {
                     console.error('Ошибка данных списка чатов:', data.error);
                 }
             })
-            .catch((error) => {
-                console.error('Ошибка при опросе списка чатов:', error);
-            });
+            .catch(error => console.error('Ошибка при опросе списка чатов:', error));
         } else {
             const url = lastMessageTimestamp
                 ? `/cosmochat/${currentChatId}/?since=${encodeURIComponent(lastMessageTimestamp)}`
@@ -564,8 +563,8 @@ function startPolling() {
             fetch(url, {
                 headers: { 'X-CSRFToken': csrfToken, 'X-Requested-With': 'XMLHttpRequest' }
             })
-                .then((response) => response.json())
-                .then((data) => {
+                .then(response => response.json())
+                .then(data => {
                     if (data.success) {
                         const newMessages = data.messages;
                         if (newMessages.length > 0) {
@@ -581,8 +580,8 @@ function startPolling() {
                         fetch('/cosmochat/chat-list/', {
                             headers: { 'X-CSRFToken': csrfToken, 'X-Requested-With': 'XMLHttpRequest' }
                         })
-                        .then((response) => response.json())
-                        .then((data) => {
+                        .then(response => response.json())
+                        .then(data => {
                             if (data.success) {
                                 const chatListContainer = document.getElementById('chatListContainer');
                                 if (chatListContainer) {
@@ -600,12 +599,12 @@ function startPolling() {
                                 }
                             }
                         })
-                        .catch((error) => console.error('Ошибка обновления списка чатов:', error));
+                        .catch(error => console.error('Ошибка обновления списка чатов:', error));
                     } else {
                         console.error('Ошибка опроса:', data.error);
                     }
                 })
-                .catch((error) => {
+                .catch(error => {
                     console.error('Ошибка при опросе новых сообщений:', error);
                 });
         }
@@ -629,6 +628,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function startDeal(chatId) {
     const startDealBtn = document.getElementById('startDealBtn');
+    if (!chatId) {
+        alert('Ошибка: chatId не определён');
+        return;
+    }
+    console.log('Starting deal for chatId:', chatId);
     const initiatorName = window.REQUEST_USER_ID ? document.querySelector(`.user-card-new[data-user-id="${window.REQUEST_USER_ID}"] h3`)?.textContent || 'Пользователь' : 'Пользователь';
     fetch(`/cosmochat/start-deal/${chatId}/`, {
         method: 'POST',
@@ -639,62 +643,65 @@ function startDeal(chatId) {
         },
         body: JSON.stringify({ initiator_name: initiatorName })
     })
-        .then((response) => response.json())
-        .then((data) => {
-            if (data.success) {
-                alert(data.message);
-                if (startDealBtn) {
-                    startDealBtn.style.display = 'none';
-                    startDealBtn.disabled = false;
-                    startDealBtn.textContent = 'Начать сделку';
-                }
-                const chatItem = document.querySelector(`.chat-item-new[data-chat-id="${chatId}"]`);
-                if (chatItem) {
-                    chatItem.dataset.isDeal = 'true';
-                    const chatNameElement = chatItem.querySelector('h4');
-                    if (chatNameElement) {
-                        chatNameElement.innerHTML = chatItem.dataset.chatName.slice(0, 25) + (chatItem.dataset.chatName.length > 25 ? '...' : '') +
-                            '<span class="deal-indicator" title="Сделка"><img src="/static/accounts/images/cosmochat/deal_icon.svg" alt="Сделка" class="deal-icon"></span>';
-                    }
-                }
-                const dealLabel = document.getElementById('dealLabel');
-                if (dealLabel) dealLabel.style.display = 'inline';
-                const participantsListDiv = document.getElementById('chatParticipantsList');
-                if (participantsListDiv && data.participants) {
-                    currentParticipants = data.participants;
-                    participantsListDiv.innerHTML = currentParticipants.map(p => 
-                        `<span class="participant-name">${p.name} (${p.role})</span>`
-                    ).join(', ');
-                    participantsListDiv.style.display = 'block';
-                }
-                appendMessage({
-                    message_id: `temp_${Date.now()}`,
-                    sender_id: null,
-                    sender_name: 'Система',
-                    message_text: `Сделку начал ${initiatorName}. Назначен модератор: ${data.moderator.name}`,
-                    created_at: new Date().toLocaleString('ru-RU'),
-                    created_at_iso: new Date().toISOString(),
-                    is_read: true,
-                    is_own: false,
-                    is_system: true
-                }, false);
-                startPolling();
-            } else {
-                alert(data.error || 'Ошибка при начале сделки');
-                if (startDealBtn) {
-                    startDealBtn.disabled = false;
-                    startDealBtn.textContent = 'Начать сделку';
+    .then(response => {
+        console.log('Response status:', response.status); // Для отладки
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            alert(data.message);
+            if (startDealBtn) {
+                startDealBtn.style.display = 'none';
+                startDealBtn.disabled = false;
+                startDealBtn.textContent = 'Начать сделку';
+            }
+            const chatItem = document.querySelector(`.chat-item-new[data-chat-id="${chatId}"]`);
+            if (chatItem) {
+                chatItem.dataset.isDeal = 'true';
+                const chatNameElement = chatItem.querySelector('h4');
+                if (chatNameElement) {
+                    chatNameElement.innerHTML = chatItem.dataset.chatName.slice(0, 25) + (chatItem.dataset.chatName.length > 25 ? '...' : '') +
+                        '<span class="deal-indicator" title="Сделка"><img src="/static/accounts/images/cosmochat/deal_icon.svg" alt="Сделка" class="deal-icon"></span>';
                 }
             }
-        })
-        .catch((error) => {
-            console.error('Ошибка начала сделки:', error);
-            alert('Произошла ошибка при начале сделки.');
+            const dealLabel = document.getElementById('dealLabel');
+            if (dealLabel) dealLabel.style.display = 'inline';
+            const participantsListDiv = document.getElementById('chatParticipantsList');
+            if (participantsListDiv && data.participants) {
+                currentParticipants = data.participants;
+                participantsListDiv.innerHTML = currentParticipants.map(p => 
+                    `<span class="participant-name">${p.name} (${p.role})</span>`
+                ).join(', ');
+                participantsListDiv.style.display = 'block';
+            }
+            appendMessage({
+                message_id: `temp_${Date.now()}`,
+                sender_id: null,
+                sender_name: 'Система',
+                message_text: `Сделку начал ${initiatorName}. Назначен модератор: ${data.moderator.name}`,
+                created_at: new Date().toLocaleString('ru-RU'),
+                created_at_iso: new Date().toISOString(),
+                is_read: true,
+                is_own: false,
+                is_system: true
+            }, false);
+            startPolling();
+        } else {
+            alert(data.error || 'Ошибка при начале сделки');
             if (startDealBtn) {
                 startDealBtn.disabled = false;
                 startDealBtn.textContent = 'Начать сделку';
             }
-        });
+        }
+    })
+    .catch(error => {
+        console.error('Ошибка начала сделки:', error);
+        alert('Произошла ошибка при начале сделки.');
+        if (startDealBtn) {
+            startDealBtn.disabled = false;
+            startDealBtn.textContent = 'Начать сделку';
+        }
+    });
 }
 // Функция для удаления сообщения (для модератора)
 function deleteMessage(messageId) {
@@ -1058,31 +1065,42 @@ function addParticipantToChat(userId) {
         });
 }
 
-function leaveChat() {
-  if (!currentChatId) {
-    alert('Выберите чат')
-    return
-  }
-  if (!confirm('Вы уверены, что хотите покинуть/удалить этот чат?')) return
+let alertShown = false;
 
-  fetch(`/cosmochat/leave-chat/${currentChatId}/`, {
-    method: 'POST',
-    headers: { 'X-CSRFToken': csrfToken, 'X-Requested-With': 'XMLHttpRequest' },
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.success) {
-        alert(data.message || 'Вы покинули чат.')
-        currentChatId = null
-        location.reload()
-      } else {
-        alert(data.error || 'Ошибка при выходе из чата')
-      }
-    })
-    .catch((error) => {
-      console.error('Ошибка выхода из чата:', error)
-      alert('Произошла ошибка при выходе из чата.')
-    })
+function leaveChat() {
+    if (!currentChatId) {
+        if (!alertShown) {
+            alertShown = true;
+            alert('Выберите чат');
+            alertShown = false;
+        }
+        return;
+    }
+    if (!confirm('Вы уверены, что хотите покинуть/удалить этот чат?')) return;
+
+    if (!alertShown) {
+        alertShown = true;
+        fetch(`/cosmochat/leave-chat/${currentChatId}/`, {
+            method: 'POST',
+            headers: { 'X-CSRFToken': csrfToken, 'X-Requested-With': 'XMLHttpRequest' },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message || 'Вы покинули чат.');
+                currentChatId = null;
+                location.reload();
+            } else {
+                alert(data.error || 'Ошибка при выходе из чата');
+            }
+            alertShown = false; // Сбрасываем флаг после выполнения
+        })
+        .catch(error => {
+            console.error('Ошибка выхода из чата:', error);
+            alert('Произошла ошибка при выходе из чата.');
+            alertShown = false;
+        });
+    }
 }
 
 // Вспомогательные функции для textarea (авто-изменение высоты)
@@ -1501,186 +1519,178 @@ function clearSearchSection(section) {
   }
 }
 
-// Обновление HTML-разметки для пагинации
 function updatePaginationHTML() {
-  const usersList = document.getElementById('usersList')
-  const userCards = usersList
-    ? usersList.querySelectorAll('.user-card-new')
-    : []
-  const paginationContainer = document.getElementById('userPagination')
+    const usersList = document.getElementById('usersList')
+    const userCards = usersList
+        ? usersList.querySelectorAll('.user-card-new')
+        : []
+    const paginationContainer = document.getElementById('userPagination')
 
-  if (!usersList || !paginationContainer || userCards.length === 0) return
+    if (!usersList || !paginationContainer || userCards.length === 0) return
 
-  const itemsPerPage = 8
-  const totalPages = Math.ceil(userCards.length / itemsPerPage)
+    const itemsPerPage = 8
+    const totalPages = Math.ceil(userCards.length / itemsPerPage)
 
-  let paginationHTML = ''
+    let paginationHTML = ''
 
-  // Кнопка "Назад"
-  paginationHTML += `<span class="page-number-item" data-page="prev">‹</span>`
+    // Кнопка "Назад"
+    paginationHTML += `<span class="page-number-item" data-page="prev">‹</span>`
 
-  // Номера страниц
-  if (totalPages <= 7) {
-    // Показываем все страницы, если их <= 7
-    for (let i = 1; i <= totalPages; i++) {
-      paginationHTML += `<span class="page-number-item ${i === 1 ? 'current' : ''}" data-page="${i}">${i}</span>`
-    }
-  } else {
-    // Показываем 1, 2, 3, ..., last-2, last-1, last
-    for (let i = 1; i <= 3; i++) {
-      paginationHTML += `<span class="page-number-item ${i === 1 ? 'current' : ''}" data-page="${i}">${i}</span>`
-    }
-
-    paginationHTML += `<span class="dots">...</span>`
-
-    for (let i = totalPages - 2; i <= totalPages; i++) {
-      paginationHTML += `<span class="page-number-item" data-page="${i}">${i}</span>`
-    }
-  }
-
-  // Кнопка "Вперед"
-  paginationHTML += `<span class="page-number-item" data-page="next">›</span>`
-
-  paginationContainer.innerHTML = paginationHTML
-
-  // Добавляем обработчики для кнопок пагинации
-  const pageButtons = paginationContainer.querySelectorAll('.page-number-item')
-  pageButtons.forEach((button) => {
-    if (button.classList.contains('dots')) return
-
-    button.addEventListener('click', function () {
-      const page = this.dataset.page
-
-      if (page === 'prev') {
-        if (currentPage > 1) {
-          currentPage--
-          showPage(currentPage)
-          // updateActivePage(); // Убрали вызов, если не определена
+    // Номера страниц
+    if (totalPages <= 7) {
+        // Показываем все страницы, если их <= 7
+        for (let i = 1; i <= totalPages; i++) {
+            paginationHTML += `<span class="page-number-item ${i === 1 ? 'current' : ''}" data-page="${i}">${i}</span>`
         }
-      } else if (page === 'next') {
-        if (currentPage < totalPages) {
-          currentPage++
-          showPage(currentPage)
-          // updateActivePage(); // Убрали вызов, если не определена
+    } else {
+        // Показываем 1, 2, 3, ..., last-2, last-1, last
+        for (let i = 1; i <= 3; i++) {
+            paginationHTML += `<span class="page-number-item ${i === 1 ? 'current' : ''}" data-page="${i}">${i}</span>`
         }
-      } else {
-        currentPage = parseInt(page)
-        showPage(currentPage)
-        // updateActivePage(); // Убрали вызов, если не определена
-      }
+
+        paginationHTML += `<span class="dots">...</span>`
+
+        for (let i = totalPages - 2; i <= totalPages; i++) {
+            paginationHTML += `<span class="page-number-item" data-page="${i}">${i}</span>`
+        }
+    }
+
+    // Кнопка "Вперед"
+    paginationHTML += `<span class="page-number-item" data-page="next">›</span>`
+
+    paginationContainer.innerHTML = paginationHTML
+
+    // Добавляем обработчики для кнопок пагинации
+    const pageButtons = paginationContainer.querySelectorAll('.page-number-item')
+    pageButtons.forEach((button) => {
+        if (button.classList.contains('dots')) return
+
+        button.addEventListener('click', function () {
+            const page = this.dataset.page
+
+            if (page === 'prev') {
+                if (currentPage > 1) {
+                    currentPage--
+                    showPage(currentPage)
+                }
+            } else if (page === 'next') {
+                if (currentPage < totalPages) {
+                    currentPage++
+                    showPage(currentPage)
+                }
+            } else {
+                currentPage = parseInt(page)
+                showPage(currentPage)
+            }
+        })
     })
-  })
 }
 
-// Функция для показа дополнительных пользователей
 let additionalUsersShown = 0
 function showMoreUsers() {
-  const usersList = document.getElementById('usersList')
-  const hiddenUserCards = usersList
-    ? usersList.querySelectorAll('.user-card-new.hidden-user')
-    : []
-  const paginationContainer = document.getElementById('userPagination')
-  const showMoreBtn = document.getElementById('showMoreUsersBtn')
+    const usersList = document.getElementById('usersList')
+    const hiddenUserCards = usersList
+        ? usersList.querySelectorAll('.user-card-new.hidden-user')
+        : []
+    const paginationContainer = document.getElementById('userPagination')
+    const showMoreBtn = document.getElementById('showMoreUsersBtn')
 
-  if (!usersList || hiddenUserCards.length === 0) {
-    // Если больше нет скрытых пользователей, можно скрыть кнопку
-    if (showMoreBtn) showMoreBtn.style.display = 'none'
-    return
-  }
-
-  // Скрываем пагинацию с цифрами и меняем отображение кнопок
-  if (paginationContainer) {
-    paginationContainer.style.display = 'none'
-  }
-
-  // Если контейнер для кнопок еще не создан, создаем его
-  let buttonsContainer = document.querySelector('.pagination-buttons-container')
-  if (!buttonsContainer) {
-    buttonsContainer = document.createElement('div')
-    buttonsContainer.className = 'pagination-buttons-container'
-    const paginationNew = document.querySelector('.pagination-new')
-    if (paginationNew) {
-      paginationNew.appendChild(buttonsContainer)
+    if (!usersList || hiddenUserCards.length === 0) {
+        // Если больше нет скрытых пользователей, можно скрыть кнопку
+        if (showMoreBtn) showMoreBtn.style.display = 'none'
+        return
     }
-  }
 
-  // Показываем кнопку "Скрыть", если её еще нет
-  let hideBtn = document.getElementById('hideUsersBtn')
-  if (!hideBtn) {
-    hideBtn = document.createElement('button')
-    hideBtn.id = 'hideUsersBtn'
-    hideBtn.className = 'hide-btn-new'
-    hideBtn.textContent = 'Скрыть'
-    hideBtn.addEventListener('click', hideExtraUsers)
-    buttonsContainer.appendChild(hideBtn)
-  } else {
-    hideBtn.style.display = 'flex'
-  }
+    // Скрываем пагинацию с цифрами и меняем отображение кнопок
+    if (paginationContainer) {
+        paginationContainer.style.display = 'none'
+    }
 
-  // Перемещаем кнопку "Показать еще" в контейнер, если она еще не там
-  if (showMoreBtn && showMoreBtn.parentElement !== buttonsContainer) {
-    buttonsContainer.appendChild(showMoreBtn)
-  }
+    // Если контейнер для кнопок еще не создан, создаем его
+    let buttonsContainer = document.querySelector('.pagination-buttons-container')
+    if (!buttonsContainer) {
+        buttonsContainer = document.createElement('div')
+        buttonsContainer.className = 'pagination-buttons-container'
+        const paginationNew = document.querySelector('.pagination-new')
+        if (paginationNew) {
+            paginationNew.appendChild(buttonsContainer)
+        }
+    }
 
-  // Показываем следующие 5 скрытых карточек
-  const showCount = Math.min(5, hiddenUserCards.length)
-  for (let i = 0; i < showCount; i++) {
-    hiddenUserCards[i].classList.remove('hidden-user')
-    hiddenUserCards[i].classList.add('show-more-revealed')
-    additionalUsersShown++
-  }
+    // Показываем кнопку "Скрыть", если её еще нет
+    let hideBtn = document.getElementById('hideUsersBtn')
+    if (!hideBtn) {
+        hideBtn = document.createElement('button')
+        hideBtn.id = 'hideUsersBtn'
+        hideBtn.className = 'hide-btn-new'
+        hideBtn.textContent = 'Скрыть'
+        hideBtn.addEventListener('click', hideExtraUsers)
+        buttonsContainer.appendChild(hideBtn)
+    } else {
+        hideBtn.style.display = 'flex'
+    }
 
-  // Если больше нет скрытых пользователей, скрываем кнопку "Показать еще"
-  if (hiddenUserCards.length <= showCount) {
-    if (showMoreBtn) showMoreBtn.style.display = 'none'
-  }
+    // Перемещаем кнопку "Показать еще" в контейнер, если она еще не там
+    if (showMoreBtn && showMoreBtn.parentElement !== buttonsContainer) {
+        buttonsContainer.appendChild(showMoreBtn)
+    }
+
+    // Показываем следующие 5 скрытых карточек
+    const showCount = Math.min(5, hiddenUserCards.length)
+    for (let i = 0; i < showCount; i++) {
+        hiddenUserCards[i].classList.remove('hidden-user')
+        hiddenUserCards[i].classList.add('show-more-revealed')
+        additionalUsersShown++
+    }
+
+    // Если больше нет скрытых пользователей, скрываем кнопку "Показать еще"
+    if (hiddenUserCards.length <= showCount) {
+        if (showMoreBtn) showMoreBtn.style.display = 'none'
+    }
 }
 
 // Функция для скрытия дополнительных пользователей и возврата к пагинации
 function hideExtraUsers() {
-  const usersList = document.getElementById('usersList')
-  const paginationContainer = document.getElementById('userPagination')
-  const buttonsContainer = document.querySelector(
-    '.pagination-buttons-container'
-  )
-  const hideBtn = document.getElementById('hideUsersBtn')
-  const showMoreBtn = document.getElementById('showMoreUsersBtn')
+    const usersList = document.getElementById('usersList')
+    const paginationContainer = document.getElementById('userPagination')
+    const buttonsContainer = document.querySelector('.pagination-buttons-container')
+    const hideBtn = document.getElementById('hideUsersBtn')
+    const showMoreBtn = document.getElementById('showMoreUsersBtn')
 
-  // Возвращаем отображение пагинации с цифрами
-  if (paginationContainer) {
-    paginationContainer.style.display = 'flex'
-  }
+    // Возвращаем отображение пагинации с цифрами
+    if (paginationContainer) {
+        paginationContainer.style.display = 'flex'
+    }
 
-  // Скрываем кнопку "Скрыть"
-  if (hideBtn) {
-    hideBtn.style.display = 'none'
-  }
+    // Скрываем кнопку "Скрыть"
+    if (hideBtn) {
+        hideBtn.style.display = 'none'
+    }
 
-  // Возвращаем кнопку "Показать еще" в исходное положение
-  if (showMoreBtn && buttonsContainer) {
-    document.querySelector('.pagination-new').appendChild(showMoreBtn)
-    showMoreBtn.style.display = 'flex'
-  }
+    // Возвращаем кнопку "Показать еще" в исходное положение
+    if (showMoreBtn && buttonsContainer) {
+        document.querySelector('.pagination-new').appendChild(showMoreBtn)
+        showMoreBtn.style.display = 'flex'
+    }
 
-  // Скрываем все карточки, которые были показаны через "Показать еще"
-  const revealedCards = usersList
-    ? usersList.querySelectorAll('.user-card-new.show-more-revealed')
-    : []
-  revealedCards.forEach((card) => {
-    card.classList.add('hidden-user')
-    card.classList.remove('show-more-revealed')
-  })
+    // Скрываем все карточки, которые были показаны через "Показать еще"
+    const revealedCards = usersList
+        ? usersList.querySelectorAll('.user-card-new.show-more-revealed')
+        : []
+    revealedCards.forEach((card) => {
+        card.classList.add('hidden-user')
+        card.classList.remove('show-more-revealed')
+    })
 
-  // Сбрасываем счетчик показанных дополнительных пользователей
-  additionalUsersShown = 0
+    // Сбрасываем счетчик показанных дополнительных пользователей
+    additionalUsersShown = 0
 
-  // Восстанавливаем состояние текущей страницы
-  const currentPageBtn = document.querySelector('.page-number-item.current')
-  if (currentPageBtn) {
-    const currentPage = parseInt(currentPageBtn.dataset.page)
-    showPage(currentPage)
-    // updateActivePage(); // Убрали вызов, если не определена
-  }
+    // Восстанавливаем состояние текущей страницы
+    const currentPageBtn = document.querySelector('.page-number-item.current')
+    if (currentPageBtn) {
+        const currentPage = parseInt(currentPageBtn.dataset.page)
+        showPage(currentPage)
+    }
 }
 
 // Функция для показа определенной страницы
