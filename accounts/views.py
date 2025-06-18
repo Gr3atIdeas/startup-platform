@@ -3202,13 +3202,6 @@ def my_startups(request):
         return redirect("profile")
 
 
-@login_required
-def deals_view(request):
-    if not hasattr(request.user, "role") or request.user.role.role_name != "moderator":
-        messages.error(request, "Доступ к этой странице разрешен только модераторам.")
-        return redirect("home")  # Или на другую страницу, например, профиль
-    return render(request, "accounts/deals.html")
-
 
 @login_required
 def notifications_view(request):
