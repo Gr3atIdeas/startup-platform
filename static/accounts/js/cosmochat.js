@@ -2061,19 +2061,3 @@ function createChatItemElement(chat) {
 
     return chatItem;
 }
-
-
-document.addEventListener('DOMContentLoaded', function() {
-    const chatActionsBtn = document.getElementById('chatActionsBtn');
-    const chatActionsMenu = document.getElementById('chatActionsMenu');
-    if (chatActionsBtn && chatActionsMenu) {
-        chatActionsBtn.addEventListener('click', function() {
-            chatActionsMenu.classList.toggle('open');
-        });
-        document.addEventListener('click', function(event) {
-            if (!chatActionsBtn.contains(event.target) && !chatActionsMenu.contains(event.target)) {
-                chatActionsMenu.classList.remove('open');
-            }
-        });
-    }
-});
