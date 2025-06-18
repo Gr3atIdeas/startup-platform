@@ -1045,7 +1045,7 @@ def start_deal(request, chat_id):
 
     with transaction.atomic():
         chat.is_deal = True
-        chat.deal_status = 'pending'  # Явно устанавливаем статус
+        chat.deal_status = 'pending'
         chat.updated_at = timezone.now()
         chat.save()
 
@@ -1054,7 +1054,11 @@ def start_deal(request, chat_id):
             return JsonResponse({"success": False, "error": "Нет доступных модераторов"}, status=500)
 
         moderator = choice(list(moderators))
-        ChatParticipants.objects.create(conversation=chat, user=moderator)
+        moderator_participant, created = ChatParticipants.objects.get_or_create(conversation=chat, user=moderator)
+        if not created and not moderator_participant:
+            logger.error(f"Failed to create or find moderator {moderator.user_id} for chat {chat_id}")
+            return JsonResponse({"success": False, "error": "Ошибка назначения модератора"}, status=500)
+        logger.info(f"Moderator {moderator.user_id} added to chat {chat_id}, created: {created}")
 
         message = Messages(
             conversation=chat,
@@ -1082,7 +1086,6 @@ def deals_view(request):
         messages.error(request, "Доступ к этой странице разрешен только модераторам.")
         return redirect("home")
 
-    # Получаем параметр фильтра (активные, принятые или отклонённые)
     status_filter = request.GET.get('status', 'pending')
     valid_statuses = ['pending', 'approved', 'rejected']
     if status_filter not in valid_statuses:
@@ -1094,16 +1097,20 @@ def deals_view(request):
         deal_status=status_filter
     ).select_related('chatparticipants__user').order_by('-updated_at')
 
-    # Проверяем, что модератор участвует в чате
-    deals = deals.filter(chatparticipants__user=request.user)
+    # Проверяем наличие модератора в чате, но не ограничиваем только текущим пользователем
+    deals = deals.annotate(has_moderator=Exists(
+        ChatParticipants.objects.filter(
+            conversation=OuterRef('pk'),
+            user__role__role_name='moderator'
+        )
+    )).filter(has_moderator=True)
 
     logger.info(f"Fetching deals for moderator {request.user.user_id} with status_filter: {status_filter}, found {deals.count()} deals")
     for deal in deals:
         participants = deal.chatparticipants_set.all()
         moderator = next((p.user for p in participants if p.user.role and p.user.role.role_name == 'moderator'), None)
-        logger.debug(f"Deal {deal.conversation_id}: Moderator found - {moderator is not None}")
+        logger.debug(f"Deal {deal.conversation_id}: Moderator found - {moderator.user_id if moderator else 'None'}, Participants: {[p.user.user_id for p in participants]}")
 
-    # Подготовка данных для отображения
     deal_data = []
     selected_chat = None
     chat_id = request.GET.get('chat_id')
@@ -1113,7 +1120,6 @@ def deals_view(request):
             messages.error(request, "У вас нет доступа к этому чату.")
             selected_chat = None
         else:
-            # Получаем сообщения для выбранного чата
             messages = Messages.objects.filter(conversation=selected_chat).order_by('created_at')
             messages_data = [{
                 'message_id': msg.message_id,
