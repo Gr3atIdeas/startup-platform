@@ -369,8 +369,7 @@ html::-webkit-scrollbar-button {
 
 .featured .featured-child,
 .featured .featured-item {
-  /* Вспомогательные, если нужны по макету */
-  display: none; /* Скрываем, если не используются явно */
+  object-fit: cover;
 }
 
 /* --- Секция 2: Нет идей для стартапа? (бывшая featured5) --- */
@@ -663,6 +662,10 @@ html::-webkit-scrollbar-button {
 .featured5 .button8 .iconsarrow-right-2line {
   width: 20px;
   height: 20px;
+}
+
+.featured5-main-image {
+  background-image: url('../images/main_page/startups_preview.webp');
 }
 
 /* --- New Journey Start Block --- */
@@ -1243,125 +1246,52 @@ html::-webkit-scrollbar-button {
 
 /* Адаптивность (пример) */
 @media (width <= 1350px) {
-  .featured4 .frame-parent3 {
-    flex-direction: column;
-    height: auto;
-    padding: 30px;
-  }
-
-  .featured4 .parent6 {
-    width: 100%;
-    align-items: center;
-    text-align: center;
-    padding-left: 0;
-  }
-
   .featured3 .icon9,
-  .featured4 .icon10,
-  .featured3 .scale-1200-photoroom-2-parent {
-    position: relative;
-    width: 70%;
-    max-width: 400px;
-    height: auto;
-    margin-top: 30px;
-    inset: auto;
-    transform: none;
-  }
-
-  .featured5 .frame-parent7 {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .featured5 .frame-parent8,
-  .featured5 .frame-parent9,
-  .featured5 .creators {
-    width: 100%;
-    max-width: 500px; /* Ограничение для центральных колонок */
-  }
-
-  .featured5 .divider {
+  .featured3 .icon10 {
     display: none;
   }
-
   .featured9 .heading-parent {
     flex-direction: column;
+    align-items: center;
+    text-align: center;
   }
-
   .featured9 .heading2,
-  .featured9 .instance-parent {
-    flex: 0 0 100%;
-    max-height: none;
+  .featured9 .text-block {
+    text-align: center;
   }
 
   .featured10 .featured11 {
-    flex-direction: column;
-    gap: 40px;
-    padding: 30px;
+    flex-direction: column-reverse;
   }
 
   .featured10 .featured10-content-left,
-  .featured10 .form-container-featured10 {
+  .featured10 .featured10-content-right {
+    width: 100%;
     max-width: 100%;
-    align-items: center;
-    text-align: center;
   }
-
   .featured10 .frame-parent32 {
-    justify-content: center;
+    max-width: 90%;
   }
-
   .featured14 .heading-group {
     flex-direction: column;
-    padding: 30px;
+    align-items: center;
   }
-
   .featured14 .faq-left-column,
   .featured14 .faq-right-column {
-    flex: 0 0 100%;
-    padding-left: 0;
-    border-left: none;
-  }
-
-  .featured14 .faq-right-column {
-    margin-top: 30px;
-    border-top: 1px solid #e0e0e0;
-    padding-top: 30px;
-  }
-
-  .cta {
-    padding: 30px;
-    text-align: center;
-  }
-
-  .cta .cta-content {
-    max-width: 100%;
-    align-items: center;
-    text-align: center;
-    margin-right: 0;
-  }
-
-  .cta .cta-image {
     width: 100%;
-    height: 50%;
-    inset: auto auto 0 50%;
-    transform: translateX(-50%);
-    clip-path: polygon(0 20%, 100% 0, 100% 100%, 0% 100%);
-    opacity: 0.2;
+    padding: 0 15px;
+    align-items: center;
   }
-
-  .final-cta-heading-main,
-  .final-cta-heading-sub {
-    font-size: 40px;
+  .cta {
+    padding: 40px 20px;
   }
-
-  .final-cta-section {
-    height: auto;
-    padding-bottom: 60px; /* Adjust padding for better spacing */
+  .cta .cta-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 30px;
   }
-
-  .final-cta-image {
-    margin-top: 40px;
+  .cta .cta-image {
+    max-width: 250px;
   }
 }
 
@@ -1369,87 +1299,70 @@ html::-webkit-scrollbar-button {
   .featured .group {
     padding-left: 20px;
     padding-right: 20px;
-    height: auto;
-    min-height: 600px;
+    align-items: center;
+    text-align: center;
   }
-
   .featured .div6,
   .featured .div7 {
-    font-size: 50px;
+    font-size: 60px;
   }
-
   .featured .icon1 {
-    width: 120px;
-    height: auto;
+    display: none;
   }
-
   .featured .icon8 {
-    width: 180px;
-    height: auto;
+    width: 200px;
+    height: 200px;
   }
-
   .featured1,
+  .featured2,
   .featured3,
-  .featured4,
-  .featured5,
-  .featured6.galaxy-carousel-wrapper,
+  .featured6,
   .featured7,
-  .featured8.success-stories-carousel-outer,
+  .featured8,
   .featured9,
   .featured10,
+  .featured12,
+  .featured13,
   .featured14,
+  .cta,
+  .footer,
   .final-cta-section {
-    padding-left: 20px;
-    padding-right: 20px;
+    padding: 40px 20px;
   }
-
   .featured1 .feature-card {
-    min-width: 300px; /* Для мобильных карусель может показывать 1-2 карточки */
-    height: auto;
+    flex-direction: column;
   }
-
   .featured1 .heading {
     flex-direction: column;
     align-items: center;
     text-align: center;
-    gap: 20px;
   }
-
   .featured1 .heading .wrap {
-    padding: 10px 0;
+    text-align: center;
   }
-
   .featured6 .galaxy-carousel,
-  .featured6 .galaxy-step-card .frame-child12 {
-    width: 100%; /* На всю ширину */
-    min-width: 100%;
-    height: auto;
-    max-height: 350px;
+  .featured6 .heading {
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
   }
-
   .featured8 .success-story-card {
-    min-width: calc(
-      90% - 20px
-    ); /* Почти на всю ширину, если 1 карточка видна */
+    flex-direction: column;
   }
-
   .featured8 .success-stories-arrow-left {
-    left: 5px;
+    left: 0;
   }
-
   .featured8 .success-stories-arrow-right {
-    right: 5px;
+    right: 0;
   }
-
   .final-cta-content-wrapper {
     flex-direction: column;
-    gap: 30px;
     text-align: center;
-    padding: 0 20px;
+    gap: 20px;
   }
-
   .final-cta-heading-main,
   .final-cta-heading-sub {
-    font-size: 40px;
+    font-size: 24px;
+    line-height: 1.3;
   }
 }
