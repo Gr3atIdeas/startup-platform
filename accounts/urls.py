@@ -55,6 +55,7 @@ urlpatterns = [
     path("edit-startup/<int:startup_id>/", views.edit_startup, name="edit_startup"),
     path("moderator-main/", views.main_page_moderator, name="main_page_moderator"),
     path("investor-main/", views.investor_main, name="investor_main"),
+    path("startupper-main/", views.startupper_main, name="startupper_main"),
     path("moderator-dashboard/", views.moderator_dashboard, name="moderator_dashboard"),
     path(
         "approve-startup/<int:startup_id>/",

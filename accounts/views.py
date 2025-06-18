@@ -1753,6 +1753,11 @@ def investor_main(request):
     return render(request, "accounts/investor_main.html")
 
 
+@login_required
+def startupper_main(request):
+    return render(request, "accounts/startupper_main.html")
+
+
 # Панель модератора
 def moderator_dashboard(request):
     pending_startups_list = Startups.objects.filter(status="pending")
