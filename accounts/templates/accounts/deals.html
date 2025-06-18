@@ -14,12 +14,12 @@
             <div class="chat-list-column">
                 <h3>Список сделок</h3>
                 <div class="deal-status-filters">
-                    <a href="?status=pending" class="filter-btn {% if current_status == 'pending' %}active{% endif %}">Ожидают</a>
-                    <a href="?status=approved" class="filter-btn {% if current_status == 'approved' %}active{% endif %}">Приняты</a>
-                    <a href="?status=rejected" class="filter-btn {% if current_status == 'rejected' %}active{% endif %}">Отклонены</a>
+                    <a href="{% url 'deals_view' %}?status=pending" class="filter-btn {% if current_status == 'pending' %}active{% endif %}">Ожидают</a>
+                    <a href="{% url 'deals_view' %}?status=approved" class="filter-btn {% if current_status == 'approved' %}active{% endif %}">Приняты</a>
+                    <a href="{% url 'deals_view' %}?status=rejected" class="filter-btn {% if current_status == 'rejected' %}active{% endif %}">Отклонены</a>
                 </div>
                 {% if deals|length == 0 %}
-                    <p>Нет сделок с статусом {{ current_status }}.</p>
+                    <p>Нет сделок с статусом {{ current_status }}. Debug: User ID {{ request.user.user_id }}</p>
                 {% endif %}
                 {% for deal in deals %}
                     <div class="chat-item {% if selected_chat and selected_chat.conversation_id == deal.conversation_id %}active{% endif %}" data-chat-id="{{ deal.conversation_id }}" onclick="loadChat({{ deal.conversation_id }})">
@@ -61,8 +61,8 @@
                         <form id="messageForm" method="post" action="{% url 'send_message' %}">
                             {% csrf_token %}
                             <input type="hidden" name="chat_id" value="{{ selected_chat.conversation_id }}">
-                            <textarea name="message_text" placeholder="Введите сообщение..." required></textarea>
-                            <button type="submit">Отправить</button>
+                            <textarea name="message_text" class="message-input" placeholder="Введите сообщение..." required></textarea>
+                            <button type="submit" class="send-button"><img src="{% static 'accounts/images/send_icon.png' %}" alt="Send"></button>
                         </form>
                     </div>
                 {% else %}
@@ -98,6 +98,8 @@
                             messageDiv.innerHTML = `<div class="message-content">${data.message.message_text}</div><span class="message-time">${data.message.created_at}</span><span class="message-sender">${data.message.sender_name}</span>`;
                             document.querySelector('.messages-container').appendChild(messageDiv);
                             this.reset();
+                            const messagesContainer = document.querySelector('.messages-container');
+                            messagesContainer.scrollTop = messagesContainer.scrollHeight;
                         } else {
                             alert(data.error || 'Ошибка отправки сообщения');
                         }

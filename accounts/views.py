@@ -1148,12 +1148,12 @@ def deals_view(request):
         try:
             participants = deal.chatparticipants_set.all()
             moderator = next((p.user for p in participants if p.user.role and p.user.role.role_name == 'moderator'), None)
-            other_participants = [p.user for p in participants if p.user and p.user != moderator]  # Убрали if p.user
+            other_participants = [p.user for p in participants if p.user and p.user != moderator]
 
             deal_data.append({
                 'conversation_id': deal.conversation_id,
                 'name': deal.name or f"Сделка {deal.conversation_id}",
-                'participants': [f"{p.first_name} {p.last_name}" for p in other_participants],  # Убрали if p.user
+                'participants': [f"{p.first_name} {p.last_name}" for p in other_participants],
                 'moderator': moderator.get_full_name() if moderator else 'Не назначен',
                 'last_message': deal.get_last_message().message_text if deal.get_last_message() else 'Нет сообщений',
                 'created_at': deal.created_at.strftime('%H:%M') if deal.created_at else '',
