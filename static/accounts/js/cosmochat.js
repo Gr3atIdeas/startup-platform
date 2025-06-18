@@ -241,9 +241,63 @@ document.addEventListener('DOMContentLoaded', function () {
     })
   })
 
-  // Инициализация фильтров ролей
+// Инициализация фильтров ролей
   setupRoleFilters()
-})
+
+  // Обработчик для переименования чата
+  const chatNameInput = document.getElementById('chatNameInput');
+  if (chatNameInput) {
+      chatNameInput.addEventListener('blur', function() {
+          const newName = chatNameInput.value.trim();
+          const chatWindowTitle = document.getElementById('chatWindowTitle');
+          const renameChatBtn = document.getElementById('renameChatBtn');
+          if (newName && currentChatId && chatWindowTitle && renameChatBtn) {
+              fetch(`/cosmochat/rename-chat/${currentChatId}/`, {
+                  method: 'POST',
+                  headers: {
+                      'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                      'Content-Type': 'application/json',
+                      'X-Requested-With': 'XMLHttpRequest'
+                  },
+                  body: JSON.stringify({ name: newName })
+              })
+              .then(response => response.json())
+              .then(data => {
+                  if (data.success) {
+                      chatWindowTitle.textContent = data.chat_name;
+                      const chatItem = document.querySelector(`.chat-item-new[data-chat-id="${data.chat_id}"]`);
+                      if (chatItem) {
+                          chatItem.dataset.chatName = data.chat_name;
+                          const chatNameElement = chatItem.querySelector('h4');
+                          if (chatNameElement) {
+                              chatNameElement.innerHTML = data.chat_name.slice(0, 25) + (data.chat_name.length > 25 ? '...' : '') +
+                                  (chatItem.dataset.isDeal === 'true' ? '<span class="deal-indicator" title="Сделка"><img src="/static/accounts/images/cosmochat/deal_icon.svg" alt="Сделка" class="deal-icon"></span>' : '');
+                          }
+                      }
+                      startPolling(); // Обновляем список для других пользователей
+                  } else {
+                      alert(data.error || 'Ошибка при переименовании чата');
+                  }
+              })
+              .catch(error => {
+                  console.error('Ошибка при переименовании:', error);
+                  alert('Произошла ошибка при переименовании чата.');
+              });
+          }
+          if (chatNameInput && chatWindowTitle && renameChatBtn) {
+              chatNameInput.style.display = 'none';
+              chatWindowTitle.style.display = 'inline';
+              renameChatBtn.style.display = 'inline-block';
+          }
+      });
+
+      chatNameInput.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') {
+              chatNameInput.blur();
+          }
+      });
+    }
+});
 
 
 function showNoChatSelected() {
@@ -295,7 +349,18 @@ function loadChat(chatId) {
                 }
                 data.messages.forEach((msg) => appendMessage(msg, false));
 
-                if (chatWindowTitle && data.chat_name) chatWindowTitle.textContent = data.chat_name;
+                if (chatWindowTitle && data.chat_name) {
+                    chatWindowTitle.textContent = data.chat_name;
+                    const chatItem = document.querySelector(`.chat-item-new[data-chat-id="${chatId}"]`);
+                    if (chatItem) {
+                        chatItem.dataset.chatName = data.chat_name;
+                        const chatNameElement = chatItem.querySelector('h4');
+                        if (chatNameElement) {
+                            chatNameElement.innerHTML = data.chat_name.slice(0, 25) + (data.chat_name.length > 25 ? '...' : '') +
+                                (chatItem.dataset.isDeal === 'true' ? '<span class="deal-indicator" title="Сделка"><img src="/static/accounts/images/cosmochat/deal_icon.svg" alt="Сделка" class="deal-icon"></span>' : '');
+                        }
+                    }
+                }
                 currentParticipants = data.participants || [];
 
                 const chatItem = document.querySelector(`.chat-item-new[data-chat-id="${chatId}"]`);

@@ -3465,7 +3465,7 @@ def rename_chat(request, chat_id):
             chat.save()
 
         logger.info(f"Чат {chat.conversation_id} переименован в {new_name}")
-        return JsonResponse({"success": True, "chat_name": new_name})
+        return JsonResponse({"success": True, "chat_name": new_name, "chat_id": chat_id})
     except json.JSONDecodeError:
         logger.error("Неверный формат JSON в rename_chat")
         return JsonResponse(
