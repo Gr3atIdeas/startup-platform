@@ -248,16 +248,24 @@
                     <h3 id="chatWindowTitle">Название чата</h3>
                     <span id="dealLabel" class="deal-label" style="display: none;">Сделка</span>
                 </div>
-                <button id="renameChatBtn" class="rename-chat-btn">Переименовать</button>
-                <input type="text" id="chatNameInput" style="display: none;" placeholder="Новое название чата">
                 <div class="chat-header-actions">
-                    <button id="startDealBtn" class="start-deal-btn-new-style">Начать сделку</button>
-                    <button id="participantsBtn" class="participants-btn-new-style" style="display: none;">Участники</button>
-                    <button id="leaveChatBtn" class="leave-chat-btn-new-style">Покинуть</button>
+                    <div class="dropdown-container">
+                        <button class="dropdown-button" id="chatActionsBtn">
+                            <img src="{% static 'accounts/images/icons/three_dots.svg' %}" alt="Действия" class="action-icon">
+                        </button>
+                        <div class="dropdown-menu" id="chatActionsMenu">
+                            <button id="renameChatBtn" class="dropdown-item">Переименовать</button>
+                            <button id="startDealBtn" class="dropdown-item">Начать сделку</button>
+                            <button id="leaveChatBtn" class="dropdown-item">Покинуть</button>
+                        </div>
+                    </div>
                 </div>
                 <div class="chat-participants" id="chatParticipantsList" style="display: none;"></div>
             </div>
 
+
+
+            
             <div class="chat-messages-area" id="chatMessagesArea"></div>
             
             <div class="no-chat-selected-placeholder" id="noChatSelectedPlaceholder">

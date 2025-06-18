@@ -308,8 +308,8 @@ function loadChat(chatId) {
                 const participantsListDiv = document.getElementById('chatParticipantsList');
 
                 if (dealLabel) dealLabel.style.display = isDeal ? 'inline' : 'none';
-                if (startDealBtn) startDealBtn.style.display = isDeal ? 'none' : 'inline-block';
-                if (participantsBtn) participantsBtn.style.display = isGroupChat ? 'inline-block' : 'none';
+                if (startDealBtn) startDealBtn.style.display = isGroupChat ? 'none' : 'block';
+                if (participantsBtn) participantsBtn.style.display = isGroupChat ? 'block' : 'none';
 
                 if (participantsListDiv && isDeal) {
                     participantsListDiv.innerHTML = currentParticipants.map(p => 
@@ -409,6 +409,10 @@ function startPolling() {
                                 chatListContainer.appendChild(chatItem);
                             }
                         });
+                        const currentChatItem = chatListContainer.querySelector(`.chat-item-new[data-chat-id="${currentChatId}"]`);
+                        if (currentChatItem && chatWindowTitle) {
+                            chatWindowTitle.textContent = currentChatItem.dataset.chatName;
+                        }
                     }
                 } else {
                     console.error('Ошибка данных списка чатов:', data.error);
@@ -1901,3 +1905,19 @@ function createChatItemElement(chat) {
 
     return chatItem;
 }
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    const chatActionsBtn = document.getElementById('chatActionsBtn');
+    const chatActionsMenu = document.getElementById('chatActionsMenu');
+    if (chatActionsBtn && chatActionsMenu) {
+        chatActionsBtn.addEventListener('click', function() {
+            chatActionsMenu.classList.toggle('open');
+        });
+        document.addEventListener('click', function(event) {
+            if (!chatActionsBtn.contains(event.target) && !chatActionsMenu.contains(event.target)) {
+                chatActionsMenu.classList.remove('open');
+            }
+        });
+    }
+});

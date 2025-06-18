@@ -1822,3 +1822,53 @@ body.cosmochat-body {
     display: flex;
     align-items: center;
 }
+
+.dropdown-container {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.action-icon {
+    width: 24px;
+    height: 24px;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background: white;
+    box-shadow: 0 4px 15px rgb(0 0 0 / 20%);
+    border-radius: 10px;
+    z-index: 100;
+    min-width: 150px;
+    padding: 10px 0;
+}
+
+.dropdown-menu.open {
+    display: block;
+}
+
+.dropdown-item {
+    background: none;
+    border: none;
+    padding: 10px 20px;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    color: black;
+    font-family: Unbounded, sans-serif;
+    font-size: 14px;
+}
+
+.dropdown-item:hover {
+    background: #f0f0f0;
+}
