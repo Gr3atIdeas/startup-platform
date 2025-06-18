@@ -55,35 +55,38 @@ const groupChatSelectedParticipantsList = document.getElementById('groupChatSele
 const groupChatAddMoreParticipantsBtn = document.getElementById('groupChatAddMoreParticipantsBtn')
 
 document.addEventListener('DOMContentLoaded', function () {
+    // Запускаем поллинг сразу при загрузке для начальной загрузки списка чатов
+    startPolling();
+
     if (messageFormNew) {
-        messageFormNew.addEventListener('submit', handleSendMessage)
+        messageFormNew.addEventListener('submit', handleSendMessage);
     }
 
     // Если при загрузке страницы есть параметр new_chat=true и open_chat_id, то это новый чат
-    const urlParams = new URLSearchParams(window.location.search)
+    const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('new_chat') === 'true' && urlParams.get('open_chat_id')) {
-        const newChatId = urlParams.get('open_chat_id')
-        // Пока перезагрузим список чатов, чтобы новый чат подгрузился
+        const newChatId = urlParams.get('open_chat_id');
+        loadChat(newChatId); // Загружаем новый чат сразу
     }
 
     // Показываем плейсхолдер, если чат не выбран
     if (!currentChatId) {
-        showNoChatSelected()
+        showNoChatSelected();
     }
 
     // Инициализация отображения рейтинга для всех карточек пользователей
     const userCardsRatingContainers = document.querySelectorAll(
         '.users-list-new .user-card-new .rating-stars-new'
-    )
+    );
     userCardsRatingContainers.forEach((container) => {
-        updateUserRatingDisplay(container)
-    })
+        updateUserRatingDisplay(container);
+    });
 
     // Инициализация выпадающего списка поиска
-    setupSearchDropdown()
+    setupSearchDropdown();
 
     // Обновление HTML-разметки для пагинации
-    updatePaginationHTML()
+    updatePaginationHTML();
 
     // Объявляем переменные для кнопок один раз
     const startDealBtn = document.getElementById('startDealBtn');
@@ -95,12 +98,12 @@ document.addEventListener('DOMContentLoaded', function () {
     if (startDealBtn) {
         startDealBtn.addEventListener('click', function () {
             if (!currentChatId) {
-                alert('Выберите чат для начала сделки')
-                return
+                alert('Выберите чат для начала сделки');
+                return;
             }
             const chatItem = document.querySelector(
                 `.chat-item-new[data-chat-id="${currentChatId}"]`
-            )
+            );
             if (
                 !chatItem ||
                 chatItem.dataset.chatType === 'group' ||
@@ -108,148 +111,148 @@ document.addEventListener('DOMContentLoaded', function () {
             ) {
                 alert(
                     'Сделку можно начать только в личном чате, который ещё не помечен как сделка'
-                )
-                return
+                );
+                return;
             }
-            startDealBtn.disabled = true
-            startDealBtn.textContent = 'Инициация сделки...'
-            startDeal(currentChatId)
-        })
+            startDealBtn.disabled = true;
+            startDealBtn.textContent = 'Инициация сделки...';
+            startDeal(currentChatId);
+        });
     }
 
     // Обработчик для кнопки "Покинуть чат"
     if (leaveChatBtn) {
         leaveChatBtn.addEventListener('click', function () {
             if (!currentChatId) {
-                alert('Выберите чат')
-                return
+                alert('Выберите чат');
+                return;
             }
-            if (!confirm('Вы уверены, что хотите покинуть/удалить этот чат?')) return
-            leaveChatBtn.disabled = true
-            leaveChatBtn.textContent = 'Выход...'
-            leaveChat()
-        })
+            if (!confirm('Вы уверены, что хотите покинуть/удалить этот чат?')) return;
+            leaveChatBtn.disabled = true;
+            leaveChatBtn.textContent = 'Выход...';
+            leaveChat();
+        });
     }
 
     // Обработчик для кнопки "Далее" в модальном окне группового чата
     if (navigateToDetailsViewBtn) {
         navigateToDetailsViewBtn.addEventListener('click', function () {
-            console.log('#navigateToDetailsViewBtn clicked')
+            console.log('#navigateToDetailsViewBtn clicked');
             if (selectedGroupChatUserIds.length > 0) {
-                console.log('Selected users:', selectedGroupChatUserIds)
-                const groupChatUsersList = document.getElementById('groupChatUsersList')
-                const groupChatNameInput = document.getElementById('groupChatNameInput')
+                console.log('Selected users:', selectedGroupChatUserIds);
+                const groupChatUsersList = document.getElementById('groupChatUsersList');
+                const groupChatNameInput = document.getElementById('groupChatNameInput');
 
-                console.log('Calling renderSelectedParticipantsForDetailsView...')
-                renderSelectedParticipantsForDetailsView(groupChatUsersList)
+                console.log('Calling renderSelectedParticipantsForDetailsView...');
+                renderSelectedParticipantsForDetailsView(groupChatUsersList);
                 if (groupChatNameInput && groupChatUsersList) {
                     const firstFewNames = selectedGroupChatUserIds
                         .map((userId) => {
                             const userDiv = groupChatUsersList.querySelector(
                                 `.group-chat-modal-user[data-user-id="${userId}"] .group-chat-modal-user-firstname`
-                            )
-                            return userDiv ? userDiv.textContent : ''
+                            );
+                            return userDiv ? userDiv.textContent : '';
                         })
                         .filter((name) => name)
                         .slice(0, 3)
-                        .join(', ')
-                    groupChatNameInput.value = firstFewNames || 'Новый групповой чат'
+                        .join(', ');
+                    groupChatNameInput.value = firstFewNames || 'Новый групповой чат';
                 }
-                console.log('Calling toggleGroupChatModalView(true)...')
-                toggleGroupChatModalView(true)
+                console.log('Calling toggleGroupChatModalView(true)...');
+                toggleGroupChatModalView(true);
             } else {
-                alert('Выберите хотя бы одного пользователя.')
+                alert('Выберите хотя бы одного пользователя.');
             }
-        })
+        });
     }
 
     if (groupChatGoBackBtn) {
         groupChatGoBackBtn.addEventListener('click', function () {
-            toggleGroupChatModalView(false)
-        })
+            toggleGroupChatModalView(false);
+        });
     }
 
     if (confirmGroupChatCreationBtn) {
         confirmGroupChatCreationBtn.addEventListener('click', function () {
-            const groupChatNameInput = document.getElementById('groupChatNameInput')
+            const groupChatNameInput = document.getElementById('groupChatNameInput');
             const chatName = groupChatNameInput
                 ? groupChatNameInput.value.trim()
-                : 'Групповой чат'
+                : 'Групповой чат';
             if (!chatName) {
-                alert('Пожалуйста, введите название чата.')
-                if (groupChatNameInput) groupChatNameInput.focus()
-                return
+                alert('Пожалуйста, введите название чата.');
+                if (groupChatNameInput) groupChatNameInput.focus();
+                return;
             }
             if (selectedGroupChatUserIds.length === 0) {
                 alert(
                     'Нет выбранных участников. Пожалуйста, вернитесь и выберите участников.'
-                )
-                toggleGroupChatModalView(false)
-                return
+                );
+                toggleGroupChatModalView(false);
+                return;
             }
-            confirmGroupChatCreationBtn.disabled = true
-            confirmGroupChatCreationBtn.textContent = 'Создание...'
-            createGroupChat(chatName, selectedGroupChatUserIds)
-        })
+            confirmGroupChatCreationBtn.disabled = true;
+            confirmGroupChatCreationBtn.textContent = 'Создание...';
+            createGroupChat(chatName, selectedGroupChatUserIds);
+        });
     }
 
     if (groupChatAddMoreParticipantsBtn) {
         groupChatAddMoreParticipantsBtn.addEventListener('click', function () {
-            toggleGroupChatModalView(false)
-        })
+            toggleGroupChatModalView(false);
+        });
     }
 
     // Закрытие модального окна группового чата по клику вне модального окна
-    const groupChatModalOverlay = document.getElementById('groupChatModal')
+    const groupChatModalOverlay = document.getElementById('groupChatModal');
     if (groupChatModalOverlay) {
         groupChatModalOverlay.addEventListener('click', function (event) {
             if (event.target === groupChatModalOverlay) {
-                closeGroupChatModal()
+                closeGroupChatModal();
             }
-        })
+        });
     }
 
     // Закрытие модального окна группового чата по нажатию ESC
     document.addEventListener('keydown', function (event) {
-        const groupChatModal = document.getElementById('groupChatModal')
+        const groupChatModal = document.getElementById('groupChatModal');
         if (
             event.key === 'Escape' &&
             groupChatModal &&
             groupChatModal.style.display === 'flex'
         ) {
-            closeGroupChatModal()
+            closeGroupChatModal();
         }
-    })
+    });
 
     // Обработчик для кнопки закрытия модального окна группового чата
-    const closeGroupChatModalBtn = document.getElementById('closeGroupChatModalBtn')
+    const closeGroupChatModalBtn = document.getElementById('closeGroupChatModalBtn');
     if (closeGroupChatModalBtn) {
         closeGroupChatModalBtn.addEventListener('click', function () {
-            closeGroupChatModal()
-        })
+            closeGroupChatModal();
+        });
     }
 
     // Добавляем обработчики для фильтров чатов
-    const chatFilterButtons = document.querySelectorAll('.chat-filters-new .filter-btn-new')
+    const chatFilterButtons = document.querySelectorAll('.chat-filters-new .filter-btn-new');
     chatFilterButtons.forEach((button) => {
         button.addEventListener('click', function () {
-            chatFilterButtons.forEach((btn) => btn.classList.remove('active'))
-            this.classList.add('active')
-            filterChats(this.dataset.filter)
-        })
-    })
+            chatFilterButtons.forEach((btn) => btn.classList.remove('active'));
+            this.classList.add('active');
+            filterChats(this.dataset.filter);
+        });
+    });
 
     // Инициализация фильтров ролей
-    setupRoleFilters()
+    setupRoleFilters();
 
     // Обработчик для выпадающего меню действий
     const chatActionsBtn = document.getElementById('chatActionsBtn');
     const chatActionsMenu = document.getElementById('chatActionsMenu');
     if (chatActionsBtn && chatActionsMenu) {
-        chatActionsBtn.addEventListener('click', function() {
+        chatActionsBtn.addEventListener('click', function () {
             chatActionsMenu.classList.toggle('open');
         });
-        document.addEventListener('click', function(event) {
+        document.addEventListener('click', function (event) {
             if (!chatActionsBtn.contains(event.target) && !chatActionsMenu.contains(event.target)) {
                 chatActionsMenu.classList.remove('open');
             }
@@ -259,7 +262,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Обработчик для переименования чата
     const chatNameInput = document.getElementById('chatNameInput');
     if (chatNameInput) {
-        chatNameInput.addEventListener('blur', function() {
+        chatNameInput.addEventListener('blur', function () {
             const newName = chatNameInput.value.trim();
             const chatWindowTitle = document.getElementById('chatWindowTitle');
             if (newName && currentChatId && chatWindowTitle) {
@@ -302,7 +305,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
-        chatNameInput.addEventListener('keypress', function(e) {
+        chatNameInput.addEventListener('keypress', function (e) {
             if (e.key === 'Enter') {
                 chatNameInput.blur();
             }
@@ -311,7 +314,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Обработчик для кнопки "Переименовать" в выпадающем меню
     if (renameChatBtn) {
-        renameChatBtn.addEventListener('click', function() {
+        renameChatBtn.addEventListener('click', function () {
             const chatWindowTitle = document.getElementById('chatWindowTitle');
             const chatNameInput = document.getElementById('chatNameInput');
             if (chatWindowTitle && chatNameInput) {
@@ -326,7 +329,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Обработчик для кнопки "Начать сделку" в выпадающем меню
     if (startDealBtn) {
-        startDealBtn.addEventListener('click', function() {
+        startDealBtn.addEventListener('click', function () {
             if (!currentChatId) {
                 alert('Выберите чат для начала сделки');
                 return;
@@ -352,7 +355,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Обработчик для кнопки "Участники" в выпадающем меню
     if (participantsBtn) {
-        participantsBtn.addEventListener('click', function() {
+        participantsBtn.addEventListener('click', function () {
             if (!currentChatId) {
                 alert('Выберите чат для просмотра участников');
                 return;
@@ -370,7 +373,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Обработчик для кнопки "Покинуть" в выпадающем меню
     if (leaveChatBtn) {
-        leaveChatBtn.addEventListener('click', function() {
+        leaveChatBtn.addEventListener('click', function () {
             if (!currentChatId) {
                 alert('Выберите чат');
                 return;
@@ -523,39 +526,41 @@ function startPolling() {
 
     pollingInterval = setInterval(() => {
         console.log('Polling...');
-        if (!currentChatId) {
-            fetch('/cosmochat/chat-list/', {
-                headers: { 'X-CSRFToken': csrfToken, 'X-Requested-With': 'XMLHttpRequest' }
-            })
-            .then(response => {
-                if (!response.ok) {
-                    console.error('Ошибка при получении списка чатов:', response.status, response.statusText);
-                    return;
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    const chatListContainer = document.getElementById('chatListContainer');
-                    if (chatListContainer) {
-                        chatListContainer.innerHTML = '';
-                        data.chats.forEach((chat) => {
-                            if (!chat.is_deleted && (!chat.has_left || (window.REQUEST_USER_ID && requestUserRole === 'moderator'))) {
-                                const chatItem = createChatItemElement(chat);
-                                chatListContainer.appendChild(chatItem);
-                            }
-                        });
-                        const currentChatItem = chatListContainer.querySelector(`.chat-item-new[data-chat-id="${currentChatId}"]`);
-                        if (currentChatItem && chatWindowTitle) {
-                            chatWindowTitle.textContent = currentChatItem.dataset.chatName;
+        // Всегда начинаем с загрузки списка чатов
+        fetch('/cosmochat/chat-list/', {
+            headers: { 'X-CSRFToken': csrfToken, 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(response => {
+            if (!response.ok) {
+                console.error('Ошибка при получении списка чатов:', response.status, response.statusText);
+                return;
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                const chatListContainer = document.getElementById('chatListContainer');
+                if (chatListContainer) {
+                    chatListContainer.innerHTML = '';
+                    data.chats.forEach((chat) => {
+                        if (!chat.is_deleted && (!chat.has_left || (window.REQUEST_USER_ID && requestUserRole === 'moderator'))) {
+                            const chatItem = createChatItemElement(chat);
+                            chatListContainer.appendChild(chatItem);
                         }
+                    });
+                    const currentChatItem = chatListContainer.querySelector(`.chat-item-new[data-chat-id="${currentChatId}"]`);
+                    if (currentChatItem && chatWindowTitle) {
+                        chatWindowTitle.textContent = currentChatItem.dataset.chatName;
                     }
-                } else {
-                    console.error('Ошибка данных списка чатов:', data.error);
                 }
-            })
-            .catch(error => console.error('Ошибка при опросе списка чатов:', error));
-        } else {
+            } else {
+                console.error('Ошибка данных списка чатов:', data.error);
+            }
+        })
+        .catch(error => console.error('Ошибка при опросе списка чатов:', error));
+
+        // Поллинг для текущего чата, если он выбран
+        if (currentChatId) {
             const url = lastMessageTimestamp
                 ? `/cosmochat/${currentChatId}/?since=${encodeURIComponent(lastMessageTimestamp)}`
                 : `/cosmochat/${currentChatId}/`;
@@ -687,7 +692,12 @@ function startDeal(chatId) {
             }, false);
             startPolling();
         } else {
-            alert(data.error || 'Ошибка при начале сделки');
+            // Обработка ошибки с более специфичным сообщением
+            if (data.error && data.error.includes('Сделку можно начать только в личном чате')) {
+                alert('Ошибка: ' + data.error);
+            } else {
+                alert(data.error || 'Ошибка при начале сделки');
+            }
             if (startDealBtn) {
                 startDealBtn.disabled = false;
                 startDealBtn.textContent = 'Начать сделку';
