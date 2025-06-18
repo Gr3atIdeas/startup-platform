@@ -1099,7 +1099,7 @@ def deals_view(request):
     deals = ChatConversations.objects.filter(
         is_deal=True,
         deal_status=status_filter
-    ).select_related('chatparticipants__user').order_by('-updated_at')
+    ).prefetch_related('chatparticipants_set__user').order_by('-updated_at')  # Используем prefetch_related
 
     # Фильтруем только те сделки, где текущий модератор участвует
     deals = deals.filter(chatparticipants__user=request.user)
