@@ -1,0 +1,1704 @@
+@font-face {
+  font-family: Unbounded;
+  src: url('../fonts/Unbounded-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: Unbounded;
+  src: url('../fonts/Unbounded-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: Unbounded;
+  src: url('../fonts/Unbounded-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: Unbounded;
+  src: url('../fonts/Unbounded-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: Unbounded;
+  src: url('../fonts/Unbounded-Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Blippo Black';
+  src: url('../fonts/blippo_blackcyrusbyme.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+img {
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+html {
+  height: 100%;
+  min-height: 100%;
+  background: linear-gradient(
+    to bottom,
+    #000 0%,
+    #01366d 50%,
+    #004e9f 100%
+  ); /* Фон на html */
+
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  width: 100%;
+  margin: 0;
+  padding: 0; /* No padding on the main container */
+  box-sizing: border-box;
+  overflow: hidden auto; /* Включаем вертикальную прокрутку */
+  scrollbar-width: thin; /* Для Firefox */
+  scrollbar-color: #ffef2b transparent; /* Цвета для Firefox: ползунок и прозрачный фон */
+  display: flex;
+  flex-direction: column;
+
+  /* align-items: center; */
+
+  /* Remove centering from here */
+  gap: 40px;
+}
+
+.btn--yellow-gradient,
+.btn--yellow-gradient:visited {
+  background: linear-gradient(180deg, #ffef2b 0%, #f9f7d6 100%) !important;
+  border: none !important;
+  color: #000 !important;
+}
+
+.btn--yellow-gradient span {
+  color: #000 !important;
+}
+
+.btn--yellow-gradient .icon {
+  filter: brightness(0) invert(0);
+}
+
+.btn--blue,
+.btn--blue:visited {
+  background: linear-gradient(0deg, #004e9f 0%, #006edf 100%) !important;
+  border: none !important;
+}
+
+.btn--blue span {
+  color: #f5f5f5 !important;
+}
+
+body {
+  font-family: Unbounded, sans-serif;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #fcfcfd;
+  margin: 0;
+  padding: 0;
+  background: transparent; /* body прозрачный */
+  overflow-x: hidden;
+
+  /* overflow-y: auto; */
+
+  /* <--- УДАЛЯЕМ ЭТО */
+  min-height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex; /* Для flex-grow у .div */
+  flex-direction: column; /* Для flex-grow у .div */
+  flex-shrink: 0;
+}
+
+/* Кастомный скроллбар для Webkit-браузеров (Chrome, Safari) */
+html::-webkit-scrollbar {
+  width: 8px; /* Ширина скроллбара */
+}
+
+html::-webkit-scrollbar-track {
+  background: transparent; /* Убираем фон у трека */
+}
+
+html::-webkit-scrollbar-thumb {
+  background-color: #ffef2b; /* Цвет ползунка */
+  border-radius: 4px; /* Скругление углов */
+}
+
+html::-webkit-scrollbar-thumb:hover {
+  background-color: #e6d329; /* Цвет ползунка при наведении */
+}
+
+html::-webkit-scrollbar-button {
+  display: none; /* Скрываем стрелочки */
+}
+
+.div {
+  /* Общий контейнер страницы */
+  width: 100%;
+
+  /* min-width: 100%; */
+
+  /* width: 100% должно быть достаточно */
+  display: flex; /* Для align-items: center */
+  flex-direction: column; /* Основная ось - вертикальная для секций */
+  align-items: center; /* Центрируем дочерние секции */
+  background: transparent !important; /* .div прозрачный, показываем фон html */
+
+  /* background-repeat и background-attachment не нужны для прозрачного фона */
+  box-sizing: border-box; /* Добавляем для консистентности */
+}
+
+/* --- Секция 1: Featured (Главный экран) --- */
+.featured {
+  width: 100%;
+  max-width: 1445px;
+  height: 798px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  box-sizing: border-box;
+  background: transparent !important;
+  margin-left: auto; /* Центрирование */
+  margin-right: auto; /* Центрирование */
+}
+
+.featured .group {
+  width: 100%;
+  max-width: 1303px;
+  height: 708px;
+  position: relative;
+
+  /* background: transparent; */
+
+  /* Убираем старый прозрачный фон */
+  background: transparent;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column; /* Для внутреннего расположения элементов */
+  justify-content: center; /* Центрирование по вертикали */
+  padding-left: 109px; /* Отступ для текстового контента */
+  box-sizing: border-box;
+}
+
+/* Элементы внутри .featured .group */
+.featured .div5 {
+  width: 390px;
+  margin-bottom: 30px; /* Отступ под описанием */
+}
+
+.featured .div5 .txt {
+  font-family: Unbounded, sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.4;
+  word-wrap: break-word;
+}
+
+.featured .div5 .txt > span:first-child {
+  color: #ffef2b;
+}
+
+.featured .div5 .txt .span {
+  color: white;
+}
+
+.featured .div6 {
+  color: white;
+  font-size: 80px;
+  font-family: 'Blippo Black', sans-serif;
+  font-weight: normal;
+  text-transform: uppercase;
+  line-height: 0.7; /* Сжатая высота строки для Blippo */
+  word-wrap: break-word;
+}
+
+.featured .div7 {
+  color: #ffef2b;
+  font-size: 80px;
+  font-family: 'Blippo Black', sans-serif;
+  font-weight: normal;
+  text-transform: uppercase;
+  line-height: 0.7; /* Сжатая высота строки для Blippo */
+  word-wrap: break-word;
+  margin-bottom: 40px; /* Отступ после заголовка */
+}
+
+/* Декоративные круги и планеты (плейсхолдеры) */
+.featured .frame-child,
+.featured .frame-item,
+.featured .frame-inner,
+.featured .ellipse-div,
+.featured .frame-child1 {
+  position: absolute;
+  border-radius: 9999px;
+  border: 1px white solid;
+  filter: blur(1px);
+  opacity: 0.3;
+}
+
+.featured .frame-child {
+  width: 1013px;
+  height: 784px;
+  left: 60%;
+  top: -5%;
+}
+
+.featured .frame-item {
+  width: 900px;
+  height: 696px;
+  left: 75%;
+  top: 0%;
+}
+
+.featured .frame-inner {
+  width: 950px;
+  height: 754px;
+  left: 65%;
+  top: -2%;
+}
+
+.featured .ellipse-div {
+  width: 800px;
+  height: 651px;
+  left: 80%;
+  top: 5%;
+}
+
+.featured .frame-child1 {
+  width: 700px;
+  height: 576px;
+  left: 85%;
+  top: 10%;
+}
+
+.featured .icon1,
+.featured .icon2,
+.featured .icon3,
+.featured .icon4,
+.featured .icon5,
+.featured .icon6,
+.featured .icon7,
+.featured .icon8 {
+  position: absolute;
+  object-fit: contain; /* Чтобы плейсхолдеры не искажались */
+}
+
+.featured .icon1 {
+  width: 193px;
+  height: 186px;
+  right: 50px;
+  bottom: 50px;
+  z-index: 5;
+} /* Крупная планета справа внизу */
+.featured .icon2 {
+  width: 100px;
+  height: 100px;
+  right: 250px;
+  top: 100px;
+  z-index: 4;
+}
+
+.featured .icon3 {
+  width: 150px;
+  height: 150px;
+  right: 300px;
+  bottom: 150px;
+  z-index: 3;
+  opacity: 0.8;
+}
+
+.featured .icon4 {
+  width: 80px;
+  height: 80px;
+  right: 100px;
+  top: 200px;
+  z-index: 2;
+  opacity: 0.7;
+}
+
+.featured .icon5 {
+  width: 160px;
+  height: 160px;
+  right: 400px;
+  top: 300px;
+  z-index: 1;
+  opacity: 0.6;
+}
+
+.featured .icon6 {
+  width: 130px;
+  height: 130px;
+  right: 500px;
+  bottom: 50px;
+  opacity: 0.5;
+}
+
+.featured .icon7 {
+  width: 120px;
+  height: 120px;
+  right: 150px;
+  top: 400px;
+  opacity: 0.4;
+}
+
+.featured .icon8 {
+  width: 280px;
+  height: 280px;
+  right: -100px;
+  top: -50px;
+  opacity: 0.9;
+  z-index: 0;
+} /* Большая фоновая */
+
+.featured .featured-child,
+.featured .featured-item {
+  /* Вспомогательные, если нужны по макету */
+  display: none; /* Скрываем, если не используются явно */
+}
+
+/* --- Секция 4: Featured4 (Инвесторы) --- */
+.featured4 {
+  width: 100%;
+  max-width: 1445px;
+  padding: 45px 71px;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 60px;
+  margin-left: auto;
+  margin-right: auto;
+
+  /* background-color: #001833; */
+
+  /* Убираем фон с обертки .featured4, будет на .frame-parent3 */
+
+  /* position: relative; */
+
+  /* Это было для JS, теперь не нужно */
+
+  /* z-index: 2; */
+
+  /* Это было для JS, теперь не нужно */
+}
+
+.featured4 .frame-parent3 {
+  width: 1303px;
+  height: 521px;
+  position: relative;
+  background-color: #001833; /* Фон на контентном блоке */
+  border-radius: 20px;
+
+  /* display: flex; */
+
+  /* Убираем flex отсюда, если он не нужен для позиционирования .parent6 и .icon10 */
+
+  /* justify-content: space-between; */
+
+  /* align-items: center; */
+  overflow: visible; /* Чтобы .icon10 мог вылезать */
+  padding: 50px;
+  box-sizing: border-box;
+}
+
+.featured4 .parent6 {
+  /* Левый блок с текстом */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 35px;
+  width: 55%; /* Немного увеличим место для текста, т.к. фон будет вылезать */
+  position: relative; /* Для z-index, чтобы текст был выше фона */
+  z-index: 1;
+}
+
+.featured4 .parent6 .div23 {
+  text-align: center;
+  width: 100%;
+}
+
+.featured4 .parent6 .div23 .txt > span {
+    display: block;
+}
+
+.featured4 .parent6 .div23 .txt > span:first-child {
+  color: #004e9f; /* Изменено по макету */
+  font-size: 35px;
+  font-family: Unbounded, sans-serif; /* Уже должно быть, но для явности */
+  font-weight: 600;
+  line-height: 1.2;
+  word-wrap: break-word; /* Уже должно быть */
+}
+
+.featured4 .parent6 .div23 .txt .span3 {
+  color: black; /* Изменено по макету */
+  font-size: 35px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 600;
+  line-height: 1.2;
+  word-wrap: break-word;
+}
+
+.featured4 .group-parent {
+  align-self: stretch;
+  display: flex;
+  flex-flow: row nowrap; /* Явно указываем ряд */
+  justify-content: space-around;
+  align-items: flex-start; /* Выравнивание по верху, т.к. иконки вылезают */
+  gap: 20px; /* Запрещаем перенос, если хотим строгий ряд */
+  margin-top: 20px; /* Добавляем отступ сверху для карточек */
+}
+
+.featured4 .group-div {
+  width: 187px;
+  height: 187px; /* Делаем квадратным */
+
+  /* min-height: 220px; */
+
+  /* Убираем min-height */
+  position: relative;
+  background: linear-gradient(180deg, #004e9f 0%, #001c39 100%);
+  border-radius: 10px;
+  padding: 0 14px 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  overflow: visible;
+  gap: 10px;
+}
+
+.featured4 .group-div .card-icon-container {
+  width: 100%;
+  min-height: 80px; /* Увеличиваем для больших иконок */
+  margin-top: -60px; /* Увеличиваем отрицательный отступ для больших иконок */
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  margin-bottom: 10px;
+  z-index: 1;
+}
+
+.featured4 .group-div .card-icon {
+  width: 140px; /* Увеличиваем размер иконки ~x2 от 70px */
+  height: 140px;
+  object-fit: contain;
+}
+
+.featured4 .div24,
+.featured4 .div25,
+.featured4 .div26 {
+  color: white;
+  font-size: 14px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 400;
+  line-height: 18px; /* Изменено по макету */
+  word-wrap: break-word;
+}
+
+.featured4 .parent7 {
+  /* Кнопка "Посмотреть стартапы" */
+  padding: 12px 25px;
+  background: linear-gradient(180deg, #ffef2b 0%, #f9f7d6 100%);
+  border-radius: 10px;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 9px;
+  display: inline-flex;
+  text-decoration: none;
+  box-sizing: border-box;
+  margin-top: 20px;
+}
+
+.featured4 .parent7 .div22 {
+  color: black;
+  font-size: 16px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 400; /* Изменено по макету */
+  line-height: 16px; /* Изменено по макету */
+}
+
+.featured4 .parent7 .iconeye {
+  width: 24px;
+  height: 24px;
+}
+
+.featured4 .icon10 {
+  /* Фоновое изображение инвесторов */
+  position: absolute;
+  left: 0; /* Начинается от левого края родителя */
+  right: auto; /* Убираем right, чтобы не конфликтовал с left и width */
+  top: 0;
+  width: 115%; /* Чтобы покрыть всю ширину (100%) и вылезти справа (15%) */
+  height: 100%;
+  object-fit: cover;
+
+  /* border-radius: 0 10px 10px 0; */
+
+  /* Убираем, если фон должен быть без закругления на вылезающей части или будет обрезан родителем */
+  z-index: 0;
+  opacity: 1;
+}
+
+/* --- Секция 5: Featured5 (Исследуйте новые миры) --- */
+.featured5 {
+  width: 100%;
+  max-width: 1445px;
+  padding: 45px 71px;
+  box-sizing: border-box;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Внутреннее выравнивание этого блока */
+  gap: 55px;
+  margin-top: 60px;
+  background: transparent !important;
+  margin-left: auto; /* Центрирование */
+  margin-right: auto; /* Центрирование */
+}
+
+.featured5 .frame-parent6 {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 40px; /* Уменьшен отступ */
+}
+
+.featured5 .parent8 {
+  /* Заголовок "Исследуйте новые миры" */
+  align-self: flex-start;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.featured5 .parent8 .div28 {
+  color: white;
+  font-size: 55px;
+  font-family: 'Blippo Black', sans-serif;
+  font-weight: normal;
+  line-height: 1;
+}
+
+.featured5 .parent8 .div29 {
+  color: #ffef2b;
+  font-size: 55px;
+  font-family: 'Blippo Black', sans-serif;
+  font-weight: normal;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.featured5 .frame-parent7 {
+  /* Основной контент: [картинка слева] [разделитель] [карточки] [список справа] */
+  align-self: stretch;
+  display: flex;
+  justify-content: space-between; /* Элементы будут распределены */
+  align-items: flex-start;
+  gap: 30px;
+}
+
+.featured5 .frame-parent8 {
+  /* Левый блок с большой картинкой */
+  width: 45%; /* Примерно */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 25px;
+}
+
+.featured5 .group-wrapper {
+  align-self: stretch;
+  height: 514px;
+  position: relative;
+  background: #041a32;
+  overflow: hidden;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.featured5 .group-child-main-img-1 {
+  width: 122.15px;
+  height: 345.36px;
+  left: 36px;
+  top: 83px;
+  position: absolute;
+}
+
+.featured5 .group-child-main-img-2 {
+  width: 388.42px;
+  height: 345.36px;
+  left: 168.7px;
+  top: 85.64px;
+  position: absolute;
+}
+
+.featured5 .parent9 {
+  /* Кнопка "Все стартапы" */
+  padding: 12px 25px;
+  background: linear-gradient(180deg, #ffef2b 0%, #f9f7d6 100%);
+  border-radius: 10px;
+  border: 1px solid black;
+  gap: 9px;
+  display: inline-flex;
+  text-decoration: none;
+  box-sizing: border-box;
+  align-items: center;
+}
+
+.featured5 .parent9 .div22 {
+  color: black;
+  font-size: 16px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.featured5 .parent9 .iconsarrow-right-2line {
+  width: 16px;
+  height: 16px;
+}
+
+.featured5 .divider {
+  width: 1px;
+  align-self: stretch; /* Растянуть по высоте .frame-parent7 */
+  background: rgb(255 255 255 / 20%);
+}
+
+.featured5 .frame-parent9 {
+  /* Блок с тремя карточками стартапов */
+  width: 28%; /* Примерно */
+  display: flex;
+  flex-direction: column;
+  gap: 49px;
+}
+
+.featured5 .frame-wrapper {
+  align-self: stretch;
+}
+
+.featured5 .frame-parent10 {
+  /* Карточка стартапа */
+  align-self: stretch;
+  display: flex;
+  flex-direction: row; /* Картинка слева, текст справа */
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  background: transparent;
+  padding: 0;
+}
+
+.featured5 .frame-parent10 .frame-child9 {
+  /* Картинка стартапа */
+  width: 160px;
+  height: 156px;
+  object-fit: cover;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+.featured5 .content {
+  /* Текст справа от картинки */
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 16px;
+  flex-grow: 1;
+}
+
+.featured5 .voltforge-dynamics-parent {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.featured5 .voltforge-dynamics {
+  color: #fcfcfd;
+  font-size: 16px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.featured5 .info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.featured5 .avatar01-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.featured5 .label2 {
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid #ffef2b;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.featured5 .popular {
+  color: #ffef2b;
+  font-size: 12px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.featured5 .voltforge-description {
+  color: #e6e8ec;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+
+  /* height: auto;  */
+
+  /* Убираем ограничение высоты */
+  overflow: visible;
+  text-overflow: initial;
+  width: 175px;
+  font-size: 8px;
+  line-height: 9px;
+}
+
+.featured5 .button5 {
+  padding: 8px 12px;
+  background: linear-gradient(0deg, #004e9f 0%, #006edf 100%);
+  border-radius: 8px;
+  gap: 10px;
+  display: inline-flex;
+  text-decoration: none;
+  align-items: center;
+  justify-content: center;
+  align-self: flex-start; /* Кнопка слева */
+}
+
+.featured5 .button5 .cosmochat {
+  color: #fcfcfd;
+  font-size: 14px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  line-height: 1;
+}
+
+.featured5 .creators {
+  /* "Последние обновления от стартаперов" */
+  width: 22%; /* Примерно */
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.featured5 .div31 {
+  color: #777e90; /* Светлее, чем 777E90 */
+  font-size: 12px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 500;
+}
+
+.featured5 .frame-parent13 {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.featured5 .frame-parent14 {
+  width: 100%;
+  padding: 15px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.featured5 .user-parent {
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.featured5 .avatar01-icon3 {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.featured5 .name-parent {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.featured5 .name-wrapper .cosmochat-name {
+  color: #fcfcfd;
+  font-size: 14px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+}
+
+.featured5 .rating-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+}
+
+.featured5 .rating-stars {
+  color: #ffef2b;
+}
+
+.featured5 .rating-value {
+  color: #e6e8ec;
+}
+
+.featured5 .divider1 {
+  align-self: stretch;
+  height: 1px;
+  background: rgb(255 255 255 / 13%);
+}
+
+.featured5 .button8 {
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: 1px solid white;
+  gap: 12px;
+  display: inline-flex;
+  text-decoration: none;
+  align-items: center;
+  justify-content: center;
+  margin-top: 15px;
+  align-self: flex-start;
+}
+
+.featured5 .button8 .cosmochat {
+  color: #fcfcfd;
+  font-size: 14px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+}
+
+.featured5 .button8 .iconsarrow-right-2line {
+  width: 16px;
+  height: 16px;
+}
+
+/* --- New Journey Start Block --- */
+.journey-start-wrapper {
+  width: 100%;
+  max-width: 1445px;
+  padding: 45px 71px;
+  box-sizing: border-box;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 40px;
+  margin-top: 60px;
+}
+
+.chat-header {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: flex-start;
+}
+
+.chat-header__title,
+.chat-header__subtitle {
+  font-family: 'Blippo Black', sans-serif;
+  font-size: 55px;
+  font-weight: normal;
+  line-height: 1;
+  margin: 0;
+}
+
+.chat-header__title {
+  color: white;
+}
+
+.chat-header__subtitle {
+  color: #ffef2b;
+}
+
+.journey-start-container {
+  width: 1303px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 78px;
+}
+
+.journey-start-banner {
+  align-self: stretch;
+  height: 560px;
+  position: relative;
+  box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  border-radius: 10px;
+  background-size: cover;
+  background-position: center;
+}
+
+.journey-start-banner-text {
+  width: 869px;
+  left: 217px;
+  top: 382px;
+  position: absolute;
+  text-align: center;
+  color: white;
+  font-size: 35px;
+  font-family: Unbounded;
+  font-weight: 600;
+  line-height: 35px;
+  word-wrap: break-word;
+}
+
+.journey-start-banner-image-container {
+  width: 372px;
+  height: 279px;
+  left: 485px;
+  top: 74px;
+  position: absolute;
+  overflow: hidden;
+}
+
+.journey-start-banner-image {
+  width: 371.89px;
+  height: 278.66px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: rotate(0deg);
+  transform-origin: top left;
+}
+
+.journey-start-interests {
+  width: 1303px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 32px;
+}
+
+.journey-start-title {
+  align-self: stretch;
+  text-align: center;
+  color: white;
+  font-size: 35px;
+  font-family: Unbounded;
+  font-weight: 600;
+  line-height: 35px;
+  word-wrap: break-word;
+}
+
+.journey-start-subtitle {
+  align-self: stretch;
+  text-align: center;
+  color: white;
+  font-size: 20px;
+  font-family: Unbounded;
+  font-weight: 400;
+  line-height: 18px;
+  word-wrap: break-word;
+}
+
+.journey-start-categories {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 40px;
+}
+
+.journey-start-categories-row {
+  align-self: stretch;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 45px;
+  display: inline-flex;
+}
+
+.journey-start-category {
+  width: 179px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 11px;
+}
+
+.journey-start-category img {
+  align-self: stretch;
+  height: 142px;
+  border-radius: 10px;
+}
+
+.journey-start-category.active img {
+  border: 2px #FFEF2B solid;
+}
+
+.journey-start-category-name {
+  align-self: stretch;
+  text-align: center;
+  color: white;
+  font-size: 16px;
+  font-family: Unbounded;
+  font-weight: 400;
+  line-height: 16px;
+  word-wrap: break-word;
+}
+
+.journey-start-category-name.large {
+  font-size: 20px;
+  line-height: 18px;
+}
+
+.journey-start-button {
+  width: 224px;
+  height: 40px;
+  padding: 12px;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  display: inline-flex;
+  text-decoration: none;
+  color: black;
+  font-size: 16px;
+  font-family: Unbounded;
+  font-weight: 400;
+  line-height: 16px;
+  word-wrap: break-word;
+}
+
+/* --- Секция 7: Featured7 (Great Ideas это платформа...) --- */
+.featured7 {
+  width: 100%;
+  max-width: 1445px;
+  padding: 60px 71px;
+  box-sizing: border-box;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 60px;
+  background: transparent !important;
+  border-radius: 10px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.featured7 .frame-parent19 {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 39px;
+}
+
+.featured7 .group-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 60px;
+  width: 100%;
+  background-image: url('../images/main_page/7blockmain.webp');
+  background-size: cover;
+  background-position: center;
+  border-radius: 10px;
+  padding: 60px;
+  box-sizing: border-box;
+  min-height: 521px;
+  position: relative;
+}
+
+.featured7 .great-ideas-parent {
+  flex: 0 0 40%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 405px;
+  position: relative;
+  z-index: 2;
+}
+
+.featured7 .great-ideas {
+  color: white;
+  font-size: 35px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 600;
+  line-height: 35px;
+}
+
+.featured7 .div56 {
+  color: white;
+  font-size: 14px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  line-height: 18px;
+}
+
+.featured7 .app-store-buttons {
+  display: flex;
+  gap: 15px;
+  margin-top: auto;
+  justify-content: center;
+}
+
+.featured7 .app-store-btn img {
+  height: 115px;
+  width: auto;
+  border-radius: 5px;
+  aspect-ratio: 1 / 1;
+}
+
+.featured7 .frame-parent21 {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  gap: 39px;
+  width: 100%;
+}
+
+.featured7 .frame-parent22 {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 61px;
+  border-radius: 10px;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.featured7 .card-gamification {
+  background: linear-gradient(180deg, #7b61ff 0%, #4a3a99 100%);
+  flex: 3.5;
+  aspect-ratio: 1 / 1;
+}
+
+.featured7 .card-industry {
+  background-color: black;
+  padding: 61px 67px;
+  flex: 6.5;
+}
+
+.featured7 .card-industry .parent20 {
+  position: relative;
+  z-index: 2;
+}
+
+.featured7 .card-industry::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('../images/main_page/7blockastron.webp');
+  background-size: cover;
+  background-position: center;
+  opacity: 1;
+  z-index: 1;
+}
+
+.featured7 .div57 {
+  font-size: 35px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 600;
+  line-height: 35px;
+  margin-bottom: 31px;
+}
+
+.featured7 .div58,
+.featured7 .div60 {
+  font-size: 16px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+/* --- Секция 9: Featured9 (Новости) --- */
+.featured9 {
+  width: 100%;
+  max-width: 1445px;
+  padding: 60px 71px;
+  box-sizing: border-box;
+  overflow: hidden;
+  margin: 60px auto 0;
+  background: transparent !important;
+}
+
+.featured9 .news-container-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 78px;
+}
+
+.featured9 .news-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.featured9 .news-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.featured9 .news-title-main {
+  color: white;
+  font-size: 55px;
+  font-family: 'Blippo Black', sans-serif;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.featured9 .news-title-sub {
+  color: #ffef2b;
+  font-size: 55px;
+  font-family: 'Blippo Black', sans-serif;
+  font-weight: 400;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.featured9 .news-top-description {
+  max-width: 364px;
+  color: #f2f2f2;
+  font-size: 20px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.featured9 .news-top-card {
+  width: 403px;
+  height: 212px;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.featured9 .news-top-card-img {
+  width: 100%;
+  height: 131px;
+  object-fit: cover;
+}
+
+.featured9 .news-top-card-body {
+  flex-grow: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 23px;
+  gap: 13px;
+}
+
+.featured9 .news-top-card-body p {
+  color: black;
+  font-size: 14px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  line-height: 1.3;
+  margin: 0;
+}
+
+.featured9 .news-top-card-body .btn {
+  padding: 12px 35px;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.featured9 .news-grid-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px 30px;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.featured9 .news-card-wrapper {
+  width: 412px;
+  box-shadow: 2px 2px 4px rgb(0 0 0 / 25%);
+  border-radius: 10px;
+}
+
+.featured9 .news-card {
+  background: white;
+  border-radius: 10px;
+  outline: 1px solid #c6bbfe;
+  outline-offset: -1px;
+  padding: 20px 21px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  height: 310px;
+}
+
+.featured9 .news-card-img {
+  width: 100%;
+  height: 131px;
+  border-radius: 7px;
+  object-fit: cover;
+}
+
+.featured9 .news-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+}
+
+.featured9 .news-card-author-section {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.featured9 .news-card-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+}
+
+.featured9 .news-card-author-details {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.featured9 .news-card-author-name {
+  color: black;
+  font-size: 16px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.featured9 .news-card-date {
+  color: rgb(0 0 0 / 20%);
+  font-size: 14px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  line-height: 1.3;
+}
+
+.featured9 .news-card-text-section {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+}
+
+.featured9 .news-card-title {
+  color: black;
+  font-size: 16px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 400;
+  line-height: 1;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.featured9 .news-card-summary {
+  color: rgb(0 0 0 / 20%);
+  font-size: 12px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.12px;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.featured9 .news-show-more-wrapper {
+  width: 412px;
+  height: 310px;
+  border-radius: 20px;
+  background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='20' ry='20' stroke='white' stroke-width='2' stroke-dasharray='15, 10'/%3e%3c/svg%3e");
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.featured9 .news-show-more-button-container .btn {
+  border: 1px solid white !important;
+  padding: 12px 35px;
+  box-shadow: 2px 2px 4px rgb(0 0 0 / 25%);
+  line-height: 1;
+  background: transparent !important;
+  transition: background-color 0.3s ease;
+}
+
+.featured9 .news-show-more-button-container .btn:hover {
+  background-color: rgb(255 255 255 / 10%);
+}
+
+.featured9 .news-show-more-button-container .btn span {
+  color: #f5f5f5;
+  font-size: 16px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.featured9 .news-show-more-button-container .btn .icon {
+  width: 24px;
+  height: 24px;
+}
+
+/* Адаптивность (пример) */
+@media (width <= 1350px) {
+  .featured4 .frame-parent3 {
+    flex-direction: column;
+    height: auto;
+    padding: 30px;
+  }
+
+  .featured4 .parent6 {
+    width: 100%;
+    align-items: center;
+    text-align: center;
+    padding-left: 0;
+  }
+
+  .featured3 .icon9,
+  .featured4 .icon10,
+  .featured3 .scale-1200-photoroom-2-parent {
+    position: relative;
+    width: 70%;
+    max-width: 400px;
+    height: auto;
+    margin-top: 30px;
+    inset: auto;
+    transform: none;
+  }
+
+  .featured5 .frame-parent7 {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .featured5 .frame-parent8,
+  .featured5 .frame-parent9,
+  .featured5 .creators {
+    width: 100%;
+    max-width: 500px; /* Ограничение для центральных колонок */
+  }
+
+  .featured5 .divider {
+    display: none;
+  }
+
+  .featured9 .heading-parent {
+    flex-direction: column;
+  }
+
+  .featured9 .heading2,
+  .featured9 .instance-parent {
+    flex: 0 0 100%;
+    max-height: none;
+  }
+
+  .featured10 .featured11 {
+    flex-direction: column;
+    gap: 40px;
+    padding: 30px;
+  }
+
+  .featured10 .featured10-content-left,
+  .featured10 .form-container-featured10 {
+    max-width: 100%;
+    align-items: center;
+    text-align: center;
+  }
+
+  .featured10 .frame-parent32 {
+    justify-content: center;
+  }
+
+  .featured14 .heading-group {
+    flex-direction: column;
+    padding: 30px;
+  }
+
+  .featured14 .faq-left-column,
+  .featured14 .faq-right-column {
+    flex: 0 0 100%;
+    padding-left: 0;
+    border-left: none;
+  }
+
+  .featured14 .faq-right-column {
+    margin-top: 30px;
+    border-top: 1px solid #e0e0e0;
+    padding-top: 30px;
+  }
+
+  .cta {
+    padding: 30px;
+    text-align: center;
+  }
+
+  .cta .cta-content {
+    max-width: 100%;
+    align-items: center;
+    text-align: center;
+    margin-right: 0;
+  }
+
+  .cta .cta-image {
+    width: 100%;
+    height: 50%;
+    inset: auto auto 0 50%;
+    transform: translateX(-50%);
+    clip-path: polygon(0 20%, 100% 0, 100% 100%, 0% 100%);
+    opacity: 0.2;
+  }
+
+  .final-cta-heading-main,
+  .final-cta-heading-sub {
+    font-size: 40px;
+  }
+
+  .final-cta-section {
+    height: auto;
+    padding-bottom: 60px; /* Adjust padding for better spacing */
+  }
+
+  .final-cta-image {
+    margin-top: 40px;
+  }
+}
+
+@media (width <= 768px) {
+  .featured .group {
+    padding-left: 20px;
+    padding-right: 20px;
+    height: auto;
+    min-height: 600px;
+  }
+
+  .featured .div6,
+  .featured .div7 {
+    font-size: 50px;
+  }
+
+  .featured .icon1 {
+    width: 120px;
+    height: auto;
+  }
+
+  .featured .icon8 {
+    width: 180px;
+    height: auto;
+  }
+
+  .featured1,
+  .featured3,
+  .featured4,
+  .featured5,
+  .featured6.galaxy-carousel-wrapper,
+  .featured7,
+  .featured8.success-stories-carousel-outer,
+  .featured9,
+  .featured10,
+  .featured14,
+  .final-cta-section {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .featured1 .feature-card {
+    min-width: 300px; /* Для мобильных карусель может показывать 1-2 карточки */
+    height: auto;
+  }
+
+  .featured1 .heading {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 20px;
+  }
+
+  .featured1 .heading .wrap {
+    padding: 10px 0;
+  }
+
+  .featured6 .galaxy-carousel,
+  .featured6 .galaxy-step-card .frame-child12 {
+    width: 100%; /* На всю ширину */
+    min-width: 100%;
+    height: auto;
+    max-height: 350px;
+  }
+
+  .featured8 .success-story-card {
+    min-width: calc(
+      90% - 20px
+    ); /* Почти на всю ширину, если 1 карточка видна */
+  }
+
+  .featured8 .success-stories-arrow-left {
+    left: 5px;
+  }
+
+  .featured8 .success-stories-arrow-right {
+    right: 5px;
+  }
+
+  .final-cta-content-wrapper {
+    flex-direction: column;
+    gap: 30px;
+    text-align: center;
+    padding: 0 20px;
+  }
+
+  .final-cta-heading-main,
+  .final-cta-heading-sub {
+    font-size: 40px;
+  }
+}
