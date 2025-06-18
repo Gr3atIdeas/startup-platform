@@ -19,9 +19,7 @@ const chatWindowColumn = document.getElementById('chatWindowColumn')
 const chatActiveHeader = document.getElementById('chatActiveHeader')
 const chatWindowTitle = document.getElementById('chatWindowTitle')
 const chatMessagesArea = document.getElementById('chatMessagesArea')
-const noChatSelectedPlaceholder = document.getElementById(
-  'noChatSelectedPlaceholder'
-)
+const noChatSelectedPlaceholder = document.getElementById('noChatSelectedPlaceholder')
 const chatInputFieldArea = document.getElementById('chatInputFieldArea')
 const messageFormNew = document.getElementById('messageFormNew')
 const chatIdInput = document.getElementById('chatIdInput')
@@ -43,30 +41,18 @@ const addParticipantBtn = document.getElementById('addParticipantBtn') // кно
 const leaveChatBtn = document.getElementById('leaveChatBtn') // кнопка в шапке чата
 
 const groupChatModal = document.getElementById('groupChatModal')
-const groupChatContentWrapper = document.getElementById(
-  'groupChatModalContentWrapper'
-) // Вид 1
+const groupChatContentWrapper = document.getElementById('groupChatModalContentWrapper') // Вид 1
 const groupChatDetailsView = document.getElementById('groupChatDetailsView') // Вид 2
-const selectedUserPillsContainer = document.getElementById(
-  'selectedUserPillsContainer'
-)
+const selectedUserPillsContainer = document.getElementById('selectedUserPillsContainer')
 const groupChatSearchInput = document.getElementById('groupChatSearchInput')
 const groupChatUsersList = document.getElementById('groupChatUsersList')
 const selectedUsersCountElement = document.getElementById('selectedUsersCount')
-const navigateToDetailsViewBtn = document.getElementById(
-  'navigateToDetailsViewBtn'
-)
+const navigateToDetailsViewBtn = document.getElementById('navigateToDetailsViewBtn')
 const groupChatGoBackBtn = document.getElementById('groupChatGoBackBtn')
-const confirmGroupChatCreationBtn = document.getElementById(
-  'confirmGroupChatCreationBtn'
-)
+const confirmGroupChatCreationBtn = document.getElementById('confirmGroupChatCreationBtn')
 const groupChatNameInput = document.getElementById('groupChatNameInput')
-const groupChatSelectedParticipantsList = document.getElementById(
-  'groupChatSelectedParticipantsList'
-)
-const groupChatAddMoreParticipantsBtn = document.getElementById(
-  'groupChatAddMoreParticipantsBtn'
-)
+const groupChatSelectedParticipantsList = document.getElementById('groupChatSelectedParticipantsList')
+const groupChatAddMoreParticipantsBtn = document.getElementById('groupChatAddMoreParticipantsBtn')
 
 document.addEventListener('DOMContentLoaded', function () {
     if (messageFormNew) {
@@ -236,9 +222,7 @@ document.addEventListener('DOMContentLoaded', function () {
     })
 
     // Обработчик для кнопки закрытия модального окна группового чата
-    const closeGroupChatModalBtn = document.getElementById(
-        'closeGroupChatModalBtn'
-    )
+    const closeGroupChatModalBtn = document.getElementById('closeGroupChatModalBtn')
     if (closeGroupChatModalBtn) {
         closeGroupChatModalBtn.addEventListener('click', function () {
             closeGroupChatModal()
@@ -246,9 +230,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Добавляем обработчики для фильтров чатов
-    const chatFilterButtons = document.querySelectorAll(
-        '.chat-filters-new .filter-btn-new'
-    )
+    const chatFilterButtons = document.querySelectorAll('.chat-filters-new .filter-btn-new')
     chatFilterButtons.forEach((button) => {
         button.addEventListener('click', function () {
             chatFilterButtons.forEach((btn) => btn.classList.remove('active'))
@@ -401,22 +383,19 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
-
 function showNoChatSelected() {
-  if (noChatSelectedPlaceholder)
-    noChatSelectedPlaceholder.style.display = 'flex'
-  if (chatActiveHeader) chatActiveHeader.style.display = 'none'
-  if (chatMessagesArea) chatMessagesArea.innerHTML = '' // Очищаем сообщения
-  if (chatMessagesArea) chatMessagesArea.style.display = 'none'
-  if (chatInputFieldArea) chatInputFieldArea.style.display = 'none'
+    if (noChatSelectedPlaceholder) noChatSelectedPlaceholder.style.display = 'flex'
+    if (chatActiveHeader) chatActiveHeader.style.display = 'none'
+    if (chatMessagesArea) chatMessagesArea.innerHTML = '' // Очищаем сообщения
+    if (chatMessagesArea) chatMessagesArea.style.display = 'none'
+    if (chatInputFieldArea) chatInputFieldArea.style.display = 'none'
 }
 
 function showActiveChatWindow() {
-  if (noChatSelectedPlaceholder)
-    noChatSelectedPlaceholder.style.display = 'none'
-  if (chatActiveHeader) chatActiveHeader.style.display = 'flex'
-  if (chatMessagesArea) chatMessagesArea.style.display = 'flex'
-  if (chatInputFieldArea) chatInputFieldArea.style.display = 'flex'
+    if (noChatSelectedPlaceholder) noChatSelectedPlaceholder.style.display = 'none'
+    if (chatActiveHeader) chatActiveHeader.style.display = 'flex'
+    if (chatMessagesArea) chatMessagesArea.style.display = 'flex'
+    if (chatInputFieldArea) chatInputFieldArea.style.display = 'flex'
 }
 
 function loadChat(chatId) {
@@ -504,39 +483,39 @@ function loadChat(chatId) {
 }
 
 function handleSendMessage(e) {
-  e.preventDefault()
-  if (!currentChatId || !messageTextInput) {
-    alert('Выберите чат и введите сообщение.')
-    return
-  }
-  const messageText = messageTextInput.value.trim()
-  if (!messageText) return
+    e.preventDefault()
+    if (!currentChatId || !messageTextInput) {
+        alert('Выберите чат и введите сообщение.')
+        return
+    }
+    const messageText = messageTextInput.value.trim()
+    if (!messageText) return
 
-  const formData = new FormData()
-  formData.append('chat_id', currentChatId)
-  formData.append('message_text', messageText)
+    const formData = new FormData()
+    formData.append('chat_id', currentChatId)
+    formData.append('message_text', messageText)
 
-  fetch('/cosmochat/send-message/', {
-    method: 'POST',
-    body: formData,
-    headers: { 'X-CSRFToken': csrfToken, 'X-Requested-With': 'XMLHttpRequest' },
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.success) {
-        appendMessage(data.message, true)
-        updateChatListItem(data.message)
-        lastMessageTimestamp = data.message.created_at_iso
-        if (messageFormNew) messageFormNew.reset()
-        if (messageTextInput) messageTextInput.style.height = 'auto' // Сброс высоты textarea
-      } else {
-        alert(data.error || 'Ошибка при отправке сообщения')
-      }
+    fetch('/cosmochat/send-message/', {
+        method: 'POST',
+        body: formData,
+        headers: { 'X-CSRFToken': csrfToken, 'X-Requested-With': 'XMLHttpRequest' },
     })
-    .catch((error) => {
-      console.error('Ошибка отправки:', error)
-      alert('Произошла ошибка при отправке сообщения.')
-    })
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.success) {
+                appendMessage(data.message, true)
+                updateChatListItem(data.message)
+                lastMessageTimestamp = data.message.created_at_iso
+                if (messageFormNew) messageFormNew.reset()
+                if (messageTextInput) messageTextInput.style.height = 'auto' // Сброс высоты textarea
+            } else {
+                alert(data.error || 'Ошибка при отправке сообщения')
+            }
+        })
+        .catch((error) => {
+            console.error('Ошибка отправки:', error)
+            alert('Произошла ошибка при отправке сообщения.')
+        })
 }
 
 function startPolling() {
@@ -1116,30 +1095,30 @@ if (messageTextInput) {
 
 // Установить ID текущего пользователя из JSON-данных, переданных через json_script с проверкой
 document.addEventListener('DOMContentLoaded', function () {
-  const requestUserIdElement = document.getElementById('request_user_id_data')
-  if (requestUserIdElement && requestUserIdElement.textContent) {
-    const requestUserIdData = JSON.parse(requestUserIdElement.textContent)
-    if (requestUserIdData) {
-      window.REQUEST_USER_ID = parseInt(requestUserIdData)
+    const requestUserIdElement = document.getElementById('request_user_id_data')
+    if (requestUserIdElement && requestUserIdElement.textContent) {
+        const requestUserIdData = JSON.parse(requestUserIdElement.textContent)
+        if (requestUserIdData) {
+            window.REQUEST_USER_ID = parseInt(requestUserIdData)
+        } else {
+            console.warn(
+                'REQUEST_USER_ID не установлен. Получено пустое значение из JSON.'
+            )
+        }
     } else {
-      console.warn(
-        'REQUEST_USER_ID не установлен. Получено пустое значение из JSON.'
-      )
+        console.error(
+            'Элемент request_user_id_data не найден или пуст. Проверьте шаблон.'
+        )
+        // Падбэк: попытка получить из body.dataset.userId
+        const bodyUserId = document.body.dataset.userId
+        if (bodyUserId) {
+            window.REQUEST_USER_ID = parseInt(bodyUserId)
+        } else {
+            console.warn(
+                'REQUEST_USER_ID не установлен. Некоторые функции чата могут работать некорректно.'
+            )
+        }
     }
-  } else {
-    console.error(
-      'Элемент request_user_id_data не найден или пуст. Проверьте шаблон.'
-    )
-    // Падбэк: попытка получить из body.dataset.userId
-    const bodyUserId = document.body.dataset.userId
-    if (bodyUserId) {
-      window.REQUEST_USER_ID = parseInt(bodyUserId)
-    } else {
-      console.warn(
-        'REQUEST_USER_ID не установлен. Некоторые функции чата могут работать некорректно.'
-      )
-    }
-  }
 })
 
 // Функция для обновления отображения рейтинга планетами
@@ -1538,7 +1517,7 @@ function updatePaginationHTML() {
   let paginationHTML = ''
 
   // Кнопка "Назад"
-  paginationHTML += `<span class="page-number-item" data-page="prev">&lsaquo;</span>`
+  paginationHTML += `<span class="page-number-item" data-page="prev">‹</span>`
 
   // Номера страниц
   if (totalPages <= 7) {
@@ -1560,7 +1539,7 @@ function updatePaginationHTML() {
   }
 
   // Кнопка "Вперед"
-  paginationHTML += `<span class="page-number-item" data-page="next">&rsaquo;</span>`
+  paginationHTML += `<span class="page-number-item" data-page="next">›</span>`
 
   paginationContainer.innerHTML = paginationHTML
 
@@ -1576,18 +1555,18 @@ function updatePaginationHTML() {
         if (currentPage > 1) {
           currentPage--
           showPage(currentPage)
-          updateActivePage()
+          // updateActivePage(); // Убрали вызов, если не определена
         }
       } else if (page === 'next') {
         if (currentPage < totalPages) {
           currentPage++
           showPage(currentPage)
-          updateActivePage()
+          // updateActivePage(); // Убрали вызов, если не определена
         }
       } else {
         currentPage = parseInt(page)
         showPage(currentPage)
-        updateActivePage()
+        // updateActivePage(); // Убрали вызов, если не определена
       }
     })
   })
@@ -1700,6 +1679,7 @@ function hideExtraUsers() {
   if (currentPageBtn) {
     const currentPage = parseInt(currentPageBtn.dataset.page)
     showPage(currentPage)
+    // updateActivePage(); // Убрали вызов, если не определена
   }
 }
 
@@ -1817,7 +1797,7 @@ function loadGroupChatUsers(usersListElement, countElement, pillsContainer) {
                             <span class="group-chat-modal-user-firstname">${user.name.split(' ')[0]}</span>
                             <span class="group-chat-modal-user-lastname">${user.name.split(' ').slice(1).join(' ')}</span>
                         </div>
-                    </div>
+                                       </div>
                     <div class="group-chat-modal-checkbox ${isChecked ? 'checked' : ''}" data-user-id="${user.user_id}">
                         <div class="group-chat-modal-checkbox-empty"></div>
                         <div class="group-chat-modal-checkbox-filled"></div>
@@ -1869,15 +1849,11 @@ function updateSelectedUsersCount(countElement) {
 
 function toggleGroupChatModalView(showDetailsView) {
   console.log('toggleGroupChatModalView called with:', showDetailsView)
-  const groupChatContentWrapper = document.getElementById(
-    'groupChatModalContentWrapper'
-  )
+  const groupChatContentWrapper = document.getElementById('groupChatModalContentWrapper')
   const groupChatDetailsView = document.getElementById('groupChatDetailsView')
 
   if (!groupChatContentWrapper || !groupChatDetailsView) {
-    console.error(
-      'toggleGroupChatModalView: groupChatContentWrapper or groupChatDetailsView is null! GETTING THEM BY ID.'
-    )
+    console.error('toggleGroupChatModalView: groupChatContentWrapper or groupChatDetailsView is null! GETTING THEM BY ID.')
     return
   }
 
@@ -1900,21 +1876,13 @@ function toggleGroupChatModalView(showDetailsView) {
   }
 }
 
-function renderSelectedParticipantsForDetailsView(
-  groupChatUsersListFromCaller
-) {
+function renderSelectedParticipantsForDetailsView(groupChatUsersListFromCaller) {
   console.log('renderSelectedParticipantsForDetailsView called')
-  const groupChatSelectedParticipantsList = document.getElementById(
-    'groupChatSelectedParticipantsList'
-  )
-  const usersList =
-    groupChatUsersListFromCaller ||
-    document.getElementById('groupChatUsersList')
+  const groupChatSelectedParticipantsList = document.getElementById('groupChatSelectedParticipantsList')
+  const usersList = groupChatUsersListFromCaller || document.getElementById('groupChatUsersList')
 
   if (!groupChatSelectedParticipantsList || !usersList) {
-    console.error(
-      'renderSelectedParticipantsForDetailsView: groupChatSelectedParticipantsList or usersList is null!'
-    )
+    console.error('renderSelectedParticipantsForDetailsView: groupChatSelectedParticipantsList or usersList is null!')
     return
   }
   groupChatSelectedParticipantsList.innerHTML = ''
@@ -1923,15 +1891,9 @@ function renderSelectedParticipantsForDetailsView(
       `.group-chat-modal-user[data-user-id="${userId}"]`
     )
     if (userDiv) {
-      const avatarSrc = userDiv.querySelector(
-        '.group-chat-modal-user-avatar'
-      ).src
-      const firstName = userDiv.querySelector(
-        '.group-chat-modal-user-firstname'
-      ).textContent
-      const lastName = userDiv.querySelector(
-        '.group-chat-modal-user-lastname'
-      ).textContent
+      const avatarSrc = userDiv.querySelector('.group-chat-modal-user-avatar').src
+      const firstName = userDiv.querySelector('.group-chat-modal-user-firstname').textContent
+      const lastName = userDiv.querySelector('.group-chat-modal-user-lastname').textContent
       const participantNameText = `${firstName} ${lastName}`
       const participantItem = document.createElement('div')
       participantItem.className = 'participant-display-item'
@@ -1947,9 +1909,7 @@ function renderSelectedParticipantsForDetailsView(
 function renderSelectedUserPills(pillsContainer, usersList) {
   console.log('renderSelectedUserPills called')
   if (!pillsContainer || !usersList) {
-    console.error(
-      'renderSelectedUserPills: pillsContainer or usersList is null!'
-    )
+    console.error('renderSelectedUserPills: pillsContainer or usersList is null!')
     return
   }
   pillsContainer.innerHTML = ''
@@ -1958,12 +1918,8 @@ function renderSelectedUserPills(pillsContainer, usersList) {
       `.group-chat-modal-user[data-user-id="${userId}"]`
     )
     if (userDiv) {
-      const firstName = userDiv.querySelector(
-        '.group-chat-modal-user-firstname'
-      ).textContent
-      const lastNameInitial = userDiv
-        .querySelector('.group-chat-modal-user-lastname')
-        .textContent.charAt(0)
+      const firstName = userDiv.querySelector('.group-chat-modal-user-firstname').textContent
+      const lastNameInitial = userDiv.querySelector('.group-chat-modal-user-lastname').textContent.charAt(0)
       const pillNameText = `${firstName} ${lastNameInitial}.`
       const pill = document.createElement('div')
       pill.className = 'selected-user-pill'
@@ -1976,7 +1932,7 @@ function renderSelectedUserPills(pillsContainer, usersList) {
           : pillNameText
       const removeIcon = document.createElement('span')
       removeIcon.className = 'pill-remove-icon'
-      removeIcon.innerHTML = '&times;'
+      removeIcon.innerHTML = '×'
       removeIcon.addEventListener('click', function () {
         const userIdToRemove = this.parentElement.dataset.userId
         selectedGroupChatUserIds = selectedGroupChatUserIds.filter(
@@ -1987,12 +1943,9 @@ function renderSelectedUserPills(pillsContainer, usersList) {
         )
         if (checkbox) checkbox.classList.remove('checked')
 
-        const currentPillsContainer = document.getElementById(
-          'selectedUserPillsContainer'
-        )
+        const currentPillsContainer = document.getElementById('selectedUserPillsContainer')
         const currentUsersList = document.getElementById('groupChatUsersList')
-        const currentCountElement =
-          document.getElementById('selectedUsersCount')
+        const currentCountElement = document.getElementById('selectedUsersCount')
 
         if (currentPillsContainer && currentUsersList)
           renderSelectedUserPills(currentPillsContainer, currentUsersList)
