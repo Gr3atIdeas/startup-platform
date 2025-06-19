@@ -160,18 +160,18 @@ html::-webkit-scrollbar-button {
 /* --- Секция 1: Featured (Главный экран) --- */
 .featured {
   width: 100%;
-  /* max-width: 1445px; */ /* Убираем ограничение */
+  max-width: 1445px;
   height: 798px;
   position: relative;
   overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px 0; /* Убираем боковые отступы */
+  padding: 20px;
   box-sizing: border-box;
   background-color: #000;
-  margin-left: auto; 
-  margin-right: auto;
+  margin-left: auto; /* Центрирование */
+  margin-right: auto; /* Центрирование */
 }
 
 .featured::after {
@@ -192,7 +192,10 @@ html::-webkit-scrollbar-button {
   height: 708px;
   position: relative;
   z-index: 2; /* Чтобы контент был над звездами */
-  overflow: visible; /* Чтобы солнце было видно */
+
+  /* background: transparent; */
+
+  /* Убираем старый прозрачный фон */
   background: transparent;
   background-size: cover;
   background-position: center;
@@ -2815,7 +2818,7 @@ html::-webkit-scrollbar-button {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%) rotateX(-45deg); /* Компенсируем наклон */
+    transform: translate(-50%, -50%);
     width: 150px; /* Размер солнца */
     height: 150px;
     z-index: 2;
@@ -2876,7 +2879,7 @@ html::-webkit-scrollbar-button {
     border-radius: 50%;
     background-size: cover;
     background-position: center;
-    background-color: #010A1A; /* Фон для непрозрачности */
+    background-color: #010A1A; /* Добавляем фон, чтобы избежать прозрачности */
     transform-style: preserve-3d;
     z-index: 5;
     transition: transform 0.3s ease;
@@ -2890,25 +2893,18 @@ html::-webkit-scrollbar-button {
     pointer-events: all; /* Ссылка с планетой кликабельна */
     position: absolute;
     z-index: 100;
-    /* Позиция будет настроена в JS */
+    top: 70%;
+    left: 80%;
+    transform: translate(-50%, -50%);
 }
 
 #plus-planet {
-    width: 96px; /* Размер планеты с плюсом (80px * 1.2) */
-    height: 96px;
+    width: 80px; /* Размер планеты с плюсом */
+    height: 80px;
     cursor: pointer;
     transition: transform 0.3s ease;
 }
 
 #plus-planet:hover {
     transform: scale(1.15);
-}
-
-@keyframes orbit-rotation {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
 }
