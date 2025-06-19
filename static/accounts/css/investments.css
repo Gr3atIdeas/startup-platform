@@ -156,10 +156,11 @@ body {
 }
 
 .planetary-system #logo {
-  width: 60px;
-  height: 60px;
-  background-size: cover;
-  border-radius: 50%;
+  width: 100px !important; /* Соответствует JavaScript */
+  height: 100px !important; /* Соответствует JavaScript */
+  background-size: cover !important;
+  border-radius: 50% !important; /* Принудительное круглое */
+  object-fit: cover !important; /* Корректное заполнение изображения */
   position: absolute;
   top: 50%;
   left: 50%;
@@ -173,6 +174,7 @@ body {
   color: #333;
   text-align: center;
   line-height: 1.2;
+  overflow: hidden; /* Обрезаем лишнее */
 }
 
 .planetary-system .orbit {

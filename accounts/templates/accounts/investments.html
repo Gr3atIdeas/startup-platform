@@ -967,17 +967,23 @@
             // Устанавливаем логотип инвестора
             if (logoElement && investorLogoUrl) {
               logoElement.style.backgroundImage = `url('${investorLogoUrl}')`;
-              logoElement.style.backgroundSize = 'contain';
+              logoElement.style.backgroundSize = 'cover'; // Убедимся, что изображение обрезается
               logoElement.style.backgroundRepeat = 'no-repeat';
               logoElement.style.backgroundPosition = 'center';
-              logoElement.style.borderRadius = '50%'; // Сделать круглым
-              logoElement.style.width = '100px'; // Установите нужный размер
-              logoElement.style.height = '100px'; // Установите нужный размер
+              logoElement.style.borderRadius = '50% !important'; // Принудительное применение
+              logoElement.style.width = '100px !important'; // Сохраняем размер из JavaScript
+              logoElement.style.height = '100px !important'; // Сохраняем размер из JavaScript
+              logoElement.style.objectFit = 'cover !important'; // Корректное заполнение
+              logoElement.style.overflow = 'hidden'; // Обрезаем лишнее
+              logoElement.style.display = 'block'; // Убедимся, что элемент отображается
             } else {
               logoElement.style.backgroundColor = '#e9ecef';
-              logoElement.style.borderRadius = '50%'; // Круглый фон для запасного цвета
-              logoElement.style.width = '100px';
-              logoElement.style.height = '100px';
+              logoElement.style.borderRadius = '50% !important';
+              logoElement.style.width = '100px !important';
+              logoElement.style.height = '100px !important';
+              logoElement.style.objectFit = 'cover !important';
+              logoElement.style.overflow = 'hidden';
+              logoElement.style.display = 'block';
             }
 
             const galaxyTiltAngle = 45;
