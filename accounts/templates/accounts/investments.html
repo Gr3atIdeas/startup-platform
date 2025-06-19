@@ -44,11 +44,7 @@
                               {% elif investment.startup.logo_urls and investment.startup.logo_urls|length > 0 %}
                                 <img src="{% get_file_url_tag file_id=investment.startup.logo_urls.0 startup_id=investment.startup.startup_id file_type='logo' %}" alt="{{ investment.name|default:'Logo'|escape }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; max-width: 30px; max-height: 30px;">
                               {% else %}
-                                <div class="planet">
-                                  <div class="planet-segment segment-top" style="background: linear-gradient(to bottom, #87CEEB 0%, #E0FFFF 100%);"></div>
-                                  <div class="planet-segment segment-middle" style="background: linear-gradient(to bottom, #4682B4 0%, #B0C4DE 100%);"></div>
-                                  <div class="planet-segment segment-bottom" style="background: linear-gradient(to bottom, #1E90FF 0%, #87CEFA 100%);"></div>
-                                </div>
+                                <img src="https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/startup_5_logo.png" alt="Default Planet" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                               {% endif %}
                             </div>
                             {% if investment.startup.logo_urls and investment.startup.logo_urls|length > 0 %}
@@ -1021,7 +1017,7 @@
                   funding: '{{ investment.funding|escapejs }}',
                   funding_goal: '{{ investment.funding_goal|escapejs }}',
                   investors: '{{ investment.investors|escapejs }}',
-                  planet_image: '{% if investment.startup.planet_image %}https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/{{ investment.startup.planet_image|escapejs }}{% elif investment.startup.logo_urls and investment.startup.logo_urls|length > 0 %}{% get_file_url_tag file_id=investment.startup.logo_urls.0 startup_id=investment.startup.startup_id file_type="logo"|escapejs %}{% else %}/static/accounts/images/planets/startup_5_logo.png{% endif %}',
+                  planet_image: '{% if investment.startup.planet_image %}https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/{{ investment.startup.planet_image|escapejs }}{% else %}https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/startup_5_logo.png{% endif %}',
                   logo_image: '{% if investment.startup.logo_urls and investment.startup.logo_urls|length > 0 %}{% get_file_url_tag file_id=investment.startup.logo_urls.0 startup_id=investment.startup.startup_id file_type="logo"|escapejs %}{% else %}/static/images/default-logo.png{% endif %}',
                   startup_id: '{{ investment.startup_id|escapejs }}',
                   investment_type: '{{ investment.investment_type|escapejs }}'
