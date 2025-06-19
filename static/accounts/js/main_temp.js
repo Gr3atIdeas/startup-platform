@@ -312,4 +312,88 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   // Блок скрипта для sticky эффекта был здесь и теперь удален.
+
+  // --- Planetary System from v8.html ---
+  const galaxyContainer = document.getElementById('galaxy');
+  if (galaxyContainer) {
+    const roundPlanetImages = [
+        '1.png', '2.png', '3.png', '4.png', '5.png', '6.png', '7.png', '8.png', 
+        '9.png', '10.png', '11.png', '12.png', '13.png', '14.png', '15.png'
+    ];
+    const ringPlanetImages = ['1.png', '2.png', '3.png', '4.png', '5.png', '6.png'];
+
+    const allPlanetImages = [
+        ...roundPlanetImages.map(img => `planets_round/${img}`),
+        ...ringPlanetImages.map(img => `planets_ring/${img}`)
+    ];
+
+    const planetObjects = [];
+    const galaxyTiltAngle = 45; // в градусах
+
+    // Создаем 8 орбит и планет
+    for (let i = 0; i < 8; i++) {
+        const orbit = document.createElement('div');
+        orbit.className = 'orbit';
+        const orbitSize = 200 + i * 100;
+        orbit.style.setProperty('--orbit-size', `${orbitSize}px`);
+
+        const planetOrientation = document.createElement('div');
+        planetOrientation.className = 'planet-orientation';
+
+        const planet = document.createElement('div');
+        planet.className = 'planet';
+        const planetSize = 40 + Math.random() * 40; // Случайный размер от 40 до 80
+        planet.style.setProperty('--planet-size', `${planetSize}px`);
+        
+        const imageName = allPlanetImages[i % allPlanetImages.length];
+        const imageUrl = `/static/accounts/images/planetary_system/${imageName}`;
+        planet.style.backgroundImage = `url('${imageUrl}')`;
+
+        planetOrientation.appendChild(planet);
+        orbit.appendChild(planetOrientation);
+        galaxyContainer.appendChild(orbit);
+
+        const orbitTime = 80 + i * 20; // Время оборота
+        const initialAngle = Math.random() * 360;
+        const speedFactor = 0.8 + Math.random() * 0.4;
+
+        planetObjects.push({
+            element: planet,
+            orientation: planetOrientation,
+            orbit: orbit,
+            size: planetSize,
+            orbitSize: orbitSize,
+            orbitTime: orbitTime,
+            angle: initialAngle,
+            speedFactor: speedFactor,
+            startTime: Date.now() - Math.random() * orbitTime * 1000,
+        });
+    }
+
+    function updatePlanets() {
+        const now = Date.now();
+
+        planetObjects.forEach(planetObj => {
+            const elapsedSeconds = (now - planetObj.startTime) / 1000;
+            const orbitTimeSeconds = planetObj.orbitTime * planetObj.speedFactor;
+            const progress = (elapsedSeconds % orbitTimeSeconds) / orbitTimeSeconds;
+            const angle = planetObj.angle + progress * 360;
+            const angleRad = angle * Math.PI / 180;
+            
+            const radius = planetObj.orbitSize / 2;
+            const x = Math.cos(angleRad) * radius;
+            const y = Math.sin(angleRad) * radius;
+            
+            planetObj.orientation.style.left = `${50 + 50 * (x / radius)}%`;
+            planetObj.orientation.style.top = `${50 + 50 * (y / radius)}%`;
+
+            const tiltCompensation = -galaxyTiltAngle;
+            planetObj.element.style.transform = `rotateX(${tiltCompensation}deg)`;
+        });
+        
+        requestAnimationFrame(updatePlanets);
+    }
+
+    updatePlanets();
+  }
 })
