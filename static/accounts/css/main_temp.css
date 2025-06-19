@@ -70,6 +70,7 @@ html {
 
   /* Remove centering from here */
   gap: 40px;
+  overflow-x: visible; /* РАЗРЕШАЕМ ГОРИЗОНТАЛЬНЫЙ ОВЕРФЛОУ */
 }
 
 .btn--yellow-gradient,
@@ -200,7 +201,7 @@ html::-webkit-scrollbar-button {
   z-index: 2; /* Чтобы контент был над звездами */
   background: transparent;
   border-radius: 10px;
-  overflow: hidden;
+  overflow: visible; /* ИСПРАВЛЕНИЕ: Позволяем содержимому (планетам, солнцу) выходить за рамки */
   display: flex;
   flex-direction: column; /* Для внутреннего расположения элементов */
   justify-content: center; /* Центрирование по вертикали */
@@ -2855,7 +2856,7 @@ html::-webkit-scrollbar-button {
     margin-top: calc(-0.5 * var(--planet-size));
     border-radius: 50%;
     /* Сначала цвет, потом изображение. Цвет заполнит прозрачные части PNG. */
-    background-color: #000; 
+    background-color: transparent; /* ИСПРАВЛЕНИЕ: Убираем черный фон, который создавал "рамку" */
     background-size: cover;
     background-position: center;
     transform-style: preserve-3d;
@@ -2877,14 +2878,14 @@ html::-webkit-scrollbar-button {
     pointer-events: all; /* Ссылка с планетой кликабельна */
     position: absolute;
     z-index: 100;
-    top: 65%; /* Двигаем выше */
-    left: 88%; /* Двигаем правее на дальнюю орбиту */
+    top: 50%; /* ИСПРАВЛЕНИЕ: Центрируем по вертикали */
+    left: 10%; /* ИСПРАВЛЕНИЕ: Сдвигаем на дальнюю орбиту слева */
     transform: translate(-50%, -50%);
 }
 
 #plus-planet {
-    width: 80px; /* Размер планеты с плюсом */
-    height: 80px;
+    width: 60px; /* Немного уменьшим для гармонии */
+    height: 60px;
     cursor: pointer;
     transition: transform 0.3s ease;
 }
