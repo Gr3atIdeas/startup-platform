@@ -1104,7 +1104,7 @@
               });
 
               const id = planet.getAttribute('data-id');
-              const planetImage = startups[id]?.planet_image || '/static/accounts/images/planets/startup_5_logo.png';
+              const planetImage = startups[id]?.planet_image || 'https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/startup_5_logo.png';
               const logoImage = startups[id]?.logo_image || '/static/images/default-logo.png';
               if (startups[id] && startups[id].planet_image) {
                 planet.style.backgroundImage = `url('${startups[id].planet_image}')`;
