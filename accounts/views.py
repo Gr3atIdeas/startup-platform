@@ -3,11 +3,10 @@ import collections  # Добавляем для defaultdict
 import datetime  # Добавляем для работы с датами
 import json
 import logging
-import random
 import os
 import uuid
 from decimal import Decimal
-from random import choice
+from random import choice, shuffle  # Импортируем shuffle напрямую
 from dateutil.relativedelta import relativedelta
 from django import forms  # Добавляем импорт
 from django.conf import settings
