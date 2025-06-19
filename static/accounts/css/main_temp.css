@@ -122,6 +122,8 @@ body {
 body > main.content {
   background-color: transparent; /* Убираем фон отсюда */
   position: relative;
+  max-width: none; /* Снимаем ограничение ширины */
+  padding: 0; /* Убираем отступы */
 }
 
 body > main.content::after {
@@ -169,20 +171,21 @@ html::-webkit-scrollbar-button {
 /* --- Секция 1: Featured (Главный экран) --- */
 .featured {
   width: 100%;
-  max-width: 1440px; /* Исправляем под общую сетку */
+  max-width: 1303px; /* Идентично .featured3 .frame-parent */
   margin-left: auto;
   margin-right: auto;
   height: 798px;
   position: relative;
   overflow: visible; /* Позволяем солнцу выходить за рамки */
   display: flex;
-  justify-content: center;
+  justify-content: flex-start; /* Выравниваем контент по левому краю */
   align-items: center;
-  padding: 20px;
+  padding: 0; /* Убираем внутренний отступ */
   box-sizing: border-box;
   background-image: url('../images/main_page/main_bg.jpg');
   background-size: cover;
   background-position: center;
+  border-radius: 10px; /* Добавляем скругление, как у .group */
 }
 
 .featured::after {
@@ -191,14 +194,11 @@ html::-webkit-scrollbar-button {
 
 .featured .group {
   width: 100%;
-  max-width: 1303px; /* Ограничиваем контент, а не фон */
+  /* max-width: 1303px; */ /* Управляется теперь через .featured */
   height: 708px;
   position: relative;
   z-index: 2; /* Чтобы контент был над звездами */
   background: transparent;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
   border-radius: 10px;
   overflow: hidden;
   display: flex;
@@ -2784,8 +2784,8 @@ html::-webkit-scrollbar-button {
 #planetary-system-container {
     position: absolute;
     top: 0;
-    left: 40%; /* Сдвигаем левее, чтобы правая часть была больше */
-    width: 120%; /* Увеличиваем ширину, чтобы заполнить правую часть */
+    left: 50%; /* Начинаем от середины блока .featured */
+    width: 100%; 
     height: 100%;
     pointer-events: none; /* Контейнер не перехватывает клики */
 }
@@ -2817,9 +2817,9 @@ html::-webkit-scrollbar-button {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
-    width: 150px; /* Размер солнца */
-    height: 150px;
+    transform: translate(-50%, -50%) rotateX(-45deg); /* Компенсируем наклон сцены */
+    width: 250px; /* Увеличим солнце */
+    height: 250px;
     z-index: 2;
     display: flex;
     align-items: center;
