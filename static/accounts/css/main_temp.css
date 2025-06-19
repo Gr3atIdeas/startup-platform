@@ -159,14 +159,15 @@ html::-webkit-scrollbar-button {
 
 /* --- Секция 1: Featured (Главный экран) --- */
 .featured {
-  width: 100%;
+  width: 100vw; /* Занимаем всю ширину экрана */
+  max-width: 100vw;
   height: 798px;
   position: relative;
   overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px;
+  padding: 0; /* Убираем внутренний отступ */
   box-sizing: border-box;
   background-color: #000;
   margin-left: auto; /* Центрирование */
@@ -187,14 +188,10 @@ html::-webkit-scrollbar-button {
 
 .featured .group {
   width: 100%;
-  max-width: 1303px;
+  max-width: 1303px; /* Ограничиваем контент, а не фон */
   height: 708px;
   position: relative;
   z-index: 2; /* Чтобы контент был над звездами */
-
-  /* background: transparent; */
-
-  /* Убираем старый прозрачный фон */
   background: transparent;
   background-size: cover;
   background-position: center;
@@ -2878,8 +2875,7 @@ html::-webkit-scrollbar-button {
     border-radius: 50%;
     background-size: cover;
     background-position: center;
-    background-color: #010A1A; /* Фон для непрозрачности */
-    box-shadow: 0 0 4px 2px #010A1A; /* Мягкая тень для скрытия орбиты */
+    background-color: #000; /* Черный фон для непрозрачности */
     transform-style: preserve-3d;
     z-index: 5;
     transition: transform 0.3s ease;
