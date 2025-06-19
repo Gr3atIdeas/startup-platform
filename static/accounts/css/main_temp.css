@@ -2877,8 +2877,8 @@ html::-webkit-scrollbar-button {
     pointer-events: all; /* Ссылка с планетой кликабельна */
     position: absolute;
     z-index: 100;
-    top: 32.5%;
-    left: 11.7%;
+    top: 74.7%;
+    left: 16%;
     transform: translate(-50%, -50%);
 }
 
