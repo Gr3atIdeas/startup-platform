@@ -50,9 +50,9 @@ html {
   min-height: 100%;
   background: linear-gradient(
     to bottom,
-    #000 0%,
-    #01366d 50%,
-    #004e9f 100%
+    #000000 0%,
+    #000000 60%, /* Черный цвет занимает верхние 60% */
+    #01366d 100%
   ); /* Фон на html */
   background-repeat: no-repeat;
   background-attachment: scroll;
@@ -168,24 +168,22 @@ html::-webkit-scrollbar-button {
 
 /* --- Секция 1: Featured (Главный экран) --- */
 .featured {
-  width: 100vw; /* Растягиваем на всю ширину */
-  margin-left: calc(50% - 50vw); /* Центрируем */
-  padding: 20px 0;
-  background-color: #000; /* Задаем черный фон */
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  height: 798px;
   position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  box-sizing: border-box;
+  background-image: url('../images/main_page/main_bg.jpg');
+  background-size: cover;
+  background-position: center;
 }
 
 .featured::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: url('https://www.transparenttextures.com/patterns/stardust.png');
-  opacity: 0.4;
-  z-index: 1; /* Звезды под контентом блока */
-  display: block !important;
+  display: none;
 }
 
 .featured .group {

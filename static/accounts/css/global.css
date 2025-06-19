@@ -22,12 +22,10 @@ body {
   padding-left: 0;
   font-family: Unbounded, Arial, sans-serif;
   background: linear-gradient(
-    178.72deg,
-    #000 0%,
-    #00346b 25%,
-    #004e9f 47.6%,
-    #01366d 64.42%,
-    #020202 100%
+    to bottom,
+    #000000 0%,
+    #000000 85%, /* Черный до самого низа */
+    #00346b 100% /* И только потом переход в синий */
   );
   color: var(--text-light);
   display: flex;
