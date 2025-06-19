@@ -160,15 +160,18 @@ html::-webkit-scrollbar-button {
 /* --- Секция 1: Featured (Главный экран) --- */
 .featured {
   width: 100%;
+  /* max-width: 1445px; */ /* Убираем ограничение */
   height: 798px;
   position: relative;
-  overflow: visible; /* Чтобы солнце было видно */
+  overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px;
+  padding: 20px 0; /* Убираем боковые отступы */
   box-sizing: border-box;
   background-color: #000;
+  margin-left: auto; 
+  margin-right: auto;
 }
 
 .featured::after {
@@ -189,11 +192,7 @@ html::-webkit-scrollbar-button {
   height: 708px;
   position: relative;
   z-index: 2; /* Чтобы контент был над звездами */
-  margin: 0 auto; /* Центрируем контент внутри full-width хедера */
-
-  /* background: transparent; */
-
-  /* Убираем старый прозрачный фон */
+  overflow: visible; /* Чтобы солнце было видно */
   background: transparent;
   background-size: cover;
   background-position: center;
@@ -205,8 +204,6 @@ html::-webkit-scrollbar-button {
   justify-content: center; /* Центрирование по вертикали */
   padding-left: 109px; /* Отступ для текстового контента */
   box-sizing: border-box;
-  transform: rotateX(45deg);
-  transform-style: preserve-3d;
 }
 
 /* Элементы внутри .featured .group */
@@ -2831,7 +2828,6 @@ html::-webkit-scrollbar-button {
     width: 100%;
     height: 100%;
     object-fit: contain;
-    filter: drop-shadow(0 0 35px #ffdd88); /* Свечение солнца */
 }
 
 #sun-logo-container {
@@ -2878,35 +2874,12 @@ html::-webkit-scrollbar-button {
     margin-left: calc(-0.5 * var(--planet-size));
     margin-top: calc(-0.5 * var(--planet-size));
     border-radius: 50%;
+    background-size: cover;
+    background-position: center;
+    background-color: #010A1A; /* Фон для непрозрачности */
     transform-style: preserve-3d;
     z-index: 5;
     transition: transform 0.3s ease;
-    box-shadow: 0 0 15px 2px rgba(255, 255, 255, 0.3); /* Свечение планет */
-}
-
-.planet::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: #010A1A; /* Непрозрачный фон */
-    border-radius: 50%;
-    z-index: -1;
-}
-
-.planet::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: var(--planet-image-url);
-    background-size: cover;
-    background-position: center;
-    border-radius: 50%;
 }
 
 .planet:hover {
@@ -2917,18 +2890,25 @@ html::-webkit-scrollbar-button {
     pointer-events: all; /* Ссылка с планетой кликабельна */
     position: absolute;
     z-index: 100;
-    top: 60%;
-    left: 95%; /* Размещаем на краю самой дальней орбиты */
-    transform: translate(-50%, -50%);
+    /* Позиция будет настроена в JS */
 }
 
 #plus-planet {
-    width: 96px; /* Увеличено на 20% */
-    height: 96px; /* Увеличено на 20% */
+    width: 96px; /* Размер планеты с плюсом (80px * 1.2) */
+    height: 96px;
     cursor: pointer;
     transition: transform 0.3s ease;
 }
 
 #plus-planet:hover {
     transform: scale(1.15);
+}
+
+@keyframes orbit-rotation {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }

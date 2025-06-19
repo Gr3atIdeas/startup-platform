@@ -330,8 +330,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const planetObjects = [];
     const galaxyTiltAngle = 45; // в градусах
 
-    // Создаем 8 орбит и планет, пропуская первую
-    for (let i = 1; i < 9; i++) {
+    // Создаем 7 орбит и планет (начиная с i=1)
+    for (let i = 1; i < 8; i++) {
         const orbit = document.createElement('div');
         orbit.className = 'orbit';
         const orbitSize = 200 + i * 100;
@@ -340,6 +340,11 @@ document.addEventListener('DOMContentLoaded', function () {
         const planetOrientation = document.createElement('div');
         planetOrientation.className = 'planet-orientation';
 
+        // Применяем CSS анимацию
+        const orbitTime = 40 + Math.random() * 40; // от 40 до 80 секунд
+        planetOrientation.style.animation = `orbit-rotation ${orbitTime}s linear infinite`;
+        planetOrientation.style.animationDelay = `-${Math.random() * orbitTime}s`; // Случайная начальная позиция
+
         const planet = document.createElement('div');
         planet.className = 'planet';
         const planetSize = (52 + Math.random() * 52); // Увеличенный на 30% размер
@@ -347,53 +352,51 @@ document.addEventListener('DOMContentLoaded', function () {
         
         const imageName = allPlanetImages[i % allPlanetImages.length];
         const imageUrl = `/static/accounts/images/planetary_system/${imageName}`;
-        planet.style.setProperty('--planet-image-url', `url('${imageUrl}')`);
+        planet.style.backgroundImage = `url('${imageUrl}')`;
 
         planetOrientation.appendChild(planet);
         orbit.appendChild(planetOrientation);
         galaxyContainer.appendChild(orbit);
 
-        const orbitTime = 80 + i * 20; // Время оборота
-        const initialAngle = Math.random() * 360;
-        const speedFactor = 0.7 + Math.random() * 0.6; // Увеличим диапазон скоростей
-        const zOffset = (Math.random() - 0.5) * 50; // Случайное смещение по Z
-
         planetObjects.push({
             element: planet,
-            orientation: planetOrientation,
-            orbit: orbit,
             size: planetSize,
-            orbitSize: orbitSize,
-            orbitTime: orbitTime,
-            angle: initialAngle,
-            speedFactor: speedFactor,
-            startTime: Date.now() - Math.random() * orbitTime * 1000,
-            zOffset: zOffset
         });
     }
 
-    function updatePlanets() {
-        const now = Date.now();
-
-        planetObjects.forEach(planetObj => {
-            const elapsedSeconds = (now - planetObj.startTime) / 1000;
-            const orbitTimeSeconds = planetObj.orbitTime * planetObj.speedFactor;
-            const progress = (elapsedSeconds % orbitTimeSeconds) / orbitTimeSeconds;
-            const angle = planetObj.angle + progress * 360;
-            const angleRad = angle * Math.PI / 180;
-            
-            const radius = planetObj.orbitSize / 2;
-            const x = Math.cos(angleRad) * radius;
-            const y = Math.sin(angleRad) * radius;
-            // Плавное покачивание по оси Z для красоты
-            const z = Math.sin(progress * Math.PI * 2) * planetObj.zOffset;
-            
-            planetObj.orientation.style.transform = `translate3d(${x}px, ${y}px, ${z}px)`;
-
-            const tiltCompensation = -galaxyTiltAngle;
-            planetObj.element.style.transform = `rotateX(${tiltCompensation}deg) rotateY(${angle * -0.5}deg)`; // Добавим легкое вращение
-        });
+    // Позиционирование планеты 0.png на самой дальней орбите
+    const plusPlanetLink = document.getElementById('plus-planet-link');
+    if (plusPlanetLink) {
+        const farthestOrbitSize = 200 + 7 * 100; // i=7
+        const radius = farthestOrbitSize / 2;
+        const angle = -45 * Math.PI / 180; // Статичный угол
         
+        // Позиция внутри #galaxy, которая повернута
+        const x = Math.cos(angle) * radius;
+        const y = Math.sin(angle) * radius;
+
+        // Применяем позицию к ссылке
+        plusPlanetLink.style.position = 'absolute';
+        plusPlanetLink.style.top = '50%';
+        plusPlanetLink.style.left = '50%';
+        plusPlanetLink.style.transform = `translate(-50%, -50%) translate(${x}px, ${y}px) rotateX(-45deg)`;
+        plusPlanetLink.style.transformOrigin = '0 0';
+
+        // Добавляем ссылку в #galaxy, чтобы она вращалась вместе с ней, но была статичной на орбите
+        const galaxy = document.getElementById('galaxy');
+        if (galaxy) {
+            // Переносим элемент внутрь, если он еще не там
+            if(plusPlanetLink.parentElement !== galaxy) {
+                galaxy.appendChild(plusPlanetLink);
+            }
+        }
+    }
+
+    function updatePlanets() {
+        planetObjects.forEach(planetObj => {
+            const tiltCompensation = -galaxyTiltAngle;
+            planetObj.element.style.transform = `rotateX(${tiltCompensation}deg)`;
+        });
         requestAnimationFrame(updatePlanets);
     }
 
