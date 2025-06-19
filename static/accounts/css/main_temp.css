@@ -175,7 +175,7 @@ html::-webkit-scrollbar-button {
   max-width: 1303px;
   margin-left: auto;
   margin-right: auto;
-  height: 798px;
+  height: auto;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -2877,8 +2877,8 @@ html::-webkit-scrollbar-button {
     pointer-events: all; /* Ссылка с планетой кликабельна */
     position: absolute;
     z-index: 100;
-    top: 60%;
-    left: 40%;
+    top: 32.5%;
+    left: 11.7%;
     transform: translate(-50%, -50%);
 }
 
