@@ -106,7 +106,7 @@ body {
   margin: 0;
   padding: 0;
   background: transparent; /* body прозрачный */
-  overflow-x: hidden;
+  /* overflow-x: hidden; */ /* УБИРАЕМ ЭТО СВОЙСТВО, ЧТОБЫ НЕ ОБРЕЗАТЬ СОЛНЦЕ */
 
   /* overflow-y: auto; */
 
@@ -2817,9 +2817,9 @@ html::-webkit-scrollbar-button {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%) rotateX(-45deg); /* Компенсируем наклон сцены */
-    width: 250px; /* Увеличим солнце */
-    height: 250px;
+    transform: translate(-50%, -50%); /* Убираем ошибочный rotateX */
+    width: 220px; /* Немного уменьшаем солнце */
+    height: 220px;
     z-index: 2;
     display: flex;
     align-items: center;
@@ -2899,8 +2899,8 @@ html::-webkit-scrollbar-button {
     pointer-events: all; /* Ссылка с планетой кликабельна */
     position: absolute;
     z-index: 100;
-    top: 70%;
-    left: 80%;
+    top: 65%; /* Двигаем выше */
+    left: 88%; /* Двигаем правее на дальнюю орбиту */
     transform: translate(-50%, -50%);
 }
 

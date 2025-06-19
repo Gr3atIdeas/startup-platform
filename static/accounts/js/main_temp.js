@@ -339,44 +339,49 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     shuffle(allPlanetImages);
 
-    // Создаем 7 орбит и планет, начиная со второй
+    // Создаем 7 орбит, но только 6 планет
     for (let i = 1; i < 8; i++) {
         const orbit = document.createElement('div');
         orbit.className = 'orbit';
         const orbitSize = 200 + i * 100;
         orbit.style.setProperty('--orbit-size', `${orbitSize}px`);
 
-        const planetOrientation = document.createElement('div');
-        planetOrientation.className = 'planet-orientation';
+        // Создаем планеты только для первых 6 орбит (i с 1 до 6)
+        // Седьмая орбита (i=7) останется пустой
+        if (i < 7) { 
+            const planetOrientation = document.createElement('div');
+            planetOrientation.className = 'planet-orientation';
 
-        const planet = document.createElement('div');
-        planet.className = 'planet';
-        const planetSize = (52 + Math.random() * 52); // Увеличенный на 30% размер
-        planet.style.setProperty('--planet-size', `${planetSize}px`);
-        
-        const imageName = allPlanetImages[i - 1]; // Берем из перемешанного массива
-        const imageUrl = `/static/accounts/images/planetary_system/${imageName}`;
-        planet.style.backgroundImage = `url('${imageUrl}')`;
+            const planet = document.createElement('div');
+            planet.className = 'planet';
+            const planetSize = (52 + Math.random() * 52); // Увеличенный на 30% размер
+            planet.style.setProperty('--planet-size', `${planetSize}px`);
+            
+            const imageName = allPlanetImages[i - 1]; // Берем из перемешанного массива
+            const imageUrl = `/static/accounts/images/planetary_system/${imageName}`;
+            planet.style.backgroundImage = `url('${imageUrl}')`;
 
-        planetOrientation.appendChild(planet);
-        orbit.appendChild(planetOrientation);
+            planetOrientation.appendChild(planet);
+            orbit.appendChild(planetOrientation);
+
+            const orbitTime = 80 + i * 20; // Время оборота
+            const initialAngle = Math.random() * 360;
+            const speedFactor = 0.8 + Math.random() * 0.4;
+
+            planetObjects.push({
+                element: planet,
+                orientation: planetOrientation,
+                orbit: orbit,
+                size: planetSize,
+                orbitSize: orbitSize,
+                orbitTime: orbitTime,
+                angle: initialAngle,
+                speedFactor: speedFactor,
+                startTime: Date.now() - Math.random() * orbitTime * 1000,
+            });
+        }
+
         galaxyContainer.appendChild(orbit);
-
-        const orbitTime = 80 + i * 20; // Время оборота
-        const initialAngle = Math.random() * 360;
-        const speedFactor = 0.8 + Math.random() * 0.4;
-
-        planetObjects.push({
-            element: planet,
-            orientation: planetOrientation,
-            orbit: orbit,
-            size: planetSize,
-            orbitSize: orbitSize,
-            orbitTime: orbitTime,
-            angle: initialAngle,
-            speedFactor: speedFactor,
-            startTime: Date.now() - Math.random() * orbitTime * 1000,
-        });
     }
 
     function updatePlanets() {
