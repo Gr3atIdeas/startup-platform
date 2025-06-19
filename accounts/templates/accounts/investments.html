@@ -226,9 +226,9 @@
                 <div class="startup-rating">
                   {% with rating=investment.startup_average_rating|default:0 %}
                       {% for i in "12345"|make_list %}
-                          {% if rating >= i|to_int %}
+                          {% if rating >= i|add:0 %}
                               <i class="fas fa-star"></i>
-                          {% elif rating > i|to_int|add:"-1" and rating < i|to_int %}
+                          {% elif rating >= i|add:"-0.5" %}
                               <i class="fas fa-star-half-alt"></i>
                           {% else %}
                               <i class="far fa-star"></i>
