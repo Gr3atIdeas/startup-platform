@@ -3,6 +3,7 @@ import collections  # Добавляем для defaultdict
 import datetime  # Добавляем для работы с датами
 import json
 import logging
+import random
 import os
 import uuid
 from decimal import Decimal
@@ -657,7 +658,7 @@ def investments(request):
     max_orbit_size = 800
     orbit_step = 50
     available_sizes = list(range(min_orbit_size, max_orbit_size + orbit_step, orbit_step))
-    random.shuffle(available_sizes)
+    shuffle(available_sizes)  # Используем shuffle вместо random.shuffle
 
     for idx, startup_data in enumerate(all_startups_data, 1):
         orbit_size = available_sizes[idx - 1] if idx <= len(available_sizes) else min_orbit_size + (idx - 1) * orbit_step
@@ -666,11 +667,11 @@ def investments(request):
 
         # Получаем URL логотипа
         logo_url = "https://via.placeholder.com/150"
+        logo_urls = startup_data.get("startup__logo_urls") or startup_data.get("logo_urls")
         if (
-            startup_data.get("startup__logo_urls")
-            or startup_data.get("logo_urls")
-            and isinstance(startup_data.get("startup__logo_urls") or startup_data.get("logo_urls"), list)
-            and len(startup_data.get("startup__logo_urls") or startup_data.get("logo_urls")) > 0
+            logo_urls
+            and isinstance(logo_urls, list)
+            and len(logo_urls) > 0
         ):
             try:
                 prefix = f"startups/{startup_data['startup__startup_id'] or startup_data['startup_id']}/logos/"
@@ -691,6 +692,10 @@ def investments(request):
                 logger.error(
                     f"Ошибка при генерации URL для логотипа стартапа {startup_data['startup__startup_id'] or startup_data['startup_id']}: {str(e)}"
                 )
+        else:
+            logger.warning(
+                f"Стартап {startup_data['startup__startup_id'] or startup_data['startup_id']} не имеет логотипа в logo_urls"
+            )
 
         # Тип инвестирования
         startup = Startups.objects.get(startup_id=startup_data['startup__startup_id'] or startup_data['startup_id'])
