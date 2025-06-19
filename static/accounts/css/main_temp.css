@@ -120,20 +120,12 @@ body {
 }
 
 body > main.content {
-  background-color: #000;
+  background-color: transparent; /* Убираем фон отсюда */
   position: relative;
 }
 
 body > main.content::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: url('https://www.transparenttextures.com/patterns/stardust.png');
-  opacity: 0.4;
-  z-index: 0;
+  display: none; /* И отсюда тоже убираем */
 }
 
 /* Кастомный скроллбар для Webkit-браузеров (Chrome, Safari) */
@@ -176,23 +168,24 @@ html::-webkit-scrollbar-button {
 
 /* --- Секция 1: Featured (Главный экран) --- */
 .featured {
-  width: 100vw; /* Занимаем всю ширину экрана */
-  max-width: 100vw;
-  height: 798px;
+  width: 100vw; /* Растягиваем на всю ширину */
+  margin-left: calc(50% - 50vw); /* Центрируем */
+  padding: 20px 0;
+  background-color: #000; /* Задаем черный фон */
   position: relative;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0; /* Убираем внутренний отступ */
-  box-sizing: border-box;
-  background: transparent !important;
-  margin-left: auto; /* Центрирование */
-  margin-right: auto; /* Центрирование */
 }
 
 .featured::after {
-  display: none;
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('https://www.transparenttextures.com/patterns/stardust.png');
+  opacity: 0.4;
+  z-index: 1; /* Звезды под контентом блока */
+  display: block !important;
 }
 
 .featured .group {
@@ -2882,18 +2875,19 @@ html::-webkit-scrollbar-button {
     margin-left: calc(-0.5 * var(--planet-size));
     margin-top: calc(-0.5 * var(--planet-size));
     border-radius: 50%;
-    background-color: #000; /* Сплошной черный фон */
+    /* Сначала цвет, потом изображение. Цвет заполнит прозрачные части PNG. */
+    background-color: #000; 
+    background-size: cover;
+    background-position: center;
     transform-style: preserve-3d;
     z-index: 5;
     transition: transform 0.3s ease;
+    border: none !important;
+    box-shadow: none !important;
 }
 
 .planet-image {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    background-size: cover;
-    background-position: center;
+   display: none; /* Эта структура больше не нужна */
 }
 
 .planet:hover {

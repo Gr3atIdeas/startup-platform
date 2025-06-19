@@ -330,6 +330,15 @@ document.addEventListener('DOMContentLoaded', function () {
     const planetObjects = [];
     const galaxyTiltAngle = 45; // в градусах
 
+    // Перемешиваем массив планет для случайного порядка
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+    shuffle(allPlanetImages);
+
     // Создаем 7 орбит и планет, начиная со второй
     for (let i = 1; i < 8; i++) {
         const orbit = document.createElement('div');
@@ -344,15 +353,11 @@ document.addEventListener('DOMContentLoaded', function () {
         planet.className = 'planet';
         const planetSize = (52 + Math.random() * 52); // Увеличенный на 30% размер
         planet.style.setProperty('--planet-size', `${planetSize}px`);
-
-        const planetImageDiv = document.createElement('div');
-        planetImageDiv.className = 'planet-image';
         
-        const imageName = allPlanetImages[i % allPlanetImages.length];
+        const imageName = allPlanetImages[i - 1]; // Берем из перемешанного массива
         const imageUrl = `/static/accounts/images/planetary_system/${imageName}`;
-        planetImageDiv.style.backgroundImage = `url('${imageUrl}')`;
+        planet.style.backgroundImage = `url('${imageUrl}')`;
 
-        planet.appendChild(planetImageDiv);
         planetOrientation.appendChild(planet);
         orbit.appendChild(planetOrientation);
         galaxyContainer.appendChild(orbit);
