@@ -177,7 +177,7 @@ html::-webkit-scrollbar-button {
   margin-right: auto;
   height: 798px;
   position: relative;
-  overflow: visible; /* Позволяем солнцу выходить за рамки */
+  overflow: hidden; /* ОБРЕЗАЕМ ВСЕ, ЧТО ВЫХОДИТ ЗА РАМКИ, ВКЛЮЧАЯ ОРБИТЫ */
   display: flex;
   justify-content: flex-start; /* Выравниваем контент по левому краю */
   align-items: center;
@@ -187,6 +187,13 @@ html::-webkit-scrollbar-button {
   background-size: cover;
   background-position: center;
   border-radius: 10px; /* Добавляем скругление, как у .group */
+  z-index: 2; /* Чтобы контент был над звездами */
+  background: transparent;
+  border-radius: 10px;
+  overflow: visible; /* РАЗРЕШАЕМ СОДЕРЖИМОМУ (ОРБИТАМ) ВЫХОДИТЬ ДО ГРАНИЦ .featured */
+  display: flex;
+  flex-direction: column; /* Для внутреннего расположения элементов */
+  justify-content: center; /* Центрирование по вертикали */
 }
 
 .featured::after {
@@ -2811,8 +2818,10 @@ html::-webkit-scrollbar-button {
 
 #sun-logo-container {
     position: absolute;
-    width: 80%; /* Размер лого внутри солнца */
-    height: 80%;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2877,8 +2886,8 @@ html::-webkit-scrollbar-button {
     pointer-events: all; /* Ссылка с планетой кликабельна */
     position: absolute;
     z-index: 100;
-    top: 85%;    /* Новая, точная позиция на последней орбите */
-    left: 62%;   /* Новая, точная позиция на последней орбите */
+    top: 60%;    /* Точная позиция на 5-й орбите */
+    left: 45%;   /* Точная позиция на 5-й орбите */
     transform: translate(-50%, -50%);
 }
 

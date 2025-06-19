@@ -339,16 +339,15 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     shuffle(allPlanetImages);
 
-    // Создаем 7 орбит, но только 6 планет
+    // Создаем 7 орбит. Статичная планета будет на 5-й, поэтому ее пропускаем.
     for (let i = 1; i < 8; i++) {
         const orbit = document.createElement('div');
         orbit.className = 'orbit';
         const orbitSize = 200 + i * 100;
         orbit.style.setProperty('--orbit-size', `${orbitSize}px`);
 
-        // Создаем планеты только для первых 6 орбит (i с 1 до 6)
-        // Седьмая орбита (i=7) останется пустой
-        if (i < 7) { 
+        // Пропускаем создание динамической планеты для 5-й орбиты
+        if (i !== 5) {
             const planetOrientation = document.createElement('div');
             planetOrientation.className = 'planet-orientation';
 
@@ -356,15 +355,21 @@ document.addEventListener('DOMContentLoaded', function () {
             planet.className = 'planet';
             const planetSize = (52 + Math.random() * 52); // Увеличенный на 30% размер
             planet.style.setProperty('--planet-size', `${planetSize}px`);
-            
-            const imageName = allPlanetImages[i - 1]; // Берем из перемешанного массива
+
+            const imageName = allPlanetImages.pop(); // Берем планету из конца массива
             const imageUrl = `/static/accounts/images/planetary_system/${imageName}`;
-            planet.style.backgroundImage = `url('${imageUrl}')`;
+            
+            // Устанавливаем два фона: планету и за ней фон космоса
+            const spaceBgUrl = `url('/static/accounts/images/main_page/main_bg.jpg')`;
+            planet.style.backgroundImage = `url('${imageUrl}'), ${spaceBgUrl}`;
+            planet.style.backgroundPosition = `center, center`;
+            planet.style.backgroundSize = `cover, cover`;
+
 
             planetOrientation.appendChild(planet);
             orbit.appendChild(planetOrientation);
 
-            const orbitTime = 80 + i * 20; // Время оборота
+            const orbitTime = 80 + i * 20 + (Math.random() - 0.5) * 40; // Более хаотичное время оборота
             const initialAngle = Math.random() * 360;
             const speedFactor = 0.8 + Math.random() * 0.4;
 
