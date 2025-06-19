@@ -160,7 +160,6 @@ html::-webkit-scrollbar-button {
 /* --- Секция 1: Featured (Главный экран) --- */
 .featured {
   width: 100%;
-  max-width: 1445px;
   height: 798px;
   position: relative;
   overflow: hidden;
@@ -2879,7 +2878,8 @@ html::-webkit-scrollbar-button {
     border-radius: 50%;
     background-size: cover;
     background-position: center;
-    background-color: #010A1A; /* Добавляем фон, чтобы избежать прозрачности */
+    background-color: #010A1A; /* Фон для непрозрачности */
+    box-shadow: 0 0 4px 2px #010A1A; /* Мягкая тень для скрытия орбиты */
     transform-style: preserve-3d;
     z-index: 5;
     transition: transform 0.3s ease;

@@ -330,8 +330,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const planetObjects = [];
     const galaxyTiltAngle = 45; // в градусах
 
-    // Создаем 8 орбит и планет
-    for (let i = 0; i < 8; i++) {
+    // Создаем 7 орбит и планет, начиная со второй
+    for (let i = 1; i < 8; i++) {
         const orbit = document.createElement('div');
         orbit.className = 'orbit';
         const orbitSize = 200 + i * 100;
