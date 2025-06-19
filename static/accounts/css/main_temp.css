@@ -222,7 +222,7 @@ html::-webkit-scrollbar-button {
 }
 
 .featured .div5 {
-  width: auto;
+  width: 390px;
   margin: 0;
   margin-bottom: 40px; /* Gap after description */
 }
