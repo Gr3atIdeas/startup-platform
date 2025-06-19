@@ -208,24 +208,23 @@ html::-webkit-scrollbar-button {
 
 .featured .group {
   width: 100%;
-  /* max-width: 1303px; */ /* Управляется теперь через .featured */
-  height: 708px;
+  height: auto; /* Allow content to define height */
   position: relative;
-  z-index: 2; /* Чтобы контент был над звездами */
+  z-index: 2;
   background: transparent;
   border-radius: 10px;
   overflow: hidden;
   display: flex;
-  flex-direction: column; /* Для внутреннего расположения элементов */
-  justify-content: center; /* Центрирование по вертикали */
-  padding-left: 109px; /* Отступ для текстового контента */
+  flex-direction: column;
+  justify-content: center;
+  padding: 100px 109px; /* Add some padding for vertical spacing */
   box-sizing: border-box;
 }
 
-/* Элементы внутри .featured .group */
 .featured .div5 {
-  width: 390px;
-  margin-bottom: 30px; /* Отступ под описанием */
+  width: auto;
+  margin: 0;
+  margin-bottom: 40px; /* Gap after description */
 }
 
 .featured .div5 .txt {
@@ -250,8 +249,10 @@ html::-webkit-scrollbar-button {
   font-family: 'Blippo Black', sans-serif;
   font-weight: normal;
   text-transform: uppercase;
-  line-height: 0.7; /* Сжатая высота строки для Blippo */
+  line-height: 0.8;
   word-wrap: break-word;
+  margin: 0;
+  margin-bottom: 18px; /* Gap after СОЗДАВАЙ */
 }
 
 .featured .div7 {
@@ -260,17 +261,18 @@ html::-webkit-scrollbar-button {
   font-family: 'Blippo Black', sans-serif;
   font-weight: normal;
   text-transform: uppercase;
-  line-height: 0.7; /* Сжатая высота строки для Blippo */
+  line-height: 0.8;
   word-wrap: break-word;
-  margin-bottom: 40px; /* Отступ после заголовка */
+  margin: 0;
+  margin-bottom: 40px; /* Gap after БУДУЩЕЕ */
 }
 
 .header-buttons {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 15px;
-    margin-top: 20px;
+    gap: 13px; /* Gap between buttons */
+    margin: 0;
 }
 
 /* Custom Main Page Header Buttons */
