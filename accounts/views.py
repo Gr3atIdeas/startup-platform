@@ -469,12 +469,12 @@ def investments(request):
         messages.error(request, "Доступ к этой странице разрешен только инвесторам.")
         return redirect("home")
 
-    # Базовый запрос без аннотаций рейтинга/комментов, которые могут дублировать строки
+    # Базовый запрос без аннотаций рейтинга/комментов
     base_investments_qs = InvestmentTransactions.objects.filter(
         investor=request.user, transaction_type__type_name="investment"
     ).select_related("startup", "startup__direction", "startup__owner")
 
-    # Агрегированные данные для аналитики (применяем distinct() ПЕРЕД агрегацией)
+    # Агрегированные данные для аналитики
     analytics_data = base_investments_qs.distinct().aggregate(
         total_investment=Sum("amount"),
         max_investment=Max("amount"),
@@ -482,13 +482,13 @@ def investments(request):
         startups_count=Count("startup", distinct=True),
     )
 
-    # Получаем общую сумму инвестиций отдельно
+    # Получаем общую сумму инвестиций
     total_investment_decimal = analytics_data.get("total_investment") or Decimal("0")
     logger.info(
         f"[investments view] User: {request.user.email}, Total Investment Calculated (after distinct): {total_investment_decimal}"
     )
 
-    # Данные по категориям (применяем distinct() ПЕРЕД values/annotate)
+    # Данные по категориям
     category_data_raw = (
         base_investments_qs.distinct()
         .values("startup__direction__direction_name")
@@ -496,20 +496,14 @@ def investments(request):
         .order_by("-category_total")
     )
 
-    # Формируем данные для радиальных диаграмм, РАССЧИТЫВАЯ ПРОЦЕНТЫ
     investment_categories = []
-    invested_category_data_dict = {}  # Для модального окна
-
-    total_for_percentage = (
-        total_investment_decimal if total_investment_decimal > 0 else Decimal("1")
-    )
+    invested_category_data_dict = {}
+    total_for_percentage = total_investment_decimal if total_investment_decimal > 0 else Decimal("1")
 
     for cat_data in category_data_raw:
         percentage = 0
         category_sum = cat_data.get("category_total")
-        category_name = (
-            cat_data.get("startup__direction__direction_name") or "Без категории"
-        )
+        category_name = cat_data.get("startup__direction__direction_name") or "Без категории"
 
         if investment_categories == []:
             logger.info(
@@ -527,10 +521,7 @@ def investments(request):
                 percentage = 0
 
         investment_categories.append(
-            {
-                "name": category_name,
-                "percentage": percentage,
-            }
+            {"name": category_name, "percentage": percentage}
         )
         invested_category_data_dict[category_name] = percentage
 
@@ -552,31 +543,26 @@ def investments(request):
         f"[investments view] Monthly data calculated (after distinct): {list(monthly_data_direct)}"
     )
 
-    month_labels = [
-        "Янв", "Фев", "Мар", "Апр", "Май", "Июн",
-        "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек",
-    ]
+    month_labels = ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"]
     monthly_totals = [0] * 12
     for data in monthly_data_direct:
         month_index = data["month"].month - 1
         if 0 <= month_index < 12:
-            monthly_totals[month_index] = float(
-                data.get("monthly_total", 0) or 0
-            )
+            monthly_totals[month_index] = float(data.get("monthly_total", 0) or 0)
     logger.info(
         f"[investments view] Final monthly totals for chart (after distinct): {monthly_totals}"
     )
 
     # QuerySet для планетарной системы (ограничим до 10 стартапов)
     planetary_investments = base_investments_qs.values(
+        "startup__startup_id",  # Добавляем ID стартапа для ссылок
         "startup__title",
         "startup__status",
-        "startup__current_investment",
-        "startup__goal",
+        "startup__amount_raised",  # Исправлено с current_investment
+        "startup__funding_goal",   # Исправлено с goal
         "startup__direction__direction_name",
         "amount",  # Сумма инвестиции пользователя
-        "startup_average_rating",
-        "startup_comment_count",
+        "startup__logo_urls",  # Добавляем logo_urls для изображения планеты
     ).annotate(
         startup_average_rating=Avg(
             ExpressionWrapper(
@@ -587,7 +573,8 @@ def investments(request):
             default=0.0,
         ),
         startup_comment_count=Count("startup__comments", distinct=True),
-    ).order_by("-amount")[:10]  # Топ-10 по сумме инвестиций
+        investors_count=Count("startup__investmenttransactions__investor", distinct=True),
+    ).order_by("-amount")[:10]
 
     # Логирование данных для планетарной системы
     logger.info(
@@ -624,14 +611,10 @@ def investments(request):
             f"[investments view] Checking startup data for user {request.user.email}:"
         )
         for inv in user_investments_qs_final[:3]:
-            startup_info = (
-                "Startup object exists"
-                if inv.startup
-                else "!!! Startup object IS MISSING !!!"
-            )
+            startup_info = "Startup object exists" if inv.startup else "!!! Startup object IS MISSING !!!"
             startup_name = (
-                f"Name: '{inv.startup.name}'"
-                if inv.startup and hasattr(inv.startup, "name")
+                f"Name: '{inv.startup.title}'"
+                if inv.startup and hasattr(inv.startup, "title")
                 else "Name: attribute missing or startup is None"
             )
             logger.info(
@@ -642,7 +625,7 @@ def investments(request):
 
     context = {
         "user_investments": user_investments_qs_final,
-        "planetary_investments": planetary_investments,  # Новый контекст для планет
+        "planetary_investments": planetary_investments,
         "startups_count": analytics_data.get("startups_count", 0),
         "total_investment": total_investment_decimal,
         "max_investment": analytics_data.get("max_investment", 0),
