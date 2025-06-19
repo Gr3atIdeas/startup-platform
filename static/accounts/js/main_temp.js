@@ -356,10 +356,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const imageName = allPlanetImages.pop();
             const imageUrl = `/static/accounts/images/planetary_system/${imageName}`;
             
-            const spaceBgUrl = `url('/static/accounts/images/main_page/main_bg.jpg')`;
-            planet.style.backgroundImage = `url('${imageUrl}'), ${spaceBgUrl}`;
-            planet.style.backgroundPosition = `center, center`;
-            planet.style.backgroundSize = `cover, cover`;
+            planet.style.backgroundImage = `url('${imageUrl}')`;
 
 
             planetOrientation.appendChild(planet);

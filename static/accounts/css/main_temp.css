@@ -172,28 +172,23 @@ html::-webkit-scrollbar-button {
 /* --- Секция 1: Featured (Главный экран) --- */
 .featured {
   width: 100%;
-  max-width: 1303px; /* Идентично .featured3 .frame-parent */
+  max-width: 1303px;
   margin-left: auto;
   margin-right: auto;
   height: 798px;
   position: relative;
-  overflow: hidden; /* ОБРЕЗАЕМ ВСЕ, ЧТО ВЫХОДИТ ЗА РАМКИ, ВКЛЮЧАЯ ОРБИТЫ */
   display: flex;
-  justify-content: flex-start; /* Выравниваем контент по левому краю */
-  align-items: center;
-  padding: 0; /* Убираем внутренний отступ */
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 0;
   box-sizing: border-box;
   background-image: url('../images/main_page/main_bg.jpg');
   background-size: cover;
   background-position: center;
-  border-radius: 10px; /* Добавляем скругление, как у .group */
-  z-index: 2; /* Чтобы контент был над звездами */
-  background: transparent;
   border-radius: 10px;
-  overflow: visible; /* РАЗРЕШАЕМ СОДЕРЖИМОМУ (ОРБИТАМ) ВЫХОДИТЬ ДО ГРАНИЦ .featured */
-  display: flex;
-  flex-direction: column; /* Для внутреннего расположения элементов */
-  justify-content: center; /* Центрирование по вертикали */
+  z-index: 2;
+  overflow: hidden;
 }
 
 .featured::after {
@@ -2874,10 +2869,6 @@ html::-webkit-scrollbar-button {
     box-shadow: none !important;
 }
 
-.planet-image {
-   display: none; /* Эта структура больше не нужна */
-}
-
 .planet:hover {
     transform: scale(1.1) rotateX(-45deg);
 }
@@ -2886,8 +2877,8 @@ html::-webkit-scrollbar-button {
     pointer-events: all; /* Ссылка с планетой кликабельна */
     position: absolute;
     z-index: 100;
-    top: 60%;    /* Точная позиция на 5-й орбите */
-    left: 45%;   /* Точная позиция на 5-й орбите */
+    top: 60%;
+    left: 40%;
     transform: translate(-50%, -50%);
 }
 
