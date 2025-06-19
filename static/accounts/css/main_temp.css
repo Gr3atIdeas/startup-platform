@@ -2941,7 +2941,7 @@ html::-webkit-scrollbar-button {
     position: absolute;
     z-index: 100;
     top: 64%;
-    left: 47%;
+    left: 47.5%;
     transform: translate(-50%, -50%);
 }
 
