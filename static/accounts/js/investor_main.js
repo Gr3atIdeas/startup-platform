@@ -2,5 +2,8 @@
 // We can add functionality here later if needed.
 
 document.addEventListener('DOMContentLoaded', function () {
-  // Блок скрипта для sticky эффекта был здесь и теперь удален.
-})
+  const banner = document.querySelector('.journey-start-banner');
+    if (banner && banner.dataset.bgUrl) {
+      banner.style.backgroundImage = `url('${banner.dataset.bgUrl}')`;
+    }
+});

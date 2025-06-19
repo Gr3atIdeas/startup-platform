@@ -77,6 +77,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const container = document.getElementById('planetary-system-container');
     if (!container) return; // Exit if the container is not found
 
+    const logoElement = container.querySelector('#logo');
+    if (logoElement && logoElement.dataset.bgUrl) {
+        logoElement.style.backgroundImage = `url('${logoElement.dataset.bgUrl}')`;
+    }
+
     const planets = container.querySelectorAll('.planet');
     const infoCard = document.getElementById('info-card');
     const planetImage = document.getElementById('planet-image');
@@ -97,6 +102,8 @@ document.addEventListener('DOMContentLoaded', function () {
     let lastInteractionTime = Date.now();
     const inactivityTimeout = 10000;
     let isReturningToCenter = false;
+    let rotationX = 45; // Initial tilt
+    let rotationY = 0;
 
     planets.forEach((planet, index) => {
         const orbit = planet.closest('.orbit');
@@ -162,31 +169,37 @@ document.addEventListener('DOMContentLoaded', function () {
     closeCard.addEventListener('click', closeInfoCard);
     moreDetails.addEventListener('click', closeInfoCard);
 
-    let isDragging = false;
-    let startX, startY;
-    let offsetX = 0;
-    let offsetY = 0;
-    let scale = 1;
+    let isDragging = false, startX, startY;
+    let scale = 1; // Keep scale for zooming
 
-    solarSystem.addEventListener('mousedown', (e) => {
+    container.addEventListener('mousedown', (e) => {
         e.preventDefault();
+        if (e.target.closest('.galaxy-item')) return; // Ignore clicks on galaxy selector
+
         isDragging = true;
         startX = e.clientX;
         startY = e.clientY;
-        solarSystem.classList.add('dragging');
+        container.classList.add('dragging');
         lastInteractionTime = Date.now();
         isReturningToCenter = false;
     });
 
     document.addEventListener('mousemove', (e) => {
         if (!isDragging) return;
+
         const deltaX = e.clientX - startX;
         const deltaY = e.clientY - startY;
-        offsetX += deltaX;
-        offsetY += deltaY;
-        offsetX = Math.max(-window.innerWidth / 4, Math.min(window.innerWidth / 4, offsetX));
-        offsetY = Math.max(-window.innerHeight / 4, Math.min(window.innerHeight / 4, offsetY));
-        scene.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+
+        // Update rotation based on mouse movement
+        rotationY += deltaX * 0.2;
+        rotationX -= deltaY * 0.2;
+
+        // Clamp the vertical rotation to avoid flipping
+        rotationX = Math.max(-90, Math.min(90, rotationX));
+
+        // Apply rotation to the galaxy
+        galaxy.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
+
         startX = e.clientX;
         startY = e.clientY;
         lastInteractionTime = Date.now();
@@ -194,15 +207,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.addEventListener('mouseup', () => {
         isDragging = false;
-        solarSystem.classList.remove('dragging');
+        container.classList.remove('dragging');
         lastInteractionTime = Date.now();
     });
 
-    solarSystem.addEventListener('wheel', (e) => {
+    container.addEventListener('wheel', (e) => {
         e.preventDefault();
         const delta = e.deltaY > 0 ? -0.1 : 0.1;
-        scale = Math.max(0.5, Math.min(2, scale + delta));
-        scene.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+        scale = Math.max(0.5, Math.min(3, scale + delta)); // Increased max zoom
+        scene.style.transform = `translate(-50%, -50%) scale(${scale})`;
         lastInteractionTime = Date.now();
         isReturningToCenter = false;
     });
@@ -214,22 +227,28 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function checkInactivity() {
         const now = Date.now();
-        if (now - lastInteractionTime >= inactivityTimeout && !isReturningToCenter && !isPaused && (offsetX !== 0 || offsetY !== 0)) {
+        if (now - lastInteractionTime >= inactivityTimeout && !isReturningToCenter && !isPaused) {
             isReturningToCenter = true;
-            const startX = offsetX;
-            const startY = offsetY;
+            
+            // Animate rotation back to default
+            const startRotX = rotationX;
+            const startRotY = rotationY;
+            const endRotX = 45;
+            const endRotY = 0;
+
             const duration = 1000;
             let startTime = null;
 
             function animateReturn(timestamp) {
                 if (!startTime) startTime = timestamp;
                 const elapsed = timestamp - startTime;
-                const progress = Math.min(elapsed / duration, 1);
+                let progress = Math.min(elapsed / duration, 1);
+                progress = 0.5 - 0.5 * Math.cos(progress * Math.PI); // Easing
 
-                offsetX = startX + (0 - startX) * progress;
-                offsetY = startY + (0 - startY) * progress;
+                rotationX = startRotX + (endRotX - startRotX) * progress;
+                rotationY = startRotY + (endRotY - startRotY) * progress;
 
-                scene.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+                galaxy.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
                 
                 if (progress < 1) {
                     requestAnimationFrame(animateReturn);
@@ -250,7 +269,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         const now = Date.now();
-        const galaxyTiltAngle = 45;
 
         planetObjects.forEach(planetObj => {
             const elapsedSeconds = (now - planetObj.startTime) / 1000;
@@ -266,8 +284,8 @@ document.addEventListener('DOMContentLoaded', function () {
             planetObj.orientation.style.left = `${50 + 50 * (x / radius)}%`;
             planetObj.orientation.style.top = `${50 + 50 * (y / radius)}%`;
 
-            const tiltCompensation = -galaxyTiltAngle;
-            planetObj.element.style.transform = `rotateX(${tiltCompensation}deg)`;
+            // Counter-rotate the planet to always face the camera
+            planetObj.element.style.transform = `rotateY(${-rotationY}deg) rotateX(${-rotationX}deg)`;
         });
         
         requestAnimationFrame(updatePlanets);
