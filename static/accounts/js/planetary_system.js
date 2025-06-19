@@ -75,14 +75,13 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     const container = document.getElementById('planetary-system-container');
-    if (!container) return; // Exit if the container is not found
+    if (!container) return;
 
     const logoElement = container.querySelector('#logo');
     if (logoElement && logoElement.dataset.bgUrl) {
         logoElement.style.backgroundImage = `url('${logoElement.dataset.bgUrl}')`;
     }
 
-    const planets = container.querySelectorAll('.planet');
     const infoCard = document.getElementById('info-card');
     const planetImage = document.getElementById('planet-image');
     const startupName = document.getElementById('startup-name');
@@ -93,68 +92,83 @@ document.addEventListener('DOMContentLoaded', function () {
     const startupDescription = document.getElementById('startup-description');
     const closeCard = document.getElementById('close-card');
     const moreDetails = document.getElementById('more-details');
-    const solarSystem = container.querySelector('#solar-system');
     const scene = container.querySelector('#scene');
-
+    const galaxy = container.querySelector('#galaxy');
+    const orbits = Array.from(container.querySelectorAll('.orbit'));
+    
     const planetObjects = [];
     let isPaused = false;
     let pausedTime = 0;
     let lastInteractionTime = Date.now();
     const inactivityTimeout = 10000;
     let isReturningToCenter = false;
-    let rotationX = 45; // Initial tilt
+    let rotationX = 45;
     let rotationY = 0;
+    let scale = 1;
 
-    planets.forEach((planet, index) => {
-        const orbit = planet.closest('.orbit');
-        const planetOrientation = planet.closest('.planet-orientation');
-        
-        const orbitSize = parseFloat(getComputedStyle(orbit).getPropertyValue('--orbit-size'));
-        const orbitTime = parseFloat(getComputedStyle(orbit).getPropertyValue('--orbit-time'));
-        
-        const initialAngle = Math.random() * 360;
-        const speedFactor = 0.8 + Math.random() * 0.4;
-        
-        planetObjects.push({
-            element: planet,
-            orientation: planetOrientation,
-            orbit: orbit,
-            size: parseFloat(getComputedStyle(planet).getPropertyValue('--planet-size')),
-            orbitSize: orbitSize,
-            orbitTime: orbitTime,
-            angle: initialAngle,
-            speedFactor: speedFactor,
-            startTime: Date.now() - Math.random() * orbitTime * 1000
-        });
+    function createPlanets() {
+        // Clear existing planets before creating new ones
+        orbits.forEach(orbit => orbit.innerHTML = '');
+        planetObjects.length = 0;
 
-        const id = planet.getAttribute('data-id');
-        planet.style.backgroundImage = `url('${startups[id].image}')`;
-        
-        planet.addEventListener('click', (e) => {
-            e.stopPropagation();
+        Object.keys(startups).forEach((id, index) => {
             const startup = startups[id];
+            const orbit = orbits[index % orbits.length];
 
-            planetImage.style.backgroundImage = `url('${startup.image}')`;
-            startupName.textContent = startup.name;
-            startupRating.textContent = `Рейтинг ${startup.rating}`;
-            startupProgress.textContent = startup.progress;
-            startupFunding.textContent = `Цель финансирования: ${startup.funding}`;
-            startupInvestors.textContent = startup.investors;
-            startupDescription.textContent = startup.description;
+            const planetOrientation = document.createElement('div');
+            planetOrientation.className = 'planet-orientation';
 
-            planets.forEach(p => p.classList.remove('active'));
-            planet.classList.add('active');
-            infoCard.style.display = 'block';
+            const planetEl = document.createElement('div');
+            planetEl.className = 'planet';
+            planetEl.setAttribute('data-id', id);
+            
+            const randomSize = 40 + Math.random() * 30;
+            planetEl.style.setProperty('--planet-size', `${randomSize}px`);
+            planetEl.style.backgroundImage = `url('${startup.image}')`;
 
-            isPaused = true;
-            pausedTime = Date.now();
-            lastInteractionTime = Date.now();
+            planetOrientation.appendChild(planetEl);
+            orbit.appendChild(planetOrientation);
+            
+            const orbitSize = parseFloat(getComputedStyle(orbit).getPropertyValue('--orbit-size'));
+            const orbitTime = parseFloat(getComputedStyle(orbit).getPropertyValue('--orbit-time'));
+
+            planetObjects.push({
+                element: planetEl,
+                orientation: planetOrientation,
+                orbit: orbit,
+                size: randomSize,
+                orbitSize: orbitSize,
+                orbitTime: orbitTime,
+                angle: Math.random() * 360,
+                speedFactor: 0.8 + Math.random() * 0.4,
+                startTime: Date.now() - Math.random() * orbitTime * 1000
+            });
+
+            planetEl.addEventListener('click', (e) => {
+                e.stopPropagation();
+                planetImage.style.backgroundImage = `url('${startup.image}')`;
+                startupName.textContent = startup.name;
+                startupRating.textContent = `Рейтинг ${startup.rating}`;
+                startupProgress.textContent = startup.progress;
+                startupFunding.textContent = `Цель финансирования: ${startup.funding}`;
+                startupInvestors.textContent = startup.investors;
+                startupDescription.textContent = startup.description;
+
+                document.querySelectorAll('.planet').forEach(p => p.classList.remove('active'));
+                planetEl.classList.add('active');
+                infoCard.style.display = 'block';
+
+                isPaused = true;
+                pausedTime = Date.now();
+                lastInteractionTime = Date.now();
+            });
         });
-    });
+    }
+
 
     function closeInfoCard() {
         infoCard.style.display = 'none';
-        planets.forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.planet').forEach(p => p.classList.remove('active'));
 
         if (isPaused) {
             const pauseDuration = Date.now() - pausedTime;
@@ -170,12 +184,10 @@ document.addEventListener('DOMContentLoaded', function () {
     moreDetails.addEventListener('click', closeInfoCard);
 
     let isDragging = false, startX, startY;
-    let scale = 1; // Keep scale for zooming
 
     container.addEventListener('mousedown', (e) => {
+        if (e.target.closest('#galaxy-selector') || e.target.closest('#info-card')) return;
         e.preventDefault();
-        if (e.target.closest('.galaxy-item')) return; // Ignore clicks on galaxy selector
-
         isDragging = true;
         startX = e.clientX;
         startY = e.clientY;
@@ -186,20 +198,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.addEventListener('mousemove', (e) => {
         if (!isDragging) return;
-
         const deltaX = e.clientX - startX;
         const deltaY = e.clientY - startY;
-
-        // Update rotation based on mouse movement
         rotationY += deltaX * 0.2;
         rotationX -= deltaY * 0.2;
-
-        // Clamp the vertical rotation to avoid flipping
         rotationX = Math.max(-90, Math.min(90, rotationX));
-
-        // Apply rotation to the galaxy
         galaxy.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
-
         startX = e.clientX;
         startY = e.clientY;
         lastInteractionTime = Date.now();
@@ -212,9 +216,10 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     container.addEventListener('wheel', (e) => {
+        if (e.target.closest('#galaxy-selector')) return;
         e.preventDefault();
         const delta = e.deltaY > 0 ? -0.1 : 0.1;
-        scale = Math.max(0.5, Math.min(3, scale + delta)); // Increased max zoom
+        scale = Math.max(0.5, Math.min(3, scale + delta));
         scene.style.transform = `translate(-50%, -50%) scale(${scale})`;
         lastInteractionTime = Date.now();
         isReturningToCenter = false;
@@ -229,25 +234,20 @@ document.addEventListener('DOMContentLoaded', function () {
         const now = Date.now();
         if (now - lastInteractionTime >= inactivityTimeout && !isReturningToCenter && !isPaused) {
             isReturningToCenter = true;
-            
-            // Animate rotation back to default
             const startRotX = rotationX;
             const startRotY = rotationY;
             const endRotX = 45;
             const endRotY = 0;
-
             const duration = 1000;
             let startTime = null;
 
             function animateReturn(timestamp) {
                 if (!startTime) startTime = timestamp;
-                const elapsed = timestamp - startTime;
-                let progress = Math.min(elapsed / duration, 1);
-                progress = 0.5 - 0.5 * Math.cos(progress * Math.PI); // Easing
+                let progress = Math.min((timestamp - startTime) / duration, 1);
+                progress = 0.5 - 0.5 * Math.cos(progress * Math.PI);
 
                 rotationX = startRotX + (endRotX - startRotX) * progress;
                 rotationY = startRotY + (endRotY - startRotY) * progress;
-
                 galaxy.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
                 
                 if (progress < 1) {
@@ -263,33 +263,23 @@ document.addEventListener('DOMContentLoaded', function () {
     setInterval(checkInactivity, 1000);
 
     function updatePlanets() {
-        if (isPaused) {
-            requestAnimationFrame(updatePlanets);
-            return;
+        if (!isPaused) {
+            const now = Date.now();
+            planetObjects.forEach(p => {
+                const elapsedSeconds = (now - p.startTime) / 1000;
+                const orbitTimeSeconds = p.orbitTime * p.speedFactor;
+                const progress = (elapsedSeconds % orbitTimeSeconds) / orbitTimeSeconds;
+                const angleRad = (p.angle + progress * 360) * Math.PI / 180;
+                const radius = p.orbitSize / 2;
+                const x = Math.cos(angleRad) * radius;
+                const y = Math.sin(angleRad) * radius;
+                p.orientation.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+                p.element.style.transform = `rotateY(${-rotationY}deg) rotateX(${-rotationX}deg)`;
+            });
         }
-
-        const now = Date.now();
-
-        planetObjects.forEach(planetObj => {
-            const elapsedSeconds = (now - planetObj.startTime) / 1000;
-            const orbitTimeSeconds = planetObj.orbitTime * planetObj.speedFactor;
-            const progress = (elapsedSeconds % orbitTimeSeconds) / orbitTimeSeconds;
-            const angle = planetObj.angle + progress * 360;
-            const angleRad = angle * Math.PI / 180;
-            
-            const radius = planetObj.orbitSize / 2;
-            const x = Math.cos(angleRad) * radius;
-            const y = Math.sin(angleRad) * radius;
-            
-            planetObj.orientation.style.left = `${50 + 50 * (x / radius)}%`;
-            planetObj.orientation.style.top = `${50 + 50 * (y / radius)}%`;
-
-            // Counter-rotate the planet to always face the camera
-            planetObj.element.style.transform = `rotateY(${-rotationY}deg) rotateX(${-rotationX}deg)`;
-        });
-        
         requestAnimationFrame(updatePlanets);
     }
 
+    createPlanets();
     updatePlanets();
 });
