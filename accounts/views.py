@@ -466,295 +466,288 @@ def load_similar_startups(request, startup_id: int):  # <-- Явно указы�
 
 @login_required
 def investments(request):
-    # Дополнительная проверка на роль инвестора
+    # Проверяем роль пользователя
     if not hasattr(request.user, "role") or request.user.role.role_name != "investor":
         messages.error(request, "Доступ к этой странице разрешен только инвесторам.")
-        return redirect("home")
+        return redirect("profile")
 
-    # Базовый запрос для инвестиций
-    base_investments_qs = InvestmentTransactions.objects.filter(
-        investor=request.user, transaction_type__type_name="investment"
-    ).select_related("startup", "startup__direction", "startup__owner")
-
-    # Агрегированные данные для аналитики
-    analytics_data = base_investments_qs.distinct().aggregate(
-        total_investment=Sum("amount"),
-        max_investment=Max("amount"),
-        min_investment=Min("amount"),
-        startups_count=Count("startup", distinct=True),
-    )
-
-    total_investment_decimal = analytics_data.get("total_investment") or Decimal("0")
-    logger.info(
-        f"[investments] User: {request.user.email}, Total Investment Calculated: {total_investment_decimal}"
-    )
-
-    # Данные по категориям для радиальных диаграмм
-    category_data_raw = (
-        base_investments_qs.distinct()
-        .values("startup__direction__direction_name")
-        .annotate(category_total=Sum("amount"))
-        .order_by("-category_total")
-    )
-
-    investment_categories = []
-    invested_category_data_dict = {}
-    total_for_percentage = total_investment_decimal if total_investment_decimal > 0 else Decimal("1")
-
-    for cat_data in category_data_raw:
-        percentage = 0
-        category_sum = cat_data.get("category_total")
-        category_name = cat_data.get("startup__direction__direction_name") or "Без категории"
-
-        if category_sum and total_for_percentage > 0:
-            try:
-                percentage = round((Decimal(category_sum) / total_for_percentage) * 100)
-                percentage = min(percentage, 100)
-            except Exception as e:
-                logger.error(f"Ошибка расчета процента для категории '{category_name}': {e}")
-                percentage = 0
-
-        investment_categories.append({"name": category_name, "percentage": percentage})
-        invested_category_data_dict[category_name] = percentage
-
-    # Данные для графика по месяцам
-    current_year = timezone.now().year
-    logger.info(f"[investments] Preparing chart data for user {request.user.email}, year: {current_year}")
-    monthly_data_direct = (
-        base_investments_qs.filter(
-            created_at__year=current_year, amount__gt=0
-        )
-        .annotate(month=TruncMonth("created_at"))
-        .values("month")
-        .annotate(monthly_total=Sum(Coalesce("amount", Decimal(0))))
-        .order_by("month")
-    )
-
-    month_labels = ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"]
-    monthly_totals = [0] * 12
-    for data in monthly_data_direct:
-        month_index = data["month"].month - 1
-        if 0 <= month_index < 12:
-            monthly_total_decimal = data.get("monthly_total", Decimal(0)) or Decimal(0)
-            monthly_totals[month_index] = float(monthly_total_decimal)
-
-    # Данные для стекированного графика по категориям
-    logger.info(f"[investments] Preparing chart data for user {request.user.email}, year: {current_year}")
-    monthly_category_data_raw = (
-        base_investments_qs.filter(
-            created_at__year=current_year,
-            amount__gt=0,
-            startup__direction__isnull=False,
-        )
-        .annotate(month=TruncMonth("created_at"))
-        .values("month", "startup__direction__direction_name")
-        .annotate(monthly_category_total=Sum(Coalesce("amount", Decimal(0))))
-        .order_by("month", "startup__direction__direction_name")
-    )
-
-    logger.info(f"[investments] Raw monthly category data from DB: {list(monthly_category_data_raw)}")
-
-    structured_monthly_data = collections.defaultdict(lambda: collections.defaultdict(float))
-    unique_categories = set()
-
-    for data in monthly_category_data_raw:
-        month_dt = data["month"]
-        category_name = data["startup__direction__direction_name"]
-        amount = float(data.get("monthly_category_total", 0) or 0)
-        month_key = month_dt.strftime("%Y-%m-01")
-        structured_monthly_data[month_key][category_name] += amount
-        unique_categories.add(category_name)
-
-    sorted_categories = sorted(list(unique_categories))
-    logger.info(f"[investments] Unique categories found for chart: {sorted_categories}")
-
-    chart_data_list = []
-    start_date = datetime.date(current_year, 1, 1)
-    for i in range(12):
-        current_month_key = (start_date + relativedelta(months=i)).strftime("%Y-%m-01")
-        month_data = {
-            "month_key": current_month_key,
-            "category_data": dict(structured_monthly_data[current_month_key]),
-        }
-        chart_data_list.append(month_data)
-
-    logger.info(f"[investments] Final structured chart data list: {chart_data_list}")
-
-    # Данные для планетарной системы
-    s3_client = client(
-        "s3",
-        aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-        aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
-        endpoint_url=settings.AWS_S3_ENDPOINT_URL,
-        region_name=settings.AWS_S3_REGION_NAME,
-    )
-
-    # Инвестированные стартапы
-    invested_startups_qs = base_investments_qs.select_related("startup").annotate(
-        average_rating=Avg(
-            ExpressionWrapper(
-                Coalesce(F("startup__sum_votes"), 0) * 1.0 / Coalesce(F("startup__total_voters"), 1),
-                output_field=FloatField(),
-            ),
-            filter=Q(startup__total_voters__gt=0),
-            default=0.0,
-        ),
-        comment_count=Count("startup__comments", distinct=True),
-        investors_count=Count("startup__investmenttransactions__investor", distinct=True),
-    ).order_by("-amount")[:5]
-
-    # Стартапы, где пользователь — владелец
-    owned_startups_qs = Startups.objects.filter(
-        owner_id=request.user.user_id,
-        status="approved"
-    ).select_related("direction").annotate(
-        average_rating=Avg(
-            ExpressionWrapper(
-                Coalesce(F("sum_votes"), 0) * 1.0 / Coalesce(F("total_voters"), 1),
-                output_field=FloatField(),
-            ),
-            filter=Q(total_voters__gt=0),
-            default=0.0,
-        ),
-        comment_count=Count("comments", distinct=True),
-        investors_count=Count("investmenttransactions__investor", distinct=True),
-    ).order_by("-amount_raised")[:5]
-
-    # Объединяем данные
-    all_startups_data = list(invested_startups_qs) + list(owned_startups_qs)
-    planetary_investments = []
-    min_orbit_size = 200
-    max_orbit_size = 800
-    orbit_step = 50
-    available_sizes = list(range(min_orbit_size, max_orbit_size + orbit_step, orbit_step))
-    shuffle(available_sizes)
-
-    for idx, startup_data in enumerate(all_startups_data, 1):
-        orbit_size = available_sizes[idx - 1] if idx <= len(available_sizes) else min_orbit_size + (idx - 1) * orbit_step
-        orbit_time = 80 + (idx - 1) * 20
-        planet_size = idx * 2 + 50
-
-        # Получаем URL логотипа
-        logo_url = "https://via.placeholder.com/150"
-        startup_id = startup_data.startup_id if hasattr(startup_data, 'startup_id') else startup_data.startup.startup_id
-        logo_urls = startup_data.startup.logo_urls if hasattr(startup_data, 'startup') else startup_data.logo_urls
-        if (
-            logo_urls
-            and isinstance(logo_urls, list)
-            and len(logo_urls) > 0
-        ):
-            try:
-                prefix = f"startups/{startup_id}/logos/"
-                response = s3_client.list_objects_v2(
-                    Bucket=settings.AWS_STORAGE_BUCKET_NAME, Prefix=prefix
-                )
-                if "Contents" in response and len(response["Contents"]) > 0:
-                    file_key = response["Contents"][0]["Key"]
-                    logo_url = f"https://storage.yandexcloud.net/{settings.AWS_STORAGE_BUCKET_NAME}/{file_key}"
-                    logger.info(f"Сгенерирован URL для логотипа стартапа {startup_id}: {logo_url}")
-                else:
-                    logger.warning(f"Файл для логотипа стартапа {startup_id} не найден в бакете по префиксу {prefix}")
-            except Exception as e:
-                logger.error(f"Ошибка при генерации URL для логотипа стартапа {startup_id}: {str(e)}")
-        else:
-            logger.warning(f"Стартап {startup_id} не имеет логотипа в logo_urls")
-
-        # Тип инвестирования
-        startup = Startups.objects.get(startup_id=startup_id)
-        investment_type = "Инвестирование" if startup.only_invest else "Выкуп" if startup.only_buy else "Выкуп+инвестирование" if startup.both_mode else "Не указано"
-
-        planet_data = {
-            "id": str(idx),
-            "startup_id": startup_id,
-            "name": startup_data.startup.title if hasattr(startup_data, 'startup') else startup_data.title or "Без названия",
-            "description": startup.short_description or startup.description or "Описание отсутствует",
-            "rating": f"{(startup_data.average_rating or 0):.1f}/5 ({startup.total_voters or 0})",
-            "comment_count": startup_data.comment_count or 0,
-            "progress": f"{(startup.amount_raised / startup.funding_goal * 100 if startup.funding_goal else 0):.0f}%",
-            "direction": startup_data.startup.direction.direction_name if hasattr(startup_data, 'startup') else startup_data.direction__direction_name or "Не указано",
-            "investment_type": investment_type,
-            "funding": f"{int(startup_data.startup.amount_raised if hasattr(startup_data, 'startup') else startup_data.amount_raised or 0):,d} ₽".replace(",", " "),
-            "funding_goal": f"{int(startup_data.startup.funding_goal if hasattr(startup_data, 'startup') else startup_data.funding_goal or 0):,d} ₽".replace(",", " "),
-            "investors": f"Инвесторов: {startup_data.investors_count or 0}",
-            "image": logo_url,
-            "orbit_size": orbit_size,
-            "orbit_time": orbit_time,
-            "planet_size": planet_size,
-        }
-        planetary_investments.append(planet_data)
-
-    logger.info(f"[investments] Planetary investments for user {request.user.email}: {planetary_investments}")
-
-    # Стартапы, где пользователь является владельцем
-    user_owned_startups = Startups.objects.filter(
-        owner_id=request.user.user_id
-    ).select_related("direction", "stage", "status_id").annotate(
-        average_rating=Avg(
-            ExpressionWrapper(
-                Coalesce(F("sum_votes"), 0) * 1.0 / Coalesce(F("total_voters"), 1),
-                output_field=FloatField(),
-            ),
-            filter=Q(total_voters__gt=0),
-            default=0.0,
-        ),
-        comment_count=Count("comments"),
-    ).order_by("-created_at")
-
-    logger.info(f"[investments] User-owned startups for {request.user.email}: {user_owned_startups.count()}")
-
-    # QuerySet для списка стартапов (инвестиции)
-    user_investments_qs_final = base_investments_qs.annotate(
-        startup_average_rating=Avg(
-            ExpressionWrapper(
-                F("startup__sum_votes") * 1.0 / F("startup__total_voters"),
-                output_field=FloatField(),
-            ),
-            filter=Q(startup__total_voters__gt=0),
-            default=0.0,
-        ),
-        startup_comment_count=Count("startup__comments", distinct=True),
-    ).annotate(average_rating=Coalesce("startup_average_rating", 0.0))
-
-    # Сортировка
-    sort_param = request.GET.get("sort", "newest")
-    if sort_param == "oldest":
-        user_investments_qs_final = user_investments_qs_final.order_by("created_at")
-    else:
-        user_investments_qs_final = user_investments_qs_final.order_by("-created_at")
-
-    # Данные для модального окна категорий
-    all_directions_qs = Directions.objects.all().order_by("direction_name")
-    all_directions_list = list(all_directions_qs.values("pk", "direction_name"))
-
-    # Логирование данных стартапов
     try:
-        logger.info(f"[investments] Checking investment data for user {request.user.email}:")
-        for inv in user_investments_qs_final[:3]:
-            startup_info = "Startup object exists" if inv.startup else "!!! Startup object IS MISSING !!!"
-            startup_name = f"Name: '{inv.startup.title}'" if inv.startup and hasattr(inv.startup, "title") else "Name: attribute missing or startup is None"
-            logger.info(f"  Investment ID: {inv.transaction_id}, {startup_info}, {startup_name}")
+        # Получаем все инвестиции пользователя
+        user_investments_qs = InvestmentTransactions.objects.filter(
+            investor=request.user, transaction_type__type_name="investment"
+        ).select_related("startup", "startup__direction", "startup__owner")
+
+        # --- Расчет общей суммы инвестиций ---
+        total_investment_data = user_investments_qs.aggregate(
+            total_investment=Sum("amount"),
+            max_investment=Max("amount"),
+            min_investment=Min("amount"),
+            startups_count=Count("startup", distinct=True),
+        )
+
+        total_investment = total_investment_data.get("total_investment") or Decimal("0")
+        max_investment = total_investment_data.get("max_investment") or Decimal("0")
+        min_investment = total_investment_data.get("min_investment") or Decimal("0")
+        startups_count = total_investment_data.get("startups_count", 0)
+
+        logger.info(
+            f"[investments] User: {request.user.email}, Total Investment: {total_investment}"
+        )
+
+        # --- Данные по категориям для радиальных диаграмм ---
+        category_data_raw = (
+            user_investments_qs.values("startup__direction__direction_name")
+            .annotate(category_total=Sum("amount"))
+            .order_by("-category_total")
+        )
+
+        investment_categories = []
+        invested_category_data_dict = {}
+        total_for_category_percentage = total_investment if total_investment > 0 else Decimal("1")
+
+        for cat_data in category_data_raw:
+            percentage = 0
+            category_sum = cat_data.get("category_total")
+            category_name = cat_data.get("startup__direction__direction_name") or "Без категории"
+
+            if category_sum and total_for_category_percentage > 0:
+                try:
+                    percentage = round((Decimal(category_sum) / total_for_category_percentage) * 100)
+                    percentage = min(percentage, 100)
+                except Exception as e:
+                    logger.error(f"Ошибка расчета процента для категории '{category_name}': {e}")
+                    percentage = 0
+
+            investment_categories.append({"name": category_name, "percentage": percentage})
+            invested_category_data_dict[category_name] = percentage
+
+        # --- Данные для графика по месяцам ---
+        current_year = timezone.now().year
+        logger.info(f"[investments] Preparing chart data for user {request.user.email}, year: {current_year}")
+        monthly_data_direct = (
+            user_investments_qs.filter(
+                created_at__year=current_year, amount__gt=0
+            )
+            .annotate(month=TruncMonth("created_at"))
+            .values("month")
+            .annotate(monthly_total=Sum(Coalesce("amount", Decimal(0))))
+            .order_by("month")
+        )
+
+        month_labels = ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"]
+        monthly_totals = [0] * 12
+        for data in monthly_data_direct:
+            month_index = data["month"].month - 1
+            if 0 <= month_index < 12:
+                monthly_total_decimal = data.get("monthly_total", Decimal(0)) or Decimal(0)
+                monthly_totals[month_index] = float(monthly_total_decimal)
+
+        # --- Данные для стекированного графика по категориям ---
+        logger.info(f"[investments] Preparing chart data for user {request.user.email}, year: {current_year}")
+        monthly_category_data_raw = (
+            user_investments_qs.filter(
+                created_at__year=current_year,
+                amount__gt=0,
+                startup__direction__isnull=False,
+            )
+            .annotate(month=TruncMonth("created_at"))
+            .values("month", "startup__direction__direction_name")
+            .annotate(monthly_category_total=Sum(Coalesce("amount", Decimal(0))))
+            .order_by("month", "startup__direction__direction_name")
+        )
+
+        logger.info(f"[investments] Raw monthly category data from DB: {list(monthly_category_data_raw)}")
+
+        structured_monthly_data = collections.defaultdict(lambda: collections.defaultdict(float))
+        unique_categories = set()
+
+        for data in monthly_category_data_raw:
+            month_dt = data["month"]
+            category_name = data["startup__direction__direction_name"]
+            amount = float(data.get("monthly_category_total", 0) or 0)
+            month_key = month_dt.strftime("%Y-%m-01")
+            structured_monthly_data[month_key][category_name] += amount
+            unique_categories.add(category_name)
+
+        sorted_categories = sorted(list(unique_categories))
+        logger.info(f"[investments] Unique categories found for chart: {sorted_categories}")
+
+        chart_data_list = []
+        start_date = datetime.date(current_year, 1, 1)
+        for i in range(12):
+            current_month_key = (start_date + relativedelta(months=i)).strftime("%Y-%m-01")
+            month_data = {
+                "month_key": current_month_key,
+                "category_data": dict(structured_monthly_data[current_month_key]),
+            }
+            chart_data_list.append(month_data)
+
+        logger.info(f"[investments] Final structured chart data list: {chart_data_list}")
+
+        # --- Данные для планетарной системы ---
+        s3_client = client(
+            "s3",
+            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+            endpoint_url=settings.AWS_S3_ENDPOINT_URL,
+            region_name=settings.AWS_S3_REGION_NAME,
+        )
+
+        # Инвестированные стартапы
+        invested_startups_qs = user_investments_qs.select_related("startup").annotate(
+            average_rating=Avg(
+                ExpressionWrapper(
+                    Coalesce(F("startup__sum_votes"), 0) * 1.0 / Coalesce(F("startup__total_voters"), 1),
+                    output_field=FloatField(),
+                ),
+                filter=Q(startup__total_voters__gt=0),
+                default=0.0,
+            ),
+            comment_count=Count("startup__comments", distinct=True),
+            investors_count=Count("startup__investmenttransactions__investor", distinct=True),
+        ).order_by("-amount")[:5]
+
+        # Стартапы, где пользователь — владелец
+        owned_startups_qs = Startups.objects.filter(
+            owner_id=request.user.user_id,
+            status="approved"
+        ).select_related("direction").annotate(
+            average_rating=Avg(
+                ExpressionWrapper(
+                    Coalesce(F("sum_votes"), 0) * 1.0 / Coalesce(F("total_voters"), 1),
+                    output_field=FloatField(),
+                ),
+                filter=Q(total_voters__gt=0),
+                default=0.0,
+            ),
+            comment_count=Count("comments", distinct=True),
+            investors_count=Count("investmenttransactions__investor", distinct=True),
+        ).order_by("-amount_raised")[:5]
+
+        planetary_investments = []
+        min_orbit_size = 200
+        max_orbit_size = 800
+        orbit_step = 50
+        available_sizes = list(range(min_orbit_size, max_orbit_size + orbit_step, orbit_step))
+        shuffle(available_sizes)
+
+        for idx, startup in enumerate(list(invested_startups_qs) + list(owned_startups_qs), 1):
+            if hasattr(startup, 'startup'):
+                startup_obj = startup.startup
+            else:
+                startup_obj = startup
+
+            # Формируем URL для логотипа
+            if (
+                not startup_obj.logo_urls
+                or not isinstance(startup_obj.logo_urls, list)
+                or len(startup_obj.logo_urls) == 0
+            ):
+                logger.warning(f"Стартап {startup_obj.startup_id} ({startup_obj.title}) не имеет логотипа в logo_urls")
+                logo_url = "https://via.placeholder.com/150"
+            else:
+                try:
+                    prefix = f"startups/{startup_obj.startup_id}/logos/"
+                    response = s3_client.list_objects_v2(Bucket=settings.AWS_STORAGE_BUCKET_NAME, Prefix=prefix)
+                    if "Contents" in response and len(response["Contents"]) > 0:
+                        file_key = response["Contents"][0]["Key"]
+                        logo_url = f"https://storage.yandexcloud.net/{settings.AWS_STORAGE_BUCKET_NAME}/{file_key}"
+                        logger.info(f"Сгенерирован URL для логотипа стартапа {startup_obj.startup_id}: {logo_url}")
+                    else:
+                        logger.warning(f"Файл для логотипа стартапа {startup_obj.startup_id} не найден в бакете по префиксу {prefix}")
+                        logo_url = "https://via.placeholder.com/150"
+                except Exception as e:
+                    logger.error(f"Ошибка при генерации URL для логотипа стартапа {startup_obj.startup_id}: {str(e)}")
+                    logo_url = "https://via.placeholder.com/150"
+
+            orbit_size = (idx * 100) + 100
+            orbit_time = (idx * 20) + 60
+            planet_size = (idx * 2) + 50
+
+            # Тип инвестирования
+            investment_type = "Инвестирование" if startup_obj.only_invest else "Выкуп" if startup_obj.only_buy else "Выкуп+инвестирование" if startup_obj.both_mode else "Не указано"
+
+            planet_data = {
+                "id": str(idx),
+                "startup_id": startup_obj.startup_id,
+                "name": startup_obj.title or "Без названия",
+                "description": startup_obj.description or "Описание отсутствует",
+                "rating": f"{(startup.average_rating or 0):.1f}/5 ({startup_obj.total_voters or 0})",
+                "comment_count": startup.comment_count or 0,
+                "progress": f"{(startup_obj.amount_raised / startup_obj.funding_goal * 100 if startup_obj.funding_goal else 0):.0f}%",
+                "direction": startup_obj.direction.direction_name if startup_obj.direction else "Не указано",
+                "investment_type": investment_type,
+                "funding": f"{int(startup_obj.amount_raised or 0):,d} ₽".replace(",", " "),
+                "funding_goal": f"{int(startup_obj.funding_goal or 0):,d} ₽".replace(",", " "),
+                "investors": f"Инвесторов: {startup.investors_count or 0}",
+                "image": logo_url,
+                "orbit_size": orbit_size,
+                "orbit_time": orbit_time,
+                "planet_size": planet_size,
+            }
+            planetary_investments.append(planet_data)
+
+        logger.info(f"[investments] Planetary investments for user {request.user.email}: {planetary_investments}")
+
+        # Инвестиции пользователя для списка
+        user_investments = user_investments_qs.select_related("startup").annotate(
+            startup_average_rating=Avg(
+                ExpressionWrapper(
+                    F("startup__sum_votes") * 1.0 / F("startup__total_voters"),
+                    output_field=FloatField(),
+                ),
+                filter=Q(startup__total_voters__gt=0),
+                default=0.0,
+            ),
+            startup_comment_count=Count("startup__comments", distinct=True),
+        ).order_by("-created_at")
+
+        # Стартапы, где пользователь является владельцем
+        user_owned_startups = Startups.objects.filter(
+            owner_id=request.user.user_id
+        ).select_related("direction", "stage", "status_id").annotate(
+            average_rating=Avg(
+                ExpressionWrapper(
+                    Coalesce(F("sum_votes"), 0) * 1.0 / Coalesce(F("total_voters"), 1),
+                    output_field=FloatField(),
+                ),
+                filter=Q(total_voters__gt=0),
+                default=0.0,
+            ),
+            comment_count=Count("comments"),
+        ).order_by("-created_at")
+
+        # Данные для модального окна категорий
+        all_directions_qs = Directions.objects.all().order_by("direction_name")
+        all_directions_list = list(all_directions_qs.values("pk", "direction_name"))
+
+        context = {
+            "startups_count": startups_count,
+            "total_investment": total_investment,
+            "max_investment": max_investment,
+            "min_investment": min_investment,
+            "investment_categories": investment_categories[:7],
+            "month_labels": month_labels,
+            "chart_monthly_category_data": chart_data_list,
+            "chart_categories": sorted_categories,
+            "all_directions": all_directions_list,
+            "invested_category_data": invested_category_data_dict,
+            "user_investments": user_investments,
+            "user_owned_startups": user_owned_startups,
+            "current_sort": "newest",
+            "planetary_investments": planetary_investments,
+            "investor_logo_url": request.user.get_profile_picture_url() or "https://via.placeholder.com/60",
+        }
+
+        return render(request, "accounts/investments.html", context)
+
     except Exception as e:
-        logger.error(f"[investments] Error logging investment data: {e}")
-
-    context = {
-        "user_investments": user_investments_qs_final,
-        "planetary_investments": planetary_investments,
-        "startups_count": analytics_data.get("startups_count", 0),
-        "total_investment": total_investment_decimal,
-        "max_investment": analytics_data.get("max_investment", 0),
-        "min_investment": analytics_data.get("min_investment", 0),
-        "investment_categories": investment_categories[:7],
-        "month_labels": month_labels,
-        "chart_monthly_category_data": chart_data_list,
-        "chart_categories": sorted_categories,
-        "all_directions": all_directions_list,
-        "invested_category_data": invested_category_data_dict,
-        "current_sort": sort_param,
-        "user_owned_startups": user_owned_startups,
-        "investor_logo_url": request.user.get_profile_picture_url() or "https://via.placeholder.com/60",
-    }
-
-    return render(request, "accounts/investments.html", context)
+        logger.error(f"Произошла ошибка в investments: {str(e)}", exc_info=True)
+        messages.error(
+            request,
+            "Произошла ошибка при загрузке страницы. Пожалуйста, попробуйте снова.",
+        )
+        return redirect("profile")
 
 
 
