@@ -38,11 +38,11 @@
                       <div class="orbit" style="--orbit-size: {{ investment.orbit_size|default:200 }}px; --orbit-time: {{ investment.orbit_time|default:80 }}s;">
                         <div class="planet-orientation">
                           <div class="planet-logo-container">
-                            <div class="planet" style="--planet-size: {{ investment.planet_size|default:50 }}px;" data-id="{{ investment.id|default_if_none:'' }}">
+                            <div class="planet" style="--planet-size: {{ investment.planet_size|default:50 }}px; max-width: 100px; max-height: 100px;" data-id="{{ investment.id|default_if_none:'' }}">
                               {% if investment.startup.planet_image %}
-                                <img src="{% get_file_url_tag file_id=investment.startup.planet_image.name startup_id=investment.startup.startup_id file_type='planet' %}" alt="{{ investment.name|default:'Planet'|escape }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                                <img src="https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/{{ investment.startup.planet_image }}" alt="{{ investment.name|default:'Planet'|escape }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
                               {% elif investment.startup.logo_urls and investment.startup.logo_urls|length > 0 %}
-                                <img src="{% get_file_url_tag file_id=investment.startup.logo_urls.0 startup_id=investment.startup.startup_id file_type='logo' %}" alt="{{ investment.name|default:'Logo'|escape }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                                <img src="{% get_file_url_tag file_id=investment.startup.logo_urls.0 startup_id=investment.startup.startup_id file_type='logo' %}" alt="{{ investment.name|default:'Logo'|escape }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; max-width: 30px; max-height: 30px;">
                               {% else %}
                                 <div class="planet">
                                   <div class="planet-segment segment-top" style="background: linear-gradient(to bottom, #87CEEB 0%, #E0FFFF 100%);"></div>
@@ -52,9 +52,9 @@
                               {% endif %}
                             </div>
                             {% if investment.startup.logo_urls and investment.startup.logo_urls|length > 0 %}
-                              <img src="{% get_file_url_tag file_id=investment.startup.logo_urls.0 startup_id=investment.startup.startup_id file_type='logo' %}" alt="{{ investment.name|default:'Logo'|escape }}" style="width: 50%; height: 50%; object-fit: contain;">
+                              <img src="{% get_file_url_tag file_id=investment.startup.logo_urls.0 startup_id=investment.startup.startup_id file_type='logo' %}" alt="{{ investment.name|default:'Logo'|escape }}" style="width: 50%; height: 50%; object-fit: contain; max-width: 30px; max-height: 30px;">
                             {% else %}
-                              <img src="/static/images/default-logo.png" alt="Default Logo" style="width: 50%; height: 50%; object-fit: contain;">
+                              <img src="/static/images/default-logo.png" alt="Default Logo" style="width: 50%; height: 50%; object-fit: contain; max-width: 30px; max-height: 30px;">
                             {% endif %}
                           </div>
                         </div>
@@ -179,9 +179,9 @@
               <div class="startup-card-left">
                 <div class="planet-logo-container">
                   {% if investment.startup.planet_image %}
-                    <img src="{% get_file_url_tag file_id=investment.startup.planet_image.name startup_id=investment.startup.startup_id file_type='planet' %}" alt="{{ investment.startup.title|default:'No Name' }} Planet" class="planet-image">
+                    <img src="https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/{{ investment.startup.planet_image }}" alt="{{ investment.startup.title|default:'No Name' }} Planet" class="planet-image" style="max-width: 100px; max-height: 100px;">
                   {% elif investment.startup.logo_urls and investment.startup.logo_urls|length > 0 %}
-                    <img src="{% get_file_url_tag file_id=investment.startup.logo_urls.0 startup_id=investment.startup.startup_id file_type='logo' %}" alt="{{ investment.startup.title|default:'No Name' }} Logo" class="planet-image">
+                    <img src="{% get_file_url_tag file_id=investment.startup.logo_urls.0 startup_id=investment.startup.startup_id file_type='logo' %}" alt="{{ investment.startup.title|default:'No Name' }} Logo" class="planet-image" style="max-width: 30px; max-height: 30px;">
                   {% else %}
                     <div class="planet">
                       <div class="planet-segment segment-top" style="background: linear-gradient(to bottom, #87CEEB 0%, #E0FFFF 100%);"></div>
@@ -190,9 +190,9 @@
                     </div>
                   {% endif %}
                   {% if investment.startup.logo_urls and investment.startup.logo_urls|length > 0 %}
-                    <img src="{% get_file_url_tag file_id=investment.startup.logo_urls.0 startup_id=investment.startup.startup_id file_type='logo' %}" alt="{{ investment.startup.title|default:'No Name' }} Logo" class="startup-logo">
+                    <img src="{% get_file_url_tag file_id=investment.startup.logo_urls.0 startup_id=investment.startup.startup_id file_type='logo' %}" alt="{{ investment.startup.title|default:'No Name' }} Logo" class="startup-logo" style="max-width: 30px; max-height: 30px;">
                   {% else %}
-                    <img src="/static/images/default-logo.png" alt="Default Logo" class="startup-logo">
+                    <img src="/static/images/default-logo.png" alt="Default Logo" class="startup-logo" style="max-width: 30px; max-height: 30px;">
                   {% endif %}
                 </div>
                 <div class="startup-name">
@@ -259,9 +259,9 @@
               <div class="startup-card-left">
                 <div class="planet-logo-container">
                   {% if startup.planet_image %}
-                    <img src="{% get_file_url_tag file_id=startup.planet_image.name startup_id=startup.startup_id file_type='planet' %}" alt="{{ startup.title|default:'No Name' }} Planet" class="planet-image">
+                    <img src="https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/{{ startup.planet_image }}" alt="{{ startup.title|default:'No Name' }} Planet" class="planet-image" style="max-width: 100px; max-height: 100px;">
                   {% elif startup.logo_urls and startup.logo_urls|length > 0 %}
-                    <img src="{% get_file_url_tag file_id=startup.logo_urls.0 startup_id=startup.startup_id file_type='logo' %}" alt="{{ startup.title|default:'No Name' }} Logo" class="planet-image">
+                    <img src="{% get_file_url_tag file_id=startup.logo_urls.0 startup_id=startup.startup_id file_type='logo' %}" alt="{{ startup.title|default:'No Name' }} Logo" class="planet-image" style="max-width: 30px; max-height: 30px;">
                   {% else %}
                     <div class="planet">
                       <div class="planet-segment segment-top" style="background: linear-gradient(to bottom, #87CEEB 0%, #E0FFFF 100%);"></div>
@@ -270,9 +270,9 @@
                     </div>
                   {% endif %}
                   {% if startup.logo_urls and startup.logo_urls|length > 0 %}
-                    <img src="{% get_file_url_tag file_id=startup.logo_urls.0 startup_id=startup.startup_id file_type='logo' %}" alt="{{ startup.title|default:'No Name' }} Logo" class="startup-logo">
+                    <img src="{% get_file_url_tag file_id=startup.logo_urls.0 startup_id=startup.startup_id file_type='logo' %}" alt="{{ startup.title|default:'No Name' }} Logo" class="startup-logo" style="max-width: 30px; max-height: 30px;">
                   {% else %}
-                    <img src="/static/images/default-logo.png" alt="Default Logo" class="startup-logo">
+                    <img src="/static/images/default-logo.png" alt="Default Logo" class="startup-logo" style="max-width: 30px; max-height: 30px;">
                   {% endif %}
                 </div>
                 <div class="startup-name">
@@ -338,9 +338,9 @@
               <div class="startup-card-left">
                 <div class="planet-logo-container">
                   {% if investment.startup.planet_image %}
-                    <img src="{% get_file_url_tag file_id=investment.startup.planet_image.name startup_id=investment.startup.startup_id file_type='planet' %}" alt="{{ investment.startup.title|default:'No Name' }} Planet" class="planet-image">
+                    <img src="https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/{{ investment.startup.planet_image }}" alt="{{ investment.startup.title|default:'No Name' }} Planet" class="planet-image" style="max-width: 100px; max-height: 100px;">
                   {% elif investment.startup.logo_urls and investment.startup.logo_urls|length > 0 %}
-                    <img src="{% get_file_url_tag file_id=investment.startup.logo_urls.0 startup_id=investment.startup.startup_id file_type='logo' %}" alt="{{ investment.startup.title|default:'No Name' }} Logo" class="planet-image">
+                    <img src="{% get_file_url_tag file_id=investment.startup.logo_urls.0 startup_id=investment.startup.startup_id file_type='logo' %}" alt="{{ investment.startup.title|default:'No Name' }} Logo" class="planet-image" style="max-width: 30px; max-height: 30px;">
                   {% else %}
                     <div class="planet">
                       <div class="planet-segment segment-top" style="background: linear-gradient(to bottom, #87CEEB 0%, #E0FFFF 100%);"></div>
@@ -349,9 +349,9 @@
                     </div>
                   {% endif %}
                   {% if investment.startup.logo_urls and investment.startup.logo_urls|length > 0 %}
-                    <img src="{% get_file_url_tag file_id=investment.startup.logo_urls.0 startup_id=investment.startup.startup_id file_type='logo' %}" alt="{{ investment.startup.title|default:'No Name' }} Logo" class="startup-logo">
+                    <img src="{% get_file_url_tag file_id=investment.startup.logo_urls.0 startup_id=investment.startup.startup_id file_type='logo' %}" alt="{{ investment.startup.title|default:'No Name' }} Logo" class="startup-logo" style="max-width: 30px; max-height: 30px;">
                   {% else %}
-                    <img src="/static/images/default-logo.png" alt="Default Logo" class="startup-logo">
+                    <img src="/static/images/default-logo.png" alt="Default Logo" class="startup-logo" style="max-width: 30px; max-height: 30px;">
                   {% endif %}
                 </div>
                 <div class="startup-name">
@@ -415,9 +415,9 @@
               <div class="startup-card-left">
                 <div class="planet-logo-container">
                   {% if startup.planet_image %}
-                    <img src="{% get_file_url_tag file_id=startup.planet_image.name startup_id=startup.startup_id file_type='planet' %}" alt="{{ startup.title|default:'No Name' }} Planet" class="planet-image">
+                    <img src="https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/{{ startup.planet_image }}" alt="{{ startup.title|default:'No Name' }} Planet" class="planet-image" style="max-width: 100px; max-height: 100px;">
                   {% elif startup.logo_urls and startup.logo_urls|length > 0 %}
-                    <img src="{% get_file_url_tag file_id=startup.logo_urls.0 startup_id=startup.startup_id file_type='logo' %}" alt="{{ startup.title|default:'No Name' }} Logo" class="planet-image">
+                    <img src="{% get_file_url_tag file_id=startup.logo_urls.0 startup_id=startup.startup_id file_type='logo' %}" alt="{{ startup.title|default:'No Name' }} Logo" class="planet-image" style="max-width: 30px; max-height: 30px;">
                   {% else %}
                     <div class="planet">
                       <div class="planet-segment segment-top" style="background: linear-gradient(to bottom, #87CEEB 0%, #E0FFFF 100%);"></div>
@@ -426,9 +426,9 @@
                     </div>
                   {% endif %}
                   {% if startup.logo_urls and startup.logo_urls|length > 0 %}
-                    <img src="{% get_file_url_tag file_id=startup.logo_urls.0 startup_id=startup.startup_id file_type='logo' %}" alt="{{ startup.title|default:'No Name' }} Logo" class="startup-logo">
+                    <img src="{% get_file_url_tag file_id=startup.logo_urls.0 startup_id=startup.startup_id file_type='logo' %}" alt="{{ startup.title|default:'No Name' }} Logo" class="startup-logo" style="max-width: 30px; max-height: 30px;">
                   {% else %}
-                    <img src="/static/images/default-logo.png" alt="Default Logo" class="startup-logo">
+                    <img src="/static/images/default-logo.png" alt="Default Logo" class="startup-logo" style="max-width: 30px; max-height: 30px;">
                   {% endif %}
                 </div>
                 <div class="startup-name">
@@ -1021,7 +1021,7 @@
                   funding: '{{ investment.funding|escapejs }}',
                   funding_goal: '{{ investment.funding_goal|escapejs }}',
                   investors: '{{ investment.investors|escapejs }}',
-                  planet_image: '{% if investment.startup.planet_image %}{% get_file_url_tag file_id=investment.startup.planet_image.name startup_id=investment.startup.startup_id file_type="planet"|escapejs %}{% elif investment.startup.logo_urls and investment.startup.logo_urls|length > 0 %}{% get_file_url_tag file_id=investment.startup.logo_urls.0 startup_id=investment.startup.startup_id file_type="logo"|escapejs %}{% else %}/static/accounts/images/planets/startup_5_logo.png{% endif %}',
+                  planet_image: '{% if investment.startup.planet_image %}https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/{{ investment.startup.planet_image|escapejs }}{% elif investment.startup.logo_urls and investment.startup.logo_urls|length > 0 %}{% get_file_url_tag file_id=investment.startup.logo_urls.0 startup_id=investment.startup.startup_id file_type="logo"|escapejs %}{% else %}/static/accounts/images/planets/startup_5_logo.png{% endif %}',
                   logo_image: '{% if investment.startup.logo_urls and investment.startup.logo_urls|length > 0 %}{% get_file_url_tag file_id=investment.startup.logo_urls.0 startup_id=investment.startup.startup_id file_type="logo"|escapejs %}{% else %}/static/images/default-logo.png{% endif %}',
                   startup_id: '{{ investment.startup_id|escapejs }}',
                   investment_type: '{{ investment.investment_type|escapejs }}'
