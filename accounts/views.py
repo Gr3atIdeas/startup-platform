@@ -553,7 +553,47 @@ def investments(request):
         f"[investments] Final monthly totals for chart: {monthly_totals}"
     )
 
-    # Данные для планетарной системы (аналогично my_startups)
+    # Данные для стекированного графика по категориям
+    monthly_category_data_raw = (
+        InvestmentTransactions.objects.filter(
+            investor=request.user,
+            transaction_type__type_name="investment",
+            created_at__year=current_year,
+            startup__direction__isnull=False,
+        )
+        .annotate(month=TruncMonth("created_at"))
+        .values("month", "startup__direction__direction_name")
+        .annotate(monthly_category_total=Sum("amount"))
+        .order_by("month", "startup__direction__direction_name")
+    )
+
+    structured_monthly_data = collections.defaultdict(lambda: collections.defaultdict(float))
+    unique_categories = set()
+
+    for data in monthly_category_data_raw:
+        month_dt = data["month"]
+        category_name = data["startup__direction__direction_name"]
+        amount = float(data.get("monthly_category_total", 0) or 0)
+        month_key = month_dt.strftime("%Y-%m-01")
+        structured_monthly_data[month_key][category_name] += amount
+        unique_categories.add(category_name)
+
+    chart_categories = sorted(list(unique_categories))
+    chart_data_list = []
+    start_date = datetime.date(current_year, 1, 1)
+    for i in range(12):
+        current_month_key = (start_date + relativedelta(months=i)).strftime("%Y-%m-01")
+        month_data = {
+            "month_key": current_month_key,
+            "category_data": dict(structured_monthly_data[current_month_key]),
+        }
+        chart_data_list.append(month_data)
+
+    logger.info(
+        f"[investments] Chart Categories: {chart_categories}, Monthly Category Data: {chart_data_list}"
+    )
+
+    # Данные для планетарной системы
     planetary_investments_qs = base_investments_qs.values(
         "startup__startup_id",
         "startup__title",
@@ -585,15 +625,53 @@ def investments(request):
     import random
     random.shuffle(available_sizes)
 
+    s3_client = boto3.client(
+        "s3",
+        aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+        aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+        endpoint_url=settings.AWS_S3_ENDPOINT_URL,
+        region_name=settings.AWS_S3_REGION_NAME,
+    )
+
     for idx, investment in enumerate(planetary_investments_qs, 1):
         orbit_size = available_sizes[idx - 1] if idx <= len(available_sizes) else min_orbit_size + (idx - 1) * orbit_step
         orbit_time = 80 + (idx - 1) * 20
         planet_size = idx * 2 + 50
 
         # Получаем URL логотипа
-        logo_url = investment['startup__logo_urls'][0] if investment['startup__logo_urls'] and isinstance(investment['startup__logo_urls'], list) else "https://via.placeholder.com/150"
+        if (
+            not investment['startup__logo_urls']
+            or not isinstance(investment['startup__logo_urls'], list)
+            or len(investment['startup__logo_urls']) == 0
+        ):
+            logger.warning(
+                f"Стартап {investment['startup__startup_id']} ({investment['startup__title']}) не имеет логотипа в logo_urls"
+            )
+            logo_url = "https://via.placeholder.com/150"
+        else:
+            try:
+                prefix = f"startups/{investment['startup__startup_id']}/logos/"
+                response = s3_client.list_objects_v2(
+                    Bucket=settings.AWS_STORAGE_BUCKET_NAME, Prefix=prefix
+                )
+                if "Contents" in response and len(response["Contents"]) > 0:
+                    file_key = response["Contents"][0]["Key"]
+                    logo_url = f"https://storage.yandexcloud.net/{settings.AWS_STORAGE_BUCKET_NAME}/{file_key}"
+                    logger.info(
+                        f"Сгенерирован URL для логотипа стартапа {investment['startup__startup_id']}: {logo_url}"
+                    )
+                else:
+                    logger.warning(
+                        f"Файл для логотипа стартапа {investment['startup__startup_id']} не найден в бакете по префиксу {prefix}"
+                    )
+                    logo_url = "https://via.placeholder.com/150"
+            except Exception as e:
+                logger.error(
+                    f"Ошибка при генерации URL для логотипа стартапа {investment['startup__startup_id']}: {str(e)}"
+                )
+                logo_url = "https://via.placeholder.com/150"
 
-        # Тип инвестирования (аналогично my_startups)
+        # Тип инвестирования
         startup = Startups.objects.get(startup_id=investment['startup__startup_id'])
         if startup.only_invest:
             investment_type = "Инвестирование"
@@ -626,6 +704,25 @@ def investments(request):
 
     logger.info(
         f"[investments] Planetary investments for user {request.user.email}: {planetary_investments}"
+    )
+
+    # Стартапы, где пользователь является владельцем
+    user_owned_startups = Startups.objects.filter(owner_id=request.user.user_id).select_related(
+        "direction", "stage", "status_id"
+    ).annotate(
+        average_rating=Avg(
+            models.ExpressionWrapper(
+                Coalesce(models.F("sum_votes"), 0) * 1.0 / Coalesce(models.F("total_voters"), 1),
+                output_field=FloatField(),
+            ),
+            filter=models.Q(total_voters__gt=0),
+            default=0.0,
+        ),
+        comment_count=Count("comments"),
+    ).order_by("-created_at")
+
+    logger.info(
+        f"[investments] User-owned startups for {request.user.email}: {user_owned_startups.count()}"
     )
 
     # QuerySet для списка стартапов
@@ -679,10 +776,12 @@ def investments(request):
         "min_investment": analytics_data.get("min_investment", 0),
         "investment_categories": investment_categories[:7],
         "month_labels": month_labels,
-        "month_data": monthly_totals,
+        "chart_monthly_category_data": chart_data_list,
+        "chart_categories": chart_categories,
         "all_directions": all_directions_list,
         "invested_category_data": invested_category_data_dict,
         "current_sort": sort_param,
+        "user_owned_startups": user_owned_startups,  # Добавляем стартапы, где пользователь — владелец
     }
 
     return render(request, "accounts/investments.html", context)
@@ -3709,3 +3808,7 @@ def get_user_rating_for_startup(user_id, startup_id):
     // ... existing code ...
     """
     pass
+
+
+def custom_404(request, exception):
+    return render(request, 'accounts/404.html', status=404)

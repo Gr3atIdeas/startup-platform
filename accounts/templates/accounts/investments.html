@@ -32,15 +32,17 @@
               <div id="scene">
                 <div id="galaxy">
                   <div id="logo"></div>
-                  {% for investment in planetary_investments %}
-                    <div class="orbit" style="--orbit-size: {{ investment.orbit_size|default:200 }}px; --orbit-time: {{ investment.orbit_time|default:80 }}s;">
-                      <div class="planet-orientation">
-                        <div class="planet" style="--planet-size: {{ investment.planet_size|default:50 }}px;" data-id="{{ investment.id|default_if_none:'' }}"></div>
+                  {% if planetary_investments %}
+                    {% for investment in planetary_investments %}
+                      <div class="orbit" style="--orbit-size: {{ investment.orbit_size|default:200 }}px; --orbit-time: {{ investment.orbit_time|default:80 }}s;">
+                        <div class="planet-orientation">
+                          <div class="planet" style="--planet-size: {{ investment.planet_size|default:50 }}px;" data-id="{{ investment.id|default_if_none:'' }}" data-image="{{ investment.image|default:'/static/accounts/images/planets/startup_5_logo.png'|escapejs }}"></div>
+                        </div>
                       </div>
-                    </div>
-                  {% empty %}
+                    {% endfor %}
+                  {% else %}
                     <p style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white;">Нет инвестиций для отображения</p>
-                  {% endfor %}
+                  {% endif %}
                 </div>
               </div>
               <div id="info-card">
@@ -214,6 +216,69 @@
           {% empty %}
             <p style="grid-column: 1 / -1; text-align: center;">У вас пока нет инвестиций.</p>
           {% endfor %}
+          <!-- Добавляем стартапы, где пользователь является владельцем -->
+          {% for startup in user_owned_startups|slice:":6" %}
+            <div class="startup-card" data-category="{{ startup.direction.direction_name|default:''|escape }}" data-name="{{ startup.title|default:''|escape }}">
+              <div class="startup-card-left">
+                <img src="{{ startup.planet_image.url|default:'/static/accounts/images/planets/startup_5_logo.png' }}" alt="{{ startup.title|default:'No Name' }} Planet" class="startup-planet-img" style="width: 70px; height: 70px; border-radius: 50%; margin-bottom: 5px;">
+                <div class="startup-name">
+                  {% if startup.title %}
+                    <a href="{% url 'startup_detail' startup_id=startup.startup_id|default_if_none:'' %}" style="color: inherit; text-decoration: none;">{{ startup.title|escape }}</a>
+                  {% else %}
+                    <span style="color: red; font-size: 10px;">(Имя не задано!)</span>
+                  {% endif %}
+                </div>
+                <div class="startup-rating">
+                  {% with rating=startup.average_rating|default:0 %}
+                    {% for i in "12345"|make_list %}
+                      {% if rating >= i|floatformat:0 %}
+                        <i class="fas fa-star" aria-hidden="true"></i>
+                      {% elif rating >= i|add:-0.5 %}
+                        <i class="fas fa-star-half-alt" aria-hidden="true"></i>
+                      {% else %}
+                        <i class="far fa-star" aria-hidden="true"></i>
+                      {% endif %}
+                    {% endfor %}
+                    <span style="font-size: 12px; color: #868E96; margin-left: 5px;">({{ startup.total_voters|default:0|floatformat:0|intcomma }})</span>
+                  {% endwith %}
+                </div>
+                <div class="startup-comments">
+                  <i class="fas fa-comment-dots" aria-hidden="true"></i>
+                  <span>{{ startup.comment_count|default:0|floatformat:0|intcomma }}</span>
+                </div>
+              </div>
+              <div class="startup-card-right">
+                <div class="startup-status-row">
+                  <span class="detail-label">Статус</span>
+                  <span class="detail-value status-{{ startup.status|lower|default:'pending' }}">
+                    {% if startup.status == 'approved' %}Активен{% else %}{{ startup.get_status_display }}{% endif %}
+                  </span>
+                </div>
+                <div class="startup-financials">
+                  <div class="startup-detail-row">
+                    <span class="detail-label">Собрано:</span>
+                    <span class="detail-value">{{ startup.amount_raised|default:'0'|floatformat:0|intcomma }} ₽</span>
+                  </div>
+                  <div class="startup-detail-row">
+                    <span class="detail-label">Инвесторов:</span>
+                    <span class="detail-value">{{ startup.get_investors_count|default:0|floatformat:0|intcomma }}</span>
+                  </div>
+                  <div class="startup-detail-row">
+                    <span class="detail-label">Цель:</span>
+                    <span class="detail-value">{{ startup.funding_goal|default:'0'|floatformat:0|intcomma }} ₽</span>
+                  </div>
+                </div>
+                <div class="startup-category-row">
+                  <span class="detail-label">Категория</span>
+                  <span class="startup-category-tag">
+                    {{ startup.direction.direction_name|translate_category|default:"Без категории"|escape }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          {% empty %}
+            <!-- Сообщение будет отображаться, если нет ни инвестиций, ни стартапов -->
+          {% endfor %}
           {% for investment in user_investments|slice:"6:" %}
             <div class="startup-card hidden-card" data-category="{{ investment.startup.direction.direction_name|default:''|escape }}" data-name="{{ investment.startup.title|default:''|escape }}" style="display: none;">
               <div class="startup-card-left">
@@ -274,8 +339,68 @@
               </div>
             </div>
           {% endfor %}
+          {% for startup in user_owned_startups|slice:"6:" %}
+            <div class="startup-card hidden-card" data-category="{{ startup.direction.direction_name|default:''|escape }}" data-name="{{ startup.title|default:''|escape }}" style="display: none;">
+              <div class="startup-card-left">
+                <img src="{{ startup.planet_image.url|default:'/static/accounts/images/planets/startup_5_logo.png' }}" alt="{{ startup.title|default:'No Name' }} Planet" class="startup-planet-img" style="width: 70px; height: 70px; border-radius: 50%; margin-bottom: 5px;">
+                <div class="startup-name">
+                  {% if startup.title %}
+                    <a href="{% url 'startup_detail' startup_id=startup.startup_id|default_if_none:'' %}" style="color: inherit; text-decoration: none;">{{ startup.title|escape }}</a>
+                  {% else %}
+                    <span style="color: red; font-size: 10px;">(Имя не задано!)</span>
+                  {% endif %}
+                </div>
+                <div class="startup-rating">
+                  {% with rating=startup.average_rating|default:0 %}
+                    {% for i in "12345"|make_list %}
+                      {% if rating >= i|floatformat:0 %}
+                        <i class="fas fa-star" aria-hidden="true"></i>
+                      {% elif rating >= i|add:-0.5 %}
+                        <i class="fas fa-star-half-alt" aria-hidden="true"></i>
+                      {% else %}
+                        <i class="far fa-star" aria-hidden="true"></i>
+                      {% endif %}
+                    {% endfor %}
+                    <span style="font-size: 12px; color: #868E96; margin-left: 5px;">({{ startup.total_voters|default:0|floatformat:0|intcomma }})</span>
+                  {% endwith %}
+                </div>
+                <div class="startup-comments">
+                  <i class="fas fa-comment-dots" aria-hidden="true"></i>
+                  <span>{{ startup.comment_count|default:0|floatformat:0|intcomma }}</span>
+                </div>
+              </div>
+              <div class="startup-card-right">
+                <div class="startup-status-row">
+                  <span class="detail-label">Статус</span>
+                  <span class="detail-value status-{{ startup.status|lower|default:'pending' }}">
+                    {% if startup.status == 'approved' %}Активен{% else %}{{ startup.get_status_display }}{% endif %}
+                  </span>
+                </div>
+                <div class="startup-financials">
+                  <div class="startup-detail-row">
+                    <span class="detail-label">Собрано:</span>
+                    <span class="detail-value">{{ startup.amount_raised|default:'0'|floatformat:0|intcomma }} ₽</span>
+                  </div>
+                  <div class="startup-detail-row">
+                    <span class="detail-label">Инвесторов:</span>
+                    <span class="detail-value">{{ startup.get_investors_count|default:0|floatformat:0|intcomma }}</span>
+                  </div>
+                  <div class="startup-detail-row">
+                    <span class="detail-label">Цель:</span>
+                    <span class="detail-value">{{ startup.funding_goal|default:'0'|floatformat:0|intcomma }} ₽</span>
+                  </div>
+                </div>
+                <div class="startup-category-row">
+                  <span class="detail-label">Категория</span>
+                  <span class="startup-category-tag">
+                    {{ startup.direction.direction_name|translate_category|default:"Без категории"|escape }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
         </div>
-        {% if user_investments|length > 6 %}
+        {% if user_investments|length > 6 or user_owned_startups|length > 6 %}
           <div class="startup-buttons-container" style="text-align: center; margin-top: 20px;">
             <button class="show-more-btn" id="load-more" type="button">
               Показать еще <i class="fas fa-arrow-right" aria-hidden="true"></i>
@@ -549,7 +674,7 @@
                   const p = document.createElement('p');
                   p.textContent = 'По вашему запросу ничего не найдено.';
                   p.style.gridColumn = '1 / -1';
-                  p.style.textAlign = 'center';
+                  p.style.text-align = 'center';
                   p.classList.add('no-results-message');
                   startupGrid.appendChild(p);
                 }
@@ -664,7 +789,7 @@
                   const p = document.createElement('p');
                   p.textContent = 'По вашему запросу ничего не найдено.';
                   p.style.gridColumn = '1 / -1';
-                  p.style.textAlign = 'center';
+                  p.style.text-align = 'center';
                   p.classList.add('no-results-message');
                   startupGrid.appendChild(p);
                 }
@@ -783,7 +908,7 @@
                   const p = document.createElement('p');
                   p.textContent = 'По вашему запросу ничего не найдено.';
                   p.style.gridColumn = '1 / -1';
-                  p.style.textAlign = 'center';
+                  p.style.text-align = 'center';
                   p.classList.add('no-results-message');
                   startupGrid.appendChild(p);
                 }
@@ -795,7 +920,7 @@
             });
           });
 
-          // График (адаптирован под my_startups.html)
+          // График (адаптирован под my_startups.html с отладкой)
           (function() {
             const canvasElement = document.getElementById('monthlyInvestmentChart');
             if (!canvasElement) {
@@ -813,7 +938,9 @@
               const monthlyDataEl = document.getElementById('chart-monthly-category-data');
               const categoriesEl = document.getElementById('chart-categories');
 
-              if (!labelsEl || !monthlyDataEl || !categoriesEl) throw new Error("Элементы данных графика не найдены");
+              if (!labelsEl || !monthlyDataEl || !categoriesEl) {
+                throw new Error("Элементы данных графика не найдены");
+              }
 
               monthLabels = JSON.parse(labelsEl.textContent);
               monthlyCategoryData = JSON.parse(monthlyDataEl.textContent);
@@ -825,7 +952,7 @@
             } catch (e) {
               console.error("Ошибка парсинга данных для графика:", e);
               if (canvasElement.parentNode) {
-                canvasElement.parentNode.innerHTML = '<p style="text-align: center; color: red;">Ошибка загрузки данных для графика.</p>';
+                canvasElement.parentNode.innerHTML = '<p style="text-align: center; color: red;">Ошибка загрузки данных для графика. Проверьте console.log.</p>';
               }
               return;
             }
@@ -917,7 +1044,7 @@
                 }
               });
             } else {
-              console.log("No category data found for chart, rendering placeholder.");
+              console.log("No category data found for chart, rendering placeholder. Data:", monthlyCategoryData, "Categories:", categoriesForChart);
               if (canvasElement.parentNode) {
                 canvasElement.parentNode.innerHTML = '<p style="text-align: center; color: #adb5bd;">Нет данных по инвестициям за текущий год для отображения по категориям.</p>';
               }
@@ -937,7 +1064,7 @@
                   funding: '{{ investment.funding|escapejs }}',
                   funding_goal: '{{ investment.funding_goal|escapejs }}',
                   investors: '{{ investment.investors|escapejs }}',
-                  image: '{{ investment.image|escapejs }}',
+                  image: '{{ investment.image|escapejs|default:"/static/accounts/images/planets/startup_5_logo.png" }}',
                   startup_id: '{{ investment.startup_id|escapejs }}',
                   investment_type: '{{ investment.investment_type|escapejs }}'
                 }{% if not forloop.last %},{% endif %}
@@ -997,15 +1124,17 @@
               });
 
               const id = planet.getAttribute('data-id');
+              const image = planet.getAttribute('data-image') || '/static/accounts/images/planets/startup_5_logo.png';
               if (startups[id] && startups[id].image) {
                 planet.style.backgroundImage = `url('${startups[id].image}')`;
               } else {
+                planet.style.backgroundImage = `url('${image}')`;
                 planet.style.backgroundColor = '#e9ecef';
               }
 
               planet.addEventListener('click', (e) => {
                 e.stopPropagation();
-                const startupData = startups[id];
+                const startupData = startups[id] || { name: 'Нет данных', description: '', rating: '0', progress: '0%', funding: '0 ₽', funding_goal: '0 ₽', investors: '0', image: image, startup_id: '', investment_type: '' };
 
                 planetImage.style.backgroundImage = `url('${startupData.image}')`;
                 startupName.textContent = startupData.name;
