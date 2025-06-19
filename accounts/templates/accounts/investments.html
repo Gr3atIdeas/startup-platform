@@ -674,7 +674,7 @@
                   const p = document.createElement('p');
                   p.textContent = 'По вашему запросу ничего не найдено.';
                   p.style.gridColumn = '1 / -1';
-                  p.style.text-align = 'center';
+                  p.style.textAlign = 'center';
                   p.classList.add('no-results-message');
                   startupGrid.appendChild(p);
                 }
@@ -789,7 +789,7 @@
                   const p = document.createElement('p');
                   p.textContent = 'По вашему запросу ничего не найдено.';
                   p.style.gridColumn = '1 / -1';
-                  p.style.text-align = 'center';
+                  p.style.textAlign = 'center';
                   p.classList.add('no-results-message');
                   startupGrid.appendChild(p);
                 }
@@ -908,7 +908,7 @@
                   const p = document.createElement('p');
                   p.textContent = 'По вашему запросу ничего не найдено.';
                   p.style.gridColumn = '1 / -1';
-                  p.style.text-align = 'center';
+                  p.style.textAlign = 'center';
                   p.classList.add('no-results-message');
                   startupGrid.appendChild(p);
                 }
@@ -920,138 +920,7 @@
             });
           });
 
-          // График (адаптирован под my_startups.html с отладкой)
-          (function() {
-            const canvasElement = document.getElementById('monthlyInvestmentChart');
-            if (!canvasElement) {
-              console.warn("Элемент canvas #monthlyInvestmentChart не найден.");
-              return;
-            }
-            const ctx = canvasElement.getContext('2d');
-
-            let monthLabels = [];
-            let monthlyCategoryData = [];
-            let categoriesForChart = [];
-
-            try {
-              const labelsEl = document.getElementById('chart-month-labels');
-              const monthlyDataEl = document.getElementById('chart-monthly-category-data');
-              const categoriesEl = document.getElementById('chart-categories');
-
-              if (!labelsEl || !monthlyDataEl || !categoriesEl) {
-                throw new Error("Элементы данных графика не найдены");
-              }
-
-              monthLabels = JSON.parse(labelsEl.textContent);
-              monthlyCategoryData = JSON.parse(monthlyDataEl.textContent);
-              categoriesForChart = JSON.parse(categoriesEl.textContent);
-
-              console.log("Chart Labels:", monthLabels);
-              console.log("Chart Categories:", categoriesForChart);
-              console.log("Chart Monthly Category Data:", monthlyCategoryData);
-            } catch (e) {
-              console.error("Ошибка парсинга данных для графика:", e);
-              if (canvasElement.parentNode) {
-                canvasElement.parentNode.innerHTML = '<p style="text-align: center; color: red;">Ошибка загрузки данных для графика. Проверьте console.log.</p>';
-              }
-              return;
-            }
-
-            const hasData = monthlyCategoryData && monthlyCategoryData.some(month => Object.keys(month.category_data).length > 0);
-            console.log("Chart has category data:", hasData);
-
-            if (hasData && categoriesForChart.length > 0) {
-              const datasets = categoriesForChart.map(categoryName => {
-                const color = categoryColors[categoryName] || categoryColors["default"];
-                const data = monthLabels.map((label, index) => {
-                  const monthData = monthlyCategoryData[index];
-                  return monthData.category_data[categoryName] || 0;
-                });
-
-                return {
-                  label: translateCategoryName(categoryName),
-                  data: data,
-                  backgroundColor: color,
-                };
-              });
-
-              console.log("Generated Chart Datasets:", datasets);
-
-              new Chart(ctx, {
-                type: 'bar',
-                data: {
-                  labels: monthLabels,
-                  datasets: datasets
-                },
-                options: {
-                  responsive: true,
-                  maintainAspectRatio: false,
-                  interaction: {
-                    mode: 'index',
-                    intersect: false,
-                  },
-                  scales: {
-                    y: {
-                      stacked: true,
-                      beginAtZero: true,
-                      grid: { color: 'rgba(255, 255, 255, 0.05)' },
-                      ticks: {
-                        color: 'rgba(255, 255, 255, 0.7)',
-                        callback: function(value) {
-                          if (value >= 1000000) { return (value / 1000000).toLocaleString('ru-RU', { maximumFractionDigits: 1 }) + 'M'; }
-                          if (value >= 1000) { return (value / 1000).toLocaleString('ru-RU', { maximumFractionDigits: 0 }) + 'k'; }
-                          else { return value.toLocaleString('ru-RU'); }
-                        }
-                      },
-                      title: {
-                        display: true,
-                        text: 'Сумма инвестиций, ₽',
-                        color: 'rgba(255, 255, 255, 0.7)'
-                      }
-                    },
-                    x: {
-                      stacked: true,
-                      grid: { display: false },
-                      ticks: { color: '#495057' }
-                    }
-                  },
-                  plugins: {
-                    legend: {
-                      display: true,
-                      position: 'top',
-                      labels: {
-                        color: 'rgba(255, 255, 255, 0.7)',
-                        boxWidth: 12,
-                        padding: 15
-                      }
-                    },
-                    tooltip: {
-                      callbacks: {
-                        title: function(tooltipItems) {
-                          return tooltipItems[0].label;
-                        },
-                        label: function(context) {
-                          let label = context.dataset.label || '';
-                          if (label) { label += ': '; }
-                          if (context.parsed.y !== null) {
-                            label += context.parsed.y.toLocaleString('ru-RU', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + ' ₽';
-                          }
-                          return label;
-                        }
-                      }
-                    }
-                  }
-                }
-              });
-            } else {
-              console.log("No category data found for chart, rendering placeholder. Data:", monthlyCategoryData, "Categories:", categoriesForChart);
-              if (canvasElement.parentNode) {
-                canvasElement.parentNode.innerHTML = '<p style="text-align: center; color: #adb5bd;">Нет данных по инвестициям за текущий год для отображения по категориям.</p>';
-              }
-            }
-          })();
-
-        // Планетарная система
+          // Планетарная система
           (function() {
             const startups = {% if planetary_investments %}
               {
@@ -1098,8 +967,11 @@
             // Устанавливаем логотип инвестора
             if (logoElement && investorLogoUrl) {
               logoElement.style.backgroundImage = `url('${investorLogoUrl}')`;
+              logoElement.style.backgroundSize = 'contain';
+              logoElement.style.backgroundRepeat = 'no-repeat';
+              logoElement.style.backgroundPosition = 'center';
             } else {
-              logoElement.style.backgroundColor = '#e9ecef'; // Фallback
+              logoElement.style.backgroundColor = '#e9ecef';
             }
 
             const galaxyTiltAngle = 45;
@@ -1134,6 +1006,8 @@
               const image = planet.getAttribute('data-image') || startups[id]?.image || '/static/accounts/images/planets/startup_5_logo.png';
               if (startups[id] && startups[id].image) {
                 planet.style.backgroundImage = `url('${startups[id].image}')`;
+                planet.style.backgroundSize = 'cover';
+                planet.style.backgroundPosition = 'center';
               } else {
                 planet.style.backgroundImage = `url('${image}')`;
                 planet.style.backgroundColor = '#e9ecef';
@@ -1318,6 +1192,135 @@
             }
 
             updatePlanets();
+          })();
+
+          // График (адаптирован под my_startups.html)
+          (function() {
+            const canvasElement = document.getElementById('monthlyInvestmentChart');
+            if (!canvasElement) {
+              console.warn("Элемент canvas #monthlyInvestmentChart не найден.");
+              return;
+            }
+            const ctx = canvasElement.getContext('2d');
+
+            let monthLabels = [];
+            let monthlyCategoryData = [];
+            let categoriesForChart = [];
+
+            try {
+              const labelsEl = document.getElementById('chart-month-labels');
+              const monthlyDataEl = document.getElementById('chart-monthly-category-data');
+              const categoriesEl = document.getElementById('chart-categories');
+
+              if (!labelsEl || !monthlyDataEl || !categoriesEl) throw new Error("Элементы данных графика не найдены");
+
+              monthLabels = JSON.parse(labelsEl.textContent);
+              monthlyCategoryData = JSON.parse(monthlyDataEl.textContent);
+              categoriesForChart = JSON.parse(categoriesEl.textContent);
+
+              console.log("Chart Labels:", monthLabels);
+              console.log("Chart Categories:", categoriesForChart);
+              console.log("Chart Monthly Category Data:", monthlyCategoryData);
+            } catch (e) {
+              console.error("Ошибка парсинга данных для графика:", e);
+              if (canvasElement.parentNode) {
+                canvasElement.parentNode.innerHTML = '<p style="text-align: center; color: red;">Ошибка загрузки данных для графика.</p>';
+              }
+              return;
+            }
+
+            const hasData = monthlyCategoryData && monthlyCategoryData.some(month => Object.keys(month.category_data).length > 0);
+            console.log("Chart has category data:", hasData);
+
+            if (hasData && categoriesForChart.length > 0) {
+              const datasets = categoriesForChart.map(categoryName => {
+                const color = categoryColors[categoryName] || categoryColors["default"];
+                const data = monthLabels.map((label, index) => {
+                  const monthData = monthlyCategoryData[index];
+                  return monthData.category_data[categoryName] || 0;
+                });
+
+                return {
+                  label: translateCategoryName(categoryName),
+                  data: data,
+                  backgroundColor: color,
+                };
+              });
+
+              console.log("Generated Chart Datasets:", datasets);
+
+              new Chart(ctx, {
+                type: 'bar',
+                data: {
+                  labels: monthLabels,
+                  datasets: datasets
+                },
+                options: {
+                  responsive: true,
+                  maintainAspectRatio: false,
+                  interaction: {
+                    mode: 'index',
+                    intersect: false,
+                  },
+                  scales: {
+                    y: {
+                      stacked: true,
+                      beginAtZero: true,
+                      grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                      ticks: {
+                        color: 'rgba(255, 255, 255, 0.7)',
+                        callback: function(value) {
+                          if (value >= 1000000) { return (value / 1000000).toLocaleString('ru-RU', { maximumFractionDigits: 1 }) + 'M'; }
+                          if (value >= 1000) { return (value / 1000).toLocaleString('ru-RU', { maximumFractionDigits: 0 }) + 'k'; }
+                          else { return value.toLocaleString('ru-RU'); }
+                        }
+                      },
+                      title: {
+                        display: true,
+                        text: 'Сумма инвестиций, ₽',
+                        color: 'rgba(255, 255, 255, 0.7)'
+                      }
+                    },
+                    x: {
+                      stacked: true,
+                      grid: { display: false },
+                      ticks: { color: '#495057' }
+                    }
+                  },
+                  plugins: {
+                    legend: {
+                      display: true,
+                      position: 'top',
+                      labels: {
+                        color: 'rgba(255, 255, 255, 0.7)',
+                        boxWidth: 12,
+                        padding: 15
+                      }
+                    },
+                    tooltip: {
+                      callbacks: {
+                        title: function(tooltipItems) {
+                          return tooltipItems[0].label;
+                        },
+                        label: function(context) {
+                          let label = context.dataset.label || '';
+                          if (label) { label += ': '; }
+                          if (context.parsed.y !== null) {
+                            label += context.parsed.y.toLocaleString('ru-RU', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + ' ₽';
+                          }
+                          return label;
+                        }
+                      }
+                    }
+                  }
+                }
+              });
+            } else {
+              console.log("No category data found for chart, rendering placeholder.");
+              if (canvasElement.parentNode) {
+                canvasElement.parentNode.innerHTML = '<p style="text-align: center; color: #adb5bd;">Нет данных по инвестициям за текущий год для отображения по категориям.</p>';
+              }
+            }
           })();
         });
       </script>
