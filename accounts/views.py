@@ -4,6 +4,8 @@ import datetime  # Добавляем для работы с датами
 import json
 import logging
 import os
+import boto3
+from boto3 import client
 import uuid
 from decimal import Decimal
 from random import choice, shuffle  # Импортируем shuffle напрямую
@@ -469,7 +471,7 @@ def investments(request):
         messages.error(request, "Доступ к этой странице разрешен только инвесторам.")
         return redirect("home")
 
-    # Базовый запрос без аннотаций рейтинга/комментов
+    # Базовый запрос для инвестиций
     base_investments_qs = InvestmentTransactions.objects.filter(
         investor=request.user, transaction_type__type_name="investment"
     ).select_related("startup", "startup__direction", "startup__owner")
@@ -482,13 +484,12 @@ def investments(request):
         startups_count=Count("startup", distinct=True),
     )
 
-    # Получаем общую сумму инвестиций
     total_investment_decimal = analytics_data.get("total_investment") or Decimal("0")
     logger.info(
         f"[investments] User: {request.user.email}, Total Investment Calculated: {total_investment_decimal}"
     )
 
-    # Данные по категориям
+    # Данные по категориям для радиальных диаграмм
     category_data_raw = (
         base_investments_qs.distinct()
         .values("startup__direction__direction_name")
@@ -505,42 +506,28 @@ def investments(request):
         category_sum = cat_data.get("category_total")
         category_name = cat_data.get("startup__direction__direction_name") or "Без категории"
 
-        if investment_categories == []:
-            logger.info(
-                f"[investments] Raw category data example: {list(category_data_raw[:2])}"
-            )
-
         if category_sum and total_for_percentage > 0:
             try:
                 percentage = round((Decimal(category_sum) / total_for_percentage) * 100)
                 percentage = min(percentage, 100)
             except Exception as e:
-                logger.error(
-                    f"Ошибка расчета процента для категории '{category_name}': {e}"
-                )
+                logger.error(f"Ошибка расчета процента для категории '{category_name}': {e}")
                 percentage = 0
 
-        investment_categories.append(
-            {"name": category_name, "percentage": percentage}
-        )
+        investment_categories.append({"name": category_name, "percentage": percentage})
         invested_category_data_dict[category_name] = percentage
 
     # Данные для графика по месяцам
     current_year = timezone.now().year
+    logger.info(f"[investments] Preparing chart data for user {request.user.email}, year: {current_year}")
     monthly_data_direct = (
-        InvestmentTransactions.objects.filter(
-            investor=request.user,
-            transaction_type__type_name="investment",
-            created_at__year=current_year,
+        base_investments_qs.filter(
+            created_at__year=current_year, amount__gt=0
         )
-        .distinct()
         .annotate(month=TruncMonth("created_at"))
         .values("month")
-        .annotate(monthly_total=Sum("amount"))
+        .annotate(monthly_total=Sum(Coalesce("amount", Decimal(0))))
         .order_by("month")
-    )
-    logger.info(
-        f"[investments] Monthly data calculated: {list(monthly_data_direct)}"
     )
 
     month_labels = ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"]
@@ -548,24 +535,24 @@ def investments(request):
     for data in monthly_data_direct:
         month_index = data["month"].month - 1
         if 0 <= month_index < 12:
-            monthly_totals[month_index] = float(data.get("monthly_total", 0) or 0)
-    logger.info(
-        f"[investments] Final monthly totals for chart: {monthly_totals}"
-    )
+            monthly_total_decimal = data.get("monthly_total", Decimal(0)) or Decimal(0)
+            monthly_totals[month_index] = float(monthly_total_decimal)
 
     # Данные для стекированного графика по категориям
+    logger.info(f"[investments] Preparing chart data for user {request.user.email}, year: {current_year}")
     monthly_category_data_raw = (
-        InvestmentTransactions.objects.filter(
-            investor=request.user,
-            transaction_type__type_name="investment",
+        base_investments_qs.filter(
             created_at__year=current_year,
+            amount__gt=0,
             startup__direction__isnull=False,
         )
         .annotate(month=TruncMonth("created_at"))
         .values("month", "startup__direction__direction_name")
-        .annotate(monthly_category_total=Sum("amount"))
+        .annotate(monthly_category_total=Sum(Coalesce("amount", Decimal(0))))
         .order_by("month", "startup__direction__direction_name")
     )
+
+    logger.info(f"[investments] Raw monthly category data from DB: {list(monthly_category_data_raw)}")
 
     structured_monthly_data = collections.defaultdict(lambda: collections.defaultdict(float))
     unique_categories = set()
@@ -578,7 +565,9 @@ def investments(request):
         structured_monthly_data[month_key][category_name] += amount
         unique_categories.add(category_name)
 
-    chart_categories = sorted(list(unique_categories))
+    sorted_categories = sorted(list(unique_categories))
+    logger.info(f"[investments] Unique categories found for chart: {sorted_categories}")
+
     chart_data_list = []
     start_date = datetime.date(current_year, 1, 1)
     for i in range(12):
@@ -589,12 +578,10 @@ def investments(request):
         }
         chart_data_list.append(month_data)
 
-    logger.info(
-        f"[investments] Chart Categories: {chart_categories}, Monthly Category Data: {chart_data_list}"
-    )
+    logger.info(f"[investments] Final structured chart data list: {chart_data_list}")
 
-    # Данные для планетарной системы (инвестиции + владение)
-    s3_client = boto3.client(
+    # Данные для планетарной системы
+    s3_client = client(
         "s3",
         aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
         aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
@@ -603,25 +590,16 @@ def investments(request):
     )
 
     # Инвестированные стартапы
-    invested_startups_qs = base_investments_qs.values(
-        "startup__startup_id",
-        "startup__title",
-        "startup__status",
-        "startup__amount_raised",
-        "startup__funding_goal",
-        "startup__direction__direction_name",
-        "amount",
-        "startup__logo_urls",
-    ).annotate(
-        startup_average_rating=Avg(
+    invested_startups_qs = base_investments_qs.select_related("startup").annotate(
+        average_rating=Avg(
             ExpressionWrapper(
-                F("startup__sum_votes") * 1.0 / F("startup__total_voters"),
+                Coalesce(F("startup__sum_votes"), 0) * 1.0 / Coalesce(F("startup__total_voters"), 1),
                 output_field=FloatField(),
             ),
             filter=Q(startup__total_voters__gt=0),
             default=0.0,
         ),
-        startup_comment_count=Count("startup__comments", distinct=True),
+        comment_count=Count("startup__comments", distinct=True),
         investors_count=Count("startup__investmenttransactions__investor", distinct=True),
     ).order_by("-amount")[:5]
 
@@ -629,15 +607,7 @@ def investments(request):
     owned_startups_qs = Startups.objects.filter(
         owner_id=request.user.user_id,
         status="approved"
-    ).values(
-        "startup_id",
-        "title",
-        "status",
-        "amount_raised",
-        "funding_goal",
-        "direction__direction_name",
-        "logo_urls",
-    ).annotate(
+    ).select_related("direction").annotate(
         average_rating=Avg(
             ExpressionWrapper(
                 Coalesce(F("sum_votes"), 0) * 1.0 / Coalesce(F("total_voters"), 1),
@@ -657,7 +627,7 @@ def investments(request):
     max_orbit_size = 800
     orbit_step = 50
     available_sizes = list(range(min_orbit_size, max_orbit_size + orbit_step, orbit_step))
-    shuffle(available_sizes)  # Используем shuffle вместо random.shuffle
+    shuffle(available_sizes)
 
     for idx, startup_data in enumerate(all_startups_data, 1):
         orbit_size = available_sizes[idx - 1] if idx <= len(available_sizes) else min_orbit_size + (idx - 1) * orbit_step
@@ -666,60 +636,46 @@ def investments(request):
 
         # Получаем URL логотипа
         logo_url = "https://via.placeholder.com/150"
-        logo_urls = startup_data.get("startup__logo_urls") or startup_data.get("logo_urls")
+        startup_id = startup_data.startup_id if hasattr(startup_data, 'startup_id') else startup_data.startup.startup_id
+        logo_urls = startup_data.startup.logo_urls if hasattr(startup_data, 'startup') else startup_data.logo_urls
         if (
             logo_urls
             and isinstance(logo_urls, list)
             and len(logo_urls) > 0
         ):
             try:
-                prefix = f"startups/{startup_data['startup__startup_id'] or startup_data['startup_id']}/logos/"
+                prefix = f"startups/{startup_id}/logos/"
                 response = s3_client.list_objects_v2(
                     Bucket=settings.AWS_STORAGE_BUCKET_NAME, Prefix=prefix
                 )
                 if "Contents" in response and len(response["Contents"]) > 0:
                     file_key = response["Contents"][0]["Key"]
                     logo_url = f"https://storage.yandexcloud.net/{settings.AWS_STORAGE_BUCKET_NAME}/{file_key}"
-                    logger.info(
-                        f"Сгенерирован URL для логотипа стартапа {startup_data['startup__startup_id'] or startup_data['startup_id']}: {logo_url}"
-                    )
+                    logger.info(f"Сгенерирован URL для логотипа стартапа {startup_id}: {logo_url}")
                 else:
-                    logger.warning(
-                        f"Файл для логотипа стартапа {startup_data['startup__startup_id'] or startup_data['startup_id']} не найден в бакете по префиксу {prefix}"
-                    )
+                    logger.warning(f"Файл для логотипа стартапа {startup_id} не найден в бакете по префиксу {prefix}")
             except Exception as e:
-                logger.error(
-                    f"Ошибка при генерации URL для логотипа стартапа {startup_data['startup__startup_id'] or startup_data['startup_id']}: {str(e)}"
-                )
+                logger.error(f"Ошибка при генерации URL для логотипа стартапа {startup_id}: {str(e)}")
         else:
-            logger.warning(
-                f"Стартап {startup_data['startup__startup_id'] or startup_data['startup_id']} не имеет логотипа в logo_urls"
-            )
+            logger.warning(f"Стартап {startup_id} не имеет логотипа в logo_urls")
 
         # Тип инвестирования
-        startup = Startups.objects.get(startup_id=startup_data['startup__startup_id'] or startup_data['startup_id'])
-        if startup.only_invest:
-            investment_type = "Инвестирование"
-        elif startup.only_buy:
-            investment_type = "Выкуп"
-        elif startup.both_mode:
-            investment_type = "Выкуп+инвестирование"
-        else:
-            investment_type = "Не указано"
+        startup = Startups.objects.get(startup_id=startup_id)
+        investment_type = "Инвестирование" if startup.only_invest else "Выкуп" if startup.only_buy else "Выкуп+инвестирование" if startup.both_mode else "Не указано"
 
         planet_data = {
             "id": str(idx),
-            "startup_id": startup_data['startup__startup_id'] or startup_data['startup_id'],
-            "name": startup_data['startup__title'] or startup_data['title'] or "Без названия",
+            "startup_id": startup_id,
+            "name": startup_data.startup.title if hasattr(startup_data, 'startup') else startup_data.title or "Без названия",
             "description": startup.short_description or startup.description or "Описание отсутствует",
-            "rating": f"{(startup_data['startup_average_rating'] or startup_data['average_rating'] or 0):.1f}/5 ({startup.total_voters or 0})",
-            "comment_count": startup_data['startup_comment_count'] or startup_data['comment_count'] or 0,
+            "rating": f"{(startup_data.average_rating or 0):.1f}/5 ({startup.total_voters or 0})",
+            "comment_count": startup_data.comment_count or 0,
             "progress": f"{(startup.amount_raised / startup.funding_goal * 100 if startup.funding_goal else 0):.0f}%",
-            "direction": startup_data['startup__direction__direction_name'] or "Не указано",
+            "direction": startup_data.startup.direction.direction_name if hasattr(startup_data, 'startup') else startup_data.direction__direction_name or "Не указано",
             "investment_type": investment_type,
-            "funding": f"{int(startup_data['startup__amount_raised'] or startup_data['amount_raised'] or 0):,d} ₽".replace(",", " "),
-            "funding_goal": f"{int(startup_data['startup__funding_goal'] or startup_data['funding_goal'] or 0):,d} ₽".replace(",", " "),
-            "investors": f"Инвесторов: {startup_data['investors_count'] or 0}",
+            "funding": f"{int(startup_data.startup.amount_raised if hasattr(startup_data, 'startup') else startup_data.amount_raised or 0):,d} ₽".replace(",", " "),
+            "funding_goal": f"{int(startup_data.startup.funding_goal if hasattr(startup_data, 'startup') else startup_data.funding_goal or 0):,d} ₽".replace(",", " "),
+            "investors": f"Инвесторов: {startup_data.investors_count or 0}",
             "image": logo_url,
             "orbit_size": orbit_size,
             "orbit_time": orbit_time,
@@ -727,30 +683,26 @@ def investments(request):
         }
         planetary_investments.append(planet_data)
 
-    logger.info(
-        f"[investments] Planetary investments for user {request.user.email}: {planetary_investments}"
-    )
+    logger.info(f"[investments] Planetary investments for user {request.user.email}: {planetary_investments}")
 
     # Стартапы, где пользователь является владельцем
     user_owned_startups = Startups.objects.filter(
         owner_id=request.user.user_id
     ).select_related("direction", "stage", "status_id").annotate(
         average_rating=Avg(
-            models.ExpressionWrapper(
-                Coalesce(models.F("sum_votes"), 0) * 1.0 / Coalesce(models.F("total_voters"), 1),
+            ExpressionWrapper(
+                Coalesce(F("sum_votes"), 0) * 1.0 / Coalesce(F("total_voters"), 1),
                 output_field=FloatField(),
             ),
-            filter=models.Q(total_voters__gt=0),
+            filter=Q(total_voters__gt=0),
             default=0.0,
         ),
         comment_count=Count("comments"),
     ).order_by("-created_at")
 
-    logger.info(
-        f"[investments] User-owned startups for {request.user.email}: {user_owned_startups.count()}"
-    )
+    logger.info(f"[investments] User-owned startups for {request.user.email}: {user_owned_startups.count()}")
 
-    # QuerySet для списка стартапов
+    # QuerySet для списка стартапов (инвестиции)
     user_investments_qs_final = base_investments_qs.annotate(
         startup_average_rating=Avg(
             ExpressionWrapper(
@@ -776,21 +728,13 @@ def investments(request):
 
     # Логирование данных стартапов
     try:
-        logger.info(
-            f"[investments] Checking startup data for user {request.user.email}:"
-        )
+        logger.info(f"[investments] Checking investment data for user {request.user.email}:")
         for inv in user_investments_qs_final[:3]:
             startup_info = "Startup object exists" if inv.startup else "!!! Startup object IS MISSING !!!"
-            startup_name = (
-                f"Name: '{inv.startup.title}'"
-                if inv.startup and hasattr(inv.startup, "title")
-                else "Name: attribute missing or startup is None"
-            )
-            logger.info(
-                f"  Investment ID: {inv.transaction_id}, {startup_info}, {startup_name}"
-            )
+            startup_name = f"Name: '{inv.startup.title}'" if inv.startup and hasattr(inv.startup, "title") else "Name: attribute missing or startup is None"
+            logger.info(f"  Investment ID: {inv.transaction_id}, {startup_info}, {startup_name}")
     except Exception as e:
-        logger.error(f"[investments] Error logging startup data: {e}")
+        logger.error(f"[investments] Error logging investment data: {e}")
 
     context = {
         "user_investments": user_investments_qs_final,
@@ -802,12 +746,12 @@ def investments(request):
         "investment_categories": investment_categories[:7],
         "month_labels": month_labels,
         "chart_monthly_category_data": chart_data_list,
-        "chart_categories": chart_categories,
+        "chart_categories": sorted_categories,
         "all_directions": all_directions_list,
         "invested_category_data": invested_category_data_dict,
         "current_sort": sort_param,
         "user_owned_startups": user_owned_startups,
-        "investor_logo_url": request.user.get_profile_picture_url() or "https://via.placeholder.com/60",  # Логотип инвестора
+        "investor_logo_url": request.user.get_profile_picture_url() or "https://via.placeholder.com/60",
     }
 
     return render(request, "accounts/investments.html", context)
@@ -2854,8 +2798,6 @@ def leave_chat(request, chat_id):
     return JsonResponse({"success": True, "deleted": False})
 
 
-# accounts/views.py
-import boto3
 
 
 def planetary_system(request):
