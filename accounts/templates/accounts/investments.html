@@ -152,7 +152,7 @@
           </div>
         </div>
         <div class="startups-grid">
-          {% for investment in user_investments|slice:":4" %}
+          {% for investment in user_investments|slice:":6" %}
             <div class="startup-card" data-category="{{ investment.startup.direction.direction_name|default:''|escape }}" data-name="{{ investment.startup.title|default:''|escape }}">
               <div class="startup-card-left">
                 <img src="{{ investment.startup.planet_image.url|default:'/static/accounts/images/planets/startup_5_logo.png' }}" alt="{{ investment.startup.title|default:'No Name' }} Planet" class="startup-planet-img" style="width: 70px; height: 70px; border-radius: 50%; margin-bottom: 5px;">
@@ -214,7 +214,7 @@
           {% empty %}
             <p style="grid-column: 1 / -1; text-align: center;">У вас пока нет инвестиций.</p>
           {% endfor %}
-          {% for investment in user_investments|slice:"4:" %}
+          {% for investment in user_investments|slice:"6:" %}
             <div class="startup-card hidden-card" data-category="{{ investment.startup.direction.direction_name|default:''|escape }}" data-name="{{ investment.startup.title|default:''|escape }}" style="display: none;">
               <div class="startup-card-left">
                 <img src="{{ investment.startup.planet_image.url|default:'/static/accounts/images/planets/startup_5_logo.png' }}" alt="{{ investment.startup.title|default:'No Name' }} Planet" class="startup-planet-img" style="width: 70px; height: 70px; border-radius: 50%; margin-bottom: 5px;">
@@ -275,7 +275,7 @@
             </div>
           {% endfor %}
         </div>
-        {% if user_investments|length > 4 %}
+        {% if user_investments|length > 6 %}
           <div class="startup-buttons-container" style="text-align: center; margin-top: 20px;">
             <button class="show-more-btn" id="load-more" type="button">
               Показать еще <i class="fas fa-arrow-right" aria-hidden="true"></i>
@@ -296,7 +296,8 @@
       </div>
       <!-- JSON данные -->
       {{ month_labels|json_script:"chart-month-labels" }}
-      {{ month_data|json_script:"chart-month-data" }}
+      {{ chart_monthly_category_data|json_script:"chart-monthly-category-data" }}
+      {{ chart_categories|json_script:"chart-categories" }}
       {{ all_directions|json_script:"all-directions-data" }}
       {{ invested_category_data|json_script:"invested-category-data" }}
       {{ planetary_investments|json_script:"planetary-investments" }}
@@ -408,7 +409,7 @@
           let visibleCount = 0;
           startupCards.forEach(card => {
             if (card.dataset.category === selectedCategory) {
-              if (visibleCount < 4) {
+              if (visibleCount < 6) {
                 card.style.display = 'flex';
                 card.classList.remove('hidden-card');
                 visibleCount++;
@@ -421,7 +422,7 @@
             }
           });
 
-          if (loadMoreBtn) loadMoreBtn.style.display = visibleCount >= 4 && startupCards.length > 4 ? 'flex' : 'none';
+          if (loadMoreBtn) loadMoreBtn.style.display = visibleCount >= 6 && startupCards.length > 6 ? 'flex' : 'none';
           if (hideBtn) hideBtn.style.display = 'none';
 
           let startupsNoResultsMsg = startupGrid.querySelector('.no-results-message');
@@ -526,7 +527,7 @@
                 const matchesSearch = name.includes(searchTerm);
 
                 if (matchesSearch && matchesCategory) {
-                  if (visibleCount < 4) {
+                  if (visibleCount < 6) {
                     card.style.display = 'flex';
                     card.classList.remove('hidden-card');
                     visibleCount++;
@@ -539,7 +540,7 @@
                 }
               });
 
-              if (loadMoreBtnSearch) loadMoreBtnSearch.style.display = visibleCount >= 4 && startupCards.length > 4 ? 'flex' : 'none';
+              if (loadMoreBtnSearch) loadMoreBtnSearch.style.display = visibleCount >= 6 && startupCards.length > 6 ? 'flex' : 'none';
               if (hideBtnSearch) hideBtnSearch.style.display = 'none';
 
               let startupsNoResultsMsg = startupGrid.querySelector('.no-results-message');
@@ -584,7 +585,7 @@
               if (filter === 'all') {
                 let visibleCount = 0;
                 allStartupCards.forEach(card => {
-                  if (visibleCount < 4) {
+                  if (visibleCount < 6) {
                     card.style.display = 'flex';
                     card.classList.remove('hidden-card');
                     visibleCount++;
@@ -641,7 +642,7 @@
                 const matchesSearch = name.includes(searchTerm);
 
                 if (matchesSearch && matchesCategory) {
-                  if (visibleCount < 4) {
+                  if (visibleCount < 6) {
                     card.style.display = 'flex';
                     card.classList.remove('hidden-card');
                     visibleCount++;
@@ -654,7 +655,7 @@
                 }
               });
 
-              if (loadMoreBtnSearch) loadMoreBtnSearch.style.display = visibleCount >= 4 && startupCards.length > 4 ? 'flex' : 'none';
+              if (loadMoreBtnSearch) loadMoreBtnSearch.style.display = visibleCount >= 6 && startupCards.length > 6 ? 'flex' : 'none';
               if (hideBtnSearch) hideBtnSearch.style.display = 'none';
 
               startupsNoResultsMsg = startupGrid.querySelector('.no-results-message');
@@ -692,7 +693,7 @@
               let visibleCount = 0;
               startupGrid.querySelectorAll('.startup-card').forEach(card => {
                 if (card.style.display === 'flex') {
-                  if (visibleCount >= 4) {
+                  if (visibleCount >= 6) {
                     card.style.display = 'none';
                     card.classList.add('hidden-card');
                   }
@@ -760,7 +761,7 @@
                 const matchesSearch = name.includes(searchTerm);
 
                 if (matchesSearch && matchesCategory) {
-                  if (visibleCount < 4) {
+                  if (visibleCount < 6) {
                     card.style.display = 'flex';
                     card.classList.remove('hidden-card');
                     visibleCount++;
@@ -773,7 +774,7 @@
                 }
               });
 
-              if (loadMoreBtnSearch) loadMoreBtnSearch.style.display = visibleCount >= 4 && startupCards.length > 4 ? 'flex' : 'none';
+              if (loadMoreBtnSearch) loadMoreBtnSearch.style.display = visibleCount >= 6 && startupCards.length > 6 ? 'flex' : 'none';
               if (hideBtnSearch) hideBtnSearch.style.display = 'none';
 
               startupsNoResultsMsg = startupGrid.querySelector('.no-results-message');
@@ -794,7 +795,7 @@
             });
           });
 
-          // График (из исходного investments.html)
+          // График (адаптирован под my_startups.html)
           (function() {
             const canvasElement = document.getElementById('monthlyInvestmentChart');
             if (!canvasElement) {
@@ -804,16 +805,23 @@
             const ctx = canvasElement.getContext('2d');
 
             let monthLabels = [];
-            let monthData = [];
+            let monthlyCategoryData = [];
+            let categoriesForChart = [];
 
             try {
               const labelsEl = document.getElementById('chart-month-labels');
-              const dataEl = document.getElementById('chart-month-data');
-              if (!labelsEl || !dataEl) throw new Error("Элементы данных графика не найдены");
+              const monthlyDataEl = document.getElementById('chart-monthly-category-data');
+              const categoriesEl = document.getElementById('chart-categories');
+
+              if (!labelsEl || !monthlyDataEl || !categoriesEl) throw new Error("Элементы данных графика не найдены");
+
               monthLabels = JSON.parse(labelsEl.textContent);
-              monthData = JSON.parse(dataEl.textContent);
+              monthlyCategoryData = JSON.parse(monthlyDataEl.textContent);
+              categoriesForChart = JSON.parse(categoriesEl.textContent);
+
               console.log("Chart Labels:", monthLabels);
-              console.log("Chart Data:", monthData);
+              console.log("Chart Categories:", categoriesForChart);
+              console.log("Chart Monthly Category Data:", monthlyCategoryData);
             } catch (e) {
               console.error("Ошибка парсинга данных для графика:", e);
               if (canvasElement.parentNode) {
@@ -822,38 +830,49 @@
               return;
             }
 
-            const hasData = monthData && monthData.some(value => value > 0);
+            const hasData = monthlyCategoryData && monthlyCategoryData.some(month => Object.keys(month.category_data).length > 0);
+            console.log("Chart has category data:", hasData);
 
-            if (hasData) {
-              const gradient = ctx.createLinearGradient(0, 0, 0, 300);
-              gradient.addColorStop(0, 'rgba(0, 123, 255, 0.8)');
-              gradient.addColorStop(1, 'rgba(0, 123, 255, 0.1)');
+            if (hasData && categoriesForChart.length > 0) {
+              const datasets = categoriesForChart.map(categoryName => {
+                const color = categoryColors[categoryName] || categoryColors["default"];
+                const data = monthLabels.map((label, index) => {
+                  const monthData = monthlyCategoryData[index];
+                  return monthData.category_data[categoryName] || 0;
+                });
+
+                return {
+                  label: translateCategoryName(categoryName),
+                  data: data,
+                  backgroundColor: color,
+                };
+              });
+
+              console.log("Generated Chart Datasets:", datasets);
 
               new Chart(ctx, {
                 type: 'bar',
                 data: {
                   labels: monthLabels,
-                  datasets: [{
-                    label: 'Сумма инвестиций',
-                    data: monthData,
-                    backgroundColor: gradient,
-                    borderColor: 'rgba(0, 123, 255, 1)',
-                    borderWidth: 1,
-                    borderRadius: 5,
-                    barThickness: 'flex',
-                    maxBarThickness: 30
-                  }]
+                  datasets: datasets
                 },
                 options: {
                   responsive: true,
                   maintainAspectRatio: false,
+                  interaction: {
+                    mode: 'index',
+                    intersect: false,
+                  },
                   scales: {
                     y: {
+                      stacked: true,
                       beginAtZero: true,
-                      grid: { color: 'rgba(0, 0, 0, 0.05)' },
+                      grid: { color: 'rgba(255, 255, 255, 0.05)' },
                       ticks: {
+                        color: 'rgba(255, 255, 255, 0.7)',
                         callback: function(value) {
-                          if (value >= 1000) { return (value / 1000).toLocaleString('ru-RU') + 'k'; }
+                          if (value >= 1000000) { return (value / 1000000).toLocaleString('ru-RU', { maximumFractionDigits: 1 }) + 'M'; }
+                          if (value >= 1000) { return (value / 1000).toLocaleString('ru-RU', { maximumFractionDigits: 0 }) + 'k'; }
                           else { return value.toLocaleString('ru-RU'); }
                         }
                       },
@@ -863,12 +882,27 @@
                         color: 'rgba(255, 255, 255, 0.7)'
                       }
                     },
-                    x: { grid: { display: false } }
+                    x: {
+                      stacked: true,
+                      grid: { display: false },
+                      ticks: { color: '#495057' }
+                    }
                   },
                   plugins: {
-                    legend: { display: false },
+                    legend: {
+                      display: true,
+                      position: 'top',
+                      labels: {
+                        color: 'rgba(255, 255, 255, 0.7)',
+                        boxWidth: 12,
+                        padding: 15
+                      }
+                    },
                     tooltip: {
                       callbacks: {
+                        title: function(tooltipItems) {
+                          return tooltipItems[0].label;
+                        },
                         label: function(context) {
                           let label = context.dataset.label || '';
                           if (label) { label += ': '; }
@@ -883,9 +917,9 @@
                 }
               });
             } else {
-              console.log("No data found for chart, rendering placeholder.");
+              console.log("No category data found for chart, rendering placeholder.");
               if (canvasElement.parentNode) {
-                canvasElement.parentNode.innerHTML = '<p style="text-align: center; color: #adb5bd;">Нет данных по инвестициям за текущий год.</p>';
+                canvasElement.parentNode.innerHTML = '<p style="text-align: center; color: #adb5bd;">Нет данных по инвестициям за текущий год для отображения по категориям.</p>';
               }
             }
           })();
