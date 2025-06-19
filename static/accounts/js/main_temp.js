@@ -328,9 +328,8 @@ document.addEventListener('DOMContentLoaded', function () {
     ];
 
     const planetObjects = [];
-    const galaxyTiltAngle = 45; // в градусах
+    const galaxyTiltAngle = 45;
 
-    // Перемешиваем массив планет для случайного порядка
     function shuffle(array) {
         for (let i = array.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -339,27 +338,24 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     shuffle(allPlanetImages);
 
-    // Создаем 7 орбит. Статичная планета будет на 5-й, поэтому ее пропускаем.
     for (let i = 1; i < 8; i++) {
         const orbit = document.createElement('div');
         orbit.className = 'orbit';
         const orbitSize = 200 + i * 100;
         orbit.style.setProperty('--orbit-size', `${orbitSize}px`);
 
-        // Пропускаем создание динамической планеты для 5-й орбиты
         if (i !== 5) {
             const planetOrientation = document.createElement('div');
             planetOrientation.className = 'planet-orientation';
 
             const planet = document.createElement('div');
             planet.className = 'planet';
-            const planetSize = (52 + Math.random() * 52); // Увеличенный на 30% размер
+            const planetSize = (52 + Math.random() * 52);
             planet.style.setProperty('--planet-size', `${planetSize}px`);
 
-            const imageName = allPlanetImages.pop(); // Берем планету из конца массива
+            const imageName = allPlanetImages.pop();
             const imageUrl = `/static/accounts/images/planetary_system/${imageName}`;
             
-            // Устанавливаем два фона: планету и за ней фон космоса
             const spaceBgUrl = `url('/static/accounts/images/main_page/main_bg.jpg')`;
             planet.style.backgroundImage = `url('${imageUrl}'), ${spaceBgUrl}`;
             planet.style.backgroundPosition = `center, center`;
@@ -369,7 +365,7 @@ document.addEventListener('DOMContentLoaded', function () {
             planetOrientation.appendChild(planet);
             orbit.appendChild(planetOrientation);
 
-            const orbitTime = 80 + i * 20 + (Math.random() - 0.5) * 40; // Более хаотичное время оборота
+            const orbitTime = 80 + i * 20 + (Math.random() - 0.5) * 40;
             const initialAngle = Math.random() * 360;
             const speedFactor = 0.8 + Math.random() * 0.4;
 
