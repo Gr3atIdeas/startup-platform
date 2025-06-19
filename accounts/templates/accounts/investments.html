@@ -22,7 +22,7 @@
       <div class="analytics-section">
         <div class="analytics-left">
           <!-- Планетарная система -->
-          <div class="portfolio-image-container planetary-system-container">
+          <div class="portfolio-image-container planetary-system-container" style="min-height: 451px;">
             <button class="portfolio-image-fullscreen-btn" aria-label="Развернуть на полный экран">
               <i class="fas fa-expand"></i>
             </button>
@@ -155,7 +155,7 @@
         </div>
         <div class="startups-grid">
           {% for investment in user_investments|slice:":6" %}
-            <div class="startup-card" data-category="{{ investment.startup.direction.direction_name|default:''|escape }}" data-name="{{ investment.startup.title|default:''|escape }}">
+            <div class="startup-card" data-category="{{ investment.startup.direction.direction_name|default:''|escape }}" data-name="{{ investment.startup.title|default:''|escape }}" data-created="{{ investment.created_at|date:'Y-m-d' }}">
               <div class="startup-card-left">
                 <img src="{{ investment.startup.planet_image.url|default:'/static/accounts/images/planets/startup_5_logo.png' }}" alt="{{ investment.startup.title|default:'No Name' }} Planet" class="startup-planet-img" style="width: 70px; height: 70px; border-radius: 50%; margin-bottom: 5px;">
                 <div class="startup-name">
@@ -927,7 +927,7 @@
               {% for investment in planetary_investments %}
                 '{{ investment.id }}': {
                   name: '{{ investment.name|escapejs }}',
-                  description: '{{ investment.description|escapejs }}',
+                  'description': '{{ investment.description|truncatechars:50|escapejs }}',
                   rating: '{{ investment.rating|escapejs }}',
                   progress: '{{ investment.progress|escapejs }}',
                   funding: '{{ investment.funding|escapejs }}',
@@ -970,8 +970,14 @@
               logoElement.style.backgroundSize = 'contain';
               logoElement.style.backgroundRepeat = 'no-repeat';
               logoElement.style.backgroundPosition = 'center';
+              logoElement.style.borderRadius = '50%'; // Сделать круглым
+              logoElement.style.width = '100px'; // Установите нужный размер
+              logoElement.style.height = '100px'; // Установите нужный размер
             } else {
               logoElement.style.backgroundColor = '#e9ecef';
+              logoElement.style.borderRadius = '50%'; // Круглый фон для запасного цвета
+              logoElement.style.width = '100px';
+              logoElement.style.height = '100px';
             }
 
             const galaxyTiltAngle = 45;

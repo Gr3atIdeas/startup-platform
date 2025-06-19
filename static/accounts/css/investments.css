@@ -94,7 +94,7 @@ body {
 .planetary-system-container {
   position: relative;
   width: 100%;
-  height: 400px;
+  height: 451px;
   overflow: hidden;
   background: radial-gradient(circle at center, #1a1a2e 0%, #0a0a1e 100%);
 }
