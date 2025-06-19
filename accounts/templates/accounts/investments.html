@@ -5,1198 +5,437 @@
 {% load math_filters %}
 {% load startup_filters %}
 
-{% block title %}Портфель{% endblock %}
+{% block title %}Мои инвестиции{% endblock %}
 
 {% block head_extra %}
   {{ block.super }}
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&display=swap">
   <link rel="stylesheet" href="{% static 'accounts/css/investments.css' %}">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  {# Стили из my_startups.html для планетарной системы #}
+  <style>
+    /* Стили для планетарной системы */
+    .planetary-system-container {
+      position: relative;
+      width: 100%;
+      height: 400px; /* Убедимся, что высота задана */
+      overflow: hidden;
+      background: radial-gradient(circle at center, #1a1a2e 0%, #0a0a1e 100%);
+      margin-bottom: 40px;
+    }
+
+    .planetary-system {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      perspective: 1000px;
+      cursor: grab;
+    }
+
+    .planetary-system.dragging {
+      cursor: grabbing;
+    }
+
+    .planetary-system #scene {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      transform-style: preserve-3d;
+    }
+
+    .planetary-system #galaxy {
+      position: absolute;
+      top: 0;
+      left: 0;
+      transform: rotateX(45deg);
+      transform-style: preserve-3d;
+    }
+
+    .planetary-system #logo {
+      width: 60px;
+      height: 60px;
+      background-size: cover;
+      border-radius: 50%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotateX(-45deg);
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: bold;
+      color: #333;
+      text-align: center;
+      line-height: 1.2;
+    }
+
+    .planetary-system .orbit {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: var(--orbit-size);
+      height: var(--orbit-size);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      margin-left: calc(-0.5 * var(--orbit-size));
+      margin-top: calc(-0.5 * var(--orbit-size));
+      transform-style: preserve-3d;
+      z-index: 1;
+      transition: all 0.5s ease;
+    }
+
+    .planetary-system .planet-orientation {
+      position: absolute;
+      transform-style: preserve-3d;
+    }
+
+    .planetary-system .planet {
+      position: absolute;
+      width: var(--planet-size);
+      height: var(--planet-size);
+      margin-left: calc(-0.5 * var(--planet-size));
+      margin-top: calc(-0.5 * var(--planet-size));
+      border-radius: 50%;
+      background-size: cover;
+      cursor: pointer;
+      transform-style: preserve-3d;
+      z-index: 5;
+      transition: all 0.3s ease;
+    }
+    .planetary-system .planet:hover {
+      transform: scale(1.1);
+    }
+    .planetary-system .planet.active {
+      transform: scale(1.2);
+    }
+    .planetary-system #info-card {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(255, 255, 255, 0.95);
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+      max-width: 300px;
+      width: 90%;
+      color: #333;
+      z-index: 20;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    .planetary-system #info-card.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+  </style>
 {% endblock %}
 
 {% block content %}
-  {% if user.is_authenticated and user.role.role_name == 'investor' %}
-    <div class="portfolio-container">
-      <!-- Верхняя секция с аналитикой -->
-      <div class="analytics-section">
-        <div class="analytics-left">
-          <!-- Планетарная система -->
-          <div class="portfolio-image-container planetary-system-container">
-            <button class="portfolio-image-fullscreen-btn" aria-label="Развернуть на полный экран">
-              <i class="fas fa-expand"></i>
-            </button>
-            <div class="planetary-system" id="solar-system">
-              <div class="space-background"></div>
-              <div class="stars"></div>
-              <div id="scene">
-                <div id="galaxy">
-                  <div id="logo"></div>
-                  {% for investment in planetary_investments %}
-                    <div class="orbit" style="--orbit-size: {{ investment.orbit_size|default:200 }}px; --orbit-time: {{ investment.orbit_time|default:80 }}s;">
-                      <div class="planet-orientation">
-                        <div class="planet" style="--planet-size: {{ investment.planet_size|default:50 }}px;" data-id="{{ investment.id|default_if_none:'' }}"></div>
-                      </div>
-                    </div>
-                  {% empty %}
-                    <p style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white;">Нет инвестиций для отображения</p>
-                  {% endfor %}
-                </div>
-              </div>
-              <div id="info-card">
-                <button id="close-card" aria-label="Закрыть карточку">×</button>
-                <div class="planet-image" id="planet-image"></div>
-                <h2 id="startup-name"></h2>
-                <div class="rating" id="startup-rating"></div>
-                <div class="progress-bar">
-                  <button id="investment-type"></button>
-                  <div class="progress" id="startup-progress"></div>
-                </div>
-                <div class="funding" id="startup-funding"></div>
-                <div class="investors" id="startup-investors"></div>
-                <div class="description" id="startup-description"></div>
-                <button class="more-details" id="more-details">Подробнее</button>
+<div class="portfolio-container">
+  <!-- Планетарная система -->
+  <div class="planetary-system-container">
+    <div class="planetary-system" id="planetary-system">
+      <div id="scene">
+        <div id="galaxy">
+          {% for investment in planetary_investments %}
+          <div class="orbit" id="orbit-{{ investment.id }}" style="--orbit-size: {{ investment.orbit_size }}px; animation: orbit {{ investment.orbit_time }}s linear infinite;">
+            <div class="planet-orientation" style="--orbit-size: {{ investment.orbit_size }}px;">
+              <div class="planet" id="planet-{{ investment.id }}"
+                   style="--planet-size: {{ investment.planet_size }}px; background-image: url('{{ investment.image }}');"
+                   data-info="{{ investment.name }}"
+                   data-startup-id="{{ investment.startup_id }}"
+                   data-description="{{ investment.description }}"
+                   data-rating="{{ investment.rating }}"
+                   data-comment-count="{{ investment.comment_count }}"
+                   data-progress="{{ investment.progress }}"
+                   data-direction="{{ investment.direction }}"
+                   data-investment-type="{{ investment.investment_type }}"
+                   data-funding="{{ investment.funding }}"
+                   data-funding-goal="{{ investment.funding_goal }}"
+                   data-investors="{{ investment.investors }}">
               </div>
             </div>
           </div>
-          <!-- Категории с радиальными диаграммами -->
-          <div class="categories-radial-section">
-            <h3 class="categories-radial-title">Категории ваших инвестиций</h3>
-            <div class="categories-radial-grid">
-              {% for category in investment_categories %}
-                <div class="category-radial-item">
-                  <div class="radial-chart" data-percentage="{{ category.percentage|default:0 }}" data-category-name="{{ category.name|default:''|escape }}">
-                    <div class="radial-chart-progress"></div>
-                    <div class="radial-chart-text">{{ category.percentage|default:0 }}%</div>
-                  </div>
-                  <span class="category-radial-name">{{ category.name|translate_category|default:"Без категории"|escape }}</span>
-                </div>
-              {% empty %}
-                <p>Нет данных по категориям инвестиций.</p>
-              {% endfor %}
-              <div class="category-radial-item category-all" id="openCategoriesModalBtn">
-                <div class="radial-chart-all">
-                  <i class="fas fa-ellipsis-h" aria-hidden="true"></i>
-                </div>
-                <span class="category-radial-name">Все</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="analytics-content">
-          <div class="analytics-header">
-            <h1 class="analytics-title">Аналитика</h1>
-            <div class="analytics-controls">
-              <select class="month-select" aria-label="Выбор периода">
-                <option value="весь год">Весь год</option>
-              </select>
-              <button class="analytics-options-btn" aria-label="Дополнительные опции">
-                <i class="fas fa-ellipsis-v" aria-hidden="true"></i>
-              </button>
-            </div>
-          </div>
-          <div class="stats-overview">
-            <div class="stat-item">
-              <span class="stat-label">Инвестированные стартапы</span>
-              <div class="stat-value-box dark-box">{{ startups_count|default:0|floatformat:0|intcomma }}</div>
-            </div>
-            <div class="stat-item">
-              <span class="stat-label">Общая сумма инвестиций</span>
-              <div class="stat-value-box blue-box">{{ total_investment|default:0|floatformat:0|intcomma }} ₽</div>
-            </div>
-          </div>
-          <div class="stats-details">
-            <div class="stat-item detail-item">
-              <span class="stat-label">Макс. инвестиция</span>
-              <span class="stat-value-simple">{{ max_investment|default:0|floatformat:0|intcomma }} ₽</span>
-            </div>
-            <div class="stat-item detail-item">
-              <span class="stat-label">Мин. инвестиция</span>
-              <span class="stat-value-simple">{{ min_investment|default:0|floatformat:0|intcomma }} ₽</span>
-            </div>
-          </div>
-          <div class="analytics-chart-container">
-            <canvas id="monthlyInvestmentChart" aria-label="График инвестиций за год"></canvas>
-            <span class="chart-title-overlay">Инвестиции за год</span>
-          </div>
-          <button class="download-report-btn" type="button">Скачать отчет</button>
+          {% endfor %}
         </div>
       </div>
-      <!-- Раздел Мои стартапы -->
-      <div class="my-startups-section">
-        <div class="startups-header">
-          <div class="startups-titles">
-            <h2 class="startups-title-main">МОИ</h2>
-            <h2 class="startups-title-sub">СТАРТАПЫ</h2>
-          </div>
-          <div class="total-investment">
-            <span class="investment-label">Инвестировано всего</span>
-            <div class="investment-amount">{{ total_investment|default:0|floatformat:0|intcomma }} ₽</div>
-          </div>
+    </div>
+    <div id="info-card" class="info-card"></div>
+  </div>
+
+  <!-- Раздел Мои инвестиции -->
+  <div class="my-startups-section">
+    <div class="startups-header">
+      <div class="startups-titles">
+        <h2 class="startups-title-main">МОИ</h2>
+        <h2 class="startups-title-sub">ИНВЕСТИЦИИ</h2>
+      </div>
+      <div class="total-investment">
+        <span class="investment-label">Всего инвестировано</span>
+        <div class="investment-amount">{{ total_investment|default:"0"|intcomma }} ₽</div>
+      </div>
+    </div>
+
+    <div class="startups-filters">
+        <div class="startups-search-wrapper">
+          <i class="fas fa-search search-icon"></i>
+          <input type="text" placeholder="Поиск по названию..." id="startup-search" class="startups-search-input">
         </div>
-        <div class="startups-filters">
-          <div class="startups-search-wrapper">
-            <i class="fas fa-search search-icon" aria-hidden="true"></i>
-            <input type="text" placeholder="Поиск по названию..." id="startup-search" class="startups-search-input" aria-label="Поиск стартапов по названию">
-          </div>
-          <div class="filter-buttons">
-            <button class="filter-btn active" data-filter="all" type="button">Все</button>
+        <div class="filter-buttons">
+            <button class="filter-btn {% if current_sort == 'all' or not current_sort %}active{% endif %}" onclick="applySort('all')">Все</button>
             <div class="filter-dropdown-wrapper">
-              <button class="filter-btn filter-btn-dropdown" data-filter="category" type="button" aria-expanded="false">
-                Категория <i class="fas fa-chevron-down" aria-hidden="true"></i>
-              </button>
-              <div class="filter-dropdown-content">
-                <a href="#" aria-label="Загрузка категорий">Загрузка...</a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="startups-grid">
-          {% for investment in user_investments|slice:":4" %}
-            <div class="startup-card" data-category="{{ investment.startup.direction.direction_name|default:''|escape }}" data-name="{{ investment.startup.title|default:''|escape }}">
-              <div class="startup-card-left">
-                <img src="{{ investment.startup.planet_image.url|default:'/static/accounts/images/planets/startup_5_logo.png' }}" alt="{{ investment.startup.title|default:'No Name' }} Planet" class="startup-planet-img" style="width: 70px; height: 70px; border-radius: 50%; margin-bottom: 5px;">
-                <div class="startup-name">
-                  {% if investment.startup.title %}
-                    <a href="{% url 'startup_detail' startup_id=investment.startup.startup_id|default_if_none:'' %}" style="color: inherit; text-decoration: none;">{{ investment.startup.title|escape }}</a>
-                  {% else %}
-                    <span style="color: red; font-size: 10px;">(Имя не задано!)</span>
-                  {% endif %}
+                <button class="filter-btn filter-btn-dropdown">
+                    Категория <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="filter-dropdown-content">
+                    <a href="#" data-category="all">Все категории</a>
+                    {% for direction in all_directions %}
+                        <a href="#" data-category="{{ direction.direction_name }}">{{ direction.direction_name }}</a>
+                    {% endfor %}
                 </div>
+            </div>
+            <button class="filter-btn {% if current_sort == 'newest' %}active{% endif %}" onclick="applySort('newest')">
+                <i class="fas fa-sort-amount-up"></i> Новые
+            </button>
+            <button class="filter-btn {% if current_sort == 'oldest' %}active{% endif %}" onclick="applySort('oldest')">
+                <i class="fas fa-sort-amount-down"></i> Старые
+            </button>
+        </div>
+    </div>
+
+
+    <div class="startups-grid">
+      {% for investment in user_investments %}
+        <div class="startup-card" data-category="{{ investment.startup.direction.direction_name|default:''|escapejs }}" data-name="{{ investment.startup.title|default:''|escapejs }}">
+          <div class="startup-card-left">
+            <a href="{% url 'startup_detail' investment.startup.startup_id %}">
+              <img src="{{ investment.startup.planet_image.url | default:'/static/accounts/images/planets/startup_5_logo.png' }}" alt="{{ investment.startup.title|default:'No Name' }} Planet" class="startup-planet-img">
+            </a>
+            <div class="startup-info-wrapper">
+              <div class="startup-name">
+                <a href="{% url 'startup_detail' investment.startup.startup_id %}">
+                  {{ investment.startup.title|truncatechars:25 }}
+                </a>
+              </div>
+              <div class="startup-meta">
                 <div class="startup-rating">
                   {% with rating=investment.startup_average_rating|default:0 %}
-                    {% for i in "12345"|make_list %}
-                      {% if rating >= i|floatformat:0 %}
-                        <i class="fas fa-star" aria-hidden="true"></i>
-                      {% elif rating >= i|add:-0.5 %}
-                        <i class="fas fa-star-half-alt" aria-hidden="true"></i>
-                      {% else %}
-                        <i class="far fa-star" aria-hidden="true"></i>
-                      {% endif %}
-                    {% endfor %}
-                    <span style="font-size: 12px; color: #868E96; margin-left: 5px;">({{ investment.startup.total_voters|default:0|floatformat:0|intcomma }})</span>
+                      {% for i in "12345"|make_list %}
+                          {% if rating >= i|to_int %}
+                              <i class="fas fa-star"></i>
+                          {% elif rating > i|to_int|add:"-1" and rating < i|to_int %}
+                              <i class="fas fa-star-half-alt"></i>
+                          {% else %}
+                              <i class="far fa-star"></i>
+                          {% endif %}
+                      {% endfor %}
                   {% endwith %}
                 </div>
                 <div class="startup-comments">
-                  <i class="fas fa-comment-dots" aria-hidden="true"></i>
-                  <span>{{ investment.startup_comment_count|default:0|floatformat:0|intcomma }}</span>
-                </div>
-              </div>
-              <div class="startup-card-right">
-                <div class="startup-status-row">
-                  <span class="detail-label">Статус</span>
-                  <span class="detail-value status-{{ investment.startup.status|lower|default:'pending' }}">
-                    {% if investment.startup.status == 'approved' %}Активен{% else %}{{ investment.startup.get_status_display }}{% endif %}
-                  </span>
-                </div>
-                <div class="startup-financials">
-                  <div class="startup-detail-row">
-                    <span class="detail-label">Собрано:</span>
-                    <span class="detail-value">{{ investment.startup.current_investment|default:'0'|floatformat:0|intcomma }} ₽</span>
-                  </div>
-                  <div class="startup-detail-row">
-                    <span class="detail-label">Ваши инвестиции:</span>
-                    <span class="detail-value">{{ investment.amount|default:'0'|floatformat:0|intcomma }} ₽</span>
-                  </div>
-                  <div class="startup-detail-row">
-                    <span class="detail-label">Цель:</span>
-                    <span class="detail-value">{{ investment.startup.goal|default:'0'|floatformat:0|intcomma }} ₽</span>
-                  </div>
-                </div>
-                <div class="startup-category-row">
-                  <span class="detail-label">Категория</span>
-                  <span class="startup-category-tag">
-                    {{ investment.startup.direction.direction_name|translate_category|default:"Без категории"|escape }}
-                  </span>
+                  <i class="fas fa-comment-dots"></i>
+                  <span>{{ investment.startup_comment_count|default:0 }}</span>
                 </div>
               </div>
             </div>
-          {% empty %}
-            <p style="grid-column: 1 / -1; text-align: center;">У вас пока нет инвестиций.</p>
-          {% endfor %}
-          {% for investment in user_investments|slice:"4:" %}
-            <div class="startup-card hidden-card" data-category="{{ investment.startup.direction.direction_name|default:''|escape }}" data-name="{{ investment.startup.title|default:''|escape }}" style="display: none;">
-              <div class="startup-card-left">
-                <img src="{{ investment.startup.planet_image.url|default:'/static/accounts/images/planets/startup_5_logo.png' }}" alt="{{ investment.startup.title|default:'No Name' }} Planet" class="startup-planet-img" style="width: 70px; height: 70px; border-radius: 50%; margin-bottom: 5px;">
-                <div class="startup-name">
-                  {% if investment.startup.title %}
-                    <a href="{% url 'startup_detail' startup_id=investment.startup.startup_id|default_if_none:'' %}" style="color: inherit; text-decoration: none;">{{ investment.startup.title|escape }}</a>
-                  {% else %}
-                    <span style="color: red; font-size: 10px;">(Имя не задано!)</span>
-                  {% endif %}
-                </div>
-                <div class="startup-rating">
-                  {% with rating=investment.startup_average_rating|default:0 %}
-                    {% for i in "12345"|make_list %}
-                      {% if rating >= i|floatformat:0 %}
-                        <i class="fas fa-star" aria-hidden="true"></i>
-                      {% elif rating >= i|add:-0.5 %}
-                        <i class="fas fa-star-half-alt" aria-hidden="true"></i>
-                      {% else %}
-                        <i class="far fa-star" aria-hidden="true"></i>
-                      {% endif %}
-                    {% endfor %}
-                    <span style="font-size: 12px; color: #868E96; margin-left: 5px;">({{ investment.startup.total_voters|default:0|floatformat:0|intcomma }})</span>
-                  {% endwith %}
-                </div>
-                <div class="startup-comments">
-                  <i class="fas fa-comment-dots" aria-hidden="true"></i>
-                  <span>{{ investment.startup_comment_count|default:0|floatformat:0|intcomma }}</span>
-                </div>
-              </div>
-              <div class="startup-card-right">
-                <div class="startup-status-row">
-                  <span class="detail-label">Статус</span>
-                  <span class="detail-value status-{{ investment.startup.status|lower|default:'pending' }}">
-                    {% if investment.startup.status == 'approved' %}Активен{% else %}{{ investment.startup.get_status_display }}{% endif %}
-                  </span>
-                </div>
-                <div class="startup-financials">
-                  <div class="startup-detail-row">
-                    <span class="detail-label">Собрано:</span>
-                    <span class="detail-value">{{ investment.startup.current_investment|default:'0'|floatformat:0|intcomma }} ₽</span>
-                  </div>
-                  <div class="startup-detail-row">
-                    <span class="detail-label">Ваши инвестиции:</span>
-                    <span class="detail-value">{{ investment.amount|default:'0'|floatformat:0|intcomma }} ₽</span>
-                  </div>
-                  <div class="startup-detail-row">
-                    <span class="detail-label">Цель:</span>
-                    <span class="detail-value">{{ investment.startup.goal|default:'0'|floatformat:0|intcomma }} ₽</span>
-                  </div>
-                </div>
-                <div class="startup-category-row">
-                  <span class="detail-label">Категория</span>
-                  <span class="startup-category-tag">
-                    {{ investment.startup.direction.direction_name|translate_category|default:"Без категории"|escape }}
-                  </span>
-                </div>
-              </div>
-            </div>
-          {% endfor %}
-        </div>
-        {% if user_investments|length > 4 %}
-          <div class="startup-buttons-container" style="text-align: center; margin-top: 20px;">
-            <button class="show-more-btn" id="load-more" type="button">
-              Показать еще <i class="fas fa-arrow-right" aria-hidden="true"></i>
-            </button>
-            <button class="show-more-btn hide-btn" id="hide-startups-btn" style="display: none;" type="button">
-              Скрыть <i class="fas fa-arrow-up" aria-hidden="true"></i>
-            </button>
           </div>
-        {% endif %}
-      </div>
-      <!-- Модальное окно для всех категорий -->
-      <div id="allCategoriesModal" class="modal-overlay">
-        <div class="modal-content category-modal-content">
-          <button class="modal-close-btn" id="closeCategoriesModalBtn" aria-label="Закрыть модальное окно">×</button>
-          <h2 class="modal-title">Все категории инвестиций</h2>
-          <div class="modal-categories-grid" id="modalCategoriesGrid"></div>
-        </div>
-      </div>
-      <!-- JSON данные -->
-      {{ month_labels|json_script:"chart-month-labels" }}
-      {{ chart_monthly_category_data|json_script:"chart-monthly-category-data" }}
-      {{ chart_categories|json_script:"chart-categories" }}
-      {{ all_directions|json_script:"all-directions-data" }}
-      {{ invested_category_data|json_script:"invested-category-data" }}
-      {{ planetary_investments|json_script:"planetary-investments" }}
-      <script>
-        // Глобальные функции и константы
-        const categoryColors = {
-          "Medicine": "#e74c3c", "Auto": "#3498db", "Delivery": "#f1c40f",
-          "Cafe": "#9b59b6", "Fastfood": "#e67e22", "Health": "#1abc9c",
-          "Beauty": "#fd79a8", "Transport": "#2ecc71", "Sport": "#a3ff00",
-          "Psychology": "#d35400", "AI": "#00bcd4", "Finance": "#2980b9",
-          "Healthcare": "#c0392b", "IT": "#8e44ad", "Retail": "#f39c12",
-          "default": "#007bff"
-        };
-
-        function translateCategoryName(name) {
-          const translations = {
-            "Medicine": "Медицина", "Auto": "Автомобили", "Delivery": "Доставка",
-            "Cafe": "Кафе/рестораны", "Fastfood": "Фастфуд", "Health": "Здоровье",
-            "Beauty": "Красота", "Transport": "Транспорт", "Sport": "Спорт",
-            "Psychology": "Психология", "AI": "ИИ", "Finance": "Финансы",
-            "Healthcare": "Здравоохранение", "Technology": "Технологии", "IT": "ИТ",
-            "Retail": "Ритейл"
-          };
-          return translations[name] || name || "Без категории";
-        }
-
-        function updateRadialChartColors() {
-          document.querySelectorAll('.radial-chart').forEach(chart => {
-            const percentage = parseInt(chart.dataset.percentage || 0, 10);
-            const categoryName = chart.dataset.categoryName || '';
-            const color = categoryColors[categoryName] || categoryColors["default"];
-            const progressElement = chart.querySelector('.radial-chart-progress');
-            const textElement = chart.querySelector('.radial-chart-text');
-            if (progressElement) {
-              progressElement.style.setProperty('--percentage', percentage);
-              progressElement.style.setProperty('--progress-color', color);
-            }
-            if (!chart.closest('.category-all') && textElement) {
-              textElement.textContent = `${percentage}%`;
-            }
-          });
-          document.querySelectorAll('.category-radial-name').forEach(span => {
-            const item = span.closest('.category-radial-item');
-            if (item && !item.classList.contains('category-all')) {
-              const chart = item.querySelector('.radial-chart');
-              if (chart) {
-                const originalName = chart.dataset.categoryName;
-                span.textContent = translateCategoryName(originalName);
-              }
-            }
-          });
-        }
-
-        function openModal(directionsData, investedDataDict) {
-          const modalOverlay = document.getElementById('allCategoriesModal');
-          const modalGrid = document.getElementById('modalCategoriesGrid');
-          if (!modalOverlay || !modalGrid) return;
-          modalGrid.innerHTML = '';
-          if (directionsData && directionsData.length > 0) {
-            directionsData.sort((a, b) => (investedDataDict[b.direction_name] || 0) - (investedDataDict[a.direction_name] || 0));
-            directionsData.forEach(direction => {
-              const categoryName = direction.direction_name;
-              const percentage = investedDataDict[categoryName] || 0;
-              const translatedName = translateCategoryName(categoryName);
-              const color = categoryColors[categoryName] || categoryColors["default"];
-              const item = document.createElement('div');
-              item.classList.add('modal-category-item');
-              item.innerHTML = `
-                <div class="radial-chart" data-percentage="${percentage}" data-category-name="${categoryName}">
-                  <div class="radial-chart-progress" style="--percentage: ${percentage}; --progress-color: ${color};"></div>
-                  <div class="radial-chart-text">${percentage}%</div>
+          <div class="startup-card-right">
+            <div class="startup-detail-row your-investment-row">
+                <span class="detail-label">Ваша инвестиция:</span>
+                <span class="detail-value your-investment-value">{{ investment.amount|floatformat:0|intcomma }} ₽</span>
+            </div>
+            <div class="startup-financials">
+                <div class="startup-detail-row">
+                    <span class="detail-label">Собрано:</span>
+                    <span class="detail-value">{{ investment.startup.current_investment|default:'0'|intcomma }} ₽</span>
                 </div>
-                <span class="modal-category-name">${translatedName}</span>
-              `;
-              modalGrid.appendChild(item);
-            });
-          } else {
-            modalGrid.innerHTML = '<p>Нет доступных категорий.</p>';
-          }
-          modalOverlay.classList.add('visible');
-          document.body.classList.add('modal-open-blur');
-        }
-
-        function closeModal() {
-          const modalOverlay = document.getElementById('allCategoriesModal');
-          if (!modalOverlay) return;
-          modalOverlay.classList.remove('visible');
-          document.body.classList.remove('modal-open-blur');
-        }
-
-        function filterByCategory(event) {
-          event.preventDefault();
-          const selectedCategory = event.target.dataset.category;
-          const categoryButton = document.querySelector('.filter-btn[data-filter="category"]');
-          const filterButtons = document.querySelectorAll('.filter-btn');
-          const startupCards = document.querySelectorAll('.startups-grid .startup-card');
-          const loadMoreBtn = document.getElementById('load-more');
-          const hideBtn = document.getElementById('hide-startups-btn');
-          const startupGrid = document.querySelector('.startups-grid');
-
-          filterButtons.forEach(btn => btn.classList.remove('active'));
-          if (categoryButton) {
-            categoryButton.classList.add('active');
-            const chevron = categoryButton.querySelector('i');
-            categoryButton.textContent = translateCategoryName(selectedCategory) + ' ';
-            if (chevron) categoryButton.appendChild(chevron);
-          }
-
-          let visibleCount = 0;
-          startupCards.forEach(card => {
-            if (card.dataset.category === selectedCategory) {
-              if (visibleCount < 4) {
-                card.style.display = 'flex';
-                card.classList.remove('hidden-card');
-                visibleCount++;
-              } else {
-                card.style.display = 'none';
-                card.classList.add('hidden-card');
-              }
-            } else {
-              card.style.display = 'none';
-            }
-          });
-
-          if (loadMoreBtn) loadMoreBtn.style.display = visibleCount >= 4 && startupCards.length > 4 ? 'flex' : 'none';
-          if (hideBtn) hideBtn.style.display = 'none';
-
-          let startupsNoResultsMsg = startupGrid.querySelector('.no-results-message');
-          if (visibleCount === 0) {
-            if (!startupsNoResultsMsg) {
-              const p = document.createElement('p');
-              p.textContent = `Нет стартапов в категории "${translateCategoryName(selectedCategory)}".`;
-              p.style.gridColumn = '1 / -1';
-              p.style.textAlign = 'center';
-              p.classList.add('no-results-message');
-              startupGrid.appendChild(p);
-            }
-          } else {
-            if (startupsNoResultsMsg) {
-              startupsNoResultsMsg.remove();
-            }
-          }
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-          let parsedDirections = [];
-          let parsedInvestedData = {};
-          try {
-            const directionsElement = document.getElementById('all-directions-data');
-            const investedElement = document.getElementById('invested-category-data');
-            if (directionsElement) {
-              parsedDirections = JSON.parse(directionsElement.textContent);
-            }
-            if (investedElement) {
-              parsedInvestedData = JSON.parse(investedElement.textContent);
-            }
-          } catch (e) {
-            console.error("Ошибка парсинга данных для модального окна:", e);
-          }
-
-          updateRadialChartColors();
-
-          const categoryDropdownContent = document.querySelector('.filter-dropdown-content');
-          if (categoryDropdownContent) {
-            const directionsForDropdown = parsedDirections || [];
-            categoryDropdownContent.innerHTML = '';
-            if (directionsForDropdown.length > 0) {
-              const allLink = document.createElement('a');
-              allLink.href = '#';
-              allLink.dataset.filter = 'all';
-              allLink.textContent = 'Все категории';
-              allLink.addEventListener('click', (e) => {
-                e.preventDefault();
-                document.querySelector('.filter-btn[data-filter="all"]').click();
-                const categoryButton = document.querySelector('.filter-btn[data-filter="category"]');
-                const chevron = categoryButton.querySelector('i');
-                categoryButton.textContent = 'Категория ';
-                if (chevron) categoryButton.appendChild(chevron);
-              });
-              categoryDropdownContent.appendChild(allLink);
-
-              directionsForDropdown.forEach(direction => {
-                const link = document.createElement('a');
-                link.href = '#';
-                link.dataset.category = direction.direction_name;
-                link.textContent = translateCategoryName(direction.direction_name);
-                link.addEventListener('click', filterByCategory);
-                categoryDropdownContent.appendChild(link);
-              });
-            } else {
-              categoryDropdownContent.innerHTML = '<a href="#">Нет категорий</a>';
-            }
-          }
-
-          const searchInput = document.getElementById('startup-search');
-          const startupGrid = document.querySelector('.startups-grid');
-          if (searchInput && startupGrid) {
-            searchInput.addEventListener('input', function() {
-              const searchTerm = this.value.toLowerCase().trim();
-              const startupCards = startupGrid.querySelectorAll('.startup-card');
-              const loadMoreBtnSearch = document.getElementById('load-more');
-              const hideBtnSearch = document.getElementById('hide-startups-btn');
-              let visibleCount = 0;
-              const activeCategoryButton = document.querySelector('.filter-btn[data-filter="category"].active');
-              let activeCategoryFilter = null;
-              if (activeCategoryButton) {
-                const links = categoryDropdownContent.querySelectorAll('a');
-                for(let link of links){
-                  if(translateCategoryName(link.dataset.category) === activeCategoryButton.textContent.trim().split(' ')[0]){
-                    activeCategoryFilter = link.dataset.category;
-                    break;
-                  }
-                }
-                if (!activeCategoryFilter && !document.querySelector('.filter-btn[data-filter="all"].active')) {
-                  console.warn("Не удалось определить активный фильтр категории для поиска.");
-                  activeCategoryFilter = null;
-                } else if (document.querySelector('.filter-btn[data-filter="all"].active')) {
-                  activeCategoryFilter = null;
-                }
-              }
-
-              startupCards.forEach(card => {
-                const name = card.getAttribute('data-name').toLowerCase();
-                const category = card.getAttribute('data-category');
-
-                const matchesCategory = !activeCategoryFilter || (category === activeCategoryFilter);
-                const matchesSearch = name.includes(searchTerm);
-
-                if (matchesSearch && matchesCategory) {
-                  if (visibleCount < 4) {
-                    card.style.display = 'flex';
-                    card.classList.remove('hidden-card');
-                    visibleCount++;
-                  } else {
-                    card.style.display = 'none';
-                    card.classList.add('hidden-card');
-                  }
-                } else {
-                  card.style.display = 'none';
-                }
-              });
-
-              if (loadMoreBtnSearch) loadMoreBtnSearch.style.display = visibleCount >= 4 && startupCards.length > 4 ? 'flex' : 'none';
-              if (hideBtnSearch) hideBtnSearch.style.display = 'none';
-
-              let startupsNoResultsMsg = startupGrid.querySelector('.no-results-message');
-              if (visibleCount === 0 && searchTerm !== '') {
-                if (!startupsNoResultsMsg) {
-                  const p = document.createElement('p');
-                  p.textContent = 'По вашему запросу ничего не найдено.';
-                  p.style.gridColumn = '1 / -1';
-                  p.style.textAlign = 'center';
-                  p.classList.add('no-results-message');
-                  startupGrid.appendChild(p);
-                }
-              } else {
-                if (startupsNoResultsMsg) {
-                  startupsNoResultsMsg.remove();
-                }
-              }
-            });
-          }
-
-          const filterButtons = document.querySelectorAll('.filter-btn');
-          const allStartupCards = startupGrid.querySelectorAll('.startup-card');
-          const loadMoreBtn = document.getElementById('load-more');
-          const hideBtn = document.getElementById('hide-startups-btn');
-
-          filterButtons.forEach(button => {
-            button.addEventListener('click', function(event) {
-              if (this.classList.contains('filter-btn-dropdown')) {
-                return;
-              }
-              if (event.target.tagName === 'A' && event.target.closest('.filter-dropdown-content')) {
-                return;
-              }
-
-              filterButtons.forEach(btn => btn.classList.remove('active'));
-              this.classList.add('active');
-              const filter = this.getAttribute('data-filter');
-
-              let startupsNoResultsMsg = startupGrid.querySelector('.no-results-message');
-              if (startupsNoResultsMsg) startupsNoResultsMsg.remove();
-
-              if (filter === 'all') {
-                let visibleCount = 0;
-                allStartupCards.forEach(card => {
-                  if (visibleCount < 4) {
-                    card.style.display = 'flex';
-                    card.classList.remove('hidden-card');
-                    visibleCount++;
-                  } else {
-                    card.style.display = 'none';
-                    card.classList.add('hidden-card');
-                  }
-                });
-                const hiddenCardsAfterReset = startupGrid.querySelectorAll('.startup-card.hidden-card');
-                if (hiddenCardsAfterReset.length > 0) {
-                  if (loadMoreBtn) loadMoreBtn.style.display = 'flex';
-                  if (hideBtn) hideBtn.style.display = 'none';
-                } else {
-                  if (loadMoreBtn) loadMoreBtn.style.display = 'none';
-                  if (hideBtn) hideBtn.style.display = 'none';
-                }
-                const categoryButton = document.querySelector('.filter-btn[data-filter="category"]');
-                if (categoryButton) {
-                  const chevron = categoryButton.querySelector('i');
-                  categoryButton.textContent = 'Категория ';
-                  if (chevron) categoryButton.appendChild(chevron);
-                }
-                if(searchInput) searchInput.value = '';
-              }
-
-              const searchTerm = searchInput ? searchInput.value.toLowerCase().trim() : '';
-              const startupCards = startupGrid.querySelectorAll('.startup-card');
-              const loadMoreBtnSearch = document.getElementById('load-more');
-              const hideBtnSearch = document.getElementById('hide-startups-btn');
-              let visibleCount = 0;
-              const activeCategoryButton = document.querySelector('.filter-btn[data-filter="category"].active');
-              let activeCategoryFilter = null;
-              if (activeCategoryButton) {
-                const links = categoryDropdownContent.querySelectorAll('a');
-                for(let link of links){
-                  if(translateCategoryName(link.dataset.category) === activeCategoryButton.textContent.trim().split(' ')[0]){
-                    activeCategoryFilter = link.dataset.category;
-                    break;
-                  }
-                }
-                if (!activeCategoryFilter && !document.querySelector('.filter-btn[data-filter="all"].active')) {
-                  console.warn("Не удалось определить активный фильтр категории для поиска.");
-                  activeCategoryFilter = null;
-                } else if (document.querySelector('.filter-btn[data-filter="all"].active')) {
-                  activeCategoryFilter = null;
-                }
-              }
-
-              startupCards.forEach(card => {
-                const name = card.getAttribute('data-name').toLowerCase();
-                const category = card.getAttribute('data-category');
-
-                const matchesCategory = !activeCategoryFilter || (category === activeCategoryFilter);
-                const matchesSearch = name.includes(searchTerm);
-
-                if (matchesSearch && matchesCategory) {
-                  if (visibleCount < 4) {
-                    card.style.display = 'flex';
-                    card.classList.remove('hidden-card');
-                    visibleCount++;
-                  } else {
-                    card.style.display = 'none';
-                    card.classList.add('hidden-card');
-                  }
-                } else {
-                  card.style.display = 'none';
-                }
-              });
-
-              if (loadMoreBtnSearch) loadMoreBtnSearch.style.display = visibleCount >= 4 && startupCards.length > 4 ? 'flex' : 'none';
-              if (hideBtnSearch) hideBtnSearch.style.display = 'none';
-
-              startupsNoResultsMsg = startupGrid.querySelector('.no-results-message');
-              if (visibleCount === 0 && searchTerm !== '') {
-                if (!startupsNoResultsMsg) {
-                  const p = document.createElement('p');
-                  p.textContent = 'По вашему запросу ничего не найдено.';
-                  p.style.gridColumn = '1 / -1';
-                  p.style.textAlign = 'center';
-                  p.classList.add('no-results-message');
-                  startupGrid.appendChild(p);
-                }
-              } else {
-                if (startupsNoResultsMsg) {
-                  startupsNoResultsMsg.remove();
-                }
-              }
-            });
-          });
-
-          if (loadMoreBtn) {
-            loadMoreBtn.addEventListener('click', function() {
-              const currentlyHiddenCards = startupGrid.querySelectorAll('.startup-card.hidden-card');
-              currentlyHiddenCards.forEach(card => {
-                card.style.display = 'flex';
-                card.classList.remove('hidden-card');
-              });
-              this.style.display = 'none';
-              if (hideBtn) hideBtn.style.display = 'flex';
-            });
-          }
-
-          if (hideBtn) {
-            hideBtn.addEventListener('click', function() {
-              let visibleCount = 0;
-              startupGrid.querySelectorAll('.startup-card').forEach(card => {
-                if (card.style.display === 'flex') {
-                  if (visibleCount >= 4) {
-                    card.style.display = 'none';
-                    card.classList.add('hidden-card');
-                  }
-                  visibleCount++;
-                }
-              });
-              this.style.display = 'none';
-              if (loadMoreBtn && startupGrid.querySelectorAll('.startup-card.hidden-card').length > 0) {
-                loadMoreBtn.style.display = 'flex';
-              }
-            });
-          }
-
-          const openModalBtn = document.getElementById('openCategoriesModalBtn');
-          const closeModalBtn = document.getElementById('closeCategoriesModalBtn');
-          const modalOverlay = document.getElementById('allCategoriesModal');
-          if (openModalBtn) {
-            openModalBtn.addEventListener('click', function() {
-              openModal(parsedDirections, parsedInvestedData);
-            });
-          }
-          if (closeModalBtn) {
-            closeModalBtn.addEventListener('click', closeModal);
-          }
-          if (modalOverlay) {
-            modalOverlay.addEventListener('click', function(event) {
-              if (event.target === modalOverlay) {
-                closeModal();
-              }
-            });
-          }
-
-          document.querySelectorAll('.filter-dropdown-content a').forEach(link => {
-            link.addEventListener('click', function(event) {
-              filterByCategory(event);
-              const searchInput = document.getElementById('startup-search');
-              const searchTerm = searchInput ? searchInput.value.toLowerCase().trim() : '';
-              const startupCards = startupGrid.querySelectorAll('.startup-card');
-              const loadMoreBtnSearch = document.getElementById('load-more');
-              const hideBtnSearch = document.getElementById('hide-startups-btn');
-              let visibleCount = 0;
-              const activeCategoryButton = document.querySelector('.filter-btn[data-filter="category"].active');
-              let activeCategoryFilter = null;
-              if (activeCategoryButton) {
-                const links = categoryDropdownContent.querySelectorAll('a');
-                for(let link of links){
-                  if(translateCategoryName(link.dataset.category) === activeCategoryButton.textContent.trim().split(' ')[0]){
-                    activeCategoryFilter = link.dataset.category;
-                    break;
-                  }
-                }
-                if (!activeCategoryFilter && !document.querySelector('.filter-btn[data-filter="all"].active')) {
-                  console.warn("Не удалось определить активный фильтр категории для поиска.");
-                  activeCategoryFilter = null;
-                } else if (document.querySelector('.filter-btn[data-filter="all"].active')) {
-                  activeCategoryFilter = null;
-                }
-              }
-
-              startupCards.forEach(card => {
-                const name = card.getAttribute('data-name').toLowerCase();
-                const category = card.getAttribute('data-category');
-
-                const matchesCategory = !activeCategoryFilter || (category === activeCategoryFilter);
-                const matchesSearch = name.includes(searchTerm);
-
-                if (matchesSearch && matchesCategory) {
-                  if (visibleCount < 4) {
-                    card.style.display = 'flex';
-                    card.classList.remove('hidden-card');
-                    visibleCount++;
-                  } else {
-                    card.style.display = 'none';
-                    card.classList.add('hidden-card');
-                  }
-                } else {
-                  card.style.display = 'none';
-                }
-              });
-
-              if (loadMoreBtnSearch) loadMoreBtnSearch.style.display = visibleCount >= 4 && startupCards.length > 4 ? 'flex' : 'none';
-              if (hideBtnSearch) hideBtnSearch.style.display = 'none';
-
-              startupsNoResultsMsg = startupGrid.querySelector('.no-results-message');
-              if (visibleCount === 0 && searchTerm !== '') {
-                if (!startupsNoResultsMsg) {
-                  const p = document.createElement('p');
-                  p.textContent = 'По вашему запросу ничего не найдено.';
-                  p.style.gridColumn = '1 / -1';
-                  p.style.textAlign = 'center';
-                  p.classList.add('no-results-message');
-                  startupGrid.appendChild(p);
-                }
-              } else {
-                if (startupsNoResultsMsg) {
-                  startupsNoResultsMsg.remove();
-                }
-              }
-            });
-          });
-
-          // График
-          (function() {
-            const canvasElement = document.getElementById('monthlyInvestmentChart');
-            if (!canvasElement) {
-              console.warn("Элемент canvas #monthlyInvestmentChart не найден.");
-              return;
-            }
-            const ctx = canvasElement.getContext('2d');
-
-            let monthLabels = [];
-            let monthlyCategoryData = [];
-            let categoriesForChart = [];
-
-            try {
-              const labelsEl = document.getElementById('chart-month-labels');
-              const monthlyDataEl = document.getElementById('chart-monthly-category-data');
-              const categoriesEl = document.getElementById('chart-categories');
-
-              if (!labelsEl || !monthlyDataEl || !categoriesEl) throw new Error("Элементы данных графика не найдены");
-
-              monthLabels = JSON.parse(labelsEl.textContent);
-              monthlyCategoryData = JSON.parse(monthlyDataEl.textContent);
-              categoriesForChart = JSON.parse(categoriesEl.textContent);
-
-              console.log("Chart Labels:", monthLabels);
-              console.log("Chart Categories:", categoriesForChart);
-              console.log("Chart Monthly Category Data:", monthlyCategoryData);
-            } catch (e) {
-              console.error("Ошибка парсинга данных для графика:", e);
-              if (canvasElement.parentNode) {
-                canvasElement.parentNode.innerHTML = '<p style="text-align: center; color: red;">Ошибка загрузки данных для графика.</p>';
-              }
-              return;
-            }
-
-            const hasData = monthlyCategoryData && monthlyCategoryData.some(month => Object.keys(month.category_data).length > 0);
-            console.log("Chart has category data:", hasData);
-
-            if (hasData && categoriesForChart.length > 0) {
-              const datasets = categoriesForChart.map(categoryName => {
-                const color = categoryColors[categoryName] || categoryColors["default"];
-                const data = monthLabels.map((label, index) => {
-                  const monthData = monthlyCategoryData[index];
-                  return monthData.category_data[categoryName] || 0;
-                });
-
-                return {
-                  label: translateCategoryName(categoryName),
-                  data: data,
-                  backgroundColor: color,
-                };
-              });
-
-              console.log("Generated Chart Datasets:", datasets);
-
-              new Chart(ctx, {
-                type: 'bar',
-                data: {
-                  labels: monthLabels,
-                  datasets: datasets
-                },
-                options: {
-                  responsive: true,
-                  maintainAspectRatio: false,
-                  interaction: {
-                    mode: 'index',
-                    intersect: false,
-                  },
-                  scales: {
-                    y: {
-                      stacked: true,
-                      beginAtZero: true,
-                      grid: { color: 'rgba(255, 255, 255, 0.05)' },
-                      ticks: {
-                        color: 'rgba(255, 255, 255, 0.7)',
-                        callback: function(value) {
-                          if (value >= 1000000) { return (value / 1000000).toLocaleString('ru-RU', { maximumFractionDigits: 1 }) + 'M'; }
-                          if (value >= 1000) { return (value / 1000).toLocaleString('ru-RU', { maximumFractionDigits: 0 }) + 'k'; }
-                          else { return value.toLocaleString('ru-RU'); }
-                        }
-                      },
-                      title: {
-                        display: true,
-                        text: 'Сумма инвестиций, ₽',
-                        color: 'rgba(255, 255, 255, 0.7)'
-                      }
-                    },
-                    x: {
-                      stacked: true,
-                      grid: { display: false },
-                      ticks: { color: '#495057' }
-                    }
-                  },
-                  plugins: {
-                    legend: {
-                      display: true,
-                      position: 'top',
-                      labels: {
-                        color: 'rgba(255, 255, 255, 0.7)',
-                        boxWidth: 12,
-                        padding: 15
-                      }
-                    },
-                    tooltip: {
-                      callbacks: {
-                        title: function(tooltipItems) {
-                          return tooltipItems[0].label;
-                        },
-                        label: function(context) {
-                          let label = context.dataset.label || '';
-                          if (label) { label += ': '; }
-                          if (context.parsed.y !== null) {
-                            label += context.parsed.y.toLocaleString('ru-RU', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + ' ₽';
-                          }
-                          return label;
-                        }
-                      }
-                    }
-                  }
-                }
-              });
-            } else {
-              console.log("No category data found for chart, rendering placeholder.");
-              if (canvasElement.parentNode) {
-                canvasElement.parentNode.innerHTML = '<p style="text-align: center; color: #adb5bd;">Нет данных по инвестициям за текущий год для отображения по категориям.</p>';
-              }
-            }
-          })();
-
-          // Планетарная система
-          (function() {
-            const startups = {% if planetary_investments %}
-              {
-              {% for investment in planetary_investments %}
-                '{{ investment.id }}': {
-                  name: '{{ investment.name|escapejs }}',
-                  description: '{{ investment.description|escapejs }}',
-                  rating: '{{ investment.rating|escapejs }}',
-                  progress: '{{ investment.progress|escapejs }}',
-                  funding: '{{ investment.funding|escapejs }}',
-                  funding_goal: '{{ investment.funding_goal|escapejs }}',
-                  investors: '{{ investment.investors|escapejs }}',
-                  image: '{{ investment.image|escapejs }}',
-                  startup_id: '{{ investment.startup_id|escapejs }}',
-                  investment_type: '{{ investment.investment_type|escapejs }}'
-                }{% if not forloop.last %},{% endif %}
-              {% endfor %}
-              }
-            {% else %}
-              {}
-            {% endif %};
-
-            const planets = document.querySelectorAll('.planetary-system .planet');
-            const planetOrientations = document.querySelectorAll('.planetary-system .planet-orientation');
-            const orbits = document.querySelectorAll('.planetary-system .orbit');
-            const infoCard = document.querySelector('.planetary-system #info-card');
-            const planetImage = document.querySelector('.planetary-system #planet-image');
-            const startupName = document.querySelector('.planetary-system #startup-name');
-            const startupRating = document.querySelector('.planetary-system #startup-rating');
-            const startupProgress = document.querySelector('.planetary-system #startup-progress');
-            const startupFunding = document.querySelector('.planetary-system #startup-funding');
-            const startupInvestors = document.querySelector('.planetary-system #startup-investors');
-            const startupDescription = document.querySelector('.planetary-system #startup-description');
-            const closeCard = document.querySelector('.planetary-system #close-card');
-            const moreDetails = document.querySelector('.planetary-system #more-details');
-            const investmentType = document.querySelector('.planetary-system #investment-type');
-            const solarSystem = document.querySelector('.planetary-system#solar-system');
-            const scene = document.querySelector('.planetary-system #scene');
-            const galaxy = document.querySelector('.planetary-system #galaxy');
-            const logoElement = document.querySelector('.planetary-system #logo');
-
-            logoElement.style.backgroundImage = `url('{% static "accounts/images/layout/image12.png" %}')`;
-
-            const galaxyTiltAngle = 45;
-            const planetObjects = [];
-            let isPaused = false;
-            let pausedTime = 0;
-            let lastInteractionTime = Date.now();
-            const inactivityTimeout = 10000;
-            let isReturningToCenter = false;
-
-            planets.forEach((planet, index) => {
-              const orbit = planet.closest('.orbit');
-              const planetOrientation = planet.closest('.planet-orientation');
-              const orbitSize = parseFloat(getComputedStyle(orbit).getPropertyValue('--orbit-size'));
-              const orbitTime = parseFloat(getComputedStyle(orbit).getPropertyValue('--orbit-time'));
-              const initialAngle = Math.random() * 360;
-              const speedFactor = 0.8 + Math.random() * 0.4;
-
-              planetObjects.push({
-                element: planet,
-                orientation: planetOrientation,
-                orbit: orbit,
-                size: parseFloat(getComputedStyle(planet).getPropertyValue('--planet-size')),
-                orbitSize: orbitSize,
-                orbitTime: orbitTime,
-                angle: initialAngle,
-                speedFactor: speedFactor,
-                startTime: Date.now() - Math.random() * orbitTime * 1000
-              });
-
-              const id = planet.getAttribute('data-id');
-              if (startups[id] && startups[id].image) {
-                planet.style.backgroundImage = `url('${startups[id].image}')`;
-              } else {
-                planet.style.backgroundColor = '#e9ecef';
-              }
-
-              planet.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const startupData = startups[id];
-
-                planetImage.style.backgroundImage = `url('${startupData.image}')`;
-                startupName.textContent = startupData.name;
-                startupRating.textContent = `Рейтинг ${startupData.rating}`;
-                startupProgress.textContent = startupData.progress;
-                startupFunding.textContent = `Собрано: ${startupData.funding} (Цель: ${startupData.funding_goal})`;
-                startupInvestors.textContent = startupData.investors;
-                startupDescription.textContent = startupData.description;
-                investmentType.textContent = startupData.investment_type;
-
-                planets.forEach(p => p.classList.remove('active'));
-                planet.classList.add('active');
-                infoCard.style.display = 'block';
-
-                isPaused = true;
-                pausedTime = Date.now();
-                lastInteractionTime = Date.now();
-              });
-            });
-
-            closeCard.addEventListener('click', () => {
-              infoCard.style.display = 'none';
-              planets.forEach(p => p.classList.remove('active'));
-
-              if (isPaused) {
-                const pauseDuration = Date.now() - pausedTime;
-                planetObjects.forEach(planetObj => {
-                  planetObj.startTime += pauseDuration;
-                });
-                isPaused = false;
-              }
-
-              lastInteractionTime = Date.now();
-            });
-
-            moreDetails.addEventListener('click', () => {
-              const activePlanet = document.querySelector('.planetary-system .planet.active');
-              if (activePlanet) {
-                const id = activePlanet.getAttribute('data-id');
-                const startup = startups[id];
-                if (startup && startup.startup_id) {
-                  window.location.href = `/startups/${startup.startup_id}/`;
-                }
-              }
-              infoCard.style.display = 'none';
-              planets.forEach(p => p.classList.remove('active'));
-
-              if (isPaused) {
-                const pauseDuration = Date.now() - pausedTime;
-                planetObjects.forEach(planetObj => {
-                  planetObj.startTime += pauseDuration;
-                });
-                isPaused = false;
-              }
-
-              lastInteractionTime = Date.now();
-            });
-
-            let isDragging = false;
-            let startX, startY;
-            let offsetX = 0;
-            let offsetY = 0;
-            let scale = 1;
-
-            solarSystem.addEventListener('mousedown', (e) => {
-              e.preventDefault();
-              isDragging = true;
-              startX = e.clientX;
-              startY = e.clientY;
-              solarSystem.classList.add('dragging');
-              lastInteractionTime = Date.now();
-              isReturningToCenter = false;
-            });
-
-            document.addEventListener('mousemove', (e) => {
-              if (!isDragging) return;
-
-              const deltaX = e.clientX - startX;
-              const deltaY = e.clientY - startY;
-
-              offsetX += deltaX;
-              offsetY += deltaY;
-
-              offsetX = Math.max(-solarSystem.offsetWidth / 2, Math.min(solarSystem.offsetWidth / 2, offsetX));
-              offsetY = Math.max(-solarSystem.offsetHeight / 2, Math.min(solarSystem.offsetHeight / 2, offsetY));
-
-              scene.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
-              startX = e.clientX;
-              startY = e.clientY;
-
-              lastInteractionTime = Date.now();
-            });
-
-            document.addEventListener('mouseup', () => {
-              isDragging = false;
-              solarSystem.classList.remove('dragging');
-              lastInteractionTime = Date.now();
-            });
-
-            solarSystem.addEventListener('wheel', (e) => {
-              e.preventDefault();
-              const delta = e.deltaY > 0 ? -0.1 : 0.1;
-              scale = Math.max(0.5, Math.min(3, scale + delta));
-              scene.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
-
-              lastInteractionTime = Date.now();
-              isReturningToCenter = false;
-            });
-
-            infoCard.addEventListener('mousedown', (e) => {
-              e.stopPropagation();
-              lastInteractionTime = Date.now();
-            });
-
-            function checkInactivity() {
-              const now = Date.now();
-              if (now - lastInteractionTime >= inactivityTimeout && !isReturningToCenter && !isPaused) {
-                isReturningToCenter = true;
-                const startX = offsetX;
-                const startY = offsetY;
-                const duration = 1000;
-                let startTime = null;
-
-                function animateReturn(timestamp) {
-                  if (!startTime) startTime = timestamp;
-                  const elapsed = timestamp - startTime;
-                  const progress = Math.min(elapsed / duration, 1);
-
-                  offsetX = startX + (0 - startX) * progress;
-                  offsetY = startY + (0 - startY) * progress;
-
-                  scene.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
-
-                  if (progress < 1) {
-                    requestAnimationFrame(animateReturn);
-                  } else {
-                    isReturningToCenter = false;
-                  }
-                }
-
-                requestAnimationFrame(animateReturn);
-              }
-            }
-
-            setInterval(checkInactivity, 1000);
-
-            function updatePlanets() {
-              const now = Date.now();
-
-              if (isPaused) {
-                requestAnimationFrame(updatePlanets);
-                return;
-              }
-
-              planetObjects.forEach(planetObj => {
-                const elapsedSeconds = (now - planetObj.startTime) / 1000;
-                const orbitTimeSeconds = planetObj.orbitTime * planetObj.speedFactor;
-                const progress = (elapsedSeconds % orbitTimeSeconds) / orbitTimeSeconds;
-                const angle = planetObj.angle + progress * 360;
-                const angleRad = angle * Math.PI / 180;
-
-                const radius = planetObj.orbitSize / 2;
-                const x = Math.cos(angleRad) * radius;
-                const y = Math.sin(angleRad) * radius;
-
-                planetObj.orientation.style.left = `${50 + 50 * (x / radius)}%`;
-                planetObj.orientation.style.top = `${50 + 50 * (y / radius)}%`;
-
-                const tiltCompensation = -galaxyTiltAngle;
-                planetObj.element.style.transform = `rotateX(${tiltCompensation}deg)`;
-              });
-
-              requestAnimationFrame(updatePlanets);
-            }
-
-            updatePlanets();
-          })();
-        });
-      </script>
-    {% else %}
-      <div class="access-restricted">
-        <h2>Доступ ограничен</h2>
-        <p>Эта страница доступна только для пользователей со статусом "Инвестор". Пожалуйста, войдите в аккаунт или зарегистрируйтесь как инвестор.</p>
-        {% if user.is_authenticated %}
-          <p>Ваша текущая роль: {{ user.role.role_name|default:"не указана" }}</p>
-          <p>Чтобы изменить роль, перейдите в настройки профиля.</p>
-          <a href="{% url 'profile' %}" class="access-button">Перейти в профиль</a>
-        {% else %}
-          <a href="{% url 'login' %}" class="access-button">Войти</a>
-          <a href="{% url 'register' %}" class="access-button" style="margin-left: 10px;">Зарегистрироваться</a>
-        {% endif %}
+                <div class="startup-detail-row">
+                    <span class="detail-label">Цель:</span>
+                    <span class="detail-value">{{ investment.startup.goal|default:'0'|intcomma }} ₽</span>
+                </div>
+            </div>
+            <div class="startup-progress">
+              <div class="progress-bar-container">
+                  <div class="progress-bar" style="width: {% widthratio investment.startup.current_investment investment.startup.goal 100 %}%;"></div>
+              </div>
+              <span class="progress-percentage">{% widthratio investment.startup.current_investment investment.startup.goal 100 %}%</span>
+            </div>
+          </div>
+          <a href="{% url 'startup_detail' investment.startup.startup_id %}" class="details-button">Подробнее</a>
+        </div>
+      {% empty %}
+        <div class="no-startups-message">
+            <p>Вы еще не инвестировали ни в один стартап.</p>
+            <a href="{% url 'startups_list' %}" class="btn-primary">Найти стартапы</a>
+        </div>
+      {% endfor %}
+    </div>
+
+    {% if user_investments.has_other_pages %}
+      <div class="pagination">
+          <span class="step-links">
+              {% if user_investments.has_previous %}
+                  <a href="?page=1">&laquo; первая</a>
+                  <a href="?page={{ user_investments.previous_page_number }}">предыдущая</a>
+              {% endif %}
+
+              <span class="current">
+                  Страница {{ user_investments.number }} из {{ user_investments.paginator.num_pages }}.
+              </span>
+
+              {% if user_investments.has_next %}
+                  <a href="?page={{ user_investments.next_page_number }}">следующая</a>
+                  <a href="?page={{ user_investments.paginator.num_pages }}">последняя &raquo;</a>
+              {% endif %}
+          </span>
       </div>
     {% endif %}
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Скрипт для планетарной системы (из my_startups.html)
+  const system = document.getElementById('planetary-system');
+  const scene = document.getElementById('scene');
+  const galaxy = document.getElementById('galaxy');
+  const infoCard = document.getElementById('info-card');
+
+  if (system && scene && galaxy) {
+    let isDragging = false;
+    let previousX, previousY;
+    let rotationX = 45;
+    let rotationY = 0;
+    let posX = 0;
+    let posY = 0;
+    let scale = 1.0;
+
+    system.addEventListener('mousedown', function(e) {
+      isDragging = true;
+      previousX = e.clientX;
+      previousY = e.clientY;
+      system.classList.add('dragging');
+    });
+
+    window.addEventListener('mouseup', function() {
+      isDragging = false;
+      system.classList.remove('dragging');
+    });
+
+    window.addEventListener('mousemove', function(e) {
+      if (!isDragging) return;
+      const dx = e.clientX - previousX;
+      const dy = e.clientY - previousY;
+      previousX = e.clientX;
+      previousY = e.clientY;
+
+      if (e.ctrlKey || e.metaKey) { // Вращение
+        rotationY += dx * 0.5;
+        rotationX -= dy * 0.5;
+        rotationX = Math.max(-90, Math.min(90, rotationX)); // Ограничение вращения
+        galaxy.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
+      } else { // Перемещение
+        posX += dx;
+        posY += dy;
+        scene.style.transform = `translate(-50%, -50%) translate(${posX}px, ${posY}px) scale(${scale})`;
+      }
+    });
+
+    system.addEventListener('wheel', function(e) {
+      e.preventDefault();
+      scale += e.deltaY * -0.001;
+      scale = Math.min(Math.max(.5, scale), 2); // Ограничение масштаба
+      scene.style.transform = `translate(-50%, -50%) translate(${posX}px, ${posY}px) scale(${scale})`;
+    });
+
+    document.querySelectorAll('.planet').forEach(planet => {
+      planet.addEventListener('mouseover', function(e) {
+        const startupId = planet.dataset.startupId;
+        const name = planet.dataset.info;
+        const description = planet.dataset.description;
+        const rating = planet.dataset.rating;
+        const commentCount = planet.dataset.commentCount;
+        const progress = planet.dataset.progress;
+        const direction = planet.dataset.direction;
+        const investmentType = planet.dataset.investmentType;
+        const funding = planet.dataset.funding;
+        const fundingGoal = planet.dataset.fundingGoal;
+        const investors = planet.dataset.investors;
+        
+        infoCard.innerHTML = `
+          <h4 style="margin: 0 0 10px 0;">${name}</h4>
+          <p style="font-size: 12px; margin: 0 0 5px 0;">${description}</p>
+          <div style="font-size: 12px;">
+            <div><strong>Рейтинг:</strong> ${rating}</div>
+            <div><strong>Собрано:</strong> ${funding} из ${fundingGoal}</div>
+            <div><strong>Прогресс:</strong> ${progress}</div>
+            <div><strong>Инвесторов:</strong> ${investors}</div>
+            <div><strong>Направление:</strong> ${direction}</div>
+            <div><a href="/startups/${startupId}" style="color: #FFEF2B; text-decoration:none; font-weight:bold;">Подробнее...</a></div>
+          </div>
+        `;
+        infoCard.classList.add('visible');
+      });
+
+      planet.addEventListener('mouseout', function() {
+        infoCard.classList.remove('visible');
+      });
+
+      planet.addEventListener('click', function() {
+        window.location.href = `/startups/${planet.dataset.startupId}`;
+      });
+    });
+  }
+
+  // Скрипты для фильтрации и поиска
+    const searchInput = document.getElementById('startup-search');
+    const startupCards = document.querySelectorAll('.startup-card');
+    const filterButtons = document.querySelectorAll('.filter-dropdown-content a');
+
+    function filterAndSearch() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const activeCategory = document.querySelector('.filter-dropdown-content a.active')?.dataset.category || 'all';
+
+        startupCards.forEach(card => {
+            const name = card.dataset.name.toLowerCase();
+            const category = card.dataset.category;
+
+            const nameMatch = name.includes(searchTerm);
+            const categoryMatch = (activeCategory === 'all' || category === activeCategory);
+
+            if (nameMatch && categoryMatch) {
+                card.style.display = '';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+
+    searchInput.addEventListener('input', filterAndSearch);
+
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            document.querySelector('.filter-dropdown-content a.active')?.classList.remove('active');
+            this.classList.add('active');
+            const dropdownButton = document.querySelector('.filter-btn-dropdown');
+            dropdownButton.firstChild.nodeValue = this.textContent + ' ';
+            filterAndSearch();
+        });
+    });
+});
+
+function applySort(sortValue) {
+    const url = new URL(window.location);
+    url.searchParams.set('sort', sortValue);
+    window.location.href = url.toString();
+}
+
+</script>
 {% endblock %}
