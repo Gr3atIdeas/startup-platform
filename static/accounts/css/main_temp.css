@@ -382,23 +382,20 @@ html::-webkit-scrollbar-button {
 /* --- Секция 2: Featured1 (Почему выбирают нас? + Карусель) --- */
 .featured1 {
   width: 100%;
-
-  /* max-width: 1445px; */
-
-  /* Убираем ограничение по максимальной ширине */
+  max-width: 1303px; /* Возвращаем ограничение по сетке */
+  margin-left: auto; /* Центрируем блок */
+  margin-right: auto; /* Центрируем блок */
   padding: 45px 0;
   box-sizing: border-box;
-
-  /* overflow: hidden; - Убираем, чтобы карусель могла выходить за пределы */
   background: transparent !important;
 }
 
 /* Стили для заголовка блока */
 .featured1 .heading {
   width: 100%;
-  max-width: 1303px; /* Контейнер для заголовка и контролов */
-  margin: 0 auto 40px; /* Центрирование и отступ снизу до карусели */
-  padding: 0 71px; /* Боковые отступы для текста заголовка, если .featured1 их не имеет */
+  /* max-width: 1303px; */ /* Больше не нужно, родитель ограничен */
+  margin: 0 auto 40px; 
+  padding: 0; /* Убираем лишние отступы */
   box-sizing: border-box;
   display: flex;
   justify-content: space-between;
@@ -498,16 +495,8 @@ html::-webkit-scrollbar-button {
   /* Это viewport карусели */
   display: flex;
   overflow: hidden; /* Оставляем для обрезки внутреннего контейнера */
-
-  /* width: 1387px; */
-
-  /* Убираем фиксированную ширину */
-
-  /* margin: 0 auto; */
-
-  /* Убираем центрирование */
-  margin-left: 71px; /* Выравниваем по левому краю контента */
-  width: calc(100vw - 71px); /* Ширина до правого края окна браузера */
+  width: 100%; /* Занимаем всю ширину родителя */
+  margin-left: 0; /* Убираем сдвиг */
 }
 
 .featured1-carousel-inner {
@@ -1406,21 +1395,15 @@ html::-webkit-scrollbar-button {
 /* --- Секция 6: Featured6 (Как работает наша галактика?) --- */
 .featured6.galaxy-carousel-wrapper {
   width: 100%;
-  max-width: 1445px;
+  max-width: 1303px; /* Возвращаем ограничение по сетке */
+  margin-left: auto; /* Центрируем блок */
+  margin-right: auto; /* Центрируем блок */
   padding: 45px 0;
   box-sizing: border-box;
   overflow: hidden;
-
-  /* display: flex; */
-
-  /* justify-content: center; */
-
-  /* align-items: center; */
   margin-top: 60px;
   background: transparent !important;
   border-radius: 10px;
-  margin-left: auto; /* Центрирование */
-  margin-right: auto; /* Центрирование */
   align-items: center; /* This was forcing the carousel to be centered */
   gap: 55px;
 }
@@ -1720,16 +1703,11 @@ html::-webkit-scrollbar-button {
 /* --- Секция 8: Featured8 (Истории успеха) --- */
 .featured8.success-stories-carousel-outer {
   width: 100%;
-
-  /* max-width: 1445px; */
-
-  /* Let it be full width */
+  max-width: 1303px; /* Возвращаем ограничение по сетке */
+  margin-left: auto; /* Центрируем блок */
+  margin-right: auto; /* Центрируем блок */
   padding: 45px 0;
   box-sizing: border-box;
-
-  /* overflow: hidden; */
-
-  /* We need overflow for carousel */
   display: flex;
   flex-direction: column;
   align-items: center; /* Center children (header and carousel wrapper) */
@@ -1782,8 +1760,8 @@ html::-webkit-scrollbar-button {
 .featured8 .success-stories-carousel {
   display: flex;
   overflow: hidden;
-  margin-left: 71px;
-  width: calc(100vw - 71px);
+  width: 100%; /* Занимаем всю ширину родителя */
+  margin-left: 0; /* Убираем сдвиг */
   padding: 20px 0;
 }
 
@@ -2570,7 +2548,7 @@ html::-webkit-scrollbar-button {
   width: 1444px;
   max-width: 100%;
   height: auto;
-  margin-top: 100px;
+  margin-top: 60px; /* Поднимаем изображение */
   position: relative;
   z-index: 1;
 }
