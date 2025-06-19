@@ -4,6 +4,7 @@
 {% load accounts_extras %}
 {% load math_filters %}
 {% load startup_filters %}
+{% load file_tags %}
 
 {% block title %}Портфель{% endblock %}
 
@@ -36,17 +37,24 @@
                     {% for investment in planetary_investments %}
                       <div class="orbit" style="--orbit-size: {{ investment.orbit_size|default:200 }}px; --orbit-time: {{ investment.orbit_time|default:80 }}s;">
                         <div class="planet-orientation">
-                          <div class="planet" style="--planet-size: {{ investment.planet_size|default:50 }}px;" data-id="{{ investment.id|default_if_none:'' }}">
-                            {% if investment.startup.planet_image %}
-                              <img src="{{ investment.startup.planet_image.url }}" alt="{{ investment.name|default:'Planet'|escape }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
-                            {% elif investment.startup.logo_urls and investment.startup.logo_urls|length > 0 %}
-                              <img src="{{ investment.startup.logo_urls.0 }}" alt="{{ investment.name|default:'Logo'|escape }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                          <div class="planet-logo-container">
+                            <div class="planet" style="--planet-size: {{ investment.planet_size|default:50 }}px;" data-id="{{ investment.id|default_if_none:'' }}">
+                              {% if investment.startup.planet_image %}
+                                <img src="{% file_url investment.startup.planet_image %}" alt="{{ investment.name|default:'Planet'|escape }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                              {% elif investment.startup.logo_urls and investment.startup.logo_urls|length > 0 %}
+                                <img src="{% file_url investment.startup.logo_urls.0 %}" alt="{{ investment.name|default:'Logo'|escape }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                              {% else %}
+                                <div class="planet">
+                                  <div class="planet-segment segment-top" style="background: linear-gradient(to bottom, #87CEEB 0%, #E0FFFF 100%);"></div>
+                                  <div class="planet-segment segment-middle" style="background: linear-gradient(to bottom, #4682B4 0%, #B0C4DE 100%);"></div>
+                                  <div class="planet-segment segment-bottom" style="background: linear-gradient(to bottom, #1E90FF 0%, #87CEFA 100%);"></div>
+                                </div>
+                              {% endif %}
+                            </div>
+                            {% if investment.startup.logo_urls and investment.startup.logo_urls|length > 0 %}
+                              <img src="{% file_url investment.startup.logo_urls.0 %}" alt="{{ investment.name|default:'Logo'|escape }}" style="width: 50%; height: 50%; object-fit: contain;">
                             {% else %}
-                              <div class="planet">
-                                <div class="planet-segment segment-top" style="background: linear-gradient(to bottom, #87CEEB 0%, #E0FFFF 100%);"></div>
-                                <div class="planet-segment segment-middle" style="background: linear-gradient(to bottom, #4682B4 0%, #B0C4DE 100%);"></div>
-                                <div class="planet-segment segment-bottom" style="background: linear-gradient(to bottom, #1E90FF 0%, #87CEFA 100%);"></div>
-                              </div>
+                              <img src="/static/images/default-logo.png" alt="Default Logo" style="width: 50%; height: 50%; object-fit: contain;">
                             {% endif %}
                           </div>
                         </div>
@@ -169,17 +177,24 @@
           {% for investment in user_investments|slice:":6" %}
             <div class="startup-card" data-category="{{ investment.startup.direction.direction_name|default:''|escape }}" data-name="{{ investment.startup.title|default:''|escape }}" data-created="{{ investment.created_at|date:'Y-m-d' }}">
               <div class="startup-card-left">
-                {% if investment.startup.planet_image %}
-                  <img src="{{ investment.startup.planet_image.url }}" alt="{{ investment.startup.title|default:'No Name' }} Planet" class="startup-planet-img" style="width: 70px; height: 70px; border-radius: 50%; margin-bottom: 5px;">
-                {% elif investment.startup.logo_urls and investment.startup.logo_urls|length > 0 %}
-                  <img src="{{ investment.startup.logo_urls.0 }}" alt="{{ investment.startup.title|default:'No Name' }} Logo" class="startup-planet-img" style="width: 70px; height: 70px; border-radius: 50%; margin-bottom: 5px;">
-                {% else %}
-                  <div class="planet">
-                    <div class="planet-segment segment-top" style="background: linear-gradient(to bottom, #87CEEB 0%, #E0FFFF 100%);"></div>
-                    <div class="planet-segment segment-middle" style="background: linear-gradient(to bottom, #4682B4 0%, #B0C4DE 100%);"></div>
-                    <div class="planet-segment segment-bottom" style="background: linear-gradient(to bottom, #1E90FF 0%, #87CEFA 100%);"></div>
-                  </div>
-                {% endif %}
+                <div class="planet-logo-container">
+                  {% if investment.startup.planet_image %}
+                    <img src="{% file_url investment.startup.planet_image %}" alt="{{ investment.startup.title|default:'No Name' }} Planet" class="planet-image">
+                  {% elif investment.startup.logo_urls and investment.startup.logo_urls|length > 0 %}
+                    <img src="{% file_url investment.startup.logo_urls.0 %}" alt="{{ investment.startup.title|default:'No Name' }} Logo" class="planet-image">
+                  {% else %}
+                    <div class="planet">
+                      <div class="planet-segment segment-top" style="background: linear-gradient(to bottom, #87CEEB 0%, #E0FFFF 100%);"></div>
+                      <div class="planet-segment segment-middle" style="background: linear-gradient(to bottom, #4682B4 0%, #B0C4DE 100%);"></div>
+                      <div class="planet-segment segment-bottom" style="background: linear-gradient(to bottom, #1E90FF 0%, #87CEFA 100%);"></div>
+                    </div>
+                  {% endif %}
+                  {% if investment.startup.logo_urls and investment.startup.logo_urls|length > 0 %}
+                    <img src="{% file_url investment.startup.logo_urls.0 %}" alt="{{ investment.startup.title|default:'No Name' }} Logo" class="startup-logo">
+                  {% else %}
+                    <img src="/static/images/default-logo.png" alt="Default Logo" class="startup-logo">
+                  {% endif %}
+                </div>
                 <div class="startup-name">
                   {% if investment.startup.title %}
                     <a href="{% url 'startup_detail' startup_id=investment.startup.startup_id|default_if_none:'' %}" style="color: inherit; text-decoration: none;">{{ investment.startup.title|escape }}</a>
@@ -242,17 +257,24 @@
           {% for startup in user_owned_startups|slice:":6" %}
             <div class="startup-card" data-category="{{ startup.direction.direction_name|default:''|escape }}" data-name="{{ startup.title|default:''|escape }}">
               <div class="startup-card-left">
-                {% if startup.planet_image %}
-                  <img src="{{ startup.planet_image.url }}" alt="{{ startup.title|default:'No Name' }} Planet" class="startup-planet-img" style="width: 70px; height: 70px; border-radius: 50%; margin-bottom: 5px;">
-                {% elif startup.logo_urls and startup.logo_urls|length > 0 %}
-                  <img src="{{ startup.logo_urls.0 }}" alt="{{ startup.title|default:'No Name' }} Logo" class="startup-planet-img" style="width: 70px; height: 70px; border-radius: 50%; margin-bottom: 5px;">
-                {% else %}
-                  <div class="planet">
-                    <div class="planet-segment segment-top" style="background: linear-gradient(to bottom, #87CEEB 0%, #E0FFFF 100%);"></div>
-                    <div class="planet-segment segment-middle" style="background: linear-gradient(to bottom, #4682B4 0%, #B0C4DE 100%);"></div>
-                    <div class="planet-segment segment-bottom" style="background: linear-gradient(to bottom, #1E90FF 0%, #87CEFA 100%);"></div>
-                  </div>
-                {% endif %}
+                <div class="planet-logo-container">
+                  {% if startup.planet_image %}
+                    <img src="{% file_url startup.planet_image %}" alt="{{ startup.title|default:'No Name' }} Planet" class="planet-image">
+                  {% elif startup.logo_urls and startup.logo_urls|length > 0 %}
+                    <img src="{% file_url startup.logo_urls.0 %}" alt="{{ startup.title|default:'No Name' }} Logo" class="planet-image">
+                  {% else %}
+                    <div class="planet">
+                      <div class="planet-segment segment-top" style="background: linear-gradient(to bottom, #87CEEB 0%, #E0FFFF 100%);"></div>
+                      <div class="planet-segment segment-middle" style="background: linear-gradient(to bottom, #4682B4 0%, #B0C4DE 100%);"></div>
+                      <div class="planet-segment segment-bottom" style="background: linear-gradient(to bottom, #1E90FF 0%, #87CEFA 100%);"></div>
+                    </div>
+                  {% endif %}
+                  {% if startup.logo_urls and startup.logo_urls|length > 0 %}
+                    <img src="{% file_url startup.logo_urls.0 %}" alt="{{ startup.title|default:'No Name' }} Logo" class="startup-logo">
+                  {% else %}
+                    <img src="/static/images/default-logo.png" alt="Default Logo" class="startup-logo">
+                  {% endif %}
+                </div>
                 <div class="startup-name">
                   {% if startup.title %}
                     <a href="{% url 'startup_detail' startup_id=startup.startup_id|default_if_none:'' %}" style="color: inherit; text-decoration: none;">{{ startup.title|escape }}</a>
@@ -314,17 +336,24 @@
           {% for investment in user_investments|slice:"6:" %}
             <div class="startup-card hidden-card" data-category="{{ investment.startup.direction.direction_name|default:''|escape }}" data-name="{{ investment.startup.title|default:''|escape }}" style="display: none;">
               <div class="startup-card-left">
-                {% if investment.startup.planet_image %}
-                  <img src="{{ investment.startup.planet_image.url }}" alt="{{ investment.startup.title|default:'No Name' }} Planet" class="startup-planet-img" style="width: 70px; height: 70px; border-radius: 50%; margin-bottom: 5px;">
-                {% elif investment.startup.logo_urls and investment.startup.logo_urls|length > 0 %}
-                  <img src="{{ investment.startup.logo_urls.0 }}" alt="{{ investment.startup.title|default:'No Name' }} Logo" class="startup-planet-img" style="width: 70px; height: 70px; border-radius: 50%; margin-bottom: 5px;">
-                {% else %}
-                  <div class="planet">
-                    <div class="planet-segment segment-top" style="background: linear-gradient(to bottom, #87CEEB 0%, #E0FFFF 100%);"></div>
-                    <div class="planet-segment segment-middle" style="background: linear-gradient(to bottom, #4682B4 0%, #B0C4DE 100%);"></div>
-                    <div class="planet-segment segment-bottom" style="background: linear-gradient(to bottom, #1E90FF 0%, #87CEFA 100%);"></div>
-                  </div>
-                {% endif %}
+                <div class="planet-logo-container">
+                  {% if investment.startup.planet_image %}
+                    <img src="{% file_url investment.startup.planet_image %}" alt="{{ investment.startup.title|default:'No Name' }} Planet" class="planet-image">
+                  {% elif investment.startup.logo_urls and investment.startup.logo_urls|length > 0 %}
+                    <img src="{% file_url investment.startup.logo_urls.0 %}" alt="{{ investment.startup.title|default:'No Name' }} Logo" class="planet-image">
+                  {% else %}
+                    <div class="planet">
+                      <div class="planet-segment segment-top" style="background: linear-gradient(to bottom, #87CEEB 0%, #E0FFFF 100%);"></div>
+                      <div class="planet-segment segment-middle" style="background: linear-gradient(to bottom, #4682B4 0%, #B0C4DE 100%);"></div>
+                      <div class="planet-segment segment-bottom" style="background: linear-gradient(to bottom, #1E90FF 0%, #87CEFA 100%);"></div>
+                    </div>
+                  {% endif %}
+                  {% if investment.startup.logo_urls and investment.startup.logo_urls|length > 0 %}
+                    <img src="{% file_url investment.startup.logo_urls.0 %}" alt="{{ investment.startup.title|default:'No Name' }} Logo" class="startup-logo">
+                  {% else %}
+                    <img src="/static/images/default-logo.png" alt="Default Logo" class="startup-logo">
+                  {% endif %}
+                </div>
                 <div class="startup-name">
                   {% if investment.startup.title %}
                     <a href="{% url 'startup_detail' startup_id=investment.startup.startup_id|default_if_none:'' %}" style="color: inherit; text-decoration: none;">{{ investment.startup.title|escape }}</a>
@@ -384,17 +413,24 @@
           {% for startup in user_owned_startups|slice:"6:" %}
             <div class="startup-card hidden-card" data-category="{{ startup.direction.direction_name|default:''|escape }}" data-name="{{ startup.title|default:''|escape }}" style="display: none;">
               <div class="startup-card-left">
-                {% if startup.planet_image %}
-                  <img src="{{ startup.planet_image.url }}" alt="{{ startup.title|default:'No Name' }} Planet" class="startup-planet-img" style="width: 70px; height: 70px; border-radius: 50%; margin-bottom: 5px;">
-                {% elif startup.logo_urls and startup.logo_urls|length > 0 %}
-                  <img src="{{ startup.logo_urls.0 }}" alt="{{ startup.title|default:'No Name' }} Logo" class="startup-planet-img" style="width: 70px; height: 70px; border-radius: 50%; margin-bottom: 5px;">
-                {% else %}
-                  <div class="planet">
-                    <div class="planet-segment segment-top" style="background: linear-gradient(to bottom, #87CEEB 0%, #E0FFFF 100%);"></div>
-                    <div class="planet-segment segment-middle" style="background: linear-gradient(to bottom, #4682B4 0%, #B0C4DE 100%);"></div>
-                    <div class="planet-segment segment-bottom" style="background: linear-gradient(to bottom, #1E90FF 0%, #87CEFA 100%);"></div>
-                  </div>
-                {% endif %}
+                <div class="planet-logo-container">
+                  {% if startup.planet_image %}
+                    <img src="{% file_url startup.planet_image %}" alt="{{ startup.title|default:'No Name' }} Planet" class="planet-image">
+                  {% elif startup.logo_urls and startup.logo_urls|length > 0 %}
+                    <img src="{% file_url startup.logo_urls.0 %}" alt="{{ startup.title|default:'No Name' }} Logo" class="planet-image">
+                  {% else %}
+                    <div class="planet">
+                      <div class="planet-segment segment-top" style="background: linear-gradient(to bottom, #87CEEB 0%, #E0FFFF 100%);"></div>
+                      <div class="planet-segment segment-middle" style="background: linear-gradient(to bottom, #4682B4 0%, #B0C4DE 100%);"></div>
+                      <div class="planet-segment segment-bottom" style="background: linear-gradient(to bottom, #1E90FF 0%, #87CEFA 100%);"></div>
+                    </div>
+                  {% endif %}
+                  {% if startup.logo_urls and startup.logo_urls|length > 0 %}
+                    <img src="{% file_url startup.logo_urls.0 %}" alt="{{ startup.title|default:'No Name' }} Logo" class="startup-logo">
+                  {% else %}
+                    <img src="/static/images/default-logo.png" alt="Default Logo" class="startup-logo">
+                  {% endif %}
+                </div>
                 <div class="startup-name">
                   {% if startup.title %}
                     <a href="{% url 'startup_detail' startup_id=startup.startup_id|default_if_none:'' %}" style="color: inherit; text-decoration: none;">{{ startup.title|escape }}</a>
@@ -985,7 +1021,8 @@
                   funding: '{{ investment.funding|escapejs }}',
                   funding_goal: '{{ investment.funding_goal|escapejs }}',
                   investors: '{{ investment.investors|escapejs }}',
-                  image: '{% if investment.startup.planet_image %}{{ investment.startup.planet_image.url|escapejs }}{% elif investment.startup.logo_urls and investment.startup.logo_urls|length > 0 %}{{ investment.startup.logo_urls.0|escapejs }}{% else %}/static/accounts/images/planets/startup_5_logo.png{% endif %}',
+                  planet_image: '{% if investment.startup.planet_image %}{% file_url investment.startup.planet_image|escapejs %}{% elif investment.startup.logo_urls and investment.startup.logo_urls|length > 0 %}{% file_url investment.startup.logo_urls.0|escapejs %}{% else %}/static/accounts/images/planets/startup_5_logo.png{% endif %}',
+                  logo_image: '{% if investment.startup.logo_urls and investment.startup.logo_urls|length > 0 %}{% file_url investment.startup.logo_urls.0|escapejs %}{% else %}/static/images/default-logo.png{% endif %}',
                   startup_id: '{{ investment.startup_id|escapejs }}',
                   investment_type: '{{ investment.investment_type|escapejs }}'
                 }{% if not forloop.last %},{% endif %}
@@ -1067,21 +1104,28 @@
               });
 
               const id = planet.getAttribute('data-id');
-              const image = startups[id]?.image || '/static/accounts/images/planets/startup_5_logo.png';
-              if (startups[id] && startups[id].image) {
-                planet.style.backgroundImage = `url('${startups[id].image}')`;
+              const planetImage = startups[id]?.planet_image || '/static/accounts/images/planets/startup_5_logo.png';
+              const logoImage = startups[id]?.logo_image || '/static/images/default-logo.png';
+              if (startups[id] && startups[id].planet_image) {
+                planet.style.backgroundImage = `url('${startups[id].planet_image}')`;
                 planet.style.backgroundSize = 'cover';
                 planet.style.backgroundPosition = 'center';
               } else {
-                planet.style.backgroundImage = `url('${image}')`;
+                planet.style.backgroundImage = `url('${planetImage}')`;
                 planet.style.backgroundColor = '#e9ecef';
+              }
+              const logoElement = planet.querySelector('.startup-logo');
+              if (logoElement && startups[id] && startups[id].logo_image) {
+                logoElement.src = startups[id].logo_image;
+              } else if (logoElement) {
+                logoElement.src = logoImage;
               }
 
               planet.addEventListener('click', (e) => {
                 e.stopPropagation();
-                const startupData = startups[id] || { name: 'Нет данных', description: '', rating: '0', progress: '0%', funding: '0 ₽', funding_goal: '0 ₽', investors: '0', image: image, startup_id: '', investment_type: '' };
+                const startupData = startups[id] || { name: 'Нет данных', description: '', rating: '0', progress: '0%', funding: '0 ₽', funding_goal: '0 ₽', investors: '0', planet_image: planetImage, logo_image: logoImage, startup_id: '', investment_type: '' };
 
-                planetImage.style.backgroundImage = `url('${startupData.image}')`;
+                planetImage.style.backgroundImage = `url('${startupData.planet_image}')`;
                 startupName.textContent = startupData.name;
                 startupRating.textContent = `Рейтинг ${startupData.rating}`;
                 startupProgress.textContent = startupData.progress;
