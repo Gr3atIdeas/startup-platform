@@ -169,11 +169,12 @@ html::-webkit-scrollbar-button {
 /* --- Секция 1: Featured (Главный экран) --- */
 .featured {
   width: 100%;
-  max-width: 1445px;
+  max-width: 1440px; /* Исправляем под общую сетку */
   margin-left: auto;
   margin-right: auto;
   height: 798px;
   position: relative;
+  overflow: visible; /* Позволяем солнцу выходить за рамки */
   display: flex;
   justify-content: center;
   align-items: center;
