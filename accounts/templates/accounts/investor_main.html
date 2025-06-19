@@ -7,47 +7,83 @@
     <link rel="stylesheet" type="text/css" href="{% static 'accounts/css/investor_main.css' %}">
     <link rel="stylesheet" href="{% static 'accounts/css/faq.css' %}">
     <link rel="stylesheet" href="{% static 'accounts/css/improved_styles.css' %}">
+    <link rel="stylesheet" href="{% static 'accounts/css/planetary_system.css' %}?v={% now 'U' %}">
 {% endblock %}
 
 {% block content %}
 <link rel="stylesheet" type="text/css" href="{% static 'accounts/css/investor_main.css' %}">
 
 <div class="div">
-    <div class="featured">
-        <div class="group">
-            <div class="div5">
-                <span class="txt">
-                    <span>Маркетплейс</span>
-                    <span class="span">, где стартаперы находят финансирование, а инвесторы — перспективные идеи</span>
-                </span>
+    <div id="planetary-system-container">
+        <div class="space-background"></div>
+        <div class="stars"></div>
+        <div id="solar-system">
+            <div id="scene">
+                <div id="galaxy">
+                    <div id="logo" style="background-image: url('{% static 'accounts/images/planetary_system/solar.png' %}');"></div>
+                    <div class="orbit" style="--orbit-size: 200px; --orbit-time: 80s;">
+                        <div class="planet-orientation">
+                            <div class="planet" style="--planet-size: 60px;" data-id="1"></div>
+                        </div>
+                    </div>
+                    <div class="orbit" style="--orbit-size: 300px; --orbit-time: 100s;">
+                        <div class="planet-orientation">
+                            <div class="planet" style="--planet-size: 70px;" data-id="2"></div>
+                        </div>
+                    </div>
+                    <div class="orbit" style="--orbit-size: 400px; --orbit-time: 120s;">
+                        <div class="planet-orientation">
+                            <div class="planet" style="--planet-size: 56px;" data-id="3"></div>
+                        </div>
+                    </div>
+                    <div class="orbit" style="--orbit-size: 500px; --orbit-time: 140s;">
+                        <div class="planet-orientation">
+                            <div class="planet" style="--planet-size: 64px;" data-id="4"></div>
+                        </div>
+                    </div>
+                    <div class="orbit" style="--orbit-size: 600px; --orbit-time: 160s;">
+                        <div class="planet-orientation">
+                            <div class="planet" style="--planet-size: 50px;" data-id="5"></div>
+                        </div>
+                    </div>
+                    <div class="orbit" style="--orbit-size: 700px; --orbit-time: 180s;">
+                        <div class="planet-orientation">
+                            <div class="planet" style="--planet-size: 60px;" data-id="6"></div>
+                        </div>
+                    </div>
+                    <div class="orbit" style="--orbit-size: 800px; --orbit-time: 200s;">
+                        <div class="planet-orientation">
+                            <div class="planet" style="--planet-size: 54px;" data-id="7"></div>
+                        </div>
+                    </div>
+                    <div class="orbit" style="--orbit-size: 900px; --orbit-time: 220s;">
+                        <div class="planet-orientation">
+                            <div class="planet" style="--planet-size:58px;" data-id="8"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="div6">Создавай </div>
-            <div class="div7">будущее</div>
-            <a href="#" class="btn btn--secondary">
-                <span>Зарегистрировать стартап</span>
-                <img class="icon" src="https://placehold.co/16x16" alt="Arrow">
-            </a>
-            <a href="#" class="btn btn--primary">
-                <span>Найти стартап</span>
-                <img class="icon" src="https://placehold.co/16x16" alt="Arrow">
-            </a>
-            <div class="frame-child"></div>
-            <div class="frame-item"></div>
-            <div class="frame-inner"></div>
-            <div class="ellipse-div"></div>
-            <div class="frame-child1"></div>
-            <img class="icon1" alt="Placeholder" src="https://placehold.co/193x186">
-            <img class="icon2" alt="Placeholder" src="https://placehold.co/100x100">
-            <img class="icon3" alt="Placeholder" src="https://placehold.co/150x150">
-            <img class="icon4" alt="Placeholder" src="https://placehold.co/80x80">
-            <img class="icon5" alt="Placeholder" src="https://placehold.co/160x160">
-            <img class="icon6" alt="Placeholder" src="https://placehold.co/130x130">
-            <img class="icon7" alt="Placeholder" src="https://placehold.co/120x120">
-            <img class="icon8" alt="Placeholder" src="https://placehold.co/280x280">
-            </div>
-        <img class="featured-child" alt="Placeholder" src="https://placehold.co/208x199">
-        <img class="featured-item" alt="Placeholder" src="https://placehold.co/19x25">
+        </div>
+        <div id="galaxy-selector">
+            <div id="galaxy-list"></div>
+        </div>
     </div>
+    
+    <div id="info-card">
+        <button id="close-card">×</button>
+        <div class="planet-image" id="planet-image"></div>
+        <h2 id="startup-name"></h2>
+        <div class="rating" id="startup-rating"></div>
+        <div class="progress-bar">
+            <button>Выкуп+инвестирование</button>
+            <div class="progress" id="startup-progress"></div>
+        </div>
+        <div class="funding" id="startup-funding"></div>
+        <div class="investors" id="startup-investors"></div>
+        <div class="description" id="startup-description"></div>
+        <button class="more-details" id="more-details">Подробнее</button>
+    </div>
+
     <div class="featured4">
         <div class="frame-parent3">
             <div class="parent6">
@@ -633,4 +669,5 @@
 
 {% block scripts %}
     <script src="{% static 'accounts/js/investor_main.js' %}"></script>
+    <script src="{% static 'accounts/js/planetary_system.js' %}?v={% now 'U' %}"></script>
 {% endblock %}
