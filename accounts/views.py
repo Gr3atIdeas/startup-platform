@@ -7,7 +7,6 @@ import os
 import uuid
 from decimal import Decimal
 from random import choice
-
 from dateutil.relativedelta import relativedelta
 from django import forms  # Добавляем импорт
 from django.conf import settings
@@ -32,6 +31,7 @@ from django.db.models import (  # Добавляем Q
     Q,
     Subquery,
     Sum,
+    ExpressionWrapper,
 )
 from django.db.models.functions import (
     Coalesce,  # Добавляем Coalesce
@@ -462,7 +462,6 @@ def load_similar_startups(request, startup_id: int):  # <-- Явно указы�
     return HttpResponse(html)
 
 
-# Страница инвестиций
 @login_required
 def investments(request):
     # Дополнительная проверка на роль инвестора
@@ -485,7 +484,6 @@ def investments(request):
 
     # Получаем общую сумму инвестиций отдельно
     total_investment_decimal = analytics_data.get("total_investment") or Decimal("0")
-    # >>> ЛОГГИРОВАНИЕ ОБЩЕЙ СУММЫ
     logger.info(
         f"[investments view] User: {request.user.email}, Total Investment Calculated (after distinct): {total_investment_decimal}"
     )
@@ -502,10 +500,9 @@ def investments(request):
     investment_categories = []
     invested_category_data_dict = {}  # Для модального окна
 
-    # Используем total_investment_decimal для расчета процентов
     total_for_percentage = (
         total_investment_decimal if total_investment_decimal > 0 else Decimal("1")
-    )  # Избегаем деления на ноль
+    )
 
     for cat_data in category_data_raw:
         percentage = 0
@@ -514,17 +511,15 @@ def investments(request):
             cat_data.get("startup__direction__direction_name") or "Без категории"
         )
 
-        # >>> ЛОГГИРОВАНИЕ СУММ ПО КАТЕГОРИЯМ (примерно)
-        if investment_categories == []:  # Логгируем только первый раз
+        if investment_categories == []:
             logger.info(
                 f"[investments view] Raw category data example (after distinct): {list(category_data_raw[:2])}"
-            )  # Логгируем список
+            )
 
         if category_sum and total_for_percentage > 0:
             try:
-                # Расчет процента
                 percentage = round((Decimal(category_sum) / total_for_percentage) * 100)
-                percentage = min(percentage, 100)  # Ограничиваем сверху 100%
+                percentage = min(percentage, 100)
             except Exception as e:
                 logger.error(
                     f"Ошибка расчета процента для категории '{category_name}': {e}"
@@ -537,9 +532,9 @@ def investments(request):
                 "percentage": percentage,
             }
         )
-        invested_category_data_dict[category_name] = percentage  # Сохраняем для модалки
+        invested_category_data_dict[category_name] = percentage
 
-    # --- Данные для графика по месяцам (НОВЫЙ НЕЗАВИСИМЫЙ ЗАПРОС + distinct) ---
+    # Данные для графика по месяцам
     current_year = timezone.now().year
     monthly_data_direct = (
         InvestmentTransactions.objects.filter(
@@ -553,76 +548,82 @@ def investments(request):
         .annotate(monthly_total=Sum("amount"))
         .order_by("month")
     )
-    # >>> ЛОГГИРОВАНИЕ МЕСЯЧНЫХ ДАННЫХ
     logger.info(
         f"[investments view] Monthly data calculated (after distinct): {list(monthly_data_direct)}"
     )
 
-    # Подготовка данных для Chart.js
     month_labels = [
-        "Янв",
-        "Фев",
-        "Мар",
-        "Апр",
-        "Май",
-        "Июн",
-        "Июл",
-        "Авг",
-        "Сен",
-        "Окт",
-        "Ноя",
-        "Дек",
+        "Янв", "Фев", "Мар", "Апр", "Май", "Июн",
+        "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек",
     ]
     monthly_totals = [0] * 12
-    for data in monthly_data_direct:  # Используем новый queryset
-        month_index = data["month"].month - 1  # Месяцы 1-12 -> индексы 0-11
+    for data in monthly_data_direct:
+        month_index = data["month"].month - 1
         if 0 <= month_index < 12:
             monthly_totals[month_index] = float(
                 data.get("monthly_total", 0) or 0
-            )  # Добавил .get()
-    # >>> ЛОГГИРОВАНИЕ ИТОГОВЫХ ДАННЫХ ДЛЯ ГРАФИКА
+            )
     logger.info(
         f"[investments view] Final monthly totals for chart (after distinct): {monthly_totals}"
     )
-    # --- Конец данных для графика ---
 
-    # --- Получаем QuerySet со всеми данными для передачи в шаблон ---
-    # Теперь добавляем аннотации рейтинга/комментов к базовому QS
-    user_investments_qs_final = base_investments_qs.annotate(
+    # QuerySet для планетарной системы (ограничим до 10 стартапов)
+    planetary_investments = base_investments_qs.values(
+        "startup__title",
+        "startup__status",
+        "startup__current_investment",
+        "startup__goal",
+        "startup__direction__direction_name",
+        "amount",  # Сумма инвестиции пользователя
+        "startup_average_rating",
+        "startup_comment_count",
+    ).annotate(
         startup_average_rating=Avg(
-            models.ExpressionWrapper(
-                models.F("startup__sum_votes")
-                * 1.0
-                / models.F("startup__total_voters"),
+            ExpressionWrapper(
+                F("startup__sum_votes") * 1.0 / F("startup__total_voters"),
                 output_field=FloatField(),
             ),
-            filter=models.Q(startup__total_voters__gt=0),
-            default=0.0,  # Значение по умолчанию, если нет голосов
+            filter=Q(startup__total_voters__gt=0),
+            default=0.0,
         ),
-        # Аннотируем количество комментариев (предполагая связь 'comments' в модели Startups)
         startup_comment_count=Count("startup__comments", distinct=True),
-    ).annotate(average_rating=models.functions.Coalesce("startup_average_rating", 0.0))
+    ).order_by("-amount")[:10]  # Топ-10 по сумме инвестиций
 
-    # <<< ДОБАВЛЯЕМ СОРТИРОВКУ >>>
-    sort_param = request.GET.get("sort", "newest")  # По умолчанию - новые
+    # Логирование данных для планетарной системы
+    logger.info(
+        f"[investments view] Planetary investments for user {request.user.email}: {list(planetary_investments)}"
+    )
+
+    # QuerySet для списка стартапов
+    user_investments_qs_final = base_investments_qs.annotate(
+        startup_average_rating=Avg(
+            ExpressionWrapper(
+                F("startup__sum_votes") * 1.0 / F("startup__total_voters"),
+                output_field=FloatField(),
+            ),
+            filter=Q(startup__total_voters__gt=0),
+            default=0.0,
+        ),
+        startup_comment_count=Count("startup__comments", distinct=True),
+    ).annotate(average_rating=Coalesce("startup_average_rating", 0.0))
+
+    # Сортировка
+    sort_param = request.GET.get("sort", "newest")
     if sort_param == "oldest":
         user_investments_qs_final = user_investments_qs_final.order_by("created_at")
-    else:  # newest или любой другой параметр
+    else:
         user_investments_qs_final = user_investments_qs_final.order_by("-created_at")
-    # <<< КОНЕЦ СОРТИРОВКИ >>>
 
-    # --- Данные для модального окна категорий ---
+    # Данные для модального окна категорий
     all_directions_qs = Directions.objects.all().order_by("direction_name")
-    # Преобразуем QuerySet в список словарей для JSON
     all_directions_list = list(all_directions_qs.values("pk", "direction_name"))
-    # all_directions_json_string = json.dumps(all_directions_list) # Убираем ручную сериализацию
 
-    # >>> ЛОГГИРОВАНИЕ ДАННЫХ СТАРТАПОВ ПЕРЕД КОНТЕКСТОМ
+    # Логирование данных стартапов
     try:
         logger.info(
             f"[investments view] Checking startup data for user {request.user.email}:"
         )
-        for inv in user_investments_qs_final[:3]:  # Проверяем первые 3 инвестиции
+        for inv in user_investments_qs_final[:3]:
             startup_info = (
                 "Startup object exists"
                 if inv.startup
@@ -640,27 +641,21 @@ def investments(request):
         logger.error(f"[investments view] Error logging startup data: {e}")
 
     context = {
-        "user_investments": user_investments_qs_final,  # <<< Передаем QS с аннотациями
+        "user_investments": user_investments_qs_final,
+        "planetary_investments": planetary_investments,  # Новый контекст для планет
         "startups_count": analytics_data.get("startups_count", 0),
-        "total_investment": total_investment_decimal,  # Передаем Decimal
+        "total_investment": total_investment_decimal,
         "max_investment": analytics_data.get("max_investment", 0),
         "min_investment": analytics_data.get("min_investment", 0),
-        "investment_categories": investment_categories[
-            :7
-        ],  # Оставляем топ-7 для радиальных диаграмм
+        "investment_categories": investment_categories[:7],
         "month_labels": month_labels,
         "month_data": monthly_totals,
         "all_directions": all_directions_list,
-        "invested_category_data": invested_category_data_dict,  # Передаем обновленный словарь
-        "current_sort": sort_param,  # Передаем текущую сортировку для выделения активной кнопки
+        "invested_category_data": invested_category_data_dict,
+        "current_sort": sort_param,
     }
-    # context['month_labels'] = json.dumps(month_labels) # УДАЛЯЕМ - json_script сделает это сам
-    # context['month_data'] = json.dumps(monthly_totals) # УДАЛЯЕМ - json_script сделает это сам
-    # context['all_directions'] = json.dumps(all_directions_list) # УДАЛЯЕМ - json_script сделает это сам
-    # context['invested_category_data'] = json.dumps(invested_category_data_dict) # УДАЛЯЕМ - json_script сделает это сам
 
     return render(request, "accounts/investments.html", context)
-
 
 # Страница юридической информации
 def legal(request):
