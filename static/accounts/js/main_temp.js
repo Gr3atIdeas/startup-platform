@@ -330,8 +330,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const planetObjects = [];
     const galaxyTiltAngle = 45; // в градусах
 
-    // Создаем 8 орбит и планет
-    for (let i = 0; i < 8; i++) {
+    // Создаем 8 орбит и планет, пропуская первую
+    for (let i = 1; i < 9; i++) {
         const orbit = document.createElement('div');
         orbit.className = 'orbit';
         const orbitSize = 200 + i * 100;
@@ -347,7 +347,7 @@ document.addEventListener('DOMContentLoaded', function () {
         
         const imageName = allPlanetImages[i % allPlanetImages.length];
         const imageUrl = `/static/accounts/images/planetary_system/${imageName}`;
-        planet.style.backgroundImage = `url('${imageUrl}')`;
+        planet.style.setProperty('--planet-image-url', `url('${imageUrl}')`);
 
         planetOrientation.appendChild(planet);
         orbit.appendChild(planetOrientation);
@@ -355,7 +355,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const orbitTime = 80 + i * 20; // Время оборота
         const initialAngle = Math.random() * 360;
-        const speedFactor = 0.8 + Math.random() * 0.4;
+        const speedFactor = 0.7 + Math.random() * 0.6; // Увеличим диапазон скоростей
+        const zOffset = (Math.random() - 0.5) * 50; // Случайное смещение по Z
 
         planetObjects.push({
             element: planet,
@@ -367,6 +368,7 @@ document.addEventListener('DOMContentLoaded', function () {
             angle: initialAngle,
             speedFactor: speedFactor,
             startTime: Date.now() - Math.random() * orbitTime * 1000,
+            zOffset: zOffset
         });
     }
 
@@ -383,12 +385,13 @@ document.addEventListener('DOMContentLoaded', function () {
             const radius = planetObj.orbitSize / 2;
             const x = Math.cos(angleRad) * radius;
             const y = Math.sin(angleRad) * radius;
+            // Плавное покачивание по оси Z для красоты
+            const z = Math.sin(progress * Math.PI * 2) * planetObj.zOffset;
             
-            planetObj.orientation.style.left = `${50 + 50 * (x / radius)}%`;
-            planetObj.orientation.style.top = `${50 + 50 * (y / radius)}%`;
+            planetObj.orientation.style.transform = `translate3d(${x}px, ${y}px, ${z}px)`;
 
             const tiltCompensation = -galaxyTiltAngle;
-            planetObj.element.style.transform = `rotateX(${tiltCompensation}deg)`;
+            planetObj.element.style.transform = `rotateX(${tiltCompensation}deg) rotateY(${angle * -0.5}deg)`; // Добавим легкое вращение
         });
         
         requestAnimationFrame(updatePlanets);
