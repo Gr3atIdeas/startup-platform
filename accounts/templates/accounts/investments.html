@@ -36,7 +36,19 @@
                     {% for investment in planetary_investments %}
                       <div class="orbit" style="--orbit-size: {{ investment.orbit_size|default:200 }}px; --orbit-time: {{ investment.orbit_time|default:80 }}s;">
                         <div class="planet-orientation">
-                          <div class="planet" style="--planet-size: {{ investment.planet_size|default:50 }}px;" data-id="{{ investment.id|default_if_none:'' }}" data-image="{{ investment.image|default:'/static/accounts/images/planets/startup_5_logo.png'|escapejs }}"></div>
+                          <div class="planet" style="--planet-size: {{ investment.planet_size|default:50 }}px;" data-id="{{ investment.id|default_if_none:'' }}">
+                            {% if investment.startup.planet_image %}
+                              <img src="{{ investment.startup.planet_image.url }}" alt="{{ investment.name|default:'Planet'|escape }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                            {% elif investment.startup.logo_urls and investment.startup.logo_urls|length > 0 %}
+                              <img src="{{ investment.startup.logo_urls.0 }}" alt="{{ investment.name|default:'Logo'|escape }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                            {% else %}
+                              <div class="planet">
+                                <div class="planet-segment segment-top" style="background: linear-gradient(to bottom, #87CEEB 0%, #E0FFFF 100%);"></div>
+                                <div class="planet-segment segment-middle" style="background: linear-gradient(to bottom, #4682B4 0%, #B0C4DE 100%);"></div>
+                                <div class="planet-segment segment-bottom" style="background: linear-gradient(to bottom, #1E90FF 0%, #87CEFA 100%);"></div>
+                              </div>
+                            {% endif %}
+                          </div>
                         </div>
                       </div>
                     {% endfor %}
@@ -157,7 +169,17 @@
           {% for investment in user_investments|slice:":6" %}
             <div class="startup-card" data-category="{{ investment.startup.direction.direction_name|default:''|escape }}" data-name="{{ investment.startup.title|default:''|escape }}" data-created="{{ investment.created_at|date:'Y-m-d' }}">
               <div class="startup-card-left">
-                <img src="{{ investment.startup.planet_image.url|default:'/static/accounts/images/planets/startup_5_logo.png' }}" alt="{{ investment.startup.title|default:'No Name' }} Planet" class="startup-planet-img" style="width: 70px; height: 70px; border-radius: 50%; margin-bottom: 5px;">
+                {% if investment.startup.planet_image %}
+                  <img src="{{ investment.startup.planet_image.url }}" alt="{{ investment.startup.title|default:'No Name' }} Planet" class="startup-planet-img" style="width: 70px; height: 70px; border-radius: 50%; margin-bottom: 5px;">
+                {% elif investment.startup.logo_urls and investment.startup.logo_urls|length > 0 %}
+                  <img src="{{ investment.startup.logo_urls.0 }}" alt="{{ investment.startup.title|default:'No Name' }} Logo" class="startup-planet-img" style="width: 70px; height: 70px; border-radius: 50%; margin-bottom: 5px;">
+                {% else %}
+                  <div class="planet">
+                    <div class="planet-segment segment-top" style="background: linear-gradient(to bottom, #87CEEB 0%, #E0FFFF 100%);"></div>
+                    <div class="planet-segment segment-middle" style="background: linear-gradient(to bottom, #4682B4 0%, #B0C4DE 100%);"></div>
+                    <div class="planet-segment segment-bottom" style="background: linear-gradient(to bottom, #1E90FF 0%, #87CEFA 100%);"></div>
+                  </div>
+                {% endif %}
                 <div class="startup-name">
                   {% if investment.startup.title %}
                     <a href="{% url 'startup_detail' startup_id=investment.startup.startup_id|default_if_none:'' %}" style="color: inherit; text-decoration: none;">{{ investment.startup.title|escape }}</a>
@@ -220,7 +242,17 @@
           {% for startup in user_owned_startups|slice:":6" %}
             <div class="startup-card" data-category="{{ startup.direction.direction_name|default:''|escape }}" data-name="{{ startup.title|default:''|escape }}">
               <div class="startup-card-left">
-                <img src="{{ startup.planet_image.url|default:'/static/accounts/images/planets/startup_5_logo.png' }}" alt="{{ startup.title|default:'No Name' }} Planet" class="startup-planet-img" style="width: 70px; height: 70px; border-radius: 50%; margin-bottom: 5px;">
+                {% if startup.planet_image %}
+                  <img src="{{ startup.planet_image.url }}" alt="{{ startup.title|default:'No Name' }} Planet" class="startup-planet-img" style="width: 70px; height: 70px; border-radius: 50%; margin-bottom: 5px;">
+                {% elif startup.logo_urls and startup.logo_urls|length > 0 %}
+                  <img src="{{ startup.logo_urls.0 }}" alt="{{ startup.title|default:'No Name' }} Logo" class="startup-planet-img" style="width: 70px; height: 70px; border-radius: 50%; margin-bottom: 5px;">
+                {% else %}
+                  <div class="planet">
+                    <div class="planet-segment segment-top" style="background: linear-gradient(to bottom, #87CEEB 0%, #E0FFFF 100%);"></div>
+                    <div class="planet-segment segment-middle" style="background: linear-gradient(to bottom, #4682B4 0%, #B0C4DE 100%);"></div>
+                    <div class="planet-segment segment-bottom" style="background: linear-gradient(to bottom, #1E90FF 0%, #87CEFA 100%);"></div>
+                  </div>
+                {% endif %}
                 <div class="startup-name">
                   {% if startup.title %}
                     <a href="{% url 'startup_detail' startup_id=startup.startup_id|default_if_none:'' %}" style="color: inherit; text-decoration: none;">{{ startup.title|escape }}</a>
@@ -282,7 +314,17 @@
           {% for investment in user_investments|slice:"6:" %}
             <div class="startup-card hidden-card" data-category="{{ investment.startup.direction.direction_name|default:''|escape }}" data-name="{{ investment.startup.title|default:''|escape }}" style="display: none;">
               <div class="startup-card-left">
-                <img src="{{ investment.startup.planet_image.url|default:'/static/accounts/images/planets/startup_5_logo.png' }}" alt="{{ investment.startup.title|default:'No Name' }} Planet" class="startup-planet-img" style="width: 70px; height: 70px; border-radius: 50%; margin-bottom: 5px;">
+                {% if investment.startup.planet_image %}
+                  <img src="{{ investment.startup.planet_image.url }}" alt="{{ investment.startup.title|default:'No Name' }} Planet" class="startup-planet-img" style="width: 70px; height: 70px; border-radius: 50%; margin-bottom: 5px;">
+                {% elif investment.startup.logo_urls and investment.startup.logo_urls|length > 0 %}
+                  <img src="{{ investment.startup.logo_urls.0 }}" alt="{{ investment.startup.title|default:'No Name' }} Logo" class="startup-planet-img" style="width: 70px; height: 70px; border-radius: 50%; margin-bottom: 5px;">
+                {% else %}
+                  <div class="planet">
+                    <div class="planet-segment segment-top" style="background: linear-gradient(to bottom, #87CEEB 0%, #E0FFFF 100%);"></div>
+                    <div class="planet-segment segment-middle" style="background: linear-gradient(to bottom, #4682B4 0%, #B0C4DE 100%);"></div>
+                    <div class="planet-segment segment-bottom" style="background: linear-gradient(to bottom, #1E90FF 0%, #87CEFA 100%);"></div>
+                  </div>
+                {% endif %}
                 <div class="startup-name">
                   {% if investment.startup.title %}
                     <a href="{% url 'startup_detail' startup_id=investment.startup.startup_id|default_if_none:'' %}" style="color: inherit; text-decoration: none;">{{ investment.startup.title|escape }}</a>
@@ -342,7 +384,17 @@
           {% for startup in user_owned_startups|slice:"6:" %}
             <div class="startup-card hidden-card" data-category="{{ startup.direction.direction_name|default:''|escape }}" data-name="{{ startup.title|default:''|escape }}" style="display: none;">
               <div class="startup-card-left">
-                <img src="{{ startup.planet_image.url|default:'/static/accounts/images/planets/startup_5_logo.png' }}" alt="{{ startup.title|default:'No Name' }} Planet" class="startup-planet-img" style="width: 70px; height: 70px; border-radius: 50%; margin-bottom: 5px;">
+                {% if startup.planet_image %}
+                  <img src="{{ startup.planet_image.url }}" alt="{{ startup.title|default:'No Name' }} Planet" class="startup-planet-img" style="width: 70px; height: 70px; border-radius: 50%; margin-bottom: 5px;">
+                {% elif startup.logo_urls and startup.logo_urls|length > 0 %}
+                  <img src="{{ startup.logo_urls.0 }}" alt="{{ startup.title|default:'No Name' }} Logo" class="startup-planet-img" style="width: 70px; height: 70px; border-radius: 50%; margin-bottom: 5px;">
+                {% else %}
+                  <div class="planet">
+                    <div class="planet-segment segment-top" style="background: linear-gradient(to bottom, #87CEEB 0%, #E0FFFF 100%);"></div>
+                    <div class="planet-segment segment-middle" style="background: linear-gradient(to bottom, #4682B4 0%, #B0C4DE 100%);"></div>
+                    <div class="planet-segment segment-bottom" style="background: linear-gradient(to bottom, #1E90FF 0%, #87CEFA 100%);"></div>
+                  </div>
+                {% endif %}
                 <div class="startup-name">
                   {% if startup.title %}
                     <a href="{% url 'startup_detail' startup_id=startup.startup_id|default_if_none:'' %}" style="color: inherit; text-decoration: none;">{{ startup.title|escape }}</a>
@@ -927,13 +979,13 @@
               {% for investment in planetary_investments %}
                 '{{ investment.id }}': {
                   name: '{{ investment.name|escapejs }}',
-                  'description': '{{ investment.description|truncatechars:50|escapejs }}',
+                  description: '{{ investment.description|truncatechars:50|escapejs }}',
                   rating: '{{ investment.rating|escapejs }}',
                   progress: '{{ investment.progress|escapejs }}',
                   funding: '{{ investment.funding|escapejs }}',
                   funding_goal: '{{ investment.funding_goal|escapejs }}',
                   investors: '{{ investment.investors|escapejs }}',
-                  image: '{{ investment.image|escapejs }}',
+                  image: '{% if investment.startup.planet_image %}{{ investment.startup.planet_image.url|escapejs }}{% elif investment.startup.logo_urls and investment.startup.logo_urls|length > 0 %}{{ investment.startup.logo_urls.0|escapejs }}{% else %}/static/accounts/images/planets/startup_5_logo.png{% endif %}',
                   startup_id: '{{ investment.startup_id|escapejs }}',
                   investment_type: '{{ investment.investment_type|escapejs }}'
                 }{% if not forloop.last %},{% endif %}
@@ -967,15 +1019,15 @@
             // Устанавливаем логотип инвестора
             if (logoElement && investorLogoUrl) {
               logoElement.style.backgroundImage = `url('${investorLogoUrl}')`;
-              logoElement.style.backgroundSize = 'cover'; // Убедимся, что изображение обрезается
+              logoElement.style.backgroundSize = 'cover';
               logoElement.style.backgroundRepeat = 'no-repeat';
               logoElement.style.backgroundPosition = 'center';
-              logoElement.style.borderRadius = '50% !important'; // Принудительное применение
-              logoElement.style.width = '100px !important'; // Сохраняем размер из JavaScript
-              logoElement.style.height = '100px !important'; // Сохраняем размер из JavaScript
-              logoElement.style.objectFit = 'cover !important'; // Корректное заполнение
-              logoElement.style.overflow = 'hidden'; // Обрезаем лишнее
-              logoElement.style.display = 'block'; // Убедимся, что элемент отображается
+              logoElement.style.borderRadius = '50% !important';
+              logoElement.style.width = '100px !important';
+              logoElement.style.height = '100px !important';
+              logoElement.style.objectFit = 'cover !important';
+              logoElement.style.overflow = 'hidden';
+              logoElement.style.display = 'block';
             } else {
               logoElement.style.backgroundColor = '#e9ecef';
               logoElement.style.borderRadius = '50% !important';
@@ -1015,7 +1067,7 @@
               });
 
               const id = planet.getAttribute('data-id');
-              const image = planet.getAttribute('data-image') || startups[id]?.image || '/static/accounts/images/planets/startup_5_logo.png';
+              const image = startups[id]?.image || '/static/accounts/images/planets/startup_5_logo.png';
               if (startups[id] && startups[id].image) {
                 planet.style.backgroundImage = `url('${startups[id].image}')`;
                 planet.style.backgroundSize = 'cover';
