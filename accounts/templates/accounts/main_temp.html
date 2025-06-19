@@ -24,13 +24,13 @@
             <div class="div6">Создавай </div>
             <div class="div7">будущее</div>
             <div class="header-buttons">
-                <a href="{% url 'login' %}?next={% url 'create_startup' %}" class="btn btn--secondary">
-                <span>Зарегистрировать стартап</span>
-                    <img class="icon" src="{% static 'accounts/images/main_page/add-circle-outline.svg' %}" alt="Arrow">
-            </a>
-                <a href="{% url 'startups_list' %}" class="btn btn--primary">
-                <span>Найти стартап</span>
-                    <img class="icon" src="{% static 'accounts/images/main_page/button_eye.svg' %}" alt="Arrow">
+                <a href="{% url 'login' %}?next={% url 'create_startup' %}" class="btn btn--hero-register">
+                    <span>Зарегистрировать стартап</span>
+                    <img class="icon" src="{% static 'accounts/images/main_page/rightarrow.svg' %}" alt="Arrow">
+                </a>
+                <a href="{% url 'startups_list' %}" class="btn btn--hero-find">
+                    <span>Найти стартап</span>
+                    <img class="icon" src="{% static 'accounts/images/main_page/rightarrow.svg' %}" alt="Arrow">
                 </a>
             </div>
 

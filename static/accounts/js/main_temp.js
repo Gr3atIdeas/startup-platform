@@ -395,10 +395,9 @@ document.addEventListener('DOMContentLoaded', function () {
             const radius = planetObj.orbitSize / 2;
             const x = Math.cos(angleRad) * radius;
             const y = Math.sin(angleRad) * radius;
-            
-            planetObj.orientation.style.left = `${50 + 50 * (x / radius)}%`;
-            planetObj.orientation.style.top = `${50 + 50 * (y / radius)}%`;
 
+            planetObj.orientation.style.transform = `translate(${x}px, ${y}px)`;
+            
             const tiltCompensation = -galaxyTiltAngle;
             planetObj.element.style.transform = `rotateX(${tiltCompensation}deg)`;
         });

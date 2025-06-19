@@ -187,8 +187,19 @@ html::-webkit-scrollbar-button {
   background-size: cover;
   background-position: center;
   border-radius: 10px;
-  z-index: 2;
+  z-index: 1;
   overflow: hidden;
+}
+
+.featured::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4); /* 40% black overlay */
+  border-radius: 10px; /* Match parent's border-radius */
 }
 
 .featured::after {
@@ -256,8 +267,57 @@ html::-webkit-scrollbar-button {
 
 .header-buttons {
     display: flex;
-    gap: 20px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
     margin-top: 20px;
+}
+
+/* Custom Main Page Header Buttons */
+.btn--hero-register,
+.btn--hero-find {
+    padding: 12px 16px;
+    border-radius: 10px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    font-family: Unbounded, sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 18px;
+    border: none;
+    transition: transform 0.2s;
+}
+
+.btn--hero-register:hover,
+.btn--hero-find:hover {
+    transform: scale(1.05);
+}
+
+.btn--hero-register {
+    background: #004E9F;
+}
+
+.btn--hero-register span {
+    color: #FCFCFD;
+}
+
+.btn--hero-register .icon {
+    filter: brightness(0) invert(1);
+}
+
+.btn--hero-find {
+    background: #FFEF2B;
+}
+
+.btn--hero-find span {
+    color: black;
+}
+
+.btn--hero-find .icon {
+    filter: none;
 }
 
 /* Декоративные круги и планеты (плейсхолдеры) */
@@ -2848,7 +2908,10 @@ html::-webkit-scrollbar-button {
 
 .planet-orientation {
     position: absolute;
+    top: 50%;
+    left: 50%;
     transform-style: preserve-3d;
+    will-change: transform;
 }
 
 .planet {
