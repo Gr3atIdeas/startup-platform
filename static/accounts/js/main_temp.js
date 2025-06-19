@@ -342,7 +342,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const planet = document.createElement('div');
         planet.className = 'planet';
-        const planetSize = 40 + Math.random() * 40; // Случайный размер от 40 до 80
+        const planetSize = (52 + Math.random() * 52); // Увеличенный на 30% размер
         planet.style.setProperty('--planet-size', `${planetSize}px`);
         
         const imageName = allPlanetImages[i % allPlanetImages.length];

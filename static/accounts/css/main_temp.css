@@ -169,9 +169,21 @@ html::-webkit-scrollbar-button {
   align-items: center;
   padding: 20px;
   box-sizing: border-box;
-  background: transparent !important;
+  background-color: #000;
   margin-left: auto; /* Центрирование */
   margin-right: auto; /* Центрирование */
+}
+
+.featured::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('https://www.transparenttextures.com/patterns/stardust.png');
+  opacity: 0.4; /* Тусклые звезды */
+  z-index: 1;
 }
 
 .featured .group {
@@ -179,6 +191,7 @@ html::-webkit-scrollbar-button {
   max-width: 1303px;
   height: 708px;
   position: relative;
+  z-index: 2; /* Чтобы контент был над звездами */
 
   /* background: transparent; */
 
@@ -237,6 +250,12 @@ html::-webkit-scrollbar-button {
   line-height: 0.7; /* Сжатая высота строки для Blippo */
   word-wrap: break-word;
   margin-bottom: 40px; /* Отступ после заголовка */
+}
+
+.header-buttons {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
 }
 
 /* Декоративные круги и планеты (плейсхолдеры) */
@@ -2766,8 +2785,8 @@ html::-webkit-scrollbar-button {
 #planetary-system-container {
     position: absolute;
     top: 0;
-    left: 50%; /* Начинается от середины родителя */
-    width: 100%;
+    left: 40%; /* Сдвигаем левее, чтобы правая часть была больше */
+    width: 120%; /* Увеличиваем ширину, чтобы заполнить правую часть */
     height: 100%;
     pointer-events: none; /* Контейнер не перехватывает клики */
 }
@@ -2793,6 +2812,43 @@ html::-webkit-scrollbar-button {
     left: 0;
     transform: rotateX(45deg);
     transform-style: preserve-3d;
+}
+
+#sun-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 150px; /* Размер солнца */
+    height: 150px;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#sun-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+#sun-logo-container {
+    position: absolute;
+    width: 80%; /* Размер лого внутри солнца */
+    height: 80%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#sun-logo-container svg {
+    width: 100px;
+    height: auto;
+}
+
+#sun-logo-container svg path {
+    fill: black !important;
 }
 
 .orbit {
@@ -2822,6 +2878,8 @@ html::-webkit-scrollbar-button {
     margin-top: calc(-0.5 * var(--planet-size));
     border-radius: 50%;
     background-size: cover;
+    background-position: center;
+    background-color: #010A1A; /* Добавляем фон, чтобы избежать прозрачности */
     transform-style: preserve-3d;
     z-index: 5;
     transition: transform 0.3s ease;
@@ -2835,9 +2893,8 @@ html::-webkit-scrollbar-button {
     pointer-events: all; /* Ссылка с планетой кликабельна */
     position: absolute;
     z-index: 100;
-    /* Позиция будет настроена в JS */
-    top: 50%;
-    left: 75%;
+    top: 70%;
+    left: 80%;
     transform: translate(-50%, -50%);
 }
 
