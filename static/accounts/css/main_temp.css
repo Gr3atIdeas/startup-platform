@@ -2797,8 +2797,8 @@ html::-webkit-scrollbar-button {
     top: 50%;
     left: 85%; /* Устанавливаем солнце в тот же центр, что и орбиты */
     transform: translate(-50%, -50%); /* Точное центрирование */
-    width: 330px; /* Размер как на референсе */
-    height: 330px;
+    width: 110px; /* Уменьшаем размер */
+    height: 110px;
     z-index: 2; /* Над орбитами, под планетами */
     pointer-events: none; /* Не мешает кликам */
 }
@@ -2816,10 +2816,11 @@ html::-webkit-scrollbar-button {
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 3; /* Логотип над картинкой солнца */
 }
 
 #sun-logo-container svg {
-    width: 100px;
+    width: 60px; /* Уменьшаем логотип пропорционально */
     height: auto;
 }
 
