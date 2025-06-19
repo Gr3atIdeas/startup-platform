@@ -201,7 +201,7 @@ html::-webkit-scrollbar-button {
   z-index: 2; /* Чтобы контент был над звездами */
   background: transparent;
   border-radius: 10px;
-  overflow: visible; /* ИСПРАВЛЕНИЕ: Позволяем содержимому (планетам, солнцу) выходить за рамки */
+  overflow: hidden;
   display: flex;
   flex-direction: column; /* Для внутреннего расположения элементов */
   justify-content: center; /* Центрирование по вертикали */
@@ -2795,14 +2795,12 @@ html::-webkit-scrollbar-button {
 #sun-container {
     position: absolute;
     top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%); /* Убираем ошибочный rotateX */
-    width: 220px; /* Немного уменьшаем солнце */
-    height: 220px;
-    z-index: 2;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    left: 75%; /* Центр системы примерно здесь (50% от родителя + 50% от контейнера планетарки) */
+    transform: translate(-50%, -50%); /* Точное центрирование */
+    width: 330px; /* Размер как на референсе */
+    height: 330px;
+    z-index: 2; /* Над орбитами, под планетами */
+    pointer-events: none; /* Не мешает кликам */
 }
 
 #sun-image {
@@ -2856,7 +2854,7 @@ html::-webkit-scrollbar-button {
     margin-top: calc(-0.5 * var(--planet-size));
     border-radius: 50%;
     /* Сначала цвет, потом изображение. Цвет заполнит прозрачные части PNG. */
-    background-color: transparent; /* ИСПРАВЛЕНИЕ: Убираем черный фон, который создавал "рамку" */
+    background-color: #000; 
     background-size: cover;
     background-position: center;
     transform-style: preserve-3d;
@@ -2878,13 +2876,13 @@ html::-webkit-scrollbar-button {
     pointer-events: all; /* Ссылка с планетой кликабельна */
     position: absolute;
     z-index: 100;
-    top: 50%; /* ИСПРАВЛЕНИЕ: Центрируем по вертикали */
-    left: 10%; /* ИСПРАВЛЕНИЕ: Сдвигаем на дальнюю орбиту слева */
+    top: 78%;    /* Позиция как на референсе (8 часов) */
+    left: 68%;   /* Позиция как на референсе (8 часов) */
     transform: translate(-50%, -50%);
 }
 
 #plus-planet {
-    width: 60px; /* Немного уменьшим для гармонии */
+    width: 60px; /* Размер как на референсе */
     height: 60px;
     cursor: pointer;
     transition: transform 0.3s ease;
