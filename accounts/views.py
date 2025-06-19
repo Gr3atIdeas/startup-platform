@@ -553,7 +553,7 @@ def investments(request):
         f"[investments] Final monthly totals for chart: {monthly_totals}"
     )
 
-    # QuerySet для планетарной системы (ограничим до 10 стартапов)
+    # Данные для планетарной системы (аналогично my_startups)
     planetary_investments_qs = base_investments_qs.values(
         "startup__startup_id",
         "startup__title",
@@ -576,10 +576,54 @@ def investments(request):
         investors_count=Count("startup__investmenttransactions__investor", distinct=True),
     ).order_by("-amount")[:10]
 
-    # Преобразуем QuerySet в список для JSON сериализации
-    planetary_investments = list(planetary_investments_qs)
+    # Формируем данные для планетарной системы
+    planetary_investments = []
+    min_orbit_size = 200
+    max_orbit_size = 800
+    orbit_step = 50
+    available_sizes = list(range(min_orbit_size, max_orbit_size + orbit_step, orbit_step))
+    import random
+    random.shuffle(available_sizes)
 
-    # Логирование данных для планетарной системы
+    for idx, investment in enumerate(planetary_investments_qs, 1):
+        orbit_size = available_sizes[idx - 1] if idx <= len(available_sizes) else min_orbit_size + (idx - 1) * orbit_step
+        orbit_time = 80 + (idx - 1) * 20
+        planet_size = idx * 2 + 50
+
+        # Получаем URL логотипа
+        logo_url = investment['startup__logo_urls'][0] if investment['startup__logo_urls'] and isinstance(investment['startup__logo_urls'], list) else "https://via.placeholder.com/150"
+
+        # Тип инвестирования (аналогично my_startups)
+        startup = Startups.objects.get(startup_id=investment['startup__startup_id'])
+        if startup.only_invest:
+            investment_type = "Инвестирование"
+        elif startup.only_buy:
+            investment_type = "Выкуп"
+        elif startup.both_mode:
+            investment_type = "Выкуп+инвестирование"
+        else:
+            investment_type = "Не указано"
+
+        planet_data = {
+            "id": str(idx),
+            "startup_id": investment['startup__startup_id'],
+            "name": investment['startup__title'] or "Без названия",
+            "description": startup.short_description or startup.description or "Описание отсутствует",
+            "rating": f"{investment['startup_average_rating']:.1f}/5 ({startup.total_voters or 0})",
+            "comment_count": investment['startup_comment_count'],
+            "progress": f"{(startup.amount_raised / startup.funding_goal * 100 if startup.funding_goal else 0):.0f}%",
+            "direction": investment['startup__direction__direction_name'] or "Не указано",
+            "investment_type": investment_type,
+            "funding": f"{int(startup.amount_raised or 0):,d} ₽".replace(",", " "),
+            "funding_goal": f"{int(startup.funding_goal or 0):,d} ₽".replace(",", " "),
+            "investors": f"Инвесторов: {investment['investors_count'] or 0}",
+            "image": logo_url,
+            "orbit_size": orbit_size,
+            "orbit_time": orbit_time,
+            "planet_size": planet_size,
+        }
+        planetary_investments.append(planet_data)
+
     logger.info(
         f"[investments] Planetary investments for user {request.user.email}: {planetary_investments}"
     )
@@ -628,7 +672,7 @@ def investments(request):
 
     context = {
         "user_investments": user_investments_qs_final,
-        "planetary_investments": planetary_investments,  # Теперь список, а не QuerySet
+        "planetary_investments": planetary_investments,  # Список для JSON
         "startups_count": analytics_data.get("startups_count", 0),
         "total_investment": total_investment_decimal,
         "max_investment": analytics_data.get("max_investment", 0),
@@ -642,6 +686,14 @@ def investments(request):
     }
 
     return render(request, "accounts/investments.html", context)
+
+
+
+
+
+
+
+
 
 # Страница юридической информации
 def legal(request):

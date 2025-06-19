@@ -1374,3 +1374,55 @@ body.modal-open-blur .portfolio-container > *:not(.modal-overlay) {
   object-fit: cover;
   border-radius: 50%;
 }
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+}
+
+.modal-overlay.visible {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.category-modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 600px;
+  width: 90%;
+  position: relative;
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.modal-categories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.modal-category-item {
+  text-align: center;
+}
+
+.modal-category-name {
+  display: block;
+  margin-top: 5px;
+  font-size: 14px;
+}
