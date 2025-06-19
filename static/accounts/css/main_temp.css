@@ -274,8 +274,7 @@ html::-webkit-scrollbar-button {
 }
 
 /* Custom Main Page Header Buttons */
-.btn--hero-register,
-.btn--hero-find {
+.hero-button {
     padding: 12px 16px;
     border-radius: 10px;
     display: inline-flex;
@@ -291,32 +290,31 @@ html::-webkit-scrollbar-button {
     transition: transform 0.2s;
 }
 
-.btn--hero-register:hover,
-.btn--hero-find:hover {
+.hero-button:hover {
     transform: scale(1.05);
 }
 
-.btn--hero-register {
+.hero-button--register {
     background: #004E9F;
 }
 
-.btn--hero-register span {
+.hero-button--register span {
     color: #FCFCFD;
 }
 
-.btn--hero-register .icon {
+.hero-button--register .icon {
     filter: brightness(0) invert(1);
 }
 
-.btn--hero-find {
+.hero-button--find {
     background: #FFEF2B;
 }
 
-.btn--hero-find span {
+.hero-button--find span {
     color: black;
 }
 
-.btn--hero-find .icon {
+.hero-button--find .icon {
     filter: none;
 }
 
