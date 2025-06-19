@@ -344,11 +344,15 @@ document.addEventListener('DOMContentLoaded', function () {
         planet.className = 'planet';
         const planetSize = (52 + Math.random() * 52); // Увеличенный на 30% размер
         planet.style.setProperty('--planet-size', `${planetSize}px`);
+
+        const planetImageDiv = document.createElement('div');
+        planetImageDiv.className = 'planet-image';
         
         const imageName = allPlanetImages[i % allPlanetImages.length];
         const imageUrl = `/static/accounts/images/planetary_system/${imageName}`;
-        planet.style.backgroundImage = `url('${imageUrl}')`;
+        planetImageDiv.style.backgroundImage = `url('${imageUrl}')`;
 
+        planet.appendChild(planetImageDiv);
         planetOrientation.appendChild(planet);
         orbit.appendChild(planetOrientation);
         galaxyContainer.appendChild(orbit);
