@@ -1051,7 +1051,7 @@
             }
           })();
 
-          // Планетарная система
+        // Планетарная система
           (function() {
             const startups = {% if planetary_investments %}
               {
@@ -1064,7 +1064,7 @@
                   funding: '{{ investment.funding|escapejs }}',
                   funding_goal: '{{ investment.funding_goal|escapejs }}',
                   investors: '{{ investment.investors|escapejs }}',
-                  image: '{{ investment.image|escapejs|default:"/static/accounts/images/planets/startup_5_logo.png" }}',
+                  image: '{{ investment.image|escapejs }}',
                   startup_id: '{{ investment.startup_id|escapejs }}',
                   investment_type: '{{ investment.investment_type|escapejs }}'
                 }{% if not forloop.last %},{% endif %}
@@ -1073,6 +1073,8 @@
             {% else %}
               {}
             {% endif %};
+
+            const investorLogoUrl = "{{ investor_logo_url|escapejs }}"; // Логотип инвестора
 
             const planets = document.querySelectorAll('.planetary-system .planet');
             const planetOrientations = document.querySelectorAll('.planetary-system .planet-orientation');
@@ -1093,7 +1095,12 @@
             const galaxy = document.querySelector('.planetary-system #galaxy');
             const logoElement = document.querySelector('.planetary-system #logo');
 
-            logoElement.style.backgroundImage = `url('{% static "accounts/images/layout/image12.png" %}')`;
+            // Устанавливаем логотип инвестора
+            if (logoElement && investorLogoUrl) {
+              logoElement.style.backgroundImage = `url('${investorLogoUrl}')`;
+            } else {
+              logoElement.style.backgroundColor = '#e9ecef'; // Фallback
+            }
 
             const galaxyTiltAngle = 45;
             const planetObjects = [];
@@ -1124,7 +1131,7 @@
               });
 
               const id = planet.getAttribute('data-id');
-              const image = planet.getAttribute('data-image') || '/static/accounts/images/planets/startup_5_logo.png';
+              const image = planet.getAttribute('data-image') || startups[id]?.image || '/static/accounts/images/planets/startup_5_logo.png';
               if (startups[id] && startups[id].image) {
                 planet.style.backgroundImage = `url('${startups[id].image}')`;
               } else {
