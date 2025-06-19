@@ -485,7 +485,7 @@ def investments(request):
     # Получаем общую сумму инвестиций
     total_investment_decimal = analytics_data.get("total_investment") or Decimal("0")
     logger.info(
-        f"[investments view] User: {request.user.email}, Total Investment Calculated (after distinct): {total_investment_decimal}"
+        f"[investments] User: {request.user.email}, Total Investment Calculated: {total_investment_decimal}"
     )
 
     # Данные по категориям
@@ -507,7 +507,7 @@ def investments(request):
 
         if investment_categories == []:
             logger.info(
-                f"[investments view] Raw category data example (after distinct): {list(category_data_raw[:2])}"
+                f"[investments] Raw category data example: {list(category_data_raw[:2])}"
             )
 
         if category_sum and total_for_percentage > 0:
@@ -540,7 +540,7 @@ def investments(request):
         .order_by("month")
     )
     logger.info(
-        f"[investments view] Monthly data calculated (after distinct): {list(monthly_data_direct)}"
+        f"[investments] Monthly data calculated: {list(monthly_data_direct)}"
     )
 
     month_labels = ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"]
@@ -550,19 +550,19 @@ def investments(request):
         if 0 <= month_index < 12:
             monthly_totals[month_index] = float(data.get("monthly_total", 0) or 0)
     logger.info(
-        f"[investments view] Final monthly totals for chart (after distinct): {monthly_totals}"
+        f"[investments] Final monthly totals for chart: {monthly_totals}"
     )
 
     # QuerySet для планетарной системы (ограничим до 10 стартапов)
-    planetary_investments = base_investments_qs.values(
-        "startup__startup_id",  # Добавляем ID стартапа для ссылок
+    planetary_investments_qs = base_investments_qs.values(
+        "startup__startup_id",
         "startup__title",
         "startup__status",
-        "startup__amount_raised",  # Исправлено с current_investment
-        "startup__funding_goal",   # Исправлено с goal
+        "startup__amount_raised",
+        "startup__funding_goal",
         "startup__direction__direction_name",
-        "amount",  # Сумма инвестиции пользователя
-        "startup__logo_urls",  # Добавляем logo_urls для изображения планеты
+        "amount",
+        "startup__logo_urls",
     ).annotate(
         startup_average_rating=Avg(
             ExpressionWrapper(
@@ -576,9 +576,12 @@ def investments(request):
         investors_count=Count("startup__investmenttransactions__investor", distinct=True),
     ).order_by("-amount")[:10]
 
+    # Преобразуем QuerySet в список для JSON сериализации
+    planetary_investments = list(planetary_investments_qs)
+
     # Логирование данных для планетарной системы
     logger.info(
-        f"[investments view] Planetary investments for user {request.user.email}: {list(planetary_investments)}"
+        f"[investments] Planetary investments for user {request.user.email}: {planetary_investments}"
     )
 
     # QuerySet для списка стартапов
@@ -608,7 +611,7 @@ def investments(request):
     # Логирование данных стартапов
     try:
         logger.info(
-            f"[investments view] Checking startup data for user {request.user.email}:"
+            f"[investments] Checking startup data for user {request.user.email}:"
         )
         for inv in user_investments_qs_final[:3]:
             startup_info = "Startup object exists" if inv.startup else "!!! Startup object IS MISSING !!!"
@@ -621,11 +624,11 @@ def investments(request):
                 f"  Investment ID: {inv.transaction_id}, {startup_info}, {startup_name}"
             )
     except Exception as e:
-        logger.error(f"[investments view] Error logging startup data: {e}")
+        logger.error(f"[investments] Error logging startup data: {e}")
 
     context = {
         "user_investments": user_investments_qs_final,
-        "planetary_investments": planetary_investments,
+        "planetary_investments": planetary_investments,  # Теперь список, а не QuerySet
         "startups_count": analytics_data.get("startups_count", 0),
         "total_investment": total_investment_decimal,
         "max_investment": analytics_data.get("max_investment", 0),
