@@ -17,6 +17,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.staticfiles import finders
 from django.core.files.storage import default_storage
 from django.core.paginator import Paginator
 from django.core.serializers.json import DjangoJSONEncoder
@@ -2281,6 +2282,19 @@ def investor_main(request):
 
     startups_list = []
     for startup in startups:
+        image_url = None
+        if startup.planet_image:
+            potential_path = (
+                f"accounts/images/planetary_system/planets_round/{startup.planet_image}"
+            )
+            if finders.find(potential_path):
+                image_url = static(potential_path)
+        else:
+            random_image_num = choice(range(1, 16))
+            image_url = static(
+                f"accounts/images/planetary_system/planets_round/{random_image_num}.png"
+            )
+
         startups_list.append(
             {
                 "id": startup.startup_id,
@@ -2289,11 +2303,7 @@ def investor_main(request):
                 "direction_name": startup.direction.direction_name
                 if startup.direction
                 else "",
-                "image": static(
-                    f"accounts/images/planetary_system/planets_round/{startup.planet_image}"
-                )
-                if startup.planet_image
-                else static("accounts/images/planetary_system/planets_round/1.png"),
+                "image": image_url,
                 "url": reverse("accounts:startup_detail", args=[startup.startup_id]),
                 "rating": f"{startup.rating_agg:.1f}/5.0"
                 if startup.rating_agg is not None
