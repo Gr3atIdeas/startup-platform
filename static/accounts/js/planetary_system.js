@@ -1,10 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const startupsDataElement = document.getElementById('startups-data');
-    if (!startupsDataElement) {
-        console.error('Startups data element not found!');
+    const dataElement = document.getElementById('planetary-system-data');
+    if (!dataElement) {
+        console.error('Planetary system data element not found!');
         return;
     }
-    const startups = JSON.parse(startupsDataElement.textContent);
+    const appData = JSON.parse(dataElement.textContent);
+    const { startups, categories: galaxyNames, categoryImageUrl, logoImageUrl } = appData;
 
     const planets = [];
     const orbits = document.querySelectorAll('.orbit');
@@ -27,8 +28,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const galaxySelectorPrev = document.getElementById('galaxy-selector-prev');
     const galaxySelectorNext = document.getElementById('galaxy-selector-next');
 
-    if (logoElement && logoElement.dataset.bgUrl) {
-        logoElement.style.backgroundImage = `url('${logoElement.dataset.bgUrl}')`;
+    if (logoElement && logoImageUrl) {
+        logoElement.style.backgroundImage = `url('${logoImageUrl}')`;
     }
 
     let isPaused = false;
@@ -39,31 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let offsetY = 0;
     let scale = 1;
 
-    // Список категорий (галактик)
-    const galaxyData = {
-        'Технологии': { image: "{% static 'accounts/images/planetary_system/category_img.png' %}" },
-        'Финансы': { image: "{% static 'accounts/images/planetary_system/category_img.png' %}" },
-        'Здравоохранение': { image: "{% static 'accounts/images/planetary_system/category_img.png' %}" },
-        'Медицина': { image: "{% static 'accounts/images/planetary_system/category_img.png' %}" },
-        'Автомобили': { image: "{% static 'accounts/images/planetary_system/category_img.png' %}" },
-        'Доставка': { image: "{% static 'accounts/images/planetary_system/category_img.png' %}" },
-        'Кафе/рестораны': { image: "{% static 'accounts/images/planetary_system/category_img.png' %}" },
-        'Фастфуд': { image: "{% static 'accounts/images/planetary_system/category_img.png' %}" },
-        'Здоровье': { image: "{% static 'accounts/images/planetary_system/category_img.png' %}" },
-        'Красота': { image: "{% static 'accounts/images/planetary_system/category_img.png' %}" },
-        'Транспорт': { image: "{% static 'accounts/images/planetary_system/category_img.png' %}" },
-        'Спорт': { image: "{% static 'accounts/images/planetary_system/category_img.png' %}" },
-        'Психология': { image: "{% static 'accounts/images/planetary_system/category_img.png' %}" },
-        'ИИ': { image: "{% static 'accounts/images/planetary_system/category_img.png' %}" }
-    };
-    
-    const galaxyNames = Object.keys(galaxyData);
     let currentGalaxy = galaxyNames[0];
-    let categoryImageBaseUrl = '';
-    if (galaxyList.dataset.categoryImageUrl) {
-        categoryImageBaseUrl = galaxyList.dataset.categoryImageUrl;
-    }
-
 
     function populatePlanets(category) {
         galaxy.querySelectorAll('.planet-orientation').forEach(p => p.remove());
@@ -129,7 +106,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function initGalaxySelector() {
         galaxyList.innerHTML = '';
-        const categoryImageUrl = galaxyList.dataset.categoryImageUrl;
 
         galaxyNames.forEach(name => {
             const galaxyItem = document.createElement('div');
