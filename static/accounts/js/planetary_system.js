@@ -4,8 +4,10 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Planetary system data element not found!');
         return;
     }
-    const appData = JSON.parse(dataElement.textContent);
-    const { startups, categories, logoImageUrl } = appData;
+    const appData = JSON.parse(dataElement.textContent || '{}');
+    const startups = appData.startups || [];
+    const categories = appData.categories || [];
+    const logoImageUrl = appData.logoImageUrl;
 
     const planets = [];
     const orbits = document.querySelectorAll('.orbit');
@@ -39,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     let isDragging = false;
     let startX, startY;
-    let rotationX = 65; 
+    let rotationX = 25;
     let rotationY = 0;
     let scale = 1;
 
