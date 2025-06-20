@@ -1,7 +1,6 @@
 {% extends 'accounts/base.html' %}
 {% load static %}
 {% load socialaccount %}
-{% load telegram_tags %}
 
 {% block title %}Вход{% endblock %}
 
@@ -211,7 +210,7 @@
                 <div style="flex-grow: 1; height: 1px; background-color: #555;"></div>
             </div>
 
-            <a href="{% get_telegram_login_url %}" class="telegram-login-btn">
+            <a href="{% provider_login_url 'telegram' %}" class="telegram-login-btn">
                 Войти через Telegram
             </a>
 

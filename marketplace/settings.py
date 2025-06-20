@@ -88,6 +88,10 @@ AUTHENTICATION_BACKENDS = [
 
 # Добавьте настройки для Telegram
 SITE_ID = 1
+
+# Указываем allauth использовать наш кастомный адаптер
+SOCIALACCOUNT_ADAPTER = 'accounts.adapter.CustomSocialAccountAdapter'
+
 SOCIALACCOUNT_PROVIDERS = {
     'telegram': {
         'TOKEN': '7843250850:AAEL8hapR_WVcG2mMNUhWvK-I0DMYG042Ko',  # Ваш токен
