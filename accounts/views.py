@@ -49,6 +49,8 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.text import slugify
+from django.shortcuts import redirect
+from urllib.parse import urlencode
 
 from .forms import (  # Добавляем MessageForm и UserSearchForm
     CommentForm,
@@ -4114,3 +4116,44 @@ def get_user_rating_for_startup(user_id, startup_id):
 
 def custom_404(request, exception):
     return render(request, "accounts/404.html", status=404)
+
+from allauth.socialaccount.providers.telegram.views import TelegramOAuth2Adapter
+from allauth.socialaccount.providers.oauth2.client import OAuth2Client
+from django.conf import settings
+from django.shortcuts import redirect
+
+def telegram_login_redirect(request):
+    """
+    Создает правильный URL для входа через Telegram и перенаправляет на него.
+    """
+    # Этот способ оказался нерабочим из-за того, что APP не был в словаре
+    # Вместо этого, будем строить URL вручную, что надежнее
+    
+    bot_token = settings.SOCIALACCOUNT_PROVIDERS['telegram']['TOKEN']
+    callback_url = request.build_absolute_uri('/accounts/telegram/login/callback/')
+    
+    # Заменяем http на https и greatideas.ru на www.greatideas.ru
+    if not settings.DEBUG:
+        callback_url = callback_url.replace('http://', 'https://')
+        callback_url = callback_url.replace('://greatideas.ru', '://www.greatideas.ru')
+
+    params = {
+        'bot_id': bot_token,
+        'origin': 'https://www.greatideas.ru', # Жестко задаем правильный origin
+        'embed': '0',
+        'request_access': 'write',
+        'return_to': callback_url,
+    }
+    
+    auth_url = 'https://oauth.telegram.org/auth'
+    query_string = urlencode(params)
+    
+    full_url = f'{auth_url}?{query_string}'
+    
+    return redirect(full_url)
+
+# ... весь остальной код views.py, который был до этого ...
+# Например:
+# @login_required
+# def cosmochat(request):
+# ...
