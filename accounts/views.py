@@ -2304,7 +2304,7 @@ def investor_main(request):
                 if startup.direction
                 else "",
                 "image": image_url,
-                "url": reverse("accounts:startup_detail", args=[startup.startup_id]),
+                "url": reverse("startup_detail", args=[startup.startup_id]),
                 "rating": f"{startup.rating_agg:.1f}/5.0"
                 if startup.rating_agg is not None
                 else "N/A",
