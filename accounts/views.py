@@ -2289,7 +2289,9 @@ def investor_main(request):
                 "direction_name": startup.direction.direction_name
                 if startup.direction
                 else "",
-                "image": startup.planet_image.url
+                "image": static(
+                    f"accounts/images/planetary_system/planets_round/{startup.planet_image}"
+                )
                 if startup.planet_image
                 else static("accounts/images/planetary_system/planets_round/1.png"),
                 "url": reverse("accounts:startup_detail", args=[startup.startup_id]),
@@ -2313,7 +2315,7 @@ def investor_main(request):
         {
             "id": d.direction_id,
             "name": d.direction_name,
-            "image": d.image.url if d.image else "",
+            "image": "",  # У Directions нет поля image, оставляем пустым, JS подставит дефолтное
         }
         for d in directions_with_startups
     ]
