@@ -106,6 +106,68 @@ document.addEventListener('DOMContentLoaded', function () {
     let rotationY = 0;
     let scale = 1;
 
+    // Переменные для переключателя галактик
+    const galaxyNames = [
+      'Технологии', 'Финансы', 'Здравоохранение', 'Медицина', 'Автомобили',
+      'Доставка', 'Кафе/рестораны', 'Фастфуд', 'Здоровье', 'Красота',
+      'Транспорт', 'Спорт', 'Психология', 'ИИ'
+    ];
+    let currentGalaxy = 'Технологии';
+
+    // Инициализация переключателя галактик
+    const categoryImageURL = '/static/accounts/images/planetary_system/category_img.png';
+
+    galaxyNames.forEach((name, index) => {
+        const galaxyItem = document.createElement('div');
+        galaxyItem.className = 'galaxy-item';
+
+        const itemImage = document.createElement('img');
+        itemImage.src = categoryImageURL;
+        itemImage.alt = name;
+
+        const itemName = document.createElement('span');
+        itemName.textContent = name;
+
+        galaxyItem.appendChild(itemImage);
+        galaxyItem.appendChild(itemName);
+
+        if (name === currentGalaxy) {
+            galaxyItem.classList.add('selected');
+        }
+        galaxyItem.addEventListener('click', () => {
+            switchGalaxy(name);
+            // Плавная прокрутка к выбранному элементу
+            const wrapper = document.getElementById('galaxy-list-wrapper');
+            if (wrapper) {
+                const scrollLeft = galaxyItem.offsetLeft - (wrapper.offsetWidth / 2) + (galaxyItem.offsetWidth / 2);
+                wrapper.scrollTo({
+                    left: scrollLeft,
+                    behavior: 'smooth'
+                });
+            }
+        });
+        if(galaxyList) {
+            galaxyList.appendChild(galaxyItem);
+        }
+    });
+
+    // Добавляем функционал для кнопок прокрутки
+    const scrollWrapper = document.getElementById('galaxy-list-wrapper');
+    const scrollLeftBtn = document.getElementById('galaxy-scroll-left');
+    const scrollRightBtn = document.getElementById('galaxy-scroll-right');
+
+    if (scrollWrapper && scrollLeftBtn && scrollRightBtn) {
+        const scrollAmount = 200; // Значение прокрутки
+
+        scrollLeftBtn.addEventListener('click', () => {
+            scrollWrapper.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+        });
+
+        scrollRightBtn.addEventListener('click', () => {
+            scrollWrapper.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+        });
+    }
+
     function createPlanets() {
         // Clear existing planets before creating new ones
         orbits.forEach(orbit => orbit.innerHTML = '');

@@ -33,7 +33,15 @@
             </div>
         </div>
         <div id="galaxy-selector">
-            <div id="galaxy-list"></div>
+            <button id="galaxy-scroll-left" class="galaxy-scroll-button">
+                <img src="{% static 'accounts/images/planetary_system/chevron_left.svg' %}" alt="<">
+            </button>
+            <div id="galaxy-list-wrapper">
+                <div id="galaxy-list"></div>
+            </div>
+            <button id="galaxy-scroll-right" class="galaxy-scroll-button">
+                <img src="{% static 'accounts/images/planetary_system/chevron_right.svg' %}" alt=">">
+            </button>
         </div>
     </div>
     
