@@ -52,6 +52,12 @@
         .auth-box button:hover {
             background-color: yellow;
         }
+
+        /* Стили для кнопки Telegram */
+        .telegram-login {
+            margin-top: 20px;
+            text-align: center;
+        }
     </style>
 
     <div class="content">
@@ -62,6 +68,13 @@
                 {{ form.as_p }}
                 <button type="submit">Зарегистрироваться</button>
             </form>
+            <div class="telegram-login">
+                <script async src="https://telegram.org/js/telegram-widget.js?22" 
+                        data-telegram-login="MyStartupBot" 
+                        data-size="large" 
+                        data-auth-url="{{ request.scheme }}://{{ request.get_host }}/accounts/telegram/login/" 
+                        data-request-access="write"></script>
+            </div>
         </div>
     </div>
 {% endblock %}

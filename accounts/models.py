@@ -534,8 +534,8 @@ class UserManager(BaseUserManager):
 
 class Users(AbstractBaseUser):
     user_id = models.AutoField(primary_key=True)
-    email = models.CharField(unique=True, max_length=255)
-    password_hash = models.CharField(max_length=255)
+    email = models.CharField(unique=True, max_length=255, blank=True, null=True)  # Может быть null
+    password_hash = models.CharField(max_length=255, blank=True, null=True)
     first_name = models.CharField(max_length=100, blank=True, null=True)
     last_name = models.CharField(max_length=100, blank=True, null=True)
     phone = models.CharField(max_length=20, blank=True, null=True)
@@ -559,10 +559,12 @@ class Users(AbstractBaseUser):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     show_phone = models.BooleanField(default=False)
-    website_url = models.CharField(
-        max_length=255, blank=True, null=True
-    )  # Добавляем поле
+    website_url = models.CharField(max_length=255, blank=True, null=True)
     social_links = models.JSONField(blank=True, null=True)
+    
+    # Новые поля для Telegram
+    telegram_id = models.CharField(max_length=255, unique=True, blank=True, null=True)
+    telegram_email = models.CharField(max_length=255, blank=True, null=True)
 
     objects = UserManager()
 
@@ -573,7 +575,7 @@ class Users(AbstractBaseUser):
         db_table = "users"
 
     def __str__(self):
-        return self.email
+        return self.email or self.telegram_email or f"User {self.user_id}"
 
     def set_password(self, raw_password):
         if raw_password is None:
@@ -585,9 +587,6 @@ class Users(AbstractBaseUser):
         return check_password(raw_password, self.password_hash)
 
     def get_full_name(self):
-        """
-        Возвращает полное имя пользователя (имя + фамилия).
-        """
         return f"{self.first_name or ''} {self.last_name or ''}".strip()
 
     @property
@@ -605,10 +604,9 @@ class Users(AbstractBaseUser):
         return self.is_staff
 
     def get_profile_picture_url(self):
-        """Генерирует URL аватара из profile_picture_url."""
         if self.profile_picture_url and is_uuid(self.profile_picture_url):
             return get_file_url(self.profile_picture_url, self.user_id, "avatar")
-        return None
+        return self.profile_picture_url  # Поддержка Telegram photo_url
 
 
 class NewsArticles(models.Model):

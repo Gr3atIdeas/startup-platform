@@ -31,7 +31,6 @@ class MultipleFileField(forms.FileField):
         return cleaned_files
 
 
-# Форма регистрации пользователя
 class RegisterForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput, label="Пароль")
     confirm_password = forms.CharField(
@@ -42,6 +41,12 @@ class RegisterForm(forms.ModelForm):
         model = Users
         fields = ["email", "first_name", "last_name", "phone", "role"]
 
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if email and Users.objects.filter(email=email).exists():
+            raise forms.ValidationError("Этот email уже используется.")
+        return email
+
     def clean(self):
         cleaned_data = super().clean()
         password = cleaned_data.get("password")
@@ -51,13 +56,11 @@ class RegisterForm(forms.ModelForm):
         return cleaned_data
 
 
-# Форма входа пользователя
 class LoginForm(forms.Form):
     email = forms.EmailField(label="Email")
     password = forms.CharField(widget=forms.PasswordInput, label="Пароль")
 
 
-# Форма создания стартапа
 class StartupForm(forms.ModelForm):
     logo = forms.ImageField(
         label="Логотип *",
@@ -243,66 +246,6 @@ class StartupForm(forms.ModelForm):
 
         return cleaned_data
 
-    def clean_title(self):
-        title = self.cleaned_data.get("title")
-        if not self.instance or not self.instance.pk:
-            if Startups.objects.filter(title__iexact=title).exists():
-                raise forms.ValidationError(
-                    "Стартап с таким названием уже существует. Пожалуйста, выберите другое название."
-                )
-        else:
-            if (
-                Startups.objects.filter(title__iexact=title)
-                .exclude(pk=self.instance.pk)
-                .exists()
-            ):
-                raise forms.ValidationError(
-                    "Другой стартап с таким названием уже существует. Пожалуйста, выберите другое название."
-                )
-        return title
-
-    def clean(self):
-        cleaned_data = super().clean()
-        # Валидация для investment_type, если потребуется, может быть добавлена здесь.
-        # Например, убедиться, что значение выбрано.
-        # Но 'required=True' в определении поля уже это делает.
-
-        # Убедимся, что creatives и proofs — это плоский список файлов
-        if "creatives" in cleaned_data:
-            # Если это список списков, распакуем его
-            creatives = cleaned_data["creatives"]
-            if (
-                creatives
-                and isinstance(creatives, list)
-                and all(isinstance(item, list) for item in creatives)
-            ):
-                cleaned_data["creatives"] = [
-                    file for sublist in creatives for file in sublist
-                ]
-            # Если это не список, обернём в список
-            elif creatives and not isinstance(creatives, list):
-                cleaned_data["creatives"] = [creatives]
-            # Если пусто, оставим пустой список
-            else:
-                cleaned_data["creatives"] = creatives if creatives else []
-
-        if "proofs" in cleaned_data:
-            proofs = cleaned_data["proofs"]
-            if (
-                proofs
-                and isinstance(proofs, list)
-                and all(isinstance(item, list) for item in proofs)
-            ):
-                cleaned_data["proofs"] = [
-                    file for sublist in proofs for file in sublist
-                ]
-            elif proofs and not isinstance(proofs, list):
-                cleaned_data["proofs"] = [proofs]
-            else:
-                cleaned_data["proofs"] = proofs if proofs else []
-
-        return cleaned_data
-
 
 class CommentForm(forms.ModelForm):
     class Meta:
@@ -351,11 +294,19 @@ class ProfileEditForm(forms.ModelForm):
         label="Telegram",
         widget=forms.TextInput(attrs={"placeholder": "@username"}),
     )
+    email = forms.EmailField(
+        required=False,
+        label="Email",
+        widget=forms.EmailInput(attrs={"placeholder": "your@email.com"}),
+    )
 
     class Meta:
         model = Users
-        fields = ["first_name", "last_name", "website_url", "bio"]
+        fields = ["email", "first_name", "last_name", "website_url", "bio"]
         widgets = {
+            "email": forms.EmailInput(
+                attrs={"class": "form-control", "placeholder": "Введите email"}
+            ),
             "first_name": forms.TextInput(
                 attrs={"class": "form-control", "placeholder": "Введите имя"}
             ),
@@ -374,11 +325,18 @@ class ProfileEditForm(forms.ModelForm):
             ),
         }
         labels = {
+            "email": "Email",
             "first_name": "Имя",
             "last_name": "Фамилия",
             "website_url": "Портфолио или сайт",
             "bio": "О себе",
         }
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if email and Users.objects.filter(email=email).exclude(user_id=self.instance.user_id).exists():
+            raise forms.ValidationError("Этот email уже используется.")
+        return email
 
     def clean_telegram(self):
         telegram = self.cleaned_data.get("telegram")

@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from django.views.generic import RedirectView
 
 from accounts.views import delete_avatar
@@ -81,6 +81,7 @@ urlpatterns = [
     path("delete-message/<int:message_id>/", views.delete_message, name="delete_message"),
     path("remove-participant/<int:chat_id>/", views.remove_participant, name="remove_participant"),
     path('cosmochat/<int:chat_id>/messages/', views.get_chat_messages, name='get_chat_messages_dynamic'),
+    path('accounts/', include('allauth.urls')),
 ]
 
 # Обработчик ошибок 404
