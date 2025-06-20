@@ -339,13 +339,12 @@
     text-align: center;
     position: relative;
     width: 90px;
-    height: 100px;
+    height: 120px;
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
+    justify-content: flex-start;
     align-items: center;
     transition: transform 0.3s ease;
-    padding-bottom: 20px;
 }
 
 .galaxy-item.selected {
@@ -354,13 +353,14 @@
 
 .galaxy-item .category-image-container {
     position: absolute;
-    top: 0;
+    top: 10px;
     width: 65px;
     height: 65px;
-    transition: all 0.3s ease;
+    transition: all 0.3s ease-in-out;
     border-radius: 50%;
-    background: radial-gradient(circle, #1a1a2e 50%, #0a0a1e 100%);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background-image: url('https://www.transparenttextures.com/patterns/stardust.png');
+    background-color: #0a0a1e;
+    border: 1px solid rgba(255, 255, 255, 0.2);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -368,34 +368,34 @@
 }
 
 .galaxy-item.selected .category-image-container {
-     transform: translateY(-10px);
-     border-radius: 25px;
-     border: 3px solid #FFEF2B;
-     background: transparent;
+     width: 85px;
+     border-radius: 42.5px;
+     border: 2px solid rgba(255, 255, 255, 0.4);
 }
 
 .galaxy-item img {
-    width: 90%;
-    height: 90%;
+    width: 80%;
+    height: 80%;
     object-fit: contain;
 }
 
 .galaxy-item .galaxy-name-wrapper {
-    background: transparent;
+    background: #050505;
     border-radius: 20px;
-    padding: 5px 15px;
+    padding: 4px 12px;
     position: relative;
     z-index: 1;
+    margin-top: 85px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    visibility: hidden;
 }
 
 .galaxy-item.selected .galaxy-name-wrapper {
-    background: #FFEF2B;
-    padding: 5px 12px;
-}
-
-.galaxy-item.selected .galaxy-name {
-     color: white;
-     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
 }
 
 .galaxy-item .galaxy-name {
