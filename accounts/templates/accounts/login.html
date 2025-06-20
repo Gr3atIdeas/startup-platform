@@ -187,34 +187,34 @@
             <p>Нет аккаунта? <a href="{% url 'register' %}">Зарегистрироваться</a></p>
             <div class="telegram-login">
                 <script async src="https://telegram.org/js/telegram-widget.js?22" 
-                        data-telegram-login="MyStartupBot" 
-                        data-size="large" 
-                        data-auth-url="https://greatideas.ru/accounts/telegram/login/" 
+                        data-telegram-login="testmarketstartup_bot" 
+                        data-size="medium" 
+                        data-auth-url="https://greatideas.ru/login/" 
                         data-request-access="write"></script>
             </div>
             <!-- Отладочный вывод -->
             <div class="debug-info">
-                Auth URL: https://greatideas.ru/accounts/telegram/login/
+                Auth URL: https://greatideas.ru/login/
             </div>
         </div>
     </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    const D=document;
-    const c=window;
-    let d=c.innerWidth;
-    let e=c.innerHeight;
-    const g=D.getElementById('starfield-canvas');
+    const D = document;
+    const c = window;
+    let d = c.innerWidth;
+    let e = c.innerHeight;
+    const g = D.getElementById('starfield-canvas');
     if (!g) {
         console.error("Starfield canvas not found!");
         return;
     }
-    let i=d/2;
-    let j=e/2;
-    g.width=d;
-    g.height=e;
-    const k=g.getContext("2d");
+    let i = d / 2;
+    let j = e / 2;
+    g.width = d;
+    g.height = e;
+    const k = g.getContext("2d");
     if (!k) {
         console.error("Could not get 2D context for starfield canvas!");
         return;
@@ -225,47 +225,47 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentOffsetY = e / 2;
 
     k.globalAlpha = 0.7;
-    const l=Math;
-    const m=l.random;
-    const n=l.sin;
-    const o=l.floor;
-    const p=10;
-    const q=[];
-    let r=0;
-    let s=0.05;
-    const V=750;
-    const W=190;
-    const Q=0.3;
+    const l = Math;
+    const m = l.random;
+    const n = l.sin;
+    const o = l.floor;
+    const p = 10;
+    const q = [];
+    let r = 0;
+    let s = 0.05;
+    const V = 750;
+    const W = 190;
+    const Q = 0.3;
 
     function E(eventName, handler) {
         c.addEventListener(eventName, handler, false);
     }
 
-    E("mousemove", function(a){
-        targetOffsetX=a.clientX;
-        targetOffsetY=a.clientY;
+    E("mousemove", function(a) {
+        targetOffsetX = a.clientX;
+        targetOffsetY = a.clientY;
     });
 
     function u(a) {
-        a.x=(m()*d - d*0.5)*p;
-        a.y=(m()*e - e*0.5)*p;
+        a.x = (m() * d - d * 0.5) * p;
+        a.y = (m() * e - e * 0.5) * p;
         a.a = p;
     }
 
-    for(let v=0; v<V; v++) {
-        let w={};
+    for (let v = 0; v < V; v++) {
+        let w = {};
         u(w);
         q.push(w);
     }
 
     function drawFrame() {
-        k.fillStyle="#000";
-        k.fillRect(0,0,d,e);
+        k.fillStyle = "#000";
+        k.fillRect(0, 0, d, e);
         const interpolationFactor = 0.03;
         currentOffsetX += (targetOffsetX - currentOffsetX) * interpolationFactor;
         currentOffsetY += (targetOffsetY - currentOffsetY) * interpolationFactor;
 
-        for(let h=0; h<V; h++) {
+        for (let h = 0; h < V; h++) {
             const b = q[h];
             const currentX = b.x / b.a;
             const currentY = b.y / b.a;
@@ -282,7 +282,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const screenX = currentX + currentOffsetX;
             const screenY = currentY + currentOffsetY;
-            if(b.a < 0.01 || screenX < -z || screenX > d + z || screenY < -z || screenY > e + z) {
+            if (b.a < 0.01 || screenX < -z || screenX > d + z || screenY < -z || screenY > e + z) {
                 u(b);
             }
         }
@@ -294,7 +294,7 @@ document.addEventListener('DOMContentLoaded', () => {
         e = c.innerHeight;
         g.width = d;
         g.height = e;
-        for(let star of q) {
+        for (let star of q) {
             star.b = 0;
             star.c = 0;
         }
