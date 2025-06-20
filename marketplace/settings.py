@@ -96,6 +96,7 @@ SOCIALACCOUNT_PROVIDERS = {
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "accounts.middleware.WwwRedirectMiddleware", # Редирект на www
     "whitenoise.middleware.WhiteNoiseMiddleware",  # Для статических файлов
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -224,7 +225,7 @@ SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 SECURE_SSL_REDIRECT = True
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
-CSRF_TRUSTED_ORIGINS = ["https://www.greatideas.ru"]
+CSRF_TRUSTED_ORIGINS = ["https://greatideas.ru"]
 
 # Дополнительные настройки безопасности для продакшена
 SECURE_HSTS_SECONDS = 31536000
