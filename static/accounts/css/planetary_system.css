@@ -357,21 +357,31 @@
     top: 0;
     width: 65px;
     height: 65px;
-    transition: transform 0.3s ease;
+    transition: all 0.3s ease;
+    border-radius: 50%;
+    background: radial-gradient(circle, #1a1a2e 50%, #0a0a1e 100%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
 }
 
 .galaxy-item.selected .category-image-container {
      transform: translateY(-10px);
+     border-radius: 25px;
+     border: 3px solid #FFEF2B;
+     background: transparent;
 }
 
 .galaxy-item img {
-    width: 100%;
-    height: 100%;
+    width: 90%;
+    height: 90%;
     object-fit: contain;
 }
 
 .galaxy-item .galaxy-name-wrapper {
-    background: #050505;
+    background: transparent;
     border-radius: 20px;
     padding: 5px 15px;
     position: relative;
@@ -380,10 +390,12 @@
 
 .galaxy-item.selected .galaxy-name-wrapper {
     background: #FFEF2B;
+    padding: 5px 12px;
 }
 
 .galaxy-item.selected .galaxy-name {
-     color: #000;
+     color: white;
+     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .galaxy-item .galaxy-name {
