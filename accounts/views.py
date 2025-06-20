@@ -50,6 +50,10 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.text import slugify
 
+import hashlib
+import hmac
+import time
+
 from .forms import (  # Добавляем MessageForm и UserSearchForm
     CommentForm,
     LoginForm,
@@ -163,6 +167,63 @@ def user_login(request):
         logger.debug("Rendering login form")
         form = LoginForm()
     return render(request, "accounts/login.html", {"form": form})
+
+
+# Telegram login view
+def telegram_login(request):
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'Method not allowed'}, status=405)
+
+    try:
+        user_data = json.loads(request.body)
+        bot_token = settings.SOCIALACCOUNT_PROVIDERS['telegram']['TOKEN']
+        
+        # Проверка подлинности данных
+        data_check_arr = []
+        for key, value in user_data.items():
+            if key != 'hash':
+                data_check_arr.append(f"{key}={value}")
+        data_check_arr.sort()
+        data_check_string = '\n'.join(data_check_arr)
+        secret_key = hashlib.sha256(bot_token.encode()).digest()
+        expected_hash = hmac.new(secret_key, data_check_string.encode(), hashlib.sha256).hexdigest()
+        
+        if user_data.get('hash') != expected_hash:
+            return JsonResponse({'success': False, 'error': 'Invalid hash'})
+        
+        auth_date = int(user_data.get('auth_date', 0))
+        if time.time() - auth_date > 86400:  # Проверка срока действия (24 часа)
+            return JsonResponse({'success': False, 'error': 'Auth data expired'})
+
+        # Поиск или создание пользователя
+        telegram_id = user_data['id']
+        user, created = Users.objects.get_or_create(
+            telegram_id=telegram_id,
+            defaults={
+                'email': f'tg_{telegram_id}@example.com',  # Временный email
+                'first_name': user_data.get('first_name', ''),
+                'last_name': user_data.get('last_name', ''),
+                'username': user_data.get('username', ''),
+            }
+        )
+
+        if not user.is_active:
+            user.is_active = True
+            user.save()
+
+        # Аутентификация и вход
+        user = authenticate(request, user=user)
+        if user:
+            login(request, user)
+            return JsonResponse({'success': True})
+        else:
+            return JsonResponse({'success': False, 'error': 'Authentication failed'})
+
+    except json.JSONDecodeError:
+        return JsonResponse({'success': False, 'error': 'Invalid JSON data'}, status=400)
+    except Exception as e:
+        logger.error(f"Telegram login error: {str(e)}")
+        return JsonResponse({'success': False, 'error': 'Internal server error'}, status=500)
 
 
 # Выход пользователя

@@ -77,7 +77,7 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'allauth.socialaccount.providers.telegram',
+    # Убрано 'allauth.socialaccount.providers.telegram', так как используем кастомный подход
 ]
 
 # Добавьте AUTHENTICATION_BACKENDS
@@ -89,14 +89,10 @@ AUTHENTICATION_BACKENDS = [
 # Добавьте настройки для Telegram
 SITE_ID = 1
 
-# Указываем allauth использовать наш кастомный адаптер
+# Указываем allauth использовать наш кастомный адаптер (опционально, если захотите интегрировать позже)
 SOCIALACCOUNT_ADAPTER = 'accounts.adapter.CustomSocialAccountAdapter'
 
-SOCIALACCOUNT_PROVIDERS = {
-    'telegram': {
-        'TOKEN': '7843250850:AAEL8hapR_WVcG2mMNUhWvK-I0DMYG042Ko',  # Ваш токен
-    }
-}
+# Убраны настройки SOCIALACCOUNT_PROVIDERS для Telegram, так как используем кастомный обработчик
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -228,7 +224,7 @@ SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 SECURE_SSL_REDIRECT = True
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
-CSRF_TRUSTED_ORIGINS = ["https://greatideas.ru"]
+CSRF_TRUSTED_ORIGINS = ["https://greatideas.ru", "https://www.greatideas.ru"]
 
 # Дополнительные настройки безопасности для продакшена
 SECURE_HSTS_SECONDS = 31536000
