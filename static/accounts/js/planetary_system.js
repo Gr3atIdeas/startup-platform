@@ -27,6 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const galaxySelector = document.getElementById('galaxy-selector');
     const galaxySelectorPrev = document.getElementById('galaxy-selector-prev');
     const galaxySelectorNext = document.getElementById('galaxy-selector-next');
+    const sunInfo = document.getElementById('sun-info');
 
     if (logoElement && logoImageUrl) {
         logoElement.style.backgroundImage = `url('${logoImageUrl}')`;
@@ -37,9 +38,10 @@ document.addEventListener('DOMContentLoaded', () => {
     
     let isDragging = false;
     let startX, startY;
-    let rotationX = 45; 
+    let rotationX = 65;
     let rotationY = 0;
     let scale = 1;
+    let activePlanet = null;
 
     let currentGalaxy = galaxyNames[0];
 
@@ -79,28 +81,15 @@ document.addEventListener('DOMContentLoaded', () => {
             planetEl.addEventListener('click', (e) => {
                 e.stopPropagation();
                 
-                if(infoCard.style.display === 'block' && startupName.textContent === startup.name) {
-                    infoCard.style.display = 'none';
-                    planetEl.classList.remove('active');
-                    resumeAnimation();
+                if (activePlanet === planetEl) {
+                    hideInfoCard();
                     return;
                 }
 
-                planetImage.style.backgroundImage = `url('${startup.planet_image_url}')`;
-                startupName.textContent = startup.name;
-                startupRating.textContent = `Рейтинг ${startup.rating_avg.toFixed(1)}/5 (${startup.rating_count})`;
-                startupProgress.textContent = `${startup.investment_progress.toFixed(0)}%`;
-                startupFunding.textContent = `Цель: ${startup.investment_goal} ₽`;
-                startupInvestors.textContent = `Инвесторов: ${startup.investors_count}`;
-                startupDescription.textContent = startup.short_description;
-                if(moreDetails) {
-                    moreDetails.onclick = () => window.location.href = startup.url;
+                if (sunInfo.style.display === 'flex') {
+                    sunInfo.style.display = 'none';
                 }
-
-                document.querySelectorAll('.planet').forEach(p => p.classList.remove('active'));
-                planetEl.classList.add('active');
-                infoCard.style.display = 'block';
-                pauseAnimation();
+                showInfoCard(startup, planetEl);
             });
         });
     }
@@ -179,30 +168,77 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function pauseAnimation() {
         if (!isPaused) {
+            solarSystem.classList.add('paused');
             isPaused = true;
-            pausedTime = Date.now();
         }
     }
 
     function resumeAnimation() {
         if (isPaused) {
-            const pauseDuration = Date.now() - pausedTime;
-            planets.forEach(p => {
-                p.startTime += pauseDuration;
-            });
+            solarSystem.classList.remove('paused');
             isPaused = false;
+            requestAnimationFrame(animate);
         }
     }
 
-    closeCard.addEventListener('click', () => {
-        infoCard.style.display = 'none';
-        document.querySelectorAll('.planet').forEach(p => p.classList.remove('active'));
-        resumeAnimation();
-    });
+    function showInfoCard(planetData, planetEl) {
+        planetImage.style.backgroundImage = `url('${planetData.planet_image_url}')`;
+        startupName.textContent = planetData.name;
+        startupRating.textContent = `Рейтинг ${planetData.rating_avg.toFixed(1)}/5 (${planetData.rating_count})`;
+        startupProgress.textContent = `${planetData.investment_progress.toFixed(0)}%`;
+        startupFunding.textContent = `Цель: ${planetData.investment_goal} ₽`;
+        startupInvestors.textContent = `Инвесторов: ${planetData.investors_count}`;
+        startupDescription.textContent = planetData.short_description;
+        moreDetails.onclick = () => window.location.href = planetData.url;
 
-    if (moreDetails) {
-        moreDetails.addEventListener('click', () => {});
+        const planetRect = planetEl.getBoundingClientRect();
+        const containerRect = solarSystem.getBoundingClientRect();
+
+        let top = planetRect.top - containerRect.top + (planetRect.height / 2);
+        let left = planetRect.left - containerRect.left + planetRect.width + 20;
+
+        infoCard.style.top = `${top}px`;
+        infoCard.style.left = `${left}px`;
+        infoCard.style.transform = 'translateY(-50%)';
+
+        infoCard.style.display = 'block';
+
+        if (activePlanet) {
+            activePlanet.classList.remove('active');
+        }
+        activePlanet = planetEl;
+        planetEl.classList.add('active');
+
+        pauseAnimation();
     }
+
+    function hideInfoCard() {
+        infoCard.style.display = 'none';
+        if (activePlanet) {
+            activePlanet.classList.remove('active');
+            activePlanet = null;
+        }
+        if (sunInfo.style.display !== 'flex') {
+            resumeAnimation();
+        }
+    }
+
+    closeCard.addEventListener('click', hideInfoCard);
+    moreDetails.addEventListener('click', hideInfoCard);
+
+    logoElement.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (sunInfo.style.display === 'flex') {
+            sunInfo.style.display = 'none';
+            if (!activePlanet) {
+                 resumeAnimation();
+            }
+        } else {
+            hideInfoCard();
+            sunInfo.style.display = 'flex';
+            pauseAnimation();
+        }
+    });
 
     function updatePositions() {
         if (!isPaused) {
@@ -243,8 +279,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isDragging) {
             const deltaX = e.clientX - startX;
             const deltaY = e.clientY - startY;
-            rotationY += deltaX * 0.2;
-            rotationX -= deltaY * 0.2;
+            rotationY += deltaX * 0.5;
+            rotationX -= deltaY * 0.5;
             rotationX = Math.max(-90, Math.min(90, rotationX));
 
             galaxy.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;

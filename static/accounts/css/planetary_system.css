@@ -71,21 +71,47 @@
 #logo {
     width: 100px;
     height: 100px;
-    background-size: cover;
+    background-color: #ffef2b;
     border-radius: 50%;
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%) rotateX(-45deg);
+    transform: translate(-50%, -50%);
     z-index: 10;
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 0 30px #ffef2b, 0 0 60px #ffef2b;
+}
+
+#logo svg {
+    width: 80%;
+    height: 80%;
+    transform: rotateX(65deg);
+}
+
+#sun-info {
+    position: absolute;
+    background: white;
+    border-radius: 20px;
+    padding: 20px;
+    color: black;
     font-size: 16px;
-    font-weight: bold;
-    color: #333;
-    text-align: center;
+    font-family: Unbounded, sans-serif;
+    font-weight: 400;
     line-height: 1.2;
+    word-wrap: break-word;
+    text-align: center;
+    z-index: 11;
+    display: none;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#sun-info .btn {
+    background: #ffef2b;
+    color: black;
 }
 
 .orbit {
@@ -134,20 +160,16 @@
     transform: scale(1.2);
 }
 
-/* Info card is outside the container now */
 #info-card {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(255, 255, 255, 0.95);
+    position: absolute;
+    background: white;
     padding: 20px;
-    border-radius: 15px;
+    border-radius: 20px;
     box-shadow: 0 0 15px rgba(0,0,0,0.5);
-    max-width: 350px;
+    max-width: 250px;
     width: 90%;
     color: #333;
-    z-index: 1001; /* Above the planetary system */
+    z-index: 20;
     display: none;
     text-align: center;
 }
