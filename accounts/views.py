@@ -191,8 +191,8 @@ def startups_list(request):
     # Аннотируем базовые поля + средний рейтинг сразу
     startups_qs = startups_qs.annotate(
         total_voters=Count("uservotes", distinct=True),
-        total_investors=Count("investments", distinct=True),
-        current_funding_sum=Coalesce(Sum("investments__amount"), 0),
+        total_investors=Count("investmenttransactions", distinct=True),
+        current_funding_sum=Coalesce(Sum("investmenttransactions__amount"), 0),
         rating=ExpressionWrapper(
             Coalesce(
                 Avg(
@@ -2264,8 +2264,8 @@ def investor_main(request):
     # Добавляем суффикс _agg к аннотированным полям, чтобы избежать конфликтов
     startups_qs = startups_qs.annotate(
         total_voters_agg=Count("uservotes", distinct=True),
-        total_investors_agg=Count("investments", distinct=True),
-        current_funding_sum_agg=Coalesce(Sum("investments__amount"), 0),
+        total_investors_agg=Count("investmenttransactions", distinct=True),
+        current_funding_sum_agg=Coalesce(Sum("investmenttransactions__amount"), 0),
         rating_agg=ExpressionWrapper(
             Coalesce(
                 Avg(
