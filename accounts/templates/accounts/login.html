@@ -42,7 +42,7 @@
     .auth-container {
         position: relative;
         z-index: 1; /* Убеждаемся, что контент над фоном */
-        background: rgba(40, 40, 40, 0.6); /* Темный полупрозрачный фон */
+         background: rgba(40, 40, 40, 0.6); /* Темный полупрозрачный фон */
         backdrop-filter: blur(5px); /* Эффект размытия под контейнером */
         padding: 30px; /* Увеличим внутренние отступы */
         border-radius: 10px;
@@ -52,91 +52,91 @@
         margin: 0; /* Убираем внешние отступы */
     }
     .auth-box {
-        background: transparent; /* Делаем внутренний бокс прозрачным */
-        box-shadow: none; /* Убираем тень */
-        padding: 0; /* Убираем внутренние отступы */
-        text-align: center; /* Центрируем текст внутри */
+         background: transparent; /* Делаем внутренний бокс прозрачным */
+         box-shadow: none; /* Убираем тень */
+         padding: 0; /* Убираем внутренние отступы */
+         text-align: center; /* Центрируем текст внутри */
     }
 
     /* Дополнительные стили для формы, чтобы она выглядела хорошо на темном фоне */
-    .auth-box h1 {
+     .auth-box h1 {
         color: #fff; /* Белый текст для заголовка */
         text-shadow: 1px 1px 3px rgba(0,0,0,0.5); /* Тень для читаемости */
         margin-bottom: 25px; /* Добавим отступ снизу */
-    }
-    .auth-box .form-group {
-        margin-bottom: 15px; /* Отступ между полями */
-        text-align: left; /* Выравнивание текста по левому краю для полей */
-    }
-    .auth-box form label {
+     }
+     .auth-box .form-group {
+         margin-bottom: 15px; /* Отступ между полями */
+         text-align: left; /* Выравнивание текста по левому краю для полей */
+     }
+     .auth-box form label {
         color: #eee; /* Светлый цвет для меток */
         font-weight: bold;
         display: block; /* Метка над полем */
         margin-bottom: 5px;
-    }
-    /* Стилизуем стандартные виджеты Django */
-    .auth-box input[type="email"],
-    .auth-box input[type="password"] {
-        background-color: rgba(255, 255, 255, 0.8); /* Полупрозрачный фон для полей */
-        border: 1px solid rgba(255, 255, 255, 0.5);
-        color: #333;
-        padding: 10px;
-        border-radius: 5px;
-        width: 100%;
-        box-sizing: border-box;
-    }
-    /* Убираем стили Django для ошибок по умолчанию, если они мешают */
-    .auth-box .errors {
-        color: #ffdddd;
-        font-size: 0.9em;
-        list-style: none;
-        padding: 5px 0 0 0;
-        margin: 0;
-    }
-    .auth-box button {
-        background-color: blue !important; /* Тест: Ярко-синяя кнопка */
-        border: 1px solid #FFFFFF; /* Белая рамка для контраста */
-        transition: background-color 0.3s, color 0.3s;
-        color: #FFFFFF !important; /* Белый текст, принудительно */
-        font-weight: bold;
-        padding: 12px 20px;
-        border-radius: 5px;
-        cursor: pointer;
-        width: 100%;
-        margin-top: 10px;
-    }
-    .auth-box button:hover {
-        background-color: rgba(255, 239, 43, 0.9); /* Яркий желтый при наведении */
-        color: #333;
-    }
-    .auth-box p, .auth-box p a {
-        color: #eee; /* Светлый текст для ссылки регистрации */
-        text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
-        margin-top: 20px; /* Отступ сверху для ссылки */
-        font-size: 0.9em;
-    }
-    .auth-box p a:hover {
-        color: #fff;
-        text-decoration: underline;
-    }
-    /* Стили для сообщений */
-    .messages {
-        padding: 0;
-        margin-bottom: 15px;
-    }
-    .messages li {
-        color: #fff;
-        background-color: rgba(0,0,0,0.5);
-        padding: 10px;
-        border-radius: 5px;
-        margin-bottom: 10px;
-        list-style: none;
-        text-align: left;
-    }
-    .messages li.success { background-color: rgba(40, 167, 69, 0.7); }
-    .messages li.error { background-color: rgba(220, 53, 69, 0.7); }
-    .messages li.warning { background-color: rgba(255, 193, 7, 0.7); }
-    .messages li.info { background-color: rgba(23, 162, 184, 0.7); }
+     }
+     /* Стилизуем стандартные виджеты Django */
+     .auth-box input[type="email"],
+     .auth-box input[type="password"] {
+         background-color: rgba(255, 255, 255, 0.8); /* Полупрозрачный фон для полей */
+         border: 1px solid rgba(255, 255, 255, 0.5);
+         color: #333;
+         padding: 10px;
+         border-radius: 5px;
+         width: 100%;
+         box-sizing: border-box;
+     }
+     /* Убираем стили Django для ошибок по умолчанию, если они мешают */
+     .auth-box .errors {
+         color: #ffdddd;
+         font-size: 0.9em;
+         list-style: none;
+         padding: 5px 0 0 0;
+         margin: 0;
+     }
+      .auth-box button {
+         background-color: blue !important; /* Тест: Ярко-синяя кнопка */
+         border: 1px solid #FFFFFF; /* Белая рамка для контраста */
+         transition: background-color 0.3s, color 0.3s;
+         color: #FFFFFF !important; /* Белый текст, принудительно */
+         font-weight: bold;
+         padding: 12px 20px;
+         border-radius: 5px;
+         cursor: pointer;
+         width: 100%;
+         margin-top: 10px;
+      }
+      .auth-box button:hover {
+         background-color: rgba(255, 239, 43, 0.9); /* Яркий желтый при наведении */
+         color: #333;
+      }
+     .auth-box p, .auth-box p a {
+         color: #eee; /* Светлый текст для ссылки регистрации */
+         text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
+         margin-top: 20px; /* Отступ сверху для ссылки */
+         font-size: 0.9em;
+     }
+     .auth-box p a:hover {
+         color: #fff;
+         text-decoration: underline;
+     }
+     /* Стили для сообщений */
+     .messages {
+         padding: 0;
+         margin-bottom: 15px;
+     }
+     .messages li {
+         color: #fff;
+         background-color: rgba(0,0,0,0.5);
+         padding: 10px;
+         border-radius: 5px;
+         margin-bottom: 10px;
+         list-style: none;
+         text-align: left;
+     }
+     .messages li.success { background-color: rgba(40, 167, 69, 0.7); }
+     .messages li.error { background-color: rgba(220, 53, 69, 0.7); }
+     .messages li.warning { background-color: rgba(255, 193, 7, 0.7); }
+     .messages li.info { background-color: rgba(23, 162, 184, 0.7); }
 
     /* Скрытие основной части футера на странице входа */
     .site-footer .footer-main-content {
@@ -144,8 +144,8 @@
     }
     /* Можно добавить стили для copyright bar, если нужно */
     .footer-copyright-bar {
-        background-color: rgba(0, 0, 0, 0.8); /* Сделаем фон чуть прозрачнее */
-        border-top: 1px solid rgba(255, 255, 255, 0.1); /* Тонкая линия сверху */
+         background-color: rgba(0, 0, 0, 0.8); /* Сделаем фон чуть прозрачнее */
+         border-top: 1px solid rgba(255, 255, 255, 0.1); /* Тонкая линия сверху */
     }
 </style>
 {% endblock %}
@@ -161,12 +161,6 @@
     <div class="auth-container">
         <div class="auth-box">
             <h1>Вход</h1>
-            <script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-login="testmarketstartup_bot" data-size="medium" data-onauth="onTelegramAuth(user)" data-request-access="write"></script>
-            <script type="text/javascript">
-              function onTelegramAuth(user) {
-                alert('Logged in as ' + user.first_name + ' ' + user.last_name + ' (' + user.id + (user.username ? ', @' + user.username : '') + ')');
-              }
-            </script>
             <form method="post">
                 {% csrf_token %}
                 {# Явный рендеринг полей #}
