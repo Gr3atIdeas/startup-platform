@@ -1,5 +1,7 @@
 from django.urls import path, include, re_path
 from django.views.generic import RedirectView
+from allauth.socialaccount.providers.telegram.views import TelegramOAuth2Adapter
+from allauth.socialaccount.providers.oauth2.views import OAuth2CallbackView
 
 from accounts.views import delete_avatar
 from . import views
@@ -80,10 +82,9 @@ urlpatterns = [
     path("delete-message/<int:message_id>/", views.delete_message, name="delete_message"),
     path("remove-participant/<int:chat_id>/", views.remove_participant, name="remove_participant"),
     path('cosmochat/<int:chat_id>/messages/', views.get_chat_messages, name='get_chat_messages_dynamic'),
-    path('accounts/', include('allauth.urls')),
-    # Перенаправление с /login/ на /accounts/telegram/login/ для Telegram
-    re_path(r'^login/$', RedirectView.as_view(url='/accounts/telegram/login/', permanent=False)),
+    # Кастомный маршрут для Telegram-аутентификации
+    path('login/', TelegramOAuth2Adapter.as_view(), name='telegram_login'),
+    path('login/callback/', OAuth2CallbackView.as_view(), name='telegram_callback'),
 ]
-
 # Обработчик ошибок 404
 handler404 = 'accounts.views.custom_404'
