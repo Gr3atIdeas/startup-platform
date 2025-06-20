@@ -34,10 +34,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let isPaused = false;
     let pausedTime = 0;
+    
     let isDragging = false;
     let startX, startY;
-    let offsetX = 0;
-    let offsetY = 0;
+    let rotationX = 45; 
+    let rotationY = 0;
     let scale = 1;
 
     let currentGalaxy = galaxyNames[0];
@@ -152,7 +153,6 @@ document.addEventListener('DOMContentLoaded', () => {
         updateGalaxySelectorScroll();
     }
     
-    let currentScrollOffset = 0;
     function updateGalaxySelectorScroll(animated = true) {
         const selected = galaxyList.querySelector('.galaxy-item.selected');
         if (!selected) return;
@@ -161,9 +161,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const selectedWidth = selected.offsetWidth;
         const scrollLeft = selectedLeft - (listWidth / 2) + (selectedWidth / 2);
         
-        currentScrollOffset = -scrollLeft;
         galaxyList.style.transition = animated ? 'transform 0.5s ease' : 'none';
-        galaxyList.style.transform = `translateX(${currentScrollOffset}px)`;
+        galaxyList.style.transform = `translateX(${-scrollLeft}px)`;
     }
 
     galaxySelectorPrev.addEventListener('click', () => {
@@ -202,9 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     if (moreDetails) {
-        moreDetails.addEventListener('click', () => {
-            // The URL is now set when a planet is clicked
-        });
+        moreDetails.addEventListener('click', () => {});
     }
 
     function updatePositions() {
@@ -221,19 +218,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 const x = Math.cos(angleRad) * radius;
                 const y = Math.sin(angleRad) * radius;
                 
-                p.orientation.style.left = `${50 + 50 * (x / radius)}%`;
-                p.orientation.style.top = `${50 + 50 * (y / radius)}%`;
-                p.element.style.transform = `rotateX(${-45}deg)`;
+                p.orientation.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+                p.element.style.transform = `rotateY(${-rotationY}deg) rotateX(${-rotationX}deg)`;
             });
         }
         requestAnimationFrame(updatePositions);
     }
     
     solarSystem.addEventListener('mousedown', (e) => {
+        if (e.target.closest('#galaxy-selector-container') || e.target.closest('#info-card')) return;
         e.preventDefault();
         isDragging = true;
-        startX = e.clientX - offsetX;
-        startY = e.clientY - offsetY;
+        startX = e.clientX;
+        startY = e.clientY;
         solarSystem.classList.add('dragging');
     });
 
@@ -244,9 +241,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.addEventListener('mousemove', (e) => {
         if (isDragging) {
-            offsetX = e.clientX - startX;
-            offsetY = e.clientY - startY;
-            scene.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(${scale}) rotateX(45deg)`;
+            const deltaX = e.clientX - startX;
+            const deltaY = e.clientY - startY;
+            rotationY += deltaX * 0.2;
+            rotationX -= deltaY * 0.2;
+            rotationX = Math.max(-90, Math.min(90, rotationX));
+
+            galaxy.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
+
+            startX = e.clientX;
+            startY = e.clientY;
         }
     });
 
@@ -254,10 +258,11 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         const delta = e.deltaY > 0 ? -0.1 : 0.1;
         scale = Math.max(0.5, Math.min(3, scale + delta));
-        scene.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(${scale}) rotateX(45deg)`;
+        scene.style.transform = `translate(-50%, -50%) scale(${scale})`;
     });
     
-    scene.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(${scale}) rotateX(45deg)`;
+    scene.style.transform = `translate(-50%, -50%) scale(${scale})`;
+    galaxy.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
 
     initGalaxySelector();
     populatePlanets(currentGalaxy);
