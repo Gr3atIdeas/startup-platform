@@ -1,10 +1,7 @@
 {% extends 'accounts/base.html' %}
 {% load static %}
-{% load i18n %}
-{% load accounts_extras %}
-{% load file_tags %}
 
-{% block title %}{% trans "Главная страница | Инвестор" %}{% endblock %}
+{% block title %}Главная страница | Инвестор{% endblock %}
 
 {% block head_extra %}
     <link rel="stylesheet" type="text/css" href="{% static 'accounts/css/investor_main.css' %}">
@@ -23,9 +20,7 @@
         <div id="solar-system">
             <div id="scene">
                 <div id="galaxy">
-                    <div id="logo" data-bg-url="{% static 'accounts/images/planetary_system/solar.png' %}">
-                        <span class="logo-text">GI...<br>Great Ideas</span>
-                    </div>
+                    <div id="logo" data-bg-url="{% static 'accounts/images/planetary_system/solar.png' %}"></div>
                     <div class="orbit" style="--orbit-size: 200px; --orbit-time: 80s;"></div>
                     <div class="orbit" style="--orbit-size: 300px; --orbit-time: 100s;"></div>
                     <div class="orbit" style="--orbit-size: 400px; --orbit-time: 120s;"></div>
@@ -41,8 +36,8 @@
             <button id="galaxy-selector-prev" class="galaxy-selector-arrow">
                 <img src="{% static 'accounts/images/planetary_system/chevron_left.svg' %}" alt="Назад">
             </button>
-        <div id="galaxy-selector">
-            <div id="galaxy-list"></div>
+            <div id="galaxy-selector">
+                <div id="galaxy-list"></div>
             </div>
             <button id="galaxy-selector-next" class="galaxy-selector-arrow">
                 <img src="{% static 'accounts/images/planetary_system/chevron_right.svg' %}" alt="Вперед">
@@ -52,23 +47,17 @@
     
     <div id="info-card">
         <button id="close-card">×</button>
-        <div id="planet-info-content">
-            <div class="planet-image" id="planet-image"></div>
-            <h2 id="startup-name"></h2>
-            <div class="rating" id="startup-rating"></div>
-            <div class="progress-bar">
-                <button>Выкуп+инвестирование</button>
-                <div class="progress" id="startup-progress"></div>
-            </div>
-            <div class="funding" id="startup-funding"></div>
-            <div class="investors" id="startup-investors"></div>
-            <div class="description" id="startup-description"></div>
-            <button class="more-details" id="more-details">Подробнее</button>
+        <div class="planet-image" id="planet-image"></div>
+        <h2 id="startup-name"></h2>
+        <div class="rating" id="startup-rating"></div>
+        <div class="progress-bar">
+            <button>Выкуп+инвестирование</button>
+            <div class="progress" id="startup-progress"></div>
         </div>
-        <div id="sun-info-content">
-            <p class="sun-adventure-text">Начни свое приключение по Great Ideas...</p>
-            <a href="{% url 'create_startup' %}" class="btn btn--blue sun-start-button">Начать</a>
-        </div>
+        <div class="funding" id="startup-funding"></div>
+        <div class="investors" id="startup-investors"></div>
+        <div class="description" id="startup-description"></div>
+        <button class="more-details" id="more-details">Подробнее</button>
     </div>
 
     <div class="featured4">
@@ -177,7 +166,7 @@
                         <div class="frame-parent10">
                             <img class="frame-child9" alt="BioCrop Nexus" src="{% static 'accounts/images/main_page/biocrop_nexus.webp' %}">
                             <div class="content">
-                                <div class="voltforge-dynamics">BioCrop Nexus</div>
+                                <div class.="voltforge-dynamics">BioCrop Nexus</div>
                                 <div class="info">
                                     <img class="avatar01-icon" alt="Avatar" src="https://placehold.co/24x24/9757D7/FFF">
                                     <div class="label2">
@@ -251,131 +240,439 @@
             <h2 class="chat-header__title">Чат</h2>
             <h2 class="chat-header__subtitle">СТАРТАПОВ</h2>
             </div>
-        <div class="chat-content">
-            <div class="messages-list-wrapper">
-                <div class="message-group">
-                    <div class="message message--received">
-                        <img src="https://placehold.co/40x40/3498DB/FFF" alt="Avatar" class="message__avatar">
-                        <div class="message__content">
-                            <p class="message__text">🚀 Команда, мы получили первый транш инвестиций! Пора ускоряться. Жду всех на созвоне в 14:00.</p>
-                            <span class="message__timestamp">12:30</span>
-                        </div>
-                        </div>
-                    <div class="message message--sent">
-                        <div class="message__content">
-                            <p class="message__text">Отличные новости! Буду на связи. 🔥</p>
-                            <span class="message__timestamp">12:32</span>
-                        </div>
-                        <img src="https://placehold.co/40x40/2ECC71/FFF" alt="Avatar" class="message__avatar">
-                        </div>
-                        </div>
-                <div class="message-group">
-                    <div class="message message--received">
-                        <img src="https://placehold.co/40x40/E74C3C/FFF" alt="Avatar" class="message__avatar">
-                        <div class="message__content">
-                            <p class="message__text">📈 Подготовила отчет по метрикам за прошлый квартал. Выглядит многообещающе.</p>
-                            <span class="message__timestamp">12:35</span>
-                        </div>
-            </div>
+        <div class="journey-start-container">
+            <div class="journey-start-banner" data-bg-url="{% static 'accounts/images/investor_main/cosmobg.jpg' %}">
+                <div class="journey-start-banner-text">Вы только начинаете свое путешествие, поэтому здесь пока пусто</div>
+                <div class="journey-start-banner-image-container">
+                    <img class="journey-start-banner-image" src="{% static 'accounts/images/investor_main/cosmoboy.png' %}" alt="Cosmo Boy" />
                 </div>
             </div>
-            <div class="chat-input-wrapper">
-                <input type="text" placeholder="Написать сообщение..." class="chat-input__field">
-                <button class="btn btn--icon"><img src="{% static 'accounts/images/main_page/send.svg' %}" alt="Send"></button>
+            <div class="journey-start-interests">
+                <div class="journey-start-title">Начните свое путешествие вместе с Great Ideas</div>
+                <div class="journey-start-subtitle">Какие направления вас интересуют?</div>
+                <div class="journey-start-categories">
+                    <div class="journey-start-categories-row">
+                        <div class="journey-start-category">
+                            <img src="{% static 'accounts/images/investor_main/4block_mini.png' %}" />
+                            <div class="journey-start-category-name">Медицина</div>
+                        </div>
+                        <div class="journey-start-category active">
+                            <img src="{% static 'accounts/images/investor_main/4block_mini.png' %}" />
+                            <div class="journey-start-category-name large">Технологии</div>
+                        </div>
+                        <div class="journey-start-category">
+                            <img src="{% static 'accounts/images/investor_main/4block_mini.png' %}" />
+                            <div class="journey-start-category-name">Медицина</div>
+                        </div>
+                        <div class="journey-start-category">
+                            <img src="{% static 'accounts/images/investor_main/4block_mini.png' %}" />
+                            <div class="journey-start-category-name">Медицина</div>
+                        </div>
+                        <div class="journey-start-category">
+                            <img src="{% static 'accounts/images/investor_main/4block_mini.png' %}" />
+                            <div class="journey-start-category-name">Медицина</div>
+                        </div>
+                        <div class="journey-start-category">
+                            <img src="{% static 'accounts/images/investor_main/4block_mini.png' %}" />
+                            <div class="journey-start-category-name">Медицина</div>
+                        </div>
             </div>
-        </div>
-    </div>
-    <div class="news-section">
-        <div class="news-header">
-            <h2 class="news-title">Новости и тренды</h2>
-            <a href="#" class="news-all-link">Все новости <img src="{% static 'accounts/images/main_page/rightarrow.svg' %}" alt="Arrow"></a>
-        </div>
-        <div class="news-main-card">
-            <img class="news-main-image" src="{% static 'accounts/images/main_page/news_topblock_placeholder.webp' %}" alt="Main news image">
-            <div class="news-main-content">
-                <h3 class="news-main-title">ИИ в финтехе: Как нейросети меняют мир инвестиций</h3>
-                <p class="news-main-text">Искусственный интеллект больше не научная фантастика. Он активно трансформирует финансовую отрасль, предлагая новые инструменты для анализа, прогнозирования и управления инвестициями.</p>
-                <div class="news-card-tags">
-                    <span class="tag tag--blue">#ИИ</span>
-                    <span class="tag tag--purple">#финтех</span>
-                    <span class="tag tag--green">#инвестиции</span>
-                </div>
-            </div>
-        </div>
-        <div class="news-grid">
-            <div class="news-card">
-                <img class="news-card-image" src="{% static 'accounts/images/main_page/news_placeholder.webp' %}" alt="News image">
-                <h4 class="news-card-title">Будущее биотеха: Стартапы, которые изменят медицину</h4>
-                <div class="news-card-tags">
-                    <span class="tag tag--green">#биотех</span>
-                    </div>
-                    </div>
-            <div class="news-card">
-                <img class="news-card-image" src="{% static 'accounts/images/main_page/news_placeholder.webp' %}" alt="News image">
-                <h4 class="news-card-title">Зеленая энергетика: Куда инвестировать в 2025 году?</h4>
-                <div class="news-card-tags">
-                    <span class="tag tag--green">#экология</span>
-                </div>
-                    </div>
-            <div class="news-card">
-                <img class="news-card-image" src="{% static 'accounts/images/main_page/news_placeholder.webp' %}" alt="News image">
-                <h4 class="news-card-title">Web3 и метавселенные: Новая эра цифровых активов</h4>
-                <div class="news-card-tags">
-                    <span class="tag tag--blue">#web3</span>
+                    <a href="#" class="btn btn--yellow-gradient journey-start-button">Подобрать стартап</a>
                 </div>
             </div>
         </div>
     </div>
-    <div class="reviews-section">
-        <h2 class="reviews-title">Что говорят о нас</h2>
-        <div class="reviews-carousel">
-            <button class="swipe-arrow swipe-arrow--left">
-                <img src="{% static 'accounts/images/main_page/left_swipe.svg' %}" alt="Swipe left">
-            </button>
-            <div class="review-card">
-                <img class="review-quote-icon" src="{% static 'accounts/images/main_page/quotation_mark.svg' %}" alt="Quote">
-                <p class="review-text">«Благодаря Great Ideas мы нашли инвестора за 2 месяца. Платформа дала нам доступ к широкой аудитории и удобные инструменты для презентации проекта».</p>
-                <div class="review-author">
-                    <img class="review-author-avatar" src="{% static 'accounts/images/main_page/temp_avatar.webp' %}" alt="Author avatar">
-                    <div class="review-author-info">
-                        <span class="review-author-name">Елена Петрова</span>
-                        <span class="review-author-role">CEO, TechInnovate</span>
+    <div class="featured7">
+        <div class="frame-parent19">
+            <div class="group-container">
+                <div class="great-ideas-parent">
+                    <div class="great-ideas">Great Ideas</div>
+                    <div class="div56">это платформа, которая превращает ваш смартфон в портал для глобальных инвестиций. Больше не нужно привязываться к офису или времени</div>
+                </div>
+            </div>
+            <div class="frame-parent21">
+                <div class="frame-parent22 card-gamification">
+                    <div class="parent19">
+                        <div class="div57">Геймификация бизнеса</div>
+                        <div class="div58">Удобное приложение для инвестирования и открытия стартапа. Предлагай идеи для бизнеса и инвестируй в будущее </div>
+                    </div>
+                    <div class="app-store-buttons">
+                        <a href="#" class="app-store-btn"><img src="{% static 'accounts/images/main_page/7blockapple.webp' %}" alt="App Store"></a>
+                        <a href="#" class="app-store-btn"><img src="{% static 'accounts/images/main_page/7blockgoogle.webp' %}" alt="Google Play"></a>
+                    </div>
+                </div>
+                <div class="frame-parent22 card-industry">
+                    <div class="parent20">
+                        <div class="div57">Стартапы, меняющие индустрию</div>
+                        <div class="div60">Все больше стартапов разрабатывают технологии. Инвестирование в эти компании — это шанс поддержать инновации и извлечь выгоду от растущего рынка</div>
                     </div>
                 </div>
             </div>
-            <div class="review-card">
-                <img class="review-quote-icon" src="{% static 'accounts/images/main_page/quotation_mark.svg' %}" alt="Quote">
-                <p class="review-text">«Как инвестор, я ценю качество и проверенность проектов. На Great Ideas я нашел несколько перспективных стартапов и диверсифицировал свой портфель».</p>
-                <div class="review-author">
-                    <img class="review-author-avatar" src="{% static 'accounts/images/main_page/temp_avatar.webp' %}" alt="Author avatar">
-                    <div class="review-author-info">
-                        <span class="review-author-name">Алексей Сидоров</span>
-                        <span class="review-author-role">Частный инвестор</span>
-                    </div>
-                </div>
-            </div>
-            <button class="swipe-arrow swipe-arrow--right">
-                <img src="{% static 'accounts/images/main_page/right_swipe.svg' %}" alt="Swipe right">
-            </button>
         </div>
     </div>
-    <div class="cta-section">
-        <div class="cta-content">
-            <h2 class="cta-title">Готовы присоединиться?</h2>
-            <p class="cta-text">Создайте профиль и начните свой путь в мире инноваций и инвестиций уже сегодня</p>
-            <div class="cta-buttons">
-                <a href="{% url 'register' %}" class="btn btn--yellow-gradient">Зарегистрироваться</a>
-                <a href="{% url 'login' %}" class="btn btn--secondary">Войти</a>
+    <div class="featured9">
+        <div class="news-container-wrapper">
+            <div class="news-top-row">
+                <div class="news-title-group">
+                    <div class="news-title-main">Новости</div>
+                    <div class="news-title-sub">нашей галактики</div>
+                </div>
+                <div class="news-top-description">Свежие новости на платформе Great Ideas</div>
+                <div class="news-top-card">
+                    <img class="news-top-card-img" src="{% static 'accounts/images/main_page/news_topblock_placeholder.webp' %}" alt="Главная новость">
+                    <div class="news-top-card-body">
+                        <p>Лучшие ракеты или турбо режим на лайте</p>
+                        <a href="#" class="btn btn--blue">
+                            <span>Подробнее</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="news-grid-container">
+                <div class="news-card-wrapper">
+                    <div class="news-card">
+                        <img class="news-card-img" src="{% static 'accounts/images/main_page/news_placeholder.webp' %}" alt="Новость">
+                        <div class="news-card-content">
+                            <div class="news-card-author-section">
+                                <img class="news-card-avatar" src="{% static 'accounts/images/main_page/temp_avatar.webp' %}" alt="Аватар">
+                                <div class="news-card-author-details">
+                                    <div class="news-card-author-name">Ромашка</div>
+                                    <div class="news-card-date">2 дня назад</div>
+                                </div>
+                            </div>
+                            <div class="news-card-text-section">
+                                <div class="news-card-title">Лучшие ракеты или турбо режим на лайте</div>
+                                <div class="news-card-summary">Наш стартап разрабатывает инновационную платформу для...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="news-card-wrapper">
+                    <div class="news-card">
+                        <img class="news-card-img" src="{% static 'accounts/images/main_page/news_placeholder.webp' %}" alt="Новость">
+                        <div class="news-card-content">
+                            <div class="news-card-author-section">
+                                <img class="news-card-avatar" src="{% static 'accounts/images/main_page/temp_avatar.webp' %}" alt="Аватар">
+                                <div class="news-card-author-details">
+                                    <div class="news-card-author-name">Василек</div>
+                                    <div class="news-card-date">3 дня назад</div>
+                                </div>
+                            </div>
+                            <div class="news-card-text-section">
+                                <div class="news-card-title">Новые горизонты инвестиций в AI</div>
+                                <div class="news-card-summary">Искусственный интеллект продолжает привлекать внимание...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="news-card-wrapper">
+                    <div class="news-card">
+                        <img class="news-card-img" src="{% static 'accounts/images/main_page/news_placeholder.webp' %}" alt="Новость">
+                        <div class="news-card-content">
+                            <div class="news-card-author-section">
+                                <img class="news-card-avatar" src="{% static 'accounts/images/main_page/temp_avatar.webp' %}" alt="Аватар">
+                                <div class="news-card-author-details">
+                                    <div class="news-card-author-name">Космос Инвест</div>
+                                    <div class="news-card-date">5 дней назад</div>
+                                </div>
+                            </div>
+                            <div class="news-card-text-section">
+                                <div class="news-card-title">Тренды венчурного рынка 2024</div>
+                                <div class="news-card-summary">Аналитический обзор ключевых тенденций этого года...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="news-card-wrapper">
+                    <div class="news-card">
+                        <img class="news-card-img" src="{% static 'accounts/images/main_page/news_placeholder.webp' %}" alt="Новость">
+                        <div class="news-card-content">
+                            <div class="news-card-author-section">
+                                <img class="news-card-avatar" src="{% static 'accounts/images/main_page/temp_avatar.webp' %}" alt="Аватар">
+                                <div class="news-card-author-details">
+                                    <div class="news-card-author-name">Анна</div>
+                                    <div class="news-card-date">6 дней назад</div>
+                                </div>
+                            </div>
+                            <div class="news-card-text-section">
+                                <div class="news-card-title">Зеленые технологии: будущее планеты</div>
+                                <div class="news-card-summary">Инвестиции в экологически чистые проекты набирают обороты...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="news-card-wrapper">
+                    <div class="news-card">
+                        <img class="news-card-img" src="{% static 'accounts/images/main_page/news_placeholder.webp' %}" alt="Новость">
+                        <div class="news-card-content">
+                            <div class="news-card-author-section">
+                                <img class="news-card-avatar" src="{% static 'accounts/images/main_page/temp_avatar.webp' %}" alt="Аватар">
+                                <div class="news-card-author-details">
+                                    <div class="news-card-author-name">Илон Масков</div>
+                                    <div class="news-card-date">1 неделя назад</div>
+                                </div>
+                            </div>
+                            <div class="news-card-text-section">
+                                <div class="news-card-title">Как запустить ракету с телефона</div>
+                                <div class="news-card-summary">Новое приложение позволяет управлять запуском ракет...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="news-show-more-wrapper">
+                    <div class="news-show-more-button-container">
+                        <a href="#" class="btn btn--secondary">
+                            <span>Показать еще</span>
+                            <img class="icon" src="{% static 'accounts/images/main_page/button_eye.svg' %}" alt="Показать еще">
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
-        <img class="cta-image" src="{% static 'accounts/images/main_page/cta_main_image.webp' %}" alt="Join us">
+    </div>
+    <div class="faq-page-wrapper">
+    <div class="faq-main-container">
+        <div class="faq-header-block">
+            <div class="faq-title-section">
+                <h1 class="faq-main-title-text">FAQ</h1>
+                <p class="faq-subtitle-text">Часто <br>задаваемые вопросы</p>
+            </div>
+            <div class="faq-ask-question-section">
+                <p class="faq-ask-question-prompt">Не нашли ответа?</p>
+                <a href="{% url 'support' %}" class="faq-ask-question-button">Задать вопрос</a>
+            </div>
+        </div>
+
+        <div class="faq-content-block">
+            <div class="faq-left-panel">
+                <div class="faq-question-category active" data-question-id="what-is-great-ideas">
+                    Что такое «Great Ideas»?
                 </div>
-    <div class="faq-section-main-page">
-        <h2 class="faq-title-main">Часто задаваемые вопросы</h2>
-        <div class="faq-container-main" id="faq-container">
+                <div class="faq-accordion-category">
+                    <div class="faq-accordion-header">
+                        <span>Для стартаперов и владельцев франшиз</span>
+                        <img src="{% static 'accounts/images/faq/chevron_down.svg' %}" alt="toggle" class="faq-chevron-icon">
+                    </div>
+                    <div class="faq-accordion-content">
+                        <div class="faq-accordion-category nested">
+                            <div class="faq-accordion-header">
+                                <span>Создание и ведение профиля стартапа</span>
+                                <img src="{% static 'accounts/images/faq/chevron_down.svg' %}" alt="toggle" class="faq-chevron-icon">
+                            </div>
+                            <div class="faq-accordion-content">
+                                <div class="faq-question-item" data-question-id="how-to-register">Как зарегистрироваться на платформе «Great Ideas»?</div>
+                                <div class="faq-question-item" data-question-id="how-to-setup-profile">Как правильно оформить профиль стартапа?</div>
+                                <div class="faq-question-item" data-question-id="can-edit-info">Можно ли редактировать информацию после публикации?</div>
+                                <div class="faq-question-item" data-question-id="franchise-types">Какие виды франшиз можно размещать?</div>
+                                <div class="faq-question-item" data-question-id="franchise-limits">Есть ли ограничения на размещение франшиз?</div>
+                                <div class="faq-question-item" data-question-id="franchise-requirements">Какие требования для размещения франшизы?</div>
+                                <div class="faq-question-item" data-question-id="franchise-verification">Проверяет ли платформа франшизы перед публикацией?</div>
+                                <div class="faq-question-item" data-question-id="franchise-data-privacy">Как защищена конфиденциальность данных франшизы?</div>
+                            </div>
+                        </div>
+                        <div class="faq-accordion-category nested">
+                            <div class="faq-accordion-header">
+                                <span>Привлечение инвестиций</span>
+                                <img src="{% static 'accounts/images/faq/chevron_down.svg' %}" alt="toggle" class="faq-chevron-icon">
+                            </div>
+                            <div class="faq-accordion-content">
+                                <div class="faq-question-item" data-question-id="how-to-get-noticed">Как сделать мой стартап заметным для инвесторов?</div>
+                                <div class="faq-question-item" data-question-id="minimum-goal">Что такое минимальная цель и что будет, если я её не достигну?</div>
+                                <div class="faq-question-item" data-question-id="attract-more-investors">Как я могу привлечь больше инвесторов?</div>
+                            </div>
+                        </div>
+                        <div class="faq-accordion-category nested">
+                            <div class="faq-accordion-header">                               
+                                <span>Продажа стартапа или франшизы</span>
+                                <img src="{% static 'accounts/images/faq/chevron_down.svg' %}" alt="toggle" class="faq-chevron-icon">
+                            </div>
+                            <div class="faq-accordion-content">
+                                <div class="faq-question-item" data-question-id="how-to-sell-startup">Как выставить стартап на продажу?</div>
+                                <div class="faq-question-item" data-question-id="sell-part-of-company">Можно ли продать только часть компании?</div>
+                            </div>
+                        </div>
+                         <div class="faq-accordion-category nested">
+                            <div class="faq-accordion-header">
+                                <span>Категории стартапов</span>
+                                <img src="{% static 'accounts/images/faq/chevron_down.svg' %}" alt="toggle" class="faq-chevron-icon">
+                            </div>
+                            <div class="faq-accordion-content">
+                                <div class="faq-question-item" data-question-id="startup-categories-allowed">Какие категории стартапов можно размещать?</div>
+                                <div class="faq-question-item" data-question-id="startup-categories-forbidden">Какие категории стартапов нельзя размещать?</div>
+                            </div>
+                        </div>
+                        <div class="faq-accordion-category nested">
+                            <div class="faq-accordion-header">
+                                <span>Правовые и финансовые вопросы</span>
+                                <img src="{% static 'accounts/images/faq/chevron_down.svg' %}" alt="toggle" class="faq-chevron-icon">
+                            </div>
+                            <div class="faq-accordion-content">
+                                <div class="faq-question-item" data-question-id="required-documents">Какие документы нужно предоставить?</div>
+                                <div class="faq-question-item" data-question-id="platform-commission">Какая комиссия взимается с успешного проекта?</div>
+                                <div class="faq-question-item" data-question-id="data-confidentiality-legal">Как защищена конфиденциальность данных?</div>
+                            </div>
+                        </div>
+                        <div class="faq-accordion-category nested">
+                            <div class="faq-accordion-header">
+                                <span>Услуги специалистов и подрядчиков</span>
+                                <img src="{% static 'accounts/images/faq/chevron_down.svg' %}" alt="toggle" class="faq-chevron-icon">
+                            </div>
+                            <div class="faq-accordion-content">
+                                <div class="faq-question-item" data-question-id="specialists-on-platform">Каких специалистов можно найти на платформе?</div>
+                                <div class="faq-question-item" data-question-id="specialist-quality-check">Как проверяется качество специалистов?</div>
+                                <div class="faq-question-item" data-question-id="protecting-ip">Как защитить интеллектуальную собственность?</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="faq-accordion-category">
+                     <div class="faq-accordion-header">
+                        <span>Для инвесторов</span>
+                        <img src="{% static 'accounts/images/faq/chevron_down.svg' %}" alt="toggle" class="faq-chevron-icon">
+                    </div>
+                    <div class="faq-accordion-content">
+                        <div class="faq-accordion-category nested">
+                            <div class="faq-accordion-header">
+                                <span>Регистрация и настройка профиля</span>
+                                <img src="{% static 'accounts/images/faq/chevron_down.svg' %}" alt="toggle" class="faq-chevron-icon">
+                            </div>
+                            <div class="faq-accordion-content">
+                                <div class="faq-question-item" data-question-id="who-can-be-investor">Кто может стать инвестором на платформе?</div>
+                                <div class="faq-question-item" data-question-id="accredited-investor-status">Как подтвердить статус аккредитованного инвестора?</div>
+                            </div>
+                        </div>
+                        <div class="faq-accordion-category nested">
+                            <div class="faq-accordion-header">
+                                <span>Поиск и анализ стартапов, франшиз и подрядчиков</span>
+                                <img src="{% static 'accounts/images/faq/chevron_down.svg' %}" alt="toggle" class="faq-chevron-icon">
+                            </div>
+                            <div class="faq-accordion-content">
+                                <div class="faq-question-item" data-question-id="find-suitable-startups">Как найти подходящие стартапы?</div>
+                                <div class="faq-question-item" data-question-id="request-additional-data">Можно ли запросить дополнительные данные у стартапа?</div>
+                                <div class="faq-question-item" data-question-id="investment-risks">Какие риски связаны с инвестициями?</div>
+                            </div>
+                        </div>
+                        <div class="faq-accordion-category nested">
+                            <div class="faq-accordion-header">
+                                <span>Инвестирование и сделки</span>
+                                <img src="{% static 'accounts/images/faq/chevron_down.svg' %}" alt="toggle" class="faq-chevron-icon">
+                            </div>
+                            <div class="faq-accordion-content">
+                                <div class="faq-question-item" data-question-id="how-to-invest">Как я могу инвестировать в стартап или франшизу?</div>
+                                <div class="faq-question-item" data-question-id="investment-confirmation">Как я получу подтверждение своей инвестиции?</div>
+                                <div class="faq-question-item" data-question-id="can-sell-investment">Могу ли я продать свою инвестицию?</div>
+                            </div>
+                        </div>
+                        <div class="faq-accordion-category nested">
+                            <div class="faq-accordion-header">
+                                <span>Комиссии и расходы</span>
+                                <img src="{% static 'accounts/images/faq/chevron_down.svg' %}" alt="toggle" class="faq-chevron-icon">
+                            </div>
+                            <div class="faq-accordion-content">
+                                <div class="faq-question-item" data-question-id="commission-for-investing">Есть ли комиссия за инвестирование?</div>
+                                <div class="faq-question-item" data-question-id="cancel-investment">Могу ли я отменить свою инвестицию?</div>
+                            </div>
+                        </div>
+                         <div class="faq-accordion-category nested">
+                            <div class="faq-accordion-header">
+                                <span>Правовые аспекты и поддержка</span>
+                                <img src="{% static 'accounts/images/faq/chevron_down.svg' %}" alt="toggle" class="faq-chevron-icon">
+                            </div>
+                            <div class="faq-accordion-content">
+                                <div class="faq-question-item" data-question-id="investment-confirmation-docs">Какие документы подтверждают мою инвестицию?</div>
+                                <div class="faq-question-item" data-question-id="contact-startup-founders">Как я могу связаться с основателями стартапа?</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="faq-right-panel">
+                <h2 class="faq-answer-title" id="faqAnswerTitle">Что такое «Great Ideas»?</h2>
+                <div class="faq-answer-body" id="faqAnswerBody">
+                    <p>«Great Ideas» — это маркетплейс стартапов, где стартаперы размещают свои проекты, а инвесторы исследуют их в поисках лучших идей для инвестиций или покупки.</p>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+</div>
+
+<script type="application/json" id="planetary-system-data">
+{
+  "startups": [
+    {
+      "name": "MediTech",
+      "short_description": "Наш стартап разрабатывает инновационную платформу для телемедицины.",
+      "rating_avg": 4.2,
+      "rating_count": 534,
+      "investment_progress": 65,
+      "investment_goal": "345678",
+      "investors_count": 648,
+      "planet_image_url": "{% static 'accounts/images/planetary_system/planets_round/1.png' %}",
+      "direction": "Медицина",
+      "url": "#"
+    },
+    {
+      "name": "SmartHomeAI",
+      "short_description": "Решения для умного дома с использованием ИИ для автоматизации.",
+      "rating_avg": 4.5,
+      "rating_count": 789,
+      "investment_progress": 72,
+      "investment_goal": "1234567",
+      "investors_count": 892,
+      "planet_image_url": "{% static 'accounts/images/planetary_system/planets_round/2.png' %}",
+      "direction": "Технологии",
+      "url": "#"
+    },
+    {
+      "name": "EcoCycle",
+      "short_description": "Экологичные технологии для переработки отходов.",
+      "rating_avg": 4.0,
+      "rating_count": 321,
+      "investment_progress": 58,
+      "investment_goal": "789123",
+      "investors_count": 456,
+      "planet_image_url": "{% static 'accounts/images/planetary_system/planets_round/3.png' %}",
+      "direction": "Экология",
+      "url": "#"
+    },
+    {
+      "name": "EduVR",
+      "short_description": "Образовательная платформа с использованием виртуальной реальности.",
+      "rating_avg": 4.8,
+      "rating_count": 987,
+      "investment_progress": 80,
+      "investment_goal": "2345678",
+      "investors_count": 1234,
+      "planet_image_url": "{% static 'accounts/images/planetary_system/planets_round/4.png' %}",
+      "direction": "Образование",
+      "url": "#"
+    }
+  ],
+  "categories": [
+    "Все",
+    "Технологии",
+    "Финансы",
+    "Здравоохранение",
+    "Медицина",
+    "Автомобили",
+    "Доставка",
+    "Кафе/рестораны",
+    "Фастфуд",
+    "Здоровье",
+    "Красота",
+    "Транспорт",
+    "Спорт",
+    "Психология",
+    "ИИ",
+    "Экология",
+    "Образование"
+  ],
+  "categoryImageUrl": "{% static 'accounts/images/planetary_system/category_img.png' %}",
+  "logoImageUrl": "{% static 'accounts/images/planetary_system/solar.png' %}"
+}
+</script>
 
 <script type="application/json" id="faqData">
 {
@@ -416,10 +713,13 @@
 }
 </script>
 
-{{ planetary_data_json|json_script:"planetary-system-data" }}
+</div>
 
-<script src="{% static 'accounts/js/planetary_system.js' %}" defer></script>
+<script src="{% static 'accounts/js/main_temp.js' %}?v={% now 'U' %}"></script>
+<script src="{% static 'accounts/js/faq.js' %}?v={% now 'U' %}"></script>
+{% endblock %}
+
+{% block scripts %}
     <script src="{% static 'accounts/js/investor_main.js' %}"></script>
-<script src="{% static 'accounts/js/faq.js' %}"></script>
-
+    <script src="{% static 'accounts/js/planetary_system.js' %}?v={% now 'U' %}"></script>
 {% endblock %}

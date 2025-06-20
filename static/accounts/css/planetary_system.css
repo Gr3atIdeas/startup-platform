@@ -42,7 +42,7 @@
 
 #solar-system {
     width: 100%;
-    height: 100vh;
+    height: 100%;
     position: relative;
     perspective: 1000px;
     cursor: grab;
@@ -54,9 +54,9 @@
 
 #scene {
     position: absolute;
-    top: 40%;
+    top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%) translate(0px, 0px) scale(1);
     transform-style: preserve-3d;
 }
 
@@ -76,7 +76,7 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%) rotateX(-65deg);
+    transform: translate(-50%, -50%) rotateX(-45deg);
     z-index: 10;
     display: flex;
     align-items: center;
@@ -86,15 +86,6 @@
     color: #333;
     text-align: center;
     line-height: 1.2;
-    cursor: pointer;
-}
-
-.logo-text {
-    color: black;
-    font-family: Unbounded, sans-serif;
-    font-weight: 600;
-    font-size: 12px;
-    line-height: 1.1;
 }
 
 .orbit {
@@ -143,64 +134,93 @@
     transform: scale(1.2);
 }
 
+/* Info card is outside the container now */
 #info-card {
-    position: absolute;
-    background: white;
-    padding: 15px;
-    border-radius: 20px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
-    max-width: 260px;
-    width: auto;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 255, 255, 0.95);
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.5);
+    max-width: 350px;
+    width: 90%;
     color: #333;
-    z-index: 101;
+    z-index: 1001; /* Above the planetary system */
     display: none;
     text-align: center;
-    transition: opacity 0.3s ease, transform 0.3s ease;
-    transform: scale(0.95);
-    opacity: 0;
-}
-
-#info-card.visible {
-    display: block;
-    transform: scale(1);
-    opacity: 1;
 }
 
 #info-card .planet-image {
-    width: 80px;
-    height: 80px;
+    width: 100px;
+    height: 100px;
     border-radius: 50%;
     margin: 0 auto 10px;
     background-size: cover;
-    border: 2px solid #333;
 }
 
 #info-card h2 {
     margin: 0 0 5px;
-    font-size: 20px;
+    font-size: 24px;
     color: #000;
 }
 
-#sun-info-content {
-    display: none;
-}
-
-.sun-adventure-text {
-    color: black;
+#info-card .rating {
     font-size: 16px;
-    font-family: Unbounded, sans-serif;
-    font-weight: 400;
-    line-height: 1.2;
-    margin: 15px 0;
+    color: #555;
+    margin-bottom: 10px;
 }
 
-.sun-start-button,
-.sun-start-button:hover {
-    color: white !important;
-    text-decoration: none;
+#info-card .progress-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 10px 0;
+}
+
+#info-card .progress-bar button {
+    padding: 5px 10px;
+    border: none;
+    background: #000;
+    color: white;
+    font-size: 14px;
+    border-radius: 5px 0 0 5px;
+}
+
+#info-card .progress-bar .progress {
+    background: #ffd700;
+    padding: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 0 5px 5px 0;
+}
+
+#info-card .funding {
+    font-size: 14px;
+    color: #555;
+    margin: 10px 0;
+}
+
+#info-card .investors {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 15px;
+}
+
+#info-card .description {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 15px;
+}
+
+#info-card .more-details {
     padding: 10px 20px;
-    display: inline-block;
-    margin-top: 10px;
+    background: none;
+    border: none;
+    color: #007bff;
+    font-size: 16px;
+    cursor: pointer;
 }
 
 #close-card {
@@ -265,7 +285,7 @@
     transform: translateX(-50%);
     width: 600px;
     max-width: 90vw;
-    height: 130px;
+    height: 120px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -273,10 +293,8 @@
 }
 
 .galaxy-selector-arrow {
-    background: #FFEF2B !important;
-    background-image: none !important;
-    border: none !important;
-    box-shadow: none !important;
+    background: #FFEF2B;
+    border: none;
     border-radius: 50%;
     width: 40px;
     height: 40px;
@@ -286,17 +304,16 @@
     align-items: center;
     padding: 0;
     flex-shrink: 0;
-    transition: background-color 0.2s ease !important;
+    transition: background-color 0.3s ease;
 }
 
 .galaxy-selector-arrow:hover {
-    background-color: #e6d329 !important;
+    background-color: #e6d329;
 }
 
 .galaxy-selector-arrow img {
     width: 20px;
     height: 20px;
-    filter: brightness(0);
 }
 
 
@@ -322,12 +339,13 @@
     text-align: center;
     position: relative;
     width: 90px;
-    height: 130px;
+    height: 100px;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: flex-end;
     align-items: center;
     transition: transform 0.3s ease;
+    padding-bottom: 20px;
 }
 
 .galaxy-item.selected {
@@ -336,14 +354,13 @@
 
 .galaxy-item .category-image-container {
     position: absolute;
-    top: 10px;
+    top: 0;
     width: 65px;
     height: 65px;
-    transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease;
     border-radius: 50%;
-    background-image: url('https://www.transparenttextures.com/patterns/stardust.png');
-    background-color: #0a0a1e;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: radial-gradient(circle, #1a1a2e 50%, #0a0a1e 100%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -351,34 +368,34 @@
 }
 
 .galaxy-item.selected .category-image-container {
-     width: 85px;
-     border-radius: 42.5px;
-     border: 2px solid rgba(255, 255, 255, 0.4);
+     transform: translateY(-10px);
+     border-radius: 25px;
+     border: 3px solid #FFEF2B;
+     background: transparent;
 }
 
 .galaxy-item img {
-    width: 80%;
-    height: 80%;
+    width: 90%;
+    height: 90%;
     object-fit: contain;
 }
 
 .galaxy-item .galaxy-name-wrapper {
-    background: #050505;
+    background: transparent;
     border-radius: 20px;
-    padding: 4px 12px;
+    padding: 5px 15px;
     position: relative;
     z-index: 1;
-    margin-top: 85px;
-    opacity: 0;
-    transform: translateY(10px);
-    transition: opacity 0.3s ease, transform 0.3s ease;
-    visibility: hidden;
 }
 
 .galaxy-item.selected .galaxy-name-wrapper {
-    opacity: 1;
-    transform: translateY(0);
-    visibility: visible;
+    background: #FFEF2B;
+    padding: 5px 12px;
+}
+
+.galaxy-item.selected .galaxy-name {
+     color: white;
+     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .galaxy-item .galaxy-name {
