@@ -24,6 +24,7 @@ from django.db import (
 )
 from django.db.models import (  # Добавляем Q
     Avg,
+    Case,
     Count,
     Exists,
     ExpressionWrapper,
@@ -35,6 +36,8 @@ from django.db.models import (  # Добавляем Q
     Q,
     Subquery,
     Sum,
+    Value,
+    When,
 )
 from django.db.models.functions import (
     Coalesce,  # Добавляем Coalesce
@@ -187,16 +190,41 @@ def startups_list(request):
 
     # Аннотируем базовые поля + средний рейтинг сразу
     startups_qs = startups_qs.annotate(
-        comment_count=Count("comments"),
-        investors_count=Count("investmenttransactions__investor", distinct=True),
-        average_rating=Avg(
-            models.ExpressionWrapper(
-                models.F("sum_votes") * 1.0 / models.F("total_voters"),
-                output_field=FloatField(),
+        total_voters=Count("uservotes", distinct=True),
+        total_investors=Count("investments", distinct=True),
+        current_funding_sum=Coalesce(Sum("investments__amount"), 0),
+        rating=ExpressionWrapper(
+            Coalesce(
+                Avg(
+                    Case(
+                        When(uservotes__vote_type="up", then=Value(5)),
+                        When(uservotes__vote_type="down", then=Value(1)),
+                        default=Value(0),
+                        output_field=FloatField(),
+                    )
+                ),
+                0.0,
             ),
-            filter=models.Q(total_voters__gt=0),
+            output_field=FloatField(),
         ),
-    ).annotate(average_rating=models.functions.Coalesce("average_rating", 0.0))
+    ).annotate(
+        progress=ExpressionWrapper(
+            Coalesce(
+                Case(
+                    When(
+                        funding_goal__gt=0,
+                        then=F("current_funding_sum") * 100.0 / F("funding_goal"),
+                    ),
+                    default=Value(0),
+                    output_field=FloatField(),
+                ),
+                0.0,
+            ),
+            output_field=FloatField(),
+        )
+    )
+
+    categories = list(Directions.objects.values("id", "name", "image"))
 
     # Фильтрация по категориям
     if selected_categories:
@@ -2234,59 +2262,75 @@ def investor_main(request):
 
     # Используем точную и безопасную логику аннотаций, как в startups_list
     startups_qs = startups_qs.annotate(
-        average_rating=Coalesce(
-            ExpressionWrapper(
-                F("sum_votes") * 1.0 / F("total_voters"),
-                output_field=models.FloatField(),
+        total_voters=Count("uservotes", distinct=True),
+        total_investors=Count("investments", distinct=True),
+        current_funding_sum=Coalesce(Sum("investments__amount"), 0),
+        rating=ExpressionWrapper(
+            Coalesce(
+                Avg(
+                    Case(
+                        When(uservotes__vote_type="up", then=Value(5)),
+                        When(uservotes__vote_type="down", then=Value(1)),
+                        default=Value(0),
+                        output_field=FloatField(),
+                    )
+                ),
+                0.0,
             ),
-            0.0,
-            output_field=models.FloatField(),
+            output_field=FloatField(),
         ),
-        investment_progress=Coalesce(
-            ExpressionWrapper(
-                F("amount_raised") * 100.0 / F("funding_goal"),
-                output_field=models.FloatField(),
+    ).annotate(
+        progress=ExpressionWrapper(
+            Coalesce(
+                Case(
+                    When(
+                        funding_goal__gt=0,
+                        then=F("current_funding_sum") * 100.0 / F("funding_goal"),
+                    ),
+                    default=Value(0),
+                    output_field=FloatField(),
+                ),
+                0.0,
             ),
-            0.0,
-            output_field=models.FloatField(),
-        ),
-        investors_count=Count("investmenttransactions", distinct=True),
-    ).filter(total_voters__gt=0, funding_goal__gt=0)
+            output_field=FloatField(),
+        )
+    )
+
+    categories = list(Directions.objects.values("id", "name", "image"))
 
     startup_data = []
     for s in startups_qs:
+        # Получаем URL для планеты. Если его нет, используем дефолтный.
+        planet_image_url = (
+            f"/static/accounts/images/planetary_system/planets_round/{s.planet_image}"
+            if s.planet_image
+            else "/static/accounts/images/planetary_system/planets_round/1.png"
+        )
+
         startup_data.append(
             {
+                "id": s.startup_id,
                 "name": s.title,
-                "short_description": s.short_description,
-                "rating_avg": float(s.average_rating),
-                "rating_count": s.total_voters,
-                "investment_progress": float(s.investment_progress),
-                "investment_goal": str(s.funding_goal),
-                "investors_count": s.investors_count,
-                "planet_image_url": f"/static/accounts/images/planetary_system/planets_round/{s.planet_image}",
-                "direction": s.direction.direction_name
-                if s.direction
-                else "Без категории",
+                "description": s.short_description,
+                "rating": f"{s.rating:.1f}/5 ({s.total_voters})",
+                "progress": f"{s.progress:.0f}%",
+                "funding": f"{s.current_funding_sum:,.0f} ₽".replace(",", " "),
+                "investors": f"Инвесторов: {s.total_investors}",
+                "image": planet_image_url,
+                "category_id": s.direction_id,
                 "url": reverse("startup_detail", args=[s.startup_id]),
             }
         )
 
-    categories = ["Все"] + list(
-        Directions.objects.values_list("direction_name", flat=True).distinct()
-    )
-
     planetary_data = {
         "startups": startup_data,
         "categories": categories,
-        "categoryImageUrl": "/static/accounts/images/planetary_system/category_img.png",
-        "logoImageUrl": "/static/accounts/images/planetary_system/solar.png",
     }
 
     return render(
         request,
         "accounts/investor_main.html",
-        {"planetary_data_json": json.dumps(planetary_data)},
+        {"planetary_data_json": json.dumps(planetary_data, ensure_ascii=False)},
     )
 
 
