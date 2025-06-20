@@ -8,40 +8,39 @@ logger = logging.getLogger(__name__)
 
 @receiver(social_account_added)
 def handle_telegram_login(request, sociallogin, **kwargs):
+    if sociallogin.account.provider != 'telegram':
+        return
+
     telegram_data = sociallogin.account.extra_data
+    user = sociallogin.user
     
-    # Детальное логирование полученных данных
-    logger.debug(f"Received Telegram data: {telegram_data}")
-    logger.debug(f"Request scheme: {request.scheme}, host: {request.get_host()}")
-    logger.debug(f"Auth URL: {request.scheme}://{request.get_host()}/accounts/telegram/login/")
+    logger.debug(f"Received Telegram data for user {user.email}: {telegram_data}")
 
-    # Сохранение данных в таблицу users
-    users_entry, created = Users.objects.get_or_create(
-        telegram_id=telegram_data['id'],
-        defaults={
-            'telegram_email': f"{telegram_data['id']}@telegram.com",
-            'social_links': {'telegram': telegram_data.get('username', '')},
-            'first_name': telegram_data.get('first_name', ''),
-            'last_name': telegram_data.get('last_name', ''),
-            'profile_picture_url': telegram_data.get('photo_url', ''),
-            'role_id': 1,
-            'is_active': True,
-            'created_at': timezone.now(),
-            'updated_at': timezone.now(),
-            'last_login': timezone.now(),
-        }
-    )
-    if not created:
-        users_entry.telegram_email = f"{telegram_data['id']}@telegram.com"
-        users_entry.social_links = {'telegram': telegram_data.get('username', users_entry.social_links.get('telegram', ''))}
-        users_entry.first_name = telegram_data.get('first_name', users_entry.first_name)
-        users_entry.last_name = telegram_data.get('last_name', users_entry.last_name)
-        users_entry.profile_picture_url = telegram_data.get('photo_url', users_entry.profile_picture_url)
-        users_entry.last_login = timezone.now()
-        users_entry.save()
+    # The user is being created via social account for the first time.
+    # allauth has created a user instance, let's populate it with telegram data.
+    
+    user.telegram_id = str(telegram_data.get('id', ''))
+    user.first_name = telegram_data.get('first_name', '')
+    user.last_name = telegram_data.get('last_name', '')
+    user.profile_picture_url = telegram_data.get('photo_url', '')
+    
+    if telegram_data.get('username'):
+        user.social_links = {'telegram': f"@{telegram_data.get('username')}"}
 
-    # Логирование успешной обработки
-    logger.info(f"Telegram user processed: user_id={users_entry.user_id}, telegram_id={users_entry.telegram_id}")
+    # allauth might not assign an email if it's not provided.
+    # Our user model might require it (it allows null but unique).
+    if not user.email:
+        user.email = f"{user.telegram_id}@telegram.com"
+        user.telegram_email = user.email
+
+    if not user.role_id:
+        user.role_id = 1 # Default role
+
+    user.last_login = timezone.now()
+    
+    user.save() # Save the updated user fields.
+
+    logger.info(f"Telegram user processed and saved: user_id={user.user_id}, telegram_id={user.telegram_id}")
 
     # Связываем sociallogin с пользователем
-    sociallogin.connect(request, users_entry)
+    # sociallogin.connect(request, user) # This line is not needed and incorrect here. Allauth handles it.
