@@ -2261,11 +2261,12 @@ def investor_main(request):
     startups_qs = Startups.objects.filter(status="approved")
 
     # Используем точную и безопасную логику аннотаций, как в startups_list
+    # Добавляем суффикс _agg к аннотированным полям, чтобы избежать конфликтов
     startups_qs = startups_qs.annotate(
-        total_voters=Count("uservotes", distinct=True),
-        total_investors=Count("investments", distinct=True),
-        current_funding_sum=Coalesce(Sum("investments__amount"), 0),
-        rating=ExpressionWrapper(
+        total_voters_agg=Count("uservotes", distinct=True),
+        total_investors_agg=Count("investments", distinct=True),
+        current_funding_sum_agg=Coalesce(Sum("investments__amount"), 0),
+        rating_agg=ExpressionWrapper(
             Coalesce(
                 Avg(
                     Case(
@@ -2280,12 +2281,12 @@ def investor_main(request):
             output_field=FloatField(),
         ),
     ).annotate(
-        progress=ExpressionWrapper(
+        progress_agg=ExpressionWrapper(
             Coalesce(
                 Case(
                     When(
                         funding_goal__gt=0,
-                        then=F("current_funding_sum") * 100.0 / F("funding_goal"),
+                        then=F("current_funding_sum_agg") * 100.0 / F("funding_goal"),
                     ),
                     default=Value(0),
                     output_field=FloatField(),
@@ -2312,10 +2313,10 @@ def investor_main(request):
                 "id": s.startup_id,
                 "name": s.title,
                 "description": s.short_description,
-                "rating": f"{s.rating:.1f}/5 ({s.total_voters})",
-                "progress": f"{s.progress:.0f}%",
-                "funding": f"{s.current_funding_sum:,.0f} ₽".replace(",", " "),
-                "investors": f"Инвесторов: {s.total_investors}",
+                "rating": f"{s.rating_agg:.1f}/5 ({s.total_voters_agg})",
+                "progress": f"{s.progress_agg:.0f}%",
+                "funding": f"{s.current_funding_sum_agg:,.0f} ₽".replace(",", " "),
+                "investors": f"Инвесторов: {s.total_investors_agg}",
                 "image": planet_image_url,
                 "category_id": s.direction_id,
                 "url": reverse("startup_detail", args=[s.startup_id]),
