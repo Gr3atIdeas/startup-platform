@@ -1,13 +1,15 @@
 #planetary-system-container {
     width: 100%;
     max-width: 1303px;
-    height: 798px;
+    height: 708px; /* Set a fixed height for the container */
     position: relative;
     margin: 0 auto;
     background: linear-gradient(180deg, black 0%, #004E9F 100%);
     box-shadow: 0px 10px 23px 5px rgba(0, 0, 0, 0.18);
     overflow: hidden;
     border-radius: 10px;
+    outline: 1px var(--S-G2, rgba(255, 255, 255, 0.36)) solid;
+    outline-offset: -1px;
 }
 
 .space-background {
@@ -39,7 +41,7 @@
 }
 
 #solar-system {
-    width: 100vw;
+    width: 100%;
     height: 100%;
     position: relative;
     perspective: 1000px;
@@ -276,101 +278,129 @@
 
 
 /* Стили для переключателя галактик */
-#galaxy-selector {
+#galaxy-selector-container {
     position: absolute;
     bottom: 20px;
     left: 50%;
     transform: translateX(-50%);
-    width: 600px; /* Ограничиваем ширину */
+    width: 600px;
     max-width: 90vw;
-    height: 100px;
-    z-index: 100;
+    height: 120px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 10px;
+    justify-content: center;
+    z-index: 100;
 }
 
-.galaxy-scroll-button {
+.galaxy-selector-arrow {
     background: #FFEF2B;
-    border-radius: 50%;
     border: none;
-    width: 48px;
-    height: 48px;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
     cursor: pointer;
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 0;
     flex-shrink: 0;
     transition: background-color 0.3s ease;
 }
 
-.galaxy-scroll-button:hover {
+.galaxy-selector-arrow:hover {
     background-color: #e6d329;
 }
 
-.galaxy-scroll-button img {
-    width: 24px;
-    height: 24px;
+.galaxy-selector-arrow img {
+    width: 20px;
+    height: 20px;
 }
 
 
-#galaxy-list-wrapper {
-    overflow-x: auto;
-    white-space: nowrap;
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE and Edge */
+#galaxy-selector {
     width: 100%;
     height: 100%;
-}
-
-#galaxy-list-wrapper::-webkit-scrollbar {
-    display: none; /* Chrome, Safari */
+    overflow: hidden;
+    margin: 0 15px;
 }
 
 #galaxy-list {
-    display: inline-flex;
+    display: flex;
     align-items: center;
     justify-content: flex-start;
-    padding: 0 10px;
     height: 100%;
+    transition: transform 0.5s ease;
+    gap: 20px;
 }
 
 .galaxy-item {
-    flex: 0 0 auto;
-    margin: 0 10px;
-    border-radius: 20px;
-    padding: 10px;
-    color: white;
-    text-align: center;
-    transition: all 0.3s ease;
+    flex-shrink: 0;
     cursor: pointer;
+    text-align: center;
+    position: relative;
+    width: 90px;
+    height: 100px;
     display: flex;
     flex-direction: column;
+    justify-content: flex-end;
     align-items: center;
-    justify-content: center;
-    gap: 8px;
-    background: transparent;
-    width: 80px;
-    height: 100%;
+    transition: transform 0.3s ease;
+    padding-bottom: 20px;
 }
 
 .galaxy-item.selected {
-    background: #050505;
+    transform: scale(1.1);
+}
+
+.galaxy-item .category-image-container {
+    position: absolute;
+    top: 0;
+    width: 65px;
+    height: 65px;
+    transition: transform 0.3s ease;
+}
+
+.galaxy-item.selected .category-image-container {
+     transform: translateY(-10px);
 }
 
 .galaxy-item img {
-    width: 55px;
-    height: 54px;
-    border-radius: 50%;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
 }
 
-.galaxy-item span {
+.galaxy-item .galaxy-name-wrapper {
+    background: #050505;
+    border-radius: 20px;
+    padding: 5px 15px;
+    position: relative;
+    z-index: 1;
+}
+
+.galaxy-item.selected .galaxy-name-wrapper {
+    background: #FFEF2B;
+}
+
+.galaxy-item.selected .galaxy-name {
+     color: #000;
+}
+
+.galaxy-item .galaxy-name {
     color: white;
     font-size: 12px;
-    font-family: 'Unbounded', sans-serif;
+    font-family: Unbounded, sans-serif;
     font-weight: 300;
     letter-spacing: 0.12px;
     word-wrap: break-word;
-    white-space: normal;
+    white-space: nowrap;
+}
+
+.planet-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin: 0 auto 10px;
+    background-size: cover;
+    border: 2px solid #FFEF2B;
 }
