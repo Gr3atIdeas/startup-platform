@@ -1,11 +1,16 @@
 {% extends 'accounts/base.html' %}
 {% load static %}
 {% load socialaccount %}
-{% load telegram_tags %}
 
 {% block title %}Вход{% endblock %}
 
 {% block head_extra %}
+<script>
+    // Проверяем хост и при необходимости делаем редирект на WWW
+    if (window.location.hostname === 'greatideas.ru') {
+        window.location.href = 'https://www.greatideas.ru' + window.location.pathname + window.location.search + window.location.hash;
+    }
+</script>
 {{ block.super }}
 <style>
     /* Убираем старые стили фона */
@@ -211,7 +216,7 @@
                 <div style="flex-grow: 1; height: 1px; background-color: #555;"></div>
             </div>
 
-            <a href="{% get_telegram_login_url %}" class="telegram-login-btn">
+            <a href="{% provider_login_url 'telegram' %}" class="telegram-login-btn">
                 Войти через Telegram
             </a>
 

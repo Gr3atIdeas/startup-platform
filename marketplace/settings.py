@@ -88,6 +88,7 @@ AUTHENTICATION_BACKENDS = [
 
 # Добавьте настройки для Telegram
 SITE_ID = 1
+
 SOCIALACCOUNT_PROVIDERS = {
     'telegram': {
         'TOKEN': '7843250850:AAEL8hapR_WVcG2mMNUhWvK-I0DMYG042Ko',  # Ваш токен
