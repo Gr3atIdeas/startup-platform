@@ -190,10 +190,10 @@ def startups_list(request):
 
     # Аннотируем базовые поля + средний рейтинг сразу
     startups_qs = startups_qs.annotate(
-        total_voters=Count("uservotes", distinct=True),
-        total_investors=Count("investments", distinct=True),
-        current_funding_sum=Coalesce(Sum("investments__amount"), 0),
-        rating=ExpressionWrapper(
+        total_voters_agg=Count("uservotes", distinct=True),
+        total_investors_agg=Count("investmenttransactions", distinct=True),
+        current_funding_sum_agg=Coalesce(Sum("investmenttransactions__amount"), 0),
+        rating_agg=ExpressionWrapper(
             Coalesce(
                 Avg(
                     Case(
@@ -208,12 +208,12 @@ def startups_list(request):
             output_field=FloatField(),
         ),
     ).annotate(
-        progress=ExpressionWrapper(
+        progress_agg=ExpressionWrapper(
             Coalesce(
                 Case(
                     When(
                         funding_goal__gt=0,
-                        then=F("current_funding_sum") * 100.0 / F("funding_goal"),
+                        then=F("current_funding_sum_agg") * 100.0 / F("funding_goal"),
                     ),
                     default=Value(0),
                     output_field=FloatField(),
@@ -245,9 +245,9 @@ def startups_list(request):
         min_rating = float(min_rating_str)
         max_rating = float(max_rating_str)
         if min_rating > 0:
-            startups_qs = startups_qs.filter(average_rating__gte=min_rating)
+            startups_qs = startups_qs.filter(rating_agg__gte=min_rating)
         if max_rating < 5:
-            startups_qs = startups_qs.filter(average_rating__lte=max_rating)
+            startups_qs = startups_qs.filter(rating_agg__lte=max_rating)
     except ValueError:
         min_rating = 0
         max_rating = 5
@@ -278,6 +278,11 @@ def startups_list(request):
                 "page_number": page_obj.number,
                 "num_pages": paginator.num_pages,
                 "count": paginator.count,
+                "total_voters_agg": "total_voters_agg",
+                "rating_agg": "rating_agg",
+                "progress_agg": "progress_agg",
+                "current_funding_sum_agg": "current_funding_sum_agg",
+                "total_investors_agg": "total_investors_agg",
             }
         )
     else:
@@ -2264,8 +2269,8 @@ def investor_main(request):
     # Добавляем суффикс _agg к аннотированным полям, чтобы избежать конфликтов
     startups_qs = startups_qs.annotate(
         total_voters_agg=Count("uservotes", distinct=True),
-        total_investors_agg=Count("investments", distinct=True),
-        current_funding_sum_agg=Coalesce(Sum("investments__amount"), 0),
+        total_investors_agg=Count("investmenttransactions", distinct=True),
+        current_funding_sum_agg=Coalesce(Sum("investmenttransactions__amount"), 0),
         rating_agg=ExpressionWrapper(
             Coalesce(
                 Avg(
