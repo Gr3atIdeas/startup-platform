@@ -133,22 +133,30 @@ def register(request):
 
 # Вход пользователя
 def user_login(request):
+    logger.debug("Entering user_login view")
     if request.method == "POST":
+        logger.debug("Processing POST request in user_login")
         form = LoginForm(request.POST)
         if form.is_valid():
+            logger.debug(f"Form is valid. Email: {form.cleaned_data['email']}")
             user = authenticate(
                 request,
                 email=form.cleaned_data["email"],
                 password=form.cleaned_data["password"],
             )
             if user is not None:
+                logger.info(f"User authenticated: {user.email}")
                 login(request, user)
                 messages.success(request, f"Добро пожаловать, {user.email}!")
                 return redirect("home")
             else:
+                logger.warning("Authentication failed for email")
                 messages.error(request, "Неверный email или пароль.")
+        else:
+            logger.warning(f"Form invalid: {form.errors}")
         return render(request, "accounts/login.html", {"form": form})
     else:
+        logger.debug("Rendering login form")
         form = LoginForm()
     return render(request, "accounts/login.html", {"form": form})
 
