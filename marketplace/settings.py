@@ -96,7 +96,6 @@ SOCIALACCOUNT_PROVIDERS = {
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "accounts.middleware.WwwRedirectMiddleware", # Редирект на www
     "whitenoise.middleware.WhiteNoiseMiddleware",  # Для статических файлов
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
