@@ -1,9 +1,5 @@
-from django.urls import path, include
+from django.urls import path, include, re_path
 from django.views.generic import RedirectView
-from allauth.socialaccount.providers.oauth2.views import OAuth2LoginView, OAuth2CallbackView
-from accounts.providers import CustomTelegramAdapter  # Импортируем кастомный адаптер
-
-from accounts.views import delete_avatar
 from . import views
 
 urlpatterns = [
@@ -37,7 +33,7 @@ urlpatterns = [
     
     # Профиль и управление
     path("profile/", views.profile, name="profile"),
-    path("profile/delete-avatar/", delete_avatar, name="delete_avatar"),
+    path("profile/delete-avatar/", views.delete_avatar, name="delete_avatar"),
     path("profile/<int:user_id>/", views.profile, name="user_profile"),
     path("create-startup/", views.create_startup, name="create_startup"),
     path("create-startup/success/", views.startup_creation_success, name="startup_creation_success"),
@@ -82,9 +78,6 @@ urlpatterns = [
     path("delete-message/<int:message_id>/", views.delete_message, name="delete_message"),
     path("remove-participant/<int:chat_id>/", views.remove_participant, name="remove_participant"),
     path('cosmochat/<int:chat_id>/messages/', views.get_chat_messages, name='get_chat_messages_dynamic'),
-    # Кастомный маршрут для Telegram-аутентификации
-    path('login/', OAuth2LoginView.as_view(adapter_class=CustomTelegramAdapter), name='telegram_login'),
-    path('login/callback/', OAuth2CallbackView.as_view(adapter_class=CustomTelegramAdapter), name='telegram_callback'),
+    # Обработчик ошибок 404
+    path('404/', views.custom_404, name='custom_404'),
 ]
-# Обработчик ошибок 404
-handler404 = 'accounts.views.custom_404'
