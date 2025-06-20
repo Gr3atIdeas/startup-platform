@@ -16,8 +16,10 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.files.storage import default_storage
 from django.core.paginator import Paginator
+from django.core.serializers.json import DjangoJSONEncoder
 from django.db import (
     models,  # Добавляем для models.Q
     transaction,
@@ -44,12 +46,13 @@ from django.db.models.functions import (
     Coalesce,  # Добавляем Coalesce
     TruncMonth,  # Добавляем для группировки по месяцам
 )
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, HttpResponseForbidden, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
 from django.templatetags.static import static
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.utils import timezone
+from django.utils.decorators import method_decorator
 from django.utils.text import slugify
 
 from .forms import (  # Добавляем MessageForm и UserSearchForm
@@ -2260,71 +2263,59 @@ def main_page_moderator(request):
 
 @login_required
 def investor_main(request):
-    startups_qs = Startups.objects.select_related("direction").filter(status="approved")
-
-    # Используем точную и безопасную логику аннотаций, как в startups_list
-    # Добавляем суффикс _agg к аннотированным полям, чтобы избежать конфликтов
-    startups_qs = startups_qs.annotate(
-        total_voters_agg=Count("uservotes", distinct=True),
-        total_investors_agg=Count("investmenttransactions", distinct=True),
-        current_funding_sum_agg=Coalesce(
-            Sum("investmenttransactions__amount"), 0, output_field=DecimalField()
-        ),
-        rating_agg=ExpressionWrapper(
-            Coalesce(Avg("uservotes__rating"), 0.0), output_field=FloatField()
-        ),
-    ).annotate(
-        progress_agg=ExpressionWrapper(
-            Coalesce(
-                Case(
-                    When(
-                        funding_goal__gt=0,
-                        then=F("current_funding_sum_agg") * 100.0 / F("funding_goal"),
-                    ),
-                    default=Value(0),
-                    output_field=FloatField(),
-                ),
-                0.0,
+    """
+    Отображает главную страницу инвестора с планетарной системой стартапов.
+    """
+    startups = (
+        Startups.objects.filter(status="approved")
+        .annotate(
+            total_investment_agg=Coalesce(
+                Sum("investmenttransactions__amount"), 0.0, output_field=DecimalField()
             ),
-            output_field=FloatField(),
+            rating_agg=Avg("uservotes__rating"),
+            total_voters_agg=Count("uservotes", distinct=True),
         )
+        .select_related("direction")
+        .order_by("-created_at")
     )
 
-    categories = list(
-        Directions.objects.annotate(id=F("direction_id"), name=F("direction_name"))
-        .values("id", "name")
-        .order_by("name")
-    )
-
-    startup_data = []
-    for s in startups_qs:
-        # Получаем URL для планеты. Если его нет, используем дефолтный.
-        planet_image_url = (
-            f"/static/accounts/images/planetary_system/planets_round/{s.planet_image}"
-            if s.planet_image
-            else "/static/accounts/images/planetary_system/planets_round/1.png"
-        )
-
-        startup_data.append(
+    startups_list = []
+    for startup in startups:
+        startups_list.append(
             {
-                "id": s.startup_id,
-                "name": s.title,
-                "description": s.short_description,
-                "rating": f"{s.rating_agg:.1f}/5 ({s.total_voters_agg})",
-                "progress": f"{s.progress_agg:.0f}%",
-                "funding": f"{s.current_funding_sum_agg:,.0f} ₽".replace(",", " "),
-                "investors": f"Инвесторов: {s.total_investors_agg}",
-                "image": planet_image_url,
-                "category_id": s.direction_id,
-                "direction_name": s.direction.direction_name
-                if s.direction
-                else "Без категории",
-                "url": reverse("startup_detail", args=[s.startup_id]),
+                "id": startup.id,
+                "name": startup.name,
+                "description": startup.short_description,
+                "direction_name": startup.direction.direction_name
+                if startup.direction
+                else "",
+                "image": startup.planet_image.url
+                if startup.planet_image
+                else static("accounts/images/planetary_system/planets_round/1.png"),
+                "url": reverse("accounts:startup_detail", args=[startup.id]),
+                "rating": f"{startup.rating_agg:.1f}/5.0"
+                if startup.rating_agg is not None
+                else "N/A",
+                "investors": startup.total_voters_agg,
+                "funding": f"{(startup.total_investment_agg or 0):.0f} ₽",
+                "progress": "50%",  # Placeholder
             }
         )
 
+    directions_with_startups = (
+        Directions.objects.filter(startups__status="approved")
+        .annotate(startup_count=Count("startups"))
+        .filter(startup_count__gt=0)
+        .distinct()
+    )
+
+    categories = [
+        {"id": d.id, "name": d.direction_name, "image": d.image.url if d.image else ""}
+        for d in directions_with_startups
+    ]
+
     planetary_data = {
-        "startups": startup_data,
+        "startups": startups_list,
         "categories": categories,
         "logoImageUrl": static("accounts/images/planetary_system/solar.png"),
     }
@@ -2332,7 +2323,7 @@ def investor_main(request):
     return render(
         request,
         "accounts/investor_main.html",
-        {"planetary_data_json": json.dumps(planetary_data, ensure_ascii=False)},
+        {"planetary_data_json": json.dumps(planetary_data, cls=DjangoJSONEncoder)},
     )
 
 

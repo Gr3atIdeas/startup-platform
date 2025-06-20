@@ -43,7 +43,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let rotationY = 0;
     let scale = 1;
 
-    let currentGalaxy = categories.length > 0 ? categories[0].name : "Все";
+    let currentGalaxy =
+        categories && categories.length > 0 ? categories[0].name : "Все";
 
     const showInfoCard = (contentToShow, targetElement) => {
         // Hide all content blocks first
@@ -148,40 +149,42 @@ document.addEventListener('DOMContentLoaded', () => {
     function initGalaxySelector() {
         galaxyList.innerHTML = '';
 
-        categories.forEach(category => {
-            const galaxyItem = document.createElement('div');
-            galaxyItem.className = 'galaxy-item';
-            
-            const imgContainer = document.createElement('div');
-            imgContainer.className = 'category-image-container';
-            const img = document.createElement('img');
-            img.src = category.image
-                ? category.image
-                : '/static/accounts/images/planetary_system/category_img.png';
-            img.alt = category.name;
-            imgContainer.appendChild(img);
+        if (categories && categories.length > 0) {
+            categories.forEach(category => {
+                const galaxyItem = document.createElement('div');
+                galaxyItem.className = 'galaxy-item';
+                
+                const imgContainer = document.createElement('div');
+                imgContainer.className = 'category-image-container';
+                const img = document.createElement('img');
+                img.src = category.image
+                    ? category.image
+                    : '/static/accounts/images/planetary_system/category_img.png';
+                img.alt = category.name;
+                imgContainer.appendChild(img);
 
-            const nameWrapper = document.createElement('div');
-            nameWrapper.className = 'galaxy-name-wrapper';
-            const nameSpan = document.createElement('span');
-            nameSpan.className = 'galaxy-name';
-            nameSpan.textContent = category.name;
-            nameWrapper.appendChild(nameSpan);
+                const nameWrapper = document.createElement('div');
+                nameWrapper.className = 'galaxy-name-wrapper';
+                const nameSpan = document.createElement('span');
+                nameSpan.className = 'galaxy-name';
+                nameSpan.textContent = category.name;
+                nameWrapper.appendChild(nameSpan);
 
-            galaxyItem.appendChild(imgContainer);
-            galaxyItem.appendChild(nameWrapper);
+                galaxyItem.appendChild(imgContainer);
+                galaxyItem.appendChild(nameWrapper);
 
-            if (category.name === currentGalaxy) {
-                galaxyItem.classList.add('selected');
-            }
+                if (category.name === currentGalaxy) {
+                    galaxyItem.classList.add('selected');
+                }
 
-            galaxyItem.addEventListener('click', () => {
-                switchGalaxy(category.name);
+                galaxyItem.addEventListener('click', () => {
+                    switchGalaxy(category.name);
+                });
+
+                galaxyList.appendChild(galaxyItem);
             });
-
-            galaxyList.appendChild(galaxyItem);
-        });
-        updateGalaxySelectorScroll(false);
+            updateGalaxySelectorScroll(false);
+        }
     }
     
     function switchGalaxy(name) {
@@ -208,6 +211,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     galaxySelectorPrev.addEventListener('click', () => {
+        if (!categories || categories.length === 0) return;
         const galaxyNames = categories.map(c => c.name);
         let currentIndex = galaxyNames.indexOf(currentGalaxy);
         currentIndex = (currentIndex - 1 + galaxyNames.length) % galaxyNames.length;
@@ -215,6 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     galaxySelectorNext.addEventListener('click', () => {
+        if (!categories || categories.length === 0) return;
         const galaxyNames = categories.map(c => c.name);
         let currentIndex = galaxyNames.indexOf(currentGalaxy);
         currentIndex = (currentIndex + 1) % galaxyNames.length;
