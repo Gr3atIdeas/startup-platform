@@ -285,7 +285,7 @@
     transform: translateX(-50%);
     width: 600px;
     max-width: 90vw;
-    height: 120px;
+    height: 130px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -293,8 +293,10 @@
 }
 
 .galaxy-selector-arrow {
-    background: #FFEF2B;
-    border: none;
+    background: #FFEF2B !important;
+    background-image: none !important;
+    border: none !important;
+    box-shadow: none !important;
     border-radius: 50%;
     width: 40px;
     height: 40px;
@@ -304,16 +306,17 @@
     align-items: center;
     padding: 0;
     flex-shrink: 0;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.2s ease !important;
 }
 
 .galaxy-selector-arrow:hover {
-    background-color: #e6d329;
+    background-color: #e6d329 !important;
 }
 
 .galaxy-selector-arrow img {
     width: 20px;
     height: 20px;
+    filter: brightness(0);
 }
 
 
@@ -339,7 +342,7 @@
     text-align: center;
     position: relative;
     width: 90px;
-    height: 120px;
+    height: 130px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
