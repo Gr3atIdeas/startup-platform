@@ -1,12 +1,15 @@
 #planetary-system-container {
-    width: 100%;
-    max-width: 1303px;
-    height: 708px; /* Set a fixed height for the container */
     position: relative;
+    width: 100%;
+    height: 900px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
     margin: 0 auto;
     background: linear-gradient(180deg, black 0%, #004E9F 100%);
     box-shadow: 0px 10px 23px 5px rgba(0, 0, 0, 0.18);
-    overflow: hidden;
     border-radius: 10px;
     outline: 1px var(--S-G2, rgba(255, 255, 255, 0.36)) solid;
     outline-offset: -1px;
