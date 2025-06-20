@@ -10,6 +10,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const planets = [];
     const orbits = document.querySelectorAll('.orbit');
     const infoCard = document.getElementById('info-card');
+    const planetInfoContent = document.getElementById('planet-info-content');
+    const sunInfoContent = document.getElementById('sun-info-content');
     const planetImage = document.getElementById('planet-image');
     const startupName = document.getElementById('startup-name');
     const startupRating = document.getElementById('startup-rating');
@@ -37,11 +39,51 @@ document.addEventListener('DOMContentLoaded', () => {
     
     let isDragging = false;
     let startX, startY;
-    let rotationX = 45;
+    let rotationX = 65; 
     let rotationY = 0;
     let scale = 1;
 
     let currentGalaxy = galaxyNames[0];
+
+    const showInfoCard = (contentToShow, targetElement) => {
+        // Hide all content blocks first
+        planetInfoContent.style.display = 'none';
+        sunInfoContent.style.display = 'none';
+        // Show the specific content block
+        contentToShow.style.display = 'block';
+
+        infoCard.classList.add('visible');
+
+        const containerRect = solarSystem.getBoundingClientRect();
+        const targetRect = targetElement.getBoundingClientRect();
+        const cardRect = infoCard.getBoundingClientRect();
+
+        let top = targetRect.top - containerRect.top + (targetRect.height / 2) - (cardRect.height / 2);
+        let left = targetRect.left - containerRect.left + targetRect.width + 20;
+
+        if (left + cardRect.width > containerRect.width) {
+            left = targetRect.left - containerRect.left - cardRect.width - 20;
+        }
+        if (left < 0) {
+            left = targetRect.left - containerRect.left + targetRect.width + 20;
+        }
+        if (top + cardRect.height > containerRect.height) {
+            top = containerRect.height - cardRect.height - 10;
+        }
+        if (top < 0) {
+            top = 10;
+        }
+
+        infoCard.style.left = `${left}px`;
+        infoCard.style.top = `${top}px`;
+        
+        pauseAnimation();
+    };
+
+    const hideInfoCard = () => {
+        infoCard.classList.remove('visible');
+        resumeAnimation();
+    };
 
     function populatePlanets(category) {
         galaxy.querySelectorAll('.planet-orientation').forEach(p => p.remove());
@@ -53,18 +95,18 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const orbit = orbits[index];
             const orbitSize = parseFloat(getComputedStyle(orbit).getPropertyValue('--orbit-size'));
-
+            
             const planetOrientation = document.createElement('div');
             planetOrientation.className = 'planet-orientation';
-
+            
             const planetEl = document.createElement('div');
             planetEl.className = 'planet';
             planetEl.style.setProperty('--planet-size', `${50 + Math.random() * 20}px`);
             planetEl.style.backgroundImage = `url('${startup.planet_image_url}')`;
-
+            
             planetOrientation.appendChild(planetEl);
             orbit.appendChild(planetOrientation);
-            
+
             const planetObj = {
                 element: planetEl,
                 orientation: planetOrientation,
@@ -79,13 +121,6 @@ document.addEventListener('DOMContentLoaded', () => {
             planetEl.addEventListener('click', (e) => {
                 e.stopPropagation();
                 
-                if(infoCard.style.display === 'block' && startupName.textContent === startup.name) {
-                    infoCard.style.display = 'none';
-                    planetEl.classList.remove('active');
-                    resumeAnimation();
-                    return;
-                }
-
                 planetImage.style.backgroundImage = `url('${startup.planet_image_url}')`;
                 startupName.textContent = startup.name;
                 startupRating.textContent = `Рейтинг ${startup.rating_avg.toFixed(1)}/5 (${startup.rating_count})`;
@@ -99,11 +134,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 document.querySelectorAll('.planet').forEach(p => p.classList.remove('active'));
                 planetEl.classList.add('active');
-                infoCard.style.display = 'block';
-                pauseAnimation();
+                
+                showInfoCard(planetInfoContent, planetEl);
             });
         });
     }
+
+    logoElement.addEventListener('click', (e) => {
+        e.stopPropagation();
+        showInfoCard(sunInfoContent, logoElement);
+    });
 
     function initGalaxySelector() {
         galaxyList.innerHTML = '';
@@ -195,9 +235,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     closeCard.addEventListener('click', () => {
-        infoCard.style.display = 'none';
+        hideInfoCard();
         document.querySelectorAll('.planet').forEach(p => p.classList.remove('active'));
-        resumeAnimation();
     });
 
     if (moreDetails) {
@@ -241,16 +280,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.addEventListener('mousemove', (e) => {
         if (isDragging) {
-        const deltaX = e.clientX - startX;
-        const deltaY = e.clientY - startY;
-        rotationY += deltaX * 0.2;
-        rotationX -= deltaY * 0.2;
-        rotationX = Math.max(-90, Math.min(90, rotationX));
+            const deltaX = e.clientX - startX;
+            const deltaY = e.clientY - startY;
+            rotationY += deltaX * 0.2;
+            rotationX -= deltaY * 0.2;
+            rotationX = Math.max(-90, Math.min(90, rotationX));
 
-        galaxy.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
+            galaxy.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
 
-        startX = e.clientX;
-        startY = e.clientY;
+            startX = e.clientX;
+            startY = e.clientY;
         }
     });
 
@@ -262,8 +301,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     
     scene.style.transform = `translate(-50%, -50%) scale(${scale})`;
-                galaxy.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
-                
+    galaxy.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
+
     initGalaxySelector();
     populatePlanets(currentGalaxy);
     requestAnimationFrame(updatePositions);
