@@ -78,8 +78,6 @@ urlpatterns = [
     path("delete-message/<int:message_id>/", views.delete_message, name="delete_message"),
     path("remove-participant/<int:chat_id>/", views.remove_participant, name="remove_participant"),
     path('cosmochat/<int:chat_id>/messages/', views.get_chat_messages, name='get_chat_messages_dynamic'),
-    # Telegram login
-    path('telegram-login/', views.telegram_login, name='telegram_login'),
     # Обработчик ошибок 404
     path('404/', views.custom_404, name='custom_404'),
 ]

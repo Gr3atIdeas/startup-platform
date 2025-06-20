@@ -77,7 +77,7 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    # Убрано 'allauth.socialaccount.providers.telegram', так как используем кастомный подход
+    'allauth.socialaccount.providers.telegram',
 ]
 
 # Добавьте AUTHENTICATION_BACKENDS
@@ -89,10 +89,14 @@ AUTHENTICATION_BACKENDS = [
 # Добавьте настройки для Telegram
 SITE_ID = 1
 
-# Указываем allauth использовать наш кастомный адаптер (опционально, если захотите интегрировать позже)
+# Указываем allauth использовать наш кастомный адаптер
 SOCIALACCOUNT_ADAPTER = 'accounts.adapter.CustomSocialAccountAdapter'
 
-# Убраны настройки SOCIALACCOUNT_PROVIDERS для Telegram, так как используем кастомный обработчик
+SOCIALACCOUNT_PROVIDERS = {
+    'telegram': {
+        'TOKEN': '7843250850:AAEL8hapR_WVcG2mMNUhWvK-I0DMYG042Ko',  # Ваш токен
+    }
+}
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
