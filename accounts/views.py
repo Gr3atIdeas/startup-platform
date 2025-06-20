@@ -2284,7 +2284,7 @@ def investor_main(request):
         startups_list.append(
             {
                 "id": startup.startup_id,
-                "name": startup.name,
+                "name": startup.title,
                 "description": startup.short_description,
                 "direction_name": startup.direction.direction_name
                 if startup.direction
