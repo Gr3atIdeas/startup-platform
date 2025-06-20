@@ -170,8 +170,8 @@
          border-top: 1px solid rgba(255, 255, 255, 0.1); /* Тонкая линия сверху */
     }
 </style>
-{% providers_media_js %}
 {% endblock %}
+
 
 {% block content %}
     {# Добавляем canvas для звездного поля #}
@@ -210,7 +210,10 @@
                 <div style="flex-grow: 1; height: 1px; background-color: #555;"></div>
             </div>
 
-            <a href="{% provider_login_url 'telegram' %}" class="telegram-login-btn">Войти через Telegram</a>
+            <a href="{% provider_login_url 'telegram' %}" class="telegram-login-btn">
+                Войти через Telegram
+            </a>
+
         </div>
     </div>
 
@@ -353,4 +356,5 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(drawFrame, 25); // ~40 FPS
 });
 </script>
+
 {% endblock %}
