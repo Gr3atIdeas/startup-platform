@@ -1,4 +1,4 @@
-from django.urls import path, include, re_path
+from django.urls import path, include
 from django.views.generic import RedirectView
 from allauth.socialaccount.providers.telegram.views import TelegramOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.views import OAuth2CallbackView
