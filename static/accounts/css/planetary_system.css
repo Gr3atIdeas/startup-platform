@@ -1,15 +1,12 @@
 #planetary-system-container {
-    position: relative;
     width: 100%;
-    height: 900px;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
+    max-width: 1303px;
+    height: 708px; /* Set a fixed height for the container */
+    position: relative;
     margin: 0 auto;
     background: linear-gradient(180deg, black 0%, #004E9F 100%);
     box-shadow: 0px 10px 23px 5px rgba(0, 0, 0, 0.18);
+    overflow: hidden;
     border-radius: 10px;
     outline: 1px var(--S-G2, rgba(255, 255, 255, 0.36)) solid;
     outline-offset: -1px;
@@ -74,47 +71,30 @@
 #logo {
     width: 100px;
     height: 100px;
-    background-color: #ffef2b;
+    background-size: cover;
     border-radius: 50%;
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%) rotateX(-65deg);
     z-index: 10;
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
-    box-shadow: 0 0 30px #ffef2b, 0 0 60px #ffef2b;
-}
-
-#logo svg {
-    width: 80%;
-    height: 80%;
-    transform: rotateX(65deg);
-}
-
-#sun-info {
-    position: absolute;
-    background: white;
-    border-radius: 20px;
-    padding: 20px;
-    color: black;
     font-size: 16px;
-    font-family: Unbounded, sans-serif;
-    font-weight: 400;
-    line-height: 1.2;
-    word-wrap: break-word;
+    font-weight: bold;
+    color: #333;
     text-align: center;
-    z-index: 11;
-    display: none;
-    flex-direction: column;
-    gap: 15px;
+    line-height: 1.2;
+    cursor: pointer;
 }
 
-#sun-info .btn {
-    background: #ffef2b;
+.logo-text {
     color: black;
+    font-family: Unbounded, sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1.2;
 }
 
 .orbit {
@@ -166,86 +146,61 @@
 #info-card {
     position: absolute;
     background: white;
-    padding: 20px;
+    padding: 15px;
     border-radius: 20px;
-    box-shadow: 0 0 15px rgba(0,0,0,0.5);
-    max-width: 250px;
-    width: 90%;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+    max-width: 260px;
+    width: auto;
     color: #333;
-    z-index: 20;
+    z-index: 101;
     display: none;
     text-align: center;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    transform: scale(0.95);
+    opacity: 0;
+}
+
+#info-card.visible {
+    display: block;
+    transform: scale(1);
+    opacity: 1;
 }
 
 #info-card .planet-image {
-    width: 100px;
-    height: 100px;
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
     margin: 0 auto 10px;
     background-size: cover;
+    border: 2px solid #333;
 }
 
 #info-card h2 {
     margin: 0 0 5px;
-    font-size: 24px;
+    font-size: 20px;
     color: #000;
 }
 
-#info-card .rating {
+#sun-info-content {
+    display: none;
+}
+
+.sun-adventure-text {
+    color: black;
     font-size: 16px;
-    color: #555;
-    margin-bottom: 10px;
+    font-family: Unbounded, sans-serif;
+    font-weight: 400;
+    line-height: 1.2;
+    margin: 15px 0;
 }
 
-#info-card .progress-bar {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 10px 0;
-}
-
-#info-card .progress-bar button {
-    padding: 5px 10px;
-    border: none;
-    background: #000;
-    color: white;
-    font-size: 14px;
-    border-radius: 5px 0 0 5px;
-}
-
-#info-card .progress-bar .progress {
-    background: #ffd700;
-    padding: 5px;
-    font-size: 14px;
-    font-weight: bold;
-    border-radius: 0 5px 5px 0;
-}
-
-#info-card .funding {
-    font-size: 14px;
-    color: #555;
-    margin: 10px 0;
-}
-
-#info-card .investors {
-    font-size: 14px;
-    color: #555;
-    margin-bottom: 15px;
-}
-
-#info-card .description {
-    font-size: 14px;
-    color: #555;
-    margin-bottom: 15px;
-}
-
-#info-card .more-details {
+.sun-start-button,
+.sun-start-button:hover {
+    color: white !important;
+    text-decoration: none;
     padding: 10px 20px;
-    background: none;
-    border: none;
-    color: #007bff;
-    font-size: 16px;
-    cursor: pointer;
+    display: inline-block;
+    margin-top: 10px;
 }
 
 #close-card {
