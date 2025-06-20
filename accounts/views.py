@@ -213,7 +213,11 @@ def startups_list(request):
         )
     )
 
-    categories = list(Directions.objects.values("id", "name", "image"))
+    categories = list(
+        Directions.objects.annotate(id=F("direction_id"), name=F("direction_name"))
+        .values("id", "name")
+        .order_by("name")
+    )
 
     # Фильтрация по категориям
     if selected_categories:
@@ -2280,7 +2284,11 @@ def investor_main(request):
         )
     )
 
-    categories = list(Directions.objects.values("id", "name", "image"))
+    categories = list(
+        Directions.objects.annotate(id=F("direction_id"), name=F("direction_name"))
+        .values("id", "name")
+        .order_by("name")
+    )
 
     startup_data = []
     for s in startups_qs:
@@ -3120,35 +3128,24 @@ def leave_chat(request, chat_id):
 
 def planetary_system(request):
     # Получаем все направления из базы данных
-    directions = Directions.objects.all()
-
-    # Получаем текущую категорию (галактику) из GET-параметра или берём случайную
-    selected_galaxy = request.GET.get("galaxy", "")
-    if selected_galaxy:
-        current_direction = Directions.objects.filter(
-            direction_name=selected_galaxy
-        ).first()
-    else:
-        current_direction = Directions.objects.order_by(
-            "?"
-        ).first()  # Случайная категория, если не выбрана
-    selected_galaxy = (
-        current_direction.direction_name if current_direction else "Технологии"
+    categories = list(
+        Directions.objects.annotate(id=F("direction_id"), name=F("direction_name"))
+        .values("id", "name")
+        .order_by("name")
     )
 
-    # Получаем стартапы для текущей категории
-    planetary_startups = Startups.objects.filter(
-        status="approved", direction=current_direction
-    ).order_by("?")
+    # Получаем все стартапы со статусом 'approved'
+    # Аннотируем данные так же, как в `investor_main`, чтобы обеспечить консистентность
+    startups_qs = Startups.objects.filter(status="approved")
 
     # Логируем общее количество стартапов в категории
     logger.info(
-        f"Найдено стартапов в категории '{selected_galaxy}': {planetary_startups.count()}"
+        f"Найдено стартапов в категории '{categories[0]['name']}': {startups_qs.count()}"
     )
 
     # Ограничиваем до 8 стартапов (или берём столько, сколько есть, если меньше)
-    planetary_startups = planetary_startups[:8]
-    logger.info(f"Выбрано стартапов для отображения: {len(planetary_startups)}")
+    startups_qs = startups_qs[:8]
+    logger.info(f"Выбрано стартапов для отображения: {len(startups_qs)}")
 
     # Инициализируем S3-клиент для доступа к Yandex Object Storage
     s3_client = boto3.client(
@@ -3174,7 +3171,7 @@ def planetary_system(request):
 
     random.shuffle(available_sizes)  # Перемешиваем размеры
 
-    for idx, startup in enumerate(planetary_startups, 1):
+    for idx, startup in enumerate(startups_qs, 1):
         # Проверяем наличие logo_urls
         if (
             not startup.logo_urls
@@ -3277,10 +3274,10 @@ def planetary_system(request):
         is_startuper = request.user.role.role_name == "startuper"
 
     if not is_authenticated or is_startuper:  # Только для гостей и стартаперов
-        if len(available_sizes) > len(planetary_startups):
-            orbit_size = available_sizes[len(planetary_startups)]
+        if len(available_sizes) > len(startups_qs):
+            orbit_size = available_sizes[len(startups_qs)]
         else:
-            orbit_size = min_orbit_size + len(planetary_startups) * orbit_step
+            orbit_size = min_orbit_size + len(startups_qs) * orbit_step
 
         create_planet_data = {
             "id": "create-startup",
@@ -3311,15 +3308,15 @@ def planetary_system(request):
 
     # Подготавливаем и сериализуем directions_data
     # JS ожидает массив объектов, где каждый объект имеет direction_name
-    directions_list = list(directions.values("direction_name"))  # Убрал 'description'
+    directions_list = list(categories)  # Убрал 'description'
     directions_data_json = json.dumps(directions_list)
 
     context = {
         "planets_data": planets_data,  # Оставляем для HTML рендеринга
         "planets_data_json": planets_data_json,  # Для JS
-        "directions": directions,  # Оставляем для HTML рендеринга
+        "directions": categories,  # Оставляем для HTML рендеринга
         "directions_data_json": directions_data_json,  # Для JS
-        "selected_galaxy": selected_galaxy,
+        "selected_galaxy": categories[0]["name"],
         "logo_data": logo_data,
         "is_authenticated": is_authenticated,
         "is_startuper": is_startuper,
