@@ -13,7 +13,7 @@ urlpatterns = [
     path("login/", views.user_login, name="login"),
     path("logout/", views.user_logout, name="logout"),
     path("startups/", views.startups_list, name="startups_list"),
-    path("startups/<int:startup_id>/", views.startup_detail, name="startup_detail"),
+    path("startups/<str:startup_id>/", views.startup_detail, name="startup_detail"),  # Изменён с int на str
     path("investments/", views.investments, name="investments"),
     path("news/", views.news, name="news"),
     path("news/<int:article_id>/", views.news_detail, name="news_detail"),
@@ -82,3 +82,6 @@ urlpatterns = [
     path("remove-participant/<int:chat_id>/", views.remove_participant, name="remove_participant"),
     path('cosmochat/<int:chat_id>/messages/', views.get_chat_messages, name='get_chat_messages_dynamic'),
 ]
+
+# Обработчик ошибок 404
+handler404 = 'accounts.views.custom_404'
