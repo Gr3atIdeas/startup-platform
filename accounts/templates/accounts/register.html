@@ -9,8 +9,8 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: calc(100vh - 120px);
-            padding-top: 20px;
+            min-height: calc(100vh - 120px); /* Учитываем высоту шапки */
+            padding-top: 20px; /* Дополнительный отступ */
         }
 
         .auth-box {
@@ -20,7 +20,7 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             max-width: 400px;
             width: 100%;
-            margin-top: 20px;
+            margin-top: 20px; /* Отступ сверху для предотвращения прилипания */
         }
 
         .auth-box h1 {
@@ -52,20 +52,6 @@
         .auth-box button:hover {
             background-color: yellow;
         }
-
-        /* Стили для кнопки Telegram */
-        .telegram-login {
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        /* Отладочный вывод */
-        .debug-info {
-            color: #fff;
-            font-size: 12px;
-            margin-top: 10px;
-            text-align: center;
-        }
     </style>
 
     <div class="content">
@@ -76,17 +62,6 @@
                 {{ form.as_p }}
                 <button type="submit">Зарегистрироваться</button>
             </form>
-            <div class="telegram-login">
-                <script async src="https://telegram.org/js/telegram-widget.js?22" 
-                        data-telegram-login="testmarketstartup_bot" 
-                        data-size="medium" 
-                        data-auth-url="https://greatideas.ru/login/" 
-                        data-request-access="write"></script>
-            </div>
-            <!-- Отладочный вывод -->
-            <div class="debug-info">
-                Auth URL: https://greatideas.ru/login/
-            </div>
         </div>
     </div>
 {% endblock %}
