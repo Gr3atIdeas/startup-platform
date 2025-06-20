@@ -4,11 +4,12 @@ import datetime  # Добавляем для работы с датами
 import json
 import logging
 import os
-import boto3
-from boto3 import client
 import uuid
 from decimal import Decimal
 from random import choice, shuffle  # Импортируем shuffle напрямую
+
+import boto3
+from boto3 import client
 from dateutil.relativedelta import relativedelta
 from django import forms  # Добавляем импорт
 from django.conf import settings
@@ -25,6 +26,7 @@ from django.db.models import (  # Добавляем Q
     Avg,
     Count,
     Exists,
+    ExpressionWrapper,
     F,
     FloatField,
     Max,
@@ -33,7 +35,6 @@ from django.db.models import (  # Добавляем Q
     Q,
     Subquery,
     Sum,
-    ExpressionWrapper,
 )
 from django.db.models.functions import (
     Coalesce,  # Добавляем Coalesce
@@ -511,47 +512,74 @@ def investments(request):
 
         investment_categories = []
         invested_category_data_dict = {}
-        total_for_category_percentage = total_investment if total_investment > 0 else Decimal("1")
+        total_for_category_percentage = (
+            total_investment if total_investment > 0 else Decimal("1")
+        )
 
         for cat_data in category_data_raw:
             percentage = 0
             category_sum = cat_data.get("category_total")
-            category_name = cat_data.get("startup__direction__direction_name") or "Без категории"
+            category_name = (
+                cat_data.get("startup__direction__direction_name") or "Без категории"
+            )
 
             if category_sum and total_for_category_percentage > 0:
                 try:
-                    percentage = round((Decimal(category_sum) / total_for_category_percentage) * 100)
+                    percentage = round(
+                        (Decimal(category_sum) / total_for_category_percentage) * 100
+                    )
                     percentage = min(percentage, 100)
                 except Exception as e:
-                    logger.error(f"Ошибка расчета процента для категории '{category_name}': {e}")
+                    logger.error(
+                        f"Ошибка расчета процента для категории '{category_name}': {e}"
+                    )
                     percentage = 0
 
-            investment_categories.append({"name": category_name, "percentage": percentage})
+            investment_categories.append(
+                {"name": category_name, "percentage": percentage}
+            )
             invested_category_data_dict[category_name] = percentage
 
         # --- Данные для графика по месяцам ---
         current_year = timezone.now().year
-        logger.info(f"[investments] Preparing chart data for user {request.user.email}, year: {current_year}")
+        logger.info(
+            f"[investments] Preparing chart data for user {request.user.email}, year: {current_year}"
+        )
         monthly_data_direct = (
-            user_investments_qs.filter(
-                created_at__year=current_year, amount__gt=0
-            )
+            user_investments_qs.filter(created_at__year=current_year, amount__gt=0)
             .annotate(month=TruncMonth("created_at"))
             .values("month")
             .annotate(monthly_total=Sum(Coalesce("amount", Decimal(0))))
             .order_by("month")
         )
 
-        month_labels = ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"]
+        month_labels = [
+            "Янв",
+            "Фев",
+            "Мар",
+            "Апр",
+            "Май",
+            "Июн",
+            "Июл",
+            "Авг",
+            "Сен",
+            "Окт",
+            "Ноя",
+            "Дек",
+        ]
         monthly_totals = [0] * 12
         for data in monthly_data_direct:
             month_index = data["month"].month - 1
             if 0 <= month_index < 12:
-                monthly_total_decimal = data.get("monthly_total", Decimal(0)) or Decimal(0)
+                monthly_total_decimal = data.get(
+                    "monthly_total", Decimal(0)
+                ) or Decimal(0)
                 monthly_totals[month_index] = float(monthly_total_decimal)
 
         # --- Данные для стекированного графика по категориям ---
-        logger.info(f"[investments] Preparing chart data for user {request.user.email}, year: {current_year}")
+        logger.info(
+            f"[investments] Preparing chart data for user {request.user.email}, year: {current_year}"
+        )
         monthly_category_data_raw = (
             user_investments_qs.filter(
                 created_at__year=current_year,
@@ -564,9 +592,13 @@ def investments(request):
             .order_by("month", "startup__direction__direction_name")
         )
 
-        logger.info(f"[investments] Raw monthly category data from DB: {list(monthly_category_data_raw)}")
+        logger.info(
+            f"[investments] Raw monthly category data from DB: {list(monthly_category_data_raw)}"
+        )
 
-        structured_monthly_data = collections.defaultdict(lambda: collections.defaultdict(float))
+        structured_monthly_data = collections.defaultdict(
+            lambda: collections.defaultdict(float)
+        )
         unique_categories = set()
 
         for data in monthly_category_data_raw:
@@ -578,19 +610,25 @@ def investments(request):
             unique_categories.add(category_name)
 
         sorted_categories = sorted(list(unique_categories))
-        logger.info(f"[investments] Unique categories found for chart: {sorted_categories}")
+        logger.info(
+            f"[investments] Unique categories found for chart: {sorted_categories}"
+        )
 
         chart_data_list = []
         start_date = datetime.date(current_year, 1, 1)
         for i in range(12):
-            current_month_key = (start_date + relativedelta(months=i)).strftime("%Y-%m-01")
+            current_month_key = (start_date + relativedelta(months=i)).strftime(
+                "%Y-%m-01"
+            )
             month_data = {
                 "month_key": current_month_key,
                 "category_data": dict(structured_monthly_data[current_month_key]),
             }
             chart_data_list.append(month_data)
 
-        logger.info(f"[investments] Final structured chart data list: {chart_data_list}")
+        logger.info(
+            f"[investments] Final structured chart data list: {chart_data_list}"
+        )
 
         # --- Данные для планетарной системы ---
         s3_client = client(
@@ -602,45 +640,63 @@ def investments(request):
         )
 
         # Инвестированные стартапы
-        invested_startups_qs = user_investments_qs.select_related("startup").annotate(
-            average_rating=Avg(
-                ExpressionWrapper(
-                    Coalesce(F("startup__sum_votes"), 0) * 1.0 / Coalesce(F("startup__total_voters"), 1),
-                    output_field=FloatField(),
+        invested_startups_qs = (
+            user_investments_qs.select_related("startup")
+            .annotate(
+                average_rating=Avg(
+                    ExpressionWrapper(
+                        Coalesce(F("startup__sum_votes"), 0)
+                        * 1.0
+                        / Coalesce(F("startup__total_voters"), 1),
+                        output_field=FloatField(),
+                    ),
+                    filter=Q(startup__total_voters__gt=0),
+                    default=0.0,
                 ),
-                filter=Q(startup__total_voters__gt=0),
-                default=0.0,
-            ),
-            comment_count=Count("startup__comments", distinct=True),
-            investors_count=Count("startup__investmenttransactions__investor", distinct=True),
-        ).order_by("-amount")[:5]
+                comment_count=Count("startup__comments", distinct=True),
+                investors_count=Count(
+                    "startup__investmenttransactions__investor", distinct=True
+                ),
+            )
+            .order_by("-amount")[:5]
+        )
 
         # Стартапы, где пользователь — владелец
-        owned_startups_qs = Startups.objects.filter(
-            owner_id=request.user.user_id,
-            status="approved"
-        ).select_related("direction").annotate(
-            average_rating=Avg(
-                ExpressionWrapper(
-                    Coalesce(F("sum_votes"), 0) * 1.0 / Coalesce(F("total_voters"), 1),
-                    output_field=FloatField(),
+        owned_startups_qs = (
+            Startups.objects.filter(owner_id=request.user.user_id, status="approved")
+            .select_related("direction")
+            .annotate(
+                average_rating=Avg(
+                    ExpressionWrapper(
+                        Coalesce(F("sum_votes"), 0)
+                        * 1.0
+                        / Coalesce(F("total_voters"), 1),
+                        output_field=FloatField(),
+                    ),
+                    filter=Q(total_voters__gt=0),
+                    default=0.0,
                 ),
-                filter=Q(total_voters__gt=0),
-                default=0.0,
-            ),
-            comment_count=Count("comments", distinct=True),
-            investors_count=Count("investmenttransactions__investor", distinct=True),
-        ).order_by("-amount_raised")[:5]
+                comment_count=Count("comments", distinct=True),
+                investors_count=Count(
+                    "investmenttransactions__investor", distinct=True
+                ),
+            )
+            .order_by("-amount_raised")[:5]
+        )
 
         planetary_investments = []
         min_orbit_size = 200
         max_orbit_size = 800
         orbit_step = 50
-        available_sizes = list(range(min_orbit_size, max_orbit_size + orbit_step, orbit_step))
+        available_sizes = list(
+            range(min_orbit_size, max_orbit_size + orbit_step, orbit_step)
+        )
         shuffle(available_sizes)
 
-        for idx, startup in enumerate(list(invested_startups_qs) + list(owned_startups_qs), 1):
-            if hasattr(startup, 'startup'):
+        for idx, startup in enumerate(
+            list(invested_startups_qs) + list(owned_startups_qs), 1
+        ):
+            if hasattr(startup, "startup"):
                 startup_obj = startup.startup
             else:
                 startup_obj = startup
@@ -651,21 +707,31 @@ def investments(request):
                 or not isinstance(startup_obj.logo_urls, list)
                 or len(startup_obj.logo_urls) == 0
             ):
-                logger.warning(f"Стартап {startup_obj.startup_id} ({startup_obj.title}) не имеет логотипа в logo_urls")
+                logger.warning(
+                    f"Стартап {startup_obj.startup_id} ({startup_obj.title}) не имеет логотипа в logo_urls"
+                )
                 logo_url = "https://via.placeholder.com/150"
             else:
                 try:
                     prefix = f"startups/{startup_obj.startup_id}/logos/"
-                    response = s3_client.list_objects_v2(Bucket=settings.AWS_STORAGE_BUCKET_NAME, Prefix=prefix)
+                    response = s3_client.list_objects_v2(
+                        Bucket=settings.AWS_STORAGE_BUCKET_NAME, Prefix=prefix
+                    )
                     if "Contents" in response and len(response["Contents"]) > 0:
                         file_key = response["Contents"][0]["Key"]
                         logo_url = f"https://storage.yandexcloud.net/{settings.AWS_STORAGE_BUCKET_NAME}/{file_key}"
-                        logger.info(f"Сгенерирован URL для логотипа стартапа {startup_obj.startup_id}: {logo_url}")
+                        logger.info(
+                            f"Сгенерирован URL для логотипа стартапа {startup_obj.startup_id}: {logo_url}"
+                        )
                     else:
-                        logger.warning(f"Файл для логотипа стартапа {startup_obj.startup_id} не найден в бакете по префиксу {prefix}")
+                        logger.warning(
+                            f"Файл для логотипа стартапа {startup_obj.startup_id} не найден в бакете по префиксу {prefix}"
+                        )
                         logo_url = "https://via.placeholder.com/150"
                 except Exception as e:
-                    logger.error(f"Ошибка при генерации URL для логотипа стартапа {startup_obj.startup_id}: {str(e)}")
+                    logger.error(
+                        f"Ошибка при генерации URL для логотипа стартапа {startup_obj.startup_id}: {str(e)}"
+                    )
                     logo_url = "https://via.placeholder.com/150"
 
             orbit_size = (idx * 100) + 100
@@ -673,7 +739,15 @@ def investments(request):
             planet_size = (idx * 2) + 50
 
             # Тип инвестирования
-            investment_type = "Инвестирование" if startup_obj.only_invest else "Выкуп" if startup_obj.only_buy else "Выкуп+инвестирование" if startup_obj.both_mode else "Не указано"
+            investment_type = (
+                "Инвестирование"
+                if startup_obj.only_invest
+                else "Выкуп"
+                if startup_obj.only_buy
+                else "Выкуп+инвестирование"
+                if startup_obj.both_mode
+                else "Не указано"
+            )
 
             planet_data = {
                 "id": str(idx),
@@ -683,10 +757,16 @@ def investments(request):
                 "rating": f"{(startup.average_rating or 0):.1f}/5 ({startup_obj.total_voters or 0})",
                 "comment_count": startup.comment_count or 0,
                 "progress": f"{(startup_obj.amount_raised / startup_obj.funding_goal * 100 if startup_obj.funding_goal else 0):.0f}%",
-                "direction": startup_obj.direction.direction_name if startup_obj.direction else "Не указано",
+                "direction": startup_obj.direction.direction_name
+                if startup_obj.direction
+                else "Не указано",
                 "investment_type": investment_type,
-                "funding": f"{int(startup_obj.amount_raised or 0):,d} ₽".replace(",", " "),
-                "funding_goal": f"{int(startup_obj.funding_goal or 0):,d} ₽".replace(",", " "),
+                "funding": f"{int(startup_obj.amount_raised or 0):,d} ₽".replace(
+                    ",", " "
+                ),
+                "funding_goal": f"{int(startup_obj.funding_goal or 0):,d} ₽".replace(
+                    ",", " "
+                ),
                 "investors": f"Инвесторов: {startup.investors_count or 0}",
                 "image": logo_url,
                 "orbit_size": orbit_size,
@@ -695,35 +775,46 @@ def investments(request):
             }
             planetary_investments.append(planet_data)
 
-        logger.info(f"[investments] Planetary investments for user {request.user.email}: {planetary_investments}")
+        logger.info(
+            f"[investments] Planetary investments for user {request.user.email}: {planetary_investments}"
+        )
 
         # Инвестиции пользователя для списка
-        user_investments = user_investments_qs.select_related("startup").annotate(
-            startup_average_rating=Avg(
-                ExpressionWrapper(
-                    F("startup__sum_votes") * 1.0 / F("startup__total_voters"),
-                    output_field=FloatField(),
+        user_investments = (
+            user_investments_qs.select_related("startup")
+            .annotate(
+                startup_average_rating=Avg(
+                    ExpressionWrapper(
+                        F("startup__sum_votes") * 1.0 / F("startup__total_voters"),
+                        output_field=FloatField(),
+                    ),
+                    filter=Q(startup__total_voters__gt=0),
+                    default=0.0,
                 ),
-                filter=Q(startup__total_voters__gt=0),
-                default=0.0,
-            ),
-            startup_comment_count=Count("startup__comments", distinct=True),
-        ).order_by("-created_at")
+                startup_comment_count=Count("startup__comments", distinct=True),
+            )
+            .order_by("-created_at")
+        )
 
         # Стартапы, где пользователь является владельцем
-        user_owned_startups = Startups.objects.filter(
-            owner_id=request.user.user_id
-        ).select_related("direction", "stage", "status_id").annotate(
-            average_rating=Avg(
-                ExpressionWrapper(
-                    Coalesce(F("sum_votes"), 0) * 1.0 / Coalesce(F("total_voters"), 1),
-                    output_field=FloatField(),
+        user_owned_startups = (
+            Startups.objects.filter(owner_id=request.user.user_id)
+            .select_related("direction", "stage", "status_id")
+            .annotate(
+                average_rating=Avg(
+                    ExpressionWrapper(
+                        Coalesce(F("sum_votes"), 0)
+                        * 1.0
+                        / Coalesce(F("total_voters"), 1),
+                        output_field=FloatField(),
+                    ),
+                    filter=Q(total_voters__gt=0),
+                    default=0.0,
                 ),
-                filter=Q(total_voters__gt=0),
-                default=0.0,
-            ),
-            comment_count=Count("comments"),
-        ).order_by("-created_at")
+                comment_count=Count("comments"),
+            )
+            .order_by("-created_at")
+        )
 
         # Данные для модального окна категорий
         all_directions_qs = Directions.objects.all().order_by("direction_name")
@@ -744,7 +835,8 @@ def investments(request):
             "user_owned_startups": user_owned_startups,
             "current_sort": "newest",
             "planetary_investments": planetary_investments,
-            "investor_logo_url": request.user.get_profile_picture_url() or "https://via.placeholder.com/60",
+            "investor_logo_url": request.user.get_profile_picture_url()
+            or "https://via.placeholder.com/60",
         }
 
         return render(request, "accounts/investments.html", context)
@@ -756,13 +848,6 @@ def investments(request):
             "Произошла ошибка при загрузке страницы. Пожалуйста, попробуйте снова.",
         )
         return redirect("profile")
-
-
-
-
-
-
-
 
 
 # Страница юридической информации
@@ -1061,107 +1146,175 @@ def chat_list(request):
     for chat in chats:
         participants = chat.chatparticipants_set.all()
         has_user = participants.filter(user=user).exists()
-        is_deleted = getattr(chat, 'is_deleted', False)
+        is_deleted = getattr(chat, "is_deleted", False)
         has_left = not has_user and any(p.user != user for p in participants)
 
         # Проверяем доступ только для пользователей, участвующих в чате
-        if not has_user and (not user.role or user.role.role_name.lower() != "moderator"):
+        if not has_user and (
+            not user.role or user.role.role_name.lower() != "moderator"
+        ):
             continue
 
         # Для модераторов добавляем чаты-сделки и групповые чаты
-        if user.role and user.role.role_name.lower() == "moderator" and (chat.is_group_chat or chat.is_deal):
+        if (
+            user.role
+            and user.role.role_name.lower() == "moderator"
+            and (chat.is_group_chat or chat.is_deal)
+        ):
             other_participant = participants.exclude(user=user).first()
             participant_info = None
             if other_participant and not chat.is_group_chat and other_participant.user:
                 participant_info = other_participant.user
-            chat_data.append({
-                'conversation_id': chat.conversation_id,
-                'name': chat.name if chat.name else f"Чат {chat.conversation_id}",
-                'is_group_chat': chat.is_group_chat,
-                'is_deal': chat.is_deal,
-                'is_deleted': is_deleted,
-                'has_left': has_left,
-                'participant': {
-                    'user_id': participant_info.user_id if participant_info else None,
-                    'first_name': participant_info.first_name if participant_info else None,
-                    'last_name': participant_info.last_name if participant_info else None,
-                    'profile_picture_url': participant_info.get_profile_picture_url() if participant_info else None
-                } if participant_info else None,
-            })
+            chat_data.append(
+                {
+                    "conversation_id": chat.conversation_id,
+                    "name": chat.name if chat.name else f"Чат {chat.conversation_id}",
+                    "is_group_chat": chat.is_group_chat,
+                    "is_deal": chat.is_deal,
+                    "is_deleted": is_deleted,
+                    "has_left": has_left,
+                    "participant": {
+                        "user_id": participant_info.user_id
+                        if participant_info
+                        else None,
+                        "first_name": participant_info.first_name
+                        if participant_info
+                        else None,
+                        "last_name": participant_info.last_name
+                        if participant_info
+                        else None,
+                        "profile_picture_url": participant_info.get_profile_picture_url()
+                        if participant_info
+                        else None,
+                    }
+                    if participant_info
+                    else None,
+                }
+            )
         # Для обычных пользователей только их чаты
         elif not is_deleted and not has_left and has_user:
             other_participant = participants.exclude(user=user).first()
             participant_info = None
             if other_participant and not chat.is_group_chat and other_participant.user:
                 participant_info = other_participant.user
-            chat_data.append({
-                'conversation_id': chat.conversation_id,
-                'name': chat.name if chat.name else f"Чат {chat.conversation_id}",
-                'is_group_chat': chat.is_group_chat,
-                'is_deal': chat.is_deal,
-                'is_deleted': is_deleted,
-                'has_left': has_left,
-                'participant': {
-                    'user_id': participant_info.user_id if participant_info else None,
-                    'first_name': participant_info.first_name if participant_info else None,
-                    'last_name': participant_info.last_name if participant_info else None,
-                    'profile_picture_url': participant_info.get_profile_picture_url() if participant_info else None
-                } if participant_info else None,
-            })
+            chat_data.append(
+                {
+                    "conversation_id": chat.conversation_id,
+                    "name": chat.name if chat.name else f"Чат {chat.conversation_id}",
+                    "is_group_chat": chat.is_group_chat,
+                    "is_deal": chat.is_deal,
+                    "is_deleted": is_deleted,
+                    "has_left": has_left,
+                    "participant": {
+                        "user_id": participant_info.user_id
+                        if participant_info
+                        else None,
+                        "first_name": participant_info.first_name
+                        if participant_info
+                        else None,
+                        "last_name": participant_info.last_name
+                        if participant_info
+                        else None,
+                        "profile_picture_url": participant_info.get_profile_picture_url()
+                        if participant_info
+                        else None,
+                    }
+                    if participant_info
+                    else None,
+                }
+            )
 
     logger.info(f"Chat list generated for user {user.email}: {len(chat_data)} chats")
-    return JsonResponse({'success': True, 'chats': chat_data})
+    return JsonResponse({"success": True, "chats": chat_data})
 
 
 @login_required
 def start_deal(request, chat_id):
     if request.method != "POST":
-        return JsonResponse({"success": False, "error": "Неверный метод запроса"}, status=405)
+        return JsonResponse(
+            {"success": False, "error": "Неверный метод запроса"}, status=405
+        )
 
     chat = get_object_or_404(ChatConversations, conversation_id=chat_id)
     if not chat.chatparticipants_set.filter(user=request.user).exists():
-        return JsonResponse({"success": False, "error": "У вас нет доступа к этому чату"}, status=403)
+        return JsonResponse(
+            {"success": False, "error": "У вас нет доступа к этому чату"}, status=403
+        )
 
-    logger.info(f"Starting deal check for chat {chat_id}, participants: {chat.chatparticipants_set.count()}")
+    logger.info(
+        f"Starting deal check for chat {chat_id}, participants: {chat.chatparticipants_set.count()}"
+    )
     if chat.is_group_chat or chat.is_deal:
         logger.error(f"Chat {chat_id} is group or already a deal")
         return JsonResponse(
-            {"success": False, "error": "Сделку можно начать только в личном чате, который ещё не является сделкой"},
+            {
+                "success": False,
+                "error": "Сделку можно начать только в личном чате, который ещё не является сделкой",
+            },
             status=400,
         )
 
     participants = chat.chatparticipants_set.all()
-    if participants.count() < 2:  # Изменяем с != 2 на < 2, чтобы разрешить добавление модератора
-        logger.error(f"Chat {chat_id} has {participants.count()} participants, expected at least 2")
-        return JsonResponse({"success": False, "error": "В чате должно быть как минимум два участника"}, status=400)
+    if (
+        participants.count() < 2
+    ):  # Изменяем с != 2 на < 2, чтобы разрешить добавление модератора
+        logger.error(
+            f"Chat {chat_id} has {participants.count()} participants, expected at least 2"
+        )
+        return JsonResponse(
+            {"success": False, "error": "В чате должно быть как минимум два участника"},
+            status=400,
+        )
 
-    roles = {p.user.role.role_name.lower() for p in participants if p.user and p.user.role}
+    roles = {
+        p.user.role.role_name.lower() for p in participants if p.user and p.user.role
+    }
     if not {"startuper", "investor"}.issubset(roles):  # Проверяем, что есть оба роли
-        logger.error(f"Chat {chat_id} roles: {roles}, expected 'startuper' and 'investor'")
-        return JsonResponse({"success": False, "error": "Чат должен включать одного стартапера и одного инвестора"}, status=400)
+        logger.error(
+            f"Chat {chat_id} roles: {roles}, expected 'startuper' and 'investor'"
+        )
+        return JsonResponse(
+            {
+                "success": False,
+                "error": "Чат должен включать одного стартапера и одного инвестора",
+            },
+            status=400,
+        )
 
     try:
         data = json.loads(request.body)
-        initiator_name = data.get("initiator_name", request.user.get_full_name() or "Пользователь")
+        initiator_name = data.get(
+            "initiator_name", request.user.get_full_name() or "Пользователь"
+        )
     except json.JSONDecodeError:
         initiator_name = request.user.get_full_name() or "Пользователь"
 
     with transaction.atomic():
         chat.is_deal = True
-        chat.deal_status = 'pending'
+        chat.deal_status = "pending"
         chat.updated_at = timezone.now()
         chat.save()
 
         moderators = Users.objects.filter(role__role_name="moderator")
         if not moderators.exists():
-            return JsonResponse({"success": False, "error": "Нет доступных модераторов"}, status=500)
+            return JsonResponse(
+                {"success": False, "error": "Нет доступных модераторов"}, status=500
+            )
 
         moderator = choice(list(moderators))
-        moderator_participant, created = ChatParticipants.objects.get_or_create(conversation=chat, user=moderator)
+        moderator_participant, created = ChatParticipants.objects.get_or_create(
+            conversation=chat, user=moderator
+        )
         if not created and not moderator_participant:
-            logger.error(f"Failed to create or find moderator {moderator.user_id} for chat {chat_id}")
-            return JsonResponse({"success": False, "error": "Ошибка назначения модератора"}, status=500)
-        logger.info(f"Moderator {moderator.user_id} added to chat {chat_id}, created: {created}")
+            logger.error(
+                f"Failed to create or find moderator {moderator.user_id} for chat {chat_id}"
+            )
+            return JsonResponse(
+                {"success": False, "error": "Ошибка назначения модератора"}, status=500
+            )
+        logger.info(
+            f"Moderator {moderator.user_id} added to chat {chat_id}, created: {created}"
+        )
 
         message = Messages(
             conversation=chat,
@@ -1174,36 +1327,56 @@ def start_deal(request, chat_id):
         message.save()
 
     participants_data = [
-        {"user_id": p.user.user_id, "name": p.user.get_full_name(), "role": p.user.role.role_name if p.user.role else "unknown"}
+        {
+            "user_id": p.user.user_id,
+            "name": p.user.get_full_name(),
+            "role": p.user.role.role_name if p.user.role else "unknown",
+        }
         for p in chat.chatparticipants_set.all()
     ]
 
-    logger.info(f"Сделка начата в чате {chat_id}, модератор {moderator.user_id} назначен")
-    return JsonResponse(
-        {"success": True, "message": "Сделка начата, модератор назначен", "moderator": {"user_id": moderator.user_id, "name": moderator.get_full_name()}, "participants": participants_data}
+    logger.info(
+        f"Сделка начата в чате {chat_id}, модератор {moderator.user_id} назначен"
     )
+    return JsonResponse(
+        {
+            "success": True,
+            "message": "Сделка начата, модератор назначен",
+            "moderator": {
+                "user_id": moderator.user_id,
+                "name": moderator.get_full_name(),
+            },
+            "participants": participants_data,
+        }
+    )
+
 
 @login_required
 def deals_view(request):
     if not hasattr(request.user, "role") or request.user.role.role_name != "moderator":
         messages.error(request, "Доступ к этой странице разрешен только модераторам.")
-        logger.warning(f"Access denied for user {request.user.user_id} - not a moderator")
+        logger.warning(
+            f"Access denied for user {request.user.user_id} - not a moderator"
+        )
         return redirect("home")
 
-    status_filter = request.GET.get('status', 'pending')
-    valid_statuses = ['pending', 'approved', 'rejected']
+    status_filter = request.GET.get("status", "pending")
+    valid_statuses = ["pending", "approved", "rejected"]
     if status_filter not in valid_statuses:
-        status_filter = 'pending'
+        status_filter = "pending"
 
     # Логируем начальные данные
-    logger.info(f"Processing deals_view for user_id={request.user.user_id}, status_filter={status_filter}")
+    logger.info(
+        f"Processing deals_view for user_id={request.user.user_id}, status_filter={status_filter}"
+    )
 
     # Фильтруем чаты, где is_deal=True и соответствующий deal_status
     try:
-        deals_query = ChatConversations.objects.filter(
-            is_deal=True,
-            deal_status=status_filter
-        ).prefetch_related('chatparticipants_set__user').order_by('-updated_at')
+        deals_query = (
+            ChatConversations.objects.filter(is_deal=True, deal_status=status_filter)
+            .prefetch_related("chatparticipants_set__user")
+            .order_by("-updated_at")
+        )
         logger.info(f"Initial query returned {deals_query.count()} deals")
     except Exception as e:
         logger.error(f"Error in initial query: {str(e)}")
@@ -1217,29 +1390,46 @@ def deals_view(request):
     for deal in deals:
         try:
             participants = deal.chatparticipants_set.all()
-            logger.debug(f"Deal {deal.conversation_id}: Participants {[(p.user.user_id, p.user.role.role_name if p.user.role else 'None') for p in participants]}, Status: {deal.deal_status}")
+            logger.debug(
+                f"Deal {deal.conversation_id}: Participants {[(p.user.user_id, p.user.role.role_name if p.user.role else 'None') for p in participants]}, Status: {deal.deal_status}"
+            )
         except Exception as e:
             logger.error(f"Error processing deal {deal.conversation_id}: {str(e)}")
 
     deal_data = []
     selected_chat = None
-    chat_id = request.GET.get('chat_id')
+    chat_id = request.GET.get("chat_id")
     if chat_id:
         try:
-            selected_chat = get_object_or_404(ChatConversations, conversation_id=chat_id, is_deal=True)
-            if not selected_chat.chatparticipants_set.filter(user=request.user).exists():
+            selected_chat = get_object_or_404(
+                ChatConversations, conversation_id=chat_id, is_deal=True
+            )
+            if not selected_chat.chatparticipants_set.filter(
+                user=request.user
+            ).exists():
                 messages.error(request, "У вас нет доступа к этому чату.")
-                logger.warning(f"No access to chat {chat_id} for user {request.user.user_id}")
+                logger.warning(
+                    f"No access to chat {chat_id} for user {request.user.user_id}"
+                )
                 selected_chat = None
             else:
-                messages = Messages.objects.filter(conversation=selected_chat).order_by('created_at')
-                messages_data = [{
-                    'message_id': msg.message_id,
-                    'sender_name': msg.sender.get_full_name() if msg.sender else 'Система',
-                    'message_text': msg.message_text,
-                    'created_at': msg.created_at.strftime('%H:%M %d/%m/%Y') if msg.created_at else '',
-                    'is_own': msg.sender == request.user if msg.sender else False,
-                } for msg in messages]
+                messages = Messages.objects.filter(conversation=selected_chat).order_by(
+                    "created_at"
+                )
+                messages_data = [
+                    {
+                        "message_id": msg.message_id,
+                        "sender_name": msg.sender.get_full_name()
+                        if msg.sender
+                        else "Система",
+                        "message_text": msg.message_text,
+                        "created_at": msg.created_at.strftime("%H:%M %d/%m/%Y")
+                        if msg.created_at
+                        else "",
+                        "is_own": msg.sender == request.user if msg.sender else False,
+                    }
+                    for msg in messages
+                ]
                 selected_chat_messages = messages_data
                 logger.info(f"Loaded {len(messages_data)} messages for chat {chat_id}")
         except Exception as e:
@@ -1250,31 +1440,61 @@ def deals_view(request):
     for deal in deals:
         try:
             participants = deal.chatparticipants_set.all()
-            moderator = next((p.user for p in participants if p.user.role and p.user.role.role_name == 'moderator'), None)
-            other_participants = [p.user for p in participants if p.user and p.user != moderator]
+            moderator = next(
+                (
+                    p.user
+                    for p in participants
+                    if p.user.role and p.user.role.role_name == "moderator"
+                ),
+                None,
+            )
+            other_participants = [
+                p.user for p in participants if p.user and p.user != moderator
+            ]
 
-            deal_data.append({
-                'conversation_id': deal.conversation_id,
-                'name': deal.name or f"Сделка {deal.conversation_id}",
-                'participants': [f"{p.first_name} {p.last_name}" for p in other_participants],
-                'moderator': moderator.get_full_name() if moderator else 'Не назначен',
-                'last_message': deal.get_last_message().message_text if deal.get_last_message() else 'Нет сообщений',
-                'created_at': deal.created_at.strftime('%H:%M') if deal.created_at else '',
-                'date': deal.created_at.strftime('%d/%m/%Y') if deal.created_at else '',
-                'unread_count': Messages.objects.filter(conversation=deal, status__status_name='sent').exclude(sender=moderator).count() if moderator else 0,
-                'deal_status': deal.deal_status,
-            })
+            deal_data.append(
+                {
+                    "conversation_id": deal.conversation_id,
+                    "name": deal.name or f"Сделка {deal.conversation_id}",
+                    "participants": [
+                        f"{p.first_name} {p.last_name}" for p in other_participants
+                    ],
+                    "moderator": moderator.get_full_name()
+                    if moderator
+                    else "Не назначен",
+                    "last_message": deal.get_last_message().message_text
+                    if deal.get_last_message()
+                    else "Нет сообщений",
+                    "created_at": deal.created_at.strftime("%H:%M")
+                    if deal.created_at
+                    else "",
+                    "date": deal.created_at.strftime("%d/%m/%Y")
+                    if deal.created_at
+                    else "",
+                    "unread_count": Messages.objects.filter(
+                        conversation=deal, status__status_name="sent"
+                    )
+                    .exclude(sender=moderator)
+                    .count()
+                    if moderator
+                    else 0,
+                    "deal_status": deal.deal_status,
+                }
+            )
         except Exception as e:
-            logger.error(f"Error processing deal data for {deal.conversation_id}: {str(e)}")
+            logger.error(
+                f"Error processing deal data for {deal.conversation_id}: {str(e)}"
+            )
 
     context = {
-        'deals': deal_data,
-        'current_status': status_filter,
-        'selected_chat': selected_chat,
-        'chat_messages': selected_chat_messages if selected_chat else [],
+        "deals": deal_data,
+        "current_status": status_filter,
+        "selected_chat": selected_chat,
+        "chat_messages": selected_chat_messages if selected_chat else [],
     }
     logger.info(f"Rendering deals.html with {len(deal_data)} deals")
     return render(request, "accounts/deals.html", context)
+
 
 @login_required
 def send_message(request):
@@ -1288,11 +1508,18 @@ def send_message(request):
     chat_id = request.POST.get("chat_id")
     chat = get_object_or_404(ChatConversations, conversation_id=chat_id)
     if not chat.chatparticipants_set.filter(user=request.user).exists():
-        return JsonResponse({"success": False, "error": "У вас нет доступа к этому чату"})
+        return JsonResponse(
+            {"success": False, "error": "У вас нет доступа к этому чату"}
+        )
 
     # Проверяем, что пользователь — модератор
     if not request.user.role or request.user.role.role_name != "moderator":
-        return JsonResponse({"success": False, "error": "Только модератор может отправлять сообщения здесь"})
+        return JsonResponse(
+            {
+                "success": False,
+                "error": "Только модератор может отправлять сообщения здесь",
+            }
+        )
 
     message = Messages(
         conversation=chat,
@@ -1314,7 +1541,7 @@ def send_message(request):
                 "message_id": message.message_id,
                 "sender_name": request.user.get_full_name(),
                 "message_text": message.message_text,
-                "created_at": message.created_at.strftime('%H:%M %d/%m/%Y'),
+                "created_at": message.created_at.strftime("%H:%M %d/%m/%Y"),
                 "is_own": True,
             },
         }
@@ -1324,17 +1551,23 @@ def send_message(request):
 @login_required
 def approve_deal(request, chat_id):
     if request.method != "POST":
-        return JsonResponse({"success": False, "error": "Неверный метод запроса"}, status=405)
+        return JsonResponse(
+            {"success": False, "error": "Неверный метод запроса"}, status=405
+        )
 
     chat = get_object_or_404(ChatConversations, conversation_id=chat_id)
-    if not chat.chatparticipants_set.filter(user=request.user).exists() or (request.user.role and request.user.role.role_name != "moderator"):
-        return JsonResponse({"success": False, "error": "У вас нет прав для этого действия"}, status=403)
+    if not chat.chatparticipants_set.filter(user=request.user).exists() or (
+        request.user.role and request.user.role.role_name != "moderator"
+    ):
+        return JsonResponse(
+            {"success": False, "error": "У вас нет прав для этого действия"}, status=403
+        )
 
     if not chat.is_deal:
         return JsonResponse({"success": False, "error": "Это не сделка"}, status=400)
 
     with transaction.atomic():
-        chat.deal_status = 'approved'
+        chat.deal_status = "approved"
         chat.updated_at = timezone.now()
         chat.save()
 
@@ -1352,20 +1585,27 @@ def approve_deal(request, chat_id):
     logger.info(f"Сделка {chat_id} одобрена модератором {request.user.user_id}")
     return JsonResponse({"success": True, "message": "Сделка одобрена"})
 
+
 @login_required
 def reject_deal(request, chat_id):
     if request.method != "POST":
-        return JsonResponse({"success": False, "error": "Неверный метод запроса"}, status=405)
+        return JsonResponse(
+            {"success": False, "error": "Неверный метод запроса"}, status=405
+        )
 
     chat = get_object_or_404(ChatConversations, conversation_id=chat_id)
-    if not chat.chatparticipants_set.filter(user=request.user).exists() or (request.user.role and request.user.role.role_name != "moderator"):
-        return JsonResponse({"success": False, "error": "У вас нет прав для этого действия"}, status=403)
+    if not chat.chatparticipants_set.filter(user=request.user).exists() or (
+        request.user.role and request.user.role.role_name != "moderator"
+    ):
+        return JsonResponse(
+            {"success": False, "error": "У вас нет прав для этого действия"}, status=403
+        )
 
     if not chat.is_deal:
         return JsonResponse({"success": False, "error": "Это не сделка"}, status=400)
 
     with transaction.atomic():
-        chat.deal_status = 'rejected'
+        chat.deal_status = "rejected"
         chat.updated_at = timezone.now()
         chat.save()
 
@@ -1990,13 +2230,64 @@ def main_page_moderator(request):
 
 @login_required
 def investor_main(request):
-    """
-    Отображает главную страницу для инвестора.
-    """
-    if not request.user.role or request.user.role.role_name != "investor":
-        return redirect("home")
+    startups_qs = Startups.objects.filter(status="approved")
 
-    return render(request, "accounts/investor_main.html")
+    # Используем точную и безопасную логику аннотаций, как в startups_list
+    startups_qs = startups_qs.annotate(
+        average_rating=Coalesce(
+            ExpressionWrapper(
+                F("sum_votes") * 1.0 / F("total_voters"),
+                output_field=models.FloatField(),
+            ),
+            0.0,
+            output_field=models.FloatField(),
+        ),
+        investment_progress=Coalesce(
+            ExpressionWrapper(
+                F("amount_raised") * 100.0 / F("funding_goal"),
+                output_field=models.FloatField(),
+            ),
+            0.0,
+            output_field=models.FloatField(),
+        ),
+        investors_count=Count("investmenttransactions", distinct=True),
+    ).filter(total_voters__gt=0, funding_goal__gt=0)
+
+    startup_data = []
+    for s in startups_qs:
+        startup_data.append(
+            {
+                "name": s.title,
+                "short_description": s.short_description,
+                "rating_avg": float(s.average_rating),
+                "rating_count": s.total_voters,
+                "investment_progress": float(s.investment_progress),
+                "investment_goal": str(s.funding_goal),
+                "investors_count": s.investors_count,
+                "planet_image_url": f"/static/accounts/images/planetary_system/planets_round/{s.planet_image}",
+                "direction": s.direction.direction_name
+                if s.direction
+                else "Без категории",
+                "url": reverse("startup_detail", args=[s.startup_id]),
+            }
+        )
+
+    categories = ["Все"] + list(
+        Directions.objects.values_list("direction_name", flat=True).distinct()
+    )
+
+    planetary_data = {
+        "startups": startup_data,
+        "categories": categories,
+        "categoryImageUrl": "/static/accounts/images/planetary_system/category_img.png",
+        "logoImageUrl": "/static/accounts/images/planetary_system/solar.png",
+    }
+
+    return render(
+        request,
+        "accounts/investor_main.html",
+        {"planetary_data_json": json.dumps(planetary_data)},
+    )
 
 
 @login_required
@@ -2799,8 +3090,6 @@ def leave_chat(request, chat_id):
     return JsonResponse({"success": True, "deleted": False})
 
 
-
-
 def planetary_system(request):
     # Получаем все направления из базы данных
     directions = Directions.objects.all()
@@ -3320,7 +3609,6 @@ def my_startups(request):
         return redirect("profile")
 
 
-
 @login_required
 def notifications_view(request):
     # В будущем здесь будет логика получения уведомлений для пользователя
@@ -3780,4 +4068,4 @@ def get_user_rating_for_startup(user_id, startup_id):
 
 
 def custom_404(request, exception):
-    return render(request, 'accounts/404.html', status=404)
+    return render(request, "accounts/404.html", status=404)

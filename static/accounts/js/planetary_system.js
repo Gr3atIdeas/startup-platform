@@ -296,7 +296,7 @@ document.addEventListener('DOMContentLoaded', () => {
     solarSystem.addEventListener('wheel', (e) => {
         e.preventDefault();
         const delta = e.deltaY > 0 ? -0.1 : 0.1;
-        scale = Math.max(0.5, Math.min(3, scale + delta));
+        scale = Math.max(0.5, Math.min(2.5, scale + delta));
         scene.style.transform = `translate(-50%, -50%) scale(${scale})`;
     });
     
