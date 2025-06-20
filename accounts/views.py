@@ -26,6 +26,7 @@ from django.db.models import (  # Добавляем Q
     Avg,
     Case,
     Count,
+    DecimalField,
     Exists,
     ExpressionWrapper,
     F,
@@ -192,7 +193,9 @@ def startups_list(request):
     startups_qs = startups_qs.annotate(
         total_voters_agg=Count("uservotes", distinct=True),
         total_investors_agg=Count("investmenttransactions", distinct=True),
-        current_funding_sum_agg=Coalesce(Sum("investmenttransactions__amount"), 0),
+        current_funding_sum_agg=Coalesce(
+            Sum("investmenttransactions__amount"), 0, output_field=DecimalField()
+        ),
         rating_agg=ExpressionWrapper(
             Coalesce(Avg("uservotes__rating"), 0.0), output_field=FloatField()
         ),
@@ -2263,7 +2266,9 @@ def investor_main(request):
     startups_qs = startups_qs.annotate(
         total_voters_agg=Count("uservotes", distinct=True),
         total_investors_agg=Count("investmenttransactions", distinct=True),
-        current_funding_sum_agg=Coalesce(Sum("investmenttransactions__amount"), 0),
+        current_funding_sum_agg=Coalesce(
+            Sum("investmenttransactions__amount"), 0, output_field=DecimalField()
+        ),
         rating_agg=ExpressionWrapper(
             Coalesce(Avg("uservotes__rating"), 0.0), output_field=FloatField()
         ),
