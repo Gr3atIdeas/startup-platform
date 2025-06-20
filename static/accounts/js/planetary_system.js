@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
     const appData = JSON.parse(dataElement.textContent);
-    const { startups, categories: galaxyNames, categoryImageUrl, logoImageUrl } = appData;
+    const { startups, categories } = appData;
 
     const planets = [];
     const orbits = document.querySelectorAll('.orbit');
@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let rotationY = 0;
     let scale = 1;
 
-    let currentGalaxy = galaxyNames[0];
+    let currentGalaxy = categories.length > 0 ? categories[0].name : "Все";
 
     const showInfoCard = (contentToShow, targetElement) => {
         // Hide all content blocks first
@@ -85,10 +85,10 @@ document.addEventListener('DOMContentLoaded', () => {
         resumeAnimation();
     };
 
-    function populatePlanets(category) {
+    function populatePlanets(categoryName) {
         galaxy.querySelectorAll('.planet-orientation').forEach(p => p.remove());
         planets.length = 0;
-        const filteredStartups = startups.filter(s => s.direction === category || category === 'Все');
+        const filteredStartups = startups.filter(s => s.direction_name === categoryName || categoryName === 'Все');
         
         filteredStartups.forEach((startup, index) => {
             if (index >= orbits.length) return;
@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const planetEl = document.createElement('div');
             planetEl.className = 'planet';
             planetEl.style.setProperty('--planet-size', `${50 + Math.random() * 20}px`);
-            planetEl.style.backgroundImage = `url('${startup.planet_image_url}')`;
+            planetEl.style.backgroundImage = `url('${startup.image}')`;
             
             planetOrientation.appendChild(planetEl);
             orbit.appendChild(planetOrientation);
@@ -121,13 +121,13 @@ document.addEventListener('DOMContentLoaded', () => {
             planetEl.addEventListener('click', (e) => {
                 e.stopPropagation();
                 
-                planetImage.style.backgroundImage = `url('${startup.planet_image_url}')`;
+                planetImage.style.backgroundImage = `url('${startup.image}')`;
                 startupName.textContent = startup.name;
-                startupRating.textContent = `Рейтинг ${startup.rating_avg.toFixed(1)}/5 (${startup.rating_count})`;
-                startupProgress.textContent = `${startup.investment_progress.toFixed(0)}%`;
-                startupFunding.textContent = `Цель: ${startup.investment_goal} ₽`;
-                startupInvestors.textContent = `Инвесторов: ${startup.investors_count}`;
-                startupDescription.textContent = startup.short_description;
+                startupRating.textContent = startup.rating;
+                startupProgress.textContent = startup.progress;
+                startupFunding.textContent = startup.funding;
+                startupInvestors.textContent = startup.investors;
+                startupDescription.textContent = startup.description;
                 if(moreDetails) {
                     moreDetails.onclick = () => window.location.href = startup.url;
                 }
@@ -148,33 +148,35 @@ document.addEventListener('DOMContentLoaded', () => {
     function initGalaxySelector() {
         galaxyList.innerHTML = '';
 
-        galaxyNames.forEach(name => {
+        categories.forEach(category => {
             const galaxyItem = document.createElement('div');
             galaxyItem.className = 'galaxy-item';
             
             const imgContainer = document.createElement('div');
             imgContainer.className = 'category-image-container';
             const img = document.createElement('img');
-            img.src = categoryImageUrl; 
-            img.alt = name;
+            img.src = category.image
+                ? category.image
+                : '/static/accounts/images/planetary_system/category_img.png';
+            img.alt = category.name;
             imgContainer.appendChild(img);
 
             const nameWrapper = document.createElement('div');
             nameWrapper.className = 'galaxy-name-wrapper';
             const nameSpan = document.createElement('span');
             nameSpan.className = 'galaxy-name';
-            nameSpan.textContent = name;
+            nameSpan.textContent = category.name;
             nameWrapper.appendChild(nameSpan);
 
             galaxyItem.appendChild(imgContainer);
             galaxyItem.appendChild(nameWrapper);
 
-            if (name === currentGalaxy) {
+            if (category.name === currentGalaxy) {
                 galaxyItem.classList.add('selected');
             }
 
             galaxyItem.addEventListener('click', () => {
-                switchGalaxy(name);
+                switchGalaxy(category.name);
             });
 
             galaxyList.appendChild(galaxyItem);
@@ -206,12 +208,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     galaxySelectorPrev.addEventListener('click', () => {
+        const galaxyNames = categories.map(c => c.name);
         let currentIndex = galaxyNames.indexOf(currentGalaxy);
         currentIndex = (currentIndex - 1 + galaxyNames.length) % galaxyNames.length;
         switchGalaxy(galaxyNames[currentIndex]);
     });
 
     galaxySelectorNext.addEventListener('click', () => {
+        const galaxyNames = categories.map(c => c.name);
         let currentIndex = galaxyNames.indexOf(currentGalaxy);
         currentIndex = (currentIndex + 1) % galaxyNames.length;
         switchGalaxy(galaxyNames[currentIndex]);
@@ -248,63 +252,48 @@ document.addEventListener('DOMContentLoaded', () => {
             const now = Date.now();
             planets.forEach(p => {
                 const elapsedSeconds = (now - p.startTime) / 1000;
-                const orbitTime = p.orbit.style.getPropertyValue('--orbit-time');
-                const orbitTimeSeconds = parseFloat(orbitTime.replace('s', '')) * p.speedFactor;
-                const progress = (elapsedSeconds % orbitTimeSeconds) / orbitTimeSeconds;
-                const angle = p.angle + progress * 360;
-                const angleRad = angle * Math.PI / 180;
-                const radius = p.orbitSize / 2;
-                const x = Math.cos(angleRad) * radius;
-                const y = Math.sin(angleRad) * radius;
-                
-                p.orientation.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-                p.element.style.transform = `rotateY(${-rotationY}deg) rotateX(${-rotationX}deg)`;
+                const orbitDuration = parseFloat(getComputedStyle(p.orbit).getPropertyValue('--orbit-time')) || 100;
+                p.angle = (elapsedSeconds * 360) / (orbitDuration * p.speedFactor);
+                p.orientation.style.transform = `rotate(${p.angle}deg)`;
             });
         }
         requestAnimationFrame(updatePositions);
     }
     
     solarSystem.addEventListener('mousedown', (e) => {
-        if (e.target.closest('#galaxy-selector-container') || e.target.closest('#info-card')) return;
-        e.preventDefault();
         isDragging = true;
-        startX = e.clientX;
-        startY = e.clientY;
-        solarSystem.classList.add('dragging');
+        startX = e.clientX - rotationY;
+        startY = e.clientY - rotationX;
+        solarSystem.style.cursor = 'grabbing';
     });
 
     document.addEventListener('mouseup', () => {
         isDragging = false;
-        solarSystem.classList.remove('dragging');
+        solarSystem.style.cursor = 'grab';
     });
 
     document.addEventListener('mousemove', (e) => {
         if (isDragging) {
-            const deltaX = e.clientX - startX;
-            const deltaY = e.clientY - startY;
-            rotationY += deltaX * 0.2;
-            rotationX -= deltaY * 0.2;
-            rotationX = Math.max(-90, Math.min(90, rotationX));
-
-            galaxy.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
-
-            startX = e.clientX;
-            startY = e.clientY;
+            rotationY = e.clientX - startX;
+            rotationX = e.clientY - startY;
+            rotationX = Math.max(-10, Math.min(80, rotationX)); // Ограничение вертикального вращения
+            scene.style.transform = `scale(${scale}) rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
         }
     });
 
     solarSystem.addEventListener('wheel', (e) => {
         e.preventDefault();
-        const delta = e.deltaY > 0 ? -0.1 : 0.1;
-        scale = Math.max(0.5, Math.min(2.5, scale + delta));
-        scene.style.transform = `translate(-50%, -50%) scale(${scale})`;
+        scale -= e.deltaY * 0.001;
+        scale = Math.max(0.5, Math.min(2.5, scale));
+        scene.style.transform = `scale(${scale}) rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
     });
     
-    scene.style.transform = `translate(-50%, -50%) scale(${scale})`;
-    galaxy.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
+    scene.style.transform = `scale(${scale}) rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
 
     initGalaxySelector();
     populatePlanets(currentGalaxy);
-    requestAnimationFrame(updatePositions);
-    window.addEventListener('resize', () => updateGalaxySelectorScroll(false));
+    updatePositions();
+
+    let minScale = 0.5;
+    let maxScale = 2;
 });

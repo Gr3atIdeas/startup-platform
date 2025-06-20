@@ -2259,7 +2259,7 @@ def main_page_moderator(request):
 
 @login_required
 def investor_main(request):
-    startups_qs = Startups.objects.filter(status="approved")
+    startups_qs = Startups.objects.select_related("direction").filter(status="approved")
 
     # Используем точную и безопасную логику аннотаций, как в startups_list
     # Добавляем суффикс _agg к аннотированным полям, чтобы избежать конфликтов
@@ -2315,6 +2315,9 @@ def investor_main(request):
                 "investors": f"Инвесторов: {s.total_investors_agg}",
                 "image": planet_image_url,
                 "category_id": s.direction_id,
+                "direction_name": s.direction.direction_name
+                if s.direction
+                else "Без категории",
                 "url": reverse("startup_detail", args=[s.startup_id]),
             }
         )
