@@ -6,7 +6,7 @@ from django.urls import include, path
 urlpatterns = [
     path("", include("accounts.urls")),
     path('admin/', admin.site.urls),
-    path('accounts/', include('allauth.urls')),  # Добавляем маршруты allauth
+    path('accounts/', include('allauth.urls')),  # Полный путь для allauth
 ]
 
 if settings.DEBUG:

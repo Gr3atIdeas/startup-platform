@@ -12,8 +12,8 @@
 
     /* Устанавливаем черный фон для body */
     body {
-        background: #000 !important;
-        overflow: hidden;
+        background: #000 !important; /* Черный фон */
+        overflow: hidden; /* Убираем прокрутку, как предполагал скрипт */
     }
 
     /* Стили для canvas звездного поля */
@@ -23,8 +23,8 @@
         left: 0;
         width: 100%;
         height: 100%;
-        z-index: -1;
-        display: block;
+        z-index: -1; /* Позади всего контента */
+        display: block; /* Предотвращаем лишние отступы */
     }
 
     /* Центрируем main.content для страницы входа */
@@ -32,51 +32,52 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        flex-grow: 1;
-        padding: 20px;
-        position: relative;
-        z-index: 1;
+        flex-grow: 1; /* Убедимся, что он растягивается */
+        padding: 20px; /* Добавим немного отступов */
+        position: relative; /* Чтобы z-index работал */
+        z-index: 1; /* Контент поверх canvas */
     }
 
     /* Стили для основного контента (auth-container) */
     .auth-container {
         position: relative;
-        z-index: 1;
-        background: rgba(40, 40, 40, 0.6);
-        backdrop-filter: blur(5px);
-        padding: 30px;
+        z-index: 1; /* Убеждаемся, что контент над фоном */
+        background: rgba(40, 40, 40, 0.6); /* Темный полупрозрачный фон */
+        backdrop-filter: blur(5px); /* Эффект размытия под контейнером */
+        padding: 30px; /* Увеличим внутренние отступы */
         border-radius: 10px;
         max-width: 450px;
-        width: 100%;
-        box-sizing: border-box;
-        margin: 0;
+        width: 100%; /* Чтобы не растягивался бесконечно на больших экранах */
+        box-sizing: border-box; /* Учитываем padding в ширине */
+        margin: 0; /* Убираем внешние отступы */
     }
     .auth-box {
-        background: transparent;
-        box-shadow: none;
-        padding: 0;
-        text-align: center;
+        background: transparent; /* Делаем внутренний бокс прозрачным */
+        box-shadow: none; /* Убираем тень */
+        padding: 0; /* Убираем внутренние отступы */
+        text-align: center; /* Центрируем текст внутри */
     }
 
-    /* Дополнительные стили для формы */
+    /* Дополнительные стили для формы, чтобы она выглядела хорошо на темном фоне */
     .auth-box h1 {
-        color: #fff;
-        text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
-        margin-bottom: 25px;
+        color: #fff; /* Белый текст для заголовка */
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.5); /* Тень для читаемости */
+        margin-bottom: 25px; /* Добавим отступ снизу */
     }
     .auth-box .form-group {
-        margin-bottom: 15px;
-        text-align: left;
+        margin-bottom: 15px; /* Отступ между полями */
+        text-align: left; /* Выравнивание текста по левому краю для полей */
     }
     .auth-box form label {
-        color: #eee;
+        color: #eee; /* Светлый цвет для меток */
         font-weight: bold;
-        display: block;
+        display: block; /* Метка над полем */
         margin-bottom: 5px;
     }
+    /* Стилизуем стандартные виджеты Django */
     .auth-box input[type="email"],
     .auth-box input[type="password"] {
-        background-color: rgba(255, 255, 255, 0.8);
+        background-color: rgba(255, 255, 255, 0.8); /* Полупрозрачный фон для полей */
         border: 1px solid rgba(255, 255, 255, 0.5);
         color: #333;
         padding: 10px;
@@ -84,6 +85,7 @@
         width: 100%;
         box-sizing: border-box;
     }
+    /* Убираем стили Django для ошибок по умолчанию, если они мешают */
     .auth-box .errors {
         color: #ffdddd;
         font-size: 0.9em;
@@ -92,10 +94,10 @@
         margin: 0;
     }
     .auth-box button {
-        background-color: blue !important;
-        border: 1px solid #FFFFFF;
+        background-color: blue !important; /* Тест: Ярко-синяя кнопка */
+        border: 1px solid #FFFFFF; /* Белая рамка для контраста */
         transition: background-color 0.3s, color 0.3s;
-        color: #FFFFFF !important;
+        color: #FFFFFF !important; /* Белый текст, принудительно */
         font-weight: bold;
         padding: 12px 20px;
         border-radius: 5px;
@@ -104,19 +106,20 @@
         margin-top: 10px;
     }
     .auth-box button:hover {
-        background-color: rgba(255, 239, 43, 0.9);
+        background-color: rgba(255, 239, 43, 0.9); /* Яркий желтый при наведении */
         color: #333;
     }
     .auth-box p, .auth-box p a {
-        color: #eee;
+        color: #eee; /* Светлый текст для ссылки регистрации */
         text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
-        margin-top: 20px;
+        margin-top: 20px; /* Отступ сверху для ссылки */
         font-size: 0.9em;
     }
     .auth-box p a:hover {
         color: #fff;
         text-decoration: underline;
     }
+    /* Стили для сообщений */
     .messages {
         padding: 0;
         margin-bottom: 15px;
@@ -139,35 +142,34 @@
     .site-footer .footer-main-content {
         display: none;
     }
-    /* Стили для copyright bar */
+    /* Можно добавить стили для copyright bar, если нужно */
     .footer-copyright-bar {
-        background-color: rgba(0, 0, 0, 0.8);
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    /* Стили для кнопки Telegram */
-    .telegram-login {
-        margin-top: 20px;
-        text-align: center;
-    }
-
-    /* Отладочный вывод */
-    .debug-info {
-        color: #fff;
-        font-size: 12px;
-        margin-top: 10px;
-        text-align: center;
+        background-color: rgba(0, 0, 0, 0.8); /* Сделаем фон чуть прозрачнее */
+        border-top: 1px solid rgba(255, 255, 255, 0.1); /* Тонкая линия сверху */
     }
 </style>
 {% endblock %}
 
+
 {% block content %}
+    {# Добавляем canvas для звездного поля #}
     <canvas id="starfield-canvas"></canvas>
+
+    {# Удален старый SVG контейнер #}
+    {# <div id="liquid-background-container">...</div> #}
+
     <div class="auth-container">
         <div class="auth-box">
             <h1>Вход</h1>
+            <script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-login="testmarketstartup_bot" data-size="medium" data-onauth="onTelegramAuth(user)" data-request-access="write"></script>
+            <script type="text/javascript">
+              function onTelegramAuth(user) {
+                alert('Logged in as ' + user.first_name + ' ' + user.last_name + ' (' + user.id + (user.username ? ', @' + user.username : '') + ')');
+              }
+            </script>
             <form method="post">
                 {% csrf_token %}
+                {# Явный рендеринг полей #}
                 <div class="form-group">
                     <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
                     {{ form.email }}
@@ -185,123 +187,147 @@
                 <button type="submit">Войти</button>
             </form>
             <p>Нет аккаунта? <a href="{% url 'register' %}">Зарегистрироваться</a></p>
-            <div class="telegram-login">
-                <script async src="https://telegram.org/js/telegram-widget.js?22" 
-                        data-telegram-login="testmarketstartup_bot" 
-                        data-size="medium" 
-                        data-auth-url="https://greatideas.ru/accounts/telegram/login/" 
-                        data-request-access="write"></script>
-            </div>
-            <!-- Отладочный вывод -->
-            <div class="debug-info">
-                Auth URL: https://greatideas.ru/accounts/telegram/login/
-            </div>
         </div>
     </div>
 
-    <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const D = document;
-        const c = window;
-        let d = c.innerWidth;
-        let e = c.innerHeight;
-        const g = D.getElementById('starfield-canvas');
-        if (!g) {
-            console.error("Starfield canvas not found!");
-            return;
+{# Удален старый скрипт LiquidButton #}
+{# <script> ... LiquidButton class ... </script> #}
+
+<script>
+// Оборачиваем в DOMContentLoaded для гарантии наличия canvas
+document.addEventListener('DOMContentLoaded', () => {
+    const D=document;
+    // Убрано прямое изменение стилей body: d=D.body.style;d.margin=0;d.overflow="hidden";
+    const c=window;
+    let d=c.innerWidth; // Ширина окна
+    let e=c.innerHeight; // Высота окна
+    // Изменено: Получаем canvas по ID
+    const g=D.getElementById('starfield-canvas'); // g = canvas element
+    if (!g) {
+        console.error("Starfield canvas not found!");
+        return;
+    }
+    let i=d/2; // mouse x center
+    let j=e/2; // mouse y center
+    g.width=d;
+    g.height=e;
+    const k=g.getContext("2d"); // k = context
+    if (!k) {
+        console.error("Could not get 2D context for starfield canvas!");
+        return;
+    }
+    // Добавляем переменные для плавного смещения
+    let targetOffsetX = d / 2;
+    let targetOffsetY = e / 2;
+    let currentOffsetX = d / 2;
+    let currentOffsetY = e / 2;
+
+    k.globalAlpha = 0.7; // Возвращаем полупрозрачность для эффекта свечения
+    const l=Math;
+    const m=l.random;
+    const n=l.sin;
+    const o=l.floor;
+    const p=10; // Начальный множитель для координат (z-координата?)
+    const q=[]; // Массив звезд
+    let r=0; // Переменная для синуса (цвет)
+    let s=0.05; // Скорость приближения звезд - ЗАМЕДЛИЛИ ЕЩЕ
+    const V=750; // Количество звезд - УВЕЛИЧИЛИ
+    const W=190; // Базовое значение для цвета
+    const Q=0.3; // Множитель для синуса (разнообразие цветов)
+
+    function E(eventName, handler) {
+        // Используем window вместо canvas для событий мыши, чтобы они работали по всему экрану
+        c.addEventListener(eventName, handler, false);
+    }
+
+    // Обработчик движения мыши - Обновляем целевое смещение
+    E("mousemove", function(a){
+        targetOffsetX=a.clientX;
+        targetOffsetY=a.clientY;
+    });
+
+    // Инициализация/Сброс звезды
+    function u(a) { // a = star object
+        a.x=(m()*d - d*0.5)*p; // Случайное X в пределах (-d/2*p, d/2*p)
+        a.y=(m()*e - e*0.5)*p; // Случайное Y в пределах (-e/2*p, e/2*p)
+        a.a = p; // Z-координата (глубина/масштаб), НАЧИНАЕТСЯ ДАЛЕКО
+        // a.b=0; // Предыдущая экранная X координата - НЕ НУЖНА
+        // a.c=0; // Предыдущая экранная Y координата - НЕ НУЖНА
+    }
+
+    // Создаем начальные звезды
+    for(let v=0; v<V; v++) {
+        let w={}; // w = star object
+        u(w);
+        q.push(w);
+    }
+
+    // Функция основного цикла анимации
+    function drawFrame() {
+        k.fillStyle="#000"; // Черный фон на каждом кадре
+        k.fillRect(0,0,d,e);
+
+        // Центр смещения (зависит от положения мыши) - ЗАМЕНЕНО НА ПЛАВНОЕ СМЕЩЕНИЕ
+        // const offsetX = i; // Используем напрямую позицию мыши
+        // const offsetY = j;
+
+        // Плавно интерполируем текущее смещение к целевому
+        const interpolationFactor = 0.03; // Меньше значение = ЕЩЕ более плавное/медленное движение
+        currentOffsetX += (targetOffsetX - currentOffsetX) * interpolationFactor;
+        currentOffsetY += (targetOffsetY - currentOffsetY) * interpolationFactor;
+
+        for(let h=0; h<V; h++) {
+            const b = q[h]; // b = текущая звезда
+            const currentX = b.x / b.a; // Экранная X = Мировая X / Глубина
+            const currentY = b.y / b.a; // Экранная Y = Мировая Y / Глубина
+            // Увеличиваем базовый размер звезд для видимости
+            const baseSize = 1 / b.a * 2.5 + 0.5; // Сделали звезды чуть меньше
+            // Добавляем фактор мерцания
+            const twinkleFactor = 0.8 + Math.random() * 0.4; // Сделали мерцание менее резким
+            const z = baseSize * twinkleFactor; // Итоговый размер с мерцанием
+
+            // Рисуем белую круглую "голову" звезды
+            k.fillStyle = '#fff'; // Устанавливаем белый цвет
+            k.beginPath();
+            // Рисуем круг: arc(x, y, radius, startAngle, endAngle) - ИСПОЛЬЗУЕМ ПЛАВНОЕ СМЕЩЕНИЕ и размер z
+            k.arc(currentX + currentOffsetX, currentY + currentOffsetY, z / 2, 0, Math.PI * 2); // Делим z на 2 для радиуса
+            k.fill();
+
+            // Приближаем звезду (уменьшаем глубину)
+            b.a -= s;
+
+            // Если звезда вышла за пределы глубины или экрана, сбрасываем её
+            // Проверяем экранные координаты со смещением - ИСПОЛЬЗУЕМ ПЛАВНОЕ СМЕЩЕНИЕ
+            const screenX = currentX + currentOffsetX;
+            const screenY = currentY + currentOffsetY;
+            // Условие сброса: звезда слишком близко или ушла за экран
+            if(b.a < 0.01 || screenX < -z || screenX > d + z || screenY < -z || screenY > e + z) {
+                 u(b); // Сбросить звезду в центр "туннеля"
+                 // Сбрасываем предыдущие координаты - НЕ НУЖНО
+                 // b.b = 0;
+                 // b.c = 0;
+            }
         }
-        let i = d / 2;
-        let j = e / 2;
+        r += 0.015; // Увеличиваем фазу для пульсации цвета (сейчас не влияет на цвет звезд)
+    }
+
+    // Обработчик изменения размера окна
+    function onResize() {
+        d = c.innerWidth;
+        e = c.innerHeight;
         g.width = d;
         g.height = e;
-        const k = g.getContext("2d");
-        if (!k) {
-            console.error("Could not get 2D context for starfield canvas!");
-            return;
+        // Сбрасываем предыдущие координаты звезд при ресайзе, чтобы избежать артефактов
+        for(let star of q) {
+           star.b = 0;
+           star.c = 0;
         }
-        let targetOffsetX = d / 2;
-        let targetOffsetY = e / 2;
-        let currentOffsetX = d / 2;
-        let currentOffsetY = e / 2;
+    }
+    c.addEventListener('resize', onResize, false);
 
-        k.globalAlpha = 0.7;
-        const l = Math;
-        const m = l.random;
-        const n = l.sin;
-        const o = l.floor;
-        const p = 10;
-        const q = [];
-        let r = 0;
-        let s = 0.05;
-        const V = 750;
-        const W = 190;
-        const Q = 0.3;
+    // Запускаем анимацию
+    setInterval(drawFrame, 25); // ~40 FPS
+});
+</script>
 
-        function E(eventName, handler) {
-            c.addEventListener(eventName, handler, false);
-        }
-
-        E("mousemove", function(a) {
-            targetOffsetX = a.clientX;
-            targetOffsetY = a.clientY;
-        });
-
-        function u(a) {
-            a.x = (m() * d - d * 0.5) * p;
-            a.y = (m() * e - e * 0.5) * p;
-            a.a = p;
-        }
-
-        for (let v = 0; v < V; v++) {
-            let w = {};
-            u(w);
-            q.push(w);
-        }
-
-        function drawFrame() {
-            k.fillStyle = "#000";
-            k.fillRect(0, 0, d, e);
-            const interpolationFactor = 0.03;
-            currentOffsetX += (targetOffsetX - currentOffsetX) * interpolationFactor;
-            currentOffsetY += (targetOffsetY - currentOffsetY) * interpolationFactor;
-
-            for (let h = 0; h < V; h++) {
-                const b = q[h];
-                const currentX = b.x / b.a;
-                const currentY = b.y / b.a;
-                const baseSize = 1 / b.a * 2.5 + 0.5;
-                const twinkleFactor = 0.8 + Math.random() * 0.4;
-                const z = baseSize * twinkleFactor;
-
-                k.fillStyle = '#fff';
-                k.beginPath();
-                k.arc(currentX + currentOffsetX, currentY + currentOffsetY, z / 2, 0, Math.PI * 2);
-                k.fill();
-
-                b.a -= s;
-
-                const screenX = currentX + currentOffsetX;
-                const screenY = currentY + currentOffsetY;
-                if (b.a < 0.01 || screenX < -z || screenX > d + z || screenY < -z || screenY > e + z) {
-                    u(b);
-                }
-            }
-            r += 0.015;
-        }
-
-        function onResize() {
-            d = c.innerWidth;
-            e = c.innerHeight;
-            g.width = d;
-            g.height = e;
-            for (let star of q) {
-                star.b = 0;
-                star.c = 0;
-            }
-        }
-        c.addEventListener('resize', onResize, false);
-
-        setInterval(drawFrame, 25);
-    });
-    </script>
 {% endblock %}
