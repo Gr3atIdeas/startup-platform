@@ -423,3 +423,10 @@
 <script src="{% static 'accounts/js/faq.js' %}"></script>
 
 {% endblock %}
+
+{% block scripts %}
+    {{ block.super }}
+    {{ planetary_data_json|json_script:"planetary-system-data" }}
+    <script src="{% static 'accounts/js/planetary_system.js' %}?v={% now 'U' %}"></script>
+    <script src="{% static 'accounts/js/investor_main.js' %}"></script>
+{% endblock %}
