@@ -2283,7 +2283,7 @@ def investor_main(request):
     for startup in startups:
         startups_list.append(
             {
-                "id": startup.id,
+                "id": startup.startup_id,
                 "name": startup.name,
                 "description": startup.short_description,
                 "direction_name": startup.direction.direction_name
@@ -2292,7 +2292,7 @@ def investor_main(request):
                 "image": startup.planet_image.url
                 if startup.planet_image
                 else static("accounts/images/planetary_system/planets_round/1.png"),
-                "url": reverse("accounts:startup_detail", args=[startup.id]),
+                "url": reverse("accounts:startup_detail", args=[startup.startup_id]),
                 "rating": f"{startup.rating_agg:.1f}/5.0"
                 if startup.rating_agg is not None
                 else "N/A",
@@ -2310,7 +2310,11 @@ def investor_main(request):
     )
 
     categories = [
-        {"id": d.id, "name": d.direction_name, "image": d.image.url if d.image else ""}
+        {
+            "id": d.direction_id,
+            "name": d.direction_name,
+            "image": d.image.url if d.image else "",
+        }
         for d in directions_with_startups
     ]
 
