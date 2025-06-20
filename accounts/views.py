@@ -47,6 +47,7 @@ from django.db.models.functions import (
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
+from django.templatetags.static import static
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.text import slugify
@@ -2325,6 +2326,7 @@ def investor_main(request):
     planetary_data = {
         "startups": startup_data,
         "categories": categories,
+        "logoImageUrl": static("accounts/images/planetary_system/solar.png"),
     }
 
     return render(

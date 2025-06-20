@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
     const appData = JSON.parse(dataElement.textContent);
-    const { startups, categories } = appData;
+    const { startups, categories, logoImageUrl } = appData;
 
     const planets = [];
     const orbits = document.querySelectorAll('.orbit');
