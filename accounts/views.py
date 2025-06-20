@@ -194,18 +194,7 @@ def startups_list(request):
         total_investors_agg=Count("investmenttransactions", distinct=True),
         current_funding_sum_agg=Coalesce(Sum("investmenttransactions__amount"), 0),
         rating_agg=ExpressionWrapper(
-            Coalesce(
-                Avg(
-                    Case(
-                        When(uservotes__vote_type="up", then=Value(5)),
-                        When(uservotes__vote_type="down", then=Value(1)),
-                        default=Value(0),
-                        output_field=FloatField(),
-                    )
-                ),
-                0.0,
-            ),
-            output_field=FloatField(),
+            Coalesce(Avg("uservotes__rating"), 0.0), output_field=FloatField()
         ),
     ).annotate(
         progress_agg=ExpressionWrapper(
@@ -2272,18 +2261,7 @@ def investor_main(request):
         total_investors_agg=Count("investmenttransactions", distinct=True),
         current_funding_sum_agg=Coalesce(Sum("investmenttransactions__amount"), 0),
         rating_agg=ExpressionWrapper(
-            Coalesce(
-                Avg(
-                    Case(
-                        When(uservotes__vote_type="up", then=Value(5)),
-                        When(uservotes__vote_type="down", then=Value(1)),
-                        default=Value(0),
-                        output_field=FloatField(),
-                    )
-                ),
-                0.0,
-            ),
-            output_field=FloatField(),
+            Coalesce(Avg("uservotes__rating"), 0.0), output_field=FloatField()
         ),
     ).annotate(
         progress_agg=ExpressionWrapper(
