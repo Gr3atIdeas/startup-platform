@@ -5,12 +5,6 @@
 {% block title %}Вход{% endblock %}
 
 {% block head_extra %}
-<script>
-    // Проверяем хост и при необходимости делаем редирект на WWW
-    if (window.location.hostname === 'greatideas.ru') {
-        window.location.href = 'https://www.greatideas.ru' + window.location.pathname + window.location.search + window.location.hash;
-    }
-</script>
 {{ block.super }}
 <style>
     /* Убираем старые стили фона */
