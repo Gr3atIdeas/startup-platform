@@ -1,0 +1,154 @@
+{% extends 'accounts/base.html' %}
+{% load static %}
+
+{% block custom_styles %}
+<link rel="stylesheet" href="{% static 'accounts/css/support_orders.css' %}">
+<style>
+    .support-ticket-detail-container {
+        display: flex;
+        gap: 2rem;
+        padding: 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .ticket-info-panel {
+        flex: 1;
+        min-width: 300px;
+        max-width: 400px;
+    }
+
+    .ticket-content-panel {
+        flex: 2;
+        background: #f9f9f9;
+        padding: 2rem;
+        border-radius: 8px;
+    }
+
+    .info-block {
+        margin-bottom: 1.5rem;
+    }
+
+    .info-block label {
+        display: block;
+        color: #888;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+    }
+
+    .info-block input, .info-block select, .info-block textarea {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        background-color: #fff;
+    }
+    
+    .info-block input:disabled, .info-block select:disabled {
+        background-color: #f0f0f0;
+        cursor: not-allowed;
+    }
+
+    .ticket-content-panel h3 {
+        margin-top: 0;
+        border-bottom: 2px solid #eee;
+        padding-bottom: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .ticket-message {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+    }
+    
+    .moderator-comment-section {
+        margin-top: 2rem;
+        border-top: 1px solid #eee;
+        padding-top: 1.5rem;
+    }
+
+    .back-link {
+        display: inline-block;
+        margin-bottom: 1rem;
+        color: #333;
+        text-decoration: none;
+    }
+    .back-link:hover {
+        text-decoration: underline;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<main>
+    <div class="support-ticket-detail-container">
+        
+        <div class="ticket-info-panel">
+            <a href="{% url 'support_orders' %}" class="back-link">&larr; К списку заявок</a>
+            
+            <form method="post">
+                {% csrf_token %}
+
+                {% if is_moderator and form %}
+                    <div class="info-block">
+                        <label for="{{ form.status.id_for_label }}">{{ form.status.label }}</label>
+                        {{ form.status }}
+                    </div>
+                {% else %}
+                    <div class="info-block">
+                        <label>Статус работы</label>
+                        <input type="text" value="{{ ticket.get_status_display }}" disabled>
+                    </div>
+                {% endif %}
+                
+                <div class="info-block">
+                    <label>Дата создания</label>
+                    <input type="text" value="{{ ticket.created_at|date:'d.m.Y' }}" disabled>
+                </div>
+
+                <div class="info-block">
+                    <label>Номер заявки</label>
+                    <input type="text" value="#{{ ticket.ticket_id }}" disabled>
+                </div>
+                
+                <div class="info-block">
+                    <label>ID аккаунта обращения</label>
+                    <input type="text" value="{{ ticket.user.id }}" disabled>
+                </div>
+
+                <div class="info-block">
+                    <label>Ваше имя</label>
+                    <input type="text" value="{{ ticket.user.get_full_name }}" disabled>
+                </div>
+                
+                <div class="info-block">
+                    <label>Почта для связи</label>
+                    <input type="text" value="{{ ticket.user.email }}" disabled>
+                </div>
+
+                {% if is_moderator and form %}
+                    <div class="info-block">
+                        <label for="{{ form.moderator_comment.id_for_label }}">{{ form.moderator_comment.label }}</label>
+                        {{ form.moderator_comment }}
+                    </div>
+                     <button type="submit" class="blue-button">Сохранить изменения</button>
+                {% endif %}
+
+            </form>
+        </div>
+
+        <div class="ticket-content-panel">
+            <h3>Тема: {{ ticket.subject }}</h3>
+            <p class="ticket-message">{{ ticket.message }}</p>
+
+            {% if ticket.moderator_comment %}
+                <div class="moderator-comment-section">
+                    <h4>Комментарий модератора</h4>
+                    <p class="ticket-message">{{ ticket.moderator_comment }}</p>
+                </div>
+            {% endif %}
+        </div>
+        
+    </div>
+</main>
+{% endblock %} 

@@ -62,6 +62,7 @@ urlpatterns = [
     path("notifications/", views.notifications_view, name="notifications_page"),
     path("support/", views.support_page_view, name="support"),
     path("support/orders/", views.support_orders_view, name="support_orders"),
+    path("support/ticket/<int:ticket_id>/", views.support_ticket_detail, name="support_ticket_detail"),
     path("support/contact/", views.support_contact_view, name="support_contact"),
     
     # Вебхук для Telegram бота

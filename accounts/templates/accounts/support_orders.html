@@ -37,33 +37,25 @@
     </section>
     
     <section class="orders-list-section">
-      {% for order in orders %}
-        <a href="#" class="order-card"> {# TODO: Ссылка на детальный просмотр тикета #}
-          <div class="order-details-grid">
-            <div class="order-detail-item">
-              <span class="detail-label">Создана</span>
-              <span class="detail-value">{{ order.created_at|date:"d.m.Y" }}</span>
-            </div>
-            <div class="order-detail-item order-detail-topic">
-              <span class="detail-label">Тема</span>
-              <span class="detail-value">{{ order.subject }}</span>
-            </div>
-            <div class="order-detail-item">
-              <span class="detail-label">Статус</span>
-              <span class="detail-value status-{{ order.status }}">{{ order.get_status_display }}</span>
-            </div>
-            <div class="order-detail-item">
-              <span class="detail-label">Номер</span>
-              <span class="detail-value">#{{ order.ticket_id }}</span>
-            </div>
+      <div class="tickets-list">
+        {% if orders %}
+          {% for order in orders %}
+            <a href="{% url 'support_ticket_detail' order.ticket_id %}" class="ticket-card-link">
+              <div class="ticket-card">
+                <div class="ticket-info"><span>Создана</span>{{ order.created_at|date:"d.m.Y" }}</div>
+                <div class="ticket-info"><span>Тема</span>{{ order.subject|truncatechars:25 }}</div>
+                <div class="ticket-info"><span>Статус</span>{{ order.get_status_display }}</div>
+                <div class="ticket-info"><span>Номер</span>#{{ order.ticket_id }}</div>
+              </div>
+            </a>
+          {% endfor %}
+        {% else %}
+          <div class="no-orders-message">
+            <p>У вас пока нет созданных заявок.</p>
+            <p>Если у вас есть вопрос, вы можете <a href="{% url 'support_contact' %}">создать новую заявку</a>.</p>
           </div>
-        </a>
-      {% empty %}
-        <div class="no-orders-message">
-          <p>У вас пока нет созданных заявок.</p>
-          <p>Если у вас есть вопрос, вы можете <a href="{% url 'support_contact' %}">создать новую заявку</a>.</p>
-        </div>
-      {% endfor %}
+        {% endif %}
+      </div>
     </section>
 
     <section class="additional-info-section">

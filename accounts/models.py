@@ -741,6 +741,7 @@ class SupportTicket(models.Model):
     user = models.ForeignKey(Users, on_delete=models.SET_NULL, null=True, blank=True, related_name='support_tickets')
     subject = models.CharField(max_length=255)
     message = models.TextField()
+    moderator_comment = models.TextField(blank=True, null=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='new')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

@@ -340,3 +340,17 @@ class SupportTicketForm(forms.ModelForm):
             'subject': 'Тема',
             'message': 'Сообщение',
         }
+
+
+class ModeratorTicketForm(forms.ModelForm):
+    class Meta:
+        model = SupportTicket
+        fields = ['status', 'moderator_comment']
+        widgets = {
+            'status': forms.Select(attrs={'class': 'form-control'}),
+            'moderator_comment': forms.Textarea(attrs={'rows': 4, 'placeholder': 'Добавьте комментарий...'}),
+        }
+        labels = {
+            'status': 'Статус работы',
+            'moderator_comment': 'Комментарий',
+        }

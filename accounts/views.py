@@ -63,6 +63,7 @@ from .forms import (  # Добавляем MessageForm и UserSearchForm
     CommentForm,
     LoginForm,
     MessageForm,
+    ModeratorTicketForm,
     ProfileEditForm,
     RegisterForm,
     StartupForm,
@@ -3845,6 +3846,35 @@ def support_orders_view(request):
 
 
 @login_required  # Предполагаем, что создание заявки доступно только авторизованным
+def support_ticket_detail(request, ticket_id):
+    ticket = get_object_or_404(SupportTicket, pk=ticket_id)
+    user = request.user
+
+    # Проверка прав доступа
+    is_moderator = user.is_authenticated and user.role and user.role.role_name == 'moderator'
+    if not (user == ticket.user or is_moderator):
+        return HttpResponseForbidden("У вас нет доступа к этой заявке.")
+
+    form = None
+    if is_moderator:
+        if request.method == 'POST':
+            form = ModeratorTicketForm(request.POST, instance=ticket)
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Заявка успешно обновлена.')
+                return redirect('support_ticket_detail', ticket_id=ticket.ticket_id)
+        else:
+            form = ModeratorTicketForm(instance=ticket)
+    
+    context = {
+        'ticket': ticket,
+        'form': form,
+        'is_moderator': is_moderator,
+    }
+    return render(request, 'accounts/support_ticket_detail.html', context)
+
+
+@login_required
 def support_contact_view(request):
     if request.method == 'POST':
         form = SupportTicketForm(request.POST)
