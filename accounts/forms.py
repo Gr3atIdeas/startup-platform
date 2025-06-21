@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Comments, Directions, Startups, StartupStages, Users
+from .models import Comments, Directions, Roles, Startups, StartupStages, Users
 from .utils import get_planet_urls
 
 
@@ -35,6 +35,11 @@ class RegisterForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput, label="Пароль")
     confirm_password = forms.CharField(
         widget=forms.PasswordInput, label="Подтвердите пароль"
+    )
+    role = forms.ModelChoiceField(
+        queryset=Roles.objects.filter(role_name__in=['startuper', 'investor']),
+        label="Роль",
+        empty_label="Выберите роль"
     )
 
     class Meta:

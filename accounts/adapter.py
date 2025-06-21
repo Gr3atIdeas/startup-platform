@@ -70,8 +70,8 @@ class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
         return url
 
     def get_login_redirect_url(self, request):
-        logger.debug("Redirecting after login to /startups/")
-        return '/startups/'  # Явный редирект на каталог
+        logger.debug("Redirecting after login to /profile/")
+        return reverse("profile")
 
     def get_app(self, request, provider):
         logger.debug(f"Attempting to get SocialApp for provider '{provider}' with SITE_ID={settings.SITE_ID}")

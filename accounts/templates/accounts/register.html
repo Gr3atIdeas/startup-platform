@@ -1,12 +1,71 @@
 {% extends 'accounts/base.html' %}
 {% load static %}
+{% load socialaccount %}
 
 {% block title %}Регистрация{% endblock %}
 
 {% block head_extra %}
 {{ block.super }}
-<link rel="stylesheet" href="{% static 'accounts/css/register.css' %}?v={% now 'U' %}">
 <style>
+    /* Стили скопированы из login.html для идентичного вида */
+    body {
+        background: #000 !important;
+        overflow: hidden;
+    }
+    #starfield-canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        display: block;
+    }
+    main.content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-grow: 1;
+        padding: 20px;
+        position: relative;
+        z-index: 1;
+    }
+    .auth-container {
+        position: relative;
+        z-index: 1;
+        background: rgba(40, 40, 40, 0.6);
+        backdrop-filter: blur(5px);
+        padding: 30px;
+        border-radius: 10px;
+        max-width: 450px;
+        width: 100%;
+        box-sizing: border-box;
+        margin: 0;
+    }
+    .auth-box {
+        background: transparent;
+        box-shadow: none;
+        padding: 0;
+        text-align: center;
+    }
+    .auth-box h1 {
+        color: #fff;
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+        margin-bottom: 25px;
+    }
+    .auth-box .form-group {
+        margin-bottom: 15px;
+        text-align: left;
+    }
+    .auth-box form label {
+        color: #eee;
+        font-weight: bold;
+        display: block;
+        margin-bottom: 5px;
+    }
+    .auth-box input[type="email"],
+    .auth-box input[type="password"],
+    .auth-box input[type="text"],
     .auth-box select {
         background-color: rgba(255, 255, 255, 0.8);
         border: 1px solid rgba(255, 255, 255, 0.5);
@@ -16,86 +75,119 @@
         width: 100%;
         box-sizing: border-box;
     }
-    .auth-container {
-        margin-bottom: 40px; /* Поднимаем контейнер вверх */
+    .auth-box .errors, .auth-box .errorlist {
+        color: #ffdddd;
+        font-size: 0.9em;
+        list-style: none;
+        padding: 5px 0 0 0;
+        margin: 0;
+        text-align: left;
+    }
+    .auth-box button {
+        background-color: blue !important;
+        border: 1px solid #FFFFFF;
+        transition: background-color 0.3s, color 0.3s;
+        color: #FFFFFF !important;
+        font-weight: bold;
+        padding: 12px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 100%;
+        margin-top: 10px;
+    }
+    .auth-box button:hover {
+        background-color: rgba(255, 239, 43, 0.9);
+        color: #333;
+    }
+    .auth-box p, .auth-box p a {
+        color: #eee;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
+        margin-top: 20px;
+        font-size: 0.9em;
+    }
+    .auth-box p a:hover {
+        color: #fff;
+        text-decoration: underline;
+    }
+    .site-footer .footer-main-content {
+        display: none;
+    }
+    .footer-copyright-bar {
+        background-color: rgba(0, 0, 0, 0.8);
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
     }
 </style>
 {% endblock %}
 
 {% block content %}
-    <canvas id="starfield-canvas"></canvas>
+<canvas id="starfield-canvas"></canvas>
 
-    <div class="auth-container">
-        <div class="auth-box">
-            <h1>Регистрация</h1>
-            <form method="post">
-                {% csrf_token %}
-                
-                {# Отображение общих ошибок формы #}
-                {% if form.non_field_errors %}
-                    <div class="errorlist">
-                        {% for error in form.non_field_errors %}
-                            {{ error }}
-                        {% endfor %}
-                    </div>
-                {% endif %}
+<div class="auth-container">
+    <div class="auth-box">
+        <h1>Регистрация</h1>
+        <form method="post">
+            {% csrf_token %}
 
-                <p>
-                    <label for="{{ form.email.id_for_label }}">Электронная почта:</label>
-                    {{ form.email }}
-                    {% if form.email.errors %}<div class="errorlist">{{ form.email.errors }}</div>{% endif %}
-                </p>
-                <p>
-                    <label for="{{ form.first_name.id_for_label }}">Имя:</label>
-                    {{ form.first_name }}
-                    {% if form.first_name.errors %}<div class="errorlist">{{ form.first_name.errors }}</div>{% endif %}
-                </p>
-                <p>
-                    <label for="{{ form.last_name.id_for_label }}">Фамилия:</label>
-                    {{ form.last_name }}
-                    {% if form.last_name.errors %}<div class="errorlist">{{ form.last_name.errors }}</div>{% endif %}
-                </p>
-                <p>
-                    <label for="{{ form.phone.id_for_label }}">Телефон:</label>
-                    {{ form.phone }}
-                    {% if form.phone.errors %}<div class="errorlist">{{ form.phone.errors }}</div>{% endif %}
-                </p>
-                <p>
-                    <label for="{{ form.role.id_for_label }}">Роль:</label>
-                    <select name="{{ form.role.name }}" id="{{ form.role.id_for_label }}">
-                        <option value="">Выберите роль</option>
-                        {% for value, text in form.role.field.choices %}
-                            {% if text == 'startuper' or text == 'investor' %}
-                                <option value="{{ value }}" {% if form.role.value|stringformat:"s" == value|stringformat:"s" %}selected{% endif %}>
-                                    {% if text == 'startuper' %}
-                                        Стартаппер
-                                    {% elif text == 'investor' %}
-                                        Инвестор
-                                    {% endif %}
-                                </option>
-                            {% endif %}
-                        {% endfor %}
-                    </select>
-                    {% if form.role.errors %}<div class="errorlist">{{ form.role.errors }}</div>{% endif %}
-                </p>
-                <p>
-                    <label for="{{ form.password.id_for_label }}">Пароль:</label>
-                    {{ form.password }}
-                    {% if form.password.errors %}<div class="errorlist">{{ form.password.errors }}</div>{% endif %}
-                </p>
-                <p>
-                    <label for="{{ form.confirm_password.id_for_label }}">Подтвердите пароль:</label>
-                    {{ form.confirm_password }}
-                    {% if form.confirm_password.errors %}<div class="errorlist">{{ form.confirm_password.errors }}</div>{% endif %}
-                </p>
-                
-                <button type="submit">Зарегистрироваться</button>
-            </form>
-            <div class="login-link">
-                <p>Уже есть аккаунт? <a href="{% url 'login' %}">Войти</a></p>
+            {% if form.non_field_errors %}
+                <div class.errors>
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="form-group">
+                <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+                {{ form.email }}
+                {% if form.email.errors %}<div class="errors">{{ form.email.errors }}</div>{% endif %}
             </div>
+            <div class="form-group">
+                <label for="{{ form.first_name.id_for_label }}">{{ form.first_name.label }}</label>
+                {{ form.first_name }}
+                {% if form.first_name.errors %}<div class="errors">{{ form.first_name.errors }}</div>{% endif %}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.last_name.id_for_label }}">{{ form.last_name.label }}</label>
+                {{ form.last_name }}
+                {% if form.last_name.errors %}<div class="errors">{{ form.last_name.errors }}</div>{% endif %}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.phone.id_for_label }}">{{ form.phone.label }}</label>
+                {{ form.phone }}
+                {% if form.phone.errors %}<div class="errors">{{ form.phone.errors }}</div>{% endif %}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.role.id_for_label }}">{{ form.role.label }}</label>
+                {{ form.role }}
+                {% if form.role.errors %}<div class="errors">{{ form.role.errors }}</div>{% endif %}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.password.id_for_label }}">{{ form.password.label }}</label>
+                {{ form.password }}
+                {% if form.password.errors %}<div class="errors">{{ form.password.errors }}</div>{% endif %}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.confirm_password.id_for_label }}">{{ form.confirm_password.label }}</label>
+                {{ form.confirm_password }}
+                {% if form.confirm_password.errors %}<div class="errors">{{ form.confirm_password.errors }}</div>{% endif %}
+            </div>
+            
+            <button type="submit">Зарегистрироваться</button>
+        </form>
+
+        <div style="display: flex; align-items: center; text-align: center; margin: 20px 0;">
+            <div style="flex-grow: 1; height: 1px; background-color: #555;"></div>
+            <span style="padding: 0 10px; color: #ccc;">или</span>
+            <div style="flex-grow: 1; height: 1px; background-color: #555;"></div>
         </div>
+
+        <a href="{% provider_login_url 'telegram' %}" class="telegram-login-btn">
+            Зарегистрироваться через Telegram
+        </a>
+
+        <p>Уже есть аккаунт? <a href="{% url 'login' %}">Войти</a></p>
     </div>
+</div>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
@@ -104,65 +196,46 @@ document.addEventListener('DOMContentLoaded', () => {
     let d = c.innerWidth;
     let e = c.innerHeight;
     const g = D.getElementById('starfield-canvas');
-    if (!g) {
-        console.error("Starfield canvas not found!");
-        return;
-    }
-    let i = d / 2;
-    let j = e / 2;
+    if (!g) return;
     g.width = d;
     g.height = e;
     const k = g.getContext("2d");
-    if (!k) {
-        console.error("Could not get 2D context for starfield canvas!");
-        return;
-    }
-
-    c.onresize = () => {
-        d = c.innerWidth;
-        e = c.innerHeight;
-        g.width = d;
-        g.height = e;
-        i = d / 2;
-        j = e / 2;
-    };
+    if (!k) return;
 
     let stars = [];
     for (let n = 0; n < 500; n++) {
-        stars[n] = {
-            x: Math.random() * d - i,
-            y: Math.random() * e - j,
-            z: Math.random() * d
-        };
+        stars[n] = { x: Math.random() * d, y: Math.random() * e, z: Math.random() * d };
     }
 
     function draw() {
         k.fillStyle = "black";
         k.fillRect(0, 0, d, e);
-
         k.save();
-        k.translate(d / 2, e / 2); // Center the starfield
-
+        k.translate(d / 2, e / 2);
         for (let n = 0; n < 500; n++) {
             let star = stars[n];
             star.z -= 1;
             if (star.z <= 0) {
-                star.x = Math.random() * d - i;
-                star.y = Math.random() * e - j;
                 star.z = d;
             }
-
             let s = d / (d + star.z);
             let r = s * 2;
             k.beginPath();
             k.fillStyle = `rgba(255, 255, 255, ${s > 0.1 ? s : 0.1})`;
-            k.arc(star.x, star.y, r, 0, 2 * Math.PI);
+            k.arc( (star.x - d/2) * s, (star.y - e/2) * s, r, 0, 2 * Math.PI);
             k.fill();
         }
         k.restore();
-        c.requestAnimationFrame(draw);
+        requestAnimationFrame(draw);
     }
     draw();
+
+    window.onresize = () => {
+        d = c.innerWidth;
+        e = c.innerHeight;
+        g.width = d;
+        g.height = e;
+    };
 });
 </script>
 {% endblock %}
