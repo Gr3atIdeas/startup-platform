@@ -1,6 +1,5 @@
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 from allauth.socialaccount.providers.telegram.provider import TelegramProvider
-import requests
 import logging
 from allauth.socialaccount.models import SocialAccount, SocialLogin
 from allauth.socialaccount.helpers import complete_social_login
@@ -18,45 +17,29 @@ class CustomTelegramAdapter(DefaultSocialAccountAdapter):
 
     def complete_login(self, request, app, token, **kwargs):
         logger.debug(f"Complete_login called with app: {app}, token: {token}, kwargs: {kwargs}")
-        try:
-            api_url = f'https://api.telegram.org/bot{app.client_id}/getMe'
-            response = requests.get(api_url)
-            if response.status_code == 200:
-                data = response.json()
-                logger.debug(f"getMe response: {data}")
-                user_data = {
-                    'id': data.get('result', {}).get('id'),
-                    'username': data.get('result', {}).get('username'),
-                    'first_name': data.get('result', {}).get('first_name'),
-                    'last_name': data.get('result', {}).get('last_name'),
-                }
-                if user_data.get('id'):
-                    logger.info("Successfully fetched user data via getMe")
-                    return self._process_social_login(request, app, user_data)
-                else:
-                    logger.warning("No valid user data in getMe response")
-            else:
-                logger.warning(f"getMe failed with status {response.status_code}: {response.text}")
-        except Exception as e:
-            logger.error(f"Error in getMe request: {str(e)}")
-
         telegram_data = kwargs.get('response', {})
-        logger.debug(f"Telegram data from kwargs: {telegram_data}")
-        if telegram_data:
-            user_data = {
-                'id': telegram_data.get('id'),
-                'username': telegram_data.get('username'),
-                'first_name': telegram_data.get('first_name'),
-                'last_name': telegram_data.get('last_name'),
-                'photo_url': telegram_data.get('photo_url'),
-            }
-            if user_data.get('id'):
-                logger.info("Successfully fetched user data from kwargs")
-                return self._process_social_login(request, app, user_data)
-            else:
-                logger.warning("No valid user data in kwargs['response']")
+        logger.debug(f"Received Telegram data: {telegram_data}")
 
-        raise Exception("Failed to fetch user data from Telegram")
+        if not telegram_data or 'id' not in telegram_data:
+            logger.error("No valid Telegram data received")
+            raise Exception("Failed to fetch user data from Telegram")
+
+        user_data = {
+            'id': telegram_data.get('id'),
+            'username': telegram_data.get('username'),
+            'first_name': telegram_data.get('first_name'),
+            'last_name': telegram_data.get('last_name', ''),
+            'photo_url': telegram_data.get('photo_url'),
+        }
+        logger.info(f"Processed user data: {user_data}")
+
+        # Проверка хэша (опционально, если Telegram требует)
+        # Для простоты пока пропускаем, но можно добавить позже
+        # if not self.verify_telegram_hash(telegram_data, app.client_id):
+        #     logger.error("Invalid Telegram hash")
+        #     raise Exception("Invalid Telegram authentication data")
+
+        return self._process_social_login(request, app, user_data)
 
     def _process_social_login(self, request, app, user_data):
         User = get_user_model()
@@ -88,4 +71,5 @@ class CustomTelegramAdapter(DefaultSocialAccountAdapter):
         )
 
         sociallogin = SocialLogin(user=user, account=social_account)
+        logger.debug(f"Completing social login for user_id={user.user_id}")
         return complete_social_login(request, sociallogin)
