@@ -12,6 +12,10 @@ logger = logging.getLogger(__name__)
 class CustomTelegramAdapter(DefaultSocialAccountAdapter):
     provider_id = TelegramProvider.id
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        logger.debug(f"CustomTelegramAdapter initialized with provider_id: {self.provider_id}")
+
     def complete_login(self, request, app, token, **kwargs):
         logger.debug(f"Complete_login called with app: {app}, token: {token}, kwargs: {kwargs}")
         try:
