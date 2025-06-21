@@ -2,7 +2,7 @@ from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 from allauth.socialaccount.providers.telegram.provider import TelegramProvider
 import requests
 import logging
-from allauth.socialaccount.models import SocialAccount, SocialLogin  # Добавлен импорт SocialLogin
+from allauth.socialaccount.models import SocialAccount, SocialLogin
 from allauth.socialaccount.helpers import complete_social_login
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
@@ -38,7 +38,7 @@ class CustomTelegramAdapter(DefaultSocialAccountAdapter):
         except Exception as e:
             logger.error(f"Error in getMe request: {str(e)}")
 
-        # Вариант 2: Использование данных из kwargs['response'] (если доступно)
+        # Вариант 2: Использование данных из kwargs['response']
         telegram_data = kwargs.get('response', {})
         logger.debug(f"Telegram data from kwargs: {telegram_data}")
         if telegram_data:
@@ -61,12 +61,11 @@ class CustomTelegramAdapter(DefaultSocialAccountAdapter):
         User = get_user_model()
         telegram_id = str(user_data['id'])
 
-        # Проверяем, существует ли пользователь с таким Telegram ID
+        # Проверяем или создаем пользователя
         try:
             user = User.objects.get(telegram_id=telegram_id)
             logger.info(f"Existing user found: user_id={user.user_id}")
         except ObjectDoesNotExist:
-            # Создаем нового пользователя, если не найден
             user = User(
                 telegram_id=telegram_id,
                 first_name=user_data.get('first_name', ''),
@@ -78,7 +77,7 @@ class CustomTelegramAdapter(DefaultSocialAccountAdapter):
             if not user.email:
                 user.email = f"{telegram_id}@telegram.com"
                 user.telegram_email = user.email
-            user.role_id = 1  # Default role
+            user.role_id = 4  # Назначаем роль "Unrecognized"
             user.save()
             logger.info(f"New user created: user_id={user.user_id}")
 
@@ -89,9 +88,5 @@ class CustomTelegramAdapter(DefaultSocialAccountAdapter):
             defaults={'extra_data': user_data}
         )
 
-        # Создаем SocialLogin для завершения аутентификации
-        sociallogin = SocialLogin(
-            user=user,
-            account=social_account
-        )
+        sociallogin = SocialLogin(user=user, account=social_account)
         return complete_social_login(request, sociallogin)

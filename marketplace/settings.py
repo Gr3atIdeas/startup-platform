@@ -107,9 +107,10 @@ SOCIALACCOUNT_PROVIDERS = {
 LOGIN_REDIRECT_URL = 'startups_list'  # Перенаправление на страницу каталога
 SOCIALACCOUNT_LOGIN_ON_GET = True  # Разрешить GET-запросы для входа
 ACCOUNT_EMAIL_REQUIRED = False  # Email не обязателен для Telegram
-ACCOUNT_AUTHENTICATION_METHOD = 'email'  # Или 'username', если хотите
+ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
 ACCOUNT_EMAIL_VERIFICATION = 'none'  # Отключите верификацию email
 ACCOUNT_LOGOUT_REDIRECT_URL = 'startups_list'  # Перенаправление после выхода
+ACCOUNT_USERNAME_REQUIRED = False  # Username не нужен
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",

@@ -506,53 +506,54 @@ class ModeratorReviews(models.Model):
 
 
 class UserManager(BaseUserManager):
-    def create_user(
-        self,
-        email,
-        password=None,
-        first_name=None,
-        last_name=None,
-        phone=None,
-        role_id=None,
-        **extra_fields,
-    ):
-        if not email:
-            raise ValueError("Email обязателен")
-        email = self.normalize_email(email)
+    def create_user(self, email, password=None, first_name=None, last_name=None, phone=None, role_id=None, telegram_id=None, **extra_fields):
+        if not email and not telegram_id:
+            raise ValueError("Email или Telegram ID обязателен")
+        email = self.normalize_email(email) if email else None
         user = self.model(
             email=email,
             first_name=first_name,
             last_name=last_name,
             phone=phone,
             role_id=role_id,
-            **extra_fields,
+            telegram_id=telegram_id,
+            **extra_fields
         )
-        user.set_password(password)
+        if password:
+            user.set_password(password)
+        else:
+            user.password_hash = None  # Явно устанавливаем None для Telegram
         user.save(using=self._db)
         return user
 
+    def create_superuser(self, email, password, first_name=None, last_name=None, **extra_fields):
+        if not email:
+            raise ValueError("Email обязателен для суперпользователя")
+        user = self.create_user(
+            email=email,
+            password=password,
+            first_name=first_name,
+            last_name=last_name,
+            is_staff=True,
+            is_active=True,
+            **extra_fields
+        )
+        user.is_staff = True
+        user.save(using=self._db)
+        return user
 
 class Users(AbstractBaseUser):
     user_id = models.AutoField(primary_key=True)
-    email = models.CharField(unique=True, max_length=255, blank=True, null=True)  # Может быть null
+    email = models.EmailField(unique=True, max_length=255, blank=True, null=True)
     password_hash = models.CharField(max_length=255, blank=True, null=True)
     first_name = models.CharField(max_length=100, blank=True, null=True)
     last_name = models.CharField(max_length=100, blank=True, null=True)
     phone = models.CharField(max_length=20, blank=True, null=True)
-    role = models.ForeignKey(
-        "Roles", models.SET_NULL, blank=True, null=True, db_column="role_id"
-    )
+    role = models.ForeignKey("Roles", models.SET_NULL, blank=True, null=True, db_column="role_id")
     profile_picture_url = models.CharField(max_length=255, blank=True, null=True)
     bio = models.TextField(blank=True, null=True)
     rating = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
-    status = models.ForeignKey(
-        "UserStatuses",
-        models.SET_DEFAULT,
-        default=1,
-        blank=True,
-        null=True,
-        db_column="status_id",
-    )
+    status = models.ForeignKey("UserStatuses", models.SET_DEFAULT, default=1, blank=True, null=True, db_column="status_id")
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
     last_login = models.DateTimeField(blank=True, null=True)
@@ -560,9 +561,7 @@ class Users(AbstractBaseUser):
     is_staff = models.BooleanField(default=False)
     show_phone = models.BooleanField(default=False)
     website_url = models.CharField(max_length=255, blank=True, null=True)
-    social_links = models.JSONField(blank=True, null=True)
-    
-    # Новые поля для Telegram
+    social_links = models.JSONField(blank=True, null=True, default=dict)
     telegram_id = models.CharField(max_length=255, unique=True, blank=True, null=True)
     telegram_email = models.CharField(max_length=255, blank=True, null=True)
 
@@ -582,8 +581,11 @@ class Users(AbstractBaseUser):
             self.password_hash = None
         else:
             self.password_hash = make_password(raw_password)
+        self.save()
 
     def check_password(self, raw_password):
+        if not self.password_hash or raw_password is None:
+            return False  # Блокируем вход с пустым паролем для пользователей без пароля
         return check_password(raw_password, self.password_hash)
 
     def get_full_name(self):
@@ -606,7 +608,14 @@ class Users(AbstractBaseUser):
     def get_profile_picture_url(self):
         if self.profile_picture_url and is_uuid(self.profile_picture_url):
             return get_file_url(self.profile_picture_url, self.user_id, "avatar")
-        return self.profile_picture_url  # Поддержка Telegram photo_url
+        return self.profile_picture_url
+
+    def is_telegram_authenticated(self):
+        return bool(self.telegram_id)
+
+    def update_last_login(self):
+        self.last_login = timezone.now()
+        self.save(update_fields=['last_login'])
 
 
 class NewsArticles(models.Model):

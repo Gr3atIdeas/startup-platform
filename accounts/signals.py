@@ -17,23 +17,22 @@ def handle_telegram_login(request, sociallogin, **kwargs):
     logger.debug(f"Received Telegram data in signal: {telegram_data}")
     logger.debug(f"User before update: {user.__dict__}")
 
-    # Обновляем только для нового пользователя
-    user.telegram_id = str(telegram_data.get('id', '') or '')
-    user.first_name = telegram_data.get('first_name', '') or ''
-    user.last_name = telegram_data.get('last_name', '') or ''
-    user.profile_picture_url = telegram_data.get('photo_url', '') or ''
-    
-    if telegram_data.get('username'):
-        user.social_links = {'telegram': f"@{telegram_data.get('username')}"}
+    if not user.telegram_id:  # Обновляем только если telegram_id пуст
+        user.telegram_id = str(telegram_data.get('id', '') or '')
+        user.first_name = telegram_data.get('first_name', '') or ''
+        user.last_name = telegram_data.get('last_name', '') or ''
+        user.profile_picture_url = telegram_data.get('photo_url', '') or ''
+        
+        if telegram_data.get('username'):
+            user.social_links = {'telegram': f"@{telegram_data.get('username')}"}
 
-    if not user.email:
-        user.email = f"{user.telegram_id}@telegram.com"
-        user.telegram_email = user.email
+        if not user.email:
+            user.email = f"{user.telegram_id}@telegram.com"
+            user.telegram_email = user.email
 
-    if not user.role_id:
-        user.role_id = 1  # Default role
+        if not user.role_id:
+            user.role_id = 4  # Default role
 
-    user.last_login = timezone.now()
-    
-    user.save()
-    logger.info(f"Telegram user processed and saved: user_id={user.user_id}, telegram_id={user.telegram_id}, social_links={user.social_links}")
+        user.last_login = timezone.now()
+        user.save()
+        logger.info(f"Telegram user processed and saved: user_id={user.user_id}, telegram_id={user.telegram_id}, social_links={user.social_links}")
