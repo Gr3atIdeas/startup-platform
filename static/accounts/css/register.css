@@ -1,7 +1,9 @@
-/* General body styles for registration page */
+/* Styles for registration page, mimicking login page */
 body {
     background: #000 !important;
-    overflow: hidden;
+    /* Allow scrolling for long forms */
+    overflow-y: auto !important; 
+    overflow-x: hidden !important;
 }
 
 /* Starfield canvas styles */
@@ -19,11 +21,13 @@ body {
 main.content {
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: center; /* This is fine if the container can grow */
     flex-grow: 1;
-    padding: 20px;
+    padding: 40px 20px; /* More vertical padding */
     position: relative;
     z-index: 1;
+    min-height: 100vh; /* ensure it takes at least the full height */
+    box-sizing: border-box;
 }
 
 /* Auth container styles */
@@ -53,29 +57,23 @@ main.content {
     margin-bottom: 25px;
 }
 
-/* Form styles */
-.auth-box form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px; /* Spacing between form elements */
-}
-
-.auth-box form p {
-    display: flex;
-    flex-direction: column;
+.auth-box .form-group {
+    margin-bottom: 15px;
     text-align: left;
-    margin: 0;
-    padding: 0;
 }
 
 .auth-box form label {
     color: #eee;
     font-weight: bold;
-    margin-bottom: 5px;
     display: block;
+    margin-bottom: 5px;
 }
 
-.auth-box input {
+/* Input fields styling */
+.auth-box input[type="email"],
+.auth-box input[type="password"],
+.auth-box input[type="text"],
+.auth-box select {
     background-color: rgba(255, 255, 255, 0.8);
     border: 1px solid rgba(255, 255, 255, 0.5);
     color: #333;
@@ -85,13 +83,8 @@ main.content {
     box-sizing: border-box;
 }
 
-.auth-box .helptext {
-    font-size: 0.8em;
-    color: #ccc;
-    margin-top: 5px;
-}
-
-.auth-box .errorlist {
+/* Error messages styling */
+.auth-box .errors, .auth-box .errorlist {
     color: #ffdddd;
     font-size: 0.9em;
     list-style: none;
@@ -100,10 +93,10 @@ main.content {
     text-align: left;
 }
 
-.auth-box button {
-    background-color: #af00ef !important; /* Project's purple */
+/* Button styling */
+.auth-box button[type="submit"] {
+    background-color: blue !important;
     border: 1px solid #FFFFFF;
-    transition: background-color 0.3s, color 0.3s;
     color: #FFFFFF !important;
     font-weight: bold;
     padding: 12px 20px;
@@ -111,22 +104,44 @@ main.content {
     cursor: pointer;
     width: 100%;
     margin-top: 10px;
+    transition: background-color 0.3s, color 0.3s;
 }
 
-.auth-box button:hover {
-    background-color: rgba(255, 239, 43, 0.9); /* Bright yellow on hover */
+.auth-box button[type="submit"]:hover {
+    background-color: rgba(255, 239, 43, 0.9) !important;
     color: #333 !important;
 }
 
-.auth-box .login-link p,
-.auth-box .login-link p a {
+.telegram-login-btn {
+    display: inline-block;
+    background-color: #54A9EB; /* Telegram blue */
+    border: none;
+    transition: background-color 0.3s;
+    color: #FFFFFF !important;
+    font-weight: bold;
+    padding: 12px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    text-decoration: none;
+    box-sizing: border-box;
+    margin-top: 10px;
+    text-align: center;
+}
+
+.telegram-login-btn:hover {
+    background-color: #4894cf;
+    text-decoration: none;
+}
+
+.auth-box p, .auth-box p a {
     color: #eee;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
     margin-top: 20px;
     font-size: 0.9em;
 }
 
-.auth-box .login-link p a:hover {
+.auth-box p a:hover {
     color: #fff;
     text-decoration: underline;
 }
