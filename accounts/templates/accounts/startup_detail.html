@@ -81,9 +81,10 @@
         <div class="author-header">Автор</div>
         <div class="author-details">
           <div class="author-avatar">
+            <img src="{% if startup.owner.get_profile_picture_url %}{{ startup.owner.get_profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}" alt="Аватар {{ startup.owner.username }}" class="author-avatar-img">
           </div>
           <div class="author-meta">
-            <div class="author-name">{{ startup.owner.first_name|default:"Виктор" }}</div>
+            <div class="author-name">{{ startup.owner.first_name|default:"Автор" }} {{ startup.owner.last_name }}</div>
             <div class="author-rating">Рейтинг {{ average_rating|floatformat:"1" }}/5</div>
           </div>
           <button class="action-button write-author-button">Написать</button>
@@ -154,20 +155,11 @@
             {% endif %}
           </div>
 
-          <a href="{% url 'edit_startup' startup_id=startup.startup_id %}" 
-             class="action-button edit-button" 
-             {% if not user.is_authenticated %}
-               disabled
-             {% elif user == startup.owner %}
-               {# Это владелец, кнопка активна (нет disabled) #}
-             {% elif user.role and user.role.role_name == 'moderator' %}
-               {# Это модератор, кнопка активна (нет disabled) #}
-             {% else %}
-               disabled {# Для всех остальных (не аутентифицирован И не владелец И не модератор) #}
-             {% endif %}
-             >
-            Редактировать
-          </a>
+          {% if request.user == startup.owner or request.user.role.role_name == 'moderator' %}
+            <a href="{% url 'edit_startup' startup_id=startup.startup_id %}" class="action-button edit-button">
+              Редактировать
+            </a>
+          {% endif %}
 
           {# Добавляем новые кнопки для модераторов с условиями #}
           {% if user.is_authenticated and user.role.role_name == 'moderator' %}
@@ -446,16 +438,11 @@
                 <div class="comment-left">
                   <div class="comment-author-avatar">
                     {# Вставляем аватарку #}
-                    {% if comment.user_id.profile_picture_url %}
-                      <img src="{{ comment.user_id.profile_picture_url }}" alt="Аватар {{ comment.user_id.first_name }}">
-                    {% else %}
-                      {# Можно добавить плейсхолдер, если аватарки нет #}
-                      <i class="fas fa-user"></i>
-                    {% endif %}
+                    <img src="{% if comment.user.get_profile_picture_url %}{{ comment.user.get_profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}" alt="Аватар {{ comment.user.username }}" class="comment-avatar-img">
                   </div>
                   <div class="comment-content-wrapper">
                     <div class="comment-author-name">
-                      {{ comment.user_id.first_name|default:comment.user_id.email }}
+                      {{ comment.user.first_name|default:comment.user.username }}
                       {% if comment.user_rating %}
                         <span class="comment-author-rating-badge">оценил на {{ comment.user_rating }}</span>
                       {% endif %}
