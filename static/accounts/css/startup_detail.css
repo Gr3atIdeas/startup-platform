@@ -375,6 +375,7 @@ a:hover {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
+  z-index: 3; /* Планета на переднем плане */
 }
 
 /* Плейсхолдер планеты */
@@ -382,33 +383,10 @@ a:hover {
   width: 30px;
   height: 30px;
   opacity: 0.5;
+  z-index: 3; /* Плейсхолдер на переднем плане */
 }
 
-/* Новый контейнер для логотипа */
-.logo-display-container {
-  width: 451px;
-  height: 60px;
-  border-radius: 10px;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--secondary-blue);
-}
 
-/* Изображение логотипа */
-.logo-image {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-}
-
-/* Плейсхолдер логотипа */
-.logo-placeholder {
-  width: 30px;
-  height: 30px;
-  opacity: 0.5;
-}
 
 .startup-logo-actual {
   display: block;
@@ -808,6 +786,44 @@ a:hover {
   gap: 35px;
 }
 
+/* Новый враппер для заголовка и лого */
+.startup-title-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+/* Контейнер логотипа в заголовке */
+.startup-header .logo-display-container {
+  width: 68px;
+  height: 68px;
+  flex-shrink: 0;
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+  background-color: var(--secondary-blue);
+  padding: 4px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.startup-header .logo-image,
+.startup-header .logo-placeholder {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.startup-header .logo-placeholder {
+  object-fit: contain;
+  opacity: 0.5;
+  width: 50%;
+  height: 50%;
+}
+
 /* Обертка шапки и действий */
 .startup-header-actions-wrapper {
   display: flex;
@@ -822,7 +838,7 @@ a:hover {
 .startup-header {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  /* gap: 5px; */ /* Управляется теперь через margin-bottom у .startup-title-wrapper */
   flex-grow: 1;
   min-width: 0; /* Позволяем сжиматься и переносить контент */
 }
@@ -855,6 +871,7 @@ a:hover {
   gap: 5px;
   font-size: 14px;
   color: var(--text-placeholder);
+  margin-top: 10px;
 }
 
 .category-value {

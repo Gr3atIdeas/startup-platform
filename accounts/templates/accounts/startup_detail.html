@@ -61,16 +61,6 @@
           {% endif %}
         </div>
         
-        <div class="logo-display-container">
-          {% if startup.logo_urls %}
-            {% with logo_file_id=startup.logo_urls.0 %}
-              <img src="{% get_file_url_tag logo_file_id startup.startup_id 'logo' %}" alt="Логотип {{ startup.title }}" class="logo-image">
-            {% endwith %}
-          {% else %}
-            <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Логотип не загружен" class="logo-placeholder">
-          {% endif %}
-        </div>
-        
         <button class="action-button chat-button">Чат</button>
       </div>
       
@@ -107,7 +97,18 @@
       {# Этот контейнер теперь будет стилизоваться через CSS #}
       <div class="startup-header-actions-wrapper"> 
         <div class="startup-header">
-          <h1 class="startup-name" title="{{ startup.title }}">{{ startup.title }}</h1>
+          <div class="startup-title-wrapper">
+            <div class="logo-display-container">
+              {% if startup.logo_urls %}
+                {% with logo_file_id=startup.logo_urls.0 %}
+                  <img src="{% get_file_url_tag logo_file_id startup.startup_id 'logo' %}" alt="Логотип {{ startup.title }}" class="logo-image">
+                {% endwith %}
+              {% else %}
+                <img src="{% static 'accounts/images/icons/image_placeholder.svg' %}" alt="Логотип не загружен" class="logo-placeholder">
+              {% endif %}
+            </div>
+            <h1 class="startup-name" title="{{ startup.title }}">{{ startup.title }}</h1>
+          </div>
           <div class="header-meta">
             {# Применяем фильтр для перевода категории #}
             <span class="category-value">{{ startup.direction.direction_name|translate_category|default:"Без категории" }}</span>
