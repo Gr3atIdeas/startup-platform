@@ -16,6 +16,10 @@ class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
         Populates user fields from social account data.
         This method is called on every login.
         """
+        # Log the complete extra_data from Telegram for debugging
+        if sociallogin.account.provider == 'telegram':
+            logger.info(f"Telegram extra_data: {sociallogin.account.extra_data}")
+
         user = super().populate_user(request, sociallogin, data)
 
         if sociallogin.account.provider == 'telegram':
