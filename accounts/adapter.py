@@ -5,6 +5,7 @@ import logging
 from django.core.exceptions import MultipleObjectsReturned
 from allauth.socialaccount.models import SocialApp
 from django.contrib.sites.models import Site
+from allauth.account.utils import user_email
 
 logger = logging.getLogger(__name__)
 
@@ -12,11 +13,29 @@ class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
     def populate_user(self, request, sociallogin, data):
         user = super().populate_user(request, sociallogin, data)
         if sociallogin.account.provider == 'telegram':
-            user.username = data.get('username')
-            user.first_name = data.get('first_name')
-            user.last_name = data.get('last_name')
-            if 'id' in sociallogin.account.extra_data:
-                user.telegram_id = sociallogin.account.extra_data['id']
+            # Данные из Telegram
+            telegram_id = sociallogin.account.extra_data.get('id')
+            username = data.get('username')
+            first_name = data.get('first_name')
+            last_name = data.get('last_name')
+
+            # Устанавливаем telegram_id
+            if telegram_id:
+                user.telegram_id = str(telegram_id)
+
+            # Если username от Telegram пустой, генерируем свой
+            if not username:
+                username = f"telegram_user_{telegram_id}"
+            user.username = username
+
+            # Устанавливаем имя и фамилию
+            user.first_name = first_name
+            user.last_name = last_name
+
+            # Если email не получен, создаем временный уникальный email
+            if not user_email(user):
+                user.email = f"{user.username}@telegram.placeholder.com"
+
         return user
 
     def get_connect_redirect_url(self, request, socialaccount):
