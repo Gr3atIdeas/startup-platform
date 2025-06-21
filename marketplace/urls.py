@@ -4,9 +4,16 @@ from django.contrib import admin
 from django.urls import include, path
 
 urlpatterns = [
+    # Пути allauth для обработки логина через соцсети (Telegram).
+    # Префикс /accounts/ необходим для корректной работы колбэков.
+    path('accounts/', include('allauth.urls')),
+    
+    # Ваши основные пути (login, register, startups и т.д.)
+    # подключаются в корень, чтобы работали URL без префикса.
     path("", include("accounts.urls")),
+    
+    # Админка
     path('admin/', admin.site.urls),
-    path('accounts/', include('allauth.urls')),  # Полный путь для allauth
 ]
 
 if settings.DEBUG:
