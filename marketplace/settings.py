@@ -94,9 +94,22 @@ SOCIALACCOUNT_ADAPTER = 'accounts.adapter.CustomSocialAccountAdapter'
 
 SOCIALACCOUNT_PROVIDERS = {
     'telegram': {
-        'TOKEN': '7843250850:AAEL8hapR_WVcG2mMNUhWvK-I0DMYG042Ko',  # Ваш токен
+        'APP': {
+            'client_id': '7843250850:AAEL8hapR_WVcG2mMNUhWvK-I0DMYG042Ko',  # Ваш Bot Token
+            'secret': '',  # Обычно не требуется для Telegram
+        },
+        'SCOPE': ['user'],  # Опционально, если требуется доступ к данным пользователя
+        'AUTH_PARAMS': {'bot_id': '7843250850:AAEL8hapR_WVcG2mMNUhWvK-I0DMYG042Ko'},  # Дополнительные параметры для Telegram
     }
 }
+
+# Перенаправление после входа
+LOGIN_REDIRECT_URL = 'startups_list'  # Перенаправление на страницу каталога
+SOCIALACCOUNT_LOGIN_ON_GET = True  # Разрешить GET-запросы для входа
+ACCOUNT_EMAIL_REQUIRED = False  # Email не обязателен для Telegram
+ACCOUNT_AUTHENTICATION_METHOD = 'email'  # Или 'username', если хотите
+ACCOUNT_EMAIL_VERIFICATION = 'none'  # Отключите верификацию email
+ACCOUNT_LOGOUT_REDIRECT_URL = 'startups_list'  # Перенаправление после выхода
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
