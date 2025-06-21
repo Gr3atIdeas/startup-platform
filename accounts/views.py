@@ -889,11 +889,10 @@ def legal(request):
     return render(request, "accounts/legal.html")
 
 
+@login_required
 def profile(request, user_id=None):
     if not request.user.is_authenticated:
-        messages.error(
-            request, "Пожалуйста, войдите в систему, чтобы просмотреть профиль."
-        )
+        messages.error(request, "Пожалуйста, войдите в систему, чтобы просмотреть профиль.")
         return redirect("login")
 
     if user_id:
@@ -903,29 +902,29 @@ def profile(request, user_id=None):
 
     if request.GET.get("user_id"):
         user = get_object_or_404(Users, user_id=request.GET.get("user_id"))
-        return JsonResponse(
-            {
-                "first_name": user.first_name,
-                "last_name": user.last_name,
-                "role": user.role.role_name if user.role else "Неизвестно",
-                "rating": float(user.rating) if user.rating else None,
-                "bio": user.bio,
-                "profile_picture_url": (
-                    user.get_profile_picture_url() if user.profile_picture_url else None
-                ),
-            }
-        )
+        return JsonResponse({
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "role": user.role.role_name if user.role else "Неизвестно",
+            "rating": float(user.rating) if user.rating else None,
+            "bio": user.bio,
+            "profile_picture_url": user.get_profile_picture_url() if user.profile_picture_url else None,
+        })
 
     # Проверка роли и модальное окно для role_id=4
     show_role_selection = False
-    if profile_user == request.user and profile_user.role_id == 4:
+    logger.debug(f"Checking role for user_id={request.user.user_id}, role_id={getattr(request.user, 'role_id', 'None')}")
+    if hasattr(request.user, 'role_id') and request.user.role_id == 4:  # Проверяем role_id текущего пользователя
         show_role_selection = True
+        logger.debug(f"show_role_selection set to True for user_id={request.user.user_id}")
         if request.method == "POST" and "select_role" in request.POST:
+            logger.debug(f"POST received with select_role for user_id={request.user.user_id}")
             role_id = request.POST.get("role_id")
-            if role_id in ["1", "2"]:  # Только startuper=1, investor=2
-                profile_user.role_id = int(role_id)
-                profile_user.save()
+            if role_id in ["1", "2"]:  # Только startuper и investor
+                request.user.role_id = int(role_id)
+                request.user.save()
                 show_role_selection = False
+                logger.debug(f"Role updated to {role_id} for user_id={request.user.user_id}")
                 messages.success(request, "Роль успешно выбрана!")
                 return redirect("profile")
 
@@ -936,12 +935,7 @@ def profile(request, user_id=None):
         form = None
 
     # Получение стартапов, где пользователь является владельцем, только approved и pending
-    startups = (
-        Startups.objects.filter(owner=profile_user, status__in=["approved", "pending"])
-        .select_related("direction")
-        .annotate(comment_count=Count("comments"))
-        .order_by("-created_at")
-    )
+    startups = Startups.objects.filter(owner=profile_user, status__in=["approved", "pending"]).select_related("direction").annotate(comment_count=Count("comments")).order_by("-created_at")
     startups_paginator = Paginator(startups, 3)
     startups_page_number = request.GET.get("startups_page", 1)
     startups_page = startups_paginator.get_page(startups_page_number)
@@ -954,13 +948,7 @@ def profile(request, user_id=None):
 
     if request.method == "POST":
         if profile_user != request.user:
-            return JsonResponse(
-                {
-                    "success": False,
-                    "error": "Вы не можете редактировать чужой профиль.",
-                },
-                status=403,
-            )
+            return JsonResponse({"success": False, "error": "Вы не можете редактировать чужой профиль."}, status=403)
 
         # Обработка загрузки аватара
         if "avatar" in request.FILES:
@@ -969,58 +957,20 @@ def profile(request, user_id=None):
             if avatar.content_type not in allowed_mimes:
                 messages.error(request, "Допустимы только файлы PNG или JPEG.")
                 if request.headers.get("X-Requested-With") == "XMLHttpRequest":
-                    return JsonResponse(
-                        {
-                            "success": False,
-                            "error": "Допустимы только файлы PNG или JPEG.",
-                        }
-                    )
-                return render(
-                    request,
-                    "accounts/profile.html",
-                    {
-                        "user": profile_user,
-                        "is_own_profile": True,
-                        "form": form,
-                        "startups_page": startups_page,
-                        "news_page": news_page,
-                        "show_role_selection": show_role_selection,
-                    },
-                )
+                    return JsonResponse({"success": False, "error": "Допустимы только файлы PNG или JPEG."})
+                return render(request, "accounts/profile.html", {"user": profile_user, "is_own_profile": True, "form": form, "startups_page": startups_page, "news_page": news_page, "show_role_selection": show_role_selection})
 
             max_size = 5 * 1024 * 1024
             if avatar.size > max_size:
                 messages.error(request, "Размер файла не должен превышать 5 МБ.")
                 if request.headers.get("X-Requested-With") == "XMLHttpRequest":
-                    return JsonResponse(
-                        {
-                            "success": False,
-                            "error": "Размер файла не должен превышать 5 МБ.",
-                        }
-                    )
-                return render(
-                    request,
-                    "accounts/profile.html",
-                    {
-                        "user": profile_user,
-                        "is_own_profile": True,
-                        "form": form,
-                        "startups_page": startups_page,
-                        "news_page": news_page,
-                        "show_role_selection": show_role_selection,
-                    },
-                )
+                    return JsonResponse({"success": False, "error": "Размер файла не должен превышать 5 МБ."})
+                return render(request, "accounts/profile.html", {"user": profile_user, "is_own_profile": True, "form": form, "startups_page": startups_page, "news_page": news_page, "show_role_selection": show_role_selection})
 
             avatar_id = str(uuid.uuid4())
             file_path = f"users/{request.user.user_id}/avatar/{avatar_id}_{avatar.name}"
             try:
-                s3_client = boto3.client(
-                    "s3",
-                    endpoint_url=settings.AWS_S3_ENDPOINT_URL,
-                    aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-                    aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
-                    region_name=settings.AWS_S3_REGION_NAME,
-                )
+                s3_client = boto3.client("s3", endpoint_url=settings.AWS_S3_ENDPOINT_URL, aws_access_key_id=settings.AWS_ACCESS_KEY_ID, aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY, region_name=settings.AWS_S3_REGION_NAME)
                 bucket_name = settings.AWS_STORAGE_BUCKET_NAME
                 prefix = f"users/{request.user.user_id}/avatar/"
                 response = s3_client.list_objects_v2(Bucket=bucket_name, Prefix=prefix)
@@ -1029,11 +979,7 @@ def profile(request, user_id=None):
                         s3_client.delete_object(Bucket=bucket_name, Key=obj["Key"])
                         logger.info(f"Удалён старый аватар: {obj['Key']}")
 
-                FileStorage.objects.filter(
-                    entity_type__type_name="user",
-                    entity_id=request.user.user_id,
-                    file_type__type_name="avatar",
-                ).delete()
+                FileStorage.objects.filter(entity_type__type_name="user", entity_id=request.user.user_id, file_type__type_name="avatar").delete()
 
                 default_storage.save(file_path, avatar)
                 request.user.profile_picture_url = avatar_id
@@ -1041,31 +987,17 @@ def profile(request, user_id=None):
 
                 entity_type, _ = EntityTypes.objects.get_or_create(type_name="user")
                 file_type, _ = FileTypes.objects.get_or_create(type_name="avatar")
-                FileStorage.objects.create(
-                    entity_type=entity_type,
-                    entity_id=request.user.user_id,
-                    file_url=avatar_id,
-                    file_type=file_type,
-                    uploaded_at=timezone.now(),
-                )
+                FileStorage.objects.create(entity_type=entity_type, entity_id=request.user.user_id, file_url=avatar_id, file_type=file_type, uploaded_at=timezone.now())
 
-                logger.info(
-                    f"Аватар сохранён для user_id {request.user.user_id} по пути: {file_path}, UUID: {avatar_id}"
-                )
+                logger.info(f"Аватар сохранён для user_id {request.user.user_id} по пути: {file_path}, UUID: {avatar_id}")
                 messages.success(request, "Аватарка успешно загружена!")
                 if request.headers.get("X-Requested-With") == "XMLHttpRequest":
-                    return JsonResponse(
-                        {"success": True, "message": "Аватарка успешно загружена!"}
-                    )
+                    return JsonResponse({"success": True, "message": "Аватарка успешно загружена!"})
             except Exception as e:
-                logger.error(
-                    f"Ошибка при сохранении аватара для user_id {request.user.user_id}: {str(e)}"
-                )
+                logger.error(f"Ошибка при сохранении аватара для user_id {request.user.user_id}: {str(e)}")
                 messages.error(request, "Ошибка при загрузке аватара.")
                 if request.headers.get("X-Requested-With") == "XMLHttpRequest":
-                    return JsonResponse(
-                        {"success": False, "error": "Ошибка при загрузке аватара."}
-                    )
+                    return JsonResponse({"success": False, "error": "Ошибка при загрузке аватара."})
             return redirect("profile")
 
         # Обработка редактирования профиля
@@ -1085,57 +1017,20 @@ def profile(request, user_id=None):
 
                     logger.info(f"Профиль обновлён для user_id {request.user.user_id}")
                     if request.headers.get("X-Requested-With") == "XMLHttpRequest":
-                        return JsonResponse(
-                            {"success": True, "message": "Профиль успешно обновлён!"}
-                        )
+                        return JsonResponse({"success": True, "message": "Профиль успешно обновлён!"})
                     messages.success(request, "Профиль успешно обновлён!")
                 except Exception as e:
-                    logger.error(
-                        f"Ошибка при обновлении профиля для user_id {request.user.user_id}: {str(e)}"
-                    )
+                    logger.error(f"Ошибка при обновлении профиля для user_id {request.user.user_id}: {str(e)}")
                     if request.headers.get("X-Requested-With") == "XMLHttpRequest":
-                        return JsonResponse(
-                            {
-                                "success": False,
-                                "error": "Ошибка при сохранении профиля.",
-                            }
-                        )
+                        return JsonResponse({"success": False, "error": "Ошибка при сохранении профиля."})
                     messages.error(request, "Ошибка при сохранении профиля.")
             else:
                 if request.headers.get("X-Requested-With") == "XMLHttpRequest":
-                    return JsonResponse(
-                        {
-                            "success": False,
-                            "error": "Форма содержит ошибки.",
-                            "errors": form.errors,
-                        }
-                    )
+                    return JsonResponse({"success": False, "error": "Форма содержит ошибки.", "errors": form.errors})
                 messages.error(request, "Форма содержит ошибки.")
-            return render(
-                request,
-                "accounts/profile.html",
-                {
-                    "user": profile_user,
-                    "is_own_profile": True,
-                    "form": form,
-                    "startups_page": startups_page,
-                    "news_page": news_page,
-                    "show_role_selection": show_role_selection,
-                },
-            )
+            return render(request, "accounts/profile.html", {"user": profile_user, "is_own_profile": True, "form": form, "startups_page": startups_page, "news_page": news_page, "show_role_selection": show_role_selection})
 
-    return render(
-        request,
-        "accounts/profile.html",
-        {
-            "user": profile_user,
-            "is_own_profile": profile_user == request.user,
-            "form": form,
-            "startups_page": startups_page,
-            "news_page": news_page,
-            "show_role_selection": show_role_selection,
-        },
-    )
+    return render(request, "accounts/profile.html", {"user": profile_user, "is_own_profile": profile_user == request.user, "form": form, "startups_page": startups_page, "news_page": news_page, "show_role_selection": show_role_selection})
 
 
 def delete_avatar(request):

@@ -595,6 +595,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     initializeActiveTab();
+    console.log("Profile page loaded, show_role_selection:", {% if show_role_selection %}true{% else %}false{% endif %}); // Отладка
 });
 </script>
 {% endblock %}

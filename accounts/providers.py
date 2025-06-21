@@ -5,6 +5,7 @@ from allauth.socialaccount.models import SocialAccount, SocialLogin
 from allauth.socialaccount.helpers import complete_social_login
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils import timezone
 
 logger = logging.getLogger(__name__)
 
@@ -41,22 +42,29 @@ class CustomTelegramAdapter(DefaultSocialAccountAdapter):
 
         try:
             user = User.objects.get(telegram_id=telegram_id)
-            logger.info(f"Existing user found: user_id={user.user_id}")
+            logger.info(f"Existing user found: user_id={user.user_id}, role_id={user.role_id}")
         except ObjectDoesNotExist:
             user = User(
                 telegram_id=telegram_id,
+                username=user_data.get('username', ''),  # Сохраняем никнейм в username
                 first_name=user_data.get('first_name', ''),
                 last_name=user_data.get('last_name', ''),
-                profile_picture_url=user_data.get('photo_url', ''),
+                profile_picture_url=user_data.get('photo_url', ''),  # Сохраняем аватар
+                email=f"{telegram_id}@telegram.com",  # Генерируем email
+                telegram_email=f"{telegram_id}@telegram.com",  # Сохраняем как telegram_email
+                role_id=4,  # По умолчанию unrecognized
+                is_active=True,
+                created_at=timezone.now(),  # Используем импортированный timezone
+                updated_at=timezone.now(),  # Используем импортированный timezone
+                last_login=timezone.now(),  # Используем импортированный timezone
+                is_staff=False,
+                show_phone=False,
             )
+            # Обновляем social_links с telegram username
             if user_data.get('username'):
-                user.social_links = {'telegram': f"@{user_data.get('username')}"}
-            if not user.email:
-                user.email = f"{telegram_id}@telegram.com"
-                user.telegram_email = user.email
-            user.role_id = 4
+                user.social_links = {'telegram': f"@{user_data['username']}"}
             user.save()
-            logger.info(f"New user created: user_id={user.user_id}")
+            logger.info(f"New user created: user_id={user.user_id}, role_id={user.role_id}")
 
         social_account, created = SocialAccount.objects.update_or_create(
             provider=self.provider_id,
