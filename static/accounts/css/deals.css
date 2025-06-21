@@ -400,6 +400,7 @@ body {
   padding: 12px 0px;
   flex-shrink: 0;
   gap: 24px;
+  margin-top: 40px;
 }
 
 .attach-button,

@@ -81,15 +81,18 @@
                                 <p>Нет сообщений в этой сделке.</p>
                             {% endfor %}
                         </div>
-                        <form id="messageForm" method="post" action="{% url 'send_message' %}">
-                            {% csrf_token %}
-                            <input type="hidden" name="chat_id" value="{{ selected_chat.conversation_id }}">
-                            <textarea name="message_text" class="message-input" placeholder="Введите сообщение..." required></textarea>
-                            <button type="submit" class="send-button">
-                                <img src="{% static 'accounts/images/send_icon.svg' %}" alt="Send">
-                            </button>
-                        </form>
                     </div>
+                    <form id="messageForm" class="chat-input-area" method="post" action="{% url 'send_message' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="chat_id" value="{{ selected_chat.conversation_id }}">
+                        <button type="button" class="attach-button">
+                            <img src="{% static 'accounts/images/cosmochat/attach.svg' %}" alt="Attach">
+                        </button>
+                        <textarea name="message_text" class="message-input" placeholder="Сообщение" required></textarea>
+                        <button type="submit" class="send-button">
+                            <img src="{% static 'accounts/images/cosmochat/send.svg' %}" alt="Send">
+                        </button>
+                    </form>
                 {% else %}
                     <p>Выберите сделку для просмотра деталей и отправки сообщений.</p>
                 {% endif %}
