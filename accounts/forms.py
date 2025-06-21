@@ -129,7 +129,7 @@ class StartupForm(forms.ModelForm):
             "description",
             "terms",
             "funding_goal",
-            "amount_views",
+            "amount_raised",
             "valuation",
             "pitch_deck_url",
             "logo",
