@@ -6,6 +6,17 @@
 {% block head_extra %}
 {{ block.super }}
 <link rel="stylesheet" href="{% static 'accounts/css/register.css' %}?v={% now 'U' %}">
+<style>
+    .auth-box select {
+        background-color: rgba(255, 255, 255, 0.8);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        color: #333;
+        padding: 10px;
+        border-radius: 5px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -16,7 +27,67 @@
             <h1>Регистрация</h1>
             <form method="post">
                 {% csrf_token %}
-                {{ form.as_p }}
+                
+                {# Отображение общих ошибок формы #}
+                {% if form.non_field_errors %}
+                    <div class="errorlist">
+                        {% for error in form.non_field_errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <p>
+                    <label for="{{ form.email.id_for_label }}">Электронная почта:</label>
+                    {{ form.email }}
+                    {% if form.email.errors %}<div class="errorlist">{{ form.email.errors }}</div>{% endif %}
+                </p>
+                <p>
+                    <label for="{{ form.first_name.id_for_label }}">Имя:</label>
+                    {{ form.first_name }}
+                    {% if form.first_name.errors %}<div class="errorlist">{{ form.first_name.errors }}</div>{% endif %}
+                </p>
+                <p>
+                    <label for="{{ form.last_name.id_for_label }}">Фамилия:</label>
+                    {{ form.last_name }}
+                    {% if form.last_name.errors %}<div class="errorlist">{{ form.last_name.errors }}</div>{% endif %}
+                </p>
+                <p>
+                    <label for="{{ form.phone.id_for_label }}">Телефон:</label>
+                    {{ form.phone }}
+                    {% if form.phone.errors %}<div class="errorlist">{{ form.phone.errors }}</div>{% endif %}
+                </p>
+                <p>
+                    <label for="{{ form.role.id_for_label }}">Роль:</label>
+                    <select name="{{ form.role.name }}" id="{{ form.role.id_for_label }}">
+                        <option value="">---------</option>
+                        {% for value, text in form.role.field.choices %}
+                            {% if text != 'moderator' %}
+                                <option value="{{ value }}" {% if form.role.value == value %}selected{% endif %}>
+                                    {% if text == 'startuper' %}
+                                        Стартаппер
+                                    {% elif text == 'investor' %}
+                                        Инвестор
+                                    {% else %}
+                                        {{ text }}
+                                    {% endif %}
+                                </option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                    {% if form.role.errors %}<div class="errorlist">{{ form.role.errors }}</div>{% endif %}
+                </p>
+                <p>
+                    <label for="{{ form.password.id_for_label }}">Пароль:</label>
+                    {{ form.password }}
+                    {% if form.password.errors %}<div class="errorlist">{{ form.password.errors }}</div>{% endif %}
+                </p>
+                <p>
+                    <label for="{{ form.confirm_password.id_for_label }}">Подтвердите пароль:</label>
+                    {{ form.confirm_password }}
+                    {% if form.confirm_password.errors %}<div class="errorlist">{{ form.confirm_password.errors }}</div>{% endif %}
+                </p>
+                
                 <button type="submit">Зарегистрироваться</button>
             </form>
             <div class="login-link">
@@ -27,19 +98,25 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    const D=document;
-    const c=window;
-    let d=c.innerWidth;
-    let e=c.innerHeight;
-    const g=D.getElementById('starfield-canvas');
-    if (!g) return;
-    let i=d/2;
-    let j=e/2;
-    g.width=d;
-    g.height=e;
-    const k=g.getContext("2d");
-    if (!k) return;
-    
+    const D = document;
+    const c = window;
+    let d = c.innerWidth;
+    let e = c.innerHeight;
+    const g = D.getElementById('starfield-canvas');
+    if (!g) {
+        console.error("Starfield canvas not found!");
+        return;
+    }
+    let i = d / 2;
+    let j = e / 2;
+    g.width = d;
+    g.height = e;
+    const k = g.getContext("2d");
+    if (!k) {
+        console.error("Could not get 2D context for starfield canvas!");
+        return;
+    }
+
     let targetOffsetX = d / 2;
     let targetOffsetY = e / 2;
     let currentOffsetX = d / 2;
@@ -50,19 +127,21 @@ document.addEventListener('DOMContentLoaded', () => {
         targetOffsetX = event.clientX;
         targetOffsetY = event.clientY;
     };
-    
-    c.onresize=()=>{
-        d=c.innerWidth;
-        e=c.innerHeight;
-        g.width=d;
-        g.height=e;
+
+    c.onresize = () => {
+        d = c.innerWidth;
+        e = c.innerHeight;
+        g.width = d;
+        g.height = e;
+        i = d / 2;
+        j = e / 2;
     };
 
     let stars = [];
-    for(let n=0; n<500; n++){
+    for (let n = 0; n < 500; n++) {
         stars[n] = {
-            x: Math.random() * d - d / 2,
-            y: Math.random() * e - e / 2,
+            x: Math.random() * d - i,
+            y: Math.random() * e - j,
             z: Math.random() * d
         };
     }
@@ -73,14 +152,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         currentOffsetX += (targetOffsetX - currentOffsetX) * smoothing;
         currentOffsetY += (targetOffsetY - currentOffsetY) * smoothing;
-        
+
         k.save();
         k.translate(currentOffsetX, currentOffsetY);
 
-        for(let n=0; n<500; n++){
+        for (let n = 0; n < 500; n++) {
             let star = stars[n];
             star.z -= 1;
-            if(star.z <= 0) {
+            if (star.z <= 0) {
                 star.x = Math.random() * d - i;
                 star.y = Math.random() * e - j;
                 star.z = d;
