@@ -2,6 +2,7 @@
 import logging
 import uuid
 from django.utils import timezone
+import requests
 
 import boto3
 from botocore.exceptions import ClientError
@@ -128,3 +129,48 @@ def update_user_from_telegram(user, sociallogin):
 
     except Exception as e:
         logger.error(f"CRITICAL ERROR in update_user_from_telegram for user {user.pk}: {e}", exc_info=True)
+
+
+def send_telegram_support_message(ticket):
+    """
+    Sends a formatted support ticket message to a specific Telegram chat.
+    """
+    bot_token = '7843250850:AAEL8hapR_WVcG2mMNUhWvK-I0DMYG042Ko'
+    chat_id = '206461329'
+    
+    user = ticket.user
+    if not user:
+        logger.warning(f"Support ticket {ticket.ticket_id} has no associated user.")
+        user_info = "Пользователь: Анонимный"
+    else:
+        telegram_username = user.social_links.get('telegram', 'Не указан') if isinstance(user.social_links, dict) else 'Не указан'
+        user_info = (
+            f"👤 *Пользователь:* {user.first_name} {user.last_name}\n"
+            f"🆔 *ID на платформе:* `{user.user_id}`\n"
+            f"✉️ *Email:* `{user.email}`\n"
+            f"✈️ *Telegram:* `{telegram_username}`"
+        )
+
+    message_text = (
+        f"🚨 *Новая заявка в техподдержку!* 🚨\n\n"
+        f"📝 *Тема:* {ticket.subject}\n\n"
+        f"📄 *Сообщение:*\n{ticket.message}\n\n"
+        f"--- Техническая информация ---\n"
+        f"{user_info}"
+    )
+
+    url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
+    payload = {
+        'chat_id': chat_id,
+        'text': message_text,
+        'parse_mode': 'Markdown'
+    }
+
+    try:
+        response = requests.post(url, json=payload, timeout=10)
+        response.raise_for_status()  # Will raise an exception for 4xx/5xx responses
+        logger.info(f"Successfully sent support ticket {ticket.ticket_id} to Telegram chat {chat_id}.")
+        return True
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Failed to send support ticket {ticket.ticket_id} to Telegram: {e}", exc_info=True)
+        return False

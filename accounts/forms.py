@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Comments, Directions, Roles, Startups, StartupStages, Users
+from .models import Comments, Directions, Roles, Startups, StartupStages, Users, ChatConversations, TransactionTypes, UserVotes, SupportTicket
 from .utils import get_planet_urls
 
 
@@ -326,3 +326,17 @@ class ProfileEditForm(forms.ModelForm):
         if bio and len(bio) > 50:
             raise forms.ValidationError("Описание не должно превышать 50 символов.")
         return bio
+
+
+class SupportTicketForm(forms.ModelForm):
+    class Meta:
+        model = SupportTicket
+        fields = ['subject', 'message']
+        widgets = {
+            'subject': forms.TextInput(attrs={'placeholder': 'Тема обращения'}),
+            'message': forms.Textarea(attrs={'rows': 5, 'placeholder': 'Опишите вашу проблему или вопрос...'}),
+        }
+        labels = {
+            'subject': 'Тема',
+            'message': 'Сообщение',
+        }

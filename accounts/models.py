@@ -728,3 +728,26 @@ class Messages(models.Model):
     def is_read(self):
         """Проверяет, прочитано ли сообщение."""
         return self.status.status_name == "read"
+
+
+class SupportTicket(models.Model):
+    STATUS_CHOICES = [
+        ('new', 'Новая'),
+        ('in_progress', 'В обработке'),
+        ('closed', 'Закрыта'),
+    ]
+    
+    ticket_id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(Users, on_delete=models.SET_NULL, null=True, blank=True, related_name='support_tickets')
+    subject = models.CharField(max_length=255)
+    message = models.TextField()
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='new')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        db_table = 'support_tickets'
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"Ticket #{self.ticket_id} by {self.user.username if self.user else 'Anonymous'}"

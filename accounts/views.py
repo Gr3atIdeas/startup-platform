@@ -63,6 +63,7 @@ from .forms import (  # Добавляем MessageForm и UserSearchForm
     ProfileEditForm,
     RegisterForm,
     StartupForm,
+    SupportTicketForm,
     UserSearchForm,
 )
 from .models import (
@@ -83,10 +84,12 @@ from .models import (
     ReviewStatuses,
     Startups,
     StartupTimeline,
+    SupportTicket,
     TransactionTypes,
     Users,
     UserVotes,
 )
+from .utils import send_telegram_support_message
 
 logger = logging.getLogger(__name__)
 
@@ -3827,23 +3830,31 @@ def support_orders_view(request):
     #     'orders': SupportOrder.objects.filter(user=request.user).order_by('-created_at')
     # }
     # return render(request, 'accounts/support_orders.html', context)
-    return render(request, "accounts/support_orders.html")
+    return render(request, 'accounts/support_orders.html') # Заглушка
 
 
 @login_required  # Предполагаем, что создание заявки доступно только авторизованным
 def support_contact_view(request):
-    # Здесь в будущем будет логика обработки формы создания заявки
-    # if request.method == 'POST':
-    #     form = SupportContactForm(request.POST)
-    #     if form.is_valid():
-    #         # Process the data in form.cleaned_data
-    #         # ...
-    #         return redirect('support_orders') # Или на страницу с сообщением об успехе
-    # else:
-    #     form = SupportContactForm()
-    # context = {'form': form}
-    # return render(request, 'accounts/support_contact.html', context)
-    return render(request, "accounts/support_contact.html")
+    if request.method == 'POST':
+        form = SupportTicketForm(request.POST)
+        if form.is_valid():
+            # Создаем, но не сохраняем в БД, чтобы добавить пользователя
+            ticket = form.save(commit=False)
+            ticket.user = request.user
+            ticket.save()
+            
+            # Отправляем уведомление в Telegram
+            send_telegram_support_message(ticket)
+            
+            messages.success(request, 'Ваше обращение успешно отправлено! Мы скоро с вами свяжемся.')
+            return redirect('support_contact')
+    else:
+        form = SupportTicketForm()
+
+    context = {
+        'form': form
+    }
+    return render(request, 'accounts/support_contact.html', context)
 
 
 @login_required
