@@ -1,6 +1,7 @@
 # accounts/utils.py
 import logging
 import uuid
+from django.utils import timezone
 
 import boto3
 from botocore.exceptions import ClientError
@@ -72,3 +73,64 @@ def get_planet_urls():
     except ClientError as e:
         logger.error(f"Error listing planets: {e}")
         return []
+
+
+def update_user_from_telegram(user, sociallogin):
+    """
+    Forcefully updates a user model instance with data from a Telegram social login account.
+    This function compares fields and saves the user only if there are changes.
+    """
+    if not sociallogin or sociallogin.account.provider != 'telegram':
+        return
+
+    try:
+        telegram_data = sociallogin.account.extra_data
+        update_fields = []
+
+        # --- Data from Telegram ---
+        tg_id = str(telegram_data.get('id'))
+        tg_username = telegram_data.get('username')
+        tg_first_name = telegram_data.get('first_name')
+        tg_last_name = telegram_data.get('last_name', '')
+        tg_photo_url = telegram_data.get('photo_url')
+
+        # --- Compare and stage fields for update ---
+        if user.telegram_id != tg_id:
+            user.telegram_id = tg_id
+            update_fields.append('telegram_id')
+
+        if tg_username and user.username != tg_username:
+            user.username = tg_username
+            update_fields.append('username')
+
+        if tg_first_name and user.first_name != tg_first_name:
+            user.first_name = tg_first_name
+            update_fields.append('first_name')
+
+        if user.last_name != tg_last_name:
+            user.last_name = tg_last_name
+            update_fields.append('last_name')
+
+        if tg_photo_url and user.profile_picture_url != tg_photo_url:
+            user.profile_picture_url = tg_photo_url
+            update_fields.append('profile_picture_url')
+        
+        # --- Handle JSONB social_links field ---
+        if tg_username:
+            telegram_link = f"https://t.me/{tg_username}"
+            if not isinstance(user.social_links, dict) or user.social_links.get('telegram') != telegram_link:
+                if not isinstance(user.social_links, dict):
+                    user.social_links = {}
+                user.social_links['telegram'] = telegram_link
+                update_fields.append('social_links')
+
+        # --- Save if any fields were updated ---
+        if update_fields:
+            user.updated_at = timezone.now()
+            update_fields.append('updated_at')
+            
+            user.save(update_fields=update_fields)
+            logger.info(f"User {user.username} (ID: {user.pk}) has been updated from Telegram. Fields changed: {update_fields}")
+
+    except Exception as e:
+        logger.error(f"CRITICAL ERROR in update_user_from_telegram for user {user.pk}: {e}", exc_info=True)

@@ -7,70 +7,60 @@ from allauth.socialaccount.models import SocialApp
 from django.contrib.sites.models import Site
 from allauth.account.utils import user_email
 from .models import Roles, Users
+from .utils import update_user_from_telegram
 
 logger = logging.getLogger(__name__)
 
 class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
     def populate_user(self, request, sociallogin, data):
         """
-        Populates and updates user fields from social account data on every login.
+        Populates user fields from social account data for NEW users only.
+        Updates for existing users are handled by the pre_social_login signal.
         """
         user = super().populate_user(request, sociallogin, data)
 
-        if sociallogin.account.provider == 'telegram':
+        if sociallogin.account.provider == 'telegram' and not user.pk:
             telegram_data = sociallogin.account.extra_data
-            is_new_user = not user.pk
-
-            # --- Data from Telegram ---
-            tg_id = str(telegram_data.get('id'))
-            tg_username = telegram_data.get('username')
-            tg_first_name = telegram_data.get('first_name')
-            tg_last_name = telegram_data.get('last_name', '')
-            tg_photo_url = telegram_data.get('photo_url')
-
-            # --- Always update user data from Telegram ---
-            user.telegram_id = tg_id
-            if tg_username:
-                user.username = tg_username
-            if tg_first_name:
-                user.first_name = tg_first_name
-            # We can update last_name even if it's empty string
-            user.last_name = tg_last_name
-            if tg_photo_url:
-                user.profile_picture_url = tg_photo_url
             
-            # --- Update social_links (JSONB field) ---
-            if tg_username:
-                telegram_link = f"https://t.me/{tg_username}"
-                if not isinstance(user.social_links, dict):
-                    user.social_links = {}
-                user.social_links['telegram'] = telegram_link
+            # --- Populate fields for a brand new user ---
+            user.telegram_id = str(telegram_data.get('id'))
+            user.username = telegram_data.get('username')
+            user.first_name = telegram_data.get('first_name')
+            user.last_name = telegram_data.get('last_name', '')
+            user.profile_picture_url = telegram_data.get('photo_url')
 
-            # --- Handle specifics for brand new users ---
-            if is_new_user:
-                if not user.username and tg_id:
-                    user.username = f"telegram_user_{tg_id}"
-                
-                if not user_email(user) and user.username:
-                    user.email = f"{user.username}@telegram.placeholder.com"
+            if user.username:
+                user.social_links = {'telegram': f"https://t.me/{user.username}"}
+
+            if not user.username and user.telegram_id:
+                user.username = f"telegram_user_{user.telegram_id}"
+            
+            if not user_email(user) and user.username:
+                user.email = f"{user.username}@telegram.placeholder.com"
         
         return user
 
     def save_user(self, request, sociallogin, form=None):
         """
-        Saves the user and assigns a temporary role if they are new
-        and registering via Telegram.
+        Saves the user and then triggers an update from Telegram data
+        as a fallback mechanism.
         """
         user = super().save_user(request, sociallogin, form)
 
-        if sociallogin.account.provider == 'telegram' and not user.role_id:
-            try:
-                temp_role = Roles.objects.get(pk=4)
-                user.role = temp_role
-                user.save(update_fields=['role'])
-                logger.info(f"Assigned temporary role (ID=4) to new Telegram user: {user.username}")
-            except Roles.DoesNotExist:
-                logger.error("Role with ID=4 not found. Could not assign temporary role.")
+        if sociallogin.account.provider == 'telegram':
+            # Assign role to new user
+            if not user.role_id:
+                try:
+                    temp_role = Roles.objects.get(pk=4)
+                    user.role = temp_role
+                    user.save(update_fields=['role'])
+                    logger.info(f"Assigned temporary role (ID=4) to new Telegram user: {user.username}")
+                except Roles.DoesNotExist:
+                    logger.error("Role with ID=4 not found. Could not assign temporary role.")
+            
+            # As a fallback, trigger the update function here as well.
+            logger.info(f"save_user method is triggering a data update for user {user.pk}.")
+            update_user_from_telegram(user, sociallogin)
 
         return user
 
