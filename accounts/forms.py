@@ -129,7 +129,7 @@ class StartupForm(forms.ModelForm):
             "description",
             "terms",
             "funding_goal",
-            "amount_raised",
+            "amount_views",
             "valuation",
             "pitch_deck_url",
             "logo",
@@ -334,13 +334,10 @@ class ProfileEditForm(forms.ModelForm):
 
     def clean_email(self):
         email = self.cleaned_data.get("email")
-        if (
-            email
-            and Users.objects.filter(email=email)
-            .exclude(user_id=self.instance.user_id)
-            .exists()
-        ):
-            raise forms.ValidationError("Этот email уже используется.")
+        # Проверяем только если email изменился
+        if email and email != self.instance.email:
+            if Users.objects.filter(email=email).exclude(user_id=self.instance.user_id).exists():
+                raise forms.ValidationError("Этот email уже используется.")
         return email
 
     def clean_telegram(self):

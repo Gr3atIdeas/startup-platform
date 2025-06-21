@@ -916,6 +916,19 @@ def profile(request, user_id=None):
             }
         )
 
+    # Проверка роли и модальное окно для role_id=4
+    show_role_selection = False
+    if profile_user == request.user and profile_user.role_id == 4:
+        show_role_selection = True
+        if request.method == "POST" and "select_role" in request.POST:
+            role_id = request.POST.get("role_id")
+            if role_id in ["1", "2"]:  # Только startuper=1, investor=2
+                profile_user.role_id = int(role_id)
+                profile_user.save()
+                show_role_selection = False
+                messages.success(request, "Роль успешно выбрана!")
+                return redirect("profile")
+
     # Инициализация формы редактирования
     if profile_user == request.user:
         form = ProfileEditForm(instance=profile_user)
@@ -928,20 +941,14 @@ def profile(request, user_id=None):
         .select_related("direction")
         .annotate(comment_count=Count("comments"))
         .order_by("-created_at")
-    )  # Новые стартапы первыми
-    startups_paginator = Paginator(startups, 3)  # 3 стартапа на страницу
+    )
+    startups_paginator = Paginator(startups, 3)
     startups_page_number = request.GET.get("startups_page", 1)
     startups_page = startups_paginator.get_page(startups_page_number)
 
-    # Логирование для отладки логотипов
-    for startup in startups_page:
-        logger.info(
-            f"Стартап ID: {startup.startup_id}, Title: {startup.title}, Logo URLs: {startup.logo_urls}"
-        )
-
     # Получение новостей, созданных пользователем
     news = NewsArticles.objects.filter(author=profile_user).order_by("-published_at")
-    news_paginator = Paginator(news, 6)  # 6 новостей на страницу
+    news_paginator = Paginator(news, 6)
     news_page_number = request.GET.get("news_page", 1)
     news_page = news_paginator.get_page(news_page_number)
 
@@ -977,6 +984,7 @@ def profile(request, user_id=None):
                         "form": form,
                         "startups_page": startups_page,
                         "news_page": news_page,
+                        "show_role_selection": show_role_selection,
                     },
                 )
 
@@ -999,6 +1007,7 @@ def profile(request, user_id=None):
                         "form": form,
                         "startups_page": startups_page,
                         "news_page": news_page,
+                        "show_role_selection": show_role_selection,
                     },
                 )
 
@@ -1061,13 +1070,19 @@ def profile(request, user_id=None):
 
         # Обработка редактирования профиля
         elif "edit_profile" in request.POST:
-            form = ProfileEditForm(request.POST, instance=request.user)
+            form = ProfileEditForm(request.POST, request.FILES, instance=request.user)
             if form.is_valid():
                 try:
-                    user = form.save(commit=False)
-                    telegram = form.cleaned_data.get("telegram")
-                    user.social_links = {"telegram": telegram} if telegram else {}
+                    # Сохраняем только изменённые поля
+                    user = request.user
+                    for field in form.changed_data:
+                        if field == "telegram":
+                            telegram = form.cleaned_data.get("telegram")
+                            user.social_links = {"telegram": telegram} if telegram else {}
+                        elif hasattr(user, field):
+                            setattr(user, field, form.cleaned_data[field])
                     user.save()
+
                     logger.info(f"Профиль обновлён для user_id {request.user.user_id}")
                     if request.headers.get("X-Requested-With") == "XMLHttpRequest":
                         return JsonResponse(
@@ -1105,6 +1120,7 @@ def profile(request, user_id=None):
                     "form": form,
                     "startups_page": startups_page,
                     "news_page": news_page,
+                    "show_role_selection": show_role_selection,
                 },
             )
 
@@ -1117,6 +1133,7 @@ def profile(request, user_id=None):
             "form": form,
             "startups_page": startups_page,
             "news_page": news_page,
+            "show_role_selection": show_role_selection,
         },
     )
 
