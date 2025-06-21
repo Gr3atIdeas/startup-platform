@@ -110,14 +110,18 @@ SOCIALACCOUNT_QUERYSET_CACHING = False  # Отключаем кэширован�
 LOGIN_REDIRECT_URL = '/startups/'  # Редирект после любого входа
 SOCIALACCOUNT_LOGIN_REDIRECT_URL = '/startups/'  # Редирект после Telegram-логина
 SOCIALACCOUNT_LOGIN_ON_GET = True  # Разрешить GET-запросы для входа
-ACCOUNT_EMAIL_REQUIRED = False  # Email не обязателен для Telegram
-ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
 ACCOUNT_EMAIL_VERIFICATION = 'none'  # Отключите верификацию email
 ACCOUNT_LOGOUT_REDIRECT_URL = 'startups_list'  # Перенаправление после выхода
+
+# Замени на
+ACCOUNT_LOGIN_METHODS = ['username', 'email']
+ACCOUNT_SIGNUP_FIELDS = ['email', 'password1*', 'password2*']
+
 ACCOUNT_USERNAME_REQUIRED = False  # Username не нужен
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "accounts.middleware.WwwRedirectMiddleware",  # Наш новый middleware для редиректа на WWW
     "whitenoise.middleware.WhiteNoiseMiddleware",  # Для статических файлов
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
