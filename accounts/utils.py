@@ -143,17 +143,16 @@ def escape_markdown_v2(text: str) -> str:
 
 def send_telegram_support_message(ticket):
     """
-    Sends a formatted support ticket message to a specific Telegram chat.
+    Sends a formatted support ticket message with an inline button to a specific Telegram chat.
     """
     bot_token = '7843250850:AAEL8hapR_WVcG2mMNUhWvK-I0DMYG042Ko'
-    chat_id = '2064613329'  # Исправлен ID чата
+    chat_id = '2064613329'
     
     user = ticket.user
     if not user:
         logger.warning(f"Support ticket {ticket.ticket_id} has no associated user.")
         user_info = "Пользователь: Анонимный"
     else:
-        # Экранируем данные пользователя
         first_name = escape_markdown_v2(user.first_name or '')
         last_name = escape_markdown_v2(user.last_name or '')
         email = escape_markdown_v2(user.email or '')
@@ -166,23 +165,35 @@ def send_telegram_support_message(ticket):
             f"✈️ *Telegram:* {telegram_username}"
         )
 
-    # Экранируем данные из тикета
     subject = escape_markdown_v2(ticket.subject)
     message = escape_markdown_v2(ticket.message)
 
     message_text = (
-        f"🚨 *Новая заявка в техподдержку\\!* 🚨\n\n"
+        f"🚨 *Новая заявка в техподдержку \\({ticket.ticket_id}\\)!* 🚨\n\n"
         f"📝 *Тема:* {subject}\n\n"
         f"📄 *Сообщение:*\n{message}\n\n"
         f"\\-\\-\\- Техническая информация \\-\\-\\-\n"
         f"{user_info}"
     )
 
+    # Создаем кнопку
+    inline_keyboard = {
+        "inline_keyboard": [
+            [
+                {
+                    "text": "✅ Исполнено",
+                    "callback_data": f"close_ticket_{ticket.ticket_id}"
+                }
+            ]
+        ]
+    }
+
     url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
     payload = {
         'chat_id': chat_id,
         'text': message_text,
-        'parse_mode': 'MarkdownV2'  # Используем MarkdownV2 для лучшей поддержки форматирования
+        'parse_mode': 'MarkdownV2',
+        'reply_markup': inline_keyboard
     }
 
     try:

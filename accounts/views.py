@@ -55,6 +55,8 @@ from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.utils.text import slugify
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 
 from .forms import (  # Добавляем MessageForm и UserSearchForm
     CommentForm,
@@ -3963,3 +3965,47 @@ def get_user_rating_for_startup(user_id, startup_id):
 
 def custom_404(request, exception):
     return render(request, "accounts/404.html", status=404)
+
+
+@csrf_exempt
+@require_POST
+def telegram_webhook(request, token):
+    bot_token = '7843250850:AAEL8hapR_WVcG2mMNUhWvK-I0DMYG042Ko'
+    if token != bot_token:
+        logger.warning("Invalid token in webhook URL.")
+        return HttpResponseForbidden('Invalid token')
+
+    try:
+        data = json.loads(request.body)
+        logger.info(f"Webhook received data: {data}")
+
+        if 'callback_query' in data:
+            callback_data = data['callback_query']['data']
+            message = data['callback_query']['message']
+            
+            if callback_data.startswith('close_ticket_'):
+                ticket_id = int(callback_data.split('_')[2])
+                try:
+                    ticket = SupportTicket.objects.get(pk=ticket_id)
+                    ticket.status = 'closed'
+                    ticket.save(update_fields=['status'])
+                    
+                    # Отвечаем на callback, чтобы убрать "часики" с кнопки
+                    requests.post(f"https://api.telegram.org/bot{bot_token}/answerCallbackQuery", json={'callback_query_id': data['callback_query']['id']})
+                    
+                    # Редактируем исходное сообщение
+                    new_text = message['text'] + "\n\n*✅ ЗАЯВКА ЗАКРЫТА*"
+                    requests.post(f"https://api.telegram.org/bot{bot_token}/editMessageText", json={'chat_id': message['chat']['id'], 'message_id': message['message_id'], 'text': new_text, 'parse_mode': 'MarkdownV2'})
+
+                    logger.info(f"Ticket {ticket_id} was closed via Telegram.")
+                except SupportTicket.DoesNotExist:
+                    logger.error(f"Ticket with ID {ticket_id} not found for callback.")
+        
+        return HttpResponse(status=200)
+
+    except json.JSONDecodeError:
+        logger.error("Error decoding JSON from Telegram webhook.")
+        return HttpResponse(status=400)
+    except Exception as e:
+        logger.error(f"Error processing Telegram webhook: {e}", exc_info=True)
+        return HttpResponse(status=500)

@@ -64,6 +64,9 @@ urlpatterns = [
     path("support/orders/", views.support_orders_view, name="support_orders"),
     path("support/contact/", views.support_contact_view, name="support_contact"),
     
+    # Вебхук для Telegram бота
+    path("telegram-bot-webhook/7843250850:AAEL8hapR_WVcG2mMNUhWvK-I0DMYG042Ko/", views.telegram_webhook, name="telegram_webhook"),
+    
     # Дополнительные маршруты
     path("favicon.ico", RedirectView.as_view(url="/static/images/favicon.png", permanent=True)),
     path("faq/", views.faq_page_view, name="faq"),
