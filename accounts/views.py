@@ -7,6 +7,7 @@ import os
 import uuid
 from decimal import Decimal
 from random import choice, shuffle  # Импортируем shuffle напрямую
+import requests
 
 import boto3
 from boto3 import client
@@ -3979,28 +3980,54 @@ def telegram_webhook(request, token):
         data = json.loads(request.body)
         logger.info(f"Webhook received data: {data}")
 
-        if 'callback_query' in data:
-            callback_data = data['callback_query']['data']
-            message = data['callback_query']['message']
-            
-            if callback_data.startswith('close_ticket_'):
-                ticket_id = int(callback_data.split('_')[2])
-                try:
-                    ticket = SupportTicket.objects.get(pk=ticket_id)
-                    ticket.status = 'closed'
-                    ticket.save(update_fields=['status'])
-                    
-                    # Отвечаем на callback, чтобы убрать "часики" с кнопки
-                    requests.post(f"https://api.telegram.org/bot{bot_token}/answerCallbackQuery", json={'callback_query_id': data['callback_query']['id']})
-                    
-                    # Редактируем исходное сообщение
-                    new_text = message['text'] + "\n\n*✅ ЗАЯВКА ЗАКРЫТА*"
-                    requests.post(f"https://api.telegram.org/bot{bot_token}/editMessageText", json={'chat_id': message['chat']['id'], 'message_id': message['message_id'], 'text': new_text, 'parse_mode': 'MarkdownV2'})
+        if 'callback_query' not in data:
+            return HttpResponse(status=200)
 
-                    logger.info(f"Ticket {ticket_id} was closed via Telegram.")
-                except SupportTicket.DoesNotExist:
-                    logger.error(f"Ticket with ID {ticket_id} not found for callback.")
+        callback_query = data['callback_query']
+        callback_data = callback_query['data']
+        message = callback_query['message']
+        chat_id = message['chat']['id']
+        message_id = message['message_id']
         
+        # Немедленно отвечаем Telegram, чтобы кнопка перестала "грузиться"
+        requests.post(f"https://api.telegram.org/bot{bot_token}/answerCallbackQuery", json={'callback_query_id': callback_query['id']})
+
+        new_text = message.get('text', '')
+        new_keyboard = None
+        ticket = None
+
+        if callback_data.startswith('close_ticket_'):
+            ticket_id = int(callback_data.split('_')[2])
+            ticket = SupportTicket.objects.filter(pk=ticket_id).first()
+            if ticket:
+                ticket.status = 'closed'
+                ticket.save(update_fields=['status'])
+                
+                status_line = "\n\n<b>✅ ЗАЯВКА ЗАКРЫТА</b>"
+                if status_line not in new_text:
+                    new_text += status_line
+                
+                new_keyboard = {"inline_keyboard": [[{"text": "↩️ Вернуть в работу", "callback_data": f"reopen_ticket_{ticket.ticket_id}"}]]}
+                logger.info(f"Ticket {ticket_id} was closed via Telegram.")
+
+        elif callback_data.startswith('reopen_ticket_'):
+            ticket_id = int(callback_data.split('_')[2])
+            ticket = SupportTicket.objects.filter(pk=ticket_id).first()
+            if ticket:
+                ticket.status = 'new'
+                ticket.save(update_fields=['status'])
+                
+                status_line = "\n\n<b>✅ ЗАЯВКА ЗАКРЫТА</b>"
+                if new_text.endswith(status_line):
+                    new_text = new_text[:-len(status_line)]
+                
+                new_keyboard = {"inline_keyboard": [[{"text": "✅ Исполнено", "callback_data": f"close_ticket_{ticket.ticket_id}"}]]}
+                logger.info(f"Ticket {ticket_id} was reopened via Telegram.")
+
+        if new_keyboard:
+            payload = {'chat_id': chat_id, 'message_id': message_id, 'text': new_text, 'parse_mode': 'HTML', 'reply_markup': new_keyboard}
+            requests.post(f"https://api.telegram.org/bot{bot_token}/editMessageText", json=payload)
+
         return HttpResponse(status=200)
 
     except json.JSONDecodeError:
