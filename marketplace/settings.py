@@ -95,11 +95,11 @@ SOCIALACCOUNT_ADAPTER = 'accounts.adapter.CustomSocialAccountAdapter'
 SOCIALACCOUNT_PROVIDERS = {
     'telegram': {
         'APP': {
-            'client_id': '7843250850:AAEL8hapR_WVcG2mMNUhWvK-I0DMYG042Ko',  # Ваш Bot Token
-            'secret': '',  # Обычно не требуется для Telegram
+            'client_id': '7843250850:AAEL8hapR_WVcG2mMNUhWvK-I0DMYG042Ko',
+            'secret': '',
         },
-        'SCOPE': ['user'],  # Опционально, если требуется доступ к данным пользователя
-        'AUTH_PARAMS': {'bot_id': '7843250850:AAEL8hapR_WVcG2mMNUhWvK-I0DMYG042Ko'},  # Дополнительные параметры для Telegram
+        'SCOPE': ['user'],
+        'AUTH_PARAMS': {'bot_id': '7843250850:AAEL8hapR_WVcG2mMNUhWvK-I0DMYG042Ko'},
     }
 }
 

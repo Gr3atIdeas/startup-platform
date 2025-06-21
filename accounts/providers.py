@@ -13,9 +13,7 @@ class CustomTelegramAdapter(DefaultSocialAccountAdapter):
     provider_id = TelegramProvider.id
 
     def complete_login(self, request, app, token, **kwargs):
-        logger.debug(f"Complete_login called with kwargs: {kwargs}")
-
-        # Вариант 1: Попытка получить данные через Telegram API (getMe)
+        logger.debug(f"Complete_login called with app: {app}, token: {token}, kwargs: {kwargs}")
         try:
             api_url = f'https://api.telegram.org/bot{app.client_id}/getMe'
             response = requests.get(api_url)
@@ -38,7 +36,6 @@ class CustomTelegramAdapter(DefaultSocialAccountAdapter):
         except Exception as e:
             logger.error(f"Error in getMe request: {str(e)}")
 
-        # Вариант 2: Использование данных из kwargs['response']
         telegram_data = kwargs.get('response', {})
         logger.debug(f"Telegram data from kwargs: {telegram_data}")
         if telegram_data:
@@ -61,7 +58,6 @@ class CustomTelegramAdapter(DefaultSocialAccountAdapter):
         User = get_user_model()
         telegram_id = str(user_data['id'])
 
-        # Проверяем или создаем пользователя
         try:
             user = User.objects.get(telegram_id=telegram_id)
             logger.info(f"Existing user found: user_id={user.user_id}")
@@ -77,11 +73,10 @@ class CustomTelegramAdapter(DefaultSocialAccountAdapter):
             if not user.email:
                 user.email = f"{telegram_id}@telegram.com"
                 user.telegram_email = user.email
-            user.role_id = 4  # Назначаем роль "Unrecognized"
+            user.role_id = 4
             user.save()
             logger.info(f"New user created: user_id={user.user_id}")
 
-        # Создаем или обновляем SocialAccount
         social_account, created = SocialAccount.objects.update_or_create(
             provider=self.provider_id,
             uid=telegram_id,
