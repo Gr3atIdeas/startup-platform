@@ -3828,12 +3828,20 @@ def delete_investment(request, startup_id, user_id):
 
 @login_required  # Предполагаем, что страница заявок доступна только авторизованным
 def support_orders_view(request):
-    # Здесь в будущем будет логика получения заявок пользователя
-    # context = {
-    #     'orders': SupportOrder.objects.filter(user=request.user).order_by('-created_at')
-    # }
-    # return render(request, 'accounts/support_orders.html', context)
-    return render(request, 'accounts/support_orders.html') # Заглушка
+    if request.user.is_authenticated and request.user.role and request.user.role.role_name == 'moderator':
+        # Модератор видит все заявки
+        orders = SupportTicket.objects.all().order_by('-created_at')
+        is_moderator = True
+    else:
+        # Обычный пользователь видит только свои заявки
+        orders = SupportTicket.objects.filter(user=request.user).order_by('-created_at')
+        is_moderator = False
+
+    context = {
+        'orders': orders,
+        'is_moderator': is_moderator
+    }
+    return render(request, 'accounts/support_orders.html', context)
 
 
 @login_required  # Предполагаем, что создание заявки доступно только авторизованным

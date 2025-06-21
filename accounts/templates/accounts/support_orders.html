@@ -26,7 +26,7 @@
     </div>
 
     <section class="page-header-section">
-      <h1>Мои заявки</h1>
+      <h1>{% if is_moderator %}Все заявки{% else %}Мои заявки{% endif %}</h1>
       <a href="{% url 'support_contact' %}" class="btn btn-primary">Новая заявка</a>
     </section>
 
@@ -37,49 +37,33 @@
     </section>
     
     <section class="orders-list-section">
-      {# Пример заявки 1 #}
-      <a href="#" class="order-card"> {# Обернули в ссылку #}
-        <div class="order-details-grid">
-          <div class="order-detail-item">
-            <span class="detail-label">Создана</span>
-            <span class="detail-value">06.06.2025</span>
+      {% for order in orders %}
+        <a href="#" class="order-card"> {# TODO: Ссылка на детальный просмотр тикета #}
+          <div class="order-details-grid">
+            <div class="order-detail-item">
+              <span class="detail-label">Создана</span>
+              <span class="detail-value">{{ order.created_at|date:"d.m.Y" }}</span>
+            </div>
+            <div class="order-detail-item order-detail-topic">
+              <span class="detail-label">Тема</span>
+              <span class="detail-value">{{ order.subject }}</span>
+            </div>
+            <div class="order-detail-item">
+              <span class="detail-label">Статус</span>
+              <span class="detail-value status-{{ order.status }}">{{ order.get_status_display }}</span>
+            </div>
+            <div class="order-detail-item">
+              <span class="detail-label">Номер</span>
+              <span class="detail-value">#{{ order.ticket_id }}</span>
+            </div>
           </div>
-          <div class="order-detail-item order-detail-topic">
-            <span class="detail-label">Тема</span>
-            <span class="detail-value">Передача портфеля в другой аккаунт</span>
-          </div>
-          <div class="order-detail-item">
-            <span class="detail-label">Статус</span>
-            <span class="detail-value status-closed">Закрыта</span> {# Можно добавить классы для статусов #}
-          </div>
-          <div class="order-detail-item">
-            <span class="detail-label">Номер</span>
-            <span class="detail-value">#83947938753</span>
-          </div>
+        </a>
+      {% empty %}
+        <div class="no-orders-message">
+          <p>У вас пока нет созданных заявок.</p>
+          <p>Если у вас есть вопрос, вы можете <a href="{% url 'support_contact' %}">создать новую заявку</a>.</p>
         </div>
-      </a>
-      {# Пример заявки 2 #}
-      <a href="#" class="order-card"> {# Обернули в ссылку #}
-        <div class="order-details-grid">
-          <div class="order-detail-item">
-            <span class="detail-label">Создана</span>
-            <span class="detail-value">05.06.2025</span>
-          </div>
-          <div class="order-detail-item order-detail-topic">
-            <span class="detail-label">Тема</span>
-            <span class="detail-value">Вопрос по функционалу платформы</span>
-          </div>
-          <div class="order-detail-item">
-            <span class="detail-label">Статус</span>
-            <span class="detail-value status-open">Открыта</span>
-          </div>
-          <div class="order-detail-item">
-            <span class="detail-label">Номер</span>
-            <span class="detail-value">#83947938754</span>
-          </div>
-        </div>
-      </a>
-      {# Здесь будет цикл для отображения заявок с бэкенда #}
+      {% endfor %}
     </section>
 
     <section class="additional-info-section">
