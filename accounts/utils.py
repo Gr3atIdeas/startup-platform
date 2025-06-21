@@ -79,6 +79,7 @@ def update_user_from_telegram(user, sociallogin):
     """
     Forcefully updates a user model instance with data from a Telegram social login account.
     This function compares fields and saves the user only if there are changes.
+    First name and last name are intentionally NOT updated to allow user customization.
     """
     if not sociallogin or sociallogin.account.provider != 'telegram':
         return
@@ -90,8 +91,6 @@ def update_user_from_telegram(user, sociallogin):
         # --- Data from Telegram ---
         tg_id = str(telegram_data.get('id'))
         tg_username = telegram_data.get('username')
-        tg_first_name = telegram_data.get('first_name')
-        tg_last_name = telegram_data.get('last_name', '')
         tg_photo_url = telegram_data.get('photo_url')
 
         # --- Compare and stage fields for update ---
@@ -103,13 +102,8 @@ def update_user_from_telegram(user, sociallogin):
             user.username = tg_username
             update_fields.append('username')
 
-        if tg_first_name and user.first_name != tg_first_name:
-            user.first_name = tg_first_name
-            update_fields.append('first_name')
-
-        if user.last_name != tg_last_name:
-            user.last_name = tg_last_name
-            update_fields.append('last_name')
+        # Per user request, DO NOT update first_name and last_name
+        # as they can be customized in the profile.
 
         if tg_photo_url and user.profile_picture_url != tg_photo_url:
             user.profile_picture_url = tg_photo_url
@@ -117,11 +111,11 @@ def update_user_from_telegram(user, sociallogin):
         
         # --- Handle JSONB social_links field ---
         if tg_username:
-            telegram_link = f"https://t.me/{tg_username}"
-            if not isinstance(user.social_links, dict) or user.social_links.get('telegram') != telegram_link:
+            telegram_handle = f"@{tg_username}"
+            if not isinstance(user.social_links, dict) or user.social_links.get('telegram') != telegram_handle:
                 if not isinstance(user.social_links, dict):
                     user.social_links = {}
-                user.social_links['telegram'] = telegram_link
+                user.social_links['telegram'] = telegram_handle
                 update_fields.append('social_links')
 
         # --- Save if any fields were updated ---
