@@ -103,6 +103,8 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
+SOCIALACCOUNT_QUERYSET_CACHING = False  # Отключаем кэширование SocialApp
+
 # Перенаправление после входа
 LOGIN_REDIRECT_URL = 'startups_list'  # Перенаправление на страницу каталога
 SOCIALACCOUNT_LOGIN_ON_GET = True  # Разрешить GET-запросы для входа
