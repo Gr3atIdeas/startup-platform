@@ -898,7 +898,8 @@ def profile(request, user_id=None):
         user = request.user
         is_own_profile = True
 
-    show_role_selection = (not user.role or user.role.role_id == 4) and is_own_profile
+    # Показывать выбор роли, если роль не установлена или это временная роль (ID=4)
+    show_role_selection = (not user.role_id or user.role_id == 4) and is_own_profile
 
     if request.method == "POST" and is_own_profile:
         if "select_role" in request.POST:

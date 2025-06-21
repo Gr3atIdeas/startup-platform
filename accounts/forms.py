@@ -288,57 +288,27 @@ class UserSearchForm(forms.Form):
 
 
 class ProfileEditForm(forms.ModelForm):
-    telegram = forms.CharField(
-        max_length=50,
-        required=False,
-        label="Telegram",
-        widget=forms.TextInput(attrs={"placeholder": "@username"}),
-    )
-    email = forms.EmailField(
-        required=False,
-        label="Email",
-        widget=forms.EmailInput(attrs={"placeholder": "your@email.com"}),
-    )
+    telegram = forms.CharField(max_length=100, required=False, label="Telegram")
 
     class Meta:
         model = Users
-        fields = ["email", "first_name", "last_name", "website_url", "bio"]
+        fields = [
+            "first_name",
+            "last_name",
+            "website_url",
+            "bio",
+            "telegram",
+        ]
         widgets = {
-            "email": forms.EmailInput(
-                attrs={"class": "form-control", "placeholder": "Введите email"}
-            ),
-            "first_name": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "Введите имя"}
-            ),
-            "last_name": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "Введите фамилию"}
-            ),
-            "website_url": forms.URLInput(
-                attrs={"class": "form-control", "placeholder": "https://example.com"}
-            ),
-            "bio": forms.Textarea(
-                attrs={
-                    "class": "form-control",
-                    "rows": 5,
-                    "placeholder": "Расскажите о себе",
-                }
-            ),
-        }
-        labels = {
-            "email": "Email",
-            "first_name": "Имя",
-            "last_name": "Фамилия",
-            "website_url": "Портфолио или сайт",
-            "bio": "О себе",
+            'bio': forms.Textarea(attrs={'rows': 3, 'maxlength': 150}),
         }
 
-    def clean_email(self):
-        email = self.cleaned_data.get("email")
-        # Проверяем только если email изменился
-        if email and email != self.instance.email:
-            if Users.objects.filter(email=email).exclude(user_id=self.instance.user_id).exists():
-                raise forms.ValidationError("Этот email уже используется.")
-        return email
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['first_name'].widget.attrs['placeholder'] = 'Введите имя'
+        self.fields['last_name'].widget.attrs['placeholder'] = 'Введите фамилию'
+        self.fields['website_url'].widget.attrs['placeholder'] = 'https://example.com'
+        self.fields['telegram'].widget.attrs['placeholder'] = '@username'
 
     def clean_telegram(self):
         telegram = self.cleaned_data.get("telegram")
