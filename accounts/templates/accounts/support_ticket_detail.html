@@ -4,106 +4,103 @@
 {% block custom_styles %}
 <link rel="stylesheet" href="{% static 'accounts/css/support_orders.css' %}">
 <style>
-    .support-ticket-detail-container {
+    /* Адаптируем существующие стили для детального вида */
+    .detail-container {
         display: flex;
-        gap: 2rem;
+        gap: 30px;
         padding: 2rem;
         max-width: 1200px;
         margin: 0 auto;
     }
-
-    .ticket-info-panel {
+    .left-panel {
         flex: 1;
-        min-width: 300px;
+        min-width: 350px;
         max-width: 400px;
     }
-
-    .ticket-content-panel {
+    .right-panel {
         flex: 2;
-        background: #f9f9f9;
-        padding: 2rem;
-        border-radius: 8px;
+        background-color: #F9F9F9;
+        border-radius: 12px;
+        padding: 30px;
     }
-
     .info-block {
-        margin-bottom: 1.5rem;
+        margin-bottom: 20px;
     }
-
     .info-block label {
         display: block;
         color: #888;
-        margin-bottom: 0.5rem;
-        font-size: 0.9rem;
+        margin-bottom: 8px;
+        font-size: 14px;
+        font-weight: 500;
     }
-
-    .info-block input, .info-block select, .info-block textarea {
+    .info-block input[type="text"],
+    .info-block select,
+    .info-block textarea {
         width: 100%;
-        padding: 0.75rem;
+        padding: 12px;
         border: 1px solid #ddd;
-        border-radius: 4px;
+        border-radius: 8px;
         background-color: #fff;
+        font-size: 16px;
     }
-    
-    .info-block input:disabled, .info-block select:disabled {
+    .info-block input[disabled] {
         background-color: #f0f0f0;
         cursor: not-allowed;
+        color: #555;
     }
-
-    .ticket-content-panel h3 {
+    .right-panel h3 {
         margin-top: 0;
-        border-bottom: 2px solid #eee;
-        padding-bottom: 1rem;
-        margin-bottom: 1rem;
+        margin-bottom: 20px;
+        font-size: 22px;
+        font-weight: 700;
     }
-
     .ticket-message {
         white-space: pre-wrap;
         word-wrap: break-word;
-    }
-    
-    .moderator-comment-section {
-        margin-top: 2rem;
-        border-top: 1px solid #eee;
-        padding-top: 1.5rem;
-    }
-
-    .back-link {
-        display: inline-block;
-        margin-bottom: 1rem;
+        line-height: 1.6;
         color: #333;
-        text-decoration: none;
     }
-    .back-link:hover {
-        text-decoration: underline;
+    .moderator-comment-section {
+        margin-top: 30px;
+        border-top: 1px solid #e0e0e0;
+        padding-top: 20px;
+    }
+    .moderator-comment-section h4 {
+        margin-top: 0;
+        margin-bottom: 15px;
+        font-size: 18px;
+        font-weight: 600;
+    }
+    .blue-button {
+      width: 100%;
+      padding: 15px;
+      font-size: 16px;
     }
 </style>
 {% endblock %}
 
 {% block content %}
 <main>
-    <div class="support-ticket-detail-container">
+    <div class="detail-container">
         
-        <div class="ticket-info-panel">
-            <a href="{% url 'support_orders' %}" class="back-link">&larr; К списку заявок</a>
+        <div class="left-panel">
+            <a href="{% url 'support_orders' %}" class="back-button" style="margin-bottom: 20px;">&larr; К списку заявок</a>
             
             <form method="post">
                 {% csrf_token %}
 
-                {% if is_moderator and form %}
-                    <div class="info-block">
-                        <label for="{{ form.status.id_for_label }}">{{ form.status.label }}</label>
+                <div class="info-block">
+                    <label>Статус работы</label>
+                    {% if is_moderator and form %}
                         {{ form.status }}
-                    </div>
-                {% else %}
-                    <div class="info-block">
-                        <label>Статус работы</label>
+                    {% else %}
                         <input type="text" value="{{ ticket.get_status_display }}" disabled>
-                    </div>
-                {% endif %}
+                    {% endif %}
+                </div>
                 
                 <div class="info-block">
                     <label>Дата создания</label>
-                    <input type="text" value="{{ ticket.created_at|date:'d.m.Y' }}" disabled>
+                    <input type="text" value="{{ ticket.created_at|date:'d/m/Y' }}" disabled>
                 </div>
 
                 <div class="info-block">
@@ -118,7 +115,7 @@
 
                 <div class="info-block">
                     <label>Ваше имя</label>
-                    <input type="text" value="{{ ticket.user.get_full_name }}" disabled>
+                    <input type="text" value="{{ ticket.user.get_full_name|default:ticket.user.username }}" disabled>
                 </div>
                 
                 <div class="info-block">
@@ -131,13 +128,13 @@
                         <label for="{{ form.moderator_comment.id_for_label }}">{{ form.moderator_comment.label }}</label>
                         {{ form.moderator_comment }}
                     </div>
-                     <button type="submit" class="blue-button">Сохранить изменения</button>
+                     <button type="submit" class="blue-button">Закрыть заявку</button>
                 {% endif %}
 
             </form>
         </div>
 
-        <div class="ticket-content-panel">
+        <div class="right-panel">
             <h3>Тема: {{ ticket.subject }}</h3>
             <p class="ticket-message">{{ ticket.message }}</p>
 
