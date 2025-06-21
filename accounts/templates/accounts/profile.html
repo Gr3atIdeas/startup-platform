@@ -595,11 +595,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     initializeActiveTab();
-    
-    // Debug alert for Telegram data
-    {% if telegram_debug_data %}
-    alert("Telegram Debug Data:\\n" + JSON.stringify({{ telegram_debug_data|safe }}, null, 2));
-    {% endif %}
 });
 </script>
 {% endblock %}
