@@ -574,14 +574,10 @@ class Users(AbstractBaseUser):
         db_table = "users"
 
     def __str__(self):
-        return self.email or self.telegram_email or f"User {self.user_id}"
+        return self.email or f"User {self.user_id}"
 
     def set_password(self, raw_password):
-        if raw_password is None:
-            self.password_hash = None
-        else:
-            self.password_hash = make_password(raw_password)
-        self.save()
+        self.password_hash = make_password(raw_password)
 
     def check_password(self, raw_password):
         if not self.password_hash or raw_password is None:
