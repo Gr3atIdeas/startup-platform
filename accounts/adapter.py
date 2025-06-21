@@ -16,50 +16,44 @@ class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
         Populates user fields from social account data.
         This method is called on every login.
         """
-        # Store extra_data in session for debugging
-        if sociallogin.account.provider == 'telegram':
-            request.session['telegram_debug_data'] = sociallogin.account.extra_data
-
         user = super().populate_user(request, sociallogin, data)
 
         if sociallogin.account.provider == 'telegram':
             telegram_data = sociallogin.account.extra_data
-            is_new_user = not user.pk
 
             # --- Fields to update on EVERY login ---
-            
-            # Update username from Telegram
             username = telegram_data.get('username')
             if username:
                 user.username = username
             
-            # Update profile picture URL from Telegram
             photo_url = telegram_data.get('photo_url')
             if photo_url:
                 user.profile_picture_url = photo_url
             
-            # Update social_links with Telegram username
             if user.social_links is None:
                 user.social_links = {}
             if username:
-                user.social_links['telegram'] = f"@{username}"
+                user.social_links['telegram'] = f"https://t.me/{username}"
 
-            # --- Fields to set ONLY on first registration ---
+            # --- Fields to fill if they are empty in our DB ---
+            telegram_id = telegram_data.get('id')
+            if telegram_id and not user.telegram_id:
+                user.telegram_id = str(telegram_id)
+            
+            first_name = telegram_data.get('first_name')
+            if first_name and not user.first_name:
+                user.first_name = first_name
+            
+            last_name = telegram_data.get('last_name')
+            if last_name and not user.last_name:
+                user.last_name = last_name
+
+            # --- Fields to set ONLY for brand new users ---
+            is_new_user = not user.pk
             if is_new_user:
-                # Set telegram_id
-                telegram_id = telegram_data.get('id')
-                if telegram_id:
-                    user.telegram_id = str(telegram_id)
-                
-                # Set first_name and last_name ONLY on creation
-                user.first_name = telegram_data.get('first_name')
-                user.last_name = telegram_data.get('last_name')
-                
-                # Generate a username if not provided by Telegram
                 if not user.username and telegram_id:
                     user.username = f"telegram_user_{telegram_id}"
 
-                # Generate a placeholder email if not provided
                 if not user_email(user) and user.username:
                     user.email = f"{user.username}@telegram.placeholder.com"
         
