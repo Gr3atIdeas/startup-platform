@@ -438,11 +438,11 @@
                 <div class="comment-left">
                   <div class="comment-author-avatar">
                     {# Вставляем аватарку #}
-                    <img src="{% if comment.user.get_profile_picture_url %}{{ comment.user.get_profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}" alt="Аватар {{ comment.user.username }}" class="comment-avatar-img">
+                    <img src="{% if comment.user_id.get_profile_picture_url %}{{ comment.user_id.get_profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}" alt="Аватар {{ comment.user_id.username }}" class="comment-avatar-img">
                   </div>
                   <div class="comment-content-wrapper">
                     <div class="comment-author-name">
-                      {{ comment.user.first_name|default:comment.user.username }}
+                      {{ comment.user_id.first_name|default:comment.user_id.username }}
                       {% if comment.user_rating %}
                         <span class="comment-author-rating-badge">оценил на {{ comment.user_rating }}</span>
                       {% endif %}
