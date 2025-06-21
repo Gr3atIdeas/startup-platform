@@ -12,53 +12,70 @@ logger = logging.getLogger(__name__)
 
 class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
     def populate_user(self, request, sociallogin, data):
+        """
+        Populates user fields from social account data.
+        This method is called on every login.
+        """
         user = super().populate_user(request, sociallogin, data)
+
         if sociallogin.account.provider == 'telegram':
-            # Данные из Telegram
-            telegram_id = sociallogin.account.extra_data.get('id')
-            username = data.get('username')
-            first_name = data.get('first_name')
-            last_name = data.get('last_name')
+            telegram_data = sociallogin.account.extra_data
+            is_new_user = not user.pk
 
-            # Устанавливаем telegram_id
-            if telegram_id:
-                user.telegram_id = str(telegram_id)
+            # --- Fields to update on EVERY login ---
+            
+            # Update username from Telegram
+            username = telegram_data.get('username')
+            if username:
+                user.username = username
+            
+            # Update profile picture URL from Telegram
+            photo_url = telegram_data.get('photo_url')
+            if photo_url:
+                user.profile_picture_url = photo_url
+            
+            # Update social_links with Telegram username
+            if user.social_links is None:
+                user.social_links = {}
+            if username:
+                user.social_links['telegram'] = f"@{username}"
 
-            # Если username от Telegram пустой, генерируем свой
-            if not username:
-                username = f"telegram_user_{telegram_id}"
-            user.username = username
+            # --- Fields to set ONLY on first registration ---
+            if is_new_user:
+                # Set telegram_id
+                telegram_id = telegram_data.get('id')
+                if telegram_id:
+                    user.telegram_id = str(telegram_id)
+                
+                # Set first_name and last_name ONLY on creation
+                user.first_name = telegram_data.get('first_name')
+                user.last_name = telegram_data.get('last_name')
+                
+                # Generate a username if not provided by Telegram
+                if not user.username and telegram_id:
+                    user.username = f"telegram_user_{telegram_id}"
 
-            # Устанавливаем имя и фамилию
-            user.first_name = first_name
-            user.last_name = last_name
-
-            # Если email не получен, создаем временный уникальный email
-            if not user_email(user):
-                user.email = f"{user.username}@telegram.placeholder.com"
-
+                # Generate a placeholder email if not provided
+                if not user_email(user) and user.username:
+                    user.email = f"{user.username}@telegram.placeholder.com"
+        
         return user
 
     def save_user(self, request, sociallogin, form=None):
         """
-        Сохраняет пользователя и назначает ему роль 'Временный' (id=4),
-        если он регистрируется через Telegram и у него еще нет роли.
+        Saves the user and assigns a temporary role if they are new
+        and registering via Telegram.
         """
-        # Сначала создаем пользователя стандартным способом
         user = super().save_user(request, sociallogin, form)
 
-        # Если регистрация через Telegram и роль еще не назначена
         if sociallogin.account.provider == 'telegram' and not user.role_id:
             try:
-                # Назначаем временную роль.
-                # Предполагается, что роль с ID=4 существует в таблице Roles
-                # и соответствует временному статусу пользователя.
                 temp_role = Roles.objects.get(pk=4)
                 user.role = temp_role
                 user.save(update_fields=['role'])
-                logger.info(f"Назначена временная роль (ID=4) для нового пользователя Telegram: {user.username}")
+                logger.info(f"Assigned temporary role (ID=4) to new Telegram user: {user.username}")
             except Roles.DoesNotExist:
-                logger.error("Роль с ID=4 не найдена в базе данных. Не удалось назначить временную роль.")
+                logger.error("Role with ID=4 not found. Could not assign temporary role.")
 
         return user
 
