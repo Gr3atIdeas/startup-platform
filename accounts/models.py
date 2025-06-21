@@ -544,6 +544,7 @@ class UserManager(BaseUserManager):
 
 class Users(AbstractBaseUser):
     user_id = models.AutoField(primary_key=True)
+    username = models.CharField(max_length=150, unique=True, null=True, blank=True)
     email = models.EmailField(unique=True, max_length=255, blank=True, null=True)
     password_hash = models.CharField(max_length=255, blank=True, null=True)
     first_name = models.CharField(max_length=100, blank=True, null=True)

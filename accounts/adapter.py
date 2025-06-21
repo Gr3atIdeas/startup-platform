@@ -9,6 +9,16 @@ from django.contrib.sites.models import Site
 logger = logging.getLogger(__name__)
 
 class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
+    def populate_user(self, request, sociallogin, data):
+        user = super().populate_user(request, sociallogin, data)
+        if sociallogin.account.provider == 'telegram':
+            user.username = data.get('username')
+            user.first_name = data.get('first_name')
+            user.last_name = data.get('last_name')
+            if 'id' in sociallogin.account.extra_data:
+                user.telegram_id = sociallogin.account.extra_data['id']
+        return user
+
     def get_connect_redirect_url(self, request, socialaccount):
         url = super().get_connect_redirect_url(request, socialaccount)
         if not settings.DEBUG and '://greatideas.ru' in url:
