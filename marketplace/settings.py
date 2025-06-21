@@ -98,15 +98,15 @@ SOCIALACCOUNT_PROVIDERS = {
             'client_id': '7843250850:AAEL8hapR_WVcG2mMNUhWvK-I0DMYG042Ko',
             'secret': '',
         },
-        'SCOPE': ['user'],
-        'AUTH_PARAMS': {'bot_id': '7843250850:AAEL8hapR_WVcG2mMNUhWvK-I0DMYG042Ko'},
+        'CALLBACK_URL': 'https://www.greatideas.ru/accounts/telegram/login/callback/',  # Указываем правильный callback
     }
 }
 
 SOCIALACCOUNT_QUERYSET_CACHING = False  # Отключаем кэширование SocialApp
 
 # Перенаправление после входа
-LOGIN_REDIRECT_URL = 'startups_list'  # Перенаправление на страницу каталога
+LOGIN_REDIRECT_URL = '/startups/'  # Редирект после любого входа
+SOCIALACCOUNT_LOGIN_REDIRECT_URL = '/startups/'  # Редирект после Telegram-логина
 SOCIALACCOUNT_LOGIN_ON_GET = True  # Разрешить GET-запросы для входа
 ACCOUNT_EMAIL_REQUIRED = False  # Email не обязателен для Telegram
 ACCOUNT_AUTHENTICATION_METHOD = 'username_email'

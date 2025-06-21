@@ -21,11 +21,11 @@ class CustomTelegramAdapter(DefaultSocialAccountAdapter):
         logger.debug(f"Received Telegram data: {telegram_data}")
 
         if not telegram_data or 'id' not in telegram_data:
-            logger.error("No valid Telegram data received")
-            raise Exception("Failed to fetch user data from Telegram")
+            logger.error("No valid Telegram data received: {telegram_data}")
+            raise Exception("Invalid Telegram authentication data")
 
         user_data = {
-            'id': telegram_data.get('id'),
+            'id': str(telegram_data.get('id')),
             'username': telegram_data.get('username'),
             'first_name': telegram_data.get('first_name'),
             'last_name': telegram_data.get('last_name', ''),
@@ -33,17 +33,11 @@ class CustomTelegramAdapter(DefaultSocialAccountAdapter):
         }
         logger.info(f"Processed user data: {user_data}")
 
-        # Проверка хэша (опционально, если Telegram требует)
-        # Для простоты пока пропускаем, но можно добавить позже
-        # if not self.verify_telegram_hash(telegram_data, app.client_id):
-        #     logger.error("Invalid Telegram hash")
-        #     raise Exception("Invalid Telegram authentication data")
-
         return self._process_social_login(request, app, user_data)
 
     def _process_social_login(self, request, app, user_data):
         User = get_user_model()
-        telegram_id = str(user_data['id'])
+        telegram_id = user_data['id']
 
         try:
             user = User.objects.get(telegram_id=telegram_id)
