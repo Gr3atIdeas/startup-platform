@@ -27,42 +27,41 @@
     <div class="deals-page-container">
         <div class="deals-main-wrapper">
             <div class="chat-list-column">
-                <h3>Список сделок</h3>
+                <div class="search-bar">
+                    <img src="{% static 'accounts/images/search.svg' %}" alt="Search" class="search-icon">
+                    <input type="text" placeholder="Поиск">
+                </div>
                 <div class="deal-status-filters">
-                    <a href="{% url 'deals_view' %}?status=pending" class="filter-btn {% if current_status == 'pending' %}active{% endif %}">
-                        <img src="{% static 'accounts/images/cosmochat/deal_icon.svg' %}" alt="Новые" class="filter-icon">
-                        Новые
+                    <a href="{% url 'deals_view' %}?status=pending" class="filter-btn {% if current_status == 'pending' or current_status == 'approved' %}active{% endif %}">
+                        Активные
                     </a>
-                    <a href="{% url 'deals_view' %}?status=approved" class="filter-btn {% if current_status == 'approved' %}active approved{% endif %}">
-                        <img src="{% static 'accounts/images/check-mark-button-svgrepo-com.svg' %}" alt="Принятые" class="filter-icon">
-                        Принятые
-                    </a>
-                    <a href="{% url 'deals_view' %}?status=rejected" class="filter-btn {% if current_status == 'rejected' %}active rejected{% endif %}">
-                        <img src="{% static 'accounts/images/cross-mark-button-svgrepo-com.svg' %}" alt="Отклонённые" class="filter-icon">
-                        Отклонённые
+                    <a href="{% url 'deals_view' %}?status=rejected" class="filter-btn {% if current_status == 'rejected' %}active{% endif %}">
+                        Завершенные
                     </a>
                 </div>
-                {% if deals|length == 0 %}
-                    <p>Нет сделок с статусом {{ current_status }}. Debug: User ID {{ request.user.user_id }}</p>
-                {% endif %}
-                {% for deal in deals %}
-                    <div class="chat-item {% if selected_chat and selected_chat.conversation_id == deal.conversation_id %}active{% endif %}" data-chat-id="{{ deal.conversation_id }}" onclick="loadChat({{ deal.conversation_id }})">
-                        <img src="{% static 'accounts/images/cosmochat/deal_icon.svg' %}" alt="{{ deal.name }}" class="chat-item-avatar">
-                        <div class="chat-item-info">
-                            <h4 class="chat-item-name">{{ deal.name }}</h4>
-                            <p class="chat-item-status">{{ deal.participants|join:', ' }}</p>
+                <div class="chat-list">
+                    {% if deals|length == 0 %}
+                        <p>Нет сделок с статусом {{ current_status }}.</p>
+                    {% endif %}
+                    {% for deal in deals %}
+                        <div class="chat-item {% if selected_chat and selected_chat.conversation_id == deal.conversation_id %}active{% endif %}" data-chat-id="{{ deal.conversation_id }}" onclick="loadChat({{ deal.conversation_id }})">
+                            <img src="{{ deal.avatar_url|default:'/static/accounts/images/avatars/default_avatar_ufo.png' }}" alt="{{ deal.name }}" class="chat-item-avatar">
+                            <div class="chat-item-info">
+                                <h4 class="chat-item-name">{{ deal.name }}</h4>
+                                <p class="chat-item-status">{{ deal.last_message_text|default:'Нет сообщений'|truncatechars:25 }}</p>
+                            </div>
+                            <div class="chat-item-meta">
+                                <span class="chat-item-time">{{ deal.last_message_time|date:"H:i" }}</span>
+                                {% if deal.unread_count > 0 %}
+                                    <span class="chat-item-badge">{{ deal.unread_count }}</span>
+                                {% endif %}
+                                <span class="date-chat-preview">{{ deal.last_message_time|date:"d/m/Y" }}</span>
+                            </div>
                         </div>
-                        <div class="chat-item-meta">
-                            <span class="chat-item-time">{{ deal.created_at }}</span>
-                            {% if deal.unread_count > 0 %}
-                                <span class="chat-item-badge">{{ deal.unread_count }}</span>
-                            {% endif %}
-                            <span class="date-chat-preview">{{ deal.date }}</span>
-                        </div>
-                    </div>
-                {% empty %}
-                    <p>Сделок не найдено.</p>
-                {% endfor %}
+                    {% empty %}
+                        <p>Сделок не найдено.</p>
+                    {% endfor %}
+                </div>
             </div>
             <div class="chat-window-column">
                 {% if selected_chat %}
