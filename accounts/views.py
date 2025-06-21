@@ -944,6 +944,9 @@ def profile(request, user_id=None):
     news_page_number = request.GET.get("news_page")
     news_page_obj = news_paginator.get_page(news_page_number)
 
+    # Get debug data from session and then clear it
+    telegram_debug_data = request.session.pop('telegram_debug_data', None)
+
     context = {
         "user": user,
         "is_own_profile": is_own_profile,
@@ -951,6 +954,7 @@ def profile(request, user_id=None):
         "form": form,
         "startups_page": startups_page_obj,
         "news_page": news_page_obj,
+        "telegram_debug_data": telegram_debug_data,
     }
 
     return render(request, "accounts/profile.html", context)
