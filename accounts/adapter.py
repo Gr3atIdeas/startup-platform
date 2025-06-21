@@ -25,14 +25,18 @@ class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
         try:
             current_site = Site.objects.get(id=settings.SITE_ID)
             apps = SocialApp.objects.filter(provider=provider, sites=current_site)
-            logger.debug(f"Found apps: {[f'id={app.id}, provider={app.provider}, name={app.name}, sites={list(app.sites.values('id', 'domain'))}' for app in apps]}")
+            app_info = [
+                f"id={app.id}, provider={app.provider}, name={app.name}, sites={list(app.sites.values('id', 'domain'))}"
+                for app in apps
+            ]
+            logger.debug(f"Found apps: {app_info}")
             
             if not apps.exists():
                 logger.error(f"No SocialApp found for provider '{provider}' and site '{current_site.domain}'")
                 raise ValueError(f"No SocialApp configured for provider '{provider}' and site '{current_site.domain}'")
             
             if apps.count() > 1:
-                logger.warning(f"Multiple SocialApps found: {[f'id={app.id}' for app in apps]}")
+                logger.warning(f"Multiple SocialApps found: {[app.id for app in apps]}")
             
             app = apps.first()
             logger.info(f"Selected SocialApp: id={app.id}, provider={app.provider}, name={app.name}, sites={list(app.sites.values('id', 'domain'))}")
