@@ -144,61 +144,58 @@ def escape_markdown_v2(text: str) -> str:
 def send_telegram_support_message(ticket):
     """
     Sends a formatted support ticket message with an inline button to a specific Telegram chat.
+    Uses HTML parse mode for robust formatting.
     """
     bot_token = '7843250850:AAEL8hapR_WVcG2mMNUhWvK-I0DMYG042Ko'
     chat_id = '2064613329'
     
     user = ticket.user
     if not user:
-        logger.warning(f"Support ticket {ticket.ticket_id} has no associated user.")
-        user_info = "Пользователь: Анонимный"
+        user_info = "<b>Пользователь:</b> Анонимный"
     else:
-        first_name = escape_markdown_v2(user.first_name or '')
-        last_name = escape_markdown_v2(user.last_name or '')
-        email = escape_markdown_v2(user.email or '')
-        telegram_username = escape_markdown_v2(user.social_links.get('telegram', 'Не указан') if isinstance(user.social_links, dict) else 'Не указан')
+        # Используем HTML-теги для форматирования и избегаем ошибок парсинга
+        user_full_name = f"{user.first_name or ''} {user.last_name or ''}".strip()
+        user_full_name = user_full_name or "Имя не указано"
         
+        email = user.email or "Не указан"
+        telegram_handle = user.social_links.get('telegram', 'Не указан') if isinstance(user.social_links, dict) else 'Не указан'
+
         user_info = (
-            f"👤 *Пользователь:* {first_name} {last_name}\n"
-            f"🆔 *ID на платформе:* `{user.user_id}`\n"
-            f"✉️ *Email:* {email}\n"
-            f"✈️ *Telegram:* {telegram_username}"
+            f"👤 <b>Пользователь:</b> {user_full_name}\n"
+            f"🆔 <b>ID на платформе:</b> <code>{user.user_id}</code>\n"
+            f"✉️ <b>Email:</b> <code>{email}</code>\n"
+            f"✈️ <b>Telegram:</b> {telegram_handle}"
         )
 
-    subject = escape_markdown_v2(ticket.subject)
-    message = escape_markdown_v2(ticket.message)
+    # Оборачиваем пользовательский ввод в <pre> для безопасности
+    subject = f"<pre>{ticket.subject}</pre>"
+    message = f"<pre>{ticket.message}</pre>"
 
     message_text = (
-        f"🚨 *Новая заявка в техподдержку \\({ticket.ticket_id}\\)!* 🚨\n\n"
-        f"📝 *Тема:* {subject}\n\n"
-        f"📄 *Сообщение:*\n{message}\n\n"
-        f"\\-\\-\\- Техническая информация \\-\\-\\-\n"
+        f"🚨 <b>Новая заявка в техподдержку ({ticket.ticket_id})</b> 🚨\n\n"
+        f"📝 <b>Тема:</b>\n{subject}\n\n"
+        f"📄 <b>Сообщение:</b>\n{message}\n\n"
+        f"--- Техническая информация ---\n"
         f"{user_info}"
     )
 
-    # Создаем кнопку
     inline_keyboard = {
-        "inline_keyboard": [
-            [
-                {
-                    "text": "✅ Исполнено",
-                    "callback_data": f"close_ticket_{ticket.ticket_id}"
-                }
-            ]
-        ]
+        "inline_keyboard": [[
+            {"text": "✅ Исполнено", "callback_data": f"close_ticket_{ticket.ticket_id}"}
+        ]]
     }
 
     url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
     payload = {
         'chat_id': chat_id,
         'text': message_text,
-        'parse_mode': 'MarkdownV2',
+        'parse_mode': 'HTML',
         'reply_markup': inline_keyboard
     }
 
     try:
         response = requests.post(url, json=payload, timeout=10)
-        response.raise_for_status()  # Will raise an exception for 4xx/5xx responses
+        response.raise_for_status()
         logger.info(f"Successfully sent support ticket {ticket.ticket_id} to Telegram chat {chat_id}.")
         return True
     except requests.exceptions.RequestException as e:
