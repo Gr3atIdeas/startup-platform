@@ -101,7 +101,6 @@ SOCIALACCOUNT_PROVIDERS = {
         'AUTH_PARAMS': {
             'auth_date_valid_within': 90,
         },
-        'CALLBACK_URL': 'https://www.greatideas.ru/accounts/telegram/login/callback/',
     }
 }
 
