@@ -98,7 +98,10 @@ SOCIALACCOUNT_PROVIDERS = {
             'client_id': 'testmarketstartup_bot',
             'secret': '7843250850:AAEL8hapR_WVcG2mMNUhWvK-I0DMYG042Ko',
         },
-        'CALLBACK_URL': 'https://www.greatideas.ru/accounts/telegram/login/callback/',  # Указываем правильный callback
+        'AUTH_PARAMS': {
+            'auth_date_valid_within': 90,
+        },
+        'CALLBACK_URL': 'https://www.greatideas.ru/accounts/telegram/login/callback/',
     }
 }
 
