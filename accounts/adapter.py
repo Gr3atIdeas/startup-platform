@@ -13,47 +13,44 @@ logger = logging.getLogger(__name__)
 class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
     def populate_user(self, request, sociallogin, data):
         """
-        Populates user fields from social account data.
-        This method is called on every login.
+        Populates and updates user fields from social account data on every login.
         """
         user = super().populate_user(request, sociallogin, data)
 
         if sociallogin.account.provider == 'telegram':
             telegram_data = sociallogin.account.extra_data
-
-            # --- Fields to update on EVERY login ---
-            username = telegram_data.get('username')
-            if username:
-                user.username = username
-            
-            photo_url = telegram_data.get('photo_url')
-            if photo_url:
-                user.profile_picture_url = photo_url
-            
-            if user.social_links is None:
-                user.social_links = {}
-            if username:
-                user.social_links['telegram'] = f"https://t.me/{username}"
-
-            # --- Fields to fill if they are empty in our DB ---
-            telegram_id = telegram_data.get('id')
-            if telegram_id and not user.telegram_id:
-                user.telegram_id = str(telegram_id)
-            
-            first_name = telegram_data.get('first_name')
-            if first_name and not user.first_name:
-                user.first_name = first_name
-            
-            last_name = telegram_data.get('last_name')
-            if last_name and not user.last_name:
-                user.last_name = last_name
-
-            # --- Fields to set ONLY for brand new users ---
             is_new_user = not user.pk
-            if is_new_user:
-                if not user.username and telegram_id:
-                    user.username = f"telegram_user_{telegram_id}"
 
+            # --- Data from Telegram ---
+            tg_id = str(telegram_data.get('id'))
+            tg_username = telegram_data.get('username')
+            tg_first_name = telegram_data.get('first_name')
+            tg_last_name = telegram_data.get('last_name', '')
+            tg_photo_url = telegram_data.get('photo_url')
+
+            # --- Always update user data from Telegram ---
+            user.telegram_id = tg_id
+            if tg_username:
+                user.username = tg_username
+            if tg_first_name:
+                user.first_name = tg_first_name
+            # We can update last_name even if it's empty string
+            user.last_name = tg_last_name
+            if tg_photo_url:
+                user.profile_picture_url = tg_photo_url
+            
+            # --- Update social_links (JSONB field) ---
+            if tg_username:
+                telegram_link = f"https://t.me/{tg_username}"
+                if not isinstance(user.social_links, dict):
+                    user.social_links = {}
+                user.social_links['telegram'] = telegram_link
+
+            # --- Handle specifics for brand new users ---
+            if is_new_user:
+                if not user.username and tg_id:
+                    user.username = f"telegram_user_{tg_id}"
+                
                 if not user_email(user) and user.username:
                     user.email = f"{user.username}@telegram.placeholder.com"
         
