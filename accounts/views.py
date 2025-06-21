@@ -891,81 +891,89 @@ def legal(request):
 
 @login_required
 def profile(request, user_id=None):
-    if not request.user.is_authenticated:
-        messages.error(request, "Пожалуйста, войдите в систему, чтобы просмотреть профиль.")
-        return redirect("login")
-
     if user_id:
-        profile_user = get_object_or_404(Users, user_id=user_id)
+        user = get_object_or_404(Users, user_id=user_id)
+        is_own_profile = request.user.user_id == user.user_id
     else:
-        profile_user = request.user
+        user = request.user
+        is_own_profile = True
 
-    if request.GET.get("user_id"):
-        user = get_object_or_404(Users, user_id=request.GET.get("user_id"))
-        return JsonResponse({
-            "first_name": user.first_name,
-            "last_name": user.last_name,
-            "role": user.role.role_name if user.role else "Неизвестно",
-            "rating": float(user.rating) if user.rating else None,
-            "bio": user.bio,
-            "profile_picture_url": user.get_profile_picture_url() if user.profile_picture_url else None,
-        })
+    show_role_selection = (not user.role or user.role.role_id == 4) and is_own_profile
 
-    # Проверка роли и модальное окно для role_id=4
-    show_role_selection = False
-    logger.debug(f"Checking role for user_id={request.user.user_id}, role_id={getattr(request.user, 'role_id', 'None')}")
-    if hasattr(request.user, 'role_id') and request.user.role_id == 4:  # Проверяем role_id текущего пользователя
-        show_role_selection = True
-        logger.debug(f"show_role_selection set to True for user_id={request.user.user_id}")
-        if request.method == "POST" and "select_role" in request.POST:
-            logger.debug(f"POST received with select_role for user_id={request.user.user_id}")
+    if request.method == "POST" and is_own_profile:
+        if "select_role" in request.POST:
             role_id = request.POST.get("role_id")
-            if role_id in ["1", "2"]:  # Только startuper и investor
-                request.user.role_id = int(role_id)
-                request.user.save()
-                show_role_selection = False
-                logger.debug(f"Role updated to {role_id} for user_id={request.user.user_id}")
+            if role_id in ["1", "2"]:
+                user.role_id = int(role_id)
+                user.save(update_fields=['role'])
                 messages.success(request, "Роль успешно выбрана!")
                 return redirect("profile")
+            else:
+                messages.error(request, "Выбрана неверная роль.")
+                return redirect("profile")
 
-    # Инициализация формы редактирования
-    if profile_user == request.user:
-        form = ProfileEditForm(instance=profile_user)
-    else:
-        form = None
+        elif 'edit_profile' in request.POST:
+            form = ProfileEditForm(request.POST, instance=user)
+            if form.is_valid():
+                form.save()
+                if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                    return JsonResponse({'success': True, 'message': 'Профиль успешно обновлен!'})
+                messages.success(request, "Профиль успешно обновлен!")
+                return redirect("profile")
+            else:
+                if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                    return JsonResponse({'success': False, 'errors': form.errors})
+                messages.error(request, "Пожалуйста, исправьте ошибки.")
+        
+        elif 'avatar' in request.FILES:
+            user.profile_picture_url = request.FILES['avatar']
+            user.save(update_fields=['profile_picture_url'])
+            messages.success(request, "Аватар успешно обновлен!")
+            return redirect("profile")
 
-    # Получение стартапов, где пользователь является владельцем, только approved и pending
-    startups = Startups.objects.filter(owner=profile_user, status__in=["approved", "pending"]).select_related("direction").annotate(comment_count=Count("comments")).order_by("-created_at")
-    startups_paginator = Paginator(startups, 3)
-    startups_page_number = request.GET.get("startups_page", 1)
-    startups_page = startups_paginator.get_page(startups_page_number)
+    form = ProfileEditForm(instance=user)
 
-    # Получение новостей, созданных пользователем
-    news = NewsArticles.objects.filter(author=profile_user).order_by("-published_at")
-    news_paginator = Paginator(news, 6)
-    news_page_number = request.GET.get("news_page", 1)
-    news_page = news_paginator.get_page(news_page_number)
+    startups_list = Startups.objects.filter(owner=user).order_by("-created_at")
+    startups_paginator = Paginator(startups_list, 5)
+    startups_page_number = request.GET.get("startups_page")
+    startups_page_obj = startups_paginator.get_page(startups_page_number)
 
-    if request.method == "POST":
-        if profile_user != request.user:
-            return JsonResponse({"success": False, "error": "Вы не можете редактировать чужой профиль."}, status=403)
+    news_list = NewsArticles.objects.filter(author=user).order_by("-published_at")
+    news_paginator = Paginator(news_list, 6)
+    news_page_number = request.GET.get("news_page")
+    news_page_obj = news_paginator.get_page(news_page_number)
 
-        # Обработка загрузки аватара
-        if "avatar" in request.FILES:
-            avatar = request.FILES["avatar"]
+    context = {
+        "user": user,
+        "is_own_profile": is_own_profile,
+        "show_role_selection": show_role_selection,
+        "form": form,
+        "startups_page": startups_page_obj,
+        "news_page": news_page_obj,
+    }
+
+    return render(request, "accounts/profile.html", context)
+
+
+@login_required
+def delete_avatar(request):
+    if request.method == 'POST':
+        user = request.user
+        if 'avatar' in request.FILES:
+            avatar = request.FILES['avatar']
             allowed_mimes = ["image/jpeg", "image/png"]
             if avatar.content_type not in allowed_mimes:
                 messages.error(request, "Допустимы только файлы PNG или JPEG.")
                 if request.headers.get("X-Requested-With") == "XMLHttpRequest":
                     return JsonResponse({"success": False, "error": "Допустимы только файлы PNG или JPEG."})
-                return render(request, "accounts/profile.html", {"user": profile_user, "is_own_profile": True, "form": form, "startups_page": startups_page, "news_page": news_page, "show_role_selection": show_role_selection})
+                return render(request, "accounts/profile.html", {"user": user, "is_own_profile": True, "form": form, "startups_page": startups_page, "news_page": news_page, "show_role_selection": show_role_selection})
 
             max_size = 5 * 1024 * 1024
             if avatar.size > max_size:
                 messages.error(request, "Размер файла не должен превышать 5 МБ.")
                 if request.headers.get("X-Requested-With") == "XMLHttpRequest":
                     return JsonResponse({"success": False, "error": "Размер файла не должен превышать 5 МБ."})
-                return render(request, "accounts/profile.html", {"user": profile_user, "is_own_profile": True, "form": form, "startups_page": startups_page, "news_page": news_page, "show_role_selection": show_role_selection})
+                return render(request, "accounts/profile.html", {"user": user, "is_own_profile": True, "form": form, "startups_page": startups_page, "news_page": news_page, "show_role_selection": show_role_selection})
 
             avatar_id = str(uuid.uuid4())
             file_path = f"users/{request.user.user_id}/avatar/{avatar_id}_{avatar.name}"
@@ -1000,87 +1008,7 @@ def profile(request, user_id=None):
                     return JsonResponse({"success": False, "error": "Ошибка при загрузке аватара."})
             return redirect("profile")
 
-        # Обработка редактирования профиля
-        elif "edit_profile" in request.POST:
-            form = ProfileEditForm(request.POST, request.FILES, instance=request.user)
-            if form.is_valid():
-                try:
-                    # Сохраняем только изменённые поля
-                    user = request.user
-                    for field in form.changed_data:
-                        if field == "telegram":
-                            telegram = form.cleaned_data.get("telegram")
-                            user.social_links = {"telegram": telegram} if telegram else {}
-                        elif hasattr(user, field):
-                            setattr(user, field, form.cleaned_data[field])
-                    user.save()
-
-                    logger.info(f"Профиль обновлён для user_id {request.user.user_id}")
-                    if request.headers.get("X-Requested-With") == "XMLHttpRequest":
-                        return JsonResponse({"success": True, "message": "Профиль успешно обновлён!"})
-                    messages.success(request, "Профиль успешно обновлён!")
-                except Exception as e:
-                    logger.error(f"Ошибка при обновлении профиля для user_id {request.user.user_id}: {str(e)}")
-                    if request.headers.get("X-Requested-With") == "XMLHttpRequest":
-                        return JsonResponse({"success": False, "error": "Ошибка при сохранении профиля."})
-                    messages.error(request, "Ошибка при сохранении профиля.")
-            else:
-                if request.headers.get("X-Requested-With") == "XMLHttpRequest":
-                    return JsonResponse({"success": False, "error": "Форма содержит ошибки.", "errors": form.errors})
-                messages.error(request, "Форма содержит ошибки.")
-            return render(request, "accounts/profile.html", {"user": profile_user, "is_own_profile": True, "form": form, "startups_page": startups_page, "news_page": news_page, "show_role_selection": show_role_selection})
-
-    return render(request, "accounts/profile.html", {"user": profile_user, "is_own_profile": profile_user == request.user, "form": form, "startups_page": startups_page, "news_page": news_page, "show_role_selection": show_role_selection})
-
-
-def delete_avatar(request):
-    if not request.user.is_authenticated:
-        return JsonResponse(
-            {"success": False, "error": "Требуется авторизация"}, status=401
-        )
-
-    if request.method != "POST":
-        return JsonResponse(
-            {"success": False, "error": "Неверный метод запроса"}, status=405
-        )
-
-    try:
-        # Удаление файлов аватара из Yandex Object Storage
-        s3_client = boto3.client(
-            "s3",
-            endpoint_url=settings.AWS_S3_ENDPOINT_URL,
-            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
-            region_name=settings.AWS_S3_REGION_NAME,
-        )
-        bucket_name = settings.AWS_STORAGE_BUCKET_NAME
-        prefix = f"users/{request.user.user_id}/avatar/"
-        response = s3_client.list_objects_v2(Bucket=bucket_name, Prefix=prefix)
-        if "Contents" in response:
-            for obj in response["Contents"]:
-                s3_client.delete_object(Bucket=bucket_name, Key=obj["Key"])
-                logger.info(f"Удалён аватар: {obj['Key']}")
-
-        # Удаление записей в file_storage
-        FileStorage.objects.filter(
-            entity_type__type_name="user",
-            entity_id=request.user.user_id,
-            file_type__type_name="avatar",
-        ).delete()
-
-        # Очистка profile_picture_url
-        request.user.profile_picture_url = None
-        request.user.save()
-
-        logger.info(f"Аватар удалён для user_id {request.user.user_id}")
-        return JsonResponse({"success": True, "message": "Аватар успешно удалён."})
-    except Exception as e:
-        logger.error(
-            f"Ошибка при удалении аватара для user_id {request.user.user_id}: {str(e)}"
-        )
-        return JsonResponse(
-            {"success": False, "error": "Ошибка при удалении аватара."}, status=500
-        )
+    return render(request, "accounts/profile.html", {"user": user, "is_own_profile": profile_user == request.user, "form": form, "startups_page": startups_page, "news_page": news_page, "show_role_selection": show_role_selection})
 
 
 @login_required

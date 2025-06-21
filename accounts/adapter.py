@@ -6,6 +6,7 @@ from django.core.exceptions import MultipleObjectsReturned
 from allauth.socialaccount.models import SocialApp
 from django.contrib.sites.models import Site
 from allauth.account.utils import user_email
+from .models import Roles, Users
 
 logger = logging.getLogger(__name__)
 
@@ -35,6 +36,29 @@ class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
             # Если email не получен, создаем временный уникальный email
             if not user_email(user):
                 user.email = f"{user.username}@telegram.placeholder.com"
+
+        return user
+
+    def save_user(self, request, sociallogin, form=None):
+        """
+        Сохраняет пользователя и назначает ему роль 'Временный' (id=4),
+        если он регистрируется через Telegram и у него еще нет роли.
+        """
+        # Сначала создаем пользователя стандартным способом
+        user = super().save_user(request, sociallogin, form)
+
+        # Если регистрация через Telegram и роль еще не назначена
+        if sociallogin.account.provider == 'telegram' and not user.role_id:
+            try:
+                # Назначаем временную роль.
+                # Предполагается, что роль с ID=4 существует в таблице Roles
+                # и соответствует временному статусу пользователя.
+                temp_role = Roles.objects.get(pk=4)
+                user.role = temp_role
+                user.save(update_fields=['role'])
+                logger.info(f"Назначена временная роль (ID=4) для нового пользователя Telegram: {user.username}")
+            except Roles.DoesNotExist:
+                logger.error("Роль с ID=4 не найдена в базе данных. Не удалось назначить временную роль.")
 
         return user
 
