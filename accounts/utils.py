@@ -3,6 +3,7 @@ import logging
 import uuid
 from django.utils import timezone
 import requests
+import re
 
 import boto3
 from botocore.exceptions import ClientError
@@ -131,31 +132,49 @@ def update_user_from_telegram(user, sociallogin):
         logger.error(f"CRITICAL ERROR in update_user_from_telegram for user {user.pk}: {e}", exc_info=True)
 
 
+def escape_markdown_v2(text: str) -> str:
+    """Escapes characters for Telegram's MarkdownV2 parse mode."""
+    if not text:
+        return ''
+    # In MarkdownV2, you must escape the characters: _ * [ ] ( ) ~ ` > # + - = | { } . !
+    escape_chars = r'_*[]()~`>#+-=|{}.!'
+    return re.sub(f'([{re.escape(escape_chars)}])', r'\\\1', text)
+
+
 def send_telegram_support_message(ticket):
     """
     Sends a formatted support ticket message to a specific Telegram chat.
     """
     bot_token = '7843250850:AAEL8hapR_WVcG2mMNUhWvK-I0DMYG042Ko'
-    chat_id = '206461329'
+    chat_id = '2064613329'  # Исправлен ID чата
     
     user = ticket.user
     if not user:
         logger.warning(f"Support ticket {ticket.ticket_id} has no associated user.")
         user_info = "Пользователь: Анонимный"
     else:
-        telegram_username = user.social_links.get('telegram', 'Не указан') if isinstance(user.social_links, dict) else 'Не указан'
+        # Экранируем данные пользователя
+        first_name = escape_markdown_v2(user.first_name or '')
+        last_name = escape_markdown_v2(user.last_name or '')
+        email = escape_markdown_v2(user.email or '')
+        telegram_username = escape_markdown_v2(user.social_links.get('telegram', 'Не указан') if isinstance(user.social_links, dict) else 'Не указан')
+        
         user_info = (
-            f"👤 *Пользователь:* {user.first_name} {user.last_name}\n"
+            f"👤 *Пользователь:* {first_name} {last_name}\n"
             f"🆔 *ID на платформе:* `{user.user_id}`\n"
-            f"✉️ *Email:* `{user.email}`\n"
-            f"✈️ *Telegram:* `{telegram_username}`"
+            f"✉️ *Email:* {email}\n"
+            f"✈️ *Telegram:* {telegram_username}"
         )
 
+    # Экранируем данные из тикета
+    subject = escape_markdown_v2(ticket.subject)
+    message = escape_markdown_v2(ticket.message)
+
     message_text = (
-        f"🚨 *Новая заявка в техподдержку!* 🚨\n\n"
-        f"📝 *Тема:* {ticket.subject}\n\n"
-        f"📄 *Сообщение:*\n{ticket.message}\n\n"
-        f"--- Техническая информация ---\n"
+        f"🚨 *Новая заявка в техподдержку\\!* 🚨\n\n"
+        f"📝 *Тема:* {subject}\n\n"
+        f"📄 *Сообщение:*\n{message}\n\n"
+        f"\\-\\-\\- Техническая информация \\-\\-\\-\n"
         f"{user_info}"
     )
 
@@ -163,7 +182,7 @@ def send_telegram_support_message(ticket):
     payload = {
         'chat_id': chat_id,
         'text': message_text,
-        'parse_mode': 'Markdown'
+        'parse_mode': 'MarkdownV2'  # Используем MarkdownV2 для лучшей поддержки форматирования
     }
 
     try:
