@@ -24,7 +24,7 @@ body {
   border-radius: 32px;
   gap: 61px;
   font-family: Unbounded, sans-serif;
-  min-height: 700px;
+  height: 750px;
   overflow: hidden;
   padding: 23px 38px;
 }
