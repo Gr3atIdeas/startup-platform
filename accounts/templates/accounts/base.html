@@ -60,6 +60,17 @@
   {% endblock %}
 </head>
 <body>
+
+  {% if messages %}
+    <div class="messages-container">
+      {% for message in messages %}
+        <div class="alert-message alert-{{ message.tags }}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
   <header id="main-header">
     <div class="header-content-wrapper">
         <a href="{% url 'home' %}" class="header-logo-link">
@@ -299,6 +310,62 @@
             });
             observer.observe(catalogDropdownContainer, { attributes: true });
         }
+    });
+  </script>
+
+  <style>
+    .messages-container {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1060; /* Higher than Bootstrap's navbar (1030) */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      width: 90%;
+      max-width: 500px;
+    }
+
+    .alert-message {
+      padding: 15px 20px;
+      border-radius: 8px;
+      color: #fff;
+      font-weight: 500;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      opacity: 1;
+      transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+      transform: translateY(0);
+      width: 100%;
+      text-align: center;
+    }
+    
+    .alert-message.fade-out {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+
+    .alert-debug { background-color: #6c757d; }
+    .alert-info { background-color: #0dcaf0; }
+    .alert-success { background-color: #198754; }
+    .alert-warning { background-color: #ffc107; color: #000; }
+    .alert-error { background-color: #dc3545; }
+  </style>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const messagesContainer = document.querySelector('.messages-container');
+      if (messagesContainer) {
+        const alerts = messagesContainer.querySelectorAll('.alert-message');
+        alerts.forEach((alert, index) => {
+          setTimeout(() => {
+            alert.classList.add('fade-out');
+            // Remove the element from the DOM after the transition ends
+            alert.addEventListener('transitionend', () => alert.remove());
+          }, 3000 + index * 300); // Disappear after 3 seconds, with a slight delay for multiple messages
+        });
+      }
     });
   </script>
 
