@@ -95,8 +95,8 @@ SOCIALACCOUNT_ADAPTER = 'accounts.adapter.CustomSocialAccountAdapter'
 SOCIALACCOUNT_PROVIDERS = {
     'telegram': {
         'APP': {
-            'client_id': '7843250850:AAEL8hapR_WVcG2mMNUhWvK-I0DMYG042Ko',
-            'secret': '',
+            'client_id': 'testmarketstartup_bot',
+            'secret': '7843250850:AAEL8hapR_WVcG2mMNUhWvK-I0DMYG042Ko',
         },
         'CALLBACK_URL': 'https://www.greatideas.ru/accounts/telegram/login/callback/',  # Указываем правильный callback
     }
