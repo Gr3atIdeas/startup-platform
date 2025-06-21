@@ -16,6 +16,9 @@
         width: 100%;
         box-sizing: border-box;
     }
+    .auth-container {
+        margin-bottom: 40px; /* Поднимаем контейнер вверх */
+    }
 </style>
 {% endblock %}
 
@@ -60,16 +63,14 @@
                 <p>
                     <label for="{{ form.role.id_for_label }}">Роль:</label>
                     <select name="{{ form.role.name }}" id="{{ form.role.id_for_label }}">
-                        <option value="">---------</option>
+                        <option value="">Выберите роль</option>
                         {% for value, text in form.role.field.choices %}
-                            {% if text != 'moderator' %}
-                                <option value="{{ value }}" {% if form.role.value == value %}selected{% endif %}>
+                            {% if text == 'startuper' or text == 'investor' %}
+                                <option value="{{ value }}" {% if form.role.value|stringformat:"s" == value|stringformat:"s" %}selected{% endif %}>
                                     {% if text == 'startuper' %}
                                         Стартаппер
                                     {% elif text == 'investor' %}
                                         Инвестор
-                                    {% else %}
-                                        {{ text }}
                                     {% endif %}
                                 </option>
                             {% endif %}
@@ -117,17 +118,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    let targetOffsetX = d / 2;
-    let targetOffsetY = e / 2;
-    let currentOffsetX = d / 2;
-    let currentOffsetY = e / 2;
-    const smoothing = 0.05;
-
-    c.onmousemove = (event) => {
-        targetOffsetX = event.clientX;
-        targetOffsetY = event.clientY;
-    };
-
     c.onresize = () => {
         d = c.innerWidth;
         e = c.innerHeight;
@@ -150,11 +140,8 @@ document.addEventListener('DOMContentLoaded', () => {
         k.fillStyle = "black";
         k.fillRect(0, 0, d, e);
 
-        currentOffsetX += (targetOffsetX - currentOffsetX) * smoothing;
-        currentOffsetY += (targetOffsetY - currentOffsetY) * smoothing;
-
         k.save();
-        k.translate(currentOffsetX, currentOffsetY);
+        k.translate(d / 2, e / 2); // Center the starfield
 
         for (let n = 0; n < 500; n++) {
             let star = stars[n];

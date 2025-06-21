@@ -42,7 +42,7 @@ class RegisterForm(forms.ModelForm):
         fields = ["email", "first_name", "last_name", "phone", "role"]
 
     def clean_email(self):
-        email = self.cleaned_data.get('email')
+        email = self.cleaned_data.get("email")
         if email and Users.objects.filter(email=email).exists():
             raise forms.ValidationError("Этот email уже используется.")
         return email
@@ -333,8 +333,13 @@ class ProfileEditForm(forms.ModelForm):
         }
 
     def clean_email(self):
-        email = self.cleaned_data.get('email')
-        if email and Users.objects.filter(email=email).exclude(user_id=self.instance.user_id).exists():
+        email = self.cleaned_data.get("email")
+        if (
+            email
+            and Users.objects.filter(email=email)
+            .exclude(user_id=self.instance.user_id)
+            .exists()
+        ):
             raise forms.ValidationError("Этот email уже используется.")
         return email
 
