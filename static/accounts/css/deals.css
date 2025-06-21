@@ -491,3 +491,23 @@ body {
 .filter-btn.active:hover {
     background: #004e9f;
 }
+
+/* Custom scrollbar for chat messages */
+.chat-messages-area::-webkit-scrollbar {
+  width: 8px;
+}
+
+.chat-messages-area::-webkit-scrollbar-track {
+  background: #f3f3f3; /* Light grey track, similar to input field */
+  border-radius: 10px;
+}
+
+.chat-messages-area::-webkit-scrollbar-thumb {
+  background-color: #004e9f; /* Blue thumb, matching project theme */
+  border-radius: 10px;
+  border: 2px solid #f3f3f3; /* Creates padding around thumb */
+}
+
+.chat-messages-area::-webkit-scrollbar-thumb:hover {
+  background-color: #003a75; /* Darker blue on hover */
+}
