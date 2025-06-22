@@ -514,9 +514,14 @@ body {
   background-color: #003a75; /* Darker blue on hover */
 }
 
-/* ПЕРЕОПРЕДЕЛЕНИЕ ГЛОБАЛЬНОГО СТИЛЯ:
-   Убираем 'position: sticky', который ошибочно применяется из другого файла
-   и вызывает "залипание" сообщений в чате сделок. */
-.message-date-separator, .new-messages-separator {
+/* 
+  ИСПРАВЛЕНИЕ: 
+  Переопределяем глобальный стиль 'position: sticky', который ошибочно применяется 
+  из другого CSS-файла и заставляет элементы даты "прилипать" к верху контейнера,
+  ломая верстку на странице сделок. 'position: static !important' возвращает 
+  элементы в нормальный поток документа.
+*/
+.deals-main-wrapper .message-date-separator,
+.deals-main-wrapper .new-messages-separator {
   position: static !important;
 }
