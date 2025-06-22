@@ -3392,28 +3392,16 @@ def my_startups(request):
 
         planetary_startups = []
         for idx, startup in enumerate(approved_startups_annotated, start=1):
-            logo_url = None
-            if startup.logo_urls and isinstance(startup.logo_urls, list) and startup.logo_urls:
-                try:
-                    # Предполагаем, что в logo_urls хранится полный ключ файла, а не только UUID
-                    file_key = startup.logo_urls[0]
-                    logo_url = f"https://storage.yandexcloud.net/{settings.AWS_STORAGE_BUCKET_NAME}/{file_key}"
-                except Exception as e:
-                    logger.error(f"Error generating logo URL for startup {startup.startup_id}: {e}")
-            
-            if not logo_url:
-                logo_url = static('accounts/images/default_icon.svg')
-
-            orbit_size = (idx * 100) + 150 # Увеличим базовую орбиту
+            orbit_size = (idx * 100) + 150
             orbit_time = (idx * 10) + 40
-            planet_size = 60 # Фиксированный размер для наглядности
+            planet_size = 60
 
             planet_data = {
                 "id": str(startup.startup_id),
                 "startup_id": startup.startup_id,
                 "name": startup.title or "Без названия",
-                "planet_image": startup.planet_image, # Передаем картинку планеты
-                "logo_url": logo_url, # Передаем URL логотипа
+                "planet_image": startup.planet_image,
+                "logo_urls": startup.logo_urls,  # Используем logo_urls
                 "rating": f"{startup.average_rating or 0:.1f}/5 ({startup.total_voters or 0})",
                 "description": startup.description or "Описание отсутствует.",
                 "progress": startup.get_progress_percentage() or 0,
@@ -3424,7 +3412,6 @@ def my_startups(request):
                 "planet_size": planet_size,
             }
             planetary_startups.append(planet_data)
-
 
     except Exception as e:
         logger.error(f"Критическая ошибка в my_startups view: {e}", exc_info=True)

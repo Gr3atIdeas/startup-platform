@@ -227,6 +227,7 @@
       z-index: 5;
       transition: all 0.3s ease;
       overflow: hidden;
+      border: none; /* Убираем рамку */
     }
 
     .planetary-system .planet-img {
@@ -243,8 +244,9 @@
       width: 30px;
       height: 30px;
       border-radius: 50%;
-      border: 1px solid #fff;
+      border: none; /* Убираем рамку */
       background-color: transparent; /* Убираем фон */
+      z-index: 10; /* Логотип поверх планеты */
     }
 
     .planetary-system .planet:hover {
@@ -540,7 +542,13 @@
                                       {% else %}
                                         <img src="{% static 'accounts/images/planet_logo_carusel.webp' %}" alt="Планета по умолчанию" class="planet-img">
                                       {% endif %}
-                                      <img src="{{ startup.logo_url }}" alt="Лого" class="planet-logo-overlay">
+                                      {% if startup.logo_urls %}
+                                        {% with logo_file_id=startup.logo_urls.0 %}
+                                            <img src="{% get_file_url_tag logo_file_id startup.startup_id 'logo' %}" alt="Лого" class="planet-logo-overlay">
+                                        {% endwith %}
+                                      {% else %}
+                                        <img src="{% static 'accounts/images/default_icon.svg' %}" alt="Лого" class="planet-logo-overlay">
+                                      {% endif %}
                                   </div>
                               </div>
                           </div>
