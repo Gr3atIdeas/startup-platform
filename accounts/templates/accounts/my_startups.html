@@ -1602,7 +1602,7 @@
             const startups = {};
             if (Array.isArray(startups_data)) {
                 startups_data.forEach(s => {
-                    startups[s.id.toString()] = s; // Используем s.id (строка из JSON) как ключ
+                    startups[s.startup_id.toString()] = s; // Используем s.startup_id как ключ
                 });
             }
             console.log('Startups object:', startups);
@@ -1676,7 +1676,7 @@
                     e.stopPropagation();
                     const id = planet.getAttribute('data-id');
                     console.log('Clicked ID:', id);
-                    const startupData = startups[id.toString()]; // Приводим id к строке для соответствия ключам
+                    const startupData = startups[id.toString()]; // Соответствие с startup_id
                     if (!startupData) {
                         console.error('Не найдены данные для стартапа с ID:', id);
                         return;
