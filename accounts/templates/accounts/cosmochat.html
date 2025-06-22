@@ -265,8 +265,6 @@
                 <div class="chat-participants" id="chatParticipantsList" style="display: none;"></div>
             </div>
 
-
-
             
             <div class="chat-messages-area" id="chatMessagesArea"></div>
             
@@ -362,11 +360,18 @@
                         <span class="icon-back-arrow"></span>
                         <span>Назад</span>
                     </div>
-                    <div class="nav-title">Создание группового чата</div>
+                    <div class="nav-title">Новый чат</div>
                     <div class="nav-action" id="confirmGroupChatCreationBtn">Создать</div>
                 </div>
                 <div class="selected-chat-info">
+                    <div class="chat-icon-container">
+                        <img src="{% static 'accounts/images/cosmochat/image-plus.svg' %}" alt="Иконка чата" class="chat-details-icon">
+                    </div>
                     <input type="text" class="chat-name-display-input" id="groupChatNameInput" placeholder="Введите название чата">
+                </div>
+                <div class="add-participant-container">
+                  <img src="{% static 'accounts/images/cosmochat/smile-plus.svg' %}" alt="Добавить участника" class="chat-details-icon">
+                  <span>Добавить участника</span>
                 </div>
                 <div class="participants-actions-list" id="groupChatSelectedParticipantsList">
                     <!-- Участники будут добавляться динамически через JS -->

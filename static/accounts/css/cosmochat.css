@@ -1104,24 +1104,6 @@ body.cosmochat-body {
   user-select: none;
 }
 
-/* --- Удалить СТАРЫЕ неиспользуемые стили --- */
-
-/* Селекторы типа .cosmochat-container, .social-section, .user-card (старый), .chat-section, .chat-list (старый) и т.д. */
-
-/* должны быть удалены, если они полностью заменены новыми с суффиксом -new или другой логикой */
-
-/* Например, старый .cosmochat-container был заменен на .cosmochat-page-wrapper */
-
-/* Старый .social-section заменен на .top-section-new и .users-main-area-new */
-
-/* Очистка старых стилей (оставляю несколько для примера, что нужно удалить) */
-
-/* .social-section { display: none !important; } */
-
-/* .chat-section { display: none !important; } */
-
-/* ... и так далее для всех старых корневых селекторов */
-
 /* Стили для модального окна создания группового чата */
 .group-chat-modal-overlay {
   position: fixed;
@@ -1543,55 +1525,53 @@ body.cosmochat-body {
 
 .selected-chat-info {
   width: 100%;
-  padding: 23px 22px;
+  padding: 15px;
   border-radius: 10px;
-  border: 1px solid black;
+  border: 1px solid #004e9f;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 15px;
   margin-bottom: 20px;
 }
 
 /* Стили для контейнера иконки в модальном окне */
-.chat-icon-placeholder {
-    width: 43px;
-    height: 43px;
-    border-radius: 50%;
-    border: 1px solid #004e9f;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #ffffff; /* Белый фон для контраста */
+.chat-icon-container {
+  width: 43px;
+  height: 43px;
+  border-radius: 50%;
+  border: 1px solid #004e9f;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  padding: 9px;
 }
 
 /* Стили для SVG-иконки */
-.group-icon-svg {
-    width: 24px;
-    height: 24px;
-}
-.group-icon-svg path {
-    stroke: #004e9f; /* Синий цвет обводки для читаемости */
-    fill: none; /* Убираем заливку, если есть */
+.chat-details-icon {
+  width: 24px;
+  height: 24px;
 }
 
 /* Стили для иконок в списке чатов (по умолчанию, если нет аватара) */
 .chat-item-new .chat-avatar-img[src="/static/accounts/images/cosmochat/group_avatar.svg"],
 .chat-item-new .chat-avatar-img:not([src]) {
-    background-color: #ffffff; /* Белый фон для иконок по умолчанию */
-    border-radius: 22px; /* Соответствует радиусу .chat-avatar-img */
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  background-color: #ffffff; /* Белый фон для иконок по умолчанию */
+  border-radius: 22px; /* Соответствует радиусу .chat-avatar-img */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .chat-item-new .chat-avatar-img[src="/static/accounts/images/cosmochat/group_avatar.svg"] svg,
 .chat-item-new .chat-avatar-img:not([src]) svg {
-    width: 100%;
-    height: 100%;
+  width: 100%;
+  height: 100%;
 }
 .chat-item-new .chat-avatar-img[src="/static/accounts/images/cosmochat/group_avatar.svg"] path,
 .chat-item-new .chat-avatar-img:not([src]) path {
-    stroke: #004e9f; /* Синий цвет обводки */
-    fill: none; /* Убираем заливку */
+  stroke: #004e9f; /* Синий цвет обводки */
+  fill: none; /* Убираем заливку */
 }
 
 .selected-chat-info .chat-name-display-input {
@@ -1609,6 +1589,18 @@ body.cosmochat-body {
 
 .selected-chat-info .chat-name-display-input::placeholder {
   color: #a1a0a0; /* Цвет плейсхолдера, если нужен */
+}
+
+.add-participant-container {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  cursor: pointer;
+  padding: 12px 0;
+  color: #004e9f;
+  font-size: 16px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 400;
 }
 
 .participants-actions-list {
@@ -1677,6 +1669,7 @@ body.cosmochat-body {
 .participants-actions-list .participant-name {
   color: black;
   font-size: 18px; /* Уменьшено с 20px */
+  font-weight: 400;
 }
 
 /* Стили для второго вида модального окна (будут дополняться) */
@@ -1871,4 +1864,64 @@ body.cosmochat-body {
 
 .dropdown-item:hover {
     background: #f0f0f0;
+}
+
+/* Стили для деталей группового чата */
+.group-chat-modal-details-view .selected-chat-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px; /* Уменьшаем внутренние отступы для компактности */
+    border: 1px solid #004E9F;
+    border-radius: 10px;
+}
+
+.group-chat-modal-details-view .chat-icon-container {
+    width: 43px;
+    height: 43px;
+    border-radius: 50%;
+    border: 1px solid #004E9F;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    padding: 9px;
+}
+
+.group-chat-modal-details-view .chat-details-icon {
+    width: 24px;
+    height: 24px;
+}
+
+.group-chat-modal-details-view .chat-name-display-input {
+    font-size: 18px; /* Немного уменьшил, было 20px */
+    font-weight: 400;
+}
+
+.group-chat-modal-details-view .add-participant-container {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Уменьшаем гэп для более плотного вида */
+    cursor: pointer;
+    padding: 12px 0; /* Добавляем вертикальные отступы */
+    color: #004E9F;
+    font-size: 16px;
+    font-family: Unbounded, sans-serif;
+    font-weight: 400;
+}
+
+.participants-actions-list .participant-display-item {
+    gap: 15px;
+}
+
+.participants-actions-list .participant-display-item img {
+    width: 58px;
+    height: 58px;
+    border-radius: 29px;
+}
+
+.participants-actions-list .participant-name {
+    font-size: 18px;
+    font-weight: 400;
 }
