@@ -52,11 +52,30 @@
                 {% if selected_chat %}
                     <div class="chat-messages-area">
                     <div class="chat-header">
-                        <div class="chat-actions-top">
-                            <button class="btn btn-approve" data-chat-id="{{ selected_chat.conversation_id }}" id="approveDealBtn">Одобрить</button>
-                            <button class="btn btn-reject" data-chat-id="{{ selected_chat.conversation_id }}" id="rejectDealBtn">Отклонить</button>
+                        <div class="chat-actions-menu-container">
+                            <button class="chat-actions-icon-button" id="chatActionsButton">
+                                <img src="{% static 'accounts/images/icons/three_dots.svg' %}" alt="Действия" class="chat-actions-icon">
+                            </button>
+                            <div class="chat-actions-dropdown" id="chatActionsDropdown">
+                                <div class="dropdown-item" id="approveDealBtn">
+                                    <img src="{% static 'accounts/images/deals/user-plus.svg' %}" alt="">
+                                    <span>Добавить инвестора</span>
+                                </div>
+                                <div class="dropdown-item" id="rejectDealBtn">
+                                    <img src="{% static 'accounts/images/deals/heart-handshake.svg' %}" alt="">
+                                    <span>Завершить</span>
+                                </div>
+                                <div class="dropdown-divider"></div>
+                                <div class="dropdown-item">
+                                    <img src="{% static 'accounts/images/deals/info.svg' %}" alt="">
+                                    <span>Информация</span>
+                                </div>
+                                <div class="dropdown-item">
+                                    <img src="{% static 'accounts/images/deals/copy-outline.svg' %}" alt="">
+                                    <span>Скопировать ID</span>
+                                </div>
+                            </div>
                         </div>
-                        <img src="{% static 'accounts/images/icons/three_dots.svg' %}" alt="Действия" class="chat-actions-icon">
                     </div>
                     
                     <div class="chat-messages-list" id="messagesContainer">
@@ -138,7 +157,7 @@
             const approveBtn = document.getElementById('approveDealBtn');
             if (approveBtn) {
                 approveBtn.addEventListener('click', function() {
-                    const chatId = this.getAttribute('data-chat-id');
+                    const chatId = '{{ selected_chat.conversation_id }}';
                     fetch(`/deals/approve/${chatId}/`, {
                         method: 'POST',
                         headers: {
@@ -163,7 +182,7 @@
     const rejectBtn = document.getElementById('rejectDealBtn');
             if (rejectBtn) {
                 rejectBtn.addEventListener('click', function() {
-                    const chatId = this.getAttribute('data-chat-id');
+                    const chatId = '{{ selected_chat.conversation_id }}';
                     fetch(`/deals/reject/${chatId}/`, {
                         method: 'POST',
                         headers: {
@@ -183,6 +202,23 @@
                     .catch(error => console.error('Ошибка:', error));
                 });
             }
+            
+            // Chat actions dropdown
+            const chatActionsButton = document.getElementById('chatActionsButton');
+            const chatActionsDropdown = document.getElementById('chatActionsDropdown');
+
+            if (chatActionsButton) {
+                chatActionsButton.addEventListener('click', function(event) {
+                    event.stopPropagation();
+                    chatActionsDropdown.classList.toggle('show');
+                });
+            }
+
+            document.addEventListener('click', function(event) {
+                if (chatActionsDropdown && chatActionsDropdown.classList.contains('show') && !chatActionsButton.contains(event.target)) {
+                    chatActionsDropdown.classList.remove('show');
+                }
+            });
         });
     </script>
 {% endif %}
