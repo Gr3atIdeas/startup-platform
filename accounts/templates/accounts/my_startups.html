@@ -515,7 +515,13 @@
                       {% for startup in planetary_startups %}
                           <div class="orbit" style="--orbit-size: {{ startup.orbit_size|default:200 }}px; --orbit-time: {{ startup.orbit_time|default:80 }}s;">
                               <div class="planet-orientation">
-                                  <div class="planet" style="--planet-size: {{ startup.planet_size|default:50 }}px;" data-id="{{ startup.id|default_if_none:'' }}"></div>
+                                  <div class="planet" style="--planet-size: {{ startup.planet_size|default:50 }}px;" data-id="{{ startup.id|default_if_none:'' }}">
+                                    {% if startup.planet_image %}
+                                      <img src="https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/{{ startup.planet_image }}" alt="{{ startup.title|default:'Планета'|escape }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                                    {% else %}
+                                      <img src="{% static 'accounts/images/planet_logo_carusel.webp' %}" alt="Планета по умолчанию" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                                    {% endif %}
+                                  </div>
                               </div>
                           </div>
                       {% empty %}
