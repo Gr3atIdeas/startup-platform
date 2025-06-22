@@ -241,8 +241,6 @@
 
     .planetary-system .planet-logo-overlay {
       position: absolute;
-      top: -15px;
-      right: -15px;
       width: 40px;
       height: 40px;
       z-index: 15;
@@ -541,18 +539,20 @@
                     {% for startup in planetary_startups %}
                       <div class="orbit" style="--orbit-size: {{ startup.orbit_size }}px; --orbit-time: {{ startup.orbit_time }}s;">
                         <div class="planet-orientation">
-                          <div class="planet" style="--planet-size: {{ startup.planet_size }}px;" data-id="{{ startup.startup_id }}">
-                            {% if startup.planet_image %}
-                              <img src="https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/{{ startup.planet_image }}" alt="{{ startup.name|escape }}" class="planet-img">
-                            {% else %}
-                              <img src="{% static 'accounts/images/planet_logo_carusel.webp' %}" alt="Планета по умолчанию" class="planet-img">
-                            {% endif %}
+                          <div class="planet-logo-container">
+                            <div class="planet" style="--planet-size: {{ startup.planet_size|default:50 }}px; max-width: 100px; max-height: 100px;" data-id="{{ startup.startup_id|default_if_none:'' }}">
+                              {% if startup.planet_image %}
+                                <img src="https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/{{ startup.planet_image }}" alt="{{ startup.title|default:'Planet'|escape }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                              {% elif startup.logo_urls and startup.logo_urls|length > 0 %}
+                                <img src="{% get_file_url_tag file_id=startup.logo_urls.0 startup_id=startup.startup_id file_type='logo' %}" alt="{{ startup.title|default:'Logo'|escape }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; max-width: 30px; max-height: 30px;">
+                              {% else %}
+                                <img src="https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/startup_5_logo.png" alt="Default Planet" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                              {% endif %}
+                            </div>
                             {% if startup.logo_urls and startup.logo_urls|length > 0 %}
-                              {% with logo_file_id=startup.logo_urls.0 %}
-                                <img src="{% get_file_url_tag logo_file_id startup.startup_id 'logo' %}" alt="Лого" class="planet-logo-overlay">
-                              {% endwith %}
+                              <img src="{% get_file_url_tag file_id=startup.logo_urls.0 startup_id=startup.startup_id file_type='logo' %}" alt="{{ startup.title|default:'Logo'|escape }}" style="width: 50%; height: 50%; object-fit: contain; max-width: 30px; max-height: 30px;">
                             {% else %}
-                              <img src="{% static 'accounts/images/default_icon.svg' %}" alt="Лого по умолчанию" class="planet-logo-overlay">
+                              <img src="/static/accounts/images/logo.png" alt="Default Logo" style="width: 50%; height: 50%; object-fit: contain; max-width: 30px; max-height: 30px;">
                             {% endif %}
                           </div>
                         </div>
