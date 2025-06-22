@@ -222,7 +222,7 @@
       margin-left: calc(-0.5 * var(--planet-size));
       margin-top: calc(-0.5 * var(--planet-size));
       border-radius: 50%;
-      background-color: transparent; /* Убираем фон у контейнера планеты */
+      background-color: transparent !important;
       cursor: pointer;
       transform-style: preserve-3d;
       z-index: 5;
@@ -1664,9 +1664,11 @@
 
                 const id = planet.getAttribute('data-id');
                 if (startups[id] && startups[id].image) {
-                    planet.style.backgroundImage = `url('${startups[id].image}')`;
+                    planet.style.backgroundImage = 'none'; // Удаляем backgroundImage
+                    planet.style.backgroundColor = 'transparent'; // Убеждаемся, что нет фонового цвета
                 } else {
-                    planet.style.backgroundColor = '#e9ecef';
+                    planet.style.backgroundImage = 'none'; // Удаляем backgroundImage
+                    planet.style.backgroundColor = 'transparent'; // Убеждаемся, что нет фонового цвета
                 }
 
                 planet.addEventListener('click', (e) => {
