@@ -226,6 +226,26 @@
       transform-style: preserve-3d;
       z-index: 5;
       transition: all 0.3s ease;
+      /* Добавляем overflow: hidden, чтобы дочерние элементы не выходили за пределы круга */
+      overflow: hidden;
+    }
+
+    .planetary-system .planet-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+    .planetary-system .planet-logo-overlay {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: 1px solid #fff;
+      background-color: rgba(0,0,0,0.5);
     }
 
     .planetary-system .planet:hover {
@@ -513,14 +533,15 @@
                   <div id="galaxy">
                       <div id="logo"></div>
                       {% for startup in planetary_startups %}
-                          <div class="orbit" style="--orbit-size: {{ startup.orbit_size|default:200 }}px; --orbit-time: {{ startup.orbit_time|default:80 }}s;">
+                          <div class="orbit" style="--orbit-size: {{ startup.orbit_size }}px; --orbit-time: {{ startup.orbit_time }}s;">
                               <div class="planet-orientation">
-                                  <div class="planet" style="--planet-size: {{ startup.planet_size|default:50 }}px;" data-id="{{ startup.id|default_if_none:'' }}">
-                                    {% if startup.planet_image %}
-                                      <img src="https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/{{ startup.planet_image }}" alt="{{ startup.title|default:'Планета'|escape }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
-                                    {% else %}
-                                      <img src="{% static 'accounts/images/planet_logo_carusel.webp' %}" alt="Планета по умолчанию" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
-                                    {% endif %}
+                                  <div class="planet" style="--planet-size: {{ startup.planet_size }}px;" data-id="{{ startup.startup_id }}">
+                                      {% if startup.planet_image %}
+                                        <img src="https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/{{ startup.planet_image }}" alt="{{ startup.name|escape }}" class="planet-img">
+                                      {% else %}
+                                        <img src="{% static 'accounts/images/planet_logo_carusel.webp' %}" alt="Планета по умолчанию" class="planet-img">
+                                      {% endif %}
+                                      <img src="{{ startup.logo_url }}" alt="Лого" class="planet-logo-overlay">
                                   </div>
                               </div>
                           </div>
@@ -673,7 +694,7 @@
           {% for startup in user_startups|slice:":6" %}
             <div class="startup-card" data-category="{{ startup.direction.direction_name|default:''|escape }}" data-name="{{ startup.title|default:''|escape }}" data-status="{{ startup.status|lower|default:'pending' }}">
               <div class="startup-card-left">
-                <div class="startup-planet-placeholder" style="width: 70px; height: 70px; border-radius: 50%; margin-bottom: 5px; overflow: hidden;">
+                <div class="startup-planet-placeholder" style="width: 70px; height: 70px; border-radius: 50%; margin-bottom: 5px; overflow: hidden; position: relative;">
                   {% if startup.planet_image %}
                     <img src="https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/{{ startup.planet_image }}" alt="{{ startup.title|default:'Планета' }}" style="width: 100%; height: 100%; object-fit: cover;">
                   {% else %}
@@ -745,7 +766,7 @@
           {% for startup in user_startups|slice:"6:" %}
             <div class="startup-card hidden-card" data-category="{{ startup.direction.direction_name|default:''|escape }}" data-name="{{ startup.title|default:''|escape }}" data-status="{{ startup.status|lower|default:'pending' }}" style="display: none;">
               <div class="startup-card-left">
-                <div class="startup-planet-placeholder" style="width: 70px; height: 70px; border-radius: 50%; margin-bottom: 5px; overflow: hidden;">
+                <div class="startup-planet-placeholder" style="width: 70px; height: 70px; border-radius: 50%; margin-bottom: 5px; overflow: hidden; position: relative;">
                   {% if startup.planet_image %}
                     <img src="https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/{{ startup.planet_image }}" alt="{{ startup.title|default:'Планета' }}" style="width: 100%; height: 100%; object-fit: cover;">
                   {% else %}

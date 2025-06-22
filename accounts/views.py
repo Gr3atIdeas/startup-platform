@@ -3392,111 +3392,67 @@ def my_startups(request):
 
         planetary_startups = []
         for idx, startup in enumerate(approved_startups_annotated, start=1):
-            # Формируем URL для логотипа
-            if (
-                not startup.logo_urls
-                or not isinstance(startup.logo_urls, list)
-                or len(startup.logo_urls) == 0
-            ):
-                logger.warning(
-                    f"Стартап {startup.startup_id} ({startup.title}) не имеет логотипа в logo_urls"
-                )
-                logo_url = "https://via.placeholder.com/150"
-            else:
+            logo_url = None
+            if startup.logo_urls and isinstance(startup.logo_urls, list) and startup.logo_urls:
                 try:
-                    # Формируем префикс для поиска файла в папке startups/{startup_id}/logos/
-                    prefix = f"startups/{startup.startup_id}/logos/"
-
-                    # Ищем файлы в этой папке
-                    response = s3_client.list_objects_v2(
-                        Bucket=settings.AWS_STORAGE_BUCKET_NAME, Prefix=prefix
-                    )
-
-                    # Проверяем, есть ли файлы в папке
-                    if "Contents" in response and len(response["Contents"]) > 0:
-                        # Берём первый файл
-                        file_key = response["Contents"][0]["Key"]
-                        # Генерируем прямой URL без подписи
-                        logo_url = f"https://storage.yandexcloud.net/{settings.AWS_STORAGE_BUCKET_NAME}/{file_key}"
-                        logger.info(
-                            f"Сгенерирован URL для логотипа стартапа {startup.startup_id}: {logo_url}"
-                        )
-                    else:
-                        logger.warning(
-                            f"Файл для логотипа стартапа {startup.startup_id} не найден в бакете по префиксу {prefix}"
-                        )
-                        logo_url = "https://via.placeholder.com/150"
+                    file_uuid = startup.logo_urls[0]
+                    file_key = f"startups/{startup.startup_id}/logos/{file_uuid}"
+                    logo_url = f"https://storage.yandexcloud.net/{settings.AWS_STORAGE_BUCKET_NAME}/{file_key}"
                 except Exception as e:
-                    logger.error(
-                        f"Ошибка при генерации URL для логотипа стартапа {startup.startup_id}: {str(e)}"
-                    )
-                    logo_url = "https://via.placeholder.com/150"
+                    logger.error(f"Error generating logo URL for startup {startup.startup_id}: {e}")
+            
+            if not logo_url:
+                logo_url = static('accounts/images/default_icon.svg')
 
-            orbit_size = (idx * 100) + 100
-            orbit_time = (idx * 20) + 60
-            planet_size = (idx * 2) + 50
+            orbit_size = (idx * 100) + 150 # Увеличим базовую орбиту
+            orbit_time = (idx * 10) + 40
+            planet_size = 60 # Фиксированный размер для наглядности
+
             planet_data = {
-                "id": str(idx),
+                "id": str(startup.startup_id),
                 "startup_id": startup.startup_id,
                 "name": startup.title or "Без названия",
-                "description": startup.description or "Описание отсутствует",
-                "rating": f"{startup.get_average_rating():.1f}/5 ({startup.total_voters or 0})",
-                "progress": f"{startup.get_progress_percentage():.0f}%",
-                "funding": f"{int(startup.amount_raised or 0):,d} ₽".replace(",", " "),
-                "investors": f"Инвесторов: {startup.get_investors_count() or 0}",
-                "image": logo_url,
+                "planet_image": startup.planet_image, # Передаем картинку планеты
+                "logo_url": logo_url, # Передаем URL логотипа
+                "rating": f"{startup.average_rating or 0:.1f}/5 ({startup.total_voters or 0})",
+                "description": startup.description or "Описание отсутствует.",
+                "progress": startup.funding_progress or 0,
+                "funding": f"Собрано: {startup.amount_raised or 0:,.0f} ₽ из {startup.funding_goal or 0:,.0f} ₽",
+                "investors": f"Инвесторов: {startup.get_investors_count()}",
                 "orbit_size": orbit_size,
                 "orbit_time": orbit_time,
                 "planet_size": planet_size,
             }
             planetary_startups.append(planet_data)
 
-        # Логирование для отладки
-        logger.info("Planetary Startups Data:")
-        for planet in planetary_startups:
-            logger.info(f"Startup ID: {planet['startup_id']}, Title: {planet['name']}")
-
-        # --- Все направления для модального окна ---
-        try:
-            all_directions_qs = Directions.objects.all().order_by("direction_name")
-            all_directions_list = list(all_directions_qs.values("pk", "direction_name"))
-        except Exception as e:
-            logger.error(f"Ошибка при получении направлений: {str(e)}")
-            all_directions_list = []
-
-        # --- Получаем все стартапы пользователя для секции "Заявки" ---
-        try:
-            all_user_applications = user_startups_qs.order_by("-updated_at")
-        except Exception as e:
-            logger.error(f"Ошибка при получении всех заявок пользователя: {str(e)}")
-            all_user_applications = []
-
-        context = {
-            "startups_count": approved_startups_count,
-            "total_investment": total_amount_raised,
-            "max_investment": max_raised,
-            "min_investment": min_raised,
-            "investment_categories": investment_categories[:7],
-            "month_labels": month_labels,
-            "chart_monthly_category_data": chart_data_list,
-            "chart_categories": sorted_categories,
-            "all_directions": all_directions_list,
-            "invested_category_data": invested_category_data_dict,
-            "user_startups": approved_startups_annotated,
-            "startup_applications": all_user_applications,
-            "current_sort": "newest",
-            "planetary_startups": planetary_startups,
-        }
-
-        return render(request, "accounts/my_startups.html", context)
 
     except Exception as e:
-        logger.error(f"Произошла ошибка в my_startups: {str(e)}", exc_info=True)
+        logger.error(f"Критическая ошибка в my_startups view: {e}", exc_info=True)
         messages.error(
-            request,
-            "Произошла ошибка при загрузке страницы. Пожалуйста, попробуйте снова.",
+            request, "Произошла ошибка при загрузке страницы ваших стартапов."
         )
         return redirect("profile")
+
+    context = {
+        "user_startups": approved_startups_annotated,
+        "planetary_startups": planetary_startups,
+        "total_investment": total_amount_raised,
+        "startups_count": approved_startups_count,
+        "max_investment": max_raised,
+        "min_investment": min_raised,
+        "investment_categories": investment_categories,
+        "invested_category_data_dict_json": json.dumps(
+            invested_category_data_dict, cls=DjangoJSONEncoder
+        ),
+        "monthly_totals_json": json.dumps(monthly_totals),
+        "month_labels_json": json.dumps(month_labels),
+        "stacked_chart_data_json": json.dumps(
+            {"categories": sorted_categories, "data": chart_data_list},
+            cls=DjangoJSONEncoder,
+        ),
+    }
+
+    return render(request, "accounts/my_startups.html", context)
 
 
 @login_required
