@@ -3416,7 +3416,7 @@ def my_startups(request):
                 "logo_url": logo_url, # Передаем URL логотипа
                 "rating": f"{startup.average_rating or 0:.1f}/5 ({startup.total_voters or 0})",
                 "description": startup.description or "Описание отсутствует.",
-                "progress": startup.funding_progress or 0,
+                "progress": startup.get_progress_percentage() or 0,
                 "funding": f"Собрано: {startup.amount_raised or 0:,.0f} ₽ из {startup.funding_goal or 0:,.0f} ₽",
                 "investors": f"Инвесторов: {startup.get_investors_count()}",
                 "orbit_size": orbit_size,
