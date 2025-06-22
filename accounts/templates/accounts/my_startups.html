@@ -1599,14 +1599,13 @@
         // Планетарная система
         (function() {
             const startups_data = JSON.parse(document.getElementById('planetary-startups-data').textContent || '[]');
-            console.log('Raw startups_data:', startups_data); // Добавляем отладку
             const startups = {};
             if (Array.isArray(startups_data)) {
                 startups_data.forEach(s => {
-                    startups[s.startup_id.toString()] = s; // Приводим startup_id к строке явно
+                    startups[s.id.toString()] = s; // Используем s.id (строка из JSON) как ключ
                 });
             }
-            console.log('Startups object:', startups); // Отладка структуры
+            console.log('Startups object:', startups);
 
             const planets = document.querySelectorAll('.planetary-system .planet');
             const planetOrientations = document.querySelectorAll('.planetary-system .planet-orientation');
@@ -1676,10 +1675,10 @@
                 planet.addEventListener('click', (e) => {
                     e.stopPropagation();
                     const id = planet.getAttribute('data-id');
-                    console.log('Clicked ID:', id); // Добавляем отладку
-                    const startupData = startups[id];
+                    console.log('Clicked ID:', id);
+                    const startupData = startups[id.toString()]; // Приводим id к строке для соответствия ключам
                     if (!startupData) {
-                        console.error('Не найдены данные для стартапа с ID:', id); // Уточняем ошибку
+                        console.error('Не найдены данные для стартапа с ID:', id);
                         return;
                     }
 
