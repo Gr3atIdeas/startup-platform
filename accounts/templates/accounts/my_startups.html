@@ -1602,9 +1602,10 @@
             const startups = {};
             if (Array.isArray(startups_data)) {
                 startups_data.forEach(s => {
-                    startups[s.id] = s;
+                    startups[s.startup_id] = s;
                 });
             }
+            console.log('Startups object:', startups); // Добавлено для отладки
 
             const planets = document.querySelectorAll('.planetary-system .planet');
             const planetOrientations = document.querySelectorAll('.planetary-system .planet-orientation');
@@ -1675,9 +1676,8 @@
                     e.stopPropagation();
                     const id = planet.getAttribute('data-id');
                     const startupData = startups[id];
-
                     if (!startupData) {
-                        console.error('Не найдены данные для стартапа с ID:', id);
+                        console.error('Не найдены данные для стартапа с ID:', id); // Добавлено для отладки
                         return; // Прерываем выполнение, если данные не найдены
                     }
 
