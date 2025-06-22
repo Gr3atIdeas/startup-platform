@@ -36,13 +36,24 @@
                 </div>
                 <img src="{% static 'accounts/images/support/clipboard-list.svg' %}" alt="Справочный центр" class="info-card-icon">
             </div>
-            <a href="{% url 'support_orders' %}" class="info-card info-card-link">
-                <div class="info-card-text">
-                    <h2>Написать нам</h2>
-                    <p>Не нашли ответ на вопрос?</p>
-                </div>
-                <img src="{% static 'accounts/images/support/edit.svg' %}" alt="Написать нам" class="info-card-icon">
-            </a>
+            
+            {% if is_moderator %}
+                <a href="{% url 'support_orders' %}" class="info-card info-card-link">
+                    <div class="info-card-text">
+                        <h2>Заявки от пользователей</h2>
+                        <p>Просмотреть и обработать все заявки</p>
+                    </div>
+                    <img src="{% static 'accounts/images/support/edit.svg' %}" alt="Заявки от пользователей" class="info-card-icon">
+                </a>
+            {% else %}
+                <a href="{% url 'support_contact' %}" class="info-card info-card-link">
+                    <div class="info-card-text">
+                        <h2>Написать нам</h2>
+                        <p>Не нашли ответ на вопрос?</p>
+                    </div>
+                    <img src="{% static 'accounts/images/support/edit.svg' %}" alt="Написать нам" class="info-card-icon">
+                </a>
+            {% endif %}
         </section>
 
         <section class="knowledge-base-section">

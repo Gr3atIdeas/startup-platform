@@ -3627,8 +3627,13 @@ def create_group_chat(request):
         )
 
 
+@login_required
 def support_page_view(request):
-    return render(request, "accounts/support.html")
+    is_moderator = request.user.is_authenticated and request.user.role and request.user.role.role_name == 'moderator'
+    context = {
+        'is_moderator': is_moderator
+    }
+    return render(request, "accounts/support.html", context)
 
 
 @login_required
