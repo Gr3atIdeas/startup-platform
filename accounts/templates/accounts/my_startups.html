@@ -1598,14 +1598,13 @@
     
         // Планетарная система
         (function() {
-            const startups_data = JSON.parse(document.getElementById('planetary-startups-data').textContent);
+            const startups_data = JSON.parse(document.getElementById('planetary-startups-data').textContent || '[]');
             const startups = {};
             if (Array.isArray(startups_data)) {
                 startups_data.forEach(s => {
                     startups[s.id] = s;
                 });
             }
-
 
             const planets = document.querySelectorAll('.planetary-system .planet');
             const planetOrientations = document.querySelectorAll('.planetary-system .planet-orientation');
@@ -1664,7 +1663,7 @@
                 });
 
                 const id = planet.getAttribute('data-id');
-                if (startups[id] && startups[id].image) {
+                if (startups_data[id] && startups_data[id].image) {
                     planet.style.backgroundImage = 'none'; // Удаляем backgroundImage
                     planet.style.backgroundColor = 'transparent'; // Убеждаемся, что нет фонового цвета
                 } else {
@@ -1674,7 +1673,13 @@
 
                 planet.addEventListener('click', (e) => {
                     e.stopPropagation();
+                    const id = planet.getAttribute('data-id');
                     const startupData = startups[id];
+
+                    if (!startupData) {
+                        console.error('Не найдены данные для стартапа с ID:', id);
+                        return; // Прерываем выполнение, если данные не найдены
+                    }
 
                     planetImage.style.backgroundImage = `url('${startupData.image}')`;
                     startupName.textContent = startupData.name;
