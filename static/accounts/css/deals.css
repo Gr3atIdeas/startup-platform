@@ -274,7 +274,7 @@ body {
 }
 
 .message-bubble {
-  padding: 11px 14px 11px 39px;
+  padding: 11px 14px;
   max-width: 452px; /* Ширина из макета */
   border-radius: 20px;
   font-size: 12px;
@@ -300,6 +300,10 @@ body {
   color: white;
   align-self: flex-start;
   border-bottom-left-radius: 0;
+}
+
+.message-content {
+  padding-bottom: 5px; /* Добавляем отступ для времени */
 }
 
 .message-content a {

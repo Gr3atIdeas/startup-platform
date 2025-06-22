@@ -62,7 +62,7 @@
                     <div class="messages-container" id="messagesContainer">
                         {% for message in chat_messages %}
                             <div class="message-bubble {% if message.is_own %}sent{% else %}received{% endif %}">
-                                <div class="message-content">{{ message.message_text }}</div>
+                                <div class="message-content">{{ message.message_text|linebreaksbr }}</div>
                                 <div class="message-meta">
                                     <span class="message-time">{{ message.created_at|date:"H:i" }}</span>
                                 </div>
@@ -122,7 +122,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (data.success) {
                     const messageDiv = document.createElement('div');
                     messageDiv.className = 'message-bubble sent';
-                    messageDiv.innerHTML = `<div class="message-content">${data.message.message_text}</div><div class="message-meta"><span class="message-time">${data.message.created_at}</span></div>`;
+                    const messageText = data.message.message_text.replace(/\\n/g, '<br>');
+                    messageDiv.innerHTML = `<div class="message-content">${messageText}</div><div class="message-meta"><span class="message-time">${data.message.created_at}</span></div>`;
                     messagesContainer.appendChild(messageDiv);
                     this.reset();
                     messagesContainer.scrollTop = messagesContainer.scrollHeight;
