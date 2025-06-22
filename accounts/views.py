@@ -3407,6 +3407,16 @@ def my_startups(request):
             orbit_time = (idx * 10) + 40
             planet_size = 60
 
+            # Определяем investment_type на основе only_invest, only_buy, both_mode
+            if startup.both_mode:
+                investment_type = "Инвестиции и выкуп"
+            elif startup.only_invest:
+                investment_type = "Только инвестиции"
+            elif startup.only_buy:
+                investment_type = "Только выкуп"
+            else:
+                investment_type = "Не указано"
+
             planet_data = {
                 "startup_id": startup.startup_id,
                 "planet_image": startup.planet_image,
@@ -3417,13 +3427,15 @@ def my_startups(request):
                 "direction": {"direction_name": startup.direction.direction_name if startup.direction else "Без категории"},
                 "funding_goal": float(startup.funding_goal or 0),
                 "get_investors_count": startup.get_investors_count() or 0,
-                "investment_type": startup.investment_type or "Не указано",
+                "investment_type": investment_type,
                 "short_description": startup.short_description or startup.description or "Описание отсутствует",
                 "orbit_size": orbit_size,
                 "orbit_time": orbit_time,
                 "planet_size": planet_size,
             }
             planetary_startups.append(planet_data)
+
+        logger.info(f"Planetary startups data: {planetary_startups}")
 
         context["planetary_startups_json"] = json.dumps(planetary_startups, cls=DjangoJSONEncoder)
 
