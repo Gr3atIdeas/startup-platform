@@ -169,7 +169,7 @@
 
     .planetary-system #galaxy {
       position: relative;
-      z-index: 9998; /* УБРАТЬ ЕСЛИ ВСЕ СЛОМАЕТСЯ */
+      z-index: 10000; /* УБРАТЬ ЕСЛИ ВСЕ СЛОМАЕТСЯ */
       top: 0;
       left: 0;
       transform: rotateX(45deg);
@@ -241,8 +241,10 @@
 
     .planetary-system .planet-logo-overlay {
       position: absolute;
-      width: 40px;
-      height: 40px;
+      top: 0px; /* Уменьшаем отступ вверх */
+      right: 0px; /* Уменьшаем отступ вправо */
+      width: 30px; /* Уменьшаем размер для ближе расположения */
+      height: 30px; /* Уменьшаем размер для ближе расположения */
       z-index: 15;
       transform: translate(50%, -50%);
       border-radius: 50% !important; /* Делаем круглой */
@@ -1841,40 +1843,51 @@
             setInterval(checkInactivity, 1000);
 
             function updatePlanets() {
-                const now = Date.now();
+              const now = Date.now();
 
-                frameCount++;
-                if (now - lastTime >= 1000) {
-                    fps = frameCount;
-                    frameCount = 0;
-                    lastTime = now;
-                    fpsElement.textContent = `${fps} FPS`;
-                }
+              frameCount++;
+              if (now - lastTime >= 1000) {
+                fps = frameCount;
+                frameCount = 0;
+                lastTime = now;
+                fpsElement.textContent = `${fps} FPS`;
+              }
 
-                if (isPaused) {
-                    requestAnimationFrame(updatePlanets);
-                    return;
-                }
-
-                planetObjects.forEach(planetObj => {
-                    const elapsedSeconds = (now - planetObj.startTime) / 1000;
-                    const orbitTimeSeconds = planetObj.orbitTime * planetObj.speedFactor;
-                    const progress = (elapsedSeconds % orbitTimeSeconds) / orbitTimeSeconds;
-                    const angle = planetObj.angle + progress * 360;
-                    const angleRad = angle * Math.PI / 180;
-
-                    const radius = planetObj.orbitSize / 2;
-                    const x = Math.cos(angleRad) * radius;
-                    const y = Math.sin(angleRad) * radius;
-
-                    planetObj.orientation.style.left = `${50 + 50 * (x / radius)}%`;
-                    planetObj.orientation.style.top = `${50 + 50 * (y / radius)}%`;
-
-                    const tiltCompensation = -galaxyTiltAngle;
-                    planetObj.element.style.transform = `rotateX(${tiltCompensation}deg)`;
-                });
-
+              if (isPaused) {
                 requestAnimationFrame(updatePlanets);
+                return;
+              }
+
+              planetObjects.forEach(planetObj => {
+                const elapsedSeconds = (now - planetObj.startTime) / 1000;
+                const orbitTimeSeconds = planetObj.orbitTime * planetObj.speedFactor;
+                const progress = (elapsedSeconds % orbitTimeSeconds) / orbitTimeSeconds;
+                let angle = planetObj.angle + progress * 360;
+                const angleRad = angle * Math.PI / 180;
+
+                const radius = planetObj.orbitSize / 2;
+                let x = Math.cos(angleRad) * radius;
+                let y = Math.sin(angleRad) * radius;
+
+                // Ограничиваем движение планет, чтобы они не пересекали центр (где #logo)
+                const centerThreshold = 50; // Радиус зоны вокруг центра, куда планеты не заходят
+                const distanceFromCenter = Math.sqrt(x * x + y * y);
+                if (distanceFromCenter < centerThreshold) {
+                  // Корректируем угол, чтобы планета оставалась за пределами центра
+                  angle += 10; // Смещаем угол для избежания пересечения
+                  const newAngleRad = angle * Math.PI / 180;
+                  x = Math.cos(newAngleRad) * radius;
+                  y = Math.sin(newAngleRad) * radius;
+                }
+
+                planetObj.orientation.style.left = `${50 + 50 * (x / radius)}%`;
+                planetObj.orientation.style.top = `${50 + 50 * (y / radius)}%`;
+
+                const tiltCompensation = -galaxyTiltAngle;
+                planetObj.element.style.transform = `rotateX(${tiltCompensation}deg)`;
+              });
+
+              requestAnimationFrame(updatePlanets);
             }
 
             updatePlanets();
