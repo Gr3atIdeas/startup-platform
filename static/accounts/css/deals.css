@@ -513,3 +513,10 @@ body {
 .messages-container::-webkit-scrollbar-thumb:hover {
   background-color: #003a75; /* Darker blue on hover */
 }
+
+/* ПЕРЕОПРЕДЕЛЕНИЕ ГЛОБАЛЬНОГО СТИЛЯ:
+   Убираем 'position: sticky', который ошибочно применяется из другого файла
+   и вызывает "залипание" сообщений в чате сделок. */
+.message-date-separator, .new-messages-separator {
+  position: static !important;
+}
