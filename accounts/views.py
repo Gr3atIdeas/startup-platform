@@ -3408,11 +3408,11 @@ def my_startups(request):
             planet_size = 60
 
             planet_data = {
-                "id": str(startup.startup_id),  # Явно преобразуем в строку
+                "id": startup.startup_id,  # Используем реальный ID стартапа
                 "startup_id": startup.startup_id,
                 "name": startup.title or "Без названия",
                 "planet_image": startup.planet_image,
-                "logo_urls": startup.logo_urls,  # Используем logo_urls
+                "logo_urls": startup.logo_urls,
                 "rating": f"{startup.average_rating or 0:.1f}/5 ({startup.total_voters or 0})",
                 "description": startup.description or "Описание отсутствует.",
                 "progress": startup.get_progress_percentage() or 0,

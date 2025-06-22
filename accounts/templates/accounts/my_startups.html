@@ -541,7 +541,7 @@
                     {% for startup in planetary_startups %}
                       <div class="orbit" style="--orbit-size: {{ startup.orbit_size }}px; --orbit-time: {{ startup.orbit_time }}s;">
                         <div class="planet-orientation">
-                          <div class="planet" style="--planet-size: {{ startup.planet_size }}px;" data-id="{{ startup.id }}">
+                          <div class="planet" style="--planet-size: {{ startup.planet_size }}px;" data-id="{{ startup.startup_id }}">
                             {% if startup.planet_image %}
                               <img src="https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/{{ startup.planet_image }}" alt="{{ startup.name|escape }}" class="planet-img">
                             {% else %}
