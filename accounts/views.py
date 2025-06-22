@@ -132,19 +132,14 @@ def contacts_page_view(request):
 # Регистрация пользователя
 def register(request):
     if request.method == "POST":
-        form = RegisterForm(request.POST)
+        form = RegisterForm(request.POST, request=request)
         if form.is_valid():
-            user = form.save(commit=False)
-            user.set_password(form.cleaned_data["password"])
-            user.save()
-            messages.success(
-                request, "Регистрация прошла успешно! Теперь вы можете войти."
-            )
-            return redirect("home")
-        else:
-            return render(request, "accounts/register.html", {"form": form})
+            user = form.save()
+            auth_login(request, user)
+            messages.success(request, "Вы успешно зарегистрировались!")
+            return redirect("profile_page")
     else:
-        form = RegisterForm()
+        form = RegisterForm(request=request)
     return render(request, "accounts/register.html", {"form": form})
 
 

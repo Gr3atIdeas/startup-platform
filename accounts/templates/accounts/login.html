@@ -200,7 +200,10 @@
                         <div class="errors">{{ form.password.errors }}</div>
                     {% endif %}
                 </div>
-                <button type="submit">Войти</button>
+
+                <div id="captcha-container" class="smart-captcha" data-sitekey="{{ YANDEX_SMART_CAPTCHA_SITE_KEY }}"></div>
+
+                <button type="submit" class="blue-button">Войти</button>
             </form>
             <p>Нет аккаунта? <a href="{% url 'register' %}">Зарегистрироваться</a></p>
             
@@ -357,4 +360,8 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 
+{% endblock %}
+
+{% block extra_scripts %}
+  <script src="https://smartcaptcha.yandexcloud.net/captcha.js" defer></script>
 {% endblock %}
