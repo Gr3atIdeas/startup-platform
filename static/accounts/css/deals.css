@@ -250,6 +250,7 @@ body {
 }
 
 .messages-container {
+  position: static !important; /* Возвращаем элемент в нормальный поток, отменяя ошибочный fixed/sticky */
   flex-grow: 1; /* Занимает все оставшееся место */
   overflow-y: auto; /* Включает вертикальную прокрутку ТОЛЬКО для этого блока */
   padding: 20px;
@@ -491,7 +492,7 @@ body {
 }
 
 .filter-btn.active:hover {
-    background: #004e9f;
+    background-color: #003a75; /* Darker blue on hover */
 }
 
 /* Custom scrollbar for chat messages */
