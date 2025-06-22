@@ -3408,7 +3408,7 @@ def my_startups(request):
             planet_size = 60
 
             planet_data = {
-                "id": str(startup.startup_id),
+                "id": startup.startup_id,  # Используем реальный ID
                 "startup_id": startup.startup_id,
                 "name": startup.title or "Без названия",
                 "planet_image": startup.planet_image,
