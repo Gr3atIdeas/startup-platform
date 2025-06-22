@@ -189,10 +189,8 @@ body {
   width: 833px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   overflow: hidden;
-  position: relative !important;
-  transform: none !important;
+  position: relative;
 }
 
 .no-chat-selected {
@@ -207,7 +205,8 @@ body {
 .chat-messages-area {
   display: flex;
   flex-direction: column;
-  height: calc(100% - 60px); /* Высота минус инпут */
+  flex-grow: 1;
+  min-height: 0;
   padding: 28px 19px;
   border: 1px solid #818CE5;
   border-radius: 32px;
@@ -389,16 +388,4 @@ body {
 .chat-list::-webkit-scrollbar-thumb:hover,
 .messages-container::-webkit-scrollbar-thumb:hover {
   background: #555;
-}
-
-/* 
-  ИСПРАВЛЕНИЕ: 
-  Принудительно отменяем 'position: sticky' для ВСЕХ дочерних элементов 
-  в контейнере сообщений. Это перекрывает глобальные стили из main_temp.css,
-  которые могут ошибочно применяться к разделителям даты или сообщений,
-  исправляя баг с "прилипанием". Используем очень специфичный селектор,
-  чтобы гарантированно победить в специфичности любое правило из main_temp.css
-*/
-.deals-page-container .deals-main-wrapper .deal-chat-window .chat-messages-area .messages-container > * {
-  position: static !important;
 }
