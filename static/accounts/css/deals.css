@@ -388,3 +388,14 @@ body {
 .messages-container::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+
+/* 
+  ИСПРАВЛЕНИЕ: 
+  Принудительно отменяем 'position: sticky' для ВСЕХ дочерних элементов 
+  в контейнере сообщений. Это перекрывает глобальные стили из main_temp.css,
+  которые могут ошибочно применяться к разделителям даты или сообщений,
+  исправляя баг с "прилипанием".
+*/
+.messages-container > * {
+  position: static !important;
+}
