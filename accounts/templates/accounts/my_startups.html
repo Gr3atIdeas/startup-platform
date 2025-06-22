@@ -367,131 +367,6 @@
       justify-content: center;
     }
 
-    .planetary-system #crosshair {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 16px;
-      height: 16px;
-      transform: translate(-50%, -50%);
-      z-index: 100;
-    }
-
-    .planetary-system #crosshair::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 0;
-      width: 100%;
-      height: 1px;
-      background: rgba(255, 255, 255, 0.7);
-      transform: translateY(-50%);
-    }
-
-    .planetary-system #crosshair::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 50%;
-      width: 1px;
-      height: 100%;
-      background: rgba(255, 255, 255, 0.7);
-      transform: translateX(-50%);
-    }
-
-    .planetary-system #crosshair-coords {
-      position: absolute;
-      top: 50%;
-      left: calc(50% + 15px);
-      transform: translateY(-50%);
-      color: white;
-      font-size: 10px;
-      background: rgba(0, 0, 0, 0.5);
-      padding: 4px;
-      border-radius: 4px;
-      z-index: 100;
-    }
-
-    .planetary-system #mouse-coords {
-      position: absolute;
-      color: white;
-      font-size: 10px;
-      background: rgba(0, 0, 0, 0.5);
-      padding: 4px;
-      border-radius: 4px;
-      pointer-events: none;
-      z-index: 100;
-    }
-
-    .planetary-system #axes {
-      position: absolute;
-      bottom: 8px;
-      right: 8px;
-      width: 40px;
-      height: 40px;
-      transform-style: preserve-3d;
-      z-index: 100;
-    }
-
-    .planetary-system .axis {
-      position: absolute;
-      width: 1px;
-      height: 20px;
-      transform-origin: bottom center;
-    }
-
-    .planetary-system #axis-x {
-      background: red;
-      transform: rotateY(90deg) translateZ(10px);
-    }
-
-    .planetary-system #axis-y {
-      background: green;
-      transform: translateZ(10px);
-    }
-
-    .planetary-system #axis-z {
-      background: blue;
-      transform: rotateX(90deg) translateZ(10px);
-    }
-
-    .planetary-system .axis-label {
-      position: absolute;
-      color: white;
-      font-size: 8px;
-      transform: translateZ(15px);
-    }
-
-    .planetary-system #label-x {
-      left: 25px;
-      top: 10px;
-      color: red;
-    }
-
-    .planetary-system #label-y {
-      left: 10px;
-      top: -5px;
-      color: green;
-    }
-
-    .planetary-system #label-z {
-      left: 10px;
-      top: 25px;
-      color: blue;
-    }
-
-    .planetary-system #fps {
-      position: absolute;
-      top: 8px;
-      left: 8px;
-      background: rgba(0, 0, 0, 0.5);
-      color: white;
-      padding: 4px;
-      border-radius: 3px;
-      font-size: 10px;
-      z-index: 100;
-    }
-
     .status-filter-buttons {
         display: flex;
         justify-content: flex-end;
@@ -578,18 +453,6 @@
                   <div class="description" id="startup-description"></div>
                   <button class="more-details" id="more-details">Подробнее</button>
               </div>
-              <div id="crosshair"></div>
-              <div id="crosshair-coords"></div>
-              <div id="mouse-coords"></div>
-              <div id="axes">
-                  <div class="axis" id="axis-x"></div>
-                  <div class="axis" id="axis-y"></div>
-                  <div class="axis" id="axis-z"></div>
-                  <div class="axis-label" id="label-x">X</div>
-                  <div class="axis-label" id="label-y">Y</div>
-                  <div class="axis-label" id="label-z">Z</div>
-              </div>
-              <div id="fps">0 FPS</div>
           </div>
           </div>
           <!-- Категории с радиальными диаграммами -->
@@ -1625,16 +1488,10 @@
             const solarSystem = document.querySelector('.planetary-system#solar-system');
             const scene = document.querySelector('.planetary-system #scene');
             const galaxy = document.querySelector('.planetary-system #galaxy');
-            const crosshairCoords = document.querySelector('.planetary-system #crosshair-coords');
-            const mouseCoords = document.querySelector('.planetary-system #mouse-coords');
-            const fpsElement = document.querySelector('.planetary-system #fps');
             const logoElement = document.querySelector('.planetary-system #logo');
 
             const galaxyTiltAngle = 45;
             const planetObjects = [];
-            let lastTime = 0;
-            let frameCount = 0;
-            let fps = 0;
             let isPaused = false;
             let pausedTime = 0;
             let lastInteractionTime = Date.now();
@@ -1768,12 +1625,6 @@
                 startX = e.clientX;
                 startY = e.clientY;
 
-                crosshairCoords.textContent = `Center: (${Math.round(offsetX)}, ${Math.round(offsetY)}, 0)`;
-
-                mouseCoords.style.left = `${e.clientX + 15}px`;
-                mouseCoords.style.top = `${e.clientY + 15}px`;
-                mouseCoords.textContent = `Mouse: (${e.clientX}, ${e.clientY})`;
-
                 lastInteractionTime = Date.now();
             });
 
@@ -1789,12 +1640,6 @@
                 scale = Math.max(0.5, Math.min(3, scale + delta));
                 scene.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
 
-                crosshairCoords.textContent = `Center: (${Math.round(offsetX)}, ${Math.round(offsetY)}, 0)`;
-
-                mouseCoords.style.left = `${e.clientX + 15}px`;
-                mouseCoords.style.top = `${e.clientY + 15}px`;
-                mouseCoords.textContent = `Mouse: (${e.clientX}, ${e.clientY})`;
-
                 lastInteractionTime = Date.now();
                 isReturningToCenter = false;
             });
@@ -1802,12 +1647,6 @@
             infoCard.addEventListener('mousedown', (e) => {
                 e.stopPropagation();
                 lastInteractionTime = Date.now();
-            });
-
-            document.addEventListener('mousemove', (e) => {
-                mouseCoords.style.left = `${e.clientX + 15}px`;
-                mouseCoords.style.top = `${e.clientY + 15}px`;
-                mouseCoords.textContent = `Mouse: (${e.clientX}, ${e.clientY})`;
             });
 
             function checkInactivity() {
@@ -1828,7 +1667,6 @@
                         offsetY = startY + (0 - startY) * progress;
 
                         scene.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
-                        crosshairCoords.textContent = `Center: (${Math.round(offsetX)}, ${Math.round(offsetY)}, 0)`;
 
                         if (progress < 1) {
                             requestAnimationFrame(animateReturn);
@@ -1845,14 +1683,6 @@
 
             function updatePlanets() {
               const now = Date.now();
-
-              frameCount++;
-              if (now - lastTime >= 1000) {
-                fps = frameCount;
-                frameCount = 0;
-                lastTime = now;
-                fpsElement.textContent = `${fps} FPS`;
-              }
 
               if (isPaused) {
                 requestAnimationFrame(updatePlanets);
