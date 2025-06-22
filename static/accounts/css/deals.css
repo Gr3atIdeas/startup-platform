@@ -166,22 +166,25 @@ body {
 }
 
 .chat-window-column {
-  flex: 1; /* Используем flex: 1 для правильного растягивания */
+  flex: 1;
   display: flex;
   flex-direction: column;
-  min-width: 0; /* Предотвращает переполнение flex-элементов */
+  min-width: 0;
+  box-sizing: border-box; /* Гарантируем правильный расчет размеров */
 }
 
 .chat-messages-area {
-  flex: 1; /* Занимает все доступное пространство по высоте */
+  flex: 1;
   display: flex;
   flex-direction: column;
-  min-height: 0; /* Обязательно для вложенных flex-элементов с overflow */
+  min-height: 0;
   border-radius: 32px;
   outline: 1px #818ce5 solid;
   outline-offset: -1px;
   background: white;
   overflow: hidden;
+  width: 100%; /* Принудительно задаем ширину */
+  box-sizing: border-box; /* Гарантируем правильный расчет размеров */
 }
 
 .chat-actions-top {
@@ -396,13 +399,14 @@ body {
 }
 
 .chat-input-area {
-  flex-shrink: 0; /* Запрещаем инпуту сжиматься */
+  flex-shrink: 0;
+  width: 100%; /* Принудительно задаем ширину */
+  box-sizing: border-box; /* Гарантируем правильный расчет размеров */
   display: flex;
   align-items: center;
   padding: 10px 20px;
   background-color: #fff;
   border-top: 1px solid #e0e0e0;
-  box-sizing: border-box;
 }
 
 .attach-button,
