@@ -59,7 +59,7 @@
                         <img src="{% static 'accounts/images/icons/three_dots.svg' %}" alt="Действия" class="chat-actions-icon">
                     </div>
                     
-                    <div class="messages-container" id="messagesContainer">
+                    <div class="chat-messages-list" id="messagesContainer">
                             {% for message in chat_messages %}
                                 <div class="message-bubble {% if message.is_own %}sent{% else %}received{% endif %}">
                                     <div class="message-content">{{ message.message_text }}</div>

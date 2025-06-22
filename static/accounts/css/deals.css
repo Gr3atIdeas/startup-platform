@@ -269,6 +269,16 @@ body {
   cursor: pointer;
 }
 
+.chat-messages-list {
+  overflow-y: auto;
+  flex-grow: 1;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  position: static !important;
+}
+
 .message-bubble {
   padding: 11px 14px 11px 39px;
   max-width: 452px; /* Ширина из макета */
@@ -365,23 +375,23 @@ body {
 
 /* Стили для скроллбара */
 .chat-list::-webkit-scrollbar,
-.messages-container::-webkit-scrollbar {
+.chat-messages-list::-webkit-scrollbar {
   width: 6px;
 }
 
 .chat-list::-webkit-scrollbar-track,
-.messages-container::-webkit-scrollbar-track {
+.chat-messages-list::-webkit-scrollbar-track {
   background: #f1f1f1;
   border-radius: 10px;
 }
 
 .chat-list::-webkit-scrollbar-thumb,
-.messages-container::-webkit-scrollbar-thumb {
+.chat-messages-list::-webkit-scrollbar-thumb {
   background: #888;
   border-radius: 10px;
 }
 
 .chat-list::-webkit-scrollbar-thumb:hover,
-.messages-container::-webkit-scrollbar-thumb:hover {
+.chat-messages-list::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
