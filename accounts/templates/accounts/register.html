@@ -62,7 +62,7 @@
                 {% if form.confirm_password.errors %}<div class="errors">{{ form.confirm_password.errors }}</div>{% endif %}
             </div>
 
-            <div id="captcha-container" class="smart-captcha" data-sitekey="{{ YANDEX_SMART_CAPTCHA_SITE_KEY }}"></div>
+            <div id="captcha-container" class="smart-captcha" data-sitekey="{{ YANDEX_SMART_CAPTCHA_SITE_KEY }}" data-robustness="medium"></div>
 
             <button type="submit" class="blue-button">Зарегистрироваться</button>
         </form>
@@ -77,7 +77,7 @@
             Зарегистрироваться через Telegram
         </a>
 
-        <p class="auth-switch">Уже есть аккаунт? <a href="{% url 'account_login' %}">Войти</a></p>
+        <p class="auth-switch">Уже есть аккаунт? <a href="{% url 'login' %}">Войти</a></p>
     </div>
 </div>
 

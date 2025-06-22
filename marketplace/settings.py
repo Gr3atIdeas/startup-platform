@@ -58,6 +58,11 @@ SECRET_KEY = os.getenv(
 YANDEX_SMART_CAPTCHA_SITE_KEY = 'ysc1_a0WVSMonLGAwWvSYesAi0bhJMImVPgzqheqmBRP45d139d7d'
 YANDEX_SMART_CAPTCHA_SECRET_KEY = 'ysc2_a0WVSMonLGAwWvSYesAij0432tm9yG9Rk6LT2ipIb52dae61'
 
+# Tell allauth to use custom forms
+ACCOUNT_FORMS = {
+    'login': 'accounts.forms.LoginForm',
+}
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DJANGO_DEBUG", "False") == "True"
 

@@ -6,8 +6,7 @@ urlpatterns = [
     # Основные маршруты
     path("", views.home, name="home"),
     path("main_temp_page/", views.display_main_temp_page, name="main_temp_page"),
-    path("register/", views.register, name="register"),
-    path("login/", views.user_login, name="login"),
+    path("register/", views.register, name="register_page"),
     path("logout/", views.user_logout, name="logout"),
     path("startups/", views.startups_list, name="startups_list"),
     path("startups/<str:startup_id>/", views.startup_detail, name="startup_detail"),
@@ -32,7 +31,7 @@ urlpatterns = [
     path("cosmochat/chat-list/", views.chat_list, name="chat_list"),
     
     # Профиль и управление
-    path("profile/", views.profile, name="profile"),
+    path("profile/", views.profile, name="profile_page"),
     path("profile/delete-avatar/", views.delete_avatar, name="delete_avatar"),
     path("profile/<int:user_id>/", views.profile, name="user_profile"),
     path("create-startup/", views.create_startup, name="create_startup"),
