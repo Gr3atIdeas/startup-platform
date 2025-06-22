@@ -396,8 +396,9 @@ body {
   Принудительно отменяем 'position: sticky' для ВСЕХ дочерних элементов 
   в контейнере сообщений. Это перекрывает глобальные стили из main_temp.css,
   которые могут ошибочно применяться к разделителям даты или сообщений,
-  исправляя баг с "прилипанием".
+  исправляя баг с "прилипанием". Используем очень специфичный селектор,
+  чтобы гарантированно победить в специфичности любое правило из main_temp.css
 */
-.messages-container > * {
+.deals-page-container .deals-main-wrapper .deal-chat-window .chat-messages-area .messages-container > * {
   position: static !important;
 }
