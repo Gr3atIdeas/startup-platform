@@ -221,12 +221,11 @@
       margin-left: calc(-0.5 * var(--planet-size));
       margin-top: calc(-0.5 * var(--planet-size));
       border-radius: 50%;
-      background-size: cover;
+      background-color: transparent; /* Убираем фон у контейнера планеты */
       cursor: pointer;
       transform-style: preserve-3d;
       z-index: 5;
       transition: all 0.3s ease;
-      /* Добавляем overflow: hidden, чтобы дочерние элементы не выходили за пределы круга */
       overflow: hidden;
     }
 
@@ -239,13 +238,13 @@
 
     .planetary-system .planet-logo-overlay {
       position: absolute;
-      top: 0;
-      right: 0;
+      top: -10px;      /* Смещаем выше */
+      right: -10px;     /* Смещаем правее */
       width: 30px;
       height: 30px;
       border-radius: 50%;
       border: 1px solid #fff;
-      background-color: rgba(0,0,0,0.5);
+      background-color: transparent; /* Убираем фон */
     }
 
     .planetary-system .planet:hover {

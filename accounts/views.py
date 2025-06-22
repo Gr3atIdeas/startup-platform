@@ -3395,8 +3395,8 @@ def my_startups(request):
             logo_url = None
             if startup.logo_urls and isinstance(startup.logo_urls, list) and startup.logo_urls:
                 try:
-                    file_uuid = startup.logo_urls[0]
-                    file_key = f"startups/{startup.startup_id}/logos/{file_uuid}"
+                    # Предполагаем, что в logo_urls хранится полный ключ файла, а не только UUID
+                    file_key = startup.logo_urls[0]
                     logo_url = f"https://storage.yandexcloud.net/{settings.AWS_STORAGE_BUCKET_NAME}/{file_key}"
                 except Exception as e:
                     logger.error(f"Error generating logo URL for startup {startup.startup_id}: {e}")
