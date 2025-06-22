@@ -920,6 +920,7 @@
     {{ chart_categories|json_script:"chart-categories" }}
     {{ all_directions|json_script:"all-directions-data" }}
     {{ invested_category_data|json_script:"invested-category-data" }}
+    {{ planetary_startups_json|json_script:"planetary-startups-data" }}
 
     <script>
       // ГЛОБАЛЬНЫЕ ФУНКЦИИ, КОНСТАНТЫ
@@ -1597,20 +1598,14 @@
     
         // Планетарная система
         (function() {
-            const startups = {
-                {% for startup in planetary_startups %}
-                    '{{ startup.id }}': {
-                        name: '{{ startup.name|escapejs }}',
-                        description: '{{ startup.description|escapejs }}',
-                        rating: '{{ startup.rating|escapejs }}',
-                        progress: '{{ startup.progress|escapejs }}',
-                        funding: '{{ startup.funding|escapejs }}',
-                        investors: '{{ startup.investors|escapejs }}',
-                        image: '{{ startup.image|escapejs }}',
-                        startup_id: '{{ startup.startup_id|escapejs }}'
-                    }{% if not forloop.last %},{% endif %}
-                {% endfor %}
-            };
+            const startups_data = JSON.parse(document.getElementById('planetary-startups-data').textContent);
+            const startups = {};
+            if (Array.isArray(startups_data)) {
+                startups_data.forEach(s => {
+                    startups[s.id] = s;
+                });
+            }
+
 
             const planets = document.querySelectorAll('.planetary-system .planet');
             const planetOrientations = document.querySelectorAll('.planetary-system .planet-orientation');
@@ -1634,7 +1629,9 @@
             const logoElement = document.querySelector('.planetary-system #logo');
 
             logoElement.style.backgroundImage = `url('{% static "accounts/images/layout/image12.png" %}')`;
-
+            if (!logoElement.style.backgroundImage || logoElement.style.backgroundImage === 'none') {
+              logoElement.style.backgroundImage = `url('{% static "accounts/images/logo.png" %}')`; // Запасной вариант
+            }
             const galaxyTiltAngle = 45;
             const planetObjects = [];
             let lastTime = 0;

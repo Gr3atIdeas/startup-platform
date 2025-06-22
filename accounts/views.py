@@ -3357,6 +3357,17 @@ def my_startups(request):
             f"[my_startups] Final structured chart data list: {chart_data_list}"
         )
 
+        # --- Получаем все направления для модального окна и фильтров ---
+        try:
+            all_directions_qs = Directions.objects.all().order_by("direction_name")
+            # Преобразуем в формат, который ожидает JS
+            all_directions_list = [
+                {"direction_name": d.direction_name} for d in all_directions_qs
+            ]
+        except Exception as e:
+            logger.error(f"Ошибка при получении всех направлений: {str(e)}")
+            all_directions_list = []
+
         # --- Получаем одобренные стартапы с аннотациями для основной сетки и планетарной системы ---
         try:
             approved_startups_annotated = (
@@ -3427,17 +3438,20 @@ def my_startups(request):
         "startups_count": approved_startups_count,
         "max_investment": max_raised,
         "min_investment": min_raised,
-        "investment_categories": investment_categories,
-        "invested_category_data_dict_json": json.dumps(
-            invested_category_data_dict, cls=DjangoJSONEncoder
-        ),
-        "monthly_totals_json": json.dumps(monthly_totals),
-        "month_labels_json": json.dumps(month_labels),
-        "stacked_chart_data_json": json.dumps(
-            {"categories": sorted_categories, "data": chart_data_list},
-            cls=DjangoJSONEncoder,
-        ),
+        "investment_categories": investment_categories[:7],  # Ограничиваем до 7 для отображения
+        "invested_category_data": invested_category_data_dict,
+        "all_directions": all_directions_list,
+        # Данные для графика (передаем как есть, json_script обработает)
+        "month_labels": month_labels,
+        "chart_monthly_category_data": chart_data_list,
+        "chart_categories": sorted_categories,
+        # Данные для заявок
+        "startup_applications": user_startups_qs.order_by("-updated_at"),
     }
+
+    # Добавляем JSON-сериализованные данные отдельно, чтобы не загромождать основной контекст
+    context["planetary_startups_json"] = json.dumps(planetary_startups, cls=DjangoJSONEncoder)
+
 
     return render(request, "accounts/my_startups.html", context)
 
@@ -3699,7 +3713,6 @@ def add_investor(request, startup_id):
 def edit_investment(request, startup_id, user_id):
     if request.method != "POST":
         return JsonResponse({"success": False, "error": "Неверный метод запроса"})
-
     if not request.user.role or request.user.role.role_name != "moderator":
         return JsonResponse(
             {"success": False, "error": "У вас нет прав для этого действия"}
@@ -4022,3 +4035,4 @@ def telegram_webhook(request, token):
     except Exception as e:
         logger.error(f"Error processing Telegram webhook: {e}", exc_info=True)
         return HttpResponse(status=500)
+
