@@ -1551,13 +1551,13 @@ body.cosmochat-body {
 
 /* Стили для контейнера иконки в модальном окне */
 .chat-icon-container {
-  width: 43px;
-  height: 43px;
-  border-radius: 50%;
-  border: 1px solid #004e9f;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    width: 43px;
+    height: 43px;
+    border-radius: 50%;
+    border: 1px solid #004e9f;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   flex-shrink: 0;
   box-sizing: border-box;
   padding: 9px;
@@ -1565,28 +1565,28 @@ body.cosmochat-body {
 
 /* Стили для SVG-иконки */
 .chat-details-icon {
-  width: 24px;
-  height: 24px;
+    width: 24px;
+    height: 24px;
 }
 
 /* Стили для иконок в списке чатов (по умолчанию, если нет аватара) */
 .chat-item-new .chat-avatar-img[src="/static/accounts/images/cosmochat/group_avatar.svg"],
 .chat-item-new .chat-avatar-img:not([src]) {
-  background-color: #ffffff; /* Белый фон для иконок по умолчанию */
-  border-radius: 22px; /* Соответствует радиусу .chat-avatar-img */
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    background-color: #ffffff; /* Белый фон для иконок по умолчанию */
+    border-radius: 22px; /* Соответствует радиусу .chat-avatar-img */
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .chat-item-new .chat-avatar-img[src="/static/accounts/images/cosmochat/group_avatar.svg"] svg,
 .chat-item-new .chat-avatar-img:not([src]) svg {
-  width: 100%;
-  height: 100%;
+    width: 100%;
+    height: 100%;
 }
 .chat-item-new .chat-avatar-img[src="/static/accounts/images/cosmochat/group_avatar.svg"] path,
 .chat-item-new .chat-avatar-img:not([src]) path {
-  stroke: #004e9f; /* Синий цвет обводки */
-  fill: none; /* Убираем заливку */
+    stroke: #004e9f; /* Синий цвет обводки */
+    fill: none; /* Убираем заливку */
 }
 
 .selected-chat-info .chat-name-display-input {

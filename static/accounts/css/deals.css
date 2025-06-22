@@ -191,6 +191,8 @@ body {
   flex-direction: column;
   justify-content: space-between;
   overflow: hidden;
+  position: relative !important;
+  transform: none !important;
 }
 
 .no-chat-selected {
