@@ -269,16 +269,6 @@ body {
   cursor: pointer;
 }
 
-.messages-container {
-  overflow-y: auto;
-  flex-grow: 1;
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  position: static !important;
-}
-
 .message-bubble {
   padding: 11px 14px 11px 39px;
   max-width: 452px; /* Ширина из макета */
