@@ -168,7 +168,8 @@
     }
 
     .planetary-system #galaxy {
-      position: absolute;
+      position: relative;
+      z-index: 9998; /* УБРАТЬ ЕСЛИ ВСЕ СЛОМАЕТСЯ */
       top: 0;
       left: 0;
       transform: rotateX(45deg);
@@ -240,15 +241,17 @@
 
     .planetary-system .planet-logo-overlay {
       position: absolute;
-      top: -15px; /* Смещение вверх за границы */
-      right: -15px; /* Смещение вправо за границы */
-      width: 40px; /* Размер логотипа */
-      height: 40px; /* Размер логотипа */
-      z-index: 15; /* Выше, чем z-index: 5 у .planet */
-      transform: translate(50%, -50%); /* Корректировка позиции для центрирования */
-      border: none !important; /* Убираем рамку */
-      background-color: transparent !important; /* Убеждаемся, что фона нет */
-      object-fit: cover; /* Корректное отображение изображения */
+      top: -15px;
+      right: -15px;
+      width: 40px;
+      height: 40px;
+      z-index: 15;
+      transform: translate(50%, -50%);
+      border-radius: 50% !important; /* Делаем круглой */
+      border: none !important;
+      background-color: transparent !important;
+      object-fit: cover; /* Обрезаем изображение по форме круга */
+      overflow: hidden; /* Убеждаемся, что лишнее скрыто */
     }
 
     .planetary-system .planet:hover {
@@ -529,34 +532,34 @@
             <button class="portfolio-image-fullscreen-btn" aria-label="Развернуть на полный экран">
               <i class="fas fa-expand"></i>
             </button>
-            <div class="planetary-system" id="solar-system">
-              <div class="space-background"></div>
-              <div class="stars"></div>
-              <div id="scene">
+        <div class="planetary-system" id="solar-system">
+                <div class="space-background"></div>
+                <div class="stars"></div>
+                <div id="scene">
                   <div id="galaxy">
-                      <div id="logo"></div>
-                      {% for startup in planetary_startups %}
-                          <div class="orbit" style="--orbit-size: {{ startup.orbit_size }}px; --orbit-time: {{ startup.orbit_time }}s;">
-                              <div class="planet-orientation">
-                                  <div class="planet" style="--planet-size: {{ startup.planet_size }}px;" data-id="{{ startup.startup_id }}">
-                                      {% if startup.planet_image %}
-                                        <img src="https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/{{ startup.planet_image }}" alt="{{ startup.name|escape }}" class="planet-img">
-                                      {% else %}
-                                        <img src="{% static 'accounts/images/planet_logo_carusel.webp' %}" alt="Планета по умолчанию" class="planet-img">
-                                      {% endif %}
-                                      {% if startup.logo_urls %}
-                                        {% with logo_file_id=startup.logo_urls.0 %}
-                                            <img src="{% get_file_url_tag logo_file_id startup.startup_id 'logo' %}" alt="Лого" class="planet-logo-overlay">
-                                        {% endwith %}
-                                      {% else %}
-                                        <img src="{% static 'accounts/images/default_icon.svg' %}" alt="Лого" class="planet-logo-overlay">
-                                      {% endif %}
-                                  </div>
-                              </div>
+                    <div id="logo"></div>
+                    {% for startup in planetary_startups %}
+                      <div class="orbit" style="--orbit-size: {{ startup.orbit_size }}px; --orbit-time: {{ startup.orbit_time }}s;">
+                        <div class="planet-orientation">
+                          <div class="planet" style="--planet-size: {{ startup.planet_size }}px;" data-id="{{ startup.startup_id }}">
+                            {% if startup.planet_image %}
+                              <img src="https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/{{ startup.planet_image }}" alt="{{ startup.name|escape }}" class="planet-img">
+                            {% else %}
+                              <img src="{% static 'accounts/images/planet_logo_carusel.webp' %}" alt="Планета по умолчанию" class="planet-img">
+                            {% endif %}
+                            {% if startup.logo_urls and startup.logo_urls|length > 0 %}
+                              {% with logo_file_id=startup.logo_urls.0 %}
+                                <img src="{% get_file_url_tag logo_file_id startup.startup_id 'logo' %}" alt="Лого" class="planet-logo-overlay">
+                              {% endwith %}
+                            {% else %}
+                              <img src="{% static 'accounts/images/default_icon.svg' %}" alt="Лого по умолчанию" class="planet-logo-overlay">
+                            {% endif %}
                           </div>
-                      {% empty %}
-                          <p style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white;">Нет стартапов для отображения</p>
-                      {% endfor %}
+                        </div>
+                      </div>
+                    {% empty %}
+                      <p style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white;">Нет стартапов для отображения</p>
+                    {% endfor %}
                   </div>
               </div>
               <div id="info-card">
