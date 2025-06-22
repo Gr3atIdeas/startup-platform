@@ -166,22 +166,22 @@ body {
 }
 
 .chat-window-column {
-  flex-grow: 1;
+  flex: 1; /* Используем flex: 1 для правильного растягивания */
   display: flex;
   flex-direction: column;
-  min-height: 0; /* Позволяет flex-колонке сжиматься */
+  min-width: 0; /* Предотвращает переполнение flex-элементов */
 }
 
 .chat-messages-area {
-  flex-grow: 1;
+  flex: 1; /* Занимает все доступное пространство по высоте */
   display: flex;
   flex-direction: column;
-  min-height: 0; /* Позволяет этому блоку тоже сжиматься */
+  min-height: 0; /* Обязательно для вложенных flex-элементов с overflow */
   border-radius: 32px;
   outline: 1px #818ce5 solid;
   outline-offset: -1px;
-  overflow: hidden; /* Обрезает все, что выходит за рамки, включая углы */
   background: white;
+  overflow: hidden;
 }
 
 .chat-actions-top {
@@ -250,9 +250,8 @@ body {
 }
 
 .messages-container {
-  position: static !important; /* Возвращаем элемент в нормальный поток, отменяя ошибочный fixed/sticky */
-  flex-grow: 1; /* Занимает все оставшееся место */
-  overflow-y: auto; /* Включает вертикальную прокрутку ТОЛЬКО для этого блока */
+  flex-grow: 1; /* Растягивается внутри chat-messages-area */
+  overflow-y: auto; /* Только этот блок будет скроллиться */
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -397,13 +396,13 @@ body {
 }
 
 .chat-input-area {
+  flex-shrink: 0; /* Запрещаем инпуту сжиматься */
   display: flex;
   align-items: center;
   padding: 10px 20px;
   background-color: #fff;
   border-top: 1px solid #e0e0e0;
   box-sizing: border-box;
-  flex-shrink: 0; /* Запрещает этому блоку сжиматься */
 }
 
 .attach-button,
