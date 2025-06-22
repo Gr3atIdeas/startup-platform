@@ -1599,13 +1599,14 @@
         // Планетарная система
         (function() {
             const startups_data = JSON.parse(document.getElementById('planetary-startups-data').textContent || '[]');
+            console.log('Raw startups_data:', startups_data); // Добавляем отладку
             const startups = {};
             if (Array.isArray(startups_data)) {
                 startups_data.forEach(s => {
-                    startups[s.startup_id] = s;
+                    startups[s.startup_id.toString()] = s; // Приводим startup_id к строке явно
                 });
             }
-            console.log('Startups object:', startups); // Добавлено для отладки
+            console.log('Startups object:', startups); // Отладка структуры
 
             const planets = document.querySelectorAll('.planetary-system .planet');
             const planetOrientations = document.querySelectorAll('.planetary-system .planet-orientation');
@@ -1675,10 +1676,11 @@
                 planet.addEventListener('click', (e) => {
                     e.stopPropagation();
                     const id = planet.getAttribute('data-id');
+                    console.log('Clicked ID:', id); // Добавляем отладку
                     const startupData = startups[id];
                     if (!startupData) {
-                        console.error('Не найдены данные для стартапа с ID:', id); // Добавлено для отладки
-                        return; // Прерываем выполнение, если данные не найдены
+                        console.error('Не найдены данные для стартапа с ID:', id); // Уточняем ошибку
+                        return;
                     }
 
                     planetImage.style.backgroundImage = `url('${startupData.image}')`;
