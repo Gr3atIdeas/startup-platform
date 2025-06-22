@@ -1483,8 +1483,9 @@ body.cosmochat-body {
 
 /* Стили для второго вида модального окна (будут дополняться) */
 .group-chat-modal-view-details .modal-header-nav {
+  position: relative;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   width: 100%;
   padding-bottom: 20px; /* Отступ снизу */
@@ -1492,8 +1493,25 @@ body.cosmochat-body {
   margin-bottom: 20px;
 }
 
+#groupChatGoBackBtn {
+  position: absolute;
+  left: 0;
+}
+
+.nav-action-create {
+  position: absolute;
+  top: 28px;
+  right: 20px;
+  z-index: 5;
+  color: #004E9F;
+  font-size: 16px;
+  font-family: Unbounded, sans-serif;
+  font-weight: 400;
+  cursor: pointer;
+}
+
 .modal-header-nav .nav-action {
-  color: #004e9f;
+  color: #004E9F;
   font-size: 16px;
   font-family: Unbounded, sans-serif;
   font-weight: 400;
@@ -1517,10 +1535,7 @@ body.cosmochat-body {
   font-size: 16px;
   font-family: Unbounded, sans-serif;
   font-weight: 400;
-  flex-grow: 1; /* Чтобы заголовок занимал доступное место и кнопка "Создать" ушла вправо */
-  text-align: center; /* Центрируем текст заголовка */
-  margin-left: 10px; /* Небольшой отступ от кнопки "Назад" */
-  margin-right: 10px; /* Небольшой отступ до кнопки "Создать" */
+  text-align: center;
 }
 
 .selected-chat-info {
@@ -1668,17 +1683,17 @@ body.cosmochat-body {
 
 .participants-actions-list .participant-name {
   color: black;
-  font-size: 18px; /* Уменьшено с 20px */
+  font-size: 18px;
   font-weight: 400;
 }
 
 /* Стили для второго вида модального окна (будут дополняться) */
 .group-chat-modal-details-view {
-  /* Добавляем стили для этого блока */
-  width: 474px; /* Такая же ширина как у content-wrapper первого вида */
-  max-height: 580px; /* Такая же максимальная высота */
+  position: relative;
+  width: 474px;
+  max-height: 580px;
   overflow-y: auto;
-  overflow-x: hidden !important; /* Убираем горизонтальный скролл с !important */
+  overflow-x: hidden !important;
   display: flex;
   flex-direction: column;
   gap: 15px;
