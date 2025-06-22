@@ -184,7 +184,7 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%) rotateX(-45deg);
-      z-index: 10;
+      z-index: 9999 !important;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -227,7 +227,7 @@
       transform-style: preserve-3d;
       z-index: 5;
       transition: all 0.3s ease;
-      overflow: hidden;
+      overflow: visible !important; /* Убираем обрезку, чтобы логотипы были видны */
       border: none; /* Убираем рамку */
     }
 
@@ -240,14 +240,15 @@
 
     .planetary-system .planet-logo-overlay {
       position: absolute;
-      top: -10px;      /* Смещаем выше */
-      right: -10px;     /* Смещаем правее */
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      border: none; /* Убираем рамку */
-      background-color: transparent; /* Убираем фон */
-      z-index: 10; /* Логотип поверх планеты */
+      top: -15px; /* Смещение вверх за границы */
+      right: -15px; /* Смещение вправо за границы */
+      width: 40px; /* Размер логотипа */
+      height: 40px; /* Размер логотипа */
+      z-index: 15; /* Выше, чем z-index: 5 у .planet */
+      transform: translate(50%, -50%); /* Корректировка позиции для центрирования */
+      border: none !important; /* Убираем рамку */
+      background-color: transparent !important; /* Убеждаемся, что фона нет */
+      object-fit: cover; /* Корректное отображение изображения */
     }
 
     .planetary-system .planet:hover {
