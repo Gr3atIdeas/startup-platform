@@ -537,7 +537,9 @@
                 <div class="stars"></div>
                 <div id="scene">
                   <div id="galaxy">
-                    <div id="logo"></div>
+                    <div id="logo">
+                        <img src="{% if user.get_profile_picture_url %}{{ user.get_profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}" alt="Аватар" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                    </div>
                     {% for startup in planetary_startups %}
                       <div class="orbit" style="--orbit-size: {{ startup.orbit_size }}px; --orbit-time: {{ startup.orbit_time }}s;">
                         <div class="planet-orientation">
@@ -1628,10 +1630,6 @@
             const fpsElement = document.querySelector('.planetary-system #fps');
             const logoElement = document.querySelector('.planetary-system #logo');
 
-            logoElement.style.backgroundImage = `url('{% static "accounts/images/layout/image12.png" %}')`;
-            if (!logoElement.style.backgroundImage || logoElement.style.backgroundImage === 'none') {
-              logoElement.style.backgroundImage = `url('{% static "accounts/images/logo.png" %}')`; // Запасной вариант
-            }
             const galaxyTiltAngle = 45;
             const planetObjects = [];
             let lastTime = 0;

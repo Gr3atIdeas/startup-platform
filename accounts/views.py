@@ -3439,7 +3439,7 @@ def my_startups(request):
         "max_investment": max_raised,
         "min_investment": min_raised,
         "investment_categories": investment_categories[:7],  # Ограничиваем до 7 для отображения
-        "invested_category_data": json.dumps(invested_category_data_dict),
+        "invested_category_data": invested_category_data_dict,
         "all_directions": all_directions_list,
         # Данные для графика (передаем как есть, json_script обработает)
         "month_labels": month_labels,
@@ -3447,12 +3447,11 @@ def my_startups(request):
         "chart_categories": sorted_categories,
         # Данные для заявок
         "startup_applications": user_startups_qs.order_by("-updated_at"),
-        "invested_category_data": json.dumps(invested_category_data_dict),
-        "planetary_startups": planetary_startups,
-        "planetary_startups_json": json.dumps(
-            planetary_startups, cls=DjangoJSONEncoder
-        ),
     }
+
+    # Добавляем JSON-сериализованные данные отдельно, чтобы не загромождать основной контекст
+    context["planetary_startups_json"] = json.dumps(planetary_startups, cls=DjangoJSONEncoder)
+
 
     return render(request, "accounts/my_startups.html", context)
 
