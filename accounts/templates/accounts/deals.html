@@ -5,186 +5,185 @@
 
 {% block head_extra %}
     <link rel="stylesheet" href="{% static 'accounts/css/deals.css' %}">
-    <script src="{% static 'accounts/js/deals.js' %}" type="text/javascript"></script>
-    <style>
-        .deal-status-filters .filter-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-        }
-        .deal-status-filters .filter-icon {
-            width: 30px; /* Установи желаемый размер */
-            height: 30px; /* Установи желаемый размер */
-            object-fit: contain; /* Сохраняет пропорции иконки */
-        }
-        .chat-window-column p {
-            text-align: center;
-        }
-    </style>
 {% endblock %}
 
 {% block content %}
-    <div class="deals-page-container">
-        <div class="deals-main-wrapper">
-            <div class="chat-list-column">
-                <div class="search-bar">
-                    <img src="{% static 'accounts/images/search.svg' %}" alt="Search" class="search-icon">
-                    <input type="text" placeholder="Поиск">
-                </div>
-                <div class="deal-status-filters">
-                    <a href="{% url 'deals_view' %}?status=pending" class="filter-btn {% if current_status == 'pending' or current_status == 'approved' %}active{% endif %}">
-                        Активные
-                    </a>
-                    <a href="{% url 'deals_view' %}?status=rejected" class="filter-btn {% if current_status == 'rejected' %}active{% endif %}">
-                        Завершенные
-                    </a>
-                </div>
-                <div class="chat-list">
-                    {% if deals|length == 0 %}
-                        <p>Нет сделок с статусом {{ current_status }}.</p>
-                    {% endif %}
-                    {% for deal in deals %}
-                        <div class="chat-item {% if selected_chat and selected_chat.conversation_id == deal.conversation_id %}active{% endif %}" data-chat-id="{{ deal.conversation_id }}" onclick="loadChat({{ deal.conversation_id }})">
-                            <img src="{{ deal.avatar_url|default:'/static/accounts/images/avatars/default_avatar_ufo.png' }}" alt="{{ deal.name }}" class="chat-item-avatar">
-                            <div class="chat-item-info">
-                                <h4 class="chat-item-name">{{ deal.name }}</h4>
-                                <p class="chat-item-status">{{ deal.last_message_text|default:'Нет сообщений'|truncatechars:25 }}</p>
-                            </div>
-                            <div class="chat-item-meta">
-                                <span class="chat-item-time">{{ deal.last_message_time|date:"H:i" }}</span>
-                                {% if deal.unread_count > 0 %}
-                                    <span class="chat-item-badge">{{ deal.unread_count }}</span>
-                                {% endif %}
-                                <span class="date-chat-preview">{{ deal.last_message_time|date:"d/m/Y" }}</span>
-                            </div>
-                        </div>
-                    {% empty %}
-                        <p>Сделок не найдено.</p>
-                    {% endfor %}
-                </div>
+<div class="deals-page-container">
+    <div class="deals-main-wrapper">
+        
+        <!-- Левая колонка со списком чатов -->
+        <div class="chat-list-column">
+            <div class="search-bar">
+                <img src="{% static 'accounts/images/search.svg' %}" alt="Поиск" class="search-icon">
+                <input type="text" placeholder="Поиск">
             </div>
-            <div class="chat-window-column">
-                {% if selected_chat %}
-                    <div class="chat-messages-area">
-                        <div class="chat-actions-top">
+            <div class="deal-status-filters">
+                <a href="{% url 'deals_view' %}?status=pending" class="filter-btn {% if current_status == 'pending' or current_status == 'approved' %}active{% endif %}">
+                    Активные
+                </a>
+                <a href="{% url 'deals_view' %}?status=rejected" class="filter-btn {% if current_status == 'rejected' %}active{% endif %}">
+                    Завершенные
+                </a>
+            </div>
+            <div class="chat-list">
+                {% for deal in deals %}
+                    <div class="chat-item {% if selected_chat and selected_chat.conversation_id == deal.conversation_id %}active{% endif %}" onclick="location.href='{% url 'deals_view' %}?chat_id={{ deal.conversation_id }}&status={{ current_status }}'">
+                        <img src="{{ deal.avatar_url|default:'/static/accounts/images/avatars/default_avatar_ufo.png' }}" alt="{{ deal.name }}" class="chat-item-avatar">
+                        <div class="chat-item-info">
+                            <h4 class="chat-item-name">{{ deal.name }}</h4>
+                            <p class="chat-item-status">{{ deal.last_message_text|default:'Нет сообщений'|truncatechars:25 }}</p>
+                        </div>
+                        <div class="chat-item-meta">
+                            <span class="chat-item-time">{{ deal.last_message_time|date:"H:i" }}</span>
+                            {% if deal.unread_count > 0 %}
+                                <span class="chat-item-badge">{{ deal.unread_count }}</span>
+                            {% endif %}
+                            <span class="date-chat-preview">{{ deal.last_message_time|date:"d/m/Y" }}</span>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p class="no-deals-message">Сделок не найдено.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Правая колонка с окном чата -->
+        <div class="deal-chat-window">
+            {% if selected_chat %}
+                <div class="chat-messages-area">
+                    <div class="chat-header">
+                         <div class="chat-actions-top">
                             <button class="btn btn-approve" data-chat-id="{{ selected_chat.conversation_id }}" id="approveDealBtn">Одобрить</button>
                             <button class="btn btn-reject" data-chat-id="{{ selected_chat.conversation_id }}" id="rejectDealBtn">Отклонить</button>
                         </div>
-                        <div class="messages-container">
-                            {% for message in chat_messages %}
-                                <div class="message-bubble {% if message.is_own %}sent{% else %}received{% endif %}">
-                                    <div class="message-content">{{ message.message_text }}</div>
-                                    <span class="message-time">{{ message.created_at }}</span>
-                                    <span class="message-sender">{{ message.sender_name }}</span>
-                                </div>
-                            {% empty %}
-                                <p>Нет сообщений в этой сделке.</p>
-                            {% endfor %}
-                        </div>
+                        <img src="{% static 'accounts/images/icons/three_dots.svg' %}" alt="Действия" class="chat-actions-icon">
                     </div>
-                    <form id="messageForm" class="chat-input-area" method="post" action="{% url 'send_message' %}">
-                        {% csrf_token %}
-                        <input type="hidden" name="chat_id" value="{{ selected_chat.conversation_id }}">
-                        <button type="button" class="attach-button">
-                            <img src="{% static 'accounts/images/cosmochat/attach.svg' %}" alt="Attach">
-                        </button>
-                        <textarea name="message_text" class="message-input" placeholder="Сообщение" required></textarea>
-                        <button type="submit" class="send-button">
-                            <img src="{% static 'accounts/images/cosmochat/send.svg' %}" alt="Send">
-                        </button>
-                    </form>
-                {% else %}
-                    <p>Выберите сделку для просмотра деталей и отправки сообщений.</p>
-                {% endif %}
-            </div>
+                    
+                    <div class="messages-container" id="messagesContainer">
+                        {% for message in chat_messages %}
+                            <div class="message-bubble {% if message.is_own %}sent{% else %}received{% endif %}">
+                                <div class="message-content">{{ message.message_text }}</div>
+                                <div class="message-meta">
+                                    <span class="message-time">{{ message.created_at|date:"H:i" }}</span>
+                                </div>
+                            </div>
+                        {% empty %}
+                            <p class="no-messages">Нет сообщений в этой сделке.</p>
+                        {% endfor %}
+                    </div>
+                     <div class="top-gradient-overlay"></div>
+                </div>
+
+                <form id="messageForm" class="chat-input-area" method="post" action="{% url 'send_message' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="chat_id" value="{{ selected_chat.conversation_id }}">
+                    <button type="button" class="attach-button">
+                        <img src="{% static 'accounts/images/cosmochat/attach.svg' %}" alt="Прикрепить">
+                    </button>
+                    <textarea name="message_text" class="message-input" placeholder="Сообщение" required></textarea>
+                    <button type="submit" class="send-button">
+                        <img src="{% static 'accounts/images/cosmochat/send.svg' %}" alt="Отправить">
+                    </button>
+                </form>
+            {% else %}
+                <div class="no-chat-selected">
+                    <p>Выберите сделку для просмотра деталей.</p>
+                </div>
+            {% endif %}
         </div>
     </div>
+</div>
 
-    <script>
-        function loadChat(chatId) {
-            window.location.href = `?chat_id=${chatId}&status=${encodeURIComponent('{{ current_status }}')}`;
-        }
+{% if selected_chat %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Scroll to bottom
+    const messagesContainer = document.getElementById('messagesContainer');
+    if (messagesContainer) {
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const messageForm = document.getElementById('messageForm');
-            if (messageForm) {
-                messageForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    const formData = new FormData(this);
-                    fetch(this.action, {
-                        method: 'POST',
-                        body: formData,
-                        headers: {
-                            'X-Requested-With': 'XMLHttpRequest',
-                        }
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            const messageDiv = document.createElement('div');
-                            messageDiv.className = 'message-bubble sent';
-                            messageDiv.innerHTML = `<div class="message-content">${data.message.message_text}</div><span class="message-time">${data.message.created_at}</span><span class="message-sender">${data.message.sender_name}</span>`;
-                            document.querySelector('.messages-container').appendChild(messageDiv);
-                            this.reset();
-                            const messagesContainer = document.querySelector('.messages-container');
-                            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                        } else {
-                            alert(data.error || 'Ошибка отправки сообщения');
-                        }
-                    })
-                    .catch(error => console.error('Ошибка:', error));
-                });
-            }
-
-            const approveBtn = document.getElementById('approveDealBtn');
-            const rejectBtn = document.getElementById('rejectDealBtn');
-            if (approveBtn) {
-                approveBtn.addEventListener('click', function() {
-                    const chatId = this.getAttribute('data-chat-id');
-                    fetch(`/deals/approve/${chatId}/`, {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRFToken': '{{ csrf_token }}',
-                            'X-Requested-With': 'XMLHttpRequest',
-                            'Content-Type': 'application/json'
-                        }
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            alert(data.message);
-                            location.reload();
-                        } else {
-                            alert(data.error || 'Ошибка при одобрении сделки');
-                        }
-                    })
-                    .catch(error => console.error('Ошибка:', error));
-                });
-            }
-
-            if (rejectBtn) {
-                rejectBtn.addEventListener('click', function() {
-                    const chatId = this.getAttribute('data-chat-id');
-                    fetch(`/deals/reject/${chatId}/`, {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRFToken': '{{ csrf_token }}',
-                            'X-Requested-With': 'XMLHttpRequest',
-                            'Content-Type': 'application/json'
-                        }
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            alert(data.message);
-                            location.reload();
-                        } else {
-                            alert(data.error || 'Ошибка при отклонении сделки');
-                        }
-                    })
-                    .catch(error => console.error('Ошибка:', error));
-                });
-            }
+    // Handle message sending
+    const messageForm = document.getElementById('messageForm');
+    if (messageForm) {
+        messageForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            fetch("{% url 'send_message' %}", {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'X-Requested-With': 'XMLHttpRequest',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = 'message-bubble sent';
+                    messageDiv.innerHTML = `<div class="message-content">${data.message.message_text}</div><div class="message-meta"><span class="message-time">${data.message.created_at}</span></div>`;
+                    messagesContainer.appendChild(messageDiv);
+                    this.reset();
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                } else {
+                    alert(data.error || 'Ошибка отправки сообщения');
+                }
+            })
+            .catch(error => console.error('Ошибка:', error));
         });
-    </script>
+    }
+
+    // Handle deal approval
+    const approveBtn = document.getElementById('approveDealBtn');
+    if (approveBtn) {
+        approveBtn.addEventListener('click', function() {
+            const chatId = this.getAttribute('data-chat-id');
+            fetch(`/deals/approve/${chatId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'X-Requested-With': 'XMLHttpRequest',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message);
+                    location.reload();
+                } else {
+                    alert(data.error || 'Ошибка при одобрении сделки');
+                }
+            })
+            .catch(error => console.error('Ошибка:', error));
+        });
+    }
+
+    // Handle deal rejection
+    const rejectBtn = document.getElementById('rejectDealBtn');
+    if (rejectBtn) {
+        rejectBtn.addEventListener('click', function() {
+            const chatId = this.getAttribute('data-chat-id');
+            fetch(`/deals/reject/${chatId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'X-Requested-With': 'XMLHttpRequest',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message);
+                    location.reload();
+                } else {
+                    alert(data.error || 'Ошибка при отклонении сделки');
+                }
+            })
+            .catch(error => console.error('Ошибка:', error));
+        });
+    }
+});
+</script>
+{% endif %}
 {% endblock %}

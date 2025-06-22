@@ -1,43 +1,38 @@
 /* static/accounts/css/deals.css */
 body {
-  background-color: #0e163d; /* Темно-синий фон, как на других страницах */
-  color: #333; /* Основной цвет текста для контраста на белом */
+  font-family: 'Unbounded', sans-serif;
+  background-color: #f0f2f5; /* Легкий фон для страницы */
 }
 
 .deals-page-container {
+  width: 100%;
+  padding: 45px 20px;
   display: flex;
   justify-content: center;
-  align-items: flex-start; /* Чтобы контейнер не растягивался на всю высоту экрана */
-  padding: 40px 20px;
-  min-height: calc(
-    100vh - 120px
-  ); /* Примерная высота (viewport - header ~80px - footer ~40px), настройте */
+  align-items: flex-start; /* Выравниваем по верху */
   box-sizing: border-box;
 }
 
 .deals-main-wrapper {
-  width: 100%;
-  max-width: 1280px;
-  display: flex;
-  background: white;
-  box-shadow: 6px 6px 15px rgb(0 0 0 / 25%);
-  border-radius: 32px;
-  gap: 61px;
-  font-family: Unbounded, sans-serif;
-  height: 750px;
-  overflow: hidden;
+  width: 1303px;
+  max-width: 100%;
+  height: 797px;
   padding: 23px 38px;
+  background: white;
+  box-shadow: 6px 6px 15px rgba(0, 0, 0, 0.25);
+  border-radius: 32px;
+  display: flex;
+  gap: 61px;
+  box-sizing: border-box;
 }
 
+/* Левая колонка */
 .chat-list-column {
   width: 351px;
   display: flex;
   flex-direction: column;
   gap: 36px;
-  overflow-y: auto;
   flex-shrink: 0;
-  padding: 0;
-  border-right: none;
 }
 
 .search-bar {
@@ -45,9 +40,9 @@ body {
   align-items: center;
   gap: 8px;
   padding: 8px 30px;
+  background: rgba(255, 255, 255, 0.19);
   border-radius: 99px;
-  outline: 1px #004e9f solid;
-  outline-offset: -1px;
+  border: 1px solid #004E9F;
 }
 
 .search-bar .search-icon {
@@ -57,37 +52,66 @@ body {
 }
 
 .search-bar input {
-  border: none;
   background: transparent;
+  border: none;
   outline: none;
-  color: #a1a0a0;
+  color: #A1A0A0;
   font-size: 12px;
-  font-family: Unbounded;
+  font-family: 'Unbounded', sans-serif;
   font-weight: 300;
   letter-spacing: 0.12px;
   width: 100%;
+}
+
+.deal-status-filters {
+  display: flex;
+  gap: 14px;
+}
+
+.deal-status-filters .filter-btn {
+  padding: 11px 25px;
+  border-radius: 99px;
+  font-size: 12px;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 300;
+  line-height: 20px; /* Адаптируем высоту строки */
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.deal-status-filters .filter-btn.active {
+  background: #004E9F;
+  color: white;
+}
+
+.deal-status-filters .filter-btn:not(.active) {
+  color: black;
+  border: 1px solid #004E9F;
+  background: transparent;
 }
 
 .chat-list {
   display: flex;
   flex-direction: column;
   gap: 14px;
+  overflow-y: auto;
+  height: calc(797px - 23px*2 - 50px - 36px - 42px - 36px); /* Расчет высоты */
 }
 
 .chat-item {
   display: flex;
   align-items: center;
   gap: 26px;
-  padding: 12px 10px;
+  padding: 5px;
   border-radius: 10px;
   cursor: pointer;
-  transition: background-color 0.2s ease;
-  height: 77px;
+  transition: background-color 0.2s;
 }
 
-.chat-item:hover,
-.chat-item.active {
-  background-color: #eef2f7; /* Обновленный цвет фона */
+.chat-item:hover, .chat-item.active {
+  background-color: #f0f5ff;
 }
 
 .chat-item-avatar {
@@ -99,433 +123,268 @@ body {
 }
 
 .chat-item-info {
-  width: 108px;
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
   gap: 7px;
-  min-width: 0;
+  overflow: hidden;
 }
 
 .chat-item-name {
-  color: black;
   font-size: 16px;
   font-weight: 400;
-  line-height: 16px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  line-height: 1;
+  color: black;
+  margin: 0;
 }
 
 .chat-item-status {
-  color: #797979;
   font-size: 12px;
   font-weight: 300;
+  color: #797979;
   letter-spacing: 0.12px;
+  margin: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .chat-item-meta {
-  width: 84px;
-  height: 77px;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   gap: 10px;
-  font-weight: 300;
-  letter-spacing: 0.12px;
-  text-align: right;
-  flex-shrink: 0;
-  justify-content: flex-start;
+  font-size: 12px;
+  color: black;
 }
 
-.chat-item-meta .chat-item-time {
-  color: black;
-  font-size: 12px;
+.chat-item-time, .date-chat-preview {
+  font-weight: 300;
+  letter-spacing: 0.12px;
 }
 
 .date-chat-preview {
-    color: #A9A9A9;
-    font-size: 12px;
+  color: #A9A9A9;
 }
 
 .chat-item-badge {
-  width: 22px;
-  height: 22px;
-  background: #004e9f;
-  border-radius: 28.5px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  padding: 2px 7px;
+  background: #004E9F;
+  border-radius: 50%;
   color: white;
   font-size: 14px;
   font-weight: 300;
   line-height: 18px;
-  padding: 5px;
+  text-align: center;
 }
 
-.chat-window-column {
-  flex: 1;
+.no-deals-message {
+  color: #797979;
+  padding: 20px;
+  text-align: center;
+}
+
+/* Правая колонка */
+.deal-chat-window {
+  width: 833px;
   display: flex;
   flex-direction: column;
-  min-width: 0;
-  box-sizing: border-box; /* Гарантируем правильный расчет размеров */
+  justify-content: space-between;
+  overflow: hidden;
+}
+
+.no-chat-selected {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  color: #A9A9A9;
+  font-size: 18px;
 }
 
 .chat-messages-area {
-  flex: 1;
   display: flex;
   flex-direction: column;
-  min-height: 0;
+  height: calc(100% - 60px); /* Высота минус инпут */
+  padding: 28px 19px;
+  border: 1px solid #818CE5;
   border-radius: 32px;
-  outline: 1px #818ce5 solid;
-  outline-offset: -1px;
-  background: white;
-  overflow: hidden;
-  width: 100%; /* Принудительно задаем ширину */
-  box-sizing: border-box; /* Гарантируем правильный расчет размеров */
+  position: relative;
+  box-sizing: border-box;
+}
+
+.top-gradient-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 104px;
+  background: linear-gradient(180deg, white 0%, rgba(255, 255, 255, 0.01) 100%);
+  border-radius: 32px;
+  pointer-events: none; /* Чтобы не мешал кликам */
+}
+
+.chat-header {
+  display: flex;
+  justify-content: flex-end; /* Кнопки справа */
+  align-items: center;
+  margin-bottom: 20px;
+  gap: 20px;
+  padding-right: 10px;
 }
 
 .chat-actions-top {
   display: flex;
-  justify-content: center;
-  gap: 20px;
-  padding: 15px 0;
-  margin-bottom: 20px;
+  gap: 10px;
 }
 
 .chat-actions-top .btn {
-  padding: 12px 35px;
-  border-radius: 10px;
-  font-size: 16px;
-  font-family: Unbounded, sans-serif;
-  font-weight: 400 !important;
-  line-height: 16px;
-  word-wrap: break-word;
-  cursor: pointer;
-  transition:
-    background-color 0.2s ease,
-    box-shadow 0.2s ease,
-    outline 0.2s ease;
+  padding: 8px 16px;
+  border-radius: 8px;
   border: none;
-  box-shadow: 2px 2px 4px rgb(0 0 0 / 25%);
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-  overflow: hidden;
-  color: black !important;
-  background: none;
+  cursor: pointer;
+  font-family: 'Unbounded', sans-serif;
+  font-size: 14px;
 }
 
-.chat-actions-top .btn-approve {
-  background: linear-gradient(
-    180deg,
-    #ffef2b 0%,
-    #f9f7d6 100%
-  ) !important;
-  color: black !important;
-  outline: none !important;
-  border: none !important;
+.btn-approve {
+  background-color: #28a745;
+  color: white;
 }
 
-.chat-actions-top .btn-approve:hover {
-  box-shadow: 2px 2px 8px rgb(0 0 0 / 35%);
-  background: linear-gradient(
-    180deg,
-    #fde800 0%,
-    #f7f5c0 100%
-  ) !important;
+.btn-reject {
+  background-color: #dc3545;
+  color: white;
 }
 
-.chat-actions-top .btn-reject {
-  background: transparent !important;
-  color: black !important;
-  outline: 1px solid black !important;
-  outline-offset: -1px;
-  border: none !important;
-}
-
-.chat-actions-top .btn-reject:hover {
-  background: rgb(0 0 0 / 5%) !important;
-  outline-color: #333 !important;
+.chat-actions-icon {
+  width: 29px;
+  height: 29px;
+  cursor: pointer;
 }
 
 .messages-container {
-  flex-grow: 1; /* Растягивается внутри chat-messages-area */
-  overflow-y: auto; /* Только этот блок будет скроллиться */
-  padding: 20px;
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 10px;
   display: flex;
   flex-direction: column;
   gap: 15px;
 }
 
-.message-group {
+.message-bubble {
+  padding: 11px 14px 11px 39px;
+  max-width: 452px; /* Ширина из макета */
+  border-radius: 20px;
+  font-size: 12px;
+  font-family: 'Unbounded';
+  font-weight: 300;
+  letter-spacing: 0.12px;
+  line-height: 1.5;
+  word-wrap: break-word;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  z-index: 10;
-  transition: opacity 0.3s;
-}
-
-.message-date-separator {
-  align-self: center;
-  color: #a4a4a4;
-  font-size: 8px;
-  font-weight: 300;
-  letter-spacing: 0.08px;
-  padding: 4px 12px;
-  border-radius: 8px;
-  margin: 8px 0;
-}
-
-.new-messages-separator {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 8px 0;
-}
-
-.new-messages-separator span {
-  color: #004e9f;
-  font-size: 10px;
-  font-weight: 400;
-  letter-spacing: 0.08px;
-  padding: 4px 12px;
-  background-color: #e6f0ff;
-  border-radius: 10px;
-}
-
-.message-bubble {
-  max-width: 70%;
-  padding: 10px 14px;
-  border-radius: 18px;
-  font-size: 12.5px;
-  line-height: 1.45;
-  word-wrap: break-word;
-  position: relative;
-}
-
-.message-bubble.received {
-  background: #004e9f;
-  color: white;
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
-  border-bottom-right-radius: 20px;
-  border-bottom-left-radius: 0;
-  align-self: flex-start;
+  gap: 9px;
 }
 
 .message-bubble.sent {
-    background: #e9e9eb;
-    color: black;
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
-    border-bottom-left-radius: 20px;
-    border-bottom-right-radius: 0;
-    align-self: flex-end;
+  background: #E5E5E5; /* Серый для отправленных */
+  color: black;
+  align-self: flex-end;
+  border-bottom-right-radius: 0;
 }
 
-.message-content {
-  margin-bottom: 2px;
+.message-bubble.received {
+  background: #004E9F;
+  color: white;
+  align-self: flex-start;
+  border-bottom-left-radius: 0;
 }
 
-.message-link {
-  color: #ffef2b;
+.message-content a {
+  color: #FFEF2B;
   text-decoration: underline;
 }
 
-.message-link:hover {
-  text-decoration: none;
-}
-
-.message-time {
-  font-size: 8px;
-  color: rgb(255 255 255 / 75%);
+.message-meta {
   text-align: right;
-  display: block;
-  margin-top: 4px;
-  font-weight: 300;
+  font-size: 8px;
   letter-spacing: 0.08px;
 }
 
-.message-bubble.sent .message-time {
-  color: #888;
-}
-
-.scroll-to-bottom-indicator {
-  position: absolute;
-  bottom: 20px;
-  right: 25px;
-  width: 32px;
-  height: 32px;
-  background: rgb(217 217 217 / 80%);
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  box-shadow: 0 1px 4px rgb(0 0 0 / 15%);
-  transition: background-color 0.2s ease;
-}
-
-.scroll-to-bottom-indicator:hover {
-  background: rgb(200 200 200 / 90%);
-}
-
-.scroll-to-bottom-indicator img {
-  width: 14px;
-  height: 14px;
-}
-
-.new-message-notification {
-  position: absolute;
-  bottom: 45px;
-  right: 15px;
-  width: 18px;
-  height: 18px;
-  background: #004e9f;
-  color: white;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 10px;
-  font-family: 'Helvetica Neue', sans-serif;
-  font-weight: 500;
-  box-shadow: 0 1px 3px rgb(0 0 0 / 25%);
-  border: 1px solid white;
+.no-messages {
+  text-align: center;
+  color: #A9A9A9;
+  align-self: center;
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
 .chat-input-area {
-  flex-shrink: 0;
-  width: 100%; /* Принудительно задаем ширину */
-  box-sizing: border-box; /* Гарантируем правильный расчет размеров */
   display: flex;
   align-items: center;
-  padding: 10px 20px;
-  background-color: #fff;
-  border-top: 1px solid #e0e0e0;
+  gap: 24px;
+  width: 100%;
+  margin-top: 42px;
+  padding: 0 50px; /* примерные отступы */
+  box-sizing: border-box;
 }
 
-.attach-button,
-.send-button {
-  background: none;
+.chat-input-area button {
+  background: transparent;
   border: none;
-  padding: 6px;
   cursor: pointer;
+  padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
-  transition: background-color 0.2s ease;
 }
 
-.attach-button:hover,
-.send-button:hover {
-  background-color: #e0e0e0;
-}
-
-.attach-button img,
-.send-button img {
+.chat-input-area .attach-button img,
+.chat-input-area .send-button img {
   width: 24px;
   height: 24px;
 }
 
-.message-input {
+.chat-input-area .message-input {
   flex-grow: 1;
   height: 45px;
   padding: 15px 18px;
-  background: #f3f3f3;
+  background: #F3F3F3;
   border-radius: 10px;
-  border: 1px solid #dcdcdc;
+  border: none;
+  outline: none;
+  resize: none;
   font-size: 12px;
-  font-family: Unbounded, sans-serif;
+  font-family: 'Unbounded';
   font-weight: 300;
   letter-spacing: 0.12px;
-  color: #333;
-  margin: 0;
+  color: black;
 }
 
 .message-input::placeholder {
-  color: #d8d7d7;
+  color: #D8D7D7;
 }
 
-.message-input:focus {
-  outline: none;
-  border-color: #004e9f;
-  box-shadow: 0 0 0 2px rgb(0 78 159 / 20%);
-}
-
-/* static/accounts/css/deals.css */
-.deal-status-filters {
-    display: flex;
-    gap: 14px;
-    margin-bottom: 0;
-    padding: 0;
-    background: transparent;
-    border-radius: 0;
-}
-
-.filter-btn {
-    padding: 11px 25px;
-    border: none;
-    border-radius: 99px;
-    background: transparent;
-    cursor: pointer;
-    font-family: Unbounded, sans-serif;
-    font-size: 12px;
-    font-weight: 300;
-    color: black;
-    text-decoration: none;
-    line-height: 35px;
-    outline: 1px #004e9f solid;
-    outline-offset: -1px;
-}
-
-.filter-btn.active {
-    background: #004e9f;
-    color: white;
-    outline: none;
-}
-
-.filter-btn:hover {
-    background: #d0d0d0;
-}
-
-.filter-btn.active:hover {
-    background-color: #003a75; /* Darker blue on hover */
-}
-
-/* Custom scrollbar for chat messages */
+/* Стили для скроллбара */
+.chat-list::-webkit-scrollbar,
 .messages-container::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 
+.chat-list::-webkit-scrollbar-track,
 .messages-container::-webkit-scrollbar-track {
-  background: #f3f3f3; /* Light grey track, similar to input field */
+  background: #f1f1f1;
   border-radius: 10px;
 }
 
+.chat-list::-webkit-scrollbar-thumb,
 .messages-container::-webkit-scrollbar-thumb {
-  background-color: #004e9f; /* Blue thumb, matching project theme */
+  background: #888;
   border-radius: 10px;
-  border: 2px solid #f3f3f3; /* Creates padding around thumb */
 }
 
+.chat-list::-webkit-scrollbar-thumb:hover,
 .messages-container::-webkit-scrollbar-thumb:hover {
-  background-color: #003a75; /* Darker blue on hover */
-}
-
-/* 
-  ИСПРАВЛЕНИЕ: 
-  Переопределяем глобальный стиль 'position: sticky', который ошибочно применяется 
-  из другого CSS-файла и заставляет элементы даты "прилипать" к верху контейнера,
-  ломая верстку на странице сделок. 'position: static !important' возвращает 
-  элементы в нормальный поток документа.
-*/
-.deals-main-wrapper .message-date-separator,
-.deals-main-wrapper .new-messages-separator {
-  position: static !important;
+  background: #555;
 }
