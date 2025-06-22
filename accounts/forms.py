@@ -1,9 +1,4 @@
 from django import forms
-import requests
-from django.conf import settings
-from django.core.exceptions import ValidationError
-from django.contrib.auth import get_user_model
-from allauth.account.forms import LoginForm as AllAuthLoginForm
 
 from .models import Comments, Directions, Roles, Startups, StartupStages, Users, ChatConversations, TransactionTypes, UserVotes, SupportTicket
 from .utils import get_planet_urls
@@ -36,43 +31,7 @@ class MultipleFileField(forms.FileField):
         return cleaned_files
 
 
-class YandexCaptchaFormMixin:
-    def __init__(self, *args, **kwargs):
-        self.request = kwargs.pop('request', None)
-        super().__init__(*args, **kwargs)
-
-    def clean(self):
-        cleaned_data = super().clean()
-
-        if not self.request:
-            # Не можем проверить капчу без реквеста
-            return cleaned_data
-
-        token = self.request.POST.get('smart-token')
-        if not token:
-            raise ValidationError('Пожалуйста, подтвердите, что вы не робот.')
-
-        # Проверка токена через API Yandex
-        params = {
-            'secret': settings.YANDEX_SMART_CAPTCHA_SECRET_KEY,
-            'token': token,
-            'ip': self.request.META.get('REMOTE_ADDR'),
-        }
-        try:
-            response = requests.get('https://smartcaptcha.yandexcloud.net/validate', params=params, timeout=5)
-            response.raise_for_status()
-            data = response.json()
-            if data['status'] != 'ok':
-                raise ValidationError('Проверка на робота не пройдена. Попробуйте еще раз.')
-        except (requests.RequestException, ValueError) as e:
-            # В случае ошибки API, не блокируем пользователя, но логируем проблему
-            # print(f"Error validating captcha: {e}") # Для отладки
-            pass # Пропускаем проверку, если сервис Яндекса недоступен
-
-        return cleaned_data
-
-
-class RegisterForm(YandexCaptchaFormMixin, forms.ModelForm):
+class RegisterForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput, label="Пароль")
     confirm_password = forms.CharField(
         widget=forms.PasswordInput, label="Подтвердите пароль"
@@ -102,10 +61,7 @@ class RegisterForm(YandexCaptchaFormMixin, forms.ModelForm):
         return cleaned_data
 
 
-class LoginForm(YandexCaptchaFormMixin, AllAuthLoginForm):
-    """
-    Form for user login.
-    """
+class LoginForm(forms.Form):
     email = forms.EmailField(label="Email")
     password = forms.CharField(widget=forms.PasswordInput, label="Пароль")
 

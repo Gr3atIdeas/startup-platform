@@ -132,14 +132,19 @@ def contacts_page_view(request):
 # Регистрация пользователя
 def register(request):
     if request.method == "POST":
-        form = RegisterForm(request.POST, request=request)
+        form = RegisterForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            auth_login(request, user)
-            messages.success(request, "Вы успешно зарегистрировались!")
-            return redirect("profile_page")
+            user = form.save(commit=False)
+            user.set_password(form.cleaned_data["password"])
+            user.save()
+            messages.success(
+                request, "Регистрация прошла успешно! Теперь вы можете войти."
+            )
+            return redirect("home")
+        else:
+            return render(request, "accounts/register.html", {"form": form})
     else:
-        form = RegisterForm(request=request)
+        form = RegisterForm()
     return render(request, "accounts/register.html", {"form": form})
 
 
@@ -916,7 +921,7 @@ def profile(request, user_id=None):
                 return redirect("profile")
 
         elif 'edit_profile' in request.POST:
-            form = ProfileEditForm(request.POST, request.FILES, instance=user)
+            form = ProfileEditForm(request.POST, instance=user)
             if form.is_valid():
                 form.save()
                 if request.headers.get('x-requested-with') == 'XMLHttpRequest':
@@ -4074,22 +4079,3 @@ def telegram_webhook(request, token):
     except Exception as e:
         logger.error(f"Error processing Telegram webhook: {e}", exc_info=True)
         return HttpResponse(status=500)
-
-
-@login_required
-def edit_profile(request):
-    if request.method == "POST":
-        form = ProfileEditForm(request.POST, request.FILES, instance=request.user)
-        if form.is_valid():
-            form.save()
-            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-                return JsonResponse({'success': True, 'message': 'Профиль успешно обновлен!'})
-            messages.success(request, "Профиль успешно обновлен!")
-            return redirect("profile")
-        else:
-            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-                return JsonResponse({'success': False, 'errors': form.errors})
-            messages.error(request, "Пожалуйста, исправьте ошибки.")
-    
-    form = ProfileEditForm(instance=request.user)
-    return render(request, "accounts/edit_profile.html", {"form": form})

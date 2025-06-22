@@ -54,15 +54,6 @@ SECRET_KEY = os.getenv(
     "django-insecure-0w+_*%hwspl5i9b)%9!i-3$dq5(e7i%e9*lh=v!u$4brh!5ok9",
 )
 
-# Yandex Smart Captcha keys
-YANDEX_SMART_CAPTCHA_SITE_KEY = 'ysc1_a0WVSMonLGAwWvSYesAi0bhJMImVPgzqheqmBRP45d139d7d'
-YANDEX_SMART_CAPTCHA_SECRET_KEY = 'ysc2_a0WVSMonLGAwWvSYesAij0432tm9yG9Rk6LT2ipIb52dae61'
-
-# Tell allauth to use custom forms
-ACCOUNT_FORMS = {
-    'login': 'accounts.forms.LoginForm',
-}
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DJANGO_DEBUG", "False") == "True"
 
@@ -154,7 +145,6 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                'accounts.context_processors.captcha_keys',
             ],
         },
     },
