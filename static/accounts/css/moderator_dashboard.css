@@ -166,12 +166,8 @@ div.moderator-page-container
 }
 
 .startup-card-item {
-  width: 630px; /* Adjusted width */
-
-  /* max-width: 610px; /* Fallback or control, (1240px content - 20px gap) / 2 */
-
-  /* Forcing a slightly smaller max-width to ensure fit, can be adjusted */
-  max-width: 630px; /* Adjusted max-width */
+  width: calc(50% - 10px); /* 50% ширины минус половина gap */
+  max-width: none; /* Убираем фиксированную максимальную ширину */
   padding: 20px;
   background: white;
   box-shadow: 2px 2px 4px rgb(0 0 0 / 25%);
