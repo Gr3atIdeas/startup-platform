@@ -3402,39 +3402,27 @@ def my_startups(request):
         )
 
         planetary_startups = []
-        planetary_startups_for_json = []
         for idx, startup in enumerate(approved_startups_annotated, start=1):
             orbit_size = (idx * 100) + 150
             orbit_time = (idx * 10) + 40
             planet_size = 60
 
-            # Данные для цикла в шаблоне
-            template_data = {
+            planet_data = {
+                "id": str(startup.startup_id),  # ЯВНО преобразуем в СТРОКУ
                 "startup_id": startup.startup_id,
-                "title": startup.title,
+                "name": startup.title or "Без названия",
                 "planet_image": startup.planet_image,
                 "logo_urls": startup.logo_urls,
+                "rating": f"{startup.average_rating or 0:.1f}/5 ({startup.total_voters or 0})",
+                "description": startup.description or "Описание отсутствует.",
+                "progress": startup.get_progress_percentage() or 0,
+                "funding": f"Собрано: {startup.amount_raised or 0:,.0f} ₽ из {startup.funding_goal or 0:,.0f} ₽",
+                "investors": f"Инвесторов: {startup.get_investors_count()}",
                 "orbit_size": orbit_size,
                 "orbit_time": orbit_time,
                 "planet_size": planet_size,
             }
-            planetary_startups.append(template_data)
-
-            # Данные для JSON, который будет использовать JS
-            js_data = {
-                "startup_id": startup.startup_id,
-                "title": startup.title or "Без названия",
-                "planet_image": startup.planet_image,
-                "average_rating": float(startup.average_rating or 0),
-                "comment_count": startup.comment_count or 0,
-                "progress": startup.get_progress_percentage() or "0%",
-                "direction": startup.direction.direction_name if startup.direction else "Без категории",
-                "funding_goal": startup.funding_goal or 0,
-                "get_investors_count": startup.get_investors_count(),
-                "investment_type": startup.get_investment_type_display(),
-                "short_description": startup.short_description or "Описание отсутствует."
-            }
-            planetary_startups_for_json.append(js_data)
+            planetary_startups.append(planet_data)
 
     except Exception as e:
         logger.error(f"Критическая ошибка в my_startups view: {e}", exc_info=True)
@@ -3459,9 +3447,11 @@ def my_startups(request):
         "chart_categories": sorted_categories,
         # Данные для заявок
         "startup_applications": user_startups_qs.order_by("-updated_at"),
-        # Данные для JSON
-        "planetary_startups_json": json.dumps(planetary_startups_for_json, cls=DjangoJSONEncoder),
     }
+
+    # Добавляем JSON-сериализованные данные отдельно, чтобы не загромождать основной контекст
+    context["planetary_startups_json"] = json.dumps(planetary_startups, cls=DjangoJSONEncoder)
+
 
     return render(request, "accounts/my_startups.html", context)
 
