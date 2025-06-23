@@ -5,9 +5,7 @@
 {% block title %}Главная страница | Модератор{% endblock %}
 
 {% block head_extra %}
-    {# Старые стили можно будет удалить или перенести в Vue компоненты #}
-    {# <link rel="stylesheet" href="{% static 'accounts/css/main_page_moderator.css' %}?v={% now 'U' %}"> #}
-    <link rel="stylesheet" href="{% static 'accounts/css/moderator_main.css' %}">
+    {# Vite подключит все необходимые стили через JS-бандл #}
     {% vite_asset 'static/src/js/moderator_main.js' %}
 {% endblock %}
 
