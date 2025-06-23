@@ -1,4 +1,4 @@
-window.addEventListener('load', function () {
+document.addEventListener('DOMContentLoaded', function () {
   document.documentElement.style.scrollBehavior = 'smooth'
 
   var style = document.createElement('style')
