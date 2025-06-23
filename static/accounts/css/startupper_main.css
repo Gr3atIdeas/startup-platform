@@ -45,6 +45,34 @@ img {
   -webkit-user-drag: none;
 }
 
+html {
+  height: 100%;
+  min-height: 100%;
+  background: linear-gradient(
+    to bottom,
+    #000 0%,
+    #01366d 50%,
+    #004e9f 100%
+  ); /* Фон на html */
+
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  width: 100%;
+  margin: 0;
+  padding: 0; /* No padding on the main container */
+  box-sizing: border-box;
+  overflow: hidden auto; /* Включаем вертикальную прокрутку */
+  scrollbar-width: thin; /* Для Firefox */
+  scrollbar-color: #ffef2b transparent; /* Цвета для Firefox: ползунок и прозрачный фон */
+  display: flex;
+  flex-direction: column;
+
+  /* align-items: center; */
+
+  /* Remove centering from here */
+  gap: 40px;
+}
+
 .btn--yellow-gradient,
 .btn--yellow-gradient:visited {
   background: linear-gradient(180deg, #ffef2b 0%, #f9f7d6 100%) !important;
@@ -70,10 +98,71 @@ img {
   color: #f5f5f5 !important;
 }
 
+body {
+  font-family: Unbounded, sans-serif;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #fcfcfd;
+  margin: 0;
+  padding: 0;
+  background: transparent; /* body прозрачный */
+  overflow-x: hidden;
+
+  /* overflow-y: auto; */
+
+  /* <--- УДАЛЯЕМ ЭТО */
+  min-height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex; /* Для flex-grow у .div */
+  flex-direction: column; /* Для flex-grow у .div */
+  flex-shrink: 0;
+}
+
+/* Кастомный скроллбар для Webkit-браузеров (Chrome, Safari) */
+html::-webkit-scrollbar {
+  width: 8px; /* Ширина скроллбара */
+}
+
+html::-webkit-scrollbar-track {
+  background: transparent; /* Убираем фон у трека */
+}
+
+html::-webkit-scrollbar-thumb {
+  background-color: #ffef2b; /* Цвет ползунка */
+  border-radius: 4px; /* Скругление углов */
+}
+
+html::-webkit-scrollbar-thumb:hover {
+  background-color: #e6d329; /* Цвет ползунка при наведении */
+}
+
+html::-webkit-scrollbar-button {
+  display: none; /* Скрываем стрелочки */
+}
+
+.div {
+  /* Общий контейнер страницы */
+  width: 100%;
+
+  /* min-width: 100%; */
+
+  /* width: 100% должно быть достаточно */
+  display: flex; /* Для align-items: center */
+  flex-direction: column; /* Основная ось - вертикальная для секций */
+  align-items: center; /* Центрируем дочерние секции */
+  background: transparent !important; /* .div прозрачный, показываем фон html */
+
+  /* background-repeat и background-attachment не нужны для прозрачного фона */
+  box-sizing: border-box; /* Добавляем для консистентности */
+}
+
 /* --- Секция 1: Featured (Главный экран) --- */
-.featured4 {
+.featured {
   width: 100%;
   max-width: 1445px;
+  height: 798px;
   position: relative;
   overflow: hidden;
   display: flex;
@@ -81,402 +170,405 @@ img {
   align-items: center;
   padding: 20px;
   box-sizing: border-box;
-  background-color: transparent !important;
+  background: transparent !important;
   margin-left: auto; /* Центрирование */
   margin-right: auto; /* Центрирование */
 }
 
-.featured4 .frame-parent3 {
+.featured .group {
   width: 100%;
-  max-width: 1240px; /* Уменьшено для соответствия Figma */
-  height: auto; /* Автоматическая высота */
+  max-width: 1303px;
+  height: 708px;
   position: relative;
-  background-color: transparent; /* Убран фон */
-  border-radius: 20px;
-  overflow: hidden;
-  display: flex; /* Используем flexbox */
-  justify-content: space-between; /* Распределение пространства */
-  align-items: center; /* Центрирование по вертикали */
-  padding: 40px; /* Отступы внутри блока */
-  box-sizing: border-box;
-}
 
-.featured4 .parent6 {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start; /* Выравнивание по левому краю */
-  gap: 30px; /* Пространство между элементами */
-  max-width: 50%; /* Ограничение ширины текстового блока */
-  z-index: 2; /* Поверх изображения */
-}
+  /* background: transparent; */
 
-.featured4 .parent6 .div23 {
-  font-size: 55px; /* Размер шрифта из Figma */
-  font-family: 'Blippo Black', sans-serif;
-  font-weight: 400; /* Blippo не имеет числовых весов, но ставим для консистентности */
-  text-transform: uppercase;
-  line-height: 1; /* Уменьшаем межстрочный интервал */
-}
-
-.featured4 .parent6 .div23 .txt > span {
-  display: block; /* Каждый span на новой строке */
-}
-
-.featured4 .parent6 .div23 .txt > span:first-child {
-  color: white;
-}
-
-.featured4 .parent6 .div23 .txt .span3 {
-  color: #ffef2b; /* Желтый цвет для "звезды" */
-}
-
-.featured4 .group-parent {
-  display: flex;
-  flex-direction: column; /* Элементы в столбец */
-  gap: 20px; /* Расстояние между карточками */
-  align-items: flex-start;
-}
-
-.featured4 .group-div {
-  display: flex;
-  align-items: center;
-  gap: 20px; /* Расстояние между иконкой и текстом */
-  background-color: rgba(
-    255,
-    255,
-    255,
-    0.1
-  ); /* Полупрозрачный фон как в Figma */
+  /* Убираем старый прозрачный фон */
+  background: transparent;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   border-radius: 10px;
-  padding: 15px;
-  width: 100%; /* Занимает всю доступную ширину родителя */
-  box-sizing: border-box;
-  transition: background-color 0.3s;
-}
-.featured4 .group-div:hover {
-  background-color: rgba(255, 255, 255, 0.2);
-}
-
-.featured4 .group-div .card-icon-container {
-  flex-shrink: 0; /* Иконка не сжимается */
-  width: 60px; /* Фиксированная ширина контейнера иконки */
-  height: 60px; /* Фиксированная высота */
+  overflow: hidden;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column; /* Для внутреннего расположения элементов */
+  justify-content: center; /* Центрирование по вертикали */
+  padding-left: 109px; /* Отступ для текстового контента */
+  box-sizing: border-box;
 }
 
-.featured4 .group-div .card-icon {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
+/* Элементы внутри .featured .group */
+.featured .div5 {
+  width: 390px;
+  margin-bottom: 30px; /* Отступ под описанием */
 }
 
-.featured4 .div24,
-.featured4 .div25,
-.featured4 .div26 {
+.featured .div5 .txt {
   font-family: Unbounded, sans-serif;
   font-weight: 400;
   font-size: 16px;
-  color: #fcfcfd;
   line-height: 1.4;
+  word-wrap: break-word;
 }
 
-.featured4 .icon10 {
+.featured .div5 .txt > span:first-child {
+  color: #ffef2b;
+}
+
+.featured .div5 .txt .span {
+  color: white;
+}
+
+.featured .div6 {
+  color: white;
+  font-size: 80px;
+  font-family: 'Blippo Black', sans-serif;
+  font-weight: normal;
+  text-transform: uppercase;
+  line-height: 0.7; /* Сжатая высота строки для Blippo */
+  word-wrap: break-word;
+}
+
+.featured .div7 {
+  color: #ffef2b;
+  font-size: 80px;
+  font-family: 'Blippo Black', sans-serif;
+  font-weight: normal;
+  text-transform: uppercase;
+  line-height: 0.7; /* Сжатая высота строки для Blippo */
+  word-wrap: break-word;
+  margin-bottom: 40px; /* Отступ после заголовка */
+}
+
+/* Декоративные круги и планеты (плейсхолдеры) */
+.featured .frame-child,
+.featured .frame-item,
+.featured .frame-inner,
+.featured .ellipse-div,
+.featured .frame-child1 {
   position: absolute;
-  right: 40px;
-  bottom: 0;
-  width: 45%; /* Ширина изображения */
-  height: auto;
-  max-height: 100%; /* Не превышает высоту родителя */
-  object-fit: contain;
-  z-index: 1;
+  border-radius: 9999px;
+  border: 1px white solid;
+  filter: blur(1px);
+  opacity: 0.3;
 }
 
+.featured .frame-child {
+  width: 1013px;
+  height: 784px;
+  left: 60%;
+  top: -5%;
+}
+
+.featured .frame-item {
+  width: 900px;
+  height: 696px;
+  left: 75%;
+  top: 0%;
+}
+
+.featured .frame-inner {
+  width: 950px;
+  height: 754px;
+  left: 65%;
+  top: -2%;
+}
+
+.featured .ellipse-div {
+  width: 800px;
+  height: 651px;
+  left: 80%;
+  top: 5%;
+}
+
+.featured .frame-child1 {
+  width: 700px;
+  height: 576px;
+  left: 85%;
+  top: 10%;
+}
+
+.featured .icon1,
+.featured .icon2,
+.featured .icon3,
+.featured .icon4,
+.featured .icon5,
+.featured .icon6,
+.featured .icon7,
+.featured .icon8 {
+  position: absolute;
+  object-fit: contain; /* Чтобы плейсхолдеры не искажались */
+}
+
+.featured .icon1 {
+  width: 193px;
+  height: 186px;
+  right: 50px;
+  bottom: 50px;
+  z-index: 5;
+} /* Крупная планета справа внизу */
+.featured .icon2 {
+  width: 100px;
+  height: 100px;
+  right: 250px;
+  top: 100px;
+  z-index: 4;
+}
+
+.featured .icon3 {
+  width: 150px;
+  height: 150px;
+  right: 300px;
+  bottom: 150px;
+  z-index: 3;
+  opacity: 0.8;
+}
+
+.featured .icon4 {
+  width: 80px;
+  height: 80px;
+  right: 100px;
+  top: 200px;
+  z-index: 2;
+  opacity: 0.7;
+}
+
+.featured .icon5 {
+  width: 160px;
+  height: 160px;
+  right: 400px;
+  top: 300px;
+  z-index: 1;
+  opacity: 0.6;
+}
+
+.featured .icon6 {
+  width: 130px;
+  height: 130px;
+  right: 500px;
+  bottom: 50px;
+  opacity: 0.5;
+}
+
+.featured .icon7 {
+  width: 120px;
+  height: 120px;
+  right: 150px;
+  top: 400px;
+  opacity: 0.4;
+}
+
+.featured .icon8 {
+  position: absolute;
+  top: 10px;
+  left: 996px;
+  width: 280px;
+  height: 280px;
+  object-fit: cover;
+}
+
+.featured .featured-child,
+.featured .featured-item {
+  /* Вспомогательные, если нужны по макету */
+  display: none; /* Скрываем, если не используются явно */
+}
+
+.featured .featured-item {
+  object-fit: cover;
+}
+
+/* --- New Journey Start Block --- */
 .journey-start-wrapper {
   width: 100%;
-  max-width: 1240px; /* Ограничиваем ширину для консистентности */
-  padding: 40px;
-  margin-top: 50px; /* Добавляем отступ сверху */
-  background-color: rgba(
-    11,
-    14,
-    23,
-    0.7
-  ); /* Немного другой фон для выделения */
-  border-radius: 20px;
+  max-width: 1445px;
+  padding: 45px 71px;
   box-sizing: border-box;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 40px;
+  margin-top: 60px;
 }
 
 .chat-header {
-  width: 100%;
   display: flex;
-  justify-content: center;
-  align-items: baseline;
+  flex-direction: column;
   gap: 15px;
-  margin-bottom: 30px;
+  align-items: flex-start;
 }
 
 .chat-header__title,
 .chat-header__subtitle {
   font-family: 'Blippo Black', sans-serif;
-  font-weight: normal;
-  text-transform: uppercase;
   font-size: 55px;
+  font-weight: normal;
   line-height: 1;
+  margin: 0;
 }
 
 .chat-header__title {
   color: white;
 }
+
 .chat-header__subtitle {
   color: #ffef2b;
 }
 
 .journey-start-container {
+  width: 1303px;
   display: flex;
-  width: 100%;
-  gap: 30px; /* Расстояние между баннером и интересами */
-  align-items: stretch; /* Растягиваем элементы по высоте */
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 78px;
 }
 
 .journey-start-banner {
-  flex: 1;
+  background-image: url('../images/investor_main/cosmobg.jpg');
+  align-self: stretch;
+  height: 560px;
   position: relative;
-  border-radius: 20px;
+  box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.25);
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between; /* Распределяем контент */
-  padding: 30px;
-  min-height: 300px; /* Минимальная высота */
+  border-radius: 10px;
+  background-size: cover;
+  background-position: center;
 }
 
 .journey-start-banner-text {
-  font-family: Unbounded, sans-serif;
-  font-size: 20px;
-  font-weight: 500;
+  width: 869px;
+  left: 217px;
+  top: 382px;
+  position: absolute;
+  text-align: center;
   color: white;
-  max-width: 60%;
-  z-index: 2;
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+  font-size: 35px;
+  font-family: Unbounded;
+  font-weight: 600;
+  line-height: 35px;
+  word-wrap: break-word;
 }
 
 .journey-start-banner-image-container {
+  width: 372px;
+  height: 279px;
+  left: 485px;
+  top: 74px;
   position: absolute;
-  right: 0;
-  bottom: 0;
-  width: 60%;
-  height: auto;
-  z-index: 1;
-}
-
-.journey-start-banner-image {
-  width: 100%;
-  height: auto;
-  display: block;
-  object-fit: contain;
-  object-position: bottom right;
-}
-
-.journey-start-interests {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.journey-start-title {
-  font-family: Unbounded, sans-serif;
-  font-size: 24px;
-  font-weight: 600;
-  color: #fcfcfd;
-  border-bottom: 2px solid #ffef2b;
-  padding-bottom: 10px;
-  margin-bottom: 10px;
-}
-
-.journey-start-subtitle {
-  font-family: Unbounded, sans-serif;
-  font-size: 16px;
-  font-weight: 400;
-  color: #e6e8ec;
-  margin-bottom: 15px;
-}
-
-.journey-start-categories {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.journey-start-categories-row {
-  display: flex;
-  gap: 15px;
-  justify-content: flex-start;
-}
-
-.journey-start-category {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background-color: rgba(255, 255, 255, 0.08);
-  padding: 10px 15px;
-  border-radius: 30px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  border: 1px solid transparent;
-}
-
-.journey-start-category:hover,
-.journey-start-category.active {
-  background-color: rgba(255, 255, 255, 0.2);
-  border-color: #ffef2b;
-}
-
-.journey-start-category img {
-  width: 24px;
-  height: 24px;
-}
-
-.journey-start-category.active img {
-  filter: drop-shadow(0 0 5px #ffef2b);
-}
-
-.journey-start-category-name {
-  font-family: Unbounded, sans-serif;
-  font-size: 14px;
-  font-weight: 400;
-  color: #fcfcfd;
-  white-space: nowrap;
-}
-
-.journey-start-button {
-  margin-top: auto; /* Прижимаем кнопку к низу */
-  align-self: flex-start; /* Выравниваем по левому краю */
-}
-
-.featured3 {
-  width: 100%;
-  max-width: 1445px;
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 50px;
-  padding: 20px;
-  box-sizing: border-box;
-}
-
-.featured3 .frame-parent {
-  width: 100%;
-  max-width: 1240px;
-  height: auto;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end; /* Контент справа */
-  border-radius: 20px;
   overflow: hidden;
 }
 
-.featured3 .icon9 {
+.journey-start-banner-image {
+  width: 371.89px;
+  height: 278.66px;
   position: absolute;
   left: 0;
   top: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: 1;
+  transform: rotate(0deg);
+  transform-origin: top left;
 }
 
-.featured3 .parent4 {
-  position: relative;
-  z-index: 2;
-  width: 50%;
-  padding: 50px;
-  box-sizing: border-box;
+.journey-start-interests {
+  width: 1303px;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 30px;
-}
-
-.featured3 .parent4 .gradient-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    to right,
-    transparent 0%,
-    rgba(1, 23, 44, 0.7) 30%,
-    #01172c 70%
-  );
-  z-index: -1;
-  border-radius: 0 20px 20px 0;
-}
-
-.featured3 .heading1 .div18 .txt {
-  font-family: 'Blippo Black', sans-serif;
-  font-size: 55px;
-  text-transform: uppercase;
-  line-height: 1;
-}
-
-.featured3 .heading1 .div18 .txt > span {
-  display: block;
-}
-.featured3 .heading1 .div18 .txt > span:first-child {
-  color: white;
-}
-.featured3 .heading1 .div18 .txt .span1 {
-  color: #ffef2b;
-}
-
-.featured3 .frame-group {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.featured3 .chevron-forward-circle-outline-parent,
-.featured3 .chevron-forward-circle-outline-group {
-  display: flex;
+  justify-content: flex-start;
   align-items: center;
-  gap: 15px;
-  font-size: 18px;
+  gap: 32px;
+}
+
+.journey-start-title {
+  align-self: stretch;
+  text-align: center;
+  color: white;
+  font-size: 35px;
+  font-family: Unbounded;
+  font-weight: 600;
+  line-height: 35px;
+  word-wrap: break-word;
+}
+
+.journey-start-subtitle {
+  align-self: stretch;
+  text-align: center;
+  color: white;
+  font-size: 20px;
+  font-family: Unbounded;
   font-weight: 400;
-  color: #fcfcfd;
+  line-height: 18px;
+  word-wrap: break-word;
 }
 
-.featured3 .frame-icon {
-  width: 28px;
-  height: 28px;
+.journey-start-categories {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 40px;
 }
 
-.featured3 .faq,
-.featured3 .div20 {
-  font-family: Unbounded, sans-serif;
+.journey-start-categories-row {
+  align-self: stretch;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 45px;
+  display: inline-flex;
 }
 
-.featured3 .div20 .txt .span2 {
-  color: #b1b5c3; /* Серый цвет для текста в скобках */
+.journey-start-category {
+  width: 179px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 11px;
 }
 
-@media (max-width: 1350px) {
-  .featured3 .frame-parent {
-    justify-content: center;
-  }
-  .featured3 .parent4 {
-    width: 80%;
-    text-align: center;
-    align-items: center;
-  }
-  .featured3 .icon9 {
-    opacity: 0.3;
-  }
+.journey-start-category img {
+  align-self: stretch;
+  height: 142px;
+  border-radius: 10px;
+}
+
+.journey-start-category.active img {
+  border: 2px #FFEF2B solid;
+}
+
+.journey-start-category-name {
+  align-self: stretch;
+  text-align: center;
+  color: white;
+  font-size: 16px;
+  font-family: Unbounded;
+  font-weight: 400;
+  line-height: 16px;
+  word-wrap: break-word;
+}
+
+.journey-start-category-name.large {
+  font-size: 20px;
+  line-height: 18px;
+}
+
+.journey-start-button {
+  width: 224px;
+  height: 40px;
+  padding: 12px;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  display: inline-flex;
+  text-decoration: none;
+  color: black;
+  font-size: 16px;
+  font-family: Unbounded;
+  font-weight: 400;
+  line-height: 16px;
+  word-wrap: break-word;
 }
 
 /* --- Секция 7: Featured7 (Great Ideas это платформа...) --- */
@@ -1018,5 +1110,135 @@ img {
   }
   .final-cta-image {
     display: none;
+  }
+}
+
+/* --- Section 3: featured3 --- */
+.featured3 {
+  width: 100%;
+  max-width: 1445px;
+  position: relative;
+  overflow: hidden;
+  padding: 80px 71px;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.featured3 .frame-parent {
+  display: flex;
+  position: relative;
+  width: 100%;
+  height: 600px; /* Фиксированная высота для контейнера */
+  border-radius: 20px;
+  overflow: hidden;
+  background-color: #000;
+}
+.featured3 .icon9 {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: auto;
+  object-fit: cover;
+  object-position: center;
+}
+.featured3 .parent4 {
+  position: relative;
+  z-index: 1;
+  padding: 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 50%;
+  height: 100%;
+  box-sizing: border-box;
+}
+.featured3 .parent4 .gradient-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    #000 0%,
+    rgba(0, 0, 0, 0.8) 50%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  z-index: 0;
+}
+.featured3 .parent4 > .heading1,
+.featured3 .parent4 > .btn {
+  position: relative;
+  z-index: 1;
+}
+
+.featured3 .heading1 .div18 {
+  margin-bottom: 40px;
+}
+.featured3 .heading1 .div18 .txt {
+  font-family: 'Blippo Black', sans-serif;
+  font-size: 55px;
+  font-weight: 400;
+  line-height: 1;
+  text-transform: uppercase;
+}
+.featured3 .heading1 .div18 .txt > span:first-child {
+  color: white;
+}
+.featured3 .heading1 .div18 .txt .span1 {
+  color: #ffef2b;
+}
+
+.featured3 .frame-group {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-bottom: 40px;
+}
+.featured3 .chevron-forward-circle-outline-parent,
+.featured3 .frame-parent2 {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.featured3 .frame-icon {
+  width: 32px;
+  height: 32px;
+  filter: brightness(0) saturate(100%) invert(92%) sepia(54%) saturate(5839%)
+    hue-rotate(325deg) brightness(105%) contrast(101%);
+}
+.featured3 .faq,
+.featured3 .div20 {
+  color: #fcfcfd;
+  font-family: Unbounded, sans-serif;
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 1.2;
+}
+
+.featured3 .div20 .txt > span:first-child {
+  color: #fcfcfd;
+}
+.featured3 .div20 .txt .span2 {
+  color: #777e90;
+}
+
+/* --- Media Queries for featured3 --- */
+@media (max-width: 1350px) {
+  .featured3 .frame-parent {
+    flex-direction: column;
+    height: auto;
+  }
+  .featured3 .parent4 {
+    width: 100%;
+    padding: 40px;
+  }
+  .featured3 .icon9 {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
   }
 }
