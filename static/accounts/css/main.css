@@ -70,7 +70,7 @@ html {
 
   /* Remove centering from here */
   gap: 40px;
-  overflow-x: visible; /* РАЗРЕШАЕМ ГОРИЗОНТАЛЬНЫЙ ОВЕРФЛОУ */
+  overflow-x: hidden; /* ЗАПРЕЩАЕМ ГОРИЗОНТАЛЬНЫЙ ОВЕРФЛОУ */
 }
 
 .btn--yellow-gradient,
