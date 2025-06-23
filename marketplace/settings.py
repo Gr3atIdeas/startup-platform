@@ -113,6 +113,9 @@ SOCIALACCOUNT_LOGIN_ON_GET = True  # Разрешить GET-запросы дл�
 ACCOUNT_EMAIL_VERIFICATION = 'none'  # Отключите верификацию email
 ACCOUNT_LOGOUT_REDIRECT_URL = 'startups_list'  # Перенаправление после выхода
 
+# Устанавливаем кастомный URL для страницы входа
+LOGIN_URL = '/login/'
+
 # Замени на
 ACCOUNT_LOGIN_METHODS = ['username', 'email']
 ACCOUNT_SIGNUP_FIELDS = ['email', 'password1*', 'password2*']
