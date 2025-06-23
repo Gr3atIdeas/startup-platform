@@ -66,4 +66,24 @@ document.addEventListener('DOMContentLoaded', function () {
       button.style.boxShadow = '0 2px 4px rgba(0,0,0,0.2)'
     })
   })
+
+  // Скрипт для выпадающего меню каталога
+  const catalogDropdownButton = document.querySelector('.catalog-dropdown-button');
+  const catalogDropdownMenu = document.querySelector('.catalog-dropdown-menu');
+  const catalogDropdownContainer = document.querySelector('.catalog-dropdown-container');
+
+  if (catalogDropdownButton && catalogDropdownMenu && catalogDropdownContainer) {
+      catalogDropdownButton.addEventListener('click', function (event) {
+          event.stopPropagation();
+          catalogDropdownContainer.classList.toggle('open');
+      });
+
+      document.addEventListener('click', function (event) {
+          if (catalogDropdownContainer.classList.contains('open') && 
+              !catalogDropdownMenu.contains(event.target) && 
+              !catalogDropdownButton.contains(event.target)) {
+              catalogDropdownContainer.classList.remove('open');
+          }
+      });
+  }
 })
