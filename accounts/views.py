@@ -3431,6 +3431,7 @@ def my_startups(request):
                 "orbit_size": orbit_size,
                 "orbit_time": orbit_time,
                 "planet_size": planet_size,
+                "logo_urls": startup.logo_urls if startup.logo_urls else []
             }
             planetary_startups.append(planet_data)
 

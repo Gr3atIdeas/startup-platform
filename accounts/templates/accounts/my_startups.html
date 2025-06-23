@@ -1478,7 +1478,8 @@
                         funding_goal: s.funding_goal || 0,
                         investors: s.get_investors_count || 0,
                         investment_type: s.investment_type || 'Не указано',
-                        description: s.short_description || 'Описание отсутствует'
+                        description: s.short_description || 'Описание отсутствует',
+                        logo_url: s.logo_urls && s.logo_urls.length > 0 ? `{% get_file_url_tag s.logo_urls[0] s.startup_id 'logo' %}` : '{% static "accounts/images/logo.png" %}'
                     };
                 });
             }
@@ -1524,7 +1525,7 @@
 
                 const orbitSize = parseFloat(getComputedStyle(orbit).getPropertyValue('--orbit-size')) || 200;
                 if (orbitSize < 100) {
-                    planetOrientation.style.display = 'none'; // Скрываем планеты с орбитой меньше 100px
+                    planetOrientation.style.display = 'none'; // Скрываем планеты с маленькой орбитой
                     return;
                 }
 
@@ -1563,10 +1564,19 @@
                     planet.style.backgroundImage = 'none';
                     planet.style.backgroundColor = 'transparent';
                     const img = planet.querySelector('.planet-img');
+                    const logoImg = planet.querySelector('.planet-logo-overlay');
                     if (img) {
+                        img.src = startups[id].image;
                         img.onerror = () => {
                             console.warn(`Не удалось загрузить изображение для стартапа ${id}.`);
                             img.src = '{% static "accounts/images/planet_logo_carusel.webp" %}';
+                        };
+                    }
+                    if (logoImg && startups[id].logo_url) {
+                        logoImg.src = startups[id].logo_url;
+                        logoImg.onerror = () => {
+                            console.warn(`Не удалось загрузить логотип для стартапа ${id}.`);
+                            logoImg.src = '{% static "accounts/images/logo.png" %}';
                         };
                     }
                 }
@@ -1752,7 +1762,7 @@
 
                         let x = Math.cos(angleRad) * radius;
                         let y = Math.sin(angleRad) * radius;
-                        const centerThreshold = 100; // Увеличен для предотвращения перекрытия логотипа
+                        const centerThreshold = 100;
                         const distanceFromCenter = Math.sqrt(x * x + y * y);
                         if (distanceFromCenter < centerThreshold) {
                             angle += 10;
