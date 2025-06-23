@@ -3403,31 +3403,21 @@ def my_startups(request):
 
         planetary_startups = []
         for idx, startup in enumerate(approved_startups_annotated, start=1):
-            orbit_size = (idx * 100) + 150  # Минимальная орбита 250px
+            orbit_size = (idx * 100) + 150
             orbit_time = (idx * 10) + 40
             planet_size = 60
 
-            if startup.both_mode:
-                investment_type = "Инвестиции и выкуп"
-            elif startup.only_invest:
-                investment_type = "Только инвестиции"
-            elif startup.only_buy:
-                investment_type = "Только выкуп"
-            else:
-                investment_type = "Не указано"
-
             planet_data = {
+                "id": str(startup.startup_id),  # ЯВНО преобразуем в СТРОКУ
                 "startup_id": startup.startup_id,
+                "name": startup.title or "Без названия",
                 "planet_image": startup.planet_image,
-                "title": startup.title or "Без названия",
-                "average_rating": float(startup.average_rating or 0),
-                "comment_count": startup.comment_count or 0,
-                "progress": f"{startup.get_progress_percentage() or 0}%",
-                "direction": {"direction_name": startup.direction.direction_name if startup.direction else "Без категории"},
-                "funding_goal": float(startup.funding_goal or 0),
-                "get_investors_count": startup.get_investors_count() or 0,
-                "investment_type": investment_type,
-                "short_description": startup.short_description or startup.description or "Описание отсутствует",
+                "logo_urls": startup.logo_urls,
+                "rating": f"{startup.average_rating or 0:.1f}/5 ({startup.total_voters or 0})",
+                "description": startup.description or "Описание отсутствует.",
+                "progress": startup.get_progress_percentage() or 0,
+                "funding": f"Собрано: {startup.amount_raised or 0:,.0f} ₽ из {startup.funding_goal or 0:,.0f} ₽",
+                "investors": f"Инвесторов: {startup.get_investors_count()}",
                 "orbit_size": orbit_size,
                 "orbit_time": orbit_time,
                 "planet_size": planet_size,
