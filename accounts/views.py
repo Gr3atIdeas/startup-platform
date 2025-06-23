@@ -110,7 +110,7 @@ def home(request):
         role_name = request.user.role.role_name.lower()
         if role_name == "investor":
             return redirect("investor_main")
-        elif role_name == "startupper":
+        elif role_name == "startuper":
             return redirect("startupper_main")
         elif role_name == "moderator":
             return redirect("main_page_moderator")
@@ -177,7 +177,7 @@ def user_login(request):
                     role_name = user.role.role_name.lower()
                     if role_name == "investor":
                         return redirect("investor_main")
-                    elif role_name == "startupper":
+                    elif role_name == "startuper":
                         return redirect("startupper_main")
                     elif role_name == "moderator":
                         return redirect("main_page_moderator")
