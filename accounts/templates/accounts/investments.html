@@ -36,18 +36,18 @@
                         <img src="{% if user.get_profile_picture_url %}{{ user.get_profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}" alt="Аватар" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
                     </div>
                   {% if planetary_investments %}
-                    {% for investment in planetary_investments %}
-                      <div class="orbit" style="--orbit-size: {{ investment.orbit_size|default:200 }}px; --orbit-time: {{ investment.orbit_time|default:80 }}s;">
+                    {% for startup in planetary_investments %}
+                      <div class="orbit" style="--orbit-size: {{ startup.orbit_size|default:200 }}px; --orbit-time: {{ startup.orbit_time|default:80 }}s;">
                         <div class="planet-orientation">
-                          <div class="planet" style="--planet-size: {{ investment.planet_size|default:50 }}px;" data-id="{{ investment.startup.startup_id }}">
-                            {% if investment.startup.planet_image %}
-                              <img src="https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/{{ investment.startup.planet_image }}" alt="{{ investment.startup.name|escape }}" class="planet-img">
+                          <div class="planet" style="--planet-size: {{ startup.planet_size|default:50 }}px;" data-id="{{ startup.startup_id }}">
+                            {% if startup.planet_image %}
+                              <img src="https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/{{ startup.planet_image }}" alt="{{ startup.name|escape }}" class="planet-img">
                             {% else %}
                               <img src="{% static 'accounts/images/planet_logo_carusel.webp' %}" alt="Планета по умолчанию" class="planet-img">
                             {% endif %}
-                            {% if investment.startup.logo_urls and investment.startup.logo_urls|length > 0 %}
-                              {% with logo_file_id=investment.startup.logo_urls.0 %}
-                                <img src="{% get_file_url_tag logo_file_id investment.startup.startup_id 'logo' %}" alt="Лого" class="planet-logo-overlay">
+                            {% if startup.logo_urls and startup.logo_urls|length > 0 %}
+                              {% with logo_file_id=startup.logo_urls.0 %}
+                                <img src="{% get_file_url_tag logo_file_id startup.startup_id 'logo' %}" alt="Лого" class="planet-logo-overlay">
                               {% endwith %}
                             {% else %}
                               <img src="{% static 'accounts/images/logo.png' %}" alt="Лого по умолчанию" class="planet-logo-overlay">
