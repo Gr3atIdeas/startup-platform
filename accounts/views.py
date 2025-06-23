@@ -106,15 +106,16 @@ def home(request):
         )  # Показываем новую главную для неавторизованных
 
     # Если пользователь авторизован, перенаправляем его на соответствующую страницу
-    if request.user.role == "investor":
-        return redirect("investor_main")
-    elif request.user.role == "startupper":
-        return redirect("startupper_main")
-    elif request.user.role == "moderator":
-        return redirect("main_page_moderator")
+    if hasattr(request.user, "role") and request.user.role:
+        if request.user.role.role_name == "investor":
+            return redirect("investor_main")
+        elif request.user.role.role_name == "startupper":
+            return redirect("startupper_main")
+        elif request.user.role.role_name == "moderator":
+            return redirect("main_page_moderator")
 
-    # Если роль не определена или другая, можно направить на общую страницу
-    return render(request, "accounts/home.html")
+    # Если роль не определена или другая, перенаправляем на страницу профиля
+    return redirect("profile")
 
 
 # Страница FAQ
