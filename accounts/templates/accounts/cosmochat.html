@@ -518,10 +518,6 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 {% endblock %}
 
-{% block body_extra %}
-    {{ request.user.user_id|default:0|json_script:"request_user_id_data" }}
-    <script id="request_user_role_data" type="application/json">
-        {"role_name": "{{ request.user.role.role_name|default:'unknown' }}"}
-    </script>
-    <script src="{% static 'accounts/js/cosmochat.js' %}"></script>
+{% block scripts %}
+  <script src="{% static 'accounts/js/cosmochat.js' %}"></script>
 {% endblock %}
