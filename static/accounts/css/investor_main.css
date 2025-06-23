@@ -56,7 +56,7 @@ html {
   ); /* Фон на html */
 
   background-repeat: no-repeat;
-  background-attachment: scroll;
+  background-attachment: fixed;
   width: 100%;
   margin: 0;
   padding: 0; /* No padding on the main container */
