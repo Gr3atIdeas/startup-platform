@@ -1222,3 +1222,64 @@ body.modal-open-blur .portfolio-container > *:not(.modal-overlay) {
     width: 100%;
   }
 }
+
+.progress-bar-visual {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 200px;
+    margin: 0 auto;
+}
+.progress-animation-container {
+    height: 8px;
+    background: #ddd;
+    border-radius: 4px;
+    overflow: hidden;
+    flex-grow: 1;
+}
+.progress-planets {
+    height: 100%;
+    background: #ffd700;
+    transition: width 0.5s ease;
+}
+.progress-percentage {
+    margin-left: 8px;
+    font-size: 12px;
+    color: #555;
+}
+.funding-goal-container-figma {
+    margin-top: 8px;
+    text-align: center;
+}
+.funding-goal-text-figma {
+    font-size: 12px;
+    color: #555;
+}
+.investor-count-container-figma {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 8px 0;
+}
+.investor-icon-figma {
+    margin-right: 4px;
+    color: #555;
+}
+.investor-count-text-figma {
+    font-size: 12px;
+    color: #555;
+}
+.startup-short-description {
+    font-size: 12px;
+    color: #555;
+    text-align: left;
+}
+.planetary-system #info-card {
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.9);
+}
+.planetary-system #info-card[style*="display: block"] {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}

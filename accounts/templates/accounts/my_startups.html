@@ -1467,14 +1467,24 @@
             const startups = {};
             if (Array.isArray(startups_data)) {
                 startups_data.forEach(s => {
-                    startups[s.id.toString()] = s; // Используем s.id (строка из JSON) как ключ
+                    startups[s.startup_id.toString()] = {
+                        startup_id: s.startup_id,
+                        image: s.planet_image ? `https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/${s.planet_image}` : '{% static "accounts/images/planet_logo_carusel.webp" %}',
+                        name: s.title || 'Без названия',
+                        rating: s.average_rating || 0,
+                        comment_count: s.comment_count || 0,
+                        progress: s.progress || '0%',
+                        direction: s.direction?.direction_name || 'Без категории',
+                        funding_goal: s.funding_goal || 0,
+                        investors: s.get_investors_count || 0,
+                        investment_type: s.investment_type || 'Не указано',
+                        description: s.short_description || 'Описание отсутствует'
+                    };
                 });
             }
             console.log('Startups object:', startups);
 
             const planets = document.querySelectorAll('.planetary-system .planet');
-            const planetOrientations = document.querySelectorAll('.planetary-system .planet-orientation');
-            const orbits = document.querySelectorAll('.planetary-system .orbit');
             const infoCard = document.querySelector('.planetary-system #info-card');
             const planetImage = document.querySelector('.planetary-system #planet-image');
             const startupName = document.querySelector('.planetary-system #startup-name');
@@ -1497,20 +1507,50 @@
             let lastInteractionTime = Date.now();
             const inactivityTimeout = 10000;
             let isReturningToCenter = false;
+            let isDragging = false;
+            let startX, startY;
+            let offsetX = 0;
+            let offsetY = 0;
+            let scale = 1;
+            let currentStartupID = null;
 
             planets.forEach((planet, index) => {
                 const orbit = planet.closest('.orbit');
                 const planetOrientation = planet.closest('.planet-orientation');
-                const orbitSize = parseFloat(getComputedStyle(orbit).getPropertyValue('--orbit-size'));
-                const orbitTime = parseFloat(getComputedStyle(orbit).getPropertyValue('--orbit-time'));
+                if (!orbit || !planetOrientation) {
+                    console.error(`Орбита или ориентация не найдены для планеты ${index}.`);
+                    return;
+                }
+
+                const orbitSize = parseFloat(getComputedStyle(orbit).getPropertyValue('--orbit-size')) || 200;
+                if (orbitSize < 100) {
+                    planetOrientation.style.display = 'none'; // Скрываем планеты с орбитой меньше 100px
+                    return;
+                }
+
+                const orbitTime = parseFloat(getComputedStyle(orbit).getPropertyValue('--orbit-time')) || 10;
                 const initialAngle = Math.random() * 360;
                 const speedFactor = 0.8 + Math.random() * 0.4;
+                const radius = orbitSize / 2;
+
+                if (radius > 0) {
+                    const angleRad = initialAngle * Math.PI / 180;
+                    const x = Math.cos(angleRad) * radius;
+                    const y = Math.sin(angleRad) * radius;
+                    planetOrientation.style.left = `${50 + 50 * (x / radius)}%`;
+                    planetOrientation.style.top = `${50 + 50 * (y / radius)}%`;
+                } else {
+                    console.warn(`Радиус орбиты равен нулю для планеты ${index}.`);
+                }
+
+                const tiltCompensation = -galaxyTiltAngle;
+                planet.style.transform = `rotateX(${tiltCompensation}deg)`;
 
                 planetObjects.push({
                     element: planet,
                     orientation: planetOrientation,
                     orbit: orbit,
-                    size: parseFloat(getComputedStyle(planet).getPropertyValue('--planet-size')),
+                    size: parseFloat(getComputedStyle(planet).getPropertyValue('--planet-size')) || 50,
                     orbitSize: orbitSize,
                     orbitTime: orbitTime,
                     angle: initialAngle,
@@ -1519,36 +1559,60 @@
                 });
 
                 const id = planet.getAttribute('data-id');
-                if (startups_data[id] && startups_data[id].image) {
-                    planet.style.backgroundImage = 'none'; // Удаляем backgroundImage
-                    planet.style.backgroundColor = 'transparent'; // Убеждаемся, что нет фонового цвета
-                } else {
-                    planet.style.backgroundImage = 'none'; // Удаляем backgroundImage
-                    planet.style.backgroundColor = 'transparent'; // Убеждаемся, что нет фонового цвета
+                if (startups[id]) {
+                    planet.style.backgroundImage = 'none';
+                    planet.style.backgroundColor = 'transparent';
+                    const img = planet.querySelector('.planet-img');
+                    if (img) {
+                        img.onerror = () => {
+                            console.warn(`Не удалось загрузить изображение для стартапа ${id}.`);
+                            img.src = '{% static "accounts/images/planet_logo_carusel.webp" %}';
+                        };
+                    }
                 }
 
                 planet.addEventListener('click', (e) => {
                     e.stopPropagation();
                     const id = planet.getAttribute('data-id');
-                    console.log('Clicked ID:', id);
-                    const startupData = startups[id.toString()]; // Приводим id к строке для соответствия ключам
-                    if (!startupData) {
+                    console.log('Clicked planet ID:', id);
+                    const startup = startups[id];
+                    if (!startup) {
                         console.error('Не найдены данные для стартапа с ID:', id);
                         return;
                     }
 
-                    planetImage.style.backgroundImage = `url('${startupData.image}')`;
-                    startupName.textContent = startupData.name;
-                    startupRating.textContent = `Рейтинг ${startupData.rating}`;
-                    startupProgress.textContent = startupData.progress;
-                    startupFunding.textContent = `Цель финансирования: ${startupData.funding}`;
-                    startupInvestors.textContent = startupData.investors;
-                    startupDescription.textContent = startupData.description;
+                    planetImage.style.backgroundImage = `url('${startup.image}')`;
+                    startupName.textContent = startup.name;
+                    startupRating.innerHTML = `Рейтинг: ${startup.rating.toFixed(1)} | Комментариев: ${startup.comment_count}`;
+                    startupProgress.innerHTML = `
+                        <div class="progress-bar-visual">
+                            <div class="progress-animation-container" style="width: ${startup.progress};">
+                                <div class="progress-planets"></div>
+                            </div>
+                            <span class="progress-percentage">${startup.progress}</span>
+                        </div>`;
+                    startupFunding.innerHTML = `
+                        <strong>Направление:</strong> ${startup.direction}<br>
+                        <div class="funding-goal-container-figma">
+                            <span class="funding-goal-text-figma">Цель финансирования: ${startup.funding_goal.toLocaleString('ru-RU')} ₽</span>
+                        </div>`;
+                    startupInvestors.innerHTML = `
+                        <div class="investor-count-container-figma">
+                            <i class="fas fa-users investor-icon-figma"></i>
+                            <span class="investor-count-text-figma">${startup.investors}</span>
+                        </div>`;
+                    startupDescription.innerHTML = `
+                        <div class="progress-bar">
+                            ${startup.investment_type && startup.investment_type !== 'Не указано' ? `<button>${startup.investment_type}</button>` : ''}
+                        </div>
+                        <div class="startup-short-description">${startup.description}</div>`;
+
+                    currentStartupID = startup.startup_id;
+                    console.log('Current Startup ID:', currentStartupID);
 
                     planets.forEach(p => p.classList.remove('active'));
                     planet.classList.add('active');
                     infoCard.style.display = 'block';
-
                     isPaused = true;
                     pausedTime = Date.now();
                     lastInteractionTime = Date.now();
@@ -1556,48 +1620,39 @@
             });
 
             closeCard.addEventListener('click', () => {
+                console.log('Close card clicked');
                 infoCard.style.display = 'none';
                 planets.forEach(p => p.classList.remove('active'));
-
                 if (isPaused) {
                     const pauseDuration = Date.now() - pausedTime;
                     planetObjects.forEach(planetObj => {
                         planetObj.startTime += pauseDuration;
                     });
                     isPaused = false;
+                    console.log('Resuming planet rotation');
                 }
-
                 lastInteractionTime = Date.now();
             });
 
             moreDetails.addEventListener('click', () => {
-                const activePlanet = document.querySelector('.planetary-system .planet.active');
-                if (activePlanet) {
-                    const id = activePlanet.getAttribute('data-id');
-                    const startup = startups[id];
-                    if (startup && startup.startup_id) {
-                        window.location.href = `/startups/${startup.startup_id}/`;
-                    }
+                console.log('More details clicked');
+                if (currentStartupID) {
+                    window.location.href = `/startups/${currentStartupID}/`;
+                } else {
+                    console.error('Startup ID не найден для перехода на страницу стартапа');
                 }
                 infoCard.style.display = 'none';
                 planets.forEach(p => p.classList.remove('active'));
-
                 if (isPaused) {
                     const pauseDuration = Date.now() - pausedTime;
                     planetObjects.forEach(planetObj => {
                         planetObj.startTime += pauseDuration;
                     });
                     isPaused = false;
+                    console.log('Resuming planet rotation after more details');
                 }
-
                 lastInteractionTime = Date.now();
             });
-
-            let isDragging = false;
-            let startX, startY;
-            let offsetX = 0;
-            let offsetY = 0;
-            let scale = 1;
 
             solarSystem.addEventListener('mousedown', (e) => {
                 e.preventDefault();
@@ -1611,20 +1666,15 @@
 
             document.addEventListener('mousemove', (e) => {
                 if (!isDragging) return;
-
                 const deltaX = e.clientX - startX;
                 const deltaY = e.clientY - startY;
-
                 offsetX += deltaX;
                 offsetY += deltaY;
-
                 offsetX = Math.max(-solarSystem.offsetWidth / 2, Math.min(solarSystem.offsetWidth / 2, offsetX));
                 offsetY = Math.max(-solarSystem.offsetHeight / 2, Math.min(solarSystem.offsetHeight / 2, offsetY));
-
                 scene.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
                 startX = e.clientX;
                 startY = e.clientY;
-
                 lastInteractionTime = Date.now();
             });
 
@@ -1639,7 +1689,6 @@
                 const delta = e.deltaY > 0 ? -0.1 : 0.1;
                 scale = Math.max(0.5, Math.min(3, scale + delta));
                 scene.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
-
                 lastInteractionTime = Date.now();
                 isReturningToCenter = false;
             });
@@ -1662,66 +1711,71 @@
                         if (!startTime) startTime = timestamp;
                         const elapsed = timestamp - startTime;
                         const progress = Math.min(elapsed / duration, 1);
-
                         offsetX = startX + (0 - startX) * progress;
                         offsetY = startY + (0 - startY) * progress;
-
                         scene.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
-
                         if (progress < 1) {
                             requestAnimationFrame(animateReturn);
                         } else {
                             isReturningToCenter = false;
                         }
                     }
-
                     requestAnimationFrame(animateReturn);
                 }
             }
-
             setInterval(checkInactivity, 1000);
 
             function updatePlanets() {
-              const now = Date.now();
-
-              if (isPaused) {
-                requestAnimationFrame(updatePlanets);
-                return;
-              }
-
-              planetObjects.forEach(planetObj => {
-                const elapsedSeconds = (now - planetObj.startTime) / 1000;
-                const orbitTimeSeconds = planetObj.orbitTime * planetObj.speedFactor;
-                const progress = (elapsedSeconds % orbitTimeSeconds) / orbitTimeSeconds;
-                let angle = planetObj.angle + progress * 360;
-                const angleRad = angle * Math.PI / 180;
-
-                const radius = planetObj.orbitSize / 2;
-                let x = Math.cos(angleRad) * radius;
-                let y = Math.sin(angleRad) * radius;
-
-                // Ограничиваем движение планет, чтобы они не пересекали центр (где #logo)
-                const centerThreshold = 50; // Радиус зоны вокруг центра, куда планеты не заходят
-                const distanceFromCenter = Math.sqrt(x * x + y * y);
-                if (distanceFromCenter < centerThreshold) {
-                  // Корректируем угол, чтобы планета оставалась за пределами центра
-                  angle += 10; // Смещаем угол для избежания пересечения
-                  const newAngleRad = angle * Math.PI / 180;
-                  x = Math.cos(newAngleRad) * radius;
-                  y = Math.sin(newAngleRad) * radius;
+                const now = Date.now();
+                if (isPaused) {
+                    requestAnimationFrame(updatePlanets);
+                    return;
                 }
 
-                planetObj.orientation.style.left = `${50 + 50 * (x / radius)}%`;
-                planetObj.orientation.style.top = `${50 + 50 * (y / radius)}%`;
+                planetObjects.forEach(planetObj => {
+                    try {
+                        if (!planetObj.orientation || !planetObj.element) return;
+                        const elapsedSeconds = (now - planetObj.startTime) / 1000;
+                        const orbitTimeSeconds = planetObj.orbitTime * planetObj.speedFactor;
+                        if (!orbitTimeSeconds || orbitTimeSeconds <= 0) {
+                            console.error('Некорректное значение orbitTimeSeconds:', orbitTimeSeconds);
+                            return;
+                        }
+                        const progress = (elapsedSeconds % orbitTimeSeconds) / orbitTimeSeconds;
+                        let angle = planetObj.angle + progress * 360;
+                        const angleRad = angle * Math.PI / 180;
+                        const radius = planetObj.orbitSize / 2;
+                        if (!radius || radius <= 0) {
+                            console.error('Некорректный радиус:', radius);
+                            return;
+                        }
 
-                const tiltCompensation = -galaxyTiltAngle;
-                planetObj.element.style.transform = `rotateX(${tiltCompensation}deg)`;
-              });
+                        let x = Math.cos(angleRad) * radius;
+                        let y = Math.sin(angleRad) * radius;
+                        const centerThreshold = 100; // Увеличен для предотвращения перекрытия логотипа
+                        const distanceFromCenter = Math.sqrt(x * x + y * y);
+                        if (distanceFromCenter < centerThreshold) {
+                            angle += 10;
+                            const newAngleRad = angle * Math.PI / 180;
+                            x = Math.cos(newAngleRad) * radius;
+                            y = Math.sin(newAngleRad) * radius;
+                        }
 
-              requestAnimationFrame(updatePlanets);
+                        planetObj.orientation.style.left = `${50 + 50 * (x / radius)}%`;
+                        planetObj.orientation.style.top = `${50 + 50 * (y / radius)}%`;
+                        const tiltCompensation = -galaxyTiltAngle;
+                        planetObj.element.style.transform = `rotateX(${tiltCompensation}deg)`;
+                    } catch (error) {
+                        console.error('Ошибка при обновлении позиции планеты:', error);
+                    }
+                });
+
+                requestAnimationFrame(updatePlanets);
             }
 
-            updatePlanets();
+            if (planets.length > 0) {
+                requestAnimationFrame(updatePlanets);
+            }
         })();
      });
     </script>
