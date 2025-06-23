@@ -21,14 +21,7 @@ body {
   padding-bottom: 0 !important;
   padding-left: 0;
   font-family: Unbounded, Arial, sans-serif;
-  background: linear-gradient(
-    180deg,
-    #000000 0%,
-    #00346b 25%,
-    #004e9f 48%,
-    #01366d 64%,
-    #020202 100%
-  );
+  background: transparent;
   color: var(--text-light);
   display: flex;
   flex-direction: column;
