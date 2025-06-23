@@ -1463,18 +1463,20 @@
     
           // Планетарная система
           (function() {
-              const startups_data = JSON.parse(document.getElementById('planetary-startups-data').textContent || '[]');
+              const startups_data_raw = JSON.parse(document.getElementById('planetary-startups-data').textContent || '[]');
               const startups = {};
-              if (Array.isArray(startups_data)) {
-                  startups_data.forEach(s => {
-                      startups[s.startup_id.toString()] = {
+              if (Array.isArray(startups_data_raw)) {
+                  startups_data_raw.forEach(s => {
+                      // Ключом будет startup_id, преобразованный в строку для надежности
+                      startups[String(s.startup_id)] = {
+                          // Сопоставляем поля из js_data (views.py) с тем, что ожидает JS
                           startup_id: s.startup_id,
                           image: s.planet_image ? `https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/${s.planet_image}` : '{% static "accounts/images/planet_logo_carusel.webp" %}',
                           name: s.title || 'Без названия',
                           rating: s.average_rating || 0,
                           comment_count: s.comment_count || 0,
                           progress: s.progress || '0%',
-                          direction: s.direction?.direction_name || 'Без категории',
+                          direction: s.direction || 'Без категории',
                           funding_goal: s.funding_goal || 0,
                           investors: s.get_investors_count || 0,
                           investment_type: s.investment_type || 'Не указано',
@@ -1575,7 +1577,7 @@
                       e.stopPropagation();
                       const id = planet.getAttribute('data-id');
                       console.log('Clicked planet ID:', id);
-                      const startup = startups[id];
+                      const startup = startups[id]; // Ищем по строковому ID
                       if (!startup) {
                           console.error('Не найдены данные для стартапа с ID:', id);
                           return;
