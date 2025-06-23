@@ -7,9 +7,9 @@ import os
 import uuid
 from decimal import Decimal
 from random import choice, shuffle  # Импортируем shuffle напрямую
-import requests
 
 import boto3
+import requests
 from boto3 import client
 from dateutil.relativedelta import relativedelta
 from django import forms  # Добавляем импорт
@@ -101,20 +101,20 @@ logger = logging.getLogger(__name__)
 # Главная страница
 def home(request):
     if not request.user.is_authenticated:
-        return redirect(
-            "main_temp_page"
-        )  # Перенаправляем на временную главную, если не авторизован
+        return render(
+            request, "accounts/main.html"
+        )  # Показываем новую главную для неавторизованных
+
+    # Если пользователь авторизован, перенаправляем его на соответствующую страницу
+    if request.user.role == "investor":
+        return redirect("investor_main")
+    elif request.user.role == "startupper":
+        return redirect("startupper_main")
+    elif request.user.role == "moderator":
+        return redirect("main_page_moderator")
+
+    # Если роль не определена или другая, можно направить на общую страницу
     return render(request, "accounts/home.html")
-
-
-# Новая временная главная страница (для всех)
-def display_main_temp_page(request):  # Изменено имя представления
-    return render(request, "accounts/main_temp.html")
-
-
-# Старая временная главная страница (если еще нужна)
-def main_temp_view(request):
-    return render(request, "accounts/main_temp.html")
 
 
 # Страница FAQ
@@ -140,7 +140,9 @@ def register(request):
             messages.success(
                 request, "Регистрация прошла успешно! Теперь вы можете войти."
             )
-            return redirect("home")
+            return redirect(
+                "login"
+            )  # После регистрации перенаправляем на страницу входа
         else:
             return render(request, "accounts/register.html", {"form": form})
     else:
@@ -164,8 +166,19 @@ def user_login(request):
             if user is not None:
                 logger.info(f"User authenticated: {user.email}")
                 login(request, user)
-                messages.success(request, f"Добро пожаловать, {user.email}!")
-                return redirect("home")
+                messages.success(
+                    request, f"Добро пожаловать, {user.first_name or user.email}!"
+                )
+
+                # Перенаправление в зависимости от роли
+                if user.role == "investor":
+                    return redirect("investor_main")
+                elif user.role == "startupper":
+                    return redirect("startupper_main")
+                elif user.role == "moderator":
+                    return redirect("main_page_moderator")
+                else:
+                    return redirect("home")  # Запасной вариант
             else:
                 logger.warning("Authentication failed for email")
                 messages.error(request, "Неверный email или пароль.")
@@ -913,29 +926,31 @@ def profile(request, user_id=None):
             role_id = request.POST.get("role_id")
             if role_id in ["1", "2"]:
                 user.role_id = int(role_id)
-                user.save(update_fields=['role'])
+                user.save(update_fields=["role"])
                 messages.success(request, "Роль успешно выбрана!")
                 return redirect("profile")
             else:
                 messages.error(request, "Выбрана неверная роль.")
                 return redirect("profile")
 
-        elif 'edit_profile' in request.POST:
+        elif "edit_profile" in request.POST:
             form = ProfileEditForm(request.POST, instance=user)
             if form.is_valid():
                 form.save()
-                if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-                    return JsonResponse({'success': True, 'message': 'Профиль успешно обновлен!'})
+                if request.headers.get("x-requested-with") == "XMLHttpRequest":
+                    return JsonResponse(
+                        {"success": True, "message": "Профиль успешно обновлен!"}
+                    )
                 messages.success(request, "Профиль успешно обновлен!")
                 return redirect("profile")
             else:
-                if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-                    return JsonResponse({'success': False, 'errors': form.errors})
+                if request.headers.get("x-requested-with") == "XMLHttpRequest":
+                    return JsonResponse({"success": False, "errors": form.errors})
                 messages.error(request, "Пожалуйста, исправьте ошибки.")
-        
-        elif 'avatar' in request.FILES:
-            user.profile_picture_url = request.FILES['avatar']
-            user.save(update_fields=['profile_picture_url'])
+
+        elif "avatar" in request.FILES:
+            user.profile_picture_url = request.FILES["avatar"]
+            user.save(update_fields=["profile_picture_url"])
             messages.success(request, "Аватар успешно обновлен!")
             return redirect("profile")
 
@@ -965,28 +980,66 @@ def profile(request, user_id=None):
 
 @login_required
 def delete_avatar(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         user = request.user
-        if 'avatar' in request.FILES:
-            avatar = request.FILES['avatar']
+        if "avatar" in request.FILES:
+            avatar = request.FILES["avatar"]
             allowed_mimes = ["image/jpeg", "image/png"]
             if avatar.content_type not in allowed_mimes:
                 messages.error(request, "Допустимы только файлы PNG или JPEG.")
                 if request.headers.get("X-Requested-With") == "XMLHttpRequest":
-                    return JsonResponse({"success": False, "error": "Допустимы только файлы PNG или JPEG."})
-                return render(request, "accounts/profile.html", {"user": user, "is_own_profile": True, "form": form, "startups_page": startups_page, "news_page": news_page, "show_role_selection": show_role_selection})
+                    return JsonResponse(
+                        {
+                            "success": False,
+                            "error": "Допустимы только файлы PNG или JPEG.",
+                        }
+                    )
+                return render(
+                    request,
+                    "accounts/profile.html",
+                    {
+                        "user": user,
+                        "is_own_profile": True,
+                        "form": form,
+                        "startups_page": startups_page,
+                        "news_page": news_page,
+                        "show_role_selection": show_role_selection,
+                    },
+                )
 
             max_size = 5 * 1024 * 1024
             if avatar.size > max_size:
                 messages.error(request, "Размер файла не должен превышать 5 МБ.")
                 if request.headers.get("X-Requested-With") == "XMLHttpRequest":
-                    return JsonResponse({"success": False, "error": "Размер файла не должен превышать 5 МБ."})
-                return render(request, "accounts/profile.html", {"user": user, "is_own_profile": True, "form": form, "startups_page": startups_page, "news_page": news_page, "show_role_selection": show_role_selection})
+                    return JsonResponse(
+                        {
+                            "success": False,
+                            "error": "Размер файла не должен превышать 5 МБ.",
+                        }
+                    )
+                return render(
+                    request,
+                    "accounts/profile.html",
+                    {
+                        "user": user,
+                        "is_own_profile": True,
+                        "form": form,
+                        "startups_page": startups_page,
+                        "news_page": news_page,
+                        "show_role_selection": show_role_selection,
+                    },
+                )
 
             avatar_id = str(uuid.uuid4())
             file_path = f"users/{request.user.user_id}/avatar/{avatar_id}_{avatar.name}"
             try:
-                s3_client = boto3.client("s3", endpoint_url=settings.AWS_S3_ENDPOINT_URL, aws_access_key_id=settings.AWS_ACCESS_KEY_ID, aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY, region_name=settings.AWS_S3_REGION_NAME)
+                s3_client = boto3.client(
+                    "s3",
+                    endpoint_url=settings.AWS_S3_ENDPOINT_URL,
+                    aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+                    aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+                    region_name=settings.AWS_S3_REGION_NAME,
+                )
                 bucket_name = settings.AWS_STORAGE_BUCKET_NAME
                 prefix = f"users/{request.user.user_id}/avatar/"
                 response = s3_client.list_objects_v2(Bucket=bucket_name, Prefix=prefix)
@@ -995,7 +1048,11 @@ def delete_avatar(request):
                         s3_client.delete_object(Bucket=bucket_name, Key=obj["Key"])
                         logger.info(f"Удалён старый аватар: {obj['Key']}")
 
-                FileStorage.objects.filter(entity_type__type_name="user", entity_id=request.user.user_id, file_type__type_name="avatar").delete()
+                FileStorage.objects.filter(
+                    entity_type__type_name="user",
+                    entity_id=request.user.user_id,
+                    file_type__type_name="avatar",
+                ).delete()
 
                 default_storage.save(file_path, avatar)
                 request.user.profile_picture_url = avatar_id
@@ -1003,20 +1060,45 @@ def delete_avatar(request):
 
                 entity_type, _ = EntityTypes.objects.get_or_create(type_name="user")
                 file_type, _ = FileTypes.objects.get_or_create(type_name="avatar")
-                FileStorage.objects.create(entity_type=entity_type, entity_id=request.user.user_id, file_url=avatar_id, file_type=file_type, uploaded_at=timezone.now())
+                FileStorage.objects.create(
+                    entity_type=entity_type,
+                    entity_id=request.user.user_id,
+                    file_url=avatar_id,
+                    file_type=file_type,
+                    uploaded_at=timezone.now(),
+                )
 
-                logger.info(f"Аватар сохранён для user_id {request.user.user_id} по пути: {file_path}, UUID: {avatar_id}")
+                logger.info(
+                    f"Аватар сохранён для user_id {request.user.user_id} по пути: {file_path}, UUID: {avatar_id}"
+                )
                 messages.success(request, "Аватарка успешно загружена!")
                 if request.headers.get("X-Requested-With") == "XMLHttpRequest":
-                    return JsonResponse({"success": True, "message": "Аватарка успешно загружена!"})
+                    return JsonResponse(
+                        {"success": True, "message": "Аватарка успешно загружена!"}
+                    )
             except Exception as e:
-                logger.error(f"Ошибка при сохранении аватара для user_id {request.user.user_id}: {str(e)}")
+                logger.error(
+                    f"Ошибка при сохранении аватара для user_id {request.user.user_id}: {str(e)}"
+                )
                 messages.error(request, "Ошибка при загрузке аватара.")
                 if request.headers.get("X-Requested-With") == "XMLHttpRequest":
-                    return JsonResponse({"success": False, "error": "Ошибка при загрузке аватара."})
+                    return JsonResponse(
+                        {"success": False, "error": "Ошибка при загрузке аватара."}
+                    )
             return redirect("profile")
 
-    return render(request, "accounts/profile.html", {"user": user, "is_own_profile": profile_user == request.user, "form": form, "startups_page": startups_page, "news_page": news_page, "show_role_selection": show_role_selection})
+    return render(
+        request,
+        "accounts/profile.html",
+        {
+            "user": user,
+            "is_own_profile": profile_user == request.user,
+            "form": form,
+            "startups_page": startups_page,
+            "news_page": news_page,
+            "show_role_selection": show_role_selection,
+        },
+    )
 
 
 @login_required
@@ -3438,7 +3520,9 @@ def my_startups(request):
         "startups_count": approved_startups_count,
         "max_investment": max_raised,
         "min_investment": min_raised,
-        "investment_categories": investment_categories[:7],  # Ограничиваем до 7 для отображения
+        "investment_categories": investment_categories[
+            :7
+        ],  # Ограничиваем до 7 для отображения
         "invested_category_data": invested_category_data_dict,
         "all_directions": all_directions_list,
         # Данные для графика (передаем как есть, json_script обработает)
@@ -3450,8 +3534,9 @@ def my_startups(request):
     }
 
     # Добавляем JSON-сериализованные данные отдельно, чтобы не загромождать основной контекст
-    context["planetary_startups_json"] = json.dumps(planetary_startups, cls=DjangoJSONEncoder)
-
+    context["planetary_startups_json"] = json.dumps(
+        planetary_startups, cls=DjangoJSONEncoder
+    )
 
     return render(request, "accounts/my_startups.html", context)
 
@@ -3586,10 +3671,12 @@ def create_group_chat(request):
 
 @login_required
 def support_page_view(request):
-    is_moderator = request.user.is_authenticated and request.user.role and request.user.role.role_name == 'moderator'
-    context = {
-        'is_moderator': is_moderator
-    }
+    is_moderator = (
+        request.user.is_authenticated
+        and request.user.role
+        and request.user.role.role_name == "moderator"
+    )
+    context = {"is_moderator": is_moderator}
     return render(request, "accounts/support.html", context)
 
 
@@ -3790,20 +3877,21 @@ def delete_investment(request, startup_id, user_id):
 
 @login_required  # Предполагаем, что страница заявок доступна только авторизованным
 def support_orders_view(request):
-    if request.user.is_authenticated and request.user.role and request.user.role.role_name == 'moderator':
+    if (
+        request.user.is_authenticated
+        and request.user.role
+        and request.user.role.role_name == "moderator"
+    ):
         # Модератор видит все заявки
-        orders = SupportTicket.objects.all().order_by('-created_at')
+        orders = SupportTicket.objects.all().order_by("-created_at")
         is_moderator = True
     else:
         # Обычный пользователь видит только свои заявки
-        orders = SupportTicket.objects.filter(user=request.user).order_by('-created_at')
+        orders = SupportTicket.objects.filter(user=request.user).order_by("-created_at")
         is_moderator = False
 
-    context = {
-        'orders': orders,
-        'is_moderator': is_moderator
-    }
-    return render(request, 'accounts/support_orders.html', context)
+    context = {"orders": orders, "is_moderator": is_moderator}
+    return render(request, "accounts/support_orders.html", context)
 
 
 @login_required  # Предполагаем, что создание заявки доступно только авторизованным
@@ -3812,51 +3900,53 @@ def support_ticket_detail(request, ticket_id):
     user = request.user
 
     # Проверка прав доступа
-    is_moderator = user.is_authenticated and user.role and user.role.role_name == 'moderator'
+    is_moderator = (
+        user.is_authenticated and user.role and user.role.role_name == "moderator"
+    )
     if not (user == ticket.user or is_moderator):
         return HttpResponseForbidden("У вас нет доступа к этой заявке.")
 
     form = None
     if is_moderator:
-        if request.method == 'POST':
+        if request.method == "POST":
             form = ModeratorTicketForm(request.POST, instance=ticket)
             if form.is_valid():
                 form.save()
-                messages.success(request, 'Заявка успешно обновлена.')
-                return redirect('support_ticket_detail', ticket_id=ticket.ticket_id)
+                messages.success(request, "Заявка успешно обновлена.")
+                return redirect("support_ticket_detail", ticket_id=ticket.ticket_id)
         else:
             form = ModeratorTicketForm(instance=ticket)
-    
+
     context = {
-        'ticket': ticket,
-        'form': form,
-        'is_moderator': is_moderator,
+        "ticket": ticket,
+        "form": form,
+        "is_moderator": is_moderator,
     }
-    return render(request, 'accounts/support_ticket_detail.html', context)
+    return render(request, "accounts/support_ticket_detail.html", context)
 
 
 @login_required
 def support_contact_view(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         form = SupportTicketForm(request.POST)
         if form.is_valid():
             # Создаем, но не сохраняем в БД, чтобы добавить пользователя
             ticket = form.save(commit=False)
             ticket.user = request.user
             ticket.save()
-            
+
             # Отправляем уведомление в Telegram
             send_telegram_support_message(ticket)
-            
-            messages.success(request, 'Ваше обращение успешно отправлено! Мы скоро с вами свяжемся.')
-            return redirect('support_contact')
+
+            messages.success(
+                request, "Ваше обращение успешно отправлено! Мы скоро с вами свяжемся."
+            )
+            return redirect("support_contact")
     else:
         form = SupportTicketForm()
 
-    context = {
-        'form': form
-    }
-    return render(request, 'accounts/support_contact.html', context)
+    context = {"form": form}
+    return render(request, "accounts/support_contact.html", context)
 
 
 @login_required
@@ -3970,62 +4060,91 @@ def custom_404(request, exception):
 @csrf_exempt
 @require_POST
 def telegram_webhook(request, token):
-    bot_token = '7843250850:AAEL8hapR_WVcG2mMNUhWvK-I0DMYG042Ko'
+    bot_token = "7843250850:AAEL8hapR_WVcG2mMNUhWvK-I0DMYG042Ko"
     if token != bot_token:
         logger.warning("Invalid token in webhook URL.")
-        return HttpResponseForbidden('Invalid token')
+        return HttpResponseForbidden("Invalid token")
 
     try:
         data = json.loads(request.body)
         logger.info(f"Webhook received data: {data}")
 
-        if 'callback_query' not in data:
+        if "callback_query" not in data:
             return HttpResponse(status=200)
 
-        callback_query = data['callback_query']
-        callback_data = callback_query['data']
-        message = callback_query['message']
-        chat_id = message['chat']['id']
-        message_id = message['message_id']
-        
-        # Немедленно отвечаем Telegram, чтобы кнопка перестала "грузиться"
-        requests.post(f"https://api.telegram.org/bot{bot_token}/answerCallbackQuery", json={'callback_query_id': callback_query['id']})
+        callback_query = data["callback_query"]
+        callback_data = callback_query["data"]
+        message = callback_query["message"]
+        chat_id = message["chat"]["id"]
+        message_id = message["message_id"]
 
-        new_text = message.get('text', '')
+        # Немедленно отвечаем Telegram, чтобы кнопка перестала "грузиться"
+        requests.post(
+            f"https://api.telegram.org/bot{bot_token}/answerCallbackQuery",
+            json={"callback_query_id": callback_query["id"]},
+        )
+
+        new_text = message.get("text", "")
         new_keyboard = None
         ticket = None
 
-        if callback_data.startswith('close_ticket_'):
-            ticket_id = int(callback_data.split('_')[2])
+        if callback_data.startswith("close_ticket_"):
+            ticket_id = int(callback_data.split("_")[2])
             ticket = SupportTicket.objects.filter(pk=ticket_id).first()
             if ticket:
-                ticket.status = 'closed'
-                ticket.save(update_fields=['status'])
-                
+                ticket.status = "closed"
+                ticket.save(update_fields=["status"])
+
                 status_line = "\n\n<b>✅ ЗАЯВКА ЗАКРЫТА</b>"
                 if status_line not in new_text:
                     new_text += status_line
-                
-                new_keyboard = {"inline_keyboard": [[{"text": "↩️ Вернуть в работу", "callback_data": f"reopen_ticket_{ticket.ticket_id}"}]]}
+
+                new_keyboard = {
+                    "inline_keyboard": [
+                        [
+                            {
+                                "text": "↩️ Вернуть в работу",
+                                "callback_data": f"reopen_ticket_{ticket.ticket_id}",
+                            }
+                        ]
+                    ]
+                }
                 logger.info(f"Ticket {ticket_id} was closed via Telegram.")
 
-        elif callback_data.startswith('reopen_ticket_'):
-            ticket_id = int(callback_data.split('_')[2])
+        elif callback_data.startswith("reopen_ticket_"):
+            ticket_id = int(callback_data.split("_")[2])
             ticket = SupportTicket.objects.filter(pk=ticket_id).first()
             if ticket:
-                ticket.status = 'new'
-                ticket.save(update_fields=['status'])
-                
+                ticket.status = "new"
+                ticket.save(update_fields=["status"])
+
                 status_line = "\n\n<b>✅ ЗАЯВКА ЗАКРЫТА</b>"
                 if new_text.endswith(status_line):
-                    new_text = new_text[:-len(status_line)]
-                
-                new_keyboard = {"inline_keyboard": [[{"text": "✅ Исполнено", "callback_data": f"close_ticket_{ticket.ticket_id}"}]]}
+                    new_text = new_text[: -len(status_line)]
+
+                new_keyboard = {
+                    "inline_keyboard": [
+                        [
+                            {
+                                "text": "✅ Исполнено",
+                                "callback_data": f"close_ticket_{ticket.ticket_id}",
+                            }
+                        ]
+                    ]
+                }
                 logger.info(f"Ticket {ticket_id} was reopened via Telegram.")
 
         if new_keyboard:
-            payload = {'chat_id': chat_id, 'message_id': message_id, 'text': new_text, 'parse_mode': 'HTML', 'reply_markup': new_keyboard}
-            requests.post(f"https://api.telegram.org/bot{bot_token}/editMessageText", json=payload)
+            payload = {
+                "chat_id": chat_id,
+                "message_id": message_id,
+                "text": new_text,
+                "parse_mode": "HTML",
+                "reply_markup": new_keyboard,
+            }
+            requests.post(
+                f"https://api.telegram.org/bot{bot_token}/editMessageText", json=payload
+            )
 
         return HttpResponse(status=200)
 
@@ -4035,4 +4154,3 @@ def telegram_webhook(request, token):
     except Exception as e:
         logger.error(f"Error processing Telegram webhook: {e}", exc_info=True)
         return HttpResponse(status=500)
-

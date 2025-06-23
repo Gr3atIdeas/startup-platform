@@ -1,11 +1,11 @@
-from django.urls import path, include, re_path
+from django.urls import include, path, re_path
 from django.views.generic import RedirectView
+
 from . import views
 
 urlpatterns = [
     # Основные маршруты
     path("", views.home, name="home"),
-    path("main_temp_page/", views.display_main_temp_page, name="main_temp_page"),
     path("register/", views.register, name="register"),
     path("login/", views.user_login, name="login"),
     path("logout/", views.user_logout, name="logout"),
@@ -15,73 +15,129 @@ urlpatterns = [
     path("news/", views.news, name="news"),
     path("news/<int:article_id>/", views.news_detail, name="news_detail"),
     path("news/<int:article_id>/delete/", views.delete_news, name="delete_news"),
-    
     # Космочат
     path("cosmochat/", views.cosmochat, name="cosmochat"),
     path("cosmochat/<int:chat_id>/", views.get_chat_messages, name="get_chat_messages"),
     path("cosmochat/send-message/", views.send_message, name="send_message"),
-    path("cosmochat/mark-read/<int:chat_id>/", views.mark_messages_read, name="mark_messages_read"),
+    path(
+        "cosmochat/mark-read/<int:chat_id>/",
+        views.mark_messages_read,
+        name="mark_messages_read",
+    ),
     path("cosmochat/start-chat/<int:user_id>/", views.start_chat, name="start_chat"),
-    path("cosmochat/add-participant/<int:chat_id>/", views.add_participant, name="add_participant"),
+    path(
+        "cosmochat/add-participant/<int:chat_id>/",
+        views.add_participant,
+        name="add_participant",
+    ),
     path("cosmochat/leave-chat/<int:chat_id>/", views.leave_chat, name="leave_chat"),
-    path("cosmochat/create-group-chat/", views.create_group_chat, name="create_group_chat"),
-    path("cosmochat/available-users-for-chat/<int:chat_id>/", views.available_users_for_chat, name="available_users_for_chat"),
+    path(
+        "cosmochat/create-group-chat/",
+        views.create_group_chat,
+        name="create_group_chat",
+    ),
+    path(
+        "cosmochat/available-users-for-chat/<int:chat_id>/",
+        views.available_users_for_chat,
+        name="available_users_for_chat",
+    ),
     path("cosmochat/rename-chat/<int:chat_id>/", views.rename_chat, name="rename_chat"),
     path("cosmochat/available_users/", views.available_users, name="available_users"),
     path("cosmochat/start-deal/<int:chat_id>/", views.start_deal, name="start_deal"),
     path("cosmochat/chat-list/", views.chat_list, name="chat_list"),
-    
     # Профиль и управление
     path("profile/", views.profile, name="profile"),
     path("profile/delete-avatar/", views.delete_avatar, name="delete_avatar"),
     path("profile/<int:user_id>/", views.profile, name="user_profile"),
     path("create-startup/", views.create_startup, name="create_startup"),
-    path("create-startup/success/", views.startup_creation_success, name="startup_creation_success"),
+    path(
+        "create-startup/success/",
+        views.startup_creation_success,
+        name="startup_creation_success",
+    ),
     path("edit-startup/<int:startup_id>/", views.edit_startup, name="edit_startup"),
     path("moderator-main/", views.main_page_moderator, name="main_page_moderator"),
     path("investor-main/", views.investor_main, name="investor_main"),
     path("startupper-main/", views.startupper_main, name="startupper_main"),
     path("moderator-dashboard/", views.moderator_dashboard, name="moderator_dashboard"),
-    path("approve-startup/<int:startup_id>/", views.approve_startup, name="approve_startup"),
-    path("reject-startup/<int:startup_id>/", views.reject_startup, name="reject_startup"),
+    path(
+        "approve-startup/<int:startup_id>/",
+        views.approve_startup,
+        name="approve_startup",
+    ),
+    path(
+        "reject-startup/<int:startup_id>/", views.reject_startup, name="reject_startup"
+    ),
     path("vote-startup/<int:startup_id>/", views.vote_startup, name="vote_startup"),
     path("invest/<int:startup_id>/", views.invest, name="invest"),
-    
     # Поиск и планетарная система
     path("search-suggestions/", views.search_suggestions, name="search_suggestions"),
     path("planetary-system/", views.planetary_system, name="planetary_system"),
     path("my_startups/", views.my_startups, name="my_startups"),
-    path("load_similar_startups/<int:startup_id>/", views.load_similar_startups, name="load_similar_startups"),
-    
+    path(
+        "load_similar_startups/<int:startup_id>/",
+        views.load_similar_startups,
+        name="load_similar_startups",
+    ),
     # Сделки
-    path('deals/', views.deals_view, name='deals_view'),
-    path('deals/approve/<int:chat_id>/', views.approve_deal, name='approve_deal'),
-    path('deals/reject/<int:chat_id>/', views.reject_deal, name='reject_deal'),
-    
+    path("deals/", views.deals_view, name="deals_view"),
+    path("deals/approve/<int:chat_id>/", views.approve_deal, name="approve_deal"),
+    path("deals/reject/<int:chat_id>/", views.reject_deal, name="reject_deal"),
     # Уведомления и поддержка
     path("notifications/", views.notifications_view, name="notifications_page"),
     path("support/", views.support_page_view, name="support"),
     path("support/orders/", views.support_orders_view, name="support_orders"),
-    path("support/ticket/<int:ticket_id>/", views.support_ticket_detail, name="support_ticket_detail"),
+    path(
+        "support/ticket/<int:ticket_id>/",
+        views.support_ticket_detail,
+        name="support_ticket_detail",
+    ),
     path("support/contact/", views.support_contact_view, name="support_contact"),
-    
     # Вебхук для Telegram бота
-    path("telegram-bot-webhook/<str:token>/", views.telegram_webhook, name="telegram_webhook"),
-    
+    path(
+        "telegram-bot-webhook/<str:token>/",
+        views.telegram_webhook,
+        name="telegram_webhook",
+    ),
     # Дополнительные маршруты
-    path("favicon.ico", RedirectView.as_view(url="/static/images/favicon.png", permanent=True)),
+    path(
+        "favicon.ico",
+        RedirectView.as_view(url="/static/images/favicon.png", permanent=True),
+    ),
     path("faq/", views.faq_page_view, name="faq"),
     path("contacts/", views.contacts_page_view, name="contacts"),
     path("legal/", views.legal, name="legal"),
     path("change_owner/<int:startup_id>/", views.change_owner, name="change_owner"),
     path("get_investors/<int:startup_id>/", views.get_investors, name="get_investors"),
     path("add_investor/<int:startup_id>/", views.add_investor, name="add_investor"),
-    path("edit_investment/<int:startup_id>/<int:user_id>/", views.edit_investment, name="edit_investment"),
-    path("delete_investment/<int:startup_id>/<int:user_id>/", views.delete_investment, name="delete_investment"),
-    path("chats/find_or_create/<int:recipient_id>/", views.find_or_create_chat, name="find_or_create_chat"),
-    path("delete-message/<int:message_id>/", views.delete_message, name="delete_message"),
-    path("remove-participant/<int:chat_id>/", views.remove_participant, name="remove_participant"),
-    path('cosmochat/<int:chat_id>/messages/', views.get_chat_messages, name='get_chat_messages_dynamic'),
+    path(
+        "edit_investment/<int:startup_id>/<int:user_id>/",
+        views.edit_investment,
+        name="edit_investment",
+    ),
+    path(
+        "delete_investment/<int:startup_id>/<int:user_id>/",
+        views.delete_investment,
+        name="delete_investment",
+    ),
+    path(
+        "chats/find_or_create/<int:recipient_id>/",
+        views.find_or_create_chat,
+        name="find_or_create_chat",
+    ),
+    path(
+        "delete-message/<int:message_id>/", views.delete_message, name="delete_message"
+    ),
+    path(
+        "remove-participant/<int:chat_id>/",
+        views.remove_participant,
+        name="remove_participant",
+    ),
+    path(
+        "cosmochat/<int:chat_id>/messages/",
+        views.get_chat_messages,
+        name="get_chat_messages_dynamic",
+    ),
     # Обработчик ошибок 404
-    path('404/', views.custom_404, name='custom_404'),
+    path("404/", views.custom_404, name="custom_404"),
 ]
