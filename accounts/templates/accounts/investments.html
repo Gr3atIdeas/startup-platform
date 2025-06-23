@@ -189,7 +189,7 @@
                   {% if investment.startup.planet_image %}
                     <img src="{% get_file_url_tag file_id=investment.startup.planet_image startup_id=investment.startup.startup_id file_type='planet' %}" alt="{{ investment.startup.title|default:'No Name' }} Planet" class="planet-image" style="max-width: 100px; max-height: 100px;" onerror="this.src='{% static 'accounts/images/planet_logo_carusel.webp' %}'">
                   {% elif investment.startup.logo_urls and investment.startup.logo_urls|length > 0 %}
-                    <img src="{% get_file_url_tag file_id=investment.startup.logo_urls.0 startup_id=investment.startup.startup_id file_type='logo' %}" alt="{{ investment.startup.title|default:'No Name' }} Logo" class="planet-image" style="max-width: 30px; max-height: 30px;" onerror="this.src='{% static 'accounts/images/default-logo.png' %}'">
+                    <img src="{% get_file_url_tag file_id=investment.startup.logo_urls.0 startup_id=investment.startup.startup_id file_type='logo' %}" alt="{{ investment.startup.title|default:'No Name' }} Logo" class="planet-image" style="max-width: 30px; max-height: 30px;" onerror="this.src='{% static 'accounts/images/logo.png' %}'">
                   {% else %}
                     <div class="planet">
                       <div class="planet-segment segment-top" style="background: linear-gradient(to bottom, #87CEEB 0%, #E0FFFF 100%);"></div>
@@ -198,9 +198,9 @@
                     </div>
                   {% endif %}
                   {% if investment.startup.logo_urls and investment.startup.logo_urls|length > 0 %}
-                    <img src="{% get_file_url_tag file_id=investment.startup.logo_urls.0 startup_id=investment.startup.startup_id file_type='logo' %}" alt="{{ investment.startup.title|default:'No Name' }} Logo" class="startup-logo" style="max-width: 30px; max-height: 30px;" onerror="this.src='{% static 'accounts/images/default-logo.png' %}'">
+                    <img src="{% get_file_url_tag file_id=investment.startup.logo_urls.0 startup_id=investment.startup.startup_id file_type='logo' %}" alt="{{ investment.startup.title|default:'No Name' }} Logo" class="startup-logo" style="max-width: 30px; max-height: 30px;" onerror="this.src='{% static 'accounts/images/logo.png' %}'">
                   {% else %}
-                    <img src="{% static 'accounts/images/default-logo.png' %}" alt="Default Logo" class="startup-logo" style="max-width: 30px; max-height: 30px;">
+                    <img src="{% static 'accounts/images/logo.png' %}" alt="Default Logo" class="startup-logo" style="max-width: 30px; max-height: 30px;">
                   {% endif %}
                 </div>
                 <div class="startup-name">
@@ -269,7 +269,7 @@
                   {% if startup.planet_image %}
                     <img src="{% get_file_url_tag file_id=startup.planet_image startup_id=startup.startup_id file_type='planet' %}" alt="{{ startup.title|default:'No Name' }} Planet" class="planet-image" style="max-width: 100px; max-height: 100px;" onerror="this.src='{% static 'accounts/images/planet_logo_carusel.webp' %}'">
                   {% elif startup.logo_urls and startup.logo_urls|length > 0 %}
-                    <img src="{% get_file_url_tag file_id=startup.logo_urls.0 startup_id=startup.startup_id file_type='logo' %}" alt="{{ startup.title|default:'No Name' }} Logo" class="planet-image" style="max-width: 30px; max-height: 30px;" onerror="this.src='{% static 'accounts/images/default-logo.png' %}'">
+                    <img src="{% get_file_url_tag file_id=startup.logo_urls.0 startup_id=startup.startup_id file_type='logo' %}" alt="{{ startup.title|default:'No Name' }} Logo" class="planet-image" style="max-width: 30px; max-height: 30px;" onerror="this.src='{% static 'accounts/images/logo.png' %}'">
                   {% else %}
                     <div class="planet">
                       <div class="planet-segment segment-top" style="background: linear-gradient(to bottom, #87CEEB 0%, #E0FFFF 100%);"></div>
@@ -278,9 +278,9 @@
                     </div>
                   {% endif %}
                   {% if startup.logo_urls and startup.logo_urls|length > 0 %}
-                    <img src="{% get_file_url_tag file_id=startup.logo_urls.0 startup_id=startup.startup_id file_type='logo' %}" alt="{{ startup.title|default:'No Name' }} Logo" class="startup-logo" style="max-width: 30px; max-height: 30px;" onerror="this.src='{% static 'accounts/images/default-logo.png' %}'">
+                    <img src="{% get_file_url_tag file_id=startup.logo_urls.0 startup_id=startup.startup_id file_type='logo' %}" alt="{{ startup.title|default:'No Name' }} Logo" class="startup-logo" style="max-width: 30px; max-height: 30px;" onerror="this.src='{% static 'accounts/images/logo.png' %}'">
                   {% else %}
-                    <img src="{% static 'accounts/images/default-logo.png' %}" alt="Default Logo" class="startup-logo" style="max-width: 30px; max-height: 30px;">
+                    <img src="{% static 'accounts/images/logo.png' %}" alt="Default Logo" class="startup-logo" style="max-width: 30px; max-height: 30px;">
                   {% endif %}
                 </div>
                 <div class="startup-name">
@@ -348,7 +348,7 @@
                   {% if investment.startup.planet_image %}
                     <img src="{% get_file_url_tag file_id=investment.startup.planet_image startup_id=investment.startup.startup_id file_type='planet' %}" alt="{{ investment.startup.title|default:'No Name' }} Planet" class="planet-image" style="max-width: 100px; max-height: 100px;" onerror="this.src='{% static 'accounts/images/planet_logo_carusel.webp' %}'">
                   {% elif investment.startup.logo_urls and investment.startup.logo_urls|length > 0 %}
-                    <img src="{% get_file_url_tag file_id=investment.startup.logo_urls.0 startup_id=investment.startup.startup_id file_type='logo' %}" alt="{{ investment.startup.title|default:'No Name' }} Logo" class="planet-image" style="max-width: 30px; max-height: 30px;" onerror="this.src='{% static 'accounts/images/default-logo.png' %}'">
+                    <img src="{% get_file_url_tag file_id=investment.startup.logo_urls.0 startup_id=investment.startup.startup_id file_type='logo' %}" alt="{{ investment.startup.title|default:'No Name' }} Logo" class="planet-image" style="max-width: 30px; max-height: 30px;" onerror="this.src='{% static 'accounts/images/logo.png' %}'">
                   {% else %}
                     <div class="planet">
                       <div class="planet-segment segment-top" style="background: linear-gradient(to bottom, #87CEEB 0%, #E0FFFF 100%);"></div>
@@ -357,9 +357,9 @@
                     </div>
                   {% endif %}
                   {% if investment.startup.logo_urls and investment.startup.logo_urls|length > 0 %}
-                    <img src="{% get_file_url_tag file_id=investment.startup.logo_urls.0 startup_id=investment.startup.startup_id file_type='logo' %}" alt="{{ investment.startup.title|default:'No Name' }} Logo" class="startup-logo" style="max-width: 30px; max-height: 30px;" onerror="this.src='{% static 'accounts/images/default-logo.png' %}'">
+                    <img src="{% get_file_url_tag file_id=investment.startup.logo_urls.0 startup_id=investment.startup.startup_id file_type='logo' %}" alt="{{ investment.startup.title|default:'No Name' }} Logo" class="startup-logo" style="max-width: 30px; max-height: 30px;" onerror="this.src='{% static 'accounts/images/logo.png' %}'">
                   {% else %}
-                    <img src="{% static 'accounts/images/default-logo.png' %}" alt="Default Logo" class="startup-logo" style="max-width: 30px; max-height: 30px;">
+                    <img src="{% static 'accounts/images/logo.png' %}" alt="Default Logo" class="startup-logo" style="max-width: 30px; max-height: 30px;">
                   {% endif %}
                 </div>
                 <div class="startup-name">
@@ -425,7 +425,7 @@
                   {% if startup.planet_image %}
                     <img src="{% get_file_url_tag file_id=startup.planet_image startup_id=startup.startup_id file_type='planet' %}" alt="{{ startup.title|default:'No Name' }} Planet" class="planet-image" style="max-width: 100px; max-height: 100px;" onerror="this.src='{% static 'accounts/images/planet_logo_carusel.webp' %}'">
                   {% elif startup.logo_urls and startup.logo_urls|length > 0 %}
-                    <img src="{% get_file_url_tag file_id=startup.logo_urls.0 startup_id=startup.startup_id file_type='logo' %}" alt="{{ startup.title|default:'No Name' }} Logo" class="planet-image" style="max-width: 30px; max-height: 30px;" onerror="this.src='{% static 'accounts/images/default-logo.png' %}'">
+                    <img src="{% get_file_url_tag file_id=startup.logo_urls.0 startup_id=startup.startup_id file_type='logo' %}" alt="{{ startup.title|default:'No Name' }} Logo" class="planet-image" style="max-width: 30px; max-height: 30px;" onerror="this.src='{% static 'accounts/images/logo.png' %}'">
                   {% else %}
                     <div class="planet">
                       <div class="planet-segment segment-top" style="background: linear-gradient(to bottom, #87CEEB 0%, #E0FFFF 100%);"></div>
@@ -434,9 +434,9 @@
                     </div>
                   {% endif %}
                   {% if startup.logo_urls and startup.logo_urls|length > 0 %}
-                    <img src="{% get_file_url_tag file_id=startup.logo_urls.0 startup_id=startup.startup_id file_type='logo' %}" alt="{{ startup.title|default:'No Name' }} Logo" class="startup-logo" style="max-width: 30px; max-height: 30px;" onerror="this.src='{% static 'accounts/images/default-logo.png' %}'">
+                    <img src="{% get_file_url_tag file_id=startup.logo_urls.0 startup_id=startup.startup_id file_type='logo' %}" alt="{{ startup.title|default:'No Name' }} Logo" class="startup-logo" style="max-width: 30px; max-height: 30px;" onerror="this.src='{% static 'accounts/images/logo.png' %}'">
                   {% else %}
-                    <img src="{% static 'accounts/images/default-logo.png' %}" alt="Default Logo" class="startup-logo" style="max-width: 30px; max-height: 30px;">
+                    <img src="{% static 'accounts/images/logo.png' %}" alt="Default Logo" class="startup-logo" style="max-width: 30px; max-height: 30px;">
                   {% endif %}
                 </div>
                 <div class="startup-name">
