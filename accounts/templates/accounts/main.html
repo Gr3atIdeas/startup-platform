@@ -4,13 +4,13 @@
 {% block title %}Главная страница{% endblock %}
 
 {% block head_extra %}
-    <link rel="stylesheet" type="text/css" href="{% static 'accounts/css/main_temp.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'accounts/css/main.css' %}">
     <link rel="stylesheet" href="{% static 'accounts/css/faq.css' %}">
     <link rel="stylesheet" href="{% static 'accounts/css/improved_styles.css' %}">
 {% endblock %}
 
 {% block content %}
-<link rel="stylesheet" type="text/css" href="{% static 'accounts/css/main_temp.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'accounts/css/main.css' %}">
 
 <div class="div">
     <div class="featured">
@@ -903,6 +903,6 @@
 
 </div>
 
-<script src="{% static 'accounts/js/main_temp.js' %}?v={% now 'U' %}"></script>
+<script src="{% static 'accounts/js/main.js' %}"></script>
 <script src="{% static 'accounts/js/faq.js' %}?v={% now 'U' %}"></script>
 {% endblock %}

@@ -68,15 +68,18 @@
       <nav class="nav-menu">
             <div class="header-nav-links">
                 {% if not user.is_authenticated %}
+                    <a href="{% url 'home' %}" class="header-nav-link">Главная</a>
                     <a href="{% url 'startups_list' %}" class="header-nav-link">Каталог</a>
                     <a href="{% url 'news' %}" class="header-nav-link">Новости</a>
                     <a href="{% url 'faq' %}" class="header-nav-link">FAQ</a>
                 {% elif user.role.role_name == 'investor' %}
+                    <a href="{% url 'home' %}" class="header-nav-link">Главная</a>
                     <a href="{% url 'startups_list' %}" class="header-nav-link">Каталог</a>
                     <a href="{% url 'investments' %}" class="header-nav-link">Портфель</a> {# Убедитесь, что URL 'investments' существует #}
                     <a href="{% url 'news' %}" class="header-nav-link">Новости</a>
                     <a href="{% url 'cosmochat' %}" class="header-nav-link cosmochat-link">CosmoChat</a>
                 {% elif user.role.role_name == 'startuper' %}
+                    <a href="{% url 'home' %}" class="header-nav-link">Главная</a>
                     <a href="{% url 'startups_list' %}" class="header-nav-link">Каталог</a>
                     <a href="{% url 'my_startups' %}" class="header-nav-link">Мои стартапы</a> {# Убедитесь, что URL 'my_startups' существует #}
                     <a href="{% url 'news' %}" class="header-nav-link">Новости</a>
