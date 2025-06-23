@@ -1010,18 +1010,18 @@
             const startups = {};
             if (Array.isArray(startups_data)) {
                 startups_data.forEach(s => {
-                    startups[s.startup.startup_id.toString()] = {
-                        startup_id: s.startup.startup_id,
-                        image: s.startup.planet_image ? `https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/${s.startup.planet_image}` : '{% static "accounts/images/planet_logo_carusel.webp" %}',
-                        name: s.startup.title || 'Без названия',
-                        rating: s.startup.average_rating || 0,
-                        comment_count: s.startup.comment_count || 0,
+                    startups[s.startup_id.toString()] = {
+                        startup_id: s.startup_id,
+                        image: s.planet_image ? `https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/${s.planet_image}` : '{% static "accounts/images/planet_logo_carusel.webp" %}',
+                        name: s.title || 'Без названия',
+                        rating: s.average_rating || 0,
+                        comment_count: s.comment_count || 0,
                         progress: s.progress || '0%',
-                        direction: s.startup.direction?.direction_name || 'Без категории',
-                        funding_goal: s.startup.funding_goal || 0,
-                        investors: s.startup.get_investors_count || 0,
+                        direction: s.direction?.direction_name || 'Без категории',
+                        funding_goal: s.funding_goal || 0,
+                        investors: s.get_investors_count || 0,
                         investment_type: s.investment_type || 'Не указано',
-                        description: s.startup.short_description || 'Описание отсутствует'
+                        description: s.short_description || 'Описание отсутствует'
                     };
                 });
             }
