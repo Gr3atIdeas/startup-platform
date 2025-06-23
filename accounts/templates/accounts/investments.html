@@ -52,17 +52,17 @@
                       <div class="orbit" style="--orbit-size: {{ investment.orbit_size|default:200 }}px; --orbit-time: {{ investment.orbit_time|default:80 }}s;">
                         <div class="planet-orientation">
                           <div class="planet" style="--planet-size: {{ investment.planet_size|default:50 }}px;" data-id="{{ investment.startup_id }}">
-                            {% if investment.planet_image %}
-                              <img src="{% get_file_url_tag file_id=investment.planet_image startup_id=investment.startup_id file_type='planet' %}" alt="{{ investment.name|escape }}" class="planet-img" onerror="this.src='https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/0.png'">
+                            {% if startup.planet_image %}
+                              <img src="https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/{{ startup.planet_image }}" alt="{{ investment.name|escape }}" class="planet-img" onerror="this.src='https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/0.png'">
                             {% else %}
                               <img src="https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/0.png" alt="Планета по умолчанию" class="planet-img">
                             {% endif %}
                             {% if investment.logo_urls and investment.logo_urls|length > 0 %}
                               {% with logo_file_id=investment.logo_urls.0 %}
-                                <img src="{% get_file_url_tag file_id=logo_file_id startup_id=investment.startup_id file_type='logo' %}" alt="Лого" class="planet-logo-overlay" onerror="this.src='https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/startups/logo.png'">
+                                <img src="{% get_file_url_tag file_id=logo_file_id startup_id=investment.startup_id file_type='logo' %}" alt="Лого" class="planet-logo-overlay" onerror="this.src='{% static 'accounts/images/logo.png' %}'">
                               {% endwith %}
                             {% else %}
-                              <img src="https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/startups/logo.png" alt="Лого по умолчанию" class="planet-logo-overlay">
+                              <img src="{% static 'accounts/images/logo.png' %}" alt="Лого по умолчанию" class="planet-logo-overlay">
                             {% endif %}
                           </div>
                         </div>
@@ -187,9 +187,9 @@
               <div class="startup-card-left">
                 <div class="planet-logo-container">
                   {% if investment.startup.planet_image %}
-                    <img src="{% get_file_url_tag file_id=investment.startup.planet_image startup_id=investment.startup.startup_id file_type='planet' %}" alt="{{ investment.startup.title|default:'No Name' }} Planet" class="planet-image" style="max-width: 100px; max-height: 100px;" onerror="this.src='https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/0.png'">
+                    <img src="https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/{{ investment.startup.planet_image }}" alt="{{ investment.startup.title|default:'No Name' }} Planet" class="planet-image" style="max-width: 100px; max-height: 100px;" onerror="this.src='https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/0.png'">
                   {% elif investment.startup.logo_urls and investment.startup.logo_urls|length > 0 %}
-                    <img src="{% get_file_url_tag file_id=investment.startup.logo_urls.0 startup_id=investment.startup.startup_id file_type='logo' %}" alt="{{ investment.startup.title|default:'No Name' }} Logo" class="planet-image" style="max-width: 30px; max-height: 30px;" onerror="this.src='https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/startups/logo.png'">
+                    <img src="{% get_file_url_tag file_id=investment.startup.logo_urls.0 startup_id=investment.startup.startup_id file_type='logo' %}" alt="{{ investment.startup.title|default:'No Name' }} Logo" class="planet-image" style="max-width: 30px; max-height: 30px;" onerror="this.src='{% static 'accounts/images/logo.png' %}'">
                   {% else %}
                     <div class="planet">
                       <div class="planet-segment segment-top" style="background: linear-gradient(to bottom, #87CEEB 0%, #E0FFFF 100%);"></div>
@@ -267,9 +267,9 @@
               <div class="startup-card-left">
                 <div class="planet-logo-container">
                   {% if startup.planet_image %}
-                    <img src="{% get_file_url_tag file_id=startup.planet_image startup_id=startup.startup_id file_type='planet' %}" alt="{{ startup.title|default:'No Name' }} Planet" class="planet-image" style="max-width: 100px; max-height: 100px;" onerror="this.src='https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/0.png'">
+                    <img src="https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/{{ startup.planet_image }}" alt="{{ startup.title|default:'No Name' }} Planet" class="planet-image" style="max-width: 100px; max-height: 100px;" onerror="this.src='https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/0.png'">
                   {% elif startup.logo_urls and startup.logo_urls|length > 0 %}
-                    <img src="{% get_file_url_tag file_id=startup.logo_urls.0 startup_id=startup.startup_id file_type='logo' %}" alt="{{ startup.title|default:'No Name' }} Logo" class="planet-image" style="max-width: 30px; max-height: 30px;" onerror="this.src='https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/startups/logo.png'">
+                    <img src="{% get_file_url_tag file_id=startup.logo_urls.0 startup_id=startup.startup_id file_type='logo' %}" alt="{{ startup.title|default:'No Name' }} Logo" class="planet-image" style="max-width: 30px; max-height: 30px;" onerror="this.src='{% static 'accounts/images/logo.png' %}'">
                   {% else %}
                     <div class="planet">
                       <div class="planet-segment segment-top" style="background: linear-gradient(to bottom, #87CEEB 0%, #E0FFFF 100%);"></div>
@@ -346,9 +346,9 @@
               <div class="startup-card-left">
                 <div class="planet-logo-container">
                   {% if investment.startup.planet_image %}
-                    <img src="{% get_file_url_tag file_id=investment.startup.planet_image startup_id=investment.startup.startup_id file_type='planet' %}" alt="{{ investment.startup.title|default:'No Name' }} Planet" class="planet-image" style="max-width: 100px; max-height: 100px;" onerror="this.src='https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/0.png'">
+                    <img src="https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/{{ investment.startup.planet_image }}" alt="{{ investment.startup.title|default:'No Name' }} Planet" class="planet-image" style="max-width: 100px; max-height: 100px;" onerror="this.src='https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/0.png'">
                   {% elif investment.startup.logo_urls and investment.startup.logo_urls|length > 0 %}
-                    <img src="{% get_file_url_tag file_id=investment.startup.logo_urls.0 startup_id=investment.startup.startup_id file_type='logo' %}" alt="{{ investment.startup.title|default:'No Name' }} Logo" class="planet-image" style="max-width: 30px; max-height: 30px;" onerror="this.src='https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/startups/logo.png'">
+                    <img src="{% get_file_url_tag file_id=investment.startup.logo_urls.0 startup_id=investment.startup.startup_id file_type='logo' %}" alt="{{ investment.startup.title|default:'No Name' }} Logo" class="planet-image" style="max-width: 30px; max-height: 30px;" onerror="this.src='{% static 'accounts/images/logo.png' %}'">
                   {% else %}
                     <div class="planet">
                       <div class="planet-segment segment-top" style="background: linear-gradient(to bottom, #87CEEB 0%, #E0FFFF 100%);"></div>
@@ -423,9 +423,9 @@
               <div class="startup-card-left">
                 <div class="planet-logo-container">
                   {% if startup.planet_image %}
-                    <img src="{% get_file_url_tag file_id=startup.planet_image startup_id=startup.startup_id file_type='planet' %}" alt="{{ startup.title|default:'No Name' }} Planet" class="planet-image" style="max-width: 100px; max-height: 100px;" onerror="this.src='https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/0.png'">
+                    <img src="https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/{{ startup.planet_image }}" alt="{{ startup.title|default:'No Name' }} Planet" class="planet-image" style="max-width: 100px; max-height: 100px;" onerror="this.src='https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/0.png'">
                   {% elif startup.logo_urls and startup.logo_urls|length > 0 %}
-                    <img src="{% get_file_url_tag file_id=startup.logo_urls.0 startup_id=startup.startup_id file_type='logo' %}" alt="{{ startup.title|default:'No Name' }} Logo" class="planet-image" style="max-width: 30px; max-height: 30px;" onerror="this.src='https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/startups/logo.png'">
+                    <img src="{% get_file_url_tag file_id=startup.logo_urls.0 startup_id=startup.startup_id file_type='logo' %}" alt="{{ startup.title|default:'No Name' }} Logo" class="planet-image" style="max-width: 30px; max-height: 30px;" onerror="this.src='{% static 'accounts/images/logo.png' %}'">
                   {% else %}
                     <div class="planet">
                       <div class="planet-segment segment-top" style="background: linear-gradient(to bottom, #87CEEB 0%, #E0FFFF 100%);"></div>
@@ -1024,7 +1024,7 @@
               startups_data.forEach(s => {
                 startups[s.startup_id.toString()] = {
                   startup_id: s.startup_id,
-                  image: s.image || 'https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/0.png',
+                  image: s.planet_image ? `https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/${s.planet_image}` : 'https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/0.png',
                   name: s.name || 'Без названия',
                   rating: s.rating || '0/5 (0)',
                   comment_count: s.comment_count || 0,
@@ -1119,6 +1119,7 @@
                 planet.style.backgroundColor = 'transparent';
                 const img = planet.querySelector('.planet-img');
                 if (img) {
+                  img.src = startups[id].image;
                   img.onerror = () => {
                     console.warn(`Не удалось загрузить изображение для стартапа ${id}.`);
                     img.src = 'https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/0.png';
