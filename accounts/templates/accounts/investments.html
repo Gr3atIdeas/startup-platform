@@ -32,25 +32,25 @@
               <div class="stars"></div>
               <div id="scene">
                 <div id="galaxy">
-                  <div id="logo"></div>
+                    <div id="logo">
+                        <img src="{% if user.get_profile_picture_url %}{{ user.get_profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}" alt="Аватар" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                    </div>
                   {% if planetary_investments %}
                     {% for investment in planetary_investments %}
                       <div class="orbit" style="--orbit-size: {{ investment.orbit_size|default:200 }}px; --orbit-time: {{ investment.orbit_time|default:80 }}s;">
                         <div class="planet-orientation">
-                          <div class="planet-logo-container">
-                            <div class="planet" style="--planet-size: {{ investment.planet_size|default:50 }}px; max-width: 100px; max-height: 100px;" data-id="{{ investment.id|default_if_none:'' }}">
-                              {% if investment.startup.planet_image %}
-                                <img src="https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/{{ investment.startup.planet_image }}" alt="{{ investment.name|default:'Planet'|escape }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
-                              {% elif investment.startup.logo_urls and investment.startup.logo_urls|length > 0 %}
-                                <img src="{% get_file_url_tag file_id=investment.startup.logo_urls.0 startup_id=investment.startup.startup_id file_type='logo' %}" alt="{{ investment.name|default:'Logo'|escape }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; max-width: 30px; max-height: 30px;">
-                              {% else %}
-                                <img src="https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/startup_5_logo.png" alt="Default Planet" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
-                              {% endif %}
-                            </div>
-                            {% if investment.startup.logo_urls and investment.startup.logo_urls|length > 0 %}
-                              <img src="{% get_file_url_tag file_id=investment.startup.logo_urls.0 startup_id=investment.startup.startup_id file_type='logo' %}" alt="{{ investment.name|default:'Logo'|escape }}" style="width: 50%; height: 50%; object-fit: contain; max-width: 30px; max-height: 30px;">
+                          <div class="planet" style="--planet-size: {{ investment.planet_size|default:50 }}px;" data-id="{{ investment.startup.startup_id }}">
+                            {% if investment.startup.planet_image %}
+                              <img src="https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/{{ investment.startup.planet_image }}" alt="{{ investment.startup.name|escape }}" class="planet-img">
                             {% else %}
-                              <img src="/static/images/default-logo.png" alt="Default Logo" style="width: 50%; height: 50%; object-fit: contain; max-width: 30px; max-height: 30px;">
+                              <img src="{% static 'accounts/images/planet_logo_carusel.webp' %}" alt="Планета по умолчанию" class="planet-img">
+                            {% endif %}
+                            {% if investment.startup.logo_urls and investment.startup.logo_urls|length > 0 %}
+                              {% with logo_file_id=investment.startup.logo_urls.0 %}
+                                <img src="{% get_file_url_tag logo_file_id investment.startup.startup_id 'logo' %}" alt="Лого" class="planet-logo-overlay">
+                              {% endwith %}
+                            {% else %}
+                              <img src="{% static 'accounts/images/logo.png' %}" alt="Лого по умолчанию" class="planet-logo-overlay">
                             {% endif %}
                           </div>
                         </div>
@@ -509,7 +509,7 @@
       {{ chart_categories|json_script:"chart-categories" }}
       {{ all_directions|json_script:"all-directions-data" }}
       {{ invested_category_data|json_script:"invested-category-data" }}
-      {{ planetary_investments|json_script:"planetary-investments" }}
+      {{ planetary_investments_json|json_script:"planetary-investments-data" }}
       <script>
         // Глобальные функции и константы
         const categoryColors = {
@@ -1006,33 +1006,28 @@
 
           // Планетарная система
           (function() {
-            const startups = {% if planetary_investments %}
-              {
-              {% for investment in planetary_investments %}
-                '{{ investment.id }}': {
-                  name: '{{ investment.name|escapejs }}',
-                  description: '{{ investment.description|truncatechars:50|escapejs }}',
-                  rating: '{{ investment.rating|escapejs }}',
-                  progress: '{{ investment.progress|escapejs }}',
-                  funding: '{{ investment.funding|escapejs }}',
-                  funding_goal: '{{ investment.funding_goal|escapejs }}',
-                  investors: '{{ investment.investors|escapejs }}',
-                  planet_image: '{% if investment.startup.planet_image %}https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/{{ investment.startup.planet_image|escapejs }}{% else %}https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/startup_5_logo.png{% endif %}',
-                  logo_image: '{% if investment.startup.logo_urls and investment.startup.logo_urls|length > 0 %}{% get_file_url_tag file_id=investment.startup.logo_urls.0 startup_id=investment.startup.startup_id file_type="logo"|escapejs %}{% else %}/static/images/default-logo.png{% endif %}',
-                  startup_id: '{{ investment.startup_id|escapejs }}',
-                  investment_type: '{{ investment.investment_type|escapejs }}'
-                }{% if not forloop.last %},{% endif %}
-              {% endfor %}
-              }
-            {% else %}
-              {}
-            {% endif %};
-
-            const investorLogoUrl = "{{ investor_logo_url|escapejs }}"; // Логотип инвестора
+            const startups_data = JSON.parse(document.getElementById('planetary-investments-data').textContent || '[]');
+            const startups = {};
+            if (Array.isArray(startups_data)) {
+                startups_data.forEach(s => {
+                    startups[s.startup.startup_id.toString()] = {
+                        startup_id: s.startup.startup_id,
+                        image: s.startup.planet_image ? `https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/${s.startup.planet_image}` : '{% static "accounts/images/planet_logo_carusel.webp" %}',
+                        name: s.startup.title || 'Без названия',
+                        rating: s.startup.average_rating || 0,
+                        comment_count: s.startup.comment_count || 0,
+                        progress: s.progress || '0%',
+                        direction: s.startup.direction?.direction_name || 'Без категории',
+                        funding_goal: s.startup.funding_goal || 0,
+                        investors: s.startup.get_investors_count || 0,
+                        investment_type: s.investment_type || 'Не указано',
+                        description: s.startup.short_description || 'Описание отсутствует'
+                    };
+                });
+            }
+            console.log('Startups object:', startups);
 
             const planets = document.querySelectorAll('.planetary-system .planet');
-            const planetOrientations = document.querySelectorAll('.planetary-system .planet-orientation');
-            const orbits = document.querySelectorAll('.planetary-system .orbit');
             const infoCard = document.querySelector('.planetary-system #info-card');
             const planetImage = document.querySelector('.planetary-system #planet-image');
             const startupName = document.querySelector('.planetary-system #startup-name');
@@ -1043,33 +1038,10 @@
             const startupDescription = document.querySelector('.planetary-system #startup-description');
             const closeCard = document.querySelector('.planetary-system #close-card');
             const moreDetails = document.querySelector('.planetary-system #more-details');
-            const investmentType = document.querySelector('.planetary-system #investment-type');
             const solarSystem = document.querySelector('.planetary-system#solar-system');
             const scene = document.querySelector('.planetary-system #scene');
             const galaxy = document.querySelector('.planetary-system #galaxy');
             const logoElement = document.querySelector('.planetary-system #logo');
-
-            // Устанавливаем логотип инвестора
-            if (logoElement && investorLogoUrl) {
-              logoElement.style.backgroundImage = `url('${investorLogoUrl}')`;
-              logoElement.style.backgroundSize = 'cover';
-              logoElement.style.backgroundRepeat = 'no-repeat';
-              logoElement.style.backgroundPosition = 'center';
-              logoElement.style.borderRadius = '50% !important';
-              logoElement.style.width = '100px !important';
-              logoElement.style.height = '100px !important';
-              logoElement.style.objectFit = 'cover !important';
-              logoElement.style.overflow = 'hidden';
-              logoElement.style.display = 'block';
-            } else {
-              logoElement.style.backgroundColor = '#e9ecef';
-              logoElement.style.borderRadius = '50% !important';
-              logoElement.style.width = '100px !important';
-              logoElement.style.height = '100px !important';
-              logoElement.style.objectFit = 'cover !important';
-              logoElement.style.overflow = 'hidden';
-              logoElement.style.display = 'block';
-            }
 
             const galaxyTiltAngle = 45;
             const planetObjects = [];
@@ -1078,224 +1050,275 @@
             let lastInteractionTime = Date.now();
             const inactivityTimeout = 10000;
             let isReturningToCenter = false;
-
-            planets.forEach((planet, index) => {
-              const orbit = planet.closest('.orbit');
-              const planetOrientation = planet.closest('.planet-orientation');
-              const orbitSize = parseFloat(getComputedStyle(orbit).getPropertyValue('--orbit-size'));
-              const orbitTime = parseFloat(getComputedStyle(orbit).getPropertyValue('--orbit-time'));
-              const initialAngle = Math.random() * 360;
-              const speedFactor = 0.8 + Math.random() * 0.4;
-
-              planetObjects.push({
-                element: planet,
-                orientation: planetOrientation,
-                orbit: orbit,
-                size: parseFloat(getComputedStyle(planet).getPropertyValue('--planet-size')),
-                orbitSize: orbitSize,
-                orbitTime: orbitTime,
-                angle: initialAngle,
-                speedFactor: speedFactor,
-                startTime: Date.now() - Math.random() * orbitTime * 1000
-              });
-
-              const id = planet.getAttribute('data-id');
-              const planetImage = startups[id]?.planet_image || 'https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/startup_5_logo.png';
-              const logoImage = startups[id]?.logo_image || '/static/images/default-logo.png';
-              if (startups[id] && startups[id].planet_image) {
-                planet.style.backgroundImage = `url('${startups[id].planet_image}')`;
-                planet.style.backgroundSize = 'cover';
-                planet.style.backgroundPosition = 'center';
-              } else {
-                planet.style.backgroundImage = `url('${planetImage}')`;
-                planet.style.backgroundColor = '#e9ecef';
-              }
-              const logoElement = planet.querySelector('.startup-logo');
-              if (logoElement && startups[id] && startups[id].logo_image) {
-                logoElement.src = startups[id].logo_image;
-              } else if (logoElement) {
-                logoElement.src = logoImage;
-              }
-
-              planet.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const startupData = startups[id] || { name: 'Нет данных', description: '', rating: '0', progress: '0%', funding: '0 ₽', funding_goal: '0 ₽', investors: '0', planet_image: planetImage, logo_image: logoImage, startup_id: '', investment_type: '' };
-
-                planetImage.style.backgroundImage = `url('${startupData.planet_image}')`;
-                startupName.textContent = startupData.name;
-                startupRating.textContent = `Рейтинг ${startupData.rating}`;
-                startupProgress.textContent = startupData.progress;
-                startupFunding.textContent = `Собрано: ${startupData.funding} (Цель: ${startupData.funding_goal})`;
-                startupInvestors.textContent = startupData.investors;
-                startupDescription.textContent = startupData.description;
-                investmentType.textContent = startupData.investment_type;
-
-                planets.forEach(p => p.classList.remove('active'));
-                planet.classList.add('active');
-                infoCard.style.display = 'block';
-
-                isPaused = true;
-                pausedTime = Date.now();
-                lastInteractionTime = Date.now();
-              });
-            });
-
-            closeCard.addEventListener('click', () => {
-              infoCard.style.display = 'none';
-              planets.forEach(p => p.classList.remove('active'));
-
-              if (isPaused) {
-                const pauseDuration = Date.now() - pausedTime;
-                planetObjects.forEach(planetObj => {
-                  planetObj.startTime += pauseDuration;
-                });
-                isPaused = false;
-              }
-
-              lastInteractionTime = Date.now();
-            });
-
-            moreDetails.addEventListener('click', () => {
-              const activePlanet = document.querySelector('.planetary-system .planet.active');
-              if (activePlanet) {
-                const id = activePlanet.getAttribute('data-id');
-                const startup = startups[id];
-                if (startup && startup.startup_id) {
-                  window.location.href = `/startups/${startup.startup_id}/`;
-                }
-              }
-              infoCard.style.display = 'none';
-              planets.forEach(p => p.classList.remove('active'));
-
-              if (isPaused) {
-                const pauseDuration = Date.now() - pausedTime;
-                planetObjects.forEach(planetObj => {
-                  planetObj.startTime += pauseDuration;
-                });
-                isPaused = false;
-              }
-
-              lastInteractionTime = Date.now();
-            });
-
             let isDragging = false;
             let startX, startY;
             let offsetX = 0;
             let offsetY = 0;
             let scale = 1;
+            let currentStartupID = null;
+
+            planets.forEach((planet, index) => {
+                const orbit = planet.closest('.orbit');
+                const planetOrientation = planet.closest('.planet-orientation');
+                if (!orbit || !planetOrientation) {
+                    console.error(`Орбита или ориентация не найдены для планеты ${index}.`);
+                    return;
+                }
+
+                const orbitSize = parseFloat(getComputedStyle(orbit).getPropertyValue('--orbit-size')) || 200;
+                if (orbitSize < 100) {
+                    planetOrientation.style.display = 'none'; // Скрываем планеты с орбитой меньше 100px
+                    return;
+                }
+
+                const orbitTime = parseFloat(getComputedStyle(orbit).getPropertyValue('--orbit-time')) || 10;
+                const initialAngle = Math.random() * 360;
+                const speedFactor = 0.8 + Math.random() * 0.4;
+                const radius = orbitSize / 2;
+
+                if (radius > 0) {
+                    const angleRad = initialAngle * Math.PI / 180;
+                    const x = Math.cos(angleRad) * radius;
+                    const y = Math.sin(angleRad) * radius;
+                    planetOrientation.style.left = `${50 + 50 * (x / radius)}%`;
+                    planetOrientation.style.top = `${50 + 50 * (y / radius)}%`;
+                } else {
+                    console.warn(`Радиус орбиты равен нулю для планеты ${index}.`);
+                }
+
+                const tiltCompensation = -galaxyTiltAngle;
+                planet.style.transform = `rotateX(${tiltCompensation}deg)`;
+
+                planetObjects.push({
+                    element: planet,
+                    orientation: planetOrientation,
+                    orbit: orbit,
+                    size: parseFloat(getComputedStyle(planet).getPropertyValue('--planet-size')) || 50,
+                    orbitSize: orbitSize,
+                    orbitTime: orbitTime,
+                    angle: initialAngle,
+                    speedFactor: speedFactor,
+                    startTime: Date.now() - Math.random() * orbitTime * 1000
+                });
+
+                const id = planet.getAttribute('data-id');
+                if (startups[id]) {
+                    planet.style.backgroundImage = 'none';
+                    planet.style.backgroundColor = 'transparent';
+                    const img = planet.querySelector('.planet-img');
+                    if (img) {
+                        img.onerror = () => {
+                            console.warn(`Не удалось загрузить изображение для стартапа ${id}.`);
+                            img.src = '{% static "accounts/images/planet_logo_carusel.webp" %}';
+                        };
+                    }
+                }
+
+                planet.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const id = planet.getAttribute('data-id');
+                    console.log('Clicked planet ID:', id);
+                    const startup = startups[id];
+                    if (!startup) {
+                        console.error('Не найдены данные для стартапа с ID:', id);
+                        return;
+                    }
+
+                    planetImage.style.backgroundImage = `url('${startup.image}')`;
+                    startupName.textContent = startup.name;
+                    startupRating.innerHTML = `Рейтинг: ${startup.rating.toFixed(1)} | Комментариев: ${startup.comment_count}`;
+                    startupProgress.innerHTML = `
+                        <div class="progress-bar-visual">
+                            <div class="progress-animation-container" style="width: ${startup.progress};">
+                                <div class="progress-planets"></div>
+                            </div>
+                            <span class="progress-percentage">${startup.progress}</span>
+                        </div>`;
+                    startupFunding.innerHTML = `
+                        <strong>Направление:</strong> ${startup.direction}<br>
+                        <div class="funding-goal-container-figma">
+                            <span class="funding-goal-text-figma">Цель финансирования: ${startup.funding_goal.toLocaleString('ru-RU')} ₽</span>
+                        </div>`;
+                    startupInvestors.innerHTML = `
+                        <div class="investor-count-container-figma">
+                            <i class="fas fa-users investor-icon-figma"></i>
+                            <span class="investor-count-text-figma">${startup.investors}</span>
+                        </div>`;
+                    startupDescription.innerHTML = `
+                        <div class="progress-bar">
+                            ${startup.investment_type && startup.investment_type !== 'Не указано' ? `<button>${startup.investment_type}</button>` : ''}
+                        </div>
+                        <div class="startup-short-description">${startup.description}</div>`;
+
+                    currentStartupID = startup.startup_id;
+                    console.log('Current Startup ID:', currentStartupID);
+
+                    planets.forEach(p => p.classList.remove('active'));
+                    planet.classList.add('active');
+                    infoCard.style.display = 'block';
+                    isPaused = true;
+                    pausedTime = Date.now();
+                    lastInteractionTime = Date.now();
+                });
+            });
+
+            closeCard.addEventListener('click', () => {
+                console.log('Close card clicked');
+                infoCard.style.display = 'none';
+                planets.forEach(p => p.classList.remove('active'));
+                if (isPaused) {
+                    const pauseDuration = Date.now() - pausedTime;
+                    planetObjects.forEach(planetObj => {
+                        planetObj.startTime += pauseDuration;
+                    });
+                    isPaused = false;
+                    console.log('Resuming planet rotation');
+                }
+                lastInteractionTime = Date.now();
+            });
+
+            moreDetails.addEventListener('click', () => {
+                console.log('More details clicked');
+                if (currentStartupID) {
+                    window.location.href = `/startups/${currentStartupID}/`;
+                } else {
+                    console.error('Startup ID не найден для перехода на страницу стартапа');
+                }
+                infoCard.style.display = 'none';
+                planets.forEach(p => p.classList.remove('active'));
+                if (isPaused) {
+                    const pauseDuration = Date.now() - pausedTime;
+                    planetObjects.forEach(planetObj => {
+                        planetObj.startTime += pauseDuration;
+                    });
+                    isPaused = false;
+                    console.log('Resuming planet rotation after more details');
+                }
+                lastInteractionTime = Date.now();
+            });
 
             solarSystem.addEventListener('mousedown', (e) => {
-              e.preventDefault();
-              isDragging = true;
-              startX = e.clientX;
-              startY = e.clientY;
-              solarSystem.classList.add('dragging');
-              lastInteractionTime = Date.now();
-              isReturningToCenter = false;
+                e.preventDefault();
+                isDragging = true;
+                startX = e.clientX;
+                startY = e.clientY;
+                solarSystem.classList.add('dragging');
+                lastInteractionTime = Date.now();
+                isReturningToCenter = false;
             });
 
             document.addEventListener('mousemove', (e) => {
-              if (!isDragging) return;
-
-              const deltaX = e.clientX - startX;
-              const deltaY = e.clientY - startY;
-
-              offsetX += deltaX;
-              offsetY += deltaY;
-
-              offsetX = Math.max(-solarSystem.offsetWidth / 2, Math.min(solarSystem.offsetWidth / 2, offsetX));
-              offsetY = Math.max(-solarSystem.offsetHeight / 2, Math.min(solarSystem.offsetHeight / 2, offsetY));
-
-              scene.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
-              startX = e.clientX;
-              startY = e.clientY;
-
-              lastInteractionTime = Date.now();
+                if (!isDragging) return;
+                const deltaX = e.clientX - startX;
+                const deltaY = e.clientY - startY;
+                offsetX += deltaX;
+                offsetY += deltaY;
+                offsetX = Math.max(-solarSystem.offsetWidth / 2, Math.min(solarSystem.offsetWidth / 2, offsetX));
+                offsetY = Math.max(-solarSystem.offsetHeight / 2, Math.min(solarSystem.offsetHeight / 2, offsetY));
+                scene.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+                startX = e.clientX;
+                startY = e.clientY;
+                lastInteractionTime = Date.now();
             });
 
             document.addEventListener('mouseup', () => {
-              isDragging = false;
-              solarSystem.classList.remove('dragging');
-              lastInteractionTime = Date.now();
+                isDragging = false;
+                solarSystem.classList.remove('dragging');
+                lastInteractionTime = Date.now();
             });
 
             solarSystem.addEventListener('wheel', (e) => {
-              e.preventDefault();
-              const delta = e.deltaY > 0 ? -0.1 : 0.1;
-              scale = Math.max(0.5, Math.min(3, scale + delta));
-              scene.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
-
-              lastInteractionTime = Date.now();
-              isReturningToCenter = false;
+                e.preventDefault();
+                const delta = e.deltaY > 0 ? -0.1 : 0.1;
+                scale = Math.max(0.5, Math.min(3, scale + delta));
+                scene.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+                lastInteractionTime = Date.now();
+                isReturningToCenter = false;
             });
 
             infoCard.addEventListener('mousedown', (e) => {
-              e.stopPropagation();
-              lastInteractionTime = Date.now();
+                e.stopPropagation();
+                lastInteractionTime = Date.now();
             });
 
             function checkInactivity() {
-              const now = Date.now();
-              if (now - lastInteractionTime >= inactivityTimeout && !isReturningToCenter && !isPaused) {
-                isReturningToCenter = true;
-                const startX = offsetX;
-                const startY = offsetY;
-                const duration = 1000;
-                let startTime = null;
+                const now = Date.now();
+                if (now - lastInteractionTime >= inactivityTimeout && !isReturningToCenter && !isPaused) {
+                    isReturningToCenter = true;
+                    const startX = offsetX;
+                    const startY = offsetY;
+                    const duration = 1000;
+                    let startTime = null;
 
-                function animateReturn(timestamp) {
-                  if (!startTime) startTime = timestamp;
-                  const elapsed = timestamp - startTime;
-                  const progress = Math.min(elapsed / duration, 1);
-
-                  offsetX = startX + (0 - startX) * progress;
-                  offsetY = startY + (0 - startY) * progress;
-
-                  scene.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
-
-                  if (progress < 1) {
+                    function animateReturn(timestamp) {
+                        if (!startTime) startTime = timestamp;
+                        const elapsed = timestamp - startTime;
+                        const progress = Math.min(elapsed / duration, 1);
+                        offsetX = startX + (0 - startX) * progress;
+                        offsetY = startY + (0 - startY) * progress;
+                        scene.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+                        if (progress < 1) {
+                            requestAnimationFrame(animateReturn);
+                        } else {
+                            isReturningToCenter = false;
+                        }
+                    }
                     requestAnimationFrame(animateReturn);
-                  } else {
-                    isReturningToCenter = false;
-                  }
                 }
-
-                requestAnimationFrame(animateReturn);
-              }
             }
-
             setInterval(checkInactivity, 1000);
 
             function updatePlanets() {
-              const now = Date.now();
+                const now = Date.now();
+                if (isPaused) {
+                    requestAnimationFrame(updatePlanets);
+                    return;
+                }
 
-              if (isPaused) {
+                planetObjects.forEach(planetObj => {
+                    try {
+                        if (!planetObj.orientation || !planetObj.element) return;
+                        const elapsedSeconds = (now - planetObj.startTime) / 1000;
+                        const orbitTimeSeconds = planetObj.orbitTime * planetObj.speedFactor;
+                        if (!orbitTimeSeconds || orbitTimeSeconds <= 0) {
+                            console.error('Некорректное значение orbitTimeSeconds:', orbitTimeSeconds);
+                            return;
+                        }
+                        const progress = (elapsedSeconds % orbitTimeSeconds) / orbitTimeSeconds;
+                        let angle = planetObj.angle + progress * 360;
+                        const angleRad = angle * Math.PI / 180;
+                        const radius = planetObj.orbitSize / 2;
+                        if (!radius || radius <= 0) {
+                            console.error('Некорректный радиус:', radius);
+                            return;
+                        }
+
+                        let x = Math.cos(angleRad) * radius;
+                        let y = Math.sin(angleRad) * radius;
+                        const centerThreshold = 100; // Увеличен для предотвращения перекрытия логотипа
+                        const distanceFromCenter = Math.sqrt(x * x + y * y);
+                        if (distanceFromCenter < centerThreshold) {
+                            angle += 10;
+                            const newAngleRad = angle * Math.PI / 180;
+                            x = Math.cos(newAngleRad) * radius;
+                            y = Math.sin(newAngleRad) * radius;
+                        }
+
+                        planetObj.orientation.style.left = `${50 + 50 * (x / radius)}%`;
+                        planetObj.orientation.style.top = `${50 + 50 * (y / radius)}%`;
+                        const tiltCompensation = -galaxyTiltAngle;
+                        planetObj.element.style.transform = `rotateX(${tiltCompensation}deg)`;
+                    } catch (error) {
+                        console.error('Ошибка при обновлении позиции планеты:', error);
+                    }
+                });
+
                 requestAnimationFrame(updatePlanets);
-                return;
-              }
-
-              planetObjects.forEach(planetObj => {
-                const elapsedSeconds = (now - planetObj.startTime) / 1000;
-                const orbitTimeSeconds = planetObj.orbitTime * planetObj.speedFactor;
-                const progress = (elapsedSeconds % orbitTimeSeconds) / orbitTimeSeconds;
-                const angle = planetObj.angle + progress * 360;
-                const angleRad = angle * Math.PI / 180;
-
-                const radius = planetObj.orbitSize / 2;
-                const x = Math.cos(angleRad) * radius;
-                const y = Math.sin(angleRad) * radius;
-
-                planetObj.orientation.style.left = `${50 + 50 * (x / radius)}%`;
-                planetObj.orientation.style.top = `${50 + 50 * (y / radius)}%`;
-
-                const tiltCompensation = -galaxyTiltAngle;
-                planetObj.element.style.transform = `rotateX(${tiltCompensation}deg)`;
-              });
-
-              requestAnimationFrame(updatePlanets);
             }
 
-            updatePlanets();
+            if (planets.length > 0) {
+                requestAnimationFrame(updatePlanets);
+            }
           })();
 
           // График (адаптирован под my_startups.html)

@@ -204,11 +204,35 @@ body {
   margin-left: calc(-0.5 * var(--planet-size));
   margin-top: calc(-0.5 * var(--planet-size));
   border-radius: 50%;
-  background-size: cover;
+  background-color: transparent !important;
   cursor: pointer;
   transform-style: preserve-3d;
   z-index: 5;
   transition: all 0.3s ease;
+  overflow: visible !important;
+  border: none;
+}
+
+.planetary-system .planet-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.planetary-system .planet-logo-overlay {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  width: 30px;
+  height: 30px;
+  z-index: 15;
+  transform: translate(50%, -50%);
+  border-radius: 50% !important;
+  border: none !important;
+  background-color: transparent !important;
+  object-fit: cover;
+  overflow: hidden;
 }
 
 .planetary-system .planet:hover {
