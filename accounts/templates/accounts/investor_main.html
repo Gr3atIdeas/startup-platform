@@ -715,8 +715,12 @@
 
 </div>
 
-<script src="{% static 'accounts/js/main_temp.js' %}?v={% now 'U' %}"></script>
-<script src="{% static 'accounts/js/faq.js' %}?v={% now 'U' %}"></script>
+<script src="{% static 'accounts/js/investor_main.js' %}?v={% now 'U' %}"></script>
+<script src="{% static 'accounts/js/planetary_system.js' %}?v={% now 'U' %}"></script>
+<script>
+    const planetaryData = JSON.parse('{{ planetary_data_json|escapejs }}');
+    document.addEventListener('DOMContentLoaded', () => initializePlanetarySystem(planetaryData));
+</script>
 {% endblock %}
 
 {% block scripts %}

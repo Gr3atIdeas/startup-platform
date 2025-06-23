@@ -107,11 +107,12 @@ def home(request):
 
     # Если пользователь авторизован, перенаправляем его на соответствующую страницу
     if hasattr(request.user, "role") and request.user.role:
-        if request.user.role.role_name == "investor":
+        role_name = request.user.role.role_name.lower()
+        if role_name == "investor":
             return redirect("investor_main")
-        elif request.user.role.role_name == "startupper":
+        elif role_name == "startupper":
             return redirect("startupper_main")
-        elif request.user.role.role_name == "moderator":
+        elif role_name == "moderator":
             return redirect("main_page_moderator")
 
     # Если роль не определена или другая, перенаправляем на страницу профиля
@@ -172,14 +173,17 @@ def user_login(request):
                 )
 
                 # Перенаправление в зависимости от роли
-                if user.role == "investor":
-                    return redirect("investor_main")
-                elif user.role == "startupper":
-                    return redirect("startupper_main")
-                elif user.role == "moderator":
-                    return redirect("main_page_moderator")
-                else:
-                    return redirect("home")  # Запасной вариант
+                if hasattr(user, "role") and user.role:
+                    role_name = user.role.role_name.lower()
+                    if role_name == "investor":
+                        return redirect("investor_main")
+                    elif role_name == "startupper":
+                        return redirect("startupper_main")
+                    elif role_name == "moderator":
+                        return redirect("main_page_moderator")
+
+                # Если роль не определена, перенаправляем на главную, где будет выбор
+                return redirect("home")
             else:
                 logger.warning("Authentication failed for email")
                 messages.error(request, "Неверный email или пароль.")
