@@ -97,4 +97,8 @@ staticfiles/
 /static/dist
 
 # Other
-bandit_report.json
+/site
+/media
+/static
+*.swp
+*.swo
