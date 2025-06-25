@@ -125,10 +125,19 @@
   line-height: 18px;
   word-wrap: break-word;
   text-decoration: none;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+/* Общий стиль для наведения на все элементы навигации */
+.header-nav-link:hover,
+.catalog-dropdown-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+/* Убираем специфичный фон для Космочата, чтобы он соответствовал общему стилю */
 .header-nav-link.cosmochat-link:hover {
-  background: linear-gradient(0deg, #004e9f 0%, #006edf 100%);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .header-auth-section {
@@ -376,9 +385,7 @@ nav.nav-menu
 }
 
 .catalog-dropdown-button:hover {
-  /* Можно добавить эффект при наведении, если нужно, например, как у CosmoChat */
-
-  /* background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%); */
+  background-color: transparent;
 }
 
 .catalog-dropdown-button:focus + .catalog-dropdown-menu {
