@@ -1,271 +1,401 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', function() {
     const dataElement = document.getElementById('planetary-system-data');
     if (!dataElement) {
-        console.error('Planetary system data element not found!');
+        console.error('Data element #planetary-system-data not found!');
         return;
     }
-    const appData = JSON.parse(dataElement.textContent);
-    const { startups, categories: galaxyNames, categoryImageUrl, logoImageUrl } = appData;
+    const config = JSON.parse(dataElement.textContent);
 
-    const planets = [];
-    const orbits = document.querySelectorAll('.orbit');
-    const infoCard = document.getElementById('info-card');
-    const planetImage = document.getElementById('planet-image');
-    const startupName = document.getElementById('startup-name');
-    const startupRating = document.getElementById('startup-rating');
-    const startupProgress = document.getElementById('startup-progress');
-    const startupFunding = document.getElementById('startup-funding');
-    const startupInvestors = document.getElementById('startup-investors');
-    const startupDescription = document.getElementById('startup-description');
-    const closeCard = document.getElementById('close-card');
-    const moreDetails = document.getElementById('more-details');
-    const solarSystem = document.getElementById('solar-system');
-    const scene = document.getElementById('scene');
-    const galaxy = document.getElementById('galaxy');
-    const galaxyList = document.getElementById('galaxy-list');
-    const logoElement = document.getElementById('logo');
-    const galaxySelector = document.getElementById('galaxy-selector');
-    const galaxySelectorPrev = document.getElementById('galaxy-selector-prev');
-    const galaxySelectorNext = document.getElementById('galaxy-selector-next');
+    try {
+        // Передаём информацию о пользователе из config
+        const isAuthenticated = config.isAuthenticated;
+        const isStartuper = config.isStartuper;
+        console.log('User context from config:', { isAuthenticated, isStartuper });
 
-    if (logoElement && logoImageUrl) {
-        logoElement.style.backgroundImage = `url('${logoImageUrl}')`;
-    }
+        // Формируем объект startups из config.planetsData
+        const startups = {};
+        if (config.planetsData) {
+            config.planetsData.forEach(planet => {
+                startups[planet.id] = planet;
+            });
+        }
+        console.log('Startups data from config:', startups);
 
-    let isPaused = false;
-    let pausedTime = 0;
-    
-    let isDragging = false;
-    let startX, startY;
-    let rotationX = 45; 
-    let rotationY = 0;
-    let scale = 1;
+        const planets = document.querySelectorAll('.planet');
+        const infoCard = document.getElementById('info-card');
+        const planetImage = document.getElementById('planet-image');
+        const startupName = document.getElementById('startup-name');
+        const startupRating = document.getElementById('startup-rating');
+        const startupProgress = document.getElementById('startup-progress');
+        const startupFunding = document.getElementById('startup-funding');
+        const startupInvestors = document.getElementById('startup-investors');
+        const startupDescription = document.getElementById('startup-description');
+        const closeCard = document.getElementById('close-card');
+        const moreDetails = document.getElementById('more-details');
+        const solarSystem = document.getElementById('solar-system');
+        const scene = document.getElementById('scene');
+        const galaxyElement = document.getElementById('galaxy'); // Renamed to avoid conflict with galaxy variable/parameter
+        const crosshairCoords = document.getElementById('crosshair-coords');
+        const mouseCoords = document.getElementById('mouse-coords');
+        const fpsElement = document.getElementById('fps');
+        const galaxySelector = document.getElementById('galaxy-selector');
+        const galaxyList = document.getElementById('galaxy-list');
 
-    let currentGalaxy = galaxyNames[0];
+        console.log('Found planets:', planets.length);
+        console.log('infoCard:', infoCard);
+        console.log('solarSystem:', solarSystem);
+        console.log('galaxySelector:', galaxySelector);
 
-    function populatePlanets(category) {
-        galaxy.querySelectorAll('.planet-orientation').forEach(p => p.remove());
-        planets.length = 0;
-        const filteredStartups = startups.filter(s => s.direction === category || category === 'Все');
-        
-        filteredStartups.forEach((startup, index) => {
-            if (index >= orbits.length) return;
-            
-            const orbit = orbits[index];
-            const orbitSize = parseFloat(getComputedStyle(orbit).getPropertyValue('--orbit-size'));
-            
-            const planetOrientation = document.createElement('div');
-            planetOrientation.className = 'planet-orientation';
-            
-            const planetEl = document.createElement('div');
-            planetEl.className = 'planet';
-            planetEl.style.setProperty('--planet-size', `${50 + Math.random() * 20}px`);
-            planetEl.style.backgroundImage = `url('${startup.planet_image_url}')`;
-            
-            planetOrientation.appendChild(planetEl);
-            orbit.appendChild(planetOrientation);
+        let currentStartupID = null;
+        const galaxyTiltAngle = 45;
+        let lastTime = 0;
+        let frameCount = 0;
+        let fps = 0;
+        let isPaused = false;
+        let pausedTime = 0;
+        let lastInteractionTime = Date.now();
+        const inactivityTimeout = 10000;
+        let isReturningToCenter = false;
+        let isDragging = false;
+        let startX_drag, startY_drag; // Renamed to avoid conflict
+        let offsetX = 0;
+        let offsetY = 0;
+        let scale = 1;
 
-            const planetObj = {
-                element: planetEl,
-                orientation: planetOrientation,
-                orbit: orbit,
-                orbitSize: orbitSize,
-                angle: Math.random() * 360,
-                speedFactor: 0.8 + Math.random() * 0.4,
-                startTime: Date.now() - Math.random() * 100000
-            };
-            planets.push(planetObj);
+        planets.forEach(planet => {
+            console.log('Processing planet:', planet);
+            const randomAngle = Math.random() * 360;
+            planet.parentElement.parentElement.style.setProperty('--random-angle', `${randomAngle}deg`);
+            const randomSpeedFactor = 0.8 + Math.random() * 0.4;
+            planet.parentElement.parentElement.style.setProperty('--random-speed-factor', randomSpeedFactor);
+            const id = planet.getAttribute('data-id');
+            console.log(`Planet ID: ${id}, Startup data:`, startups[id]);
 
-            planetEl.addEventListener('click', (e) => {
+            if (startups[id] && startups[id].image) {
+                const img = new Image();
+                img.src = startups[id].image;
+                img.onload = () => {
+                    console.log(`Image loaded for startup ${id}: ${startups[id].image}`);
+                };
+                img.onerror = () => {
+                    console.error(`Failed to load image for startup ${id}: ${startups[id].image}`);
+                    planet.style.backgroundImage = `url('https://via.placeholder.com/150')`;
+                };
+            } else if (id !== 'create-startup') { // Don't error for special planets if they lack image in startups object
+                 console.warn(`No image data for planet ${id} or startup data missing.`);
+                 planet.style.backgroundImage = `url('https://via.placeholder.com/150')`;
+            }
+
+
+            planet.addEventListener('click', (e) => {
+                console.log(`Planet clicked: ${id}`);
                 e.stopPropagation();
-                
-                if(infoCard.style.display === 'block' && startupName.textContent === startup.name) {
-                    infoCard.style.display = 'none';
-                    planetEl.classList.remove('active');
-                    resumeAnimation();
+                if (id === 'create-startup') {
+                    console.log('Clicked on create-startup planet');
+                    if (isAuthenticated && isStartuper) {
+                        window.location.href = config.urls.createStartup;
+                    } else if (!isAuthenticated) {
+                        window.location.href = config.urls.register;
+                    }
                     return;
                 }
 
-                planetImage.style.backgroundImage = `url('${startup.planet_image_url}')`;
-                startupName.textContent = startup.name;
-                startupRating.textContent = `Рейтинг ${startup.rating_avg.toFixed(1)}/5 (${startup.rating_count})`;
-                startupProgress.textContent = `${startup.investment_progress.toFixed(0)}%`;
-                startupFunding.textContent = `Цель: ${startup.investment_goal} ₽`;
-                startupInvestors.textContent = `Инвесторов: ${startup.investors_count}`;
-                startupDescription.textContent = startup.short_description;
-                if(moreDetails) {
-                    moreDetails.onclick = () => window.location.href = startup.url;
+                const startup = startups[id];
+                if (!startup) {
+                    console.error('Startup data not found for id:', id);
+                    return;
                 }
+                console.log('Startup data:', startup);
 
-                document.querySelectorAll('.planet').forEach(p => p.classList.remove('active'));
-                planetEl.classList.add('active');
+                planetImage.style.backgroundImage = `url('${startup.image}')`;
+                startupName.textContent = startup.name;
+                startupRating.textContent = `Рейтинг ${startup.rating} | Комментариев: ${startup.comment_count || 0}`;
+                startupProgress.innerHTML = `
+                    <div class="progress-bar-visual">
+                      <div class="progress-animation-container" style="width: ${startup.progress};">
+                        <div class="progress-planets"></div>
+                      </div>
+                      <span class="progress-percentage">${startup.progress}</span>
+                    </div>`;
+                startupFunding.innerHTML = `
+                    <strong>Направление:</strong> ${startup.direction}<br>
+                    <div class="funding-goal-container-figma">
+                      <span class="funding-goal-text-figma">Цель финансирования: ${startup.funding_goal}</span>
+                    </div>`; // Corrected to funding_goal from startup.funding if that's the correct field from context
+                startupInvestors.innerHTML = `
+                    <div class="investor-count-container-figma">
+                      <i class="fas fa-users investor-icon-figma"></i>
+                      <span class="investor-count-text-figma">${startup.investors}</span>
+                    </div>`;
+                startupDescription.innerHTML = `
+                    <div class="progress-bar">
+                      ${startup.investment_type && startup.investment_type !== "Не указано" ? `<button>${startup.investment_type}</button>` : ""}
+                    </div>
+                    <div class="startup-short-description">${startup.description}</div>`;
+                currentStartupID = startup.startup_id;
+                console.log('Current Startup ID:', currentStartupID);
+                planets.forEach(p => p.classList.remove('active'));
+                planet.classList.add('active');
                 infoCard.style.display = 'block';
-                pauseAnimation();
+                isPaused = true;
+                pausedTime = Date.now();
+                lastInteractionTime = Date.now();
             });
         });
-    }
 
-    function initGalaxySelector() {
-        galaxyList.innerHTML = '';
+        if (closeCard) {
+            closeCard.addEventListener('click', () => {
+                console.log('Close card clicked');
+                infoCard.style.display = 'none';
+                planets.forEach(p => p.classList.remove('active'));
+                if (isPaused) {
+                    const pauseDuration = Date.now() - pausedTime;
+                    planetObjects.forEach(planetObj => {
+                        planetObj.startTime += pauseDuration;
+                    });
+                    isPaused = false;
+                    console.log('Resuming planet rotation');
+                }
+                lastInteractionTime = Date.now();
+            });
+        }
 
-        galaxyNames.forEach(name => {
-            const galaxyItem = document.createElement('div');
-            galaxyItem.className = 'galaxy-item';
-            
-            const imgContainer = document.createElement('div');
-            imgContainer.className = 'category-image-container';
-            const img = document.createElement('img');
-            img.src = categoryImageUrl; 
-            img.alt = name;
-            imgContainer.appendChild(img);
+        if (moreDetails) {
+            moreDetails.addEventListener('click', () => {
+                console.log('More details clicked');
+                if (currentStartupID) {
+                    window.location.href = `/startups/${currentStartupID}/`;
+                } else {
+                    console.error('Startup ID не найден для перехода на страницу стартапа');
+                }
+                infoCard.style.display = 'none';
+                planets.forEach(p => p.classList.remove('active'));
+                if (isPaused) {
+                    const pauseDuration = Date.now() - pausedTime;
+                    planetObjects.forEach(planetObj => {
+                        planetObj.startTime += pauseDuration;
+                    });
+                    isPaused = false;
+                    console.log('Resuming planet rotation after more details');
+                }
+                lastInteractionTime = Date.now();
+            });
+        }
+        
+        if (solarSystem) {
+            solarSystem.addEventListener('mousedown', (e) => {
+                console.log('Solar system mousedown');
+                e.preventDefault();
+                const rect = solarSystem.getBoundingClientRect();
+                startX_drag = e.clientX - rect.left;
+                startY_drag = e.clientY - rect.top;
+                isDragging = true;
+                solarSystem.classList.add('dragging');
+                lastInteractionTime = Date.now();
+                isReturningToCenter = false;
+            });
 
-            const nameWrapper = document.createElement('div');
-            nameWrapper.className = 'galaxy-name-wrapper';
-            const nameSpan = document.createElement('span');
-            nameSpan.className = 'galaxy-name';
-            nameSpan.textContent = name;
-            nameWrapper.appendChild(nameSpan);
+            solarSystem.addEventListener('wheel', (e) => {
+                console.log('Solar system wheel');
+                e.preventDefault();
+                const rect = solarSystem.getBoundingClientRect();
+                const delta = e.deltaY > 0 ? -0.1 : 0.1;
+                scale = Math.max(0.5, Math.min(3, scale + delta));
+                if (scene) scene.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+                if (crosshairCoords) crosshairCoords.textContent = `Center: (${Math.round(offsetX)}, ${Math.round(offsetY)}, 0)`;
+                if (mouseCoords) {
+                    mouseCoords.style.left = `${Math.min(rect.width - 80, Math.max(0, e.clientX - rect.left))}px`;
+                    mouseCoords.style.top = `${Math.min(rect.height - 30, Math.max(0, e.clientY - rect.top))}px`;
+                    mouseCoords.textContent = `Mouse: (${Math.round(e.clientX - rect.left)}, ${Math.round(e.clientY - rect.top)})`;
+                }
+                lastInteractionTime = Date.now();
+                isReturningToCenter = false;
+            });
+        }
 
-            galaxyItem.appendChild(imgContainer);
-            galaxyItem.appendChild(nameWrapper);
+        document.addEventListener('mousemove', (e) => {
+            if (solarSystem && isDragging) { // Check if solarSystem exists
+                const rect = solarSystem.getBoundingClientRect();
+                const deltaX = e.clientX - rect.left - startX_drag;
+                const deltaY = e.clientY - rect.top - startY_drag;
+                offsetX += deltaX;
+                offsetY += deltaY;
+                const maxX = (rect.width / 2) / scale;
+                const maxY = (rect.height / 2) / scale;
+                offsetX = Math.max(-maxX, Math.min(maxX, offsetX));
+                offsetY = Math.max(-maxY, Math.min(maxY, offsetY));
+                if (scene) scene.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+                startX_drag = e.clientX - rect.left;
+                startY_drag = e.clientY - rect.top;
+                if (crosshairCoords) crosshairCoords.textContent = `Center: (${Math.round(offsetX)}, ${Math.round(offsetY)}, 0)`;
+                lastInteractionTime = Date.now();
+            }
+             if (solarSystem && mouseCoords) { // Check if solarSystem and mouseCoords exist
+                const rect = solarSystem.getBoundingClientRect();
+                mouseCoords.style.left = `${Math.min(rect.width - 80, Math.max(0, e.clientX - rect.left))}px`;
+                mouseCoords.style.top = `${Math.min(rect.height - 30, Math.max(0, e.clientY - rect.top))}px`;
+                mouseCoords.textContent = `Mouse: (${Math.round(e.clientX - rect.left)}, ${Math.round(e.clientY - rect.top)})`;
+            }
+        });
 
-            if (name === currentGalaxy) {
-                galaxyItem.classList.add('selected');
+        document.addEventListener('mouseup', () => {
+            console.log('Mouse up');
+            isDragging = false;
+            if (solarSystem) solarSystem.classList.remove('dragging');
+            lastInteractionTime = Date.now();
+        });
+
+        if (infoCard) {
+            infoCard.addEventListener('mousedown', (e) => {
+                console.log('Info card mousedown');
+                e.stopPropagation();
+            });
+        }
+
+        let planetObjects = [];
+        planets.forEach(planet => {
+            const orbit = planet.closest('.orbit');
+            if (orbit) {
+                planetObjects.push({
+                    element: planet,
+                    orbitSize: parseFloat(getComputedStyle(orbit).getPropertyValue('--orbit-size')),
+                    orbitTime: parseFloat(getComputedStyle(orbit).getPropertyValue('--orbit-time')) * 1000,
+                    startTime: Date.now() + Math.random() * 5000,
+                    randomSpeedFactor: parseFloat(orbit.style.getPropertyValue('--random-speed-factor') || 1)
+                });
+            }
+        });
+
+        function checkInactivity() {
+            if (!isDragging && !isPaused && Date.now() - lastInteractionTime > inactivityTimeout) {
+                if (!isReturningToCenter) {
+                    isReturningToCenter = true;
+                    const animationDuration = 1000;
+                    const start = performance.now();
+                    const startOffsetX = offsetX;
+                    const startOffsetY = offsetY;
+
+                    function animateReturn(timestamp) {
+                        const elapsed = timestamp - start;
+                        const progress = Math.min(elapsed / animationDuration, 1);
+                        offsetX = startOffsetX * (1 - progress);
+                        offsetY = startOffsetY * (1 - progress);
+                        if (scene) scene.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+                        if (crosshairCoords) crosshairCoords.textContent = `Center: (${Math.round(offsetX)}, ${Math.round(offsetY)}, 0)`;
+
+                        if (progress < 1) {
+                            requestAnimationFrame(animateReturn);
+                        } else {
+                            isReturningToCenter = false;
+                        }
+                    }
+                    requestAnimationFrame(animateReturn);
+                }
+            }
+        }
+        setInterval(checkInactivity, 2000);
+
+        function updatePlanets(time) {
+            if (!lastTime) {
+                lastTime = time;
+                requestAnimationFrame(updatePlanets);
+                return;
             }
 
-            galaxyItem.addEventListener('click', () => {
-                switchGalaxy(name);
+            const deltaTime = time - lastTime;
+            lastTime = time;
+            frameCount++;
+            if (time % 1000 < deltaTime) {
+                fps = frameCount;
+                frameCount = 0;
+                if (fpsElement) fpsElement.textContent = `${fps} FPS`;
+            }
+
+            if (!isPaused) {
+                const now = Date.now();
+                planetObjects.forEach(p => {
+                    const elapsedTime = now - p.startTime;
+                    const angle = ((elapsedTime / (p.orbitTime / p.randomSpeedFactor)) * 360) % 360;
+                    const x = Math.cos(angle * Math.PI / 180) * p.orbitSize / 2;
+                    const y = Math.sin(angle * Math.PI / 180) * p.orbitSize / 2;
+                    const z = Math.sin(angle * Math.PI / 180) * p.orbitSize * Math.tan(galaxyTiltAngle * Math.PI / 180) / 2;
+
+                    const orientationElement = p.element.parentElement;
+                    orientationElement.style.transform = `translate3d(${x}px, ${y}px, 0px)`;
+
+                    const planetItself = orientationElement.querySelector('.planet');
+                    if(planetItself) {
+                        planetItself.style.transform = `rotateX(${-galaxyTiltAngle}deg)`;
+                    }
+                });
+            }
+
+            if (galaxyElement) { // Use the renamed variable
+                galaxyElement.style.transform = `rotateX(${galaxyTiltAngle}deg)`;
+            }
+
+            requestAnimationFrame(updatePlanets);
+        }
+
+        // Galaxy Selector Logic
+        if (galaxySelector && config.directionsData) {
+            const galaxyItems = document.querySelectorAll('.galaxy-item');
+            
+            galaxyItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    const galaxyName = item.getAttribute('data-name');
+                    selectGalaxy(galaxyName);
+                });
             });
 
-            galaxyList.appendChild(galaxyItem);
-        });
-        updateGalaxySelectorScroll(false);
-    }
-    
-    function switchGalaxy(name) {
-        if (currentGalaxy === name) return;
-        currentGalaxy = name;
-        document.querySelectorAll('.galaxy-item').forEach(item => {
-            const itemName = item.querySelector('.galaxy-name').textContent;
-            item.classList.toggle('selected', itemName === name);
-        });
-        populatePlanets(currentGalaxy);
-        updateGalaxySelectorScroll();
-    }
-    
-    function updateGalaxySelectorScroll(animated = true) {
-        const selected = galaxyList.querySelector('.galaxy-item.selected');
-        if (!selected) return;
-        const listWidth = galaxySelector.offsetWidth;
-        const selectedLeft = selected.offsetLeft;
-        const selectedWidth = selected.offsetWidth;
-        const scrollLeft = selectedLeft - (listWidth / 2) + (selectedWidth / 2);
-        
-        galaxyList.style.transition = animated ? 'transform 0.5s ease' : 'none';
-        galaxyList.style.transform = `translateX(${-scrollLeft}px)`;
-    }
+            function selectGalaxy(galaxyName) {
+                // Remove 'selected' from all items and add to the clicked one
+                galaxyItems.forEach(item => item.classList.remove('selected'));
+                const selectedItem = document.querySelector(`.galaxy-item[data-name="${galaxyName}"]`);
+                if (selectedItem) {
+                    selectedItem.classList.add('selected');
+                }
 
-    galaxySelectorPrev.addEventListener('click', () => {
-        let currentIndex = galaxyNames.indexOf(currentGalaxy);
-        currentIndex = (currentIndex - 1 + galaxyNames.length) % galaxyNames.length;
-        switchGalaxy(galaxyNames[currentIndex]);
-    });
+                // Redirect to the new galaxy URL
+                // Assuming config.urls.planetarySystemBase is something like "/planetary-system/"
+                window.location.href = `${config.urls.planetarySystemBase}?direction=${encodeURIComponent(galaxyName)}`;
+            }
 
-    galaxySelectorNext.addEventListener('click', () => {
-        let currentIndex = galaxyNames.indexOf(currentGalaxy);
-        currentIndex = (currentIndex + 1) % galaxyNames.length;
-        switchGalaxy(galaxyNames[currentIndex]);
-    });
-
-    function pauseAnimation() {
-        if (!isPaused) {
-            isPaused = true;
-            pausedTime = Date.now();
-        }
-    }
-
-    function resumeAnimation() {
-        if (isPaused) {
-            const pauseDuration = Date.now() - pausedTime;
-            planets.forEach(p => {
-                p.startTime += pauseDuration;
+            // Smooth scrolling for galaxy selector
+            let isDown = false;
+            let startX;
+            let scrollLeft;
+            
+            galaxyList.addEventListener('mousedown', (e) => {
+                isDown = true;
+                galaxyList.classList.add('active');
+                startX = e.pageX - galaxyList.offsetLeft;
+                scrollLeft = galaxyList.scrollLeft;
             });
-            isPaused = false;
-        }
-    }
-
-    closeCard.addEventListener('click', () => {
-        infoCard.style.display = 'none';
-        document.querySelectorAll('.planet').forEach(p => p.classList.remove('active'));
-        resumeAnimation();
-    });
-
-    if (moreDetails) {
-        moreDetails.addEventListener('click', () => {});
-    }
-
-    function updatePositions() {
-        if (!isPaused) {
-            const now = Date.now();
-            planets.forEach(p => {
-                const elapsedSeconds = (now - p.startTime) / 1000;
-                const orbitTime = p.orbit.style.getPropertyValue('--orbit-time');
-                const orbitTimeSeconds = parseFloat(orbitTime.replace('s', '')) * p.speedFactor;
-                const progress = (elapsedSeconds % orbitTimeSeconds) / orbitTimeSeconds;
-                const angle = p.angle + progress * 360;
-                const angleRad = angle * Math.PI / 180;
-                const radius = p.orbitSize / 2;
-                const x = Math.cos(angleRad) * radius;
-                const y = Math.sin(angleRad) * radius;
-                
-                p.orientation.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-                p.element.style.transform = `rotateY(${-rotationY}deg) rotateX(${-rotationX}deg)`;
+            galaxyList.addEventListener('mouseleave', () => {
+                isDown = false;
+                galaxyList.classList.remove('active');
             });
+            galaxyList.addEventListener('mouseup', () => {
+                isDown = false;
+                galaxyList.classList.remove('active');
+            });
+            galaxyList.addEventListener('mousemove', (e) => {
+                if(!isDown) return;
+                e.preventDefault();
+                const x = e.pageX - galaxyList.offsetLeft;
+                const walk = (x - startX) * 2; //scroll-fast
+                galaxyList.scrollLeft = scrollLeft - walk;
+            });
+             function smoothScroll() {
+                // This is a placeholder for any smooth scrolling logic if needed beyond native/drag scrolling
+            }
         }
-        requestAnimationFrame(updatePositions);
+
+
+        requestAnimationFrame(updatePlanets);
+
+    } catch (error) {
+        console.error('An error occurred in the planetary system script:', error);
     }
-    
-    solarSystem.addEventListener('mousedown', (e) => {
-        if (e.target.closest('#galaxy-selector-container') || e.target.closest('#info-card')) return;
-        e.preventDefault();
-        isDragging = true;
-        startX = e.clientX;
-        startY = e.clientY;
-        solarSystem.classList.add('dragging');
-    });
-
-    document.addEventListener('mouseup', () => {
-        isDragging = false;
-        solarSystem.classList.remove('dragging');
-    });
-
-    document.addEventListener('mousemove', (e) => {
-        if (isDragging) {
-            const deltaX = e.clientX - startX;
-            const deltaY = e.clientY - startY;
-            rotationY += deltaX * 0.2;
-            rotationX -= deltaY * 0.2;
-            rotationX = Math.max(-90, Math.min(90, rotationX));
-
-            galaxy.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
-
-            startX = e.clientX;
-            startY = e.clientY;
-        }
-    });
-
-    solarSystem.addEventListener('wheel', (e) => {
-        e.preventDefault();
-        const delta = e.deltaY > 0 ? -0.1 : 0.1;
-        scale = Math.max(0.5, Math.min(3, scale + delta));
-        scene.style.transform = `translate(-50%, -50%) scale(${scale})`;
-    });
-    
-    scene.style.transform = `translate(-50%, -50%) scale(${scale})`;
-    galaxy.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
-
-    initGalaxySelector();
-    populatePlanets(currentGalaxy);
-    requestAnimationFrame(updatePositions);
-    window.addEventListener('resize', () => updateGalaxySelectorScroll(false));
 });

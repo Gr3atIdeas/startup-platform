@@ -1,30 +1,36 @@
-#planetary-system-container {
-    width: 100%;
-    max-width: 1303px;
-    height: 708px; /* Set a fixed height for the container */
-    position: relative;
+/* Стили для планетарной системы */
+.planetary-system-wrapper {
+    padding: 20px;
+    width: 100%; /* Возвращаем полную ширину */
+    height: calc(85vh - 40px); /* Уменьшаем высоту на 30% (было 100vh) */
+    box-sizing: border-box;
     margin: 0 auto;
-    background: linear-gradient(180deg, black 0%, #004E9F 100%);
-    box-shadow: 0px 10px 23px 5px rgba(0, 0, 0, 0.18);
-    overflow: hidden;
+}
+
+.planetary-system-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    border: 2px solid rgba(255, 255, 255, 0.3);
     border-radius: 10px;
-    outline: 1px var(--S-G2, rgba(255, 255, 255, 0.36)) solid;
-    outline-offset: -1px;
+    /* Убираем overflow: hidden */
+    background: #000; /* Добавляем чёрный фон, чтобы перекрыть фоновое изображение страницы */
 }
 
 .space-background {
-    position: absolute;
+    position: absolute; /* Изменяем на absolute */
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    /* background: url('https://images.unsplash.com/photo-1447433819943-74a20987a81b') no-repeat center center; */
+    background: url('https://images.unsplash.com/photo-1447433819943-74a20987a81b') no-repeat center center;
     background-size: cover;
-    z-index: 0;
+    z-index: -1;
 }
 
 .stars {
-    position: absolute;
+    position: absolute; /* Изменяем на absolute */
     top: 0;
     left: 0;
     width: 100%;
@@ -32,7 +38,7 @@
     background: url('https://www.transparenttextures.com/patterns/stardust.png') repeat;
     opacity: 0.5;
     animation: parallax 100s linear infinite;
-    z-index: 1;
+    z-index: 0;
 }
 
 @keyframes parallax {
@@ -98,17 +104,14 @@
     border-radius: 50%;
     margin-left: calc(-0.5 * var(--orbit-size));
     margin-top: calc(-0.5 * var(--orbit-size));
+    transform: scaleY(0.95);
     transform-style: preserve-3d;
     z-index: 1;
-    transition: all 0.5s ease; /* Плавный переход при смене галактики */
+    transition: all 0.5s ease;
 }
 
 .planet-orientation {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
     transform-style: preserve-3d;
 }
 
@@ -134,9 +137,8 @@
     transform: scale(1.2);
 }
 
-/* Info card is outside the container now */
 #info-card {
-    position: fixed;
+    position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -147,29 +149,36 @@
     max-width: 350px;
     width: 90%;
     color: #333;
-    z-index: 1001; /* Above the planetary system */
+    z-index: 20;
     display: none;
     text-align: center;
+    overflow: visible;
 }
 
 #info-card .planet-image {
     width: 100px;
     height: 100px;
     border-radius: 50%;
-    margin: 0 auto 10px;
+    margin: 0 auto -50px;
     background-size: cover;
+    position: relative;
+    top: -50px;
 }
 
 #info-card h2 {
-    margin: 0 0 5px;
-    font-size: 24px;
+    margin: 10px 0 5px;
+    font-size: 20px;
     color: #000;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
 }
 
 #info-card .rating {
-    font-size: 16px;
-    color: #555;
+    font-size: 12px;
+    color: #004E9F;
     margin-bottom: 10px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
 }
 
 #info-card .progress-bar {
@@ -177,6 +186,7 @@
     align-items: center;
     justify-content: center;
     margin: 10px 0;
+    width: 100%;
 }
 
 #info-card .progress-bar button {
@@ -184,8 +194,11 @@
     border: none;
     background: #000;
     color: white;
-    font-size: 14px;
-    border-radius: 5px 0 0 5px;
+    font-size: 12px;
+    border-radius: 5px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    display: block;
 }
 
 #info-card .progress-bar .progress {
@@ -197,21 +210,27 @@
 }
 
 #info-card .funding {
-    font-size: 14px;
+    font-size: 12px;
     color: #555;
     margin: 10px 0;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
 }
 
 #info-card .investors {
-    font-size: 14px;
-    color: #555;
+    font-size: 12px;
+    color: #4E4F51;
     margin-bottom: 15px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
 }
 
 #info-card .description {
-    font-size: 14px;
+    font-size: 12px;
     color: #555;
     margin-bottom: 15px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
 }
 
 #info-card .more-details {
@@ -229,25 +248,30 @@
     right: 10px;
     background: #ffd700;
     border: none;
-    font-size: 20px;
-    cursor: pointer;
     color: #000;
+    font-size: 24px;
     width: 30px;
     height: 30px;
     border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    line-height: 28px;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+#close-card:hover {
+    background: #e6c300;
+    transform: rotate(90deg);
 }
 
 #crosshair {
-    position: absolute; /* Changed to absolute */
+    position: absolute;
     top: 50%;
     left: 50%;
     width: 20px;
     height: 20px;
     transform: translate(-50%, -50%);
-    z-index: 100;
+    z-index: 15;
 }
 
 #crosshair::before {
@@ -256,8 +280,8 @@
     top: 50%;
     left: 0;
     width: 100%;
-    height: 2px;
-    background: rgba(255, 255, 255, 0.7);
+    height: 1px;
+    background: rgba(255, 255, 255, 0.5);
     transform: translateY(-50%);
 }
 
@@ -266,153 +290,146 @@
     position: absolute;
     top: 0;
     left: 50%;
-    width: 2px;
+    width: 1px;
     height: 100%;
-    background: rgba(255, 255, 255, 0.7);
+    background: rgba(255, 255, 255, 0.5);
     transform: translateX(-50%);
 }
 
-#crosshair-coords, #mouse-coords, #axes, #fps {
-    display: none; /* Hiding debug elements */
+#crosshair-coords {
+    position: absolute;
+    top: calc(50% + 15px);
+    left: calc(50% + 15px);
+    color: white;
+    font-size: 12px;
+    background: rgba(0,0,0,0.5);
+    padding: 2px 5px;
+    border-radius: 3px;
+    z-index: 15;
 }
 
-
-/* Стили для переключателя галактик */
-#galaxy-selector-container {
+#mouse-coords {
     position: absolute;
-    bottom: 20px;
+    bottom: 10px;
+    left: 10px;
+    color: white;
+    font-size: 12px;
+    background: rgba(0,0,0,0.5);
+    padding: 5px;
+    border-radius: 5px;
+}
+
+#axes {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    width: 100px;
+    height: 100px;
+    transform-style: preserve-3d;
+    transform: rotateX(45deg) rotateY(0deg) rotateZ(0deg);
+}
+
+.axis {
+    position: absolute;
+    background: white;
+}
+
+#axis-x {
+    width: 100%;
+    height: 1px;
+    top: 50%;
+    left: 0;
+}
+
+#axis-y {
+    width: 1px;
+    height: 100%;
+    top: 0;
+    left: 50%;
+}
+
+#axis-z {
+    width: 1px;
+    height: 100%;
+    top: 0;
+    left: 50%;
+    transform: rotateY(90deg) translateX(50px) translateY(-50px) translateZ(50px);
+}
+
+.axis-label {
+    position: absolute;
+    color: white;
+    font-size: 14px;
+}
+
+#label-x {
+    top: 50%;
+    left: 100%;
+    transform: translate(5px, -50%);
+}
+
+#label-y {
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -100%);
+}
+
+#label-z {
+    top: 50%;
+    left: 50%;
+    transform: rotateY(90deg) translate3d(50px, -50%, 5px);
+}
+
+#fps {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    color: white;
+    background: rgba(0,0,0,0.5);
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-family: monospace;
+}
+
+#galaxy-selector {
+    position: absolute;
+    bottom: 0;
     left: 50%;
     transform: translateX(-50%);
-    width: 600px;
-    max-width: 90vw;
-    height: 120px;
+    background: rgba(0,0,0,0.7);
+    padding: 10px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    max-width: 80%;
+    overflow-x: auto;
     z-index: 100;
 }
 
-.galaxy-selector-arrow {
-    background: #FFEF2B;
-    border: none;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 0;
-    flex-shrink: 0;
-    transition: background-color 0.3s ease;
-}
-
-.galaxy-selector-arrow:hover {
-    background-color: #e6d329;
-}
-
-.galaxy-selector-arrow img {
-    width: 20px;
-    height: 20px;
-}
-
-
-#galaxy-selector {
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    margin: 0 15px;
+#galaxy-selector::-webkit-scrollbar {
+    height: 5px;
 }
 
 #galaxy-list {
     display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    height: 100%;
-    transition: transform 0.5s ease;
-    gap: 20px;
+    gap: 10px;
 }
 
 .galaxy-item {
-    flex-shrink: 0;
+    padding: 10px 15px;
+    color: white;
+    background: #333;
+    border-radius: 5px;
     cursor: pointer;
-    text-align: center;
-    position: relative;
-    width: 90px;
-    height: 100px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    align-items: center;
-    transition: transform 0.3s ease;
-    padding-bottom: 20px;
+    transition: background-color 0.3s;
+    white-space: nowrap; /* Чтобы текст не переносился */
+}
+
+.galaxy-item:hover {
+    background-color: #555;
 }
 
 .galaxy-item.selected {
-    transform: scale(1.1);
-}
-
-.galaxy-item .category-image-container {
-    position: absolute;
-    top: 0;
-    width: 65px;
-    height: 65px;
-    transition: all 0.3s ease;
-    border-radius: 50%;
-    background: radial-gradient(circle, #1a1a2e 50%, #0a0a1e 100%);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-}
-
-.galaxy-item.selected .category-image-container {
-     transform: translateY(-10px);
-     border-radius: 25px;
-     border: 3px solid #FFEF2B;
-     background: transparent;
-}
-
-.galaxy-item img {
-    width: 90%;
-    height: 90%;
-    object-fit: contain;
-}
-
-.galaxy-item .galaxy-name-wrapper {
-    background: transparent;
-    border-radius: 20px;
-    padding: 5px 15px;
-    position: relative;
-    z-index: 1;
-}
-
-.galaxy-item.selected .galaxy-name-wrapper {
-    background: #FFEF2B;
-    padding: 5px 12px;
-}
-
-.galaxy-item.selected .galaxy-name {
-     color: white;
-     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-}
-
-.galaxy-item .galaxy-name {
-    color: white;
-    font-size: 12px;
-    font-family: Unbounded, sans-serif;
-    font-weight: 300;
-    letter-spacing: 0.12px;
-    word-wrap: break-word;
-    white-space: nowrap;
-}
-
-.planet-image {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    margin: 0 auto 10px;
-    background-size: cover;
-    border: 2px solid #FFEF2B;
+    background-color: #007bff;
+    font-weight: bold;
 }

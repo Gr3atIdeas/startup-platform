@@ -3079,201 +3079,87 @@ def leave_chat(request, chat_id):
 
 
 def planetary_system(request):
-    # Получаем все направления из базы данных
-    categories = list(
-        Directions.objects.annotate(id=F("direction_id"), name=F("direction_name"))
-        .values("id", "name")
-        .order_by("name")
+    directions = Directions.objects.all().order_by("direction_name")
+    selected_direction_name = request.GET.get("direction", "Все")
+
+    startups_query = Startups.objects.filter(status="approved").annotate(
+        rating_avg=Coalesce(Avg("uservotes__rating"), 0.0, output_field=FloatField()),
+        total_voters=Count("uservotes", distinct=True),
+        total_investors=Count("investmenttransactions", distinct=True),
+        current_funding=Coalesce(
+            Sum("investmenttransactions__amount"), 0, output_field=DecimalField()
+        ),
+        comment_count=Count("comments", distinct=True),
     )
 
-    # Получаем все стартапы со статусом 'approved'
-    # Аннотируем данные так же, как в `investor_main`, чтобы обеспечить консистентность
-    startups_qs = Startups.objects.filter(status="approved")
-
-    # Логируем общее количество стартапов в категории
-    logger.info(
-        f"Найдено стартапов в категории '{categories[0]['name']}': {startups_qs.count()}"
-    )
-
-    # Ограничиваем до 8 стартапов (или берём столько, сколько есть, если меньше)
-    startups_qs = startups_qs[:8]
-    logger.info(f"Выбрано стартапов для отображения: {len(startups_qs)}")
-
-    # Инициализируем S3-клиент для доступа к Yandex Object Storage
-    s3_client = boto3.client(
-        "s3",
-        aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-        aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
-        endpoint_url=settings.AWS_S3_ENDPOINT_URL,
-        region_name=settings.AWS_S3_REGION_NAME,
-    )
-
-    # Формируем данные для планет
-    planets_data = []
-    # Генерируем случайные размеры орбит
-    min_orbit_size = 200  # Минимальный размер орбиты
-    max_orbit_size = 800  # Максимальный размер орбиты
-    orbit_step = 50  # Минимальное расстояние между орбитами
-
-    # Создаём список доступных размеров орбит с шагом orbit_step
-    available_sizes = list(
-        range(min_orbit_size, max_orbit_size + orbit_step, orbit_step)
-    )
-    import random
-
-    random.shuffle(available_sizes)  # Перемешиваем размеры
-
-    for idx, startup in enumerate(startups_qs, 1):
-        # Проверяем наличие logo_urls
-        if (
-            not startup.logo_urls
-            or not isinstance(startup.logo_urls, list)
-            or len(startup.logo_urls) == 0
-        ):
-            logger.warning(
-                f"Стартап {startup.startup_id} ({startup.title}) не имеет логотипа в logo_urls"
-            )
-            logo_url = "https://via.placeholder.com/150"
-        else:
-            try:
-                # Формируем префикс для поиска файла в папке startups/{startup_id}/logos/
-                prefix = f"startups/{startup.startup_id}/logos/"
-
-                # Ищем файлы в этой папке
-                response = s3_client.list_objects_v2(
-                    Bucket=settings.AWS_STORAGE_BUCKET_NAME, Prefix=prefix
-                )
-
-                # Проверяем, есть ли файлы в папке
-                if "Contents" in response and len(response["Contents"]) > 0:
-                    # Берём первый (и единственный) файл
-                    file_key = response["Contents"][0]["Key"]
-                    # Генерируем URL без подписи, так как файл публичный
-                    logo_url = f"https://storage.yandexcloud.net/{settings.AWS_STORAGE_BUCKET_NAME}/{file_key}"
-                    logger.info(
-                        f"Сгенерирован URL для логотипа стартапа {startup.startup_id}: {logo_url}"
-                    )
-                else:
-                    logger.warning(
-                        f"Файл для логотипа стартапа {startup.startup_id} не найден в бакете по префиксу {prefix}"
-                    )
-                    logo_url = "https://via.placeholder.com/150"
-            except Exception as e:
-                logger.error(
-                    f"Ошибка при генерации URL для логотипа стартапа {startup.startup_id}: {str(e)}"
-                )
-                logo_url = "https://via.placeholder.com/150"
-
-        # Выбираем случайный размер орбиты из доступных
-        if idx <= len(available_sizes):
-            orbit_size = available_sizes[idx - 1]
-        else:
-            orbit_size = (
-                min_orbit_size + (idx - 1) * orbit_step
-            )  # Fallback, если закончились размеры
-
-        orbit_time = 80 + (idx - 1) * 20
-        planet_size = idx * 2 + 50
-
-        # Получаем количество комментариев
-        comment_count = Comments.objects.filter(startup_id=startup).count()
-
-        # Получаем направление
-        direction = (
-            startup.direction.direction_name if startup.direction else "Не указано"
+    if selected_direction_name != "Все":
+        startups_query = startups_query.filter(
+            direction__direction_name=selected_direction_name
         )
 
-        # Определяем тип инвестирования
-        if startup.only_invest:
-            investment_type = "Инвестирование"
-        elif startup.only_buy:
-            investment_type = "Выкуп"
-        elif startup.both_mode:
-            investment_type = "Выкуп+инвестирование"
-        else:
-            investment_type = "Не указано"
+    startups_filtered = startups_query.annotate(
+        progress=Case(
+            When(funding_goal__gt=0, then=(F("current_funding") * 100.0 / F("funding_goal"))),
+            default=Value(0),
+            output_field=FloatField(),
+        )
+    )[:8]
 
-        planet_data = {
-            "id": idx,
+    planets_data_for_template = []
+    available_sizes = list(range(200, 851, 50))
+    import random
+    random.shuffle(available_sizes)
+
+    for idx, startup in enumerate(startups_filtered):
+        orbit_size = available_sizes[idx % len(available_sizes)]
+        image_path = f"accounts/images/planetary_system/planets_round/{startup.planet_image}" if startup.planet_image else "accounts/images/planetary_system/planets_round/default.png"
+        planets_data_for_template.append(
+            {
+                "id": startup.startup_id,
+                "image": static(image_path),
+                "orbit_size": orbit_size,
+                "orbit_time": 80 + idx * 10,
+                "planet_size": 50 + (idx % 4) * 10,
+            }
+        )
+
+    planets_data_json = [
+        {
+            "id": startup.startup_id,
+            "name": startup.title,
+            "image": static(f"accounts/images/planetary_system/planets_round/{startup.planet_image}") if startup.planet_image else static("accounts/images/planetary_system/planets_round/default.png"),
+            "rating": round(startup.rating_avg, 2),
+            "progress": f"{startup.progress:.2f}%" if startup.progress is not None else "0%",
+            "direction": startup.direction.direction_name if startup.direction else "Не указано",
+            "investors": startup.total_investors,
+            "funding_goal": f"{startup.funding_goal:,.0f}Р".replace(",", " ") if startup.funding_goal else "Не определена",
+            "comment_count": startup.comment_count,
             "startup_id": startup.startup_id,
-            "name": startup.title or "Без названия",
-            "description": startup.short_description
-            or startup.description
-            or "Описание отсутствует",
-            "rating": f"{startup.get_average_rating():.1f}/5 ({startup.total_voters or 0})",
-            "comment_count": comment_count,
-            "progress": f"{startup.get_progress_percentage():.0f}%",
-            "direction": direction,
-            "investment_type": investment_type,
-            "funding_goal": f"{int(startup.funding_goal or 0):,d} ₽".replace(",", " "),
-            "investors": f"Инвесторов: {startup.get_investors_count() or 0}",
-            "image": logo_url,
-            "orbit_size": orbit_size,
-            "orbit_time": orbit_time,
-            "planet_size": planet_size,
+            "description": startup.short_description,
+            "investment_type": startup.investment_type if startup.investment_type else "Не указано",
         }
-        planets_data.append(planet_data)
-
-    # Добавляем планету с плюсом для создания стартапа только для гостей и стартаперов
+        for startup in startups_filtered
+    ]
+    
     is_authenticated = request.user.is_authenticated
-    # Убедимся, что is_startuper определяется корректно, даже если user.role не существует
-    is_startuper = False
-    if (
-        is_authenticated
-        and hasattr(request.user, "role")
-        and request.user.role is not None
-    ):
-        is_startuper = request.user.role.role_name == "startuper"
+    is_startuper = is_authenticated and hasattr(request.user, 'role') and request.user.role and request.user.role.role_name == 'startuper'
 
-    if not is_authenticated or is_startuper:  # Только для гостей и стартаперов
-        if len(available_sizes) > len(startups_qs):
-            orbit_size = available_sizes[len(startups_qs)]
-        else:
-            orbit_size = min_orbit_size + len(startups_qs) * orbit_step
-
-        create_planet_data = {
-            "id": "create-startup",
-            "startup_id": None,
-            "name": "Создать стартап",
-            "description": "Нажмите, чтобы создать новый стартап",
-            "rating": "",
-            "comment_count": 0,
-            "progress": "",
-            "direction": "",
-            "investment_type": "",
-            "funding_goal": "",  # В JS это поле используется как funding_goal
-            "investors": "",
-            "image": "https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/0.png",
-            "orbit_size": orbit_size,
-            "orbit_time": 80,
-            "planet_size": 60,
-        }
-        planets_data.append(create_planet_data)
-
-    # Данные для логотипа планетарной системы
-    logo_data = {
-        "image": "https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/planets/Group%20645.png"
-    }
-
-    # Сериализуем данные в JSON
-    planets_data_json = json.dumps(planets_data)
-
-    # Подготавливаем и сериализуем directions_data
-    # JS ожидает массив объектов, где каждый объект имеет direction_name
-    directions_list = list(categories)  # Убрал 'description'
-    directions_data_json = json.dumps(directions_list)
-
+    logo_data = {"image": static("accounts/images/planetary_system/solar.png")}
+    
+    directions_data_json = [
+        {"direction_name": d.direction_name} for d in directions
+    ]
+    
     context = {
-        "planets_data": planets_data,  # Оставляем для HTML рендеринга
-        "planets_data_json": planets_data_json,  # Для JS
-        "directions": categories,  # Оставляем для HTML рендеринга
-        "directions_data_json": directions_data_json,  # Для JS
-        "selected_galaxy": categories[0]["name"],
+        "planets_data": planets_data_for_template,
         "logo_data": logo_data,
-        "is_authenticated": is_authenticated,
+        "directions": directions,
+        "selected_galaxy": selected_direction_name,
+        "planets_data_json": json.dumps(planets_data_json, cls=DjangoJSONEncoder),
+        "directions_data_json": json.dumps(directions_data_json, cls=DjangoJSONEncoder),
         "is_startuper": is_startuper,
     }
-    return render(request, "accounts/planetary_system.html", context)
+    return render(request, "accounts/planetary_system.html", context
 
 
 @login_required
