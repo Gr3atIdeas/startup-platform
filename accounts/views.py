@@ -2207,7 +2207,7 @@ def investor_main(request):
 
     startups_query = Startups.objects.filter(status="approved").annotate(
         rating_avg=Coalesce(Avg("uservotes__rating"), 0.0, output_field=FloatField()),
-        total_voters=Count("uservotes", distinct=True),
+        voters_count=Count("uservotes", distinct=True),
         total_investors=Count("investmenttransactions", distinct=True),
         current_funding=Coalesce(
             Sum("investmenttransactions__amount"), 0, output_field=DecimalField()
@@ -2246,8 +2246,20 @@ def investor_main(request):
             }
         )
 
-    planets_data_json = [
-        {
+    planets_data_json = []
+    for startup in startups_filtered:
+        # Вычисляем тип инвестирования
+        investment_type = (
+            "Инвестирование"
+            if startup.only_invest
+            else "Выкуп"
+            if startup.only_buy
+            else "Выкуп+инвестирование"
+            if startup.both_mode
+            else "Не указано"
+        )
+        
+        planets_data_json.append({
             "id": startup.startup_id,
             "name": startup.title,
             "image": static(f"accounts/images/planetary_system/planets_round/{startup.planet_image}") if startup.planet_image else static("accounts/images/planetary_system/planets_round/default.png"),
@@ -2259,10 +2271,8 @@ def investor_main(request):
             "comment_count": startup.comment_count,
             "startup_id": startup.startup_id,
             "description": startup.short_description,
-            "investment_type": startup.investment_type if startup.investment_type else "Не указано",
-        }
-        for startup in startups_filtered
-    ]
+            "investment_type": investment_type,
+        })
     
     is_authenticated = request.user.is_authenticated
     is_startuper = is_authenticated and hasattr(request.user, 'role') and request.user.role and request.user.role.role_name == 'startuper'
