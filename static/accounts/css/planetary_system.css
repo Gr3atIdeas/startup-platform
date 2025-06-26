@@ -1,7 +1,7 @@
 /* Стили для планетарной системы */
 .planetary-system-wrapper {
     width: 100%;
-    max-width: 1400px;
+    max-width: 1374px;
     margin: 0 auto;
     height: 708px;
     position: relative;
@@ -112,13 +112,13 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 60px;
-    height: 30px;
+    width: 80px;
+    height: 40px;
     background-image: url('/static/accounts/images/planetary_system/gi.svg');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-    z-index: 1;
+    z-index: 11;
 }
 
 .orbit {
@@ -151,6 +151,17 @@
     width: var(--planet-size);
     height: var(--planet-size);
     transform: translate(-50%, -50%);
+    animation: counter-rotate linear infinite;
+    animation-duration: var(--orbit-time, 60s);
+}
+
+@keyframes counter-rotate {
+    from { 
+        transform: translate(-50%, -50%) rotate(0deg); 
+    }
+    to { 
+        transform: translate(-50%, -50%) rotate(-360deg); 
+    }
 }
 
 .planet {
@@ -531,17 +542,12 @@
     bottom: -40px;
     left: 50%;
     transform: translateX(-50%);
-    background: rgba(0, 0, 0, 0.9);
     color: white;
-    padding: 6px 16px;
-    border-radius: 15px;
     font-size: 12px;
     white-space: nowrap;
     font-family: 'Unbounded', sans-serif;
     font-weight: 500;
-    backdrop-filter: blur(10px);
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
     z-index: 10;
 }
 
