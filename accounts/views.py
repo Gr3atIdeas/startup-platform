@@ -2235,13 +2235,9 @@ def investor_main(request):
 
     for idx, startup in enumerate(startups_filtered):
         orbit_size = available_sizes[idx % len(available_sizes)]
-        # Если у стартапа есть свое изображение планеты, используем его, иначе случайное из доступных
-        if startup.planet_image:
-            image_path = f"accounts/images/planetary_system/planets_round/{startup.planet_image}"
-        else:
-            # Случайно выбираем изображение планеты из доступных (1.png - 15.png)
-            random_planet_num = random.randint(1, 15)
-            image_path = f"accounts/images/planetary_system/planets_round/{random_planet_num}.png"
+        # Используем простые placeholder изображения для планет
+        random_planet_num = random.randint(1, 8)
+        image_path = f"accounts/images/planetary_system/planets_round/{random_planet_num}.png"
         
         planets_data_for_template.append(
             {
@@ -2267,12 +2263,8 @@ def investor_main(request):
         )
         
         # Выбираем изображение планеты
-        if startup.planet_image:
-            planet_image_url = static(f"accounts/images/planetary_system/planets_round/{startup.planet_image}")
-        else:
-            # Случайно выбираем изображение планеты из доступных (1.png - 15.png)
-            random_planet_num = random.randint(1, 15)
-            planet_image_url = static(f"accounts/images/planetary_system/planets_round/{random_planet_num}.png")
+        random_planet_num = random.randint(1, 8)
+        planet_image_url = static(f"accounts/images/planetary_system/planets_round/{random_planet_num}.png")
         
         planets_data_json.append({
             "id": startup.startup_id,
@@ -2292,7 +2284,7 @@ def investor_main(request):
     is_authenticated = request.user.is_authenticated
     is_startuper = is_authenticated and hasattr(request.user, 'role') and request.user.role and request.user.role.role_name == 'startuper'
 
-    logo_data = {"image": static("accounts/images/planetary_system/solar.png")}
+    logo_data = {"image": static("accounts/images/planetary_system/gi.svg")}
     
     directions_data_json = [
         {"direction_name": d.direction_name} for d in directions
@@ -3201,7 +3193,7 @@ def planetary_system(request):
     is_authenticated = request.user.is_authenticated
     is_startuper = is_authenticated and hasattr(request.user, 'role') and request.user.role and request.user.role.role_name == 'startuper'
 
-    logo_data = {"image": static("accounts/images/planetary_system/solar.png")}
+    logo_data = {"image": static("accounts/images/planetary_system/gi.svg")}
     
     directions_data_json = [
         {"direction_name": d.direction_name} for d in directions

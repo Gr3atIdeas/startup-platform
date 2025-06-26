@@ -63,18 +63,21 @@
     width: 800px;
     height: 500px;
     z-index: 3;
+    perspective: 1000px;
 }
 
 #scene {
     position: relative;
     width: 100%;
     height: 100%;
+    transform-style: preserve-3d;
 }
 
 #galaxy {
     position: relative;
     width: 100%;
     height: 100%;
+    transform-style: preserve-3d;
 }
 
 #logo {
@@ -99,24 +102,28 @@
     height: var(--orbit-size);
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%) rotateX(65deg);
     animation: rotate linear infinite;
     animation-duration: var(--orbit-time, 60s);
     z-index: 1;
 }
 
 @keyframes rotate {
-    from { transform: translate(-50%, -50%) rotate(0deg); }
-    to { transform: translate(-50%, -50%) rotate(360deg); }
+    from { 
+        transform: translate(-50%, -50%) rotateX(65deg) rotate(0deg); 
+    }
+    to { 
+        transform: translate(-50%, -50%) rotateX(65deg) rotate(360deg); 
+    }
 }
 
 .planet-orientation {
     position: absolute;
     top: 0;
     left: 50%;
-    width: 0;
-    height: 0;
-    transform: translateX(-50%);
+    width: var(--orbit-size);
+    height: var(--orbit-size);
+    transform: translate(-50%, 0);
 }
 
 .planet {
@@ -128,14 +135,14 @@
     border-radius: 50%;
     background-size: cover;
     background-position: center;
-    transform: translateX(-50%);
+    transform: translate(-50%, 0) rotateX(-65deg);
     cursor: pointer;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     z-index: 5;
 }
 
 .planet:hover {
-    transform: translateX(-50%) scale(1.2);
+    transform: translate(-50%, 0) rotateX(-65deg) scale(1.2);
     box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
 }
 
