@@ -60,8 +60,8 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 100%;
-    height: 100%;
+    width: 800px;
+    height: 500px;
     z-index: 3;
 }
 
@@ -78,23 +78,17 @@
 }
 
 #logo {
-    width: 100px;
-    height: 100px;
-    background-size: cover;
+    width: 80px;
+    height: 80px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
     border-radius: 50%;
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%) rotateX(-45deg);
+    transform: translate(-50%, -50%);
     z-index: 10;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    font-weight: bold;
-    color: #333;
-    text-align: center;
-    line-height: 1.2;
 }
 
 .orbit {
@@ -363,36 +357,28 @@
 
 #galaxy-selector {
     position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
     z-index: 15;
-    background: linear-gradient(180deg, rgba(11, 20, 38, 0.8) 0%, rgba(30, 58, 138, 0.9) 100%);
-    backdrop-filter: blur(10px);
-    padding: 20px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 #galaxy-list {
     display: flex;
-    gap: 15px;
-    justify-content: center;
+    gap: 10px;
     align-items: center;
-    flex-wrap: wrap;
-    max-width: 100%;
-    overflow-x: auto;
-    padding: 10px 0;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 10px;
+    border-radius: 25px;
+    backdrop-filter: blur(10px);
 }
 
 .galaxy-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 80px;
-    height: 80px;
+    width: 50px;
+    height: 50px;
     background: rgba(255, 255, 255, 0.1);
-    border: 2px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 50%;
     color: white;
     cursor: pointer;
@@ -401,6 +387,9 @@
     text-align: center;
     position: relative;
     backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .galaxy-item::before {
@@ -409,8 +398,8 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
     background-image: url('/static/accounts/images/planetary_system/category_img.png');
     background-size: contain;
     background-repeat: no-repeat;
@@ -426,11 +415,10 @@
 }
 
 .galaxy-item.selected {
-    background: linear-gradient(135deg, #FFEF2B 0%, #F9F7D6 100%);
+    background: #FFEF2B;
     color: #000;
     border-color: #FFEF2B;
-    box-shadow: 0 5px 20px rgba(255, 239, 43, 0.4);
-    transform: translateY(-3px);
+    transform: scale(1.2);
 }
 
 .galaxy-item.selected::before {
@@ -501,4 +489,27 @@
     border-radius: 15px;
     font-size: 12px;
     white-space: nowrap;
+}
+
+/* Кнопка "Все стартапы" в левом верхнем углу */
+.all-startups-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
+    border: none;
+    border-radius: 10px;
+    padding: 12px 24px;
+    color: #000;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 20;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.all-startups-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
 }

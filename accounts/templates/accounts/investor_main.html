@@ -19,6 +19,7 @@
         <div class="planetary-system-container">
             <div class="space-background"></div>
             <div class="stars"></div>
+            <button class="all-startups-button">Все стартапы</button>
             <div id="solar-system">
                 <div id="scene">
                     <div id="galaxy">
@@ -60,22 +61,11 @@
             </div>
             <div id="fps">0 FPS</div>
             <div id="galaxy-selector">
-                <button class="galaxy-nav-arrow left" id="galaxy-prev">
-                    <img src="{% static 'accounts/images/planetary_system/chevron_left.svg' %}" alt="Предыдущая категория">
-                </button>
                 <div id="galaxy-list">
                     {% for direction in directions %}
-                        <div class="galaxy-item {% if direction.direction_name == selected_galaxy %}selected center{% endif %}" data-name="{{ direction.direction_name }}">
-                            {{ direction.direction_name }}
-                            {% if direction.direction_name == selected_galaxy %}
-                                <div class="category-label">{{ direction.direction_name }}</div>
-                            {% endif %}
-                        </div>
+                        <div class="galaxy-item {% if direction.direction_name == selected_galaxy %}selected{% endif %}" data-name="{{ direction.direction_name }}"></div>
                     {% endfor %}
                 </div>
-                <button class="galaxy-nav-arrow right" id="galaxy-next">
-                    <img src="{% static 'accounts/images/planetary_system/chevron_right.svg' %}" alt="Следующая категория">
-                </button>
             </div>
         </div>
     </div>
