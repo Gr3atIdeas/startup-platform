@@ -1,7 +1,7 @@
 /* Стили для планетарной системы */
 .planetary-system-wrapper {
     width: 100%;
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
     height: 708px;
     position: relative;
@@ -36,19 +36,21 @@
     width: 100%;
     height: 100%;
     background-image: 
-        radial-gradient(1px 1px at 15% 25%, rgba(255,255,255,0.9), transparent),
-        radial-gradient(2px 2px at 35% 45%, rgba(255,255,255,0.7), transparent),
-        radial-gradient(1px 1px at 55% 15%, rgba(255,255,255,0.8), transparent),
-        radial-gradient(1px 1px at 75% 65%, rgba(255,255,255,0.6), transparent),
-        radial-gradient(2px 2px at 85% 35%, rgba(255,255,255,0.9), transparent),
-        radial-gradient(1px 1px at 25% 75%, rgba(255,255,255,0.5), transparent),
-        radial-gradient(1px 1px at 65% 85%, rgba(255,255,255,0.7), transparent),
-        radial-gradient(2px 2px at 5% 55%, rgba(255,255,255,0.8), transparent),
-        radial-gradient(1px 1px at 95% 25%, rgba(255,255,255,0.6), transparent),
-        radial-gradient(1px 1px at 45% 5%, rgba(255,255,255,0.9), transparent);
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
-    animation: twinkle 2s ease-in-out infinite alternate, parallax 60s linear infinite;
+        radial-gradient(2px 2px at 20px 30px, #eee, transparent),
+        radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.8), transparent),
+        radial-gradient(1px 1px at 90px 40px, #fff, transparent),
+        radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.6), transparent),
+        radial-gradient(2px 2px at 160px 30px, #ddd, transparent),
+        radial-gradient(1px 1px at 200px 120px, rgba(255,255,255,0.7), transparent),
+        radial-gradient(2px 2px at 250px 60px, #ccc, transparent),
+        radial-gradient(1px 1px at 300px 90px, rgba(255,255,255,0.9), transparent),
+        radial-gradient(2px 2px at 350px 150px, #fff, transparent),
+        radial-gradient(1px 1px at 400px 50px, rgba(255,255,255,0.8), transparent),
+        radial-gradient(1px 1px at 450px 180px, #eee, transparent),
+        radial-gradient(2px 2px at 500px 20px, rgba(255,255,255,0.7), transparent);
+    background-repeat: repeat;
+    background-size: 600px 400px;
+    animation: twinkle 3s ease-in-out infinite alternate, parallax 80s linear infinite;
     z-index: 2;
 }
 
@@ -58,8 +60,8 @@
 }
 
 @keyframes parallax {
-    from { transform: translateX(0) translateY(0); }
-    to { transform: translateX(-20px) translateY(-10px); }
+    from { background-position: 0 0; }
+    to { background-position: 600px 400px; }
 }
 
 #solar-system {
@@ -85,7 +87,7 @@
     width: 100%;
     height: 100%;
     transform-style: preserve-3d;
-    transform: rotateX(-65deg);
+    transform: rotateX(65deg);
 }
 
 #logo {
@@ -99,7 +101,7 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%) rotateX(-65deg);
     z-index: 10;
     box-shadow: 0 0 30px rgba(255, 239, 43, 0.6);
 }
@@ -160,18 +162,19 @@
     border-radius: 50%;
     background-size: cover;
     background-position: center;
+    transform: rotateX(-65deg);
     cursor: pointer;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     z-index: 5;
 }
 
 .planet:hover {
-    transform: scale(1.2);
+    transform: rotateX(-65deg) scale(1.2);
     box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
 }
 
 .planet.active {
-    transform: scale(1.2);
+    transform: rotateX(-65deg) scale(1.2);
     box-shadow: 0 0 25px rgba(255, 239, 43, 0.8);
 }
 
@@ -404,6 +407,13 @@
     padding: 10px;
     border-radius: 25px;
     backdrop-filter: blur(10px);
+}
+
+.galaxy-item-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .galaxy-item {
