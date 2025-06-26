@@ -1,0 +1,462 @@
+/* Планетарная система - первый блок главной страницы инвестора */
+.planetary-system-hero {
+    width: 100%;
+    height: 708px;
+    position: relative;
+    background: linear-gradient(180deg, black 0%, #004E9F 100%);
+    box-shadow: 0px 10px 23px 5px rgba(0, 0, 0, 0.18);
+    overflow: hidden;
+    border-radius: 10px;
+    outline: 1px rgba(255, 255, 255, 0.36) solid;
+    outline-offset: -1px;
+}
+
+/* Орбиты */
+.orbit-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px white solid;
+    filter: blur(1.50px);
+}
+
+.orbit-ring:nth-child(1) {
+    width: 668.19px;
+    height: 203.34px;
+    left: 305.43px;
+    top: 240.74px;
+    box-shadow: 3px 3px 3px;
+}
+
+.orbit-ring:nth-child(2) {
+    width: 681.99px;
+    height: 214.13px;
+    left: 298.83px;
+    top: 235.34px;
+    box-shadow: 3px 3px 3px;
+}
+
+.orbit-ring:nth-child(3) {
+    width: 832.90px;
+    height: 263.35px;
+    left: 222.30px;
+    top: 210.71px;
+    box-shadow: 4px 4px 4px;
+    filter: blur(2px);
+}
+
+.orbit-ring:nth-child(4) {
+    width: 850.10px;
+    height: 277.34px;
+    left: 214.08px;
+    top: 203.72px;
+    box-shadow: 4px 4px 4px;
+    filter: blur(2px);
+}
+
+.orbit-ring:nth-child(5) {
+    width: 1012.59px;
+    height: 325.53px;
+    left: 133px;
+    top: 179.47px;
+    box-shadow: 3px 3px 3px;
+}
+
+.orbit-ring:nth-child(6) {
+    width: 1033.49px;
+    height: 342.81px;
+    left: 123px;
+    top: 170.83px;
+    box-shadow: 3px 3px 3px;
+}
+
+/* Центральное солнце */
+.central-sun {
+    width: 97.76px;
+    height: 95.62px;
+    left: 591.04px;
+    top: 293.53px;
+    position: absolute;
+    background-image: url('/static/accounts/images/planetary_system/solar.png');
+    background-size: cover;
+    background-position: center;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.central-sun:hover {
+    transform: scale(1.1);
+}
+
+.central-sun-glow {
+    width: 90.53px;
+    height: 88.50px;
+    left: 594.09px;
+    top: 296.58px;
+    position: absolute;
+    background: #FAF7DB;
+    box-shadow: 25px 25px 25px;
+    border-radius: 50%;
+    filter: blur(12.50px);
+    z-index: -1;
+}
+
+.central-sun-text {
+    width: 62.37px;
+    height: 28.34px;
+    left: 608.79px;
+    top: 321.92px;
+    position: absolute;
+    background-image: url('/static/accounts/images/planetary_system/gi.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+/* Планеты */
+.startup-planet {
+    position: absolute;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background-size: cover;
+    background-position: center;
+}
+
+.startup-planet:hover {
+    transform: scale(1.2);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+}
+
+.startup-planet.planet-1 {
+    width: 69.57px;
+    height: 70.84px;
+    left: 852.89px;
+    top: 404.85px;
+}
+
+.startup-planet.planet-2 {
+    width: 121.44px;
+    height: 101.20px;
+    left: 322.87px;
+    top: 342.87px;
+}
+
+.startup-planet.planet-3 {
+    width: 104.99px;
+    height: 104.99px;
+    left: 171.07px;
+    top: 266.97px;
+}
+
+.startup-planet.planet-4 {
+    width: 96.14px;
+    height: 69.57px;
+    left: 444.30px;
+    top: 474.43px;
+}
+
+.startup-planet.planet-5 {
+    width: 69.57px;
+    height: 68.31px;
+    left: 427.86px;
+    top: 167.04px;
+}
+
+.startup-planet.planet-6 {
+    width: 68.31px;
+    height: 68.31px;
+    left: 754.23px;
+    top: 143px;
+}
+
+.startup-planet.planet-7 {
+    width: 61.98px;
+    height: 63.25px;
+    left: 869.34px;
+    top: 254.32px;
+}
+
+.startup-planet.planet-8 {
+    width: 68.31px;
+    height: 67.04px;
+    left: 1110.95px;
+    top: 280.88px;
+}
+
+/* Навигационные кнопки */
+.nav-button {
+    width: 31.17px;
+    height: 31.17px;
+    padding: 16px;
+    position: absolute;
+    background: #FFEF2B;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: none;
+}
+
+.nav-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 15px rgba(255, 239, 43, 0.5);
+}
+
+.nav-button-left {
+    left: 403.17px;
+    top: 626.17px;
+    transform: rotate(180deg);
+}
+
+.nav-button-right {
+    left: 900px;
+    top: 595px;
+}
+
+.nav-button img {
+    width: 14.89px;
+    height: 8.78px;
+}
+
+/* Текстовые элементы */
+.adventure-text {
+    width: 275px;
+    left: 726.50px;
+    top: 233px;
+    position: absolute;
+    text-align: center;
+    color: black;
+    font-size: 16px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
+    line-height: 16px;
+    word-wrap: break-word;
+}
+
+.start-button {
+    height: 40px;
+    padding: 12px 35px;
+    left: 726.50px;
+    top: 280px;
+    position: absolute;
+    background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%);
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    color: #F5F5F5;
+    font-size: 16px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
+    line-height: 16px;
+}
+
+.start-button:hover {
+    transform: scale(1.05);
+}
+
+/* Категория */
+.category-badge {
+    padding: 9px 17px;
+    left: 653px;
+    top: 654px;
+    position: absolute;
+    background: #050505;
+    border-radius: 20px;
+    color: white;
+    font-size: 12px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.12px;
+    text-align: center;
+}
+
+/* Кнопка "Все стартапы" */
+.all-startups-button {
+    width: 224px;
+    height: 40px;
+    padding: 12px;
+    left: 46px;
+    top: 39px;
+    position: absolute;
+    background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    color: black;
+    font-size: 16px;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 400;
+    line-height: 16px;
+}
+
+.all-startups-button:hover {
+    transform: scale(1.05);
+}
+
+/* Информационная карточка стартапа */
+.startup-info-card {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 15px;
+    padding: 20px;
+    width: 300px;
+    color: white;
+    font-family: 'Unbounded', sans-serif;
+    display: none;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+}
+
+.startup-info-card.active {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+    to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+.startup-info-card .close-button {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.startup-info-card .startup-name {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.startup-info-card .startup-rating {
+    color: #FFEF2B;
+    margin-bottom: 10px;
+}
+
+.startup-info-card .startup-description {
+    font-size: 14px;
+    line-height: 1.4;
+    margin-bottom: 15px;
+}
+
+.startup-info-card .more-details-button {
+    background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%);
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    color: white;
+    cursor: pointer;
+    font-family: 'Unbounded', sans-serif;
+    font-size: 14px;
+}
+
+/* Анимации */
+.startup-planet {
+    animation: float 6s ease-in-out infinite;
+}
+
+.startup-planet:nth-child(odd) {
+    animation-delay: -3s;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+.central-sun {
+    animation: pulse 4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* Звездное небо */
+.stars-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(2px 2px at 20px 30px, #eee, transparent),
+        radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.8), transparent),
+        radial-gradient(1px 1px at 90px 40px, #fff, transparent),
+        radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.6), transparent),
+        radial-gradient(2px 2px at 160px 30px, #ddd, transparent);
+    background-repeat: repeat;
+    background-size: 200px 100px;
+    animation: twinkle 5s linear infinite;
+    opacity: 0.6;
+}
+
+@keyframes twinkle {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+}
+
+/* Адаптивность */
+@media (max-width: 1200px) {
+    .planetary-system-hero {
+        height: 600px;
+    }
+    
+    .orbit-ring {
+        transform: scale(0.8);
+    }
+    
+    .startup-planet {
+        transform: scale(0.8);
+    }
+    
+    .central-sun {
+        transform: scale(0.8);
+    }
+}
+
+@media (max-width: 768px) {
+    .planetary-system-hero {
+        height: 500px;
+    }
+    
+    .orbit-ring {
+        transform: scale(0.6);
+    }
+    
+    .startup-planet {
+        transform: scale(0.6);
+    }
+    
+    .central-sun {
+        transform: scale(0.6);
+    }
+    
+    .adventure-text {
+        font-size: 14px;
+        width: 200px;
+    }
+    
+    .all-startups-button {
+        width: 180px;
+        font-size: 14px;
+    }
+} 
