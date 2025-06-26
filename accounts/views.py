@@ -3127,11 +3127,23 @@ def planetary_system(request):
             default=Value(0),
             output_field=FloatField(),
         )
-    )[:8]
+    )
 
     planets_data_for_template = []
-    available_sizes = list(range(200, 851, 50))
+    # Генерируем достаточно размеров орбит для всех стартапов
+    base_sizes = list(range(200, 851, 50))  # 200, 250, 300, ..., 850
     import random
+    
+    # Если стартапов больше чем базовых размеров, добавляем дополнительные
+    startups_count = len(startups_filtered)
+    available_sizes = base_sizes.copy()
+    while len(available_sizes) < startups_count:
+        # Добавляем размеры с небольшими вариациями
+        for base_size in base_sizes:
+            if len(available_sizes) >= startups_count:
+                break
+            available_sizes.append(base_size + random.randint(-20, 20))
+    
     random.shuffle(available_sizes)
 
     for idx, startup in enumerate(startups_filtered):

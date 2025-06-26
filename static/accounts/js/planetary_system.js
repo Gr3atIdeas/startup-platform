@@ -1,28 +1,36 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const dataElement = document.getElementById('planetary-system-data');
-    if (!dataElement) {
-        console.error('Data element #planetary-system-data not found!');
+    console.log('Planetary system JavaScript loaded');
+
+    // Получаем данные из script тега
+    const dataScript = document.getElementById('planetary-system-data');
+    if (!dataScript) {
+        console.error('Не найден скрипт с данными планетарной системы');
         return;
     }
-    const config = JSON.parse(dataElement.textContent);
 
+    let data;
     try {
-        // Передаём информацию о пользователе из config
-        const isAuthenticated = config.isAuthenticated;
-        const isStartuper = config.isStartuper;
-        console.log('User context from config:', { isAuthenticated, isStartuper });
+        data = JSON.parse(dataScript.textContent);
+    } catch (e) {
+        console.error('Ошибка парсинга данных:', e);
+        return;
+    }
 
-        // Формируем объект startups из config.planetsData
-        const startups = {};
-        if (config.planetsData) {
-            config.planetsData.forEach(planet => {
-                startups[planet.id] = planet;
-            });
-        }
-        console.log('Startups data from config:', startups);
+    const { planetsData, directionsData, selectedGalaxy, urls } = data;
+    console.log('Данные загружены:', { planetsData, directionsData, selectedGalaxy });
 
-        const planets = document.querySelectorAll('.planet');
-        const infoCard = document.getElementById('info-card');
+    // Элементы DOM
+    const infoCard = document.getElementById('info-card');
+    const closeCardBtn = document.getElementById('close-card');
+    const allStartupsBtn = document.querySelector('.all-startups-button');
+    const galaxyItems = document.querySelectorAll('.galaxy-item');
+    const planets = document.querySelectorAll('.planet');
+
+    // Функция для отображения карточки стартапа
+    function showStartupCard(startupData) {
+        if (!startupData || !infoCard) return;
+
+        // Заполняем данные
         const planetImage = document.getElementById('planet-image');
         const startupName = document.getElementById('startup-name');
         const startupRating = document.getElementById('startup-rating');
@@ -30,163 +38,140 @@ document.addEventListener('DOMContentLoaded', function() {
         const startupFunding = document.getElementById('startup-funding');
         const startupInvestors = document.getElementById('startup-investors');
         const startupDescription = document.getElementById('startup-description');
-        const closeCard = document.getElementById('close-card');
-        const moreDetails = document.getElementById('more-details');
-        const solarSystem = document.getElementById('solar-system');
-        const scene = document.getElementById('scene');
-        const galaxyElement = document.getElementById('galaxy');
-        const galaxySelector = document.getElementById('galaxy-selector');
-        const galaxyList = document.getElementById('galaxy-list');
-        const allStartupsButton = document.querySelector('.all-startups-button');
+        const moreDetailsBtn = document.getElementById('more-details');
 
-        console.log('Found planets:', planets.length);
-        console.log('allStartupsButton:', allStartupsButton);
-
-        let currentStartupID = null;
-        let isDragging = false;
-        let startX_drag, startY_drag;
-        let offsetX = 0;
-        let offsetY = 0;
-        let scale = 1;
-
-        // Обработка кликов по планетам
-        planets.forEach(planet => {
-            const id = planet.getAttribute('data-id');
-            console.log(`Processing planet: ${id}`);
-
-            planet.addEventListener('click', (e) => {
-                console.log(`Planet clicked: ${id}`);
-                e.stopPropagation();
-                
-                if (id === 'create-startup') {
-                    console.log('Clicked on create-startup planet');
-                    if (isAuthenticated && isStartuper) {
-                        window.location.href = config.urls.createStartup;
-                    } else if (!isAuthenticated) {
-                        window.location.href = config.urls.register;
-                    }
-                    return;
-                }
-
-                const startup = startups[id];
-                if (!startup) {
-                    console.error('Startup data not found for id:', id);
-                    return;
-                }
-
-                // Заполняем карточку информацией о стартапе
-                planetImage.style.backgroundImage = `url('${startup.image}')`;
-                startupName.textContent = startup.name;
-                startupRating.textContent = `Рейтинг ${startup.rating} | Комментариев: ${startup.comment_count || 0}`;
-                startupProgress.innerHTML = `<span class="progress-percentage">${startup.progress}</span>`;
-                startupFunding.innerHTML = `
-                    <strong>Направление:</strong> ${startup.direction}<br>
-                    <strong>Цель финансирования:</strong> ${startup.funding_goal}`;
-                startupInvestors.innerHTML = `<strong>Инвесторов:</strong> ${startup.investors}`;
-                startupDescription.innerHTML = `
-                    ${startup.investment_type && startup.investment_type !== "Не указано" ? `<div class="investment-type">${startup.investment_type}</div>` : ""}
-                    <div class="startup-description">${startup.description || 'Описание не указано'}</div>`;
-                
-                currentStartupID = startup.startup_id;
-                planets.forEach(p => p.classList.remove('active'));
-                planet.classList.add('active');
-                infoCard.style.display = 'block';
-            });
-        });
-
-        // Закрытие карточки
-        if (closeCard) {
-            closeCard.addEventListener('click', () => {
-                infoCard.style.display = 'none';
-                planets.forEach(p => p.classList.remove('active'));
-            });
+        if (planetImage) planetImage.style.backgroundImage = `url('${startupData.image}')`;
+        if (startupName) startupName.textContent = startupData.name || 'Название не указано';
+        if (startupRating) startupRating.textContent = `Рейтинг: ${startupData.rating || 0}`;
+        if (startupProgress) {
+            startupProgress.textContent = startupData.progress || '0%';
+            startupProgress.style.width = startupData.progress || '0%';
+        }
+        if (startupFunding) startupFunding.textContent = `Цель: ${startupData.funding_goal || 'Не указана'}`;
+        if (startupInvestors) startupInvestors.textContent = `Инвесторы: ${startupData.investors || 0}`;
+        if (startupDescription) startupDescription.textContent = startupData.description || 'Описание не указано';
+        
+        if (moreDetailsBtn) {
+            moreDetailsBtn.onclick = function() {
+                window.location.href = `/startup/${startupData.startup_id}/`;
+            };
         }
 
-        // Кнопка "Подробнее"
-        if (moreDetails) {
-            moreDetails.addEventListener('click', () => {
-                if (currentStartupID) {
-                    window.location.href = `/startups/${currentStartupID}/`;
-                }
-                infoCard.style.display = 'none';
-                planets.forEach(p => p.classList.remove('active'));
-            });
-        }
-
-        // Обработка кнопки "Все стартапы"
-        if (allStartupsButton) {
-            allStartupsButton.addEventListener('click', () => {
-                console.log('All startups button clicked');
-                window.location.href = '/startups/';
-            });
-        }
-
-        // Обработка кликов по категориям
-        if (galaxyList) {
-            const galaxyItems = galaxyList.querySelectorAll('.galaxy-item');
-            galaxyItems.forEach(item => {
-                item.addEventListener('click', () => {
-                    const directionName = item.getAttribute('data-name');
-                    console.log('Galaxy item clicked:', directionName);
-                    window.location.href = config.urls.planetarySystemBase + '?direction=' + encodeURIComponent(directionName);
-                });
-            });
-        }
-
-        // Простая обработка перетаскивания
-        if (solarSystem) {
-            solarSystem.addEventListener('mousedown', (e) => {
-                e.preventDefault();
-                const rect = solarSystem.getBoundingClientRect();
-                startX_drag = e.clientX - rect.left;
-                startY_drag = e.clientY - rect.top;
-                isDragging = true;
-                solarSystem.classList.add('dragging');
-            });
-
-            solarSystem.addEventListener('wheel', (e) => {
-                e.preventDefault();
-                const delta = e.deltaY > 0 ? -0.1 : 0.1;
-                scale = Math.max(0.5, Math.min(3, scale + delta));
-                if (scene) scene.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
-            });
-        }
-
-        document.addEventListener('mousemove', (e) => {
-            if (solarSystem && isDragging) {
-                const rect = solarSystem.getBoundingClientRect();
-                const deltaX = e.clientX - rect.left - startX_drag;
-                const deltaY = e.clientY - rect.top - startY_drag;
-                offsetX += deltaX;
-                offsetY += deltaY;
-                
-                const maxX = (rect.width / 2) / scale;
-                const maxY = (rect.height / 2) / scale;
-                offsetX = Math.max(-maxX, Math.min(maxX, offsetX));
-                offsetY = Math.max(-maxY, Math.min(maxY, offsetY));
-                
-                if (scene) scene.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
-                startX_drag = e.clientX - rect.left;
-                startY_drag = e.clientY - rect.top;
-            }
-        });
-
-        document.addEventListener('mouseup', () => {
-            if (isDragging) {
-                isDragging = false;
-                if (solarSystem) solarSystem.classList.remove('dragging');
-            }
-        });
-
-        // Закрытие карточки при клике вне её
-        document.addEventListener('click', (e) => {
-            if (infoCard && infoCard.style.display === 'block' && !infoCard.contains(e.target) && !e.target.classList.contains('planet')) {
-                infoCard.style.display = 'none';
-                planets.forEach(p => p.classList.remove('active'));
-            }
-        });
-
-    } catch (error) {
-        console.error('Error initializing planetary system:', error);
+        // Показываем карточку
+        infoCard.style.display = 'block';
+        infoCard.classList.add('active');
     }
-});
+
+    // Функция для скрытия карточки
+    function hideStartupCard() {
+        if (infoCard) {
+            infoCard.style.display = 'none';
+            infoCard.classList.remove('active');
+        }
+    }
+
+    // Обработчики событий для планет
+    planets.forEach(planet => {
+        planet.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const planetId = parseInt(this.dataset.id);
+            const startupData = planetsData.find(p => p.id === planetId);
+            
+            if (startupData) {
+                console.log('Клик по планете:', startupData);
+                showStartupCard(startupData);
+            }
+        });
+
+        // Эффект при наведении
+        planet.addEventListener('mouseenter', function() {
+            this.style.transform = this.style.transform + ' scale(1.2)';
+            this.style.boxShadow = '0 0 20px rgba(255, 255, 255, 0.8)';
+        });
+
+        planet.addEventListener('mouseleave', function() {
+            this.style.transform = this.style.transform.replace(' scale(1.2)', '');
+            this.style.boxShadow = 'none';
+        });
+    });
+
+    // Обработчик закрытия карточки
+    if (closeCardBtn) {
+        closeCardBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            hideStartupCard();
+        });
+    }
+
+    // Закрытие карточки по клику вне её
+    document.addEventListener('click', function(e) {
+        if (infoCard && infoCard.style.display === 'block' && !infoCard.contains(e.target)) {
+            hideStartupCard();
+        }
+    });
+
+    // Обработчик кнопки "Все стартапы"
+    if (allStartupsBtn) {
+        allStartupsBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('Клик по кнопке "Все стартапы"');
+            
+            // Перенаправляем на страницу каталога
+            window.location.href = '/startups/';
+        });
+    }
+
+    // Обработчики для категорий
+    galaxyItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const categoryName = this.dataset.name;
+            console.log('Клик по категории:', categoryName);
+            
+            if (categoryName && categoryName !== selectedGalaxy) {
+                // Перенаправляем на планетарную систему с фильтром
+                const newUrl = `${urls.planetarySystemBase}?direction=${encodeURIComponent(categoryName)}`;
+                window.location.href = newUrl;
+            }
+        });
+
+        // Эффект при наведении на категории
+        item.addEventListener('mouseenter', function() {
+            if (!this.classList.contains('selected')) {
+                this.style.transform = 'translateY(-5px) scale(1.05)';
+                this.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.3)';
+            }
+        });
+
+        item.addEventListener('mouseleave', function() {
+            if (!this.classList.contains('selected')) {
+                this.style.transform = '';
+                this.style.boxShadow = '';
+            }
+        });
+    });
+
+    // Предотвращаем случайные клики по системе
+    const solarSystem = document.getElementById('solar-system');
+    if (solarSystem) {
+        solarSystem.addEventListener('click', function(e) {
+            // Если клик не по планете или кнопке, не делаем ничего
+            if (!e.target.classList.contains('planet') && 
+                !e.target.classList.contains('galaxy-item') && 
+                !e.target.classList.contains('all-startups-button')) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+        });
+    }
+
+    // Инициализация: скрываем карточку при загрузке
+    hideStartupCard();
+
+    console.log('Планетарная система инициализирована');
+}); 
