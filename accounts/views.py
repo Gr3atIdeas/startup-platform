@@ -2235,7 +2235,14 @@ def investor_main(request):
 
     for idx, startup in enumerate(startups_filtered):
         orbit_size = available_sizes[idx % len(available_sizes)]
-        image_path = f"accounts/images/planetary_system/planets_round/{startup.planet_image}" if startup.planet_image else "accounts/images/planetary_system/planets_round/default.png"
+        # Если у стартапа есть свое изображение планеты, используем его, иначе случайное из доступных
+        if startup.planet_image:
+            image_path = f"accounts/images/planetary_system/planets_round/{startup.planet_image}"
+        else:
+            # Случайно выбираем изображение планеты из доступных (1.png - 15.png)
+            random_planet_num = random.randint(1, 15)
+            image_path = f"accounts/images/planetary_system/planets_round/{random_planet_num}.png"
+        
         planets_data_for_template.append(
             {
                 "id": startup.startup_id,
@@ -2259,10 +2266,18 @@ def investor_main(request):
             else "Не указано"
         )
         
+        # Выбираем изображение планеты
+        if startup.planet_image:
+            planet_image_url = static(f"accounts/images/planetary_system/planets_round/{startup.planet_image}")
+        else:
+            # Случайно выбираем изображение планеты из доступных (1.png - 15.png)
+            random_planet_num = random.randint(1, 15)
+            planet_image_url = static(f"accounts/images/planetary_system/planets_round/{random_planet_num}.png")
+        
         planets_data_json.append({
             "id": startup.startup_id,
             "name": startup.title,
-            "image": static(f"accounts/images/planetary_system/planets_round/{startup.planet_image}") if startup.planet_image else static("accounts/images/planetary_system/planets_round/default.png"),
+            "image": planet_image_url,
             "rating": round(startup.rating_avg, 2),
             "progress": f"{startup.progress:.2f}%" if startup.progress is not None else "0%",
             "direction": startup.direction.direction_name if startup.direction else "Не указано",
@@ -3129,7 +3144,14 @@ def planetary_system(request):
 
     for idx, startup in enumerate(startups_filtered):
         orbit_size = available_sizes[idx % len(available_sizes)]
-        image_path = f"accounts/images/planetary_system/planets_round/{startup.planet_image}" if startup.planet_image else "accounts/images/planetary_system/planets_round/default.png"
+        # Если у стартапа есть свое изображение планеты, используем его, иначе случайное из доступных
+        if startup.planet_image:
+            image_path = f"accounts/images/planetary_system/planets_round/{startup.planet_image}"
+        else:
+            # Случайно выбираем изображение планеты из доступных (1.png - 15.png)
+            random_planet_num = random.randint(1, 15)
+            image_path = f"accounts/images/planetary_system/planets_round/{random_planet_num}.png"
+        
         planets_data_for_template.append(
             {
                 "id": startup.startup_id,
@@ -3153,10 +3175,18 @@ def planetary_system(request):
             else "Не указано"
         )
         
+        # Выбираем изображение планеты
+        if startup.planet_image:
+            planet_image_url = static(f"accounts/images/planetary_system/planets_round/{startup.planet_image}")
+        else:
+            # Случайно выбираем изображение планеты из доступных (1.png - 15.png)
+            random_planet_num = random.randint(1, 15)
+            planet_image_url = static(f"accounts/images/planetary_system/planets_round/{random_planet_num}.png")
+        
         planets_data_json.append({
             "id": startup.startup_id,
             "name": startup.title,
-            "image": static(f"accounts/images/planetary_system/planets_round/{startup.planet_image}") if startup.planet_image else static("accounts/images/planetary_system/planets_round/default.png"),
+            "image": planet_image_url,
             "rating": round(startup.rating_avg, 2),
             "progress": f"{startup.progress:.2f}%" if startup.progress is not None else "0%",
             "direction": startup.direction.direction_name if startup.direction else "Не указано",
