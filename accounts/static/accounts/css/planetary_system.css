@@ -1,9 +1,9 @@
 /* Планетарная система - первый блок главной страницы инвестора */
-.planetary-system-hero {
+.planetary-system-wrapper {
     width: 100%;
     height: 708px;
     position: relative;
-    background: linear-gradient(180deg, black 0%, #004E9F 100%);
+    background: linear-gradient(180deg, #0B1426 0%, #1E3A8A 100%);
     box-shadow: 0px 10px 23px 5px rgba(0, 0, 0, 0.18);
     overflow: hidden;
     border-radius: 10px;
@@ -11,7 +11,135 @@
     outline-offset: -1px;
 }
 
-/* Орбиты */
+.planetary-system-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+/* Планетарная система - основные стили */
+.space-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(ellipse at center, rgba(11, 20, 38, 0.8) 0%, rgba(11, 20, 38, 1) 100%);
+    z-index: 1;
+}
+
+.stars {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(2px 2px at 20px 30px, #eee, transparent),
+        radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.8), transparent),
+        radial-gradient(1px 1px at 90px 40px, #fff, transparent),
+        radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.6), transparent),
+        radial-gradient(2px 2px at 160px 30px, #ddd, transparent);
+    background-repeat: repeat;
+    background-size: 200px 100px;
+    animation: twinkle 4s ease-in-out infinite alternate;
+    z-index: 2;
+}
+
+#solar-system {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 3;
+}
+
+#scene {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+#galaxy {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+#logo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80px;
+    height: 80px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    border-radius: 50%;
+    z-index: 10;
+}
+
+.orbit {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    animation: rotate linear infinite;
+    width: var(--orbit-size, 200px);
+    height: var(--orbit-size, 200px);
+    animation-duration: var(--orbit-time, 60s);
+}
+
+.orbit::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    animation: rotate linear infinite reverse;
+}
+
+.planet-orientation {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 0;
+    height: 0;
+    transform: translateX(-50%);
+}
+
+.planet {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    border-radius: 50%;
+    background-size: cover;
+    background-position: center;
+    transform: translateX(-50%);
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    z-index: 5;
+    width: var(--planet-size, 50px);
+    height: var(--planet-size, 50px);
+}
+
+.planet:hover {
+    transform: translateX(-50%) scale(1.2);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+}
+
+@keyframes rotate {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Орбиты - старые стили для совместимости */
 .orbit-ring {
     position: absolute;
     border-radius: 50%;
@@ -458,5 +586,205 @@
     .all-startups-button {
         width: 180px;
         font-size: 14px;
+    }
+}
+
+/* Селектор галактик */
+#galaxy-selector {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 15;
+}
+
+#galaxy-list {
+    display: flex;
+    gap: 10px;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 10px;
+    border-radius: 25px;
+    backdrop-filter: blur(10px);
+}
+
+.galaxy-item {
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.galaxy-item:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+.galaxy-item.selected {
+    background: #FFEF2B;
+    color: #000;
+    border-color: #FFEF2B;
+}
+
+/* Карточка информации */
+#info-card {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 300px;
+    background: rgba(0, 0, 0, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    padding: 20px;
+    color: white;
+    backdrop-filter: blur(10px);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(20px);
+    transition: all 0.3s ease;
+    z-index: 20;
+}
+
+#info-card.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+}
+
+#close-card {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    line-height: 1;
+}
+
+#close-card:hover {
+    color: #ff4444;
+}
+
+.planet-image {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-size: cover;
+    background-position: center;
+    margin-bottom: 15px;
+}
+
+#startup-name {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.rating {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.progress-bar {
+    margin-bottom: 15px;
+}
+
+.progress-bar button {
+    background: #4A90E2;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+
+.progress {
+    height: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.progress::after {
+    content: '';
+    display: block;
+    height: 100%;
+    background: #4A90E2;
+    width: var(--progress, 0%);
+    transition: width 0.3s ease;
+}
+
+.funding, .investors, .description {
+    font-size: 14px;
+    margin-bottom: 10px;
+    line-height: 1.4;
+}
+
+.more-details {
+    background: #FFEF2B;
+    color: #000;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    width: 100%;
+    transition: all 0.3s ease;
+}
+
+.more-details:hover {
+    background: #fff;
+    transform: translateY(-2px);
+}
+
+/* Отладочные элементы */
+#crosshair, #crosshair-coords, #mouse-coords, #axes, #fps {
+    display: none;
+}
+
+/* Обновленная адаптивность */
+@media (max-width: 1200px) {
+    .planetary-system-wrapper {
+        height: 500px;
+    }
+
+    #info-card {
+        width: 250px;
+        top: 10px;
+        right: 10px;
+    }
+}
+
+@media (max-width: 768px) {
+    .planetary-system-wrapper {
+        height: 400px;
+    }
+
+    #galaxy-list {
+        flex-wrap: wrap;
+        max-width: 90%;
+    }
+
+    .galaxy-item {
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+
+    #info-card {
+        width: 280px;
+        top: 5px;
+        right: 5px;
+        left: 5px;
+        width: auto;
     }
 } 
