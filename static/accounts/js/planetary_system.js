@@ -22,24 +22,24 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Startups data from config:', startups);
 
         const planets = document.querySelectorAll('.planet');
-        const infoCard = document.getElementById('info-card');
-        const planetImage = document.getElementById('planet-image');
-        const startupName = document.getElementById('startup-name');
-        const startupRating = document.getElementById('startup-rating');
-        const startupProgress = document.getElementById('startup-progress');
-        const startupFunding = document.getElementById('startup-funding');
-        const startupInvestors = document.getElementById('startup-investors');
-        const startupDescription = document.getElementById('startup-description');
-        const closeCard = document.getElementById('close-card');
-        const moreDetails = document.getElementById('more-details');
-        const solarSystem = document.getElementById('solar-system');
-        const scene = document.getElementById('scene');
+    const infoCard = document.getElementById('info-card');
+    const planetImage = document.getElementById('planet-image');
+    const startupName = document.getElementById('startup-name');
+    const startupRating = document.getElementById('startup-rating');
+    const startupProgress = document.getElementById('startup-progress');
+    const startupFunding = document.getElementById('startup-funding');
+    const startupInvestors = document.getElementById('startup-investors');
+    const startupDescription = document.getElementById('startup-description');
+    const closeCard = document.getElementById('close-card');
+    const moreDetails = document.getElementById('more-details');
+    const solarSystem = document.getElementById('solar-system');
+    const scene = document.getElementById('scene');
         const galaxyElement = document.getElementById('galaxy'); // Renamed to avoid conflict with galaxy variable/parameter
         const crosshairCoords = document.getElementById('crosshair-coords');
         const mouseCoords = document.getElementById('mouse-coords');
         const fpsElement = document.getElementById('fps');
         const galaxySelector = document.getElementById('galaxy-selector');
-        const galaxyList = document.getElementById('galaxy-list');
+    const galaxyList = document.getElementById('galaxy-list');
 
         console.log('Found planets:', planets.length);
         console.log('infoCard:', infoCard);
@@ -51,16 +51,16 @@ document.addEventListener('DOMContentLoaded', function() {
         let lastTime = 0;
         let frameCount = 0;
         let fps = 0;
-        let isPaused = false;
-        let pausedTime = 0;
+    let isPaused = false;
+    let pausedTime = 0;
         let lastInteractionTime = Date.now();
         const inactivityTimeout = 10000;
         let isReturningToCenter = false;
-        let isDragging = false;
+    let isDragging = false;
         let startX_drag, startY_drag; // Renamed to avoid conflict
         let offsetX = 0;
         let offsetY = 0;
-        let scale = 1;
+    let scale = 1;
 
         planets.forEach(planet => {
             console.log('Processing planet:', planet);
@@ -207,7 +207,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     mouseCoords.style.left = `${Math.min(rect.width - 80, Math.max(0, e.clientX - rect.left))}px`;
                     mouseCoords.style.top = `${Math.min(rect.height - 30, Math.max(0, e.clientY - rect.top))}px`;
                     mouseCoords.textContent = `Mouse: (${Math.round(e.clientX - rect.left)}, ${Math.round(e.clientY - rect.top)})`;
-                }
+    }
                 lastInteractionTime = Date.now();
                 isReturningToCenter = false;
             });
@@ -264,7 +264,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     randomSpeedFactor: parseFloat(orbit.style.getPropertyValue('--random-speed-factor') || 1)
                 });
             }
-        });
+    });
 
         function checkInactivity() {
             if (!isDragging && !isPaused && Date.now() - lastInteractionTime > inactivityTimeout) {
@@ -311,15 +311,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (fpsElement) fpsElement.textContent = `${fps} FPS`;
             }
 
-            if (!isPaused) {
-                const now = Date.now();
+        if (!isPaused) {
+            const now = Date.now();
                 planetObjects.forEach(p => {
                     const elapsedTime = now - p.startTime;
                     const angle = ((elapsedTime / (p.orbitTime / p.randomSpeedFactor)) * 360) % 360;
                     const x = Math.cos(angle * Math.PI / 180) * p.orbitSize / 2;
                     const y = Math.sin(angle * Math.PI / 180) * p.orbitSize / 2;
                     const z = Math.sin(angle * Math.PI / 180) * p.orbitSize * Math.tan(galaxyTiltAngle * Math.PI / 180) / 2;
-
+                
                     const orientationElement = p.element.parentElement;
                     orientationElement.style.transform = `translate3d(${x}px, ${y}px, 0px)`;
 
@@ -335,8 +335,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             requestAnimationFrame(updatePlanets);
-        }
-
+    }
+    
         // Galaxy Selector Logic
         if (galaxySelector && config.directionsData) {
             const galaxyItems = document.querySelectorAll('.galaxy-item');
@@ -382,11 +382,11 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             galaxyList.addEventListener('mousemove', (e) => {
                 if(!isDown) return;
-                e.preventDefault();
+        e.preventDefault();
                 const x = e.pageX - galaxyList.offsetLeft;
                 const walk = (x - startX) * 2; //scroll-fast
                 galaxyList.scrollLeft = scrollLeft - walk;
-            });
+    });
              function smoothScroll() {
                 // This is a placeholder for any smooth scrolling logic if needed beyond native/drag scrolling
             }

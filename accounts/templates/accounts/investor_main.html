@@ -20,28 +20,23 @@
         <div id="solar-system">
             <div id="scene">
                 <div id="galaxy">
-                    <div id="logo" data-bg-url="{% static 'accounts/images/planetary_system/solar.png' %}"></div>
-                    <div class="orbit" style="--orbit-size: 200px; --orbit-time: 80s;"></div>
-                    <div class="orbit" style="--orbit-size: 300px; --orbit-time: 100s;"></div>
-                    <div class="orbit" style="--orbit-size: 400px; --orbit-time: 120s;"></div>
-                    <div class="orbit" style="--orbit-size: 500px; --orbit-time: 140s;"></div>
-                    <div class="orbit" style="--orbit-size: 600px; --orbit-time: 160s;"></div>
-                    <div class="orbit" style="--orbit-size: 700px; --orbit-time: 180s;"></div>
-                    <div class="orbit" style="--orbit-size: 800px; --orbit-time: 200s;"></div>
-                    <div class="orbit" style="--orbit-size: 900px; --orbit-time: 220s;"></div>
+                    <div id="logo" style="background-image: url('{{ logo_data.image|default_if_none:"" }}');"></div>
+                    {% for planet in planets_data %}
+                      <div class="orbit" style="--orbit-size: {{ planet.orbit_size }}px; --orbit-time: {{ planet.orbit_time }}s;">
+                        <div class="planet-orientation">
+                          <div class="planet" style="--planet-size: {{ planet.planet_size }}px; background-image: url('{{ planet.image }}');" data-id="{{ planet.id }}"></div>
+                        </div>
+                      </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
-        <div id="galaxy-selector-container">
-            <button id="galaxy-selector-prev" class="galaxy-selector-arrow">
-                <img src="{% static 'accounts/images/planetary_system/chevron_left.svg' %}" alt="Назад">
-            </button>
-            <div id="galaxy-selector">
-                <div id="galaxy-list"></div>
+        <div id="galaxy-selector">
+            <div id="galaxy-list">
+              {% for direction in directions %}
+                <div class="galaxy-item {% if direction.direction_name == selected_galaxy %}selected{% endif %}" data-name="{{ direction.direction_name }}">{{ direction.direction_name }}</div>
+              {% endfor %}
             </div>
-            <button id="galaxy-selector-next" class="galaxy-selector-arrow">
-                <img src="{% static 'accounts/images/planetary_system/chevron_right.svg' %}" alt="Вперед">
-            </button>
         </div>
     </div>
     
@@ -598,79 +593,19 @@
 
 </div>
 
-<script type="application/json" id="planetary-system-data">
+<script id="planetary-system-data" type="application/json">
 {
-  "startups": [
-    {
-      "name": "MediTech",
-      "short_description": "Наш стартап разрабатывает инновационную платформу для телемедицины.",
-      "rating_avg": 4.2,
-      "rating_count": 534,
-      "investment_progress": 65,
-      "investment_goal": "345678",
-      "investors_count": 648,
-      "planet_image_url": "{% static 'accounts/images/planetary_system/planets_round/1.png' %}",
-      "direction": "Медицина",
-      "url": "#"
-    },
-    {
-      "name": "SmartHomeAI",
-      "short_description": "Решения для умного дома с использованием ИИ для автоматизации.",
-      "rating_avg": 4.5,
-      "rating_count": 789,
-      "investment_progress": 72,
-      "investment_goal": "1234567",
-      "investors_count": 892,
-      "planet_image_url": "{% static 'accounts/images/planetary_system/planets_round/2.png' %}",
-      "direction": "Технологии",
-      "url": "#"
-    },
-    {
-      "name": "EcoCycle",
-      "short_description": "Экологичные технологии для переработки отходов.",
-      "rating_avg": 4.0,
-      "rating_count": 321,
-      "investment_progress": 58,
-      "investment_goal": "789123",
-      "investors_count": 456,
-      "planet_image_url": "{% static 'accounts/images/planetary_system/planets_round/3.png' %}",
-      "direction": "Экология",
-      "url": "#"
-    },
-    {
-      "name": "EduVR",
-      "short_description": "Образовательная платформа с использованием виртуальной реальности.",
-      "rating_avg": 4.8,
-      "rating_count": 987,
-      "investment_progress": 80,
-      "investment_goal": "2345678",
-      "investors_count": 1234,
-      "planet_image_url": "{% static 'accounts/images/planetary_system/planets_round/4.png' %}",
-      "direction": "Образование",
-      "url": "#"
+  "isAuthenticated": {{ user.is_authenticated|yesno:"true,false" }},
+  "isStartuper": {{ is_startuper|yesno:"true,false" }},
+  "planetsData": {{ planets_data_json|safe }},
+  "directionsData": {{ directions_data_json|safe }},
+  "selectedGalaxy": "{{ selected_galaxy|escapejs }}",
+  "logoImage": "{{ logo_data.image|default_if_none:''|escapejs }}",
+  "urls": {
+        "createStartup": "{% url 'create_startup' %}",
+        "register": "{% url 'register' %}",
+        "planetarySystemBase": "{% url 'investor_main' %}"
     }
-  ],
-  "categories": [
-    "Все",
-    "Технологии",
-    "Финансы",
-    "Здравоохранение",
-    "Медицина",
-    "Автомобили",
-    "Доставка",
-    "Кафе/рестораны",
-    "Фастфуд",
-    "Здоровье",
-    "Красота",
-    "Транспорт",
-    "Спорт",
-    "Психология",
-    "ИИ",
-    "Экология",
-    "Образование"
-  ],
-  "categoryImageUrl": "{% static 'accounts/images/planetary_system/category_img.png' %}",
-  "logoImageUrl": "{% static 'accounts/images/planetary_system/solar.png' %}"
 }
 </script>
 
@@ -715,15 +650,5 @@
 
 </div>
 
-<script src="{% static 'accounts/js/investor_main.js' %}?v={% now 'U' %}"></script>
-<script src="{% static 'accounts/js/planetary_system.js' %}?v={% now 'U' %}"></script>
-<script>
-    const planetaryData = JSON.parse('{{ planetary_data_json|escapejs }}');
-    document.addEventListener('DOMContentLoaded', () => initializePlanetarySystem(planetaryData));
-</script>
-{% endblock %}
-
-{% block scripts %}
-    <script src="{% static 'accounts/js/investor_main.js' %}"></script>
-    <script src="{% static 'accounts/js/planetary_system.js' %}?v={% now 'U' %}"></script>
+<script src="{% static 'accounts/js/planetary_system.js' %}" defer></script>
 {% endblock %}
