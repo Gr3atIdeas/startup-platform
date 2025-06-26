@@ -56,6 +56,7 @@
           </div>
           <div id="fps">0 FPS</div>
           <div id="galaxy-selector">
+            <button class="all-startups-button {% if selected_galaxy == 'Все' %}selected{% endif %}" data-name="Все">Все стартапы</button>
             <div id="galaxy-list">
               {% for direction in directions %}
                 <div class="galaxy-item {% if direction.direction_name == selected_galaxy %}selected{% endif %}" data-name="{{ direction.direction_name }}">{{ direction.direction_name }}</div>

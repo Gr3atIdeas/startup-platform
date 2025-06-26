@@ -38,21 +38,23 @@
         radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.8), transparent),
         radial-gradient(1px 1px at 90px 40px, #fff, transparent),
         radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.6), transparent),
-        radial-gradient(2px 2px at 160px 30px, #ddd, transparent);
+        radial-gradient(2px 2px at 160px 30px, #ddd, transparent),
+        radial-gradient(1px 1px at 200px 120px, rgba(255,255,255,0.7), transparent),
+        radial-gradient(2px 2px at 250px 60px, #ccc, transparent);
     background-repeat: repeat;
-    background-size: 200px 100px;
-    animation: twinkle 4s ease-in-out infinite alternate;
+    background-size: 300px 200px;
+    animation: twinkle 4s ease-in-out infinite alternate, parallax 120s linear infinite;
     z-index: 2;
 }
 
 @keyframes twinkle {
-    0%, 100% { opacity: 0.8; }
+    0%, 100% { opacity: 0.6; }
     50% { opacity: 1; }
 }
 
 @keyframes parallax {
     from { background-position: 0 0; }
-    to { background-position: 1000px 1000px; }
+    to { background-position: 300px 200px; }
 }
 
 #solar-system {
@@ -78,11 +80,12 @@
     width: 100%;
     height: 100%;
     transform-style: preserve-3d;
+    transform: rotateX(15deg);
 }
 
 #logo {
-    width: 80px;
-    height: 80px;
+    width: 100px;
+    height: 100px;
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
@@ -92,6 +95,7 @@
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 10;
+    box-shadow: 0 0 30px rgba(255, 239, 43, 0.6);
 }
 
 .orbit {
@@ -100,9 +104,9 @@
     left: 50%;
     width: var(--orbit-size);
     height: var(--orbit-size);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 50%;
-    transform: translate(-50%, -50%) rotateX(65deg);
+    transform: translate(-50%, -50%);
     animation: rotate linear infinite;
     animation-duration: var(--orbit-time, 60s);
     z-index: 1;
@@ -110,10 +114,10 @@
 
 @keyframes rotate {
     from { 
-        transform: translate(-50%, -50%) rotateX(65deg) rotate(0deg); 
+        transform: translate(-50%, -50%) rotate(0deg); 
     }
     to { 
-        transform: translate(-50%, -50%) rotateX(65deg) rotate(360deg); 
+        transform: translate(-50%, -50%) rotate(360deg); 
     }
 }
 
@@ -121,33 +125,34 @@
     position: absolute;
     top: 0;
     left: 50%;
-    width: var(--orbit-size);
-    height: var(--orbit-size);
-    transform: translate(-50%, 0);
+    width: var(--planet-size);
+    height: var(--planet-size);
+    transform: translate(-50%, -50%);
 }
 
 .planet {
     position: absolute;
     top: 0;
-    left: 50%;
+    left: 0;
     width: var(--planet-size);
     height: var(--planet-size);
     border-radius: 50%;
     background-size: cover;
     background-position: center;
-    transform: translate(-50%, 0) rotateX(-65deg);
     cursor: pointer;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     z-index: 5;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
 }
 
 .planet:hover {
-    transform: translate(-50%, 0) rotateX(-65deg) scale(1.2);
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+    transform: scale(1.2);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
 }
 
 .planet.active {
     transform: scale(1.2);
+    box-shadow: 0 0 25px rgba(255, 239, 43, 0.8);
 }
 
 #info-card {
