@@ -1,21 +1,20 @@
 /* Стили для планетарной системы */
 .planetary-system-wrapper {
-    padding: 20px;
-    width: 100%; /* Возвращаем полную ширину */
-    height: calc(85vh - 40px); /* Уменьшаем высоту на 30% (было 100vh) */
-    box-sizing: border-box;
-    margin: 0 auto;
+    width: 100%;
+    height: 708px;
+    position: relative;
+    background: linear-gradient(180deg, #0B1426 0%, #1E3A8A 100%);
+    box-shadow: 0px 10px 23px 5px rgba(0, 0, 0, 0.18);
+    overflow: hidden;
+    border-radius: 10px;
+    outline: 1px rgba(255, 255, 255, 0.36) solid;
+    outline-offset: -1px;
 }
 
 .planetary-system-container {
-    position: relative;
     width: 100%;
     height: 100%;
-    box-sizing: border-box;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    border-radius: 10px;
-    /* Убираем overflow: hidden */
-    background: #000; /* Добавляем чёрный фон, чтобы перекрыть фоновое изображение страницы */
+    position: relative;
 }
 
 .space-background {
@@ -100,37 +99,48 @@
     left: 50%;
     width: var(--orbit-size);
     height: var(--orbit-size);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 50%;
     margin-left: calc(-0.5 * var(--orbit-size));
     margin-top: calc(-0.5 * var(--orbit-size));
-    transform: scaleY(0.95);
-    transform-style: preserve-3d;
+    transform: translate(-50%, -50%);
+    animation: rotate linear infinite;
+    animation-duration: var(--orbit-time, 60s);
     z-index: 1;
-    transition: all 0.5s ease;
+}
+
+@keyframes rotate {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
 .planet-orientation {
     position: absolute;
-    transform-style: preserve-3d;
+    top: 0;
+    left: 50%;
+    width: 0;
+    height: 0;
+    transform: translateX(-50%);
 }
 
 .planet {
     position: absolute;
+    top: 0;
+    left: 50%;
     width: var(--planet-size);
     height: var(--planet-size);
-    margin-left: calc(-0.5 * var(--planet-size));
-    margin-top: calc(-0.5 * var(--planet-size));
     border-radius: 50%;
     background-size: cover;
+    background-position: center;
+    transform: translateX(-50%);
     cursor: pointer;
-    transform-style: preserve-3d;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
     z-index: 5;
-    transition: all 0.3s ease;
 }
 
 .planet:hover {
-    transform: scale(1.1);
+    transform: translateX(-50%) scale(1.2);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
 }
 
 .planet.active {
@@ -265,13 +275,7 @@
 }
 
 #crosshair {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 20px;
-    height: 20px;
-    transform: translate(-50%, -50%);
-    z-index: 15;
+    display: none;
 }
 
 #crosshair::before {
@@ -296,37 +300,8 @@
     transform: translateX(-50%);
 }
 
-#crosshair-coords {
-    position: absolute;
-    top: calc(50% + 15px);
-    left: calc(50% + 15px);
-    color: white;
-    font-size: 12px;
-    background: rgba(0,0,0,0.5);
-    padding: 2px 5px;
-    border-radius: 3px;
-    z-index: 15;
-}
-
-#mouse-coords {
-    position: absolute;
-    bottom: 10px;
-    left: 10px;
-    color: white;
-    font-size: 12px;
-    background: rgba(0,0,0,0.5);
-    padding: 5px;
-    border-radius: 5px;
-}
-
-#axes {
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
-    width: 100px;
-    height: 100px;
-    transform-style: preserve-3d;
-    transform: rotateX(45deg) rotateY(0deg) rotateZ(0deg);
+#crosshair-coords, #mouse-coords, #axes {
+    display: none;
 }
 
 .axis {
@@ -381,55 +356,45 @@
 }
 
 #fps {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    color: white;
-    background: rgba(0,0,0,0.5);
-    padding: 5px 10px;
-    border-radius: 5px;
-    font-family: monospace;
+    display: none;
 }
 
 #galaxy-selector {
     position: absolute;
-    bottom: 0;
+    bottom: 20px;
     left: 50%;
     transform: translateX(-50%);
-    background: rgba(0,0,0,0.7);
-    padding: 10px;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-    display: flex;
-    max-width: 80%;
-    overflow-x: auto;
-    z-index: 100;
-}
-
-#galaxy-selector::-webkit-scrollbar {
-    height: 5px;
+    z-index: 15;
 }
 
 #galaxy-list {
     display: flex;
     gap: 10px;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 10px;
+    border-radius: 25px;
+    backdrop-filter: blur(10px);
 }
 
 .galaxy-item {
-    padding: 10px 15px;
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
     color: white;
-    background: #333;
-    border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s;
-    white-space: nowrap; /* Чтобы текст не переносился */
+    transition: all 0.3s ease;
+    font-size: 14px;
+    white-space: nowrap;
 }
 
 .galaxy-item:hover {
-    background-color: #555;
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
 }
 
 .galaxy-item.selected {
-    background-color: #007bff;
-    font-weight: bold;
+    background: #FFEF2B;
+    color: #000;
+    border-color: #FFEF2B;
 }
