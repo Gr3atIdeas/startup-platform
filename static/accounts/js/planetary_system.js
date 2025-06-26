@@ -31,13 +31,13 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!startupData || !infoCard) return;
 
         // Заполняем данные
-        const planetImage = document.getElementById('planet-image');
-        const startupName = document.getElementById('startup-name');
-        const startupRating = document.getElementById('startup-rating');
-        const startupProgress = document.getElementById('startup-progress');
-        const startupFunding = document.getElementById('startup-funding');
-        const startupInvestors = document.getElementById('startup-investors');
-        const startupDescription = document.getElementById('startup-description');
+    const planetImage = document.getElementById('planet-image');
+    const startupName = document.getElementById('startup-name');
+    const startupRating = document.getElementById('startup-rating');
+    const startupProgress = document.getElementById('startup-progress');
+    const startupFunding = document.getElementById('startup-funding');
+    const startupInvestors = document.getElementById('startup-investors');
+    const startupDescription = document.getElementById('startup-description');
         const moreDetailsBtn = document.getElementById('more-details');
 
         if (planetImage) planetImage.style.backgroundImage = `url('${startupData.image}')`;
@@ -127,7 +127,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Обработчики для категорий
     galaxyItems.forEach(item => {
         item.addEventListener('click', function(e) {
-            e.preventDefault();
+        e.preventDefault();
             e.stopPropagation();
             
             const categoryName = this.dataset.name;

@@ -3130,24 +3130,17 @@ def planetary_system(request):
     )
 
     planets_data_for_template = []
-    # Генерируем достаточно размеров орбит для всех стартапов
-    base_sizes = list(range(200, 851, 50))  # 200, 250, 300, ..., 850
+    # Создаем 10 фиксированных орбит с равномерными интервалами
+    fixed_orbit_sizes = [180, 220, 260, 300, 340, 380, 420, 460, 500, 540]
+    orbit_times = [60, 70, 80, 90, 100, 110, 120, 130, 140, 150]
+    planet_sizes = [40, 45, 50, 55, 60, 45, 50, 55, 40, 45]
+    
     import random
     
-    # Если стартапов больше чем базовых размеров, добавляем дополнительные
-    startups_count = len(startups_filtered)
-    available_sizes = base_sizes.copy()
-    while len(available_sizes) < startups_count:
-        # Добавляем размеры с небольшими вариациями
-        for base_size in base_sizes:
-            if len(available_sizes) >= startups_count:
-                break
-            available_sizes.append(base_size + random.randint(-20, 20))
+    # Берем первые 10 стартапов или сколько есть
+    startups_to_show = list(startups_filtered)[:10]
     
-    random.shuffle(available_sizes)
-
-    for idx, startup in enumerate(startups_filtered):
-        orbit_size = available_sizes[idx % len(available_sizes)]
+    for idx, startup in enumerate(startups_to_show):
         # Если у стартапа есть свое изображение планеты, используем его, иначе случайное из доступных
         if startup.planet_image:
             image_path = f"accounts/images/planetary_system/planets_round/{startup.planet_image}"
@@ -3160,14 +3153,26 @@ def planetary_system(request):
             {
                 "id": startup.startup_id,
                 "image": static(image_path),
-                "orbit_size": orbit_size,
-                "orbit_time": 80 + idx * 10,
-                "planet_size": 50 + (idx % 4) * 10,
+                "orbit_size": fixed_orbit_sizes[idx],
+                "orbit_time": orbit_times[idx],
+                "planet_size": planet_sizes[idx],
+            }
+        )
+    
+    # Если стартапов меньше 10, добавляем пустые орбиты
+    for idx in range(len(startups_to_show), 10):
+        planets_data_for_template.append(
+            {
+                "id": 0,  # Пустая орбита
+                "image": "",
+                "orbit_size": fixed_orbit_sizes[idx],
+                "orbit_time": orbit_times[idx],
+                "planet_size": 0,  # Невидимая планета
             }
         )
 
     planets_data_json = []
-    for startup in startups_filtered:
+    for startup in startups_to_show:
         # Вычисляем тип инвестирования
         investment_type = (
             "Инвестирование"
