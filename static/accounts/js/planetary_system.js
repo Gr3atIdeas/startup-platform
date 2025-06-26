@@ -117,7 +117,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (allStartupsButton) {
             allStartupsButton.addEventListener('click', () => {
                 console.log('All startups button clicked');
-                window.location.href = config.urls.planetarySystemBase + '?direction=Все';
+                window.location.href = '/startups/';
             });
         }
 

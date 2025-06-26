@@ -1,6 +1,8 @@
 /* Стили для планетарной системы */
 .planetary-system-wrapper {
     width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
     height: 708px;
     position: relative;
     background: linear-gradient(180deg, #0B1426 0%, #1E3A8A 100%);
@@ -23,7 +25,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: radial-gradient(ellipse at center, rgba(11, 20, 38, 0.8) 0%, rgba(11, 20, 38, 1) 100%);
+    background: linear-gradient(180deg, rgba(5, 10, 20, 1) 0%, rgba(11, 20, 38, 0.9) 50%, rgba(30, 58, 138, 0.8) 100%);
     z-index: 1;
 }
 
@@ -34,16 +36,19 @@
     width: 100%;
     height: 100%;
     background-image: 
-        radial-gradient(2px 2px at 20px 30px, #eee, transparent),
-        radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.8), transparent),
-        radial-gradient(1px 1px at 90px 40px, #fff, transparent),
-        radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.6), transparent),
-        radial-gradient(2px 2px at 160px 30px, #ddd, transparent),
-        radial-gradient(1px 1px at 200px 120px, rgba(255,255,255,0.7), transparent),
-        radial-gradient(2px 2px at 250px 60px, #ccc, transparent);
-    background-repeat: repeat;
-    background-size: 300px 200px;
-    animation: twinkle 4s ease-in-out infinite alternate, parallax 120s linear infinite;
+        radial-gradient(1px 1px at 15% 25%, rgba(255,255,255,0.9), transparent),
+        radial-gradient(2px 2px at 35% 45%, rgba(255,255,255,0.7), transparent),
+        radial-gradient(1px 1px at 55% 15%, rgba(255,255,255,0.8), transparent),
+        radial-gradient(1px 1px at 75% 65%, rgba(255,255,255,0.6), transparent),
+        radial-gradient(2px 2px at 85% 35%, rgba(255,255,255,0.9), transparent),
+        radial-gradient(1px 1px at 25% 75%, rgba(255,255,255,0.5), transparent),
+        radial-gradient(1px 1px at 65% 85%, rgba(255,255,255,0.7), transparent),
+        radial-gradient(2px 2px at 5% 55%, rgba(255,255,255,0.8), transparent),
+        radial-gradient(1px 1px at 95% 25%, rgba(255,255,255,0.6), transparent),
+        radial-gradient(1px 1px at 45% 5%, rgba(255,255,255,0.9), transparent);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    animation: twinkle 2s ease-in-out infinite alternate, parallax 60s linear infinite;
     z-index: 2;
 }
 
@@ -53,8 +58,8 @@
 }
 
 @keyframes parallax {
-    from { background-position: 0 0; }
-    to { background-position: 300px 200px; }
+    from { transform: translateX(0) translateY(0); }
+    to { transform: translateX(-20px) translateY(-10px); }
 }
 
 #solar-system {
@@ -80,13 +85,14 @@
     width: 100%;
     height: 100%;
     transform-style: preserve-3d;
-    transform: rotateX(15deg);
+    transform: rotateX(-65deg);
 }
 
 #logo {
     width: 100px;
     height: 100px;
-    background-size: contain;
+    background-image: url('/static/accounts/images/planetary_system/solar.png');
+    background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
     border-radius: 50%;
@@ -96,6 +102,21 @@
     transform: translate(-50%, -50%);
     z-index: 10;
     box-shadow: 0 0 30px rgba(255, 239, 43, 0.6);
+}
+
+#logo::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 30px;
+    background-image: url('/static/accounts/images/planetary_system/gi.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    z-index: 1;
 }
 
 .orbit {
@@ -123,11 +144,11 @@
 
 .planet-orientation {
     position: absolute;
-    top: 0;
+    top: -50%;
     left: 50%;
     width: var(--planet-size);
     height: var(--planet-size);
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, 50%);
 }
 
 .planet {
@@ -142,7 +163,6 @@
     cursor: pointer;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     z-index: 5;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
 }
 
 .planet:hover {
@@ -438,6 +458,12 @@
     filter: brightness(0.8);
 }
 
+.galaxy-item.selected .category-label {
+    background: #FFEF2B;
+    color: #000;
+    border-color: #FFEF2B;
+}
+
 /* Навигационные стрелки для категорий */
 .galaxy-nav-arrow {
     position: absolute;
@@ -489,18 +515,22 @@
     height: 60px;
 }
 
-/* Подпись под центральной категорией */
+/* Подпись под категориями */
 .category-label {
     position: absolute;
-    bottom: -30px;
+    bottom: -35px;
     left: 50%;
     transform: translateX(-50%);
     background: rgba(0, 0, 0, 0.8);
     color: white;
-    padding: 5px 15px;
-    border-radius: 15px;
-    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 11px;
     white-space: nowrap;
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 300;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* Кнопка "Все стартапы" в левом верхнем углу */
@@ -524,4 +554,11 @@
 .all-startups-button:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.all-startups-button.selected {
+    background: linear-gradient(180deg, #FFD700 0%, #FFA500 100%);
+    border: 2px solid #FFD700;
+    transform: scale(1.05);
+    box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
 }

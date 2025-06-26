@@ -18,7 +18,7 @@
           <div id="solar-system">
             <div id="scene">
               <div id="galaxy">
-                <div id="logo" style="background-image: url('{{ logo_data.image|default_if_none:"" }}');"></div>
+                <div id="logo"></div>
                 {% for planet in planets_data %} <!-- Ограничение теперь должно быть во view при подготовке planets_data_json -->
                   <div class="orbit" style="--orbit-size: {{ planet.orbit_size }}px; --orbit-time: {{ planet.orbit_time }}s;">
                     <div class="planet-orientation">
@@ -59,7 +59,9 @@
             <button class="all-startups-button {% if selected_galaxy == 'Все' %}selected{% endif %}" data-name="Все">Все стартапы</button>
             <div id="galaxy-list">
               {% for direction in directions %}
-                <div class="galaxy-item {% if direction.direction_name == selected_galaxy %}selected{% endif %}" data-name="{{ direction.direction_name }}">{{ direction.direction_name }}</div>
+                <div class="galaxy-item {% if direction.direction_name == selected_galaxy %}selected{% endif %}" data-name="{{ direction.direction_name }}">
+                  <div class="category-label">{{ direction.direction_name }}</div>
+                </div>
               {% endfor %}
             </div>
           </div>
