@@ -3159,7 +3159,7 @@ def planetary_system(request):
         "directions_data_json": json.dumps(directions_data_json, cls=DjangoJSONEncoder),
         "is_startuper": is_startuper,
     }
-    return render(request, "accounts/planetary_system.html", context
+    return render(request, "accounts/planetary_system.html", context)
 
 
 @login_required
