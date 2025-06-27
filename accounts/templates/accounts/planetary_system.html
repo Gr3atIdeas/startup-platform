@@ -106,13 +106,15 @@
           left: 50%;
           width: var(--orbit-size);
           height: var(--orbit-size);
-          border: 1px solid rgba(255, 255, 255, 0.3);
+          border: 2px solid rgba(255, 255, 255, 0.8) !important;
           border-radius: 50%;
           margin-left: calc(-0.5 * var(--orbit-size));
           margin-top: calc(-0.5 * var(--orbit-size));
           transform-style: preserve-3d;
           z-index: 1;
           transition: all 0.5s ease;
+          display: block !important;
+          visibility: visible !important;
         }
 
         .planet-orientation {
@@ -132,7 +134,21 @@
           transform-style: preserve-3d;
           z-index: 5;
           transition: all 0.3s ease;
+          display: block !important;
+          visibility: visible !important;
+          background-color: #FF6B6B !important;
         }
+
+        .planet[data-id="1"] { background-color: #FF6B6B !important; }
+        .planet[data-id="2"] { background-color: #4ECDC4 !important; }
+        .planet[data-id="3"] { background-color: #45B7D1 !important; }
+        .planet[data-id="4"] { background-color: #96CEB4 !important; }
+        .planet[data-id="5"] { background-color: #FECA57 !important; }
+        .planet[data-id="6"] { background-color: #FF9FF3 !important; }
+        .planet[data-id="7"] { background-color: #54A0FF !important; }
+        .planet[data-id="8"] { background-color: #5F27CD !important; }
+        .planet[data-id="9"] { background-color: #00D2D3 !important; }
+        .planet[data-id="10"] { background-color: #FF9F43 !important; }
 
         .planet:hover {
           transform: scale(1.1);
@@ -462,8 +478,14 @@
         const inactivityTimeout = 10000;
         let isReturningToCenter = false;
 
+        // Отладочный вывод
+        console.log('Planets found:', planets.length);
+        console.log('Orbits found:', orbits.length);
+        console.log('PlanetsData:', planetsData);
+
         // Инициализация планет
         planets.forEach((planet, index) => {
+          console.log(`Initializing planet ${index + 1}:`, planet);
           const orbit = planet.closest('.orbit');
           const planetOrientation = planet.closest('.planet-orientation');
           
