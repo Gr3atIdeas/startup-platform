@@ -90,119 +90,121 @@
     transform: rotateX(45deg);
 }
 
-#logo {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 10;
-    box-shadow: 0 0 30px rgba(255, 239, 43, 0.6);
-    background-image: url('/static/accounts/images/planetary_system/solar.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-}
-
-#logo::after {
-    content: '';
+/* СОЛНЦЕ В ЦЕНТРЕ */
+#sun {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     width: 80px;
-    height: 40px;
+    height: 80px;
+    border-radius: 50%;
+    background-image: url('/static/accounts/images/planetary_system/solar.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    box-shadow: 0 0 30px rgba(255, 239, 43, 0.8);
+    z-index: 100;
+}
+
+#sun::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 30px;
     background-image: url('/static/accounts/images/planetary_system/gi.svg');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-    z-index: 11;
+    z-index: 101;
 }
 
-/* Базовые орбиты - всегда видимые */
-.orbit-base {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1;
-}
-
-.orbit-base:nth-of-type(1) { width: 150px; height: 150px; }
-.orbit-base:nth-of-type(2) { width: 200px; height: 200px; }
-.orbit-base:nth-of-type(3) { width: 250px; height: 250px; }
-.orbit-base:nth-of-type(4) { width: 300px; height: 300px; }
-.orbit-base:nth-of-type(5) { width: 350px; height: 350px; }
-.orbit-base:nth-of-type(6) { width: 400px; height: 400px; }
-.orbit-base:nth-of-type(7) { width: 450px; height: 450px; }
-.orbit-base:nth-of-type(8) { width: 500px; height: 500px; }
-.orbit-base:nth-of-type(9) { width: 550px; height: 550px; }
-.orbit-base:nth-of-type(10) { width: 600px; height: 600px; }
-
+/* 10 ОРБИТ */
 .orbit {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: var(--orbit-size);
-    height: var(--orbit-size);
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
     transform: translate(-50%, -50%);
-    z-index: 2;
     animation: orbit-rotate linear infinite;
-    animation-duration: var(--orbit-time, 60s);
 }
+
+.orbit-1 { width: 140px; height: 140px; animation-duration: 10s; }
+.orbit-2 { width: 180px; height: 180px; animation-duration: 15s; }
+.orbit-3 { width: 220px; height: 220px; animation-duration: 20s; }
+.orbit-4 { width: 260px; height: 260px; animation-duration: 25s; }
+.orbit-5 { width: 300px; height: 300px; animation-duration: 30s; }
+.orbit-6 { width: 340px; height: 340px; animation-duration: 35s; }
+.orbit-7 { width: 380px; height: 380px; animation-duration: 40s; }
+.orbit-8 { width: 420px; height: 420px; animation-duration: 45s; }
+.orbit-9 { width: 460px; height: 460px; animation-duration: 50s; }
+.orbit-10 { width: 500px; height: 500px; animation-duration: 55s; }
 
 @keyframes orbit-rotate {
-    from { 
-        transform: translate(-50%, -50%) rotate(0deg); 
-    }
-    to { 
-        transform: translate(-50%, -50%) rotate(360deg); 
-    }
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
-.planet-orientation {
+/* КОНТЕЙНЕРЫ ПЛАНЕТ */
+.planet-container {
     position: absolute;
     top: 0;
     left: 50%;
     transform: translate(-50%, -50%);
     animation: planet-counter-rotate linear infinite;
-    animation-duration: var(--orbit-time, 60s);
 }
+
+.orbit-1 .planet-container { animation-duration: 10s; }
+.orbit-2 .planet-container { animation-duration: 15s; }
+.orbit-3 .planet-container { animation-duration: 20s; }
+.orbit-4 .planet-container { animation-duration: 25s; }
+.orbit-5 .planet-container { animation-duration: 30s; }
+.orbit-6 .planet-container { animation-duration: 35s; }
+.orbit-7 .planet-container { animation-duration: 40s; }
+.orbit-8 .planet-container { animation-duration: 45s; }
+.orbit-9 .planet-container { animation-duration: 50s; }
+.orbit-10 .planet-container { animation-duration: 55s; }
 
 @keyframes planet-counter-rotate {
-    from { 
-        transform: translate(-50%, -50%) rotate(0deg); 
-    }
-    to { 
-        transform: translate(-50%, -50%) rotate(-360deg); 
-    }
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(-360deg); }
 }
 
+/* ПЛАНЕТЫ */
 .planet {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: var(--planet-size);
-    height: var(--planet-size);
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
     background-size: cover;
     background-position: center;
     cursor: pointer;
-    z-index: 5;
     transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
+/* СЛУЧАЙНЫЕ ЦВЕТА ДЛЯ ПЛАНЕТ */
+.planet-1 { background-color: #FF6B6B; }
+.planet-2 { background-color: #4ECDC4; }
+.planet-3 { background-color: #45B7D1; }
+.planet-4 { background-color: #96CEB4; }
+.planet-5 { background-color: #FECA57; }
+.planet-6 { background-color: #FF9FF3; }
+.planet-7 { background-color: #54A0FF; }
+.planet-8 { background-color: #5F27CD; }
+.planet-9 { background-color: #00D2D3; }
+.planet-10 { background-color: #FF9F43; }
+
 .planet:hover {
-    transform: scale(1.2);
+    transform: scale(1.5);
     box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
 }
 
 .planet.active {
-    transform: scale(1.3);
+    transform: scale(1.7);
     box-shadow: 0 0 25px rgba(255, 239, 43, 0.8);
 }
 

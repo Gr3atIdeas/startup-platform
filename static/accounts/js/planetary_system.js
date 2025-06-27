@@ -26,8 +26,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const galaxyItems = document.querySelectorAll('.galaxy-item');
     const planets = document.querySelectorAll('.planet');
 
-    // Инициализация планетарной системы - убираем сложную логику
-    console.log('Планетарная система инициализирована без дополнительной настройки');
+    // Инициализация планетарной системы
+    initializePlanets();
 
     // Функция для отображения карточки стартапа
     function showStartupCard(startupData) {
@@ -164,7 +164,25 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Убираем сложную функцию инициализации
+    // Функция инициализации планет
+    function initializePlanets() {
+        const planets = document.querySelectorAll('.planet');
+        
+        // Если есть данные о стартапах, используем их изображения
+        if (planetsData && planetsData.length > 0) {
+            planets.forEach((planet, index) => {
+                const planetData = planetsData[index % planetsData.length];
+                if (planetData && planetData.image) {
+                    planet.style.backgroundImage = `url('${planetData.image}')`;
+                    planet.dataset.startupId = planetData.id;
+                    planet.dataset.startupName = planetData.name || `Стартап ${index + 1}`;
+                    planet.dataset.startupDescription = planetData.description || 'Описание стартапа';
+                }
+            });
+        }
+        
+        console.log(`Инициализировано ${planets.length} планет`);
+    }
 
     // Инициализация: скрываем карточку при загрузке
     hideStartupCard();

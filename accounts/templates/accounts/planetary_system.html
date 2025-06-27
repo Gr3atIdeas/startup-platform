@@ -18,28 +18,69 @@
           <div id="solar-system">
             <div id="scene">
               <div id="galaxy">
-                <!-- Базовые орбиты - всегда видимые -->
-                <div class="orbit-base"></div>
-                <div class="orbit-base"></div>
-                <div class="orbit-base"></div>
-                <div class="orbit-base"></div>
-                <div class="orbit-base"></div>
-                <div class="orbit-base"></div>
-                <div class="orbit-base"></div>
-                <div class="orbit-base"></div>
-                <div class="orbit-base"></div>
-                <div class="orbit-base"></div>
+                <!-- СОЛНЦЕ В ЦЕНТРЕ -->
+                <div id="sun"></div>
                 
-                <div id="logo"></div>
-                {% for planet in planets_data %}
-                  <div class="orbit" style="--orbit-size: {{ planet.orbit_size }}px; --orbit-time: {{ planet.orbit_time }}s;">
-                    {% if planet.planet_size > 0 %}
-                      <div class="planet-orientation">
-                        <div class="planet" style="--planet-size: {{ planet.planet_size }}px; background-image: url('{{ planet.image }}');" data-id="{{ planet.id }}"></div>
-                      </div>
-                    {% endif %}
+                <!-- 10 ОРБИТ С ПЛАНЕТАМИ -->
+                <div class="orbit orbit-1">
+                  <div class="planet-container">
+                    <div class="planet planet-1" data-id="1"></div>
                   </div>
-                {% endfor %}
+                </div>
+                
+                <div class="orbit orbit-2">
+                  <div class="planet-container">
+                    <div class="planet planet-2" data-id="2"></div>
+                  </div>
+                </div>
+                
+                <div class="orbit orbit-3">
+                  <div class="planet-container">
+                    <div class="planet planet-3" data-id="3"></div>
+                  </div>
+                </div>
+                
+                <div class="orbit orbit-4">
+                  <div class="planet-container">
+                    <div class="planet planet-4" data-id="4"></div>
+                  </div>
+                </div>
+                
+                <div class="orbit orbit-5">
+                  <div class="planet-container">
+                    <div class="planet planet-5" data-id="5"></div>
+                  </div>
+                </div>
+                
+                <div class="orbit orbit-6">
+                  <div class="planet-container">
+                    <div class="planet planet-6" data-id="6"></div>
+                  </div>
+                </div>
+                
+                <div class="orbit orbit-7">
+                  <div class="planet-container">
+                    <div class="planet planet-7" data-id="7"></div>
+                  </div>
+                </div>
+                
+                <div class="orbit orbit-8">
+                  <div class="planet-container">
+                    <div class="planet planet-8" data-id="8"></div>
+                  </div>
+                </div>
+                
+                <div class="orbit orbit-9">
+                  <div class="planet-container">
+                    <div class="planet planet-9" data-id="9"></div>
+                  </div>
+                </div>
+                
+                <div class="orbit orbit-10">
+                  <div class="planet-container">
+                    <div class="planet planet-10" data-id="10"></div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
