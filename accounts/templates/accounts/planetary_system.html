@@ -117,6 +117,25 @@
                 <div class="galaxy-item-wrapper">
                   <div class="galaxy-item {% if direction.direction_name == selected_galaxy %}selected{% endif %}" data-name="{{ direction.direction_name }}"></div>
                   <div class="category-label">{{ direction.direction_name }}</div>
+                  <div class="category-description">
+                    {% if direction.direction_name == "Технологии" %}
+                      Инновационные IT-решения и разработки
+                    {% elif direction.direction_name == "Медицина" %}
+                      Здравоохранение и медицинские технологии
+                    {% elif direction.direction_name == "Финтех" %}
+                      Финансовые технологии и услуги
+                    {% elif direction.direction_name == "Образование" %}
+                      EdTech и образовательные платформы
+                    {% elif direction.direction_name == "Экология" %}
+                      Зеленые технологии и экология
+                    {% elif direction.direction_name == "Торговля" %}
+                      E-commerce и розничная торговля
+                    {% elif direction.direction_name == "Транспорт" %}
+                      Логистика и транспортные решения
+                    {% else %}
+                      Инновационные стартапы
+                    {% endif %}
+                  </div>
                 </div>
               {% endfor %}
             </div>
