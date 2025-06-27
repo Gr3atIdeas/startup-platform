@@ -1,722 +1,703 @@
 {% extends "accounts/base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <title>{% block title %}Планетарная система стартапов{% endblock %}</title>
-    {% block head_extra %}
-      {{ block.super }}
-      <style>
-        body {
-          margin: 0;
-          padding: 0;
-          overflow: hidden;
-          background: radial-gradient(circle at center, #1a1a2e 0%, #0a0a1e 100%);
-          color: white;
-          font-family: Arial, sans-serif;
-          user-select: none;
-        }
 
-        .space-background {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background: linear-gradient(180deg, #0B1426 0%, #1E3A8A 100%);
-          z-index: -1;
-        }
+{% block title %}Планетарная система стартапов{% endblock %}
 
-        .stars {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background-image: 
-            radial-gradient(2px 2px at 20px 30px, #eee, transparent),
-            radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.8), transparent),
-            radial-gradient(1px 1px at 90px 40px, #fff, transparent),
-            radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.6), transparent);
-          background-repeat: repeat;
-          background-size: 600px 400px;
-          animation: parallax 100s linear infinite;
-          opacity: 0.5;
-          z-index: -1;
-        }
+{% block head_extra %}
+{{ block.super }}
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background: radial-gradient(circle at center, #1a1a2e 0%, #0a0a1e 100%);
+    color: white;
+    font-family: Arial, sans-serif;
+    user-select: none;
+  }
 
-        @keyframes parallax {
-          from { background-position: 0 0; }
-          to { background-position: 1000px 1000px; }
-        }
+  .space-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, #0B1426 0%, #1E3A8A 100%);
+    z-index: -1;
+  }
 
-        #solar-system {
-          width: 100vw;
-          height: 100vh;
-          position: relative;
-          perspective: 1000px;
-          cursor: grab;
-        }
+  .stars {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+      radial-gradient(2px 2px at 20px 30px, #eee, transparent),
+      radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.8), transparent),
+      radial-gradient(1px 1px at 90px 40px, #fff, transparent),
+      radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.6), transparent);
+    background-repeat: repeat;
+    background-size: 600px 400px;
+    animation: parallax 100s linear infinite;
+    opacity: 0.5;
+    z-index: -1;
+  }
 
-        #solar-system.dragging {
-          cursor: grabbing;
-        }
+  @keyframes parallax {
+    from { background-position: 0 0; }
+    to { background-position: 1000px 1000px; }
+  }
 
-        #scene {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%) translate(0px, 0px) scale(1);
-          transform-style: preserve-3d;
-        }
+  #solar-system {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    perspective: 1000px;
+    cursor: grab;
+  }
 
-        #galaxy {
-          position: absolute;
-          top: 0;
-          left: 0;
-          transform: rotateX(45deg);
-          transform-style: preserve-3d;
-        }
+  #solar-system.dragging {
+    cursor: grabbing;
+  }
 
-        #logo {
-          width: 100px;
-          height: 100px;
-          background-size: cover;
-          border-radius: 50%;
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%) rotateX(-45deg);
-          z-index: 10;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 16px;
-          font-weight: bold;
-          color: #333;
-          text-align: center;
-          line-height: 1.2;
-          background: radial-gradient(circle at center, #FFD700 0%, #FFA500 50%, #FF8C00 100%);
-          box-shadow: 0 0 50px rgba(255, 239, 43, 1), 0 0 100px rgba(255, 165, 0, 0.5);
-        }
+  #scene {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) translate(0px, 0px) scale(1);
+    transform-style: preserve-3d;
+  }
 
-        .orbit {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          width: var(--orbit-size);
-          height: var(--orbit-size);
-          border: 2px solid rgba(255, 255, 255, 0.8) !important;
-          border-radius: 50%;
-          margin-left: calc(-0.5 * var(--orbit-size));
-          margin-top: calc(-0.5 * var(--orbit-size));
-          transform-style: preserve-3d;
-          z-index: 1;
-          transition: all 0.5s ease;
-          display: block !important;
-          visibility: visible !important;
-        }
+  #galaxy {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: rotateX(45deg);
+    transform-style: preserve-3d;
+  }
 
-        .planet-orientation {
-          position: absolute;
-          transform-style: preserve-3d;
-        }
+  #logo {
+    width: 100px;
+    height: 100px;
+    background-size: cover;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotateX(-45deg);
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+    line-height: 1.2;
+    background: radial-gradient(circle at center, #FFD700 0%, #FFA500 50%, #FF8C00 100%);
+    box-shadow: 0 0 50px rgba(255, 239, 43, 1), 0 0 100px rgba(255, 165, 0, 0.5);
+  }
 
-        .planet {
-          position: absolute;
-          width: var(--planet-size);
-          height: var(--planet-size);
-          margin-left: calc(-0.5 * var(--planet-size));
-          margin-top: calc(-0.5 * var(--planet-size));
-          border-radius: 50%;
-          background-size: cover;
-          cursor: pointer;
-          transform-style: preserve-3d;
-          z-index: 5;
-          transition: all 0.3s ease;
-          display: block !important;
-          visibility: visible !important;
-          background-color: #FF6B6B !important;
-        }
+  .orbit {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: var(--orbit-size);
+    height: var(--orbit-size);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    margin-left: calc(-0.5 * var(--orbit-size));
+    margin-top: calc(-0.5 * var(--orbit-size));
+    transform-style: preserve-3d;
+    z-index: 1;
+    transition: all 0.5s ease;
+  }
 
-        .planet[data-id="1"] { background-color: #FF6B6B !important; }
-        .planet[data-id="2"] { background-color: #4ECDC4 !important; }
-        .planet[data-id="3"] { background-color: #45B7D1 !important; }
-        .planet[data-id="4"] { background-color: #96CEB4 !important; }
-        .planet[data-id="5"] { background-color: #FECA57 !important; }
-        .planet[data-id="6"] { background-color: #FF9FF3 !important; }
-        .planet[data-id="7"] { background-color: #54A0FF !important; }
-        .planet[data-id="8"] { background-color: #5F27CD !important; }
-        .planet[data-id="9"] { background-color: #00D2D3 !important; }
-        .planet[data-id="10"] { background-color: #FF9F43 !important; }
+  .planet-orientation {
+    position: absolute;
+    transform-style: preserve-3d;
+  }
 
-        .planet:hover {
-          transform: scale(1.1);
-        }
+  .planet {
+    position: absolute;
+    width: var(--planet-size);
+    height: var(--planet-size);
+    margin-left: calc(-0.5 * var(--planet-size));
+    margin-top: calc(-0.5 * var(--planet-size));
+    border-radius: 50%;
+    background-size: cover;
+    cursor: pointer;
+    transform-style: preserve-3d;
+    z-index: 5;
+    transition: all 0.3s ease;
+  }
 
-        .planet.active {
-          transform: scale(1.2);
-        }
+  .planet:hover {
+    transform: scale(1.1);
+  }
 
-        #info-card {
-          position: fixed;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          background: rgba(255, 255, 255, 0.95);
-          padding: 20px;
-          border-radius: 15px;
-          box-shadow: 0 0 15px rgba(0,0,0,0.5);
-          max-width: 350px;
-          width: 90%;
-          color: #333;
-          z-index: 20;
-          display: none;
-          text-align: center;
-        }
+  .planet.active {
+    transform: scale(1.2);
+  }
 
-        #info-card .planet-image {
-          width: 100px;
-          height: 100px;
-          border-radius: 50%;
-          margin: 0 auto 10px;
-          background-size: cover;
-        }
+  #info-card {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 255, 255, 0.95);
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.5);
+    max-width: 350px;
+    width: 90%;
+    color: #333;
+    z-index: 20;
+    display: none;
+    text-align: center;
+  }
 
-        #info-card h2 {
-          margin: 0 0 5px;
-          font-size: 24px;
-          color: #000;
-        }
+  #info-card .planet-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin: 0 auto 10px;
+    background-size: cover;
+  }
 
-        #info-card .rating {
-          font-size: 16px;
-          color: #555;
-          margin-bottom: 10px;
-        }
+  #info-card h2 {
+    margin: 0 0 5px;
+    font-size: 24px;
+    color: #000;
+  }
 
-        #info-card .progress-bar {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin: 10px 0;
-        }
+  #info-card .rating {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 10px;
+  }
 
-        #info-card .progress-bar button {
-          padding: 5px 10px;
-          border: none;
-          background: #000;
-          color: white;
-          font-size: 14px;
-          border-radius: 5px 0 0 5px;
-        }
+  #info-card .progress-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 10px 0;
+  }
 
-        #info-card .progress-bar .progress {
-          background: #ffd700;
-          padding: 5px;
-          font-size: 14px;
-          font-weight: bold;
-          border-radius: 0 5px 5px 0;
-        }
+  #info-card .progress-bar button {
+    padding: 5px 10px;
+    border: none;
+    background: #000;
+    color: white;
+    font-size: 14px;
+    border-radius: 5px 0 0 5px;
+  }
 
-        #info-card .funding,
-        #info-card .investors,
-        #info-card .description {
-          font-size: 14px;
-          color: #555;
-          margin: 10px 0;
-        }
+  #info-card .progress-bar .progress {
+    background: #ffd700;
+    padding: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 0 5px 5px 0;
+  }
 
-        #info-card .more-details {
-          padding: 10px 20px;
-          background: none;
-          border: none;
-          color: #007bff;
-          font-size: 16px;
-          cursor: pointer;
-        }
+  #info-card .funding,
+  #info-card .investors,
+  #info-card .description {
+    font-size: 14px;
+    color: #555;
+    margin: 10px 0;
+  }
 
-        #close-card {
-          position: absolute;
-          top: 10px;
-          right: 10px;
-          background: #ffd700;
-          border: none;
-          font-size: 20px;
-          cursor: pointer;
-          color: #000;
-          width: 30px;
-          height: 30px;
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
+  #info-card .more-details {
+    padding: 10px 20px;
+    background: none;
+    border: none;
+    color: #007bff;
+    font-size: 16px;
+    cursor: pointer;
+  }
 
-        #crosshair,
-        #crosshair-coords,
-        #mouse-coords,
-        #axes,
-        #fps {
-          display: none;
-        }
+  #close-card {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #ffd700;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #000;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
-        #galaxy-selector {
-          position: fixed;
-          bottom: 20px;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 400px;
-          height: 60px;
-          overflow-x: auto;
-          white-space: nowrap;
-          z-index: 100;
-          scrollbar-width: none;
-        }
+  #crosshair,
+  #crosshair-coords,
+  #mouse-coords,
+  #axes,
+  #fps {
+    display: none;
+  }
 
-        #galaxy-selector::-webkit-scrollbar {
-          display: none;
-        }
+  #galaxy-selector {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 400px;
+    height: 60px;
+    overflow-x: auto;
+    white-space: nowrap;
+    z-index: 100;
+    scrollbar-width: none;
+  }
 
-        #galaxy-list {
-          display: inline-flex;
-          align-items: center;
-          justify-content: flex-start;
-          padding: 0 20px;
-          height: 100%;
-        }
+  #galaxy-selector::-webkit-scrollbar {
+    display: none;
+  }
 
-        .galaxy-item {
-          flex: 0 0 auto;
-          margin: 0 10px;
-          background: rgba(255, 255, 255, 0.2);
-          border-radius: 10px;
-          padding: 10px 20px;
-          color: white;
-          font-size: 16px;
-          text-align: center;
-          transition: all 0.3s ease;
-          cursor: pointer;
-        }
+  #galaxy-list {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0 20px;
+    height: 100%;
+  }
 
-        .galaxy-item:hover {
-          background: rgba(255, 255, 255, 0.3);
-        }
+  .galaxy-item {
+    flex: 0 0 auto;
+    margin: 0 10px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    padding: 10px 20px;
+    color: white;
+    font-size: 16px;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
 
-        .galaxy-item.selected {
-          background: rgba(255, 255, 255, 0.5);
-          transform: scale(1.2);
-        }
+  .galaxy-item:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
 
-        .all-startups-button {
-          position: fixed;
-          top: 20px;
-          left: 20px;
-          background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
-          border: none;
-          border-radius: 10px;
-          padding: 12px 24px;
-          color: #000;
-          font-size: 16px;
-          font-weight: 500;
-          cursor: pointer;
-          transition: all 0.3s ease;
-          z-index: 20;
-          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        }
+  .galaxy-item.selected {
+    background: rgba(255, 255, 255, 0.5);
+    transform: scale(1.2);
+  }
 
-        .all-startups-button:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-        }
-      </style>
-    {% endblock %}
-</head>
-<body>
-    {% block content %}
-      <div class="space-background"></div>
-      <div class="stars"></div>
-      <button class="all-startups-button">Все стартапы</button>
-      <div id="solar-system">
-        <div id="scene">
-          <div id="galaxy">
-            <div id="logo"></div>
-            <div class="orbit" style="--orbit-size: 200px; --orbit-time: 80s;">
-              <div class="planet-orientation">
-                <div class="planet" style="--planet-size: 60px;" data-id="1"></div>
-              </div>
-            </div>
-            <div class="orbit" style="--orbit-size: 300px; --orbit-time: 100s;">
-              <div class="planet-orientation">
-                <div class="planet" style="--planet-size: 70px;" data-id="2"></div>
-              </div>
-            </div>
-            <div class="orbit" style="--orbit-size: 400px; --orbit-time: 120s;">
-              <div class="planet-orientation">
-                <div class="planet" style="--planet-size: 56px;" data-id="3"></div>
-              </div>
-            </div>
-            <div class="orbit" style="--orbit-size: 500px; --orbit-time: 140s;">
-              <div class="planet-orientation">
-                <div class="planet" style="--planet-size: 64px;" data-id="4"></div>
-              </div>
-            </div>
-            <div class="orbit" style="--orbit-size: 600px; --orbit-time: 160s;">
-              <div class="planet-orientation">
-                <div class="planet" style="--planet-size: 50px;" data-id="5"></div>
-              </div>
-            </div>
-            <div class="orbit" style="--orbit-size: 700px; --orbit-time: 180s;">
-              <div class="planet-orientation">
-                <div class="planet" style="--planet-size: 60px;" data-id="6"></div>
-              </div>
-            </div>
-            <div class="orbit" style="--orbit-size: 800px; --orbit-time: 200s;">
-              <div class="planet-orientation">
-                <div class="planet" style="--planet-size: 54px;" data-id="7"></div>
-              </div>
-            </div>
-            <div class="orbit" style="--orbit-size: 900px; --orbit-time: 220s;">
-              <div class="planet-orientation">
-                <div class="planet" style="--planet-size: 58px;" data-id="8"></div>
-              </div>
-            </div>
-            <div class="orbit" style="--orbit-size: 1000px; --orbit-time: 240s;">
-              <div class="planet-orientation">
-                <div class="planet" style="--planet-size: 62px;" data-id="9"></div>
-              </div>
-            </div>
-            <div class="orbit" style="--orbit-size: 1100px; --orbit-time: 260s;">
-              <div class="planet-orientation">
-                <div class="planet" style="--planet-size: 58px;" data-id="10"></div>
-              </div>
-            </div>
-          </div>
+  .all-startups-button {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
+    border: none;
+    border-radius: 10px;
+    padding: 12px 24px;
+    color: #000;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 20;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  }
+
+  .all-startups-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="space-background"></div>
+<div class="stars"></div>
+<button class="all-startups-button">Все стартапы</button>
+<div id="solar-system">
+  <div id="scene">
+    <div id="galaxy">
+      <div id="logo"></div>
+      <div class="orbit" style="--orbit-size: 200px; --orbit-time: 80s;">
+        <div class="planet-orientation">
+          <div class="planet" style="--planet-size: 60px;" data-id="1"></div>
         </div>
       </div>
-      <div id="info-card">
-        <button id="close-card">×</button>
-        <div class="planet-image" id="planet-image"></div>
-        <h2 id="startup-name"></h2>
-        <div class="rating" id="startup-rating"></div>
-        <div class="progress-bar">
-          <button>Выкуп+инвестирование</button>
-          <div class="progress" id="startup-progress"></div>
-        </div>
-        <div class="funding" id="startup-funding"></div>
-        <div class="investors" id="startup-investors"></div>
-        <div class="description" id="startup-description"></div>
-        <button class="more-details" id="more-details">Подробнее</button>
-      </div>
-      <div id="crosshair"></div>
-      <div id="crosshair-coords"></div>
-      <div id="mouse-coords"></div>
-      <div id="axes">
-        <div class="axis" id="axis-x"></div>
-        <div class="axis" id="axis-y"></div>
-        <div class="axis" id="axis-z"></div>
-        <div class="axis-label" id="label-x">X</div>
-        <div class="axis-label" id="label-y">Y</div>
-        <div class="axis-label" id="label-z">Z</div>
-      </div>
-      <div id="fps">0 FPS</div>
-      <div id="galaxy-selector">
-        <div id="galaxy-list">
-          {% for direction in directions %}
-            <div class="galaxy-item {% if direction.direction_name == selected_galaxy %}selected{% endif %}" data-name="{{ direction.direction_name }}">{{ direction.direction_name }}</div>
-          {% endfor %}
+      <div class="orbit" style="--orbit-size: 300px; --orbit-time: 100s;">
+        <div class="planet-orientation">
+          <div class="planet" style="--planet-size: 70px;" data-id="2"></div>
         </div>
       </div>
-    {% endblock %}
+      <div class="orbit" style="--orbit-size: 400px; --orbit-time: 120s;">
+        <div class="planet-orientation">
+          <div class="planet" style="--planet-size: 56px;" data-id="3"></div>
+        </div>
+      </div>
+      <div class="orbit" style="--orbit-size: 500px; --orbit-time: 140s;">
+        <div class="planet-orientation">
+          <div class="planet" style="--planet-size: 64px;" data-id="4"></div>
+        </div>
+      </div>
+      <div class="orbit" style="--orbit-size: 600px; --orbit-time: 160s;">
+        <div class="planet-orientation">
+          <div class="planet" style="--planet-size: 50px;" data-id="5"></div>
+        </div>
+      </div>
+      <div class="orbit" style="--orbit-size: 700px; --orbit-time: 180s;">
+        <div class="planet-orientation">
+          <div class="planet" style="--planet-size: 60px;" data-id="6"></div>
+        </div>
+      </div>
+      <div class="orbit" style="--orbit-size: 800px; --orbit-time: 200s;">
+        <div class="planet-orientation">
+          <div class="planet" style="--planet-size: 54px;" data-id="7"></div>
+        </div>
+      </div>
+      <div class="orbit" style="--orbit-size: 900px; --orbit-time: 220s;">
+        <div class="planet-orientation">
+          <div class="planet" style="--planet-size: 58px;" data-id="8"></div>
+        </div>
+      </div>
+      <div class="orbit" style="--orbit-size: 1000px; --orbit-time: 240s;">
+        <div class="planet-orientation">
+          <div class="planet" style="--planet-size: 62px;" data-id="9"></div>
+        </div>
+      </div>
+      <div class="orbit" style="--orbit-size: 1100px; --orbit-time: 260s;">
+        <div class="planet-orientation">
+          <div class="planet" style="--planet-size: 58px;" data-id="10"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="info-card">
+  <button id="close-card">×</button>
+  <div class="planet-image" id="planet-image"></div>
+  <h2 id="startup-name"></h2>
+  <div class="rating" id="startup-rating"></div>
+  <div class="progress-bar">
+    <button>Выкуп+инвестирование</button>
+    <div class="progress" id="startup-progress"></div>
+  </div>
+  <div class="funding" id="startup-funding"></div>
+  <div class="investors" id="startup-investors"></div>
+  <div class="description" id="startup-description"></div>
+  <button class="more-details" id="more-details">Подробнее</button>
+</div>
+<div id="crosshair"></div>
+<div id="crosshair-coords"></div>
+<div id="mouse-coords"></div>
+<div id="axes">
+  <div class="axis" id="axis-x"></div>
+  <div class="axis" id="axis-y"></div>
+  <div class="axis" id="axis-z"></div>
+  <div class="axis-label" id="label-x">X</div>
+  <div class="axis-label" id="label-y">Y</div>
+  <div class="axis-label" id="label-z">Z</div>
+</div>
+<div id="fps">0 FPS</div>
+<div id="galaxy-selector">
+  <div id="galaxy-list">
+    {% for direction in directions %}
+      <div class="galaxy-item {% if direction.direction_name == selected_galaxy %}selected{% endif %}" data-name="{{ direction.direction_name }}">{{ direction.direction_name }}</div>
+    {% endfor %}
+  </div>
+</div>
 
-    {% block script_extra %}
-      {{ block.super }}
-      <script>
-        // Получаем данные из Django
-        const planetsData = {{ planets_data_json|safe }};
-        const logoData = { image: "{{ logo_data.image|default_if_none:'' }}" };
-        const directionsData = {{ directions_data_json|safe }};
-        const selectedGalaxy = "{{ selected_galaxy|default_if_none:'' }}";
-        
-        // Элементы DOM
-        const planets = document.querySelectorAll('.planet');
-        const planetOrientations = document.querySelectorAll('.planet-orientation');
-        const orbits = document.querySelectorAll('.orbit');
-        const infoCard = document.getElementById('info-card');
-        const planetImage = document.getElementById('planet-image');
-        const startupName = document.getElementById('startup-name');
-        const startupRating = document.getElementById('startup-rating');
-        const startupProgress = document.getElementById('startup-progress');
-        const startupFunding = document.getElementById('startup-funding');
-        const startupInvestors = document.getElementById('startup-investors');
-        const startupDescription = document.getElementById('startup-description');
-        const closeCard = document.getElementById('close-card');
-        const moreDetails = document.getElementById('more-details');
-        const solarSystem = document.getElementById('solar-system');
-        const scene = document.getElementById('scene');
-        const galaxy = document.getElementById('galaxy');
-        const logoElement = document.getElementById('logo');
-        const allStartupsBtn = document.querySelector('.all-startups-button');
+<script id="planetary-data" type="application/json">
+{
+  "planets": {{ planets_data_json|safe }},
+  "logo": { "image": "{{ logo_data.image|default_if_none:''|escapejs }}" },
+  "directions": {{ directions_data_json|safe }},
+  "selectedGalaxy": "{{ selected_galaxy|default_if_none:''|escapejs }}"
+}
+</script>
 
-        // Устанавливаем изображение логотипа
-        if (logoData.image) {
-          logoElement.style.backgroundImage = `url('${logoData.image}')`;
-        }
+<script>
+// Получаем данные из Django
+const data = JSON.parse(document.getElementById('planetary-data').textContent);
+const planetsData = data.planets;
+const logoData = data.logo;
+const directionsData = data.directions;
+const selectedGalaxy = data.selectedGalaxy;
 
-        // Начальный угол наклона галактики
-        const galaxyTiltAngle = 45;
+// Элементы DOM
+const planets = document.querySelectorAll('.planet');
+const planetOrientations = document.querySelectorAll('.planet-orientation');
+const orbits = document.querySelectorAll('.orbit');
+const infoCard = document.getElementById('info-card');
+const planetImage = document.getElementById('planet-image');
+const startupName = document.getElementById('startup-name');
+const startupRating = document.getElementById('startup-rating');
+const startupProgress = document.getElementById('startup-progress');
+const startupFunding = document.getElementById('startup-funding');
+const startupInvestors = document.getElementById('startup-investors');
+const startupDescription = document.getElementById('startup-description');
+const closeCard = document.getElementById('close-card');
+const moreDetails = document.getElementById('more-details');
+const solarSystem = document.getElementById('solar-system');
+const scene = document.getElementById('scene');
+const galaxy = document.getElementById('galaxy');
+const logoElement = document.getElementById('logo');
+const allStartupsBtn = document.querySelector('.all-startups-button');
 
-        // Массив планет с данными
-        const planetObjects = [];
+// Устанавливаем изображение логотипа
+if (logoData.image) {
+  logoElement.style.backgroundImage = `url('${logoData.image}')`;
+}
 
-        // Переменные для управления паузой
-        let isPaused = false;
-        let pausedTime = 0;
+// Начальный угол наклона галактики
+const galaxyTiltAngle = 45;
 
-        // Переменные для возвращения к центру
-        let lastInteractionTime = Date.now();
-        const inactivityTimeout = 10000;
-        let isReturningToCenter = false;
+// Массив планет с данными
+const planetObjects = [];
 
-        // Отладочный вывод
-        console.log('Planets found:', planets.length);
-        console.log('Orbits found:', orbits.length);
-        console.log('PlanetsData:', planetsData);
+// Переменные для управления паузой
+let isPaused = false;
+let pausedTime = 0;
 
-        // Инициализация планет
-        planets.forEach((planet, index) => {
-          console.log(`Initializing planet ${index + 1}:`, planet);
-          const orbit = planet.closest('.orbit');
-          const planetOrientation = planet.closest('.planet-orientation');
-          
-          // Параметры орбиты
-          const orbitSize = parseFloat(getComputedStyle(orbit).getPropertyValue('--orbit-size'));
-          const orbitTime = parseFloat(getComputedStyle(orbit).getPropertyValue('--orbit-time'));
-          
-          // Генерируем случайный начальный угол и скорость для каждой планеты
-          const initialAngle = Math.random() * 360;
-          const speedFactor = 0.8 + Math.random() * 0.4;
-          
-          // Сохраняем данные о планете
-          planetObjects.push({
-            element: planet,
-            orientation: planetOrientation,
-            orbit: orbit,
-            size: parseFloat(getComputedStyle(planet).getPropertyValue('--planet-size')),
-            orbitSize: orbitSize,
-            orbitTime: orbitTime,
-            angle: initialAngle,
-            speedFactor: speedFactor,
-            startTime: Date.now() - Math.random() * orbitTime * 1000
-          });
+// Переменные для возвращения к центру
+let lastInteractionTime = Date.now();
+const inactivityTimeout = 10000;
+let isReturningToCenter = false;
 
-          // Устанавливаем изображение планеты
-          const id = planet.getAttribute('data-id');
-          const planetData = planetsData.find(p => p.id == id);
-          if (planetData && planetData.image) {
-            planet.style.backgroundImage = `url('${planetData.image}')`;
-          }
-          
-          // Обработчик клика по планете
-          planet.addEventListener('click', (e) => {
-            e.stopPropagation();
-            
-            if (planetData) {
-              planetImage.style.backgroundImage = `url('${planetData.image}')`;
-              startupName.textContent = planetData.name || 'Название не указано';
-              startupRating.textContent = `Рейтинг ${planetData.rating || '0'}/5`;
-              startupProgress.textContent = planetData.progress || '0%';
-              startupFunding.textContent = `Цель финансирования: ${planetData.funding_goal || 'Не указана'}`;
-              startupInvestors.textContent = `Инвесторов: ${planetData.investors || 0}`;
-              startupDescription.textContent = planetData.description || 'Описание не указано';
+// Инициализация планет
+planets.forEach((planet, index) => {
+  const orbit = planet.closest('.orbit');
+  const planetOrientation = planet.closest('.planet-orientation');
+  
+  // Параметры орбиты
+  const orbitSize = parseFloat(getComputedStyle(orbit).getPropertyValue('--orbit-size'));
+  const orbitTime = parseFloat(getComputedStyle(orbit).getPropertyValue('--orbit-time'));
+  
+  // Генерируем случайный начальный угол и скорость для каждой планеты
+  const initialAngle = Math.random() * 360;
+  const speedFactor = 0.8 + Math.random() * 0.4;
+  
+  // Сохраняем данные о планете
+  planetObjects.push({
+    element: planet,
+    orientation: planetOrientation,
+    orbit: orbit,
+    size: parseFloat(getComputedStyle(planet).getPropertyValue('--planet-size')),
+    orbitSize: orbitSize,
+    orbitTime: orbitTime,
+    angle: initialAngle,
+    speedFactor: speedFactor,
+    startTime: Date.now() - Math.random() * orbitTime * 1000
+  });
 
-              planets.forEach(p => p.classList.remove('active'));
-              planet.classList.add('active');
-              infoCard.style.display = 'block';
+  // Устанавливаем изображение планеты
+  const id = planet.getAttribute('data-id');
+  const planetData = planetsData.find(p => p.id == id);
+  if (planetData && planetData.image) {
+    planet.style.backgroundImage = `url('${planetData.image}')`;
+  }
+  
+  // Обработчик клика по планете
+  planet.addEventListener('click', (e) => {
+    e.stopPropagation();
+    
+    if (planetData) {
+      planetImage.style.backgroundImage = `url('${planetData.image}')`;
+      startupName.textContent = planetData.name || 'Название не указано';
+      startupRating.textContent = `Рейтинг ${planetData.rating || '0'}/5`;
+      startupProgress.textContent = planetData.progress || '0%';
+      startupFunding.textContent = `Цель финансирования: ${planetData.funding_goal || 'Не указана'}`;
+      startupInvestors.textContent = `Инвесторов: ${planetData.investors || 0}`;
+      startupDescription.textContent = planetData.description || 'Описание не указано';
 
-              // Приостановить вращение планет
-              isPaused = true;
-              pausedTime = Date.now();
-            }
+      planets.forEach(p => p.classList.remove('active'));
+      planet.classList.add('active');
+      infoCard.style.display = 'block';
 
-            lastInteractionTime = Date.now();
-          });
-        });
+      // Приостановить вращение планет
+      isPaused = true;
+      pausedTime = Date.now();
+    }
 
-        closeCard.addEventListener('click', () => {
-          infoCard.style.display = 'none';
-          planets.forEach(p => p.classList.remove('active'));
+    lastInteractionTime = Date.now();
+  });
+});
 
-          // Возобновить вращение планет
-          if (isPaused) {
-            const pauseDuration = Date.now() - pausedTime;
-            planetObjects.forEach(planetObj => {
-              planetObj.startTime += pauseDuration;
-            });
-            isPaused = false;
-          }
+closeCard.addEventListener('click', () => {
+  infoCard.style.display = 'none';
+  planets.forEach(p => p.classList.remove('active'));
 
-          lastInteractionTime = Date.now();
-        });
+  // Возобновить вращение планет
+  if (isPaused) {
+    const pauseDuration = Date.now() - pausedTime;
+    planetObjects.forEach(planetObj => {
+      planetObj.startTime += pauseDuration;
+    });
+    isPaused = false;
+  }
 
-        moreDetails.addEventListener('click', () => {
-          const activePlanet = document.querySelector('.planet.active');
-          if (activePlanet) {
-            const id = activePlanet.getAttribute('data-id');
-            const planetData = planetsData.find(p => p.id == id);
-            if (planetData && planetData.startup_id) {
-              window.location.href = `/startup/${planetData.startup_id}/`;
-            }
-          }
-        });
+  lastInteractionTime = Date.now();
+});
 
-        // Обработчик кнопки "Все стартапы"
-        if (allStartupsBtn) {
-          allStartupsBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            window.location.href = '/startups/';
-          });
-        }
+moreDetails.addEventListener('click', () => {
+  const activePlanet = document.querySelector('.planet.active');
+  if (activePlanet) {
+    const id = activePlanet.getAttribute('data-id');
+    const planetData = planetsData.find(p => p.id == id);
+    if (planetData && planetData.startup_id) {
+      window.location.href = `/startup/${planetData.startup_id}/`;
+    }
+  }
+});
 
-        // Переменные для перемещения и масштабирования
-        let isDragging = false;
-        let startX, startY;
-        let offsetX = 0;
-        let offsetY = 0;
-        let scale = 1;
+// Обработчик кнопки "Все стартапы"
+if (allStartupsBtn) {
+  allStartupsBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    window.location.href = '/startups/';
+  });
+}
 
-        solarSystem.addEventListener('mousedown', (e) => {
-          e.preventDefault();
-          isDragging = true;
-          startX = e.clientX;
-          startY = e.clientY;
-          solarSystem.classList.add('dragging');
-          lastInteractionTime = Date.now();
-          isReturningToCenter = false;
-        });
+// Переменные для перемещения и масштабирования
+let isDragging = false;
+let startX, startY;
+let offsetX = 0;
+let offsetY = 0;
+let scale = 1;
 
-        document.addEventListener('mousemove', (e) => {
-          if (!isDragging) return;
+solarSystem.addEventListener('mousedown', (e) => {
+  e.preventDefault();
+  isDragging = true;
+  startX = e.clientX;
+  startY = e.clientY;
+  solarSystem.classList.add('dragging');
+  lastInteractionTime = Date.now();
+  isReturningToCenter = false;
+});
 
-          const deltaX = e.clientX - startX;
-          const deltaY = e.clientY - startY;
+document.addEventListener('mousemove', (e) => {
+  if (!isDragging) return;
 
-          offsetX += deltaX;
-          offsetY += deltaY;
+  const deltaX = e.clientX - startX;
+  const deltaY = e.clientY - startY;
 
-          offsetX = Math.max(-window.innerWidth / 2, Math.min(window.innerWidth / 2, offsetX));
-          offsetY = Math.max(-window.innerHeight / 2, Math.min(window.innerHeight / 2, offsetY));
+  offsetX += deltaX;
+  offsetY += deltaY;
 
-          scene.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
-          startX = e.clientX;
-          startY = e.clientY;
+  offsetX = Math.max(-window.innerWidth / 2, Math.min(window.innerWidth / 2, offsetX));
+  offsetY = Math.max(-window.innerHeight / 2, Math.min(window.innerHeight / 2, offsetY));
 
-          lastInteractionTime = Date.now();
-        });
+  scene.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+  startX = e.clientX;
+  startY = e.clientY;
 
-        document.addEventListener('mouseup', () => {
-          isDragging = false;
-          solarSystem.classList.remove('dragging');
-          lastInteractionTime = Date.now();
-        });
+  lastInteractionTime = Date.now();
+});
 
-        solarSystem.addEventListener('wheel', (e) => {
-          e.preventDefault();
-          const delta = e.deltaY > 0 ? -0.1 : 0.1;
-          scale = Math.max(0.5, Math.min(3, scale + delta));
-          scene.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
-          lastInteractionTime = Date.now();
-          isReturningToCenter = false;
-        });
+document.addEventListener('mouseup', () => {
+  isDragging = false;
+  solarSystem.classList.remove('dragging');
+  lastInteractionTime = Date.now();
+});
 
-        // Функция для проверки бездействия и возвращения к центру
-        function checkInactivity() {
-          const now = Date.now();
-          if (now - lastInteractionTime >= inactivityTimeout && !isReturningToCenter && !isPaused) {
-            isReturningToCenter = true;
-            const startX = offsetX;
-            const startY = offsetY;
-            const duration = 1000;
-            let startTime = null;
+solarSystem.addEventListener('wheel', (e) => {
+  e.preventDefault();
+  const delta = e.deltaY > 0 ? -0.1 : 0.1;
+  scale = Math.max(0.5, Math.min(3, scale + delta));
+  scene.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+  lastInteractionTime = Date.now();
+  isReturningToCenter = false;
+});
 
-            function animateReturn(timestamp) {
-              if (!startTime) startTime = timestamp;
-              const elapsed = timestamp - startTime;
-              const progress = Math.min(elapsed / duration, 1);
+// Функция для проверки бездействия и возвращения к центру
+function checkInactivity() {
+  const now = Date.now();
+  if (now - lastInteractionTime >= inactivityTimeout && !isReturningToCenter && !isPaused) {
+    isReturningToCenter = true;
+    const startX = offsetX;
+    const startY = offsetY;
+    const duration = 1000;
+    let startTime = null;
 
-              offsetX = startX + (0 - startX) * progress;
-              offsetY = startY + (0 - startY) * progress;
+    function animateReturn(timestamp) {
+      if (!startTime) startTime = timestamp;
+      const elapsed = timestamp - startTime;
+      const progress = Math.min(elapsed / duration, 1);
 
-              scene.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+      offsetX = startX + (0 - startX) * progress;
+      offsetY = startY + (0 - startY) * progress;
 
-              if (progress < 1) {
-                requestAnimationFrame(animateReturn);
-              } else {
-                isReturningToCenter = false;
-              }
-            }
+      scene.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
 
-            requestAnimationFrame(animateReturn);
-          }
-        }
+      if (progress < 1) {
+        requestAnimationFrame(animateReturn);
+      } else {
+        isReturningToCenter = false;
+      }
+    }
 
-        // Периодически проверяем бездействие
-        setInterval(checkInactivity, 1000);
+    requestAnimationFrame(animateReturn);
+  }
+}
 
-        // Функция для обновления позиций планет
-        function updatePlanets() {
-          const now = Date.now();
+// Периодически проверяем бездействие
+setInterval(checkInactivity, 1000);
 
-          if (isPaused) {
-            requestAnimationFrame(updatePlanets);
-            return;
-          }
+// Функция для обновления позиций планет
+function updatePlanets() {
+  const now = Date.now();
 
-          planetObjects.forEach(planetObj => {
-            // Вычисляем текущее положение планеты на орбите
-            const elapsedSeconds = (now - planetObj.startTime) / 1000;
-            const orbitTimeSeconds = planetObj.orbitTime * planetObj.speedFactor;
-            const progress = (elapsedSeconds % orbitTimeSeconds) / orbitTimeSeconds;
-            const angle = planetObj.angle + progress * 360;
-            const angleRad = angle * Math.PI / 180;
-            
-            // Вычисляем позицию на орбите
-            const radius = planetObj.orbitSize / 2;
-            const x = Math.cos(angleRad) * radius;
-            const y = Math.sin(angleRad) * radius;
-            
-            // Устанавливаем положение планеты на орбите
-            planetObj.orientation.style.left = `${50 + 50 * (x / radius)}%`;
-            planetObj.orientation.style.top = `${50 + 50 * (y / radius)}%`;
+  if (isPaused) {
+    requestAnimationFrame(updatePlanets);
+    return;
+  }
 
-            // Компенсация поворота для ориентации лицевой стороной к зрителю
-            const tiltCompensation = -galaxyTiltAngle;
-            
-            // Применяем трансформации к планете
-            planetObj.element.style.transform = `rotateX(${tiltCompensation}deg)`;
-          });
-          
-          // Запрашиваем следующий кадр анимации
-          requestAnimationFrame(updatePlanets);
-        }
+  planetObjects.forEach(planetObj => {
+    // Вычисляем текущее положение планеты на орбите
+    const elapsedSeconds = (now - planetObj.startTime) / 1000;
+    const orbitTimeSeconds = planetObj.orbitTime * planetObj.speedFactor;
+    const progress = (elapsedSeconds % orbitTimeSeconds) / orbitTimeSeconds;
+    const angle = planetObj.angle + progress * 360;
+    const angleRad = angle * Math.PI / 180;
+    
+    // Вычисляем позицию на орбите
+    const radius = planetObj.orbitSize / 2;
+    const x = Math.cos(angleRad) * radius;
+    const y = Math.sin(angleRad) * radius;
+    
+    // Устанавливаем положение планеты на орбите
+    planetObj.orientation.style.left = `${50 + 50 * (x / radius)}%`;
+    planetObj.orientation.style.top = `${50 + 50 * (y / radius)}%`;
 
-        // Обработчики для категорий
-        document.querySelectorAll('.galaxy-item').forEach(item => {
-          item.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            const categoryName = this.dataset.name;
-            if (categoryName && categoryName !== selectedGalaxy) {
-              const newUrl = `{% url 'planetary_system' %}?direction=${encodeURIComponent(categoryName)}`;
-              window.location.href = newUrl;
-            }
-          });
-        });
+    // Компенсация поворота для ориентации лицевой стороной к зрителю
+    const tiltCompensation = -galaxyTiltAngle;
+    
+    // Применяем трансформации к планете
+    planetObj.element.style.transform = `rotateX(${tiltCompensation}deg)`;
+  });
+  
+  // Запрашиваем следующий кадр анимации
+  requestAnimationFrame(updatePlanets);
+}
 
-        // Запускаем анимацию
-        updatePlanets();
-      </script>
-    {% endblock %}
-</body>
-</html> 
+// Обработчики для категорий
+document.querySelectorAll('.galaxy-item').forEach(item => {
+  item.addEventListener('click', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const categoryName = this.dataset.name;
+    if (categoryName && categoryName !== selectedGalaxy) {
+      const newUrl = `{% url 'planetary_system' %}?direction=${encodeURIComponent(categoryName)}`;
+      window.location.href = newUrl;
+    }
+  });
+});
+
+// Запускаем анимацию
+updatePlanets();
+</script>
+{% endblock %} 
