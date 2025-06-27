@@ -26,8 +26,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const galaxyItems = document.querySelectorAll('.galaxy-item');
     const planets = document.querySelectorAll('.planet');
 
-    // Инициализация планетарной системы
-    initializePlanetarySystem();
+    // Инициализация планетарной системы - убираем сложную логику
+    console.log('Планетарная система инициализирована без дополнительной настройки');
 
     // Функция для отображения карточки стартапа
     function showStartupCard(startupData) {
@@ -164,60 +164,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Функция инициализации планетарной системы
-    function initializePlanetarySystem() {
-        // Настройка планет с правильными параметрами орбит
-        planets.forEach((planet, index) => {
-            const planetId = parseInt(planet.dataset.id);
-            const planetData = planetsData.find(p => p.id === planetId);
-            
-            if (planetData) {
-                const orbit = planet.closest('.orbit');
-                const planetOrientation = planet.parentElement;
-                
-                if (orbit && planetOrientation) {
-                    // Устанавливаем правильные размеры орбиты и планеты
-                    orbit.style.setProperty('--orbit-size', `${planetData.orbit_size}px`);
-                    orbit.style.setProperty('--orbit-time', `${planetData.orbit_time}s`);
-                    planet.style.setProperty('--planet-size', `${planetData.planet_size}px`);
-                    
-                    // Устанавливаем изображение планеты
-                    planet.style.backgroundImage = `url('${planetData.image}')`;
-                    
-                    // Добавляем случайную задержку для более естественного вида
-                    const randomDelay = Math.random() * planetData.orbit_time;
-                    planetOrientation.style.animationDelay = `-${randomDelay}s`;
-                    planet.style.animationDelay = `-${randomDelay}s`;
-                    
-                    console.log(`Планета ${planetId} инициализирована:`, {
-                        orbitSize: planetData.orbit_size,
-                        orbitTime: planetData.orbit_time,
-                        planetSize: planetData.planet_size
-                    });
-                }
-            }
-        });
-        
-        // Настройка логотипа
-        const logo = document.getElementById('logo');
-        if (logo && data.logoImage) {
-            // Создаем элемент для фонового изображения
-            const logoBackground = document.createElement('div');
-            logoBackground.style.cssText = `
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background-image: url('${data.logoImage}');
-                background-size: cover;
-                background-position: center;
-                border-radius: 50%;
-                z-index: -1;
-            `;
-            logo.appendChild(logoBackground);
-        }
-    }
+    // Убираем сложную функцию инициализации
 
     // Инициализация: скрываем карточку при загрузке
     hideStartupCard();

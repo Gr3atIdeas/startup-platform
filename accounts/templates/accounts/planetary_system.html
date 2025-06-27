@@ -18,7 +18,7 @@
           <div id="solar-system">
             <div id="scene">
               <div id="galaxy">
-                <div id="logo"></div>
+                <div id="logo" style="background-image: url('{% static 'accounts/images/planetary_system/solar.png' %}');"></div>
                 {% for planet in planets_data %}
                   <div class="orbit" style="--orbit-size: {{ planet.orbit_size }}px; --orbit-time: {{ planet.orbit_time }}s;">
                     {% if planet.planet_size > 0 %}
