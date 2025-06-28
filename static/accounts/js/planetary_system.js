@@ -333,4 +333,64 @@
     const eng = el.textContent.trim();
     if (translate[eng]) el.textContent = translate[eng];
   });
+
+  /* ---------------------------------------------------------
+   *  DEBUG MODE
+   *  Включается, если в URL есть параметр ?debugplanet (регистр не важен)
+   *  – Показывает оверлей с количеством DOM-планет, данных и статусом анимации
+   *  – Добавляет красные рамки планетам и синие орбитам
+   *  – Экспортирует объект window.planetaryDebug для ручных проверок
+   * --------------------------------------------------------- */
+
+  const debugMode = /[?&]debugplanet/i.test(window.location.search);
+
+  if (debugMode) {
+    console.info('%c[Planetary] DEBUG MODE ON', 'color:#0f0');
+
+    // Визуальные рамки
+    const styleEl = document.createElement('style');
+    styleEl.textContent = `
+      .planet.debug-highlight { outline: 1px solid #ff3333 !important; }
+      .orbit.debug-highlight   { outline: 1px dashed #3399ff !important; }
+    `;
+    document.head.appendChild(styleEl);
+
+    // Назначаем классы после рендера
+    window.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.planet').forEach(p => p.classList.add('debug-highlight'));
+      document.querySelectorAll('.orbit').forEach(o => o.classList.add('debug-highlight'));
+    });
+
+    // Оверлей
+    const overlay = document.createElement('div');
+    overlay.id = 'planetary-debug-overlay';
+    Object.assign(overlay.style, {
+      position: 'fixed',
+      top: '0',
+      right: '0',
+      background: 'rgba(0,0,0,0.7)',
+      color: '#0f0',
+      fontFamily: 'monospace',
+      fontSize: '12px',
+      padding: '6px 8px',
+      zIndex: 99999,
+      pointerEvents: 'none'
+    });
+    document.body.appendChild(overlay);
+
+    function refreshOverlay() {
+      overlay.textContent = `DOM planets: ${document.querySelectorAll('.planet').length} | Data planets: ${planetsData.length} | Paused: ${isPaused} | Anim objs: ${planetObjects.length}`;
+    }
+    refreshOverlay();
+    setInterval(refreshOverlay, 1000);
+
+    // Экспорт для ручной проверки в консоли
+    window.planetaryDebug = {
+      planetsData,
+      planetsElements: planets,
+      planetObjects,
+      isPausedRef: () => isPaused,
+      refreshOverlay
+    };
+  }
 })(); 
