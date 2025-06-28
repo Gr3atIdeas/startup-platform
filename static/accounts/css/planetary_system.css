@@ -660,3 +660,9 @@
     border-radius: 20px;
     line-height: 1;
 }
+
+/* DEBUG: подсветка границ */
+#solar-system  { outline:2px solid red !important; }
+#scene         { outline:2px dashed orange !important; }
+#galaxy        { outline:2px dotted lime !important; }
+.orbit         { outline:1px solid cyan !important; }
