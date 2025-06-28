@@ -2822,7 +2822,7 @@ html::-webkit-scrollbar-button {
 }
 
 /* --- Planetary System Integration --- */
-#planetary-system-container {
+.main-demo #planetary-system-container {
     position: absolute;
     top: 0;
     left: 50%; /* Начинаем от середины блока .featured */
@@ -2831,14 +2831,14 @@ html::-webkit-scrollbar-button {
     pointer-events: none; /* Контейнер не перехватывает клики */
 }
 
-#solar-system {
+.main-demo #solar-system {
     width: 100%;
     height: 100%;
     position: relative;
     perspective: 1000px;
 }
 
-#scene {
+.main-demo #scene {
     position: absolute;
     top: 50%;
     left: 35%; /* Смещаем центр сцены (и орбит) */
@@ -2846,7 +2846,7 @@ html::-webkit-scrollbar-button {
     transform-style: preserve-3d;
 }
 
-#galaxy {
+.main-demo #galaxy {
     position: absolute;
     top: 0;
     left: 0;
@@ -2854,7 +2854,7 @@ html::-webkit-scrollbar-button {
     transform-style: preserve-3d;
 }
 
-#sun-container {
+.main-demo #sun-container {
     position: absolute;
     top: 50%;
     left: 85%; /* Устанавливаем солнце в тот же центр, что и орбиты */
@@ -2865,13 +2865,13 @@ html::-webkit-scrollbar-button {
     pointer-events: none; /* Не мешает кликам */
 }
 
-#sun-image {
+.main-demo #sun-image {
     width: 100%;
     height: 100%;
     object-fit: contain;
 }
 
-#sun-logo-container {
+.main-demo #sun-logo-container {
     position: absolute;
     top: 0;
     left: 0;
@@ -2883,16 +2883,16 @@ html::-webkit-scrollbar-button {
     z-index: 3; /* Логотип над картинкой солнца */
 }
 
-#sun-logo-container svg {
+.main-demo #sun-logo-container svg {
     width: 60px; /* Уменьшаем логотип пропорционально */
     height: auto;
 }
 
-#sun-logo-container svg path {
+.main-demo #sun-logo-container svg path {
     fill: black !important;
 }
 
-.orbit {
+.main-demo .orbit {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -2906,7 +2906,7 @@ html::-webkit-scrollbar-button {
     z-index: 1;
 }
 
-.planet-orientation {
+.main-demo .planet-orientation {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -2914,7 +2914,7 @@ html::-webkit-scrollbar-button {
     will-change: transform;
 }
 
-.planet {
+.main-demo .planet {
     position: absolute;
     width: var(--planet-size);
     height: var(--planet-size);
@@ -2932,11 +2932,11 @@ html::-webkit-scrollbar-button {
     box-shadow: none !important;
 }
 
-.planet:hover {
+.main-demo .planet:hover {
     transform: scale(1.1) rotateX(-45deg);
 }
 
-#plus-planet-link {
+.main-demo #plus-planet-link {
     pointer-events: all; /* Ссылка с планетой кликабельна */
     position: absolute;
     z-index: 100;
@@ -2945,13 +2945,13 @@ html::-webkit-scrollbar-button {
     transform: translate(-50%, -50%);
 }
 
-#plus-planet {
+.main-demo #plus-planet {
     width: 60px; /* Размер как на референсе */
     height: 60px;
     cursor: pointer;
     transition: transform 0.3s ease;
 }
 
-#plus-planet:hover {
+.main-demo #plus-planet:hover {
     transform: scale(1.15);
 }
