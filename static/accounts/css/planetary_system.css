@@ -671,3 +671,22 @@
 }
 
 /* Удалены outline для продакшн */
+
+/* КОНТЕЙНЕРЫ ПЛАНЕТ */
+.planet-orientation {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: planet-counter-rotate var(--orbit-time) linear infinite;
+    transform-style: preserve-3d;
+}
+
+/* старый класс для обратной совместимости */
+.planet-container {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: planet-counter-rotate linear infinite;
+}
