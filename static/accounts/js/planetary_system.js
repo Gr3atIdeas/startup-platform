@@ -1,191 +1,290 @@
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('Planetary system JavaScript loaded');
+// Planetary system universal script
+// Работает на страницах, где присутствует разметка планетарной системы и JSON-скрипт
+// с id = planetary-system-data | planetary-data | planetary-investments-data | planetary-startups-data
 
-    // Получаем данные из script тега
-    const dataScript = document.getElementById('planetary-system-data');
-    if (!dataScript) {
-        console.error('Не найден скрипт с данными планетарной системы');
-        return;
+(function() {
+  // Подбираем скрипт с данными
+  const dataScript = document.getElementById('planetary-system-data')
+                    || document.getElementById('planetary-data')
+                    || document.getElementById('planetary-investments-data')
+                    || document.getElementById('planetary-startups-data');
+  if (!dataScript) {
+    console.warn('[Planetary] JSON-скрипт с данными не найден');
+    return;
+  }
+
+  let data;
+  try {
+    data = JSON.parse(dataScript.textContent);
+  } catch (e) {
+    console.error('[Planetary] Ошибка парсинга данных:', e);
+    return;
+  }
+
+  const planetsData   = data.planetsData   || data.planets   || [];
+  const directionsData = data.directionsData || data.directions || [];
+  const selectedGalaxy = data.selectedGalaxy || '';
+  const logoData      = { image: data.logoImage || (data.logo ? data.logo.image : '') };
+  const urls          = data.urls || {};
+
+  // DOM-элементы
+  const planets           = document.querySelectorAll('.planet');
+  const infoCard          = document.getElementById('info-card');
+  const planetImage       = document.getElementById('planet-image');
+  const startupName       = document.getElementById('startup-name');
+  const startupRating     = document.getElementById('startup-rating');
+  const startupProgress   = document.getElementById('startup-progress');
+  const startupFunding    = document.getElementById('startup-funding');
+  const startupInvestors  = document.getElementById('startup-investors');
+  const startupDescription= document.getElementById('startup-description');
+  const closeCard         = document.getElementById('close-card');
+  const moreDetails       = document.getElementById('more-details');
+  const solarSystem       = document.getElementById('solar-system');
+  const scene             = document.getElementById('scene');
+  const logoElement       = document.getElementById('logo');
+  const allStartupsBtn    = document.querySelector('.all-startups-button');
+  const navLeftBtn        = document.getElementById('nav-left-btn');
+  const navRightBtn       = document.getElementById('nav-right-btn');
+  const fullscreenBtn     = document.getElementById('fullscreen-btn');
+  const galaxyListElem    = document.getElementById('galaxy-list');
+
+  // Солнце + текст
+  if (logoElement) {
+    const sunImgUrl = '/static/accounts/images/planetary_system/solar.png';
+    logoElement.style.backgroundImage = `url('${sunImgUrl}')`;
+    if (logoData.image) {
+      const txtImg = document.createElement('img');
+      txtImg.src = logoData.image;
+      txtImg.style.width = '80%';
+      txtImg.style.height = 'auto';
+      txtImg.style.objectFit = 'contain';
+      txtImg.style.pointerEvents = 'none';
+      logoElement.appendChild(txtImg);
     }
+  }
 
-    let data;
-    try {
-        data = JSON.parse(dataScript.textContent);
-    } catch (e) {
-        console.error('Ошибка парсинга данных:', e);
-        return;
-    }
+  // --- Переменные для анимации / управления ---
+  const planetObjects = [];
+  const galaxyTiltAngle = 45;
+  let isPaused = false;
+  let pausedTime = 0;
+  let lastInteractionTime = Date.now();
+  const inactivityTimeout = 10000;
+  let isReturningToCenter = false;
 
-    const { planetsData, directionsData, selectedGalaxy, urls } = data;
-    console.log('Данные загружены:', { planetsData, directionsData, selectedGalaxy });
+  // --- Инициализация планет
+  planets.forEach((planet) => {
+    const orbit = planet.closest('.orbit');
+    const planetOrientation = planet.closest('.planet-orientation');
+    if (!orbit || !planetOrientation) return;
 
-    // Элементы DOM
-    const infoCard = document.getElementById('info-card');
-    const closeCardBtn = document.getElementById('close-card');
-    const allStartupsBtn = document.querySelector('.all-startups-button');
-    const galaxyItems = document.querySelectorAll('.galaxy-item');
-    const planets = document.querySelectorAll('.planet');
+    const orbitSize = parseFloat(getComputedStyle(orbit).getPropertyValue('--orbit-size'));
+    const orbitTime = parseFloat(getComputedStyle(orbit).getPropertyValue('--orbit-time'));
 
-    // Инициализация планетарной системы
-    initializePlanets();
+    const initialAngle = Math.random() * 360;
+    const speedFactor  = 0.8 + Math.random() * 0.4;
 
-    // Функция для отображения карточки стартапа
-    function showStartupCard(startupData) {
-        if (!startupData || !infoCard) return;
-
-        // Заполняем данные
-    const planetImage = document.getElementById('planet-image');
-    const startupName = document.getElementById('startup-name');
-    const startupRating = document.getElementById('startup-rating');
-    const startupProgress = document.getElementById('startup-progress');
-    const startupFunding = document.getElementById('startup-funding');
-    const startupInvestors = document.getElementById('startup-investors');
-    const startupDescription = document.getElementById('startup-description');
-        const moreDetailsBtn = document.getElementById('more-details');
-
-        if (planetImage) planetImage.style.backgroundImage = `url('${startupData.image}')`;
-        if (startupName) startupName.textContent = startupData.name || 'Название не указано';
-        if (startupRating) startupRating.textContent = `Рейтинг: ${startupData.rating || 0}`;
-        if (startupProgress) {
-            startupProgress.textContent = startupData.progress || '0%';
-            startupProgress.style.width = startupData.progress || '0%';
-        }
-        if (startupFunding) startupFunding.textContent = `Цель: ${startupData.funding_goal || 'Не указана'}`;
-        if (startupInvestors) startupInvestors.textContent = `Инвесторы: ${startupData.investors || 0}`;
-        if (startupDescription) startupDescription.textContent = startupData.description || 'Описание не указано';
-        
-        if (moreDetailsBtn) {
-            moreDetailsBtn.onclick = function() {
-                window.location.href = `/startup/${startupData.startup_id}/`;
-            };
-        }
-
-        // Показываем карточку
-        infoCard.style.display = 'block';
-        infoCard.classList.add('active');
-    }
-
-    // Функция для скрытия карточки
-    function hideStartupCard() {
-        if (infoCard) {
-            infoCard.style.display = 'none';
-            infoCard.classList.remove('active');
-        }
-    }
-
-    // Обработчики событий для планет
-    planets.forEach(planet => {
-        planet.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            const planetId = parseInt(this.dataset.id);
-            const startupData = planetsData.find(p => p.id === planetId);
-            
-            if (startupData) {
-                console.log('Клик по планете:', startupData);
-                showStartupCard(startupData);
-            }
-        });
-
-        // Эффект при наведении - убираем старые обработчики, так как теперь используем CSS
+    planetObjects.push({
+      element: planet,
+      orientation: planetOrientation,
+      orbitSize: orbitSize,
+      orbitTime: orbitTime,
+      angle: initialAngle,
+      speedFactor: speedFactor,
+      startTime: Date.now() - Math.random() * orbitTime * 1000
     });
 
-    // Обработчик закрытия карточки
-    if (closeCardBtn) {
-        closeCardBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            hideStartupCard();
-        });
+    // Картинка планеты
+    const id = planet.getAttribute('data-id');
+    const pData = planetsData.find(p => p.id == id);
+    if (pData && pData.image) {
+      planet.style.backgroundImage = `url('${pData.image}')`;
     }
 
-    // Закрытие карточки по клику вне её
-    document.addEventListener('click', function(e) {
-        if (infoCard && infoCard.style.display === 'block' && !infoCard.contains(e.target)) {
-            hideStartupCard();
-        }
+    // Клик по планете → карточка
+    planet.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (!pData) return;
+
+      planetImage.style.backgroundImage = `url('${pData.image}')`;
+      startupName.textContent       = pData.name || 'Название не указано';
+      startupRating.textContent     = `Рейтинг ${pData.rating || '0'}/5`;
+      startupProgress.textContent   = pData.progress || '0%';
+      startupFunding.textContent    = `Цель финансирования: ${pData.funding_goal || 'Не указана'}`;
+      startupInvestors.textContent  = `Инвесторов: ${pData.investors || 0}`;
+      startupDescription.textContent= pData.description || 'Описание не указано';
+
+      planets.forEach(p => p.classList.remove('active'));
+      planet.classList.add('active');
+      infoCard.style.display = 'block';
+
+      isPaused = true;
+      pausedTime = Date.now();
+      lastInteractionTime = Date.now();
+    });
+  });
+
+  // Закрытие карточки
+  if (closeCard) {
+    closeCard.addEventListener('click', () => {
+      infoCard.style.display = 'none';
+      planets.forEach(p => p.classList.remove('active'));
+      if (isPaused) {
+        const pauseDuration = Date.now() - pausedTime;
+        planetObjects.forEach(o => { o.startTime += pauseDuration; });
+        isPaused = false;
+      }
+      lastInteractionTime = Date.now();
+    });
+  }
+
+  // «Подробнее»
+  if (moreDetails) {
+    moreDetails.addEventListener('click', () => {
+      const activePlanet = document.querySelector('.planet.active');
+      if (!activePlanet) return;
+      const id = activePlanet.getAttribute('data-id');
+      const pData = planetsData.find(p => p.id == id);
+      if (pData && pData.startup_id) {
+        window.location.href = `/startup/${pData.startup_id}/`;
+      }
+    });
+  }
+
+  // Кнопка «Все стартапы»
+  if (allStartupsBtn) {
+    allStartupsBtn.addEventListener('click', e => {
+      e.preventDefault();
+      window.location.href = '/startups/';
+    });
+  }
+
+  // --- Drag / Zoom ---
+  let isDragging = false;
+  let startX, startY, offsetX = 0, offsetY = 0, scale = 1;
+  if (solarSystem) {
+    solarSystem.addEventListener('mousedown', e => {
+      e.preventDefault();
+      isDragging = true;
+      startX = e.clientX;
+      startY = e.clientY;
+      solarSystem.classList.add('dragging');
+      lastInteractionTime = Date.now();
+      isReturningToCenter = false;
     });
 
-    // Обработчик кнопки "Все стартапы"
-    if (allStartupsBtn) {
-        allStartupsBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            console.log('Клик по кнопке "Все стартапы"');
-            
-            // Перенаправляем на страницу каталога
-            window.location.href = '/startups/';
-        });
-    }
-
-    // Обработчики для категорий
-    galaxyItems.forEach(item => {
-        item.addEventListener('click', function(e) {
-        e.preventDefault();
-            e.stopPropagation();
-            
-            const categoryName = this.dataset.name;
-            console.log('Клик по категории:', categoryName);
-            
-            if (categoryName && categoryName !== selectedGalaxy) {
-                // Перенаправляем на планетарную систему с фильтром
-                const newUrl = `${urls.planetarySystemBase}?direction=${encodeURIComponent(categoryName)}`;
-                window.location.href = newUrl;
-            }
-        });
-
-        // Эффект при наведении на категории
-        item.addEventListener('mouseenter', function() {
-            if (!this.classList.contains('selected')) {
-                this.style.transform = 'translateY(-5px) scale(1.05)';
-                this.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.3)';
-            }
-        });
-
-        item.addEventListener('mouseleave', function() {
-            if (!this.classList.contains('selected')) {
-                this.style.transform = '';
-                this.style.boxShadow = '';
-            }
-        });
+    document.addEventListener('mousemove', e => {
+      if (!isDragging) return;
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+      offsetX += dx;
+      offsetY += dy;
+      offsetX = Math.max(-window.innerWidth/2, Math.min(window.innerWidth/2, offsetX));
+      offsetY = Math.max(-window.innerHeight/2, Math.min(window.innerHeight/2, offsetY));
+      scene.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+      startX = e.clientX;
+      startY = e.clientY;
+      lastInteractionTime = Date.now();
     });
 
-    // Предотвращаем случайные клики по системе
-    const solarSystem = document.getElementById('solar-system');
-    if (solarSystem) {
-        solarSystem.addEventListener('click', function(e) {
-            // Если клик не по планете или кнопке, не делаем ничего
-            if (!e.target.classList.contains('planet') && 
-                !e.target.classList.contains('galaxy-item') && 
-                !e.target.classList.contains('all-startups-button')) {
-                e.preventDefault();
-                e.stopPropagation();
-            }
-        });
-    }
+    document.addEventListener('mouseup', () => {
+      isDragging = false;
+      solarSystem.classList.remove('dragging');
+      lastInteractionTime = Date.now();
+    });
 
-    // Функция инициализации планет
-    function initializePlanets() {
-        const planets = document.querySelectorAll('.planet');
-        
-        // Если есть данные о стартапах, используем их изображения
-        if (planetsData && planetsData.length > 0) {
-            planets.forEach((planet, index) => {
-                const planetData = planetsData[index % planetsData.length];
-                if (planetData && planetData.image) {
-                    planet.style.backgroundImage = `url('${planetData.image}')`;
-                    planet.dataset.startupId = planetData.id;
-                    planet.dataset.startupName = planetData.name || `Стартап ${index + 1}`;
-                    planet.dataset.startupDescription = planetData.description || 'Описание стартапа';
-                }
-            });
+    solarSystem.addEventListener('wheel', e => {
+      e.preventDefault();
+      const delta = e.deltaY > 0 ? -0.1 : 0.1;
+      scale = Math.max(0.5, Math.min(3, scale + delta));
+      scene.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+      lastInteractionTime = Date.now();
+      isReturningToCenter = false;
+    });
+  }
+
+  // --- Планетарная анимация ---
+  function updatePlanets() {
+    const now = Date.now();
+    if (isPaused) { requestAnimationFrame(updatePlanets); return; }
+    planetObjects.forEach(o => {
+      const elapsed  = (now - o.startTime) / 1000;
+      const period   = o.orbitTime * o.speedFactor;
+      const progress = (elapsed % period) / period;
+      const angleDeg = o.angle + progress * 360;
+      const angleRad = angleDeg * Math.PI / 180;
+      const radius   = o.orbitSize / 2;
+      const x = Math.cos(angleRad) * radius;
+      const y = Math.sin(angleRad) * radius;
+      o.orientation.style.left = `${50 + 50 * (x / radius)}%`;
+      o.orientation.style.top  = `${50 + 50 * (y / radius)}%`;
+      o.element.style.transform = `rotateX(${-galaxyTiltAngle}deg)`;
+    });
+    requestAnimationFrame(updatePlanets);
+  }
+  updatePlanets();
+
+  // --- Категории ---
+  document.querySelectorAll('.galaxy-item').forEach(item => {
+    item.addEventListener('click', e => {
+      e.preventDefault();
+      e.stopPropagation();
+      const catName = item.dataset.name;
+      if (!catName || catName === selectedGalaxy) return;
+      const base = urls.planetarySystemBase || window.location.pathname;
+      window.location.href = `${base}?direction=${encodeURIComponent(catName)}`;
+    });
+  });
+
+  // --- Навигация категорий ---
+  if (navLeftBtn && galaxyListElem) {
+    navLeftBtn.addEventListener('click', () => {
+      galaxyListElem.scrollBy({ left: -200, behavior: 'smooth' });
+    });
+  }
+  if (navRightBtn && galaxyListElem) {
+    navRightBtn.addEventListener('click', () => {
+      galaxyListElem.scrollBy({ left: 200, behavior: 'smooth' });
+    });
+  }
+
+  // --- Полноэкранный режим ---
+  if (fullscreenBtn) {
+    fullscreenBtn.addEventListener('click', () => {
+      const wrapper = document.querySelector('.planetary-system-wrapper');
+      if (!wrapper) return;
+      if (!document.fullscreenElement) {
+        wrapper.requestFullscreen().catch(err => console.warn(err));
+      } else {
+        document.exitFullscreen();
+      }
+    });
+  }
+
+  // --- Автоцентрирование при бездействии ---
+  function checkInactivity() {
+    const now = Date.now();
+    if (now - lastInteractionTime >= inactivityTimeout && !isReturningToCenter && !isPaused) {
+      isReturningToCenter = true;
+      const startX = offsetX;
+      const startY = offsetY;
+      const duration = 1000;
+      let startTime = null;
+      function animateReturn(ts) {
+        if (!startTime) startTime = ts;
+        const elapsed = ts - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        offsetX = startX * (1 - progress);
+        offsetY = startY * (1 - progress);
+        scene.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+        if (progress < 1) {
+          requestAnimationFrame(animateReturn);
+        } else {
+          isReturningToCenter = false;
         }
-        
-        console.log(`Инициализировано ${planets.length} планет`);
+      }
+      requestAnimationFrame(animateReturn);
     }
-
-    // Инициализация: скрываем карточку при загрузке
-    hideStartupCard();
-
-    console.log('Планетарная система инициализирована');
-}); 
+  }
+  setInterval(checkInactivity, 1000);
+})(); 

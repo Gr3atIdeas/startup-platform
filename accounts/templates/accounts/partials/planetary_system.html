@@ -1,0 +1,77 @@
+<div class="planetary-system-wrapper">
+  <div class="planetary-system-container">
+    <div class="space-background"></div>
+    <div class="stars"></div>
+    <button class="all-startups-button">Все стартапы</button>
+    <button class="nav-btn nav-left" id="nav-left-btn"><img src="{% static 'accounts/images/planetary_system/chevron_left.svg' %}" alt="prev"></button>
+    <button class="nav-btn nav-right" id="nav-right-btn"><img src="{% static 'accounts/images/planetary_system/chevron_right.svg' %}" alt="next"></button>
+    <button class="fullscreen-btn" id="fullscreen-btn"><img src="{% static 'accounts/images/planetary_system/scan-circle-outline.svg' %}" alt="fullscreen"></button>
+
+    <div id="solar-system">
+      <div id="scene">
+        <div id="galaxy">
+          <div id="logo"></div>
+          <!-- 6 орбит по 3 планеты -->
+          <div class="orbit" style="--orbit-size: 350px; --orbit-time: 80s;">
+            <div class="planet-orientation"><div class="planet" style="--planet-size: 60px;" data-id="1"></div></div>
+            <div class="planet-orientation"><div class="planet" style="--planet-size: 52px;" data-id="2"></div></div>
+            <div class="planet-orientation"><div class="planet" style="--planet-size: 48px;" data-id="3"></div></div>
+          </div>
+          <div class="orbit" style="--orbit-size: 500px; --orbit-time: 95s;">
+            <div class="planet-orientation"><div class="planet" style="--planet-size: 64px;" data-id="4"></div></div>
+            <div class="planet-orientation"><div class="planet" style="--planet-size: 56px;" data-id="5"></div></div>
+            <div class="planet-orientation"><div class="planet" style="--planet-size: 50px;" data-id="6"></div></div>
+          </div>
+          <div class="orbit" style="--orbit-size: 650px; --orbit-time: 110s;">
+            <div class="planet-orientation"><div class="planet" style="--planet-size: 58px;" data-id="7"></div></div>
+            <div class="planet-orientation"><div class="planet" style="--planet-size: 50px;" data-id="8"></div></div>
+            <div class="planet-orientation"><div class="planet" style="--planet-size: 44px;" data-id="9"></div></div>
+          </div>
+          <div class="orbit" style="--orbit-size: 800px; --orbit-time: 125s;">
+            <div class="planet-orientation"><div class="planet" style="--planet-size: 66px;" data-id="10"></div></div>
+            <div class="planet-orientation"><div class="planet" style="--planet-size: 58px;" data-id="11"></div></div>
+            <div class="planet-orientation"><div class="planet" style="--planet-size: 52px;" data-id="12"></div></div>
+          </div>
+          <div class="orbit" style="--orbit-size: 950px; --orbit-time: 140s;">
+            <div class="planet-orientation"><div class="planet" style="--planet-size: 60px;" data-id="13"></div></div>
+            <div class="planet-orientation"><div class="planet" style="--planet-size: 54px;" data-id="14"></div></div>
+            <div class="planet-orientation"><div class="planet" style="--planet-size: 46px;" data-id="15"></div></div>
+          </div>
+          <div class="orbit" style="--orbit-size: 1100px; --orbit-time: 160s;">
+            <div class="planet-orientation"><div class="planet" style="--planet-size: 64px;" data-id="16"></div></div>
+            <div class="planet-orientation"><div class="planet" style="--planet-size: 56px;" data-id="17"></div></div>
+            <div class="planet-orientation"><div class="planet" style="--planet-size: 48px;" data-id="18"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Карточка стартапа -->
+    <div id="info-card">
+      <button id="close-card">×</button>
+      <div class="planet-image" id="planet-image"></div>
+      <h2 id="startup-name"></h2>
+      <div class="rating" id="startup-rating"></div>
+      <div class="progress-bar">
+        <button>Выкуп+инвестирование</button>
+        <div class="progress" id="startup-progress"></div>
+      </div>
+      <div class="funding" id="startup-funding"></div>
+      <div class="investors" id="startup-investors"></div>
+      <div class="description" id="startup-description"></div>
+      <button class="more-details" id="more-details">Подробнее</button>
+    </div>
+
+    <!-- Селектор категорий -->
+    <div id="galaxy-selector">
+      <div id="galaxy-list">
+        {% for direction in directions %}
+          <div class="galaxy-item {% if direction.direction_name == selected_galaxy %}selected{% endif %}" data-name="{{ direction.direction_name }}">
+            <img src="{% static 'accounts/images/planetary_system/category_img.png' %}" class="category-icon" alt="cat">
+            <span class="category-text">{{ direction.direction_name }}</span>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div> 

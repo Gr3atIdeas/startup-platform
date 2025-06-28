@@ -635,3 +635,45 @@
     transform: scale(1.05);
     box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
 }
+
+/* --- Навигационные и полноэкранная кнопки --- */
+.nav-btn,
+.fullscreen-btn {
+    position: absolute;
+    bottom: 25px;
+    width: 62px;
+    height: 62px;
+    padding: 16px;
+    background: var(--Color7, #FFEF2B);
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+    z-index: 120;
+}
+.nav-left { left: 30px; }
+.nav-right { right: 30px; }
+.fullscreen-btn { right: 30px; bottom: 90px; }
+.nav-btn img,
+.fullscreen-btn img { width: 32px; height: 32px; }
+.nav-left img { transform: rotate(180deg); }
+
+/* --- Категории --- */
+.category-icon {
+    width: 32px;
+    height: 32px;
+    margin-bottom: 4px;
+}
+.galaxy-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+}
+.category-text {
+    font-size: 12px;
+}
