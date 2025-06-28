@@ -99,6 +99,14 @@
     const pData = planetsData.find(p => p.id == id);
     if (pData && pData.image) {
       planet.style.backgroundImage = `url('${pData.image}')`;
+    } else {
+      // Рандомное изображение с дисками / кольцами
+      const roundTotal = 15;
+      const ringTotal  = 6;
+      const useRing = Math.random() < 0.3;
+      const idx = Math.floor(Math.random() * (useRing ? ringTotal : roundTotal)) + 1;
+      const dir = useRing ? 'planets_ring' : 'planets_round';
+      planet.style.backgroundImage = `/static/accounts/images/planetary_system/${dir}/${idx}.png`;
     }
 
     // Клик по планете → карточка
