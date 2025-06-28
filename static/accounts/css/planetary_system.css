@@ -84,11 +84,13 @@
 }
 
 #galaxy {
-    position: relative;
+    position: absolute;
+    top: 50%;
+    left: 50%;
     width: 100%;
     height: 100%;
     transform-style: preserve-3d;
-    transform: rotateX(45deg);
+    transform: translate(-50%, -50%) rotateX(45deg);
 }
 
 /* СОЛНЦЕ В ЦЕНТРЕ */
@@ -117,20 +119,7 @@
     }
 }
 
-#logo::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 60px;
-    height: 30px;
-    background-image: url('/static/accounts/images/planetary_system/gi.svg');
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    z-index: 101;
-}
+#logo::after { display: none; }
 
 #logo .sun-img {
     position: absolute;

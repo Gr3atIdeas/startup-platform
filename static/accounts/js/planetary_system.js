@@ -109,6 +109,11 @@
       if (arr[idx]) planet.style.backgroundImage = `url('${arr[idx]}')`;
     }
 
+    // Устанавливаем атрибут направления (категории)
+    if (pData && pData.direction) {
+      planet.dataset.direction = pData.direction;
+    }
+
     // Клик по планете → карточка
     planet.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -237,16 +242,29 @@
   updatePlanets();
 
   // --- Категории ---
+  function filterByCategory(cat) {
+    planets.forEach(p => {
+      const dir = p.dataset.direction || '';
+      p.style.display = (!cat || dir === cat) ? '' : 'none';
+    });
+    document.querySelectorAll('.galaxy-item').forEach(el => {
+      el.classList.toggle('selected', el.dataset.name === cat);
+    });
+  }
+
   document.querySelectorAll('.galaxy-item').forEach(item => {
-    item.addEventListener('click', e => {
+    item.addEventListener('click', function(e) {
       e.preventDefault();
       e.stopPropagation();
-      const catName = item.dataset.name;
-      if (!catName || catName === selectedGalaxy) return;
-      const base = urls.planetarySystemBase || window.location.pathname;
-      window.location.href = `${base}?direction=${encodeURIComponent(catName)}`;
+      const categoryName = this.dataset.name;
+      filterByCategory(categoryName);
     });
   });
+
+  // При загрузке, если selectedGalaxy указан, отфильтруем
+  if (selectedGalaxy) {
+    filterByCategory(selectedGalaxy);
+  }
 
   // --- Навигация категорий ---
   if (navLeftBtn && galaxyListElem) {
