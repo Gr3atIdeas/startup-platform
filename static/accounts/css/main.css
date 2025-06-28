@@ -2841,16 +2841,16 @@ html::-webkit-scrollbar-button {
 .main-demo #scene {
     position: absolute;
     top: 50%;
-    left: 80%; /* Центр совпадает с солнцем справа */
+    left: 94%; /* выровнено по макету */
     transform: translate(-50%, -50%);
     transform-style: preserve-3d;
 }
 
 .main-demo #galaxy {
     position: absolute;
-    top: 0;
+    top: -23px;
     left: 0;
-    transform: rotateX(45deg);
+    transform: rotateX(47deg);
     transform-style: preserve-3d;
 }
 
@@ -2940,7 +2940,7 @@ html::-webkit-scrollbar-button {
     position: absolute;
     z-index: 100;
     top: 64%;
-    left: 47.5%;
+    left: 52.5%;
     transform: translate(-50%, -50%);
 }
 
@@ -2998,7 +2998,7 @@ html::-webkit-scrollbar-button {
     position: absolute;
     z-index: 100;
     top: 64%;
-    left: 47.5%;
+    left: 52.5%;
     transform: translate(-50%, -50%);
 }
 
