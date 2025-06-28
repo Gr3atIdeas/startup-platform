@@ -8,18 +8,18 @@
                     || document.getElementById('planetary-data')
                     || document.getElementById('planetary-investments-data')
                     || document.getElementById('planetary-startups-data');
-  if (!dataScript) {
+    if (!dataScript) {
     console.warn('[Planetary] JSON-скрипт с данными не найден');
-    return;
-  }
+        return;
+    }
 
-  let data;
-  try {
-    data = JSON.parse(dataScript.textContent);
-  } catch (e) {
+    let data;
+    try {
+        data = JSON.parse(dataScript.textContent);
+    } catch (e) {
     console.error('[Planetary] Ошибка парсинга данных:', e);
-    return;
-  }
+        return;
+    }
 
   const planetsData   = data.planetsData   || data.planets   || [];
   const directionsData = data.directionsData || data.directions || [];
@@ -116,7 +116,7 @@
 
     // Клик по планете → карточка
     planet.addEventListener('click', (e) => {
-      e.stopPropagation();
+            e.stopPropagation();
       if (!pData) return;
 
       planetImage.style.backgroundImage = `url('${pData.image}')`;
@@ -169,12 +169,12 @@
   }
 
   // Кнопка «Все стартапы»
-  if (allStartupsBtn) {
+    if (allStartupsBtn) {
     allStartupsBtn.addEventListener('click', e => {
-      e.preventDefault();
-      window.location.href = '/startups/';
-    });
-  }
+            e.preventDefault();
+            window.location.href = '/startups/';
+        });
+    }
 
   // --- Drag / Zoom ---
   let isDragging = false;
@@ -254,10 +254,10 @@
   }
 
   document.querySelectorAll('.galaxy-item').forEach(item => {
-    item.addEventListener('click', function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      const categoryName = this.dataset.name;
+        item.addEventListener('click', function(e) {
+        e.preventDefault();
+            e.stopPropagation();
+            const categoryName = this.dataset.name;
       filterByCategory(categoryName);
     });
   });
@@ -283,10 +283,10 @@
         wrapper.requestFullscreen().catch(err => console.warn(err));
       } else {
         document.exitFullscreen();
-      }
-    });
-  }
-
+                }
+            });
+        }
+        
   // --- Автоцентрирование при бездействии ---
   function checkInactivity() {
     const now = Date.now();

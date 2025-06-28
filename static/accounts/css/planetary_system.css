@@ -66,10 +66,11 @@
 
 #solar-system {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 50%;
+    left: 50%;
+    width: 1200px;
+    height: 1200px;
+    transform: translate(-50%, -50%);
     perspective: 1000px;
 }
 
@@ -87,12 +88,12 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 100%;
-    height: 100%;
+    width: 1200px;
+    height: 1200px;
     transform: translate(-50%, -50%) rotateX(45deg);
     transform-style: preserve-3d;
-    background-image: linear-gradient(to bottom, transparent, transparent); /* debug box */
-    z-index: 5;
+    transform-origin: 50% 50%;
+    background-image: linear-gradient(to bottom, transparent, transparent); /* 1x1 px заставит браузер задать content-box */
 }
 
 /* СОЛНЦЕ В ЦЕНТРЕ */
@@ -106,7 +107,7 @@
     border-radius: 50%;
     background: radial-gradient(circle at center, #FFD700 0%, #FFA500 50%, #FF8C00 100%);
     box-shadow: 0 0 50px rgba(255, 239, 43, 1), 0 0 100px rgba(255, 165, 0, 0.5);
-    z-index: 8;
+    z-index: 1000;
     border: 3px solid rgba(255, 239, 43, 0.8);
     animation: sun-glow 3s ease-in-out infinite alternate;
     overflow: visible;
@@ -156,7 +157,6 @@
     border-radius: 50%;
     transform: translate(-50%,-50%);
     animation: orbit-rotate linear infinite;
-    z-index: 6;
 }
 
 .orbit-1 { width: 140px; height: 140px; animation-duration: 10s; }
@@ -212,7 +212,6 @@
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    z-index: 7;
 }
 
 /* СЛУЧАЙНЫЕ ЦВЕТА ДЛЯ ПЛАНЕТ */
