@@ -2955,3 +2955,61 @@ html::-webkit-scrollbar-button {
 .main-demo #plus-planet:hover {
     transform: scale(1.15);
 }
+
+#sun-container {
+    position: absolute;
+    top: 50%;
+    left: 85%;
+    transform: translate(-50%, -50%);
+    width: 110px;
+    height: 110px;
+    z-index: 2;
+    pointer-events: none;
+}
+
+#sun-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+#sun-logo-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3;
+}
+
+#sun-logo-container svg {
+    width: 60px;
+    height: auto;
+}
+
+#sun-logo-container svg path {
+    fill: black !important;
+}
+
+#plus-planet-link {
+    pointer-events: all;
+    position: absolute;
+    z-index: 100;
+    top: 64%;
+    left: 47.5%;
+    transform: translate(-50%, -50%);
+}
+
+#plus-planet {
+    width: 60px;
+    height: 60px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+#plus-planet:hover {
+    transform: scale(1.15);
+}
