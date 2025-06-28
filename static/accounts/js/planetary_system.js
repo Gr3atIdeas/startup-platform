@@ -261,11 +261,6 @@
     });
   });
 
-  // При загрузке, если selectedGalaxy указан, отфильтруем
-  if (selectedGalaxy) {
-    filterByCategory(selectedGalaxy);
-  }
-
   // --- Навигация категорий ---
   if (navLeftBtn && galaxyListElem) {
     navLeftBtn.addEventListener('click', () => {
