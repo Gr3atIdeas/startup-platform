@@ -59,7 +59,7 @@
     const existing = logoElement.querySelector('.sun-text');
     if (existing) {
       existing.src = logoData.image;
-    }
+        }
   }
 
   // --- Переменные для анимации / управления ---
@@ -135,7 +135,7 @@
       pausedTime = Date.now();
       lastInteractionTime = Date.now();
     });
-  });
+    });
 
   // Закрытие карточки
   if (closeCard) {
@@ -148,8 +148,8 @@
         isPaused = false;
       }
       lastInteractionTime = Date.now();
-    });
-  }
+        });
+    }
 
   // «Подробнее»
   if (moreDetails) {
@@ -164,7 +164,7 @@
       }
       if (pData && pData.startup_id) {
         window.location.href = `/startup/${pData.startup_id}/`;
-      }
+        }
     });
   }
 
@@ -260,7 +260,7 @@
             const categoryName = this.dataset.name;
       filterByCategory(categoryName);
     });
-  });
+        });
 
   // --- Навигация категорий ---
   if (navLeftBtn && galaxyListElem) {
@@ -271,8 +271,8 @@
   if (navRightBtn && galaxyListElem) {
     navRightBtn.addEventListener('click', () => {
       galaxyListElem.scrollBy({ left: 200, behavior: 'smooth' });
-    });
-  }
+        });
+    }
 
   // --- Полноэкранный режим ---
   if (fullscreenBtn) {
