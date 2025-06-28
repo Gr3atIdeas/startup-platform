@@ -2841,7 +2841,7 @@ html::-webkit-scrollbar-button {
 .main-demo #scene {
     position: absolute;
     top: 50%;
-    left: 35%; /* Смещаем центр сцены (и орбит) */
+    left: 85%; /* Центр совпадает с солнцем справа */
     transform: translate(-50%, -50%);
     transform-style: preserve-3d;
 }
@@ -2921,8 +2921,7 @@ html::-webkit-scrollbar-button {
     margin-left: calc(-0.5 * var(--planet-size));
     margin-top: calc(-0.5 * var(--planet-size));
     border-radius: 50%;
-    /* Сначала цвет, потом изображение. Цвет заполнит прозрачные части PNG. */
-    background-color: #000; 
+    background-color: transparent; /* убираем черные "борты" */
     background-size: cover;
     background-position: center;
     transform-style: preserve-3d;
