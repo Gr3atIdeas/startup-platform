@@ -99,6 +99,5 @@ staticfiles/
 # Other
 /site
 /media
-/static
 *.swp
 *.swo
