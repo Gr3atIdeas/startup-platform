@@ -2848,8 +2848,8 @@ html::-webkit-scrollbar-button {
 
 .main-demo #galaxy {
     position: absolute;
-    top: -23px;
-    left: 0;
+    top: -204px;
+    left: -20px;
     transform: rotateX(47deg);
     transform-style: preserve-3d;
 }
