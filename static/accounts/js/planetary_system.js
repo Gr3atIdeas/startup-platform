@@ -72,7 +72,7 @@
   let isReturningToCenter = false;
 
   // --- Инициализация планет
-  planets.forEach((planet) => {
+  planets.forEach((planet, index) => {
     const orbit = planet.closest('.orbit');
     const planetOrientation = planet.closest('.planet-orientation');
     if (!orbit || !planetOrientation) return;
@@ -95,7 +95,10 @@
 
     // Картинка планеты
     const id = planet.getAttribute('data-id');
-    const pData = planetsData.find(p => p.id == id);
+    let pData = planetsData.find(p => p.id == id);
+    if (!pData) {
+      pData = planetsData[index];
+    }
     if (pData && pData.image) {
       planet.style.backgroundImage = `url('${pData.image}')`;
     } else {
@@ -149,7 +152,11 @@
       const activePlanet = document.querySelector('.planet.active');
       if (!activePlanet) return;
       const id = activePlanet.getAttribute('data-id');
-      const pData = planetsData.find(p => p.id == id);
+      let pData = planetsData.find(p => p.id == id);
+      if (!pData) {
+        const idx = [...planets].indexOf(activePlanet);
+        pData = planetsData[idx];
+      }
       if (pData && pData.startup_id) {
         window.location.href = `/startup/${pData.startup_id}/`;
       }
