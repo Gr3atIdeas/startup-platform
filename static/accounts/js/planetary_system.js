@@ -179,47 +179,46 @@
   // --- Drag / Zoom ---
   let isDragging = false;
   let startX, startY, offsetX = 0, offsetY = 0, scale = 1;
-  /* DEBUG: временно отключаем drag/zoom, чтобы убедиться в центрировании */
-  // if (solarSystem) {
-  //   solarSystem.addEventListener('mousedown', e => {
-  //     e.preventDefault();
-  //     isDragging = true;
-  //     startX = e.clientX;
-  //     startY = e.clientY;
-  //     solarSystem.classList.add('dragging');
-  //     lastInteractionTime = Date.now();
-  //     isReturningToCenter = false;
-  //   });
-  //
-  //   document.addEventListener('mousemove', e => {
-  //     if (!isDragging) return;
-  //     const dx = e.clientX - startX;
-  //     const dy = e.clientY - startY;
-  //     offsetX += dx;
-  //     offsetY += dy;
-  //     offsetX = Math.max(-window.innerWidth/2, Math.min(window.innerWidth/2, offsetX));
-  //     offsetY = Math.max(-window.innerHeight/2, Math.min(window.innerHeight/2, offsetY));
-  //     scene.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
-  //     startX = e.clientX;
-  //     startY = e.clientY;
-  //     lastInteractionTime = Date.now();
-  //   });
-  //
-  //   document.addEventListener('mouseup', () => {
-  //     isDragging = false;
-  //     solarSystem.classList.remove('dragging');
-  //     lastInteractionTime = Date.now();
-  //   });
-  //
-  //   solarSystem.addEventListener('wheel', e => {
-  //     e.preventDefault();
-  //     const delta = e.deltaY > 0 ? -0.1 : 0.1;
-  //     scale = Math.max(0.5, Math.min(3, scale + delta));
-  //     scene.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
-  //     lastInteractionTime = Date.now();
-  //     isReturningToCenter = false;
-  //   });
-  // }
+  if (solarSystem) {
+    solarSystem.addEventListener('mousedown', e => {
+      e.preventDefault();
+      isDragging = true;
+      startX = e.clientX;
+      startY = e.clientY;
+      solarSystem.classList.add('dragging');
+      lastInteractionTime = Date.now();
+      isReturningToCenter = false;
+    });
+
+    document.addEventListener('mousemove', e => {
+      if (!isDragging) return;
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+      offsetX += dx;
+      offsetY += dy;
+      offsetX = Math.max(-window.innerWidth/2, Math.min(window.innerWidth/2, offsetX));
+      offsetY = Math.max(-window.innerHeight/2, Math.min(window.innerHeight/2, offsetY));
+      scene.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+      startX = e.clientX;
+      startY = e.clientY;
+      lastInteractionTime = Date.now();
+    });
+
+    document.addEventListener('mouseup', () => {
+      isDragging = false;
+      solarSystem.classList.remove('dragging');
+      lastInteractionTime = Date.now();
+    });
+
+    solarSystem.addEventListener('wheel', e => {
+      e.preventDefault();
+      const delta = e.deltaY > 0 ? -0.1 : 0.1;
+      scale = Math.max(0.5, Math.min(3, scale + delta));
+      scene.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+      lastInteractionTime = Date.now();
+      isReturningToCenter = false;
+    });
+  }
 
   // --- Планетарная анимация ---
   function updatePlanets() {

@@ -100,7 +100,7 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%) rotateX(-45deg);
     width: 120px;
     height: 120px;
     border-radius: 50%;
@@ -152,9 +152,9 @@
     left: 50%;
     width: var(--orbit-size);
     height: var(--orbit-size);
-    border: 2px solid rgba(0,255,255,.5);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 50%;
-    transform: translate(-50%,-50%);
+    transform: translate(-50%, -50%);
     animation: orbit-rotate linear infinite;
     z-index: 6;
 }
@@ -668,8 +668,4 @@
     line-height: 1;
 }
 
-/* DEBUG: подсветка границ */
-#solar-system  { outline:2px solid red !important; }
-#scene         { outline:2px dashed orange !important; }
-#galaxy        { outline:2px dotted lime !important; }
-.orbit         { outline:1px solid cyan !important; }
+/* Удалены outline для продакшн */
