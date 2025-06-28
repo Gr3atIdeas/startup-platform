@@ -2841,7 +2841,7 @@ html::-webkit-scrollbar-button {
 .main-demo #scene {
     position: absolute;
     top: 50%;
-    left: 85%; /* Центр совпадает с солнцем справа */
+    left: 80%; /* Центр совпадает с солнцем справа */
     transform: translate(-50%, -50%);
     transform-style: preserve-3d;
 }
