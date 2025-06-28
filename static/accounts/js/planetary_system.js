@@ -49,17 +49,10 @@
   const galaxyListElem    = document.getElementById('galaxy-list');
 
   // Солнце + текст
-  if (logoElement) {
-    const sunImgUrl = '/static/accounts/images/planetary_system/solar.png';
-    logoElement.style.backgroundImage = `url('${sunImgUrl}')`;
-    if (logoData.image) {
-      const txtImg = document.createElement('img');
-      txtImg.src = logoData.image;
-      txtImg.style.width = '80%';
-      txtImg.style.height = 'auto';
-      txtImg.style.objectFit = 'contain';
-      txtImg.style.pointerEvents = 'none';
-      logoElement.appendChild(txtImg);
+  if (logoElement && logoData.image) {
+    const existing = logoElement.querySelector('.sun-text');
+    if (existing) {
+      existing.src = logoData.image;
     }
   }
 
@@ -295,4 +288,25 @@
     }
   }
   setInterval(checkInactivity, 1000);
+
+  // Перевод категорий на русский
+  const translate = {
+    'Auto': 'Авто',
+    'Beauty': 'Красота',
+    'Cafe': 'Кафе',
+    'Delivery': 'Доставка',
+    'Fastfood': 'Фастфуд',
+    'Finance': 'Финансы',
+    'Health': 'Здоровье',
+    'Healthcare': 'Медицина',
+    'Medicine': 'Медицина',
+    'Psychology': 'Психология',
+    'Sport': 'Спорт',
+    'Technology': 'Технологии',
+    'Transport': 'Транспорт'
+  };
+  document.querySelectorAll('.category-text').forEach(el => {
+    const eng = el.textContent.trim();
+    if (translate[eng]) el.textContent = translate[eng];
+  });
 })(); 

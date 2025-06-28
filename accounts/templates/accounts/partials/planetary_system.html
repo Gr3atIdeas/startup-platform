@@ -11,7 +11,10 @@
     <div id="solar-system">
       <div id="scene">
         <div id="galaxy">
-          <div id="logo"></div>
+          <div id="logo">
+            <img src="{% static 'accounts/images/planetary_system/solar.png' %}" alt="sun" class="sun-img">
+            <img src="{% static 'accounts/images/planetary_system/gi.svg' %}" alt="GI" class="sun-text">
+          </div>
           <!-- 6 орбит по 3 планеты -->
           <div class="orbit" style="--orbit-size: 350px; --orbit-time: 80s;">
             <div class="planet-orientation"><div class="planet" style="--planet-size: 60px;" data-id="1"></div></div>
