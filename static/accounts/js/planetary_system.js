@@ -48,6 +48,12 @@
   const fullscreenBtn     = document.getElementById('fullscreen-btn');
   const galaxyListElem    = document.getElementById('galaxy-list');
 
+  const fallbackScript = document.getElementById('planetary-fallback-images');
+  let fallbackImages = {round:[], ring:[]};
+  if (fallbackScript) {
+    try { fallbackImages = JSON.parse(fallbackScript.textContent); } catch(e){}
+  }
+
   // Солнце + текст
   if (logoElement && logoData.image) {
     const existing = logoElement.querySelector('.sun-text');
@@ -94,12 +100,10 @@
       planet.style.backgroundImage = `url('${pData.image}')`;
     } else {
       // Рандомное изображение с дисками / кольцами
-      const roundTotal = 15;
-      const ringTotal  = 6;
       const useRing = Math.random() < 0.3;
-      const idx = Math.floor(Math.random() * (useRing ? ringTotal : roundTotal)) + 1;
-      const dir = useRing ? 'planets_ring' : 'planets_round';
-      planet.style.backgroundImage = `/static/accounts/images/planetary_system/${dir}/${idx}.png`;
+      const arr = useRing ? fallbackImages.ring : fallbackImages.round;
+      const idx = Math.floor(Math.random() * arr.length);
+      if (arr[idx]) planet.style.backgroundImage = `url('${arr[idx]}')`;
     }
 
     // Клик по планете → карточка
