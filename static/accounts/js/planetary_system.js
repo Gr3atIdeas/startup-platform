@@ -117,15 +117,25 @@
     // Клик по планете → карточка
     planet.addEventListener('click', (e) => {
             e.stopPropagation();
-      if (!pData) return;
-
-      planetImage.style.backgroundImage = `url('${pData.image}')`;
-      startupName.textContent       = pData.name || 'Название не указано';
-      startupRating.textContent     = `Рейтинг ${pData.rating || '0'}/5`;
-      startupProgress.textContent   = pData.progress || '0%';
-      startupFunding.textContent    = `Цель финансирования: ${pData.funding_goal || 'Не указана'}`;
-      startupInvestors.textContent  = `Инвесторов: ${pData.investors || 0}`;
-      startupDescription.textContent= pData.description || 'Описание не указано';
+      if (!pData) {
+        // Fallback, если данных нет
+        const bg = getComputedStyle(planet).backgroundImage;
+        planetImage.style.backgroundImage = bg !== 'none' ? bg : 'linear-gradient(#3a7bd5,#3a6073)';
+        startupName.textContent       = 'Скоро здесь будет стартап';
+        startupRating.textContent     = '';
+        startupProgress.textContent   = '';
+        startupFunding.textContent    = '';
+        startupInvestors.textContent  = '';
+        startupDescription.textContent= 'Ожидаем загрузку данных…';
+      } else {
+        planetImage.style.backgroundImage = `url('${pData.image}')`;
+        startupName.textContent       = pData.name || 'Название не указано';
+        startupRating.textContent     = `Рейтинг ${pData.rating || '0'}/5`;
+        startupProgress.textContent   = pData.progress || '0%';
+        startupFunding.textContent    = `Цель финансирования: ${pData.funding_goal || 'Не указана'}`;
+        startupInvestors.textContent  = `Инвесторов: ${pData.investors || 0}`;
+        startupDescription.textContent= pData.description || 'Описание не указано';
+      }
 
       planets.forEach(p => p.classList.remove('active'));
       planet.classList.add('active');
