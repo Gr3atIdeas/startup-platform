@@ -238,29 +238,11 @@
     }, { passive: false });
   }
 
-  // --- Планетарная анимация ---
-  function updatePlanets() {
-    const now = Date.now();
-    if (isPaused) { requestAnimationFrame(updatePlanets); return; }
-    planetObjects.forEach(o => {
-      const elapsed  = (now - o.startTime) / 1000;
-      const period   = o.orbitTime * o.speedFactor;
-      const progress = (elapsed % period) / period;
-      const angleDeg = o.angle + progress * 360;
-      const angleRad = angleDeg * Math.PI / 180;
-      const radius   = o.orbitSize / 2;
-      const x = Math.cos(angleRad) * radius;
-      const y = Math.sin(angleRad) * radius;
-      /* Классическое позиционирование: центр + процент радиуса */
-      o.orientation.style.left = `${50 + (x / radius) * 50}%`;
-      o.orientation.style.top  = `${50 + (y / radius) * 50}%`;
-      o.orientation.style.transform = 'translate(-50%, -50%)';
-      /* Планета остаётся плоской диспой без доп. поворота - будет кругом */
-      o.element.style.transform = 'none';
-    });
-    requestAnimationFrame(updatePlanets);
+  /* ----------------  НАЧАЛЬНЫЙ ЗУМ ---------------- */
+  scale = 0.8; // переопределяем переменную, объявленную ниже вместе с drag-zoom
+  if (scene) {
+    scene.style.transform = `translate(-50%, -50%) scale(${scale})`;
   }
-  updatePlanets();
 
   // --- Категории ---
   function filterByCategory(cat) {
@@ -384,4 +366,17 @@
     starsContainer.innerHTML = ''; // очищаем старый фон
     starsContainer.appendChild(frag);
   })();
+
+  /* ----- ОТКЛЮЧИЛ JS-движение планет. CSS-анимации орбит делают всё сами ----- */
+
+  // Равномерно распределяем планеты по орбите через animation-delay
+  document.querySelectorAll('.orbit').forEach(orbitEl => {
+    const orientations = orbitEl.querySelectorAll('.planet-orientation');
+    const N = orientations.length;
+    orientations.forEach((ori, idx) => {
+      const orbitTime = parseFloat(getComputedStyle(orbitEl).getPropertyValue('--orbit-time')) || 60;
+      const delay = -(orbitTime * idx / N);
+      ori.style.animationDelay = `${delay}s`;
+    });
+  });
 })(); 
