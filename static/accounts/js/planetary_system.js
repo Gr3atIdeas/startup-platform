@@ -73,6 +73,7 @@
 
   // Для равномерного распределения – счётчик планет на каждой орбите
   const orbitCounters = new Map();
+  const orbitBaseAngles = new Map();
 
   // --- Инициализация планет
   planets.forEach((planet, index) => {
@@ -84,11 +85,16 @@
     const orbitTime = parseFloat(getComputedStyle(orbit).getPropertyValue('--orbit-time'));
 
     // Равномерный угол в пределах конкретной орбиты
-    if (!orbitCounters.has(orbit)) orbitCounters.set(orbit, 0);
+    if (!orbitCounters.has(orbit)) {
+      orbitCounters.set(orbit, 0);
+      /* случайный базовый угол 0-360 для этой орбиты */
+      orbitBaseAngles.set(orbit, Math.random() * 360);
+    }
     const idxInOrbit = orbitCounters.get(orbit);
     orbitCounters.set(orbit, idxInOrbit + 1);
     const orientationsInOrbit = orbit.querySelectorAll('.planet-orientation').length;
-    const initialAngle = (360 / orientationsInOrbit) * idxInOrbit;
+    const baseAngle = orbitBaseAngles.get(orbit);
+    const initialAngle = baseAngle + (360 / orientationsInOrbit) * idxInOrbit;
     // начальная позиция будет рассчитана в updatePlanets
 
     const speedFactor  = 0.8 + Math.random() * 0.4;
@@ -155,6 +161,9 @@
 
     /* Отключаем CSS-анимацию вращения контейнера, чтобы transform из JS не перезаписывался */
     planetOrientation.style.animation = 'none';
+
+    /* диску возвращаем поворот к камере */
+    planet.style.transform = 'rotateX(-60deg)';
 
     planetObjects.push({
       orientation: planetOrientation,
