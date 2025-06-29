@@ -27,6 +27,7 @@
     height: 100%;
     background: linear-gradient(180deg, rgba(5, 10, 20, 0.25) 0%, rgba(11, 20, 38, 0.15) 50%, rgba(30, 58, 138, 0.15) 100%);
     z-index: 1;
+    pointer-events: none;
 }
 
 .stars {
@@ -52,6 +53,7 @@
     background-size: 600px 400px;
     animation: twinkle 3s ease-in-out infinite alternate, parallax 80s linear infinite;
     z-index: 2;
+    pointer-events: none;
 }
 
 @keyframes twinkle {
@@ -158,6 +160,7 @@
     animation: orbit-rotate linear infinite;
     z-index: 6;
     box-shadow: none;
+    pointer-events: none;
 }
 
 .orbit-1 { width: 140px; height: 140px; animation-duration: 10s; }
@@ -216,6 +219,7 @@
     box-shadow: none;
     z-index: 7;
     opacity: 1 !important;
+    transform: rotateX(-60deg);
 }
 
 .planet.debug-highlight { outline: none !important; }
@@ -681,6 +685,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    animation: planet-counter-rotate var(--orbit-time) linear infinite;
     transform-style: preserve-3d;
 }
 
