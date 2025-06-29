@@ -71,6 +71,9 @@
   const inactivityTimeout = 10000;
   let isReturningToCenter = false;
 
+  // Для равномерного распределения по орбите
+  const orbitCounters = new Map();
+
   // --- Инициализация планет
   planets.forEach((planet, index) => {
     const orbit = planet.closest('.orbit');
@@ -80,7 +83,13 @@
     const orbitSize = parseFloat(getComputedStyle(orbit).getPropertyValue('--orbit-size'));
     const orbitTime = parseFloat(getComputedStyle(orbit).getPropertyValue('--orbit-time'));
 
-    const initialAngle = Math.random() * 360;
+    // Равномерный угол в пределах конкретной орбиты
+    if (!orbitCounters.has(orbit)) orbitCounters.set(orbit, 0);
+    const idxInOrbit = orbitCounters.get(orbit);
+    orbitCounters.set(orbit, idxInOrbit + 1);
+    const orientationsInOrbit = orbit.querySelectorAll('.planet-orientation').length;
+    const initialAngle = (360 / orientationsInOrbit) * idxInOrbit;
+
     const speedFactor  = 0.8 + Math.random() * 0.4;
 
     planetObjects.push({
@@ -195,7 +204,7 @@
 
   // --- Drag / Zoom ---
   let isDragging = false;
-  let startX, startY, offsetX = 0, offsetY = 0, scale = 1;
+  let startX, startY, offsetX = 0, offsetY = 0, scale = 0.8; // начальный масштаб 0.8
   if (solarSystem) {
     solarSystem.addEventListener('mousedown', e => {
       e.preventDefault();
@@ -239,9 +248,8 @@
   }
 
   /* ----------------  НАЧАЛЬНЫЙ ЗУМ ---------------- */
-  scale = 0.8; // переопределяем переменную, объявленную ниже вместе с drag-zoom
   if (scene) {
-    scene.style.transform = `translate(-50%, -50%) scale(${scale})`;
+    scene.style.transform = `translate(-50%, -50%) translate(0,0) scale(${scale})`;
   }
 
   // --- Категории ---
@@ -379,4 +387,24 @@
       ori.style.animationDelay = `${delay}s`;
     });
   });
+
+  // --- Планетарная анимация ---
+  function updatePlanets() {
+    const now = Date.now();
+    if (isPaused) { requestAnimationFrame(updatePlanets); return; }
+    planetObjects.forEach(o => {
+      const elapsed  = (now - o.startTime) / 1000;
+      const period   = o.orbitTime * o.speedFactor;
+      const progress = (elapsed % period) / period;
+      const angleDeg = o.angle + progress * 360;
+      const angleRad = angleDeg * Math.PI / 180;
+      const radius   = o.orbitSize / 2;
+      const x = Math.cos(angleRad) * radius;
+      const y = Math.sin(angleRad) * radius;
+      o.orientation.style.transform = `translate(-50%, -50%) translate3d(${x}px, ${y}px, 0)`;
+      o.element.style.transform = 'rotateX(-60deg)';
+    });
+    requestAnimationFrame(updatePlanets);
+  }
+  updatePlanets();
 })(); 
