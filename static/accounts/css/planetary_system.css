@@ -40,7 +40,7 @@
     background-image: radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,0.7), transparent);
     background-repeat: repeat;
     background-size: 600px 400px;
-    animation: star-drift 240s linear infinite, parallax 80s linear infinite;
+    animation: star-scroll 40s linear infinite;
     z-index: 2;
     pointer-events: none;
 }
@@ -52,7 +52,13 @@
 
 @keyframes parallax {
     from { background-position: 0 0; }
-    to { background-position: 600px 400px; }
+    to { background-position: -1200px 0; }
+}
+
+/* Горизонтальный скролл звёзд (фон повторяется) */
+@keyframes star-scroll {
+    from { background-position: 0 0; }
+    to   { background-position: -800px 0; }
 }
 
 /* Горизонтальный дрейф звёзд */
