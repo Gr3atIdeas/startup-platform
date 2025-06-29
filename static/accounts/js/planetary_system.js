@@ -71,7 +71,7 @@
   const inactivityTimeout = 10000;
   let isReturningToCenter = false;
 
-  // Для равномерного распределения по орбите
+  // Для равномерного распределения – счётчик планет на каждой орбите
   const orbitCounters = new Map();
 
   // --- Инициализация планет
@@ -89,25 +89,10 @@
     orbitCounters.set(orbit, idxInOrbit + 1);
     const orientationsInOrbit = orbit.querySelectorAll('.planet-orientation').length;
     const initialAngle = (360 / orientationsInOrbit) * idxInOrbit;
+    // Поворачиваем контейнер на стартовый угол
+    planetOrientation.style.transform = `translate(-50%, -50%) rotate(${initialAngle}deg)`;
 
     const speedFactor  = 0.8 + Math.random() * 0.4;
-
-    planetObjects.push({
-      element: planet,
-      orientation: planetOrientation,
-      orbitSize: orbitSize,
-      orbitTime: orbitTime,
-      angle: initialAngle,
-      speedFactor: speedFactor,
-      startTime: Date.now() - Math.random() * orbitTime * 1000
-    });
-
-    /* Случайный размер 60-90 px вместо заранее заданного */
-    const rndSize = 60 + Math.random() * 30; // 60-90
-    planet.style.width  = `${rndSize}px`;
-    planet.style.height = `${rndSize}px`;
-    planet.style.marginLeft = `${-rndSize / 2}px`;
-    planet.style.marginTop  = `${-rndSize / 2}px`;
 
     // Картинка планеты
     const id = planet.getAttribute('data-id');
@@ -375,36 +360,5 @@
     starsContainer.appendChild(frag);
   })();
 
-  /* ----- ОТКЛЮЧИЛ JS-движение планет. CSS-анимации орбит делают всё сами ----- */
-
-  // Равномерно распределяем планеты по орбите через animation-delay
-  document.querySelectorAll('.orbit').forEach(orbitEl => {
-    const orientations = orbitEl.querySelectorAll('.planet-orientation');
-    const N = orientations.length;
-    orientations.forEach((ori, idx) => {
-      const orbitTime = parseFloat(getComputedStyle(orbitEl).getPropertyValue('--orbit-time')) || 60;
-      const delay = -(orbitTime * idx / N);
-      ori.style.animationDelay = `${delay}s`;
-    });
-  });
-
-  // --- Планетарная анимация ---
-  function updatePlanets() {
-    const now = Date.now();
-    if (isPaused) { requestAnimationFrame(updatePlanets); return; }
-    planetObjects.forEach(o => {
-      const elapsed  = (now - o.startTime) / 1000;
-      const period   = o.orbitTime * o.speedFactor;
-      const progress = (elapsed % period) / period;
-      const angleDeg = o.angle + progress * 360;
-      const angleRad = angleDeg * Math.PI / 180;
-      const radius   = o.orbitSize / 2;
-      const x = Math.cos(angleRad) * radius;
-      const y = Math.sin(angleRad) * radius;
-      o.orientation.style.transform = `translate(-50%, -50%) translate3d(${x}px, ${y}px, 0)`;
-      o.element.style.transform = 'rotateX(-60deg)';
-    });
-    requestAnimationFrame(updatePlanets);
-  }
-  updatePlanets();
+  /* CSS-анимация окружностей управляет движением, JS больше не меняет координаты */
 })(); 
