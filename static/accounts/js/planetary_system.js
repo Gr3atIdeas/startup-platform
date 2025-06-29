@@ -89,8 +89,7 @@
     orbitCounters.set(orbit, idxInOrbit + 1);
     const orientationsInOrbit = orbit.querySelectorAll('.planet-orientation').length;
     const initialAngle = (360 / orientationsInOrbit) * idxInOrbit;
-    // Поворачиваем контейнер на стартовый угол
-    planetOrientation.style.transform = `translate(-50%, -50%) rotate(${initialAngle}deg)`;
+    // начальная позиция будет рассчитана в updatePlanets
 
     const speedFactor  = 0.8 + Math.random() * 0.4;
 
@@ -146,7 +145,16 @@
       pausedTime = Date.now();
       lastInteractionTime = Date.now();
     });
+
+    planetObjects.push({
+      orientation: planetOrientation,
+      orbitSize: orbitSize,
+      orbitTime: orbitTime,
+      angleStart: initialAngle,
+      speedFactor: speedFactor,
+      startTime: Date.now()
     });
+  });
 
   // Закрытие карточки
   if (closeCard) {
@@ -360,5 +368,21 @@
     starsContainer.appendChild(frag);
   })();
 
-  /* CSS-анимация окружностей управляет движением, JS больше не меняет координаты */
+  /* --- Планетарная анимация: только перемещаем контейнеры, диск не трогаем --- */
+  function updatePlanets() {
+    const now = Date.now();
+    planetObjects.forEach(o => {
+      const elapsed  = (now - o.startTime) / 1000;
+      const period   = o.orbitTime * o.speedFactor;
+      const progress = (elapsed % period) / period;
+      const angleDeg = o.angleStart + progress * 360;
+      const rad      = angleDeg * Math.PI/180;
+      const R        = o.orbitSize / 2;
+      const x = Math.cos(rad) * R;
+      const y = Math.sin(rad) * R;
+      o.orientation.style.transform = `translate(-50%, -50%) translate(${x}px, ${y}px)`;
+    });
+    requestAnimationFrame(updatePlanets);
+  }
+  updatePlanets();
 })(); 
