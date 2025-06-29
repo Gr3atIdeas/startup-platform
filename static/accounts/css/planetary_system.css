@@ -92,7 +92,7 @@
     left: 50%;
     width: 100%;
     height: 100%;
-    transform: translate(-50%, -50%) rotateX(60deg);
+    transform: translate(-50%, -50%);
     transform-style: preserve-3d;
     background-image: linear-gradient(to bottom, transparent, transparent); /* debug box */
     z-index: 5;
@@ -103,7 +103,7 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%) rotateX(-45deg);
+    transform: translate(-50%, -50%);
     width: 120px;
     height: 120px;
     border-radius: 50%;
@@ -240,12 +240,12 @@
 .planet-10 { background-color: #FF9F43; }
 
 .planet:hover {
-    transform: rotateX(-60deg) scale(1.2);
+    transform: scale(1.2);
     box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
 }
 
 .planet.active {
-    transform: rotateX(-60deg) scale(1.4);
+    transform: scale(1.4);
     box-shadow: 0 0 25px rgba(255, 239, 43, 0.8);
 }
 
