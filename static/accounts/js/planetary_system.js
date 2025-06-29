@@ -64,7 +64,7 @@
 
   // --- Переменные для анимации / управления ---
   const planetObjects = [];
-  const galaxyTiltAngle = 60;
+  const galaxyTilt = 65;
   let isPaused = false;
   let pausedTime = 0;
   let lastInteractionTime = Date.now();
@@ -163,7 +163,7 @@
     planetOrientation.style.animation = 'none';
 
     /* диску возвращаем поворот к камере */
-    planet.style.transform = 'rotateX(-60deg)';
+    planet.style.transform = `rotateX(-${galaxyTilt}deg)`;
 
     planetObjects.push({
       orientation: planetOrientation,
@@ -404,4 +404,7 @@
     requestAnimationFrame(updatePlanets);
   }
   updatePlanets();
+
+  // передаём в CSS
+  document.documentElement.style.setProperty('--galaxy-tilt', galaxyTilt + 'deg');
 })(); 
