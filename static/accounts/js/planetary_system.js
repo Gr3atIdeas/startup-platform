@@ -220,6 +220,7 @@
       lastInteractionTime = Date.now();
     });
 
+    /* Колёсико мыши — масштабирование. Указываем passive: false, чтобы избежать warning в Chrome */
     solarSystem.addEventListener('wheel', e => {
       e.preventDefault();
       const delta = e.deltaY > 0 ? -0.1 : 0.1;
@@ -227,7 +228,7 @@
       scene.style.transform = `translate(-50%, -50%) translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
       lastInteractionTime = Date.now();
       isReturningToCenter = false;
-    });
+    }, { passive: false });
   }
 
   // --- Планетарная анимация ---
@@ -243,8 +244,9 @@
       const radius   = o.orbitSize / 2;
       const x = Math.cos(angleRad) * radius;
       const y = Math.sin(angleRad) * radius;
-      o.orientation.style.left = `${50 + 50 * (x / radius)}%`;
-      o.orientation.style.top  = `${50 + 50 * (y / radius)}%`;
+      /* Используем translate3d вместо изменения left/top → меньше перерисовок */
+      o.orientation.style.transform = `translate(-50%, -50%) translate3d(${x}px, ${y}px, 0)`;
+      /* Сохраняем наклон планеты */
       o.element.style.transform = `rotateX(${-galaxyTiltAngle}deg)`;
     });
     requestAnimationFrame(updatePlanets);
