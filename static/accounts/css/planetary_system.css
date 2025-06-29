@@ -85,11 +85,11 @@
 
 #galaxy {
     position: absolute;
-    top: 50%;
+    top: 40%;
     left: 50%;
     width: 100%;
     height: 100%;
-    transform: translate(-50%, -50%) rotateX(45deg);
+    transform: translate(-50%, -50%) rotateX(60deg);
     transform-style: preserve-3d;
     background-image: linear-gradient(to bottom, transparent, transparent); /* debug box */
     z-index: 5;
@@ -152,12 +152,12 @@
     left: 50%;
     width: var(--orbit-size);
     height: var(--orbit-size);
-    border: 1px solid rgba(255, 255, 255, 0.45);
+    border: 0.6px solid rgba(255, 255, 255, 0.35);
     border-radius: 50%;
     transform: translate(-50%, -50%);
     animation: orbit-rotate linear infinite;
     z-index: 6;
-    box-shadow: 0 0 6px rgba(255, 255, 255, 0.25);
+    box-shadow: none;
 }
 
 .orbit-1 { width: 140px; height: 140px; animation-duration: 10s; }
@@ -212,10 +212,10 @@
     background-position: center;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 0 12px rgba(0, 0, 0, 0.6);
+    box-shadow: none;
     z-index: 7;
     opacity: 1 !important;
-    transform: rotateX(-45deg); /* компенсируем наклон галактики чтобы планеты были круглыми */
+    transform: rotateX(-60deg); /* компенсируем новый наклон галактики */
 }
 
 /* СЛУЧАЙНЫЕ ЦВЕТА ДЛЯ ПЛАНЕТ */
