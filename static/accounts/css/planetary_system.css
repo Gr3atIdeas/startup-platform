@@ -211,12 +211,14 @@
     background-size: cover;
     background-position: center;
     cursor: pointer;
+    pointer-events: auto;
     transition: all 0.3s ease;
     box-shadow: none;
     z-index: 7;
     opacity: 1 !important;
-    transform: rotateX(-60deg); /* компенсируем новый наклон галактики */
 }
+
+.planet.debug-highlight { outline: none !important; }
 
 /* СЛУЧАЙНЫЕ ЦВЕТА ДЛЯ ПЛАНЕТ */
 .planet-1 { background-color: #FF6B6B; }
@@ -676,10 +678,9 @@
 /* КОНТЕЙНЕРЫ ПЛАНЕТ */
 .planet-orientation {
     position: absolute;
-    top: 0;
+    top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    animation: planet-counter-rotate var(--orbit-time) linear infinite;
     transform-style: preserve-3d;
 }
 
