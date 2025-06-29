@@ -146,6 +146,16 @@
       lastInteractionTime = Date.now();
     });
 
+    // Случайный размер 60-90 px вместо заранее заданного
+    const rndSize = 60 + Math.random() * 30; // 60-90
+    planet.style.width  = `${rndSize}px`;
+    planet.style.height = `${rndSize}px`;
+    planet.style.marginLeft = `${-rndSize / 2}px`;
+    planet.style.marginTop  = `${-rndSize / 2}px`;
+
+    /* Отключаем CSS-анимацию вращения контейнера, чтобы transform из JS не перезаписывался */
+    planetOrientation.style.animation = 'none';
+
     planetObjects.push({
       orientation: planetOrientation,
       orbitSize: orbitSize,
