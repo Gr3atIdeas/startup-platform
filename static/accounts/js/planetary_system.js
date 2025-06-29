@@ -93,6 +93,13 @@
       startTime: Date.now() - Math.random() * orbitTime * 1000
     });
 
+    /* Случайный размер 60-90 px вместо заранее заданного */
+    const rndSize = 60 + Math.random() * 30; // 60-90
+    planet.style.width  = `${rndSize}px`;
+    planet.style.height = `${rndSize}px`;
+    planet.style.marginLeft = `${-rndSize / 2}px`;
+    planet.style.marginTop  = `${-rndSize / 2}px`;
+
     // Картинка планеты
     const id = planet.getAttribute('data-id');
     let pData = planetsData.find(p => p.id == id);
@@ -248,8 +255,8 @@
       o.orientation.style.left = `${50 + (x / radius) * 50}%`;
       o.orientation.style.top  = `${50 + (y / radius) * 50}%`;
       o.orientation.style.transform = 'translate(-50%, -50%)';
-      /* Повернём диск к наблюдателю, чтобы казаться круглым */
-      o.element.style.transform = `rotateX(${-galaxyTiltAngle}deg)`;
+      /* Планета остаётся плоской диспой без доп. поворота - будет кругом */
+      o.element.style.transform = 'none';
     });
     requestAnimationFrame(updatePlanets);
   }
