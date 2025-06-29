@@ -162,8 +162,7 @@
     /* Отключаем CSS-анимацию вращения контейнера, чтобы transform из JS не перезаписывался */
     planetOrientation.style.animation = 'none';
 
-    /* диску возвращаем поворот к камере */
-    planet.style.transform = `rotateX(-${galaxyTilt}deg)`;
+    /* поворот компенсируется через CSS (.planet) */
 
     planetObjects.push({
       orientation: planetOrientation,
