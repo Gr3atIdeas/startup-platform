@@ -347,4 +347,32 @@
   });
 
   /* DEBUG-блок временно отключён по требованию — никаких рамок/оверлея */
+
+  // Генерируем реальные звёзды вместо статичной текстуры
+  (function generateStars() {
+    const starsContainer = document.querySelector('.stars');
+    if (!starsContainer) return;
+    const starCount = 300; // количество звёзд
+    const frag = document.createDocumentFragment();
+    for (let i = 0; i < starCount; i++) {
+      const star = document.createElement('div');
+      star.className = 'star';
+      const size = Math.random() * 2 + 1; // 1–3 px
+      star.style.width = `${size}px`;
+      star.style.height = `${size}px`;
+      star.style.background = 'white';
+      star.style.borderRadius = '50%';
+      star.style.position = 'absolute';
+      star.style.top = `${Math.random() * 100}%`;
+      star.style.left = `${Math.random() * 100}%`;
+      star.style.opacity = (0.6 + Math.random() * 0.4).toFixed(2);
+      // Индивидуальная мерцалка
+      const duration = (2 + Math.random() * 4).toFixed(1);
+      const delay = (Math.random() * 4).toFixed(1);
+      star.style.animation = `twinkle ${duration}s ease-in-out ${delay}s infinite alternate`;
+      frag.appendChild(star);
+    }
+    starsContainer.innerHTML = ''; // очищаем старый фон
+    starsContainer.appendChild(frag);
+  })();
 })(); 
