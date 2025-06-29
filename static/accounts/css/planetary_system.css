@@ -40,7 +40,7 @@
     background-image: radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,0.7), transparent);
     background-repeat: repeat;
     background-size: 600px 400px;
-    animation: parallax 80s linear infinite;
+    animation: star-drift 240s linear infinite, parallax 80s linear infinite;
     z-index: 2;
     pointer-events: none;
 }
@@ -53,6 +53,12 @@
 @keyframes parallax {
     from { background-position: 0 0; }
     to { background-position: 600px 400px; }
+}
+
+/* Горизонтальный дрейф звёзд */
+@keyframes star-drift {
+    from { transform: translateX(0); }
+    to   { transform: translateX(200px); }
 }
 
 #solar-system {
@@ -195,11 +201,10 @@
 
 /* ПЛАНЕТЫ */
 .planet {
-    /* Увеличиваем базовый размер планет на ~20% и сохраняем центрирование */
-    width: calc(var(--planet-size) * 1.2);
-    height: calc(var(--planet-size) * 1.2);
-    margin-left: calc(-0.6 * var(--planet-size));
-    margin-top: calc(-0.6 * var(--planet-size));
+    width: var(--planet-size);
+    height: var(--planet-size);
+    margin-left: calc(-0.5 * var(--planet-size));
+    margin-top: calc(-0.5 * var(--planet-size));
     border-radius: 50%;
     background-size: cover;
     background-position: center;
@@ -674,7 +679,7 @@
 /* КОНТЕЙНЕРЫ ПЛАНЕТ */
 .planet-orientation {
     position: absolute;
-    top: 0; /* центр планеты будет лежать на орбите, а не её край */
+    top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     animation: planet-counter-rotate var(--orbit-time) linear infinite;

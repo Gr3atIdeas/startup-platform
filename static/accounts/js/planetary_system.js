@@ -360,14 +360,14 @@
       const size = Math.random() * 2 + 1; // 1–3 px
       star.style.width = `${size}px`;
       star.style.height = `${size}px`;
-      star.style.background = 'white';
+      star.style.background = 'rgba(255,255,255,0.9)';
       star.style.borderRadius = '50%';
       star.style.position = 'absolute';
       star.style.top = `${Math.random() * 100}%`;
       star.style.left = `${Math.random() * 100}%`;
-      star.style.opacity = (0.6 + Math.random() * 0.4).toFixed(2);
+      star.style.opacity = (0.3 + Math.random() * 0.4).toFixed(2);
       // Индивидуальная мерцалка
-      const duration = (2 + Math.random() * 4).toFixed(1);
+      const duration = (3 + Math.random() * 5).toFixed(1);
       const delay = (Math.random() * 4).toFixed(1);
       star.style.animation = `twinkle ${duration}s ease-in-out ${delay}s infinite alternate`;
       frag.appendChild(star);
