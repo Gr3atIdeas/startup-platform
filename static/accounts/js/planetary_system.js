@@ -77,13 +77,19 @@
   const orbitBaseAngles = new Map();
 
   // --- Инициализация планет
+  console.log('Найдено планет:', planets.length);
   planets.forEach((planet, index) => {
     const orbit = planet.closest('.orbit');
     const planetOrientation = planet.closest('.planet-orientation');
-    if (!orbit || !planetOrientation) return;
+    console.log(`Планета ${index}:`, { planet, orbit, planetOrientation });
+    if (!orbit || !planetOrientation) {
+      console.warn(`Планета ${index}: не найден orbit или planetOrientation`);
+      return;
+    }
 
-    const orbitSize = parseFloat(getComputedStyle(orbit).getPropertyValue('--orbit-size'));
-    const orbitTime = parseFloat(getComputedStyle(orbit).getPropertyValue('--orbit-time'));
+    const orbitSize = parseFloat(getComputedStyle(orbit).getPropertyValue('--orbit-size')) || parseFloat(getComputedStyle(orbit).width);
+    const orbitTime = parseFloat(getComputedStyle(orbit).getPropertyValue('--orbit-time')) || 20;
+    console.log(`Планета ${index}: orbitSize=${orbitSize}, orbitTime=${orbitTime}`);
 
     // Равномерный угол в пределах конкретной орбиты
     if (!orbitCounters.has(orbit)) {
@@ -155,25 +161,25 @@
 
     // Случайный размер 60-90 px вместо заранее заданного
     const rndSize = 60 + Math.random() * 30; // 60-90
-    planet.style.width  = `${rndSize}px`;
-    planet.style.height = `${rndSize}px`;
-    planet.style.marginLeft = `${-rndSize / 2}px`;
-    planet.style.marginTop  = `${-rndSize / 2}px`;
+    planet.style.setProperty('--planet-size', `${rndSize}px`);
 
     /* Отключаем CSS-анимацию вращения контейнера, чтобы transform из JS не перезаписывался */
     planetOrientation.style.animation = 'none';
 
-    /* поворот компенсируется через CSS (.planet) */
-
-    planetObjects.push({
+    const planetObj = {
+      element: planet,
       orientation: planetOrientation,
       orbitSize: orbitSize,
       orbitTime: orbitTime,
       angleStart: initialAngle,
       speedFactor: speedFactor,
       startTime: Date.now()
-    });
+    };
+    console.log(`Добавлен объект планеты ${index}:`, planetObj);
+    planetObjects.push(planetObj);
   });
+  
+  console.log('Всего объектов планет:', planetObjects.length);
 
   // Закрытие карточки
   if (closeCard) {
@@ -391,22 +397,26 @@
   function updatePlanets() {
     const now = Date.now();
     planetObjects.forEach(o => {
+      // Проверяем, что элемент существует
+      if (!o.orientation || !o.orientation.style) return;
+      
       const elapsed  = (now - o.startTime) / 1000;
       const period   = o.orbitTime * o.speedFactor;
       const progress = (elapsed % period) / period;
       const angleDeg = o.angleStart + progress * 360;
       const rad      = angleDeg * Math.PI/180;
       const R        = o.orbitSize / 2;
-      const x = Math.cos(rad) * R;
-      const y = Math.sin(rad) * R;
       
-      // Позиционирование через проценты
+      // Учитываем наклон галактики при расчете траектории
+      const tiltRad = galaxyTilt * Math.PI / 180;
+      const cosT = Math.cos(tiltRad);
+      
+      const x = Math.cos(rad) * R;
+      const y = Math.sin(rad) * R * cosT;
+      
+      // Позиционирование через абсолютные координаты
       o.orientation.style.left = `${50 + 50 * (x / R)}%`;
       o.orientation.style.top = `${50 + 50 * (y / R)}%`;
-      
-      // Компенсация поворота для ориентации лицевой стороной к зрителю (как в демо)
-      const tiltCompensation = -galaxyTilt;
-      o.element.style.transform = `rotateX(${tiltCompensation}deg)`;
     });
     requestAnimationFrame(updatePlanets);
   }
