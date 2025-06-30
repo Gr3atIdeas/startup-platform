@@ -1,5 +1,5 @@
-// Планетарная система - исправленная версия
-// Работает на всех страницах с планетарной системой
+// Планетарная система - 2D версия
+// Планеты всегда смотрят в камеру без наклона
 
 (function() {
   'use strict';
@@ -263,17 +263,13 @@
       const angleRad = (currentAngle * Math.PI) / 180;
       const radius = planetObj.orbitSize / 2;
 
-      // Вычисляем позицию на орбите
+      // Вычисляем позицию на орбите (2D без наклона)
       const x = Math.cos(angleRad) * radius;
       const y = Math.sin(angleRad) * radius;
 
-      // Учитываем наклон галактики для визуального сжатия
-      const tiltRad = (60 * Math.PI) / 180; // 60 градусов наклон
-      const adjustedY = y * Math.cos(tiltRad);
-
-      // Позиционируем планету относительно центра орбиты
+      // Позиционируем планету относительно центра орбиты (плоская орбита)
       const leftPercent = 50 + (x / radius) * 50;
-      const topPercent = 50 + (adjustedY / radius) * 50;
+      const topPercent = 50 + (y / radius) * 50;
 
       planetObj.orientation.style.left = `${leftPercent}%`;
       planetObj.orientation.style.top = `${topPercent}%`;
