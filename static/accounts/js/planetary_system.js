@@ -239,7 +239,7 @@
     if (startupDescription) startupDescription.textContent = 'Ожидаем загрузку данных...';
   }
 
-  // Основная функция анимации планет
+  // Основная функция анимации планет - ИСПРАВЛЕННАЯ
   function updatePlanets() {
     if (isPaused) {
       requestAnimationFrame(updatePlanets);
@@ -263,18 +263,19 @@
       const angleRad = (currentAngle * Math.PI) / 180;
       const radius = planetObj.orbitSize / 2;
 
-      // Вычисляем позицию на орбите (2D с наклоном орбит)
-      const x = Math.cos(angleRad) * radius;
+      // Получаем коэффициент сжатия орбиты из CSS
       const orbitCompression = parseFloat(getComputedStyle(document.documentElement)
         .getPropertyValue('--orbit-compression')) || 0.6;
-      const y = Math.sin(angleRad) * radius * orbitCompression; // Сжимаем Y координату для эллиптической орбиты
 
-      // Позиционируем планету относительно центра орбиты (эллиптическая орбита)
-      const leftPercent = 50 + (x / radius) * 50;
-      const topPercent = 50 + (y / radius) * 50;
+      // Вычисляем ТОЧНУЮ позицию на орбите (2D координаты)
+      const x = Math.cos(angleRad) * radius;
+      const y = Math.sin(angleRad) * radius * orbitCompression; // Сжимаем Y для эллиптической орбиты
 
-      planetObj.orientation.style.left = `${leftPercent}%`;
-      planetObj.orientation.style.top = `${topPercent}%`;
+      // ПРАВИЛЬНОЕ позиционирование: контейнер планеты точно на орбите
+      // Центр орбиты находится в центре galaxy (50%, 50%)
+      // Позиционируем контейнер планеты относительно центра galaxy
+      planetObj.orientation.style.left = `calc(50% + ${x}px)`;
+      planetObj.orientation.style.top = `calc(50% + ${y}px)`;
     });
 
     requestAnimationFrame(updatePlanets);

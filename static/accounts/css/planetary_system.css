@@ -1,7 +1,7 @@
-/* Планетарная система - 2D версия с наклоном орбит */
+/* Планетарная система - 2D версия без наклона */
 :root {
-  --galaxy-tilt: 60deg;
-  --orbit-compression: 0.5; /* cos(60°) = 0.5 для наклона 60 градусов */
+  --galaxy-tilt: 0deg;
+  --orbit-compression: 0.6; /* Легкое сжатие для визуального эффекта */
 }
 
 .planetary-system-wrapper {
@@ -152,9 +152,10 @@
   width: 0;
   height: 0;
   pointer-events: none;
+  /* Контейнер точно позиционируется на орбите */
 }
 
-/* ПЛАНЕТЫ - 2D ВЕРСИЯ */
+/* ПЛАНЕТЫ - 2D ВЕРСИЯ БЕЗ НАКЛОНА */
 .planet {
   position: absolute;
   width: var(--planet-size);
@@ -167,37 +168,44 @@
   pointer-events: auto;
   z-index: 7;
   
-  /* 2D ТРАНСФОРМАЦИЯ БЕЗ НАКЛОНА */
-  transform: translate(-50%, -50%) !important;
+  /* ЦЕНТРИРОВАНИЕ ПЛАНЕТЫ - центр планеты точно на позиции контейнера */
+  top: 0;
+  left: 0;
+  transform: translate(-50%, -50%);
   
-  /* Гладкие переходы */
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Гладкие переходы только для масштаба и тени */
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
   
-  /* Тень для объема */
+  /* Тень для объема БЕЗ 3D эффектов */
   box-shadow: 
-    inset -10px -10px 20px rgba(0, 0, 0, 0.3),
-    0 5px 15px rgba(0, 0, 0, 0.2);
+    inset -8px -8px 16px rgba(0, 0, 0, 0.3),
+    0 4px 12px rgba(0, 0, 0, 0.2);
   
-  /* Защита от деформации */
+  /* Идеальная круглая форма */
   aspect-ratio: 1 / 1;
   overflow: hidden;
+  
+  /* Оптимизация производительности */
   will-change: transform;
+  
+  /* УБИРАЕМ ВСЕ 3D ЭФФЕКТЫ */
+  transform-style: flat;
 }
 
-/* Состояния планет */
+/* Состояния планет - БЕЗ НАКЛОНА */
 .planet:hover {
-  transform: translate(-50%, -50%) scale(1.15) !important;
+  transform: translate(-50%, -50%) scale(1.15);
   box-shadow: 
-    inset -10px -10px 20px rgba(0, 0, 0, 0.3),
-    0 10px 25px rgba(255, 255, 255, 0.3),
-    0 0 30px rgba(255, 255, 255, 0.2);
+    inset -8px -8px 16px rgba(0, 0, 0, 0.3),
+    0 8px 20px rgba(255, 255, 255, 0.3),
+    0 0 25px rgba(255, 255, 255, 0.2);
 }
 
 .planet.active {
-  transform: translate(-50%, -50%) scale(1.3) !important;
+  transform: translate(-50%, -50%) scale(1.3);
   box-shadow: 
-    inset -10px -10px 20px rgba(0, 0, 0, 0.3),
-    0 15px 35px rgba(255, 239, 43, 0.4),
+    inset -8px -8px 16px rgba(0, 0, 0, 0.3),
+    0 12px 30px rgba(255, 239, 43, 0.4),
     0 0 40px rgba(255, 239, 43, 0.6);
 }
 
