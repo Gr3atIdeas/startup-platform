@@ -390,8 +390,6 @@
   /* --- Планетарная анимация: только перемещаем контейнеры, диск не трогаем --- */
   function updatePlanets() {
     const now = Date.now();
-    const tiltRad = galaxyTilt * Math.PI / 180;  // угол наклона в радианах
-    const cosT = Math.cos(tiltRad);              // коэффициент сжатия по Y
     planetObjects.forEach(o => {
       const elapsed  = (now - o.startTime) / 1000;
       const period   = o.orbitTime * o.speedFactor;
@@ -400,8 +398,11 @@
       const rad      = angleDeg * Math.PI/180;
       const R        = o.orbitSize / 2;
       const x = Math.cos(rad) * R;
-      const y = Math.sin(rad) * R * cosT;        // компенсируем наклон галактики
-      o.orientation.style.transform = `translate(-50%, -50%) translate(${x}px, ${y}px)`;
+      const y = Math.sin(rad) * R;
+      
+      // Позиционирование через проценты, как в рабочей версии
+      o.orientation.style.left = `${50 + 50 * (x / R)}%`;
+      o.orientation.style.top = `${50 + 50 * (y / R)}%`;
     });
     requestAnimationFrame(updatePlanets);
   }
