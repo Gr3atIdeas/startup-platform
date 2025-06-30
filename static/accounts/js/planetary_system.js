@@ -387,7 +387,7 @@
     starsContainer.appendChild(frag);
   })();
 
-  /* --- Планетарная анимация: простое позиционирование --- */
+  /* --- Планетарная анимация: как в рабочей демо-версии --- */
   function updatePlanets() {
     const now = Date.now();
     planetObjects.forEach(o => {
@@ -403,6 +403,10 @@
       // Позиционирование через проценты
       o.orientation.style.left = `${50 + 50 * (x / R)}%`;
       o.orientation.style.top = `${50 + 50 * (y / R)}%`;
+      
+      // Компенсация поворота для ориентации лицевой стороной к зрителю (как в демо)
+      const tiltCompensation = -galaxyTilt;
+      o.element.style.transform = `rotateX(${tiltCompensation}deg)`;
     });
     requestAnimationFrame(updatePlanets);
   }
