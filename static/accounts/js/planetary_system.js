@@ -64,7 +64,7 @@
 
   // --- Переменные для анимации / управления ---
   const planetObjects = [];
-  const galaxyTilt = 45; // Увеличиваем наклон для лучшего 3D эффекта
+  const galaxyTilt = 60; // Возвращаем исходный наклон
   document.documentElement.style.setProperty('--galaxy-tilt', galaxyTilt + 'deg');
   let isPaused = false;
   let pausedTime = 0;
@@ -406,10 +406,14 @@
       const x = Math.cos(rad) * R;
       const y = Math.sin(rad) * R;
       
+      // Учитываем визуальное сжатие от наклона галактики
+      const tiltRad = galaxyTilt * Math.PI / 180;
+      const cosT = Math.cos(tiltRad);
+      const adjustedY = y * cosT;
+      
       // Позиционируем планету относительно центра орбиты (50%, 50%)
-      // Орбита имеет размер orbitSize, поэтому нормализуем координаты
       const leftPercent = 50 + (x / R) * 50; // от 0% до 100%
-      const topPercent = 50 + (y / R) * 50;  // от 0% до 100%
+      const topPercent = 50 + (adjustedY / R) * 50;  // от 0% до 100% с учетом сжатия
       
       o.orientation.style.left = `${leftPercent}%`;
       o.orientation.style.top = `${topPercent}%`;
