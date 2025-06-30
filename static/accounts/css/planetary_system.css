@@ -685,9 +685,10 @@
 
 /* КОНТЕЙНЕРЫ ПЛАНЕТ */
 .planet-orientation {
-    position: absolute;
+    position: fixed;
     transform-style: flat;
     will-change: transform;
+    z-index: 10;
 }
 
 /* старый класс для обратной совместимости */
