@@ -387,19 +387,9 @@
     starsContainer.appendChild(frag);
   })();
 
-  /* --- Планетарная анимация: абсолютное позиционирование для избежания 3D-искажений --- */
+  /* --- Планетарная анимация: простое позиционирование --- */
   function updatePlanets() {
     const now = Date.now();
-    const galaxyElement = document.getElementById('galaxy');
-    const sceneElement = document.getElementById('scene');
-    
-    if (!galaxyElement || !sceneElement) return;
-    
-    // Получаем центр галактики на экране
-    const sceneRect = sceneElement.getBoundingClientRect();
-    const centerX = sceneRect.left + sceneRect.width / 2;
-    const centerY = sceneRect.top + sceneRect.height * 0.4; // учитываем смещение галактики
-    
     planetObjects.forEach(o => {
       const elapsed  = (now - o.startTime) / 1000;
       const period   = o.orbitTime * o.speedFactor;
@@ -407,14 +397,12 @@
       const angleDeg = o.angleStart + progress * 360;
       const rad      = angleDeg * Math.PI/180;
       const R        = o.orbitSize / 2;
-      
-      // Рассчитываем позицию с учетом наклона галактики (только визуального сжатия по Y)
       const x = Math.cos(rad) * R;
-      const y = Math.sin(rad) * R * Math.cos(60 * Math.PI / 180); // сжатие из-за наклона
+      const y = Math.sin(rad) * R;
       
-      // Абсолютное позиционирование относительно экрана
-      o.orientation.style.left = `${centerX + x}px`;
-      o.orientation.style.top = `${centerY + y}px`;
+      // Позиционирование через проценты
+      o.orientation.style.left = `${50 + 50 * (x / R)}%`;
+      o.orientation.style.top = `${50 + 50 * (y / R)}%`;
     });
     requestAnimationFrame(updatePlanets);
   }

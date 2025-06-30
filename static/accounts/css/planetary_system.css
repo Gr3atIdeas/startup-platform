@@ -222,7 +222,8 @@
     z-index: 7;
     opacity: 1 !important;
     transform-style: flat;
-    transform: none;
+    transform: translateZ(0);
+    backface-visibility: hidden;
     will-change: transform;
 }
 
@@ -241,12 +242,12 @@
 .planet-10 { background-color: #FF9F43; }
 
 .planet:hover {
-    transform: scale(1.2);
+    transform: translateZ(0) scale(1.2);
     box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
 }
 
 .planet.active {
-    transform: scale(1.4);
+    transform: translateZ(0) scale(1.4);
     box-shadow: 0 0 25px rgba(255, 239, 43, 0.8);
 }
 
@@ -685,10 +686,9 @@
 
 /* КОНТЕЙНЕРЫ ПЛАНЕТ */
 .planet-orientation {
-    position: fixed;
+    position: absolute;
     transform-style: flat;
     will-change: transform;
-    z-index: 10;
 }
 
 /* старый класс для обратной совместимости */
