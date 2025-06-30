@@ -212,6 +212,7 @@
     height: var(--planet-size);
     margin-left: calc(-0.5 * var(--planet-size));
     margin-top: calc(-0.5 * var(--planet-size));
+    transform: rotateX(calc(-1 * var(--galaxy-tilt)));
     border-radius: 50%;
     background-size: cover;
     background-position: center;
@@ -221,7 +222,7 @@
     box-shadow: none;
     z-index: 7;
     opacity: 1 !important;
-    transform-style: preserve-3d;
+    transform-style: flat;
     will-change: transform;
 }
 
@@ -240,12 +241,12 @@
 .planet-10 { background-color: #FF9F43; }
 
 .planet:hover {
-    transform: scale(1.2);
+    transform: rotateX(calc(-1 * var(--galaxy-tilt))) scale(1.2);
     box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
 }
 
 .planet.active {
-    transform: scale(1.4);
+    transform: rotateX(calc(-1 * var(--galaxy-tilt))) scale(1.4);
     box-shadow: 0 0 25px rgba(255, 239, 43, 0.8);
 }
 
