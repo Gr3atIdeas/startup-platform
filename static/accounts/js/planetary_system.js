@@ -93,10 +93,14 @@
         return;
       }
 
-      // Получаем размеры из CSS
-      const orbitSize = parseFloat(getComputedStyle(orbit).getPropertyValue('--orbit-size')) || 300;
-      const orbitTime = parseFloat(getComputedStyle(orbit).getPropertyValue('--orbit-time')) || 60;
-      const planetSize = parseFloat(getComputedStyle(planet).getPropertyValue('--planet-size')) || 60;
+      // Получаем размеры из CSS - ИСПРАВЛЯЕМ ПАРСИНГ
+      const orbitSizeStr = getComputedStyle(orbit).getPropertyValue('--orbit-size').trim();
+      const orbitTimeStr = getComputedStyle(orbit).getPropertyValue('--orbit-time').trim();
+      const planetSizeStr = getComputedStyle(planet).getPropertyValue('--planet-size').trim();
+      
+      const orbitSize = parseFloat(orbitSizeStr.replace('px', '')) || 300;
+      const orbitTime = parseFloat(orbitTimeStr.replace('s', '')) || 60;
+      const planetSize = parseFloat(planetSizeStr.replace('px', '')) || 60;
 
       // Случайный начальный угол для каждой планеты
       const initialAngle = Math.random() * 360;
@@ -122,6 +126,8 @@
         startTime: Date.now(),
         size: planetSize
       });
+
+      console.log(`[Planetary] Планета ${index}: орбита ${orbitSize}px, время ${orbitTime}s`);
     });
 
     console.log(`[Planetary] Инициализировано ${planetObjects.length} планет`);
@@ -248,17 +254,27 @@
       const orbitCompression = parseFloat(getComputedStyle(document.documentElement)
         .getPropertyValue('--orbit-compression')) || 0.6;
 
-      // Вычисляем ТОЧНУЮ позицию на орбите (2D координаты)
+      // Вычисляем позицию на орбите относительно центра орбиты
       const x = Math.cos(angleRad) * radius;
-      const y = Math.sin(angleRad) * radius * orbitCompression; // Сжимаем Y для эллиптической орбиты
+      const y = Math.sin(angleRad) * radius * orbitCompression;
 
-      // ИСПРАВЛЕННОЕ позиционирование: используем простые px значения
-      // Центр galaxy находится в (600px, 600px) при размере scene 1200x1200
-      const centerX = 600;
-      const centerY = 600;
+      // ИСПРАВЛЕННОЕ позиционирование: используем смещение от центра орбиты
+      // Орбита имеет transform: translate(-50%, -50%), поэтому центр орбиты в (50%, 50%)
+      // Нужно добавить смещение от центра
+      const offsetX = (x / radius) * 50; // Смещение в процентах от -50% до +50%
+      const offsetY = (y / radius) * 50; // Смещение в процентах от -50% до +50%
       
-      planetObj.orientation.style.left = `${centerX + x}px`;
-      planetObj.orientation.style.top = `${centerY + y}px`;
+      const percentX = 50 + offsetX;
+      const percentY = 50 + offsetY;
+      
+      planetObj.orientation.style.left = `${percentX}%`;
+      planetObj.orientation.style.top = `${percentY}%`;
+      planetObj.orientation.style.position = 'absolute';
+      
+      // Отладочная информация для первой планеты
+      if (planetObj === planetObjects[0]) {
+        console.log(`[Planetary] Планета 0: угол ${currentAngle.toFixed(1)}°, позиция (${percentX.toFixed(1)}%, ${percentY.toFixed(1)}%)`);
+      }
     });
 
     requestAnimationFrame(updatePlanets);
