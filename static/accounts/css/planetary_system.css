@@ -1,6 +1,7 @@
-/* Планетарная система - 2D версия */
+/* Планетарная система - 2D версия с наклоном орбит */
 :root {
-  --galaxy-tilt: 0deg;
+  --galaxy-tilt: 60deg;
+  --orbit-compression: 0.5; /* cos(60°) = 0.5 для наклона 60 градусов */
 }
 
 .planetary-system-wrapper {
@@ -131,7 +132,7 @@
   z-index: 2;
 }
 
-/* ОРБИТЫ - без анимации, управление через JS */
+/* ОРБИТЫ - наклоненные без 3D */
 .orbit {
   position: absolute;
   top: 50%;
@@ -140,7 +141,7 @@
   height: var(--orbit-size);
   border: 0.8px solid rgba(255, 255, 255, 0.25);
   border-radius: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%) scaleY(var(--orbit-compression));
   z-index: 6;
   pointer-events: none;
 }

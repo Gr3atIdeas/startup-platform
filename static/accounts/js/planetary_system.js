@@ -1,5 +1,5 @@
-// Планетарная система - 2D версия
-// Планеты всегда смотрят в камеру без наклона
+// Планетарная система - 2D версия с наклоном орбит
+// Планеты круглые, орбиты эллиптические
 
 (function() {
   'use strict';
@@ -263,11 +263,13 @@
       const angleRad = (currentAngle * Math.PI) / 180;
       const radius = planetObj.orbitSize / 2;
 
-      // Вычисляем позицию на орбите (2D без наклона)
+      // Вычисляем позицию на орбите (2D с наклоном орбит)
       const x = Math.cos(angleRad) * radius;
-      const y = Math.sin(angleRad) * radius;
+      const orbitCompression = parseFloat(getComputedStyle(document.documentElement)
+        .getPropertyValue('--orbit-compression')) || 0.6;
+      const y = Math.sin(angleRad) * radius * orbitCompression; // Сжимаем Y координату для эллиптической орбиты
 
-      // Позиционируем планету относительно центра орбиты (плоская орбита)
+      // Позиционируем планету относительно центра орбиты (эллиптическая орбита)
       const leftPercent = 50 + (x / radius) * 50;
       const topPercent = 50 + (y / radius) * 50;
 
