@@ -77,19 +77,13 @@
   const orbitBaseAngles = new Map();
 
   // --- Инициализация планет
-  console.log('Найдено планет:', planets.length);
   planets.forEach((planet, index) => {
     const orbit = planet.closest('.orbit');
     const planetOrientation = planet.closest('.planet-orientation');
-    console.log(`Планета ${index}:`, { planet, orbit, planetOrientation });
-    if (!orbit || !planetOrientation) {
-      console.warn(`Планета ${index}: не найден orbit или planetOrientation`);
-      return;
-    }
+    if (!orbit || !planetOrientation) return;
 
     const orbitSize = parseFloat(getComputedStyle(orbit).getPropertyValue('--orbit-size')) || parseFloat(getComputedStyle(orbit).width);
     const orbitTime = parseFloat(getComputedStyle(orbit).getPropertyValue('--orbit-time')) || 20;
-    console.log(`Планета ${index}: orbitSize=${orbitSize}, orbitTime=${orbitTime}`);
 
     // Равномерный угол в пределах конкретной орбиты
     if (!orbitCounters.has(orbit)) {
@@ -166,7 +160,7 @@
     /* Отключаем CSS-анимацию вращения контейнера, чтобы transform из JS не перезаписывался */
     planetOrientation.style.animation = 'none';
 
-    const planetObj = {
+    planetObjects.push({
       element: planet,
       orientation: planetOrientation,
       orbitSize: orbitSize,
@@ -174,12 +168,8 @@
       angleStart: initialAngle,
       speedFactor: speedFactor,
       startTime: Date.now()
-    };
-    console.log(`Добавлен объект планеты ${index}:`, planetObj);
-    planetObjects.push(planetObj);
+    });
   });
-  
-  console.log('Всего объектов планет:', planetObjects.length);
 
   // Закрытие карточки
   if (closeCard) {
@@ -395,6 +385,11 @@
 
   /* --- Планетарная анимация: как в рабочей демо-версии --- */
   function updatePlanets() {
+    if (isPaused) {
+      requestAnimationFrame(updatePlanets);
+      return;
+    }
+    
     const now = Date.now();
     planetObjects.forEach(o => {
       // Проверяем, что элемент существует
@@ -414,9 +409,13 @@
       const x = Math.cos(rad) * R;
       const y = Math.sin(rad) * R * cosT;
       
-      // Позиционирование через абсолютные координаты
-      o.orientation.style.left = `${50 + 50 * (x / R)}%`;
-      o.orientation.style.top = `${50 + 50 * (y / R)}%`;
+      // Позиционирование относительно центра галактики (50%, 50%)
+      // Преобразуем в проценты относительно размера орбиты
+      const leftPercent = 50 + (x / R) * 50;
+      const topPercent = 50 + (y / R) * 50;
+      
+      o.orientation.style.left = `${leftPercent}%`;
+      o.orientation.style.top = `${topPercent}%`;
     });
     requestAnimationFrame(updatePlanets);
   }
