@@ -64,7 +64,8 @@
 
   // --- Переменные для анимации / управления ---
   const planetObjects = [];
-  const galaxyTilt = 0;
+  const galaxyTilt = 60;
+  document.documentElement.style.setProperty('--galaxy-tilt', galaxyTilt + 'deg');
   let isPaused = false;
   let pausedTime = 0;
   let lastInteractionTime = Date.now();
@@ -405,7 +406,4 @@
     requestAnimationFrame(updatePlanets);
   }
   updatePlanets();
-
-  // передаём в CSS
-  document.documentElement.style.setProperty('--galaxy-tilt', galaxyTilt + 'deg');
 })(); 
