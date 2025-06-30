@@ -132,30 +132,35 @@
   z-index: 2;
 }
 
-/* ОРБИТЫ - наклоненные без 3D */
+/* ОРБИТЫ - 2D БЕЗ 3D ЭФФЕКТОВ */
 .orbit {
   position: absolute;
   top: 50%;
   left: 50%;
   width: var(--orbit-size);
   height: var(--orbit-size);
-  border: 0.8px solid rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 50%;
   transform: translate(-50%, -50%) scaleY(var(--orbit-compression));
-  z-index: 6;
+  z-index: 5;
   pointer-events: none;
+  
+  /* Убираем 3D эффекты */
+  transform-style: flat !important;
+  perspective: none !important;
 }
 
 /* КОНТЕЙНЕРЫ ПЛАНЕТ */
 .planet-orientation {
   position: absolute;
-  width: 0;
-  height: 0;
+  width: 1px;
+  height: 1px;
   pointer-events: none;
-  /* Контейнер точно позиционируется на орбите */
+  /* Контейнер - точка позиционирования на орбите */
+  z-index: 6;
 }
 
-/* ПЛАНЕТЫ - 2D ВЕРСИЯ БЕЗ НАКЛОНА */
+/* ПЛАНЕТЫ - ПОЛНОСТЬЮ 2D БЕЗ 3D ЭФФЕКТОВ */
 .planet {
   position: absolute;
   width: var(--planet-size);
@@ -166,20 +171,18 @@
   background-repeat: no-repeat;
   cursor: pointer;
   pointer-events: auto;
-  z-index: 7;
+  z-index: 8;
   
   /* ЦЕНТРИРОВАНИЕ ПЛАНЕТЫ - центр планеты точно на позиции контейнера */
   top: 0;
   left: 0;
   transform: translate(-50%, -50%);
   
-  /* Гладкие переходы только для масштаба и тени */
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+  /* Гладкие переходы */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   
-  /* Тень для объема БЕЗ 3D эффектов */
-  box-shadow: 
-    inset -8px -8px 16px rgba(0, 0, 0, 0.3),
-    0 4px 12px rgba(0, 0, 0, 0.2);
+  /* Простая тень БЕЗ 3D эффектов */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   
   /* Идеальная круглая форма */
   aspect-ratio: 1 / 1;
@@ -188,25 +191,25 @@
   /* Оптимизация производительности */
   will-change: transform;
   
-  /* УБИРАЕМ ВСЕ 3D ЭФФЕКТЫ */
-  transform-style: flat;
+  /* ПРИНУДИТЕЛЬНО УБИРАЕМ ВСЕ 3D ЭФФЕКТЫ */
+  transform-style: flat !important;
+  perspective: none !important;
+  backface-visibility: visible !important;
 }
 
-/* Состояния планет - БЕЗ НАКЛОНА */
+/* Состояния планет - ПОЛНОСТЬЮ 2D */
 .planet:hover {
-  transform: translate(-50%, -50%) scale(1.15);
+  transform: translate(-50%, -50%) scale(1.1);
   box-shadow: 
-    inset -8px -8px 16px rgba(0, 0, 0, 0.3),
-    0 8px 20px rgba(255, 255, 255, 0.3),
-    0 0 25px rgba(255, 255, 255, 0.2);
+    0 4px 12px rgba(255, 255, 255, 0.4),
+    0 0 20px rgba(255, 255, 255, 0.2);
 }
 
 .planet.active {
-  transform: translate(-50%, -50%) scale(1.3);
+  transform: translate(-50%, -50%) scale(1.2);
   box-shadow: 
-    inset -8px -8px 16px rgba(0, 0, 0, 0.3),
-    0 12px 30px rgba(255, 239, 43, 0.4),
-    0 0 40px rgba(255, 239, 43, 0.6);
+    0 6px 18px rgba(255, 239, 43, 0.5),
+    0 0 30px rgba(255, 239, 43, 0.3);
 }
 
 /* Карточка информации */
