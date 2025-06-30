@@ -201,7 +201,7 @@
     left: 50%;
     width: var(--planet-size);
     height: var(--planet-size);
-    transform: translate(-50%, -50%) rotateX(calc(-1 * var(--galaxy-tilt))) scaleY(2);
+    transform: translate(-50%, -50%);
     border-radius: 50%;
     background-size: cover;
     background-position: center;
@@ -230,12 +230,12 @@
 .planet-10 { background-color: #FF9F43; }
 
 .planet:hover {
-    transform: translate(-50%, -50%) rotateX(calc(-1 * var(--galaxy-tilt))) scaleY(2) scale(1.2);
+    transform: translate(-50%, -50%) scale(1.2);
     box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
 }
 
 .planet.active {
-    transform: translate(-50%, -50%) rotateX(calc(-1 * var(--galaxy-tilt))) scaleY(2) scale(1.4);
+    transform: translate(-50%, -50%) scale(1.4);
     box-shadow: 0 0 25px rgba(255, 239, 43, 0.8);
 }
 

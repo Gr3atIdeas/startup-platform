@@ -64,7 +64,7 @@
 
   // --- Переменные для анимации / управления ---
   const planetObjects = [];
-  const galaxyTilt = 60;
+  const galaxyTilt = 15; // Уменьшаем наклон для меньшего сплющивания
   document.documentElement.style.setProperty('--galaxy-tilt', galaxyTilt + 'deg');
   let isPaused = false;
   let pausedTime = 0;
@@ -402,17 +402,16 @@
       const rad      = angleDeg * Math.PI/180;
       const R        = o.orbitSize / 2;
       
-      // Учитываем наклон галактики при расчете траектории
-      const tiltRad = galaxyTilt * Math.PI / 180;
-      const cosT = Math.cos(tiltRad);
-      
+      // Рассчитываем позицию на орбите (без учета наклона в траектории, наклон только визуальный)
       const x = Math.cos(rad) * R;
-      const y = Math.sin(rad) * R * cosT;
+      const y = Math.sin(rad) * R;
       
-      // Позиционирование относительно центра галактики (50%, 50%)
-      // Преобразуем в проценты относительно размера орбиты
-      const leftPercent = 50 + (x / R) * 50;
-      const topPercent = 50 + (y / R) * 50;
+      // Позиционируем планету на орбите
+      // Центр орбиты находится в 50%, 50% контейнера галактики
+      // Преобразуем пиксели в проценты относительно размера орбиты
+      const galaxySize = 1200; // размер контейнера галактики
+      const leftPercent = 50 + (x / galaxySize) * 100;
+      const topPercent = 50 + (y / galaxySize) * 100;
       
       o.orientation.style.left = `${leftPercent}%`;
       o.orientation.style.top = `${topPercent}%`;
