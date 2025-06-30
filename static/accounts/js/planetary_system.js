@@ -64,7 +64,7 @@
 
   // --- Переменные для анимации / управления ---
   const planetObjects = [];
-  const galaxyTilt = 60;
+  const galaxyTilt = 0;
   let isPaused = false;
   let pausedTime = 0;
   let lastInteractionTime = Date.now();
