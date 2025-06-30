@@ -82,12 +82,8 @@
   let offsetX = 0, offsetY = 0;
   let scale = 0.8;
 
-  // Инициализация планет
+  // Инициализация планет - ИСПРАВЛЕННАЯ ДЛЯ 6 ПЛАНЕТ
   function initializePlanets() {
-    // Счетчики для равномерного распределения планет по орбитам
-    const orbitCounters = new Map();
-    const orbitBaseAngles = new Map();
-
     planets.forEach((planet, index) => {
       const orbit = planet.closest('.orbit');
       const planetOrientation = planet.closest('.planet-orientation');
@@ -97,26 +93,15 @@
         return;
       }
 
-      // Получаем размеры орбиты
-      const orbitSize = parseFloat(getComputedStyle(orbit).getPropertyValue('--orbit-size')) || 
-                       parseFloat(getComputedStyle(orbit).width) || 300;
+      // Получаем размеры из CSS
+      const orbitSize = parseFloat(getComputedStyle(orbit).getPropertyValue('--orbit-size')) || 300;
       const orbitTime = parseFloat(getComputedStyle(orbit).getPropertyValue('--orbit-time')) || 60;
+      const planetSize = parseFloat(getComputedStyle(planet).getPropertyValue('--planet-size')) || 60;
 
-      // Равномерное распределение планет по орбите
-      if (!orbitCounters.has(orbit)) {
-        orbitCounters.set(orbit, 0);
-        orbitBaseAngles.set(orbit, Math.random() * 360);
-      }
+      // Случайный начальный угол для каждой планеты
+      const initialAngle = Math.random() * 360;
 
-      const planetIndex = orbitCounters.get(orbit);
-      orbitCounters.set(orbit, planetIndex + 1);
-      
-      const planetsInOrbit = orbit.querySelectorAll('.planet-orientation').length;
-      const baseAngle = orbitBaseAngles.get(orbit);
-      const angleOffset = (360 / planetsInOrbit) * planetIndex;
-      const initialAngle = baseAngle + angleOffset;
-
-      // Случайная скорость
+      // Варьируем скорость орбиты
       const speedFactor = 0.8 + Math.random() * 0.4;
 
       // Установка изображения планеты
@@ -124,10 +109,6 @@
 
       // Обработчик клика
       setupPlanetClick(planet, index);
-
-      // Случайный размер планеты
-      const planetSize = 50 + Math.random() * 40; // 50-90px
-      planet.style.setProperty('--planet-size', `${planetSize}px`);
 
       // Сохраняем данные планеты
       planetObjects.push({
