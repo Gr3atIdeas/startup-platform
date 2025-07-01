@@ -63,13 +63,13 @@
     const scriptElement = document.getElementById('planetary-system-data');
     if (scriptElement) {
       const data = JSON.parse(scriptElement.textContent);
-      ultraNewPlanetaryStartupsData = data.planetsData || [];
-      ultraNewPlanetaryDirectionsData = data.directionsData || [];
+      ultraNewPlanetaryStartupsData = data.planets || [];
+      ultraNewPlanetaryDirectionsData = data.directions || [];
       ultraNewPlanetarySelectedGalaxy = data.selectedGalaxy || '';
       ultraNewPlanetaryUrls = data.urls || {};
       ultraNewPlanetaryIsAuthenticated = data.isAuthenticated || false;
       ultraNewPlanetaryIsStartuper = data.isStartuper || false;
-      ultraNewPlanetaryLogoImage = data.logoImage || '';
+      ultraNewPlanetaryLogoImage = data.logo?.image || '';
     }
   }
 
@@ -366,20 +366,27 @@
     const imageUrl = getUltraNewPlanetaryFallbackImage(index);
     planet.style.backgroundImage = `url(${imageUrl})`;
     
-    // Добавляем обработчик клика для пустых планет
+    // Добавляем обработчик клика для пустых планет - показываем модальное окно
     planet.addEventListener('click', function(e) {
       e.preventDefault();
       e.stopPropagation();
       
-      if (ultraNewPlanetaryIsAuthenticated && ultraNewPlanetaryIsStartuper) {
-        if (ultraNewPlanetaryUrls.createStartup) {
-          window.location.href = ultraNewPlanetaryUrls.createStartup;
-        }
-      } else {
-        if (ultraNewPlanetaryUrls.register) {
-          window.location.href = ultraNewPlanetaryUrls.register;
-        }
-      }
+      // Показываем модальное окно с информацией о пустой орбите
+      const emptyStartupData = {
+        id: 0,
+        title: 'Свободная орбита',
+        rating: 0,
+        rating_count: 0,
+        comments_count: 0,
+        direction: 'Свободна',
+        short_description: 'Эта орбита пока свободна. Здесь может появиться новый стартап!',
+        funding_goal: 0,
+        valuation: 0,
+        investors_count: 0,
+        funding_current: 0
+      };
+      
+      showUltraNewPlanetaryModal(emptyStartupData, imageUrl);
     });
     
     planet.style.cursor = 'pointer';
@@ -409,6 +416,7 @@
     const investorsCountElement = document.getElementById('ultra_new_planetary_modal_investors_count');
     const planetImageElement = document.getElementById('ultra_new_planetary_modal_planet_img');
     const detailsBtn = document.getElementById('ultra_new_planetary_modal_details_btn');
+    const investmentBtn = document.getElementById('ultra_new_planetary_modal_investment_btn');
 
     // Заполнение текстовых данных
     if (nameElement) nameElement.textContent = startup.title || 'Без названия';
@@ -436,8 +444,23 @@
     // Кнопка "Подробнее"
     if (detailsBtn) {
       detailsBtn.onclick = function() {
-        if (startup.id) {
+        if (startup.id && startup.id !== 0) {
           window.location.href = `/startups/${startup.id}/`;
+        } else {
+          // Для пустых орбит показываем сообщение
+          alert('Эта орбита пока свободна. Здесь пока нет стартапа для просмотра.');
+        }
+      };
+    }
+
+    // Кнопка инвестирования
+    if (investmentBtn) {
+      investmentBtn.onclick = function() {
+        if (startup.id && startup.id !== 0) {
+          window.location.href = `/invest/${startup.id}/`;
+        } else {
+          // Для пустых орбит показываем сообщение
+          alert('Эта орбита пока свободна. Здесь пока нет стартапа для инвестирования.');
         }
       };
     }
