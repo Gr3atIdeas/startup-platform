@@ -28,6 +28,19 @@
     ]
   };
 
+  // ПЕРЕМЕННЫЕ ДЛЯ ИНТЕРАКТИВНОСТИ ГАЛАКТИКИ
+  let ultraNewPlanetaryGalaxyScale = 1;
+  let ultraNewPlanetaryGalaxyX = 0;
+  let ultraNewPlanetaryGalaxyY = 0;
+  let ultraNewPlanetaryIsDragging = false;
+  let ultraNewPlanetaryLastMouseX = 0;
+  let ultraNewPlanetaryLastMouseY = 0;
+  
+  // ЛИМИТЫ ДЛЯ ИНТЕРАКТИВНОСТИ
+  const ultraNewPlanetaryMinScale = 0.3;
+  const ultraNewPlanetaryMaxScale = 2.5;
+  const ultraNewPlanetaryMaxOffset = 500;
+
   // ИНИЦИАЛИЗАЦИЯ ПРИ ЗАГРУЗКЕ DOM
   document.addEventListener('DOMContentLoaded', function() {
     initializeUltraNewPlanetarySystem();
@@ -88,11 +101,89 @@
     const solarSystem = document.getElementById('ultra_new_planetary_solar_system');
     if (!solarSystem) return;
 
+    // Обычное отслеживание мыши
     solarSystem.addEventListener('mousemove', function(e) {
       const rect = solarSystem.getBoundingClientRect();
       ultraNewPlanetaryMouseX = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
       ultraNewPlanetaryMouseY = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+
+      // Перетаскивание галактики
+      if (ultraNewPlanetaryIsDragging) {
+        const deltaX = e.clientX - ultraNewPlanetaryLastMouseX;
+        const deltaY = e.clientY - ultraNewPlanetaryLastMouseY;
+        
+        ultraNewPlanetaryGalaxyX += deltaX;
+        ultraNewPlanetaryGalaxyY += deltaY;
+        
+        // Ограничиваем перемещение
+        ultraNewPlanetaryGalaxyX = Math.max(-ultraNewPlanetaryMaxOffset, Math.min(ultraNewPlanetaryMaxOffset, ultraNewPlanetaryGalaxyX));
+        ultraNewPlanetaryGalaxyY = Math.max(-ultraNewPlanetaryMaxOffset, Math.min(ultraNewPlanetaryMaxOffset, ultraNewPlanetaryGalaxyY));
+        
+        updateUltraNewPlanetaryGalaxyTransform();
+        
+        ultraNewPlanetaryLastMouseX = e.clientX;
+        ultraNewPlanetaryLastMouseY = e.clientY;
+      }
     });
+
+    // Начало перетаскивания (только не на планетах)
+    solarSystem.addEventListener('mousedown', function(e) {
+      // Проверяем, что клик не по планете
+      if (e.target.classList.contains('ultra_new_planetary_planet')) {
+        return; // Не запускаем драг если кликнули по планете
+      }
+      
+      ultraNewPlanetaryIsDragging = true;
+      ultraNewPlanetaryLastMouseX = e.clientX;
+      ultraNewPlanetaryLastMouseY = e.clientY;
+      solarSystem.style.cursor = 'grabbing';
+      e.preventDefault();
+    });
+
+    // Окончание перетаскивания
+    document.addEventListener('mouseup', function() {
+      if (ultraNewPlanetaryIsDragging) {
+        ultraNewPlanetaryIsDragging = false;
+        solarSystem.style.cursor = 'grab';
+      }
+    });
+
+    // Зум колесом мыши
+    solarSystem.addEventListener('wheel', function(e) {
+      e.preventDefault();
+      
+      const zoomSpeed = 0.1;
+      const delta = e.deltaY > 0 ? -zoomSpeed : zoomSpeed;
+      
+      ultraNewPlanetaryGalaxyScale += delta;
+      ultraNewPlanetaryGalaxyScale = Math.max(ultraNewPlanetaryMinScale, Math.min(ultraNewPlanetaryMaxScale, ultraNewPlanetaryGalaxyScale));
+      
+      updateUltraNewPlanetaryGalaxyTransform();
+    });
+
+    // Сброс при двойном клике
+    solarSystem.addEventListener('dblclick', function(e) {
+      e.preventDefault();
+      resetUltraNewPlanetaryGalaxyTransform();
+    });
+  }
+
+  // ОБНОВЛЕНИЕ ТРАНСФОРМАЦИИ ГАЛАКТИКИ
+  function updateUltraNewPlanetaryGalaxyTransform() {
+    const galaxy = document.getElementById('ultra_new_planetary_galaxy');
+    if (!galaxy) return;
+
+    galaxy.style.setProperty('--ultra_new_planetary_galaxy_scale', ultraNewPlanetaryGalaxyScale);
+    galaxy.style.setProperty('--ultra_new_planetary_galaxy_x', ultraNewPlanetaryGalaxyX + 'px');
+    galaxy.style.setProperty('--ultra_new_planetary_galaxy_y', ultraNewPlanetaryGalaxyY + 'px');
+  }
+
+  // СБРОС ТРАНСФОРМАЦИИ ГАЛАКТИКИ
+  function resetUltraNewPlanetaryGalaxyTransform() {
+    ultraNewPlanetaryGalaxyScale = 1;
+    ultraNewPlanetaryGalaxyX = 0;
+    ultraNewPlanetaryGalaxyY = 0;
+    updateUltraNewPlanetaryGalaxyTransform();
   }
 
   // НАСТРОЙКА ЭЛЕМЕНТОВ УПРАВЛЕНИЯ
@@ -215,13 +306,29 @@
     const planets = document.querySelectorAll('.ultra_new_planetary_planet');
     
     planets.forEach(function(planet, index) {
+      // Сначала очищаем все обработчики и данные
+      const cleanPlanet = clearUltraNewPlanetaryPlanetData(planet);
+      
       const startup = startups[index];
       if (startup) {
-        setupUltraNewPlanetaryPlanet(planet, startup, index);
+        setupUltraNewPlanetaryPlanet(cleanPlanet, startup, index);
       } else {
-        setupUltraNewPlanetaryEmptyPlanet(planet, index);
+        setupUltraNewPlanetaryEmptyPlanet(cleanPlanet, index);
       }
     });
+  }
+
+  // ОЧИСТКА ДАННЫХ ПЛАНЕТЫ
+  function clearUltraNewPlanetaryPlanetData(planet) {
+    // Клонируем элемент для удаления всех обработчиков
+    const newPlanet = planet.cloneNode(true);
+    planet.parentNode.replaceChild(newPlanet, planet);
+    
+    // Удаляем данные
+    newPlanet.removeAttribute('data-startup-id');
+    newPlanet.removeAttribute('data-startup-data');
+    
+    return newPlanet;
   }
 
   // НАСТРОЙКА ПЛАНЕТЫ СО СТАРТАПОМ
@@ -235,11 +342,15 @@
     planet.dataset.startupData = JSON.stringify(startup);
     
     // Обработчики событий
-    planet.addEventListener('click', function() {
+    planet.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
       showUltraNewPlanetaryModal(startup, imageUrl);
     });
     
-    planet.addEventListener('dblclick', function() {
+    planet.addEventListener('dblclick', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
       const startupId = startup.id;
       if (startupId) {
         window.location.href = `/startups/${startupId}/`;
@@ -255,16 +366,11 @@
     const imageUrl = getUltraNewPlanetaryFallbackImage(index);
     planet.style.backgroundImage = `url(${imageUrl})`;
     
-    // Очистка данных стартапа
-    planet.removeAttribute('data-startup-id');
-    planet.removeAttribute('data-startup-data');
-    
-    // Удаляем старые обработчики
-    const newPlanet = planet.cloneNode(true);
-    planet.parentNode.replaceChild(newPlanet, planet);
-    
-    // Добавляем новый обработчик к новому элементу
-    newPlanet.addEventListener('click', function() {
+    // Добавляем обработчик клика для пустых планет
+    planet.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
       if (ultraNewPlanetaryIsAuthenticated && ultraNewPlanetaryIsStartuper) {
         if (ultraNewPlanetaryUrls.createStartup) {
           window.location.href = ultraNewPlanetaryUrls.createStartup;
@@ -276,8 +382,8 @@
       }
     });
     
-    newPlanet.style.cursor = 'pointer';
-    newPlanet.style.opacity = '0.6';
+    planet.style.cursor = 'pointer';
+    planet.style.opacity = '0.6';
   }
 
   // ПОЛУЧЕНИЕ РЕЗЕРВНОГО ИЗОБРАЖЕНИЯ
