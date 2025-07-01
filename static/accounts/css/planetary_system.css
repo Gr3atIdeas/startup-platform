@@ -186,8 +186,12 @@
   /* Простая тень БЕЗ 3D эффектов */
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   
-  /* Идеальная круглая форма */
-  aspect-ratio: 1 / 1;
+  /* ИДЕАЛЬНАЯ КРУГЛАЯ ФОРМА - УСИЛЕННАЯ ВЕРСИЯ */
+  aspect-ratio: 1 / 1 !important;
+  min-width: var(--planet-size) !important;
+  min-height: var(--planet-size) !important;
+  max-width: var(--planet-size) !important;
+  max-height: var(--planet-size) !important;
   overflow: hidden;
   
   /* Оптимизация производительности */

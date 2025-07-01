@@ -30,6 +30,9 @@
   const logoData = { image: data.logoImage || (data.logo ? data.logo.image : '') };
   const urls = data.urls || {};
 
+  console.log('[Planetary] Загружены данные:', { planetsData, directionsData, selectedGalaxy });
+  console.log('[Planetary] Количество планет:', planetsData.length);
+
   // DOM элементы
   const planets = document.querySelectorAll('.planet');
   const orbits = document.querySelectorAll('.orbit');
@@ -167,16 +170,25 @@
       e.stopPropagation();
       
       const id = planet.getAttribute('data-id');
-      let planetData = planetsData.find(p => p.id == id);
+      let planetData = null;
       
+      // Ищем данные планеты по разным полям
+      if (id) {
+        planetData = planetsData.find(p => p.id == id || p.startup_id == id);
+      }
+      
+      // Если не нашли по ID, берем по индексу
       if (!planetData && planetsData[index]) {
         planetData = planetsData[index];
       }
 
+      console.log(`[Planetary] Клик по планете ${index}, ID: ${id}, найдены данные:`, planetData);
+
       // Заполняем карточку данными
-      if (planetData) {
+      if (planetData && planetData.name) {
         fillInfoCard(planetData, planet);
       } else {
+        console.warn(`[Planetary] Данные не найдены для планеты ${index}, используем fallback`);
         fillInfoCardFallback(planet);
       }
 
@@ -198,17 +210,29 @@
 
   // Заполнение карточки данными
   function fillInfoCard(planetData, planet) {
+    console.log(`[Planetary] Заполняем карточку данными:`, planetData);
+    
     if (planetImage) {
-      const bg = getComputedStyle(planet).backgroundImage;
-      planetImage.style.backgroundImage = bg !== 'none' ? bg : `url('${planetData.image}')`;
+      if (planetData.image) {
+        planetImage.style.backgroundImage = `url('${planetData.image}')`;
+      } else {
+        const bg = getComputedStyle(planet).backgroundImage;
+        planetImage.style.backgroundImage = bg !== 'none' ? bg : 'linear-gradient(#3a7bd5,#3a6073)';
+      }
     }
     
-    if (startupName) startupName.textContent = planetData.name || 'Название не указано';
+    // Пробуем разные поля для названия
+    const name = planetData.name || planetData.title || 'Название не указано';
+    if (startupName) startupName.textContent = name;
+    
     if (startupRating) startupRating.textContent = `Рейтинг ${planetData.rating || '0'}/5`;
     if (startupProgress) startupProgress.textContent = planetData.progress || '0%';
     if (startupFunding) startupFunding.textContent = `Цель: ${planetData.funding_goal || 'Не указана'}`;
     if (startupInvestors) startupInvestors.textContent = `Инвесторов: ${planetData.investors || 0}`;
-    if (startupDescription) startupDescription.textContent = planetData.description || 'Описание не указано';
+    
+    // Пробуем разные поля для описания
+    const description = planetData.description || planetData.short_description || 'Описание не указано';
+    if (startupDescription) startupDescription.textContent = description;
   }
 
   // Fallback заполнение карточки
@@ -235,7 +259,7 @@
 
     const now = Date.now();
 
-    planetObjects.forEach(planetObj => {
+    planetObjects.forEach((planetObj, index) => {
       if (!planetObj.orientation || !planetObj.orientation.style) {
         return;
       }
@@ -254,26 +278,22 @@
       const orbitCompression = parseFloat(getComputedStyle(document.documentElement)
         .getPropertyValue('--orbit-compression')) || 0.6;
 
-      // Вычисляем позицию на орбите относительно центра орбиты
+      // Вычисляем позицию на эллиптической орбите
       const x = Math.cos(angleRad) * radius;
       const y = Math.sin(angleRad) * radius * orbitCompression;
 
-      // ИСПРАВЛЕННОЕ позиционирование: используем смещение от центра орбиты
-      // Орбита имеет transform: translate(-50%, -50%), поэтому центр орбиты в (50%, 50%)
-      // Нужно добавить смещение от центра
-      const offsetX = (x / radius) * 50; // Смещение в процентах от -50% до +50%
-      const offsetY = (y / radius) * 50; // Смещение в процентах от -50% до +50%
-      
-      const percentX = 50 + offsetX;
-      const percentY = 50 + offsetY;
-      
-      planetObj.orientation.style.left = `${percentX}%`;
-      planetObj.orientation.style.top = `${percentY}%`;
+      // Позиционируем планету относительно центра орбиты
+      // Орбита уже имеет transform: translate(-50%, -50%), поэтому:
+      // - центр орбиты находится в точке (50%, 50%) относительно galaxy
+      // - нужно сместить планету от центра орбиты на (x, y) пикселей
+      planetObj.orientation.style.left = '50%';
+      planetObj.orientation.style.top = '50%';
+      planetObj.orientation.style.transform = `translate(${x}px, ${y}px)`;
       planetObj.orientation.style.position = 'absolute';
       
       // Отладочная информация для первой планеты
-      if (planetObj === planetObjects[0]) {
-        console.log(`[Planetary] Планета 0: угол ${currentAngle.toFixed(1)}°, позиция (${percentX.toFixed(1)}%, ${percentY.toFixed(1)}%)`);
+      if (index === 0) {
+        console.log(`[Planetary] Планета ${index}: угол ${currentAngle.toFixed(1)}°, позиция (${x.toFixed(1)}px, ${y.toFixed(1)}px)`);
       }
     });
 
@@ -306,15 +326,18 @@
         if (!activePlanet) return;
         
         const id = activePlanet.getAttribute('data-id');
-        let planetData = planetsData.find(p => p.id == id);
+        let planetData = planetsData.find(p => p.id == id || p.startup_id == id);
         
         if (!planetData) {
           const index = [...planets].indexOf(activePlanet);
           planetData = planetsData[index];
         }
         
-        if (planetData && planetData.startup_id) {
-          window.location.href = `/startup/${planetData.startup_id}/`;
+        const startupId = planetData && (planetData.startup_id || planetData.id);
+        if (startupId) {
+          window.location.href = `/startup/${startupId}/`;
+        } else {
+          console.warn('[Planetary] Не удалось найти ID стартапа для перехода');
         }
       });
     }
