@@ -1,11 +1,11 @@
-/* НОВАЯ ПЛАНЕТАРНАЯ СИСТЕМА - РАБОЧАЯ ВЕРСИЯ ИЗ ДЕМО */
+/* УЛЬТРА НОВАЯ ПЛАНЕТАРНАЯ СИСТЕМА - РАБОЧАЯ ВЕРСИЯ ИЗ ДЕМО */
 :root {
-  --new_planetary_galaxy_tilt: 47deg;
-  --new_planetary_planet_compensation: -45deg;
+  --ultra_new_planetary_galaxy_tilt: 47deg;
+  --ultra_new_planetary_planet_compensation: -45deg;
 }
 
 /* ОСНОВНОЙ КОНТЕЙНЕР */
-.new_planetary_system_wrapper {
+.ultra_new_planetary_system_wrapper {
   width: 100%;
   max-width: 1374px;
   margin: 0 auto;
@@ -19,14 +19,14 @@
   outline-offset: -1px;
 }
 
-.new_planetary_system_container {
+.ultra_new_planetary_system_container {
   width: 100%;
   height: 100%;
   position: relative;
 }
 
 /* ОБЩИЙ ФОН КАК В КАРТОЧКЕ СТАРТАПА */
-.new_planetary_space_background {
+.ultra_new_planetary_space_background {
   position: absolute;
   top: 0;
   left: 0;
@@ -37,7 +37,7 @@
   pointer-events: none;
 }
 
-.new_planetary_stars {
+.ultra_new_planetary_stars {
   position: absolute;
   top: 0;
   left: 0;
@@ -46,18 +46,18 @@
   background-image: radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,0.7), transparent);
   background-repeat: repeat;
   background-size: 600px 400px;
-  animation: new_planetary_star_scroll 40s linear infinite;
+  animation: ultra_new_planetary_star_scroll 40s linear infinite;
   z-index: 2;
   pointer-events: none;
 }
 
-@keyframes new_planetary_star_scroll {
+@keyframes ultra_new_planetary_star_scroll {
   from { background-position: 0 0; }
   to { background-position: -800px 0; }
 }
 
 /* СОЛНЕЧНАЯ СИСТЕМА - РАБОЧАЯ СТРУКТУРА ИЗ ДЕМО */
-#new_planetary_solar_system {
+#ultra_new_planetary_solar_system {
   position: absolute;
   top: 0;
   left: 0;
@@ -68,11 +68,11 @@
   cursor: grab;
 }
 
-#new_planetary_solar_system.dragging {
+#ultra_new_planetary_solar_system.dragging {
   cursor: grabbing;
 }
 
-#new_planetary_scene {
+#ultra_new_planetary_scene {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -82,19 +82,19 @@
   transform-style: preserve-3d;
 }
 
-#new_planetary_galaxy {
+#ultra_new_planetary_galaxy {
   position: absolute;
   top: 50%;
   left: 50%;
   width: 100%;
   height: 100%;
-  transform: translate(-50%, -50%) rotateX(var(--new_planetary_galaxy_tilt));
+  transform: translate(-50%, -50%) rotateX(var(--ultra_new_planetary_galaxy_tilt));
   transform-style: preserve-3d;
   z-index: 5;
 }
 
 /* СОЛНЦЕ */
-#new_planetary_sun_container {
+#ultra_new_planetary_sun_container {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -105,15 +105,15 @@
   pointer-events: none;
 }
 
-#new_planetary_sun_image {
+#ultra_new_planetary_sun_image {
   width: 100%;
   height: 100%;
   object-fit: contain;
   border-radius: 50%;
-  animation: new_planetary_sun_glow 3s ease-in-out infinite alternate;
+  animation: ultra_new_planetary_sun_glow 3s ease-in-out infinite alternate;
 }
 
-@keyframes new_planetary_sun_glow {
+@keyframes ultra_new_planetary_sun_glow {
   0% { 
     box-shadow: 0 0 50px rgba(255, 239, 43, 0.8), 0 0 100px rgba(255, 165, 0, 0.4);
   }
@@ -122,7 +122,7 @@
   }
 }
 
-#new_planetary_sun_logo_container {
+#ultra_new_planetary_sun_logo_container {
   position: absolute;
   top: 0;
   left: 0;
@@ -134,14 +134,14 @@
   z-index: 11;
 }
 
-#new_planetary_sun_logo {
+#ultra_new_planetary_sun_logo {
   width: 60px;
   height: auto;
   filter: brightness(0) invert(1);
 }
 
 /* ОРБИТЫ */
-.new_planetary_orbit {
+.ultra_new_planetary_orbit {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -157,7 +157,7 @@
 }
 
 /* КОНТЕЙНЕРЫ ПЛАНЕТ */
-.new_planetary_planet_orientation {
+.ultra_new_planetary_planet_orientation {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -167,7 +167,7 @@
 }
 
 /* ПЛАНЕТЫ */
-.new_planetary_planet {
+.ultra_new_planetary_planet {
   position: absolute;
   width: var(--planet-size);
   height: var(--planet-size);
@@ -179,7 +179,7 @@
   background-position: center;
   background-repeat: no-repeat;
   transform-style: preserve-3d;
-  transform: rotateX(var(--new_planetary_planet_compensation));
+  transform: rotateX(var(--ultra_new_planetary_planet_compensation));
   z-index: 8;
   transition: transform 0.3s ease;
   border: none !important;
@@ -193,19 +193,19 @@
   -webkit-backface-visibility: hidden;
 }
 
-.new_planetary_planet:hover {
-  transform: rotateX(var(--new_planetary_planet_compensation)) scale(1.1);
+.ultra_new_planetary_planet:hover {
+  transform: rotateX(var(--ultra_new_planetary_planet_compensation)) scale(1.1);
   filter: brightness(1.2) drop-shadow(0 0 20px rgba(255, 255, 255, 0.8));
 }
 
-.new_planetary_planet.active {
-  transform: rotateX(var(--new_planetary_planet_compensation)) scale(1.15);
+.ultra_new_planetary_planet.active {
+  transform: rotateX(var(--ultra_new_planetary_planet_compensation)) scale(1.15);
   filter: brightness(1.3) drop-shadow(0 0 30px rgba(255, 255, 255, 1));
   z-index: 9;
 }
 
 /* КАРТОЧКА ИНФОРМАЦИИ */
-#new_planetary_info_card {
+#ultra_new_planetary_info_card {
   position: absolute;
   top: 20px;
   right: 20px;
@@ -219,7 +219,7 @@
   backdrop-filter: blur(10px);
 }
 
-.new_planetary_planet_image {
+.ultra_new_planetary_planet_image {
   width: 80px;
   height: 80px;
   border-radius: 50%;
@@ -228,28 +228,28 @@
   background-position: center;
 }
 
-#new_planetary_info_card h2 {
+#ultra_new_planetary_info_card h2 {
   color: white;
   margin: 0 0 10px 0;
   font-size: 18px;
 }
 
-.new_planetary_rating,
-.new_planetary_funding,
-.new_planetary_investors {
+.ultra_new_planetary_rating,
+.ultra_new_planetary_funding,
+.ultra_new_planetary_investors {
   color: rgba(255, 255, 255, 0.8);
   margin: 5px 0;
   font-size: 14px;
 }
 
-.new_planetary_description {
+.ultra_new_planetary_description {
   color: rgba(255, 255, 255, 0.7);
   margin: 10px 0;
   font-size: 13px;
   line-height: 1.4;
 }
 
-.new_planetary_more_details {
+.ultra_new_planetary_more_details {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   border: none;
@@ -262,12 +262,12 @@
   transition: all 0.3s ease;
 }
 
-.new_planetary_more_details:hover {
+.ultra_new_planetary_more_details:hover {
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
 }
 
-#new_planetary_close_card {
+#ultra_new_planetary_close_card {
   position: absolute;
   top: 10px;
   right: 15px;
@@ -285,13 +285,13 @@
   transition: all 0.2s ease;
 }
 
-#new_planetary_close_card:hover {
+#ultra_new_planetary_close_card:hover {
   background: rgba(255, 255, 255, 0.1);
   color: white;
 }
 
 /* КНОПКИ УПРАВЛЕНИЯ */
-.new_planetary_all_startups_button {
+.ultra_new_planetary_all_startups_button {
   position: absolute;
   top: 30px;
   left: 30px;
@@ -308,12 +308,12 @@
   box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
 }
 
-.new_planetary_all_startups_button:hover {
+.ultra_new_planetary_all_startups_button:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
 }
 
-.new_planetary_nav_btn {
+.ultra_new_planetary_nav_btn {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -331,21 +331,21 @@
   backdrop-filter: blur(10px);
 }
 
-.new_planetary_nav_btn:hover {
+.ultra_new_planetary_nav_btn:hover {
   background: rgba(255, 255, 255, 0.2);
   transform: translateY(-50%) scale(1.1);
 }
 
-.new_planetary_nav_left { left: 30px; }
-.new_planetary_nav_right { right: 30px; }
+.ultra_new_planetary_nav_left { left: 30px; }
+.ultra_new_planetary_nav_right { right: 30px; }
 
-.new_planetary_nav_btn img {
+.ultra_new_planetary_nav_btn img {
   width: 24px;
   height: 24px;
   filter: brightness(0) invert(1);
 }
 
-.new_planetary_fullscreen_btn {
+.ultra_new_planetary_fullscreen_btn {
   position: absolute;
   bottom: 30px;
   right: 30px;
@@ -363,19 +363,19 @@
   backdrop-filter: blur(10px);
 }
 
-.new_planetary_fullscreen_btn:hover {
+.ultra_new_planetary_fullscreen_btn:hover {
   background: rgba(255, 255, 255, 0.2);
   transform: scale(1.1);
 }
 
-.new_planetary_fullscreen_btn img {
+.ultra_new_planetary_fullscreen_btn img {
   width: 24px;
   height: 24px;
   filter: brightness(0) invert(1);
 }
 
 /* СЕЛЕКТОР КАТЕГОРИЙ */
-#new_planetary_galaxy_selector {
+#ultra_new_planetary_galaxy_selector {
   position: absolute;
   bottom: 30px;
   left: 30px;
@@ -387,13 +387,13 @@
   backdrop-filter: blur(10px);
 }
 
-#new_planetary_galaxy_list {
+#ultra_new_planetary_galaxy_list {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-.new_planetary_galaxy_item {
+.ultra_new_planetary_galaxy_item {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -404,52 +404,52 @@
   color: rgba(255, 255, 255, 0.7);
 }
 
-.new_planetary_galaxy_item:hover {
+.ultra_new_planetary_galaxy_item:hover {
   background: rgba(255, 255, 255, 0.1);
   color: white;
 }
 
-.new_planetary_galaxy_item.selected {
+.ultra_new_planetary_galaxy_item.selected {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
 }
 
-.new_planetary_category_icon {
+.ultra_new_planetary_category_icon {
   width: 20px;
   height: 20px;
   opacity: 0.7;
 }
 
-.new_planetary_category_text {
+.ultra_new_planetary_category_text {
   font-size: 13px;
   font-weight: 500;
 }
 
 /* АДАПТИВНОСТЬ */
 @media (max-width: 768px) {
-  .new_planetary_system_wrapper {
+  .ultra_new_planetary_system_wrapper {
     height: 500px;
   }
 
-  #new_planetary_scene {
+  #ultra_new_planetary_scene {
     width: 800px;
     height: 800px;
   }
 
-  .new_planetary_all_startups_button {
+  .ultra_new_planetary_all_startups_button {
     padding: 8px 16px;
     font-size: 12px;
   }
 
-  .new_planetary_nav_btn {
+  .ultra_new_planetary_nav_btn {
     width: 40px;
     height: 40px;
   }
 
-  .new_planetary_nav_left { left: 15px; }
-  .new_planetary_nav_right { right: 15px; }
+  .ultra_new_planetary_nav_left { left: 15px; }
+  .ultra_new_planetary_nav_right { right: 15px; }
 
-  #new_planetary_info_card {
+  #ultra_new_planetary_info_card {
     width: 250px;
   }
 }

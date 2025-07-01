@@ -1,63 +1,63 @@
 {% load static %}
-<div class="new_planetary_system_wrapper">
-  <div class="new_planetary_system_container">
+<div class="ultra_new_planetary_system_wrapper">
+  <div class="ultra_new_planetary_system_container">
     <!-- ОБЩИЙ ФОН КАК В КАРТОЧКЕ СТАРТАПА -->
-    <div class="new_planetary_space_background"></div>
-    <div class="new_planetary_stars"></div>
+    <div class="ultra_new_planetary_space_background"></div>
+    <div class="ultra_new_planetary_stars"></div>
     
     <!-- КНОПКИ УПРАВЛЕНИЯ -->
-    <button class="new_planetary_all_startups_button">Все стартапы</button>
-    <button class="new_planetary_nav_btn new_planetary_nav_left" id="new_planetary_nav_left_btn">
+    <button class="ultra_new_planetary_all_startups_button">Все стартапы</button>
+    <button class="ultra_new_planetary_nav_btn ultra_new_planetary_nav_left" id="ultra_new_planetary_nav_left_btn">
       <img src="{% static 'accounts/images/planetary_system/chevron_left.svg' %}" alt="prev">
     </button>
-    <button class="new_planetary_nav_btn new_planetary_nav_right" id="new_planetary_nav_right_btn">
+    <button class="ultra_new_planetary_nav_btn ultra_new_planetary_nav_right" id="ultra_new_planetary_nav_right_btn">
       <img src="{% static 'accounts/images/planetary_system/chevron_right.svg' %}" alt="next">
     </button>
-    <button class="new_planetary_fullscreen_btn" id="new_planetary_fullscreen_btn">
+    <button class="ultra_new_planetary_fullscreen_btn" id="ultra_new_planetary_fullscreen_btn">
       <img src="{% static 'accounts/images/planetary_system/scan-circle-outline.svg' %}" alt="fullscreen">
     </button>
 
     <!-- СОЛНЕЧНАЯ СИСТЕМА - РАБОЧАЯ СТРУКТУРА ИЗ ДЕМО -->
-    <div id="new_planetary_solar_system">
-      <div id="new_planetary_scene">
-        <div id="new_planetary_galaxy">
+    <div id="ultra_new_planetary_solar_system">
+      <div id="ultra_new_planetary_scene">
+        <div id="ultra_new_planetary_galaxy">
           <!-- СОЛНЦЕ -->
-          <div id="new_planetary_sun_container">
-            <img src="{% static 'accounts/images/planetary_system/solar.png' %}" alt="sun" id="new_planetary_sun_image">
-            <div id="new_planetary_sun_logo_container">
-              <img src="{% static 'accounts/images/planetary_system/gi.svg' %}" alt="GI" id="new_planetary_sun_logo">
+          <div id="ultra_new_planetary_sun_container">
+            <img src="{% static 'accounts/images/planetary_system/solar.png' %}" alt="sun" id="ultra_new_planetary_sun_image">
+            <div id="ultra_new_planetary_sun_logo_container">
+              <img src="{% static 'accounts/images/planetary_system/gi.svg' %}" alt="GI" id="ultra_new_planetary_sun_logo">
             </div>
           </div>
           
           <!-- 6 ОРБИТ С ПЛАНЕТАМИ -->
-          <div class="new_planetary_orbit" style="--orbit-size: 350px; --orbit-time: 80s;">
-            <div class="new_planetary_planet_orientation">
-              <div class="new_planetary_planet" style="--planet-size: 90px;" data-id="1"></div>
+          <div class="ultra_new_planetary_orbit" style="--orbit-size: 350px; --orbit-time: 80s;">
+            <div class="ultra_new_planetary_planet_orientation">
+              <div class="ultra_new_planetary_planet" style="--planet-size: 90px;" data-id="1"></div>
             </div>
           </div>
-          <div class="new_planetary_orbit" style="--orbit-size: 500px; --orbit-time: 95s;">
-            <div class="new_planetary_planet_orientation">
-              <div class="new_planetary_planet" style="--planet-size: 96px;" data-id="2"></div>
+          <div class="ultra_new_planetary_orbit" style="--orbit-size: 500px; --orbit-time: 95s;">
+            <div class="ultra_new_planetary_planet_orientation">
+              <div class="ultra_new_planetary_planet" style="--planet-size: 96px;" data-id="2"></div>
             </div>
           </div>
-          <div class="new_planetary_orbit" style="--orbit-size: 650px; --orbit-time: 110s;">
-            <div class="new_planetary_planet_orientation">
-              <div class="new_planetary_planet" style="--planet-size: 87px;" data-id="3"></div>
+          <div class="ultra_new_planetary_orbit" style="--orbit-size: 650px; --orbit-time: 110s;">
+            <div class="ultra_new_planetary_planet_orientation">
+              <div class="ultra_new_planetary_planet" style="--planet-size: 87px;" data-id="3"></div>
             </div>
           </div>
-          <div class="new_planetary_orbit" style="--orbit-size: 800px; --orbit-time: 125s;">
-            <div class="new_planetary_planet_orientation">
-              <div class="new_planetary_planet" style="--planet-size: 99px;" data-id="4"></div>
+          <div class="ultra_new_planetary_orbit" style="--orbit-size: 800px; --orbit-time: 125s;">
+            <div class="ultra_new_planetary_planet_orientation">
+              <div class="ultra_new_planetary_planet" style="--planet-size: 99px;" data-id="4"></div>
             </div>
           </div>
-          <div class="new_planetary_orbit" style="--orbit-size: 950px; --orbit-time: 140s;">
-            <div class="new_planetary_planet_orientation">
-              <div class="new_planetary_planet" style="--planet-size: 90px;" data-id="5"></div>
+          <div class="ultra_new_planetary_orbit" style="--orbit-size: 950px; --orbit-time: 140s;">
+            <div class="ultra_new_planetary_planet_orientation">
+              <div class="ultra_new_planetary_planet" style="--planet-size: 90px;" data-id="5"></div>
             </div>
           </div>
-          <div class="new_planetary_orbit" style="--orbit-size: 1100px; --orbit-time: 160s;">
-            <div class="new_planetary_planet_orientation">
-              <div class="new_planetary_planet" style="--planet-size: 96px;" data-id="6"></div>
+          <div class="ultra_new_planetary_orbit" style="--orbit-size: 1100px; --orbit-time: 160s;">
+            <div class="ultra_new_planetary_planet_orientation">
+              <div class="ultra_new_planetary_planet" style="--planet-size: 96px;" data-id="6"></div>
             </div>
           </div>
         </div>
@@ -65,28 +65,28 @@
     </div>
 
     <!-- КАРТОЧКА ИНФОРМАЦИИ О СТАРТАПЕ -->
-    <div id="new_planetary_info_card">
-      <button id="new_planetary_close_card">×</button>
-      <div class="new_planetary_planet_image" id="new_planetary_planet_image"></div>
-      <h2 id="new_planetary_startup_name"></h2>
-      <div class="new_planetary_rating" id="new_planetary_startup_rating"></div>
-      <div class="new_planetary_progress_bar">
+    <div id="ultra_new_planetary_info_card">
+      <button id="ultra_new_planetary_close_card">×</button>
+      <div class="ultra_new_planetary_planet_image" id="ultra_new_planetary_planet_image"></div>
+      <h2 id="ultra_new_planetary_startup_name"></h2>
+      <div class="ultra_new_planetary_rating" id="ultra_new_planetary_startup_rating"></div>
+      <div class="ultra_new_planetary_progress_bar">
         <button>Выкуп+инвестирование</button>
-        <div class="new_planetary_progress" id="new_planetary_startup_progress"></div>
+        <div class="ultra_new_planetary_progress" id="ultra_new_planetary_startup_progress"></div>
       </div>
-      <div class="new_planetary_funding" id="new_planetary_startup_funding"></div>
-      <div class="new_planetary_investors" id="new_planetary_startup_investors"></div>
-      <div class="new_planetary_description" id="new_planetary_startup_description"></div>
-      <button class="new_planetary_more_details" id="new_planetary_more_details">Подробнее</button>
+      <div class="ultra_new_planetary_funding" id="ultra_new_planetary_startup_funding"></div>
+      <div class="ultra_new_planetary_investors" id="ultra_new_planetary_startup_investors"></div>
+      <div class="ultra_new_planetary_description" id="ultra_new_planetary_startup_description"></div>
+      <button class="ultra_new_planetary_more_details" id="ultra_new_planetary_more_details">Подробнее</button>
     </div>
 
     <!-- СЕЛЕКТОР КАТЕГОРИЙ -->
-    <div id="new_planetary_galaxy_selector">
-      <div id="new_planetary_galaxy_list">
+    <div id="ultra_new_planetary_galaxy_selector">
+      <div id="ultra_new_planetary_galaxy_list">
         {% for direction in directions %}
-          <div class="new_planetary_galaxy_item {% if direction.direction_name == selected_galaxy %}selected{% endif %}" data-name="{{ direction.direction_name }}">
-            <img src="{% static 'accounts/images/planetary_system/category_img.png' %}" class="new_planetary_category_icon" alt="cat">
-            <span class="new_planetary_category_text">{{ direction.direction_name }}</span>
+          <div class="ultra_new_planetary_galaxy_item {% if direction.direction_name == selected_galaxy %}selected{% endif %}" data-name="{{ direction.direction_name }}">
+            <img src="{% static 'accounts/images/planetary_system/category_img.png' %}" class="ultra_new_planetary_category_icon" alt="cat">
+            <span class="ultra_new_planetary_category_text">{{ direction.direction_name }}</span>
           </div>
         {% endfor %}
       </div>
@@ -95,7 +95,7 @@
 </div>
 
 <!-- ДАННЫЕ ДЛЯ JAVASCRIPT -->
-<script id="new_planetary_fallback_images" type="application/json">
+<script id="ultra_new_planetary_fallback_images" type="application/json">
 {
   "round": [
     "{% static 'accounts/images/planetary_system/planets_round/1.png' %}",
