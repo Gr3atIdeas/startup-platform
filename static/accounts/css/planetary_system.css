@@ -1,7 +1,7 @@
 /* УЛЬТРА НОВАЯ ПЛАНЕТАРНАЯ СИСТЕМА - РАБОЧАЯ ВЕРСИЯ ИЗ ДЕМО */
 :root {
-  --ultra_new_planetary_galaxy_tilt: 0deg;
-  --ultra_new_planetary_planet_compensation: 0deg;
+  --ultra_new_planetary_galaxy_tilt: 60deg;
+  --ultra_new_planetary_planet_compensation: -60deg;
   --ultra_new_planetary_galaxy_scale: 1;
   --ultra_new_planetary_galaxy_x: 0px;
   --ultra_new_planetary_galaxy_y: 0px;
@@ -109,7 +109,7 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%) rotateX(-60deg);
   width: 97px;
   height: 95px;
   z-index: 10;
@@ -164,10 +164,11 @@
 #ultra_new_planetary_sun_logo {
   width: 60px;
   height: auto;
-  filter: brightness(0) invert(1);
+  filter: brightness(0);
+  color: #000000;
 }
 
-/* ОРБИТЫ - ОБНОВЛЕНО ПОД МАКЕТ */
+/* ОРБИТЫ - УБИРАЮ BLUR ДЛЯ ЧЕТКОСТИ */
 .ultra_new_planetary_orbit {
   position: absolute;
   top: 50%;
@@ -181,38 +182,30 @@
   transform-style: preserve-3d;
   z-index: 5;
   pointer-events: none;
-  box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);
-  filter: blur(1.5px);
 }
 
 .ultra_new_planetary_orbit:nth-child(1) {
-  box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);
-  filter: blur(1.5px);
+  /* убираю blur эффекты */
 }
 
 .ultra_new_planetary_orbit:nth-child(2) {
-  box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);
-  filter: blur(1.5px);
+  /* убираю blur эффекты */
 }
 
 .ultra_new_planetary_orbit:nth-child(3) {
-  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.2);
-  filter: blur(2px);
+  /* убираю blur эффекты */
 }
 
 .ultra_new_planetary_orbit:nth-child(4) {
-  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.2);
-  filter: blur(2px);
+  /* убираю blur эффекты */
 }
 
 .ultra_new_planetary_orbit:nth-child(5) {
-  box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);
-  filter: blur(1.5px);
+  /* убираю blur эффекты */
 }
 
 .ultra_new_planetary_orbit:nth-child(6) {
-  box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);
-  filter: blur(1.5px);
+  /* убираю blur эффекты */
 }
 
 /* КОНТЕЙНЕРЫ ПЛАНЕТ */

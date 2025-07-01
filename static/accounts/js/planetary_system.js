@@ -259,7 +259,15 @@
   function selectUltraNewPlanetaryGalaxy(galaxyName) {
     ultraNewPlanetarySelectedGalaxy = galaxyName;
     updateUltraNewPlanetaryGalaxyUI();
-    loadUltraNewPlanetaryGalaxy();
+    
+    // Перезагружаем страницу с фильтром категории
+    const currentUrl = new URL(window.location);
+    if (galaxyName && galaxyName !== 'Все') {
+      currentUrl.searchParams.set('direction', galaxyName);
+    } else {
+      currentUrl.searchParams.delete('direction');
+    }
+    window.location.href = currentUrl.toString();
   }
 
   // ОБНОВЛЕНИЕ UI СЕЛЕКТОРА ГАЛАКТИК
@@ -294,11 +302,13 @@
 
   // ЗАГРУЗКА ГАЛАКТИКИ
   function loadUltraNewPlanetaryGalaxy() {
-    const currentStartups = ultraNewPlanetaryStartupsData.filter(function(startup) {
-      return startup.direction === ultraNewPlanetarySelectedGalaxy;
-    });
-
+    // Используем данные из Django views
+    const currentStartups = ultraNewPlanetaryStartupsData || [];
+    
+    console.log('Loading galaxy with startups:', currentStartups);
+    
     updateUltraNewPlanetaryPlanets(currentStartups);
+    startUltraNewPlanetaryAnimation();
   }
 
   // ОБНОВЛЕНИЕ ПЛАНЕТ
@@ -310,7 +320,7 @@
       const cleanPlanet = clearUltraNewPlanetaryPlanetData(planet);
       
       const startup = startups[index];
-      if (startup) {
+      if (startup && startup.id) {
         setupUltraNewPlanetaryPlanet(cleanPlanet, startup, index);
       } else {
         setupUltraNewPlanetaryEmptyPlanet(cleanPlanet, index);
@@ -334,7 +344,7 @@
   // НАСТРОЙКА ПЛАНЕТЫ СО СТАРТАПОМ
   function setupUltraNewPlanetaryPlanet(planet, startup, index) {
     // Установка изображения планеты
-    const imageUrl = startup.planet_image_url || getUltraNewPlanetaryFallbackImage(index);
+    const imageUrl = startup.image || getUltraNewPlanetaryFallbackImage(index);
     planet.style.backgroundImage = `url(${imageUrl})`;
     
     // Сохранение данных стартапа
@@ -419,25 +429,24 @@
     const investmentBtn = document.getElementById('ultra_new_planetary_modal_investment_btn');
 
     // Заполнение текстовых данных
-    if (nameElement) nameElement.textContent = startup.title || 'Без названия';
-    if (ratingElement) ratingElement.textContent = `Рейтинг ${startup.rating || '0'}/5 (${startup.rating_count || '0'})`;
-    if (commentsElement) commentsElement.textContent = startup.comments_count || '0';
-    if (categoryElement) categoryElement.textContent = startup.direction || 'Медицина';
-    if (descriptionElement) descriptionElement.textContent = startup.short_description || 'Наш стартап разрабатывает инновационную платформу для телемедицины...';
-    if (fundingAmountElement) fundingAmountElement.textContent = `${formatNumber(startup.funding_goal || 456768)} ₽`;
-    if (valuationAmountElement) valuationAmountElement.textContent = `${formatNumber(startup.valuation || 567876)} ₽`;
-    if (investorsCountElement) investorsCountElement.textContent = `Инвестировало (${startup.investors_count || '648'})`;
+    if (nameElement) nameElement.textContent = startup.name || 'Без названия';
+    if (ratingElement) ratingElement.textContent = `Рейтинг ${startup.rating || '0'}/5 (${startup.voters_count || '0'})`;
+    if (commentsElement) commentsElement.textContent = startup.comment_count || '0';
+    if (categoryElement) categoryElement.textContent = startup.direction || 'Не указана';
+    if (descriptionElement) descriptionElement.textContent = startup.description || 'Описание отсутствует';
+    if (fundingAmountElement) fundingAmountElement.textContent = startup.funding_goal || 'Не определена';
+    if (valuationAmountElement) valuationAmountElement.textContent = startup.valuation || 'Не определена';
+    if (investorsCountElement) investorsCountElement.textContent = `Инвестировало (${startup.investors || '0'})`;
 
     // Установка изображения планеты
     if (planetImageElement) {
       planetImageElement.src = planetImageUrl || getUltraNewPlanetaryFallbackImage(0);
     }
 
-    // Прогресс-бар (расчет процента финансирования)
+    // Прогресс-бар
     if (progressElement) {
-      const currentFunding = startup.funding_current || 0;
-      const goalFunding = startup.funding_goal || 1;
-      const percentage = Math.min((currentFunding / goalFunding) * 100, 100);
+      const progressText = startup.progress || '0%';
+      const percentage = parseFloat(progressText.replace('%', '')) || 0;
       progressElement.style.background = `linear-gradient(90deg, #31D2C6 0%, #31D2C6 ${percentage}%, #E0E0E0 ${percentage}%, #E0E0E0 100%)`;
     }
 

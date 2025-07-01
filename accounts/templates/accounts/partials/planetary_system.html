@@ -29,35 +29,35 @@
             </div>
           </div>
           
-          <!-- 6 ОРБИТ С ПЛАНЕТАМИ - РАЗМЕРЫ ИЗ МАКЕТА -->
-          <div class="ultra_new_planetary_orbit" style="--orbit-size: 420px; --orbit-time: 80s;">
+          <!-- 6 ОРБИТ С ПЛАНЕТАМИ - ИСПРАВЛЕННЫЕ РАЗМЕРЫ С БОЛЬШИМИ ИНТЕРВАЛАМИ -->
+          <div class="ultra_new_planetary_orbit" style="--orbit-size: 200px; --orbit-time: 80s;">
             <div class="ultra_new_planetary_planet_orientation">
-              <div class="ultra_new_planetary_planet" style="--planet-size: 69px;" data-id="1"></div>
+              <div class="ultra_new_planetary_planet" style="--planet-size: 60px;" data-id="1"></div>
             </div>
           </div>
-          <div class="ultra_new_planetary_orbit" style="--orbit-size: 430px; --orbit-time: 95s;">
+          <div class="ultra_new_planetary_orbit" style="--orbit-size: 300px; --orbit-time: 95s;">
             <div class="ultra_new_planetary_planet_orientation">
               <div class="ultra_new_planetary_planet" style="--planet-size: 70px;" data-id="2"></div>
             </div>
           </div>
-          <div class="ultra_new_planetary_orbit" style="--orbit-size: 530px; --orbit-time: 110s;">
+          <div class="ultra_new_planetary_orbit" style="--orbit-size: 400px; --orbit-time: 110s;">
             <div class="ultra_new_planetary_planet_orientation">
-              <div class="ultra_new_planetary_planet" style="--planet-size: 105px;" data-id="3"></div>
+              <div class="ultra_new_planetary_planet" style="--planet-size: 56px;" data-id="3"></div>
             </div>
           </div>
-          <div class="ultra_new_planetary_orbit" style="--orbit-size: 540px; --orbit-time: 125s;">
+          <div class="ultra_new_planetary_orbit" style="--orbit-size: 500px; --orbit-time: 125s;">
             <div class="ultra_new_planetary_planet_orientation">
-              <div class="ultra_new_planetary_planet" style="--planet-size: 96px;" data-id="4"></div>
+              <div class="ultra_new_planetary_planet" style="--planet-size: 64px;" data-id="4"></div>
             </div>
           </div>
-          <div class="ultra_new_planetary_orbit" style="--orbit-size: 650px; --orbit-time: 140s;">
+          <div class="ultra_new_planetary_orbit" style="--orbit-size: 600px; --orbit-time: 140s;">
             <div class="ultra_new_planetary_planet_orientation">
-              <div class="ultra_new_planetary_planet" style="--planet-size: 70px;" data-id="5"></div>
+              <div class="ultra_new_planetary_planet" style="--planet-size: 50px;" data-id="5"></div>
             </div>
           </div>
-          <div class="ultra_new_planetary_orbit" style="--orbit-size: 670px; --orbit-time: 160s;">
+          <div class="ultra_new_planetary_orbit" style="--orbit-size: 700px; --orbit-time: 160s;">
             <div class="ultra_new_planetary_planet_orientation">
-              <div class="ultra_new_planetary_planet" style="--planet-size: 68px;" data-id="6"></div>
+              <div class="ultra_new_planetary_planet" style="--planet-size: 60px;" data-id="6"></div>
             </div>
           </div>
         </div>
@@ -144,7 +144,30 @@
         {% for direction in directions %}
           <div class="ultra_new_planetary_galaxy_item {% if direction.direction_name == selected_galaxy %}selected{% endif %}" data-name="{{ direction.direction_name }}">
             <img src="{% static 'accounts/images/planetary_system/category_img.png' %}" class="ultra_new_planetary_category_icon" alt="cat">
-            <span class="ultra_new_planetary_category_text">{{ direction.direction_name }}</span>
+            <span class="ultra_new_planetary_category_text">
+              {% if direction.direction_name == 'Technology' %}Технологии
+              {% elif direction.direction_name == 'Medicine' %}Медицина
+              {% elif direction.direction_name == 'Finance' %}Финансы
+              {% elif direction.direction_name == 'Education' %}Образование
+              {% elif direction.direction_name == 'Entertainment' %}Развлечения
+              {% elif direction.direction_name == 'Food' %}Еда
+              {% elif direction.direction_name == 'Transportation' %}Транспорт
+              {% elif direction.direction_name == 'Energy' %}Энергия
+              {% elif direction.direction_name == 'Real Estate' %}Недвижимость
+              {% elif direction.direction_name == 'Fashion' %}Мода
+              {% elif direction.direction_name == 'Sports' %}Спорт
+              {% elif direction.direction_name == 'Travel' %}Путешествия
+              {% elif direction.direction_name == 'Environment' %}Экология
+              {% elif direction.direction_name == 'Social' %}Социальные сети
+              {% elif direction.direction_name == 'Gaming' %}Игры
+              {% elif direction.direction_name == 'Hardware' %}Оборудование
+              {% elif direction.direction_name == 'Software' %}Программное обеспечение
+              {% elif direction.direction_name == 'AI' %}Искусственный интеллект
+              {% elif direction.direction_name == 'Blockchain' %}Блокчейн
+              {% elif direction.direction_name == 'IoT' %}Интернет вещей
+              {% else %}{{ direction.direction_name }}
+              {% endif %}
+            </span>
           </div>
         {% endfor %}
       </div>

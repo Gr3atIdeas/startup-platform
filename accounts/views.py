@@ -2229,10 +2229,10 @@ def investor_main(request):
     )[:6]
 
     planets_data_for_template = []
-    # Создаем 6 фиксированных орбит с размерами из HTML template
-    fixed_orbit_sizes = [420, 430, 530, 540, 650, 670]
+    # Создаем 6 фиксированных орбит с размерами из обновленного HTML template
+    fixed_orbit_sizes = [200, 300, 400, 500, 600, 700]
     orbit_times = [80, 95, 110, 125, 140, 160]
-    planet_sizes = [69, 70, 105, 96, 70, 68]
+    planet_sizes = [60, 70, 56, 64, 50, 60]
     
     import random
     
@@ -3132,10 +3132,10 @@ def planetary_system(request):
     )
 
     planets_data_for_template = []
-    # Создаем 6 фиксированных орбит с размерами из HTML template
-    fixed_orbit_sizes = [420, 430, 530, 540, 650, 670]
+    # Создаем 6 фиксированных орбит с размерами из обновленного HTML template
+    fixed_orbit_sizes = [200, 300, 400, 500, 600, 700]
     orbit_times = [80, 95, 110, 125, 140, 160]
-    planet_sizes = [69, 70, 105, 96, 70, 68]
+    planet_sizes = [60, 70, 56, 64, 50, 60]
     
     import random
     
