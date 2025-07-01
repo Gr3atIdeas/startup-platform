@@ -221,12 +221,13 @@
 /* ПЛАНЕТЫ */
 .ultra_new_planetary_planet {
   position: absolute;
+  top: 50%;
+  left: 50%;
   width: var(--planet-size);
   height: var(--planet-size);
   margin-left: calc(-0.5 * var(--planet-size));
   margin-top: calc(-0.5 * var(--planet-size));
   border-radius: 50%;
-  background-color: transparent;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -241,10 +242,23 @@
   opacity: 1 !important;
   visibility: visible !important;
   
+  /* Улучшаем качество изображений */
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  image-rendering: pixelated;
+  
+  /* Убираем любые фильтры по умолчанию */
+  filter: none;
+  
   /* Оптимизация производительности */
   will-change: transform;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
+  
+  /* Четкие края */
+  outline: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .ultra_new_planetary_planet:hover {
@@ -620,189 +634,118 @@
 /* КНОПКИ УПРАВЛЕНИЯ - ОБНОВЛЕНО ПОД МАКЕТ */
 .ultra_new_planetary_all_startups_button {
   position: absolute;
-  top: 39px;
-  left: 46px;
-  width: 224px;
-  height: 40px;
-  background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
-  color: black;
+  top: 40px;
+  left: 40px;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #FFEF2B 0%, #FFD700 100%);
   border: none;
-  padding: 12px;
-  border-radius: 10px;
-  cursor: pointer;
+  border-radius: 25px;
+  color: black;
+  font-size: 14px;
   font-family: 'Unbounded', sans-serif;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 16px;
-  z-index: 20;
+  font-weight: 500;
+  cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
-  justify-content: center;
-  align-items: center;
-  display: flex;
-  gap: 8px;
+  z-index: 100;
+  box-shadow: 0 4px 15px rgba(255, 239, 43, 0.3);
 }
 
 .ultra_new_planetary_all_startups_button:hover {
-  transform: translateY(-1px);
-  box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.3);
-}
-
-.ultra_new_planetary_nav_btn {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 63px;
-  height: 63px;
-  padding: 16px;
-  background: #FFEF2B;
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 20;
-  transition: all 0.3s ease;
-  gap: 8px;
-}
-
-.ultra_new_planetary_nav_btn:hover {
-  background: #FFE600;
-  transform: translateY(-50%) scale(1.05);
-}
-
-.ultra_new_planetary_nav_left { 
-  left: 30px; 
-  transform: translateY(-50%);
-}
-
-.ultra_new_planetary_nav_right { 
-  right: 30px; 
-  transform: translateY(-50%);
-}
-
-.ultra_new_planetary_nav_btn img {
-  width: 32px;
-  height: 32px;
-  filter: brightness(0);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 239, 43, 0.4);
+  background: linear-gradient(135deg, #FFD700 0%, #FFEF2B 100%);
 }
 
 .ultra_new_planetary_fullscreen_btn {
   position: absolute;
-  bottom: 30px;
-  right: 30px;
-  width: 62px;
-  height: 62px;
-  background: transparent;
-  border: none;
+  bottom: 40px;
+  right: 40px;
+  width: 50px;
+  height: 50px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
   cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 100;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 20;
-  transition: all 0.3s ease;
-}
-
-.ultra_new_planetary_fullscreen_btn::before {
-  content: '';
-  position: absolute;
-  width: 46.5px;
-  height: 46.5px;
-  border: 1px solid white;
-  border-radius: 0;
-  top: 7.75px;
-  left: 7.75px;
-}
-
-.ultra_new_planetary_fullscreen_btn::after {
-  content: '';
-  position: absolute;
-  width: 23.25px;
-  height: 23.25px;
-  border: 1px solid white;
-  border-radius: 0;
-  top: 19.375px;
-  left: 19.375px;
+  backdrop-filter: blur(10px);
 }
 
 .ultra_new_planetary_fullscreen_btn:hover {
-  transform: scale(1.05);
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: scale(1.1);
 }
 
 .ultra_new_planetary_fullscreen_btn img {
-  display: none;
+  width: 24px;
+  height: 24px;
+  filter: invert(1);
 }
 
 /* СЕЛЕКТОР КАТЕГОРИЙ - ОБНОВЛЕНО ПОД МАКЕТ */
 #ultra_new_planetary_galaxy_selector {
   position: absolute;
-  bottom: 0;
+  bottom: 30px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 20;
-  padding: 20px 0;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  z-index: 100;
+}
+
+#ultra_new_planetary_galaxy_list_container {
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 25px;
+  padding: 8px 12px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 #ultra_new_planetary_galaxy_list {
   display: flex;
-  flex-direction: row;
-  gap: 10px;
   align-items: center;
-  justify-content: center;
+  gap: 8px;
 }
 
 .ultra_new_planetary_galaxy_item {
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 55px;
-  height: 54px;
-  border-radius: 50%;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 20px;
   cursor: pointer;
   transition: all 0.3s ease;
-  position: relative;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  background: transparent;
+  border: 1px solid transparent;
 }
 
 .ultra_new_planetary_galaxy_item:hover {
-  transform: scale(1.1);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 .ultra_new_planetary_galaxy_item.selected {
-  transform: scale(1.2);
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
-}
-
-.ultra_new_planetary_galaxy_item.selected::after {
-  content: attr(data-name);
-  position: absolute;
-  bottom: -35px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #050505;
-  color: white;
-  padding: 9px 17px;
-  border-radius: 20px;
-  font-family: 'Unbounded', sans-serif;
-  font-size: 12px;
-  font-weight: 300;
-  letter-spacing: 0.12px;
-  white-space: nowrap;
-  text-align: center;
+  background: rgba(255, 239, 43, 0.2);
+  border-color: rgba(255, 239, 43, 0.4);
 }
 
 .ultra_new_planetary_category_icon {
-  width: 45px;
-  height: 44px;
-  object-fit: cover;
-  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  opacity: 0.8;
 }
 
 .ultra_new_planetary_category_text {
-  display: none;
+  color: white;
+  font-size: 12px;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 300;
+  white-space: nowrap;
 }
 
 /* АДАПТИВНОСТЬ */
@@ -838,19 +781,7 @@
     left: 20px;
   }
 
-  .ultra_new_planetary_nav_btn {
-    width: 45px;
-    height: 45px;
-    padding: 12px;
-  }
 
-  .ultra_new_planetary_nav_left { left: 15px; }
-  .ultra_new_planetary_nav_right { right: 15px; }
-
-  .ultra_new_planetary_nav_btn img {
-    width: 24px;
-    height: 24px;
-  }
   
   #ultra_new_planetary_galaxy_selector {
     padding: 10px 0;
@@ -865,4 +796,43 @@
     width: 32px;
     height: 32px;
   }
+}
+
+/* ПЕРЕКЛЮЧАТЕЛИ КАТЕГОРИЙ */
+.ultra_new_planetary_category_nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 30px;
+  height: 30px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 101;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(5px);
+}
+
+.ultra_new_planetary_category_nav:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.ultra_new_planetary_category_nav_left {
+  left: -50px;
+}
+
+.ultra_new_planetary_category_nav_right {
+  right: -50px;
+}
+
+.ultra_new_planetary_category_nav img {
+  width: 16px;
+  height: 16px;
+  filter: invert(1);
 }

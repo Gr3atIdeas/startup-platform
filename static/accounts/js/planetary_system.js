@@ -41,6 +41,11 @@
   const ultraNewPlanetaryMaxScale = 2.5;
   const ultraNewPlanetaryMaxOffset = 500;
 
+  // ПЕРЕМЕННЫЕ ДЛЯ КАТЕГОРИЙ
+  let ultraNewPlanetaryCategoriesVisible = 0; // Индекс первой видимой категории
+  let ultraNewPlanetaryCategoriesTotal = 0; // Общее количество категорий
+  const ultraNewPlanetaryCategoriesPerPage = 7; // Показываем 7 категорий
+
   // ИНИЦИАЛИЗАЦИЯ ПРИ ЗАГРУЗКЕ DOM
   document.addEventListener('DOMContentLoaded', function() {
     initializeUltraNewPlanetarySystem();
@@ -188,6 +193,12 @@
 
   // НАСТРОЙКА ЭЛЕМЕНТОВ УПРАВЛЕНИЯ
   function setupUltraNewPlanetaryControls() {
+    // Кнопка полноэкранного режима
+    const fullscreenBtn = document.getElementById('ultra_new_planetary_fullscreen_btn');
+    if (fullscreenBtn) {
+      fullscreenBtn.addEventListener('click', toggleUltraNewPlanetaryFullscreen);
+    }
+
     // Кнопка "Все стартапы"
     const allStartupsBtn = document.querySelector('.ultra_new_planetary_all_startups_button');
     if (allStartupsBtn) {
@@ -196,29 +207,24 @@
       });
     }
 
-    // Навигационные кнопки
-    const leftBtn = document.getElementById('ultra_new_planetary_nav_left_btn');
-    const rightBtn = document.getElementById('ultra_new_planetary_nav_right_btn');
-
-    if (leftBtn) {
-      leftBtn.addEventListener('click', function() {
-        changeUltraNewPlanetaryGalaxy(-1);
+    // Переключатели категорий
+    const categoryPrevBtn = document.getElementById('ultra_new_planetary_category_prev');
+    const categoryNextBtn = document.getElementById('ultra_new_planetary_category_next');
+    
+    if (categoryPrevBtn) {
+      categoryPrevBtn.addEventListener('click', function() {
+        switchUltraNewPlanetaryCategories('prev');
+      });
+    }
+    
+    if (categoryNextBtn) {
+      categoryNextBtn.addEventListener('click', function() {
+        switchUltraNewPlanetaryCategories('next');
       });
     }
 
-    if (rightBtn) {
-      rightBtn.addEventListener('click', function() {
-        changeUltraNewPlanetaryGalaxy(1);
-      });
-    }
-
-    // Полноэкранная кнопка
-    const fullscreenBtn = document.getElementById('ultra_new_planetary_fullscreen_btn');
-    if (fullscreenBtn) {
-      fullscreenBtn.addEventListener('click', function() {
-        toggleUltraNewPlanetaryFullscreen();
-      });
-    }
+    // Инициализация категорий
+    initUltraNewPlanetaryCategories();
 
     // Закрытие модального окна
     const modalCloseBtn = document.getElementById('ultra_new_planetary_modal_close');
@@ -516,31 +522,38 @@
     animate();
   }
 
-  // ОБНОВЛЕНИЕ ПОЗИЦИЙ ПЛАНЕТ - РАБОЧАЯ ЛОГИКА ИЗ ДЕМО
+  // ОБНОВЛЕНИЕ ПОЗИЦИЙ ПЛАНЕТ - ИСПРАВЛЕННАЯ ПЛАВНАЯ АНИМАЦИЯ
   function updateUltraNewPlanetaryPlanetsPosition() {
     const galaxy = document.getElementById('ultra_new_planetary_galaxy');
     if (!galaxy) return;
 
-    const time = Date.now() * 0.001;
+    const time = Date.now() * 0.0008; // Уменьшил скорость для плавности
     const orbits = document.querySelectorAll('.ultra_new_planetary_orbit');
     
     orbits.forEach(function(orbit, orbitIndex) {
-      const radius = parseFloat(orbit.style.getPropertyValue('--orbit-size')) / 2;
-      const speed = 0.02 + orbitIndex * 0.005;
-      const angle = time * speed;
+      const style = window.getComputedStyle(orbit);
+      const orbitSize = parseFloat(style.getPropertyValue('--orbit-size'));
+      const radius = orbitSize / 2;
       
-      const x = Math.cos(angle) * radius;
+      // Разные скорости для разных орбит
+      const baseSpeed = 0.3;
+      const speed = baseSpeed - (orbitIndex * 0.03); // Внешние орбиты медленнее
+      const angle = (time * speed) + (orbitIndex * Math.PI / 3); // Смещение начальных позиций
+      
+      // Плавный расчет позиций
+      const x = Math.cos(angle) * radius * 0.8; // Сжимаем по горизонтали для эллипса
       const y = Math.sin(angle) * radius;
       
       const planetOrientation = orbit.querySelector('.ultra_new_planetary_planet_orientation');
       if (planetOrientation) {
-        // ИСПОЛЬЗУЕМ ПРОЦЕНТНОЕ ПОЗИЦИОНИРОВАНИЕ КАК В ДЕМО
-        const percentX = 50 + 50 * (x / radius);
-        const percentY = 50 + 50 * (y / radius);
+        // Используем transform для плавности
+        const translateX = x;
+        const translateY = y;
         
-        planetOrientation.style.left = `${percentX}%`;
-        planetOrientation.style.top = `${percentY}%`;
-        planetOrientation.style.transform = 'translate(-50%, -50%)';
+        planetOrientation.style.transform = `translate(${translateX}px, ${translateY}px) rotateX(-60deg)`;
+        planetOrientation.style.position = 'absolute';
+        planetOrientation.style.left = '50%';
+        planetOrientation.style.top = '50%';
       }
     });
   }
@@ -557,5 +570,73 @@
   window.addEventListener('beforeunload', function() {
     stopUltraNewPlanetaryAnimation();
   });
+
+  // ИНИЦИАЛИЗАЦИЯ КАТЕГОРИЙ
+  function initUltraNewPlanetaryCategories() {
+    const visibleCategories = document.querySelectorAll('#ultra_new_planetary_galaxy_list .ultra_new_planetary_galaxy_item');
+    const hiddenCategories = document.querySelectorAll('.ultra_new_planetary_hidden_categories .ultra_new_planetary_galaxy_item');
+    
+    ultraNewPlanetaryCategoriesTotal = visibleCategories.length + hiddenCategories.length;
+    updateUltraNewPlanetaryCategoryNavigation();
+  }
+
+  // ПЕРЕКЛЮЧЕНИЕ КАТЕГОРИЙ
+  function switchUltraNewPlanetaryCategories(direction) {
+    const container = document.getElementById('ultra_new_planetary_galaxy_list');
+    const hiddenContainer = document.querySelector('.ultra_new_planetary_hidden_categories');
+    
+    if (!container || !hiddenContainer) return;
+
+    // Собираем все категории в один массив
+    const allVisibleItems = Array.from(container.querySelectorAll('.ultra_new_planetary_galaxy_item'));
+    const allHiddenItems = Array.from(hiddenContainer.querySelectorAll('.ultra_new_planetary_galaxy_item'));
+    const allCategories = [...allVisibleItems, ...allHiddenItems];
+
+    if (allCategories.length <= ultraNewPlanetaryCategoriesPerPage) return;
+
+    // Определяем новый индекс
+    if (direction === 'next') {
+      ultraNewPlanetaryCategoriesVisible = (ultraNewPlanetaryCategoriesVisible + 1) % (allCategories.length - ultraNewPlanetaryCategoriesPerPage + 1);
+    } else {
+      ultraNewPlanetaryCategoriesVisible = ultraNewPlanetaryCategoriesVisible > 0 ? ultraNewPlanetaryCategoriesVisible - 1 : allCategories.length - ultraNewPlanetaryCategoriesPerPage;
+    }
+
+    // Очищаем контейнеры
+    container.innerHTML = '';
+    
+    // Показываем нужные категории
+    const categoriesToShow = allCategories.slice(ultraNewPlanetaryCategoriesVisible, ultraNewPlanetaryCategoriesVisible + ultraNewPlanetaryCategoriesPerPage);
+    
+    categoriesToShow.forEach(category => {
+      const clone = category.cloneNode(true);
+      container.appendChild(clone);
+      
+      // Добавляем обработчик клика
+      clone.addEventListener('click', function() {
+        const galaxyName = clone.getAttribute('data-name');
+        selectUltraNewPlanetaryGalaxy(galaxyName);
+      });
+    });
+
+    updateUltraNewPlanetaryCategoryNavigation();
+  }
+
+  // ОБНОВЛЕНИЕ НАВИГАЦИИ КАТЕГОРИЙ
+  function updateUltraNewPlanetaryCategoryNavigation() {
+    const prevBtn = document.getElementById('ultra_new_planetary_category_prev');
+    const nextBtn = document.getElementById('ultra_new_planetary_category_next');
+    
+    if (!prevBtn || !nextBtn) return;
+
+    const hasMore = ultraNewPlanetaryCategoriesTotal > ultraNewPlanetaryCategoriesPerPage;
+    
+    // Показываем/скрываем кнопки навигации
+    prevBtn.style.display = hasMore ? 'flex' : 'none';
+    nextBtn.style.display = hasMore ? 'flex' : 'none';
+    
+    // Активность кнопок
+    prevBtn.style.opacity = ultraNewPlanetaryCategoriesVisible > 0 ? '1' : '0.5';
+    nextBtn.style.opacity = ultraNewPlanetaryCategoriesVisible < ultraNewPlanetaryCategoriesTotal - ultraNewPlanetaryCategoriesPerPage ? '1' : '0.5';
+  }
 
 })(); 
