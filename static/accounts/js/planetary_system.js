@@ -1,5 +1,5 @@
-// Планетарная система - 2D версия с наклоном орбит
-// Планеты круглые, орбиты эллиптические
+// Планетарная система - 2D версия с исправленным позиционированием
+// Планеты круглые с изображениями, орбиты эллиптические
 
 (function() {
   'use strict';
@@ -87,7 +87,7 @@
   let offsetX = 0, offsetY = 0;
   let scale = 0.8;
 
-  // Инициализация планет - ИСПРАВЛЕННАЯ ДЛЯ 6 ПЛАНЕТ
+  // Инициализация планет - ИСПРАВЛЕННАЯ ВЕРСИЯ
   function initializePlanets() {
     planets.forEach((planet, index) => {
       const orbit = planet.closest('.orbit');
@@ -98,7 +98,7 @@
         return;
       }
 
-      // Получаем размеры из CSS - ИСПРАВЛЯЕМ ПАРСИНГ
+      // Получаем размеры из CSS
       const orbitSizeStr = getComputedStyle(orbit).getPropertyValue('--orbit-size').trim();
       const orbitTimeStr = getComputedStyle(orbit).getPropertyValue('--orbit-time').trim();
       const planetSizeStr = getComputedStyle(planet).getPropertyValue('--planet-size').trim();
@@ -113,7 +113,7 @@
       // Варьируем скорость орбиты
       const speedFactor = 0.8 + Math.random() * 0.4;
 
-      // Установка изображения планеты
+      // Установка изображения планеты - ВОЗВРАЩАЕМ ИЗОБРАЖЕНИЯ
       setupPlanetImage(planet, index);
 
       // Обработчик клика
@@ -138,7 +138,7 @@
     console.log(`[Planetary] Инициализировано ${planetObjects.length} планет`);
   }
 
-  // Настройка планеты (БЕЗ изображений - планеты прозрачные)
+  // Настройка изображения планеты - ВОЗВРАЩАЕМ ИЗОБРАЖЕНИЯ
   function setupPlanetImage(planet, index) {
     const id = planet.getAttribute('data-id');
     let planetData = planetsData.find(p => p.id == id || p.startup_id == id);
@@ -149,9 +149,31 @@
 
     console.log(`[Planetary] Настройка планеты ${index}, ID: ${id}, данные:`, planetData);
 
-    // Убираем все фоновые изображения - планеты теперь прозрачные
-    planet.style.backgroundImage = 'none';
-    planet.style.backgroundColor = 'transparent';
+    // Устанавливаем изображение планеты
+    let planetImageUrl = null;
+    
+    if (planetData) {
+      // Пробуем различные поля для изображения
+      planetImageUrl = planetData.planet_image 
+                      || planetData.image 
+                      || planetData.logo 
+                      || planetData.avatar
+                      || (planetData.startup && planetData.startup.planet_image)
+                      || (planetData.startup && planetData.startup.image);
+    }
+
+    // Если нет изображения в данных, используем fallback
+    if (!planetImageUrl && fallbackImages.round.length > 0) {
+      planetImageUrl = fallbackImages.round[index % fallbackImages.round.length];
+    }
+
+    // Устанавливаем изображение как background-image
+    if (planetImageUrl) {
+      planet.style.backgroundImage = `url(${planetImageUrl})`;
+      console.log(`[Planetary] Планета ${index}: установлено изображение ${planetImageUrl}`);
+    } else {
+      console.warn(`[Planetary] Планета ${index}: изображение не найдено`);
+    }
 
     // Установка атрибута направления
     if (planetData && planetData.direction) {
@@ -185,11 +207,11 @@
       console.log(`[Planetary] Клик по планете ${index}, ID: ${id}, найдены данные:`, planetData);
 
       // Заполняем карточку данными
-      if (planetData && planetData.name) {
+      if (planetData && (planetData.name || planetData.startup_name)) {
         fillInfoCard(planetData, planet);
       } else {
         console.warn(`[Planetary] Данные не найдены для планеты ${index}, используем fallback`);
-        fillInfoCardFallback(planet);
+        fillInfoCardFallback(planet, index);
       }
 
       // Активируем планету
@@ -200,57 +222,64 @@
       if (infoCard) {
         infoCard.style.display = 'block';
       }
-
-      // Ставим анимацию на паузу
-      isPaused = true;
-      pausedTime = Date.now();
+      
+      // Приостанавливаем анимацию
+      if (!isPaused) {
+        isPaused = true;
+        pausedTime = Date.now();
+      }
+      
       lastInteractionTime = Date.now();
     });
   }
 
-  // Заполнение карточки данными
+  // Заполнение карточки информации о стартапе
   function fillInfoCard(planetData, planet) {
-    console.log(`[Planetary] Заполняем карточку данными:`, planetData);
+    const name = planetData.name || planetData.startup_name || 'Неизвестный стартап';
+    const rating = planetData.rating || '4.5';
+    const funding = planetData.funding || planetData.goal || '1,000,000₽';
+    const investors = planetData.investors_count || '25';
+    const description = planetData.description || planetData.short_description || 'Описание стартапа';
     
-    if (planetImage) {
-      if (planetData.image) {
-        planetImage.style.backgroundImage = `url('${planetData.image}')`;
-      } else {
-        const bg = getComputedStyle(planet).backgroundImage;
-        planetImage.style.backgroundImage = bg !== 'none' ? bg : 'linear-gradient(#3a7bd5,#3a6073)';
-      }
+    // Изображение для карточки
+    let cardImageUrl = planetData.planet_image 
+                      || planetData.image 
+                      || planetData.logo 
+                      || planetData.avatar;
+    
+    if (!cardImageUrl && fallbackImages.round.length > 0) {
+      const index = [...planets].indexOf(planet);
+      cardImageUrl = fallbackImages.round[index % fallbackImages.round.length];
     }
-    
-    // Пробуем разные поля для названия
-    const name = planetData.name || planetData.title || 'Название не указано';
+
     if (startupName) startupName.textContent = name;
-    
-    if (startupRating) startupRating.textContent = `Рейтинг ${planetData.rating || '0'}/5`;
-    if (startupProgress) startupProgress.textContent = planetData.progress || '0%';
-    if (startupFunding) startupFunding.textContent = `Цель: ${planetData.funding_goal || 'Не указана'}`;
-    if (startupInvestors) startupInvestors.textContent = `Инвесторов: ${planetData.investors || 0}`;
-    
-    // Пробуем разные поля для описания
-    const description = planetData.description || planetData.short_description || 'Описание не указано';
+    if (startupRating) startupRating.textContent = `★★★★☆ (${rating}/5)`;
+    if (startupFunding) startupFunding.textContent = `Цель: ${funding}`;
+    if (startupInvestors) startupInvestors.textContent = `Инвесторов: ${investors}`;
     if (startupDescription) startupDescription.textContent = description;
+    if (planetImage && cardImageUrl) {
+      planetImage.style.backgroundImage = `url(${cardImageUrl})`;
+    }
   }
 
   // Fallback заполнение карточки
-  function fillInfoCardFallback(planet) {
-    if (planetImage) {
-      const bg = getComputedStyle(planet).backgroundImage;
-      planetImage.style.backgroundImage = bg !== 'none' ? bg : 'linear-gradient(#3a7bd5,#3a6073)';
-    }
+  function fillInfoCardFallback(planet, index) {
+    const fallbackNames = ['Технологический стартап', 'Инновационный проект', 'Перспективная идея', 'Растущий бизнес'];
+    const name = fallbackNames[index % fallbackNames.length];
     
-    if (startupName) startupName.textContent = 'Скоро здесь будет стартап';
-    if (startupRating) startupRating.textContent = '';
-    if (startupProgress) startupProgress.textContent = '';
-    if (startupFunding) startupFunding.textContent = '';
-    if (startupInvestors) startupInvestors.textContent = '';
-    if (startupDescription) startupDescription.textContent = 'Ожидаем загрузку данных...';
+    if (startupName) startupName.textContent = name;
+    if (startupRating) startupRating.textContent = '★★★★☆ (4.2/5)';
+    if (startupFunding) startupFunding.textContent = 'Цель: 1,500,000₽';
+    if (startupInvestors) startupInvestors.textContent = 'Инвесторов: 12';
+    if (startupDescription) startupDescription.textContent = 'Инновационный проект с большим потенциалом роста';
+    
+    if (planetImage && fallbackImages.round.length > 0) {
+      const imageUrl = fallbackImages.round[index % fallbackImages.round.length];
+      planetImage.style.backgroundImage = `url(${imageUrl})`;
+    }
   }
 
-  // Основная функция анимации планет - ИСПРАВЛЕННАЯ ДЛЯ ТОЧНОГО ДВИЖЕНИЯ ПО ОРБИТАМ
+  // Обновление позиций планет - ИСПРАВЛЕННАЯ ВЕРСИЯ БЕЗ ДВОЙНОГО ЦЕНТРИРОВАНИЯ
   function updatePlanets() {
     if (isPaused) {
       requestAnimationFrame(updatePlanets);
@@ -279,23 +308,17 @@
         .getPropertyValue('--orbit-compression')) || 0.6;
 
       // Вычисляем позицию на эллиптической орбите
-      // Радиус должен учитывать реальный размер орбиты в CSS
       const x = Math.cos(angleRad) * radius;
-      const y = Math.sin(angleRad) * radius;
+      const y = Math.sin(angleRad) * radius * orbitCompression;
 
       // ИСПРАВЛЕННОЕ позиционирование: 
-      // Орбита имеет scaleY(0.6), поэтому Y координату нужно сжать ПОСЛЕ вычисления позиции
-      const compressedY = y * orbitCompression;
-
-      // Позиционируем планету строго на линии орбиты
-      planetObj.orientation.style.left = '50%';
-      planetObj.orientation.style.top = '50%';
-      planetObj.orientation.style.transform = `translate(${x}px, ${compressedY}px)`;
-      planetObj.orientation.style.position = 'absolute';
+      // planet-orientation уже позиционирован в центре орбиты (top: 50%, left: 50%)
+      // поэтому просто сдвигаем его от центра на вычисленные координаты
+      planetObj.orientation.style.transform = `translate(${x}px, ${y}px)`;
       
       // Отладочная информация для первой планеты
-      if (index === 0) {
-        console.log(`[Planetary] Планета ${index}: угол ${currentAngle.toFixed(1)}°, позиция (${x.toFixed(1)}px, ${y.toFixed(1)}px)`);
+      if (index === 0 && Math.floor(elapsed) % 5 === 0) {
+        console.log(`[Planetary] Планета ${index}: угол ${currentAngle.toFixed(1)}°, позиция (${x.toFixed(1)}px, ${y.toFixed(1)}px), радиус ${radius}px`);
       }
     });
 
@@ -340,6 +363,8 @@
           window.location.href = `/startup/${startupId}/`;
         } else {
           console.warn('[Planetary] Не удалось найти ID стартапа для перехода');
+          // Fallback - переход на список стартапов
+          window.location.href = '/startups/';
         }
       });
     }
@@ -451,25 +476,25 @@
       isReturningToCenter = true;
       returnToCenter();
     }
+    setTimeout(checkInactivity, 1000);
   }
 
   // Возврат к центру
   function returnToCenter() {
+    const duration = 2000;
+    const startTime = Date.now();
     const startOffsetX = offsetX;
     const startOffsetY = offsetY;
     const startScale = scale;
-    const targetScale = 0.8;
-    const duration = 2000;
-    const startTime = Date.now();
 
     function animate() {
       const elapsed = Date.now() - startTime;
       const progress = Math.min(elapsed / duration, 1);
-      const easing = 1 - Math.pow(1 - progress, 3); // easeOutCubic
+      const easeProgress = 1 - Math.pow(1 - progress, 3);
 
-      offsetX = startOffsetX * (1 - easing);
-      offsetY = startOffsetY * (1 - easing);
-      scale = startScale + (targetScale - startScale) * easing;
+      offsetX = startOffsetX * (1 - easeProgress);
+      offsetY = startOffsetY * (1 - easeProgress);
+      scale = startScale + (0.8 - startScale) * easeProgress;
 
       updateSceneTransform();
 
@@ -483,63 +508,52 @@
     animate();
   }
 
-  // Генерация звёзд (опционально)
+  // Генерация звезд
   function generateStars() {
     const starsContainer = document.querySelector('.stars');
     if (!starsContainer) return;
 
-    // Удаляем существующие динамические звёзды
-    starsContainer.querySelectorAll('.star').forEach(star => star.remove());
-
-    // Создаём новые звёзды
-    for (let i = 0; i < 100; i++) {
-      const star = document.createElement('div');
-      star.className = 'star';
-      star.style.position = 'absolute';
-      star.style.width = '2px';
-      star.style.height = '2px';
-      star.style.backgroundColor = 'white';
-      star.style.borderRadius = '50%';
-      star.style.left = Math.random() * 100 + '%';
-      star.style.top = Math.random() * 100 + '%';
-      star.style.opacity = 0.3 + Math.random() * 0.7;
-      star.style.animation = `twinkle ${2 + Math.random() * 3}s infinite`;
-      
-      starsContainer.appendChild(star);
+    // Создаем дополнительные слои звезд
+    for (let layer = 0; layer < 3; layer++) {
+      const starLayer = document.createElement('div');
+      starLayer.className = 'star-layer';
+      starLayer.style.position = 'absolute';
+      starLayer.style.top = '0';
+      starLayer.style.left = '0';
+      starLayer.style.width = '100%';
+      starLayer.style.height = '100%';
+      starLayer.style.backgroundImage = 'radial-gradient(1px 1px at 50px 100px, rgba(255,255,255,0.5), transparent)';
+      starLayer.style.backgroundRepeat = 'repeat';
+      starLayer.style.backgroundSize = `${300 + layer * 200}px ${200 + layer * 100}px`;
+      starLayer.style.animation = `star-scroll ${20 + layer * 10}s linear infinite`;
+      starLayer.style.animationDirection = layer % 2 ? 'reverse' : 'normal';
+      starsContainer.appendChild(starLayer);
     }
   }
 
   // Инициализация
   function init() {
-    console.log('[Planetary] Инициализация планетарной системы...');
+    console.log('[Planetary] Инициализация планетарной системы');
     
-    initializePlanets();
-    setupEventHandlers();
+    // Генерируем звезды
     generateStars();
+    
+    // Инициализируем планеты
+    initializePlanets();
+    
+    // Настраиваем обработчики
+    setupEventHandlers();
     
     // Запускаем анимацию
     updatePlanets();
     
     // Запускаем проверку неактивности
-    setInterval(checkInactivity, 1000);
+    checkInactivity();
     
     console.log('[Planetary] Планетарная система инициализирована');
   }
 
-  // Стили для анимации мерцания звёзд
-  if (!document.getElementById('planetary-star-styles')) {
-    const style = document.createElement('style');
-    style.id = 'planetary-star-styles';
-    style.textContent = `
-      @keyframes twinkle {
-        0%, 100% { opacity: 0.3; }
-        50% { opacity: 1; }
-      }
-    `;
-    document.head.appendChild(style);
-  }
-
-  // Запускаем инициализацию после загрузки DOM
+  // Запуск после загрузки DOM
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {
