@@ -32,6 +32,8 @@
 
   console.log('[Planetary] Загружены данные:', { planetsData, directionsData, selectedGalaxy });
   console.log('[Planetary] Количество планет:', planetsData.length);
+  console.log('[Planetary] Первая планета:', planetsData[0]);
+  console.log('[Planetary] Структура всех данных планет:', planetsData);
 
   // DOM элементы
   const planets = document.querySelectorAll('.planet');
@@ -136,31 +138,29 @@
     console.log(`[Planetary] Инициализировано ${planetObjects.length} планет`);
   }
 
-  // Настройка изображения планеты
+  // Настройка планеты (БЕЗ изображений - планеты прозрачные)
   function setupPlanetImage(planet, index) {
     const id = planet.getAttribute('data-id');
-    let planetData = planetsData.find(p => p.id == id);
+    let planetData = planetsData.find(p => p.id == id || p.startup_id == id);
     
     if (!planetData && planetsData[index]) {
       planetData = planetsData[index];
     }
 
-    if (planetData && planetData.image) {
-      planet.style.backgroundImage = `url('${planetData.image}')`;
-    } else {
-      // Fallback изображение
-      const useRing = Math.random() < 0.3;
-      const imageArray = useRing ? fallbackImages.ring : fallbackImages.round;
-      
-      if (imageArray.length > 0) {
-        const randomIndex = Math.floor(Math.random() * imageArray.length);
-        planet.style.backgroundImage = `url('${imageArray[randomIndex]}')`;
-      }
-    }
+    console.log(`[Planetary] Настройка планеты ${index}, ID: ${id}, данные:`, planetData);
+
+    // Убираем все фоновые изображения - планеты теперь прозрачные
+    planet.style.backgroundImage = 'none';
+    planet.style.backgroundColor = 'transparent';
 
     // Установка атрибута направления
     if (planetData && planetData.direction) {
       planet.dataset.direction = planetData.direction;
+    }
+    
+    // Сохраняем данные планеты в атрибуте для быстрого доступа
+    if (planetData) {
+      planet.dataset.planetData = JSON.stringify(planetData);
     }
   }
 
@@ -279,16 +279,18 @@
         .getPropertyValue('--orbit-compression')) || 0.6;
 
       // Вычисляем позицию на эллиптической орбите
+      // Радиус должен учитывать реальный размер орбиты в CSS
       const x = Math.cos(angleRad) * radius;
-      const y = Math.sin(angleRad) * radius * orbitCompression;
+      const y = Math.sin(angleRad) * radius;
 
-      // Позиционируем планету относительно центра орбиты
-      // Орбита уже имеет transform: translate(-50%, -50%), поэтому:
-      // - центр орбиты находится в точке (50%, 50%) относительно galaxy
-      // - нужно сместить планету от центра орбиты на (x, y) пикселей
+      // ИСПРАВЛЕННОЕ позиционирование: 
+      // Орбита имеет scaleY(0.6), поэтому Y координату нужно сжать ПОСЛЕ вычисления позиции
+      const compressedY = y * orbitCompression;
+
+      // Позиционируем планету строго на линии орбиты
       planetObj.orientation.style.left = '50%';
       planetObj.orientation.style.top = '50%';
-      planetObj.orientation.style.transform = `translate(${x}px, ${y}px)`;
+      planetObj.orientation.style.transform = `translate(${x}px, ${compressedY}px)`;
       planetObj.orientation.style.position = 'absolute';
       
       // Отладочная информация для первой планеты

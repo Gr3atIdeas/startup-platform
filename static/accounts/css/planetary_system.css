@@ -168,12 +168,14 @@
   width: var(--planet-size);
   height: var(--planet-size);
   border-radius: 50%;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
   cursor: pointer;
   pointer-events: auto;
   z-index: 8;
+  
+  /* УБИРАЕМ ФОНОВЫЕ ИЗОБРАЖЕНИЯ - ПРОЗРАЧНЫЕ ПЛАНЕТЫ */
+  background: transparent !important;
+  background-image: none !important;
+  background-color: transparent !important;
   
   /* ЦЕНТРИРОВАНИЕ ПЛАНЕТЫ - центр планеты точно на позиции контейнера */
   top: 0;
@@ -181,26 +183,42 @@
   transform: translate(-50%, -50%);
   
   /* Гладкие переходы */
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border 0.3s ease;
   
-  /* Простая тень БЕЗ 3D эффектов */
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  
-  /* ИДЕАЛЬНАЯ КРУГЛАЯ ФОРМА - УСИЛЕННАЯ ВЕРСИЯ */
+  /* ИДЕАЛЬНАЯ КРУГЛАЯ ФОРМА - МАКСИМАЛЬНО УСИЛЕННАЯ ВЕРСИЯ */
   aspect-ratio: 1 / 1 !important;
   min-width: var(--planet-size) !important;
   min-height: var(--planet-size) !important;
   max-width: var(--planet-size) !important;
   max-height: var(--planet-size) !important;
+  box-sizing: border-box !important;
   overflow: hidden;
+  
+  /* Тонкая прозрачная граница для видимости */
+  border: 2px solid rgba(255, 255, 255, 0.3);
   
   /* Оптимизация производительности */
   will-change: transform;
   
-  /* ПРИНУДИТЕЛЬНО УБИРАЕМ ВСЕ 3D ЭФФЕКТЫ */
+  /* ПРИНУДИТЕЛЬНО УБИРАЕМ ВСЕ 3D ЭФФЕКТЫ И ИСКАЖЕНИЯ */
   transform-style: flat !important;
   perspective: none !important;
   backface-visibility: visible !important;
+  image-rendering: crisp-edges !important;
+}
+
+.planet:hover {
+  transform: translate(-50%, -50%) scale(1.1);
+  border: 3px solid rgba(255, 255, 255, 0.8) !important;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+  z-index: 9;
+}
+
+.planet.active {
+  transform: translate(-50%, -50%) scale(1.2);
+  border: 3px solid rgba(255, 215, 0, 1) !important;
+  box-shadow: 0 0 30px rgba(255, 215, 0, 0.8);
+  z-index: 10;
 }
 
 /* Состояния планет - ПОЛНОСТЬЮ 2D */
