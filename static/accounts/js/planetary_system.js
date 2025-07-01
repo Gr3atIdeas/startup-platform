@@ -279,7 +279,7 @@
     }
   }
 
-  // Обновление позиций планет - ИСПРАВЛЕННАЯ ВЕРСИЯ БЕЗ ДВОЙНОГО ЦЕНТРИРОВАНИЯ
+  // Обновление позиций планет - ТОЧНАЯ ПРИВЯЗКА К ОРБИТАМ
   function updatePlanets() {
     if (isPaused) {
       requestAnimationFrame(updatePlanets);
@@ -301,24 +301,32 @@
       
       // Преобразуем в радианы
       const angleRad = (currentAngle * Math.PI) / 180;
-      const radius = planetObj.orbitSize / 2;
+      
+      // ТОЧНЫЙ РАСЧЕТ РАДИУСА: 
+      // Радиус должен быть точно равен половине размера орбиты минус половина размера планеты
+      // чтобы центр планеты был на линии орбиты, а не край планеты
+      const orbitRadius = planetObj.orbitSize / 2;
+      const planetRadius = planetObj.size / 2;
+      
+      // Центр планеты должен быть на линии орбиты
+      const effectiveRadius = orbitRadius;
 
       // Получаем коэффициент сжатия орбиты из CSS
       const orbitCompression = parseFloat(getComputedStyle(document.documentElement)
         .getPropertyValue('--orbit-compression')) || 0.6;
 
-      // Вычисляем позицию на эллиптической орбите
-      const x = Math.cos(angleRad) * radius;
-      const y = Math.sin(angleRad) * radius * orbitCompression;
+      // Вычисляем позицию центра планеты точно на линии орбиты
+      const x = Math.cos(angleRad) * effectiveRadius;
+      const y = Math.sin(angleRad) * effectiveRadius * orbitCompression;
 
-      // ИСПРАВЛЕННОЕ позиционирование: 
-      // planet-orientation уже позиционирован в центре орбиты (top: 50%, left: 50%)
-      // поэтому просто сдвигаем его от центра на вычисленные координаты
+      // ТОЧНОЕ позиционирование: 
+      // planet-orientation позиционирован в центре орбиты
+      // Сдвигаем его так, чтобы центр планеты был точно на линии орбиты
       planetObj.orientation.style.transform = `translate(${x}px, ${y}px)`;
       
       // Отладочная информация для первой планеты
       if (index === 0 && Math.floor(elapsed) % 5 === 0) {
-        console.log(`[Planetary] Планета ${index}: угол ${currentAngle.toFixed(1)}°, позиция (${x.toFixed(1)}px, ${y.toFixed(1)}px), радиус ${radius}px`);
+        console.log(`[Planetary] Планета ${index}: угол ${currentAngle.toFixed(1)}°, орбита ${orbitRadius}px, планета ${planetRadius}px, позиция (${x.toFixed(1)}px, ${y.toFixed(1)}px)`);
       }
     });
 
