@@ -302,13 +302,11 @@
       // Преобразуем в радианы
       const angleRad = (currentAngle * Math.PI) / 180;
       
-      // ТОЧНЫЙ РАСЧЕТ РАДИУСА: 
-      // Радиус должен быть точно равен половине размера орбиты минус половина размера планеты
-      // чтобы центр планеты был на линии орбиты, а не край планеты
+      // ПРАВИЛЬНЫЙ РАСЧЕТ РАДИУСА: 
+      // Центр планеты должен двигаться точно по линии орбиты
       const orbitRadius = planetObj.orbitSize / 2;
-      const planetRadius = planetObj.size / 2;
       
-      // Центр планеты должен быть на линии орбиты
+      // Используем точный радиус орбиты без учета размера планеты
       const effectiveRadius = orbitRadius;
 
       // Получаем коэффициент сжатия орбиты из CSS
@@ -326,7 +324,7 @@
       
       // Отладочная информация для первой планеты
       if (index === 0 && Math.floor(elapsed) % 5 === 0) {
-        console.log(`[Planetary] Планета ${index}: угол ${currentAngle.toFixed(1)}°, орбита ${orbitRadius}px, планета ${planetRadius}px, позиция (${x.toFixed(1)}px, ${y.toFixed(1)}px)`);
+        console.log(`[Planetary] Планета ${index}: угол ${currentAngle.toFixed(1)}°, радиус орбиты ${orbitRadius}px, позиция (${x.toFixed(1)}px, ${y.toFixed(1)}px)`);
       }
     });
 
@@ -368,7 +366,7 @@
         
         const startupId = planetData && (planetData.startup_id || planetData.id);
         if (startupId) {
-          window.location.href = `/startup/${startupId}/`;
+          window.location.href = `/startups/${startupId}/`;
         } else {
           console.warn('[Planetary] Не удалось найти ID стартапа для перехода');
           // Fallback - переход на список стартапов
