@@ -1,7 +1,7 @@
 /* УЛЬТРА НОВАЯ ПЛАНЕТАРНАЯ СИСТЕМА - РАБОЧАЯ ВЕРСИЯ ИЗ ДЕМО */
 :root {
-  --ultra_new_planetary_galaxy_tilt: 60deg;
-  --ultra_new_planetary_planet_compensation: -60deg;
+  --ultra_new_planetary_galaxy_tilt: 0deg;
+  --ultra_new_planetary_planet_compensation: 0deg;
   --ultra_new_planetary_galaxy_scale: 1;
   --ultra_new_planetary_galaxy_x: 0px;
   --ultra_new_planetary_galaxy_y: 0px;
@@ -231,8 +231,9 @@
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  transform-style: preserve-3d;
-  transform: rotateX(var(--ultra_new_planetary_planet_compensation));
+  /* Убираю все 3D трансформации */
+  transform: none;
+  transform-style: flat;
   z-index: 8;
   transition: transform 0.3s ease;
   border: none !important;
@@ -247,7 +248,7 @@
   image-rendering: crisp-edges;
   image-rendering: pixelated;
   
-  /* Убираем любые фильтры по умолчанию */
+  /* Убираю любые фильтры по умолчанию */
   filter: none;
   
   /* Оптимизация производительности */
@@ -262,12 +263,12 @@
 }
 
 .ultra_new_planetary_planet:hover {
-  transform: rotateX(var(--ultra_new_planetary_planet_compensation)) scale(1.1);
+  transform: scale(1.1);
   filter: brightness(1.2) drop-shadow(0 0 20px rgba(255, 255, 255, 0.8));
 }
 
 .ultra_new_planetary_planet.active {
-  transform: rotateX(var(--ultra_new_planetary_planet_compensation)) scale(1.15);
+  transform: scale(1.15);
   filter: brightness(1.3) drop-shadow(0 0 30px rgba(255, 255, 255, 1));
   z-index: 9;
 }
@@ -656,12 +657,13 @@
   background: linear-gradient(135deg, #FFD700 0%, #FFEF2B 100%);
 }
 
+/* КНОПКА ПОЛНОЭКРАННОГО РЕЖИМА - В САМЫЙ НИЖНИЙ ПРАВЫЙ УГОЛ */
 .ultra_new_planetary_fullscreen_btn {
   position: absolute;
-  bottom: 40px;
-  right: 40px;
-  width: 50px;
-  height: 50px;
+  bottom: 10px;
+  right: 10px;
+  width: 40px;
+  height: 40px;
   background: rgba(255, 255, 255, 0.1);
   border: 2px solid rgba(255, 255, 255, 0.3);
   border-radius: 50%;
@@ -681,15 +683,15 @@
 }
 
 .ultra_new_planetary_fullscreen_btn img {
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   filter: invert(1);
 }
 
-/* СЕЛЕКТОР КАТЕГОРИЙ - ОБНОВЛЕНО ПОД МАКЕТ */
+/* КОНТЕЙНЕР КАТЕГОРИЙ - ОПУСКАЕМ ЕЩЕ НИЖЕ */
 #ultra_new_planetary_galaxy_selector {
   position: absolute;
-  bottom: 30px;
+  bottom: 60px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -781,8 +783,6 @@
     left: 20px;
   }
 
-
-  
   #ultra_new_planetary_galaxy_selector {
     padding: 10px 0;
   }
