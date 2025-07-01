@@ -64,20 +64,78 @@
       </div>
     </div>
 
-    <!-- КАРТОЧКА ИНФОРМАЦИИ О СТАРТАПЕ -->
-    <div id="ultra_new_planetary_info_card">
-      <button id="ultra_new_planetary_close_card">×</button>
-      <div class="ultra_new_planetary_planet_image" id="ultra_new_planetary_planet_image"></div>
-      <h2 id="ultra_new_planetary_startup_name"></h2>
-      <div class="ultra_new_planetary_rating" id="ultra_new_planetary_startup_rating"></div>
-      <div class="ultra_new_planetary_progress_bar">
-        <button>Выкуп+инвестирование</button>
-        <div class="ultra_new_planetary_progress" id="ultra_new_planetary_startup_progress"></div>
+    <!-- МОДАЛЬНОЕ ОКНО СТАРТАПА -->
+    <div id="ultra_new_planetary_modal" class="ultra_new_planetary_modal">
+      <!-- BACKDROP С БЛЮРОМ -->
+      <div class="ultra_new_planetary_modal_backdrop"></div>
+      
+      <!-- КНОПКА ЗАКРЫТИЯ -->
+      <button id="ultra_new_planetary_modal_close" class="ultra_new_planetary_modal_close">×</button>
+      
+      <!-- КОНТЕНТ МОДАЛЬНОГО ОКНА -->
+      <div class="ultra_new_planetary_modal_content">
+        <!-- ИЗОБРАЖЕНИЕ ПЛАНЕТЫ СЛЕВА -->
+        <div class="ultra_new_planetary_modal_planet">
+          <img id="ultra_new_planetary_modal_planet_img" src="" alt="Planet">
+        </div>
+        
+        <!-- КАРТОЧКА ИНФОРМАЦИИ СПРАВА -->
+        <div class="ultra_new_planetary_modal_card">
+          <!-- НАЗВАНИЕ СТАРТАПА -->
+          <h2 id="ultra_new_planetary_modal_name" class="ultra_new_planetary_modal_title">Ромашка</h2>
+          
+          <!-- РЕЙТИНГ И КОММЕНТАРИИ -->
+          <div class="ultra_new_planetary_modal_rating_section">
+            <div id="ultra_new_planetary_modal_rating" class="ultra_new_planetary_modal_rating">Рейтинг 4,2/5 (534)</div>
+            <div class="ultra_new_planetary_modal_comments">
+              <div class="ultra_new_planetary_modal_comment_icon"></div>
+              <div id="ultra_new_planetary_modal_comments_count" class="ultra_new_planetary_modal_comments_text">17</div>
+            </div>
+          </div>
+          
+          <!-- КНОПКА ВЫКУП+ИНВЕСТИРОВАНИЕ -->
+          <div class="ultra_new_planetary_modal_investment_btn">
+            <button>Выкуп+инвестирование</button>
+          </div>
+          
+          <!-- КАТЕГОРИЯ -->
+          <div class="ultra_new_planetary_modal_category_section">
+            <div id="ultra_new_planetary_modal_category" class="ultra_new_planetary_modal_category">Медицина</div>
+          </div>
+          
+          <!-- ПРОГРЕСС БАР -->
+          <div class="ultra_new_planetary_modal_progress_container">
+            <div id="ultra_new_planetary_modal_progress" class="ultra_new_planetary_modal_progress"></div>
+          </div>
+          
+          <!-- ОПИСАНИЕ -->
+          <div id="ultra_new_planetary_modal_description" class="ultra_new_planetary_modal_description">
+            Наш стартап разрабатывает инновационную платформу для телемедицины...
+          </div>
+          
+          <!-- ФИНАНСИРОВАНИЕ И ОЦЕНКА -->
+          <div class="ultra_new_planetary_modal_financing_section">
+            <div class="ultra_new_planetary_modal_funding_goal">
+              <div class="ultra_new_planetary_modal_funding_label">Цель финансирования</div>
+              <div id="ultra_new_planetary_modal_funding_amount" class="ultra_new_planetary_modal_funding_amount">456 768 ₽</div>
+            </div>
+            <div class="ultra_new_planetary_modal_valuation">
+              <div class="ultra_new_planetary_modal_valuation_icon"></div>
+              <div class="ultra_new_planetary_modal_valuation_label">Оценка</div>
+              <div id="ultra_new_planetary_modal_valuation_amount" class="ultra_new_planetary_modal_valuation_amount">567 876 ₽</div>
+            </div>
+          </div>
+          
+          <!-- КНОПКИ ДЕЙСТВИЙ -->
+          <div class="ultra_new_planetary_modal_actions">
+            <button id="ultra_new_planetary_modal_details_btn" class="ultra_new_planetary_modal_details_btn">Подробнее</button>
+            <div class="ultra_new_planetary_modal_investors_info">
+              <div class="ultra_new_planetary_modal_investor_icon"></div>
+              <div id="ultra_new_planetary_modal_investors_count" class="ultra_new_planetary_modal_investors_text">Инвестировало (648)</div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="ultra_new_planetary_funding" id="ultra_new_planetary_startup_funding"></div>
-      <div class="ultra_new_planetary_investors" id="ultra_new_planetary_startup_investors"></div>
-      <div class="ultra_new_planetary_description" id="ultra_new_planetary_startup_description"></div>
-      <button class="ultra_new_planetary_more_details" id="ultra_new_planetary_more_details">Подробнее</button>
     </div>
 
     <!-- СЕЛЕКТОР КАТЕГОРИЙ -->

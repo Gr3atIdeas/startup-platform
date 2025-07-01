@@ -129,13 +129,28 @@
       });
     }
 
-    // Закрытие карточки информации
-    const closeCard = document.getElementById('ultra_new_planetary_close_card');
-    if (closeCard) {
-      closeCard.addEventListener('click', function() {
-        hideUltraNewPlanetaryInfoCard();
+    // Закрытие модального окна
+    const modalCloseBtn = document.getElementById('ultra_new_planetary_modal_close');
+    if (modalCloseBtn) {
+      modalCloseBtn.addEventListener('click', function() {
+        hideUltraNewPlanetaryModal();
       });
     }
+
+    // Закрытие модального окна по клику на backdrop
+    const modalBackdrop = document.querySelector('.ultra_new_planetary_modal_backdrop');
+    if (modalBackdrop) {
+      modalBackdrop.addEventListener('click', function() {
+        hideUltraNewPlanetaryModal();
+      });
+    }
+
+    // Закрытие модального окна по ESC
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        hideUltraNewPlanetaryModal();
+      }
+    });
   }
 
   // НАСТРОЙКА СЕЛЕКТОРА ГАЛАКТИК
@@ -221,7 +236,7 @@
     
     // Обработчики событий
     planet.addEventListener('click', function() {
-      showUltraNewPlanetaryInfoCard(startup);
+      showUltraNewPlanetaryModal(startup, imageUrl);
     });
     
     planet.addEventListener('dblclick', function() {
@@ -240,12 +255,16 @@
     const imageUrl = getUltraNewPlanetaryFallbackImage(index);
     planet.style.backgroundImage = `url(${imageUrl})`;
     
+    // Очистка данных стартапа
     planet.removeAttribute('data-startup-id');
     planet.removeAttribute('data-startup-data');
     
-    planet.replaceWith(planet.cloneNode(true));
+    // Удаляем старые обработчики
+    const newPlanet = planet.cloneNode(true);
+    planet.parentNode.replaceChild(newPlanet, planet);
     
-    planet.addEventListener('click', function() {
+    // Добавляем новый обработчик к новому элементу
+    newPlanet.addEventListener('click', function() {
       if (ultraNewPlanetaryIsAuthenticated && ultraNewPlanetaryIsStartuper) {
         if (ultraNewPlanetaryUrls.createStartup) {
           window.location.href = ultraNewPlanetaryUrls.createStartup;
@@ -257,8 +276,8 @@
       }
     });
     
-    planet.style.cursor = 'pointer';
-    planet.style.opacity = '0.6';
+    newPlanet.style.cursor = 'pointer';
+    newPlanet.style.opacity = '0.6';
   }
 
   // ПОЛУЧЕНИЕ РЕЗЕРВНОГО ИЗОБРАЖЕНИЯ
@@ -267,48 +286,73 @@
     return images[index % images.length] || 'https://placehold.co/100x100/333/FFF?text=P';
   }
 
-  // ПОКАЗ КАРТОЧКИ ИНФОРМАЦИИ
-  function showUltraNewPlanetaryInfoCard(startup) {
-    const infoCard = document.getElementById('ultra_new_planetary_info_card');
-    if (!infoCard) return;
+  // ПОКАЗ МОДАЛЬНОГО ОКНА
+  function showUltraNewPlanetaryModal(startup, planetImageUrl) {
+    const modal = document.getElementById('ultra_new_planetary_modal');
+    if (!modal) return;
 
     // Заполнение данных
-    const nameElement = document.getElementById('ultra_new_planetary_startup_name');
-    const ratingElement = document.getElementById('ultra_new_planetary_startup_rating');
-    const fundingElement = document.getElementById('ultra_new_planetary_startup_funding');
-    const investorsElement = document.getElementById('ultra_new_planetary_startup_investors');
-    const descriptionElement = document.getElementById('ultra_new_planetary_startup_description');
-    const imageElement = document.getElementById('ultra_new_planetary_planet_image');
-    const moreDetailsBtn = document.getElementById('ultra_new_planetary_more_details');
+    const nameElement = document.getElementById('ultra_new_planetary_modal_name');
+    const ratingElement = document.getElementById('ultra_new_planetary_modal_rating');
+    const commentsElement = document.getElementById('ultra_new_planetary_modal_comments_count');
+    const categoryElement = document.getElementById('ultra_new_planetary_modal_category');
+    const progressElement = document.getElementById('ultra_new_planetary_modal_progress');
+    const descriptionElement = document.getElementById('ultra_new_planetary_modal_description');
+    const fundingAmountElement = document.getElementById('ultra_new_planetary_modal_funding_amount');
+    const valuationAmountElement = document.getElementById('ultra_new_planetary_modal_valuation_amount');
+    const investorsCountElement = document.getElementById('ultra_new_planetary_modal_investors_count');
+    const planetImageElement = document.getElementById('ultra_new_planetary_modal_planet_img');
+    const detailsBtn = document.getElementById('ultra_new_planetary_modal_details_btn');
 
+    // Заполнение текстовых данных
     if (nameElement) nameElement.textContent = startup.title || 'Без названия';
-    if (ratingElement) ratingElement.textContent = `★ ${startup.rating || '0'}/5`;
-    if (fundingElement) fundingElement.textContent = `Собрано: ${startup.funding_current || 0}₽ из ${startup.funding_goal || 0}₽`;
-    if (investorsElement) investorsElement.textContent = `Инвесторов: ${startup.investors_count || 0}`;
-    if (descriptionElement) descriptionElement.textContent = startup.short_description || 'Описание отсутствует';
-    
-    if (imageElement) {
-      const imageUrl = startup.planet_image_url || getUltraNewPlanetaryFallbackImage(0);
-      imageElement.style.backgroundImage = `url(${imageUrl})`;
+    if (ratingElement) ratingElement.textContent = `Рейтинг ${startup.rating || '0'}/5 (${startup.rating_count || '0'})`;
+    if (commentsElement) commentsElement.textContent = startup.comments_count || '0';
+    if (categoryElement) categoryElement.textContent = startup.direction || 'Медицина';
+    if (descriptionElement) descriptionElement.textContent = startup.short_description || 'Наш стартап разрабатывает инновационную платформу для телемедицины...';
+    if (fundingAmountElement) fundingAmountElement.textContent = `${formatNumber(startup.funding_goal || 456768)} ₽`;
+    if (valuationAmountElement) valuationAmountElement.textContent = `${formatNumber(startup.valuation || 567876)} ₽`;
+    if (investorsCountElement) investorsCountElement.textContent = `Инвестировало (${startup.investors_count || '648'})`;
+
+    // Установка изображения планеты
+    if (planetImageElement) {
+      planetImageElement.src = planetImageUrl || getUltraNewPlanetaryFallbackImage(0);
     }
 
-    if (moreDetailsBtn) {
-      moreDetailsBtn.onclick = function() {
+    // Прогресс-бар (расчет процента финансирования)
+    if (progressElement) {
+      const currentFunding = startup.funding_current || 0;
+      const goalFunding = startup.funding_goal || 1;
+      const percentage = Math.min((currentFunding / goalFunding) * 100, 100);
+      progressElement.style.background = `linear-gradient(90deg, #31D2C6 0%, #31D2C6 ${percentage}%, #E0E0E0 ${percentage}%, #E0E0E0 100%)`;
+    }
+
+    // Кнопка "Подробнее"
+    if (detailsBtn) {
+      detailsBtn.onclick = function() {
         if (startup.id) {
           window.location.href = `/startups/${startup.id}/`;
         }
       };
     }
 
-    infoCard.style.display = 'block';
+    // Показ модального окна
+    modal.style.display = 'block';
+    document.body.style.overflow = 'hidden'; // Блокируем скролл страницы
   }
 
-  // СКРЫТИЕ КАРТОЧКИ ИНФОРМАЦИИ
-  function hideUltraNewPlanetaryInfoCard() {
-    const infoCard = document.getElementById('ultra_new_planetary_info_card');
-    if (infoCard) {
-      infoCard.style.display = 'none';
+  // СКРЫТИЕ МОДАЛЬНОГО ОКНА
+  function hideUltraNewPlanetaryModal() {
+    const modal = document.getElementById('ultra_new_planetary_modal');
+    if (modal) {
+      modal.style.display = 'none';
+      document.body.style.overflow = 'auto'; // Возвращаем скролл страницы
     }
+  }
+
+  // ФОРМАТИРОВАНИЕ ЧИСЕЛ
+  function formatNumber(num) {
+    return new Intl.NumberFormat('ru-RU').format(num);
   }
 
   // ПОЛНОЭКРАННЫЙ РЕЖИМ
