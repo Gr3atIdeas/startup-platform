@@ -259,6 +259,11 @@
         selectUltraNewPlanetaryGalaxy(galaxyName);
       });
     });
+    
+    // Инициализируем отображение категорий
+    const allCategories = document.querySelectorAll('.ultra_new_planetary_galaxy_item');
+    ultraNewPlanetaryCategoriesTotal = allCategories.length;
+    updateUltraNewPlanetaryCategoriesDisplay();
   }
 
   // ВЫБОР ГАЛАКТИКИ
