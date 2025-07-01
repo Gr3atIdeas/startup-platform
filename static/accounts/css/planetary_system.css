@@ -1,7 +1,8 @@
 /* УЛЬТРА НОВАЯ ПЛАНЕТАРНАЯ СИСТЕМА - РАБОЧАЯ ВЕРСИЯ ИЗ ДЕМО */
 :root {
-  --ultra_new_planetary_galaxy_tilt: 0deg;
-  --ultra_new_planetary_planet_compensation: 0deg;
+  --ultra_new_planetary_galaxy_tilt: 60deg;
+  --ultra_new_planetary_planet_compensation: -60deg;
+  --ultra_new_planetary_sun_compensation: -60deg;
   --ultra_new_planetary_galaxy_scale: 1;
   --ultra_new_planetary_galaxy_x: 0px;
   --ultra_new_planetary_galaxy_y: 0px;
@@ -109,7 +110,7 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%) rotateX(-60deg);
+  transform: translate(-50%, -50%) rotateX(var(--ultra_new_planetary_sun_compensation));
   width: 97px;
   height: 95px;
   z-index: 10;
@@ -688,10 +689,10 @@
   filter: invert(1);
 }
 
-/* КОНТЕЙНЕР КАТЕГОРИЙ - ОПУСКАЕМ ЕЩЕ НИЖЕ */
+/* КОНТЕЙНЕР КАТЕГОРИЙ - ПЕРЕМЕЩАЕМ В САМЫЙ НИЗ */
 #ultra_new_planetary_galaxy_selector {
   position: absolute;
-  bottom: 60px;
+  bottom: 10px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
