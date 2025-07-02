@@ -1,8 +1,8 @@
 /* УЛЬТРА НОВАЯ ПЛАНЕТАРНАЯ СИСТЕМА - РАБОЧАЯ ВЕРСИЯ ИЗ ДЕМО */
 :root {
-  --ultra_new_planetary_galaxy_tilt: 60deg;
-  --ultra_new_planetary_planet_compensation: -60deg;
-  --ultra_new_planetary_sun_compensation: -60deg;
+  --ultra_new_planetary_galaxy_tilt: 45deg;
+  --ultra_new_planetary_planet_compensation: -45deg;
+  --ultra_new_planetary_sun_compensation: -45deg;
   --ultra_new_planetary_galaxy_scale: 1;
   --ultra_new_planetary_galaxy_x: 0px;
   --ultra_new_planetary_galaxy_y: 0px;
@@ -209,32 +209,30 @@
   /* убираю blur эффекты */
 }
 
-/* КОНТЕЙНЕРЫ ПЛАНЕТ - ИСПРАВЛЕННОЕ ЦЕНТРИРОВАНИЕ */
+/* КОНТЕЙНЕРЫ ПЛАНЕТ - КАК В РАБОЧЕЙ ДЕМО V8 */
 .ultra_new_planetary_planet_orientation {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  /* БЕЗ transform в CSS - позиционирование ТОЛЬКО через JS */
+  /* Позиционирование через left/top устанавливается в JS как в v8.html */
   transform-style: preserve-3d;
-  will-change: transform;
+  will-change: left, top;
   pointer-events: none;
-  /* Контейнер должен быть точкой без размера для правильного центрирования */
-  width: 1px;
-  height: 1px;
-  /* Убираем любые margin/padding */
+  /* Убираем размеры - контейнер просто точка позиционирования */
+  width: 0;
+  height: 0;
   margin: 0;
   padding: 0;
 }
 
-/* ПЛАНЕТЫ - ИСПРАВЛЕННОЕ ЦЕНТРИРОВАНИЕ */
+/* ПЛАНЕТЫ - КАК В РАБОЧЕЙ ДЕМО V8 */
 .ultra_new_planetary_planet {
   position: absolute;
   width: var(--planet-size);
   height: var(--planet-size);
-  /* ИСПРАВЛЕННОЕ центрирование: планета центрируется относительно своего контейнера */
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) rotateX(var(--ultra_new_planetary_planet_compensation));
+  /* Центрирование через отрицательные margin как в v8.html */
+  margin-left: calc(-0.5 * var(--planet-size));
+  margin-top: calc(-0.5 * var(--planet-size));
+  /* Только компенсация наклона, без translate */
+  transform: rotateX(var(--ultra_new_planetary_planet_compensation));
   border-radius: 50%;
   background-size: cover;
   background-position: center;
@@ -274,14 +272,14 @@
 }
 
 .ultra_new_planetary_planet:hover {
-  /* Исправленное масштабирование с сохранением центрирования */
-  transform: translate(-50%, -50%) scale(1.1) rotateX(var(--ultra_new_planetary_planet_compensation));
+  /* Масштабирование как в v8.html - только scale и rotateX */
+  transform: scale(1.1) rotateX(var(--ultra_new_planetary_planet_compensation));
   filter: brightness(1.2) drop-shadow(0 0 20px rgba(255, 255, 255, 0.8));
 }
 
 .ultra_new_planetary_planet.active {
-  /* Исправленное масштабирование с сохранением центрирования */
-  transform: translate(-50%, -50%) scale(1.15) rotateX(var(--ultra_new_planetary_planet_compensation));
+  /* Масштабирование как в v8.html - только scale и rotateX */
+  transform: scale(1.15) rotateX(var(--ultra_new_planetary_planet_compensation));
   filter: brightness(1.3) drop-shadow(0 0 30px rgba(255, 255, 255, 1));
   z-index: 9;
 }
