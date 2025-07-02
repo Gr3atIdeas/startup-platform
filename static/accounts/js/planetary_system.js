@@ -623,15 +623,11 @@
         });
       }
       
-      // Применяем позицию к контейнеру ориентации планеты - КАК В РАБОЧЕЙ ДЕМО
-      // Простое смещение от центра без calc() - точно как в main.js
+      // Применяем позицию к контейнеру ориентации планеты - ИСПРАВЛЕННАЯ ВЕРСИЯ
+      // Простое смещение от центра без calc() - с правильным центрированием
       planetOrientation.style.transform = `translate(${x}px, ${y}px)`;
       
-      // Компенсация поворота применяется к самой планете
-      const planet = planetOrientation.querySelector('.ultra_new_planetary_planet');
-      if (planet) {
-        planet.style.transform = `rotateX(var(--ultra_new_planetary_planet_compensation))`;
-      }
+      // Компенсация поворота теперь обрабатывается в CSS, не нужно применять здесь
       
       // ДЕБАГ: логируем применение трансформации для первой планеты
       if (index === 0 && Math.floor(time * 60) % 30 === 0) {
