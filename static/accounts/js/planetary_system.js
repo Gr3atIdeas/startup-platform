@@ -596,17 +596,10 @@
       
       // Разные скорости для разных орбит (еще больше замедлили)
       const speed = 0.5 / (1 + index * 0.4);
-      const rawAngle = time * speed + (index * Math.PI / 3); // Смещение начальных позиций
+      let rawAngle = time * speed + (index * Math.PI / 3); // Смещение начальных позиций
       
       // ФИКС: Нормализуем угол в диапазон 0-2π чтобы избежать огромных чисел  
-      // И сбрасываем rawAngle периодически для предотвращения переполнения
-      if (Math.abs(rawAngle) > 1000000) {
-        // Сбрасываем rawAngle, сохраняя текущую позицию
-        const currentNormalizedAngle = rawAngle % (2 * Math.PI);
-        // Обновляем время начала, чтобы сохранить текущую позицию
-        // Но пересчитать rawAngle с нуля
-        rawAngle = currentNormalizedAngle;
-      }
+      // Просто нормализуем без сложной логики
       const angle = rawAngle % (2 * Math.PI);
       
       // Вычисляем точную позицию на орбите
@@ -616,18 +609,19 @@
       const x = Math.cos(angle) * orbitRadius * 0.8;
       const y = Math.sin(angle) * orbitRadius;
       
-      // ДЕБАГ: логируем данные для первой планеты каждые 30 кадров (чаще)
-      if (index === 0 && Math.floor(time * 60) % 30 === 0) {
-        console.log('🪐 ДЕБАГ ПЛАНЕТА 0 (ИСПРАВЛЕНО):', {
-          orbitSize: orbitSize,
-          orbitRadius: orbitRadius,
+      // ДЕБАГ: логируем данные для первой планеты каждые 60 кадров
+      if (index === 0 && Math.floor(time * 60) % 60 === 0) {
+        console.log('🪐 ДЕБАГ ДВИЖЕНИЕ ПЛАНЕТЫ 0:', {
+          time: time.toFixed(3),
+          speed: speed.toFixed(3),
           rawAngle: rawAngle.toFixed(2),
           normalizedAngle: angle.toFixed(2),
           x: x.toFixed(2),
           y: y.toFixed(2),
-          transformBefore: planetOrientation.style.transform,
-          planetOrientationRect: planetOrientation.getBoundingClientRect(),
-          orbitRect: orbit.getBoundingClientRect()
+          leftPercent: `${50 + 50 * (x / orbitRadius)}%`,
+          topPercent: `${50 + 50 * (y / orbitRadius)}%`,
+          orbitRadius: orbitRadius,
+          isMoving: time > 0 ? 'YES' : 'NO'
         });
       }
       
@@ -638,12 +632,11 @@
       
       // Убираем transform для позиционирования, используем только left/top
       
-      // ДЕБАГ: логируем применение позиционирования для первой планеты
-      if (index === 0 && Math.floor(time * 60) % 30 === 0) {
-        console.log('🪐 ДЕБАГ ПОЗИЦИОНИРОВАНИЕ применено (V8 ВЕРСИЯ):', {
-          left: `${50 + 50 * (x / orbitRadius)}%`,
-          top: `${50 + 50 * (y / orbitRadius)}%`,
-          planetOrientationRect: planetOrientation.getBoundingClientRect()
+      // ДЕБАГ: подтверждаем что позиционирование применено
+      if (index === 0 && Math.floor(time * 60) % 60 === 0) {
+        console.log('✅ ПОЗИЦИОНИРОВАНИЕ ПРИМЕНЕНО:', {
+          left: planetOrientation.style.left,
+          top: planetOrientation.style.top
         });
       }
     });
