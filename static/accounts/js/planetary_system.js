@@ -585,7 +585,7 @@
     }
   }
 
-  // ОБНОВЛЕНИЕ ПОЗИЦИЙ ПЛАНЕТ (АНИМАЦИЯ) - С ДЕБАГОМ
+  // ОБНОВЛЕНИЕ ПОЗИЦИЙ ПЛАНЕТ (АНИМАЦИЯ) - С ДЕБАГОМ И ФИКСОМ УГЛОВ
   function updateUltraNewPlanetaryPlanetsPosition() {
     const planets = document.querySelectorAll('.ultra_new_planetary_planet_orientation');
     const time = Date.now() * 0.0003; // Снижена скорость с 0.0008 до 0.0003
@@ -596,7 +596,10 @@
       
       // Разные скорости для разных орбит (еще больше замедлили)
       const speed = 0.5 / (1 + index * 0.4);
-      const angle = time * speed + (index * Math.PI / 3); // Смещение начальных позиций
+      const rawAngle = time * speed + (index * Math.PI / 3); // Смещение начальных позиций
+      
+      // ФИКС: Нормализуем угол в диапазон 0-2π чтобы избежать огромных чисел
+      const angle = rawAngle % (2 * Math.PI);
       
       // Вычисляем точную позицию на орбите
       const orbitRadius = orbitSize / 2;
@@ -607,10 +610,11 @@
       
       // ДЕБАГ: логируем данные для первой планеты каждые 60 кадров
       if (index === 0 && Math.floor(time * 60) % 60 === 0) {
-        console.log('🪐 ДЕБАГ ПЛАНЕТА 0:', {
+        console.log('🪐 ДЕБАГ ПЛАНЕТА 0 (ИСПРАВЛЕНО):', {
           orbitSize: orbitSize,
           orbitRadius: orbitRadius,
-          angle: angle.toFixed(2),
+          rawAngle: rawAngle.toFixed(2),
+          normalizedAngle: angle.toFixed(2),
           x: x.toFixed(2),
           y: y.toFixed(2),
           transformBefore: planetOrientation.style.transform,
@@ -620,13 +624,13 @@
       }
       
       // Применяем позицию к контейнеру ориентации планеты
-      // Учитываем базовое центрирование translate(-50%, -50%) и добавляем смещение орбиты
+      // Контейнер уже центрирован через CSS translate(-50%, -50%), добавляем смещение орбиты
       const newTransform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) rotateX(var(--ultra_new_planetary_planet_compensation))`;
       planetOrientation.style.transform = newTransform;
       
       // ДЕБАГ: логируем применение трансформации для первой планеты
       if (index === 0 && Math.floor(time * 60) % 60 === 0) {
-        console.log('🪐 ДЕБАГ TRANSFORM применен:', newTransform);
+        console.log('🪐 ДЕБАГ TRANSFORM применен (ИСПРАВЛЕНО):', newTransform);
       }
     });
   }
