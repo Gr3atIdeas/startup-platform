@@ -608,8 +608,8 @@
       const x = Math.cos(angle) * orbitRadius * 0.8;
       const y = Math.sin(angle) * orbitRadius;
       
-      // ДЕБАГ: логируем данные для первой планеты каждые 60 кадров
-      if (index === 0 && Math.floor(time * 60) % 60 === 0) {
+      // ДЕБАГ: логируем данные для первой планеты каждые 30 кадров (чаще)
+      if (index === 0 && Math.floor(time * 60) % 30 === 0) {
         console.log('🪐 ДЕБАГ ПЛАНЕТА 0 (ИСПРАВЛЕНО):', {
           orbitSize: orbitSize,
           orbitRadius: orbitRadius,
@@ -629,7 +629,7 @@
       planetOrientation.style.transform = newTransform;
       
       // ДЕБАГ: логируем применение трансформации для первой планеты
-      if (index === 0 && Math.floor(time * 60) % 60 === 0) {
+      if (index === 0 && Math.floor(time * 60) % 30 === 0) {
         console.log('🪐 ДЕБАГ TRANSFORM применен (ИСПРАВЛЕНО):', newTransform);
       }
     });
