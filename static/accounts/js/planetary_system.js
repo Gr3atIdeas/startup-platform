@@ -600,12 +600,17 @@
       const speed = 1 / (1 + index * 0.3);
       const angle = time * speed + (index * Math.PI / 3); // Смещение начальных позиций
       
+      // Вычисляем точную позицию на орбите - центр планеты должен быть точно на линии орбиты
+      const orbitRadius = orbitSize / 2;
+      
       // Эллиптическая орбита (сжатие по X на 0.8)
-      const x = Math.cos(angle) * (orbitSize / 2) * 0.8;
-      const y = Math.sin(angle) * (orbitSize / 2);
+      const x = Math.cos(angle) * orbitRadius * 0.8;
+      const y = Math.sin(angle) * orbitRadius;
       
       // Применяем позицию к контейнеру ориентации планеты
-      planetOrientation.style.transform = `translate(${x}px, ${y}px) rotateX(var(--ultra_new_planetary_planet_compensation))`;
+      // Учитываем что контейнер уже центрирован через CSS translate(-50%, -50%)
+      // Добавляем смещение относительно центра орбиты
+      planetOrientation.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) rotateX(var(--ultra_new_planetary_planet_compensation))`;
     });
   }
 
