@@ -337,6 +337,9 @@
         setupUltraNewPlanetaryEmptyPlanet(cleanPlanet, index);
       }
     });
+    
+    // ИНИЦИАЛИЗАЦИЯ ПЛАНЕТАРНЫХ ОБЪЕКТОВ КАК В V8.HTML
+    initializeUltraNewPlanetaryObjects();
   }
 
   // ОЧИСТКА ДАННЫХ ПЛАНЕТЫ
@@ -585,58 +588,75 @@
     }
   }
 
-  // ОБНОВЛЕНИЕ ПОЗИЦИЙ ПЛАНЕТ (АНИМАЦИЯ) - С ДЕБАГОМ И ФИКСОМ УГЛОВ
-  function updateUltraNewPlanetaryPlanetsPosition() {
-    const planets = document.querySelectorAll('.ultra_new_planetary_planet_orientation');
-    const time = Date.now() * 0.0003; // Снижена скорость с 0.0008 до 0.0003
+  // ПЛАНЕТАРНЫЕ ОБЪЕКТЫ ДЛЯ СИСТЕМЫ КАК В V8.HTML
+  let ultraNewPlanetaryObjects = [];
+
+  // ИНИЦИАЛИЗАЦИЯ ПЛАНЕТАРНЫХ ОБЪЕКТОВ КАК В V8.HTML
+  function initializeUltraNewPlanetaryObjects() {
+    const planets = document.querySelectorAll('.ultra_new_planetary_planet');
+    ultraNewPlanetaryObjects = [];
     
-    planets.forEach(function(planetOrientation, index) {
-      const orbit = planetOrientation.parentElement;
-      const orbitSize = parseInt(orbit.style.getPropertyValue('--orbit-size')) || 200;
+    planets.forEach((planet, index) => {
+      const orbit = planet.closest('.ultra_new_planetary_orbit');
+      const planetOrientation = planet.closest('.ultra_new_planetary_planet_orientation');
       
-      // Разные скорости для разных орбит (еще больше замедлили)
-      const speed = 0.5 / (1 + index * 0.4);
-      let rawAngle = time * speed + (index * Math.PI / 3); // Смещение начальных позиций
+      if (!orbit || !planetOrientation) return;
       
-      // ФИКС: Нормализуем угол в диапазон 0-2π чтобы избежать огромных чисел  
-      // Просто нормализуем без сложной логики
-      const angle = rawAngle % (2 * Math.PI);
+      // Параметры орбиты
+      const orbitSize = parseFloat(orbit.style.getPropertyValue('--orbit-size')) || 200;
+      const orbitTime = parseFloat(orbit.style.getPropertyValue('--orbit-time')) || 80;
       
-      // Вычисляем точную позицию на орбите
-      const orbitRadius = orbitSize / 2;
+      // Генерируем случайный начальный угол и скорость для каждой планеты КАК В V8.HTML
+      const initialAngle = Math.random() * 360;
+      const speedFactor = 0.8 + Math.random() * 0.4;
       
-      // Эллиптическая орбита (сжатие по X на 0.8)
-      const x = Math.cos(angle) * orbitRadius * 0.8;
-      const y = Math.sin(angle) * orbitRadius;
+      // Сохраняем данные о планете
+      ultraNewPlanetaryObjects.push({
+        element: planet,
+        orientation: planetOrientation,
+        orbit: orbit,
+        orbitSize: orbitSize,
+        orbitTime: orbitTime,
+        angle: initialAngle,
+        speedFactor: speedFactor,
+        startTime: Date.now() - Math.random() * orbitTime * 1000 // Рандомизируем начальные позиции
+      });
+    });
+  }
+
+  // ОБНОВЛЕНИЕ ПОЗИЦИЙ ПЛАНЕТ ТОЧНО КАК В V8.HTML
+  function updateUltraNewPlanetaryPlanetsPosition() {
+    const now = Date.now();
+    
+    ultraNewPlanetaryObjects.forEach((planetObj, index) => {
+      if (!planetObj.orientation || !planetObj.element) return;
       
-      // ДЕБАГ: логируем данные для первой планеты каждые 60 кадров
-      if (index === 0 && Math.floor(time * 60) % 60 === 0) {
-        console.log('🪐 ДЕБАГ ДВИЖЕНИЕ ПЛАНЕТЫ 0:', {
-          time: time.toFixed(3),
-          speed: speed.toFixed(3),
-          rawAngle: rawAngle.toFixed(2),
-          normalizedAngle: angle.toFixed(2),
+      // ТОЧНО КАК В V8.HTML - система времени
+      const elapsedSeconds = (now - planetObj.startTime) / 1000;
+      const orbitTimeSeconds = planetObj.orbitTime * planetObj.speedFactor;
+      const progress = (elapsedSeconds % orbitTimeSeconds) / orbitTimeSeconds;
+      const angle = planetObj.angle + progress * 360; // в градусах
+      const angleRad = angle * Math.PI / 180; // в радианах
+      
+      // Вычисляем позицию на орбите
+      const radius = planetObj.orbitSize / 2;
+      const x = Math.cos(angleRad) * radius;
+      const y = Math.sin(angleRad) * radius;
+      
+      // Устанавливаем положение планеты на орбите ТОЧНО КАК В V8.HTML
+      planetObj.orientation.style.left = `${50 + 50 * (x / radius)}%`;
+      planetObj.orientation.style.top = `${50 + 50 * (y / radius)}%`;
+      
+      // ДЕБАГ для первой планеты
+      if (index === 0 && Math.floor(Date.now() / 1000) % 2 === 0 && Math.floor(Date.now() / 100) % 10 === 0) {
+        console.log('🪐 V8.HTML СИСТЕМА:', {
+          elapsedSeconds: elapsedSeconds.toFixed(2),
+          progress: progress.toFixed(3),
+          angle: angle.toFixed(2),
           x: x.toFixed(2),
           y: y.toFixed(2),
-          leftPercent: `${50 + 50 * (x / orbitRadius)}%`,
-          topPercent: `${50 + 50 * (y / orbitRadius)}%`,
-          orbitRadius: orbitRadius,
-          isMoving: time > 0 ? 'YES' : 'NO'
-        });
-      }
-      
-      // Применяем позицию к контейнеру ориентации планеты - КАК В РАБОЧЕЙ ДЕМО V8
-      // Используем процентное позиционирование как в working demo
-      planetOrientation.style.left = `${50 + 50 * (x / orbitRadius)}%`;
-      planetOrientation.style.top = `${50 + 50 * (y / orbitRadius)}%`;
-      
-      // Убираем transform для позиционирования, используем только left/top
-      
-      // ДЕБАГ: подтверждаем что позиционирование применено
-      if (index === 0 && Math.floor(time * 60) % 60 === 0) {
-        console.log('✅ ПОЗИЦИОНИРОВАНИЕ ПРИМЕНЕНО:', {
-          left: planetOrientation.style.left,
-          top: planetOrientation.style.top
+          left: planetObj.orientation.style.left,
+          top: planetObj.orientation.style.top
         });
       }
     });
