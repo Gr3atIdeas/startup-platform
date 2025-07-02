@@ -585,7 +585,7 @@
     }
   }
 
-  // ОБНОВЛЕНИЕ ПОЗИЦИЙ ПЛАНЕТ (АНИМАЦИЯ)
+  // ОБНОВЛЕНИЕ ПОЗИЦИЙ ПЛАНЕТ (АНИМАЦИЯ) - С ДЕБАГОМ
   function updateUltraNewPlanetaryPlanetsPosition() {
     const planets = document.querySelectorAll('.ultra_new_planetary_planet_orientation');
     const time = Date.now() * 0.0003; // Снижена скорость с 0.0008 до 0.0003
@@ -605,9 +605,29 @@
       const x = Math.cos(angle) * orbitRadius * 0.8;
       const y = Math.sin(angle) * orbitRadius;
       
+      // ДЕБАГ: логируем данные для первой планеты каждые 60 кадров
+      if (index === 0 && Math.floor(time * 60) % 60 === 0) {
+        console.log('🪐 ДЕБАГ ПЛАНЕТА 0:', {
+          orbitSize: orbitSize,
+          orbitRadius: orbitRadius,
+          angle: angle.toFixed(2),
+          x: x.toFixed(2),
+          y: y.toFixed(2),
+          transformBefore: planetOrientation.style.transform,
+          planetOrientationRect: planetOrientation.getBoundingClientRect(),
+          orbitRect: orbit.getBoundingClientRect()
+        });
+      }
+      
       // Применяем позицию к контейнеру ориентации планеты
       // Учитываем базовое центрирование translate(-50%, -50%) и добавляем смещение орбиты
-      planetOrientation.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) rotateX(var(--ultra_new_planetary_planet_compensation))`;
+      const newTransform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) rotateX(var(--ultra_new_planetary_planet_compensation))`;
+      planetOrientation.style.transform = newTransform;
+      
+      // ДЕБАГ: логируем применение трансформации для первой планеты
+      if (index === 0 && Math.floor(time * 60) % 60 === 0) {
+        console.log('🪐 ДЕБАГ TRANSFORM применен:', newTransform);
+      }
     });
   }
 
