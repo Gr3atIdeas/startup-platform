@@ -598,7 +598,15 @@
       const speed = 0.5 / (1 + index * 0.4);
       const rawAngle = time * speed + (index * Math.PI / 3); // Смещение начальных позиций
       
-      // ФИКС: Нормализуем угол в диапазон 0-2π чтобы избежать огромных чисел
+      // ФИКС: Нормализуем угол в диапазон 0-2π чтобы избежать огромных чисел  
+      // И сбрасываем rawAngle периодически для предотвращения переполнения
+      if (Math.abs(rawAngle) > 1000000) {
+        // Сбрасываем rawAngle, сохраняя текущую позицию
+        const currentNormalizedAngle = rawAngle % (2 * Math.PI);
+        // Обновляем время начала, чтобы сохранить текущую позицию
+        // Но пересчитать rawAngle с нуля
+        rawAngle = currentNormalizedAngle;
+      }
       const angle = rawAngle % (2 * Math.PI);
       
       // Вычисляем точную позицию на орбите

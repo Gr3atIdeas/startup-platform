@@ -209,18 +209,13 @@
   /* убираю blur эффекты */
 }
 
-/* КОНТЕЙНЕРЫ ПЛАНЕТ - КАК В РАБОЧЕЙ ДЕМО V8 */
+/* КОНТЕЙНЕРЫ ПЛАНЕТ - ТОЧНО КАК В V8.HTML */
 .ultra_new_planetary_planet_orientation {
   position: absolute;
-  /* Позиционирование через left/top устанавливается в JS как в v8.html */
+  /* БЕЗ КАКОГО-ЛИБО ЦЕНТРИРОВАНИЯ В CSS - ВСЁ В JS КАК В V8.HTML */
   transform-style: preserve-3d;
   will-change: left, top;
   pointer-events: none;
-  /* Убираем размеры - контейнер просто точка позиционирования */
-  width: 0;
-  height: 0;
-  margin: 0;
-  padding: 0;
 }
 
 /* ПЛАНЕТЫ - КАК В РАБОЧЕЙ ДЕМО V8 */
