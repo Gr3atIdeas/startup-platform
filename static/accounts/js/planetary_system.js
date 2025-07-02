@@ -352,64 +352,84 @@
     return newPlanet;
   }
 
-  // НАСТРОЙКА ПЛАНЕТЫ СО СТАРТАПОМ
+  // НАСТРОЙКА ПЛАНЕТЫ С ДАННЫМИ
   function setupUltraNewPlanetaryPlanet(planet, startup, index) {
-    // Установка изображения планеты
-    const imageUrl = startup.image || getUltraNewPlanetaryFallbackImage(index);
+    if (!planet || !startup) return;
+
+    // Установка изображения
+    const imageUrl = startup.planet_image || getUltraNewPlanetaryFallbackImage(index);
     planet.style.backgroundImage = `url(${imageUrl})`;
     
-    // Сохранение данных стартапа
-    planet.dataset.startupId = startup.id;
-    planet.dataset.startupData = JSON.stringify(startup);
+    // Получаем размер планеты и устанавливаем его на контейнер
+    const planetSize = planet.style.getPropertyValue('--planet-size') || '60px';
+    const container = planet.parentElement;
+    if (container && container.classList.contains('ultra_new_planetary_planet_orientation')) {
+      container.style.setProperty('--planet-size', planetSize);
+      container.style.width = planetSize;
+      container.style.height = planetSize;
+      container.style.marginLeft = `calc(-0.5 * ${planetSize})`;
+      container.style.marginTop = `calc(-0.5 * ${planetSize})`;
+    }
+
+    // Установка данных
+    planet.setAttribute('data-startup-id', startup.id || 0);
+    planet.setAttribute('data-startup-name', startup.name || 'Пустая орбита');
+    planet.setAttribute('data-startup-data', JSON.stringify(startup));
     
-    // Обработчики событий
-    planet.addEventListener('click', function(e) {
-      e.preventDefault();
-      e.stopPropagation();
+    // Обработчик клика
+    planet.addEventListener('click', function() {
       showUltraNewPlanetaryModal(startup, imageUrl);
     });
     
-    planet.addEventListener('dblclick', function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      const startupId = startup.id;
-      if (startupId) {
-        window.location.href = `/startups/${startupId}/`;
-      }
-    });
-    
+    // Стили для активной планеты
     planet.style.cursor = 'pointer';
     planet.style.opacity = '1';
   }
 
   // НАСТРОЙКА ПУСТОЙ ПЛАНЕТЫ
   function setupUltraNewPlanetaryEmptyPlanet(planet, index) {
+    if (!planet) return;
+
+    // Установка изображения-заглушки
     const imageUrl = getUltraNewPlanetaryFallbackImage(index);
     planet.style.backgroundImage = `url(${imageUrl})`;
     
-    // Добавляем обработчик клика для пустых планет - показываем модальное окно
-    planet.addEventListener('click', function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      
-      // Показываем модальное окно с информацией о пустой орбите
-      const emptyStartupData = {
-        id: 0,
-        name: 'Свободная орбита',
-        rating: 0,
-        voters_count: 0,
-        comment_count: 0,
-        direction: 'Свободна',
-        description: 'Эта орбита пока свободна. Здесь может появиться новый стартап!',
-        funding_goal: 0,
-        valuation: 0,
-        investors: 0,
-        current_funding: 0
-      };
-      
-      showUltraNewPlanetaryModal(emptyStartupData, imageUrl);
+    // Получаем размер планеты и устанавливаем его на контейнер
+    const planetSize = planet.style.getPropertyValue('--planet-size') || '60px';
+    const container = planet.parentElement;
+    if (container && container.classList.contains('ultra_new_planetary_planet_orientation')) {
+      container.style.setProperty('--planet-size', planetSize);
+      container.style.width = planetSize;
+      container.style.height = planetSize;
+      container.style.marginLeft = `calc(-0.5 * ${planetSize})`;
+      container.style.marginTop = `calc(-0.5 * ${planetSize})`;
+    }
+
+    // Установка данных по умолчанию
+    const emptyStartup = {
+      id: 0,
+      name: 'Свободная орбита',
+      description: 'Эта орбита пока свободна. Здесь может появиться ваш стартап!',
+      rating: '0',
+      voters_count: '0',
+      comment_count: '0',
+      direction: 'Не определена',
+      funding_goal: 'Не определена',
+      valuation: 'Не определена',
+      investors: '0',
+      progress: 0
+    };
+    
+    planet.setAttribute('data-startup-id', '0');
+    planet.setAttribute('data-startup-name', 'Свободная орбита');
+    planet.setAttribute('data-startup-data', JSON.stringify(emptyStartup));
+    
+    // Обработчик клика для пустой планеты
+    planet.addEventListener('click', function() {
+      showUltraNewPlanetaryModal(emptyStartup, imageUrl);
     });
     
+    // Стили для неактивной планеты
     planet.style.cursor = 'pointer';
     planet.style.opacity = '0.6';
   }
@@ -590,17 +610,17 @@
   // ОБНОВЛЕНИЕ ПОЗИЦИЙ ПЛАНЕТ (АНИМАЦИЯ)
   function updateUltraNewPlanetaryPlanetsPosition() {
     const planets = document.querySelectorAll('.ultra_new_planetary_planet_orientation');
-    const time = Date.now() * 0.0008; // Уменьшенная скорость для плавности
+    const time = Date.now() * 0.0003; // Снижена скорость с 0.0008 до 0.0003
     
     planets.forEach(function(planetOrientation, index) {
       const orbit = planetOrientation.parentElement;
       const orbitSize = parseInt(orbit.style.getPropertyValue('--orbit-size')) || 200;
       
-      // Разные скорости для разных орбит
-      const speed = 1 / (1 + index * 0.3);
+      // Разные скорости для разных орбит (еще больше замедлили)
+      const speed = 0.5 / (1 + index * 0.4);
       const angle = time * speed + (index * Math.PI / 3); // Смещение начальных позиций
       
-      // Вычисляем точную позицию на орбите - центр планеты должен быть точно на линии орбиты
+      // Вычисляем точную позицию на орбите
       const orbitRadius = orbitSize / 2;
       
       // Эллиптическая орбита (сжатие по X на 0.8)
@@ -608,9 +628,8 @@
       const y = Math.sin(angle) * orbitRadius;
       
       // Применяем позицию к контейнеру ориентации планеты
-      // Учитываем что контейнер уже центрирован через CSS translate(-50%, -50%)
-      // Добавляем смещение относительно центра орбиты
-      planetOrientation.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) rotateX(var(--ultra_new_planetary_planet_compensation))`;
+      // Просто смещаем от центра орбиты без calc()
+      planetOrientation.style.transform = `translate(${x}px, ${y}px) rotateX(var(--ultra_new_planetary_planet_compensation))`;
     });
   }
 

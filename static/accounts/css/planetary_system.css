@@ -209,35 +209,34 @@
   /* убираю blur эффекты */
 }
 
-/* КОНТЕЙНЕРЫ ПЛАНЕТ - ПРАВИЛЬНОЕ ЦЕНТРИРОВАНИЕ НА ОРБИТЕ */
+/* КОНТЕЙНЕРЫ ПЛАНЕТ - УПРОЩЕННОЕ ЦЕНТРИРОВАНИЕ */
 .ultra_new_planetary_planet_orientation {
   position: absolute;
   top: 50%;
   left: 50%;
-  /* Убираем любые трансформации по умолчанию кроме центрирования */
-  transform: translate(-50%, -50%);
+  /* НЕ добавляем transform по умолчанию - анимация будет его устанавливать */
   transform-style: preserve-3d;
   will-change: transform;
   pointer-events: none;
-  /* Размер контейнера должен быть минимальным для точного позиционирования */
-  width: 0;
-  height: 0;
+  /* Устанавливаем размер контейнера равный размеру планеты для точного позиционирования */
+  width: var(--planet-size, 60px);
+  height: var(--planet-size, 60px);
+  /* Центрируем контейнер относительно его размера */
+  margin-left: calc(-0.5 * var(--planet-size, 60px));
+  margin-top: calc(-0.5 * var(--planet-size, 60px));
 }
 
-/* ПЛАНЕТЫ - ЦЕНТРИРУЮТСЯ ОТНОСИТЕЛЬНО КОНТЕЙНЕРА */
+/* ПЛАНЕТЫ - ЗАПОЛНЯЮТ ВЕСЬ КОНТЕЙНЕР */
 .ultra_new_planetary_planet {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  width: var(--planet-size);
-  height: var(--planet-size);
-  /* Центрируем планету относительно контейнера-ориентации */
-  transform: translate(-50%, -50%);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   border-radius: 50%;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  /* Убираю все 3D трансформации */
   transform-style: flat;
   z-index: 8;
   transition: transform 0.3s ease;
@@ -268,12 +267,12 @@
 }
 
 .ultra_new_planetary_planet:hover {
-  transform: translate(-50%, -50%) scale(1.1);
+  transform: scale(1.1);
   filter: brightness(1.2) drop-shadow(0 0 20px rgba(255, 255, 255, 0.8));
 }
 
 .ultra_new_planetary_planet.active {
-  transform: translate(-50%, -50%) scale(1.15);
+  transform: scale(1.15);
   filter: brightness(1.3) drop-shadow(0 0 30px rgba(255, 255, 255, 1));
   z-index: 9;
 }
@@ -693,15 +692,15 @@
   filter: invert(1);
 }
 
-/* КОНТЕЙНЕР КАТЕГОРИЙ - ОПУСКАЕМ НИЖЕ, НО НЕ КОНФЛИКТУЕМ С КНОПКОЙ */
+/* КОНТЕЙНЕР КАТЕГОРИЙ - ОПУСКАЕМ В САМЫЙ НИЗ */
 #ultra_new_planetary_galaxy_selector {
   position: absolute;
-  bottom: 70px;
+  bottom: 5px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 10px;
   z-index: 100;
 }
 
@@ -800,9 +799,9 @@
     height: 20px;
   }
 
-  /* КАТЕГОРИИ НА МОБИЛЬНЫХ - ОПУСКАЕМ ВЫШЕ КНОПКИ ПОЛНОЭКРАННОГО РЕЖИМА */
+  /* КАТЕГОРИИ НА МОБИЛЬНЫХ - ВОЗВРАЩАЕМ В НИЗ ЭКРАНА */
   #ultra_new_planetary_galaxy_selector {
-    bottom: 60px;
+    bottom: 5px;
     gap: 10px;
   }
   
