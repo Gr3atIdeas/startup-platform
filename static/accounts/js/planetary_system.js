@@ -360,17 +360,6 @@
     const imageUrl = startup.planet_image || getUltraNewPlanetaryFallbackImage(index);
     planet.style.backgroundImage = `url(${imageUrl})`;
     
-    // Получаем размер планеты и устанавливаем его на контейнер
-    const planetSize = planet.style.getPropertyValue('--planet-size') || '60px';
-    const container = planet.parentElement;
-    if (container && container.classList.contains('ultra_new_planetary_planet_orientation')) {
-      container.style.setProperty('--planet-size', planetSize);
-      container.style.width = planetSize;
-      container.style.height = planetSize;
-      container.style.marginLeft = `calc(-0.5 * ${planetSize})`;
-      container.style.marginTop = `calc(-0.5 * ${planetSize})`;
-    }
-
     // Установка данных
     planet.setAttribute('data-startup-id', startup.id || 0);
     planet.setAttribute('data-startup-name', startup.name || 'Пустая орбита');
@@ -394,17 +383,6 @@
     const imageUrl = getUltraNewPlanetaryFallbackImage(index);
     planet.style.backgroundImage = `url(${imageUrl})`;
     
-    // Получаем размер планеты и устанавливаем его на контейнер
-    const planetSize = planet.style.getPropertyValue('--planet-size') || '60px';
-    const container = planet.parentElement;
-    if (container && container.classList.contains('ultra_new_planetary_planet_orientation')) {
-      container.style.setProperty('--planet-size', planetSize);
-      container.style.width = planetSize;
-      container.style.height = planetSize;
-      container.style.marginLeft = `calc(-0.5 * ${planetSize})`;
-      container.style.marginTop = `calc(-0.5 * ${planetSize})`;
-    }
-
     // Установка данных по умолчанию
     const emptyStartup = {
       id: 0,
@@ -628,8 +606,8 @@
       const y = Math.sin(angle) * orbitRadius;
       
       // Применяем позицию к контейнеру ориентации планеты
-      // Просто смещаем от центра орбиты без calc()
-      planetOrientation.style.transform = `translate(${x}px, ${y}px) rotateX(var(--ultra_new_planetary_planet_compensation))`;
+      // Учитываем базовое центрирование translate(-50%, -50%) и добавляем смещение орбиты
+      planetOrientation.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) rotateX(var(--ultra_new_planetary_planet_compensation))`;
     });
   }
 
