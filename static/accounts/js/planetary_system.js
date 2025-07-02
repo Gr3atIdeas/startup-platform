@@ -623,14 +623,19 @@
         });
       }
       
-      // Применяем позицию к контейнеру ориентации планеты
-      // Контейнер уже центрирован через CSS translate(-50%, -50%), добавляем смещение орбиты
-      const newTransform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) rotateX(var(--ultra_new_planetary_planet_compensation))`;
-      planetOrientation.style.transform = newTransform;
+      // Применяем позицию к контейнеру ориентации планеты - КАК В РАБОЧЕЙ ДЕМО
+      // Простое смещение от центра без calc() - точно как в main.js
+      planetOrientation.style.transform = `translate(${x}px, ${y}px)`;
+      
+      // Компенсация поворота применяется к самой планете
+      const planet = planetOrientation.querySelector('.ultra_new_planetary_planet');
+      if (planet) {
+        planet.style.transform = `rotateX(var(--ultra_new_planetary_planet_compensation))`;
+      }
       
       // ДЕБАГ: логируем применение трансформации для первой планеты
       if (index === 0 && Math.floor(time * 60) % 30 === 0) {
-        console.log('🪐 ДЕБАГ TRANSFORM применен (ИСПРАВЛЕНО):', newTransform);
+        console.log('🪐 ДЕБАГ TRANSFORM применен (ДЕМО ВЕРСИЯ):', `translate(${x}px, ${y}px)`);
       }
     });
   }

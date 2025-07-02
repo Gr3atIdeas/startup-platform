@@ -209,13 +209,12 @@
   /* убираю blur эффекты */
 }
 
-/* КОНТЕЙНЕРЫ ПЛАНЕТ - ПРОСТОЕ ЦЕНТРИРОВАНИЕ БЕЗ MARGIN */
+/* КОНТЕЙНЕРЫ ПЛАНЕТ - КАК В РАБОЧЕЙ ДЕМО ВЕРСИИ */
 .ultra_new_planetary_planet_orientation {
   position: absolute;
   top: 50%;
   left: 50%;
-  /* Простое центрирование через transform - JS будет его перезаписывать */
-  transform: translate(-50%, -50%);
+  /* БЕЗ transform в CSS - позиционирование ТОЛЬКО через JS */
   transform-style: preserve-3d;
   will-change: transform;
   pointer-events: none;
@@ -224,20 +223,19 @@
   height: 0;
 }
 
-/* ПЛАНЕТЫ - ПРАВИЛЬНОЕ ЦЕНТРИРОВАНИЕ И ГЛАДКИЕ КРАЯ */
+/* ПЛАНЕТЫ - КАК В РАБОЧЕЙ ДЕМО ВЕРСИИ */
 .ultra_new_planetary_planet {
   position: absolute;
-  top: 0;
-  left: 0;
   width: var(--planet-size);
   height: var(--planet-size);
-  /* ТОЧНОЕ центрирование планеты через transform - НЕ margin! */
-  transform: translate(-50%, -50%);
+  /* Центрирование через margin как в рабочей демо */
+  margin-left: calc(-0.5 * var(--planet-size));
+  margin-top: calc(-0.5 * var(--planet-size));
   border-radius: 50%;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  transform-style: flat;
+  transform-style: preserve-3d;
   z-index: 8;
   transition: transform 0.3s ease;
   border: none !important;
@@ -272,14 +270,14 @@
 }
 
 .ultra_new_planetary_planet:hover {
-  /* Комбинируем центрирование и масштабирование */
-  transform: translate(-50%, -50%) scale(1.1);
+  /* Простое масштабирование как в демо */
+  transform: scale(1.1) rotateX(var(--ultra_new_planetary_planet_compensation));
   filter: brightness(1.2) drop-shadow(0 0 20px rgba(255, 255, 255, 0.8));
 }
 
 .ultra_new_planetary_planet.active {
-  /* Комбинируем центрирование и масштабирование */
-  transform: translate(-50%, -50%) scale(1.15);
+  /* Простое масштабирование как в демо */
+  transform: scale(1.15) rotateX(var(--ultra_new_planetary_planet_compensation));
   filter: brightness(1.3) drop-shadow(0 0 30px rgba(255, 255, 255, 1));
   z-index: 9;
 }
