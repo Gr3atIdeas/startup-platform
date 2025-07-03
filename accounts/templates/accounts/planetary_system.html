@@ -387,9 +387,9 @@
 <div id="fps">0 FPS</div>
 <div id="galaxy-selector">
   <div id="galaxy-list">
-    <div class="galaxy-item {% if selected_galaxy == 'All' or selected_galaxy == 'Все' %}selected{% endif %}" data-name="Все">Все</div>
+    <div class="galaxy-item {% if selected_galaxy == 'All' or selected_galaxy == 'Все' %}selected{% endif %}" data-name="All">Все</div>
     {% for direction in directions %}
-      <div class="galaxy-item {% if selected_galaxy == direction.original_name %}selected{% endif %}" data-name="{{ direction.direction_name }}">{{ direction.direction_name }}</div>
+      <div class="galaxy-item {% if selected_galaxy == direction.original_name %}selected{% endif %}" data-name="{{ direction.original_name|default:direction.direction_name }}">{{ direction.direction_name }}</div>
     {% endfor %}
   </div>
 </div>
@@ -700,13 +700,15 @@ function filterStartupsByCategory(categoryName) {
   
   let filteredStartups = [];
   
-  if (categoryName === 'Все' || !categoryName) {
+  if (categoryName === 'Все' || categoryName === 'All' || !categoryName) {
     filteredStartups = [...allStartupsData];
+    console.log('🔍 Показываем ВСЕ стартапы');
   } else {
     // Фильтруем по русскому названию категории
     filteredStartups = allStartupsData.filter(startup => 
       startup.direction === categoryName
     );
+    console.log('🔍 Фильтруем по русскому названию:', categoryName);
   }
   
   console.log('🔍 Найдено стартапов:', filteredStartups.length);
@@ -806,30 +808,39 @@ function showStartupModal(startup, imageUrl) {
   lastInteractionTime = Date.now();
 }
 
-// Обработчики для категорий - ОБНОВЛЕННЫЕ для реального времени
+// Обработчики для категорий - ИСПРАВЛЕНО для правильной работы с английскими data-name
 document.querySelectorAll('.galaxy-item').forEach(item => {
   item.addEventListener('click', function(e) {
     e.preventDefault();
     e.stopPropagation();
     
-    const categoryName = this.dataset.name;
+    const originalCategoryName = this.dataset.name; // Английское название из data-name
     
     // Обновляем выбранную категорию в UI
     document.querySelectorAll('.galaxy-item').forEach(i => i.classList.remove('selected'));
     this.classList.add('selected');
     
-    // Фильтруем стартапы в реальном времени
-    filterStartupsByCategory(categoryName);
+    // Определяем русское название для фильтрации
+    let russianCategoryName;
+    if (originalCategoryName === 'All') {
+      russianCategoryName = 'Все';
+    } else {
+      // Ищем русское название по английскому
+      const directionData = directionsData.find(d => d.original_name === originalCategoryName);
+      russianCategoryName = directionData ? directionData.direction_name : originalCategoryName;
+    }
+    
+    console.log('🔍 Клик по категории:', originalCategoryName, '→ фильтруем по:', russianCategoryName);
+    
+    // Фильтруем стартапы по русскому названию
+    filterStartupsByCategory(russianCategoryName);
     
     lastInteractionTime = Date.now();
     
-    // Обновляем URL для правильной навигации
+    // Обновляем URL с английским названием
     const currentUrl = new URL(window.location);
-    if (categoryName && categoryName !== 'Все') {
-      // Находим оригинальное название категории для URL
-      const directionData = directionsData.find(d => d.direction_name === categoryName);
-      const originalName = directionData ? directionData.original_name : categoryName;
-      currentUrl.searchParams.set('direction', originalName);
+    if (originalCategoryName && originalCategoryName !== 'All') {
+      currentUrl.searchParams.set('direction', originalCategoryName);
     } else {
       // Для категории "Все" очищаем параметр direction
       currentUrl.searchParams.delete('direction');
