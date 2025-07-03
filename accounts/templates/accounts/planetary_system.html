@@ -119,7 +119,16 @@
   <div class="ultra_new_planetary_categories_container">
     <!-- Планеты слева -->
     <div class="ultra_new_planetary_side_planets left" id="ultra_new_planetary_left_planets">
-      <!-- Планеты будут добавлены JavaScript -->
+      <!-- Временные тестовые планеты -->
+      <div class="ultra_new_planetary_category_planet" style="background-image: url('/static/accounts/images/planetary_system/planets_round/1.png');">
+        <div class="ultra_new_planetary_category_planet_icon"></div>
+      </div>
+      <div class="ultra_new_planetary_category_planet" style="background-image: url('/static/accounts/images/planetary_system/planets_round/2.png');">
+        <div class="ultra_new_planetary_category_planet_icon"></div>
+      </div>
+      <div class="ultra_new_planetary_category_planet" style="background-image: url('/static/accounts/images/planetary_system/planets_round/3.png');">
+        <div class="ultra_new_planetary_category_planet_icon"></div>
+      </div>
     </div>
     
     <!-- Активная категория по центру -->
@@ -131,13 +140,22 @@
           {% endif %}
         {% endfor %}
       {% else %}
-        Все категории
+        Медицина
       {% endif %}
     </div>
     
     <!-- Планеты справа -->
     <div class="ultra_new_planetary_side_planets right" id="ultra_new_planetary_right_planets">
-      <!-- Планеты будут добавлены JavaScript -->
+      <!-- Временные тестовые планеты -->
+      <div class="ultra_new_planetary_category_planet" style="background-image: url('/static/accounts/images/planetary_system/planets_round/4.png');">
+        <div class="ultra_new_planetary_category_planet_icon"></div>
+      </div>
+      <div class="ultra_new_planetary_category_planet" style="background-image: url('/static/accounts/images/planetary_system/planets_round/5.png');">
+        <div class="ultra_new_planetary_category_planet_icon"></div>
+      </div>
+      <div class="ultra_new_planetary_category_planet" style="background-image: url('/static/accounts/images/planetary_system/planets_round/6.png');">
+        <div class="ultra_new_planetary_category_planet_icon"></div>
+      </div>
     </div>
   </div>
   
@@ -164,11 +182,7 @@ const directionsData = data.directions;
 const selectedGalaxy = data.selectedGalaxy;
 const allStartupsData = data.allStartups; // ВСЕ стартапы для фильтрации
 
-// Отладочная информация
-console.log('🪐 Всего планет получено:', planetsData.length);
-console.log('🪐 Всего стартапов для фильтрации:', allStartupsData.length);
-console.log('🪐 Направления:', directionsData.map(d => d.direction_name));
-console.log('🪐 Выбранная категория:', selectedGalaxy);
+// Данные загружены
 
 // Элементы DOM
 const planets = document.querySelectorAll('.planet');
@@ -467,22 +481,16 @@ function updatePlanets() {
 
 // Функция фильтрации стартапов по категории
 function filterStartupsByCategory(categoryName) {
-  console.log('🔍 Фильтрация по категории:', categoryName);
-  
   let filteredStartups = [];
   
   if (categoryName === 'Все' || categoryName === 'All' || !categoryName) {
     filteredStartups = [...allStartupsData];
-    console.log('🔍 Показываем ВСЕ стартапы');
   } else {
     // Фильтруем по русскому названию категории
     filteredStartups = allStartupsData.filter(startup => 
       startup.direction === categoryName
     );
-    console.log('🔍 Фильтруем по русскому названию:', categoryName);
   }
-  
-  console.log('🔍 Найдено стартапов:', filteredStartups.length);
   
   // Выбираем до 6 стартапов
   const selectedStartups = [];
@@ -685,19 +693,26 @@ function ultra_new_planetary_switch_category() {
 }
 
 // Обработчики навигации
-document.getElementById('ultra_new_planetary_nav_left').addEventListener('click', function() {
-  if (ultra_new_planetary_current_category_index > 0) {
-    ultra_new_planetary_current_category_index--;
-    ultra_new_planetary_switch_category();
-  }
-});
+const navLeft = document.getElementById('ultra_new_planetary_nav_left');
+const navRight = document.getElementById('ultra_new_planetary_nav_right');
 
-document.getElementById('ultra_new_planetary_nav_right').addEventListener('click', function() {
-  if (ultra_new_planetary_current_category_index < ultra_new_planetary_categories.length - 1) {
-    ultra_new_planetary_current_category_index++;
-    ultra_new_planetary_switch_category();
-  }
-});
+if (navLeft) {
+  navLeft.addEventListener('click', function() {
+    if (ultra_new_planetary_current_category_index > 0) {
+      ultra_new_planetary_current_category_index--;
+      ultra_new_planetary_switch_category();
+    }
+  });
+}
+
+if (navRight) {
+  navRight.addEventListener('click', function() {
+    if (ultra_new_planetary_current_category_index < ultra_new_planetary_categories.length - 1) {
+      ultra_new_planetary_current_category_index++;
+      ultra_new_planetary_switch_category();
+    }
+  });
+}
 
 // Обработчик клика по активной категории
 document.getElementById('ultra_new_planetary_active_category').addEventListener('click', function() {

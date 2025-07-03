@@ -951,28 +951,31 @@ body {
 /* НОВЫЕ СТИЛИ КАТЕГОРИЙ ПО КОДУ ИЗ FIGMA - ВНИЗУ */
 #ultra_new_planetary_categories_system {
   position: fixed;
-  bottom: 80px;
+  bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
-  width: 100%;
+  width: calc(100% - 40px);
   max-width: 1200px;
   height: 100px;
-  z-index: 200;
+  z-index: 9999;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 20px;
   padding: 0 20px;
   box-sizing: border-box;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
 }
 
 /* Стрелка навигации влево */
 .ultra_new_planetary_nav_arrow_left {
-  width: 31.17px;
-  height: 31.17px;
-  padding: 16px;
+  width: 50px;
+  height: 50px;
   background: var(--Color7, #FFEF2B);
-  border-radius: 99px;
+  border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -981,29 +984,28 @@ body {
   border: none;
   outline: none;
   flex-shrink: 0;
-  transform: rotate(180deg);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  position: relative;
 }
 
 .ultra_new_planetary_nav_arrow_left:hover {
   background: #FFD700;
-  transform: rotate(180deg) scale(1.1);
+  transform: scale(1.1);
 }
 
 .ultra_new_planetary_nav_arrow_left::after {
-  content: '';
-  width: 8.78px;
-  height: 14.89px;
-  background: black;
-  clip-path: polygon(50% 0%, 100% 50%, 50% 100%);
+  content: '←';
+  font-size: 18px;
+  color: black;
+  font-weight: bold;
 }
 
 /* Стрелка навигации вправо */
 .ultra_new_planetary_nav_arrow_right {
-  width: 31.17px;
-  height: 31.17px;
-  padding: 16px;
+  width: 50px;
+  height: 50px;
   background: var(--Color7, #FFEF2B);
-  border-radius: 99px;
+  border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1012,6 +1014,8 @@ body {
   border: none;
   outline: none;
   flex-shrink: 0;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  position: relative;
 }
 
 .ultra_new_planetary_nav_arrow_right:hover {
@@ -1020,11 +1024,10 @@ body {
 }
 
 .ultra_new_planetary_nav_arrow_right::after {
-  content: '';
-  width: 8.78px;
-  height: 14.89px;
-  background: black;
-  clip-path: polygon(50% 0%, 100% 50%, 50% 100%);
+  content: '→';
+  font-size: 18px;
+  color: black;
+  font-weight: bold;
 }
 
 /* Контейнер для категорий */
@@ -1053,6 +1056,10 @@ body {
   transition: all 0.3s ease;
   z-index: 10;
   position: relative;
+  min-width: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Планеты по бокам от активной категории */
@@ -1064,15 +1071,16 @@ body {
   transform: translateY(-50%);
   height: 100px;
   z-index: 5;
+  gap: 10px;
 }
 
 .ultra_new_planetary_side_planets.left {
-  left: 50px;
+  left: 20px;
   flex-direction: row;
 }
 
 .ultra_new_planetary_side_planets.right {
-  right: 50px;
+  right: 20px;
   flex-direction: row-reverse;
 }
 
@@ -1087,13 +1095,16 @@ body {
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
-  margin: 0 15px;
+  margin: 0 5px;
   flex-shrink: 0;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
 }
 
 .ultra_new_planetary_category_planet:hover {
   transform: scale(1.1);
   filter: brightness(1.2);
+  border-color: rgba(255, 255, 255, 0.8);
 }
 
 /* Иконка на планете */
@@ -1108,6 +1119,7 @@ body {
   background-position: center;
   background-repeat: no-repeat;
   pointer-events: none;
+  opacity: 0.8;
 }
 
 /* ПРОГРЕСС-БАРЫ ПОД ПЛАНЕТАМИ */
@@ -1164,44 +1176,47 @@ body {
 /* Адаптивность категорий */
 @media (max-width: 768px) {
   #ultra_new_planetary_categories_system {
-    max-width: 100%;
+    width: calc(100% - 20px);
     height: 80px;
     padding: 0 10px;
+    bottom: 10px;
+    background: rgba(0, 0, 0, 0.8);
   }
   
   .ultra_new_planetary_nav_arrow_left,
   .ultra_new_planetary_nav_arrow_right {
-    width: 25px;
-    height: 25px;
-    padding: 12px;
+    width: 40px;
+    height: 40px;
+  }
+  
+  .ultra_new_planetary_nav_arrow_left::after,
+  .ultra_new_planetary_nav_arrow_right::after {
+    font-size: 16px;
   }
   
   .ultra_new_planetary_active_category {
     font-size: 10px;
     padding: 6px 12px;
-    margin: 0 10px;
+    min-width: 80px;
   }
   
   .ultra_new_planetary_category_planet {
-    width: 40px;
-    height: 40px;
-    margin: 0 5px;
+    width: 35px;
+    height: 35px;
+    margin: 0 3px;
   }
   
   .ultra_new_planetary_category_planet_icon {
-    width: 30px;
-    height: 30px;
+    width: 25px;
+    height: 25px;
   }
   
-  .ultra_new_planetary_planet_progress_bar {
-    width: 30px;
-    height: 4px;
-    bottom: -20px;
+  .ultra_new_planetary_side_planets.left {
+    left: 10px;
   }
   
-  .ultra_new_planetary_planet_progress_text {
-    font-size: 8px;
-    bottom: -30px;
+  .ultra_new_planetary_side_planets.right {
+    right: 10px;
   }
 }
 
