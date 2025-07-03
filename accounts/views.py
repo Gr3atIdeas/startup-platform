@@ -3113,9 +3113,13 @@ def planetary_system(request):
     selected_direction_name = request.GET.get("direction", "Все")
     print(f"🚀 Выбранное направление: {selected_direction_name}")
 
-    # ПРОСТОЙ запрос для планетарной системы - ВСЕ одобренные стартапы
+    # МАКСИМАЛЬНО ПРОСТОЙ запрос для отладки
     print("🚀 Выполняем запрос к базе данных...")
-    startups_filtered = Startups.objects.filter(status="approved").annotate(
+    startups_filtered = Startups.objects.filter(status="approved").select_related('direction')
+    print(f"🚀 SQL запрос: {startups_filtered.query}")
+    
+    # Добавим аннотации
+    startups_filtered = startups_filtered.annotate(
         rating_avg=Coalesce(Avg("uservotes__rating"), 0.0, output_field=FloatField()),
         total_voters=Count("uservotes", distinct=True),
         total_investors=Count("investmenttransactions", distinct=True),
@@ -3128,7 +3132,7 @@ def planetary_system(request):
             default=Value(0),
             output_field=FloatField(),
         )
-    ).select_related('direction')
+    )
 
     # Выбираем рандомные 6 стартапов
     import random
@@ -3139,6 +3143,14 @@ def planetary_system(request):
     
     all_startups = list(startups_filtered)
     print(f"🚀 ПОЛУЧЕНО из БД: {len(all_startups)} одобренных стартапов")
+    
+    # Проверим первые несколько стартапов
+    if len(all_startups) > 0:
+        print("🚀 Первые стартапы:")
+        for i, startup in enumerate(all_startups[:5]):
+            print(f"   {i+1}. {startup.title} (ID: {startup.startup_id})")
+    else:
+        print("🚀 НЕТ СТАРТАПОВ в результате запроса!")
     
     # ПРОСТОЙ выбор - просто берем первые 6 стартапов (без рандома для отладки)
     selected_startups = []
@@ -3271,6 +3283,13 @@ def planetary_system(request):
         "directions_data_json": json.dumps(directions_data_json, cls=DjangoJSONEncoder),
         "is_startuper": is_startuper,
     }
+    
+    # Последняя проверка - что передается в шаблон
+    print(f"🚀 ПЕРЕДАЕТСЯ В ШАБЛОН: {len(planets_data_json)} планет")
+    print("🚀 ПЛАНЕТЫ В JSON:")
+    for i, planet in enumerate(planets_data_json):
+        print(f"   {i+1}. {planet.get('name', 'Нет имени')} (ID: {planet.get('startup_id', 'Нет ID')})")
+    
     return render(request, "accounts/planetary_system.html", context)
 
 
