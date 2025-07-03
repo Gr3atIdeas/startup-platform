@@ -12,7 +12,6 @@
 <div class="space-background"></div>
 <div class="stars"></div>
 <button class="all-startups-button">Все стартапы</button>
-<button class="ultra_new_planetary_fullscreen_close_btn" id="planetary-close-btn">×</button>
 <div id="solar-system">
   <div id="scene">
     <div id="galaxy">
@@ -110,57 +109,32 @@
 </div>
 <div id="fps">0 FPS</div>
 
-<!-- НОВЫЕ КАТЕГОРИИ ПО КОДУ ИЗ FIGMA - ВНИЗУ -->
-<div id="ultra_new_planetary_categories_system">
-  <!-- Стрелка навигации влево -->
-  <button class="ultra_new_planetary_nav_arrow_left" id="ultra_new_planetary_nav_left"></button>
-  
-  <!-- Контейнер для категорий -->
-  <div class="ultra_new_planetary_categories_container">
-    <!-- Планеты слева -->
-    <div class="ultra_new_planetary_side_planets left" id="ultra_new_planetary_left_planets">
-      <!-- Временные тестовые планеты -->
-      <div class="ultra_new_planetary_category_planet" style="background-image: url('/static/accounts/images/planetary_system/planets_round/1.png');">
-        <div class="ultra_new_planetary_category_planet_icon"></div>
-      </div>
-      <div class="ultra_new_planetary_category_planet" style="background-image: url('/static/accounts/images/planetary_system/planets_round/2.png');">
-        <div class="ultra_new_planetary_category_planet_icon"></div>
-      </div>
-      <div class="ultra_new_planetary_category_planet" style="background-image: url('/static/accounts/images/planetary_system/planets_round/3.png');">
-        <div class="ultra_new_planetary_category_planet_icon"></div>
-      </div>
-    </div>
-    
-    <!-- Активная категория по центру -->
-    <div class="ultra_new_planetary_active_category" id="ultra_new_planetary_active_category">
-      {% if selected_galaxy and selected_galaxy != 'All' and selected_galaxy != 'Все' %}
-        {% for direction in directions %}
-          {% if direction.original_name == selected_galaxy %}
-            {{ direction.direction_name }}
-          {% endif %}
-        {% endfor %}
-      {% else %}
-        Медицина
-      {% endif %}
-    </div>
-    
-    <!-- Планеты справа -->
-    <div class="ultra_new_planetary_side_planets right" id="ultra_new_planetary_right_planets">
-      <!-- Временные тестовые планеты -->
-      <div class="ultra_new_planetary_category_planet" style="background-image: url('/static/accounts/images/planetary_system/planets_round/4.png');">
-        <div class="ultra_new_planetary_category_planet_icon"></div>
-      </div>
-      <div class="ultra_new_planetary_category_planet" style="background-image: url('/static/accounts/images/planetary_system/planets_round/5.png');">
-        <div class="ultra_new_planetary_category_planet_icon"></div>
-      </div>
-      <div class="ultra_new_planetary_category_planet" style="background-image: url('/static/accounts/images/planetary_system/planets_round/6.png');">
-        <div class="ultra_new_planetary_category_planet_icon"></div>
-      </div>
-    </div>
+<!-- КАТЕГОРИИ ПО МАКЕТУ FIGMA -->
+<div style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: calc(100% - 40px); max-width: 1200px; height: 100px; z-index: 9999; display: flex; align-items: center; justify-content: center; gap: 20px; padding: 0 20px; box-sizing: border-box;">
+  <!-- Стрелка влево -->
+  <div style="width: 31.17px; height: 31.17px; padding: 16px; background: #FFEF2B; border-radius: 99px; display: flex; justify-content: center; align-items: center; cursor: pointer; transform: rotate(180deg);" id="ultra_new_planetary_nav_left">
+    <div style="width: 8.78px; height: 14.89px; background: black; clip-path: polygon(50% 0%, 100% 50%, 50% 100%);"></div>
   </div>
   
-  <!-- Стрелка навигации вправо -->
-  <button class="ultra_new_planetary_nav_arrow_right" id="ultra_new_planetary_nav_right"></button>
+  <!-- Планеты слева -->
+  <img style="width: 54.84px; height: 53.61px; border-radius: 50%; cursor: pointer;" src="/static/accounts/images/planetary_system/planets_round/1.png" />
+  <img style="width: 54.84px; height: 53.61px; border-radius: 50%; cursor: pointer;" src="/static/accounts/images/planetary_system/planets_round/2.png" />
+  <img style="width: 54.84px; height: 53.61px; border-radius: 50%; cursor: pointer;" src="/static/accounts/images/planetary_system/planets_round/3.png" />
+  
+  <!-- Активная категория -->
+  <div style="padding: 9px 17px; background: #050505; border-radius: 20px; color: white; font-size: 12px; font-family: Unbounded; font-weight: 300; letter-spacing: 0.12px; text-align: center; white-space: nowrap; cursor: pointer;" id="ultra_new_planetary_active_category">
+    Медицина
+  </div>
+  
+  <!-- Планеты справа -->
+  <img style="width: 54.84px; height: 53.61px; border-radius: 50%; cursor: pointer;" src="/static/accounts/images/planetary_system/planets_round/4.png" />
+  <img style="width: 54.84px; height: 53.61px; border-radius: 50%; cursor: pointer;" src="/static/accounts/images/planetary_system/planets_round/5.png" />
+  <img style="width: 54.84px; height: 53.61px; border-radius: 50%; cursor: pointer;" src="/static/accounts/images/planetary_system/planets_round/6.png" />
+  
+  <!-- Стрелка вправо -->
+  <div style="width: 31.17px; height: 31.17px; padding: 16px; background: #FFEF2B; border-radius: 99px; display: flex; justify-content: center; align-items: center; cursor: pointer;" id="ultra_new_planetary_nav_right">
+    <div style="width: 8.78px; height: 14.89px; background: black; clip-path: polygon(50% 0%, 100% 50%, 50% 100%);"></div>
+  </div>
 </div>
 
 <script id="planetary-data" type="application/json">
@@ -207,7 +181,6 @@ const scene = document.getElementById('scene');
 const galaxy = document.getElementById('galaxy');
 const logoElement = document.getElementById('logo');
 const allStartupsBtn = document.querySelector('.all-startups-button');
-const planetaryCloseBtn = document.getElementById('planetary-close-btn');
 
 // Устанавливаем изображение логотипа (отключено для избежания огромных картинок)
 // if (logoData.image) {
@@ -344,16 +317,6 @@ if (allStartupsBtn) {
   allStartupsBtn.addEventListener('click', function(e) {
     e.preventDefault();
     window.location.href = '/startups/';
-  });
-}
-
-// Обработчик кнопки полноэкранного режима
-if (planetaryCloseBtn) {
-  planetaryCloseBtn.addEventListener('click', function(e) {
-    e.preventDefault();
-    // Можно добавить функционал выхода из полноэкранного режима или закрытия модального окна
-    // Пока просто скрываем саму кнопку
-    planetaryCloseBtn.style.display = 'none';
   });
 }
 
@@ -587,110 +550,7 @@ function showStartupModal(startup, imageUrl) {
   lastInteractionTime = Date.now();
 }
 
-// НОВЫЕ ОБРАБОТЧИКИ КАТЕГОРИЙ ПО КОДУ ИЗ FIGMA
-
-// Список всех категорий с русскими названиями
-const ultra_new_planetary_categories = [
-  { name: 'Все категории', original: 'All' },
-  ...directionsData.map(d => ({ name: d.direction_name, original: d.original_name }))
-];
-
-// Текущий индекс активной категории
-let ultra_new_planetary_current_category_index = 0;
-
-// Инициализация текущей категории
-function ultra_new_planetary_init_current_category() {
-  if (selectedGalaxy && selectedGalaxy !== 'All' && selectedGalaxy !== 'Все') {
-    const foundIndex = ultra_new_planetary_categories.findIndex(cat => cat.original === selectedGalaxy);
-    if (foundIndex !== -1) {
-      ultra_new_planetary_current_category_index = foundIndex;
-    }
-  }
-}
-
-// Обновление отображения категорий
-function ultra_new_planetary_update_categories_display() {
-  const activeCategory = document.getElementById('ultra_new_planetary_active_category');
-  const leftPlanets = document.getElementById('ultra_new_planetary_left_planets');
-  const rightPlanets = document.getElementById('ultra_new_planetary_right_planets');
-  
-  // Обновляем активную категорию
-  if (activeCategory) {
-    activeCategory.textContent = ultra_new_planetary_categories[ultra_new_planetary_current_category_index].name;
-  }
-  
-  // Очищаем планеты
-  if (leftPlanets) leftPlanets.innerHTML = '';
-  if (rightPlanets) rightPlanets.innerHTML = '';
-  
-  // Добавляем планеты слева (предыдущие категории)
-  for (let i = 1; i <= 3; i++) {
-    const leftIndex = ultra_new_planetary_current_category_index - i;
-    if (leftIndex >= 0) {
-      const planet = ultra_new_planetary_create_category_planet(leftIndex, 'left');
-      if (leftPlanets) leftPlanets.appendChild(planet);
-    }
-  }
-  
-  // Добавляем планеты справа (следующие категории)
-  for (let i = 1; i <= 3; i++) {
-    const rightIndex = ultra_new_planetary_current_category_index + i;
-    if (rightIndex < ultra_new_planetary_categories.length) {
-      const planet = ultra_new_planetary_create_category_planet(rightIndex, 'right');
-      if (rightPlanets) rightPlanets.appendChild(planet);
-    }
-  }
-}
-
-// Создание планеты-категории
-function ultra_new_planetary_create_category_planet(categoryIndex, side) {
-  const planet = document.createElement('div');
-  planet.className = 'ultra_new_planetary_category_planet';
-  
-  // Используем изображения планет для категорий
-  const planetImageIndex = (categoryIndex % 15) + 1;
-  planet.style.backgroundImage = `url('/static/accounts/images/planetary_system/planets_round/${planetImageIndex}.png')`;
-  
-  // Добавляем иконку
-  const icon = document.createElement('div');
-  icon.className = 'ultra_new_planetary_category_planet_icon';
-  // Здесь можно добавить специфичные иконки для каждой категории
-  planet.appendChild(icon);
-  
-  // Обработчик клика
-  planet.addEventListener('click', function() {
-    ultra_new_planetary_current_category_index = categoryIndex;
-    ultra_new_planetary_switch_category();
-  });
-  
-  return planet;
-}
-
-// Переключение категории
-function ultra_new_planetary_switch_category() {
-  const category = ultra_new_planetary_categories[ultra_new_planetary_current_category_index];
-  
-  // Обновляем отображение
-  ultra_new_planetary_update_categories_display();
-  
-  // Фильтруем стартапы
-  if (category.original === 'All') {
-    filterStartupsByCategory('Все');
-  } else {
-    filterStartupsByCategory(category.name);
-  }
-  
-  // Обновляем URL
-  const currentUrl = new URL(window.location);
-  if (category.original === 'All') {
-    currentUrl.searchParams.delete('direction');
-  } else {
-    currentUrl.searchParams.set('direction', category.original);
-  }
-  window.history.pushState({}, '', currentUrl.toString());
-  
-  lastInteractionTime = Date.now();
-}
+// ПРОСТЫЕ ОБРАБОТЧИКИ КАТЕГОРИЙ
 
 // Обработчики навигации
 const navLeft = document.getElementById('ultra_new_planetary_nav_left');
@@ -698,49 +558,17 @@ const navRight = document.getElementById('ultra_new_planetary_nav_right');
 
 if (navLeft) {
   navLeft.addEventListener('click', function() {
-    if (ultra_new_planetary_current_category_index > 0) {
-      ultra_new_planetary_current_category_index--;
-      ultra_new_planetary_switch_category();
-    }
+    // Переключение влево
   });
 }
 
 if (navRight) {
   navRight.addEventListener('click', function() {
-    if (ultra_new_planetary_current_category_index < ultra_new_planetary_categories.length - 1) {
-      ultra_new_planetary_current_category_index++;
-      ultra_new_planetary_switch_category();
-    }
+    // Переключение вправо  
   });
 }
 
-// Обработчик клика по активной категории
-document.getElementById('ultra_new_planetary_active_category').addEventListener('click', function() {
-  ultra_new_planetary_switch_category();
-});
 
-// Функция обновления прогресс-баров планет
-function ultra_new_planetary_update_planet_progress() {
-  const planets = document.querySelectorAll('.planet');
-  
-  planets.forEach((planet, index) => {
-    const planetId = planet.getAttribute('data-id');
-    const planetData = planetsData.find(p => p.id == planetId);
-    
-    const progressBar = planet.querySelector('.ultra_new_planetary_planet_progress_fill');
-    const progressText = planet.querySelector('.ultra_new_planetary_planet_progress_text');
-    
-    if (planetData && progressBar && progressText) {
-      const progress = planetData.progress || 0;
-      progressBar.style.width = `${progress}%`;
-      progressText.textContent = `${progress}%`;
-    } else if (progressBar && progressText) {
-      // Для пустых планет
-      progressBar.style.width = '0%';
-      progressText.textContent = '0%';
-    }
-  });
-}
 
 // Обновляем функцию updatePlanetsWithNewData для включения прогресса
 function updatePlanetsWithNewData(startupsData) {
@@ -793,10 +621,7 @@ function updatePlanetsWithNewData(startupsData) {
   });
 }
 
-// Инициализация новой системы категорий
-ultra_new_planetary_init_current_category();
-ultra_new_planetary_update_categories_display();
-ultra_new_planetary_update_planet_progress();
+// Система планет инициализирована
 
 // Запускаем анимацию
 updatePlanets();

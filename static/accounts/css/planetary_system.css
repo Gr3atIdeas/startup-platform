@@ -230,44 +230,7 @@ body {
   justify-content: center;
 }
 
-/* Кнопка полноэкранного режима в правом верхнем углу */
-.ultra_new_planetary_fullscreen_close_btn {
-  position: fixed;
-  top: 37px;
-  right: 37px;
-  width: 30px;
-  height: 30.47px;
-  background: var(--Color7, #FFEF2B);
-  border: none;
-  border-radius: 100px;
-  cursor: pointer;
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  color: black;
-  font-weight: bold;
-  transition: all 0.3s ease;
-}
 
-.ultra_new_planetary_fullscreen_close_btn:hover {
-  transform: scale(1.1);
-  box-shadow: 0 0 20px rgba(255, 239, 43, 0.5);
-}
-
-.ultra_new_planetary_fullscreen_close_btn::after {
-  content: '×';
-  width: 10.37px;
-  height: 10.53px;
-  background: black;
-  color: black;
-  font-size: 18px;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 
 #crosshair,
 #crosshair-coords,
@@ -948,179 +911,7 @@ body {
 
 
 
-/* НОВЫЕ СТИЛИ КАТЕГОРИЙ ПО КОДУ ИЗ FIGMA - ВНИЗУ */
-#ultra_new_planetary_categories_system {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: calc(100% - 40px);
-  max-width: 1200px;
-  height: 100px;
-  z-index: 9999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
-  padding: 0 20px;
-  box-sizing: border-box;
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(10px);
-  border-radius: 20px;
-  border: 2px solid rgba(255, 255, 255, 0.1);
-}
 
-/* Стрелка навигации влево */
-.ultra_new_planetary_nav_arrow_left {
-  width: 50px;
-  height: 50px;
-  background: var(--Color7, #FFEF2B);
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  border: none;
-  outline: none;
-  flex-shrink: 0;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-  position: relative;
-}
-
-.ultra_new_planetary_nav_arrow_left:hover {
-  background: #FFD700;
-  transform: scale(1.1);
-}
-
-.ultra_new_planetary_nav_arrow_left::after {
-  content: '←';
-  font-size: 18px;
-  color: black;
-  font-weight: bold;
-}
-
-/* Стрелка навигации вправо */
-.ultra_new_planetary_nav_arrow_right {
-  width: 50px;
-  height: 50px;
-  background: var(--Color7, #FFEF2B);
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  border: none;
-  outline: none;
-  flex-shrink: 0;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-  position: relative;
-}
-
-.ultra_new_planetary_nav_arrow_right:hover {
-  background: #FFD700;
-  transform: scale(1.1);
-}
-
-.ultra_new_planetary_nav_arrow_right::after {
-  content: '→';
-  font-size: 18px;
-  color: black;
-  font-weight: bold;
-}
-
-/* Контейнер для категорий */
-.ultra_new_planetary_categories_container {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  height: 100px;
-}
-
-/* Активная категория по центру */
-.ultra_new_planetary_active_category {
-  padding: 9px 17px;
-  background: #050505;
-  border-radius: 20px;
-  color: white;
-  font-size: 12px;
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 300;
-  letter-spacing: 0.12px;
-  text-align: center;
-  white-space: nowrap;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  z-index: 10;
-  position: relative;
-  min-width: 120px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Планеты по бокам от активной категории */
-.ultra_new_planetary_side_planets {
-  display: flex;
-  align-items: center;
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  height: 100px;
-  z-index: 5;
-  gap: 10px;
-}
-
-.ultra_new_planetary_side_planets.left {
-  left: 20px;
-  flex-direction: row;
-}
-
-.ultra_new_planetary_side_planets.right {
-  right: 20px;
-  flex-direction: row-reverse;
-}
-
-/* Планета-категория */
-.ultra_new_planetary_category_planet {
-  width: 54.84px;
-  height: 53.61px;
-  border-radius: 50%;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  position: relative;
-  margin: 0 5px;
-  flex-shrink: 0;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-}
-
-.ultra_new_planetary_category_planet:hover {
-  transform: scale(1.1);
-  filter: brightness(1.2);
-  border-color: rgba(255, 255, 255, 0.8);
-}
-
-/* Иконка на планете */
-.ultra_new_planetary_category_planet_icon {
-  width: 44.99px;
-  height: 43.98px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
-  pointer-events: none;
-  opacity: 0.8;
-}
 
 /* ПРОГРЕСС-БАРЫ ПОД ПЛАНЕТАМИ */
 .ultra_new_planetary_planet_progress_bar {
@@ -1173,52 +964,7 @@ body {
   pointer-events: none;
 }
 
-/* Адаптивность категорий */
-@media (max-width: 768px) {
-  #ultra_new_planetary_categories_system {
-    width: calc(100% - 20px);
-    height: 80px;
-    padding: 0 10px;
-    bottom: 10px;
-    background: rgba(0, 0, 0, 0.8);
-  }
-  
-  .ultra_new_planetary_nav_arrow_left,
-  .ultra_new_planetary_nav_arrow_right {
-    width: 40px;
-    height: 40px;
-  }
-  
-  .ultra_new_planetary_nav_arrow_left::after,
-  .ultra_new_planetary_nav_arrow_right::after {
-    font-size: 16px;
-  }
-  
-  .ultra_new_planetary_active_category {
-    font-size: 10px;
-    padding: 6px 12px;
-    min-width: 80px;
-  }
-  
-  .ultra_new_planetary_category_planet {
-    width: 35px;
-    height: 35px;
-    margin: 0 3px;
-  }
-  
-  .ultra_new_planetary_category_planet_icon {
-    width: 25px;
-    height: 25px;
-  }
-  
-  .ultra_new_planetary_side_planets.left {
-    left: 10px;
-  }
-  
-  .ultra_new_planetary_side_planets.right {
-    right: 10px;
-  }
-}
+
 
 /* АДАПТИВНОСТЬ */
 @media (max-width: 1400px) {
@@ -1252,14 +998,6 @@ body {
     height: 35px;
     padding: 8px;
     font-size: 14px;
-  }
-
-  /* КНОПКА ПОЛНОЭКРАННОГО РЕЖИМА НА МОБИЛЬНЫХ - ОСТАЕТСЯ В ПРАВОМ ВЕРХНЕМ УГЛУ */
-  .ultra_new_planetary_fullscreen_close_btn {
-    top: 15px;
-    right: 15px;
-    width: 25px;
-    height: 25px;
   }
 
   /* МОБИЛЬНЫЕ СТИЛИ КАТЕГОРИЙ УДАЛЕНЫ - БУДУТ ПЕРЕПИСАНЫ ЗАНОВО */
