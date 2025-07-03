@@ -387,9 +387,9 @@
 <div id="fps">0 FPS</div>
 <div id="galaxy-selector">
   <div id="galaxy-list">
-    <div class="galaxy-item selected" data-name="Все">Все</div>
+    <div class="galaxy-item {% if selected_galaxy == 'Все' %}selected{% endif %}" data-name="Все">Все</div>
     {% for direction in directions %}
-      <div class="galaxy-item" data-name="{{ direction.direction_name }}">{{ direction.direction_name }}</div>
+      <div class="galaxy-item {% if selected_galaxy == direction.original_name %}selected{% endif %}" data-name="{{ direction.direction_name }}">{{ direction.direction_name }}</div>
     {% endfor %}
   </div>
 </div>
@@ -417,6 +417,7 @@ const allStartupsData = data.allStartups; // ВСЕ стартапы для фи
 console.log('🪐 Всего планет получено:', planetsData.length);
 console.log('🪐 Всего стартапов для фильтрации:', allStartupsData.length);
 console.log('🪐 Направления:', directionsData.map(d => d.direction_name));
+console.log('🪐 Выбранная категория:', selectedGalaxy);
 
 // Элементы DOM
 const planets = document.querySelectorAll('.planet');
@@ -698,6 +699,7 @@ function filterStartupsByCategory(categoryName) {
   if (categoryName === 'Все' || !categoryName) {
     filteredStartups = [...allStartupsData];
   } else {
+    // Фильтруем по русскому названию категории
     filteredStartups = allStartupsData.filter(startup => 
       startup.direction === categoryName
     );
@@ -708,9 +710,8 @@ function filterStartupsByCategory(categoryName) {
   // Выбираем до 6 стартапов
   const selectedStartups = [];
   if (filteredStartups.length >= 6) {
-    // Выбираем 6 случайных стартапов
-    const shuffled = filteredStartups.sort(() => 0.5 - Math.random());
-    selectedStartups.push(...shuffled.slice(0, 6));
+    // Берем первые 6 стартапов (можно изменить на случайные)
+    selectedStartups.push(...filteredStartups.slice(0, 6));
   } else if (filteredStartups.length > 0) {
     // Дублируем стартапы до 6
     for (let i = 0; i < 6; i++) {
@@ -816,8 +817,33 @@ document.querySelectorAll('.galaxy-item').forEach(item => {
     filterStartupsByCategory(categoryName);
     
     lastInteractionTime = Date.now();
+    
+    // Обновляем URL для правильной навигации
+    const currentUrl = new URL(window.location);
+    if (categoryName && categoryName !== 'Все') {
+      // Находим оригинальное название категории для URL
+      const directionData = directionsData.find(d => d.direction_name === categoryName);
+      const originalName = directionData ? directionData.original_name : categoryName;
+      currentUrl.searchParams.set('direction', originalName);
+    } else {
+      currentUrl.searchParams.delete('direction');
+    }
+    
+    // Обновляем URL без перезагрузки страницы
+    window.history.pushState({}, '', currentUrl.toString());
   });
 });
+
+// Инициализируем правильную категорию при загрузке
+if (selectedGalaxy && selectedGalaxy !== 'Все') {
+  // Если выбрана конкретная категория, найдем русское название
+  const directionData = directionsData.find(d => d.original_name === selectedGalaxy);
+  const russianName = directionData ? directionData.direction_name : selectedGalaxy;
+  filterStartupsByCategory(russianName);
+} else {
+  // Если выбрана категория "Все", показываем все стартапы
+  filterStartupsByCategory('Все');
+}
 
 // Запускаем анимацию
 updatePlanets();

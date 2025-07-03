@@ -3105,206 +3105,157 @@ def leave_chat(request, chat_id):
 
 
 def planetary_system(request):
-    print("🚀 ПЛАНЕТАРНАЯ СИСТЕМА - РЕЖИМ РЕАЛЬНОГО ВРЕМЕНИ")
-    
-    directions = Directions.objects.all().order_by("direction_name")
-    
-    # ВСЕГДА загружаем ВСЕ одобренные стартапы для фильтрации в реальном времени
-    print("🚀 Загружаем ВСЕ одобренные стартапы...")
-    all_approved_startups = Startups.objects.filter(status="approved").select_related('direction').annotate(
-        rating_avg=Coalesce(Avg("uservotes__rating"), 0.0, output_field=FloatField()),
-        total_voters=Count("uservotes", distinct=True),
-        total_investors=Count("investmenttransactions", distinct=True),
-        current_funding=Coalesce(
-            Sum("investmenttransactions__amount"), 0, output_field=DecimalField()
-        ),
-        comment_count=Count("comments", distinct=True),
-        progress=Case(
-            When(funding_goal__gt=0, then=(F("current_funding") * 100.0 / F("funding_goal"))),
-            default=Value(0),
-            output_field=FloatField(),
-        )
-    )
-
-    # Получаем все стартапы как список
-    all_startups = list(all_approved_startups)
-    print(f"🚀 ПОЛУЧЕНО из БД: {len(all_startups)} одобренных стартапов")
-    
-    # Выбираем рандомные 6 стартапов для изначального отображения  
-    import random
-    import time
-    random.seed(int(time.time()))
-    
-    selected_startups = []
-    
-    if len(all_startups) == 0:
-        # Нет стартапов - 6 пустых слотов
-        selected_startups = [None] * 6
-        print("🚀 Создаем 6 пустых планет")
-    elif len(all_startups) >= 6:
-        # Достаточно стартапов - выбираем 6 случайных
-        selected_startups = random.sample(all_startups, 6)
-        print(f"🚀 Выбрали 6 случайных стартапов из {len(all_startups)}")
-    else:
-        # Стартапов меньше 6 - дублируем до 6
-        for i in range(6):
-            selected_startups.append(all_startups[i % len(all_startups)])
-        print(f"🚀 Дублировали {len(all_startups)} стартапов до 6")
-
-
-    planets_data_for_template = []
-    # Создаем 6 фиксированных орбит с размерами из обновленного HTML template
-    fixed_orbit_sizes = [200, 300, 400, 500, 600, 700]
-    orbit_times = [80, 95, 110, 125, 140, 160]
-    planet_sizes = [60, 70, 56, 64, 50, 60]
-    
-    for idx in range(6):  # Всегда создаем 6 планет
-        startup = selected_startups[idx] if idx < len(selected_startups) and selected_startups[idx] is not None else None
-        
-        if startup:
-            # Используем фиксированные изображения для каждой орбиты (1-15)
-            planet_image_num = (idx % 15) + 1  # Циклически используем изображения 1-15
-            image_path = f"accounts/images/planetary_system/planets_round/{planet_image_num}.png"
-            
-            planets_data_for_template.append(
-                {
-                    "id": idx + 1,  # Используем последовательные ID 1-6
-                    "startup_id": startup.startup_id,  # Добавляем реальный ID стартапа
-                    "image": static(image_path),
-                    "orbit_size": fixed_orbit_sizes[idx],
-                    "orbit_time": orbit_times[idx],
-                    "planet_size": planet_sizes[idx],
-                }
-            )
-        else:
-            # Пустая планета - используем изображения 8-15
-            planet_image_num = 8 + (idx % 8)  # Используем изображения 8-15 для пустых планет
-            image_path = f"accounts/images/planetary_system/planets_round/{planet_image_num}.png"
-            
-            planets_data_for_template.append(
-                {
-                    "id": idx + 1,  # Используем последовательные ID 1-6
-                    "startup_id": None,  # Нет реального стартапа
-                    "image": static(image_path),
-                    "orbit_size": fixed_orbit_sizes[idx],
-                    "orbit_time": orbit_times[idx],
-                    "planet_size": planet_sizes[idx],
-                }
-            )
-
-    planets_data_json = []
-    for idx in range(6):  # Всегда создаем 6 планет
-        startup = selected_startups[idx] if idx < len(selected_startups) and selected_startups[idx] is not None else None
-        
-        if startup:
-            # Вычисляем тип инвестирования
-            investment_type = (
-                "Инвестирование"
-                if startup.only_invest
-                else "Выкуп"
-                if startup.only_buy
-                else "Выкуп+инвестирование"
-                if startup.both_mode
-                else "Не указано"
-            )
-            
-            # Используем те же фиксированные изображения что и в planets_data_for_template
-            planet_image_num = (idx % 15) + 1  # Циклически используем изображения 1-15
-            planet_image_url = static(f"accounts/images/planetary_system/planets_round/{planet_image_num}.png")
-            
-            planets_data_json.append({
-                "id": idx + 1,  # Последовательный ID для связи с HTML
-                "name": startup.title,
-                "image": planet_image_url,
-                "rating": round(startup.rating_avg, 2),
-                "voters_count": startup.total_voters,
-                "progress": f"{startup.progress:.1f}" if startup.progress is not None else "0",
-                "direction": startup.direction.direction_name if startup.direction else "Не указано",
-                "investors": startup.total_investors,
-                "funding_goal": f"{startup.funding_goal:,.0f} ₽".replace(",", " ") if startup.funding_goal else "Не определена",
-                "valuation": f"{startup.valuation:,.0f} ₽".replace(",", " ") if startup.valuation else "Не определена",
-                "comment_count": startup.comment_count,
-                "startup_id": startup.startup_id,  # Реальный ID для ссылок
-                "description": startup.short_description or "Описание отсутствует",
-                "investment_type": investment_type,
-            }) 
-        else:
-            # Пустая планета - используем те же изображения что и в planets_data_for_template
-            planet_image_num = 8 + (idx % 8)  # Используем изображения 8-15 для пустых планет
-            planet_image_url = static(f"accounts/images/planetary_system/planets_round/{planet_image_num}.png")
-            
-            planets_data_json.append({
-                "id": idx + 1,  # Последовательный ID для связи с HTML
-                "name": "Свободная орбита",
-                "image": planet_image_url,
-                "rating": 0,
-                "voters_count": 0,
-                "progress": "0",
-                "direction": "Не определена",
-                "investors": 0,
-                "funding_goal": "Не определена",
-                "valuation": "Не определена",
-                "comment_count": 0,
-                "startup_id": None,
-                "description": "Эта орбита пока свободна. Здесь может появиться ваш стартап!",
-                "investment_type": "Не указано",
-            })
-    
-    is_authenticated = request.user.is_authenticated
-    is_startuper = is_authenticated and hasattr(request.user, 'role') and request.user.role and request.user.role.role_name == 'startuper'
-
-    logo_data = {"image": static("accounts/images/planetary_system/gi.svg")}
-    
-    directions_data_json = [
-        {"direction_name": d.direction_name} for d in directions
-    ]
-    
-    # Создаем полные данные о ВСЕХ стартапах для JavaScript фильтрации
-    all_startups_data_json = []
-    for startup in all_startups:
-        # Вычисляем тип инвестирования
-        investment_type = (
-            "Инвестирование"
-            if startup.only_invest
-            else "Выкуп"
-            if startup.only_buy
-            else "Выкуп+инвестирование"
-            if startup.both_mode
-            else "Не указано"
-        )
-        
-        all_startups_data_json.append({
-            "startup_id": startup.startup_id,
-            "name": startup.title,
-            "rating": round(startup.rating_avg, 2),
-            "voters_count": startup.total_voters,
-            "progress": f"{startup.progress:.1f}" if startup.progress is not None else "0",
-            "direction": startup.direction.direction_name if startup.direction else "Не указано",
-            "investors": startup.total_investors,
-            "funding_goal": f"{startup.funding_goal:,.0f} ₽".replace(",", " ") if startup.funding_goal else "Не определена",
-            "valuation": f"{startup.valuation:,.0f} ₽".replace(",", " ") if startup.valuation else "Не определена",
-            "comment_count": startup.comment_count,
-            "description": startup.short_description or "Описание отсутствует",
-            "investment_type": investment_type,
-            "image": startup.planet_image.url if startup.planet_image else None,
-        })
-    
-    context = {
-        "planets_data": planets_data_for_template,
-        "logo_data": logo_data,
-        "directions": directions,
-        "selected_galaxy": "Все",  # По умолчанию показываем "Все"
-        "planets_data_json": json.dumps(planets_data_json, cls=DjangoJSONEncoder),
-        "directions_data_json": json.dumps(directions_data_json, cls=DjangoJSONEncoder),
-        "all_startups_data_json": json.dumps(all_startups_data_json, cls=DjangoJSONEncoder),  # ВСЕ стартапы для фильтрации
-        "is_startuper": is_startuper,
+    """
+    Планетарная система - отображает стартапы как планеты на орбитах
+    """
+    # Мапинг направлений для перевода на русский язык
+    DIRECTION_TRANSLATIONS = {
+        'Beauty': 'Красота',
+        'Technology': 'Технологии',
+        'FinTech': 'Финтех',
+        'HealthTech': 'Медтех',
+        'Education': 'Образование',
+        'Entertainment': 'Развлечения',
+        'Food': 'Еда',
+        'Fashion': 'Мода',
+        'Sports': 'Спорт',
+        'Travel': 'Путешествия',
+        'Real Estate': 'Недвижимость',
+        'Automotive': 'Автомобили',
+        'Agriculture': 'Сельское хозяйство',
+        'Energy': 'Энергетика',
+        'Environment': 'Экология',
+        'Gaming': 'Игры',
+        'Logistics': 'Логистика',
+        'Marketing': 'Маркетинг',
+        'Media': 'Медиа',
+        'Retail': 'Розничная торговля',
+        'Security': 'Безопасность',
+        'Social': 'Социальные сети',
+        'Transportation': 'Транспорт',
+        'Wellness': 'Велнес',
+        'Business': 'Бизнес',
     }
     
-    # Последняя проверка - что передается в шаблон
-    print(f"🚀 ПЕРЕДАЕТСЯ В ШАБЛОН: {len(planets_data_json)} планет")
-    print("🚀 ПЛАНЕТЫ В JSON:")
-    for i, planet in enumerate(planets_data_json):
-        print(f"   {i+1}. {planet.get('name', 'Нет имени')} (ID: {planet.get('startup_id', 'Нет ID')})")
+    # Получаем все направления
+    directions = Directions.objects.all().order_by("direction_name")
+    
+    # Получаем выбранное направление из URL (по умолчанию "Все")
+    selected_direction_name = request.GET.get("direction", "Все")
+    
+    # Логирование для отладки
+    logger.info(f"🪐 Планетарная система: выбрано направление '{selected_direction_name}'")
+    
+    # Получаем все одобренные стартапы
+    startups_query = Startups.objects.filter(
+        status="approved"
+    ).select_related("direction", "owner").order_by("-created_at")
+    
+    # Применяем фильтрацию только если выбрано конкретное направление
+    if selected_direction_name != "Все":
+        startups_query = startups_query.filter(
+            direction__direction_name=selected_direction_name
+        )
+    
+    # Получаем список стартапов
+    startups_list = list(startups_query)
+    
+    logger.info(f"🪐 Загружено стартапов: {len(startups_list)}")
+    
+    # Выбираем до 6 стартапов для отображения
+    selected_startups = []
+    if len(startups_list) >= 6:
+        # Берем первые 6 стартапов
+        selected_startups = startups_list[:6]
+    elif len(startups_list) > 0:
+        # Дублируем стартапы до 6
+        while len(selected_startups) < 6:
+            selected_startups.extend(startups_list)
+        selected_startups = selected_startups[:6]
+    else:
+        # Создаем пустые слоты
+        selected_startups = [None] * 6
+    
+    # Формируем данные для планет (текущие 6 планет)
+    planets_data = []
+    for i, startup in enumerate(selected_startups):
+        if startup:
+            planets_data.append({
+                "id": i + 1,
+                "startup_id": startup.startup_id,
+                "name": startup.title,
+                "description": startup.short_description or startup.description[:200] if startup.description else "",
+                "image": startup.get_logo_url(),
+                "rating": startup.get_average_rating(),
+                "voters_count": startup.total_voters,
+                "comment_count": startup.comments.count(),
+                "direction": DIRECTION_TRANSLATIONS.get(startup.direction.direction_name, startup.direction.direction_name) if startup.direction else "Не указано",
+                "funding_goal": f"{startup.funding_goal:,.0f} ₽" if startup.funding_goal else "Не указано",
+                "valuation": f"{startup.valuation:,.0f} ₽" if startup.valuation else "Не указано",
+                "investors": startup.get_investors_count(),
+                "progress": startup.get_progress_percentage(),
+                "investment_type": "Выкуп+инвестирование" if startup.both_mode else ("Только выкуп" if startup.only_buy else "Только инвестирование")
+            })
+        else:
+            planets_data.append({
+                "id": i + 1,
+                "startup_id": None,
+                "name": "Свободная орбита",
+                "description": "Эта орбита пока свободна",
+                "image": None,
+                "rating": 0,
+                "voters_count": 0,
+                "comment_count": 0,
+                "direction": "Не указано",
+                "funding_goal": "Не указано",
+                "valuation": "Не указано",
+                "investors": 0,
+                "progress": 0,
+                "investment_type": "Не указано"
+            })
+    
+    # Формируем данные для всех стартапов (для фильтрации в реальном времени)
+    all_startups_data = []
+    for startup in startups_list:
+        all_startups_data.append({
+            "startup_id": startup.startup_id,
+            "name": startup.title,
+            "description": startup.short_description or startup.description[:200] if startup.description else "",
+            "image": startup.get_logo_url(),
+            "rating": startup.get_average_rating(),
+            "voters_count": startup.total_voters,
+            "comment_count": startup.comments.count(),
+            "direction": DIRECTION_TRANSLATIONS.get(startup.direction.direction_name, startup.direction.direction_name) if startup.direction else "Не указано",
+            "funding_goal": f"{startup.funding_goal:,.0f} ₽" if startup.funding_goal else "Не указано",
+            "valuation": f"{startup.valuation:,.0f} ₽" if startup.valuation else "Не указано",
+            "investors": startup.get_investors_count(),
+            "progress": startup.get_progress_percentage(),
+            "investment_type": "Выкуп+инвестирование" if startup.both_mode else ("Только выкуп" if startup.only_buy else "Только инвестирование")
+        })
+    
+    # Формируем данные для направлений с переводом на русский
+    directions_data = []
+    for direction in directions:
+        original_name = direction.direction_name
+        russian_name = DIRECTION_TRANSLATIONS.get(original_name, original_name)
+        directions_data.append({
+            "direction_name": russian_name,
+            "original_name": original_name
+        })
+    
+    # Данные для логотипа
+    logo_data = {
+        "image": "/static/accounts/images/logo.png"
+    }
+    
+    context = {
+        "planets_data_json": json.dumps(planets_data, ensure_ascii=False),
+        "directions_data_json": json.dumps(directions_data, ensure_ascii=False),
+        "all_startups_data_json": json.dumps(all_startups_data, ensure_ascii=False),
+        "logo_data": logo_data,
+        "directions": directions_data,
+        "selected_galaxy": selected_direction_name,
+    }
     
     return render(request, "accounts/planetary_system.html", context)
 
