@@ -3131,60 +3131,112 @@ def planetary_system(request):
         )
     )
 
+    # Выбираем рандомные 6 стартапов
+    import random
+    all_startups = list(startups_filtered)
+    selected_startups = random.sample(all_startups, min(6, len(all_startups)))
+    
+    # Если стартапов меньше 6, дополняем пустыми слотами
+    while len(selected_startups) < 6:
+        selected_startups.append(None)
+
     planets_data_for_template = []
     # Создаем 6 фиксированных орбит с размерами из обновленного HTML template
     fixed_orbit_sizes = [200, 300, 400, 500, 600, 700]
     orbit_times = [80, 95, 110, 125, 140, 160]
     planet_sizes = [60, 70, 56, 64, 50, 60]
     
-    import random
-    
-    for idx, startup in enumerate(startups_filtered):
-        # Выбираем изображение планеты
-        random_planet_num = random.randint(1, 15)
-        image_path = f"accounts/images/planetary_system/planets_round/{random_planet_num}.png"
+    for idx in range(6):  # Всегда создаем 6 планет
+        startup = selected_startups[idx] if idx < len(selected_startups) else None
         
-        planets_data_for_template.append(
-            {
-                "id": startup.startup_id,
-                "image": static(image_path),
-                "orbit_size": fixed_orbit_sizes[idx],
-                "orbit_time": orbit_times[idx],
-                "planet_size": planet_sizes[idx],
-            }
-        )
+        if startup:
+            # Выбираем изображение планеты
+            random_planet_num = random.randint(1, 15)
+            image_path = f"accounts/images/planetary_system/planets_round/{random_planet_num}.png"
+            
+            planets_data_for_template.append(
+                {
+                    "id": idx + 1,  # Используем последовательные ID 1-6
+                    "startup_id": startup.startup_id,  # Добавляем реальный ID стартапа
+                    "image": static(image_path),
+                    "orbit_size": fixed_orbit_sizes[idx],
+                    "orbit_time": orbit_times[idx],
+                    "planet_size": planet_sizes[idx],
+                }
+            )
+        else:
+            # Пустая планета
+            random_planet_num = random.randint(1, 8)
+            image_path = f"accounts/images/planetary_system/planets_round/{random_planet_num}.png"
+            
+            planets_data_for_template.append(
+                {
+                    "id": idx + 1,  # Используем последовательные ID 1-6
+                    "startup_id": None,  # Нет реального стартапа
+                    "image": static(image_path),
+                    "orbit_size": fixed_orbit_sizes[idx],
+                    "orbit_time": orbit_times[idx],
+                    "planet_size": planet_sizes[idx],
+                }
+            )
 
     planets_data_json = []
-    for startup in startups_filtered:
-        # Вычисляем тип инвестирования
-        investment_type = (
-            "Инвестирование"
-            if startup.only_invest
-            else "Выкуп"
-            if startup.only_buy
-            else "Выкуп+инвестирование"
-            if startup.both_mode
-            else "Не указано"
-        )
+    for idx in range(6):  # Всегда создаем 6 планет
+        startup = selected_startups[idx] if idx < len(selected_startups) else None
         
-        # Выбираем изображение планеты
-        random_planet_num = random.randint(1, 8)
-        planet_image_url = static(f"accounts/images/planetary_system/planets_round/{random_planet_num}.png")
-        
-        planets_data_json.append({
-            "id": startup.startup_id,
-            "name": startup.title,
-            "image": planet_image_url,
-            "rating": round(startup.rating_avg, 2),
-            "progress": f"{startup.progress:.2f}%" if startup.progress is not None else "0%",
-            "direction": startup.direction.direction_name if startup.direction else "Не указано",
-            "investors": startup.total_investors,
-            "funding_goal": f"{startup.funding_goal:,.0f}Р".replace(",", " ") if startup.funding_goal else "Не определена",
-            "comment_count": startup.comment_count,
-            "startup_id": startup.startup_id,
-            "description": startup.short_description,
-            "investment_type": investment_type,
-        })
+        if startup:
+            # Вычисляем тип инвестирования
+            investment_type = (
+                "Инвестирование"
+                if startup.only_invest
+                else "Выкуп"
+                if startup.only_buy
+                else "Выкуп+инвестирование"
+                if startup.both_mode
+                else "Не указано"
+            )
+            
+            # Выбираем изображение планеты
+            random_planet_num = random.randint(1, 8)
+            planet_image_url = static(f"accounts/images/planetary_system/planets_round/{random_planet_num}.png")
+            
+            planets_data_json.append({
+                "id": idx + 1,  # Последовательный ID для связи с HTML
+                "name": startup.title,
+                "image": planet_image_url,
+                "rating": round(startup.rating_avg, 2),
+                "voters_count": startup.total_voters,
+                "progress": f"{startup.progress:.1f}" if startup.progress is not None else "0",
+                "direction": startup.direction.direction_name if startup.direction else "Не указано",
+                "investors": startup.total_investors,
+                "funding_goal": f"{startup.funding_goal:,.0f} ₽".replace(",", " ") if startup.funding_goal else "Не определена",
+                "valuation": f"{startup.valuation:,.0f} ₽".replace(",", " ") if startup.valuation else "Не определена",
+                "comment_count": startup.comment_count,
+                "startup_id": startup.startup_id,  # Реальный ID для ссылок
+                "description": startup.short_description or "Описание отсутствует",
+                "investment_type": investment_type,
+            })
+        else:
+            # Пустая планета
+            random_planet_num = random.randint(1, 8)
+            planet_image_url = static(f"accounts/images/planetary_system/planets_round/{random_planet_num}.png")
+            
+            planets_data_json.append({
+                "id": idx + 1,  # Последовательный ID для связи с HTML
+                "name": "Свободная орбита",
+                "image": planet_image_url,
+                "rating": 0,
+                "voters_count": 0,
+                "progress": "0",
+                "direction": "Не определена",
+                "investors": 0,
+                "funding_goal": "Не определена",
+                "valuation": "Не определена",
+                "comment_count": 0,
+                "startup_id": None,
+                "description": "Эта орбита пока свободна. Здесь может появиться ваш стартап!",
+                "investment_type": "Не указано",
+            })
     
     is_authenticated = request.user.is_authenticated
     is_startuper = is_authenticated and hasattr(request.user, 'role') and request.user.role and request.user.role.role_name == 'startuper'

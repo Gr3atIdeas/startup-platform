@@ -353,26 +353,6 @@
           <div class="planet" style="--planet-size: 60px;" data-id="6"></div>
         </div>
       </div>
-      <div class="orbit" style="--orbit-size: 800px; --orbit-time: 200s;">
-        <div class="planet-orientation">
-          <div class="planet" style="--planet-size: 54px;" data-id="7"></div>
-        </div>
-      </div>
-      <div class="orbit" style="--orbit-size: 900px; --orbit-time: 220s;">
-        <div class="planet-orientation">
-          <div class="planet" style="--planet-size: 58px;" data-id="8"></div>
-        </div>
-      </div>
-      <div class="orbit" style="--orbit-size: 1000px; --orbit-time: 240s;">
-        <div class="planet-orientation">
-          <div class="planet" style="--planet-size: 62px;" data-id="9"></div>
-        </div>
-      </div>
-      <div class="orbit" style="--orbit-size: 1100px; --orbit-time: 260s;">
-        <div class="planet-orientation">
-          <div class="planet" style="--planet-size: 58px;" data-id="10"></div>
-        </div>
-      </div>
     </div>
   </div>
 </div>
@@ -381,12 +361,15 @@
   <div class="planet-image" id="planet-image"></div>
   <h2 id="startup-name"></h2>
   <div class="rating" id="startup-rating"></div>
+  <div class="direction" id="startup-direction" style="font-size: 14px; color: #666; margin: 5px 0;"></div>
   <div class="progress-bar">
-    <button>Выкуп+инвестирование</button>
+    <button id="investment-type">Выкуп+инвестирование</button>
     <div class="progress" id="startup-progress"></div>
   </div>
   <div class="funding" id="startup-funding"></div>
+  <div class="valuation" id="startup-valuation" style="font-size: 14px; color: #555; margin: 10px 0;"></div>
   <div class="investors" id="startup-investors"></div>
+  <div class="comments" id="startup-comments" style="font-size: 14px; color: #555; margin: 5px 0;"></div>
   <div class="description" id="startup-description"></div>
   <button class="more-details" id="more-details">Подробнее</button>
 </div>
@@ -435,10 +418,14 @@ const infoCard = document.getElementById('info-card');
 const planetImage = document.getElementById('planet-image');
 const startupName = document.getElementById('startup-name');
 const startupRating = document.getElementById('startup-rating');
+const startupDirection = document.getElementById('startup-direction');
 const startupProgress = document.getElementById('startup-progress');
 const startupFunding = document.getElementById('startup-funding');
+const startupValuation = document.getElementById('startup-valuation');
 const startupInvestors = document.getElementById('startup-investors');
+const startupComments = document.getElementById('startup-comments');
 const startupDescription = document.getElementById('startup-description');
+const investmentType = document.getElementById('investment-type');
 const closeCard = document.getElementById('close-card');
 const moreDetails = document.getElementById('more-details');
 const solarSystem = document.getElementById('solar-system');
@@ -507,11 +494,15 @@ planets.forEach((planet, index) => {
     if (planetData) {
       planetImage.style.backgroundImage = `url('${planetData.image}')`;
       startupName.textContent = planetData.name || 'Название не указано';
-      startupRating.textContent = `Рейтинг ${planetData.rating || '0'}/5`;
-      startupProgress.textContent = planetData.progress || '0%';
+      startupRating.textContent = `Рейтинг ${planetData.rating || '0'}/5 (${planetData.voters_count || '0'})`;
+      startupDirection.textContent = `Направление: ${planetData.direction || 'Не указано'}`;
+      startupProgress.textContent = `${planetData.progress || '0'}%`;
       startupFunding.textContent = `Цель финансирования: ${planetData.funding_goal || 'Не указана'}`;
+      startupValuation.textContent = `Оценка компании: ${planetData.valuation || 'Не указана'}`;
       startupInvestors.textContent = `Инвесторов: ${planetData.investors || 0}`;
+      startupComments.textContent = `Комментариев: ${planetData.comment_count || 0}`;
       startupDescription.textContent = planetData.description || 'Описание не указано';
+      investmentType.textContent = planetData.investment_type || 'Не указано';
 
       planets.forEach(p => p.classList.remove('active'));
       planet.classList.add('active');
@@ -549,6 +540,9 @@ moreDetails.addEventListener('click', () => {
     const planetData = planetsData.find(p => p.id == id);
     if (planetData && planetData.startup_id) {
       window.location.href = `/startup/${planetData.startup_id}/`;
+    } else if (planetData && !planetData.startup_id) {
+      // Для пустых орбит показываем сообщение
+      alert('Эта орбита пока свободна. Здесь пока нет стартапа для просмотра.');
     }
   }
 });
