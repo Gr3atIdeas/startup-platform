@@ -410,6 +410,12 @@ const logoData = data.logo;
 const directionsData = data.directions;
 const selectedGalaxy = data.selectedGalaxy;
 
+// Отладочная информация
+console.log('🪐 Всего планет получено:', planetsData.length);
+planetsData.forEach((planet, idx) => {
+  console.log(`🪐 Планета ${idx + 1} (ID: ${planet.id}):`, planet.name, planet.startup_id ? `(Стартап ID: ${planet.startup_id})` : '(Пустая орбита)');
+});
+
 // Элементы DOM
 const planets = document.querySelectorAll('.planet');
 const planetOrientations = document.querySelectorAll('.planet-orientation');
@@ -491,18 +497,22 @@ planets.forEach((planet, index) => {
   planet.addEventListener('click', (e) => {
     e.stopPropagation();
     
-    if (planetData) {
-      planetImage.style.backgroundImage = `url('${planetData.image}')`;
-      startupName.textContent = planetData.name || 'Название не указано';
-      startupRating.textContent = `Рейтинг ${planetData.rating || '0'}/5 (${planetData.voters_count || '0'})`;
-      startupDirection.textContent = `Направление: ${planetData.direction || 'Не указано'}`;
-      startupProgress.textContent = `${planetData.progress || '0'}%`;
-      startupFunding.textContent = `Цель финансирования: ${planetData.funding_goal || 'Не указана'}`;
-      startupValuation.textContent = `Оценка компании: ${planetData.valuation || 'Не указана'}`;
-      startupInvestors.textContent = `Инвесторов: ${planetData.investors || 0}`;
-      startupComments.textContent = `Комментариев: ${planetData.comment_count || 0}`;
-      startupDescription.textContent = planetData.description || 'Описание не указано';
-      investmentType.textContent = planetData.investment_type || 'Не указано';
+    // Находим данные планеты заново для корректной работы замыкания
+    const clickedId = planet.getAttribute('data-id');
+    const clickedPlanetData = planetsData.find(p => p.id == clickedId);
+    
+    if (clickedPlanetData) {
+      planetImage.style.backgroundImage = `url('${clickedPlanetData.image}')`;
+      startupName.textContent = clickedPlanetData.name || 'Название не указано';
+      startupRating.textContent = `Рейтинг ${clickedPlanetData.rating || '0'}/5 (${clickedPlanetData.voters_count || '0'})`;
+      startupDirection.textContent = `Направление: ${clickedPlanetData.direction || 'Не указано'}`;
+      startupProgress.textContent = `${clickedPlanetData.progress || '0'}%`;
+      startupFunding.textContent = `Цель финансирования: ${clickedPlanetData.funding_goal || 'Не указана'}`;
+      startupValuation.textContent = `Оценка компании: ${clickedPlanetData.valuation || 'Не указана'}`;
+      startupInvestors.textContent = `Инвесторов: ${clickedPlanetData.investors || 0}`;
+      startupComments.textContent = `Комментариев: ${clickedPlanetData.comment_count || 0}`;
+      startupDescription.textContent = clickedPlanetData.description || 'Описание не указано';
+      investmentType.textContent = clickedPlanetData.investment_type || 'Не указано';
 
       planets.forEach(p => p.classList.remove('active'));
       planet.classList.add('active');
@@ -537,10 +547,10 @@ moreDetails.addEventListener('click', () => {
   const activePlanet = document.querySelector('.planet.active');
   if (activePlanet) {
     const id = activePlanet.getAttribute('data-id');
-    const planetData = planetsData.find(p => p.id == id);
-    if (planetData && planetData.startup_id) {
-      window.location.href = `/startup/${planetData.startup_id}/`;
-    } else if (planetData && !planetData.startup_id) {
+    const detailsPlanetData = planetsData.find(p => p.id == id);
+    if (detailsPlanetData && detailsPlanetData.startup_id) {
+      window.location.href = `/startup/${detailsPlanetData.startup_id}/`;
+    } else if (detailsPlanetData && !detailsPlanetData.startup_id) {
       // Для пустых орбит показываем сообщение
       alert('Эта орбита пока свободна. Здесь пока нет стартапа для просмотра.');
     }

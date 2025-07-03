@@ -3133,12 +3133,36 @@ def planetary_system(request):
 
     # Выбираем рандомные 6 стартапов
     import random
-    all_startups = list(startups_filtered)
-    selected_startups = random.sample(all_startups, min(6, len(all_startups)))
+    import time
     
-    # Если стартапов меньше 6, дополняем пустыми слотами
-    while len(selected_startups) < 6:
-        selected_startups.append(None)
+    # Устанавливаем новый сид для рандома при каждом запросе
+    random.seed(int(time.time()))
+    
+    all_startups = list(startups_filtered)
+    
+    # Выбираем рандомные стартапы
+    selected_startups = []
+    if len(all_startups) >= 6:
+        selected_startups = random.sample(all_startups, 6)
+        # Перемешиваем для лучшей рандомизации
+        random.shuffle(selected_startups)
+    elif len(all_startups) > 0:
+        # Если стартапов меньше 6, но они есть - дублируем их до 6
+        selected_startups = []
+        # Создаем список из 6 элементов, повторяя имеющиеся стартапы
+        for i in range(6):
+            if i < len(all_startups):
+                selected_startups.append(all_startups[i])
+            else:
+                # Берем стартап по модулю от количества доступных
+                selected_startups.append(all_startups[i % len(all_startups)])
+        # Перемешиваем для случайности
+        random.shuffle(selected_startups)
+    else:
+        # Если стартапов нет вообще - создаем 6 пустых слотов
+        selected_startups = [None] * 6
+    
+
 
     planets_data_for_template = []
     # Создаем 6 фиксированных орбит с размерами из обновленного HTML template
@@ -3147,12 +3171,12 @@ def planetary_system(request):
     planet_sizes = [60, 70, 56, 64, 50, 60]
     
     for idx in range(6):  # Всегда создаем 6 планет
-        startup = selected_startups[idx] if idx < len(selected_startups) else None
+        startup = selected_startups[idx] if idx < len(selected_startups) and selected_startups[idx] is not None else None
         
         if startup:
-            # Выбираем изображение планеты
-            random_planet_num = random.randint(1, 15)
-            image_path = f"accounts/images/planetary_system/planets_round/{random_planet_num}.png"
+            # Используем фиксированные изображения для каждой орбиты (1-15)
+            planet_image_num = (idx % 15) + 1  # Циклически используем изображения 1-15
+            image_path = f"accounts/images/planetary_system/planets_round/{planet_image_num}.png"
             
             planets_data_for_template.append(
                 {
@@ -3165,9 +3189,9 @@ def planetary_system(request):
                 }
             )
         else:
-            # Пустая планета
-            random_planet_num = random.randint(1, 8)
-            image_path = f"accounts/images/planetary_system/planets_round/{random_planet_num}.png"
+            # Пустая планета - используем изображения 8-15
+            planet_image_num = 8 + (idx % 8)  # Используем изображения 8-15 для пустых планет
+            image_path = f"accounts/images/planetary_system/planets_round/{planet_image_num}.png"
             
             planets_data_for_template.append(
                 {
@@ -3182,7 +3206,7 @@ def planetary_system(request):
 
     planets_data_json = []
     for idx in range(6):  # Всегда создаем 6 планет
-        startup = selected_startups[idx] if idx < len(selected_startups) else None
+        startup = selected_startups[idx] if idx < len(selected_startups) and selected_startups[idx] is not None else None
         
         if startup:
             # Вычисляем тип инвестирования
@@ -3196,9 +3220,9 @@ def planetary_system(request):
                 else "Не указано"
             )
             
-            # Выбираем изображение планеты
-            random_planet_num = random.randint(1, 8)
-            planet_image_url = static(f"accounts/images/planetary_system/planets_round/{random_planet_num}.png")
+            # Используем те же фиксированные изображения что и в planets_data_for_template
+            planet_image_num = (idx % 15) + 1  # Циклически используем изображения 1-15
+            planet_image_url = static(f"accounts/images/planetary_system/planets_round/{planet_image_num}.png")
             
             planets_data_json.append({
                 "id": idx + 1,  # Последовательный ID для связи с HTML
@@ -3217,9 +3241,9 @@ def planetary_system(request):
                 "investment_type": investment_type,
             })
         else:
-            # Пустая планета
-            random_planet_num = random.randint(1, 8)
-            planet_image_url = static(f"accounts/images/planetary_system/planets_round/{random_planet_num}.png")
+            # Пустая планета - используем те же изображения что и в planets_data_for_template
+            planet_image_num = 8 + (idx % 8)  # Используем изображения 8-15 для пустых планет
+            planet_image_url = static(f"accounts/images/planetary_system/planets_round/{planet_image_num}.png")
             
             planets_data_json.append({
                 "id": idx + 1,  # Последовательный ID для связи с HTML
