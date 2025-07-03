@@ -232,13 +232,7 @@ body {
 
 
 
-#crosshair,
-#crosshair-coords,
-#mouse-coords,
-#axes,
-#fps {
-  display: none;
-}
+
 
 .all-startups-button {
   position: fixed;
@@ -913,56 +907,7 @@ body {
 
 
 
-/* ПРОГРЕСС-БАРЫ ПОД ПЛАНЕТАМИ */
-.ultra_new_planetary_planet_progress_bar {
-  position: absolute;
-  bottom: -25px;
-  left: 50%;
-  transform: translateX(-50%) rotateX(var(--ultra_new_planetary_planet_compensation));
-  width: 40px;
-  height: 6px;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 3px;
-  overflow: hidden;
-  z-index: 10;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-}
 
-.ultra_new_planetary_planet_progress_fill {
-  height: 100%;
-  background: linear-gradient(90deg, #31D2C6 0%, #31D2C6 100%);
-  border-radius: 3px;
-  transition: width 0.3s ease;
-}
-
-/* Подпись прогресса */
-.ultra_new_planetary_planet_progress_text {
-  position: absolute;
-  bottom: -40px;
-  left: 50%;
-  transform: translateX(-50%) rotateX(var(--ultra_new_planetary_planet_compensation));
-  color: white;
-  font-size: 10px;
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 300;
-  text-align: center;
-  white-space: nowrap;
-  z-index: 10;
-  opacity: 0.8;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
-}
-
-/* Анимация перехода категорий */
-.ultra_new_planetary_categories_transition {
-  transition: all 0.5s ease;
-}
-
-/* Скрытые категории */
-.ultra_new_planetary_hidden_category {
-  opacity: 0;
-  transform: scale(0.8);
-  pointer-events: none;
-}
 
 
 
@@ -990,7 +935,6 @@ body {
     height: 600px;
   }
 
-  /* КНОПКА "ВСЕ СТАРТАПЫ" НА МОБИЛЬНЫХ - ОСТАЕТСЯ В ЛЕВОМ ВЕРХНЕМ УГЛУ */
   .all-startups-button {
     top: 15px;
     left: 15px;
@@ -999,6 +943,4 @@ body {
     padding: 8px;
     font-size: 14px;
   }
-
-  /* МОБИЛЬНЫЕ СТИЛИ КАТЕГОРИЙ УДАЛЕНЫ - БУДУТ ПЕРЕПИСАНЫ ЗАНОВО */
 }

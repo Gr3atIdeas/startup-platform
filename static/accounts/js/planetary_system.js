@@ -76,8 +76,7 @@
       ultraNewPlanetaryIsStartuper = data.isStartuper || false;
       ultraNewPlanetaryLogoImage = data.logoImage || '';
       
-      console.log('Loaded startup data:', ultraNewPlanetaryStartupsData);
-      console.log('Loaded directions data:', ultraNewPlanetaryDirectionsData);
+
     }
   }
 
@@ -316,7 +315,7 @@
     // Используем данные из Django views
     const currentStartups = ultraNewPlanetaryStartupsData || [];
     
-    console.log('Loading galaxy with startups:', currentStartups);
+
     
     updateUltraNewPlanetaryPlanets(currentStartups);
     startUltraNewPlanetaryAnimation();
@@ -647,18 +646,7 @@
       planetObj.orientation.style.left = `${50 + 50 * (x / radius)}%`;
       planetObj.orientation.style.top = `${50 + 50 * (y / radius)}%`;
       
-      // ДЕБАГ для первой планеты
-      if (index === 0 && Math.floor(Date.now() / 1000) % 2 === 0 && Math.floor(Date.now() / 100) % 10 === 0) {
-        console.log('🪐 V8.HTML СИСТЕМА:', {
-          elapsedSeconds: elapsedSeconds.toFixed(2),
-          progress: progress.toFixed(3),
-          angle: angle.toFixed(2),
-          x: x.toFixed(2),
-          y: y.toFixed(2),
-          left: planetObj.orientation.style.left,
-          top: planetObj.orientation.style.top
-        });
-      }
+
     });
   }
 

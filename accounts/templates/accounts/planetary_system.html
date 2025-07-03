@@ -19,60 +19,36 @@
       <div class="orbit" style="--orbit-size: 200px; --orbit-time: 80s;">
         <div class="planet-orientation">
           <div class="planet" style="--planet-size: 60px;" data-id="1">
-            <div class="ultra_new_planetary_planet_progress_bar">
-              <div class="ultra_new_planetary_planet_progress_fill" style="width: 0%;"></div>
-            </div>
-            <div class="ultra_new_planetary_planet_progress_text">0%</div>
           </div>
         </div>
       </div>
       <div class="orbit" style="--orbit-size: 300px; --orbit-time: 100s;">
         <div class="planet-orientation">
           <div class="planet" style="--planet-size: 70px;" data-id="2">
-            <div class="ultra_new_planetary_planet_progress_bar">
-              <div class="ultra_new_planetary_planet_progress_fill" style="width: 0%;"></div>
-            </div>
-            <div class="ultra_new_planetary_planet_progress_text">0%</div>
           </div>
         </div>
       </div>
       <div class="orbit" style="--orbit-size: 400px; --orbit-time: 120s;">
         <div class="planet-orientation">
           <div class="planet" style="--planet-size: 56px;" data-id="3">
-            <div class="ultra_new_planetary_planet_progress_bar">
-              <div class="ultra_new_planetary_planet_progress_fill" style="width: 0%;"></div>
-            </div>
-            <div class="ultra_new_planetary_planet_progress_text">0%</div>
           </div>
         </div>
       </div>
       <div class="orbit" style="--orbit-size: 500px; --orbit-time: 140s;">
         <div class="planet-orientation">
           <div class="planet" style="--planet-size: 64px;" data-id="4">
-            <div class="ultra_new_planetary_planet_progress_bar">
-              <div class="ultra_new_planetary_planet_progress_fill" style="width: 0%;"></div>
-            </div>
-            <div class="ultra_new_planetary_planet_progress_text">0%</div>
           </div>
         </div>
       </div>
       <div class="orbit" style="--orbit-size: 600px; --orbit-time: 160s;">
         <div class="planet-orientation">
           <div class="planet" style="--planet-size: 50px;" data-id="5">
-            <div class="ultra_new_planetary_planet_progress_bar">
-              <div class="ultra_new_planetary_planet_progress_fill" style="width: 0%;"></div>
-            </div>
-            <div class="ultra_new_planetary_planet_progress_text">0%</div>
           </div>
         </div>
       </div>
       <div class="orbit" style="--orbit-size: 700px; --orbit-time: 180s;">
         <div class="planet-orientation">
           <div class="planet" style="--planet-size: 60px;" data-id="6">
-            <div class="ultra_new_planetary_planet_progress_bar">
-              <div class="ultra_new_planetary_planet_progress_fill" style="width: 0%;"></div>
-            </div>
-            <div class="ultra_new_planetary_planet_progress_text">0%</div>
           </div>
         </div>
       </div>
@@ -96,46 +72,9 @@
   <div class="description" id="startup-description"></div>
   <button class="more-details" id="more-details">Подробнее</button>
 </div>
-<div id="crosshair"></div>
-<div id="crosshair-coords"></div>
-<div id="mouse-coords"></div>
-<div id="axes">
-  <div class="axis" id="axis-x"></div>
-  <div class="axis" id="axis-y"></div>
-  <div class="axis" id="axis-z"></div>
-  <div class="axis-label" id="label-x">X</div>
-  <div class="axis-label" id="label-y">Y</div>
-  <div class="axis-label" id="label-z">Z</div>
-</div>
-<div id="fps">0 FPS</div>
 
-<!-- КАТЕГОРИИ ПО МАКЕТУ FIGMA -->
-<div style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: calc(100% - 40px); max-width: 1200px; height: 100px; z-index: 9999; display: flex; align-items: center; justify-content: center; gap: 20px; padding: 0 20px; box-sizing: border-box;">
-  <!-- Стрелка влево -->
-  <div style="width: 31.17px; height: 31.17px; padding: 16px; background: #FFEF2B; border-radius: 99px; display: flex; justify-content: center; align-items: center; cursor: pointer; transform: rotate(180deg);" id="ultra_new_planetary_nav_left">
-    <div style="width: 8.78px; height: 14.89px; background: black; clip-path: polygon(50% 0%, 100% 50%, 50% 100%);"></div>
-  </div>
-  
-  <!-- Планеты слева -->
-  <img style="width: 54.84px; height: 53.61px; border-radius: 50%; cursor: pointer;" src="/static/accounts/images/planetary_system/planets_round/1.png" />
-  <img style="width: 54.84px; height: 53.61px; border-radius: 50%; cursor: pointer;" src="/static/accounts/images/planetary_system/planets_round/2.png" />
-  <img style="width: 54.84px; height: 53.61px; border-radius: 50%; cursor: pointer;" src="/static/accounts/images/planetary_system/planets_round/3.png" />
-  
-  <!-- Активная категория -->
-  <div style="padding: 9px 17px; background: #050505; border-radius: 20px; color: white; font-size: 12px; font-family: Unbounded; font-weight: 300; letter-spacing: 0.12px; text-align: center; white-space: nowrap; cursor: pointer;" id="ultra_new_planetary_active_category">
-    Медицина
-  </div>
-  
-  <!-- Планеты справа -->
-  <img style="width: 54.84px; height: 53.61px; border-radius: 50%; cursor: pointer;" src="/static/accounts/images/planetary_system/planets_round/4.png" />
-  <img style="width: 54.84px; height: 53.61px; border-radius: 50%; cursor: pointer;" src="/static/accounts/images/planetary_system/planets_round/5.png" />
-  <img style="width: 54.84px; height: 53.61px; border-radius: 50%; cursor: pointer;" src="/static/accounts/images/planetary_system/planets_round/6.png" />
-  
-  <!-- Стрелка вправо -->
-  <div style="width: 31.17px; height: 31.17px; padding: 16px; background: #FFEF2B; border-radius: 99px; display: flex; justify-content: center; align-items: center; cursor: pointer;" id="ultra_new_planetary_nav_right">
-    <div style="width: 8.78px; height: 14.89px; background: black; clip-path: polygon(50% 0%, 100% 50%, 50% 100%);"></div>
-  </div>
-</div>
+
+
 
 <script id="planetary-data" type="application/json">
 {
@@ -150,13 +89,11 @@
 <script>
 // Получаем данные из Django
 const data = JSON.parse(document.getElementById('planetary-data').textContent);
-const planetsData = data.planets; // Текущие 6 планет для отображения
+const planetsData = data.planets;
 const logoData = data.logo;
 const directionsData = data.directions;
 const selectedGalaxy = data.selectedGalaxy;
-const allStartupsData = data.allStartups; // ВСЕ стартапы для фильтрации
-
-// Данные загружены
+const allStartupsData = data.allStartups;
 
 // Элементы DOM
 const planets = document.querySelectorAll('.planet');
@@ -182,10 +119,7 @@ const galaxy = document.getElementById('galaxy');
 const logoElement = document.getElementById('logo');
 const allStartupsBtn = document.querySelector('.all-startups-button');
 
-// Устанавливаем изображение логотипа (отключено для избежания огромных картинок)
-// if (logoData.image) {
-//   logoElement.style.backgroundImage = `url('${logoData.image}')`;
-// }
+
 
 // Начальный угол наклона галактики
 const galaxyTiltAngle = 45;
@@ -234,25 +168,16 @@ planets.forEach((planet, index) => {
   if (planetData && planetData.image) {
     planet.style.backgroundImage = `url('${planetData.image}')`;
   } else {
-    // Резервное изображение если нет данных
     const planetNum = (index % 15) + 1;
     planet.style.backgroundImage = `url('/static/accounts/images/planetary_system/planets_round/${planetNum}.png')`;
   }
   
-  // Обновляем прогресс планеты
-  const progressBar = planet.querySelector('.ultra_new_planetary_planet_progress_fill');
-  const progressText = planet.querySelector('.ultra_new_planetary_planet_progress_text');
-  if (planetData && progressBar && progressText) {
-    const progress = planetData.progress || 0;
-    progressBar.style.width = `${progress}%`;
-    progressText.textContent = `${progress}%`;
-  }
+
   
   // Обработчик клика по планете
   planet.addEventListener('click', (e) => {
     e.stopPropagation();
     
-    // Находим данные планеты заново для корректной работы замыкания
     const clickedId = planet.getAttribute('data-id');
     const clickedPlanetData = planetsData.find(p => p.id == clickedId);
     
@@ -273,7 +198,6 @@ planets.forEach((planet, index) => {
       planet.classList.add('active');
       infoCard.style.display = 'block';
 
-      // Приостановить вращение планет
       isPaused = true;
       pausedTime = Date.now();
     }
@@ -286,7 +210,6 @@ closeCard.addEventListener('click', () => {
   infoCard.style.display = 'none';
   planets.forEach(p => p.classList.remove('active'));
 
-  // Возобновить вращение планет
   if (isPaused) {
     const pauseDuration = Date.now() - pausedTime;
     planetObjects.forEach(planetObj => {
@@ -305,9 +228,6 @@ moreDetails.addEventListener('click', () => {
     const detailsPlanetData = planetsData.find(p => p.id == id);
     if (detailsPlanetData && detailsPlanetData.startup_id) {
       window.location.href = `/startup/${detailsPlanetData.startup_id}/`;
-    } else if (detailsPlanetData && !detailsPlanetData.startup_id) {
-      // Для пустых орбит показываем сообщение
-      alert('Эта орбита пока свободна. Здесь пока нет стартапа для просмотра.');
     }
   }
 });
@@ -442,186 +362,7 @@ function updatePlanets() {
   requestAnimationFrame(updatePlanets);
 }
 
-// Функция фильтрации стартапов по категории
-function filterStartupsByCategory(categoryName) {
-  let filteredStartups = [];
-  
-  if (categoryName === 'Все' || categoryName === 'All' || !categoryName) {
-    filteredStartups = [...allStartupsData];
-  } else {
-    // Фильтруем по русскому названию категории
-    filteredStartups = allStartupsData.filter(startup => 
-      startup.direction === categoryName
-    );
-  }
-  
-  // Выбираем до 6 стартапов
-  const selectedStartups = [];
-  if (filteredStartups.length >= 6) {
-    // Берем первые 6 стартапов (можно изменить на случайные)
-    selectedStartups.push(...filteredStartups.slice(0, 6));
-  } else if (filteredStartups.length > 0) {
-    // Дублируем стартапы до 6
-    for (let i = 0; i < 6; i++) {
-      selectedStartups.push(filteredStartups[i % filteredStartups.length]);
-    }
-  } else {
-    // Создаем пустые слоты
-    for (let i = 0; i < 6; i++) {
-      selectedStartups.push(null);
-    }
-  }
-  
-  updatePlanetsWithNewData(selectedStartups);
-}
 
-// Функция обновления планет с новыми данными
-function updatePlanetsWithNewData(startupsData) {
-  const currentPlanets = document.querySelectorAll('.planet');
-  
-  currentPlanets.forEach((planet, index) => {
-    const startup = startupsData[index];
-    
-    // Очищаем старые обработчики событий
-    const newPlanet = planet.cloneNode(true);
-    planet.parentNode.replaceChild(newPlanet, planet);
-    
-    if (startup) {
-      // Используем изображение из данных стартапа (уже содержит правильный путь к планете)
-      const imageUrl = startup.image || `/static/accounts/images/planetary_system/planets_round/${(index % 15) + 1}.png`;
-      newPlanet.style.backgroundImage = `url('${imageUrl}')`;
-      newPlanet.style.opacity = '1';
-      newPlanet.setAttribute('data-startup-id', startup.startup_id);
-      
-      // Добавляем обработчик клика с новыми данными
-      newPlanet.addEventListener('click', (e) => {
-        e.stopPropagation();
-        showStartupModal(startup, imageUrl);
-      });
-    } else {
-      // Пустая планета - используем изображения 8-15
-      const planetNum = 8 + (index % 8);
-      const imageUrl = `/static/accounts/images/planetary_system/planets_round/${planetNum}.png`;
-      newPlanet.style.backgroundImage = `url('${imageUrl}')`;
-      newPlanet.style.opacity = '0.5';
-      newPlanet.removeAttribute('data-startup-id');
-      
-      newPlanet.addEventListener('click', (e) => {
-        e.stopPropagation();
-        alert('Эта орбита пока свободна!');
-      });
-    }
-  });
-}
-
-// Функция показа модального окна стартапа
-function showStartupModal(startup, imageUrl) {
-  planetImage.style.backgroundImage = `url('${imageUrl}')`;
-  startupName.textContent = startup.name || 'Название не указано';
-  startupRating.textContent = `Рейтинг ${startup.rating || '0'}/5 (${startup.voters_count || '0'})`;
-  startupDirection.textContent = `Направление: ${startup.direction || 'Не указано'}`;
-  startupProgress.textContent = `${startup.progress || '0'}%`;
-  startupFunding.textContent = `Цель финансирования: ${startup.funding_goal || 'Не указана'}`;
-  startupValuation.textContent = `Оценка компании: ${startup.valuation || 'Не указана'}`;
-  startupInvestors.textContent = `Инвесторов: ${startup.investors || 0}`;
-  startupComments.textContent = `Комментариев: ${startup.comment_count || 0}`;
-  startupDescription.textContent = startup.description || 'Описание не указано';
-  investmentType.textContent = startup.investment_type || 'Не указано';
-
-  // Убираем активные классы у всех планет
-  document.querySelectorAll('.planet').forEach(p => p.classList.remove('active'));
-  
-  // Находим и активируем нужную планету
-  const clickedPlanet = document.querySelector(`[data-startup-id="${startup.startup_id}"]`);
-  if (clickedPlanet) clickedPlanet.classList.add('active');
-  
-  infoCard.style.display = 'block';
-  
-  // Обновляем кнопку "Подробнее"
-  moreDetails.onclick = function() {
-    if (startup.startup_id) {
-      window.location.href = `/startup/${startup.startup_id}/`;
-    }
-  };
-
-  // Приостановить вращение планет
-  isPaused = true;
-  pausedTime = Date.now();
-  lastInteractionTime = Date.now();
-}
-
-// ПРОСТЫЕ ОБРАБОТЧИКИ КАТЕГОРИЙ
-
-// Обработчики навигации
-const navLeft = document.getElementById('ultra_new_planetary_nav_left');
-const navRight = document.getElementById('ultra_new_planetary_nav_right');
-
-if (navLeft) {
-  navLeft.addEventListener('click', function() {
-    // Переключение влево
-  });
-}
-
-if (navRight) {
-  navRight.addEventListener('click', function() {
-    // Переключение вправо  
-  });
-}
-
-
-
-// Обновляем функцию updatePlanetsWithNewData для включения прогресса
-function updatePlanetsWithNewData(startupsData) {
-  const currentPlanets = document.querySelectorAll('.planet');
-  
-  currentPlanets.forEach((planet, index) => {
-    const startup = startupsData[index];
-    
-    // Очищаем старые обработчики событий
-    const newPlanet = planet.cloneNode(true);
-    planet.parentNode.replaceChild(newPlanet, planet);
-    
-    const progressBar = newPlanet.querySelector('.ultra_new_planetary_planet_progress_fill');
-    const progressText = newPlanet.querySelector('.ultra_new_planetary_planet_progress_text');
-    
-    if (startup) {
-      // Используем изображение из данных стартапа
-      const imageUrl = startup.image || `/static/accounts/images/planetary_system/planets_round/${(index % 15) + 1}.png`;
-      newPlanet.style.backgroundImage = `url('${imageUrl}')`;
-      newPlanet.style.opacity = '1';
-      newPlanet.setAttribute('data-startup-id', startup.startup_id);
-      
-      // Обновляем прогресс
-      const progress = startup.progress || 0;
-      if (progressBar) progressBar.style.width = `${progress}%`;
-      if (progressText) progressText.textContent = `${progress}%`;
-      
-      // Добавляем обработчик клика с новыми данными
-      newPlanet.addEventListener('click', (e) => {
-        e.stopPropagation();
-        showStartupModal(startup, imageUrl);
-      });
-    } else {
-      // Пустая планета
-      const planetNum = 8 + (index % 8);
-      const imageUrl = `/static/accounts/images/planetary_system/planets_round/${planetNum}.png`;
-      newPlanet.style.backgroundImage = `url('${imageUrl}')`;
-      newPlanet.style.opacity = '0.5';
-      newPlanet.removeAttribute('data-startup-id');
-      
-      // Обнуляем прогресс
-      if (progressBar) progressBar.style.width = '0%';
-      if (progressText) progressText.textContent = '0%';
-      
-      newPlanet.addEventListener('click', (e) => {
-        e.stopPropagation();
-        alert('Эта орбита пока свободна!');
-      });
-    }
-  });
-}
-
-// Система планет инициализирована
 
 // Запускаем анимацию
 updatePlanets();
