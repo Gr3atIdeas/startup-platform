@@ -3105,12 +3105,17 @@ def leave_chat(request, chat_id):
 
 
 def planetary_system(request):
+    print("=" * 50)
+    print("🚀 ПЛАНЕТАРНАЯ СИСТЕМА ЗАПУЩЕНА!")
+    print("=" * 50)
+    
     directions = Directions.objects.all().order_by("direction_name")
     selected_direction_name = request.GET.get("direction", "Все")
+    print(f"🚀 Выбранное направление: {selected_direction_name}")
 
-    # Для планетарной системы ВСЕГДА берем ВСЕ одобренные стартапы, 
-    # независимо от выбранного направления, чтобы заполнить все 6 орбит
-    startups_query = Startups.objects.filter(status="approved").annotate(
+    # ПРОСТОЙ запрос для планетарной системы - ВСЕ одобренные стартапы
+    print("🚀 Выполняем запрос к базе данных...")
+    startups_filtered = Startups.objects.filter(status="approved").annotate(
         rating_avg=Coalesce(Avg("uservotes__rating"), 0.0, output_field=FloatField()),
         total_voters=Count("uservotes", distinct=True),
         total_investors=Count("investmenttransactions", distinct=True),
@@ -3118,22 +3123,12 @@ def planetary_system(request):
             Sum("investmenttransactions__amount"), 0, output_field=DecimalField()
         ),
         comment_count=Count("comments", distinct=True),
-    )
-
-    # УБИРАЕМ фильтрацию по направлению для планетарной системы
-    # Это позволит всегда заполнить все 6 орбит разнообразными стартапами
-    # if selected_direction_name != "Все":
-    #     startups_query = startups_query.filter(
-    #         direction__direction_name=selected_direction_name
-    #     )
-
-    startups_filtered = startups_query.annotate(
         progress=Case(
             When(funding_goal__gt=0, then=(F("current_funding") * 100.0 / F("funding_goal"))),
             default=Value(0),
             output_field=FloatField(),
         )
-    )
+    ).select_related('direction')
 
     # Выбираем рандомные 6 стартапов
     import random
@@ -3143,25 +3138,21 @@ def planetary_system(request):
     random.seed(int(time.time()))
     
     all_startups = list(startups_filtered)
+    print(f"🚀 ПОЛУЧЕНО из БД: {len(all_startups)} одобренных стартапов")
     
-    # Отладочная информация для проверки
-    print(f"🚀 ПЛАНЕТАРНАЯ СИСТЕМА: найдено {len(all_startups)} одобренных стартапов")
-    
-    # Выбираем рандомные стартапы - ИСПРАВЛЕННАЯ ЛОГИКА
+    # ПРОСТОЙ выбор - просто берем первые 6 стартапов (без рандома для отладки)
     selected_startups = []
     
     if len(all_startups) == 0:
         # Нет стартапов - 6 пустых слотов
         selected_startups = [None] * 6
     elif len(all_startups) >= 6:
-        # Достаточно стартапов - выбираем 6 случайных
-        selected_startups = random.sample(all_startups, 6)
-        random.shuffle(selected_startups)
+        # Достаточно стартапов - берем первые 6
+        selected_startups = all_startups[:6]
     else:
         # Стартапов меньше 6 - дублируем до 6
         for i in range(6):
             selected_startups.append(all_startups[i % len(all_startups)])
-        random.shuffle(selected_startups)
 
 
     planets_data_for_template = []
