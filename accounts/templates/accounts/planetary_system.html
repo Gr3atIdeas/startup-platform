@@ -387,8 +387,9 @@
 <div id="fps">0 FPS</div>
 <div id="galaxy-selector">
   <div id="galaxy-list">
+    <div class="galaxy-item selected" data-name="Все">Все</div>
     {% for direction in directions %}
-      <div class="galaxy-item {% if direction.direction_name == selected_galaxy %}selected{% endif %}" data-name="{{ direction.direction_name }}">{{ direction.direction_name }}</div>
+      <div class="galaxy-item" data-name="{{ direction.direction_name }}">{{ direction.direction_name }}</div>
     {% endfor %}
   </div>
 </div>
@@ -398,23 +399,24 @@
   "planets": {{ planets_data_json|safe }},
   "logo": { "image": "{{ logo_data.image|default_if_none:''|escapejs }}" },
   "directions": {{ directions_data_json|safe }},
-  "selectedGalaxy": "{{ selected_galaxy|default_if_none:''|escapejs }}"
+  "selectedGalaxy": "{{ selected_galaxy|default_if_none:''|escapejs }}",
+  "allStartups": {{ all_startups_data_json|safe }}
 }
 </script>
 
 <script>
 // Получаем данные из Django
 const data = JSON.parse(document.getElementById('planetary-data').textContent);
-const planetsData = data.planets;
+const planetsData = data.planets; // Текущие 6 планет для отображения
 const logoData = data.logo;
 const directionsData = data.directions;
 const selectedGalaxy = data.selectedGalaxy;
+const allStartupsData = data.allStartups; // ВСЕ стартапы для фильтрации
 
 // Отладочная информация
 console.log('🪐 Всего планет получено:', planetsData.length);
-planetsData.forEach((planet, idx) => {
-  console.log(`🪐 Планета ${idx + 1} (ID: ${planet.id}):`, planet.name, planet.startup_id ? `(Стартап ID: ${planet.startup_id})` : '(Пустая орбита)');
-});
+console.log('🪐 Всего стартапов для фильтрации:', allStartupsData.length);
+console.log('🪐 Направления:', directionsData.map(d => d.direction_name));
 
 // Элементы DOM
 const planets = document.querySelectorAll('.planet');
@@ -687,17 +689,133 @@ function updatePlanets() {
   requestAnimationFrame(updatePlanets);
 }
 
-// Обработчики для категорий
+// Функция фильтрации стартапов по категории
+function filterStartupsByCategory(categoryName) {
+  console.log('🔍 Фильтрация по категории:', categoryName);
+  
+  let filteredStartups = [];
+  
+  if (categoryName === 'Все' || !categoryName) {
+    filteredStartups = [...allStartupsData];
+  } else {
+    filteredStartups = allStartupsData.filter(startup => 
+      startup.direction === categoryName
+    );
+  }
+  
+  console.log('🔍 Найдено стартапов:', filteredStartups.length);
+  
+  // Выбираем до 6 стартапов
+  const selectedStartups = [];
+  if (filteredStartups.length >= 6) {
+    // Выбираем 6 случайных стартапов
+    const shuffled = filteredStartups.sort(() => 0.5 - Math.random());
+    selectedStartups.push(...shuffled.slice(0, 6));
+  } else if (filteredStartups.length > 0) {
+    // Дублируем стартапы до 6
+    for (let i = 0; i < 6; i++) {
+      selectedStartups.push(filteredStartups[i % filteredStartups.length]);
+    }
+  } else {
+    // Создаем пустые слоты
+    for (let i = 0; i < 6; i++) {
+      selectedStartups.push(null);
+    }
+  }
+  
+  updatePlanetsWithNewData(selectedStartups);
+}
+
+// Функция обновления планет с новыми данными
+function updatePlanetsWithNewData(startupsData) {
+  const currentPlanets = document.querySelectorAll('.planet');
+  
+  currentPlanets.forEach((planet, index) => {
+    const startup = startupsData[index];
+    
+    // Очищаем старые обработчики событий
+    const newPlanet = planet.cloneNode(true);
+    planet.parentNode.replaceChild(newPlanet, planet);
+    
+    if (startup) {
+      // Устанавливаем изображение
+      const imageUrl = startup.image || `https://placehold.co/100x100/4ECDC4/FFFFFF?text=P${index + 1}`;
+      newPlanet.style.backgroundImage = `url('${imageUrl}')`;
+      newPlanet.style.opacity = '1';
+      newPlanet.setAttribute('data-startup-id', startup.startup_id);
+      
+      // Добавляем обработчик клика с новыми данными
+      newPlanet.addEventListener('click', (e) => {
+        e.stopPropagation();
+        showStartupModal(startup, imageUrl);
+      });
+    } else {
+      // Пустая планета
+      const imageUrl = `https://placehold.co/100x100/666/FFF?text=Пусто`;
+      newPlanet.style.backgroundImage = `url('${imageUrl}')`;
+      newPlanet.style.opacity = '0.5';
+      newPlanet.removeAttribute('data-startup-id');
+      
+      newPlanet.addEventListener('click', (e) => {
+        e.stopPropagation();
+        alert('Эта орбита пока свободна!');
+      });
+    }
+  });
+}
+
+// Функция показа модального окна стартапа
+function showStartupModal(startup, imageUrl) {
+  planetImage.style.backgroundImage = `url('${imageUrl}')`;
+  startupName.textContent = startup.name || 'Название не указано';
+  startupRating.textContent = `Рейтинг ${startup.rating || '0'}/5 (${startup.voters_count || '0'})`;
+  startupDirection.textContent = `Направление: ${startup.direction || 'Не указано'}`;
+  startupProgress.textContent = `${startup.progress || '0'}%`;
+  startupFunding.textContent = `Цель финансирования: ${startup.funding_goal || 'Не указана'}`;
+  startupValuation.textContent = `Оценка компании: ${startup.valuation || 'Не указана'}`;
+  startupInvestors.textContent = `Инвесторов: ${startup.investors || 0}`;
+  startupComments.textContent = `Комментариев: ${startup.comment_count || 0}`;
+  startupDescription.textContent = startup.description || 'Описание не указано';
+  investmentType.textContent = startup.investment_type || 'Не указано';
+
+  // Убираем активные классы у всех планет
+  document.querySelectorAll('.planet').forEach(p => p.classList.remove('active'));
+  
+  // Находим и активируем нужную планету
+  const clickedPlanet = document.querySelector(`[data-startup-id="${startup.startup_id}"]`);
+  if (clickedPlanet) clickedPlanet.classList.add('active');
+  
+  infoCard.style.display = 'block';
+  
+  // Обновляем кнопку "Подробнее"
+  moreDetails.onclick = function() {
+    if (startup.startup_id) {
+      window.location.href = `/startup/${startup.startup_id}/`;
+    }
+  };
+
+  // Приостановить вращение планет
+  isPaused = true;
+  pausedTime = Date.now();
+  lastInteractionTime = Date.now();
+}
+
+// Обработчики для категорий - ОБНОВЛЕННЫЕ для реального времени
 document.querySelectorAll('.galaxy-item').forEach(item => {
   item.addEventListener('click', function(e) {
     e.preventDefault();
     e.stopPropagation();
     
     const categoryName = this.dataset.name;
-    if (categoryName && categoryName !== selectedGalaxy) {
-      const newUrl = `{% url 'planetary_system' %}?direction=${encodeURIComponent(categoryName)}`;
-      window.location.href = newUrl;
-    }
+    
+    // Обновляем выбранную категорию в UI
+    document.querySelectorAll('.galaxy-item').forEach(i => i.classList.remove('selected'));
+    this.classList.add('selected');
+    
+    // Фильтруем стартапы в реальном времени
+    filterStartupsByCategory(categoryName);
+    
+    lastInteractionTime = Date.now();
   });
 });
 
