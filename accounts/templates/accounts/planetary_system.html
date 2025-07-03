@@ -12,6 +12,7 @@
 <div class="space-background"></div>
 <div class="stars"></div>
 <button class="all-startups-button">Все стартапы</button>
+<button class="ultra_new_planetary_fullscreen_close_btn" id="planetary-close-btn">×</button>
 <div id="solar-system">
   <div id="scene">
     <div id="galaxy">
@@ -108,7 +109,8 @@
   <div class="axis-label" id="label-z">Z</div>
 </div>
 <div id="fps">0 FPS</div>
-<!-- НОВЫЕ КАТЕГОРИИ ПО КОДУ ИЗ FIGMA -->
+
+<!-- НОВЫЕ КАТЕГОРИИ ПО КОДУ ИЗ FIGMA - ВНИЗУ -->
 <div id="ultra_new_planetary_categories_system">
   <!-- Стрелка навигации влево -->
   <button class="ultra_new_planetary_nav_arrow_left" id="ultra_new_planetary_nav_left"></button>
@@ -191,6 +193,7 @@ const scene = document.getElementById('scene');
 const galaxy = document.getElementById('galaxy');
 const logoElement = document.getElementById('logo');
 const allStartupsBtn = document.querySelector('.all-startups-button');
+const planetaryCloseBtn = document.getElementById('planetary-close-btn');
 
 // Устанавливаем изображение логотипа (отключено для избежания огромных картинок)
 // if (logoData.image) {
@@ -327,6 +330,16 @@ if (allStartupsBtn) {
   allStartupsBtn.addEventListener('click', function(e) {
     e.preventDefault();
     window.location.href = '/startups/';
+  });
+}
+
+// Обработчик кнопки полноэкранного режима
+if (planetaryCloseBtn) {
+  planetaryCloseBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    // Можно добавить функционал выхода из полноэкранного режима или закрытия модального окна
+    // Пока просто скрываем саму кнопку
+    planetaryCloseBtn.style.display = 'none';
   });
 }
 
