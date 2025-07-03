@@ -3121,7 +3121,6 @@ def planetary_system(request):
         'Sports': 'Спорт',
         'Travel': 'Путешествия',
         'Real Estate': 'Недвижимость',
-        'Automotive': 'Автомобили',
         'Agriculture': 'Сельское хозяйство',
         'Energy': 'Энергетика',
         'Environment': 'Экология',
@@ -3135,13 +3134,19 @@ def planetary_system(request):
         'Transportation': 'Транспорт',
         'Wellness': 'Велнес',
         'Business': 'Бизнес',
+        'Cafe': 'Кафе',
+        'Delivery': 'Доставка',
+        'FastFood': 'Быстрое питание',
+        'Auto': 'Автомобили',
+        'AI': 'Искусственный интеллект',
+        # Auto не переводим, оставляем как есть для "Автомобили"
     }
     
     # Получаем все направления
     directions = Directions.objects.all().order_by("direction_name")
     
-    # Получаем выбранное направление из URL (по умолчанию "Все")
-    selected_direction_name = request.GET.get("direction", "Все")
+    # Получаем выбранное направление из URL (по умолчанию "All" = "Все")
+    selected_direction_name = request.GET.get("direction", "All")
     
     # Логирование для отладки
     logger.info(f"🪐 Планетарная система: выбрано направление '{selected_direction_name}'")
@@ -3152,13 +3157,22 @@ def planetary_system(request):
     ).select_related("direction", "owner").order_by("-created_at")
     
     # Применяем фильтрацию только если выбрано конкретное направление
-    if selected_direction_name != "Все":
+    if selected_direction_name != "All" and selected_direction_name != "Все":
         startups_query = startups_query.filter(
             direction__direction_name=selected_direction_name
         )
     
     # Получаем список стартапов
     startups_list = list(startups_query)
+    
+    # Отладочная информация
+    print(f"🚀 ПЛАНЕТАРНАЯ СИСТЕМА DEBUG:")
+    print(f"🚀 Выбрано направление: '{selected_direction_name}'")
+    print(f"🚀 Всего одобренных стартапов в БД: {Startups.objects.filter(status='approved').count()}")
+    print(f"🚀 Загружено стартапов после фильтрации: {len(startups_list)}")
+    if startups_list:
+        for i, startup in enumerate(startups_list[:3]):
+            print(f"🚀   {i+1}. {startup.title} - направление: {startup.direction.direction_name if startup.direction else 'Нет'}")
     
     logger.info(f"🪐 Загружено стартапов: {len(startups_list)}")
     
@@ -3180,12 +3194,16 @@ def planetary_system(request):
     planets_data = []
     for i, startup in enumerate(selected_startups):
         if startup:
+            # Используем фиксированные изображения планет вместо логотипов
+            planet_image_num = (i % 15) + 1  # Циклически используем изображения 1-15
+            planet_image_url = f"/static/accounts/images/planetary_system/planets_round/{planet_image_num}.png"
+            
             planets_data.append({
                 "id": i + 1,
                 "startup_id": startup.startup_id,
                 "name": startup.title,
                 "description": startup.short_description or startup.description[:200] if startup.description else "",
-                "image": startup.get_logo_url(),
+                "image": planet_image_url,
                 "rating": startup.get_average_rating(),
                 "voters_count": startup.total_voters,
                 "comment_count": startup.comments.count(),
@@ -3197,12 +3215,16 @@ def planetary_system(request):
                 "investment_type": "Выкуп+инвестирование" if startup.both_mode else ("Только выкуп" if startup.only_buy else "Только инвестирование")
             })
         else:
+            # Пустая планета - используем изображения 8-15
+            planet_image_num = 8 + (i % 8)  # Используем изображения 8-15 для пустых планет
+            planet_image_url = f"/static/accounts/images/planetary_system/planets_round/{planet_image_num}.png"
+            
             planets_data.append({
                 "id": i + 1,
                 "startup_id": None,
                 "name": "Свободная орбита",
                 "description": "Эта орбита пока свободна",
-                "image": None,
+                "image": planet_image_url,
                 "rating": 0,
                 "voters_count": 0,
                 "comment_count": 0,
@@ -3215,13 +3237,20 @@ def planetary_system(request):
             })
     
     # Формируем данные для всех стартапов (для фильтрации в реальном времени)
+    # Получаем ВСЕ одобренные стартапы, а не только отфильтрованные
+    all_approved_startups = list(Startups.objects.filter(status="approved").select_related("direction", "owner").order_by("-created_at"))
+    
     all_startups_data = []
-    for startup in startups_list:
+    for idx, startup in enumerate(all_approved_startups):
+        # Используем фиксированные изображения планет для всех стартапов
+        planet_image_num = (idx % 15) + 1  # Циклически используем изображения 1-15
+        planet_image_url = f"/static/accounts/images/planetary_system/planets_round/{planet_image_num}.png"
+        
         all_startups_data.append({
             "startup_id": startup.startup_id,
             "name": startup.title,
             "description": startup.short_description or startup.description[:200] if startup.description else "",
-            "image": startup.get_logo_url(),
+            "image": planet_image_url,
             "rating": startup.get_average_rating(),
             "voters_count": startup.total_voters,
             "comment_count": startup.comments.count(),
@@ -3247,6 +3276,15 @@ def planetary_system(request):
     logo_data = {
         "image": "/static/accounts/images/logo.png"
     }
+    
+    # Финальная отладочная информация
+    print(f"🚀 ПЕРЕДАЕТСЯ В ШАБЛОН:")
+    print(f"🚀 Планет для отображения: {len(planets_data)}")
+    print(f"🚀 Всех стартапов для фильтрации: {len(all_startups_data)}")
+    print(f"🚀 Направлений: {len(directions_data)}")
+    print(f"🚀 Выбранная галактика: '{selected_direction_name}'")
+    print(f"🚀 Первые 3 планеты: {[p.get('name', 'Нет названия') for p in planets_data[:3]]}")
+    print(f"🚀 Переводы направлений: {[(d.get('original_name'), d.get('direction_name')) for d in directions_data[:5]]}")
     
     context = {
         "planets_data_json": json.dumps(planets_data, ensure_ascii=False),

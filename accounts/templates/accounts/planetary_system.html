@@ -387,7 +387,7 @@
 <div id="fps">0 FPS</div>
 <div id="galaxy-selector">
   <div id="galaxy-list">
-    <div class="galaxy-item {% if selected_galaxy == 'Все' %}selected{% endif %}" data-name="Все">Все</div>
+    <div class="galaxy-item {% if selected_galaxy == 'All' or selected_galaxy == 'Все' %}selected{% endif %}" data-name="Все">Все</div>
     {% for direction in directions %}
       <div class="galaxy-item {% if selected_galaxy == direction.original_name %}selected{% endif %}" data-name="{{ direction.direction_name }}">{{ direction.direction_name }}</div>
     {% endfor %}
@@ -494,6 +494,10 @@ planets.forEach((planet, index) => {
   const planetData = planetsData.find(p => p.id == id);
   if (planetData && planetData.image) {
     planet.style.backgroundImage = `url('${planetData.image}')`;
+  } else {
+    // Резервное изображение если нет данных
+    const planetNum = (index % 15) + 1;
+    planet.style.backgroundImage = `url('/static/accounts/images/planetary_system/planets_round/${planetNum}.png')`;
   }
   
   // Обработчик клика по планете
@@ -739,8 +743,8 @@ function updatePlanetsWithNewData(startupsData) {
     planet.parentNode.replaceChild(newPlanet, planet);
     
     if (startup) {
-      // Устанавливаем изображение
-      const imageUrl = startup.image || `https://placehold.co/100x100/4ECDC4/FFFFFF?text=P${index + 1}`;
+      // Используем изображение из данных стартапа (уже содержит правильный путь к планете)
+      const imageUrl = startup.image || `/static/accounts/images/planetary_system/planets_round/${(index % 15) + 1}.png`;
       newPlanet.style.backgroundImage = `url('${imageUrl}')`;
       newPlanet.style.opacity = '1';
       newPlanet.setAttribute('data-startup-id', startup.startup_id);
@@ -751,8 +755,9 @@ function updatePlanetsWithNewData(startupsData) {
         showStartupModal(startup, imageUrl);
       });
     } else {
-      // Пустая планета
-      const imageUrl = `https://placehold.co/100x100/666/FFF?text=Пусто`;
+      // Пустая планета - используем изображения 8-15
+      const planetNum = 8 + (index % 8);
+      const imageUrl = `/static/accounts/images/planetary_system/planets_round/${planetNum}.png`;
       newPlanet.style.backgroundImage = `url('${imageUrl}')`;
       newPlanet.style.opacity = '0.5';
       newPlanet.removeAttribute('data-startup-id');
@@ -826,6 +831,7 @@ document.querySelectorAll('.galaxy-item').forEach(item => {
       const originalName = directionData ? directionData.original_name : categoryName;
       currentUrl.searchParams.set('direction', originalName);
     } else {
+      // Для категории "Все" очищаем параметр direction
       currentUrl.searchParams.delete('direction');
     }
     
@@ -835,13 +841,13 @@ document.querySelectorAll('.galaxy-item').forEach(item => {
 });
 
 // Инициализируем правильную категорию при загрузке
-if (selectedGalaxy && selectedGalaxy !== 'Все') {
+if (selectedGalaxy && selectedGalaxy !== 'All' && selectedGalaxy !== 'Все') {
   // Если выбрана конкретная категория, найдем русское название
   const directionData = directionsData.find(d => d.original_name === selectedGalaxy);
   const russianName = directionData ? directionData.direction_name : selectedGalaxy;
   filterStartupsByCategory(russianName);
 } else {
-  // Если выбрана категория "Все", показываем все стартапы
+  // Если выбрана категория "Все" или нет категории, показываем все стартапы
   filterStartupsByCategory('Все');
 }
 
