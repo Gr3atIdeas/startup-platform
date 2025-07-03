@@ -3139,29 +3139,21 @@ def planetary_system(request):
     random.seed(int(time.time()))
     
     all_startups = list(startups_filtered)
-    
-    # Выбираем рандомные стартапы
+    # Выбираем рандомные стартапы - ИСПРАВЛЕННАЯ ЛОГИКА
     selected_startups = []
-    if len(all_startups) >= 6:
+    
+    if len(all_startups) == 0:
+        # Нет стартапов - 6 пустых слотов
+        selected_startups = [None] * 6
+    elif len(all_startups) >= 6:
+        # Достаточно стартапов - выбираем 6 случайных
         selected_startups = random.sample(all_startups, 6)
-        # Перемешиваем для лучшей рандомизации
-        random.shuffle(selected_startups)
-    elif len(all_startups) > 0:
-        # Если стартапов меньше 6, но они есть - дублируем их до 6
-        selected_startups = []
-        # Создаем список из 6 элементов, повторяя имеющиеся стартапы
-        for i in range(6):
-            if i < len(all_startups):
-                selected_startups.append(all_startups[i])
-            else:
-                # Берем стартап по модулю от количества доступных
-                selected_startups.append(all_startups[i % len(all_startups)])
-        # Перемешиваем для случайности
         random.shuffle(selected_startups)
     else:
-        # Если стартапов нет вообще - создаем 6 пустых слотов
-        selected_startups = [None] * 6
-    
+        # Стартапов меньше 6 - дублируем до 6
+        for i in range(6):
+            selected_startups.append(all_startups[i % len(all_startups)])
+        random.shuffle(selected_startups)
 
 
     planets_data_for_template = []
@@ -3239,7 +3231,7 @@ def planetary_system(request):
                 "startup_id": startup.startup_id,  # Реальный ID для ссылок
                 "description": startup.short_description or "Описание отсутствует",
                 "investment_type": investment_type,
-            })
+            }) 
         else:
             # Пустая планета - используем те же изображения что и в planets_data_for_template
             planet_image_num = 8 + (idx % 8)  # Используем изображения 8-15 для пустых планет
