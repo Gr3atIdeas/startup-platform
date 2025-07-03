@@ -2368,7 +2368,7 @@ def investor_main(request):
             "description": startup.short_description,
             "investment_type": investment_type,
         })
-
+    
     context = {
         "planets_data": planets_data_for_template,
         "logo_data": logo_data,
@@ -3208,7 +3208,7 @@ def planetary_system(request):
     
     # Логирование для отладки
     logger.info(f"🪐 Планетарная система: выбрано направление '{selected_direction_name}'")
-    
+
     # Получаем все одобренные стартапы
     startups_query = Startups.objects.filter(
         status="approved"
@@ -3219,7 +3219,7 @@ def planetary_system(request):
         startups_query = startups_query.filter(
             direction__direction_name=selected_direction_name
         )
-    
+
     # Получаем список стартапов
     startups_list = list(startups_query)
     
@@ -3255,7 +3255,7 @@ def planetary_system(request):
             # Используем фиксированные изображения планет вместо логотипов
             planet_image_num = (i % 15) + 1  # Циклически используем изображения 1-15
             planet_image_url = f"/static/accounts/images/planetary_system/planets_round/{planet_image_num}.png"
-            
+        
             planets_data.append({
                 "id": i + 1,
                 "startup_id": startup.startup_id,
@@ -3293,7 +3293,7 @@ def planetary_system(request):
                 "progress": 0,
                 "investment_type": "Не указано"
             })
-    
+        
     # Формируем данные для всех стартапов (для фильтрации в реальном времени)
     # Получаем ВСЕ одобренные стартапы, а не только отфильтрованные
     all_approved_startups = list(Startups.objects.filter(status="approved").select_related("direction", "owner").order_by("-created_at"))

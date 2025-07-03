@@ -12,23 +12,7 @@ register = template.Library()
 def translate_category(name):
     """Переводит английское название категории на русский."""
     translations = {
-        "Medicine": "Медицина",
-        "Auto": "Автомобили",
-        "Delivery": "Доставка",
-        "Cafe": "Кафе/рестораны",
-        "Fastfood": "Фастфуд",
-        "Health": "Здоровье",
-        "Beauty": "Красота",
-        "Transport": "Транспорт",
-        "Sport": "Спорт",
-        "Psychology": "Психология",
-        "AI": "ИИ",
-        "Finance": "Финансы",
-        "Healthcare": "Здравоохранение",
-        "Technology": "Технологии",
-        "IT": "ИТ",
-        "Retail": "Ритейл",
-        # Добавьте другие переводы по мере необходимости
+        # Переводы отключены для планетарной системы
     }
     return translations.get(
         name, name if name else "Без категории"
