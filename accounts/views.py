@@ -2202,40 +2202,23 @@ def investor_main(request):
     """
     Отображает главную страницу инвестора с планетарной системой стартапов.
     """
-    # Мапинг направлений для перевода на русский язык
+    # Мапинг направлений для перевода на русский язык (только реально используемые)
     DIRECTION_TRANSLATIONS = {
         'Beauty': 'Красота',
         'Technology': 'Технологии',
-        'FinTech': 'Финтех',
-        'HealthTech': 'Медтех',
-        'Education': 'Образование',
-        'Entertainment': 'Развлечения',
-        'Food': 'Еда',
-        'Fashion': 'Мода',
-        'Sports': 'Спорт',
-        'Travel': 'Путешествия',
-        'Real Estate': 'Недвижимость',
-        'Agriculture': 'Сельское хозяйство',
-        'Energy': 'Энергетика',
-        'Environment': 'Экология',
-        'Gaming': 'Игры',
-        'Logistics': 'Логистика',
-        'Marketing': 'Маркетинг',
-        'Media': 'Медиа',
-        'Retail': 'Розничная торговля',
-        'Security': 'Безопасность',
-        'Social': 'Социальные сети',
-        'Transportation': 'Транспорт',
-        'Wellness': 'Велнес',
-        'Business': 'Бизнес',
+        'Healthcare': 'Здравоохранение',
+        'Finance': 'Финансы',
         'Cafe': 'Кафе',
         'Delivery': 'Доставка',
-        'FastFood': 'Быстрое питание',
-        'Auto': 'Автомобили',
+        'Fastfood': 'Быстрое питание',
+        'Sport': 'Спорт',
         'AI': 'Искусственный интеллект',
     }
     
-    directions = Directions.objects.all().order_by("direction_name")
+    # Получаем только те направления, которые реально используются стартапами
+    used_directions = Startups.objects.filter(status="approved").values_list('direction__direction_name', flat=True).distinct()
+    directions = Directions.objects.filter(direction_name__in=used_directions).order_by("direction_name")
+    
     selected_direction_name = request.GET.get("direction", "All")
 
     startups_query = Startups.objects.filter(status="approved").annotate(
@@ -3205,42 +3188,22 @@ def planetary_system(request):
     """
     Планетарная система - отображает стартапы как планеты на орбитах
     """
-    # Мапинг направлений для перевода на русский язык
+    # Мапинг направлений для перевода на русский язык (только реально используемые)
     DIRECTION_TRANSLATIONS = {
         'Beauty': 'Красота',
         'Technology': 'Технологии',
-        'FinTech': 'Финтех',
-        'HealthTech': 'Медтех',
-        'Education': 'Образование',
-        'Entertainment': 'Развлечения',
-        'Food': 'Еда',
-        'Fashion': 'Мода',
-        'Sports': 'Спорт',
-        'Travel': 'Путешествия',
-        'Real Estate': 'Недвижимость',
-        'Agriculture': 'Сельское хозяйство',
-        'Energy': 'Энергетика',
-        'Environment': 'Экология',
-        'Gaming': 'Игры',
-        'Logistics': 'Логистика',
-        'Marketing': 'Маркетинг',
-        'Media': 'Медиа',
-        'Retail': 'Розничная торговля',
-        'Security': 'Безопасность',
-        'Social': 'Социальные сети',
-        'Transportation': 'Транспорт',
-        'Wellness': 'Велнес',
-        'Business': 'Бизнес',
+        'Healthcare': 'Здравоохранение',
+        'Finance': 'Финансы',
         'Cafe': 'Кафе',
         'Delivery': 'Доставка',
-        'FastFood': 'Быстрое питание',
-        'Auto': 'Автомобили',
+        'Fastfood': 'Быстрое питание',
+        'Sport': 'Спорт',
         'AI': 'Искусственный интеллект',
-        # Auto не переводим, оставляем как есть для "Автомобили"
     }
     
-    # Получаем все направления
-    directions = Directions.objects.all().order_by("direction_name")
+    # Получаем только те направления, которые реально используются стартапами
+    used_directions = Startups.objects.filter(status="approved").values_list('direction__direction_name', flat=True).distinct()
+    directions = Directions.objects.filter(direction_name__in=used_directions).order_by("direction_name")
     
     # Получаем выбранное направление из URL (по умолчанию "All" = "Все")
     selected_direction_name = request.GET.get("direction", "All")
@@ -3361,6 +3324,9 @@ def planetary_system(request):
     
     # Формируем данные для направлений с переводом на русский
     directions_data = []
+    # Добавляем категорию "Все" в начало списка
+    directions_data.append({"direction_name": "Все", "original_name": "All"})
+    
     for direction in directions:
         original_name = direction.direction_name
         russian_name = DIRECTION_TRANSLATIONS.get(original_name, original_name)
