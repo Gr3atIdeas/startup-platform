@@ -3108,6 +3108,8 @@ def planetary_system(request):
     directions = Directions.objects.all().order_by("direction_name")
     selected_direction_name = request.GET.get("direction", "Все")
 
+    # Для планетарной системы ВСЕГДА берем ВСЕ одобренные стартапы, 
+    # независимо от выбранного направления, чтобы заполнить все 6 орбит
     startups_query = Startups.objects.filter(status="approved").annotate(
         rating_avg=Coalesce(Avg("uservotes__rating"), 0.0, output_field=FloatField()),
         total_voters=Count("uservotes", distinct=True),
@@ -3118,10 +3120,12 @@ def planetary_system(request):
         comment_count=Count("comments", distinct=True),
     )
 
-    if selected_direction_name != "Все":
-        startups_query = startups_query.filter(
-            direction__direction_name=selected_direction_name
-        )
+    # УБИРАЕМ фильтрацию по направлению для планетарной системы
+    # Это позволит всегда заполнить все 6 орбит разнообразными стартапами
+    # if selected_direction_name != "Все":
+    #     startups_query = startups_query.filter(
+    #         direction__direction_name=selected_direction_name
+    #     )
 
     startups_filtered = startups_query.annotate(
         progress=Case(
@@ -3139,6 +3143,10 @@ def planetary_system(request):
     random.seed(int(time.time()))
     
     all_startups = list(startups_filtered)
+    
+    # Отладочная информация для проверки
+    print(f"🚀 ПЛАНЕТАРНАЯ СИСТЕМА: найдено {len(all_startups)} одобренных стартапов")
+    
     # Выбираем рандомные стартапы - ИСПРАВЛЕННАЯ ЛОГИКА
     selected_startups = []
     
