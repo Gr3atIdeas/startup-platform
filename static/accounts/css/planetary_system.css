@@ -694,157 +694,262 @@
   filter: invert(1);
 }
 
-/* КОНТЕЙНЕР КАТЕГОРИЙ - ОПУСКАЕМ В САМЫЙ НИЗ */
-#ultra_new_planetary_galaxy_selector {
-  position: absolute;
-  bottom: 2px;
+/* НОВЫЕ СТИЛИ КАТЕГОРИЙ ПО КОДУ ИЗ FIGMA */
+#ultra_new_planetary_categories_system {
+  position: fixed;
+  top: 16px;
   left: 50%;
   transform: translateX(-50%);
+  width: 100%;
+  max-width: 600px;
+  height: 100px;
+  z-index: 200;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
-  z-index: 100;
+  padding: 0 20px;
+  box-sizing: border-box;
 }
 
-/* НОВЫЕ СТИЛИ ДЛЯ ОПТИМИЗИРОВАННОГО СЕЛЕКТОРА КАТЕГОРИЙ */
-#galaxy-selector {
-  position: fixed !important;
-  bottom: 20px !important;
-  left: 50% !important;
-  transform: translateX(-50%) !important;
-  width: 500px !important;
-  height: 60px !important;
-  z-index: 100 !important;
-  display: flex !important;
-  align-items: center !important;
-}
-
-#galaxy-all-button {
-  flex: 0 0 auto !important;
-  background: rgba(255, 239, 43, 0.9) !important;
-  color: #000 !important;
-  border: none !important;
-  border-radius: 10px !important;
-  padding: 10px 20px !important;
-  font-size: 16px !important;
-  font-weight: 600 !important;
-  cursor: pointer !important;
-  transition: all 0.3s ease !important;
-  margin-right: 10px !important;
-  box-shadow: 0 2px 10px rgba(255, 239, 43, 0.3) !important;
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-}
-
-#galaxy-all-button:hover {
-  background: rgba(255, 239, 43, 1);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(255, 239, 43, 0.5);
-}
-
-#galaxy-all-button.selected {
-  background: rgba(255, 239, 43, 1);
-  transform: scale(1.05);
-  box-shadow: 0 4px 20px rgba(255, 239, 43, 0.7);
-}
-
-#galaxy-scroll-container {
-  flex: 1 !important;
-  height: 60px !important;
-  overflow-x: auto !important;
-  overflow-y: hidden !important;
-  white-space: nowrap !important;
-  scrollbar-width: none !important;
-  border-radius: 10px !important;
-  background: rgba(0, 0, 0, 0.3) !important;
-  backdrop-filter: blur(10px) !important;
-  display: block !important;
-}
-
-#galaxy-scroll-container::-webkit-scrollbar {
-  display: none;
-}
-
-#galaxy-list {
-  display: inline-flex;
+/* Стрелка навигации влево */
+.ultra_new_planetary_nav_arrow_left {
+  width: 31.17px;
+  height: 31.17px;
+  padding: 16px;
+  background: var(--Color7, #FFEF2B);
+  border-radius: 99px;
+  display: flex;
+  justify-content: center;
   align-items: center;
-  justify-content: flex-start;
-  padding: 0 15px;
-  height: 100%;
-  min-width: 100%;
-}
-
-.galaxy-item {
-  flex: 0 0 auto;
-  margin: 0 10px;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 10px;
-  padding: 10px 20px;
-  color: white;
-  font-size: 16px;
-  text-align: center;
-  transition: all 0.3s ease;
   cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  outline: none;
+  flex-shrink: 0;
 }
 
-.galaxy-item:hover {
-  background: rgba(255, 255, 255, 0.3);
+.ultra_new_planetary_nav_arrow_left:hover {
+  background: #FFD700;
+  transform: scale(1.1);
 }
 
-.galaxy-item.selected {
-  background: rgba(255, 255, 255, 0.5);
-  transform: scale(1.2);
+.ultra_new_planetary_nav_arrow_left::after {
+  content: '';
+  width: 8.78px;
+  height: 14.89px;
+  background: black;
+  clip-path: polygon(50% 0%, 0% 50%, 50% 100%);
 }
 
-#ultra_new_planetary_galaxy_list_container {
-  background: rgba(0, 0, 0, 0.4);
-  border-radius: 25px;
-  padding: 8px 12px;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+/* Стрелка навигации вправо */
+.ultra_new_planetary_nav_arrow_right {
+  width: 31.17px;
+  height: 31.17px;
+  padding: 16px;
+  background: var(--Color7, #FFEF2B);
+  border-radius: 99px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  outline: none;
+  flex-shrink: 0;
 }
 
-#ultra_new_planetary_galaxy_list {
+.ultra_new_planetary_nav_arrow_right:hover {
+  background: #FFD700;
+  transform: scale(1.1);
+}
+
+.ultra_new_planetary_nav_arrow_right::after {
+  content: '';
+  width: 8.78px;
+  height: 14.89px;
+  background: black;
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%);
+}
+
+/* Контейнер для категорий */
+.ultra_new_planetary_categories_container {
+  flex: 1;
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+  height: 100px;
 }
 
-.ultra_new_planetary_galaxy_item {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
+/* Активная категория по центру */
+.ultra_new_planetary_active_category {
+  padding: 9px 17px;
+  background: #050505;
   border-radius: 20px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  background: transparent;
-  border: 1px solid transparent;
-}
-
-.ultra_new_planetary_galaxy_item:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.2);
-}
-
-.ultra_new_planetary_galaxy_item.selected {
-  background: rgba(255, 239, 43, 0.2);
-  border-color: rgba(255, 239, 43, 0.4);
-}
-
-.ultra_new_planetary_category_icon {
-  width: 20px;
-  height: 20px;
-  opacity: 0.8;
-}
-
-.ultra_new_planetary_category_text {
   color: white;
   font-size: 12px;
   font-family: 'Unbounded', sans-serif;
   font-weight: 300;
+  letter-spacing: 0.12px;
+  text-align: center;
   white-space: nowrap;
+  margin: 0 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 10;
+  position: relative;
+}
+
+/* Планеты по бокам от активной категории */
+.ultra_new_planetary_side_planets {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 100px;
+  z-index: 5;
+}
+
+.ultra_new_planetary_side_planets.left {
+  left: 0;
+  flex-direction: row;
+}
+
+.ultra_new_planetary_side_planets.right {
+  right: 0;
+  flex-direction: row-reverse;
+}
+
+/* Планета-категория */
+.ultra_new_planetary_category_planet {
+  width: 54.84px;
+  height: 53.61px;
+  border-radius: 50%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  margin: 0 10px;
+  flex-shrink: 0;
+}
+
+.ultra_new_planetary_category_planet:hover {
+  transform: scale(1.1);
+  filter: brightness(1.2);
+}
+
+/* Иконка на планете */
+.ultra_new_planetary_category_planet_icon {
+  width: 44.99px;
+  height: 43.98px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  pointer-events: none;
+}
+
+/* ПРОГРЕСС-БАРЫ ПОД ПЛАНЕТАМИ */
+.ultra_new_planetary_planet_progress_bar {
+  position: absolute;
+  bottom: -25px;
+  left: 50%;
+  transform: translateX(-50%) rotateX(var(--ultra_new_planetary_planet_compensation));
+  width: 40px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+  overflow: hidden;
+  z-index: 10;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.ultra_new_planetary_planet_progress_fill {
+  height: 100%;
+  background: linear-gradient(90deg, #31D2C6 0%, #31D2C6 100%);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+/* Подпись прогресса */
+.ultra_new_planetary_planet_progress_text {
+  position: absolute;
+  bottom: -40px;
+  left: 50%;
+  transform: translateX(-50%) rotateX(var(--ultra_new_planetary_planet_compensation));
+  color: white;
+  font-size: 10px;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 300;
+  text-align: center;
+  white-space: nowrap;
+  z-index: 10;
+  opacity: 0.8;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
+}
+
+/* Анимация перехода категорий */
+.ultra_new_planetary_categories_transition {
+  transition: all 0.5s ease;
+}
+
+/* Скрытые категории */
+.ultra_new_planetary_hidden_category {
+  opacity: 0;
+  transform: scale(0.8);
+  pointer-events: none;
+}
+
+/* Адаптивность категорий */
+@media (max-width: 768px) {
+  #ultra_new_planetary_categories_system {
+    max-width: 100%;
+    height: 80px;
+    padding: 0 10px;
+  }
+  
+  .ultra_new_planetary_nav_arrow_left,
+  .ultra_new_planetary_nav_arrow_right {
+    width: 25px;
+    height: 25px;
+    padding: 12px;
+  }
+  
+  .ultra_new_planetary_active_category {
+    font-size: 10px;
+    padding: 6px 12px;
+    margin: 0 10px;
+  }
+  
+  .ultra_new_planetary_category_planet {
+    width: 40px;
+    height: 40px;
+    margin: 0 5px;
+  }
+  
+  .ultra_new_planetary_category_planet_icon {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .ultra_new_planetary_planet_progress_bar {
+    width: 30px;
+    height: 4px;
+    bottom: -20px;
+  }
+  
+  .ultra_new_planetary_planet_progress_text {
+    font-size: 8px;
+    bottom: -30px;
+  }
 }
 
 /* АДАПТИВНОСТЬ */
@@ -892,80 +997,5 @@
     height: 20px;
   }
 
-  /* КАТЕГОРИИ НА МОБИЛЬНЫХ - ВОЗВРАЩАЕМ В НИЗ ЭКРАНА */
-  #ultra_new_planetary_galaxy_selector {
-    bottom: 1px;
-    gap: 10px;
-  }
-  
-  .ultra_new_planetary_galaxy_item {
-    padding: 4px 8px;
-  }
-  
-  .ultra_new_planetary_category_icon {
-    width: 16px;
-    height: 16px;
-  }
-
-  .ultra_new_planetary_category_text {
-    font-size: 10px;
-  }
-
-  /* НАВИГАЦИОННЫЕ КНОПКИ КАТЕГОРИЙ НА МОБИЛЬНЫХ */
-  .ultra_new_planetary_category_nav {
-    width: 25px;
-    height: 25px;
-  }
-
-  .ultra_new_planetary_category_nav_left {
-    left: -35px;
-  }
-
-  .ultra_new_planetary_category_nav_right {
-    right: -35px;
-  }
-
-  .ultra_new_planetary_category_nav img {
-    width: 12px;
-    height: 12px;
-  }
-}
-
-/* ПЕРЕКЛЮЧАТЕЛИ КАТЕГОРИЙ */
-.ultra_new_planetary_category_nav {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 30px;
-  height: 30px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 50%;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  z-index: 101;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  backdrop-filter: blur(5px);
-}
-
-.ultra_new_planetary_category_nav:hover {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: rgba(255, 255, 255, 0.5);
-  transform: translateY(-50%) scale(1.1);
-}
-
-.ultra_new_planetary_category_nav_left {
-  left: -50px;
-}
-
-.ultra_new_planetary_category_nav_right {
-  right: -50px;
-}
-
-.ultra_new_planetary_category_nav img {
-  width: 16px;
-  height: 16px;
-  filter: invert(1);
+  /* МОБИЛЬНЫЕ СТИЛИ КАТЕГОРИЙ УДАЛЕНЫ - БУДУТ ПЕРЕПИСАНЫ ЗАНОВО */
 }
