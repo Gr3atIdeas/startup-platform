@@ -144,19 +144,9 @@
         <div id="ultra_new_planetary_galaxy_list">
           <!-- Показываем только первые 7 категорий, остальные скрыты -->
           {% for direction in directions|slice:":7" %}
-            <div class="ultra_new_planetary_galaxy_item {% if direction.direction_name == selected_galaxy %}selected{% endif %}" data-name="{{ direction.direction_name }}">
+            <div class="ultra_new_planetary_galaxy_item {% if direction.direction_name == selected_galaxy or direction.original_name == selected_galaxy %}selected{% endif %}" data-name="{{ direction.original_name|default:direction.direction_name }}">
               <img src="{% static 'accounts/images/planetary_system/category_img.png' %}" class="ultra_new_planetary_category_icon" alt="cat">
-              <span class="ultra_new_planetary_category_text">
-                {% if direction.direction_name == 'Technology' %}Технологии
-                {% elif direction.direction_name == 'Medicine' %}Медицина
-                {% elif direction.direction_name == 'Finance' %}Финансы
-                {% elif direction.direction_name == 'Education' %}Образование
-                {% elif direction.direction_name == 'Entertainment' %}Развлечения
-                {% elif direction.direction_name == 'Food' %}Еда
-                {% elif direction.direction_name == 'Transportation' %}Транспорт
-                {% else %}{{ direction.direction_name }}
-                {% endif %}
-              </span>
+              <span class="ultra_new_planetary_category_text">{{ direction.direction_name }}</span>
             </div>
           {% endfor %}
           
@@ -164,25 +154,9 @@
           <div class="ultra_new_planetary_hidden_categories" style="display: none;">
             {% for direction in directions %}
               {% if not forloop.counter <= 7 %}
-                <div class="ultra_new_planetary_galaxy_item {% if direction.direction_name == selected_galaxy %}selected{% endif %}" data-name="{{ direction.direction_name }}">
+                <div class="ultra_new_planetary_galaxy_item {% if direction.direction_name == selected_galaxy or direction.original_name == selected_galaxy %}selected{% endif %}" data-name="{{ direction.original_name|default:direction.direction_name }}">
                   <img src="{% static 'accounts/images/planetary_system/category_img.png' %}" class="ultra_new_planetary_category_icon" alt="cat">
-                  <span class="ultra_new_planetary_category_text">
-                    {% if direction.direction_name == 'Energy' %}Энергия
-                    {% elif direction.direction_name == 'Real Estate' %}Недвижимость
-                    {% elif direction.direction_name == 'Fashion' %}Мода
-                    {% elif direction.direction_name == 'Sports' %}Спорт
-                    {% elif direction.direction_name == 'Travel' %}Путешествия
-                    {% elif direction.direction_name == 'Environment' %}Экология
-                    {% elif direction.direction_name == 'Social' %}Социальные сети
-                    {% elif direction.direction_name == 'Gaming' %}Игры
-                    {% elif direction.direction_name == 'Hardware' %}Оборудование
-                    {% elif direction.direction_name == 'Software' %}ПО
-                    {% elif direction.direction_name == 'AI' %}ИИ
-                    {% elif direction.direction_name == 'Blockchain' %}Блокчейн
-                    {% elif direction.direction_name == 'IoT' %}IoT
-                    {% else %}{{ direction.direction_name }}
-                    {% endif %}
-                  </span>
+                  <span class="ultra_new_planetary_category_text">{{ direction.direction_name }}</span>
                 </div>
               {% endif %}
             {% endfor %}

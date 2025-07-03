@@ -563,6 +563,7 @@
   "directionsData": {{ directions_data_json|safe }},
   "selectedGalaxy": "{{ selected_galaxy|escapejs }}",
   "logoImage": "{{ logo_data.image|default_if_none:''|escapejs }}",
+  "allStartupsData": {{ all_startups_data_json|safe }},
   "urls": {
         "createStartup": "{% url 'create_startup' %}",
         "register": "{% url 'register' %}",

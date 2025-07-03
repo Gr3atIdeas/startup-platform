@@ -2202,8 +2202,41 @@ def investor_main(request):
     """
     Отображает главную страницу инвестора с планетарной системой стартапов.
     """
+    # Мапинг направлений для перевода на русский язык
+    DIRECTION_TRANSLATIONS = {
+        'Beauty': 'Красота',
+        'Technology': 'Технологии',
+        'FinTech': 'Финтех',
+        'HealthTech': 'Медтех',
+        'Education': 'Образование',
+        'Entertainment': 'Развлечения',
+        'Food': 'Еда',
+        'Fashion': 'Мода',
+        'Sports': 'Спорт',
+        'Travel': 'Путешествия',
+        'Real Estate': 'Недвижимость',
+        'Agriculture': 'Сельское хозяйство',
+        'Energy': 'Энергетика',
+        'Environment': 'Экология',
+        'Gaming': 'Игры',
+        'Logistics': 'Логистика',
+        'Marketing': 'Маркетинг',
+        'Media': 'Медиа',
+        'Retail': 'Розничная торговля',
+        'Security': 'Безопасность',
+        'Social': 'Социальные сети',
+        'Transportation': 'Транспорт',
+        'Wellness': 'Велнес',
+        'Business': 'Бизнес',
+        'Cafe': 'Кафе',
+        'Delivery': 'Доставка',
+        'FastFood': 'Быстрое питание',
+        'Auto': 'Автомобили',
+        'AI': 'Искусственный интеллект',
+    }
+    
     directions = Directions.objects.all().order_by("direction_name")
-    selected_direction_name = request.GET.get("direction", "Все")
+    selected_direction_name = request.GET.get("direction", "All")
 
     startups_query = Startups.objects.filter(status="approved").annotate(
         rating_avg=Coalesce(Avg("uservotes__rating"), 0.0, output_field=FloatField()),
@@ -2215,7 +2248,7 @@ def investor_main(request):
         comment_count=Count("comments", distinct=True),
     )
 
-    if selected_direction_name != "Все":
+    if selected_direction_name != "All" and selected_direction_name != "Все":
         startups_query = startups_query.filter(
             direction__direction_name=selected_direction_name
         )
@@ -2288,17 +2321,81 @@ def investor_main(request):
 
     logo_data = {"image": static("accounts/images/planetary_system/gi.svg")}
     
-    directions_data_json = [
-        {"direction_name": d.direction_name} for d in directions
-    ]
+    # Формируем данные для направлений с переводом на русский
+    directions_data_json = []
+    # Добавляем категорию "Все" в начало списка
+    directions_data_json.append({"direction_name": "Все", "original_name": "All"})
     
+    for direction in directions:
+        original_name = direction.direction_name
+        russian_name = DIRECTION_TRANSLATIONS.get(original_name, original_name)
+        directions_data_json.append({
+            "direction_name": russian_name,
+            "original_name": original_name
+        })
+    
+    # Получаем ВСЕ стартапы для фильтрации в JavaScript
+    all_startups_query = Startups.objects.filter(status="approved").annotate(
+        rating_avg=Coalesce(Avg("uservotes__rating"), 0.0, output_field=FloatField()),
+        voters_count=Count("uservotes", distinct=True),
+        total_investors=Count("investmenttransactions", distinct=True),
+        current_funding=Coalesce(
+            Sum("investmenttransactions__amount"), 0, output_field=DecimalField()
+        ),
+        comment_count=Count("comments", distinct=True),
+        progress=Case(
+            When(funding_goal__gt=0, then=(F("current_funding") * 100.0 / F("funding_goal"))),
+            default=Value(0),
+            output_field=FloatField(),
+        )
+    )
+
+    all_startups_data = []
+    for startup in all_startups_query:
+        # Вычисляем тип инвестирования
+        investment_type = (
+            "Инвестирование"
+            if startup.only_invest
+            else "Выкуп"
+            if startup.only_buy
+            else "Выкуп+инвестирование"
+            if startup.both_mode
+            else "Не указано"
+        )
+        
+        # Выбираем изображение планеты
+        random_planet_num = random.randint(1, 15)
+        planet_image_url = static(f"accounts/images/planetary_system/planets_round/{random_planet_num}.png")
+        
+        # Переводим направление на русский
+        direction_name = startup.direction.direction_name if startup.direction else "Не указано"
+        russian_direction = DIRECTION_TRANSLATIONS.get(direction_name, direction_name)
+        
+        all_startups_data.append({
+            "id": startup.startup_id,
+            "name": startup.title,
+            "image": planet_image_url,
+            "rating": round(startup.rating_avg, 2),
+            "voters_count": startup.voters_count,
+            "progress": round(startup.progress, 2) if startup.progress is not None else 0,
+            "direction": russian_direction,
+            "investors": startup.total_investors,
+            "funding_goal": f"{startup.funding_goal:,.0f}Р".replace(",", " ") if startup.funding_goal else "Не определена",
+            "valuation": f"{startup.valuation:,.0f}Р".replace(",", " ") if startup.valuation else "Не указана",
+            "comment_count": startup.comment_count,
+            "startup_id": startup.startup_id,
+            "description": startup.short_description,
+            "investment_type": investment_type,
+        })
+
     context = {
         "planets_data": planets_data_for_template,
         "logo_data": logo_data,
-        "directions": directions,
+        "directions": directions_data_json,  # Передаем переведенные направления
         "selected_galaxy": selected_direction_name,
         "planets_data_json": json.dumps(planets_data_json, cls=DjangoJSONEncoder),
         "directions_data_json": json.dumps(directions_data_json, cls=DjangoJSONEncoder),
+        "all_startups_data_json": json.dumps(all_startups_data, cls=DjangoJSONEncoder),
         "is_startuper": is_startuper,
     }
     return render(request, "accounts/investor_main.html", context)
