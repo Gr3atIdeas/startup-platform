@@ -5,6 +5,7 @@
 
 {% block head_extra %}
 {{ block.super }}
+<link rel="stylesheet" href="{% static 'accounts/css/planetary_system.css' %}">
 <style>
   body {
     margin: 0;
@@ -386,11 +387,18 @@
 </div>
 <div id="fps">0 FPS</div>
 <div id="galaxy-selector">
-  <div id="galaxy-list">
-    <div class="galaxy-item {% if selected_galaxy == 'All' or selected_galaxy == 'Все' %}selected{% endif %}" data-name="All">Все</div>
-    {% for direction in directions %}
-      <div class="galaxy-item {% if selected_galaxy == direction.original_name %}selected{% endif %}" data-name="{{ direction.original_name|default:direction.direction_name }}">{{ direction.direction_name }}</div>
-    {% endfor %}
+  <!-- Зафиксированная кнопка "Все" слева -->
+  <button id="galaxy-all-button" class="{% if selected_galaxy == 'All' or selected_galaxy == 'Все' %}selected{% endif %}" data-name="All">Все</button>
+  
+  <!-- Прокручиваемый контейнер с остальными категориями -->
+  <div id="galaxy-scroll-container">
+    <div id="galaxy-list">
+      {% for direction in directions %}
+        {% if direction.direction_name != 'Все' %}
+          <div class="galaxy-item {% if selected_galaxy == direction.original_name %}selected{% endif %}" data-name="{{ direction.original_name|default:direction.direction_name }}">{{ direction.direction_name }}</div>
+        {% endif %}
+      {% endfor %}
+    </div>
   </div>
 </div>
 
@@ -808,7 +816,30 @@ function showStartupModal(startup, imageUrl) {
   lastInteractionTime = Date.now();
 }
 
-// Обработчики для категорий - ИСПРАВЛЕНО для правильной работы с английскими data-name
+// Обработчик для кнопки "Все" - фиксированная слева
+const galaxyAllButton = document.getElementById('galaxy-all-button');
+if (galaxyAllButton) {
+  galaxyAllButton.addEventListener('click', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    // Убираем выбранное состояние у всех элементов
+    document.querySelectorAll('.galaxy-item').forEach(i => i.classList.remove('selected'));
+    document.getElementById('galaxy-all-button').classList.add('selected');
+    
+    // Показываем все стартапы
+    filterStartupsByCategory('Все');
+    
+    lastInteractionTime = Date.now();
+    
+    // Очищаем параметр direction из URL
+    const currentUrl = new URL(window.location);
+    currentUrl.searchParams.delete('direction');
+    window.history.pushState({}, '', currentUrl.toString());
+  });
+}
+
+// Обработчики для остальных категорий - ИСПРАВЛЕНО для правильной работы с английскими data-name
 document.querySelectorAll('.galaxy-item').forEach(item => {
   item.addEventListener('click', function(e) {
     e.preventDefault();
@@ -818,17 +849,12 @@ document.querySelectorAll('.galaxy-item').forEach(item => {
     
     // Обновляем выбранную категорию в UI
     document.querySelectorAll('.galaxy-item').forEach(i => i.classList.remove('selected'));
+    document.getElementById('galaxy-all-button').classList.remove('selected');
     this.classList.add('selected');
     
-    // Определяем русское название для фильтрации
-    let russianCategoryName;
-    if (originalCategoryName === 'All') {
-      russianCategoryName = 'Все';
-    } else {
-      // Ищем русское название по английскому
-      const directionData = directionsData.find(d => d.original_name === originalCategoryName);
-      russianCategoryName = directionData ? directionData.direction_name : originalCategoryName;
-    }
+    // Ищем русское название по английскому
+    const directionData = directionsData.find(d => d.original_name === originalCategoryName);
+    const russianCategoryName = directionData ? directionData.direction_name : originalCategoryName;
     
     console.log('🔍 Клик по категории:', originalCategoryName, '→ фильтруем по:', russianCategoryName);
     
@@ -839,12 +865,7 @@ document.querySelectorAll('.galaxy-item').forEach(item => {
     
     // Обновляем URL с английским названием
     const currentUrl = new URL(window.location);
-    if (originalCategoryName && originalCategoryName !== 'All') {
-      currentUrl.searchParams.set('direction', originalCategoryName);
-    } else {
-      // Для категории "Все" очищаем параметр direction
-      currentUrl.searchParams.delete('direction');
-    }
+    currentUrl.searchParams.set('direction', originalCategoryName);
     
     // Обновляем URL без перезагрузки страницы
     window.history.pushState({}, '', currentUrl.toString());
@@ -857,9 +878,56 @@ if (selectedGalaxy && selectedGalaxy !== 'All' && selectedGalaxy !== 'Все') {
   const directionData = directionsData.find(d => d.original_name === selectedGalaxy);
   const russianName = directionData ? directionData.direction_name : selectedGalaxy;
   filterStartupsByCategory(russianName);
+  
+  // Убираем выбранное состояние у кнопки "Все"
+  document.getElementById('galaxy-all-button').classList.remove('selected');
 } else {
   // Если выбрана категория "Все" или нет категории, показываем все стартапы
   filterStartupsByCategory('Все');
+  
+  // Убираем выбранное состояние у всех категорий
+  document.querySelectorAll('.galaxy-item').forEach(i => i.classList.remove('selected'));
+  document.getElementById('galaxy-all-button').classList.add('selected');
+}
+
+// Оптимизированная прокрутка категорий
+const galaxyScrollContainer = document.getElementById('galaxy-scroll-container');
+if (galaxyScrollContainer) {
+  // Поддержка прокрутки колесиком мыши
+  galaxyScrollContainer.addEventListener('wheel', function(e) {
+    e.preventDefault();
+    
+    // Горизонтальная прокрутка
+    const scrollAmount = e.deltaY > 0 ? 100 : -100;
+    galaxyScrollContainer.scrollBy({
+      left: scrollAmount,
+      behavior: 'smooth'
+    });
+  });
+  
+  // Поддержка прокрутки пальцем на мобильных
+  let isScrolling = false;
+  let startX = 0;
+  let scrollLeft = 0;
+  
+  galaxyScrollContainer.addEventListener('touchstart', function(e) {
+    isScrolling = true;
+    startX = e.touches[0].pageX - galaxyScrollContainer.offsetLeft;
+    scrollLeft = galaxyScrollContainer.scrollLeft;
+  });
+  
+  galaxyScrollContainer.addEventListener('touchmove', function(e) {
+    if (!isScrolling) return;
+    e.preventDefault();
+    
+    const x = e.touches[0].pageX - galaxyScrollContainer.offsetLeft;
+    const walk = (x - startX) * 2; // Умножаем на 2 для более быстрой прокрутки
+    galaxyScrollContainer.scrollLeft = scrollLeft - walk;
+  });
+  
+  galaxyScrollContainer.addEventListener('touchend', function() {
+    isScrolling = false;
+  });
 }
 
 // Запускаем анимацию

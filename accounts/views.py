@@ -2306,8 +2306,6 @@ def investor_main(request):
     
     # Формируем данные для направлений с переводом на русский
     directions_data_json = []
-    # Добавляем категорию "Все" в начало списка
-    directions_data_json.append({"direction_name": "Все", "original_name": "All"})
     
     for direction in directions:
         original_name = direction.direction_name
@@ -3324,8 +3322,6 @@ def planetary_system(request):
     
     # Формируем данные для направлений с переводом на русский
     directions_data = []
-    # Добавляем категорию "Все" в начало списка
-    directions_data.append({"direction_name": "Все", "original_name": "All"})
     
     for direction in directions:
         original_name = direction.direction_name
