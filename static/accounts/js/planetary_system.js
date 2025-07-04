@@ -290,6 +290,19 @@
         item.classList.remove('selected');
       }
     });
+
+    // Обновляем лейбл выбранной категории под слайдером
+    const labelEl = document.getElementById('ultra_new_planetary_selected_label');
+    if (labelEl) {
+      // Ищем русский перевод названия, если доступен
+      let displayName = ultraNewPlanetarySelectedGalaxy;
+      const dirObj = ultraNewPlanetaryDirectionsData.find(d => d.direction_name === ultraNewPlanetarySelectedGalaxy || d.original_name === ultraNewPlanetarySelectedGalaxy);
+      if (dirObj) {
+        displayName = dirObj.direction_name;
+      }
+      if (!displayName || displayName === 'All') displayName = 'Все';
+      labelEl.textContent = displayName;
+    }
   }
 
   // СМЕНА ГАЛАКТИКИ НАВИГАЦИОННЫМИ КНОПКАМИ
