@@ -136,26 +136,36 @@
     <div id="ultra_new_planetary_galaxy_selector">
       <!-- СТРЕЛКА ВЛЕВО -->
       <div class="ultra_new_planetary_nav_arrow ultra_new_planetary_nav_left" id="ultra_new_planetary_category_prev">
-        <div class="ultra_new_planetary_nav_arrow_icon"></div>
+        <div class="ultra_new_planetary_nav_arrow_icon ultra_new_planetary_nav_left_icon"></div>
       </div>
       
       <!-- СТРЕЛКА ВПРАВО -->
       <div class="ultra_new_planetary_nav_arrow ultra_new_planetary_nav_right" id="ultra_new_planetary_category_next">
-        <div class="ultra_new_planetary_nav_arrow_icon ultra_new_planetary_nav_arrow_rotated"></div>
+        <div class="ultra_new_planetary_nav_arrow_icon ultra_new_planetary_nav_right_icon"></div>
       </div>
       
       <!-- ПОДПИСЬ ВЫБРАННОЙ КАТЕГОРИИ -->
-      <div id="ultra_new_planetary_selected_label" class="ultra_new_planetary_selected_label">{{ selected_galaxy|default:'Все' }}</div>
+      <div id="ultra_new_planetary_selected_label" class="ultra_new_planetary_selected_label">
+        {% if selected_galaxy and selected_galaxy != 'All' and selected_galaxy != 'Все' %}
+          {% for direction in directions %}
+            {% if direction.original_name == selected_galaxy or direction.direction_name == selected_galaxy %}
+              {{ direction.direction_name }}
+            {% endif %}
+          {% endfor %}
+        {% else %}
+          Все
+        {% endif %}
+      </div>
       
       <!-- КОНТЕЙНЕР КАТЕГОРИЙ -->
       <div class="ultra_new_planetary_categories_container">
         <!-- Видимые категории -->
         {% for direction in directions|slice:":7" %}
           <div class="ultra_new_planetary_category_item {% if direction.direction_name == selected_galaxy or direction.original_name == selected_galaxy %}selected{% endif %}" data-name="{{ direction.original_name|default:direction.direction_name }}">
-            <!-- Фоновое изображение планеты -->
-            <img src="{% static 'accounts/images/planetary_system/category_img.png' %}" class="ultra_new_planetary_category_bg" alt="planet bg">
+            <!-- Фоновое звездное небо -->
+            <div class="ultra_new_planetary_category_bg"></div>
             <!-- Переднее изображение иконки -->
-            <img src="{% static 'accounts/images/planetary_system/category_img.png' %}" class="ultra_new_planetary_category_icon" alt="category icon">
+            <img src="{% static 'accounts/images/planetary_system/category_img.png' %}" class="ultra_new_planetary_category_icon" alt="{{ direction.direction_name }}">
           </div>
         {% endfor %}
         
@@ -164,10 +174,10 @@
           {% for direction in directions %}
             {% if not forloop.counter <= 7 %}
               <div class="ultra_new_planetary_category_item {% if direction.direction_name == selected_galaxy or direction.original_name == selected_galaxy %}selected{% endif %}" data-name="{{ direction.original_name|default:direction.direction_name }}">
-                <!-- Фоновое изображение планеты -->
-                <img src="{% static 'accounts/images/planetary_system/category_img.png' %}" class="ultra_new_planetary_category_bg" alt="planet bg">
+                <!-- Фоновое звездное небо -->
+                <div class="ultra_new_planetary_category_bg"></div>
                 <!-- Переднее изображение иконки -->
-                <img src="{% static 'accounts/images/planetary_system/category_img.png' %}" class="ultra_new_planetary_category_icon" alt="category icon">
+                <img src="{% static 'accounts/images/planetary_system/category_img.png' %}" class="ultra_new_planetary_category_icon" alt="{{ direction.direction_name }}">
               </div>
             {% endif %}
           {% endfor %}

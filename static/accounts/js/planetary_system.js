@@ -214,14 +214,20 @@
     const nextBtn = document.getElementById('ultra_new_planetary_category_next');
     
     if (prevBtn) {
-      prevBtn.addEventListener('click', function() {
-        changeUltraNewPlanetaryCategory(-1);
+      prevBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        changeUltraNewPlanetaryCategory(-1); // Левая стрелка - назад
+        console.log('Нажата левая стрелка (назад)');
       });
     }
     
     if (nextBtn) {
-      nextBtn.addEventListener('click', function() {
-        changeUltraNewPlanetaryCategory(1);
+      nextBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        changeUltraNewPlanetaryCategory(1); // Правая стрелка - вперед
+        console.log('Нажата правая стрелка (вперед)');
       });
     }
 
@@ -251,18 +257,25 @@
 
   // НАСТРОЙКА СЕЛЕКТОРА ГАЛАКТИК
   function setupUltraNewPlanetaryGalaxySelector() {
-    const categoryItems = document.querySelectorAll('.ultra_new_planetary_category_item');
+    // Устанавливаем обработчики для видимых категорий
+    setupUltraNewPlanetaryCategoryHandlers();
+    
+    // Инициализируем отображение категорий
+    const visibleCategories = document.querySelectorAll('.ultra_new_planetary_categories_container .ultra_new_planetary_category_item:not(.ultra_new_planetary_hidden_categories .ultra_new_planetary_category_item)');
+    const hiddenCategories = document.querySelectorAll('.ultra_new_planetary_hidden_categories .ultra_new_planetary_category_item');
+    ultraNewPlanetaryCategoriesTotal = visibleCategories.length + hiddenCategories.length;
+    updateUltraNewPlanetaryCategoriesDisplay();
+  }
+
+  // УСТАНОВКА ОБРАБОТЧИКОВ ДЛЯ КАТЕГОРИЙ
+  function setupUltraNewPlanetaryCategoryHandlers() {
+    const categoryItems = document.querySelectorAll('.ultra_new_planetary_categories_container .ultra_new_planetary_category_item:not(.ultra_new_planetary_hidden_categories .ultra_new_planetary_category_item)');
     categoryItems.forEach(function(item) {
       item.addEventListener('click', function() {
         const galaxyName = this.getAttribute('data-name');
         selectUltraNewPlanetaryGalaxy(galaxyName);
       });
     });
-    
-    // Инициализируем отображение категорий
-    const allCategories = document.querySelectorAll('.ultra_new_planetary_category_item');
-    ultraNewPlanetaryCategoriesTotal = allCategories.length;
-    updateUltraNewPlanetaryCategoriesDisplay();
   }
 
   // ВЫБОР ГАЛАКТИКИ
@@ -282,8 +295,9 @@
 
   // ОБНОВЛЕНИЕ UI СЕЛЕКТОРА ГАЛАКТИК
   function updateUltraNewPlanetaryGalaxyUI() {
-    const categoryItems = document.querySelectorAll('.ultra_new_planetary_category_item');
-    categoryItems.forEach(function(item) {
+    // Обновляем состояние всех категорий (видимых и скрытых)
+    const allCategoryItems = document.querySelectorAll('.ultra_new_planetary_category_item');
+    allCategoryItems.forEach(function(item) {
       if (item.getAttribute('data-name') === ultraNewPlanetarySelectedGalaxy) {
         item.classList.add('selected');
       } else {
@@ -291,7 +305,7 @@
       }
     });
 
-    // Обновляем лейбл выбранной категории под слайдером
+    // Обновляем лейбл выбранной категории под селектором
     const labelEl = document.getElementById('ultra_new_planetary_selected_label');
     if (labelEl) {
       // Ищем русский перевод названия, если доступен
@@ -556,15 +570,15 @@
     
     if (allCategories.length === 0) return;
 
-    // Обновляем индекс
-    ultraNewPlanetaryCategoriesVisible += direction;
+    // Обновляем индекс (инвертируем направление для правильной работы)
+    ultraNewPlanetaryCategoriesVisible -= direction;
     
     // Проверяем границы
     const maxVisible = Math.max(0, allCategories.length - ultraNewPlanetaryCategoriesPerPage);
     if (ultraNewPlanetaryCategoriesVisible < 0) {
-      ultraNewPlanetaryCategoriesVisible = 0;
-    } else if (ultraNewPlanetaryCategoriesVisible > maxVisible) {
       ultraNewPlanetaryCategoriesVisible = maxVisible;
+    } else if (ultraNewPlanetaryCategoriesVisible > maxVisible) {
+      ultraNewPlanetaryCategoriesVisible = 0;
     }
     
     // Обновляем отображение категорий
@@ -583,7 +597,7 @@
     const hiddenCategories = document.querySelectorAll('.ultra_new_planetary_hidden_categories .ultra_new_planetary_category_item');
     const allCategories = [...visibleCategories, ...hiddenCategories];
     
-    // Очищаем видимый контейнер (кроме скрытого)
+    // Очищаем видимый контейнер (кроме скрытого и стрелок)
     visibleCategories.forEach(cat => cat.remove());
     
     // Показываем нужные категории
@@ -598,6 +612,9 @@
       
       categoriesContainer.insertBefore(categoryClone, hiddenContainer);
     }
+    
+    // Переустанавливаем обработчики
+    setupUltraNewPlanetaryCategoryHandlers();
   }
 
   // ПЛАНЕТАРНЫЕ ОБЪЕКТЫ ДЛЯ СИСТЕМЫ КАК В V8.HTML
