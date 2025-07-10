@@ -725,7 +725,8 @@
   overflow-x: auto !important;
   white-space: nowrap !important;
   scrollbar-width: none !important;
-  padding-left: 0;
+  /* оставляем место для застикованной категории "Все" */
+  padding-left: 160px;
 }
 .ultra_new_planetary_categories_container::-webkit-scrollbar {
   display: none;
@@ -775,7 +776,7 @@
   width: 118px !important;
   height: 60px !important;
   border-radius: 50px / 30px !important;
-  background-size: 150px 100px; /* тот же масштаб звёзд, что и у кругов */
+  background: url('/static/accounts/images/planetary_system/ellipse_planetary.svg') center/cover no-repeat;
 }
 
 /* иконка внутри эллипса */
@@ -809,10 +810,7 @@
   width: 57px;
   height: 57px;
   border-radius: 9999px;
-  background: radial-gradient(circle at center, 
-    rgba(30, 58, 138, 0.8) 0%, 
-    rgba(11, 20, 38, 0.9) 50%, 
-    rgba(0, 0, 0, 0.95) 100%);
+  background: url('/static/accounts/images/planetary_system/circle_planetary.svg') center/cover no-repeat;
   background-image: 
     radial-gradient(1px 1px at 20px 30px, rgba(255,255,255,0.8), transparent),
     radial-gradient(1px 1px at 40px 70px, rgba(255,255,255,0.6), transparent),
@@ -875,12 +873,18 @@
 
 /* ЛЕВАЯ СТРЕЛКА < */
 .ultra_new_planetary_nav_left_icon {
-  clip-path: polygon(100% 0, 0 50%, 100% 100%);
+  width: 14px;
+  height: 14px;
+  background: url('/static/accounts/images/planetary_system/chevron_left.svg') center/contain no-repeat;
+  clip-path: none;
 }
 
 /* ПРАВАЯ СТРЕЛКА > */
 .ultra_new_planetary_nav_right_icon {
-  clip-path: polygon(0 0, 100% 50%, 0 100%);
+  width: 14px;
+  height: 14px;
+  background: url('/static/accounts/images/planetary_system/chevron_right.svg') center/contain no-repeat;
+  clip-path: none;
 }
 
 /* ПОДПИСЬ ВЫБРАННОЙ КАТЕГОРИИ ПО ДИЗАЙНУ FIGMA */
@@ -1011,6 +1015,26 @@
     font-size: 10px;
     padding: 6px 12px;
   }
+}
+
+/* Навигационные стрелки: подменяем фон на svg */
+.ultra_new_planetary_nav_left_icon {
+  width: 14px;
+  height: 14px;
+  background: url('/static/accounts/images/planetary_system/chevron_left.svg') center/contain no-repeat;
+  clip-path: none;
+}
+
+.ultra_new_planetary_nav_right_icon {
+  width: 14px;
+  height: 14px;
+  background: url('/static/accounts/images/planetary_system/chevron_right.svg') center/contain no-repeat;
+  clip-path: none;
+}
+
+/* Повышаем приоритет "Все", чтобы планеты не перекрывали */
+.ultra_new_planetary_category_item.category-all {
+  z-index: 200;
 }
 
 
