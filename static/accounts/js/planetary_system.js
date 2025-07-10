@@ -17,6 +17,7 @@
   let ultraNewPlanetaryIsAuthenticated = false;
   let ultraNewPlanetaryIsStartuper = false;
   let ultraNewPlanetaryLogoImage = '';
+  let ultraNewPlanetaryAllStartupsData = [];
   let ultraNewPlanetaryFallbackImages = {
     round: [
       '/static/accounts/images/planetary_system/planets_round/1.png',
@@ -75,6 +76,7 @@
       ultraNewPlanetaryIsAuthenticated = data.isAuthenticated || false;
       ultraNewPlanetaryIsStartuper = data.isStartuper || false;
       ultraNewPlanetaryLogoImage = data.logoImage || '';
+      ultraNewPlanetaryAllStartupsData = data.allStartupsData || [];
       
 
     }
@@ -276,14 +278,16 @@
     ultraNewPlanetarySelectedGalaxy = galaxyName;
     updateUltraNewPlanetaryGalaxyUI();
     
-    // Перезагружаем страницу с фильтром категории
-    const currentUrl = new URL(window.location);
+    // Динамически фильтруем без перезагрузки
+    applyUltraNewPlanetaryFilter(galaxyName);
+    // Обновляем URL в адресной строке, не перезагружая страницу
+    const url = new URL(window.location);
     if (galaxyName && galaxyName !== 'Все') {
-      currentUrl.searchParams.set('direction', galaxyName);
+      url.searchParams.set('direction', galaxyName);
     } else {
-      currentUrl.searchParams.delete('direction');
+      url.searchParams.delete('direction');
     }
-    window.location.href = currentUrl.toString();
+    history.replaceState(null, '', url.toString());
   }
 
   // ОБНОВЛЕНИЕ UI СЕЛЕКТОРА ГАЛАКТИК
@@ -300,11 +304,21 @@
       }
     });
 
-    // Плавно скроллим контейнер так, чтобы выбранная категория была максимально по центру (кроме sticky "Все")
-    if (selectedElement && !selectedElement.classList.contains('category-all')) {
-      const container = document.querySelector('.ultra_new_planetary_categories_container');
-      if (container && selectedElement) {
-        selectedElement.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    // Плавно скроллим контейнер так, чтобы выбранная категория оказалась по центру под текстовой капсулой
+    const container = document.querySelector('.ultra_new_planetary_categories_container');
+    if (container && selectedElement) {
+      if (selectedElement.classList.contains('category-all')) {
+        // Категория "Все" — просто возвращаемся в начало
+        container.scrollTo({ left: 0, behavior: 'smooth' });
+      } else {
+        const containerRect = container.getBoundingClientRect();
+        const itemRect = selectedElement.getBoundingClientRect();
+        const delta = (itemRect.left + itemRect.width / 2) - (containerRect.left + containerRect.width / 2);
+        let targetScroll = container.scrollLeft + delta;
+        // Ограничиваем диапазон
+        const maxScroll = container.scrollWidth - container.clientWidth;
+        targetScroll = Math.max(0, Math.min(maxScroll, targetScroll));
+        container.scrollTo({ left: targetScroll, behavior: 'smooth' });
       }
     }
 
@@ -635,6 +649,30 @@
       
 
     });
+  }
+
+  // ФИЛЬТРАЦИЯ СТАРТАПОВ ПО КАТЕГОРИИ
+  function applyUltraNewPlanetaryFilter(categoryName) {
+    let filtered = [];
+    if (!categoryName || categoryName === 'Все') {
+      filtered = ultraNewPlanetaryAllStartupsData.slice();
+    } else {
+      filtered = ultraNewPlanetaryAllStartupsData.filter(s => s.direction === categoryName);
+    }
+
+    // Заполняем до 6 элементов как раньше
+    const startups = [];
+    if (filtered.length >= 6) {
+      startups.push(...filtered.slice(0, 6));
+    } else if (filtered.length > 0) {
+      for (let i = 0; i < 6; i++) {
+        startups.push(filtered[i % filtered.length]);
+      }
+    } else {
+      for (let i = 0; i < 6; i++) startups.push(null);
+    }
+
+    updateUltraNewPlanetaryPlanets(startups);
   }
 
 })();

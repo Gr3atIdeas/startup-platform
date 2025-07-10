@@ -864,17 +864,13 @@
 }
 
 /* ИКОНКИ СТРЕЛОК - ЛЕВАЯ И ПРАВАЯ */
-.ultra_new_planetary_nav_arrow_icon {
-  width: 8.78px;
-  height: 14.89px;
-  background: black;
-}
+
 
 /* ЛЕВАЯ СТРЕЛКА < */
 .ultra_new_planetary_nav_left_icon {
   width: 14px;
   height: 14px;
-  background: url('/static/accounts/images/planetary_system/chevron_left.svg') center/contain no-repeat;
+  background: url('../images/planetary_system/chevron_left.svg') center/contain no-repeat;
   clip-path: none;
 }
 
@@ -882,7 +878,7 @@
 .ultra_new_planetary_nav_right_icon {
   width: 14px;
   height: 14px;
-  background: url('/static/accounts/images/planetary_system/chevron_right.svg') center/contain no-repeat;
+  background: url('../images/planetary_system/chevron_right.svg') center/contain no-repeat;
   clip-path: none;
 }
 
@@ -1020,20 +1016,37 @@
 .ultra_new_planetary_nav_left_icon {
   width: 14px;
   height: 14px;
-  background: url('/static/accounts/images/planetary_system/chevron_left.svg') center/contain no-repeat;
+  background: url('../images/planetary_system/chevron_left.svg') center/contain no-repeat;
   clip-path: none;
 }
 
 .ultra_new_planetary_nav_right_icon {
   width: 14px;
   height: 14px;
-  background: url('/static/accounts/images/planetary_system/chevron_right.svg') center/contain no-repeat;
+  background: url('../images/planetary_system/chevron_right.svg') center/contain no-repeat;
   clip-path: none;
 }
 
 /* Повышаем приоритет "Все", чтобы планеты не перекрывали */
 .ultra_new_planetary_category_item.category-all {
   z-index: 200;
+}
+
+/* Финальный override для категории "Все" на всех брейкпоинтах */
+.ultra_new_planetary_category_item.category-all{
+  position: absolute !important;
+  left: 40px !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  margin: auto 0 !important;
+  z-index: 200 !important;
+}
+
+/* Моб. брейк-пойнт: фиксируем позицию "Все" немного ближе к стрелке */
+@media (max-width: 768px) {
+  .ultra_new_planetary_category_item.category-all {
+    left: 25px !important;
+  }
 }
 
 
