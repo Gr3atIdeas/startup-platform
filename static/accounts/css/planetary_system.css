@@ -713,7 +713,7 @@
   position: absolute;
   width: 520px;
   height: 65px;
-  left: 120px; /* после кнопки "Все" */
+  left: 140px; /* после кнопки "Все" (40px + ширина + отступ) */
   top: 0;
   transform: none; /* убираем центрирование */
   display: flex;
@@ -776,10 +776,10 @@
 
 /* Эллипс фон + размеры */
 .ultra_new_planetary_category_item.selected .ultra_new_planetary_category_bg {
-  width: 118px !important;
-  height: 60px !important;
+  width: 124px !important;
+  height: 64px !important;
   border-radius: 50px / 30px !important;
-  background: url('/static/accounts/images/planetary_system/ellipse_planetary.svg') center/cover no-repeat;
+  background: url('/static/accounts/images/planetary_system/ellipse_planetary.svg') center/contain no-repeat;
 }
 
 /* иконка внутри эллипса */
@@ -810,10 +810,10 @@
 /* ФОНОВОЕ ЗВЕЗДНОЕ НЕБО */
 .ultra_new_planetary_category_bg {
   position: absolute;
-  width: 57px;
-  height: 57px;
+  width: 60px;
+  height: 60px;
   border-radius: 9999px;
-  background: url('/static/accounts/images/planetary_system/circle_planetary.svg') center/cover no-repeat;
+  background: url('/static/accounts/images/planetary_system/circle_planetary.svg') center/contain no-repeat;
   background-image: none;
   z-index: 1;
   box-shadow: 0 0 20px rgba(30, 58, 138, 0.3);
