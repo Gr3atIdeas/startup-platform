@@ -725,7 +725,7 @@
   overflow-x: auto !important;
   white-space: nowrap !important;
   scrollbar-width: none !important;
-  padding-left: 140px; /* место для фиксированной категории "Все" */
+  padding-left: 160px; /* немного больше места для sticky "Все" и её эллипса */
 }
 .ultra_new_planetary_categories_container::-webkit-scrollbar {
   display: none;
@@ -753,8 +753,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: 12px;
-  flex: 0 0 auto; /* не допускаем ужимания, чтобы flex учитывал фактическую ширину */
+  margin-right: 20px; /* больше расстояние между элементами */
+  flex: 0 0 auto;
+  min-width: 60px; /* учитываем ширину фонового круга */
 }
 
 /* НЕВЫБРАННЫЕ категории - маленькие круглые */
