@@ -703,6 +703,7 @@
   width: 590px;
   height: 100px;
   z-index: 100;
+  overflow: visible; /* чтобы category-all могла выступать */
 }
 
 
@@ -712,13 +713,14 @@
   position: absolute;
   width: 520px;
   height: 65px;
-  left: 50%;
+  left: 120px; /* после кнопки "Все" */
   top: 0;
-  transform: translateX(-50%);
+  transform: none; /* убираем центрирование */
   display: flex;
   align-items: center;
   justify-content: flex-start;
   gap: 10px;
+  scroll-behavior: smooth; /* плавный скролл */
 }
 
 .ultra_new_planetary_categories_container {
@@ -733,10 +735,11 @@
 }
 /* Категория "Все" всегда фиксирована слева */
 .ultra_new_planetary_category_item.category-all {
-  position: sticky;
+  position: absolute;
   left: 0;
-  z-index: 103;
-  margin-right: 15px;
+  top: 0;
+  z-index: 200; /* выше планет */
+  margin-right: 0;
 }
 
 /* Когда категория "Все" выбрана, расширяем эллипс полностью и задаём min-width*/
@@ -811,13 +814,7 @@
   height: 57px;
   border-radius: 9999px;
   background: url('/static/accounts/images/planetary_system/circle_planetary.svg') center/cover no-repeat;
-  background-image: 
-    radial-gradient(1px 1px at 20px 30px, rgba(255,255,255,0.8), transparent),
-    radial-gradient(1px 1px at 40px 70px, rgba(255,255,255,0.6), transparent),
-    radial-gradient(1px 1px at 90px 40px, rgba(255,255,255,0.9), transparent),
-    radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.4), transparent);
-  background-size: 150px 100px;
-  background-repeat: repeat;
+  background-image: none;
   z-index: 1;
   box-shadow: 0 0 20px rgba(30, 58, 138, 0.3);
 }
