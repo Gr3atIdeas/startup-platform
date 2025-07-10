@@ -132,45 +132,47 @@
       </div>
     </div>
 
-    <!-- СЕЛЕКТОР КАТЕГОРИЙ С НАВИГАЦИЕЙ - ПЕРЕМЕЩЕН В САМЫЙ НИЗ -->
+    <!-- НОВЫЙ СЕЛЕКТОР КАТЕГОРИЙ ПО ДИЗАЙНУ ИЗ FIGMA -->
     <div id="ultra_new_planetary_galaxy_selector">
-      <!-- ПЕРЕКЛЮЧАТЕЛЬ ВЛЕВО -->
-      <button class="ultra_new_planetary_category_nav ultra_new_planetary_category_nav_left" id="ultra_new_planetary_category_prev">
-        <img src="{% static 'accounts/images/planetary_system/chevron_left.svg' %}" alt="prev">
-      </button>
-      
-      <!-- КОНТЕЙНЕР КАТЕГОРИЙ С ОГРАНИЧЕННЫМ ПОКАЗОМ -->
-      <div id="ultra_new_planetary_galaxy_list_container">
-        <div id="ultra_new_planetary_galaxy_list">
-          <!-- Показываем только первые 7 категорий, остальные скрыты -->
-          {% for direction in directions|slice:":7" %}
-            <div class="ultra_new_planetary_galaxy_item {% if direction.direction_name == selected_galaxy or direction.original_name == selected_galaxy %}selected{% endif %}" data-name="{{ direction.original_name|default:direction.direction_name }}">
-              <img src="{% static 'accounts/images/planetary_system/category_img.png' %}" class="ultra_new_planetary_category_icon" alt="cat">
-              <span class="ultra_new_planetary_category_text">{{ direction.direction_name }}</span>
-            </div>
-          {% endfor %}
-          
-          <!-- Скрытые категории для JS переключения -->
-          <div class="ultra_new_planetary_hidden_categories" style="display: none;">
-            {% for direction in directions %}
-              {% if not forloop.counter <= 7 %}
-                <div class="ultra_new_planetary_galaxy_item {% if direction.direction_name == selected_galaxy or direction.original_name == selected_galaxy %}selected{% endif %}" data-name="{{ direction.original_name|default:direction.direction_name }}">
-                  <img src="{% static 'accounts/images/planetary_system/category_img.png' %}" class="ultra_new_planetary_category_icon" alt="cat">
-                  <span class="ultra_new_planetary_category_text">{{ direction.direction_name }}</span>
-                </div>
-              {% endif %}
-            {% endfor %}
-          </div>
-        </div>
+      <!-- СТРЕЛКА ВЛЕВО -->
+      <div class="ultra_new_planetary_nav_arrow ultra_new_planetary_nav_left" id="ultra_new_planetary_category_prev">
+        <div class="ultra_new_planetary_nav_arrow_icon"></div>
       </div>
       
-      <!-- ДОБАВЛЕННЫЙ ЛЕЙБЛ ВЫБРАННОЙ КАТЕГОРИИ -->
+      <!-- СТРЕЛКА ВПРАВО -->
+      <div class="ultra_new_planetary_nav_arrow ultra_new_planetary_nav_right" id="ultra_new_planetary_category_next">
+        <div class="ultra_new_planetary_nav_arrow_icon ultra_new_planetary_nav_arrow_rotated"></div>
+      </div>
+      
+      <!-- ПОДПИСЬ ВЫБРАННОЙ КАТЕГОРИИ -->
       <div id="ultra_new_planetary_selected_label" class="ultra_new_planetary_selected_label">{{ selected_galaxy|default:'Все' }}</div>
       
-      <!-- ПЕРЕКЛЮЧАТЕЛЬ ВПРАВО -->
-      <button class="ultra_new_planetary_category_nav ultra_new_planetary_category_nav_right" id="ultra_new_planetary_category_next">
-        <img src="{% static 'accounts/images/planetary_system/chevron_right.svg' %}" alt="next">
-      </button>
+      <!-- КОНТЕЙНЕР КАТЕГОРИЙ -->
+      <div class="ultra_new_planetary_categories_container">
+        <!-- Видимые категории -->
+        {% for direction in directions|slice:":7" %}
+          <div class="ultra_new_planetary_category_item {% if direction.direction_name == selected_galaxy or direction.original_name == selected_galaxy %}selected{% endif %}" data-name="{{ direction.original_name|default:direction.direction_name }}">
+            <!-- Фоновое изображение планеты -->
+            <img src="{% static 'accounts/images/planetary_system/category_img.png' %}" class="ultra_new_planetary_category_bg" alt="planet bg">
+            <!-- Переднее изображение иконки -->
+            <img src="{% static 'accounts/images/planetary_system/category_img.png' %}" class="ultra_new_planetary_category_icon" alt="category icon">
+          </div>
+        {% endfor %}
+        
+        <!-- Скрытые категории для JS переключения -->
+        <div class="ultra_new_planetary_hidden_categories" style="display: none;">
+          {% for direction in directions %}
+            {% if not forloop.counter <= 7 %}
+              <div class="ultra_new_planetary_category_item {% if direction.direction_name == selected_galaxy or direction.original_name == selected_galaxy %}selected{% endif %}" data-name="{{ direction.original_name|default:direction.direction_name }}">
+                <!-- Фоновое изображение планеты -->
+                <img src="{% static 'accounts/images/planetary_system/category_img.png' %}" class="ultra_new_planetary_category_bg" alt="planet bg">
+                <!-- Переднее изображение иконки -->
+                <img src="{% static 'accounts/images/planetary_system/category_img.png' %}" class="ultra_new_planetary_category_icon" alt="category icon">
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
     </div>
   </div>
 </div>
