@@ -9,14 +9,8 @@
   {{ block.super }}
   {# <link rel="stylesheet" href="{% static 'accounts/css/startups_list_styles.css' %}"> <-- Закомментируем или удалим, если файла нет #}
   <link rel="stylesheet" href="{% static 'accounts/css/startups_list.css' %}">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&display=swap">
-  {# <<< Восстанавливаем noUiSlider CSS >>> #}
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.css">
-  {# <<< Подключаем шрифт Inter, используемый в Figma для значений рейтинга >>> #}
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Unbounded:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'accounts/libs/fontawesome/css/all.min.css' %}">
+  <link rel="stylesheet" href="{% static 'accounts/libs/nouislider/css/nouislider.min.css' %}">
   {# <<< Комментируем rangeslider.js CSS >>> #}
 
   {# JS пока не подключаем здесь #}
@@ -186,8 +180,8 @@
 {# Удаляем старый скрипт rangeslider #}
 {# <script src="https://cdnjs.cloudflare.com/ajax/libs/rangeslider.js/2.3.0/rangeslider.min.js"></script> #}
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/wnumb/1.2.0/wNumb.min.js"></script>
+<script src="{% static 'accounts/libs/nouislider/js/nouislider.min.js' %}"></script>
+<script src="{% static 'accounts/libs/wnumb/js/wNumb.min.js' %}"></script>
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
@@ -385,6 +379,6 @@
 {% block body_scripts %}
   {{ block.super }} {# На случай, если в base.html уже есть скрипты в этом блоке #}
   {# <<< Подключаем JS noUiSlider и wNumb здесь >>> #}
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/wnumb/1.2.0/wNumb.min.js"></script>
+  <script src="{% static 'accounts/libs/nouislider/js/nouislider.min.js' %}"></script>
+  <script src="{% static 'accounts/libs/wnumb/js/wNumb.min.js' %}"></script>
 {% endblock %}

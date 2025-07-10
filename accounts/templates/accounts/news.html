@@ -6,7 +6,7 @@
 {% block head_extra %}
   <link rel="stylesheet" href="{% static 'accounts/css/news.css' %}">
   <!-- noUiSlider CSS -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.css">
+  <link rel="stylesheet" href="{% static 'accounts/libs/nouislider/css/nouislider.min.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -212,8 +212,8 @@
 </div> <!-- news-page-container -->
 
 <!-- noUiSlider JS and wNumb (for formatting) -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/wnumb/1.2.0/wNumb.min.js"></script>
+<script src="{% static 'accounts/libs/nouislider/js/nouislider.min.js' %}"></script>
+<script src="{% static 'accounts/libs/wnumb/js/wNumb.min.js' %}"></script>
 <script>
   function openPopup() {
     document.getElementById('newsPopup').style.display = 'flex';

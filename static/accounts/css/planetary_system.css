@@ -725,7 +725,7 @@
   overflow-x: auto !important;
   white-space: nowrap !important;
   scrollbar-width: none !important;
-  padding-left: 160px; /* немного больше места для sticky "Все" и её эллипса */
+  padding-left: 180px; /* чуть больше места под застикованную категорию "Все" и её эллипс */
 }
 .ultra_new_planetary_categories_container::-webkit-scrollbar {
   display: none;
@@ -755,7 +755,7 @@
   justify-content: center;
   margin-right: 20px; /* больше расстояние между элементами */
   flex: 0 0 auto;
-  min-width: 60px; /* учитываем ширину фонового круга */
+  min-width: 70px; /* чуть шире, чтобы исключить слипание иконок */
 }
 
 /* НЕВЫБРАННЫЕ категории - маленькие круглые */
@@ -775,7 +775,7 @@
   width: 110px !important;
   height: 60px !important;
   border-radius: 50px / 30px !important;
-  background-size: 200px 120px; /* масштабирую звёздный фон чтобы не казался чёрным */
+  background-size: 150px 100px; /* тот же масштаб звёзд, что и у кругов */
 }
 
 /* иконка внутри эллипса */

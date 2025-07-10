@@ -375,8 +375,8 @@ document.addEventListener('DOMContentLoaded', function () {
       keyboardNavigation: true,
       closeOnOutsideClick: true,
       plyr: {
-        css: 'https://cdn.plyr.io/3.6.12/plyr.css',
-        js: 'https://cdn.plyr.io/3.6.12/plyr.polyfilled.js',
+        css: '/static/accounts/libs/plyr/css/plyr.css',
+        js: '/static/accounts/libs/plyr/js/plyr.polyfilled.js',
         speed: {
           selected: 1,
           options: [0.5, 1, 1.25, 1.5],
