@@ -212,22 +212,21 @@
     // Кнопки навигации категорий
     const prevBtn = document.getElementById('ultra_new_planetary_category_prev');
     const nextBtn = document.getElementById('ultra_new_planetary_category_next');
+    const categoriesCarousel = document.querySelector('.ultra_new_planetary_categories_container');
     
-    if (prevBtn) {
+    if (prevBtn && categoriesCarousel) {
       prevBtn.addEventListener('click', function(e) {
         e.preventDefault();
         e.stopPropagation();
-        changeUltraNewPlanetaryCategory(-1); // Левая стрелка - назад
-        console.log('Нажата левая стрелка (назад)');
+        changeUltraNewPlanetaryCategory(-1);
       });
     }
-    
-    if (nextBtn) {
+
+    if (nextBtn && categoriesCarousel) {
       nextBtn.addEventListener('click', function(e) {
         e.preventDefault();
         e.stopPropagation();
-        changeUltraNewPlanetaryCategory(1); // Правая стрелка - вперед
-        console.log('Нажата правая стрелка (вперед)');
+        changeUltraNewPlanetaryCategory(1);
       });
     }
 
@@ -563,26 +562,10 @@
 
   // СМЕНА КАТЕГОРИИ НАВИГАЦИОННЫМИ КНОПКАМИ
   function changeUltraNewPlanetaryCategory(direction) {
-    // Получаем все элементы категорий
-    const visibleCategories = document.querySelectorAll('.ultra_new_planetary_categories_container .ultra_new_planetary_category_item:not(.ultra_new_planetary_hidden_categories .ultra_new_planetary_category_item)');
-    const hiddenCategories = document.querySelectorAll('.ultra_new_planetary_hidden_categories .ultra_new_planetary_category_item');
-    const allCategories = [...visibleCategories, ...hiddenCategories];
-    
-    if (allCategories.length === 0) return;
-
-    // Обновляем индекс (инвертируем направление для правильной работы)
-    ultraNewPlanetaryCategoriesVisible -= direction;
-    
-    // Проверяем границы
-    const maxVisible = Math.max(0, allCategories.length - ultraNewPlanetaryCategoriesPerPage);
-    if (ultraNewPlanetaryCategoriesVisible < 0) {
-      ultraNewPlanetaryCategoriesVisible = maxVisible;
-    } else if (ultraNewPlanetaryCategoriesVisible > maxVisible) {
-      ultraNewPlanetaryCategoriesVisible = 0;
-    }
-    
-    // Обновляем отображение категорий
-    updateUltraNewPlanetaryCategoriesDisplay();
+    const container = document.querySelector('.ultra_new_planetary_categories_container');
+    if (!container) return;
+    const scrollAmount = 160; // px per click
+    container.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
   }
 
   // ОБНОВЛЕНИЕ ОТОБРАЖЕНИЯ КАТЕГОРИЙ

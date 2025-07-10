@@ -721,6 +721,21 @@
   gap: 10px;
 }
 
+.ultra_new_planetary_categories_container {
+  overflow-x: auto !important;
+  white-space: nowrap !important;
+  scrollbar-width: none !important;
+}
+.ultra_new_planetary_categories_container::-webkit-scrollbar {
+  display: none;
+}
+/* Категория "Все" всегда фиксирована слева */
+.ultra_new_planetary_category_item.category-all {
+  position: sticky;
+  left: 0;
+  z-index: 103;
+}
+
 /* ЭЛЕМЕНТЫ КАТЕГОРИЙ */
 .ultra_new_planetary_category_item {
   position: relative;

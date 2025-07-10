@@ -159,29 +159,19 @@
       
       <!-- КОНТЕЙНЕР КАТЕГОРИЙ -->
       <div class="ultra_new_planetary_categories_container">
-        <!-- Видимые категории -->
-        {% for direction in directions|slice:":7" %}
+        <!-- Категория ВСЕ (всегда первая и фиксированная) -->
+        <div class="ultra_new_planetary_category_item category-all {% if selected_galaxy == 'All' or selected_galaxy == 'Все' %}selected{% endif %}" data-name="Все">
+          <div class="ultra_new_planetary_category_bg"></div>
+          <img src="{% static 'accounts/images/planetary_system/category_img.png' %}" class="ultra_new_planetary_category_icon" alt="Все">
+        </div>
+
+        <!-- Все остальные категории -->
+        {% for direction in directions %}
           <div class="ultra_new_planetary_category_item {% if direction.direction_name == selected_galaxy or direction.original_name == selected_galaxy %}selected{% endif %}" data-name="{{ direction.original_name|default:direction.direction_name }}">
-            <!-- Фоновое звездное небо -->
             <div class="ultra_new_planetary_category_bg"></div>
-            <!-- Переднее изображение иконки -->
             <img src="{% static 'accounts/images/planetary_system/category_img.png' %}" class="ultra_new_planetary_category_icon" alt="{{ direction.direction_name }}">
           </div>
         {% endfor %}
-        
-        <!-- Скрытые категории для JS переключения -->
-        <div class="ultra_new_planetary_hidden_categories" style="display: none;">
-          {% for direction in directions %}
-            {% if not forloop.counter <= 7 %}
-              <div class="ultra_new_planetary_category_item {% if direction.direction_name == selected_galaxy or direction.original_name == selected_galaxy %}selected{% endif %}" data-name="{{ direction.original_name|default:direction.direction_name }}">
-                <!-- Фоновое звездное небо -->
-                <div class="ultra_new_planetary_category_bg"></div>
-                <!-- Переднее изображение иконки -->
-                <img src="{% static 'accounts/images/planetary_system/category_img.png' %}" class="ultra_new_planetary_category_icon" alt="{{ direction.direction_name }}">
-              </div>
-            {% endif %}
-          {% endfor %}
-        </div>
       </div>
     </div>
   </div>
