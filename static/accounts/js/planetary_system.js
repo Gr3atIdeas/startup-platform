@@ -290,13 +290,23 @@
   function updateUltraNewPlanetaryGalaxyUI() {
     // Обновляем состояние всех категорий (видимых и скрытых)
     const allCategoryItems = document.querySelectorAll('.ultra_new_planetary_category_item');
+    let selectedElement = null;
     allCategoryItems.forEach(function(item) {
       if (item.getAttribute('data-name') === ultraNewPlanetarySelectedGalaxy) {
         item.classList.add('selected');
+        selectedElement = item;
       } else {
         item.classList.remove('selected');
       }
     });
+
+    // Плавно скроллим контейнер так, чтобы выбранная категория была максимально по центру (кроме sticky "Все")
+    if (selectedElement && !selectedElement.classList.contains('category-all')) {
+      const container = document.querySelector('.ultra_new_planetary_categories_container');
+      if (container && selectedElement) {
+        selectedElement.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      }
+    }
 
     // Обновляем лейбл выбранной категории под селектором
     const labelEl = document.getElementById('ultra_new_planetary_selected_label');

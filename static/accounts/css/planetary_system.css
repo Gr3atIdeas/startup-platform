@@ -753,6 +753,44 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-right: 12px;
+}
+
+/* НЕВЫБРАННЫЕ категории - маленькие круглые */
+.ultra_new_planetary_category_item .ultra_new_planetary_category_bg,
+.ultra_new_planetary_category_item .ultra_new_planetary_category_icon {
+  transition: all 0.3s ease;
+}
+
+/* ВЫБРАННАЯ КАТЕГОРИЯ = эллипс (шире круга, но не длинная капсула) */
+.ultra_new_planetary_category_item.selected {
+  z-index: 104;
+}
+
+.ultra_new_planetary_category_item.selected .ultra_new_planetary_category_bg {
+  width: 90px !important;
+  height: 60px !important;
+  border-radius: 45px / 30px !important; /* эллипс */
+  box-shadow: 0 0 30px rgba(30, 58, 138, 0.6), 0 0 60px rgba(255, 239, 43, 0.3);
+}
+
+.ultra_new_planetary_category_item.selected .ultra_new_planetary_category_icon {
+  width: 65px !important;
+  height: 45px !important;
+  filter: brightness(1.3) contrast(1.2) drop-shadow(0 0 8px rgba(255,255,255,0.4));
+}
+
+/* соседи автоматически остаются с margin, поэтому эллипс их не перекрывает */
+
+/* Плавные переходы */
+.ultra_new_planetary_category_bg,
+.ultra_new_planetary_category_icon {
+  transition: all 0.3s ease;
+}
+
+/* FIX: sticky "Все" ширина */
+.ultra_new_planetary_category_item.category-all {
+  margin-right: 20px;
 }
 
 /* ФОНОВОЕ ЗВЕЗДНОЕ НЕБО */
@@ -784,25 +822,6 @@
   object-fit: cover;
   z-index: 2;
   filter: brightness(1.2) contrast(1.1);
-}
-
-/* АКТИВНАЯ КАТЕГОРИЯ - ПИЛЮЛЯ */
-.ultra_new_planetary_category_item.selected .ultra_new_planetary_category_bg {
-  width: 135.43px;
-  height: 64.50px;
-  border-radius: 32px; /* Делаем пилюлей вместо круга */
-  background: radial-gradient(ellipse at center, 
-    rgba(30, 58, 138, 0.9) 0%, 
-    rgba(11, 20, 38, 0.95) 50%, 
-    rgba(0, 0, 0, 1) 100%);
-  box-shadow: 0 0 30px rgba(30, 58, 138, 0.6), 
-              0 0 60px rgba(255, 239, 43, 0.2);
-}
-
-.ultra_new_planetary_category_item.selected .ultra_new_planetary_category_icon {
-  width: 86.74px;
-  height: 64.92px;
-  filter: brightness(1.4) contrast(1.2) drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
 }
 
 /* НАВИГАЦИОННЫЕ СТРЕЛКИ ПО ДИЗАЙНУ FIGMA */
