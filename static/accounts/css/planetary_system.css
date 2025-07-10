@@ -725,6 +725,7 @@
   overflow-x: auto !important;
   white-space: nowrap !important;
   scrollbar-width: none !important;
+  padding-left: 140px; /* место для фиксированной категории "Все" */
 }
 .ultra_new_planetary_categories_container::-webkit-scrollbar {
   display: none;
@@ -734,6 +735,14 @@
   position: sticky;
   left: 0;
   z-index: 103;
+  margin-right: 15px;
+}
+
+/* Когда категория "Все" выбрана, расширяем эллипс полностью и задаём min-width*/
+.ultra_new_planetary_category_item.category-all.selected .ultra_new_planetary_category_bg {
+  width: 135.43px;
+  height: 64.5px;
+  border-radius: 32px;
 }
 
 /* ЭЛЕМЕНТЫ КАТЕГОРИЙ */

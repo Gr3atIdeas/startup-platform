@@ -256,14 +256,8 @@
 
   // НАСТРОЙКА СЕЛЕКТОРА ГАЛАКТИК
   function setupUltraNewPlanetaryGalaxySelector() {
-    // Устанавливаем обработчики для видимых категорий
+    // Просто навешиваем клики на все категории
     setupUltraNewPlanetaryCategoryHandlers();
-    
-    // Инициализируем отображение категорий
-    const visibleCategories = document.querySelectorAll('.ultra_new_planetary_categories_container .ultra_new_planetary_category_item:not(.ultra_new_planetary_hidden_categories .ultra_new_planetary_category_item)');
-    const hiddenCategories = document.querySelectorAll('.ultra_new_planetary_hidden_categories .ultra_new_planetary_category_item');
-    ultraNewPlanetaryCategoriesTotal = visibleCategories.length + hiddenCategories.length;
-    updateUltraNewPlanetaryCategoriesDisplay();
   }
 
   // УСТАНОВКА ОБРАБОТЧИКОВ ДЛЯ КАТЕГОРИЙ
@@ -568,37 +562,7 @@
     container.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
   }
 
-  // ОБНОВЛЕНИЕ ОТОБРАЖЕНИЯ КАТЕГОРИЙ
-  function updateUltraNewPlanetaryCategoriesDisplay() {
-    const categoriesContainer = document.querySelector('.ultra_new_planetary_categories_container');
-    const hiddenContainer = document.querySelector('.ultra_new_planetary_hidden_categories');
-    
-    if (!categoriesContainer || !hiddenContainer) return;
-    
-    // Получаем все категории
-    const visibleCategories = document.querySelectorAll('.ultra_new_planetary_categories_container .ultra_new_planetary_category_item:not(.ultra_new_planetary_hidden_categories .ultra_new_planetary_category_item)');
-    const hiddenCategories = document.querySelectorAll('.ultra_new_planetary_hidden_categories .ultra_new_planetary_category_item');
-    const allCategories = [...visibleCategories, ...hiddenCategories];
-    
-    // Очищаем видимый контейнер (кроме скрытого и стрелок)
-    visibleCategories.forEach(cat => cat.remove());
-    
-    // Показываем нужные категории
-    for (let i = ultraNewPlanetaryCategoriesVisible; i < ultraNewPlanetaryCategoriesVisible + ultraNewPlanetaryCategoriesPerPage && i < allCategories.length; i++) {
-      const categoryClone = allCategories[i].cloneNode(true);
-      
-      // Добавляем обработчик клика
-      categoryClone.addEventListener('click', function() {
-        const galaxyName = this.getAttribute('data-name');
-        selectUltraNewPlanetaryGalaxy(galaxyName);
-      });
-      
-      categoriesContainer.insertBefore(categoryClone, hiddenContainer);
-    }
-    
-    // Переустанавливаем обработчики
-    setupUltraNewPlanetaryCategoryHandlers();
-  }
+  // Функция отображения категорий больше не нужна (скролл нативный)
 
   // ПЛАНЕТАРНЫЕ ОБЪЕКТЫ ДЛЯ СИСТЕМЫ КАК В V8.HTML
   let ultraNewPlanetaryObjects = [];
