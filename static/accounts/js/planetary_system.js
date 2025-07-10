@@ -19,12 +19,12 @@
   let ultraNewPlanetaryLogoImage = '';
   let ultraNewPlanetaryFallbackImages = {
     round: [
-      'https://placehold.co/100x100/FF6B6B/FFFFFF?text=P1',
-      'https://placehold.co/100x100/4ECDC4/FFFFFF?text=P2',
-      'https://placehold.co/100x100/45B7D1/FFFFFF?text=P3',
-      'https://placehold.co/100x100/96CEB4/FFFFFF?text=P4',
-      'https://placehold.co/100x100/FECA57/FFFFFF?text=P5',
-      'https://placehold.co/100x100/FF9FF3/FFFFFF?text=P6'
+      '/static/accounts/images/planetary_system/planets_round/1.png',
+      '/static/accounts/images/planetary_system/planets_round/2.png',
+      '/static/accounts/images/planetary_system/planets_round/3.png',
+      '/static/accounts/images/planetary_system/planets_round/4.png',
+      '/static/accounts/images/planetary_system/planets_round/5.png',
+      '/static/accounts/images/planetary_system/planets_round/6.png'
     ]
   };
 
@@ -447,7 +447,7 @@
   // ПОЛУЧЕНИЕ РЕЗЕРВНОГО ИЗОБРАЖЕНИЯ
   function getUltraNewPlanetaryFallbackImage(index) {
     const images = ultraNewPlanetaryFallbackImages.round || [];
-    return images[index % images.length] || 'https://placehold.co/100x100/333/FFF?text=P';
+    return images[index % images.length] || '/static/accounts/images/planetary_system/planets_round/1.png';
   }
 
   // ПОКАЗ МОДАЛЬНОГО ОКНА

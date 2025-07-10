@@ -113,13 +113,13 @@
               {% if article.get_image_url %}
                 <img src="{{ article.get_image_url }}" alt="{{ article.title }}" class="news-image">
               {% else %}
-                <img src="https://placehold.co/295x173/E0E0E0/B0B0B0?text=Новость" alt="{{ article.title|default:"Заголовок новости" }}" class="news-image">
+                <img src="{% static 'accounts/images/main_page/news_placeholder.webp' %}" alt="{{ article.title|default:"Заголовок новости" }}" class="news-image">
               {% endif %}
             </a>
             
             <div class="news-content">
               <div class="news-card-header">
-                 <img src="{{ article.author.avatar.url|default:'https://placehold.co/39x39/7B61FF/FFFFFF?text=A' }}" alt="Аватар" class="news-avatar">
+                 <img src="{{ article.author.avatar.url|default:'/static/accounts/images/avatars/default_avatar_ufo.png' }}" alt="Аватар" class="news-avatar">
                  <div class="news-title-meta">
                     <h2 class="news-title"><a href="{% url 'news_detail' article.article_id %}">{{ article.title|default:"Заголовок новости" }}</a></h2>
                     <div class="news-meta">
@@ -143,7 +143,7 @@
         {% for i in "12345" %}
         <div class="news-card {% if i == '4' %}news-card-ad{% endif %}"> <!-- Example: 4th static card is an ad -->
             <a href="#" class="news-image-link">
-                <img src="https://placehold.co/295x173/A9A9A9/FFFFFF?text=Новость+{{ i }}" alt="Новость {{ i }}" class="news-image">
+                <img src="{% static 'accounts/images/main_page/news_placeholder.webp' %}" alt="Новость {{ i }}" class="news-image">
                 {% if i == '4' %}
                 <div class="ad-label-on-image">
                     <img src="{% static 'accounts/images/alert-circle.svg' %}" alt="Реклама"> Реклама
@@ -152,7 +152,7 @@
             </a>
             <div class="news-content">
               <div class="news-card-header">
-                 <img src="https://placehold.co/39x39/C6BBFE/FFFFFF?text={{ i }}" alt="Аватар автора" class="news-avatar">
+                 <img src="/static/accounts/images/avatars/default_avatar_ufo.png" alt="Аватар автора" class="news-avatar">
                  <div class="news-title-meta">
                     <h2 class="news-title"><a href="#">Ромашка {{ i }}</a></h2>
                     <div class="news-meta">
@@ -172,11 +172,11 @@
          <!-- One more static card to make it 6 if articles is empty -->
         <div class="news-card">
             <a href="#" class="news-image-link">
-                <img src="https://placehold.co/295x173/D3D3D3/000000?text=Новость+6" alt="Новость 6" class="news-image">
+                <img src="{% static 'accounts/images/main_page/news_placeholder.webp' %}" alt="Новость 6" class="news-image">
             </a>
             <div class="news-content">
               <div class="news-card-header">
-                 <img src="https://placehold.co/39x39/E6E6FA/000000?text=6" alt="Аватар автора" class="news-avatar">
+                 <img src="/static/accounts/images/avatars/default_avatar_ufo.png" alt="Аватар автора" class="news-avatar">
                  <div class="news-title-meta">
                     <h2 class="news-title"><a href="#">Еще одна Ромашка</a></h2>
                     <div class="news-meta">

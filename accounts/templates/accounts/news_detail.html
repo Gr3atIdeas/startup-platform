@@ -30,7 +30,7 @@
           <div class="article-meta-rating-row">
             <div class="author-info-block">
               <div class="author-details">
-                <img class="author-avatar" src="{{ article.author.profile.avatar.url|default:'https://placehold.co/39x39/7B61FF/FFFFFF?text=A' }}" alt="{{ article.author.email|default:'Автор' }}"/>
+                <img class="author-avatar" src="{{ article.author.profile.avatar.url|default:'/static/accounts/images/avatars/default_avatar_ufo.png' }}" alt="{{ article.author.email|default:'Автор' }}"/>
                 <div class="author-name-time">
                   <div class="author-name">{{ article.author.get_full_name|default:article.author.email|default:"Аноним" }}</div>
                   <div class="publish-time">{{ article.published_at|timesince }} назад</div>
@@ -74,7 +74,7 @@
           {% if article.get_image_url %}
             <img class="article-main-image" src="{{ article.get_image_url }}" alt="{{ article.title }}">
           {% else %}
-            <img class="article-main-image" src="https://placehold.co/800x314/EEE/CCC?text=Главное+изображение" alt="{{ article.title }}">
+            <img class="article-main-image" src="{% static 'accounts/images/main_page/news_placeholder.webp' %}" alt="{{ article.title }}">
           {% endif %}
 
           <div class="article-title-large">
@@ -93,7 +93,7 @@
           {# Example content blocks from user HTML - adapt with real data if available #}
           <div class="content-row">
             <div class="content-image-block">
-              <img class="content-image" src="https://placehold.co/267x267/EEE/CCC?text=Изображение+1" alt="Ромашка шкаф/стеллаж">
+              <img class="content-image" src="{% static 'accounts/images/main_page/news_placeholder.webp' %}" alt="Ромашка шкаф/стеллаж">
               <div class="image-caption">Ромашка шкаф/стеллаж</div>
             </div>
             <div class="content-text">
@@ -106,7 +106,7 @@
               Наш стартап разрабатывает инновационную платформу для телемедицины, которая обеспечивает пользователям доступ к качественным медицинским консультациям в любое время и в любом месте, уменьшая необходимость в личных визитах к врачам...<br/><br/>Наш стартап разрабатывает инновационную платформу для телемедицины, которая обеспечивает пользователям доступ к качественным медицинским консультациям в любое время и в любом месте, уменьшая необходимость в личных визитах к врачам...
             </div>
             <div class="content-image-block">
-              <img class="content-image" src="https://placehold.co/267x267/DDD/BBB?text=Изображение+2" alt="Ромашка шкаф/стеллаж">
+              <img class="content-image" src="{% static 'accounts/images/main_page/news_placeholder.webp' %}" alt="Ромашка шкаф/стеллаж">
               <div class="image-caption">Ромашка шкаф/стеллаж</div>
             </div>
           </div>
@@ -115,7 +115,7 @@
               Наш стартап разрабатывает инновационную платформу для телемедицины, которая обеспечивает пользователям доступ к качественным медицинским консультациям в любое время и в любом месте, уменьшая необходимость в личных визитах к врачам...
           </div>
           
-          <img class="content-image-large" src="https://placehold.co/800x314/AAA/999?text=Большое+изображение" alt="Большое изображение в тексте">
+          <img class="content-image-large" src="{% static 'accounts/images/main_page/news_placeholder.webp' %}" alt="Большое изображение в тексте">
           
           <div class="content-text-full-width">
               Наш стартап разрабатывает инновационную платформу для телемедицины, которая обеспечивает пользователям доступ к качественным медицинским консультациям в любое время и в любом месте, уменьшая необходимость в личных визитах к врачам...
@@ -160,7 +160,7 @@
                     {% for i in "123" %} {# Placeholder loop for comments #}
                     <div class="comment-item">
                         <div class="comment-content">
-                            <img class="comment-avatar" src="https://placehold.co/39x39/{% if i == '1' %}7B61FF{% elif i == '2' %}FF6161{% else %}61FFB7{% endif %}/FFFFFF?text={% if i == '1' %}В{% elif i == '2' %}С{% else %}А{% endif %}" alt="Аватар пользователя"/>
+                            <img class="comment-avatar" src="/static/accounts/images/avatars/default_avatar_ufo.png" alt="Аватар пользователя"/>
                             <div class="comment-text-block">
                                 <div class="comment-author-name">
                                     {% if i == '1' %}Виктор
@@ -206,7 +206,7 @@
         <div class="sidebar-title">Похожие статьи</div>
         {% for i in "123" %} 
         <div class="similar-article-card">
-          <img class="similar-article-image" src="https://placehold.co/409x214/AEC/9DB?text=Новость+{{forloop.counter}}" alt="Похожая статья {{forloop.counter}}">
+          <img class="similar-article-image" src="{% static 'accounts/images/main_page/news_placeholder.webp' %}" alt="Похожая статья {{forloop.counter}}">
           
           {% if forloop.counter == 2 %} 
           <div class="ad-label-on-image">

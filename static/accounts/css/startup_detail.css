@@ -1826,7 +1826,7 @@ a:hover {
   margin-top: 60px;
   padding: 70px 0; /* Только вертикальные отступы, фон будет на всю ширину */
   background-color: black; /* Цвет фона из Figma */
-  background-image: url('../images/startups/inside_cards_background.webp');
+  background-image: url('/static/accounts/images/backgrounds/unsplash_bg.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -2880,7 +2880,7 @@ body.glightbox-open .glightbox-container {
   left: 0;
   width: 100%;
   height: 100%;
-  background: url('https://images.unsplash.com/photo-1447433819943-74a20987a81b')
+  background: url('/static/accounts/images/backgrounds/unsplash_bg.jpg')
     no-repeat center center;
   background-size: cover;
   z-index: 1;
@@ -2893,7 +2893,7 @@ body.glightbox-open .glightbox-container {
   left: 0;
   width: 100%;
   height: 100%;
-  background: url('https://www.transparenttextures.com/patterns/stardust.png')
+  background: url('/static/accounts/images/backgrounds/stardust.png')
     repeat;
   opacity: 0.5;
   animation: parallax 100s linear infinite;
