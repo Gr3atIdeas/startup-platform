@@ -713,9 +713,9 @@
   position: absolute;
   width: 520px;
   height: 65px;
-  left: 140px; /* после кнопки "Все" (40px + ширина + отступ) */
+  left: 50%;
   top: 0;
-  transform: none; /* убираем центрирование */
+  transform: translateX(-50%); /* центрируем контейнер */
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -736,9 +736,11 @@
 /* Категория "Все" всегда фиксирована слева */
 .ultra_new_planetary_category_item.category-all {
   position: absolute;
-  left: 0;
+  left: 40px; /* рядом со стрелкой */
   top: 0;
-  z-index: 200; /* выше планет */
+  bottom: 0;
+  margin: auto 0; /* вертикальное центрирование */
+  z-index: 200;
   margin-right: 0;
 }
 
@@ -779,7 +781,7 @@
   width: 124px !important;
   height: 64px !important;
   border-radius: 50px / 30px !important;
-  background: url('/static/accounts/images/planetary_system/ellipse_planetary.svg') center/contain no-repeat;
+  background: url('../images/planetary_system/ellipse_planetary.svg') center/contain no-repeat;
 }
 
 /* иконка внутри эллипса */
@@ -813,7 +815,7 @@
   width: 60px;
   height: 60px;
   border-radius: 9999px;
-  background: url('/static/accounts/images/planetary_system/circle_planetary.svg') center/contain no-repeat;
+  background: url('../images/planetary_system/circle_planetary.svg') center/contain no-repeat;
   background-image: none;
   z-index: 1;
   box-shadow: 0 0 20px rgba(30, 58, 138, 0.3);
