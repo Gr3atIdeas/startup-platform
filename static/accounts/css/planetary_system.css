@@ -717,7 +717,7 @@
   transform: translateX(-50%);
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 10px;
 }
 
@@ -725,7 +725,7 @@
   overflow-x: auto !important;
   white-space: nowrap !important;
   scrollbar-width: none !important;
-  padding-left: 180px; /* чуть больше места под застикованную категорию "Все" и её эллипс */
+  padding-left: 0;
 }
 .ultra_new_planetary_categories_container::-webkit-scrollbar {
   display: none;
@@ -767,12 +767,12 @@
 /* ВЫБРАННАЯ КАТЕГОРИЯ - устанавливаем минимальную ширину, чтобы соседние не наезжали */
 .ultra_new_planetary_category_item.selected {
   z-index: 104;
-  min-width: 110px; /* ширина совпадает с эллипсом */
+  min-width: 118px; /* ширина совпадает с новым эллипсом */
 }
 
 /* Эллипс фон + размеры */
 .ultra_new_planetary_category_item.selected .ultra_new_planetary_category_bg {
-  width: 110px !important;
+  width: 118px !important;
   height: 60px !important;
   border-radius: 50px / 30px !important;
   background-size: 150px 100px; /* тот же масштаб звёзд, что и у кругов */
@@ -806,8 +806,8 @@
 /* ФОНОВОЕ ЗВЕЗДНОЕ НЕБО */
 .ultra_new_planetary_category_bg {
   position: absolute;
-  width: 54.84px;
-  height: 53.61px;
+  width: 57px;
+  height: 57px;
   border-radius: 9999px;
   background: radial-gradient(circle at center, 
     rgba(30, 58, 138, 0.8) 0%, 
