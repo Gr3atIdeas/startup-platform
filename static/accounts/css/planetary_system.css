@@ -760,7 +760,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: 3px; /* 3px между соседями */
+  margin-right: 0; /* убираем дублирование с gap */
   flex: 0 0 auto;
   min-width: 70px; /* чуть шире, чтобы исключить слипание иконок */
 }
@@ -807,7 +807,7 @@
 
 /* FIX: sticky "Все" ширина */
 .ultra_new_planetary_category_item.category-all {
-  margin-right: 3px;
+  margin-right: 0;
 }
 
 /* ФОНОВОЕ ЗВЕЗДНОЕ НЕБО */
@@ -885,7 +885,8 @@
 /* ПОДПИСЬ ВЫБРАННОЙ КАТЕГОРИИ ПО ДИЗАЙНУ FIGMA */
 .ultra_new_planetary_selected_label {
   position: absolute;
-  left: 281px;
+  left: 50%;
+  transform: translateX(-50%);
   top: 75px;
   background: #050505;
   border-radius: 20px;
@@ -1046,6 +1047,7 @@
 @media (max-width: 768px) {
   .ultra_new_planetary_category_item.category-all {
     left: 25px !important;
+    margin-right: 0 !important;
   }
 }
 
