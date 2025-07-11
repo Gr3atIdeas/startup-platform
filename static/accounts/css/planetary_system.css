@@ -711,7 +711,8 @@
 /* КОНТЕЙНЕР КАТЕГОРИЙ ПО ДИЗАЙНУ FIGMA */
 .ultra_new_planetary_categories_container {
   position: absolute;
-  width: 520px;
+  /* Показываем ровно 7 категорий (7×70px + 6×3px = 508px) */
+  width: 508px;
   height: 65px;
   left: 50%;
   top: 0;
@@ -719,7 +720,7 @@
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: 10px;
+  gap: 3px; /* расстояние между категориями по макету */
   scroll-behavior: smooth; /* плавный скролл */
 }
 
@@ -759,7 +760,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: 20px; /* больше расстояние между элементами */
+  margin-right: 3px; /* 3px между соседями */
   flex: 0 0 auto;
   min-width: 70px; /* чуть шире, чтобы исключить слипание иконок */
 }
@@ -806,7 +807,7 @@
 
 /* FIX: sticky "Все" ширина */
 .ultra_new_planetary_category_item.category-all {
-  margin-right: 20px;
+  margin-right: 3px;
 }
 
 /* ФОНОВОЕ ЗВЕЗДНОЕ НЕБО */
@@ -815,8 +816,7 @@
   width: 60px;
   height: 60px;
   border-radius: 9999px;
-  background: url('../images/planetary_system/circle_planetary.svg') center/contain no-repeat;
-  background-image: none;
+  background: url('../images/planetary_system/circle_planetary.svg') center/contain no-repeat; /* включаем звёздный кружок */
   z-index: 1;
   box-shadow: 0 0 20px rgba(30, 58, 138, 0.3);
 }
@@ -850,11 +850,11 @@
 }
 
 .ultra_new_planetary_nav_left {
-  left: -50px;
+  left: 1px; /* стрелка → ряд: 8 px (31 px стрелка + 8 px gap ≈ 40px до category-all) */
 }
 
 .ultra_new_planetary_nav_right {
-  right: -50px;
+  right: 1px; /* симметрично слева */
 }
 
 .ultra_new_planetary_nav_arrow:hover {
@@ -956,7 +956,7 @@
   .ultra_new_planetary_categories_container {
     width: 280px;
     height: 50px;
-    gap: 5px;
+    gap: 3px; /* тот же отступ на мобилках */
   }
   
   .ultra_new_planetary_category_bg {
@@ -990,11 +990,11 @@
   }
 
   .ultra_new_planetary_nav_left {
-    left: -35px;
+    left: 1px;
   }
 
   .ultra_new_planetary_nav_right {
-    right: -35px;
+    right: 1px;
   }
 
   .ultra_new_planetary_nav_arrow_icon {
