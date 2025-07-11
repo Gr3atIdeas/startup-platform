@@ -712,7 +712,7 @@
 .ultra_new_planetary_categories_container {
   position: absolute;
   /* Показываем ровно 7 категорий (7×70px + 6×3px = 508px) */
-  width: 508px;
+  width: 570px; /* 1 big (124px) + 6 small (6×70) + 6 gaps (6×3) + 8px слева */
   height: 65px;
   left: 50%;
   top: 0;
@@ -729,20 +729,21 @@
   white-space: nowrap !important;
   scrollbar-width: none !important;
   /* оставляем место для застикованной категории "Все" */
-  padding-left: 160px;
+  padding-left: 8px; /* зазор между стрелкой и первой категорией */
 }
 .ultra_new_planetary_categories_container::-webkit-scrollbar {
   display: none;
 }
-/* Категория "Все" всегда фиксирована слева */
+/* Категория "Все" встроена в поток, но всегда первая */
 .ultra_new_planetary_category_item.category-all {
-  position: absolute;
-  left: 40px; /* рядом со стрелкой */
-  top: 0;
-  bottom: 0;
-  margin: auto 0; /* вертикальное центрирование */
-  z-index: 200;
+  position: relative !important;
+  order: -1; /* всегда первая */
   margin-right: 0;
+  left: auto !important;
+  top: auto !important;
+  bottom: auto !important;
+  margin: 0;
+  z-index: 200;
 }
 
 /* Когда категория "Все" выбрана, расширяем эллипс полностью и задаём min-width*/
@@ -955,9 +956,10 @@
   }
   
   .ultra_new_planetary_categories_container {
-    width: 280px;
+    width: 330px; /* mobile: 1 big (90) + 6×50 + 6×3 + 4px слева */
     height: 50px;
     gap: 3px; /* тот же отступ на мобилках */
+    padding-left: 4px;
   }
   
   .ultra_new_planetary_category_bg {
@@ -1033,20 +1035,11 @@
   z-index: 200;
 }
 
-/* Финальный override для категории "Все" на всех брейкпоинтах */
-.ultra_new_planetary_category_item.category-all{
-  position: absolute !important;
-  left: 40px !important;
-  top: 0 !important;
-  bottom: 0 !important;
-  margin: auto 0 !important;
-  z-index: 200 !important;
-}
+/* Убираем старый absolute-override для "Все" */
 
 /* Моб. брейк-пойнт: фиксируем позицию "Все" немного ближе к стрелке */
 @media (max-width: 768px) {
   .ultra_new_planetary_category_item.category-all {
-    left: 25px !important;
     margin-right: 0 !important;
   }
 }

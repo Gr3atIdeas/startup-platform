@@ -307,19 +307,14 @@
     // Плавно скроллим контейнер так, чтобы выбранная категория оказалась по центру под текстовой капсулой
     const container = document.querySelector('.ultra_new_planetary_categories_container');
     if (container && selectedElement) {
-      if (selectedElement.classList.contains('category-all')) {
-        // Категория "Все" — просто возвращаемся в начало
-        container.scrollTo({ left: 0, behavior: 'smooth' });
-      } else {
-        const containerRect = container.getBoundingClientRect();
-        const itemRect = selectedElement.getBoundingClientRect();
-        const delta = (itemRect.left + itemRect.width / 2) - (containerRect.left + containerRect.width / 2);
-        let targetScroll = container.scrollLeft + delta;
-        // Ограничиваем диапазон
-        const maxScroll = container.scrollWidth - container.clientWidth;
-        targetScroll = Math.max(0, Math.min(maxScroll, targetScroll));
-        container.scrollTo({ left: targetScroll, behavior: 'smooth' });
-      }
+      const containerRect = container.getBoundingClientRect();
+      const itemRect = selectedElement.getBoundingClientRect();
+      const delta = (itemRect.left + itemRect.width / 2) - (containerRect.left + containerRect.width / 2);
+      let targetScroll = container.scrollLeft + delta;
+      // Ограничиваем диапазон
+      const maxScroll = container.scrollWidth - container.clientWidth;
+      targetScroll = Math.max(0, Math.min(maxScroll, targetScroll));
+      container.scrollTo({ left: targetScroll, behavior: 'smooth' });
     }
 
     // Обновляем лейбл выбранной категории под селектором
