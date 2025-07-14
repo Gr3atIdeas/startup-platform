@@ -2202,7 +2202,6 @@ def investor_main(request):
     """
     Отображает главную страницу инвестора с планетарной системой стартапов.
     """
-    # Мапинг направлений для перевода на русский язык (полный список)
     DIRECTION_TRANSLATIONS = {
         'Beauty': 'Красота', 'Technology': 'Технологии', 'Healthcare': 'Здравоохранение', 'Health': 'Здоровье', 'Medicine': 'Медицина',
         'Finance': 'Финансы', 'Cafe': 'Кафе/рестораны', 'Restaurant': 'Кафе/рестораны', 'Delivery': 'Доставка',
@@ -2218,11 +2217,8 @@ def investor_main(request):
         'Cryptocurrency': 'Криптовалюты', 'VR': 'Виртуальная реальность', 'AR': 'Дополненная реальность', 'IoT': 'Интернет вещей',
         'Robotics': 'Робототехника', 'Space': 'Космические технологии', 'Science': 'Наука', 'Research': 'Исследования', 'Other': 'Другое',
     }
-    
-    # Получаем только те направления, которые реально используются стартапами
-    used_directions = Startups.objects.filter(status="approved").values_list('direction__direction_name', flat=True).distinct()
-    directions = Directions.objects.filter(direction_name__in=used_directions).order_by("direction_name")
-    
+    # Получаем все направления (все категории)
+    directions = Directions.objects.all().order_by("direction_name")
     selected_direction_name = request.GET.get("direction", "All")
 
     startups_query = Startups.objects.filter(status="approved").annotate(
@@ -3191,12 +3187,8 @@ def planetary_system(request):
     Планетарная система - отображает стартапы как планеты на орбитах
     """
     # Используем глобальный словарь переводов направлений
-    
-    # Получаем только те направления, которые реально используются стартапами
-    used_directions = Startups.objects.filter(status="approved").values_list('direction__direction_name', flat=True).distinct()
-    directions = Directions.objects.filter(direction_name__in=used_directions).order_by("direction_name")
-    
-    # Получаем выбранное направление из URL (по умолчанию "All" = "Все")
+    # Получаем все направления (все категории)
+    directions = Directions.objects.all().order_by("direction_name")
     selected_direction_name = request.GET.get("direction", "All")
     
     # Логирование для отладки
