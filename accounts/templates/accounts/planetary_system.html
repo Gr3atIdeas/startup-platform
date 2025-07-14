@@ -12,6 +12,23 @@
 {% include 'accounts/partials/planetary_system.html' %}
 {% endblock %}
 
+<script id="planetary-system-data" type="application/json">
+{
+  "isAuthenticated": {{ user.is_authenticated|yesno:"true,false" }},
+  "isStartuper": {{ user.is_authenticated and user.role.role_name == "startuper"|yesno:"true,false" }},
+  "planetsData": {{ planets_data_json|safe }},
+  "directionsData": {{ directions_data_json|safe }},
+  "selectedGalaxy": "{{ selected_galaxy|escapejs }}",
+  "logoImage": "{{ logo_data.image|default_if_none:''|escapejs }}",
+  "allStartupsData": {{ all_startups_data_json|safe }},
+  "urls": {
+        "createStartup": "{% url 'create_startup' %}",
+        "register": "{% url 'register' %}",
+        "planetarySystemBase": "{% url 'planetary_system' %}"
+    }
+}
+</script>
+
 {% block script_extra %}
 {{ block.super }}
 <script src="{% static 'accounts/js/planetary_system.js' %}"></script>

@@ -414,6 +414,9 @@
     // Стили для активной планеты
     planet.style.cursor = 'pointer';
     planet.style.opacity = '1';
+    
+    // Настройка прогресс-бара под планетой
+    setupUltraNewPlanetaryProgressBar(planet, startup, index);
   }
 
   // НАСТРОЙКА ПУСТОЙ ПЛАНЕТЫ
@@ -451,6 +454,51 @@
     // Стили для неактивной планеты
     planet.style.cursor = 'pointer';
     planet.style.opacity = '0.6';
+    
+    // Настройка прогресс-бара под планетой (пустой)
+    setupUltraNewPlanetaryProgressBar(planet, emptyStartup, index);
+  }
+
+  // НАСТРОЙКА ПРОГРЕСС-БАРА ПОД ПЛАНЕТОЙ
+  function setupUltraNewPlanetaryProgressBar(planet, startup, index) {
+    // Находим контейнер планеты (родительский элемент)
+    const planetContainer = planet.closest('.ultra_new_planetary_planet_orientation');
+    if (!planetContainer) return;
+    
+    // Находим прогресс-бар под планетой
+    const progressContainer = planetContainer.querySelector('.ultra_new_planetary_progress_container');
+    if (!progressContainer) return;
+    
+    const progressBar = progressContainer.querySelector('.ultra_new_planetary_progress_animation_container');
+    const progressPercentage = progressContainer.querySelector('.ultra_new_planetary_progress_percentage');
+    
+    if (!progressBar || !progressPercentage) return;
+    
+    // Получаем рейтинг стартапа (преобразуем в число от 0 до 100)
+    let rating = 0;
+    if (startup && startup.rating) {
+      // Если рейтинг в формате "4.2/5", извлекаем числовое значение
+      if (typeof startup.rating === 'string' && startup.rating.includes('/')) {
+        const ratingMatch = startup.rating.match(/(\d+\.?\d*)/);
+        if (ratingMatch) {
+          rating = parseFloat(ratingMatch[1]);
+        }
+      } else {
+        rating = parseFloat(startup.rating);
+      }
+      
+      // Преобразуем рейтинг из 5-балльной шкалы в проценты
+      rating = (rating / 5) * 100;
+    }
+    
+    // Ограничиваем значения от 0 до 100
+    rating = Math.max(0, Math.min(100, rating));
+    
+    // Обновляем прогресс-бар с анимацией
+    setTimeout(() => {
+      progressBar.style.width = rating + '%';
+      progressPercentage.textContent = Math.round(rating) + '%';
+    }, 100 + (index * 50)); // Небольшая задержка для каждой планеты
   }
 
   // ПОЛУЧЕНИЕ РЕЗЕРВНОГО ИЗОБРАЖЕНИЯ
