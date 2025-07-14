@@ -601,6 +601,7 @@
   function startUltraNewPlanetaryAnimation() {
     function animate() {
       updateUltraNewPlanetaryPlanetsPosition();
+      updateUltraNewPlanetaryProgressBars();
       ultraNewPlanetaryAnimationId = requestAnimationFrame(animate);
     }
     animate();
@@ -786,6 +787,23 @@
       if (prevBtn) prevBtn.style.display = hasOverflow ? 'flex' : 'none';
       if (nextBtn) nextBtn.style.display = hasOverflow ? 'flex' : 'none';
     }
+  }
+
+  function updateUltraNewPlanetaryProgressBars() {
+    // Для каждой планеты ищем соответствующий прогресс-бар и позиционируем его под планетой
+    document.querySelectorAll('.ultra_new_planetary_planet').forEach((planet, idx) => {
+      const planetId = planet.getAttribute('data-id');
+      const progressBar = document.querySelector(`.ultra_new_planetary_progress_container[data-planet-id="${planetId}"]`);
+      if (!progressBar) return;
+      // Получаем координаты планеты относительно документа
+      const planetRect = planet.getBoundingClientRect();
+      const parentRect = document.getElementById('ultra_new_planetary_solar_system').getBoundingClientRect();
+      // Считаем top/left для прогресс-бара
+      const left = planetRect.left + planetRect.width / 2 - parentRect.left;
+      const top = planetRect.bottom - parentRect.top + 8; // 8px вниз от планеты
+      progressBar.style.left = `${left}px`;
+      progressBar.style.top = `${top}px`;
+    });
   }
 
 })();
