@@ -2204,9 +2204,12 @@ def investor_main(request):
     """
     # Мапинг направлений для перевода на русский язык (полный список)
     DIRECTION_TRANSLATIONS = {
-        'Beauty': 'Красота', 'Technology': 'Технологии', 'Healthcare': 'Здравоохранение', 'Finance': 'Финансы', 'Cafe': 'Кафе', 'Delivery': 'Доставка',
-        'Fastfood': 'Быстрое питание', 'Sport': 'Спорт', 'AI': 'Искусственный интеллект', 'Education': 'Образование', 'Entertainment': 'Развлечения',
-        'Fashion': 'Мода', 'Food': 'Еда', 'Gaming': 'Игры', 'Real Estate': 'Недвижимость', 'Transport': 'Транспорт', 'Travel': 'Путешествия',
+        'Beauty': 'Красота', 'Technology': 'Технологии', 'Healthcare': 'Здравоохранение', 'Health': 'Здоровье', 'Medicine': 'Медицина',
+        'Finance': 'Финансы', 'Cafe': 'Кафе/рестораны', 'Restaurant': 'Кафе/рестораны', 'Delivery': 'Доставка',
+        'Fastfood': 'Фастфуд', 'Sport': 'Спорт', 'Automotive': 'Автомобили', 'Transport': 'Транспорт', 'Psychology': 'Психология',
+        'AI': 'ИИ',
+        'Education': 'Образование', 'Entertainment': 'Развлечения',
+        'Fashion': 'Мода', 'Food': 'Еда', 'Gaming': 'Игры', 'Real Estate': 'Недвижимость', 'Travel': 'Путешествия',
         'Agriculture': 'Сельское хозяйство', 'Energy': 'Энергетика', 'Environment': 'Экология', 'Social': 'Социальные проекты', 'Media': 'Медиа',
         'E-commerce': 'Электронная коммерция', 'Biotech': 'Биотехнологии', 'Medicine': 'Медицина', 'Automotive': 'Автомобили', 'Construction': 'Строительство',
         'Logistics': 'Логистика', 'Manufacturing': 'Производство', 'Retail': 'Розничная торговля', 'Security': 'Безопасность', 'Insurance': 'Страхование',
