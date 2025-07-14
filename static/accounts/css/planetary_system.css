@@ -211,7 +211,7 @@
 
 /* КОНТЕЙНЕРЫ ПЛАНЕТ - ТОЧНО КАК В V8.HTML */
 .ultra_new_planetary_planet_orientation {
-  position: absolute;
+  position: relative;
   /* БЕЗ КАКОГО-ЛИБО ЦЕНТРИРОВАНИЯ В CSS - ВСЁ В JS КАК В V8.HTML */
   transform-style: preserve-3d;
   will-change: left, top;
@@ -222,19 +222,18 @@
 
 /* === ПРОГРЕСС-БАРЫ ПОД ПЛАНЕТАМИ (АДАПТИРОВАННЫЕ ИЗ STARTUPS_LIST.CSS) === */
 .ultra_new_planetary_progress_container {
-  position: absolute;
-  top: calc(var(--planet-size) + 15px); /* 15px отступ от планеты */
-  left: 50%;
-  transform: translateX(-50%);
-  width: var(--planet-size); /* Ширина равна ширине планеты */
+  /* убираем absolute/top/left/transform */
+  width: var(--planet-size);
   display: flex;
   align-items: center;
   gap: 5px;
   z-index: 7;
-  /* Обеспечиваем видимость */
   visibility: visible !important;
   opacity: 1 !important;
   pointer-events: auto;
+  margin: calc(var(--planet-size) + 10px) auto 0 auto;
+  position: static;
+  justify-content: center;
 }
 
 .ultra_new_planetary_progress_bar_visual {
