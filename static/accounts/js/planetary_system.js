@@ -461,18 +461,27 @@
 
   // НАСТРОЙКА ПРОГРЕСС-БАРА ПОД ПЛАНЕТОЙ
   function setupUltraNewPlanetaryProgressBar(planet, startup, index) {
-    // Находим орбиту планеты (родительский элемент)
-    const orbitContainer = planet.closest('.ultra_new_planetary_orbit');
-    if (!orbitContainer) return;
+    // Получаем ID планеты
+    const planetId = planet.getAttribute('data-id');
+    if (!planetId) {
+      console.warn('Planet ID not found for progress bar setup');
+      return;
+    }
     
-    // Находим прогресс-бар под планетой в орбите
-    const progressContainer = orbitContainer.querySelector('.ultra_new_planetary_progress_container');
-    if (!progressContainer) return;
+    // Находим прогресс-бар по data-planet-id
+    const progressContainer = document.querySelector(`.ultra_new_planetary_progress_container[data-planet-id="${planetId}"]`);
+    if (!progressContainer) {
+      console.warn(`Progress container not found for planet ID: ${planetId}`);
+      return;
+    }
     
     const progressBar = progressContainer.querySelector('.ultra_new_planetary_progress_animation_container');
     const progressPercentage = progressContainer.querySelector('.ultra_new_planetary_progress_percentage');
     
-    if (!progressBar || !progressPercentage) return;
+    if (!progressBar || !progressPercentage) {
+      console.warn(`Progress bar elements not found for planet ID: ${planetId}`);
+      return;
+    }
     
     // Получаем рейтинг стартапа (преобразуем в число от 0 до 100)
     let rating = 0;
@@ -494,10 +503,13 @@
     // Ограничиваем значения от 0 до 100
     rating = Math.max(0, Math.min(100, rating));
     
+    console.log(`Setting progress bar for planet ${planetId}: ${rating}%`);
+    
     // Обновляем прогресс-бар с анимацией
     setTimeout(() => {
       progressBar.style.width = rating + '%';
       progressPercentage.textContent = Math.round(rating) + '%';
+      console.log(`Progress bar updated for planet ${planetId}: ${rating}%`);
     }, 100 + (index * 50)); // Небольшая задержка для каждой планеты
   }
 
