@@ -2203,20 +2203,19 @@ def investor_main(request):
     Отображает главную страницу инвестора с планетарной системой стартапов.
     """
     DIRECTION_TRANSLATIONS = {
-        'Beauty': 'Красота', 'Technology': 'Технологии', 'Healthcare': 'Здравоохранение', 'Health': 'Здоровье', 'Medicine': 'Медицина',
+        'Beauty': 'Красота', 'Technology': 'Технологии', 'Healthcare': 'Здравоохранение', 'Health': 'Здоровье',
         'Finance': 'Финансы', 'Cafe': 'Кафе/рестораны', 'Restaurant': 'Кафе/рестораны', 'Delivery': 'Доставка',
-        'Fastfood': 'Фастфуд', 'Sport': 'Спорт', 'Automotive': 'Автомобили', 'Transport': 'Транспорт', 'Psychology': 'Психология',
+        'Fastfood': 'Фастфуд', 'Sport': 'Спорт', 'Transport': 'Транспорт', 'Psychology': 'Психология',
         'AI': 'ИИ',
         'Education': 'Образование', 'Entertainment': 'Развлечения',
         'Fashion': 'Мода', 'Food': 'Еда', 'Gaming': 'Игры', 'Real Estate': 'Недвижимость', 'Travel': 'Путешествия',
         'Agriculture': 'Сельское хозяйство', 'Energy': 'Энергетика', 'Environment': 'Экология', 'Social': 'Социальные проекты', 'Media': 'Медиа',
-        'E-commerce': 'Электронная коммерция', 'Biotech': 'Биотехнологии', 'Medicine': 'Медицина', 'Automotive': 'Автомобили', 'Construction': 'Строительство',
+        'E-commerce': 'Электронная коммерция', 'Biotech': 'Биотехнологии', 'Construction': 'Строительство',
         'Logistics': 'Логистика', 'Manufacturing': 'Производство', 'Retail': 'Розничная торговля', 'Security': 'Безопасность', 'Insurance': 'Страхование',
         'Legal': 'Юридические услуги', 'Consulting': 'Консалтинг', 'Marketing': 'Маркетинг', 'IT': 'ИТ', 'Software': 'Программное обеспечение',
         'Hardware': 'Аппаратное обеспечение', 'Mobile': 'Мобильные приложения', 'Web': 'Веб-разработка', 'Blockchain': 'Блокчейн',
         'Cryptocurrency': 'Криптовалюты', 'VR': 'Виртуальная реальность', 'AR': 'Дополненная реальность', 'IoT': 'Интернет вещей',
         'Robotics': 'Робототехника', 'Space': 'Космические технологии', 'Science': 'Наука', 'Research': 'Исследования', 'Other': 'Другое',
-        'Auto': 'Автомобили', 'auto': 'Автомобили',
     }
     # Получаем все направления (все категории)
     directions = Directions.objects.all().order_by("direction_name")

@@ -605,75 +605,81 @@
     stopUltraNewPlanetaryAnimation();
   });
 
-  // РЕНДЕР СТРАНИЦЫ КАТЕГОРИЙ
-  function renderUltraNewPlanetaryCategoriesPage(pageIndex) {
+  // --- ГОРИЗОНТАЛЬНЫЙ СКРОЛЛ КАТЕГОРИЙ ---
+  function setupUltraNewPlanetaryCategoryScroll() {
+    const container = document.querySelector('.ultra_new_planetary_categories_container');
+    const prevBtn = document.getElementById('ultra_new_planetary_category_prev');
+    const nextBtn = document.getElementById('ultra_new_planetary_category_next');
+    if (!container) return;
+
+    // Показываем стрелки только если есть переполнение
+    function updateArrows() {
+      if (prevBtn) prevBtn.style.display = container.scrollLeft > 0 ? 'flex' : 'none';
+      if (nextBtn) nextBtn.style.display = (container.scrollLeft + container.clientWidth < container.scrollWidth - 1) ? 'flex' : 'none';
+    }
+    updateArrows();
+    container.addEventListener('scroll', updateArrows);
+
+    // Кнопки скроллят контейнер
+    if (prevBtn) {
+      prevBtn.onclick = function() {
+        container.scrollBy({ left: -container.clientWidth * 0.7, behavior: 'smooth' });
+      };
+    }
+    if (nextBtn) {
+      nextBtn.onclick = function() {
+        container.scrollBy({ left: container.clientWidth * 0.7, behavior: 'smooth' });
+      };
+    }
+
+    // Автоматический скролл при наведении к краю (опционально)
+    // Можно добавить по желанию
+  }
+
+  // Вызов после рендера категорий
+  document.addEventListener('DOMContentLoaded', function() {
+    setupUltraNewPlanetaryCategoryScroll();
+  });
+
+  // --- КОНЕЦ ГОРИЗОНТАЛЬНОГО СКРОЛЛА ---
+
+  // Оставляем только рендер всех категорий без пагинации
+  function renderUltraNewPlanetaryCategoriesPage() {
     const container = document.querySelector('.ultra_new_planetary_categories_container');
     if (!container) {
       console.warn('Container not found');
       return;
     }
-
-    // Получаем массив всех категорий (только из directionsData, без "Все")
     const mainCategories = ultraNewPlanetaryDirectionsData.map(d => d.direction_name);
-    const categoriesPerPage = 10; // 1 ("Все") + 9 категорий
-    const pageSize = categoriesPerPage - 1; // 9 (кроме "Все")
-    
-    // Считаем сколько "страниц" всего
-    const totalPages = Math.ceil(mainCategories.length / pageSize);
-    
-    // Ограничиваем индекс страницы
-    if (pageIndex < 0) pageIndex = 0;
-    if (pageIndex >= totalPages) pageIndex = totalPages - 1;
-
-    console.log('Rendering page:', pageIndex);
-    console.log('Total pages:', totalPages);
-
-    // Формируем массив для текущей страницы
-    const start = pageIndex * pageSize;
-    const end = start + pageSize;
-    const pageCategories = mainCategories.slice(start, end);
-    
-    // Добавляем "Все" в начало
-    const visibleCategories = ['Все', ...pageCategories];
-
-    console.log('Visible categories:', visibleCategories);
-
-    // Очищаем контейнер и рендерим только нужные категории
+    const visibleCategories = ['Все', ...mainCategories];
     container.innerHTML = '';
     visibleCategories.forEach(catName => {
-      // Находим объект категории по имени
       const dirObj = ultraNewPlanetaryDirectionsData.find(d => d.direction_name === catName || d.original_name === catName) || {direction_name: catName, original_name: catName};
-      // const isAll = catName === 'Все';
-      // Делаем эллипс для всех категорий
       const item = document.createElement('div');
       item.className = 'ultra_new_planetary_category_item category-all';
       item.setAttribute('data-name', dirObj.original_name || dirObj.direction_name);
       if (catName === ultraNewPlanetarySelectedGalaxy) {
         item.classList.add('selected');
       }
-      // Внутренний фон
       const bg = document.createElement('div');
       bg.className = 'ultra_new_planetary_category_bg';
       item.appendChild(bg);
-      // Иконка
       const icon = document.createElement('img');
       icon.className = 'ultra_new_planetary_category_icon';
       icon.src = '/static/accounts/images/planetary_system/category_img.png';
       icon.alt = dirObj.direction_name;
       item.appendChild(icon);
-      // Клик
       item.addEventListener('click', function() {
         selectUltraNewPlanetaryGalaxy(dirObj.direction_name);
       });
       container.appendChild(item);
     });
-
-    // Обновляем состояние стрелок
-    const prevBtn = document.getElementById('ultra_new_planetary_category_prev');
-    const nextBtn = document.getElementById('ultra_new_planetary_category_next');
-    if (prevBtn) prevBtn.style.display = pageIndex > 0 ? 'flex' : 'none';
-    if (nextBtn) nextBtn.style.display = pageIndex < totalPages - 1 ? 'flex' : 'none';
   }
+
+  // Вызов рендера при инициализации
+  document.addEventListener('DOMContentLoaded', function() {
+    renderUltraNewPlanetaryCategoriesPage();
+  });
 
   // СМЕНА КАТЕГОРИИ НАВИГАЦИОННЫМИ КНОПКАМИ
   function changeUltraNewPlanetaryCategory(direction) {
