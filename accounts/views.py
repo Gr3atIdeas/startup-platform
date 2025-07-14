@@ -97,6 +97,41 @@ from .utils import send_telegram_support_message
 
 logger = logging.getLogger(__name__)
 
+# Глобальный словарь переводов направлений
+DIRECTION_TRANSLATIONS = {
+    'Beauty': 'Красота', 'Technology': 'Технологии', 'Healthcare': 'Здравоохранение', 'Health': 'Здоровье',
+    'Finance': 'Финансы', 'Cafe': 'Кафе/рестораны', 'Restaurant': 'Кафе/рестораны', 'Delivery': 'Доставка',
+    'Fastfood': 'Фастфуд', 'Sport': 'Спорт', 'Transport': 'Транспорт', 'Psychology': 'Психология',
+    'AI': 'ИИ', 'Auto': 'Авто',
+    'Education': 'Образование', 'Entertainment': 'Развлечения',
+    'Fashion': 'Мода', 'Food': 'Еда', 'Gaming': 'Игры', 'Real Estate': 'Недвижимость', 'Travel': 'Путешествия',
+    'Agriculture': 'Сельское хозяйство', 'Energy': 'Энергетика', 'Environment': 'Экология', 'Social': 'Социальные проекты', 'Media': 'Медиа',
+    'E-commerce': 'Электронная коммерция', 'Biotech': 'Биотехнологии', 'Construction': 'Строительство',
+    'Logistics': 'Логистика', 'Manufacturing': 'Производство', 'Retail': 'Розничная торговля', 'Security': 'Безопасность', 'Insurance': 'Страхование',
+    'Legal': 'Юридические услуги', 'Consulting': 'Консалтинг', 'Marketing': 'Маркетинг', 'IT': 'ИТ', 'Software': 'Программное обеспечение',
+    'Hardware': 'Аппаратное обеспечение', 'Mobile': 'Мобильные приложения', 'Web': 'Веб-разработка', 'Blockchain': 'Блокчейн',
+    'Cryptocurrency': 'Криптовалюты', 'VR': 'Виртуальная реальность', 'AR': 'Дополненная реальность', 'IoT': 'Интернет вещей',
+    'Robotics': 'Робототехника', 'Space': 'Космические технологии', 'Science': 'Наука', 'Research': 'Исследования', 'Other': 'Другое',
+}
+
+# Фиксированный список из 14 категорий (игнорируем базу данных)
+FIXED_CATEGORIES = [
+    {'original_name': 'Technology', 'direction_name': 'Технологии'},
+    {'original_name': 'Healthcare', 'direction_name': 'Здравоохранение'},
+    {'original_name': 'Finance', 'direction_name': 'Финансы'},
+    {'original_name': 'Education', 'direction_name': 'Образование'},
+    {'original_name': 'Entertainment', 'direction_name': 'Развлечения'},
+    {'original_name': 'Fashion', 'direction_name': 'Мода'},
+    {'original_name': 'Food', 'direction_name': 'Еда'},
+    {'original_name': 'Gaming', 'direction_name': 'Игры'},
+    {'original_name': 'Real Estate', 'direction_name': 'Недвижимость'},
+    {'original_name': 'Travel', 'direction_name': 'Путешествия'},
+    {'original_name': 'Agriculture', 'direction_name': 'Сельское хозяйство'},
+    {'original_name': 'Energy', 'direction_name': 'Энергетика'},
+    {'original_name': 'Environment', 'direction_name': 'Экология'},
+    {'original_name': 'Social', 'direction_name': 'Социальные проекты'},
+]
+
 
 # Главная страница
 def home(request):
@@ -2202,23 +2237,8 @@ def investor_main(request):
     """
     Отображает главную страницу инвестора с планетарной системой стартапов.
     """
-    DIRECTION_TRANSLATIONS = {
-        'Beauty': 'Красота', 'Technology': 'Технологии', 'Healthcare': 'Здравоохранение', 'Health': 'Здоровье',
-        'Finance': 'Финансы', 'Cafe': 'Кафе/рестораны', 'Restaurant': 'Кафе/рестораны', 'Delivery': 'Доставка',
-        'Fastfood': 'Фастфуд', 'Sport': 'Спорт', 'Transport': 'Транспорт', 'Psychology': 'Психология',
-        'AI': 'ИИ',
-        'Education': 'Образование', 'Entertainment': 'Развлечения',
-        'Fashion': 'Мода', 'Food': 'Еда', 'Gaming': 'Игры', 'Real Estate': 'Недвижимость', 'Travel': 'Путешествия',
-        'Agriculture': 'Сельское хозяйство', 'Energy': 'Энергетика', 'Environment': 'Экология', 'Social': 'Социальные проекты', 'Media': 'Медиа',
-        'E-commerce': 'Электронная коммерция', 'Biotech': 'Биотехнологии', 'Construction': 'Строительство',
-        'Logistics': 'Логистика', 'Manufacturing': 'Производство', 'Retail': 'Розничная торговля', 'Security': 'Безопасность', 'Insurance': 'Страхование',
-        'Legal': 'Юридические услуги', 'Consulting': 'Консалтинг', 'Marketing': 'Маркетинг', 'IT': 'ИТ', 'Software': 'Программное обеспечение',
-        'Hardware': 'Аппаратное обеспечение', 'Mobile': 'Мобильные приложения', 'Web': 'Веб-разработка', 'Blockchain': 'Блокчейн',
-        'Cryptocurrency': 'Криптовалюты', 'VR': 'Виртуальная реальность', 'AR': 'Дополненная реальность', 'IoT': 'Интернет вещей',
-        'Robotics': 'Робототехника', 'Space': 'Космические технологии', 'Science': 'Наука', 'Research': 'Исследования', 'Other': 'Другое',
-    }
-    # Получаем все направления (все категории)
-    directions = Directions.objects.all().order_by("direction_name")
+    # Используем фиксированный список категорий вместо базы данных
+    directions_data_json = FIXED_CATEGORIES.copy()
     selected_direction_name = request.GET.get("direction", "All")
 
     startups_query = Startups.objects.filter(status="approved").annotate(
@@ -2304,18 +2324,7 @@ def investor_main(request):
 
     logo_data = {"image": static("accounts/images/planetary_system/gi.svg")}
     
-    # Формируем данные для направлений с переводом на русский (только уникальные по direction_name)
-    directions_data_json = []
-    seen_russian_names = set()
-    for direction in directions:
-        original_name = direction.direction_name
-        russian_name = DIRECTION_TRANSLATIONS.get(original_name, original_name)
-        if russian_name not in seen_russian_names:
-            directions_data_json.append({
-                "direction_name": russian_name,
-                "original_name": original_name
-            })
-            seen_russian_names.add(russian_name)
+    # Используем фиксированный список категорий (уже сформирован выше)
     
     # Получаем ВСЕ стартапы для фильтрации в JavaScript
     all_startups_query = Startups.objects.filter(status="approved").annotate(
@@ -3188,9 +3197,8 @@ def planetary_system(request):
     """
     Планетарная система - отображает стартапы как планеты на орбитах
     """
-    # Используем глобальный словарь переводов направлений
-    # Получаем все направления (все категории)
-    directions = Directions.objects.all().order_by("direction_name")
+    # Используем фиксированный список категорий вместо базы данных
+    directions_data = FIXED_CATEGORIES.copy()
     selected_direction_name = request.GET.get("direction", "All")
     
     # Логирование для отладки
@@ -3307,16 +3315,7 @@ def planetary_system(request):
             "investment_type": "Выкуп+инвестирование" if startup.both_mode else ("Только выкуп" if startup.only_buy else "Только инвестирование")
         })
     
-    # Формируем данные для направлений с переводом на русский
-    directions_data = []
-    
-    for direction in directions:
-        original_name = direction.direction_name
-        russian_name = DIRECTION_TRANSLATIONS.get(original_name, original_name)
-        directions_data.append({
-            "direction_name": russian_name,
-            "original_name": original_name
-        })
+    # Используем фиксированный список категорий (уже сформирован выше)
     
     # Данные для логотипа
     logo_data = {
@@ -3337,7 +3336,7 @@ def planetary_system(request):
         "directions_data_json": json.dumps(directions_data, ensure_ascii=False),
         "all_startups_data_json": json.dumps(all_startups_data, ensure_ascii=False),
         "logo_data": logo_data,
-        "directions": directions_data,
+        "directions": directions_data,  # Унифицируем с investor_main
         "selected_galaxy": selected_direction_name,
     }
     

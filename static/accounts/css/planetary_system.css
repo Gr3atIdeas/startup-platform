@@ -1015,27 +1015,10 @@
   }
 }
 
-/* Навигационные стрелки: подменяем фон на svg */
-.ultra_new_planetary_nav_left_icon {
-  width: 14px;
-  height: 14px;
-  background: url('../images/planetary_system/chevron_left.svg') center/contain no-repeat;
-  clip-path: none;
-}
-
-.ultra_new_planetary_nav_right_icon {
-  width: 14px;
-  height: 14px;
-  background: url('../images/planetary_system/chevron_right.svg') center/contain no-repeat;
-  clip-path: none;
-}
-
 /* Повышаем приоритет "Все", чтобы планеты не перекрывали */
 .ultra_new_planetary_category_item.category-all {
   z-index: 200;
 }
-
-/* Убираем старый absolute-override для "Все" */
 
 /* Моб. брейк-пойнт: фиксируем позицию "Все" немного ближе к стрелке */
 @media (max-width: 768px) {
