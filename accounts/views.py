@@ -2311,10 +2311,10 @@ def investor_main(request):
         original_name = direction.direction_name
         russian_name = DIRECTION_TRANSLATIONS.get(original_name, original_name)
         if russian_name not in seen_russian_names:
-            directions_data_json.append({
-                "direction_name": russian_name,
-                "original_name": original_name
-            })
+        directions_data_json.append({
+            "direction_name": russian_name,
+            "original_name": original_name
+        })
             seen_russian_names.add(russian_name)
     
     # Получаем ВСЕ стартапы для фильтрации в JavaScript

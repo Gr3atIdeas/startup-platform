@@ -46,7 +46,7 @@
   let ultraNewPlanetaryCategoriesVisible = 0; // Индекс первой видимой категории
   let ultraNewPlanetaryCategoriesTotal = 0; // Общее количество категорий
   const ultraNewPlanetaryCategoriesPerPage = 7; // Показываем 7 категорий за раз
-  
+
   // ИНИЦИАЛИЗАЦИЯ ПРИ ЗАГРУЗКЕ DOM
   document.addEventListener('DOMContentLoaded', function() {
     initializeUltraNewPlanetarySystem();
@@ -339,14 +339,14 @@
     // Плавно скроллим контейнер так, чтобы выбранная категория оказалась по центру под текстовой капсулой
     const container = document.querySelector('.ultra_new_planetary_categories_container');
     if (container && selectedElement) {
-      const containerRect = container.getBoundingClientRect();
-      const itemRect = selectedElement.getBoundingClientRect();
-      const delta = (itemRect.left + itemRect.width / 2) - (containerRect.left + containerRect.width / 2);
-      let targetScroll = container.scrollLeft + delta;
-      // Ограничиваем диапазон
-      const maxScroll = container.scrollWidth - container.clientWidth;
-      targetScroll = Math.max(0, Math.min(maxScroll, targetScroll));
-      container.scrollTo({ left: targetScroll, behavior: 'smooth' });
+        const containerRect = container.getBoundingClientRect();
+        const itemRect = selectedElement.getBoundingClientRect();
+        const delta = (itemRect.left + itemRect.width / 2) - (containerRect.left + containerRect.width / 2);
+        let targetScroll = container.scrollLeft + delta;
+        // Ограничиваем диапазон
+        const maxScroll = container.scrollWidth - container.clientWidth;
+        targetScroll = Math.max(0, Math.min(maxScroll, targetScroll));
+        container.scrollTo({ left: targetScroll, behavior: 'smooth' });
     }
 
     // Обновляем лейбл выбранной категории под селектором
