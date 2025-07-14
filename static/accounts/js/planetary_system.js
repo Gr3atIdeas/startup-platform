@@ -89,15 +89,27 @@
       console.log('Categories per page:', ultraNewPlanetaryCategoriesPerPage);
       console.log('Initial visible:', ultraNewPlanetaryCategoriesVisible);
       
-      // Показываем стрелки, если категорий больше, чем помещается на одной странице
-      if (ultraNewPlanetaryCategoriesTotal > ultraNewPlanetaryCategoriesPerPage) {
+      // Показываем стрелки, если категорий больше, чем помещается на одной странице (без учёта "Все")
+      const pageSize = ultraNewPlanetaryCategoriesPerPage - 1; // 6 категорий + "Все"
+      const totalPages = Math.ceil(ultraNewPlanetaryCategoriesTotal / pageSize);
+      
+      if (totalPages > 1) {
         console.log('Showing arrows - more categories than fit on one page');
+        console.log('Total pages:', totalPages);
         ultraNewPlanetaryShowArrows();
         ultraNewPlanetaryUpdateArrowStates();
       } else {
         console.log('Hiding arrows - all categories fit on one page');
         ultraNewPlanetaryHideArrows();
       }
+      
+      // Инициализируем первую страницу категорий
+      if (typeof window.ultraNewPlanetaryCurrentCategoryPage === 'undefined') {
+        window.ultraNewPlanetaryCurrentCategoryPage = 0;
+      }
+      
+      // Рендерим первую страницу категорий
+      renderUltraNewPlanetaryCategoriesPage(0);
 
     }
   }
@@ -593,36 +605,38 @@
     stopUltraNewPlanetaryAnimation();
   });
 
-  // СМЕНА КАТЕГОРИИ НАВИГАЦИОННЫМИ КНОПКАМИ
-  function changeUltraNewPlanetaryCategory(direction) {
+  // РЕНДЕР СТРАНИЦЫ КАТЕГОРИЙ
+  function renderUltraNewPlanetaryCategoriesPage(pageIndex) {
     const container = document.querySelector('.ultra_new_planetary_categories_container');
     if (!container) {
       console.warn('Container not found');
       return;
     }
 
-    // Получаем массив всех категорий ("Все" + остальные)
-    const allCategories = ultraNewPlanetaryDirectionsData.map(d => d.direction_name);
-    // Гарантируем, что "Все" всегда первая
-    if (allCategories[0] !== 'Все') {
-      allCategories.unshift('Все');
-    }
+    // Получаем массив всех категорий (только из directionsData, без "Все")
+    const mainCategories = ultraNewPlanetaryDirectionsData.map(d => d.direction_name);
     const categoriesPerPage = ultraNewPlanetaryCategoriesPerPage; // 7
     const pageSize = categoriesPerPage - 1; // 6 (кроме "Все")
+    
     // Считаем сколько "страниц" всего
-    const totalPages = Math.ceil((allCategories.length - 1) / pageSize);
-    // Индекс текущей страницы
-    if (typeof window.ultraNewPlanetaryCurrentCategoryPage === 'undefined') {
-      window.ultraNewPlanetaryCurrentCategoryPage = 0;
-    }
-    window.ultraNewPlanetaryCurrentCategoryPage += direction;
-    if (window.ultraNewPlanetaryCurrentCategoryPage < 0) window.ultraNewPlanetaryCurrentCategoryPage = 0;
-    if (window.ultraNewPlanetaryCurrentCategoryPage > totalPages - 1) window.ultraNewPlanetaryCurrentCategoryPage = totalPages - 1;
+    const totalPages = Math.ceil(mainCategories.length / pageSize);
+    
+    // Ограничиваем индекс страницы
+    if (pageIndex < 0) pageIndex = 0;
+    if (pageIndex >= totalPages) pageIndex = totalPages - 1;
+
+    console.log('Rendering page:', pageIndex);
+    console.log('Total pages:', totalPages);
 
     // Формируем массив для текущей страницы
-    const start = 1 + window.ultraNewPlanetaryCurrentCategoryPage * pageSize;
+    const start = pageIndex * pageSize;
     const end = start + pageSize;
-    const visibleCategories = [allCategories[0], ...allCategories.slice(start, end)];
+    const pageCategories = mainCategories.slice(start, end);
+    
+    // Добавляем "Все" в начало
+    const visibleCategories = ['Все', ...pageCategories];
+
+    console.log('Visible categories:', visibleCategories);
 
     // Очищаем контейнер и рендерим только нужные категории
     container.innerHTML = '';
@@ -656,8 +670,22 @@
     // Обновляем состояние стрелок
     const prevBtn = document.getElementById('ultra_new_planetary_category_prev');
     const nextBtn = document.getElementById('ultra_new_planetary_category_next');
-    if (prevBtn) prevBtn.style.display = window.ultraNewPlanetaryCurrentCategoryPage > 0 ? 'flex' : 'none';
-    if (nextBtn) nextBtn.style.display = window.ultraNewPlanetaryCurrentCategoryPage < totalPages - 1 ? 'flex' : 'none';
+    if (prevBtn) prevBtn.style.display = pageIndex > 0 ? 'flex' : 'none';
+    if (nextBtn) nextBtn.style.display = pageIndex < totalPages - 1 ? 'flex' : 'none';
+  }
+
+  // СМЕНА КАТЕГОРИИ НАВИГАЦИОННЫМИ КНОПКАМИ
+  function changeUltraNewPlanetaryCategory(direction) {
+    // Индекс текущей страницы
+    if (typeof window.ultraNewPlanetaryCurrentCategoryPage === 'undefined') {
+      window.ultraNewPlanetaryCurrentCategoryPage = 0;
+    }
+    
+    // Меняем страницу
+    window.ultraNewPlanetaryCurrentCategoryPage += direction;
+    
+    // Рендерим новую страницу
+    renderUltraNewPlanetaryCategoriesPage(window.ultraNewPlanetaryCurrentCategoryPage);
   }
 
   // Функция отображения категорий больше не нужна (скролл нативный)
@@ -768,12 +796,15 @@
     const prevBtn = document.getElementById('ultra_new_planetary_category_prev');
     const nextBtn = document.getElementById('ultra_new_planetary_category_next');
     
+    const pageSize = ultraNewPlanetaryCategoriesPerPage - 1; // 6 категорий + "Все"
+    const totalPages = Math.ceil(ultraNewPlanetaryCategoriesTotal / pageSize);
+    const currentPage = window.ultraNewPlanetaryCurrentCategoryPage || 0;
+    
     if (prevBtn) {
-      prevBtn.style.display = ultraNewPlanetaryCategoriesVisible > 0 ? 'flex' : 'none';
+      prevBtn.style.display = currentPage > 0 ? 'flex' : 'none';
     }
     if (nextBtn) {
-      const maxVisible = Math.max(0, ultraNewPlanetaryCategoriesTotal - ultraNewPlanetaryCategoriesPerPage);
-      nextBtn.style.display = ultraNewPlanetaryCategoriesVisible < maxVisible ? 'flex' : 'none';
+      nextBtn.style.display = currentPage < totalPages - 1 ? 'flex' : 'none';
     }
   }
 
