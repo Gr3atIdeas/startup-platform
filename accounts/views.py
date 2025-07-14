@@ -2304,16 +2304,18 @@ def investor_main(request):
 
     logo_data = {"image": static("accounts/images/planetary_system/gi.svg")}
     
-    # Формируем данные для направлений с переводом на русский
+    # Формируем данные для направлений с переводом на русский (только уникальные по direction_name)
     directions_data_json = []
-    
+    seen_russian_names = set()
     for direction in directions:
         original_name = direction.direction_name
         russian_name = DIRECTION_TRANSLATIONS.get(original_name, original_name)
-        directions_data_json.append({
-            "direction_name": russian_name,
-            "original_name": original_name
-        })
+        if russian_name not in seen_russian_names:
+            directions_data_json.append({
+                "direction_name": russian_name,
+                "original_name": original_name
+            })
+            seen_russian_names.add(russian_name)
     
     # Получаем ВСЕ стартапы для фильтрации в JavaScript
     all_startups_query = Startups.objects.filter(status="approved").annotate(

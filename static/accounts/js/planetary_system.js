@@ -679,6 +679,10 @@
   // Вызов рендера при инициализации
   document.addEventListener('DOMContentLoaded', function() {
     renderUltraNewPlanetaryCategoriesPage();
+    // Убедиться, что у всех категорий есть класс category-all
+    document.querySelectorAll('.ultra_new_planetary_category_item').forEach(el => {
+      el.classList.add('category-all');
+    });
   });
 
   // СМЕНА КАТЕГОРИИ НАВИГАЦИОННЫМИ КНОПКАМИ
