@@ -82,6 +82,8 @@
       ultraNewPlanetaryCategoriesTotal = ultraNewPlanetaryDirectionsData.length;
       ultraNewPlanetaryCategoriesVisible = 0;
       
+      console.log('DIRECTIONS DATA:', ultraNewPlanetaryDirectionsData);
+      console.log('DIRECTIONS COUNT:', ultraNewPlanetaryDirectionsData.length);
       console.log('Initializing categories:');
       console.log('Total categories:', ultraNewPlanetaryCategoriesTotal);
       console.log('Categories per page:', ultraNewPlanetaryCategoriesPerPage);
