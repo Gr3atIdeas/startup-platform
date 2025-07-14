@@ -220,24 +220,24 @@
 .ultra_new_planetary_progress_container {
   position: absolute;
   left: 50%;
-  /* top будет устанавливаться через JS в зависимости от положения планеты */
-  transform: translateX(-50%);
-  width: 70px; /* или calc(var(--planet-size) * 1.1) */
-  height: 24px;
+  top: 100%;
+  transform: translateX(-50%) translateY(8px); /* небольшой отступ вниз */
+  width: calc(var(--planet-size) * 1.2);
   display: flex;
   align-items: center;
+  gap: 5px;
   z-index: 10;
-  pointer-events: none;
+  pointer-events: auto;
 }
 
 .ultra_new_planetary_progress_bar_visual {
-  width: 100%;
-  height: 100%;
-  background: #0b1a3f;
-  border-radius: 8px;
-  border: 2px solid #1d3059;
+  flex-grow: 1;
+  height: 22px;
   position: relative;
+  background-color: #0b1a3f;
+  border-radius: 8px;
   overflow: hidden;
+  border: 2px solid #1d3059;
   padding: 2px;
   box-sizing: border-box;
 }
@@ -266,13 +266,13 @@
   position: absolute;
   top: 50%;
   border-radius: 50%;
-  background-color: rgb(255 255 255 / 70%); /* ПРАВИЛЬНЫЙ БЕЛЫЙ цвет планет из startups_list */
-  box-shadow: 0 0 8px rgb(255 255 255 / 80%); /* ПРАВИЛЬНОЕ БЕЛОЕ свечение из startups_list */
+  background-color: rgb(255 255 255 / 70%);
+  box-shadow: 0 0 8px rgb(255 255 255 / 80%);
   animation: ultra_new_planetary_movePlanets 8s linear infinite;
 }
 
 .ultra_new_planetary_progress_planets::before {
-  width: 10px; /* Увеличиваем размеры для лучшей видимости */
+  width: 10px;
   height: 10px;
   margin-top: -5px;
   left: 10%;
@@ -280,7 +280,7 @@
 }
 
 .ultra_new_planetary_progress_planets::after {
-  width: 7px; /* Увеличиваем размеры для лучшей видимости */
+  width: 7px;
   height: 7px;
   margin-top: -3.5px;
   left: 60%;
@@ -288,17 +288,16 @@
 }
 
 .ultra_new_planetary_progress_animation_container::before {
-  /* Дополнительная точка из startups_list */
   content: '';
   position: absolute;
   top: 50%;
   left: 30%;
-  width: 8px; /* Увеличиваем размеры для лучшей видимости */
+  width: 8px;
   height: 8px;
   margin-top: -4px;
   border-radius: 50%;
-  background-color: rgb(255 255 255 / 60%); /* ПРАВИЛЬНЫЙ БЕЛЫЙ цвет из startups_list */
-  box-shadow: 0 0 6px rgb(255 255 255 / 70%); /* ПРАВИЛЬНОЕ БЕЛОЕ свечение из startups_list */
+  background-color: rgb(255 255 255 / 60%);
+  box-shadow: 0 0 6px rgb(255 255 255 / 70%);
   animation: ultra_new_planetary_movePlanets 10s linear infinite alternate;
   animation-delay: -2s;
 }

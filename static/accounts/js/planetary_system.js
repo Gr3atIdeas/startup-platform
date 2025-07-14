@@ -461,27 +461,32 @@
 
   // НАСТРОЙКА ПРОГРЕСС-БАРА ПОД ПЛАНЕТОЙ
   function setupUltraNewPlanetaryProgressBar(planet, startup, index) {
-    // Получаем контейнер ориентации планеты
-    const orientationContainer = planet.parentElement;
-    if (!orientationContainer) {
-      console.warn('Orientation container not found for progress bar setup');
+    // Получаем ID планеты
+    const planetId = planet.getAttribute('data-id');
+    if (!planetId) {
+      console.warn('Planet ID not found for progress bar setup');
       return;
     }
-    // Находим прогресс-бар внутри orientationContainer
-    const progressContainer = orientationContainer.querySelector('.ultra_new_planetary_progress_container');
+    
+    // Находим прогресс-бар по data-planet-id
+    const progressContainer = document.querySelector(`.ultra_new_planetary_progress_container[data-planet-id="${planetId}"]`);
     if (!progressContainer) {
-      console.warn('Progress container not found inside orientation container');
+      console.warn(`Progress container not found for planet ID: ${planetId}`);
       return;
     }
+    
     const progressBar = progressContainer.querySelector('.ultra_new_planetary_progress_animation_container');
     const progressPercentage = progressContainer.querySelector('.ultra_new_planetary_progress_percentage');
+    
     if (!progressBar || !progressPercentage) {
-      console.warn('Progress bar elements not found inside orientation container');
+      console.warn(`Progress bar elements not found for planet ID: ${planetId}`);
       return;
     }
+    
     // Получаем рейтинг стартапа (преобразуем в число от 0 до 100)
     let rating = 0;
     if (startup && startup.rating) {
+      // Если рейтинг в формате "4.2/5", извлекаем числовое значение
       if (typeof startup.rating === 'string' && startup.rating.includes('/')) {
         const ratingMatch = startup.rating.match(/(\d+\.?\d*)/);
         if (ratingMatch) {
@@ -490,13 +495,22 @@
       } else {
         rating = parseFloat(startup.rating);
       }
+      
+      // Преобразуем рейтинг из 5-балльной шкалы в проценты
       rating = (rating / 5) * 100;
     }
+    
+    // Ограничиваем значения от 0 до 100
     rating = Math.max(0, Math.min(100, rating));
+    
+    console.log(`Setting progress bar for planet ${planetId}: ${rating}%`);
+    
+    // Обновляем прогресс-бар с анимацией
     setTimeout(() => {
       progressBar.style.width = rating + '%';
       progressPercentage.textContent = Math.round(rating) + '%';
-    }, 100 + (index * 50));
+      console.log(`Progress bar updated for planet ${planetId}: ${rating}%`);
+    }, 100 + (index * 50)); // Небольшая задержка для каждой планеты
   }
 
   // ПОЛУЧЕНИЕ РЕЗЕРВНОГО ИЗОБРАЖЕНИЯ
@@ -601,7 +615,6 @@
   function startUltraNewPlanetaryAnimation() {
     function animate() {
       updateUltraNewPlanetaryPlanetsPosition();
-      updateUltraNewPlanetaryProgressBars();
       ultraNewPlanetaryAnimationId = requestAnimationFrame(animate);
     }
     animate();
@@ -787,23 +800,6 @@
       if (prevBtn) prevBtn.style.display = hasOverflow ? 'flex' : 'none';
       if (nextBtn) nextBtn.style.display = hasOverflow ? 'flex' : 'none';
     }
-  }
-
-  function updateUltraNewPlanetaryProgressBars() {
-    // Для каждой планеты ищем соответствующий прогресс-бар и позиционируем его под планетой
-    document.querySelectorAll('.ultra_new_planetary_planet').forEach((planet, idx) => {
-      const planetId = planet.getAttribute('data-id');
-      const progressBar = document.querySelector(`.ultra_new_planetary_progress_container[data-planet-id="${planetId}"]`);
-      if (!progressBar) return;
-      // Получаем координаты планеты относительно документа
-      const planetRect = planet.getBoundingClientRect();
-      const parentRect = document.getElementById('ultra_new_planetary_solar_system').getBoundingClientRect();
-      // Считаем top/left для прогресс-бара
-      const left = planetRect.left + planetRect.width / 2 - parentRect.left;
-      const top = planetRect.bottom - parentRect.top + 8; // 8px вниз от планеты
-      progressBar.style.left = `${left}px`;
-      progressBar.style.top = `${top}px`;
-    });
   }
 
 })();
