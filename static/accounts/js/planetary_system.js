@@ -626,14 +626,25 @@
     container.innerHTML = '';
     visibleCategories.forEach(catName => {
       // Находим объект категории по имени
-      const dirObj = ultraNewPlanetaryDirectionsData.find(d => d.direction_name === catName || d.original_name === catName) || {direction_name: catName};
+      const dirObj = ultraNewPlanetaryDirectionsData.find(d => d.direction_name === catName || d.original_name === catName) || {direction_name: catName, original_name: catName};
+      const isAll = catName === 'Все';
       const item = document.createElement('div');
-      item.className = 'ultra_new_planetary_category_item';
-      item.setAttribute('data-name', dirObj.direction_name);
-      item.textContent = dirObj.direction_name;
+      item.className = 'ultra_new_planetary_category_item' + (isAll ? ' category-all' : '');
+      item.setAttribute('data-name', dirObj.original_name || dirObj.direction_name);
       if (catName === ultraNewPlanetarySelectedGalaxy) {
         item.classList.add('selected');
       }
+      // Внутренний фон
+      const bg = document.createElement('div');
+      bg.className = 'ultra_new_planetary_category_bg';
+      item.appendChild(bg);
+      // Иконка
+      const icon = document.createElement('img');
+      icon.className = 'ultra_new_planetary_category_icon';
+      icon.src = '/static/accounts/images/planetary_system/category_img.png';
+      icon.alt = isAll ? 'Все' : dirObj.direction_name;
+      item.appendChild(icon);
+      // Клик
       item.addEventListener('click', function() {
         selectUltraNewPlanetaryGalaxy(dirObj.direction_name);
       });
