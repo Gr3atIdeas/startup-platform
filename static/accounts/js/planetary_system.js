@@ -43,6 +43,9 @@
   const ultraNewPlanetaryMaxOffset = 500;
 
   // ПЕРЕМЕННЫЕ ДЛЯ КАТЕГОРИЙ
+  let ultraNewPlanetaryCategoriesVisible = 0; // Индекс первой видимой категории
+  let ultraNewPlanetaryCategoriesTotal = 0; // Общее количество категорий
+  const ultraNewPlanetaryCategoriesPerPage = 7; // Показываем 7 категорий за раз
   
   // ИНИЦИАЛИЗАЦИЯ ПРИ ЗАГРУЗКЕ DOM
   document.addEventListener('DOMContentLoaded', function() {
@@ -75,6 +78,17 @@
       ultraNewPlanetaryLogoImage = data.logoImage || '';
       ultraNewPlanetaryAllStartupsData = data.allStartupsData || [];
       
+      // Инициализация переменных для категорий
+      ultraNewPlanetaryCategoriesTotal = ultraNewPlanetaryDirectionsData.length;
+      ultraNewPlanetaryCategoriesVisible = 0;
+      
+      // Показываем стрелки, если категорий больше, чем помещается на одной странице
+      if (ultraNewPlanetaryCategoriesTotal > ultraNewPlanetaryCategoriesPerPage) {
+        ultraNewPlanetaryShowArrows();
+        ultraNewPlanetaryUpdateArrowStates();
+      } else {
+        ultraNewPlanetaryHideArrows();
+      }
 
     }
   }
@@ -574,8 +588,25 @@
   function changeUltraNewPlanetaryCategory(direction) {
     const container = document.querySelector('.ultra_new_planetary_categories_container');
     if (!container) return;
-    const scrollAmount = 160; // px per click
-    container.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
+    
+    // Вычисляем новую позицию
+    const newVisible = ultraNewPlanetaryCategoriesVisible + (direction * ultraNewPlanetaryCategoriesPerPage);
+    
+    // Ограничиваем диапазон
+    const maxVisible = Math.max(0, ultraNewPlanetaryCategoriesTotal - ultraNewPlanetaryCategoriesPerPage);
+    ultraNewPlanetaryCategoriesVisible = Math.max(0, Math.min(maxVisible, newVisible));
+    
+    // Вычисляем скролл для контейнера
+    const categoryWidth = 70; // ширина одной категории
+    const gap = 3; // расстояние между категориями
+    const scrollStep = ultraNewPlanetaryCategoriesPerPage * (categoryWidth + gap);
+    
+    // Скроллим контейнер
+    const targetScroll = ultraNewPlanetaryCategoriesVisible * (categoryWidth + gap);
+    container.scrollTo({ left: targetScroll, behavior: 'smooth' });
+    
+    // Обновляем состояние стрелок
+    ultraNewPlanetaryUpdateArrowStates();
   }
 
   // Функция отображения категорий больше не нужна (скролл нативный)
@@ -665,6 +696,34 @@
     }
 
     updateUltraNewPlanetaryPlanets(startups);
+  }
+
+  // ФУНКЦИИ ДЛЯ УПРАВЛЕНИЯ СТРЕЛКАМИ
+  function ultraNewPlanetaryShowArrows() {
+    const prevBtn = document.getElementById('ultra_new_planetary_category_prev');
+    const nextBtn = document.getElementById('ultra_new_planetary_category_next');
+    if (prevBtn) prevBtn.style.display = 'flex';
+    if (nextBtn) nextBtn.style.display = 'flex';
+  }
+
+  function ultraNewPlanetaryHideArrows() {
+    const prevBtn = document.getElementById('ultra_new_planetary_category_prev');
+    const nextBtn = document.getElementById('ultra_new_planetary_category_next');
+    if (prevBtn) prevBtn.style.display = 'none';
+    if (nextBtn) nextBtn.style.display = 'none';
+  }
+
+  function ultraNewPlanetaryUpdateArrowStates() {
+    const prevBtn = document.getElementById('ultra_new_planetary_category_prev');
+    const nextBtn = document.getElementById('ultra_new_planetary_category_next');
+    
+    if (prevBtn) {
+      prevBtn.style.display = ultraNewPlanetaryCategoriesVisible > 0 ? 'flex' : 'none';
+    }
+    if (nextBtn) {
+      const maxVisible = Math.max(0, ultraNewPlanetaryCategoriesTotal - ultraNewPlanetaryCategoriesPerPage);
+      nextBtn.style.display = ultraNewPlanetaryCategoriesVisible < maxVisible ? 'flex' : 'none';
+    }
   }
 
 })();
