@@ -461,17 +461,17 @@
 
   // НАСТРОЙКА ПРОГРЕСС-БАРА ПОД ПЛАНЕТОЙ
   function setupUltraNewPlanetaryProgressBar(planet, startup, index) {
-    // Получаем ID планеты
-    const planetId = planet.getAttribute('data-id');
-    if (!planetId) {
-      console.warn('Planet ID not found for progress bar setup');
+    // Находим контейнер планеты (родительский элемент)
+    const planetContainer = planet.closest('.ultra_new_planetary_planet_orientation');
+    if (!planetContainer) {
+      console.warn('Planet container not found for planet:', planet);
       return;
     }
     
-    // Находим прогресс-бар по data-planet-id
-    const progressContainer = document.querySelector(`.ultra_new_planetary_progress_container[data-planet-id="${planetId}"]`);
+    // Находим прогресс-бар под планетой
+    const progressContainer = planetContainer.querySelector('.ultra_new_planetary_progress_container');
     if (!progressContainer) {
-      console.warn(`Progress container not found for planet ID: ${planetId}`);
+      console.warn('Progress container not found for planet:', planet);
       return;
     }
     
@@ -479,7 +479,7 @@
     const progressPercentage = progressContainer.querySelector('.ultra_new_planetary_progress_percentage');
     
     if (!progressBar || !progressPercentage) {
-      console.warn(`Progress bar elements not found for planet ID: ${planetId}`);
+      console.warn('Progress bar elements not found for planet:', planet);
       return;
     }
     
@@ -503,13 +503,11 @@
     // Ограничиваем значения от 0 до 100
     rating = Math.max(0, Math.min(100, rating));
     
-    console.log(`Setting progress bar for planet ${planetId}: ${rating}%`);
-    
     // Обновляем прогресс-бар с анимацией
     setTimeout(() => {
       progressBar.style.width = rating + '%';
       progressPercentage.textContent = Math.round(rating) + '%';
-      console.log(`Progress bar updated for planet ${planetId}: ${rating}%`);
+      console.log(`Progress bar updated for planet ${index}: ${rating}%`);
     }, 100 + (index * 50)); // Небольшая задержка для каждой планеты
   }
 
