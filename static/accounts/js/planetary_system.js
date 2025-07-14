@@ -461,12 +461,12 @@
 
   // НАСТРОЙКА ПРОГРЕСС-БАРА ПОД ПЛАНЕТОЙ
   function setupUltraNewPlanetaryProgressBar(planet, startup, index) {
-    // Находим контейнер планеты (родительский элемент)
-    const planetContainer = planet.closest('.ultra_new_planetary_planet_orientation');
-    if (!planetContainer) return;
+    // Находим орбиту планеты (родительский элемент)
+    const orbitContainer = planet.closest('.ultra_new_planetary_orbit');
+    if (!orbitContainer) return;
     
-    // Находим прогресс-бар под планетой
-    const progressContainer = planetContainer.querySelector('.ultra_new_planetary_progress_container');
+    // Находим прогресс-бар под планетой в орбите
+    const progressContainer = orbitContainer.querySelector('.ultra_new_planetary_progress_container');
     if (!progressContainer) return;
     
     const progressBar = progressContainer.querySelector('.ultra_new_planetary_progress_animation_container');

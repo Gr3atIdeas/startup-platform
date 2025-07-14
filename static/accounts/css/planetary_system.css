@@ -221,7 +221,7 @@
 /* === ПРОГРЕСС-БАРЫ ПОД ПЛАНЕТАМИ (АДАПТИРОВАННЫЕ ИЗ STARTUPS_LIST.CSS) === */
 .ultra_new_planetary_progress_container {
   position: absolute;
-  top: calc(var(--planet-size) + 10px); /* 10px отступ от планеты */
+  top: calc(var(--orbit-size) / 2 + var(--planet-size) / 2 + 15px); /* Позиционируем под планетой на орбите */
   left: 50%;
   transform: translateX(-50%);
   width: calc(var(--planet-size) * 1.1); /* Размер не превышает планету более чем на 10% */
