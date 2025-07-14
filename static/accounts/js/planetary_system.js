@@ -43,10 +43,7 @@
   const ultraNewPlanetaryMaxOffset = 500;
 
   // ПЕРЕМЕННЫЕ ДЛЯ КАТЕГОРИЙ
-  let ultraNewPlanetaryCategoriesVisible = 0; // Индекс первой видимой категории
-  let ultraNewPlanetaryCategoriesTotal = 0; // Общее количество категорий
-  const ultraNewPlanetaryCategoriesPerPage = 7; // Показываем 7 категорий
-
+  
   // ИНИЦИАЛИЗАЦИЯ ПРИ ЗАГРУЗКЕ DOM
   document.addEventListener('DOMContentLoaded', function() {
     initializeUltraNewPlanetarySystem();
