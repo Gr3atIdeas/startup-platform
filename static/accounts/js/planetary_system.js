@@ -461,32 +461,27 @@
 
   // НАСТРОЙКА ПРОГРЕСС-БАРА ПОД ПЛАНЕТОЙ
   function setupUltraNewPlanetaryProgressBar(planet, startup, index) {
-    // Получаем ID планеты
-    const planetId = planet.getAttribute('data-id');
-    if (!planetId) {
-      console.warn('Planet ID not found for progress bar setup');
+    // Получаем контейнер ориентации планеты
+    const orientationContainer = planet.parentElement;
+    if (!orientationContainer) {
+      console.warn('Orientation container not found for progress bar setup');
       return;
     }
-    
-    // Находим прогресс-бар по data-planet-id
-    const progressContainer = document.querySelector(`.ultra_new_planetary_progress_container[data-planet-id="${planetId}"]`);
+    // Находим прогресс-бар внутри orientationContainer
+    const progressContainer = orientationContainer.querySelector('.ultra_new_planetary_progress_container');
     if (!progressContainer) {
-      console.warn(`Progress container not found for planet ID: ${planetId}`);
+      console.warn('Progress container not found inside orientation container');
       return;
     }
-    
     const progressBar = progressContainer.querySelector('.ultra_new_planetary_progress_animation_container');
     const progressPercentage = progressContainer.querySelector('.ultra_new_planetary_progress_percentage');
-    
     if (!progressBar || !progressPercentage) {
-      console.warn(`Progress bar elements not found for planet ID: ${planetId}`);
+      console.warn('Progress bar elements not found inside orientation container');
       return;
     }
-    
     // Получаем рейтинг стартапа (преобразуем в число от 0 до 100)
     let rating = 0;
     if (startup && startup.rating) {
-      // Если рейтинг в формате "4.2/5", извлекаем числовое значение
       if (typeof startup.rating === 'string' && startup.rating.includes('/')) {
         const ratingMatch = startup.rating.match(/(\d+\.?\d*)/);
         if (ratingMatch) {
@@ -495,22 +490,13 @@
       } else {
         rating = parseFloat(startup.rating);
       }
-      
-      // Преобразуем рейтинг из 5-балльной шкалы в проценты
       rating = (rating / 5) * 100;
     }
-    
-    // Ограничиваем значения от 0 до 100
     rating = Math.max(0, Math.min(100, rating));
-    
-    console.log(`Setting progress bar for planet ${planetId}: ${rating}%`);
-    
-    // Обновляем прогресс-бар с анимацией
     setTimeout(() => {
       progressBar.style.width = rating + '%';
       progressPercentage.textContent = Math.round(rating) + '%';
-      console.log(`Progress bar updated for planet ${planetId}: ${rating}%`);
-    }, 100 + (index * 50)); // Небольшая задержка для каждой планеты
+    }, 100 + (index * 50));
   }
 
   // ПОЛУЧЕНИЕ РЕЗЕРВНОГО ИЗОБРАЖЕНИЯ
