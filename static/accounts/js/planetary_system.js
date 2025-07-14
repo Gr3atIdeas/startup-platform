@@ -615,8 +615,8 @@
 
     // Получаем массив всех категорий (только из directionsData, без "Все")
     const mainCategories = ultraNewPlanetaryDirectionsData.map(d => d.direction_name);
-    const categoriesPerPage = ultraNewPlanetaryCategoriesPerPage; // 7
-    const pageSize = categoriesPerPage - 1; // 6 (кроме "Все")
+    const categoriesPerPage = 10; // 1 ("Все") + 9 категорий
+    const pageSize = categoriesPerPage - 1; // 9 (кроме "Все")
     
     // Считаем сколько "страниц" всего
     const totalPages = Math.ceil(mainCategories.length / pageSize);
