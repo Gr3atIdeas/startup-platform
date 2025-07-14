@@ -82,11 +82,18 @@
       ultraNewPlanetaryCategoriesTotal = ultraNewPlanetaryDirectionsData.length;
       ultraNewPlanetaryCategoriesVisible = 0;
       
+      console.log('Initializing categories:');
+      console.log('Total categories:', ultraNewPlanetaryCategoriesTotal);
+      console.log('Categories per page:', ultraNewPlanetaryCategoriesPerPage);
+      console.log('Initial visible:', ultraNewPlanetaryCategoriesVisible);
+      
       // Показываем стрелки, если категорий больше, чем помещается на одной странице
       if (ultraNewPlanetaryCategoriesTotal > ultraNewPlanetaryCategoriesPerPage) {
+        console.log('Showing arrows - more categories than fit on one page');
         ultraNewPlanetaryShowArrows();
         ultraNewPlanetaryUpdateArrowStates();
       } else {
+        console.log('Hiding arrows - all categories fit on one page');
         ultraNewPlanetaryHideArrows();
       }
 
@@ -587,7 +594,14 @@
   // СМЕНА КАТЕГОРИИ НАВИГАЦИОННЫМИ КНОПКАМИ
   function changeUltraNewPlanetaryCategory(direction) {
     const container = document.querySelector('.ultra_new_planetary_categories_container');
-    if (!container) return;
+    if (!container) {
+      console.warn('Container not found');
+      return;
+    }
+    
+    console.log('Direction:', direction);
+    console.log('Current visible:', ultraNewPlanetaryCategoriesVisible);
+    console.log('Total categories:', ultraNewPlanetaryCategoriesTotal);
     
     // Вычисляем новую позицию
     const newVisible = ultraNewPlanetaryCategoriesVisible + (direction * ultraNewPlanetaryCategoriesPerPage);
@@ -596,17 +610,24 @@
     const maxVisible = Math.max(0, ultraNewPlanetaryCategoriesTotal - ultraNewPlanetaryCategoriesPerPage);
     ultraNewPlanetaryCategoriesVisible = Math.max(0, Math.min(maxVisible, newVisible));
     
+    console.log('New visible:', ultraNewPlanetaryCategoriesVisible);
+    console.log('Max visible:', maxVisible);
+    
     // Вычисляем скролл для контейнера
     const categoryWidth = 70; // ширина одной категории
     const gap = 3; // расстояние между категориями
-    const scrollStep = ultraNewPlanetaryCategoriesPerPage * (categoryWidth + gap);
+    const paddingLeft = 8; // padding-left контейнера
     
-    // Скроллим контейнер
+    // Скроллим контейнер на нужную позицию
     const targetScroll = ultraNewPlanetaryCategoriesVisible * (categoryWidth + gap);
+    console.log('Target scroll:', targetScroll);
+    
     container.scrollTo({ left: targetScroll, behavior: 'smooth' });
     
     // Обновляем состояние стрелок
     ultraNewPlanetaryUpdateArrowStates();
+    
+    console.log('Scroll completed');
   }
 
   // Функция отображения категорий больше не нужна (скролл нативный)
