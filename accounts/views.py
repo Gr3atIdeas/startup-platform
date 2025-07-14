@@ -2216,6 +2216,7 @@ def investor_main(request):
         'Hardware': 'Аппаратное обеспечение', 'Mobile': 'Мобильные приложения', 'Web': 'Веб-разработка', 'Blockchain': 'Блокчейн',
         'Cryptocurrency': 'Криптовалюты', 'VR': 'Виртуальная реальность', 'AR': 'Дополненная реальность', 'IoT': 'Интернет вещей',
         'Robotics': 'Робототехника', 'Space': 'Космические технологии', 'Science': 'Наука', 'Research': 'Исследования', 'Other': 'Другое',
+        'Auto': 'Автомобили', 'auto': 'Автомобили',
     }
     # Получаем все направления (все категории)
     directions = Directions.objects.all().order_by("direction_name")

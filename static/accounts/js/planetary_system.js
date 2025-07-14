@@ -643,9 +643,10 @@
     visibleCategories.forEach(catName => {
       // Находим объект категории по имени
       const dirObj = ultraNewPlanetaryDirectionsData.find(d => d.direction_name === catName || d.original_name === catName) || {direction_name: catName, original_name: catName};
-      const isAll = catName === 'Все';
+      // const isAll = catName === 'Все';
+      // Делаем эллипс для всех категорий
       const item = document.createElement('div');
-      item.className = 'ultra_new_planetary_category_item' + (isAll ? ' category-all' : '');
+      item.className = 'ultra_new_planetary_category_item category-all';
       item.setAttribute('data-name', dirObj.original_name || dirObj.direction_name);
       if (catName === ultraNewPlanetarySelectedGalaxy) {
         item.classList.add('selected');
@@ -658,7 +659,7 @@
       const icon = document.createElement('img');
       icon.className = 'ultra_new_planetary_category_icon';
       icon.src = '/static/accounts/images/planetary_system/category_img.png';
-      icon.alt = isAll ? 'Все' : dirObj.direction_name;
+      icon.alt = dirObj.direction_name;
       item.appendChild(icon);
       // Клик
       item.addEventListener('click', function() {
