@@ -96,7 +96,7 @@ SOCIALACCOUNT_PROVIDERS = {
     'telegram': {
         'APP': {
             'client_id': 'testmarketstartup_bot',
-            'secret': '7843250850:AAEL8hapR_WVcG2mMNUhWvK-I0DMYG042Ko',
+            'secret': os.getenv('BOT_ACCESS_TOKEN'),
         },
         'AUTH_PARAMS': {
             'auth_date_valid_within': 90,
