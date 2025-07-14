@@ -700,7 +700,7 @@
   bottom: 2px;
   left: 50%;
   transform: translateX(-50%);
-  width: 850px;
+  width: 900px;
   height: 100px;
   z-index: 100;
   overflow: visible; /* чтобы category-all могла выступать */
@@ -712,7 +712,7 @@
 .ultra_new_planetary_categories_container {
   position: absolute;
   /* Показываем ровно 7 категорий (7×70px + 6×3px = 508px) */
-  width: 750px; /* 1 big (124px) + 6 small (6×70) + 6 gaps (6×3) + 8px слева */
+  width: 810px; /* 1 big (124px) + 6 small (6×70) + 6 gaps (6×3) + 8px слева */
   height: 65px;
   left: 50%;
   top: 0;
