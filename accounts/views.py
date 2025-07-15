@@ -6,7 +6,7 @@ import logging
 import os
 import uuid
 from decimal import Decimal
-from random import choice, shuffle, sample  # Импортируем shuffle и sample напрямую
+from random import choice, shuffle  # Импортируем shuffle напрямую
 
 import boto3
 import requests
@@ -2256,15 +2256,13 @@ def investor_main(request):
             direction__direction_name=selected_direction_name
         )
 
-    startups_list = list(startups_query)
-    if len(startups_list) >= 6:
-        startups_filtered = sample(startups_list, 6)
-    elif len(startups_list) > 0:
-        while len(startups_list) < 6:
-            startups_list.extend(startups_list)
-        startups_filtered = startups_list[:6]
-    else:
-        startups_filtered = []
+    startups_filtered = startups_query.annotate(
+        progress=Case(
+            When(funding_goal__gt=0, then=(F("current_funding") * 100.0 / F("funding_goal"))),
+            default=Value(0),
+            output_field=FloatField(),
+        )
+    )[:6]
 
     planets_data_for_template = []
     # Создаем 6 фиксированных орбит с размерами из обновленного HTML template
