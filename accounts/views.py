@@ -2256,13 +2256,15 @@ def investor_main(request):
             direction__direction_name=selected_direction_name
         )
 
-    startups_filtered = startups_query.annotate(
-        progress=Case(
-            When(funding_goal__gt=0, then=(F("current_funding") * 100.0 / F("funding_goal"))),
-            default=Value(0),
-            output_field=FloatField(),
-        )
-    )[:6]
+    startups_list = list(startups_query)
+    if len(startups_list) >= 6:
+        startups_filtered = sample(startups_list, 6)
+    elif len(startups_list) > 0:
+        while len(startups_list) < 6:
+            startups_list.extend(startups_list)
+        startups_filtered = startups_list[:6]
+    else:
+        startups_filtered = []
 
     planets_data_for_template = []
     # Создаем 6 фиксированных орбит с размерами из обновленного HTML template
@@ -3218,26 +3220,44 @@ def planetary_system(request):
     # Получаем список стартапов
     startups_list = list(startups_query)
     
-    # Выбираем 6 случайных стартапов, если их больше 6
-    if len(startups_list) > 6:
-        selected_startups = sample(startups_list, 6)
+    # Отладочная информация
+    print(f"🚀 ПЛАНЕТАРНАЯ СИСТЕМА DEBUG:")
+    print(f"🚀 Выбрано направление: '{selected_direction_name}'")
+    print(f"🚀 Всего одобренных стартапов в БД: {Startups.objects.filter(status='approved').count()}")
+    print(f"🚀 Загружено стартапов после фильтрации: {len(startups_list)}")
+    if startups_list:
+        for i, startup in enumerate(startups_list[:3]):
+            print(f"🚀   {i+1}. {startup.title} - направление: {startup.direction.direction_name if startup.direction else 'Нет'}")
+    
+    logger.info(f"🪐 Загружено стартапов: {len(startups_list)}")
+    
+    # Выбираем до 6 стартапов для отображения
+    selected_startups = []
+    if len(startups_list) >= 6:
+        # Берем первые 6 стартапов
+        selected_startups = startups_list[:6]
     elif len(startups_list) > 0:
-        selected_startups = startups_list * (6 // len(startups_list)) + startups_list[:6 % len(startups_list)]
+        # Дублируем стартапы до 6
+        while len(selected_startups) < 6:
+            selected_startups.extend(startups_list)
         selected_startups = selected_startups[:6]
     else:
+        # Создаем пустые слоты
         selected_startups = [None] * 6
     
     # Формируем данные для планет (текущие 6 планет)
     planets_data = []
     for i, startup in enumerate(selected_startups):
         if startup:
-            planet_image_num = (i % 15) + 1
+            # Используем фиксированные изображения планет вместо логотипов
+            planet_image_num = (i % 15) + 1  # Циклически используем изображения 1-15
             planet_image_url = f"/static/accounts/images/planetary_system/planets_round/{planet_image_num}.png"
+        
             planets_data.append({
                 "id": i + 1,
                 "startup_id": startup.startup_id,
                 "name": startup.title,
-                "description": startup.short_description or (startup.description[:200] if startup.description else ""),
+                "description": startup.short_description or startup.description[:200] if startup.description else "",
                 "image": planet_image_url,
                 "rating": startup.get_average_rating(),
                 "voters_count": startup.total_voters,
@@ -3250,8 +3270,10 @@ def planetary_system(request):
                 "investment_type": "Выкуп+инвестирование" if startup.both_mode else ("Только выкуп" if startup.only_buy else "Только инвестирование")
             })
         else:
-            planet_image_num = 8 + (i % 8)
+            # Пустая планета - используем изображения 8-15
+            planet_image_num = 8 + (i % 8)  # Используем изображения 8-15 для пустых планет
             planet_image_url = f"/static/accounts/images/planetary_system/planets_round/{planet_image_num}.png"
+            
             planets_data.append({
                 "id": i + 1,
                 "startup_id": None,
@@ -3268,7 +3290,7 @@ def planetary_system(request):
                 "progress": 0,
                 "investment_type": "Не указано"
             })
-    
+        
     # Формируем данные для всех стартапов (для фильтрации в реальном времени)
     # Получаем ВСЕ одобренные стартапы, а не только отфильтрованные
     all_approved_startups = list(Startups.objects.filter(status="approved").select_related("direction", "owner").order_by("-created_at"))

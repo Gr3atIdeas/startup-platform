@@ -222,9 +222,7 @@
 
 /* === ПРОГРЕСС-БАРЫ ПОД ПЛАНЕТАМИ (АДАПТИРОВАННЫЕ ИЗ STARTUPS_LIST.CSS) === */
 .ultra_new_planetary_progress_container {
-  /* убираем absolute/top/left/transform */
   width: 100px;
-  margin: 40px auto 0 auto;
   height: 20px;
   display: flex;
   align-items: center;
@@ -233,24 +231,26 @@
   visibility: visible !important;
   opacity: 1 !important;
   pointer-events: auto;
+  margin: calc(var(--planet-size) + 10px) auto 0 auto;
+  position: static;
   justify-content: center;
+  /* Убираем 3D-эффекты */
+  transform: none !important;
 }
 
 .ultra_new_planetary_progress_bar_visual {
-  /* Визуальная часть */
   flex-grow: 1;
-  height: 20px; /* Уменьшенная высота для планетарной системы */
+  height: 20px;
+  width: 100px;
   position: relative;
-  background-color: #0b1a3f; /* Точный темный фон из startups_list */
+  background-color: #0b1a3f;
   border-radius: 6px;
   overflow: hidden;
-  border: 1px solid #1d3059; /* Точная рамка из startups_list */
-
-  /* Добавляем внутренние отступы */
+  border: 1px solid #1d3059;
   padding: 1px;
   box-sizing: border-box;
-  min-width: 100px;
-  max-width: 100px;
+  /* Убираем 3D-эффекты */
+  transform: none !important;
 }
 
 .ultra_new_planetary_progress_animation_container {
