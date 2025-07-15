@@ -211,19 +211,18 @@
 
 /* КОНТЕЙНЕРЫ ПЛАНЕТ - ТОЧНО КАК В V8.HTML */
 .ultra_new_planetary_planet_orientation {
-  position: relative;
-  /* БЕЗ КАКОГО-ЛИБО ЦЕНТРИРОВАНИЯ В CSS - ВСЁ В JS КАК В V8.HTML */
+  position: relative !important;
   transform-style: preserve-3d;
   will-change: left, top;
   pointer-events: none;
-  /* Убеждаемся, что прогресс-бары видны */
-  overflow: visible;
+  overflow: visible !important;
+  min-height: calc(var(--planet-size) + 40px) !important; /* Место для прогресс-бара */
 }
 
 /* === ПРОГРЕСС-БАРЫ ПОД ПЛАНЕТАМИ (АДАПТИРОВАННЫЕ ИЗ STARTUPS_LIST.CSS) === */
 .ultra_new_planetary_progress_container {
   position: absolute !important;
-  top: calc(var(--planet-size) + 10px) !important;
+  bottom: -35px !important;
   left: 50% !important;
   transform: translateX(-50%) !important;
   width: 110px !important;
@@ -236,7 +235,7 @@
   visibility: visible !important;
   opacity: 1 !important;
   pointer-events: auto;
-  background: rgba(255, 0, 0, 0.1) !important; /* Временный фон для отладки */
+  background: rgba(255, 0, 0, 0.3) !important; /* Увеличиваю прозрачность для лучшей видимости */
 }
 
 .ultra_new_planetary_progress_bar_visual {
@@ -412,7 +411,6 @@
   /* Центрирование через отрицательные margin как в v8.html */
   margin-left: calc(-0.5 * var(--planet-size));
   margin-top: calc(-0.5 * var(--planet-size));
-  margin-bottom: 35px; /* Отступ снизу для прогресс-бара */
   /* Только компенсация наклона, без translate */
   transform: rotateX(var(--ultra_new_planetary_planet_compensation));
   border-radius: 50%;
