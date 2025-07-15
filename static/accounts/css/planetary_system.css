@@ -222,32 +222,34 @@
 
 /* === ПРОГРЕСС-БАРЫ ПОД ПЛАНЕТАМИ (АДАПТИРОВАННЫЕ ИЗ STARTUPS_LIST.CSS) === */
 .ultra_new_planetary_progress_container {
-  position: absolute;
-  top: calc(var(--planet-size) + 10px);
-  left: 50%;
-  transform: translateX(-50%);
-  width: 110px;
-  height: 25px;
-  display: flex;
+  position: absolute !important;
+  top: calc(var(--planet-size) + 10px) !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: 110px !important;
+  height: 25px !important;
+  display: flex !important;
   align-items: center;
   justify-content: center;
   gap: 5px;
-  z-index: 7;
+  z-index: 10 !important;
   visibility: visible !important;
   opacity: 1 !important;
   pointer-events: auto;
+  background: rgba(255, 0, 0, 0.1) !important; /* Временный фон для отладки */
 }
 
 .ultra_new_planetary_progress_bar_visual {
-  flex-grow: 1;
-  height: 20px;
-  position: relative;
-  background-color: #0b1a3f;
-  border-radius: 10px;
-  overflow: hidden;
-  border: 1px solid #1d3059;
-  padding: 2px;
-  box-sizing: border-box;
+  flex-grow: 1 !important;
+  height: 20px !important;
+  position: relative !important;
+  background-color: #0b1a3f !important;
+  border-radius: 10px !important;
+  overflow: hidden !important;
+  border: 1px solid #1d3059 !important;
+  padding: 2px !important;
+  box-sizing: border-box !important;
+  min-width: 100px !important;
 }
 
 .ultra_new_planetary_progress_animation_container {
@@ -410,6 +412,7 @@
   /* Центрирование через отрицательные margin как в v8.html */
   margin-left: calc(-0.5 * var(--planet-size));
   margin-top: calc(-0.5 * var(--planet-size));
+  margin-bottom: 35px; /* Отступ снизу для прогресс-бара */
   /* Только компенсация наклона, без translate */
   transform: rotateX(var(--ultra_new_planetary_planet_compensation));
   border-radius: 50%;
