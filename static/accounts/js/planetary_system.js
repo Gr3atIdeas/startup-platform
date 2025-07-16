@@ -494,10 +494,10 @@
     if (categoryElement) categoryElement.textContent = startup.direction || 'Не указана';
     if (descriptionElement) descriptionElement.textContent = startup.description || 'Описание отсутствует';
     
-    // Форматирование сумм с символом ₽
+    // Форматирование сумм (убираем дублирование ₽)
     if (fundingAmountElement) {
       const fundingGoal = startup.funding_goal || 'Не определена';
-      if (fundingGoal !== 'Не определена') {
+      if (fundingGoal !== 'Не определена' && !fundingGoal.includes('₽')) {
         fundingAmountElement.textContent = `${fundingGoal} ₽`;
       } else {
         fundingAmountElement.textContent = fundingGoal;
@@ -506,7 +506,7 @@
     
     if (valuationAmountElement) {
       const valuation = startup.valuation || 'Не определена';
-      if (valuation !== 'Не определена') {
+      if (valuation !== 'Не определена' && !valuation.includes('₽')) {
         valuationAmountElement.textContent = `${valuation} ₽`;
       } else {
         valuationAmountElement.textContent = valuation;
@@ -523,9 +523,24 @@
     // Прогресс-бар в модальном окне
     const progressPercentageElement = document.getElementById('ultra_new_planetary_modal_progress_percentage');
     const progressBarVisual = document.querySelector('.ultra_new_planetary_modal_progress_bar_visual');
+    const progressContainer = document.querySelector('.ultra_new_planetary_modal_progress_container');
     
-    if (progressPercentageElement && progressBarVisual) {
-      const progress = startup.progress || 0;
+    if (progressPercentageElement && progressBarVisual && progressContainer) {
+      // Получаем реальный прогресс из данных стартапа
+      let progress = 0;
+      
+      // Обрабатываем разные форматы прогресса
+      if (typeof startup.progress === 'number') {
+        progress = Math.round(startup.progress);
+      } else if (typeof startup.progress === 'string') {
+        // Если приходит строка типа "75.5%" или "75.5"
+        progress = parseFloat(startup.progress.replace('%', '')) || 0;
+      } else {
+        progress = 0;
+      }
+      
+      // Ограничиваем прогресс от 0 до 100
+      progress = Math.max(0, Math.min(100, progress));
       
       // Устанавливаем процент
       progressPercentageElement.textContent = `${progress}%`;
@@ -533,12 +548,8 @@
       // Устанавливаем ширину прогресс-бара
       progressBarVisual.style.width = `${progress}%`;
       
-      // Если прогресс 0%, скрываем прогресс-бар
-      if (progress === 0) {
-        document.querySelector('.ultra_new_planetary_modal_progress_container').style.display = 'none';
-      } else {
-        document.querySelector('.ultra_new_planetary_modal_progress_container').style.display = 'block';
-      }
+      // Показываем прогресс-бар всегда, но при 0% он будет пустым
+      progressContainer.style.display = 'block';
     }
 
     // Кнопка "Подробнее"
