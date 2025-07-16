@@ -446,8 +446,7 @@
 .ultra_new_planetary_modal_comment_icon {
   width: 16px;
   height: 15px;
-  outline: 1px #004E9F solid;
-  outline-offset: -0.5px;
+  filter: brightness(0) saturate(100%) invert(27%) sepia(51%) saturate(2878%) hue-rotate(199deg) brightness(104%) contrast(97%);
 }
 
 .ultra_new_planetary_modal_comments_text {
@@ -495,11 +494,120 @@
   letter-spacing: 0.12px;
 }
 
+/* ПРОГРЕСС БАР В МОДАЛЬНОМ ОКНЕ */
 .ultra_new_planetary_modal_progress_container {
-  /* Удалён стиль контейнера прогресс-бара в модальном окне */
+  width: 100%;
+  height: 20px;
+  margin-bottom: 16px;
+  position: relative;
 }
-.ultra_new_planetary_modal_progress {
-  /* Удалён стиль самого прогресс-бара в модальном окне */
+
+.ultra_new_planetary_modal_progress_bar_visual {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, #31D2C6 0%, #006EDF 100%);
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 
+    inset 0 0 5px rgb(255 255 255 / 50%),
+    0 0 10px rgb(71 209 255 / 70%);
+  transition: width 0.5s ease-in-out;
+}
+
+.ultra_new_planetary_modal_progress_animation_container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.ultra_new_planetary_modal_progress_planets {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.ultra_new_planetary_modal_progress_planets::before,
+.ultra_new_planetary_modal_progress_planets::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  border-radius: 50%;
+  background-color: rgb(255 255 255 / 70%);
+  box-shadow: 0 0 8px rgb(255 255 255 / 80%);
+  animation: ultra_new_planetary_modal_movePlanets 8s linear infinite;
+}
+
+.ultra_new_planetary_modal_progress_planets::before {
+  width: 12px;
+  height: 12px;
+  margin-top: -6px;
+  left: 10%;
+  animation-delay: 0s;
+}
+
+.ultra_new_planetary_modal_progress_planets::after {
+  width: 8px;
+  height: 8px;
+  margin-top: -4px;
+  left: 60%;
+  animation-delay: -4s;
+}
+
+.ultra_new_planetary_modal_progress_animation_container::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 30%;
+  width: 10px;
+  height: 10px;
+  margin-top: -5px;
+  border-radius: 50%;
+  background-color: rgb(255 255 255 / 60%);
+  box-shadow: 0 0 6px rgb(255 255 255 / 70%);
+  animation: ultra_new_planetary_modal_movePlanets 10s linear infinite alternate;
+  animation-delay: -2s;
+}
+
+@keyframes ultra_new_planetary_modal_movePlanets {
+  0% {
+    transform: translateX(0) translateY(-1px) scale(1);
+    opacity: 0.7;
+  }
+  25% {
+    transform: translateX(20px) translateY(1px) scale(1.1);
+    opacity: 0.9;
+  }
+  50% {
+    transform: translateX(-10px) translateY(0) scale(1);
+    opacity: 0.8;
+  }
+  75% {
+    transform: translateX(15px) translateY(-2px) scale(0.9);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(0) translateY(-1px) scale(1);
+    opacity: 0.7;
+  }
+}
+
+.ultra_new_planetary_modal_progress_percentage {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-weight: bold;
+  color: #fff;
+  font-size: 12px;
+  z-index: 3;
+  text-shadow: 0 1px 2px rgb(0 0 0 / 60%);
+  white-space: nowrap;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0 5px;
+  box-sizing: border-box;
 }
 
 .ultra_new_planetary_modal_description {
@@ -554,30 +662,7 @@
 .ultra_new_planetary_modal_valuation_icon {
   width: 17px;
   height: 17px;
-  position: relative;
-  overflow: hidden;
-}
-
-.ultra_new_planetary_modal_valuation_icon::before {
-  content: '';
-  position: absolute;
-  top: 1.42px;
-  left: 4.25px;
-  width: 8.5px;
-  height: 8.5px;
-  outline: 1px #004E9F solid;
-  outline-offset: -0.5px;
-}
-
-.ultra_new_planetary_modal_valuation_icon::after {
-  content: '';
-  position: absolute;
-  top: 9.13px;
-  left: 4.96px;
-  width: 7.08px;
-  height: 6.45px;
-  outline: 1px #004E9F solid;
-  outline-offset: -0.5px;
+  filter: brightness(0) saturate(100%) invert(27%) sepia(51%) saturate(2878%) hue-rotate(199deg) brightness(104%) contrast(97%);
 }
 
 .ultra_new_planetary_modal_valuation_label,
@@ -625,18 +710,7 @@
 .ultra_new_planetary_modal_investor_icon {
   width: 16px;
   height: 16px;
-  position: relative;
-  overflow: hidden;
-}
-
-.ultra_new_planetary_modal_investor_icon::before {
-  content: '';
-  position: absolute;
-  top: 4px;
-  left: 0;
-  width: 16px;
-  height: 8px;
-  background: #4E4F51;
+  filter: brightness(0) saturate(100%) invert(31%) sepia(8%) saturate(748%) hue-rotate(202deg) brightness(94%) contrast(86%);
 }
 
 .ultra_new_planetary_modal_investors_text {
@@ -679,8 +753,12 @@
     padding: 20px 25px;
   }
   
-  .ultra_new_planetary_modal_progress {
+  .ultra_new_planetary_modal_progress_container {
     width: 270px;
+  }
+  
+  .ultra_new_planetary_modal_progress_percentage {
+    font-size: 10px;
   }
 }
 

@@ -493,8 +493,26 @@
     if (commentsElement) commentsElement.textContent = startup.comment_count || '0';
     if (categoryElement) categoryElement.textContent = startup.direction || 'Не указана';
     if (descriptionElement) descriptionElement.textContent = startup.description || 'Описание отсутствует';
-    if (fundingAmountElement) fundingAmountElement.textContent = startup.funding_goal || 'Не определена';
-    if (valuationAmountElement) valuationAmountElement.textContent = startup.valuation || 'Не определена';
+    
+    // Форматирование сумм с символом ₽
+    if (fundingAmountElement) {
+      const fundingGoal = startup.funding_goal || 'Не определена';
+      if (fundingGoal !== 'Не определена') {
+        fundingAmountElement.textContent = `${fundingGoal} ₽`;
+      } else {
+        fundingAmountElement.textContent = fundingGoal;
+      }
+    }
+    
+    if (valuationAmountElement) {
+      const valuation = startup.valuation || 'Не определена';
+      if (valuation !== 'Не определена') {
+        valuationAmountElement.textContent = `${valuation} ₽`;
+      } else {
+        valuationAmountElement.textContent = valuation;
+      }
+    }
+    
     if (investorsCountElement) investorsCountElement.textContent = `Инвестировало (${startup.investors || '0'})`;
 
     // Установка изображения планеты
@@ -503,7 +521,11 @@
     }
 
     // Прогресс-бар в модальном окне
-    // if (progressElement) { ... } // Удалён блок установки прогресса
+    const progressPercentageElement = document.getElementById('ultra_new_planetary_modal_progress_percentage');
+    if (progressPercentageElement) {
+      const progress = startup.progress || 0;
+      progressPercentageElement.textContent = `${progress}%`;
+    }
 
     // Кнопка "Подробнее"
     if (detailsBtn) {
