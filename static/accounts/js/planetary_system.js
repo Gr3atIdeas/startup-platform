@@ -522,9 +522,23 @@
 
     // Прогресс-бар в модальном окне
     const progressPercentageElement = document.getElementById('ultra_new_planetary_modal_progress_percentage');
-    if (progressPercentageElement) {
+    const progressBarVisual = document.querySelector('.ultra_new_planetary_modal_progress_bar_visual');
+    
+    if (progressPercentageElement && progressBarVisual) {
       const progress = startup.progress || 0;
+      
+      // Устанавливаем процент
       progressPercentageElement.textContent = `${progress}%`;
+      
+      // Устанавливаем ширину прогресс-бара
+      progressBarVisual.style.width = `${progress}%`;
+      
+      // Если прогресс 0%, скрываем прогресс-бар
+      if (progress === 0) {
+        document.querySelector('.ultra_new_planetary_modal_progress_container').style.display = 'none';
+      } else {
+        document.querySelector('.ultra_new_planetary_modal_progress_container').style.display = 'block';
+      }
     }
 
     // Кнопка "Подробнее"

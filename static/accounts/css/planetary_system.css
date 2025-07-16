@@ -500,10 +500,13 @@
   height: 20px;
   margin-bottom: 16px;
   position: relative;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
 }
 
 .ultra_new_planetary_modal_progress_bar_visual {
-  width: 100%;
+  width: 0%; /* Начинаем с 0% */
   height: 100%;
   background: linear-gradient(90deg, #31D2C6 0%, #006EDF 100%);
   border-radius: 10px;
