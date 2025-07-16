@@ -55,11 +55,6 @@
       loadUltraNewPlanetarySystemData();
       loadUltraNewPlanetaryFallbackImages();
       setupUltraNewPlanetarySystem();
-      
-      // Инициализируем планетарные объекты с диагностикой
-      console.log('=== ЗАПУСК ИНИЦИАЛИЗАЦИИ ПЛАНЕТАРНЫХ ОБЪЕКТОВ ===');
-      initializeUltraNewPlanetaryObjects();
-      
       startUltraNewPlanetaryAnimation();
     } catch (error) {
       console.warn('Ultra New Planetary System initialization error:', error);
@@ -402,10 +397,6 @@
   function setupUltraNewPlanetaryPlanet(planet, startup, index) {
     if (!planet || !startup) return;
 
-    // Устанавливаем размер планеты
-    const planetSize = 50 + Math.random() * 20; // 50-70px
-    planet.style.setProperty('--planet-size', `${planetSize}px`);
-    
     // Установка изображения
     const imageUrl = startup.planet_image || getUltraNewPlanetaryFallbackImage(index);
     planet.style.backgroundImage = `url(${imageUrl})`;
@@ -425,16 +416,12 @@
     planet.style.opacity = '1';
     
     // Настройка прогресс-бара под планетой
-    // setupUltraNewPlanetaryProgressBar(planet, startup, index); // Удалено
+    // Удалён вызов setupUltraNewPlanetaryProgressBar(planet, startup, index);
   }
 
   // НАСТРОЙКА ПУСТОЙ ПЛАНЕТЫ
   function setupUltraNewPlanetaryEmptyPlanet(planet, index) {
     if (!planet) return;
-
-    // Устанавливаем размер планеты
-    const planetSize = 50 + Math.random() * 20; // 50-70px
-    planet.style.setProperty('--planet-size', `${planetSize}px`);
 
     // Установка изображения-заглушки
     const imageUrl = getUltraNewPlanetaryFallbackImage(index);
@@ -469,8 +456,11 @@
     planet.style.opacity = '0.6';
     
     // Настройка прогресс-бара под планетой (пустой)
-    // setupUltraNewPlanetaryProgressBar(planet, emptyStartup, index); // Удалено
+    // Удалён вызов setupUltraNewPlanetaryProgressBar(planet, emptyStartup, index);
   }
+
+  // НАСТРОЙКА ПРОГРЕСС-БАРА ПОД ПЛАНЕТОЙ
+  // function setupUltraNewPlanetaryProgressBar(planet, startup, index) { ... } // Удалена вся функция
 
   // ПОЛУЧЕНИЕ РЕЗЕРВНОГО ИЗОБРАЖЕНИЯ
   function getUltraNewPlanetaryFallbackImage(index) {
@@ -512,11 +502,8 @@
       planetImageElement.src = planetImageUrl || getUltraNewPlanetaryFallbackImage(0);
     }
 
-    // Прогресс-бар
-    if (progressElement) {
-      const progressPercent = startup.progress || 0;
-      progressElement.style.background = `linear-gradient(90deg, #31D2C6 0%, #31D2C6 ${progressPercent}%, #E0E0E0 ${progressPercent}%, #E0E0E0 100%)`;
-    }
+    // Прогресс-бар в модальном окне
+    // if (progressElement) { ... } // Удалён блок установки прогресса
 
     // Кнопка "Подробнее"
     if (detailsBtn) {
@@ -654,78 +641,32 @@
     const planets = document.querySelectorAll('.ultra_new_planetary_planet');
     ultraNewPlanetaryObjects = [];
     
-    console.log('=== ИНИЦИАЛИЗАЦИЯ ПЛАНЕТАРНЫХ ОБЪЕКТОВ ===');
-    console.log('Найдено планет:', planets.length);
-    
     planets.forEach((planet, index) => {
       const orbit = planet.closest('.ultra_new_planetary_orbit');
       const planetOrientation = planet.closest('.ultra_new_planetary_planet_orientation');
       
-      if (!orbit || !planetOrientation) {
-        console.error(`❌ Планета ${index}: не найден orbit или planetOrientation`);
-        return;
-      }
+      if (!orbit || !planetOrientation) return;
       
-      // Проверяем наличие прогресс-бара
-      // const progressContainer = planetOrientation.querySelector('.ultra_new_planetary_progress_container'); // Удалено
-      // console.log(`Планета ${index}:`, { // Удалено
-      //   planet: planet, // Удалено
-      //   orbit: orbit, // Удалено
-      //   orientation: planetOrientation, // Удалено
-      //   progressContainer: progressContainer, // Удалено
-      //   hasProgressBar: !!progressContainer // Удалено
-      // }); // Удалено
+      // Параметры орбиты
+      const orbitSize = parseFloat(orbit.style.getPropertyValue('--orbit-size')) || 200;
+      const orbitTime = parseFloat(orbit.style.getPropertyValue('--orbit-time')) || 80;
       
-      // Детальная диагностика структуры HTML // Удалено
-      // console.log(`Структура HTML для планеты ${index}:`, { // Удалено
-      //   planetClasses: planet.className, // Удалено
-      //   orientationClasses: planetOrientation.className, // Удалено
-      //   orbitClasses: orbit.className, // Удалено
-      //   orientationChildren: Array.from(planetOrientation.children).map(child => ({ // Удалено
-      //     tagName: child.tagName, // Удалено
-      //     className: child.className // Удалено
-      //   })) // Удалено
-      // }); // Удалено
+      // Генерируем случайный начальный угол и скорость для каждой планеты КАК В V8.HTML
+      const initialAngle = Math.random() * 360;
+      const speedFactor = 0.8 + Math.random() * 0.4;
       
-      // Проверяем CSS стили контейнера ориентации // Удалено
-      // const orientationStyles = getComputedStyle(planetOrientation); // Удалено
-      // console.log(`CSS стили контейнера ориентации планеты ${index}:`, { // Удалено
-      //   position: orientationStyles.position, // Удалено
-      //   width: orientationStyles.width, // Удалено
-      //   height: orientationStyles.height, // Удалено
-      //   minHeight: orientationStyles.minHeight, // Удалено
-      //   display: orientationStyles.display // Удалено
-      // }); // Удалено
-      
-      // Параметры орбиты // Удалено
-      // const orbitSize = parseFloat(orbit.style.getPropertyValue('--orbit-size')) || 200; // Удалено
-      // const orbitTime = parseFloat(orbit.style.getPropertyValue('--orbit-time')) || 80; // Удалено
-      
-      // Генерируем случайный начальный угол и скорость для каждой планеты КАК В V8.HTML // Удалено
-      // const initialAngle = Math.random() * 360; // Удалено
-      // const speedFactor = 0.8 + Math.random() * 0.4; // Удалено
-      
-      // Сохраняем данные о планете // Удалено
-      ultraNewPlanetaryObjects.push({ // Удалено
-        element: planet, // Удалено
-        orientation: planetOrientation, // Удалено
-        orbit: orbit, // Удалено
-        orbitSize: orbitSize, // Удалено
-        orbitTime: orbitTime, // Удалено
-        angle: initialAngle, // Удалено
-        speedFactor: speedFactor, // Удалено
-        startTime: Date.now() - Math.random() * orbitTime * 1000 // Рандомизируем начальные позиции // Удалено
-      }); // Удалено
-      
-      // console.log(`✅ Планета ${index} создана:`, { // Удалено
-      //   orbitSize, // Удалено
-      //   orbitTime, // Удалено
-      //   initialAngle: initialAngle.toFixed(2), // Удалено
-      //   speedFactor: speedFactor.toFixed(2) // Удалено
-      // }); // Удалено
+      // Сохраняем данные о планете
+      ultraNewPlanetaryObjects.push({
+        element: planet,
+        orientation: planetOrientation,
+        orbit: orbit,
+        orbitSize: orbitSize,
+        orbitTime: orbitTime,
+        angle: initialAngle,
+        speedFactor: speedFactor,
+        startTime: Date.now() - Math.random() * orbitTime * 1000 // Рандомизируем начальные позиции
+      });
     });
-    
-    // console.log('Всего создано объектов:', ultraNewPlanetaryObjects.length); // Удалено
   }
 
   // ОБНОВЛЕНИЕ ПОЗИЦИЙ ПЛАНЕТ ТОЧНО КАК В V8.HTML
@@ -748,77 +689,10 @@
       const y = Math.sin(angleRad) * radius;
       
       // Устанавливаем положение планеты на орбите ТОЧНО КАК В V8.HTML
-      const newLeft = `${50 + 50 * (x / radius)}%`;
-      const newTop = `${50 + 50 * (y / radius)}%`;
+      planetObj.orientation.style.left = `${50 + 50 * (x / radius)}%`;
+      planetObj.orientation.style.top = `${50 + 50 * (y / radius)}%`;
       
-      planetObj.orientation.style.left = newLeft;
-      planetObj.orientation.style.top = newTop;
-      
-      // ДЕТАЛЬНАЯ ДИАГНОСТИКА ПРОГРЕСС-БАРОВ // Удалено
-      // if (index === 0) { // Логируем только для первой планеты // Удалено
-      //   const progressContainer = planetObj.orientation.querySelector('.ultra_new_planetary_progress_container'); // Удалено
-      //   if (progressContainer) { // Удалено
-      //     const planetRect = planetObj.element.getBoundingClientRect(); // Удалено
-      //     const progressRect = progressContainer.getBoundingClientRect(); // Удалено
-      //     const orientationRect = planetObj.orientation.getBoundingClientRect(); // Удалено
-      //      // Удалено
-      //     console.log(`=== ДИАГНОСТИКА ПЛАНЕТЫ ${index} ===`); // Удалено
-      //     console.log('Позиция планеты:', { // Удалено
-      //       left: newLeft, // Удалено
-      //       top: newTop, // Удалено
-      //       planetRect: { // Удалено
-      //         left: planetRect.left, // Удалено
-      //         top: planetRect.top, // Удалено
-      //         width: planetRect.width, // Удалено
-      //         height: planetRect.height // Удалено
-      //       } // Удалено
-      //     }); // Удалено
-      //      // Удалено
-      //     console.log('Позиция контейнера ориентации:', { // Удалено
-      //       left: orientationRect.left, // Удалено
-      //       top: orientationRect.top, // Удалено
-      //       width: orientationRect.width, // Удалено
-      //       height: orientationRect.height, // Удалено
-      //       position: getComputedStyle(planetObj.orientation).position // Удалено
-      //     }); // Удалено
-      //      // Удалено
-      //     console.log('Позиция прогресс-бара:', { // Удалено
-      //       left: progressRect.left, // Удалено
-      //       top: progressRect.top, // Удалено
-      //       width: progressRect.width, // Удалено
-      //       height: progressRect.height, // Удалено
-      //       position: getComputedStyle(progressContainer).position, // Удалено
-      //       bottom: getComputedStyle(progressContainer).bottom, // Удалено
-      //       zIndex: getComputedStyle(progressContainer).zIndex // Удалено
-      //     }); // Удалено
-      //      // Удалено
-      //     // Проверяем CSS стили прогресс-бара // Удалено
-      //     const computedStyles = getComputedStyle(progressContainer); // Удалено
-      //     console.log('CSS стили прогресс-бара:', { // Удалено
-      //       position: computedStyles.position, // Удалено
-      //       bottom: computedStyles.bottom, // Удалено
-      //       left: computedStyles.left, // Удалено
-      //       top: computedStyles.top, // Удалено
-      //       width: computedStyles.width, // Удалено
-      //       height: computedStyles.height, // Удалено
-      //       zIndex: computedStyles.zIndex, // Удалено
-      //       display: computedStyles.display // Удалено
-      //     }); // Удалено
-      //      // Удалено
-      //     // Проверяем, правильно ли позиционирован прогресс-бар относительно планеты // Удалено
-      //     const planetBottom = planetRect.bottom; // Удалено
-      //     const progressTop = progressRect.top; // Удалено
-      //     const distance = progressTop - planetBottom; // Удалено
-      //      // Удалено
-      //     console.log('Расстояние между планетой и прогресс-баром:', { // Удалено
-      //       planetBottom: planetBottom, // Удалено
-      //       progressTop: progressTop, // Удалено
-      //       distance: distance, // Удалено
-      //       expectedDistance: '~10px (отступ)' // Удалено
-      //     }); // Удалено
-      //   } else { // Удалено
-      //     console.warn(`Прогресс-бар не найден для планеты ${index}`); // Удалено
-      //   } // Удалено
+
     });
   }
 
