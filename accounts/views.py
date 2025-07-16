@@ -2258,7 +2258,7 @@ def investor_main(request):
 
     startups_filtered = startups_query.annotate(
         progress=Case(
-            When(funding_goal__gt=0, then=(F("current_funding") * 100.0 / F("funding_goal"))),
+            When(funding_goal__gt=0, then=(F("amount_raised") * 100.0 / F("funding_goal"))),
             default=Value(0),
             output_field=FloatField(),
         )
@@ -2336,7 +2336,7 @@ def investor_main(request):
         ),
         comment_count=Count("comments", distinct=True),
         progress=Case(
-            When(funding_goal__gt=0, then=(F("current_funding") * 100.0 / F("funding_goal"))),
+            When(funding_goal__gt=0, then=(F("amount_raised") * 100.0 / F("funding_goal"))),
             default=Value(0),
             output_field=FloatField(),
         )

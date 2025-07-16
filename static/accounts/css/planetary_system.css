@@ -500,9 +500,10 @@
   height: 20px;
   margin-bottom: 16px;
   position: relative;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.1);
   border-radius: 10px;
   overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.2);
 }
 
 .ultra_new_planetary_modal_progress_bar_visual {
