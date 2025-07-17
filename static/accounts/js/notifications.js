@@ -53,23 +53,25 @@ document.addEventListener('DOMContentLoaded', function() {
             font-size: 18px;
             cursor: pointer;
             padding: 0;
-            width: 20px;
-            height: 20px;
+            width: 24px;
+            height: 24px;
             display: flex;
             align-items: center;
             justify-content: center;
             border-radius: 50%;
-            transition: all 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         `;
         
         closeBtn.addEventListener('mouseenter', () => {
-            closeBtn.style.background = 'rgba(0,0,0,0.1)';
+            closeBtn.style.background = 'rgba(0,0,0,0.15)';
             closeBtn.style.color = '#1d1d1f';
+            closeBtn.style.transform = 'translateY(-50%) scale(1.1)';
         });
         
         closeBtn.addEventListener('mouseleave', () => {
             closeBtn.style.background = 'none';
             closeBtn.style.color = '#8e8e93';
+            closeBtn.style.transform = 'translateY(-50%) scale(1)';
         });
         
         closeBtn.addEventListener('click', () => {
