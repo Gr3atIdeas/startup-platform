@@ -2057,3 +2057,35 @@ function createChatItemElement(chat) {
 
     return chatItem;
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+  // Находим все чекбоксы ролей
+  const roleCheckboxes = document.querySelectorAll('.django-roles-filter input[type="checkbox"][name="roles"]');
+  // Находим все карточки пользователей
+  const userCards = document.querySelectorAll('.user-card-new');
+
+  function filterUsersByRole() {
+      // Собираем выбранные роли
+      const selectedRoles = Array.from(roleCheckboxes)
+          .filter(cb => cb.checked)
+          .map(cb => cb.value.toLowerCase());
+
+      userCards.forEach(card => {
+          const userRole = (card.dataset.role || '').toLowerCase();
+          // Если ни одна роль не выбрана — показываем всех
+          if (selectedRoles.length === 0 || selectedRoles.includes(userRole)) {
+              card.style.display = '';
+          } else {
+              card.style.display = 'none';
+          }
+      });
+  }
+
+  // Вешаем обработчик на каждый чекбокс
+  roleCheckboxes.forEach(cb => {
+      cb.addEventListener('change', filterUsersByRole);
+  });
+
+  // Вызываем фильтрацию при первой загрузке (если что-то выбрано)
+  filterUsersByRole();
+});
