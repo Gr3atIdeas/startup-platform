@@ -1031,6 +1031,20 @@ def profile(request, user_id=None):
     else:
         user = request.user
         is_own_profile = True
+    # --- ДОБАВИТЬ ЭТОТ БЛОК ---
+    if request.headers.get("x-requested-with") == "XMLHttpRequest" and request.method == "GET":
+        user_data = {
+            "user_id": user.user_id,
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "role": user.role.role_name if user.role else "",
+            "profile_picture_url": user.get_profile_picture_url() if hasattr(user, "get_profile_picture_url") else "",
+            "rating": getattr(user, "rating", None),
+            "bio": getattr(user, "bio", ""),
+            # добавьте другие нужные поля
+        }
+        return JsonResponse(user_data)
+    # --- КОНЕЦ БЛОКА ---
 
     # Показывать выбор роли, если роль не установлена или это временная роль (ID=4)
     show_role_selection = (not user.role_id or user.role_id == 4) and is_own_profile
