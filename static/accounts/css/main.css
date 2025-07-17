@@ -107,11 +107,7 @@ body {
   margin: 0;
   padding: 0;
   background: transparent; /* body прозрачный */
-  /* overflow-x: hidden; */ /* УБИРАЕМ ЭТО СВОЙСТВО, ЧТОБЫ НЕ ОБРЕЗАТЬ СОЛНЦЕ */
-
-  /* overflow-y: auto; */
-
-  /* <--- УДАЛЯЕМ ЭТО */
+  overflow-x: hidden; /* Убираем горизонтальную прокрутку */
   min-height: 100%;
   width: 100%;
   box-sizing: border-box;
@@ -156,16 +152,11 @@ html::-webkit-scrollbar-button {
 .div {
   /* Общий контейнер страницы */
   width: 100%;
-
-  /* min-width: 100%; */
-
-  /* width: 100% должно быть достаточно */
+  overflow-x: hidden; /* Убираем горизонтальную прокрутку */
   display: flex; /* Для align-items: center */
   flex-direction: column; /* Основная ось - вертикальная для секций */
   align-items: center; /* Центрируем дочерние секции */
   background: transparent !important; /* .div прозрачный, показываем фон html */
-
-  /* background-repeat и background-attachment не нужны для прозрачного фона */
   box-sizing: border-box; /* Добавляем для консистентности */
 }
 
@@ -2963,7 +2954,7 @@ html::-webkit-scrollbar-button {
     position: absolute;
     z-index: 100;
     top: 64%;
-    left: 110.5%;
+    left: 52.5%;
     transform: translate(-50%, -50%);
 }
 
