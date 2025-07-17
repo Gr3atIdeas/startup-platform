@@ -37,6 +37,9 @@
   <!-- Подключаем Chart.js локально -->
   <script src="{% static 'accounts/libs/chartjs/chart.min.js' %}"></script>
 
+  <!-- Подключаем стили для уведомлений -->
+  <link rel="stylesheet" href="{% static 'accounts/css/notifications.css' %}">
+  
   {% block head_extra %}
     {{ block.super }}
   {% endblock %}
@@ -48,6 +51,7 @@
       {% for message in messages %}
         <div class="alert-message alert-{{ message.tags }}">
           {{ message }}
+          <button class="notification-close-btn" onclick="this.parentElement.classList.add('removing'); setTimeout(() => this.parentElement.remove(), 300)">×</button>
         </div>
       {% endfor %}
     </div>
@@ -226,6 +230,7 @@
   <script src="{% static 'accounts/libs/glightbox/js/glightbox.min.js' %}" defer></script>
   {# <script src="{% static 'accounts/js/button_effects.js' %}" defer></script> #}
   <script src="{% static 'accounts/js/global_styles.js' %}" defer></script>
+  <script src="{% static 'accounts/js/notifications.js' %}" defer></script>
   
   {% block scripts %}
     {# Сюда будут добавляться скрипты из дочерних шаблонов #}

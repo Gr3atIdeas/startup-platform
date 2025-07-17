@@ -4358,6 +4358,10 @@ def get_user_rating_for_startup(user_id, startup_id):
 def custom_404(request, exception):
     return render(request, "accounts/404.html", status=404)
 
+def test_notifications(request):
+    """Тестовая страница для проверки уведомлений"""
+    return render(request, "accounts/test_notifications.html")
+
 
 @csrf_exempt
 @require_POST
