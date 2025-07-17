@@ -50,7 +50,7 @@
     <div class="messages-container">
       {% for message in messages %}
         <div class="alert-message alert-{{ message.tags }}">
-          {{ message }}
+          <span style="flex: 1;">{{ message }}</span>
           <button class="notification-close-btn" onclick="this.parentElement.classList.add('removing'); setTimeout(() => this.parentElement.remove(), 300)">×</button>
         </div>
       {% endfor %}

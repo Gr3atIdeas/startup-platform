@@ -31,7 +31,11 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const notification = document.createElement('div');
         notification.className = `alert-message alert-${type}`;
-        notification.textContent = message;
+        
+        // Создаем контейнер для текста
+        const textContainer = document.createElement('span');
+        textContainer.textContent = message;
+        textContainer.style.flex = '1';
         
         // Добавляем кнопку закрытия
         const closeBtn = document.createElement('button');
@@ -70,6 +74,7 @@ document.addEventListener('DOMContentLoaded', function() {
             hideNotification(notification);
         });
         
+        notification.appendChild(textContainer);
         notification.appendChild(closeBtn);
         container.appendChild(notification);
         
