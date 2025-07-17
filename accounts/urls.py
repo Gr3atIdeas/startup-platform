@@ -44,7 +44,6 @@ urlpatterns = [
     path("cosmochat/rename-chat/<int:chat_id>/", views.rename_chat, name="rename_chat"),
     path("cosmochat/available_users/", views.available_users, name="available_users"),
     path("cosmochat/start-deal/<int:chat_id>/", views.start_deal, name="start_deal"),
-    path("test-notifications/", views.test_notifications, name="test_notifications"),
     path("cosmochat/chat-list/", views.chat_list, name="chat_list"),
     # Профиль и управление
     path("profile/", views.profile, name="profile"),
