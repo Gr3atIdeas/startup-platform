@@ -3057,11 +3057,6 @@ html::-webkit-scrollbar-button {
     animation: plus-planet-pulse 3s ease-in-out infinite;
 }
 
-/* Кастомная подсказка для планеты с + */
-#plus-planet-link {
-    position: relative;
-}
-
 #plus-planet-link::after {
     content: 'Создать стартап';
     position: absolute;
