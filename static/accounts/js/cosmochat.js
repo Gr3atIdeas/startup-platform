@@ -914,10 +914,12 @@ function openProfileModal(userId) {
     .then((data) => {
       if (!profileModal) return
       const profilePictureUrl = data.profile_picture_url
-        ? data.profile_picture_url.startsWith('/')
+      ? (data.profile_picture_url.startsWith('http://') || data.profile_picture_url.startsWith('https://')
           ? data.profile_picture_url
-          : `/${data.profile_picture_url}`
-        : '/static/accounts/images/cosmochat/avatar_placeholder_general.png'
+          : data.profile_picture_url.startsWith('/')
+            ? data.profile_picture_url
+            : '/' + data.profile_picture_url)
+      : '/static/accounts/images/cosmochat/avatar_placeholder_general.png';
 
       if (profileAvatar) profileAvatar.src = profilePictureUrl
       if (profileName)
