@@ -136,9 +136,83 @@ FIXED_CATEGORIES = [
 # Главная страница
 def home(request):
     if not request.user.is_authenticated:
-        return render(
-            request, "accounts/main.html"
-        )  # Показываем новую главную для неавторизованных
+        # Получаем случайные стартапы для демо-версии планетарной системы
+        import random
+        from django.db.models import Avg, Count, Sum, F, Case, When, Value, FloatField, DecimalField
+        from django.db.models.functions import Coalesce
+        from django.templatetags.static import static
+        
+        # Получаем одобренные стартапы с аннотациями
+        startups_query = Startups.objects.filter(status="approved").annotate(
+            rating_avg=Coalesce(Avg("uservotes__rating"), 0.0, output_field=FloatField()),
+            voters_count=Count("uservotes", distinct=True),
+            total_investors=Count("investmenttransactions", distinct=True),
+            current_funding=Coalesce(
+                Sum("investmenttransactions__amount"), 0, output_field=DecimalField()
+            ),
+            comment_count=Count("comments", distinct=True),
+            progress=Case(
+                When(funding_goal__gt=0, then=(F("amount_raised") * 100.0 / F("funding_goal"))),
+                default=Value(0),
+                output_field=FloatField(),
+            )
+        )
+        
+        # Выбираем случайные стартапы для демо
+        all_startups = list(startups_query)
+        demo_startups = []
+        
+        if all_startups:
+            # Выбираем до 6 случайных стартапов
+            num_startups = min(6, len(all_startups))
+            demo_startups = random.sample(all_startups, num_startups)
+        
+        # Подготавливаем данные для JavaScript
+        startups_data = []
+        for startup in demo_startups:
+            # Выбираем случайное изображение планеты
+            planet_num = random.randint(1, 15)
+            planet_image_url = static(f"accounts/images/planetary_system/planets_round/{planet_num}.png")
+            
+            startups_data.append({
+                "id": startup.startup_id,
+                "name": startup.title,
+                "description": startup.short_description or startup.description[:200] if startup.description else "",
+                "image": planet_image_url,
+                "rating": round(startup.rating_avg, 2),
+                "voters_count": startup.voters_count,
+                "comment_count": startup.comment_count,
+                "direction": startup.direction.direction_name if startup.direction else "Не указано",
+                "funding_goal": f"{startup.funding_goal:,.0f} ₽".replace(",", " ") if startup.funding_goal else "Не указано",
+                "valuation": f"{startup.valuation:,.0f} ₽".replace(",", " ") if startup.valuation else "Не указано",
+                "investors": startup.total_investors,
+                "progress": round(startup.progress, 2) if startup.progress is not None else 0,
+                "investment_type": "Выкуп+инвестирование" if startup.both_mode else ("Только выкуп" if startup.only_buy else "Только инвестирование")
+            })
+        
+        # Если стартапов меньше 6, добавляем пустые слоты
+        while len(startups_data) < 6:
+            startups_data.append({
+                "id": 0,
+                "name": "Свободная орбита",
+                "description": "Эта орбита пока свободна. Здесь может появиться ваш стартап!",
+                "image": static(f"accounts/images/planetary_system/planets_round/{random.randint(1, 15)}.png"),
+                "rating": 0,
+                "voters_count": 0,
+                "comment_count": 0,
+                "direction": "Не определена",
+                "funding_goal": "Не определена",
+                "valuation": "Не определена",
+                "investors": 0,
+                "progress": 0,
+                "investment_type": "Не указано"
+            })
+        
+        context = {
+            "demo_startups_data": json.dumps(startups_data, cls=DjangoJSONEncoder),
+        }
+        
+        return render(request, "accounts/main.html", context)
 
     # Если пользователь авторизован, перенаправляем его на соответствующую страницу
     if hasattr(request.user, "role") and request.user.role:

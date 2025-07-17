@@ -316,70 +316,99 @@ document.addEventListener('DOMContentLoaded', function () {
   // --- Planetary System from v8.html ---
   const galaxyContainer = document.getElementById('galaxy');
   if (galaxyContainer) {
-    const roundPlanetImages = [
-        '1.png', '2.png', '3.png', '4.png', '5.png', '6.png', '7.png', '8.png', 
-        '9.png', '10.png', '11.png', '12.png', '13.png', '14.png', '15.png'
-    ];
-    const ringPlanetImages = ['1.png', '2.png', '3.png', '4.png', '5.png', '6.png'];
-
-    const allPlanetImages = [
-        ...roundPlanetImages.map(img => `planets_round/${img}`),
-        ...ringPlanetImages.map(img => `planets_ring/${img}`)
-    ];
+    // Загружаем данные о стартапах для демо
+    let demoStartupsData = [];
+    const demoDataScript = document.getElementById('demo-startups-data');
+    if (demoDataScript) {
+      try {
+        demoStartupsData = JSON.parse(demoDataScript.textContent);
+        console.log('Demo startups data loaded:', demoStartupsData.length, 'startups');
+      } catch (error) {
+        console.warn('Failed to parse demo startups data:', error);
+      }
+    }
 
     const planetObjects = [];
     const galaxyTiltAngle = 45;
 
-    function shuffle(array) {
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]];
-        }
-    }
-    shuffle(allPlanetImages);
-
-    for (let i = 1; i < 8; i++) {
+    // Создаем орбиты и планеты
+    for (let i = 1; i <= 6; i++) {
         const orbit = document.createElement('div');
         orbit.className = 'orbit';
         const orbitSize = 200 + i * 100;
         orbit.style.setProperty('--orbit-size', `${orbitSize}px`);
 
-        if (i !== 5) {
-            const planetOrientation = document.createElement('div');
-            planetOrientation.className = 'planet-orientation';
+        const planetOrientation = document.createElement('div');
+        planetOrientation.className = 'planet-orientation';
 
-            const planet = document.createElement('div');
-            planet.className = 'planet';
-            const planetSize = (52 + Math.random() * 52);
-            planet.style.setProperty('--planet-size', `${planetSize}px`);
+        const planet = document.createElement('div');
+        planet.className = 'planet';
+        const planetSize = 60 + Math.random() * 20; // 60-80px
+        planet.style.setProperty('--planet-size', `${planetSize}px`);
 
-            const imageName = allPlanetImages.pop();
-            const imageUrl = `/static/accounts/images/planetary_system/${imageName}`;
+        // Получаем данные стартапа для этой планеты
+        const startupData = demoStartupsData[i - 1];
+        if (startupData) {
+            planet.style.backgroundImage = `url('${startupData.image}')`;
+            planet.setAttribute('data-startup-id', startupData.id);
+            planet.setAttribute('data-startup-name', startupData.name);
+            planet.setAttribute('data-startup-data', JSON.stringify(startupData));
             
-            planet.style.backgroundImage = `url('${imageUrl}')`;
-
-
-            planetOrientation.appendChild(planet);
-            orbit.appendChild(planetOrientation);
-
-            const orbitTime = 80 + i * 20 + (Math.random() - 0.5) * 40;
-            const initialAngle = Math.random() * 360;
-            const speedFactor = 0.8 + Math.random() * 0.4;
-
-            planetObjects.push({
-                element: planet,
-                orientation: planetOrientation,
-                orbit: orbit,
-                size: planetSize,
-                orbitSize: orbitSize,
-                orbitTime: orbitTime,
-                angle: initialAngle,
-                speedFactor: speedFactor,
-                startTime: Date.now() - Math.random() * orbitTime * 1000,
+            // Добавляем обработчик клика для показа информации о стартапе
+            planet.addEventListener('click', function() {
+                showStartupInfo(startupData);
             });
+            
+            // Добавляем подсказку при наведении
+            planet.title = startupData.name;
+        } else {
+            // Fallback изображение
+            const fallbackImage = `/static/accounts/images/planetary_system/planets_round/${Math.floor(Math.random() * 15) + 1}.png`;
+            planet.style.backgroundImage = `url('${fallbackImage}')`;
         }
 
+        planetOrientation.appendChild(planet);
+        orbit.appendChild(planetOrientation);
+
+        const orbitTime = 80 + i * 20 + (Math.random() - 0.5) * 40;
+        const initialAngle = Math.random() * 360;
+        const speedFactor = 0.8 + Math.random() * 0.4;
+
+        planetObjects.push({
+            element: planet,
+            orientation: planetOrientation,
+            orbit: orbit,
+            size: planetSize,
+            orbitSize: orbitSize,
+            orbitTime: orbitTime,
+            angle: initialAngle,
+            speedFactor: speedFactor,
+            startTime: Date.now() - Math.random() * orbitTime * 1000,
+        });
+
         galaxyContainer.appendChild(orbit);
+    }
+
+    // Функция для показа информации о стартапе
+    function showStartupInfo(startupData) {
+        if (!startupData || startupData.id === 0) {
+            alert('Эта орбита пока свободна. Здесь может появиться ваш стартап!');
+            return;
+        }
+
+        const message = `
+Название: ${startupData.name}
+Рейтинг: ${startupData.rating}/5 (${startupData.voters_count} голосов)
+Категория: ${startupData.direction}
+Цель финансирования: ${startupData.funding_goal}
+Прогресс: ${startupData.progress}%
+Инвесторов: ${startupData.investors}
+Комментариев: ${startupData.comment_count}
+
+${startupData.description}
+        `.trim();
+
+        alert(message);
     }
 
     function updatePlanets() {

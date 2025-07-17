@@ -50,7 +50,7 @@
                     </svg>
                 </div>
              </div>
-            <a href="{% url 'login' %}?next={% url 'create_startup' %}" id="plus-planet-link">
+            <a href="{% url 'login' %}?next={% url 'create_startup' %}" id="plus-planet-link" title="Создать стартап">
                 <img src="{% static 'accounts/images/planetary_system/0.png' %}" alt="Создать стартап" id="plus-planet">
             </a>
 
@@ -902,6 +902,13 @@
 </script>
 
 </div>
+
+<!-- Данные для демо-версии планетарной системы -->
+{% if demo_startups_data %}
+<script type="application/json" id="demo-startups-data">
+{{ demo_startups_data|safe }}
+</script>
+{% endif %}
 
 <script src="{% static 'accounts/js/main.js' %}"></script>
 <script src="{% static 'accounts/js/faq.js' %}?v={% now 'U' %}"></script>
