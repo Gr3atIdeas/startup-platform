@@ -382,6 +382,9 @@
 </div>
 
 <script>
+window.REQUEST_USER_ID = "{{ request.user.user_id|default:'' }}";
+window.REQUEST_USER_ROLE = "{{ request.user.role.role_name|default:'' }}";
+
 document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.user-card-new').forEach(card => {
         card.addEventListener('click', function() {
@@ -517,10 +520,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-<script>
-  window.REQUEST_USER_ID = "{{ request.user.user_id|default:'' }}";
-  window.REQUEST_USER_ROLE = "{{ request.user.role.role_name|default:'' }}";
-</script>
 {% endblock %}
 
 {% block scripts %}
