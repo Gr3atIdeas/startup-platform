@@ -391,25 +391,92 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Функция для показа информации о стартапе
     function showStartupInfo(startupData) {
+        const modal = document.getElementById('demo_planetary_modal');
+        if (!modal) return;
+
         if (!startupData || startupData.id === 0) {
-            alert('Эта орбита пока свободна. Здесь может появиться ваш стартап!');
-            return;
+            // Для пустых орбит показываем специальное сообщение
+            document.getElementById('demo_planetary_modal_name').textContent = 'Свободная орбита';
+            document.getElementById('demo_planetary_modal_rating').textContent = 'Рейтинг 0/5 (0)';
+            document.getElementById('demo_planetary_modal_comments_count').textContent = '0';
+            document.getElementById('demo_planetary_modal_category').textContent = 'Не определена';
+            document.getElementById('demo_planetary_modal_description').textContent = 'Эта орбита пока свободна. Здесь может появиться ваш стартап!';
+            document.getElementById('demo_planetary_modal_funding_amount').textContent = 'Не определена';
+            document.getElementById('demo_planetary_modal_valuation_amount').textContent = 'Не определена';
+            document.getElementById('demo_planetary_modal_investors_count').textContent = 'Инвестировало (0)';
+            document.getElementById('demo_planetary_modal_progress_percentage').textContent = '0%';
+            document.querySelector('#demo_planetary_modal .ultra_new_planetary_modal_progress_bar_visual').style.width = '0%';
+            
+            // Отключаем кнопки для пустых орбит
+            document.getElementById('demo_planetary_modal_details_btn').onclick = function() {
+                alert('Эта орбита пока свободна. Здесь пока нет стартапа для просмотра.');
+            };
+            document.getElementById('demo_planetary_modal_investment_btn').onclick = function() {
+                alert('Эта орбита пока свободна. Здесь пока нет стартапа для инвестирования.');
+            };
+        } else {
+            // Заполняем данными реального стартапа
+            document.getElementById('demo_planetary_modal_name').textContent = startupData.name;
+            document.getElementById('demo_planetary_modal_rating').textContent = `Рейтинг ${startupData.rating}/5 (${startupData.voters_count})`;
+            document.getElementById('demo_planetary_modal_comments_count').textContent = startupData.comment_count;
+            document.getElementById('demo_planetary_modal_category').textContent = startupData.direction;
+            document.getElementById('demo_planetary_modal_description').textContent = startupData.description;
+            document.getElementById('demo_planetary_modal_funding_amount').textContent = startupData.funding_goal;
+            document.getElementById('demo_planetary_modal_valuation_amount').textContent = startupData.valuation;
+            document.getElementById('demo_planetary_modal_investors_count').textContent = `Инвестировало (${startupData.investors})`;
+            document.getElementById('demo_planetary_modal_progress_percentage').textContent = `${startupData.progress}%`;
+            document.querySelector('#demo_planetary_modal .ultra_new_planetary_modal_progress_bar_visual').style.width = `${startupData.progress}%`;
+            
+            // Настраиваем кнопки для реального стартапа
+            document.getElementById('demo_planetary_modal_details_btn').onclick = function() {
+                window.location.href = `/startups/${startupData.id}/`;
+            };
+            document.getElementById('demo_planetary_modal_investment_btn').onclick = function() {
+                window.location.href = `/invest/${startupData.id}/`;
+            };
         }
 
-        const message = `
-Название: ${startupData.name}
-Рейтинг: ${startupData.rating}/5 (${startupData.voters_count} голосов)
-Категория: ${startupData.direction}
-Цель финансирования: ${startupData.funding_goal}
-Прогресс: ${startupData.progress}%
-Инвесторов: ${startupData.investors}
-Комментариев: ${startupData.comment_count}
+        // Устанавливаем изображение планеты
+        document.getElementById('demo_planetary_modal_planet_img').src = startupData.image;
 
-${startupData.description}
-        `.trim();
-
-        alert(message);
+        // Показываем модальное окно
+        modal.style.display = 'block';
+        document.body.style.overflow = 'hidden';
     }
+
+    // Функция для скрытия модального окна
+    function hideDemoModal() {
+        const modal = document.getElementById('demo_planetary_modal');
+        if (modal) {
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+    }
+
+    // Обработчики для закрытия модального окна
+    document.addEventListener('DOMContentLoaded', function() {
+        const modal = document.getElementById('demo_planetary_modal');
+        const closeBtn = document.getElementById('demo_planetary_modal_close');
+        
+        if (closeBtn) {
+            closeBtn.addEventListener('click', hideDemoModal);
+        }
+        
+        if (modal) {
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    hideDemoModal();
+                }
+            });
+        }
+
+        // Закрытие по Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                hideDemoModal();
+            }
+        });
+    });
 
     function updatePlanets() {
         const now = Date.now();

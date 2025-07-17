@@ -7,6 +7,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'accounts/css/main.css' %}">
     <link rel="stylesheet" href="{% static 'accounts/css/faq.css' %}">
     <link rel="stylesheet" href="{% static 'accounts/css/improved_styles.css' %}">
+    <link rel="stylesheet" href="{% static 'accounts/css/planetary_system.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -61,6 +62,85 @@
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <!-- МОДАЛЬНОЕ ОКНО СТАРТАПА ДЛЯ ДЕМО -->
+            <div id="demo_planetary_modal" class="ultra_new_planetary_modal">
+              <!-- BACKDROP С БЛЮРОМ -->
+              <div class="ultra_new_planetary_modal_backdrop"></div>
+              
+              <!-- КНОПКА ЗАКРЫТИЯ -->
+              <button id="demo_planetary_modal_close" class="ultra_new_planetary_modal_close">×</button>
+              
+              <!-- КОНТЕНТ МОДАЛЬНОГО ОКНА -->
+              <div class="ultra_new_planetary_modal_content">
+                <!-- ИЗОБРАЖЕНИЕ ПЛАНЕТЫ СЛЕВА -->
+                <div class="ultra_new_planetary_modal_planet">
+                  <img id="demo_planetary_modal_planet_img" src="" alt="Planet">
+                </div>
+                
+                <!-- КАРТОЧКА ИНФОРМАЦИИ СПРАВА -->
+                <div class="ultra_new_planetary_modal_card">
+                  <!-- НАЗВАНИЕ СТАРТАПА -->
+                  <h2 id="demo_planetary_modal_name" class="ultra_new_planetary_modal_title">Название стартапа</h2>
+                  
+                  <!-- РЕЙТИНГ И КОММЕНТАРИИ -->
+                  <div class="ultra_new_planetary_modal_rating_section">
+                    <div id="demo_planetary_modal_rating" class="ultra_new_planetary_modal_rating">Рейтинг 0/5 (0)</div>
+                    <div class="ultra_new_planetary_modal_comments">
+                      <img src="{% static 'accounts/images/planetary_system/comment.svg' %}" alt="Комментарии" class="ultra_new_planetary_modal_comment_icon">
+                      <div id="demo_planetary_modal_comments_count" class="ultra_new_planetary_modal_comments_text">0</div>
+                    </div>
+                  </div>
+                  
+                  <!-- КНОПКА ВЫКУП+ИНВЕСТИРОВАНИЕ -->
+                  <div class="ultra_new_planetary_modal_investment_btn">
+                    <button id="demo_planetary_modal_investment_btn">Выкуп+инвестирование</button>
+                  </div>
+                  
+                  <!-- КАТЕГОРИЯ -->
+                  <div class="ultra_new_planetary_modal_category_section">
+                    <div id="demo_planetary_modal_category" class="ultra_new_planetary_modal_category">Категория</div>
+                  </div>
+                  
+                  <!-- ПРОГРЕСС БАР -->
+                  <div class="ultra_new_planetary_modal_progress_container">
+                    <div class="ultra_new_planetary_modal_progress_bar_visual">
+                      <div class="ultra_new_planetary_modal_progress_animation_container">
+                        <div class="ultra_new_planetary_modal_progress_planets"></div>
+                        <div id="demo_planetary_modal_progress_percentage" class="ultra_new_planetary_modal_progress_percentage">0%</div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <!-- ОПИСАНИЕ -->
+                  <div id="demo_planetary_modal_description" class="ultra_new_planetary_modal_description">
+                    Описание стартапа...
+                  </div>
+                  
+                  <!-- ФИНАНСИРОВАНИЕ И ОЦЕНКА -->
+                  <div class="ultra_new_planetary_modal_financing_section">
+                    <div class="ultra_new_planetary_modal_funding_goal">
+                      <div class="ultra_new_planetary_modal_funding_label">Цель финансирования</div>
+                      <div id="demo_planetary_modal_funding_amount" class="ultra_new_planetary_modal_funding_amount">0 ₽</div>
+                    </div>
+                    <div class="ultra_new_planetary_modal_valuation">
+                      <img src="{% static 'accounts/images/planetary_system/award.svg' %}" alt="Оценка" class="ultra_new_planetary_modal_valuation_icon">
+                      <div class="ultra_new_planetary_modal_valuation_label">Оценка</div>
+                      <div id="demo_planetary_modal_valuation_amount" class="ultra_new_planetary_modal_valuation_amount">0 ₽</div>
+                    </div>
+                  </div>
+                  
+                  <!-- КНОПКИ ДЕЙСТВИЙ -->
+                  <div class="ultra_new_planetary_modal_actions">
+                    <button id="demo_planetary_modal_details_btn" class="ultra_new_planetary_modal_details_btn">Подробнее</button>
+                    <div class="ultra_new_planetary_modal_investors_info">
+                      <img src="{% static 'accounts/images/planetary_system/groups.svg' %}" alt="Инвесторы" class="ultra_new_planetary_modal_investor_icon">
+                      <div id="demo_planetary_modal_investors_count" class="ultra_new_planetary_modal_investors_text">Инвестировало (0)</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
             </div>
         <img class="featured-child" alt="Placeholder" src="{% static 'accounts/images/default_icon.svg' %}">
