@@ -843,9 +843,9 @@ body {
 }
 
 .alert-message {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(30px);
-  -webkit-backdrop-filter: blur(30px);
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(50px);
+  -webkit-backdrop-filter: blur(50px);
   border-radius: 16px;
   padding: 16px 20px;
   box-shadow: 
@@ -860,8 +860,8 @@ body {
   max-width: 400px;
   min-width: 300px;
   opacity: 0;
-  transform: translateY(-30px) scale(0.9);
-  animation: notificationSlideIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  transform: translateY(-20px) scale(0.95);
+  animation: notificationSlideIn 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
   pointer-events: auto;
   position: relative;
   overflow: hidden;
@@ -901,11 +901,7 @@ body {
 @keyframes notificationSlideIn {
   0% {
     opacity: 0;
-    transform: translateY(-30px) scale(0.9);
-  }
-  50% {
-    opacity: 0.8;
-    transform: translateY(-5px) scale(0.98);
+    transform: translateY(-20px) scale(0.95);
   }
   100% {
     opacity: 1;
@@ -918,18 +914,14 @@ body {
     opacity: 1;
     transform: translateY(0) scale(1);
   }
-  50% {
-    opacity: 0.5;
-    transform: translateY(-15px) scale(0.95);
-  }
   100% {
     opacity: 0;
-    transform: translateY(-30px) scale(0.9);
+    transform: translateY(-20px) scale(0.95);
   }
 }
 
 .alert-message.removing {
-  animation: notificationSlideOut 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: notificationSlideOut 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
 /* Убираем иконки - оставляем только цветные полоски сверху */
@@ -954,7 +946,7 @@ body {
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   z-index: 1;
 }
 

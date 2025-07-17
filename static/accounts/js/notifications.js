@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
             align-items: center;
             justify-content: center;
             border-radius: 50%;
-            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         `;
         
         closeBtn.addEventListener('mouseenter', () => {
