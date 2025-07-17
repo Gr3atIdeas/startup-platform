@@ -36,6 +36,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const textContainer = document.createElement('span');
         textContainer.textContent = message;
         textContainer.style.flex = '1';
+        textContainer.style.marginRight = '10px';
         
         // Добавляем кнопку закрытия
         const closeBtn = document.createElement('button');
@@ -43,8 +44,9 @@ document.addEventListener('DOMContentLoaded', function() {
         closeBtn.className = 'notification-close-btn';
         closeBtn.style.cssText = `
             position: absolute;
-            top: 8px;
+            top: 50%;
             right: 8px;
+            transform: translateY(-50%);
             background: none;
             border: none;
             color: #8e8e93;
