@@ -442,6 +442,18 @@ document.addEventListener('DOMContentLoaded', function () {
         // Показываем модальное окно
         modal.style.display = 'block';
         document.body.style.overflow = 'hidden';
+        
+        // Добавляем обработчики для закрытия модального окна
+        const closeBtn = document.getElementById('demo_planetary_modal_close');
+        if (closeBtn) {
+            closeBtn.onclick = hideDemoModal;
+        }
+        
+        modal.onclick = function(e) {
+            if (e.target === modal) {
+                hideDemoModal();
+            }
+        };
     }
 
     // Функция для скрытия модального окна
@@ -454,7 +466,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Обработчики для закрытия модального окна
-    document.addEventListener('DOMContentLoaded', function() {
+    function setupModalHandlers() {
         const modal = document.getElementById('demo_planetary_modal');
         const closeBtn = document.getElementById('demo_planetary_modal_close');
         
@@ -469,14 +481,21 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             });
         }
+    }
 
-        // Закрытие по Escape
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                hideDemoModal();
-            }
-        });
+    // Закрытие по Escape
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            hideDemoModal();
+        }
     });
+
+    // Настраиваем обработчики после загрузки DOM
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', setupModalHandlers);
+    } else {
+        setupModalHandlers();
+    }
 
     function updatePlanets() {
         const now = Date.now();

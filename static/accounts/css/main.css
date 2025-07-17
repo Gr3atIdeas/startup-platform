@@ -2926,13 +2926,36 @@ html::-webkit-scrollbar-button {
     background-position: center;
     transform-style: preserve-3d;
     z-index: 5;
-    transition: transform 0.3s ease;
+    transition: all 0.3s ease;
     border: none !important;
     box-shadow: none !important;
+    cursor: pointer;
 }
 
 .main-demo .planet:hover {
     transform: scale(1.1) rotateX(-45deg);
+    filter: brightness(1.2) drop-shadow(0 0 15px rgba(255, 239, 43, 0.6));
+}
+
+/* Добавляем подсказку для кликабельности планет */
+.main-demo .planet::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    border: 2px solid transparent;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.main-demo .planet:hover::before {
+    opacity: 1;
+    border-color: rgba(255, 239, 43, 0.8);
+    box-shadow: 0 0 15px rgba(255, 239, 43, 0.6);
 }
 
 .main-demo #plus-planet-link {
