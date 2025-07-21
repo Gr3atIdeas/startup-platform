@@ -1192,38 +1192,131 @@ function showConfirmModal(message, onConfirm, onCancel) {
   });
 }
 
+// --- Асинхронный кастомный confirm ---
+window.customConfirm = function(message) {
+  return new Promise((resolve) => {
+    // Удаляем старую модалку, если есть
+    let oldModal = document.getElementById('custom-confirm-modal-overlay');
+    if (oldModal) oldModal.remove();
+
+    const overlay = document.createElement('div');
+    overlay.id = 'custom-confirm-modal-overlay';
+    overlay.className = 'modal-overlay';
+    overlay.style.display = 'flex';
+    overlay.style.zIndex = 20000;
+
+    const modal = document.createElement('div');
+    modal.className = 'modal-popup';
+    modal.style.background = 'rgba(34, 34, 34, 0.95)';
+    modal.style.color = 'white';
+    modal.style.borderRadius = '20px';
+    modal.style.boxShadow = '0 15px 40px rgb(0 0 0 / 50%)';
+    modal.style.padding = '40px 32px 32px 32px';
+    modal.style.display = 'flex';
+    modal.style.flexDirection = 'column';
+    modal.style.alignItems = 'center';
+    modal.style.maxWidth = '350px';
+    modal.style.width = '100%';
+    modal.style.position = 'relative';
+
+    const text = document.createElement('div');
+    text.textContent = message;
+    text.style.fontSize = '18px';
+    text.style.marginBottom = '32px';
+    text.style.textAlign = 'center';
+
+    const btnRow = document.createElement('div');
+    btnRow.style.display = 'flex';
+    btnRow.style.gap = '18px';
+    btnRow.style.justifyContent = 'center';
+
+    const confirmBtn = document.createElement('button');
+    confirmBtn.textContent = 'Выйти';
+    confirmBtn.className = 'btn promo-action-button';
+    confirmBtn.style.background = 'linear-gradient(180deg, #ffef2b 0%, #f9f7d6 100%)';
+    confirmBtn.style.color = '#191919';
+    confirmBtn.style.fontWeight = 'bold';
+    confirmBtn.style.fontSize = '16px';
+    confirmBtn.style.padding = '10px 28px';
+    confirmBtn.style.borderRadius = '10px';
+    confirmBtn.style.border = 'none';
+    confirmBtn.style.cursor = 'pointer';
+
+    const cancelBtn = document.createElement('button');
+    cancelBtn.textContent = 'Отмена';
+    cancelBtn.className = 'btn';
+    cancelBtn.style.background = 'rgba(255,255,255,0.12)';
+    cancelBtn.style.color = '#fff';
+    cancelBtn.style.fontWeight = 'bold';
+    cancelBtn.style.fontSize = '16px';
+    cancelBtn.style.padding = '10px 28px';
+    cancelBtn.style.borderRadius = '10px';
+    cancelBtn.style.border = 'none';
+    cancelBtn.style.cursor = 'pointer';
+
+    btnRow.appendChild(confirmBtn);
+    btnRow.appendChild(cancelBtn);
+
+    modal.appendChild(text);
+    modal.appendChild(btnRow);
+    overlay.appendChild(modal);
+    document.body.appendChild(overlay);
+
+    confirmBtn.onclick = () => {
+      overlay.remove();
+      resolve(true);
+    };
+    cancelBtn.onclick = () => {
+      overlay.remove();
+      resolve(false);
+    };
+    overlay.onclick = (e) => {
+      if (e.target === overlay) {
+        overlay.remove();
+        resolve(false);
+      }
+    };
+    document.addEventListener('keydown', function escListener(e) {
+      if (e.key === 'Escape') {
+        overlay.remove();
+        document.removeEventListener('keydown', escListener);
+        resolve(false);
+      }
+    });
+  });
+};
+window.confirm = window.customConfirm;
+
 let isLeavingChat = false;
-function leaveChat() {
+async function leaveChat() {
   if (isLeavingChat) return;
   if (!currentChatId) {
     window.showNotification('Выберите чат', 'warning');
     return;
   }
-  showConfirmModal('Вы уверены, что хотите покинуть/удалить этот чат?', () => {
-    isLeavingChat = true;
-    fetch(`/cosmochat/leave-chat/${currentChatId}/`, {
-      method: 'POST',
-      headers: { 'X-CSRFToken': csrfToken, 'X-Requested-With': 'XMLHttpRequest' },
+  const confirmed = await window.confirm('Вы уверены, что хотите покинуть/удалить этот чат?');
+  if (!confirmed) return;
+  isLeavingChat = true;
+  fetch(`/cosmochat/leave-chat/${currentChatId}/`, {
+    method: 'POST',
+    headers: { 'X-CSRFToken': csrfToken, 'X-Requested-With': 'XMLHttpRequest' },
+  })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        window.showNotification(data.message || 'Вы покинули чат.', 'success');
+        currentChatId = null;
+        location.reload();
+      } else {
+        window.showNotification(data.error || 'Ошибка при выходе из чата', 'error');
+      }
+      isLeavingChat = false;
     })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          window.showNotification(data.message || 'Вы покинули чат.', 'success');
-          currentChatId = null;
-          location.reload();
-        } else {
-          window.showNotification(data.error || 'Ошибка при выходе из чата', 'error');
-        }
-        isLeavingChat = false;
-      })
-      .catch(error => {
-        console.error('Ошибка выхода из чата:', error);
-        window.showNotification('Произошла ошибка при выходе из чата.', 'error');
-        isLeavingChat = false;
-      });
-  }, () => {
-    // Отмена — ничего не делаем
-  });
+    .catch(error => {
+      console.error('Ошибка выхода из чата:', error);
+      window.showNotification('Произошла ошибка при выходе из чата.', 'error');
+      isLeavingChat = false;
+    });
 }
 
 // Вспомогательные функции для textarea (авто-изменение высоты)
