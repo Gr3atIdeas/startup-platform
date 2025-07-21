@@ -641,6 +641,21 @@ function startPolling() {
     }, 5000);
 }
 
+// Инициализация роли пользователя
+document.addEventListener('DOMContentLoaded', function () {
+    const requestUserRoleElement = document.getElementById('request_user_role_data');
+    if (requestUserRoleElement && requestUserRoleElement.textContent) {
+        const roleData = JSON.parse(requestUserRoleElement.textContent);
+        if (roleData) {
+            window.requestUserRole = roleData.role_name;
+        } else {
+            console.warn('REQUEST_USER_ROLE не установлен. Получено пустое значение из JSON.');
+        }
+    } else {
+        console.error('Элемент request_user_role_data не найден или пуст. Проверьте шаблон.');
+    }
+});
+
 function startDeal(chatId) {
     const startDealBtn = document.getElementById('startDealBtn');
     if (!chatId) {
@@ -1128,6 +1143,613 @@ if (messageTextInput) {
   messageTextInput.addEventListener('input', () => {
     messageTextInput.style.height = 'auto'
     messageTextInput.style.height = messageTextInput.scrollHeight + 'px'
+  })
+}
+
+// Установить ID текущего пользователя из JSON-данных, переданных через json_script с проверкой
+document.addEventListener('DOMContentLoaded', function () {
+    const requestUserIdElement = document.getElementById('request_user_id_data')
+    if (requestUserIdElement && requestUserIdElement.textContent) {
+        const requestUserIdData = JSON.parse(requestUserIdElement.textContent)
+        if (requestUserIdData) {
+            window.REQUEST_USER_ID = parseInt(requestUserIdData)
+        } else {
+            console.warn(
+                'REQUEST_USER_ID не установлен. Получено пустое значение из JSON.'
+            )
+        }
+    } else {
+        console.error(
+            'Элемент request_user_id_data не найден или пуст. Проверьте шаблон.'
+        )
+        // Падбэк: попытка получить из body.dataset.userId
+        const bodyUserId = document.body.dataset.userId
+        if (bodyUserId) {
+            window.REQUEST_USER_ID = parseInt(bodyUserId)
+        } else {
+            console.warn(
+                'REQUEST_USER_ID не установлен. Некоторые функции чата могут работать некорректно.'
+            )
+        }
+    }
+})
+
+// Функция для обновления отображения рейтинга планетами
+function updateUserRatingDisplay(starsContainer) {
+  if (!starsContainer) {
+    console.error(
+      '[updateUserRatingDisplay] Container not found for user card.'
+    )
+    return
+  }
+
+  const ratingString = starsContainer.dataset.rating
+  if (typeof ratingString === 'undefined') {
+    console.warn(
+      '[updateUserRatingDisplay] data-rating attribute not found on container:',
+      starsContainer
+    )
+    return
+  }
+
+  const iconContainers = starsContainer.querySelectorAll(
+    '.rating-icon-planet-container'
+  )
+  const ratingValue = parseFloat(ratingString) || 0
+
+  iconContainers.forEach((container, index) => {
+    const filledIcon = container.querySelector('.icon-filled')
+    if (!filledIcon) {
+      console.warn(
+        `[updateUserRatingDisplay] Filled icon not found in planet container ${index + 1}`
+      )
+      return
+    }
+
+    const emptyIcon = container.querySelector('.icon-empty')
+    if (!emptyIcon) {
+      console.warn(
+        `[updateUserRatingDisplay] Empty icon not found in planet container ${index + 1}`
+      )
+      return
+    }
+
+    if (index < Math.floor(ratingValue)) {
+      // Полная звезда
+      filledIcon.style.width = '100%'
+    } else if (index === Math.floor(ratingValue) && ratingValue % 1 > 0) {
+      // Частичная звезда
+      const percentage = (ratingValue % 1) * 100
+      filledIcon.style.width = `${percentage}%`
+    } else {
+      // Пустая звезда
+      filledIcon.style.width = '0%'
+    }
+  })
+}
+
+// Функция для фильтрации чатов
+function filterChats(filter) {
+  const chatItems = document.querySelectorAll(
+    '.chat-items-list-new .chat-item-new'
+  )
+  const paginationContainer = document.getElementById('chatPagination')
+  const showMoreContainer = document.querySelector(
+    '.pagination-new:has(#showMoreChatsBtn)'
+  )
+
+  if (filter === 'all') {
+    // Если выбран фильтр "Все", показываем пагинацию и сбрасываем стили display
+    if (paginationContainer) paginationContainer.style.display = 'flex'
+    if (showMoreContainer) showMoreContainer.style.display = 'flex'
+    chatItems.forEach((item) => (item.style.display = '')) // Сбрасываем инлайновый стиль
+    // Восстанавливаем видимость согласно пагинации, если она есть
+    const currentPageBtn = document.querySelector(
+      '#chatPagination .page-number-item.current'
+    )
+    if (currentPageBtn) {
+      const currentPage = parseInt(currentPageBtn.dataset.page)
+      showChatPage(currentPage)
+    }
+  } else {
+    // Для фильтров "Чаты" или "Группы" скрываем пагинацию
+    if (paginationContainer) paginationContainer.style.display = 'none'
+    if (showMoreContainer) showMoreContainer.style.display = 'none'
+
+    chatItems.forEach((item) => {
+      const type = item.getAttribute('data-chat-type')
+      if (filter === 'chats' && type === 'personal') {
+        item.style.display = 'flex'
+      } else if (filter === 'groups' && type === 'group') {
+        item.style.display = 'flex'
+      } else {
+        item.style.display = 'none'
+      }
+    })
+  }
+}
+
+// Обновленная функция для старта личного чата
+function startChatWithUser(userId) {
+  fetch(`/cosmochat/start-chat/${userId}/`, {
+    method: 'POST',
+    headers: {
+      'X-CSRFToken': csrfToken,
+      'Content-Type': 'application/json',
+      'X-Requested-With': 'XMLHttpRequest',
+    },
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`Сетевая ошибка: ${response.status}`)
+      }
+      return response.json()
+    })
+    .then((data) => {
+      if (data.success) {
+        if (data.existed) {
+          loadChat(data.chat_id)
+        } else {
+          const newChatItem = createChatItemElement(data.chat)
+          if (newChatItem) {
+            const chatListContainer =
+              document.getElementById('chatListContainer')
+            const noChatsMessage = chatListContainer.querySelector('p')
+            if (noChatsMessage) {
+              noChatsMessage.remove()
+            }
+            chatListContainer.prepend(newChatItem)
+            loadChat(data.chat.conversation_id)
+          }
+        }
+        if (typeof closeProfileModal === 'function') closeProfileModal()
+        const searchDropdown = document.getElementById('searchDropdown')
+        if (searchDropdown) searchDropdown.style.display = 'none'
+        document
+          .querySelector('.main-chat-area-new')
+          .scrollIntoView({ behavior: 'smooth', block: 'start' })
+      } else {
+        alert(`Не удалось начать чат: ${data.error || 'Неизвестная ошибка'}`)
+      }
+    })
+    .catch((error) => {
+      console.error('Ошибка при создании чата:', error)
+      alert('Произошла критическая ошибка при попытке начать чат.')
+    })
+}
+
+// Обновленная функция для создания группового чата
+function createGroupChat(chatName, userIds) {
+  if (!chatName || userIds.length === 0) {
+    alert('Необходимо указать название чата и выбрать участников.')
+    return
+  }
+
+  fetch('/cosmochat/create-group-chat/', {
+    method: 'POST',
+    headers: {
+      'X-CSRFToken': csrfToken,
+      'Content-Type': 'application/json',
+      'X-Requested-With': 'XMLHttpRequest',
+    },
+    body: JSON.stringify({ name: chatName, user_ids: userIds }),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`Сетевая ошибка: ${response.status}`)
+      }
+      return response.json()
+    })
+    .then((data) => {
+      if (data.success && data.chat) {
+        const newChatItem = createChatItemElement(data.chat)
+        if (newChatItem) {
+          const chatListContainer = document.getElementById('chatListContainer')
+          const noChatsMessage = chatListContainer.querySelector('p')
+          if (noChatsMessage) {
+            noChatsMessage.remove()
+          }
+          chatListContainer.prepend(newChatItem)
+          loadChat(data.chat.conversation_id)
+        }
+        if (typeof closeGroupChatModal === 'function') {
+          closeGroupChatModal()
+        }
+        document
+          .querySelector('.main-chat-area-new')
+          .scrollIntoView({ behavior: 'smooth', block: 'start' })
+      } else {
+        alert(
+          `Ошибка создания группового чата: ${data.error || 'Неизвестная ошибка'}`
+        )
+      }
+    })
+    .catch((error) => {
+      console.error('Ошибка при создании группового чата:', error)
+      alert('Произошла критическая ошибка при создании группового чата.')
+    })
+}
+
+function openCreateChatModal() {
+  // Эта функция может быть использована для открытия общего модального окна
+  // для выбора типа чата (личный/групповой), если потребуется.
+}
+
+// Функции для поиска и выпадающего списка
+function setupSearchDropdown() {
+  const searchInput = document.querySelector('.search-query-input')
+  const searchDropdown = document.getElementById('searchDropdown')
+
+  if (!searchInput || !searchDropdown) return
+
+  // Показать выпадающий список при фокусе на поле поиска
+  searchInput.addEventListener('focus', function () {
+    searchDropdown.style.display = 'block'
+    loadDropdownData()
+  })
+
+  // Скрыть выпадающий список при клике вне его
+  document.addEventListener('click', function (event) {
+    if (
+      !searchInput.contains(event.target) &&
+      !searchDropdown.contains(event.target)
+    ) {
+      searchDropdown.style.display = 'none'
+    }
+  })
+
+  // Предотвращаем скрытие при клике внутри выпадающего списка
+  searchDropdown.addEventListener('click', function (event) {
+    event.stopPropagation()
+  })
+
+  // Добавляем обработчики для кнопок "Очистить"
+  const clearButtons = document.querySelectorAll('.search-dropdown-clear')
+  clearButtons.forEach((button) => {
+    button.addEventListener('click', function () {
+      const section = this.getAttribute('data-section')
+      clearSearchSection(section)
+    })
+  })
+
+  // Добавляем обработчики для горизонтального свайпа
+  const userContainers = document.querySelectorAll('.search-dropdown-users')
+  userContainers.forEach((container) => {
+    // Предотвращаем выделение текста при перетаскивании
+    container.addEventListener('selectstart', function (e) {
+      if (isDragging) {
+        e.preventDefault()
+        return false
+      }
+    })
+
+    // Начало перетаскивания
+    container.addEventListener('mousedown', function (e) {
+      isDragging = true
+      startX = e.pageX - container.offsetLeft
+      scrollLeft = container.scrollLeft
+      container.style.cursor = 'grabbing'
+
+      // Предотвращаем выделение текста
+      e.preventDefault()
+      document.body.style.userSelect = 'none'
+    })
+
+    // Прекращение перетаскивания
+    container.addEventListener('mouseup', function () {
+      isDragging = false
+      container.style.cursor = 'grab'
+      document.body.style.userSelect = ''
+    })
+
+    container.addEventListener('mouseleave', function () {
+      isDragging = false
+      container.style.cursor = 'grab'
+      document.body.style.userSelect = ''
+    })
+
+    // Перетаскивание
+    container.addEventListener('mousemove', function (e) {
+      if (!isDragging) return
+      e.preventDefault()
+      const x = e.pageX - container.offsetLeft
+      const walk = (x - startX) * 2 // Множитель для увеличения скорости прокрутки
+      container.scrollLeft = scrollLeft - walk
+    })
+
+    // Установка курсора для показа возможности перетаскивания
+    container.style.cursor = 'grab'
+  })
+}
+
+// Загрузка данных для выпадающего списка
+function loadDropdownData() {
+  // Получаем список пользователей из существующих карточек в DOM
+  const userCards = document.querySelectorAll('.user-card-new')
+  const users = []
+
+  userCards.forEach((card) => {
+    const userId = card.dataset.userId
+    const avatarImg = card.querySelector('.avatar-img')
+    const nameElement = card.querySelector('h3')
+
+    if (userId && nameElement) {
+      const name = nameElement.textContent.trim()
+      const avatarSrc = avatarImg
+        ? avatarImg.src
+        : '/static/accounts/images/avatars/default_avatar_ufo.png'
+      const role = card.dataset.role
+
+      users.push({
+        user_id: userId,
+        first_name: name,
+        profile_picture_url: avatarSrc,
+        role: role,
+      })
+    }
+  })
+
+  // Разделяем пользователей по ролям
+  const recentUsers = users.slice(0, 5) // Берем первых 5 как "недавние"
+  const investorUsers = users.filter((user) => user.role === 'investor')
+  const startuperUsers = users.filter((user) => user.role === 'startuper')
+
+  // Заполняем секции
+  populateUserSection('recentUsers', recentUsers)
+  populateUserSection('investorUsers', investorUsers)
+  populateUserSection('startuperUsers', startuperUsers)
+}
+
+// Заполнение секции пользователями
+function populateUserSection(sectionId, users) {
+  const section = document.getElementById(sectionId)
+  if (!section) return
+
+  section.innerHTML = ''
+
+  if (users && users.length > 0) {
+    users.forEach((user) => {
+      const userItem = document.createElement('div')
+      userItem.className = 'search-dropdown-user'
+      userItem.setAttribute('data-user-id', user.user_id)
+
+      const defaultAvatarSrc =
+        '/static/accounts/images/avatars/default_avatar_ufo.png'
+      const avatarSrc = user.profile_picture_url || defaultAvatarSrc
+
+      userItem.innerHTML = `
+                <img src="${avatarSrc}" alt="${user.first_name}" draggable="false">
+                <div class="search-dropdown-user-name">${user.first_name}</div>
+            `
+
+      userItem.addEventListener('click', function () {
+        startChatWithUser(user.user_id)
+      })
+
+      section.appendChild(userItem)
+    })
+  } else {
+    section.innerHTML =
+      '<div class="search-dropdown-empty">Нет пользователей</div>'
+  }
+}
+
+// Очистка секции поиска
+function clearSearchSection(section) {
+  const sectionId =
+    section === 'recent'
+      ? 'recentUsers'
+      : section === 'investors'
+        ? 'investorUsers'
+        : section === 'startupers'
+          ? 'startuperUsers'
+          : null
+
+  if (sectionId) {
+    const sectionElement = document.getElementById(sectionId)
+    if (sectionElement) {
+      sectionElement.innerHTML =
+        '<div class="search-dropdown-empty">Нет пользователей</div>'
+    }
+  }
+}
+
+function updatePaginationHTML() {
+    const usersList = document.getElementById('usersList')
+    const userCards = usersList
+        ? usersList.querySelectorAll('.user-card-new')
+        : []
+    const paginationContainer = document.getElementById('userPagination')
+
+    if (!usersList || !paginationContainer || userCards.length === 0) return
+
+    const itemsPerPage = 8
+    const totalPages = Math.ceil(userCards.length / itemsPerPage)
+
+    let paginationHTML = ''
+
+    // Кнопка "Назад"
+    paginationHTML += `<span class="page-number-item" data-page="prev">‹</span>`
+
+    // Номера страниц
+    if (totalPages <= 7) {
+        // Показываем все страницы, если их <= 7
+        for (let i = 1; i <= totalPages; i++) {
+            paginationHTML += `<span class="page-number-item ${i === 1 ? 'current' : ''}" data-page="${i}">${i}</span>`
+        }
+    } else {
+        // Показываем 1, 2, 3, ..., last-2, last-1, last
+        for (let i = 1; i <= 3; i++) {
+            paginationHTML += `<span class="page-number-item ${i === 1 ? 'current' : ''}" data-page="${i}">${i}</span>`
+        }
+
+        paginationHTML += `<span class="dots">...</span>`
+
+        for (let i = totalPages - 2; i <= totalPages; i++) {
+            paginationHTML += `<span class="page-number-item" data-page="${i}">${i}</span>`
+        }
+    }
+
+    // Кнопка "Вперед"
+    paginationHTML += `<span class="page-number-item" data-page="next">›</span>`
+
+    paginationContainer.innerHTML = paginationHTML
+
+    // Добавляем обработчики для кнопок пагинации
+    const pageButtons = paginationContainer.querySelectorAll('.page-number-item')
+    pageButtons.forEach((button) => {
+        if (button.classList.contains('dots')) return
+
+        button.addEventListener('click', function () {
+            const page = this.dataset.page
+
+            if (page === 'prev') {
+                if (currentPage > 1) {
+                    currentPage--
+                    showPage(currentPage)
+                }
+            } else if (page === 'next') {
+                if (currentPage < totalPages) {
+                    currentPage++
+                    showPage(currentPage)
+                }
+            } else {
+                currentPage = parseInt(page)
+                showPage(currentPage)
+            }
+        })
+    })
+}
+
+let additionalUsersShown = 0
+function showMoreUsers() {
+    const usersList = document.getElementById('usersList')
+    const hiddenUserCards = usersList
+        ? usersList.querySelectorAll('.user-card-new.hidden-user')
+        : []
+    const paginationContainer = document.getElementById('userPagination')
+    const showMoreBtn = document.getElementById('showMoreUsersBtn')
+
+    if (!usersList || hiddenUserCards.length === 0) {
+        // Если больше нет скрытых пользователей, можно скрыть кнопку
+        if (showMoreBtn) showMoreBtn.style.display = 'none'
+        return
+    }
+
+    // Скрываем пагинацию с цифрами и меняем отображение кнопок
+    if (paginationContainer) {
+        paginationContainer.style.display = 'none'
+    }
+
+    // Если контейнер для кнопок еще не создан, создаем его
+    let buttonsContainer = document.querySelector('.pagination-buttons-container')
+    if (!buttonsContainer) {
+        buttonsContainer = document.createElement('div')
+        buttonsContainer.className = 'pagination-buttons-container'
+        const paginationNew = document.querySelector('.pagination-new')
+        if (paginationNew) {
+            paginationNew.appendChild(buttonsContainer)
+        }
+    }
+
+    // Показываем кнопку "Скрыть", если её еще нет
+    let hideBtn = document.getElementById('hideUsersBtn')
+    if (!hideBtn) {
+        hideBtn = document.createElement('button')
+        hideBtn.id = 'hideUsersBtn'
+        hideBtn.className = 'hide-btn-new'
+        hideBtn.textContent = 'Скрыть'
+        hideBtn.addEventListener('click', hideExtraUsers)
+        buttonsContainer.appendChild(hideBtn)
+    } else {
+        hideBtn.style.display = 'flex'
+    }
+
+    // Перемещаем кнопку "Показать еще" в контейнер, если она еще не там
+    if (showMoreBtn && showMoreBtn.parentElement !== buttonsContainer) {
+        buttonsContainer.appendChild(showMoreBtn)
+    }
+
+    // Показываем следующие 5 скрытых карточек
+    const showCount = Math.min(5, hiddenUserCards.length)
+    for (let i = 0; i < showCount; i++) {
+        hiddenUserCards[i].classList.remove('hidden-user')
+        hiddenUserCards[i].classList.add('show-more-revealed')
+        additionalUsersShown++
+    }
+
+    // Если больше нет скрытых пользователей, скрываем кнопку "Показать еще"
+    if (hiddenUserCards.length <= showCount) {
+        if (showMoreBtn) showMoreBtn.style.display = 'none'
+    }
+}
+
+// Функция для скрытия дополнительных пользователей и возврата к пагинации
+function hideExtraUsers() {
+    const usersList = document.getElementById('usersList')
+    const paginationContainer = document.getElementById('userPagination')
+    const buttonsContainer = document.querySelector('.pagination-buttons-container')
+    const hideBtn = document.getElementById('hideUsersBtn')
+    const showMoreBtn = document.getElementById('showMoreUsersBtn')
+
+    // Возвращаем отображение пагинации с цифрами
+    if (paginationContainer) {
+        paginationContainer.style.display = 'flex'
+    }
+
+    // Скрываем кнопку "Скрыть"
+    if (hideBtn) {
+        hideBtn.style.display = 'none'
+    }
+
+    // Возвращаем кнопку "Показать еще" в исходное положение
+    if (showMoreBtn && buttonsContainer) {
+        document.querySelector('.pagination-new').appendChild(showMoreBtn)
+        showMoreBtn.style.display = 'flex'
+    }
+
+    // Скрываем все карточки, которые были показаны через "Показать еще"
+    const revealedCards = usersList
+        ? usersList.querySelectorAll('.user-card-new.show-more-revealed')
+        : []
+    revealedCards.forEach((card) => {
+        card.classList.add('hidden-user')
+        card.classList.remove('show-more-revealed')
+    })
+
+    // Сбрасываем счетчик показанных дополнительных пользователей
+    additionalUsersShown = 0
+
+    // Восстанавливаем состояние текущей страницы
+    const currentPageBtn = document.querySelector('.page-number-item.current')
+    if (currentPageBtn) {
+        const currentPage = parseInt(currentPageBtn.dataset.page)
+        showPage(currentPage)
+    }
+}
+
+// Функция для показа определенной страницы
+function showPage(page) {
+  const usersList = document.getElementById('usersList')
+  const userCards = usersList
+    ? usersList.querySelectorAll('.user-card-new')
+    : []
+  const itemsPerPage = 8 // Изменили с 5 на 8
+
+  if (!usersList || userCards.length === 0) return
+
+  const startIndex = (page - 1) * itemsPerPage
+  const endIndex = startIndex + itemsPerPage
+
+  userCards.forEach((card, index) => {
+    if (index >= startIndex && index < endIndex) {
+      card.classList.remove('hidden-user')
+    } else {
+      // Если карточка уже была показана через "Показать еще", не скрываем её
+      if (!card.classList.contains('show-more-revealed')) {
+        card.classList.add('hidden-user')
+      }
+    }
   })
 }
 
