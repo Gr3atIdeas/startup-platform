@@ -520,8 +520,8 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-<script id="request_user_id_data" type="application/json">{{ request.user.user_id|default:"null" }}</script>
-<script id="request_user_role_data" type="application/json">{{ request.user.role.role_name|default:"null" }}</script>
+{{ request.user.user_id|default:"null"|json_script:"request_user_id_data" }}
+{{ request.user.role.role_name|default:"null"|json_script:"request_user_role_data" }}
 
 {% endblock %}
 
