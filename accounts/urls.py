@@ -139,5 +139,4 @@ urlpatterns = [
         name="get_chat_messages_dynamic",
     ),
     # Обработчик ошибок 404
-    path("404/", views.custom_404, name="custom_404"),
 ]
