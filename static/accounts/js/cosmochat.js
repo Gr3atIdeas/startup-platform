@@ -1109,13 +1109,16 @@ let isLeavingChat = false;
 
 function leaveChat() {
     if (isLeavingChat) return;
+    isLeavingChat = true;
     if (!currentChatId) {
         alert('Выберите чат');
+        isLeavingChat = false;
         return;
     }
-    if (!confirm('Вы уверены, что хотите покинуть/удалить этот чат?')) return;
-
-    isLeavingChat = true;
+    if (!confirm('Вы уверены, что хотите покинуть/удалить этот чат?')) {
+        isLeavingChat = false;
+        return;
+    }
     fetch(`/cosmochat/leave-chat/${currentChatId}/`, {
         method: 'POST',
         headers: { 'X-CSRFToken': csrfToken, 'X-Requested-With': 'XMLHttpRequest' },
