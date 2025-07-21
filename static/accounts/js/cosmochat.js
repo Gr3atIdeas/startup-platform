@@ -919,7 +919,7 @@ function openProfileModal(userId) {
           : data.profile_picture_url.startsWith('/')
             ? data.profile_picture_url
             : '/' + data.profile_picture_url)
-      : '/static/accounts/images/cosmochat/avatar_placeholder_general.png';
+      : '/static/accounts/images/avatars/default_avatar_ufo.png';
 
       if (profileAvatar) profileAvatar.src = profilePictureUrl
       if (profileName)
