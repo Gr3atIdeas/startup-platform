@@ -976,12 +976,34 @@ function startChat() {
           document
             .querySelector('.main-chat-area-new')
             .scrollIntoView({ behavior: 'smooth' })
+        } else if (data.chat) {
+          // Новый чат: добавляем в DOM и открываем
+          const newChatItem = createChatItemElement(data.chat)
+          if (newChatItem) {
+            const chatListContainer = document.getElementById('chatListContainer')
+            const noChatsMessage = chatListContainer.querySelector('p')
+            if (noChatsMessage) {
+              noChatsMessage.remove()
+            }
+            chatListContainer.prepend(newChatItem)
+            startPolling()
+            waitForChatInDOM(data.chat.conversation_id, 3000)
+              .then(() => {
+                loadChat(data.chat.conversation_id).then(() => {
+                  if (typeof closeProfileModal === 'function') closeProfileModal();
+                  document.querySelector('.main-chat-area-new').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                });
+              })
+              .catch(() => {
+                window.showNotification('Чат создан, но не удалось его сразу открыть. Обновите страницу.', 'warning');
+              });
+          }
         } else {
-          window.location.href =
-            window.location.pathname +
-            '?open_chat_id=' +
-            data.chat_id +
-            '&new_chat=true'
+          // fallback: если нет data.chat, просто открываем по id
+          loadChat(data.chat_id)
+          document
+            .querySelector('.main-chat-area-new')
+            .scrollIntoView({ behavior: 'smooth' })
         }
         closeProfileModal()
       } else {
