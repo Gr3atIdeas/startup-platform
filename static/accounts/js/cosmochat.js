@@ -1303,14 +1303,20 @@ function startChatWithUser(userId) {
             if (noChatsMessage) {
               noChatsMessage.remove()
             }
-            chatListContainer.prepend(newChatItem)
+            chatListContainer.prepend(newChatItem);
             startPolling();
-            setTimeout(() => {
-              loadChat(data.chat.conversation_id).then(() => {
-                if (typeof closeProfileModal === 'function') closeProfileModal();
-                document.querySelector('.main-chat-area-new').scrollIntoView({ behavior: 'smooth', block: 'start' });
-              });
-            }, 500);
+            // Ждём появления нового чата в DOM и только потом вызываем loadChat и закрываем модалку
+            const observer = new MutationObserver((mutations, obs) => {
+              const newChatElem = chatListContainer.querySelector(`.chat-item-new[data-chat-id='${data.chat.conversation_id}']`);
+              if (newChatElem) {
+                obs.disconnect();
+                loadChat(data.chat.conversation_id).then(() => {
+                  if (typeof closeProfileModal === 'function') closeProfileModal();
+                  document.querySelector('.main-chat-area-new').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                });
+              }
+            });
+            observer.observe(chatListContainer, { childList: true, subtree: true });
           }
         }
         const searchDropdown = document.getElementById('searchDropdown')
