@@ -1304,9 +1304,12 @@ function startChatWithUser(userId) {
               noChatsMessage.remove()
             }
             chatListContainer.prepend(newChatItem)
-            loadChat(data.chat.conversation_id).then(() => {
-              if (typeof closeProfileModal === 'function') closeProfileModal();
-            });
+            setTimeout(() => {
+              loadChat(data.chat.conversation_id).then(() => {
+                if (typeof closeProfileModal === 'function') closeProfileModal();
+                document.querySelector('.main-chat-area-new').scrollIntoView({ behavior: 'smooth', block: 'start' });
+              });
+            }, 0);
           }
         }
         const searchDropdown = document.getElementById('searchDropdown')
