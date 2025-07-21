@@ -1039,6 +1039,15 @@ def legal(request):
 
 @login_required
 def profile(request, user_id=None):
+    # --- ДОБАВЛЯЮ обработку user_id из GET-параметра ---
+    if not user_id:
+        user_id_param = request.GET.get("user_id")
+        if user_id_param:
+            try:
+                user_id = int(user_id_param)
+            except ValueError:
+                user_id = None
+    # --- КОНЕЦ ДОБАВЛЕНИЯ ---
     if user_id:
         user = get_object_or_404(Users, user_id=user_id)
         is_own_profile = request.user.user_id == user.user_id
