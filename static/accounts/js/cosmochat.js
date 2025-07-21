@@ -1105,41 +1105,37 @@ function addParticipantToChat(userId) {
 }
 
 let alertShown = false;
+let isLeavingChat = false;
 
 function leaveChat() {
+    if (isLeavingChat) return;
     if (!currentChatId) {
-        if (!alertShown) {
-            alertShown = true;
-            alert('Выберите чат');
-            alertShown = false;
-        }
+        alert('Выберите чат');
         return;
     }
     if (!confirm('Вы уверены, что хотите покинуть/удалить этот чат?')) return;
 
-    if (!alertShown) {
-        alertShown = true;
-        fetch(`/cosmochat/leave-chat/${currentChatId}/`, {
-            method: 'POST',
-            headers: { 'X-CSRFToken': csrfToken, 'X-Requested-With': 'XMLHttpRequest' },
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert(data.message || 'Вы покинули чат.');
-                currentChatId = null;
-                location.reload();
-            } else {
-                alert(data.error || 'Ошибка при выходе из чата');
-            }
-            alertShown = false; // Сбрасываем флаг после выполнения
-        })
-        .catch(error => {
-            console.error('Ошибка выхода из чата:', error);
-            alert('Произошла ошибка при выходе из чата.');
-            alertShown = false;
-        });
-    }
+    isLeavingChat = true;
+    fetch(`/cosmochat/leave-chat/${currentChatId}/`, {
+        method: 'POST',
+        headers: { 'X-CSRFToken': csrfToken, 'X-Requested-With': 'XMLHttpRequest' },
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert(data.message || 'Вы покинули чат.');
+            currentChatId = null;
+            location.reload();
+        } else {
+            alert(data.error || 'Ошибка при выходе из чата');
+        }
+        isLeavingChat = false;
+    })
+    .catch(error => {
+        console.error('Ошибка выхода из чата:', error);
+        alert('Произошла ошибка при выходе из чата.');
+        isLeavingChat = false;
+    });
 }
 
 // Вспомогательные функции для textarea (авто-изменение высоты)
@@ -1304,8 +1300,13 @@ function startChatWithUser(userId) {
               noChatsMessage.remove()
             }
             chatListContainer.prepend(newChatItem);
+            // Сразу делаем новый чат активным
+            loadChat(data.chat.conversation_id).then(() => {
+              if (typeof closeProfileModal === 'function') closeProfileModal();
+              document.querySelector('.main-chat-area-new').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+            // Затем polling и MutationObserver для гарантии
             startPolling();
-            // Ждём появления нового чата в DOM и только потом вызываем loadChat и закрываем модалку
             const observer = new MutationObserver((mutations, obs) => {
               const newChatElem = chatListContainer.querySelector(`.chat-item-new[data-chat-id='${data.chat.conversation_id}']`);
               if (newChatElem) {
