@@ -411,8 +411,11 @@
                 <div class="stars"></div>
                 <div id="scene">
                   <div id="galaxy">
-                    <div id="logo">
-                        <img src="{% if user.get_profile_picture_url %}{{ user.get_profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}" alt="Аватар" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                    <div id="logo" style="display: flex; flex-direction: column; align-items: center;">
+                        <img src="{% if user.get_profile_picture_url %}{{ user.get_profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}" alt="Аватар" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover;">
+                        {% if planetary_startups|length == 0 %}
+                          <span style="margin-top: 12px; color: white; font-size: 18px; text-align: center;">Нет стартапов для отображения</span>
+                        {% endif %}
                     </div>
                     {% for startup in planetary_startups %}
                       <div class="orbit" style="--orbit-size: {{ startup.orbit_size }}px; --orbit-time: {{ startup.orbit_time }}s;">
@@ -434,7 +437,7 @@
                         </div>
                       </div>
                     {% empty %}
-                      <p style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white;">Нет стартапов для отображения</p>
+                      <!-- убираем дублирующийся текст, теперь сообщение под аватаром -->
                     {% endfor %}
                   </div>
               </div>
