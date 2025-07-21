@@ -1255,7 +1255,7 @@ def delete_avatar(request):
 @login_required
 def chat_list(request):
     user = request.user
-    chats = ChatConversations.objects.all()
+    chats = ChatConversations.objects.all().order_by('-updated_at')
     chat_data = []
 
     for chat in chats:
