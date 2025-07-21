@@ -397,6 +397,7 @@
 {% endblock %}
 
 {% block content %}
+  <main class="content">
   {% if user.is_authenticated and user.role.role_name == 'startuper' %}
     <div class="portfolio-container">
       <!-- Верхняя секция с аналитикой -->
@@ -1786,5 +1787,5 @@
       {% endif %}
     </div>
   {% endif %}
-
+  </main>
 {% endblock %}
