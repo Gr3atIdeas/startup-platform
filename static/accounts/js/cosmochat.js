@@ -1104,41 +1104,126 @@ function addParticipantToChat(userId) {
         });
 }
 
-let alertShown = false;
-let isLeavingChat = false;
+// Кастомная модалка подтверждения (на основе notification)
+function showConfirmModal(message, onConfirm, onCancel) {
+  // Удаляем старую модалку, если есть
+  let oldModal = document.getElementById('custom-confirm-modal-overlay');
+  if (oldModal) oldModal.remove();
 
+  const overlay = document.createElement('div');
+  overlay.id = 'custom-confirm-modal-overlay';
+  overlay.className = 'modal-overlay';
+  overlay.style.display = 'flex';
+  overlay.style.zIndex = 20000;
+
+  const modal = document.createElement('div');
+  modal.className = 'modal-popup';
+  modal.style.background = 'rgba(34, 34, 34, 0.95)';
+  modal.style.color = 'white';
+  modal.style.borderRadius = '20px';
+  modal.style.boxShadow = '0 15px 40px rgb(0 0 0 / 50%)';
+  modal.style.padding = '40px 32px 32px 32px';
+  modal.style.display = 'flex';
+  modal.style.flexDirection = 'column';
+  modal.style.alignItems = 'center';
+  modal.style.maxWidth = '350px';
+  modal.style.width = '100%';
+  modal.style.position = 'relative';
+
+  const text = document.createElement('div');
+  text.textContent = message;
+  text.style.fontSize = '18px';
+  text.style.marginBottom = '32px';
+  text.style.textAlign = 'center';
+
+  const btnRow = document.createElement('div');
+  btnRow.style.display = 'flex';
+  btnRow.style.gap = '18px';
+  btnRow.style.justifyContent = 'center';
+
+  const confirmBtn = document.createElement('button');
+  confirmBtn.textContent = 'Выйти';
+  confirmBtn.className = 'btn promo-action-button';
+  confirmBtn.style.background = 'linear-gradient(180deg, #ffef2b 0%, #f9f7d6 100%)';
+  confirmBtn.style.color = '#191919';
+  confirmBtn.style.fontWeight = 'bold';
+  confirmBtn.style.fontSize = '16px';
+  confirmBtn.style.padding = '10px 28px';
+  confirmBtn.style.borderRadius = '10px';
+  confirmBtn.style.border = 'none';
+  confirmBtn.style.cursor = 'pointer';
+
+  const cancelBtn = document.createElement('button');
+  cancelBtn.textContent = 'Отмена';
+  cancelBtn.className = 'btn';
+  cancelBtn.style.background = 'rgba(255,255,255,0.12)';
+  cancelBtn.style.color = '#fff';
+  cancelBtn.style.fontWeight = 'bold';
+  cancelBtn.style.fontSize = '16px';
+  cancelBtn.style.padding = '10px 28px';
+  cancelBtn.style.borderRadius = '10px';
+  cancelBtn.style.border = 'none';
+  cancelBtn.style.cursor = 'pointer';
+
+  btnRow.appendChild(confirmBtn);
+  btnRow.appendChild(cancelBtn);
+
+  modal.appendChild(text);
+  modal.appendChild(btnRow);
+  overlay.appendChild(modal);
+  document.body.appendChild(overlay);
+
+  confirmBtn.onclick = () => {
+    overlay.remove();
+    if (onConfirm) onConfirm();
+  };
+  cancelBtn.onclick = () => {
+    overlay.remove();
+    if (onCancel) onCancel();
+  };
+  overlay.onclick = (e) => {
+    if (e.target === overlay) overlay.remove();
+  };
+  document.addEventListener('keydown', function escListener(e) {
+    if (e.key === 'Escape') {
+      overlay.remove();
+      document.removeEventListener('keydown', escListener);
+    }
+  });
+}
+
+let isLeavingChat = false;
 function leaveChat() {
-    if (isLeavingChat) return;
+  if (isLeavingChat) return;
+  if (!currentChatId) {
+    window.showNotification('Выберите чат', 'warning');
+    return;
+  }
+  showConfirmModal('Вы уверены, что хотите покинуть/удалить этот чат?', () => {
     isLeavingChat = true;
-    if (!currentChatId) {
-        alert('Выберите чат');
-        isLeavingChat = false;
-        return;
-    }
-    if (!confirm('Вы уверены, что хотите покинуть/удалить этот чат?')) {
-        isLeavingChat = false;
-        return;
-    }
     fetch(`/cosmochat/leave-chat/${currentChatId}/`, {
-        method: 'POST',
-        headers: { 'X-CSRFToken': csrfToken, 'X-Requested-With': 'XMLHttpRequest' },
+      method: 'POST',
+      headers: { 'X-CSRFToken': csrfToken, 'X-Requested-With': 'XMLHttpRequest' },
     })
-    .then(response => response.json())
-    .then(data => {
+      .then(response => response.json())
+      .then(data => {
         if (data.success) {
-            alert(data.message || 'Вы покинули чат.');
-            currentChatId = null;
-            location.reload();
+          window.showNotification(data.message || 'Вы покинули чат.', 'success');
+          currentChatId = null;
+          location.reload();
         } else {
-            alert(data.error || 'Ошибка при выходе из чата');
+          window.showNotification(data.error || 'Ошибка при выходе из чата', 'error');
         }
         isLeavingChat = false;
-    })
-    .catch(error => {
+      })
+      .catch(error => {
         console.error('Ошибка выхода из чата:', error);
-        alert('Произошла ошибка при выходе из чата.');
+        window.showNotification('Произошла ошибка при выходе из чата.', 'error');
         isLeavingChat = false;
-    });
+      });
+  }, () => {
+    // Отмена — ничего не делаем
+  });
 }
 
 // Вспомогательные функции для textarea (авто-изменение высоты)
@@ -1303,24 +1388,17 @@ function startChatWithUser(userId) {
               noChatsMessage.remove()
             }
             chatListContainer.prepend(newChatItem);
-            // Сразу делаем новый чат активным
-            loadChat(data.chat.conversation_id).then(() => {
-              if (typeof closeProfileModal === 'function') closeProfileModal();
-              document.querySelector('.main-chat-area-new').scrollIntoView({ behavior: 'smooth', block: 'start' });
-            });
-            // Затем polling и MutationObserver для гарантии
             startPolling();
-            const observer = new MutationObserver((mutations, obs) => {
-              const newChatElem = chatListContainer.querySelector(`.chat-item-new[data-chat-id='${data.chat.conversation_id}']`);
-              if (newChatElem) {
-                obs.disconnect();
+            waitForChatInDOM(data.chat.conversation_id, 3000)
+              .then(() => {
                 loadChat(data.chat.conversation_id).then(() => {
                   if (typeof closeProfileModal === 'function') closeProfileModal();
                   document.querySelector('.main-chat-area-new').scrollIntoView({ behavior: 'smooth', block: 'start' });
                 });
-              }
-            });
-            observer.observe(chatListContainer, { childList: true, subtree: true });
+              })
+              .catch(() => {
+                window.showNotification('Чат создан, но не удалось его сразу открыть. Обновите страницу.', 'warning');
+              });
           }
         }
         const searchDropdown = document.getElementById('searchDropdown')
@@ -2111,3 +2189,21 @@ document.addEventListener('DOMContentLoaded', function() {
   // Вызываем фильтрацию при первой загрузке (если что-то выбрано)
   filterUsersByRole();
 });
+
+// --- Надёжный поиск нового чата при создании ---
+function waitForChatInDOM(chatId, maxWaitMs = 3000) {
+  return new Promise((resolve, reject) => {
+    const start = Date.now();
+    function check() {
+      const chatElem = chatListContainer.querySelector(`.chat-item-new[data-chat-id='${chatId}']`);
+      if (chatElem) {
+        resolve(chatElem);
+      } else if (Date.now() - start > maxWaitMs) {
+        reject(new Error('Чат не появился в DOM за отведённое время.'));
+      } else {
+        setTimeout(check, 100);
+      }
+    }
+    check();
+  });
+}
