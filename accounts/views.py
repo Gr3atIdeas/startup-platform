@@ -242,6 +242,7 @@ def contacts_page_view(request):
 
 # Регистрация пользователя
 def register(request):
+    next_url = request.GET.get("next") or request.POST.get("next")
     if request.method == "POST":
         form = RegisterForm(request.POST)
         if form.is_valid():
@@ -251,19 +252,22 @@ def register(request):
             messages.success(
                 request, "Регистрация прошла успешно! Теперь вы можете войти."
             )
-            return redirect(
-                "login"
-            )  # После регистрации перенаправляем на страницу входа
+            # После регистрации, если был next, передать его в login
+            if next_url:
+                login_url = reverse("login") + f"?next={next_url}"
+                return redirect(login_url)
+            return redirect("login")
         else:
-            return render(request, "accounts/register.html", {"form": form})
+            return render(request, "accounts/register.html", {"form": form, "next": next_url})
     else:
         form = RegisterForm()
-    return render(request, "accounts/register.html", {"form": form})
+    return render(request, "accounts/register.html", {"form": form, "next": next_url})
 
 
 # Вход пользователя
 def user_login(request):
     logger.debug("Entering user_login view")
+    next_url = request.GET.get("next") or request.POST.get("next")
     if request.method == "POST":
         logger.debug("Processing POST request in user_login")
         form = LoginForm(request.POST)
@@ -280,8 +284,20 @@ def user_login(request):
                 messages.success(
                     request, f"Добро пожаловать, {user.first_name or user.email}!"
                 )
-
-                # Перенаправление в зависимости от роли
+                # Если был next и он ведёт на создание стартапа, пускаем только стартаппера
+                if next_url == reverse("create_startup"):
+                    if hasattr(user, "role") and user.role and user.role.role_name.lower() == "startuper":
+                        return redirect(next_url)
+                    # Если не стартаппер — на главную по роли
+                    else:
+                        role_name = user.role.role_name.lower() if hasattr(user, "role") and user.role else None
+                        if role_name == "investor":
+                            return redirect("investor_main")
+                        elif role_name == "moderator":
+                            return redirect("main_page_moderator")
+                        else:
+                            return redirect("home")
+                # Обычный редирект по роли
                 if hasattr(user, "role") and user.role:
                     role_name = user.role.role_name.lower()
                     if role_name == "investor":
@@ -290,19 +306,17 @@ def user_login(request):
                         return redirect("startupper_main")
                     elif role_name == "moderator":
                         return redirect("main_page_moderator")
-
-                # Если роль не определена, перенаправляем на главную, где будет выбор
                 return redirect("home")
             else:
                 logger.warning("Authentication failed for email")
                 messages.error(request, "Неверный email или пароль.")
         else:
             logger.warning(f"Form invalid: {form.errors}")
-        return render(request, "accounts/login.html", {"form": form})
+        return render(request, "accounts/login.html", {"form": form, "next": next_url})
     else:
         logger.debug("Rendering login form")
         form = LoginForm()
-    return render(request, "accounts/login.html", {"form": form})
+    return render(request, "accounts/login.html", {"form": form, "next": next_url})
 
 
 # Выход пользователя
@@ -1718,6 +1732,12 @@ def reject_deal(request, chat_id):
 
 @login_required
 def create_startup(request):
+    # Только стартаппер и модератор могут создавать стартап
+    allowed_roles = ["startuper", "moderator"]
+    if not hasattr(request.user, "role") or request.user.role.role_name.lower() not in allowed_roles:
+        messages.error(request, "Доступ к созданию стартапа разрешён только пользователям с ролью 'Стартаппер' или 'Модератор'.")
+        return redirect("home")
+
     if request.method == "POST":
         form = StartupForm(request.POST, request.FILES)
         if form.is_valid():
