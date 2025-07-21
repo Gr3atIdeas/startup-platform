@@ -972,17 +972,19 @@ function startChat() {
     })
     .then((data) => {
       console.log('[startChat] fetch data:', data)
-      if (data.success && data.chat_id) {
+      // --- Исправление: поддержка data.chat.conversation_id ---
+      const chatId = data.chat_id || (data.chat && data.chat.conversation_id);
+      if (data.success && chatId) {
         let chatExists = false
         document.querySelectorAll('.chat-item-new').forEach((item) => {
-          if (item.dataset.chatId == data.chat_id) {
+          if (item.dataset.chatId == chatId) {
             chatExists = true
           }
         })
         console.log('[startChat] chatExists:', chatExists)
         if (chatExists) {
-          console.log('[startChat] loading existing chat:', data.chat_id)
-          loadChat(data.chat_id)
+          console.log('[startChat] loading existing chat:', chatId)
+          loadChat(chatId)
           document
             .querySelector('.main-chat-area-new')
             .scrollIntoView({ behavior: 'smooth' })
@@ -998,10 +1000,10 @@ function startChat() {
             }
             chatListContainer.prepend(newChatItem)
             startPolling()
-            waitForChatInDOM(data.chat.conversation_id, 3000)
+            waitForChatInDOM(chatId, 3000)
               .then(() => {
-                console.log('[startChat] chat appeared in DOM, loading:', data.chat.conversation_id)
-                loadChat(data.chat.conversation_id).then(() => {
+                console.log('[startChat] chat appeared in DOM, loading:', chatId)
+                loadChat(chatId).then(() => {
                   if (typeof closeProfileModal === 'function') closeProfileModal();
                   document.querySelector('.main-chat-area-new').scrollIntoView({ behavior: 'smooth', block: 'start' });
                 });
@@ -1014,8 +1016,8 @@ function startChat() {
             console.error('[startChat] createChatItemElement вернул null/undefined!')
           }
         } else {
-          console.log('[startChat] fallback: просто открываем по id', data.chat_id)
-          loadChat(data.chat_id)
+          console.log('[startChat] fallback: просто открываем по id', chatId)
+          loadChat(chatId)
           document
             .querySelector('.main-chat-area-new')
             .scrollIntoView({ behavior: 'smooth' })
