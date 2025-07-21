@@ -930,7 +930,8 @@ function openProfileModal(userId) {
       if (profileBio)
         profileBio.textContent = `О себе: ${data.bio || 'Нет информации'}`
       if (profileLink) profileLink.href = `/profile/${userId}/`
-      profileModal.style.display = 'flex'
+      profileModal.style.display = 'flex';
+      profileModal.classList.add('active');
     })
     .catch((error) => {
       console.error('Ошибка загрузки профиля:', error)
@@ -939,7 +940,10 @@ function openProfileModal(userId) {
 }
 
 function closeProfileModal() {
-  if (profileModal) profileModal.style.display = 'none'
+  if (profileModal) {
+    profileModal.classList.remove('active');
+    profileModal.style.display = 'none';
+  }
   currentProfileUserId = null
 }
 
