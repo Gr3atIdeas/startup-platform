@@ -1292,21 +1292,23 @@ function startChatWithUser(userId) {
     .then((data) => {
       if (data.success) {
         if (data.existed) {
-          loadChat(data.chat_id)
+          loadChat(data.chat_id).then(() => {
+            if (typeof closeProfileModal === 'function') closeProfileModal();
+          });
         } else {
           const newChatItem = createChatItemElement(data.chat)
           if (newChatItem) {
-            const chatListContainer =
-              document.getElementById('chatListContainer')
+            const chatListContainer = document.getElementById('chatListContainer')
             const noChatsMessage = chatListContainer.querySelector('p')
             if (noChatsMessage) {
               noChatsMessage.remove()
             }
             chatListContainer.prepend(newChatItem)
-            loadChat(data.chat.conversation_id)
+            loadChat(data.chat.conversation_id).then(() => {
+              if (typeof closeProfileModal === 'function') closeProfileModal();
+            });
           }
         }
-        if (typeof closeProfileModal === 'function') closeProfileModal()
         const searchDropdown = document.getElementById('searchDropdown')
         if (searchDropdown) searchDropdown.style.display = 'none'
         document
