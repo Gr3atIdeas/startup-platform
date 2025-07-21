@@ -1306,19 +1306,9 @@
              });
     
              let applicationsNoResultsMsg = document.querySelector('.applications-list .no-results-message');
-             if (visibleCount === 0) {
-                 if (!applicationsNoResultsMsg) {
-                     const p = document.createElement('p');
-                     p.textContent = 'По вашему запросу ничего не найдено.';
-                     p.style.gridColumn = '1 / -1';
-                     p.style.textAlign = 'center';
-                     p.classList.add('no-results-message');
-                     document.querySelector('.applications-list').appendChild(p);
-                 }
-             } else {
-                 if (applicationsNoResultsMsg) {
-                     applicationsNoResultsMsg.remove();
-                 }
+             // Отключаем автоматическое добавление сообщения, чтобы не было дублирующих системных сообщений
+             if (applicationsNoResultsMsg) {
+                 applicationsNoResultsMsg.remove();
              }
          }
     
