@@ -907,6 +907,7 @@ function updateChatListItem(lastMessage) {
 // Функции для модальных окон (взяты из старого HTML, адаптированы)
 function openProfileModal(userId) {
   currentProfileUserId = userId
+  if (typeof startChatBtn !== 'undefined' && startChatBtn) startChatBtn.disabled = true;
   fetch(`/profile/?user_id=${userId}`, {
     headers: { 'X-CSRFToken': csrfToken, 'X-Requested-With': 'XMLHttpRequest' },
   })
@@ -932,10 +933,12 @@ function openProfileModal(userId) {
       if (profileLink) profileLink.href = `/profile/${userId}/`
       profileModal.style.display = 'flex';
       profileModal.classList.add('active');
+      if (typeof startChatBtn !== 'undefined' && startChatBtn) startChatBtn.disabled = false;
     })
     .catch((error) => {
       console.error('Ошибка загрузки профиля:', error)
       alert('Произошла ошибка при загрузке профиля.')
+      if (typeof startChatBtn !== 'undefined' && startChatBtn) startChatBtn.disabled = false;
     })
 }
 
@@ -948,12 +951,12 @@ function closeProfileModal() {
 }
 
 function startChat() {
-  // Эта функция вызывается из МОДАЛЬНОГО ОКНА ПРОФИЛЯ
   const userId = currentProfileUserId
   if (!userId) {
     alert('Ошибка: пользователь не выбран')
     return
   }
+  if (typeof startChatBtn !== 'undefined' && startChatBtn) startChatBtn.disabled = true;
   fetch(`/cosmochat/start-chat/${userId}/`, {
     method: 'POST',
     headers: {
@@ -977,7 +980,6 @@ function startChat() {
             .querySelector('.main-chat-area-new')
             .scrollIntoView({ behavior: 'smooth' })
         } else if (data.chat) {
-          // Новый чат: добавляем в DOM и открываем
           const newChatItem = createChatItemElement(data.chat)
           if (newChatItem) {
             const chatListContainer = document.getElementById('chatListContainer')
@@ -999,7 +1001,6 @@ function startChat() {
               });
           }
         } else {
-          // fallback: если нет data.chat, просто открываем по id
           loadChat(data.chat_id)
           document
             .querySelector('.main-chat-area-new')
@@ -1009,10 +1010,12 @@ function startChat() {
       } else {
         alert(data.error || 'Ошибка при создании чата')
       }
+      if (typeof startChatBtn !== 'undefined' && startChatBtn) startChatBtn.disabled = false;
     })
     .catch((error) => {
       console.error('Ошибка создания чата:', error)
       alert('Произошла ошибка при создании чата')
+      if (typeof startChatBtn !== 'undefined' && startChatBtn) startChatBtn.disabled = false;
     })
 }
 
