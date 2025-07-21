@@ -952,7 +952,6 @@ function closeProfileModal() {
 
 function startChat() {
   const userId = currentProfileUserId
-  console.log('[startChat] userId:', userId)
   if (!userId) {
     alert('Ошибка: пользователь не выбран')
     return
@@ -967,12 +966,9 @@ function startChat() {
     },
   })
     .then((response) => {
-      console.log('[startChat] fetch response status:', response.status)
       return response.json()
     })
     .then((data) => {
-      console.log('[startChat] fetch data:', data)
-      // --- Исправление: поддержка data.chat.conversation_id ---
       const chatId = data.chat_id || (data.chat && data.chat.conversation_id);
       if (data.success && chatId) {
         let chatExists = false
@@ -981,17 +977,13 @@ function startChat() {
             chatExists = true
           }
         })
-        console.log('[startChat] chatExists:', chatExists)
         if (chatExists) {
-          console.log('[startChat] loading existing chat:', chatId)
           loadChat(chatId)
           document
             .querySelector('.main-chat-area-new')
             .scrollIntoView({ behavior: 'smooth' })
         } else if (data.chat) {
-          console.log('[startChat] creating new chat item:', data.chat)
           const newChatItem = createChatItemElement(data.chat)
-          console.log('[startChat] newChatItem:', newChatItem)
           if (newChatItem) {
             const chatListContainer = document.getElementById('chatListContainer')
             const noChatsMessage = chatListContainer.querySelector('p')
@@ -1002,21 +994,16 @@ function startChat() {
             startPolling()
             waitForChatInDOM(chatId, 3000)
               .then(() => {
-                console.log('[startChat] chat appeared in DOM, loading:', chatId)
                 loadChat(chatId).then(() => {
                   if (typeof closeProfileModal === 'function') closeProfileModal();
                   document.querySelector('.main-chat-area-new').scrollIntoView({ behavior: 'smooth', block: 'start' });
                 });
               })
               .catch(() => {
-                console.warn('[startChat] Чат создан, но не удалось его сразу открыть. Обновите страницу.')
                 window.showNotification('Чат создан, но не удалось его сразу открыть. Обновите страницу.', 'warning');
               });
-          } else {
-            console.error('[startChat] createChatItemElement вернул null/undefined!')
           }
         } else {
-          console.log('[startChat] fallback: просто открываем по id', chatId)
           loadChat(chatId)
           document
             .querySelector('.main-chat-area-new')
@@ -1024,13 +1011,11 @@ function startChat() {
         }
         closeProfileModal()
       } else {
-        console.error('[startChat] Ошибка при создании чата:', data.error)
         alert(data.error || 'Ошибка при создании чата')
       }
       if (typeof startChatBtn !== 'undefined' && startChatBtn) startChatBtn.disabled = false;
     })
-    .catch((error) => {
-      console.error('[startChat] Ошибка создания чата:', error)
+    .catch(() => {
       alert('Произошла ошибка при создании чата')
       if (typeof startChatBtn !== 'undefined' && startChatBtn) startChatBtn.disabled = false;
     })
