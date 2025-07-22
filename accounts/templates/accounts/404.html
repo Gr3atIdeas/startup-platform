@@ -1,28 +1,23 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>404 - Страница не найдена</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #0b0d17;
-            color: #fff;
-            font-family: Arial, sans-serif;
-            text-align: center;
-        }
-        h1 {
-            font-size: 48px;
-        }
-    </style>
+    <link rel="stylesheet" href="{% static 'accounts/css/404.css' %}">
 </head>
-<body>
-    <h1>Страница не найдена</h1>
+<body class="notfound-body">
+    <div class="notfound-bg"></div>
+    <div class="notfound-center-block">
+        <div class="notfound-cosmoboy">
+            <img src="{% static 'accounts/images/404/cosmoboy.png' %}" alt="cosmoboy" />
+        </div>
+        <div class="notfound-content">
+            <div class="notfound-title">ОооОопс</div>
+            <div class="notfound-desc">что то тут не так, уже проверяем</div>
+            <a href="/" class="notfound-btn">Главная страница</a>
+        </div>
+    </div>
 </body>
 </html>
