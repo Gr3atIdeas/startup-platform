@@ -2090,37 +2090,42 @@ def edit_startup(request, startup_id):
     timeline_steps = {step.step_number: step.description for step in timeline}
 
     # --- Медиа и документы для превью ---
+    from .utils import get_file_url
     creative_type = FileTypes.objects.get(type_name="creative")
     proof_type = FileTypes.objects.get(type_name="proof")
     video_type = FileTypes.objects.get(type_name="video")
-    from django.conf import settings
-    def build_file_url(folder, file_url):
-        return f"{settings.MEDIA_URL}startups/{startup.startup_id}/{folder}/{file_url}" if file_url else ""
-    existing_creatives = [
-        {
-            "id": fs.file_url,
-            "url": build_file_url("creatives", fs.file_url),
-            "name": fs.file_url,
-        }
-        for fs in FileStorage.objects.filter(startup=startup, file_type=creative_type)
-    ]
-    existing_proofs = [
-        {
-            "id": fs.file_url,
-            "url": build_file_url("proofs", fs.file_url),
-            "name": fs.file_url,
-        }
-        for fs in FileStorage.objects.filter(startup=startup, file_type=proof_type)
-    ]
+    
+    existing_creatives = []
+    for fs in FileStorage.objects.filter(startup=startup, file_type=creative_type):
+        file_url = get_file_url(fs.file_url, startup.startup_id, "creative")
+        if file_url:
+            existing_creatives.append({
+                "id": fs.file_url,
+                "url": file_url,
+                "name": f"creative_{fs.file_url[:8]}.jpg",
+            })
+    
+    existing_proofs = []
+    for fs in FileStorage.objects.filter(startup=startup, file_type=proof_type):
+        file_url = get_file_url(fs.file_url, startup.startup_id, "proof")
+        if file_url:
+            existing_proofs.append({
+                "id": fs.file_url,
+                "url": file_url,
+                "name": f"document_{fs.file_url[:8]}.pdf",
+            })
+    
     existing_video = None
     video_files = FileStorage.objects.filter(startup=startup, file_type=video_type)
     if video_files.exists():
         fs = video_files.first()
-        existing_video = {
-            "id": fs.file_url,
-            "url": build_file_url("videos", fs.file_url),
-            "name": fs.file_url,
-        }
+        file_url = get_file_url(fs.file_url, startup.startup_id, "video")
+        if file_url:
+            existing_video = {
+                "id": fs.file_url,
+                "url": file_url,
+                "name": f"video_{fs.file_url[:8]}.mp4",
+            }
     # ---
 
     if request.method == "POST":
@@ -2150,6 +2155,32 @@ def edit_startup(request, startup_id):
                 startup.both_mode = True
 
             startup.save()
+
+            # Обработка удаления файлов
+            deleted_files_json = request.POST.get('deleted_files', '[]')
+            try:
+                deleted_files = json.loads(deleted_files_json)
+                for deleted_file in deleted_files:
+                    file_id = deleted_file.get('id')
+                    file_type = deleted_file.get('type')
+                    if file_id and file_type:
+                        # Удаляем из FileStorage
+                        FileStorage.objects.filter(
+                            startup=startup,
+                            file_url=file_id
+                        ).delete()
+                        
+                        # Удаляем из соответствующего списка в startup
+                        if file_type == 'creative' and startup.creatives_urls:
+                            startup.creatives_urls = [url for url in startup.creatives_urls if url != file_id]
+                        elif file_type == 'proof' and startup.proofs_urls:
+                            startup.proofs_urls = [url for url in startup.proofs_urls if url != file_id]
+                        elif file_type == 'video' and startup.video_urls:
+                            startup.video_urls = [url for url in startup.video_urls if url != file_id]
+                        
+                        logger.info(f"Удален файл {file_type}: {file_id}")
+            except json.JSONDecodeError:
+                logger.warning("Ошибка при разборе deleted_files JSON")
 
             # Обновление или создание этапов таймлайна
             for i in range(1, 6):

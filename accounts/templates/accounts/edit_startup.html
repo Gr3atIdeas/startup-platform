@@ -165,12 +165,8 @@
                         </div>
                         <div class="form-group">
                             <label for="{{ form.valuation.id_for_label }}">{{ form.valuation.label }}</label>
-                            <div class="input-wrapper valuation-input" style="width:100%;">
+                            <div class="input-wrapper">
                                 {{ form.valuation|add_class:"form-control"|attr:"placeholder:1"|attr:"type:number"|attr:"min:1" }}
-                                <div class="valuation-spin-buttons">
-                                    <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="increase value" class="spin-up">
-                                    <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="decrease value" class="spin-down">
-                                </div>
                             </div>
                             {% if form.valuation.errors %}<span class="error-message">{{ form.valuation.errors|first }}</span>{% endif %}
                         </div>
@@ -396,15 +392,59 @@ document.addEventListener('DOMContentLoaded', function() {
         (files || []).forEach(file => {
             let html = '';
             if (isImage) {
-                html = `<div class="file-preview-item existing-file" data-file-id="${file.id}"><img src="${file.url}" alt="Креатив"><p>${file.name}</p></div>`;
+                html = `<div class="file-preview-item existing-file" data-file-id="${file.id}">
+                    <img src="${file.url}" alt="Креатив">
+                    <p>${file.name}</p>
+                    <button type="button" class="delete-existing-file-btn" data-file-id="${file.id}" data-file-type="creative">Удалить</button>
+                </div>`;
             } else if (isVideo) {
-                html = `<div class="file-preview-item existing-file" data-file-id="${file.id}"><video controls src="${file.url}" style="max-width: 200px; max-height: 150px;"></video><p>${file.name}</p></div>`;
+                html = `<div class="file-preview-item existing-file" data-file-id="${file.id}">
+                    <video controls src="${file.url}" style="max-width: 200px; max-height: 150px;"></video>
+                    <p>${file.name}</p>
+                    <button type="button" class="delete-existing-file-btn" data-file-id="${file.id}" data-file-type="video">Удалить</button>
+                </div>`;
             } else {
-                html = `<div class="file-preview-item existing-file" data-file-id="${file.id}"><img src='${window.STATIC_URL || '/static/'}accounts/images/icons/file_icon.svg' alt='file icon' class='file-icon' style='width: 40px; height: auto;'><p><a href="${file.url}" target="_blank">${file.name}</a></p></div>`;
+                html = `<div class="file-preview-item existing-file" data-file-id="${file.id}">
+                    <img src='${window.STATIC_URL || '/static/'}accounts/images/icons/file_icon.svg' alt='file icon' class='file-icon' style='width: 40px; height: auto;'>
+                    <p><a href="${file.url}" target="_blank">${file.name}</a></p>
+                    <button type="button" class="delete-existing-file-btn" data-file-id="${file.id}" data-file-type="proof">Удалить</button>
+                </div>`;
             }
             previewArea.insertAdjacentHTML('beforeend', html);
         });
     }
+    
+    // Обработчик удаления существующих файлов
+    document.addEventListener('click', function(event) {
+        if (event.target.classList.contains('delete-existing-file-btn')) {
+            const fileId = event.target.dataset.fileId;
+            const fileType = event.target.dataset.fileType;
+            const fileItem = event.target.closest('.file-preview-item');
+            
+            if (confirm('Вы уверены, что хотите удалить этот файл?')) {
+                // Удаляем из превью
+                fileItem.remove();
+                
+                // Добавляем в список удаляемых файлов (для отправки на сервер)
+                const deletedFilesInput = document.getElementById('deleted-files-input') || createDeletedFilesInput();
+                const deletedFiles = JSON.parse(deletedFilesInput.value || '[]');
+                deletedFiles.push({id: fileId, type: fileType});
+                deletedFilesInput.value = JSON.stringify(deletedFiles);
+            }
+        }
+    });
+    
+    // Создаем скрытое поле для удаляемых файлов
+    function createDeletedFilesInput() {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.id = 'deleted-files-input';
+        input.name = 'deleted_files';
+        input.value = '[]';
+        document.getElementById('startupForm').appendChild(input);
+        return input;
+    }
+    
     // Для изображений
     showExistingFiles('creativesPreview', window.existingCreatives, true, false);
     // Для видео
