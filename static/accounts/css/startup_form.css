@@ -8,7 +8,7 @@ body {
 }
 
 .startup-form-container {
-  max-width: 1440px; /* Или ширина вашего основного контейнера по макету */
+  max-width: 1303px; /* Ширина основного контейнера по макету */
   margin: 0 auto;
   padding: 20px; /* Общий паддинг для контейнера */
 }
@@ -1139,6 +1139,25 @@ h3.section-title {
   text-overflow: ellipsis; /* Add ellipsis for very long names */
 }
 
+/* Стили для ссылок и текста в превью файлов */
+.file-preview-item p {
+  color: #2c3e50 !important;
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.file-preview-item a {
+  color: #2c3e50 !important;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.file-preview-item a:hover {
+  color: #3498db !important;
+  text-decoration: underline;
+}
+
 .file-preview-item .file-type-display {
   font-size: 0.75rem;
   color: #7f8c8d; /* Softer grey */
@@ -1168,6 +1187,22 @@ h3.section-title {
 
 .file-preview-item .file-actions button:hover img {
   opacity: 0.7;
+}
+
+/* Стили для кнопки удаления существующих файлов */
+.delete-existing-file-btn {
+  background-color: #e74c3c !important;
+  color: white !important;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  margin-left: 8px;
+}
+
+.delete-existing-file-btn:hover {
+  background-color: #c0392b !important;
 }
 
 /* === Timeline Progress Bar Styles === */
