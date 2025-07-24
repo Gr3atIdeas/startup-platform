@@ -128,14 +128,15 @@
                         {{ form.creatives|attr:"style:display:none"|attr:"multiple:true"|attr:"id:id_creatives_input" }}
                         <div class="custom-file-upload-button" onclick="document.getElementById('id_creatives_input').click()">Выбрать файлы</div>
                         <div class="small-text">Допустимый формат PNG, JPEG (до 3 файлов)</div>
-                        <div id="creativesPreview" class="file-preview-area">
-                            {% for file_meta in existing_creatives %}
-                                <div class="file-preview-item existing-file" data-file-id="{{ file_meta.id }}">
-                                    <img src="{{ file_meta.url }}" alt="Креатив">
-                                    <p>{{ file_meta.name }}</p>
-                                </div>
-                            {% endfor %}
-                        </div>
+                                            <div id="creativesPreview" class="file-preview-area">
+                        {% for creative_url in startup.creatives_urls %}
+                            <div class="file-preview-item existing-file" data-file-id="{{ creative_url }}">
+                                <img src="{% get_file_url_tag creative_url startup.startup_id 'creative' %}" alt="Креатив" style="max-width: 200px; max-height: 150px;">
+                                <p>creative_{{ creative_url|slice:":8" }}.jpg</p>
+                                <button type="button" class="delete-existing-file-btn" data-file-id="{{ creative_url }}" data-file-type="creative">Удалить</button>
+                            </div>
+                        {% endfor %}
+                    </div>
                         {% if form.creatives.errors %}<span class="error-message">{{ form.creatives.errors|first }}</span>{% endif %}
                     </div>
                     <!-- Блок Видео -->
@@ -145,12 +146,13 @@
                         <div class="custom-file-upload-button" onclick="document.getElementById('id_video_input').click()">Выбрать файл</div>
                         <div class="small-text">Допустимый формат MOV, MP4 (1 файл)</div>
                         <div id="videoPreview" class="file-preview-area">
-                            {% if existing_video %}
-                                <div class="file-preview-item existing-file" data-file-id="{{ existing_video.id }}">
-                                    <video controls src="{{ existing_video.url }}" style="max-width: 200px; max-height: 150px;"></video>
-                                    <p>{{ existing_video.name }}</p>
+                            {% for video_url in startup.video_urls %}
+                                <div class="file-preview-item existing-file" data-file-id="{{ video_url }}">
+                                    <video controls src="{% get_file_url_tag video_url startup.startup_id 'video' %}" style="max-width: 200px; max-height: 150px;"></video>
+                                    <p>video_{{ video_url|slice:":8" }}.mp4</p>
+                                    <button type="button" class="delete-existing-file-btn" data-file-id="{{ video_url }}" data-file-type="video">Удалить</button>
                                 </div>
-                            {% endif %}
+                            {% endfor %}
                         </div>
                         {% if form.video.errors %}<span class="error-message">{{ form.video.errors|first }}</span>{% endif %}
                     </div>
@@ -240,10 +242,11 @@
                     <div class="custom-file-upload-button" onclick="document.getElementById('id_proofs_input').click()">Выбрать файл</div>
                     <div class="small-text">Допустимый формат Doc, Excel, PDF (до 3 файлов)</div>
                     <div id="proofsPreview" class="file-preview-area">
-                        {% for file_meta in existing_proofs %}
-                            <div class="file-preview-item existing-file" data-file-id="{{ file_meta.id }}">
+                        {% for proof_url in startup.proofs_urls %}
+                            <div class="file-preview-item existing-file" data-file-id="{{ proof_url }}">
                                 <img src="{% static 'accounts/images/icons/file_icon.svg' %}" alt="file icon" class="file-icon" style="width: 40px; height: auto;">
-                                <p><a href="{{ file_meta.url }}" target="_blank">{{ file_meta.name }}</a></p>
+                                <p><a href="{% get_file_url_tag proof_url startup.startup_id 'proof' %}" target="_blank">document_{{ proof_url|slice:":8" }}.pdf</a></p>
+                                <button type="button" class="delete-existing-file-btn" data-file-id="{{ proof_url }}" data-file-type="proof">Удалить</button>
                             </div>
                         {% endfor %}
                     </div>
@@ -295,11 +298,7 @@
         <p>Пожалуйста, исправьте ошибки и попробуйте снова.</p>
     </div>
 </div>
-<script>
-    window.existingCreatives = {{ existing_creatives|safe|default:'[]'|json_script:'existingCreatives' }};
-    window.existingProofs = {{ existing_proofs|safe|default:'[]'|json_script:'existingProofs' }};
-    window.existingVideo = {{ existing_video|safe|default:'null'|json_script:'existingVideo' }};
-    </script>
+
 <script src="{% static 'accounts/js/startup_form.js' %}"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -384,35 +383,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (timelineSteps.length > 0) {
         setCurrentStep(currentStepInput.value || 1);
     }
-    // --- Медиа и документы: показать существующие файлы в превью ---
-    function showExistingFiles(previewId, files, isImage, isVideo) {
-        const previewArea = document.getElementById(previewId);
-        if (!previewArea) return;
-        previewArea.innerHTML = '';
-        (files || []).forEach(file => {
-            let html = '';
-            if (isImage) {
-                html = `<div class="file-preview-item existing-file" data-file-id="${file.id}">
-                    <img src="${file.url}" alt="Креатив">
-                    <p>${file.name}</p>
-                    <button type="button" class="delete-existing-file-btn" data-file-id="${file.id}" data-file-type="creative">Удалить</button>
-                </div>`;
-            } else if (isVideo) {
-                html = `<div class="file-preview-item existing-file" data-file-id="${file.id}">
-                    <video controls src="${file.url}" style="max-width: 200px; max-height: 150px;"></video>
-                    <p>${file.name}</p>
-                    <button type="button" class="delete-existing-file-btn" data-file-id="${file.id}" data-file-type="video">Удалить</button>
-                </div>`;
-            } else {
-                html = `<div class="file-preview-item existing-file" data-file-id="${file.id}">
-                    <img src='${window.STATIC_URL || '/static/'}accounts/images/icons/file_icon.svg' alt='file icon' class='file-icon' style='width: 40px; height: auto;'>
-                    <p><a href="${file.url}" target="_blank">${file.name}</a></p>
-                    <button type="button" class="delete-existing-file-btn" data-file-id="${file.id}" data-file-type="proof">Удалить</button>
-                </div>`;
-            }
-            previewArea.insertAdjacentHTML('beforeend', html);
-        });
-    }
+    // --- Медиа и документы: показать существующие файлы в превью (заменено на серверный рендеринг) ---
     
     // Обработчик удаления существующих файлов
     document.addEventListener('click', function(event) {
@@ -445,12 +416,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return input;
     }
     
-    // Для изображений
-    showExistingFiles('creativesPreview', window.existingCreatives, true, false);
-    // Для видео
-    if (window.existingVideo) showExistingFiles('videoPreview', [window.existingVideo], false, true);
-    // Для документов
-    showExistingFiles('proofsPreview', window.existingProofs, false, false);
+    // Существующие файлы теперь рендерятся на сервере
 });
 </script>
 {% endblock %}

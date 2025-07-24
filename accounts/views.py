@@ -2086,47 +2086,10 @@ def edit_startup(request, startup_id):
 
     # Получаем таймлайн стартапа
     timeline = StartupTimeline.objects.filter(startup=startup)
-    # Создаём словарь с описаниями этапов (step_number: description)
-    timeline_steps = {step.step_number: step.description for step in timeline}
+    # Передаем QuerySet для использования в template фильтре
+    timeline_steps = timeline
 
-    # --- Медиа и документы для превью ---
-    from .utils import get_file_url
-    creative_type = FileTypes.objects.get(type_name="creative")
-    proof_type = FileTypes.objects.get(type_name="proof")
-    video_type = FileTypes.objects.get(type_name="video")
-    
-    existing_creatives = []
-    for fs in FileStorage.objects.filter(startup=startup, file_type=creative_type):
-        file_url = get_file_url(fs.file_url, startup.startup_id, "creative")
-        if file_url:
-            existing_creatives.append({
-                "id": fs.file_url,
-                "url": file_url,
-                "name": f"creative_{fs.file_url[:8]}.jpg",
-            })
-    
-    existing_proofs = []
-    for fs in FileStorage.objects.filter(startup=startup, file_type=proof_type):
-        file_url = get_file_url(fs.file_url, startup.startup_id, "proof")
-        if file_url:
-            existing_proofs.append({
-                "id": fs.file_url,
-                "url": file_url,
-                "name": f"document_{fs.file_url[:8]}.pdf",
-            })
-    
-    existing_video = None
-    video_files = FileStorage.objects.filter(startup=startup, file_type=video_type)
-    if video_files.exists():
-        fs = video_files.first()
-        file_url = get_file_url(fs.file_url, startup.startup_id, "video")
-        if file_url:
-            existing_video = {
-                "id": fs.file_url,
-                "url": file_url,
-                "name": f"video_{fs.file_url[:8]}.mp4",
-            }
-    # ---
+
 
     if request.method == "POST":
         form = StartupForm(request.POST, request.FILES, instance=startup)
@@ -2395,9 +2358,6 @@ def edit_startup(request, startup_id):
                     "form": form,
                     "startup": startup,
                     "timeline_steps": timeline_steps,
-                    "existing_creatives": existing_creatives,
-                    "existing_proofs": existing_proofs,
-                    "existing_video": existing_video,
                 },
             )
     else:
@@ -2409,9 +2369,6 @@ def edit_startup(request, startup_id):
             "form": form,
             "startup": startup,
             "timeline_steps": timeline_steps,
-            "existing_creatives": existing_creatives,
-            "existing_proofs": existing_proofs,
-            "existing_video": existing_video,
         },
     )
 
