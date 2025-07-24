@@ -299,7 +299,11 @@
         <p>Пожалуйста, исправьте ошибки и попробуйте снова.</p>
     </div>
 </div>
-
+<script>
+    window.existingCreatives = {{ existing_creatives|safe|default:'[]'|json_script:'existingCreatives' }};
+    window.existingProofs = {{ existing_proofs|safe|default:'[]'|json_script:'existingProofs' }};
+    window.existingVideo = {{ existing_video|safe|default:'null'|json_script:'existingVideo' }};
+    </script>
 <script src="{% static 'accounts/js/startup_form.js' %}"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {

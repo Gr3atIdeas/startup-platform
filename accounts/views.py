@@ -2089,6 +2089,40 @@ def edit_startup(request, startup_id):
     # Создаём словарь с описаниями этапов (step_number: description)
     timeline_steps = {step.step_number: step.description for step in timeline}
 
+    # --- Медиа и документы для превью ---
+    creative_type = FileTypes.objects.get(type_name="creative")
+    proof_type = FileTypes.objects.get(type_name="proof")
+    video_type = FileTypes.objects.get(type_name="video")
+    from django.conf import settings
+    def build_file_url(folder, file_url):
+        return f"{settings.MEDIA_URL}startups/{startup.startup_id}/{folder}/{file_url}" if file_url else ""
+    existing_creatives = [
+        {
+            "id": fs.file_url,
+            "url": build_file_url("creatives", fs.file_url),
+            "name": fs.file_url,
+        }
+        for fs in FileStorage.objects.filter(startup=startup, file_type=creative_type)
+    ]
+    existing_proofs = [
+        {
+            "id": fs.file_url,
+            "url": build_file_url("proofs", fs.file_url),
+            "name": fs.file_url,
+        }
+        for fs in FileStorage.objects.filter(startup=startup, file_type=proof_type)
+    ]
+    existing_video = None
+    video_files = FileStorage.objects.filter(startup=startup, file_type=video_type)
+    if video_files.exists():
+        fs = video_files.first()
+        existing_video = {
+            "id": fs.file_url,
+            "url": build_file_url("videos", fs.file_url),
+            "name": fs.file_url,
+        }
+    # ---
+
     if request.method == "POST":
         form = StartupForm(request.POST, request.FILES, instance=startup)
         if form.is_valid():
@@ -2321,19 +2355,39 @@ def edit_startup(request, startup_id):
                 f'Стартап "{startup.title}" успешно отредактирован и отправлен на модерацию!',
             )
             return redirect("profile")
-        else:
+       else:
             messages.error(request, "Форма содержит ошибки.")
             return render(
                 request,
                 "accounts/edit_startup.html",
                 {"form": form, "startup": startup, "timeline_steps": timeline_steps},
+            )        else:
+            messages.error(request, "Форма содержит ошибки.")
+            return render(
+                request,
+                "accounts/edit_startup.html",
+                {
+                    "form": form,
+                    "startup": startup,
+                    "timeline_steps": timeline_steps,
+                    "existing_creatives": existing_creatives,
+                    "existing_proofs": existing_proofs,
+                    "existing_video": existing_video,
+                },
             )
-    else:
+        else:
         form = StartupForm(instance=startup)
     return render(
         request,
         "accounts/edit_startup.html",
-        {"form": form, "startup": startup, "timeline_steps": timeline_steps},
+        {
+            "form": form,
+            "startup": startup,
+            "timeline_steps": timeline_steps,
+            "existing_creatives": existing_creatives,
+            "existing_proofs": existing_proofs,
+            "existing_video": existing_video,
+        },
     )
 
 
