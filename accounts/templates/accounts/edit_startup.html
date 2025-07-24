@@ -285,8 +285,8 @@
             </div>
         </div> <!-- Конец form-main-content-wrapper -->
 
-        <div class="form-actions">
-            <button type="submit" class="btn-submit-startup" id="submitStartupBtn">Сохранить изменения</button>
+        <div class="form-actions submit-button-container">
+            <button type="submit" class="submit-button" id="submitStartupBtn">Сохранить изменения</button>
         </div>
     </form>
 </div>
@@ -301,4 +301,84 @@
 </div>
 
 <script src="{% static 'accounts/js/startup_form.js' %}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Переводим опции select direction на русский
+    const directionSelect = document.getElementById('{{ form.direction.id_for_label }}');
+    if (directionSelect) {
+        const translations = {
+            "Medicine": "Медицина",
+            "Auto": "Автомобили",
+            "Delivery": "Доставка",
+            "Cafe": "Кафе/рестораны",
+            "Fastfood": "Фастфуд",
+            "Health": "Здоровье",
+            "Beauty": "Красота",
+            "Transport": "Транспорт",
+            "Sport": "Спорт",
+            "Psychology": "Психология",
+            "AI": "ИИ",
+            "Finance": "Финансы",
+            "Healthcare": "Здравоохранение",
+            "Technology": "Технологии"
+        };
+        Array.from(directionSelect.options).forEach(option => {
+            const originalValue = option.textContent.trim();
+            if (translations[originalValue]) {
+                option.textContent = translations[originalValue];
+            }
+        });
+    }
+    // Логика активации редактирования этапов (таймлайна)
+    const timelineSteps = document.querySelectorAll('.timeline-step');
+    const descriptionContainers = document.querySelectorAll('.timeline-description-container');
+    const currentStepInput = document.getElementById('step_number');
+    const setCurrentButtons = document.querySelectorAll('.btn-select-current-step');
+    const timelineProgressFilled = document.getElementById('timelineProgressFilled');
+    const totalSteps = 5;
+    function selectStepDescription(stepNumber) {
+        descriptionContainers.forEach(container => {
+            container.classList.toggle('active', container.dataset.stepContent == stepNumber);
+        });
+        timelineSteps.forEach(step => {
+            step.classList.toggle('active-step-display', step.dataset.step == stepNumber);
+        });
+    }
+    function setCurrentStep(stepNumber) {
+        const currentStep = parseInt(stepNumber);
+        currentStepInput.value = currentStep;
+        timelineSteps.forEach(step => {
+            const stepNum = parseInt(step.dataset.step);
+            const stepWrapper = step.querySelector('.step-number-wrapper');
+            step.classList.remove('active-step-display');
+            stepWrapper.classList.remove('active');
+            if (stepNum <= currentStep) {
+                stepWrapper.classList.add('active');
+            }
+        });
+        if (currentStep > 1) {
+            const progressPercentage = ((currentStep - 1) / (totalSteps - 1)) * 100;
+            timelineProgressFilled.style.width = `${progressPercentage}%`;
+        } else {
+            timelineProgressFilled.style.width = '0%';
+        }
+        selectStepDescription(currentStep);
+    }
+    timelineSteps.forEach(step => {
+        step.addEventListener('click', function() {
+            const stepNum = this.dataset.step;
+            selectStepDescription(stepNum);
+        });
+    });
+    setCurrentButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const stepNum = this.dataset.stepTarget;
+            setCurrentStep(stepNum);
+        });
+    });
+    if (timelineSteps.length > 0) {
+        setCurrentStep(currentStepInput.value || 1);
+    }
+});
+</script>
 {% endblock %}
