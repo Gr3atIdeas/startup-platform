@@ -12,6 +12,52 @@ from django.conf import settings
 logger = logging.getLogger(__name__)
 
 
+def get_file_info(file_id, entity_id, file_type):
+    """
+    Получает URL и оригинальное имя файла из S3.
+    Возвращает словарь с 'url' и 'original_name' или None если файл не найден.
+    """
+    s3_client = boto3.client(
+        "s3",
+        endpoint_url=settings.AWS_S3_ENDPOINT_URL,
+        aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+        aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+        region_name=settings.AWS_S3_REGION_NAME,
+    )
+    bucket_name = settings.AWS_STORAGE_BUCKET_NAME
+    if file_type == "avatar":
+        prefix = f"users/{entity_id}/avatar/{file_id}_"
+    else:
+        prefix = f"startups/{entity_id}/{file_type}s/{file_id}_"
+    try:
+        response = s3_client.list_objects_v2(Bucket=bucket_name, Prefix=prefix)
+        if "Contents" in response and len(response["Contents"]) > 0:
+            key = response["Contents"][0]["Key"]
+            url = f"{settings.AWS_S3_ENDPOINT_URL}/{bucket_name}/{key}"
+            
+            # Извлекаем оригинальное имя файла из ключа
+            # Формат: startups/{entity_id}/{file_type}s/{file_type}_{entity_id}_{original_name}
+            filename = key.split('/')[-1]  # Получаем имя файла
+            # Убираем префикс типа "proof_123_" и оставляем оригинальное имя
+            parts = filename.split('_', 2)  # Разделяем на максимум 3 части
+            if len(parts) >= 3:
+                original_name = parts[2]  # Третья часть - оригинальное имя
+            else:
+                original_name = filename  # Если формат не соответствует, используем весь filename
+            
+            logger.debug(f"Найден файл {file_type}: {url}, оригинальное имя: {original_name}")
+            return {
+                'url': url,
+                'original_name': original_name
+            }
+        else:
+            logger.warning(f"Файл не найден: prefix={prefix}")
+            return None
+    except ClientError as e:
+        logger.error(f"Ошибка при получении информации о файле: {e}")
+        return None
+
+
 def get_file_url(file_id, entity_id, file_type):
     s3_client = boto3.client(
         "s3",

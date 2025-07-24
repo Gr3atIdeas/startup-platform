@@ -129,13 +129,13 @@
                         <div class="custom-file-upload-button" onclick="document.getElementById('id_creatives_input').click()">Выбрать файлы</div>
                         <div class="small-text">Допустимый формат PNG, JPEG (до 3 файлов)</div>
                                             <div id="creativesPreview" class="file-preview-area">
-                        {% for creative_url in startup.creatives_urls %}
-                            <div class="file-preview-item existing-file" data-file-id="{{ creative_url }}">
-                                <img src="{% get_file_url_tag creative_url startup.startup_id 'creative' %}" alt="Креатив" style="max-width: 200px; max-height: 150px;">
-                                <p>creative_{{ creative_url|slice:":8" }}.jpg</p>
-                                <button type="button" class="delete-existing-file-btn" data-file-id="{{ creative_url }}" data-file-type="creative">Удалить</button>
-                            </div>
-                        {% endfor %}
+                                                 {% for creative_url in startup.creatives_urls %}
+                             <div class="file-preview-item existing-file" data-file-id="{{ creative_url }}">
+                                 <img src="{% get_file_url_tag creative_url startup.startup_id 'creative' %}" alt="Креатив" style="max-width: 200px; max-height: 150px;">
+                                 <p>{% get_file_original_name creative_url startup.startup_id 'creative' %}</p>
+                                 <button type="button" class="delete-existing-file-btn" data-file-id="{{ creative_url }}" data-file-type="creative">Удалить</button>
+                             </div>
+                         {% endfor %}
                     </div>
                         {% if form.creatives.errors %}<span class="error-message">{{ form.creatives.errors|first }}</span>{% endif %}
                     </div>
@@ -146,13 +146,13 @@
                         <div class="custom-file-upload-button" onclick="document.getElementById('id_video_input').click()">Выбрать файл</div>
                         <div class="small-text">Допустимый формат MOV, MP4 (1 файл)</div>
                         <div id="videoPreview" class="file-preview-area">
-                            {% for video_url in startup.video_urls %}
-                                <div class="file-preview-item existing-file" data-file-id="{{ video_url }}">
-                                    <video controls src="{% get_file_url_tag video_url startup.startup_id 'video' %}" style="max-width: 200px; max-height: 150px;"></video>
-                                    <p>video_{{ video_url|slice:":8" }}.mp4</p>
-                                    <button type="button" class="delete-existing-file-btn" data-file-id="{{ video_url }}" data-file-type="video">Удалить</button>
-                                </div>
-                            {% endfor %}
+                                                         {% for video_url in startup.video_urls %}
+                                 <div class="file-preview-item existing-file" data-file-id="{{ video_url }}">
+                                     <video controls src="{% get_file_url_tag video_url startup.startup_id 'video' %}" style="max-width: 200px; max-height: 150px;"></video>
+                                     <p>{% get_file_original_name video_url startup.startup_id 'video' %}</p>
+                                     <button type="button" class="delete-existing-file-btn" data-file-id="{{ video_url }}" data-file-type="video">Удалить</button>
+                                 </div>
+                             {% endfor %}
                         </div>
                         {% if form.video.errors %}<span class="error-message">{{ form.video.errors|first }}</span>{% endif %}
                     </div>
@@ -245,7 +245,7 @@
                         {% for proof_url in startup.proofs_urls %}
                             <div class="file-preview-item existing-file" data-file-id="{{ proof_url }}">
                                 <img src="{% static 'accounts/images/icons/file_icon.svg' %}" alt="file icon" class="file-icon" style="width: 40px; height: auto;">
-                                <p><a href="{% get_file_url_tag proof_url startup.startup_id 'proof' %}" target="_blank">document_{{ proof_url|slice:":8" }}.pdf</a></p>
+                                <p><a href="{% get_file_url_tag proof_url startup.startup_id 'proof' %}" target="_blank">{% get_file_original_name proof_url startup.startup_id 'proof' %}</a></p>
                                 <button type="button" class="delete-existing-file-btn" data-file-id="{{ proof_url }}" data-file-type="proof">Удалить</button>
                             </div>
                         {% endfor %}
