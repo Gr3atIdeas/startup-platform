@@ -2164,84 +2164,6 @@ def edit_startup(request, startup_id):
                         timeline_entry.description = description
                         timeline_entry.save()
 
-            # ... (оставь остальной код сохранения файлов как есть) ...
-
-            messages.success(
-                request,
-                f'Стартап "{startup.title}" успешно отредактирован и отправлен на модерацию!',
-            )
-            return redirect("profile")
-        else:
-            messages.error(request, "Форма содержит ошибки.")
-            return render(
-                request,
-                "accounts/edit_startup.html",
-                {
-                    "form": form,
-                    "startup": startup,
-                    "timeline_steps": timeline_steps,
-                    "existing_creatives": existing_creatives,
-                    "existing_proofs": existing_proofs,
-                    "existing_video": existing_video,
-                },
-            )
-    else:
-        form = StartupForm(instance=startup)
-        return render(
-            request,
-            "accounts/edit_startup.html",
-            {
-                "form": form,
-                "startup": startup,
-                "timeline_steps": timeline_steps,
-                "existing_creatives": existing_creatives,
-                "existing_proofs": existing_proofs,
-                "existing_video": existing_video,
-            },
-        )
-    # ---
-
-    if request.method == "POST":
-        form = StartupForm(request.POST, request.FILES, instance=startup)
-        if form.is_valid():
-            startup = form.save(commit=False)
-            startup.status = "pending"
-            startup.is_edited = True
-            startup.updated_at = timezone.now()
-            if "step_number" in request.POST:
-                new_step = int(request.POST.get("step_number"))
-                startup.step_number = new_step
-
-            # Обработка типа инвестирования
-            investment_type = form.cleaned_data.get("investment_type")
-            if investment_type == "invest":
-                startup.only_invest = True
-                startup.only_buy = False
-                startup.both_mode = False
-            elif investment_type == "buy":
-                startup.only_invest = False
-                startup.only_buy = True
-                startup.both_mode = False
-            elif investment_type == "both":
-                startup.only_invest = False
-                startup.only_buy = False
-                startup.both_mode = True
-
-            startup.save()
-
-            # Обновление или создание этапов таймлайна
-            for i in range(1, 6):
-                description = request.POST.get(f"step_description_{i}", "").strip()
-                if description:
-                    timeline_entry, created = StartupTimeline.objects.get_or_create(
-                        startup=startup,
-                        step_number=i,
-                        defaults={"title": f"Этап {i}", "description": description},
-                    )
-                    if not created and timeline_entry.description != description:
-                        timeline_entry.description = description
-                        timeline_entry.save()
-
             # Инициализация списков для ID
             logo_ids = startup.logo_urls or []
             creatives_ids = startup.creatives_urls or []
@@ -2433,13 +2355,7 @@ def edit_startup(request, startup_id):
                 f'Стартап "{startup.title}" успешно отредактирован и отправлен на модерацию!',
             )
             return redirect("profile")
-       else:
-            messages.error(request, "Форма содержит ошибки.")
-            return render(
-                request,
-                "accounts/edit_startup.html",
-                {"form": form, "startup": startup, "timeline_steps": timeline_steps},
-            )        else:
+        else:
             messages.error(request, "Форма содержит ошибки.")
             return render(
                 request,
@@ -2453,7 +2369,7 @@ def edit_startup(request, startup_id):
                     "existing_video": existing_video,
                 },
             )
-        else:
+    else:
         form = StartupForm(instance=startup)
     return render(
         request,
