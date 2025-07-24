@@ -165,7 +165,7 @@
                         </div>
                         <div class="form-group">
                             <label for="{{ form.valuation.id_for_label }}">{{ form.valuation.label }}</label>
-                            <div class="input-wrapper valuation-input">
+                            <div class="input-wrapper valuation-input" style="width:100%;">
                                 {{ form.valuation|add_class:"form-control"|attr:"placeholder:1"|attr:"type:number"|attr:"min:1" }}
                                 <div class="valuation-spin-buttons">
                                     <img src="{% static 'accounts/images/creat_startup/Chevron down.svg' %}" alt="increase value" class="spin-up">
@@ -329,7 +329,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-    // Логика активации редактирования этапов (таймлайна)
+    // --- Таймлайн ---
     const timelineSteps = document.querySelectorAll('.timeline-step');
     const descriptionContainers = document.querySelectorAll('.timeline-description-container');
     const currentStepInput = document.getElementById('step_number');
@@ -343,6 +343,11 @@ document.addEventListener('DOMContentLoaded', function() {
         timelineSteps.forEach(step => {
             step.classList.toggle('active-step-display', step.dataset.step == stepNumber);
         });
+        // Фокус на textarea выбранного этапа
+        const activeTextarea = document.querySelector('.timeline-description-container.active textarea');
+        if (activeTextarea) {
+            activeTextarea.focus();
+        }
     }
     function setCurrentStep(stepNumber) {
         const currentStep = parseInt(stepNumber);
@@ -379,6 +384,29 @@ document.addEventListener('DOMContentLoaded', function() {
     if (timelineSteps.length > 0) {
         setCurrentStep(currentStepInput.value || 1);
     }
+    // --- Медиа и документы: показать существующие файлы в превью ---
+    function showExistingFiles(previewId, files, isImage, isVideo) {
+        const previewArea = document.getElementById(previewId);
+        if (!previewArea) return;
+        previewArea.innerHTML = '';
+        (files || []).forEach(file => {
+            let html = '';
+            if (isImage) {
+                html = `<div class="file-preview-item existing-file" data-file-id="${file.id}"><img src="${file.url}" alt="Креатив"><p>${file.name}</p></div>`;
+            } else if (isVideo) {
+                html = `<div class="file-preview-item existing-file" data-file-id="${file.id}"><video controls src="${file.url}" style="max-width: 200px; max-height: 150px;"></video><p>${file.name}</p></div>`;
+            } else {
+                html = `<div class="file-preview-item existing-file" data-file-id="${file.id}"><img src='${window.STATIC_URL || '/static/'}accounts/images/icons/file_icon.svg' alt='file icon' class='file-icon' style='width: 40px; height: auto;'><p><a href="${file.url}" target="_blank">${file.name}</a></p></div>`;
+            }
+            previewArea.insertAdjacentHTML('beforeend', html);
+        });
+    }
+    // Для изображений
+    showExistingFiles('creativesPreview', window.existingCreatives, true, false);
+    // Для видео
+    if (window.existingVideo) showExistingFiles('videoPreview', [window.existingVideo], false, true);
+    // Для документов
+    showExistingFiles('proofsPreview', window.existingProofs, false, false);
 });
 </script>
 {% endblock %}
