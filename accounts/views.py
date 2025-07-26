@@ -97,6 +97,45 @@ from .utils import send_telegram_support_message
 
 logger = logging.getLogger(__name__)
 
+
+def get_unique_filename(original_name, startup_id, file_type_name):
+    """
+    Генерирует уникальное имя файла, добавляя (2), (3) и т.д. если файл с таким именем уже существует
+    """
+    # Получаем базовое имя файла и расширение
+    name, ext = os.path.splitext(original_name)
+    
+    # Проверяем, есть ли уже файлы с таким именем
+    try:
+        file_type = FileTypes.objects.get(type_name=file_type_name)
+        existing_files = FileStorage.objects.filter(
+            startup_id=startup_id,
+            file_type=file_type,
+            original_file_name=original_name
+        )
+        
+        if not existing_files.exists():
+            return original_name
+        
+        # Если файл существует, ищем свободный номер
+        counter = 2
+        while True:
+            new_name = f"{name} ({counter}){ext}"
+            existing_duplicate = FileStorage.objects.filter(
+                startup_id=startup_id,
+                file_type=file_type,
+                original_file_name=new_name
+            )
+            
+            if not existing_duplicate.exists():
+                return new_name
+                
+            counter += 1
+            
+    except FileTypes.DoesNotExist:
+        logger.error(f"FileType '{file_type_name}' не найден")
+        return original_name
+
 # Глобальный словарь переводов направлений
 DIRECTION_TRANSLATIONS = {
     'Beauty': 'Красота', 'Technology': 'Технологии', 'Healthcare': 'Здравоохранение', 'Health': 'Здоровье',
@@ -1860,6 +1899,10 @@ def create_startup(request):
                     if not hasattr(creative_file, "name"):
                         logger.warning(f"Пропущен креатив: {creative_file}")
                         continue
+                    
+                    # Получаем уникальное имя файла для избежания дубликатов
+                    unique_filename = get_unique_filename(creative_file.name, startup.startup_id, "creative")
+                    
                     creative_id = str(uuid.uuid4())
                     base_name = os.path.splitext(creative_file.name)[0]
                     ext = os.path.splitext(creative_file.name)[1]
@@ -1880,6 +1923,7 @@ def create_startup(request):
                             file_url=creative_id,
                             uploaded_at=timezone.now(),
                             startup=startup,
+                            original_file_name=unique_filename,  # Сохраняем оригинальное название
                         )
                         logger.info(f"Креатив сохранён: {file_path}")
                     except Exception as e:
@@ -1899,6 +1943,10 @@ def create_startup(request):
                     if not hasattr(proof_file, "name"):
                         logger.warning(f"Пропущен пруф: {proof_file}")
                         continue
+                    
+                    # Получаем уникальное имя файла для избежания дубликатов
+                    unique_filename = get_unique_filename(proof_file.name, startup.startup_id, "proof")
+                    
                     proof_id = str(uuid.uuid4())
                     base_name = os.path.splitext(proof_file.name)[0]
                     ext = os.path.splitext(proof_file.name)[1]
@@ -1921,8 +1969,9 @@ def create_startup(request):
                             file_url=proof_id,
                             uploaded_at=timezone.now(),
                             startup=startup,
+                            original_file_name=unique_filename,  # Сохраняем оригинальное название
                         )
-                        logger.info(f"Пруф сохранён: {file_path}")
+                        logger.info(f"Пруф сохранён: {file_path}, оригинальное название: {unique_filename}")
                     except Exception as e:
                         logger.error(f"Ошибка сохранения пруфа: {e}", exc_info=True)
                         messages.warning(
@@ -1934,6 +1983,9 @@ def create_startup(request):
             # Сохранение видео
             video = form.cleaned_data.get("video")
             if video:
+                # Получаем уникальное имя файла для избежания дубликатов
+                unique_filename = get_unique_filename(video.name, startup.startup_id, "video")
+                
                 video_id = str(uuid.uuid4())
                 base_name = os.path.splitext(video.name)[0]
                 ext = os.path.splitext(video.name)[1]
@@ -1950,7 +2002,7 @@ def create_startup(request):
                     logger.info(f"Попытка сохранить видео по пути: {file_path}")
                     default_storage.save(file_path, video)
                     logger.info(f"Видео успешно сохранено по пути: {file_path}")
-                    video_ids.append(video_id)
+                                        video_ids.append(video_id)
                     FileStorage.objects.create(
                         entity_type=entity_type,
                         entity_id=startup.startup_id,
@@ -1958,6 +2010,7 @@ def create_startup(request):
                         file_url=video_id,
                         uploaded_at=timezone.now(),
                         startup=startup,
+                        original_file_name=unique_filename,  # Сохраняем оригинальное название
                     )
                     logger.info(f"Видео сохранено: {file_path}")
                 except Exception as e:
@@ -2185,6 +2238,10 @@ def edit_startup(request, startup_id):
                             f"Пропущен креатив, так как это не файл: {creative_file}"
                         )
                         continue
+                    
+                    # Получаем уникальное имя файла для избежания дубликатов
+                    unique_filename = get_unique_filename(creative_file.name, startup.startup_id, "creative")
+                    
                     creative_id = str(uuid.uuid4())
                     file_path = f"startups/{startup.startup_id}/creatives/{creative_id}_{creative_file.name}"
                     default_storage.save(file_path, creative_file)
@@ -2196,6 +2253,7 @@ def edit_startup(request, startup_id):
                         file_url=creative_id,
                         uploaded_at=timezone.now(),
                         startup=startup,
+                        original_file_name=unique_filename,  # Сохраняем оригинальное название
                     )
                     file_storage.save()
                     logger.info(f"Креатив сохранён с ID: {creative_id}")
@@ -2212,6 +2270,10 @@ def edit_startup(request, startup_id):
                             f"Пропущен пруф, так как это не файл: {proof_file}"
                         )
                         continue
+                    
+                    # Получаем уникальное имя файла для избежания дубликатов
+                    unique_filename = get_unique_filename(proof_file.name, startup.startup_id, "proof")
+                    
                     proof_id = str(uuid.uuid4())
                     file_path = f"startups/{startup.startup_id}/proofs/{proof_id}_{proof_file.name}"
                     default_storage.save(file_path, proof_file)
@@ -2223,6 +2285,7 @@ def edit_startup(request, startup_id):
                         file_url=proof_id,
                         uploaded_at=timezone.now(),
                         startup=startup,
+                        original_file_name=unique_filename,  # Сохраняем оригинальное название
                     )
                     file_storage.save()
                     logger.info(f"Пруф сохранён с ID: {proof_id}")
