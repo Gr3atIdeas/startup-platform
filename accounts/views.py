@@ -2002,7 +2002,7 @@ def create_startup(request):
                     logger.info(f"Попытка сохранить видео по пути: {file_path}")
                     default_storage.save(file_path, video)
                     logger.info(f"Видео успешно сохранено по пути: {file_path}")
-                                        video_ids.append(video_id)
+                    video_ids.append(video_id)
                     FileStorage.objects.create(
                         entity_type=entity_type,
                         entity_id=startup.startup_id,
