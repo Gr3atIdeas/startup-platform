@@ -896,7 +896,7 @@ document.addEventListener('DOMContentLoaded', function () {
         this.textContent = 'Создание чата...';
         this.disabled = true;
 
-        fetch(`/start_chat/${ownerId}/`, {
+        fetch(`/cosmochat/start-chat/${ownerId}/`, {
             method: 'POST',
             headers: {
                 'X-CSRFToken': getCookie('csrftoken'),
@@ -907,7 +907,8 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(data => {
             if (data.success) {
                 // Перенаправляем пользователя в космочат, сразу открыв нужный диалог
-                window.location.href = `/cosmochat/?chat_id=${data.chat_id || data.chat.conversation_id}`;
+                const chatId = data.chat_id || (data.chat && data.chat.conversation_id);
+                window.location.href = `/cosmochat/?chat_id=${chatId}`;
             } else {
                 alert(data.error || 'Не удалось создать или найти чат.');
                 this.textContent = 'Чат';
@@ -981,30 +982,43 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
+        // Показываем состояние загрузки
+        const button = event.target;
+        const originalText = button.textContent;
+        button.textContent = 'Создание чата...';
+        button.disabled = true;
+
         try {
-            const response = await fetch(`/chats/find_or_create/${ownerId}/`, {
+            const response = await fetch(`/cosmochat/start-chat/${ownerId}/`, {
                 method: 'POST',
                 headers: {
                     'X-CSRFToken': getCookie('csrftoken'),
-                    'Content-Type': 'application/json'
+                    'X-Requested-With': 'XMLHttpRequest',
                 },
             });
 
             if (response.ok) {
                 const data = await response.json();
-                if (data.chat_url) {
-                    window.location.href = data.chat_url;
+                if (data.success) {
+                    const chatId = data.chat_id || (data.chat && data.chat.conversation_id);
+                    window.location.href = `/cosmochat/?chat_id=${chatId}`;
                 } else {
-                    console.error('Chat URL not found in response');
-                    alert('Не удалось получить адрес чата.');
+                    console.error('Chat creation failed:', data.error);
+                    alert(data.error || 'Не удалось создать чат.');
+                    button.textContent = originalText;
+                    button.disabled = false;
                 }
             } else {
                 console.error('Failed to create or find chat', await response.text());
                 alert('Произошла ошибка при создании чата.');
+                button.textContent = originalText;
+                button.disabled = false;
             }
         } catch (error) {
             console.error('Error initiating chat:', error);
             alert('Сетевая ошибка. Не удалось создать чат.');
+            button.textContent = originalText;
+            button.disabled = false;
         }
     };
 

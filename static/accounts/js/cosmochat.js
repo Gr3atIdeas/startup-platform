@@ -63,15 +63,36 @@ document.addEventListener('DOMContentLoaded', function () {
         messageFormNew.addEventListener('submit', handleSendMessage);
     }
 
-    // Если при загрузке страницы есть параметр new_chat=true и open_chat_id, то это новый чат
+    // Проверяем параметры URL для автоматического открытия чата
     const urlParams = new URLSearchParams(window.location.search);
+    
+    // Если есть параметр new_chat=true и open_chat_id, то это новый чат
     if (urlParams.get('new_chat') === 'true' && urlParams.get('open_chat_id')) {
         const newChatId = urlParams.get('open_chat_id');
         loadChat(newChatId); // Загружаем новый чат сразу
     }
-
+    // Если есть параметр chat_id, загружаем этот чат
+    else if (urlParams.get('chat_id')) {
+        const chatId = urlParams.get('chat_id');
+        console.log('Opening chat from URL parameter:', chatId);
+        
+        // Ждем немного для загрузки списка чатов, затем открываем нужный
+        setTimeout(() => {
+            loadChat(chatId).then(() => {
+                // Прокручиваем к области чата для лучшего UX
+                const chatWindowColumn = document.getElementById('chatWindowColumn');
+                if (chatWindowColumn) {
+                    chatWindowColumn.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }).catch((error) => {
+                console.error('Failed to load chat from URL:', error);
+                // Если чат не найден, показываем placeholder
+                showNoChatSelected();
+            });
+        }, 1000); // Даем время для загрузки списка чатов
+    }
     // Показываем плейсхолдер, если чат не выбран
-    if (!currentChatId) {
+    else if (!currentChatId) {
         showNoChatSelected();
     }
 
