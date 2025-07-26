@@ -98,6 +98,62 @@ from .utils import send_telegram_support_message
 logger = logging.getLogger(__name__)
 
 
+def safe_create_file_storage(entity_type, entity_id, file_type, file_url, uploaded_at, startup, original_file_name):
+    """
+    Безопасно создает объект FileStorage, учитывая наличие/отсутствие поля original_file_name
+    """
+    try:
+        return FileStorage.objects.create(
+            entity_type=entity_type,
+            entity_id=entity_id,
+            file_type=file_type,
+            file_url=file_url,
+            uploaded_at=uploaded_at,
+            startup=startup,
+            original_file_name=original_file_name,
+        )
+    except Exception:
+        # Если поле original_file_name не существует, создаем без него
+        return FileStorage.objects.create(
+            entity_type=entity_type,
+            entity_id=entity_id,
+            file_type=file_type,
+            file_url=file_url,
+            uploaded_at=uploaded_at,
+            startup=startup,
+        )
+
+
+def safe_create_file_storage_instance(entity_type, entity_id, file_type, file_url, uploaded_at, startup, original_file_name):
+    """
+    Безопасно создает и сохраняет экземпляр FileStorage, учитывая наличие/отсутствие поля original_file_name
+    """
+    try:
+        file_storage = FileStorage(
+            entity_type=entity_type,
+            entity_id=entity_id,
+            file_type=file_type,
+            file_url=file_url,
+            uploaded_at=uploaded_at,
+            startup=startup,
+            original_file_name=original_file_name,
+        )
+        file_storage.save()
+        return file_storage
+    except Exception:
+        # Если поле original_file_name не существует, создаем без него
+        file_storage = FileStorage(
+            entity_type=entity_type,
+            entity_id=entity_id,
+            file_type=file_type,
+            file_url=file_url,
+            uploaded_at=uploaded_at,
+            startup=startup,
+        )
+        file_storage.save()
+        return file_storage
+
+
 def get_unique_filename(original_name, startup_id, file_type_name):
     """
     Генерирует уникальное имя файла, добавляя (2), (3) и т.д. если файл с таким именем уже существует
@@ -108,29 +164,35 @@ def get_unique_filename(original_name, startup_id, file_type_name):
     # Проверяем, есть ли уже файлы с таким именем
     try:
         file_type = FileTypes.objects.get(type_name=file_type_name)
-        existing_files = FileStorage.objects.filter(
-            startup_id=startup_id,
-            file_type=file_type,
-            original_file_name=original_name
-        )
         
-        if not existing_files.exists():
-            return original_name
-        
-        # Если файл существует, ищем свободный номер
-        counter = 2
-        while True:
-            new_name = f"{name} ({counter}){ext}"
-            existing_duplicate = FileStorage.objects.filter(
+        # Проверяем, существует ли колонка original_file_name
+        try:
+            existing_files = FileStorage.objects.filter(
                 startup_id=startup_id,
                 file_type=file_type,
-                original_file_name=new_name
+                original_file_name=original_name
             )
             
-            if not existing_duplicate.exists():
-                return new_name
+            if not existing_files.exists():
+                return original_name
+            
+            # Если файл существует, ищем свободный номер
+            counter = 2
+            while True:
+                new_name = f"{name} ({counter}){ext}"
+                existing_duplicate = FileStorage.objects.filter(
+                    startup_id=startup_id,
+                    file_type=file_type,
+                    original_file_name=new_name
+                )
                 
-            counter += 1
+                if not existing_duplicate.exists():
+                    return new_name
+                    
+                counter += 1
+        except Exception:
+            # Если колонка original_file_name не существует, просто возвращаем оригинальное имя
+            return original_name
             
     except FileTypes.DoesNotExist:
         logger.error(f"FileType '{file_type_name}' не найден")
@@ -1916,14 +1978,14 @@ def create_startup(request):
                         default_storage.save(file_path, creative_file)
                         logger.info(f"Креатив успешно сохранён по пути: {file_path}")
                         creatives_ids.append(creative_id)
-                        FileStorage.objects.create(
+                        safe_create_file_storage(
                             entity_type=entity_type,
                             entity_id=startup.startup_id,
                             file_type=creative_type,
                             file_url=creative_id,
                             uploaded_at=timezone.now(),
                             startup=startup,
-                            original_file_name=unique_filename,  # Сохраняем оригинальное название
+                            original_file_name=unique_filename,
                         )
                         logger.info(f"Креатив сохранён: {file_path}")
                     except Exception as e:
@@ -1962,14 +2024,14 @@ def create_startup(request):
                         default_storage.save(file_path, proof_file)
                         logger.info(f"Пруф успешно сохранён по пути: {file_path}")
                         proofs_ids.append(proof_id)
-                        FileStorage.objects.create(
+                        safe_create_file_storage(
                             entity_type=entity_type,
                             entity_id=startup.startup_id,
                             file_type=proof_type,
                             file_url=proof_id,
                             uploaded_at=timezone.now(),
                             startup=startup,
-                            original_file_name=unique_filename,  # Сохраняем оригинальное название
+                            original_file_name=unique_filename,
                         )
                         logger.info(f"Пруф сохранён: {file_path}, оригинальное название: {unique_filename}")
                     except Exception as e:
@@ -2003,14 +2065,14 @@ def create_startup(request):
                     default_storage.save(file_path, video)
                     logger.info(f"Видео успешно сохранено по пути: {file_path}")
                     video_ids.append(video_id)
-                    FileStorage.objects.create(
+                    safe_create_file_storage(
                         entity_type=entity_type,
                         entity_id=startup.startup_id,
                         file_type=video_type,
                         file_url=video_id,
                         uploaded_at=timezone.now(),
                         startup=startup,
-                        original_file_name=unique_filename,  # Сохраняем оригинальное название
+                        original_file_name=unique_filename,
                     )
                     logger.info(f"Видео сохранено: {file_path}")
                 except Exception as e:
@@ -2246,16 +2308,15 @@ def edit_startup(request, startup_id):
                     file_path = f"startups/{startup.startup_id}/creatives/{creative_id}_{creative_file.name}"
                     default_storage.save(file_path, creative_file)
                     creatives_ids.append(creative_id)
-                    file_storage = FileStorage(
+                    safe_create_file_storage_instance(
                         entity_type=entity_type,
                         entity_id=startup.startup_id,
                         file_type=creative_type,
                         file_url=creative_id,
                         uploaded_at=timezone.now(),
                         startup=startup,
-                        original_file_name=unique_filename,  # Сохраняем оригинальное название
+                        original_file_name=unique_filename,
                     )
-                    file_storage.save()
                     logger.info(f"Креатив сохранён с ID: {creative_id}")
 
             # Сохранение пруфов
@@ -2278,21 +2339,23 @@ def edit_startup(request, startup_id):
                     file_path = f"startups/{startup.startup_id}/proofs/{proof_id}_{proof_file.name}"
                     default_storage.save(file_path, proof_file)
                     proofs_ids.append(proof_id)
-                    file_storage = FileStorage(
+                    safe_create_file_storage_instance(
                         entity_type=entity_type,
                         entity_id=startup.startup_id,
                         file_type=proof_type,
                         file_url=proof_id,
                         uploaded_at=timezone.now(),
                         startup=startup,
-                        original_file_name=unique_filename,  # Сохраняем оригинальное название
+                        original_file_name=unique_filename,
                     )
-                    file_storage.save()
                     logger.info(f"Пруф сохранён с ID: {proof_id}")
 
             # Сохранение видео
             video = form.cleaned_data.get("video")
             if video:
+                # Получаем уникальное имя файла для избежания дубликатов
+                unique_filename = get_unique_filename(video.name, startup.startup_id, "video")
+                
                 video_id = str(uuid.uuid4())
                 file_path = (
                     f"startups/{startup.startup_id}/videos/{video_id}_{video.name}"
@@ -2301,15 +2364,15 @@ def edit_startup(request, startup_id):
                 video_ids = [video_id]
                 video_type, _ = FileTypes.objects.get_or_create(type_name="video")
                 entity_type = EntityTypes.objects.get(type_name="startup")
-                file_storage = FileStorage(
+                safe_create_file_storage_instance(
                     entity_type=entity_type,
                     entity_id=startup.startup_id,
                     file_type=video_type,
                     file_url=video_id,
                     uploaded_at=timezone.now(),
                     startup=startup,
+                    original_file_name=unique_filename,
                 )
-                file_storage.save()
                 logger.info(f"Видео сохранено с ID: {video_id}")
 
             # Сохранение списков ID в поля jsonb

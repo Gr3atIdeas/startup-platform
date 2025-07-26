@@ -43,11 +43,12 @@ def get_file_original_name(file_id, startup_id, file_type):
             file_url=file_id
         ).first()
         
-        if file_storage and file_storage.original_file_name:
+        if file_storage and hasattr(file_storage, 'original_file_name') and file_storage.original_file_name:
             return file_storage.original_file_name
     except FileTypes.DoesNotExist:
         pass
     except Exception:
+        # Обрабатываем случай, когда колонка original_file_name еще не существует
         pass
     
     # Если не нашли в базе данных, используем старую логику (извлечение из S3)
