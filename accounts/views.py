@@ -680,13 +680,23 @@ def startup_detail(request, startup_id):
     for i in range(1, 6):
         rating_distribution.setdefault(i, 0)
 
-    # Похожие стартапы
+    # Похожие стартапы - используем ту же логику что и в load_similar_startups
     similar_startups = (
-        Startups.objects.filter(direction=startup.direction, status="approved")
+        Startups.objects.filter(status="approved")
         .exclude(startup_id=startup.startup_id)
-        .annotate(avg_rating=Avg("uservotes__rating"))
-        .order_by("-avg_rating")[:8]
+        .order_by("?")[:4]
     )
+    
+    # Аннотируем средний рейтинг для похожих стартапов
+    similar_startups = similar_startups.annotate(
+        average_rating_calc=Avg(
+            models.ExpressionWrapper(
+                models.F("sum_votes") * 1.0 / models.F("total_voters"),
+                output_field=FloatField(),
+            ),
+            filter=models.Q(total_voters__gt=0),
+        )
+    ).annotate(average_rating=Coalesce("average_rating_calc", 0.0))
 
     # Медиафайлы
     logo_urls = startup.logo_urls if isinstance(startup.logo_urls, list) else []
