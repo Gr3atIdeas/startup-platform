@@ -120,9 +120,10 @@ class FileStorage(models.Model):
     file_type = models.ForeignKey("FileTypes", models.DO_NOTHING, blank=True, null=True)
     uploaded_at = models.DateTimeField(blank=True, null=True)
     startup = models.ForeignKey("Startups", models.CASCADE, blank=True, null=True)
-    original_file_name = models.CharField(
-        max_length=255, blank=True, null=True
-    )  # Добавляем поле для хранения оригинального названия файла
+    # original_file_name = models.CharField(
+    #     max_length=255, blank=True, null=True
+    # )  # Добавляем поле для хранения оригинального названия файла
+    # ВРЕМЕННО ЗАКОММЕНТИРОВАНО ДО ПРИМЕНЕНИЯ МИГРАЦИИ
 
     class Meta:
         managed = True  # Изменяем на True, чтобы Django управлял таблицей

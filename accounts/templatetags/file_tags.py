@@ -35,21 +35,23 @@ def get_file_original_name(file_id, startup_id, file_type):
         return file_id.split('/')[-1] if '/' in file_id else file_id
     
     # Пытаемся получить оригинальное название из базы данных
-    try:
-        file_type_obj = FileTypes.objects.get(type_name=file_type)
-        file_storage = FileStorage.objects.filter(
-            startup_id=startup_id,
-            file_type=file_type_obj,
-            file_url=file_id
-        ).first()
-        
-        if file_storage and hasattr(file_storage, 'original_file_name') and file_storage.original_file_name:
-            return file_storage.original_file_name
-    except FileTypes.DoesNotExist:
-        pass
-    except Exception:
-        # Обрабатываем случай, когда колонка original_file_name еще не существует
-        pass
+    # Проверяем, есть ли поле original_file_name в модели
+    if hasattr(FileStorage, 'original_file_name'):
+        try:
+            file_type_obj = FileTypes.objects.get(type_name=file_type)
+            file_storage = FileStorage.objects.filter(
+                startup_id=startup_id,
+                file_type=file_type_obj,
+                file_url=file_id
+            ).first()
+            
+            if file_storage and hasattr(file_storage, 'original_file_name') and file_storage.original_file_name:
+                return file_storage.original_file_name
+        except FileTypes.DoesNotExist:
+            pass
+        except Exception:
+            # Обрабатываем случай, когда колонка original_file_name еще не существует в БД
+            pass
     
     # Если не нашли в базе данных, используем старую логику (извлечение из S3)
     file_info = get_file_info(file_id, startup_id, file_type)

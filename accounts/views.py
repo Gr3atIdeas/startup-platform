@@ -102,18 +102,30 @@ def safe_create_file_storage(entity_type, entity_id, file_type, file_url, upload
     """
     Безопасно создает объект FileStorage, учитывая наличие/отсутствие поля original_file_name
     """
-    try:
-        return FileStorage.objects.create(
-            entity_type=entity_type,
-            entity_id=entity_id,
-            file_type=file_type,
-            file_url=file_url,
-            uploaded_at=uploaded_at,
-            startup=startup,
-            original_file_name=original_file_name,
-        )
-    except Exception:
-        # Если поле original_file_name не существует, создаем без него
+    # Проверяем, есть ли поле original_file_name в модели
+    if hasattr(FileStorage, 'original_file_name'):
+        try:
+            return FileStorage.objects.create(
+                entity_type=entity_type,
+                entity_id=entity_id,
+                file_type=file_type,
+                file_url=file_url,
+                uploaded_at=uploaded_at,
+                startup=startup,
+                original_file_name=original_file_name,
+            )
+        except Exception:
+            # Если поле есть в модели, но не в БД, создаем без него
+            return FileStorage.objects.create(
+                entity_type=entity_type,
+                entity_id=entity_id,
+                file_type=file_type,
+                file_url=file_url,
+                uploaded_at=uploaded_at,
+                startup=startup,
+            )
+    else:
+        # Если поля нет в модели, создаем без него
         return FileStorage.objects.create(
             entity_type=entity_type,
             entity_id=entity_id,
@@ -128,20 +140,34 @@ def safe_create_file_storage_instance(entity_type, entity_id, file_type, file_ur
     """
     Безопасно создает и сохраняет экземпляр FileStorage, учитывая наличие/отсутствие поля original_file_name
     """
-    try:
-        file_storage = FileStorage(
-            entity_type=entity_type,
-            entity_id=entity_id,
-            file_type=file_type,
-            file_url=file_url,
-            uploaded_at=uploaded_at,
-            startup=startup,
-            original_file_name=original_file_name,
-        )
-        file_storage.save()
-        return file_storage
-    except Exception:
-        # Если поле original_file_name не существует, создаем без него
+    # Проверяем, есть ли поле original_file_name в модели
+    if hasattr(FileStorage, 'original_file_name'):
+        try:
+            file_storage = FileStorage(
+                entity_type=entity_type,
+                entity_id=entity_id,
+                file_type=file_type,
+                file_url=file_url,
+                uploaded_at=uploaded_at,
+                startup=startup,
+                original_file_name=original_file_name,
+            )
+            file_storage.save()
+            return file_storage
+        except Exception:
+            # Если поле есть в модели, но не в БД, создаем без него
+            file_storage = FileStorage(
+                entity_type=entity_type,
+                entity_id=entity_id,
+                file_type=file_type,
+                file_url=file_url,
+                uploaded_at=uploaded_at,
+                startup=startup,
+            )
+            file_storage.save()
+            return file_storage
+    else:
+        # Если поля нет в модели, создаем без него
         file_storage = FileStorage(
             entity_type=entity_type,
             entity_id=entity_id,
@@ -165,7 +191,11 @@ def get_unique_filename(original_name, startup_id, file_type_name):
     try:
         file_type = FileTypes.objects.get(type_name=file_type_name)
         
-        # Проверяем, существует ли колонка original_file_name
+        # Проверяем, есть ли поле original_file_name в модели
+        if not hasattr(FileStorage, 'original_file_name'):
+            return original_name
+        
+        # Проверяем, существует ли колонка original_file_name в БД
         try:
             existing_files = FileStorage.objects.filter(
                 startup_id=startup_id,
@@ -191,7 +221,7 @@ def get_unique_filename(original_name, startup_id, file_type_name):
                     
                 counter += 1
         except Exception:
-            # Если колонка original_file_name не существует, просто возвращаем оригинальное имя
+            # Если колонка original_file_name не существует в БД, просто возвращаем оригинальное имя
             return original_name
             
     except FileTypes.DoesNotExist:
