@@ -12,7 +12,20 @@ register = template.Library()
 def translate_category(name):
     """Переводит английское название категории на русский."""
     translations = {
-        # Переводы отключены для планетарной системы
+        "Medicine": "Медицина",
+        "Auto": "Автомобили",
+        "Delivery": "Доставка",
+        "Cafe": "Кафе/рестораны",
+        "Fastfood": "Фастфуд",
+        "Health": "Здоровье",
+        "Beauty": "Красота",
+        "Transport": "Транспорт",
+        "Sport": "Спорт",
+        "Psychology": "Психология",
+        "AI": "ИИ",
+        "Finance": "Финансы",
+        "Healthcare": "Здравоохранение",
+        "Technology": "Технологии",
     }
     return translations.get(
         name, name if name else "Без категории"
@@ -113,7 +126,7 @@ def get_telegram_login_url(context):
         if param_name in query_params and query_params[param_name]:
             # query_params[param_name] - это список, берем первый элемент
             inner_url_str = query_params[param_name][0]
-            
+
             # Заменяем домен, если он не содержит 'www'
             if '://greatideas.ru' in inner_url_str:
                 new_inner_url = inner_url_str.replace('://greatideas.ru', '://www.greatideas.ru')

@@ -74,8 +74,6 @@
         <span class="investor-count-text-figma">Инвестировало ({{ startup.investors_count }})</span>
       </div>
 
-      <p class="startup-short-description">{{ startup.short_description|truncatewords:15|default:"" }}</p>
-
       <a href="{% url 'startup_detail' startup_id=startup.startup_id %}" class="detail-link" aria-label="Подробнее о {{ startup.title }}"></a>
     </div>
   </div>
