@@ -2743,6 +2743,17 @@ body.glightbox-open .glightbox-container {
   gap: 8px;
   position: relative; /* Для z-index */
   z-index: 2; /* Иконки над линией прогресса */
+  cursor: pointer; /* Показываем, что элемент кликабельный */
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.timeline-step:hover {
+  transform: translateY(-2px); /* Легкий подъем при наведении */
+}
+
+.timeline-step:hover .step-number-wrapper {
+  transform: scale(1.1); /* Увеличение иконки при наведении */
+  box-shadow: 0 4px 12px rgba(123, 97, 255, 0.3); /* Легкая тень */
 }
 
 .step-number-wrapper {
@@ -2756,7 +2767,9 @@ body.glightbox-open .glightbox-container {
   align-items: center;
   transition:
     border-color 0.3s ease,
-    background-color 0.3s ease;
+    background-color 0.3s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .step-number-wrapper .step-icon {
@@ -2798,6 +2811,16 @@ body.glightbox-open .glightbox-container {
   color: var(--accent-purple);
 }
 
+/* Дополнительные стили для неактивных этапов */
+.timeline-step:not(.active-step-display):not(.completed-step-display) .step-number-wrapper {
+  opacity: 0.7;
+}
+
+.timeline-step:not(.active-step-display):not(.completed-step-display):hover .step-number-wrapper {
+  opacity: 1;
+  border-color: var(--accent-yellow);
+}
+
 /* Описания этапов */
 .timeline-descriptions-display {
   margin-top: 20px;
@@ -2815,6 +2838,18 @@ body.glightbox-open .glightbox-container {
 .timeline-description-item.active {
   display: block; /* Показываем только активное описание */
   border-left: 3px solid var(--accent-yellow); /* Акцент для активного */
+  animation: fadeInDescription 0.3s ease-in-out; /* Плавное появление */
+}
+
+@keyframes fadeInDescription {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .timeline-description-item h4 {

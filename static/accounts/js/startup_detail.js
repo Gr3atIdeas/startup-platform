@@ -1033,9 +1033,53 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
+  // --- 6. Логика интерактивных этапов ---
+  function setupTimelineSteps() {
+    const timelineSteps = document.querySelectorAll('.timeline-step');
+    const descriptionItems = document.querySelectorAll('.timeline-description-item');
+
+    if (timelineSteps.length === 0 || descriptionItems.length === 0) {
+      return; // Если нет этапов, ничего не делаем
+    }
+
+    timelineSteps.forEach(step => {
+      step.addEventListener('click', function() {
+        const stepNumber = this.dataset.step;
+        
+        // Убираем активное состояние у всех описаний
+        descriptionItems.forEach(item => {
+          item.classList.remove('active');
+        });
+
+        // Добавляем активное состояние к соответствующему описанию
+        const targetDescription = document.querySelector(`.timeline-description-item:nth-child(${stepNumber})`);
+        if (targetDescription) {
+          targetDescription.classList.add('active');
+          
+          // Плавная прокрутка к описанию
+          targetDescription.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'nearest',
+            inline: 'start'
+          });
+        }
+
+        // Добавляем визуальную обратную связь - легкий "пульс" при клике
+        const stepWrapper = this.querySelector('.step-number-wrapper');
+        if (stepWrapper) {
+          stepWrapper.style.transform = 'scale(0.95)';
+          setTimeout(() => {
+            stepWrapper.style.transform = '';
+          }, 150);
+        }
+      });
+    });
+  }
+
   // --- ВЫЗОВ НОВЫХ ФУНКЦИЙ ---
   setupTruncateText();
   setupChatButtons();
+  setupTimelineSteps(); // Добавляем инициализацию этапов
 
   // Инициализация всех функций при загрузке страницы
   if (pageDataElement) {
@@ -1043,6 +1087,7 @@ document.addEventListener('DOMContentLoaded', function () {
     setupSimilarStartups();
     setupTruncateText(); // Вызываем новую функцию
     setupChatButtons(); // И эту тоже
+    setupTimelineSteps(); // И этапы тоже
 
     const addInvestorModalEl = document.getElementById('addInvestorModal');
     if (addInvestorModalEl) {
