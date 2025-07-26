@@ -34,6 +34,7 @@
   <div class="top-section">
     <div class="left-column">
       <div class="planet-container">
+        <div class="stars"></div>
         {% if user.is_authenticated and user.role.role_name == 'moderator' %}
           <form method="post" class="status-form">
             {% csrf_token %}
@@ -53,7 +54,6 @@
         
         <div class="planet-display-container">
           <div class="space-background"></div>
-          <div class="stars"></div>
           {% if startup.planet_image %}
             <img src="https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/{{ startup.planet_image }}" alt="Планета {{ startup.title }}" class="planet-image">
           {% else %}

@@ -168,7 +168,7 @@ a:hover {
   appearance: none;
   position: relative; /* Добавим для z-index дочерних элементов */
   overflow: hidden; /* Снова скроем волну, выходящую за края */
-  z-index: 1; /* Базовый z-index */
+  z-index: 3; /* Поверх звезд и других элементов */
 }
 
 /* Увеличиваем специфичность */
@@ -358,6 +358,7 @@ a:hover {
   align-items: center;
   justify-content: center;
   position: relative;
+  z-index: 2; /* Поверх звезд, но под управляющими элементами */
 }
 
 /* Анимация звездного фона */
@@ -434,7 +435,7 @@ a:hover {
   color: #fff;
   padding: 5px 15px;
   border-radius: 20px;
-  z-index: 1;
+  z-index: 3; /* Поверх звезд и других элементов */
   font-family: Unbounded, sans-serif;
   font-size: 14px;
   font-style: normal;
@@ -448,7 +449,7 @@ a:hover {
   position: absolute;
   top: 10px;
   left: 10px;
-  z-index: 2;
+  z-index: 3; /* Поверх звезд и других элементов */
 }
 
 .status-select {
@@ -2922,7 +2923,7 @@ body.glightbox-open .glightbox-container {
 }
 
 /* Движущиеся звезды */
-.stars {
+.planet-container .stars {
   position: absolute;
   top: 0;
   left: 0;
@@ -2932,7 +2933,8 @@ body.glightbox-open .glightbox-container {
     repeat;
   opacity: 0.5;
   animation: parallax 100s linear infinite;
-  z-index: 2;
+  z-index: 1; /* Фон - самый низкий слой */
+  border-radius: 10px; /* Соответствует border-radius .planet-container */
 }
 
 /* Анимация параллакса для звезд */
