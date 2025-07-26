@@ -361,7 +361,7 @@
                         <li class="document-item">
                             <a href="{% get_file_url_tag doc.file_url startup.startup_id 'proof' %}" target="_blank" class="document-link">
                                 <i class="fas fa-file-alt document-icon"></i>
-                                <span class="document-name">{{ doc.original_file_name|default:doc.file_url }}</span>
+                                <span class="document-name">{% get_file_original_name doc.file_url startup.startup_id 'proof' %}</span>
                             </a>
                             {# Можно добавить дату загрузки, если нужно: {{ doc.uploaded_at|date:"d.m.Y" }} #}
                         </li>

@@ -16,6 +16,9 @@ echo "--- END VITE MANIFEST CONTENT ---"
 echo "--- Applying database migrations ---"
 python manage.py migrate
 
+echo "--- Filling original filenames for existing files ---"
+python manage.py fill_original_filenames || echo "Warning: Could not fill original filenames (column might not exist yet)"
+
 echo "--- Collecting static files ---"
 
 /opt/render/project/src/.venv/bin/python manage.py collectstatic --noinput --clear
