@@ -667,7 +667,7 @@ a:hover {
   display: flex;
   width: 451px;
   height: 257px;
-  padding: 30px 50px;
+  padding: 5px 30px;
   flex-direction: column;
   align-items: flex-start;
   gap: 23px;
@@ -1840,7 +1840,7 @@ a:hover {
 }
 
 .similar-startups-container {
-  width: 100%;
+  width: 1303px; /* Точная ширина блока */
   max-width: 1303px; /* Ширина контентной сетки */
   margin: 0 auto; /* Центрирование контента */
   padding: 0 30px; /* Внутренние горизонтальные отступы для самого контента */

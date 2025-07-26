@@ -13,6 +13,90 @@ function getCookie(name) {
   return cookieValue
 }
 
+// Функция для обновления отображения рейтинга (метод наложения)
+function updateRatingDisplay(containerSelector, rating) {
+  console.log(
+    `[updateRatingDisplay] Called for selector: "${containerSelector}", rating: ${rating}`
+  )
+  const starsContainer = document.querySelector(containerSelector)
+  if (!starsContainer) {
+    console.error(
+      `[updateRatingDisplay] Container not found for selector: "${containerSelector}"`
+    )
+    return
+  }
+
+  const iconContainers = starsContainer.querySelectorAll(
+    '.rating-icon-container'
+  )
+  console.log(
+    `[updateRatingDisplay] Found ${iconContainers.length} icon containers within "${containerSelector}"`
+  )
+  const ratingValue = parseFloat(rating) || 0
+  const fullStars = Math.floor(ratingValue)
+  const partialPercentage = (ratingValue - fullStars) * 100
+
+  iconContainers.forEach((container, index) => {
+    const filledIcon = container.querySelector('.icon-filled')
+    if (!filledIcon) {
+      console.warn(
+        `[updateRatingDisplay] Filled icon not found in container ${index + 1} for selector "${containerSelector}"`
+      )
+      return
+    }
+
+    let fillWidth = '0%'
+    if (index < fullStars) {
+      fillWidth = '100%'
+    } else if (index === fullStars && partialPercentage > 0) {
+      fillWidth = `${partialPercentage}%`
+    }
+    console.log(
+      `[updateRatingDisplay] Setting width ${fillWidth} for icon ${index + 1} in "${containerSelector}"`
+    )
+    filledIcon.style.width = fillWidth
+  })
+}
+
+// Функция для инициализации рейтинга похожих стартапов
+function initializeSimilarRatings() {
+  const similarRatingContainers = document.querySelectorAll(
+    '.similar-card .similar-card-rating[data-rating]'
+  )
+  console.log(
+    `Found ${similarRatingContainers.length} similar startup rating containers.`
+  )
+  similarRatingContainers.forEach((container, index) => {
+    const ratingStringRaw = container.dataset.rating
+    console.log(
+      `[Similar Rating] Raw data-rating: "${ratingStringRaw}" for container:`,
+      container
+    )
+    const ratingStringForJs = ratingStringRaw
+      ? ratingStringRaw.replace(',', '.')
+      : '0'
+    const similarRatingValue = parseFloat(ratingStringForJs) || 0
+    console.log(
+      `[Similar Rating] Processing similar startup card. Parsed rating: ${similarRatingValue}`
+    )
+
+    const parentLink = container.closest('.similar-card')
+    let uniqueSimilarSelector = null
+    if (parentLink && parentLink.getAttribute('href')) {
+      uniqueSimilarSelector = `.similar-card[href="${parentLink.getAttribute('href')}"] .similar-card-rating`
+    } else {
+      console.warn(
+        'Could not find unique href for similar card, using index-based selector'
+      )
+      uniqueSimilarSelector = `.similar-startups-grid .similar-card:nth-child(${index + 1}) .similar-card-rating`
+    }
+    console.log(`Using selector: ${uniqueSimilarSelector}`)
+    if (uniqueSimilarSelector) {
+      updateRatingDisplay(uniqueSimilarSelector, similarRatingValue)
+    }
+  })
+}
+
 document.addEventListener('DOMContentLoaded', function () {
   const pageDataElement = document.querySelector('.startup-detail-page')
   if (!pageDataElement) {
@@ -36,50 +120,7 @@ document.addEventListener('DOMContentLoaded', function () {
     console.error('Startup ID не найден в data-атрибутах.')
   }
 
-  // Функция для обновления отображения рейтинга (метод наложения)
-  function updateRatingDisplay(containerSelector, rating) {
-    console.log(
-      `[updateRatingDisplay] Called for selector: "${containerSelector}", rating: ${rating}`
-    )
-    const starsContainer = document.querySelector(containerSelector)
-    if (!starsContainer) {
-      console.error(
-        `[updateRatingDisplay] Container not found for selector: "${containerSelector}"`
-      )
-      return
-    }
 
-    const iconContainers = starsContainer.querySelectorAll(
-      '.rating-icon-container'
-    )
-    console.log(
-      `[updateRatingDisplay] Found ${iconContainers.length} icon containers within "${containerSelector}"`
-    )
-    const ratingValue = parseFloat(rating) || 0
-    const fullStars = Math.floor(ratingValue)
-    const partialPercentage = (ratingValue - fullStars) * 100
-
-    iconContainers.forEach((container, index) => {
-      const filledIcon = container.querySelector('.icon-filled')
-      if (!filledIcon) {
-        console.warn(
-          `[updateRatingDisplay] Filled icon not found in container ${index + 1} for selector "${containerSelector}"`
-        )
-        return
-      }
-
-      let fillWidth = '0%'
-      if (index < fullStars) {
-        fillWidth = '100%'
-      } else if (index === fullStars && partialPercentage > 0) {
-        fillWidth = `${partialPercentage}%`
-      }
-      console.log(
-        `[updateRatingDisplay] Setting width ${fillWidth} for icon ${index + 1} in "${containerSelector}"`
-      )
-      filledIcon.style.width = fillWidth
-    })
-  }
 
   // Функция для анимации прогресс-бара
   function updateAnimatedProgressBars(containerElement) {
@@ -155,41 +196,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   })
 
-  const similarRatingContainers = document.querySelectorAll(
-    '.similar-card .similar-card-rating[data-rating]'
-  )
-  console.log(
-    `Found ${similarRatingContainers.length} similar startup rating containers.`
-  )
-  similarRatingContainers.forEach((container) => {
-    const ratingStringRaw = container.dataset.rating
-    console.log(
-      `[Similar Rating] Raw data-rating: "${ratingStringRaw}" for container:`,
-      container
-    )
-    const ratingStringForJs = ratingStringRaw
-      ? ratingStringRaw.replace(',', '.')
-      : '0'
-    const similarRatingValue = parseFloat(ratingStringForJs) || 0
-    console.log(
-      `[Similar Rating] Processing similar startup card. Parsed rating: ${similarRatingValue}`
-    )
-
-    const parentLink = container.closest('.similar-card')
-    let uniqueSimilarSelector = null
-    if (parentLink && parentLink.getAttribute('href')) {
-      uniqueSimilarSelector = `.similar-card[href="${parentLink.getAttribute('href')}"] .similar-card-rating`
-    } else {
-      console.warn(
-        'Could not find unique href for similar card, using less specific selector'
-      )
-      uniqueSimilarSelector = `.similar-card-rating[data-rating="${ratingStringRaw}"]`
-    }
-    console.log(`Using selector: ${uniqueSimilarSelector}`)
-    if (uniqueSimilarSelector) {
-      updateRatingDisplay(uniqueSimilarSelector, similarRatingValue)
-    }
-  })
+  // Вызываем инициализацию с небольшой задержкой для корректной загрузки DOM
+  setTimeout(initializeSimilarRatings, 100)
 
   const overallRatingStarsElement = document.querySelector(
     '.overall-rating-stars'
@@ -506,28 +514,10 @@ document.addEventListener('DOMContentLoaded', function () {
             similarGrid.innerHTML += html
           }
 
-          const newCards = similarGrid.querySelectorAll(
-            '.similar-card:not(.show-more-placeholder)'
-          )
-          newCards.forEach((card, cardIndex) => {
-            const similarRatingContainer = card.querySelector(
-              '.similar-card-rating'
-            )
-            if (
-              similarRatingContainer &&
-              similarRatingContainer.dataset.rating !== undefined
-            ) {
-              const ratingStringRaw = similarRatingContainer.dataset.rating
-              const ratingStringForJs = ratingStringRaw
-                ? ratingStringRaw.replace(',', '.')
-                : '0'
-              const similarRatingValue = parseFloat(ratingStringForJs) || 0
-              updateRatingDisplay(
-                `.similar-card[href="${card.getAttribute('href')}"] .similar-card-rating`,
-                similarRatingValue
-              )
-            }
-          })
+          // Используем уже созданную функцию для инициализации рейтинга новых карточек
+          setTimeout(() => {
+            initializeSimilarRatings()
+          }, 50)
 
           this.innerHTML = '<i class="fas fa-redo"></i> Показать еще'
           this.disabled = false

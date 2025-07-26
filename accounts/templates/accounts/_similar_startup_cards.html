@@ -21,7 +21,7 @@
   <div class="similar-card-rating" data-rating="{{ similar.average_rating|default:0|floatformat:'-2' }}">
     {# Используем цикл и контейнеры для планет #}
     {% for star_i in "12345" %}
-      <span class="rating-icon-container comment-icon-container"> {# Меньший размер иконок #}
+      <span class="rating-icon-container">
         <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-empty">
         <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-filled">
       </span>
