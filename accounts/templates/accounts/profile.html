@@ -211,7 +211,7 @@
                                     <div class="profile-main-startup-list-divider"></div>
                                 {% endif %}
                             {% endfor %}
-                            <!-- Пагинация для стартапов -->
+                            
                             {% if startups_page.paginator.num_pages > 1 %}
                                 <div class="pagination">
                                     {% if startups_page.has_previous %}
@@ -246,7 +246,7 @@
                                         </div>
                                     </a>
                                 {% endfor %}
-                                <!-- Пагинация для новостей -->
+                                
                                 {% if news_page.paginator.num_pages > 1 %}
                                     <div class="pagination">
                                         {% if news_page.has_previous %}
@@ -354,7 +354,7 @@
                 <option value="">Выберите роль</option>
                 <option value="1">Стартапер</option>
                 <option value="2">Инвестор</option>
-                <!-- Исключен option value="3" (Модератор) -->
+                
             </select>
             <div class="modal-buttons">
                 <button type="submit" name="select_role" class="confirm">Подтвердить</button>

@@ -1,12 +1,6 @@
-# accounts/templatetags/timeline_filters.py
-
 import re
-
 from django import template
-
 register = template.Library()
-
-
 @register.filter
 def extract_step_number(title):
     """

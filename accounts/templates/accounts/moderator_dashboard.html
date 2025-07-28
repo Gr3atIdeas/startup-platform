@@ -226,7 +226,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     </a>
                     <div class="category-dropdown-menu" id="categoryDropdownMenu">
                         {% if all_categories %}
-                            {% for category_obj in all_categories %} {# Изменено имя переменной цикла #}
+                            {% for category_obj in all_categories %} 
                                 <a href="?category={{ category_obj.direction_name|urlencode }}{% if current_sort_order %}&sort={{ current_sort_order }}{% endif %}" 
                                    data-category-value="{{ category_obj.direction_name }}">
                                     {% with original_name=category_obj.direction_name|lower %}
@@ -286,8 +286,8 @@ document.addEventListener('DOMContentLoaded', function () {
                                             {% endif %}
                                             <div class="author-text-details">
                                                 <span class="author-name">{{ startup.owner.get_full_name|default:startup.owner.email|default:"Не указан" }}</span>
-                                                <span class="author-rating">Рейтинг 4,2/5</span> {# Placeholder #}
-                                                <a href="#" class="author-reviews-link">Отзывы</a> {# Placeholder #}
+                                                <span class="author-rating">Рейтинг 4,2/5</span> 
+                                                <a href="#" class="author-reviews-link">Отзывы</a> 
                                             </div>
                                 {% else %}
                                             <div class="author-avatar-placeholder"></div>
@@ -322,8 +322,8 @@ document.addEventListener('DOMContentLoaded', function () {
                                                 {% elif original_name == "finance" %}Финансы
                                                 {% elif original_name == "healthcare" %}Здравоохранение
                                                 {% elif original_name == "technology" %}Технологии
-                                                {# Добавьте другие категории и их переводы здесь, если они есть в вашей системе #}
-                                                {% else %}{{ startup.direction.direction_name|default:"Не указана" }}{# Возвращаем оригинал или "Не указано" #}
+                                                
+                                                {% else %}{{ startup.direction.direction_name|default:"Не указана" }}
                                                 {% endif %}
                                             {% endwith %}
                                         </span>
@@ -351,7 +351,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             <span class="detail-label">Описание</span>
                             <p class="startup-description-text">{{ startup.description|default:startup.short_description|default:"Описание отсутствует."|truncatewords:30 }}</p>
                         </div>
-                    </div> {# End of startup-card-item-content #}
+                    </div> 
 
                     <div class="funding-info-actions">
                         <div class="funding-details-row">
@@ -380,7 +380,7 @@ document.addEventListener('DOMContentLoaded', function () {
             {% endif %}
         </section>
 
-        {% if pending_startups and pending_startups|length > 4 %} {# Кнопка "Показать еще" только если есть что показывать #}
+        {% if pending_startups and pending_startups|length > 4 %} 
         <div class="show-more-bar">
             <a href="#" class="show-more-button">
                 Показать еще

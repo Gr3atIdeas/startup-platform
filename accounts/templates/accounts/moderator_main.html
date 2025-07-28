@@ -5,16 +5,16 @@
 {% block title %}Главная страница | Модератор{% endblock %}
 
 {% block head_extra %}
-    {# Vite подключит все необходимые стили через JS-бандл #}
+    
     {% vite_asset 'static/src/js/moderator_main.js' %}
 {% endblock %}
 
 {% block content %}
   <div id="app">
-    <!-- Сюда будет смонтировано Vue-приложение -->
+    
   </div>
 {% endblock %}
 
 {% block scripts %}
-  {# django-vite автоматически подключит сюда JS, так как CSS уже был подключен в head #}
+  
 {% endblock %}

@@ -1,10 +1,5 @@
-# accounts/templatetags/startup_filters.py
 from django import template
-
-# Создаём объект register
 register = template.Library()
-
-
 @register.filter(name="get_timeline_event_by_step")
 def get_timeline_event_by_step(timeline_events, step_number):
     """
@@ -16,20 +11,17 @@ def get_timeline_event_by_step(timeline_events, step_number):
         Объект StartupTimeline или None, если этап не найден.
     """
     try:
-        # Убедимся, что step_number - это число
         step_number = int(step_number)
         for event in timeline_events:
             if event.step_number == step_number:
                 return event
-        return None  # Если не найдено
+        return None
     except (
         ValueError,
         AttributeError,
         TypeError,
-    ):  # Добавил TypeError на случай если timeline_events не итерируемый
+    ):
         return None
-
-
 @register.filter
 def get_item(dictionary, key):
     """

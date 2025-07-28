@@ -12,8 +12,6 @@ function getCookie(name) {
   }
   return cookieValue
 }
-
-// Функция для обновления отображения рейтинга (метод наложения)
 function updateRatingDisplay(containerSelector, rating) {
   console.log(
     `[updateRatingDisplay] Called for selector: "${containerSelector}", rating: ${rating}`
@@ -25,7 +23,6 @@ function updateRatingDisplay(containerSelector, rating) {
     )
     return
   }
-
   const iconContainers = starsContainer.querySelectorAll(
     '.rating-icon-container'
   )
@@ -35,7 +32,6 @@ function updateRatingDisplay(containerSelector, rating) {
   const ratingValue = parseFloat(rating) || 0
   const fullStars = Math.floor(ratingValue)
   const partialPercentage = (ratingValue - fullStars) * 100
-
   iconContainers.forEach((container, index) => {
     const filledIcon = container.querySelector('.icon-filled')
     if (!filledIcon) {
@@ -44,7 +40,6 @@ function updateRatingDisplay(containerSelector, rating) {
       )
       return
     }
-
     let fillWidth = '0%'
     if (index < fullStars) {
       fillWidth = '100%'
@@ -57,8 +52,6 @@ function updateRatingDisplay(containerSelector, rating) {
     filledIcon.style.width = fillWidth
   })
 }
-
-// Функция для инициализации рейтинга похожих стартапов
 function initializeSimilarRatings() {
   const similarRatingContainers = document.querySelectorAll(
     '.similar-card .similar-card-rating[data-rating]'
@@ -79,7 +72,6 @@ function initializeSimilarRatings() {
     console.log(
       `[Similar Rating] Processing similar startup card. Parsed rating: ${similarRatingValue}`
     )
-
     const parentLink = container.closest('.similar-card')
     let uniqueSimilarSelector = null
     if (parentLink && parentLink.getAttribute('href')) {
@@ -96,14 +88,12 @@ function initializeSimilarRatings() {
     }
   })
 }
-
 document.addEventListener('DOMContentLoaded', function () {
   const pageDataElement = document.querySelector('.startup-detail-page')
   if (!pageDataElement) {
     console.error('Не удалось найти основной элемент .startup-detail-page')
     return
   }
-
   const startupId = pageDataElement.dataset.startupId
   const startupTitle = pageDataElement.dataset.startupTitle
   const isUserAuthenticated =
@@ -115,30 +105,22 @@ document.addEventListener('DOMContentLoaded', function () {
   const csrfToken = csrfTokenInput
     ? csrfTokenInput.value
     : getCookie('csrftoken')
-
   if (!startupId) {
     console.error('Startup ID не найден в data-атрибутах.')
   }
-
-
-
-  // Функция для анимации прогресс-бара
   function updateAnimatedProgressBars(containerElement) {
     if (!containerElement) return
     const visualContainers = containerElement.querySelectorAll(
       '.progress-bar-visual'
     )
-
     visualContainers.forEach((container) => {
       const animationContainer = container.querySelector(
         '.progress-animation-container'
       )
       const percentageSpan = container.querySelector('.progress-percentage')
-
       if (animationContainer && percentageSpan) {
         const textContent = percentageSpan.textContent || '0%'
         const progressPercentValue = parseInt(textContent, 10) || 0
-
         setTimeout(() => {
           animationContainer.style.width = progressPercentValue + '%'
         }, 100)
@@ -156,15 +138,10 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     })
   }
-
-  // Вызываем функцию анимации прогресс-бара
   const startupDetailPage = document.querySelector('.startup-detail-page')
   updateAnimatedProgressBars(startupDetailPage)
-
-  // Отображение начального рейтинга
   const ratingDisplayContainer = '.rating-stars[data-rating]'
   const ratingCommentsSelector = '.comment-rating'
-
   const mainRatingElement = document.querySelector(ratingDisplayContainer)
   if (mainRatingElement) {
     const initialRatingRaw = mainRatingElement.getAttribute('data-rating')
@@ -181,7 +158,6 @@ document.addEventListener('DOMContentLoaded', function () {
       ratingDisplayContainer
     )
   }
-
   const commentCards = document.querySelectorAll('.comment-card')
   commentCards.forEach((card, cardIndex) => {
     const commentRatingContainer = card.querySelector(ratingCommentsSelector)
@@ -195,10 +171,7 @@ document.addEventListener('DOMContentLoaded', function () {
       updateRatingDisplay(uniqueCommentSelector, commentRatingValue)
     }
   })
-
-  // Вызываем инициализацию с небольшой задержкой для корректной загрузки DOM
   setTimeout(initializeSimilarRatings, 100)
-
   const overallRatingStarsElement = document.querySelector(
     '.overall-rating-stars'
   )
@@ -211,12 +184,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const overallRating = parseFloat(overallRatingStringForJs)
     updateRatingDisplay('.overall-rating-stars', overallRating)
   }
-
-  // Логика "Показать еще" / "Скрыть" для комментариев
   const showMoreCommentsBtn = document.querySelector('.show-more-comments')
   const hideCommentsBtn = document.querySelector('.hide-comments-button')
   const commentsToShow = 5
-
   if (
     showMoreCommentsBtn &&
     hideCommentsBtn &&
@@ -231,7 +201,6 @@ document.addEventListener('DOMContentLoaded', function () {
       this.style.display = 'none'
       hideCommentsBtn.style.display = 'inline-flex'
     })
-
     hideCommentsBtn.addEventListener('click', function () {
       commentCards.forEach((comment, index) => {
         if (index >= commentsToShow) {
@@ -244,8 +213,6 @@ document.addEventListener('DOMContentLoaded', function () {
   } else if (showMoreCommentsBtn) {
     showMoreCommentsBtn.style.display = 'none'
   }
-
-  // Логика голосования и эффект наведения
   const interactiveStarsContainer = document.querySelector(
     '.rating-stars[data-interactive="true"]'
   )
@@ -255,11 +222,8 @@ document.addEventListener('DOMContentLoaded', function () {
     )
     iconContainers.forEach((iconContainer) => {
       iconContainer.style.cursor = 'pointer'
-
-      // Обработчик клика для голосования
       iconContainer.addEventListener('click', function () {
         const rating = this.getAttribute('data-value')
-
         if (!csrfToken) {
           console.error('CSRF токен не найден для голосования.')
           alert(
@@ -272,7 +236,6 @@ document.addEventListener('DOMContentLoaded', function () {
           alert('Ошибка: Не удалось определить стартап.')
           return
         }
-
         fetch(`/vote-startup/${startupId}/`, {
           method: 'POST',
           headers: {
@@ -296,27 +259,23 @@ document.addEventListener('DOMContentLoaded', function () {
                   '.rating-stars[data-rating]',
                   data.average_rating
                 )
-
                 starsContainerElement
                   .querySelectorAll('.rating-icon-container')
                   .forEach((container) => {
                     container.removeAttribute('data-value')
                     container.style.cursor = 'default'
                   })
-
                 const ratingValueElement =
                   document.querySelector('.rating-label')
                 if (ratingValueElement) {
                   ratingValueElement.textContent = `Рейтинг ${data.average_rating.toFixed(1)}/5`
                 }
-
                 const commentAvgRating = document.querySelector(
                   '.average-rating-value'
                 )
                 if (commentAvgRating) {
                   commentAvgRating.textContent = data.average_rating.toFixed(1)
                 }
-
                 const overallRatingStars = document.querySelector(
                   '.overall-rating-stars'
                 )
@@ -340,8 +299,6 @@ document.addEventListener('DOMContentLoaded', function () {
             alert('Произошла ошибка сети при голосовании')
           })
       })
-
-      // Обработчик наведения для подсветки
       iconContainer.addEventListener('mouseover', function () {
         const value = parseInt(this.getAttribute('data-value'))
         iconContainers.forEach((otherIcon, otherIndex) => {
@@ -353,8 +310,6 @@ document.addEventListener('DOMContentLoaded', function () {
           }
         })
       })
-
-      // Обработчик ухода мыши (возвращаем текущий рейтинг)
       iconContainer.addEventListener('mouseout', function () {
         const currentRating =
           parseFloat(interactiveStarsContainer.getAttribute('data-rating')) || 0
@@ -373,8 +328,6 @@ document.addEventListener('DOMContentLoaded', function () {
       })
     })
   }
-
-  // Инициализация GLightbox
   if (typeof GLightbox !== 'undefined') {
     const lightbox = GLightbox({
       selector: '.glightbox',
@@ -441,24 +394,19 @@ document.addEventListener('DOMContentLoaded', function () {
       'GLightbox is not defined. Check if the library is loaded correctly.'
     )
   }
-
-  // Логика переключения табов
   const tabContainer = document.querySelector('.tab-navigation')
   const contentSections = document.querySelectorAll('.content-section')
   const tabButtons = document.querySelectorAll('.tab-button')
-
   if (tabContainer && contentSections.length > 0 && tabButtons.length > 0) {
     tabContainer.addEventListener('click', function (event) {
       const clickedButton = event.target.closest('.tab-button')
       if (clickedButton) {
         const targetId = clickedButton.dataset.target
         if (!targetId) return
-
         tabButtons.forEach((button) => {
           button.classList.remove('active')
         })
         clickedButton.classList.add('active')
-
         contentSections.forEach((section) => {
           if (section.id === targetId) {
             section.classList.add('active')
@@ -469,18 +417,14 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     })
   }
-
-  // Обработчик для "Показать еще" похожие стартапы
   const showMoreSimilarBtn = document.querySelector(
     '.action-button.show-more-similar'
   )
   const similarGrid = document.querySelector('.similar-startups-grid')
-
   if (showMoreSimilarBtn && similarGrid) {
     showMoreSimilarBtn.addEventListener('click', function () {
       this.textContent = 'Загрузка...'
       this.disabled = true
-
       const loadSimilarUrl = pageDataElement.dataset.loadSimilarUrl
       if (!loadSimilarUrl) {
         console.error(
@@ -491,7 +435,6 @@ document.addEventListener('DOMContentLoaded', function () {
         alert('Произошла ошибка конфигурации.')
         return
       }
-
       fetch(loadSimilarUrl)
         .then((response) => {
           if (!response.ok) {
@@ -504,7 +447,6 @@ document.addEventListener('DOMContentLoaded', function () {
             '.similar-card:not(.show-more-placeholder)'
           )
           currentCards.forEach((card) => card.remove())
-
           const placeholder = similarGrid.querySelector(
             '.show-more-placeholder'
           )
@@ -513,12 +455,9 @@ document.addEventListener('DOMContentLoaded', function () {
           } else {
             similarGrid.innerHTML += html
           }
-
-          // Используем уже созданную функцию для инициализации рейтинга новых карточек
           setTimeout(() => {
             initializeSimilarRatings()
           }, 50)
-
           this.innerHTML = '<i class="fas fa-redo"></i> Показать еще'
           this.disabled = false
         })
@@ -530,8 +469,6 @@ document.addEventListener('DOMContentLoaded', function () {
         })
     })
   }
-
-  // Обработчик для ссылки "Комментарии"
   const commentsLink = document.querySelector(
     '.comments-link[href="#comments-section"]'
   )
@@ -539,15 +476,12 @@ document.addEventListener('DOMContentLoaded', function () {
     '.tab-button[data-target="comments-section"]'
   )
   const commentsSection = document.getElementById('comments-section')
-
   if (commentsLink && commentsTabButton && commentsSection) {
     commentsLink.addEventListener('click', function (event) {
       event.preventDefault()
-
       if (!commentsTabButton.classList.contains('active')) {
         commentsTabButton.click()
       }
-
       if (window.getComputedStyle(commentsSection).display !== 'none') {
         commentsSection.scrollIntoView({ behavior: 'smooth', block: 'start' })
       } else {
@@ -567,8 +501,6 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     })
   }
-
-  // Функция debounce для ограничения частоты запросов
   function debounce(func, delay) {
     let timeoutId
     return function (...args) {
@@ -576,23 +508,16 @@ document.addEventListener('DOMContentLoaded', function () {
       timeoutId = setTimeout(() => func.apply(this, args), delay)
     }
   }
-
-  // --- ЛОГИКА МОДАЛЬНЫХ ОКОН МОДЕРАТОРА ---
-
-  // Универсальная функция для поиска пользователей
   function setupUserSearch(modalId, searchInputId, resultsId, onSelect) {
     const searchModalElement = document.getElementById(modalId)
     if (!searchModalElement) return;
-
     const searchInput = document.getElementById(searchInputId)
     const searchResults = document.getElementById(resultsId)
-
     const debouncedSearch = debounce(function (query) {
       if (query.length < 2) {
         searchResults.innerHTML = ''
         return
       }
-      // Используем новый, исправленный URL и логику
       fetch(`/search-suggestions/?q=${encodeURIComponent(query)}`, {
         headers: { 'X-Requested-With': 'XMLHttpRequest' },
       })
@@ -607,11 +532,10 @@ document.addEventListener('DOMContentLoaded', function () {
           const li = document.createElement('li')
           li.classList.add('list-group-item')
           li.style.cursor = 'pointer';
-          li.textContent = user.name // <-- Используем user.name
-          li.dataset.userId = user.id  // <-- Используем user.id
+          li.textContent = user.name
+          li.dataset.userId = user.id
           li.addEventListener('click', () => {
-            onSelect(user); // Передаем весь объект user
-            // Для окна смены владельца закрываем, для остальных - нет
+            onSelect(user);
             if (modalId === 'changeOwnerModal') {
                 const currentModal = bootstrap.Modal.getInstance(searchModalElement);
                 if (currentModal) {
@@ -627,33 +551,22 @@ document.addEventListener('DOMContentLoaded', function () {
         searchResults.innerHTML = '<li class="list-group-item">Ошибка поиска</li>'
       })
     }, 300)
-
     searchInput.addEventListener('input', function () {
       debouncedSearch(this.value.trim())
     })
-
-    // Очищаем результаты при закрытии модального окна
     searchModalElement.addEventListener('hidden.bs.modal', function () {
         searchInput.value = '';
         searchResults.innerHTML = '';
     });
   }
-
-  // --- 1. Смена владельца ---
   setupUserSearch('changeOwnerModal', 'userSearchInput', 'userSearchResults', (user) => {
-    // Наполняем модальное окно подтверждения
     const confirmModalEl = document.getElementById('confirmChangeOwnerModal')
     if (!confirmModalEl) return;
-    
     document.getElementById('newOwnerName').textContent = user.name;
     document.getElementById('newOwnerId').value = user.id;
-
-    // Показываем модальное окно подтверждения
     const confirmModal = new bootstrap.Modal(confirmModalEl);
     confirmModal.show();
   });
-
-  // Подтверждение смены владельца (остается почти без изменений)
   const confirmChangeOwnerBtn = document.querySelector('.confirm-change-owner')
   if (confirmChangeOwnerBtn) {
     confirmChangeOwnerBtn.addEventListener('click', function () {
@@ -681,24 +594,17 @@ document.addEventListener('DOMContentLoaded', function () {
       })
     })
   }
-
-  // --- 2. Добавление инвестора ---
   const addInvestorModalEl = document.getElementById('addInvestorModal');
   if (addInvestorModalEl) {
     let selectedInvestor = null;
-
-    // Настраиваем поиск для модального окна добавления инвестора
     setupUserSearch('addInvestorModal', 'investorSearchInput', 'investorSearchResults', (user) => {
       selectedInvestor = user;
-      // Показываем, кто выбран
       const investorSearchInput = document.getElementById('investorSearchInput');
       investorSearchInput.value = user.name;
       investorSearchInput.disabled = true;
       document.getElementById('investorSearchResults').innerHTML = '';
       document.getElementById('addInvestmentButton').disabled = false;
     });
-
-    // Обработчик кнопки "Добавить"
     const addInvestmentButton = document.getElementById('addInvestmentButton');
     addInvestmentButton.addEventListener('click', function() {
         if (!selectedInvestor) {
@@ -710,11 +616,10 @@ document.addEventListener('DOMContentLoaded', function () {
             alert('Введите корректную сумму инвестиции.');
             return;
         }
-
         fetch(`/add_investor/${startupId}/`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json', // Отправляем JSON
+                'Content-Type': 'application/json',
                 'X-CSRFToken': getCookie('csrftoken'),
             },
             body: JSON.stringify({
@@ -726,7 +631,7 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(data => {
             if (data.success) {
                 alert('Инвестор успешно добавлен!');
-                loadCurrentInvestors(); // Перезагружаем список
+                loadCurrentInvestors();
                 resetAddInvestorForm();
                 updateStartupFinancials(data.new_amount_raised, data.new_investor_count);
             } else {
@@ -738,8 +643,6 @@ document.addEventListener('DOMContentLoaded', function () {
             alert('Сетевая ошибка при добавлении инвестора.');
         });
     });
-
-    // Функция для сброса формы добавления
     function resetAddInvestorForm() {
         selectedInvestor = null;
         const searchInput = document.getElementById('investorSearchInput');
@@ -748,22 +651,19 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('investmentAmount').value = '';
         document.getElementById('addInvestmentButton').disabled = true;
     }
-
-    // Загрузка и отображение текущих инвесторов
     function loadCurrentInvestors() {
         fetch(`/get_investors/${startupId}/`)
         .then(response => {
             if (!response.ok) {
-                // Если статус ошибки, читаем как текст, чтобы увидеть HTML-ошибку
-                return response.text().then(text => { 
+                return response.text().then(text => {
                     throw new Error(`Ошибка сервера: ${response.status}. Ответ: ${text}`);
                 });
             }
-            return response.json(); // Если все ок, парсим как JSON
+            return response.json();
         })
         .then(data => {
             const investorsList = document.getElementById('currentInvestorsList');
-            investorsList.innerHTML = data.html; // <-- Вставляем готовый HTML
+            investorsList.innerHTML = data.html;
         })
         .catch(error => {
             const investorsList = document.getElementById('currentInvestorsList');
@@ -771,8 +671,6 @@ document.addEventListener('DOMContentLoaded', function () {
             console.error('Ошибка загрузки инвесторов:', error)
         });
     }
-    
-    // Обработка кликов на удаление (делегирование событий)
     document.getElementById('currentInvestorsList').addEventListener('click', function(event) {
         const deleteButton = event.target.closest('.delete-investment-btn');
         if (deleteButton) {
@@ -791,7 +689,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 .then(data => {
                     if (data.success) {
                         alert('Инвестиция удалена.');
-                        loadCurrentInvestors(); // <-- Перезагружаем список (теперь это просто вставка HTML)
+                        loadCurrentInvestors();
                         updateStartupFinancials(data.new_amount_raised, data.new_investor_count);
                     } else {
                         alert(data.error || 'Ошибка при удалении.');
@@ -804,33 +702,22 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
     });
-    
-    // --- Универсальная функция для обновления финансовых показателей ---
     function updateStartupFinancials(investorCount, amountRaised) {
         console.log('Updating financials:', { investorCount, amountRaised });
-
-        // Обновляем счетчик инвесторов под прогресс-баром
         const investorCountDisplay = document.getElementById('investor-count-display');
         if (investorCountDisplay) {
             investorCountDisplay.textContent = `(${investorCount})`;
         } else {
             console.error('Element with id "investor-count-display" not found.');
         }
-
-        // Обновляем общую собранную сумму в информационной карточке
-        // Ищем по классу, так как id был удален
         const amountRaisedCard = document.querySelector('.info-card-value-button.accent-blue-bg');
         if (amountRaisedCard) {
             amountRaisedCard.textContent = `${new Intl.NumberFormat('ru-RU').format(Math.floor(amountRaised))} ₽`;
         }
-
-        // Обновляем прогресс-бар
         const fundingGoal = parseFloat(pageDataElement.dataset.fundingGoal) || 0;
         const progressPercentage = fundingGoal > 0 ? (amountRaised / fundingGoal) * 100 : 0;
-        
         const progressBar = document.querySelector('.progress-animation-container');
         const progressText = document.querySelector('.progress-percentage');
-
         if (progressBar) {
             progressBar.style.width = `${Math.min(progressPercentage, 100)}%`;
         }
@@ -838,20 +725,13 @@ document.addEventListener('DOMContentLoaded', function () {
             progressText.textContent = `${Math.floor(progressPercentage)}%`;
         }
     }
-    
-    // Загрузка и отображение инвесторов в модальном окне
     async function loadInvestors() {
-        // ... existing code ...
     }
-
-    // Первоначальная загрузка списка при открытии модального окна
     addInvestorModalEl.addEventListener('show.bs.modal', function () {
         loadCurrentInvestors();
         resetAddInvestorForm();
     });
   }
-
-  // --- 3. Жалобы (Report) ---
   const submitReportBtn = document.getElementById('submitReport');
   if(submitReportBtn) {
     submitReportBtn.addEventListener('click', function() {
@@ -861,10 +741,8 @@ document.addEventListener('DOMContentLoaded', function () {
         alert('Пожалуйста, выберите причину жалобы.');
         return;
       }
-      // Здесь должен быть fetch на бэкенд для отправки жалобы
       console.log('Жалоба:', { startupId, reason, comment });
       alert('Ваша жалоба отправлена на рассмотрение!');
-      
       const reportModalEl = document.getElementById('reportModal');
       const reportModal = bootstrap.Modal.getInstance(reportModalEl);
       if(reportModal) {
@@ -872,8 +750,6 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     });
   }
-
-  // --- 4. Кнопка "Чат" ---
   const chatButton = document.querySelector('.chat-button');
   if(chatButton && isUserAuthenticated) {
     chatButton.addEventListener('click', function() {
@@ -882,10 +758,8 @@ document.addEventListener('DOMContentLoaded', function () {
             alert('Не удалось определить владельца стартапа.');
             return;
         }
-
         this.textContent = 'Создание чата...';
         this.disabled = true;
-
         fetch(`/cosmochat/start-chat/${ownerId}/`, {
             method: 'POST',
             headers: {
@@ -896,7 +770,6 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                // Перенаправляем пользователя в космочат, сразу открыв нужный диалог
                 const chatId = data.chat_id || (data.chat && data.chat.conversation_id);
                 window.location.href = `/cosmochat/?chat_id=${chatId}`;
             } else {
@@ -913,33 +786,24 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
   } else if (chatButton && !isUserAuthenticated) {
-    // Если пользователь не авторизован, можно перенаправить его на страницу входа
     chatButton.addEventListener('click', function() {
         window.location.href = '/login/';
     });
   }
-
-  // --- Логика для "Показать еще" для длинных текстов ---
   function setupTruncateText() {
     const charLimit = 256;
     const elements = document.querySelectorAll('.truncatable-text');
-
     elements.forEach(element => {
-      // Используем textContent для подсчета реальной длины текста без HTML тегов
       if (element.textContent.trim().length > charLimit) {
         const p = element.querySelector('p');
         if (!p) return;
-
-        const fullText = p.innerHTML; // Сохраняем с <br> и т.д.
+        const fullText = p.innerHTML;
         const truncatedText = p.textContent.trim().substring(0, charLimit);
-
         p.innerHTML = `${truncatedText}...`;
-
         const showMoreButton = document.createElement('button');
         showMoreButton.textContent = 'Показать еще';
         showMoreButton.className = 'action-button show-more-text-button';
         element.appendChild(showMoreButton);
-
         showMoreButton.addEventListener('click', () => {
           if (showMoreButton.textContent === 'Показать еще') {
             p.innerHTML = fullText;
@@ -952,32 +816,24 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     });
   }
-
-  // --- Логика для кнопок "Чат" и "Написать" ---
   function setupChatButtons() {
     const ownerId = pageDataElement.dataset.ownerId;
     const userIsAuthenticated = pageDataElement.dataset.userAuthenticated === 'true';
-
     const handleChatRedirect = async (event) => {
-        event.preventDefault(); // Предотвращаем стандартное поведение кнопки/ссылки
-
+        event.preventDefault();
         if (!userIsAuthenticated) {
-            window.location.href = '/login/'; // Перенаправляем на логин, если не авторизован
+            window.location.href = '/login/';
             return;
         }
-
         if (!ownerId) {
             console.error('Owner ID is not defined.');
             alert('Не удалось определить владельца стартапа.');
             return;
         }
-
-        // Показываем состояние загрузки
         const button = event.target;
         const originalText = button.textContent;
         button.textContent = 'Создание чата...';
         button.disabled = true;
-
         try {
             const response = await fetch(`/cosmochat/start-chat/${ownerId}/`, {
                 method: 'POST',
@@ -986,7 +842,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     'X-Requested-With': 'XMLHttpRequest',
                 },
             });
-
             if (response.ok) {
                 const data = await response.json();
                 if (data.success) {
@@ -1011,10 +866,8 @@ document.addEventListener('DOMContentLoaded', function () {
             button.disabled = false;
         }
     };
-
     const chatButton = document.querySelector('.chat-button');
     const writeAuthorButton = document.querySelector('.write-author-button');
-
     if (chatButton) {
       chatButton.addEventListener('click', handleChatRedirect);
     }
@@ -1022,39 +875,27 @@ document.addEventListener('DOMContentLoaded', function () {
       writeAuthorButton.addEventListener('click', handleChatRedirect);
     }
   }
-
-  // --- 6. Логика интерактивных этапов ---
   function setupTimelineSteps() {
     const timelineSteps = document.querySelectorAll('.timeline-step');
     const descriptionItems = document.querySelectorAll('.timeline-description-item');
-
     if (timelineSteps.length === 0 || descriptionItems.length === 0) {
-      return; // Если нет этапов, ничего не делаем
+      return;
     }
-
     timelineSteps.forEach(step => {
       step.addEventListener('click', function() {
         const stepNumber = this.dataset.step;
-        
-        // Убираем активное состояние у всех описаний
         descriptionItems.forEach(item => {
           item.classList.remove('active');
         });
-
-        // Добавляем активное состояние к соответствующему описанию
         const targetDescription = document.querySelector(`.timeline-description-item:nth-child(${stepNumber})`);
         if (targetDescription) {
           targetDescription.classList.add('active');
-          
-          // Плавная прокрутка к описанию
-          targetDescription.scrollIntoView({ 
-            behavior: 'smooth', 
+          targetDescription.scrollIntoView({
+            behavior: 'smooth',
             block: 'nearest',
             inline: 'start'
           });
         }
-
-        // Добавляем визуальную обратную связь - легкий "пульс" при клике
         const stepWrapper = this.querySelector('.step-number-wrapper');
         if (stepWrapper) {
           stepWrapper.style.transform = 'scale(0.95)';
@@ -1065,23 +906,17 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     });
   }
-
-  // --- ВЫЗОВ НОВЫХ ФУНКЦИЙ ---
   setupTruncateText();
   setupChatButtons();
-  setupTimelineSteps(); // Добавляем инициализацию этапов
-
-  // Инициализация всех функций при загрузке страницы
+  setupTimelineSteps();
   if (pageDataElement) {
     setupRatingStars();
     setupSimilarStartups();
-    setupTruncateText(); // Вызываем новую функцию
-    setupChatButtons(); // И эту тоже
-    setupTimelineSteps(); // И этапы тоже
-
+    setupTruncateText();
+    setupChatButtons();
+    setupTimelineSteps();
     const addInvestorModalEl = document.getElementById('addInvestorModal');
     if (addInvestorModalEl) {
-      // ... existing code ...
     }
   }
 })

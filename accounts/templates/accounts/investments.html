@@ -24,16 +24,16 @@
 {% block content %}
   {% if user.is_authenticated and user.role.role_name == 'investor' %}
     <div class="portfolio-container">
-      <!-- Отладочная информация -->
+      
       <div style="background: #fff; color: #000; padding: 10px; margin-bottom: 20px; display: none;">
         <p>Отладка: Количество инвестиций: {{ user_investments|length }}</p>
         <p>Отладка: Количество собственных стартапов: {{ user_owned_startups|length }}</p>
         <p>Отладка: Планетарные инвестиции: {{ planetary_investments|length }}</p>
       </div>
-      <!-- Верхняя секция с аналитикой -->
+      
       <div class="analytics-section">
         <div class="analytics-left">
-          <!-- Планетарная система -->
+          
           <div class="portfolio-image-container planetary-system-container" style="min-height: 451px;">
             <button class="portfolio-image-fullscreen-btn" aria-label="Развернуть на полный экран">
               <i class="fas fa-expand"></i>
@@ -88,7 +88,7 @@
               </div>
             </div>
           </div>
-          <!-- Категории с радиальными диаграммами -->
+          
           <div class="categories-radial-section">
             <h3 class="categories-radial-title">Категории ваших инвестиций</h3>
             <div class="categories-radial-grid">
@@ -151,7 +151,7 @@
           <button class="download-report-btn" type="button">Скачать отчет</button>
         </div>
       </div>
-      <!-- Раздел Мои стартапы -->
+      
       <div class="my-startups-section">
         <div class="startups-header">
           <div class="startups-titles">
@@ -260,7 +260,7 @@
           {% empty %}
             <p style="grid-column: 1 / -1; text-align: center;">У вас пока нет инвестиций.</p>
           {% endfor %}
-          <!-- Добавляем стартапы, где пользователь является владельцем -->
+          
           {% for startup in user_owned_startups|slice:":6" %}
             <div class="startup-card" data-category="{{ startup.direction.direction_name|default:''|escape }}" data-name="{{ startup.title|default:''|escape }}">
               <div class="startup-card-left">
@@ -338,7 +338,7 @@
               </div>
             </div>
           {% empty %}
-            <!-- Сообщение будет отображаться, если нет ни инвестиций, ни стартапов -->
+            
           {% endfor %}
           {% for investment in user_investments|slice:"6:" %}
             <div class="startup-card hidden-card" data-category="{{ investment.startup.direction.direction_name|default:''|escape }}" data-name="{{ investment.startup.title|default:''|escape }}" style="display: none;">
@@ -506,7 +506,7 @@
           </div>
         {% endif %}
       </div>
-      <!-- Модальное окно для всех категорий -->
+      
       <div id="allCategoriesModal" class="modal-overlay">
         <div class="modal-content category-modal-content">
           <button class="modal-close-btn" id="closeCategoriesModalBtn" aria-label="Закрыть модальное окно">×</button>
@@ -514,7 +514,7 @@
           <div class="modal-categories-grid" id="modalCategoriesGrid"></div>
         </div>
       </div>
-      <!-- JSON данные -->
+      
       {{ month_labels|json_script:"chart-month-labels" }}
       {{ chart_monthly_category_data|json_script:"chart-monthly-category-data" }}
       {{ chart_categories|json_script:"chart-categories" }}

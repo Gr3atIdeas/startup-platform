@@ -1,12 +1,12 @@
-/* Styles for registration page, mimicking login page */
+
 body {
     background: #000 !important;
-    /* Allow scrolling for long forms */
+    
     overflow-y: auto !important; 
     overflow-x: hidden !important;
 }
 
-/* Starfield canvas styles */
+
 #starfield-canvas {
     position: fixed;
     top: 0;
@@ -17,20 +17,20 @@ body {
     display: block;
 }
 
-/* Center content */
+
 main.content {
     display: flex;
     justify-content: center;
-    align-items: center; /* This is fine if the container can grow */
+    align-items: center; 
     flex-grow: 1;
-    padding: 40px 20px; /* More vertical padding */
+    padding: 40px 20px; 
     position: relative;
     z-index: 1;
-    min-height: 100vh; /* ensure it takes at least the full height */
+    min-height: 100vh; 
     box-sizing: border-box;
 }
 
-/* Auth container styles */
+
 .auth-container {
     position: relative;
     z-index: 1;
@@ -69,7 +69,7 @@ main.content {
     margin-bottom: 5px;
 }
 
-/* Input fields styling */
+
 .auth-box input[type="email"],
 .auth-box input[type="password"],
 .auth-box input[type="text"],
@@ -83,7 +83,7 @@ main.content {
     box-sizing: border-box;
 }
 
-/* Error messages styling */
+
 .auth-box .errors, .auth-box .errorlist {
     color: #ffdddd;
     font-size: 0.9em;
@@ -93,7 +93,7 @@ main.content {
     text-align: left;
 }
 
-/* Button styling */
+
 .auth-box button[type="submit"] {
     background-color: blue !important;
     border: 1px solid #FFFFFF;
@@ -114,7 +114,7 @@ main.content {
 
 .telegram-login-btn {
     display: inline-block;
-    background-color: #54A9EB; /* Telegram blue */
+    background-color: #54A9EB; 
     border: none;
     transition: background-color 0.3s;
     color: #FFFFFF !important;
@@ -146,7 +146,7 @@ main.content {
     text-decoration: underline;
 }
 
-/* Hide footer content */
+
 .site-footer .footer-main-content {
     display: none;
 }

@@ -551,7 +551,7 @@ body {
   color: #757575;
 }
 
-/* === Стили прогресс-бара ТОЧНО из startup_detail.css (Адаптированные) === */
+
 .progress-container {
   width: 100%;
   margin-top: 5px;
@@ -561,39 +561,39 @@ body {
 }
 
 .progress-bar-visual {
-  /* Визуальная часть */
+  
   flex-grow: 1;
-  height: 30px; /* ! Увеличена высота до 30px (было 20px) */
+  height: 30px; 
   position: relative;
-  background-color: #0b1a3f; /* ! Точный темный фон из detail (:root --dark-card-bg) */
+  background-color: #0b1a3f; 
   border-radius: 10px;
   overflow: hidden;
-  border: 2px solid #1d3059; /* ! Увеличена рамка до 2px и Точная рамка из detail (:root --border-color) */
+  border: 2px solid #1d3059; 
 
-  /* Добавляем внутренние отступы */
-  padding: 2px; /* Создаем отступ для внутреннего бара */
-  box-sizing: border-box; /* Учитываем padding в общем размере */
+  
+  padding: 2px; 
+  box-sizing: border-box; 
 }
 
 .progress-animation-container {
-  /* Анимируемый передний план */
+  
   position: absolute;
-  top: 2px; /* Отступ сверху, равный padding родителя */
-  left: 2px; /* Отступ слева, равный padding родителя */
-  bottom: 2px; /* Отступ снизу, равный padding родителя */
+  top: 2px; 
+  left: 2px; 
+  bottom: 2px; 
 
-  /* Width устанавливается через инлайн-стиль */
+  
   background: linear-gradient(
     90deg,
     #08e5cf 0%,
     #345dff 100%
-  ); /* ! ПРАВИЛЬНЫЙ сине-зеленый градиент из detail */
-  border-radius: 6px; /* Уменьшен радиус (10px родителя - 2px рамка - 2px padding = 6px) */
+  ); 
+  border-radius: 6px; 
   overflow: hidden;
   transition: width 0.5s ease-in-out;
 }
 
-/* --- Анимация "планет" (светящиеся точки) ИЗ STARTUP_DETAIL.CSS --- */
+
 .progress-planets {
   position: relative;
   width: 100%;
@@ -607,18 +607,18 @@ body {
   top: 50%;
   border-radius: 50%;
 
-  /* background-color: #FFC85E; */
+  
   background-color: rgb(
     255 255 255 / 70%
-  ); /* ! ПРАВИЛЬНЫЙ БЕЛЫЙ цвет планет из detail */
+  ); 
 
-  /* box-shadow: 0 0 5px #FFC85E, 0 0 10px #FFC85E; */
-  box-shadow: 0 0 8px rgb(255 255 255 / 80%); /* ! ПРАВИЛЬНОЕ БЕЛОЕ свечение из detail */
+  
+  box-shadow: 0 0 8px rgb(255 255 255 / 80%); 
   animation: movePlanets 8s linear infinite;
 }
 
 .progress-planets::before {
-  width: 10px; /* ! Размеры из detail (там они чуть меньше) */
+  width: 10px; 
   height: 10px;
   margin-top: -5px;
   left: 10%;
@@ -626,7 +626,7 @@ body {
 }
 
 .progress-planets::after {
-  width: 6px; /* ! Размеры из detail */
+  width: 6px; 
   height: 6px;
   margin-top: -3px;
   left: 60%;
@@ -634,7 +634,7 @@ body {
 }
 
 .progress-animation-container::before {
-  /* Дополнительная точка из detail */
+  
   content: '';
   position: absolute;
   top: 50%;
@@ -644,75 +644,75 @@ body {
   margin-top: -4px;
   border-radius: 50%;
 
-  /* background-color: #FFC85E; */
+  
   background-color: rgb(
     255 255 255 / 60%
-  ); /* ! ПРАВИЛЬНЫЙ БЕЛЫЙ цвет из detail */
+  ); 
 
-  /* box-shadow: 0 0 4px #FFC85E, 0 0 8px #FFC85E; */
-  box-shadow: 0 0 6px rgb(255 255 255 / 70%); /* ! ПРАВИЛЬНОЕ БЕЛОЕ свечение из detail */
+  
+  box-shadow: 0 0 6px rgb(255 255 255 / 70%); 
   animation: movePlanets 10s linear infinite alternate;
   animation-delay: -2s;
 }
 
-/* Анимация @keyframes из startup_detail.css */
+
 @keyframes movePlanets {
   0% {
     transform: translateX(0) translateY(-1px) scale(1);
     opacity: 0.6;
-  } /* ! Opacity из detail */
+  } 
   25% {
     transform: translateX(15px) translateY(1px) scale(1.05);
     opacity: 0.8;
-  } /* ! Параметры из detail */
+  } 
   50% {
     transform: translateX(-8px) translateY(0) scale(1);
     opacity: 0.7;
-  } /* ! Параметры из detail */
+  } 
   75% {
     transform: translateX(12px) translateY(-2px) scale(0.95);
     opacity: 0.9;
-  } /* ! Параметры из detail */
+  } 
   100% {
     transform: translateX(0) translateY(-1px) scale(1);
     opacity: 0.6;
-  } /* ! Opacity из detail */
+  } 
 }
 
-/* --- Конец анимации "планет" --- */
+
 
 .progress-percentage {
-  /* Текст процентов - стили из detail */
-  position: absolute; /* Позиционируется относительно .progress-bar-visual */
+  
+  position: absolute; 
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   color: #fff;
   font-family: Unbounded, sans-serif;
-  font-size: 12px; /* Немного увеличим шрифт для большей высоты бара */
+  font-size: 12px; 
   font-weight: 700;
   line-height: 1;
   white-space: nowrap;
-  z-index: 3; /* Должен быть выше .progress-animation-container, если тот имеет z-index */
+  z-index: 3; 
   text-shadow: none;
   padding: 0 5px;
   box-sizing: border-box;
 
-  /* Убираем flex и width/height 100%, т.к. left/top/transform достаточно для центрирования */
+  
 }
 
-/* Стиль для backers-info, если он будет добавлен позже */
 
-/* .progress-backers-info { ... } */
 
-/* ============================================================== */
+
+
+
 
 .investment-type {
   background-color: transparent;
 
-  /* text-align: center; */
+  
 
-  /* Убираем старое */
+  
   font-weight: 300;
   border: 1px solid black;
   padding: 5px 16px;
@@ -724,8 +724,8 @@ body {
   box-sizing: border-box;
   line-height: 1.3;
   letter-spacing: 0.12px;
-  text-align: center; /* ! Центрируем текст */
-  align-self: center; /* ! Центрируем сам блок по горизонтали в flex-контейнере карточки */
+  text-align: center; 
+  align-self: center; 
 }
 
 .funding-goal-container-figma {
@@ -1240,7 +1240,7 @@ body {
   margin-top: 15px;
 }
 
-/* Контейнер для названия и логотипа */
+
 .startup-title-container {
   display: flex;
   align-items: center;
@@ -1250,15 +1250,15 @@ body {
   justify-content: center;
 }
 
-/* Стили для логотипа */
+
 .startup-logo {
   width: 32px;
   height: 32px;
   border-radius: 50%;
   overflow: hidden;
-  border: 1px solid rgb(0 0 0 / 5%); /* Используем тот же стиль рамки, что у .startup-image */
+  border: 1px solid rgb(0 0 0 / 5%); 
   flex-shrink: 0;
-  box-shadow: 0 1px 2px rgb(0 0 0 / 15%); /* Уменьшенная тень для меньшего размера */
+  box-shadow: 0 1px 2px rgb(0 0 0 / 15%); 
 }
 
 .startup-logo img {
@@ -1267,7 +1267,7 @@ body {
   object-fit: cover;
 }
 
-/* Стили для планеты */
+
 .startup-image .planet-image {
   width: 100%;
   height: 100%;

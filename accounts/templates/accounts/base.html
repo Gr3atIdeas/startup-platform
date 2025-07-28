@@ -6,38 +6,38 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}Great Ideas{% endblock %}</title>
 
-  <!-- Favicons -->
+  
   <link rel="shortcut icon" href="{% static 'accounts/images/favicons/favicon.ico' %}">
   <link rel="icon" type="image/png" sizes="32x32" href="{% static 'accounts/images/favicons/favicon-32x32.png' %}">
   <link rel="icon" type="image/png" sizes="16x16" href="{% static 'accounts/images/favicons/favicon-16x16.png' %}">
   <link rel="apple-touch-icon" href="{% static 'accounts/images/favicons/apple-touch-icon.png' %}">
   <link rel="manifest" href="{% static 'accounts/images/favicons/site.webmanifest' %}">
-  <!-- End Favicons -->
+  
 
-  <!-- Подключаем Font Awesome для иконок -->
+  
   <link rel="stylesheet" href="{% static 'accounts/libs/fontawesome/css/all.min.css' %}">
   
-  <!-- Подключаем Bootstrap CSS -->
+  
   <link rel="stylesheet" href="{% static 'accounts/libs/bootstrap/css/bootstrap.min.css' %}">
   
-  <!-- Подключаем Google Fonts и Unbounded -->
-  {# Ссылка на Blippo-Black CY, если он используется локально и не через @font-face в CSS #}
-  {# <link rel="stylesheet" href="{% static 'path/to/blippo-font.css' %}"> #}
   
-  <!-- Глобальные стили -->
+  
+  
+  
+  
   <link rel="stylesheet" href="{% static 'accounts/css/fonts.css' %}?v={% now 'U' %}">
   <link rel="stylesheet" href="{% static 'accounts/css/global.css' %}?v={% now 'U' %}">
   <link rel="stylesheet" href="{% static 'accounts/css/improved_styles.css' %}?v={% now 'U' %}">
   <link rel="stylesheet" href="{% static 'accounts/css/footer.css' %}?v={% now 'U' %}"> 
   
-  <!-- Подключение CSS -->
+  
   <link rel="stylesheet" href="{% static 'accounts/css/header.css' %}?v={% now 'U' %}">
-  {# <link rel="stylesheet" href="{% static 'accounts/css/buttons.css' %}?v={% now 'U' %}"> #}
+  
 
-  <!-- Подключаем Chart.js локально -->
+  
   <script src="{% static 'accounts/libs/chartjs/chart.min.js' %}"></script>
 
-  <!-- Подключаем стили для уведомлений -->
+  
   <link rel="stylesheet" href="{% static 'accounts/css/notifications.css' %}">
   
   {% block head_extra %}
@@ -76,13 +76,13 @@
                 {% elif user.role.role_name == 'investor' %}
                     <a href="{% url 'home' %}" class="header-nav-link">Главная</a>
                     <a href="{% url 'startups_list' %}" class="header-nav-link">Каталог</a>
-                    <a href="{% url 'investments' %}" class="header-nav-link">Портфель</a> {# Убедитесь, что URL 'investments' существует #}
+                    <a href="{% url 'investments' %}" class="header-nav-link">Портфель</a> 
                     <a href="{% url 'news' %}" class="header-nav-link">Новости</a>
                     <a href="{% url 'cosmochat' %}" class="header-nav-link cosmochat-link">CosmoChat</a>
                 {% elif user.role.role_name == 'startuper' %}
                     <a href="{% url 'home' %}" class="header-nav-link">Главная</a>
                     <a href="{% url 'startups_list' %}" class="header-nav-link">Каталог</a>
-                    <a href="{% url 'my_startups' %}" class="header-nav-link">Мои стартапы</a> {# Убедитесь, что URL 'my_startups' существует #}
+                    <a href="{% url 'my_startups' %}" class="header-nav-link">Мои стартапы</a> 
                     <a href="{% url 'news' %}" class="header-nav-link">Новости</a>
                     <a href="{% url 'cosmochat' %}" class="header-nav-link cosmochat-link">CosmoChat</a>
                 {% elif user.role.role_name == 'moderator' %}
@@ -103,12 +103,12 @@
                     <a href="{% url 'news' %}" class="header-nav-link">Новости</a>
                     <a href="{% url 'cosmochat' %}" class="header-nav-link cosmochat-link">CosmoChat</a>
                     <a href="{% url 'moderator_dashboard' %}" class="header-nav-link">Заявки</a>
-                    <a href="{% url 'deals_view' %}" class="header-nav-link">Сделки</a> <!-- Исправлено с 'deals_page' на 'deals_view' -->
+                    <a href="{% url 'deals_view' %}" class="header-nav-link">Сделки</a> 
                     <a href="{% url 'support' %}" class="header-nav-link">Поддержка</a>
                 {% endif %}
             </div>
 
-            {# Блок для дополнительных кнопок ролей перед кнопкой Профиля/Войти #}
+            
             {% if user.is_authenticated %}
                 {% if user.role.role_name == 'startuper' %}
                     <a href="{% url 'create_startup' %}" class="header-nav-link header-role-button create-startup-button">
@@ -125,7 +125,7 @@
                         <div class="profile-avatar-wrapper">
                             <img src="{% if user.get_profile_picture_url %}{{ user.get_profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}" alt="Аватар" class="profile-dropdown-avatar">
                         </div>
-                        {# <i class="fas fa-chevron-down profile-dropdown-chevron"></i> #} {# Шеврон пока уберем, на скрине его нет #}
+                         
                     </button>
                     <div class="profile-dropdown-menu">
                         <a href="{% url 'notifications_page' %}" class="profile-dropdown-item profile-dropdown-notifications">
@@ -133,11 +133,11 @@
                                 <img src="{% static 'accounts/images/bell.svg' %}" alt="Уведомления" class="profile-dropdown-item-icon">
                             </span>
                             Уведомления
-                            {# Здесь может быть счетчик уведомлений, если он есть в контексте #}
+                            
                         </a>
                         <a href="{% url 'profile' %}" class="profile-dropdown-item">Профиль</a>
-                        <a href="{% url 'startups_list' %}" class="profile-dropdown-item">Стартапы</a> {# Исправлено на каталог #}
-                        <a href="{% url 'support' %}" class="profile-dropdown-item">Поддержка</a> {# ЗАМЕНЕН URL #}
+                        <a href="{% url 'startups_list' %}" class="profile-dropdown-item">Стартапы</a> 
+                        <a href="{% url 'support' %}" class="profile-dropdown-item">Поддержка</a> 
                         <a href="{% url 'contacts' %}" class="profile-dropdown-item">Контакты</a>
                         <a href="{% url 'faq' %}" class="profile-dropdown-item">FAQ</a>
                         <a href="{% url 'logout' %}" class="profile-dropdown-item profile-dropdown-logout">
@@ -198,7 +198,7 @@
                     <div class="footer-menu-links">
                         <a href="{% url 'faq' %}" class="footer-menu-link">FAQ</a>
                         <a href="{% url 'support' %}" class="footer-menu-link">Поддержка</a>
-                        <a href="{% url 'contacts' %}" class="footer-menu-link">Контакты</a> {# Предполагая, что есть URL 'contacts' #}
+                        <a href="{% url 'contacts' %}" class="footer-menu-link">Контакты</a> 
                         <a href="{% url 'legal' %}" class="footer-menu-link">Правовая информация</a>
                     </div>
                 </div>
@@ -206,7 +206,7 @@
         </div>
         
         <div class="footer-bottom-section">
-            {# <div class="footer-bottom-bar"></div> #} {# Этот элемент теперь не нужен здесь, управляется из CSS или интегрирован в copyright-section #}
+             
             <div class="footer-copyright-section">
                 <div class="footer-copyright-text">© 2025 Great Ideas</div>
                 <div class="footer-legal-links">
@@ -218,16 +218,16 @@
     </div>
   </footer>
 
-  <!-- Глобальные скрипты -->
+  
   <script src="{% static 'accounts/libs/jquery/js/jquery.min.js' %}" defer></script>
   <script src="{% static 'accounts/libs/bootstrap/js/bootstrap.bundle.min.js' %}" defer></script>
   <script src="{% static 'accounts/libs/glightbox/js/glightbox.min.js' %}" defer></script>
-  {# <script src="{% static 'accounts/js/button_effects.js' %}" defer></script> #}
+  
   <script src="{% static 'accounts/js/global_styles.js' %}" defer></script>
   <script src="{% static 'accounts/js/notifications.js' %}" defer></script>
   
   {% block scripts %}
-    {# Сюда будут добавляться скрипты из дочерних шаблонов #}
+    
   {% endblock %}
 </body>
 </html>

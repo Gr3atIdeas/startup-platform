@@ -1,4 +1,4 @@
-/* static/accounts/css/notifications.css */
+
 body {
   background: linear-gradient(
     153deg,
@@ -8,29 +8,29 @@ body {
     #01366d 64%,
     #020202 100%
   );
-  background-attachment: fixed; /* Чтобы градиент не скроллился */
+  background-attachment: fixed; 
 }
 
 .notifications-page-wrapper {
-  padding-top: 20px; /* Отступ сверху от хедера */
+  padding-top: 20px; 
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 30px; /* Расстояние между блоками */
-  padding-bottom: 50px; /* Отступ снизу до футера */
+  gap: 30px; 
+  padding-bottom: 50px; 
   color: white;
   font-family: Unbounded, sans-serif;
-  overflow-x: hidden; /* Предотвратить горизонтальный скролл из-за больших заголовков */
+  overflow-x: hidden; 
 }
 
 .notifications-content-container {
   display: flex;
-  justify-content: center; /* Выравниваем по центру */
-  align-items: flex-start; /* Карточка и список уведомлений сверху */
-  gap: 30px; /* Расстояние между карточкой и списком */
+  justify-content: center; 
+  align-items: flex-start; 
+  gap: 30px; 
   width: 100%;
-  max-width: 1280px; /* Ограничиваем ширину */
-  padding: 0 20px; /* Боковые отступы для контейнера */
+  max-width: 1280px; 
+  padding: 0 20px; 
   box-sizing: border-box;
 }
 
@@ -40,14 +40,14 @@ body {
   position: relative;
   background-color: black;
   background-image: url('../images/mainimg_notification.png');
-  background-size: cover; /* Изображение будет обрезаться при уменьшении */
+  background-size: cover; 
   background-position: center;
   box-shadow: 6px 6px 10px rgb(0 0 0 / 25%);
   overflow: hidden;
   border-radius: 20px;
   flex-shrink: 0;
 
-  /* Обновляем transition для плавности изменения размеров и положения */
+  
   transition:
     top 0.3s ease-out,
     width 0.3s ease-out,
@@ -57,20 +57,20 @@ body {
 
 .notifications-promo-card.sticky-promo {
   position: fixed;
-  top: 20px; /* Отступ от верха окна в 'липком' состоянии */
+  top: 20px; 
 
-  /* Размеры уменьшены примерно в 3 раза */
-  width: 180px; /* 540 / 3 */
-  height: 174px; /* 521 / 3 */
-  z-index: 999; /* Чтобы быть поверх другого контента */
+  
+  width: 180px; 
+  height: 174px; 
+  z-index: 999; 
 
-  /* Для фона можно оставить cover, или изменить на contain, или вообще другой фон */
+  
 
-  /* background-size: contain; */
+  
 
-  /* background-image: none; */
+  
 
-  /* background-color: #1a1a1a; */
+  
 }
 
 .promo-card-background-elements {
@@ -79,7 +79,7 @@ body {
   height: 100%;
   top: 0;
   left: 0;
-  overflow: hidden; /* Чтобы блюр-круги не выходили за пределы */
+  overflow: hidden; 
 }
 
 .promo-bg-blur-circle-1 {
@@ -89,60 +89,60 @@ body {
   top: -265px;
   position: absolute;
   background: #004e9f;
-  box-shadow: 0 0 250px 250px #004e9f; /* Примерный эффект блюра через box-shadow */
+  box-shadow: 0 0 250px 250px #004e9f; 
   border-radius: 9999px;
 
-  /* filter: blur(250px); /* filter: blur может быть затратным */
+  
 }
 
 .promo-bg-blur-circle-2 {
   width: 411px;
   height: 411px;
-  left: 250px; /* Скорректировано для лучшего вида */
+  left: 250px; 
   top: 134px;
   position: absolute;
   background: rgb(97 165 255 / 45%);
   box-shadow: 0 0 250px 250px rgb(97 165 255 / 45%);
   border-radius: 9999px;
 
-  /* filter: blur(250px); */
+  
 }
 
 .promo-card-text-content {
-  position: relative; /* Чтобы текст был над блюром и картинками */
+  position: relative; 
   z-index: 2;
   text-align: center;
-  margin-bottom: 150px; /* Отступ для кнопки и изображений */
+  margin-bottom: 150px; 
 }
 
 .promo-title-main {
   color: white;
   font-size: 55px;
   font-family:
-    'Blippo Local', sans-serif; /* Убедимся, что шрифт Blippo Local используется */
-  font-weight: 400; /* Соответствует Blippo-Black */
-  line-height: 1.2; /* Оставляем относительный line-height для больших шрифтов */
+    'Blippo Local', sans-serif; 
+  font-weight: 400; 
+  line-height: 1.2; 
   word-wrap: break-word;
 }
 
 .promo-title-accent {
-  color: #ffef2b; /* var(--Color7, #FFEF2B) - используем прямое значение */
+  color: #ffef2b; 
   font-size: 55px;
   font-family:
-    'Blippo Local', sans-serif; /* Убедимся, что шрифт Blippo Local используется */
-  font-weight: 400; /* Соответствует Blippo-Black */
-  line-height: 1.2; /* Оставляем относительный line-height для больших шрифтов */
+    'Blippo Local', sans-serif; 
+  font-weight: 400; 
+  line-height: 1.2; 
   word-wrap: break-word;
 }
 
-/* Стили для декоративных изображений внутри промо-карточки */
+
 .promo-img-1,
 .promo-img-2,
 .promo-img-3,
 .promo-img-4,
 .promo-img-5 {
   position: absolute;
-  z-index: 1; /* Под текстом, над блюром */
+  z-index: 1; 
 }
 .promo-img-1 {
   width: 112px;
@@ -156,7 +156,7 @@ body {
   left: 390px;
   top: 405.83px;
   transform: rotate(169deg);
-} /* Скорректировал left */
+} 
 .promo-img-3 {
   width: 108px;
   height: 105px;
@@ -177,29 +177,29 @@ body {
 }
 
 .promo-card-gradient-overlay {
-  width: 100%; /* Ширина родителя */
-  height: 255px; /* Высота из Figma */
-  left: 0; /* Позиционирование от левого края родителя */
-  top: 266px; /* Позиционирование от верхнего края родителя (521px - 255px) */
+  width: 100%; 
+  height: 255px; 
+  left: 0; 
+  top: 266px; 
   position: absolute;
   background: linear-gradient(
     180deg,
     rgb(0 0 0 / 0%) 0%,
     black 100%
-  ); /* Градиент изменен для плавности */
-  z-index: 3; /* Над изображениями, под кнопкой */
+  ); 
+  z-index: 3; 
 
-  /* box-shadow: 0px 0px 55px 27.5px rgba(0,0,0,0.75); */
+  
 
-  /* Упрощенный блюр через box-shadow, если filter: blur не используется */
+  
 
-  /* filter: blur(27.50px); */
+  
 
-  /* filter:blur может быть ресурсоемким */
+  
 }
 
 .notifications-promo-card .promo-action-button.btn {
-  /* Увеличиваем специфичность */
+  
   position: absolute;
   top: 438px;
   left: 186px;
@@ -214,18 +214,18 @@ body {
     180deg,
     #ffef2b 0%,
     #f9f7d6 100%
-  ) !important; /* Добавляем !important */
+  ) !important; 
   box-shadow: 2px 2px 4px 0 rgb(0 0 0 / 25%);
   border-radius: 10px;
-  color: black !important; /* Добавляем !important */
+  color: black !important; 
   font-size: 16px;
   font-family: Unbounded, sans-serif;
   font-weight: 400;
   line-height: 16px;
   text-decoration: none;
-  border: none; /* Явно указываем отсутствие рамки, если buttons.css её добавляет */
+  border: none; 
 
-  /* Плавный переход для свойств кнопки */
+  
   transition:
     width 0.3s ease-out,
     height 0.3s ease-out,
@@ -236,80 +236,80 @@ body {
 }
 
 .notifications-promo-card .promo-action-button.btn:hover {
-  /* Увеличиваем специфичность */
+  
   background: linear-gradient(
     180deg,
     #f2e00a 0%,
     #e9e7c3 100%
-  ) !important; /* Добавляем !important */
-  color: black !important; /* Гарантируем черный цвет и при наведении */
+  ) !important; 
+  color: black !important; 
 }
 
-/* Стили для кнопки в состоянии sticky-promo */
+
 .notifications-promo-card.sticky-promo .promo-action-button.btn {
-  width: 140px; /* Уменьшаем кнопку, но оставляем читаемой */
+  width: 140px; 
   height: 36px;
   font-size: 14px;
-  line-height: 14px; /* Для корректного отображения текста кнопки */
+  line-height: 14px; 
 
-  /* Центрируем кнопку в уменьшенной карточке (180x174) */
-  top: calc(50% - 18px); /* (174px / 2) - (36px / 2) = 87px - 18px = 69px */
-  left: calc(50% - 70px); /* (180px / 2) - (140px / 2) = 90px - 70px = 20px */
+  
+  top: calc(50% - 18px); 
+  left: calc(50% - 70px); 
 }
 
 .notifications-list-section {
-  /* Основной контейнер для списка уведомлений и скроллбара */
-  width: 724px; /* Ширина из Figma, если она фиксированная, или можно использовать flex-grow */
-  padding: 41px 70px; /* Внутренние отступы из Figma */
-  background: rgb(255 255 255 / 10%); /* Фон из Figma */
-  border-radius: 20px; /* Скругление из Figma */
-  display: flex; /* Для расположения списка уведомлений и кастомного скроллбара рядом */
-  gap: 10px; /* Отступ между списком и скроллбаром, если он есть. В Figma gap:91px, но это до скроллбара, сам список и скроллбар могут быть ближе */
+  
+  width: 724px; 
+  padding: 41px 70px; 
+  background: rgb(255 255 255 / 10%); 
+  border-radius: 20px; 
+  display: flex; 
+  gap: 10px; 
   box-sizing: border-box;
-  height: 521px; /* Новая высота, как у промо-карты */
+  height: 521px; 
   flex-shrink: 0;
-  overflow: hidden; /* Чтобы внутренний скролл работал */
-  transition: margin-left 0.3s ease-out; /* Добавляем transition для плавности */
+  overflow: hidden; 
+  transition: margin-left 0.3s ease-out; 
 }
 
 .notifications-list-items {
-  /* Контейнер для самих элементов уведомлений */
-  flex-grow: 1; /* Занимает доступное пространство */
+  
+  flex-grow: 1; 
   display: flex;
   flex-direction: column;
-  gap: 40px; /* Вертикальный отступ между уведомлениями из Figma */
-  overflow-y: auto; /* Включаем скролл, если контента много */
-  padding-right: 15px; /* Небольшой отступ справа, чтобы контент не прилипал к кастомному скроллбару */
+  gap: 40px; 
+  overflow-y: auto; 
+  padding-right: 15px; 
 }
 
-/* Стилизация нативного скроллбара (если кастомный не используется или для fallback) */
+
 .notifications-list-items::-webkit-scrollbar {
-  width: 8px; /* Ширина скроллбара */
+  width: 8px; 
 }
 
 .notifications-list-items::-webkit-scrollbar-track {
-  background: transparent; /* Прозрачный трек */
+  background: transparent; 
 }
 
 .notifications-list-items::-webkit-scrollbar-thumb {
   background-color: rgb(
     0 0 0 / 30%
-  ); /* Цвет бегунка, как в Figma (var --Color1) */
-  border-radius: 6px; /* Скругление бегунка */
-  border: 2px solid transparent; /* Прозрачная обводка для эффекта padding */
+  ); 
+  border-radius: 6px; 
+  border: 2px solid transparent; 
   background-clip: content-box;
 }
 
 .notification-item {
-  /* Каждый отдельный элемент уведомления */
-  display: flex; /* Используем flex для расположения меты и бабла */
-  align-items: center; /* Выравнивание по центру вертикали, в Figma align-items: flex-end, но это для группы элементов */
-  gap: 20px; /* Горизонтальный отступ между метой и баблом из Figma */
-  width: 100%; /* Занимает всю доступную ширину */
+  
+  display: flex; 
+  align-items: center; 
+  gap: 20px; 
+  width: 100%; 
 }
 
 .notification-item-meta {
-  /* Блок с датой и временем */
+  
   width: 56px;
   display: flex;
   flex-direction: column;
@@ -325,20 +325,20 @@ body {
   font-size: 8px;
   font-family: Unbounded, sans-serif;
   font-weight: 300;
-  line-height: 1.2; /* Оставляем относительный line-height для 8px шрифта, 18px из запроса слишком много */
+  line-height: 1.2; 
   word-wrap: break-word;
   text-align: right;
 }
 
 .notification-item-bubble {
-  /* "Бабл" с текстом уведомления */
-  flex-grow: 1; /* Занимает оставшееся пространство */
-  height: auto; /* Автоматическая высота по контенту, в Figma 40px, но может быть динамической */
-  padding: 8px 24px; /* Внутренние отступы из Figma */
-  background: rgb(255 255 255 / 16%); /* ИСПРАВЛЕННЫЙ ЦВЕТ ФОНА */
-  border-radius: 99px; /* Овальная форма из Figma */
-  display: flex; /* Для центрирования текста, если нужно */
-  justify-content: flex-start; /* Текст слева */
+  
+  flex-grow: 1; 
+  height: auto; 
+  padding: 8px 24px; 
+  background: rgb(255 255 255 / 16%); 
+  border-radius: 99px; 
+  display: flex; 
+  justify-content: flex-start; 
   align-items: center;
 }
 
@@ -348,32 +348,32 @@ body {
   font-size: 14px;
   font-family: Unbounded, sans-serif;
   font-weight: 300;
-  line-height: 18px; /* Соответствует запросу */
+  line-height: 18px; 
   word-wrap: break-word;
 }
 
-/* Добавляем стиль для курсора на кликабельные пузыри */
+
 .notifications-list-section .notification-item-bubble {
   cursor: pointer;
 }
 
 .notifications-list-section .notification-item-bubble:hover {
-  background: rgb(255 255 255 / 22%); /* Легкое подсвечивание при наведении */
+  background: rgb(255 255 255 / 22%); 
 }
 
 .notifications-section-title {
-  align-self: flex-start; /* Заголовок слева */
+  align-self: flex-start; 
   padding-left: calc(
     (100% - 1280px) / 2 + 20px
-  ); /* Динамический отступ для выравнивания с контентом */
-  color: #ffef2b; /* var(--Color7, #FFEF2B) - используем прямое значение */
-  font-size: 55px; /* ИЗМЕНЕНО согласно запросу */
+  ); 
+  color: #ffef2b; 
+  font-size: 55px; 
   font-family:
-    'Blippo Local', sans-serif; /* Убедимся, что шрифт Blippo Local используется */
-  font-weight: 400; /* Соответствует Blippo-Black */
-  line-height: 1.2; /* Оставляем относительный line-height, 18px из запроса слишком много для 55px */
+    'Blippo Local', sans-serif; 
+  font-weight: 400; 
+  line-height: 1.2; 
   word-wrap: break-word;
-  margin-top: 20px; /* Добавил отступ сверху */
+  margin-top: 20px; 
   box-sizing: border-box;
   width: 100%;
   max-width: 1280px;
@@ -383,110 +383,110 @@ body {
 }
 
 @media (width <= 1320px) {
-  /* Примерный breakpoint, когда 1280px + padding не влезает */
+  
   .notifications-section-title {
-    padding-left: 40px; /* Фиксированный отступ для меньших экранов */
+    padding-left: 40px; 
     padding-right: 40px;
   }
 }
 
 .notifications-related-startups {
   width: 100%;
-  max-width: 1280px; /* Ограничиваем ширину */
-  padding: 0 20px; /* Боковые отступы */
+  max-width: 1280px; 
+  padding: 0 20px; 
   box-sizing: border-box;
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-start; /* Элементы начинаются слева */
-  align-items: flex-start; /* Выравнивание по верху для карточек разной высоты */
-  gap: 20px; /* Расстояние между карточками */
+  justify-content: flex-start; 
+  align-items: flex-start; 
+  gap: 20px; 
 }
 
 .related-startup-card {
-  padding: 15px; /* Уменьшил padding */
+  padding: 15px; 
   background: white;
   border-radius: 10px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  gap: 8px; /* Уменьшил gap */
-  width: 155px; /* Примерная ширина, чтобы уместилось несколько в ряд */
+  gap: 8px; 
+  width: 155px; 
   box-sizing: border-box;
-  position: relative; /* Для позиционирования бейджа */
+  position: relative; 
 }
 
 .related-startup-card img {
-  width: 100px; /* Уменьшил изображение */
+  width: 100px; 
   height: 90px;
   object-fit: cover;
-  border-radius: 5px; /* Небольшое скругление для картинки */
+  border-radius: 5px; 
 }
 
 .related-startup-name {
   align-self: stretch;
   text-align: center;
   color: black;
-  font-size: 16px; /* ИЗМЕНЕНО согласно запросу */
+  font-size: 16px; 
   font-family: Unbounded, sans-serif;
   font-weight: 400;
-  line-height: 1.3; /* line-height: 16px из запроса может быть слишком жестким, 1.3 даст немного больше воздуха */
+  line-height: 1.3; 
   word-wrap: break-word;
 }
 
 .related-startup-badge {
-  width: 28px; /* Уменьшил для лучшего вида */
-  height: 28px; /* Уменьшил для лучшего вида */
+  width: 28px; 
+  height: 28px; 
   background: #f00;
-  border-radius: 50%; /* Делаем круглым */
+  border-radius: 50%; 
   display: flex;
   justify-content: center;
   align-items: center;
   color: white;
-  font-size: 16px; /* ИЗМЕНЕНО согласно запросу */
+  font-size: 16px; 
   font-family: Unbounded, sans-serif;
-  font-weight: 400; /* ИЗМЕНЕНО согласно запросу */
-  line-height: 1; /* Для центрирования числа в круге, line-height: 16px из запроса не нужен */
-  position: absolute; /* Абсолютное позиционирование */
-  top: -10px; /* Смещение вверх */
-  right: -10px; /* Смещение вправо */
-  box-shadow: 0 1px 3px rgb(0 0 0 / 30%); /* Небольшая тень */
-  border: 2px solid white; /* Белая обводка для отделения */
+  font-weight: 400; 
+  line-height: 1; 
+  position: absolute; 
+  top: -10px; 
+  right: -10px; 
+  box-shadow: 0 1px 3px rgb(0 0 0 / 30%); 
+  border: 2px solid white; 
 }
 
 .related-startup-badge span {
   line-height: 1;
 }
 
-/* Пустышки для выравнивания, если последний ряд неполный */
+
 .related-startup-card-empty-spacer,
 .related-startup-badge-empty-spacer {
-  width: 155px; /* Такая же ширина как у карточки */
-  height: 0; /* Не занимает высоту */
+  width: 155px; 
+  height: 0; 
   padding: 0;
   margin: 0;
-  visibility: hidden; /* Скрыто, но занимает место */
+  visibility: hidden; 
 }
 
-/* .related-startup-badge-empty-spacer { */
 
-/* Удаляем, так как бейдж теперь внутри карточки */
 
-/* width: 38px; */
 
-/* Такая же ширина как у бейджа */
 
-/* } */
 
-/* Styles for Modal Window */
+
+
+
+
+
+
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgb(0 0 0 / 50%); /* Фон затемнения */
-  display: none; /* Скрыто по умолчанию */
+  background-color: rgb(0 0 0 / 50%); 
+  display: none; 
   justify-content: center;
   align-items: center;
   z-index: 1000;
@@ -494,8 +494,8 @@ body {
   padding: 20px;
   box-sizing: border-box;
 
-  /* Эффект блюра для "рамки" */
-  backdrop-filter: blur(10px); /* Интенсивность блюра для оверлея */
+  
+  backdrop-filter: blur(10px); 
   backdrop-filter: blur(10px);
 }
 
@@ -514,7 +514,7 @@ body {
   gap: 39px;
 }
 
-/* Увеличиваем специфичность и добавляем !important для теста */
+
 #notification-modal-popup > #notification-modal-close.modal-close-button {
   position: absolute !important;
   top: 15px !important;
@@ -531,7 +531,7 @@ body {
   justify-content: center;
   transition: background-color 0.2s ease;
 
-  /* Убедимся, что иконка не обрезана */
+  
   overflow: visible;
 }
 
@@ -542,40 +542,40 @@ body {
 .modal-close-button img {
   width: 18px;
   height: 18px;
-  display: block; /* Убираем возможное пространство под картинкой */
+  display: block; 
 }
 
-/* Удаляем .modal-content-wrapper, так как .modal-popup теперь flex-контейнер для двух блоков */
+
 
 .modal-promo-card {
-  /* Левый блок - теперь просто плейсхолдер с фоновой картинкой */
+  
   width: 540px;
-  height: 521px; /* Фиксированная высота, как у правого блока */
-  min-width: 540px; /* Фиксированная ширина */
-  background-color: #0e163d; /* Фоновый цвет на случай, если картинка не загрузится */
-  background-image: url('/static/accounts/images/backgrounds/unsplash_bg.jpg'); /* локальный фон */
-  background-size: cover; /* Масштабировать изображение, чтобы покрыть блок */
-  background-position: center; /* Центрировать изображение */
+  height: 521px; 
+  min-width: 540px; 
+  background-color: #0e163d; 
+  background-image: url('/static/accounts/images/backgrounds/unsplash_bg.jpg'); 
+  background-size: cover; 
+  background-position: center; 
   position: relative;
 
-  /* display: flex; /* Больше не нужен flex, так как дочерних элементов для выравнивания нет */
+  
 
-  /* flex-direction: column; */
+  
 
-  /* justify-content: center; */
+  
 
-  /* align-items: center; */
+  
 
-  /* padding: 30px;  Убираем внутренние отступы, если это просто фон */
+  
   box-sizing: border-box;
   overflow: hidden;
 
-  /* text-align: center; */
-  border-radius: 20px; /* Скругление углов */
+  
+  border-radius: 20px; 
   flex-shrink: 0;
 }
 
-/* Элементы блюра можно оставить, если они создают желаемый эффект поверх фоновой картинки */
+
 .modal-promo-bg-elements {
   position: absolute;
   width: 100%;
@@ -583,7 +583,7 @@ body {
   top: 0;
   left: 0;
   overflow: hidden;
-  z-index: 0; /* z-index: 0 чтобы быть под контентом, если он есть, но над основным фоном */
+  z-index: 0; 
 }
 
 .modal-promo-blur-1 {
@@ -595,7 +595,7 @@ body {
   background: #004e9f;
   box-shadow: 0 0 150px 150px #004e9f;
   border-radius: 50%;
-  opacity: 0.5; /* Уменьшил непрозрачность */
+  opacity: 0.5; 
 }
 
 .modal-promo-blur-2 {
@@ -607,61 +607,15 @@ body {
   background: rgb(97 165 255 / 35%);
   box-shadow: 0 0 120px 120px rgb(97 165 255 / 25%);
   border-radius: 50%;
-  opacity: 0.5; /* Уменьшил непрозрачность */
+  opacity: 0.5; 
 }
 
-/* Удаляем или комментируем стили для .modal-promo-text, .modal-promo-main-img, .modal-promo-action, так как их нет в HTML */
 
-/*
-.modal-promo-text {
-    position: relative; z-index: 2; margin-bottom: 20px;
-}
-.modal-promo-subtitle {
-    font-size: 20px;
-    color: #FFFFFF;
-    margin-bottom: 8px;
-    font-weight: 300;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-.modal-promo-title {
-    font-size: 60px;
-    font-family: 'Blippo-Black CY', sans-serif;
-    color: #FFEF2B;
-    line-height: 1.1;
-    margin-bottom: 30px;
-}
-.modal-promo-main-img {
-    position: relative; z-index: 1;
-    width: 100%;
-    max-width: 280px;
-    height: auto;
-    margin-top: 20px;
-    margin-bottom: 40px;
-}
 
-.modal-promo-action.btn {
-    position: relative; z-index: 4;
-    padding: 15px 50px;
-    background: linear-gradient(180deg, #FFEF2B 0%, #F9F7D6 100%);
-    box-shadow: 0px 4px 10px rgba(0,0,0,0.3);
-    border-radius: 12px;
-    color: black;
-    font-size: 18px;
-    font-weight: 500;
-    text-decoration: none;
-    transition: all 0.2s ease;
-    margin-top: auto;
-}
-.modal-promo-action.btn:hover {
-    background: linear-gradient(180deg, #f2e00a 0%, #e9e7c3 100%);
-    box-shadow: 0px 6px 15px rgba(0,0,0,0.4);
-    transform: translateY(-2px);
-}
-*/
+
 
 .modal-notification-details {
-  /* Правый блок */
+  
   flex-grow: 1;
   min-width: 400px;
   max-width: 700px;
@@ -672,15 +626,15 @@ body {
   overflow: hidden;
   background-color: rgb(
     50 50 50 / 75%
-  ); /* Сделал еще более прозрачным и чуть светлее (было 34,34,34,0.85) для теста */
+  ); 
   border-radius: 12px;
-  backdrop-filter: blur(12px); /* Немного увеличил блюр */
+  backdrop-filter: blur(12px); 
   backdrop-filter: blur(12px);
   height: 521px;
 }
 
 .modal-notification-list-title {
-  display: none; /* Скрываем заголовок, так как нужен полный дубль списка */
+  display: none; 
 }
 
 .modal-notification-list {
@@ -690,10 +644,10 @@ body {
   gap: 15px;
   overflow-y: auto;
   padding-right: 10px;
-  margin-right: -10px; /* Компенсация для скрытия нативного скроллбара, если он не нужен */
+  margin-right: -10px; 
 }
 
-/* Стилизация нативного скроллбара для .modal-notification-list, если нужен */
+
 .modal-notification-list::-webkit-scrollbar {
   width: 6px;
 }
@@ -709,27 +663,27 @@ body {
   background-color: rgb(255 255 255 / 40%);
 }
 
-/* Стили для элементов уведомлений ВНУТРИ модального окна */
+
 .modal-notification-details .notification-item {
-  background-color: transparent; /* Уведомления сами по себе без фона */
-  padding: 10px 0; /* Уменьшил вертикальные паддинги, чтобы больше влезало */
-  border-radius: 0; /* Убираем радиус, если фон прозрачный */
+  background-color: transparent; 
+  padding: 10px 0; 
+  border-radius: 0; 
   display: flex;
-  align-items: center; /* Выравнивание меты и бабла */
+  align-items: center; 
   gap: 15px;
 }
 
 .modal-notification-details .notification-item-meta {
   flex-shrink: 0;
-  width: auto; /* Ширина по контенту */
-  text-align: left; /* Выравнивание текста меты по левому краю */
+  width: auto; 
+  text-align: left; 
 }
 
 .modal-notification-details .notification-item-meta .notification-date,
 .modal-notification-details .notification-item-meta .notification-time {
   font-size: 11px;
   color: rgb(255 255 255 / 70%);
-  display: block; /* Чтобы были друг под другом */
+  display: block; 
   line-height: 1.3;
 }
 
@@ -740,13 +694,13 @@ body {
 .modal-notification-details .notification-item-bubble {
   background: rgb(255 255 255 / 10%);
   padding: 10px 18px;
-  border-radius: 12px; /* Скругление баблов */
+  border-radius: 12px; 
   flex-grow: 1;
-  cursor: default; /* Внутри модалки баблы не кликабельны для открытия новой модалки */
+  cursor: default; 
 }
 
 .modal-notification-details .notification-item-bubble:hover {
-  background: rgb(255 255 255 / 15%); /* Легкое подсвечивание при наведении */
+  background: rgb(255 255 255 / 15%); 
 }
 
 .modal-notification-details .notification-item-bubble p {
@@ -755,31 +709,31 @@ body {
   color: #fff;
 }
 
-/* Адаптивность для модального окна */
+
 @media (width <= 1100px) {
-  /* Примерный брейкпоинт, когда два блока + рамка уже не влезают */
+  
   .modal-popup {
-    flex-direction: column; /* Блоки друг под другом */
-    padding: 30px; /* Уменьшаем "рамку" */
-    max-height: calc(100vh - 20px); /* Больше высоты */
-    overflow-y: auto; /* Скролл для всего попапа на малых экранах */
+    flex-direction: column; 
+    padding: 30px; 
+    max-height: calc(100vh - 20px); 
+    overflow-y: auto; 
     gap: 20px;
   }
 
   .modal-promo-card {
     width: 100%;
-    height: auto; /* Авто высота */
-    min-height: 300px; /* Минимальная высота для промо */
-    max-width: 540px; /* Ограничиваем ширину на мобильных */
-    margin: 0 auto; /* Центрируем */
+    height: auto; 
+    min-height: 300px; 
+    max-width: 540px; 
+    margin: 0 auto; 
   }
 
   .modal-notification-details {
     width: 100%;
-    max-width: 600px; /* Ограничиваем ширину на мобильных */
-    height: auto; /* Авто высота */
+    max-width: 600px; 
+    height: auto; 
     min-height: 300px;
-    margin: 0 auto; /* Центрируем */
+    margin: 0 auto; 
   }
 
   .modal-promo-title {
@@ -827,9 +781,9 @@ body {
   }
 }
 
-/* Конец стилей для модального окна */
 
-/* Apple-style Notifications */
+
+
 .messages-container {
   position: fixed;
   top: 20px;
@@ -924,11 +878,11 @@ body {
   animation: notificationSlideOut 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
-/* Убираем иконки - оставляем только цветные полоски сверху */
 
-/* Убираем все иконки - оставляем только цветные полоски сверху */
 
-/* Стили для кнопки закрытия */
+
+
+
 .notification-close-btn {
   position: absolute;
   top: 50%;
@@ -961,7 +915,7 @@ body {
   transform: translateY(-50%) scale(0.95);
 }
 
-/* Адаптивность для мобильных устройств */
+
 @media (max-width: 768px) {
   .messages-container {
     top: 10px;

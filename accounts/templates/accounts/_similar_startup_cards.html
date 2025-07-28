@@ -1,9 +1,9 @@
-{# accounts/templates/accounts/_similar_startup_cards.html #}
+
 {% load static %}
 {% load file_tags %}
 {% load accounts_extras %}
 
-{# Отображаем переданные похожие стартапы #}
+
 {% for similar in similar_startups %}
 <a href="{% url 'startup_detail' similar.startup_id %}" class="similar-card">
   <div class="similar-card-image">
@@ -19,7 +19,7 @@
   </div>
   <div class="similar-card-name">{{ similar.title|default:"Ромашка" }}</div>
   <div class="similar-card-rating" data-rating="{{ similar.average_rating|default:0|floatformat:'-2' }}">
-    {# Используем цикл и контейнеры для планет #}
+    
     {% for star_i in "12345" %}
       <span class="rating-icon-container">
         <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-empty">
@@ -28,10 +28,10 @@
     {% endfor %}
   </div>
   <div class="similar-card-category">
-    {# Применяем фильтр перевода #}
+    
     <div class="category-badge">{{ similar.direction.direction_name|translate_category|default:"Категория" }}</div>
   </div>
 </a>
 {% empty %}
-  {# Можно добавить сообщение, если других похожих нет, но JS их просто не отобразит #}
+  
 {% endfor %} 

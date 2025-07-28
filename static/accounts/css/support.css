@@ -1,25 +1,25 @@
-/* static/accounts/css/support.css */
+
 
 body {
   font-family: Unbounded, sans-serif;
   margin: 0;
 
-  /* background-color: #fff; */
+  
 
-  /* Можно убрать, если фон body и так белый глобально */
-  overflow-x: hidden; /* Предотвращаем горизонтальный скролл */
+  
+  overflow-x: hidden; 
 }
 
 .support-page {
-  position: relative; /* Для позиционирования псевдоэлемента */
+  position: relative; 
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   box-sizing: border-box;
-  padding-top: 0; /* Убираем паддинг отсюда */
-  padding-bottom: 0; /* Убираем паддинг отсюда */
-  z-index: 0; /* Контекст для z-index псевдоэлемента */
+  padding-top: 0; 
+  padding-bottom: 0; 
+  z-index: 0; 
 }
 
 .support-page::before {
@@ -29,32 +29,32 @@ body {
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 100vw; /* Фон на всю ширину окна */
+  width: 100vw; 
   background-color: #fff;
-  z-index: -1; /* Фон под контентом .support-page */
+  z-index: -1; 
 }
 
 .support-container {
   width: 100%;
-  max-width: 1303px; /* Максимальная ширина контента */
-  padding-top: 60px; /* Отступ для контента */
-  padding-bottom: 60px; /* Отступ для контента */
+  max-width: 1303px; 
+  padding-top: 60px; 
+  padding-bottom: 60px; 
   display: flex;
   flex-direction: column;
-  gap: 100px; /* Отступ между основными секциями */
-  position: relative; /* Чтобы быть над псевдоэлементом ::before родителя */
-  z-index: 1; /* Чтобы быть над псевдоэлементом ::before родителя */
+  gap: 100px; 
+  position: relative; 
+  z-index: 1; 
 }
 
-/* Секция "Чем мы можем вам помочь?" */
+
 .help-section {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 42px;
   width: 100%;
-  max-width: 1032px; /* Ширина из макета */
-  margin: 0 auto; /* Центрирование */
+  max-width: 1032px; 
+  margin: 0 auto; 
 }
 
 .help-section h1 {
@@ -73,7 +73,7 @@ body {
   border-radius: 10px;
   display: flex;
   align-items: center;
-  padding: 0 20px; /* Внутренние отступы */
+  padding: 0 20px; 
   box-sizing: border-box;
 }
 
@@ -96,12 +96,12 @@ body {
 }
 
 .search-button {
-  width: 53px; /* Примерно квадратная кнопка */
+  width: 53px; 
   height: 53px;
-  background: transparent; /* Прозрачный фон */
+  background: transparent; 
   border: none;
   padding: 0;
-  margin-left: 15px; /* Отступ от инпута */
+  margin-left: 15px; 
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -109,19 +109,19 @@ body {
 }
 
 .search-button img {
-  width: 35px; /* Размер иконки */
+  width: 35px; 
   height: 35px;
 }
 
-/* Секция с карточками "Справочный центр" и "Написать нам" */
+
 .info-cards-section {
   display: flex;
-  justify-content: center; /* Центрирование карточек */
-  align-items: stretch; /* ИЗМЕНЕНО: Карточки будут одинаковой высоты */
+  justify-content: center; 
+  align-items: stretch; 
   gap: 51px;
   width: 100%;
-  max-width: 1032px; /* Ширина из макета */
-  margin: 0 auto; /* Центрирование */
+  max-width: 1032px; 
+  margin: 0 auto; 
 }
 
 .info-card {
@@ -130,23 +130,23 @@ body {
   outline: 1px solid #004e9f;
   padding: 75px 46px;
   display: flex;
-  justify-content: space-between; /* Текст слева, иконка справа */
-  align-items: flex-start; /* Выравнивание по верху */
+  justify-content: space-between; 
+  align-items: flex-start; 
   gap: 10px;
-  flex-basis: calc(50% - 25.5px); /* Расчет ширины с учетом gap */
+  flex-basis: calc(50% - 25.5px); 
   box-sizing: border-box;
 }
 
 .info-card:first-child {
-  /* width: 589px; */
+  
 
-  /* Ширина из макета, но лучше использовать flex-basis */
+  
 }
 
 .info-card:last-child {
-  /* width: 392px; */
+  
 
-  /* Ширина из макета */
+  
 }
 
 .info-card-text {
@@ -174,25 +174,25 @@ body {
   margin: 0;
 }
 
-/* Стили для карточки-ссылки */
+
 .info-card-link {
-  text-decoration: none; /* Убираем подчеркивание у ссылки */
-  color: inherit; /* Наследуем цвет текста от родителя или внутренних элементов */
+  text-decoration: none; 
+  color: inherit; 
 }
 
 .info-card-link:hover {
-  /* Можно добавить эффект при наведении, если нужно */
+  
 
-  /* например, изменение фона или тени, если это не противоречит дизайну карточки */
+  
 }
 
 .info-card-icon {
   width: 75px;
   height: 75px;
-  object-fit: contain; /* Чтобы иконка не искажалась */
+  object-fit: contain; 
 }
 
-/* Секция "База знаний" */
+
 .knowledge-base-section {
   display: flex;
   flex-direction: column;
@@ -205,8 +205,8 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px; /* Уменьшил gap для соответствия макету */
-  width: 200px; /* Ширина из макета */
+  gap: 10px; 
+  width: 200px; 
 }
 
 .knowledge-base-header h2 {
@@ -220,13 +220,13 @@ body {
 }
 
 .knowledge-base-header a {
-  color: black; /* В макете черный, не синий */
+  color: black; 
   font-size: 14px;
   font-family: Unbounded, sans-serif;
   font-weight: 300;
   line-height: 18px;
   text-decoration: none;
-  white-space: nowrap; /* ДОБАВЛЕНО: Текст не будет переноситься */
+  white-space: nowrap; 
 }
 
 .knowledge-base-header a:hover {
@@ -236,8 +236,8 @@ body {
 .knowledge-base-cards {
   display: flex;
   justify-content: space-between;
-  align-items: stretch; /* Чтобы карточки были одинаковой высоты */
-  gap: 25px; /* Примерный отступ, нужно будет подобрать */
+  align-items: stretch; 
+  gap: 25px; 
   width: 100%;
 }
 
@@ -245,14 +245,14 @@ body {
   background: white;
   border-radius: 10px;
   outline: 1px solid #004e9f;
-  padding: 40px; /* Уменьшил вертикальные паддинги */
+  padding: 40px; 
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px; /* Уменьшил gap */
+  gap: 20px; 
   text-align: center;
-  flex: 1; /* Равномерное распределение пространства */
-  min-width: 300px; /* Минимальная ширина для адаптивности */
+  flex: 1; 
+  min-width: 300px; 
   box-sizing: border-box;
 }
 
@@ -278,11 +278,11 @@ body {
   font-weight: 300;
   line-height: 18px;
   margin: 0;
-  width: 100%; /* Для выравнивания текста по центру */
-  max-width: 327px; /* Из макета */
+  width: 100%; 
+  max-width: 327px; 
 }
 
-/* Секция "Самые популярные статьи" */
+
 .popular-articles-section {
   display: flex;
   flex-direction: column;
@@ -325,7 +325,7 @@ body {
   grid-template-columns: repeat(
     auto-fit,
     minmax(600px, 1fr)
-  ); /* Адаптивная сетка */
+  ); 
   gap: 25px;
   width: 100%;
 }
@@ -334,14 +334,14 @@ body {
   background: white;
   border-radius: 10px;
   outline: 1px solid #004e9f;
-  padding: 21px 30px; /* Скорректировал паддинги */
+  padding: 21px 30px; 
   display: flex;
   align-items: center;
-  gap: 20px; /* Уменьшил gap */
+  gap: 20px; 
 
-  /* width: 639px; */
+  
 
-  /* Убрал фиксированную ширину для грида */
+  
   box-sizing: border-box;
 }
 
@@ -355,7 +355,7 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 5px; /* Отступ между заголовком и датой */
+  gap: 5px; 
 }
 
 .article-info h3 {
@@ -363,7 +363,7 @@ body {
   font-size: 20px;
   font-family: Unbounded, sans-serif;
   font-weight: 600;
-  line-height: 1.2; /* Более компактная высота строки */
+  line-height: 1.2; 
   margin: 0;
 }
 
@@ -376,9 +376,9 @@ body {
   margin: 0;
 }
 
-/* Адаптивность */
+
 @media (width <= 1300px) {
-  /* Немного меньше max-width контейнера */
+  
   .support-container {
     padding: 40px 20px;
     gap: 60px;
@@ -391,7 +391,7 @@ body {
   }
 
   .info-card {
-    flex-basis: 100%; /* Карточки занимают всю ширину на меньших экранах */
+    flex-basis: 100%; 
     max-width: 600px;
     padding: 40px 30px;
   }
@@ -408,13 +408,13 @@ body {
   }
 
   .articles-grid {
-    grid-template-columns: 1fr; /* Одна колонка на маленьких экранах */
+    grid-template-columns: 1fr; 
   }
 
   .article-card {
-    /* width: 100%; */
+    
 
-    /* Занимает доступную ширину */
+    
   }
 }
 
@@ -483,7 +483,7 @@ body {
   .search-bar-container {
     flex-direction: column;
     height: auto;
-    background: transparent; /* Убираем фон, т.к. элементы будут отдельно */
+    background: transparent; 
     gap: 15px;
     padding: 0;
   }
@@ -494,13 +494,13 @@ body {
   }
 
   .search-button {
-    background-color: #004e9f; /* Делаем кнопку заметной */
+    background-color: #004e9f; 
     border-radius: 7px;
     width: 100%;
   }
 
   .search-button img {
-    filter: brightness(0) invert(1); /* Делаем иконку белой */
+    filter: brightness(0) invert(1); 
   }
 
   .info-card,

@@ -11,7 +11,7 @@
 {% block head_extra %}
   <link rel="stylesheet" href="{% static 'accounts/css/startup_detail.css' %}">
   <link rel="stylesheet" href="{% static 'accounts/libs/fontawesome/css/all.min.css' %}">
-  {# <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" /> #}
+  
   <link rel="stylesheet" href="{% static 'accounts/libs/glightbox/css/glightbox.min.css' %}" />
   <link rel="stylesheet" href="{% static 'accounts/css/moderation_panel.css' %}">
 {% endblock %}
@@ -95,7 +95,7 @@
     </div>
     
     <div class="right-column">
-      {# Этот контейнер теперь будет стилизоваться через CSS #}
+      
       <div class="startup-header-actions-wrapper"> 
         <div class="startup-header">
           <div class="startup-title-wrapper">
@@ -111,21 +111,21 @@
             <h1 class="startup-name" title="{{ startup.title }}">{{ startup.title }}</h1>
           </div>
           <div class="header-meta">
-            {# Применяем фильтр для перевода категории #}
+            
             <span class="category-value">{{ startup.direction.direction_name|translate_category|default:"Без категории" }}</span>
-            <!-- Добавляем цель инвестиций сюда -->
+            
             <div class="funding-goal-info">
               <span class="funding-goal-label">Цель:</span>
               <span class="funding-goal-value">{{ startup.funding_goal|default:0|floatformat:0|intcomma }} ₽</span>
             </div>
-            {# Новый блок для Микроинвестиций #}
+            
             {% if startup.only_invest or startup.both_mode %}
             <div class="microinvestment-badge">
               <i class="fas fa-check-circle"></i> Микроинвестиции
             </div>
             {% endif %}
           </div>
-          {# --- ВОЗВРАЩАЕМ РЕЙТИНГ И КОММЕНТАРИИ СЮДА --- #}
+          
           <div class="rating-comments-container">
             <div class="rating-container">
               <span class="rating-label">Рейтинг {{ average_rating|floatformat:"1" }}/5</span>
@@ -140,11 +140,11 @@
             </div>
             <a href="#comments-section" class="comments-link">Комментарии</a>
           </div>
-          {# --- КОНЕЦ ВОЗВРАЩЕННОГО БЛОКА --- #}
+          
         </div>
 
         <div class="actions-top-right">
-          {# Блок .rating-comments-container был убран отсюда и возвращен в .startup-header #}
+          
           <div class="startup-info-badge">
             {% if startup.both_mode %}
               Инвестирование+Выкуп
@@ -161,7 +161,7 @@
             </a>
           {% endif %}
 
-          {# Добавляем новые кнопки для модераторов с условиями #}
+          
           {% if user.is_authenticated and user.role.role_name == 'moderator' %}
             {% if startup.both_mode or startup.only_buy %}
               <button type="button" class="action-button change-owner-button" data-bs-toggle="modal" data-bs-target="#changeOwnerModal">
@@ -188,30 +188,30 @@
 
         <div class="tab-content-container">
           <div id="info-section" class="content-section active">
-            {# --- Сначала текстовые блоки "Вводная" и "О проекте" --- #}
+            
             <div class="about-section">
-              <h2 class="section-title">Вводная</h2> {# Изменено с "О проекте" на "Вводная" #}
+              <h2 class="section-title">Вводная</h2> 
               <div class="section-content truncatable-text">
-                <p>{{ startup.short_description|default:"Нет вводного описания." }}</p> {# Убран тег strong #}
+                <p>{{ startup.short_description|default:"Нет вводного описания." }}</p> 
               </div>
             </div>
-            <div class="about-section"> {# Отдельный блок для "О проекте" #}
+            <div class="about-section"> 
               <h2 class="section-title">О проекте</h2>
               <div class="section-content truncatable-text">
-                {# <p><strong>Подробное описание:</strong></p> #} {# Можно убрать, если заголовок уже есть #}
+                 
                 <p>{{ startup.description|linebreaksbr|default:"Нет подробного описания." }}</p>
                 {% if startup.additional_info %}
                   <p><strong>Основные функции:</strong></p>
                   {{ startup.additional_info|linebreaksbr }}
                 {% endif %}
-                 {# Ссылка "Читать дальше" пока не активна, можно добавить логику позже #}
+                 
                  <a href="#" class="read-more-link" style="display: none;">Читать дальше</a>
               </div>
             </div>
 
-            {# --- Затем сетка из 4 информационных карточек --- #}
+            
             <div class="info-card-grid">
-              <!-- Block 1: Презентация -->
+              
               <div class="info-card">
                 <div class="info-card-icon-container">
                   <img src="{% static 'accounts/images/startups/image.svg' %}" alt="Презентация" class="info-card-icon">
@@ -224,7 +224,7 @@
                 {% endif %}
               </div>
 
-              <!-- Block 2: Оценка (Average Rating) -->
+              
               <div class="info-card">
                 <div class="info-card-icon-container">
                   <img src="{% static 'accounts/images/startups/award.svg' %}" alt="Оценка" class="info-card-icon">
@@ -235,7 +235,7 @@
                 </div>
               </div>
 
-              <!-- Block 3: Собранная сумма -->
+              
               <div class="info-card">
                 <div class="info-card-icon-container">
                   <img src="{% static 'accounts/images/startups/piggy-bank.svg' %}" alt="Собранная сумма" class="info-card-icon">
@@ -246,7 +246,7 @@
                 </div>
               </div>
 
-              <!-- Block 4: Стадия -->
+              
               <div class="info-card">
                 <div class="info-card-icon-container">
                   <img src="{% static 'accounts/images/startups/boxes.svg' %}" alt="Стадия" class="info-card-icon">
@@ -262,38 +262,38 @@
           <div id="gallery-section" class="content-section media-section">
             <h2 class="section-title">Галерея</h2>
 
-            {# --- БЛОК ВИДЕО (ПЕРЕМЕЩЕН ВВЕРХ) --- #}
+            
             {% if video_urls %}
               <h3 class="section-subtitle" style="margin-bottom: 15px; font-size: 18px; color: var(--accent-yellow);">Видео</h3>
-              <div class="video-grid"> {# Используем новый класс сетки #}
+              <div class="video-grid"> 
                   {% for url in video_urls %}
-                      {# Оборачиваем видео в .gallery-item для единообразия сетки #}
+                      
                       <a href="{% get_file_url_tag url startup.startup_id 'video' %}" 
-                         {# target="_blank" <<< УДАЛЯЕМ #}
-                         class="gallery-item video-item glightbox" {# <<< ДОБАВЛЯЕМ glightbox #}
-                         data-gallery="startup-gallery">          {# <<< ДОБАВЛЯЕМ data-gallery #}
+                         
+                         class="gallery-item video-item glightbox" 
+                         data-gallery="startup-gallery">          
                          <div class="play-icon-overlay"><i class="fas fa-play"></i></div>
-                         {# Плейсхолдер текста. Реальные превью требуют бэкенда #}
+                         
                          <div class="video-placeholder">Смотреть видео {{ forloop.counter }}</div> 
                       </a>
                   {% endfor %}
               </div>
             {% endif %}
-            {# --- КОНЕЦ БЛОКА ВИДЕО --- #}
             
-            {# --- БЛОК ИЗОБРАЖЕНИЙ (GLightbox) --- #}
+            
+            
             {% if creatives_urls %}
-              {# Добавляем заголовок для изображений, если есть и видео, и изображения #}
+              
               {% if video_urls %}
               <h3 class="section-subtitle" style="margin-top: 30px; margin-bottom: 15px; font-size: 18px; color: var(--accent-yellow);">Изображения</h3>
               {% endif %}
               <div class="gallery-grid">
-                {# Выводим ТОЛЬКО креативы (изображения) #}
+                
                 {% for url in creatives_urls %}
                   <a 
                      href="{% get_file_url_tag url startup.startup_id 'creative' %}"
                      class="gallery-item image-item glightbox" 
-                     data-gallery="startup-gallery"> {# Добавляем data-gallery для группировки #}
+                     data-gallery="startup-gallery"> 
                     <img src="{% get_file_url_tag url startup.startup_id 'creative' %}" alt="Креатив {{ forloop.counter }}" />
                   </a>
                 {% endfor %}
@@ -301,10 +301,10 @@
             {% elif not video_urls %}
               <p>Медиа-материалы отсутствуют.</p>
             {% endif %}
-            {# --- КОНЕЦ БЛОКА ИЗОБРАЖЕНИЙ --- #}
+            
           </div>
 
-          {# Секция ЭТАПЫ (пустая) #}
+          
           <div id="stages-section" class="content-section">
             <h2 class="section-title">Этапы</h2>
             {% if timeline_events %}
@@ -315,12 +315,12 @@
                         {% with total_steps=5 current_step=startup.step_number|default:1 %}
                             {% if current_step > 1 %}
                                 {% if current_step >= total_steps %}
-                                    {% widthratio 1 1 100 as progress_width %} {# 100% #}
+                                    {% widthratio 1 1 100 as progress_width %} 
                                 {% else %}
                                     {% widthratio current_step|add:"-1" total_steps|add:"-1" 100 as progress_width %}
                                 {% endif %}
                             {% else %}
-                                {% firstof 0 as progress_width %} {# 0% #}
+                                {% firstof 0 as progress_width %} 
                             {% endif %}
                         {% endwith %}
                         <div class="timeline-progress-filled" style="width: {{ progress_width }}%;"></div>
@@ -352,7 +352,7 @@
             {% endif %}
           </div>
 
-          {# Секция ДОКУМЕНТЫ (пустая) #}
+          
           <div id="documents-section" class="content-section">
             <h2 class="section-title">Документы</h2>
             {% if startup_documents %}
@@ -363,7 +363,7 @@
                                 <i class="fas fa-file-alt document-icon"></i>
                                 <span class="document-name">{% get_file_original_name doc.file_url startup.startup_id 'proof' %}</span>
                             </a>
-                            {# Можно добавить дату загрузки, если нужно: {{ doc.uploaded_at|date:"d.m.Y" }} #}
+                            
                         </li>
                     {% endfor %}
                 </ul>
@@ -372,10 +372,10 @@
             {% endif %}
           </div>
 
-          {# Секция УСЛОВИЯ (пустая) #}
+          
           <div id="conditions-section" class="content-section">
             <h2 class="section-title">Условия</h2>
-            {# Добавьте сюда контент для условий #}
+            
             <p>{{ startup.terms|linebreaksbr|default:"Условия не указаны." }}</p>
           </div>
         </div> 
@@ -414,30 +414,30 @@
   </div>
 
   <div id="comments-section">
-    {# 1. Заголовок с иконкой #}
+    
     <div class="comments-header">
       <h2 class="section-title">
         Комментарии 
-        <i class="fas fa-comment-dots comment-title-icon"></i> {# Добавляем иконку #}
-        <span class="comments-count">{{ comments|length }}</span> {# Убираем скобки #}
+        <i class="fas fa-comment-dots comment-title-icon"></i> 
+        <span class="comments-count">{{ comments|length }}</span> 
       </h2>
-      {# Правую часть хедера (рейтинг) переносим в правую колонку ниже #}
+      
     </div>
 
-    {# 2. Основной контент (две колонки) #}
+    
     <div class="comments-main-content">
       
-      {# 2.1 Левая колонка: Комментарии и форма #}
+      
       <div class="comments-list-wrapper">
         
-        {# Список комментариев #}
+        
         {% if comments %}
           <div class="comments-list">
             {% for comment in comments %}
-              <div class="comment-card {% if forloop.counter > 5 %}hidden{% endif %}"> {# Скрываем после 5 #}
+              <div class="comment-card {% if forloop.counter > 5 %}hidden{% endif %}"> 
                 <div class="comment-left">
                   <div class="comment-author-avatar">
-                    {# Вставляем аватарку #}
+                    
                     <img src="{% if comment.user_id.get_profile_picture_url %}{{ comment.user_id.get_profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}" alt="Аватар {{ comment.user_id.username }}" class="comment-avatar-img">
                   </div>
                   <div class="comment-content-wrapper">
@@ -473,14 +473,14 @@
                 </div>
               </div>
             {% endfor %}
-          </div> {# Конец comments-list #}
+          </div> 
         {% else %}
           <div class="comments-list empty">
             <p>Пока нет комментариев. Будьте первым!</p>
           </div>
         {% endif %}
 
-        {# Кнопка Показать еще (если > 5) #}
+        
         {% if comments|length > 5 %}
           <button class="show-more-comments">
             Показать еще <i class="fas fa-chevron-down"></i>
@@ -490,11 +490,11 @@
           </button>
         {% endif %}
 
-        {# Форма добавления комментария #}
+        
         {% if user.is_authenticated %}
           <form method="post" class="comment-form">
             {% csrf_token %}
-            {# Устанавливаем плейсхолдер #}
+            
             {{ form.content|add_class:"comment-textarea"|attr:"placeholder:Написать комментарий" }}
             <button type="submit" class="action-button comment-submit">Оставить комментарий</button>
           </form>
@@ -504,13 +504,13 @@
           </div>
         {% endif %}
 
-      </div> {# Конец comments-list-wrapper #}
+      </div> 
 
-      {# 2.2 Правая колонка: Общий рейтинг #}
+      
       <div class="comments-rating-summary-wrapper">
-        {# Обертка для верхней линии (планеты + цифра) и распределения #}
+        
         <div class="rating-summary-content">
-          {# Верхняя линия: Планеты + Цифра #}
+          
           <div class="overall-rating-line">
             <div class="overall-rating-stars" data-rating="{{ average_rating|floatformat:'-2'|default:0 }}">
                 {% for i in "12345" %}
@@ -521,45 +521,45 @@
                 {% endfor %}
             </div>
             <span class="average-rating-value">{{ average_rating|default:0|floatformat:"1" }}</span>
-          </div> {# Конец overall-rating-line #}
+          </div> 
 
-          {# Распределение рейтинга #}
+          
           <div class="rating-distribution" data-ratings='{{ rating_distribution|to_json }}'>
             {% for i_str in "54321" %}
-              {% with i=i_str|add:"0" %} {# Преобразуем строку в число #}
-              {# ---> Вычисляем количество голосов СНАРУЖИ div <--- #}
+              {% with i=i_str|add:"0" %} 
+              
               {% with current_count=rating_distribution|get_item:i %}
               <div class="rating-bar-container">
-                {# Генерируем i маленьких планеток #}
+                
                 <span class="star-label">
                   {% for _ in ""|rjust:i %}
                     <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="rating-dist-icon">
                   {% endfor %}
                 </span>
                 <div class="rating-bar">
-                  {# Ширина = (кол-во голосов / макс кол-во) * 100, но не больше 100% #}
+                  
                   {% with total_votes=total_votes_count %}
                     {% if total_votes > 0 %}
                       {% widthratio current_count total_votes 100 as bar_width %}
                       <div class="rating-bar-fill" style="width: {{ bar_width }}%;"></div>
                     {% else %}
-                      {# define 0 as bar_width #} {# Удаляем define #}
-                      <div class="rating-bar-fill" style="width: 0%;"></div> {# Устанавливаем 0% напрямую #}
+                       
+                      <div class="rating-bar-fill" style="width: 0%;"></div> 
                     {% endif %}
                   {% endwith %}
                 </div>
-                {# Количество берем из rating_distribution по числовому ключу i #}
+                
                 <span class="rating-count">{{ current_count }}</span> 
               </div>
-              {% endwith %} {# Конец with current_count #}
-              {% endwith %} {# Конец with i #}
+              {% endwith %} 
+              {% endwith %} 
             {% endfor %}
-          </div> {# Конец rating-distribution #}
-        </div> {# Конец rating-summary-content #}
-      </div> {# Конец comments-rating-summary-wrapper #}
+          </div> 
+        </div> 
+      </div> 
 
-    </div> {# Конец comments-main-content #}
-  </div> {# Конец comments-section #}
+    </div> 
+  </div> 
 
   <div class="similar-startups-section">
     <div class="similar-startups-container">
@@ -573,7 +573,7 @@
       </a>
       
       <div class="similar-startups-grid">
-        {# Отображаем первые 4 похожих стартапа #}
+        
         {% for similar in similar_startups|slice:":4" %}
         <a href="{% url 'startup_detail' similar.startup_id %}" class="similar-card">
           <div class="similar-card-image">
@@ -589,7 +589,7 @@
           </div>
           <div class="similar-card-name">{{ similar.title|default:"Ромашка" }}</div>
           <div class="similar-card-rating" data-rating="{{ similar.average_rating|default:0|floatformat:'-2' }}">
-            {# Используем цикл и контейнеры для планет #}
+            
             {% for star_i in "12345" %}
               <span class="rating-icon-container">
                 <img src="{% static 'accounts/images/planets/full_filled_planet.svg' %}" alt="" class="icon-empty">
@@ -598,17 +598,17 @@
             {% endfor %}
           </div>
           <div class="similar-card-category">
-            {# Применяем фильтр перевода #}
+            
             <div class="category-badge">{{ similar.direction.direction_name|translate_category|default:"Категория" }}</div>
           </div>
         </a>
         {% empty %}
-          {# Плейсхолдеры, если нет похожих стартапов #}
+          
           {% for i in "1234" %}
           <a href="#" class="similar-card placeholder">
             <div class="similar-card-image"><div class="planet"></div></div>
             <div class="similar-card-name">Название стартапа</div>
-            {# Восстанавливаем плейсхолдер рейтинга #}
+            
             <div class="similar-card-rating">
               <i class="fas fa-star active"></i><i class="fas fa-star active"></i><i class="fas fa-star active"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
             </div>
@@ -617,18 +617,18 @@
           {% endfor %}
         {% endfor %}
 
-        {# Возвращаем кнопку "Показать еще" как пятый элемент сетки #}
+        
         <div class="similar-card show-more-placeholder">
            <button class="action-button show-more-similar">
              <i class="fas fa-redo"></i> Показать еще
            </button>
         </div>
-      </div> {# Конец similar-startups-grid #}
+      </div> 
     </div>
   </div>
 
-  {# Добавляем модальные окна для функционала модератора #}
-  <!-- Модальное окно для жалобы -->
+  
+  
   <div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -662,7 +662,7 @@
     </div>
   </div>
 
-  <!-- Модальное окно 1: Поиск пользователей для смены владельца -->
+  
   <div class="modal fade" id="changeOwnerModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -681,7 +681,7 @@
     </div>
   </div>
 
-  <!-- Модальное окно 2: Подтверждение смены владельца -->
+  
   <div class="modal fade" id="confirmChangeOwnerModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -701,7 +701,7 @@
     </div>
   </div>
 
-  <!-- Модальное окно: Добавить инвестора -->
+  
   <div class="modal fade" id="addInvestorModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
@@ -731,7 +731,7 @@
     </div>
   </div>
 
-  <!-- Модальное окно: Подтверждение редактирования инвестиции -->
+  
   <div class="modal fade" id="confirmEditInvestmentModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -751,7 +751,7 @@
     </div>
   </div>
 
-  <!-- Модальное окно: Подтверждение удаления инвестиции -->
+  
   <div class="modal fade" id="confirmDeleteInvestmentModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -771,18 +771,18 @@
     </div>
   </div>
 
-  {# --- Наш основной скрипт --- #}
+  
   <script src="{% static 'accounts/js/startup_detail.js' %}" defer></script>
-</div> {# Конец startup-detail-page #}
+</div> 
 
-{# СЕКЦИЯ ПОХОЖИХ СТАРТАПОВ (остается снаружи) #}
+
 {% endblock %}
 
 {% block body_scripts %}
-{# Добавляем JS GLightbox #}
-{# <script src="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/js/glightbox.min.js"></script> #}
+
+
 <script src="{% static 'accounts/libs/glightbox/js/glightbox.min.js' %}"></script>
-{# Дочерние шаблоны могут добавлять скрипты сюда #}
+
 {% endblock %}
 </body>
 </html>

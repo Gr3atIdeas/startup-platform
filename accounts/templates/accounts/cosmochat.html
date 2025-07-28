@@ -12,47 +12,47 @@
 {% block content %}
 {% static 'accounts/images/avatars/default_avatar_ufo.png' as default_avatar_src %}
 <div class="cosmochat-page-wrapper">
-    <!-- Верхний блок: Пользователи и Статьи/Новости -->
+    
     <div class="top-section-new">
-        <!-- Левая колонка: Поиск пользователей и список пользователей -->
+        
         <div class="users-main-area-new">
             <form method="get" action="." class="user-search-filters-new">
                 <div class="search-input-wrapper-new search-form-cosmo">
                     {% render_field search_form.query class+="search-query-input" placeholder="Поиск" %}
                     <img src="{% static 'accounts/images/cosmochat/search.svg' %}" alt="Поиск">
                     
-                    <!-- Выпадающее окно поиска -->
+                    
                     <div id="searchDropdown" class="search-dropdown">
-                        <!-- Недавние -->
+                        
                         <div class="search-dropdown-section">
                             <div class="search-dropdown-header">
                                 <div class="search-dropdown-title">Недавние</div>
                                 <div class="search-dropdown-clear" data-section="recent">Очистить</div>
                             </div>
                             <div class="search-dropdown-users" id="recentUsers">
-                                <!-- Данные будут загружены через JavaScript -->
+                                
                             </div>
                         </div>
                         
-                        <!-- Инвесторы -->
+                        
                         <div class="search-dropdown-section">
                             <div class="search-dropdown-header">
                                 <div class="search-dropdown-title">Инвесторы</div>
                                 <div class="search-dropdown-clear" data-section="investors">Очистить</div>
                             </div>
                             <div class="search-dropdown-users" id="investorUsers">
-                                <!-- Данные будут загружены через JavaScript -->
+                                
                             </div>
                         </div>
                         
-                        <!-- Стартаперы -->
+                        
                         <div class="search-dropdown-section">
                             <div class="search-dropdown-header">
                                 <div class="search-dropdown-title">Стартаперы</div>
                                 <div class="search-dropdown-clear" data-section="startupers">Очистить</div>
                             </div>
                             <div class="search-dropdown-users" id="startuperUsers">
-                                <!-- Данные будут загружены через JavaScript -->
+                                
                             </div>
                         </div>
                     </div>
@@ -308,7 +308,7 @@
         </div>
     </div>
 
-    <!-- Модальное окно создания группового чата -->
+    
     <div class="group-chat-modal-overlay" id="groupChatModal">
         <div class="group-chat-modal">
             <button class="group-chat-modal-close" id="closeGroupChatModalBtn">
@@ -353,7 +353,7 @@
                     {% endfor %}
                 </div>
             </div>
-            <!-- Заменяем секцию с иконкой на отображение только имени и участников -->
+            
             <div class="group-chat-modal-details-view" id="groupChatDetailsView" style="display: none;">
                 <div class="nav-action nav-action-create" id="confirmGroupChatCreationBtn">Создать</div>
                 <div class="modal-header-nav">
@@ -374,7 +374,7 @@
                   <span>Добавить участника</span>
                 </div>
                 <div class="participants-actions-list" id="groupChatSelectedParticipantsList">
-                    <!-- Участники будут добавляться динамически через JS -->
+                    
                 </div>
             </div>
         </div>

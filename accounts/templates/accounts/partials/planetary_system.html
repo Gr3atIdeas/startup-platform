@@ -1,21 +1,21 @@
 {% load static %}
 <div class="ultra_new_planetary_system_wrapper">
   <div class="ultra_new_planetary_system_container">
-    <!-- ОБЩИЙ ФОН КАК В КАРТОЧКЕ СТАРТАПА -->
+    
     <div class="ultra_new_planetary_space_background"></div>
     <div class="ultra_new_planetary_stars"></div>
     
-    <!-- КНОПКИ УПРАВЛЕНИЯ -->
+    
     <button class="ultra_new_planetary_all_startups_button">Все стартапы</button>
     <button class="ultra_new_planetary_fullscreen_btn" id="ultra_new_planetary_fullscreen_btn">
       <img src="{% static 'accounts/images/planetary_system/scan-circle-outline.svg' %}" alt="fullscreen">
     </button>
 
-    <!-- СОЛНЕЧНАЯ СИСТЕМА - РАБОЧАЯ СТРУКТУРА ИЗ ДЕМО -->
+    
     <div id="ultra_new_planetary_solar_system">
       <div id="ultra_new_planetary_scene">
         <div id="ultra_new_planetary_galaxy">
-          <!-- СОЛНЦЕ -->
+          
           <div id="ultra_new_planetary_sun_container">
             <img src="{% static 'accounts/images/planetary_system/solar.png' %}" alt="sun" id="ultra_new_planetary_sun_image">
             <div id="ultra_new_planetary_sun_logo_container">
@@ -23,74 +23,74 @@
             </div>
           </div>
           
-          <!-- 6 ОРБИТ С ПЛАНЕТАМИ - ИСПРАВЛЕННЫЕ РАЗМЕРЫ С БОЛЬШИМИ ИНТЕРВАЛАМИ -->
+          
           <div class="ultra_new_planetary_orbit" style="--orbit-size: 200px; --orbit-time: 80s;">
             <div class="ultra_new_planetary_planet_orientation">
               <div class="ultra_new_planetary_planet" style="--planet-size: 60px;" data-id="1"></div>
               
-              <!-- Удалён блок прогресс-бара под планетой -->
+              
             </div>
           </div>
           <div class="ultra_new_planetary_orbit" style="--orbit-size: 300px; --orbit-time: 95s;">
             <div class="ultra_new_planetary_planet_orientation">
               <div class="ultra_new_planetary_planet" style="--planet-size: 70px;" data-id="2"></div>
               
-              <!-- Удалён блок прогресс-бара под планетой -->
+              
             </div>
           </div>
           <div class="ultra_new_planetary_orbit" style="--orbit-size: 400px; --orbit-time: 110s;">
             <div class="ultra_new_planetary_planet_orientation">
               <div class="ultra_new_planetary_planet" style="--planet-size: 56px;" data-id="3"></div>
               
-              <!-- Удалён блок прогресс-бара под планетой -->
+              
             </div>
           </div>
           <div class="ultra_new_planetary_orbit" style="--orbit-size: 500px; --orbit-time: 125s;">
             <div class="ultra_new_planetary_planet_orientation">
               <div class="ultra_new_planetary_planet" style="--planet-size: 64px;" data-id="4"></div>
               
-              <!-- Удалён блок прогресс-бара под планетой -->
+              
             </div>
           </div>
           <div class="ultra_new_planetary_orbit" style="--orbit-size: 600px; --orbit-time: 140s;">
             <div class="ultra_new_planetary_planet_orientation">
               <div class="ultra_new_planetary_planet" style="--planet-size: 50px;" data-id="5"></div>
               
-              <!-- Удалён блок прогресс-бара под планетой -->
+              
             </div>
           </div>
           <div class="ultra_new_planetary_orbit" style="--orbit-size: 700px; --orbit-time: 160s;">
             <div class="ultra_new_planetary_planet_orientation">
               <div class="ultra_new_planetary_planet" style="--planet-size: 60px;" data-id="6"></div>
               
-              <!-- Удалён блок прогресс-бара под планетой -->
+              
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- МОДАЛЬНОЕ ОКНО СТАРТАПА -->
+    
     <div id="ultra_new_planetary_modal" class="ultra_new_planetary_modal">
-      <!-- BACKDROP С БЛЮРОМ -->
+      
       <div class="ultra_new_planetary_modal_backdrop"></div>
       
-      <!-- КНОПКА ЗАКРЫТИЯ -->
+      
       <button id="ultra_new_planetary_modal_close" class="ultra_new_planetary_modal_close">×</button>
       
-      <!-- КОНТЕНТ МОДАЛЬНОГО ОКНА -->
+      
       <div class="ultra_new_planetary_modal_content">
-        <!-- ИЗОБРАЖЕНИЕ ПЛАНЕТЫ СЛЕВА -->
+        
         <div class="ultra_new_planetary_modal_planet">
           <img id="ultra_new_planetary_modal_planet_img" src="" alt="Planet">
         </div>
         
-        <!-- КАРТОЧКА ИНФОРМАЦИИ СПРАВА -->
+        
         <div class="ultra_new_planetary_modal_card">
-          <!-- НАЗВАНИЕ СТАРТАПА -->
+          
           <h2 id="ultra_new_planetary_modal_name" class="ultra_new_planetary_modal_title">Ромашка</h2>
           
-          <!-- РЕЙТИНГ И КОММЕНТАРИИ -->
+          
           <div class="ultra_new_planetary_modal_rating_section">
             <div id="ultra_new_planetary_modal_rating" class="ultra_new_planetary_modal_rating">Рейтинг 4,2/5 (534)</div>
             <div class="ultra_new_planetary_modal_comments">
@@ -99,17 +99,17 @@
             </div>
           </div>
           
-          <!-- КНОПКА ВЫКУП+ИНВЕСТИРОВАНИЕ -->
+          
           <div class="ultra_new_planetary_modal_investment_btn">
             <button id="ultra_new_planetary_modal_investment_btn">Выкуп+инвестирование</button>
           </div>
           
-          <!-- КАТЕГОРИЯ -->
+          
           <div class="ultra_new_planetary_modal_category_section">
             <div id="ultra_new_planetary_modal_category" class="ultra_new_planetary_modal_category">Медицина</div>
           </div>
           
-          <!-- ПРОГРЕСС БАР -->
+          
           <div class="ultra_new_planetary_modal_progress_container">
             <div class="ultra_new_planetary_modal_progress_bar_visual">
               <div class="ultra_new_planetary_modal_progress_animation_container">
@@ -119,12 +119,12 @@
             </div>
           </div>
           
-          <!-- ОПИСАНИЕ -->
+          
           <div id="ultra_new_planetary_modal_description" class="ultra_new_planetary_modal_description">
             Наш стартап разрабатывает инновационную платформу для телемедицины...
           </div>
           
-          <!-- ФИНАНСИРОВАНИЕ И ОЦЕНКА -->
+          
           <div class="ultra_new_planetary_modal_financing_section">
             <div class="ultra_new_planetary_modal_funding_goal">
               <div class="ultra_new_planetary_modal_funding_label">Цель финансирования</div>
@@ -137,7 +137,7 @@
             </div>
           </div>
           
-          <!-- КНОПКИ ДЕЙСТВИЙ -->
+          
           <div class="ultra_new_planetary_modal_actions">
             <button id="ultra_new_planetary_modal_details_btn" class="ultra_new_planetary_modal_details_btn">Подробнее</button>
             <div class="ultra_new_planetary_modal_investors_info">
@@ -149,19 +149,19 @@
       </div>
     </div>
 
-    <!-- НОВЫЙ СЕЛЕКТОР КАТЕГОРИЙ ПО ДИЗАЙНУ ИЗ FIGMA -->
+    
     <div id="ultra_new_planetary_galaxy_selector">
-      <!-- СТРЕЛКА ВЛЕВО -->
+      
       <div class="ultra_new_planetary_nav_arrow ultra_new_planetary_nav_left" id="ultra_new_planetary_category_prev">
         <div class="ultra_new_planetary_nav_arrow_icon ultra_new_planetary_nav_left_icon"></div>
       </div>
       
-      <!-- СТРЕЛКА ВПРАВО -->
+      
       <div class="ultra_new_planetary_nav_arrow ultra_new_planetary_nav_right" id="ultra_new_planetary_category_next">
         <div class="ultra_new_planetary_nav_arrow_icon ultra_new_planetary_nav_right_icon"></div>
       </div>
       
-      <!-- ПОДПИСЬ ВЫБРАННОЙ КАТЕГОРИИ -->
+      
       <div id="ultra_new_planetary_selected_label" class="ultra_new_planetary_selected_label">
         {% if selected_galaxy and selected_galaxy != 'All' and selected_galaxy != 'Все' %}
           {% for direction in directions %}
@@ -174,15 +174,15 @@
         {% endif %}
       </div>
       
-      <!-- КОНТЕЙНЕР КАТЕГОРИЙ -->
+      
       <div class="ultra_new_planetary_categories_container">
-        <!-- Категория ВСЕ (всегда первая и фиксированная) -->
+        
         <div class="ultra_new_planetary_category_item category-all {% if selected_galaxy == 'All' or selected_galaxy == 'Все' %}selected{% endif %}" data-name="Все">
           <div class="ultra_new_planetary_category_bg"></div>
           <img src="{% static 'accounts/images/planetary_system/category_img.png' %}" class="ultra_new_planetary_category_icon" alt="Все">
         </div>
 
-        <!-- Все остальные категории -->
+        
         {% for direction in directions %}
           <div class="ultra_new_planetary_category_item {% if direction.direction_name == selected_galaxy or direction.original_name == selected_galaxy %}selected{% endif %}" data-name="{{ direction.original_name|default:direction.direction_name }}">
             <div class="ultra_new_planetary_category_bg"></div>
@@ -194,7 +194,7 @@
   </div>
 </div>
 
-<!-- ДАННЫЕ ДЛЯ JAVASCRIPT -->
+
 <script id="ultra_new_planetary_fallback_images" type="application/json">
 {
   "round": [

@@ -1,10 +1,7 @@
 from django.urls import include, path, re_path
 from django.views.generic import RedirectView
-
 from . import views
-
 urlpatterns = [
-    # Основные маршруты
     path("", views.home, name="home"),
     path("register/", views.register, name="register"),
     path("login/", views.user_login, name="login"),
@@ -15,7 +12,6 @@ urlpatterns = [
     path("news/", views.news, name="news"),
     path("news/<int:article_id>/", views.news_detail, name="news_detail"),
     path("news/<int:article_id>/delete/", views.delete_news, name="delete_news"),
-    # Космочат
     path("cosmochat/", views.cosmochat, name="cosmochat"),
     path("cosmochat/<int:chat_id>/", views.get_chat_messages, name="get_chat_messages"),
     path("cosmochat/send-message/", views.send_message, name="send_message"),
@@ -45,7 +41,6 @@ urlpatterns = [
     path("cosmochat/available_users/", views.available_users, name="available_users"),
     path("cosmochat/start-deal/<int:chat_id>/", views.start_deal, name="start_deal"),
     path("cosmochat/chat-list/", views.chat_list, name="chat_list"),
-    # Профиль и управление
     path("profile/", views.profile, name="profile"),
     path("profile/delete-avatar/", views.delete_avatar, name="delete_avatar"),
     path("profile/<int:user_id>/", views.profile, name="user_profile"),
@@ -70,7 +65,6 @@ urlpatterns = [
     ),
     path("vote-startup/<int:startup_id>/", views.vote_startup, name="vote_startup"),
     path("invest/<int:startup_id>/", views.invest, name="invest"),
-    # Поиск и планетарная система
     path("search-suggestions/", views.search_suggestions, name="search_suggestions"),
     path("planetary-system/", views.planetary_system, name="planetary_system"),
     path("my_startups/", views.my_startups, name="my_startups"),
@@ -79,11 +73,9 @@ urlpatterns = [
         views.load_similar_startups,
         name="load_similar_startups",
     ),
-    # Сделки
     path("deals/", views.deals_view, name="deals_view"),
     path("deals/approve/<int:chat_id>/", views.approve_deal, name="approve_deal"),
     path("deals/reject/<int:chat_id>/", views.reject_deal, name="reject_deal"),
-    # Уведомления и поддержка
     path("notifications/", views.notifications_view, name="notifications_page"),
     path("support/", views.support_page_view, name="support"),
     path("support/orders/", views.support_orders_view, name="support_orders"),
@@ -93,13 +85,11 @@ urlpatterns = [
         name="support_ticket_detail",
     ),
     path("support/contact/", views.support_contact_view, name="support_contact"),
-    # Вебхук для Telegram бота
     path(
         "telegram-bot-webhook/<str:token>/",
         views.telegram_webhook,
         name="telegram_webhook",
     ),
-    # Дополнительные маршруты
     path(
         "favicon.ico",
         RedirectView.as_view(url="/static/images/favicon.png", permanent=True),
@@ -138,5 +128,4 @@ urlpatterns = [
         views.get_chat_messages,
         name="get_chat_messages_dynamic",
     ),
-    # Обработчик ошибок 404
 ]

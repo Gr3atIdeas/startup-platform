@@ -2,9 +2,7 @@ from allauth.socialaccount.signals import pre_social_login
 from django.dispatch import receiver
 from .utils import update_user_from_telegram
 import logging
-
 logger = logging.getLogger(__name__)
-
 @receiver(pre_social_login)
 def handle_telegram_login_update(request, sociallogin, **kwargs):
     """

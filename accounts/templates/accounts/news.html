@@ -5,7 +5,7 @@
 
 {% block head_extra %}
   <link rel="stylesheet" href="{% static 'accounts/css/news.css' %}">
-  <!-- noUiSlider CSS -->
+  
   <link rel="stylesheet" href="{% static 'accounts/libs/nouislider/css/nouislider.min.css' %}">
 {% endblock %}
 
@@ -52,15 +52,15 @@
         </label>
       </div>
       
-      <!-- Rating Filter with noUiSlider -->
+      
       <div class="sidebar-block rating-filter">
         <div class="rating-header">
           <label class="sidebar-label">Рейтинг</label>
-          <span id="newsRatingValueDisplay" class="rating-value">0-3,2</span> <!-- Changed ID -->
+          <span id="newsRatingValueDisplay" class="rating-value">0-3,2</span> 
         </div>
-        <div id="newsRatingSlider"></div> <!-- Container for noUiSlider, Changed ID -->
-        <input type="hidden" name="min_rating" id="newsMinRatingInput" value="0"> <!-- Changed ID -->
-        <input type="hidden" name="max_rating" id="newsMaxRatingInput" value="3.2"> <!-- Changed ID -->
+        <div id="newsRatingSlider"></div> 
+        <input type="hidden" name="min_rating" id="newsMinRatingInput" value="0"> 
+        <input type="hidden" name="max_rating" id="newsMaxRatingInput" value="3.2"> 
         <span class="rating-range-label">Диапазон</span>
       </div>
 
@@ -70,7 +70,7 @@
     </aside>
 
     <div class="news-feed-column">
-      <!-- Search bar MOVED here -->
+      
       <div class="search-bar-container">
         <input type="text" placeholder="Поиск по каталогу" class="search-input">
         <button class="search-button">
@@ -78,7 +78,7 @@
         </button>
       </div>
 
-      <!-- Popup для создания новости -->
+      
       <div class="popup-overlay" id="newsPopup">
         <div class="popup">
           <button class="popup-close" onclick="closePopup()">×</button>
@@ -139,9 +139,9 @@
           {% comment %}This block will be rendered if there are no articles. We'll add static cards below anyway for layout purposes.{% endcomment %}
         {% endfor %}
 
-        <!-- Static example cards for layout (total 6 with the one from loop if it exists) -->
+        
         {% for i in "12345" %}
-        <div class="news-card {% if i == '4' %}news-card-ad{% endif %}"> <!-- Example: 4th static card is an ad -->
+        <div class="news-card {% if i == '4' %}news-card-ad{% endif %}"> 
             <a href="#" class="news-image-link">
                 <img src="{% static 'accounts/images/main_page/news_placeholder.webp' %}" alt="Новость {{ i }}" class="news-image">
                 {% if i == '4' %}
@@ -169,7 +169,7 @@
             </div>
         </div>
         {% endfor %}
-         <!-- One more static card to make it 6 if articles is empty -->
+         
         <div class="news-card">
             <a href="#" class="news-image-link">
                 <img src="{% static 'accounts/images/main_page/news_placeholder.webp' %}" alt="Новость 6" class="news-image">
@@ -193,7 +193,7 @@
             </div>
         </div>
 
-      </div> <!-- news-grid -->
+      </div> 
 
       <div class="pagination">
         <a href="#" class="page-item current">1</a>
@@ -207,11 +207,11 @@
          <button class="show-more-btn">Показать еще</button>
        </div>
 
-    </div> <!-- news-feed-column -->
-  </div> <!-- main-content-area -->
-</div> <!-- news-page-container -->
+    </div> 
+  </div> 
+</div> 
 
-<!-- noUiSlider JS and wNumb (for formatting) -->
+
 <script src="{% static 'accounts/libs/nouislider/js/nouislider.min.js' %}"></script>
 <script src="{% static 'accounts/libs/wnumb/js/wNumb.min.js' %}"></script>
 <script>

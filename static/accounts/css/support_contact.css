@@ -1,4 +1,4 @@
-/* static/accounts/css/support_contact.css */
+
 
 body {
   font-family: Unbounded, sans-serif;
@@ -25,37 +25,37 @@ body {
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 100vw; /* Фон на всю ширину окна */
-  background-color: #fff; /* Белый фон */
+  width: 100vw; 
+  background-color: #fff; 
   z-index: -1;
 }
 
 .support-contact-container {
   width: 100%;
-  max-width: 1303px; /* (1445px - 71px - 71px) Ширина основного блока из макета */
-  padding: 20px; /* Отступы для всего контейнера */
+  max-width: 1303px; 
+  padding: 20px; 
   display: flex;
   flex-direction: column;
-  gap: 20px; /* Отступ между ссылкой "Назад" и основным контентом */
+  gap: 20px; 
   position: relative;
   z-index: 1;
   box-sizing: border-box;
 }
 
-/* Ссылка "Назад" */
+
 .back-link-container {
   display: flex;
   justify-content: flex-start;
   width: 100%;
-  padding-left: 12px; /* Из макета (padding-left: 12px у родителя) */
-  padding-top: 20px; /* из макета отступ был у header */
+  padding-left: 12px; 
+  padding-top: 20px; 
 }
 
 .back-link {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  color: #000; /* Черный цвет для белого фона */
+  color: #000; 
   font-size: 12px;
   font-family: Unbounded, sans-serif;
   font-weight: 300;
@@ -70,20 +70,20 @@ body {
 .back-link-icon {
   width: 16px;
   height: 16px;
-  filter: brightness(0); /* Черная иконка */
+  filter: brightness(0); 
 }
 
-/* Основной контент: форма слева, инфо-блок справа */
+
 .support-contact-main-content {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start; /* Выравнивание по верху */
-  gap: 71px; /* (1445px - 640px - 574px)/2 примерно, но макет показывает space-between */
+  align-items: flex-start; 
+  gap: 71px; 
   width: 100%;
-  padding-top: 40px; /* Отступ сверху для основного блока (60px - 20px от .support-contact-container) */
+  padding-top: 40px; 
 }
 
-/* Секция с формой */
+
 .form-section {
   width: 640px;
   background: #014184;
@@ -92,7 +92,7 @@ body {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  gap: 20px; /* Расстояние между группами полей */
+  gap: 20px; 
 }
 
 .form-section form {
@@ -128,27 +128,27 @@ body {
   font-family: Unbounded, sans-serif;
   font-weight: 300;
   line-height: 18px;
-  color: #1e1e1e; /* Для введенного текста */
+  color: #1e1e1e; 
   box-sizing: border-box;
 }
 
 .form-group input::placeholder,
 .form-group textarea::placeholder {
-  color: #cacaca; /* Цвет плейсхолдера */
+  color: #cacaca; 
 }
 
 .form-group textarea {
   height: 120px;
   resize: vertical;
-  padding-top: 17px; /* Из макета */
+  padding-top: 17px; 
 }
 
-/* Стилизация селекта */
+
 .select-wrapper {
   position: relative;
   display: flex;
   align-items: center;
-  padding-right: 12px; /* Место для стрелки */
+  padding-right: 12px; 
 }
 
 .select-wrapper select {
@@ -156,7 +156,7 @@ body {
   height: 100%;
   border: none;
   background: transparent;
-  appearance: none; /* Убираем стандартную стрелку */
+  appearance: none; 
   appearance: none;
   appearance: none;
   cursor: pointer;
@@ -165,7 +165,7 @@ body {
   font-family: Unbounded, sans-serif;
   font-weight: 300;
   line-height: 18px;
-  padding-right: 25px; /* Добавляем место для иконки-картинки */
+  padding-right: 25px; 
 }
 
 .select-wrapper select:focus {
@@ -175,40 +175,40 @@ body {
 .select-arrow-icon {
   pointer-events: none;
   position: absolute;
-  right: 16px; /* Положение иконки */
+  right: 16px; 
   top: 50%;
   transform: translateY(-50%);
-  width: 16px; /* Размер иконки из макета */
-  height: 16px; /* Размер иконки из макета */
+  width: 16px; 
+  height: 16px; 
 }
 
 .btn-submit-support {
   height: 40px;
   padding: 12px 35px;
-  background: #ffef2b !important; /* Желтый цвет кнопки */
+  background: #ffef2b !important; 
   box-shadow: 2px 2px 4px rgb(0 0 0 / 25%);
   border-radius: 10px;
   border: none;
-  color: black !important; /* Черный цвет текста */
+  color: black !important; 
   font-size: 16px;
   font-family: Unbounded, sans-serif;
   font-weight: 400;
   line-height: 16px;
   cursor: pointer;
-  align-self: flex-start; /* Чтобы кнопка не растягивалась */
-  margin-top: 10px; /* Небольшой отступ сверху от последнего поля */
+  align-self: flex-start; 
+  margin-top: 10px; 
 }
 
 .btn-submit-support:hover {
-  background: #f0e00a !important; /* Чуть темнее при наведении */
+  background: #f0e00a !important; 
 }
 
-/* Информационная секция справа */
+
 .info-section {
   width: 574px;
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* Выравнивание по левому краю */
+  align-items: flex-start; 
   gap: 34px;
 }
 
@@ -219,16 +219,16 @@ body {
   font-weight: 600;
   line-height: 35px;
   margin: 0;
-  align-self: stretch; /* Чтобы занимал всю ширину родителя .info-section */
+  align-self: stretch; 
 }
 
 .search-bar-support-contact {
   width: 100%;
-  height: 40px; /* Примерно (8px + 22px + 8px) */
+  height: 40px; 
   padding: 8px 30px;
   background: rgb(
     255 255 255 / 19%
-  ); /* Не видно на белом фоне, будет просто белый */
+  ); 
   border-radius: 10px;
   outline: 1px solid #004e9f;
   display: flex;
@@ -251,7 +251,7 @@ body {
   font-family: Unbounded, sans-serif;
   font-weight: 300;
   letter-spacing: 0.12px;
-  color: #1e1e1e; /* Для введенного текста */
+  color: #1e1e1e; 
 }
 
 .search-bar-support-contact input[type='text']::placeholder {
@@ -263,8 +263,8 @@ body {
 }
 
 .image-link {
-  display: block; /* Чтобы ссылка занимала всю область изображения */
-  line-height: 0; /* Убрать лишнее пространство под изображением */
+  display: block; 
+  line-height: 0; 
 }
 
 .info-image-large {
@@ -278,10 +278,10 @@ body {
 .info-image-support-center {
   width: 574px;
 
-  /* height: auto; Высота будет определяться содержимым, но можно задать если надо */
+  
   border-radius: 10px;
   outline: 1px solid #004e9f;
-  display: block; /* Изображения по умолчанию inline */
+  display: block; 
   box-sizing: border-box;
 }
 
@@ -289,36 +289,36 @@ body {
   width: 222px;
   height: 159px;
   object-fit: cover;
-  display: block; /* Чтобы не было лишних отступов */
+  display: block; 
 }
 
-/* Адаптивность */
+
 @media (width <= 1200px) {
-  /* Когда элементы начнут слишком сжиматься */
+  
   .support-contact-main-content {
     flex-direction: column;
-    align-items: center; /* Центрируем блоки, когда они в колонке */
+    align-items: center; 
     gap: 40px;
   }
 
   .form-section,
   .info-section {
     width: 100%;
-    max-width: 640px; /* Ограничиваем максимальную ширину */
+    max-width: 640px; 
   }
 
   .info-section {
-    align-items: center; /* Центрируем контент в info-section */
+    align-items: center; 
   }
 
   .info-image-large,
   .info-image-support-center {
     width: 100%;
-    height: auto; /* Для сохранения пропорций */
+    height: auto; 
   }
 
   .info-image-small {
-    align-self: flex-start; /* Если нужно чтобы остался слева */
+    align-self: flex-start; 
   }
 }
 

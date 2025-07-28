@@ -16,7 +16,7 @@
     <form method="post" enctype="multipart/form-data" id="startupForm" novalidate>
         {% csrf_token %}
 
-        <!-- Верхний блок: Планета, Логотип и основные поля -->
+        
         <div class="form-section-top">
             <div class="form-top-grid">
                 <div class="form-top-left">
@@ -110,10 +110,10 @@
             </div>
         </div>
 
-        <!-- Новый общий контейнер для основного контента формы -->
+        
         <div class="form-main-content-wrapper">
 
-            <!-- Секция Вводная и Описание -->
+            
             <div class="form-content-section">
                 <div class="form-group full-width">
                     <label for="{{ form.short_description.id_for_label }}">*{{ form.short_description.label }}</label>
@@ -129,10 +129,10 @@
                 </div>
             </div>
 
-            <!-- Секция Изображения, Видео, Презентация, Оценка, Собранная сумма -->
+            
              <div class="form-content-section">
                 <div class="upload-section-grid media-and-finance-grid">
-                    <!-- Блок Изображения -->
+                    
                     <div class="form-group upload-box" id="creativesDropArea">
                         <label for="id_creatives_input">*Изображения</label>
                         {{ form.creatives|attr:"style:display:none"|attr:"multiple:true"|attr:"id:id_creatives_input" }}
@@ -141,7 +141,7 @@
                         <div id="creativesPreview" class="file-preview-area"></div>
                         {% if form.creatives.errors %}<span class="error-message">{{ form.creatives.errors|first }}</span>{% endif %}
                     </div>
-                    <!-- Блок Видео -->
+                    
                     <div class="form-group upload-box" id="videoDropArea">
                         <label for="id_video_input">*Видео</label>
                         {{ form.video|attr:"style:display:none"|attr:"id:id_video_input" }}
@@ -150,7 +150,7 @@
                         <div id="videoPreview" class="file-preview-area"></div>
                         {% if form.video.errors %}<span class="error-message">{{ form.video.errors|first }}</span>{% endif %}
                     </div>
-                    <!-- Блок Презентация, Оценка, Собранная сумма -->
+                    
                     <div class="presentation-finance-group">
                         <div class="form-group">
                             <label for="{{ form.pitch_deck_url.id_for_label }}">{{ form.pitch_deck_url.label }}</label>
@@ -181,7 +181,7 @@
                 </div>
             </div>
 
-            <!-- Секция Условия -->
+            
              <div class="form-content-section">
                 <div class="form-group full-width">
                     <label for="{{ form.terms.id_for_label }}">*{{ form.terms.label }}</label>
@@ -191,7 +191,7 @@
                 </div>
             </div>
             
-            <!-- Блок таймлайна -->
+            
              <div class="form-content-section timeline-section-wrapper">
                  <h3 class="section-title">*Этапы</h3>
                 <div class="timeline" id="timeline">
@@ -228,7 +228,7 @@
                 <input type="hidden" name="step_number" id="step_number" value="1">
             </div>
 
-            <!-- Секция Документы (Пруфы) -->
+            
              <div class="form-content-section">
                 <div class="form-group upload-box full-width" id="proofsDropArea">
                     <label for="id_proofs_input">*Документы</label>
@@ -241,7 +241,7 @@
                 </div>
             </div>
 
-            <!-- Согласия -->
+            
              <div class="form-content-section agreement-section-outer-wrapper">
                 <div class="agreement-section">
                     <h3 class="section-title">Согласие</h3>
@@ -270,9 +270,9 @@
                 </div>
             </div>
 
-        </div> <!-- Конец form-main-content-wrapper -->
+        </div> 
 
-        <!-- Кнопка отправки -->
+        
         <div class="submit-button-container">
             <button type="submit" class="submit-button">Отправить на модерацию</button>
         </div>

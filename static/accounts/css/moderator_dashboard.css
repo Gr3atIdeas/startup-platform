@@ -1,62 +1,62 @@
-/* General body and container styles from mockup and base.html context */
+
 body.moderator-dashboard-body {
-  background-color: #0e163d; /* Assuming this is the dark blue background from the image */
+  background-color: #0e163d; 
   color: white;
-  font-family: Unbounded, sans-serif; /* Default font from mockup */
+  font-family: Unbounded, sans-serif; 
 }
 
 .moderator-page-container {
   width: 100%;
-  max-width: 1280px; /* Based on mockup */
+  max-width: 1280px; 
   margin: 0 auto;
-  padding: 40px 20px; /* Added some padding */
+  padding: 40px 20px; 
   display: flex;
   flex-direction: column;
-  gap: 30px; /* Adjusted main gap */
+  gap: 30px; 
 }
 
 .page-header {
-  /* width: 1280px; From mockup, but container handles width */
+  
   justify-content: flex-start;
   align-items: center;
 
-  /* gap: 677px; This gap seems too large and specific, adjust as needed or rely on flex behavior */
-  display: flex; /* For potential future elements next to title block */
-  margin-bottom: 30px; /* Added margin like in mockup */
+  
+  display: flex; 
+  margin-bottom: 30px; 
 }
 
 .header-title-block {
   flex-direction: column;
   justify-content: flex-start;
-  align-items: flex-start; /* Ensure left alignment */
-  gap: 5px; /* Adjusted gap for title based on visual feedback */
+  align-items: flex-start; 
+  gap: 5px; 
   display: inline-flex;
 }
 
-/* Ensuring title styles are very specific and match mockup */
+
 div.moderator-page-container
   > header.page-header
   > div.header-title-block
   > h1.header-title-main {
-  color: white !important; /* Force color */
-  font-family: 'Blippo Local', sans-serif !important; /* Force font */
-  font-size: 55px !important; /* Force font size */
-  font-weight: 400 !important; /* Force font weight */
-  line-height: 1.1 !important; /* Mockup 18px for 55px font is too small, using 1.1 for readability */
-  align-self: flex-start; /* Ensure it doesn't stretch if parent is wider */
-  margin: 0; /* Reset any default margins */
-  padding: 0; /* Reset any default padding */
+  color: white !important; 
+  font-family: 'Blippo Local', sans-serif !important; 
+  font-size: 55px !important; 
+  font-weight: 400 !important; 
+  line-height: 1.1 !important; 
+  align-self: flex-start; 
+  margin: 0; 
+  padding: 0; 
 }
 
 div.moderator-page-container
   > header.page-header
   > div.header-title-block
   > h2.header-title-highlight {
-  color: #ffef2b !important; /* Force color */
-  font-family: 'Blippo Local', sans-serif !important; /* Force font */
-  font-size: 55px !important; /* Force font size */
-  font-weight: 400 !important; /* Force font weight */
-  line-height: 1.1 !important; /* Similar to above */
+  color: #ffef2b !important; 
+  font-family: 'Blippo Local', sans-serif !important; 
+  font-size: 55px !important; 
+  font-weight: 400 !important; 
+  line-height: 1.1 !important; 
   align-self: flex-start;
   margin: 0;
   padding: 0;
@@ -76,12 +76,12 @@ div.moderator-page-container
   align-items: center;
   gap: 30px;
   display: inline-flex;
-  flex-wrap: wrap; /* Allow filters to wrap on smaller screens */
+  flex-wrap: wrap; 
 }
 
 .filter-search {
   width: 352px;
-  padding: 8px 15px; /* Adjusted padding */
+  padding: 8px 15px; 
   background: rgb(255 255 255 / 19%);
   border-radius: 10px;
   border: 1px solid #004e9f;
@@ -92,9 +92,9 @@ div.moderator-page-container
 }
 
 .filter-search img {
-  width: 18px; /* Adjusted size from mockup */
+  width: 18px; 
   height: 18px;
-  opacity: 0.6; /* As per mockup for the placeholder */
+  opacity: 0.6; 
 }
 
 .filter-search input::placeholder {
@@ -105,7 +105,7 @@ div.moderator-page-container
   background: transparent;
   border: none;
   outline: none;
-  color: #a1a0a0; /* Color for typed text, can be white for better contrast */
+  color: #a1a0a0; 
   font-size: 12px;
   font-family: Unbounded, sans-serif;
   font-weight: 300;
@@ -114,7 +114,7 @@ div.moderator-page-container
 }
 
 .filter-button {
-  padding: 8px 25px; /* Adjusted padding */
+  padding: 8px 25px; 
   border-radius: 10px;
   border: 1px solid #004e9f;
   justify-content: center;
@@ -127,8 +127,8 @@ div.moderator-page-container
   font-weight: 300;
   line-height: 18px;
   font-size: 14px;
-  height: 40px; /* Match search bar height */
-  box-sizing: border-box; /* Include padding and border in height */
+  height: 40px; 
+  box-sizing: border-box; 
 }
 
 .filter-button img.filter-icon {
@@ -142,7 +142,7 @@ div.moderator-page-container
 }
 
 .filter-button.active img.filter-icon {
-  filter: brightness(0) invert(1); /* Makes black SVG white */
+  filter: brightness(0) invert(1); 
 }
 
 .filter-button.inactive {
@@ -151,34 +151,34 @@ div.moderator-page-container
 }
 
 .filter-button.inactive img.filter-icon {
-  filter: none; /* Default for black SVG on white background */
+  filter: none; 
 }
 
-/* Startup cards grid */
+
 .startup-cards-grid {
   align-self: stretch;
-  width: 100%; /* Ensure it takes full width of its container */
-  justify-content: flex-start; /* Changed from center to align cards to the start */
-  align-items: stretch; /* Make cards same height in a row */
+  width: 100%; 
+  justify-content: flex-start; 
+  align-items: stretch; 
   gap: 20px;
-  display: flex; /* Changed from inline-flex */
+  display: flex; 
   flex-wrap: wrap;
 }
 
 .startup-card-item {
-  width: calc(50% - 10px); /* 50% ширины минус половина gap */
-  max-width: none; /* Убираем фиксированную максимальную ширину */
+  width: calc(50% - 10px); 
+  max-width: none; 
   padding: 20px;
   background: white;
   box-shadow: 2px 2px 4px rgb(0 0 0 / 25%);
   border-radius: 12px;
   border: 1px solid #c6bbfe;
   flex-direction: column;
-  justify-content: space-between; /* Ensures content pushes footer down */
-  gap: 15px; /* Adjusted gap inside card */
-  display: flex; /* Changed from inline-flex */
-  color: black; /* Default text color inside card */
-  box-sizing: border-box; /* Ensure padding and border are part of width calculation */
+  justify-content: space-between; 
+  gap: 15px; 
+  display: flex; 
+  color: black; 
+  box-sizing: border-box; 
 }
 
 .startup-card-item-content {
@@ -186,33 +186,33 @@ div.moderator-page-container
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  gap: 20px; /* Adjusted gap in content */
+  gap: 20px; 
   display: flex;
-  flex-grow: 1; /* Allows content to grow and push footer */
+  flex-grow: 1; 
 }
 
 .startup-card-main-info {
   align-self: stretch;
   justify-content: flex-start;
-  align-items: flex-start; /* Changed from center on smaller screens */
-  gap: 20px; /* Adjusted gap */
+  align-items: flex-start; 
+  gap: 20px; 
   display: flex;
-  flex-direction: row; /* Default to row */
+  flex-direction: row; 
 }
 
 .startup-card-image {
-  width: 250px; /* Reduced image width to help card fit */
-  height: 180px; /* Reduced image height proportionally */
+  width: 250px; 
+  height: 180px; 
   border-radius: 7px;
-  object-fit: cover; /* Ensure image covers the area */
-  flex-shrink: 0; /* Prevent image from shrinking */
+  object-fit: cover; 
+  flex-shrink: 0; 
 }
 
 .startup-card-image-placeholder {
   width: 250px;
   height: 180px;
   border-radius: 7px;
-  background-color: #e0e0e0; /* Placeholder background */
+  background-color: #e0e0e0; 
   display: flex;
   align-items: center;
   justify-content: center;
@@ -225,9 +225,9 @@ div.moderator-page-container
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  gap: 10px; /* Adjusted gap */
-  display: flex; /* Changed from inline-flex for better flex behavior */
-  min-width: 0; /* Allows text to wrap properly in flex item */
+  gap: 10px; 
+  display: flex; 
+  min-width: 0; 
 }
 
 .detail-group {
@@ -235,7 +235,7 @@ div.moderator-page-container
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  gap: 5px; /* Reduced gap */
+  gap: 5px; 
   display: flex;
 }
 
@@ -251,7 +251,7 @@ div.moderator-page-container
 
 .author-info {
   justify-content: flex-start;
-  align-items: center; /* Align items center */
+  align-items: center; 
   gap: 10px;
   display: inline-flex;
 }
@@ -274,24 +274,24 @@ div.moderator-page-container
 
 .author-text-details {
   flex-direction: column;
-  justify-content: center; /* Align text center vertically */
+  justify-content: center; 
   align-items: flex-start;
-  gap: 3px; /* Reduced gap */
+  gap: 3px; 
   display: inline-flex;
 }
 
 .author-name {
   color: black;
-  font-size: 18px; /* Slightly reduced from 20px */
+  font-size: 18px; 
   font-family: Unbounded, sans-serif;
-  font-weight: 500; /* Adjusted from 400 */
-  line-height: 1.2; /* Adjusted for 20px font */
+  font-weight: 500; 
+  line-height: 1.2; 
   word-wrap: break-word;
 }
 
 .author-rating {
   color: #a9a9a9;
-  font-size: 11px; /* Slightly reduced */
+  font-size: 11px; 
   font-family: Unbounded, sans-serif;
   font-weight: 300;
   letter-spacing: 0.12px;
@@ -300,44 +300,44 @@ div.moderator-page-container
 
 .author-reviews-link {
   color: #7b61ff;
-  font-size: 11px; /* Slightly reduced */
+  font-size: 11px; 
   font-family: Unbounded, sans-serif;
-  font-weight: 400; /* Adjusted */
+  font-weight: 400; 
   letter-spacing: 0.12px;
   word-wrap: break-word;
-  text-decoration: none; /* Optional */
+  text-decoration: none; 
 }
 
 .author-reviews-link:hover {
-  text-decoration: underline; /* Optional */
+  text-decoration: underline; 
 }
 
 .startup-name {
   align-self: stretch;
   color: black;
-  font-size: 18px; /* Slightly reduced */
+  font-size: 18px; 
   font-family: Unbounded, sans-serif;
-  font-weight: 500; /* Adjusted */
-  line-height: 1.2; /* Adjusted for 20px font */
+  font-weight: 500; 
+  line-height: 1.2; 
   word-wrap: break-word;
 }
 
 .category-tag,
 .type-tag {
-  padding: 6px 12px; /* Adjusted padding */
+  padding: 6px 12px; 
   background: #050505;
   border-radius: 5px;
   justify-content: center;
   align-items: center;
   gap: 8px;
-  display: inline-flex; /* So it only takes content width */
+  display: inline-flex; 
 }
 
 .category-tag-text,
 .type-tag-text {
   text-align: center;
   color: white;
-  font-size: 11px; /* Slightly reduced */
+  font-size: 11px; 
   font-family: Unbounded, sans-serif;
   font-weight: 300;
   letter-spacing: 0.12px;
@@ -354,7 +354,7 @@ div.moderator-page-container
 }
 
 .startup-description-text {
-  /* width: 591px; Making it responsive */
+  
   align-self: stretch;
   color: black;
   font-size: 12px;
@@ -362,52 +362,52 @@ div.moderator-page-container
   font-weight: 300;
   letter-spacing: 0.12px;
   word-wrap: break-word;
-  max-height: 3.6em; /* Approx 3 lines, adjust if needed (1.2em line-height * 3) */
+  max-height: 3.6em; 
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
-  line-height: 1.2em; /* Added for consistency with max-height calculation */
+  line-height: 1.2em; 
 }
 
 .funding-info-actions {
   align-self: stretch;
 
-  /* height: 121px; Height will be auto based on content + padding */
+  
   padding: 15px;
   background: #ebebeb;
   border-radius: 7px;
-  flex-direction: column; /* Stack funding goal and buttons */
+  flex-direction: column; 
   justify-content: center;
-  align-items: center; /* Center content within this box */
-  gap: 15px; /* Gap between funding text and button row */
+  align-items: center; 
+  gap: 15px; 
   display: flex;
-  margin-top: auto; /* Pushes this block to the bottom of the card */
+  margin-top: auto; 
 }
 
 .funding-details-row {
-  /* For horizontal layout of funding and buttons */
+  
   display: flex;
-  justify-content: space-between; /* Puts funding on left, buttons on right */
+  justify-content: space-between; 
   align-items: center;
-  gap: 15px; /* Adjusted gap */
+  gap: 15px; 
   width: 100%;
-  flex-wrap: wrap; /* Allow wrapping on smaller screens */
+  flex-wrap: wrap; 
 }
 
 .funding-goal-block {
   flex-direction: column;
-  justify-content: center; /* Center text */
+  justify-content: center; 
   align-items: flex-start;
-  gap: 5px; /* Reduced gap */
+  gap: 5px; 
   display: inline-flex;
-  text-align: left; /* Ensure text aligns left */
+  text-align: left; 
 }
 
 .funding-goal-label {
   color: black;
-  font-size: 13px; /* Reduced */
+  font-size: 13px; 
   font-family: Unbounded, sans-serif;
   font-weight: 300;
   line-height: 1.2;
@@ -417,23 +417,23 @@ div.moderator-page-container
 .funding-goal-amount {
   align-self: stretch;
   color: black;
-  font-size: 18px; /* Reduced */
+  font-size: 18px; 
   font-family: Unbounded, sans-serif;
-  font-weight: 500; /* Adjusted */
+  font-weight: 500; 
   line-height: 1.2;
   word-wrap: break-word;
 }
 
 .action-buttons-group {
-  justify-content: flex-end; /* Align buttons to the right */
+  justify-content: flex-end; 
   align-items: center;
   gap: 10px;
   display: flex;
   flex-wrap: wrap;
-  flex-grow: 1; /* Allow group to take space */
+  flex-grow: 1; 
 }
 
-/* Specificity for action buttons */
+
 div.startup-card-item
   div.funding-info-actions
   div.action-buttons-group
@@ -442,10 +442,10 @@ div.startup-card-item
   div.funding-info-actions
   div.action-buttons-group
   a.action-button {
-  min-width: auto; /* Allow buttons to size based on content + padding */
-  flex: 1 1 0; /* Allow buttons to grow and shrink, basis 0 */
-  max-width: 150px; /* Prevent buttons from becoming too wide */
-  height: 38px; /* Adjusted height */
+  min-width: auto; 
+  flex: 1 1 0; 
+  max-width: 150px; 
+  height: 38px; 
   padding: 0 12px;
   box-shadow: 2px 2px 4px rgb(0 0 0 / 25%);
   border-radius: 10px;
@@ -453,16 +453,16 @@ div.startup-card-item
   align-items: center;
   gap: 8px;
   display: inline-flex;
-  font-size: 14px; /* Reduced font size */
+  font-size: 14px; 
   font-family: Unbounded, sans-serif;
-  font-weight: 500; /* Adjusted */
-  line-height: 1; /* Adjusted line height for button text */
+  font-weight: 500; 
+  line-height: 1; 
   word-wrap: break-word;
   text-decoration: none;
   border: none;
   cursor: pointer;
   text-align: center;
-  flex-shrink: 0; /* Prevent buttons from shrinking too much */
+  flex-shrink: 0; 
 }
 
 div.startup-card-item
@@ -502,7 +502,7 @@ div.startup-card-item
   background: white !important;
   color: black !important;
   border: 1px black solid !important;
-  padding: 0 11px; /* Adjust padding for border */
+  padding: 0 11px; 
 }
 
 div.startup-card-item
@@ -513,10 +513,10 @@ div.startup-card-item
 }
 
 .show-more-bar {
-  justify-content: center; /* Center the button */
+  justify-content: center; 
   align-items: center;
-  display: flex; /* Use flex to center */
-  margin-top: 30px; /* Increased margin */
+  display: flex; 
+  margin-top: 30px; 
   width: 100%;
 }
 
@@ -526,7 +526,7 @@ div.startup-card-item
   box-shadow: 2px 2px 4px rgb(0 0 0 / 25%);
   border-radius: 10px;
   border: 1px white solid;
-  justify-content: center; /* Center content in button */
+  justify-content: center; 
   align-items: center;
   gap: 9px;
   display: inline-flex;
@@ -550,7 +550,7 @@ div.startup-card-item
   fill: white;
 }
 
-/* Fallback for the icon div from mockup if not using img/SVG */
+
 .show-more-icon-placeholder {
   width: 16px;
   height: 16px;
@@ -569,13 +569,13 @@ div.startup-card-item
 
 .no-applications {
   text-align: center;
-  font-size: 1.25rem; /* text-lg */
-  color: #a1a0a0; /* A grey color, adjust as needed */
+  font-size: 1.25rem; 
+  color: #a1a0a0; 
   padding: 40px;
-  width: 100%; /* Ensure it takes full width to center text if grid is empty */
+  width: 100%; 
 }
 
-/* Responsive adjustments */
+
 @media (width <= 1200px) {
   .startup-card-main-info {
     flex-direction: column;
@@ -585,7 +585,7 @@ div.startup-card-item
   .startup-card-image,
   .startup-card-image-placeholder {
     width: 100%;
-    max-width: 250px; /* Match reduced image width */
+    max-width: 250px; 
   }
 
   .startup-card-details {
@@ -595,16 +595,16 @@ div.startup-card-item
 }
 
 @media (width <= 860px) {
-  /* Breakpoint for single column cards */
+  
   .startup-card-item {
     width: 100%;
-    max-width: 630px; /* Adjusted max-width for consistency */
-    margin-left: auto; /* Center single column */
-    margin-right: auto; /* Center single column */
+    max-width: 630px; 
+    margin-left: auto; 
+    margin-right: auto; 
   }
 
   .startup-card-main-info {
-    flex-direction: row; /* Revert to row if space for single card */
+    flex-direction: row; 
   }
 }
 
@@ -622,9 +622,9 @@ div.startup-card-item
     width: 100%;
   }
 
-  /* .startup-card-item is already 100% width below 860px */
+  
   .startup-card-main-info {
-    flex-direction: column; /* Stack again on very small screens */
+    flex-direction: column; 
     align-items: center;
   }
 
@@ -649,7 +649,7 @@ div.startup-card-item
     a.action-button {
     min-width: 90px;
     flex-grow: 1;
-    font-size: 13px; /* Further reduce for small screens */
+    font-size: 13px; 
     padding: 0 10px;
     height: 36px;
   }
@@ -675,7 +675,7 @@ div.startup-card-item
   }
 
   .startup-card-details {
-    min-width: 0; /* Ensure it can shrink */
+    min-width: 0; 
   }
 
   div.startup-card-item
@@ -691,32 +691,32 @@ div.startup-card-item
   }
 }
 
-/* Styles for form display (to make forms inline for buttons) */
+
 .inline-form {
-  display: inline-block; /* Changed to inline-block to allow gap/margin on form itself */
+  display: inline-block; 
 }
 
-/* Original status styles - might not be used directly in the new design, but keeping for reference or potential reuse */
+
 .status {
   padding: 5px 10px;
   border-radius: 5px;
   font-weight: bold;
   font-size: 0.9em;
-  display: inline-block; /* To allow padding and be on its own line if needed */
-  margin-bottom: 10px; /* Example spacing */
+  display: inline-block; 
+  margin-bottom: 10px; 
 }
 
 .status-approved {
-  background-color: #16a34a; /* bg-green-600 */
+  background-color: #16a34a; 
   color: white;
 }
 
 .status-rejected {
-  background-color: #dc2626; /* bg-red-600 */
+  background-color: #dc2626; 
   color: white;
 }
 
 .status-pending {
-  background-color: #f59e0b; /* amber-500, mockup has no pending status directly on card display */
+  background-color: #f59e0b; 
   color: white;
 }

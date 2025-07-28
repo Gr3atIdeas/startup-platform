@@ -5,7 +5,7 @@
 
 {% for startup in page_obj %}
   <div class="startup-card" data-startup-id="{{ startup.startup_id }}">
-    <!-- Надпись "Франшиза" заменена на "Стартап" -->
+    
     <span class="startup-franchise-tag">Стартап</span>
     <div class="startup-image">
       {% if startup.planet_image %}
@@ -18,7 +18,7 @@
     </div>
 
     <div class="startup-card-inner">
-      <!-- Добавляем контейнер для названия и логотипа -->
+      
       <div class="startup-title-container">
         {% if startup.logo_urls %}
           <div class="startup-logo">
@@ -45,7 +45,7 @@
         {% endif %}
       </div>
 
-      <!-- Прогресс-бар ТОЧНО как на startup_detail.html -->
+      
       {% with progress=startup.get_progress_percentage|default:0 %}
       <div class="progress-container">
         <div class="progress-bar-visual">

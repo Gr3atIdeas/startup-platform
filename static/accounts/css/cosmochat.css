@@ -1,9 +1,9 @@
-/* Убираем старые стили, если они были прямо здесь, или оставляем, если это основной файл стилей */
 
-/* Стили, перенесенные из <style> тега cosmochat.html, будут ниже, если они еще актуальны */
+
+
 
 body.cosmochat-body {
-  /* Применяем фон ко всему body, если это возможно через класс в base.html или напрямую */
+  
   background: linear-gradient(
     153deg,
     black 0%,
@@ -28,16 +28,16 @@ body.cosmochat-body {
   align-items: center;
   gap: 40px;
   box-sizing: border-box;
-  color: white; /* Устанавливаем основной цвет текста для страницы */
+  color: white; 
 }
 
-/* Общие стили */
+
 .search-input-wrapper-new {
   display: flex;
   align-items: center;
   background: rgb(255 255 255 / 19%);
   border-radius: 99px;
-  border: 1px solid #004e9f; /* Был outline, сделал border для единообразия */
+  border: 1px solid #004e9f; 
   padding: 8px 15px;
   gap: 8px;
 }
@@ -86,7 +86,7 @@ body.cosmochat-body {
   color: #f5f5f5;
 }
 
-/* --- Верхний блок: Пользователи и Статьи/Новости --- */
+
 .top-section-new {
   width: 1303px;
   max-width: 95%;
@@ -111,7 +111,7 @@ body.cosmochat-body {
 }
 
 .user-search-filters-new .search-form-cosmo {
-  /* Класс для формы поиска пользователей */
+  
   width: 374px;
   position: relative;
 }
@@ -121,7 +121,7 @@ body.cosmochat-body {
   gap: 10px;
 }
 
-/* Стилизация для Django CheckboxSelectMultiple под кнопки */
+
 .django-roles-filter {
   display: flex;
   gap: 10px;
@@ -141,11 +141,11 @@ body.cosmochat-body {
   transition:
     background-color 0.3s,
     color 0.3s;
-  display: inline-block; /* Для правильного отображения */
+  display: inline-block; 
 }
 
 .django-roles-filter input[type='checkbox'] {
-  display: none; /* Скрываем оригинальные чекбоксы */
+  display: none; 
 }
 
 .django-roles-filter input[type='checkbox']:checked + label {
@@ -154,7 +154,7 @@ body.cosmochat-body {
 }
 
 .django-roles-filter label:hover {
-  background: #005aa3; /* Легкий ховер */
+  background: #005aa3; 
 }
 
 .users-list-new {
@@ -201,7 +201,7 @@ body.cosmochat-body {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 120px; /* Ширина блока user-info-new */
+  max-width: 120px; 
 }
 
 .user-role-rating-new {
@@ -213,19 +213,19 @@ body.cosmochat-body {
 
 .rating-stars-new {
   display: flex;
-  gap: 3px; /* Немного увеличил расстояние между планетами */
+  gap: 3px; 
 }
 
-/* Убираем старые стили для img напрямую внутри .rating-stars-new, если они были */
 
-/* .rating-stars-new img { ... } */
+
+
 
 .rating-icon-planet-container {
   display: inline-block;
-  width: 22px; /* Размер планеты */
-  height: 22px; /* Размер планеты */
-  line-height: 22px; /* Для вертикального выравнивания, если вдруг внутри текст */
-  position: relative; /* Для позиционирования вложенных иконок */
+  width: 22px; 
+  height: 22px; 
+  line-height: 22px; 
+  position: relative; 
 }
 
 .rating-icon-planet-container .icon-empty,
@@ -241,24 +241,21 @@ body.cosmochat-body {
 .rating-icon-planet-container .icon-empty {
   z-index: 1;
 
-  /* Можно добавить opacity, если empty_planet.svg это просто серая версия full_filled_planet.svg
-    opacity: 0.3; */
-  opacity: 0.3; /* Делаем "пустую" иконку (которая на самом деле partial_filled_planet) полупрозрачной */
+  
+  opacity: 0.3; 
 }
 
 .rating-icon-planet-container .icon-filled {
   z-index: 2;
 
-  /* Ширина будет управляться JS, но на всякий случай можно поставить overflow: hidden,
-       хотя для SVG это обычно не нужно, если viewBox корректный */
-  overflow: hidden; /* Гарантирует, что часть SVG будет скрыта, если ширина меньше 100% */
+  
+  overflow: hidden; 
 }
 
 .icon-planet-empty {
-  opacity: 0.5; /* Пример: делаем пустые планеты полупрозрачными, если используется одна и та же SVG */
+  opacity: 0.5; 
 
-  /* Если у вас есть отдельный SVG для пустой планеты (например, только контур),
-       то этот стиль opacity может не понадобиться или его можно заменить на fill: none; stroke: white; и т.д. внутри SVG */
+  
 }
 
 .user-role-rating-new .role-text {
@@ -321,7 +318,7 @@ body.cosmochat-body {
 .page-numbers-new {
   display: flex;
   align-items: center;
-  gap: 31px; /* Увеличенный отступ между цифрами */
+  gap: 31px; 
   font-size: 14px;
   font-family: Unbounded, sans-serif;
   font-weight: 300;
@@ -368,7 +365,7 @@ body.cosmochat-body {
   align-items: center;
   gap: 9px;
   cursor: pointer;
-  box-shadow: none; /* Убираем тень */
+  box-shadow: none; 
 }
 
 .show-more-btn-new i {
@@ -389,7 +386,7 @@ body.cosmochat-body {
   align-items: center;
   gap: 9px;
   cursor: pointer;
-  box-shadow: none; /* Убираем тень */
+  box-shadow: none; 
   margin-left: 10px;
 }
 
@@ -452,7 +449,7 @@ body.cosmochat-body {
 
 .article-card-item .ad-badge-new {
   position: absolute;
-  top: 10px; /* Сделал ближе к верху */
+  top: 10px; 
   right: 10px;
   background: rgb(217 217 217 / 58%);
   border-radius: 10px;
@@ -467,7 +464,7 @@ body.cosmochat-body {
 }
 
 .article-card-item .ad-badge-new img {
-  width: 16px; /* Уменьшил иконку */
+  width: 16px; 
   height: 16px;
 }
 
@@ -490,7 +487,7 @@ body.cosmochat-body {
   font-size: 12px;
 }
 
-/* --- Нижний блок: Чаты --- */
+
 .main-chat-area-new {
   width: 1303px;
   max-width: 95%;
@@ -501,7 +498,7 @@ body.cosmochat-body {
   padding: 36px 38px;
   display: flex;
   gap: 61px;
-  color: black; /* Текст внутри этого блока по умолчанию черный */
+  color: black; 
   box-sizing: border-box;
 }
 
@@ -520,14 +517,14 @@ body.cosmochat-body {
 }
 
 .chat-list-header-new .chat-search-input-wrapper {
-  /* Используем общий .search-input-wrapper-new */
+  
   flex-grow: 1;
-  border-color: #004e9f; /* Рамка как в макете */
-  background: #f0f0f0; /* Фон для поля поиска в чатах */
+  border-color: #004e9f; 
+  background: #f0f0f0; 
 }
 
 .chat-list-header-new .chat-search-input-wrapper input {
-  color: #333; /* Темный текст в поле поиска */
+  color: #333; 
 }
 
 .chat-list-header-new .chat-search-input-wrapper input::placeholder {
@@ -539,7 +536,7 @@ body.cosmochat-body {
   height: 24px;
   cursor: pointer;
 
-  /* Ожидается SVG или img тег в HTML */
+  
 }
 
 .chat-filters-new {
@@ -551,7 +548,7 @@ body.cosmochat-body {
   padding: 11px 25px;
   border-radius: 99px;
   font-size: 12px;
-  color: black; /* Текст по умолчанию черный */
+  color: black; 
 }
 
 .chat-filters-new .filter-btn-new.active,
@@ -566,7 +563,7 @@ body.cosmochat-body {
   gap: 14px;
   max-height: 500px;
   overflow-y: auto;
-  padding-right: 5px; /* Небольшой отступ для скроллбара */
+  padding-right: 5px; 
 }
 
 .chat-item-new {
@@ -577,15 +574,15 @@ body.cosmochat-body {
   border-radius: 10px;
   cursor: pointer;
   transition: background-color 0.2s;
-  border: 1px solid transparent; /* Для активного состояния */
+  border: 1px solid transparent; 
 }
 
 .chat-item-new:hover {
-  background-color: #f2f4ff; /* Легкий фон при наведении */
+  background-color: #f2f4ff; 
 }
 
 .chat-item-new.active {
-  background-color: #e6efff; /* Более заметный фон для активного чата */
+  background-color: #e6efff; 
   border-color: #004e9f;
 }
 
@@ -647,7 +644,7 @@ body.cosmochat-body {
   color: white;
   font-size: 12px;
   padding: 3px 7px;
-  border-radius: 12px; /* Сделал более овальным */
+  border-radius: 12px; 
   min-width: 18px;
   text-align: center;
   line-height: 1;
@@ -664,9 +661,9 @@ body.cosmochat-body {
   flex-direction: column;
   border-radius: 15px;
   border: 1px solid #004e9f;
-  min-height: 650px; /* Примерно 725 (общая) - 2*36 (паддинги) - заголовок/ввод */
-  max-height: 650px; /* Добавляем максимальную высоту, чтобы блок не расширялся */
-  overflow: hidden; /* Скрываем переполнение */
+  min-height: 650px; 
+  max-height: 650px; 
+  overflow: hidden; 
 }
 
 .no-chat-selected-placeholder {
@@ -696,7 +693,7 @@ body.cosmochat-body {
 .chat-active-header {
   padding: 15px 25px;
   border-bottom: 1px solid #e0e0e0;
-  display: flex; /* По умолчанию flex, JS будет управлять видимостью всего блока .chat-window-column-new */
+  display: flex; 
   align-items: center;
   justify-content: space-between;
 }
@@ -729,20 +726,20 @@ body.cosmochat-body {
 .chat-messages-area {
   flex-grow: 1;
   padding: 20px;
-  overflow-y: auto; /* Добавляем вертикальный скроллбар */
+  overflow-y: auto; 
   background: #f9f9f9;
   display: flex;
   flex-direction: column;
   gap: 15px;
   max-height: calc(
     650px - 60px - 60px
-  ); /* Максимальная высота за вычетом высоты header и input area */
+  ); 
 }
 
 .message-bubble-new {
   max-width: 70%;
   padding: 10px 15px;
-  border-radius: 18px; /* Закругленные углы */
+  border-radius: 18px; 
   font-size: 14px;
   font-family: Unbounded, sans-serif;
   line-height: 1.4;
@@ -752,7 +749,7 @@ body.cosmochat-body {
   font-weight: 600;
   font-size: 13px;
   margin-bottom: 4px;
-  color: #333; /* Цвет имени отправителя */
+  color: #333; 
 }
 
 .message-bubble-new .message-text-content {
@@ -772,24 +769,24 @@ body.cosmochat-body {
 }
 
 .other-user-message {
-  background-color: #e9e9eb; /* Светло-серый для чужих */
+  background-color: #e9e9eb; 
   color: black;
   align-self: flex-start;
-  border-bottom-left-radius: 4px; /* Один угол острый */
+  border-bottom-left-radius: 4px; 
 }
 
 .current-user-message {
-  background-color: #004e9f; /* Синий для своих */
+  background-color: #004e9f; 
   color: white;
   align-self: flex-end;
-  border-bottom-right-radius: 4px; /* Один угол острый */
+  border-bottom-right-radius: 4px; 
 }
 .current-user-message .message-sender-name {
   color: #e0e0e0;
-} /* Светлое имя для своих сообщений */
+} 
 .current-user-message .message-meta-info {
   color: #c0c0c0;
-} /* Светлые метаданные */
+} 
 
 .system-notification-message .message-text-content {
   background-color: #f0f0f0;
@@ -799,7 +796,7 @@ body.cosmochat-body {
   padding: 8px;
   border-radius: 8px;
   align-self: center;
-  width: 100%; /* Системное сообщение на всю ширину */
+  width: 100%; 
   max-width: 100%;
   box-sizing: border-box;
 }
@@ -817,11 +814,11 @@ body.cosmochat-body {
   height: 24px;
   cursor: pointer;
 
-  /* Ожидается SVG/img */
+  
 }
 
 .chat-input-field-area #messageFormNew {
-  /* ID формы */
+  
   flex-grow: 1;
   display: flex;
   align-items: center;
@@ -830,7 +827,7 @@ body.cosmochat-body {
 }
 
 .chat-input-field-area #messageFormNew textarea {
-  /* Textarea из Django формы */
+  
   flex-grow: 1;
   border: none;
   outline: none;
@@ -840,7 +837,7 @@ body.cosmochat-body {
   font-size: 14px;
   font-family: Unbounded, sans-serif;
   resize: none;
-  min-height: 24px; /* (45px общая высота - 2* ~10px паддинги) */
+  min-height: 24px; 
   line-height: 1.4;
 }
 
@@ -860,10 +857,10 @@ body.cosmochat-body {
   width: 24px;
   height: 24px;
 
-  /* Ожидается SVG/img */
+  
 }
 
-/* Стили для модальных окон - из старого css, адаптированы */
+
 .modal-overlay {
   display: none;
   position: fixed;
@@ -914,7 +911,7 @@ body.cosmochat-body {
 
 .modal h3#profileName,
 .modal h3 {
-  /* Общий для заголовков модалок */
+  
   font-size: 22px;
   font-weight: 500;
   margin: 0 0 15px;
@@ -939,7 +936,7 @@ body.cosmochat-body {
 
 .modal button.action-btn,
 .modal a button.action-btn {
-  /* Общий класс для кнопок */
+  
   padding: 10px 20px;
   background: #004e9f;
   color: #fff;
@@ -953,7 +950,7 @@ body.cosmochat-body {
   width: 100%;
   text-align: center;
   transition: background-color 0.2s;
-  box-sizing: border-box; /* Для корректной ширины с padding */
+  box-sizing: border-box; 
 }
 
 .modal button.action-btn:hover,
@@ -962,7 +959,7 @@ body.cosmochat-body {
 }
 
 .modal a#profileLink button.action-btn {
-  /* Кнопка "К профилю" */
+  
   background: #6c757d;
 }
 
@@ -999,7 +996,7 @@ body.cosmochat-body {
   color: #a9a9a9;
 }
 
-/* Стили для выпадающего окна поиска */
+
 .search-dropdown {
   position: absolute;
   top: 100%;
@@ -1052,16 +1049,16 @@ body.cosmochat-body {
   gap: 17px;
   overflow-x: auto;
   padding-bottom: 10px;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE и Edge */
-  user-select: none; /* Предотвращение выделения текста */
+  scrollbar-width: none; 
+  -ms-overflow-style: none; 
+  user-select: none; 
   user-select: none;
   user-select: none;
   user-select: none;
 }
 
 .search-dropdown-users::-webkit-scrollbar {
-  display: none; /* Chrome, Safari и Opera */
+  display: none; 
 }
 
 .search-dropdown-user {
@@ -1071,7 +1068,7 @@ body.cosmochat-body {
   gap: 7px;
   min-width: 58px;
   cursor: pointer;
-  user-select: none; /* Предотвращение выделения текста */
+  user-select: none; 
   user-select: none;
   user-select: none;
   user-select: none;
@@ -1082,9 +1079,9 @@ body.cosmochat-body {
   height: 58px;
   border-radius: 29px;
   object-fit: cover;
-  user-drag: none; /* Предотвращение перетаскивания изображений */
+  user-drag: none; 
   -webkit-user-drag: none;
-  pointer-events: none; /* Предотвращение взаимодействия с изображением */
+  pointer-events: none; 
 }
 
 .search-dropdown-user-name {
@@ -1098,24 +1095,24 @@ body.cosmochat-body {
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 58px;
-  user-select: none; /* Предотвращение выделения текста */
+  user-select: none; 
   user-select: none;
   user-select: none;
   user-select: none;
 }
 
-/* Стили для модального окна создания группового чата */
+
 .group-chat-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgb(0 0 0 / 55%); /* Уменьшена непрозрачность фона */
+  background-color: rgb(0 0 0 / 55%); 
   display: none;
   justify-content: center;
   align-items: center;
-  z-index: 2000; /* Как было в cosmochat */
+  z-index: 2000; 
   font-family: Unbounded, sans-serif;
   padding: 20px;
   box-sizing: border-box;
@@ -1127,25 +1124,25 @@ body.cosmochat-body {
 
 .group-chat-modal-overlay.active {
   opacity: 1;
-  display: flex; /* Добавлено для корректного появления */
+  display: flex; 
 }
 
 .group-chat-modal {
-  /* Ранее .modal-popup */
-  color: black; /* Текст внутри модального окна по умолчанию черный */
+  
+  color: black; 
   border-radius: 20px;
   box-shadow: 0 15px 40px rgb(0 0 0 / 50%);
-  width: 1074px; /* Новая ширина: 474px (контент) + 300px (отступ слева) + 300px (отступ справа) */
-  max-width: 95vw; /* Ограничение по ширине окна браузера */
+  width: 1074px; 
+  max-width: 95vw; 
   position: relative;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   background: white;
 
-  /* max-height: 85vh; Управляется высотой контента и паддингами */
-  padding: 30px 300px; /* Уменьшено с 45px */ /* Уменьшено с 45px */
-  box-sizing: border-box; /* Чтобы паддинги учитывались в общей ширине/высоте */
+  
+  padding: 30px 300px;  
+  box-sizing: border-box; 
   transform: scale(0.95);
   opacity: 0;
   transition:
@@ -1159,16 +1156,16 @@ body.cosmochat-body {
 }
 
 .group-chat-modal-close {
-  /* Ранее .modal-close-button */
-  position: absolute !important; /* Оставляем !important на всякий случай, если есть конфликты */
+  
+  position: absolute !important; 
 
-  /* Новые координаты: позиционируем относительно верхнего правого угла .group-chat-modal */
-  top: 15px; /* Отступ сверху от края .group-chat-modal */
-  right: 15px; /* Отступ справа от края .group-chat-modal */
+  
+  top: 15px; 
+  right: 15px; 
   background: #ffef2b;
   border: none;
   cursor: pointer;
-  z-index: 2100; /* Выше чем z-index оверлея */
+  z-index: 2100; 
   border-radius: 50%;
   width: 36px;
   height: 36px;
@@ -1178,7 +1175,7 @@ body.cosmochat-body {
   transition:
     background-color 0.2s ease,
     transform 0.2s ease;
-  box-shadow: 0 2px 5px rgb(0 0 0 / 20%); /* Небольшая тень */
+  box-shadow: 0 2px 5px rgb(0 0 0 / 20%); 
 }
 
 .group-chat-modal-close:hover {
@@ -1187,34 +1184,34 @@ body.cosmochat-body {
 }
 
 .group-chat-modal-close img {
-  width: 14px; /* Размер крестика */
+  width: 14px; 
   height: 14px;
   display: block;
 }
 
 .group-chat-modal-content-wrapper {
-  width: 474px; /* Расширена на ~15% (было 412px) */
-  max-height: 580px; /* Уменьшено с 680px, чтобы уменьшить общую высоту */
+  width: 474px; 
+  max-height: 580px; 
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 15px; /* Уменьшен gap между основными блоками, было 20px */
-  padding: 20px; /* Уменьшены внутренние отступы, было 30px */
+  gap: 15px; 
+  padding: 20px; 
   box-sizing: border-box;
 }
 
-/* --- Существующие стили для group-chat-modal (некоторые могут быть изменены или удалены ниже) --- */
 
-/* Старые стили для .group-chat-modal-overlay и .group-chat-modal будут заменены выше */
 
-/* Оставляем и адаптируем остальные стили для контента модального окна */
+
+
+
 
 .group-chat-modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
 
-  /* margin-bottom: 0; gap теперь у wrapper */
+  
 }
 
 .group-chat-modal-title {
@@ -1247,7 +1244,7 @@ body.cosmochat-body {
 
 .group-chat-modal-search {
   width: 100%;
-  padding: 8px 15px; /* Уменьшены боковые паддинги */
+  padding: 8px 15px; 
   background: rgb(255 255 255 / 19%);
   border-radius: 99px;
   border: 1px solid #004e9f;
@@ -1255,9 +1252,9 @@ body.cosmochat-body {
   align-items: center;
   gap: 8px;
 
-  /* margin-bottom: 48px; Удаляем, теперь gap у wrapper */
-  box-sizing: border-box; /* Добавлено для корректного расчета ширины */
-  flex-wrap: wrap; /* Позволит таблеткам переноситься, если их много */
+  
+  box-sizing: border-box; 
+  flex-wrap: wrap; 
 }
 
 .group-chat-modal-search-icon {
@@ -1276,7 +1273,7 @@ body.cosmochat-body {
   font-family: Unbounded, sans-serif;
   font-weight: 300;
   letter-spacing: 0.12px;
-  min-width: 150px; /* Минимальная ширина для поля ввода */
+  min-width: 150px; 
 }
 
 .group-chat-modal-search-input::placeholder {
@@ -1289,12 +1286,12 @@ body.cosmochat-body {
 
 .group-chat-modal-role-filters {
   display: flex;
-  gap: 10px; /* Уменьшен gap */
+  gap: 10px; 
   justify-content: center;
 }
 
 .group-chat-modal-role-btn {
-  padding: 8px 25px; /* Уменьшены боковые паддинги */
+  padding: 8px 25px; 
   border-radius: 99px;
   font-size: 12px;
   font-family: Unbounded, sans-serif;
@@ -1319,9 +1316,9 @@ body.cosmochat-body {
 .group-chat-modal-users {
   display: flex;
   flex-direction: column;
-  gap: 12px; /* Значительно уменьшен gap между пользователями */
+  gap: 12px; 
 
-  /* max-height: auto; /* Управляется высотой content-wrapper */
+  
   overflow: hidden auto;
 }
 
@@ -1329,20 +1326,20 @@ body.cosmochat-body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 4px 10px 4px 0; /* Уменьшены вертикальные отступы, добавлен правый отступ для чекбокса */
+  padding: 4px 10px 4px 0; 
 }
 
 .group-chat-modal-user-info {
   display: flex;
   align-items: center;
-  gap: 10px; /* Уменьшен gap */
-  margin-right: auto; /* Отодвинет чекбокс вправо */
+  gap: 10px; 
+  margin-right: auto; 
 }
 
 .group-chat-modal-user-avatar {
-  width: 48px; /* Уменьшен размер аватара */
-  height: 48px; /* Уменьшен размер аватара */
-  border-radius: 24px; /* Соответственно */
+  width: 48px; 
+  height: 48px; 
+  border-radius: 24px; 
   border: 1px solid #004e9f;
   object-fit: cover;
 }
@@ -1356,13 +1353,13 @@ body.cosmochat-body {
 .group-chat-modal-user-firstname,
 .group-chat-modal-user-lastname {
   color: black;
-  font-size: 16px; /* Уменьшен размер шрифта */
+  font-size: 16px; 
   font-family: Unbounded, sans-serif;
   font-weight: 400;
-  line-height: 1.2; /* Адаптивная высота строки */
+  line-height: 1.2; 
 }
 
-/* Улучшенные чекбоксы - стили остаются без изменений */
+
 .group-chat-modal-checkbox {
   width: 24px;
   height: 24px;
@@ -1374,7 +1371,7 @@ body.cosmochat-body {
   width: 18px;
   height: 18px;
   position: absolute;
-  left: 3px; /* Оставляем как есть, если сам чекбокс отодвинут */
+  left: 3px; 
   top: 3px;
   background: #f4f4f4;
   border: 2px solid #004e9f;
@@ -1398,9 +1395,9 @@ body.cosmochat-body {
   width: 8px;
   height: 5px;
   position: absolute;
-  left: 50%; /* Центрируем по горизонтали */
-  top: 50%; /* Центрируем по вертикали */
-  transform: translate(-50%, -50%) rotate(-45deg); /* Точное центрирование и поворот */
+  left: 50%; 
+  top: 50%; 
+  transform: translate(-50%, -50%) rotate(-45deg); 
   border-left: 2px solid white;
   border-bottom: 2px solid white;
   display: none;
@@ -1419,14 +1416,14 @@ body.cosmochat-body {
   display: block;
 }
 
-/* Кастомный скроллбар для .group-chat-modal-users (если нужен) */
+
 .group-chat-modal-users::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
 .group-chat-modal-users::-webkit-scrollbar-track {
-  background: rgb(0 0 0 / 5%); /* Чуть темнее для белого фона */
+  background: rgb(0 0 0 / 5%); 
   border-radius: 3px;
 }
 
@@ -1439,35 +1436,35 @@ body.cosmochat-body {
   background: #003b7a;
 }
 
-/* Стили для "таблеток" выбранных пользователей в строке поиска */
+
 .selected-user-pills-container {
-  /* Новый контейнер для таблеток внутри строки поиска */
+  
   display: flex;
   flex-wrap: wrap;
   gap: 5px;
-  margin-right: 8px; /* Отступ от иконки поиска или инпута */
+  margin-right: 8px; 
 }
 
 .selected-user-pill {
-  display: inline-flex; /* Используем inline-flex для выравнивания текста и крестика */
+  display: inline-flex; 
   align-items: center;
   background-color: #004e9f;
   color: white;
   padding: 5px 10px;
   border-radius: 10px;
-  font-size: 14px; /* Немного меньше чем в примере (16px) для компактности */
+  font-size: 14px; 
   font-family: Unbounded, sans-serif;
   font-weight: 400;
-  line-height: 1.2; /* Адаптивная высота строки */
+  line-height: 1.2; 
   white-space: nowrap;
-  overflow: hidden; /* Для обрезки текста, если .pill-name будет с text-overflow */
+  overflow: hidden; 
 }
 
 .pill-name {
   margin-right: 6px;
-  text-overflow: ellipsis; /* Если будет механизм сокращения текста */
+  text-overflow: ellipsis; 
   overflow: hidden;
-  max-width: 100px; /* Примерная максимальная ширина имени в таблетке */
+  max-width: 100px; 
 }
 
 .pill-remove-icon {
@@ -1481,15 +1478,15 @@ body.cosmochat-body {
   cursor: pointer;
 }
 
-/* Стили для второго вида модального окна (будут дополняться) */
+
 .group-chat-modal-view-details .modal-header-nav {
   position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
-  padding-bottom: 20px; /* Отступ снизу */
-  border-bottom: 1px solid #e0e0e0; /* Разделитель */
+  padding-bottom: 20px; 
+  border-bottom: 1px solid #e0e0e0; 
   margin-bottom: 20px;
 }
 
@@ -1522,7 +1519,7 @@ body.cosmochat-body {
 }
 
 .modal-header-nav .nav-action .icon-back-arrow {
-  /* Пример для иконки "Назад" */
+  
   width: 9.33px;
   height: 9.33px;
   border-left: 2px solid #004e9f;
@@ -1549,7 +1546,7 @@ body.cosmochat-body {
   margin-bottom: 20px;
 }
 
-/* Стили для контейнера иконки в модальном окне */
+
 .chat-icon-container {
     width: 43px;
     height: 43px;
@@ -1563,17 +1560,17 @@ body.cosmochat-body {
   padding: 9px;
 }
 
-/* Стили для SVG-иконки */
+
 .chat-details-icon {
     width: 24px;
     height: 24px;
 }
 
-/* Стили для иконок в списке чатов (по умолчанию, если нет аватара) */
+
 .chat-item-new .chat-avatar-img[src="/static/accounts/images/cosmochat/group_avatar.svg"],
 .chat-item-new .chat-avatar-img:not([src]) {
-    background-color: #ffffff; /* Белый фон для иконок по умолчанию */
-    border-radius: 22px; /* Соответствует радиусу .chat-avatar-img */
+    background-color: #ffffff; 
+    border-radius: 22px; 
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1585,25 +1582,25 @@ body.cosmochat-body {
 }
 .chat-item-new .chat-avatar-img[src="/static/accounts/images/cosmochat/group_avatar.svg"] path,
 .chat-item-new .chat-avatar-img:not([src]) path {
-    stroke: #004e9f; /* Синий цвет обводки */
-    fill: none; /* Убираем заливку */
+    stroke: #004e9f; 
+    fill: none; 
 }
 
 .selected-chat-info .chat-name-display-input {
-  /* Изменен селектор на конкретный класс инпута */
+  
   flex-grow: 1;
   font-size: 18px;
   font-family: Unbounded, sans-serif;
   font-weight: 400;
-  color: black !important; /* Устанавливаем черный цвет текста для инпута */
-  border: none; /* Убираем стандартную рамку инпута */
-  outline: none; /* Убираем подсветку при фокусе */
-  background-color: transparent; /* Прозрачный фон */
-  padding: 5px; /* Небольшие внутренние отступы для текста */
+  color: black !important; 
+  border: none; 
+  outline: none; 
+  background-color: transparent; 
+  padding: 5px; 
 }
 
 .selected-chat-info .chat-name-display-input::placeholder {
-  color: #a1a0a0; /* Цвет плейсхолдера, если нужен */
+  color: #a1a0a0; 
 }
 
 .add-participant-container {
@@ -1621,7 +1618,7 @@ body.cosmochat-body {
 .participants-actions-list {
   display: flex;
   flex-direction: column;
-  gap: 15px; /* Уменьшен с 24px */
+  gap: 15px; 
   width: 100%;
 }
 
@@ -1629,7 +1626,7 @@ body.cosmochat-body {
 .participants-actions-list .participant-display-item {
   display: flex;
   align-items: center;
-  gap: 15px; /* Уменьшен с 24px */
+  gap: 15px; 
   font-size: 16px;
   font-family: Unbounded, sans-serif;
   font-weight: 400;
@@ -1641,11 +1638,11 @@ body.cosmochat-body {
 }
 
 .participants-actions-list .action-item-icon {
-  /* Для иконки "Добавить участника" */
+  
   width: 24px;
   height: 24px;
 
-  /* Стили для иконки (можно SVG inline или через mask-image) */
+  
   border: 2px solid #004e9f;
   border-radius: 50%;
   position: relative;
@@ -1662,19 +1659,19 @@ body.cosmochat-body {
 }
 
 .participants-actions-list .action-item-icon::before {
-  /* Горизонтальная палочка */
+  
   width: 10px;
   height: 2px;
 }
 
 .participants-actions-list .action-item-icon::after {
-  /* Вертикальная палочка */
+  
   width: 2px;
   height: 10px;
 }
 
 .participants-actions-list .participant-display-item img {
-  /* Аватар участника */
+  
   width: 58px;
   height: 58px;
   border-radius: 29px;
@@ -1687,7 +1684,7 @@ body.cosmochat-body {
   font-weight: 400;
 }
 
-/* Стили для второго вида модального окна (будут дополняться) */
+
 .group-chat-modal-details-view {
   position: relative;
   width: 474px;
@@ -1701,11 +1698,11 @@ body.cosmochat-body {
   box-sizing: border-box;
 }
 
-/* Стили для аватарок */
+
 .avatar-img,
 .chat-avatar-img,
 .group-chat-modal-user-avatar {
-  background-color: #011b35; /* Тёмный фон для плейсхолдера */
+  background-color: #011b35; 
 }
 
 .rename-chat-btn {
@@ -1739,28 +1736,28 @@ body.cosmochat-body {
   gap: 10px;
 }
 
-/* Добавляем стиль для модального окна при активном оверлее */
+
 .modal-overlay.active .modal {
   display: block;
   opacity: 1;
 }
 
-/* Стили для иконок в списке чатов */
+
 #chatListContainer .chat-item-new .chat-avatar-img[src="/static/accounts/images/cosmochat/group_avatar.svg"],
 #chatListContainer .chat-item-new .chat-avatar-img:not([src]) {
     width: 77px;
     height: 77px;
     border-radius: 22px;
-    background-color: #ffffff; /* Белый фон */
+    background-color: #ffffff; 
     display: flex;
     justify-content: center;
     align-items: center;
-    filter: brightness(0) invert(1); /* Инверсия для синего контура */
+    filter: brightness(0) invert(1); 
 }
 
-/* Убираем стили для модального окна */
+
 .chat-icon-placeholder {
-    display: none; /* Отключаем, так как иконки не нужны в модальном окне */
+    display: none; 
 }
 
 .start-deal-btn-new-style {
@@ -1881,12 +1878,12 @@ body.cosmochat-body {
     background: #f0f0f0;
 }
 
-/* Стили для деталей группового чата */
+
 .group-chat-modal-details-view .selected-chat-info {
     display: flex;
     align-items: center;
     gap: 15px;
-    padding: 15px; /* Уменьшаем внутренние отступы для компактности */
+    padding: 15px; 
     border: 1px solid #004E9F;
     border-radius: 10px;
 }
@@ -1910,16 +1907,16 @@ body.cosmochat-body {
 }
 
 .group-chat-modal-details-view .chat-name-display-input {
-    font-size: 18px; /* Немного уменьшил, было 20px */
+    font-size: 18px; 
     font-weight: 400;
 }
 
 .group-chat-modal-details-view .add-participant-container {
     display: flex;
     align-items: center;
-    gap: 15px; /* Уменьшаем гэп для более плотного вида */
+    gap: 15px; 
     cursor: pointer;
-    padding: 12px 0; /* Добавляем вертикальные отступы */
+    padding: 12px 0; 
     color: #004E9F;
     font-size: 16px;
     font-family: Unbounded, sans-serif;

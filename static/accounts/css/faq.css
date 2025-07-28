@@ -1,21 +1,21 @@
 @font-face {
   font-family: Unbounded;
-  src: url('../fonts/Unbounded-Light.ttf') format('truetype'); /* ИСПРАВЛЕН ПУТЬ И ФОРМАТ */
+  src: url('../fonts/Unbounded-Light.ttf') format('truetype'); 
   font-weight: 300;
   font-style: normal;
 }
 
 @font-face {
   font-family: Unbounded;
-  src: url('../fonts/Unbounded-Regular.ttf') format('truetype'); /* ИСПРАВЛЕН ПУТЬ И ФОРМАТ */
+  src: url('../fonts/Unbounded-Regular.ttf') format('truetype'); 
   font-weight: 400;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Blippo-Black CY [Rus by me]';
-  src: url('../fonts/blippo_blackcyrusbyme.otf') format('opentype'); /* ИСПРАВЛЕН ПУТЬ И ФОРМАТ */
-  font-weight: 400; /* Или 900, если шрифт очень жирный */
+  src: url('../fonts/blippo_blackcyrusbyme.otf') format('opentype'); 
+  font-weight: 400; 
   font-style: normal;
 }
 
@@ -26,19 +26,19 @@ html {
   width: 100%;
   height: 100%;
 
-  /* overflow-x: hidden; удалено, чтобы не конфликтовать с overflow:hidden на wrapper */
+  
 }
 
 .faq-page-wrapper {
   width: 100%;
-  min-height: 100vh; /* Гарантирует, что фон занимает всю высоту экрана */
-  padding-top: 20px; /* Отступ сверху как в макете */
+  min-height: 100vh; 
+  padding-top: 20px; 
 
-  /* background: linear-gradient(153deg, black 0%, #00346B 25%, #004E9F 48%, #01366D 64%, #020202 100%); */
+  
 
-  /* ИЗМЕНЕНО: фон убран */
-  background: none; /* Явно указываем отсутствие фона */
-  overflow: hidden; /* Как в макете, но может потребоваться настройка, если контент будет выходить за рамки */
+  
+  background: none; 
+  overflow: hidden; 
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -47,15 +47,15 @@ html {
 
 .faq-main-container {
   width: 100%;
-  max-width: 1303px; /* Максимальная ширина контентной части */
-  padding: 0; /* Убираем боковые отступы, оставляя только верхний/нижний (если они были бы заданы иначе) */
+  max-width: 1303px; 
+  padding: 0; 
   display: flex;
   flex-direction: column;
-  gap: 55px; /* Отступ между хедером FAQ и основным блоком */
+  gap: 55px; 
   box-sizing: border-box;
-  background: none !important; /* ИЗМЕНЕНО: Убран фон, добавлено !important для проверки */
+  background: none !important; 
 
-  /* padding-bottom: 65px; /* Отступ снизу, если нужен */
+  
 }
 
 .faq-header-block {
@@ -63,9 +63,9 @@ html {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: none !important; /* ИЗМЕНЕНО: Убран фон, добавлено !important для проверки */
+  background: none !important; 
 
-  /* padding-top: 20px; убрано, т.к. есть на wrapper */
+  
 }
 
 .faq-title-section {
@@ -75,42 +75,42 @@ html {
 }
 
 .faq-main-title-text {
-  color: #ffef2b; /* var(--Color7, #FFEF2B) */
+  color: #ffef2b; 
   font-family: 'Blippo-Black CY [Rus by me]', sans-serif;
   font-size: 55px;
-  font-weight: 400; /* В Figma указано 400, но Blippo Black обычно жирнее */
-  line-height: 1; /* Изменено с 18px для лучшей читаемости */
+  font-weight: 400; 
+  line-height: 1; 
   word-wrap: break-word;
   margin: 0;
 }
 
 .faq-subtitle-text {
-  color: white; /* var(--Color5, white) */
+  color: white; 
   font-family: Unbounded, sans-serif;
   font-size: 20px;
   font-weight: 400;
-  line-height: 1.2; /* Изменено с 18px */
+  line-height: 1.2; 
   word-wrap: break-word;
   margin: 0;
-  width: 273px; /* Как в макете */
+  width: 273px; 
 }
 
 .faq-ask-question-section {
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* Было flex-start, но кнопка будет по центру блока */
+  align-items: flex-start; 
   gap: 28px;
-  padding: 24px 32px; /* Как в макете */
-  width: auto; /* Ширина по содержимому, но не более 364px */
+  padding: 24px 32px; 
+  width: auto; 
   max-width: 364px;
 }
 
 .faq-ask-question-prompt {
-  color: white; /* var(--Color5, white) */
+  color: white; 
   font-family: Unbounded, sans-serif;
   font-size: 20px;
   font-weight: 400;
-  line-height: 1; /* Изменено с 18px */
+  line-height: 1; 
   word-wrap: break-word;
   margin: 0;
 }
@@ -124,10 +124,10 @@ html {
   font-family: Unbounded, sans-serif;
   font-size: 16px;
   font-weight: 400;
-  line-height: 16px; /* Соответствует размеру шрифта */
+  line-height: 16px; 
   word-wrap: break-word;
   text-decoration: none;
-  display: inline-flex; /* Чтобы outline корректно работал */
+  display: inline-flex; 
   align-items: center;
   justify-content: center;
   transition:
@@ -141,63 +141,63 @@ html {
 }
 
 .faq-content-block {
-  width: 100%; /* Ширина 1303px как в макете */
-  height: 797px; /* Высота как в макете */
-  position: relative; /* Для позиционирования дочерних элементов */
-  background: #004e9f; /* Фоновый цвет блока */
+  width: 100%; 
+  height: 797px; 
+  position: relative; 
+  background: #004e9f; 
   box-shadow: 6px 6px 15px rgb(0 0 0 / 25%);
   border-radius: 20px;
   display: flex;
-  overflow: hidden; /* Чтобы панели не выходили за пределы */
-  margin-bottom: 65px; /* Отступ снизу для всего faq блока */
+  overflow: hidden; 
+  margin-bottom: 65px; 
 }
 
 .faq-left-panel {
   width: 535px;
-  height: calc(100% - 64px); /* 797px - 32px (top) - 32px (bottom) */
+  height: calc(100% - 64px); 
 
-  /* padding: 32px 24px; ИЗМЕНЕНО: правый паддинг будет увеличен */
-  padding: 32px 34px 32px 24px; /* top, right (24+10), bottom, left. Отступ справа увеличен на 10px для смещения скроллбара */
+  
+  padding: 32px 34px 32px 24px; 
   display: flex;
   flex-direction: column;
-  gap: 20px; /* Промежуток между элементами */
-  overflow-y: auto; /* Для прокрутки, если контента много */
+  gap: 20px; 
+  overflow-y: auto; 
   box-sizing: border-box;
-  position: relative; /* Для кастомного скроллбара */
+  position: relative; 
 }
 
-/* Стили для кастомного скроллбара в левой панели */
+
 .faq-left-panel::-webkit-scrollbar {
-  width: 5px; /* Ширина скроллбара */
+  width: 5px; 
 }
 
 .faq-left-panel::-webkit-scrollbar-track {
-  background: transparent; /* Фон трека скроллбара */
+  background: transparent; 
   border-radius: 4px;
 
-  /* margin-right: 10px; ИЗМЕНЕНО: Удален margin, так как он не сработал */
+  
 
-  /* Добавим небольшой отступ справа от трека, чтобы он не прилипал к контенту */
+  
 
-  /* Это может не сработать во всех браузерах так, как ожидается для track */
+  
 
-  /* Более надежно - сделать padding для самого .faq-left-panel */
+  
 }
 
 .faq-left-panel::-webkit-scrollbar-thumb {
-  background: rgb(255 255 255 / 34%); /* Цвет ползунка скроллбара */
+  background: rgb(255 255 255 / 34%); 
   border-radius: 4px;
 }
 
 .faq-left-panel::-webkit-scrollbar-thumb:hover {
-  background: rgb(255 255 255 / 50%); /* Цвет ползунка при наведении */
+  background: rgb(255 255 255 / 50%); 
 }
 
 .faq-question-category,
 .faq-accordion-header,
 .faq-question-item {
-  padding: 10px 24px; /* Паддинги по макету (12px top/bottom, 24px left/right) - адапт */
-  border-radius: 99px; /* Закругленные края */
+  padding: 10px 24px; 
+  border-radius: 99px; 
   font-family: Unbounded, sans-serif;
   cursor: pointer;
   transition:
@@ -211,41 +211,41 @@ html {
 }
 
 .faq-question-category {
-  /* "Что такое «Great Ideas»?" */
+  
   background: white;
   color: black;
   outline: 2px black solid;
   font-size: 16px;
   font-weight: 400;
-  line-height: 1; /* 16px */
+  line-height: 1; 
 }
 
 .faq-accordion-header {
-  /* Заголовки аккордеонов */
+  
   background: white;
   color: black;
   outline: 2px black solid;
   font-size: 16px;
   font-weight: 400;
-  line-height: 1.19; /* 19.04px / 16px */
+  line-height: 1.19; 
 }
 
 .faq-accordion-category.open > .faq-accordion-header {
-  /* Стили для открытого состояния, если нужны */
+  
 }
 
 .faq-accordion-category.nested > .faq-accordion-header {
-  /* Вложенный аккордеон "Создание и ведение..." */
+  
   outline: 1px white solid;
   background: transparent;
   color: white;
   font-size: 14px;
   font-weight: 400;
-  line-height: 1.19; /* 16.66px / 14px */
+  line-height: 1.19; 
 }
 
 .faq-accordion-category.nested.open > .faq-accordion-header {
-  /* Стили для открытого вложенного, если нужны */
+  
 }
 
 .faq-chevron-icon {
@@ -259,15 +259,15 @@ html {
 }
 
 .faq-accordion-content {
-  display: none; /* Скрыто по умолчанию */
-  padding-left: 20px; /* Небольшой отступ для вложенных элементов */
+  display: none; 
+  padding-left: 20px; 
   flex-direction: column;
-  gap: 10px; /* Отступ между элементами в аккордеоне */
+  gap: 10px; 
   margin-top: 10px;
 }
 
 .faq-accordion-category.open > .faq-accordion-content {
-  display: flex; /* Показывается при открытии */
+  display: flex; 
 }
 
 .faq-question-item {
@@ -275,10 +275,10 @@ html {
   color: black;
   font-size: 12px;
   font-weight: 400;
-  line-height: 1.19; /* 14.28px / 12px */
-  padding-left: 24px; /* Внутренний отступ для текста */
+  line-height: 1.19; 
+  padding-left: 24px; 
   padding-right: 24px;
-  width: 100%; /* Растягивается на всю доступную ширину */
+  width: 100%; 
 }
 
 .faq-question-item.active {
@@ -297,7 +297,7 @@ html {
 
 .faq-accordion-category.nested > .faq-accordion-header:hover,
 .faq-question-category.nested-item:hover {
-  /* Для элементов с белой обводкой */
+  
   background-color: rgb(255 255 255 / 10%);
   color: white;
   outline-color: white;
@@ -306,42 +306,42 @@ html {
 .faq-right-panel {
   width: calc(
     100% - 535px - 1px
-  ); /* 1303px - 559px (ширина левой с псевдо-отступом) = 744px. -1px на границу */
-  height: calc(100% - 42px); /* 797px - 21px (top) - 21px (bottom) */
-  margin: 21px; /* Отступы внутри правой панели */
-  margin-left: 0; /* Убираем левый отступ, т.к. он уже задан шириной левой панели */
+  ); 
+  height: calc(100% - 42px); 
+  margin: 21px; 
+  margin-left: 0; 
   background: white;
   box-shadow: inset 4px 4px 6px rgb(0 0 0 / 25%);
   border-radius: 32px;
   border: 1px #818ce5 solid;
-  padding: 59px; /* Внутренние отступы 80px (top) - 21px (margin) = 59px */
+  padding: 59px; 
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  gap: 74px; /* Отступ между заголовком ответа и телом */
-  overflow-y: auto; /* Если ответ длинный */
+  gap: 74px; 
+  overflow-y: auto; 
 }
 
 .faq-answer-title {
   color: #191919;
-  font-family: sans-serif; /* ЗАМЕНА: Ubuntu окончательно заменен на sans-serif */
+  font-family: sans-serif; 
   font-size: 24px;
   font-weight: 400;
-  line-height: 1; /* 24px */
+  line-height: 1; 
   word-wrap: break-word;
   margin: 0;
 }
 
 .faq-answer-body {
   color: #191919;
-  font-family: sans-serif; /* ЗАМЕНА: Ubuntu окончательно заменен на sans-serif */
+  font-family: sans-serif; 
   font-size: 16px;
   font-weight: 400;
-  line-height: 1.0625; /* 17px / 16px */
+  line-height: 1.0625; 
   word-wrap: break-word;
   display: flex;
   flex-direction: column;
-  gap: 37px; /* Отступ между абзацем и ссылкой "Список доступных сфер" */
+  gap: 37px; 
 }
 
 .faq-answer-body p {
@@ -358,15 +358,15 @@ html {
   text-decoration: none;
   display: inline-flex;
   align-items: center;
-  gap: 7px; /* Отступ между текстом и иконкой */
+  gap: 7px; 
 }
 
 .faq-answer-details-link img {
-  width: 12px; /* Размер иконки стрелки, подберите по необходимости */
+  width: 12px; 
   height: 12px;
 }
 
-/* Кастомный скроллбар для правой панели (если нужен) */
+
 .faq-right-panel::-webkit-scrollbar {
   width: 8px;
 }
@@ -385,24 +385,24 @@ html {
   background: #575fbf;
 }
 
-/* Внешний декоративный скроллбар - его позиционирование может потребовать JS или более сложного CSS */
+
 .faq-custom-scrollbar-visual {
   position: absolute;
   width: 5px;
-  height: 99px; /* Как в макете */
-  left: 536px; /* Положение по макету (относительно .faq-content-block) */
-  top: 671px; /* Положение по макету */
+  height: 99px; 
+  left: 536px; 
+  top: 671px; 
   background: rgb(255 255 255 / 34%);
   border-radius: 4px;
 
-  /* Этот элемент статичен и не отражает реальную прокрутку без JS */
+  
 }
 
-/* Адаптивность (пример) */
+
 @media (width <= 1350px) {
-  /* Немного больше чем max-width контейнера */
+  
   .faq-main-container {
-    padding: 0 20px; /* Уменьшаем боковые отступы */
+    padding: 0 20px; 
   }
 }
 
@@ -419,25 +419,25 @@ html {
 
   .faq-content-block {
     flex-direction: column;
-    height: auto; /* Автоматическая высота для мобильных */
+    height: auto; 
   }
 
   .faq-left-panel {
     width: 100%;
     height: auto;
-    max-height: 40vh; /* Ограничиваем высоту левой панели */
+    max-height: 40vh; 
     padding: 20px;
   }
 
   .faq-right-panel {
-    width: calc(100% - 40px); /* Учитываем паддинги родителя */
+    width: calc(100% - 40px); 
     margin: 20px;
     height: auto;
     padding: 30px;
   }
 
   .faq-custom-scrollbar-visual {
-    display: none; /* Скрываем декоративный скроллбар на малых экранах */
+    display: none; 
   }
 }
 

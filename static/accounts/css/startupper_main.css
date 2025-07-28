@@ -53,23 +53,23 @@ html {
     #000 0%,
     #01366d 50%,
     #004e9f 100%
-  ); /* Фон на html */
+  ); 
 
   background-repeat: no-repeat;
   background-attachment: scroll;
   width: 100%;
   margin: 0;
-  padding: 0; /* No padding on the main container */
+  padding: 0; 
   box-sizing: border-box;
-  overflow: hidden auto; /* Включаем вертикальную прокрутку */
-  scrollbar-width: thin; /* Для Firefox */
-  scrollbar-color: #ffef2b transparent; /* Цвета для Firefox: ползунок и прозрачный фон */
+  overflow: hidden auto; 
+  scrollbar-width: thin; 
+  scrollbar-color: #ffef2b transparent; 
   display: flex;
   flex-direction: column;
 
-  /* align-items: center; */
+  
 
-  /* Remove centering from here */
+  
   gap: 40px;
 }
 
@@ -106,59 +106,59 @@ body {
   color: #fcfcfd;
   margin: 0;
   padding: 0;
-  background: transparent; /* body прозрачный */
+  background: transparent; 
   overflow-x: hidden;
 
-  /* overflow-y: auto; */
+  
 
-  /* <--- УДАЛЯЕМ ЭТО */
+  
   min-height: 100%;
   width: 100%;
   box-sizing: border-box;
-  display: flex; /* Для flex-grow у .div */
-  flex-direction: column; /* Для flex-grow у .div */
+  display: flex; 
+  flex-direction: column; 
   flex-shrink: 0;
 }
 
-/* Кастомный скроллбар для Webkit-браузеров (Chrome, Safari) */
+
 html::-webkit-scrollbar {
-  width: 8px; /* Ширина скроллбара */
+  width: 8px; 
 }
 
 html::-webkit-scrollbar-track {
-  background: transparent; /* Убираем фон у трека */
+  background: transparent; 
 }
 
 html::-webkit-scrollbar-thumb {
-  background-color: #ffef2b; /* Цвет ползунка */
-  border-radius: 4px; /* Скругление углов */
+  background-color: #ffef2b; 
+  border-radius: 4px; 
 }
 
 html::-webkit-scrollbar-thumb:hover {
-  background-color: #e6d329; /* Цвет ползунка при наведении */
+  background-color: #e6d329; 
 }
 
 html::-webkit-scrollbar-button {
-  display: none; /* Скрываем стрелочки */
+  display: none; 
 }
 
 .div {
-  /* Общий контейнер страницы */
+  
   width: 100%;
 
-  /* min-width: 100%; */
+  
 
-  /* width: 100% должно быть достаточно */
-  display: flex; /* Для align-items: center */
-  flex-direction: column; /* Основная ось - вертикальная для секций */
-  align-items: center; /* Центрируем дочерние секции */
-  background: transparent !important; /* .div прозрачный, показываем фон html */
+  
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  background: transparent !important; 
 
-  /* background-repeat и background-attachment не нужны для прозрачного фона */
-  box-sizing: border-box; /* Добавляем для консистентности */
+  
+  box-sizing: border-box; 
 }
 
-/* --- Секция 1: Featured (Главный экран) --- */
+
 .featured {
   width: 100%;
   max-width: 1445px;
@@ -171,8 +171,8 @@ html::-webkit-scrollbar-button {
   padding: 20px;
   box-sizing: border-box;
   background: transparent !important;
-  margin-left: auto; /* Центрирование */
-  margin-right: auto; /* Центрирование */
+  margin-left: auto; 
+  margin-right: auto; 
 }
 
 .featured .group {
@@ -181,9 +181,9 @@ html::-webkit-scrollbar-button {
   height: 708px;
   position: relative;
 
-  /* background: transparent; */
+  
 
-  /* Убираем старый прозрачный фон */
+  
   background: transparent;
   background-size: cover;
   background-position: center;
@@ -191,16 +191,16 @@ html::-webkit-scrollbar-button {
   border-radius: 10px;
   overflow: hidden;
   display: flex;
-  flex-direction: column; /* Для внутреннего расположения элементов */
-  justify-content: center; /* Центрирование по вертикали */
-  padding-left: 109px; /* Отступ для текстового контента */
+  flex-direction: column; 
+  justify-content: center; 
+  padding-left: 109px; 
   box-sizing: border-box;
 }
 
-/* Элементы внутри .featured .group */
+
 .featured .div5 {
   width: 390px;
-  margin-bottom: 30px; /* Отступ под описанием */
+  margin-bottom: 30px; 
 }
 
 .featured .div5 .txt {
@@ -225,7 +225,7 @@ html::-webkit-scrollbar-button {
   font-family: 'Blippo Black', sans-serif;
   font-weight: normal;
   text-transform: uppercase;
-  line-height: 0.7; /* Сжатая высота строки для Blippo */
+  line-height: 0.7; 
   word-wrap: break-word;
 }
 
@@ -235,12 +235,12 @@ html::-webkit-scrollbar-button {
   font-family: 'Blippo Black', sans-serif;
   font-weight: normal;
   text-transform: uppercase;
-  line-height: 0.7; /* Сжатая высота строки для Blippo */
+  line-height: 0.7; 
   word-wrap: break-word;
-  margin-bottom: 40px; /* Отступ после заголовка */
+  margin-bottom: 40px; 
 }
 
-/* Декоративные круги и планеты (плейсхолдеры) */
+
 .featured .frame-child,
 .featured .frame-item,
 .featured .frame-inner,
@@ -297,7 +297,7 @@ html::-webkit-scrollbar-button {
 .featured .icon7,
 .featured .icon8 {
   position: absolute;
-  object-fit: contain; /* Чтобы плейсхолдеры не искажались */
+  object-fit: contain; 
 }
 
 .featured .icon1 {
@@ -306,7 +306,7 @@ html::-webkit-scrollbar-button {
   right: 50px;
   bottom: 50px;
   z-index: 5;
-} /* Крупная планета справа внизу */
+} 
 .featured .icon2 {
   width: 100px;
   height: 100px;
@@ -369,15 +369,15 @@ html::-webkit-scrollbar-button {
 
 .featured .featured-child,
 .featured .featured-item {
-  /* Вспомогательные, если нужны по макету */
-  display: none; /* Скрываем, если не используются явно */
+  
+  display: none; 
 }
 
 .featured .featured-item {
   object-fit: cover;
 }
 
-/* --- New Journey Start Block --- */
+
 .journey-start-wrapper {
   width: 100%;
   max-width: 1445px;
@@ -571,7 +571,7 @@ html::-webkit-scrollbar-button {
   word-wrap: break-word;
 }
 
-/* --- Секция 7: Featured7 (Great Ideas это платформа...) --- */
+
 .featured7 {
   width: 100%;
   max-width: 1445px;
@@ -716,7 +716,7 @@ html::-webkit-scrollbar-button {
   line-height: 1.5;
 }
 
-/* --- Секция 9: Featured9 (Новости) --- */
+
 .featured9 {
   width: 100%;
   max-width: 1445px;
@@ -953,7 +953,7 @@ html::-webkit-scrollbar-button {
   height: 24px;
 }
 
-/* Адаптивность (пример) */
+
 @media (width <= 1350px) {
   .featured4 .frame-parent3 {
     flex-direction: column;
@@ -989,7 +989,7 @@ html::-webkit-scrollbar-button {
   .featured5 .frame-parent9,
   .featured5 .creators {
     width: 100%;
-    max-width: 500px; /* Ограничение для центральных колонок */
+    max-width: 500px; 
   }
 
   .featured5 .divider {
@@ -1069,7 +1069,7 @@ html::-webkit-scrollbar-button {
 
   .final-cta-section {
     height: auto;
-    padding-bottom: 60px; /* Adjust padding for better spacing */
+    padding-bottom: 60px; 
   }
 
   .final-cta-image {
@@ -1079,14 +1079,14 @@ html::-webkit-scrollbar-button {
 
 @media (width <= 768px) {
   .featured .group {
-    padding: 20px; /* Уменьшаем отступы на мобильных */
-    justify-content: flex-start; /* Выравниваем по верху */
+    padding: 20px; 
+    justify-content: flex-start; 
     padding-top: 100px;
   }
 
   .featured .div6,
   .featured .div7 {
-    font-size: 48px; /* Уменьшаем шрифт заголовка */
+    font-size: 48px; 
   }
   .featured .icon1 {
     width: 120px;
@@ -1113,7 +1113,7 @@ html::-webkit-scrollbar-button {
   }
 }
 
-/* --- Section 3: featured3 --- */
+
 .featured3 {
   width: 100%;
   max-width: 1445px;
@@ -1129,7 +1129,7 @@ html::-webkit-scrollbar-button {
   display: flex;
   position: relative;
   width: 100%;
-  height: 600px; /* Фиксированная высота для контейнера */
+  height: 600px; 
   border-radius: 20px;
   overflow: hidden;
   background-color: #000;
@@ -1225,7 +1225,7 @@ html::-webkit-scrollbar-button {
   color: #777e90;
 }
 
-/* --- Media Queries for featured3 --- */
+
 @media (max-width: 1350px) {
   .featured3 .frame-parent {
     flex-direction: column;

@@ -174,18 +174,18 @@
 
 
 {% block content %}
-    {# Добавляем canvas для звездного поля #}
+    
     <canvas id="starfield-canvas"></canvas>
 
-    {# Удален старый SVG контейнер #}
-    {# <div id="liquid-background-container">...</div> #}
+    
+    
 
     <div class="auth-container">
         <div class="auth-box">
             <h1>Вход</h1>
             <form method="post">
                 {% csrf_token %}
-                {# Явный рендеринг полей #}
+                
                 <div class="form-group">
                     <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
                     {{ form.email }}
@@ -217,8 +217,8 @@
         </div>
     </div>
 
-{# Удален старый скрипт LiquidButton #}
-{# <script> ... LiquidButton class ... </script> #}
+
+
 
 <script>
 // Оборачиваем в DOMContentLoaded для гарантии наличия canvas

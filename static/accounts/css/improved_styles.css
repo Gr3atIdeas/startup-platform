@@ -1,18 +1,10 @@
-/* ==========================================================================
-   Улучшенные стили для проекта
-   ========================================================================== */
 
-/*
- * 1. Переменные
- * 2. Базовые стили
- * 3. Улучшенные компоненты
- */
 
-/* ==========================================================================
-   1. Переменные
-   ========================================================================== */
+
+
+
 :root {
-  /* Цвета (уже есть в global.css, дублируем для контекста) */
+  
   --primary-color: #7b61ff;
   --secondary-color: #818ce5;
   --text-dark: #191919;
@@ -20,11 +12,11 @@
   --text-gray: #a9a9a9;
   --yellow-accent: #ffef2b;
 
-  /* Типографика */
+  
   --font-main: 'Unbounded', arial, sans-serif;
   --font-special: 'Blippo Black', sans-serif;
 
-  /* Отступы */
+  
   --spacing-xs: 4px;
   --spacing-s: 8px;
   --spacing-m: 16px;
@@ -32,19 +24,17 @@
   --spacing-xl: 32px;
   --spacing-xxl: 64px;
 
-  /* Скругления */
+  
   --border-radius-small: 5px;
   --border-radius-medium: 10px;
 
-  /* Плавность */
+  
   --transition-speed: 0.3s;
 }
 
-/* ==========================================================================
-   2. Базовые стили
-   ========================================================================== */
 
-/* Плавность для всех элементов, которые могут изменяться */
+
+
 * {
   box-sizing: border-box;
 }
@@ -62,14 +52,9 @@ button:hover {
   box-shadow: 0 4px 15px rgb(0 0 0 / 20%);
 }
 
-/* ==========================================================================
-   3. Улучшенные компоненты (на примере кнопок)
-   ========================================================================== */
 
-/*
- * Базовый класс для всех кнопок.
- * Он определяет общие стили: отступы, шрифт, скругления и т.д.
- */
+
+
 .btn {
   display: inline-flex;
   align-items: center;
@@ -87,23 +72,20 @@ button:hover {
   white-space: nowrap;
 }
 
-/*
- * Модификаторы для кнопок.
- * Они меняют цвет, фон и другие свойства, не дублируя код.
- */
 
-/* Основная (желтая) кнопка */
+
+
 .btn--primary {
   background-color: var(--yellow-accent);
   color: var(--text-dark);
 }
 
 .btn--primary:hover {
-  background-color: #e6d329; /* Чуть темнее при наведении */
+  background-color: #e6d329; 
   color: var(--text-dark);
 }
 
-/* Второстепенная (прозрачная с рамкой) кнопка */
+
 .btn--secondary {
   background-color: transparent;
   color: var(--text-light);
@@ -119,7 +101,7 @@ button:hover {
   filter: brightness(0) invert(1);
 }
 
-/* Синяя кнопка */
+
 .btn--blue {
   background: linear-gradient(0deg, #004e9f 0%, #006edf 100%);
   color: var(--text-light);
@@ -131,7 +113,7 @@ button:hover {
   color: var(--text-light);
 }
 
-/* Второстепенная кнопка с желтой рамкой */
+
 .btn--secondary-yellow {
   background-color: transparent;
   color: var(--text-light);
@@ -143,7 +125,7 @@ button:hover {
   color: var(--text-dark);
 }
 
-/* Кнопка с иконкой */
+
 .btn .icon {
   width: 20px;
   height: 20px;

@@ -1,31 +1,31 @@
-/* ======================================== */
 
-/*          ОБЩИЕ СТИЛИ СТРАНИЦЫ          */
 
-/* ======================================== */
+
+
+
 :root {
-  /* Цвета из макета (первый скриншот) */
-  --primary-dark-blue: #000819; /* Основной фон */
-  --secondary-blue: #04112d; /* Фон для комментариев и др. блоков */
-  --accent-purple: #7b61ff; /* Фиолетовый акцент (прогресс, ссылки) */
-  --accent-yellow: #ffc85e; /* Желтый для звезд/планет (как на макете) */
-  --accent-green: #08e5cf; /* Бирюзовый для "похожие" */
-  --button-blue: #345dff; /* Синий для кнопок (Редактировать, Инвестировать) */
-  --button-yellow: #ffef2b; /* Желтый для кнопки (Продать активы) - ИЗМЕНЕН */
-  --button-grey: #3d4b70; /* Серый для кнопки (Смотреть) */
-  --dark-card-bg: #0b1a3f; /* Фон для карточек/блоков на темном фоне */
-  --text-primary: #fff; /* Основной текст */
-  --text-secondary: #a9b8d4; /* Вторичный текст */
-  --text-placeholder: #6c7a9a; /* Цвет плейсхолдера/серых надписей */
-  --border-color: #1d3059; /* Цвет границ */
-  --danger-red: #f05252; /* Красный */
-  --success-green: #36d302; /* Зеленый (для галочки микроинвестиций) */
-  --grey-light: #f8f9fa; /* Светло-серый для фона плейсхолдеров */
+  
+  --primary-dark-blue: #000819; 
+  --secondary-blue: #04112d; 
+  --accent-purple: #7b61ff; 
+  --accent-yellow: #ffc85e; 
+  --accent-green: #08e5cf; 
+  --button-blue: #345dff; 
+  --button-yellow: #ffef2b; 
+  --button-grey: #3d4b70; 
+  --dark-card-bg: #0b1a3f; 
+  --text-primary: #fff; 
+  --text-secondary: #a9b8d4; 
+  --text-placeholder: #6c7a9a; 
+  --border-color: #1d3059; 
+  --danger-red: #f05252; 
+  --success-green: #36d302; 
+  --grey-light: #f8f9fa; 
 }
 
-/* Применяем шрифт Unbounded глобально или к конкретному блоку */
-.startup-detail-page, body /* Применим к body для большей уверенности */ {
-  font-family: Unbounded, sans-serif; /* Основной шрифт страницы */
+
+.startup-detail-page, body  {
+  font-family: Unbounded, sans-serif; 
 }
 
 body {
@@ -42,9 +42,9 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: Unbounded, sans-serif; /* Заголовки - уже Unbounded */
+  font-family: Unbounded, sans-serif; 
   color: var(--text-primary);
-  font-weight: 700; /* Bold по умолчанию для заголовков */
+  font-weight: 700; 
 }
 
 a {
@@ -57,43 +57,43 @@ a:hover {
   color: var(--text-primary);
 }
 
-/* Основной контейнер с отступами */
-.main-content-grid {
-  /* max-width: 1440px; */
 
-  /* Общая ширина контейнера -> меняем на 1303px */
+.main-content-grid {
+  
+
+  
   max-width: 1303px;
   width: 100%;
-  margin: 0 auto; /* Центрирование */
+  margin: 0 auto; 
 
-  /* padding: 40px 175px; */
+  
 
-  /* Убираем боковые отступы, центрируем через margin */
-  padding: 40px 0; /* Добавляем вертикальные отступы */
+  
+  padding: 40px 0; 
   box-sizing: border-box;
 
-  /* Добавляем display: flex для работы с колонками */
+  
   display: flex;
-  gap: 30px; /* Сохраняем промежуток между колонками */
+  gap: 30px; 
 }
 
-/* Кнопка назад */
+
 .back-link-container {
   margin-bottom: 30px;
 
-  /* width: 1303px; */
+  
 
-  /* Явно задаем ширину - было в прошлом шаге, корректируем */
+  
   width: 1303px;
   margin-left: auto;
   margin-right: auto;
 
-  /* padding: 0 30px; */
+  
 
-  /* Корректируем на 12px согласно Figma для этого блока */
+  
   padding: 0 12px;
   box-sizing: border-box;
-  margin: 0 auto 30px; /* Объединенный margin для центрирования и нижнего отступа */
+  margin: 0 auto 30px; 
 }
 
 .back-button {
@@ -102,20 +102,20 @@ a:hover {
   gap: 8px;
   color: var(--text-secondary);
   font-size: 16px;
-  font-weight: 400; /* Regular */
+  font-weight: 400; 
 }
 
-/* Общие стили кнопок */
+
 .action-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   padding: 12px 24px;
-  border-radius: 10px; /* Базовый радиус */
+  border-radius: 10px; 
   border: none;
-  font-family: Unbounded, sans-serif; /* Шрифт для кнопок */
+  font-family: Unbounded, sans-serif; 
   font-size: 16px;
-  font-weight: 700; /* Bold */
+  font-weight: 700; 
   cursor: pointer;
   transition:
     background-color 0.3s ease,
@@ -126,14 +126,14 @@ a:hover {
   line-height: 1.2;
 }
 
-/* Новые, чистые стили для кнопки чата */
 
-/* Увеличиваем специфичность, добавляя родительский класс */
+
+
 .planet-container .action-button.chat-button {
-  /* Размеры и отступы */
+  
   width: 142px;
   height: 40px;
-  padding: 0; /* Оставляем 0, т.к. центрируем через flex */
+  padding: 0; 
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -142,23 +142,23 @@ a:hover {
   align-self: center;
   margin-top: auto;
 
-  /* Визуальное оформление */
-  background: none; /* Явный сброс фона */
-  background-color: transparent; /* Прозрачный фон */
-  border: 1px solid var(--text-primary); /* Возвращаем рамку */
-  border-radius: 8px; /* Возвращаем радиус */
-  color: var(--text-primary); /* Возвращаем белый текст */
+  
+  background: none; 
+  background-color: transparent; 
+  border: 1px solid var(--text-primary); 
+  border-radius: 8px; 
+  color: var(--text-primary); 
 
-  /* Типографика */
+  
   font-family: Unbounded, sans-serif;
   font-size: 14px;
-  font-weight: 400; /* Возвращаем Normal */
+  font-weight: 400; 
   line-height: 1;
   text-align: center;
   text-decoration: none;
   white-space: nowrap;
 
-  /* Поведение */
+  
   cursor: pointer;
   transition:
     background-color 0.3s ease,
@@ -166,36 +166,36 @@ a:hover {
     color 0.3s ease;
   box-shadow: none;
   appearance: none;
-  position: relative; /* Добавим для z-index дочерних элементов */
-  overflow: hidden; /* Снова скроем волну, выходящую за края */
-  z-index: 3; /* Поверх звезд и других элементов */
+  position: relative; 
+  overflow: hidden; 
+  z-index: 3; 
 }
 
-/* Увеличиваем специфичность */
+
 .planet-container .action-button.chat-button:hover {
   background-color: rgb(255 255 255 / 10%);
   border-color: var(--text-primary);
   color: var(--text-primary);
 }
 
-/* Важно: Убедимся, что никакие другие общие стили не ломают кнопку */
 
-/* Увеличиваем специфичность */
+
+
 .planet-container .action-button.chat-button span,
 .planet-container .action-button.chat-button .wave-effect,
 .planet-container .action-button.chat-button::before,
 .planet-container .action-button.chat-button::after {
-  /* display: none !important; <<< Убираем, т.к. JS должен управлять волной */
+  
 }
 
-/* Текст внутри кнопки чата (на всякий случай) */
+
 .planet-container .action-button.chat-button > span {
-  position: relative; /* Чтобы z-index сработал */
-  z-index: 2; /* Явно выше фона/волны */
-  color: var(--text-primary); /* Явно задаем цвет */
+  position: relative; 
+  z-index: 2; 
+  color: var(--text-primary); 
 }
 
-/* Скрываем оригинальный wave-effect, если JS его не добавил/удалил */
+
 .planet-container .action-button.chat-button .wave-effect {
   position: absolute;
   top: 0;
@@ -204,21 +204,21 @@ a:hover {
   height: 0;
   opacity: 0;
   pointer-events: none;
-  z-index: -1; /* Прячем под контент */
-  background-color: rgb(255 255 255 / 30%); /* Цвет волны */
+  z-index: -1; 
+  background-color: rgb(255 255 255 / 30%); 
   border-radius: 50%;
   transform: translate(-50%, -50%) scale(0);
-  transition: none; /* Анимацией управляет JS */
+  transition: none; 
 }
 
 .action-button.write-author-button {
-  /* Возвращаем стили для этой кнопки */
+  
   background-color: var(--button-blue);
   color: var(--text-primary);
   font-weight: 700;
-  padding: 10px 20px; /* <<< Возвращаем padding */
-  border-radius: 10px; /* <<< Возвращаем radius */
-  border: none; /* Убедимся, что нет рамки */
+  padding: 10px 20px; 
+  border-radius: 10px; 
+  border: none; 
   flex-shrink: 0;
 }
 
@@ -236,7 +236,7 @@ a:hover {
   background-color: #2a4ecc;
 }
 
-/* Стиль для неактивной кнопки Редактировать */
+
 .action-button.edit-button:disabled {
   background-color: var(--button-grey);
   opacity: 0.6;
@@ -285,41 +285,41 @@ a:hover {
   background-color: #2a4ecc;
 }
 
-/* ======================================== */
 
-/*             ВЕРХНЯЯ СЕКЦИЯ             */
 
-/* ======================================== */
+
+
+
 
 .top-section {
   display: flex;
 
-  /* gap: 30px; */
+  
 
-  /* Меняем на 53px из Figma */
+  
   gap: 53px;
 
-  /* width: 1303px; */
+  
 
-  /* Явно задаем ширину - было в прошлом шаге, сохраняем */
+  
   width: 1303px;
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 40px;
 
-  /* padding: 0 30px; */
+  
 
-  /* Убираем горизонтальные паддинги */
+  
   padding: 0;
   box-sizing: border-box;
-  margin: 0 auto 40px; /* Объединенный margin для центрирования и нижнего отступа */
+  margin: 0 auto 40px; 
 }
 
-/* ------------------ */
 
-/*    ЛЕВАЯ КОЛОНКА   */
 
-/* ------------------ */
+
+
+
 .left-column {
   display: flex;
   flex-direction: column;
@@ -344,9 +344,9 @@ a:hover {
   position: relative;
 }
 
-/* Удаляем старые стили для .startup-logo-container */
+
 .startup-logo-container {
-  display: none; /* Скрываем старый контейнер */
+  display: none; 
 }
 
 .planet-display-container {
@@ -358,10 +358,10 @@ a:hover {
   align-items: center;
   justify-content: center;
   position: relative;
-  z-index: 2; /* Поверх звезд, но под управляющими элементами */
+  z-index: 2; 
 }
 
-/* Анимация звездного фона */
+
 @keyframes starry-twinkle {
   0% {
     background-position: 0 0;
@@ -371,20 +371,20 @@ a:hover {
   }
 }
 
-/* Изображение планеты */
+
 .planet-image {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
-  z-index: 3; /* Планета на переднем плане */
+  z-index: 3; 
 }
 
-/* Плейсхолдер планеты */
+
 .planet-placeholder {
   width: 30px;
   height: 30px;
   opacity: 0.5;
-  z-index: 3; /* Плейсхолдер на переднем плане */
+  z-index: 3; 
 }
 
 
@@ -396,9 +396,9 @@ a:hover {
   max-width: 100%;
   max-height: 100%;
 
-  /* OLD: object-fit: contain; */
-  object-fit: cover; /* <--- ИЗМЕНЕНО: Заполняем контейнер, обрезая лишнее */
-  border-radius: 0; /* Убираем радиус у самого img, т.к. контейнер с overflow:hidden */
+  
+  object-fit: cover; 
+  border-radius: 0; 
 }
 
 .startup-logo-placeholder {
@@ -425,7 +425,7 @@ a:hover {
   margin-top: auto;
 }
 
-/* Статус стартапа */
+
 .status-badge {
   position: absolute;
   top: 10px;
@@ -435,7 +435,7 @@ a:hover {
   color: #fff;
   padding: 5px 15px;
   border-radius: 20px;
-  z-index: 3; /* Поверх звезд и других элементов */
+  z-index: 3; 
   font-family: Unbounded, sans-serif;
   font-size: 14px;
   font-style: normal;
@@ -444,12 +444,12 @@ a:hover {
   letter-spacing: -0.28px;
 }
 
-/* Форма статуса (модератор) */
+
 .status-form {
   position: absolute;
   top: 10px;
   left: 10px;
-  z-index: 3; /* Поверх звезд и других элементов */
+  z-index: 3; 
 }
 
 .status-select {
@@ -463,7 +463,7 @@ a:hover {
   appearance: none;
   appearance: none;
   appearance: none;
-  padding-right: 30px; /* Место для стрелки */
+  padding-right: 30px; 
   background-image: url('data:image/svg+xml;utf8,<svg fill="%23A9B8D4" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
   background-repeat: no-repeat;
   background-position: right 8px center;
@@ -485,7 +485,7 @@ a:hover {
   color: var(--text-primary);
 }
 
-/* Планета (если нет лого) */
+
 .planet {
   width: 150px;
   height: 150px;
@@ -510,7 +510,7 @@ a:hover {
   top: 66.66%;
 }
 
-/* Прогресс бар */
+
 .progress-container {
   width: 100%;
   height: 50px;
@@ -526,17 +526,17 @@ a:hover {
   overflow: hidden;
 }
 
-/* Визуальная часть бара - должна растягиваться */
+
 .progress-bar-visual {
-  flex-grow: 1; /* Позволяем растягиваться */
-  flex-shrink: 1; /* Позволяем немного сжиматься, если нужно */
+  flex-grow: 1; 
+  flex-shrink: 1; 
   height: 100%;
   background-color: rgb(11 26 63 / 60%);
   border-radius: 20px;
-  margin-right: 10px; /* Отступ справа от бара */
+  margin-right: 10px; 
   position: relative;
   overflow: hidden;
-  min-width: 100px; /* Минимальная ширина, чтобы бар не исчезал */
+  min-width: 100px; 
 }
 
 .progress-animation-container {
@@ -544,7 +544,7 @@ a:hover {
   top: 0;
   left: 0;
   height: 100%;
-  border-radius: 20px; /* Полностью круглые края */
+  border-radius: 20px; 
   overflow: hidden;
   background: linear-gradient(90deg, #a6f8ff 0%, #47d1ff 50%, #e0ff9c 100%);
   box-shadow:
@@ -624,28 +624,28 @@ a:hover {
   }
 }
 
-/* Текст процента поверх бара */
+
 .progress-percentage {
   position: absolute;
 
-  /* Центрируем текст внутри .progress-animation-container */
+  
   left: 50%;
   top: 50%;
-  transform: translate(-50%, -50%); /* Точное центрирование */
+  transform: translate(-50%, -50%); 
   font-weight: bold;
-  color: #fff; /* Сделаем белым для лучшей читаемости на градиенте */
+  color: #fff; 
   font-size: 14px;
-  z-index: 3; /* Над анимацией и планетами */
-  text-shadow: 0 1px 2px rgb(0 0 0 / 60%); /* Усилим тень */
-  white-space: nowrap; /* Предотвратим перенос текста */
+  z-index: 3; 
+  text-shadow: 0 1px 2px rgb(0 0 0 / 60%); 
+  white-space: nowrap; 
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
-  padding: 0 5px; /* Небольшие отступы по бокам внутри */
+  padding: 0 5px; 
   box-sizing: border-box;
 }
 
-/* Блок с инфо об инвесторах */
+
 .progress-backers-info {
   display: flex;
   align-items: center;
@@ -663,7 +663,7 @@ a:hover {
   font-size: 18px;
 }
 
-/* Блок автора слева */
+
 .author-info-left {
   display: flex;
   width: 451px;
@@ -733,7 +733,7 @@ a:hover {
 }
 
 .author-rating a {
-  /* Стиль для ссылки "Отзывы" */
+  
   color: var(--accent-purple);
   margin-left: 5px;
 }
@@ -763,38 +763,38 @@ a:hover {
   color: var(--text-primary);
 }
 
-/* ------------------ */
 
-/*   ПРАВАЯ КОЛОНКА   */
 
-/* ------------------ */
+
+
+
 .right-column {
   display: flex;
 
-  /* width: 799px; */
+  
 
-  /* Убираем фиксированную ширину - было в прошлом, ставим фикс */
+  
 
-  /* flex-grow: 1; */
+  
 
-  /* Позволяем колонке растягиваться - меняем на 0 */
+  
   flex-grow: 0;
-  width: 799px; /* Явно задаем ширину из Figma */
-  flex-shrink: 0; /* Добавляем, чтобы не сжималась */
-  min-width: 0; /* Предотвращаем проблемы с переполнением */
+  width: 799px; 
+  flex-shrink: 0; 
+  min-width: 0; 
   flex-direction: column;
   align-items: flex-start;
   gap: 35px;
 }
 
-/* Новый враппер для заголовка и лого */
+
 .startup-title-wrapper {
   display: flex;
   align-items: center;
   gap: 20px;
 }
 
-/* Контейнер логотипа в заголовке */
+
 .startup-header .logo-display-container {
   width: 68px;
   height: 68px;
@@ -825,7 +825,7 @@ a:hover {
   height: 50%;
 }
 
-/* Обертка шапки и действий */
+
 .startup-header-actions-wrapper {
   display: flex;
   justify-content: space-between;
@@ -835,13 +835,13 @@ a:hover {
   margin-bottom: 20px;
 }
 
-/* Шапка стартапа */
+
 .startup-header {
   display: flex;
   flex-direction: column;
-  /* gap: 5px; */ /* Управляется теперь через margin-bottom у .startup-title-wrapper */
+   
   flex-grow: 1;
-  min-width: 0; /* Позволяем сжиматься и переносить контент */
+  min-width: 0; 
 }
 
 .startup-name {
@@ -851,18 +851,18 @@ a:hover {
   margin: 0;
   color: var(--text-primary);
 
-  /* white-space: nowrap;  УДАЛЕНО */
+  
 
-  /* overflow: hidden;     УДАЛЕНО */
+  
 
-  /* text-overflow: ellipsis; УДАЛЕНО */
-  word-wrap: break-word; /* Добавлено для лучшего переноса */
-  overflow-wrap: break-word; /* Добавлено для лучшего переноса */
+  
+  word-wrap: break-word; 
+  overflow-wrap: break-word; 
   display: block;
 
-  /* max-width: 100%; */
+  
 
-  /* Можно оставить или скорректировать при необходимости */
+  
 }
 
 .header-meta {
@@ -898,7 +898,7 @@ a:hover {
   font-size: 16px;
 }
 
-/* Рейтинг и комментарии под шапкой */
+
 .rating-comments-container {
   display: flex;
   flex-direction: column;
@@ -915,9 +915,9 @@ a:hover {
 }
 
 .rating-label {
-  /* Типографика из запроса */
+  
   color: #fff;
-  font-family: Unbounded, sans-serif; /* Добавляем запасной шрифт */
+  font-family: Unbounded, sans-serif; 
   font-size: 12px;
   font-style: normal;
   font-weight: 300;
@@ -925,7 +925,7 @@ a:hover {
   letter-spacing: 0.12px;
 }
 
-/* Основной рейтинг (планеты) */
+
 .rating-stars {
   display: flex;
 }
@@ -939,7 +939,7 @@ a:hover {
   color: var(--text-primary);
 }
 
-/* Действия справа вверху */
+
 .actions-top-right {
   display: flex;
   flex-direction: column;
@@ -950,8 +950,8 @@ a:hover {
 }
 
 .startup-info-badge {
-  background-color: rgb(0 8 25 / 60%); /* Делаем фон полупрозрачным */
-  backdrop-filter: blur(5px); /* Добавляем размытие */
+  background-color: rgb(0 8 25 / 60%); 
+  backdrop-filter: blur(5px); 
   color: var(--text-primary);
   padding: 8px 16px;
   border-radius: 10px;
@@ -968,18 +968,18 @@ a:hover {
   box-sizing: border-box;
 }
 
-/* --- Контейнер для табов и контента --- */
+
 .tabbed-content-wrapper {
-  background-color: transparent; /* Прозрачный фон */
+  background-color: transparent; 
   padding: 25px 30px;
   border-radius: 15px;
-  border: 1px solid #353945; /* Рамка обертки */
+  border: 1px solid #353945; 
   width: 100%;
   box-sizing: border-box;
   margin-bottom: 30px;
 }
 
-/* --- ТАБЫ НАВИГАЦИИ --- */
+
 .tab-navigation {
   display: flex;
   gap: 15px;
@@ -989,15 +989,15 @@ a:hover {
   border-bottom: 1px solid #353945;
 }
 
-/* Общие стили для кнопок табов + Типографика */
+
 .tabbed-content-wrapper .tab-navigation .tab-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 6px 12px; /* Возвращаем padding */
-  border: none; /* <<< Убираем рамку */
+  padding: 6px 12px; 
+  border: none; 
 
-  /* Типографика из запроса */
+  
   font-family: Unbounded, sans-serif;
   font-size: 14px;
   font-style: normal;
@@ -1005,62 +1005,62 @@ a:hover {
   line-height: 18px;
   letter-spacing: -0.28px;
 
-  /* ---- */
+  
   text-align: center;
   cursor: pointer;
   transition:
     background-color 0.3s ease,
     color 0.3s ease;
   white-space: nowrap;
-  border-radius: 8px; /* Возвращаем радиус */
-  background-color: transparent; /* <<< Прозрачный фон */
-  color: var(--text-secondary); /* <<< Светло-серый текст */
-  box-shadow: none; /* Убираем тени, если есть */
-  appearance: none; /* Сброс системных стилей */
-  position: relative; /* Для z-index */
-  overflow: hidden; /* Скрываем волну */
+  border-radius: 8px; 
+  background-color: transparent; 
+  color: var(--text-secondary); 
+  box-shadow: none; 
+  appearance: none; 
+  position: relative; 
+  overflow: hidden; 
   z-index: 1;
 }
 
-/* Неактивная кнопка таба - стили уже заданы выше, но можно продублировать цвет */
+
 .tabbed-content-wrapper .tab-navigation .tab-button:not(.active) {
   background-color: transparent;
   color: var(--text-secondary);
   border: none;
 }
 
-/* Активная кнопка таба - Повышаем специфичность */
+
 .startup-detail-page
   .tabbed-content-wrapper
   .tab-navigation
   .tab-button.active {
-  background-color: #e6e8ec; /* Фон активной кнопки */
-  color: #23262f; /* Цвет текста активной кнопки (темный) */
+  background-color: #e6e8ec; 
+  color: #23262f; 
   font-weight: 300;
   border: none;
 }
 
-/* Стили для текста внутри таба (для z-index) */
+
 .tabbed-content-wrapper .tab-navigation .tab-button > span {
   position: relative;
   z-index: 2;
 }
 
-/* Стили для волны (если она добавляется JS) */
+
 .tabbed-content-wrapper .tab-navigation .tab-button .wave-effect {
-  display: none !important; /* Убедимся, что волна не показывается */
+  display: none !important; 
 }
 
-/* --- КОНТЕНТ ТАБОВ --- */
+
 .tab-content-container {
-  /* Новый контейнер для управления видимостью */
-  /* Стилизация не требуется, управляет только видимостью */
+  
+  
 }
 
 .content-section {
-  display: none; /* По умолчанию скрыты */
+  display: none; 
 
-  /* Убираем общие стили рамки и отступов отсюда */
+  
 }
 
 .content-section.active {
@@ -1079,7 +1079,7 @@ a:hover {
   }
 }
 
-/* Стили заголовков внутри секций контента */
+
 .content-section .section-title {
   font-size: 24px;
   font-weight: 700;
@@ -1089,7 +1089,7 @@ a:hover {
   border-bottom: none;
 }
 
-/* Секция ИНФОРМАЦИЯ */
+
 .content-section#info-section .info-blocks {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -1097,15 +1097,15 @@ a:hover {
 }
 
 .content-section#info-section .about-section {
-  margin-top: 0; /* Убираем верхний отступ у первого about-section */
+  margin-top: 0; 
   background-color: transparent;
   padding: 0;
   border: none;
-  margin-bottom: 30px; /* Добавляем отступ снизу перед карточками */
+  margin-bottom: 30px; 
 }
 
 .content-section#info-section .about-section + .about-section {
-  margin-top: 20px; /* Отступ между "Вводная" и "О проекте" */
+  margin-top: 20px; 
 }
 
 .content-section#info-section .about-section .section-content {
@@ -1123,35 +1123,35 @@ a:hover {
   font-weight: 600;
 }
 
-/* Новые стили для .info-card-grid и .info-card */
+
 .info-card-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 25px; /* Уменьшаем gap с 45px до 25px чтобы уместить 4 блока в ряд */
-  justify-content: space-between; /* Распределяем карточки по всей ширине */
+  gap: 25px; 
+  justify-content: space-between; 
   margin-top: 30px;
 }
 
 .info-card {
-  /* width: 231px; */
+  
 
-  /* Ширина из Figma */
+  
   flex-basis: calc(
     25% - 18.75px
-  ); /* (100% - 3*25px) / 4.  18.75px = 3*25px / 4 */
-  max-width: 231px; /* Максимальная ширина из Figma */
-  min-width: 200px; /* Минимальная ширина для адаптивности */
-  height: 173px; /* Высота из Figma */
+  ); 
+  max-width: 231px; 
+  min-width: 200px; 
+  height: 173px; 
   background:
     linear-gradient(0deg, #181e30 0%, #181e30 100%),
-    linear-gradient(180deg, #004e9f 0%, #001c39 100%); /* Цвета из Figma */
+    linear-gradient(180deg, #004e9f 0%, #001c39 100%); 
   box-shadow: 0 10px 15px rgb(0 0 0 / 25%);
   border-radius: 10px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 10px; /* Уменьшаем внутренний gap с 16px до 10px */
+  gap: 10px; 
   padding: 15px;
   box-sizing: border-box;
   transition: transform 0.3s ease;
@@ -1167,7 +1167,7 @@ a:hover {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 5px; /* Небольшой отступ под иконкой */
+  margin-bottom: 5px; 
 }
 
 .info-card-icon {
@@ -1178,7 +1178,7 @@ a:hover {
 
 .info-card-title {
   color: var(--text-primary);
-  font-size: 18px; /* Уменьшаем с 20px до 18px для лучшего вида */
+  font-size: 18px; 
   font-family: Unbounded, sans-serif;
   font-weight: 400;
   line-height: 1.2;
@@ -1186,19 +1186,19 @@ a:hover {
   word-wrap: break-word;
 }
 
-/* Стили для кнопок/значений внутри info-card */
+
 .info-card .action-button.info-card-button.view-button,
 .info-card .info-card-value-button {
   align-self: stretch;
   height: 40px;
-  padding: 0 15px; /* Горизонтальный паддинг для содержимого */
+  padding: 0 15px; 
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 8px; /* Единообразный радиус, Figma был 10px для кнопки и 5px для значений */
+  border-radius: 8px; 
   font-family: Unbounded, sans-serif;
   text-align: center;
-  margin-top: auto; /* Прижимает кнопку/значение к низу карточки */
+  margin-top: auto; 
   width: 100%;
   box-sizing: border-box;
 }
@@ -1207,7 +1207,7 @@ a:hover {
   background: linear-gradient(180deg, #ffef2b 0%, #f9f7d6 100%);
   box-shadow: 2px 2px 4px rgb(0 0 0 / 25%);
   color: black;
-  font-size: 15px; /* Уменьшаем с 16px */
+  font-size: 15px; 
   font-weight: 400;
   line-height: 1;
 }
@@ -1225,45 +1225,45 @@ a:hover {
 }
 
 .info-card .info-card-value-button {
-  font-size: 15px; /* Уменьшаем с 16px */
+  font-size: 15px; 
   font-weight: 400;
   line-height: 1;
-  padding-top: 0; /* Убираем лишние внутренние отступы, т.к. высота фиксирована */
+  padding-top: 0; 
   padding-bottom: 0;
 }
 
 .info-card .info-card-value-button.accent-yellow-bg {
-  background-color: #ffef2b; /* var(--accent-yellow) */
+  background-color: #ffef2b; 
   color: black;
 }
 
 .info-card .info-card-value-button.accent-blue-bg {
-  background-color: #004e9f; /* var(--button-blue) - Figma */
+  background-color: #004e9f; 
   color: white;
 }
 
 .info-card .info-card-value-button.accent-white-bg {
   background-color: white;
-  color: #1e1e1e; /* var(--primary-dark-blue) - Figma */
-  font-size: 13px; /* Уменьшаем с 14px, было 300 вес, теперь 400 */
-  font-weight: 300; /* Возвращаем вес из Figma для этого блока */
+  color: #1e1e1e; 
+  font-size: 13px; 
+  font-weight: 300; 
 }
 
-/* Секция ГАЛЕРЕЯ */
+
 .content-section#gallery-section {
-  /* Стилизация не нужна, т.к. у сеток свои стили */
+  
 }
 
-/* Общий стиль для сеток галереи (видео и изображения) */
+
 .gallery-grid,
 .video-grid {
-  /* Добавляем новый класс */
+  
   display: grid;
 
-  /* Уменьшаем минимальный размер превью на 20% */
+  
   grid-template-columns: repeat(auto-fill, minmax(192px, 1fr));
   gap: 15px;
-  margin-bottom: 30px; /* Добавим отступ под сеткой */
+  margin-bottom: 30px; 
 }
 
 .gallery-item {
@@ -1277,46 +1277,41 @@ a:hover {
   align-items: center;
   justify-content: center;
 
-  /* Убираем transition, чтобы избежать конфликтов с PhotoSwipe */
+  
 
-  /* transition: transform 0.3s ease, box-shadow 0.3s ease; */
+  
 }
 
-/* Убираем hover-эффект масштабирования */
 
-/*
-.gallery-item:hover {
-    transform: scale(1.03);
-    box-shadow: 0 5px 15px rgba(0, 8, 25, 0.3);
-}
-*/
+
+
 
 .gallery-item img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 
-  /* Убираем transition с изображения */
+  
 
-  /* transition: transform 0.3s ease; */
+  
 }
 
-/* Добавляем стили, чтобы ссылка в галерее не выглядела как ссылка */
+
 .gallery-item:hover {
-  text-decoration: none; /* Убираем подчеркивание при наведении */
+  text-decoration: none; 
 }
 
 .gallery-item,
 .gallery-item:visited,
 .gallery-item:focus {
-  text-decoration: none; /* Убираем подчеркивание для всех состояний */
-  color: inherit; /* Наследуем цвет текста (для плейсхолдеров) */
-  outline: none; /* Убираем контур при фокусе */
+  text-decoration: none; 
+  color: inherit; 
+  outline: none; 
 }
 
-/* Стили для видео-элемента (похоже на image-item) */
+
 .gallery-item.video-item {
-  text-decoration: none; /* Убираем подчеркивание ссылки */
+  text-decoration: none; 
   color: var(--text-secondary);
 }
 
@@ -1328,8 +1323,8 @@ a:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 40px; /* Увеличиваем иконку Play */
-  opacity: 0.7; /* Делаем иконку видимой всегда */
+  font-size: 40px; 
+  opacity: 0.7; 
   transition:
     opacity 0.3s ease,
     background-color 0.3s ease;
@@ -1337,65 +1332,65 @@ a:hover {
 
 .gallery-item.video-item:hover .play-icon-overlay {
   opacity: 1;
-  background: rgb(0 8 25 / 70%); /* Затемняем при наведении */
+  background: rgb(0 8 25 / 70%); 
 }
 
 .gallery-item .video-placeholder {
   color: var(--text-secondary);
-  font-size: 16px; /* Увеличим шрифт */
+  font-size: 16px; 
   text-align: center;
 }
 
-/* Секции Этапы, Документы, Условия (пока пустые) */
+
 #stages-section,
 #documents-section,
 #conditions-section {
   color: var(--text-secondary);
 }
 
-/* ======================================== */
 
-/*           СЕКЦИЯ КОММЕНТАРИЕВ          */
 
-/* ======================================== */
+
+
+
 #comments-section {
   display: flex;
   width: 1303px;
 
-  /* max-width: 95%; */
+  
   margin: 50px auto;
 
-  /* padding: 50px 0; */
+  
 
-  /* Возвращаем горизонтальные паддинги */
+  
   padding: 50px 30px;
   flex-direction: column;
   align-items: stretch;
   gap: 18px;
   flex-shrink: 0;
   border-radius: 20px;
-  background: #fff; /* Белый фон */
-  box-shadow: 6px 6px 10px 0 rgb(0 0 0 / 25%); /* Тень */
-  backdrop-filter: blur(10px); /* Блюр */
+  background: #fff; 
+  box-shadow: 6px 6px 10px 0 rgb(0 0 0 / 25%); 
+  backdrop-filter: blur(10px); 
   box-sizing: border-box;
 }
 
-/* Заголовок "Комментарии" + иконка + счетчик */
+
 .comments-header {
   display: flex;
-  justify-content: flex-start; /* Выравниваем по левому краю */
+  justify-content: flex-start; 
   align-items: center;
-  gap: 15px; /* Отступ между элементами */
-  border-bottom: none; /* Убираем старый разделитель */
+  gap: 15px; 
+  border-bottom: none; 
   padding-bottom: 0;
-  margin-bottom: 12px; /* Отступ под заголовком */
+  margin-bottom: 12px; 
 }
 
 #comments-section .section-title {
-  display: flex; /* Чтобы иконка и счетчик были в строку */
+  display: flex; 
   align-items: center;
-  gap: 10px; /* Отступ между словом, иконкой и числом */
-  color: #141416; /* Темный цвет */
+  gap: 10px; 
+  color: #141416; 
   font-family: Unbounded, sans-serif;
   font-size: 24px;
   font-weight: 500;
@@ -1404,75 +1399,75 @@ a:hover {
 }
 
 .comment-title-icon {
-  font-size: 20px; /* Размер иконки */
-  color: #777e90; /* Цвет иконки */
+  font-size: 20px; 
+  color: #777e90; 
 }
 
 .comments-count {
-  color: #777e90; /* Цвет счетчика */
+  color: #777e90; 
   font-family: Unbounded, sans-serif;
   font-size: 24px;
   font-weight: 500;
 }
 
-/* Основной контейнер: левая (комменты) + правая (рейтинг) колонки */
+
 .comments-main-content {
   display: flex;
   align-items: flex-start;
-  gap: 57px; /* Отступ между колонками */
-  width: 100%; /* Занимает всю ширину #comments-section */
+  gap: 57px; 
+  width: 100%; 
 }
 
-/* Левая колонка (основная) */
+
 .comments-list-wrapper {
-  flex-grow: 1; /* Занимает доступное пространство */
+  flex-grow: 1; 
   display: flex;
   flex-direction: column;
-  min-width: 0; /* Для корректного сжатия */
+  min-width: 0; 
 }
 
-/* Правая колонка (рейтинг) */
+
 .comments-rating-summary-wrapper {
   width: 349px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* Выравниваем контент по левому краю */
+  align-items: flex-start; 
   gap: 16px;
 
-  /* Убираем отступ сверху, если он не нужен по макету */
+  
 
-  /* margin-top: ??? */
+  
 }
 
-/* Убираем старый .comments-rating-summary, т.к. структура изменилась */
 
-/* .comments-rating-summary { ... } */
 
-/* Обертка для всего контента рейтинга (линия + распределение) */
+
+
+
 .rating-summary-content {
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 16px; /* Отступ между линией рейтинга и распределением */
+  gap: 16px; 
 }
 
-/* Линия: Большие планеты + цифра */
+
 .overall-rating-line {
   display: flex;
-  align-items: center; /* Выравнивание по вертикали */
-  gap: 12px; /* Отступ между планетами и цифрой */
+  align-items: center; 
+  gap: 12px; 
   width: 100%;
-  padding-bottom: 16px; /* Отступ под линией */
-  border-bottom: 1px solid #e6e8ec; /* Разделитель */
-  margin-bottom: 0; /* Убираем нижний маргин, т.к. gap у родителя */
+  padding-bottom: 16px; 
+  border-bottom: 1px solid #e6e8ec; 
+  margin-bottom: 0; 
 }
 
 .overall-rating-stars {
   display: flex;
   gap: 6px;
 
-  /* margin-bottom убран, т.к. все в одну линию */
+  
 }
 
 .overall-rating-icon-container {
@@ -1489,37 +1484,37 @@ a:hover {
   color: #23262f;
 }
 
-/* Распределение рейтинга */
+
 .rating-distribution {
   display: flex;
   flex-direction: column;
-  gap: 10px; /* Увеличим немного gap */
+  gap: 10px; 
   width: 100%;
 }
 
 .rating-bar-container {
   display: flex;
   align-items: center;
-  gap: 10px; /* Увеличим gap */
+  gap: 10px; 
 }
 
-/* Контейнер для N маленьких планет */
+
 .star-label {
   flex-shrink: 0;
   display: flex;
-  align-items: center; /* Выравнивание планеток */
-  justify-content: flex-start; /* Начинаем слева */
-  gap: 3px; /* Отступ между маленькими планетами */
-  min-width: 95px; /* Приблизительная ширина для 5 планет + отступы */
+  align-items: center; 
+  justify-content: flex-start; 
+  gap: 3px; 
+  min-width: 95px; 
 
-  /* width: auto; */
+  
 
-  /* Ширина по содержимому */
+  
 }
 
-/* Маленькая иконка планеты в распределении */
+
 .rating-dist-icon {
-  width: 16px; /* Фикс размер */
+  width: 16px; 
   height: 16px;
   object-fit: contain;
 }
@@ -1527,14 +1522,14 @@ a:hover {
 .rating-bar {
   flex-grow: 1;
   height: 8px;
-  background-color: #f4f5f6; /* Светло-серый фон */
+  background-color: #f4f5f6; 
   border-radius: 4px;
   overflow: hidden;
 }
 
 .rating-bar-fill {
   height: 100%;
-  background-color: #3772ff; /* Синий цвет заполнения */
+  background-color: #3772ff; 
   border-radius: 4px;
   transition: width 0.5s ease;
 }
@@ -1549,9 +1544,9 @@ a:hover {
   color: #777e91;
 }
 
-/* --- Стили левой колонки --- */
 
-/* Список комментариев */
+
+
 .comments-list {
   display: flex;
   flex-direction: column;
@@ -1566,25 +1561,25 @@ a:hover {
 }
 
 .comment-card {
-  display: flex; /* Горизонтальное расположение left и right */
-  justify-content: space-between; /* Разносим left и right */
-  align-items: flex-start; /* Выравнивание по верху */
+  display: flex; 
+  justify-content: space-between; 
+  align-items: flex-start; 
   padding: 24px 0;
   border-bottom: 1px solid #e6e8ec;
 }
 
 .comment-card:last-of-type {
-  /* У последнего убираем границу */
+  
   border-bottom: none;
 }
 
-/* Левая часть комментария */
+
 .comment-left {
   display: flex;
   align-items: flex-start;
   gap: 12px;
-  flex-grow: 1; /* Занимает доступное место */
-  margin-right: 20px; /* Отступ от правой части */
+  flex-grow: 1; 
+  margin-right: 20px; 
 }
 
 .comment-author-avatar {
@@ -1598,26 +1593,26 @@ a:hover {
 .comment-content-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 4px; /* Отступ между именем и текстом */
+  gap: 4px; 
 }
 
 .comment-author-name {
-  /* Применяем Текст1/GI/16 */
+  
   color: #000;
   font-family: Unbounded, sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
   line-height: 1;
-  margin-bottom: 6px; /* Добавляем отступ снизу */
+  margin-bottom: 6px; 
 }
 
 .comment-body {
-  /* Применяем Текст2/GI/14, но с серым цветом */
+  
 
-  /* color: #777E91; */
+  
 
-  /* Делаем черным по запросу */
+  
   color: #000;
   font-family: Unbounded, sans-serif;
   font-size: 14px;
@@ -1633,13 +1628,13 @@ a:hover {
   margin: 0;
 }
 
-/* Правая часть комментария */
+
 .comment-right {
   display: flex;
   flex-direction: column;
-  align-items: flex-end; /* Выравнивание по правому краю */
+  align-items: flex-end; 
   gap: 8px;
-  flex-shrink: 0; /* Не сжимается */
+  flex-shrink: 0; 
   text-align: right;
 }
 
@@ -1648,14 +1643,14 @@ a:hover {
   font-size: 12px;
   font-weight: 400;
   line-height: 1.3;
-  color: #b1b5c3; /* Серый цвет даты */
-  margin-left: 0; /* Убираем старый отступ */
+  color: #b1b5c3; 
+  margin-left: 0; 
   padding-left: 0;
 }
 
 .comment-rating {
   display: flex;
-  justify-content: flex-end; /* Планеты справа */
+  justify-content: flex-end; 
   gap: 4px;
 }
 
@@ -1674,15 +1669,15 @@ a:hover {
 
 .comment-footer {
   display: flex;
-  justify-content: flex-end; /* Бейджи справа */
+  justify-content: flex-end; 
   gap: 8px;
   margin-top: 0;
-  padding-left: 0; /* Убираем старый отступ */
+  padding-left: 0; 
 }
 
-/* Бейджи */
+
 .badge {
-  /* Применяем Текст2/GI/14 */
+  
   color: #000;
   font-family: Unbounded, sans-serif;
   font-size: 14px;
@@ -1691,30 +1686,30 @@ a:hover {
   line-height: 18px;
   letter-spacing: -0.28px;
 
-  /* Стили как у кнопки с рамкой */
+  
   background-color: transparent;
   border: 1px solid #000;
   border-radius: 6px;
-  padding: 4px 10px; /* Немного увеличим паддинг */
+  padding: 4px 10px; 
   text-align: center;
   display: inline-block;
 }
 
 .badge-invested {
-  /* Убираем специфичные стили, используем общие */
+  
   border-color: #000;
   color: #000;
   background-color: transparent;
 }
 
 .badge-buyout {
-  /* Убираем специфичные стили, используем общие */
+  
   border-color: #000;
   color: #000;
   background-color: transparent;
 }
 
-/* Кнопка "Показать еще" */
+
 .show-more-comments,
 .hide-comments-button {
   border: 2px solid #e6e8ec;
@@ -1724,15 +1719,15 @@ a:hover {
   font-weight: 700;
   display: inline-flex;
   align-items: center;
-  justify-content: center; /* Центрируем текст/иконку */
+  justify-content: center; 
   gap: 12px;
   background-color: transparent;
   border-radius: 90px;
-  margin-top: 24px; /* Отступ от последнего видимого коммента */
+  margin-top: 24px; 
   cursor: pointer;
   transition: all 0.2s ease;
   font-family: Poppins, sans-serif;
-  align-self: flex-start; /* Кнопка слева */
+  align-self: flex-start; 
 }
 
 .show-more-comments:hover,
@@ -1747,20 +1742,20 @@ a:hover {
   color: #777e90;
 }
 
-/* Форма добавления комментария (позиционирование) */
+
 .comment-form {
-  margin-top: 30px; /* Отступ от комментариев или кнопки "Показать еще" */
-  width: 100%; /* На всю ширину левой колонки */
+  margin-top: 30px; 
+  width: 100%; 
 }
 
 .comment-textarea {
-  /* width: 1005px; */
+  
 
-  /* Убираем фикс ширину, т.к. форма 100% */
+  
   width: 100%;
-  height: 104px; /* Заданная высота */
-  background-color: #fff; /* Белый фон */
-  border: 1px solid #e6e8ec; /* Серая рамка */
+  height: 104px; 
+  background-color: #fff; 
+  border: 1px solid #e6e8ec; 
   border-radius: 12px;
   padding: 12px 16px;
   font-family: Poppins, sans-serif;
@@ -1781,32 +1776,32 @@ a:hover {
 
 .comment-textarea:focus {
   outline: none;
-  border-color: #777e91; /* Темнее рамка при фокусе */
+  border-color: #777e91; 
   background-color: #fff;
   box-shadow: none;
 }
 
-/* Кнопка "Оставить комментарий" */
+
 #comments-section .action-button.comment-submit {
-  display: flex; /* Используем flex из описания */
+  display: flex; 
   height: 40px;
-  padding: 0 35px; /* Убираем вертикальный паддинг, т.к. есть height */
+  padding: 0 35px; 
   justify-content: center;
   align-items: center;
-  gap: 8px; /* Примерный gap */
+  gap: 8px; 
   border-radius: 10px;
-  background: linear-gradient(0deg, #004e9f 0%, #006edf 100%); /* Градиент */
-  box-shadow: 2px 2px 4px 0 rgb(0 0 0 / 25%); /* Тень */
-  color: #fff; /* Белый текст */
+  background: linear-gradient(0deg, #004e9f 0%, #006edf 100%); 
+  box-shadow: 2px 2px 4px 0 rgb(0 0 0 / 25%); 
+  color: #fff; 
   font-family: Poppins, sans-serif;
-  font-size: 14px; /* Уменьшим шрифт */
-  font-weight: 600; /* SemiBold */
+  font-size: 14px; 
+  font-weight: 600; 
   border: none;
   cursor: pointer;
   transition:
     background 0.3s ease,
     box-shadow 0.3s ease;
-  align-self: flex-start; /* Кнопка слева */
+  align-self: flex-start; 
 }
 
 #comments-section .action-button.comment-submit:hover {
@@ -1814,43 +1809,43 @@ a:hover {
     0deg,
     #003a7a 0%,
     #0055b3 100%
-  ); /* Затемненный градиент */
+  ); 
   box-shadow: 1px 1px 3px 0 rgb(0 0 0 / 20%);
 }
 
-/* ======================================== */
 
-/*         СЕКЦИЯ ПОХОЖИХ СТАРТАПОВ       */
 
-/* ======================================== */
+
+
+
 .similar-startups-section {
   margin-top: 60px;
-  padding: 70px 0; /* Только вертикальные отступы, фон будет на всю ширину */
-  background-color: black; /* Цвет фона из Figma */
+  padding: 70px 0; 
+  background-color: black; 
   background-image: url('/static/accounts/images/backgrounds/unsplash_bg.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  border-radius: 20px; /* Закругленные углы для всей секции */
-  overflow: hidden; /* Чтобы фон обрезался по радиусу */
+  border-radius: 20px; 
+  overflow: hidden; 
   box-sizing: border-box;
 
-  /* box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.25); */
+  
 
-  /* Тень лучше на внутренний контейнер или убрать, если фон на всю ширину */
+  
 }
 
 .similar-startups-container {
-  width: 1303px; /* Точная ширина блока */
-  max-width: 1303px; /* Ширина контентной сетки */
-  margin: 0 auto; /* Центрирование контента */
-  padding: 0 30px; /* Внутренние горизонтальные отступы для самого контента */
+  width: 1303px; 
+  max-width: 1303px; 
+  margin: 0 auto; 
+  padding: 0 30px; 
   box-sizing: border-box;
   position: relative;
 
-  /* Стили фона и рамки были перенесены в .similar-startups-section */
+  
 
-  /* Убираем отсюда background-color, background-image, border-radius, overflow, box-shadow */
+  
 }
 
 .similar-title {
@@ -1879,7 +1874,7 @@ a:hover {
   text-transform: uppercase;
 }
 
-/* Кнопка Показать все */
+
 .show-all-button {
   position: absolute;
   top: 0;
@@ -1909,7 +1904,7 @@ a:hover {
   color: var(--accent-green);
 }
 
-/* Сетка похожих стартапов */
+
 .similar-startups-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -1931,7 +1926,7 @@ a:hover {
   transition:
     transform 0.3s ease,
     box-shadow 0.3s ease;
-  box-sizing: border-box; /* Добавим */
+  box-sizing: border-box; 
 }
 
 .similar-card:hover {
@@ -1986,11 +1981,11 @@ a:hover {
   font-weight: 600;
   color: var(--primary-dark-blue);
 
-  /* Добавляем стили для однострочного отображения */
+  
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  width: 100%; /* Убедимся, что имя занимает всю доступную ширину */
+  width: 100%; 
   max-width: 100%;
 }
 
@@ -2013,7 +2008,7 @@ a:hover {
 }
 
 .category-badge {
-  /* Бейдж категории */
+  
   display: inline-block;
   padding: 4px 10px;
   background-color: #e9ecef;
@@ -2023,7 +2018,7 @@ a:hover {
   font-weight: 400;
 }
 
-/* Плейсхолдер для кнопки "Показать еще" */
+
 .similar-card.show-more-placeholder {
   display: flex;
   align-items: center;
@@ -2034,38 +2029,38 @@ a:hover {
   padding: 0;
   box-shadow: none;
   transform: none;
-  min-height: 200px; /* Примерная высота */
+  min-height: 200px; 
 }
 
 .similar-card.show-more-placeholder:hover {
   transform: none;
 }
 
-/* Кнопка "Показать еще" - применяем стили как у "Показать все" */
+
 .similar-startups-grid
   .similar-card.show-more-placeholder
   .action-button.show-more-similar {
-  /* Стили из .show-all-button */
+  
   display: inline-flex !important;
   align-items: center;
   gap: 8px;
   padding: 10px 20px;
   height: auto;
-  border: 1px solid var(--text-primary) !important; /* Белая рамка */
-  border-radius: 25px !important; /* Закругление */
-  background: transparent !important; /* Прозрачный фон */
-  color: var(--text-primary) !important; /* Белый текст */
+  border: 1px solid var(--text-primary) !important; 
+  border-radius: 25px !important; 
+  background: transparent !important; 
+  color: var(--text-primary) !important; 
   cursor: pointer;
   font-size: 14px;
   font-weight: 500;
   transition: all 0.3s ease;
 
-  /* Убираем возможные конфликты */
+  
   width: auto;
-  text-decoration: none !important; /* Убираем подчеркивание, если есть */
+  text-decoration: none !important; 
 }
 
-/* Пытаемся скрыть элемент с эффектом волны ВНУТРИ кнопки */
+
 .similar-startups-grid
   .similar-card.show-more-placeholder
   .action-button.show-more-similar
@@ -2073,7 +2068,7 @@ a:hover {
   display: none !important;
 }
 
-/* Убираем эффект волны (предположение) - ОСТАВИМ НА ВСЯКИЙ СЛУЧАЙ */
+
 .similar-startups-grid
   .similar-card.show-more-placeholder
   .action-button.show-more-similar::before,
@@ -2084,21 +2079,21 @@ a:hover {
   display: none !important;
 }
 
-/* Hover - добавляем glow */
+
 .similar-startups-grid
   .similar-card.show-more-placeholder
   .action-button.show-more-similar:hover {
   background-color: rgb(255 255 255 / 10%);
   border-color: var(--accent-green);
   color: var(--accent-green);
-  box-shadow: 0 0 15px rgb(8 229 207 / 50%); /* Свечение как у accent-green */
+  box-shadow: 0 0 15px rgb(8 229 207 / 50%); 
 }
 
-/* ======================================== */
 
-/*               АДАПТИВНОСТЬ              */
 
-/* ======================================== */
+
+
+
 
 @media (width <= 1200px) {
   .main-content-grid {
@@ -2171,27 +2166,27 @@ a:hover {
   }
 
   .startup-header-actions-wrapper {
-    flex-direction: column; /* Складываем шапку и действия */
-    align-items: stretch; /* Растягиваем по ширине */
+    flex-direction: column; 
+    align-items: stretch; 
   }
 
   .actions-top-right {
-    align-items: stretch; /* Выравниваем кнопки по ширине */
+    align-items: stretch; 
     width: 100%;
-    flex-flow: row wrap; /* Кнопки в ряд */ /* Разрешаем перенос */
+    flex-flow: row wrap;  
     justify-content: flex-start;
   }
 
   .actions-top-right > * {
-    flex-basis: calc(50% - 8px); /* По две кнопки/элемента */
+    flex-basis: calc(50% - 8px); 
     max-width: calc(50% - 8px);
   }
 
   .startup-info-badge {
-    min-width: auto; /* Убираем мин ширину */
-    flex-basis: 100%; /* Бейдж на всю строку */
+    min-width: auto; 
+    flex-basis: 100%; 
     max-width: 100%;
-    margin-bottom: 10px; /* Отступ под бейджем */
+    margin-bottom: 10px; 
   }
 
   .comment-textarea {
@@ -2229,11 +2224,11 @@ a:hover {
   }
 
   .header-meta {
-    /* стили уже подходят */
+    
   }
 
   .rating-comments-container {
-    /* стили уже подходят */
+    
   }
 
   .info-blocks {
@@ -2274,7 +2269,7 @@ a:hover {
   }
 
   .actions-top-right > * {
-    flex-basis: 100%; /* Все элементы по одному в ряд */
+    flex-basis: 100%; 
     max-width: 100%;
   }
 
@@ -2287,25 +2282,25 @@ a:hover {
   }
 }
 
-/* --- Стили для иконок рейтинга (SVG) --- */
+
 .rating-icon-container {
   display: inline-block;
   position: relative;
 
-  /* width/height задаются отдельно для overall и comment */
+  
   vertical-align: middle;
   cursor: default;
   line-height: 1;
 }
 
-/* ---> Задаем размер для иконок основного рейтинга <--- */
+
 .rating-stars .rating-icon-container {
   width: 20px;
   height: 20px;
-  margin: 0 1px; /* Небольшой отступ между иконками */
+  margin: 0 1px; 
 }
 
-/* ---> Задаем размер для иконок рейтинга похожих стартапов <--- */
+
 .similar-card-rating .rating-icon-container {
   width: 14px;
   height: 14px;
@@ -2319,91 +2314,78 @@ a:hover {
   height: 100%;
   object-fit: contain;
 
-  /* transition: width 0.1s ease-out; */
+  
 
-  /* <<< УДАЛЯЕМ */
+  
 }
 
-/* Пустая планета (общий стиль) */
+
 .rating-icon-container .icon-empty {
   filter: grayscale(100%) opacity(0.3);
   z-index: 1;
 }
 
-/* Заполненная планета (общий стиль) */
+
 .rating-icon-container .icon-filled {
   position: absolute;
   top: 0;
   left: 0;
   height: 100%;
 
-  /* width: 0%; */
+  
 
-  /* <<< УДАЛЯЕМ */
+  
   overflow: hidden;
   z-index: 2;
-  filter: none; /* Убираем фильтры для заполненной */
+  filter: none; 
 }
 
-/* Стили для АВАТАРОК */
+
 .comment-author-avatar {
   width: 32px;
   height: 32px;
   border-radius: 50%;
   background-color: #e6e8ec;
   flex-shrink: 0;
-  display: flex; /* Для центрирования иконки/картинки */
+  display: flex; 
   align-items: center;
   justify-content: center;
-  overflow: hidden; /* Скрываем выходящее за круг */
+  overflow: hidden; 
 }
 
 .comment-author-avatar img {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Масштабируем картинку */
+  object-fit: cover; 
 }
 
 .comment-author-avatar i.fa-user {
-  /* Стиль для иконки-плейсхолдера */
+  
   color: #b1b5c3;
   font-size: 18px;
 }
 
-/* --- Утилиты --- */
+
 .hidden {
-  display: none !important; /* Для скрытия комментариев */
+  display: none !important; 
 }
 
-/* --- БАЗОВЫЕ СТИЛИ ДЛЯ GLIGHTBOX (ТЕМНАЯ ТЕМА) --- */
 
-/* Фон оверлея */
+
+
 .goverlay {
-  background: rgb(0 8 25 / 90%) !important; /* Темно-синий полупрозрачный */
+  background: rgb(0 8 25 / 90%) !important; 
   backdrop-filter: blur(5px);
 }
 
-/* <<< Удаляем стили для контейнера навигации >>> */
 
-/*
-.goverlay .gnavigation {
-    position: absolute !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 100% !important;
-    height: 100% !important;
-    display: flex !important;
-    justify-content: space-between;
-    align-items: center;
-    pointer-events: none !important;
-    z-index: 99998 !important;
-}
-*/
 
-/* Кнопки навигации (стрелки) - ОСТАВЛЯЕМ ТОЛЬКО ВИЗУАЛЬНЫЕ СТИЛИ */
+
+
+
 .goverlay .gnavigation .gnext,
 .goverlay .gnavigation .gprev {
-  /* Визуальные стили */
+  
   background: rgb(30 40 65 / 80%) !important;
   border: none !important;
   width: 44px !important;
@@ -2414,26 +2396,26 @@ a:hover {
   opacity: 0.8 !important;
   cursor: pointer !important;
 
-  /* Стили для SVG внутри кнопки (оставляем) */
-  display: flex !important; /* Для центровки SVG */
+  
+  display: flex !important; 
   align-items: center !important;
   justify-content: center !important;
 
-  /* <<< УБИРАЕМ ВСЕ ЯВНЫЕ СТИЛИ ПОЗИЦИОНИРОВАНИЯ И ВИДИМОСТИ ОТСЮДА >>> */
+  
 
-  /* visibility: visible !important; */
+  
 
-  /* Пусть GLightbox сам решает */
+  
 
-  /* z-index: 99999 !important; */
+  
 
-  /* position: relative !important; */
+  
 
-  /* pointer-events: auto !important; */
+  
 
-  /* margin: 0 15px !important; */
+  
 
-  /* Базовые сбросы (можно оставить) */
+  
   text-decoration: none !important;
   appearance: none !important;
   font-size: inherit !important;
@@ -2442,28 +2424,28 @@ a:hover {
   color: inherit !important;
 }
 
-/* Убираем лишние элементы типа wave-effect */
+
 .goverlay .gnavigation .gnext *,
 .goverlay .gnavigation .gprev * {
-  display: none !important; /* Скрываем все дочерние, кроме SVG */
+  display: none !important; 
 }
 
 .goverlay .gnavigation .gnext svg,
 .goverlay .gnavigation .gprev svg {
-  display: block !important; /* Показываем только SVG */
+  display: block !important; 
   fill: var(--text-primary) !important;
   width: 20px !important;
   height: 20px !important;
   transition: none !important;
   transform: none !important;
   opacity: 1 !important;
-  margin: 0 !important; /* Убираем отступы */
-  padding: 0 !important; /* Убираем паддинги */
+  margin: 0 !important; 
+  padding: 0 !important; 
 }
 
-/* Hover состояние - оставляем старый селектор на всякий случай */
 
-/* Или можно упростить до .goverlay .gnavigation button:hover */
+
+
 body.glightbox-open .goverlay .gcontainer .gnavigation button.gnext:hover,
 body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
 .goverlay .gnavigation .gnext:hover,
@@ -2472,16 +2454,16 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   opacity: 1 !important;
 }
 
-/* Загрузчик */
+
 .gspinner {
   border-left-color: var(
     --accent-purple
-  ) !important; /* Фиолетовый цвет загрузчика */
+  ) !important; 
   width: 40px !important;
   height: 40px !important;
 }
 
-/* Описание/подпись к слайду (если используется) */
+
 .gslide-description {
   background: rgb(0 8 25 / 70%) !important;
 }
@@ -2491,159 +2473,146 @@ body.glightbox-open .goverlay .gcontainer .gnavigation button.gprev:hover,
   color: var(--text-primary) !important;
 }
 
-/* --- Добавляем переопределение overflow для контейнера --- */
 
-/*
-body.glightbox-open .glightbox-container {
-    overflow: visible !important;
-}
-*/
 
-/* --- Удаляем попытку убрать артефакты --- */
 
-/* Отключаем transition и animation для контейнеров GLightbox */
 
-/*
-.glightbox-container .gslide,
-.glightbox-container .gslide-inner-content,
-.glightbox-container .gslide-media {
-    transition: none !important;
-    animation: none !important;
-    /* Возвращаем backface-visibility */
 
-/*    backface-visibility: hidden !important;
-    -webkit-backface-visibility: hidden !important;
-}
-*/
 
-/* GLightbox Navigation Button Fixes */
+
+
+
+
+
+
+
 .gnext,
 .gprev {
-  position: absolute !important; /* Убедимся, что позиционирование абсолютное */
+  position: absolute !important; 
   top: 50% !important;
   transform: translateY(-50%) !important;
-  z-index: 9999 !important; /* Высокий z-index, чтобы быть поверх всего */
-  opacity: 1 !important; /* Убедимся, что кнопки не прозрачные */
-  visibility: visible !important; /* Убедимся, что кнопки видимы */
+  z-index: 9999 !important; 
+  opacity: 1 !important; 
+  visibility: visible !important; 
   cursor: pointer !important;
-  width: 40px; /* Примерный размер, можно настроить */
-  height: 40px; /* Примерный размер, можно настроить */
+  width: 40px; 
+  height: 40px; 
   background-color: rgb(
     0 0 0 / 50%
-  ) !important; /* Полупрозрачный фон для видимости */
-  border-radius: 50%; /* Сделать круглыми */
+  ) !important; 
+  border-radius: 50%; 
   border: none;
   padding: 0;
-  display: flex !important; /* Используем flex для центрирования иконки */
+  display: flex !important; 
   align-items: center;
   justify-content: center;
 }
 
 .gprev {
-  left: 20px !important; /* Отступ слева */
+  left: 20px !important; 
 }
 
 .gnext {
-  right: 20px !important; /* Отступ справа */
+  right: 20px !important; 
 }
 
-/* Стили для SVG иконки внутри кнопки (если стандартные иконки не видны) */
+
 .gnext svg,
 .gprev svg {
   display: block !important;
-  width: 20px !important; /* Размер иконки */
-  height: 20px !important; /* Размер иконки */
-  fill: white !important; /* Цвет иконки */
+  width: 20px !important; 
+  height: 20px !important; 
+  fill: white !important; 
 }
 
-/* GLightbox Container Fixes */
+
 .glightbox-container {
-  /* Самый внешний контейнер */
-  position: fixed !important; /* Фиксированное позиционирование относительно окна */
+  
+  position: fixed !important; 
   top: 0 !important;
   left: 0 !important;
   width: 100% !important;
   height: 100% !important;
-  overflow: hidden !important; /* Предотвращаем выход за пределы экрана */
-  z-index: 9990 !important; /* Чуть ниже оверлея и кнопок, но выше остального */
+  overflow: hidden !important; 
+  z-index: 9990 !important; 
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 15px; /* Небольшой отступ от краев экрана */
+  padding: 15px; 
   box-sizing: border-box;
 }
 
 .gcontainer {
-  /* Контейнер для слайдера и кнопок */
-  position: relative !important; /* Относительное позиционирование для дочерних абсолютных */
+  
+  position: relative !important; 
   width: 100% !important;
   height: 100% !important;
-  max-width: 95vw !important; /* Ограничиваем макс. ширину */
-  max-height: 95vh !important; /* Ограничиваем макс. высоту */
-  display: flex !important; /* Используем flex для выравнивания слайдера */
+  max-width: 95vw !important; 
+  max-height: 95vh !important; 
+  display: flex !important; 
   align-items: center !important;
   justify-content: center !important;
-  margin: auto !important; /* Дополнительное центрирование */
+  margin: auto !important; 
   z-index: 9995 !important;
 }
 
 .gslider {
-  /* Сам слайдер */
+  
   width: 100% !important;
   height: 100% !important;
-  max-width: 100%; /* Занимает всю ширину .gcontainer */
-  max-height: 100%; /* Занимает всю высоту .gcontainer */
+  max-width: 100%; 
+  max-height: 100%; 
 }
 
-/* Перепроверим стили кнопок, чтобы они точно были внутри .gcontainer */
+
 .gcontainer .gnext,
 .gcontainer .gprev {
   position: absolute !important;
   top: 50% !important;
   transform: translateY(-50%) !important;
   z-index: 9999 !important;
-  width: 40px !important; /* Убедимся, что !important есть */
+  width: 40px !important; 
   height: 40px !important;
   background-color: rgb(
     0 0 0 / 50%
-  ) !important; /* Полупрозрачный фон для видимости */
-  border-radius: 50% !important; /* Сделать круглыми */
+  ) !important; 
+  border-radius: 50% !important; 
   border: none !important;
   padding: 0 !important;
-  display: flex !important; /* Используем flex для центрирования иконки */
+  display: flex !important; 
   align-items: center !important;
   justify-content: center !important;
-  opacity: 1 !important; /* Убедимся, что кнопки не прозрачные */
-  visibility: visible !important; /* Убедимся, что кнопки видимы */
+  opacity: 1 !important; 
+  visibility: visible !important; 
   cursor: pointer !important;
 }
 
 .gcontainer .gprev {
-  left: 15px !important; /* Небольшой отступ от края .gcontainer */
+  left: 15px !important; 
 }
 
 .gcontainer .gnext {
-  right: 15px !important; /* Небольшой отступ от края .gcontainer */
+  right: 15px !important; 
 }
 
-/* Стили для SVG иконки внутри кнопки (если стандартные иконки не видны) */
+
 .gcontainer .gnext svg,
 .gcontainer .gprev svg {
   display: block !important;
-  width: 20px !important; /* Размер иконки */
-  height: 20px !important; /* Размер иконки */
-  fill: white !important; /* Цвет иконки */
+  width: 20px !important; 
+  height: 20px !important; 
+  fill: white !important; 
 }
 
-/* GLightbox Close Button Position */
+
 .gclose {
   position: absolute !important;
-  top: 15px !important; /* Отступ сверху */
-  right: 15px !important; /* Отступ справа */
-  width: 30px !important; /* Размер кнопки */
+  top: 15px !important; 
+  right: 15px !important; 
+  width: 30px !important; 
   height: 30px !important;
-  z-index: 10000 !important; /* Выше всего остального */
-  background-color: rgb(0 0 0 / 50%) !important; /* Фон как у навигации */
+  z-index: 10000 !important; 
+  background-color: rgb(0 0 0 / 50%) !important; 
   border-radius: 50% !important;
   opacity: 1 !important;
   visibility: visible !important;
@@ -2657,63 +2626,63 @@ body.glightbox-open .glightbox-container {
 
 .gclose svg {
   display: block !important;
-  width: 15px !important; /* Размер иконки крестика */
+  width: 15px !important; 
   height: 15px !important;
   fill: white !important;
 }
 
-/* Стили для .moderator-section-container */
+
 .moderator-section-container {
   width: 1303px;
   margin-left: auto;
   margin-right: auto;
   padding: 0 30px;
-  background: var(--secondary-blue); /* Добавляем тёмный фон */
-  border-radius: 20px; /* Добавляем закругление */
-  border: 1px solid var(--border-color); /* Добавляем рамку */
-  box-shadow: 6px 6px 10px rgb(0 0 0 / 25%); /* Добавляем тень */
-  backdrop-filter: blur(10px); /* Добавляем размытие */
+  background: var(--secondary-blue); 
+  border-radius: 20px; 
+  border: 1px solid var(--border-color); 
+  box-shadow: 6px 6px 10px rgb(0 0 0 / 25%); 
+  backdrop-filter: blur(10px); 
 }
 
-/* ======================================== */
 
-/*          СТИЛИ ДЛЯ ТАЙМЛАЙНА           */
 
-/* (Адаптировано из startup_form.css)   */
 
-/* ======================================== */
+
+
+
+
 
 .timeline-display-wrapper {
   margin-top: 20px;
   padding: 20px;
 
-  /* border: 1px solid var(--border-color); */
+  
 
-  /* Убрал рамку, если не нужна */
+  
   border-radius: 10px;
 
-  /* background-color: var(--secondary-blue); */
+  
 
-  /* Убрал фон, если основной фон страницы подходит */
+  
 }
 
 .timeline {
   display: flex;
-  justify-content: space-around; /* Распределяем иконки по ширине */
+  justify-content: space-around; 
   align-items: center;
   position: relative;
-  margin-bottom: 30px; /* Отступ от описаний */
-  padding: 0 10px; /* Небольшие отступы по краям */
+  margin-bottom: 30px; 
+  padding: 0 10px; 
 }
 
 .timeline-progress-container {
   position: absolute;
-  top: 50%; /* Центрируем линию по вертикали относительно иконок */
+  top: 50%; 
   left: 0;
   width: 100%;
-  height: 4px; /* Толщина линии */
+  height: 4px; 
   transform: translateY(-50%);
-  z-index: 1; /* Под иконками */
+  z-index: 1; 
 }
 
 .timeline-progress-line,
@@ -2727,12 +2696,12 @@ body.glightbox-open .glightbox-container {
 
 .timeline-progress-line {
   width: 100%;
-  background-color: var(--border-color); /* Цвет неактивной части линии */
+  background-color: var(--border-color); 
 }
 
 .timeline-progress-filled {
-  width: 0%; /* Задается инлайн-стилем */
-  background-color: var(--accent-purple); /* Цвет активной части линии */
+  width: 0%; 
+  background-color: var(--accent-purple); 
   transition: width 0.5s ease-in-out;
 }
 
@@ -2742,27 +2711,27 @@ body.glightbox-open .glightbox-container {
   align-items: center;
   text-align: center;
   gap: 8px;
-  position: relative; /* Для z-index */
-  z-index: 2; /* Иконки над линией прогресса */
-  cursor: pointer; /* Показываем, что элемент кликабельный */
+  position: relative; 
+  z-index: 2; 
+  cursor: pointer; 
   transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
 .timeline-step:hover {
-  transform: translateY(-2px); /* Легкий подъем при наведении */
+  transform: translateY(-2px); 
 }
 
 .timeline-step:hover .step-number-wrapper {
-  transform: scale(1.1); /* Увеличение иконки при наведении */
-  box-shadow: 0 4px 12px rgba(123, 97, 255, 0.3); /* Легкая тень */
+  transform: scale(1.1); 
+  box-shadow: 0 4px 12px rgba(123, 97, 255, 0.3); 
 }
 
 .step-number-wrapper {
-  width: 48px; /* Размер кружка иконки */
+  width: 48px; 
   height: 48px;
   border-radius: 50%;
-  background-color: var(--dark-card-bg); /* Фон кружка */
-  border: 2px solid var(--border-color); /* Рамка кружка */
+  background-color: var(--dark-card-bg); 
+  border: 2px solid var(--border-color); 
   display: flex;
   justify-content: center;
   align-items: center;
@@ -2774,27 +2743,27 @@ body.glightbox-open .glightbox-container {
 }
 
 .step-number-wrapper .step-icon {
-  width: 24px; /* Размер самой иконки внутри кружка */
+  width: 24px; 
   height: 24px;
   object-fit: contain;
 }
 
-/* Стили для активного и пройденного этапа */
+
 .timeline-step.active-step-display .step-number-wrapper {
-  border-color: var(--accent-yellow); /* Желтая рамка для активного */
-  background-color: var(--accent-yellow); /* Желтый фон для активного */
+  border-color: var(--accent-yellow); 
+  background-color: var(--accent-yellow); 
 }
 
 .timeline-step.active-step-display .step-number-wrapper .step-icon {
-  /* Можно изменить цвет иконки, если она SVG и позволяет это */
+  
   filter: brightness(
     0.8
-  ); /* Пример: немного затемнить иконку на активном фоне */
+  ); 
 }
 
 .timeline-step.completed-step-display .step-number-wrapper {
-  border-color: var(--accent-purple); /* Фиолетовая рамка для пройденного */
-  background-color: var(--accent-purple); /* Фиолетовый фон для пройденного */
+  border-color: var(--accent-purple); 
+  background-color: var(--accent-purple); 
 }
 
 .timeline-step .step-text {
@@ -2812,7 +2781,7 @@ body.glightbox-open .glightbox-container {
   color: var(--accent-purple);
 }
 
-/* Дополнительные стили для неактивных этапов */
+
 .timeline-step:not(.active-step-display):not(.completed-step-display) .step-number-wrapper {
   opacity: 0.7;
 }
@@ -2822,24 +2791,24 @@ body.glightbox-open .glightbox-container {
   border-color: var(--accent-yellow);
 }
 
-/* Описания этапов */
+
 .timeline-descriptions-display {
   margin-top: 20px;
 }
 
 .timeline-description-item {
   padding: 15px;
-  background-color: var(--dark-card-bg); /* Фон для блока описания */
+  background-color: var(--dark-card-bg); 
   border-radius: 8px;
-  margin-bottom: 15px; /* Отступ между описаниями */
+  margin-bottom: 15px; 
   border: 1px solid var(--border-color);
-  display: none; /* По умолчанию скрыты */
+  display: none; 
 }
 
 .timeline-description-item.active {
-  display: block; /* Показываем только активное описание */
-  border-left: 3px solid var(--accent-yellow); /* Акцент для активного */
-  animation: fadeInDescription 0.3s ease-in-out; /* Плавное появление */
+  display: block; 
+  border-left: 3px solid var(--accent-yellow); 
+  animation: fadeInDescription 0.3s ease-in-out; 
 }
 
 @keyframes fadeInDescription {
@@ -2867,7 +2836,7 @@ body.glightbox-open .glightbox-container {
   margin-bottom: 0;
 }
 
-/* Стили для списка документов */
+
 .document-list {
   list-style-type: none;
   padding-left: 0;
@@ -2906,10 +2875,10 @@ body.glightbox-open .glightbox-container {
 }
 
 .document-name {
-  word-break: break-all; /* Перенос длинных имен файлов */
+  word-break: break-all; 
 }
 
-/* Звездный фон (космос) */
+
 .space-background {
   position: absolute;
   top: 0;
@@ -2919,7 +2888,7 @@ body.glightbox-open .glightbox-container {
   z-index: 1;
 }
 
-/* Движущиеся звезды */
+
 .planet-container .stars {
   position: absolute;
   top: 0;
@@ -2930,11 +2899,11 @@ body.glightbox-open .glightbox-container {
     repeat;
   opacity: 0.5;
   animation: parallax 100s linear infinite;
-  z-index: 1; /* Фон - самый низкий слой */
-  border-radius: 10px; /* Соответствует border-radius .planet-container */
+  z-index: 1; 
+  border-radius: 10px; 
 }
 
-/* Анимация параллакса для звезд */
+
 @keyframes parallax {
   from {
     background-position: 0 0;
@@ -2944,39 +2913,39 @@ body.glightbox-open .glightbox-container {
   }
 }
 
-/* Изображение планеты */
+
 .planet-image {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
-  z-index: 3; /* Планета на переднем плане */
+  z-index: 3; 
 }
 
-/* Плейсхолдер планеты */
+
 .planet-placeholder {
   width: 30px;
   height: 30px;
   opacity: 0.5;
-  z-index: 3; /* Плейсхолдер на переднем плане */
+  z-index: 3; 
 }
 
-/* Стили для блока модерации */
+
 .moderator-section-container .moderator-review-section.card {
-  background-color: var(--secondary-blue); /* Тёмный фон, как в других блоках */
-  border: 1px solid var(--border-color); /* Рамка в стиле страницы */
-  border-radius: 15px; /* Закругление, как у других блоков */
-  box-shadow: 6px 6px 10px rgb(0 0 0 / 25%); /* Тень, как у других блоков */
-  backdrop-filter: blur(10px); /* Размытие, как у других блоков */
+  background-color: var(--secondary-blue); 
+  border: 1px solid var(--border-color); 
+  border-radius: 15px; 
+  box-shadow: 6px 6px 10px rgb(0 0 0 / 25%); 
+  backdrop-filter: blur(10px); 
 }
 
 .moderator-section-container .moderator-review-section .card-header {
-  background-color: transparent; /* Прозрачный фон заголовка */
-  border-bottom: 1px solid var(--border-color); /* Разделитель */
+  background-color: transparent; 
+  border-bottom: 1px solid var(--border-color); 
   padding: 15px 20px;
 }
 
 .moderator-section-container .moderator-review-section .card-header h4 {
-  color: var(--accent-yellow); /* Желтый цвет заголовка */
+  color: var(--accent-yellow); 
   font-size: 24px;
   font-weight: 700;
   margin: 0;
@@ -2987,7 +2956,7 @@ body.glightbox-open .glightbox-container {
 }
 
 .moderator-section-container .moderator-review-section .form-label {
-  color: var(--text-primary); /* Белый цвет текста */
+  color: var(--text-primary); 
   font-size: 16px;
   font-weight: 500;
   margin-bottom: 10px;
@@ -2998,13 +2967,13 @@ body.glightbox-open .glightbox-container {
   .moderator-comment-textarea {
   width: 100%;
   height: 104px;
-  background-color: var(--dark-card-bg); /* Тёмный фон для textarea */
-  border: 1px solid var(--border-color); /* Рамка в стиле страницы */
+  background-color: var(--dark-card-bg); 
+  border: 1px solid var(--border-color); 
   border-radius: 12px;
   padding: 12px 16px;
   font-family: Unbounded, sans-serif;
   font-size: 14px;
-  color: var(--text-primary); /* Белый цвет текста */
+  color: var(--text-primary); 
   resize: vertical;
   margin-bottom: 16px;
   box-sizing: border-box;
@@ -3017,54 +2986,54 @@ body.glightbox-open .glightbox-container {
 .moderator-section-container
   .moderator-review-section
   .moderator-comment-textarea::placeholder {
-  color: var(--text-secondary); /* Светло-серый цвет плейсхолдера */
+  color: var(--text-secondary); 
 }
 
 .moderator-section-container
   .moderator-review-section
   .moderator-comment-textarea:focus {
   outline: none;
-  border-color: var(--accent-purple); /* Фиолетовый акцент при фокусе */
+  border-color: var(--accent-purple); 
   background-color: var(--dark-card-bg);
   box-shadow: none;
 }
 
-/* Кнопки "Одобрить" и "Отклонить" */
+
 .moderator-section-container .moderator-review-section .btn-success {
-  background-color: var(--success-green); /* Зелёный цвет для "Одобрить" */
+  background-color: var(--success-green); 
   border: none;
   border-radius: 10px;
   padding: 10px 20px;
   font-family: Unbounded, sans-serif;
   font-size: 14px;
   font-weight: 600;
-  color: var(--primary-dark-blue); /* Тёмный текст для контраста */
+  color: var(--primary-dark-blue); 
   transition: background-color 0.3s ease;
 }
 
 .moderator-section-container .moderator-review-section .btn-success:hover {
-  background-color: #2cb302; /* Чуть темнее зелёный при наведении */
+  background-color: #2cb302; 
 }
 
 .moderator-section-container .moderator-review-section .btn-danger {
-  background-color: var(--danger-red); /* Красный цвет для "Отклонить" */
+  background-color: var(--danger-red); 
   border: none;
   border-radius: 10px;
   padding: 10px 20px;
   font-family: Unbounded, sans-serif;
   font-size: 14px;
   font-weight: 600;
-  color: var(--text-primary); /* Белый текст */
+  color: var(--text-primary); 
   transition: background-color 0.3s ease;
 }
 
 .moderator-section-container .moderator-review-section .btn-danger:hover {
-  background-color: #d94343; /* Чуть темнее красный при наведении */
+  background-color: #d94343; 
 }
 
 .moderator-section-container .moderator-comment-display.card {
-  background-color: var(--secondary-blue); /* Тёмный фон */
-  border: 1px solid var(--border-color); /* Рамка в стиле страницы */
+  background-color: var(--secondary-blue); 
+  border: 1px solid var(--border-color); 
   border-radius: 15px;
   box-shadow: 6px 6px 10px rgb(0 0 0 / 25%);
   backdrop-filter: blur(10px);
@@ -3077,7 +3046,7 @@ body.glightbox-open .glightbox-container {
 }
 
 .moderator-section-container .moderator-comment-display .card-header h5 {
-  color: var(--accent-yellow); /* Желтый цвет заголовка */
+  color: var(--accent-yellow); 
   font-size: 18px;
   font-weight: 600;
   margin: 0;
@@ -3088,7 +3057,7 @@ body.glightbox-open .glightbox-container {
 }
 
 .moderator-section-container .moderator-comment-display .card-text {
-  color: var(--text-secondary); /* Светло-серый текст */
+  color: var(--text-secondary); 
   font-size: 14px;
   line-height: 1.6;
   margin: 0;
@@ -3110,7 +3079,7 @@ body.glightbox-open .glightbox-container {
   transition: width 0.2s ease;
 }
 
-/* Новые стили для цели инвестиций */
+
 .funding-goal-info {
   display: flex;
   gap: 8px;
@@ -3129,13 +3098,13 @@ body.glightbox-open .glightbox-container {
   font-weight: 600;
 }
 
-/* Стили для новых кнопок модератора */
+
 .actions-top-right .action-button.add-investment-button,
 .actions-top-right .action-button.change-owner-button,
 .actions-top-right .action-button.add-investor-button {
   background-color: var(
     --button-blue
-  ); /* Такой же цвет, как у кнопки "Редактировать" */
+  ); 
   color: var(--text-primary);
   border-radius: 10px;
 }
@@ -3143,10 +3112,10 @@ body.glightbox-open .glightbox-container {
 .actions-top-right .action-button.add-investment-button:hover,
 .actions-top-right .action-button.change-owner-button:hover,
 .actions-top-right .action-button.add-investor-button:hover {
-  background-color: #2a4ecc; /* Такой же hover-эффект, как у "Редактировать" */
+  background-color: #2a4ecc; 
 }
 
-/* Стили для модальных окон */
+
 .modal-backdrop {
   background-color: rgb(0 8 25 / 80%);
   backdrop-filter: blur(5px);

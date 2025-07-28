@@ -1,27 +1,18 @@
 from django import forms
-
 from .models import Comments, Directions, Roles, Startups, StartupStages, Users, ChatConversations, TransactionTypes, UserVotes, SupportTicket
 from .utils import get_planet_urls
-
-
-# Кастомный виджет для загрузки нескольких файлов
 class MultipleFileInput(forms.ClearableFileInput):
     allow_multiple_selected = True
-
-
-# Кастомное поле для загрузки нескольких файлов
 class MultipleFileField(forms.FileField):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault("widget", MultipleFileInput())
         super().__init__(*args, **kwargs)
-
     def to_python(self, data):
         if not data:
             return []
         if isinstance(data, list):
             return data
         return [data] if data else []
-
     def clean(self, data, initial=None):
         files = data if isinstance(data, list) else [data] if data else []
         cleaned_files = []
@@ -29,8 +20,6 @@ class MultipleFileField(forms.FileField):
             if file:
                 cleaned_files.append(super().clean(file, initial))
         return cleaned_files
-
-
 class RegisterForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput, label="Пароль")
     confirm_password = forms.CharField(
@@ -41,17 +30,14 @@ class RegisterForm(forms.ModelForm):
         label="Роль",
         empty_label="Выберите роль"
     )
-
     class Meta:
         model = Users
         fields = ["email", "first_name", "last_name", "phone", "role"]
-
     def clean_email(self):
         email = self.cleaned_data.get("email")
         if email and Users.objects.filter(email=email).exists():
             raise forms.ValidationError("Этот email уже используется.")
         return email
-
     def clean(self):
         cleaned_data = super().clean()
         password = cleaned_data.get("password")
@@ -59,13 +45,9 @@ class RegisterForm(forms.ModelForm):
         if password != confirm_password:
             raise forms.ValidationError("Пароли не совпадают")
         return cleaned_data
-
-
 class LoginForm(forms.Form):
     email = forms.EmailField(label="Email")
     password = forms.CharField(widget=forms.PasswordInput, label="Пароль")
-
-
 class StartupForm(forms.ModelForm):
     logo = forms.ImageField(
         label="Логотип *",
@@ -99,12 +81,11 @@ class StartupForm(forms.ModelForm):
         widget=forms.Textarea(attrs={"rows": 5}), label="Условия *", required=True
     )
     planet_image = forms.ChoiceField(
-        choices=[],  # Заполняется в __init__
+        choices=[],
         label="Выберите планету *",
         required=True,
         widget=forms.HiddenInput(attrs={"id": "id_planet_image"}),
     )
-
     INVESTMENT_TYPE_CHOICES = [
         ("invest", "Инвестирование"),
         ("buy", "Выкуп"),
@@ -116,16 +97,13 @@ class StartupForm(forms.ModelForm):
         required=True,
         widget=forms.Select(attrs={"class": "form-control"}),
     )
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         try:
             self.fields["planet_image"].choices = [(p, p) for p in get_planet_urls()]
         except Exception as e:
-            # Логгирование ошибки или обработка случая, когда S3 недоступен
             print(f"Error fetching planet URLs: {e}")
             self.fields["planet_image"].choices = []
-
     class Meta:
         model = Startups
         fields = [
@@ -210,7 +188,6 @@ class StartupForm(forms.ModelForm):
             "agree_rules": "Согласен с правилами *",
             "agree_data_processing": "Согласен с обработкой данных *",
         }
-
     def clean_title(self):
         title = self.cleaned_data.get("title")
         if not self.instance or not self.instance.pk:
@@ -226,7 +203,6 @@ class StartupForm(forms.ModelForm):
                     "Другой стартап с таким названием уже существует."
                 )
         return title
-
     def clean(self):
         cleaned_data = super().clean()
         creatives = cleaned_data.get("creatives", [])
@@ -240,7 +216,6 @@ class StartupForm(forms.ModelForm):
             cleaned_data["creatives"] = [creatives]
         else:
             cleaned_data["creatives"] = creatives if creatives else []
-
         proofs = cleaned_data.get("proofs", [])
         if isinstance(proofs, list) and all(isinstance(item, list) for item in proofs):
             cleaned_data["proofs"] = [file for sublist in proofs for file in sublist]
@@ -248,10 +223,7 @@ class StartupForm(forms.ModelForm):
             cleaned_data["proofs"] = [proofs]
         else:
             cleaned_data["proofs"] = proofs if proofs else []
-
         return cleaned_data
-
-
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comments
@@ -265,15 +237,11 @@ class CommentForm(forms.ModelForm):
                 }
             ),
         }
-
-
 class MessageForm(forms.Form):
     message_text = forms.CharField(
         widget=forms.Textarea(attrs={"rows": 2, "placeholder": "Введите сообщение..."}),
         label="Сообщение",
     )
-
-
 class UserSearchForm(forms.Form):
     query = forms.CharField(
         required=False,
@@ -290,11 +258,8 @@ class UserSearchForm(forms.Form):
         widget=forms.CheckboxSelectMultiple,
         label="Роли",
     )
-
-
 class ProfileEditForm(forms.ModelForm):
     telegram = forms.CharField(max_length=100, required=False, label="Telegram")
-
     class Meta:
         model = Users
         fields = [
@@ -307,27 +272,22 @@ class ProfileEditForm(forms.ModelForm):
         widgets = {
             'bio': forms.Textarea(attrs={'rows': 3, 'maxlength': 150}),
         }
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['first_name'].widget.attrs['placeholder'] = 'Введите имя'
         self.fields['last_name'].widget.attrs['placeholder'] = 'Введите фамилию'
         self.fields['website_url'].widget.attrs['placeholder'] = 'https://example.com'
         self.fields['telegram'].widget.attrs['placeholder'] = '@username'
-
     def clean_telegram(self):
         telegram = self.cleaned_data.get("telegram")
         if telegram and not telegram.startswith("@"):
             telegram = f"@{telegram}"
         return telegram
-
     def clean_bio(self):
         bio = self.cleaned_data.get("bio")
         if bio and len(bio) > 50:
             raise forms.ValidationError("Описание не должно превышать 50 символов.")
         return bio
-
-
 class SupportTicketForm(forms.ModelForm):
     class Meta:
         model = SupportTicket
@@ -340,8 +300,6 @@ class SupportTicketForm(forms.ModelForm):
             'subject': 'Тема',
             'message': 'Сообщение',
         }
-
-
 class ModeratorTicketForm(forms.ModelForm):
     class Meta:
         model = SupportTicket

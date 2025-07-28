@@ -1,4 +1,4 @@
-/* All previous content will be removed */
+
 
 #main-header {
   width: 100%;
@@ -128,14 +128,14 @@
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Общий стиль для наведения на все элементы навигации */
+
 .header-nav-link:hover,
 .catalog-dropdown-button:hover {
   background-color: rgba(255, 255, 255, 0.1);
   color: #fff;
 }
 
-/* Убираем специфичный фон для Космочата, чтобы он соответствовал общему стилю */
+
 .header-nav-link.cosmochat-link:hover {
   background: rgba(255, 255, 255, 0.1);
 }
@@ -327,18 +327,18 @@
   gap: 16px;
 }
 
-/* Новые стили для SVG иконки поиска */
+
 .header-search-icon-img {
-  width: 22px; /* Соответствует старому размеру контейнера */
-  height: 22px; /* Соответствует старому размеру контейнера */
-  opacity: 0.8; /* Немного увеличим видимость, можно настроить */
+  width: 22px; 
+  height: 22px; 
+  opacity: 0.8; 
 }
 
 .header-search-input {
   flex-grow: 1;
 }
 
-/* Стили для кнопки "Создать стартап" - повышаем специфичность */
+
 nav.nav-menu > a.header-nav-link.header-role-button.create-startup-button {
   background: #3fff47 !important;
   color: #000 !important;
@@ -355,16 +355,16 @@ nav.nav-menu > a.header-nav-link.header-role-button.create-startup-button {
   border: none !important;
 }
 
-/* Если иконка внутри кнопки "Создать" должна быть тоже черной */
+
 nav.nav-menu
   > a.header-nav-link.header-role-button.create-startup-button
   .create-startup-icon {
   filter: brightness(
     0
-  ) !important; /* Делает иконку черной, если она была светлой SVG */
+  ) !important; 
 }
 
-/* Стили для выпадающего меню Каталог */
+
 .catalog-dropdown-container {
   position: relative;
   display: inline-block;
@@ -394,9 +394,9 @@ nav.nav-menu
   align-items: center;
 }
 
-/* По умолчанию меню скрыто */
+
 .catalog-dropdown-menu {
-  display: none !important; /* Максимальный приоритет для скрытия по умолчанию */
+  display: none !important; 
   position: absolute;
   background-color: #fff;
   min-width: 220px;
@@ -407,23 +407,23 @@ nav.nav-menu
   top: calc(100% + 10px);
   padding: 10px 0;
   border: 1px solid var(--border-light-gray);
-  flex-direction: column; /* Эти стили будут применены, когда display станет flex */
+  flex-direction: column; 
   align-items: center;
 }
 
-/* Отображение меню только когда у контейнера есть класс .open */
+
 .catalog-dropdown-container.open .catalog-dropdown-menu {
-  display: flex !important; /* Принудительно показываем */
+  display: flex !important; 
 }
 
-/* Убираем правило display:flex для .catalog-dropdown-button:focus + .catalog-dropdown-menu, если оно еще есть */
 
-/* .catalog-dropdown-button:focus + .catalog-dropdown-menu { display: none !important; } */
+
+
 
 .catalog-dropdown-item.no-wave-effect {
   all: unset !important;
 
-  /* Сначала все сбрасываем, потом задаем нужное */
+  
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -448,7 +448,7 @@ nav.nav-menu
   appearance: none !important;
   appearance: none !important;
 
-  /* ЯВНО УСТАНАВЛИВАЕМ ЦВЕТ ПОСЛЕ UNSET */
+  
   color: #000 !important;
   transition:
     transform 0.2s ease,
@@ -456,16 +456,16 @@ nav.nav-menu
 }
 
 .catalog-dropdown-item.no-wave-effect:hover {
-  /* Сброс для ховера на всякий случай */
+  
   background: none !important;
   background-color: transparent !important;
   border: none !important;
   box-shadow: none !important;
 
-  /* ЯВНО УСТАНАВЛИВАЕМ ЦВЕТ ПРИ ХОВЕРЕ (остается черным) */
+  
   color: #000 !important;
 
-  /* Нужные стили для ховера */
+  
   font-weight: 700 !important;
   transform: scale(1.05) !important;
 }

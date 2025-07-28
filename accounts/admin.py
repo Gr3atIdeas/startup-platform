@@ -1,8 +1,5 @@
 from django.contrib import admin
-
 from .models import Startups
-
-
 @admin.register(Startups)
 class StartupsAdmin(admin.ModelAdmin):
     list_display = ("title", "owner", "status", "created_at")

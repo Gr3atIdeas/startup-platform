@@ -7,41 +7,41 @@
 
 {% block head_extra %}
   {{ block.super }}
-  {# <link rel="stylesheet" href="{% static 'accounts/css/startups_list_styles.css' %}"> <-- Закомментируем или удалим, если файла нет #}
+  
   <link rel="stylesheet" href="{% static 'accounts/css/startups_list.css' %}">
   <link rel="stylesheet" href="{% static 'accounts/libs/fontawesome/css/all.min.css' %}">
   <link rel="stylesheet" href="{% static 'accounts/libs/nouislider/css/nouislider.min.css' %}">
-  {# <<< Комментируем rangeslider.js CSS >>> #}
+  
 
-  {# JS пока не подключаем здесь #}
+  
 
 
 {% endblock %}
 
 {% block content %}
-{# <div class="catalog-wrapper"> Переносим обертки с паддингами в body в CSS #}
+
   <div class="catalog-container">
-    <!-- Боковая панель с фильтрами -->
-    <aside class="sidebar"> {# Используем aside для семантики #}
+    
+    <aside class="sidebar"> 
       <form method="get" id="filterForm">
-        {# Блок сортировки #}
+        
         <div class="sort-dropdown">
-          <div class="sort-dropdown-title">Показать сначала</div> {# Новый title class #}
+          <div class="sort-dropdown-title">Показать сначала</div> 
           <select name="sort_order" id="sortOrder">
             <option value="newest" {% if sort_order == 'newest' %}selected{% endif %}>Новые</option>
             <option value="oldest" {% if sort_order == 'oldest' %}selected{% endif %}>Старые</option>
           </select>
         </div>
 
-        {# Блок категорий #}
+        
         <h2 class="categories-title">Категории</h2>
-        {# Здесь можно добавить кастомный скроллбар как в Figma, но это усложнит #}
-        {# <div class="scrollbar-track"><div class="scrollbar-thumb"></div></div> #}
+        
+        
         <ul class="categories-list">
           {% for dir in directions %}
             <li class="category-item">
               <label class="category-label">
-                {# Меняем порядок: чекбокс, потом текст #}
+                
                 <input type="checkbox" name="category" value="{{ dir.direction_name }}" class="category-checkbox" {% if dir.direction_name in selected_categories %}checked{% endif %}>
                 <span class="category-name">
                     {% with original_name=dir.direction_name|default:"" %}
@@ -50,7 +50,7 @@
                         {% elif original_name == "Delivery" %}Доставка
                         {% elif original_name == "Cafe" %}Кафе/рестораны
                         {% elif original_name == "Fastfood" %}Фастфуд
-                        {% elif original_name == "Health" %}Здоровье {# Исправлено Здооровье на Здоровье #}
+                        {% elif original_name == "Health" %}Здоровье 
                         {% elif original_name == "Beauty" %}Красота
                         {% elif original_name == "Transport" %}Транспорт
                         {% elif original_name == "Sport" %}Спорт
@@ -59,7 +59,7 @@
                         {% elif original_name == "Finance" %}Финансы
                         {% elif original_name == "Healthcare" %}Здравоохранение
                         {% elif original_name == "Technology" %}Технологии
-                        {% else %}{{ original_name|default:"Не указано" }}{# Возвращаем оригинал или "Не указано" #}
+                        {% else %}{{ original_name|default:"Не указано" }}
                         {% endif %}
                     {% endwith %}
                 </span>
@@ -70,61 +70,61 @@
           {% endfor %}
         </ul>
 
-        {# Блок микроинвестиций #}
+        
         <div class="micro-investment">
-          {# В Figma нет label-wrapper, делаем напрямую #}
+          
           <span class="micro-label">Микроинвестиции</span>
-          <span class="help-icon" title="Информация о микроинвестициях">?</span> {# Добавляем title #}
-          {# Переключатель #}
+          <span class="help-icon" title="Информация о микроинвестициях">?</span> 
+          
           <div class="toggle-switch {% if micro_investment %}active{% endif %}" id="microToggle" onclick="toggleMicroInvestment()">
             <div class="toggle-handle"></div>
           </div>
           <input type="hidden" name="micro_investment" id="microInvestmentInput" value="{% if micro_investment %}1{% else %}0{% endif %}">
         </div>
 
-        <!-- Фильтр рейтинга -->
+        
         <div class="rating-filter">
-          <div class="rating-label-container"> {# Новый контейнер #}
+          <div class="rating-label-container"> 
             <label class="rating-label">Рейтинг</label>
-            {# Меняем id для значения диапазона #}
+            
             <span id="ratingValueDisplay" class="rating-value-display">{{ min_rating|default:0|floatformat:1 }} - {{ max_rating|default:5|floatformat:1 }}</span>
           </div>
-          <div id="ratingSlider"></div> {# Контейнер для noUiSlider #}
-          {# Скрытые поля остаются без изменений #}
+          <div id="ratingSlider"></div> 
+          
           <input type="hidden" name="min_rating" id="minRatingInput" value="{{ min_rating|default:0|floatformat:1 }}">
           <input type="hidden" name="max_rating" id="maxRatingInput" value="{{ max_rating|default:5|floatformat:1 }}">
-          <div class="rating-range-label">Диапозон</div> {# Подпись как в Figma #}
+          <div class="rating-range-label">Диапозон</div> 
         </div>
 
-        {# Скрытое поле для поиска остается #}
+        
         <input type="hidden" name="search" value="{{ search_query|default_if_none:'' }}">
 
-        <!-- Кнопка показать -->
-        {# Добавляем data-атрибуты из Figma, если они нужны для JS #}
+        
+        
         <button type="submit" class="show-button" data-has-icon-end="false" data-has-icon-start="false" data-size="Medium" data-state="Default" data-variant="Primary">Показать</button>
       </form>
     </aside>
 
-    <!-- Область с карточками стартапов и поиском -->
+    
     <div class="startups-content">
-      <!-- Поисковая строка -->
+      
       <div class="catalog-search-wrapper">
         <div class="catalog-search">
-          {# Вставляем поле ввода #}
+          
           <input type="text" class="catalog-search-input" placeholder="Поиск по каталогу" value="{{ search_query|default_if_none:'' }}">
-          {# Вставляем кнопку с SVG иконкой #}
-          <button type="button" class="catalog-search-btn" title="Поиск"> {# Используем type="button" если не сабмит #}
+          
+          <button type="button" class="catalog-search-btn" title="Поиск"> 
             <svg viewBox="0 0 28 27" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12.417 21.375c4.836 0 8.75-3.914 8.75-8.75s-3.914-8.75-8.75-8.75-8.75 3.914-8.75 8.75 3.914 8.75 8.75 8.75zM22.923 23.274l-5.067-4.892" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> {# Используем currentColor и stroke #}
+                <path d="M12.417 21.375c4.836 0 8.75-3.914 8.75-8.75s-3.914-8.75-8.75-8.75-8.75 3.914-8.75 8.75 3.914 8.75 8.75 8.75zM22.923 23.274l-5.067-4.892" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/> 
             </svg>
           </button>
         </div>
       </div>
 
-      <!-- Сетка стартапов -->
+      
       <div class="startups-grid" id="startupsGrid">
-        {% if page_obj %} {# Проверяем page_obj вместо approved_startups #}
-          {# <<< Включаем частичный шаблон для отрисовки карточек >>> #}
+        {% if page_obj %} 
+          
           {% include 'accounts/partials/_startup_cards.html' with page_obj=page_obj %}
         {% else %}
           <div class="no-startups">
@@ -133,23 +133,23 @@
         {% endif %}
       </div>
 
-      {# <<< Начало: Контейнер для пагинации >>> #}
+      
       <div class="pagination-controls">
-          {# Информационный блок пагинации теперь не используется #}
-          {# <div class="pagination-info" id="paginationInfo"> ... </div> #}
+          
+          
 
-          {# <<< Начало: Контейнер для кнопок Показать/Скрыть - заменяем на цифровую пагинацию >>> #}
-          {# <div class="show-more-container"> ... </div> #}
+          
+          
           {% if page_obj and paginator.num_pages > 1 %}
             <div class="pagination-numbers">
-                {# Логика отображения пагинации - может потребовать кастомный тег или сложную логику здесь #}
-                {# Пример простой логики #}
+                
+                
                 {% if page_obj.has_previous %}
-                    {# <a href="?page=1">&laquo; First</a> #}
-                    <a href="?page={{ page_obj.previous_page_number }}">Назад</a> {# Previous -> Назад #}
+                    
+                    <a href="?page={{ page_obj.previous_page_number }}">Назад</a> 
                 {% endif %}
 
-                {# Отображаем номера страниц (упрощенный вариант) #}
+                
                 {% for num in paginator.page_range %}
                     {% if page_obj.number == num %}
                         <span class="current-page">{{ num }}</span>
@@ -161,24 +161,24 @@
                 {% endfor %}
 
                 {% if page_obj.has_next %}
-                    <a href="?page={{ page_obj.next_page_number }}">Вперед</a> {# Next -> Вперед #}
-                    {# <a href="?page={{ paginator.num_pages }}">Last &raquo;</a> #}
-                    <a href="?page={{ paginator.num_pages }}">Последняя &raquo;</a> {# Last -> Последняя #}
+                    <a href="?page={{ page_obj.next_page_number }}">Вперед</a> 
+                    
+                    <a href="?page={{ paginator.num_pages }}">Последняя &raquo;</a> 
                 {% endif %}
             </div>
-           {% elif page_obj %} {# Если только одна страница, ничего не показываем #}
-                {# <p>Показано {{ paginator.count }} стартапов.</p> #}
+           {% elif page_obj %} 
+                
            {% endif %}
-          {# <<< Конец: Замена на цифровую пагинацию >>> #}
+          
       </div>
-      {# <<< Конец: Контейнер для пагинации >>> #}
+      
 
-    </div> {# Конец .startups-content #}
-  </div> {# Конец .catalog-container #}
-{# </div> Закрывающий div для .catalog-wrapper убран #}
+    </div> 
+  </div> 
 
-{# Удаляем старый скрипт rangeslider #}
-{# <script src="https://cdnjs.cloudflare.com/ajax/libs/rangeslider.js/2.3.0/rangeslider.min.js"></script> #}
+
+
+
 
 <script src="{% static 'accounts/libs/nouislider/js/nouislider.min.js' %}"></script>
 <script src="{% static 'accounts/libs/wnumb/js/wNumb.min.js' %}"></script>
@@ -377,8 +377,8 @@
 {% endblock %}
 
 {% block body_scripts %}
-  {{ block.super }} {# На случай, если в base.html уже есть скрипты в этом блоке #}
-  {# <<< Подключаем JS noUiSlider и wNumb здесь >>> #}
+  {{ block.super }} 
+  
   <script src="{% static 'accounts/libs/nouislider/js/nouislider.min.js' %}"></script>
   <script src="{% static 'accounts/libs/wnumb/js/wNumb.min.js' %}"></script>
 {% endblock %}

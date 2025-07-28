@@ -1,11 +1,11 @@
-/* static/accounts/css/startup_success.css */
+
 
 .success-page-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 70vh; /* Высота относительно видимой части экрана, подберите по необходимости */
+  min-height: 70vh; 
   padding: 20px;
   text-align: center;
   color: #fff;
@@ -15,14 +15,11 @@
   background-repeat: no-repeat;
   box-sizing: border-box;
 
-  /* background-image будет установлен в HTML-шаблоне через <style> блок */
+  
 }
 
 .success-content-overlay {
-  /* Этот блок можно использовать для полупрозрачного оверлея,
-       если фон затрудняет чтение текста.
-       Пример: background-color: rgba(0, 0, 0, 0.3);
-       Сейчас он не используется, но оставлен для возможности настройки. */
+  
   padding: 30px;
   border-radius: 8px;
   max-width: 600px;
@@ -32,11 +29,11 @@
 .title-congrats {
   font-size: 52px;
   font-weight: 700;
-  color: #0af2c2; /* Бирюзовый цвет */
+  color: #0af2c2; 
   margin-top: 0;
   margin-bottom: 5px;
   font-family:
-    Montserrat, sans-serif; /* Пример шрифта, используйте шрифт вашего проекта */
+    Montserrat, sans-serif; 
   line-height: 1.2;
 }
 
@@ -46,14 +43,14 @@
   color: #fff;
   margin-top: 0;
   margin-bottom: 50px;
-  font-family: Montserrat, sans-serif; /* Пример шрифта */
+  font-family: Montserrat, sans-serif; 
   line-height: 1.2;
 }
 
 .btn-main-page {
   display: inline-block;
   padding: 16px 40px;
-  background-color: #f9ed3a; /* Желтый цвет */
+  background-color: #f9ed3a; 
   color: #1e1e1e;
   text-decoration: none;
   font-size: 16px;
@@ -65,7 +62,7 @@
     transform 0.2s ease;
   border: none;
   cursor: pointer;
-  font-family: Inter, sans-serif; /* Пример шрифта */
+  font-family: Inter, sans-serif; 
 }
 
 .btn-main-page:hover {
@@ -75,10 +72,10 @@
 
 .info-text {
   font-size: 15px;
-  color: #b0b0c0; /* Светло-серый текст */
+  color: #b0b0c0; 
   line-height: 1.5;
   max-width: 450px;
   margin-left: auto;
   margin-right: auto;
-  font-family: Inter, sans-serif; /* Пример шрифта */
+  font-family: Inter, sans-serif; 
 }

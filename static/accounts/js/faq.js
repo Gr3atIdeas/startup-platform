@@ -7,7 +7,6 @@ document.addEventListener('DOMContentLoaded', function () {
   )
   const faqAnswerTitle = document.getElementById('faqAnswerTitle')
   const faqAnswerBody = document.getElementById('faqAnswerBody')
-
   let faqData = {}
   try {
     const faqDataElement = document.getElementById('faqData')
@@ -19,21 +18,13 @@ document.addEventListener('DOMContentLoaded', function () {
   } catch (error) {
     console.error('Error parsing FAQ data:', error)
   }
-
-  // Аккордеоны
   accordionCategories.forEach((category) => {
     const header = category.querySelector('.faq-accordion-header')
     const content = category.querySelector('.faq-accordion-content')
     const icon = header ? header.querySelector('.faq-chevron-icon') : null
-
     if (header) {
       header.addEventListener('click', () => {
-        // Закрыть все другие аккордеоны на том же уровне, кроме родительских
-        // этого немного сложно сделать без изменения структуры или добавления классов уровней
-        // Пока просто toggle
         const isOpen = category.classList.contains('open')
-
-        // Закрываем все открытые аккордеоны того же уровня, если это не вложенный аккордеон
         if (
           !category.classList.contains('nested') &&
           !category.parentElement.classList.contains('faq-accordion-content')
@@ -56,7 +47,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
           })
         } else if (category.classList.contains('nested')) {
-          // Закрываем другие вложенные аккордеоны внутри того же родителя
           const parentContent = category.closest('.faq-accordion-content')
           if (parentContent) {
             const siblingNestedAccordions = parentContent.querySelectorAll(
@@ -75,7 +65,6 @@ document.addEventListener('DOMContentLoaded', function () {
             })
           }
         }
-
         if (isOpen) {
           category.classList.remove('open')
           if (content) content.style.display = 'none'
@@ -88,60 +77,34 @@ document.addEventListener('DOMContentLoaded', function () {
       })
     }
   })
-
-  // Обработка кликов по вопросам
   questionItems.forEach((item) => {
     item.addEventListener('click', function () {
       const questionId = this.dataset.questionId
-
-      // Снять класс active со всех элементов
       questionItems.forEach((qItem) => qItem.classList.remove('active'))
-      // Добавить класс active к текущему элементу
       this.classList.add('active')
-
       if (faqData[questionId] && faqAnswerTitle && faqAnswerBody) {
         faqAnswerTitle.textContent = faqData[questionId].title
-        // Для корректной вставки HTML и обработки тега {% static %}
-        // необходимо заменить плейсхолдер на актуальный путь к статике.
-        // Этот путь должен быть доступен JS, например, через data-атрибут или глобальную переменную.
-        // Предположим, что bluearrow.svg всегда в одном месте
-        // Удаляем const staticPath = document.body.dataset.staticBluearrowPath || '/{% static "accounts/images/faq/bluearrow.svg" %}'.replace("{% static '", "").replace("' %}", "");
-        // let answerHTML = faqData[questionId].answer;
-
-        // Замена плейсхолдера для статики в HTML ответа
-        // Обратите внимание: это упрощенная замена. Если {% static %} используется сложнее, потребуется более robust решение.
-        // Удаляем answerHTML = answerHTML.replace(/{% static 'accounts\/images\/faq\/bluearrow.svg' %}/g, staticPath);
-
-        faqAnswerBody.innerHTML = faqData[questionId].answer // Используем напрямую, т.к. пути уже разрешены
+        faqAnswerBody.innerHTML = faqData[questionId].answer
       } else {
         if (!faqData[questionId])
           console.warn(`No data found for question ID: ${questionId}`)
         if (!faqAnswerTitle) console.warn('faqAnswerTitle element not found')
         if (!faqAnswerBody) console.warn('faqAnswerBody element not found')
-        // Можно отобразить сообщение по умолчанию или ошибку
-        // faqAnswerTitle.textContent = "Ответ не найден";
-        // faqAnswerBody.innerHTML = "<p>Пожалуйста, выберите другой вопрос.</p>";
       }
     })
   })
-
-  // Открываем первый активный вопрос и его родительские аккордеоны при загрузке
   const initiallyActiveItem = document.querySelector(
     '.faq-question-item.active, .faq-question-category.active'
   )
   if (initiallyActiveItem) {
-    // Кликаем, чтобы загрузить контент
     initiallyActiveItem.click()
-
-    // Открываем родительские аккордеоны
     let parent = initiallyActiveItem.closest('.faq-accordion-category')
     while (parent) {
       if (!parent.classList.contains('open')) {
         const header = parent.querySelector('.faq-accordion-header')
         if (header)
-          header.click() // Симулируем клик для открытия и анимации
+          header.click()
         else {
-          // Если нет хедера (например, корневой элемент), просто открываем
           parent.classList.add('open')
           const content = parent.querySelector('.faq-accordion-content')
           if (content) content.style.display = 'flex'

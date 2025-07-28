@@ -16,8 +16,8 @@
 
         <div class="notifications-list-section">
             <div class="notifications-list-items">
-                {% for i in "x"|ljust:7 %} {# Создаем 7 элементов для примера (было 6) #}
-                <div class="notification-item" data-notification-id="{{ i }}{{ forloop.counter }}"> {# Добавил counter для уникальности ID в примере #}
+                {% for i in "x"|ljust:7 %} 
+                <div class="notification-item" data-notification-id="{{ i }}{{ forloop.counter }}"> 
                     <div class="notification-item-meta">
                         <span class="notification-date">25/03/2025</span>
                         <span class="notification-time">12:30</span>
@@ -36,7 +36,7 @@
     </div>
 
     <div class="notifications-related-startups">
-        {% for i in "x"|ljust:7 %} {# Создаем 7 элементов для примера #}
+        {% for i in "x"|ljust:7 %} 
         <div class="related-startup-card">
             <img src="{% static 'accounts/images/default_icon.svg' %}" alt="Лого стартапа">
             <span class="related-startup-name">Ромашка {{forloop.counter}}</span>
@@ -45,34 +45,34 @@
             </div>
         </div>
         {% endfor %}
-         <!-- Пустышка для выравнивания последнего ряда, если нужно -->
+         
         <div class="related-startup-card-empty-spacer"></div>
-        {# <div class="related-startup-badge-empty-spacer"></div> Удаляем, т.к. бейдж теперь внутри карточки #}
+        
     </div>
 </div>
 
-<!-- Модальное окно для уведомлений -->
+
 <div id="notification-modal-overlay" class="modal-overlay">
     <div id="notification-modal-popup" class="modal-popup">
         <button id="notification-modal-close" class="modal-close-button no-wave-effect">
             <img src="{% static 'accounts/images/icons/Close_yellow.svg' %}" alt="Закрыть">
         </button>
         
-        {# Левая часть - теперь только плейсхолдер с фоновой картинкой, заданной в CSS #}
+        
         <div class="modal-promo-card">
-            <div class="modal-promo-bg-elements"> {# Оставляем для блюр-эффектов поверх фона #}
+            <div class="modal-promo-bg-elements"> 
                 <div class="modal-promo-blur-1"></div>
                 <div class="modal-promo-blur-2"></div>
             </div>
-            {# Все текстовые элементы, изображение и кнопка отсюда удалены #}
+            
         </div>
 
-        {# Правая часть - детали уведомления (динамическая) #}
+        
         <div class="modal-notification-details">
             <div class="modal-notification-list-title">Информация по уведомлению</div>
             <div class="modal-notification-list">
-                <!-- Сюда будут копироваться уведомления -->
-                <div class="notification-item"> {# Пример структуры, будет очищаться и заполняться JS #}
+                
+                <div class="notification-item"> 
                     <div class="notification-item-meta">
                         <span class="notification-date"></span>
                         <span class="notification-time"></span>

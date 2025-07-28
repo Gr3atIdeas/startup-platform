@@ -1,7 +1,7 @@
-/* static/accounts/css/deals.css */
+
 body {
   font-family: 'Unbounded', sans-serif;
-  background-color: #f0f2f5; /* Легкий фон для страницы */
+  background-color: #f0f2f5; 
 }
 
 .deals-page-container {
@@ -9,7 +9,7 @@ body {
   padding: 45px 20px;
   display: flex;
   justify-content: center;
-  align-items: flex-start; /* Выравниваем по верху */
+  align-items: flex-start; 
   box-sizing: border-box;
   box-shadow: 6px 6px 15px rgba(0, 0, 0, 0.25);
   border-radius: 32px;
@@ -30,7 +30,7 @@ body {
   box-sizing: border-box;
 }
 
-/* Левая колонка */
+
 .chat-list-column {
   width: 351px;
   display: flex;
@@ -78,7 +78,7 @@ body {
   font-size: 12px;
   font-family: 'Unbounded', sans-serif;
   font-weight: 300;
-  line-height: 20px; /* Адаптируем высоту строки */
+  line-height: 20px; 
   text-decoration: none;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -101,7 +101,7 @@ body {
   flex-direction: column;
   gap: 14px;
   overflow-y: auto;
-  height: calc(797px - 23px*2 - 50px - 36px - 42px - 36px); /* Расчет высоты */
+  height: calc(797px - 23px*2 - 50px - 36px - 42px - 36px); 
 }
 
 .chat-item {
@@ -188,7 +188,7 @@ body {
   text-align: center;
 }
 
-/* Правая колонка */
+
 .deal-chat-window {
   width: 833px;
   display: flex;
@@ -226,12 +226,12 @@ body {
   height: 104px;
   background: linear-gradient(180deg, white 0%, rgba(255, 255, 255, 0.01) 100%);
   border-radius: 32px;
-  pointer-events: none; /* Чтобы не мешал кликам */
+  pointer-events: none; 
 }
 
 .chat-header {
   display: flex;
-  justify-content: flex-end; /* Кнопки справа */
+  justify-content: flex-end; 
   align-items: center;
   margin-bottom: 20px;
   gap: 20px;
@@ -320,7 +320,7 @@ body {
 
 .message-bubble {
   padding: 11px 14px 11px 39px;
-  max-width: 452px; /* Ширина из макета */
+  max-width: 452px; 
   border-radius: 20px;
   font-size: 12px;
   font-family: 'Unbounded';
@@ -334,7 +334,7 @@ body {
 }
 
 .message-bubble.sent {
-  background: #E5E5E5; /* Серый для отправленных */
+  background: #E5E5E5; 
   color: black;
   align-self: flex-end;
   border-bottom-right-radius: 0;
@@ -372,7 +372,7 @@ body {
   gap: 24px;
   width: 100%;
   margin-top: 42px;
-  padding: 0 50px; /* примерные отступы */
+  padding: 0 50px; 
   box-sizing: border-box;
 }
 
@@ -412,7 +412,7 @@ body {
   color: #D8D7D7;
 }
 
-/* Стили для скроллбара */
+
 .chat-list::-webkit-scrollbar,
 .chat-messages-list::-webkit-scrollbar {
   width: 6px;
