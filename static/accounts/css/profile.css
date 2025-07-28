@@ -1291,6 +1291,15 @@ body {
   resize: vertical;
 }
 
+.profile-edit-input::placeholder {
+  color: #777e90;
+}
+
+.profile-edit-input:focus {
+  outline: 1px solid #fff;
+  color: #fff;
+}
+
 .profile-edit-input-text[contenteditable]:empty::before {
   content: attr(data-placeholder);
   color: #777e90;
