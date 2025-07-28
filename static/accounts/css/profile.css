@@ -1270,13 +1270,7 @@ body {
   line-height: 16px;
 }
 
-.profile-edit-field-label-sm {
-  font-size: 12px;
-  font-family: Poppins, sans-serif;
-  font-weight: 700;
-  text-transform: uppercase;
-  line-height: 12px;
-}
+
 
 .profile-edit-input {
   align-self: stretch;
