@@ -14,7 +14,10 @@ cat static/dist/.vite/manifest.json || echo "Manifest file not found"
 echo "--- END VITE MANIFEST CONTENT ---"
 
 echo "--- Applying database migrations ---"
-python manage.py migrate
+python manage.py migrate --noinput
+
+echo "--- Checking for migration conflicts ---"
+python manage.py showmigrations accounts
 
 echo "--- Checking if original filenames need to be filled ---"
 # Проверяем есть ли файлы без оригинальных названий
