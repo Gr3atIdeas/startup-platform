@@ -457,6 +457,8 @@ class Users(AbstractBaseUser):
     social_links = models.JSONField(blank=True, null=True, default=dict)
     telegram_id = models.CharField(max_length=255, unique=True, blank=True, null=True)
     telegram_email = models.CharField(max_length=255, blank=True, null=True)
+    vk_url = models.CharField(max_length=255, blank=True, null=True)
+    linkedin_url = models.CharField(max_length=255, blank=True, null=True)
     objects = UserManager()
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["first_name", "last_name"]

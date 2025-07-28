@@ -260,6 +260,8 @@ class UserSearchForm(forms.Form):
     )
 class ProfileEditForm(forms.ModelForm):
     telegram = forms.CharField(max_length=100, required=False, label="Telegram")
+    vk_url = forms.CharField(max_length=255, required=False, label="VK")
+    linkedin_url = forms.CharField(max_length=255, required=False, label="LinkedIn")
     class Meta:
         model = Users
         fields = [
@@ -268,9 +270,17 @@ class ProfileEditForm(forms.ModelForm):
             "website_url",
             "bio",
             "telegram",
+            "vk_url",
+            "linkedin_url",
         ]
         widgets = {
-            'bio': forms.Textarea(attrs={'rows': 3, 'maxlength': 150}),
+            'bio': forms.Textarea(attrs={'rows': 6, 'maxlength': 150}),
+            'first_name': forms.TextInput(attrs={'class': 'profile-edit-input'}),
+            'last_name': forms.TextInput(attrs={'class': 'profile-edit-input'}),
+            'website_url': forms.TextInput(attrs={'class': 'profile-edit-input'}),
+            'telegram': forms.TextInput(attrs={'class': 'profile-edit-input'}),
+            'vk_url': forms.TextInput(attrs={'class': 'profile-edit-input'}),
+            'linkedin_url': forms.TextInput(attrs={'class': 'profile-edit-input'}),
         }
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -278,6 +288,8 @@ class ProfileEditForm(forms.ModelForm):
         self.fields['last_name'].widget.attrs['placeholder'] = 'Введите фамилию'
         self.fields['website_url'].widget.attrs['placeholder'] = 'https://example.com'
         self.fields['telegram'].widget.attrs['placeholder'] = '@username'
+        self.fields['vk_url'].widget.attrs['placeholder'] = 'https://vk.com/username'
+        self.fields['linkedin_url'].widget.attrs['placeholder'] = 'https://linkedin.com/in/username'
     def clean_telegram(self):
         telegram = self.cleaned_data.get("telegram")
         if telegram and not telegram.startswith("@"):

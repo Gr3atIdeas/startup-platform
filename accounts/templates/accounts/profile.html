@@ -148,8 +148,20 @@
             </a>
             
             <div class="profile-sidebar-social-icons-row">
-                <img class="profile-sidebar-social-icon-row-item-img" src="{% static 'accounts/images/profile/vk_icon_social.svg' %}" alt="VK" />
-                <img class="profile-sidebar-social-icon-row-item-img" src="{% static 'accounts/images/profile/linkedin_icon_social.svg' %}" alt="LinkedIn" />
+                {% if user.vk_url %}
+                <a href="{{ user.vk_url }}" target="_blank" class="profile-sidebar-social-link">
+                    <img class="profile-sidebar-social-icon-row-item-img" src="{% static 'accounts/images/profile/vk_icon_social.svg' %}" alt="VK" />
+                </a>
+                {% else %}
+                <img class="profile-sidebar-social-icon-row-item-img profile-sidebar-social-icon-disabled" src="{% static 'accounts/images/profile/vk_icon_social.svg' %}" alt="VK" />
+                {% endif %}
+                {% if user.linkedin_url %}
+                <a href="{{ user.linkedin_url }}" target="_blank" class="profile-sidebar-social-link">
+                    <img class="profile-sidebar-social-icon-row-item-img" src="{% static 'accounts/images/profile/linkedin_icon_social.svg' %}" alt="LinkedIn" />
+                </a>
+                {% else %}
+                <img class="profile-sidebar-social-icon-row-item-img profile-sidebar-social-icon-disabled" src="{% static 'accounts/images/profile/linkedin_icon_social.svg' %}" alt="LinkedIn" />
+                {% endif %}
             </div>
             <div class="profile-sidebar-divider"></div>
             <div class="profile-sidebar-date-joined">На площадке с {{ user.created_at|date:"d M Y"|default:"Неизвестно" }}</div>
@@ -159,7 +171,7 @@
             {% if is_own_profile %}
             <div class="profile-main-edit-btn-container">
                 <a href="#" class="profile-main-edit-btn" id="editProfileBtn">
-                    <div class="profile-main-edit-btn-text">Редактировать профильь</div>
+                    <div class="profile-main-edit-btn-text">Редактировать профиль</div>
                     <img src="{% static 'accounts/images/profile/Edit_Line.svg' %}" alt="Редактировать" class="profile-main-edit-btn-icon"/>
                 </a>
             </div>
@@ -301,19 +313,19 @@
                                 <div class="profile-edit-section">
                                     <div class="profile-edit-section-title">Информация профиля</div>
                                     <div class="profile-edit-field">
-                                        <div class="profile-edit-field-label">{{ form.first_name.label }}</div>
+                                        <div class="profile-edit-field-label">Имя</div>
                                         {{ form.first_name }}
                                     </div>
                                     <div class="profile-edit-field">
-                                        <div class="profile-edit-field-label">{{ form.last_name.label }}</div>
+                                        <div class="profile-edit-field-label">Фамилия</div>
                                         {{ form.last_name }}
                                     </div>
                                     <div class="profile-edit-field">
-                                        <div class="profile-edit-field-label">{{ form.website_url.label }}</div>
+                                        <div class="profile-edit-field-label">Сайт</div>
                                         {{ form.website_url }}
                                     </div>
                                     <div class="profile-edit-field">
-                                        <div class="profile-edit-field-label">{{ form.bio.label }}</div>
+                                        <div class="profile-edit-field-label">О себе</div>
                                         {{ form.bio }}
                                         <div class="profile-edit-char-counter" id="bioCounter">50/50</div>
                                     </div>
@@ -321,8 +333,16 @@
                                 <div class="profile-edit-section" style="margin-top:40px;">
                                     <div class="profile-edit-section-title">Социальные сети</div>
                                     <div class="profile-edit-field">
-                                        <div class="profile-edit-field-label profile-edit-field-label-sm">{{ form.telegram.label }}</div>
+                                        <div class="profile-edit-field-label profile-edit-field-label-sm">TELEGRAM</div>
                                         {{ form.telegram }}
+                                    </div>
+                                    <div class="profile-edit-field">
+                                        <div class="profile-edit-field-label profile-edit-field-label-sm">VK</div>
+                                        {{ form.vk_url }}
+                                    </div>
+                                    <div class="profile-edit-field">
+                                        <div class="profile-edit-field-label profile-edit-field-label-sm">LINKEDIN</div>
+                                        {{ form.linkedin_url }}
                                     </div>
                                 </div>
                                 <div class="profile-edit-hint">Чтобы обновить настройки, нажмите "Сохранить изменений".</div>

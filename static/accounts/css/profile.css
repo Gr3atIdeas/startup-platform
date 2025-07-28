@@ -346,12 +346,28 @@ body {
   width: 35px; 
   height: 35px; 
   object-fit: contain;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
 
   
 
   
 
   
+}
+
+.profile-sidebar-social-icon-disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.profile-sidebar-social-link {
+  text-decoration: none;
+  display: inline-block;
+}
+
+.profile-sidebar-social-link:hover .profile-sidebar-social-icon-row-item-img {
+  opacity: 0.8;
 }
 
 
@@ -1243,7 +1259,7 @@ body {
   gap: 12px;
   width: 100%;
   min-width: 200px;
-  height: 72px;
+  height: 144px;
 }
 
 .profile-edit-field-label {
@@ -1274,10 +1290,11 @@ body {
   font-size: 12px;
   font-weight: 300;
   letter-spacing: 0.12px;
-  min-height: 24px;
+  min-height: 48px;
   display: flex;
   align-items: center;
   gap: 10px;
+  resize: vertical;
 }
 
 .profile-edit-input-text[contenteditable]:empty::before {
@@ -1290,12 +1307,13 @@ body {
 }
 
 .profile-edit-input-textarea {
-  min-height: 96px;
+  min-height: 192px;
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-start;
   display: flex;
   width: 100%;
+  resize: vertical;
 }
 
 .profile-edit-input-textarea[contenteditable]:empty::before {
