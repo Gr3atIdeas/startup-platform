@@ -137,8 +137,6 @@
                         </a>
                         <a href="{% url 'profile' %}" class="profile-dropdown-item">Профиль</a>
                         <a href="{% url 'startups_list' %}" class="profile-dropdown-item">Стартапы</a> {# Исправлено на каталог #}
-                        {# <a href="{% url 'profile_settings' %}" class="profile-dropdown-item">Настройки</a> #} {# Нужен URL для настроек #}
-                        <a href="#" class="profile-dropdown-item">Настройки</a> {# Временный #}
                         <a href="{% url 'support' %}" class="profile-dropdown-item">Поддержка</a> {# ЗАМЕНЕН URL #}
                         <a href="{% url 'contacts' %}" class="profile-dropdown-item">Контакты</a>
                         <a href="{% url 'faq' %}" class="profile-dropdown-item">FAQ</a>
@@ -176,10 +174,6 @@
         
         <div class="footer-middle-section">
             <div class="footer-subscribe-and-apps">
-                <a href="#" class="footer-subscribe-button">
-                    <div class="footer-subscribe-text">Подписаться на новости</div>
-                    <img src="{% static 'accounts/images/add-circle-outline.svg' %}" alt="Подписаться" class="footer-subscribe-icon-img">
-                </a>
                 <div class="footer-app-links-section">
                     <a href="#"><img src="{% static 'accounts/images/layout/appstore_footer.png' %}" alt="App Store" class="footer-app-link-img"></a>
                     <a href="#"><img src="{% static 'accounts/images/layout/googleplay_footer.png' %}" alt="Google Play" class="footer-app-link-img"></a>
