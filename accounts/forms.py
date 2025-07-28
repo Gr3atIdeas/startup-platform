@@ -274,7 +274,7 @@ class ProfileEditForm(forms.ModelForm):
             "linkedin_url",
         ]
         widgets = {
-            'bio': forms.Textarea(attrs={'rows': 6, 'maxlength': 150}),
+            'bio': forms.Textarea(attrs={'rows': 6, 'maxlength': 150, 'class': 'profile-edit-input'}),
             'first_name': forms.TextInput(attrs={'class': 'profile-edit-input'}),
             'last_name': forms.TextInput(attrs={'class': 'profile-edit-input'}),
             'website_url': forms.TextInput(attrs={'class': 'profile-edit-input'}),

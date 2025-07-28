@@ -1314,6 +1314,16 @@ body {
   display: flex;
   width: 100%;
   resize: vertical;
+  padding: 12px 16px;
+  border-radius: 12px;
+  outline: 1px solid #fff;
+  outline-offset: -1px;
+  background: transparent;
+  color: #fff;
+  font-family: Unbounded, sans-serif;
+  font-size: 12px;
+  font-weight: 300;
+  letter-spacing: 0.12px;
 }
 
 .profile-edit-input-textarea[contenteditable]:empty::before {
