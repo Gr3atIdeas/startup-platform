@@ -1292,12 +1292,24 @@ body {
 }
 
 .profile-edit-input::placeholder {
-  color: #777e90;
+  color: #777e90 !important;
 }
 
 .profile-edit-input:focus {
-  outline: 1px solid #fff;
-  color: #fff;
+  outline: 1px solid #fff !important;
+  color: #fff !important;
+}
+
+.profile-edit-input {
+  color: #fff !important;
+}
+
+input[type="text"].profile-edit-input {
+  color: #fff !important;
+}
+
+input[type="text"].profile-edit-input::placeholder {
+  color: #777e90 !important;
 }
 
 .profile-edit-input-text[contenteditable]:empty::before {
