@@ -334,15 +334,15 @@
                                     <div class="profile-edit-section-title">Социальные сети</div>
                                     <div class="profile-edit-field">
                                         <div class="profile-edit-field-label">TELEGRAM</div>
-                                        {{ form.telegram }}
+                                        <input type="text" name="telegram" value="{{ form.telegram.value|default:'' }}" class="profile-edit-input" placeholder="@username">
                                     </div>
                                     <div class="profile-edit-field">
                                         <div class="profile-edit-field-label">VK</div>
-                                        {{ form.vk_url }}
+                                        <input type="text" name="vk_url" value="{{ form.vk_url.value|default:'' }}" class="profile-edit-input" placeholder="https://vk.com/username">
                                     </div>
                                     <div class="profile-edit-field">
                                         <div class="profile-edit-field-label">LINKEDIN</div>
-                                        {{ form.linkedin_url }}
+                                        <input type="text" name="linkedin_url" value="{{ form.linkedin_url.value|default:'' }}" class="profile-edit-input" placeholder="https://linkedin.com/in/username">
                                     </div>
                                 </div>
                                 <div class="profile-edit-hint">Чтобы обновить настройки, нажмите "Сохранить изменений".</div>
