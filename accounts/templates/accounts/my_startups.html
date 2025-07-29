@@ -631,6 +631,11 @@
       letter-spacing: 0.12px;
       line-height: 1.4;
       margin-bottom: 24px;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .planetary-modal-financing-section {
@@ -685,6 +690,7 @@
       font-family: 'Unbounded', sans-serif;
       font-weight: 300;
       letter-spacing: 0.08px;
+      white-space: nowrap;
     }
 
     .planetary-modal-actions {
@@ -2134,7 +2140,33 @@
                       modalName.textContent = startup.name || startup.title || 'Без названия';
                       modalRating.textContent = `Рейтинг ${(startup.rating || startup.average_rating || 0).toFixed(1)}/5 (${startup.comment_count})`;
                       modalCommentsCount.textContent = startup.comment_count;
-                      modalCategory.textContent = startup.direction;
+                                              // Перевод категорий
+                        const translateCategory = (category) => {
+                            const translations = {
+                                'Technology': 'Технологии',
+                                'Finance': 'Финансы',
+                                'Health': 'Здоровье',
+                                'Education': 'Образование',
+                                'Entertainment': 'Развлечения',
+                                'Food': 'Еда',
+                                'Fashion': 'Мода',
+                                'Sports': 'Спорт',
+                                'Travel': 'Путешествия',
+                                'Real Estate': 'Недвижимость',
+                                'Transport': 'Транспорт',
+                                'Energy': 'Энергетика',
+                                'Agriculture': 'Сельское хозяйство',
+                                'Media': 'Медиа',
+                                'Security': 'Безопасность',
+                                'Environment': 'Экология',
+                                'Beauty': 'Красота',
+                                'Cafe': 'Кафе',
+                                'Delivery': 'Доставка',
+                                'Fastfood': 'Фастфуд'
+                            };
+                            return translations[category] || category;
+                        };
+                        modalCategory.textContent = translateCategory(startup.direction);
                       modalProgressPercentage.textContent = startup.progress;
                       modalDescription.textContent = startup.description || startup.short_description || 'Описание отсутствует';
                       modalFundingAmount.textContent = `${(startup.funding_goal || 0).toLocaleString('ru-RU')} ₽`;
@@ -2189,6 +2221,22 @@
                       isPaused = false;
                   }
                   lastInteractionTime = Date.now();
+              });
+
+              // Закрытие на ESC
+              document.addEventListener('keydown', (e) => {
+                  if (e.key === 'Escape' && modal.style.display === 'flex') {
+                      modal.style.display = 'none';
+                      planets.forEach(p => p.classList.remove('active'));
+                      if (isPaused) {
+                          const pauseDuration = Date.now() - pausedTime;
+                          planetObjects.forEach(planetObj => {
+                              planetObj.startTime += pauseDuration;
+                          });
+                          isPaused = false;
+                      }
+                      lastInteractionTime = Date.now();
+                  }
               });
 
               solarSystem.addEventListener('mousedown', (e) => {
