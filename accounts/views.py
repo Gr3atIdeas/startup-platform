@@ -3340,6 +3340,7 @@ def my_startups(request):
             region_name=settings.AWS_S3_REGION_NAME,
         )
         planetary_startups = []
+        print(f"🚀 DEBUG: approved_startups_annotated count: {len(approved_startups_annotated)}")
         for idx, startup in enumerate(approved_startups_annotated, start=1):
             orbit_size = (idx * 100) + 150
             orbit_time = (idx * 10) + 40
@@ -3365,6 +3366,8 @@ def my_startups(request):
                 "planet_size": planet_size,
             }
             planetary_startups.append(planet_data)
+            print(f"🚀 DEBUG: Added planet data for startup {startup.startup_id}: {startup.title}")
+        print(f"🚀 DEBUG: Total planetary_startups: {len(planetary_startups)}")
     except Exception as e:
         logger.error(f"Критическая ошибка в my_startups view: {e}", exc_info=True)
         messages.error(
@@ -3391,6 +3394,8 @@ def my_startups(request):
     context["planetary_startups_json"] = json.dumps(
         planetary_startups, cls=DjangoJSONEncoder
     )
+    print(f"🚀 DEBUG: planetary_startups_json length: {len(context['planetary_startups_json'])}")
+    print(f"🚀 DEBUG: First few characters of JSON: {context['planetary_startups_json'][:200]}...")
     return render(request, "accounts/my_startups.html", context)
 @login_required
 def notifications_view(request):

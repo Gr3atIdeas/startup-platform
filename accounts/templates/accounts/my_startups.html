@@ -170,12 +170,14 @@
     }
 
     .planetary-system #galaxy {
-      position: relative;
-      z-index: 10000; /* УБРАТЬ ЕСЛИ ВСЕ СЛОМАЕТСЯ */
-      top: 0;
-      left: 0;
-      transform: rotateX(60deg);
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 100%;
+      height: 100%;
+      transform: translate(-50%, -50%) rotateX(60deg);
       transform-style: preserve-3d;
+      z-index: 5;
     }
 
     .planetary-system #scene {
@@ -183,7 +185,8 @@
       top: 50%;
       left: 50%;
       width: 100%;
-      transform: translate(-50%, -50%) translate(0px, 200px) scale(1.2);
+      height: 100%;
+      transform: translate(-50%, -50%);
       transform-style: preserve-3d;
     }
 
@@ -195,8 +198,8 @@
       position: absolute;
       top: 50%;
       left: 50%;
-      transform: translate(-50%, -50%) rotateX(-45deg);
-      z-index: 9999 !important;
+      transform: translate(-50%, -50%) rotateX(-60deg);
+      z-index: 10;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -1777,26 +1780,34 @@
           (function() {
               const startups_data = JSON.parse(document.getElementById('planetary-startups-data').textContent || '[]');
               console.log('Raw startups data:', startups_data);
+              console.log('Raw startups data type:', typeof startups_data);
+              console.log('Raw startups data length:', startups_data.length);
               const startups = {};
               if (Array.isArray(startups_data)) {
-                  startups_data.forEach(s => {
-                      console.log('Processing startup:', s);
-                      const startupId = s.startup_id.toString();
-                      startups[startupId] = {
-                          startup_id: s.startup_id,
-                          image: s.planet_image ? `https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/${s.planet_image}` : '{% static "accounts/images/planet_logo_carusel.webp" %}',
-                          name: s.name || s.title || 'Без названия',
-                          rating: s.rating || s.average_rating || 0,
-                          comment_count: s.comment_count || 0,
-                          progress: s.progress || '0%',
-                          direction: s.direction || 'Без категории',
-                          funding_goal: s.funding_goal || 0,
-                          investors: s.investors || s.get_investors_count || 0,
-                          investment_type: s.investment_type || 'Не указано',
-                          description: s.description || s.short_description || 'Описание отсутствует'
-                      };
-                      console.log(`Added startup ${startupId}:`, startups[startupId]);
+                  startups_data.forEach((s, index) => {
+                      console.log(`Processing startup ${index}:`, s);
+                      if (s && s.startup_id) {
+                          const startupId = s.startup_id.toString();
+                          startups[startupId] = {
+                              startup_id: s.startup_id,
+                              image: s.planet_image ? `https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/${s.planet_image}` : '{% static "accounts/images/planet_logo_carusel.webp" %}',
+                              name: s.title || s.name || 'Без названия',
+                              rating: s.average_rating || s.rating || 0,
+                              comment_count: s.comment_count || 0,
+                              progress: s.progress || '0%',
+                              direction: s.direction || 'Без категории',
+                              funding_goal: s.funding_goal || 0,
+                              investors: s.get_investors_count || s.investors || 0,
+                              investment_type: s.investment_type || 'Не указано',
+                              description: s.description || s.short_description || 'Описание отсутствует'
+                          };
+                          console.log(`Added startup ${startupId}:`, startups[startupId]);
+                      } else {
+                          console.warn(`Skipping invalid startup data at index ${index}:`, s);
+                      }
                   });
+              } else {
+                  console.error('Startups data is not an array:', startups_data);
               }
               console.log('Final startups object keys:', Object.keys(startups));
               console.log('Processed startups object:', startups);
