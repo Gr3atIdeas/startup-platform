@@ -2138,7 +2138,7 @@
 
                       modalPlanetImg.src = startup.image;
                       modalName.textContent = startup.name || startup.title || 'Без названия';
-                      modalRating.textContent = `Рейтинг ${(startup.rating || startup.average_rating || 0).toFixed(1)}/5 (${startup.comment_count})`;
+                                              modalRating.textContent = `Рейтинг ${(startup.rating || startup.average_rating || 0).toFixed(1)}/5 (${startup.comment_count || 0})`;
                       modalCommentsCount.textContent = startup.comment_count;
                                               // Перевод категорий
                         const translateCategory = (category) => {
@@ -2169,8 +2169,24 @@
                         modalCategory.textContent = translateCategory(startup.direction);
                       modalProgressPercentage.textContent = startup.progress;
                       modalDescription.textContent = startup.description || startup.short_description || 'Описание отсутствует';
-                      modalFundingAmount.textContent = `${(startup.funding_goal || 0).toLocaleString('ru-RU')} ₽`;
-                      modalValuationAmount.textContent = startup.funding_goal ? `${(startup.funding_goal * 1.2).toLocaleString('ru-RU')} ₽` : '0 ₽';
+                                              // Форматируем сумму правильно
+                        const formatAmount = (amount) => {
+                            const num = parseFloat(amount) || 0;
+                            if (num === 0) return '0 ₽';
+                            // Убираем десятичные знаки если они .0000
+                            const cleanNum = num % 1 === 0 ? Math.floor(num) : num;
+                            return `${cleanNum.toLocaleString('ru-RU')} ₽`;
+                        };
+                        modalFundingAmount.textContent = formatAmount(startup.funding_goal);
+                                              // Форматируем оценку правильно
+                        const formatValuation = (amount) => {
+                            const num = parseFloat(amount) || 0;
+                            if (num === 0) return '0 ₽';
+                            const valuation = num * 1.2;
+                            const cleanValuation = valuation % 1 === 0 ? Math.floor(valuation) : valuation;
+                            return `${cleanValuation.toLocaleString('ru-RU')} ₽`;
+                        };
+                        modalValuationAmount.textContent = formatValuation(startup.funding_goal);
                       modalInvestorsCount.textContent = `Инвестировало (${startup.investors || startup.get_investors_count || 0})`;
 
                       // Обработчик для кнопки "Подробнее"
@@ -2225,7 +2241,7 @@
 
               // Закрытие на ESC
               document.addEventListener('keydown', (e) => {
-                  if (e.key === 'Escape' && modal.style.display === 'flex') {
+                  if (e.key === 'Escape' && modal.style.display !== 'none') {
                       modal.style.display = 'none';
                       planets.forEach(p => p.classList.remove('active'));
                       if (isPaused) {
