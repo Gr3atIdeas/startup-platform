@@ -116,7 +116,7 @@
     .planetary-system-container {
       position: relative;
       width: 100%;
-      height: 400px;
+      height: 600px;
       overflow: hidden;
       background: radial-gradient(circle at center, #1a1a2e 0%, #0a0a1e 100%);
     }
@@ -182,9 +182,9 @@
       position: absolute;
       top: 50%;
       left: 50%;
-      width: 1000px;
-      height: 1000px;
-      transform: translate(-50%, -50%) translate(0px, 100px) scale(0.8);
+      width: 100%;
+      height: 100%;
+      transform: translate(-50%, -50%) translate(0px, 200px) scale(1.2);
       transform-style: preserve-3d;
     }
 
@@ -1777,9 +1777,11 @@
           // Планетарная система
           (function() {
               const startups_data = JSON.parse(document.getElementById('planetary-startups-data').textContent || '[]');
+              console.log('Raw startups data:', startups_data);
               const startups = {};
               if (Array.isArray(startups_data)) {
                   startups_data.forEach(s => {
+                      console.log('Processing startup:', s);
                       startups[s.startup_id.toString()] = {
                           startup_id: s.startup_id,
                           image: s.planet_image ? `https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/${s.planet_image}` : '{% static "accounts/images/planet_logo_carusel.webp" %}',
@@ -1795,6 +1797,7 @@
                       };
                   });
               }
+              console.log('Processed startups object:', startups);
 
 
               const planets = document.querySelectorAll('.planetary-system .planet');
