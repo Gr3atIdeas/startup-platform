@@ -368,15 +368,18 @@
       justify-content: center;
     }
 
-    /* Стили для нового модального окна */
+    /* Стили для модального окна в стиле основной планетарки */
     .planetary-modal {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      z-index: 10000;
+      background: rgba(0, 0, 0, 0.8);
       display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
     }
 
     .planetary-modal-backdrop {
@@ -386,29 +389,22 @@
       width: 100%;
       height: 100%;
       background: rgba(0, 0, 0, 0.8);
-      backdrop-filter: blur(5px);
     }
 
     .planetary-modal-close {
       position: absolute;
       top: 20px;
       right: 20px;
-      background: #ffd700;
+      background: none;
       border: none;
-      font-size: 24px;
+      color: white;
+      font-size: 30px;
       cursor: pointer;
-      color: #000;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 10002;
+      z-index: 1002;
     }
 
     .planetary-modal-close:hover {
-      background: #ffed4e;
+      color: #ccc;
     }
 
     .planetary-modal-content {
@@ -416,214 +412,363 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      background: white;
-      border-radius: 20px;
-      padding: 30px;
-      max-width: 500px;
-      width: 90%;
-      max-height: 80vh;
-      overflow-y: auto;
-      z-index: 10001;
       display: flex;
-      gap: 20px;
+      align-items: center;
+      gap: 132px;
+      z-index: 1001;
     }
 
     .planetary-modal-planet {
-      flex-shrink: 0;
-      width: 120px;
-      height: 120px;
+      width: 445px;
+      height: 420px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .planetary-modal-planet img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+      max-width: 100%;
+      max-height: 100%;
       border-radius: 50%;
+      object-fit: cover;
     }
 
     .planetary-modal-card {
-      flex: 1;
-      min-width: 0;
+      width: 471px;
+      padding: 28px 40px;
+      background: white;
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
 
     .planetary-modal-title {
-      margin: 0 0 15px;
-      font-size: 24px;
-      font-weight: bold;
-      color: #333;
+      color: black;
+      font-size: 20px;
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 400;
+      line-height: 18px;
+      margin: 0 0 16px 0;
+      text-align: center;
     }
 
     .planetary-modal-rating-section {
       display: flex;
       align-items: center;
-      gap: 15px;
-      margin-bottom: 15px;
+      gap: 13px;
+      margin-bottom: 16px;
     }
 
     .planetary-modal-rating {
-      font-size: 14px;
-      color: #666;
+      color: #004E9F;
+      font-size: 12px;
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 300;
+      letter-spacing: 0.12px;
     }
 
     .planetary-modal-comments {
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 8px;
     }
 
     .planetary-modal-comment-icon {
       width: 16px;
-      height: 16px;
+      height: 15px;
+      filter: brightness(0) saturate(100%) invert(27%) sepia(51%) saturate(2878%) hue-rotate(199deg) brightness(104%) contrast(97%);
     }
 
     .planetary-modal-comments-text {
+      color: #004E9F;
       font-size: 14px;
-      color: #666;
+      font-family: 'Circe', sans-serif;
+      font-weight: 400;
+      line-height: 18px;
     }
 
     .planetary-modal-category-section {
-      margin-bottom: 15px;
+      margin-bottom: 16px;
     }
 
     .planetary-modal-category {
       display: inline-block;
-      padding: 5px 12px;
-      background: #f0f0f0;
-      border-radius: 15px;
+      padding: 9px 17px;
+      background: #050505;
+      border-radius: 5px;
+      color: white;
       font-size: 12px;
-      color: #666;
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 300;
+      letter-spacing: 0.12px;
     }
 
     .planetary-modal-progress-container {
-      margin-bottom: 15px;
+      width: 100%;
+      height: 20px;
+      margin-bottom: 16px;
+      position: relative;
+      background: rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid rgba(0, 0, 0, 0.2);
     }
 
     .planetary-modal-progress-bar-visual {
-      background: #f0f0f0;
+      width: 0%; 
+      height: 100%;
+      background: linear-gradient(90deg, #31D2C6 0%, #006EDF 100%);
       border-radius: 10px;
-      padding: 3px;
       position: relative;
+      overflow: hidden;
+      box-shadow: 
+        inset 0 0 5px rgb(255 255 255 / 50%),
+        0 0 10px rgb(71 209 255 / 70%);
+      transition: width 0.5s ease-in-out;
     }
 
     .planetary-modal-progress-animation-container {
-      background: linear-gradient(90deg, #ffd700, #ffed4e);
-      border-radius: 8px;
-      padding: 8px;
       position: relative;
-      overflow: hidden;
+      width: 100%;
+      height: 100%;
     }
 
     .planetary-modal-progress-planets {
-      position: absolute;
-      top: 0;
-      left: 0;
+      position: relative;
       width: 100%;
       height: 100%;
-      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 20"><circle cx="10" cy="10" r="3" fill="rgba(255,255,255,0.3)"/><circle cx="30" cy="10" r="3" fill="rgba(255,255,255,0.3)"/><circle cx="50" cy="10" r="3" fill="rgba(255,255,255,0.3)"/><circle cx="70" cy="10" r="3" fill="rgba(255,255,255,0.3)"/><circle cx="90" cy="10" r="3" fill="rgba(255,255,255,0.3)"/></svg>') repeat-x;
-      animation: planetary-modal-movePlanets 2s linear infinite;
+    }
+
+    .planetary-modal-progress-planets::before,
+    .planetary-modal-progress-planets::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      border-radius: 50%;
+      background-color: rgb(255 255 255 / 70%);
+      box-shadow: 0 0 8px rgb(255 255 255 / 80%);
+      animation: planetary-modal-movePlanets 8s linear infinite;
+    }
+
+    .planetary-modal-progress-planets::before {
+      width: 12px;
+      height: 12px;
+      margin-top: -6px;
+      left: 10%;
+      animation-delay: 0s;
+    }
+
+    .planetary-modal-progress-planets::after {
+      width: 8px;
+      height: 8px;
+      margin-top: -4px;
+      left: 60%;
+      animation-delay: -4s;
+    }
+
+    .planetary-modal-progress-animation-container::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 30%;
+      width: 10px;
+      height: 10px;
+      margin-top: -5px;
+      border-radius: 50%;
+      background-color: rgb(255 255 255 / 60%);
+      box-shadow: 0 0 6px rgb(255 255 255 / 70%);
+      animation: planetary-modal-movePlanets 10s linear infinite alternate;
+      animation-delay: -2s;
     }
 
     @keyframes planetary-modal-movePlanets {
-      from { transform: translateX(-100%); }
-      to { transform: translateX(100%); }
+      0% {
+        transform: translateX(0) translateY(-1px) scale(1);
+        opacity: 0.7;
+      }
+      25% {
+        transform: translateX(20px) translateY(1px) scale(1.1);
+        opacity: 0.9;
+      }
+      50% {
+        transform: translateX(-10px) translateY(0) scale(1);
+        opacity: 0.8;
+      }
+      75% {
+        transform: translateX(15px) translateY(-2px) scale(0.9);
+        opacity: 1;
+      }
+      100% {
+        transform: translateX(0) translateY(-1px) scale(1);
+        opacity: 0.7;
+      }
     }
 
     .planetary-modal-progress-percentage {
-      position: relative;
-      z-index: 1;
-      font-size: 14px;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
       font-weight: bold;
-      color: #333;
-      text-align: center;
+      color: #fff;
+      font-size: 12px;
+      z-index: 3;
+      text-shadow: 0 1px 2px rgb(0 0 0 / 60%);
+      white-space: nowrap;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      padding: 0 5px;
+      box-sizing: border-box;
     }
 
     .planetary-modal-description {
-      font-size: 14px;
-      color: #666;
-      line-height: 1.5;
-      margin-bottom: 15px;
+      color: black;
+      font-size: 12px;
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 300;
+      letter-spacing: 0.12px;
+      line-height: 1.4;
+      margin-bottom: 24px;
     }
 
     .planetary-modal-financing-section {
       display: flex;
-      gap: 20px;
-      margin-bottom: 20px;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 24px;
     }
 
     .planetary-modal-funding-goal {
-      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
 
     .planetary-modal-funding-label {
-      font-size: 12px;
-      color: #999;
-      margin-bottom: 5px;
+      color: #004E9F;
+      font-size: 8px;
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 300;
+      letter-spacing: 0.08px;
     }
 
     .planetary-modal-funding-amount {
-      font-size: 16px;
-      font-weight: bold;
-      color: #333;
+      color: #31D2C6;
+      font-size: 25px;
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 600;
+      line-height: 35px;
     }
 
     .planetary-modal-valuation {
-      flex: 1;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 5px;
+      padding: 5px 10px;
+      border-radius: 50px;
+      outline: 1px #004E9F solid;
+      outline-offset: -1px;
     }
 
     .planetary-modal-valuation-icon {
-      width: 16px;
-      height: 16px;
+      width: 17px;
+      height: 17px;
+      filter: brightness(0) saturate(100%) invert(27%) sepia(51%) saturate(2878%) hue-rotate(199deg) brightness(104%) contrast(97%);
     }
 
-    .planetary-modal-valuation-label {
-      font-size: 12px;
-      color: #999;
-    }
-
+    .planetary-modal-valuation-label,
     .planetary-modal-valuation-amount {
-      font-size: 16px;
-      font-weight: bold;
-      color: #333;
+      color: #004E9F;
+      font-size: 8px;
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 300;
+      letter-spacing: 0.08px;
     }
 
     .planetary-modal-actions {
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: space-between;
+      gap: 5px;
     }
 
     .planetary-modal-details-btn {
-      padding: 10px 20px;
-      background: #007bff;
-      color: white;
+      padding: 12px 35px;
+      background: linear-gradient(0deg, #004E9F 0%, #006EDF 100%);
       border: none;
-      border-radius: 8px;
-      font-size: 14px;
+      border-radius: 10px;
+      color: #F5F5F5;
+      font-size: 16px;
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 400;
+      line-height: 16px;
       cursor: pointer;
-      transition: background 0.3s;
+      transition: all 0.3s ease;
     }
 
     .planetary-modal-details-btn:hover {
-      background: #0056b3;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 78, 159, 0.4);
     }
 
     .planetary-modal-investors-info {
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 8px;
+      padding: 8px 24px 8px 0;
     }
 
     .planetary-modal-investor-icon {
       width: 16px;
       height: 16px;
+      filter: brightness(0) saturate(100%) invert(31%) sepia(8%) saturate(748%) hue-rotate(202deg) brightness(94%) contrast(86%);
     }
 
     .planetary-modal-investors-text {
-      font-size: 14px;
-      color: #666;
+      color: #4E4F51;
+      font-size: 12px;
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 300;
+      letter-spacing: 0.12px;
+    }
+
+    @media (max-width: 1200px) {
+      .planetary-modal-content {
+        gap: 80px;
+      }
+      .planetary-modal-planet {
+        width: 350px;
+        height: 350px;
+      }
+      .planetary-modal-card {
+        width: 400px;
+        padding: 24px 32px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .planetary-modal-content {
+        flex-direction: column;
+        gap: 40px;
+        padding: 20px;
+      }
+      .planetary-modal-planet {
+        width: 250px;
+        height: 250px;
+      }
+      .planetary-modal-card {
+        width: 100%;
+        max-width: 400px;
+        padding: 20px 24px;
+      }
+      .planetary-modal-progress-container {
+        height: 16px;
+      }
+      .planetary-modal-progress-percentage {
+        font-size: 10px;
+      }
     }
 
     @media (max-width: 768px) {
