@@ -174,7 +174,7 @@
       z-index: 10000; /* УБРАТЬ ЕСЛИ ВСЕ СЛОМАЕТСЯ */
       top: 0;
       left: 0;
-      transform: rotateX(45deg);
+      transform: rotateX(60deg);
       transform-style: preserve-3d;
     }
 
@@ -1785,15 +1785,15 @@
                       startups[s.startup_id.toString()] = {
                           startup_id: s.startup_id,
                           image: s.planet_image ? `https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/${s.planet_image}` : '{% static "accounts/images/planet_logo_carusel.webp" %}',
-                          name: s.title || 'Без названия',
-                          rating: s.average_rating || 0,
+                          name: s.name || s.title || 'Без названия',
+                          rating: s.rating || s.average_rating || 0,
                           comment_count: s.comment_count || 0,
                           progress: s.progress || '0%',
                           direction: s.direction || 'Без категории',
                           funding_goal: s.funding_goal || 0,
-                          investors: s.get_investors_count || 0,
+                          investors: s.investors || s.get_investors_count || 0,
                           investment_type: s.investment_type || 'Не указано',
-                          description: s.short_description || 'Описание отсутствует'
+                          description: s.description || s.short_description || 'Описание отсутствует'
                       };
                   });
               }
@@ -1806,8 +1806,8 @@
               const galaxy = document.querySelector('.planetary-system #galaxy');
               const logoElement = document.querySelector('.planetary-system #logo');
 
-              const galaxyTiltAngle = 45;
-              const planetTiltCompensation = -45;
+              const galaxyTiltAngle = 60;
+              const planetTiltCompensation = -60;
               const planetObjects = [];
               let isPaused = false;
               let pausedTime = 0;
@@ -1905,15 +1905,15 @@
                       const modalDetailsBtn = document.getElementById('planetary-modal-details-btn');
 
                       modalPlanetImg.src = startup.image;
-                      modalName.textContent = startup.name;
-                      modalRating.textContent = `Рейтинг ${startup.rating.toFixed(1)}/5 (${startup.comment_count})`;
+                      modalName.textContent = startup.name || startup.title || 'Без названия';
+                      modalRating.textContent = `Рейтинг ${(startup.rating || startup.average_rating || 0).toFixed(1)}/5 (${startup.comment_count})`;
                       modalCommentsCount.textContent = startup.comment_count;
                       modalCategory.textContent = startup.direction;
                       modalProgressPercentage.textContent = startup.progress;
-                      modalDescription.textContent = startup.description;
-                      modalFundingAmount.textContent = `${startup.funding_goal.toLocaleString('ru-RU')} ₽`;
+                      modalDescription.textContent = startup.description || startup.short_description || 'Описание отсутствует';
+                      modalFundingAmount.textContent = `${(startup.funding_goal || 0).toLocaleString('ru-RU')} ₽`;
                       modalValuationAmount.textContent = startup.funding_goal ? `${(startup.funding_goal * 1.2).toLocaleString('ru-RU')} ₽` : '0 ₽';
-                      modalInvestorsCount.textContent = `Инвестировало (${startup.investors})`;
+                      modalInvestorsCount.textContent = `Инвестировало (${startup.investors || startup.get_investors_count || 0})`;
 
                       // Обработчик для кнопки "Подробнее"
                       modalDetailsBtn.onclick = () => {
