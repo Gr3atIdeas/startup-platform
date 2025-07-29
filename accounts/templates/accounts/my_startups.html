@@ -186,7 +186,7 @@
       left: 50%;
       width: 100%;
       height: 100%;
-      transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%) scale(0.7);
       transform-style: preserve-3d;
     }
 
@@ -1778,10 +1778,25 @@
     
           // Планетарная система
           (function() {
-              const startups_data = JSON.parse(document.getElementById('planetary-startups-data').textContent || '[]');
-              console.log('Raw startups data:', startups_data);
-              console.log('Raw startups data type:', typeof startups_data);
-              console.log('Raw startups data length:', startups_data.length);
+              const rawData = document.getElementById('planetary-startups-data').textContent || '[]';
+              console.log('Raw data from element:', rawData);
+              console.log('Raw data type:', typeof rawData);
+              console.log('Raw data length:', rawData.length);
+              
+              let startups_data;
+              try {
+                  // Убираем лишние пробелы и экранирование
+                  const cleanData = rawData.trim();
+                  startups_data = JSON.parse(cleanData);
+                  console.log('Parsed startups data:', startups_data);
+                  console.log('Parsed data type:', typeof startups_data);
+                  console.log('Is array:', Array.isArray(startups_data));
+                  console.log('Array length:', startups_data.length);
+              } catch (error) {
+                  console.error('JSON parse error:', error);
+                  console.error('Raw data that failed to parse:', rawData);
+                  startups_data = [];
+              }
               const startups = {};
               if (Array.isArray(startups_data)) {
                   startups_data.forEach((s, index) => {

@@ -3,7 +3,7 @@
   --ultra_new_planetary_galaxy_tilt: 45deg;
   --ultra_new_planetary_planet_compensation: -45deg;
   --ultra_new_planetary_sun_compensation: -45deg;
-  --ultra_new_planetary_galaxy_scale: 1;
+  --ultra_new_planetary_galaxy_scale: 0.7;
   --ultra_new_planetary_galaxy_x: 0px;
   --ultra_new_planetary_galaxy_y: 0px;
 }

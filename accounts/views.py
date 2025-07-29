@@ -3392,7 +3392,7 @@ def my_startups(request):
         "startup_applications": user_startups_qs.order_by("-updated_at"),
     }
     context["planetary_startups_json"] = json.dumps(
-        planetary_startups, cls=DjangoJSONEncoder
+        planetary_startups, cls=DjangoJSONEncoder, ensure_ascii=False
     )
     print(f"🚀 DEBUG: planetary_startups_json length: {len(context['planetary_startups_json'])}")
     print(f"🚀 DEBUG: First few characters of JSON: {context['planetary_startups_json'][:200]}...")
