@@ -244,6 +244,11 @@
       transition: all 0.3s ease;
       overflow: visible !important; /* Убираем обрезку, чтобы логотипы были видны */
       border: none; /* Убираем рамку */
+      pointer-events: auto; /* Обеспечиваем кликабельность */
+    }
+
+    .planetary-system .planet * {
+      pointer-events: auto; /* Все дочерние элементы тоже кликабельны */
     }
 
     .planetary-system .planet-img {
@@ -2113,14 +2118,15 @@
                       }
                   }
 
-                  planet.addEventListener('click', (e) => {
+                  // Обработчик клика для планеты и всех её дочерних элементов
+                  const handlePlanetClick = (e) => {
                       e.stopPropagation();
                       const id = planet.getAttribute('data-id');
                       
                       const startup = startups[id];
                       if (!startup) {
-                                                  return;
-                    }
+                          return;
+                      }
 
                       // Заполняем новое модальное окно
                       const modal = document.getElementById('planetary-modal');
@@ -2138,55 +2144,58 @@
 
                       modalPlanetImg.src = startup.image;
                       modalName.textContent = startup.name || startup.title || 'Без названия';
-                                              modalRating.textContent = `Рейтинг ${(startup.rating || startup.average_rating || 0).toFixed(1)}/5 (${startup.comment_count || 0})`;
+                      modalRating.textContent = `Рейтинг ${(startup.rating || startup.average_rating || 0).toFixed(1)}/5 (${startup.comment_count || 0})`;
                       modalCommentsCount.textContent = startup.comment_count;
-                                              // Перевод категорий
-                        const translateCategory = (category) => {
-                            const translations = {
-                                'Technology': 'Технологии',
-                                'Finance': 'Финансы',
-                                'Health': 'Здоровье',
-                                'Education': 'Образование',
-                                'Entertainment': 'Развлечения',
-                                'Food': 'Еда',
-                                'Fashion': 'Мода',
-                                'Sports': 'Спорт',
-                                'Travel': 'Путешествия',
-                                'Real Estate': 'Недвижимость',
-                                'Transport': 'Транспорт',
-                                'Energy': 'Энергетика',
-                                'Agriculture': 'Сельское хозяйство',
-                                'Media': 'Медиа',
-                                'Security': 'Безопасность',
-                                'Environment': 'Экология',
-                                'Beauty': 'Красота',
-                                'Cafe': 'Кафе',
-                                'Delivery': 'Доставка',
-                                'Fastfood': 'Фастфуд'
-                            };
-                            return translations[category] || category;
-                        };
-                        modalCategory.textContent = translateCategory(startup.direction);
+                      
+                      // Перевод категорий
+                      const translateCategory = (category) => {
+                          const translations = {
+                              'Technology': 'Технологии',
+                              'Finance': 'Финансы',
+                              'Health': 'Здоровье',
+                              'Education': 'Образование',
+                              'Entertainment': 'Развлечения',
+                              'Food': 'Еда',
+                              'Fashion': 'Мода',
+                              'Sports': 'Спорт',
+                              'Travel': 'Путешествия',
+                              'Real Estate': 'Недвижимость',
+                              'Transport': 'Транспорт',
+                              'Energy': 'Энергетика',
+                              'Agriculture': 'Сельское хозяйство',
+                              'Media': 'Медиа',
+                              'Security': 'Безопасность',
+                              'Environment': 'Экология',
+                              'Beauty': 'Красота',
+                              'Cafe': 'Кафе',
+                              'Delivery': 'Доставка',
+                              'Fastfood': 'Фастфуд'
+                          };
+                          return translations[category] || category;
+                      };
+                      modalCategory.textContent = translateCategory(startup.direction);
                       modalProgressPercentage.textContent = startup.progress;
                       modalDescription.textContent = startup.description || startup.short_description || 'Описание отсутствует';
-                                              // Форматируем сумму правильно
-                        const formatAmount = (amount) => {
-                            const num = parseFloat(amount) || 0;
-                            if (num === 0) return '0 ₽';
-                            // Убираем десятичные знаки если они .0000
-                            const cleanNum = num % 1 === 0 ? Math.floor(num) : num;
-                            return `${cleanNum.toLocaleString('ru-RU')} ₽`;
-                        };
-                        modalFundingAmount.textContent = formatAmount(startup.funding_goal);
-                                              // Форматируем оценку правильно
-                        const formatValuation = (amount) => {
-                            const num = parseFloat(amount) || 0;
-                            if (num === 0) return '0 ₽';
-                            const valuation = num * 1.2;
-                            const cleanValuation = valuation % 1 === 0 ? Math.floor(valuation) : valuation;
-                            return `${cleanValuation.toLocaleString('ru-RU')} ₽`;
-                        };
-                        modalValuationAmount.textContent = formatValuation(startup.funding_goal);
+                      
+                      // Форматируем сумму правильно
+                      const formatAmount = (amount) => {
+                          const num = parseFloat(amount) || 0;
+                          if (num === 0) return '0 ₽';
+                          // Убираем десятичные знаки если они .0000
+                          const cleanNum = num % 1 === 0 ? Math.floor(num) : num;
+                          return `${cleanNum.toLocaleString('ru-RU')} ₽`;
+                      };
+                      modalFundingAmount.textContent = formatAmount(startup.funding_goal);
+                      
+                      // Форматируем оценку правильно
+                      const formatValuation = (amount) => {
+                          const num = parseFloat(amount) || 0;
+                          if (num === 0) return '0 ₽';
+                          const valuation = num * 1.2;
+                          const cleanValuation = valuation % 1 === 0 ? Math.floor(valuation) : valuation;
+                          return `${cleanValuation.toLocaleString('ru-RU')} ₽`;
+                      };
+                      modalValuationAmount.textContent = formatValuation(startup.funding_goal);
                       modalInvestorsCount.textContent = `Инвестировало (${startup.investors || startup.get_investors_count || 0})`;
 
                       // Обработчик для кнопки "Подробнее"
@@ -2198,12 +2207,27 @@
 
                       currentStartupID = startup.startup_id;
 
+                      // Показываем модальное окно
+                      modal.style.display = 'flex';
                       planets.forEach(p => p.classList.remove('active'));
                       planet.classList.add('active');
-                      modal.style.display = 'block';
-                      isPaused = true;
-                      pausedTime = Date.now();
+
+                      // Пауза анимации
+                      if (!isPaused) {
+                          isPaused = true;
+                          pausedTime = Date.now();
+                      }
                       lastInteractionTime = Date.now();
+                  };
+
+                  // Добавляем обработчик на саму планету
+                  planet.addEventListener('click', handlePlanetClick);
+                  
+                  // Добавляем обработчик на все дочерние элементы планеты
+                  const planetChildren = planet.querySelectorAll('*');
+                  planetChildren.forEach(child => {
+                      child.addEventListener('click', handlePlanetClick);
+                      child.style.pointerEvents = 'auto';
                   });
               });
 
