@@ -184,7 +184,7 @@
       left: 50%;
       width: 1000px;
       height: 1000px;
-      transform: translate(-50%, -50%) translate(0px, -100px) scale(0.8);
+      transform: translate(-50%, -50%) translate(0px, 100px) scale(0.8);
       transform-style: preserve-3d;
     }
 
@@ -1787,7 +1787,7 @@
                           rating: s.average_rating || 0,
                           comment_count: s.comment_count || 0,
                           progress: s.progress || '0%',
-                          direction: s.direction?.direction_name || 'Без категории',
+                          direction: s.direction || 'Без категории',
                           funding_goal: s.funding_goal || 0,
                           investors: s.get_investors_count || 0,
                           investment_type: s.investment_type || 'Не указано',
@@ -1878,10 +1878,14 @@
                   planet.addEventListener('click', (e) => {
                       e.stopPropagation();
                       const id = planet.getAttribute('data-id');
+                      console.log('Clicked planet ID:', id);
+                      console.log('Available startups:', Object.keys(startups));
                       const startup = startups[id];
                       if (!startup) {
+                          console.log('Startup not found for ID:', id);
                           return;
                       }
+                      console.log('Found startup:', startup);
 
                       // Заполняем новое модальное окно
                       const modal = document.getElementById('planetary-modal');
