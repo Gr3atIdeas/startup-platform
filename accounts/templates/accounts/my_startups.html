@@ -178,6 +178,16 @@
       transform-style: preserve-3d;
     }
 
+    .planetary-system #scene {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 1000px;
+      height: 1000px;
+      transform: translate(-50%, -50%) translate(0px, -100px) scale(0.8);
+      transform-style: preserve-3d;
+    }
+
     .planetary-system #logo {
       width: 60px;
       height: 60px;
@@ -1661,9 +1671,7 @@
                  monthlyCategoryData = JSON.parse(monthlyDataEl.textContent);
                  categoriesForChart = JSON.parse(categoriesEl.textContent);
     
-                 console.log("Chart Labels:", monthLabels);
-                 console.log("Chart Categories:", categoriesForChart);
-                 console.log("Chart Monthly Category Data:", monthlyCategoryData);
+                 
              } catch (e) {
                  console.error("Ошибка парсинга данных для графика:", e);
                  if (canvasElement.parentNode) {
@@ -1673,7 +1681,7 @@
              }
     
              const hasData = monthlyCategoryData && monthlyCategoryData.some(month => Object.keys(month.category_data).length > 0);
-             console.log("Chart has category data:", hasData);
+             
     
              if (hasData && categoriesForChart.length > 0) {
                  const datasets = categoriesForChart.map(categoryName => {
@@ -1690,7 +1698,7 @@
                      };
                  });
     
-                 console.log("Generated Chart Datasets:", datasets);
+ 
     
                  new Chart(ctx, {
                      type: 'bar',
@@ -1759,7 +1767,7 @@
                      }
                  });
              } else {
-                console.log("No category data found for chart, rendering placeholder.");
+
                 if (canvasElement.parentNode) {
                    canvasElement.parentNode.innerHTML = '<p style="text-align: center; color: #adb5bd;">Нет данных по сборам средств за текущий год для отображения по категориям.</p>';
                 }
@@ -1787,7 +1795,7 @@
                       };
                   });
               }
-              console.log('Startups object:', startups);
+
 
               const planets = document.querySelectorAll('.planetary-system .planet');
               const solarSystem = document.querySelector('.planetary-system#solar-system');
@@ -1796,6 +1804,7 @@
               const logoElement = document.querySelector('.planetary-system #logo');
 
               const galaxyTiltAngle = 45;
+              const planetTiltCompensation = -45;
               const planetObjects = [];
               let isPaused = false;
               let pausedTime = 0;
@@ -1838,7 +1847,7 @@
                       console.warn(`Радиус орбиты равен нулю для планеты ${index}.`);
                   }
 
-                  const tiltCompensation = -galaxyTiltAngle;
+                  const tiltCompensation = planetTiltCompensation;
                   planet.style.transform = `rotateX(${tiltCompensation}deg)`;
 
                   planetObjects.push({
@@ -1869,10 +1878,8 @@
                   planet.addEventListener('click', (e) => {
                       e.stopPropagation();
                       const id = planet.getAttribute('data-id');
-                      console.log('Clicked planet ID:', id);
                       const startup = startups[id];
                       if (!startup) {
-                          console.error('Не найдены данные для стартапа с ID:', id);
                           return;
                       }
 
@@ -1909,7 +1916,6 @@
                       };
 
                       currentStartupID = startup.startup_id;
-                      console.log('Current Startup ID:', currentStartupID);
 
                       planets.forEach(p => p.classList.remove('active'));
                       planet.classList.add('active');
@@ -1925,7 +1931,6 @@
               const modal = document.getElementById('planetary-modal');
               
               modalCloseBtn.addEventListener('click', () => {
-                  console.log('Close modal clicked');
                   modal.style.display = 'none';
                   planets.forEach(p => p.classList.remove('active'));
                   if (isPaused) {
@@ -1934,7 +1939,6 @@
                           planetObj.startTime += pauseDuration;
                       });
                       isPaused = false;
-                      console.log('Resuming planet rotation');
                   }
                   lastInteractionTime = Date.now();
               });
@@ -1950,7 +1954,6 @@
                           planetObj.startTime += pauseDuration;
                       });
                       isPaused = false;
-                      console.log('Resuming planet rotation');
                   }
                   lastInteractionTime = Date.now();
               });
@@ -2061,7 +2064,7 @@
 
                           planetObj.orientation.style.left = `${50 + 50 * (x / radius)}%`;
                           planetObj.orientation.style.top = `${50 + 50 * (y / radius)}%`;
-                          const tiltCompensation = -galaxyTiltAngle;
+                          const tiltCompensation = planetTiltCompensation;
                           planetObj.element.style.transform = `rotateX(${tiltCompensation}deg)`;
                       } catch (error) {
                           console.error('Ошибка при обновлении позиции планеты:', error);
