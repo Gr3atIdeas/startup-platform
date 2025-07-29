@@ -1787,6 +1787,7 @@
               try {
                   // Убираем лишние пробелы и экранирование
                   const cleanData = rawData.trim();
+                  console.log('Clean data before parse:', cleanData.substring(0, 200));
                   startups_data = JSON.parse(cleanData);
                   console.log('Parsed startups data:', startups_data);
                   console.log('Parsed data type:', typeof startups_data);
@@ -1801,7 +1802,8 @@
               }
               const startups = {};
               // Проверяем, что данные являются массивом или объектом с данными
-              if (Array.isArray(startups_data) || (startups_data && typeof startups_data === 'object' && 'length' in startups_data && startups_data.length > 0)) {
+              if (Array.isArray(startups_data)) {
+                  console.log('Processing as array with length:', startups_data.length);
                   startups_data.forEach((s, index) => {
                       console.log(`Processing startup ${index}:`, s);
                       if (s && s.startup_id) {
@@ -1824,7 +1826,33 @@
                           console.warn(`Skipping invalid startup data at index ${index}:`, s);
                       }
                   });
+              } else if (startups_data && typeof startups_data === 'object' && 'length' in startups_data && startups_data.length > 0) {
+                  console.log('Processing as array-like object with length:', startups_data.length);
+                  for (let i = 0; i < startups_data.length; i++) {
+                      const s = startups_data[i];
+                      console.log(`Processing startup ${i}:`, s);
+                      if (s && s.startup_id) {
+                          const startupId = s.startup_id.toString();
+                          startups[startupId] = {
+                              startup_id: s.startup_id,
+                              image: s.planet_image ? `https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/${s.planet_image}` : '{% static "accounts/images/planet_logo_carusel.webp" %}',
+                              name: s.title || s.name || 'Без названия',
+                              rating: s.average_rating || s.rating || 0,
+                              comment_count: s.comment_count || 0,
+                              progress: s.progress || '0%',
+                              direction: s.direction || 'Без категории',
+                              funding_goal: s.funding_goal || 0,
+                              investors: s.get_investors_count || s.investors || 0,
+                              investment_type: s.investment_type || 'Не указано',
+                              description: s.description || s.short_description || 'Описание отсутствует'
+                          };
+                          console.log(`Added startup ${startupId}:`, startups[startupId]);
+                      } else {
+                          console.warn(`Skipping invalid startup data at index ${i}:`, s);
+                      }
+                  }
               } else if (startups_data && typeof startups_data === 'object') {
+                  console.log('Processing as object with keys:', Object.keys(startups_data));
                   // Если это объект, попробуем обработать его как массив
                   const dataArray = Object.values(startups_data);
                   dataArray.forEach((s, index) => {
@@ -1851,6 +1879,43 @@
                   });
               } else {
                   console.error('Startups data is not an array or object:', startups_data);
+                  console.error('Type:', typeof startups_data);
+                  console.error('Constructor:', startups_data ? startups_data.constructor.name : 'null/undefined');
+                  
+                  // Попробуем принудительно обработать как массив, если это строка с JSON
+                  if (typeof startups_data === 'string' && startups_data.startsWith('[') && startups_data.endsWith(']')) {
+                      console.log('Attempting to parse string as JSON array...');
+                      try {
+                          const parsedArray = JSON.parse(startups_data);
+                          if (Array.isArray(parsedArray)) {
+                              console.log('Successfully parsed string as array with length:', parsedArray.length);
+                              parsedArray.forEach((s, index) => {
+                                  console.log(`Processing startup ${index}:`, s);
+                                  if (s && s.startup_id) {
+                                      const startupId = s.startup_id.toString();
+                                      startups[startupId] = {
+                                          startup_id: s.startup_id,
+                                          image: s.planet_image ? `https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/${s.planet_image}` : '{% static "accounts/images/planet_logo_carusel.webp" %}',
+                                          name: s.title || s.name || 'Без названия',
+                                          rating: s.average_rating || s.rating || 0,
+                                          comment_count: s.comment_count || 0,
+                                          progress: s.progress || '0%',
+                                          direction: s.direction || 'Без категории',
+                                          funding_goal: s.funding_goal || 0,
+                                          investors: s.get_investors_count || s.investors || 0,
+                                          investment_type: s.investment_type || 'Не указано',
+                                          description: s.description || s.short_description || 'Описание отсутствует'
+                                      };
+                                      console.log(`Added startup ${startupId}:`, startups[startupId]);
+                                  } else {
+                                      console.warn(`Skipping invalid startup data at index ${index}:`, s);
+                                  }
+                              });
+                          }
+                      } catch (parseError) {
+                          console.error('Failed to parse string as JSON:', parseError);
+                      }
+                  }
               }
               console.log('Final startups object keys:', Object.keys(startups));
               console.log('Processed startups object:', startups);
