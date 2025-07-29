@@ -3358,7 +3358,7 @@ def my_startups(request):
                 "funding_goal": startup.funding_goal or 0,
                 "amount_raised": startup.amount_raised or 0,
                 "get_investors_count": startup.get_investors_count(),
-                "direction": startup.direction,
+                "direction": startup.direction.direction_name if startup.direction else "Не указано",
                 "investment_type": "Не указано",
                 "orbit_size": orbit_size,
                 "orbit_time": orbit_time,
