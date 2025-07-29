@@ -1416,7 +1416,7 @@
                   parsedInvestedData = JSON.parse(investedElement.textContent);
               }
           } catch (e) {
-              console.error("Ошибка парсинга данных для модального окна:", e);
+              
           }
     
           updateRadialChartColors();
@@ -1798,7 +1798,7 @@
          (function() {
              const canvasElement = document.getElementById('monthlyInvestmentChart');
              if (!canvasElement) {
-                 console.warn("Элемент canvas #monthlyInvestmentChart не найден.");
+ 
                  return;
              }
              const ctx = canvasElement.getContext('2d');
@@ -1820,7 +1820,7 @@
     
                  
              } catch (e) {
-                 console.error("Ошибка парсинга данных для графика:", e);
+ 
                  if (canvasElement.parentNode) {
                    canvasElement.parentNode.innerHTML = '<p style="text-align: center; color: red;">Ошибка загрузки данных для графика.</p>';
                  }
@@ -1924,146 +1924,109 @@
           // Планетарная система
           (function() {
               const rawData = document.getElementById('planetary-startups-data').textContent || '[]';
-              console.log('Raw data from element:', rawData);
-              console.log('Raw data type:', typeof rawData);
-              console.log('Raw data length:', rawData.length);
+
               
               let startups_data;
               try {
                   // Убираем лишние пробелы и экранирование
                   const cleanData = rawData.trim();
-                  console.log('Clean data before parse:', cleanData.substring(0, 200));
-                  startups_data = JSON.parse(cleanData);
-                  console.log('Parsed startups data:', startups_data);
-                  console.log('Parsed data type:', typeof startups_data);
-                  console.log('Is array:', Array.isArray(startups_data));
-                  console.log('Array length:', startups_data.length);
-                  console.log('Constructor name:', startups_data.constructor.name);
-                  console.log('Is array-like:', startups_data && typeof startups_data === 'object' && 'length' in startups_data);
-              } catch (error) {
-                  console.error('JSON parse error:', error);
-                  console.error('Raw data that failed to parse:', rawData);
-                  startups_data = [];
-              }
+                                  startups_data = JSON.parse(cleanData);
+                              } catch (error) {
+                    startups_data = [];
+                }
               const startups = {};
               // Проверяем, что данные являются массивом или объектом с данными
-              if (Array.isArray(startups_data)) {
-                  console.log('Processing as array with length:', startups_data.length);
-                  startups_data.forEach((s, index) => {
-                      console.log(`Processing startup ${index}:`, s);
-                      if (s && s.startup_id) {
-                          const startupId = s.startup_id.toString();
-                          startups[startupId] = {
-                              startup_id: s.startup_id,
-                              image: s.planet_image ? `https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/${s.planet_image}` : '{% static "accounts/images/planet_logo_carusel.webp" %}',
-                              name: s.title || s.name || 'Без названия',
-                              rating: s.average_rating || s.rating || 0,
-                              comment_count: s.comment_count || 0,
-                              progress: s.progress || '0%',
-                              direction: s.direction || 'Без категории',
-                              funding_goal: s.funding_goal || 0,
-                              investors: s.get_investors_count || s.investors || 0,
-                              investment_type: s.investment_type || 'Не указано',
-                              description: s.description || s.short_description || 'Описание отсутствует'
-                          };
-                          console.log(`Added startup ${startupId}:`, startups[startupId]);
-                      } else {
-                          console.warn(`Skipping invalid startup data at index ${index}:`, s);
-                      }
-                  });
-              } else if (startups_data && typeof startups_data === 'object' && 'length' in startups_data && startups_data.length > 0) {
-                  console.log('Processing as array-like object with length:', startups_data.length);
-                  for (let i = 0; i < startups_data.length; i++) {
-                      const s = startups_data[i];
-                      console.log(`Processing startup ${i}:`, s);
-                      if (s && s.startup_id) {
-                          const startupId = s.startup_id.toString();
-                          startups[startupId] = {
-                              startup_id: s.startup_id,
-                              image: s.planet_image ? `https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/${s.planet_image}` : '{% static "accounts/images/planet_logo_carusel.webp" %}',
-                              name: s.title || s.name || 'Без названия',
-                              rating: s.average_rating || s.rating || 0,
-                              comment_count: s.comment_count || 0,
-                              progress: s.progress || '0%',
-                              direction: s.direction || 'Без категории',
-                              funding_goal: s.funding_goal || 0,
-                              investors: s.get_investors_count || s.investors || 0,
-                              investment_type: s.investment_type || 'Не указано',
-                              description: s.description || s.short_description || 'Описание отсутствует'
-                          };
-                          console.log(`Added startup ${startupId}:`, startups[startupId]);
-                      } else {
-                          console.warn(`Skipping invalid startup data at index ${i}:`, s);
-                      }
-                  }
-              } else if (startups_data && typeof startups_data === 'object') {
-                  console.log('Processing as object with keys:', Object.keys(startups_data));
-                  // Если это объект, попробуем обработать его как массив
-                  const dataArray = Object.values(startups_data);
-                  dataArray.forEach((s, index) => {
-                      console.log(`Processing startup ${index}:`, s);
-                      if (s && s.startup_id) {
-                          const startupId = s.startup_id.toString();
-                          startups[startupId] = {
-                              startup_id: s.startup_id,
-                              image: s.planet_image ? `https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/${s.planet_image}` : '{% static "accounts/images/planet_logo_carusel.webp" %}',
-                              name: s.title || s.name || 'Без названия',
-                              rating: s.average_rating || s.rating || 0,
-                              comment_count: s.comment_count || 0,
-                              progress: s.progress || '0%',
-                              direction: s.direction || 'Без категории',
-                              funding_goal: s.funding_goal || 0,
-                              investors: s.get_investors_count || s.investors || 0,
-                              investment_type: s.investment_type || 'Не указано',
-                              description: s.description || s.short_description || 'Описание отсутствует'
-                          };
-                          console.log(`Added startup ${startupId}:`, startups[startupId]);
-                      } else {
-                          console.warn(`Skipping invalid startup data at index ${index}:`, s);
-                      }
-                  });
-              } else {
-                  console.error('Startups data is not an array or object:', startups_data);
-                  console.error('Type:', typeof startups_data);
-                  console.error('Constructor:', startups_data ? startups_data.constructor.name : 'null/undefined');
-                  
-                  // Попробуем принудительно обработать как массив, если это строка с JSON
-                  if (typeof startups_data === 'string' && startups_data.startsWith('[') && startups_data.endsWith(']')) {
-                      console.log('Attempting to parse string as JSON array...');
-                      try {
-                          const parsedArray = JSON.parse(startups_data);
-                          if (Array.isArray(parsedArray)) {
-                              console.log('Successfully parsed string as array with length:', parsedArray.length);
-                              parsedArray.forEach((s, index) => {
-                                  console.log(`Processing startup ${index}:`, s);
-                                  if (s && s.startup_id) {
-                                      const startupId = s.startup_id.toString();
-                                      startups[startupId] = {
-                                          startup_id: s.startup_id,
-                                          image: s.planet_image ? `https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/${s.planet_image}` : '{% static "accounts/images/planet_logo_carusel.webp" %}',
-                                          name: s.title || s.name || 'Без названия',
-                                          rating: s.average_rating || s.rating || 0,
-                                          comment_count: s.comment_count || 0,
-                                          progress: s.progress || '0%',
-                                          direction: s.direction || 'Без категории',
-                                          funding_goal: s.funding_goal || 0,
-                                          investors: s.get_investors_count || s.investors || 0,
-                                          investment_type: s.investment_type || 'Не указано',
-                                          description: s.description || s.short_description || 'Описание отсутствует'
-                                      };
-                                      console.log(`Added startup ${startupId}:`, startups[startupId]);
-                                  } else {
-                                      console.warn(`Skipping invalid startup data at index ${index}:`, s);
-                                  }
-                              });
-                          }
-                      } catch (parseError) {
-                          console.error('Failed to parse string as JSON:', parseError);
-                      }
-                  }
-              }
-              console.log('Final startups object keys:', Object.keys(startups));
-              console.log('Processed startups object:', startups);
+                              if (Array.isArray(startups_data)) {
+                    startups_data.forEach((s, index) => {
+                        if (s && s.startup_id) {
+                            const startupId = s.startup_id.toString();
+                            startups[startupId] = {
+                                startup_id: s.startup_id,
+                                image: s.planet_image ? `https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/${s.planet_image}` : '{% static "accounts/images/planet_logo_carusel.webp" %}',
+                                name: s.title || s.name || 'Без названия',
+                                rating: s.average_rating || s.rating || 0,
+                                comment_count: s.comment_count || 0,
+                                progress: s.progress || '0%',
+                                direction: s.direction || 'Без категории',
+                                funding_goal: s.funding_goal || 0,
+                                investors: s.get_investors_count || s.investors || 0,
+                                investment_type: s.investment_type || 'Не указано',
+                                description: s.description || s.short_description || 'Описание отсутствует'
+                            };
+                        }
+                    });
+                              } else if (startups_data && typeof startups_data === 'object' && 'length' in startups_data && startups_data.length > 0) {
+                    for (let i = 0; i < startups_data.length; i++) {
+                        const s = startups_data[i];
+                        if (s && s.startup_id) {
+                            const startupId = s.startup_id.toString();
+                            startups[startupId] = {
+                                startup_id: s.startup_id,
+                                image: s.planet_image ? `https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/${s.planet_image}` : '{% static "accounts/images/planet_logo_carusel.webp" %}',
+                                name: s.title || s.name || 'Без названия',
+                                rating: s.average_rating || s.rating || 0,
+                                comment_count: s.comment_count || 0,
+                                progress: s.progress || '0%',
+                                direction: s.direction || 'Без категории',
+                                funding_goal: s.funding_goal || 0,
+                                investors: s.get_investors_count || s.investors || 0,
+                                investment_type: s.investment_type || 'Не указано',
+                                description: s.description || s.short_description || 'Описание отсутствует'
+                            };
+                        }
+                    }
+                              } else if (startups_data && typeof startups_data === 'object') {
+                    // Если это объект, попробуем обработать его как массив
+                    const dataArray = Object.values(startups_data);
+                    dataArray.forEach((s, index) => {
+                        if (s && s.startup_id) {
+                            const startupId = s.startup_id.toString();
+                            startups[startupId] = {
+                                startup_id: s.startup_id,
+                                image: s.planet_image ? `https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/${s.planet_image}` : '{% static "accounts/images/planet_logo_carusel.webp" %}',
+                                name: s.title || s.name || 'Без названия',
+                                rating: s.average_rating || s.rating || 0,
+                                comment_count: s.comment_count || 0,
+                                progress: s.progress || '0%',
+                                direction: s.direction || 'Без категории',
+                                funding_goal: s.funding_goal || 0,
+                                investors: s.get_investors_count || s.investors || 0,
+                                investment_type: s.investment_type || 'Не указано',
+                                description: s.description || s.short_description || 'Описание отсутствует'
+                            };
+                        }
+                    });
+                              } else {
+                    // Попробуем принудительно обработать как массив, если это строка с JSON
+                    if (typeof startups_data === 'string' && startups_data.startsWith('[') && startups_data.endsWith(']')) {
+                        try {
+                            const parsedArray = JSON.parse(startups_data);
+                            if (Array.isArray(parsedArray)) {
+                                parsedArray.forEach((s, index) => {
+                                    if (s && s.startup_id) {
+                                        const startupId = s.startup_id.toString();
+                                        startups[startupId] = {
+                                            startup_id: s.startup_id,
+                                            image: s.planet_image ? `https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/${s.planet_image}` : '{% static "accounts/images/planet_logo_carusel.webp" %}',
+                                            name: s.title || s.name || 'Без названия',
+                                            rating: s.average_rating || s.rating || 0,
+                                            comment_count: s.comment_count || 0,
+                                            progress: s.progress || '0%',
+                                            direction: s.direction || 'Без категории',
+                                            funding_goal: s.funding_goal || 0,
+                                            investors: s.get_investors_count || s.investors || 0,
+                                            investment_type: s.investment_type || 'Не указано',
+                                            description: s.description || s.short_description || 'Описание отсутствует'
+                                        };
+                                    }
+                                });
+                            }
+                        } catch (parseError) {
+                            // Игнорируем ошибки парсинга
+                        }
+                    }
+                }
+              
 
 
               const planets = document.querySelectorAll('.planetary-system .planet');
@@ -2091,7 +2054,7 @@
                   const orbit = planet.closest('.orbit');
                   const planetOrientation = planet.closest('.planet-orientation');
                   if (!orbit || !planetOrientation) {
-                      console.error(`Орбита или ориентация не найдены для планеты ${index}.`);
+      
                       return;
                   }
 
@@ -2113,7 +2076,7 @@
                       planetOrientation.style.left = `${50 + 50 * (x / radius)}%`;
                       planetOrientation.style.top = `${50 + 50 * (y / radius)}%`;
                   } else {
-                      console.warn(`Радиус орбиты равен нулю для планеты ${index}.`);
+      
                   }
 
                   const tiltCompensation = planetTiltCompensation;
@@ -2138,7 +2101,7 @@
                       const img = planet.querySelector('.planet-img');
                       if (img) {
                           img.onerror = () => {
-                              console.warn(`Не удалось загрузить изображение для стартапа ${id}.`);
+              
                               img.src = '{% static "accounts/images/planet_logo_carusel.webp" %}';
                           };
                       }
@@ -2147,17 +2110,11 @@
                   planet.addEventListener('click', (e) => {
                       e.stopPropagation();
                       const id = planet.getAttribute('data-id');
-                      console.log('Clicked planet ID:', id);
-                      console.log('Available startups keys:', Object.keys(startups));
-                      console.log('Available startups object:', startups);
+                      
                       const startup = startups[id];
                       if (!startup) {
-                          console.log('Startup not found for ID:', id);
-                          console.log('Type of id:', typeof id);
-                          console.log('Available IDs:', Object.keys(startups));
-                          return;
-                      }
-                      console.log('Found startup:', startup);
+                                                  return;
+                    }
 
                       // Заполняем новое модальное окно
                       const modal = document.getElementById('planetary-modal');
@@ -2315,7 +2272,7 @@
                           const elapsedSeconds = (now - planetObj.startTime) / 1000;
                           const orbitTimeSeconds = planetObj.orbitTime * planetObj.speedFactor;
                           if (!orbitTimeSeconds || orbitTimeSeconds <= 0) {
-                              console.error('Некорректное значение orbitTimeSeconds:', orbitTimeSeconds);
+              
                               return;
                           }
                           const progress = (elapsedSeconds % orbitTimeSeconds) / orbitTimeSeconds;
@@ -2323,7 +2280,7 @@
                           const angleRad = angle * Math.PI / 180;
                           const radius = planetObj.orbitSize / 2;
                           if (!radius || radius <= 0) {
-                              console.error('Некорректный радиус:', radius);
+              
                               return;
                           }
 
@@ -2343,7 +2300,7 @@
                           const tiltCompensation = planetTiltCompensation;
                           planetObj.element.style.transform = `rotateX(${tiltCompensation}deg)`;
                       } catch (error) {
-                          console.error('Ошибка при обновлении позиции планеты:', error);
+          
                       }
                   });
 
