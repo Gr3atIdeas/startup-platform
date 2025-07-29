@@ -183,7 +183,6 @@
       top: 50%;
       left: 50%;
       width: 100%;
-      height: 100%;
       transform: translate(-50%, -50%) translate(0px, 200px) scale(1.2);
       transform-style: preserve-3d;
     }
@@ -1782,7 +1781,8 @@
               if (Array.isArray(startups_data)) {
                   startups_data.forEach(s => {
                       console.log('Processing startup:', s);
-                      startups[s.startup_id.toString()] = {
+                      const startupId = s.startup_id.toString();
+                      startups[startupId] = {
                           startup_id: s.startup_id,
                           image: s.planet_image ? `https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/${s.planet_image}` : '{% static "accounts/images/planet_logo_carusel.webp" %}',
                           name: s.name || s.title || 'Без названия',
@@ -1795,8 +1795,10 @@
                           investment_type: s.investment_type || 'Не указано',
                           description: s.description || s.short_description || 'Описание отсутствует'
                       };
+                      console.log(`Added startup ${startupId}:`, startups[startupId]);
                   });
               }
+              console.log('Final startups object keys:', Object.keys(startups));
               console.log('Processed startups object:', startups);
 
 
@@ -1882,10 +1884,13 @@
                       e.stopPropagation();
                       const id = planet.getAttribute('data-id');
                       console.log('Clicked planet ID:', id);
-                      console.log('Available startups:', Object.keys(startups));
+                      console.log('Available startups keys:', Object.keys(startups));
+                      console.log('Available startups object:', startups);
                       const startup = startups[id];
                       if (!startup) {
                           console.log('Startup not found for ID:', id);
+                          console.log('Type of id:', typeof id);
+                          console.log('Available IDs:', Object.keys(startups));
                           return;
                       }
                       console.log('Found startup:', startup);
