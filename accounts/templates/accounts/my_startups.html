@@ -1792,13 +1792,16 @@
                   console.log('Parsed data type:', typeof startups_data);
                   console.log('Is array:', Array.isArray(startups_data));
                   console.log('Array length:', startups_data.length);
+                  console.log('Constructor name:', startups_data.constructor.name);
+                  console.log('Is array-like:', startups_data && typeof startups_data === 'object' && 'length' in startups_data);
               } catch (error) {
                   console.error('JSON parse error:', error);
                   console.error('Raw data that failed to parse:', rawData);
                   startups_data = [];
               }
               const startups = {};
-              if (Array.isArray(startups_data)) {
+              // Проверяем, что данные являются массивом или объектом с данными
+              if (Array.isArray(startups_data) || (startups_data && typeof startups_data === 'object' && 'length' in startups_data && startups_data.length > 0)) {
                   startups_data.forEach((s, index) => {
                       console.log(`Processing startup ${index}:`, s);
                       if (s && s.startup_id) {
@@ -1821,8 +1824,33 @@
                           console.warn(`Skipping invalid startup data at index ${index}:`, s);
                       }
                   });
+              } else if (startups_data && typeof startups_data === 'object') {
+                  // Если это объект, попробуем обработать его как массив
+                  const dataArray = Object.values(startups_data);
+                  dataArray.forEach((s, index) => {
+                      console.log(`Processing startup ${index}:`, s);
+                      if (s && s.startup_id) {
+                          const startupId = s.startup_id.toString();
+                          startups[startupId] = {
+                              startup_id: s.startup_id,
+                              image: s.planet_image ? `https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/${s.planet_image}` : '{% static "accounts/images/planet_logo_carusel.webp" %}',
+                              name: s.title || s.name || 'Без названия',
+                              rating: s.average_rating || s.rating || 0,
+                              comment_count: s.comment_count || 0,
+                              progress: s.progress || '0%',
+                              direction: s.direction || 'Без категории',
+                              funding_goal: s.funding_goal || 0,
+                              investors: s.get_investors_count || s.investors || 0,
+                              investment_type: s.investment_type || 'Не указано',
+                              description: s.description || s.short_description || 'Описание отсутствует'
+                          };
+                          console.log(`Added startup ${startupId}:`, startups[startupId]);
+                      } else {
+                          console.warn(`Skipping invalid startup data at index ${index}:`, s);
+                      }
+                  });
               } else {
-                  console.error('Startups data is not an array:', startups_data);
+                  console.error('Startups data is not an array or object:', startups_data);
               }
               console.log('Final startups object keys:', Object.keys(startups));
               console.log('Processed startups object:', startups);
