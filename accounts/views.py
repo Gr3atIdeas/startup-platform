@@ -655,12 +655,17 @@ def investments(request):
         total_investment_data = user_investments_qs.aggregate(
             total_investment=Sum("amount"),
             max_investment=Max("amount"),
-            min_investment=Min("amount"),
             startups_count=Count("startup", distinct=True),
         )
         total_investment = total_investment_data.get("total_investment") or Decimal("0")
         max_investment = total_investment_data.get("max_investment") or Decimal("0")
-        min_investment = total_investment_data.get("min_investment") or Decimal("0")
+        
+        # Вычисляем минимальное значение только среди инвестиций с ненулевыми суммами
+        investments_with_amount = user_investments_qs.filter(amount__gt=0)
+        min_investment_data = investments_with_amount.aggregate(
+            min_investment=Min("amount")
+        )
+        min_investment = min_investment_data.get("min_investment") or Decimal("0")
         startups_count = total_investment_data.get("startups_count", 0)
         logger.info(
             f"[investments] User: {request.user.email}, Total Investment: {total_investment}"
@@ -3169,7 +3174,6 @@ def my_startups(request):
         financial_analytics_data = approved_startups_qs.aggregate(
             total_raised=Sum("amount_raised"),
             max_raised=Max("amount_raised"),
-            min_raised=Min("amount_raised"),
             approved_startups_count=Count("startup_id"),
         )
         approved_startups_count = financial_analytics_data.get(
@@ -3179,7 +3183,13 @@ def my_startups(request):
             "0"
         )
         max_raised = financial_analytics_data.get("max_raised") or Decimal("0")
-        min_raised = financial_analytics_data.get("min_raised") or Decimal("0")
+        
+        # Вычисляем минимальное значение только среди стартапов с ненулевыми сборами
+        startups_with_funding = approved_startups_qs.filter(amount_raised__gt=0)
+        min_raised_data = startups_with_funding.aggregate(
+            min_raised=Min("amount_raised")
+        )
+        min_raised = min_raised_data.get("min_raised") or Decimal("0")
         category_data_raw = (
             user_startups_qs.values("direction__direction_name")
             .annotate(category_count=Count("startup_id"))
