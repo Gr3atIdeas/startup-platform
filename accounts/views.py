@@ -2258,7 +2258,14 @@ def investor_main(request):
         random_planet_num = random.randint(1, 15)
         planet_image_url = static(f"accounts/images/planetary_system/planets_round/{random_planet_num}.png")
         direction_name = startup.direction.direction_name if startup.direction else "Не указано"
-        russian_direction = DIRECTION_TRANSLATIONS.get(direction_name, direction_name)
+        # Находим original_name для направления для правильной фильтрации
+        original_direction = None
+        for category in FIXED_CATEGORIES:
+            if category['direction_name'] == direction_name:
+                original_direction = category['original_name']
+                break
+        if not original_direction:
+            original_direction = direction_name  # Если не найдено, используем как есть
         all_startups_data.append({
             "id": startup.startup_id,
             "name": startup.title,
@@ -2266,7 +2273,7 @@ def investor_main(request):
             "rating": round(startup.rating_avg, 2),
             "voters_count": startup.voters_count,
             "progress": round(startup.progress, 2) if startup.progress is not None else 0,
-            "direction": russian_direction,
+            "direction": original_direction,  # Используем original_name для фильтрации
             "investors": startup.total_investors,
             "funding_goal": f"{startup.funding_goal:,.0f} ₽".replace(",", " ") if startup.funding_goal else "Не определена",
             "valuation": f"{startup.valuation:,.0f} ₽".replace(",", " ") if startup.valuation else "Не указана",

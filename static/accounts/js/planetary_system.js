@@ -511,6 +511,9 @@
     console.log('🔍 JS: applyUltraNewPlanetaryFilter called with:', categoryName);
     console.log('🔍 JS: ultraNewPlanetaryAllStartupsData length:', ultraNewPlanetaryAllStartupsData.length);
     
+    // Принудительно обновляем данные при каждом вызове
+    console.log('🔍 JS: Forcing data refresh for category:', categoryName);
+    
     let filtered = [];
     if (!categoryName || categoryName === 'Все' || categoryName === 'All') {
       filtered = ultraNewPlanetaryAllStartupsData.slice();
@@ -535,6 +538,7 @@
       });
       console.log('🔍 JS: Filtering by direction:', categoryName, 'filtered count:', filtered.length);
       console.log('🔍 JS: Available directions in data:', [...new Set(ultraNewPlanetaryAllStartupsData.map(s => s.direction))]);
+      console.log('🔍 JS: Sample filtered startups:', filtered.slice(0, 3).map(s => ({ name: s.name, direction: s.direction })));
     }
     
     const startups = [];
