@@ -2168,9 +2168,14 @@ def investor_main(request):
         comment_count=Count("comments", distinct=True),
     )
     if selected_direction_name != "All" and selected_direction_name != "Все":
-        startups_query = startups_query.filter(
-            direction__direction_name=selected_direction_name
-        )
+        # Ищем направление по original_name или direction_name
+        from django.db.models import Q
+        direction_filter = Q()
+        for category in FIXED_CATEGORIES:
+            if category['original_name'] == selected_direction_name or category['direction_name'] == selected_direction_name:
+                direction_filter |= Q(direction__direction_name=category['direction_name'])
+        if direction_filter:
+            startups_query = startups_query.filter(direction_filter)
     startups_filtered = startups_query.annotate(
         progress=Case(
             When(funding_goal__gt=0, then=(F("amount_raised") * 100.0 / F("funding_goal"))),
@@ -2298,9 +2303,14 @@ def startupper_main(request):
         comment_count=Count("comments", distinct=True),
     )
     if selected_direction_name != "All" and selected_direction_name != "Все":
-        startups_query = startups_query.filter(
-            direction__direction_name=selected_direction_name
-        )
+        # Ищем направление по original_name или direction_name
+        from django.db.models import Q
+        direction_filter = Q()
+        for category in FIXED_CATEGORIES:
+            if category['original_name'] == selected_direction_name or category['direction_name'] == selected_direction_name:
+                direction_filter |= Q(direction__direction_name=category['direction_name'])
+        if direction_filter:
+            startups_query = startups_query.filter(direction_filter)
     startups_filtered = startups_query.annotate(
         progress=Case(
             When(funding_goal__gt=0, then=(F("amount_raised") * 100.0 / F("funding_goal"))),
@@ -3044,9 +3054,14 @@ def planetary_system(request):
         status="approved"
     ).select_related("direction", "owner").order_by("-created_at")
     if selected_direction_name != "All" and selected_direction_name != "Все":
-        startups_query = startups_query.filter(
-            direction__direction_name=selected_direction_name
-        )
+        # Ищем направление по original_name или direction_name
+        from django.db.models import Q
+        direction_filter = Q()
+        for category in FIXED_CATEGORIES:
+            if category['original_name'] == selected_direction_name or category['direction_name'] == selected_direction_name:
+                direction_filter |= Q(direction__direction_name=category['direction_name'])
+        if direction_filter:
+            startups_query = startups_query.filter(direction_filter)
     startups_list = list(startups_query)
     print(f"🚀 ПЛАНЕТАРНАЯ СИСТЕМА DEBUG:")
     print(f"🚀 Выбрано направление: '{selected_direction_name}'")
