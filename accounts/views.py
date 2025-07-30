@@ -272,22 +272,7 @@ def home(request):
                 "progress": round(startup.progress, 2) if startup.progress is not None else 0,
                 "investment_type": "Выкуп+инвестирование" if startup.both_mode else ("Только выкуп" if startup.only_buy else "Только инвестирование")
             })
-        while len(startups_data) < 6:
-            startups_data.append({
-                "id": 0,
-                "name": "Свободная орбита",
-                "description": "Эта орбита пока свободна. Здесь может появиться ваш стартап!",
-                "image": static(f"accounts/images/planetary_system/planets_round/{random.randint(1, 15)}.png"),
-                "rating": 0,
-                "voters_count": 0,
-                "comment_count": 0,
-                "direction": "Не определена",
-                "funding_goal": "Не определена",
-                "valuation": "Не определена",
-                "investors": 0,
-                "progress": 0,
-                "investment_type": "Не указано"
-            })
+        # Убираем заполнение пустыми орбитами - показываем только реальные стартапы
         context = {
             "demo_startups_data": json.dumps(startups_data, cls=DjangoJSONEncoder),
         }
@@ -3074,58 +3059,38 @@ def planetary_system(request):
     if len(startups_list) >= 6:
         selected_startups = startups_list[:6]
     elif len(startups_list) > 0:
-        while len(selected_startups) < 6:
-            selected_startups.extend(startups_list)
-        selected_startups = selected_startups[:6]
+        # Если стартапов меньше 6, показываем только реальные, без заполнения пустыми орбитами
+        selected_startups = startups_list
     else:
-        selected_startups = [None] * 6
+        # Если стартапов нет вообще, показываем пустой список
+        selected_startups = []
     planets_data = []
     for i, startup in enumerate(selected_startups):
-        if startup:
-            planet_image_num = (i % 15) + 1
-            planet_image_url = f"/static/accounts/images/planetary_system/planets_round/{planet_image_num}.png"
-            # Найти original_name для категории стартапа
-            direction_original = 'Не указано'
-            if startup.direction:
-                for cat in directions_data:
-                    if cat['direction_name'] == startup.direction.direction_name or cat['original_name'] == getattr(startup.direction, 'original_name', None):
-                        direction_original = cat['original_name']
-                        break
-            planets_data.append({
-                "id": i + 1,
-                "startup_id": startup.startup_id,
-                "name": startup.title,
-                "description": startup.short_description or startup.description[:200] if startup.description else "",
-                "image": planet_image_url,
-                "rating": startup.get_average_rating(),
-                "voters_count": startup.total_voters,
-                "comment_count": startup.comments.count(),
-                "direction": direction_original,
-                "funding_goal": f"{startup.funding_goal:,.0f} ₽".replace(",", " ") if startup.funding_goal else "Не указано",
-                "valuation": f"{startup.valuation:,.0f} ₽".replace(",", " ") if startup.valuation else "Не указано",
-                "investors": startup.get_investors_count(),
-                "progress": startup.get_progress_percentage(),
-                "investment_type": "Выкуп+инвестирование" if startup.both_mode else ("Только выкуп" if startup.only_buy else "Только инвестирование")
-            })
-        else:
-            planet_image_num = 8 + (i % 8)
-            planet_image_url = f"/static/accounts/images/planetary_system/planets_round/{planet_image_num}.png"
-            planets_data.append({
-                "id": i + 1,
-                "startup_id": None,
-                "name": "Свободная орбита",
-                "description": "Эта орбита пока свободна",
-                "image": planet_image_url,
-                "rating": 0,
-                "voters_count": 0,
-                "comment_count": 0,
-                "direction": "Не указано",
-                "funding_goal": "Не указано",
-                "valuation": "Не указано",
-                "investors": 0,
-                "progress": 0,
-                "investment_type": "Не указано"
-            })
+        planet_image_num = (i % 15) + 1
+        planet_image_url = f"/static/accounts/images/planetary_system/planets_round/{planet_image_num}.png"
+        # Найти original_name для категории стартапа
+        direction_original = 'Не указано'
+        if startup.direction:
+            for cat in directions_data:
+                if cat['direction_name'] == startup.direction.direction_name or cat['original_name'] == getattr(startup.direction, 'original_name', None):
+                    direction_original = cat['original_name']
+                    break
+        planets_data.append({
+            "id": i + 1,
+            "startup_id": startup.startup_id,
+            "name": startup.title,
+            "description": startup.short_description or startup.description[:200] if startup.description else "",
+            "image": planet_image_url,
+            "rating": startup.get_average_rating(),
+            "voters_count": startup.total_voters,
+            "comment_count": startup.comments.count(),
+            "direction": direction_original,
+            "funding_goal": f"{startup.funding_goal:,.0f} ₽".replace(",", " ") if startup.funding_goal else "Не указано",
+            "valuation": f"{startup.valuation:,.0f} ₽".replace(",", " ") if startup.valuation else "Не указано",
+            "investors": startup.get_investors_count(),
+            "progress": startup.get_progress_percentage(),
+            "investment_type": "Выкуп+инвестирование" if startup.both_mode else ("Только выкуп" if startup.only_buy else "Только инвестирование")
+        })
     all_approved_startups = list(Startups.objects.filter(status="approved").select_related("direction", "owner").order_by("-created_at"))
     all_startups_data = []
     for idx, startup in enumerate(all_approved_startups):

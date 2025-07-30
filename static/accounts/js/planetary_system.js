@@ -290,30 +290,9 @@
     planet.style.opacity = '1';
   }
   function setupUltraNewPlanetaryEmptyPlanet(planet, index) {
+    // Убираем создание "свободных орбит" - показываем только реальные стартапы
     if (!planet) return;
-    const imageUrl = getUltraNewPlanetaryFallbackImage(index);
-    planet.style.backgroundImage = `url(${imageUrl})`;
-    const emptyStartup = {
-      id: 0,
-      name: 'Свободная орбита',
-      description: 'Эта орбита пока свободна. Здесь может появиться ваш стартап!',
-      rating: '0',
-      voters_count: '0',
-      comment_count: '0',
-      direction: 'Не определена',
-      funding_goal: 'Не определена',
-      valuation: 'Не определена',
-      investors: '0',
-      progress: 0
-    };
-    planet.setAttribute('data-startup-id', '0');
-    planet.setAttribute('data-startup-name', 'Свободная орбита');
-    planet.setAttribute('data-startup-data', JSON.stringify(emptyStartup));
-    planet.addEventListener('click', function() {
-      showUltraNewPlanetaryModal(emptyStartup, imageUrl);
-    });
-    planet.style.cursor = 'pointer';
-    planet.style.opacity = '0.6';
+    planet.style.display = 'none'; // Скрываем пустые планеты
   }
   function getUltraNewPlanetaryFallbackImage(index) {
     const images = ultraNewPlanetaryFallbackImages.round || [];
@@ -517,12 +496,10 @@
     if (filtered.length >= 6) {
       startups.push(...filtered.slice(0, 6));
     } else if (filtered.length > 0) {
-      for (let i = 0; i < 6; i++) {
-        startups.push(filtered[i % filtered.length]);
-      }
-    } else {
-      for (let i = 0; i < 6; i++) startups.push(null);
+      // Если стартапов меньше 6, показываем только реальные, без заполнения пустыми орбитами
+      startups.push(...filtered);
     }
+    // Если стартапов нет вообще, показываем пустой список
     updateUltraNewPlanetaryPlanets(startups);
   }
   function ultraNewPlanetaryShowArrows() {

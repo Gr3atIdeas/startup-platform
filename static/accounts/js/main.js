@@ -320,22 +320,8 @@ document.addEventListener('DOMContentLoaded', function () {
         const modal = document.getElementById('demo_planetary_modal');
         if (!modal) return;
         if (!startupData || startupData.id === 0) {
-            document.getElementById('demo_planetary_modal_name').textContent = 'Свободная орбита';
-            document.getElementById('demo_planetary_modal_rating').textContent = 'Рейтинг 0/5 (0)';
-            document.getElementById('demo_planetary_modal_comments_count').textContent = '0';
-            document.getElementById('demo_planetary_modal_category').textContent = 'Не определена';
-            document.getElementById('demo_planetary_modal_description').textContent = 'Эта орбита пока свободна. Здесь может появиться ваш стартап!';
-            document.getElementById('demo_planetary_modal_funding_amount').textContent = 'Не определена';
-            document.getElementById('demo_planetary_modal_valuation_amount').textContent = 'Не определена';
-            document.getElementById('demo_planetary_modal_investors_count').textContent = 'Инвестировало (0)';
-            document.getElementById('demo_planetary_modal_progress_percentage').textContent = '0%';
-            document.querySelector('#demo_planetary_modal .ultra_new_planetary_modal_progress_bar_visual').style.width = '0%';
-            document.getElementById('demo_planetary_modal_details_btn').onclick = function() {
-                alert('Эта орбита пока свободна. Здесь пока нет стартапа для просмотра.');
-            };
-            document.getElementById('demo_planetary_modal_investment_btn').onclick = function() {
-                alert('Эта орбита пока свободна. Здесь пока нет стартапа для инвестирования.');
-            };
+            // Убираем обработку "свободных орбит" - показываем только реальные стартапы
+            return;
         } else {
             document.getElementById('demo_planetary_modal_name').textContent = startupData.name;
             document.getElementById('demo_planetary_modal_rating').textContent = `Рейтинг ${startupData.rating}/5 (${startupData.voters_count})`;
