@@ -326,7 +326,11 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('demo_planetary_modal_name').textContent = startupData.name;
             document.getElementById('demo_planetary_modal_rating').textContent = `Рейтинг ${startupData.rating}/5 (${startupData.voters_count})`;
             document.getElementById('demo_planetary_modal_comments_count').textContent = startupData.comment_count;
-            document.getElementById('demo_planetary_modal_category').textContent = startupData.direction;
+            
+            // Находим русское название категории для отображения в модальном окне
+            let categoryDisplayName = startupData.direction || 'Не указана';
+            // Здесь нужно будет добавить логику для поиска русского названия, если есть доступ к directions_data
+            document.getElementById('demo_planetary_modal_category').textContent = categoryDisplayName;
             document.getElementById('demo_planetary_modal_description').textContent = startupData.description;
             document.getElementById('demo_planetary_modal_funding_amount').textContent = startupData.funding_goal;
             document.getElementById('demo_planetary_modal_valuation_amount').textContent = startupData.valuation;

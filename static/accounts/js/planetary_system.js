@@ -211,9 +211,13 @@
     console.log('🔍 JS: selectUltraNewPlanetaryGalaxy called with:', galaxyName);
     ultraNewPlanetarySelectedGalaxy = galaxyName;
     updateUltraNewPlanetaryGalaxyUI();
+    
+    // Принудительно обновляем данные при каждом переключении категории
+    console.log('🔍 JS: Forcing data refresh for category:', galaxyName);
     applyUltraNewPlanetaryFilter(galaxyName);
+    
     const url = new URL(window.location);
-    if (galaxyName && galaxyName !== 'Все') {
+    if (galaxyName && galaxyName !== 'Все' && galaxyName !== 'All') {
       url.searchParams.set('direction', galaxyName);
       console.log('🔍 JS: Setting URL parameter direction to:', galaxyName);
     } else {
@@ -320,7 +324,21 @@
     if (nameElement) nameElement.textContent = startup.name || 'Без названия';
     if (ratingElement) ratingElement.textContent = `Рейтинг ${startup.rating || '0'}/5 (${startup.voters_count || '0'})`;
     if (commentsElement) commentsElement.textContent = startup.comment_count || '0';
-    if (categoryElement) categoryElement.textContent = startup.direction || 'Не указана';
+    
+    // Находим русское название категории для отображения в модальном окне
+    let categoryDisplayName = startup.direction || 'Не указана';
+    if (startup.direction && ultraNewPlanetaryDirectionsData) {
+      const categoryData = ultraNewPlanetaryDirectionsData.find(d => 
+        d.original_name === startup.direction || d.direction_name === startup.direction
+      );
+      if (categoryData) {
+        categoryDisplayName = categoryData.direction_name; // Показываем русское название
+      } else {
+        // Если не найдено в directions_data, используем как есть (может быть уже русское название)
+        categoryDisplayName = startup.direction;
+      }
+    }
+    if (categoryElement) categoryElement.textContent = categoryDisplayName;
     if (descriptionElement) descriptionElement.textContent = startup.description || 'Описание отсутствует';
     if (fundingAmountElement) {
       const fundingGoal = startup.funding_goal || 'Не определена';
@@ -494,11 +512,27 @@
     console.log('🔍 JS: ultraNewPlanetaryAllStartupsData length:', ultraNewPlanetaryAllStartupsData.length);
     
     let filtered = [];
-    if (!categoryName || categoryName === 'Все') {
+    if (!categoryName || categoryName === 'Все' || categoryName === 'All') {
       filtered = ultraNewPlanetaryAllStartupsData.slice();
       console.log('🔍 JS: Showing all startups, filtered count:', filtered.length);
     } else {
-      filtered = ultraNewPlanetaryAllStartupsData.filter(s => s.direction === categoryName);
+      // Фильтруем по direction - проверяем как original_name, так и direction_name
+      filtered = ultraNewPlanetaryAllStartupsData.filter(s => {
+        // Проверяем точное совпадение
+        if (s.direction === categoryName) return true;
+        
+        // Проверяем через directions_data для соответствия original_name -> direction_name
+        if (ultraNewPlanetaryDirectionsData) {
+          const categoryData = ultraNewPlanetaryDirectionsData.find(d => 
+            d.original_name === categoryName || d.direction_name === categoryName
+          );
+          if (categoryData) {
+            return s.direction === categoryData.direction_name || s.direction === categoryData.original_name;
+          }
+        }
+        
+        return false;
+      });
       console.log('🔍 JS: Filtering by direction:', categoryName, 'filtered count:', filtered.length);
       console.log('🔍 JS: Available directions in data:', [...new Set(ultraNewPlanetaryAllStartupsData.map(s => s.direction))]);
     }
