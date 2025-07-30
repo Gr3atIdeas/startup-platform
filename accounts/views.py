@@ -2190,9 +2190,9 @@ def investor_main(request):
             {
                 "id": startup.startup_id,
                 "image": static(image_path),
-                "orbit_size": fixed_orbit_sizes[idx],
-                "orbit_time": orbit_times[idx],
-                "planet_size": planet_sizes[idx],
+                "orbit_size": fixed_orbit_sizes[idx % len(fixed_orbit_sizes)],
+                "orbit_time": orbit_times[idx % len(orbit_times)],
+                "planet_size": planet_sizes[idx % len(planet_sizes)],
             }
         )
     planets_data_json = []
@@ -2320,9 +2320,9 @@ def startupper_main(request):
             {
                 "id": startup.startup_id,
                 "image": static(image_path),
-                "orbit_size": fixed_orbit_sizes[idx],
-                "orbit_time": orbit_times[idx],
-                "planet_size": planet_sizes[idx],
+                "orbit_size": fixed_orbit_sizes[idx % len(fixed_orbit_sizes)],
+                "orbit_time": orbit_times[idx % len(orbit_times)],
+                "planet_size": planet_sizes[idx % len(planet_sizes)],
             }
         )
     planets_data_json = []
