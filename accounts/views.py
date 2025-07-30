@@ -2293,6 +2293,7 @@ def startupper_main(request):
     """
     directions_data_json = FIXED_CATEGORIES.copy()
     selected_direction_name = request.GET.get("direction", "All")
+    print(f"🔍 STARTUPPER_MAIN: Запрошено направление: '{selected_direction_name}'")
     startups_query = Startups.objects.filter(status="approved").annotate(
         rating_avg=Coalesce(Avg("uservotes__rating"), 0.0, output_field=FloatField()),
         voters_count=Count("uservotes", distinct=True),
@@ -2302,15 +2303,37 @@ def startupper_main(request):
         ),
         comment_count=Count("comments", distinct=True),
     )
+    print(f"🔍 STARTUPPER_MAIN: Всего одобренных стартапов: {startups_query.count()}")
+    
+    # Проверим, какие направления есть в базе данных
+    from accounts.models import Directions
+    all_directions = Directions.objects.all()
+    print(f"🔍 STARTUPPER_MAIN: Все направления в БД:")
+    for direction in all_directions:
+        print(f"🔍   - {direction.direction_name}")
+    
     if selected_direction_name != "All" and selected_direction_name != "Все":
         # Ищем направление по original_name или direction_name
         from django.db.models import Q
         direction_filter = Q()
+        print(f"🔍 STARTUPPER_MAIN: Ищем направление '{selected_direction_name}'")
         for category in FIXED_CATEGORIES:
             if category['original_name'] == selected_direction_name or category['direction_name'] == selected_direction_name:
                 direction_filter |= Q(direction__direction_name=category['direction_name'])
+                print(f"🔍 STARTUPPER_MAIN: Найдено соответствие: {category['original_name']} -> {category['direction_name']}")
         if direction_filter:
             startups_query = startups_query.filter(direction_filter)
+            print(f"🔍 STARTUPPER_MAIN: Применен фильтр, найдено стартапов: {startups_query.count()}")
+        else:
+            print(f"🔍 STARTUPPER_MAIN: Фильтр не найден для '{selected_direction_name}'")
+    
+    # Проверим, какие стартапы есть и с какими направлениями
+    all_startups = Startups.objects.filter(status="approved").select_related("direction")
+    print(f"🔍 STARTUPPER_MAIN: Все одобренные стартапы:")
+    for startup in all_startups[:5]:  # Показываем первые 5
+        direction_name = startup.direction.direction_name if startup.direction else "Нет направления"
+        print(f"🔍   - {startup.title} -> {direction_name}")
+    
     startups_filtered = startups_query.annotate(
         progress=Case(
             When(funding_goal__gt=0, then=(F("amount_raised") * 100.0 / F("funding_goal"))),
@@ -2394,6 +2417,14 @@ def startupper_main(request):
         planet_image_url = static(f"accounts/images/planetary_system/planets_round/{random_planet_num}.png")
         direction_name = startup.direction.direction_name if startup.direction else "Не указано"
         russian_direction = DIRECTION_TRANSLATIONS.get(direction_name, direction_name)
+        # Находим original_name для направления для правильной фильтрации
+        original_direction = None
+        for category in FIXED_CATEGORIES:
+            if category['direction_name'] == direction_name:
+                original_direction = category['original_name']
+                break
+        if not original_direction:
+            original_direction = direction_name  # Если не найдено, используем как есть
         all_startups_data.append({
             "id": startup.startup_id,
             "name": startup.title,
@@ -2401,7 +2432,7 @@ def startupper_main(request):
             "rating": round(startup.rating_avg, 2),
             "voters_count": startup.voters_count,
             "progress": round(startup.progress, 2) if startup.progress is not None else 0,
-            "direction": russian_direction,
+            "direction": original_direction,  # Используем original_name для фильтрации
             "investors": startup.total_investors,
             "funding_goal": f"{startup.funding_goal:,.0f} ₽".replace(",", " ") if startup.funding_goal else "Не определена",
             "valuation": f"{startup.valuation:,.0f} ₽".replace(",", " ") if startup.valuation else "Не указана",
@@ -2420,6 +2451,18 @@ def startupper_main(request):
         "all_startups_data_json": json.dumps(all_startups_data, cls=DjangoJSONEncoder),
         "is_startuper": is_startuper,
     }
+    
+    print(f"🔍 STARTUPPER_MAIN: Передаем в шаблон:")
+    print(f"🔍   - directions: {directions_data_json}")
+    print(f"🔍   - selected_galaxy: {selected_direction_name}")
+    print(f"🔍   - planets_data_json: {len(planets_data_json)} элементов")
+    print(f"🔍   - all_startups_data_json: {len(all_startups_data)} элементов")
+    
+    # Проверим первые несколько стартапов из all_startups_data
+    print(f"🔍 STARTUPPER_MAIN: Первые 3 стартапа из all_startups_data:")
+    for i, startup in enumerate(all_startups_data[:3]):
+        print(f"🔍   {i+1}. {startup.get('name', 'Нет названия')} -> direction: {startup.get('direction', 'Нет направления')}")
+    
     return render(request, "accounts/startupper_main.html", context)
 def moderator_dashboard(request):
     pending_startups_list = Startups.objects.filter(status="pending")

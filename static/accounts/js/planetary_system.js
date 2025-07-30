@@ -208,14 +208,17 @@
     });
   }
   function selectUltraNewPlanetaryGalaxy(galaxyName) {
+    console.log('🔍 JS: selectUltraNewPlanetaryGalaxy called with:', galaxyName);
     ultraNewPlanetarySelectedGalaxy = galaxyName;
     updateUltraNewPlanetaryGalaxyUI();
     applyUltraNewPlanetaryFilter(galaxyName);
     const url = new URL(window.location);
     if (galaxyName && galaxyName !== 'Все') {
       url.searchParams.set('direction', galaxyName);
+      console.log('🔍 JS: Setting URL parameter direction to:', galaxyName);
     } else {
       url.searchParams.delete('direction');
+      console.log('🔍 JS: Removing direction parameter from URL');
     }
     history.replaceState(null, '', url.toString());
   }
@@ -487,12 +490,19 @@
     });
   }
   function applyUltraNewPlanetaryFilter(categoryName) {
+    console.log('🔍 JS: applyUltraNewPlanetaryFilter called with:', categoryName);
+    console.log('🔍 JS: ultraNewPlanetaryAllStartupsData length:', ultraNewPlanetaryAllStartupsData.length);
+    
     let filtered = [];
     if (!categoryName || categoryName === 'Все') {
       filtered = ultraNewPlanetaryAllStartupsData.slice();
+      console.log('🔍 JS: Showing all startups, filtered count:', filtered.length);
     } else {
       filtered = ultraNewPlanetaryAllStartupsData.filter(s => s.direction === categoryName);
+      console.log('🔍 JS: Filtering by direction:', categoryName, 'filtered count:', filtered.length);
+      console.log('🔍 JS: Available directions in data:', [...new Set(ultraNewPlanetaryAllStartupsData.map(s => s.direction))]);
     }
+    
     const startups = [];
     if (filtered.length >= 6) {
       startups.push(...filtered.slice(0, 6));
@@ -501,6 +511,7 @@
       startups.push(...filtered);
     }
     // Если стартапов нет вообще, показываем пустой список
+    console.log('🔍 JS: Final startups to display:', startups.length);
     updateUltraNewPlanetaryPlanets(startups);
   }
   function ultraNewPlanetaryShowArrows() {
