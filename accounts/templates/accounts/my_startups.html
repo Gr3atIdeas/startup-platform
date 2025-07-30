@@ -112,7 +112,7 @@
 
 
 
-    /* Стили для планетарной системы */
+    /* Стили для планетарной системы my_startups */
     .planetary-system-container {
       position: relative;
       width: 100%;
@@ -121,7 +121,7 @@
       background: radial-gradient(circle at center, #1a1a2e 0%, #0a0a1e 100%);
     }
 
-          .planetary-system {
+          .my_startups_planetary-system {
       width: 100%;
       height: 100%;
       position: relative;
@@ -129,11 +129,11 @@
       cursor: grab;
     }
 
-          .planetary-system.dragging {
+          .my_startups_planetary-system.dragging {
       cursor: grabbing;
     }
 
-          .planetary-system .space-background {
+          .my_startups_planetary-system .my_startups_space-background {
       position: absolute;
       top: 0;
       left: 0;
@@ -144,7 +144,7 @@
       z-index: -1;
     }
 
-    .planetary-system .stars {
+    .my_startups_planetary-system .my_startups_stars {
       position: absolute;
       top: 0;
       left: 0;
@@ -161,7 +161,7 @@
       to { background-position: 1000px 1000px; }
     }
 
-    .planetary-system #scene {
+    .my_startups_planetary-system #my_startups_scene {
       position: absolute;
       top: 50%;
       left: 50%;
@@ -169,7 +169,7 @@
       transform-style: preserve-3d;
     }
 
-    .planetary-system #galaxy {
+    .my_startups_planetary-system #my_startups_galaxy {
       position: absolute;
       top: 50%;
       left: 50%;
@@ -180,7 +180,7 @@
       z-index: 5;
     }
 
-    .planetary-system #scene {
+    .my_startups_planetary-system #my_startups_scene {
       position: absolute;
       top: 50%;
       left: 50%;
@@ -190,7 +190,7 @@
       transform-style: preserve-3d;
     }
 
-    .planetary-system #logo {
+    .my_startups_planetary-system #my_startups_logo {
       width: 100px;
       height: 100px;
       background-size: cover;
@@ -211,7 +211,7 @@
       overflow: hidden; /* Предотвращаем обрезку */
     }
 
-    .planetary-system .orbit {
+    .my_startups_planetary-system .orbit {
       position: absolute;
       top: 50%;
       left: 50%;
@@ -226,12 +226,12 @@
       transition: all 0.5s ease;
     }
 
-    .planetary-system .planet-orientation {
+    .my_startups_planetary-system .planet-orientation {
       position: absolute;
       transform-style: preserve-3d;
     }
 
-    .planetary-system .planet {
+    .my_startups_planetary-system .planet {
       position: absolute;
       width: var(--planet-size);
       height: var(--planet-size);
@@ -248,11 +248,11 @@
       pointer-events: auto; /* Обеспечиваем кликабельность */
     }
 
-    .planetary-system .planet * {
+    .my_startups_planetary-system .planet * {
       pointer-events: auto; /* Все дочерние элементы тоже кликабельны */
     }
 
-    .planetary-system .planet-img {
+    .my_startups_planetary-system .planet-img {
       width: 100%;
       height: 100%;
       object-fit: cover;
@@ -261,15 +261,15 @@
 
 
 
-    .planetary-system .planet:hover {
+    .my_startups_planetary-system .planet:hover {
       transform: scale(1.1);
     }
 
-    .planetary-system .planet.active {
+    .my_startups_planetary-system .planet.active {
       transform: scale(1.2);
     }
 
-    .planetary-system #info-card {
+    .my_startups_planetary-system #info-card {
       position: absolute;
       top: 50%;
       left: 50%;
@@ -286,7 +286,7 @@
       text-align: center;
     }
 
-    .planetary-system #info-card .planet-image {
+    .my_startups_planetary-system #info-card .planet-image {
       width: 80px;
       height: 80px;
       border-radius: 50%;
@@ -294,26 +294,26 @@
       background-size: cover;
     }
 
-    .planetary-system #info-card h2 {
+    .my_startups_planetary-system #info-card h2 {
       margin: 0 0 4px;
       font-size: 18px;
       color: #000;
     }
 
-    .planetary-system #info-card .rating {
+    .my_startups_planetary-system #info-card .rating {
       font-size: 14px;
       color: #555;
       margin-bottom: 8px;
     }
 
-    .planetary-system #info-card .progress-bar {
+    .my_startups_planetary-system #info-card .progress-bar {
       display: flex;
       align-items: center;
       justify-content: center;
       margin: 8px 0;
     }
 
-    .planetary-system #info-card .progress-bar button {
+    .my_startups_planetary-system #info-card .progress-bar button {
       padding: 4px 8px;
       border: none;
       background: #000;
@@ -322,7 +322,7 @@
       border-radius: 4px 0 0 4px;
     }
 
-    .planetary-system #info-card .progress-bar .progress {
+    .my_startups_planetary-system #info-card .progress-bar .progress {
       background: #ffd700;
       padding: 4px;
       font-size: 12px;
@@ -330,25 +330,25 @@
       border-radius: 0 4px 4px 0;
     }
 
-    .planetary-system #info-card .funding {
+    .my_startups_planetary-system #info-card .funding {
       font-size: 12px;
       color: #555;
       margin: 8px 0;
     }
 
-    .planetary-system #info-card .investors {
+    .my_startups_planetary-system #info-card .investors {
       font-size: 12px;
       color: #555;
       margin-bottom: 12px;
     }
 
-    .planetary-system #info-card .description {
+    .my_startups_planetary-system #info-card .description {
       font-size: 12px;
       color: #555;
       margin-bottom: 12px;
     }
 
-    .planetary-system #info-card .more-details {
+    .my_startups_planetary-system #info-card .more-details {
       padding: 8px 16px;
       background: none;
       border: none;
@@ -357,7 +357,7 @@
       cursor: pointer;
     }
 
-    .planetary-system #close-card {
+    .my_startups_planetary-system #close-card {
       position: absolute;
       top: 8px;
       right: 8px;
@@ -841,12 +841,12 @@
             <button class="portfolio-image-fullscreen-btn" aria-label="Развернуть на полный экран">
               <i class="fas fa-expand"></i>
             </button>
-        <div class="planetary-system" id="solar-system">
-                <div class="space-background"></div>
-                <div class="stars"></div>
-                <div id="scene">
-                  <div id="galaxy">
-                    <div id="logo" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+        <div class="my_startups_planetary-system" id="my_startups_solar-system">
+                <div class="my_startups_space-background"></div>
+                <div class="my_startups_stars"></div>
+                <div id="my_startups_scene">
+                  <div id="my_startups_galaxy">
+                    <div id="my_startups_logo" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
                         <img src="{% if user.get_profile_picture_url %}{{ user.get_profile_picture_url }}{% else %}{% static 'accounts/images/avatars/default_avatar_ufo.png' %}{% endif %}" alt="Аватар" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; display: block;">
                         {% if planetary_startups|length == 0 %}
                           <span style="margin-top: 12px; color: white; font-size: 18px; text-align: center;">Нет стартапов для отображения</span>
@@ -2041,11 +2041,11 @@
               
 
 
-              const planets = document.querySelectorAll('.planetary-system .planet');
-              const solarSystem = document.querySelector('.planetary-system#solar-system');
-              const scene = document.querySelector('.planetary-system #scene');
-              const galaxy = document.querySelector('.planetary-system #galaxy');
-              const logoElement = document.querySelector('.planetary-system #logo');
+              const planets = document.querySelectorAll('.my_startups_planetary-system .planet');
+              const solarSystem = document.querySelector('.my_startups_planetary-system#my_startups_solar-system');
+              const scene = document.querySelector('.my_startups_planetary-system #my_startups_scene');
+              const galaxy = document.querySelector('.my_startups_planetary-system #my_startups_galaxy');
+              const logoElement = document.querySelector('.my_startups_planetary-system #my_startups_logo');
 
               const galaxyTiltAngle = 60;
               const planetTiltCompensation = -60;
