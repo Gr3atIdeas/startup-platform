@@ -121,7 +121,9 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 50%;
+  border-radius: 50% !important;
+  -webkit-border-radius: 50% !important;
+  -moz-border-radius: 50% !important;
   background: #FAF7DB;
   animation: ultra_new_planetary_sun_glow 3s ease-in-out infinite alternate;
   position: relative;
@@ -135,7 +137,9 @@
   right: -10px;
   bottom: -10px;
   background: #FAF7DB;
-  border-radius: 50%;
+  border-radius: 50% !important;
+  -webkit-border-radius: 50% !important;
+  -moz-border-radius: 50% !important;
   filter: blur(12.5px);
   box-shadow: 25px 25px 25px rgba(250, 247, 219, 0.3);
   z-index: -1;
