@@ -3140,7 +3140,7 @@ def planetary_system(request):
                     direction_original = cat['original_name']
                     break
         planets_data.append({
-            "id": i + 1,
+            "id": startup.startup_id,  # Используем startup_id вместо i + 1
             "startup_id": startup.startup_id,
             "name": startup.title,
             "description": startup.short_description or startup.description[:200] if startup.description else "",
@@ -3167,6 +3167,7 @@ def planetary_system(request):
                     direction_original = cat['original_name']
                     break
         all_startups_data.append({
+            "id": startup.startup_id,  # Добавляем поле id для совместимости
             "startup_id": startup.startup_id,
             "name": startup.title,
             "description": startup.short_description or startup.description[:200] if startup.description else "",
