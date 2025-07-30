@@ -127,6 +127,10 @@
   background: #FAF7DB;
   animation: ultra_new_planetary_sun_glow 3s ease-in-out infinite alternate;
   position: relative;
+  overflow: hidden;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 #ultra_new_planetary_sun_image::before {
@@ -143,14 +147,18 @@
   filter: blur(12.5px);
   box-shadow: 25px 25px 25px rgba(250, 247, 219, 0.3);
   z-index: -1;
+  border: none !important;
+  outline: none !important;
 }
 
 @keyframes ultra_new_planetary_sun_glow {
   0% { 
     box-shadow: 0 0 50px rgba(250, 247, 219, 0.8), 0 0 100px rgba(255, 239, 43, 0.4);
+    border-radius: 50% !important;
   }
   100% { 
     box-shadow: 0 0 80px rgba(250, 247, 219, 1), 0 0 150px rgba(255, 239, 43, 0.6);
+    border-radius: 50% !important;
   }
 }
 
