@@ -3084,6 +3084,13 @@ def planetary_system(request):
         if startup:
             planet_image_num = (i % 15) + 1
             planet_image_url = f"/static/accounts/images/planetary_system/planets_round/{planet_image_num}.png"
+            # Найти original_name для категории стартапа
+            direction_original = 'Не указано'
+            if startup.direction:
+                for cat in directions_data:
+                    if cat['direction_name'] == startup.direction.direction_name or cat['original_name'] == getattr(startup.direction, 'original_name', None):
+                        direction_original = cat['original_name']
+                        break
             planets_data.append({
                 "id": i + 1,
                 "startup_id": startup.startup_id,
@@ -3093,7 +3100,7 @@ def planetary_system(request):
                 "rating": startup.get_average_rating(),
                 "voters_count": startup.total_voters,
                 "comment_count": startup.comments.count(),
-                "direction": DIRECTION_TRANSLATIONS.get(startup.direction.direction_name, startup.direction.direction_name) if startup.direction else "Не указано",
+                "direction": direction_original,
                 "funding_goal": f"{startup.funding_goal:,.0f} ₽".replace(",", " ") if startup.funding_goal else "Не указано",
                 "valuation": f"{startup.valuation:,.0f} ₽".replace(",", " ") if startup.valuation else "Не указано",
                 "investors": startup.get_investors_count(),
@@ -3124,6 +3131,12 @@ def planetary_system(request):
     for idx, startup in enumerate(all_approved_startups):
         planet_image_num = (idx % 15) + 1
         planet_image_url = f"/static/accounts/images/planetary_system/planets_round/{planet_image_num}.png"
+        direction_original = 'Не указано'
+        if startup.direction:
+            for cat in directions_data:
+                if cat['direction_name'] == startup.direction.direction_name or cat['original_name'] == getattr(startup.direction, 'original_name', None):
+                    direction_original = cat['original_name']
+                    break
         all_startups_data.append({
             "startup_id": startup.startup_id,
             "name": startup.title,
@@ -3132,7 +3145,7 @@ def planetary_system(request):
             "rating": startup.get_average_rating(),
             "voters_count": startup.total_voters,
             "comment_count": startup.comments.count(),
-            "direction": DIRECTION_TRANSLATIONS.get(startup.direction.direction_name, startup.direction.direction_name) if startup.direction else "Не указано",
+            "direction": direction_original,
             "funding_goal": f"{startup.funding_goal:,.0f} ₽".replace(",", " ") if startup.funding_goal else "Не указано",
             "valuation": f"{startup.valuation:,.0f} ₽".replace(",", " ") if startup.valuation else "Не указано",
             "investors": startup.get_investors_count(),
@@ -3351,6 +3364,7 @@ def my_startups(request):
                 "planet_image": startup.planet_image,
                 "logo_urls": startup.logo_urls,
                 "average_rating": startup.average_rating or 0,
+                "rating": startup.average_rating or 0,  # новое поле для фронта
                 "total_voters": startup.total_voters or 0,
                 "comment_count": startup.comment_count or 0,
                 "description": startup.description or "Описание отсутствует.",
