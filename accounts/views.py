@@ -251,6 +251,7 @@ def home(request):
         all_startups = list(startups_query)
         demo_startups = []
         if all_startups:
+            # Показываем все доступные стартапы (максимум 6 для отображения)
             num_startups = min(6, len(all_startups))
             demo_startups = random.sample(all_startups, num_startups)
         startups_data = []
@@ -2176,7 +2177,7 @@ def investor_main(request):
             default=Value(0),
             output_field=FloatField(),
         )
-    )[:6]
+    )
     planets_data_for_template = []
     fixed_orbit_sizes = [200, 300, 400, 500, 600, 700]
     orbit_times = [80, 95, 110, 125, 140, 160]
@@ -2306,7 +2307,7 @@ def startupper_main(request):
             default=Value(0),
             output_field=FloatField(),
         )
-    )[:6]
+    )
     planets_data_for_template = []
     fixed_orbit_sizes = [200, 300, 400, 500, 600, 700]
     orbit_times = [80, 95, 110, 125, 140, 160]
@@ -3056,11 +3057,9 @@ def planetary_system(request):
             print(f"🚀   {i+1}. {startup.title} - направление: {startup.direction.direction_name if startup.direction else 'Нет'}")
     logger.info(f"🪐 Загружено стартапов: {len(startups_list)}")
     selected_startups = []
-    if len(startups_list) >= 6:
+    if len(startups_list) > 0:
+        # Показываем все доступные стартапы (максимум 6 для отображения)
         selected_startups = startups_list[:6]
-    elif len(startups_list) > 0:
-        # Если стартапов меньше 6, показываем только реальные, без заполнения пустыми орбитами
-        selected_startups = startups_list
     else:
         # Если стартапов нет вообще, показываем пустой список
         selected_startups = []

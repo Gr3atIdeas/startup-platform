@@ -264,6 +264,7 @@
       if (startup && startup.id) {
         setupUltraNewPlanetaryPlanet(cleanPlanet, startup, index);
       } else {
+        // Если стартапа нет, скрываем планету
         setupUltraNewPlanetaryEmptyPlanet(cleanPlanet, index);
       }
     });
@@ -496,7 +497,7 @@
     if (filtered.length >= 6) {
       startups.push(...filtered.slice(0, 6));
     } else if (filtered.length > 0) {
-      // Если стартапов меньше 6, показываем только реальные, без заполнения пустыми орбитами
+      // Если стартапов меньше 6, показываем все доступные стартапы
       startups.push(...filtered);
     }
     // Если стартапов нет вообще, показываем пустой список
