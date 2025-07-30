@@ -2177,7 +2177,7 @@ def investor_main(request):
             default=Value(0),
             output_field=FloatField(),
         )
-    )
+    )[:6]
     planets_data_for_template = []
     fixed_orbit_sizes = [200, 300, 400, 500, 600, 700]
     orbit_times = [80, 95, 110, 125, 140, 160]
@@ -2307,7 +2307,7 @@ def startupper_main(request):
             default=Value(0),
             output_field=FloatField(),
         )
-    )
+    )[:6]
     planets_data_for_template = []
     fixed_orbit_sizes = [200, 300, 400, 500, 600, 700]
     orbit_times = [80, 95, 110, 125, 140, 160]
