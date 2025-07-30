@@ -278,7 +278,7 @@
   margin-top: calc(-0.5 * var(--planet-size));
   
   transform: rotateX(var(--ultra_new_planetary_planet_compensation));
-  border-radius: 50%;
+  border-radius: 50% !important;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -312,14 +312,18 @@
   -moz-osx-font-smoothing: grayscale;
   
   
-  -webkit-border-radius: 50%;
-  -moz-border-radius: 50%;
+  -webkit-border-radius: 50% !important;
+  -moz-border-radius: 50% !important;
 }
 
 .ultra_new_planetary_planet:hover {
   
   transform: scale(1.1) rotateX(var(--ultra_new_planetary_planet_compensation));
-  filter: brightness(1.2) drop-shadow(0 0 20px rgba(255, 255, 255, 0.8));
+  filter: brightness(1.2);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+  border-radius: 50% !important;
+  -webkit-border-radius: 50% !important;
+  -moz-border-radius: 50% !important;
 }
 
 .ultra_new_planetary_planet.active {
