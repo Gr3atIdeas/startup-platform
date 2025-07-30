@@ -231,7 +231,21 @@
       transform-style: preserve-3d;
     }
 
-    .my_startups_planetary-system .planet {
+
+
+    /* Убираем псевдоэлементы, которые могут конфликтовать */
+    .my_startups_planetary-system .planet::before,
+    .my_startups_planetary-system .planet::after {
+      display: none !important;
+      content: none !important;
+    }
+
+    /* Предотвращаем конфликты с другими стилями планет */
+    .my_startups_planetary-system .planet,
+    .my_startups_planetary-system .planet * {
+      /* Отключаем любые внешние стили */
+      all: unset !important;
+      /* Восстанавливаем только нужные свойства */
       position: absolute !important;
       width: var(--planet-size) !important;
       height: var(--planet-size) !important;
@@ -241,17 +255,15 @@
       -webkit-border-radius: 50% !important;
       -moz-border-radius: 50% !important;
       background-color: transparent !important;
-      background-size: cover !important;
-      background-position: center !important;
       cursor: pointer !important;
       transform-style: preserve-3d !important;
       z-index: 5 !important;
-      transition: all 0.3s ease !important;
-      overflow: visible !important; /* Убираем обрезку, чтобы логотипы были видны */
-      border: none !important; /* Убираем рамку */
+      transition: transform 0.3s ease, filter 0.3s ease, box-shadow 0.3s ease !important;
+      overflow: visible !important;
+      border: none !important;
       outline: none !important;
       box-shadow: none !important;
-      pointer-events: auto !important; /* Обеспечиваем кликабельность */
+      pointer-events: auto !important;
       opacity: 1 !important;
       visibility: visible !important;
       filter: none !important;
@@ -260,13 +272,13 @@
       -webkit-backface-visibility: hidden !important;
       -webkit-font-smoothing: antialiased !important;
       -moz-osx-font-smoothing: grayscale !important;
+      isolation: isolate !important;
+      contain: layout style paint !important;
     }
 
-    .my_startups_planetary-system .planet * {
-      pointer-events: auto; /* Все дочерние элементы тоже кликабельны */
-    }
-
+    /* Специальные стили для изображений планет */
     .my_startups_planetary-system .planet-img {
+      all: unset !important;
       width: 100% !important;
       height: 100% !important;
       object-fit: cover !important;
@@ -280,34 +292,34 @@
       image-rendering: smooth !important;
       image-rendering: high-quality !important;
       image-rendering: -webkit-optimize-contrast !important;
-    }
-
-    /* Убираем псевдоэлементы, которые могут конфликтовать */
-    .my_startups_planetary-system .planet::before,
-    .my_startups_planetary-system .planet::after {
-      display: none !important;
-      content: none !important;
+      pointer-events: auto !important;
     }
 
 
 
     .my_startups_planetary-system .planet:hover {
-      transform: scale(1.1) !important;
+      transform: scale(1.1) rotateX(var(--my_startups_planet_compensation, -60deg)) !important;
       filter: brightness(1.2) !important;
       box-shadow: 0 0 20px rgba(255, 255, 255, 0.8) !important;
       border-radius: 50% !important;
       -webkit-border-radius: 50% !important;
       -moz-border-radius: 50% !important;
       z-index: 8 !important;
+      /* Предотвращаем конфликты с анимациями */
+      animation: none !important;
+      -webkit-animation: none !important;
     }
 
     .my_startups_planetary-system .planet.active {
-      transform: scale(1.15) !important;
+      transform: scale(1.15) rotateX(var(--my_startups_planet_compensation, -60deg)) !important;
       filter: brightness(1.3) drop-shadow(0 0 30px rgba(255, 255, 255, 1)) !important;
       z-index: 9 !important;
       border-radius: 50% !important;
       -webkit-border-radius: 50% !important;
       -moz-border-radius: 50% !important;
+      /* Предотвращаем конфликты с анимациями */
+      animation: none !important;
+      -webkit-animation: none !important;
     }
 
     .my_startups_planetary-system #info-card {
@@ -2134,6 +2146,7 @@
 
                   const tiltCompensation = planetTiltCompensation;
                   planet.style.transform = `rotateX(${tiltCompensation}deg)`;
+                  planet.style.setProperty('--my_startups_planet_compensation', `${tiltCompensation}deg`);
 
                   planetObjects.push({
                       element: planet,
@@ -2429,6 +2442,7 @@
                           planetObj.orientation.style.top = `${50 + 50 * (y / radius)}%`;
                           const tiltCompensation = planetTiltCompensation;
                           planetObj.element.style.transform = `rotateX(${tiltCompensation}deg)`;
+                          planetObj.element.style.setProperty('--my_startups_planet_compensation', `${tiltCompensation}deg`);
                       } catch (error) {
           
                       }
