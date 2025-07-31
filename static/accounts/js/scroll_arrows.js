@@ -1,0 +1,70 @@
+document.addEventListener('DOMContentLoaded', function() {
+    const scrollArrowUp = document.createElement('button');
+    scrollArrowUp.className = 'scroll-arrow scroll-arrow-up';
+    scrollArrowUp.innerHTML = `
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/>
+        </svg>
+    `;
+    scrollArrowUp.title = 'Прокрутить вверх';
+
+    const scrollArrowDown = document.createElement('button');
+    scrollArrowDown.className = 'scroll-arrow scroll-arrow-down';
+    scrollArrowDown.innerHTML = `
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/>
+        </svg>
+    `;
+    scrollArrowDown.title = 'Прокрутить вниз';
+
+    document.body.appendChild(scrollArrowUp);
+    document.body.appendChild(scrollArrowDown);
+
+    function smoothScrollTo(target) {
+        const targetElement = target === 'top' ? document.body : document.documentElement;
+        const targetPosition = target === 'top' ? 0 : targetElement.scrollHeight;
+        
+        targetElement.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+        });
+    }
+
+    scrollArrowUp.addEventListener('click', function() {
+        smoothScrollTo('top');
+    });
+
+    scrollArrowDown.addEventListener('click', function() {
+        smoothScrollTo('bottom');
+    });
+
+    function updateScrollArrows() {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const windowHeight = window.innerHeight;
+        const documentHeight = document.documentElement.scrollHeight;
+        
+        if (scrollTop > 100) {
+            scrollArrowUp.classList.add('show');
+        } else {
+            scrollArrowUp.classList.remove('show');
+        }
+        
+        if (scrollTop + windowHeight < documentHeight - 100) {
+            scrollArrowDown.classList.add('show');
+        } else {
+            scrollArrowDown.classList.remove('show');
+        }
+    }
+
+    updateScrollArrows();
+
+    let scrollTimeout;
+    window.addEventListener('scroll', function() {
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(updateScrollArrows, 10);
+    });
+
+    window.addEventListener('resize', function() {
+        updateScrollArrows();
+    });
+}); 
