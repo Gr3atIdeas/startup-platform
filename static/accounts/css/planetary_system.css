@@ -11,12 +11,13 @@
 /* Стили для планетарной системы на главной странице */
 .main_planetary_system {
   position: absolute;
-  top: 0;
-  right: -30%; /* Смещаем вправо так, чтобы торчало только 3/4 */
-  width: 100%;
-  height: 100%;
+  top: 45%;
+  left: 67%;
+  width: 200%; /* Увеличиваем размер в два раза */
+  height: 200%; /* Увеличиваем размер в два раза */
   z-index: 10;
   pointer-events: none;
+  transform: translate(-50%, -50%); /* Центрируем относительно новой позиции */
 }
 
 .main_planetary_system .ultra_new_planetary_space_background {
@@ -60,6 +61,22 @@
 
 .main_planetary_system .ultra_new_planetary_planet {
   pointer-events: auto;
+}
+
+/* Стили для эллиптических орбит на главной странице */
+.main_planetary_system .ultra_new_planetary_orbit {
+  border-radius: 50% / 30%; /* Делаем орбиты эллиптическими - растягиваем по горизонтали */
+  transform: scaleX(1.5); /* Растягиваем орбиты влево */
+}
+
+/* Увеличиваем размеры планет для большей системы */
+.main_planetary_system .ultra_new_planetary_planet {
+  transform: scale(1.5); /* Увеличиваем размер планет */
+}
+
+/* Увеличиваем размер солнца */
+.main_planetary_system #ultra_new_planetary_sun_image {
+  transform: scale(1.5);
 }
 
 
