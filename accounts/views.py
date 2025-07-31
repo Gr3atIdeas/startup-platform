@@ -277,8 +277,58 @@ def home(request):
                 "progress": round(startup.progress, 2) if startup.progress is not None else 0,
                 "investment_type": "Выкуп+инвестирование" if startup.both_mode else ("Только выкуп" if startup.only_buy else "Только инвестирование")
             })
+        
+        directions_data = FIXED_CATEGORIES.copy()
+        selected_startups = []
+        if len(all_startups) > 0:
+            selected_startups = all_startups[:6]
+        else:
+            selected_startups = []
+        planets_data = []
+        for i, startup in enumerate(selected_startups):
+            planet_image_url = None
+            
+            if startup.planet_image:
+                planet_image_url = f"https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/{startup.planet_image}"
+            
+            if not planet_image_url:
+                import random
+                folder_choice = random.choice(['planets_round', 'planets_ring'])
+                if folder_choice == 'planets_round':
+                    planet_image_num = (i % 15) + 1
+                    planet_image_url = f"/static/accounts/images/planetary_system/planets_round/{planet_image_num}.png"
+                else:
+                    planet_image_num = (i % 6) + 1
+                    planet_image_url = f"/static/accounts/images/planetary_system/planets_ring/{planet_image_num}.png"
+            
+            direction_original = 'Не указано'
+            if startup.direction:
+                for cat in directions_data:
+                    if cat['direction_name'] == startup.direction.direction_name or cat['original_name'] == getattr(startup.direction, 'original_name', None):
+                        direction_original = cat['original_name']
+                        break
+            planets_data.append({
+                "id": startup.startup_id,
+                "startup_id": startup.startup_id,
+                "name": startup.title,
+                "description": startup.short_description or startup.description[:200] if startup.description else "",
+                "image": planet_image_url,
+                "rating": startup.get_average_rating(),
+                "voters_count": startup.total_voters,
+                "comment_count": startup.comments.count(),
+                "direction": direction_original,
+                "funding_goal": f"{startup.funding_goal:,.0f} ₽".replace(",", " ") if startup.funding_goal else "Не указано",
+                "valuation": f"{startup.valuation:,.0f} ₽".replace(",", " ") if startup.valuation else "Не указано",
+                "investors": startup.get_investors_count(),
+                "progress": startup.get_progress_percentage(),
+                "investment_type": "Выкуп+инвестирование" if startup.both_mode else ("Только выкуп" if startup.only_buy else "Только инвестирование")
+            })
+        
         context = {
             "demo_startups_data": json.dumps(startups_data, cls=DjangoJSONEncoder),
+            "planets_data_json": json.dumps(planets_data, ensure_ascii=False),
+            "directions_data_json": json.dumps(directions_data, ensure_ascii=False),
+            "directions": directions_data,
         }
         return render(request, "accounts/main.html", context)
     if hasattr(request.user, "role") and request.user.role:

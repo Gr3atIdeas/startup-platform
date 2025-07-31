@@ -3210,3 +3210,35 @@ html::-webkit-scrollbar-button {
     opacity: 1;
     visibility: visible;
 }
+
+.main-page-planetary-wrapper {
+  overflow: hidden;
+  height: 600px;
+  position: relative;
+  margin: 20px 0;
+}
+
+.main-page-planetary-wrapper .ultra_new_planetary_system_wrapper {
+  transform: scale(0.9);
+  transform-origin: center center;
+}
+
+@media (max-width: 768px) {
+  .main-page-planetary-wrapper {
+    height: 500px;
+  }
+  
+  .main-page-planetary-wrapper .ultra_new_planetary_system_wrapper {
+    transform: scale(0.8);
+  }
+}
+
+@media (max-width: 480px) {
+  .main-page-planetary-wrapper {
+    height: 400px;
+  }
+  
+  .main-page-planetary-wrapper .ultra_new_planetary_system_wrapper {
+    transform: scale(0.7);
+  }
+}
