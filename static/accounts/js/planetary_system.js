@@ -19,7 +19,24 @@
       '/static/accounts/images/planetary_system/planets_round/3.png',
       '/static/accounts/images/planetary_system/planets_round/4.png',
       '/static/accounts/images/planetary_system/planets_round/5.png',
-      '/static/accounts/images/planetary_system/planets_round/6.png'
+      '/static/accounts/images/planetary_system/planets_round/6.png',
+      '/static/accounts/images/planetary_system/planets_round/7.png',
+      '/static/accounts/images/planetary_system/planets_round/8.png',
+      '/static/accounts/images/planetary_system/planets_round/9.png',
+      '/static/accounts/images/planetary_system/planets_round/10.png',
+      '/static/accounts/images/planetary_system/planets_round/11.png',
+      '/static/accounts/images/planetary_system/planets_round/12.png',
+      '/static/accounts/images/planetary_system/planets_round/13.png',
+      '/static/accounts/images/planetary_system/planets_round/14.png',
+      '/static/accounts/images/planetary_system/planets_round/15.png'
+    ],
+    ring: [
+      '/static/accounts/images/planetary_system/planets_ring/1.png',
+      '/static/accounts/images/planetary_system/planets_ring/2.png',
+      '/static/accounts/images/planetary_system/planets_ring/3.png',
+      '/static/accounts/images/planetary_system/planets_ring/4.png',
+      '/static/accounts/images/planetary_system/planets_ring/5.png',
+      '/static/accounts/images/planetary_system/planets_ring/6.png'
     ]
   };
   let ultraNewPlanetaryGalaxyScale = 1;
@@ -361,7 +378,9 @@
     planet.style.display = 'none'; // Скрываем пустые планеты
   }
   function getUltraNewPlanetaryFallbackImage(index) {
-    const images = ultraNewPlanetaryFallbackImages.round || [];
+    // Выбираем случайно между planets_round и planets_ring
+    const folderChoice = Math.random() < 0.5 ? 'round' : 'ring';
+    const images = ultraNewPlanetaryFallbackImages[folderChoice] || [];
     return images[index % images.length] || '/static/accounts/images/planetary_system/planets_round/1.png';
   }
   function showUltraNewPlanetaryModal(startup, planetImageUrl) {

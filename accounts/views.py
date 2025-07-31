@@ -3141,10 +3141,17 @@ def planetary_system(request):
             from accounts.utils import get_file_url
             planet_image_url = get_file_url(startup.logo_urls[0], startup.startup_id, "logo")
         
-        # Если нет реальных изображений, используем fallback
+        # Если нет реальных изображений, используем fallback из обеих папок
         if not planet_image_url:
-            planet_image_num = (i % 15) + 1
-            planet_image_url = f"/static/accounts/images/planetary_system/planets_round/{planet_image_num}.png"
+            import random
+            # Выбираем случайно между planets_round и planets_ring
+            folder_choice = random.choice(['planets_round', 'planets_ring'])
+            if folder_choice == 'planets_round':
+                planet_image_num = (i % 15) + 1
+                planet_image_url = f"/static/accounts/images/planetary_system/planets_round/{planet_image_num}.png"
+            else:  # planets_ring
+                planet_image_num = (i % 6) + 1
+                planet_image_url = f"/static/accounts/images/planetary_system/planets_ring/{planet_image_num}.png"
         
         # Найти original_name для категории стартапа
         direction_original = 'Не указано'
@@ -3183,10 +3190,17 @@ def planetary_system(request):
             from accounts.utils import get_file_url
             planet_image_url = get_file_url(startup.logo_urls[0], startup.startup_id, "logo")
         
-        # Если нет реальных изображений, используем fallback
+        # Если нет реальных изображений, используем fallback из обеих папок
         if not planet_image_url:
-            planet_image_num = (idx % 15) + 1
-            planet_image_url = f"/static/accounts/images/planetary_system/planets_round/{planet_image_num}.png"
+            import random
+            # Выбираем случайно между planets_round и planets_ring
+            folder_choice = random.choice(['planets_round', 'planets_ring'])
+            if folder_choice == 'planets_round':
+                planet_image_num = (idx % 15) + 1
+                planet_image_url = f"/static/accounts/images/planetary_system/planets_round/{planet_image_num}.png"
+            else:  # planets_ring
+                planet_image_num = (idx % 6) + 1
+                planet_image_url = f"/static/accounts/images/planetary_system/planets_ring/{planet_image_num}.png"
         
         direction_original = 'Не указано'
         if startup.direction:
