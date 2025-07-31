@@ -53,6 +53,37 @@
                                     <img src="{% static 'accounts/images/planetary_system/gi.svg' %}" alt="GI" id="ultra_new_planetary_sun_logo">
                                 </div>
                             </div>
+                            
+                            <div class="ultra_new_planetary_orbit" style="--orbit-size: 200px; --orbit-time: 80s;">
+                                <div class="ultra_new_planetary_planet_orientation">
+                                    <div class="ultra_new_planetary_planet" style="--planet-size: 60px;" data-id="1"></div>
+                                </div>
+                            </div>
+                            <div class="ultra_new_planetary_orbit" style="--orbit-size: 300px; --orbit-time: 95s;">
+                                <div class="ultra_new_planetary_planet_orientation">
+                                    <div class="ultra_new_planetary_planet" style="--planet-size: 70px;" data-id="2"></div>
+                                </div>
+                            </div>
+                            <div class="ultra_new_planetary_orbit" style="--orbit-size: 400px; --orbit-time: 110s;">
+                                <div class="ultra_new_planetary_planet_orientation">
+                                    <div class="ultra_new_planetary_planet" style="--planet-size: 56px;" data-id="3"></div>
+                                </div>
+                            </div>
+                            <div class="ultra_new_planetary_orbit" style="--orbit-size: 500px; --orbit-time: 125s;">
+                                <div class="ultra_new_planetary_planet_orientation">
+                                    <div class="ultra_new_planetary_planet" style="--planet-size: 64px;" data-id="4"></div>
+                                </div>
+                            </div>
+                            <div class="ultra_new_planetary_orbit" style="--orbit-size: 600px; --orbit-time: 140s;">
+                                <div class="ultra_new_planetary_planet_orientation">
+                                    <div class="ultra_new_planetary_planet" style="--planet-size: 50px;" data-id="5"></div>
+                                </div>
+                            </div>
+                            <div class="ultra_new_planetary_orbit" style="--orbit-size: 700px; --orbit-time: 160s;">
+                                <div class="ultra_new_planetary_planet_orientation">
+                                    <div class="ultra_new_planetary_planet" style="--planet-size: 60px;" data-id="6"></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -983,6 +1014,36 @@
 {{ demo_startups_data|safe }}
 </script>
 {% endif %}
+
+<script id="ultra_new_planetary_fallback_images" type="application/json">
+{
+  "round": [
+    "{% static 'accounts/images/planetary_system/planets_round/1.png' %}",
+    "{% static 'accounts/images/planetary_system/planets_round/2.png' %}",
+    "{% static 'accounts/images/planetary_system/planets_round/3.png' %}",
+    "{% static 'accounts/images/planetary_system/planets_round/4.png' %}",
+    "{% static 'accounts/images/planetary_system/planets_round/5.png' %}",
+    "{% static 'accounts/images/planetary_system/planets_round/6.png' %}",
+    "{% static 'accounts/images/planetary_system/planets_round/7.png' %}",
+    "{% static 'accounts/images/planetary_system/planets_round/8.png' %}",
+    "{% static 'accounts/images/planetary_system/planets_round/9.png' %}",
+    "{% static 'accounts/images/planetary_system/planets_round/10.png' %}",
+    "{% static 'accounts/images/planetary_system/planets_round/11.png' %}",
+    "{% static 'accounts/images/planetary_system/planets_round/12.png' %}",
+    "{% static 'accounts/images/planetary_system/planets_round/13.png' %}",
+    "{% static 'accounts/images/planetary_system/planets_round/14.png' %}",
+    "{% static 'accounts/images/planetary_system/planets_round/15.png' %}"
+  ],
+  "ring": [
+    "{% static 'accounts/images/planetary_system/planets_ring/1.png' %}",
+    "{% static 'accounts/images/planetary_system/planets_ring/2.png' %}",
+    "{% static 'accounts/images/planetary_system/planets_ring/3.png' %}",
+    "{% static 'accounts/images/planetary_system/planets_ring/4.png' %}",
+    "{% static 'accounts/images/planetary_system/planets_ring/5.png' %}",
+    "{% static 'accounts/images/planetary_system/planets_ring/6.png' %}"
+  ]
+}
+</script>
 
 <script src="{% static 'accounts/js/main.js' %}"></script>
 <script src="{% static 'accounts/js/faq.js' %}?v={% now 'U' %}"></script>
