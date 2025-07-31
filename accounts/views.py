@@ -251,17 +251,15 @@ def home(request):
         all_startups = list(startups_query)
         demo_startups = []
         if all_startups:
-            # Показываем все доступные стартапы (максимум 6 для отображения)
             num_startups = min(6, len(all_startups))
             demo_startups = random.sample(all_startups, num_startups)
         startups_data = []
         for startup in demo_startups:
-            # Выбираем случайно между planets_round и planets_ring
             folder_choice = random.choice(['planets_round', 'planets_ring'])
             if folder_choice == 'planets_round':
                 planet_num = random.randint(1, 15)
                 planet_image_url = static(f"accounts/images/planetary_system/planets_round/{planet_num}.png")
-            else:  # planets_ring
+            else:
                 planet_num = random.randint(1, 6)
                 planet_image_url = static(f"accounts/images/planetary_system/planets_ring/{planet_num}.png")
             startups_data.append({
@@ -279,7 +277,6 @@ def home(request):
                 "progress": round(startup.progress, 2) if startup.progress is not None else 0,
                 "investment_type": "Выкуп+инвестирование" if startup.both_mode else ("Только выкуп" if startup.only_buy else "Только инвестирование")
             })
-        # Убираем заполнение пустыми орбитами - показываем только реальные стартапы
         context = {
             "demo_startups_data": json.dumps(startups_data, cls=DjangoJSONEncoder),
         }
@@ -652,7 +649,6 @@ def investments(request):
         total_investment = total_investment_data.get("total_investment") or Decimal("0")
         max_investment = total_investment_data.get("max_investment") or Decimal("0")
         
-        # Вычисляем минимальное значение только среди инвестиций с ненулевыми суммами
         investments_with_amount = user_investments_qs.filter(amount__gt=0)
         min_investment_data = investments_with_amount.aggregate(
             min_investment=Min("amount")
@@ -3159,33 +3155,26 @@ def planetary_system(request):
     logger.info(f"🪐 Загружено стартапов: {len(startups_list)}")
     selected_startups = []
     if len(startups_list) > 0:
-        # Показываем все доступные стартапы (максимум 6 для отображения)
         selected_startups = startups_list[:6]
     else:
-        # Если стартапов нет вообще, показываем пустой список
         selected_startups = []
     planets_data = []
     for i, startup in enumerate(selected_startups):
-        # Получаем изображение планеты стартапа
         planet_image_url = None
         
-        # Если есть planet_image, используем его
         if startup.planet_image:
             planet_image_url = f"https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/{startup.planet_image}"
         
-        # Если нет planet_image, используем fallback из обеих папок
         if not planet_image_url:
             import random
-            # Выбираем случайно между planets_round и planets_ring
             folder_choice = random.choice(['planets_round', 'planets_ring'])
             if folder_choice == 'planets_round':
                 planet_image_num = (i % 15) + 1
                 planet_image_url = f"/static/accounts/images/planetary_system/planets_round/{planet_image_num}.png"
-            else:  # planets_ring
+            else:
                 planet_image_num = (i % 6) + 1
                 planet_image_url = f"/static/accounts/images/planetary_system/planets_ring/{planet_image_num}.png"
         
-        # Найти original_name для категории стартапа
         direction_original = 'Не указано'
         if startup.direction:
             for cat in directions_data:
@@ -3193,7 +3182,7 @@ def planetary_system(request):
                     direction_original = cat['original_name']
                     break
         planets_data.append({
-            "id": startup.startup_id,  # Используем startup_id вместо i + 1
+            "id": startup.startup_id,
             "startup_id": startup.startup_id,
             "name": startup.title,
             "description": startup.short_description or startup.description[:200] if startup.description else "",
@@ -3211,22 +3200,18 @@ def planetary_system(request):
     all_approved_startups = list(Startups.objects.filter(status="approved").select_related("direction", "owner").order_by("-created_at"))
     all_startups_data = []
     for idx, startup in enumerate(all_approved_startups):
-        # Получаем изображение планеты стартапа
         planet_image_url = None
         
-        # Если есть planet_image, используем его
         if startup.planet_image:
             planet_image_url = f"https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/{startup.planet_image}"
         
-        # Если нет planet_image, используем fallback из обеих папок
         if not planet_image_url:
             import random
-            # Выбираем случайно между planets_round и planets_ring
             folder_choice = random.choice(['planets_round', 'planets_ring'])
             if folder_choice == 'planets_round':
                 planet_image_num = (idx % 15) + 1
                 planet_image_url = f"/static/accounts/images/planetary_system/planets_round/{planet_image_num}.png"
-            else:  # planets_ring
+            else:
                 planet_image_num = (idx % 6) + 1
                 planet_image_url = f"/static/accounts/images/planetary_system/planets_ring/{planet_image_num}.png"
         
@@ -3237,7 +3222,7 @@ def planetary_system(request):
                     direction_original = cat['original_name']
                     break
         all_startups_data.append({
-            "id": startup.startup_id,  # Добавляем поле id для совместимости
+            "id": startup.startup_id,
             "startup_id": startup.startup_id,
             "name": startup.title,
             "description": startup.short_description or startup.description[:200] if startup.description else "",
@@ -3297,7 +3282,6 @@ def my_startups(request):
         )
         max_raised = financial_analytics_data.get("max_raised") or Decimal("0")
         
-        # Вычисляем минимальное значение только среди стартапов с ненулевыми сборами
         startups_with_funding = approved_startups_qs.filter(amount_raised__gt=0)
         min_raised_data = startups_with_funding.aggregate(
             min_raised=Min("amount_raised")
@@ -3464,7 +3448,7 @@ def my_startups(request):
                 "planet_image": startup.planet_image,
                 "logo_urls": startup.logo_urls,
                 "average_rating": startup.average_rating or 0,
-                "rating": startup.average_rating or 0,  # новое поле для фронта
+                "rating": startup.average_rating or 0,
                 "total_voters": startup.total_voters or 0,
                 "comment_count": startup.comment_count or 0,
                 "description": startup.description or "Описание отсутствует.",
@@ -3473,7 +3457,7 @@ def my_startups(request):
                 "funding_goal": startup.funding_goal or 0,
                 "amount_raised": startup.amount_raised or 0,
                 "get_investors_count": startup.get_investors_count(),
-                "direction": startup.direction.direction_name if startup.direction else "Не указано",  # Оставляем русское название для my_startups
+                "direction": startup.direction.direction_name if startup.direction else "Не указано",
                 "investment_type": "Не указано",
                 "orbit_size": orbit_size,
                 "orbit_time": orbit_time,

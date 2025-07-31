@@ -273,7 +273,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     const planetObjects = [];
     const galaxyTiltAngle = 60;
-    // Создаем орбиты и планеты
     const numOrbits = Math.max(6, demoStartupsData.length);
     console.log('Creating', numOrbits, 'orbits with', demoStartupsData.length, 'startup data items');
     
@@ -302,7 +301,6 @@ document.addEventListener('DOMContentLoaded', function () {
             });
             planet.title = startupData.name;
         } else {
-            // Если нет данных стартапа, создаем декоративную планету
             const fallbackImage = `/static/accounts/images/planetary_system/planets_round/${Math.floor(Math.random() * 15) + 1}.png`;
             planet.style.backgroundImage = `url('${fallbackImage}')`;
             planet.title = 'Декоративная планета';
@@ -335,16 +333,13 @@ document.addEventListener('DOMContentLoaded', function () {
         const modal = document.getElementById('demo_planetary_modal');
         if (!modal) return;
         if (!startupData || startupData.id === 0) {
-            // Убираем обработку "свободных орбит" - показываем только реальные стартапы
             return;
         } else {
             document.getElementById('demo_planetary_modal_name').textContent = startupData.name;
             document.getElementById('demo_planetary_modal_rating').textContent = `Рейтинг ${startupData.rating}/5 (${startupData.voters_count})`;
             document.getElementById('demo_planetary_modal_comments_count').textContent = startupData.comment_count;
             
-            // Находим русское название категории для отображения в модальном окне
             let categoryDisplayName = startupData.direction || 'Не указана';
-            // Здесь нужно будет добавить логику для поиска русского названия, если есть доступ к directions_data
             document.getElementById('demo_planetary_modal_category').textContent = categoryDisplayName;
             document.getElementById('demo_planetary_modal_description').textContent = startupData.description;
             document.getElementById('demo_planetary_modal_funding_amount').textContent = startupData.funding_goal;
@@ -413,15 +408,10 @@ document.addEventListener('DOMContentLoaded', function () {
             const angleRad = angle * Math.PI / 180;
             const radius = planetObj.orbitSize / 2;
             
-            // Используем круговые орбиты для всех страниц
             const x = Math.cos(angleRad) * radius;
             const y = Math.sin(angleRad) * radius;
             planetObj.orientation.style.transform = `translate(${x}px, ${y}px)`;
             
-            // Убираем наклон с самой планеты - он теперь применяется через CSS к ориентации
-            // planetObj.element.style.transform = `rotateX(${tiltCompensation}deg)`;
-            
-            // Добавляем отладочную информацию для первых нескольких планет
             if (index < 3) {
                 console.log(`Planet ${index + 1}: angle=${angle.toFixed(1)}°, x=${x.toFixed(1)}, y=${y.toFixed(1)}, radius=${radius}`);
             }

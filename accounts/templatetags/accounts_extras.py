@@ -25,27 +25,17 @@ def translate_category(name):
     }
     return translations.get(
         name, name if name else "Без категории"
-    )  # Возвращаем перевод или оригинал
+    )
 
 
 @register.simple_tag
 def multiply(qty, unit_price, *args, **kwargs):
-    # example usage in template: {% multiply value1 value2 %}
     return qty * unit_price
 
 
 @register.filter(name="get_file_url")
 def get_file_url(file_id, entity_id, file_type):
-    # Ваша логика получения URL файла
-    # Например:
-    # file = FileStorage.objects.filter(file_id=file_id, entity_id=entity_id, file_type=file_type).first()
-    # if file:
-    #     return file.get_absolute_url() # Или другой метод получения URL
-    # return '#' # Возвращаем заглушку или обрабатываем ошибку
-    # !!! Замените этот комментарий на реальную логику !!!
-    # Пока что возвращаем примерный путь для локальной разработки или заглушку
-    # return f'/media/{file_type}/{entity_id}/{file_id}'
-    return "#"  # Заглушка
+    return "#"
 
 
 @register.filter(name="jsonify")
@@ -62,19 +52,15 @@ def startswith(text, starts):
 
 @register.filter(name="has_invested")
 def has_invested(user, startup):
-    # Заглушка - замените на реальную проверку инвестиций пользователя в стартап
-    # return Investment.objects.filter(user=user, startup=startup).exists()
-    return False  # Пример
+    return False
 
 
 @register.filter(name="is_buyout_investor")
 def is_buyout_investor(user, startup):
-    # Заглушка - замените на реальную проверку, является ли пользователь инвестором типа "Выкуп"
-    # return Investment.objects.filter(user=user, startup=startup, investment_type='buyout').exists()
-    return True  # Пример
+    return True
 
 
-# Добавляем фильтр get_item
+
 @register.filter(name="get_item")
 def get_item(dictionary, key):
     """Позволяет получить значение из словаря по ключу в шаблоне Django."""

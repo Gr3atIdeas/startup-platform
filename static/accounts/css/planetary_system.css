@@ -8,16 +8,15 @@
   --ultra_new_planetary_galaxy_y: 0px;
 }
 
-/* Стили для планетарной системы на главной странице */
 .main_planetary_system {
   position: absolute;
   top: 45%;
-  left: 80.4%; /* Сдвигаем на 20% правее (67% + 13.4% = 80.4%) */
-  width: 150%; /* Уменьшаем размер с 200% до 150% */
-  height: 150%; /* Уменьшаем размер с 200% до 150% */
+  left: 80.4%;
+  width: 150%;
+  height: 150%;
   z-index: 10;
   pointer-events: none;
-  transform: translate(-50%, -50%); /* Центрируем относительно новой позиции */
+  transform: translate(-50%, -50%);
 }
 
 .main_planetary_system .ultra_new_planetary_space_background {
@@ -65,29 +64,24 @@
 
 
 
-/* Увеличиваем размеры планет для большей системы */
 .main_planetary_system .ultra_new_planetary_planet {
-  transform: scale(1.5); /* Уменьшаем размер планет с 2 до 1.5 */
+  transform: scale(1.5);
 }
 
-/* Увеличиваем размеры орбит для большей системы */
 .main_planetary_system .ultra_new_planetary_orbit {
-  transform: scale(1.2); /* Уменьшаем размер орбит с 1.5 до 1.2 */
-  transform-origin: center center; /* Центрируем масштабирование */
+  transform: scale(1.2);
+  transform-origin: center center;
 }
 
-/* Увеличиваем размер солнца */
 .main_planetary_system #ultra_new_planetary_sun_image {
-  transform: scale(1.5); /* Уменьшаем размер солнца с 2 до 1.5 */
+  transform: scale(1.5);
 }
 
-/* Исправляем обрезание солнца */
 .main_planetary_system #ultra_new_planetary_sun_container {
-  width: 150px; /* Уменьшаем базовый размер контейнера */
-  height: 150px; /* Уменьшаем базовый размер контейнера */
+  width: 150px;
+  height: 150px;
 }
 
-/* Обеспечиваем правильное позиционирование солнца */
 .main_planetary_system #ultra_new_planetary_sun_container {
   position: absolute;
   top: 50%;
@@ -96,8 +90,6 @@
   z-index: 10;
   pointer-events: none;
 }
-
-/* Исправляем наклон планет - применяем компенсацию к ориентации, а не к самой планете */
 .main_planetary_system .ultra_new_planetary_planet_orientation {
   transform: rotateX(var(--ultra_new_planetary_planet_compensation));
 }
@@ -197,7 +189,6 @@
   transform-style: preserve-3d;
   z-index: 5;
   transition: transform 0.1s ease-out;
-  /* Аппаратное ускорение для устранения дрожания */
   will-change: transform;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
@@ -230,7 +221,6 @@
   border: none !important;
   outline: none !important;
   box-shadow: none !important;
-  /* Аппаратное ускорение для устранения дрожания */
   will-change: transform;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
@@ -299,7 +289,6 @@
   transform-style: preserve-3d;
   z-index: 5;
   pointer-events: none;
-  /* Аппаратное ускорение для устранения дрожания */
   will-change: transform;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
@@ -1343,7 +1332,7 @@
     height: 600px;
   }
 
-  /* Уменьшаем размеры планет для мобильных */
+  
   .ultra_new_planetary_planet {
     transform: scale(0.8);
   }
@@ -1449,7 +1438,7 @@
     height: 500px;
   }
 
-  /* Еще больше уменьшаем размеры для маленьких экранов */
+  
   .ultra_new_planetary_planet {
     transform: scale(0.6);
   }
@@ -1545,7 +1534,7 @@
     height: 400px;
   }
 
-  /* Минимальные размеры для очень маленьких экранов */
+  
   .ultra_new_planetary_planet {
     transform: scale(0.5);
   }

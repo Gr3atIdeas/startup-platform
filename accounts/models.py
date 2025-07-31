@@ -512,7 +512,6 @@ class NewsArticles(models.Model):
     def get_image_url(self):
         """Генерирует полный URL для картинки новости."""
         if self.image_url:
-            # Базовый URL Yandex Object Storage
             base_url = "https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/"
             return f"{base_url}{self.image_url}"
         return None
@@ -543,14 +542,14 @@ class NewsViews(models.Model):
         db_table = "news_views"
 
 
-# accounts/models.py
+
 class ChatConversations(models.Model):
     conversation_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255, blank=True, null=True)
     created_at = models.DateTimeField(blank=True, null=True)
     updated_at = models.DateTimeField(blank=True, null=True)
     is_group_chat = models.BooleanField(default=False)
-    is_deal = models.BooleanField(default=False)  # Флаг сделки
+    is_deal = models.BooleanField(default=False)
     deal_status = models.CharField(
         max_length=20,
         choices=[
@@ -559,7 +558,7 @@ class ChatConversations(models.Model):
             ('rejected', 'Отклонена')
         ],
         default='pending'
-    )  # Новый статус сделки
+    )
 
     class Meta:
         managed = True

@@ -50,7 +50,6 @@
   const ultraNewPlanetaryMaxOffset = 500;
   let ultraNewPlanetaryCategoriesTotal = 0;
   
-  // Определяем текущую страницу для установки начального положения
   function getCurrentPage() {
     const path = window.location.pathname;
     if (path === '/investor/' || path === '/startupper/') {
@@ -61,15 +60,12 @@
     return 'other';
   }
   
-  // Устанавливаем начальное положение в зависимости от страницы
   function setInitialGalaxyPosition() {
     const currentPage = getCurrentPage();
     if (currentPage === 'main') {
-      // На главных страницах - смещаем галактику вверх (примерно 2 скролла мыши)
       ultraNewPlanetaryGalaxyY = -200;
-      ultraNewPlanetaryGalaxyScale = 0.8; // Немного уменьшаем масштаб
+      ultraNewPlanetaryGalaxyScale = 0.8;
     } else {
-      // На странице планетарной системы - стандартное положение
       ultraNewPlanetaryGalaxyY = 0;
       ultraNewPlanetaryGalaxyScale = 1;
     }
@@ -83,7 +79,7 @@
       loadUltraNewPlanetarySystemData();
       loadUltraNewPlanetaryFallbackImages();
       setupUltraNewPlanetarySystem();
-      setInitialGalaxyPosition(); // Устанавливаем начальное положение
+      setInitialGalaxyPosition();
       startUltraNewPlanetaryAnimation();
     } catch (error) {
       console.warn('Ultra New Planetary System initialization error:', error);
@@ -188,7 +184,6 @@
     galaxy.style.setProperty('--ultra_new_planetary_galaxy_y', ultraNewPlanetaryGalaxyY + 'px');
   }
   function resetUltraNewPlanetaryGalaxyTransform() {
-    // При сбросе возвращаем к начальному положению для текущей страницы
     setInitialGalaxyPosition();
   }
   function setupUltraNewPlanetaryControls() {
@@ -254,7 +249,6 @@
     ultraNewPlanetarySelectedGalaxy = galaxyName;
     updateUltraNewPlanetaryGalaxyUI();
     
-    // Принудительно обновляем данные при каждом переключении категории
     console.log('🔍 JS: Forcing data refresh for category:', galaxyName);
     applyUltraNewPlanetaryFilter(galaxyName);
     
@@ -315,7 +309,6 @@
       console.log('🔍 JS: Planet', index, 'startup:', startup ? startup.name : 'none');
       
       if (startup && (startup.id || startup.startup_id)) {
-        // Очищаем планеты перед настройкой
         planet.removeAttribute('data-startup-id');
         planet.removeAttribute('data-startup-data');
         planet.removeAttribute('data-startup-name');
@@ -323,7 +316,6 @@
         setupUltraNewPlanetaryPlanet(planet, startup, index);
         console.log('🔍 JS: Setup planet', index, 'with startup:', startup.name);
       } else {
-        // Если стартапа нет, скрываем планету
         setupUltraNewPlanetaryEmptyPlanet(planet, index);
         console.log('🔍 JS: Hide planet', index, '- no startup');
       }
@@ -331,7 +323,6 @@
     console.log('🔍 JS: Reinitializing planetary objects');
     initializeUltraNewPlanetaryObjects();
     
-    // Перезапускаем анимацию
     console.log('🔍 JS: Restarting animation');
     stopUltraNewPlanetaryAnimation();
     startUltraNewPlanetaryAnimation();
@@ -343,7 +334,6 @@
     newPlanet.removeAttribute('data-startup-id');
     newPlanet.removeAttribute('data-startup-data');
     newPlanet.removeAttribute('data-startup-name');
-    // Удаляем все обработчики событий
     newPlanet.replaceWith(newPlanet.cloneNode(true));
     return newPlanet;
   }
@@ -351,29 +341,23 @@
     if (!planet || !startup) return;
     console.log('🔍 JS: Setting up planet', index, 'with startup:', startup.name);
     
-    // Используем изображение из данных стартапа
     const imageUrl = startup.image || getUltraNewPlanetaryFallbackImage(index);
     console.log('🔍 JS: Planet image URL:', imageUrl);
     
-    // Проверяем, что URL изображения валидный
     if (imageUrl && imageUrl !== 'null' && imageUrl !== 'undefined') {
       planet.style.backgroundImage = `url(${imageUrl})`;
       
-      // Добавляем обработчик ошибки для изображения
       const img = new Image();
       img.onload = function() {
-        // Изображение загрузилось успешно
         console.log('🔍 JS: Planet image loaded successfully:', imageUrl);
       };
       img.onerror = function() {
-        // Если изображение не загрузилось, используем fallback
         console.warn('🔍 JS: Failed to load planet image:', imageUrl);
         const fallbackUrl = getUltraNewPlanetaryFallbackImage(index);
         planet.style.backgroundImage = `url(${fallbackUrl})`;
       };
       img.src = imageUrl;
     } else {
-      // Если изображение не загрузилось, используем fallback
       const fallbackUrl = getUltraNewPlanetaryFallbackImage(index);
       planet.style.backgroundImage = `url(${fallbackUrl})`;
     }
@@ -382,28 +366,24 @@
     planet.setAttribute('data-startup-name', startup.name || 'Пустая орбита');
     planet.setAttribute('data-startup-data', JSON.stringify(startup));
     
-    // Удаляем старые обработчики событий
     const newPlanet = planet.cloneNode(true);
     planet.parentNode.replaceChild(newPlanet, planet);
     
-    // Добавляем новый обработчик
     newPlanet.addEventListener('click', function() {
       showUltraNewPlanetaryModal(startup, imageUrl);
     });
     newPlanet.style.cursor = 'pointer';
     newPlanet.style.opacity = '1';
-    newPlanet.style.display = 'block'; // Показываем планету
+    newPlanet.style.display = 'block';
     
     console.log('🔍 JS: Planet setup complete for:', startup.name);
   }
   function setupUltraNewPlanetaryEmptyPlanet(planet, index) {
-    // Убираем создание "свободных орбит" - показываем только реальные стартапы
     if (!planet) return;
     console.log('🔍 JS: Hiding empty planet', index);
-    planet.style.display = 'none'; // Скрываем пустые планеты
+    planet.style.display = 'none';
   }
   function getUltraNewPlanetaryFallbackImage(index) {
-    // Выбираем случайно между planets_round и planets_ring
     const folderChoice = Math.random() < 0.5 ? 'round' : 'ring';
     const images = ultraNewPlanetaryFallbackImages[folderChoice] || [];
     return images[index % images.length] || '/static/accounts/images/planetary_system/planets_round/1.png';
@@ -427,16 +407,14 @@
     if (ratingElement) ratingElement.textContent = `Рейтинг ${startup.rating || '0'}/5 (${startup.voters_count || '0'})`;
     if (commentsElement) commentsElement.textContent = startup.comment_count || '0';
     
-    // Находим русское название категории для отображения в модальном окне
     let categoryDisplayName = startup.direction || 'Не указана';
     if (startup.direction && ultraNewPlanetaryDirectionsData) {
       const categoryData = ultraNewPlanetaryDirectionsData.find(d => 
         d.original_name === startup.direction || d.direction_name === startup.direction
       );
       if (categoryData) {
-        categoryDisplayName = categoryData.direction_name; // Показываем русское название
+        categoryDisplayName = categoryData.direction_name;
       } else {
-        // Если не найдено в directions_data, используем как есть (может быть уже русское название)
         categoryDisplayName = startup.direction;
       }
     }
@@ -460,11 +438,9 @@
     }
     if (investorsCountElement) investorsCountElement.textContent = `Инвестировало (${startup.investors || '0'})`;
     if (planetImageElement) {
-      // Используем изображение стартапа или fallback
       const modalImageUrl = planetImageUrl || startup.image || getUltraNewPlanetaryFallbackImage(0);
       planetImageElement.src = modalImageUrl;
       
-      // Добавляем обработчик ошибки для изображения
       planetImageElement.onerror = function() {
         console.warn('Не удалось загрузить изображение стартапа:', modalImageUrl);
         this.src = getUltraNewPlanetaryFallbackImage(0);
@@ -628,13 +604,11 @@
     console.log('🔍 JS: applyUltraNewPlanetaryFilter called with:', categoryName);
     console.log('🔍 JS: ultraNewPlanetaryAllStartupsData length:', ultraNewPlanetaryAllStartupsData.length);
     
-    // Проверим структуру данных
     if (ultraNewPlanetaryAllStartupsData.length > 0) {
       console.log('🔍 JS: Sample data structure:', ultraNewPlanetaryAllStartupsData[0]);
       console.log('🔍 JS: Sample data keys:', Object.keys(ultraNewPlanetaryAllStartupsData[0]));
     }
     
-    // Принудительно обновляем данные при каждом вызове
     console.log('🔍 JS: Forcing data refresh for category:', categoryName);
     
     let filtered = [];
@@ -642,12 +616,9 @@
       filtered = ultraNewPlanetaryAllStartupsData.slice();
       console.log('🔍 JS: Showing all startups, filtered count:', filtered.length);
     } else {
-      // Фильтруем по direction - проверяем как original_name, так и direction_name
       filtered = ultraNewPlanetaryAllStartupsData.filter(s => {
-        // Проверяем точное совпадение
         if (s.direction === categoryName) return true;
         
-        // Проверяем через directions_data для соответствия original_name -> direction_name
         if (ultraNewPlanetaryDirectionsData) {
           const categoryData = ultraNewPlanetaryDirectionsData.find(d => 
             d.original_name === categoryName || d.direction_name === categoryName
@@ -676,10 +647,8 @@
     if (filtered.length >= 6) {
       startups.push(...filtered.slice(0, 6));
     } else if (filtered.length > 0) {
-      // Если стартапов меньше 6, показываем все доступные стартапы
       startups.push(...filtered);
     }
-    // Если стартапов нет вообще, показываем пустой список
     console.log('🔍 JS: Final startups to display:', startups.length);
     console.log('🔍 JS: Startups to display:', startups.map(s => ({ 
       name: s.name, 
