@@ -256,8 +256,14 @@ def home(request):
             demo_startups = random.sample(all_startups, num_startups)
         startups_data = []
         for startup in demo_startups:
-            planet_num = random.randint(1, 15)
-            planet_image_url = static(f"accounts/images/planetary_system/planets_round/{planet_num}.png")
+            # Выбираем случайно между planets_round и planets_ring
+            folder_choice = random.choice(['planets_round', 'planets_ring'])
+            if folder_choice == 'planets_round':
+                planet_num = random.randint(1, 15)
+                planet_image_url = static(f"accounts/images/planetary_system/planets_round/{planet_num}.png")
+            else:  # planets_ring
+                planet_num = random.randint(1, 6)
+                planet_image_url = static(f"accounts/images/planetary_system/planets_ring/{planet_num}.png")
             startups_data.append({
                 "id": startup.startup_id,
                 "name": startup.title,
@@ -2174,8 +2180,8 @@ def investor_main(request):
         for category in FIXED_CATEGORIES:
             if category['original_name'] == selected_direction_name or category['direction_name'] == selected_direction_name:
                 direction_filter |= Q(direction__direction_name=category['direction_name'])
-        if direction_filter:
-            startups_query = startups_query.filter(direction_filter)
+            if direction_filter:
+        startups_query = startups_query.filter(direction_filter)
     startups_filtered = startups_query.annotate(
         progress=Case(
             When(funding_goal__gt=0, then=(F("amount_raised") * 100.0 / F("funding_goal"))),
@@ -2189,8 +2195,14 @@ def investor_main(request):
     planet_sizes = [60, 70, 56, 64, 50, 60]
     import random
     for idx, startup in enumerate(startups_filtered):
-        random_planet_num = random.randint(1, 15)
-        image_path = f"accounts/images/planetary_system/planets_round/{random_planet_num}.png"
+        # Выбираем случайно между planets_round и planets_ring
+        folder_choice = random.choice(['planets_round', 'planets_ring'])
+        if folder_choice == 'planets_round':
+            random_planet_num = random.randint(1, 15)
+            image_path = f"accounts/images/planetary_system/planets_round/{random_planet_num}.png"
+        else:  # planets_ring
+            random_planet_num = random.randint(1, 6)
+            image_path = f"accounts/images/planetary_system/planets_ring/{random_planet_num}.png"
         planets_data_for_template.append(
             {
                 "id": startup.startup_id,
@@ -2255,8 +2267,14 @@ def investor_main(request):
             if startup.both_mode
             else "Не указано"
         )
-        random_planet_num = random.randint(1, 15)
-        planet_image_url = static(f"accounts/images/planetary_system/planets_round/{random_planet_num}.png")
+        # Выбираем случайно между planets_round и planets_ring
+        folder_choice = random.choice(['planets_round', 'planets_ring'])
+        if folder_choice == 'planets_round':
+            random_planet_num = random.randint(1, 15)
+            planet_image_url = static(f"accounts/images/planetary_system/planets_round/{random_planet_num}.png")
+        else:  # planets_ring
+            random_planet_num = random.randint(1, 6)
+            planet_image_url = static(f"accounts/images/planetary_system/planets_ring/{random_planet_num}.png")
         direction_name = startup.direction.direction_name if startup.direction else "Не указано"
         # Находим original_name для направления для правильной фильтрации
         original_direction = None
@@ -2354,8 +2372,14 @@ def startupper_main(request):
     planet_sizes = [60, 70, 56, 64, 50, 60]
     import random
     for idx, startup in enumerate(startups_filtered):
-        random_planet_num = random.randint(1, 15)
-        image_path = f"accounts/images/planetary_system/planets_round/{random_planet_num}.png"
+        # Выбираем случайно между planets_round и planets_ring
+        folder_choice = random.choice(['planets_round', 'planets_ring'])
+        if folder_choice == 'planets_round':
+            random_planet_num = random.randint(1, 15)
+            image_path = f"accounts/images/planetary_system/planets_round/{random_planet_num}.png"
+        else:  # planets_ring
+            random_planet_num = random.randint(1, 6)
+            image_path = f"accounts/images/planetary_system/planets_ring/{random_planet_num}.png"
         planets_data_for_template.append(
             {
                 "id": startup.startup_id,
@@ -2376,8 +2400,14 @@ def startupper_main(request):
             if startup.both_mode
             else "Не указано"
         )
-        random_planet_num = random.randint(1, 8)
-        planet_image_url = static(f"accounts/images/planetary_system/planets_round/{random_planet_num}.png")
+        # Выбираем случайно между planets_round и planets_ring
+        folder_choice = random.choice(['planets_round', 'planets_ring'])
+        if folder_choice == 'planets_round':
+            random_planet_num = random.randint(1, 15)
+            planet_image_url = static(f"accounts/images/planetary_system/planets_round/{random_planet_num}.png")
+        else:  # planets_ring
+            random_planet_num = random.randint(1, 6)
+            planet_image_url = static(f"accounts/images/planetary_system/planets_ring/{random_planet_num}.png")
         planets_data_json.append({
             "id": startup.startup_id,
             "name": startup.title,
@@ -2420,8 +2450,14 @@ def startupper_main(request):
             if startup.both_mode
             else "Не указано"
         )
-        random_planet_num = random.randint(1, 15)
-        planet_image_url = static(f"accounts/images/planetary_system/planets_round/{random_planet_num}.png")
+        # Выбираем случайно между planets_round и planets_ring
+        folder_choice = random.choice(['planets_round', 'planets_ring'])
+        if folder_choice == 'planets_round':
+            random_planet_num = random.randint(1, 15)
+            planet_image_url = static(f"accounts/images/planetary_system/planets_round/{random_planet_num}.png")
+        else:  # planets_ring
+            random_planet_num = random.randint(1, 6)
+            planet_image_url = static(f"accounts/images/planetary_system/planets_ring/{random_planet_num}.png")
         direction_name = startup.direction.direction_name if startup.direction else "Не указано"
         russian_direction = DIRECTION_TRANSLATIONS.get(direction_name, direction_name)
         # Находим original_name для направления для правильной фильтрации
