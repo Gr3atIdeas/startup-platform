@@ -259,7 +259,7 @@ document.addEventListener('DOMContentLoaded', function () {
   } else {
     console.warn('Элементы карусели "Истории успеха" не найдены.')
   }
-  const galaxyContainer = document.getElementById('galaxy');
+  const galaxyContainer = document.getElementById('ultra_new_planetary_galaxy');
   if (galaxyContainer) {
     let demoStartupsData = [];
     const demoDataScript = document.getElementById('demo-startups-data');
@@ -273,17 +273,24 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     const planetObjects = [];
     const galaxyTiltAngle = 45;
-    for (let i = 1; i <= 6; i++) {
+    // Создаем орбиты и планеты
+    const numOrbits = Math.max(6, demoStartupsData.length);
+    console.log('Creating', numOrbits, 'orbits with', demoStartupsData.length, 'startup data items');
+    
+    for (let i = 1; i <= numOrbits; i++) {
         const orbit = document.createElement('div');
-        orbit.className = 'orbit';
+        orbit.className = 'ultra_new_planetary_orbit';
         const orbitSize = 200 + i * 100;
         orbit.style.setProperty('--orbit-size', `${orbitSize}px`);
+        
         const planetOrientation = document.createElement('div');
-        planetOrientation.className = 'planet-orientation';
+        planetOrientation.className = 'ultra_new_planetary_planet_orientation';
+        
         const planet = document.createElement('div');
-        planet.className = 'planet';
+        planet.className = 'ultra_new_planetary_planet';
         const planetSize = 60 + Math.random() * 20;
         planet.style.setProperty('--planet-size', `${planetSize}px`);
+        
         const startupData = demoStartupsData[i - 1];
         if (startupData) {
             planet.style.backgroundImage = `url('${startupData.image}')`;
@@ -295,14 +302,20 @@ document.addEventListener('DOMContentLoaded', function () {
             });
             planet.title = startupData.name;
         } else {
+            // Если нет данных стартапа, создаем декоративную планету
             const fallbackImage = `/static/accounts/images/planetary_system/planets_round/${Math.floor(Math.random() * 15) + 1}.png`;
             planet.style.backgroundImage = `url('${fallbackImage}')`;
+            planet.title = 'Декоративная планета';
+            console.log('Created decorative planet with image:', fallbackImage);
         }
+        
         planetOrientation.appendChild(planet);
         orbit.appendChild(planetOrientation);
+        
         const orbitTime = 80 + i * 20 + (Math.random() - 0.5) * 40;
         const initialAngle = Math.random() * 360;
         const speedFactor = 0.8 + Math.random() * 0.4;
+        
         planetObjects.push({
             element: planet,
             orientation: planetOrientation,
@@ -314,7 +327,9 @@ document.addEventListener('DOMContentLoaded', function () {
             speedFactor: speedFactor,
             startTime: Date.now() - Math.random() * orbitTime * 1000,
         });
+        
         galaxyContainer.appendChild(orbit);
+        console.log('Added orbit', i, 'with planet to galaxy container');
     }
     function showStartupInfo(startupData) {
         const modal = document.getElementById('demo_planetary_modal');
