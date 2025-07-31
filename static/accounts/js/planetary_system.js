@@ -309,10 +309,33 @@
     if (!planet || !startup) return;
     console.log('🔍 JS: Setting up planet', index, 'with startup:', startup.name);
     
-    const imageUrl = startup.image || startup.planet_image || getUltraNewPlanetaryFallbackImage(index);
+    // Используем изображение из данных стартапа
+    const imageUrl = startup.image || getUltraNewPlanetaryFallbackImage(index);
     console.log('🔍 JS: Planet image URL:', imageUrl);
     
-    planet.style.backgroundImage = `url(${imageUrl})`;
+    // Проверяем, что URL изображения валидный
+    if (imageUrl && imageUrl !== 'null' && imageUrl !== 'undefined') {
+      planet.style.backgroundImage = `url(${imageUrl})`;
+      
+      // Добавляем обработчик ошибки для изображения
+      const img = new Image();
+      img.onload = function() {
+        // Изображение загрузилось успешно
+        console.log('🔍 JS: Planet image loaded successfully:', imageUrl);
+      };
+      img.onerror = function() {
+        // Если изображение не загрузилось, используем fallback
+        console.warn('🔍 JS: Failed to load planet image:', imageUrl);
+        const fallbackUrl = getUltraNewPlanetaryFallbackImage(index);
+        planet.style.backgroundImage = `url(${fallbackUrl})`;
+      };
+      img.src = imageUrl;
+    } else {
+      // Если изображение не загрузилось, используем fallback
+      const fallbackUrl = getUltraNewPlanetaryFallbackImage(index);
+      planet.style.backgroundImage = `url(${fallbackUrl})`;
+    }
+    
     planet.setAttribute('data-startup-id', startup.id || startup.startup_id || 0);
     planet.setAttribute('data-startup-name', startup.name || 'Пустая орбита');
     planet.setAttribute('data-startup-data', JSON.stringify(startup));
@@ -393,7 +416,15 @@
     }
     if (investorsCountElement) investorsCountElement.textContent = `Инвестировало (${startup.investors || '0'})`;
     if (planetImageElement) {
-      planetImageElement.src = planetImageUrl || getUltraNewPlanetaryFallbackImage(0);
+      // Используем изображение стартапа или fallback
+      const modalImageUrl = planetImageUrl || startup.image || getUltraNewPlanetaryFallbackImage(0);
+      planetImageElement.src = modalImageUrl;
+      
+      // Добавляем обработчик ошибки для изображения
+      planetImageElement.onerror = function() {
+        console.warn('Не удалось загрузить изображение стартапа:', modalImageUrl);
+        this.src = getUltraNewPlanetaryFallbackImage(0);
+      };
     }
     const progressPercentageElement = document.getElementById('ultra_new_planetary_modal_progress_percentage');
     const progressBarVisual = document.querySelector('.ultra_new_planetary_modal_progress_bar_visual');

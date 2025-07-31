@@ -3130,8 +3130,22 @@ def planetary_system(request):
         selected_startups = []
     planets_data = []
     for i, startup in enumerate(selected_startups):
-        planet_image_num = (i % 15) + 1
-        planet_image_url = f"/static/accounts/images/planetary_system/planets_round/{planet_image_num}.png"
+        # Получаем реальное изображение стартапа
+        planet_image_url = None
+        
+        # Сначала пробуем получить planet_image (специальное изображение планеты)
+        if startup.planet_image:
+            planet_image_url = f"https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/{startup.planet_image}"
+        # Если нет planet_image, пробуем получить logo_urls
+        elif startup.logo_urls and isinstance(startup.logo_urls, list) and len(startup.logo_urls) > 0:
+            from accounts.utils import get_file_url
+            planet_image_url = get_file_url(startup.logo_urls[0], startup.startup_id, "logo")
+        
+        # Если нет реальных изображений, используем fallback
+        if not planet_image_url:
+            planet_image_num = (i % 15) + 1
+            planet_image_url = f"/static/accounts/images/planetary_system/planets_round/{planet_image_num}.png"
+        
         # Найти original_name для категории стартапа
         direction_original = 'Не указано'
         if startup.direction:
@@ -3158,8 +3172,22 @@ def planetary_system(request):
     all_approved_startups = list(Startups.objects.filter(status="approved").select_related("direction", "owner").order_by("-created_at"))
     all_startups_data = []
     for idx, startup in enumerate(all_approved_startups):
-        planet_image_num = (idx % 15) + 1
-        planet_image_url = f"/static/accounts/images/planetary_system/planets_round/{planet_image_num}.png"
+        # Получаем реальное изображение стартапа
+        planet_image_url = None
+        
+        # Сначала пробуем получить planet_image (специальное изображение планеты)
+        if startup.planet_image:
+            planet_image_url = f"https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/{startup.planet_image}"
+        # Если нет planet_image, пробуем получить logo_urls
+        elif startup.logo_urls and isinstance(startup.logo_urls, list) and len(startup.logo_urls) > 0:
+            from accounts.utils import get_file_url
+            planet_image_url = get_file_url(startup.logo_urls[0], startup.startup_id, "logo")
+        
+        # Если нет реальных изображений, используем fallback
+        if not planet_image_url:
+            planet_image_num = (idx % 15) + 1
+            planet_image_url = f"/static/accounts/images/planetary_system/planets_round/{planet_image_num}.png"
+        
         direction_original = 'Не указано'
         if startup.direction:
             for cat in directions_data:
