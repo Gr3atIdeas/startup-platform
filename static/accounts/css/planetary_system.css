@@ -8,6 +8,60 @@
   --ultra_new_planetary_galaxy_y: 0px;
 }
 
+/* Стили для планетарной системы на главной странице */
+.main_planetary_system {
+  position: absolute;
+  top: 0;
+  right: -30%; /* Смещаем вправо так, чтобы торчало только 3/4 */
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.main_planetary_system .ultra_new_planetary_space_background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, #0B1426 0%, #1E3A8A 100%);
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 813"><defs><radialGradient id="spaceGrad" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="rgba(255,255,255,0.3)"/><stop offset="100%" stop-color="rgba(255,255,255,0)"/></radialGradient></defs><rect width="100%" height="100%" fill="url(%23spaceGrad)"/></svg>');
+  background-size: cover;
+  background-position: center;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.main_planetary_system .ultra_new_planetary_stars {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,0.7), transparent);
+  background-repeat: repeat;
+  background-size: 600px 400px;
+  animation: ultra_new_planetary_star_scroll 40s linear infinite;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.main_planetary_system #ultra_new_planetary_solar_system {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  perspective: 1000px;
+  z-index: 3;
+  pointer-events: auto;
+}
+
+.main_planetary_system .ultra_new_planetary_planet {
+  pointer-events: auto;
+}
+
 
 .ultra_new_planetary_system_wrapper {
   width: 100%;
