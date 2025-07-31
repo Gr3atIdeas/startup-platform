@@ -49,6 +49,32 @@
   const ultraNewPlanetaryMaxScale = 2.5;
   const ultraNewPlanetaryMaxOffset = 500;
   let ultraNewPlanetaryCategoriesTotal = 0;
+  
+  // Определяем текущую страницу для установки начального положения
+  function getCurrentPage() {
+    const path = window.location.pathname;
+    if (path === '/investor/' || path === '/startupper/') {
+      return 'main';
+    } else if (path === '/planetary-system/') {
+      return 'planetary';
+    }
+    return 'other';
+  }
+  
+  // Устанавливаем начальное положение в зависимости от страницы
+  function setInitialGalaxyPosition() {
+    const currentPage = getCurrentPage();
+    if (currentPage === 'main') {
+      // На главных страницах - смещаем галактику вверх (примерно 2 скролла мыши)
+      ultraNewPlanetaryGalaxyY = -200;
+      ultraNewPlanetaryGalaxyScale = 0.8; // Немного уменьшаем масштаб
+    } else {
+      // На странице планетарной системы - стандартное положение
+      ultraNewPlanetaryGalaxyY = 0;
+      ultraNewPlanetaryGalaxyScale = 1;
+    }
+    updateUltraNewPlanetaryGalaxyTransform();
+  }
   document.addEventListener('DOMContentLoaded', function() {
     initializeUltraNewPlanetarySystem();
   });
@@ -57,6 +83,7 @@
       loadUltraNewPlanetarySystemData();
       loadUltraNewPlanetaryFallbackImages();
       setupUltraNewPlanetarySystem();
+      setInitialGalaxyPosition(); // Устанавливаем начальное положение
       startUltraNewPlanetaryAnimation();
     } catch (error) {
       console.warn('Ultra New Planetary System initialization error:', error);
@@ -161,10 +188,8 @@
     galaxy.style.setProperty('--ultra_new_planetary_galaxy_y', ultraNewPlanetaryGalaxyY + 'px');
   }
   function resetUltraNewPlanetaryGalaxyTransform() {
-    ultraNewPlanetaryGalaxyScale = 1;
-    ultraNewPlanetaryGalaxyX = 0;
-    ultraNewPlanetaryGalaxyY = 0;
-    updateUltraNewPlanetaryGalaxyTransform();
+    // При сбросе возвращаем к начальному положению для текущей страницы
+    setInitialGalaxyPosition();
   }
   function setupUltraNewPlanetaryControls() {
     const fullscreenBtn = document.getElementById('ultra_new_planetary_fullscreen_btn');

@@ -197,6 +197,11 @@
   transform-style: preserve-3d;
   z-index: 5;
   transition: transform 0.1s ease-out;
+  /* Аппаратное ускорение для устранения дрожания */
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
 }
 
 
@@ -225,6 +230,11 @@
   border: none !important;
   outline: none !important;
   box-shadow: none !important;
+  /* Аппаратное ускорение для устранения дрожания */
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
 }
 
 #ultra_new_planetary_sun_image::before {
@@ -289,6 +299,11 @@
   transform-style: preserve-3d;
   z-index: 5;
   pointer-events: none;
+  /* Аппаратное ускорение для устранения дрожания */
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
 }
 
 .ultra_new_planetary_orbit:nth-child(1) {
