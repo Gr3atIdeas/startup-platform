@@ -418,8 +418,8 @@ document.addEventListener('DOMContentLoaded', function () {
             const y = Math.sin(angleRad) * radius;
             planetObj.orientation.style.transform = `translate(${x}px, ${y}px)`;
             
-            const tiltCompensation = -galaxyTiltAngle;
-            planetObj.element.style.transform = `rotateX(${tiltCompensation}deg)`;
+            // Убираем наклон с самой планеты - он теперь применяется через CSS к ориентации
+            // planetObj.element.style.transform = `rotateX(${tiltCompensation}deg)`;
             
             // Добавляем отладочную информацию для первых нескольких планет
             if (index < 3) {
