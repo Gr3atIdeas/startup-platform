@@ -405,7 +405,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     function updatePlanets() {
         const now = Date.now();
-        planetObjects.forEach(planetObj => {
+        planetObjects.forEach((planetObj, index) => {
             const elapsedSeconds = (now - planetObj.startTime) / 1000;
             const orbitTimeSeconds = planetObj.orbitTime * planetObj.speedFactor;
             const progress = (elapsedSeconds % orbitTimeSeconds) / orbitTimeSeconds;
@@ -420,6 +420,11 @@ document.addEventListener('DOMContentLoaded', function () {
             
             const tiltCompensation = -galaxyTiltAngle;
             planetObj.element.style.transform = `rotateX(${tiltCompensation}deg)`;
+            
+            // Добавляем отладочную информацию для первых нескольких планет
+            if (index < 3) {
+                console.log(`Planet ${index + 1}: angle=${angle.toFixed(1)}°, x=${x.toFixed(1)}, y=${y.toFixed(1)}, radius=${radius}`);
+            }
         });
         requestAnimationFrame(updatePlanets);
     }

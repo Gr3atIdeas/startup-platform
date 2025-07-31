@@ -67,12 +67,36 @@
 
 /* Увеличиваем размеры планет для большей системы */
 .main_planetary_system .ultra_new_planetary_planet {
-  transform: scale(1.5); /* Увеличиваем размер планет */
+  transform: scale(2); /* Увеличиваем размер планет в два раза */
+}
+
+/* Увеличиваем размеры орбит для большей системы */
+.main_planetary_system .ultra_new_planetary_orbit {
+  transform: scale(1.5); /* Увеличиваем размер орбит */
+  transform-origin: center center; /* Центрируем масштабирование */
 }
 
 /* Увеличиваем размер солнца */
 .main_planetary_system #ultra_new_planetary_sun_image {
-  transform: scale(1.5);
+  transform: scale(2); /* Увеличиваем размер солнца в два раза */
+}
+
+/* Исправляем обрезание солнца */
+.main_planetary_system #ultra_new_planetary_sun_container {
+  transform: scale(2); /* Увеличиваем контейнер солнца */
+  transform-origin: center center; /* Центрируем масштабирование */
+  width: 194px; /* Увеличиваем базовый размер контейнера */
+  height: 190px; /* Увеличиваем базовый размер контейнера */
+}
+
+/* Обеспечиваем правильное позиционирование солнца */
+.main_planetary_system #ultra_new_planetary_sun_container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotateX(var(--ultra_new_planetary_sun_compensation)) scale(2);
+  z-index: 10;
+  pointer-events: none;
 }
 
 
