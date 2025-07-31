@@ -101,11 +101,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Plyr не загружен');
         }
         
-        modal.querySelector('.easter-egg-overlay').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeVideoEasterEgg();
-            }
-        });
+
         
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
