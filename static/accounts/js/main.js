@@ -272,7 +272,7 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     }
     const planetObjects = [];
-    const galaxyTiltAngle = 45;
+    const galaxyTiltAngle = 60;
     // Создаем орбиты и планеты
     const numOrbits = Math.max(6, demoStartupsData.length);
     console.log('Creating', numOrbits, 'orbits with', demoStartupsData.length, 'startup data items');
@@ -413,21 +413,10 @@ document.addEventListener('DOMContentLoaded', function () {
             const angleRad = angle * Math.PI / 180;
             const radius = planetObj.orbitSize / 2;
             
-            // Проверяем, находимся ли мы на главной странице без авторизации
-            const isMainPage = document.querySelector('.main_planetary_system') !== null;
-            
-            if (isMainPage) {
-                // Для главной страницы используем эллиптические орбиты
-                const ellipseRatio = 1.5; // Соотношение осей эллипса
-                const x = Math.cos(angleRad) * radius * ellipseRatio;
-                const y = Math.sin(angleRad) * radius;
-                planetObj.orientation.style.transform = `translate(${x}px, ${y}px)`;
-            } else {
-                // Для других страниц используем обычные круговые орбиты
-                const x = Math.cos(angleRad) * radius;
-                const y = Math.sin(angleRad) * radius;
-                planetObj.orientation.style.transform = `translate(${x}px, ${y}px)`;
-            }
+            // Используем круговые орбиты для всех страниц
+            const x = Math.cos(angleRad) * radius;
+            const y = Math.sin(angleRad) * radius;
+            planetObj.orientation.style.transform = `translate(${x}px, ${y}px)`;
             
             const tiltCompensation = -galaxyTiltAngle;
             planetObj.element.style.transform = `rotateX(${tiltCompensation}deg)`;

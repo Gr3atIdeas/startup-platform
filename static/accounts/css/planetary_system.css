@@ -1,8 +1,8 @@
 
 :root {
-  --ultra_new_planetary_galaxy_tilt: 45deg;
-  --ultra_new_planetary_planet_compensation: -45deg;
-  --ultra_new_planetary_sun_compensation: -45deg;
+  --ultra_new_planetary_galaxy_tilt: 60deg;
+  --ultra_new_planetary_planet_compensation: -60deg;
+  --ultra_new_planetary_sun_compensation: -60deg;
   --ultra_new_planetary_galaxy_scale: 0.7;
   --ultra_new_planetary_galaxy_x: 0px;
   --ultra_new_planetary_galaxy_y: 0px;
@@ -12,7 +12,7 @@
 .main_planetary_system {
   position: absolute;
   top: 45%;
-  left: 67%;
+  left: 80.4%; /* Сдвигаем на 20% правее (67% + 13.4% = 80.4%) */
   width: 200%; /* Увеличиваем размер в два раза */
   height: 200%; /* Увеличиваем размер в два раза */
   z-index: 10;
@@ -63,11 +63,7 @@
   pointer-events: auto;
 }
 
-/* Стили для эллиптических орбит на главной странице */
-.main_planetary_system .ultra_new_planetary_orbit {
-  border-radius: 50% / 30%; /* Делаем орбиты эллиптическими - растягиваем по горизонтали */
-  transform: scaleX(1.5); /* Растягиваем орбиты влево */
-}
+
 
 /* Увеличиваем размеры планет для большей системы */
 .main_planetary_system .ultra_new_planetary_planet {
