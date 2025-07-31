@@ -3211,34 +3211,42 @@ html::-webkit-scrollbar-button {
     visibility: visible;
 }
 
-.main-page-planetary-wrapper {
-  overflow: hidden;
-  height: 600px;
-  position: relative;
-  margin: 20px 0;
+
+
+#ultra_new_planetary_solar_system {
+  position: absolute;
+  right: -100px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 800px;
+  height: 800px;
 }
 
-.main-page-planetary-wrapper .ultra_new_planetary_system_wrapper {
-  transform: scale(0.9);
+#ultra_new_planetary_galaxy {
+  transform: scale(0.8);
   transform-origin: center center;
 }
 
 @media (max-width: 768px) {
-  .main-page-planetary-wrapper {
-    height: 500px;
+  #ultra_new_planetary_solar_system {
+    right: -80px;
+    width: 600px;
+    height: 600px;
   }
   
-  .main-page-planetary-wrapper .ultra_new_planetary_system_wrapper {
-    transform: scale(0.8);
+  #ultra_new_planetary_galaxy {
+    transform: scale(0.7);
   }
 }
 
 @media (max-width: 480px) {
-  .main-page-planetary-wrapper {
-    height: 400px;
+  #ultra_new_planetary_solar_system {
+    right: -60px;
+    width: 500px;
+    height: 500px;
   }
   
-  .main-page-planetary-wrapper .ultra_new_planetary_system_wrapper {
-    transform: scale(0.7);
+  #ultra_new_planetary_galaxy {
+    transform: scale(0.6);
   }
 }
