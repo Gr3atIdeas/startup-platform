@@ -2180,8 +2180,8 @@ def investor_main(request):
         for category in FIXED_CATEGORIES:
             if category['original_name'] == selected_direction_name or category['direction_name'] == selected_direction_name:
                 direction_filter |= Q(direction__direction_name=category['direction_name'])
-            if direction_filter:
-        startups_query = startups_query.filter(direction_filter)
+        if direction_filter:
+            startups_query = startups_query.filter(direction_filter)
     startups_filtered = startups_query.annotate(
         progress=Case(
             When(funding_goal__gt=0, then=(F("amount_raised") * 100.0 / F("funding_goal"))),
@@ -3166,18 +3166,14 @@ def planetary_system(request):
         selected_startups = []
     planets_data = []
     for i, startup in enumerate(selected_startups):
-        # Получаем реальное изображение стартапа
+        # Получаем изображение планеты стартапа
         planet_image_url = None
         
-        # Сначала пробуем получить planet_image (специальное изображение планеты)
+        # Если есть planet_image, используем его
         if startup.planet_image:
             planet_image_url = f"https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/{startup.planet_image}"
-        # Если нет planet_image, пробуем получить logo_urls
-        elif startup.logo_urls and isinstance(startup.logo_urls, list) and len(startup.logo_urls) > 0:
-            from accounts.utils import get_file_url
-            planet_image_url = get_file_url(startup.logo_urls[0], startup.startup_id, "logo")
         
-        # Если нет реальных изображений, используем fallback из обеих папок
+        # Если нет planet_image, используем fallback из обеих папок
         if not planet_image_url:
             import random
             # Выбираем случайно между planets_round и planets_ring
@@ -3215,18 +3211,14 @@ def planetary_system(request):
     all_approved_startups = list(Startups.objects.filter(status="approved").select_related("direction", "owner").order_by("-created_at"))
     all_startups_data = []
     for idx, startup in enumerate(all_approved_startups):
-        # Получаем реальное изображение стартапа
+        # Получаем изображение планеты стартапа
         planet_image_url = None
         
-        # Сначала пробуем получить planet_image (специальное изображение планеты)
+        # Если есть planet_image, используем его
         if startup.planet_image:
             planet_image_url = f"https://storage.yandexcloud.net/1-st-test-bucket-for-startup-platform-3gb-1/choosable_planets/{startup.planet_image}"
-        # Если нет planet_image, пробуем получить logo_urls
-        elif startup.logo_urls and isinstance(startup.logo_urls, list) and len(startup.logo_urls) > 0:
-            from accounts.utils import get_file_url
-            planet_image_url = get_file_url(startup.logo_urls[0], startup.startup_id, "logo")
         
-        # Если нет реальных изображений, используем fallback из обеих папок
+        # Если нет planet_image, используем fallback из обеих папок
         if not planet_image_url:
             import random
             # Выбираем случайно между planets_round и planets_ring
