@@ -876,6 +876,149 @@
   }
 }
 
+@media (max-width: 480px) {
+  .ultra_new_planetary_modal_content {
+    flex-direction: column;
+    gap: 20px;
+    padding: 0 15px;
+  }
+  
+  .ultra_new_planetary_modal_planet {
+    width: 200px;
+    height: 200px;
+  }
+  
+  .ultra_new_planetary_modal_card {
+    width: 280px;
+    padding: 15px 20px;
+  }
+  
+  .ultra_new_planetary_modal_title {
+    font-size: 16px;
+  }
+  
+  .ultra_new_planetary_modal_rating {
+    font-size: 10px;
+  }
+  
+  .ultra_new_planetary_modal_comments_text {
+    font-size: 12px;
+  }
+  
+  .ultra_new_planetary_modal_investment_btn button {
+    width: 180px;
+    padding: 7px 14px;
+    font-size: 10px;
+  }
+  
+  .ultra_new_planetary_modal_category {
+    padding: 7px 14px;
+    font-size: 10px;
+  }
+  
+  .ultra_new_planetary_modal_progress_container {
+    width: 240px;
+    height: 16px;
+  }
+  
+  .ultra_new_planetary_modal_progress_percentage {
+    font-size: 9px;
+  }
+  
+  .ultra_new_planetary_modal_description {
+    font-size: 10px;
+  }
+  
+  .ultra_new_planetary_modal_funding_amount {
+    font-size: 20px;
+    line-height: 28px;
+  }
+  
+  .ultra_new_planetary_modal_valuation_amount {
+    font-size: 10px;
+  }
+  
+  .ultra_new_planetary_modal_details_btn {
+    padding: 10px 25px;
+    font-size: 14px;
+  }
+  
+  .ultra_new_planetary_modal_investors_text {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 360px) {
+  .ultra_new_planetary_modal_content {
+    gap: 15px;
+    padding: 0 10px;
+  }
+  
+  .ultra_new_planetary_modal_planet {
+    width: 180px;
+    height: 180px;
+  }
+  
+  .ultra_new_planetary_modal_card {
+    width: 250px;
+    padding: 12px 15px;
+  }
+  
+  .ultra_new_planetary_modal_title {
+    font-size: 14px;
+  }
+  
+  .ultra_new_planetary_modal_rating {
+    font-size: 9px;
+  }
+  
+  .ultra_new_planetary_modal_comments_text {
+    font-size: 11px;
+  }
+  
+  .ultra_new_planetary_modal_investment_btn button {
+    width: 160px;
+    padding: 6px 12px;
+    font-size: 9px;
+  }
+  
+  .ultra_new_planetary_modal_category {
+    padding: 6px 12px;
+    font-size: 9px;
+  }
+  
+  .ultra_new_planetary_modal_progress_container {
+    width: 220px;
+    height: 14px;
+  }
+  
+  .ultra_new_planetary_modal_progress_percentage {
+    font-size: 8px;
+  }
+  
+  .ultra_new_planetary_modal_description {
+    font-size: 9px;
+  }
+  
+  .ultra_new_planetary_modal_funding_amount {
+    font-size: 18px;
+    line-height: 24px;
+  }
+  
+  .ultra_new_planetary_modal_valuation_amount {
+    font-size: 9px;
+  }
+  
+  .ultra_new_planetary_modal_details_btn {
+    padding: 8px 20px;
+    font-size: 12px;
+  }
+  
+  .ultra_new_planetary_modal_investors_text {
+    font-size: 9px;
+  }
+}
+
 
 .ultra_new_planetary_all_startups_button {
   position: absolute;
@@ -1154,6 +1297,26 @@
   }
 }
 
+@media (max-width: 1200px) {
+  .ultra_new_planetary_system_wrapper {
+    padding: 25px 30px;
+  }
+  
+  .ultra_new_planetary_modal_content {
+    gap: 40px;
+  }
+  
+  .ultra_new_planetary_modal_planet {
+    width: 300px;
+    height: 280px;
+  }
+  
+  .ultra_new_planetary_modal_card {
+    width: 350px;
+    padding: 25px 30px;
+  }
+}
+
 @media (max-width: 768px) {
   .ultra_new_planetary_system_wrapper {
     height: 500px;
@@ -1165,7 +1328,19 @@
     height: 600px;
   }
 
+  /* Уменьшаем размеры планет для мобильных */
+  .ultra_new_planetary_planet {
+    transform: scale(0.8);
+  }
   
+  .ultra_new_planetary_orbit {
+    transform: scale(0.8);
+  }
+  
+  #ultra_new_planetary_sun_image {
+    transform: scale(0.8);
+  }
+
   .ultra_new_planetary_all_startups_button {
     top: 10px;
     left: 10px;
@@ -1173,7 +1348,6 @@
     font-size: 12px;
   }
 
-  
   .ultra_new_planetary_fullscreen_btn {
     bottom: 3px;
     right: 3px;
@@ -1186,7 +1360,6 @@
     height: 20px;
   }
 
-  
   #ultra_new_planetary_galaxy_selector {
     width: 350px;
     height: 80px;
@@ -1211,7 +1384,6 @@
     height: 25px !important;
   }
 
-  
   .ultra_new_planetary_category_item.selected .ultra_new_planetary_category_bg {
     width: 90px !important;
     height: 40px !important;
@@ -1223,7 +1395,6 @@
     height: 35px !important;
   }
 
-  
   .ultra_new_planetary_nav_arrow {
     width: 25px;
     height: 25px;
@@ -1243,13 +1414,204 @@
     height: 10px;
   }
 
-  
   .ultra_new_planetary_selected_label {
     left: 50%;
     transform: translateX(-50%);
     top: 55px;
     font-size: 10px;
     padding: 6px 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .ultra_new_planetary_system_wrapper {
+    height: 400px;
+    padding: 15px;
+  }
+
+  #ultra_new_planetary_scene {
+    width: 500px;
+    height: 500px;
+  }
+
+  /* Еще больше уменьшаем размеры для маленьких экранов */
+  .ultra_new_planetary_planet {
+    transform: scale(0.6);
+  }
+  
+  .ultra_new_planetary_orbit {
+    transform: scale(0.6);
+  }
+  
+  #ultra_new_planetary_sun_image {
+    transform: scale(0.6);
+  }
+
+  .ultra_new_planetary_all_startups_button {
+    top: 5px;
+    left: 5px;
+    padding: 6px 12px;
+    font-size: 10px;
+  }
+
+  .ultra_new_planetary_fullscreen_btn {
+    bottom: 2px;
+    right: 2px;
+    width: 35px;
+    height: 35px;
+  }
+
+  .ultra_new_planetary_fullscreen_btn img {
+    width: 18px;
+    height: 18px;
+  }
+
+  #ultra_new_planetary_galaxy_selector {
+    width: 280px;
+    height: 70px;
+    bottom: 3px;
+  }
+  
+  .ultra_new_planetary_categories_container {
+    width: 260px; 
+    height: 45px;
+    gap: 2px; 
+    padding-left: 3px;
+  }
+  
+  .ultra_new_planetary_category_bg {
+    width: 30px !important;
+    height: 30px !important;
+    background-size: 80px 60px;
+  }
+
+  .ultra_new_planetary_category_icon {
+    width: 20px !important;
+    height: 20px !important;
+  }
+
+  .ultra_new_planetary_category_item.selected .ultra_new_planetary_category_bg {
+    width: 75px !important;
+    height: 35px !important;
+    border-radius: 17px;
+  }
+
+  .ultra_new_planetary_category_item.selected .ultra_new_planetary_category_icon {
+    width: 40px !important;
+    height: 30px !important;
+  }
+
+  .ultra_new_planetary_nav_arrow {
+    width: 20px;
+    height: 20px;
+    top: 10px;
+  }
+
+  .ultra_new_planetary_nav_arrow_icon {
+    width: 5px;
+    height: 8px;
+  }
+
+  .ultra_new_planetary_selected_label {
+    top: 45px;
+    font-size: 9px;
+    padding: 5px 10px;
+  }
+}
+
+@media (max-width: 360px) {
+  .ultra_new_planetary_system_wrapper {
+    height: 350px;
+    padding: 10px;
+  }
+
+  #ultra_new_planetary_scene {
+    width: 400px;
+    height: 400px;
+  }
+
+  /* Минимальные размеры для очень маленьких экранов */
+  .ultra_new_planetary_planet {
+    transform: scale(0.5);
+  }
+  
+  .ultra_new_planetary_orbit {
+    transform: scale(0.5);
+  }
+  
+  #ultra_new_planetary_sun_image {
+    transform: scale(0.5);
+  }
+
+  .ultra_new_planetary_all_startups_button {
+    top: 3px;
+    left: 3px;
+    padding: 5px 10px;
+    font-size: 9px;
+  }
+
+  .ultra_new_planetary_fullscreen_btn {
+    bottom: 1px;
+    right: 1px;
+    width: 30px;
+    height: 30px;
+  }
+
+  .ultra_new_planetary_fullscreen_btn img {
+    width: 15px;
+    height: 15px;
+  }
+
+  #ultra_new_planetary_galaxy_selector {
+    width: 250px;
+    height: 60px;
+    bottom: 2px;
+  }
+  
+  .ultra_new_planetary_categories_container {
+    width: 230px; 
+    height: 40px;
+    gap: 1px; 
+    padding-left: 2px;
+  }
+  
+  .ultra_new_planetary_category_bg {
+    width: 25px !important;
+    height: 25px !important;
+    background-size: 70px 50px;
+  }
+
+  .ultra_new_planetary_category_icon {
+    width: 18px !important;
+    height: 18px !important;
+  }
+
+  .ultra_new_planetary_category_item.selected .ultra_new_planetary_category_bg {
+    width: 65px !important;
+    height: 30px !important;
+    border-radius: 15px;
+  }
+
+  .ultra_new_planetary_category_item.selected .ultra_new_planetary_category_icon {
+    width: 35px !important;
+    height: 25px !important;
+  }
+
+  .ultra_new_planetary_nav_arrow {
+    width: 18px;
+    height: 18px;
+    top: 8px;
+  }
+
+  .ultra_new_planetary_nav_arrow_icon {
+    width: 4px;
+    height: 7px;
+  }
+
+  .ultra_new_planetary_selected_label {
+    top: 40px;
+    font-size: 8px;
+    padding: 4px 8px;
   }
 }
 
